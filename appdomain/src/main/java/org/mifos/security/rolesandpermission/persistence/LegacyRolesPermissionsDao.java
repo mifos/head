@@ -20,9 +20,11 @@
 
 package org.mifos.security.rolesandpermission.persistence;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -33,10 +35,15 @@ import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.persistence.LegacyMasterDao;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.Localization;
 import org.mifos.core.MifosRuntimeException;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.SecurityException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.LegacyGenericDao;
 import org.mifos.framework.util.helpers.SearchUtils;
@@ -47,6 +54,9 @@ import org.mifos.security.rolesandpermission.business.RoleActivityEntity;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.security.rolesandpermission.business.service.RolesPermissionsBusinessService;
 import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
+import org.mifos.security.util.ActivityRoles;
+import org.mifos.security.util.PersonRoles;
+import org.mifos.security.util.SecurityConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class LegacyRolesPermissionsDao extends LegacyGenericDao {
@@ -63,9 +73,155 @@ public class LegacyRolesPermissionsDao extends LegacyGenericDao {
         return (RoleBO) execUniqueResultNamedQuery(NamedQueryConstants.GET_ROLE_FOR_GIVEN_NAME, queryParameters);
     }
 
+    /**
+     * This function returns the PersonRoles object which contains the person
+     * information and the set of all the roles related to that user
+     *
+     * @param uid
+     *            user id
+     * @return PersonRoles
+     * @throws HibernateProcessException
+     */
+    public Set getUserRoles(short uid) throws SystemException, ApplicationException {
+        Set roles = null;
+        try {
+            Session session = StaticHibernateUtil.getSessionTL();
+            Query personRoles = session.getNamedQuery(NamedQueryConstants.GETPERSONROLES);
+            personRoles.setShort("ID", uid);
+            List<PersonRoles> lst = personRoles.list();
+            if (null != lst && lst.size() > 0) {
+                PersonRoles pr = lst.get(0);
+                roles = pr.getRoles();
+            }
+        } catch (HibernateException he) {
+            throw new SecurityException(SecurityConstants.GENERALERROR, he);
+        }
+        return roles;
+    }
+
+    /**
+     * This function is used to find the leaf activities in the system as those
+     * are the actual activities user can perform in the system rest are used
+     * for grouping activities only
+     *
+     * @return List of leafs activity id's
+     * @throws HibernateProcessException
+     */
+    public List<Short> getLeafActivities() throws SystemException, ApplicationException {
+        List<ActivityEntity> activityList = ApplicationContextProvider.getBean(LegacyRolesPermissionsDao.class).getActivities();
+        List<Short> leafs = new ArrayList<Short>();
+        buildLeafItems(activityList, leafs);
+        return leafs;
+    }
+    /**
+     * Internal helper function used to find the leaf activities this function
+     * is once each for the top level activity which has parent as 0
+     *
+     * @param l
+     *            list of activities in the system
+     * @param leafs
+     *            list of leafs id's
+     */
+    private static void buildLeafItems(List<ActivityEntity> l, List<Short> leafs) {
+        List<ActivityEntity> li = getChildren(l, Short.valueOf("0"));
+
+        for (int i = 0; i < li.size(); i++) {
+            makeLeafItems(l, li.get(i).getId(), leafs);
+        }
+    }
+
+    /**
+     * This is internal helper function used to find the childern of the given
+     * activity it takes the list of all the activity in the system and find out
+     * which are childern of passed activity
+     *
+     * @param activities
+     *            List of Activity objects in the system
+     * @param id
+     *            id of the activity whose childern we are trying to find out
+     *            right now
+     * @return
+     */
+    private static List<ActivityEntity> getChildren(List<ActivityEntity> activities, Short id) {
+        List<ActivityEntity> l = new ArrayList<ActivityEntity>();
+
+        /*
+         * for (int i = 0; i < activities.size(); i++) { if
+         * (activities.get(i).getParent().shortValue() == id.shortValue()) {
+         * l.add(activities.get(i)); } }
+         */
+        // if id=0 then we are looking for top level activities
+        for (int i = 0; i < activities.size(); i++) {
+            ActivityEntity parent = activities.get(i).getParent();
+            if (id.shortValue() == 0) {
+
+                if (null == parent) {
+                    l.add(activities.get(i));
+                }
+
+            } else {
+
+                if (null != parent) {
+                    if (parent.getId().shortValue() == id.shortValue()) {
+                        l.add(activities.get(i));
+                    }
+                }
+
+            }
+        }
+
+        return l;
+    }
+
+    /**
+     * This function is called recursively for each top level activities in the
+     * system till we reach the leafs this is the function where we find the
+     * leafs
+     *
+     * @param l
+     *            List of Activity objects in the system
+     * @param id
+     *            id of current activity
+     * @param leafs
+     *            list of all the leafs activity in the system this ia a out
+     *            parameter
+     */
+    private static void makeLeafItems(List<ActivityEntity> l, Short id, List<Short> leafs) {
+        List<ActivityEntity> lst = getChildren(l, id);
+        for (int i = 0; i < lst.size(); i++) {
+            Short id2 = lst.get(i).getId();
+            // check whether it is leaf
+            List<ActivityEntity> li = getChildren(l, id2);
+            if (li.size() == 0) {
+                leafs.add(id2);
+            } else {
+                makeLeafItems(l, id2, leafs);
+            }
+        }
+    }
+
+    /**
+     * This function is used to retrive the all the activities in the system and
+     * the set of roles which includes these activities
+     *
+     * @return list of ActivityRoles objects
+     * @throws HibernateProcessException
+     */
+    public List<ActivityRoles> getActivitiesRoles() throws SystemException, ApplicationException {
+        try {
+            Session session = StaticHibernateUtil.getSessionTL();
+            Query query = session.getNamedQuery(NamedQueryConstants.GETACTIVITYROLES);
+            List<ActivityRoles> activityRolesList = query.list();
+            return activityRolesList;
+        } catch (HibernateException e) {
+            throw new SecurityException(SecurityConstants.GENERALERROR, e);
+        }
+    }
+
     public List<ActivityEntity> getActivities() throws PersistenceException {
         try {
-            return getActivities(StaticHibernateUtil.getSessionTL());
+            Query query = getSession().getNamedQuery(NamedQueryConstants.GET_ALL_ACTIVITIES);
+            return query.list();
         } catch (Exception e) {
             throw new PersistenceException(e);
         }
@@ -79,12 +235,6 @@ public class LegacyRolesPermissionsDao extends LegacyGenericDao {
         } catch (Exception e) {
             throw new PersistenceException(e);
         }
-    }
-
-    @SuppressWarnings("unchecked")
-    public List<ActivityEntity> getActivities(Session session) {
-        Query query = session.getNamedQuery(NamedQueryConstants.GET_ALL_ACTIVITIES);
-        return query.list();
     }
 
     @SuppressWarnings({ "cast", "unchecked" })

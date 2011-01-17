@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SecurityException;
@@ -37,8 +38,8 @@ import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.ActivityRoles;
 import org.mifos.security.util.SecurityConstants;
-import org.mifos.security.util.SecurityHelper;
 import org.mifos.security.util.UserContext;
+import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsDao;
 
 /**
  * A singleton authorization service. Tracks a map of activities to roles
@@ -49,6 +50,8 @@ public class AuthorizationManager {
 
     private Map<Short, Set> activityToRolesCacheMap = null;
     private static AuthorizationManager manager = new AuthorizationManager();
+
+    private LegacyRolesPermissionsDao legacyRolesPermissionsDao = ApplicationContextProvider.getBean(LegacyRolesPermissionsDao.class);
 
     private AuthorizationManager() {
         activityToRolesCacheMap = new HashMap<Short, Set>();
@@ -67,11 +70,9 @@ public class AuthorizationManager {
     }
 
     private void initialize() throws ApplicationException {
-        SecurityHelper security = new SecurityHelper();
-
-        List<ActivityRoles> al = security.getActivities();
+        List<ActivityRoles> al = legacyRolesPermissionsDao.getActivitiesRoles();
         activityToRolesCacheMap.clear();
-        List leafs = security.getLeafActivities();
+        List leafs = legacyRolesPermissionsDao.getLeafActivities();
         for (ActivityRoles act : al) {
             if (leafs.contains(act.getId())) {
                 activityToRolesCacheMap.put(act.getId(), act.getActivityRoles());
