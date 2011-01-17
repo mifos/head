@@ -103,7 +103,7 @@ public class LoanTestHelper {
                                              CreateLoanAccountSubmitParameters submitAccountParameters) {
         return navigateToLoanAccountEntryPage(searchParameters)
                 .submitAndNavigateToLoanAccountConfirmationPage(submitAccountParameters)
-                .navigateToLoanAccountDetailsPage();
+                .navigateToLoanAccountDetailsPage(submitAccountParameters);
     }
 
     /**

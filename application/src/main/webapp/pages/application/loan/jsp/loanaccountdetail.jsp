@@ -112,8 +112,8 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 						<tr>
 							<td class="fontnormalbold"><span class="fontnormal">
 							<mifoscustom:MifosImage id="${loanInformationDto.accountStateId}"
-								moduleName="org.mifos.accounts.util.resources.accountsImages" />
-								<span id="loanaccountdetail.details.status"><c:out value="${accountStateNameLocalised}" /></span>&nbsp; 
+								moduleName="org.mifos.accounts.util.resources.accountsImages" /> <span id="loanaccountdetail.text.status"><c:out
+								value="${accountStateNameLocalised}" />&nbsp; 
 								<c:forEach
 								var="flagSet" items="${accountFlagNamesLocalised}">
 								<span class="fontnormal"><c:out
@@ -321,8 +321,8 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 								value="${interestTypeNameLocalised}" /> <br>
 							<fmt:message key="loan.interestRate">
 								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" /></fmt:param>
-							</fmt:message>:&nbsp;<span class="fontnormal"><c:out
-								value="${loanInformationDto.interestRate}" />%&nbsp;<mifos:mifoslabel
+							</fmt:message>:&nbsp;<span class="fontnormal"><span id="loanaccountdetail.text.interestRate"><c:out
+								value="${loanInformationDto.interestRate}" /></span>%&nbsp;<mifos:mifoslabel
 								name="loan.apr" /> </span><br>
 							</span> <fmt:message key="loan.interestDisbursement">
 								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" /></fmt:param>
@@ -359,8 +359,8 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							</c:choose> <br>
 							<mifos:mifoslabel name="loan.grace_period_type" />:&nbsp; <c:out
 								value="${gracePeriodTypeNameLocalised}" /><br>
-							<mifos:mifoslabel name="loan.no_of_inst" />:&nbsp;<c:out
-								value="${loanInformationDto.noOfInstallments}" /> <mifos:mifoslabel
+							<mifos:mifoslabel name="loan.no_of_inst" />:&nbsp;<span id="loanaccountdetail.text.noOfInst"><c:out
+								value="${loanInformationDto.noOfInstallments}" /></span> <mifos:mifoslabel
 								name="loan.allowed_no_of_inst" />&nbsp;<c:out
 								value="${loanInformationDto.minNoOfInstall}" />
 							-&nbsp;<c:out

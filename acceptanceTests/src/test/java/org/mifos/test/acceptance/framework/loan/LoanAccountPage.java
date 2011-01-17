@@ -39,7 +39,7 @@ public class LoanAccountPage extends AbstractPage {
     }
 
     public void verifyLoanAmount(String amount) {
-        Assert.assertTrue(selenium.isTextPresent(amount));
+        Assert.assertEquals(getOriginalLoanAmount(), amount);
     }
 
     public void verifyLoanIsForClient(String clientName){
@@ -79,6 +79,30 @@ public class LoanAccountPage extends AbstractPage {
     public void verifyPerformanceHistory(String payments, String missedPayments) {
         Assert.assertTrue(selenium.isTextPresent("of payments: "+payments));
         Assert.assertTrue(selenium.isTextPresent("of missed payments: "+missedPayments));
+    }
+
+    public void verifyStatus(String status) {
+        Assert.assertEquals(selenium.getText("loanaccountdetail.text.status"), status);
+    }
+
+    public void verifyNumberOfInstallments(String numberOfInstallments) {
+        Assert.assertEquals(selenium.getText("loanaccountdetail.text.noOfInst"), numberOfInstallments);
+    }
+
+    public void verifyInterestRate(String interestRate) {
+        Assert.assertEquals(selenium.getText("loanaccountdetail.text.interestRate"), interestRate);
+    }
+
+    public void verifyLoanDetails(CreateLoanAccountSubmitParameters submitAccountParameters) {
+        if(submitAccountParameters.getAmount()!=null){
+            verifyLoanAmount(submitAccountParameters.getAmount());
+        }
+        if(submitAccountParameters.getNumberOfInstallments()!=null){
+            verifyNumberOfInstallments(submitAccountParameters.getNumberOfInstallments());
+        }
+        if(submitAccountParameters.getInterestRate()!=null){
+            verifyInterestRate(submitAccountParameters.getInterestRate());
+        }
     }
 
     /**
@@ -281,7 +305,10 @@ public class LoanAccountPage extends AbstractPage {
         return new ApplyAdjustmentPage(selenium);
     }
 
-    public void verifyStatus(String status) {
-        Assert.assertTrue(selenium.isTextPresent(status));
+    public TransactionHistoryPage navigateToTransactionHistoryPage() {
+        selenium.click("loanaccountdetail.link.viewTransactionHistory");
+        waitForPageToLoad();
+        return new TransactionHistoryPage(selenium);
     }
 }
+

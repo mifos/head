@@ -20,6 +20,10 @@
 
 package org.mifos.test.acceptance.loan;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.sql.SQLException;
+
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
@@ -28,6 +32,10 @@ import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.collectionsheet.CollectionSheetEntryCustomerAccountTest;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameters;
+import org.mifos.test.acceptance.framework.loan.EditLoanAccountStatusParameters;
+import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.PaymentParameters;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
@@ -81,6 +89,28 @@ public class ClientLoanTransactionHistoryTest extends UiTestCaseBase {
     @AfterMethod
     public void logOut() {
         (new MifosPage(selenium)).logout();
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void verifyTransactionHistoryWithDoubleEntryAccounting() throws DatabaseUnitException, SQLException, IOException, URISyntaxException{
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
+        CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
+        CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
+        searchParameters.setLoanProduct("WeeklyFlatLoanWithOneTimeFees");
+        searchParameters.setSearchString("Stu1232993852651");
+        submitAccountParameters.setAmount("2000.0");
+        submitAccountParameters.setInterestRate("3.0");
+        submitAccountParameters.setNumberOfInstallments("11");
+        //When
+        LoanAccountPage loanAccountPage = loanTestHelper.createLoanAccount(searchParameters, submitAccountParameters);
+        String loanId = loanAccountPage.getAccountId();
+        EditLoanAccountStatusParameters params = new EditLoanAccountStatusParameters();
+        params.setStatus(EditLoanAccountStatusParameters.APPROVED);
+        params.setNote("Approved.");
+        loanTestHelper.changeLoanAccountStatus(loanId, params);
+        //Then
+        loanTestHelper.verifyLastEntryInStatusHistory(loanId, loanTestHelper.PENDING_APPROVAL, loanTestHelper.APPROVED);
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
