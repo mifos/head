@@ -20,27 +20,7 @@ package org.mifos.accounts.loan.business.service;
  * explanation of the license and how it is applied.
  */
 
-import static java.util.Arrays.asList;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-
 import junit.framework.Assert;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -54,6 +34,7 @@ import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
 import org.mifos.accounts.loan.business.matchers.OriginalLoanScheduleEntitiesMatcher;
 import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
+import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallmentBuilder;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
@@ -68,10 +49,33 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.platform.validations.ErrorEntry;
+import org.mifos.platform.validations.Errors;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+
+import static java.util.Arrays.asList;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LoanBusinessServiceTest {
@@ -412,6 +416,37 @@ public class LoanBusinessServiceTest {
         Assert.assertEquals(expected,loanScheduleEntities);
     }
 
+    @Test
+    public void shouldComputeExtraInterestAsOfDateLaterThanLastPaymentDate() {
+        Date asOfDate = TestUtils.getDate(10, 9, 2010);
+        Date lastPaymentDate = TestUtils.getDate(1, 9, 2010);
+        AccountPaymentEntity accountPaymentEntity = mock(AccountPaymentEntity.class);
+        when(accountPaymentEntity.getPaymentDate()).thenReturn(lastPaymentDate);
+        when(loanBO.findMostRecentNonzeroPaymentByPaymentDate()).thenReturn(accountPaymentEntity);
+        when(loanBO.isDecliningBalanceInterestRecalculation()).thenReturn(true);
+        Errors errors = loanBusinessService.computeExtraInterest(loanBO, asOfDate);
+        assertThat(errors, is(not(nullValue())));
+        assertThat(errors.hasErrors(), is(false));
+        verify(scheduleCalculatorAdaptor).computeExtraInterest(loanBO, asOfDate);
+    }
+
+    @Test
+    public void shouldComputeExtraInterestAsOfDateEarlierThanLastPaymentDate() {
+        Date asOfDate = TestUtils.getDate(1, 9, 2010);
+        Date lastPaymentDate = TestUtils.getDate(10, 9, 2010);
+        AccountPaymentEntity accountPaymentEntity = mock(AccountPaymentEntity.class);
+        when(accountPaymentEntity.getPaymentDate()).thenReturn(lastPaymentDate);
+        when(loanBO.findMostRecentNonzeroPaymentByPaymentDate()).thenReturn(accountPaymentEntity);
+        when(loanBO.isDecliningBalanceInterestRecalculation()).thenReturn(true);
+        Errors errors = loanBusinessService.computeExtraInterest(loanBO, asOfDate);
+        assertThat(errors, is(not(nullValue())));
+        assertThat(errors.hasErrors(), is(true));
+        List<ErrorEntry> errorEntries = errors.getErrorEntries();
+        assertThat(errorEntries, is(not(nullValue())));
+        assertThat(errorEntries.size(), is(1));
+        assertThat(errorEntries.get(0).getErrorCode(), is(LoanConstants.CANNOT_VIEW_REPAYMENT_SCHEDULE));
+        verify(scheduleCalculatorAdaptor, never()).computeExtraInterest(loanBO, asOfDate);
+    }
 
     private void assertInstallmentDueDate(RepaymentScheduleInstallment installment, String expectedDueDate) {
         String actualDueDate = DateUtils.getDBtoUserFormatString(installment.getDueDateValue(), locale);

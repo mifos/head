@@ -69,6 +69,7 @@ import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -85,6 +86,7 @@ import org.mifos.security.util.UserContext;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -1617,6 +1619,10 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
 
     public BigDecimal getLoanAmountAsBigDecimal() {
         return loanAmountValue.getAmount();
+    }
+
+    public void resetScheduleViewDate() {
+        setScheduleViewDate(new SimpleDateFormat("dd/MM/yyyy", Locale.US).format(new DateTimeService().getCurrentJavaSqlDate()));
     }
 
 
