@@ -12,13 +12,13 @@
 
     <bean id="legacyRolesPermissions" class="org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsDao"/>
 
-    <bean name="legacyAccountDao" class="org.mifos.accounts.persistence.LegacyAccountDao"/>
+    <bean id="legacyAccountDao" class="org.mifos.accounts.persistence.LegacyAccountDao"/>
 
-    <bean name="legacyLoanDao" class="org.mifos.accounts.loan.persistance.LegacyLoanDao"/>
+    <bean id="legacyLoanDao" class="org.mifos.accounts.loan.persistance.LegacyLoanDao"/>
 
-    <bean name="legacyAcceptedPaymentTypeDao" class="org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentTypeDao"/>
+    <bean id="legacyAcceptedPaymentTypeDao" class="org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentTypeDao"/>
 
-    <bean name="personnelPersistence" class="org.mifos.customers.personnel.persistence.PersonnelPersistence"/>
+    <bean id="legacyPersonnelDao" class="org.mifos.customers.personnel.persistence.LegacyPersonnelDao"/>
 
     <bean id="surveysPersistence" class="org.mifos.customers.surveys.persistence.SurveysPersistence" />
 

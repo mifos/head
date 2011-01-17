@@ -48,7 +48,7 @@ import org.mifos.config.FiscalCalendarRules;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.DatabaseDependentTest;
@@ -172,7 +172,7 @@ public class MifosIntegrationTestCase {
      */
     protected PersonnelBO getSystemUser() {
         try {
-            return new PersonnelPersistence().getPersonnel(PersonnelConstants.SYSTEM_USER);
+            return new LegacyPersonnelDao().getPersonnel(PersonnelConstants.SYSTEM_USER);
         } catch (PersistenceException e) {
             throw new RuntimeException(e);
         }
@@ -183,7 +183,7 @@ public class MifosIntegrationTestCase {
      */
     protected PersonnelBO getTestUser() {
         try {
-            return new PersonnelPersistence().getPersonnel(PersonnelConstants.TEST_USER);
+            return new LegacyPersonnelDao().getPersonnel(PersonnelConstants.TEST_USER);
         } catch (PersistenceException e) {
             throw new RuntimeException(e);
         }

@@ -41,7 +41,7 @@ import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.CustomFieldDto;
@@ -173,7 +173,7 @@ public class AddGroupMembershipActionStrutsTest extends MifosMockStrutsTestCase 
 
     private void createAndSetClientInSession() throws Exception {
         OfficeBO office = new OfficePersistence().getOffice(TestObjectFactory.HEAD_OFFICE);
-        PersonnelBO personnel = new PersonnelPersistence().getPersonnel(PersonnelConstants.TEST_USER);
+        PersonnelBO personnel = new LegacyPersonnelDao().getPersonnel(PersonnelConstants.TEST_USER);
         meeting = getMeeting();
         ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto(NameType.CLIENT.getValue(), 1, "Client", "", "1", "");
         clientNameDetailDto.setNames(ClientRules.getNameSequence());

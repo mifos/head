@@ -37,7 +37,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.domain.builders.MifosUserBuilder;
@@ -183,7 +183,7 @@ public class ApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Test
     public void testApplyAdjustment() throws Exception {
-        PersonnelBO personnel = new PersonnelPersistence().getPersonnel(PersonnelConstants.SYSTEM_USER);
+        PersonnelBO personnel = new LegacyPersonnelDao().getPersonnel(PersonnelConstants.SYSTEM_USER);
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         loan = (LoanBO) getLoanAccount();
         applyPayment(loan, 212);
@@ -233,7 +233,7 @@ public class ApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Test
     public void testApplyAdjustmentWhenAccountsSecondLastStateWasBadStanding() throws Exception {
-        PersonnelBO personnel = new PersonnelPersistence().getPersonnel(PersonnelConstants.SYSTEM_USER);
+        PersonnelBO personnel = new LegacyPersonnelDao().getPersonnel(PersonnelConstants.SYSTEM_USER);
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         loan = (LoanBO) getLoanAccount();
         applyPayment(loan, 212);

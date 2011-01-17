@@ -66,7 +66,7 @@ import org.mifos.customers.group.persistence.GroupPersistence;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
@@ -1299,7 +1299,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
 
     private void createClientForAuditLog() throws Exception {
         OfficeBO office = new OfficePersistence().getOffice(TestObjectFactory.HEAD_OFFICE);
-        PersonnelBO personnel = new PersonnelPersistence().getPersonnel(PersonnelConstants.TEST_USER);
+        PersonnelBO personnel = new LegacyPersonnelDao().getPersonnel(PersonnelConstants.TEST_USER);
         meeting = getMeeting();
         Integer salutation = 47;
         Integer ethincity = 218;
@@ -1543,7 +1543,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
 
     private void createAndSetClientInSession() throws Exception {
         OfficeBO office = new OfficePersistence().getOffice(TestObjectFactory.HEAD_OFFICE);
-        PersonnelBO personnel = new PersonnelPersistence().getPersonnel(PersonnelConstants.TEST_USER);
+        PersonnelBO personnel = new LegacyPersonnelDao().getPersonnel(PersonnelConstants.TEST_USER);
         meeting = getMeeting();
         ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto(NameType.CLIENT.getValue(), 1, "Client", "", "1", "");
         clientNameDetailDto.setNames(ClientRules.getNameSequence());
@@ -1650,8 +1650,8 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         meeting = new MeetingBO(WeekDay.MONDAY, TestObjectFactory.EVERY_WEEK, new Date(), MeetingType.CUSTOMER_MEETING,
                 "Delhi");
         group = new GroupBO(userContext, "groupName", CustomerStatus.GROUP_PENDING, "1234", false, null, null, null,
-                null, new PersonnelPersistence().getPersonnel(Short.valueOf("3")), new OfficePersistence()
-                        .getOffice(Short.valueOf("3")), meeting, new PersonnelPersistence().getPersonnel(Short
+                null, new LegacyPersonnelDao().getPersonnel(Short.valueOf("3")), new OfficePersistence()
+                        .getOffice(Short.valueOf("3")), meeting, new LegacyPersonnelDao().getPersonnel(Short
                         .valueOf("3")));
         new GroupPersistence().saveGroup(group);
         StaticHibernateUtil.flushAndClearSession();

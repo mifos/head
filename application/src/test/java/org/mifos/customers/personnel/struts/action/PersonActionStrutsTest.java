@@ -39,7 +39,7 @@ import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.personnel.struts.actionforms.PersonActionForm;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
@@ -291,7 +291,7 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(SessionUtils.getAttribute(PersonnelConstants.MARITAL_STATUS_LIST, request));
         List languages = (List) SessionUtils.getAttribute(PersonnelConstants.LANGUAGE_LIST, request);
         Assert.assertNotNull(languages);
-        Assert.assertEquals(new PersonnelPersistence().getAvailableLanguages().size(), languages.size());
+        Assert.assertEquals(new LegacyPersonnelDao().getAvailableLanguages().size(), languages.size());
         Assert.assertNotNull(SessionUtils.getAttribute(PersonnelConstants.ROLES_LIST, request));
         Assert.assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request));
     }

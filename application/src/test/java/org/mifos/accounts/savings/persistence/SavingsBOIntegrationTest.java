@@ -80,7 +80,7 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.screen.SavingsRecentActivityDto;
@@ -122,7 +122,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
     public void setUp() throws Exception {
         enableCustomWorkingDays();
         userContext = TestUtils.makeUser();
-        createdBy = new PersonnelPersistence().getPersonnel(userContext.getId());
+        createdBy = new LegacyPersonnelDao().getPersonnel(userContext.getId());
         currency = Configuration.getInstance().getSystemConfig().getCurrency();
     }
 
@@ -983,7 +983,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
     private void addNotes(final String comment) throws Exception {
         java.sql.Date currentDate = new java.sql.Date(System.currentTimeMillis());
-        PersonnelBO personnelBO = new PersonnelPersistence().getPersonnel(userContext.getId());
+        PersonnelBO personnelBO = new LegacyPersonnelDao().getPersonnel(userContext.getId());
         AccountNotesEntity accountNotesEntity = new AccountNotesEntity(currentDate, comment, personnelBO, savings);
         savings.addAccountNotes(accountNotesEntity);
         savings.update();

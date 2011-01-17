@@ -43,7 +43,7 @@ import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
@@ -156,7 +156,7 @@ public class LoanBOForReversalIntegrationTest extends MifosIntegrationTestCase {
     private void adjustLastPayment() throws AccountException {
         loan = retrieveLoanAccount();
         loan.setUserContext(userContext);
-        PersonnelBO loggedInUser = new PersonnelPersistence().findPersonnelById(userContext.getId());
+        PersonnelBO loggedInUser = new LegacyPersonnelDao().findPersonnelById(userContext.getId());
         loan.adjustPmnt("loan account has been adjusted by test code", loggedInUser);
         StaticHibernateUtil.flushSession();
     }

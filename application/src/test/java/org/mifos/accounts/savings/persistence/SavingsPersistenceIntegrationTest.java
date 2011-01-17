@@ -54,7 +54,7 @@ import org.mifos.config.business.Configuration;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.checklist.business.AccountCheckListBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
@@ -182,7 +182,7 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
         try {
             SavingsTestHelper helper = new SavingsTestHelper();
             createInitialObjects();
-            PersonnelBO createdBy = new PersonnelPersistence().getPersonnel(userContext.getId());
+            PersonnelBO createdBy = new LegacyPersonnelDao().getPersonnel(userContext.getId());
             savingsOffering = helper.createSavingsOffering("effwe", "231");
             savings = new SavingsBO(userContext, savingsOffering, group, AccountState.SAVINGS_ACTIVE, savingsOffering
                     .getRecommendedAmount(), null);

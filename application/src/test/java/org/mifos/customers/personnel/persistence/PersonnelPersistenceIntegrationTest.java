@@ -79,7 +79,7 @@ public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTestCas
     private OfficeBO createdBranchOffice;
     private PersonnelBO personnel;
     private Name name;
-    private final PersonnelPersistence personnelPersistence = new PersonnelPersistence();
+    private final LegacyPersonnelDao personnelPersistence = new LegacyPersonnelDao();
     private final OfficePersistence officePersistence = new OfficePersistence();
 
     private CustomerService customerService = ApplicationContextProvider.getBean(CustomerService.class);
@@ -186,7 +186,7 @@ public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTestCas
         createInitialObjects(branchOffice.getOfficeId(), personnel.getPersonnelId());
 
         PersonnelNotesEntity personnelNotes = new PersonnelNotesEntity("Personnel notes created",
-                new PersonnelPersistence().getPersonnel(PersonnelConstants.SYSTEM_USER), personnel);
+                new LegacyPersonnelDao().getPersonnel(PersonnelConstants.SYSTEM_USER), personnel);
         personnel.addNotes(PersonnelConstants.SYSTEM_USER, personnelNotes);
         StaticHibernateUtil.flushSession();
         StaticHibernateUtil.flushSession();
@@ -308,7 +308,7 @@ public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTestCas
 
     @Test
     public void testGetActiveBranchManagerUnderOffice() throws Exception {
-        List<PersonnelBO> activeBranchManagersUnderOffice = new PersonnelPersistence()
+        List<PersonnelBO> activeBranchManagersUnderOffice = new LegacyPersonnelDao()
                 .getActiveBranchManagersUnderOffice(OFFICE_WITH_BRANCH_MANAGER, legacyRolesPermissionsDao
                         .getRole(Short.valueOf("1")));
         Assert.assertNotNull(activeBranchManagersUnderOffice);

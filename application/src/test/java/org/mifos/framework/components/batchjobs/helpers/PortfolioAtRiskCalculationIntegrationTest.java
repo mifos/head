@@ -49,7 +49,7 @@ import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
@@ -133,7 +133,7 @@ public class PortfolioAtRiskCalculationIntegrationTest extends MifosIntegrationT
         Set<AccountActionDateEntity> actionDateEntities = loan.getAccountActionDates();
         LoanScheduleEntity[] paymentsArray = LoanBOTestUtils
                 .getSortedAccountActionDateEntity(actionDateEntities, 6);
-        PersonnelBO personnelBO = new PersonnelPersistence().getPersonnel(TestObjectFactory.getContext().getId());
+        PersonnelBO personnelBO = new LegacyPersonnelDao().getPersonnel(TestObjectFactory.getContext().getId());
         LoanScheduleEntity loanSchedule = paymentsArray[0];
         Short paymentTypeId = PaymentTypes.CASH.getValue();
         PaymentData paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule.getActionDate());

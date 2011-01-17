@@ -42,7 +42,7 @@ import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.domain.builders.CenterBuilder;
 import org.mifos.domain.builders.ClientBuilder;
 import org.mifos.domain.builders.GroupBuilder;
@@ -126,7 +126,7 @@ public class CustomerTrxnDetailEntityIntegrationTest extends MifosIntegrationTes
         accountPaymentEntity.addAccountTrxn(accountTrxnEntity);
         AccountTestUtils.addAccountPayment(accountPaymentEntity, customerAccountBO);
 
-        PersonnelBO loggedInUser = new PersonnelPersistence().getPersonnel(userContext.getId());
+        PersonnelBO loggedInUser = new LegacyPersonnelDao().getPersonnel(userContext.getId());
         for (AccountTrxnEntity accntTrxn : customerAccountBO.findMostRecentPaymentByPaymentDate().getAccountTrxns()) {
             AccountTrxnEntity reverseAccntTrxn = ((CustomerTrxnDetailEntity) accntTrxn).generateReverseTrxn(
                     loggedInUser, "adjustment");

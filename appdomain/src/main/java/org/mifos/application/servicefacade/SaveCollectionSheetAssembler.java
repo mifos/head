@@ -46,7 +46,7 @@ import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.persistence.ClientPersistence;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -62,7 +62,7 @@ public class SaveCollectionSheetAssembler {
 
     private final CustomerPersistence customerPersistence = new CustomerPersistence();
     private final ClientPersistence clientPersistence = new ClientPersistence();
-    private final PersonnelPersistence personnelPersistence = new PersonnelPersistence();
+    private final LegacyPersonnelDao personnelPersistence = new LegacyPersonnelDao();
 
     private final ClientAttendanceDao clientAttendanceDao;
     private final LegacyLoanDao legacyLoanDao;

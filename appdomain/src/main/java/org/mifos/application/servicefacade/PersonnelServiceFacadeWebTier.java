@@ -48,7 +48,7 @@ import org.mifos.customers.personnel.business.PersonnelRoleEntity;
 import org.mifos.customers.personnel.business.PersonnelStatusEntity;
 import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.personnel.util.helpers.PersonnelStatus;
@@ -311,7 +311,7 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
     private void verifyFields(final String userName, final String governmentIdNumber, final java.util.Date dob, final String displayName)
             throws ValidationException, PersistenceException {
 
-        PersonnelPersistence persistence = new PersonnelPersistence();
+        LegacyPersonnelDao persistence = new LegacyPersonnelDao();
         if (StringUtils.isBlank(userName)) {
             throw new ValidationException(PersonnelConstants.ERRORMANDATORY);
         }
@@ -420,7 +420,7 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
 
         try {
             if (oldUserDetails.isActive() && newStatus.equals(PersonnelStatus.INACTIVE) && newLevel.equals(PersonnelLevel.LOAN_OFFICER)) {
-                if (new PersonnelPersistence().getActiveChildrenForLoanOfficer(oldUserDetails.getPersonnelId(), oldUserDetails.getOffice().getOfficeId())) {
+                if (new LegacyPersonnelDao().getActiveChildrenForLoanOfficer(oldUserDetails.getPersonnelId(), oldUserDetails.getOffice().getOfficeId())) {
                     throw new BusinessRuleException(PersonnelConstants.STATUS_CHANGE_EXCEPTION);
                 }
             } else if (oldUserDetails.isInActive() && newStatus.equals(PersonnelStatus.ACTIVE) && !newOffice.isActive()) {
@@ -444,7 +444,7 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
                 }
             }
 
-            if (new PersonnelPersistence().getActiveChildrenForLoanOfficer(oldUserDetails.getPersonnelId(), oldUserDetails.getOffice().getOfficeId())) {
+            if (new LegacyPersonnelDao().getActiveChildrenForLoanOfficer(oldUserDetails.getPersonnelId(), oldUserDetails.getOffice().getOfficeId())) {
                 Object values[] = new Object[1];
                 values[0] = oldUserDetails.getGlobalPersonnelNum();
                 throw new BusinessRuleException(PersonnelConstants.TRANSFER_NOT_POSSIBLE_EXCEPTION, values);
@@ -458,7 +458,7 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
         try {
             if (oldUserDetails.isLoanOfficer() && newLevel.equals(PersonnelLevel.NON_LOAN_OFFICER)) {
 
-                if (new PersonnelPersistence().getAllChildrenForLoanOfficer(oldUserDetails.getPersonnelId(), oldUserDetails.getOffice().getOfficeId())) {
+                if (new LegacyPersonnelDao().getAllChildrenForLoanOfficer(oldUserDetails.getPersonnelId(), oldUserDetails.getOffice().getOfficeId())) {
                     throw new BusinessRuleException(PersonnelConstants.HIERARCHY_CHANGE_EXCEPTION);
                 }
             } else if (oldUserDetails.isNonLoanOfficer()

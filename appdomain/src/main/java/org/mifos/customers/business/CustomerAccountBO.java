@@ -67,7 +67,7 @@ import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
@@ -538,7 +538,7 @@ public class CustomerAccountBO extends AccountBO {
         try {
             PersonnelBO personnel = null;
             if (personnelId != null) {
-                personnel = new PersonnelPersistence().getPersonnel(personnelId);
+                personnel = new LegacyPersonnelDao().getPersonnel(personnelId);
             }
             return new CustomerActivityEntity(this, personnel, amount, description, new DateTimeService()
                     .getCurrentJavaDateTime());
@@ -836,7 +836,7 @@ public class CustomerAccountBO extends AccountBO {
     private void updateCustomerActivity(final Short chargeType, final Money charge, final String comments)
             throws AccountException {
         try {
-            PersonnelBO personnel = new PersonnelPersistence().getPersonnel(getUserContext().getId());
+            PersonnelBO personnel = new LegacyPersonnelDao().getPersonnel(getUserContext().getId());
             CustomerActivityEntity customerActivityEntity = null;
             if (chargeType != null && chargeType.equals(Short.valueOf(AccountConstants.MISC_PENALTY))) {
                 customerActivityEntity = new CustomerActivityEntity(this, personnel, charge,
@@ -1122,7 +1122,7 @@ public class CustomerAccountBO extends AccountBO {
         nextInstallment.addAccountFeesAction(accountFeesaction);
         String description = fee.getFees().getFeeName() + " " + AccountConstants.FEES_APPLIED;
         try {
-            addCustomerActivity(new CustomerActivityEntity(this, new PersonnelPersistence().getPersonnel(Short
+            addCustomerActivity(new CustomerActivityEntity(this, new LegacyPersonnelDao().getPersonnel(Short
                     .valueOf("1")), fee.getAccountFeeAmount(), description, new DateTimeService()
                     .getCurrentJavaDateTime()));
         } catch (PersistenceException e) {

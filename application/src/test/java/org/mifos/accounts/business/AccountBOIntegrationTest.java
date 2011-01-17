@@ -53,7 +53,7 @@ import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.dto.screen.TransactionHistoryDto;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -307,7 +307,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         loan.setUserContext(TestUtils.makeUser());
         List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
         accntActionDates.addAll(loan.getAccountActionDates());
-        PersonnelBO personnel = new PersonnelPersistence().getPersonnel(Short.valueOf("2"));
+        PersonnelBO personnel = new LegacyPersonnelDao().getPersonnel(Short.valueOf("2"));
         PaymentData accountPaymentDataView = TestObjectFactory.getLoanAccountPaymentData(accntActionDates, TestUtils
                 .createMoney(100), null, personnel, "receiptNum", Short.valueOf("1"), currentDate, currentDate);
         IntegrationTestObjectMother.applyAccountPayment(loan, accountPaymentDataView);
@@ -368,7 +368,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         groupLoan.setUserContext(TestUtils.makeUser());
 
         java.sql.Date currentDate = new java.sql.Date(System.currentTimeMillis());
-        PersonnelBO personnelBO = new PersonnelPersistence().getPersonnel(TestUtils.makeUser().getId());
+        PersonnelBO personnelBO = new LegacyPersonnelDao().getPersonnel(TestUtils.makeUser().getId());
         AccountNotesEntity accountNotesEntity = new AccountNotesEntity(currentDate, "account updated", personnelBO,
                 groupLoan);
         groupLoan.addAccountNotes(accountNotesEntity);

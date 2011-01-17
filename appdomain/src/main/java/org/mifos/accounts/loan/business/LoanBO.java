@@ -112,7 +112,7 @@ import org.mifos.customers.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupPerformanceHistoryEntity;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.screen.LoanAccountDetailDto;
@@ -813,7 +813,7 @@ public class LoanBO extends AccountBO {
     protected void updateAccountActivity(final Money principal, final Money interest, final Money fee,
             final Money penalty, final Short personnelId, final String description) throws AccountException {
         try {
-            PersonnelBO personnel = new PersonnelPersistence().getPersonnel(personnelId);
+            PersonnelBO personnel = new LegacyPersonnelDao().getPersonnel(personnelId);
             LoanActivityEntity loanActivity = new LoanActivityEntity(this, personnel, description, principal,
                     loanSummary.getOriginalPrincipal().subtract(loanSummary.getPrincipalPaid()), interest, loanSummary
                             .getOriginalInterest().subtract(loanSummary.getInterestPaid()), fee, loanSummary
@@ -1217,7 +1217,7 @@ public class LoanBO extends AccountBO {
                                    final String paymentTypeId, final Short personnelId,
                                    boolean waiveInterest, Money interestDue) throws AccountException {
         try {
-            PersonnelBO currentUser = new PersonnelPersistence().getPersonnel(personnelId);
+            PersonnelBO currentUser = new LegacyPersonnelDao().getPersonnel(personnelId);
             this.setUpdatedBy(personnelId);
             Date transactionDate = new DateTimeService().getCurrentJavaDateTime();
             this.setUpdatedDate(transactionDate);
@@ -1241,7 +1241,7 @@ public class LoanBO extends AccountBO {
             AccountStateEntity newAccountState = legacyMasterDao.getPersistentObject(
                     AccountStateEntity.class, AccountStates.LOANACC_OBLIGATIONSMET);
             addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(getAccountState(), newAccountState,
-                    new PersonnelPersistence().getPersonnel(personnelId), this));
+                    new LegacyPersonnelDao().getPersonnel(personnelId), this));
             setAccountState(legacyMasterDao.getPersistentObject(AccountStateEntity.class,
                     AccountStates.LOANACC_OBLIGATIONSMET));
             setClosedDate(transactionDate);
@@ -1318,7 +1318,7 @@ public class LoanBO extends AccountBO {
     protected void writeOff() throws AccountException {
         try {
             Short personnelId = this.getUserContext().getId();
-            PersonnelBO currentUser = new PersonnelPersistence().getPersonnel(personnelId);
+            PersonnelBO currentUser = new LegacyPersonnelDao().getPersonnel(personnelId);
             Date transactionDate = new DateTimeService().getCurrentJavaDateTime();
             this.setUpdatedBy(personnelId);
             this.setUpdatedDate(transactionDate);
@@ -1343,7 +1343,7 @@ public class LoanBO extends AccountBO {
     protected void reschedule() throws AccountException {
         try {
             Short personnelId = this.getUserContext().getId();
-            PersonnelBO currentUser = new PersonnelPersistence().getPersonnel(personnelId);
+            PersonnelBO currentUser = new LegacyPersonnelDao().getPersonnel(personnelId);
             this.setUpdatedBy(personnelId);
             Date transactionDate = new DateTimeService().getCurrentJavaDateTime();
             this.setUpdatedDate(transactionDate);
@@ -1498,7 +1498,7 @@ public class LoanBO extends AccountBO {
     public void save() throws AccountException {
         try {
             this.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(this.getAccountState(), this
-                    .getAccountState(), new PersonnelPersistence().getPersonnel(userContext.getId()), this));
+                    .getAccountState(), new LegacyPersonnelDao().getPersonnel(userContext.getId()), this));
             getlegacyLoanDao().createOrUpdate(this);
             this.globalAccountNum = generateId(userContext.getBranchGlobalNum());
             getlegacyLoanDao().createOrUpdate(this);
@@ -1825,7 +1825,7 @@ public class LoanBO extends AccountBO {
             }
 
             try {
-                PersonnelBO personnel = new PersonnelPersistence().getPersonnel(getUserContext().getId());
+                PersonnelBO personnel = new LegacyPersonnelDao().getPersonnel(getUserContext().getId());
                 addLoanActivity(buildLoanActivity(reversedTrxns, personnel, AccountConstants.LOAN_ADJUSTED, DateUtils.getCurrentDateWithoutTimeStamp()));
             } catch (PersistenceException e) {
                 throw new AccountException(e);
@@ -2315,7 +2315,7 @@ public class LoanBO extends AccountBO {
     private void updateLoanActivity(final Short chargeType, final Money charge, final String comments)
             throws AccountException {
         try {
-            PersonnelBO personnel = new PersonnelPersistence().getPersonnel(getUserContext().getId());
+            PersonnelBO personnel = new LegacyPersonnelDao().getPersonnel(getUserContext().getId());
             LoanActivityEntity loanActivityEntity = null;
             if (chargeType != null && chargeType.equals(Short.valueOf(AccountConstants.MISC_PENALTY))) {
                 loanActivityEntity = new LoanActivityEntity(this, personnel, new Money(getCurrency()), new Money(

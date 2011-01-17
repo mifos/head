@@ -46,7 +46,7 @@ import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.dto.domain.CustomFieldDto;
@@ -72,7 +72,7 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
     @Before
     public void setUp() throws Exception {
         officeBo = officePersistence.getOffice(officeId);
-        personnelBo = new PersonnelPersistence().getPersonnel(personnelId);
+        personnelBo = new LegacyPersonnelDao().getPersonnel(personnelId);
     }
 
     @After
@@ -129,7 +129,7 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
         meeting = getMeeting();
         List<FeeDto> fees = getFees();
         center = new CenterBO(TestUtils.makeUser(), name, null, getCustomFields(), fees, externalId, mfiJoiningDate,
-                new OfficePersistence().getOffice(officeId), meeting, new PersonnelPersistence()
+                new OfficePersistence().getOffice(officeId), meeting, new LegacyPersonnelDao()
                         .getPersonnel(personnelId), new CustomerPersistence());
         new CenterPersistence().saveCenter(center);
         StaticHibernateUtil.flushSession();
@@ -173,7 +173,7 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
 
         MeetingBO meeting = new MeetingBO(WeekDay.THURSDAY, (short) 1, startDate, MeetingType.CUSTOMER_MEETING, "Delhi");
 
-        PersonnelBO systemUser = new PersonnelPersistence().getPersonnel(PersonnelConstants.SYSTEM_USER);
+        PersonnelBO systemUser = new LegacyPersonnelDao().getPersonnel(PersonnelConstants.SYSTEM_USER);
         center = new CenterBO(TestUtils.makeUser(), "Center", null, null, null, null,
                 startDate, branch1, meeting, systemUser, new CustomerPersistence());
         StaticHibernateUtil.getSessionTL().save(center);

@@ -89,7 +89,7 @@ import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.dto.domain.*;
 import org.mifos.dto.screen.*;
@@ -586,7 +586,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                                 loan, loanActionForm.isVariableInstallmentsAllowed(), loanActionForm.getLoanAmountValue(),
                                 loanActionForm.getInterestDoubleValue()), userContext.getPreferredLocale());
 
-                PersonnelBO personnel = new PersonnelPersistence().getPersonnel(userContext.getId());
+                PersonnelBO personnel = new LegacyPersonnelDao().getPersonnel(userContext.getId());
                 if (personnel == null) {
                     throw new IllegalArgumentException("bad UserContext id");
                 }
@@ -981,7 +981,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             redoLoan.setCollateralNote(collateralNote);
             redoLoan.setCollateralTypeId(selectedCollateralType);
 
-            PersonnelBO user = new PersonnelPersistence().getPersonnel(userContext.getId());
+            PersonnelBO user = new LegacyPersonnelDao().getPersonnel(userContext.getId());
 
             redoLoan.changeStatus(AccountState.LOAN_APPROVED, null, "Automatic Status Update (Redo Loan)", user);
 

@@ -50,7 +50,7 @@ import org.mifos.config.business.Configuration;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.domain.builders.MifosUserBuilder;
 import org.mifos.framework.MifosMockStrutsTestCase;
@@ -292,7 +292,7 @@ public class SavingsClosureActionStrutsTest extends MifosMockStrutsTestCase {
         savings = helper.createSavingsAccount("000X00000000017", savingsOffering, group,
                 AccountStates.SAVINGS_ACC_APPROVED, userContext);
         SavingBOTestUtils.setActivationDate(savings, helper.getDate("20/05/2006"));
-        PersonnelBO createdBy = new PersonnelPersistence().getPersonnel(userContext.getId());
+        PersonnelBO createdBy = new LegacyPersonnelDao().getPersonnel(userContext.getId());
         AccountPaymentEntity payment1 = helper.createAccountPaymentToPersist(savings,
                 TestUtils.createMoney( "1000.0"), TestUtils.createMoney("1000.0"), helper
                 .getDate("30/05/2006"), AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings, createdBy, group);

@@ -35,7 +35,7 @@ import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -83,7 +83,7 @@ public class WebTierAccountServiceFacadeTest {
     private AccountTypeEntity accountTypeEntity;
 
     @Mock
-    private PersonnelPersistence personnelPersistence;
+    private LegacyPersonnelDao personnelPersistence;
     @Mock
     private LegacyAccountDao legacyAccountDao;
     @Mock

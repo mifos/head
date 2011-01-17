@@ -39,7 +39,7 @@ import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.api.CustomerLevel;
@@ -57,7 +57,7 @@ import org.mifos.security.util.UserContext;
 
 @Deprecated
 public class CenterPersistence extends LegacyGenericDao {
-    private final PersonnelPersistence personnelPersistence = new PersonnelPersistence();
+    private final LegacyPersonnelDao personnelPersistence = new LegacyPersonnelDao();
     private final OfficePersistence officePersistence = new OfficePersistence();
 
     public CenterPersistence() {
@@ -90,7 +90,7 @@ public class CenterPersistence extends LegacyGenericDao {
         QueryInputs queryInputs = new QueryInputs();
         QueryResult queryResult = QueryFactory.getQueryResult(PersonnelConstants.USER_LIST);
 
-        PersonnelBO user = new PersonnelPersistence().getPersonnel(userId);
+        PersonnelBO user = new LegacyPersonnelDao().getPersonnel(userId);
         String officeSearchId = user.getOffice().getSearchId();
 
         namedQuery[0] = NamedQueryConstants.CENTER_SEARCH_COUNT;

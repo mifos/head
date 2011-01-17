@@ -47,7 +47,7 @@ import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
@@ -186,7 +186,7 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
                 null, new PaymentTypeEntity(Short.valueOf("1")), new Date(System.currentTimeMillis()));
         FinancialBusinessService financialBusinessService = new FinancialBusinessService();
         AccountActionDateEntity accountActionDateEntity = loan.getAccountActionDate(Short.valueOf("1"));
-        PersonnelBO personnel = new PersonnelPersistence().getPersonnel(loan.getUserContext().getId());
+        PersonnelBO personnel = new LegacyPersonnelDao().getPersonnel(loan.getUserContext().getId());
         LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPaymentEntity,
                 AccountActionTypes.WRITEOFF, accountActionDateEntity.getInstallmentId(), accountActionDateEntity
                         .getActionDate(), personnel, new Date(System.currentTimeMillis()),
@@ -224,7 +224,7 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
                 null, new PaymentTypeEntity(Short.valueOf("1")), new Date(System.currentTimeMillis()));
         FinancialBusinessService financialBusinessService = new FinancialBusinessService();
         AccountActionDateEntity accountActionDateEntity = loan.getAccountActionDate(Short.valueOf("1"));
-        PersonnelBO personnel = new PersonnelPersistence().getPersonnel(loan.getUserContext().getId());
+        PersonnelBO personnel = new LegacyPersonnelDao().getPersonnel(loan.getUserContext().getId());
         LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPaymentEntity,
                 AccountActionTypes.LOAN_RESCHEDULED, accountActionDateEntity.getInstallmentId(),
                 accountActionDateEntity.getActionDate(), personnel, new Date(System.currentTimeMillis()),

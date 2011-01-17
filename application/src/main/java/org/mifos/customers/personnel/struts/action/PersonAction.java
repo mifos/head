@@ -53,7 +53,7 @@ import org.mifos.customers.personnel.business.PersonnelLevelEntity;
 import org.mifos.customers.personnel.business.PersonnelRoleEntity;
 import org.mifos.customers.personnel.business.PersonnelStatusEntity;
 import org.mifos.customers.personnel.exceptions.PersonnelException;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.personnel.struts.actionforms.PersonActionForm;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
@@ -552,7 +552,7 @@ public class PersonAction extends SearchAction {
                 .getOfficeName(), request);
         searchString = org.mifos.framework.util.helpers.SearchUtils.normalizeSearchString(searchString);
         actionForward = super.search(mapping, form, request, response);
-        SessionUtils.setQueryResultAttribute(Constants.SEARCH_RESULTS, new PersonnelPersistence().search(searchString,
+        SessionUtils.setQueryResultAttribute(Constants.SEARCH_RESULTS, new LegacyPersonnelDao().search(searchString,
                 userContext.getId()), request);
         return actionForward;
     }

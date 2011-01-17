@@ -39,7 +39,7 @@ import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelLevelEntity;
 import org.mifos.customers.personnel.business.PersonnelStatusEntity;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.dto.domain.CustomerDto;
@@ -59,7 +59,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServiceFacade {
 
     private OfficePersistence officePersistence = new OfficePersistence();
-    private PersonnelPersistence personnelPersistence = new PersonnelPersistence();
+    private LegacyPersonnelDao personnelPersistence = new LegacyPersonnelDao();
     private CustomerPersistence customerPersistence = new CustomerPersistence();
     private final CollectionSheetService collectionSheetService;
     private final CollectionSheetDtoTranslator collectionSheetTranslator;
@@ -75,7 +75,7 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
     }
 
     public CollectionSheetServiceFacadeWebTier(final OfficePersistence officePersistence,
-            final LegacyMasterDao legacyMasterDao, final PersonnelPersistence personnelPersistence,
+            final LegacyMasterDao legacyMasterDao, final LegacyPersonnelDao personnelPersistence,
             final CustomerPersistence customerPersistence, final CollectionSheetService collectionSheetService,
             final CollectionSheetDtoTranslator collectionSheetTranslator) {
         this.officePersistence = officePersistence;

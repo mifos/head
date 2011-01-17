@@ -155,7 +155,7 @@ import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.office.util.helpers.OperationMode;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.util.helpers.CustomerAccountDto;
@@ -303,7 +303,7 @@ public class TestObjectFactory {
         CenterBO center;
         try {
             center = new CenterBO(TestUtils.makeUserWithLocales(), customerName, null, null, fees, null, null,
-                    new OfficePersistence().getOffice(officeId), meeting, new PersonnelPersistence()
+                    new OfficePersistence().getOffice(officeId), meeting, new LegacyPersonnelDao()
                             .getPersonnel(personnelId), new CustomerPersistence());
             new CenterPersistence().saveCenter(center);
             StaticHibernateUtil.flushSession();
@@ -390,7 +390,7 @@ public class TestObjectFactory {
         GroupBO group;
         try {
             group = new GroupBO(TestUtils.makeUserWithLocales(), customerName, customerStatus, externalId, trained,
-                    trainedDate, address, customFields, fees, new PersonnelPersistence().getPersonnel(formedById),
+                    trainedDate, address, customFields, fees, new LegacyPersonnelDao().getPersonnel(formedById),
                     parentCustomer);
             new GroupPersistence().saveGroup(group);
             StaticHibernateUtil.flushSession();
@@ -423,10 +423,10 @@ public class TestObjectFactory {
         PersonnelBO loanOfficer = null;
         try {
             if (loanOfficerId != null) {
-                loanOfficer = new PersonnelPersistence().getPersonnel(loanOfficerId);
+                loanOfficer = new LegacyPersonnelDao().getPersonnel(loanOfficerId);
             }
             group = new GroupBO(TestUtils.makeUserWithLocales(), customerName, customerStatus, externalId, trained,
-                    trainedDate, address, customFields, fees, new PersonnelPersistence().getPersonnel(formedById),
+                    trainedDate, address, customFields, fees, new LegacyPersonnelDao().getPersonnel(formedById),
                     new OfficePersistence().getOffice(officeId), meeting, loanOfficer);
             new GroupPersistence().saveGroup(group);
             StaticHibernateUtil.flushSession();
@@ -459,7 +459,7 @@ public class TestObjectFactory {
         ClientBO client;
         try {
             client = new ClientBO(TestUtils.makeUserWithLocales(), customerName, status, null, null, address, null, fees,
-                    null, new PersonnelPersistence().getPersonnel(PersonnelConstants.SYSTEM_USER),
+                    null, new LegacyPersonnelDao().getPersonnel(PersonnelConstants.SYSTEM_USER),
                     new OfficePersistence().getOffice(SAMPLE_BRANCH_OFFICE), parentCustomer, dateOfBirth, governmentId,
                     null, null, YesNoFlag.YES.getValue(), clientNameDetailDto, spouseNameDetailView,
                     clientPersonalDetailDto, null);
@@ -481,7 +481,7 @@ public class TestObjectFactory {
         ClientBO client;
 
         try {
-            PersonnelBO systemUser = new PersonnelPersistence().getPersonnel(PersonnelConstants.SYSTEM_USER);
+            PersonnelBO systemUser = new LegacyPersonnelDao().getPersonnel(PersonnelConstants.SYSTEM_USER);
             ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto(NameType.CLIENT.getValue(), SAMPLE_SALUTATION,
                     customerName, "middle", customerName, "secondLast");
             clientNameDetailDto.setNames(ClientRules.getNameSequence());
@@ -529,7 +529,7 @@ public class TestObjectFactory {
                         null, // List<CustomFieldDto> customFields
                         getFees(), // List<FeeDto> fees
                         null, // List<SavingsOfferingBO> offeringsSelected
-                        new PersonnelPersistence().getPersonnel(personnel), // Short
+                        new LegacyPersonnelDao().getPersonnel(personnel), // Short
                         // formedById
                         new OfficePersistence().getOffice(SAMPLE_BRANCH_OFFICE), // Short
                         // officeId
@@ -546,7 +546,7 @@ public class TestObjectFactory {
                         null); // InputStream picture
             } else {
                 client = new ClientBO(TestUtils.makeUserWithLocales(), clientNameDetailDto.getDisplayName(), status,
-                        null, null, null, null, getFees(), null, new PersonnelPersistence().getPersonnel(personnel),
+                        null, null, null, null, getFees(), null, new LegacyPersonnelDao().getPersonnel(personnel),
                         parentCustomer.getOffice(), parentCustomer, null, null, null, null, YesNoFlag.YES.getValue(),
                         clientNameDetailDto, spouseNameDetailView, clientPersonalDetailDto, null);
             }
@@ -1949,7 +1949,7 @@ public class TestObjectFactory {
 
     public static PersonnelBO getSystemUser() {
         try {
-            return new PersonnelPersistence().getPersonnel(PersonnelConstants.SYSTEM_USER);
+            return new LegacyPersonnelDao().getPersonnel(PersonnelConstants.SYSTEM_USER);
         } catch (PersistenceException e) {
             throw new RuntimeException(e);
         }
@@ -1961,7 +1961,7 @@ public class TestObjectFactory {
 
     public static PersonnelBO getTestUser() {
         try {
-            return new PersonnelPersistence().getPersonnel(PersonnelConstants.TEST_USER);
+            return new LegacyPersonnelDao().getPersonnel(PersonnelConstants.TEST_USER);
         } catch (PersistenceException e) {
             throw new RuntimeException(e);
         }
