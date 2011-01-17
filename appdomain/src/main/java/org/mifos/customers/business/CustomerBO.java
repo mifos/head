@@ -1234,7 +1234,7 @@ public abstract class CustomerBO extends AbstractBusinessObject {
 
         AddressDto addressDto = null;
         if (address != null) {
-            Address.toDto(address);
+            addressDto = Address.toDto(address);
         }
 
         return new CustomerDetailDto(this.customerId, this.displayName, this.searchId, this.globalCustNum,
