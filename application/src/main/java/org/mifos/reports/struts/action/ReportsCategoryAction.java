@@ -39,7 +39,6 @@ import org.mifos.reports.business.service.ReportsBusinessService;
 import org.mifos.reports.persistence.ReportsPersistence;
 import org.mifos.reports.struts.actionforms.ReportsCategoryActionForm;
 import org.mifos.reports.util.helpers.ReportsConstants;
-import org.mifos.security.activity.ActivityGenerator;
 import org.mifos.security.activity.ActivityGeneratorException;
 import org.mifos.security.activity.DynamicLookUpValueCreationTypes;
 import org.mifos.security.util.SecurityConstants;
@@ -99,7 +98,7 @@ public class ReportsCategoryAction extends BaseAction {
 
         int newActivityId;
         try {
-            newActivityId = ActivityGenerator.calculateDynamicActivityId();
+            newActivityId = legacyRolesPermissionsDao.calculateDynamicActivityId();
         } catch (ActivityGeneratorException agex) {
 
             ActionErrors errors = new ActionErrors();
@@ -108,9 +107,8 @@ public class ReportsCategoryAction extends BaseAction {
             return mapping.findForward(ActionForwards.preview_failure.toString());
         }
 
-        ActivityGenerator activityGenerator = new ActivityGenerator();
         Short parentActivityId = SecurityConstants.REPORTS_MANAGEMENT;
-        activityGenerator.upgradeUsingHQL(DynamicLookUpValueCreationTypes.BirtReport, parentActivityId, categoryName);
+        legacyRolesPermissionsDao.createActivity(DynamicLookUpValueCreationTypes.BirtReport, parentActivityId, categoryName);
 
         reportsCategoryBO.setActivityId((short) newActivityId);
         reportsCategoryBO.setReportCategoryName(categoryName);
@@ -248,7 +246,7 @@ public class ReportsCategoryAction extends BaseAction {
         Short activityId = reportsCategoryBO.getActivityId();
         rPersistence.updateLookUpValue(activityId, inputCategoryName);
 
-        ActivityGenerator.changeActivityMessage(reportsCategoryBO.getActivityId(),
+        legacyRolesPermissionsDao.changeActivityMessage(reportsCategoryBO.getActivityId(),
                 DatabaseMigrator.ENGLISH_LOCALE, reportsCategoryBO.getReportCategoryName());
         return mapping.findForward(ActionForwards.create_success.toString());
     }

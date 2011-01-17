@@ -103,6 +103,7 @@ import org.mifos.reports.admindocuments.persistence.LegacyAdminDocAccStateMixDao
 import org.mifos.reports.admindocuments.persistence.LegacyAdminDocumentDao;
 import org.mifos.security.AuthenticationAuthorizationServiceFacade;
 import org.mifos.security.login.util.helpers.LoginConstants;
+import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsDao;
 import org.mifos.security.util.UserContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -151,6 +152,7 @@ public abstract class BaseAction extends DispatchAction {
     protected LegacyAdminDocumentDao legacyAdminDocumentDao;
     protected LegacyFieldConfigurationDao legacyFieldConfigurationDao;
     protected LegacyAdminDocAccStateMixDao legacyAdminDocAccStateMixDao;
+    protected LegacyRolesPermissionsDao legacyRolesPermissionsDao;
 
     // non domain app
     protected LoanServiceFacade loanServiceFacade;
@@ -192,6 +194,7 @@ public abstract class BaseAction extends DispatchAction {
         this.legacyAdminDocumentDao = springAppContext.getBean(LegacyAdminDocumentDao.class);
         this.legacyFieldConfigurationDao = springAppContext.getBean(LegacyFieldConfigurationDao.class);
         this.legacyAdminDocAccStateMixDao = springAppContext.getBean(LegacyAdminDocAccStateMixDao.class);
+        this.legacyRolesPermissionsDao = springAppContext.getBean(LegacyRolesPermissionsDao.class);
     }
 
     private void configureServiceFacadeBeans(ApplicationContext springAppContext) {

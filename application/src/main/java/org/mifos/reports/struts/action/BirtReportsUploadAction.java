@@ -58,7 +58,6 @@ import org.mifos.reports.business.service.ReportsBusinessService;
 import org.mifos.reports.persistence.ReportsPersistence;
 import org.mifos.reports.struts.actionforms.BirtReportsUploadActionForm;
 import org.mifos.reports.util.helpers.ReportsConstants;
-import org.mifos.security.activity.ActivityGenerator;
 import org.mifos.security.activity.ActivityGeneratorException;
 import org.mifos.security.activity.DynamicLookUpValueCreationTypes;
 import org.mifos.security.authorization.AuthorizationManager;
@@ -315,8 +314,8 @@ public class BirtReportsUploadAction extends BaseAction {
         // kim
         String activityNameHead = "Can view ";
         rp.updateLookUpValue(reportBO.getActivityId(), activityNameHead + uploadForm.getReportTitle());
-        ActivityGenerator.reparentActivityUsingHibernate(reportBO.getActivityId(), category.getActivityId());
-        ActivityGenerator.changeActivityMessage(reportBO.getActivityId(), DatabaseMigrator.ENGLISH_LOCALE,
+        legacyRolesPermissionsDao.reparentActivityUsingHibernate(reportBO.getActivityId(), category.getActivityId());
+        legacyRolesPermissionsDao.changeActivityMessage(reportBO.getActivityId(), DatabaseMigrator.ENGLISH_LOCALE,
                 "Can view " + reportBO.getReportName());
 
         FormFile formFile = uploadForm.getFile();
@@ -351,10 +350,8 @@ public class BirtReportsUploadAction extends BaseAction {
     protected int insertActivity(short parentActivity, String lookUpDescription) throws ServiceException,
             ActivityGeneratorException, IOException, HibernateException, PersistenceException {
         int newActivityId;
-        newActivityId = ActivityGenerator.calculateDynamicActivityId();
-        ActivityGenerator activityGenerator = new ActivityGenerator();
-        activityGenerator
-                .upgradeUsingHQL(DynamicLookUpValueCreationTypes.BirtReport, parentActivity, lookUpDescription);
+        newActivityId = legacyRolesPermissionsDao.calculateDynamicActivityId();
+        legacyRolesPermissionsDao.createActivity(DynamicLookUpValueCreationTypes.BirtReport, parentActivity, lookUpDescription);
         return newActivityId;
     }
 
