@@ -20,15 +20,34 @@
 
 package org.mifos.test.acceptance.framework.loan;
 
-import com.thoughtworks.selenium.Selenium;
 import org.mifos.test.acceptance.framework.AbstractPage;
 import org.testng.Assert;
+import com.thoughtworks.selenium.Selenium;
 
-public class ViewInstallmentDetailsPage extends AbstractPage {
+public class ViewNextInstallmentDetailsPage extends AbstractPage {
 
-    public ViewInstallmentDetailsPage(Selenium selenium) {
+    public ViewNextInstallmentDetailsPage(Selenium selenium) {
         super(selenium);
-        this.verifyPage("SchedulePreview");
+        this.verifyPage("NextPaymentLoanAccount");
+    }
+
+    public ViewNextInstallmentDetailsPage waiveFee() {
+        selenium.click("nextPayment_loanAccount.link.waiveFeeDue");
+        waitForPageToLoad();
+        return new ViewNextInstallmentDetailsPage(selenium);
+    }
+
+    public ViewNextInstallmentDetailsPage waivePenalty() {
+        selenium.click("nextPayment_loanAccount.link.waivePenaltyDue");
+        waitForPageToLoad();
+        return new ViewNextInstallmentDetailsPage(selenium);
+    }
+
+    public ApplyAdjustmentPage navigateToApplyAdjustment() {
+        selenium.click("nextPayment_loanAccount.link.applyAdjustment");
+        waitForPageToLoad();
+        return new ApplyAdjustmentPage(selenium);
+
     }
 
     public void verifyInstallmentAmount(int row, int column, String amount) {
@@ -38,12 +57,5 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
     public void waiveOverdueInstallmentFee() {
         selenium.click("id=nextPayment_loanAccount.link.waiveFeeOverDue");
         waitForPageToLoad();
-    }
-
-    public ApplyAdjustmentPage navigateToApplyAdjustment() {
-        selenium.click("nextPayment_loanAccount.link.applyAdjustment");
-        waitForPageToLoad();
-        return new ApplyAdjustmentPage(selenium);
-
     }
 }

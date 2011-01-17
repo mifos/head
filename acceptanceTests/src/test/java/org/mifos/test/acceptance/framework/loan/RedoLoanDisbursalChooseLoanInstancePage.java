@@ -32,9 +32,6 @@ import com.thoughtworks.selenium.Selenium;
 public class RedoLoanDisbursalChooseLoanInstancePage extends MifosPage {
     public RedoLoanDisbursalChooseLoanInstancePage(Selenium selenium) {
         super(selenium);
-    }
-
-    public void verifyPage() {
         verifyPage("LoanCreationPrdOfferingSelect");
     }
 

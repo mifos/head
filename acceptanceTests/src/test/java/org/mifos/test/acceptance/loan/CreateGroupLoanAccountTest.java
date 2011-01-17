@@ -32,7 +32,6 @@ import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameter
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountConfirmationPage;
-import org.mifos.test.acceptance.framework.loan.EditLoanAccountInformationPage;
 import org.mifos.test.acceptance.framework.login.LoginPage;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
@@ -88,15 +87,13 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
         submitAccountParameters.setAmount("2765.0");
 
         ClientsAndAccountsHomepage clientsAndAccountsPage = homePage.navigateToClientsAndAccountsUsingHeaderTab();
-        clientsAndAccountsPage.verifyPage();
         CreateLoanAccountSearchPage createLoanAccountSearchPage = clientsAndAccountsPage.navigateToCreateLoanAccountUsingLeftMenu();
 
         CreateLoanAccountEntryPage createLoanAccountEntryPage = createLoanAccountSearchPage.searchAndNavigateToCreateLoanAccountPage(searchParameters);
         createLoanAccountEntryPage.verifyPage();
         CreateLoanAccountConfirmationPage createLoanAccountConfirmationPage = createLoanAccountEntryPage.submitAndNavigateToLoanAccountConfirmationPage(submitAccountParameters);
-        createLoanAccountConfirmationPage.verifyPage();
-        LoanAccountPage loanAccountPage = createLoanAccountConfirmationPage.navigateToLoanAccountDetailsPage();
-        loanAccountPage.verifyPage();
+
+        createLoanAccountConfirmationPage.navigateToLoanAccountDetailsPage();
     }
 
     @SuppressWarnings({ "PMD.SignatureDeclareThrowsException"})
@@ -115,15 +112,13 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
         submitAccountParameters.setAmount("1000.0");
 
         ClientsAndAccountsHomepage clientsAndAccountsPage = homePage.navigateToClientsAndAccountsUsingHeaderTab();
-        clientsAndAccountsPage.verifyPage();
         CreateLoanAccountSearchPage createLoanAccountSearchPage = clientsAndAccountsPage.navigateToCreateLoanAccountUsingLeftMenu();
 
         CreateLoanAccountEntryPage createLoanAccountEntryPage = createLoanAccountSearchPage.searchAndNavigateToCreateLoanAccountPage(searchParameters);
         createLoanAccountEntryPage.verifyPage();
         CreateLoanAccountConfirmationPage createLoanAccountConfirmationPage = createLoanAccountEntryPage.submitAndNavigateToLoanAccountConfirmationPage(submitAccountParameters);
-        createLoanAccountConfirmationPage.verifyPage();
-        LoanAccountPage loanAccountPage = createLoanAccountConfirmationPage.navigateToLoanAccountDetailsPage();
-        loanAccountPage.verifyPage();
+
+        createLoanAccountConfirmationPage.navigateToLoanAccountDetailsPage();
     }
 
     @Test(enabled=false)
@@ -142,15 +137,13 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
         submitAccountParameters.setAmount("1000.0");
 
         ClientsAndAccountsHomepage clientsAndAccountsPage = homePage.navigateToClientsAndAccountsUsingHeaderTab();
-        clientsAndAccountsPage.verifyPage();
         CreateLoanAccountSearchPage createLoanAccountSearchPage = clientsAndAccountsPage.navigateToCreateLoanAccountUsingLeftMenu();
 
         CreateLoanAccountEntryPage createLoanAccountEntryPage = createLoanAccountSearchPage.searchAndNavigateToCreateLoanAccountPage(searchParameters);
         createLoanAccountEntryPage.verifyPage();
         CreateLoanAccountConfirmationPage createLoanAccountConfirmationPage = createLoanAccountEntryPage.submitAndNavigateToLoanAccountConfirmationPage(submitAccountParameters);
-        createLoanAccountConfirmationPage.verifyPage();
-        LoanAccountPage loanAccountPage = createLoanAccountConfirmationPage.navigateToLoanAccountDetailsPage();
-        loanAccountPage.verifyPage();
+
+        createLoanAccountConfirmationPage.navigateToLoanAccountDetailsPage();
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -167,13 +160,10 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
         loanAccountEntryPage.selectTwoClientsForGlim();
 
         CreateLoanAccountConfirmationPage confirmationPage = loanAccountEntryPage.clickContinueAndNavigateToLoanAccountConfirmationPage();
-        confirmationPage.verifyPage();
 
         LoanAccountPage loanAccountPage = confirmationPage.navigateToLoanAccountDetailsPage();
-        loanAccountPage.verifyPage();
 
-        EditLoanAccountInformationPage editLoanAccountInformationPage = loanAccountPage.navigateToEditAccountInformation();
-        editLoanAccountInformationPage.verifyPage();
+        loanAccountPage.navigateToEditAccountInformation();
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")

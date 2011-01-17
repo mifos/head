@@ -48,9 +48,11 @@ public class CenterViewDetailsPage extends MifosPage {
 
     public void verifyActiveCenter(SubmitFormParameters formParameters) {
         Assert.assertEquals(getCenterName(), formParameters.getCenterName());
-        //Assert.assertEquals(getStatus(), "Active");
+        Assert.assertEquals(getStatus(), "Active");
         // TODO: Verify this in another way. "Active" is locale dependant.
         Assert.assertEquals(getLoanOfficer(), formParameters.getLoanOfficer());
+        Assert.assertEquals(selenium.getText("viewCenterDetails.meeting.text.day"), "Meetings:  Recur every 1 Week(s) on Wednesday");
+        Assert.assertEquals(selenium.getText("viewCenterDetails.meeting.text.meetingplace"), "Bangalore");
     }
 
     public CenterViewDetailsPage verifyPage() {

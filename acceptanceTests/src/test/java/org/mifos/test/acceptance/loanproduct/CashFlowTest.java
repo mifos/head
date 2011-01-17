@@ -233,7 +233,8 @@ public class CashFlowTest extends UiTestCaseBase {
                 enterValidData("100", cashFlowIncremental, 100, "7003", "1000").
                 clickContinue().
                 verifyCashFlow(cashFlowIncremental, loanAmount).
-                clickPreviewAndGoToReviewLoanAccountPage().
+                // TODO - there is something wrong with pages here
+                clickPreview().
                 verifyPage("SchedulePreview");
 
     }

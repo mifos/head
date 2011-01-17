@@ -19,6 +19,7 @@
  */
 package org.mifos.test.acceptance.framework.admin;
 
+import org.mifos.test.acceptance.admin.EditFundPage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.testng.Assert;
 
@@ -34,21 +35,22 @@ public class ViewFundsPage extends MifosPage{
         return this;
     }
 
-    public void verifyFundName(String[] expectedData) {
 
-        for (String expectedCellData : expectedData) {
-            String detailsText = selenium.getText("fundDetailsList");
-            Assert.assertTrue(detailsText.contains(expectedCellData), detailsText + ">> " + expectedCellData);
+    public void verifyFundNameAndCode(String[] expectedFundNames, String[] expectedFundCodes) {
+
+        for (int i = 0; i < expectedFundNames.length; i++) {
+            String expectedFundNameCell = expectedFundNames[i];
+            String expectedFundCodeCell = expectedFundCodes[i];
+            String actualFundName = selenium.getTable("fundDisplayTable."+(i+1)+".0");
+            String actualFundCode = selenium.getTable("fundDisplayTable."+(i+1)+".1");
+            Assert.assertEquals(actualFundName, expectedFundNameCell);
+            Assert.assertEquals(actualFundCode, expectedFundCodeCell);
         }
     }
-
-    public void verifyFundCode(String[] expectedData) {
-
-        for (int i = 0; i < expectedData.length; i++) {
-            String expectedCellData = expectedData[i];
-            String actualCellData = selenium.getTable("fundDisplayTable."+(i+1)+".1");
-            Assert.assertEquals(actualCellData, expectedCellData);
-        }
+    public EditFundPage editAndNavigateToEditFundPage(){
+        selenium.click("//*[@id=\"fundDisplayTable\"]/tbody/tr[7]/td[3]/a[1]");
+        waitForPageToLoad();
+        return new EditFundPage(selenium);
     }
 }
 

@@ -31,6 +31,7 @@ import org.mifos.test.acceptance.framework.loan.EditLoanAccountInformationParame
 import org.mifos.test.acceptance.framework.loan.EditPreviewLoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
+import org.mifos.test.acceptance.framework.loan.EditLoanAccountInformationPage;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.questionnaire.ViewQuestionResponseDetailPage;
@@ -107,7 +108,6 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         questionResponseDetailPage.verifyQuestionPresent(question1, answer);
         questionResponseDetailPage.verifyQuestionPresent(question2, choiceAnswer);
         questionResponseDetailPage.navigateToDetailsPage();
-        loanAccountPage.verifyPage();
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -125,7 +125,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         submitAccountParameters.setAmount("10666.0");
         EditLoanAccountInformationParameters editAccountParameters = new EditLoanAccountInformationParameters();
         editAccountParameters.setGracePeriod("15");
-        EditPreviewLoanAccountPage editPreviewLoanAccountPage = tryToEditLoan(loanId, submitAccountParameters, editAccountParameters);
+        EditLoanAccountInformationPage editPreviewLoanAccountPage = loanTestHelper.changeLoanAccountInformationWithErrors(loanId, submitAccountParameters, editAccountParameters);
         editPreviewLoanAccountPage.verifyErrorInForm("Please specify valid Amount. Amount should be a value between 1 and 10,000, inclusive");
         editPreviewLoanAccountPage.verifyErrorInForm("Please specify valid Grace period for repayments. Grace period for repayments should be a value less than 12");
     }
@@ -146,9 +146,8 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         submitAccountParameters.setAmount("1666.0");
         EditLoanAccountInformationParameters editAccountParameters = new EditLoanAccountInformationParameters();
         editAccountParameters.setGracePeriod("5");
-        EditPreviewLoanAccountPage editPreviewLoanAccountPage = tryToEditLoan(loanId, submitAccountParameters, editAccountParameters);
-        LoanAccountPage loanAccountPage = editPreviewLoanAccountPage.submitAndNavigateToLoanAccountPage();
-        loanAccountPage.verifyPage();
+        EditPreviewLoanAccountPage editPreviewLoanAccountPage = loanTestHelper.changeLoanAccountInformation(loanId, submitAccountParameters, editAccountParameters);
+        editPreviewLoanAccountPage.submitAndNavigateToLoanAccountPage();
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -235,11 +234,6 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         } else {
             loanAccountPage = loanTestHelper.createLoanAccount(searchParameters, submitAccountParameters, questionResponseParameters);
         }
-        loanAccountPage.verifyPage();
         return loanAccountPage;
-    }
-
-    private EditPreviewLoanAccountPage tryToEditLoan(String loanId, CreateLoanAccountSubmitParameters submitAccountParameters, EditLoanAccountInformationParameters editAccountParameters) {
-        return loanTestHelper.changeLoanAccountInformation(loanId, submitAccountParameters, editAccountParameters);
     }
 }

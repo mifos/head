@@ -31,9 +31,6 @@ public class LoanAccountPage extends AbstractPage {
 
     public LoanAccountPage(Selenium selenium) {
         super(selenium);
-    }
-
-    public void verifyPage() {
         this.verifyPage("LoanAccountDetail");
     }
 
@@ -59,6 +56,12 @@ public class LoanAccountPage extends AbstractPage {
 
     public void verifyLoanIsInPartialApplication(){
         Assert.assertTrue(selenium.isTextPresent("Partial Application "));
+    }
+
+    public void verifyClosedLoanPerformanceHistory() {
+        Assert.assertTrue(selenium.isTextPresent("# of payments: 0"));
+        Assert.assertTrue(selenium.isTextPresent("# of missed payments: 0"));
+        Assert.assertTrue(selenium.isTextPresent("Days in arrears:0"));
     }
 
     /**
@@ -99,6 +102,11 @@ public class LoanAccountPage extends AbstractPage {
         return new AccountActivityPage(selenium);
     }
 
+    public ViewNextInstallmentDetailsPage navigateToViewNextInstallmentDetails() {
+        selenium.click("id=loanaccountdetail.link.viewInstallmentDetails");
+        waitForPageToLoad();
+        return new ViewNextInstallmentDetailsPage(selenium);
+    }
 
     public ViewInstallmentDetailsPage navigateToViewInstallmentDetails() {
         selenium.click("id=loanaccountdetail.link.viewInstallmentDetails");
@@ -158,6 +166,12 @@ public class LoanAccountPage extends AbstractPage {
         selenium.click("loanaccountdetail.link.attachSurvey");
         waitForPageToLoad();
         return new AttachSurveyPage(selenium);
+    }
+
+    public TransactionHistoryPage navigateToTransactionHistory() {
+        selenium.click("loanaccountdetail.link.viewTransactionHistory");
+        waitForPageToLoad();
+        return new TransactionHistoryPage(selenium);
     }
 
     public ViewRepaymentSchedulePage navigateToViewRepaymentSchedule() {
@@ -242,5 +256,9 @@ public class LoanAccountPage extends AbstractPage {
         selenium.click("loanaccountdetail.link.applyAdjustment");
         waitForPageToLoad();
         return new ApplyAdjustmentPage(selenium);
+    }
+
+    public void verifyStatus(String status) {
+        Assert.assertTrue(selenium.isTextPresent(status));
     }
 }

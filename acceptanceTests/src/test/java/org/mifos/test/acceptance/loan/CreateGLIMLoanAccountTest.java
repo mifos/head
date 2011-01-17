@@ -20,6 +20,9 @@
 
 package org.mifos.test.acceptance.loan;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.framework.util.DbUnitUtilities;
@@ -33,6 +36,7 @@ import org.mifos.test.acceptance.framework.loan.EditLoanAccountInformationPage;
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountInformationParameters;
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountStatusParameters;
 import org.mifos.test.acceptance.framework.loan.EditPreviewLoanAccountPage;
+import org.mifos.test.acceptance.framework.loan.GLIMClient;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
@@ -75,31 +79,64 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
-    /*
-     * This test is to verify that you can edit a GLIM loan account after it has been
-     * dibursed without getting an invalid disbursal date error. See MIFOS-2597.
-     */
-    @Test(enabled=true)
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void checkGLIMInvalidDisbursementDateWhenEditingLoan() throws Exception {
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = new DateTime(2009,7,11,13,0,0,0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+    private LoanAccountPage creationCheck(boolean creationType){
 
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
-
+        //When
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("MyGroup1233266297718");
         searchParameters.setLoanProduct("WeeklyGroupFlatLoanWithOnetimeFee");
 
         CreateLoanAccountEntryPage loanAccountEntryPage = loanTestHelper.navigateToCreateLoanAccountEntryPage(searchParameters);
 
-        loanAccountEntryPage.selectGLIMClients(0, "Stu1233266299995 Client1233266299995 \n Client Id: 0006-000000051", "9999.9");
-        loanAccountEntryPage.selectGLIMClients(1, "Stu1233266309851 Client1233266309851 \n Client Id: 0006-000000052", "99999.9");
-        loanAccountEntryPage.selectGLIMClients(2, "Stu1233266319760 Client1233266319760 \n Client Id: 0006-000000053", "99999.9");
+        List<GLIMClient> clients= new ArrayList<GLIMClient>();
+        clients.add(new GLIMClient(0,"Stu1233266299995 Client1233266299995 \n Client Id: 0006-000000051", "9999.9", "0700-Marriage"));
+        clients.add(new GLIMClient(1, "Stu1233266309851 Client1233266309851 \n Client Id: 0006-000000052", "99999.9", "1008-Hospital"));
+        clients.add(new GLIMClient(2, "Stu1233266319760 Client1233266319760 \n Client Id: 0006-000000053", "99999.9", "1010-Education"));
 
-        CreateLoanAccountConfirmationPage createLoanAccountConfirmationPage = loanAccountEntryPage.submitAndNavigateToGLIMLoanAccountConfirmationPage();
+        for (GLIMClient glimClient : clients) {
+            loanAccountEntryPage.selectGLIMClients(glimClient.getClientNumber(), glimClient.getClientName(), glimClient.getLoanAmount(), glimClient.getLoanPurpose());
+        }
+        CreateLoanAccountConfirmationPage createLoanAccountConfirmationPage;
+        if(creationType==true) {
+            createLoanAccountConfirmationPage = loanAccountEntryPage.submitAndNavigateToGLIMLoanAccountConfirmationPage();
+        } else {
+            createLoanAccountConfirmationPage = loanAccountEntryPage.submitAndNavigateToGLIMLoanAccountConfirmationPageSaveForLaterButton();
+        }
         LoanAccountPage loanAccountPage =  createLoanAccountConfirmationPage.navigateToLoanAccountDetailsPage();
+        //Then
+        if(creationType==true) {
+            loanAccountPage.verifyLoanIsPendingApproval();
+        } else {
+            loanAccountPage.verifyLoanIsInPartialApplication();
+        }
+        EditLoanAccountInformationPage editLoanAccountInformationPage = loanAccountPage.navigateToEditAccountInformation();
+
+        for (GLIMClient glimClient : clients) {
+            editLoanAccountInformationPage.verifyGLIMClient(glimClient.getClientNumber(), glimClient.getClientName(), glimClient.getLoanAmount(), glimClient.getLoanPurpose());
+        }
+
+        editLoanAccountInformationPage.navigateBack();
+
+        return loanAccountPage;
+    }
+
+    /*
+     * This test is to verify that you can edit a GLIM loan account after it has been
+     * dibursed without getting an invalid disbursal date error. See MIFOS-2597.
+     */
+    @Test(enabled=true)
+    // http://mifosforge.jira.com/browse/MIFOSTEST-132
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void checkGLIMInvalidDisbursementDateWhenEditingLoan() throws Exception {
+        //Given
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTime targetTime = new DateTime(2009,7,11,13,0,0,0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
+        //When
+        LoanAccountPage loanAccountPage = creationCheck(true);
+
         String accountId = loanAccountPage.getAccountId();
 
         EditLoanAccountStatusParameters statusParameters = new EditLoanAccountStatusParameters();
@@ -107,7 +144,8 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
         statusParameters.setNote("Test");
 
         loanTestHelper.changeLoanAccountStatus(accountId, statusParameters);
-
+        //Then
+        //When
         DisburseLoanParameters params = new DisburseLoanParameters();
 
         params.setDisbursalDateDD("11");
@@ -122,22 +160,32 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
         editLoanAccountInformationParameters.setExternalID("ID2323ID");
 
         loanAccountPage = editLoanAccount(accountId, editLoanAccountInformationParameters);
-        loanAccountPage.verifyPage();
+        //Then
         assertTextFoundOnPage(editLoanAccountInformationParameters.getExternalID());
-
    }
+
+    @Test(enabled=true)
+    // http://mifosforge.jira.com/browse/MIFOSTEST-133
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void checkLoanCreatedBySaveForLater() throws Exception {
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTime targetTime = new DateTime(2009,7,11,13,0,0,0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
+
+        creationCheck(false);
+    }
+
 
     private LoanAccountPage editLoanAccount(String accountID, EditLoanAccountInformationParameters params) {
         NavigationHelper helper = new NavigationHelper(selenium);
 
         LoanAccountPage loanAccountPage = helper.navigateToLoanAccountPage(accountID);
-        loanAccountPage.verifyPage();
 
         EditLoanAccountInformationPage editAccountInformationPage = loanAccountPage.navigateToEditAccountInformation();
-        editAccountInformationPage.verifyPage();
         editAccountInformationPage.editExternalID(params);
         EditPreviewLoanAccountPage editPreviewLoanAccountPage = editAccountInformationPage.submitAndNavigateToAccountInformationPreviewPage();
-        editPreviewLoanAccountPage.verifyPage();
         loanAccountPage = editPreviewLoanAccountPage.submitAndNavigateToLoanAccountPage();
 
         return loanAccountPage;

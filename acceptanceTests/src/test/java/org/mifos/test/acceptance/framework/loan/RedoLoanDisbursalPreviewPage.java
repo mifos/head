@@ -28,9 +28,6 @@ import com.thoughtworks.selenium.Selenium;
 public class RedoLoanDisbursalPreviewPage extends MifosPage {
     public RedoLoanDisbursalPreviewPage(Selenium selenium) {
         super(selenium);
-    }
-
-    public void verifyPage() {
         verifyPage("CreateLoanPreview");
     }
 

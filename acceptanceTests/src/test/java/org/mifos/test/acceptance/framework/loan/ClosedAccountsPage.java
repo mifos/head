@@ -30,6 +30,7 @@ import com.thoughtworks.selenium.Selenium;
 public class ClosedAccountsPage extends MifosPage {
     public ClosedAccountsPage(Selenium selenium) {
         super(selenium);
+        verifyPage("GetAllClosedAccounts");
     }
 
     public ClosedAccountsPage verifyPage() {
@@ -53,5 +54,11 @@ public class ClosedAccountsPage extends MifosPage {
         selenium.click("getallclosedaccounts.button.cancel");
         waitForPageToLoad();
         return new ClientViewDetailsPage(selenium);
+    }
+
+    public LoanAccountPage navigateToLoanAccountPage() {
+        selenium.click("getallclosedaccounts.link.viewLoanAccount");
+        waitForPageToLoad();
+        return new LoanAccountPage(selenium);
     }
 }

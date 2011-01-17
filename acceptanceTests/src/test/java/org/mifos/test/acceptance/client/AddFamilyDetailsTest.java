@@ -183,8 +183,7 @@ public class AddFamilyDetailsTest extends UiTestCaseBase {
         clientPreviewDataPage.submit();
         selenium.click("client_creationConfirmation.link.viewClientDetailsLink");
         selenium.waitForPageToLoad("30000");
-        ClientViewDetailsPage clientDetailsPage=new ClientViewDetailsPage(selenium);
-        clientDetailsPage.verifyPage();
+        new ClientViewDetailsPage(selenium);
         propertiesHelper.setAreFamilyDetailsRequired(false);
     }
 
@@ -205,7 +204,6 @@ public class AddFamilyDetailsTest extends UiTestCaseBase {
         selenium.click("client_creationConfirmation.link.viewClientDetailsLink");
         selenium.waitForPageToLoad("30000");
         ClientViewDetailsPage clientDetailsPage=new ClientViewDetailsPage(selenium);
-        clientDetailsPage.verifyPage();
         ClientEditFamilyPage editFamilyPage=clientDetailsPage.editFamilyInformation();
         ClientEditFamilyParameters editParameters=new ClientEditFamilyParameters();
         editParameters.setFirstName("newName");

@@ -24,6 +24,7 @@ import org.joda.time.DateTime;
 import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
+import org.mifos.test.acceptance.framework.savingsproduct.DefineNewSavingsProductConfirmationPage;
 import org.mifos.test.acceptance.framework.savingsproduct.SavingsProductParameters;
 import org.mifos.test.acceptance.framework.testhelpers.SavingsProductHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
@@ -67,6 +68,7 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
+    // http://mifosforge.jira.com/browse/MIFOSTEST-135
     @Test(enabled=true)
     public void createVoluntarySavingsProductForClients() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_default_003_dbunit.xml", dataSource, selenium);
@@ -75,11 +77,12 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         params.setTypeOfDeposits(SavingsProductParameters.VOLUNTARY);
         params.setApplicableFor(SavingsProductParameters.CLIENTS);
 
-        savingsProductHelper.createSavingsProduct(params);
+        DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
 
-//        verifySavingsProduct("DefineNewSavingsProduct_001_result_dbunit.xml");
+        confirmationPage.navigateToSavingsProductDetails();
     }
 
+    // http://mifosforge.jira.com/browse/MIFOSTEST-136
     @Test(enabled=true)
     public void createMandatorySavingsProductForClients() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_default_003_dbunit.xml", dataSource, selenium);
@@ -88,11 +91,12 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         params.setTypeOfDeposits(SavingsProductParameters.MANDATORY);
         params.setApplicableFor(SavingsProductParameters.CLIENTS);
 
-        savingsProductHelper.createSavingsProduct(params);
+        DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
 
-//        verifySavingsProduct("DefineNewSavingsProduct_002_result_dbunit.xml");
+        confirmationPage.navigateToSavingsProductDetails();
     }
 
+    // http://mifosforge.jira.com/browse/MIFOSTEST-135
     @Test(enabled=true)
     public void createVoluntarySavingsProductForGroups() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_default_003_dbunit.xml", dataSource, selenium);
@@ -101,11 +105,12 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         params.setTypeOfDeposits(SavingsProductParameters.VOLUNTARY);
         params.setApplicableFor(SavingsProductParameters.GROUPS);
 
-        savingsProductHelper.createSavingsProduct(params);
+        DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
 
-//        verifySavingsProduct("DefineNewSavingsProduct_003_result_dbunit.xml");
+        confirmationPage.navigateToSavingsProductDetails();
     }
 
+    // http://mifosforge.jira.com/browse/MIFOSTEST-136
     @Test(enabled=true)
     public void createMandatorySavingsProductForGroups() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_default_003_dbunit.xml", dataSource, selenium);
@@ -114,11 +119,12 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         params.setTypeOfDeposits(SavingsProductParameters.MANDATORY);
         params.setApplicableFor(SavingsProductParameters.GROUPS);
 
-        savingsProductHelper.createSavingsProduct(params);
+        DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
 
-//        verifySavingsProduct("DefineNewSavingsProduct_004_result_dbunit.xml");
+        confirmationPage.navigateToSavingsProductDetails();
     }
 
+    // http://mifosforge.jira.com/browse/MIFOSTEST-135
     @Test(enabled=true)
     public void createVoluntarySavingsProductForCenters() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_default_003_dbunit.xml", dataSource, selenium);
@@ -127,11 +133,12 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         params.setTypeOfDeposits(SavingsProductParameters.VOLUNTARY);
         params.setApplicableFor(SavingsProductParameters.CENTERS);
 
-        savingsProductHelper.createSavingsProduct(params);
+        DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
 
-//        verifySavingsProduct("DefineNewSavingsProduct_005_result_dbunit.xml");
+        confirmationPage.navigateToSavingsProductDetails();
     }
 
+    // http://mifosforge.jira.com/browse/MIFOSTEST-136
     @Test(enabled=true)
     public void createMandatorySavingsProductForCenters() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_default_003_dbunit.xml", dataSource, selenium);
@@ -140,9 +147,9 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         params.setTypeOfDeposits(SavingsProductParameters.MANDATORY);
         params.setApplicableFor(SavingsProductParameters.CENTERS);
 
-        savingsProductHelper.createSavingsProduct(params);
+        DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
 
-//        verifySavingsProduct("DefineNewSavingsProduct_006_result_dbunit.xml");
+        confirmationPage.navigateToSavingsProductDetails();
     }
 
 

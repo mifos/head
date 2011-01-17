@@ -27,6 +27,7 @@ import com.thoughtworks.selenium.Selenium;
 public class ViewProductCategoriesPage extends MifosPage {
     public ViewProductCategoriesPage(Selenium selenium) {
         super(selenium);
+        verifyPage("viewProductCategories");
     }
 
     public ViewProductCategoriesPage verifyPage() {

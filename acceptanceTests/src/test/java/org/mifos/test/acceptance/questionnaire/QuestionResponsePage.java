@@ -78,7 +78,6 @@ public class QuestionResponsePage extends MifosPage {
         CreateGroupConfirmationPage confirmationPage = submitNewGroupForApproval();
         confirmationPage.verifyPage();
         GroupViewDetailsPage groupDetailsPage = confirmationPage.navigateToGroupDetailsPage();
-        groupDetailsPage.verifyPage();
         groupDetailsPage.verifyStatus(status);
         return groupDetailsPage;
     }

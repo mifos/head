@@ -20,10 +20,7 @@
 
 package org.mifos.test.acceptance.framework.testhelpers;
 
-import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.savingsproduct.DefineNewSavingsProductConfirmationPage;
-import org.mifos.test.acceptance.framework.savingsproduct.DefineNewSavingsProductPage;
-import org.mifos.test.acceptance.framework.savingsproduct.DefineNewSavingsProductPreviewPage;
 import org.mifos.test.acceptance.framework.savingsproduct.SavingsProductParameters;
 
 import com.thoughtworks.selenium.Selenium;
@@ -35,17 +32,14 @@ public class SavingsProductHelper {
         navigationHelper = new NavigationHelper(selenium);
     }
 
-    public void createSavingsProduct(SavingsProductParameters productParameters) {
-        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+    public DefineNewSavingsProductConfirmationPage createSavingsProduct(SavingsProductParameters productParameters) {
+        DefineNewSavingsProductConfirmationPage confirmationPage = navigationHelper
+            .navigateToAdminPage()
+            .navigateToDefineSavingsProduct()
+            .submitAndNavigateToDefineNewSavingsProductPreviewPage(productParameters)
+            .submitAndNavigateToDefineNewSavingsProductConfirmationPage();
 
-        DefineNewSavingsProductPage newSavingsProductPage = adminPage.navigateToDefineSavingsProduct();
-        newSavingsProductPage.verifyPage();
-
-        DefineNewSavingsProductPreviewPage newSavingsProductPreviewPage = newSavingsProductPage.submitAndNavigateToDefineNewSavingsProductPreviewPage(productParameters);
-        newSavingsProductPreviewPage.verifyPage();
-
-        DefineNewSavingsProductConfirmationPage newSavingsProductConfirmationPage = newSavingsProductPreviewPage.submitAndNavigateToDefineNewSavingsProductConfirmationPage();
-        newSavingsProductConfirmationPage.verifyPage();
+        return confirmationPage;
     }
 
 }

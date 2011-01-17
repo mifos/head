@@ -27,7 +27,6 @@ import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingServic
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
-import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -66,20 +65,23 @@ public class SearchCenterTest extends SearchTestBase {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities,
                 dataFileName,
                 dataSource, selenium);
+        String searchPhrase = "MyCenter";
 
-        SearchResultsPage page = searchFor( appLauncher, "MyCenter");
-        int count = page.countSearchResults();
-        Assert.assertEquals( count, 5 );
+        SearchResultsPage page = searchFor( appLauncher, searchPhrase);
+
+        page.verifySearchResults(5);
     }
 
+    // http://mifosforge.jira.com/browse/MIFOSTEST-473
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void searchCenterSpecificTest()  throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities,
                 dataFileName,
                 dataSource, selenium);
+        String searchPhrase = "MyCenter1232993841778";
 
-        SearchResultsPage page = searchFor( appLauncher, "MyCenter1232993841778");
-        int count = page.countSearchResults();
-        Assert.assertEquals( count, 1 );
+        SearchResultsPage page = searchFor( appLauncher, searchPhrase);
+
+        page.verifySearchResults(1, "0002-000000001");
     }
 }

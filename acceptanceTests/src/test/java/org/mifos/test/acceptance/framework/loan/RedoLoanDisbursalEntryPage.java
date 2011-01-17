@@ -21,9 +21,9 @@
 package org.mifos.test.acceptance.framework.loan;
 
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
-import org.testng.Assert;
 
 
 public class RedoLoanDisbursalEntryPage extends MifosPage {
@@ -31,13 +31,31 @@ public class RedoLoanDisbursalEntryPage extends MifosPage {
 
     public RedoLoanDisbursalEntryPage(Selenium selenium) {
         super(selenium);
-    }
-
-    public void verifyPage() {
         verifyPage("LoanCreationDetail");
     }
 
+    public void verifyFutureDateInputError() {
+        verifyPage("LoanCreationDetail");
+        Assert.assertTrue(selenium.isTextPresent("You have entered an invalid disbursal date. Enter a disbursal date less than today's date"));
+    }
+
     public RedoLoanDisbursalSchedulePreviewPage submitAndNavigateToRedoLoanDisbursalSchedulePreviewPage(RedoLoanDisbursalParameters params) {
+        typeData(params);
+
+        submit();
+
+        return new RedoLoanDisbursalSchedulePreviewPage(selenium);
+    }
+
+    public RedoLoanDisbursalEntryPage submitFutureDateAndReloadPageWithInputError(RedoLoanDisbursalParameters params) {
+        typeData(params);
+
+        submit();
+
+        return new RedoLoanDisbursalEntryPage(selenium);
+    }
+
+    private void typeData(RedoLoanDisbursalParameters params) {
         this.typeTextIfNotEmpty("loancreationdetails.input.sumLoanAmount", params.getLoanAmount());
         this.typeTextIfNotEmpty("loancreationdetails.input.interestRate", params.getInterestRate());
         this.typeTextIfNotEmpty("loancreationdetails.input.numberOfInstallments", params.getNumberOfInstallments());
@@ -46,10 +64,6 @@ public class RedoLoanDisbursalEntryPage extends MifosPage {
         selenium.type("disbursementDateYY", params.getDisbursalDateYYYY());
 
         selenium.fireEvent("disbursementDateYY", "blur");
-
-        submit();
-
-        return new RedoLoanDisbursalSchedulePreviewPage(selenium);
     }
 
     private void submit() {

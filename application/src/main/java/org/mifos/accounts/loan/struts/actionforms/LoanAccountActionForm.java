@@ -1353,6 +1353,7 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
                 validatePaymentDataHtmlBean(errors, currency, locale, customer, bean);
             }
             validatePaymentDatesOrdering(validPaymentBeans, errors);
+            validateMaxPayableAmount(request, errors);
         } catch (InvalidDateException invalidDate) {
             errors.add(LoanExceptionConstants.INVALIDTRANSACTIONDATE, new ActionMessage(
                     LoanExceptionConstants.INVALIDTRANSACTIONDATE));
@@ -1368,6 +1369,19 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
         } catch (PersistenceException e) {
             errors.add(ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION, new ActionMessage(
                     ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION));
+        }
+    }
+
+    private void validateMaxPayableAmount(HttpServletRequest request, ActionErrors errors) throws InvalidDateException {
+        Money totalAmount = Money.zero(getCurrencyFromLoanOffering(request));
+        Money paymentAmount = Money.zero(getCurrencyFromLoanOffering(request));
+        for (PaymentDataHtmlBean paymentDataHtmlBean : getPaymentDataBeans()) {
+            totalAmount = totalAmount.add(paymentDataHtmlBean.totalAsMoney());
+            paymentAmount = paymentAmount.add(paymentDataHtmlBean.paymentAmountAsMoney());
+        }
+        if (paymentAmount.isGreaterThan(totalAmount)) {
+            errors.add(LoanExceptionConstants.EXCESS_PAYMENT, new ActionMessage(
+                    LoanExceptionConstants.EXCESS_PAYMENT));
         }
     }
 

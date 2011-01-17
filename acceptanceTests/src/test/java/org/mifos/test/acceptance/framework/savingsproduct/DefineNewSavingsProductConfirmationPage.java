@@ -27,9 +27,12 @@ import com.thoughtworks.selenium.Selenium;
 public class DefineNewSavingsProductConfirmationPage extends MifosPage {
     public DefineNewSavingsProductConfirmationPage(Selenium selenium) {
         super(selenium);
+        verifyPage("CreateSavingsProductConfirmation");
     }
 
-    public void verifyPage() {
-        verifyPage("CreateSavingsProductConfirmation");
+    public SavingsProductDetailsPage navigateToSavingsProductDetails() {
+        selenium.click("link=View Savings product details now.");
+        waitForPageToLoad();
+        return new SavingsProductDetailsPage(selenium);
     }
 }

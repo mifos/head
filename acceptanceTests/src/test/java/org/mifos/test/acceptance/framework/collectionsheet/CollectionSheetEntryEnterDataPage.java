@@ -21,7 +21,7 @@
 package org.mifos.test.acceptance.framework.collectionsheet;
 
 import org.mifos.test.acceptance.framework.AbstractPage;
-import org.mifos.test.acceptance.framework.HomePage;
+import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
@@ -88,10 +88,10 @@ public class CollectionSheetEntryEnterDataPage extends AbstractPage {
 
     }
 
-    public HomePage cancel() {
+    public ClientsAndAccountsHomepage cancel() {
         selenium.click("id=bulkentry_data.button.cancel");
         waitForPageToLoad();
-        return new HomePage(selenium);
+        return new ClientsAndAccountsHomepage(selenium);
     }
 
     public void verifyCustomerAccountValue(int row, int col, double amount) {

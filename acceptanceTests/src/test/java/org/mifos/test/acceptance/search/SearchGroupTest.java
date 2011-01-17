@@ -28,7 +28,6 @@ import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingServic
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
-import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -67,20 +66,23 @@ public class SearchGroupTest extends SearchTestBase {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities,
                 dataFileName,
                 dataSource, selenium);
+        String searchPhrase = "MyGroup";
 
-        SearchResultsPage page = searchFor( appLauncher, "MyGroup");
-        int count = page.countSearchResults();
-        Assert.assertEquals( count, 11 );
+        SearchResultsPage page = searchFor( appLauncher, searchPhrase);
+
+        page.verifySearchResults(11);
     }
 
+    // http://mifosforge.jira.com/browse/MIFOSTEST-475
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void searchGroupSpecificTest()  throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities,
                 dataFileName,
                 dataSource, selenium);
+        String searchPhrase = "MyGroup1233265937564";
 
-        SearchResultsPage page = searchFor( appLauncher, "MyGroup1233265937564");
-        int count = page.countSearchResults();
-        Assert.assertEquals( count, 1 );
+        SearchResultsPage page = searchFor( appLauncher, searchPhrase);
+
+        page.verifySearchResults(1, "0004-000000008");
     }
 }

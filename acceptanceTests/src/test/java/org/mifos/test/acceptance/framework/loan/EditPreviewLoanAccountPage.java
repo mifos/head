@@ -29,9 +29,6 @@ import com.thoughtworks.selenium.Selenium;
 public class EditPreviewLoanAccountPage extends MifosPage {
     public EditPreviewLoanAccountPage(Selenium selenium) {
         super(selenium);
-    }
-
-    public void verifyPage() {
         this.verifyPage("EditPreviewLoanAccount");
     }
 

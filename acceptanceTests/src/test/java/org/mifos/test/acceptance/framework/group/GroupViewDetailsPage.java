@@ -35,11 +35,7 @@ public class GroupViewDetailsPage extends MifosPage {
 
     public GroupViewDetailsPage(Selenium selenium) {
         super(selenium);
-    }
-
-    public GroupViewDetailsPage verifyPage() {
         verifyPage("ViewGroupDetails");
-        return this;
     }
 
     public void verifyStatus(String status) {
@@ -97,5 +93,9 @@ public class GroupViewDetailsPage extends MifosPage {
         selenium.click("groupdetail.link.questionGroups");
         waitForPageToLoad();
         return new ViewQuestionResponseDetailPage(selenium);
+    }
+
+    public void verifyLoanDoesntExist(String loanID) {
+        Assert.assertFalse(selenium.isTextPresent(loanID));
     }
 }

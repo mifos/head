@@ -28,9 +28,6 @@ import com.thoughtworks.selenium.Selenium;
 public class UndoLoanDisbursalEntryPage extends MifosPage {
     public UndoLoanDisbursalEntryPage (Selenium selenium) {
         super(selenium);
-    }
-
-    public void verifyPage() {
         this.verifyPage("UndoLoanDisbursal");
     }
 

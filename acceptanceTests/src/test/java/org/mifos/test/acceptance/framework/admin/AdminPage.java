@@ -21,6 +21,8 @@
 package org.mifos.test.acceptance.framework.admin;
 
 import com.thoughtworks.selenium.Selenium;
+
+import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.holiday.CreateHolidayEntryPage;
 import org.mifos.test.acceptance.framework.holiday.ViewHolidaysPage;
@@ -60,6 +62,7 @@ public class AdminPage extends MifosPage {
 
     public AdminPage(Selenium selenium) {
         super(selenium);
+        verifyPage(PAGE_ID);
     }
 
     public ViewHolidaysPage navigateToViewHolidaysPage() {
@@ -218,6 +221,12 @@ public class AdminPage extends MifosPage {
         return new ViewFundsPage(selenium);
     }
 
+    public FundCreatePage navigateToFundCreatePage(){
+        selenium.click("admin.link.defineNewFund");
+        waitForPageToLoad();
+        return new FundCreatePage(selenium);
+    }
+
     public DefineNewSavingsProductPage navigateToDefineSavingsProduct() {
         selenium.click("admin.link.defineNewSavingsProduct");
         waitForPageToLoad();
@@ -332,5 +341,11 @@ public class AdminPage extends MifosPage {
         waitForPageToLoad();
 
         return new DefineNewOfficePage(selenium);
+    }
+
+    public ClientsAndAccountsHomepage navigateToClientsAndAccountsUsingHeaderTab() {
+        selenium.click("header.link.clientsAndAccounts");
+        waitForPageToLoad();
+        return new ClientsAndAccountsHomepage(selenium);
     }
 }

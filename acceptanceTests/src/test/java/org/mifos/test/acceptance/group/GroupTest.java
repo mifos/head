@@ -30,6 +30,9 @@ import org.mifos.test.acceptance.framework.group.CenterSearchTransferGroupPage;
 import org.mifos.test.acceptance.framework.group.ConfirmCenterMembershipPage;
 import org.mifos.test.acceptance.framework.group.CreateGroupConfirmationPage;
 import org.mifos.test.acceptance.framework.group.CreateGroupEntryPage;
+import org.mifos.test.acceptance.framework.group.EditGroupStatusConfirmationPage;
+import org.mifos.test.acceptance.framework.group.EditGroupStatusPage;
+import org.mifos.test.acceptance.framework.group.EditGroupStatusParameters;
 import org.mifos.test.acceptance.framework.group.CreateGroupEntryPage.CreateGroupSubmitParameters;
 import org.mifos.test.acceptance.framework.group.CreateGroupSearchPage;
 import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
@@ -100,34 +103,56 @@ public class GroupTest extends UiTestCaseBase {
         searchResultsPage.verifyPage();
         // click on any search result leading to a group dashboard
         GroupViewDetailsPage groupViewDetailsPage = searchResultsPage.navigateToGroupViewDetailsPage("link=MyGroup*");
-        groupViewDetailsPage.verifyPage();
     }
 
     @Test(sequential = true, groups = {"smoke","group","acceptance","ui"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
+    // http://mifosforge.jira.com/browse/MIFOSTEST-301
     public void createGroupInPendingApprovalStateTest() throws Exception {
-
+        //Given
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml", dataSource, selenium);
+        //When
         CreateGroupEntryPage groupEntryPage = loginAndNavigateToNewGroupPage();
         CreateGroupSubmitParameters formParameters = getGenericGroupFormParameters();
         CreateGroupConfirmationPage confirmationPage = groupEntryPage.submitNewGroupForApproval(formParameters);
         confirmationPage.verifyPage();
         GroupViewDetailsPage groupDetailsPage = confirmationPage.navigateToGroupDetailsPage();
-        groupDetailsPage.verifyPage();
+        //Then
         groupDetailsPage.verifyStatus("Application Pending*");
+        //When
+        EditGroupStatusPage editGroupStatusPage = groupDetailsPage.navigateToEditGroupStatusPage();
+        EditGroupStatusParameters editGroupStatusParameters = new EditGroupStatusParameters();
+        editGroupStatusParameters.setStatus(EditGroupStatusParameters.ACTIVE);
+        editGroupStatusParameters.setNote("test");
+        EditGroupStatusConfirmationPage confirmationPage2 = editGroupStatusPage.submitAndNavigateToEditStatusConfirmationPage(editGroupStatusParameters);
+        GroupViewDetailsPage detailsPage = confirmationPage2.navigateToGroupDetailsPage();
+        //Then
+        detailsPage.verifyStatus("Active*");
     }
 
     @Test(sequential = true, groups = {"group","acceptance","ui"})
+    // http://mifosforge.jira.com/browse/MIFOSTEST-300
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void createGroupInPartialApplicationStateTest() throws Exception {
+        //Given
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml", dataSource, selenium);
+        //When
         CreateGroupEntryPage groupEntryPage = loginAndNavigateToNewGroupPage();
         CreateGroupSubmitParameters formParameters = getGenericGroupFormParameters();
         CreateGroupConfirmationPage confirmationPage = groupEntryPage.submitNewGroupForPartialApplication(formParameters);
         confirmationPage.verifyPage();
         GroupViewDetailsPage groupDetailsPage = confirmationPage.navigateToGroupDetailsPage();
-        groupDetailsPage.verifyPage();
+        //Then
         groupDetailsPage.verifyStatus("Partial Application*");
+        //When
+        EditGroupStatusPage editGroupStatusPage = groupDetailsPage.navigateToEditGroupStatusPage();
+        EditGroupStatusParameters editGroupStatusParameters = new EditGroupStatusParameters();
+        editGroupStatusParameters.setStatus(EditGroupStatusParameters.PENDING_APPROVAL);
+        editGroupStatusParameters.setNote("test");
+        EditGroupStatusConfirmationPage confirmationPage2 = editGroupStatusPage.submitAndNavigateToEditStatusConfirmationPage(editGroupStatusParameters);
+        GroupViewDetailsPage detailsPage = confirmationPage2.navigateToGroupDetailsPage();
+        //Then
+        detailsPage.verifyStatus("Application Pending Approval*");
     }
 
     @Test(sequential = true, groups = {"group","acceptance","ui"})
@@ -139,20 +164,17 @@ public class GroupTest extends UiTestCaseBase {
         CreateGroupConfirmationPage confirmationPage = groupEntryPage.submitNewGroupForApproval(formParameters);
         confirmationPage.verifyPage();
         GroupViewDetailsPage groupDetailsPage = confirmationPage.navigateToGroupDetailsPage();
-        groupDetailsPage.verifyPage();
         CenterSearchTransferGroupPage centerSearchTransfer = groupDetailsPage.editCenterMembership();
         centerSearchTransfer.verifyPage();
         ConfirmCenterMembershipPage confirmMembership = centerSearchTransfer.search("Center3");
         confirmMembership.verifyPage();
         groupDetailsPage = confirmMembership.submitMembershipChange();
-        groupDetailsPage.verifyPage();
         groupDetailsPage.verifyLoanOfficer(" Loan officer: Jenna Barth");
     }
 
     @Test(sequential = true, groups = {"smoke","group","acceptance","ui"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void createGroupInPendingApprovalStateTestWithSurveys() throws Exception {
-
         String questionGroupTitle = "QG1" + random.nextInt(100);
         String question1 = "Nu_" + random.nextInt(100);
         String question2 = "SS_" + random.nextInt(100);
@@ -172,7 +194,6 @@ public class GroupTest extends UiTestCaseBase {
         responsePage.verifyQuestionPresent(question1, "30");
         responsePage.verifyQuestionPresent(question2, "Choice", "Choice2");
         responsePage.navigateToDetailsPage();
-        groupViewDetailsPage.verifyPage();
     }
 
     private Map<String, String> getChoiceTags() {

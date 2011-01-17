@@ -579,7 +579,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         ClientsAndAccountsHomepage clientsAndAccountsHomepage = new ClientsAndAccountsHomepage(selenium);
         ClientSearchResultsPage resultsPage =  clientsAndAccountsHomepage.searchForClient("MyGroup1232993846342");
 
-        resultsPage.navigateToSearchResult("exact:MyGroup1232993846342: ID 0002-000000002");
+        resultsPage.navigateToGroupSearchResult("exact:MyGroup1232993846342: ID 0002-000000002");
 
         selenium.click("viewgroupdetails.link.viewSavingsAccount");
         selenium.waitForPageToLoad("30000");
@@ -592,8 +592,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         ClientsAndAccountsHomepage clientsAndAccountsHomepage = new ClientsAndAccountsHomepage(selenium);
         ClientSearchResultsPage resultsPage =  clientsAndAccountsHomepage.searchForClient("MyGroup1232993846342");
 
-        resultsPage.navigateToSearchResult("exact:MyGroup1232993846342: ID 0002-000000002");
-
+        resultsPage.navigateToGroupSearchResult("exact:MyGroup1232993846342: ID 0002-000000002");
 
         selenium.click("viewgroupdetails.link.newSavingsAccount");
         selenium.waitForPageToLoad("30000");

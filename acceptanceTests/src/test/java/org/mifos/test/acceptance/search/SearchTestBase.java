@@ -29,10 +29,6 @@ public class SearchTestBase extends UiTestCaseBase {
     public SearchResultsPage searchFor( AppLauncher appLauncher, String s )
     {
         HomePage homePage = appLauncher.launchMifos().loginSuccessfullyUsingDefaultCredentials();
-        homePage.verifyPage();
-
-        SearchResultsPage searchResult = homePage.search( s );
-        searchResult.verifyPage();
-        return searchResult ;
+        return homePage.search( s ) ;
     }
 }

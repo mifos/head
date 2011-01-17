@@ -37,12 +37,12 @@ public class EditGroupStatusPage extends MifosPage {
     public EditGroupStatusConfirmationPage submitAndNavigateToEditStatusConfirmationPage(EditGroupStatusParameters params) {
         /* usually this would be an "id=..." locator but since this is a radio button we have to use
            name + value (id + value is not supported by Selenium). */
-        selenium.check("name=newStatusId value=" + params.getStatus());
+        selenium.check("name=newStatusId value=" + params.getStatusValue());
 
-        // simulate a click on "Closed", enabling the drop down for choosing a reason
-        selenium.fireEvent("name=newStatusId value=12", "click");
+        //simulate a click on "Closed", enabling the drop down for choosing a reason
+        //selenium.fireEvent("name=newStatusId value=12", "click");
 
-        this.selectIfNotEmpty("customerchangeStatus.input.cancel_reason", params.getCancelReason());
+        //this.selectIfNotEmpty("customerchangeStatus.input.cancel_reason", params.getCancelReason());
         selenium.type("customerchangeStatus.input.notes", params.getNote());
 
         selenium.click("customerchangeStatus.button.preview");

@@ -18,23 +18,21 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.test.acceptance.framework.loan;
+package org.mifos.test.acceptance.framework.admin;
 
 import org.mifos.test.acceptance.framework.MifosPage;
 
 import com.thoughtworks.selenium.Selenium;
 
-public class CreateLoanAccountConfirmationPage extends MifosPage {
-
-    public CreateLoanAccountConfirmationPage(Selenium selenium) {
+public class CreateNewFundConfirmationPage extends MifosPage {
+    public CreateNewFundConfirmationPage(Selenium selenium) {
         super(selenium);
-        this.verifyPage("CreateLoanAccountConfirmation");
+        this.verifyPage("newFundPreview");
     }
 
-    public LoanAccountPage navigateToLoanAccountDetailsPage() {
-        selenium.click("CreateLoanAccountConfirmation.link.viewLoanDetails");
+    public AdminPage submitAndNavigateToAdminPage() {
+        selenium.click("SUBMIT");
         waitForPageToLoad();
-      return new LoanAccountPage(selenium);
+        return new AdminPage(selenium);
     }
-
 }

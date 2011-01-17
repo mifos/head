@@ -29,9 +29,6 @@ public class UndoLoanDisbursalPreviewPage extends MifosPage {
     public UndoLoanDisbursalPreviewPage (Selenium selenium) {
         super(selenium);
         this.selenium = selenium;
-    }
-
-    public void verifyPage() {
         this.verifyPage("UndoLoanDisbursalPreview");
     }
 

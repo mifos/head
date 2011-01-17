@@ -135,7 +135,7 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
 
     private void verifyAdjustmentFromInstallmentsDetails(String adjustedAmount, String[][] adjustedSchedule) {
         new LoanAccountPage(selenium).
-                navigateToViewInstallmentDetails().
+                navigateToViewNextInstallmentDetails().
                 navigateToApplyAdjustment().
                 verifyAdjustment(adjustedAmount).
                 navigateToRepaymentSchedulePage().
@@ -242,7 +242,7 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
                 clickContinue().
                 verifyLoanScheduleForDecliningPrincipal().
                 clickPreviewAndGoToReviewLoanAccountPage().
-                verifyPage().verifyInterestTypeInLoanPreview(interestTypeName).
+                verifyInterestTypeInLoanPreview(interestTypeName).
                 submit().navigateToLoanAccountDetailsPage().
                 verifyInterestTypeInLoanAccountDetails(interestTypeName).
                 navigateToRepaymentSchedulePage().

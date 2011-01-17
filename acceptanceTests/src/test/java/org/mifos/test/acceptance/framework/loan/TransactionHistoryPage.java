@@ -20,21 +20,15 @@
 
 package org.mifos.test.acceptance.framework.loan;
 
-import org.mifos.test.acceptance.framework.MifosPage;
+import org.mifos.test.acceptance.framework.AbstractPage;
 
 import com.thoughtworks.selenium.Selenium;
 
-public class CreateLoanAccountConfirmationPage extends MifosPage {
+@SuppressWarnings("PMD.SystemPrintln")
+public class TransactionHistoryPage extends AbstractPage {
 
-    public CreateLoanAccountConfirmationPage(Selenium selenium) {
+    public TransactionHistoryPage(Selenium selenium) {
         super(selenium);
-        this.verifyPage("CreateLoanAccountConfirmation");
+        verifyPage("ViewTransactionHistory");
     }
-
-    public LoanAccountPage navigateToLoanAccountDetailsPage() {
-        selenium.click("CreateLoanAccountConfirmation.link.viewLoanDetails");
-        waitForPageToLoad();
-      return new LoanAccountPage(selenium);
-    }
-
 }

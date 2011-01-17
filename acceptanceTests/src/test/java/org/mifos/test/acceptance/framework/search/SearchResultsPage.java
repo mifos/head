@@ -26,6 +26,7 @@ import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.savings.SavingsAccountDetailPage;
+import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -40,11 +41,24 @@ public class SearchResultsPage extends MifosPage {
 
     public SearchResultsPage(Selenium selenium) {
         super(selenium);
+        verifyPage("MainSearchResults");
     }
 
     public SearchResultsPage verifyPage() {
         verifyPage("MainSearchResults");
         return this;
+    }
+
+    public void verifySearchResults(int searchCount) {
+        verifySearchResults(searchCount, "");
+    }
+
+    public void verifySearchResults(int searchCount, String searchResultID) {
+        int count = countSearchResults();
+        Assert.assertEquals(count, searchCount);
+        if(!"".equals(searchResultID)) {
+            Assert.assertTrue(selenium.isTextPresent(searchResultID));
+        }
     }
 
     /**

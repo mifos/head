@@ -22,15 +22,12 @@ package org.mifos.test.acceptance.center;
 
 
 import org.mifos.framework.util.DbUnitUtilities;
-import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.center.CenterViewDetailsPage;
-import org.mifos.test.acceptance.framework.center.CreateCenterChooseOfficePage;
-import org.mifos.test.acceptance.framework.center.CreateCenterConfirmationPage;
 import org.mifos.test.acceptance.framework.center.CreateCenterEnterDataPage;
-import org.mifos.test.acceptance.framework.center.CreateCenterPreviewDataPage;
 import org.mifos.test.acceptance.framework.center.MeetingParameters;
+import org.mifos.test.acceptance.framework.testhelpers.CenterTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,14 +47,15 @@ public class CenterTest extends UiTestCaseBase {
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
 
-    private NavigationHelper navigationHelper;
+    private CenterTestHelper centerTestHelper;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
-        navigationHelper = new NavigationHelper(selenium);
+        NavigationHelper navigationHelper = new NavigationHelper(selenium);
+        centerTestHelper = new CenterTestHelper(navigationHelper);
         new InitializeApplicationRemoteTestingService().reinitializeApplication(selenium);
     }
 
@@ -66,25 +64,17 @@ public class CenterTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
+    // http://mifosforge.jira.com/browse/MIFOSTEST-299
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createCenterTest() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
 
-        createCenter(getCenterParameters("Fantastico", "Joe1233171679953 Guy1233171679953"), "MyOffice1233171674227");
-    }
+        CreateCenterEnterDataPage.SubmitFormParameters formParameters = getCenterParameters("Fantastico", "Joe1233171679953 Guy1233171679953");
+        String officeName = "MyOffice1233171674227";
 
-    public CenterViewDetailsPage createCenter(CreateCenterEnterDataPage.SubmitFormParameters formParameters, String officeName) {
-        ClientsAndAccountsHomepage clientsAccountsPage = navigationHelper.navigateToClientsAndAccountsPage();
+        CenterViewDetailsPage centerViewDetailsPage = centerTestHelper.createCenter(formParameters, officeName);
 
-        CreateCenterChooseOfficePage chooseOfficePage = clientsAccountsPage.navigateToCreateNewCenterPage();
-        CreateCenterEnterDataPage enterDataPage = chooseOfficePage.selectOffice(officeName);
-        CreateCenterPreviewDataPage centerPreviewDataPage = enterDataPage.submitAndGotoCreateCenterPreviewDataPage(formParameters);
-        CreateCenterConfirmationPage confirmationPage = centerPreviewDataPage.submit();
-        confirmationPage.verifyPage();
-        CenterViewDetailsPage centerDetailsPage = confirmationPage.navigateToCenterViewDetailsPage();
-        centerDetailsPage.verifyActiveCenter(formParameters);
-
-        return centerDetailsPage;
+        centerViewDetailsPage.verifyActiveCenter(formParameters);
     }
 
     public CreateCenterEnterDataPage.SubmitFormParameters getCenterParameters(String centerName, String loanOfficer) {

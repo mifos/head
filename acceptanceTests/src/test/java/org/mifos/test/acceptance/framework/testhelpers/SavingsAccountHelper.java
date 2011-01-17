@@ -74,7 +74,6 @@ public class SavingsAccountHelper {
       HomePage homePage = loginPage.loginSuccessfullyUsingDefaultCredentials();
       homePage.verifyPage();
       ClientsAndAccountsHomepage clientsAndAccountsPage = homePage.navigateToClientsAndAccountsUsingHeaderTab();
-      clientsAndAccountsPage.verifyPage();
       return clientsAndAccountsPage.navigateToCreateSavingsAccountUsingLeftMenu();
     }
 

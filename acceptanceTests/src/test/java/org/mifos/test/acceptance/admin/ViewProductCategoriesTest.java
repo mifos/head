@@ -21,14 +21,12 @@ package org.mifos.test.acceptance.admin;
 
 import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.AppLauncher;
-import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.admin.ViewProductCategoriesPage;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -36,13 +34,11 @@ import org.testng.annotations.Test;
 
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"acceptance","ui"})
+@Test(sequential = true, groups = {"acceptance","ui", "smoke"})
 public class ViewProductCategoriesTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;
 
-    @Autowired
-    private DriverManagerDataSource dataSource;
     @Autowired
     private DbUnitUtilities dbUnitUtilities;
     @Autowired
@@ -63,33 +59,32 @@ public class ViewProductCategoriesTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void verifyViewProductCategoriesTest() throws Exception {
-        //initialize with data set
+
+    @Test
+    // http://mifosforge.jira.com/browse/MIFOSTEST-649
+    public void verifyViewProductCategoriesTest()throws Exception {
+        //Given
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml", dataSource, selenium);
 
+        //When
         AdminPage adminPage = loginAndGoToAdminPage();
         ViewProductCategoriesPage viewProductCategoriesPage =
             adminPage.navigateToViewProductCategoriesPage();
-        viewProductCategoriesPage.verifyPage();
 
-//        String[] expectedData = new String[]{
-//                "Loan",
-//                "Other",
-//                "Saving",
-//                "Other"
-//        };
-//
-//        viewProductCategoriesPage.verifyProductCategories(expectedData);
-
+        //Then
+        String[] expectedData = new String[]{ //TODO add support for other languages than English
+                "View product categories",
+                "Click on a category below to view details and make changes or define new product category",
+                "Loan",
+                "Other",
+                "Savings",
+                "Other"
+        };
+        viewProductCategoriesPage.verifyProductCategories(expectedData);
     }
 
-
     private AdminPage loginAndGoToAdminPage() {
-        HomePage homePage = appLauncher.launchMifos().loginSuccessfullyUsingDefaultCredentials();
-        homePage.verifyPage();
-        AdminPage adminPage = homePage.navigateToAdminPage();
-        adminPage.verifyPage();
-        return adminPage;
+        return appLauncher.launchMifos().loginSuccessfullyUsingDefaultCredentials().navigateToAdminPage();
     }
 }
 

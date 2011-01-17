@@ -45,7 +45,7 @@ public class MeetingFactory {
             }
 
             WeekDay weekDay = null;
-            Integer weekDayNum = meetingDetailsDto.getRecurrenceDetails().getWeekOfMonth();
+            Integer weekDayNum = meetingDetailsDto.getRecurrenceDetails().getDayOfWeek();
             if (weekDayNum != null && weekDayNum > 0) {
                 weekDay = WeekDay.getWeekDay(meetingDetailsDto.getRecurrenceDetails().getDayOfWeek());
             }
@@ -57,6 +57,11 @@ public class MeetingFactory {
 
             if (rank != null && weekDay != null) {
                 meeting = new MeetingBO(weekDay, rank, meetingDetailsDto.getEvery().shortValue(), meetingDto
+                        .getMeetingStartDate().toDateMidnight().toDate(), MeetingType.CUSTOMER_MEETING, meetingDto
+                        .getMeetingPlace());
+            }
+            else if (weekDay != null) {
+                meeting = new MeetingBO(weekDay, meetingDetailsDto.getEvery().shortValue(), meetingDto
                         .getMeetingStartDate().toDateMidnight().toDate(), MeetingType.CUSTOMER_MEETING, meetingDto
                         .getMeetingPlace());
             }
