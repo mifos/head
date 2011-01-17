@@ -36,7 +36,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.loan.persistance.ClientAttendanceDao;
-import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.savings.persistence.SavingsDao;
 import org.mifos.application.collectionsheet.persistence.CollectionSheetDao;
@@ -58,7 +58,7 @@ public class CollectionSheetServiceImplTest {
     @Mock
     private ClientAttendanceDao clientAttendanceDao;
     @Mock
-    private LoanPersistence loanPersistence;
+    private LegacyLoanDao loanPersistence;
     @Mock
     private LegacyAccountDao legacyAccountDao;
     @Mock

@@ -28,7 +28,7 @@ import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.fees.business.FeeBO;
-import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.loan.schedule.domain.Installment;
 import org.mifos.accounts.loan.schedule.domain.InstallmentBuilder;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
@@ -62,7 +62,7 @@ public class LoanScheduleEntityTest {
     @Mock
     private AccountPaymentEntity accountPayment;
     @Mock
-    private LoanPersistence loanPersistence;
+    private LegacyLoanDao loanPersistence;
     @Mock
     private AccountPaymentEntity accountPaymentEntity;
 

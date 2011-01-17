@@ -35,7 +35,7 @@ import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.business.OriginalLoanScheduleEntity;
 import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
 import org.mifos.accounts.loan.persistance.LoanDao;
-import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.util.helpers.AccountExceptionConstants;
 import org.mifos.accounts.util.helpers.PaymentData;
@@ -56,7 +56,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class LoanBusinessService implements BusinessService {
 
-    private LoanPersistence loanPersistence = new LoanPersistence();
+    private LegacyLoanDao loanPersistence = new LegacyLoanDao();
     private ConfigurationBusinessService configService = new ConfigurationBusinessService();
 
     @Autowired
@@ -69,9 +69,9 @@ public class LoanBusinessService implements BusinessService {
     private ScheduleCalculatorAdaptor scheduleCalculatorAdaptor;
 
 
-    public LoanPersistence getLoanPersistence() {
+    public LegacyLoanDao getLoanPersistence() {
         if (loanPersistence == null) {
-            loanPersistence = new LoanPersistence();
+            loanPersistence = new LegacyLoanDao();
         }
         return loanPersistence;
     }
@@ -97,7 +97,7 @@ public class LoanBusinessService implements BusinessService {
     protected LoanBusinessService() {
     }
 
-    public LoanBusinessService(LoanPersistence loanPersistence, ConfigurationBusinessService configService,
+    public LoanBusinessService(LegacyLoanDao loanPersistence, ConfigurationBusinessService configService,
                                AccountBusinessService accountBusinessService, HolidayService holidayService,
                                ScheduleCalculatorAdaptor scheduleCalculatorAdaptor) {
         this.loanPersistence = loanPersistence;

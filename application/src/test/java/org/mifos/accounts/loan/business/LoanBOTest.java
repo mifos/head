@@ -24,7 +24,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.business.*;
 import org.mifos.accounts.exceptions.AccountException;
-import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallmentBuilder;
@@ -187,7 +187,7 @@ public class LoanBOTest {
 
     @Test
     public void repayInstallmentsShouldPopulateCalculatedInterestsForDIPBLoans() throws PersistenceException {
-        final LoanPersistence loanPersistence = mock(LoanPersistence.class);
+        final LegacyLoanDao loanPersistence = mock(LegacyLoanDao.class);
         final CustomerBO customerBO = mock(CustomerBO.class);
         final LoanSummaryEntity loanSummaryEntity = mock(LoanSummaryEntity.class);
 
@@ -198,7 +198,7 @@ public class LoanBOTest {
             }
 
             @Override
-            public LoanPersistence getLoanPersistence() {
+            public LegacyLoanDao getLoanPersistence() {
                 return loanPersistence;
             }
 
@@ -245,7 +245,7 @@ public class LoanBOTest {
 
     @Test
     public void repayInstallmentsShouldPopulateCalculatedInterestsForDIPBLoansWithWaiverInterest() throws PersistenceException {
-        final LoanPersistence loanPersistence = mock(LoanPersistence.class);
+        final LegacyLoanDao loanPersistence = mock(LegacyLoanDao.class);
         final CustomerBO customerBO = mock(CustomerBO.class);
         final LoanSummaryEntity loanSummaryEntity = mock(LoanSummaryEntity.class);
 
@@ -256,7 +256,7 @@ public class LoanBOTest {
             }
 
             @Override
-            public LoanPersistence getLoanPersistence() {
+            public LegacyLoanDao getLoanPersistence() {
                 return loanPersistence;
             }
 

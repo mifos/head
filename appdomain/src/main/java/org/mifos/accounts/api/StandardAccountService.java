@@ -34,7 +34,7 @@ import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.business.service.LoanScheduleGenerationDto;
-import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.savings.business.SavingsBO;
@@ -71,7 +71,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class StandardAccountService implements AccountService {
 
     private LegacyAccountDao legacyAccountDao;
-    private LoanPersistence loanPersistence;
+    private LegacyLoanDao loanPersistence;
     private AcceptedPaymentTypePersistence acceptedPaymentTypePersistence;
     private PersonnelDao personnelDao;
     private CustomerDao customerDao;
@@ -82,7 +82,7 @@ public class StandardAccountService implements AccountService {
     private LegacyMasterDao legacyMasterDao;
 
     @Autowired
-    public StandardAccountService(LegacyAccountDao legacyAccountDao, LoanPersistence loanPersistence,
+    public StandardAccountService(LegacyAccountDao legacyAccountDao, LegacyLoanDao loanPersistence,
                                   AcceptedPaymentTypePersistence acceptedPaymentTypePersistence, PersonnelDao personnelDao,
                                   CustomerDao customerDao, LoanBusinessService loanBusinessService,
                                   HibernateTransactionHelper transactionHelper) {

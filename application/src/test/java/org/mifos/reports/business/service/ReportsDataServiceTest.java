@@ -33,7 +33,7 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.customers.office.business.OfficeBO;
@@ -55,7 +55,7 @@ public class ReportsDataServiceTest extends TestCase {
 
     private OfficeBusinessService officeBusinessServiceMock;
 
-    private LoanPersistence loanPersistenceMock;
+    private LegacyLoanDao loanPersistenceMock;
 
     private PersonnelBO personnelMock;
 
@@ -74,7 +74,7 @@ public class ReportsDataServiceTest extends TestCase {
         personnelBusinessServiceMock = createMock(PersonnelBusinessService.class);
         officeBusinessServiceMock = createMock(OfficeBusinessService.class);
         personnelMock = createMock(PersonnelBO.class);
-        loanPersistenceMock = createMock(LoanPersistence.class);
+        loanPersistenceMock = createMock(LegacyLoanDao.class);
         expectedException = new ServiceException("someServiceException");
 
         userId = 1;

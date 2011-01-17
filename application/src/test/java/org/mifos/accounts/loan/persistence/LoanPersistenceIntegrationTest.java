@@ -56,7 +56,7 @@ import org.mifos.accounts.loan.business.OriginalLoanFeeScheduleEntity;
 import org.mifos.accounts.loan.business.OriginalLoanScheduleEntity;
 import org.mifos.accounts.loan.business.matchers.OriginalLoanFeeScheduleEntityMatcher;
 import org.mifos.accounts.loan.business.matchers.OriginalLoanScheduleEntitiesMatcher;
-import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
@@ -82,7 +82,7 @@ public class LoanPersistenceIntegrationTest extends MifosIntegrationTestCase {
     private static final double DELTA = 0.00000001;
 
     // class under test
-    private LoanPersistence loanPersistence;
+    private LegacyLoanDao loanPersistence;
 
     // collaborators
     private CustomerBO center;
@@ -98,7 +98,7 @@ public class LoanPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     @Before
     public void setUp() throws Exception {
-        loanPersistence = new LoanPersistence();
+        loanPersistence = new LegacyLoanDao();
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
         center = TestObjectFactory.createWeeklyFeeCenterForTestGetLoanAccounts("Center", meeting);
@@ -128,7 +128,7 @@ public class LoanPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     @Test
     public void testFindBySystemId() throws Exception {
-        LoanPersistence loanPersistance = new LoanPersistence();
+        LegacyLoanDao loanPersistance = new LegacyLoanDao();
         LoanBO loanBO = loanPersistance.findBySystemId(loanAccount.getGlobalAccountNum());
         Assert.assertEquals(loanAccount.getGlobalAccountNum(), loanBO.getGlobalAccountNum());
         Assert.assertEquals(loanAccount.getAccountId(), loanBO.getAccountId());
@@ -141,7 +141,7 @@ public class LoanPersistenceIntegrationTest extends MifosIntegrationTestCase {
         loanAccount.setExternalId(externalId);
         StaticHibernateUtil.flushSession();
 
-        LoanPersistence loanPersistance = new LoanPersistence();
+        LegacyLoanDao loanPersistance = new LegacyLoanDao();
         LoanBO loanBO = loanPersistance.findByExternalId(loanAccount.getExternalId());
         Assert.assertEquals(externalId, loanBO.getExternalId());
         Assert.assertEquals(loanAccount.getAccountId(), loanBO.getAccountId());
@@ -149,7 +149,7 @@ public class LoanPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     @Test
     public void testFindIndividualLoans() throws Exception {
-        LoanPersistence loanPersistance = new LoanPersistence();
+        LegacyLoanDao loanPersistance = new LegacyLoanDao();
         List<LoanBO> listLoanBO = loanPersistance.findIndividualLoans(loanAccount.getAccountId().toString());
 
         Assert.assertEquals(0, listLoanBO.size());

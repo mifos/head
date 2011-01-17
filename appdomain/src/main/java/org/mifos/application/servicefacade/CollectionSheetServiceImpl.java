@@ -35,7 +35,7 @@ import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.persistance.ClientAttendanceDao;
-import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.persistence.SavingsDao;
@@ -55,7 +55,7 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
     private static final Logger logger = LoggerFactory.getLogger(CollectionSheetServiceImpl.class);
 
     private final ClientAttendanceDao clientAttendanceDao;
-    private LoanPersistence loanPersistence = new LoanPersistence();
+    private LegacyLoanDao loanPersistence = new LegacyLoanDao();
 
     @Autowired
     private LegacyAccountDao legacyAccountDao;
@@ -71,7 +71,7 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
     }
 
     public CollectionSheetServiceImpl(final ClientAttendanceDao clientAttendanceDao,
-            final LoanPersistence loanPersistence, final LegacyAccountDao legacyAccountDao,
+            final LegacyLoanDao loanPersistence, final LegacyAccountDao legacyAccountDao,
             final SavingsDao savingsDao, final CollectionSheetDao collectionSheetDao) {
         this.clientAttendanceDao = clientAttendanceDao;
         this.loanPersistence = loanPersistence;

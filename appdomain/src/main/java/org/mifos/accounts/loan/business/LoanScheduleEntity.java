@@ -24,7 +24,7 @@ import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
-import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.loan.schedule.domain.Installment;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
@@ -693,14 +693,14 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
                                                                    PersonnelBO personnel, Date transactionDate) {
 
         LoanBO loanBO = (LoanBO) account;
-        LoanPersistence loanPersistence = loanBO.getLoanPersistence();
+        LegacyLoanDao loanPersistence = loanBO.getLoanPersistence();
         LoanTrxnDetailEntity loanTrxnDetailEntity = recordTransaction(accountPayment, personnel, transactionDate, loanPersistence);
         loanBO.recordSummaryAndPerfHistory(isPaid(), paymentAllocation);
         return loanTrxnDetailEntity;
     }
 
     private LoanTrxnDetailEntity recordTransaction(AccountPaymentEntity accountPayment, PersonnelBO personnel,
-                                                   Date transactionDate, LoanPersistence loanPersistence) {
+                                                   Date transactionDate, LegacyLoanDao loanPersistence) {
         // TODO: Avoid passing the persistence instance in the constructor for reference data lookup
         LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPayment, this, personnel, transactionDate,
                 AccountActionTypes.LOAN_REPAYMENT, AccountConstants.PAYMENT_RCVD, loanPersistence);

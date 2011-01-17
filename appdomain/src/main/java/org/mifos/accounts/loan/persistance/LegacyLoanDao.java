@@ -49,12 +49,10 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.LegacyGenericDao;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.security.rolesandpermission.business.ActivityEntity;
-
 import java.math.BigDecimal;
 import java.util.*;
 
-public class LoanPersistence extends LegacyGenericDao {
+public class LegacyLoanDao extends LegacyGenericDao {
 
     @SuppressWarnings("unchecked")
     public Money getFeeAmountAtDisbursement(final Integer accountId, final MifosCurrency currency) {
@@ -75,7 +73,6 @@ public class LoanPersistence extends LegacyGenericDao {
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
         }
-
         return amount;
     }
 

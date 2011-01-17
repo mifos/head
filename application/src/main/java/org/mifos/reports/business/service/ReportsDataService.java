@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.customers.office.business.OfficeBO;
@@ -46,13 +46,13 @@ public class ReportsDataService {
 
     private PersonnelBO personnel;
 
-    private LoanPersistence loanPersistence;
+    private LegacyLoanDao loanPersistence;
 
     public ReportsDataService() {
         this.personnelBusinessService = new PersonnelBusinessService();
         this.officeBusinessService = new OfficeBusinessService();
         this.loanPrdBusinessService = new LoanPrdBusinessService();
-        this.loanPersistence = new LoanPersistence();
+        this.loanPersistence = new LegacyLoanDao();
     }
 
     public void initialize(Integer userId) throws ServiceException {
@@ -118,7 +118,7 @@ public class ReportsDataService {
         this.personnel = personnel;
     }
 
-    public void setLoanPersistence(LoanPersistence loanPersistence) {
+    public void setLoanPersistence(LegacyLoanDao loanPersistence) {
         this.loanPersistence = loanPersistence;
     }
 

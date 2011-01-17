@@ -47,7 +47,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
-import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.loan.schedule.calculation.ScheduleCalculator;
 import org.mifos.accounts.loan.schedule.domain.Installment;
 import org.mifos.accounts.loan.schedule.domain.InstallmentBuilder;
@@ -81,7 +81,7 @@ public class ScheduleCalculatorAdaptorTest {
     private AccountPaymentEntity accountPaymentEntity;
 
     @Mock
-    private LoanPersistence loanPersistence;
+    private LegacyLoanDao loanPersistence;
 
     @Mock
     private AccountActionEntity accountActionEntity;

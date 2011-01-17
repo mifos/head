@@ -30,7 +30,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import org.joda.time.LocalDate;
-import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.savings.persistence.SavingsDao;
 import org.mifos.application.servicefacade.CollectionSheetCustomerAccountCollectionDto;
 import org.mifos.application.servicefacade.CollectionSheetCustomerDto;
@@ -408,7 +408,7 @@ public class CollectionSheetDaoHibernate extends LegacyGenericDao implements Col
             if (Constants.YES == loanDisbursementAccount.getPayInterestAtDisbursement()) {
                 amountDueAtDisbursement = findAmountDueWhenInterestIsDueAtDibursementTime(accountId);
             } else {
-                amountDueAtDisbursement = new LoanPersistence().getFeeAmountAtDisbursement(accountId,
+                amountDueAtDisbursement = new LegacyLoanDao().getFeeAmountAtDisbursement(accountId,
                         Money.getDefaultCurrency()).getAmountDoubleValue();
             }
 

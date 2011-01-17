@@ -65,7 +65,7 @@ import org.mifos.accounts.fees.util.helpers.FeeStatus;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
-import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.loan.struts.action.validate.ProductMixValidator;
 import org.mifos.accounts.loan.util.helpers.EMIInstallment;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
@@ -177,17 +177,17 @@ public class LoanBO extends AccountBO {
 
     // persistence
     private LoanPrdPersistence loanPrdPersistence;
-    private LoanPersistence loanPersistence = null;
+    private LegacyLoanDao loanPersistence = null;
     LegacyMasterDao legacyMasterDao = ApplicationContextProvider.getBean(LegacyMasterDao.class);
 
-    public LoanPersistence getLoanPersistence() {
+    public LegacyLoanDao getLoanPersistence() {
         if (null == loanPersistence) {
-            loanPersistence = new LoanPersistence();
+            loanPersistence = new LegacyLoanDao();
         }
         return loanPersistence;
     }
 
-    public void setLoanPersistence(final LoanPersistence loanPersistence) {
+    public void setLoanPersistence(final LegacyLoanDao loanPersistence) {
         this.loanPersistence = loanPersistence;
     }
 

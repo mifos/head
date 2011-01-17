@@ -25,7 +25,7 @@ import org.joda.time.LocalDate;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.fund.business.FundBO;
-import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.productdefinition.LoanAmountCalculation;
 import org.mifos.accounts.productdefinition.LoanInstallmentCalculation;
 import org.mifos.accounts.productdefinition.LoanProductCalculationType;
@@ -645,7 +645,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 
     public void save() throws ProductDefinitionException {
         try {
-            new LoanPersistence().createOrUpdate(this);
+            new LegacyLoanDao().createOrUpdate(this);
         } catch (PersistenceException e) {
             throw new ProductDefinitionException(e);
         }
