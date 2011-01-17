@@ -28,7 +28,7 @@ import org.mifos.accounts.financial.business.COAHierarchyEntity;
 import org.mifos.accounts.financial.business.FinancialActionTypeEntity;
 import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.accounts.financial.exceptions.FinancialExceptionConstants;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.config.ChartOfAccountsConfig;
 import org.mifos.config.GLAccount;
@@ -93,7 +93,7 @@ public class FinancialInitializer {
             throw new FinancialException(coaLocation + " loading failed", e);
         }
 
-        AccountPersistence ap = new AccountPersistence();
+        LegacyAccountDao ap = new LegacyAccountDao();
         for (GLAccount glAccount : coa.getGLAccounts()) {
             Short accountId = ap.getAccountIdFromGlCode(glAccount.glCode);
             if (null == accountId) {

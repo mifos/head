@@ -27,7 +27,7 @@ import java.util.Map;
 
 import org.joda.time.Days;
 import org.mifos.accounts.business.AccountBO;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.persistence.HolidayDao;
@@ -47,7 +47,7 @@ import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDat
 public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
 
     private HolidayDao holidayDao = ApplicationContextProvider.getBean(HolidayDao.class);
-    private final AccountPersistence accountPersistence = new AccountPersistence();
+    private final LegacyAccountDao accountPersistence = new LegacyAccountDao();
 
     private List<Days> workingDays;
     private Map<Short, List<Holiday>> officeCurrentAndFutureHolidays;

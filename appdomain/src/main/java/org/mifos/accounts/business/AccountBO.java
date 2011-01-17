@@ -31,7 +31,7 @@ import org.mifos.accounts.fees.util.helpers.FeeStatus;
 import org.mifos.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.accounts.financial.business.service.FinancialBusinessService;
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.savings.business.SavingsAccountActivationDetail;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
@@ -120,7 +120,7 @@ public class AccountBO extends AbstractBusinessObject {
     private List<AccountPaymentEntity> accountPayments;
     private Set<AccountCustomFieldEntity> accountCustomFields;
 
-    private AccountPersistence accountPersistence = null;
+    private LegacyAccountDao accountPersistence = null;
     private LegacyMasterDao legacyMasterDao = null;
     private DateTimeService dateTimeService = null;
     private FinancialBusinessService financialBusinessService = null;
@@ -147,14 +147,14 @@ public class AccountBO extends AbstractBusinessObject {
         this.dateTimeService = dateTimeService;
     }
 
-    public AccountPersistence getAccountPersistence() {
+    public LegacyAccountDao getAccountPersistence() {
         if (null == accountPersistence) {
-            accountPersistence = new AccountPersistence();
+            accountPersistence = new LegacyAccountDao();
         }
         return accountPersistence;
     }
 
-    public void setAccountPersistence(final AccountPersistence accountPersistence) {
+    public void setAccountPersistence(final LegacyAccountDao accountPersistence) {
         this.accountPersistence = accountPersistence;
     }
 

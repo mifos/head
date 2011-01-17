@@ -9,7 +9,7 @@
     
     <bean id="legacyRolesPermissions" class="org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsDao"/>
 
-    <bean name="accountPersistence" class="org.mifos.accounts.persistence.AccountPersistence"/>
+    <bean name="accountPersistence" class="org.mifos.accounts.persistence.LegacyAccountDao"/>
 
     <bean name="loanPersistence" class="org.mifos.accounts.loan.persistance.LoanPersistence"/>
 

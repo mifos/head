@@ -50,7 +50,7 @@ import org.mifos.accounts.business.AccountStateMachines;
 import org.mifos.accounts.business.AccountTestUtils;
 import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.exceptions.AccountException;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
@@ -106,7 +106,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
     private SavingsBO savings;
     private SavingsOfferingBO savingsOffering;
     private final SavingsTestHelper helper = new SavingsTestHelper();
-    private final AccountPersistence accountPersistence = new AccountPersistence();
+    private final LegacyAccountDao accountPersistence = new LegacyAccountDao();
     private MifosCurrency currency = null;
     private PersonnelBO createdBy = null;
 

@@ -20,10 +20,10 @@
 
 package org.mifos.framework.util.helpers;
 
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 
 public class TestGeneralLedgerCode {
-    static AccountPersistence accountPersistence = new AccountPersistence();
+    static LegacyAccountDao accountPersistence = new LegacyAccountDao();
 
     public static final Short ASSETS = accountPersistence.getAccountIdFromGlCodeDuringInitialization("10000");
     public static final Short CASH_AND_BANK_BALANCES = accountPersistence

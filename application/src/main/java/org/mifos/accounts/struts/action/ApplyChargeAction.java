@@ -30,7 +30,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.accounts.business.AccountBO;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.struts.actionforms.ApplyChargeActionForm;
 import org.mifos.accounts.util.helpers.AccountConstants;
@@ -53,7 +53,7 @@ public class ApplyChargeAction extends BaseAction {
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         ApplyChargeActionForm applyChargeActionForm = (ApplyChargeActionForm) form;
 
-        AccountBO account = new AccountPersistence().getAccount(Integer.valueOf(applyChargeActionForm.getAccountId()));
+        AccountBO account = new LegacyAccountDao().getAccount(Integer.valueOf(applyChargeActionForm.getAccountId()));
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, account, request);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, account, request.getSession());
         applyChargeActionForm.clear();

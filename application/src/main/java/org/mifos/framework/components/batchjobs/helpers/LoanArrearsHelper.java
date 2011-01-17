@@ -25,7 +25,7 @@ import java.util.List;
 
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.config.GeneralConfig;
@@ -44,7 +44,7 @@ public class LoanArrearsHelper extends TaskHelper {
     @Override
     public void execute(long timeInMillis) throws BatchJobException {
         long time1 = new DateTimeService().getCurrentDateTime().getMillis();
-        AccountPersistence accountPersistence = new AccountPersistence();
+        LegacyAccountDao accountPersistence = new LegacyAccountDao();
         List<String> errorList = new ArrayList<String>();
         List<Integer> listAccountIds = null;
         int accountNumber = 0;

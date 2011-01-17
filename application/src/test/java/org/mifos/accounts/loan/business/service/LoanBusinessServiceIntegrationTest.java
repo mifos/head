@@ -40,7 +40,7 @@ import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.PaymentData;
@@ -64,14 +64,14 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
 
     protected CustomerBO group = null;
 
-    protected AccountPersistence accountPersistence;
+    protected LegacyAccountDao accountPersistence;
 
     protected LoanBusinessService loanBusinessService;
 
     @Before
     public void setUp() throws Exception {
         loanBusinessService = ApplicationContextProvider.getBean(LoanBusinessService.class);
-        accountPersistence = new AccountPersistence();
+        accountPersistence = new LegacyAccountDao();
     }
 
     @Test

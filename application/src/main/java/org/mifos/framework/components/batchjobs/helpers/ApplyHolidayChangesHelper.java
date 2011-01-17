@@ -23,7 +23,7 @@ package org.mifos.framework.components.batchjobs.helpers;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.mifos.accounts.business.AccountActionDateEntity;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.persistence.HolidayDao;
@@ -53,7 +53,7 @@ import java.util.Map;
 public class ApplyHolidayChangesHelper extends TaskHelper {
 
     // injectable external dependencies
-    private AccountPersistence accountPersistence;
+    private LegacyAccountDao accountPersistence;
     private BatchJobConfigurationService batchJobConfigurationService;
     private HolidayDao holidayDao;
     private FiscalCalendarRules fiscalCalendarRules;
@@ -84,14 +84,14 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
         this.batchJobConfigurationService = batchJobConfigurationService;
     }
 
-    public AccountPersistence getAccountPersistence() {
+    public LegacyAccountDao getAccountPersistence() {
         if (accountPersistence == null) {
-            return new AccountPersistence();
+            return new LegacyAccountDao();
         }
         return this.accountPersistence;
     }
 
-    public void setAccountPersistence(AccountPersistence accountPersistence) {
+    public void setAccountPersistence(LegacyAccountDao accountPersistence) {
         this.accountPersistence = accountPersistence;
     }
 

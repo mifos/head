@@ -57,7 +57,7 @@ import org.mifos.accounts.loan.business.OriginalLoanScheduleEntity;
 import org.mifos.accounts.loan.business.matchers.OriginalLoanFeeScheduleEntityMatcher;
 import org.mifos.accounts.loan.business.matchers.OriginalLoanScheduleEntitiesMatcher;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
@@ -174,7 +174,7 @@ public class LoanPersistenceIntegrationTest extends MifosIntegrationTestCase {
             LoanBOTestUtils.setActionDate(accountAction, startDate);
         }
         TestObjectFactory.updateObject(loanAccount);
-        loanAccount = new AccountPersistence().getAccount(loanAccount.getAccountId());
+        loanAccount = new LegacyAccountDao().getAccount(loanAccount.getAccountId());
         List<Integer> list = loanPersistence.getLoanAccountsInArrearsInGoodStanding(latenessDays);
         Assert.assertNotNull(list);
         LoanBO testBO = TestObjectFactory.getObject(LoanBO.class, list.get(0));

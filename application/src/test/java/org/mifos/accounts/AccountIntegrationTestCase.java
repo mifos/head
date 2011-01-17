@@ -29,7 +29,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
@@ -59,7 +59,7 @@ public abstract class AccountIntegrationTestCase extends MifosIntegrationTestCas
     protected ClientBO client;
     protected MeetingBO meeting;
     protected Holiday holiday;
-    protected AccountPersistence accountPersistence;
+    protected LegacyAccountDao accountPersistence;
 
 
     @Before
@@ -68,7 +68,7 @@ public abstract class AccountIntegrationTestCase extends MifosIntegrationTestCas
         createInitialCustomerAccounts();
         groupLoan = createGroupLoanAccount();
         clientLoan = createClientLoanAccount();
-        accountPersistence = new AccountPersistence();
+        accountPersistence = new LegacyAccountDao();
     }
 
     @After

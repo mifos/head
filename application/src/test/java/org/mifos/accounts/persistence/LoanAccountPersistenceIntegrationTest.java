@@ -32,7 +32,7 @@ public class LoanAccountPersistenceIntegrationTest extends MifosIntegrationTestC
 
     @Test
     public void testSelectCoSigningClients() throws Exception {
-        List<CustomerBO> coSigningClients = new AccountPersistence().getCoSigningClientsForGlim(1);
+        List<CustomerBO> coSigningClients = new LegacyAccountDao().getCoSigningClientsForGlim(1);
         Assert.assertNotNull(coSigningClients);
        Assert.assertEquals(0, coSigningClients.size());
     }

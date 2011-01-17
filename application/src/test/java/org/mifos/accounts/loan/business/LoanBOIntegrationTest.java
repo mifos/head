@@ -48,7 +48,7 @@ import org.mifos.accounts.fees.util.helpers.FeeStatus;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.loan.persistance.LoanDaoLegacyImpl;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingInstallmentRange;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
@@ -173,7 +173,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
     private Short savedDigitAfterDecimal;
 
     private LoanDaoLegacyImpl loanDao;
-    private AccountPersistence accountPersistence = null;
+    private LegacyAccountDao accountPersistence = null;
     private Money zeroMoney;
     private String interestDueForNextInstallment = "0";
 
@@ -186,7 +186,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         zeroMoney = new Money(getCurrency());
         enableCustomWorkingDays();
         userContext = TestObjectFactory.getContext();
-        accountPersistence = new AccountPersistence();
+        accountPersistence = new LegacyAccountDao();
 
         savedInitialRoundOffMultiple = AccountingRules.getInitialRoundOffMultiple();
         savedFinalRoundOffMultiple = AccountingRules.getFinalRoundOffMultiple();
@@ -1094,7 +1094,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         loanPerformanceHistory.setNoOfPayments(Integer.valueOf("3"));
         loanPerformanceHistory.setLoanMaturityDate(currentDate);
         TestObjectFactory.updateObject(loanBO);
-        loanBO = (LoanBO) new AccountPersistence().getAccount(loanBO.getAccountId());
+        loanBO = (LoanBO) new LegacyAccountDao().getAccount(loanBO.getAccountId());
         Assert.assertEquals(Integer.valueOf("3"), loanBO.getPerformanceHistory().getNoOfPayments());
         Assert.assertEquals(currentDate, loanBO.getPerformanceHistory().getLoanMaturityDate());
     }

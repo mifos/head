@@ -31,7 +31,7 @@ import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.personnel.business.PersonnelBO;
@@ -85,7 +85,7 @@ public class WebTierAccountServiceFacadeTest {
     @Mock
     private PersonnelPersistence personnelPersistence;
     @Mock
-    private AccountPersistence accountPersistence;
+    private LegacyAccountDao accountPersistence;
     @Mock
     private HibernateTransactionHelper transactionHelper;
     @Mock

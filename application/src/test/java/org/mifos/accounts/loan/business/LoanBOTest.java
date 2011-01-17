@@ -28,7 +28,7 @@ import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallmentBuilder;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.PaymentStatus;
@@ -169,11 +169,11 @@ public class LoanBOTest {
     @Test
     @ExpectedException(value = AccountException.class)
     public void testInvalidConnectionForSave() throws PersistenceException {
-        final AccountPersistence accountPersistence = mock(AccountPersistence.class);
+        final LegacyAccountDao accountPersistence = mock(LegacyAccountDao.class);
 
         LoanBO loanBO = new LoanBO() {
             @Override
-            public AccountPersistence getAccountPersistence() {
+            public LegacyAccountDao getAccountPersistence() {
                 return accountPersistence;
             }
         };

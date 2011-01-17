@@ -38,7 +38,7 @@ import org.junit.Test;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountNotesEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.master.business.PaymentTypeEntity;
@@ -98,7 +98,7 @@ public class CollectionSheetServiceImplRetrieveSavingsAccountsIntegrationTest ex
     @Test
     public void testCollectionSheetRetrieveOnlyReturnsActiveAndInactiveSavingsAccounts() throws Exception {
 
-        AccountPersistence accountPersistence = new AccountPersistence();
+        LegacyAccountDao accountPersistence = new LegacyAccountDao();
         UserContext userContext = TestUtils.makeUser();
 
         collectionSheetRetrieveSavingsAccountsUtils.createSampleCenterHierarchy();

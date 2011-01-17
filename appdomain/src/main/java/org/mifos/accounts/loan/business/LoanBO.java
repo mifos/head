@@ -72,7 +72,7 @@ import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.accounts.loan.util.helpers.LoanPaymentTypes;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.persistence.LoanPrdPersistence;
@@ -930,7 +930,7 @@ public class LoanBO extends AccountBO {
             }
 
             try {
-                new AccountPersistence().createOrUpdate(this);
+                new LegacyAccountDao().createOrUpdate(this);
             } catch (PersistenceException e) {
                 throw new AccountException(e);
             }
@@ -1163,7 +1163,7 @@ public class LoanBO extends AccountBO {
 
         if (persistChange) {
             try {
-                new AccountPersistence().createOrUpdate(this);
+                new LegacyAccountDao().createOrUpdate(this);
             } catch (PersistenceException e) {
                 throw new AccountException(e);
             }

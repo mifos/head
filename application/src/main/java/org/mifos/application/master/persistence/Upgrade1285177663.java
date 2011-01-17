@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.mifos.accounts.business.AccountBO;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.config.GeneralConfig;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.core.MifosRuntimeException;
@@ -49,7 +49,7 @@ import org.mifos.framework.util.DateTimeService;
  */
 public class Upgrade1285177663 extends Upgrade {
 
-    private final AccountPersistence accountPersistence = new AccountPersistence();
+    private final LegacyAccountDao accountPersistence = new LegacyAccountDao();
 
     public Upgrade1285177663() {
         super();
@@ -176,7 +176,7 @@ public class Upgrade1285177663 extends Upgrade {
 
         Map<String, Object> parameters = new HashMap<String, Object>();
         try {
-            AccountIds =  new AccountPersistence().executeNamedQuery("getCustomerAccountsWithSchedulesMissingPeriodicFees", parameters);
+            AccountIds =  new LegacyAccountDao().executeNamedQuery("getCustomerAccountsWithSchedulesMissingPeriodicFees", parameters);
         } catch (PersistenceException e) {
             throw new BatchJobException(e);
         }

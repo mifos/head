@@ -34,7 +34,7 @@ import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanBOTestUtils;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -79,7 +79,7 @@ public class LoanArrearsHelperIntegrationTest extends MifosIntegrationTestCase {
     public void testExecute() throws Exception {
         int statusChangeHistorySize = loanAccount.getAccountStatusChangeHistory().size();
         loanArrearHelper.execute(System.currentTimeMillis());
-        loanAccount = new AccountPersistence().getAccount(loanAccount.getAccountId());
+        loanAccount = new LegacyAccountDao().getAccount(loanAccount.getAccountId());
        Assert.assertEquals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING, loanAccount.getState());
        Assert.assertEquals(statusChangeHistorySize + 1, loanAccount.getAccountStatusChangeHistory().size());
     }

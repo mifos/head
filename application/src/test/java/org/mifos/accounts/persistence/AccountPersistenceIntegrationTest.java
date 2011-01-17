@@ -92,7 +92,7 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
     public static final int LOAN_CUSTOMFIELDS_NUMBER = 1;
     private static final String ASSETS_GL_ACCOUNT_CODE = "10000";
     private static final String DIRECT_EXPENDITURE_GL_ACCOUNT_CODE = "41000";
-    private AccountPersistence accountPersistence = new AccountPersistence();
+    private LegacyAccountDao accountPersistence = new LegacyAccountDao();
 
     @Test
     public void testAddDuplicateGlAccounts() {
@@ -445,7 +445,7 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
         List<AccountPaymentEntity> payments = new ArrayList<AccountPaymentEntity>();
         payments.add(accountPaymentEntity);
         savingsBO.setAccountPayments(payments);
-        new AccountPersistence().createOrUpdate(savingsBO);
+        new LegacyAccountDao().createOrUpdate(savingsBO);
         StaticHibernateUtil.commitTransaction();
 
         List<AccountPaymentEntity> result = accountPersistence.findAccountPaymentsByReceiptNumber("1111");
@@ -463,7 +463,7 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
         List<AccountPaymentEntity> payments = new ArrayList<AccountPaymentEntity>();
         payments.add(accountPaymentEntity);
         savingsBO.setAccountPayments(payments);
-        new AccountPersistence().createOrUpdate(savingsBO);
+        new LegacyAccountDao().createOrUpdate(savingsBO);
         StaticHibernateUtil.commitTransaction();
 
         List<AccountPaymentEntity> result = accountPersistence.findAccountPaymentsByReceiptNumber("1111");

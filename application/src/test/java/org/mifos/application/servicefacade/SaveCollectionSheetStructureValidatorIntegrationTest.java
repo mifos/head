@@ -34,7 +34,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mifos.accounts.business.AccountNotesEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.util.helpers.PaymentTypes;
@@ -221,7 +221,7 @@ public class SaveCollectionSheetStructureValidatorIntegrationTest extends MifosI
                 collectionSheet, transactionDate);
 
         // close a savings account that is about to be saved
-        AccountPersistence accountPersistence = new AccountPersistence();
+        LegacyAccountDao accountPersistence = new LegacyAccountDao();
         UserContext userContext = TestUtils.makeUser();
 
         SavingsBO clientSavings = (SavingsBO) accountPersistence.getAccount(collectionSheetRetrieveSavingsAccountsUtils

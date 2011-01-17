@@ -35,7 +35,7 @@ import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.business.AccountTestUtils;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.savings.SavingBOTestUtils;
@@ -72,7 +72,7 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
 
     private UserContext userContext;
     private SavingsPersistence savingsPersistence;
-    private AccountPersistence accountPersistence;
+    private LegacyAccountDao accountPersistence;
     private CustomerBO group;
     private CustomerBO center;
     private SavingsBO savings;
@@ -89,7 +89,7 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
     @Before
     public void setUp() throws Exception {
         savingsPersistence = new SavingsPersistence();
-        accountPersistence = new AccountPersistence();
+        accountPersistence = new LegacyAccountDao();
         userContext = TestUtils.makeUser();
 
     }

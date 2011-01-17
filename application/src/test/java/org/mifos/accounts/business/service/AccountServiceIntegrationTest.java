@@ -51,7 +51,7 @@ import org.mifos.accounts.fees.util.helpers.FeeStatus;
 import org.mifos.accounts.loan.business.LoanBOTestUtils;
 import org.mifos.accounts.loan.business.LoanFeeScheduleEntity;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
@@ -85,13 +85,13 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
 
     protected CustomerBO group = null;
 
-    protected AccountPersistence accountPersistence;
+    protected LegacyAccountDao accountPersistence;
 
     private AccountBusinessService service;
 
     @Before
     public void setUp() throws Exception {
-        accountPersistence = new AccountPersistence();
+        accountPersistence = new LegacyAccountDao();
         service = new AccountBusinessService();
     }
 

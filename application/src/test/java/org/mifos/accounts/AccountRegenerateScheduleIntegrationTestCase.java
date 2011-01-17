@@ -48,7 +48,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
@@ -100,7 +100,7 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
     protected CustomerBO center;
     protected CustomerBO group;
     protected ClientBO client;
-    protected AccountPersistence accountPersistence;
+    protected LegacyAccountDao accountPersistence;
     // hard coded number of loan installments that are created (in TestObjectFactory)
     private int numberOfLoanInstallments = 6;
 

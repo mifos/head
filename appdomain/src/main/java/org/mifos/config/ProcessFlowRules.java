@@ -22,7 +22,7 @@ package org.mifos.config;
 
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.business.MifosConfigurationManager;
@@ -192,7 +192,7 @@ public class ProcessFlowRules {
 
     private static void initLoanPendingApprovalState() throws ConfigurationException {
 
-        AccountPersistence ap = new AccountPersistence();
+        LegacyAccountDao ap = new LegacyAccountDao();
         AccountStateEntity ase = (AccountStateEntity) ap.loadPersistentObject(AccountStateEntity.class, AccountState.LOAN_PENDING_APPROVAL.getValue());
 
         boolean fromDb = isLoanPendingApprovalStateEnabledOnDatabaseConfig(ase);
@@ -210,7 +210,7 @@ public class ProcessFlowRules {
         }
     }
 
-    private static void makeDatabaseConfigurationMatchPropertiesFileConfiguration(AccountPersistence persistence,
+    private static void makeDatabaseConfigurationMatchPropertiesFileConfiguration(LegacyAccountDao persistence,
             AccountStateEntity entity, boolean fromCfg) {
         entity.setIsOptional(fromCfg);
         try {
@@ -239,7 +239,7 @@ public class ProcessFlowRules {
 
     private static void initSavingsPendingApprovalState() throws ConfigurationException {
 
-        AccountPersistence ap = new AccountPersistence();
+        LegacyAccountDao ap = new LegacyAccountDao();
         AccountStateEntity ase = (AccountStateEntity) ap.loadPersistentObject(AccountStateEntity.class, AccountState.SAVINGS_PENDING_APPROVAL.getValue());
 
         boolean fromDb = isSavingPendingApprovalStateEnabledOnDatabaseConfig(ase);

@@ -45,7 +45,7 @@ import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.persistence.CustomerDao;
@@ -71,7 +71,7 @@ public class StandardAccountServiceTest {
     private StandardAccountService standardAccountService;
 
     @Mock
-    private AccountPersistence accountPersistence;
+    private LegacyAccountDao accountPersistence;
 
     @Mock
     private CustomerPersistence customerPersistence;

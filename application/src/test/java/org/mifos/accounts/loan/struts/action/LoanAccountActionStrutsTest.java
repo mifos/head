@@ -67,7 +67,7 @@ import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.accounts.productdefinition.business.LoanAmountSameForAllLoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -1245,7 +1245,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
     }
 
     private AccountBO saveAndFetch(AccountBO account) throws Exception {
-        AccountPersistence accountPersistence = new AccountPersistence();
+        LegacyAccountDao accountPersistence = new LegacyAccountDao();
         TestObjectFactory.updateObject(account);
         return accountPersistence.getAccount(account.getAccountId());
     }

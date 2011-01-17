@@ -35,7 +35,7 @@ import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
 import org.mifos.accounts.fees.util.helpers.FeePayment;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountExceptionConstants;
 import org.mifos.accounts.util.helpers.AccountState;
@@ -417,8 +417,8 @@ public class AccountBusinessService implements BusinessService {
         }
     }
 
-    private AccountPersistence getAccountPersistence() {
-        return new AccountPersistence();
+    private LegacyAccountDao getAccountPersistence() {
+        return new LegacyAccountDao();
     }
 
     public List<CustomerBO> getCoSigningClientsForGlim(Integer accountId) throws ServiceException {

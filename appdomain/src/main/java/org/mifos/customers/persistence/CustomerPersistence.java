@@ -39,7 +39,7 @@ import org.hibernate.Session;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountStateEntity;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountTypes;
@@ -300,7 +300,7 @@ public class CustomerPersistence extends LegacyGenericDao {
 
         try {
 
-           queryResult = new AccountPersistence().search(searchString, officeId);
+           queryResult = new LegacyAccountDao().search(searchString, officeId);
 			if (queryResult == null) {
 				queryResult = idSearch(searchString, officeId, userId);
 				if (queryResult == null) {

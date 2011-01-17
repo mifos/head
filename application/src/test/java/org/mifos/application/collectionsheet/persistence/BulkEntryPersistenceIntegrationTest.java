@@ -33,7 +33,7 @@ import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.PaymentData;
@@ -49,7 +49,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class BulkEntryPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
-    private AccountPersistence accountPersistence;
+    private LegacyAccountDao accountPersistence;
 
     private CustomerBO center;
 
@@ -62,7 +62,7 @@ public class BulkEntryPersistenceIntegrationTest extends MifosIntegrationTestCas
     @Before
     public void setUp() throws Exception {
 
-        accountPersistence = new AccountPersistence();
+        accountPersistence = new LegacyAccountDao();
     }
 
     @After

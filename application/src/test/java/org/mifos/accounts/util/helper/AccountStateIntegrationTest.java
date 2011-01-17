@@ -30,7 +30,7 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mifos.accounts.business.AccountStateEntity;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.productdefinition.util.helpers.ProductType;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.master.MessageLookup;
@@ -39,11 +39,11 @@ import org.mifos.framework.exceptions.PersistenceException;
 
 public class AccountStateIntegrationTest extends MifosIntegrationTestCase {
 
-    private AccountPersistence accountPersistence;
+    private LegacyAccountDao accountPersistence;
 
     @Before
     public void setUp() throws Exception {
-        accountPersistence = new AccountPersistence();
+        accountPersistence = new LegacyAccountDao();
     }
 
     /*

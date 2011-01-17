@@ -38,7 +38,7 @@ import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.savings.business.SavingsBO;
@@ -639,8 +639,8 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         center = TestObjectFactory.getCenter(center.getCustomerId());
         group = TestObjectFactory.getGroup(group.getCustomerId());
         client = TestObjectFactory.getClient(client.getCustomerId());
-        loanBO = (LoanBO) new AccountPersistence().getAccount(loanBO.getAccountId());
-        savingsBO = (SavingsBO) new AccountPersistence().getAccount(savingsBO.getAccountId());
+        loanBO = (LoanBO) new LegacyAccountDao().getAccount(loanBO.getAccountId());
+        savingsBO = (SavingsBO) new LegacyAccountDao().getAccount(savingsBO.getAccountId());
 
         GroupInformationDto groupInformationDto = (GroupInformationDto) SessionUtils.getAttribute(
                 "groupInformationDto", request);
@@ -660,8 +660,8 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         center = TestObjectFactory.getCenter(Integer.valueOf(center.getCustomerId()).intValue());
         group = TestObjectFactory.getGroup(Integer.valueOf(group.getCustomerId()).intValue());
         client = TestObjectFactory.getClient(Integer.valueOf(client.getCustomerId()).intValue());
-        loanBO = (LoanBO) new AccountPersistence().getAccount(loanBO.getAccountId());
-        savingsBO = (SavingsBO) new AccountPersistence().getAccount(savingsBO.getAccountId());
+        loanBO = (LoanBO) new LegacyAccountDao().getAccount(loanBO.getAccountId());
+        savingsBO = (SavingsBO) new LegacyAccountDao().getAccount(savingsBO.getAccountId());
     }
 
     @Test

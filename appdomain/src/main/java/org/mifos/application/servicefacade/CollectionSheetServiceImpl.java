@@ -36,7 +36,7 @@ import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.persistance.ClientAttendanceDao;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.persistence.SavingsDao;
 import org.mifos.application.collectionsheet.persistence.CollectionSheetDao;
@@ -56,7 +56,7 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
 
     private final ClientAttendanceDao clientAttendanceDao;
     private LoanPersistence loanPersistence = new LoanPersistence();
-    private AccountPersistence accountPersistence = new AccountPersistence();
+    private LegacyAccountDao accountPersistence = new LegacyAccountDao();
     private final SavingsDao savingsDao;
     private final CollectionSheetDao collectionSheetDao;
 
@@ -69,7 +69,7 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
     }
 
     public CollectionSheetServiceImpl(final ClientAttendanceDao clientAttendanceDao,
-            final LoanPersistence loanPersistence, final AccountPersistence accountPersistence,
+            final LoanPersistence loanPersistence, final LegacyAccountDao accountPersistence,
             final SavingsDao savingsDao, final CollectionSheetDao collectionSheetDao) {
         this.clientAttendanceDao = clientAttendanceDao;
         this.loanPersistence = loanPersistence;

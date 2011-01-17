@@ -28,7 +28,7 @@ import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.servicefacade.ListItem;
@@ -71,14 +71,14 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
     private ScheduleCalculatorAdaptor scheduleCalculatorAdaptor;
     private AcceptedPaymentTypePersistence acceptedPaymentTypePersistence;
     private PersonnelPersistence personnelPersistence;
-    private AccountPersistence accountPersistence;
+    private LegacyAccountDao accountPersistence;
 
     @Autowired
     public WebTierAccountServiceFacade(AccountService accountService, HibernateTransactionHelper transactionHelper,
                                        AccountBusinessService accountBusinessService,
                                        ScheduleCalculatorAdaptor scheduleCalculatorAdaptor,
                                        AcceptedPaymentTypePersistence acceptedPaymentTypePersistence,
-                                       PersonnelPersistence personnelPersistence, AccountPersistence accountPersistence) {
+                                       PersonnelPersistence personnelPersistence, LegacyAccountDao accountPersistence) {
         this.accountService = accountService;
         this.transactionHelper = transactionHelper;
         this.accountBusinessService = accountBusinessService;

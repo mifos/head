@@ -33,7 +33,7 @@ import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.persistance.ClientAttendanceDao;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.persistence.SavingsDao;
 import org.mifos.accounts.util.helpers.PaymentData;
@@ -66,11 +66,11 @@ public class SaveCollectionSheetAssembler {
 
     private final ClientAttendanceDao clientAttendanceDao;
     private final LoanPersistence loanPersistence;
-    private final AccountPersistence accountPersistence;
+    private final LegacyAccountDao accountPersistence;
     private final SavingsDao savingsDao;
 
     public SaveCollectionSheetAssembler(final ClientAttendanceDao clientAttendanceDao,
-            final LoanPersistence loanPersistence, final AccountPersistence accountPersistence,
+            final LoanPersistence loanPersistence, final LegacyAccountDao accountPersistence,
             final SavingsDao savingsDao) {
         this.clientAttendanceDao = clientAttendanceDao;
         this.loanPersistence = loanPersistence;

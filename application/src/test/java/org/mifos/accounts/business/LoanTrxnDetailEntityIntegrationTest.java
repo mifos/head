@@ -31,7 +31,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanSummaryEntity;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.PaymentData;
@@ -72,7 +72,7 @@ public class LoanTrxnDetailEntityIntegrationTest extends MifosIntegrationTestCas
         account = TestObjectFactory.createLoanAccount("42423142341", group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
                 sampleDate, loanOffering);
         StaticHibernateUtil.flushSession();
-        account = new AccountPersistence().getAccount(account.getAccountId());
+        account = new LegacyAccountDao().getAccount(account.getAccountId());
         Assert.assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(), "Loan");
 
         List<AccountActionDateEntity> accountActionsToBeUpdated = new ArrayList<AccountActionDateEntity>();
