@@ -138,21 +138,6 @@ public class CreateSavingsAccountTest extends UiTestCaseBase {
         verifySavingsAccountCreation(searchParameters, submitAccountParameters);
     }
 
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(sequential = true, groups = { "savings", "acceptance", "ui" })
-    public void newVoluntaryCenterSavingsAccount() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
-
-        CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
-        searchParameters.setSearchString("MyCenter1233266075715");
-        searchParameters.setSavingsProduct("VolCenterSavings3MoPost");
-
-        CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
-        submitAccountParameters.setAmount("7777.8");
-
-        verifySavingsAccountCreation(searchParameters, submitAccountParameters);
-    }
-
     private void verifySavingsAccountCreation(CreateSavingsAccountSearchParameters searchParameters,
             CreateSavingsAccountSubmitParameters submitAccountParameters) {
         SavingsAccountDetailPage savingsAccountPage = savingsAccountHelper.createSavingsAccount(searchParameters, submitAccountParameters);
