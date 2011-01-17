@@ -14,6 +14,7 @@
       http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.0.xsd">
 
     <context:annotation-config/>
+	<aop:aspectj-autoproxy/>
 	
 	<tx:annotation-driven transaction-manager="platformTransactionManager" order="200"/>
 	
@@ -34,15 +35,16 @@
         </property>
     </bean>
 
+
+    <bean id="hibernateUtil" class="org.mifos.framework.hibernate.helper.HibernateUtil">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <bean id="hibenateUtilTx" class="org.mifos.framework.hibernate.helper.HibernateUtilAspect"/>
+
     <bean id="namingStrategy" class="org.hibernate.cfg.ImprovedNamingStrategy"/>
 
     <bean id="platformTransactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
-        <property name="sessionFactory">
-            <ref local="sessionFactory"/>
-        </property>
-    </bean>
-
-    <bean id="hibernateUtil" class="org.mifos.framework.hibernate.helper.HibernateUtil">
         <property name="sessionFactory" ref="sessionFactory" />
     </bean>
 

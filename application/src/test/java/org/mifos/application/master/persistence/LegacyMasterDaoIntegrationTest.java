@@ -63,7 +63,7 @@ public class LegacyMasterDaoIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    @Test @org.junit.Ignore
+    @Test @Ignore
     public void testEntityMasterRetrievalForInvalidConnection() throws Exception {
         try {
             legacyMasterDao.getCustomValueList(MasterConstants.ATTENDENCETYPES,
@@ -91,7 +91,7 @@ public class LegacyMasterDaoIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(131, masterEntity.size());
     }
 
-    @Test @org.junit.Ignore
+    @Test@Ignore
     public void testRetrieveMasterEntitiesForInvalidConnection() throws Exception {
         try {
             legacyMasterDao.findValueListElements(MasterConstants.LOAN_PURPOSES);
@@ -102,7 +102,8 @@ public class LegacyMasterDaoIntegrationTest extends MifosIntegrationTestCase {
             StaticHibernateUtil.flushSession();
         }
     }
- @org.junit.Ignore
+
+    @Test@Ignore
     public void retrieveCustomFieldsDefinitionForInvalidConnection() throws Exception {
         try {
             legacyMasterDao.retrieveCustomFieldsDefinition(EntityType.CLIENT);

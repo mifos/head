@@ -2,7 +2,9 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-    
+    <import resource="classpath:META-INF/spring/QuestionnaireContext.xml"/>
+    <import resource="classpath:META-INF/spring/CashFlowContext.xml"/>
+
     <bean id="testDatabase" class="org.mifos.framework.persistence.TestDatabase">
         <property name="integrationDataSource" ref="integrationDataSource" />
     </bean>
@@ -24,7 +26,4 @@
     </bean>
 
     <bean id="databaseTestUtils" class="org.mifos.test.framework.util.DatabaseTestUtils" />
-
-    <import resource="classpath:META-INF/spring/QuestionnaireContext.xml"/>
-    <import resource="classpath:META-INF/spring/CashFlowContext.xml"/>
 </beans>

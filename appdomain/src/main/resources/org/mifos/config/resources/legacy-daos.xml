@@ -9,4 +9,14 @@
     
     <bean id="rolesPermissionsPersistence" class="org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence"/>
 
+    <bean name="accountPersistence" class="org.mifos.accounts.persistence.AccountPersistence"/>
+
+    <bean name="loanPersistence" class="org.mifos.accounts.loan.persistance.LoanPersistence"/>
+
+    <bean name="acceptedPaymentTypePersistence" class="org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence"/>
+
+    <bean name="personnelPersistence" class="org.mifos.customers.personnel.persistence.PersonnelPersistence"/>
+
+    <bean id="surveysPersistence" class="org.mifos.customers.surveys.persistence.SurveysPersistence" />
+
 </beans>

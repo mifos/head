@@ -44,6 +44,7 @@ import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.dto.domain.ValueListElement;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.hibernate.helper.Transactional;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.LegacyGenericDao;
 import org.mifos.framework.util.helpers.SearchUtils;
@@ -56,12 +57,13 @@ import org.mifos.security.activity.DynamicLookUpValueCreationTypes;
  */
 public class LegacyMasterDao extends LegacyGenericDao {
 
-    private LegacyMasterDao() {
+    protected LegacyMasterDao() {
     }
 
     /**
      * Only two non-test usages, one that may never be called and one for getting labels.
      */
+    @Transactional
     public CustomValueDto getLookUpEntity(final String entityName) throws SystemException {
         Session session = getSession();
         Query queryEntity = session.getNamedQuery("masterdata.entityvalue");
