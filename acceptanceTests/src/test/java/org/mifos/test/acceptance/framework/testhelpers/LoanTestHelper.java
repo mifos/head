@@ -55,6 +55,8 @@ import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalEntryPage;
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalParameters;
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalSchedulePreviewPage;
+import org.mifos.test.acceptance.framework.loan.ViewInstallmentDetailsPage;
+import org.mifos.test.acceptance.framework.loan.ViewLoanStatusHistoryPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
 import org.mifos.test.acceptance.framework.loanproduct.EditLoanProductPage;
 import org.mifos.test.acceptance.framework.loanproduct.EditLoanProductPreviewPage;
@@ -74,6 +76,8 @@ import java.util.Arrays;
  */
 public class LoanTestHelper {
 
+    public final static String APPROVED = "Application Approved";
+    public final static String PENDING_APPROVAL = "Application Pending Approval";
     private final Selenium selenium;
     private final NavigationHelper navigationHelper;
 
@@ -171,6 +175,12 @@ public class LoanTestHelper {
         }
 
         new EditAccountStatusConfirmationPage(selenium).submitAndNavigateToLoanAccountPage();
+    }
+
+    public void verifyLastEntryInStatusHistory(String loanId, String oldStatus, String newStatus) {
+        LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
+        ViewLoanStatusHistoryPage viewLoanStatusHistoryPage = loanAccountPage.navigateToViewLoanStatusHistoryPage();
+        viewLoanStatusHistoryPage.verifyLastEntryInStatusHistory(oldStatus, newStatus);
     }
 
     private void populateQuestionGroupResponses(QuestionResponseParameters responseParameters) {

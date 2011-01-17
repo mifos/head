@@ -186,6 +186,12 @@ public class LoanAccountPage extends AbstractPage {
         return new ViewQuestionResponseDetailPage(selenium);
     }
 
+    public ViewLoanStatusHistoryPage navigateToViewLoanStatusHistoryPage() {
+        selenium.click("id=loanaccountdetail.link.viewStatusHistory");
+        waitForPageToLoad();
+        return new ViewLoanStatusHistoryPage(selenium);
+    }
+
     public String getTotalBalance() {
         return selenium.getTable("loanSummaryTable.5.3").trim();
     }
