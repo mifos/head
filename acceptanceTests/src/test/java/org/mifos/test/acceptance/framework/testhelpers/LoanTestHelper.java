@@ -20,7 +20,9 @@
 
 package org.mifos.test.acceptance.framework.testhelpers;
 
-import com.thoughtworks.selenium.Selenium;
+import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
+
 import org.joda.time.DateTime;
 import org.joda.time.ReadableInstant;
 import org.joda.time.format.DateTimeFormat;
@@ -55,7 +57,6 @@ import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalEntryPage;
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalParameters;
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalSchedulePreviewPage;
-import org.mifos.test.acceptance.framework.loan.ViewInstallmentDetailsPage;
 import org.mifos.test.acceptance.framework.loan.ViewLoanStatusHistoryPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
 import org.mifos.test.acceptance.framework.loanproduct.EditLoanProductPage;
@@ -67,8 +68,7 @@ import org.mifos.test.acceptance.framework.search.SearchResultsPage;
 import org.mifos.test.acceptance.questionnaire.QuestionResponsePage;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 
-import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
+import com.thoughtworks.selenium.Selenium;
 
 /**
  * Holds methods common to most loan tests.
