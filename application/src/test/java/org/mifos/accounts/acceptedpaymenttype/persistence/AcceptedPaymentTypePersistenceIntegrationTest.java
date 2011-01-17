@@ -35,11 +35,15 @@ import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class AcceptedPaymentTypePersistenceIntegrationTest extends AccountIntegrationTestCase {
 
     private List<TransactionAcceptedPaymentTypes> currentAcceptedPaymentTypes = null;
-    private LegacyAcceptedPaymentTypeDao acceptedPaymentTypePersistence = null;
+
+    @Autowired
+    private LegacyAcceptedPaymentTypeDao legacyAcceptedPaymentTypeDao;
+
     private List<TransactionAcceptedPaymentTypes> allAcceptedPaymentTypes = null;
     private Short DEFAULT_LOCALE_ID = 1;
 
@@ -47,7 +51,6 @@ public class AcceptedPaymentTypePersistenceIntegrationTest extends AccountIntegr
     @Before
     public void setUp() throws Exception {
         StaticHibernateUtil.startTransaction();
-        acceptedPaymentTypePersistence = new LegacyAcceptedPaymentTypeDao();
     }
 
     @Test
@@ -57,7 +60,7 @@ public class AcceptedPaymentTypePersistenceIntegrationTest extends AccountIntegr
         currentAcceptedPaymentTypes = new ArrayList<TransactionAcceptedPaymentTypes>();
         allAcceptedPaymentTypes = new ArrayList<TransactionAcceptedPaymentTypes>();
         for (TrxnTypes transactionType : TrxnTypes.values()) {
-            List<AcceptedPaymentType> acceptedPaymentTypes = acceptedPaymentTypePersistence
+            List<AcceptedPaymentType> acceptedPaymentTypes = legacyAcceptedPaymentTypeDao
                     .getAcceptedPaymentTypesForATransaction(transactionType.getValue(), TrxnTypes.loan_repayment);
             TransactionAcceptedPaymentTypes transactionAcceptedPaymentTypes = new TransactionAcceptedPaymentTypes();
             transactionAcceptedPaymentTypes.setAcceptedPaymentTypes(acceptedPaymentTypes);
@@ -165,7 +168,7 @@ public class AcceptedPaymentTypePersistenceIntegrationTest extends AccountIntegr
     private void deleteAcceptedPaymentTypeForATransaction(List<AcceptedPaymentType> deleteAcceptedPaymentTypes,
             TrxnTypes transactionType) throws Exception {
 
-        List<AcceptedPaymentType> acceptedPaymentTypesFromDB = acceptedPaymentTypePersistence
+        List<AcceptedPaymentType> acceptedPaymentTypesFromDB = legacyAcceptedPaymentTypeDao
                 .getAcceptedPaymentTypesForATransaction(transactionType.getValue(), TrxnTypes.loan_repayment);
         List<AcceptedPaymentType> acceptedPaymentTypes = GetBeforeTestPaymentTypes(transactionType);
         for (AcceptedPaymentType a : acceptedPaymentTypesFromDB) {
@@ -184,11 +187,11 @@ public class AcceptedPaymentTypePersistenceIntegrationTest extends AccountIntegr
             addAcceptedPaymentTypeForATransaction(addAcceptedPaymentTypes, transactionType);
         }
         if (addAcceptedPaymentTypes.size() > 0) {
-            acceptedPaymentTypePersistence.addAcceptedPaymentTypes(addAcceptedPaymentTypes);
+            legacyAcceptedPaymentTypeDao.addAcceptedPaymentTypes(addAcceptedPaymentTypes);
         }
         // verify results
         for (TrxnTypes transactionType : TrxnTypes.values()) {
-            List<AcceptedPaymentType> acceptedPaymentTypes = acceptedPaymentTypePersistence
+            List<AcceptedPaymentType> acceptedPaymentTypes = legacyAcceptedPaymentTypeDao
                     .getAcceptedPaymentTypesForATransaction(transactionType.getValue(), TrxnTypes.loan_repayment);
             List<AcceptedPaymentType> savedAcceptedPaymentTypes = GetSavePaymentTypes(transactionType);
             verify(savedAcceptedPaymentTypes, acceptedPaymentTypes);
@@ -200,11 +203,11 @@ public class AcceptedPaymentTypePersistenceIntegrationTest extends AccountIntegr
             deleteAcceptedPaymentTypeForATransaction(deleteAcceptedPaymentTypes, transactionType);
         }
         if (deleteAcceptedPaymentTypes.size() > 0) {
-            acceptedPaymentTypePersistence.deleteAcceptedPaymentTypes(deleteAcceptedPaymentTypes);
+            legacyAcceptedPaymentTypeDao.deleteAcceptedPaymentTypes(deleteAcceptedPaymentTypes);
         }
         // verify results
         for (TrxnTypes transactionType : TrxnTypes.values()) {
-            List<AcceptedPaymentType> acceptedPaymentTypes = acceptedPaymentTypePersistence
+            List<AcceptedPaymentType> acceptedPaymentTypes = legacyAcceptedPaymentTypeDao
                     .getAcceptedPaymentTypesForATransaction(transactionType.getValue(), TrxnTypes.loan_repayment);
             List<AcceptedPaymentType> savedAcceptedPaymentTypes = GetBeforeTestPaymentTypes(transactionType);
             verify(savedAcceptedPaymentTypes, acceptedPaymentTypes);
@@ -233,9 +236,9 @@ public class AcceptedPaymentTypePersistenceIntegrationTest extends AccountIntegr
     public void testRetrieveAcceptedPaymentTypes() throws Exception {
         for (TrxnTypes transactionType : TrxnTypes.values()) {
             Short transactionId = transactionType.getValue();
-            List<AcceptedPaymentType> acceptedPaymentTypes = acceptedPaymentTypePersistence
+            List<AcceptedPaymentType> acceptedPaymentTypes = legacyAcceptedPaymentTypeDao
                     .getAcceptedPaymentTypesForATransaction(transactionId, TrxnTypes.loan_repayment);
-            List<PaymentTypeEntity> paymentTypeEntities = acceptedPaymentTypePersistence
+            List<PaymentTypeEntity> paymentTypeEntities = legacyAcceptedPaymentTypeDao
                     .getAcceptedPaymentTypesForATransaction(DEFAULT_LOCALE_ID, transactionId);
             compare(paymentTypeEntities, acceptedPaymentTypes);
         }

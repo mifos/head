@@ -35,6 +35,9 @@ import java.util.List;
 
 public class LegacyAcceptedPaymentTypeDao extends LegacyGenericDao {
 
+    private LegacyAcceptedPaymentTypeDao() {
+    }
+
     public AcceptedPaymentType getAcceptedPaymentType(Short paymentTypeId) {
         Session session = StaticHibernateUtil.getSessionTL();
         return (AcceptedPaymentType) session.get(AcceptedPaymentType.class, paymentTypeId);

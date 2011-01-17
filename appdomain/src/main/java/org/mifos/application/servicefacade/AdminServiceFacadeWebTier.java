@@ -164,6 +164,8 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     private final GeneralLedgerDao generalLedgerDao;
     private LoanProductAssembler loanProductAssembler;
 
+    @Autowired
+    private LegacyAcceptedPaymentTypeDao legacyAcceptedPaymentTypeDao;
 
     @Autowired
     LegacyMasterDao legacyMasterDao;
@@ -1029,10 +1031,9 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     @Override
     public AcceptedPaymentTypeDto retrieveAcceptedPaymentTypes() {
         List<PaymentTypeDto> payments = getAllPaymentTypes(null);
-        LegacyAcceptedPaymentTypeDao paymentTypePersistence = new LegacyAcceptedPaymentTypeDao();
         AcceptedPaymentTypeDto dto = new AcceptedPaymentTypeDto();
         for (int i = 0; i < TrxnTypes.values().length; i++) {
-            setPaymentTypesForATransaction(payments, TrxnTypes.values()[i], paymentTypePersistence, dto);
+            setPaymentTypesForATransaction(payments, TrxnTypes.values()[i], legacyAcceptedPaymentTypeDao, dto);
         }
         return dto;
     }
@@ -1112,7 +1113,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
             String[] chosenAcceptedLoanRepayments, String[] chosenAcceptedSavingDeposits,
             String[] chosenAcceptedSavingWithdrawals) {
 
-        LegacyAcceptedPaymentTypeDao persistence = new LegacyAcceptedPaymentTypeDao();
+        LegacyAcceptedPaymentTypeDao persistence = legacyAcceptedPaymentTypeDao;
 
         List<AcceptedPaymentType> deletedPaymentTypeList = new ArrayList<AcceptedPaymentType>();
         List<AcceptedPaymentType> addedPaymentTypeList = new ArrayList<AcceptedPaymentType>();

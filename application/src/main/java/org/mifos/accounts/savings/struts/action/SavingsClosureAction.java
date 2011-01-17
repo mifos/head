@@ -83,7 +83,7 @@ public class SavingsClosureAction extends BaseAction {
         LocalDate accountCloseDate = new LocalDate();
         SavingsAccountClosureDto closureDetails = this.savingsServiceFacade.retrieveClosingDetails(savingsId, accountCloseDate);
 
-        LegacyAcceptedPaymentTypeDao persistence = new LegacyAcceptedPaymentTypeDao();
+        LegacyAcceptedPaymentTypeDao persistence = legacyAcceptedPaymentTypeDao;
         List<PaymentTypeEntity> acceptedPaymentTypes = persistence.getAcceptedPaymentTypesForATransaction(uc.getLocaleId(), TrxnTypes.savings_withdrawal.getValue());
 
         Money interestAmountDue = new Money(savings.getCurrency(), closureDetails.getInterestAmountAtClosure());

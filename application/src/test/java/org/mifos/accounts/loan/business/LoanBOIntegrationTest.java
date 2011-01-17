@@ -177,6 +177,10 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
     @Autowired
     private LegacyAccountDao legacyAccountDao;
+
+    @Autowired
+    private LegacyAcceptedPaymentTypeDao legacyAcceptedPaymentTypeDao;
+
     private Money zeroMoney;
     private String interestDueForNextInstallment = "0";
 
@@ -353,7 +357,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(origRepaymentDate, new LocalDate(paymentsArray[0].getActionDate().getTime()));
 
         new DateTimeService().setCurrentDateTime(realDisbursalDate);
-        List<PaymentTypeEntity> paymentTypeEntities = new LegacyAcceptedPaymentTypeDao().getAcceptedPaymentTypesForATransaction(TestObjectFactory.TEST_LOCALE, TrxnTypes.loan_disbursement.getValue());
+        List<PaymentTypeEntity> paymentTypeEntities = legacyAcceptedPaymentTypeDao.getAcceptedPaymentTypesForATransaction(TestObjectFactory.TEST_LOCALE, TrxnTypes.loan_disbursement.getValue());
         StaticHibernateUtil.flushAndClearSession();
         AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(accountBO,
                 new Money(Money.getDefaultCurrency(), new BigDecimal(1000)), "", new DateTimeService().getCurrentJavaDateTime(),

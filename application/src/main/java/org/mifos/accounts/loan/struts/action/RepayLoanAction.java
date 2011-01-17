@@ -74,7 +74,7 @@ public class RepayLoanAction extends BaseAction {
         SessionUtils.setAttribute(LoanConstants.TOTAL_REPAYMENT_AMOUNT, new Money(loan.getCurrency(), repayLoanDto.getEarlyRepaymentMoney()), request);
         SessionUtils.setAttribute(LoanConstants.WAIVED_REPAYMENT_AMOUNT, new Money(loan.getCurrency(), repayLoanDto.getWaivedRepaymentMoney()), request);
 
-        List<PaymentTypeEntity> loanPaymentTypes = new LegacyAcceptedPaymentTypeDao().getAcceptedPaymentTypesForATransaction(userContext.getLocaleId(), TrxnTypes.loan_repayment.getValue());
+        List<PaymentTypeEntity> loanPaymentTypes = legacyAcceptedPaymentTypeDao.getAcceptedPaymentTypesForATransaction(userContext.getLocaleId(), TrxnTypes.loan_repayment.getValue());
         SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE, loanPaymentTypes, request);
         return mapping.findForward(Constants.LOAD_SUCCESS);
     }

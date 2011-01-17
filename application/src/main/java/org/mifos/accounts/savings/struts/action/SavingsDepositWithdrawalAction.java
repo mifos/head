@@ -106,7 +106,7 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
             SessionUtils.setAttribute(SavingsConstants.CLIENT_LIST, new ArrayList<CustomerBO>(), request);
         }
 
-        LegacyAcceptedPaymentTypeDao persistence = new LegacyAcceptedPaymentTypeDao();
+        LegacyAcceptedPaymentTypeDao persistence = legacyAcceptedPaymentTypeDao;
         List<PaymentTypeEntity> acceptedPaymentTypes = persistence.getAcceptedPaymentTypesForATransaction(uc.getLocaleId(), TrxnTypes.savings_deposit.getValue());
         SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE, acceptedPaymentTypes, request);
 
@@ -142,7 +142,7 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 
             Short trxnTypeId = Short.valueOf(actionForm.getTrxnTypeId());
             // added for defect 1587 [start]
-            LegacyAcceptedPaymentTypeDao persistence = new LegacyAcceptedPaymentTypeDao();
+            LegacyAcceptedPaymentTypeDao persistence = legacyAcceptedPaymentTypeDao;
             if (trxnTypeId.equals(AccountActionTypes.SAVINGS_DEPOSIT.getValue())) {
                 if (StringUtils.isNotBlank(actionForm.getCustomerId())) {
                     actionForm.setAmount(depositWithdrawalReferenceDto.getDepositDue());

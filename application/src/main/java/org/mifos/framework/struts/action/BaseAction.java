@@ -37,6 +37,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.actions.DispatchAction;
 import org.hibernate.HibernateException;
+import org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentTypeDao;
 import org.mifos.accounts.fees.persistence.FeeDao;
 import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.fund.servicefacade.FundServiceFacade;
@@ -108,6 +109,7 @@ import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsD
 import org.mifos.security.util.UserContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -155,6 +157,7 @@ public abstract class BaseAction extends DispatchAction {
     protected LegacyAdminDocAccStateMixDao legacyAdminDocAccStateMixDao;
     protected LegacyRolesPermissionsDao legacyRolesPermissionsDao;
     protected LegacyAccountDao legacyAccountDao;
+    protected LegacyAcceptedPaymentTypeDao legacyAcceptedPaymentTypeDao;
 
     // non domain app
     protected LoanServiceFacade loanServiceFacade;
@@ -198,6 +201,7 @@ public abstract class BaseAction extends DispatchAction {
         this.legacyAdminDocAccStateMixDao = getBean(LegacyAdminDocAccStateMixDao.class);
         this.legacyRolesPermissionsDao = getBean(LegacyRolesPermissionsDao.class);
         this.legacyAccountDao = getBean(LegacyAccountDao.class);
+        this.legacyAcceptedPaymentTypeDao = getBean(LegacyAcceptedPaymentTypeDao.class);
     }
 
     private void configureServiceFacadeBeans() {

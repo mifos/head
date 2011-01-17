@@ -16,7 +16,7 @@
 
     <bean name="legacyLoanDao" class="org.mifos.accounts.loan.persistance.LegacyLoanDao"/>
 
-    <bean name="acceptedPaymentTypePersistence" class="org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence"/>
+    <bean name="legacyAcceptedPaymentTypeDao" class="org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentTypeDao"/>
 
     <bean name="personnelPersistence" class="org.mifos.customers.personnel.persistence.PersonnelPersistence"/>
 
