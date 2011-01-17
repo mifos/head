@@ -93,6 +93,7 @@ import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /*
  * LoanCalculationTest is a starting point for defining and exploring
@@ -152,6 +153,9 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     private boolean isFileNameConsoleOutputEnabled = false;
 
     private LoanDaoLegacyImpl loanDao;
+
+    @Autowired
+    private LegacyLoanDao legacyLoanDao;
 
     @Before
     public void setUp() throws Exception {
@@ -319,13 +323,13 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                 .getNumberOfPayments());
         // after all payments are made
         printLoanScheduleEntities(paymentsArray);
-        List<AccountPaymentEntity> accountPayments = new LegacyLoanDao().retrieveAllAccountPayments(accountBO
+        List<AccountPaymentEntity> accountPayments = legacyLoanDao.retrieveAllAccountPayments(accountBO
                 .getAccountId());
         accountBO.setAccountPayments(accountPayments);
         PersonnelBO loggedInUser = IntegrationTestObjectMother.testUser();
         accountBO.adjustLastPayment("Adjust last payment", loggedInUser);
         new TestObjectPersistence().persist(accountBO);
-        accountPayments = new LegacyLoanDao().retrieveAllAccountPayments(accountBO.getAccountId());
+        accountPayments = legacyLoanDao.retrieveAllAccountPayments(accountBO.getAccountId());
         Assert.assertEquals(accountPayments.get(0).getAmount(), new Money(getCurrency(), "0")); // this
         // is
         // the
@@ -430,7 +434,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(actionDateEntities, loanParams
                 .getNumberOfPayments());
         verifyReversedLoanSchedules(paymentsArray, expectedResults);
-        List<AccountPaymentEntity> accountPayments = new LegacyLoanDao().retrieveAllAccountPayments(accountBO
+        List<AccountPaymentEntity> accountPayments = legacyLoanDao.retrieveAllAccountPayments(accountBO
                 .getAccountId());
         // every payment is reversed so amount is 0
         for (AccountPaymentEntity payment : accountPayments) {
@@ -556,14 +560,14 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         actionDateEntities = loan.getAccountActionDates();
         paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(actionDateEntities, loanParams
                 .getNumberOfPayments());
-        List<AccountPaymentEntity> accountPayments = new LegacyLoanDao().retrieveAllAccountPayments(loan
+        List<AccountPaymentEntity> accountPayments = legacyLoanDao.retrieveAllAccountPayments(loan
                 .getAccountId());
         Assert.assertEquals(accountPayments.size(), paymentToReverse);
         loan.setAccountPayments(accountPayments);
         PersonnelBO loggedInUser = IntegrationTestObjectMother.testUser();
         loan.adjustLastPayment("Adjust last payment", loggedInUser);
         new TestObjectPersistence().persist(loan);
-        accountPayments = new LegacyLoanDao().retrieveAllAccountPayments(loan.getAccountId());
+        accountPayments = legacyLoanDao.retrieveAllAccountPayments(loan.getAccountId());
         Assert.assertEquals(accountPayments.get(0).getAmount(), new Money(getCurrency(), "0")); // this
         // is
         // the

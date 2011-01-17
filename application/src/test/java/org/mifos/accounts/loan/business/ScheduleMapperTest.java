@@ -80,7 +80,7 @@ public class ScheduleMapperTest {
     @Mock
     private AccountPaymentEntity accountPaymentEntity;
     @Mock
-    private LegacyLoanDao loanPersistence;
+    private LegacyLoanDao legacyLoanDao;
     @Mock
     private AccountActionEntity accountActionEntity;
 
@@ -104,14 +104,14 @@ public class ScheduleMapperTest {
         Set<LoanScheduleEntity> loanScheduleEntities = new LinkedHashSet<LoanScheduleEntity>();
         loanScheduleEntities.add(scheduleEntityForPopulateTestInput);
         when(loanBO.getLoanScheduleEntities()).thenReturn(loanScheduleEntities);
-        when(loanBO.getLoanPersistence()).thenReturn(loanPersistence);
+        when(loanBO.getlegacyLoanDao()).thenReturn(legacyLoanDao);
         Date paymentDate = getDate(24, 11, 2010);
         Schedule schedule = getScheduleWithSingleInstallment();
         scheduleMapper.populatePaymentDetails(schedule, loanBO, paymentDate, personnelBO, accountPaymentEntity);
         assertCalculatedInterestOnPayment(accountPaymentEntity);
         assertThat(getLoanScheduleEntity(paymentDate), new LoanScheduleEntityMatcher(scheduleEntityForPopulateTestInput));
         verify(loanBO, times(1)).getLoanScheduleEntities();
-        verify(loanBO, times(1)).getLoanPersistence();
+        verify(loanBO, times(1)).getlegacyLoanDao();
         verify(loanBO, times(1)).recordSummaryAndPerfHistory(anyBoolean(), Matchers.<PaymentAllocation>any());
     }
 

@@ -177,18 +177,18 @@ public class LoanBO extends AccountBO {
 
     // persistence
     private LoanPrdPersistence loanPrdPersistence;
-    private LegacyLoanDao loanPersistence = null;
+    private LegacyLoanDao legacyLoanDao = null;
     LegacyMasterDao legacyMasterDao = ApplicationContextProvider.getBean(LegacyMasterDao.class);
 
-    public LegacyLoanDao getLoanPersistence() {
-        if (null == loanPersistence) {
-            loanPersistence = new LegacyLoanDao();
+    public LegacyLoanDao getlegacyLoanDao() {
+        if (null == legacyLoanDao) {
+            legacyLoanDao = ApplicationContextProvider.getBean(LegacyLoanDao.class);
         }
-        return loanPersistence;
+        return legacyLoanDao;
     }
 
-    public void setLoanPersistence(final LegacyLoanDao loanPersistence) {
-        this.loanPersistence = loanPersistence;
+    public void setlegacyLoanDao(final LegacyLoanDao legacyLoanDao) {
+        this.legacyLoanDao = legacyLoanDao;
     }
 
     /**
@@ -1250,7 +1250,7 @@ public class LoanBO extends AccountBO {
             updateCustomerHistoryOnRepayment();
             this.delete(loanArrearsAgingEntity);
             loanArrearsAgingEntity = null;
-            getLoanPersistence().createOrUpdate(this);
+            getlegacyLoanDao().createOrUpdate(this);
         } catch (PersistenceException e) {
             throw new AccountException(e);
         }
@@ -1297,7 +1297,7 @@ public class LoanBO extends AccountBO {
         }
 
         try {
-            getLoanPersistence().createOrUpdate(this);
+            getlegacyLoanDao().createOrUpdate(this);
         } catch (PersistenceException e) {
             throw new AccountException(e);
         }
@@ -1378,7 +1378,7 @@ public class LoanBO extends AccountBO {
                     LoanConstants.FEE_WAIVED);
         }
         try {
-            getLoanPersistence().createOrUpdate(this);
+            getlegacyLoanDao().createOrUpdate(this);
         } catch (PersistenceException e) {
             throw new AccountException(e);
         }
@@ -1398,7 +1398,7 @@ public class LoanBO extends AccountBO {
                     LoanConstants.PENALTY_WAIVED);
         }
         try {
-            getLoanPersistence().createOrUpdate(this);
+            getlegacyLoanDao().createOrUpdate(this);
         } catch (PersistenceException e) {
             throw new AccountException(e);
         }
@@ -1427,7 +1427,7 @@ public class LoanBO extends AccountBO {
                     AccountConstants.AMOUNT + chargeWaived + AccountConstants.WAIVED);
         }
         try {
-            getLoanPersistence().createOrUpdate(this);
+            getlegacyLoanDao().createOrUpdate(this);
         } catch (PersistenceException e) {
             throw new AccountException(e);
         }
@@ -1453,7 +1453,7 @@ public class LoanBO extends AccountBO {
                     + chargeWaived + AccountConstants.WAIVED);
         }
         try {
-            getLoanPersistence().createOrUpdate(this);
+            getlegacyLoanDao().createOrUpdate(this);
         } catch (PersistenceException e) {
             throw new AccountException(e);
         }
@@ -1464,7 +1464,7 @@ public class LoanBO extends AccountBO {
             return getDueAmount(getAccountActionDate(Short.valueOf("1")));
         }
 
-        return getLoanPersistence().getFeeAmountAtDisbursement(this.getAccountId(), getCurrency());
+        return getlegacyLoanDao().getFeeAmountAtDisbursement(this.getAccountId(), getCurrency());
     }
 
     public Boolean hasPortfolioAtRisk() {
@@ -1499,9 +1499,9 @@ public class LoanBO extends AccountBO {
         try {
             this.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(this.getAccountState(), this
                     .getAccountState(), new PersonnelPersistence().getPersonnel(userContext.getId()), this));
-            getLoanPersistence().createOrUpdate(this);
+            getlegacyLoanDao().createOrUpdate(this);
             this.globalAccountNum = generateId(userContext.getBranchGlobalNum());
-            getLoanPersistence().createOrUpdate(this);
+            getlegacyLoanDao().createOrUpdate(this);
         } catch (PersistenceException e) {
             throw new AccountException(AccountExceptionConstants.CREATEEXCEPTION, e);
         }
@@ -1699,7 +1699,7 @@ public class LoanBO extends AccountBO {
 
         if (objectoDelete != null) {
             try {
-                getLoanPersistence().delete(objectoDelete);
+                getlegacyLoanDao().delete(objectoDelete);
             } catch (PersistenceException e) {
                 throw new AccountException(e);
             }
@@ -1837,14 +1837,14 @@ public class LoanBO extends AccountBO {
         if (accountReOpened && this.getCustomer().isClient()) {
             ClientPerformanceHistoryEntity clientHistory = (ClientPerformanceHistoryEntity) this.getCustomer().getPerformanceHistory();
             clientHistory.incrementNoOfActiveLoans();
-            Money newLastLoanAmount = getLoanPersistence().findClientPerformanceHistoryLastLoanAmountWhenRepaidLoanAdjusted(
+            Money newLastLoanAmount = getlegacyLoanDao().findClientPerformanceHistoryLastLoanAmountWhenRepaidLoanAdjusted(
                     this.getCustomer().getCustomerId(), this.getAccountId());
             clientHistory.setLastLoanAmount(newLastLoanAmount);
         }
 
         if (accountReOpened && this.getCustomer().isGroup()) {
             final GroupPerformanceHistoryEntity groupHistory = (GroupPerformanceHistoryEntity) this.getCustomer().getPerformanceHistory();
-            Money newLastGroupLoanAmount = getLoanPersistence()
+            Money newLastGroupLoanAmount = getlegacyLoanDao()
                     .findGroupPerformanceHistoryLastLoanAmountWhenRepaidLoanAdjusted(
                             this.getCustomer().getCustomerId(), this.getAccountId());
             groupHistory.setLastGroupLoanAmount(newLastGroupLoanAmount);
@@ -2586,7 +2586,7 @@ public class LoanBO extends AccountBO {
         Money miscFee = getMiscFee();
         Money miscPenalty = getMiscPenalty();
         try {
-            getLoanPersistence().deleteInstallments(this.getAccountActionDates());
+            getlegacyLoanDao().deleteInstallments(this.getAccountActionDates());
         } catch (PersistenceException e) {
             throw new AccountException(e);
         }
@@ -2595,7 +2595,7 @@ public class LoanBO extends AccountBO {
         if (isRepaymentIndepOfMeetingEnabled && newMeetingForRepaymentDay != null) {
             try {
                 if (null != this.getLoanMeeting()) {
-                    getLoanPersistence().delete(this.getLoanMeeting());
+                    getlegacyLoanDao().delete(this.getLoanMeeting());
                 }
             } catch (PersistenceException e) {
                 throw new AccountException(e);
@@ -4198,7 +4198,7 @@ public class LoanBO extends AccountBO {
      * name of the PaymentTypeEntity.
      */
     private PaymentTypeEntity getPaymentTypeEntity(final short paymentTypeId) {
-        return getLoanPersistence().loadPersistentObject(PaymentTypeEntity.class, paymentTypeId);
+        return getlegacyLoanDao().loadPersistentObject(PaymentTypeEntity.class, paymentTypeId);
     }
 
     /*
@@ -4228,7 +4228,7 @@ public class LoanBO extends AccountBO {
         }
 
         try {
-            getLoanPersistence().createOrUpdate(this);
+            getlegacyLoanDao().createOrUpdate(this);
         } catch (PersistenceException pe) {
             throw new AccountException(pe);
         }

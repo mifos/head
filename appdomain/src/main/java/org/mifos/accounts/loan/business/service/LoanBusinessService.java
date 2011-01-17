@@ -56,7 +56,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class LoanBusinessService implements BusinessService {
 
-    private LegacyLoanDao loanPersistence = new LegacyLoanDao();
+    private LegacyLoanDao legacyLoanDao = ApplicationContextProvider.getBean(LegacyLoanDao.class);
     private ConfigurationBusinessService configService = new ConfigurationBusinessService();
 
     @Autowired
@@ -69,11 +69,11 @@ public class LoanBusinessService implements BusinessService {
     private ScheduleCalculatorAdaptor scheduleCalculatorAdaptor;
 
 
-    public LegacyLoanDao getLoanPersistence() {
-        if (loanPersistence == null) {
-            loanPersistence = new LegacyLoanDao();
+    public LegacyLoanDao getlegacyLoanDao() {
+        if (legacyLoanDao == null) {
+            legacyLoanDao = ApplicationContextProvider.getBean(LegacyLoanDao.class);
         }
-        return loanPersistence;
+        return legacyLoanDao;
     }
 
     public ConfigurationBusinessService getConfigService() {
@@ -97,10 +97,10 @@ public class LoanBusinessService implements BusinessService {
     protected LoanBusinessService() {
     }
 
-    public LoanBusinessService(LegacyLoanDao loanPersistence, ConfigurationBusinessService configService,
+    public LoanBusinessService(LegacyLoanDao legacyLoanDao, ConfigurationBusinessService configService,
                                AccountBusinessService accountBusinessService, HolidayService holidayService,
                                ScheduleCalculatorAdaptor scheduleCalculatorAdaptor) {
-        this.loanPersistence = loanPersistence;
+        this.legacyLoanDao = legacyLoanDao;
         this.configService = configService;
         this.accountBusinessService = accountBusinessService;
         this.holidayService = holidayService;
@@ -118,7 +118,7 @@ public class LoanBusinessService implements BusinessService {
     @Deprecated
     public LoanBO findBySystemId(final String accountGlobalNum) throws ServiceException {
         try {
-            return getLoanPersistence().findBySystemId(accountGlobalNum);
+            return getlegacyLoanDao().findBySystemId(accountGlobalNum);
         } catch (PersistenceException e) {
             throw new ServiceException(AccountExceptionConstants.FINDBYGLOBALACCNTEXCEPTION, e,
                     new Object[] { accountGlobalNum });
@@ -131,7 +131,7 @@ public class LoanBusinessService implements BusinessService {
     @Deprecated
     public List<LoanBO> findIndividualLoans(final String accountId) throws ServiceException {
         try {
-            return getLoanPersistence().findIndividualLoans(accountId);
+            return getlegacyLoanDao().findIndividualLoans(accountId);
         } catch (PersistenceException e) {
             throw new ServiceException(AccountExceptionConstants.FINDBYGLOBALACCNTEXCEPTION, e,
                     new Object[] { accountId });
@@ -144,7 +144,7 @@ public class LoanBusinessService implements BusinessService {
     @Deprecated
     public LoanBO getAccount(final Integer accountId) throws ServiceException {
         try {
-            return getLoanPersistence().getAccount(accountId);
+            return getlegacyLoanDao().getAccount(accountId);
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
@@ -152,7 +152,7 @@ public class LoanBusinessService implements BusinessService {
 
     public List<LoanBO> getLoanAccountsActiveInGoodBadStanding(final Integer customerId) throws ServiceException {
         try {
-            return getLoanPersistence().getLoanAccountsActiveInGoodBadStanding(customerId);
+            return getlegacyLoanDao().getLoanAccountsActiveInGoodBadStanding(customerId);
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
@@ -160,7 +160,7 @@ public class LoanBusinessService implements BusinessService {
 
     public Short getLastPaymentAction(final Integer accountId) throws ServiceException {
         try {
-            return getLoanPersistence().getLastPaymentAction(accountId);
+            return getlegacyLoanDao().getLastPaymentAction(accountId);
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
@@ -169,7 +169,7 @@ public class LoanBusinessService implements BusinessService {
     public List<LoanBO> getSearchResults(final String officeId, final String personnelId, final String currentStatus)
             throws ServiceException {
         try {
-            return getLoanPersistence().getSearchResults(officeId, personnelId, currentStatus);
+            return getlegacyLoanDao().getSearchResults(officeId, personnelId, currentStatus);
         } catch (PersistenceException he) {
             throw new ServiceException(he);
         }
@@ -177,7 +177,7 @@ public class LoanBusinessService implements BusinessService {
 
     public List<LoanBO> getAllLoanAccounts() throws ServiceException {
         try {
-            return getLoanPersistence().getAllLoanAccounts();
+            return getlegacyLoanDao().getAllLoanAccounts();
         } catch (PersistenceException pe) {
             throw new ServiceException(pe);
         }
@@ -310,11 +310,11 @@ public class LoanBusinessService implements BusinessService {
         for (LoanScheduleEntity loanScheduleEntity : loanScheduleEntities) {
                    originalLoanScheduleEntities.add(new OriginalLoanScheduleEntity(loanScheduleEntity));
         }
-        loanPersistence.saveOriginalSchedule(originalLoanScheduleEntities);
+        legacyLoanDao.saveOriginalSchedule(originalLoanScheduleEntities);
     }
 
     public List<OriginalLoanScheduleEntity> retrieveOriginalLoanSchedule(Integer accountId) throws PersistenceException {
-        return loanPersistence.getOriginalLoanScheduleEntity(accountId);
+        return legacyLoanDao.getOriginalLoanScheduleEntity(accountId);
     }
 
     public void computeExtraInterest(LoanBO loan, Date asOfDate) {

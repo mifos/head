@@ -32,6 +32,7 @@ import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.accounts.savings.util.helpers.SavingsAccountDto;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.customers.client.business.service.ClientAttendanceDto;
 import org.mifos.customers.util.helpers.CustomerAccountDto;
 import org.mifos.customers.api.DataTransferObject;
@@ -367,7 +368,7 @@ public class CollectionSheetEntryDto implements DataTransferObject {
                     collectionSheetEntryAccountActionViews, collectionSheetEntryAccountFeeActionDtos));
         }
 
-        return new LegacyLoanDao().getFeeAmountAtDisbursement(loanAccountDto.getAccountId(), Money.getDefaultCurrency()).getAmountDoubleValue();
+        return ApplicationContextProvider.getBean(LegacyLoanDao.class).getFeeAmountAtDisbursement(loanAccountDto.getAccountId(), Money.getDefaultCurrency()).getAmountDoubleValue();
     }
 
     private Double getInterestAmountDedAtDisb(final List<CollectionSheetEntryInstallmentDto> installments) {

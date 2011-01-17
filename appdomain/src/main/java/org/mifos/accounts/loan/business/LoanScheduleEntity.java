@@ -693,17 +693,17 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
                                                                    PersonnelBO personnel, Date transactionDate) {
 
         LoanBO loanBO = (LoanBO) account;
-        LegacyLoanDao loanPersistence = loanBO.getLoanPersistence();
-        LoanTrxnDetailEntity loanTrxnDetailEntity = recordTransaction(accountPayment, personnel, transactionDate, loanPersistence);
+        LegacyLoanDao legacyLoanDao = loanBO.getlegacyLoanDao();
+        LoanTrxnDetailEntity loanTrxnDetailEntity = recordTransaction(accountPayment, personnel, transactionDate, legacyLoanDao);
         loanBO.recordSummaryAndPerfHistory(isPaid(), paymentAllocation);
         return loanTrxnDetailEntity;
     }
 
     private LoanTrxnDetailEntity recordTransaction(AccountPaymentEntity accountPayment, PersonnelBO personnel,
-                                                   Date transactionDate, LegacyLoanDao loanPersistence) {
+                                                   Date transactionDate, LegacyLoanDao legacyLoanDao) {
         // TODO: Avoid passing the persistence instance in the constructor for reference data lookup
         LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPayment, this, personnel, transactionDate,
-                AccountActionTypes.LOAN_REPAYMENT, AccountConstants.PAYMENT_RCVD, loanPersistence);
+                AccountActionTypes.LOAN_REPAYMENT, AccountConstants.PAYMENT_RCVD, legacyLoanDao);
         accountPayment.addAccountTrxn(loanTrxnDetailEntity);
         return loanTrxnDetailEntity;
     }

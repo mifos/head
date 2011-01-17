@@ -71,6 +71,8 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
     @Autowired
     protected LoanBusinessService loanBusinessService;
 
+    @Autowired
+    private LegacyLoanDao legacyLoanDao;
 
     @Test
     public void testFindBySystemId() throws Exception {
@@ -148,7 +150,7 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
         replay(groupMock, clientMock, loanMock1, loanMock2, groupLoanMock, configServiceMock,
                 accountBusinessServiceMock);
 
-        Assert.assertEquals(asList(loanMock1), new LoanBusinessService(new LegacyLoanDao(), configServiceMock,
+        Assert.assertEquals(asList(loanMock1), new LoanBusinessService(legacyLoanDao, configServiceMock,
                 accountBusinessServiceMock, createMock(HolidayService.class), createMock(ScheduleCalculatorAdaptor.class)).getActiveLoansForAllClientsAssociatedWithGroupLoan(groupLoanMock));
 
         verify(groupMock, clientMock, loanMock1, loanMock2, groupLoanMock, configServiceMock,

@@ -58,7 +58,7 @@ public class CollectionSheetServiceImplTest {
     @Mock
     private ClientAttendanceDao clientAttendanceDao;
     @Mock
-    private LegacyLoanDao loanPersistence;
+    private LegacyLoanDao legacyLoanDao;
     @Mock
     private LegacyAccountDao legacyAccountDao;
     @Mock
@@ -69,7 +69,7 @@ public class CollectionSheetServiceImplTest {
     @Before
     public void setupAndInjectDependencies() {
 
-        collectionSheetService = new CollectionSheetServiceImpl(clientAttendanceDao, loanPersistence,
+        collectionSheetService = new CollectionSheetServiceImpl(clientAttendanceDao, legacyLoanDao,
                 legacyAccountDao, savingsDao, collectionSheetDao);
     }
 

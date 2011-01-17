@@ -62,7 +62,7 @@ public class LoanScheduleEntityTest {
     @Mock
     private AccountPaymentEntity accountPayment;
     @Mock
-    private LegacyLoanDao loanPersistence;
+    private LegacyLoanDao legacyLoanDao;
     @Mock
     private AccountPaymentEntity accountPaymentEntity;
 
@@ -114,11 +114,11 @@ public class LoanScheduleEntityTest {
         loanScheduleEntity.setAccount(loanBO);
         loanScheduleEntity.setPaymentAllocation(paymentAllocation);
         Mockito.doNothing().when(accountPayment).addAccountTrxn(Mockito.<AccountTrxnEntity>any());
-        when(loanBO.getLoanPersistence()).thenReturn(loanPersistence);
+        when(loanBO.getlegacyLoanDao()).thenReturn(legacyLoanDao);
         when(accountPayment.getAccount()).thenReturn(loanBO);
         loanScheduleEntity.updateSummaryAndPerformanceHistory(accountPayment, personnel, paymentDate);
         verify(accountPayment, times(1)).addAccountTrxn(Mockito.<AccountTrxnEntity>any());
-        verify(loanBO, times(1)).getLoanPersistence();
+        verify(loanBO, times(1)).getlegacyLoanDao();
         verify(accountPayment, times(1)).getAccount();
         verify(loanBO, times(1)).recordSummaryAndPerfHistory(true, paymentAllocation);
     }
@@ -135,11 +135,11 @@ public class LoanScheduleEntityTest {
         loanScheduleEntity.setAccount(loanBO);
         loanScheduleEntity.setPaymentAllocation(paymentAllocation);
         Mockito.doNothing().when(accountPayment).addAccountTrxn(Mockito.<AccountTrxnEntity>any());
-        when(loanBO.getLoanPersistence()).thenReturn(loanPersistence);
+        when(loanBO.getlegacyLoanDao()).thenReturn(legacyLoanDao);
         when(accountPayment.getAccount()).thenReturn(loanBO);
         loanScheduleEntity.updateSummaryAndPerformanceHistory(accountPayment, personnel, paymentDate);
         verify(accountPayment, times(1)).addAccountTrxn(Mockito.<AccountTrxnEntity>any());
-        verify(loanBO, times(1)).getLoanPersistence();
+        verify(loanBO, times(1)).getlegacyLoanDao();
         verify(accountPayment, times(1)).getAccount();
         verify(loanBO, times(1)).recordSummaryAndPerfHistory(false, paymentAllocation);
     }

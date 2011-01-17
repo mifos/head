@@ -81,7 +81,7 @@ public class ScheduleCalculatorAdaptorTest {
     private AccountPaymentEntity accountPaymentEntity;
 
     @Mock
-    private LegacyLoanDao loanPersistence;
+    private LegacyLoanDao legacyLoanDao;
 
     @Mock
     private AccountActionEntity accountActionEntity;
@@ -116,7 +116,7 @@ public class ScheduleCalculatorAdaptorTest {
         when(loanBO.getDisbursementDate()).thenReturn(DISBURSEMENT_DATE);
         when(loanBO.getLoanAmount()).thenReturn(new Money(rupee, LOAN_AMOUNT));
         when(loanBO.getInterestRate()).thenReturn(ANNUAL_INTEREST_RATE);
-        when(loanBO.getLoanPersistence()).thenReturn(loanPersistence);
+        when(loanBO.getlegacyLoanDao()).thenReturn(legacyLoanDao);
         when(loanBO.getLoanSummary()).thenReturn(loanSummary);
         when(loanBO.getPerformanceHistory()).thenReturn(performanceHistory);
         when(accountPaymentEntity.getAccount()).thenReturn(loanBO);
@@ -127,11 +127,11 @@ public class ScheduleCalculatorAdaptorTest {
         verify(loanBO, times(2)).getLoanScheduleEntities();
         verify(loanBO, times(1)).getDisbursementDate();
         verify(loanBO, times(1)).getInterestRate();
-        verify(loanBO, times(0)).getLoanPersistence();
+        verify(loanBO, times(0)).getlegacyLoanDao();
         verify(loanBO, times(0)).getLoanSummary();
         verify(loanBO, times(0)).getPerformanceHistory();
         verify(accountPaymentEntity, times(0)).getAccount();
-        verify(loanPersistence, times(0)).getPersistentObject(eq(AccountActionEntity.class), Mockito.<Serializable>any());
+        verify(legacyLoanDao, times(0)).getPersistentObject(eq(AccountActionEntity.class), Mockito.<Serializable>any());
         verify(loanSummary, times(0)).updatePaymentDetails(Mockito.<PaymentAllocation>any());
         verify(performanceHistory, times(0)).incrementPayments();
     }
@@ -143,7 +143,7 @@ public class ScheduleCalculatorAdaptorTest {
         when(loanBO.getDisbursementDate()).thenReturn(DISBURSEMENT_DATE);
         when(loanBO.getLoanAmount()).thenReturn(new Money(rupee, LOAN_AMOUNT));
         when(loanBO.getInterestRate()).thenReturn(ANNUAL_INTEREST_RATE);
-        when(loanBO.getLoanPersistence()).thenReturn(loanPersistence);
+        when(loanBO.getlegacyLoanDao()).thenReturn(legacyLoanDao);
         when(accountPaymentEntity.getAccount()).thenReturn(loanBO);
         scheduleCalculatorAdaptor.applyPayment(loanBO, new Money(rupee, 112.00), getDate(30, 10, 2010), personnel, accountPaymentEntity);
         verify(scheduleMapper, times(1)).mapToSchedule(Mockito.<Collection<LoanScheduleEntity>>any(), Mockito.<Date>any(), Mockito.<Double>any(), Mockito.<BigDecimal>any());
@@ -152,7 +152,7 @@ public class ScheduleCalculatorAdaptorTest {
         verify(loanBO, times(2)).getLoanScheduleEntities();
         verify(loanBO, times(1)).getDisbursementDate();
         verify(loanBO, times(1)).getInterestRate();
-        verify(loanBO, times(2)).getLoanPersistence();
+        verify(loanBO, times(2)).getlegacyLoanDao();
         verify(loanBO, times(2)).recordSummaryAndPerfHistory(anyBoolean(), Matchers.<PaymentAllocation>any());
         verify(accountPaymentEntity, times(2)).getAccount();
     }

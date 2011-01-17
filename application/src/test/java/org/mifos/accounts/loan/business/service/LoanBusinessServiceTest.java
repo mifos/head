@@ -99,13 +99,13 @@ public class LoanBusinessServiceTest {
     private PersonnelBO personnel;
 
     @Mock
-    private LegacyLoanDao loanPersistence;
+    private LegacyLoanDao legacyLoanDao;
     private Short officeId;
 
 
     @Before
     public void setupAndInjectDependencies() {
-        loanBusinessService = new LoanBusinessService(loanPersistence, null, null, holidayService, scheduleCalculatorAdaptor);
+        loanBusinessService = new LoanBusinessService(legacyLoanDao, null, null, holidayService, scheduleCalculatorAdaptor);
         locale = new Locale("en", "GB");
         installmentBuilder = new RepaymentScheduleInstallmentBuilder(locale);
         rupee = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
@@ -395,7 +395,7 @@ public class LoanBusinessServiceTest {
         loanBusinessService.persistOriginalSchedule(loanBO);
         ArrayList<OriginalLoanScheduleEntity> expected = new ArrayList<OriginalLoanScheduleEntity>();
         expected.add(new OriginalLoanScheduleEntity(loanScheduleEntity));
-        verify(loanPersistence).saveOriginalSchedule(Mockito.argThat(
+        verify(legacyLoanDao).saveOriginalSchedule(Mockito.argThat(
                 new OriginalLoanScheduleEntitiesMatcher(expected)
         ));
     }
@@ -405,10 +405,10 @@ public class LoanBusinessServiceTest {
         Integer accountId = 1;
 
         ArrayList<OriginalLoanScheduleEntity> expected = new ArrayList<OriginalLoanScheduleEntity>();
-        when(loanPersistence.getOriginalLoanScheduleEntity(accountId)).thenReturn(expected);
+        when(legacyLoanDao.getOriginalLoanScheduleEntity(accountId)).thenReturn(expected);
         List<OriginalLoanScheduleEntity> loanScheduleEntities = loanBusinessService.retrieveOriginalLoanSchedule(accountId);
         Assert.assertNotNull(loanScheduleEntities);
-        verify(loanPersistence).getOriginalLoanScheduleEntity(accountId);
+        verify(legacyLoanDao).getOriginalLoanScheduleEntity(accountId);
         Assert.assertEquals(expected,loanScheduleEntities);
     }
 

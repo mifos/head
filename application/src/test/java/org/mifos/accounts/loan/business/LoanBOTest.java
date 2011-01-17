@@ -187,7 +187,7 @@ public class LoanBOTest {
 
     @Test
     public void repayInstallmentsShouldPopulateCalculatedInterestsForDIPBLoans() throws PersistenceException {
-        final LegacyLoanDao loanPersistence = mock(LegacyLoanDao.class);
+        final LegacyLoanDao legacyLoanDao = mock(LegacyLoanDao.class);
         final CustomerBO customerBO = mock(CustomerBO.class);
         final LoanSummaryEntity loanSummaryEntity = mock(LoanSummaryEntity.class);
 
@@ -198,8 +198,8 @@ public class LoanBOTest {
             }
 
             @Override
-            public LegacyLoanDao getLoanPersistence() {
-                return loanPersistence;
+            public LegacyLoanDao getlegacyLoanDao() {
+                return legacyLoanDao;
             }
 
             @Override
@@ -220,7 +220,7 @@ public class LoanBOTest {
         Money interest = new Money(rupee, "10");
         Money interestDue = new Money(rupee, "2.07");
 
-        when(loanPersistence.getPersistentObject(AccountActionEntity.class, accountActionTypes.getValue())).thenReturn(accountActionEntity);
+        when(legacyLoanDao.getPersistentObject(AccountActionEntity.class, accountActionTypes.getValue())).thenReturn(accountActionEntity);
         when(loanScheduleEntity.getPrincipalDue()).thenReturn(new Money(rupee,"1000"));
         when(loanScheduleEntity.getTotalFeeDueWithMiscFeeDue()).thenReturn(new Money(rupee,"10"));
         when(loanScheduleEntity.getPenaltyDue()).thenReturn(new Money(rupee,"10"));
@@ -245,7 +245,7 @@ public class LoanBOTest {
 
     @Test
     public void repayInstallmentsShouldPopulateCalculatedInterestsForDIPBLoansWithWaiverInterest() throws PersistenceException {
-        final LegacyLoanDao loanPersistence = mock(LegacyLoanDao.class);
+        final LegacyLoanDao legacyLoanDao = mock(LegacyLoanDao.class);
         final CustomerBO customerBO = mock(CustomerBO.class);
         final LoanSummaryEntity loanSummaryEntity = mock(LoanSummaryEntity.class);
 
@@ -256,8 +256,8 @@ public class LoanBOTest {
             }
 
             @Override
-            public LegacyLoanDao getLoanPersistence() {
-                return loanPersistence;
+            public LegacyLoanDao getlegacyLoanDao() {
+                return legacyLoanDao;
             }
 
             @Override
@@ -283,7 +283,7 @@ public class LoanBOTest {
         Money interest = new Money(rupee, "10");
         Money interestDue = new Money(rupee, "0");
 
-        when(loanPersistence.getPersistentObject(AccountActionEntity.class, accountActionTypes.getValue())).thenReturn(accountActionEntity);
+        when(legacyLoanDao.getPersistentObject(AccountActionEntity.class, accountActionTypes.getValue())).thenReturn(accountActionEntity);
         when(loanScheduleEntity.getPrincipalDue()).thenReturn(new Money(rupee,"1000"));
         when(loanScheduleEntity.getTotalFeeDueWithMiscFeeDue()).thenReturn(new Money(rupee,"10"));
         when(loanScheduleEntity.getPenaltyDue()).thenReturn(new Money(rupee,"10"));

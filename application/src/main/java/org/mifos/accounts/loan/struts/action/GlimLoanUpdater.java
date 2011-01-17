@@ -28,6 +28,7 @@ import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.LoanAccountDetailsDto;
@@ -71,7 +72,7 @@ public class GlimLoanUpdater {
 
     public void delete(LoanBO loan) throws AccountException {
         try {
-            new LegacyLoanDao().delete(loan);
+            ApplicationContextProvider.getBean(LegacyLoanDao.class).delete(loan);
         } catch (PersistenceException e) {
             throw new AccountException(e);
         }

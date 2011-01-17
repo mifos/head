@@ -54,6 +54,10 @@ import java.util.*;
 
 public class LegacyLoanDao extends LegacyGenericDao {
 
+    private LegacyLoanDao() {
+
+    }
+
     @SuppressWarnings("unchecked")
     public Money getFeeAmountAtDisbursement(final Integer accountId, final MifosCurrency currency) {
         Money amount = new Money(currency);

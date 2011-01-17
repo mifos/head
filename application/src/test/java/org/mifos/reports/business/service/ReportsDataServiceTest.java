@@ -55,7 +55,7 @@ public class ReportsDataServiceTest extends TestCase {
 
     private OfficeBusinessService officeBusinessServiceMock;
 
-    private LegacyLoanDao loanPersistenceMock;
+    private LegacyLoanDao legacyLoanDaoMock;
 
     private PersonnelBO personnelMock;
 
@@ -74,7 +74,7 @@ public class ReportsDataServiceTest extends TestCase {
         personnelBusinessServiceMock = createMock(PersonnelBusinessService.class);
         officeBusinessServiceMock = createMock(OfficeBusinessService.class);
         personnelMock = createMock(PersonnelBO.class);
-        loanPersistenceMock = createMock(LegacyLoanDao.class);
+        legacyLoanDaoMock = createMock(LegacyLoanDao.class);
         expectedException = new ServiceException("someServiceException");
 
         userId = 1;
@@ -89,7 +89,7 @@ public class ReportsDataServiceTest extends TestCase {
         reportsDataService.setPersonnelBusinessService(personnelBusinessServiceMock);
         reportsDataService.setOfficeBusinessService(officeBusinessServiceMock);
         reportsDataService.setPersonnel(personnelMock);
-        reportsDataService.setLoanPersistence(loanPersistenceMock);
+        reportsDataService.setlegacyLoanDao(legacyLoanDaoMock);
     }
 
     public void testInitialize() throws Exception {
@@ -186,12 +186,12 @@ public class ReportsDataServiceTest extends TestCase {
             throws Exception {
         List<LoanBO> exceptedLoanList = new ArrayList<LoanBO>();
 
-        expect(loanPersistenceMock.getLoanAccountsInActiveBadStanding(branchId, loanOfficerId, loanProductId))
+        expect(legacyLoanDaoMock.getLoanAccountsInActiveBadStanding(branchId, loanOfficerId, loanProductId))
                 .andReturn(exceptedLoanList);
-        replay(loanPersistenceMock);
+        replay(legacyLoanDaoMock);
         assertSame(exceptedLoanList, reportsDataService.getLoanAccountsInActiveBadStanding(branchId.intValue(),
                 loanOfficerId.intValue(), loanProductId.intValue()));
-        verify(loanPersistenceMock);
+        verify(legacyLoanDaoMock);
     }
 
     public void testGetTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStandingShouldReturnSumOfOutstandingPrincipalBalanceForloansInActiveBadStanding()
@@ -199,12 +199,12 @@ public class ReportsDataServiceTest extends TestCase {
         BigDecimal exceptedSum = new BigDecimal(0);
 
         expect(
-                loanPersistenceMock.getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(branchId,
+                legacyLoanDaoMock.getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(branchId,
                         loanOfficerId, loanProductId)).andReturn(exceptedSum);
-        replay(loanPersistenceMock);
+        replay(legacyLoanDaoMock);
         assertSame(exceptedSum, reportsDataService.getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(
                 branchId.intValue(), loanOfficerId.intValue(), loanProductId.intValue()));
-        verify(loanPersistenceMock);
+        verify(legacyLoanDaoMock);
     }
 
     public void testGetActiveLoansBothInGoodAndBadStandingByLoanOfficerShouldReturnListOfAllActiveLoans()
@@ -212,11 +212,11 @@ public class ReportsDataServiceTest extends TestCase {
         List<LoanBO> exceptedLoans = new ArrayList<LoanBO>();
 
         expect(
-                loanPersistenceMock.getActiveLoansBothInGoodAndBadStandingByLoanOfficer(branchId, loanOfficerId,
+                legacyLoanDaoMock.getActiveLoansBothInGoodAndBadStandingByLoanOfficer(branchId, loanOfficerId,
                         loanProductId)).andReturn(exceptedLoans);
-        replay(loanPersistenceMock);
+        replay(legacyLoanDaoMock);
         assertSame(exceptedLoans, reportsDataService.getActiveLoansBothInGoodAndBadStandingByLoanOfficer(branchId
                 .intValue(), loanOfficerId.intValue(), loanProductId.intValue()));
-        verify(loanPersistenceMock);
+        verify(legacyLoanDaoMock);
     }
 }

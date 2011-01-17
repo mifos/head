@@ -94,7 +94,7 @@ public class StandardAccountServiceTest {
     private LoanBO accountBO;
 
     @Mock
-    private LegacyLoanDao loanPersistence;
+    private LegacyLoanDao legacyLoanDao;
 
     @Mock
     private AcceptedPaymentTypePersistence acceptedPaymentTypePersistence;
@@ -112,7 +112,7 @@ public class StandardAccountServiceTest {
 
     @Before
     public void setup() {
-        standardAccountService = new StandardAccountService(legacyAccountDao, loanPersistence,
+        standardAccountService = new StandardAccountService(legacyAccountDao, legacyLoanDao,
                 acceptedPaymentTypePersistence, personnelDao, customerDao, loanBusinessService, transactionHelper);
         Money.setDefaultCurrency(TestUtils.RUPEE);
         accountBO = new LoanAccountBuilder().withCustomer(customerBO).build();

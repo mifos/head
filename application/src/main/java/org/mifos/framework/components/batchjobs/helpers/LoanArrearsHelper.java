@@ -52,7 +52,7 @@ public class LoanArrearsHelper extends TaskHelper {
         try {
             Short latenessDays = new LoanPrdPersistence().retrieveLatenessForPrd();
             long time3 = new DateTimeService().getCurrentDateTime().getMillis();
-            listAccountIds = new LegacyLoanDao().getLoanAccountsInArrearsInGoodStanding(latenessDays);
+            listAccountIds = ApplicationContextProvider.getBean(LegacyLoanDao.class).getLoanAccountsInArrearsInGoodStanding(latenessDays);
             long duration2 = new DateTimeService().getCurrentDateTime().getMillis() - time3;
             accountNumber = listAccountIds.size();
             getLogger().info(
