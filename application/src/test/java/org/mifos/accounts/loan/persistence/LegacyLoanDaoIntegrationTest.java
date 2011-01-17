@@ -98,7 +98,6 @@ public class LegacyLoanDaoIntegrationTest extends MifosIntegrationTestCase {
 
     @Before
     public void setUp() throws Exception {
-        legacyLoanDao = legacyLoanDao;
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
         center = TestObjectFactory.createWeeklyFeeCenterForTestGetLoanAccounts("Center", meeting);
@@ -111,7 +110,6 @@ public class LegacyLoanDaoIntegrationTest extends MifosIntegrationTestCase {
 
     @After
     public void tearDown() throws Exception {
-
         try {
             loanAccount = null;
             badAccount = null;

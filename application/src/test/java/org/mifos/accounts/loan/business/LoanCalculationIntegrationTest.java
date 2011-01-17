@@ -58,7 +58,6 @@ import org.mifos.accounts.fees.util.helpers.FeeFormula;
 import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
 import org.mifos.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.accounts.financial.util.helpers.FinancialConstants;
-import org.mifos.accounts.loan.persistance.LoanDaoLegacyImpl;
 import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
@@ -152,8 +151,6 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     private boolean allConsoleOutputEnabled = false;
     private boolean isFileNameConsoleOutputEnabled = false;
 
-    private LoanDaoLegacyImpl loanDao;
-
     @Autowired
     private LegacyLoanDao legacyLoanDao;
 
@@ -169,8 +166,6 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         savedInitialRoundingMode = AccountingRules.getInitialRoundingMode();
         savedFinalRoundingMode = AccountingRules.getFinalRoundingMode();
         savedDaysInYear = AccountingRules.getNumberOfInterestDays();
-
-        loanDao = new LoanDaoLegacyImpl();
     }
 
     @After
@@ -483,7 +478,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
         List<FeeDto> feeViewList = createFeeViews(config, loanParams, meeting);
 
-        AccountBO loan = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
+        AccountBO loan = legacyLoanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), loanParams.getPrincipal()),
                 loanParams.getNumberOfPayments(), startDate, false, Double.parseDouble(loanParams.getAnnualInterest()),
                 config.getGracePeriod(), null, feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO,
@@ -887,7 +882,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
         List<FeeDto> feeViewList = createFeeViews(config, loanParams, meeting);
 
-        AccountBO loan = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
+        AccountBO loan = legacyLoanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), loanParams.getPrincipal()),
                 loanParams.getNumberOfPayments(), startDate, false, Double.parseDouble(loanParams.getAnnualInterest()),
                 config.getGracePeriod(), null, feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO,
@@ -955,7 +950,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         // loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
         List<FeeDto> feeViewList = createFeeViews(config, loanParams, meeting);
 
-        AccountBO loan = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
+        AccountBO loan = legacyLoanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), loanParams.getPrincipal()),
                 loanParams.getNumberOfPayments(), startDate, false, Double.parseDouble(loanParams.getAnnualInterest()),
                 config.getGracePeriod(), null, feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO,
@@ -1595,7 +1590,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
         List<FeeDto> feeViewList = createFeeViews(config, loanParams, meeting);
 
-        AccountBO accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
+        AccountBO accountBO = legacyLoanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), loanParams.getPrincipal()),
                 loanParams.getNumberOfPayments(), startDate, false, Double.parseDouble(loanParams.getAnnualInterest()),
                 config.getGracePeriod(), null, feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO,
