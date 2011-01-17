@@ -30,7 +30,7 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.LocalDate;
-import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
+import org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentTypeDao;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.business.AccountCustomFieldEntity;
@@ -585,7 +585,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             List<ListElement> depositPaymentTypes = retrieveDepositPaymentTypes(userContext);
 
             List<ListElement> withdrawalPaymentTypes = new ArrayList<ListElement>();
-            List<PaymentTypeEntity> withdrawalPaymentEntityTypes = new AcceptedPaymentTypePersistence().getAcceptedPaymentTypesForATransaction(userContext.getLocaleId(), TrxnTypes.savings_withdrawal.getValue());
+            List<PaymentTypeEntity> withdrawalPaymentEntityTypes = new LegacyAcceptedPaymentTypeDao().getAcceptedPaymentTypesForATransaction(userContext.getLocaleId(), TrxnTypes.savings_withdrawal.getValue());
             for (PaymentTypeEntity paymentTypeEntity : withdrawalPaymentEntityTypes) {
 
                 LookUpValueEntity lookupValue = paymentTypeEntity.getLookUpValue();
@@ -611,7 +611,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     private List<ListElement> retrieveDepositPaymentTypes(UserContext userContext) {
         try {
             List<ListElement> depositPaymentTypes = new ArrayList<ListElement>();
-            List<PaymentTypeEntity> acceptedPaymentEntityTypes = new AcceptedPaymentTypePersistence().getAcceptedPaymentTypesForATransaction(userContext.getLocaleId(), TrxnTypes.savings_deposit.getValue());
+            List<PaymentTypeEntity> acceptedPaymentEntityTypes = new LegacyAcceptedPaymentTypeDao().getAcceptedPaymentTypesForATransaction(userContext.getLocaleId(), TrxnTypes.savings_deposit.getValue());
             for (PaymentTypeEntity paymentTypeEntity : acceptedPaymentEntityTypes) {
 
                 LookUpValueEntity lookupValue = paymentTypeEntity.getLookUpValue();

@@ -20,7 +20,7 @@
 
 package org.mifos.accounts.servicefacade;
 
-import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
+import org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentTypeDao;
 import org.mifos.accounts.api.AccountService;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountPaymentEntity;
@@ -69,7 +69,7 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
     private HibernateTransactionHelper transactionHelper;
     private AccountBusinessService accountBusinessService;
     private ScheduleCalculatorAdaptor scheduleCalculatorAdaptor;
-    private AcceptedPaymentTypePersistence acceptedPaymentTypePersistence;
+    private LegacyAcceptedPaymentTypeDao acceptedPaymentTypePersistence;
     private PersonnelPersistence personnelPersistence;
     private LegacyAccountDao legacyAccountDao;
 
@@ -77,7 +77,7 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
     public WebTierAccountServiceFacade(AccountService accountService, HibernateTransactionHelper transactionHelper,
                                        AccountBusinessService accountBusinessService,
                                        ScheduleCalculatorAdaptor scheduleCalculatorAdaptor,
-                                       AcceptedPaymentTypePersistence acceptedPaymentTypePersistence,
+                                       LegacyAcceptedPaymentTypeDao acceptedPaymentTypePersistence,
                                        PersonnelPersistence personnelPersistence, LegacyAccountDao legacyAccountDao) {
         this.accountService = accountService;
         this.transactionHelper = transactionHelper;

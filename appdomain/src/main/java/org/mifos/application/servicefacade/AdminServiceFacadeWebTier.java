@@ -32,7 +32,7 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.acceptedpaymenttype.business.AcceptedPaymentType;
 import org.mifos.accounts.acceptedpaymenttype.business.TransactionTypeEntity;
-import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
+import org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentTypeDao;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.persistence.FeePersistence;
@@ -1029,7 +1029,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     @Override
     public AcceptedPaymentTypeDto retrieveAcceptedPaymentTypes() {
         List<PaymentTypeDto> payments = getAllPaymentTypes(null);
-        AcceptedPaymentTypePersistence paymentTypePersistence = new AcceptedPaymentTypePersistence();
+        LegacyAcceptedPaymentTypeDao paymentTypePersistence = new LegacyAcceptedPaymentTypeDao();
         AcceptedPaymentTypeDto dto = new AcceptedPaymentTypeDto();
         for (int i = 0; i < TrxnTypes.values().length; i++) {
             setPaymentTypesForATransaction(payments, TrxnTypes.values()[i], paymentTypePersistence, dto);
@@ -1057,7 +1057,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     }
 
     private void setPaymentTypesForATransaction(List<PaymentTypeDto> payments, TrxnTypes transactionType,
-            AcceptedPaymentTypePersistence paymentTypePersistence, AcceptedPaymentTypeDto dto) {
+            LegacyAcceptedPaymentTypeDao paymentTypePersistence, AcceptedPaymentTypeDto dto) {
 
         try {
             Short transactionId = transactionType.getValue();
@@ -1112,7 +1112,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
             String[] chosenAcceptedLoanRepayments, String[] chosenAcceptedSavingDeposits,
             String[] chosenAcceptedSavingWithdrawals) {
 
-        AcceptedPaymentTypePersistence persistence = new AcceptedPaymentTypePersistence();
+        LegacyAcceptedPaymentTypeDao persistence = new LegacyAcceptedPaymentTypeDao();
 
         List<AcceptedPaymentType> deletedPaymentTypeList = new ArrayList<AcceptedPaymentType>();
         List<AcceptedPaymentType> addedPaymentTypeList = new ArrayList<AcceptedPaymentType>();
@@ -1181,7 +1181,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
 
     private void process(List<PaymentTypeDto> selectedPaymentTypes, List<PaymentTypeDto> outList,
             List<AcceptedPaymentType> deletedPaymentTypeList, List<AcceptedPaymentType> addedPaymentTypeList,
-            AcceptedPaymentTypePersistence persistence, TrxnTypes transactionType) {
+            LegacyAcceptedPaymentTypeDao persistence, TrxnTypes transactionType) {
 
         AcceptedPaymentType acceptedPaymentType = null;
         if ((outList != null) && (outList.size() > 0)) {

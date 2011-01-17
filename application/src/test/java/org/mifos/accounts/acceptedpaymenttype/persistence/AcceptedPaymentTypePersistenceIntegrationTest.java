@@ -39,7 +39,7 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 public class AcceptedPaymentTypePersistenceIntegrationTest extends AccountIntegrationTestCase {
 
     private List<TransactionAcceptedPaymentTypes> currentAcceptedPaymentTypes = null;
-    private AcceptedPaymentTypePersistence acceptedPaymentTypePersistence = null;
+    private LegacyAcceptedPaymentTypeDao acceptedPaymentTypePersistence = null;
     private List<TransactionAcceptedPaymentTypes> allAcceptedPaymentTypes = null;
     private Short DEFAULT_LOCALE_ID = 1;
 
@@ -47,7 +47,7 @@ public class AcceptedPaymentTypePersistenceIntegrationTest extends AccountIntegr
     @Before
     public void setUp() throws Exception {
         StaticHibernateUtil.startTransaction();
-        acceptedPaymentTypePersistence = new AcceptedPaymentTypePersistence();
+        acceptedPaymentTypePersistence = new LegacyAcceptedPaymentTypeDao();
     }
 
     @Test

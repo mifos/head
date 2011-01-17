@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.joda.time.LocalDate;
-import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
+import org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentTypeDao;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.exceptions.AccountException;
@@ -72,7 +72,7 @@ public class StandardAccountService implements AccountService {
 
     private LegacyAccountDao legacyAccountDao;
     private LegacyLoanDao legacyLoanDao;
-    private AcceptedPaymentTypePersistence acceptedPaymentTypePersistence;
+    private LegacyAcceptedPaymentTypeDao acceptedPaymentTypePersistence;
     private PersonnelDao personnelDao;
     private CustomerDao customerDao;
     private LoanBusinessService loanBusinessService;
@@ -83,7 +83,7 @@ public class StandardAccountService implements AccountService {
 
     @Autowired
     public StandardAccountService(LegacyAccountDao legacyAccountDao, LegacyLoanDao legacyLoanDao,
-                                  AcceptedPaymentTypePersistence acceptedPaymentTypePersistence, PersonnelDao personnelDao,
+                                  LegacyAcceptedPaymentTypeDao acceptedPaymentTypePersistence, PersonnelDao personnelDao,
                                   CustomerDao customerDao, LoanBusinessService loanBusinessService,
                                   HibernateTransactionHelper transactionHelper) {
         this.legacyAccountDao = legacyAccountDao;

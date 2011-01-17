@@ -24,7 +24,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
+import org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentTypeDao;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountTypeEntity;
 import org.mifos.accounts.business.service.AccountBusinessService;
@@ -77,7 +77,7 @@ public class WebTierAccountServiceFacadeTest {
     private LoanBO loanBO;
 
     @Mock
-    private AcceptedPaymentTypePersistence acceptedPaymentTypePersistence;
+    private LegacyAcceptedPaymentTypeDao acceptedPaymentTypePersistence;
 
     @Mock
     private AccountTypeEntity accountTypeEntity;

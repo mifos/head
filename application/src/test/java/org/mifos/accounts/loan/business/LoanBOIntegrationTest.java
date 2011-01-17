@@ -28,7 +28,7 @@ import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
+import org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentTypeDao;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
@@ -353,7 +353,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(origRepaymentDate, new LocalDate(paymentsArray[0].getActionDate().getTime()));
 
         new DateTimeService().setCurrentDateTime(realDisbursalDate);
-        List<PaymentTypeEntity> paymentTypeEntities = new AcceptedPaymentTypePersistence().getAcceptedPaymentTypesForATransaction(TestObjectFactory.TEST_LOCALE, TrxnTypes.loan_disbursement.getValue());
+        List<PaymentTypeEntity> paymentTypeEntities = new LegacyAcceptedPaymentTypeDao().getAcceptedPaymentTypesForATransaction(TestObjectFactory.TEST_LOCALE, TrxnTypes.loan_disbursement.getValue());
         StaticHibernateUtil.flushAndClearSession();
         AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(accountBO,
                 new Money(Money.getDefaultCurrency(), new BigDecimal(1000)), "", new DateTimeService().getCurrentJavaDateTime(),

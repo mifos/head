@@ -31,7 +31,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.joda.time.LocalDate;
-import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
+import org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentTypeDao;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
@@ -83,7 +83,7 @@ public class SavingsClosureAction extends BaseAction {
         LocalDate accountCloseDate = new LocalDate();
         SavingsAccountClosureDto closureDetails = this.savingsServiceFacade.retrieveClosingDetails(savingsId, accountCloseDate);
 
-        AcceptedPaymentTypePersistence persistence = new AcceptedPaymentTypePersistence();
+        LegacyAcceptedPaymentTypeDao persistence = new LegacyAcceptedPaymentTypeDao();
         List<PaymentTypeEntity> acceptedPaymentTypes = persistence.getAcceptedPaymentTypesForATransaction(uc.getLocaleId(), TrxnTypes.savings_withdrawal.getValue());
 
         Money interestAmountDue = new Money(savings.getCurrency(), closureDetails.getInterestAmountAtClosure());

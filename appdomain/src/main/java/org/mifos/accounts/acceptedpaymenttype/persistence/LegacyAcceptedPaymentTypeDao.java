@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class AcceptedPaymentTypePersistence extends LegacyGenericDao {
+public class LegacyAcceptedPaymentTypeDao extends LegacyGenericDao {
 
     public AcceptedPaymentType getAcceptedPaymentType(Short paymentTypeId) {
         Session session = StaticHibernateUtil.getSessionTL();
@@ -44,7 +44,6 @@ public class AcceptedPaymentTypePersistence extends LegacyGenericDao {
             throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("transactionId", transactionId);
-
         return executeNamedQuery(NamedQueryConstants.GET_ACCEPTED_PAYMENT_TYPES_FOR_A_TRANSACTION, queryParameters);
 
     }
