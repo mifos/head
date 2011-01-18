@@ -50,9 +50,11 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.SqlExecutor;
 import org.mifos.framework.persistence.SqlResource;
+import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.service.test.TestingService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.util.Log4jConfigurer;
 
 
 @SuppressWarnings( { "PMD.SystemPrintln", "PMD.SingularField" })
@@ -91,6 +93,7 @@ public class DataSetUpgradeUtil {
 
     public static void main(String[] args) throws IOException, ClassNotFoundException,
             SQLException, DatabaseUnitException, URISyntaxException, TaskSystemException, PersistenceException, ConfigurationException, FinancialException {
+        Log4jConfigurer.initLogging(new ConfigurationLocator().getFilePath(FilePaths.LOG_CONFIGURATION_FILE));
         DataSetUpgradeUtil util = new DataSetUpgradeUtil();
         util.doUpgrades(args);
     }
@@ -197,9 +200,8 @@ public class DataSetUpgradeUtil {
 
     public static ApplicationContext initializeSpring() {
         return new ClassPathXmlApplicationContext(
-                                    "classpath:/org/mifos/config/resources/messageSourceBean.xml",
-                                    "classpath:/org/mifos/config/resources/persistenceContext.xml",
-                                    "classpath:/org/mifos/config/resources/dataSourceContext.xml");
+                                    "classpath:/org/mifos/config/resources/applicationContext.xml",
+                                    "classpath:META-INF/spring/QuestionnaireContext.xml");
     }
 
     private static final String params = "?sessionVariables=FOREIGN_KEY_CHECKS=0";
