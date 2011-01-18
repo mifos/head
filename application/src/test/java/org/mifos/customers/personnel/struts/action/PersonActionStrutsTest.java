@@ -467,7 +467,7 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         auditLogRecords.add(auditLogRecord);
         auditLog.addAuditLogRecords(auditLogRecords);
 
-        new org.mifos.framework.components.audit.persistence.AuditPersistence().save(auditLog);
+        new org.mifos.framework.components.audit.persistence.LegacyAuditDao().save(auditLog);
 
         setRequestPathInfo("/PersonAction.do");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);

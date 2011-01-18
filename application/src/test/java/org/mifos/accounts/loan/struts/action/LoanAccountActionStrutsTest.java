@@ -115,7 +115,7 @@ import org.mifos.dto.screen.LoanInformationDto;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
-import org.mifos.framework.components.audit.persistence.AuditPersistence;
+import org.mifos.framework.components.audit.persistence.LegacyAuditDao;
 import org.mifos.framework.components.audit.util.helpers.AuditConstants;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -420,7 +420,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         AuditLogRecord auditLogRecord = new AuditLogRecord("ColumnName_1", "test_1", "new_test_1", auditLog);
         auditLogRecords.add(auditLogRecord);
         auditLog.addAuditLogRecords(auditLogRecords);
-        new AuditPersistence().save(auditLog);
+        new LegacyAuditDao().save(auditLog);
 
         setRequestPathInfo("/loanAccountAction.do");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);

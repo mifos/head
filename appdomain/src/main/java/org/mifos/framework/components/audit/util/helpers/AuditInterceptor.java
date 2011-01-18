@@ -82,7 +82,7 @@ public class AuditInterceptor extends EmptyInterceptor {
             Set<AuditLogRecord> auditLogRecords = createAuditLogRecord();
             auditLog.addAuditLogRecords(auditLogRecords);
             if (!auditLogRecords.isEmpty()) {
-                new org.mifos.framework.components.audit.persistence.AuditPersistence().save(auditLog);
+                new org.mifos.framework.components.audit.persistence.LegacyAuditDao().save(auditLog);
             }
         }
     }
