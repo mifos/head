@@ -1038,21 +1038,6 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         client = TestObjectFactory.createClient(name, null, CustomerStatus.CLIENT_PARTIAL);
     }
 
-    private void createInitialObjectsOfficeInactive(CustomerStatus groupStatus, CustomerStatus clientStatus)
-            throws NumberFormatException, Exception {
-        office = TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE, TestObjectFactory
-                .getOffice(TestObjectFactory.HEAD_OFFICE), "customer_office", "cust");
-        group = TestObjectFactory.createGroupUnderBranch("Group", groupStatus, office.getOfficeId(), getMeeting(),
-                PersonnelConstants.TEST_USER);
-        client = TestObjectFactory.createClient("Client", clientStatus, group, new java.util.Date());
-    }
-
-    private void cleanInitialObjectsOfficeInactive() {
-        client = null;
-        group = null;
-        office = null;
-    }
-
     private void createInitialObjectsWhenCenterHierarchyNotExistWithNoMeeting(CustomerStatus groupStatus,
             CustomerStatus clientStatus) {
         Short officeId = new Short("3");

@@ -31,7 +31,11 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.LegacyGenericDao;
 
-public class AuditPersistence extends LegacyGenericDao {
+public class LegacyAuditDao extends LegacyGenericDao {
+
+    private LegacyAuditDao() {
+
+    }
 
     public void save(AuditLog auditLog) {
         try {

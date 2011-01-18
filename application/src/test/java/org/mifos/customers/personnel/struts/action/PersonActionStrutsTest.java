@@ -52,6 +52,7 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
+import org.mifos.framework.components.audit.persistence.LegacyAuditDao;
 import org.mifos.framework.components.audit.util.helpers.AuditConstants;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.exceptions.PageExpiredException;
@@ -66,6 +67,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
 
@@ -77,6 +79,9 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
     private OfficeBO createdBranchOffice;
 
     PersonnelBO personnel;
+
+    @Autowired
+    private LegacyAuditDao legacyAuditDao;
 
     @Before
     public void setUp() throws Exception {
@@ -467,7 +472,7 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         auditLogRecords.add(auditLogRecord);
         auditLog.addAuditLogRecords(auditLogRecords);
 
-        new org.mifos.framework.components.audit.persistence.AuditPersistence().save(auditLog);
+        legacyAuditDao.save(auditLog);
 
         setRequestPathInfo("/PersonAction.do");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);

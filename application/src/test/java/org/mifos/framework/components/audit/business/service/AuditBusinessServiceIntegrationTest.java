@@ -31,12 +31,16 @@ import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
-import org.mifos.framework.components.audit.persistence.AuditPersistence;
+import org.mifos.framework.components.audit.persistence.LegacyAuditDao;
 import org.mifos.framework.components.audit.util.helpers.AuditConstants;
 import org.mifos.framework.components.audit.util.helpers.AuditLogView;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class AuditBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
+
+    @Autowired
+    private LegacyAuditDao legacyAuditDao;
 
     @Test
     public void testGetAuditLogRecords() throws Exception {
@@ -45,7 +49,7 @@ public class AuditBusinessServiceIntegrationTest extends MifosIntegrationTestCas
         AuditLogRecord auditLogRecord = new AuditLogRecord("ColumnName_1", "test_1", "new_test_1", auditLog);
         auditLogRecords.add(auditLogRecord);
         auditLog.addAuditLogRecords(auditLogRecords);
-        new AuditPersistence().save(auditLog);
+        legacyAuditDao.save(auditLog);
         AuditBusinessService auditBusinessService = new AuditBusinessService();
         List<AuditLogView> auditLogViewList = auditBusinessService.getAuditLogRecords((short) 2, 1);
        Assert.assertEquals(1, auditLogViewList.size());
@@ -60,7 +64,7 @@ public class AuditBusinessServiceIntegrationTest extends MifosIntegrationTestCas
         AuditLogRecord auditLogRecord = new AuditLogRecord("Password", "test_1", "new_test_1", auditLog);
         auditLogRecords.add(auditLogRecord);
         auditLog.addAuditLogRecords(auditLogRecords);
-        new AuditPersistence().save(auditLog);
+        legacyAuditDao.save(auditLog);
         AuditBusinessService auditBusinessService = new AuditBusinessService();
         List<AuditLogView> auditLogViewList = auditBusinessService.getAuditLogRecords((short) 2, 1);
        Assert.assertEquals(1, auditLogViewList.size());
