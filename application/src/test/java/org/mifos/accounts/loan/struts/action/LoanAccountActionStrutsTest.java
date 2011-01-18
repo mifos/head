@@ -82,6 +82,7 @@ import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
+import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountState;
@@ -147,6 +148,9 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
 
     @Autowired
     private LegacyAccountDao legacyAccountDao;
+
+    @Autowired
+    private LegacyAuditDao legacyAuditDao;
 
     private static final double DELTA = 0.00000001;
     private String flowKey1;
@@ -420,7 +424,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         AuditLogRecord auditLogRecord = new AuditLogRecord("ColumnName_1", "test_1", "new_test_1", auditLog);
         auditLogRecords.add(auditLogRecord);
         auditLog.addAuditLogRecords(auditLogRecords);
-        new LegacyAuditDao().save(auditLog);
+        legacyAuditDao.save(auditLog);
 
         setRequestPathInfo("/loanAccountAction.do");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);

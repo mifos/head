@@ -32,8 +32,12 @@ import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class AuditPersistenceIntegrationTest extends MifosIntegrationTestCase {
+
+    @Autowired
+    private LegacyAuditDao legacyAuditDao;
 
     @Test
     public void testSave() {
@@ -43,7 +47,7 @@ public class AuditPersistenceIntegrationTest extends MifosIntegrationTestCase {
         AuditLogRecord auditLogRecord = new AuditLogRecord("ColumnName_1", "test_1", "new_test_1", auditLog);
         auditLogRecords.add(auditLogRecord);
         auditLog.addAuditLogRecords(auditLogRecords);
-        new LegacyAuditDao().save(auditLog);
+        legacyAuditDao.save(auditLog);
         auditLog = getAuditLog(Integer.valueOf("1"), Short.valueOf("2"));
 
        Assert.assertEquals(Integer.valueOf("1"), auditLog.getEntityId());
@@ -67,10 +71,9 @@ public class AuditPersistenceIntegrationTest extends MifosIntegrationTestCase {
         AuditLogRecord auditLogRecord = new AuditLogRecord("ColumnName_1", "test_1", "new_test_1", auditLog);
         auditLogRecords.add(auditLogRecord);
         auditLog.addAuditLogRecords(auditLogRecords);
-        new LegacyAuditDao().save(auditLog);
+        legacyAuditDao.save(auditLog);
         auditLog = getAuditLog(Integer.valueOf("1"), Short.valueOf("2"));
-        LegacyAuditDao auditPersistence = new LegacyAuditDao();
-        List<AuditLog> auditLogList = auditPersistence.getAuditLogRecords(Short.valueOf("2"), Integer.valueOf("1"));
+        List<AuditLog> auditLogList = legacyAuditDao.getAuditLogRecords(Short.valueOf("2"), Integer.valueOf("1"));
        Assert.assertEquals(1, auditLogList.size());
 
     }

@@ -36,9 +36,6 @@ import org.mifos.framework.persistence.LegacyGenericDao;
 
 public class ClientPersistence extends LegacyGenericDao {
 
-    private final CustomerPersistence customerPersistence = new CustomerPersistence();
-    private final OfficePersistence officePersistence = new OfficePersistence();
-
     /**
      * Get a client by Id and inject any required dependencies
      */
@@ -52,14 +49,6 @@ public class ClientPersistence extends LegacyGenericDao {
         } catch (IOException ioe) {
             throw new PersistenceException(ioe);
         }
-    }
-
-    public CustomerPersistence getCustomerPersistence() {
-        return customerPersistence;
-    }
-
-    public OfficePersistence getOfficePersistence() {
-        return officePersistence;
     }
 
     public void saveClient(final ClientBO clientBO) throws CustomerException {

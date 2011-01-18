@@ -33,6 +33,10 @@ import org.mifos.framework.persistence.LegacyGenericDao;
 
 public class LegacyAuditDao extends LegacyGenericDao {
 
+    private LegacyAuditDao() {
+
+    }
+
     public void save(AuditLog auditLog) {
         try {
             //explicit close session calls required to avoid infinite looping of audit logs afterTransaction

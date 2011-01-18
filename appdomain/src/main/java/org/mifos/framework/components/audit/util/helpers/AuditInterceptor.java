@@ -22,10 +22,12 @@ package org.mifos.framework.components.audit.util.helpers;
 
 import org.hibernate.EmptyInterceptor;
 import org.hibernate.Transaction;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
+import org.mifos.framework.components.audit.persistence.LegacyAuditDao;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.security.util.UserContext;
 
@@ -82,7 +84,7 @@ public class AuditInterceptor extends EmptyInterceptor {
             Set<AuditLogRecord> auditLogRecords = createAuditLogRecord();
             auditLog.addAuditLogRecords(auditLogRecords);
             if (!auditLogRecords.isEmpty()) {
-                new org.mifos.framework.components.audit.persistence.LegacyAuditDao().save(auditLog);
+                ApplicationContextProvider.getBean(LegacyAuditDao.class).save(auditLog);
             }
         }
     }
