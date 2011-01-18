@@ -420,9 +420,19 @@ public class LoanBusinessServiceTest {
     public void shouldComputeExtraInterestAsOfDateLaterThanLastPaymentDate() {
         Date asOfDate = TestUtils.getDate(10, 9, 2010);
         Date lastPaymentDate = TestUtils.getDate(1, 9, 2010);
-        AccountPaymentEntity accountPaymentEntity = mock(AccountPaymentEntity.class);
         when(accountPaymentEntity.getPaymentDate()).thenReturn(lastPaymentDate);
         when(loanBO.findMostRecentNonzeroPaymentByPaymentDate()).thenReturn(accountPaymentEntity);
+        when(loanBO.isDecliningBalanceInterestRecalculation()).thenReturn(true);
+        Errors errors = loanBusinessService.computeExtraInterest(loanBO, asOfDate);
+        assertThat(errors, is(not(nullValue())));
+        assertThat(errors.hasErrors(), is(false));
+        verify(scheduleCalculatorAdaptor).computeExtraInterest(loanBO, asOfDate);
+    }
+
+    @Test
+    public void shouldComputeExtraInterestAsOfDateLaterThanLastPaymentDateAndNoLastPayment() {
+        Date asOfDate = TestUtils.getDate(10, 9, 2010);
+        when(loanBO.findMostRecentNonzeroPaymentByPaymentDate()).thenReturn(null);
         when(loanBO.isDecliningBalanceInterestRecalculation()).thenReturn(true);
         Errors errors = loanBusinessService.computeExtraInterest(loanBO, asOfDate);
         assertThat(errors, is(not(nullValue())));
@@ -434,7 +444,6 @@ public class LoanBusinessServiceTest {
     public void shouldComputeExtraInterestAsOfDateEarlierThanLastPaymentDate() {
         Date asOfDate = TestUtils.getDate(1, 9, 2010);
         Date lastPaymentDate = TestUtils.getDate(10, 9, 2010);
-        AccountPaymentEntity accountPaymentEntity = mock(AccountPaymentEntity.class);
         when(accountPaymentEntity.getPaymentDate()).thenReturn(lastPaymentDate);
         when(loanBO.findMostRecentNonzeroPaymentByPaymentDate()).thenReturn(accountPaymentEntity);
         when(loanBO.isDecliningBalanceInterestRecalculation()).thenReturn(true);

@@ -328,9 +328,12 @@ public class LoanBusinessService implements BusinessService {
 
     private void validateForComputeExtraInterestDate(LoanBO loan, Date extraInterestDate, Errors errors) {
         if(loan.isDecliningBalanceInterestRecalculation()) {
-            Date lastPaymentDate = loan.findMostRecentNonzeroPaymentByPaymentDate().getPaymentDate();
-            if(DateUtils.dateFallsBeforeDate(extraInterestDate, lastPaymentDate)) {
-                errors.addError(LoanConstants.CANNOT_VIEW_REPAYMENT_SCHEDULE, new String[]{extraInterestDate.toString()});
+            AccountPaymentEntity mostRecentNonzeroPayment = loan.findMostRecentNonzeroPaymentByPaymentDate();
+            if (mostRecentNonzeroPayment != null) {
+                Date lastPaymentDate = mostRecentNonzeroPayment.getPaymentDate();
+                if(DateUtils.dateFallsBeforeDate(extraInterestDate, lastPaymentDate)) {
+                    errors.addError(LoanConstants.CANNOT_VIEW_REPAYMENT_SCHEDULE, new String[]{extraInterestDate.toString()});
+                }
             }
         }
     }
