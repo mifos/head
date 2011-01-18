@@ -33,6 +33,7 @@ import java.util.Locale;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.application.collectionsheet.struts.actionforms.BulkEntryActionForm;
@@ -192,6 +193,7 @@ public class CollectionSheetServiceFacadeWebTierTest {
         assertThat(formDto.getLoanOfficerList(), is(loanOfficers));
     }
 
+    @Ignore
     @Test
     public void shouldPopulateDtoWithCustomersWhenOnlyOneActiveBranchAndOneLoanOfficerExists() throws Exception {
 

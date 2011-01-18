@@ -229,6 +229,7 @@ public class LoanBusinessServiceTest {
     }
 
 
+    @SuppressWarnings("unchecked")
     @Test
     public void shouldNotComputeVariableInstallmentSchedule() {
         LoanAccountActionForm loanAccountActionForm = mock(LoanAccountActionForm.class);
@@ -463,8 +464,8 @@ public class LoanBusinessServiceTest {
     }
 
     private void assertInstallment(RepaymentScheduleInstallment installment, String principal, String interest) {
-        assertThat(installment.getPrincipal().toString(), is(principal));
-        assertThat(installment.getInterest().toString(), is(interest));
+        assertThat(installment.getPrincipal().toString(Short.valueOf("1")), is(principal));
+        assertThat(installment.getInterest().toString(Short.valueOf("1")), is(interest));
     }
 
     private RepaymentScheduleInstallment getRepaymentScheduleInstallment(String dueDate, int installment,

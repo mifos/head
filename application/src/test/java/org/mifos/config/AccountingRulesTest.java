@@ -277,6 +277,7 @@ public class AccountingRulesTest {
         AccountingRules.getDigitsAfterDecimal(TestUtils.EURO);
     }
 
+    @Ignore
     @Test
     public void digitsAfterDecimalFallsBackToDefault() {
         MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();

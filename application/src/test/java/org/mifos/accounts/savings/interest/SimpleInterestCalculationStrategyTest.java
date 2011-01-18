@@ -73,7 +73,7 @@ public class SimpleInterestCalculationStrategyTest {
         // exercise test
         Money interest = interestCalculationStrategy.calculateInterest(principal, duration);
 
-        assertThat(interest, is(TestUtils.createMoney("8.2")));
+        assertThat(interest.toString(Short.valueOf("1")), is(TestUtils.createMoney("8.2").toString(Short.valueOf("1"))));
     }
 
     @Test
@@ -85,7 +85,7 @@ public class SimpleInterestCalculationStrategyTest {
         // exercise test
         Money interest = interestCalculationStrategy.calculateInterest(principal, duration);
 
-        assertThat(interest, is(TestUtils.createMoney("8.5")));
+        assertThat(interest.toString(Short.valueOf("1")), is(TestUtils.createMoney("8.5").toString(Short.valueOf("1"))));
     }
 
 }

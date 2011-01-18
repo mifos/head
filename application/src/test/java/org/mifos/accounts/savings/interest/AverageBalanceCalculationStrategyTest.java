@@ -121,7 +121,7 @@ public class AverageBalanceCalculationStrategyTest {
         // NOT (1000 x 7 + 2000 x 17)/24 = 1708.333333..
         // But (1000 x 6 + 2000 x 17)/23 = 1708.333333.. due to first activity on 6th of september
         // verification
-        assertThat(averageBalancePrincipal, is(TestUtils.createMoney("1739.1")));
+        assertThat(averageBalancePrincipal.toString(Short.valueOf("1")), is(TestUtils.createMoney("1739.1").toString(Short.valueOf("1"))));
     }
 
     @Test
@@ -142,6 +142,6 @@ public class AverageBalanceCalculationStrategyTest {
         Money averageBalancePrincipal = calculationStrategy.calculatePrincipal(interestCalculationPeriodDetail);
 
         // verification
-        assertThat(averageBalancePrincipal, is(TestUtils.createMoney(("2586.2"))));
+        assertThat(averageBalancePrincipal.toString(Short.valueOf("1")), is(TestUtils.createMoney("2586.2").toString(Short.valueOf("1"))));
     }
 }
