@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.mifos.application.admin.system.ShutdownManager;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.servicefacade.NewLoginServiceFacade;
 import org.mifos.config.Localization;
 import org.mifos.core.MifosRuntimeException;
@@ -136,7 +137,7 @@ public class MifosLegacyUsernamePasswordAuthenticationFilter extends UsernamePas
 
             LoginDto loginActivity = loginServiceFacade.login(username, password);
 
-            PersonnelBO user =  new LegacyPersonnelDao().findPersonnelById(loginActivity.getUserId());
+            PersonnelBO user =  ApplicationContextProvider.getBean(LegacyPersonnelDao.class).findPersonnelById(loginActivity.getUserId());
 
             ActivityContext activityContext = new ActivityContext(Short.valueOf("0"), user.getOffice().getOfficeId(), user.getPersonnelId());
             request.getSession(false).setAttribute(Constants.ACTIVITYCONTEXT, activityContext);

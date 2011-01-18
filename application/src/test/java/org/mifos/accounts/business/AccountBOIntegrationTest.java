@@ -62,6 +62,7 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
@@ -307,7 +308,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         loan.setUserContext(TestUtils.makeUser());
         List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
         accntActionDates.addAll(loan.getAccountActionDates());
-        PersonnelBO personnel = new LegacyPersonnelDao().getPersonnel(Short.valueOf("2"));
+        PersonnelBO personnel = legacyPersonnelDao.getPersonnel(Short.valueOf("2"));
         PaymentData accountPaymentDataView = TestObjectFactory.getLoanAccountPaymentData(accntActionDates, TestUtils
                 .createMoney(100), null, personnel, "receiptNum", Short.valueOf("1"), currentDate, currentDate);
         IntegrationTestObjectMother.applyAccountPayment(loan, accountPaymentDataView);
@@ -368,7 +369,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         groupLoan.setUserContext(TestUtils.makeUser());
 
         java.sql.Date currentDate = new java.sql.Date(System.currentTimeMillis());
-        PersonnelBO personnelBO = new LegacyPersonnelDao().getPersonnel(TestUtils.makeUser().getId());
+        PersonnelBO personnelBO = legacyPersonnelDao.getPersonnel(TestUtils.makeUser().getId());
         AccountNotesEntity accountNotesEntity = new AccountNotesEntity(currentDate, "account updated", personnelBO,
                 groupLoan);
         groupLoan.addAccountNotes(accountNotesEntity);
@@ -435,7 +436,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
 
         PaymentData paymentData2 = TestObjectFactory.getLoanAccountPaymentData(null, TestUtils.createMoney(600),
                 null, loan.getPersonnel(), "receiptNum", Short.valueOf("1"), currentDate, currentDate);
-        
+
         IntegrationTestObjectMother.applyAccountPayment(loan, paymentData2);
         StaticHibernateUtil.flushAndClearSession();
 

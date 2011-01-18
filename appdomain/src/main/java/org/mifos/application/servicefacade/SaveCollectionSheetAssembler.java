@@ -26,6 +26,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountPaymentEntity;
@@ -62,21 +63,21 @@ public class SaveCollectionSheetAssembler {
 
     private final CustomerPersistence customerPersistence = new CustomerPersistence();
     private final ClientPersistence clientPersistence = new ClientPersistence();
-    private final LegacyPersonnelDao personnelPersistence = new LegacyPersonnelDao();
 
-    private final ClientAttendanceDao clientAttendanceDao;
-    private final LegacyLoanDao legacyLoanDao;
-    private final LegacyAccountDao legacyAccountDao;
-    private final SavingsDao savingsDao;
+    @Autowired
+    private LegacyPersonnelDao legacyPersonnelDao;
 
-    public SaveCollectionSheetAssembler(final ClientAttendanceDao clientAttendanceDao,
-            final LegacyLoanDao legacyLoanDao, final LegacyAccountDao legacyAccountDao,
-            final SavingsDao savingsDao) {
-        this.clientAttendanceDao = clientAttendanceDao;
-        this.legacyLoanDao = legacyLoanDao;
-        this.legacyAccountDao = legacyAccountDao;
-        this.savingsDao = savingsDao;
-    }
+    @Autowired
+    private ClientAttendanceDao clientAttendanceDao;
+
+    @Autowired
+    private LegacyLoanDao legacyLoanDao;
+
+    @Autowired
+    private LegacyAccountDao legacyAccountDao;
+
+    @Autowired
+    private SavingsDao savingsDao;
 
     public List<SavingsBO> savingsAccountAssemblerFromDto(
             final List<SaveCollectionSheetCustomerDto> saveCollectionSheetCustomers,
@@ -293,7 +294,7 @@ public class SaveCollectionSheetAssembler {
     public AccountPaymentEntity accountPaymentAssemblerFromDto(final LocalDate transactionDate,
             final Short paymentType, final String receiptId, final LocalDate receiptDate, final Short userId) {
 
-        final PersonnelBO user = personnelPersistence.findPersonnelById(userId);
+        final PersonnelBO user = legacyPersonnelDao.findPersonnelById(userId);
         final AccountPaymentEntity payment = new AccountPaymentEntity(null, new Money(Money.getDefaultCurrency()),
                 receiptId, DateUtils.getDateFromLocalDate(receiptDate), new PaymentTypeEntity(paymentType), DateUtils
                         .getDateFromLocalDate(transactionDate));

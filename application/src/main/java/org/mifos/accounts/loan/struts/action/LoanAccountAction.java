@@ -586,7 +586,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                                 loan, loanActionForm.isVariableInstallmentsAllowed(), loanActionForm.getLoanAmountValue(),
                                 loanActionForm.getInterestDoubleValue()), userContext.getPreferredLocale());
 
-                PersonnelBO personnel = new LegacyPersonnelDao().getPersonnel(userContext.getId());
+                PersonnelBO personnel = legacyPersonnelDao.getPersonnel(userContext.getId());
                 if (personnel == null) {
                     throw new IllegalArgumentException("bad UserContext id");
                 }
@@ -981,7 +981,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             redoLoan.setCollateralNote(collateralNote);
             redoLoan.setCollateralTypeId(selectedCollateralType);
 
-            PersonnelBO user = new LegacyPersonnelDao().getPersonnel(userContext.getId());
+            PersonnelBO user = legacyPersonnelDao.getPersonnel(userContext.getId());
 
             redoLoan.changeStatus(AccountState.LOAN_APPROVED, null, "Automatic Status Update (Redo Loan)", user);
 

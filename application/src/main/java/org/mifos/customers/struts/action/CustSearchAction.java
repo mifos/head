@@ -105,7 +105,7 @@ public class CustSearchAction extends SearchAction {
         CustSearchActionForm actionForm = (CustSearchActionForm) form;
 
         if (StringUtils.isNotBlank(actionForm.getOfficeId())) {
-            List<PersonnelBO> personnelList = new LegacyPersonnelDao().getActiveLoanOfficersUnderOffice(getShortValue(actionForm.getOfficeId()));
+            List<PersonnelBO> personnelList = legacyPersonnelDao.getActiveLoanOfficersUnderOffice(getShortValue(actionForm.getOfficeId()));
             SessionUtils.setCollectionAttribute(CustomerSearchConstants.LOANOFFICERSLIST, personnelList, request);
         }
 
@@ -233,7 +233,7 @@ public class CustSearchAction extends SearchAction {
 
     private String loadMasterData(Short userId, HttpServletRequest request, CustSearchActionForm form) throws Exception {
         UserDetailDto userDetails = this.centerServiceFacade.retrieveUsersDetails(userId);
-        PersonnelBO personnel = new LegacyPersonnelDao().getPersonnel(userId);
+        PersonnelBO personnel = legacyPersonnelDao.getPersonnel(userId);
         SessionUtils.setAttribute(CustomerSearchConstants.OFFICE, userDetails.getOfficeName(), request);
         if (userDetails.isLoanOfficer()) {
             return loadLoanOfficer(personnel, request);
@@ -269,7 +269,7 @@ public class CustSearchAction extends SearchAction {
     private String loadNonLoanOfficer(PersonnelBO personnel, HttpServletRequest request, CustSearchActionForm form)
             throws Exception {
         if (personnel.getOffice().getOfficeLevel().equals(OfficeLevel.BRANCHOFFICE)) {
-            List<PersonnelBO> personnelList = new LegacyPersonnelDao().getActiveLoanOfficersUnderOffice(personnel.getOffice().getOfficeId());
+            List<PersonnelBO> personnelList = legacyPersonnelDao.getActiveLoanOfficersUnderOffice(personnel.getOffice().getOfficeId());
             SessionUtils.setCollectionAttribute(CustomerSearchConstants.LOANOFFICERSLIST, personnelList, request);
             SessionUtils.setAttribute(CustomerSearchConstants.LOADFORWARD, CustomerSearchConstants.LOADFORWARDNONLOANOFFICER, request);
             form.setOfficeId(personnel.getOffice().getOfficeId().toString());

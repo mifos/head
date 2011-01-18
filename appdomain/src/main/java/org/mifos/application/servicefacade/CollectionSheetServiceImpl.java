@@ -65,6 +65,9 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
     private final CollectionSheetDao collectionSheetDao;
 
     @Autowired
+    private SaveCollectionSheetAssembler saveCollectionSheetAssembler;
+
+    @Autowired
     public CollectionSheetServiceImpl(final ClientAttendanceDao clientAttendanceDao,
             final SavingsDao savingsDao, final CollectionSheetDao collectionSheetDao) {
         this.clientAttendanceDao = clientAttendanceDao;
@@ -81,7 +84,7 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
         this.savingsDao = savingsDao;
         this.collectionSheetDao = collectionSheetDao;
     }
-
+    
     /**
      * The method saves a collection sheet.
      *
@@ -138,9 +141,6 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
         final List<String> failedLoanDisbursementAccountNumbers = new ArrayList<String>();
         final List<String> failedLoanRepaymentAccountNumbers = new ArrayList<String>();
         final List<String> failedCustomerAccountPaymentNums = new ArrayList<String>();
-
-        SaveCollectionSheetAssembler saveCollectionSheetAssembler = new SaveCollectionSheetAssembler(
-                clientAttendanceDao, legacyLoanDao, legacyAccountDao, savingsDao);
 
         final List<ClientAttendanceBO> clientAttendances = saveCollectionSheetAssembler
                 .clientAttendanceAssemblerfromDto(saveCollectionSheet.getSaveCollectionSheetCustomers(),

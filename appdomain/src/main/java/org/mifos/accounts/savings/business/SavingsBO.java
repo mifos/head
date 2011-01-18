@@ -148,7 +148,7 @@ public class SavingsBO extends AccountBO {
     @Deprecated
     public LegacyPersonnelDao getPersonnelPersistence() {
         if (null == personnelPersistence) {
-            personnelPersistence = new LegacyPersonnelDao();
+            personnelPersistence = ApplicationContextProvider.getBean(LegacyPersonnelDao.class);
         }
         return personnelPersistence;
     }

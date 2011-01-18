@@ -43,17 +43,17 @@ import org.mifos.security.util.UserContext;
 
 public class PersonnelBusinessService implements BusinessService {
     private static final String BRANCH_MANAGER_ROLE_NAME_KEY = "RolesAndPermissions.BranchManager.RoleName";
-    private LegacyRolesPermissionsDao rolesPermissionsPersistence;
+    private LegacyRolesPermissionsDao legacyRolesPermissionDao;
     private Configuration applicationConfiguration;
-    private LegacyPersonnelDao personnelPersistence;
+    private LegacyPersonnelDao legacyPersonnelDao;
 
     public PersonnelBusinessService() {
-        this(new LegacyPersonnelDao(), ApplicationContextProvider.getBean(LegacyRolesPermissionsDao.class));
+        this(ApplicationContextProvider.getBean(LegacyPersonnelDao.class), ApplicationContextProvider.getBean(LegacyRolesPermissionsDao.class));
     }
-    public PersonnelBusinessService(LegacyPersonnelDao personnelPersistence,
-                                    LegacyRolesPermissionsDao rolesPermissionsPersistence) {
-        this.personnelPersistence = personnelPersistence;
-        this.rolesPermissionsPersistence = rolesPermissionsPersistence;
+    public PersonnelBusinessService(LegacyPersonnelDao legacyPersonnelDao,
+                                    LegacyRolesPermissionsDao legacyRolesPermissionDao) {
+        this.legacyPersonnelDao = legacyPersonnelDao;
+        this.legacyRolesPermissionDao = legacyRolesPermissionDao;
         applicationConfiguration = MifosConfigurationManager.getInstance();
     }
 
@@ -65,7 +65,7 @@ public class PersonnelBusinessService implements BusinessService {
     public PersonnelBO getPersonnel(Short personnelId) throws ServiceException {
 
         try {
-            return new LegacyPersonnelDao().getPersonnel(personnelId);
+            return legacyPersonnelDao.getPersonnel(personnelId);
         } catch (PersistenceException e) {
 
             throw new ServiceException(e);
@@ -87,7 +87,7 @@ public class PersonnelBusinessService implements BusinessService {
 
     public List<RoleBO> getRoles() throws ServiceException {
         try {
-            return rolesPermissionsPersistence.getRoles();
+            return legacyRolesPermissionDao.getRoles();
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
@@ -95,7 +95,7 @@ public class PersonnelBusinessService implements BusinessService {
 
     public RoleBO getRoleById(Short id) throws ServiceException {
         try {
-            return rolesPermissionsPersistence.getRole(id);
+            return legacyRolesPermissionDao.getRole(id);
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
@@ -103,7 +103,7 @@ public class PersonnelBusinessService implements BusinessService {
 
     public QueryResult getAllPersonnelNotes(Short personnelId) throws ServiceException {
         try {
-            return new LegacyPersonnelDao().getAllPersonnelNotes(personnelId);
+            return legacyPersonnelDao.getAllPersonnelNotes(personnelId);
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
@@ -116,7 +116,7 @@ public class PersonnelBusinessService implements BusinessService {
     public PersonnelBO getPersonnel(String personnelName) throws ServiceException {
         PersonnelBO personnel = null;
         try {
-            personnel = personnelPersistence.getPersonnelByUserName(personnelName);
+            personnel = legacyPersonnelDao.getPersonnelByUserName(personnelName);
             if (personnel == null) {
                 throw new ServiceException(LoginConstants.KEYINVALIDUSER);
             }
@@ -129,7 +129,7 @@ public class PersonnelBusinessService implements BusinessService {
     public QueryResult search(String searchString, Short userId) throws ServiceException {
 
         try {
-            return personnelPersistence.search(searchString, userId);
+            return legacyPersonnelDao.search(searchString, userId);
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
@@ -137,7 +137,7 @@ public class PersonnelBusinessService implements BusinessService {
 
     public List<PersonnelBO> getAllPersonnel() throws ServiceException {
         try {
-            return new LegacyPersonnelDao().getAllPersonnel();
+            return legacyPersonnelDao.getAllPersonnel();
         } catch (PersistenceException pe) {
             throw new ServiceException(pe);
         }
@@ -145,7 +145,7 @@ public class PersonnelBusinessService implements BusinessService {
 
     public List<PersonnelBO> getActiveLoanOfficersUnderOffice(Short officeId) throws ServiceException {
         try {
-            return personnelPersistence.getActiveLoanOfficersUnderOffice(officeId);
+            return legacyPersonnelDao.getActiveLoanOfficersUnderOffice(officeId);
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
@@ -153,7 +153,7 @@ public class PersonnelBusinessService implements BusinessService {
 
     public List<SupportedLocalesEntity> getSupportedLocales() throws ServiceException {
         try {
-            List<SupportedLocalesEntity> locales = new LegacyPersonnelDao().getSupportedLocales();
+            List<SupportedLocalesEntity> locales = legacyPersonnelDao.getSupportedLocales();
             return locales;
         } catch (PersistenceException e) {
             throw new ServiceException(e);
@@ -162,7 +162,7 @@ public class PersonnelBusinessService implements BusinessService {
 
     public List<PersonnelBO> getActiveBranchManagersUnderOffice(Short officeId) throws ServiceException {
         try {
-            return personnelPersistence.getActiveBranchManagersUnderOffice(officeId, rolesPermissionsPersistence
+            return legacyPersonnelDao.getActiveBranchManagersUnderOffice(officeId, legacyRolesPermissionDao
                     .getRole(applicationConfiguration.getString(BRANCH_MANAGER_ROLE_NAME_KEY)));
         } catch (PersistenceException e) {
             throw new ServiceException(e);

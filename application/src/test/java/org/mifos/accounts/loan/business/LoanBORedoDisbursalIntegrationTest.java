@@ -1032,7 +1032,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
 
     private void disburseLoan(UserContext userContext, LoanBO loan, Date loanDisbursalDate) throws AccountException,
             PersistenceException {
-        PersonnelBO personnel = new LegacyPersonnelDao().getPersonnel(userContext.getId());
+        PersonnelBO personnel = legacyPersonnelDao.getPersonnel(userContext.getId());
         loan.disburseLoan(null, loanDisbursalDate, Short.valueOf("1"), personnel, null, Short.valueOf("1"));
         new TestObjectPersistence().persist(loan);
     }
@@ -1040,7 +1040,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
     private void applyPaymentForLoan(UserContext userContext, LoanBO loan, Date paymentDate, Money money) {
         loan.setUserContext(userContext);
 
-        PersonnelBO loggedInUser = new LegacyPersonnelDao().findPersonnelById(userContext.getId());
+        PersonnelBO loggedInUser = legacyPersonnelDao.findPersonnelById(userContext.getId());
 
         List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
         accntActionDates.addAll(loan.getAccountActionDates());

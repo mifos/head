@@ -182,7 +182,7 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
         try {
             SavingsTestHelper helper = new SavingsTestHelper();
             createInitialObjects();
-            PersonnelBO createdBy = new LegacyPersonnelDao().getPersonnel(userContext.getId());
+            PersonnelBO createdBy = legacyPersonnelDao.getPersonnel(userContext.getId());
             savingsOffering = helper.createSavingsOffering("effwe", "231");
             savings = new SavingsBO(userContext, savingsOffering, group, AccountState.SAVINGS_ACTIVE, savingsOffering
                     .getRecommendedAmount(), null);

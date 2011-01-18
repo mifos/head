@@ -33,6 +33,9 @@ public class RolesPermissionServiceFacadeWebTier implements RolesPermissionServi
     @Autowired
     LegacyRolesPermissionsDao legacyRolesPermissionsDao;
 
+    @Autowired
+    private LegacyPersonnelDao legacyPersonnelDao;
+
     @Override
     public List<ListElement> retrieveAllRoles() {
         try {
@@ -156,7 +159,7 @@ public class RolesPermissionServiceFacadeWebTier implements RolesPermissionServi
     private boolean isRoleAssignedToPersonnel(RoleBO role) throws RolesPermissionException {
         Integer count;
         try {
-            count = new LegacyPersonnelDao().getPersonnelRoleCount(role.getId());
+            count = legacyPersonnelDao.getPersonnelRoleCount(role.getId());
         } catch (PersistenceException e) {
             throw new RolesPermissionException(e);
         }

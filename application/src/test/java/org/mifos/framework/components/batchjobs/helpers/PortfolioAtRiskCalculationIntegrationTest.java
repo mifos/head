@@ -133,7 +133,7 @@ public class PortfolioAtRiskCalculationIntegrationTest extends MifosIntegrationT
         Set<AccountActionDateEntity> actionDateEntities = loan.getAccountActionDates();
         LoanScheduleEntity[] paymentsArray = LoanBOTestUtils
                 .getSortedAccountActionDateEntity(actionDateEntities, 6);
-        PersonnelBO personnelBO = new LegacyPersonnelDao().getPersonnel(TestObjectFactory.getContext().getId());
+        PersonnelBO personnelBO = legacyPersonnelDao.getPersonnel(TestObjectFactory.getContext().getId());
         LoanScheduleEntity loanSchedule = paymentsArray[0];
         Short paymentTypeId = PaymentTypes.CASH.getValue();
         PaymentData paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule.getActionDate());

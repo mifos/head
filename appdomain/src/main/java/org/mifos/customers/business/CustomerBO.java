@@ -1176,7 +1176,7 @@ public abstract class CustomerBO extends AbstractBusinessObject {
 
     public LegacyPersonnelDao getPersonnelPersistence() {
         if (null == personnelPersistence) {
-            personnelPersistence = new LegacyPersonnelDao();
+            personnelPersistence = ApplicationContextProvider.getBean(LegacyPersonnelDao.class);
         }
         return personnelPersistence;
     }

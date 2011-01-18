@@ -21,6 +21,7 @@
 package org.mifos.customers.group.persistence;
 
 import org.mifos.application.NamedQueryConstants;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.ClientRules;
 import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.center.persistence.CenterPersistence;
@@ -57,7 +58,7 @@ import java.util.Map;
 @Deprecated
 public class GroupPersistence extends LegacyGenericDao {
     private final CenterPersistence centerPersistence = new CenterPersistence();
-    private final LegacyPersonnelDao personnelPersistence = new LegacyPersonnelDao();
+    private final LegacyPersonnelDao legacyPersonnelDao = ApplicationContextProvider.getBean(LegacyPersonnelDao.class);
 
     public GroupBO findBySystemId(String globalCustNum) throws PersistenceException {
         Map<String, String> queryParameters = new HashMap<String, String>();
@@ -76,7 +77,7 @@ public class GroupPersistence extends LegacyGenericDao {
         QueryInputs queryInputs = new QueryInputs();
         QueryResult queryResult = QueryFactory.getQueryResult(CustomerSearchConstants.GROUPLIST);
 
-        PersonnelBO personnel = new LegacyPersonnelDao().getPersonnel(userId);
+        PersonnelBO personnel = legacyPersonnelDao.getPersonnel(userId);
         String officeSearchId = personnel.getOffice().getSearchId();
         if (ClientRules.getCenterHierarchyExists()) {
             namedQuery[0] = NamedQueryConstants.GROUP_SEARCH_COUNT_WITH_CENTER;
@@ -112,7 +113,7 @@ public class GroupPersistence extends LegacyGenericDao {
         QueryInputs queryInputs = new QueryInputs();
         QueryResult queryResult = QueryFactory.getQueryResult(CustomerSearchConstants.GROUPLIST);
 
-        PersonnelBO personnel = new LegacyPersonnelDao().getPersonnel(userId);
+        PersonnelBO personnel = legacyPersonnelDao.getPersonnel(userId);
         String officeSearchId = personnel.getOffice().getSearchId();
         if (ClientRules.getCenterHierarchyExists()) {
             namedQuery[0] = NamedQueryConstants.GROUP_SEARCH_COUNT_WITH_CENTER_FOR_ADDING_GROUPMEMBER;

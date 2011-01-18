@@ -57,7 +57,7 @@ import org.mifos.security.util.UserContext;
 
 @Deprecated
 public class CenterPersistence extends LegacyGenericDao {
-    private final LegacyPersonnelDao personnelPersistence = new LegacyPersonnelDao();
+    private final LegacyPersonnelDao legacyPersonnelDao = ApplicationContextProvider.getBean(LegacyPersonnelDao.class);
     private final OfficePersistence officePersistence = new OfficePersistence();
 
     public CenterPersistence() {
@@ -90,7 +90,7 @@ public class CenterPersistence extends LegacyGenericDao {
         QueryInputs queryInputs = new QueryInputs();
         QueryResult queryResult = QueryFactory.getQueryResult(PersonnelConstants.USER_LIST);
 
-        PersonnelBO user = new LegacyPersonnelDao().getPersonnel(userId);
+        PersonnelBO user = legacyPersonnelDao.getPersonnel(userId);
         String officeSearchId = user.getOffice().getSearchId();
 
         namedQuery[0] = NamedQueryConstants.CENTER_SEARCH_COUNT;
@@ -126,7 +126,7 @@ public class CenterPersistence extends LegacyGenericDao {
     public CenterBO createCenter(UserContext userContext, CenterTemplate template) throws Exception {
 
         OfficeBO centerOffice = officePersistence.getOffice(template.getOfficeId());
-        PersonnelBO loanOfficer = personnelPersistence.getPersonnel(template.getLoanOfficerId());
+        PersonnelBO loanOfficer = legacyPersonnelDao.getPersonnel(template.getLoanOfficerId());
         int numberOfCustomersInOfficeAlready = 1;
         MeetingBO meeting = template.getMeeting();
 

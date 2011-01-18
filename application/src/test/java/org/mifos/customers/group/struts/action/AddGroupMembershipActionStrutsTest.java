@@ -173,7 +173,7 @@ public class AddGroupMembershipActionStrutsTest extends MifosMockStrutsTestCase 
 
     private void createAndSetClientInSession() throws Exception {
         OfficeBO office = new OfficePersistence().getOffice(TestObjectFactory.HEAD_OFFICE);
-        PersonnelBO personnel = new LegacyPersonnelDao().getPersonnel(PersonnelConstants.TEST_USER);
+        PersonnelBO personnel = legacyPersonnelDao.getPersonnel(PersonnelConstants.TEST_USER);
         meeting = getMeeting();
         ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto(NameType.CLIENT.getValue(), 1, "Client", "", "1", "");
         clientNameDetailDto.setNames(ClientRules.getNameSequence());

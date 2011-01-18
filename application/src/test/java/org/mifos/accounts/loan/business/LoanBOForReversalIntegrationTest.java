@@ -156,7 +156,7 @@ public class LoanBOForReversalIntegrationTest extends MifosIntegrationTestCase {
     private void adjustLastPayment() throws AccountException {
         loan = retrieveLoanAccount();
         loan.setUserContext(userContext);
-        PersonnelBO loggedInUser = new LegacyPersonnelDao().findPersonnelById(userContext.getId());
+        PersonnelBO loggedInUser = legacyPersonnelDao.findPersonnelById(userContext.getId());
         loan.adjustPmnt("loan account has been adjusted by test code", loggedInUser);
         StaticHibernateUtil.flushSession();
     }

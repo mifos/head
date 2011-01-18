@@ -299,7 +299,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                 loanParams.getNumberOfPayments());
         // before any payment is made
         printLoanScheduleEntities(paymentsArray);
-        PersonnelBO personnelBO = new LegacyPersonnelDao().getPersonnel(userContext.getId());
+        PersonnelBO personnelBO = legacyPersonnelDao.getPersonnel(userContext.getId());
 
         LoanScheduleEntity loanSchedule = null;
         Short paymentTypeId = PaymentTypes.CASH.getValue();
@@ -403,7 +403,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                 loanParams.getNumberOfPayments());
         // before any payment is made
         printLoanScheduleEntities(paymentsArray);
-        PersonnelBO personnelBO = new LegacyPersonnelDao().getPersonnel(userContext.getId());
+        PersonnelBO personnelBO = legacyPersonnelDao.getPersonnel(userContext.getId());
 
         LoanScheduleEntity loanSchedule = null;
         Short paymentTypeId = PaymentTypes.CASH.getValue();
@@ -498,7 +498,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         Set<AccountActionDateEntity> actionDateEntities = loan.getAccountActionDates();
         LoanScheduleEntity[] paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(actionDateEntities,
                 loanParams.getNumberOfPayments());
-        PersonnelBO personnelBO = new LegacyPersonnelDao().getPersonnel(userContext.getId());
+        PersonnelBO personnelBO = legacyPersonnelDao.getPersonnel(userContext.getId());
 
         LoanScheduleEntity loanSchedule = null;
         Short paymentTypeId = PaymentTypes.CASH.getValue();
@@ -533,7 +533,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         Set<AccountActionDateEntity> actionDateEntities = loan.getAccountActionDates();
         LoanScheduleEntity[] paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(actionDateEntities,
                 loanParams.getNumberOfPayments());
-        PersonnelBO personnelBO = new LegacyPersonnelDao().getPersonnel(userContext.getId());
+        PersonnelBO personnelBO = legacyPersonnelDao.getPersonnel(userContext.getId());
 
         LoanScheduleEntity loanSchedule = null;
         Short paymentTypeId = PaymentTypes.CASH.getValue();
@@ -603,7 +603,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                 loanParams.getNumberOfPayments());
         // before any payment is made
         printLoanScheduleEntities(paymentsArray);
-        PersonnelBO personnelBO = new LegacyPersonnelDao().getPersonnel(userContext.getId());
+        PersonnelBO personnelBO = legacyPersonnelDao.getPersonnel(userContext.getId());
 
         LoanScheduleEntity loanSchedule = null;
         Short paymentTypeId = PaymentTypes.CASH.getValue();
@@ -892,7 +892,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         Set<AccountActionDateEntity> actionDateEntities = loan.getAccountActionDates();
         LoanScheduleEntity[] paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(actionDateEntities,
                 loanParams.getNumberOfPayments());
-        PersonnelBO personnelBO = new LegacyPersonnelDao().getPersonnel(userContext.getId());
+        PersonnelBO personnelBO = legacyPersonnelDao.getPersonnel(userContext.getId());
 
         LoanScheduleEntity loanSchedule = null;
         Short paymentTypeId = PaymentTypes.CASH.getValue();
@@ -960,7 +960,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         Set<AccountActionDateEntity> actionDateEntities = loan.getAccountActionDates();
         LoanScheduleEntity[] paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(actionDateEntities,
                 loanParams.getNumberOfPayments());
-        PersonnelBO personnelBO = new LegacyPersonnelDao().getPersonnel(userContext.getId());
+        PersonnelBO personnelBO = legacyPersonnelDao.getPersonnel(userContext.getId());
         LoanScheduleEntity loanSchedule = null;
         Short paymentTypeId = PaymentTypes.CASH.getValue();
         for (LoanScheduleEntity element : paymentsArray) {

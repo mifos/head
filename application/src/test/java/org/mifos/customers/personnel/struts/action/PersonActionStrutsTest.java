@@ -291,7 +291,7 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(SessionUtils.getAttribute(PersonnelConstants.MARITAL_STATUS_LIST, request));
         List languages = (List) SessionUtils.getAttribute(PersonnelConstants.LANGUAGE_LIST, request);
         Assert.assertNotNull(languages);
-        Assert.assertEquals(new LegacyPersonnelDao().getAvailableLanguages().size(), languages.size());
+        Assert.assertEquals(legacyPersonnelDao.getAvailableLanguages().size(), languages.size());
         Assert.assertNotNull(SessionUtils.getAttribute(PersonnelConstants.ROLES_LIST, request));
         Assert.assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request));
     }

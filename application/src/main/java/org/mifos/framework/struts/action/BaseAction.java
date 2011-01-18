@@ -74,6 +74,7 @@ import org.mifos.config.AccountingRules;
 import org.mifos.config.persistence.ApplicationConfigurationDao;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.persistence.CustomerDao;
+import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.LogUtils;
@@ -158,6 +159,7 @@ public abstract class BaseAction extends DispatchAction {
     protected LegacyRolesPermissionsDao legacyRolesPermissionsDao;
     protected LegacyAccountDao legacyAccountDao;
     protected LegacyAcceptedPaymentTypeDao legacyAcceptedPaymentTypeDao;
+    protected LegacyPersonnelDao legacyPersonnelDao;
 
     // non domain app
     protected LoanServiceFacade loanServiceFacade;
@@ -202,6 +204,7 @@ public abstract class BaseAction extends DispatchAction {
         this.legacyRolesPermissionsDao = getBean(LegacyRolesPermissionsDao.class);
         this.legacyAccountDao = getBean(LegacyAccountDao.class);
         this.legacyAcceptedPaymentTypeDao = getBean(LegacyAcceptedPaymentTypeDao.class);
+        this.legacyPersonnelDao = getBean(LegacyPersonnelDao.class);
     }
 
     private void configureServiceFacadeBeans() {

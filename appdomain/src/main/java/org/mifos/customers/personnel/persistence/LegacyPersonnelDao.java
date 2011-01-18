@@ -54,6 +54,9 @@ import org.mifos.security.rolesandpermission.business.RoleBO;
 
 public class LegacyPersonnelDao extends LegacyGenericDao {
 
+    private LegacyPersonnelDao() {
+    }
+
     /**
      * @deprecated - {@link PersonnelDao#findActiveLoanOfficersForOffice}
      */

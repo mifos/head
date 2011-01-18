@@ -354,13 +354,12 @@ public class SurveyInstanceAction extends BaseAction {
      * @return PersonnelBO
      */
     private PersonnelBO getOfficerByInputString(String input) throws PersistenceException {
-        LegacyPersonnelDao personnelPersistence = new LegacyPersonnelDao();
-        PersonnelBO officer = personnelPersistence.getPersonnelByUserName(input);
+        PersonnelBO officer = legacyPersonnelDao.getPersonnelByUserName(input);
         if (officer == null) {
-            officer = personnelPersistence.getPersonnelByDisplayName(input);
+            officer = legacyPersonnelDao.getPersonnelByDisplayName(input);
         }
         if (officer == null) {
-            officer = personnelPersistence.getPersonnelByGlobalPersonnelNum(input);
+            officer = legacyPersonnelDao.getPersonnelByGlobalPersonnelNum(input);
         }
         return officer;
     }
@@ -571,7 +570,6 @@ public class SurveyInstanceAction extends BaseAction {
         }
 
         SurveysPersistence persistence = new SurveysPersistence();
-        LegacyPersonnelDao personnelPersistence = new LegacyPersonnelDao();
 
         AbstractBusinessObject businessObject = (AbstractBusinessObject) results.get(Constants.BUSINESS_KEY);
 
@@ -595,7 +593,7 @@ public class SurveyInstanceAction extends BaseAction {
         instance.setOfficer(officer);
 
         UserContext userContext = getUserContext(request);
-        PersonnelBO currentUser = personnelPersistence.findPersonnelById(userContext.getId());
+        PersonnelBO currentUser = legacyPersonnelDao.findPersonnelById(userContext.getId());
         instance.setCreator(currentUser);
 
         if (businessObject instanceof CustomerBO) {

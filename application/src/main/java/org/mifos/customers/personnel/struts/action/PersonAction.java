@@ -552,7 +552,7 @@ public class PersonAction extends SearchAction {
                 .getOfficeName(), request);
         searchString = org.mifos.framework.util.helpers.SearchUtils.normalizeSearchString(searchString);
         actionForward = super.search(mapping, form, request, response);
-        SessionUtils.setQueryResultAttribute(Constants.SEARCH_RESULTS, new LegacyPersonnelDao().search(searchString,
+        SessionUtils.setQueryResultAttribute(Constants.SEARCH_RESULTS, legacyPersonnelDao.search(searchString,
                 userContext.getId()), request);
         return actionForward;
     }

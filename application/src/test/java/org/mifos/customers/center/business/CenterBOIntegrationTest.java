@@ -72,7 +72,7 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
     @Before
     public void setUp() throws Exception {
         officeBo = officePersistence.getOffice(officeId);
-        personnelBo = new LegacyPersonnelDao().getPersonnel(personnelId);
+        personnelBo = legacyPersonnelDao.getPersonnel(personnelId);
     }
 
     @After
@@ -129,7 +129,7 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
         meeting = getMeeting();
         List<FeeDto> fees = getFees();
         center = new CenterBO(TestUtils.makeUser(), name, null, getCustomFields(), fees, externalId, mfiJoiningDate,
-                new OfficePersistence().getOffice(officeId), meeting, new LegacyPersonnelDao()
+                new OfficePersistence().getOffice(officeId), meeting, legacyPersonnelDao
                         .getPersonnel(personnelId), new CustomerPersistence());
         new CenterPersistence().saveCenter(center);
         StaticHibernateUtil.flushSession();
@@ -173,7 +173,7 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
 
         MeetingBO meeting = new MeetingBO(WeekDay.THURSDAY, (short) 1, startDate, MeetingType.CUSTOMER_MEETING, "Delhi");
 
-        PersonnelBO systemUser = new LegacyPersonnelDao().getPersonnel(PersonnelConstants.SYSTEM_USER);
+        PersonnelBO systemUser = legacyPersonnelDao.getPersonnel(PersonnelConstants.SYSTEM_USER);
         center = new CenterBO(TestUtils.makeUser(), "Center", null, null, null, null,
                 startDate, branch1, meeting, systemUser, new CustomerPersistence());
         StaticHibernateUtil.getSessionTL().save(center);

@@ -183,7 +183,7 @@ public class ApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Test
     public void testApplyAdjustment() throws Exception {
-        PersonnelBO personnel = new LegacyPersonnelDao().getPersonnel(PersonnelConstants.SYSTEM_USER);
+        PersonnelBO personnel = legacyPersonnelDao.getPersonnel(PersonnelConstants.SYSTEM_USER);
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         loan = (LoanBO) getLoanAccount();
         applyPayment(loan, 212);
@@ -233,7 +233,7 @@ public class ApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Test
     public void testApplyAdjustmentWhenAccountsSecondLastStateWasBadStanding() throws Exception {
-        PersonnelBO personnel = new LegacyPersonnelDao().getPersonnel(PersonnelConstants.SYSTEM_USER);
+        PersonnelBO personnel = legacyPersonnelDao.getPersonnel(PersonnelConstants.SYSTEM_USER);
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         loan = (LoanBO) getLoanAccount();
         applyPayment(loan, 212);

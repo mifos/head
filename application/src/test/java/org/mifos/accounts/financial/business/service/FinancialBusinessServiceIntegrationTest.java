@@ -186,7 +186,7 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
                 null, new PaymentTypeEntity(Short.valueOf("1")), new Date(System.currentTimeMillis()));
         FinancialBusinessService financialBusinessService = new FinancialBusinessService();
         AccountActionDateEntity accountActionDateEntity = loan.getAccountActionDate(Short.valueOf("1"));
-        PersonnelBO personnel = new LegacyPersonnelDao().getPersonnel(loan.getUserContext().getId());
+        PersonnelBO personnel = legacyPersonnelDao.getPersonnel(loan.getUserContext().getId());
         LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPaymentEntity,
                 AccountActionTypes.WRITEOFF, accountActionDateEntity.getInstallmentId(), accountActionDateEntity
                         .getActionDate(), personnel, new Date(System.currentTimeMillis()),
@@ -224,7 +224,7 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
                 null, new PaymentTypeEntity(Short.valueOf("1")), new Date(System.currentTimeMillis()));
         FinancialBusinessService financialBusinessService = new FinancialBusinessService();
         AccountActionDateEntity accountActionDateEntity = loan.getAccountActionDate(Short.valueOf("1"));
-        PersonnelBO personnel = new LegacyPersonnelDao().getPersonnel(loan.getUserContext().getId());
+        PersonnelBO personnel = legacyPersonnelDao.getPersonnel(loan.getUserContext().getId());
         LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPaymentEntity,
                 AccountActionTypes.LOAN_RESCHEDULED, accountActionDateEntity.getInstallmentId(),
                 accountActionDateEntity.getActionDate(), personnel, new Date(System.currentTimeMillis()),
