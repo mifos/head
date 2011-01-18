@@ -213,4 +213,6 @@ public interface LoanConstants {
     String WAIVER_INTEREST_SELECTED = "waiverInterestSelected";
     String WAIVER_INTEREST_NOT_CONFIGURED= "loan.waiverInterest.not.configured";
     String ORIGINAL_INSTALLMENTS = "originalInstallments";
+
+    String CANNOT_VIEW_REPAYMENT_SCHEDULE = "cannot.view.repayment.schedule";
 }

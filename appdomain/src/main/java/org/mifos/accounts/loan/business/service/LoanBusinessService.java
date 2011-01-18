@@ -20,12 +20,6 @@
 
 package org.mifos.accounts.loan.business.service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountPaymentEntity;
@@ -34,8 +28,9 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.business.OriginalLoanScheduleEntity;
 import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
-import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.persistance.LegacyLoanDao;
+import org.mifos.accounts.loan.persistance.LoanDao;
+import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.util.helpers.AccountExceptionConstants;
 import org.mifos.accounts.util.helpers.PaymentData;
@@ -51,8 +46,15 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.platform.validations.Errors;
 import org.mifos.security.util.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 public class LoanBusinessService implements BusinessService {
 
@@ -317,7 +319,22 @@ public class LoanBusinessService implements BusinessService {
         return legacyLoanDao.getOriginalLoanScheduleEntity(accountId);
     }
 
-    public void computeExtraInterest(LoanBO loan, Date asOfDate) {
-        scheduleCalculatorAdaptor.computeExtraInterest(loan, asOfDate);
+    public Errors computeExtraInterest(LoanBO loan, Date asOfDate) {
+        Errors errors = new Errors();
+        validateForComputeExtraInterestDate(loan, asOfDate, errors);
+        if (!errors.hasErrors()) scheduleCalculatorAdaptor.computeExtraInterest(loan, asOfDate);
+        return errors;
+    }
+
+    private void validateForComputeExtraInterestDate(LoanBO loan, Date extraInterestDate, Errors errors) {
+        if(loan.isDecliningBalanceInterestRecalculation()) {
+            AccountPaymentEntity mostRecentNonzeroPayment = loan.findMostRecentNonzeroPaymentByPaymentDate();
+            if (mostRecentNonzeroPayment != null) {
+                Date lastPaymentDate = mostRecentNonzeroPayment.getPaymentDate();
+                if(DateUtils.dateFallsBeforeDate(extraInterestDate, lastPaymentDate)) {
+                    errors.addError(LoanConstants.CANNOT_VIEW_REPAYMENT_SCHEDULE, new String[]{extraInterestDate.toString()});
+                }
+            }
+        }
     }
 }

@@ -20,11 +20,11 @@
 
 package org.mifos.accounts.loan.business.service;
 
-import java.util.Date;
-import java.util.List;
-
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.customers.api.DataTransferObject;
+
+import java.util.Date;
+import java.util.List;
 
 public class OriginalScheduleInfoDto implements DataTransferObject {
     private String loanAmount;
@@ -47,5 +47,9 @@ public class OriginalScheduleInfoDto implements DataTransferObject {
 
     public List<RepaymentScheduleInstallment> getOriginalLoanScheduleInstallment() {
         return originalLoanScheduleInstallment;
+    }
+
+    public boolean hasOriginalInstallments() {
+        return originalLoanScheduleInstallment != null && !originalLoanScheduleInstallment.isEmpty();
     }
 }

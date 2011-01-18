@@ -1180,9 +1180,41 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     @Test
+    // http://mifosforge.jira.com/browse/MIFOSTEST-1092 (additional case)
+    public void testEditPhoneNumberSuccessCase1() throws Exception {
+        // we have privileges and modify phone number - success
+        createAndSetClientInSession();
+        modifyClientPersonalInfo("address.phoneNumber", "123");
+        verifyForward(ActionForwards.updatePersonalInfo_success.toString());
+        Assert.assertEquals("123", client.getCustomerAddressDetail().getAddress().getPhoneNumber());
+    }
+
+    @Test
+    // http://mifosforge.jira.com/browse/MIFOSTEST-1092
     public void testEditPhoneNumberFailure() throws Exception {
+        // we do not have privileges - failure
         createAndSetClientInSession();
         SessionUtils.setAttribute(Constants.USERCONTEXT, createUser(), request.getSession());
+        client.getCustomerAddressDetail().getAddress().setPhoneNumber("123");
+        modifyClientPersonalInfo("address.phoneNumber", "321");
+        verifyActionErrors(new String[] { SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED });
+        Assert.assertEquals("123", client.getCustomerAddressDetail().getAddress().getPhoneNumber());
+    }
+
+    @Test
+    // http://mifosforge.jira.com/browse/MIFOSTEST-1092 (additional case)
+    public void testEditPhoneNumberSuccessCase2() throws Exception {
+        // we do not have privileges, but modify different field - success
+        createAndSetClientInSession();
+        SessionUtils.setAttribute(Constants.USERCONTEXT, createUser(), request.getSession());
+        client.getCustomerAddressDetail().getAddress().setPhoneNumber("123");
+        modifyClientPersonalInfo("clientDetailView.ethinicity", "1");
+        verifyForward(ActionForwards.updatePersonalInfo_success.toString());
+        Assert.assertEquals("123", client.getCustomerAddressDetail().getAddress().getPhoneNumber());
+        Assert.assertEquals(1, client.getCustomerDetail().getEthinicity().shortValue());
+    }
+
+    private void modifyClientPersonalInfo(String key, String value) throws Exception {
         setRequestPathInfo("/clientCustAction.do");
         addRequestParameter("method", "editPersonalInfo");
         addRequestParameter("officeId", "3");
@@ -1191,7 +1223,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
 
         setRequestPathInfo("/clientCustAction.do");
         addRequestParameter("method", "previewEditPersonalInfo");
-        addRequestParameter("address.phoneNumber", "11111111");
+        addRequestParameter(key, value);
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
 
@@ -1203,8 +1235,6 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("method", "updatePersonalInfo");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        verifyActionErrors(new String[] { SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED });
-
     }
 
     private UserContext createUser() throws Exception {

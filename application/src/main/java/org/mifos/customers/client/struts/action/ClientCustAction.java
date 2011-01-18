@@ -601,7 +601,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         actionForm.setGlobalCustNum(personalInfo.getCustomerDetail().getGlobalCustNum());
         actionForm.setExternalId(personalInfo.getCustomerDetail().getExternalId());
 
-        actionForm.setAddress(client.getAddress());
+        actionForm.setAddress(Address.toAddress(client.getAddress()));
 
         // client specific
         actionForm.setGovernmentId(personalInfo.getClientDetail().getGovernmentId());
@@ -836,7 +836,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         }
 
         ClientBO client = this.customerDao.findClientBySystemId(clientFromSession.getGlobalCustNum());
-        actionForm.setAddress(client.getAddress());
+        actionForm.setAddress(Address.toAddress(client.getAddress()));
         SessionUtils.removeThenSetAttribute(Constants.BUSINESS_KEY, client, request);
 
         return mapping.findForward(ActionForwards.editFamilyInfo_success.toString());
