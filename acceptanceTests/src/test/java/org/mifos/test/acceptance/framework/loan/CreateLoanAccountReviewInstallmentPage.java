@@ -26,10 +26,11 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.mifos.test.acceptance.framework.AbstractPage;
 import org.mifos.test.acceptance.framework.HomePage;
+import org.testng.Assert;
+
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
-import org.testng.Assert;
 
 public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
     String validateButton = "validateBtn";
@@ -294,12 +295,12 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
 
     public CreateLoanAccountReviewInstallmentPage verifyCashFlowDefaultValues() {
         waitForPageToLoad();
-//        verifyCellValueOfCashFlow(3,1,"Cumulative cash flow-Total installment amount for a month");
+        verifyCellValueOfCashFlow(3,1,"Cumulative cash flow-Total installment amount per month");
         verifyCellValueOfCashFlow(3,2,"1.00");
         verifyCellValueOfCashFlow(3,3,"-670.00");
         verifyCellValueOfCashFlow(3,4,"-332.68");
         verifyCellValueOfCashFlow(3,5,"4.00");
-//        verifyCellValueOfCashFlow(4,1,"Total installment amount for a month as % of cash flow");
+        verifyCellValueOfCashFlow(4,1,"Total installment amount per month as % of cash flow");
         verifyCellValueOfCashFlow(4,2,"0.00");
         verifyCellValueOfCashFlow(4,3,"33600.00");
         verifyCellValueOfCashFlow(4,4,"11189.33");
