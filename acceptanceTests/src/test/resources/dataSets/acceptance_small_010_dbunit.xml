@@ -350,7 +350,8 @@
   <activity activity_id="241" parent_id="227" activity_name_lookup_id="634" description_lookup_id="634"/>
   <activity activity_id="242" parent_id="227" activity_name_lookup_id="635" description_lookup_id="635"/>
   <activity activity_id="243" parent_id="203" activity_name_lookup_id="636" description_lookup_id="636"/>
-  <activity activity_id="244" parent_id="113" activity_name_lookup_id="637" description_lookup_id="637"/>
+  <activity activity_id="244" parent_id="113" activity_name_lookup_id="638" description_lookup_id="638"/>
+  <activity activity_id="245" parent_id="34" activity_name_lookup_id="639" description_lookup_id="639"/>
   <admin_document/>
   <admin_document_acc_state_mix/>
   <applied_upgrades upgrade_id="1277565300"/>
@@ -405,8 +406,12 @@
   <applied_upgrades upgrade_id="1283416834"/>
   <applied_upgrades upgrade_id="1283765911"/>
   <applied_upgrades upgrade_id="1284365506"/>
+  <applied_upgrades upgrade_id="1284977483"/>
   <applied_upgrades upgrade_id="1284986654"/>
+  <applied_upgrades upgrade_id="1285046834"/>
   <applied_upgrades upgrade_id="1285177663"/>
+  <applied_upgrades upgrade_id="1285651956"/>
+  <applied_upgrades upgrade_id="1285812348"/>
   <applied_upgrades upgrade_id="1286195484"/>
   <applied_upgrades upgrade_id="1286529235"/>
   <applied_upgrades upgrade_id="1286780611"/>
@@ -414,8 +419,17 @@
   <applied_upgrades upgrade_id="1288013750"/>
   <applied_upgrades upgrade_id="1288349766"/>
   <applied_upgrades upgrade_id="1288869198"/>
+  <applied_upgrades upgrade_id="1289125815"/>
+  <applied_upgrades upgrade_id="1289541994"/>
+  <applied_upgrades upgrade_id="1289994929"/>
   <applied_upgrades upgrade_id="1290720085"/>
   <applied_upgrades upgrade_id="1291245955"/>
+  <applied_upgrades upgrade_id="1292234934"/>
+  <applied_upgrades upgrade_id="1292241366"/>
+  <applied_upgrades upgrade_id="1294738016"/>
+  <applied_upgrades upgrade_id="1294927843"/>
+  <applied_upgrades upgrade_id="1298198335"/>
+  <applied_upgrades upgrade_id="1299279218"/>
   <attendance/>
   <batch_branch_cash_confirmation_report/>
   <batch_branch_confirmation_disbursement/>
@@ -1482,6 +1496,7 @@
   <interest_types interest_type_id="1" lookup_id="79" category_id="1" descripton="Flat"/>
   <interest_types interest_type_id="2" lookup_id="80" category_id="1" descripton="Declining"/>
   <interest_types interest_type_id="4" lookup_id="604" category_id="1" descripton="Declining Balance-Equal Principal Installment"/>
+  <interest_types interest_type_id="5" lookup_id="637" category_id="1" descripton="InterestTypes-DecliningPrincipalBalance"/>
   <language lang_id="1" lang_name="English" lang_short_name="EN" lookup_id="189"/>
   <language lang_id="2" lang_name="Icelandic" lang_short_name="is" lookup_id="599"/>
   <language lang_id="3" lang_name="Spanish" lang_short_name="es" lookup_id="600"/>
@@ -2473,7 +2488,9 @@
   <lookup_value lookup_id="634" entity_id="87" lookup_name="Permissions-CanRunBatchJobsOnDemand"/>
   <lookup_value lookup_id="635" entity_id="87" lookup_name="Permissions-CanUpdateBatchJobsConfiguration"/>
   <lookup_value lookup_id="636" entity_id="87" lookup_name="Permissions-CanActivateQuestionGroups"/>
-  <lookup_value lookup_id="637" entity_id="87" lookup_name="Permissions-CanAdjustBackDatedTransactions"/>
+  <lookup_value lookup_id="637" entity_id="37" lookup_name="InterestTypes-DecliningPrincipalBalance"/>
+  <lookup_value lookup_id="638" entity_id="87" lookup_name="Permissions-CanAdjustBackDatedTransactions"/>
+  <lookup_value lookup_id="639" entity_id="87" lookup_name="Permissions-Clients-CanEditPhoneNumber"/>
   <lookup_value_locale lookup_value_id="1" locale_id="1" lookup_id="1"/>
   <lookup_value_locale lookup_value_id="3" locale_id="1" lookup_id="2"/>
   <lookup_value_locale lookup_value_id="5" locale_id="1" lookup_id="3"/>
@@ -2853,7 +2870,8 @@
   <lookup_value_locale lookup_value_id="966" locale_id="1" lookup_id="634"/>
   <lookup_value_locale lookup_value_id="967" locale_id="1" lookup_id="635"/>
   <lookup_value_locale lookup_value_id="968" locale_id="1" lookup_id="636"/>
-  <lookup_value_locale lookup_value_id="969" locale_id="1" lookup_id="637"/>
+  <lookup_value_locale lookup_value_id="969" locale_id="1" lookup_id="638"/>
+  <lookup_value_locale lookup_value_id="970" locale_id="1" lookup_id="639"/>
   <max_min_interest_rate account_id="4" min_interest_rate="3.0000" max_interest_rate="30.0000"/>
   <max_min_interest_rate account_id="6" min_interest_rate="3.0000" max_interest_rate="30.0000"/>
   <max_min_interest_rate account_id="8" min_interest_rate="3.0000" max_interest_rate="30.0000"/>
@@ -3255,6 +3273,7 @@
   <roles_activity activity_id="242" role_id="1"/>
   <roles_activity activity_id="243" role_id="1"/>
   <roles_activity activity_id="244" role_id="1"/>
+  <roles_activity activity_id="245" role_id="1"/>
   <saving_schedule/>
   <savings_account/>
   <savings_activity_details/>
