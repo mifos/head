@@ -129,7 +129,6 @@ import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.Localization;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.business.CustomerNoteEntity;
 import org.mifos.customers.business.CustomerPositionEntity;
 import org.mifos.customers.business.CustomerScheduleEntity;
@@ -163,7 +162,6 @@ import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.screen.ClientNameDetailDto;
 import org.mifos.dto.screen.ClientPersonalDetailDto;
-import org.mifos.dto.screen.ListElement;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.business.util.Address;
@@ -1915,17 +1913,12 @@ public class TestObjectFactory {
     public static GroupBO createInstanceForTest(final UserContext userContext, final GroupTemplate template,
                                                 final CenterBO center, final Date customerActivationDate) {
 
-        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
-        if (template.getCustomFieldViews() != null) {
-            customFields = template.getCustomFieldViews();
-        }
-
-        List<CustomerCustomFieldEntity> customerCustomFields = CustomerCustomFieldEntity.fromDto(customFields, null);
-
         PersonnelBO formedBy = null;
+        DateTime mfiJoiningDate = new DateTime().toDateMidnight().toDateTime();
+        DateTime activationDate = new DateTime().toDateMidnight().toDateTime();
         GroupBO group = GroupBO.createGroupWithCenterAsParent(userContext, template.getDisplayName(), formedBy, center,
                 template.getAddress(), template.getExternalId(), template.isTrained(),
-                new DateTime(template.getTrainedDate()), template.getCustomerStatus());
+                new DateTime(template.getTrainedDate()), template.getCustomerStatus(), mfiJoiningDate, activationDate);
 
         group.setCustomerActivationDate(customerActivationDate);
         return group;

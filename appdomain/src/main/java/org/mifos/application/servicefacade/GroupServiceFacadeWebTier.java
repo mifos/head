@@ -218,6 +218,9 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
             String externalId = actionForm.getExternalId();
             boolean trained = actionForm.isTrained();
             DateTime trainedOn = actionForm.getTrainedOn();
+            DateTime mfiJoiningDate = actionForm.getMfiJoiningDate();
+            DateTime activationDate = actionForm.getActivationDate();
+
             AddressDto dto = actionForm.getAddressDto();
             Address address = null;
             if (dto != null) {
@@ -240,7 +243,7 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
                 groupMeeting = parentCustomer.getCustomerMeetingValue();
 
                 group = GroupBO.createGroupWithCenterAsParent(userContext, groupName, formedBy, parentCustomer,
-                        address, externalId, trained, trainedOn, customerStatus);
+                        address, externalId, trained, trainedOn, customerStatus, mfiJoiningDate, activationDate);
             } else {
 
                 // create group without center as parent
@@ -256,7 +259,7 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
 
                 group = GroupBO.createGroupAsTopOfCustomerHierarchy(userContext, groupName, formedBy, groupMeeting,
                         loanOfficer, office, address, externalId, trained, trainedOn,
-                        customerStatus, numberOfCustomersInOfficeAlready);
+                        customerStatus, numberOfCustomersInOfficeAlready, mfiJoiningDate, activationDate);
             }
 
             this.customerService.createGroup(group, groupMeeting, feesForCustomerAccount);

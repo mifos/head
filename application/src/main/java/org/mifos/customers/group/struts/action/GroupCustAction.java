@@ -194,8 +194,6 @@ public class GroupCustAction extends CustAction {
 
         UserContext userContext = getUserContext(request);
 
-//        List<CustomerCustomFieldEntity> customerCustomFields = CustomerCustomFieldEntity.fromDto(actionForm.getCustomFields(), null);
-
         String groupName = actionForm.getDisplayName();
         String externalId = actionForm.getExternalId();
         boolean trained = actionForm.isCustomerTrained();
@@ -218,10 +216,12 @@ public class GroupCustAction extends CustAction {
             meetingDto = meeting.toDto();
         }
 
+        DateTime mfiJoiningDate = new DateTime().toDateMidnight().toDateTime();
+        DateTime activationDate = new DateTime().toDateMidnight().toDateTime();
         try {
             GroupCreationDetail groupCreationDetail = new GroupCreationDetail(groupName, externalId,
                     addressDto, actionForm.getFormedByPersonnelValue(), actionForm.getFeesToApply(),
-                    customerStatusId, trained, trainedOn, centerSystemId, officeId);
+                    customerStatusId, trained, trainedOn, centerSystemId, officeId, mfiJoiningDate, activationDate);
 
             CustomerDetailsDto centerDetails = this.groupServiceFacade.createNewGroup(groupCreationDetail, meetingDto);
             createGroupQuestionnaire.saveResponses(request, actionForm, centerDetails.getId());

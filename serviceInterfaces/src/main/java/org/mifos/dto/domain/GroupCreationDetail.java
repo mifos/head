@@ -34,12 +34,14 @@ public class GroupCreationDetail {
     private final Short customerStatus;
     private final boolean trained;
     private final DateTime trainedOn;
+    private final DateTime mfiJoiningDate;
+    private final DateTime activationDate;
     private final String parentSystemId;
     private final Short officeId;
 
     @SuppressWarnings("PMD")
     public GroupCreationDetail(String displayName, String externalId, AddressDto addressDto, Short loanOfficerId,
-            List<ApplicableAccountFeeDto> feesToApply, Short customerStatus, boolean trained, DateTime trainedOn, String parentSystemId, Short officeId) {
+            List<ApplicableAccountFeeDto> feesToApply, Short customerStatus, boolean trained, DateTime trainedOn, String parentSystemId, Short officeId, DateTime mfiJoiningDate, DateTime activationDate) {
         this.displayName = displayName;
         this.externalId = externalId;
         this.addressDto = addressDto;
@@ -50,6 +52,8 @@ public class GroupCreationDetail {
         this.trainedOn = trainedOn;
         this.parentSystemId = parentSystemId;
         this.officeId = officeId;
+        this.mfiJoiningDate = mfiJoiningDate;
+        this.activationDate = activationDate;
     }
 
     public String getDisplayName() {
@@ -90,5 +94,13 @@ public class GroupCreationDetail {
 
     public Short getOfficeId() {
         return this.officeId;
+    }
+
+    public DateTime getMfiJoiningDate() {
+        return this.mfiJoiningDate;
+    }
+
+    public DateTime getActivationDate() {
+        return this.activationDate;
     }
 }
