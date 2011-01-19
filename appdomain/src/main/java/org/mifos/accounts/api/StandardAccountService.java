@@ -184,6 +184,9 @@ public class StandardAccountService implements AccountService {
             Date oldDisbursementDate = loan.getDisbursementDate();
             List<RepaymentScheduleInstallment> originalInstallments = loan.toRepaymentScheduleDto(locale);
             loan.disburseLoan(disbursalPayment);
+            if (!loan.isVariableInstallmentsAllowed()) {
+                originalInstallments = loan.toRepaymentScheduleDto(locale);
+            }
             Date newDisbursementDate = loan.getDisbursementDate();
             boolean variableInstallmentsAllowed = loan.isVariableInstallmentsAllowed();
             loanBusinessService.adjustDatesForVariableInstallments(variableInstallmentsAllowed, originalInstallments,

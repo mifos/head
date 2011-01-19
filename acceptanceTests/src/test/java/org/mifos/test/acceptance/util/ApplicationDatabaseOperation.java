@@ -22,6 +22,11 @@ public class ApplicationDatabaseOperation {
         closeConnection();
     }
 
+    public void updateGapBetweenDisbursementAndFirstMeetingDate(int gap) throws SQLException {
+        getStatement().executeUpdate("update config_key_value_integer set configuration_value=" + gap + " where configuration_key='minDaysBetweenDisbursalAndFirstRepaymentDay'");
+        closeConnection();
+    }
+
     public boolean doesBranchOfficeExist(String officeName, int officeType, String shortName) throws SQLException {
         return doesEntityExist("select count(*) from office where " +
                 "office_level_id='" + officeType + "' and " +
