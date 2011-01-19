@@ -41,9 +41,9 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.business.SpouseFatherLookupEntity;
-import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireAction;
@@ -471,9 +471,12 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         Short loanOfficerId = actionForm.getLoanOfficerIdValue();
         Short officeId = actionForm.getOfficeIdValue();
 
+        // only applies when status is active
+        LocalDate activationDateAsToday = new LocalDate();
+
         ClientCreationDetail clientCreationDetail = new ClientCreationDetail(selectedSavingProducts, clientName, clientStatus, mfiJoiningDate, externalId,
                 address, formedBy, dateOfBirth, governmentId, trained, trainedDate, groupFlagValue, clientNameDetailDto, clientPersonalDetailDto, spouseFatherName,
-                picture, actionForm.getFeesToApply(), parentGroupId, familyNames, familyDetails, loanOfficerId, officeId);
+                picture, actionForm.getFeesToApply(), parentGroupId, familyNames, familyDetails, loanOfficerId, officeId, activationDateAsToday);
 
         MeetingDto meetingDto = null;
         if (meeting != null) {
