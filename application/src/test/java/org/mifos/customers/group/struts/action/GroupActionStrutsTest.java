@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashSet;
 import java.util.List;
 
 import junit.framework.Assert;
@@ -68,7 +67,6 @@ import org.mifos.dto.domain.ApplicableAccountFeeDto;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.screen.GroupInformationDto;
 import org.mifos.framework.MifosMockStrutsTestCase;
-import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.hibernate.helper.QueryResult;
@@ -78,7 +76,6 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.MifosUser;
-import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.TestingAuthenticationToken;
@@ -148,53 +145,6 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         center = null;
         userContext = null;
     }
-
-    /**
-     * If the user does not have right to create a group, the application must show a permission error (see MIFOS-3499)
-     */
-    @Test
-    public void testFailureCreate_WithoutPermissions() throws Exception {
-        SecurityContext securityContext = new SecurityContextImpl();
-        MifosUser principal = new MifosUserBuilder().build();
-        Authentication authentication = new TestingAuthenticationToken(principal, principal);
-        securityContext.setAuthentication(authentication);
-        SecurityContextHolder.setContext(securityContext);
-
-        createGroupWithCenter();
-
-        UserContext userContext = TestUtils.makeUser();
-        userContext.setRoles(new HashSet<Short>());
-        request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
-
-        setRequestPathInfo("/groupCustAction.do");
-        addRequestParameter("method", "load");
-        addRequestParameter("centerSystemId", center.getGlobalCustNum());
-        actionPerform();
-
-        setRequestPathInfo("/groupCustAction.do");
-        addRequestParameter("method", "preview");
-        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
-        addRequestParameter("displayName", "groupUnderCenter");
-        addRequestParameter("status", CustomerStatus.GROUP_PENDING.getValue().toString());
-        addRequestParameter("formedByPersonnel", center.getPersonnel().getPersonnelId().toString());
-
-        actionPerform();
-
-        setRequestPathInfo("/groupCustAction.do");
-        addRequestParameter("method", "create");
-        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
-
-        actionPerform();
-        verifyActionErrors(new String[] { SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED });
-        verifyForward(ActionForwards.create_failure.toString());
-
-        group = TestObjectFactory.getGroup(group.getCustomerId());
-        center = TestObjectFactory.getCenter(center.getCustomerId());
-
-        GroupCustActionForm actionForm = (GroupCustActionForm) request.getSession().getAttribute("groupCustActionForm");
-        actionForm.setParentCustomer(null);
-    }
-
 
     @Test
     public void testChooseOffice() throws Exception {
