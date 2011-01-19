@@ -39,7 +39,7 @@ import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelLevelEntity;
 import org.mifos.customers.personnel.business.PersonnelStatusEntity;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.dto.domain.CustomerDto;
@@ -59,13 +59,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServiceFacade {
 
     private OfficePersistence officePersistence = new OfficePersistence();
-    private PersonnelPersistence personnelPersistence = new PersonnelPersistence();
     private CustomerPersistence customerPersistence = new CustomerPersistence();
     private final CollectionSheetService collectionSheetService;
     private final CollectionSheetDtoTranslator collectionSheetTranslator;
 
     @Autowired
-    LegacyMasterDao legacyMasterDao;
+    private LegacyMasterDao legacyMasterDao;
+
+    @Autowired
+    private LegacyPersonnelDao legacyPersonnelDao;
+
 
     @Autowired
     public CollectionSheetServiceFacadeWebTier(final CollectionSheetService collectionSheetService,
@@ -75,12 +78,12 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
     }
 
     public CollectionSheetServiceFacadeWebTier(final OfficePersistence officePersistence,
-            final LegacyMasterDao legacyMasterDao, final PersonnelPersistence personnelPersistence,
+            final LegacyMasterDao legacyMasterDao, final LegacyPersonnelDao personnelPersistence,
             final CustomerPersistence customerPersistence, final CollectionSheetService collectionSheetService,
             final CollectionSheetDtoTranslator collectionSheetTranslator) {
         this.officePersistence = officePersistence;
         this.legacyMasterDao = legacyMasterDao;
-        this.personnelPersistence = personnelPersistence;
+        this.legacyPersonnelDao = personnelPersistence;
         this.customerPersistence = customerPersistence;
         this.collectionSheetService = collectionSheetService;
         this.collectionSheetTranslator = collectionSheetTranslator;
@@ -105,7 +108,7 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
 
             activeBranches = officePersistence.getActiveOffices(branchId);
             if (activeBranches.size() == 1) {
-                loanOfficerList = personnelPersistence.getActiveLoanOfficersInBranch(PersonnelConstants.LOAN_OFFICER,
+                loanOfficerList = legacyPersonnelDao.getActiveLoanOfficersInBranch(PersonnelConstants.LOAN_OFFICER,
                         branchId, userContext.getId(), userContext.getLevelId());
 
                 if (loanOfficerList.size() == 1) {
@@ -140,7 +143,7 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
 
         List<PersonnelDto> loanOfficerList = new ArrayList<PersonnelDto>();
         try {
-            loanOfficerList = personnelPersistence.getActiveLoanOfficersInBranch(PersonnelConstants.LOAN_OFFICER,
+            loanOfficerList = legacyPersonnelDao.getActiveLoanOfficersInBranch(PersonnelConstants.LOAN_OFFICER,
                     branchId, userContext.getId(), userContext.getLevelId());
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);

@@ -43,6 +43,7 @@ import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.LegacyMasterDao;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.config.persistence.ConfigurationPersistence;
@@ -52,7 +53,7 @@ import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AccountReferenceDto;
 import org.mifos.dto.domain.PaymentTypeDto;
@@ -127,7 +128,7 @@ public class StandardAccountService implements AccountService {
     public void makePaymentNoCommit(AccountPaymentParametersDto accountPaymentParametersDto)
             throws PersistenceException, AccountException {
 
-        PersonnelBO loggedInUser = new PersonnelPersistence().findPersonnelById(accountPaymentParametersDto.getUserMakingPayment().getUserId());
+        PersonnelBO loggedInUser = ApplicationContextProvider.getBean(LegacyPersonnelDao.class).findPersonnelById(accountPaymentParametersDto.getUserMakingPayment().getUserId());
         final int accountId = accountPaymentParametersDto.getAccountId();
         final AccountBO account = this.legacyAccountDao.getAccount(accountId);
         List<InvalidPaymentReason> validationErrors = validatePayment(accountPaymentParametersDto);
@@ -183,6 +184,9 @@ public class StandardAccountService implements AccountService {
             Date oldDisbursementDate = loan.getDisbursementDate();
             List<RepaymentScheduleInstallment> originalInstallments = loan.toRepaymentScheduleDto(locale);
             loan.disburseLoan(disbursalPayment);
+            if (!loan.isVariableInstallmentsAllowed()) {
+                originalInstallments = loan.toRepaymentScheduleDto(locale);
+            }
             Date newDisbursementDate = loan.getDisbursementDate();
             boolean variableInstallmentsAllowed = loan.isVariableInstallmentsAllowed();
             loanBusinessService.adjustDatesForVariableInstallments(variableInstallmentsAllowed, originalInstallments,

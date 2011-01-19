@@ -82,7 +82,7 @@ import org.mifos.customers.group.persistence.GroupPersistence;
 import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.domain.builders.CenterBuilder;
 import org.mifos.domain.builders.MeetingBuilder;
 import org.mifos.framework.MifosIntegrationTestCase;
@@ -1032,7 +1032,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
 
     private void disburseLoan(UserContext userContext, LoanBO loan, Date loanDisbursalDate) throws AccountException,
             PersistenceException {
-        PersonnelBO personnel = new PersonnelPersistence().getPersonnel(userContext.getId());
+        PersonnelBO personnel = legacyPersonnelDao.getPersonnel(userContext.getId());
         loan.disburseLoan(null, loanDisbursalDate, Short.valueOf("1"), personnel, null, Short.valueOf("1"));
         new TestObjectPersistence().persist(loan);
     }
@@ -1040,7 +1040,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
     private void applyPaymentForLoan(UserContext userContext, LoanBO loan, Date paymentDate, Money money) {
         loan.setUserContext(userContext);
 
-        PersonnelBO loggedInUser = new PersonnelPersistence().findPersonnelById(userContext.getId());
+        PersonnelBO loggedInUser = legacyPersonnelDao.findPersonnelById(userContext.getId());
 
         List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
         accntActionDates.addAll(loan.getAccountActionDates());

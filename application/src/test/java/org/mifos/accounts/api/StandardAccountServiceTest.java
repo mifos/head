@@ -52,7 +52,7 @@ import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.domain.builders.LoanAccountBuilder;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AccountReferenceDto;
@@ -80,7 +80,7 @@ public class StandardAccountServiceTest {
     private ConfigurationPersistence configurationPersistence;
 
     @Mock
-    private PersonnelPersistence personnelPersistence;
+    private LegacyPersonnelDao personnelPersistence;
 
     @Mock
     private PersonnelBO personnelBO;

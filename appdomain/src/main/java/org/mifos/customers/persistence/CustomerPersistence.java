@@ -71,7 +71,7 @@ import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.util.helpers.ChildrenStateType;
 import org.mifos.customers.util.helpers.CustomerConstants;
@@ -98,6 +98,8 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
 
 public class CustomerPersistence extends LegacyGenericDao {
+
+    private final LegacyPersonnelDao legacyPersonnelDao = ApplicationContextProvider.getBean(LegacyPersonnelDao.class);
 
     private static final Predicate CLIENTS_WITH_ACTIVE_LOAN_ACCOUNTS = new Predicate() {
         public boolean evaluate(final Object object) {
@@ -161,7 +163,7 @@ public class CustomerPersistence extends LegacyGenericDao {
 			queryResult.setQueryInputs(queryInputs);
 			queryInputs.setQueryStrings(namedQuery);
 			queryInputs.setParamList(paramList);
-			PersonnelBO personnel = new PersonnelPersistence().getPersonnel(userId);
+			PersonnelBO personnel = legacyPersonnelDao.getPersonnel(userId);
 
 			if (officeId != null && officeId.shortValue() == 0) {
 				namedQuery[0] = queryNoOfficeCount;
@@ -330,7 +332,7 @@ public class CustomerPersistence extends LegacyGenericDao {
         List<Param> paramList = new ArrayList<Param>();
         QueryInputs queryInputs = new QueryInputs();
         QueryResult queryResult = QueryFactory.getQueryResult(CustomerSearchConstants.ACCOUNTSEARCHRESULTS);
-        PersonnelBO personnel = new PersonnelPersistence().getPersonnel(userId);
+        PersonnelBO personnel = legacyPersonnelDao.getPersonnel(userId);
         if (personnel.getLevelEnum() == PersonnelLevel.LOAN_OFFICER) {
             namedQuery[0] = NamedQueryConstants.SEARCH_GROUP_CLIENT_COUNT_LO;
             namedQuery[1] = NamedQueryConstants.SEARCH_GROUP_CLIENT_LO;
@@ -365,7 +367,7 @@ public class CustomerPersistence extends LegacyGenericDao {
         List<Param> paramList = new ArrayList<Param>();
         QueryInputs queryInputs = new QueryInputs();
         QueryResult queryResult = QueryFactory.getQueryResult(CustomerSearchConstants.CUSTOMERSFORSAVINGSACCOUNT);
-        PersonnelBO personnel = new PersonnelPersistence().getPersonnel(userId);
+        PersonnelBO personnel = legacyPersonnelDao.getPersonnel(userId);
         if (personnel.getLevelEnum() == PersonnelLevel.LOAN_OFFICER) {
             namedQuery[0] = NamedQueryConstants.SEARCH_CUSTOMER_FOR_SAVINGS_COUNT;
             namedQuery[1] = NamedQueryConstants.SEARCH_CUSTOMER_FOR_SAVINGS;
@@ -444,7 +446,7 @@ public class CustomerPersistence extends LegacyGenericDao {
         paramList.add(typeNameValue("Short", "USERID", userId));
         paramList.add(typeNameValue("Short", "LOID", PersonnelLevel.LOAN_OFFICER.getValue()));
         paramList.add(typeNameValue("Short", "LEVELID", CustomerLevel.CLIENT.getValue()));
-        paramList.add(typeNameValue("Short", "USERLEVEL_ID", new PersonnelPersistence().getPersonnel(userId)
+        paramList.add(typeNameValue("Short", "USERLEVEL_ID", legacyPersonnelDao.getPersonnel(userId)
                 .getLevelEnum().getValue()));
     }
 
@@ -484,7 +486,7 @@ public class CustomerPersistence extends LegacyGenericDao {
         queryResult.setQueryInputs(queryInputs);
         queryInputs.setQueryStrings(namedQuery);
         queryInputs.setParamList(paramList);
-        PersonnelBO personnel = new PersonnelPersistence().getPersonnel(userId);
+        PersonnelBO personnel = legacyPersonnelDao.getPersonnel(userId);
 
         if (officeId != null && officeId.shortValue() == 0) {
             namedQuery[0] = NamedQueryConstants.CUSTOMER_ID_SEARCH_NOOFFICEID_COUNT;

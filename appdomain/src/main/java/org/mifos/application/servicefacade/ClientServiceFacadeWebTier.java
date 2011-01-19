@@ -403,8 +403,6 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
                 personnelId = clientCreationDetail.getLoanOfficerId();
                 officeId = clientCreationDetail.getOfficeId();
 
-                checkPermissionForCreate(clientCreationDetail.getClientStatus(), userContext, officeId, personnelId);
-
                 PersonnelBO loanOfficer = this.personnelDao.findPersonnelById(personnelId);
                 OfficeBO office = this.officeDao.findOfficeById(officeId);
 
@@ -436,8 +434,6 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
             throw new MifosRuntimeException(e);
         } catch (CustomerException e) {
             throw new BusinessRuleException(e.getKey(), e);
-        } catch (ApplicationException e) {
-            throw new BusinessRuleException(e.getKey(), e);
         }
     }
 
@@ -452,19 +448,6 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
             feesForCustomerAccount.add(accountFee);
         }
         return feesForCustomerAccount;
-    }
-
-    private void checkPermissionForCreate(Short newState, UserContext userContext, Short recordOfficeId,
-            Short recordLoanOfficerId) throws ApplicationException {
-        if (!isPermissionAllowed(newState, userContext, recordOfficeId, recordLoanOfficerId)) {
-            throw new AccountException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
-        }
-    }
-
-    private boolean isPermissionAllowed(Short newState, UserContext userContext, Short recordOfficeId,
-            Short recordLoanOfficerId) {
-        return ActivityMapper.getInstance().isSavePermittedForCustomer(newState.shortValue(), userContext,
-                recordOfficeId, recordLoanOfficerId);
     }
 
     @Override

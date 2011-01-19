@@ -127,16 +127,22 @@ public class GroupCustAction extends CustAction {
         actionForm.cleanForm();
         SessionUtils.removeAttribute(CustomerConstants.CUSTOMER_MEETING, request.getSession());
 
-        String centerSystemId = actionForm.getCenterSystemId();
-        CenterBO center = this.customerDao.findCenterBySystemId(centerSystemId);
-        GroupCreation groupCreation = new GroupCreation(actionForm.getOfficeIdValue(), centerSystemId);
+        GroupCreation groupCreation = null;
+        boolean isCenterHierarchyExists = ClientRules.getCenterHierarchyExists();
+        if (isCenterHierarchyExists) {
+            String centerSystemId = actionForm.getCenterSystemId();
+            CenterBO center = this.customerDao.findCenterBySystemId(centerSystemId);
+            groupCreation = new GroupCreation(actionForm.getOfficeIdValue(), centerSystemId);
+
+            // inherit these settings from center/parent if center hierarchy is configured
+            actionForm.setParentCustomer(center);
+            actionForm.setOfficeId(center.getOfficeId().toString());
+            actionForm.setFormedByPersonnel(center.getLoanOfficerId().toString());
+        } else {
+            groupCreation = new GroupCreation(actionForm.getOfficeIdValue(), "");
+        }
 
         GroupFormCreationDto groupFormCreationDto = this.groupServiceFacade.retrieveGroupFormCreationData(groupCreation);
-
-        // inherit these settings from center/parent if center hierarchy is configured
-        actionForm.setParentCustomer(center);
-        actionForm.setOfficeId(center.getOfficeId().toString());
-        actionForm.setFormedByPersonnel(center.getLoanOfficerId().toString());
 
         actionForm.setCustomFields(new ArrayList<CustomFieldDto>());
         actionForm.setDefaultFees(groupFormCreationDto.getDefaultFees());
@@ -188,8 +194,6 @@ public class GroupCustAction extends CustAction {
 
         UserContext userContext = getUserContext(request);
 
-//        List<CustomerCustomFieldEntity> customerCustomFields = CustomerCustomFieldEntity.fromDto(actionForm.getCustomFields(), null);
-
         String groupName = actionForm.getDisplayName();
         String externalId = actionForm.getExternalId();
         boolean trained = actionForm.isCustomerTrained();
@@ -199,7 +203,12 @@ public class GroupCustAction extends CustAction {
             addressDto = Address.toDto(actionForm.getAddress());
         }
         Short customerStatusId = actionForm.getStatusValue().getValue();
-        String centerSystemId = actionForm.getParentCustomer().getGlobalCustNum();
+
+        String centerSystemId = "";
+        boolean isCenterHierarchyExists = ClientRules.getCenterHierarchyExists();
+        if (isCenterHierarchyExists) {
+            centerSystemId = actionForm.getParentCustomer().getGlobalCustNum();
+        }
         Short officeId = actionForm.getOfficeIdValue();
 
         MeetingDto meetingDto = null;
@@ -207,10 +216,12 @@ public class GroupCustAction extends CustAction {
             meetingDto = meeting.toDto();
         }
 
+        DateTime mfiJoiningDate = new DateTime().toDateMidnight().toDateTime();
+        DateTime activationDate = new DateTime().toDateMidnight().toDateTime();
         try {
             GroupCreationDetail groupCreationDetail = new GroupCreationDetail(groupName, externalId,
                     addressDto, actionForm.getFormedByPersonnelValue(), actionForm.getFeesToApply(),
-                    customerStatusId, trained, trainedOn, centerSystemId, officeId);
+                    customerStatusId, trained, trainedOn, centerSystemId, officeId, mfiJoiningDate, activationDate);
 
             CustomerDetailsDto centerDetails = this.groupServiceFacade.createNewGroup(groupCreationDetail, meetingDto);
             createGroupQuestionnaire.saveResponses(request, actionForm, centerDetails.getId());

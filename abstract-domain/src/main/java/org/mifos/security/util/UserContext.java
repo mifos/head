@@ -208,4 +208,16 @@ public class UserContext implements Serializable {
         out.print("User " + name + ", id=" + id + ", global=" + userGlobalNo + "\n");
         out.print("Locale ID=" + localeId + ", locale=" + preferredLocale + "\n");
     }
+
+    @Override
+    public String toString() {
+        StringBuilder buffer = new StringBuilder(512);
+        buffer.append("name: ").append(name);
+        buffer.append(" id: ").append(id);
+        buffer.append(" branchId: ").append(branchId);
+        buffer.append(" branchGlobalnum: ").append(branchGlobalNum);
+        buffer.append(" levelId: ").append(levelId);
+
+        return buffer.toString();
+    }
 }

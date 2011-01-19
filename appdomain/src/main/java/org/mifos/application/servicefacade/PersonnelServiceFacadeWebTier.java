@@ -48,7 +48,7 @@ import org.mifos.customers.personnel.business.PersonnelRoleEntity;
 import org.mifos.customers.personnel.business.PersonnelStatusEntity;
 import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.personnel.util.helpers.PersonnelStatus;
@@ -92,6 +92,9 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
 
     @Autowired
     private LegacyMasterDao legacyMasterDao;
+
+    @Autowired
+    private LegacyPersonnelDao legacyPersonnelDao;
 
     @Autowired
     public PersonnelServiceFacadeWebTier(OfficeDao officeDao, CustomerDao customerDao, PersonnelDao personnelDao, ApplicationConfigurationDao applicationConfigurationDao, LegacyRolesPermissionsDao rolesPermissionsPersistence) {
@@ -310,21 +313,19 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
 
     private void verifyFields(final String userName, final String governmentIdNumber, final java.util.Date dob, final String displayName)
             throws ValidationException, PersistenceException {
-
-        PersonnelPersistence persistence = new PersonnelPersistence();
         if (StringUtils.isBlank(userName)) {
             throw new ValidationException(PersonnelConstants.ERRORMANDATORY);
         }
-        if (persistence.isUserExist(userName)) {
+        if (legacyPersonnelDao.isUserExist(userName)) {
             throw new ValidationException(PersonnelConstants.DUPLICATE_USER, new Object[] { userName });
 
         }
         if (StringUtils.isNotBlank(governmentIdNumber)) {
-            if (persistence.isUserExistWithGovernmentId(governmentIdNumber)) {
+            if (legacyPersonnelDao.isUserExistWithGovernmentId(governmentIdNumber)) {
                 throw new ValidationException(PersonnelConstants.DUPLICATE_GOVT_ID, new Object[] { governmentIdNumber });
             }
         } else {
-            if (persistence.isUserExist(displayName, dob)) {
+            if (legacyPersonnelDao.isUserExist(displayName, dob)) {
                 throw new ValidationException(PersonnelConstants.DUPLICATE_USER_NAME_OR_DOB,
                         new Object[] { displayName });
             }
@@ -420,7 +421,7 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
 
         try {
             if (oldUserDetails.isActive() && newStatus.equals(PersonnelStatus.INACTIVE) && newLevel.equals(PersonnelLevel.LOAN_OFFICER)) {
-                if (new PersonnelPersistence().getActiveChildrenForLoanOfficer(oldUserDetails.getPersonnelId(), oldUserDetails.getOffice().getOfficeId())) {
+                if (legacyPersonnelDao.getActiveChildrenForLoanOfficer(oldUserDetails.getPersonnelId(), oldUserDetails.getOffice().getOfficeId())) {
                     throw new BusinessRuleException(PersonnelConstants.STATUS_CHANGE_EXCEPTION);
                 }
             } else if (oldUserDetails.isInActive() && newStatus.equals(PersonnelStatus.ACTIVE) && !newOffice.isActive()) {
@@ -444,7 +445,7 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
                 }
             }
 
-            if (new PersonnelPersistence().getActiveChildrenForLoanOfficer(oldUserDetails.getPersonnelId(), oldUserDetails.getOffice().getOfficeId())) {
+            if (legacyPersonnelDao.getActiveChildrenForLoanOfficer(oldUserDetails.getPersonnelId(), oldUserDetails.getOffice().getOfficeId())) {
                 Object values[] = new Object[1];
                 values[0] = oldUserDetails.getGlobalPersonnelNum();
                 throw new BusinessRuleException(PersonnelConstants.TRANSFER_NOT_POSSIBLE_EXCEPTION, values);
@@ -458,7 +459,7 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
         try {
             if (oldUserDetails.isLoanOfficer() && newLevel.equals(PersonnelLevel.NON_LOAN_OFFICER)) {
 
-                if (new PersonnelPersistence().getAllChildrenForLoanOfficer(oldUserDetails.getPersonnelId(), oldUserDetails.getOffice().getOfficeId())) {
+                if (legacyPersonnelDao.getAllChildrenForLoanOfficer(oldUserDetails.getPersonnelId(), oldUserDetails.getOffice().getOfficeId())) {
                     throw new BusinessRuleException(PersonnelConstants.HIERARCHY_CHANGE_EXCEPTION);
                 }
             } else if (oldUserDetails.isNonLoanOfficer()

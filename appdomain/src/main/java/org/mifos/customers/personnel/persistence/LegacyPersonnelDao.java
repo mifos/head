@@ -52,7 +52,10 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.LegacyGenericDao;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 
-public class PersonnelPersistence extends LegacyGenericDao {
+public class LegacyPersonnelDao extends LegacyGenericDao {
+
+    private LegacyPersonnelDao() {
+    }
 
     /**
      * @deprecated - {@link PersonnelDao#findActiveLoanOfficersForOffice}
@@ -216,7 +219,7 @@ public class PersonnelPersistence extends LegacyGenericDao {
 
     public QueryResult search(String searchString, Short userId) throws PersistenceException {
         String[] namedQuery = new String[2];
-        List<Param> paramList = getParamList(new PersonnelPersistence().getPersonnel(userId));
+        List<Param> paramList = getParamList(new LegacyPersonnelDao().getPersonnel(userId));
 
         if (searchString.contains(" ")) {
             paramList.add(typeNameValue("String", "USER_NAME1", searchString.substring(0, searchString.indexOf(" "))));

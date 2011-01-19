@@ -82,7 +82,7 @@ import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.util.helpers.ChildrenStateType;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.CustomFieldDto;
@@ -143,18 +143,18 @@ public class SavingsBO extends AccountBO {
         this.savingsPersistence = savingsPersistence;
     }
 
-    private PersonnelPersistence personnelPersistence = null;
+    private LegacyPersonnelDao personnelPersistence = null;
 
     @Deprecated
-    public PersonnelPersistence getPersonnelPersistence() {
+    public LegacyPersonnelDao getPersonnelPersistence() {
         if (null == personnelPersistence) {
-            personnelPersistence = new PersonnelPersistence();
+            personnelPersistence = ApplicationContextProvider.getBean(LegacyPersonnelDao.class);
         }
         return personnelPersistence;
     }
 
     @Deprecated
-    public void setPersonnelPersistence(final PersonnelPersistence personnelPersistence) {
+    public void setPersonnelPersistence(final LegacyPersonnelDao personnelPersistence) {
         this.personnelPersistence = personnelPersistence;
     }
 

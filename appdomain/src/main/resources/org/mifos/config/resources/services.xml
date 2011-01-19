@@ -32,6 +32,8 @@
     
     <bean id="collectionSheetService" class="org.mifos.application.servicefacade.CollectionSheetServiceImpl"/>
     
+    <bean id="saveCollectionSheetAssembler" class="org.mifos.application.servicefacade.SaveCollectionSheetAssembler"/>
+    
     <bean id="savingsServiceFacade" class="org.mifos.application.servicefacade.SavingsServiceFacadeWebTier" />
     
     <bean id="customerServiceFacade" class="org.mifos.application.servicefacade.CustomerServiceFacadeWebTier" />

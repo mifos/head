@@ -21,6 +21,7 @@
 package org.mifos.customers.group.persistence;
 
 import org.mifos.application.NamedQueryConstants;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.ClientRules;
 import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.center.persistence.CenterPersistence;
@@ -29,7 +30,7 @@ import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.api.CustomerLevel;
@@ -57,7 +58,7 @@ import java.util.Map;
 @Deprecated
 public class GroupPersistence extends LegacyGenericDao {
     private final CenterPersistence centerPersistence = new CenterPersistence();
-    private final PersonnelPersistence personnelPersistence = new PersonnelPersistence();
+    private final LegacyPersonnelDao legacyPersonnelDao = ApplicationContextProvider.getBean(LegacyPersonnelDao.class);
 
     public GroupBO findBySystemId(String globalCustNum) throws PersistenceException {
         Map<String, String> queryParameters = new HashMap<String, String>();
@@ -76,7 +77,7 @@ public class GroupPersistence extends LegacyGenericDao {
         QueryInputs queryInputs = new QueryInputs();
         QueryResult queryResult = QueryFactory.getQueryResult(CustomerSearchConstants.GROUPLIST);
 
-        PersonnelBO personnel = new PersonnelPersistence().getPersonnel(userId);
+        PersonnelBO personnel = legacyPersonnelDao.getPersonnel(userId);
         String officeSearchId = personnel.getOffice().getSearchId();
         if (ClientRules.getCenterHierarchyExists()) {
             namedQuery[0] = NamedQueryConstants.GROUP_SEARCH_COUNT_WITH_CENTER;
@@ -112,7 +113,7 @@ public class GroupPersistence extends LegacyGenericDao {
         QueryInputs queryInputs = new QueryInputs();
         QueryResult queryResult = QueryFactory.getQueryResult(CustomerSearchConstants.GROUPLIST);
 
-        PersonnelBO personnel = new PersonnelPersistence().getPersonnel(userId);
+        PersonnelBO personnel = legacyPersonnelDao.getPersonnel(userId);
         String officeSearchId = personnel.getOffice().getSearchId();
         if (ClientRules.getCenterHierarchyExists()) {
             namedQuery[0] = NamedQueryConstants.GROUP_SEARCH_COUNT_WITH_CENTER_FOR_ADDING_GROUPMEMBER;

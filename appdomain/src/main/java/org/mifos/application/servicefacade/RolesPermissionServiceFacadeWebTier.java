@@ -6,7 +6,7 @@ import java.util.List;
 import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.application.admin.servicefacade.RolesPermissionServiceFacade;
 import org.mifos.core.MifosRuntimeException;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.dto.screen.ListElement;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -32,6 +32,9 @@ public class RolesPermissionServiceFacadeWebTier implements RolesPermissionServi
 
     @Autowired
     LegacyRolesPermissionsDao legacyRolesPermissionsDao;
+
+    @Autowired
+    private LegacyPersonnelDao legacyPersonnelDao;
 
     @Override
     public List<ListElement> retrieveAllRoles() {
@@ -156,7 +159,7 @@ public class RolesPermissionServiceFacadeWebTier implements RolesPermissionServi
     private boolean isRoleAssignedToPersonnel(RoleBO role) throws RolesPermissionException {
         Integer count;
         try {
-            count = new PersonnelPersistence().getPersonnelRoleCount(role.getId());
+            count = legacyPersonnelDao.getPersonnelRoleCount(role.getId());
         } catch (PersistenceException e) {
             throw new RolesPermissionException(e);
         }

@@ -129,7 +129,6 @@ import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.Localization;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.business.CustomerNoteEntity;
 import org.mifos.customers.business.CustomerPositionEntity;
 import org.mifos.customers.business.CustomerScheduleEntity;
@@ -155,7 +154,7 @@ import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.office.util.helpers.OperationMode;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.util.helpers.CustomerAccountDto;
@@ -163,7 +162,6 @@ import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.screen.ClientNameDetailDto;
 import org.mifos.dto.screen.ClientPersonalDetailDto;
-import org.mifos.dto.screen.ListElement;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.business.util.Address;
@@ -303,7 +301,7 @@ public class TestObjectFactory {
         CenterBO center;
         try {
             center = new CenterBO(TestUtils.makeUserWithLocales(), customerName, null, null, fees, null, null,
-                    new OfficePersistence().getOffice(officeId), meeting, new PersonnelPersistence()
+                    new OfficePersistence().getOffice(officeId), meeting, ApplicationContextProvider.getBean(LegacyPersonnelDao.class)
                             .getPersonnel(personnelId), new CustomerPersistence());
             new CenterPersistence().saveCenter(center);
             StaticHibernateUtil.flushSession();
@@ -390,7 +388,7 @@ public class TestObjectFactory {
         GroupBO group;
         try {
             group = new GroupBO(TestUtils.makeUserWithLocales(), customerName, customerStatus, externalId, trained,
-                    trainedDate, address, customFields, fees, new PersonnelPersistence().getPersonnel(formedById),
+                    trainedDate, address, customFields, fees, getPersonnel(formedById),
                     parentCustomer);
             new GroupPersistence().saveGroup(group);
             StaticHibernateUtil.flushSession();
@@ -423,10 +421,10 @@ public class TestObjectFactory {
         PersonnelBO loanOfficer = null;
         try {
             if (loanOfficerId != null) {
-                loanOfficer = new PersonnelPersistence().getPersonnel(loanOfficerId);
+                loanOfficer = getPersonnel(loanOfficerId);
             }
             group = new GroupBO(TestUtils.makeUserWithLocales(), customerName, customerStatus, externalId, trained,
-                    trainedDate, address, customFields, fees, new PersonnelPersistence().getPersonnel(formedById),
+                    trainedDate, address, customFields, fees, getPersonnel(formedById),
                     new OfficePersistence().getOffice(officeId), meeting, loanOfficer);
             new GroupPersistence().saveGroup(group);
             StaticHibernateUtil.flushSession();
@@ -459,7 +457,7 @@ public class TestObjectFactory {
         ClientBO client;
         try {
             client = new ClientBO(TestUtils.makeUserWithLocales(), customerName, status, null, null, address, null, fees,
-                    null, new PersonnelPersistence().getPersonnel(PersonnelConstants.SYSTEM_USER),
+                    null, getPersonnel(PersonnelConstants.SYSTEM_USER),
                     new OfficePersistence().getOffice(SAMPLE_BRANCH_OFFICE), parentCustomer, dateOfBirth, governmentId,
                     null, null, YesNoFlag.YES.getValue(), clientNameDetailDto, spouseNameDetailView,
                     clientPersonalDetailDto, null);
@@ -481,7 +479,7 @@ public class TestObjectFactory {
         ClientBO client;
 
         try {
-            PersonnelBO systemUser = new PersonnelPersistence().getPersonnel(PersonnelConstants.SYSTEM_USER);
+            PersonnelBO systemUser = getPersonnel(PersonnelConstants.SYSTEM_USER);
             ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto(NameType.CLIENT.getValue(), SAMPLE_SALUTATION,
                     customerName, "middle", customerName, "secondLast");
             clientNameDetailDto.setNames(ClientRules.getNameSequence());
@@ -529,7 +527,7 @@ public class TestObjectFactory {
                         null, // List<CustomFieldDto> customFields
                         getFees(), // List<FeeDto> fees
                         null, // List<SavingsOfferingBO> offeringsSelected
-                        new PersonnelPersistence().getPersonnel(personnel), // Short
+                        getPersonnel(personnel), // Short
                         // formedById
                         new OfficePersistence().getOffice(SAMPLE_BRANCH_OFFICE), // Short
                         // officeId
@@ -546,7 +544,7 @@ public class TestObjectFactory {
                         null); // InputStream picture
             } else {
                 client = new ClientBO(TestUtils.makeUserWithLocales(), clientNameDetailDto.getDisplayName(), status,
-                        null, null, null, null, getFees(), null, new PersonnelPersistence().getPersonnel(personnel),
+                        null, null, null, null, getFees(), null, getPersonnel(personnel),
                         parentCustomer.getOffice(), parentCustomer, null, null, null, null, YesNoFlag.YES.getValue(),
                         clientNameDetailDto, spouseNameDetailView, clientPersonalDetailDto, null);
             }
@@ -1915,17 +1913,12 @@ public class TestObjectFactory {
     public static GroupBO createInstanceForTest(final UserContext userContext, final GroupTemplate template,
                                                 final CenterBO center, final Date customerActivationDate) {
 
-        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
-        if (template.getCustomFieldViews() != null) {
-            customFields = template.getCustomFieldViews();
-        }
-
-        List<CustomerCustomFieldEntity> customerCustomFields = CustomerCustomFieldEntity.fromDto(customFields, null);
-
         PersonnelBO formedBy = null;
+        DateTime mfiJoiningDate = new DateTime().toDateMidnight().toDateTime();
+        DateTime activationDate = new DateTime().toDateMidnight().toDateTime();
         GroupBO group = GroupBO.createGroupWithCenterAsParent(userContext, template.getDisplayName(), formedBy, center,
                 template.getAddress(), template.getExternalId(), template.isTrained(),
-                new DateTime(template.getTrainedDate()), template.getCustomerStatus());
+                new DateTime(template.getTrainedDate()), template.getCustomerStatus(), mfiJoiningDate, activationDate);
 
         group.setCustomerActivationDate(customerActivationDate);
         return group;
@@ -1948,11 +1941,7 @@ public class TestObjectFactory {
      */
 
     public static PersonnelBO getSystemUser() {
-        try {
-            return new PersonnelPersistence().getPersonnel(PersonnelConstants.SYSTEM_USER);
-        } catch (PersistenceException e) {
-            throw new RuntimeException(e);
-        }
+        return getPersonnel(PersonnelConstants.SYSTEM_USER);
     }
 
     /*
@@ -1960,11 +1949,7 @@ public class TestObjectFactory {
      */
 
     public static PersonnelBO getTestUser() {
-        try {
-            return new PersonnelPersistence().getPersonnel(PersonnelConstants.TEST_USER);
-        } catch (PersistenceException e) {
-            throw new RuntimeException(e);
-        }
+        return getPersonnel(PersonnelConstants.TEST_USER);
     }
 
     public static org.mifos.accounts.fees.servicefacade.FeeDto getAmountBasedFee(String feeId, String statusId,

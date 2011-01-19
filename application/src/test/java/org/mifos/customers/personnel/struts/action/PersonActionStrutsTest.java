@@ -39,7 +39,7 @@ import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.personnel.struts.actionforms.PersonActionForm;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
@@ -52,6 +52,7 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
+import org.mifos.framework.components.audit.persistence.LegacyAuditDao;
 import org.mifos.framework.components.audit.util.helpers.AuditConstants;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.exceptions.PageExpiredException;
@@ -66,6 +67,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
 
@@ -77,6 +79,9 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
     private OfficeBO createdBranchOffice;
 
     PersonnelBO personnel;
+
+    @Autowired
+    private LegacyAuditDao legacyAuditDao;
 
     @Before
     public void setUp() throws Exception {
@@ -291,7 +296,7 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(SessionUtils.getAttribute(PersonnelConstants.MARITAL_STATUS_LIST, request));
         List languages = (List) SessionUtils.getAttribute(PersonnelConstants.LANGUAGE_LIST, request);
         Assert.assertNotNull(languages);
-        Assert.assertEquals(new PersonnelPersistence().getAvailableLanguages().size(), languages.size());
+        Assert.assertEquals(legacyPersonnelDao.getAvailableLanguages().size(), languages.size());
         Assert.assertNotNull(SessionUtils.getAttribute(PersonnelConstants.ROLES_LIST, request));
         Assert.assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request));
     }
@@ -467,7 +472,7 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         auditLogRecords.add(auditLogRecord);
         auditLog.addAuditLogRecords(auditLogRecords);
 
-        new org.mifos.framework.components.audit.persistence.AuditPersistence().save(auditLog);
+        legacyAuditDao.save(auditLog);
 
         setRequestPathInfo("/PersonAction.do");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);

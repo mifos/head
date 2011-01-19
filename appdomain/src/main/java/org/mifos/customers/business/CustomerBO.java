@@ -63,7 +63,7 @@ import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.util.helpers.ChildrenStateType;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
@@ -126,7 +126,7 @@ public abstract class CustomerBO extends AbstractBusinessObject {
 
 
     private CustomerPersistence customerPersistence = null;
-    private PersonnelPersistence personnelPersistence = null;
+    private LegacyPersonnelDao personnelPersistence = null;
 
     /**
      * default constructor for hibernate
@@ -1174,14 +1174,14 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         this.customerPersistence = customerPersistence;
     }
 
-    public PersonnelPersistence getPersonnelPersistence() {
+    public LegacyPersonnelDao getPersonnelPersistence() {
         if (null == personnelPersistence) {
-            personnelPersistence = new PersonnelPersistence();
+            personnelPersistence = ApplicationContextProvider.getBean(LegacyPersonnelDao.class);
         }
         return personnelPersistence;
     }
 
-    public void setPersonnelPersistence(final PersonnelPersistence personnelPersistence) {
+    public void setPersonnelPersistence(final LegacyPersonnelDao personnelPersistence) {
         this.personnelPersistence = personnelPersistence;
     }
 

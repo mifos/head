@@ -27,9 +27,9 @@ import java.util.Date;
 import java.util.Locale;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.junit.Ignore;
+import org.junit.Test;
 import org.mifos.config.Localization;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.LocalizationConverter;
@@ -37,13 +37,11 @@ import org.mifos.framework.util.helpers.ConversionError;
 import org.mifos.framework.util.helpers.DoubleConversionResult;
 import org.mifos.security.util.UserContext;
 
-public class BaseActionFormTest extends TestCase {
-    BaseActionForm baseActionForm = new BaseActionForm();
+public class BaseActionFormTest {
 
-    public BaseActionFormTest() {
-        super();
-    }
+    private BaseActionForm baseActionForm = new BaseActionForm();
 
+    @Test
     public void testGetDateFromString() throws Exception {
         UserContext userContext = TestUtils.makeUser();
         BaseActionForm baseActionForm = new BaseActionForm();
@@ -55,6 +53,7 @@ public class BaseActionFormTest extends TestCase {
 
     }
 
+    @Test
     public void testGetStringValue() throws Exception {
         String one = "1";
         Assert.assertEquals(one, baseActionForm.getStringValue(true));
@@ -70,6 +69,7 @@ public class BaseActionFormTest extends TestCase {
      * input.
      */
     @Ignore
+    @Test
     public void xtestGetStringValue_is_IS() throws Exception {
         String strValue = "0.25";
         Locale locale = Localization.getInstance().getMainLocale();
@@ -80,13 +80,13 @@ public class BaseActionFormTest extends TestCase {
         converter.setCurrentLocale(locale);
     }
 
+    @Test
     public void testGetDoubleValue() throws Exception {
         Locale locale = Localization.getInstance().getMainLocale();
         double dValue = 2.34;
         if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN")) {
             Assert.assertEquals(dValue, baseActionForm.getDoubleValue("2.34"));
         }
-
     }
 
     /**
@@ -94,6 +94,7 @@ public class BaseActionFormTest extends TestCase {
      * input.
      */
     @Ignore
+    @Test
     public void xtestGetDoubleValue_is_IS() throws Exception {
         Locale locale = Localization.getInstance().getMainLocale();
         LocalizationConverter converter = new LocalizationConverter();
@@ -103,6 +104,7 @@ public class BaseActionFormTest extends TestCase {
         converter.setCurrentLocale(locale);
     }
 
+    @Test
     public void testParseDoubleForMoney() {
         LocalizationConverter converter = new LocalizationConverter();
         converter.setCurrentLocale(new Locale("en", "GB"));
@@ -132,6 +134,7 @@ public class BaseActionFormTest extends TestCase {
      * input.
      */
     @Ignore
+    @Test
     public void xtestParseDoubleForMoney_is_IS() {
         LocalizationConverter converter = new LocalizationConverter();
         converter.setCurrentLocale(new Locale("IS", "is"));
@@ -159,35 +162,12 @@ public class BaseActionFormTest extends TestCase {
         // converter.setCurrentLocale(locale);
     }
 
-    public void testParseDoubleForInterest() {
-        LocalizationConverter converter = new LocalizationConverter();
-        converter.setCurrentLocale(new Locale("en", "GB"));
-        String doubleStr = "222.12345";
-        Double value = 222.12345;
-        DoubleConversionResult result = baseActionForm.parseDoubleForInterest(doubleStr);
-        Assert.assertEquals(value, result.getDoubleValue());
-
-        doubleStr = "222,12345";
-        result = baseActionForm.parseDoubleForInterest(doubleStr);
-        Assert.assertEquals(ConversionError.NOT_ALL_NUMBER, result.getErrors().get(0));
-        doubleStr = "222a4";
-        result = baseActionForm.parseDoubleForInterest(doubleStr);
-        Assert.assertEquals(ConversionError.NOT_ALL_NUMBER, result.getErrors().get(0));
-        doubleStr = "222.123456";
-        result = baseActionForm.parseDoubleForInterest(doubleStr);
-        Assert.assertEquals(ConversionError.EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_INTEREST, result
-                .getErrors().get(0));
-        doubleStr = "12345678910.12345";
-        result = baseActionForm.parseDoubleForInterest(doubleStr);
-        Assert.assertEquals(ConversionError.EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_INTEREST, result
-                .getErrors().get(0));
-    }
-
     /**
      * Currently broken -- incomplete support for multiple locales for numeric
      * input.
      */
     @Ignore
+    @Test
     public void xtestParseDoubleForInterest_is_IS() {
         LocalizationConverter converter = new LocalizationConverter();
         converter.setCurrentLocale(new Locale("IS", "is"));

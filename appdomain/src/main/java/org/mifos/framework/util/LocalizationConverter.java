@@ -60,11 +60,39 @@ public class LocalizationConverter {
     private Locale dateLocale;
     private char minusSign;
 
+    /**
+     * @deprecated - pull out static use of {@link AccountingRules}, use other constructor which allows for injecting in data values.
+     */
+    @Deprecated
     public LocalizationConverter() {
         digitsAfterDecimalForMoney = AccountingRules.getDigitsAfterDecimal();
         initLocalizationConverter();
     }
 
+    public LocalizationConverter(short digitsAfterDecimalForMoney, short digitsBeforeDecimalForMoney,
+            short digitsAfterDecimalForInterest, short digitsBeforeDecimalForInterest,
+            short digitsBeforeDecimalForCashFlowValidations, short digitsAfterDecimalForCashFlowValidations) {
+        this.digitsAfterDecimalForMoney = digitsAfterDecimalForMoney;
+        this.digitsBeforeDecimalForMoney = digitsBeforeDecimalForMoney;
+        this.digitsAfterDecimalForInterest = digitsAfterDecimalForInterest;
+        this.digitsBeforeDecimalForInterest = digitsBeforeDecimalForInterest;
+        this.digitsBeforeDecimalForCashFlowValidations = digitsBeforeDecimalForCashFlowValidations;
+        this.digitsAfterDecimalForCashFlowValidations = digitsAfterDecimalForCashFlowValidations;
+        currentLocale = Localization.getInstance().getMainLocale();
+        // for this 1.1. release this will be defaulted to the English locale
+        // and
+        // later on this will be the configured locale so these lines will be
+        // removed
+        decimalFormatLocale = new Locale("en", "GB");
+        loadDecimalFormats();
+        dateLocale = new Locale("en", "GB");
+        dateSeparator = getDateSeparator();
+    }
+
+    /**
+     * @deprecated - pull out static use of {@link AccountingRules}, use other constructor which allows for injecting in data values.
+     */
+    @Deprecated
     public LocalizationConverter(MifosCurrency currency) {
         digitsAfterDecimalForMoney = AccountingRules.getDigitsAfterDecimal(currency);
         initLocalizationConverter();

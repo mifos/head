@@ -23,13 +23,14 @@ package org.mifos.framework.components.audit.business.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
-import org.mifos.framework.components.audit.persistence.AuditPersistence;
+import org.mifos.framework.components.audit.persistence.LegacyAuditDao;
 import org.mifos.framework.components.audit.util.helpers.AuditConfiguration;
 import org.mifos.framework.components.audit.util.helpers.AuditConstants;
 import org.mifos.framework.components.audit.util.helpers.AuditLogView;
@@ -46,7 +47,7 @@ public class AuditBusinessService implements BusinessService {
 
     public List<AuditLogView> getAuditLogRecords(Short entityType, Integer entityId) throws ServiceException {
         try {
-            AuditPersistence auditPersistence = new AuditPersistence();
+            LegacyAuditDao auditPersistence = ApplicationContextProvider.getBean(LegacyAuditDao.class);
             PersonnelBusinessService personnelService = new PersonnelBusinessService();
             List<AuditLog> auditLogRecords = auditPersistence.getAuditLogRecords(entityType, entityId);
             List<AuditLogView> auditLogViewList = new ArrayList<AuditLogView>();

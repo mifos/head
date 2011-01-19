@@ -245,6 +245,10 @@ public final class Money implements Serializable, Comparable<Money> {
 
     }
 
+    /**
+     * @deprecated - remove use of static AccountingRules
+     */
+    @Deprecated
     Short getDigitsAfterDecimal() {
         return AccountingRules.getDigitsAfterDecimal(getCurrency());
     }

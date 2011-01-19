@@ -27,15 +27,21 @@ import org.mifos.application.util.helpers.EntityType;
 import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
+import org.mifos.framework.components.audit.persistence.LegacyAuditDao;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.platform.questionnaire.AuditLogService;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.SectionDetail;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class AuditLogServiceImpl implements AuditLogService {
     public static final String CREATE = "create";
+
+    @Autowired
+    private LegacyAuditDao legacyAuditDao;
+
 
     @Override
     public void addAuditLogRegistry(QuestionGroupDetail questionGroupDetail,
@@ -91,7 +97,7 @@ public class AuditLogServiceImpl implements AuditLogService {
             }
             if (!auditLogRecords.isEmpty()) {
                 auditLog.addAuditLogRecords(auditLogRecords);
-                new org.mifos.framework.components.audit.persistence.AuditPersistence().save(auditLog);
+                legacyAuditDao.save(auditLog);
             }
         }
     }

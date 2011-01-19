@@ -37,7 +37,7 @@ import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.ApplicableCharge;
 import org.mifos.dto.domain.UserReferenceDto;
@@ -70,7 +70,7 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
     private AccountBusinessService accountBusinessService;
     private ScheduleCalculatorAdaptor scheduleCalculatorAdaptor;
     private LegacyAcceptedPaymentTypeDao acceptedPaymentTypePersistence;
-    private PersonnelPersistence personnelPersistence;
+    private LegacyPersonnelDao personnelPersistence;
     private LegacyAccountDao legacyAccountDao;
 
     @Autowired
@@ -78,7 +78,7 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
                                        AccountBusinessService accountBusinessService,
                                        ScheduleCalculatorAdaptor scheduleCalculatorAdaptor,
                                        LegacyAcceptedPaymentTypeDao acceptedPaymentTypePersistence,
-                                       PersonnelPersistence personnelPersistence, LegacyAccountDao legacyAccountDao) {
+                                       LegacyPersonnelDao personnelPersistence, LegacyAccountDao legacyAccountDao) {
         this.accountService = accountService;
         this.transactionHelper = transactionHelper;
         this.accountBusinessService = accountBusinessService;

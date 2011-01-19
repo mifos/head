@@ -29,29 +29,43 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
+import org.junit.Before;
 import org.junit.Ignore;
+import org.junit.Test;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.Localization;
 import org.mifos.framework.util.helpers.ConversionError;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.DoubleConversionResult;
-import org.testng.annotations.Test;
 
-@Test(groups = { "unit", "fastTestsSuite" }, dependsOnGroups = { "productMixTestSuite" })
-public class LocalizationConverterTest extends TestCase {
+public class LocalizationConverterTest {
 
+    private LocalizationConverter converter;
+
+    @Before
+    public void setup() {
+        short digitsAfterDecimalForMoney = Short.valueOf("1");
+        short digitsBeforeDecimalForMoney= Short.valueOf("1");
+        short digitsAfterDecimalForInterest = Short.valueOf("5");
+        short digitsBeforeDecimalForInterest = Short.valueOf("1");
+        short digitsBeforeDecimalForCashFlowValidations = Short.valueOf("1");
+        short digitsAfterDecimalForCashFlowValidations = Short.valueOf("5");
+
+        converter = new LocalizationConverter(digitsAfterDecimalForMoney, digitsBeforeDecimalForMoney, digitsAfterDecimalForInterest,
+                digitsBeforeDecimalForInterest, digitsBeforeDecimalForCashFlowValidations, digitsAfterDecimalForCashFlowValidations);
+    }
+
+    @Test
     public void testDateFormattingWithFourDigitsInYear() throws Exception {
-        LocalizationConverter instance = new LocalizationConverter();
-        DateFormat dateFormat = instance.getDateFormatWithFullYear();
+        DateFormat dateFormat = converter.getDateFormatWithFullYear();
         Assert.assertEquals("13/12/2008", dateFormat.format(DateUtils.getDate(2008, Calendar.DECEMBER, 13)));
     }
 
+    @Test
     public void testGetDecimalFormatSymbol() {
         Locale locale = Localization.getInstance().getMainLocale();
-        LocalizationConverter converter = new LocalizationConverter();
         char sep = '.';
         if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN")) {
             Assert.assertEquals(sep, converter.getDecimalFormatSymbol());
@@ -62,12 +76,12 @@ public class LocalizationConverterTest extends TestCase {
         converter.setCurrentLocale(locale);
     }
 
+    @Test
     public void testGetDoubleStringForMoney() {
 
         String doubleValueString = "2.5";
         Double dValue = 2.5000000000;
         Locale locale = Localization.getInstance().getMainLocale();
-        LocalizationConverter converter = new LocalizationConverter();
         String dString = converter.getDoubleStringForMoney(dValue);
         if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN")) {
             Assert.assertEquals(doubleValueString, dString);
@@ -79,12 +93,12 @@ public class LocalizationConverterTest extends TestCase {
         converter.setCurrentLocale(locale);
     }
 
+    @Test
     public void testGetDoubleStringForInterest() {
 
         String doubleValueString = "2123.12345";
         Double dValue = 2123.12345000000;
         Locale locale = Localization.getInstance().getMainLocale();
-        LocalizationConverter converter = new LocalizationConverter();
         String dString = converter.getDoubleStringForInterest(dValue);
         if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN")) {
             Assert.assertEquals(doubleValueString, dString);
@@ -96,12 +110,12 @@ public class LocalizationConverterTest extends TestCase {
         converter.setCurrentLocale(locale);
     }
 
+    @Test
     public void testGetDoubleValueString() {
 
         String doubleValueString = "2.59";
         Double dValue = 2.59;
         Locale locale = Localization.getInstance().getMainLocale();
-        LocalizationConverter converter = new LocalizationConverter();
         String dString = converter.getDoubleValueString(dValue);
         if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN")) {
             Assert.assertEquals(doubleValueString, dString);
@@ -118,10 +132,10 @@ public class LocalizationConverterTest extends TestCase {
      * input.
      */
     @Ignore
+    @Test
     public void testGetDateSeparator() {
         String separator = "/";
         Locale locale = Localization.getInstance().getMainLocale();
-        LocalizationConverter converter = new LocalizationConverter();
         String dateSeparator = converter.getDateSeparatorForCurrentLocale();
         if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN")) {
             Assert.assertEquals(separator, dateSeparator);
@@ -133,6 +147,7 @@ public class LocalizationConverterTest extends TestCase {
 
     }
 
+    @Test
     public void testParseDoubleForMoney() {
         String doubleValueString = "2.5";
         Double dValue = 2.5;
@@ -140,7 +155,6 @@ public class LocalizationConverterTest extends TestCase {
         Short digitsAfterForMoney = 1;
         AccountingRules.setDigitsAfterDecimal(digitsAfterForMoney);
         Locale locale = Localization.getInstance().getMainLocale();
-        LocalizationConverter converter = new LocalizationConverter();
         DoubleConversionResult result = converter.parseDoubleForMoney(doubleValueString);
         if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN")) {
             Assert.assertEquals(result.getDoubleValue(), dValue);
@@ -167,6 +181,7 @@ public class LocalizationConverterTest extends TestCase {
 
     }
 
+    @Test
     public void testParseDoubleForInstallmentTotalAmount() {
         MifosCurrency mifosCurrency = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
         LocalizationConverter localizationConverter = new LocalizationConverter(mifosCurrency);
@@ -180,6 +195,7 @@ public class LocalizationConverterTest extends TestCase {
         assertThat(result.getErrors().get(0), is(ConversionError.EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_MONEY));
     }
 
+    @Test
     public void testParseDoubleForInterest() {
         String doubleValueString = "222.59562";
         Double dValue = 222.59562;
@@ -187,8 +203,20 @@ public class LocalizationConverterTest extends TestCase {
         Short digitsAfterForInterest = 5;
         AccountingRules.setDigitsAfterDecimalForInterest(digitsAfterForInterest);
         Locale locale = Localization.getInstance().getMainLocale();
-        LocalizationConverter converter = new LocalizationConverter();
+
+
+        short digitsAfterDecimalForMoney = Short.valueOf("1");
+        short digitsBeforeDecimalForMoney= Short.valueOf("1");
+        short digitsAfterDecimalForInterest = Short.valueOf("5");
+        short digitsBeforeDecimalForInterest = Short.valueOf("6");
+        short digitsBeforeDecimalForCashFlowValidations = Short.valueOf("1");
+        short digitsAfterDecimalForCashFlowValidations = Short.valueOf("5");
+
+        converter = new LocalizationConverter(digitsAfterDecimalForMoney, digitsBeforeDecimalForMoney, digitsAfterDecimalForInterest,
+                digitsBeforeDecimalForInterest, digitsBeforeDecimalForCashFlowValidations, digitsAfterDecimalForCashFlowValidations);
+
         DoubleConversionResult result = converter.parseDoubleForInterest(doubleValueString);
+
         if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN")) {
             Assert.assertEquals(result.getDoubleValue(), dValue);
             // if the wrong decimal separator is entered, error will be returned
@@ -212,6 +240,7 @@ public class LocalizationConverterTest extends TestCase {
 
     }
 
+    @Test
     public void testParseDoubleForCashFlowValidations() {
         MifosCurrency mifosCurrency = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
         LocalizationConverter localizationConverter = new LocalizationConverter(mifosCurrency);
@@ -240,11 +269,11 @@ public class LocalizationConverterTest extends TestCase {
      * get convert a string to a double to the config locale and the format is
      * the money format 7.1
      */
+    @Test
     public void testGetDoubleValueForCurrentLocale() {
         String doubleValueString = "223.59";
         Double dValue = 223.59;
         Locale locale = Localization.getInstance().getMainLocale();
-        LocalizationConverter converter = new LocalizationConverter();
         Double dNumber = converter.getDoubleValueForCurrentLocale(doubleValueString);
         if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN")) {
             Assert.assertEquals(dNumber, dValue);
@@ -271,5 +300,4 @@ public class LocalizationConverterTest extends TestCase {
         converter.setCurrentLocale(locale);
 
     }
-
 }

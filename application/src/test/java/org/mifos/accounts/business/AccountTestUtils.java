@@ -25,7 +25,8 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
+import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class AccountTestUtils {
@@ -54,7 +55,7 @@ public class AccountTestUtils {
 
     public static List<AccountTrxnEntity> reversalAdjustment(String adjustmentComment, AccountPaymentEntity lastPayment)
             throws Exception {
-        return lastPayment.reversalAdjustment(new PersonnelPersistence().getPersonnel(TestObjectFactory.getContext()
+        return lastPayment.reversalAdjustment(ApplicationContextProvider.getBean(LegacyPersonnelDao.class).getPersonnel(TestObjectFactory.getContext()
                 .getId()), adjustmentComment);
 
     }

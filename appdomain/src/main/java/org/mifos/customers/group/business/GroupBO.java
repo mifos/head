@@ -72,18 +72,17 @@ public class GroupBO extends CustomerBO {
     public static GroupBO createGroupWithCenterAsParent(UserContext userContext, String groupName,
             PersonnelBO formedBy, CustomerBO parentCustomer,
             Address address, String externalId, boolean trained,
-            DateTime trainedOn, CustomerStatus customerStatus) {
+            DateTime trainedOn, CustomerStatus customerStatus, DateTime mfiJoiningDate, DateTime activationDate) {
 
         Assert.notNull(customerStatus, "customerStatus cannot be null");
         Assert.notNull(parentCustomer, "parentCustomer cannot be null");
 
-        DateTime mfiJoiningDate = new DateTime().toDateMidnight().toDateTime();
         PersonnelBO loanOfficer = parentCustomer.getPersonnel();
         OfficeBO office = parentCustomer.getOffice();
         MeetingBO meeting = parentCustomer.getCustomerMeetingValue();
 
         GroupBO group = new GroupBO(userContext, groupName, formedBy, meeting, loanOfficer, office, customerStatus,
-                mfiJoiningDate);
+                mfiJoiningDate, activationDate);
 
         group.childAddedForParent(parentCustomer);
         group.setParentCustomer(parentCustomer);
@@ -105,19 +104,13 @@ public class GroupBO extends CustomerBO {
             }
         }
 
-//        List<CustomerCustomFieldEntity> populatedWithCustomerReference = CustomerCustomFieldEntity
-//                .fromCustomerCustomFieldEntity(customerCustomFields, group);
-//        for (CustomerCustomFieldEntity customerCustomFieldEntity : populatedWithCustomerReference) {
-//            group.addCustomField(customerCustomFieldEntity);
-//        }
-
         return group;
     }
 
     public static GroupBO createGroupAsTopOfCustomerHierarchy(UserContext userContext, String groupName,
             PersonnelBO formedBy, MeetingBO meeting, PersonnelBO loanOfficer, OfficeBO office,
             Address address, String externalId, boolean trained,
-            DateTime trainedOn, CustomerStatus customerStatus, int numberOfCustomersInOfficeAlready) {
+            DateTime trainedOn, CustomerStatus customerStatus, int numberOfCustomersInOfficeAlready, DateTime mfiJoiningDate, DateTime activationDate) {
 
         Assert.notNull(customerStatus, "customerStatus cannot be null");
 
@@ -125,9 +118,7 @@ public class GroupBO extends CustomerBO {
             Assert.notNull(meeting, "meeting cannot be null when group is active");
         }
 
-        DateTime mfiJoiningDate = new DateTime().toDateMidnight().toDateTime();
-        GroupBO group = new GroupBO(userContext, groupName, formedBy, meeting, loanOfficer, office, customerStatus,
-                mfiJoiningDate);
+        GroupBO group = new GroupBO(userContext, groupName, formedBy, meeting, loanOfficer, office, customerStatus, mfiJoiningDate, activationDate);
 
         final String searchId = GroupConstants.PREFIX_SEARCH_STRING + (numberOfCustomersInOfficeAlready + 1);
         group.setSearchId(searchId);
@@ -137,12 +128,6 @@ public class GroupBO extends CustomerBO {
         if (trained) {
             group.setTrainedDate(trainedOn.toDate());
         }
-
-//        List<CustomerCustomFieldEntity> populatedWithCustomerReference = CustomerCustomFieldEntity
-//                .fromCustomerCustomFieldEntity(customerCustomFields, group);
-//        for (CustomerCustomFieldEntity customerCustomFieldEntity : populatedWithCustomerReference) {
-//            group.addCustomField(customerCustomFieldEntity);
-//        }
 
         return group;
     }
@@ -158,11 +143,12 @@ public class GroupBO extends CustomerBO {
      * minimal legal constructor
      */
     private GroupBO(UserContext userContext, String groupName, PersonnelBO formedBy, MeetingBO meeting,
-            PersonnelBO loanOfficer, OfficeBO office, CustomerStatus customerStatus, DateTime mfiJoiningDate) {
+            PersonnelBO loanOfficer, OfficeBO office, CustomerStatus customerStatus, DateTime mfiJoiningDate, DateTime activationDate) {
         super(userContext, groupName, CustomerLevel.GROUP, customerStatus, mfiJoiningDate, office, meeting, loanOfficer, formedBy);
         this.groupPerformanceHistory = new GroupPerformanceHistoryEntity(this);
-        if (getStatus().equals(CustomerStatus.GROUP_ACTIVE)) {
-            this.setCustomerActivationDate(this.getCreatedDate());
+        if (isActive()) {
+            this.setCustomerActivationDate(activationDate.toDate());
+            this.updateCustomerHierarchy();
         }
     }
 
@@ -213,7 +199,7 @@ public class GroupBO extends CustomerBO {
 
     @Override
     public boolean isActive() {
-        return getStatus() == CustomerStatus.GROUP_ACTIVE;
+        return getStatus().equals(CustomerStatus.GROUP_ACTIVE);
     }
 
     public GroupPerformanceHistoryEntity getGroupPerformanceHistory() {

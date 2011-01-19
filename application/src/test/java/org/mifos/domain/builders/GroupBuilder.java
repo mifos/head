@@ -45,7 +45,6 @@ public class GroupBuilder {
     private PersonnelBO loanOfficer;
     private CustomerStatus customerStatus = CustomerStatus.GROUP_ACTIVE;
     private CustomerBO parentCustomer = new CenterBuilder().build();
-//    private List<CustomerCustomFieldEntity> customerCustomFields = new ArrayList<CustomerCustomFieldEntity>();
     private Address address;
     private String externalId;
     private boolean trained = false;
@@ -61,8 +60,10 @@ public class GroupBuilder {
             this.formedBy = this.loanOfficer;
         }
 
+        DateTime mfiJoiningDate = new DateTime().toDateMidnight().toDateTime();
+        DateTime activationDate = new DateTime().toDateMidnight().toDateTime();
         group = GroupBO.createGroupWithCenterAsParent(userContext, name, formedBy, parentCustomer,
-                address, externalId, trained, trainedOn, customerStatus);
+                address, externalId, trained, trainedOn, customerStatus, mfiJoiningDate, activationDate);
 
         if (this.versionNumber != null) {
             group.setVersionNo(versionNumber);
@@ -78,8 +79,10 @@ public class GroupBuilder {
         }
 
         UserContext userContext = TestUtils.makeUser();
+        DateTime mfiJoiningDate = new DateTime().toDateMidnight().toDateTime();
+        DateTime activationDate = new DateTime().toDateMidnight().toDateTime();
         group = GroupBO.createGroupAsTopOfCustomerHierarchy(userContext, name, formedBy, meeting, loanOfficer, office,
-                address, externalId, trained, trainedOn, customerStatus, numberOfChildrenUnderBranch);
+                address, externalId, trained, trainedOn, customerStatus, numberOfChildrenUnderBranch, mfiJoiningDate, activationDate);
 
         return group;
     }

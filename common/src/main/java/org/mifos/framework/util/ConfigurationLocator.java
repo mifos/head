@@ -20,16 +20,18 @@
 
 package org.mifos.framework.util;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Encapsulates logic for determining which directory to look in for
@@ -63,8 +65,7 @@ public class ConfigurationLocator {
      * used to find files in cases where we don't care if the file cannot be
      * found.
      */
-    @SuppressWarnings({"PMD.EmptyCatchBlock", // see comment in empty catch block, below
-                      "PMD.AvoidThrowingRawExceptionTypes"}) // being lazy; RuntimeException should be rare
+    @SuppressWarnings("PMD")
     public String getSpringFilePath(String filename) {
         String returnValue = null;
         try {
@@ -79,6 +80,30 @@ public class ConfigurationLocator {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        if (StringUtils.isBlank(returnValue)) {
+            // try and find it on class path instead
+            String configFilePath = "org/mifos/config/resources/" + filename;
+            ClassPathResource configfile = new ClassPathResource(configFilePath);
+            logger.info("Checking on classpath for existance of: " + configFilePath);
+
+            Properties props = new Properties();
+            if (configfile.exists()) {
+                logger.info(configfile.getFilename() + " exists on classpath");
+                InputStream in = ConfigurationLocator.class.getClassLoader().getResourceAsStream(configFilePath);
+                if (in != null) {
+                    try {
+                        props.load(in);
+                        logger.info(props.toString());
+                        returnValue = "classpath:" + configFilePath;
+                        logger.info("returning: " + returnValue);
+                    } catch (IOException e) {
+                        returnValue = "";
+                    }
+                }
+            }
+        }
+
         return returnValue;
     }
 

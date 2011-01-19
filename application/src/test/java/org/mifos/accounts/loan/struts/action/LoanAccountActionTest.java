@@ -19,24 +19,6 @@
  */
 
 package org.mifos.accounts.loan.struts.action;
-import static java.util.Arrays.asList;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.PERSPECTIVE_VALUE_REDO_LOAN;
-import static org.mifos.accounts.loan.util.helpers.RequestConstants.PERSPECTIVE;
-import static org.mockito.Matchers.anyShort;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import java.math.BigDecimal;
-import java.util.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -47,7 +29,6 @@ import org.junit.runner.RunWith;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.business.service.OriginalScheduleInfoDto;
-import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
@@ -62,27 +43,36 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.dto.domain.LoanAccountDetailsDto;
 import org.mifos.dto.screen.LoanCreationPreviewDto;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Flow;
 import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.platform.cashflow.ui.model.CashFlowForm;
-import org.mifos.platform.questionnaire.service.*;
+import org.mifos.platform.questionnaire.service.QuestionDetail;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
+import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
+import org.mifos.platform.questionnaire.service.QuestionType;
+import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
+import org.mifos.platform.questionnaire.service.SectionDetail;
+import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
 import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
 import org.mifos.platform.validations.Errors;
-import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
@@ -92,7 +82,11 @@ import static org.mifos.accounts.loan.util.helpers.RequestConstants.PERSPECTIVE;
 import static org.mockito.Matchers.anyShort;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LoanAccountActionTest {
@@ -374,11 +368,29 @@ public class LoanAccountActionTest {
 
     @Test
     public void getLoanRepaymentScheduleShouldCalculateExtraInterest() throws Exception {
+        when(loanBusinessService.computeExtraInterest(eq(loanBO), Matchers.<Date>any())).thenReturn(new Errors());
         when(request.getParameter("accountId")).thenReturn("1");
         when(loanServiceFacade.retrieveOriginalLoanSchedule(Matchers.<Integer>any(), Matchers.<Locale>anyObject())).
                 thenReturn(new OriginalScheduleInfoDto("100", new Date(), Collections.<RepaymentScheduleInstallment>emptyList()));
         loanAccountAction.getLoanRepaymentSchedule(mapping, form, request, response);
         verify(loanBusinessService, times(1)).computeExtraInterest(Matchers.<LoanBO>any(), Matchers.<Date>any());
+    }
+
+    @Test
+    public void getLoanRepaymentScheduleShouldValidateViewDate() throws Exception {
+        ActionForward getLoanScheduleFailure = new ActionForward("getLoanRepaymentScheduleFailure");
+        java.sql.Date extraInterestDate = TestUtils.getSqlDate(10, 7, 2010);
+        Errors errors = new Errors();
+        errors.addError(LoanConstants.CANNOT_VIEW_REPAYMENT_SCHEDULE, new String[] {extraInterestDate.toString()});
+        when(loanBusinessService.computeExtraInterest(loanBO, extraInterestDate)).thenReturn(errors);
+        when(form.getScheduleViewDateValue(Locale.US)).thenReturn(extraInterestDate);
+        when(request.getParameter("accountId")).thenReturn("1");
+        when(mapping.findForward("getLoanRepaymentScheduleFailure")).thenReturn(getLoanScheduleFailure);
+        when(loanServiceFacade.retrieveOriginalLoanSchedule(Matchers.<Integer>any(), Matchers.<Locale>anyObject())).
+                thenReturn(new OriginalScheduleInfoDto("100", new Date(), Collections.<RepaymentScheduleInstallment>emptyList()));
+        ActionForward forward = loanAccountAction.getLoanRepaymentSchedule(mapping, form, request, response);
+        assertThat(forward, is(getLoanScheduleFailure));
+        verify(form).resetScheduleViewDate();
     }
 
     @Test

@@ -48,7 +48,7 @@ import org.mifos.config.FiscalCalendarRules;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.DatabaseDependentTest;
@@ -60,6 +60,7 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.service.test.TestMode;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Log4jConfigurer;
@@ -80,6 +81,9 @@ public class MifosIntegrationTestCase {
     private static Boolean isTestingModeSet = false;
 
     private static IDataSet latestDataDump;
+
+    @Autowired
+    protected LegacyPersonnelDao legacyPersonnelDao;
 
     /**
      * This is a switch to enable verification of database (cleanup) at the end of an integration tests. i.e. if a test
@@ -172,7 +176,7 @@ public class MifosIntegrationTestCase {
      */
     protected PersonnelBO getSystemUser() {
         try {
-            return new PersonnelPersistence().getPersonnel(PersonnelConstants.SYSTEM_USER);
+            return legacyPersonnelDao.getPersonnel(PersonnelConstants.SYSTEM_USER);
         } catch (PersistenceException e) {
             throw new RuntimeException(e);
         }
@@ -183,7 +187,7 @@ public class MifosIntegrationTestCase {
      */
     protected PersonnelBO getTestUser() {
         try {
-            return new PersonnelPersistence().getPersonnel(PersonnelConstants.TEST_USER);
+            return legacyPersonnelDao.getPersonnel(PersonnelConstants.TEST_USER);
         } catch (PersistenceException e) {
             throw new RuntimeException(e);
         }

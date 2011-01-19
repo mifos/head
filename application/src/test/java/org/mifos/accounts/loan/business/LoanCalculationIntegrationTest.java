@@ -77,7 +77,7 @@ import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.core.ClasspathResource;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
@@ -299,7 +299,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                 loanParams.getNumberOfPayments());
         // before any payment is made
         printLoanScheduleEntities(paymentsArray);
-        PersonnelBO personnelBO = new PersonnelPersistence().getPersonnel(userContext.getId());
+        PersonnelBO personnelBO = legacyPersonnelDao.getPersonnel(userContext.getId());
 
         LoanScheduleEntity loanSchedule = null;
         Short paymentTypeId = PaymentTypes.CASH.getValue();
@@ -403,7 +403,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                 loanParams.getNumberOfPayments());
         // before any payment is made
         printLoanScheduleEntities(paymentsArray);
-        PersonnelBO personnelBO = new PersonnelPersistence().getPersonnel(userContext.getId());
+        PersonnelBO personnelBO = legacyPersonnelDao.getPersonnel(userContext.getId());
 
         LoanScheduleEntity loanSchedule = null;
         Short paymentTypeId = PaymentTypes.CASH.getValue();
@@ -498,7 +498,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         Set<AccountActionDateEntity> actionDateEntities = loan.getAccountActionDates();
         LoanScheduleEntity[] paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(actionDateEntities,
                 loanParams.getNumberOfPayments());
-        PersonnelBO personnelBO = new PersonnelPersistence().getPersonnel(userContext.getId());
+        PersonnelBO personnelBO = legacyPersonnelDao.getPersonnel(userContext.getId());
 
         LoanScheduleEntity loanSchedule = null;
         Short paymentTypeId = PaymentTypes.CASH.getValue();
@@ -533,7 +533,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         Set<AccountActionDateEntity> actionDateEntities = loan.getAccountActionDates();
         LoanScheduleEntity[] paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(actionDateEntities,
                 loanParams.getNumberOfPayments());
-        PersonnelBO personnelBO = new PersonnelPersistence().getPersonnel(userContext.getId());
+        PersonnelBO personnelBO = legacyPersonnelDao.getPersonnel(userContext.getId());
 
         LoanScheduleEntity loanSchedule = null;
         Short paymentTypeId = PaymentTypes.CASH.getValue();
@@ -603,7 +603,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                 loanParams.getNumberOfPayments());
         // before any payment is made
         printLoanScheduleEntities(paymentsArray);
-        PersonnelBO personnelBO = new PersonnelPersistence().getPersonnel(userContext.getId());
+        PersonnelBO personnelBO = legacyPersonnelDao.getPersonnel(userContext.getId());
 
         LoanScheduleEntity loanSchedule = null;
         Short paymentTypeId = PaymentTypes.CASH.getValue();
@@ -892,7 +892,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         Set<AccountActionDateEntity> actionDateEntities = loan.getAccountActionDates();
         LoanScheduleEntity[] paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(actionDateEntities,
                 loanParams.getNumberOfPayments());
-        PersonnelBO personnelBO = new PersonnelPersistence().getPersonnel(userContext.getId());
+        PersonnelBO personnelBO = legacyPersonnelDao.getPersonnel(userContext.getId());
 
         LoanScheduleEntity loanSchedule = null;
         Short paymentTypeId = PaymentTypes.CASH.getValue();
@@ -960,7 +960,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         Set<AccountActionDateEntity> actionDateEntities = loan.getAccountActionDates();
         LoanScheduleEntity[] paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(actionDateEntities,
                 loanParams.getNumberOfPayments());
-        PersonnelBO personnelBO = new PersonnelPersistence().getPersonnel(userContext.getId());
+        PersonnelBO personnelBO = legacyPersonnelDao.getPersonnel(userContext.getId());
         LoanScheduleEntity loanSchedule = null;
         Short paymentTypeId = PaymentTypes.CASH.getValue();
         for (LoanScheduleEntity element : paymentsArray) {

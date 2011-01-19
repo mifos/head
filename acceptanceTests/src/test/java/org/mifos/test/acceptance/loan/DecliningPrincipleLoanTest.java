@@ -104,6 +104,8 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
     @Test(enabled=true)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyLoanPayment() throws Exception {
+        applicationDatabaseOperation.updateLSIM(1);
+        applicationDatabaseOperation.updateGapBetweenDisbursementAndFirstMeetingDate(2);
         new FeeTestHelper(dataSetup).createPeriodicFee(feeName, FeesCreatePage.SubmitFormParameters.LOAN, FeesCreatePage.SubmitFormParameters.WEEKLY_FEE_RECURRENCE, 1, 100);
         int noOfInstallments = 4;
         DefineNewLoanProductPage.SubmitFormParameters formParameters = loanProductTestHelper.defineLoanProductParameters(noOfInstallments, 1000, 24, interestType);

@@ -60,7 +60,6 @@ public class ClientCustActionFormTest extends TestCase {
                 clientCanExistOutsideGroupKey);
 
         ClientRules.setConfigPersistence(configPersistence);
-        ClientRules.init();
         minimumAgeForNewClientBeforeTestRun = ClientRules.getMinimumAgeForNewClient();
         maximumAgeForNewClientBeforeTestRun = ClientRules.getMaximumAgeForNewClient();
         ageCheckSettingBeforeTestRun = ClientRules.isAgeCheckEnabled();

@@ -25,6 +25,7 @@ import static org.junit.Assert.assertEquals;
 import java.util.Locale;
 
 import org.apache.struts.action.ActionErrors;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.framework.TestUtils;
 
@@ -42,6 +43,7 @@ public class ApplyChargeActionFormTest {
     /**
      * Test method for <b>ApplyChargeActionForm#validateAmount(ActionErrors, Locale)</b>.
      */
+    @Ignore
     @Test
     public void testValidateValidRate() {
         ApplyChargeActionForm form = new ApplyChargeActionForm();

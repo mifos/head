@@ -41,7 +41,7 @@ import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.struts.actionforms.CustSearchActionForm;
 import org.mifos.customers.util.helpers.CustomerConstants;
@@ -105,7 +105,7 @@ public class CustSearchAction extends SearchAction {
         CustSearchActionForm actionForm = (CustSearchActionForm) form;
 
         if (StringUtils.isNotBlank(actionForm.getOfficeId())) {
-            List<PersonnelBO> personnelList = new PersonnelPersistence().getActiveLoanOfficersUnderOffice(getShortValue(actionForm.getOfficeId()));
+            List<PersonnelBO> personnelList = legacyPersonnelDao.getActiveLoanOfficersUnderOffice(getShortValue(actionForm.getOfficeId()));
             SessionUtils.setCollectionAttribute(CustomerSearchConstants.LOANOFFICERSLIST, personnelList, request);
         }
 
@@ -233,7 +233,7 @@ public class CustSearchAction extends SearchAction {
 
     private String loadMasterData(Short userId, HttpServletRequest request, CustSearchActionForm form) throws Exception {
         UserDetailDto userDetails = this.centerServiceFacade.retrieveUsersDetails(userId);
-        PersonnelBO personnel = new PersonnelPersistence().getPersonnel(userId);
+        PersonnelBO personnel = legacyPersonnelDao.getPersonnel(userId);
         SessionUtils.setAttribute(CustomerSearchConstants.OFFICE, userDetails.getOfficeName(), request);
         if (userDetails.isLoanOfficer()) {
             return loadLoanOfficer(personnel, request);
@@ -269,7 +269,7 @@ public class CustSearchAction extends SearchAction {
     private String loadNonLoanOfficer(PersonnelBO personnel, HttpServletRequest request, CustSearchActionForm form)
             throws Exception {
         if (personnel.getOffice().getOfficeLevel().equals(OfficeLevel.BRANCHOFFICE)) {
-            List<PersonnelBO> personnelList = new PersonnelPersistence().getActiveLoanOfficersUnderOffice(personnel.getOffice().getOfficeId());
+            List<PersonnelBO> personnelList = legacyPersonnelDao.getActiveLoanOfficersUnderOffice(personnel.getOffice().getOfficeId());
             SessionUtils.setCollectionAttribute(CustomerSearchConstants.LOANOFFICERSLIST, personnelList, request);
             SessionUtils.setAttribute(CustomerSearchConstants.LOADFORWARD, CustomerSearchConstants.LOADFORWARDNONLOANOFFICER, request);
             form.setOfficeId(personnel.getOffice().getOfficeId().toString());
