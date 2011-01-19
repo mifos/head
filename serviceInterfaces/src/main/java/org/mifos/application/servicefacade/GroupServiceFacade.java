@@ -39,10 +39,10 @@ public interface GroupServiceFacade {
     @PreAuthorize("isFullyAuthenticated()")
     CenterHierarchySearchDto isCenterHierarchyConfigured();
 
-    @PreAuthorize("isFullyAuthenticated() and hasAnyRole('ROLE_CHANGE_GROUP_ACTIVE_STATE', 'ROLE_CREATE_GROUP_IN_SAVE_FOR_LATER_STATE', 'ROLE_CREATE_GROUP_IN_SUBMIT_FOR_APPROVAL_STATE', 'ROLE_CHANGE_GROUP_TO_PARTIAL_APPL_STATE')")
+//    @PreAuthorize("isFullyAuthenticated() and hasAnyRole('ROLE_CHANGE_GROUP_ACTIVE_STATE', 'ROLE_CREATE_GROUP_IN_SAVE_FOR_LATER_STATE', 'ROLE_CREATE_GROUP_IN_SUBMIT_FOR_APPROVAL_STATE', 'ROLE_CHANGE_GROUP_TO_PARTIAL_APPL_STATE')")
     GroupFormCreationDto retrieveGroupFormCreationData(GroupCreation groupCreation);
 
-    @PreAuthorize("isFullyAuthenticated() and hasAnyRole('ROLE_CHANGE_GROUP_ACTIVE_STATE', 'ROLE_CREATE_GROUP_IN_SAVE_FOR_LATER_STATE', 'ROLE_CREATE_GROUP_IN_SUBMIT_FOR_APPROVAL_STATE', 'ROLE_CHANGE_GROUP_TO_PARTIAL_APPL_STATE')")
+//    @PreAuthorize("isFullyAuthenticated() and hasAnyRole('ROLE_CHANGE_GROUP_ACTIVE_STATE', 'ROLE_CREATE_GROUP_IN_SAVE_FOR_LATER_STATE', 'ROLE_CREATE_GROUP_IN_SUBMIT_FOR_APPROVAL_STATE', 'ROLE_CHANGE_GROUP_TO_PARTIAL_APPL_STATE')")
     CustomerDetailsDto createNewGroup(GroupCreationDetail groupCenterDetail, MeetingDto meetingDto);
 
     @PreAuthorize("isFullyAuthenticated()")
