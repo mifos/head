@@ -3717,6 +3717,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
     public void testCreateNormalLoanAccountWithMonthlyInstallments() throws Exception {
         Short dayOfMonth = (short) 1;
 
+        new DateTimeService().setCurrentDateTimeFixed(date(2010,10,13));
+
         /*
          * A date in the past won't work (we don't yet have a way of telling the
          * validation code "pretend it is such-and-such a date"). The
@@ -5163,6 +5165,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
         Session session = StaticHibernateUtil.getSessionTL();
         StaticHibernateUtil.startTransaction();
+
+        new DateTimeService().setCurrentDateTimeFixed(date(2010,10,13));
 
         //setup
         DateTime startDate = new DateTime().withDate(2010, 10, 15).toDateMidnight().toDateTime(); // Friday

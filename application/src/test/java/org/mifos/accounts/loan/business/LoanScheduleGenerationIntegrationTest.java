@@ -141,6 +141,8 @@ public class LoanScheduleGenerationIntegrationTest {
     @Test
     public void testNewWeeklyGroupLoanNoFeesNoHoliday() throws Exception {
 
+        new DateTimeService().setCurrentDateTimeFixed(date(2010,10,13));
+
         LoanBO loan = createWeeklyGroupLoanWithDisbursementDateWithOccurrences(date(2010, 10, 15), 9); //Meets on Fridays
 
         /*
