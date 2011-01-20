@@ -26,7 +26,6 @@ import java.util.Locale;
 
 import org.joda.time.DateTime;
 import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
-import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.service.LoanInformationDto;
 import org.mifos.accounts.loan.business.service.OriginalScheduleInfoDto;
@@ -62,9 +61,6 @@ public interface LoanServiceFacade {
      */
     @Deprecated
     LoanBO previewLoanRedoDetails(Integer customerId, LoanAccountActionForm loanAccountActionForm, DateTime disbursementDate);
-
-    void makeEarlyRepayment(String globalAccountNum, String earlyRepayAmount, String receiptNumber,
-                            java.sql.Date receiptDate, String paymentTypeId, Short id, boolean waiveInterest) throws AccountException;
 
     LoanInformationDto getLoanInformationDto(String globalAccountNum, UserContext userContext) throws ServiceException;
 

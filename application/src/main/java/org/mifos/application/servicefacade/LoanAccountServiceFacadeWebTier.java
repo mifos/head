@@ -46,6 +46,7 @@ import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.struts.action.validate.ProductMixValidator;
+import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.productdefinition.business.LoanAmountOption;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -803,6 +804,24 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             return loan.isTrxnDateValid(trxnDate, meetingDate, repaymentIndependentOfMeetingEnabled);
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
+        }
+    }
+
+    @Override
+    public void makeEarlyRepayment(String globalAccountNum, String earlyRepayAmountStr,
+                                   String receiptNumber, java.sql.Date receiptDate,
+                                   String paymentTypeId, Short userId, boolean waiveOffInterest) {
+
+        try {
+            LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
+            if (waiveOffInterest && !loan.isInterestWaived()) {
+                throw new BusinessRuleException(LoanConstants.WAIVER_INTEREST_NOT_CONFIGURED);
+            }
+            Money earlyRepayAmount = new Money(loan.getCurrency(), earlyRepayAmountStr);
+
+            loan.makeEarlyRepayment(earlyRepayAmount, receiptNumber, receiptDate, paymentTypeId, userId, waiveOffInterest);
+        } catch (AccountException e) {
+            throw new BusinessRuleException(e.getKey(), e);
         }
     }
 }

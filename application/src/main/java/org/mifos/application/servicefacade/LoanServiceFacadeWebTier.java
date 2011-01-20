@@ -490,18 +490,6 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         }
     }
 
-    @Override
-    public void makeEarlyRepayment(String globalAccountNum, String earlyRepayAmountStr, String receiptNumber,
-                                   java.sql.Date receiptDate, String paymentTypeId, Short userId, boolean waiveOffInterest) throws AccountException {
-
-        LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
-        if (waiveOffInterest && !loan.isInterestWaived()) {
-            throw new AccountException(LoanConstants.WAIVER_INTEREST_NOT_CONFIGURED);
-        }
-        Money earlyRepayAmount = new Money(loan.getCurrency(), earlyRepayAmountStr);
-        loan.makeEarlyRepayment(earlyRepayAmount, receiptNumber, receiptDate, paymentTypeId, userId, waiveOffInterest);
-    }
-
     public LoanInformationDto getLoanInformationDto(String globalAccountNum, UserContext userContext) throws ServiceException {
         LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
         String fundName = null;

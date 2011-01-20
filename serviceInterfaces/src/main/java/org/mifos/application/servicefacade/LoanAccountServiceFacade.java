@@ -84,4 +84,7 @@ public interface LoanAccountServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     boolean isTrxnDateValid(Integer loanAccountId, Date trxnDate);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    void makeEarlyRepayment(String globalAccountNum, String earlyRepayAmount, String receiptNumber, java.sql.Date receiptDate, String paymentTypeId, Short id, boolean waiveInterest);
 }
