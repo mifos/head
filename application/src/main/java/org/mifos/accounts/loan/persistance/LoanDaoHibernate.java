@@ -87,12 +87,12 @@ public class LoanDaoHibernate implements LoanDao {
     }
 
     @SuppressWarnings("unchecked")
-    public List<LoanBO> findIndividualLoans(final String accountId) {
+    public List<LoanBO> findIndividualLoans(final Integer accountId) {
 
         List<LoanBO> individualLoans = new ArrayList<LoanBO>();
 
         Map<String, Integer> queryParameters = new HashMap<String, Integer>();
-        queryParameters.put(LoanConstants.LOANACCOUNTID, new Integer(accountId));
+        queryParameters.put(LoanConstants.LOANACCOUNTID, accountId);
         List<LoanBO> queryResult = (List<LoanBO>) this.genericDao.executeNamedQuery(NamedQueryConstants.FIND_INDIVIDUAL_LOANS, queryParameters);
         if (queryResult != null) {
             individualLoans.addAll(queryResult);

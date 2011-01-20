@@ -40,5 +40,5 @@ public interface LoanDao {
 
     List<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForLoan();
 
-    List<LoanBO> findIndividualLoans(final String accountId);
+    List<LoanBO> findIndividualLoans(Integer accountId);
 }

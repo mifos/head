@@ -1033,7 +1033,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     @Override
     public List<LoanAccountDetailsDto> retrieveLoanAccountDetails(LoanInformationDto loanInformationDto) {
 
-        List<LoanBO> individualLoans = this.loanDao.findIndividualLoans(loanInformationDto.getGlobalAccountNum());
+        List<LoanBO> individualLoans = this.loanDao.findIndividualLoans(loanInformationDto.getAccountId());
         List<ValueListElement> allLoanPurposes = this.loanProductDao.findAllLoanPurposes();
 
         List<LoanAccountDetailsDto> loanAccountDetailsViewList = new ArrayList<LoanAccountDetailsDto>();
