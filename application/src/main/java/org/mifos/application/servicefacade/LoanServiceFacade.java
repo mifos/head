@@ -30,10 +30,6 @@ import org.mifos.accounts.loan.business.service.OriginalScheduleInfoDto;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
-import org.mifos.application.master.business.BusinessActivityEntity;
-import org.mifos.customers.client.business.service.ClientBusinessService;
-import org.mifos.dto.domain.LoanAccountDetailsDto;
-import org.mifos.dto.screen.LoanInformationDto;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.platform.cashflow.ui.model.CashFlowForm;
@@ -62,9 +58,6 @@ public interface LoanServiceFacade {
      */
     @Deprecated
     LoanBO previewLoanRedoDetails(Integer customerId, LoanAccountActionForm loanAccountActionForm, DateTime disbursementDate);
-
-    List<LoanAccountDetailsDto> getLoanAccountDetailsViewList(LoanInformationDto loanInformationDto, List<BusinessActivityEntity> businessActEntity, ClientBusinessService clientBusinessService)
-            throws ServiceException;
 
     Errors validateInputInstallments(Date disbursementDate, VariableInstallmentDetailsBO variableInstallmentDetails, List<RepaymentScheduleInstallment> installments, Integer customerId);
 

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
@@ -83,5 +84,20 @@ public class LoanDaoHibernate implements LoanDao {
     @Override
     public void save(LoanBO loanAccount) {
         this.genericDao.createOrUpdate(loanAccount);
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<LoanBO> findIndividualLoans(final String accountId) {
+
+        List<LoanBO> individualLoans = new ArrayList<LoanBO>();
+
+        Map<String, Integer> queryParameters = new HashMap<String, Integer>();
+        queryParameters.put(LoanConstants.LOANACCOUNTID, new Integer(accountId));
+        List<LoanBO> queryResult = (List<LoanBO>) this.genericDao.executeNamedQuery(NamedQueryConstants.FIND_INDIVIDUAL_LOANS, queryParameters);
+        if (queryResult != null) {
+            individualLoans.addAll(queryResult);
+        }
+
+        return individualLoans;
     }
 }

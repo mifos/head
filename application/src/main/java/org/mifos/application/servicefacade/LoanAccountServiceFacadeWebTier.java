@@ -1029,4 +1029,36 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
         return new RepayLoanDto(repaymentAmount.toString(), waivedRepaymentAmount.toString(), loan.isInterestWaived());
     }
+
+    @Override
+    public List<LoanAccountDetailsDto> retrieveLoanAccountDetails(LoanInformationDto loanInformationDto) {
+
+        List<LoanBO> individualLoans = this.loanDao.findIndividualLoans(loanInformationDto.getGlobalAccountNum());
+        List<ValueListElement> allLoanPurposes = this.loanProductDao.findAllLoanPurposes();
+
+        List<LoanAccountDetailsDto> loanAccountDetailsViewList = new ArrayList<LoanAccountDetailsDto>();
+
+        for (LoanBO individualLoan : individualLoans) {
+            LoanAccountDetailsDto loandetails = new LoanAccountDetailsDto();
+            loandetails.setClientId(individualLoan.getCustomer().getCustomerId().toString());
+            loandetails.setClientName(individualLoan.getCustomer().getDisplayName());
+            loandetails.setLoanAmount(null != individualLoan.getLoanAmount()
+                    && !EMPTY.equals(individualLoan.getLoanAmount().toString()) ? individualLoan.getLoanAmount()
+                    .toString() : "0.0");
+
+            if (null != individualLoan.getBusinessActivityId()) {
+                loandetails.setBusinessActivity(individualLoan.getBusinessActivityId().toString());
+                for (ValueListElement busact : allLoanPurposes) {
+                    if (busact.getId().toString().equals(individualLoan.getBusinessActivityId().toString())) {
+                        loandetails.setBusinessActivityName(busact.getName());
+                    }
+                }
+            }
+            ClientBO client = this.customerDao.findClientBySystemId(individualLoan.getCustomer().getGlobalCustNum());
+            String governmentId = client.getGovernmentId();
+            loandetails.setGovermentId(StringUtils.isNotBlank(governmentId) ? governmentId : "-");
+            loanAccountDetailsViewList.add(loandetails);
+        }
+        return loanAccountDetailsViewList;
+    }
 }

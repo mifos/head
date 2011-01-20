@@ -95,4 +95,7 @@ public interface LoanAccountServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     RepayLoanDto retrieveLoanRepaymentDetails(String globalAccountNum);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    List<LoanAccountDetailsDto> retrieveLoanAccountDetails(LoanInformationDto loanInformationDto);
 }

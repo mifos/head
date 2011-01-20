@@ -119,6 +119,10 @@ public class LoanBusinessService implements BusinessService {
         }
     }
 
+    /**
+     * use loanDao implementation
+     */
+    @Deprecated
     public List<LoanBO> findIndividualLoans(final String accountId) throws ServiceException {
         try {
             return getLoanPersistence().findIndividualLoans(accountId);

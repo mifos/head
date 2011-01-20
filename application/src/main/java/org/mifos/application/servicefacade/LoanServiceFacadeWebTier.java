@@ -20,7 +20,6 @@
 
 package org.mifos.application.servicefacade;
 
-import static org.apache.commons.lang.StringUtils.EMPTY;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.MAX_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.MAX_RANGE_IS_NOT_MET;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
@@ -65,7 +64,6 @@ import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.accounts.util.helpers.PaymentDataTemplate;
 import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
-import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
@@ -76,14 +74,11 @@ import org.mifos.config.ProcessFlowRules;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.client.business.service.ClientBusinessService;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.LoanAccountDetailsDto;
-import org.mifos.dto.domain.ValueListElement;
-import org.mifos.dto.screen.LoanInformationDto;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -464,39 +459,6 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         } catch (AccountException e) {
             throw new BusinessRuleException(e.getKey(), e);
         }
-    }
-
-    @Override
-    public List<LoanAccountDetailsDto> getLoanAccountDetailsViewList(LoanInformationDto loanInformationDto,
-                                                                     List<BusinessActivityEntity> businessActEntity,
-                                                                     ClientBusinessService clientBusinessService) throws ServiceException {
-        List<LoanBO> individualLoans = loanBusinessService.findIndividualLoans(Integer.valueOf(
-                loanInformationDto.getAccountId()).toString());
-
-        List<LoanAccountDetailsDto> loanAccountDetailsViewList = new ArrayList<LoanAccountDetailsDto>();
-
-        for (LoanBO individualLoan : individualLoans) {
-            LoanAccountDetailsDto loandetails = new LoanAccountDetailsDto();
-            loandetails.setClientId(individualLoan.getCustomer().getCustomerId().toString());
-            loandetails.setClientName(individualLoan.getCustomer().getDisplayName());
-            loandetails.setLoanAmount(null != individualLoan.getLoanAmount()
-                    && !EMPTY.equals(individualLoan.getLoanAmount().toString()) ? individualLoan.getLoanAmount()
-                    .toString() : "0.0");
-
-            if (null != individualLoan.getBusinessActivityId()) {
-                loandetails.setBusinessActivity(individualLoan.getBusinessActivityId().toString());
-                for (ValueListElement busact : businessActEntity) {
-                    if (busact.getId().toString().equals(individualLoan.getBusinessActivityId().toString())) {
-                        loandetails.setBusinessActivityName(busact.getName());
-                    }
-                }
-            }
-            String governmentId = clientBusinessService.getClient(individualLoan.getCustomer().getCustomerId())
-                    .getGovernmentId();
-            loandetails.setGovermentId(StringUtils.isNotBlank(governmentId) ? governmentId : "-");
-            loanAccountDetailsViewList.add(loandetails);
-        }
-        return loanAccountDetailsViewList;
     }
 
     @Override

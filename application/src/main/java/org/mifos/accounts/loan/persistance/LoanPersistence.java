@@ -99,6 +99,10 @@ public class LoanPersistence extends Persistence {
         return queryResult == null ? null : (LoanBO) queryResult;
     }
 
+    /**
+     * use loanDao implementation
+     */
+    @Deprecated
     @SuppressWarnings("unchecked")
     public List<LoanBO> findIndividualLoans(final String accountId) throws PersistenceException {
         Map<String, Integer> queryParameters = new HashMap<String, Integer>();
