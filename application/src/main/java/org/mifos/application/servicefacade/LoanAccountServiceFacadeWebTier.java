@@ -1,3 +1,23 @@
+/*
+ * Copyright (c) 2005-2010 Grameen Foundation USA
+ * All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ *
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ * explanation of the license and how it is applied.
+ */
+
 package org.mifos.application.servicefacade;
 
 import static org.apache.commons.lang.StringUtils.EMPTY;
@@ -59,6 +79,7 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.persistence.CustomerDao;
+import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.dto.domain.AccountStatusDto;
@@ -768,5 +789,19 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         }
         Money subTotal = principalDue.add(interestDue).add(feesDue).add(penaltyDue);
         return new InstallmentDetailsDto(principalDue.toString(), interestDue.toString(), feesDue.toString(), penaltyDue.toString(), subTotal.toString());
+    }
+
+    @Override
+    public boolean isTrxnDateValid(Integer loanAccountId, Date trxnDate) {
+
+        try {
+            LoanBO loan = this.loanDao.findById(loanAccountId);
+
+            Date meetingDate = new CustomerPersistence().getLastMeetingDateForCustomer(loan.getCustomer().getCustomerId());
+            boolean repaymentIndependentOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
+            return loan.isTrxnDateValid(trxnDate, meetingDate, repaymentIndependentOfMeetingEnabled);
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
+        }
     }
 }

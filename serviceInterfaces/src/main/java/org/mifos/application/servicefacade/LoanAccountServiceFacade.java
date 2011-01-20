@@ -20,6 +20,7 @@
 
 package org.mifos.application.servicefacade;
 
+import java.util.Date;
 import java.util.List;
 
 import org.mifos.dto.domain.AccountStatusDto;
@@ -80,4 +81,7 @@ public interface LoanAccountServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     LoanInstallmentDetailsDto retrieveInstallmentDetails(Integer accountId);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    boolean isTrxnDateValid(Integer loanAccountId, Date trxnDate);
 }

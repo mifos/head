@@ -40,7 +40,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Before;
@@ -58,7 +57,6 @@ import org.mifos.accounts.loan.business.service.OriginalScheduleInfoDto;
 import org.mifos.accounts.loan.business.service.validators.InstallmentValidationContext;
 import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator;
 import org.mifos.accounts.loan.persistance.LoanDao;
-import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallmentBuilder;
@@ -81,7 +79,6 @@ import org.mifos.platform.cashflow.service.CashFlowDetail;
 import org.mifos.platform.cashflow.service.MonthlyCashFlowDetail;
 import org.mifos.platform.cashflow.ui.model.CashFlowForm;
 import org.mifos.platform.validations.Errors;
-import org.mifos.security.util.UserContext;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -226,15 +223,6 @@ public class LoanServiceFacadeWebTierTest {
         Errors errors = loanServiceFacade.validateInstallmentSchedule(installments, variableInstallmentDetailsBO);
         assertThat(errors, is(expectedErrors));
         verify(installmentsValidator).validateInstallmentSchedule(installments, variableInstallmentDetailsBO);
-    }
-
-    @Test
-    public void retrieveLoanRepaymentScheduleShouldComputeOverdue() {
-        LoanBO loanBO = new LoanBO() {};
-        Mockito.when(loanDao.findById(1)).thenReturn(loanBO);
-        loanServiceFacade.retrieveLoanRepaymentSchedule(new UserContext(Locale.getDefault(), Short.valueOf("1")), 1, new DateMidnight().toDate());
-        Mockito.verify(scheduleCalculatorAdaptor, Mockito.times(1)).computeExtraInterest(Mockito.eq(loanBO), Mockito.<Date>any());
-        Mockito.verify(loanDao, Mockito.times(1)).findById(1);
     }
 
     @Test

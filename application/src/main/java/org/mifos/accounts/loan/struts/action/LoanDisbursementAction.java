@@ -161,7 +161,7 @@ public class LoanDisbursementAction extends BaseAction {
 
         Integer loanAccountId = Integer.valueOf(actionForm.getAccountId());
         createGroupQuestionnaire.saveResponses(request, actionForm, loanAccountId);
-        if (!loanServiceFacade.isTrxnDateValid(loanAccountId, trxnDate)) {
+        if (!this.loanAccountServiceFacade.isTrxnDateValid(loanAccountId, trxnDate)) {
             throw new AccountException("errors.invalidTxndate");
         }
 

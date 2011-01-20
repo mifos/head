@@ -83,6 +83,7 @@ import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.loan.business.CashFlowDataAdaptor;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.MaxMinInterestRate;
+import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.business.service.LoanInformationDto;
 import org.mifos.accounts.loan.business.service.LoanScheduleGenerationDto;
@@ -128,6 +129,7 @@ import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFac
 import org.mifos.application.questionnaire.struts.QuestionnaireAction;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.questionnaire.struts.QuestionnaireServiceFacadeLocator;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.servicefacade.LoanCreationLoanScheduleDetailsDto;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
@@ -995,7 +997,12 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         Integer loanId = Integer.valueOf(request.getParameter(ACCOUNT_ID));
         Locale locale = userContext.getPreferredLocale();
         Date viewDate = loanAccountActionForm.getScheduleViewDateValue(locale);
-        LoanBO loan = this.loanServiceFacade.retrieveLoanRepaymentSchedule(userContext, loanId, viewDate);
+
+
+        LoanBO loan = this.loanDao.findById(loanId);
+        loan.updateDetails(userContext);
+        ScheduleCalculatorAdaptor scheduleCalculatorAdaptor = DependencyInjectedServiceLocator.locateScheduleCalculatorAdaptor();
+        scheduleCalculatorAdaptor.computeExtraInterest(loan, viewDate);
 
         OriginalScheduleInfoDto originalSchedule = this.loanServiceFacade.retrieveOriginalLoanSchedule(loanId, locale);
 
@@ -1029,8 +1036,11 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
         UserContext userContext = getUserContext(request);
         String globalAccountNum = request.getParameter(GLOBAL_ACCOUNT_NUM);
-        List<AccountStatusChangeHistoryEntity> accStatusChangeHistory = this.loanServiceFacade
-                .retrieveLoanAccountStatusChangeHistory(userContext, globalAccountNum);
+
+        LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
+        loan.updateDetails(userContext);
+
+        List<AccountStatusChangeHistoryEntity> accStatusChangeHistory = new ArrayList<AccountStatusChangeHistoryEntity>(loan.getAccountStatusChangeHistory());
 
         SessionUtils.setCollectionAttribute(STATUS_HISTORY, accStatusChangeHistory, request);
 

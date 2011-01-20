@@ -17,6 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
+
 package org.mifos.application.servicefacade;
 
 import static org.apache.commons.lang.StringUtils.EMPTY;
@@ -41,7 +42,6 @@ import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.business.AccountFlagMapping;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.business.AccountStateFlagEntity;
-import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fund.business.FundBO;
@@ -96,7 +96,6 @@ import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.client.business.service.ClientBusinessService;
 import org.mifos.customers.persistence.CustomerDao;
-import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.surveys.helpers.SurveyType;
@@ -489,33 +488,6 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         } catch (AccountException e) {
             throw new BusinessRuleException(e.getKey(), e);
         }
-    }
-
-    @Override
-    public boolean isTrxnDateValid(Integer loanAccountId, Date trxnDate) throws ApplicationException {
-
-        LoanBO loan = this.loanDao.findById(loanAccountId);
-
-        Date meetingDate = new CustomerPersistence().getLastMeetingDateForCustomer(loan.getCustomer().getCustomerId());
-        boolean repaymentIndependentOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
-        return loan.isTrxnDateValid(trxnDate, meetingDate, repaymentIndependentOfMeetingEnabled);
-    }
-
-    @Override
-    public LoanBO retrieveLoanRepaymentSchedule(UserContext userContext, Integer loanId, Date asOfDate) {
-        LoanBO loan = this.loanDao.findById(loanId);
-        scheduleCalculatorAdaptor.computeExtraInterest(loan, asOfDate);
-        loan.updateDetails(userContext);
-        return loan;
-    }
-
-    @Override
-    public List<AccountStatusChangeHistoryEntity> retrieveLoanAccountStatusChangeHistory(UserContext userContext,
-            String globalAccountNum) {
-
-        LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
-        loan.updateDetails(userContext);
-        return new ArrayList<AccountStatusChangeHistoryEntity>(loan.getAccountStatusChangeHistory());
     }
 
     @Override
