@@ -1,4 +1,5 @@
 target
+targetEclipse
 *.log
 *.log.*
 /test-output
