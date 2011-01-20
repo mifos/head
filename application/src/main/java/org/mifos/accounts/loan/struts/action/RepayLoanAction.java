@@ -21,6 +21,7 @@
 package org.mifos.accounts.loan.struts.action;
 
 import java.sql.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,15 +33,19 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
+import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.struts.actionforms.RepayLoanActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
+import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
-import org.mifos.application.servicefacade.RepayLoanDto;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.application.util.helpers.TrxnTypes;
+import org.mifos.dto.screen.RepayLoanDto;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.util.ActionSecurity;
@@ -69,12 +74,18 @@ public class RepayLoanAction extends BaseAction {
         logger.info("Loading repay loan page");
         clearActionForm(form);
         UserContext userContext = getUserContext(request);
-        RepayLoanDto repayLoanDto = loanServiceFacade.getRepaymentDetails(request.getParameter("globalAccountNum"), userContext.getLocaleId(), new AcceptedPaymentTypePersistence());
+
+        String globalAccountNum = request.getParameter("globalAccountNum");
+        RepayLoanDto repayLoanDto = this.loanAccountServiceFacade.retrieveLoanRepaymentDetails(globalAccountNum);
+
+        LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
         SessionUtils.setAttribute(LoanConstants.WAIVER_INTEREST, repayLoanDto.shouldWaiverInterest(), request);
         SessionUtils.setAttribute(LoanConstants.WAIVER_INTEREST_SELECTED, repayLoanDto.shouldWaiverInterest(), request);
-        SessionUtils.setAttribute(LoanConstants.TOTAL_REPAYMENT_AMOUNT, repayLoanDto.getEarlyRepaymentMoney(), request);
-        SessionUtils.setAttribute(LoanConstants.WAIVED_REPAYMENT_AMOUNT, repayLoanDto.getWaivedRepaymentMoney(), request);
-        SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE, repayLoanDto.getPaymentTypeEntities(), request);
+        SessionUtils.setAttribute(LoanConstants.TOTAL_REPAYMENT_AMOUNT, new Money(loan.getCurrency(), repayLoanDto.getEarlyRepaymentMoney()), request);
+        SessionUtils.setAttribute(LoanConstants.WAIVED_REPAYMENT_AMOUNT, new Money(loan.getCurrency(), repayLoanDto.getWaivedRepaymentMoney()), request);
+
+        List<PaymentTypeEntity> loanPaymentTypes = new AcceptedPaymentTypePersistence().getAcceptedPaymentTypesForATransaction(userContext.getLocaleId(), TrxnTypes.loan_repayment.getValue());
+        SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE, loanPaymentTypes, request);
         return mapping.findForward(Constants.LOAD_SUCCESS);
     }
 
@@ -93,14 +104,8 @@ public class RepayLoanAction extends BaseAction {
             receiptDate = new Date(DateUtils.getLocaleDate(userContext.getPreferredLocale(),
                     repayLoanActionForm.getReceiptDate()).getTime());
         }
-
-        String forward = makeEarlyRepayment(request, userContext, repayLoanActionForm, receiptDate);
-        return mapping.findForward(forward);
-    }
-
-    private String makeEarlyRepayment(HttpServletRequest request, UserContext userContext, RepayLoanActionForm repayLoanActionForm,
-                                      Date receiptDate) {
         String globalAccountNum = request.getParameter("globalAccountNum");
+
         String forward = Constants.UPDATE_SUCCESS;
         try {
             this.loanAccountServiceFacade.makeEarlyRepayment(globalAccountNum, repayLoanActionForm.getAmount(), repayLoanActionForm.getReceiptNumber(),
@@ -111,7 +116,8 @@ public class RepayLoanAction extends BaseAction {
             addErrors(request, actionErrors);
             forward = Constants.UPDATE_FAILURE;
         }
-        return forward;
+
+        return mapping.findForward(forward);
     }
 
     @TransactionDemarcate(joinToken = true)

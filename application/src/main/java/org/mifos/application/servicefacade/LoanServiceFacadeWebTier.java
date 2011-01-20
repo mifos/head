@@ -35,7 +35,6 @@ import java.util.Locale;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
-import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fund.business.FundBO;
@@ -73,7 +72,6 @@ import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
-import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.config.ProcessFlowRules;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.core.MifosRuntimeException;
@@ -101,9 +99,6 @@ import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-/**
- * Implementation of {@link LoanServiceFacade} for web application usage.
- */
 public class LoanServiceFacadeWebTier implements LoanServiceFacade {
 
     private final LoanProductDao loanProductDao;
@@ -502,16 +497,6 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
             loanAccountDetailsViewList.add(loandetails);
         }
         return loanAccountDetailsViewList;
-    }
-
-    @Override
-    public RepayLoanDto getRepaymentDetails(String globalAccountNumber, Short localeId, AcceptedPaymentTypePersistence acceptedPaymentTypePersistence) throws PersistenceException {
-        LoanBO loan = loanDao.findByGlobalAccountNum(globalAccountNumber);
-        Money repaymentAmount = loan.getEarlyRepayAmount();
-        Money waivedRepaymentAmount = repaymentAmount.subtract(loan.waiverAmount());
-        return new RepayLoanDto(repaymentAmount, waivedRepaymentAmount,
-                acceptedPaymentTypePersistence.getAcceptedPaymentTypesForATransaction(localeId, TrxnTypes.loan_repayment.getValue()),
-                loan.isInterestWaived());
     }
 
     @Override

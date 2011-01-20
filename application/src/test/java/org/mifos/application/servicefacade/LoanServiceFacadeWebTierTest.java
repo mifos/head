@@ -27,7 +27,6 @@ import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -40,7 +39,6 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.OriginalLoanScheduleEntity;
@@ -59,15 +57,11 @@ import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.application.master.business.PaymentTypeEntity;
-import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
-import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.platform.cashflow.service.CashFlowDetail;
 import org.mifos.platform.cashflow.service.MonthlyCashFlowDetail;
 import org.mifos.platform.cashflow.ui.model.CashFlowForm;
@@ -132,25 +126,6 @@ public class LoanServiceFacadeWebTierTest {
         rupee = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
         loanServiceFacade = new LoanServiceFacadeWebTier(loanProductDao, customerDao, personnelDao,
                 fundDao, loanDao, installmentsValidator, scheduleCalculatorAdaptor,loanBusinessService, holidayServiceFacade, loanPrdBusinessService);
-    }
-
-    @Test
-    public void shouldReturnRepayLoanDtoWithAllDataPopulated() throws PersistenceException {
-        String accountNumber = "1234";
-        LoanBO loanBO = mock(LoanBO.class);
-        Money repaymentAmount = TestUtils.createMoney("1234");
-        AcceptedPaymentTypePersistence persistence = mock(AcceptedPaymentTypePersistence.class);
-        List<PaymentTypeEntity> paymentTypeEntities = new ArrayList<PaymentTypeEntity>();
-        when(loanDao.findByGlobalAccountNum(accountNumber)).thenReturn(loanBO);
-        when(persistence.getAcceptedPaymentTypesForATransaction(TestObjectFactory.TEST_LOCALE, TrxnTypes.loan_repayment.getValue())).thenReturn(paymentTypeEntities);
-        when(loanBO.getEarlyRepayAmount()).thenReturn(repaymentAmount);
-        Money interest = TestUtils.createMoney("100");
-        when(loanBO.waiverAmount()).thenReturn(interest);
-        Money waivedAmount = repaymentAmount.subtract(interest);
-        RepayLoanDto repayLoanDto = loanServiceFacade.getRepaymentDetails(accountNumber, TestObjectFactory.TEST_LOCALE, persistence);
-        assertEquals(repayLoanDto.getEarlyRepaymentMoney(), repaymentAmount);
-        assertEquals(repayLoanDto.getWaivedRepaymentMoney(), waivedAmount);
-        assertEquals(repayLoanDto.getPaymentTypeEntities(), paymentTypeEntities);
     }
 
     @Test

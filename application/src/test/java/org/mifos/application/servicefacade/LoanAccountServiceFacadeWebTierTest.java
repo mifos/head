@@ -27,10 +27,11 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertEquals;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.Locale;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -43,14 +44,14 @@ import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
-import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallmentBuilder;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
+import org.mifos.dto.screen.RepayLoanDto;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.service.BusinessRuleException;
 import org.mockito.Mock;
@@ -87,9 +88,6 @@ public class LoanAccountServiceFacadeWebTierTest {
 
     // test data
     @Mock
-    private CustomerBO customer;
-
-    @Mock
     private LoanBO loanBO;
 
     @Mock
@@ -101,17 +99,8 @@ public class LoanAccountServiceFacadeWebTierTest {
     @Mock
     private HolidayServiceFacade holidayServiceFacade;
 
-    private RepaymentScheduleInstallmentBuilder installmentBuilder;
-
-    private MifosCurrency rupee;
-
-    private Locale locale;
-
     @Before
     public void setupAndInjectDependencies() {
-        locale = new Locale("en", "GB");
-        installmentBuilder = new RepaymentScheduleInstallmentBuilder(locale);
-        rupee = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
         loanAccountServiceFacade = new LoanAccountServiceFacadeWebTier(loanProductDao, customerDao, personnelDao,
                 fundDao, loanDao, installmentsValidator, scheduleCalculatorAdaptor,loanBusinessService, holidayServiceFacade, loanPrdBusinessService);
     }
@@ -162,5 +151,25 @@ public class LoanAccountServiceFacadeWebTierTest {
             verify(loanBO,never()).getCurrency();
             assertThat(e.getMessageKey(), is(LoanConstants.WAIVER_INTEREST_NOT_CONFIGURED));
         }
+    }
+
+    @Test
+    public void shouldReturnRepayLoanDtoWithAllDataPopulated() {
+
+        String accountNumber = "1234";
+        LoanBO loanBO = mock(LoanBO.class);
+        Money repaymentAmount = TestUtils.createMoney("1234");
+        Money interest = TestUtils.createMoney("100");
+
+        when(loanDao.findByGlobalAccountNum(accountNumber)).thenReturn(loanBO);
+        when(loanBO.getEarlyRepayAmount()).thenReturn(repaymentAmount);
+        when(loanBO.waiverAmount()).thenReturn(interest);
+
+        Money waivedAmount = repaymentAmount.subtract(interest);
+
+        RepayLoanDto repayLoanDto = this.loanAccountServiceFacade.retrieveLoanRepaymentDetails(accountNumber);
+
+        assertEquals(repayLoanDto.getEarlyRepaymentMoney(), repaymentAmount.toString());
+        assertEquals(repayLoanDto.getWaivedRepaymentMoney(), waivedAmount.toString());
     }
 }

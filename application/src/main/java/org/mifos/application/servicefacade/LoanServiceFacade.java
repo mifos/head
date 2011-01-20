@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Locale;
 
 import org.joda.time.DateTime;
-import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.service.OriginalScheduleInfoDto;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
@@ -40,7 +39,10 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.platform.cashflow.ui.model.CashFlowForm;
 import org.mifos.platform.validations.Errors;
 
-
+/**
+ * @deprecated - do not use. please add functionality to {@link LoanAccountServiceFacade} instead.
+ */
+@Deprecated
 public interface LoanServiceFacade {
 
     /**
@@ -63,8 +65,6 @@ public interface LoanServiceFacade {
 
     List<LoanAccountDetailsDto> getLoanAccountDetailsViewList(LoanInformationDto loanInformationDto, List<BusinessActivityEntity> businessActEntity, ClientBusinessService clientBusinessService)
             throws ServiceException;
-
-    RepayLoanDto getRepaymentDetails(String globalAccountNumber, Short localeId, AcceptedPaymentTypePersistence acceptedPaymentTypePersistence) throws PersistenceException;
 
     Errors validateInputInstallments(Date disbursementDate, VariableInstallmentDetailsBO variableInstallmentDetails, List<RepaymentScheduleInstallment> installments, Integer customerId);
 

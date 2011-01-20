@@ -122,6 +122,7 @@ import org.mifos.dto.screen.LoanInformationDto;
 import org.mifos.dto.screen.LoanPerformanceHistoryDto;
 import org.mifos.dto.screen.LoanScheduledInstallmentDto;
 import org.mifos.dto.screen.LoanSummaryDto;
+import org.mifos.dto.screen.RepayLoanDto;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -1017,5 +1018,15 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         }
 
         return amount;
+    }
+
+    @Override
+    public RepayLoanDto retrieveLoanRepaymentDetails(String globalAccountNumber) {
+
+        LoanBO loan = loanDao.findByGlobalAccountNum(globalAccountNumber);
+        Money repaymentAmount = loan.getEarlyRepayAmount();
+        Money waivedRepaymentAmount = repaymentAmount.subtract(loan.waiverAmount());
+
+        return new RepayLoanDto(repaymentAmount.toString(), waivedRepaymentAmount.toString(), loan.isInterestWaived());
     }
 }

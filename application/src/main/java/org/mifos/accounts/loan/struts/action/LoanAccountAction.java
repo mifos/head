@@ -881,22 +881,22 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
     @TransactionDemarcate(saveToken = true)
     public ActionForward get(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-                             final HttpServletResponse response) throws Exception {
+                             @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
+
         LoanAccountActionForm loanAccountActionForm = (LoanAccountActionForm) form;
         loanAccountActionForm.clearDetailsForLoan();
         String globalAccountNum = request.getParameter(GLOBAL_ACCOUNT_NUM);
         UserContext userContext = getUserContext(request);
         LoanInformationDto loanInformationDto = this.loanAccountServiceFacade.retrieveLoanInformation(globalAccountNum);
 
-        final String accountStateNameLocalised = MessageLookup.getInstance().lookup(
-                loanInformationDto.getAccountStateName(), userContext);
+        final String accountStateNameLocalised = MessageLookup.getInstance().lookup(loanInformationDto.getAccountStateName(), userContext);
         SessionUtils.removeThenSetAttribute("accountStateNameLocalised", accountStateNameLocalised, request);
-        final String gracePeriodTypeNameLocalised = MessageLookup.getInstance().lookup(
-                loanInformationDto.getGracePeriodTypeName(), userContext);
+
+        final String gracePeriodTypeNameLocalised = MessageLookup.getInstance().lookup(loanInformationDto.getGracePeriodTypeName(), userContext);
         SessionUtils.removeThenSetAttribute("gracePeriodTypeNameLocalised", gracePeriodTypeNameLocalised, request);
-        final String interestTypeNameLocalised = MessageLookup.getInstance().lookup(
-                loanInformationDto.getInterestTypeName(), userContext);
+        final String interestTypeNameLocalised = MessageLookup.getInstance().lookup(loanInformationDto.getInterestTypeName(), userContext);
         SessionUtils.removeThenSetAttribute("interestTypeNameLocalised", interestTypeNameLocalised, request);
+
         final Set<String> accountFlagStateEntityNamesLocalised = new HashSet<String>();
         for (String name : loanInformationDto.getAccountFlagNames()) {
             accountFlagStateEntityNamesLocalised.add(MessageLookup.getInstance().lookup(name, userContext));
@@ -906,36 +906,30 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         String customerId = request.getParameter(CUSTOMER_ID);
         SessionUtils.removeAttribute(BUSINESS_KEY, request);
 
-        Integer loanIndividualMonitoringIsEnabled = configurationPersistence.getConfigurationKeyValueInteger(
-                LOAN_INDIVIDUAL_MONITORING_IS_ENABLED).getValue();
+        Integer loanIndividualMonitoringIsEnabled = configurationPersistence.getConfigurationKeyValueInteger(LOAN_INDIVIDUAL_MONITORING_IS_ENABLED).getValue();
 
         if (null != loanIndividualMonitoringIsEnabled && loanIndividualMonitoringIsEnabled.intValue() != 0) {
-            SessionUtils.setAttribute(LOAN_INDIVIDUAL_MONITORING_IS_ENABLED, loanIndividualMonitoringIsEnabled
-                    .intValue(), request);
+            SessionUtils.setAttribute(LOAN_INDIVIDUAL_MONITORING_IS_ENABLED, loanIndividualMonitoringIsEnabled.intValue(), request);
         }
         setBusinessActivitiesIntoSession(request);
 
         if (null != loanIndividualMonitoringIsEnabled && 0 != loanIndividualMonitoringIsEnabled.intValue()
                 && loanInformationDto.isGroup()) {
 
-            List<BusinessActivityEntity> businessActEntity = (List<BusinessActivityEntity>) SessionUtils
-                    .getAttribute("BusinessActivities", request);
-            SessionUtils.setCollectionAttribute("loanAccountDetailsView",
-                    loanServiceFacade.getLoanAccountDetailsViewList(loanInformationDto,
-                            businessActEntity, clientBusinessService), request);
+            List<BusinessActivityEntity> businessActEntity = (List<BusinessActivityEntity>) SessionUtils.getAttribute("BusinessActivities", request);
+            SessionUtils.setCollectionAttribute("loanAccountDetailsView",loanServiceFacade.getLoanAccountDetailsViewList(loanInformationDto, businessActEntity, clientBusinessService), request);
         }
         loadCustomFieldDefinitions(request);
         loadMasterData(request);
-        SessionUtils.setAttribute(AccountConstants.LAST_PAYMENT_ACTION, loanBusinessService
-                .getLastPaymentAction(loanInformationDto.getAccountId()), request);
+
+        SessionUtils.setAttribute(AccountConstants.LAST_PAYMENT_ACTION, loanBusinessService.getLastPaymentAction(loanInformationDto.getAccountId()), request);
         SessionUtils.removeThenSetAttribute("loanInformationDto", loanInformationDto, request);
 
         request.setAttribute(CustomerConstants.SURVEY_KEY, loanInformationDto.getAccountSurveys());
         request.setAttribute(CustomerConstants.SURVEY_COUNT, loanInformationDto.getActiveSurveys());
         request.setAttribute(AccountConstants.SURVEY_KEY, loanInformationDto.getAccountSurveys());
 
-        Integer administrativeDocumentsIsEnabled = configurationPersistence.getConfigurationKeyValueInteger(
-                ADMINISTRATIVE_DOCUMENT_IS_ENABLED).getValue();
+        Integer administrativeDocumentsIsEnabled = configurationPersistence.getConfigurationKeyValueInteger(ADMINISTRATIVE_DOCUMENT_IS_ENABLED).getValue();
 
         if (null != administrativeDocumentsIsEnabled && administrativeDocumentsIsEnabled.intValue() == 1) {
             SessionUtils.setCollectionAttribute(AdminDocumentsContants.ADMINISTRATIVEDOCUMENTSLIST,
@@ -947,6 +941,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         }
 
         // John W - temporarily put back because needed in applychargeaction - update
+        // keithW - and for recentAccountNotes
         LoanBO loan = this.loanDao.findById(loanInformationDto.getAccountId());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
         setCurrentPageUrl(request, loan);
@@ -1730,8 +1725,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     }
 
     private void loadCustomFieldDefinitions(final HttpServletRequest request) throws Exception {
-        SessionUtils.setCollectionAttribute(CUSTOM_FIELDS, getAccountBusinessService().retrieveCustomFieldsDefinition(
-                EntityType.LOAN), request);
+        SessionUtils.setCollectionAttribute(CUSTOM_FIELDS, new ArrayList<CustomFieldDefinitionEntity>(), request);
     }
 
     @SuppressWarnings("unchecked")

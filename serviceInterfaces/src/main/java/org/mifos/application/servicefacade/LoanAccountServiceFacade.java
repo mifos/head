@@ -40,6 +40,7 @@ import org.mifos.dto.screen.LoanCreationResultDto;
 import org.mifos.dto.screen.LoanDisbursalDto;
 import org.mifos.dto.screen.LoanInformationDto;
 import org.mifos.dto.screen.LoanScheduledInstallmentDto;
+import org.mifos.dto.screen.RepayLoanDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface LoanAccountServiceFacade {
@@ -91,4 +92,7 @@ public interface LoanAccountServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     LoanInformationDto retrieveLoanInformation(String globalAccountNum);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    RepayLoanDto retrieveLoanRepaymentDetails(String globalAccountNum);
 }
