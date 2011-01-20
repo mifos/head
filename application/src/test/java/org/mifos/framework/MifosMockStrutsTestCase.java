@@ -92,7 +92,7 @@ public class MifosMockStrutsTestCase extends MifosIntegrationTestCase {
     		fail(r.getDescription() + " does not exist or is not readable");
     	}
     	File webResourcesDirectory = r.getFile().getParentFile().getParentFile();
-    	setContextDirectory(webResourcesDirectory);
+    	mockSturts.setContextDirectory(webResourcesDirectory);
     	
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/other-struts-config.xml");
 
