@@ -444,29 +444,13 @@ explanation of the license and how it is applied.
 											</td>
 										</tr>
                                         <tr>
-											<td align="center" class="blueline">
-												&nbsp;
-											</td>
-										</tr>
-									<br>
-										<tr>
 											<td align="center">
-											    <c:if test="${loanAccountActionForm.variableInstallmentsAllowed && requestScope.perspective != 'redoLoan'}">
-                                                    <html-el:submit styleId="schedulePreview.button.validate" property="validateBtn" styleClass="buttn" >
-                                                        <mifos:mifoslabel name="loan.validate" />
-                                                    </html-el:submit>
-                                                    &nbsp;
-                                                </c:if>
-												<html-el:submit styleId="schedulePreview.button.preview" property="previewBtn" styleClass="buttn" >
-													<mifos:mifoslabel name="loan.preview" />
-												</html-el:submit>
 												&nbsp;
-												<html-el:button styleId="schedulePreview.button.cancel" property="cancelButton" onclick="javascript:fun_cancel(this.form)" styleClass="cancelbuttn" >
-													<mifos:mifoslabel name="loan.cancel" />
-												</html-el:button>
 											</td>
 										</tr>
-									<br/>
+										<br/>
+										<br/>
+
                                         <c:if test="${loanAccountActionForm.cashflowDataDtos != null}">
 										<tr>
                                             <td>
@@ -476,6 +460,11 @@ explanation of the license and how it is applied.
 															<mifos:mifoslabel name="loan.cashflowSummary" />
 														</td>
                                                     </tr>
+                                                    <tr>
+											            <td align="center">
+												            &nbsp;
+											            </td>
+										            </tr>
                                                     <tr>
                                                         <td valign="top" align="center">
                                                             <table width="100%" border="0" cellpadding="3" cellspacing="0" id="cashflow" name="cashflow">
@@ -513,6 +502,29 @@ explanation of the license and how it is applied.
 											</td>
 										</tr>
                                         </c:if>
+                                        <tr>
+										    <td align="center">
+										          &nbsp;
+										    </td>
+										</tr>
+										<tr>
+											<td align="center">
+											    <c:if test="${loanAccountActionForm.variableInstallmentsAllowed && requestScope.perspective != 'redoLoan'}">
+                                                    <html-el:submit styleId="schedulePreview.button.validate" property="validateBtn" styleClass="buttn" >
+                                                        <mifos:mifoslabel name="loan.validate" />
+                                                    </html-el:submit>
+                                                    &nbsp;
+                                                </c:if>
+												<html-el:submit styleId="schedulePreview.button.preview" property="previewBtn" styleClass="buttn" >
+													<mifos:mifoslabel name="loan.preview" />
+												</html-el:submit>
+												&nbsp;
+												<html-el:button styleId="schedulePreview.button.cancel" property="cancelButton" onclick="javascript:fun_cancel(this.form)" styleClass="cancelbuttn" >
+													<mifos:mifoslabel name="loan.cancel" />
+												</html-el:button>
+											</td>
+										</tr>
+									<br/>
 									</table>
 									<br>
 								</td>
