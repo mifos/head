@@ -112,8 +112,8 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 						<tr>
 							<td class="fontnormalbold"><span class="fontnormal">
 							<mifoscustom:MifosImage id="${loanInformationDto.accountStateId}"
-								moduleName="org.mifos.accounts.util.resources.accountsImages" /> <c:out
-								value="${accountStateNameLocalised}" />&nbsp; 
+								moduleName="org.mifos.accounts.util.resources.accountsImages" />
+								<span id="loanaccountdetail.details.status"><c:out value="${accountStateNameLocalised}" /></span>&nbsp; 
 								<c:forEach
 								var="flagSet" items="${accountFlagNamesLocalised}">
 								<span class="fontnormal"><c:out
@@ -121,13 +121,13 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							</c:forEach> </span></td>
 						</tr>
 						<tr>
-							<td class="fontnormal"><mifos:mifoslabel
+							<td class="fontnormal"><span id="loanaccountdetail.details.disbursaldateline"><mifos:mifoslabel
 								name="loan.proposed_date" />: <c:out
 								value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,loanInformationDto.disbursementDate)}" />
 							<c:if test="${loanInformationDto.redone}">
                                         &nbsp(<mifos:mifoslabel
 									name="loan.is_redo_loan" />)
-                                    </c:if></td>
+                                    </c:if></span></td>
 						</tr>
 						<tr id="Loan.PurposeOfLoan">
 							<td class="fontnormal"><mifos:mifoslabel

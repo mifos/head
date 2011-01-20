@@ -64,6 +64,15 @@ public class LoanAccountPage extends AbstractPage {
         Assert.assertTrue(selenium.isTextPresent("Days in arrears:0"));
     }
 
+    public void verifyLoanTotalBalance(String amount) {
+        Assert.assertEquals(getTotalBalance(), amount);
+    }
+
+    public void verifyPerformanceHistory(String payments, String missedPayments) {
+        Assert.assertTrue(selenium.isTextPresent("of payments: "+payments));
+        Assert.assertTrue(selenium.isTextPresent("of missed payments: "+missedPayments));
+    }
+
     /**
      * Returns the id of the account displayed on the current page, or -1 if no id is found.
      * The id is the global id (0001...000...263, not just 263).
@@ -91,7 +100,7 @@ public class LoanAccountPage extends AbstractPage {
     }
 
     public ViewRepaymentSchedulePage navigateToRepaymentSchedulePage() {
-        selenium.click("link=View repayment schedule");
+        selenium.click("id=loanaccountdetail.link.viewRepaymentSchedule");
         waitForPageToLoad();
         return new ViewRepaymentSchedulePage(selenium);
     }
@@ -262,6 +271,12 @@ public class LoanAccountPage extends AbstractPage {
         selenium.click("loanaccountdetail.link.applyAdjustment");
         waitForPageToLoad();
         return new ApplyAdjustmentPage(selenium);
+    }
+
+    public TransactionHistoryPage navigateToTransactionHistoryPage() {
+        selenium.click("loanaccountdetail.link.viewTransactionHistory");
+        waitForPageToLoad();
+        return new TransactionHistoryPage(selenium);
     }
 
     public void verifyStatus(String status) {

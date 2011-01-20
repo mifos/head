@@ -315,7 +315,9 @@ public class LoanTestHelper {
         }
 
         RedoLoanDisbursalSchedulePreviewPage schedulePreviewPage = dataEntryPage.submitAndNavigateToRedoLoanDisbursalSchedulePreviewPage(paramsPastDate);
-        schedulePreviewPage.typeAmountPaid(amountPaid);
+        if(amountPaid != 0) { // used to pay grater amount than default (ex. for closing loan)
+            schedulePreviewPage.typeAmountPaid(amountPaid);
+        }
 
         return schedulePreviewPage
             .submitAndNavigateToRedoLoanDisbursalPreviewPage()

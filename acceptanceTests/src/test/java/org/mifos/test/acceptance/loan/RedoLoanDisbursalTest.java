@@ -28,9 +28,13 @@ import org.mifos.test.acceptance.admin.FeeTestHelper;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.FeesCreatePage;
+import org.mifos.test.acceptance.framework.loan.ApplyAdjustmentPage;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalEntryPage;
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalParameters;
+import org.mifos.test.acceptance.framework.loan.TransactionHistoryPage;
+import org.mifos.test.acceptance.framework.loan.ViewNextInstallmentDetailsPage;
+import org.mifos.test.acceptance.framework.loan.ViewRepaymentSchedulePage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
 import org.mifos.test.acceptance.framework.office.OfficeParameters;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
@@ -121,25 +125,60 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
      * Also verifies that loan cannot be redone on a date equal to
      * or greater than the current date.
      *
-     * http://mifosforge.jira.com/browse/MIFOSTEST-13
      * http://mifosforge.jira.com/browse/MIFOSTEST-15
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void redoLoanDisbursalWithPastDateUnpaid() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
 
+        // Testing redo loan
         RedoLoanDisbursalParameters paramsPastDate = new RedoLoanDisbursalParameters();
-        paramsPastDate.setDisbursalDateDD("09");
-        paramsPastDate.setDisbursalDateMM("07");
+        paramsPastDate.setDisbursalDateDD("18");
+        paramsPastDate.setDisbursalDateMM("06");
         paramsPastDate.setDisbursalDateYYYY("2009");
         RedoLoanDisbursalParameters paramsCurrentDate = new RedoLoanDisbursalParameters();
         paramsCurrentDate.setDisbursalDateDD("29");
         paramsCurrentDate.setDisbursalDateMM("07");
         paramsCurrentDate.setDisbursalDateYYYY("2009");
 
-        LoanAccountPage loanAccountPage = loanTestHelper.redoLoanDisbursal("MyGroup1233266255641", "WeeklyGroupFlatLoanWithOnetimeFee", paramsPastDate, paramsCurrentDate, 1237);
+        LoanAccountPage loanAccountPage = loanTestHelper.redoLoanDisbursal("MyGroup1233266255641", "WeeklyGroupFlatLoanWithOnetimeFee", paramsPastDate, paramsCurrentDate, 0);
 
         loanAccountPage.verifyStatus("Active in Good Standing");
+
+        // Testing multiple reverse payments
+        String payAmount = "63.0";
+        String reverseNote = "Reversed ";
+        int loanBalance = (int) (Float.parseFloat(loanAccountPage.getTotalBalance()) + 63 * 3);
+
+        for(int i = 0; i < 3; i++) {
+            ApplyAdjustmentPage applyAdjustmentPage = loanAccountPage.navigateToApplyAdjustment();
+            applyAdjustmentPage.verifyAdjustment(payAmount, reverseNote+(i+1));
+        }
+
+        verifyMultipleReversePayments(loanAccountPage, payAmount, reverseNote, loanBalance);
+    }
+
+    private void verifyMultipleReversePayments(LoanAccountPage loanAccountPage, String payAmount, String reverseNote, int loanBalance) {
+        TransactionHistoryPage transactionHistoryPage = loanAccountPage.navigateToTransactionHistory();
+        transactionHistoryPage.verifyTableForReversedValues(payAmount, 3, reverseNote);
+        transactionHistoryPage.navigateBack();
+
+        ViewNextInstallmentDetailsPage installmentPage = loanAccountPage.navigateToViewNextInstallmentDetails();
+        installmentPage.verifyInstallmentAmount(6, 2, "0.0");
+        installmentPage.verifyInstallmentAmount(12, 2, "0.0");
+        installmentPage.navigateBack();
+
+        ViewRepaymentSchedulePage repaymentSchedulePage = loanAccountPage.navigateToRepaymentSchedulePage();
+        repaymentSchedulePage.verifyRepaymentScheduleTableRow(5, 0, "Installments due");
+        repaymentSchedulePage.verifyRepaymentScheduleTableRow(6, 6, "63.0");
+        repaymentSchedulePage.verifyRepaymentScheduleTableRow(7, 6, "63.0");
+        repaymentSchedulePage.verifyRepaymentScheduleTableRow(8, 6, "63.0");
+        repaymentSchedulePage.verifyRepaymentScheduleTableRow(9, 0, "Future Installments");
+        repaymentSchedulePage.navigateBack();
+
+        loanAccountPage.verifyLoanTotalBalance(loanBalance+".0");
+        loanAccountPage.verifyPerformanceHistory("2", "3");
+        loanAccountPage.verifyStatus("Active in Bad Standing");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")

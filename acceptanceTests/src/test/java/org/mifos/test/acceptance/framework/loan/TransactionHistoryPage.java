@@ -20,6 +20,8 @@
 
 package org.mifos.test.acceptance.framework.loan;
 
+import junit.framework.Assert;
+
 import org.mifos.test.acceptance.framework.AbstractPage;
 
 import com.thoughtworks.selenium.Selenium;
@@ -30,5 +32,29 @@ public class TransactionHistoryPage extends AbstractPage {
     public TransactionHistoryPage(Selenium selenium) {
         super(selenium);
         verifyPage("ViewTransactionHistory");
+    }
+
+    /**
+     * verifies if the table has reversed transactions
+     * @param payAmount
+     * @param reversedNumber
+     * @param notes
+     */
+    public void verifyTableForReversedValues(String payAmount, int reversedNumber, String notes) {
+        for(int i = 0; i < reversedNumber; i++) {
+            int row = i * 8 + 1;
+            float amount = 0;
+            for(int j = 0; j < 8; j++) {
+                String value = selenium.getTable("trxnhistoryList."+(row+j)+".6");
+                if(!value.contains("-")) {
+                    amount += Float.parseFloat(value);
+                }
+            }
+            Assert.assertEquals(amount, Float.parseFloat(payAmount)*2);
+            Assert.assertEquals(selenium.getTable("trxnhistoryList."+row+".10"), notes+(i+1));
+            Assert.assertEquals(selenium.getTable("trxnhistoryList."+(row+1)+".10"), notes+(i+1));
+            Assert.assertEquals(selenium.getTable("trxnhistoryList."+(row+2)+".10"), notes+(i+1));
+            Assert.assertEquals(selenium.getTable("trxnhistoryList."+(row+3)+".10"), notes+(i+1));
+        }
     }
 }
