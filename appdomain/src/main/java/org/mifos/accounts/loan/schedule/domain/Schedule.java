@@ -137,12 +137,32 @@ public class Schedule {
         return result;
     }
 
+    private List<Installment> getInstallmentsBefore(Date date) {
+        List<Installment> result = new ArrayList<Installment>();
+        for (Installment installment : installments.values()) {
+            Date dueDate = installment.getDueDate();
+            // TODO Refine this date comparison logic
+            if (dueDate.compareTo(date) < 0) result.add(installment);
+        }
+        return result;
+    }
+
     private List<Installment> getInstallmentsAfter(Date date) {
         List<Installment> result = new ArrayList<Installment>();
         for (Installment installment : installments.values()) {
             Date dueDate = installment.getDueDate();
             // TODO Refine this date comparison logic
             if (dueDate.compareTo(date) > 0) result.add(installment);
+        }
+        return result;
+    }
+
+    private List<Installment> getInstallmentsOnOrAfter(Date date) {
+        List<Installment> result = new ArrayList<Installment>();
+        for (Installment installment : installments.values()) {
+            Date dueDate = installment.getDueDate();
+            // TODO Refine this date comparison logic
+            if (dueDate.compareTo(date) >= 0) result.add(installment);
         }
         return result;
     }
@@ -222,16 +242,17 @@ public class Schedule {
 
     public BigDecimal computePayableAmountForDueInstallments(Date asOfDate) {
         BigDecimal repaymentAmount = BigDecimal.ZERO;
-        for (Installment installment : getInstallmentsOnOrBefore(asOfDate)) {
+        for (Installment installment : getInstallmentsBefore(asOfDate)) {
             repaymentAmount = repaymentAmount.add(installment.getTotalDue());
         }
         return repaymentAmount;
     }
 
     public RepaymentResultsHolder computePayableAmountForFutureInstallments(Date asOfDate) {
-        List<Installment> futureInstallments = getInstallmentsAfter(asOfDate);
+        List<Installment> futureInstallments = getInstallmentsOnOrAfter(asOfDate);
         RepaymentResultsHolder repaymentResultsHolder = new RepaymentResultsHolder();
         BigDecimal payableAmount = BigDecimal.ZERO;
+        repaymentResultsHolder.setWaiverAmount(BigDecimal.ZERO);
         if(!futureInstallments.isEmpty()){
             BigDecimal outstandingPrincipal = getOutstandingPrincipal(asOfDate);
             Installment firstFutureInstallment = futureInstallments.get(0);
@@ -251,7 +272,7 @@ public class Schedule {
 
     private BigDecimal getOutstandingPrincipal(Date asOfDate) {
         BigDecimal outstandingPrincipal = BigDecimal.ZERO;
-        for (Installment pastInstallment : getInstallmentsOnOrBefore(asOfDate)) {
+        for (Installment pastInstallment : getInstallmentsBefore(asOfDate)) {
             outstandingPrincipal = outstandingPrincipal.add(pastInstallment.getPrincipal());
         }
         return loanAmount.subtract(outstandingPrincipal);

@@ -32,6 +32,7 @@ import java.util.Set;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
+import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeDto;
@@ -116,7 +117,7 @@ public class ClientBO extends CustomerBO {
             DateTime dateOfBirth, String governmentId, boolean trained, DateTime trainedDate, Short groupFlag,
             String clientFirstName, String clientLastName, String secondLastName,
             ClientNameDetailEntity spouseFatherNameDetailEntity, ClientDetailEntity clientDetailEntity,
-            Blob pictureAsBlob, List<ClientInitialSavingsOfferingEntity> associatedOfferings, String externalId, Address address) {
+            Blob pictureAsBlob, List<ClientInitialSavingsOfferingEntity> associatedOfferings, String externalId, Address address, LocalDate activationDate) {
 
         // inherit settings from parent (group)
         OfficeBO office = group.getOffice();
@@ -145,6 +146,7 @@ public class ClientBO extends CustomerBO {
         if (clientStatus.isClientActive()) {
             CustomerHierarchyEntity hierarchy = new CustomerHierarchyEntity(client, group);
             client.addCustomerHierarchy(hierarchy);
+            client.setCustomerActivationDate(activationDate.toDateMidnight().toDate());
         }
 
         for (ClientInitialSavingsOfferingEntity clientInitialSavingsOfferingEntity : associatedOfferings) {

@@ -30,7 +30,6 @@ import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
-import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.persistence.FeeDao;
@@ -104,14 +103,11 @@ import org.mifos.dto.screen.ClientPersonalInfoDto;
 import org.mifos.dto.screen.ClientRemovalFromGroupDto;
 import org.mifos.dto.screen.LoanCycleCounter;
 import org.mifos.framework.business.util.Address;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.MifosUser;
-import org.mifos.security.util.ActivityMapper;
-import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -388,10 +384,10 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
                 officeId = group.getOffice().getOfficeId();
 
                 client = ClientBO.createNewInGroupHierarchy(userContext, clientCreationDetail.getClientName(), clientStatus, new DateTime(
-                       clientCreationDetail.getDateOfBirth()), group, formedBy, clientNameDetailEntity, dob,
+                       clientCreationDetail.getMfiJoiningDate()), group, formedBy, clientNameDetailEntity, dob,
                        clientCreationDetail.getGovernmentId(), trainedBool, trainedDateTime, clientCreationDetail.getGroupFlag(), clientFirstName, clientLastName,
                         secondLastName, spouseFatherNameDetailEntity, clientDetailEntity, pictureAsBlob,
-                        offeringsAssociatedInCreate, clientCreationDetail.getExternalId(), address);
+                        offeringsAssociatedInCreate, clientCreationDetail.getExternalId(), address, clientCreationDetail.getActivationDate());
 
                 if (ClientRules.isFamilyDetailsRequired()) {
                     client.setFamilyAndNameDetailSets(clientCreationDetail.getFamilyNames(), clientCreationDetail.getFamilyDetails());

@@ -596,7 +596,7 @@ public class ScheduleCalculatorTest {
         scheduleCalculator.applyPayment(schedule, BigDecimal.valueOf(500d), getDate(30, 10, 2010));
         RepaymentResultsHolder repaymentResultsHolder = scheduleCalculator.computeRepaymentAmount(schedule, getDate(25, 12, 2010));
         assertThat(repaymentResultsHolder.getTotalRepaymentAmount().doubleValue(),is(563.36));
-        assertThat(repaymentResultsHolder.getWaiverAmount().doubleValue(),is(0.0));
+        assertThat(repaymentResultsHolder.getWaiverAmount().doubleValue(),is(5.09));
     }
 
     @Test

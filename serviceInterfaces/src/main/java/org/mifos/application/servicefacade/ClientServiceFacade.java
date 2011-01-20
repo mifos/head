@@ -43,7 +43,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface ClientServiceFacade {
 
-    @PreAuthorize("isFullyAuthenticated()")
+    @PreAuthorize("isFullyAuthenticated() and hasAnyRole('ROLE_CREATE_CLIENT_IN_SAVE_FOR_LATER_STATE', 'ROLE_CREATE_CLIENT_IN_SUBMIT_FOR_APPROVAL_STATE')")
     ClientFormCreationDto retrieveClientFormCreationData(Short groupFlag, Short officeId, String parentGroupId);
 
     @PreAuthorize("isFullyAuthenticated()")
@@ -52,7 +52,7 @@ public interface ClientServiceFacade {
     @PreAuthorize("isFullyAuthenticated()")
     ProcessRulesDto previewClient(String governmentId, DateTime dateOfBirth, String clientName, boolean defaultFeesRemoval, Short officeId, Short loanOfficerId);
 
-    @PreAuthorize("isFullyAuthenticated()")
+    @PreAuthorize("isFullyAuthenticated() and hasAnyRole('ROLE_CREATE_CLIENT_IN_SAVE_FOR_LATER_STATE', 'ROLE_CREATE_CLIENT_IN_SUBMIT_FOR_APPROVAL_STATE')")
     CustomerDetailsDto createNewClient(ClientCreationDetail clientCreationDetail, MeetingDto meeting, List<SavingsDetailDto> allowedSavingProducts);
 
     @PreAuthorize("isFullyAuthenticated()")

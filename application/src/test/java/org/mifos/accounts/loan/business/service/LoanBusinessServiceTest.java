@@ -164,11 +164,11 @@ public class LoanBusinessServiceTest {
     @Test
     public void shouldComputeVariableInstallmentScheduleForVariableInstallmentsIfVariableInstallmentsIsEnabled() {
         RepaymentScheduleInstallment installment1 =
-                getRepaymentScheduleInstallment("01-Sep-2010", 1, "94.4", "4.6", "1", "75");
+                getRepaymentScheduleInstallment("01-Sep-2010", 1, "94.4", "4.6", "1", "75", "0", "0");
         RepaymentScheduleInstallment installment2 =
-                getRepaymentScheduleInstallment("08-Sep-2010", 2, "94.8", "4.2", "1", "100");
+                getRepaymentScheduleInstallment("08-Sep-2010", 2, "94.8", "4.2", "1", "100", "0", "0");
         RepaymentScheduleInstallment installment3 =
-                getRepaymentScheduleInstallment("15-Sep-2010", 3, "95.3", "3.7", "1", "100");
+                getRepaymentScheduleInstallment("15-Sep-2010", 3, "95.3", "3.7", "1", "100", "0", "0");
         LoanAccountActionForm loanAccountActionForm = mock(LoanAccountActionForm.class);
         List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3);
         when(loanAccountActionForm.getLoanAmount()).thenReturn("1000");
@@ -187,11 +187,11 @@ public class LoanBusinessServiceTest {
     @Test
     public void shouldComputeVariableInstallmentScheduleForVariableInstallmentsIfVariableInstallmentsIsEnabledAndInstallmentsArePassed() {
         RepaymentScheduleInstallment installment1 =
-                getRepaymentScheduleInstallment("01-Sep-2010", 1, "94.4", "4.6", "1", "75");
+                getRepaymentScheduleInstallment("01-Sep-2010", 1, "94.4", "4.6", "1", "75", "0", "0");
         RepaymentScheduleInstallment installment2 =
-                getRepaymentScheduleInstallment("08-Sep-2010", 2, "94.8", "4.2", "1", "100");
+                getRepaymentScheduleInstallment("08-Sep-2010", 2, "94.8", "4.2", "1", "100", "0", "0");
         RepaymentScheduleInstallment installment3 =
-                getRepaymentScheduleInstallment("15-Sep-2010", 3, "95.3", "3.7", "1", "100");
+                getRepaymentScheduleInstallment("15-Sep-2010", 3, "95.3", "3.7", "1", "100", "0", "0");
         LoanAccountActionForm loanAccountActionForm = mock(LoanAccountActionForm.class);
         List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3);
         when(loanAccountActionForm.getLoanAmount()).thenReturn("1000");
@@ -208,11 +208,11 @@ public class LoanBusinessServiceTest {
     @Test
     public void shouldComputeVariableInstallmentScheduleForVariableInstallmentsIfInterestTypeIsDecliningPrincipalBalance() {
         RepaymentScheduleInstallment installment1 =
-                getRepaymentScheduleInstallment("01-Sep-2010", 1, "94.4", "4.6", "1", "75");
+                getRepaymentScheduleInstallment("01-Sep-2010", 1, "94.4", "4.6", "1", "75", "0", "0");
         RepaymentScheduleInstallment installment2 =
-                getRepaymentScheduleInstallment("08-Sep-2010", 2, "94.8", "4.2", "1", "100");
+                getRepaymentScheduleInstallment("08-Sep-2010", 2, "94.8", "4.2", "1", "100", "0", "0");
         RepaymentScheduleInstallment installment3 =
-                getRepaymentScheduleInstallment("15-Sep-2010", 3, "95.3", "3.7", "1", "100");
+                getRepaymentScheduleInstallment("15-Sep-2010", 3, "95.3", "3.7", "1", "100", "0", "0");
         LoanAccountActionForm loanAccountActionForm = mock(LoanAccountActionForm.class);
         List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3);
         when(loanAccountActionForm.getLoanAmount()).thenReturn("1000");
@@ -246,13 +246,36 @@ public class LoanBusinessServiceTest {
     public void shouldGenerateMonthlyInstallmentScheduleFromRepaymentScheduleUsingDailyInterest() {
         MifosCurrency rupee = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
         RepaymentScheduleInstallment installment1 =
-                getRepaymentScheduleInstallment("25-Sep-2010", 1, "178.6", "20.4", "1", "100");
+                getRepaymentScheduleInstallment("25-Sep-2010", 1, "78.6", "20.4", "1", "100", "0", "0");
         RepaymentScheduleInstallment installment2 =
-                getRepaymentScheduleInstallment("25-Oct-2010", 2, "182.8", "16.2", "1", "200");
+                getRepaymentScheduleInstallment("25-Oct-2010", 2, "182.8", "16.2", "1", "200", "0", "0");
         RepaymentScheduleInstallment installment3 =
-                getRepaymentScheduleInstallment("25-Nov-2010", 3, "186.0", "13.0", "1", "200");
+                getRepaymentScheduleInstallment("25-Nov-2010", 3, "186.0", "13.0", "1", "200", "0", "0");
         RepaymentScheduleInstallment installment4 =
-                getRepaymentScheduleInstallment("25-Dec-2010", 4, "452.6", "8.9", "1", "462.5");
+                getRepaymentScheduleInstallment("25-Dec-2010", 4, "452.6", "8.9", "1", "462.5", "0", "0");
+        List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3, installment4);
+        Date disbursementDate = TestUtils.getDate(25, 8, 2010);
+        final Money loanAmount = new Money(rupee, "1000");
+        loanBusinessService.applyDailyInterestRates(new LoanScheduleGenerationDto(disbursementDate, loanAmount, 24d, installments));
+
+        assertInstallment(installment1, "78.6", "20.4");
+        assertInstallment(installment2, "180.8", "18.2");
+        assertInstallment(installment3, "183.9", "15.1");
+        assertInstallment(installment4, "556.7", "11.0");
+    }
+
+    //Test for the bug fix
+    @Test
+    public void shouldNotModifyPrincipalEvenIfMiscChargeIsPresent() {
+        MifosCurrency rupee = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
+        RepaymentScheduleInstallment installment1 =
+                getRepaymentScheduleInstallment("25-Sep-2010", 1, "78.6", "20.4", "1", "200", "100", "0");
+        RepaymentScheduleInstallment installment2 =
+                getRepaymentScheduleInstallment("25-Oct-2010", 2, "182.8", "16.2", "1", "200", "0", "0");
+        RepaymentScheduleInstallment installment3 =
+                getRepaymentScheduleInstallment("25-Nov-2010", 3, "186.0", "13.0", "1", "200", "0", "0");
+        RepaymentScheduleInstallment installment4 =
+                getRepaymentScheduleInstallment("25-Dec-2010", 4, "452.6", "8.9", "1", "462.5", "0", "0");
         List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3, installment4);
         Date disbursementDate = TestUtils.getDate(25, 8, 2010);
         final Money loanAmount = new Money(rupee, "1000");
@@ -268,13 +291,13 @@ public class LoanBusinessServiceTest {
     public void shouldGenerateWeeklyInstallmentScheduleFromRepaymentScheduleUsingDailyInterest() {
         MifosCurrency rupee = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
         RepaymentScheduleInstallment installment1 =
-                getRepaymentScheduleInstallment("01-Sep-2010", 1, "194.4", "4.6", "1", "100");
+                getRepaymentScheduleInstallment("01-Sep-2010", 1, "194.4", "4.6", "1", "100", "0", "0");
         RepaymentScheduleInstallment installment2 =
-                getRepaymentScheduleInstallment("08-Sep-2010", 2, "195.3", "3.7", "1", "200");
+                getRepaymentScheduleInstallment("08-Sep-2010", 2, "195.3", "3.7", "1", "200", "0", "0");
         RepaymentScheduleInstallment installment3 =
-                getRepaymentScheduleInstallment("15-Sep-2010", 3, "196.2", "2.8", "1", "200");
+                getRepaymentScheduleInstallment("15-Sep-2010", 3, "196.2", "2.8", "1", "200", "0", "0");
         RepaymentScheduleInstallment installment4 =
-                getRepaymentScheduleInstallment("22-Sep-2010", 4, "414.1", "1.9", "1", "417.0");
+                getRepaymentScheduleInstallment("22-Sep-2010", 4, "414.1", "1.9", "1", "417.0", "0", "0");
         List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3, installment4);
         Date disbursementDate = TestUtils.getDate(25, 8, 2010);
         final Money loanAmount = new Money(rupee, "1000");
@@ -289,19 +312,19 @@ public class LoanBusinessServiceTest {
     @Test
     public void shouldGenerateInstallmentScheduleFromRepaymentScheduleUsingDailyInterest() {
         RepaymentScheduleInstallment installment1 =
-                getRepaymentScheduleInstallment("01-Sep-2010", 1, "94.4", "4.6", "1", "75");
+                getRepaymentScheduleInstallment("01-Sep-2010", 1, "94.4", "4.6", "1", "75", "0", "0");
         RepaymentScheduleInstallment installment2 =
-                getRepaymentScheduleInstallment("08-Sep-2010", 2, "94.8", "4.2", "1", "100");
+                getRepaymentScheduleInstallment("08-Sep-2010", 2, "94.8", "4.2", "1", "100", "0", "0");
         RepaymentScheduleInstallment installment3 =
-                getRepaymentScheduleInstallment("15-Sep-2010", 3, "95.3", "3.7", "1", "100");
+                getRepaymentScheduleInstallment("15-Sep-2010", 3, "95.3", "3.7", "1", "100", "0", "0");
         RepaymentScheduleInstallment installment4 =
-                getRepaymentScheduleInstallment("15-Oct-2010", 4, "84.9", "14.1", "1", "100");
+                getRepaymentScheduleInstallment("15-Oct-2010", 4, "84.9", "14.1", "1", "100", "0", "0");
         RepaymentScheduleInstallment installment5 =
-                getRepaymentScheduleInstallment("25-Oct-2010", 5, "94.9", "4.2", "1", "100");
+                getRepaymentScheduleInstallment("25-Oct-2010", 5, "94.9", "4.2", "1", "100", "0", "0");
         RepaymentScheduleInstallment installment6 =
-                getRepaymentScheduleInstallment("01-Nov-2010", 6, "96.5", "2.5", "1", "100");
+                getRepaymentScheduleInstallment("01-Nov-2010", 6, "96.5", "2.5", "1", "100", "0", "0");
         RepaymentScheduleInstallment installment7 =
-                getRepaymentScheduleInstallment("18-Nov-2010", 7, "439.2", "4.9", "1", "445.1");
+                getRepaymentScheduleInstallment("18-Nov-2010", 7, "439.2", "4.9", "1", "445.1", "0", "0");
         List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3,
                 installment4, installment5, installment6, installment7);
         Date disbursementDate = TestUtils.getDate(25, 8, 2010);
@@ -320,19 +343,19 @@ public class LoanBusinessServiceTest {
     @Test
     public void shouldMaintainInstallmentGapsPostDisbursal() {
         RepaymentScheduleInstallment installment1 =
-                getRepaymentScheduleInstallment("01-Sep-2010", 1, "94.4", "4.6", "1", "75");
+                getRepaymentScheduleInstallment("01-Sep-2010", 1, "94.4", "4.6", "1", "75", "0", "0");
         RepaymentScheduleInstallment installment2 =
-                getRepaymentScheduleInstallment("08-Sep-2010", 2, "94.8", "4.2", "1", "100");
+                getRepaymentScheduleInstallment("08-Sep-2010", 2, "94.8", "4.2", "1", "100", "0", "0");
         RepaymentScheduleInstallment installment3 =
-                getRepaymentScheduleInstallment("15-Sep-2010", 3, "95.3", "3.7", "1", "100");
+                getRepaymentScheduleInstallment("15-Sep-2010", 3, "95.3", "3.7", "1", "100", "0", "0");
         RepaymentScheduleInstallment installment4 =
-                getRepaymentScheduleInstallment("15-Oct-2010", 4, "84.9", "14.1", "1", "100");
+                getRepaymentScheduleInstallment("15-Oct-2010", 4, "84.9", "14.1", "1", "100", "0", "0");
         RepaymentScheduleInstallment installment5 =
-                getRepaymentScheduleInstallment("25-Oct-2010", 5, "94.9", "4.2", "1", "100");
+                getRepaymentScheduleInstallment("25-Oct-2010", 5, "94.9", "4.2", "1", "100", "0", "0");
         RepaymentScheduleInstallment installment6 =
-                getRepaymentScheduleInstallment("01-Nov-2010", 6, "96.5", "2.5", "1", "100");
+                getRepaymentScheduleInstallment("01-Nov-2010", 6, "96.5", "2.5", "1", "100", "0", "0");
         RepaymentScheduleInstallment installment7 =
-                getRepaymentScheduleInstallment("18-Nov-2010", 7, "439.2", "4.9", "1", "445.1");
+                getRepaymentScheduleInstallment("18-Nov-2010", 7, "439.2", "4.9", "1", "445.1", "0", "0");
         List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3,
                 installment4, installment5, installment6, installment7);
         Date initialDisbursementDate = TestUtils.getDate(25, 8, 2010);
@@ -354,19 +377,19 @@ public class LoanBusinessServiceTest {
     @Test
     public void shouldMaintainInstallmentGapsPostDisbursalWithNewDisbursalDateBeforeOldDisbursalDate() {
         RepaymentScheduleInstallment installment1 =
-                getRepaymentScheduleInstallment("01-Sep-2010", 1, "94.4", "4.6", "1", "75");
+                getRepaymentScheduleInstallment("01-Sep-2010", 1, "94.4", "4.6", "1", "75", "0", "0");
         RepaymentScheduleInstallment installment2 =
-                getRepaymentScheduleInstallment("08-Sep-2010", 2, "94.8", "4.2", "1", "100");
+                getRepaymentScheduleInstallment("08-Sep-2010", 2, "94.8", "4.2", "1", "100", "0", "0");
         RepaymentScheduleInstallment installment3 =
-                getRepaymentScheduleInstallment("15-Sep-2010", 3, "95.3", "3.7", "1", "100");
+                getRepaymentScheduleInstallment("15-Sep-2010", 3, "95.3", "3.7", "1", "100", "0", "0");
         RepaymentScheduleInstallment installment4 =
-                getRepaymentScheduleInstallment("15-Oct-2010", 4, "84.9", "14.1", "1", "100");
+                getRepaymentScheduleInstallment("15-Oct-2010", 4, "84.9", "14.1", "1", "100", "0", "0");
         RepaymentScheduleInstallment installment5 =
-                getRepaymentScheduleInstallment("25-Oct-2010", 5, "94.9", "4.2", "1", "100");
+                getRepaymentScheduleInstallment("25-Oct-2010", 5, "94.9", "4.2", "1", "100", "0", "0");
         RepaymentScheduleInstallment installment6 =
-                getRepaymentScheduleInstallment("01-Nov-2010", 6, "96.5", "2.5", "1", "100");
+                getRepaymentScheduleInstallment("01-Nov-2010", 6, "96.5", "2.5", "1", "100", "0", "0");
         RepaymentScheduleInstallment installment7 =
-                getRepaymentScheduleInstallment("18-Nov-2010", 7, "439.2", "4.9", "1", "445.1");
+                getRepaymentScheduleInstallment("18-Nov-2010", 7, "439.2", "4.9", "1", "445.1", "0", "0");
         List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3,
                 installment4, installment5, installment6, installment7);
         Date initialDisbursementDate = TestUtils.getDate(25, 8, 2010);
@@ -470,10 +493,11 @@ public class LoanBusinessServiceTest {
 
     private RepaymentScheduleInstallment getRepaymentScheduleInstallment(String dueDate, int installment,
                                                                          String principal, String interest,
-                                                                         String fees, String total) {
+                                                                         String fees, String total, String miscFee, String miscPenality) {
         return installmentBuilder.reset(locale).withInstallment(installment).withDueDateValue(dueDate).
                 withPrincipal(new Money(rupee, principal)).withInterest(new Money(rupee, interest)).
-                withFees(new Money(rupee, fees)).withTotalValue(total).build();
+
+                withFees(new Money(rupee, fees)).withMiscFee(new Money(rupee, miscFee)).withMiscPenality(new Money(rupee, miscPenality)).withTotalValue(total).build();
     }
 
 }

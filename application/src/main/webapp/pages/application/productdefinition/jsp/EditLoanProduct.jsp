@@ -1139,10 +1139,10 @@ explanation of the license and how it is applied.
 							</td>
 						</tr>
 						<tr class="fontnormal">
-							<td align="right" valign="top"><mifos:mifoslabel
+							<td width="30%" align="right" valign="top"><mifos:mifoslabel
 								name="product.attachfeestypes" bundle="ProductDefUIResources" isColonRequired="yes"/>
 							</td>
-							<td valign="top">
+							<td width="70%" valign="top">
 							<table width="80%" border="0" cellspacing="0" cellpadding="0">
 								<tr>
 									<td class="fontnormal"><mifos:mifoslabel

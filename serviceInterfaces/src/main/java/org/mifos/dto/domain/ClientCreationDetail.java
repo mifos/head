@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 
+import org.joda.time.LocalDate;
 import org.mifos.dto.screen.ClientFamilyDetailDto;
 import org.mifos.dto.screen.ClientNameDetailDto;
 import org.mifos.dto.screen.ClientPersonalDetailDto;
@@ -54,6 +55,7 @@ public class ClientCreationDetail {
     private final Short loanOfficerId;
     private final Short officeId;
     private final ClientNameDetailDto spouseFatherName;
+    private final LocalDate activationDate;
 
     public ClientCreationDetail(List<Short> selectedSavingProducts, String clientName, Short clientStatus,
             Date mfiJoiningDate, String externalId, AddressDto address, Short formedBy, Date dateOfBirth,
@@ -61,7 +63,7 @@ public class ClientCreationDetail {
             ClientNameDetailDto clientNameDetailDto, ClientPersonalDetailDto clientPersonalDetailDto,
             ClientNameDetailDto spouseFatherName, InputStream picture, List<ApplicableAccountFeeDto> feesToApply, String parentGroupId,
             List<ClientNameDetailDto> familyNames, List<ClientFamilyDetailDto> familyDetails,
-            Short loanOfficerId, Short officeId) {
+            Short loanOfficerId, Short officeId, LocalDate activationDate) {
         this.selectedSavingProducts = selectedSavingProducts;
         this.clientName = clientName;
         this.clientStatus = clientStatus;
@@ -84,6 +86,7 @@ public class ClientCreationDetail {
         this.familyDetails = familyDetails;
         this.loanOfficerId = loanOfficerId;
         this.officeId = officeId;
+        this.activationDate = activationDate;
     }
 
     public List<Short> getSelectedSavingProducts() {
@@ -172,5 +175,9 @@ public class ClientCreationDetail {
 
     public ClientNameDetailDto getSpouseFatherName() {
         return this.spouseFatherName;
+    }
+
+    public LocalDate getActivationDate() {
+        return this.activationDate;
     }
 }
