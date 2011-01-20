@@ -237,8 +237,10 @@ public class LoanBusinessService implements BusinessService {
             long duration = DateUtils.getNumberOfDaysBetweenTwoDates(currentDueDate, initialDueDate);
             Money fees = installment.getFees();
             Money interest = computeInterestAmount(dailyInterestFactor, principalOutstanding, installment, duration);
+            Money miscFee = installment.getMiscFees();
+            Money miscPenality = installment.getMiscPenalty();
             Money total = installment.getTotalValue();
-            Money principal = total.subtract(interest.add(fees));
+            Money principal = total.subtract(interest.add(fees).add(miscFee).add(miscPenality));
             installment.setPrincipalAndInterest(interest, principal);
             initialDueDate = currentDueDate;
             principalOutstanding = principalOutstanding.subtract(principal);
