@@ -38,6 +38,7 @@ import org.mifos.dto.screen.LoanCreationPreviewDto;
 import org.mifos.dto.screen.LoanCreationProductDetailsDto;
 import org.mifos.dto.screen.LoanCreationResultDto;
 import org.mifos.dto.screen.LoanDisbursalDto;
+import org.mifos.dto.screen.LoanInformationDto;
 import org.mifos.dto.screen.LoanScheduledInstallmentDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -87,4 +88,7 @@ public interface LoanAccountServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     void makeEarlyRepayment(String globalAccountNum, String earlyRepayAmount, String receiptNumber, java.sql.Date receiptDate, String paymentTypeId, Short id, boolean waiveInterest);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    LoanInformationDto retrieveLoanInformation(String globalAccountNum);
 }

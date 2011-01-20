@@ -1,18 +1,36 @@
-package org.mifos.accounts.loan.business.service;
+/*
+ * Copyright (c) 2005-2010 Grameen Foundation USA
+ * All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ *
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ * explanation of the license and how it is applied.
+ */
 
+package org.mifos.dto.screen;
+
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import org.mifos.accounts.business.AccountCustomFieldEntity;
-import org.mifos.accounts.business.AccountNotesEntity;
-import org.mifos.accounts.util.helpers.AccountState;
-import org.mifos.customers.api.DataTransferObject;
 import org.mifos.dto.domain.LoanActivityDto;
 import org.mifos.dto.domain.SurveyDto;
-import org.mifos.framework.util.helpers.Money;
 
-public class LoanInformationDto implements DataTransferObject {
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID", "EI_EXPOSE_REP", "EI_EXPOSE_REP2"}, justification="should disable at filter level and also for pmd - not important for us")
+public class LoanInformationDto implements Serializable {
 
     private final Integer accountId;
     private final String globalAccountNum;
@@ -28,14 +46,13 @@ public class LoanInformationDto implements DataTransferObject {
     private final Integer businessActivityId;
     private final String gracePeriodTypeName;
     private final String interestTypeName;
-    private final List<AccountNotesEntity> recentAccountNotes;
     private final Short accountTypeId;
     private final String officeName;
     private final Short officeId;
     private final Short personnelId;
     private final Date nextMeetingDate;
-    private final Money totalAmountDue;
-    private final Money totalAmountInArrears;
+    private final String totalAmountDue;
+    private final String totalAmountInArrears;
     private final LoanSummaryDto loanSummary;
     private final boolean loanActivityDetails;
     private final Double interestRate;
@@ -51,7 +68,6 @@ public class LoanInformationDto implements DataTransferObject {
     private final Integer collateralTypeId;
     private final String collateralNote;
     private final String externalId;
-    private final Set<AccountCustomFieldEntity> accountCustomFields;
     private final Set<AccountFeesDto> accountFees;
     private final Date createdDate;
     private final LoanPerformanceHistoryDto performanceHistory;
@@ -60,16 +76,17 @@ public class LoanInformationDto implements DataTransferObject {
 
     private final Boolean activeSurveys;
     private final List<SurveyDto> accountSurveys;
+    private boolean disbursed;
 
 
-    public LoanInformationDto(String prdOfferingName, String globalAccountNum, Short accountStateId, String accountStateName,
+    public LoanInformationDto(String prdOfferingName, String globalAccountNum, Short accountStateId, String accountStateName, boolean disbursed,
                               Set<String> accountFlagNames, Date disbursementDate, boolean redone, Integer businessActivityId,
-                              Integer accountId,String gracePeriodTypeName, String interestTypeName, List<AccountNotesEntity> recentAccountNotes,
-                              Integer customerId, Short accountTypeId, Short officeId, Short personnelId, Date nextMeetingDate, Money totalAmountDue,
-                              Money totalAmountInArrears, LoanSummaryDto loanSummary, boolean loanActivityDetails, Double interestRate,
+                              Integer accountId,String gracePeriodTypeName, String interestTypeName,
+                              Integer customerId, Short accountTypeId, Short officeId, Short personnelId, Date nextMeetingDate, String totalAmountDue,
+                              String totalAmountInArrears, LoanSummaryDto loanSummary, boolean loanActivityDetails, Double interestRate,
                               boolean interestDeductedAtDisbursement,Short recurAfter, Short recurrenceId, boolean prinDueLastInst,
                               Short noOfInstallments, Short minNoOfInstall, Short maxNoOfInstall, Short gracePeriodDuration, String fundName,
-                              Integer collateralTypeId,String collateralNote, String externalId, Set<AccountCustomFieldEntity> accountCustomFields,
+                              Integer collateralTypeId,String collateralNote, String externalId,
                               Set<AccountFeesDto> accountFees, Date createdDate, LoanPerformanceHistoryDto performanceHistory, boolean group,
                               List<LoanActivityDto> recentAccountActivities, final Boolean activeSurveys, final List<SurveyDto> accountSurveys,
                               String customerName, String globalCustNum, String officeName) {
@@ -78,6 +95,7 @@ public class LoanInformationDto implements DataTransferObject {
         this.globalAccountNum = globalAccountNum;
         this.accountStateId = accountStateId;
         this.accountStateName = accountStateName;
+        this.disbursed = disbursed;
         this.accountFlagNames = accountFlagNames;
         this.disbursementDate = disbursementDate;
         this.redone = redone;
@@ -85,7 +103,6 @@ public class LoanInformationDto implements DataTransferObject {
         this.accountId = accountId;
         this.gracePeriodTypeName = gracePeriodTypeName;
         this.interestTypeName = interestTypeName;
-        this.recentAccountNotes = recentAccountNotes;
         this.customerId = customerId;
         this.accountTypeId = accountTypeId;
         this.officeId = officeId;
@@ -108,7 +125,6 @@ public class LoanInformationDto implements DataTransferObject {
         this.collateralTypeId = collateralTypeId;
         this.collateralNote = collateralNote;
         this.externalId = externalId;
-        this.accountCustomFields = accountCustomFields;
         this.accountFees = accountFees;
         this.createdDate = createdDate;
         this.performanceHistory = performanceHistory;
@@ -167,10 +183,6 @@ public class LoanInformationDto implements DataTransferObject {
         return this.interestTypeName;
     }
 
-    public List<AccountNotesEntity> getRecentAccountNotes() {
-        return this.recentAccountNotes;
-    }
-
     public Integer getCustomerId() {
         return this.customerId;
     }
@@ -191,11 +203,11 @@ public class LoanInformationDto implements DataTransferObject {
         return this.nextMeetingDate;
     }
 
-    public Money getTotalAmountDue() {
+    public String getTotalAmountDue() {
         return this.totalAmountDue;
     }
 
-    public Money getTotalAmountInArrears() {
+    public String getTotalAmountInArrears() {
         return this.totalAmountInArrears;
     }
 
@@ -259,10 +271,6 @@ public class LoanInformationDto implements DataTransferObject {
         return this.externalId;
     }
 
-    public Set<AccountCustomFieldEntity> getAccountCustomFields() {
-        return this.accountCustomFields;
-    }
-
     public Set<AccountFeesDto> getAccountFees() {
         return this.accountFees;
     }
@@ -304,6 +312,6 @@ public class LoanInformationDto implements DataTransferObject {
     }
 
     public boolean isDisbursed() {
-        return AccountState.isDisbursed(accountStateId);
+        return disbursed;
     }
 }

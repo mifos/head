@@ -25,13 +25,18 @@ import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_DAYS_BETWEE
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountActionDateEntity;
+import org.mifos.accounts.business.AccountFeesEntity;
+import org.mifos.accounts.business.AccountFlagMapping;
 import org.mifos.accounts.business.AccountNotesEntity;
 import org.mifos.accounts.business.AccountStateEntity;
+import org.mifos.accounts.business.AccountStateFlagEntity;
 import org.mifos.accounts.business.AccountStateMachines;
 import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.accounts.exceptions.AccountException;
@@ -48,6 +53,7 @@ import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.struts.action.validate.ProductMixValidator;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
+import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.accounts.productdefinition.business.LoanAmountOption;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingFundEntity;
@@ -61,6 +67,7 @@ import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
 import org.mifos.application.master.business.CustomValueDto;
 import org.mifos.application.master.business.CustomValueListElementDto;
+import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.persistence.MasterPersistence;
@@ -69,6 +76,7 @@ import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.MeetingDetailsEntity;
 import org.mifos.application.meeting.exceptions.MeetingException;
+import org.mifos.application.meeting.util.helpers.MeetingHelper;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
@@ -83,6 +91,8 @@ import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
+import org.mifos.customers.surveys.helpers.SurveyType;
+import org.mifos.customers.surveys.persistence.SurveysPersistence;
 import org.mifos.dto.domain.AccountStatusDto;
 import org.mifos.dto.domain.AccountUpdateStatus;
 import org.mifos.dto.domain.CreateAccountNote;
@@ -95,7 +105,9 @@ import org.mifos.dto.domain.LoanInstallmentDetailsDto;
 import org.mifos.dto.domain.LoanPaymentDto;
 import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.domain.PrdOfferingDto;
+import org.mifos.dto.domain.SurveyDto;
 import org.mifos.dto.domain.ValueListElement;
+import org.mifos.dto.screen.AccountFeesDto;
 import org.mifos.dto.screen.ListElement;
 import org.mifos.dto.screen.LoanAccountDetailDto;
 import org.mifos.dto.screen.LoanAccountInfoDto;
@@ -106,7 +118,10 @@ import org.mifos.dto.screen.LoanCreationPreviewDto;
 import org.mifos.dto.screen.LoanCreationProductDetailsDto;
 import org.mifos.dto.screen.LoanCreationResultDto;
 import org.mifos.dto.screen.LoanDisbursalDto;
+import org.mifos.dto.screen.LoanInformationDto;
+import org.mifos.dto.screen.LoanPerformanceHistoryDto;
 import org.mifos.dto.screen.LoanScheduledInstallmentDto;
+import org.mifos.dto.screen.LoanSummaryDto;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -823,5 +838,184 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         } catch (AccountException e) {
             throw new BusinessRuleException(e.getKey(), e);
         }
+    }
+
+    public LoanInformationDto retrieveLoanInformation(String globalAccountNum) {
+
+        MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = new UserContextFactory().create(mifosUser);
+
+        LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
+        String fundName = null;
+        if (loan.getFund() != null) {
+            fundName = loan.getFund().getFundName();
+        }
+
+        SurveysPersistence surveysPersistence = new SurveysPersistence();
+        boolean activeSurveys = surveysPersistence.isActiveSurveysForSurveyType(SurveyType.LOAN);
+        List<SurveyDto> accountSurveys = loanDao.getAccountSurveyDto(loan.getAccountId());
+
+        LoanSummaryDto loanSummary = new LoanSummaryDto(loan.getLoanSummary().getOriginalPrincipal().toString(), loan.getLoanSummary().getPrincipalPaid().toString(),
+                                                        loan.getLoanSummary().getPrincipalDue().toString(), loan.getLoanSummary().getOriginalInterest().toString(),
+                                                        loan.getLoanSummary().getInterestPaid().toString(), loan.getLoanSummary().getInterestDue().toString(),
+                                                        loan.getLoanSummary().getOriginalFees().toString(), loan.getLoanSummary().getFeesPaid().toString(),
+                                                        loan.getLoanSummary().getFeesDue().toString(), loan.getLoanSummary().getOriginalPenalty().toString(),
+                                                        loan.getLoanSummary().getPenaltyPaid().toString(), loan.getLoanSummary().getPenaltyDue().toString(),
+                                                        loan.getLoanSummary().getTotalLoanAmnt().toString(), loan.getLoanSummary().getTotalAmntPaid().toString(),
+                                                        loan.getLoanSummary().getTotalAmntDue().toString());
+
+        LoanPerformanceHistoryDto loanPerformanceHistory = new LoanPerformanceHistoryDto(loan.getPerformanceHistory().getNoOfPayments(),
+                                                                                        loan.getPerformanceHistory().getTotalNoOfMissedPayments(),
+                                                                                        loan.getPerformanceHistory().getDaysInArrears(),
+                                                                                        loan.getPerformanceHistory().getLoanMaturityDate());
+
+        Set<AccountFeesDto> accountFeesDtos = new HashSet<AccountFeesDto>();
+        if(!loan.getAccountFees().isEmpty()) {
+            for (AccountFeesEntity accountFeesEntity: loan.getAccountFees()) {
+                AccountFeesDto accountFeesDto = new AccountFeesDto(accountFeesEntity.getFees().getFeeFrequency().getFeeFrequencyType().getId(),
+                                                                  accountFeesEntity.getFeeStatus(), accountFeesEntity.getFees().getFeeName(),
+                                                                  accountFeesEntity.getAccountFeeAmount().toString(),
+                                                                  getMeetingRecurrence(accountFeesEntity.getFees().getFeeFrequency()
+                                                                          .getFeeMeetingFrequency(), userContext),
+                                                                  accountFeesEntity.getFees().getFeeId());
+                accountFeesDtos.add(accountFeesDto);
+            }
+        }
+
+        Set<String> accountFlagNames = getAccountStateFlagEntityNames(loan.getAccountFlags());
+        Short accountStateId = loan.getAccountState().getId();
+        String accountStateName = getAccountStateName(accountStateId);
+        boolean disbursed = AccountState.isDisbursed(accountStateId);
+        String gracePeriodTypeName = getGracePeriodTypeName(loan.getGracePeriodType().getId());
+        String interestTypeName = getInterestTypeName(loan.getInterestType().getId());
+
+        return new LoanInformationDto(loan.getLoanOffering().getPrdOfferingName(), globalAccountNum, accountStateId,
+                                     accountStateName, disbursed, accountFlagNames, loan.getDisbursementDate(), loan.isRedone(),
+                                     loan.getBusinessActivityId(), loan.getAccountId(),gracePeriodTypeName, interestTypeName,
+                                     loan.getCustomer().getCustomerId(), loan.getAccountType().getAccountTypeId(),
+                                     loan.getOffice().getOfficeId(), loan.getPersonnel().getPersonnelId(), loan.getNextMeetingDate(),
+                                     loan.getTotalAmountDue().toString(), loan.getTotalAmountInArrears().toString(), loanSummary,
+                                     loan.getLoanActivityDetails().isEmpty()? false: true, loan.getInterestRate(),
+                                     loan.isInterestDeductedAtDisbursement(),
+                                     loan.getLoanOffering().getLoanOfferingMeeting().getMeeting().getMeetingDetails().getRecurAfter(),
+                                     loan.getLoanOffering().getLoanOfferingMeeting().getMeeting().getMeetingDetails().getRecurrenceType().getRecurrenceId(),
+                                     loan.getLoanOffering().isPrinDueLastInst(), loan.getNoOfInstallments(),
+                                     loan.getMaxMinNoOfInstall().getMinNoOfInstall(), loan.getMaxMinNoOfInstall().getMaxNoOfInstall(),
+                                     loan.getGracePeriodDuration(), fundName, loan.getCollateralTypeId(), loan.getCollateralNote(),loan.getExternalId(),
+                                     accountFeesDtos, loan.getCreatedDate(), loanPerformanceHistory,
+                                     loan.getCustomer().isGroup(), getRecentActivityView(globalAccountNum), activeSurveys, accountSurveys,
+                                     loan.getCustomer().getDisplayName(), loan.getCustomer().getGlobalCustNum(), loan.getOffice().getOfficeName());
+    }
+
+    private String getMeetingRecurrence(MeetingBO meeting, UserContext userContext) {
+        return meeting != null ? new MeetingHelper().getMessageWithFrequency(meeting, userContext) : null;
+    }
+
+    private String getAccountStateName(Short id) {
+
+        MasterPersistence masterPersistence = new MasterPersistence();
+        AccountStateEntity accountStateEntity;
+        try {
+            accountStateEntity = (AccountStateEntity) masterPersistence.getPersistentObject(AccountStateEntity.class,
+                    id);
+            return accountStateEntity.getLookUpValue().getLookUpName();
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e.toString());
+        }
+    }
+
+    private String getGracePeriodTypeName(Short id) {
+
+        MasterPersistence masterPersistence = new MasterPersistence();
+        GracePeriodTypeEntity gracePeriodType;
+        try {
+            gracePeriodType = (GracePeriodTypeEntity) masterPersistence.getPersistentObject(GracePeriodTypeEntity.class,
+                    id);
+            return gracePeriodType.getLookUpValue().getLookUpName();
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e.toString());
+        }
+    }
+
+    private String getInterestTypeName(Short id) {
+
+        MasterPersistence masterPersistence = new MasterPersistence();
+        InterestTypesEntity interestType;
+        try {
+            interestType = (InterestTypesEntity) masterPersistence.getPersistentObject(InterestTypesEntity.class,
+                    id);
+            return interestType.getLookUpValue().getLookUpName();
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e.toString());
+        }
+    }
+
+    private Set<String> getAccountStateFlagEntityNames(Set<AccountFlagMapping> accountFlagMappings) {
+        Set<String> accountFlagNames = new HashSet<String>();
+        if(!accountFlagMappings.isEmpty()) {
+            for (AccountFlagMapping accountFlagMapping: accountFlagMappings) {
+                String accountFlagName = getAccountStateFlagEntityName(accountFlagMapping.getFlag().getId());
+                accountFlagNames.add(accountFlagName);
+            }
+        }
+        return accountFlagNames;
+    }
+
+    private String getAccountStateFlagEntityName(Short id) {
+        MasterPersistence masterPersistence = new MasterPersistence();
+        AccountStateFlagEntity accountStateFlagEntity;
+        try {
+            accountStateFlagEntity = (AccountStateFlagEntity) masterPersistence.getPersistentObject(AccountStateFlagEntity.class,
+                    id);
+            return accountStateFlagEntity.getLookUpValue().getLookUpName();
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e.toString());
+        }
+    }
+
+    private List<LoanActivityDto> getRecentActivityView(final String globalAccountNumber) {
+        LoanBO loanBO = loanDao.findByGlobalAccountNum(globalAccountNumber);
+        List<LoanActivityEntity> loanAccountActivityDetails = loanBO.getLoanActivityDetails();
+        List<LoanActivityDto> recentActivityView = new ArrayList<LoanActivityDto>();
+
+        int count = 0;
+        for (LoanActivityEntity loanActivity : loanAccountActivityDetails) {
+            recentActivityView.add(getLoanActivityView(loanActivity));
+            if (++count == 3) {
+                break;
+            }
+        }
+        return recentActivityView;
+    }
+
+    private LoanActivityDto getLoanActivityView(final LoanActivityEntity loanActivity) {
+        LoanActivityDto loanActivityDto = new LoanActivityDto();
+        loanActivityDto.setId(loanActivity.getAccount().getAccountId());
+        loanActivityDto.setActionDate(loanActivity.getTrxnCreatedDate());
+        loanActivityDto.setActivity(loanActivity.getComments());
+        loanActivityDto.setPrincipal(removeSign(loanActivity.getPrincipal()).toString());
+        loanActivityDto.setInterest(removeSign(loanActivity.getInterest()).toString());
+        loanActivityDto.setPenalty(removeSign(loanActivity.getPenalty()).toString());
+        loanActivityDto.setFees(removeSign(loanActivity.getFee()).toString());
+        Money total = removeSign(loanActivity.getFee()).add(removeSign(loanActivity.getPenalty())).add(
+                removeSign(loanActivity.getPrincipal())).add(removeSign(loanActivity.getInterest()));
+        loanActivityDto.setTotal(total.toString());
+        loanActivityDto.setTimeStamp(loanActivity.getTrxnCreatedDate());
+        loanActivityDto.setRunningBalanceInterest(loanActivity.getInterestOutstanding().toString());
+        loanActivityDto.setRunningBalancePrinciple(loanActivity.getPrincipalOutstanding().toString());
+        loanActivityDto.setRunningBalanceFees(loanActivity.getFeeOutstanding().toString());
+        loanActivityDto.setRunningBalancePenalty(loanActivity.getPenaltyOutstanding().toString());
+
+        loanActivityDto.setRunningBalancePrincipleWithInterestAndFees(loanActivity.getPrincipalOutstanding().add(loanActivity.getInterestOutstanding()).add(loanActivity.getFeeOutstanding()).toString());
+
+        return loanActivityDto;
+    }
+
+    private Money removeSign(final Money amount) {
+        if (amount != null && amount.isLessThanZero()) {
+            return amount.negate();
+        }
+
+        return amount;
     }
 }

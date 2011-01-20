@@ -85,7 +85,6 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.MaxMinInterestRate;
 import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
-import org.mifos.accounts.loan.business.service.LoanInformationDto;
 import org.mifos.accounts.loan.business.service.LoanScheduleGenerationDto;
 import org.mifos.accounts.loan.business.service.OriginalScheduleInfoDto;
 import org.mifos.accounts.loan.persistance.LoanDaoHibernate;
@@ -158,6 +157,7 @@ import org.mifos.dto.screen.LoanCreationLoanDetailsDto;
 import org.mifos.dto.screen.LoanCreationPreviewDto;
 import org.mifos.dto.screen.LoanCreationProductDetailsDto;
 import org.mifos.dto.screen.LoanCreationResultDto;
+import org.mifos.dto.screen.LoanInformationDto;
 import org.mifos.dto.screen.LoanScheduledInstallmentDto;
 import org.mifos.framework.business.util.helpers.MethodNameConstants;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -598,9 +598,6 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         return forwardAfterCashflowBinding;
     }
 
-
-
-
     private boolean bindCashflowIfPresent(final HttpServletRequest request, final ActionForm form) throws Exception {
         boolean cashflowBound = false;
 
@@ -889,7 +886,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         loanAccountActionForm.clearDetailsForLoan();
         String globalAccountNum = request.getParameter(GLOBAL_ACCOUNT_NUM);
         UserContext userContext = getUserContext(request);
-        LoanInformationDto loanInformationDto = this.loanServiceFacade.getLoanInformationDto(globalAccountNum, userContext);
+        LoanInformationDto loanInformationDto = this.loanAccountServiceFacade.retrieveLoanInformation(globalAccountNum);
 
         final String accountStateNameLocalised = MessageLookup.getInstance().lookup(
                 loanInformationDto.getAccountStateName(), userContext);
@@ -950,7 +947,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         }
 
         // John W - temporarily put back because needed in applychargeaction - update
-        LoanBO loan = new LoanDaoHibernate(new GenericDaoHibernate()).findById(loanInformationDto.getAccountId());
+        LoanBO loan = this.loanDao.findById(loanInformationDto.getAccountId());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
         setCurrentPageUrl(request, loan);
         setQuestionGroupInstances(request, loan);
