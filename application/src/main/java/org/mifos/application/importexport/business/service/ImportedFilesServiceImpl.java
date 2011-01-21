@@ -23,40 +23,45 @@ package org.mifos.application.importexport.business.service;
 import java.sql.Timestamp;
 
 import org.mifos.application.importexport.business.ImportedFilesEntity;
-import org.mifos.application.importexport.persistence.HibernateImportedFilesDao;
 import org.mifos.application.importexport.persistence.ImportedFilesDao;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
+import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
 
-public class StandardImportedFilesService implements ImportedFilesService {
+public class ImportedFilesServiceImpl implements ImportedFilesService {
 
     private ImportedFilesDao importedFileDao;
+    private HibernateTransactionHelper hibernateTransactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
 
-    public ImportedFilesDao getImportedFileDao() {
-        //TODO use Spring context
-        if(importedFileDao == null){
-            importedFileDao = new HibernateImportedFilesDao();
-        }
-        return importedFileDao;
-    }
-
-    public void setImportedFileDao(ImportedFilesDao importedFileDao) {
-        this.importedFileDao = importedFileDao;
+    public ImportedFilesServiceImpl(ImportedFilesDao importedFilesDao) {
+        this.importedFileDao = importedFilesDao;
     }
 
     @Override
-    public void saveImportedFileName(String fileName, PersonnelBO submittedBy) throws Exception {
+    public void saveImportedFileName(String fileName, PersonnelBO submittedBy) {
         Timestamp submittedOn = new Timestamp(new DateTimeService().getCurrentDateTime().getMillis());
         ImportedFilesEntity importedFile = new ImportedFilesEntity(fileName, submittedOn, submittedBy);
-        StaticHibernateUtil.startTransaction();
-        getImportedFileDao().saveImportedFile(importedFile);
-        StaticHibernateUtil.commitTransaction();
+
+        try {
+            hibernateTransactionHelper.startTransaction();
+            importedFileDao.saveImportedFile(importedFile);
+            hibernateTransactionHelper.commitTransaction();
+        } catch (Exception e) {
+            hibernateTransactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            hibernateTransactionHelper.closeSession();
+        }
     }
 
     @Override
-    public ImportedFilesEntity getImportedFileByName(String fileName) throws Exception {
-        return getImportedFileDao().findImportedFileByName(fileName);
+    public ImportedFilesEntity getImportedFileByName(String fileName) {
+        return this.importedFileDao.findImportedFileByName(fileName);
     }
 
+    public void setHibernateTransactionHelper(HibernateTransactionHelper hibernateTransactionHelper) {
+        this.hibernateTransactionHelper = hibernateTransactionHelper;
+    }
 }

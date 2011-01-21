@@ -110,9 +110,6 @@ public class AccountPaymentParametersDto {
         }
         this.paymentDate = paymentDate;
 
-        if (null == paymentType) {
-            throw new IllegalArgumentException("paymentType cannot be null");
-        }
         this.paymentType = paymentType;
 
         if (null == comment) {

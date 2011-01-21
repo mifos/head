@@ -50,6 +50,8 @@ import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.admin.servicefacade.OfficeServiceFacade;
 import org.mifos.application.admin.system.ShutdownManager;
+import org.mifos.application.importexport.servicefacade.ImportTransactionsServiceFacade;
+import org.mifos.application.importexport.servicefacade.ImportTransactionsServiceFacadeWebTier;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.MifosCurrency;
@@ -129,6 +131,7 @@ public abstract class BaseAction extends DispatchAction {
     protected FeeServiceFacade feeServiceFacade = DependencyInjectedServiceLocator.locateFeeServiceFacade();
     protected FundServiceFacade fundServiceFacade = DependencyInjectedServiceLocator.locateFundServiceFacade();
     protected AuthenticationAuthorizationServiceFacade authenticationAuthorizationServiceFacade = DependencyInjectedServiceLocator.locateAuthenticationAuthorizationServiceFacade();
+    protected ImportTransactionsServiceFacade importTransactionsServiceFacade = DependencyInjectedServiceLocator.locateImportTransactionsServiceFacade();
 
     protected FundDao fundDao = DependencyInjectedServiceLocator.locateFundDao();
 
@@ -160,6 +163,7 @@ public abstract class BaseAction extends DispatchAction {
             this.fundServiceFacade = springAppContext.getBean(FundServiceFacade.class);
             this.savingsServiceFacade = springAppContext.getBean(SavingsServiceFacade.class);
             this.authenticationAuthorizationServiceFacade = springAppContext.getBean(AuthenticationAuthorizationServiceFacade.class);
+            this.importTransactionsServiceFacade = springAppContext.getBean(ImportTransactionsServiceFacade.class);
 
             this.fundDao = springAppContext.getBean(FundDao.class);
         }

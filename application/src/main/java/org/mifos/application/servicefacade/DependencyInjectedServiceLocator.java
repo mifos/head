@@ -78,6 +78,12 @@ import org.mifos.application.holiday.business.service.HolidayServiceImpl;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.holiday.persistence.HolidayDaoHibernate;
 import org.mifos.application.holiday.persistence.HolidayServiceFacadeWebTier;
+import org.mifos.application.importexport.business.service.ImportedFilesService;
+import org.mifos.application.importexport.business.service.ImportedFilesServiceImpl;
+import org.mifos.application.importexport.persistence.ImportedFilesDao;
+import org.mifos.application.importexport.persistence.ImportedFilesDaoHibernate;
+import org.mifos.application.importexport.servicefacade.ImportTransactionsServiceFacade;
+import org.mifos.application.importexport.servicefacade.ImportTransactionsServiceFacadeWebTier;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.business.service.ConfigurationBusinessService;
@@ -130,6 +136,7 @@ public class DependencyInjectedServiceLocator {
     private static CheckListServiceFacade checkListServiceFacade;
     private static AccountServiceFacade accountServiceFacade;
     private static AuthenticationAuthorizationServiceFacade authenticationAuthorizationServiceFacade;
+    private static ImportTransactionsServiceFacade importTransactionsServiceFacade;
 
     // services
     private static CollectionSheetService collectionSheetService;
@@ -140,6 +147,7 @@ public class DependencyInjectedServiceLocator {
     private static AccountBusinessService accountBusinessService;
     private static ConfigurationBusinessService configurationBusinessService;
     private static StandardAccountService accountService;
+    private static ImportedFilesService importedFilesService;
 
     // DAOs
     private static OfficePersistence officePersistence = new OfficePersistence();
@@ -151,6 +159,7 @@ public class DependencyInjectedServiceLocator {
     private static AccountPersistence accountPersistence = new AccountPersistence();
     private static ClientAttendanceDao clientAttendanceDao = new StandardClientAttendanceDao(masterPersistence);
     private static GenericDao genericDao = new GenericDaoHibernate();
+    private static ImportedFilesDao importedFilesDao = new ImportedFilesDaoHibernate(genericDao);
     private static FundDao fundDao = new FundDaoHibernate(genericDao);
     private static LoanDao loanDao = new LoanDaoHibernate(genericDao);
     private static FeeDao feeDao = new FeeDaoHibernate(genericDao);
@@ -336,6 +345,13 @@ public class DependencyInjectedServiceLocator {
                     locatePersonnelDao(), locateCustomerDao(), locateLoanBusinessService(), hibernateTransactionHelper);
         }
         return accountService;
+    }
+
+    public static ImportedFilesService locateImportFilesService() {
+        if (importedFilesService == null) {
+            importedFilesService = new ImportedFilesServiceImpl(importedFilesDao);
+        }
+        return importedFilesService;
     }
 
     public static AcceptedPaymentTypePersistence locateAcceptedPaymentTypePersistence() {
@@ -528,5 +544,12 @@ public class DependencyInjectedServiceLocator {
             installmentsValidator = new InstallmentsValidatorImpl(locateInstallmentFormatValidator(), locateListOfInstallmentsValidator(), locateInstallmentRulesValidator());
         }
         return installmentsValidator;
+    }
+
+    public static ImportTransactionsServiceFacade locateImportTransactionsServiceFacade() {
+        if (importTransactionsServiceFacade == null) {
+            importTransactionsServiceFacade = new ImportTransactionsServiceFacadeWebTier(importedFilesService, personnelDao);
+        }
+        return importTransactionsServiceFacade;
     }
 }

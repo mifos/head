@@ -8,6 +8,11 @@
 	<bean id="appliedUpgradesServiceFacade" class="org.mifos.application.admin.business.service.AppliedUpgradesServiceFacadeWebTier">
 		<constructor-arg ref="appliedUpgradesDao"/>
 	</bean>
+	
+	<bean id="importTransactionsServiceFacade" class="org.mifos.application.importexport.servicefacade.ImportTransactionsServiceFacadeWebTier">
+    	<constructor-arg ref="importedFilesService" />
+    	<constructor-arg ref="personnelDao" />
+    </bean>
 
     <bean id="loginServiceFacade" class="org.mifos.application.servicefacade.LoginServiceFacadeWebTier">
     	<constructor-arg ref="personnelService" />
@@ -133,6 +138,10 @@
     </bean>
     
     <bean id="hibernateTransactionHelper" class="org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil" />
+    
+    <bean id="importedFilesService" class="org.mifos.application.importexport.business.service.ImportedFilesServiceImpl">
+    	<constructor-arg ref="importedFilesDao" />
+    </bean>
     
     <bean id="customerService" class="org.mifos.customers.business.service.CustomerServiceImpl" >
     	<constructor-arg ref="customerDao" />

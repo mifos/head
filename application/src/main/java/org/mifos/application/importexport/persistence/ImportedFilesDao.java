@@ -21,12 +21,11 @@
 package org.mifos.application.importexport.persistence;
 
 import org.mifos.application.importexport.business.ImportedFilesEntity;
-import org.mifos.framework.persistence.DataAccessObject;
 
-public interface ImportedFilesDao extends DataAccessObject {
+public interface ImportedFilesDao {
 
-    void saveImportedFile(ImportedFilesEntity importedFileEntity) throws Exception;
+    void saveImportedFile(ImportedFilesEntity importedFileEntity);
 
-    ImportedFilesEntity findImportedFileByName(String fileName) throws Exception;
+    ImportedFilesEntity findImportedFileByName(String fileName);
 
 }

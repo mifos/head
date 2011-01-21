@@ -29,8 +29,7 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.upload.FormFile;
 import org.apache.struts.upload.MultipartRequestHandler;
-import org.mifos.application.importexport.servicefacade.ImportTransactionsServiceFacade;
-import org.mifos.application.importexport.servicefacade.WebTierImportTransactionsServiceFacade;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 
 /**
@@ -79,7 +78,7 @@ public class ImportTransactionsActionForm extends BaseActionForm {
      * size inside of this validate method.
      */
     @Override
-    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
+    public ActionErrors validate(@SuppressWarnings("unused") ActionMapping mapping, HttpServletRequest request) {
 
         ActionErrors errors = new ActionErrors();
 
@@ -112,12 +111,11 @@ public class ImportTransactionsActionForm extends BaseActionForm {
             errors.add("importTransactionsFile", new ActionMessage("errors.importexport.mandatory_file"));
         }
 
-
-        ImportTransactionsServiceFacade importedFilesServiceFacade = new WebTierImportTransactionsServiceFacade();
         try {
 
+            // FIXME - remove call to service facade from form.
             if (importTransactionsFile.getFileName() != null
-                    && importedFilesServiceFacade.isAlreadyImported(importTransactionsFile.getFileName())) {
+                    && DependencyInjectedServiceLocator.locateImportTransactionsServiceFacade().isAlreadyImported(importTransactionsFile.getFileName())) {
                 errors.add("importTransactionsFile", new ActionMessage("errors.importexport.already_submitted"));
             }
 

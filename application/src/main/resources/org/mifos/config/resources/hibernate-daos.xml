@@ -4,6 +4,10 @@
 
 
     <bean id="genericDao" class="org.mifos.accounts.savings.persistence.GenericDaoHibernate" />
+ 
+    <bean id="importedFilesDao" class="org.mifos.application.importexport.persistence.ImportedFilesDaoHibernate" >
+    	<constructor-arg ref="genericDao" />
+    </bean>
     
     <bean id="applicationConfigurationDao" class="org.mifos.config.persistence.ApplicationConfigurationDaoHibernate" >
     	<constructor-arg ref="genericDao" />

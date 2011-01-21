@@ -20,11 +20,9 @@
 
 package org.mifos.customers.personnel.persistence;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.questionnaire.migration.CustomFieldForMigrationDto;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.dto.domain.CenterCreation;
 import org.mifos.dto.domain.PersonnelDto;

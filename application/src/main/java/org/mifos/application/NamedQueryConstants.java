@@ -489,9 +489,6 @@ public interface NamedQueryConstants {
     String SCHEDULED_TASK_GET_LATEST_TASK = "scheduledTasks.getLatestTask";
     String SCHEDULED_TASK_GET_SUCCESSFUL_TASK = "scheduledTasks.getSuccessfulTask";
 
-    // Imported transactions files
-    String GET_IMPORTED_FILES_BY_NAME = "importfiles.getImportedFileByName";
-
     // Insert CustomerCustomFieldEntity entries
     String INSERT_CUSTOMER_CUSTOM_FIELD_ENTITY = "CustomerCustomFieldEntity.insertEntries";
 

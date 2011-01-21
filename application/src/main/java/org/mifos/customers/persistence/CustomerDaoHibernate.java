@@ -20,12 +20,27 @@
 
 package org.mifos.customers.persistence;
 
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
@@ -48,6 +63,8 @@ import org.mifos.config.ClientRules;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.core.CurrencyMismatchException;
 import org.mifos.core.MifosRuntimeException;
+import org.mifos.customers.api.CustomerLevel;
+import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerFlagDetailEntity;
 import org.mifos.customers.business.CustomerMeetingEntity;
@@ -64,7 +81,6 @@ import org.mifos.customers.personnel.business.PersonnelLevelEntity;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.struts.uihelpers.CustomerUIHelperFn;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerSearchConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.util.helpers.Param;
@@ -97,28 +113,11 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.ChapterNum;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.ExceptionConstants;
+import org.mifos.framework.util.helpers.MifosStringUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
-
-import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import org.mifos.customers.business.CustomerAccountBO;
-import org.mifos.framework.util.helpers.MifosStringUtils;
 
 public class CustomerDaoHibernate implements CustomerDao {
 

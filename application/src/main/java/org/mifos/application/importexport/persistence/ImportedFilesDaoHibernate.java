@@ -20,29 +20,30 @@
 
 package org.mifos.application.importexport.persistence;
 
-import org.hibernate.Session;
-import org.mifos.application.NamedQueryConstants;
-import org.mifos.application.importexport.business.ImportedFilesEntity;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.Persistence;
-
 import java.util.HashMap;
 import java.util.Map;
 
-public class HibernateImportedFilesDao extends Persistence implements ImportedFilesDao {
+import org.mifos.accounts.savings.persistence.GenericDao;
+import org.mifos.application.importexport.business.ImportedFilesEntity;
 
-    @Override
-    public void saveImportedFile(ImportedFilesEntity importedFile) throws Exception {
-        Session session = StaticHibernateUtil.getSessionTL();
-        session.save(importedFile);
+public class ImportedFilesDaoHibernate implements ImportedFilesDao {
+
+    private final GenericDao genericDao;
+
+    public ImportedFilesDaoHibernate(final GenericDao genericDao) {
+        this.genericDao = genericDao;
     }
 
     @Override
-    public ImportedFilesEntity findImportedFileByName(String fileName) throws Exception {
+    public void saveImportedFile(ImportedFilesEntity importedFile) {
+        this.genericDao.createOrUpdate(importedFile);
+    }
+
+    @Override
+    public ImportedFilesEntity findImportedFileByName(String fileName) {
         Map<String, String> queryParameters = new HashMap<String, String>();
         queryParameters.put("importedFileName", fileName);
-        Object queryResult = execUniqueResultNamedQuery(NamedQueryConstants.GET_IMPORTED_FILES_BY_NAME, queryParameters);
+        Object queryResult = this.genericDao.executeUniqueResultNamedQuery("importfiles.getImportedFileByName", queryParameters);
         return queryResult == null ? null : (ImportedFilesEntity) queryResult;
     }
-
 }

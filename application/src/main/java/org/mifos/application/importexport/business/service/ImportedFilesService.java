@@ -25,7 +25,7 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 
 public interface ImportedFilesService {
 
-    void saveImportedFileName(String fileName, PersonnelBO submittedBy) throws Exception;
+    void saveImportedFileName(String fileName, PersonnelBO submittedBy);
 
-    ImportedFilesEntity getImportedFileByName(String fileName) throws Exception;
+    ImportedFilesEntity getImportedFileByName(String fileName);
 }
