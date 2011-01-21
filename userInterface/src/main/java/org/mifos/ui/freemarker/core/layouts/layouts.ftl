@@ -19,23 +19,11 @@
 *  explanation of the license and how it is applied.
 --]
 
-[@layout.webflow]
+[#import "../newblueprintmacros.ftl" as mifos /]
 
-<div class="debug">createSavingsAccountCustomerSearch dot FTL</div>
-
-<h1>Create Savings Account - <b>Select a customer</b></h1>
-
-<p>Enter a Client or Group or Center name and click Search. Click Cancel to return to Clients & Accounts without submitting information.</p>
-
-<form action="createSavingsAccount.ftl?execution=${flowExecutionKey}" method="post">
-	<div class="row">
-		<label for="searchString">Name:</label>
-		<input type="text" name="searchString">
-	</div>
-	<div class="row">
-		<input type="submit" class="submit" value="Search" name="_eventId_searchTermEntered" />
-		<input type="submit" class="cancel" value="Cancel" name="_eventId_cancel" />
-	</div>
-</form>
-
-[/@layout.webflow]
+[#--
+Add all layouts here. Spring is configured to auto load this file, and by extension, all the layouts defined here. 
+--]
+[#include "webflow.ftl" /]
+[#include "basic.ftl" /]
+[#include "admin.ftl" /]

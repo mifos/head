@@ -39,6 +39,11 @@
                 <entry key="xml_escape" value-ref="fmXmlEscape"/>
             </map>
         </property>
+        <property name="freemarkerSettings">
+        	<props>
+		        <prop key="auto_import">layouts/layouts.ftl as layout</prop>
+        	</props>
+        </property>
     </bean>
 
     <bean id="freemarkerViewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
