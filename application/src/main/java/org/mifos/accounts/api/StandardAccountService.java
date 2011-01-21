@@ -47,6 +47,7 @@ import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.config.ConfigurationManager;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.core.MifosRuntimeException;
+import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
@@ -61,13 +62,6 @@ import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.service.BusinessRuleException;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import org.mifos.customers.business.CustomerAccountBO;
 
 /**
  * A service class implementation to expose basic functions on loans. As an external API, this class should not expose
@@ -159,6 +153,7 @@ public class StandardAccountService implements AccountService {
 
     @Override
     public void disburseLoans(List<AccountPaymentParametersDto> accountPaymentParametersDtoList, Locale locale) throws Exception {
+
         StaticHibernateUtil.startTransaction();
         for (AccountPaymentParametersDto accountPaymentParametersDto : accountPaymentParametersDtoList) {
             LoanBO loan = this.loanPersistence.getAccount(accountPaymentParametersDto.getAccountId());

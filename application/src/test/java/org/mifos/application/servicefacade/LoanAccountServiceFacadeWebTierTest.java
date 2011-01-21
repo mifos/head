@@ -36,6 +36,7 @@ import java.util.Date;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mifos.accounts.api.AccountService;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.loan.business.LoanBO;
@@ -81,6 +82,9 @@ public class LoanAccountServiceFacadeWebTierTest {
     private LoanDao loanDao;
 
     @Mock
+    private AccountService accountService;
+
+    @Mock
     private LoanBusinessService loanBusinessService;
 
     @Mock
@@ -102,7 +106,7 @@ public class LoanAccountServiceFacadeWebTierTest {
     @Before
     public void setupAndInjectDependencies() {
         loanAccountServiceFacade = new LoanAccountServiceFacadeWebTier(loanProductDao, customerDao, personnelDao,
-                fundDao, loanDao, installmentsValidator, scheduleCalculatorAdaptor,loanBusinessService, holidayServiceFacade, loanPrdBusinessService);
+                fundDao, loanDao, accountService, installmentsValidator, scheduleCalculatorAdaptor,loanBusinessService, holidayServiceFacade, loanPrdBusinessService);
     }
 
     @Test

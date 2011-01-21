@@ -31,6 +31,7 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.LocalDate;
+import org.mifos.accounts.api.AccountService;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.business.AccountFlagMapping;
@@ -93,6 +94,7 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.surveys.helpers.SurveyType;
 import org.mifos.customers.surveys.persistence.SurveysPersistence;
+import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AccountStatusDto;
 import org.mifos.dto.domain.AccountUpdateStatus;
 import org.mifos.dto.domain.CreateAccountNote;
@@ -104,6 +106,7 @@ import org.mifos.dto.domain.LoanActivityDto;
 import org.mifos.dto.domain.LoanInstallmentDetailsDto;
 import org.mifos.dto.domain.LoanPaymentDto;
 import org.mifos.dto.domain.MeetingDto;
+import org.mifos.dto.domain.PaymentTypeDto;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.domain.SurveyDto;
 import org.mifos.dto.domain.ValueListElement;
@@ -150,6 +153,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     private final PersonnelDao personnelDao;
     private final FundDao fundDao;
     private final LoanDao loanDao;
+    private final AccountService accountService;
     private final InstallmentsValidator installmentsValidator;
     private final ScheduleCalculatorAdaptor scheduleCalculatorAdaptor;
     private final LoanBusinessService loanBusinessService;
@@ -158,7 +162,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     private HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
 
     public LoanAccountServiceFacadeWebTier(final LoanProductDao loanProductDao, final CustomerDao customerDao,
-            PersonnelDao personnelDao, FundDao fundDao, final LoanDao loanDao,
+            PersonnelDao personnelDao, FundDao fundDao, final LoanDao loanDao, final AccountService accountService,
             InstallmentsValidator installmentsValidator, ScheduleCalculatorAdaptor scheduleCalculatorAdaptor,
             LoanBusinessService loanBusinessService, HolidayServiceFacade holidayServiceFacade,
             LoanPrdBusinessService loanPrdBusinessService) {
@@ -167,6 +171,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         this.personnelDao = personnelDao;
         this.fundDao = fundDao;
         this.loanDao = loanDao;
+        this.accountService = accountService;
         this.installmentsValidator = installmentsValidator;
         this.scheduleCalculatorAdaptor = scheduleCalculatorAdaptor;
         this.loanBusinessService = loanBusinessService;
@@ -724,10 +729,28 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     }
 
     @Override
-    public void checkIfProductsOfferingCanCoexist(Integer loanAccountId) {
+    public LoanDisbursalDto retrieveLoanDisbursalDetails(Integer loanAccountId) {
+
         try {
             LoanBO loan = this.loanDao.findById(loanAccountId);
             new ProductMixValidator().checkIfProductsOfferingCanCoexist(loan);
+
+            Date proposedDate = new DateTimeService().getCurrentJavaDateTime();
+            boolean backDatedTransactionsAllowed = AccountingRules.isBackDatedTxnAllowed();
+            if (backDatedTransactionsAllowed) {
+                proposedDate = loan.getDisbursementDate();
+            }
+
+            Short currencyId = Short.valueOf("0");
+            boolean multiCurrencyEnabled = AccountingRules.isMultiCurrencyEnabled();
+            if (multiCurrencyEnabled) {
+                currencyId = loan.getCurrency().getCurrencyId();
+            }
+
+            boolean repaymentIndependentOfMeetingSchedule = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
+
+            return new LoanDisbursalDto(loan.getAccountId(), proposedDate, loan.getLoanAmount().toString(), loan.getAmountTobePaidAtdisburtail().toString(),
+                    backDatedTransactionsAllowed, repaymentIndependentOfMeetingSchedule, multiCurrencyEnabled, currencyId);
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
         } catch (AccountException e) {
@@ -735,19 +758,6 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         } catch (ServiceException e) {
             throw new MifosRuntimeException(e);
         }
-    }
-
-    @Override
-    public LoanDisbursalDto retrieveLoanDisbursalDetails(Integer loanAccountId) {
-
-        LoanBO loan = this.loanDao.findById(loanAccountId);
-
-        Date proposedDate = new DateTimeService().getCurrentJavaDateTime();
-        if (AccountingRules.isBackDatedTxnAllowed()) {
-            proposedDate = loan.getDisbursementDate();
-        }
-
-        return new LoanDisbursalDto(loan.getAccountId(), proposedDate, loan.getLoanAmount().toString(), loan.getAmountTobePaidAtdisburtail().toString());
     }
 
     @Override
@@ -1060,5 +1070,39 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             loanAccountDetailsViewList.add(loandetails);
         }
         return loanAccountDetailsViewList;
+    }
+
+    @Override
+    public void disburseLoan(AccountPaymentParametersDto loanDisbursement, Short paymentTypeId) {
+
+        MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = new UserContextFactory().create(mifosUser);
+
+        try {
+            PaymentTypeDto paymentType = null;
+            for (org.mifos.dto.domain.PaymentTypeDto paymentTypeDto : accountService.getLoanDisbursementTypes()) {
+                if (paymentTypeDto.getValue() == paymentTypeId) {
+                    paymentType = paymentTypeDto;
+                }
+            }
+
+            if (paymentType == null) {
+                throw new MifosRuntimeException("Expected loan PaymentTypeDto not found for id: " + paymentTypeId);
+            }
+
+            loanDisbursement.setPaymentType(paymentType);
+
+            Date trxnDate = DateUtils.getDateWithoutTimeStamp(loanDisbursement.getPaymentDate().toDateMidnight().toDate());
+            if (!isTrxnDateValid(Integer.valueOf(loanDisbursement.getAccountId()), trxnDate)) {
+                throw new BusinessRuleException("errors.invalidTxndate");
+            }
+
+            List<AccountPaymentParametersDto> loanDisbursements = new ArrayList<AccountPaymentParametersDto>();
+            loanDisbursements.add(loanDisbursement);
+
+            accountService.disburseLoans(loanDisbursements, userContext.getPreferredLocale());
+        } catch (Exception e) {
+            throw new MifosRuntimeException(e);
+        }
     }
 }

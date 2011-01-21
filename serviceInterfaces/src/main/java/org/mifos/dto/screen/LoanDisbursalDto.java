@@ -31,12 +31,21 @@ public class LoanDisbursalDto implements Serializable {
     private final Date proposedDate;
     private final String loanAmount;
     private final String amountPaidAtDisbursement;
+    private final boolean backDatedTransactionsAllowed;
+    private final boolean repaymentIndependentOfMeetingSchedule;
+    private final boolean multiCurrencyEnabled;
+    private final Short currencyId;
 
-    public LoanDisbursalDto(Integer accountId, Date proposedDate, String loanAmount, String amountPaidAtDisbursement) {
+    public LoanDisbursalDto(Integer accountId, Date proposedDate, String loanAmount, String amountPaidAtDisbursement,
+            boolean backDatedTransactionsAllowed, boolean repaymentIndependentOfMeetingSchedule, boolean multiCurrencyEnabled, Short currencyId) {
         this.accountId = accountId;
         this.proposedDate = proposedDate;
         this.loanAmount = loanAmount;
         this.amountPaidAtDisbursement = amountPaidAtDisbursement;
+        this.backDatedTransactionsAllowed = backDatedTransactionsAllowed;
+        this.repaymentIndependentOfMeetingSchedule = repaymentIndependentOfMeetingSchedule;
+        this.multiCurrencyEnabled = multiCurrencyEnabled;
+        this.currencyId = currencyId;
     }
 
     public Integer getAccountId() {
@@ -53,5 +62,21 @@ public class LoanDisbursalDto implements Serializable {
 
     public String getAmountPaidAtDisbursement() {
         return this.amountPaidAtDisbursement;
+    }
+
+    public boolean isBackDatedTransactionsAllowed() {
+        return this.backDatedTransactionsAllowed;
+    }
+
+    public boolean isRepaymentIndependentOfMeetingSchedule() {
+        return this.repaymentIndependentOfMeetingSchedule;
+    }
+
+    public boolean isMultiCurrencyEnabled() {
+        return this.multiCurrencyEnabled;
+    }
+
+    public Short getCurrencyId() {
+        return this.currencyId;
     }
 }

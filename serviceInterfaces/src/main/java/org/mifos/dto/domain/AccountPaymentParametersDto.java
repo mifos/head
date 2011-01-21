@@ -50,7 +50,7 @@ public class AccountPaymentParametersDto {
     private final String receiptId;
 
     /** The payment type. */
-    private final PaymentTypeDto paymentType;
+    private PaymentTypeDto paymentType;
 
     /** The comment associated with the payment. */
     private final String comment;
@@ -207,6 +207,10 @@ public class AccountPaymentParametersDto {
 
     public void setCustomer(CustomerDto customer) {
         this.customer = customer;
+    }
+
+    public void setPaymentType(PaymentTypeDto paymentType) {
+        this.paymentType = paymentType;
     }
 
 }

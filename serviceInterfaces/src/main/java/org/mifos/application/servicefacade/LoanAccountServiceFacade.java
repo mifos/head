@@ -23,6 +23,7 @@ package org.mifos.application.servicefacade;
 import java.util.Date;
 import java.util.List;
 
+import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AccountStatusDto;
 import org.mifos.dto.domain.AccountUpdateStatus;
 import org.mifos.dto.domain.CreateAccountNote;
@@ -73,9 +74,6 @@ public interface LoanAccountServiceFacade {
     LoanCreationResultDto redoLoan(LoanAccountMeetingDto loanAccountMeetingDto, LoanAccountInfoDto loanAccountInfoDto, List<LoanPaymentDto> existingLoanPayments);
 
     @PreAuthorize("isFullyAuthenticated()")
-    void checkIfProductsOfferingCanCoexist(Integer loanAccountId);
-
-    @PreAuthorize("isFullyAuthenticated()")
     LoanDisbursalDto retrieveLoanDisbursalDetails(Integer loanAccountId);
 
     @PreAuthorize("isFullyAuthenticated()")
@@ -98,4 +96,7 @@ public interface LoanAccountServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     List<LoanAccountDetailsDto> retrieveLoanAccountDetails(LoanInformationDto loanInformationDto);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    void disburseLoan(AccountPaymentParametersDto loanDisbursement, Short paymentTypeId);
 }
