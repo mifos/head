@@ -442,7 +442,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
         fillCashFlow("100", "55", "1001");
         submitAndGotoNewLoanProductPreviewPage();
         isTextPresentInPage("The Warning Threshold is invalid because it is not in between 0.0 and 99.0");
-        isTextPresentInPage("The Indebtedness Ratio is invalid because it is not in between 0.0 and 50.0.");
+        isTextPresentInPage("The Indebtedness Ratio is invalid because it is not in between 0.0 and 50.0");
         isTextPresentInPage("The Repayment Capacity is invalid because it is not in between 150.0 and 1000.0");
     }
 
