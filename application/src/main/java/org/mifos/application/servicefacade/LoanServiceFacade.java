@@ -45,12 +45,6 @@ public interface LoanServiceFacade {
      * @deprecated - unable at present to decouple Dto and ActionForm
      */
     @Deprecated
-    LoanCreationLoanScheduleDetailsDto retrieveScheduleDetailsForRedoLoan(Integer customerId, DateTime disbursementDate, Short fundId, LoanAccountActionForm loanActionForm);
-
-    /**
-     * @deprecated - unable at present to decouple Dto and ActionForm
-     */
-    @Deprecated
     LoanCreationLoanScheduleDetailsDto retrieveScheduleDetailsForLoanCreation(Integer customerId, DateTime disbursementDate, Short fundId, LoanAccountActionForm loanActionForm);
 
     /**
