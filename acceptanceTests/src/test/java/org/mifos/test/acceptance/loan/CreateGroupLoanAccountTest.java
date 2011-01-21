@@ -126,7 +126,7 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
         loanAccountPage.verifyPage();
     }
 
-    @Test(enabled=false, groups={"smoke"})
+    @Test(enabled=false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void newMonthlyGroupLoanAccountWithMeetingOnSameWeekAndWeekdayOfMonth() throws Exception {
 
@@ -154,7 +154,7 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled=false, groups={"smoke"})
+    @Test(enabled=true, groups={"smoke"})
     public void tryCreateGroupLoanWithoutMandatoryPurposeOfLoan() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
 

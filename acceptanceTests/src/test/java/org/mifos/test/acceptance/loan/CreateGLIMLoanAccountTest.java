@@ -79,7 +79,7 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
      * This test is to verify that you can edit a GLIM loan account after it has been
      * dibursed without getting an invalid disbursal date error. See MIFOS-2597.
      */
-    @Test(enabled=false)
+    @Test(enabled=true)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void checkGLIMInvalidDisbursementDateWhenEditingLoan() throws Exception {
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
