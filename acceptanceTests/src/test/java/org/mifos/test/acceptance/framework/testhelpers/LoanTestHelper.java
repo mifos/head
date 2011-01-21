@@ -78,6 +78,7 @@ public class LoanTestHelper {
 
     public final static String APPROVED = "Application Approved";
     public final static String PENDING_APPROVAL = "Application Pending Approval";
+    public final static String CANCEL_LOAN_REVERSAL = "Cancel  Loan reversal";
     private final Selenium selenium;
     private final NavigationHelper navigationHelper;
 
@@ -316,7 +317,7 @@ public class LoanTestHelper {
 
         RedoLoanDisbursalSchedulePreviewPage schedulePreviewPage = dataEntryPage.submitAndNavigateToRedoLoanDisbursalSchedulePreviewPage(paramsPastDate);
         if(amountPaid != 0) { // used to pay grater amount than default (ex. for closing loan)
-            schedulePreviewPage.typeAmountPaid(amountPaid);
+            schedulePreviewPage.typeAmountPaid(amountPaid, 2);
         }
 
         return schedulePreviewPage

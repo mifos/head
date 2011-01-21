@@ -68,6 +68,14 @@ public class LoanAccountPage extends AbstractPage {
         Assert.assertEquals(getTotalBalance(), amount);
     }
 
+    public void verifyTotalOriginalLoan(String amount) {
+        Assert.assertEquals(getOriginalTotalAmount(), amount);
+    }
+
+    public void verifyTotalAmountPaid(String amount) {
+        Assert.assertEquals(getTotalPaid(), amount);
+    }
+
     public void verifyPerformanceHistory(String payments, String missedPayments) {
         Assert.assertTrue(selenium.isTextPresent("of payments: "+payments));
         Assert.assertTrue(selenium.isTextPresent("of missed payments: "+missedPayments));
@@ -271,12 +279,6 @@ public class LoanAccountPage extends AbstractPage {
         selenium.click("loanaccountdetail.link.applyAdjustment");
         waitForPageToLoad();
         return new ApplyAdjustmentPage(selenium);
-    }
-
-    public TransactionHistoryPage navigateToTransactionHistoryPage() {
-        selenium.click("loanaccountdetail.link.viewTransactionHistory");
-        waitForPageToLoad();
-        return new TransactionHistoryPage(selenium);
     }
 
     public void verifyStatus(String status) {

@@ -102,21 +102,30 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
      * Verify a redone loan directly moves into "Closed-Met Obligation"
      * state when the loan is wholly paid off before the current date.
      *
-     * http://mifosforge.jira.com/browse/MIFOSTEST-12
-     * http://mifosforge.jira.com/browse/MIFOSTEST-17
+     * http://mifosforge.jira.com/browse/MIFOSTEST-28
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void redoLoanDisbursalWithPastDate() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
 
         RedoLoanDisbursalParameters paramsPastDate = new RedoLoanDisbursalParameters();
-        paramsPastDate.setDisbursalDateDD("09");
+        paramsPastDate.setDisbursalDateDD("02");
         paramsPastDate.setDisbursalDateMM("07");
         paramsPastDate.setDisbursalDateYYYY("2009");
 
-        LoanAccountPage loanAccountPage = loanTestHelper.redoLoanDisbursal("MyGroup1233266255641", "WeeklyGroupFlatLoanWithOnetimeFee", paramsPastDate, null, 3237);
+        LoanAccountPage loanAccountPage = loanTestHelper.redoLoanDisbursal("MyGroup1233266255641", "WeeklyGroupFlatLoanWithOnetimeFee", paramsPastDate, null, 3174);
 
+        verifyRedoLoanDisbursalWithPastDate(loanAccountPage);
+    }
+
+    private void verifyRedoLoanDisbursalWithPastDate(LoanAccountPage loanAccountPage) {
         loanAccountPage.verifyStatus("Closed- Obligation met");
+     //   loanAccountPage.verifyTotalOriginalLoan("4290.0");
+    //    loanAccountPage.verifyTotalAmountPaid("4290.0");
+     //   loanAccountPage.verifyLoanTotalBalance("0.0");
+
+        TransactionHistoryPage transactionHistoryPage = loanAccountPage.navigateToTransactionHistory();
+        transactionHistoryPage.verifyTransactionHistory(4290, 3, 217);
     }
 
     /*

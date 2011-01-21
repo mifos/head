@@ -25,6 +25,7 @@ import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
+import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
@@ -82,6 +83,10 @@ public class UndoLoanDisbursalTest extends UiTestCaseBase {
         ClientViewDetailsPage clientViewDetailsPage = (ClientViewDetailsPage) loanTestHelper.reverseLoanDisbursal(clientLoanID, clientID, false, resultClickLink);
 
         clientViewDetailsPage.verifyLoanDoesntExist("Acct #000100000000215");
+        LoanAccountPage loanAccountPage = clientViewDetailsPage
+            .navigateToClosedAccountsPage()
+            .verifyAndNavigateToOneClosedLoan(clientLoanID);
+        loanAccountPage.verifyStatus(LoanTestHelper.CANCEL_LOAN_REVERSAL);
     }
 
     /*
@@ -97,7 +102,7 @@ public class UndoLoanDisbursalTest extends UiTestCaseBase {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, START_DATA_SET, dataSource, selenium);
 
         String groupID = "0006-000000045";
-        String groupLoanID = "000100000000206"; // prev 000100000000206
+        String groupLoanID = "000100000000206";
         String resultClickLink = "MyGroup1233266255641: ID 0006-000000045";
 
         GroupViewDetailsPage groupViewDetailsPage = (GroupViewDetailsPage) loanTestHelper.reverseLoanDisbursal(groupLoanID, groupID, true, resultClickLink);
