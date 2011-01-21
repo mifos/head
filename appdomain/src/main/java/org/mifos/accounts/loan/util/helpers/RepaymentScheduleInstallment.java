@@ -217,4 +217,8 @@ public class RepaymentScheduleInstallment implements Serializable {
     public boolean isTotalAmountLessThan(Money minInstallmentAmount) {
         return minInstallmentAmount != null && (totalValue == null || totalValue.isLessThan(minInstallmentAmount));
     }
+
+    public Money getFeesWithMiscFee() {
+        return getFees().add(getMiscFees());
+    }
 }

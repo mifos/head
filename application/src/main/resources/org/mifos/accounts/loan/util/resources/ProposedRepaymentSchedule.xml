@@ -16,10 +16,10 @@
     <column label="Interest" value="interest" valueType="method" columnType="text">
          <columnDetails  rowStyle="drawtablerow" colWidth="17"/>
     </column>
-    <column label="Fees" value="fees" valueType="method" columnType="text">
+    <column label="Fees" value="feesWithMiscFee" valueType="method" columnType="text">
          <columnDetails  rowStyle="drawtablerow" colWidth="17"/>
     </column>
-    <column label="Total" value="total" valueType="method" columnType="text">
+    <column label="Total (with Penalty)" value="total" valueType="method" columnType="text">
          <columnDetails  rowStyle="drawtablerow" colWidth="17"/>
     </column>
   </row>

@@ -167,7 +167,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         return miscFee;
     }
 
-    void setMiscFee(Money miscFee) {
+    public void setMiscFee(Money miscFee) {
         this.miscFee = miscFee;
     }
 
@@ -175,7 +175,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         return miscFeePaid;
     }
 
-    void setMiscFeePaid(Money miscFeePaid) {
+    public void setMiscFeePaid(Money miscFeePaid) {
         this.miscFeePaid = miscFeePaid;
     }
 
@@ -183,7 +183,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         return miscPenalty;
     }
 
-    void setMiscPenalty(Money miscPenalty) {
+    public void setMiscPenalty(Money miscPenalty) {
         this.miscPenalty = miscPenalty;
     }
 
@@ -195,7 +195,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         return miscPenalty.subtract(miscPenaltyPaid);
     }
 
-    void setMiscPenaltyPaid(Money miscPenaltyPaid) {
+    public void setMiscPenaltyPaid(Money miscPenaltyPaid) {
         this.miscPenaltyPaid = miscPenaltyPaid;
     }
 
