@@ -75,40 +75,42 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
-    // http://mifosforge.jira.com/browse/MIFOSTEST-135
-    @Test(enabled=true)
-    public void createVoluntarySavingsProductForClients() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_default_003_dbunit.xml", dataSource, selenium);
-
-        SavingsProductParameters params = getGenericSavingsProductParameters(SavingsProductParameters.VOLUNTARY,SavingsProductParameters.CLIENTS);
+    // http://mifosforge.jira.com/browse/MIFOSTEST-139
+    @Test(sequential = true, groups = { "savings", "acceptance", "ui" })
+    public void createVoluntarySavingsProductForCenters() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
+        SavingsProductParameters params = getGenericSavingsProductParameters(SavingsProductParameters.VOLUNTARY,SavingsProductParameters.CENTERS);
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
 
         confirmationPage.navigateToSavingsProductDetails();
+        createSavingAccountWithCreatedProduct("MyCenter1233266075715",params.getProductInstanceName(),"7777.8");
     }
 
-    // http://mifosforge.jira.com/browse/MIFOSTEST-136
-    @Test(enabled=true)
-    public void createMandatorySavingsProductForClients() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_default_003_dbunit.xml", dataSource, selenium);
-
-        SavingsProductParameters params = getGenericSavingsProductParameters(SavingsProductParameters.MANDATORY,SavingsProductParameters.CLIENTS);
-        DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
-
-        confirmationPage.navigateToSavingsProductDetails();
-    }
-
-    // http://mifosforge.jira.com/browse/MIFOSTEST-135
+    // http://mifosforge.jira.com/browse/MIFOSTEST-137
     @Test(enabled=true)
     public void createVoluntarySavingsProductForGroups() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_default_003_dbunit.xml", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
 
         SavingsProductParameters params = getGenericSavingsProductParameters(SavingsProductParameters.VOLUNTARY,SavingsProductParameters.GROUPS);
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
 
         confirmationPage.navigateToSavingsProductDetails();
+        createSavingAccountWithCreatedProduct("MyGroup1232993846342", params.getProductInstanceName(), "234.0");
     }
 
-    // http://mifosforge.jira.com/browse/MIFOSTEST-136
+    // http://mifosforge.jira.com/browse/MIFOSTEST-1093
+    @Test(enabled=true)
+    public void createVoluntarySavingsProductForClients() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
+
+        SavingsProductParameters params = getGenericSavingsProductParameters(SavingsProductParameters.VOLUNTARY,SavingsProductParameters.CLIENTS);
+        DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
+
+        confirmationPage.navigateToSavingsProductDetails();
+        createSavingAccountWithCreatedProduct("Stu1233266079799 Client1233266079799",params.getProductInstanceName(),"200.0");
+    }
+
+    // http://mifosforge.jira.com/browse/MIFOSTEST-1094
     @Test(enabled=true)
     public void createMandatorySavingsProductForGroups() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_default_003_dbunit.xml", dataSource, selenium);
@@ -119,21 +121,18 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         confirmationPage.navigateToSavingsProductDetails();
     }
 
+    // http://mifosforge.jira.com/browse/MIFOSTEST-138
+    @Test(enabled=true)
+    public void createMandatorySavingsProductForClients() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_default_003_dbunit.xml", dataSource, selenium);
 
-    // http://mifosforge.jira.com/browse/MIFOSTEST-139
-    @Test(sequential = true, groups = { "savings", "acceptance", "ui" })
-    public void createVoluntarySavingsProductForCenters() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
-        selenium.setSpeed("200");
-        SavingsProductParameters params = getGenericSavingsProductParameters(SavingsProductParameters.VOLUNTARY,SavingsProductParameters.CENTERS);
+        SavingsProductParameters params = getGenericSavingsProductParameters(SavingsProductParameters.MANDATORY,SavingsProductParameters.CLIENTS);
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
 
         confirmationPage.navigateToSavingsProductDetails();
-        createSavingAccountWithCreatedProduct("MyCenter1233266075715",params.getProductInstanceName(),"7777.8");
     }
 
-
-    // http://mifosforge.jira.com/browse/MIFOSTEST-136
+    // http://mifosforge.jira.com/browse/MIFOSTEST-1095
     @Test(enabled=true)
     public void createMandatorySavingsProductForCenters() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_default_003_dbunit.xml", dataSource, selenium);
