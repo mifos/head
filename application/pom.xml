@@ -596,22 +596,18 @@
         <dependency>
             <groupId>struts</groupId>
             <artifactId>struts</artifactId>
-            <version>1.2.7</version>
         </dependency>
         <dependency>
             <groupId>struts</groupId>
             <artifactId>struts-el</artifactId>
-            <version>1.2.7</version>
         </dependency>
         <dependency>
             <groupId>struts</groupId>
             <artifactId>struts-legacy</artifactId>
-            <version>1.0</version>
         </dependency>
         <dependency>
             <groupId>strutstest</groupId>
             <artifactId>strutstest</artifactId>
-            <version>2.1.4</version>
             <scope>test</scope>
         </dependency>
         <dependency>

@@ -19,8 +19,35 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.mifos</groupId>
+			<artifactId>mifos-serviceInterfaces</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.mifos</groupId>
+			<artifactId>mifos-appdomain</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.mifos</groupId>
 			<artifactId>mifos-reporting-libs</artifactId>
 			<type>pom</type>
+		</dependency>
+		
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>struts</groupId>
+			<artifactId>struts</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-collections</groupId>
+			<artifactId>commons-collections</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
 		</dependency>
 	</dependencies>
 </project>

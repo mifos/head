@@ -26,6 +26,7 @@ import java.lang.reflect.Method;
 
 import org.mifos.framework.components.logger.ServiceLogger;
 
+@Deprecated // used only in reporting
 public class ServiceProxy implements InvocationHandler {
     private Object service;
     private final ServiceLogger logger;

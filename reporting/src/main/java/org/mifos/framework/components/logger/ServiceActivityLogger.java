@@ -26,6 +26,7 @@ import org.apache.commons.lang.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Deprecated // used only in reporting
 public class ServiceActivityLogger implements ServiceLogger {
 
     private static final Logger logger = LoggerFactory.getLogger(ServiceActivityLogger.class);

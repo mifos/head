@@ -27,6 +27,7 @@ import org.mifos.reports.business.service.IBranchCashConfirmationReportService;
 import org.mifos.reports.business.service.IBranchReportService;
 import org.mifos.reports.business.service.ICollectionSheetReportService;
 
+@Deprecated // used only in reporting
 public class ServiceDecoratorFactory {
     private static Object newInstance(Object obj, ServiceLogger logger) {
         return Proxy.newProxyInstance(obj.getClass().getClassLoader(), obj.getClass().getInterfaces(),

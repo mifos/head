@@ -22,6 +22,7 @@ package org.mifos.framework.components.logger;
 
 import java.lang.reflect.Method;
 
+@Deprecated // used only in reporting
 public class UserActivityAndServiceLogger extends ServiceActivityLogger {
     private final Integer userId;
 

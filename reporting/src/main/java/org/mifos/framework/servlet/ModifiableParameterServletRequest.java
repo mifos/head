@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletRequestWrapper;
 
 import org.apache.commons.collections.iterators.IteratorEnumeration;
 
+@Deprecated // used only in reporting
 @SuppressWarnings("deprecation")
 public class ModifiableParameterServletRequest extends HttpServletRequestWrapper {
     List<String> removedParameterList;

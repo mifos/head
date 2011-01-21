@@ -27,6 +27,7 @@ import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Deprecated // used only in reporting
 public interface ServiceLogger {
 
     public static final ServiceLogger MUTED_LOGGER = new ServiceLogger() {
