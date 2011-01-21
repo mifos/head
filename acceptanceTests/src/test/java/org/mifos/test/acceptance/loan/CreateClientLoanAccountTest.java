@@ -190,7 +190,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         searchParameters.setLoanProduct("MIFOS-2636-GKEmergencyLoanWithZeroInterest");
 
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
-        submitAccountParameters.setAmount("1000");
+        submitAccountParameters.setAmount("1000.0");
         submitAccountParameters.setGracePeriodTypeNone(true);
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_010_dbunit.xml", dataSource, selenium);
 
