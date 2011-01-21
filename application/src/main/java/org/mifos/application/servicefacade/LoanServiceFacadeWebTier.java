@@ -31,9 +31,6 @@ import java.util.Locale;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
-import org.mifos.accounts.exceptions.AccountException;
-import org.mifos.accounts.fees.business.FeeDto;
-import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.OriginalLoanScheduleEntity;
@@ -44,7 +41,6 @@ import org.mifos.accounts.loan.business.service.validators.InstallmentValidation
 import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
-import org.mifos.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
 import org.mifos.accounts.loan.util.helpers.CashFlowDataDto;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.productdefinition.business.CashFlowDetail;
@@ -52,37 +48,24 @@ import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
-import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.accounts.util.helpers.AccountConstants;
-import org.mifos.accounts.util.helpers.AccountState;
-import org.mifos.accounts.util.helpers.PaymentData;
-import org.mifos.accounts.util.helpers.PaymentDataTemplate;
 import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
-import org.mifos.application.admin.servicefacade.InvalidDateException;
-import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.config.persistence.ConfigurationPersistence;
-import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.persistence.CustomerDao;
-import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.Money;
 import org.mifos.platform.cashflow.ui.model.CashFlowForm;
 import org.mifos.platform.cashflow.ui.model.MonthlyCashFlowForm;
 import org.mifos.platform.util.CollectionUtils;
 import org.mifos.platform.validations.Errors;
-import org.mifos.security.MifosUser;
-import org.mifos.security.util.UserContext;
-import org.mifos.service.BusinessRuleException;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 public class LoanServiceFacadeWebTier implements LoanServiceFacade {
 
@@ -147,98 +130,6 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
             }
         }
         return newMeetingForRepaymentDay;
-    }
-
-    @Override
-    public LoanBO previewLoanRedoDetails(Integer customerId, LoanAccountActionForm loanAccountActionForm, DateTime disbursementDate) {
-        CustomerBO customer = loadCustomer(customerId);
-        return redoLoan(customer, loanAccountActionForm, disbursementDate);
-    }
-
-    private LoanBO redoLoan(CustomerBO customer, LoanAccountActionForm loanAccountActionForm, DateTime disbursementDate) {
-
-        MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserContext userContext = new UserContextFactory().create(mifosUser);
-
-        try {
-            boolean isRepaymentIndepOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
-
-            MeetingBO newMeetingForRepaymentDay = null;
-            if (isRepaymentIndepOfMeetingEnabled) {
-                newMeetingForRepaymentDay = createNewMeetingForRepaymentDay(disbursementDate, loanAccountActionForm, customer);
-            }
-
-            Short productId = loanAccountActionForm.getPrdOfferingIdValue();
-
-            LoanOfferingBO loanOffering = new LoanPrdBusinessService().getLoanOffering(productId, userContext.getLocaleId());
-
-            Money loanAmount = new Money(loanOffering.getCurrency(), loanAccountActionForm.getLoanAmount());
-            Short numOfInstallments = loanAccountActionForm.getNoOfInstallmentsValue();
-            boolean isInterestDeductedAtDisbursement = loanAccountActionForm.isInterestDedAtDisbValue();
-            Double interest = loanAccountActionForm.getInterestDoubleValue();
-            Short gracePeriod = loanAccountActionForm.getGracePeriodDurationValue();
-            List<FeeDto> fees = loanAccountActionForm.getFeesToApply();
-
-            Double maxLoanAmount = loanAccountActionForm.getMaxLoanAmountValue();
-            Double minLoanAmount = loanAccountActionForm.getMinLoanAmountValue();
-            Short maxNumOfInstallments = loanAccountActionForm.getMaxNoInstallmentsValue();
-            Short minNumOfShortInstallments = loanAccountActionForm.getMinNoInstallmentsValue();
-            String externalId = loanAccountActionForm.getExternalId();
-            Integer selectedLoanPurpose = loanAccountActionForm.getBusinessActivityIdValue();
-            String collateralNote = loanAccountActionForm.getCollateralNote();
-            Integer selectedCollateralType = loanAccountActionForm.getCollateralTypeIdValue();
-            AccountState accountState = loanAccountActionForm.getState();
-            if (accountState == null) {
-                accountState = AccountState.LOAN_PARTIAL_APPLICATION;
-            }
-
-            FundBO fund = null;
-            Short fundId = loanAccountActionForm.getLoanOfferingFundValue();
-            if (fundId != null) {
-                fund = this.fundDao.findById(fundId);
-            }
-
-            LoanBO redoLoan = LoanBO.redoLoan(userContext, loanOffering, customer, accountState, loanAmount,
-                    numOfInstallments, disbursementDate.toDate(), isInterestDeductedAtDisbursement, interest, gracePeriod,
-                    fund, fees, maxLoanAmount, minLoanAmount, maxNumOfInstallments,
-                    minNumOfShortInstallments, isRepaymentIndepOfMeetingEnabled, newMeetingForRepaymentDay);
-            redoLoan.setExternalId(externalId);
-            redoLoan.setBusinessActivityId(selectedLoanPurpose);
-            redoLoan.setCollateralNote(collateralNote);
-            redoLoan.setCollateralTypeId(selectedCollateralType);
-
-            PersonnelBO user = personnelDao.findPersonnelById(userContext.getId());
-
-            redoLoan.changeStatus(AccountState.LOAN_APPROVED, null, "Automatic Status Update (Redo Loan)", user);
-
-            // We're assuming cash disbursal for this situation right now
-            redoLoan.disburseLoan(user, PaymentTypes.CASH.getValue(), false);
-
-            List<PaymentDataHtmlBean> paymentDataBeans = loanAccountActionForm.getPaymentDataBeans();
-            PaymentData payment;
-
-            for (PaymentDataTemplate template : paymentDataBeans) {
-                if (template.hasValidAmount() && template.getTransactionDate() != null) {
-                    if (!customer.getCustomerMeeting().getMeeting().isValidMeetingDate(template.getTransactionDate(),
-                            DateUtils.getLastDayOfNextYear())) {
-                        throw new BusinessRuleException("errors.invalidTxndate");
-                    }
-                    payment = PaymentData.createPaymentData(template);
-                    redoLoan.applyPayment(payment);
-                }
-            }
-            return redoLoan;
-        } catch (InvalidDateException ide) {
-                throw new BusinessRuleException(ide.getMessage());
-        } catch (MeetingException e) {
-                throw new MifosRuntimeException(e);
-        } catch (ServiceException e2) {
-            throw new MifosRuntimeException(e2);
-        } catch (PersistenceException e1) {
-            throw new MifosRuntimeException(e1);
-        } catch (AccountException e) {
-            throw new BusinessRuleException(e.getKey(), e);
-        }
     }
 
     @Override

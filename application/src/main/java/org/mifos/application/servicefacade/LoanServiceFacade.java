@@ -24,8 +24,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import org.joda.time.DateTime;
-import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.service.OriginalScheduleInfoDto;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
@@ -40,12 +38,6 @@ import org.mifos.platform.validations.Errors;
  */
 @Deprecated
 public interface LoanServiceFacade {
-
-    /**
-     * @deprecated - unable at present to decouple LoanBO and ActionForm for redo functionality
-     */
-    @Deprecated
-    LoanBO previewLoanRedoDetails(Integer customerId, LoanAccountActionForm loanAccountActionForm, DateTime disbursementDate);
 
     Errors validateInputInstallments(Date disbursementDate, VariableInstallmentDetailsBO variableInstallmentDetails, List<RepaymentScheduleInstallment> installments, Integer customerId);
 
