@@ -57,12 +57,7 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
@@ -361,6 +356,7 @@ public class LoanBusinessServiceTest {
                 installment4, installment5, installment6, installment7);
         Date initialDisbursementDate = TestUtils.getDate(25, 8, 2010);
         Date disbursementDate = TestUtils.getDate(30, 8, 2010);
+        when(holidayService.isFutureRepaymentHoliday(Matchers.<Calendar>any(), eq(officeId))).thenReturn(true);
         when(holidayService.getNextWorkingDay(Matchers.<Date>any(), eq(officeId))).thenReturn(TestUtils.getDate(6, 9, 2010),
                 TestUtils.getDate(13, 9, 2010), TestUtils.getDate(20, 9, 2010), TestUtils.getDate(20, 10, 2010), TestUtils.getDate(30, 10, 2010),
                 TestUtils.getDate(6, 11, 2010), TestUtils.getDate(23, 11, 2010));
@@ -372,6 +368,7 @@ public class LoanBusinessServiceTest {
         assertInstallmentDueDate(installment5, "30-Oct-2010");
         assertInstallmentDueDate(installment6, "06-Nov-2010");
         assertInstallmentDueDate(installment7, "23-Nov-2010");
+        verify(holidayService, times(7)).isFutureRepaymentHoliday(Matchers.<Calendar>any(), eq(officeId));
         verify(holidayService, times(7)).getNextWorkingDay(Matchers.<Date>any(), eq(officeId));
     }
 
@@ -395,6 +392,7 @@ public class LoanBusinessServiceTest {
                 installment4, installment5, installment6, installment7);
         Date initialDisbursementDate = TestUtils.getDate(25, 8, 2010);
         Date disbursementDate = TestUtils.getDate(20, 8, 2010);
+        when(holidayService.isFutureRepaymentHoliday(Matchers.<Calendar>any(), eq(officeId))).thenReturn(true);
         when(holidayService.getNextWorkingDay(Matchers.<Date>any(), eq(officeId))).thenReturn(TestUtils.getDate(27, 8, 2010),
                 TestUtils.getDate(3, 9, 2010), TestUtils.getDate(10, 9, 2010), TestUtils.getDate(11, 10, 2010), TestUtils.getDate(21, 10, 2010),
                 TestUtils.getDate(28, 10, 2010), TestUtils.getDate(15, 11, 2010));
@@ -406,6 +404,7 @@ public class LoanBusinessServiceTest {
         assertInstallmentDueDate(installment5, "21-Oct-2010");
         assertInstallmentDueDate(installment6, "28-Oct-2010");
         assertInstallmentDueDate(installment7, "15-Nov-2010");
+        verify(holidayService, times(7)).isFutureRepaymentHoliday(Matchers.<Calendar>any(), eq(officeId));
         verify(holidayService, times(7)).getNextWorkingDay(Matchers.<Date>any(), eq(officeId));
     }
 
