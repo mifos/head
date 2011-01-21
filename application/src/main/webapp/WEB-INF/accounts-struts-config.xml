@@ -19,9 +19,6 @@
         <!-- Apply Adjustment action form  -->
         <form-bean name="applyAdjustmentActionForm"
                    type="org.mifos.accounts.struts.actionforms.ApplyAdjustmentActionForm"/>
-        <!-- LoanActivity action form  -->
-        <form-bean name="loanActivityActionForm"
-                   type="org.mifos.accounts.loan.struts.actionforms.LoanActivityActionForm"/>
         <!-- Savings Apply Adjustment action form  -->
         <form-bean name="savingsApplyAdjustmentActionForm"
                    type="org.mifos.accounts.savings.struts.actionforms.SavingsApplyAdjustmentActionForm"/>
@@ -149,13 +146,6 @@
             <forward name="close_failure" path="/pages/application/savings/jsp/reviewclosesavings.jsp"/>
             <forward name="preview_faliure" path="/pages/application/savings/jsp/closesavingsaccount.jsp"/>
         </action>
-        <!-- LoanActivity Action -->
-        <action path="/loanActivityAction" type="org.mifos.accounts.loan.struts.action.LoanActivityAction"
-                name="loanActivityActionForm" parameter="method" validate="true"
-                input="/loanActivityAction.do?method=validate" scope="session">
-            <forward name="getAllActivity_success" path="/pages/application/loan/jsp/viewloanaccountactivity.jsp"/>
-        </action>
-        <!-- end LoanActivity Action -->
         <!-- Savings Apply Adjustment  action -->
         <action path="/savingsApplyAdjustmentAction"
                 type="org.mifos.accounts.savings.struts.action.SavingsApplyAdjustmentAction"
