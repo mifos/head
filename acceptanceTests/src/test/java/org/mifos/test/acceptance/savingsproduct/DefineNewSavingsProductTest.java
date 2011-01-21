@@ -76,7 +76,7 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
     }
 
     // http://mifosforge.jira.com/browse/MIFOSTEST-139
-    @Test(sequential = true, groups = { "savings", "acceptance", "ui" })
+    @Test(enabled=true)
     public void createVoluntarySavingsProductForCenters() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
         SavingsProductParameters params = getGenericSavingsProductParameters(SavingsProductParameters.VOLUNTARY,SavingsProductParameters.CENTERS);
@@ -196,16 +196,4 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         savingsAccountPage.verifySavingsProduct(searchParameters.getSavingsProduct());
 
     }
-    /**
-     * note: verifying stored state of tables should be responsibility of dao/service integration tests.
-     * commenting out verification as offerings used to stored office
-     */
-//    private void verifySavingsProduct(String resultDataSetFile) throws Exception {
-//        String[] tablesToValidate = { "PRD_OFFERING",  "SAVINGS_OFFERING" };
-//
-//        IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromDataSetDirectoryFile(resultDataSetFile);
-//        IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTables(dataSource, tablesToValidate);
-
-//        dbUnitUtilities.verifyTables(tablesToValidate, databaseDataSet, expectedDataSet);
-//    }
 }

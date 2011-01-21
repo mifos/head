@@ -64,21 +64,6 @@ public class CreateSavingsAccountTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(sequential = true, groups = { "savings", "acceptance", "ui" })
-    public void newMandatoryClientSavingsAccount() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
-
-        CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
-        searchParameters.setSearchString("Stu1233266079799 Client1233266079799");
-        searchParameters.setSavingsProduct("MandClientSavings3MoPostMinBal");
-
-        CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
-        submitAccountParameters.setAmount("248.0");
-
-        verifySavingsAccountCreation(searchParameters, submitAccountParameters);
-    }
-
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(sequential = true, groups = { "savings", "acceptance", "ui" })
     public void newMandatoryClientSavingsAccountWithDateTypeCustomField() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_015_dbunit.xml", dataSource, selenium);
 
@@ -90,15 +75,6 @@ public class CreateSavingsAccountTest extends UiTestCaseBase {
         submitAccountParameters.setAmount("248.0");
 
         verifySavingsAccountCreationWithQG(searchParameters, submitAccountParameters);
-    }
-
-
-    private void verifySavingsAccountCreation(CreateSavingsAccountSearchParameters searchParameters,
-            CreateSavingsAccountSubmitParameters submitAccountParameters) {
-        SavingsAccountDetailPage savingsAccountPage = savingsAccountHelper.createSavingsAccount(searchParameters, submitAccountParameters);
-        savingsAccountPage.verifyPage();
-        savingsAccountPage.verifySavingsAmount(submitAccountParameters.getAmount());
-        savingsAccountPage.verifySavingsProduct(searchParameters.getSavingsProduct());
     }
 
     private void verifySavingsAccountCreationWithQG(CreateSavingsAccountSearchParameters searchParameters,
