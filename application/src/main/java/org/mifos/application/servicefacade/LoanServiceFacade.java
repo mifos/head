@@ -42,12 +42,6 @@ import org.mifos.platform.validations.Errors;
 public interface LoanServiceFacade {
 
     /**
-     * @deprecated - unable at present to decouple Dto and ActionForm
-     */
-    @Deprecated
-    LoanCreationLoanScheduleDetailsDto retrieveScheduleDetailsForLoanCreation(Integer customerId, DateTime disbursementDate, Short fundId, LoanAccountActionForm loanActionForm);
-
-    /**
      * @deprecated - unable at present to decouple LoanBO and ActionForm for redo functionality
      */
     @Deprecated

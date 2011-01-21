@@ -734,8 +734,28 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
                 loanActionForm.initializeTransactionFields(loanScheduleDetailsDto.getPaymentDataBeans());
             } else {
-                loanScheduleDetailsDto = loanServiceFacade.retrieveScheduleDetailsForLoanCreation(oldCustomer.getCustomerId(), disbursementDate,
-                        fundId, loanActionForm);
+
+                LoanBO loan = assembleLoan(userContext, customer, disbursementDate, fund,
+                        isRepaymentIndependentOfMeetingEnabled, newMeetingForRepaymentDay, loanActionForm);
+
+                List<RepaymentScheduleInstallment> installments = loanBusinessService.applyDailyInterestRatesWhereApplicable(
+                        new LoanScheduleGenerationDto(disbursementDate.toDate(),
+                                loan, loanActionForm.isVariableInstallmentsAllowed(), loanActionForm.getLoanAmountValue(),
+                                loanActionForm.getInterestDoubleValue()), userContext.getPreferredLocale());
+
+                if (isRepaymentIndependentOfMeetingEnabled) {
+                    Date firstRepaymentDate = installments.get(0).getDueDateValue();
+                    validateFirstRepaymentDate(disbursementDate, configurationPersistence, firstRepaymentDate);
+                }
+
+                double glimLoanAmount = computeGLIMLoanAmount(loanActionForm, localizationConverter);
+
+                boolean isLoanPendingApprovalDefined = ProcessFlowRules.isLoanPendingApprovalStateEnabled();
+
+                final boolean isGlimApplicable = customer.isGroup() && configurationPersistence.isGlimEnabled();
+                loanScheduleDetailsDto = new LoanCreationLoanScheduleDetailsDto(customer.isGroup(), isGlimApplicable, glimLoanAmount,
+                        isLoanPendingApprovalDefined, installments, new ArrayList<PaymentDataHtmlBean>());
+
                 loanActionForm.initializeInstallments(loanScheduleDetailsDto.getInstallments());
             }
         } finally {
@@ -808,6 +828,47 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                 DateUtils.getDateWithoutTimeStamp(disbursementDate.toDate())) > maxDaysInterval) {
             throw new AccountException(MAX_RANGE_IS_NOT_MET, new String[] { maxDaysInterval.toString() });
         }
+    }
+
+    private LoanBO assembleLoan(UserContext userContext, CustomerBO customer, DateTime disbursementDate, FundBO fund,
+            boolean isRepaymentIndependentOfMeetingEnabled, MeetingBO newMeetingForRepaymentDay,
+            LoanAccountActionForm loanActionForm) throws ApplicationException {
+
+        Short productId = loanActionForm.getPrdOfferingIdValue();
+        LoanOfferingBO loanOffering = new LoanPrdBusinessService()
+                .getLoanOffering(productId, userContext.getLocaleId());
+
+        Money loanAmount = new Money(loanOffering.getCurrency(), loanActionForm.getLoanAmount());
+        Short numOfInstallments = loanActionForm.getNoOfInstallmentsValue();
+        boolean isInterestDeductedAtDisbursement = loanActionForm.isInterestDedAtDisbValue();
+        Double interest = loanActionForm.getInterestDoubleValue();
+        Short gracePeriod = loanActionForm.getGracePeriodDurationValue();
+        List<FeeDto> fees = loanActionForm.getFeesToApply();
+        List<CustomFieldDto> customFields = loanActionForm.getCustomFields();
+        Double maxLoanAmount = loanActionForm.getMaxLoanAmountValue();
+        Double minLoanAmount = loanActionForm.getMinLoanAmountValue();
+        Short maxNumOfInstallments = loanActionForm.getMaxNoInstallmentsValue();
+        Short minNumOfShortInstallments = loanActionForm.getMinNoInstallmentsValue();
+        String externalId = loanActionForm.getExternalId();
+        Integer selectedLoanPurpose = loanActionForm.getBusinessActivityIdValue();
+        String collateralNote = loanActionForm.getCollateralNote();
+        Integer selectedCollateralType = loanActionForm.getCollateralTypeIdValue();
+        AccountState accountState = loanActionForm.getState();
+        if (accountState == null) {
+            accountState = AccountState.LOAN_PARTIAL_APPLICATION;
+        }
+
+        LoanBO loan = LoanBO.createLoan(userContext, loanOffering, customer, accountState, loanAmount,
+                numOfInstallments, disbursementDate.toDate(), isInterestDeductedAtDisbursement, interest, gracePeriod,
+                fund, fees, customFields, maxLoanAmount, minLoanAmount, maxNumOfInstallments,
+                minNumOfShortInstallments, isRepaymentIndependentOfMeetingEnabled, newMeetingForRepaymentDay);
+
+        loan.setExternalId(externalId);
+        loan.setBusinessActivityId(selectedLoanPurpose);
+        loan.setCollateralNote(collateralNote);
+        loan.setCollateralTypeId(selectedCollateralType);
+
+        return loan;
     }
 
     private void setAttributesForSchedulePreview(HttpServletRequest request, LoanAccountActionForm loanActionForm, DateTime disbursementDate, LoanCreationLoanScheduleDetailsDto loanScheduleDetailsDto) throws PageExpiredException {

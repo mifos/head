@@ -20,10 +20,7 @@
 
 package org.mifos.application.servicefacade;
 
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.MAX_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.MAX_RANGE_IS_NOT_MET;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_RANGE_IS_NOT_MET;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -42,8 +39,6 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.OriginalLoanScheduleEntity;
 import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
-import org.mifos.accounts.loan.business.service.LoanScheduleGenerationDto;
-import org.mifos.accounts.loan.business.service.LoanService;
 import org.mifos.accounts.loan.business.service.OriginalScheduleInfoDto;
 import org.mifos.accounts.loan.business.service.validators.InstallmentValidationContext;
 import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator;
@@ -70,19 +65,14 @@ import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
-import org.mifos.config.ProcessFlowRules;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
-import org.mifos.dto.domain.CustomFieldDto;
-import org.mifos.dto.domain.LoanAccountDetailsDto;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.platform.cashflow.ui.model.CashFlowForm;
@@ -126,132 +116,6 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
 
     private CustomerBO loadCustomer(Integer customerId) {
         return customerDao.findCustomerById(customerId);
-    }
-
-    @Override
-    public LoanCreationLoanScheduleDetailsDto retrieveScheduleDetailsForLoanCreation(Integer customerId, DateTime disbursementDate,
-                                                                                    Short fundId, LoanAccountActionForm loanActionForm) {
-
-        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserContext userContext = new UserContextFactory().create(user);
-
-        try {
-            ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
-            LocalizationConverter localizationConverter = new LocalizationConverter();
-            CustomerBO customer = loadCustomer(customerId);
-
-            if (loanActionForm.isDefaultFeeRemoved()) {
-                customerDao.checkPermissionForDefaultFeeRemovalFromLoan(userContext, customer);
-            }
-
-            new LoanService().validateDisbursementDateForNewLoan(customer.getOfficeId(), disbursementDate);
-
-            boolean isRepaymentIndependentOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
-
-            MeetingBO newMeetingForRepaymentDay = null;
-            if (isRepaymentIndependentOfMeetingEnabled) {
-                newMeetingForRepaymentDay = this
-                        .createNewMeetingForRepaymentDay(disbursementDate, loanActionForm, customer);
-            }
-
-            FundBO fund = null;
-            if (fundId != null) {
-                fund = this.fundDao.findById(fundId);
-            }
-            LoanBO loan = assembleLoan(userContext, customer, disbursementDate, fund,
-                    isRepaymentIndependentOfMeetingEnabled, newMeetingForRepaymentDay, loanActionForm);
-            List<RepaymentScheduleInstallment> installments = loanBusinessService.applyDailyInterestRatesWhereApplicable(
-                    new LoanScheduleGenerationDto(disbursementDate.toDate(),
-                            loan, loanActionForm.isVariableInstallmentsAllowed(), loanActionForm.getLoanAmountValue(),
-                            loanActionForm.getInterestDoubleValue()), userContext.getPreferredLocale());
-
-            if (isRepaymentIndependentOfMeetingEnabled) {
-                Date firstRepaymentDate = installments.get(0).getDueDateValue();
-                validateFirstRepaymentDate(disbursementDate, configurationPersistence, firstRepaymentDate);
-            }
-
-            double glimLoanAmount = computeGLIMLoanAmount(loanActionForm, localizationConverter);
-
-            boolean isLoanPendingApprovalDefined = ProcessFlowRules.isLoanPendingApprovalStateEnabled();
-
-            final boolean isGlimApplicable = customer.isGroup() && configurationPersistence.isGlimEnabled();
-            return new LoanCreationLoanScheduleDetailsDto(customer.isGroup(), isGlimApplicable, glimLoanAmount,
-                    isLoanPendingApprovalDefined, installments, new ArrayList<PaymentDataHtmlBean>());
-        } catch (ApplicationException e) {
-            throw new BusinessRuleException(e.getKey(), e);
-        }
-    }
-
-
-    private double computeGLIMLoanAmount(LoanAccountActionForm loanActionForm, LocalizationConverter localizationConverter) {
-        double glimLoanAmount = Double.valueOf("0");
-        List<LoanAccountDetailsDto> loanAccountDetails = loanActionForm.getClientDetails();
-        List<String> clientNames = loanActionForm.getClients();
-        for (LoanAccountDetailsDto loanAccount : loanAccountDetails) {
-            if (clientNames.contains(loanAccount.getClientId())) {
-                if (loanAccount.getLoanAmount() != null) {
-                    glimLoanAmount = glimLoanAmount
-                            + localizationConverter.getDoubleValueForCurrentLocale(loanAccount.getLoanAmount());
-                }
-            }
-        }
-        return glimLoanAmount;
-    }
-
-    private void validateFirstRepaymentDate(DateTime disbursementDate, ConfigurationPersistence configurationPersistence, Date firstRepaymentDate) throws AccountException {
-        Integer minDaysInterval = configurationPersistence.getConfigurationKeyValueInteger(
-                MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY).getValue();
-        Integer maxDaysInterval = configurationPersistence.getConfigurationKeyValueInteger(
-                MAX_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY).getValue();
-
-        if (DateUtils.getNumberOfDaysBetweenTwoDates(DateUtils.getDateWithoutTimeStamp(firstRepaymentDate),
-                DateUtils.getDateWithoutTimeStamp(disbursementDate.toDate())) < minDaysInterval) {
-            throw new AccountException(MIN_RANGE_IS_NOT_MET, new String[] { minDaysInterval.toString() });
-        } else if (DateUtils.getNumberOfDaysBetweenTwoDates(DateUtils.getDateWithoutTimeStamp(firstRepaymentDate),
-                DateUtils.getDateWithoutTimeStamp(disbursementDate.toDate())) > maxDaysInterval) {
-            throw new AccountException(MAX_RANGE_IS_NOT_MET, new String[] { maxDaysInterval.toString() });
-        }
-    }
-
-    private LoanBO assembleLoan(UserContext userContext, CustomerBO customer, DateTime disbursementDate, FundBO fund,
-            boolean isRepaymentIndependentOfMeetingEnabled, MeetingBO newMeetingForRepaymentDay,
-            LoanAccountActionForm loanActionForm) throws ApplicationException {
-
-        Short productId = loanActionForm.getPrdOfferingIdValue();
-        LoanOfferingBO loanOffering = new LoanPrdBusinessService()
-                .getLoanOffering(productId, userContext.getLocaleId());
-
-        Money loanAmount = new Money(loanOffering.getCurrency(), loanActionForm.getLoanAmount());
-        Short numOfInstallments = loanActionForm.getNoOfInstallmentsValue();
-        boolean isInterestDeductedAtDisbursement = loanActionForm.isInterestDedAtDisbValue();
-        Double interest = loanActionForm.getInterestDoubleValue();
-        Short gracePeriod = loanActionForm.getGracePeriodDurationValue();
-        List<FeeDto> fees = loanActionForm.getFeesToApply();
-        List<CustomFieldDto> customFields = loanActionForm.getCustomFields();
-        Double maxLoanAmount = loanActionForm.getMaxLoanAmountValue();
-        Double minLoanAmount = loanActionForm.getMinLoanAmountValue();
-        Short maxNumOfInstallments = loanActionForm.getMaxNoInstallmentsValue();
-        Short minNumOfShortInstallments = loanActionForm.getMinNoInstallmentsValue();
-        String externalId = loanActionForm.getExternalId();
-        Integer selectedLoanPurpose = loanActionForm.getBusinessActivityIdValue();
-        String collateralNote = loanActionForm.getCollateralNote();
-        Integer selectedCollateralType = loanActionForm.getCollateralTypeIdValue();
-        AccountState accountState = loanActionForm.getState();
-        if (accountState == null) {
-            accountState = AccountState.LOAN_PARTIAL_APPLICATION;
-        }
-
-        LoanBO loan = LoanBO.createLoan(userContext, loanOffering, customer, accountState, loanAmount,
-                numOfInstallments, disbursementDate.toDate(), isInterestDeductedAtDisbursement, interest, gracePeriod,
-                fund, fees, customFields, maxLoanAmount, minLoanAmount, maxNumOfInstallments,
-                minNumOfShortInstallments, isRepaymentIndependentOfMeetingEnabled, newMeetingForRepaymentDay);
-
-        loan.setExternalId(externalId);
-        loan.setBusinessActivityId(selectedLoanPurpose);
-        loan.setCollateralNote(collateralNote);
-        loan.setCollateralTypeId(selectedCollateralType);
-
-        return loan;
     }
 
     private MeetingBO createNewMeetingForRepaymentDay(DateTime disbursementDate,
