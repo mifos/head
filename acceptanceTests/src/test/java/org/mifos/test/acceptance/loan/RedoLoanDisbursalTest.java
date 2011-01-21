@@ -56,7 +56,7 @@ import java.sql.SQLException;
 
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"loan","acceptance","ui", "smoke"})
+@Test(sequential = true, groups = {"loan","acceptance","ui"})
 public class RedoLoanDisbursalTest extends UiTestCaseBase {
     private LoanTestHelper loanTestHelper;
     private NavigationHelper navigationHelper;
@@ -113,7 +113,7 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
         paramsPastDate.setDisbursalDateMM("07");
         paramsPastDate.setDisbursalDateYYYY("2009");
 
-        LoanAccountPage loanAccountPage = loanTestHelper.redoLoanDisbursal("MyGroup1233266255641", "WeeklyGroupFlatLoanWithOnetimeFee", paramsPastDate, null, 3174);
+        LoanAccountPage loanAccountPage = loanTestHelper.redoLoanDisbursal("MyGroup1233266255641", "WeeklyGroupFlatLoanWithOnetimeFee", paramsPastDate, null, 3174, false);
 
         verifyRedoLoanDisbursalWithPastDate(loanAccountPage);
     }
@@ -145,14 +145,19 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
         paramsPastDate.setDisbursalDateDD("18");
         paramsPastDate.setDisbursalDateMM("06");
         paramsPastDate.setDisbursalDateYYYY("2009");
+        paramsPastDate.setLoanAmount("3000.0");
+        paramsPastDate.setInterestRate("10");
+        paramsPastDate.setNumberOfInstallments("52");
+
         RedoLoanDisbursalParameters paramsCurrentDate = new RedoLoanDisbursalParameters();
         paramsCurrentDate.setDisbursalDateDD("29");
         paramsCurrentDate.setDisbursalDateMM("07");
         paramsCurrentDate.setDisbursalDateYYYY("2009");
 
-        LoanAccountPage loanAccountPage = loanTestHelper.redoLoanDisbursal("MyGroup1233266255641", "WeeklyGroupFlatLoanWithOnetimeFee", paramsPastDate, paramsCurrentDate, 0);
+        LoanAccountPage loanAccountPage = loanTestHelper.redoLoanDisbursal("MyGroup1233266255641", "WeeklyGroupFlatLoanWithOnetimeFee", paramsPastDate, paramsCurrentDate, 0, true);
 
         loanAccountPage.verifyStatus("Active in Good Standing");
+        loanAccountPage.verifyPerformanceHistory("5", "0");
 
         // Testing multiple reverse payments
         String payAmount = "63.0";

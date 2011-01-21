@@ -303,7 +303,7 @@ public class LoanTestHelper {
      * @param amountPaid The amount typed in second pay row. Used to pay whole loan.
      * @return LoanAccountPage
      */
-    public LoanAccountPage redoLoanDisbursal(String clientName, String loanProduct, RedoLoanDisbursalParameters paramsPastDate, RedoLoanDisbursalParameters paramsCurrentDate, int amountPaid) {
+    public LoanAccountPage redoLoanDisbursal(String clientName, String loanProduct, RedoLoanDisbursalParameters paramsPastDate, RedoLoanDisbursalParameters paramsCurrentDate, int amountPaid, boolean testForm) {
         RedoLoanDisbursalEntryPage dataEntryPage = navigationHelper
             .navigateToAdminPage()
             .navigateToRedoLoanDisbursal()
@@ -312,8 +312,13 @@ public class LoanTestHelper {
             .submitAndNavigateToRedoLoanDisbursalEntryPage(loanProduct);
 
         if(paramsCurrentDate != null) { // tests current or future date if need to.
-            dataEntryPage = dataEntryPage.submitFutureDateAndReloadPageWithInputError(paramsCurrentDate);
+            dataEntryPage = dataEntryPage.submitInvalidDataAndReloadPageWithInputError(paramsCurrentDate);
             dataEntryPage.verifyFutureDateInputError();
+        }
+        if(testForm) {
+            RedoLoanDisbursalParameters clearedParameters = RedoLoanDisbursalParameters.createObjectWithClearedParameters();
+            dataEntryPage = dataEntryPage.submitInvalidDataAndReloadPageWithInputError(clearedParameters);
+            dataEntryPage.verifyAllFormErrors();
         }
 
         RedoLoanDisbursalSchedulePreviewPage schedulePreviewPage = dataEntryPage.submitAndNavigateToRedoLoanDisbursalSchedulePreviewPage(paramsPastDate);
