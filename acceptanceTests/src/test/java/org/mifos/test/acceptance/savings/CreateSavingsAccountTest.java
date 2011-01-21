@@ -92,21 +92,6 @@ public class CreateSavingsAccountTest extends UiTestCaseBase {
         verifySavingsAccountCreationWithQG(searchParameters, submitAccountParameters);
     }
 
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(sequential = true, groups = { "savings", "acceptance", "ui" })
-    public void newMandatoryGroupSavingsAccount() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
-
-        CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
-        searchParameters.setSearchString("MyGroup1232993846342");
-        searchParameters.setSavingsProduct("MandGroupSavingsPerIndiv1MoPost");
-
-        CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
-        submitAccountParameters.setAmount("534.0");
-
-        verifySavingsAccountCreation(searchParameters, submitAccountParameters);
-    }
-
 
     private void verifySavingsAccountCreation(CreateSavingsAccountSearchParameters searchParameters,
             CreateSavingsAccountSubmitParameters submitAccountParameters) {
