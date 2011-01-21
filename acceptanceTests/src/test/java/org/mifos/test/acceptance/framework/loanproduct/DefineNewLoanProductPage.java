@@ -329,7 +329,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
 
     public DefineNewLoanProductPage verifyVariableInstalmentOptionsFields() {
         fillInstalmentOptionsAndSubmit("text,", "text,", "text,");
-        isTextPresentInPage("The min installment amount for variable installments is invalid because only numbers or decimal separator are allowed");
+        isTextPresentInPage("The min installment amount for variable installments is invalid because only positive numbers or decimal separator are allowed");
         Assert.assertTrue(!selenium.getValue(maxInstalmentGapTextBox).contains("text") & !selenium.getValue(maxInstalmentGapTextBox).contains(","));
         Assert.assertTrue(!selenium.getValue(minInstalmentGapTextBox).contains("text") & !selenium.getValue(minInstalmentGapTextBox).contains(","));
 
@@ -340,7 +340,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
         fillInstalmentOptionsAndSubmit("-1", "-1", "-1");
         isTextPresentInPage("Minimum gap must not be zero or negative for loans with variable installments");
         isTextPresentInPage("Minimum gap must not be zero or negative for loans with variable installments");
-        isTextPresentInPage("The min installment amount for variable installments is invalid because only numbers or decimal separator are allowed.");
+        isTextPresentInPage("The min installment amount for variable installments is invalid because only positive numbers or decimal separator are allowed.");
 
         fillInstalmentOptionsAndSubmit("0", "0", "0");
         isTextPresentInPage("Minimum gap must not be zero or negative for loans with variable installments");
@@ -420,17 +420,17 @@ public class DefineNewLoanProductPage extends AbstractPage {
     private void verifyMinimumLimitForCashFlow() {
         fillCashFlow("-1", "-1", "149.9");
         submitAndGotoNewLoanProductPreviewPage();
-        isTextPresentInPage("The Indebtedness Ratio is invalid because only numbers or decimal separator are allowed");
+        isTextPresentInPage("The Indebtedness Ratio is invalid because only positive numbers or decimal separator are allowed");
         isTextPresentInPage("The Repayment Capacity is invalid because it is not in between 150.0 and 1000.0");
-        isTextPresentInPage("The Warning Threshold is invalid because only numbers or decimal separator are allowed.");
+        isTextPresentInPage("The Warning Threshold is invalid because only positive numbers or decimal separator are allowed.");
     }
 
     private void verifyNonNumericForCashFlow() {
         fillCashFlow("abc", "abc", "abc");
         submitAndGotoNewLoanProductPreviewPage();
-        isTextPresentInPage("The Warning Threshold is invalid because only numbers or decimal separator are allowed");
-        isTextPresentInPage("The Indebtedness Ratio is invalid because only numbers or decimal separator are allowed");
-        isTextPresentInPage("The Indebtedness Ratio is invalid because only numbers or decimal separator are allowed");
+        isTextPresentInPage("The Warning Threshold is invalid because only positive numbers or decimal separator are allowed");
+        isTextPresentInPage("The Indebtedness Ratio is invalid because only positive numbers or decimal separator are allowed");
+        isTextPresentInPage("The Indebtedness Ratio is invalid because only positive numbers or decimal separator are allowed");
     }
 
     private void verifyMaximumLimitForCashFlow() {
