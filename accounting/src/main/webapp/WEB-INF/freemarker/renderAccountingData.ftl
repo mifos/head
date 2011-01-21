@@ -19,13 +19,38 @@
 *  explanation of the license and how it is applied.
 --]
 [#include "layout.ftl"]
-<a target="_blank" href="pages/accounting/jsp/processTallyXMLOutput.jsp?fromDate=${fromDate}&toDate=${toDate}">Download Tally XML format</a>
+<span id="page.id" title="accounting_data"/>
+        <STYLE TYPE="text/css"><!-- @import url(pages/css/jquery/jquery-ui.css); --></STYLE>
+        <script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
+        <script type="text/javascript" src="pages/js/jquery/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="pages/js/jquery/jquery.datePicker.min-2.1.2.js"></script>
+        <script type="text/javascript" src="pages/js/jquery/jquery.datePicker.configuration.js"></script>
+        <STYLE TYPE="text/css"><!-- @import url(pages/css/datepicker/datepicker.css); --></STYLE>
+        <script type="text/javascript" src="pages/framework/js/CommonUtilities.js"></script>
+		<!--[if IE]><script type="text/javascript" src="pages/js/jquery/jquery.bgiframe.js"></script><![endif]-->
+		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
+<script type="text/javascript" src="pages/accounting/js/accounting.js"></script>
+[@adminLeftPaneLayout] <!--  Main Content Begins-->
+[@mifos.crumbs breadcrumbs /]
+<br />
+<p class="font15 orangeheading">${fileName}</p>
 <br />
 [#if hasAlreadyRanQuery]
-<font color="red">This query has been already ran and probably imported also.</font>
+<font color="red">[@spring.message "accounting.viewaccountingexports.warning"/]</font>
 [/#if]
 <br />
+<br />
+[#if accountingData?size = 0]
+<b>[@spring.message "accounting.viewaccountingexports.nodata"/] : ${fromDate} - ${toDate}</b>
+[#else]
+[@spring.message "accounting.viewaccountingexports.instruction"/]
+<div align='right'>
+<a target="_blank" href="pages/accounting/jsp/processTallyXMLOutput.jsp?fromDate=${fromDate}&toDate=${toDate}">Download Tally XML format</a>
+</div>
+<br />
+<div align='right'>
 <a href="javascript:void(processPrint('table'));">Print</a>
+</div>
 <div id='table'>
 <table>
 <tr>
@@ -50,3 +75,5 @@
 [/#list]
 </table>
 </div>
+[/#if]
+[/@adminLeftPaneLayout]
