@@ -66,11 +66,6 @@ public class AccountPaymentParametersDtoTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void paymentTypeCannotBeNull() {
-        new AccountPaymentParametersDto(user, account, paymentAmount, paymentDate, null, emptyComment);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
     public void commentCannotBeNull() {
         new AccountPaymentParametersDto(user, account, paymentAmount, paymentDate, paymentType, null);
     }
