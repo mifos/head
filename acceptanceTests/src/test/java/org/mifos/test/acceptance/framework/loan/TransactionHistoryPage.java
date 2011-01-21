@@ -29,6 +29,9 @@ import com.thoughtworks.selenium.Selenium;
 @SuppressWarnings("PMD.SystemPrintln")
 public class TransactionHistoryPage extends AbstractPage {
 
+    public final static String TABLE_ID = "trxnhistoryList";
+    public final static String TYPE_LOAN_DISBURSEMENT = "Loan Disbursement";
+
     public TransactionHistoryPage(Selenium selenium) {
         super(selenium);
         verifyPage("ViewTransactionHistory");
@@ -45,16 +48,16 @@ public class TransactionHistoryPage extends AbstractPage {
             int row = i * 8 + 1;
             float amount = 0;
             for(int j = 0; j < 8; j++) {
-                String value = selenium.getTable("trxnhistoryList."+(row+j)+".6");
+                String value = getCredit(row+j);
                 if(!value.contains("-")) {
                     amount += Float.parseFloat(value);
                 }
             }
             Assert.assertEquals(amount, Float.parseFloat(payAmount)*2);
-            Assert.assertEquals(selenium.getTable("trxnhistoryList."+row+".10"), notes+(i+1));
-            Assert.assertEquals(selenium.getTable("trxnhistoryList."+(row+1)+".10"), notes+(i+1));
-            Assert.assertEquals(selenium.getTable("trxnhistoryList."+(row+2)+".10"), notes+(i+1));
-            Assert.assertEquals(selenium.getTable("trxnhistoryList."+(row+3)+".10"), notes+(i+1));
+            Assert.assertEquals(getNotes(row), notes+(i+1));
+            Assert.assertEquals(getNotes(row+1), notes+(i+1));
+            Assert.assertEquals(getNotes(row+2), notes+(i+1));
+            Assert.assertEquals(getNotes(row+3), notes+(i+1));
         }
     }
 
@@ -70,7 +73,7 @@ public class TransactionHistoryPage extends AbstractPage {
         String paymentID = "";
         int paymentCount = 0;
         for(int i = 0; ; i++) {
-            if((sum >= amountPaid && "Loan Disbursement".equals(getType(i))) || i >= maxRowCount) {
+            if((sum >= amountPaid && TYPE_LOAN_DISBURSEMENT.equals(getType(i))) || i >= maxRowCount) {
                 break;
             }
             if("11201".equals(getGLCode(i))) {
@@ -90,18 +93,26 @@ public class TransactionHistoryPage extends AbstractPage {
     }
 
     public String getPaymentID(int row) {
-        return selenium.getTable("trxnhistoryList."+row+".1");
+        return selenium.getTable(TABLE_ID+"."+row+".1");
     }
 
     public String getType(int row) {
-        return selenium.getTable("trxnhistoryList."+row+".3");
+        return selenium.getTable(TABLE_ID+"."+row+".3");
     }
 
     public String getGLCode(int row) {
-        return selenium.getTable("trxnhistoryList."+row+".4");
+        return selenium.getTable(TABLE_ID+"."+row+".4");
     }
 
     public String getDebit(int row) {
-        return selenium.getTable("trxnhistoryList."+row+".5");
+        return selenium.getTable(TABLE_ID+"."+row+".5");
+    }
+
+    public String getCredit(int row) {
+        return selenium.getTable(TABLE_ID+"."+row+".6");
+    }
+
+    public String getNotes(int row) {
+        return selenium.getTable(TABLE_ID+"."+row+".10");
     }
 }

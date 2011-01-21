@@ -25,7 +25,6 @@ import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
-import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
@@ -83,10 +82,7 @@ public class UndoLoanDisbursalTest extends UiTestCaseBase {
         ClientViewDetailsPage clientViewDetailsPage = (ClientViewDetailsPage) loanTestHelper.reverseLoanDisbursal(clientLoanID, clientID, false, resultClickLink);
 
         clientViewDetailsPage.verifyLoanDoesntExist("Acct #000100000000215");
-        LoanAccountPage loanAccountPage = clientViewDetailsPage
-            .navigateToClosedAccountsPage()
-            .verifyAndNavigateToOneClosedLoan(clientLoanID);
-        loanAccountPage.verifyStatus(LoanTestHelper.CANCEL_LOAN_REVERSAL);
+        loanTestHelper.verifyHistoryAndSummaryReversedLoan(clientViewDetailsPage.navigateToClosedAccountsPage(), clientLoanID);
     }
 
     /*
@@ -95,7 +91,6 @@ public class UndoLoanDisbursalTest extends UiTestCaseBase {
      * Group loan.
      *
      * http://mifosforge.jira.com/browse/MIFOSTEST-20
-     * http://mifosforge.jira.com/browse/MIFOSTEST-24
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void undoGroupLoanDisbursal() throws Exception {
@@ -108,6 +103,6 @@ public class UndoLoanDisbursalTest extends UiTestCaseBase {
         GroupViewDetailsPage groupViewDetailsPage = (GroupViewDetailsPage) loanTestHelper.reverseLoanDisbursal(groupLoanID, groupID, true, resultClickLink);
 
         groupViewDetailsPage.verifyLoanDoesntExist("Acct #000100000000206");
-        loanTestHelper.verifyHistoryAndSummaryReversedLoan(groupViewDetailsPage);
+        loanTestHelper.verifyHistoryAndSummaryReversedLoan(groupViewDetailsPage.navigateToClosedAccountsPage(), groupLoanID, "4290.0", "0.0", "4290.0");
     }
 }

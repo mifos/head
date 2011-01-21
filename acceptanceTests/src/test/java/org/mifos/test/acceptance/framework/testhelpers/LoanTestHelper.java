@@ -33,11 +33,11 @@ import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.client.ClientSearchResultsPage;
-import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
 import org.mifos.test.acceptance.framework.loan.ApplyChargePage;
 import org.mifos.test.acceptance.framework.loan.ApplyPaymentConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.ApplyPaymentPage;
 import org.mifos.test.acceptance.framework.loan.ChargeParameters;
+import org.mifos.test.acceptance.framework.loan.ClosedAccountsPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountEntryPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
@@ -57,6 +57,7 @@ import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalEntryPage;
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalParameters;
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalSchedulePreviewPage;
+import org.mifos.test.acceptance.framework.loan.TransactionHistoryPage;
 import org.mifos.test.acceptance.framework.loan.ViewLoanStatusHistoryPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
 import org.mifos.test.acceptance.framework.loanproduct.EditLoanProductPage;
@@ -351,11 +352,34 @@ public class LoanTestHelper {
         return searchResultsPage;
     }
 
-    public void verifyHistoryAndSummaryReversedLoan(GroupViewDetailsPage clientViewDetailsPage) {
-        LoanAccountPage loanAccountPage = clientViewDetailsPage.navigateToClosedAccountsPage()
-            .navigateToLoanAccountPage();
-        loanAccountPage.verifyClosedLoanPerformanceHistory();
-        loanAccountPage.navigateToTransactionHistory();
+    /**
+     * Small verification of reversed loan.
+     * @param closedAccountPage
+     * @param loanID
+     */
+    public void verifyHistoryAndSummaryReversedLoan(ClosedAccountsPage closedAccountPage, String loanID) {
+        verifyHistoryAndSummaryReversedLoan(closedAccountPage, loanID, null, null, null);
+    }
+
+    /**
+     * Extended verification of reversed loan.
+     * @param closedAccountPage
+     * @param loanID
+     * @param totalOriginalLoan
+     * @param totalAmountPaid
+     * @param totalLoanBalance
+     */
+    public void verifyHistoryAndSummaryReversedLoan(ClosedAccountsPage closedAccountPage, String loanID, String totalOriginalLoan, String totalAmountPaid, String totalLoanBalance) {
+        LoanAccountPage loanAccountPage = closedAccountPage.verifyAndNavigateToOneClosedLoan(loanID);
+        loanAccountPage.verifyStatus(CANCEL_LOAN_REVERSAL);
+        if(totalOriginalLoan != null) {
+            loanAccountPage.verifyTotalOriginalLoan(totalOriginalLoan);
+            loanAccountPage.verifyTotalAmountPaid(totalAmountPaid);
+            loanAccountPage.verifyLoanTotalBalance(totalLoanBalance);
+            loanAccountPage.verifyClosedLoanPerformanceHistory();
+            TransactionHistoryPage transactionHistoryPage = loanAccountPage.navigateToTransactionHistory();
+            transactionHistoryPage.verifyTransactionHistory(0, 0, 4);
+        }
     }
 
     public LoanAccountPage navigateToLoanAccountPage(CreateLoanAccountSearchParameters searchParams) {
