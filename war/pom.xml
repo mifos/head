@@ -26,7 +26,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>${project.artifactId}</finalName>
+		<finalName>mifos</finalName>
 		<defaultGoal>war:war</defaultGoal>
 
 		<plugins>
