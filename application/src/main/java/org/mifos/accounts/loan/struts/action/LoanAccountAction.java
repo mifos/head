@@ -147,6 +147,7 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.service.ClientBusinessService;
+import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.util.helpers.CustomerConstants;
@@ -2193,4 +2194,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         return actionErrors;
     }
 
+    public void setCustomerDao(CustomerDao customerDao ) {
+        this.customerDao = customerDao;
+    }
 }
