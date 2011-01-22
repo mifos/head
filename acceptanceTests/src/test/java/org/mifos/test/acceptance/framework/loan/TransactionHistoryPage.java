@@ -69,26 +69,35 @@ public class TransactionHistoryPage extends AbstractPage {
      */
     public void verifyTransactionHistory(double amountPaid, int transactionCount, int maxRowCount) {
         /* TODO: Check if everything works after fixing loan transactions problem */
-        double sum = 0;
+        double debitSum = 0;
+        double creditSum = 0;
         String paymentID = "";
         int paymentCount = 0;
-        for(int i = 0; ; i++) {
-            if((sum >= amountPaid && TYPE_LOAN_DISBURSEMENT.equals(getType(i))) || i >= maxRowCount) {
+
+        for(int i = 1;i <= maxRowCount; i++) {
+            if(TYPE_LOAN_DISBURSEMENT.equals(getType(i))) {
                 break;
             }
             if("11201".equals(getGLCode(i))) {
-                String debit = getDebit(i);
-                if(!"-".equals(debit)) {
-                    sum += Double.valueOf(debit);
-                }
-                String rowPaymentID = getPaymentID(i);
-                if(!paymentID.equals(rowPaymentID)) {
-                    paymentID = rowPaymentID;
-                    paymentCount++;
+                String debitValue = getDebit(i);
+                if(!"-".equals(debitValue)) {
+                    debitSum += Double.valueOf(debitValue);
                 }
             }
+            else{
+                String creditValue = getCredit(i);
+                if(!"-".equals(creditValue)) {
+                    creditSum += Double.valueOf(creditValue);
+                }
+            }
+            String rowPaymentID = getPaymentID(i);
+            if(!paymentID.equals(rowPaymentID)) {
+                paymentID = rowPaymentID;
+                paymentCount++;
+            }
         }
-        Assert.assertEquals(amountPaid, sum);
+        Assert.assertEquals(amountPaid, debitSum);
+        Assert.assertEquals(amountPaid, creditSum);
         Assert.assertEquals(transactionCount, paymentCount);
     }
 

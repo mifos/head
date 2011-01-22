@@ -79,27 +79,6 @@ public class ClientLoanStatusHistoryTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    //http://mifosforge.jira.com/browse/MIFOSTEST-363
-    public void statusHistoryUpdates() throws Exception {
-        //Given
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
-        CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
-        CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
-        searchParameters.setLoanProduct("WeeklyFlatLoanWithOneTimeFees");
-        searchParameters.setSearchString("Stu1232993852651");
-        submitAccountParameters.setAmount("1000");
-        //When
-        LoanAccountPage loanAccountPage = loanTestHelper.createLoanAccount(searchParameters, submitAccountParameters);
-        String loanId = loanAccountPage.getAccountId();
-        EditLoanAccountStatusParameters params = new EditLoanAccountStatusParameters();
-        params.setStatus(EditLoanAccountStatusParameters.APPROVED);
-        params.setNote("Approved.");
-        loanTestHelper.changeLoanAccountStatus(loanId, params);
-        //Then
-        loanTestHelper.verifyLastEntryInStatusHistory(loanId, loanTestHelper.PENDING_APPROVAL, loanTestHelper.APPROVED);
-    }
-
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void newLoan() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml", dataSource, selenium);
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();

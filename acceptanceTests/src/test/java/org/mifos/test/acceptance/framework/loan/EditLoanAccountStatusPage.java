@@ -28,9 +28,6 @@ import org.mifos.test.acceptance.framework.MifosPage;
 public class EditLoanAccountStatusPage extends MifosPage {
     public EditLoanAccountStatusPage(Selenium selenium) {
         super(selenium);
-    }
-
-    public void verifyPage() {
         this.verifyPage("ChangeStatus");
     }
 

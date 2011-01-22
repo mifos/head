@@ -29,6 +29,9 @@ import org.testng.Assert;
 @SuppressWarnings("PMD.SystemPrintln")
 public class LoanAccountPage extends AbstractPage {
 
+    public final static String ACTIVE = "Active in Good Standing";
+
+
     public LoanAccountPage(Selenium selenium) {
         super(selenium);
         this.verifyPage("LoanAccountDetail");
@@ -93,7 +96,23 @@ public class LoanAccountPage extends AbstractPage {
         Assert.assertEquals(selenium.getText("loanaccountdetail.text.interestRate"), interestRate);
     }
 
-    public void verifyLoanDetails(CreateLoanAccountSubmitParameters submitAccountParameters) {
+    public void verifyPurposeOfLoan(String purpose) {
+        Assert.assertEquals(selenium.getText("loanaccountdetail.text.purposeofloan"), purpose);
+    }
+
+    public void verifyCollateralNotes(String note) {
+        Assert.assertEquals(selenium.getText("loanaccountdetail.text.note"), note);
+    }
+
+    public void verifyCollateralType(String type) {
+        Assert.assertEquals(selenium.getText("loanaccountdetail.text.collateraltype"), type);
+    }
+
+    public void verifyExternalId(String id) {
+        Assert.assertEquals(selenium.getText("loanaccountdetail.text.externalid"), id);
+    }
+
+    public void verifyLoanDetails(CreateLoanAccountSubmitParameters submitAccountParameters, EditLoanAccountInformationParameters editLoanAccountInformationParameters) {
         if(submitAccountParameters.getAmount()!=null){
             verifyLoanAmount(submitAccountParameters.getAmount());
         }
@@ -102,6 +121,18 @@ public class LoanAccountPage extends AbstractPage {
         }
         if(submitAccountParameters.getInterestRate()!=null){
             verifyInterestRate(submitAccountParameters.getInterestRate());
+        }
+        if(editLoanAccountInformationParameters.getCollateralNotes()!=null){
+            verifyCollateralNotes(editLoanAccountInformationParameters.getCollateralNotes());
+        }
+        if(editLoanAccountInformationParameters.getCollateralType()!=null){
+            verifyCollateralType(editLoanAccountInformationParameters.getCollateralType());
+        }
+        if(editLoanAccountInformationParameters.getExternalID()!=null){
+            verifyInterestRate(submitAccountParameters.getInterestRate());
+        }
+        if(editLoanAccountInformationParameters.getPurposeOfLoan()!=null){
+            verifyPurposeOfLoan(editLoanAccountInformationParameters.getPurposeOfLoan());
         }
     }
 
@@ -231,6 +262,12 @@ public class LoanAccountPage extends AbstractPage {
         selenium.click("id=loanaccountdetail.link.viewStatusHistory");
         waitForPageToLoad();
         return new ViewLoanStatusHistoryPage(selenium);
+    }
+
+    public AccountActivityPage navigateToViewLoanAccountActivityPage() {
+        selenium.click("id=loanaccountdetail.link.viewAccountActivity");
+        waitForPageToLoad();
+        return new AccountActivityPage(selenium);
     }
 
     public String getTotalBalance() {

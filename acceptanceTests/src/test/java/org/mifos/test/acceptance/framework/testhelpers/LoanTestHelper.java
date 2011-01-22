@@ -33,6 +33,7 @@ import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.client.ClientSearchResultsPage;
+import org.mifos.test.acceptance.framework.loan.AccountActivityPage;
 import org.mifos.test.acceptance.framework.loan.ApplyChargePage;
 import org.mifos.test.acceptance.framework.loan.ApplyPaymentConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.ApplyPaymentPage;
@@ -168,15 +169,15 @@ public class LoanTestHelper {
         LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
 
         EditLoanAccountStatusPage editAccountStatusPage = loanAccountPage.navigateToEditAccountStatus();
-        editAccountStatusPage.verifyPage();
 
-        editAccountStatusPage.submitAndNavigateToNextPage(params);
+        EditAccountStatusConfirmationPage editAccountStatusConfirmationPage = editAccountStatusPage.submitAndNavigateToNextPage(params);
 
         if (responseParameters != null) {
             populateQuestionGroupResponses(responseParameters);
         }
 
-        new EditAccountStatusConfirmationPage(selenium).submitAndNavigateToLoanAccountPage();
+        loanAccountPage = editAccountStatusConfirmationPage.submitAndNavigateToLoanAccountPage();
+        loanAccountPage.verifyStatus(params.getStatus());
     }
 
     public void verifyLastEntryInStatusHistory(String loanId, String oldStatus, String newStatus) {
@@ -202,9 +203,10 @@ public class LoanTestHelper {
         DisburseLoanPage disburseLoanPage = prepareToDisburseLoan(loanId);
 
         DisburseLoanConfirmationPage disburseLoanConfirmationPage = disburseLoanPage.submitAndNavigateToDisburseLoanConfirmationPage(disburseParameters);
-        disburseLoanConfirmationPage.verifyPage();
 
-        return disburseLoanConfirmationPage.submitAndNavigateToLoanAccountPage();
+        LoanAccountPage loanAccountPage = disburseLoanConfirmationPage.submitAndNavigateToLoanAccountPage();
+        loanAccountPage.verifyStatus(LoanAccountPage.ACTIVE);
+        return loanAccountPage;
     }
 
     public void editLoanProduct(String loanProduct, boolean interestWaiver) {
@@ -453,9 +455,12 @@ public class LoanTestHelper {
     public LoanAccountPage makePayment(DateTime paymentDate, String paymentAmount) throws UnsupportedEncodingException {
         PaymentParameters paymentParameters =setPaymentParams(paymentAmount, paymentDate);
         setApplicationTime(paymentDate).navigateBack();
-        return new LoanAccountPage(selenium).navigateToApplyPayment().
+        LoanAccountPage loanAccountPage = new LoanAccountPage(selenium).navigateToApplyPayment().
                 submitAndNavigateToApplyPaymentConfirmationPage(paymentParameters).
                 submitAndNavigateToLoanAccountDetailsPage();
+        AccountActivityPage accountActivityPage = loanAccountPage.navigateToAccountActivityPage();
+        accountActivityPage.verifyLastTotalPaid(paymentAmount);
+        return loanAccountPage;
     }
 
     public PaymentParameters setPaymentParams(String amount, ReadableInstant paymentDate) {
@@ -511,5 +516,12 @@ public class LoanTestHelper {
         chargeParameters.setType(feeName);
         chargeParameters.setAmount(amount);
         return new LoanAccountPage(selenium).navigateToApplyCharge().submitAndNavigateToApplyChargeConfirmationPage(chargeParameters);
+    }
+
+    public void verifyTransactionHistory(String loanId, Double paymentAmount){
+        LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
+        TransactionHistoryPage transactionHistoryPage = loanAccountPage.navigateToTransactionHistory();
+
+        transactionHistoryPage.verifyTransactionHistory(paymentAmount, 1, 217);
     }
 }

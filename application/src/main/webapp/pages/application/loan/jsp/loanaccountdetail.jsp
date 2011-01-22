@@ -137,7 +137,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							<c:forEach var="busId"
 								items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessActivities')}">
 								<c:if test="${busId.id eq loanInformationDto.businessActivityId}">
-									<c:out value="${busId.name}" />
+									<span id="loanaccountdetail.text.purposeofloan"><c:out value="${busId.name}" /></span>
 								</c:if>
 							</c:forEach></td>
 						</tr>
@@ -403,7 +403,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 								isColonRequired="yes" isManadatoryIndicationNotRequired="yes" />&nbsp;
 							<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'CollateralTypes')}" var="collateralType">
 								<c:if test="${collateralType.id eq loanInformationDto.collateralTypeId}">
-									<c:out value="${collateralType.name}" />
+									<span id="loanaccountdetail.text.collateraltype"><c:out value="${collateralType.name}" /></span>
 								</c:if>
 							</c:forEach></td>
 						</tr>
@@ -412,7 +412,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							<mifos:mifoslabel name="loan.collateral_notes"
 								keyhm="Loan.CollateralNotes" isColonRequired="yes"
 								isManadatoryIndicationNotRequired="yes" />&nbsp;<br>
-							<c:out value="${loanInformationDto.collateralNote}" />
+							<span id="loanaccountdetail.text.collateralname"><c:out value="${loanInformationDto.collateralNote}" /></span>
                             <br /></td>
 						</tr>
 						<script>
@@ -423,7 +423,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
                         <tr id="Loan.ExternalId">
                             <td class="fontnormalbold"><mifos:mifoslabel name="accounts.externalId"
                                 keyhm="Loan.ExternalId" isColonRequired="yes" isManadatoryIndicationNotRequired="yes" />
-                            &nbsp; <span class="fontnormal"><c:out value="${loanInformationDto.externalId}" /> </span></td>
+                            &nbsp; <span class="fontnormal"><span id="loanaccountdetail.text.externalid"><c:out value="${loanInformationDto.externalId}" /></span> </span></td>
                         </tr>
                         
                         <!-- Administrative documents -->

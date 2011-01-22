@@ -27,9 +27,6 @@ import com.thoughtworks.selenium.Selenium;
 public class DisburseLoanConfirmationPage extends MifosPage {
     public DisburseLoanConfirmationPage(Selenium selenium) {
         super(selenium);
-    }
-
-    public void verifyPage() {
         this.verifyPage("ReviewLoanDisbursement");
     }
 
