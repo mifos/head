@@ -22,6 +22,7 @@ package org.mifos.platform.accounting.service;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -36,6 +37,7 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.framework.util.ConfigurationLocator;
 import org.mifos.platform.accounting.AccountingDto;
+import org.mifos.platform.accounting.AccountingRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -43,28 +45,45 @@ import org.springframework.stereotype.Component;
 @Component
 public class AccountingDataCacheManager {
 
-    private static final Logger logger = LoggerFactory.getLogger(AccountingDataCacheManager.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AccountingDataCacheManager.class);
 
     private String accountingDataPath;
+    private Integer digitsAfterDecimal;
 
-    public List<AccountingDto> getAccoutingDataFromCache(String fileName) throws Exception {
+    public final List<AccountingDto> getAccoutingDataFromCache(String fileName) {
 
         String accountingDataLocation = getAccoutingDataCachePath();
 
         File file = new File(accountingDataLocation + fileName);
 
-        BufferedReader br = new BufferedReader(new FileReader(file));
-        String line;
+        BufferedReader br;
+        try {
+            br = new BufferedReader(new FileReader(file));
+        } catch (FileNotFoundException e) {
+            LOGGER.error("Reading file from accounting cache" + file, e);
+            throw new AccountingRuntimeException("Reading file from accounting cache" + file, e);
+        }
+        String line = null;
 
         // skip first line
-        br.readLine();
+        try {
+            br.readLine();
+        } catch (IOException e) {
+            LOGGER.error("skipping header line", e);
+            throw new AccountingRuntimeException("skipping header line", e);
+        }
 
         List<AccountingDto> accountingData = new ArrayList<AccountingDto>();
 
-        while ((line = br.readLine()) != null) {
-            accountingData.add(parseLine(line));
+        try {
+            while ((line = br.readLine()) != null) {
+                accountingData.add(parseLine(line));
+            }
+            br.close();
+        } catch (IOException e) {
+            throw new AccountingRuntimeException("reading line" + line, e);
         }
-        br.close();
+
         return accountingData;
     }
 
@@ -80,34 +99,41 @@ public class AccountingDataCacheManager {
         return accountingDataPath;
     }
 
-    public Boolean deleteCacheDir() {
+    public final Boolean deleteCacheDir() {
         try {
             FileUtils.deleteDirectory(new File(getAccoutingDataCachePath()));
         } catch (IOException e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
             return false;
         }
         return true;
     }
 
     private int getDigitsAfterDecimal() {
-       ConfigurationLocator configurationLocator = new ConfigurationLocator();
-       String customApplicationPropertyFile = configurationLocator.getConfigurationDirectory() + "/applicationConfiguration.custom.properties";
-       File appConfigFile = new File(customApplicationPropertyFile);
-       Properties properties = new Properties();
-       if(appConfigFile.exists() && appConfigFile.isFile()) {
-           try {
-            properties.load(new FileReader(appConfigFile));
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
+        if(digitsAfterDecimal != null) {
+            // Already read, avoid reading again to reduce processing
+            return digitsAfterDecimal;
         }
-       }
-       String digitsAfterDecimal = "1";
-       digitsAfterDecimal = properties.getProperty("AccountingRules.DigitsAfterDecimal", digitsAfterDecimal);
-       return Integer.parseInt(digitsAfterDecimal);
+        ConfigurationLocator configurationLocator = new ConfigurationLocator();
+        String customApplicationPropertyFile = configurationLocator.getConfigurationDirectory() + "/applicationConfiguration.custom.properties";
+        File appConfigFile = new File(customApplicationPropertyFile);
+        Properties properties = new Properties();
+        if (appConfigFile.exists() && appConfigFile.isFile()) {
+            try {
+                properties.load(new FileReader(appConfigFile));
+            } catch (Exception e) {
+                LOGGER.error(e.getMessage(), e);
+            }
+        } else {
+            //FIXME hardcoded default value, using property file only for custom value
+            // There should be a way to read application properties across modules
+            digitsAfterDecimal = 1;
+        }
+        digitsAfterDecimal = Integer.parseInt(properties.getProperty("AccountingRules.DigitsAfterDecimal", "1"));
+        return digitsAfterDecimal;
     }
 
-    protected void setAccoutingDataCachePath(String path) {
+    protected final void setAccoutingDataCachePath(String path) {
         accountingDataPath = path;
     }
 
@@ -124,7 +150,7 @@ public class AccountingDataCacheManager {
     }
 
     private String parseNumber(String number) {
-        //FIXME should use this from common util
+        // FIXME should use this from common util
         StringBuilder pattern = new StringBuilder();
         DecimalFormat decimalFormat = new DecimalFormat();
         for (Short i = 0; i < 14; i++) {
@@ -137,16 +163,22 @@ public class AccountingDataCacheManager {
         decimalFormat.applyLocalizedPattern(pattern.toString());
         decimalFormat.setDecimalSeparatorAlwaysShown(false);
         decimalFormat.setMinimumFractionDigits(getDigitsAfterDecimal());
-        return  decimalFormat.format(Double.parseDouble(number));
+        return decimalFormat.format(Double.parseDouble(number));
     }
 
-    public boolean isAccountingDataAlreadyInCache(String fileName) {
+    public final boolean isAccountingDataAlreadyInCache(String fileName) {
         return new File(getAccoutingDataCachePath() + fileName).isFile();
     }
 
-    public void writeAccountingDataToCache(List<AccountingDto> accountingData, String cacheFileName) throws Exception {
+    public final void writeAccountingDataToCache(List<AccountingDto> accountingData, String cacheFileName) {
         File file = new File(getAccoutingDataCachePath() + cacheFileName);
-        PrintWriter out = new PrintWriter(file);
+        PrintWriter out = null;
+        try {
+            out = new PrintWriter(file);
+        } catch (FileNotFoundException e) {
+            LOGGER.error("Reading file from accounting cache" + file, e);
+            throw new AccountingRuntimeException("Reading file from accounting cache" + file, e);
+        }
         out.println("branchname;voucherdate;vouchertype;glcode;glname;debit;credit");
         for (AccountingDto instance : accountingData) {
             out.println(instance.toString());
@@ -155,19 +187,19 @@ public class AccountingDataCacheManager {
         out.close();
     }
 
-    public String getCacheFileName(LocalDate startDate, LocalDate endDate) {
+    public final String getCacheFileName(LocalDate startDate, LocalDate endDate) {
         return startDate + " to " + endDate;
     }
 
-    public String getTallyOutputFileName(LocalDate startDate, LocalDate endDate) {
+    public final String getTallyOutputFileName(LocalDate startDate, LocalDate endDate) {
         return getFilePrefixDefinedByMFI() + getCacheFileName(startDate, endDate) + ".xml";
     }
 
-    public String getFilePrefixDefinedByMFI() {
+    public final String getFilePrefixDefinedByMFI() {
         return "Mifos Accounting Export ";
     }
 
-    public List<AccountingCacheFileInfo> getAccountingDataCacheInfo() {
+    public final List<AccountingCacheFileInfo> getAccountingDataCacheInfo() {
         List<AccountingCacheFileInfo> info = new ArrayList<AccountingCacheFileInfo>();
         File directory = new File(getAccoutingDataCachePath());
         for (File file : directory.listFiles()) {

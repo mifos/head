@@ -25,7 +25,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -33,36 +32,64 @@ import javax.sql.DataSource;
 import org.joda.time.LocalDate;
 import org.mifos.framework.persistence.SqlExecutor;
 import org.mifos.platform.accounting.AccountingDto;
+import org.mifos.platform.accounting.AccountingRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class AccountingDaoImpl implements IAccountingDao {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(AccountingDaoImpl.class);
+
+    public static final int BRANCH_NAME = 1;
+    public static final int VOUCHER_DATE = 2;
+    public static final int VOUCHER_TYPE = 3;
+    public static final int GL_CODE = 4;
+    public static final int GL_CODE_NAME = 5;
+    public static final int DEBIT = 6;
+    public static final int CREDIT = 7;
+
+    private final DataSource dataSource;
+
     @Autowired
-    private DataSource dataSource;
+    public AccountingDaoImpl(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
     @Override
-    public List<AccountingDto> getAccountingData(Date startDate, Date endDate) throws SQLException {
+    public final List<AccountingDto> getAccountingDataByDate(LocalDate startDate, LocalDate endDate) {
         List<AccountingDto> dto = new ArrayList<AccountingDto>();
-        Connection connection = dataSource.getConnection();
-        PreparedStatement statement = connection.prepareStatement(getAccountingDataQuery());
-        statement.setDate(1, new java.sql.Date(startDate.getTime()));
-        statement.setDate(2, new java.sql.Date(endDate.getTime()));
-        ResultSet rs = statement.executeQuery();
-        while (rs.next()) {
-            dto.add(new AccountingDto(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs
-                    .getString(5), rs.getString(6), rs.getString(7)));
+        Connection connection = null;
+        try {
+            connection = dataSource.getConnection();
+            PreparedStatement statement = connection.prepareStatement(getAccountingDataQuery());
+            statement.setString(1, startDate.toString());
+            statement.setString(2, endDate.toString());
+            ResultSet rs = statement.executeQuery();
+
+            while (rs.next()) {
+                dto.add(new AccountingDto(rs.getString(BRANCH_NAME), rs.getString(VOUCHER_DATE), rs
+                        .getString(VOUCHER_TYPE), rs.getString(GL_CODE), rs.getString(GL_CODE_NAME), rs
+                        .getString(DEBIT), rs.getString(CREDIT)));
+            }
+
+        } catch (SQLException e) {
+            LOGGER.error("Making accounting query :" + getAccountingDataQuery(), e);
+            throw new AccountingRuntimeException(getAccountingDataQuery(), e);
+        } finally {
+            try {
+                if(connection != null) { connection.close(); }
+            } catch (SQLException e) {
+                LOGGER.error("Closing connection :" + getAccountingDataQuery(), e);
+                throw new AccountingRuntimeException(getAccountingDataQuery(), e);
+            }
         }
         return dto;
     }
 
     private String getAccountingDataQuery() {
         return SqlExecutor.readFile(AccountingDaoImpl.class.getResourceAsStream("AccountingGLIntegrationQuery.sql"))[0];
-    }
-
-    @Override
-    public List<AccountingDto> getAccountingData(LocalDate startDate, LocalDate endDate) throws SQLException {
-        return getAccountingData(startDate.toDateMidnight().toDate(), endDate.toDateMidnight().toDate());
     }
 }

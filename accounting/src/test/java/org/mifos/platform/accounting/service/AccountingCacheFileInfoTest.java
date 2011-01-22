@@ -23,13 +23,13 @@ package org.mifos.platform.accounting.service;
 import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Test;
-import org.mifos.platform.accounting.service.AccountingCacheFileInfo;
 
 public class AccountingCacheFileInfoTest {
 
     @Test
     public void testAccountingCacheFileInfo() {
-        AccountingCacheFileInfo a = new AccountingCacheFileInfo(new DateTime(2010, 05, 07, 5, 1, 20, 0), "Mifos Accounting Export ", "2010-05-05 to 2010-06-07");
+        AccountingCacheFileInfo a = new AccountingCacheFileInfo(new DateTime(2010, 05, 07, 5, 1, 20, 0),
+                "Mifos Accounting Export ", "2010-05-05 to 2010-06-07");
         Assert.assertEquals("Mifos Accounting Export ", a.getMfiPrefix());
         Assert.assertEquals(new DateTime(2010, 05, 07, 5, 1, 20, 0), a.getLastModified());
         Assert.assertEquals("2010-05-05", a.getStartDateInString());

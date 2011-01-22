@@ -27,6 +27,6 @@ public class TallyMessageBuilderException extends Exception {
     private static final long serialVersionUID = -5128349116273003625L;
 
     public TallyMessageBuilderException(String message) {
-	super(message);
+        super(message);
     }
 }

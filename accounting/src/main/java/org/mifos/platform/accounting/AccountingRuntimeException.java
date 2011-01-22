@@ -18,15 +18,14 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.platform.accounting.dao;
+package org.mifos.platform.accounting;
 
-import java.util.List;
+public class AccountingRuntimeException extends RuntimeException {
 
-import org.joda.time.LocalDate;
-import org.mifos.platform.accounting.AccountingDto;
+    private static final long serialVersionUID = -4438275004312747547L;
 
-public interface IAccountingDao {
-
-    List<AccountingDto> getAccountingDataByDate(LocalDate startDate, LocalDate endDate);
+    public AccountingRuntimeException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
 }

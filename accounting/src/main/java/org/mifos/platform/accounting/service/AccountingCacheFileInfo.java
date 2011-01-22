@@ -37,27 +37,27 @@ public class AccountingCacheFileInfo {
         this.mfiPrefix = mfiPrefix;
     }
 
-    public DateTime getLastModified() {
+    public final DateTime getLastModified() {
         return lastModified;
     }
 
-    public String getLastModifiedToString() {
+    public final String getLastModifiedToString() {
         return lastModified.toString("yyyy-MMM-dd HH:mm:sss z");
     }
 
-    public String getFileName() {
+    public final String getFileName() {
         return fileName;
     }
 
-    public String getStartDateInString() {
+    public final String getStartDateInString() {
         return fileName.substring(0, 10);
     }
 
-    public String getEndDateInString() {
+    public final String getEndDateInString() {
         return fileName.substring(14, 24);
     }
 
-    public String getMfiPrefix() {
+    public final String getMfiPrefix() {
         return mfiPrefix;
     }
 }

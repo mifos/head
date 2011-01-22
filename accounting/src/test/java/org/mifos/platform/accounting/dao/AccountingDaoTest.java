@@ -20,15 +20,12 @@
 
 package org.mifos.platform.accounting.dao;
 
-import java.sql.SQLException;
-import java.util.Date;
 import java.util.List;
 
 import org.joda.time.LocalDate;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.platform.accounting.AccountingDto;
-import org.mifos.platform.accounting.dao.IAccountingDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
@@ -39,13 +36,11 @@ public class AccountingDaoTest {
     @Autowired
     private IAccountingDao accountingDao;
 
-    @Test @Ignore
-    public void shouldCallQueryAndReturnData() throws SQLException {
-        List<AccountingDto> accountData = accountingDao.getAccountingData(createDate(2010, 8, 10), createDate(2010, 8, 10));
+    @Test
+    @Ignore
+    public void shouldCallQueryAndReturnData() {
+        List<AccountingDto> accountData = accountingDao.getAccountingDataByDate(new LocalDate(2010, 8, 10),
+                new LocalDate(2010, 8, 10));
         Assert.notNull(accountData);
-    }
-
-    private Date createDate(int year, int month, int day) {
-        return new LocalDate(year, month, day).toDateMidnight().toDate();
     }
 }

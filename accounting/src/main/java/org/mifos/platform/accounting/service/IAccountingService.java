@@ -21,6 +21,7 @@
 package org.mifos.platform.accounting.service;
 
 import java.util.List;
+
 import org.joda.time.LocalDate;
 import org.mifos.platform.accounting.AccountingDto;
 
@@ -28,11 +29,11 @@ public interface IAccountingService {
 
     String getTallyOutputFor(LocalDate startDate, LocalDate endDate) throws Exception;
 
-    List<AccountingDto> getAccountingDataFor(LocalDate startDate, LocalDate endDate) throws Exception;
+    List<AccountingDto> getAccountingDataFor(LocalDate startDate, LocalDate endDate);
 
-    List<AccountingCacheFileInfo> getAccountingDataCacheInfo()  throws Exception;
+    List<AccountingCacheFileInfo> getAccountingDataCacheInfo();
 
-    String getTallyOutputFileName(LocalDate startDate, LocalDate endDate) throws Exception;
+    String getTallyOutputFileName(LocalDate startDate, LocalDate endDate);
 
     Boolean hasAlreadyRanQuery(LocalDate startDate, LocalDate endDate);
 

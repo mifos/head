@@ -30,13 +30,13 @@ import org.mifos.platform.accounting.VoucherType;
 
 public class TallyMessageBuilder {
 
-    VoucherType voucherType;
+    private final VoucherType voucherType;
 
-    Date voucherDate;
+    private final String branchName;
 
-    String branchName;
+    private Date voucherDate;
 
-    List<AllLedger> allLedgers = new ArrayList<AllLedger>();
+    private final List<AllLedger> allLedgers = new ArrayList<AllLedger>();
 
     public TallyMessageBuilder(VoucherType voucherType, String branchName) throws TallyMessageBuilderException {
         this.voucherType = voucherType;
@@ -79,7 +79,7 @@ public class TallyMessageBuilder {
         return this;
     }
 
-    public TallyMessageBuilder addAllLegderEntry(String amount, String ledgerName, Boolean isDeemedPositive) {
+    private TallyMessageBuilder addAllLegderEntry(String amount, String ledgerName, Boolean isDeemedPositive) {
         allLedgers.add(new AllLedger(ledgerName, isDeemedPositive, amount, branchName));
         return this;
     }

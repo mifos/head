@@ -30,50 +30,51 @@ public class AccountingDto {
     private final String debit;
     private final String credit;
 
-    public AccountingDto(String branchName, String voucherDate,
-	    String voucherType, String glCode, String glCodeName, String debit,
-	    String credit) {
-	super();
-	this.branchName = branchName;
-	this.voucherDate = voucherDate;
-	this.voucherType = voucherType;
-	this.glCode = glCode;
-	this.glCodeName = glCodeName;
-	this.debit = debit;
-	this.credit = credit;
+    public AccountingDto(String branchName, String voucherDate, String voucherType, String glCode, String glCodeName,
+            String debit, String credit) {
+        super();
+        this.branchName = branchName;
+        this.voucherDate = voucherDate;
+        this.voucherType = voucherType;
+        this.glCode = glCode;
+        this.glCodeName = glCodeName;
+        this.debit = debit;
+        this.credit = credit;
     }
 
-    public String getBranchName() {
-	return branchName;
+    public final String getBranchName() {
+        return branchName;
     }
 
-    public String getVoucherDate() {
-	return voucherDate;
+    public final String getVoucherDate() {
+        return voucherDate;
     }
 
-    public String getVoucherType() {
-	return voucherType;
+    public final String getVoucherType() {
+        return voucherType;
     }
 
-    public String getGlCode() {
-	return glCode;
+    public final String getGlCode() {
+        return glCode;
     }
 
-    public String getGlCodeName() {
-	return glCodeName;
+    public final String getGlCodeName() {
+        return glCodeName;
     }
 
-    public String getDebit() {
-	return debit;
+    public final String getDebit() {
+        return debit;
     }
 
-    public String getCredit() {
-	return credit;
+    public final String getCredit() {
+        return credit;
     }
+
     // branchname;voucherdate;vouchertype;glcode;glname;debit;credit
     @Override
-    public String toString() {
-        return branchName +";"+ voucherDate +";"+voucherType +";"+ glCode +";"+ glCodeName +";"+ debit +";"+ credit;
+    public final String toString() {
+        return branchName + ";" + voucherDate + ";" + voucherType + ";" + glCode + ";" + glCodeName + ";" + debit + ";"
+                + credit;
     }
 
 }
