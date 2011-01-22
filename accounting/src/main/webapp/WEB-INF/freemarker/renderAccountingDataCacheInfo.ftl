@@ -51,7 +51,7 @@
      <td class="drawtablerow">${instance.mfiPrefix} ${instance.fileName}</td>
      <td class="drawtablerow">${instance.lastModified}</td>
      <td class="drawtablerow">
-<a target='_blank' href='pages/accounting/jsp/processTallyXMLOutput.jsp?fromDate=${instance.startDateInString}&toDate=${instance.endDateInString}'>Tally&nbs; XML</a>
+<a target='_blank' href='pages/accounting/jsp/processTallyXMLOutput.jsp?fromDate=${instance.startDateInString}&toDate=${instance.endDateInString}'>Tally&nbsp; XML</a>
 </td>
      <td class="drawtablerow"><a href='renderAccountingData.ftl?fromDate=${instance.startDateInString}&toDate=${instance.endDateInString}'>View Details</a></td>
      </tr>
