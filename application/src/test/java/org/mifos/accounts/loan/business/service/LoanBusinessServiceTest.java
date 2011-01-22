@@ -65,6 +65,7 @@ import java.util.Locale;
 import java.util.Set;
 
 import static java.util.Arrays.asList;
+import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
@@ -428,6 +429,28 @@ public class LoanBusinessServiceTest {
         ));
     }
 
+    @Test
+    public void originalLoanScheduleShouldPersistMiscFee() throws PersistenceException {
+        Set<LoanScheduleEntity> installments = new LinkedHashSet<LoanScheduleEntity>();
+        MifosCurrency mifosCurrency = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
+        Money money = new Money(mifosCurrency,"123");
+        AccountBO accountBO = mock(AccountBO.class);
+        CustomerBO customerBO = mock(CustomerBO.class);
+        when(accountBO.getCurrency()).thenReturn(mifosCurrency);
+        LoanScheduleEntity loanScheduleEntity = new LoanScheduleEntity(accountBO, customerBO, new Short("1"),
+                                        new java.sql.Date(new Date().getTime()), PaymentStatus.UNPAID, money,money);
+        loanScheduleEntity.setMiscFee(money);
+        installments.add(loanScheduleEntity);
+        when(loanBO.getLoanScheduleEntities()).thenReturn(installments);
+        loanBusinessService.persistOriginalSchedule(loanBO);
+        ArrayList<OriginalLoanScheduleEntity> expected = new ArrayList<OriginalLoanScheduleEntity>();
+        OriginalLoanScheduleEntity originalLoanScheduleEntity = new OriginalLoanScheduleEntity(loanScheduleEntity);
+        assertEquals(originalLoanScheduleEntity.getMiscFee(),loanScheduleEntity.getMiscFee());
+        expected.add(originalLoanScheduleEntity);
+        verify(legacyLoanDao).saveOriginalSchedule(Mockito.argThat(
+                new OriginalLoanScheduleEntitiesMatcher(expected)
+        ));
+    }
     @Test
     public void shouldRetrieveOriginalLoanSchedule() throws PersistenceException {
         Integer accountId = 1;

@@ -20,7 +20,6 @@
 
 package org.mifos.application.importexport.servicefacade;
 
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.List;
 
@@ -37,5 +36,5 @@ public interface ImportTransactionsServiceFacade {
 
     ParseResultDto parseImportTransactions(String importPluginClassname, InputStream inputStream);
 
-    ParseResultDto confirmImport(String importPluginClassname, FileInputStream transactionsTempFile);
+    ParseResultDto confirmImport(String importPluginClassname, String tempFileName);
 }

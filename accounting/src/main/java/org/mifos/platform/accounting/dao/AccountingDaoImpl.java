@@ -28,19 +28,24 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.sql.DataSource;
+
 import org.joda.time.LocalDate;
 import org.mifos.framework.persistence.SqlExecutor;
 import org.mifos.platform.accounting.AccountingDto;
-import org.mifos.platform.accounting.config.DatabaseManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class AccountingDaoImpl implements IAccountingDao {
 
+    @Autowired
+    private DataSource dataSource;
+
     @Override
     public List<AccountingDto> getAccountingData(Date startDate, Date endDate) throws SQLException {
         List<AccountingDto> dto = new ArrayList<AccountingDto>();
-        Connection connection = DatabaseManager.getInstance().getConnection();
+        Connection connection = dataSource.getConnection();
         PreparedStatement statement = connection.prepareStatement(getAccountingDataQuery());
         statement.setDate(1, new java.sql.Date(startDate.getTime()));
         statement.setDate(2, new java.sql.Date(endDate.getTime()));

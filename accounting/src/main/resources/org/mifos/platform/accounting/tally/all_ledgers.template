@@ -1,4 +1,5 @@
- [#ftl][#--
+[#ftl]
+[#--
 * Copyright (c) 2005-2010 Grameen Foundation USA
 *  All rights reserved.
 *
@@ -16,4 +17,16 @@
 *
 *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 *  explanation of the license and how it is applied.
---][#if result]true[#else]false[/#if]
+--]
+      <ALLLEDGERENTRIES.LIST>
+       <LEDGERNAME>${ledger.name}</LEDGERNAME>
+       <ISDEEMEDPOSITIVE>${ledger.isDeemedPositive}</ISDEEMEDPOSITIVE>
+       <AMOUNT>${ledger.amount}</AMOUNT>
+       <CATEGORYALLOCATIONS.LIST>
+        <CATEGORY>Primary Cost Category</CATEGORY>
+        <COSTCENTREALLOCATIONS.LIST>
+         <NAME>${ledger.branchName}</NAME>
+         <AMOUNT>${ledger.amount}</AMOUNT>
+        </COSTCENTREALLOCATIONS.LIST>
+       </CATEGORYALLOCATIONS.LIST>
+      </ALLLEDGERENTRIES.LIST>

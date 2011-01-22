@@ -28,15 +28,21 @@ import org.joda.time.LocalDate;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.platform.accounting.AccountingDto;
-import org.mifos.platform.accounting.dao.AccountingDaoImpl;
 import org.mifos.platform.accounting.dao.IAccountingDao;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.Assert;
 
+//@RunWith(SpringJUnit4ClassRunner.class)
+//@ContextConfiguration(locations = { "/test-accounting-dbContext.xml", "/META-INF/spring/accountingIntegrationPluginContext.xml"})
 public class AccountingDaoTest {
+
+    @Autowired
+    private IAccountingDao accountingDao;
 
     @Test @Ignore
     public void shouldCallQueryAndReturnData() throws SQLException {
-        IAccountingDao dao = new AccountingDaoImpl();
-        List<AccountingDto> accountData = dao.getAccountingData(createDate(2010, 8, 10), createDate(2010, 8, 10));
+        List<AccountingDto> accountData = accountingDao.getAccountingData(createDate(2010, 8, 10), createDate(2010, 8, 10));
+        Assert.notNull(accountData);
     }
 
     private Date createDate(int year, int month, int day) {

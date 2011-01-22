@@ -20,16 +20,22 @@
 
 package org.mifos.platform.accounting.service;
 
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 import org.joda.time.LocalDate;
 import org.mifos.platform.accounting.AccountingDto;
 import org.mifos.platform.accounting.dao.IAccountingDao;
 import org.mifos.platform.accounting.tally.TallyXMLGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AccountingServiceImpl implements IAccountingService {
+
+    private static final Logger logger = LoggerFactory.getLogger(AccountingServiceImpl.class);
 
     private AccountingDataCacheManager cacheManager;
 
@@ -61,7 +67,13 @@ public class AccountingServiceImpl implements IAccountingService {
         if (cacheManager.isAccountingDataAlreadyInCache(fileName)) {
             return getAccoutingDataFromCache(fileName);
         }
-        return getAccoutningDataFromDatabaseAfterCaching(startDate, endDate);
+        List<AccountingDto> accountingData = new ArrayList<AccountingDto>();
+        try {
+        accountingData = getAccoutningDataFromDatabaseAfterCaching(startDate, endDate);
+        } catch (FileNotFoundException e) {
+            logger.debug(e.getMessage(), e);
+        }
+        return accountingData;
     }
 
     private List<AccountingDto> getAccoutningDataFromDatabaseAfterCaching(LocalDate startDate, LocalDate endDate) throws Exception {
@@ -69,7 +81,7 @@ public class AccountingServiceImpl implements IAccountingService {
         if (!accountingData.isEmpty()) {
             cacheManager.writeAccountingDataToCache(accountingData, cacheManager.getCacheFileName(startDate, endDate));
         }
-        return accountingData;
+        return cacheManager.getAccoutingDataFromCache(cacheManager.getCacheFileName(startDate, endDate));
     }
 
     private List<AccountingDto> getAccoutingDataFromCache(String fileName) throws Exception {

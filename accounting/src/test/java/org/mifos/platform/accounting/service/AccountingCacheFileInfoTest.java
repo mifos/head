@@ -29,9 +29,9 @@ public class AccountingCacheFileInfoTest {
 
     @Test
     public void testAccountingCacheFileInfo() {
-        AccountingCacheFileInfo a = new AccountingCacheFileInfo(new DateTime(2010, 05, 07, 0, 0, 0, 0), "Mifos Accounting Export ", "2010-05-05 to 2010-06-07");
+        AccountingCacheFileInfo a = new AccountingCacheFileInfo(new DateTime(2010, 05, 07, 5, 1, 20, 0), "Mifos Accounting Export ", "2010-05-05 to 2010-06-07");
         Assert.assertEquals("Mifos Accounting Export ", a.getMfiPrefix());
-        Assert.assertEquals(new DateTime(2010, 05, 07, 0, 0, 0, 0), a.getLastModified());
+        Assert.assertEquals(new DateTime(2010, 05, 07, 5, 1, 20, 0), a.getLastModified());
         Assert.assertEquals("2010-05-05", a.getStartDateInString());
         Assert.assertEquals("2010-06-07", a.getEndDateInString());
         Assert.assertEquals("2010-05-05 to 2010-06-07", a.getFileName());
