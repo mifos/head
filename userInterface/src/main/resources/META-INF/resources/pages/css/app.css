@@ -4,6 +4,11 @@
     background: silver;
 }
 
+.clearfix
+{
+	clear: both;
+}
+
 h1
 {
     color: #000000;
@@ -61,4 +66,62 @@ input.cancel
 {
 	padding: 15px 30px 15px 30px;
 	border-top-style: none;
+}
+
+/* webflow bread crumb */
+.bread-crumb
+{
+	color: silver;
+}
+
+.bread-crumb ul
+{
+	list-style: none;
+	padding: none;
+	margin: none;
+}
+
+.bread-crumb li
+{
+	float: left;
+	margin: 0 0.15em;
+	
+	height: 2em;
+	line-height: 2em;
+	float: left;
+	display: block;
+	border: 0.1em solid #dcdce9;
+	color: #0d2474;
+	text-decoration: none;
+	text-align: center;	
+}
+
+.bread-crumb li.active
+{
+	color: #CC6601;
+	font-weight: bold;
+	background-image: url(../framework/images/timeline/bigarrow.gif);
+	background-repeat: no-repeat;
+	background-position: left center;
+	padding-left: 20px;
+}
+
+.bread-crumb li.completed
+{
+	color: #C6C6C6;
+	font-weight: bold;
+	background-image: url(../framework/images/timeline/tick.gif);
+	background-repeat: no-repeat;
+	background-position: left center;
+	padding-left: 20px;
+}
+
+.bread-crumb li.incomplete
+{
+	color: #F4CC9C;
+	font-weight: bold;
+	background-image: url(../framework/images/timeline/orangearrow.gif);
+	background-repeat: no-repeat;
+	background-position: left center;
+	padding-left: 20px;
 }
