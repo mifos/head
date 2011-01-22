@@ -22,9 +22,11 @@ package org.mifos.config;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 
 import javax.xml.XMLConstants;
@@ -43,10 +45,12 @@ import org.hibernate.Session;
 import org.mifos.accounts.financial.business.COABO;
 import org.mifos.accounts.financial.business.GLCategoryType;
 import org.mifos.application.NamedQueryConstants;
+import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.core.ClasspathResource;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.ConfigurationLocator;
+import org.springframework.core.io.ClassPathResource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -99,7 +103,16 @@ public class ChartOfAccountsConfig {
             SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 
             // load an XML schema
-            Source schemaFile = new StreamSource(new File(ClasspathResource.getURI(FilePaths.CHART_OF_ACCOUNTS_SCHEMA)));
+            ClassPathResource schemaFileResource = new ClassPathResource(FilePaths.CHART_OF_ACCOUNTS_SCHEMA);
+
+            Source schemaFile = null;
+            if (schemaFileResource.exists()) {
+                InputStream in = ChartOfAccountsConfig.class.getClassLoader().getResourceAsStream(FilePaths.CHART_OF_ACCOUNTS_SCHEMA);
+                schemaFile = new StreamSource(in);
+            } else {
+                schemaFile = new StreamSource(new File(ClasspathResource.getURI(FilePaths.CHART_OF_ACCOUNTS_SCHEMA)));
+            }
+
             Schema schema = factory.newSchema(schemaFile);
 
             // create a Validator instance and validate document

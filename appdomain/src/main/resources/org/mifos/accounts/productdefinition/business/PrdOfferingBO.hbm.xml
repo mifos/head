@@ -387,4 +387,7 @@
 	<query name="loanProduct.byid">
 		<![CDATA[from LoanOfferingBO lp where lp.prdOfferingId=:prdOfferingId]]>
 	</query>
+	<query name="loanProduct.byglobalid">
+		<![CDATA[from LoanOfferingBO lp where lp.globalPrdOfferingNum=:globalPrdOfferingNum]]>
+	</query>
 </hibernate-mapping>

@@ -571,14 +571,21 @@ public class CustomerDaoHibernate implements CustomerDao {
         String country = null;
         String zip = null;
         String phoneNumber = null;
+        String displayAddress = null;
         if (customer.getAddress() != null) {
             city = customer.getAddress().getCity();
             state = customer.getAddress().getState();
             country = customer.getAddress().getCountry();
             zip = customer.getAddress().getZip();
             phoneNumber = customer.getAddress().getPhoneNumber();
+            displayAddress = customer.getAddress().getDisplayAddress();
         }
-        return new CustomerAddressDto(customer.getDisplayAddress(), city, state, zip, country, phoneNumber);
+
+        if (StringUtils.isBlank(displayAddress)) {
+            displayAddress = customer.getDisplayAddress();
+        }
+
+        return new CustomerAddressDto(displayAddress, city, state, zip, country, phoneNumber);
     }
 
     @SuppressWarnings("unchecked")

@@ -61,7 +61,7 @@ public class ChartOfAccountsCache {
     public static COABO get(String glCode) throws FinancialException {
         COABO glAccount = cache.get(glCode);
         if (glAccount == null) {
-            throw new FinancialException(FinancialExceptionConstants.ACCOUNT_NOT_FOUND, new String[] { glCode });
+            throw new FinancialException(FinancialExceptionConstants.ACCOUNT_NOT_FOUND, new Object[] { glCode });
         }
 
         return glAccount;
@@ -70,5 +70,4 @@ public class ChartOfAccountsCache {
     public void clear() {
         cache.clear();
     }
-
 }
