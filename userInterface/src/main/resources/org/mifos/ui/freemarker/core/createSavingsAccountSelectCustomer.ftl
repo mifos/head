@@ -50,11 +50,13 @@
 						"Chitradurga" : "Test center-12:ID0039-000000175"
 						}]
 [#assign keys = cannedResults?keys]
+<div class="search-results">
 <ol>
 	[#list keys as key]
 		<li>${key} / <a href="${flowExecutionUrl}&_eventId=customerSelected">${cannedResults[key]}</a></li>
 	[/#list]
 </ol>
+</div>
 
 [#-- skwoka: TODO pagination --]
 Previous	Results 1-10 of 11 	Next

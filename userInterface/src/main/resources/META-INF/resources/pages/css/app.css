@@ -125,3 +125,19 @@ input.cancel
 	background-position: left center;
 	padding-left: 20px;
 }
+
+/* search results */
+.search-results li
+{
+	padding: 2px 0px 7px 0px;
+	
+	list-style-position: inside;
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+    border-color: #D7DEEE;
+}
+
+.search-results li a
+{
+	font-weight: bold;
+}
