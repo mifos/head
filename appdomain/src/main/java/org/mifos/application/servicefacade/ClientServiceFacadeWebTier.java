@@ -30,7 +30,6 @@ import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
-import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.persistence.FeeDao;
@@ -104,14 +103,11 @@ import org.mifos.dto.screen.ClientPersonalInfoDto;
 import org.mifos.dto.screen.ClientRemovalFromGroupDto;
 import org.mifos.dto.screen.LoanCycleCounter;
 import org.mifos.framework.business.util.Address;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.MifosUser;
-import org.mifos.security.util.ActivityMapper;
-import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -388,10 +384,10 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
                 officeId = group.getOffice().getOfficeId();
 
                 client = ClientBO.createNewInGroupHierarchy(userContext, clientCreationDetail.getClientName(), clientStatus, new DateTime(
-                       clientCreationDetail.getDateOfBirth()), group, formedBy, clientNameDetailEntity, dob,
+                       clientCreationDetail.getMfiJoiningDate()), group, formedBy, clientNameDetailEntity, dob,
                        clientCreationDetail.getGovernmentId(), trainedBool, trainedDateTime, clientCreationDetail.getGroupFlag(), clientFirstName, clientLastName,
                         secondLastName, spouseFatherNameDetailEntity, clientDetailEntity, pictureAsBlob,
-                        offeringsAssociatedInCreate, clientCreationDetail.getExternalId(), address);
+                        offeringsAssociatedInCreate, clientCreationDetail.getExternalId(), address, clientCreationDetail.getActivationDate());
 
                 if (ClientRules.isFamilyDetailsRequired()) {
                     client.setFamilyAndNameDetailSets(clientCreationDetail.getFamilyNames(), clientCreationDetail.getFamilyDetails());
@@ -402,8 +398,6 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
             } else {
                 personnelId = clientCreationDetail.getLoanOfficerId();
                 officeId = clientCreationDetail.getOfficeId();
-
-                checkPermissionForCreate(clientCreationDetail.getClientStatus(), userContext, officeId, personnelId);
 
                 PersonnelBO loanOfficer = this.personnelDao.findPersonnelById(personnelId);
                 OfficeBO office = this.officeDao.findOfficeById(officeId);
@@ -436,8 +430,6 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
             throw new MifosRuntimeException(e);
         } catch (CustomerException e) {
             throw new BusinessRuleException(e.getKey(), e);
-        } catch (ApplicationException e) {
-            throw new BusinessRuleException(e.getKey(), e);
         }
     }
 
@@ -452,19 +444,6 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
             feesForCustomerAccount.add(accountFee);
         }
         return feesForCustomerAccount;
-    }
-
-    private void checkPermissionForCreate(Short newState, UserContext userContext, Short recordOfficeId,
-            Short recordLoanOfficerId) throws ApplicationException {
-        if (!isPermissionAllowed(newState, userContext, recordOfficeId, recordLoanOfficerId)) {
-            throw new AccountException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
-        }
-    }
-
-    private boolean isPermissionAllowed(Short newState, UserContext userContext, Short recordOfficeId,
-            Short recordLoanOfficerId) {
-        return ActivityMapper.getInstance().isSavePermittedForCustomer(newState.shortValue(), userContext,
-                recordOfficeId, recordLoanOfficerId);
     }
 
     @Override

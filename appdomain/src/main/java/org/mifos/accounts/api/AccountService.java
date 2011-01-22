@@ -214,4 +214,7 @@ public interface AccountService {
      */
     boolean receiptExists(String receiptNumber) throws Exception;
 
+    List<AccountReferenceDto> lookupLoanAccountReferencesFromClientPhoneNumberAndWithdrawAmount(
+            String phoneNumber, BigDecimal withdrawAmount) throws Exception;
+
 }

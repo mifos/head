@@ -41,6 +41,10 @@ public class AccountingCacheFileInfo {
         return lastModified;
     }
 
+    public String getLastModifiedToString() {
+        return lastModified.toString("yyyy-MMM-dd HH:mm:sss z");
+    }
+
     public String getFileName() {
         return fileName;
     }

@@ -39,10 +39,10 @@ public interface GroupServiceFacade {
     @PreAuthorize("isFullyAuthenticated()")
     CenterHierarchySearchDto isCenterHierarchyConfigured();
 
-    @PreAuthorize("isFullyAuthenticated()")
+    @PreAuthorize("isFullyAuthenticated() and hasAnyRole('ROLE_CREATE_GROUP_IN_SAVE_FOR_LATER_STATE', 'ROLE_CREATE_GROUP_IN_SUBMIT_FOR_APPROVAL_STATE')")
     GroupFormCreationDto retrieveGroupFormCreationData(GroupCreation groupCreation);
 
-    @PreAuthorize("isFullyAuthenticated()")
+    @PreAuthorize("isFullyAuthenticated() and hasAnyRole('ROLE_CREATE_GROUP_IN_SAVE_FOR_LATER_STATE', 'ROLE_CREATE_GROUP_IN_SUBMIT_FOR_APPROVAL_STATE')")
     CustomerDetailsDto createNewGroup(GroupCreationDetail groupCenterDetail, MeetingDto meetingDto);
 
     @PreAuthorize("isFullyAuthenticated()")

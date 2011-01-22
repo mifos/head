@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.customers.business.CustomerBO;
@@ -45,7 +46,6 @@ import org.mifos.security.util.UserContext;
  */
 public class ClientBuilder {
 
-    private CustomerAccountBuilder customerAccountBuilder;
     private String name = "TestBuilderClient";
     private MeetingBO meeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
     private OfficeBO office = new OfficeBuilder().withGlobalOfficeNum("xxxx-112").build();
@@ -86,9 +86,8 @@ public class ClientBuilder {
         final ClientBO client = ClientBO.createNewInGroupHierarchy(userContext, name, customerStatus, mfiJoiningDate,
                 parentCustomer, formedBy, clientNameDetailEntity, dateOfBirth, governmentId,
                 trained, trainedDate, groupFlag, clientFirstName, clientLastName, secondLastName,
-                spouseFatherNameDetailEntity, clientDetailEntity, pictureAsBlob, associatedOfferings, externalId, address);
+                spouseFatherNameDetailEntity, clientDetailEntity, pictureAsBlob, associatedOfferings, externalId, address, new LocalDate(activationDate));
         client.setMeeting(this.meeting);
-        client.setCustomerActivationDate(activationDate.toDate());
 
         return client;
     }
@@ -112,8 +111,7 @@ public class ClientBuilder {
         final ClientBO client = ClientBO.createNewInGroupHierarchy(userContext, name, customerStatus, mfiJoiningDate,
                 parentCustomer, formedBy, clientNameDetailEntity, dateOfBirth, governmentId,
                 trained, trainedDate, groupFlag, clientFirstName, clientLastName, secondLastName,
-                spouseFatherNameDetailEntity, clientDetailEntity, pictureAsBlob, associatedOfferings, externalId, address);
-        client.setCustomerActivationDate(activationDate.toDate());
+                spouseFatherNameDetailEntity, clientDetailEntity, pictureAsBlob, associatedOfferings, externalId, address, new LocalDate(activationDate));
 
         return client;
     }

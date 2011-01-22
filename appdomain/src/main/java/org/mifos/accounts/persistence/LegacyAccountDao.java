@@ -148,6 +148,14 @@ public class LegacyAccountDao extends LegacyGenericDao {
         return queryResult == null ? null : (AccountBO) queryResult;
     }
 
+    public List<AccountBO> findApprovedLoansForClientWithPhoneNumber(String phoneNumber) throws PersistenceException {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("phoneNumberStripped", MifosStringUtils.removeNondigits(phoneNumber));
+        queryParameters.put("loanAccountTypeId", AccountTypes.LOAN_ACCOUNT.getValue());
+        return executeNamedQuery(
+                NamedQueryConstants.FIND_APPROVED_LOANS_FOR_CLIENT_WITH_PHONE_NUMBER, queryParameters);
+    }
+
     public AccountFeesEntity getAccountFeeEntity(Integer accountFeesEntityId) throws PersistenceException {
         return getPersistentObject(AccountFeesEntity.class, accountFeesEntityId);
     }

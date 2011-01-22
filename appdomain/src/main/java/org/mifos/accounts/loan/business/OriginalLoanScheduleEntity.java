@@ -199,10 +199,10 @@ public class OriginalLoanScheduleEntity implements Comparable<OriginalLoanSchedu
     }
 
     private void reset(MifosCurrency currency) {
-        this.penalty = new Money(currency);
+        this.penaltyPaid = new Money(currency);
         this.extraInterest = new Money(currency);
-        this.miscFee = new Money(currency);
-        this.miscPenalty = new Money(currency);
+        this.miscFeePaid = new Money(currency);
+        this.miscPenaltyPaid = new Money(currency);
         this.principalPaid = new Money(currency);
         this.interestPaid = new Money(currency);
         this.penaltyPaid = new Money(currency);

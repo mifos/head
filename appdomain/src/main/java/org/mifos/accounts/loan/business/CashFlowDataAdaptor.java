@@ -71,7 +71,7 @@ public class CashFlowDataAdaptor {
         CashFlowDataDto cashflowDataDto = new CashFlowDataDto();
         cashflowDataDto.setMonth(monthlyCashflowform.getMonthInLocale());
         cashflowDataDto.setYear(String.valueOf(monthlyCashflowform.getYear()));
-        cashflowDataDto.setCumulativeCashFlow(String.valueOf(monthlyCashflowform.getCumulativeCashFlow().setScale(2)));
+        cashflowDataDto.setCumulativeCashFlow(String.valueOf(monthlyCashflowform.getCumulativeCashFlow().setScale(2, BigDecimal.ROUND_HALF_UP)));
         cashflowDataDto.setMonthYear(monthlyCashflowform.getDateTime().toDate());
         cashflowDataDto.setNotes(monthlyCashflowform.getNotes());
 
@@ -102,7 +102,7 @@ public class CashFlowDataAdaptor {
 
 
     private BigDecimal cumulativeTotalForMonth(DateTime dateOfCashFlow) {
-        BigDecimal value = new BigDecimal(0).setScale(2);
+        BigDecimal value = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
         for (RepaymentScheduleInstallment repaymentScheduleInstallment : installments) {
             Calendar dueDate = Calendar.getInstance();
             dueDate.setTime(repaymentScheduleInstallment.getDueDateValue());

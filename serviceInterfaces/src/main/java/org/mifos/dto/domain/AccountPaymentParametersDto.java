@@ -31,6 +31,10 @@ import java.math.BigDecimal;
  */
 public class AccountPaymentParametersDto {
 
+    public enum TransactionType {
+        PAYMENT, LOAN_DISBURSAL;
+    }
+
     /** The user making the payment. */
     private final UserReferenceDto userMakingPayment;
 
@@ -57,6 +61,10 @@ public class AccountPaymentParametersDto {
 
     /** Customer making the payment */
     private CustomerDto customer;
+    
+    /** Optional transaction type indicator */
+    TransactionType transactionType;
+
 
     /**
      * Instantiates a new account payment parameters dto.
@@ -208,6 +216,20 @@ public class AccountPaymentParametersDto {
 
     public void setPaymentType(PaymentTypeDto paymentType) {
         this.paymentType = paymentType;
+    }
+
+    public TransactionType getTransactionType() {
+        TransactionType result = null;
+        if (transactionType == null) {
+            result = TransactionType.PAYMENT;
+        } else {
+            result = transactionType;
+        }
+        return result;
+    }
+
+    public void setTransactionType(TransactionType transactionType) {
+        this.transactionType = transactionType;
     }
 
 }

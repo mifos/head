@@ -18,6 +18,7 @@
                 <value>classpath:org/mifos/config/localizedResources/reporterrors</value>
                 <value>classpath:org/mifos/config/localizedResources/SharedMessages</value>
                 <value>classpath:org/mifos/config/localizedResources/LoginUIResources</value>
+                <value>classpath:accounting_i18n</value>
             </list>
         </property>
         <property name="fileEncodings" value="UTF-8" />

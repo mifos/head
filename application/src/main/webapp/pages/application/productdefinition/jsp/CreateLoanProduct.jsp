@@ -218,13 +218,7 @@ explanation of the license and how it is applied.
 									<td valign="top"><html-el:checkbox styleId="createLoanProduct.checkbox.loanCounter" property="loanCounter"
 										value="1" /></td>
 								<tr class="fontnormal">
-									<td align="right"><fmt:message
-										key="product.include.interest.waiver">
-										<fmt:param>
-											<mifos:mifoslabel name="${ConfigurationConstants.LOAN}"
-												bundle="ProductDefUIResources" />
-										</fmt:param>
-									</fmt:message> :</td>
+									<td align="right"><mifos:mifoslabel	name="product.include.interest.waiver" bundle="ProductDefUIResources" /> :</td>
 									<td valign="top"><html-el:checkbox styleId="createLoanProduct.checkbox.waiverInterest" property="waiverInterest"
 										value="1" /></td>
 								</tr>
@@ -1023,10 +1017,10 @@ explanation of the license and how it is applied.
 											</td>
 										</tr>
 										<tr class="fontnormal">
-											<td align="right" valign="top"><mifos:mifoslabel
+											<td width="30%" align="right" valign="top"><mifos:mifoslabel
 												name="product.attachfeestypes"
 												bundle="ProductDefUIResources" isColonRequired="yes" /></td>
-											<td valign="top">
+											<td width="70%" valign="top">
 											<table width="80%" border="0" cellspacing="0" cellpadding="0">
 												<tr>
 													<td class="fontnormal"><mifos:mifoslabel
@@ -1049,7 +1043,6 @@ explanation of the license and how it is applied.
 											</mifos:MifosSelect></td>
 										</tr>
 									</table>
-
 									<table width="93%" border="0" cellpadding="3" cellspacing="0">
 										<tr>
 											<td colspan="2" class="fontnormalbold"><mifos:mifoslabel

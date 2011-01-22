@@ -40,14 +40,14 @@ import freemarker.template.TemplateException;
 public class TallyXMLGenerator {
 
     private static Configuration freemarkerConfiguration;
-    
+
     private static TallyMessageGenerator tallyMessageGenerator = new TallyMessageGenerator();
 
     private static SimpleDateFormat tallyDateFormat = new SimpleDateFormat("yyyyMMdd");
 
     public static String getTallyXML(List<AccountingDto> accountingData, String fileName) throws Exception {
 
-        Template temp = buildFreemarkerConfiguration().getTemplate("master.ftl");
+        Template temp = buildFreemarkerConfiguration().getTemplate("master.template");
         String masterData = "";
         try {
             List<TallyMessage> tallyMessages = tallyMessageGenerator.generateTallyMessages(accountingData);
@@ -80,7 +80,7 @@ public class TallyXMLGenerator {
 
     private static String getTallyMessageData(TallyMessage tallyMessage, String fileName) throws TemplateException,
             IOException {
-        Template temp = buildFreemarkerConfiguration().getTemplate("tally_mesage.ftl");
+        Template temp = buildFreemarkerConfiguration().getTemplate("tally_mesage.template");
         /* Create a data-model */
         Map<String, Object> root = new HashMap<String, Object>();
         Map<String, Object> voucher = new HashMap<String, Object>();
@@ -120,7 +120,7 @@ public class TallyXMLGenerator {
     }
 
     private static String getAllLedgerData(AllLedger allLedger) throws TemplateException, IOException {
-        Template temp = buildFreemarkerConfiguration().getTemplate("all_ledgers.ftl");
+        Template temp = buildFreemarkerConfiguration().getTemplate("all_ledgers.template");
         /* Create a data-model */
         Map<String, Object> root = new HashMap<String, Object>();
         Map<String, Object> ledger = new HashMap<String, Object>();

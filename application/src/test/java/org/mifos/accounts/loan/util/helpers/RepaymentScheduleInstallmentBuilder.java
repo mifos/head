@@ -38,6 +38,17 @@ public class RepaymentScheduleInstallmentBuilder {
         return this;
     }
 
+    public RepaymentScheduleInstallmentBuilder withMiscFee(Money miscFee){
+        this.repaymentScheduleInstallment.setMiscFees(miscFee);
+        return this;
+    }
+
+    public RepaymentScheduleInstallmentBuilder withMiscPenality(Money miscPenality){
+        this.repaymentScheduleInstallment.setMiscPenalty(miscPenality);
+        return this;
+    }
+
+
     public RepaymentScheduleInstallmentBuilder withTotal(String total) {
         this.repaymentScheduleInstallment.setTotal(total);
         return this;

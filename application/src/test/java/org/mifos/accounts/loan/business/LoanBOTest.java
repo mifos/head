@@ -239,6 +239,7 @@ public class LoanBOTest {
         when(loanScheduleEntity.getExtraInterestDue()).thenReturn(extraInterestDue);
         when(loanScheduleEntity.getExtraInterestPaid()).thenReturn(extraInterestDue);
         when(loanScheduleEntity.getInterest()).thenReturn(interest);
+        when(loanScheduleEntity.getInterestDue()).thenReturn(interestDue);
 
         loanBO.repayInstallment(loanScheduleEntity,accountPaymentEntity,accountActionTypes,user,"", interestDue);
 

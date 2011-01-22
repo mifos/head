@@ -36,10 +36,14 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.framework.util.ConfigurationLocator;
 import org.mifos.platform.accounting.AccountingDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 public class AccountingDataCacheManager {
+
+    private static final Logger logger = LoggerFactory.getLogger(AccountingDataCacheManager.class);
 
     private String accountingDataPath;
 
@@ -80,7 +84,7 @@ public class AccountingDataCacheManager {
         try {
             FileUtils.deleteDirectory(new File(getAccoutingDataCachePath()));
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             return false;
         }
         return true;
@@ -95,8 +99,7 @@ public class AccountingDataCacheManager {
            try {
             properties.load(new FileReader(appConfigFile));
         } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
        }
        String digitsAfterDecimal = "1";

@@ -28,7 +28,6 @@ import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
-import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.persistence.FeePersistence;
@@ -119,7 +118,7 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
     private HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
 
     @Autowired
-    LegacyMasterDao legacyMasterDao;
+    private LegacyMasterDao legacyMasterDao;
 
     @Autowired
     public GroupServiceFacadeWebTier(CustomerService customerService, OfficeDao officeDao,
@@ -210,7 +209,6 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
 
             PersonnelBO formedBy = this.personnelDao.findPersonnelById(actionForm.getLoanOfficerId());
 
-            Short loanOfficerId;
             Short officeId;
 
             String groupName = actionForm.getDisplayName();
@@ -236,10 +234,9 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
             if (ClientRules.getCenterHierarchyExists()) {
 
                 CenterBO parentCustomer = this.customerDao.findCenterBySystemId(actionForm.getParentSystemId());
-                loanOfficerId = parentCustomer.getPersonnel().getPersonnelId();
+//                loanOfficerId = parentCustomer.getPersonnel().getPersonnelId();
                 officeId = parentCustomer.getOffice().getOfficeId();
 
-                checkPermissionForCreate(customerStatus.getValue(), userContext, officeId, loanOfficerId);
                 groupMeeting = parentCustomer.getCustomerMeetingValue();
 
                 group = GroupBO.createGroupWithCenterAsParent(userContext, groupName, formedBy, parentCustomer,
@@ -247,13 +244,11 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
             } else {
 
                 // create group without center as parent
-                loanOfficerId = actionForm.getLoanOfficerId() != null ? actionForm.getLoanOfficerId() : userContext.getId();
+                Short loanOfficerId = actionForm.getLoanOfficerId() != null ? actionForm.getLoanOfficerId() : userContext.getId();
                 officeId = actionForm.getOfficeId();
 
-                checkPermissionForCreate(customerStatus.getValue(), userContext, officeId, loanOfficerId);
-
                 OfficeBO office = this.officeDao.findOfficeById(actionForm.getOfficeId());
-                PersonnelBO loanOfficer = this.personnelDao.findPersonnelById(actionForm.getLoanOfficerId());
+                PersonnelBO loanOfficer = this.personnelDao.findPersonnelById(loanOfficerId);
 
                 int numberOfCustomersInOfficeAlready = customerDao.retrieveLastSearchIdValueForNonParentCustomersInOffice(officeId);
 
@@ -266,8 +261,6 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
 
             return new CustomerDetailsDto(group.getCustomerId(), group.getGlobalCustNum());
         } catch (CustomerException e) {
-            throw new BusinessRuleException(e.getKey(), e);
-        } catch (ApplicationException e) {
             throw new BusinessRuleException(e.getKey(), e);
         }
     }
@@ -285,18 +278,19 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
         return feesForCustomerAccount;
     }
 
-    private void checkPermissionForCreate(Short newState, UserContext userContext, Short recordOfficeId,
-            Short recordLoanOfficerId) throws ApplicationException {
-        if (!isPermissionAllowed(newState, userContext, recordOfficeId, recordLoanOfficerId)) {
-            throw new AccountException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
-        }
-    }
+//    private void checkPermissionForCreate(Short newState, UserContext userContext, Short recordOfficeId,
+//            Short recordLoanOfficerId) throws ApplicationException {
+//        if (!isPermissionAllowed(newState, userContext, recordOfficeId, recordLoanOfficerId)) {
+//            logger.info("permission not allowed: " + userContext.toString() + " officeId: " + recordLoanOfficerId + " loanOfficerId: " + recordLoanOfficerId);
+//            throw new AccountException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+//        }
+//    }
 
-    private boolean isPermissionAllowed(Short newState, UserContext userContext, Short recordOfficeId,
-            Short recordLoanOfficerId) {
-        return ActivityMapper.getInstance().isSavePermittedForCustomer(newState.shortValue(), userContext,
-                recordOfficeId, recordLoanOfficerId);
-    }
+//    private boolean isPermissionAllowed(Short newState, UserContext userContext, Short recordOfficeId,
+//            Short recordLoanOfficerId) {
+//        return ActivityMapper.getInstance().isSavePermittedForCustomer(newState.shortValue(), userContext,
+//                recordOfficeId, recordLoanOfficerId);
+//    }
 
     @Override
     public GroupInformationDto getGroupInformationDto(String globalCustNum) {

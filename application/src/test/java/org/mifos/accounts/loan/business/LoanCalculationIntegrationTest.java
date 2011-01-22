@@ -20,28 +20,7 @@
 
 package org.mifos.accounts.loan.business;
 
-import static org.apache.commons.lang.math.NumberUtils.DOUBLE_ZERO;
-import static org.apache.commons.lang.math.NumberUtils.SHORT_ZERO;
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FilenameFilter;
-import java.io.InputStreamReader;
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-
 import junit.framework.Assert;
-
 import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -77,7 +56,6 @@ import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.core.ClasspathResource;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
@@ -87,12 +65,23 @@ import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestObjectPersistence;
-import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.io.*;
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
+import java.net.URISyntaxException;
+import java.util.*;
+
+import static org.apache.commons.lang.math.NumberUtils.DOUBLE_ZERO;
+import static org.apache.commons.lang.math.NumberUtils.SHORT_ZERO;
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
 
 /*
  * LoanCalculationTest is a starting point for defining and exploring
@@ -187,7 +176,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
     private void runOne999AccountTestCaseWithDataFromSpreadSheetForLastPaymentReversal(String fileName,
             int expected999AccountTransactions, int paymentToReverse, boolean payLastPayment)
-            throws NumberFormatException, PropertyNotFoundException, SystemException, ApplicationException,
+            throws NumberFormatException, SystemException, ApplicationException,
             URISyntaxException {
 
         LoanTestCaseData testCaseData = loadSpreadSheetData(fileName);
@@ -197,12 +186,12 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         accountBO = setUpLoanFor999AccountTestLastPaymentReversal(config, loanParams, calculatedResults,
                 paymentToReverse, payLastPayment);
 
-        List<AccountPaymentEntity> paymentList = ((LoanBO) accountBO).getAccountPayments();
+        List<AccountPaymentEntity> paymentList = accountBO.getAccountPayments();
         int transactionCount = 0;
         for (AccountPaymentEntity payment : paymentList) {
             Set<AccountTrxnEntity> transactionList = payment.getAccountTrxns();
             for (AccountTrxnEntity transaction : transactionList) {
-                Set<FinancialTransactionBO> list = ((LoanTrxnDetailEntity) transaction).getFinancialTransactions();
+                Set<FinancialTransactionBO> list = transaction.getFinancialTransactions();
                 for (FinancialTransactionBO financialTransaction : list) {
                     if (financialTransaction.getPostedAmount().equals(testCaseData.getExpectedResult().getAccount999())
                             || financialTransaction.getPostedAmount().negate().equals(
@@ -224,13 +213,13 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
             }
         }
 
-        Assert.assertEquals(transactionCount, expected999AccountTransactions);
+        Assert.assertEquals(expected999AccountTransactions, transactionCount);
 
     }
 
     private void runOne999AccountTestCaseWithDataFromSpreadSheetForLoanReversal(String fileName,
             int expected999AccountTransactions, int paymentToReverse, boolean payLastPayment)
-            throws NumberFormatException, PropertyNotFoundException, SystemException, ApplicationException,
+            throws NumberFormatException, SystemException, ApplicationException,
             URISyntaxException {
 
         LoanTestCaseData testCaseData = loadSpreadSheetData(fileName);
@@ -240,12 +229,12 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         accountBO = setUpLoanFor999AccountTestLoanReversal(config, loanParams, calculatedResults, paymentToReverse,
                 payLastPayment);
 
-        List<AccountPaymentEntity> paymentList = ((LoanBO) accountBO).getAccountPayments();
+        List<AccountPaymentEntity> paymentList = accountBO.getAccountPayments();
         int transactionCount = 0;
         for (AccountPaymentEntity payment : paymentList) {
             Set<AccountTrxnEntity> transactionList = payment.getAccountTrxns();
             for (AccountTrxnEntity transaction : transactionList) {
-                Set<FinancialTransactionBO> list = ((LoanTrxnDetailEntity) transaction).getFinancialTransactions();
+                Set<FinancialTransactionBO> list = transaction.getFinancialTransactions();
                 for (FinancialTransactionBO financialTransaction : list) {
                     if (financialTransaction.getPostedAmount().equals(testCaseData.getExpectedResult().getAccount999())
                             || financialTransaction.getPostedAmount().negate().equals(
@@ -301,7 +290,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         printLoanScheduleEntities(paymentsArray);
         PersonnelBO personnelBO = legacyPersonnelDao.getPersonnel(userContext.getId());
 
-        LoanScheduleEntity loanSchedule = null;
+        LoanScheduleEntity loanSchedule;
         Short paymentTypeId = PaymentTypes.CASH.getValue();
 
         for (LoanScheduleEntity element : paymentsArray) {
@@ -765,8 +754,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     }
 
     @Test
-    public void test999AccountForLoanReversal() throws NumberFormatException, PropertyNotFoundException,
-            SystemException, ApplicationException, URISyntaxException, Exception {
+    public void test999AccountForLoanReversal() throws Exception {
         String dataFileName = "account999-test3.csv";
         int expected999AccountTransactions = 4;
         int paymentToReverse = 3;
@@ -776,10 +764,9 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     }
 
     @Test
-    public void test999AccountForLastPaymentReversal() throws NumberFormatException, PropertyNotFoundException,
-            SystemException, ApplicationException, URISyntaxException, Exception {
+    public void test999AccountForLastPaymentReversal() throws Exception {
         String dataFileName = "account999-test3.csv";
-        int expected999AccountTransactions = 4;
+        int expected999AccountTransactions = 2;
         int paymentToReverse = 3;
         boolean payLastPayment = false;
         runOne999AccountTestCaseWithDataFromSpreadSheetForLastPaymentReversal(rootPath + dataFileName,
@@ -787,15 +774,13 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     }
 
     @Test
-    public void testLoanScheduleGenerationWhenLastPaymentIsReversed() throws NumberFormatException,
-            PropertyNotFoundException, SystemException, ApplicationException, URISyntaxException, Exception {
+    public void testLoanScheduleGenerationWhenLastPaymentIsReversed() throws Exception {
         String dataFileName = "account999-test3.csv";
         runOneLoanScheduleGenerationForLastPaymentReversal(rootPath + dataFileName);
     }
 
     @Test
-    public void testLoanScheduleGenerationWhenLoanIsReversed() throws NumberFormatException, PropertyNotFoundException,
-            SystemException, ApplicationException, URISyntaxException, Exception {
+    public void testLoanScheduleGenerationWhenLoanIsReversed() throws Exception {
         String dataFileName = "account999-test3.csv";
         runOneLoanScheduleGenerationForLoanReversal(rootPath + dataFileName);
     }
@@ -803,7 +788,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     // verify that 999 account transactions are logged after last payment is
     // made
     @Test
-    public void test999Account() throws NumberFormatException, PropertyNotFoundException, SystemException,
+    public void test999Account() throws NumberFormatException, SystemException,
             ApplicationException, URISyntaxException {
         String dataFileName = "account999-test2.csv";
         runOne999AccountTestCaseWithDataFromSpreadSheet(rootPath + dataFileName);
@@ -812,7 +797,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     // verify that 999 account transactions are logged after last payment is
     // made
     @Test
-    public void test999AccountTest1() throws NumberFormatException, PropertyNotFoundException, SystemException,
+    public void test999AccountTest1() throws NumberFormatException, SystemException,
             ApplicationException, URISyntaxException {
         String dataFileName = "account999-test1.csv";
         runOne999AccountTestCaseWithDataFromSpreadSheet(rootPath + dataFileName);
@@ -820,8 +805,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
     // no 999account should be logged in this case
     @Test
-    public void test999AccountForMiddlePaymentReversal() throws NumberFormatException, PropertyNotFoundException,
-            SystemException, ApplicationException, URISyntaxException, Exception {
+    public void test999AccountForMiddlePaymentReversal() throws Exception {
         String dataFileName = "account999-test3.csv";
         int expected999AccountTransactions = 0;
         int paymentToReverse = 2;
@@ -833,7 +817,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     // payment is reversed and repay to the last payment
     @Test
     public void test999AccountForMiddlePaymentReversalAndPayToLastPayment() throws NumberFormatException,
-            PropertyNotFoundException, SystemException, ApplicationException, URISyntaxException {
+            SystemException, ApplicationException, URISyntaxException {
         String dataFileName = "account999-test3.csv";
         int expected999AccountTransactions = 2;
         int paymentToReverse = 2;
@@ -986,7 +970,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private void runOne999AccountTestCaseWithDataFromSpreadSheet(String fileName) throws NumberFormatException,
-            PropertyNotFoundException, SystemException, ApplicationException, URISyntaxException {
+            SystemException, ApplicationException, URISyntaxException {
 
         LoanTestCaseData testCaseData = loadSpreadSheetData(fileName);
         Results calculatedResults = new Results();
@@ -1005,7 +989,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         }
         Set<AccountTrxnEntity> transactionList = lastPmt.getAccountTrxns();
         for (AccountTrxnEntity transaction : transactionList) {
-            Set<FinancialTransactionBO> list = ((LoanTrxnDetailEntity) transaction).getFinancialTransactions();
+            Set<FinancialTransactionBO> list = transaction.getFinancialTransactions();
             for (FinancialTransactionBO financialTransaction : list) {
                 if (financialTransaction.getGlcode().getGlcodeId() == 51) {
                     Assert.assertEquals(financialTransaction.getGlcode().getGlcode(), "31401");
@@ -1028,7 +1012,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private void runOne999AccountTestCaseLoanWithFees(String fileName) throws NumberFormatException,
-            PropertyNotFoundException, SystemException, ApplicationException, URISyntaxException {
+            SystemException, ApplicationException, URISyntaxException {
         if (isAllConsoleOutputEnabled() || isFileNameConsoleOutputEnabled()) {
             System.out.println("Running 999 Account Test with Fees: " + fileName);
         }
@@ -1039,7 +1023,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         LoanParameters loanParams = testCaseData.getLoanParams();
         accountBO = setUpLoanFor999AccountTestLoanWithFees(config, loanParams, calculatedResults);
         AccountPaymentEntity lastPmt = null;
-        List<AccountPaymentEntity> paymentList = ((LoanBO) accountBO).getAccountPayments();
+        List<AccountPaymentEntity> paymentList = accountBO.getAccountPayments();
         int i = 1;
         for (AccountPaymentEntity payment : paymentList) {
             if (i == loanParams.getNumberOfPayments()) {
@@ -1050,7 +1034,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         }
         Set<AccountTrxnEntity> transactionList = lastPmt.getAccountTrxns();
         for (AccountTrxnEntity transaction : transactionList) {
-            Set<FinancialTransactionBO> list = ((LoanTrxnDetailEntity) transaction).getFinancialTransactions();
+            Set<FinancialTransactionBO> list = transaction.getFinancialTransactions();
             for (FinancialTransactionBO financialTransaction : list) {
                 if (financialTransaction.getGlcode().getGlcodeId() == 51) {
                     Assert.assertEquals(financialTransaction.getGlcode().getGlcode(), "31401");
@@ -1093,7 +1077,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     // verify that 999 account transactions are logged after last payment is
     // made
     @Test
-    public void testPositive999AccountTest2() throws NumberFormatException, PropertyNotFoundException, SystemException,
+    public void testPositive999AccountTest2() throws NumberFormatException, SystemException,
             ApplicationException, URISyntaxException {
         String dataFileName = "account999-test3.csv";
         runOne999AccountTestCaseWithDataFromSpreadSheet(rootPath + dataFileName);
@@ -1146,16 +1130,6 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         private String annualInterest = null;
         private short numberOfPayments = 0;
         private RecurrenceType paymentFrequency = null;
-
-        public LoanParameters(String principal, InterestType loanType, String annualInterest, short numberOfPayments,
-                RecurrenceType paymentFrequency) {
-            super();
-            this.principal = principal;
-            this.loanType = loanType;
-            this.annualInterest = annualInterest;
-            this.numberOfPayments = numberOfPayments;
-            this.paymentFrequency = paymentFrequency;
-        }
 
         public LoanParameters() {
         }
@@ -1422,10 +1396,6 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
         public void setAccount999(Money account999) {
             this.account999 = account999;
-        }
-
-        public Money getRoundedTotalInterest() {
-            return roundedTotalInterest;
         }
 
         public void setRoundedTotalInterest(Money roundedTotalInterest) {
