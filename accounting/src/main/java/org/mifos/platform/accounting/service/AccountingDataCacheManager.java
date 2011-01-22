@@ -50,7 +50,7 @@ public class AccountingDataCacheManager {
     private String accountingDataPath;
     private Integer digitsAfterDecimal;
 
-    public final List<AccountingDto> getAccoutingDataFromCache(String fileName) {
+    public List<AccountingDto> getAccoutingDataFromCache(String fileName) {
 
         String accountingDataLocation = getAccoutingDataCachePath();
 
@@ -166,7 +166,7 @@ public class AccountingDataCacheManager {
         return decimalFormat.format(Double.parseDouble(number));
     }
 
-    public final boolean isAccountingDataAlreadyInCache(String fileName) {
+    public boolean isAccountingDataAlreadyInCache(String fileName) {
         return new File(getAccoutingDataCachePath() + fileName).isFile();
     }
 
@@ -191,7 +191,7 @@ public class AccountingDataCacheManager {
         return startDate + " to " + endDate;
     }
 
-    public final String getTallyOutputFileName(LocalDate startDate, LocalDate endDate) {
+    public String getTallyOutputFileName(LocalDate startDate, LocalDate endDate) {
         return getFilePrefixDefinedByMFI() + getCacheFileName(startDate, endDate) + ".xml";
     }
 
