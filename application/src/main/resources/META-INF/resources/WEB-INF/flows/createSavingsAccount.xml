@@ -10,6 +10,7 @@
 
 	<view-state id="selectCustomerStep" view="createSavingsAccountSelectCustomer">
 		<transition on="customerSelected" to="selectProductOfferingStep" />
+		<transition on="searchTermEntered" to="selectCustomerStep" />
 		<transition on="cancel" to="cancel" />
 	</view-state>
 
