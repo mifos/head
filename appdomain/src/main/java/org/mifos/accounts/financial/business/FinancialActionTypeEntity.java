@@ -41,8 +41,8 @@ public class FinancialActionTypeEntity extends MasterDataEntity {
     }
 
     public Set<COABO> getApplicableCreditCharts() throws FinancialException {
-        COABO chart = ChartOfAccountsCache.get(FinancialRules.getInstance().getGLAccountForAction(getId(),
-                FinancialConstants.CREDIT));
+        String glAccount = FinancialRules.getInstance().getGLAccountForAction(getId(),FinancialConstants.CREDIT);
+        COABO chart = ChartOfAccountsCache.get(glAccount);
         return chart.getAssociatedChartOfAccounts();
     }
 

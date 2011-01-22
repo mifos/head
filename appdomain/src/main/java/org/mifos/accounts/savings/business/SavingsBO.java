@@ -74,7 +74,6 @@ import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.calendar.CalendarEvent;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ProcessFlowRules;
-import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerBO;
@@ -207,7 +206,7 @@ public class SavingsBO extends AccountBO {
      */
     public SavingsBO(AccountState savingsAccountState, CustomerBO customer, SavingsAccountActivationDetail activationDetails, LocalDate createdDate, Integer createdById, SavingsOfferingBO savingsProduct,
             RecommendedAmountUnit recommendedAmountUnit, Money recommendedOrMandatoryAmount, PersonnelBO createdBy, Money startingBalance) {
-        super(AccountTypes.SAVINGS_ACCOUNT, savingsAccountState, customer, activationDetails, createdDate.toDateMidnight().toDate(), createdById.shortValue());
+        super(AccountTypes.SAVINGS_ACCOUNT, savingsAccountState, customer, activationDetails.getScheduledPayments(), createdDate.toDateMidnight().toDate(), createdById.shortValue());
         this.savingsOffering = savingsProduct;
         this.recommendedAmntUnit = new RecommendedAmntUnitEntity(recommendedAmountUnit);
         this.recommendedAmount = recommendedOrMandatoryAmount;
