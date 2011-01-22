@@ -72,6 +72,7 @@ input.cancel
 .bread-crumb
 {
 	color: silver;
+	height: 2em;
 }
 
 .bread-crumb ul
@@ -85,12 +86,12 @@ input.cancel
 {
 	float: left;
 	margin: 0 0.15em;
+	padding-right: 50px;
 	
 	height: 2em;
 	line-height: 2em;
 	float: left;
 	display: block;
-	border: 0.1em solid #dcdce9;
 	color: #0d2474;
 	text-decoration: none;
 	text-align: center;	

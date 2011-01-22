@@ -4,9 +4,6 @@ html, body {
 }
 
 #header {
-    clear: both;
-    float: left;
-    width: 100%;
     margin-bottom: 2px;
     border-bottom: 6px solid #FF9600;
 }
