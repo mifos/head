@@ -42,7 +42,7 @@
 <div align='center'>
 <script>addDatePicker();</script>
 <form action='renderAccountingData.ftl' method='post'>
-<div class="prepend-11  span-21 last width90prc">
+<div class="prepend-8  span-21 last width90prc">
 <div class="span-20 ">
      <span class="span-5 rightAlign">
      [@spring.message "accounting.generateaccountingexports.fromdate"/]:
