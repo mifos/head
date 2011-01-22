@@ -49,7 +49,7 @@
  [#list files as instance ] 
      <tr>
      <td class="drawtablerow">${instance.mfiPrefix} ${instance.fileName}</td>
-     <td class="drawtablerow">${instance.lastModified}</td>
+     <td class="drawtablerow">${instance.lastModifiedToString}</td>
      <td class="drawtablerow">
 <a target='_blank' href='pages/accounting/jsp/processTallyXMLOutput.jsp?fromDate=${instance.startDateInString}&toDate=${instance.endDateInString}'>Tally&nbsp; XML</a>
 </td>

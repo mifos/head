@@ -88,13 +88,6 @@ public class AccountingDataController {
         return mav;
     }
 
-    @RequestMapping("advanceOptions.ftl")
-    public ModelAndView showAdvanceOptions() throws Exception {
-        ModelAndView mav = new ModelAndView("advanceOptions");
-        mav.addObject("fileName",accountingService.getTallyOutputFileName(new LocalDate(), new LocalDate()));
-        return mav;
-    }
-
     @RequestMapping("deleteCacheDir.ftl")
     public ModelAndView deleteCacheDir() {
         ModelAndView mav = new ModelAndView("deleteCacheDir");
