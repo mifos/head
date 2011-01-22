@@ -1,10 +1,15 @@
 [#ftl]
-[#macro webflow]
+[#macro webflow states currentState]
 [@mifos.header "title" /]
+[@mifos.topNavigationNoSecurity currentTab="ClientsAndAccounts" /]
 
-<div class="content bordered">
+<div class="content">
 	<div class="bread-crumb bordered">
-		bread crumb...
+		<ul>
+		[#list states as state]
+		<li [#if state == currentState]class="active"[/#if]>[@spring.message state/]</li>
+		[/#list]
+		</ul>
 	</div>
 	<div class="flow-content bordered">
 		[#nested]

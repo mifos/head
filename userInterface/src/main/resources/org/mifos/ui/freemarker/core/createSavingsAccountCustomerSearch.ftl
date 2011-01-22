@@ -19,15 +19,16 @@
 *  explanation of the license and how it is applied.
 --]
 
-[@layout.webflow]
-
-<div class="debug">createSavingsAccountCustomerSearch dot FTL</div>
+[@layout.webflow currentState="createSavingsAccount.progress.selectCustomer" 
+                 states=["createSavingsAccount.progress.selectCustomer", 
+                 		 "createSavingsAccount.progress.enterAccountInfo", 
+                 		 "createSavingsAccount.progress.reviewAndSubmit"]] 
 
 <h1>Create Savings Account - <b>Select a customer</b></h1>
 
 <p>Enter a Client or Group or Center name and click Search. Click Cancel to return to Clients & Accounts without submitting information.</p>
 
-<form action="createSavingsAccount.ftl?execution=${flowExecutionKey}" method="post">
+<form action="${flowExecutionUrl}" method="post">
 	<div class="row">
 		<label for="searchString">Name:</label>
 		<input type="text" name="searchString">
