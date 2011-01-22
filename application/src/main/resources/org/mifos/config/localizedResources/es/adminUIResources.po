@@ -259,6 +259,10 @@ msgstr "{0} filas no tuvieron errores y serán importadas."
 msgid "Total amount of transactions imported: {0}"
 msgstr "Cantidad total de transacciones importada: {0}"
 
+#: admin.importexport.amountDisbursementsImported
+msgid "Total amount of disbursements imported: {0}"
+msgstr ""
+
 #: admin.importexport.amountError
 msgid "Total amount of transactions with error: {0}"
 msgstr "Cantidad total de transacciones con error: {0}"

@@ -256,6 +256,10 @@ msgstr "{0}行未发现错误，将被导入。"
 msgid "Total amount of transactions imported: {0}"
 msgstr "被导入的交易为：{0}"
 
+#: admin.importexport.amountDisbursementsImported
+msgid "Total amount of disbursements imported: {0}"
+msgstr ""
+
 #: admin.importexport.amountError
 msgid "Total amount of transactions with error: {0}"
 msgstr "处理有错误的交易为：{0}"

@@ -139,6 +139,12 @@ explanation of the license and how it is applied.
 																<c:out value="${requestScope.totalAmountOfTransactionsImported}"/>
 															</fmt:param>
 													</fmt:message>
+                                                                                                        <br/>
+                                                                                                        <fmt:message key="admin.importexport.amountDisbursementsImported">
+                                                                                                            <fmt:param>
+                                                                                                                   <c:out value="${requestScope.totalAmountOfDisbursementsTransactionsImported}"/>
+                                                                                                            </fmt:param>
+													</fmt:message>
 													<br/>
 													<fmt:message key="admin.importexport.amountError">
 															<fmt:param>

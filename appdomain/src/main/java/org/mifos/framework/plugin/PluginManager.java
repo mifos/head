@@ -38,6 +38,7 @@ import org.mifos.accounts.api.TransactionImport;
 import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
+import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.customers.business.service.CustomerSearchServiceImpl;
 import org.mifos.customers.persistence.CustomerDaoHibernate;
@@ -72,7 +73,7 @@ public class PluginManager {
         for (TransactionImport ti : loader) {
             ti.setAccountService(new StandardAccountService(ApplicationContextProvider.getBean(LegacyAccountDao.class), ApplicationContextProvider.getBean(LegacyLoanDao.class),
                     ApplicationContextProvider.getBean(LegacyAcceptedPaymentTypeDao.class), new PersonnelDaoHibernate(new GenericDaoHibernate()),
-                    new CustomerDaoHibernate(new GenericDaoHibernate()), ApplicationContextProvider.getBean(LoanBusinessService.class), new HibernateTransactionHelperForStaticHibernateUtil()));
+                    new CustomerDaoHibernate(new GenericDaoHibernate()), ApplicationContextProvider.getBean(LoanBusinessService.class), new HibernateTransactionHelperForStaticHibernateUtil(), ApplicationContextProvider.getBean(LegacyMasterDao.class)) );
 	    ti.setCustomerSearchService(new CustomerSearchServiceImpl(new CustomerDaoHibernate(new GenericDaoHibernate())));
             plugins.add(ti);
         }

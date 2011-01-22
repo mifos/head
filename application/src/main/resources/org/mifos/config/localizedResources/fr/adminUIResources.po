@@ -257,6 +257,10 @@ msgstr "{0} lignes ont contenu des erreurs et ne vont pas être importés"
 msgid "Total amount of transactions imported: {0}"
 msgstr "Montant total des transactions importés: {0}"
 
+#: admin.importexport.amountDisbursementsImported
+msgid "Total amount of disbursements imported: {0}"
+msgstr ""
+
 #: admin.importexport.amountError
 msgid "Total amount of transactions with error: {0}"
 msgstr "Montant total des transactions avec erreurs: {0}"

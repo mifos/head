@@ -117,7 +117,7 @@ public class ImportTransactionsAction extends BaseAction {
                 importResult.getTotalAmountOfTransactionsImported()).toString());
 			request.setAttribute("totalAmountOfTransactionsWithError", new Money(Money.getDefaultCurrency(),
                 importResult.getTotalAmountOfTransactionsWithError()).toString());
-
+                        request.setAttribute("totalAmountOfDisbursementsTransactionsImported", new Money(Money.getDefaultCurrency(), importResult.getTotalAmountOfDisbursementsImported().toString()));
 			request.getSession().setAttribute(SESSION_ATTRIBUTE_LOG, importResult.getStatusLogFile().getBytes());
 			request.getSession().setAttribute(SESSION_ATTRIBUTE_LOG_FILENAME, statusLogfileName(importTransactionsFile.getFileName()));
 		} else {

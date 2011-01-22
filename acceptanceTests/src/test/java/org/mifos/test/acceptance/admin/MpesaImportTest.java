@@ -58,7 +58,7 @@ public class MpesaImportTest extends UiTestCaseBase {
     private static final String EXCEL_IMPORT_TYPE = "M-PESA Excel 97(-2007)";
 
 	static final String[] TEST_FILES = new String[] { "loan_product_code.xls", "mixed.xls", "saving_and_loan.xls",
-		"savings_product_code.xls" };
+		"savings_product_code.xls", "example_loan_disb.xls"};
 
     @Autowired
     private DbUnitUtilities dbUnitUtilities;

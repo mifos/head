@@ -259,6 +259,10 @@ msgstr ""
 msgid "Total amount of transactions imported: {0}"
 msgstr ""
 
+#: admin.importexport.amountDisbursementsImported
+msgid "Total amount of disbursements imported: {0}"
+msgstr ""
+
 #: admin.importexport.amountError
 msgid "Total amount of transactions with error: {0}"
 msgstr ""

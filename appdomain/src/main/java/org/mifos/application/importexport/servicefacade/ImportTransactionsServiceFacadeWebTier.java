@@ -122,6 +122,7 @@ public class ImportTransactionsServiceFacadeWebTier implements ImportTransaction
         "%d rows contained errors and were not imported\n" +
         "\n" +
         "Total amount of transactions imported: %s\n" +
+        "Total amount of disbursements imported: %s\n" +
         "Total amount of transactions with error: %s\n" +
         "\n" +
         "%s";
@@ -137,6 +138,7 @@ public class ImportTransactionsServiceFacadeWebTier implements ImportTransaction
                 result.getNumberOfIgnoredRows(),
                 result.getNumberOfErrorRows(),
                 new Money(Money.getDefaultCurrency(), result.getTotalAmountOfTransactionsImported()).toString(),
+                new Money(Money.getDefaultCurrency(), result.getTotalAmountOfDisbursementsImported().toString()),
                 new Money(Money.getDefaultCurrency(), result.getTotalAmountOfTransactionsWithError()).toString(),
                 rowErrors);
     }

@@ -80,14 +80,14 @@ public class StandardAccountService implements AccountService {
     private LoanBusinessService loanBusinessService;
     private HibernateTransactionHelper transactionHelper;
 
-    @Autowired
+    
     private LegacyMasterDao legacyMasterDao;
 
     @Autowired
     public StandardAccountService(LegacyAccountDao legacyAccountDao, LegacyLoanDao legacyLoanDao,
                                   LegacyAcceptedPaymentTypeDao acceptedPaymentTypePersistence, PersonnelDao personnelDao,
                                   CustomerDao customerDao, LoanBusinessService loanBusinessService,
-                                  HibernateTransactionHelper transactionHelper) {
+                                  HibernateTransactionHelper transactionHelper, LegacyMasterDao legacyMasterDao) {
         this.legacyAccountDao = legacyAccountDao;
         this.legacyLoanDao = legacyLoanDao;
         this.acceptedPaymentTypePersistence = acceptedPaymentTypePersistence;
@@ -95,6 +95,7 @@ public class StandardAccountService implements AccountService {
         this.customerDao = customerDao;
         this.loanBusinessService = loanBusinessService;
         this.transactionHelper = transactionHelper;
+        this.legacyMasterDao = legacyMasterDao;
     }
 
     @Override
