@@ -31,7 +31,25 @@ public class CreateLoanAccountSubmitParameters {
     private String lsimMonthTypeNthWeekdayOfMonth;
     private String lsimMonthRank;
     private boolean gracePeriodTypeNone;
+    private String interestRate;
+    private String numberOfInstallments;
 
+
+    public String getInterestRate() {
+        return this.interestRate;
+    }
+
+    public void setInterestRate(String interestRate) {
+        this.interestRate = interestRate;
+    }
+
+    public String getNumberOfInstallments() {
+        return this.numberOfInstallments;
+    }
+
+    public void setNumberOfInstallments(String numberOfInstallments) {
+        this.numberOfInstallments = numberOfInstallments;
+    }
 
     public String getAmount() {
         return this.amount;

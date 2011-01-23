@@ -28,15 +28,26 @@ import com.thoughtworks.selenium.Selenium;
 
 public class RedoLoanDisbursalEntryPage extends MifosPage {
 
-
     public RedoLoanDisbursalEntryPage(Selenium selenium) {
         super(selenium);
+        verifyPage();
+    }
+
+    private void verifyPage() {
         verifyPage("LoanCreationDetail");
     }
 
     public void verifyFutureDateInputError() {
-        verifyPage("LoanCreationDetail");
+        verifyPage();
         Assert.assertTrue(selenium.isTextPresent("You have entered an invalid disbursal date. Enter a disbursal date less than today's date"));
+    }
+
+    public void verifyAllFormErrors() {
+        verifyPage();
+        Assert.assertTrue(selenium.isTextPresent("Please specify valid Amount. Amount should be a value between 100 and 300,000, inclusive."));
+        Assert.assertTrue(selenium.isTextPresent("Please specify valid Interest rate. Interest rate should be a value between 1 and 99, inclusive."));
+        Assert.assertTrue(selenium.isTextPresent("Please specify valid No. of installments. No. of installments should be a value between 1 and 100, inclusive."));
+        Assert.assertTrue(selenium.isTextPresent("Please specify a valid disbursal date."));
     }
 
     public RedoLoanDisbursalSchedulePreviewPage submitAndNavigateToRedoLoanDisbursalSchedulePreviewPage(RedoLoanDisbursalParameters params) {
@@ -47,7 +58,7 @@ public class RedoLoanDisbursalEntryPage extends MifosPage {
         return new RedoLoanDisbursalSchedulePreviewPage(selenium);
     }
 
-    public RedoLoanDisbursalEntryPage submitFutureDateAndReloadPageWithInputError(RedoLoanDisbursalParameters params) {
+    public RedoLoanDisbursalEntryPage submitInvalidDataAndReloadPageWithInputError(RedoLoanDisbursalParameters params) {
         typeData(params);
 
         submit();

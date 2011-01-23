@@ -20,14 +20,12 @@
 
 package org.mifos.test.acceptance.loan;
 
-import org.dbunit.dataset.IDataSet;
 import org.joda.time.DateTime;
 import org.mifos.framework.util.DbUnitUtilities;
+import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
-import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.loan.DisburseLoanPage;
-import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
@@ -64,36 +62,6 @@ public class ClientLoanDisbursalTest extends UiTestCaseBase {
     @AfterMethod(alwaysRun = true)
     public void logOut() {
         (new MifosPage(selenium)).logout();
-    }
-
-    @Test( groups={"smoke"})
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void disburseLoan() throws Exception {
-
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = new DateTime(2009,7,11,13,0,0,0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
-
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml", dataSource, selenium);
-
-        // account w/ id 000100000000005 has an approved but not disbursed loan.
-
-        DisburseLoanParameters params = new DisburseLoanParameters();
-
-        params.setDisbursalDateDD("08");
-        params.setDisbursalDateMM("07");
-        params.setDisbursalDateYYYY("2009");
-        params.setPaymentType(DisburseLoanParameters.CASH);
-
-        loanTestHelper.disburseLoan("000100000000005", params);
-
-        String[] tablesToValidate = { "ACCOUNT_PAYMENT",  "ACCOUNT_TRXN", "ACCOUNT_STATUS_CHANGE_HISTORY" };
-
-        IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromDataSetDirectoryFile("ClientLoanDisbursalTest_001_result_dbunit.xml");
-        IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTables(dataSource, tablesToValidate);
-
-        dbUnitUtilities.verifyTables(tablesToValidate, databaseDataSet, expectedDataSet);
-
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")

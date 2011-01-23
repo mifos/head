@@ -29,6 +29,9 @@ import org.testng.Assert;
 @SuppressWarnings("PMD.SystemPrintln")
 public class LoanAccountPage extends AbstractPage {
 
+    public final static String ACTIVE = "Active in Good Standing";
+
+
     public LoanAccountPage(Selenium selenium) {
         super(selenium);
         this.verifyPage("LoanAccountDetail");
@@ -39,7 +42,11 @@ public class LoanAccountPage extends AbstractPage {
     }
 
     public void verifyLoanAmount(String amount) {
-        Assert.assertTrue(selenium.isTextPresent(amount));
+        Assert.assertEquals(Double.parseDouble(getOriginalLoanAmount()), Double.parseDouble(amount));
+    }
+
+    public void verifyExactLoanAmount(String amount) {
+        Assert.assertEquals(getOriginalLoanAmount(), amount);
     }
 
     public void verifyLoanIsForClient(String clientName){
@@ -62,6 +69,84 @@ public class LoanAccountPage extends AbstractPage {
         Assert.assertTrue(selenium.isTextPresent("# of payments: 0"));
         Assert.assertTrue(selenium.isTextPresent("# of missed payments: 0"));
         Assert.assertTrue(selenium.isTextPresent("Days in arrears:0"));
+    }
+
+    public void verifyLoanTotalBalance(String amount) {
+        Assert.assertEquals(getTotalBalance(), amount);
+    }
+
+    public void verifyTotalOriginalLoan(String amount) {
+        Assert.assertEquals(getOriginalTotalAmount(), amount);
+    }
+
+    public void verifyTotalAmountPaid(String amount) {
+        Assert.assertEquals(getTotalPaid(), amount);
+    }
+
+    public void verifyPerformanceHistory(String payments, String missedPayments) {
+        Assert.assertTrue(selenium.isTextPresent("of payments: "+payments));
+        Assert.assertTrue(selenium.isTextPresent("of missed payments: "+missedPayments));
+    }
+    
+    public void verifyStatus(String status) {
+        verifyStatus(status, null);
+    }
+
+    public void verifyStatus(String status, String cancelReason) {
+        if (EditLoanAccountStatusParameters.CANCEL.equals(status)) {
+            Assert.assertEquals(selenium.getText("loanaccountdetail.text.status"), status + "  " + cancelReason);
+        }
+        else {
+            Assert.assertEquals(selenium.getText("loanaccountdetail.text.status"), status);
+        }
+    }
+
+    public void verifyNumberOfInstallments(String numberOfInstallments) {
+        Assert.assertEquals(selenium.getText("loanaccountdetail.text.noOfInst"), numberOfInstallments);
+    }
+
+    public void verifyInterestRate(String interestRate) {
+        Assert.assertEquals(selenium.getText("loanaccountdetail.text.interestRate"), interestRate);
+    }
+
+    public void verifyPurposeOfLoan(String purpose) {
+        Assert.assertEquals(selenium.getText("loanaccountdetail.text.purposeofloan"), purpose);
+    }
+
+    public void verifyCollateralNotes(String note) {
+        Assert.assertEquals(selenium.getText("loanaccountdetail.text.note"), note);
+    }
+
+    public void verifyCollateralType(String type) {
+        Assert.assertEquals(selenium.getText("loanaccountdetail.text.collateraltype"), type);
+    }
+
+    public void verifyExternalId(String id) {
+        Assert.assertEquals(selenium.getText("loanaccountdetail.text.externalid"), id);
+    }
+
+    public void verifyLoanDetails(CreateLoanAccountSubmitParameters submitAccountParameters, EditLoanAccountInformationParameters editLoanAccountInformationParameters) {
+        if(submitAccountParameters.getAmount()!=null){
+            verifyLoanAmount(submitAccountParameters.getAmount());
+        }
+        if(submitAccountParameters.getNumberOfInstallments()!=null){
+            verifyNumberOfInstallments(submitAccountParameters.getNumberOfInstallments());
+        }
+        if(submitAccountParameters.getInterestRate()!=null){
+            verifyInterestRate(submitAccountParameters.getInterestRate());
+        }
+        if(editLoanAccountInformationParameters.getCollateralNotes()!=null){
+            verifyCollateralNotes(editLoanAccountInformationParameters.getCollateralNotes());
+        }
+        if(editLoanAccountInformationParameters.getCollateralType()!=null){
+            verifyCollateralType(editLoanAccountInformationParameters.getCollateralType());
+        }
+        if(editLoanAccountInformationParameters.getExternalID()!=null){
+            verifyInterestRate(submitAccountParameters.getInterestRate());
+        }
+        if(editLoanAccountInformationParameters.getPurposeOfLoan()!=null){
+            verifyPurposeOfLoan(editLoanAccountInformationParameters.getPurposeOfLoan());
+        }
     }
 
     /**
@@ -91,7 +176,7 @@ public class LoanAccountPage extends AbstractPage {
     }
 
     public ViewRepaymentSchedulePage navigateToRepaymentSchedulePage() {
-        selenium.click("link=View repayment schedule");
+        selenium.click("id=loanaccountdetail.link.viewRepaymentSchedule");
         waitForPageToLoad();
         return new ViewRepaymentSchedulePage(selenium);
     }
@@ -186,6 +271,18 @@ public class LoanAccountPage extends AbstractPage {
         return new ViewQuestionResponseDetailPage(selenium);
     }
 
+    public ViewLoanStatusHistoryPage navigateToViewLoanStatusHistoryPage() {
+        selenium.click("id=loanaccountdetail.link.viewStatusHistory");
+        waitForPageToLoad();
+        return new ViewLoanStatusHistoryPage(selenium);
+    }
+
+    public AccountActivityPage navigateToViewLoanAccountActivityPage() {
+        selenium.click("id=loanaccountdetail.link.viewAccountActivity");
+        waitForPageToLoad();
+        return new AccountActivityPage(selenium);
+    }
+
     public String getTotalBalance() {
         return selenium.getTable("loanSummaryTable.5.3").trim();
     }
@@ -258,7 +355,10 @@ public class LoanAccountPage extends AbstractPage {
         return new ApplyAdjustmentPage(selenium);
     }
 
-    public void verifyStatus(String status) {
-        Assert.assertTrue(selenium.isTextPresent(status));
+    public TransactionHistoryPage navigateToTransactionHistoryPage() {
+        selenium.click("loanaccountdetail.link.viewTransactionHistory");
+        waitForPageToLoad();
+        return new TransactionHistoryPage(selenium);
     }
 }
+

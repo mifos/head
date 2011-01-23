@@ -138,6 +138,9 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
         feesTrxnDetails = new HashSet<FeesTrxnDetailEntity>();
         for (AccountFeesActionDetailEntity accountFeesActionDetail : loanScheduleEntity.getAccountFeesActionDetails()) {
             Integer feeId = accountFeesActionDetail.getAccountFeesActionDetailId();
+            if (feeId == null) { // special workaround for MIFOS-4517
+                feeId = accountFeesActionDetail.hashCode();
+            }
             if(paymentAllocation.isFeeAllocated(feeId)) {
                 Money feePaid = paymentAllocation.getFeePaid(feeId);
                 addFeesTrxnDetail(new FeesTrxnDetailEntity(this, accountFeesActionDetail.getAccountFee(), feePaid));

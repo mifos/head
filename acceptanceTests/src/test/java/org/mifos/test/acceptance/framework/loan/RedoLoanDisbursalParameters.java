@@ -28,6 +28,17 @@ public class RedoLoanDisbursalParameters {
     private String interestRate;
     private String numberOfInstallments;
 
+    static public RedoLoanDisbursalParameters createObjectWithClearedParameters() {
+        RedoLoanDisbursalParameters parameters = new RedoLoanDisbursalParameters();
+        parameters.setDisbursalDateDD("");
+        parameters.setDisbursalDateMM("");
+        parameters.setDisbursalDateYYYY("");
+        parameters.setLoanAmount("0");
+        parameters.setInterestRate("0");
+        parameters.setNumberOfInstallments("0");
+        return parameters;
+    }
+
     public String getDisbursalDateDD() {
         return this.disbursalDateDD;
     }

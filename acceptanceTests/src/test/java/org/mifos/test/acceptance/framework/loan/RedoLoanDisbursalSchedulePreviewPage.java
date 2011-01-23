@@ -53,9 +53,8 @@ public class RedoLoanDisbursalSchedulePreviewPage extends MifosPage {
         return new RedoLoanDisbursalPreviewPage(selenium);
     }
 
-    public void typeAmountPaid(int amountPaid) {
-        /* TODO selenium.type("name=paymentDataBeans[1].total", String.valueOf(amountPaid));*/
-        selenium.type("name=paymentDataBeans[1].amount", String.valueOf(amountPaid));
+    public void typeAmountPaid(int amountPaid, int row) {
+        selenium.type("name="+String.format(paidAmountField, row), String.valueOf(amountPaid));
     }
 
     public RedoLoanDisbursalSchedulePreviewPage validateRepaymentScheduleFieldDefault(int defInstallments) {

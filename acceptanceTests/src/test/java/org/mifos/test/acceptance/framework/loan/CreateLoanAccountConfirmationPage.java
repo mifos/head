@@ -37,4 +37,12 @@ public class CreateLoanAccountConfirmationPage extends MifosPage {
       return new LoanAccountPage(selenium);
     }
 
+    public LoanAccountPage navigateToLoanAccountDetailsPage(CreateLoanAccountSubmitParameters submitAccountParameters) {
+        selenium.click("CreateLoanAccountConfirmation.link.viewLoanDetails");
+        waitForPageToLoad();
+        LoanAccountPage loanAccountPage = new LoanAccountPage(selenium);
+        loanAccountPage.verifyLoanDetails(submitAccountParameters, new EditLoanAccountInformationParameters());
+      return loanAccountPage;
+    }
+
 }

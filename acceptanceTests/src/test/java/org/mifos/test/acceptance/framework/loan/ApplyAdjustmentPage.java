@@ -46,4 +46,15 @@ public class ApplyAdjustmentPage extends AbstractPage {
         waitForPageToLoad();
         return new LoanAccountPage(selenium);
     }
+
+    public LoanAccountPage verifyAdjustment(String adjustmentAmount, String note) {
+        Assert.assertTrue(selenium.isTextPresent("Last payment made: " + adjustmentAmount + " "));
+        selenium.click("applyadjustment.input.revertLastPayment");
+        selenium.type("applyadjustment.input.note", note);
+        selenium.click("applyadjustment.button.submit");
+        waitForPageToLoad();
+        selenium.click("applyadjustment.button.submit");
+        waitForPageToLoad();
+        return new LoanAccountPage(selenium);
+    }
 }

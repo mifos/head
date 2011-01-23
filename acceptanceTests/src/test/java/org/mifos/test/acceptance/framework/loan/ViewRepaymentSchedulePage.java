@@ -50,6 +50,10 @@ public class ViewRepaymentSchedulePage extends AbstractPage {
         Assert.assertEquals(selenium.getText("//tr[" + row + "]/td[" + column + "]"), date);
     }
 
+    public void verifyRepaymentScheduleTableRow(int row, int column, String value) {
+        Assert.assertEquals(selenium.getTable("repaymentScheduleTable."+row+"."+column), value);
+    }
+
     public LoanAccountPage navigateToLoanAccountPage() {
         selenium.click("id=loanRepayment.button.return");
         waitForPageToLoad();

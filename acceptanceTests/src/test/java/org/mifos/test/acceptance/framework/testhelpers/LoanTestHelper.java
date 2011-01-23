@@ -20,7 +20,9 @@
 
 package org.mifos.test.acceptance.framework.testhelpers;
 
-import com.thoughtworks.selenium.Selenium;
+import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
+
 import org.joda.time.DateTime;
 import org.joda.time.ReadableInstant;
 import org.joda.time.format.DateTimeFormat;
@@ -31,11 +33,12 @@ import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.client.ClientSearchResultsPage;
-import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
+import org.mifos.test.acceptance.framework.loan.AccountActivityPage;
 import org.mifos.test.acceptance.framework.loan.ApplyChargePage;
 import org.mifos.test.acceptance.framework.loan.ApplyPaymentConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.ApplyPaymentPage;
 import org.mifos.test.acceptance.framework.loan.ChargeParameters;
+import org.mifos.test.acceptance.framework.loan.ClosedAccountsPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountEntryPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
@@ -55,6 +58,8 @@ import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalEntryPage;
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalParameters;
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalSchedulePreviewPage;
+import org.mifos.test.acceptance.framework.loan.TransactionHistoryPage;
+import org.mifos.test.acceptance.framework.loan.ViewLoanStatusHistoryPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
 import org.mifos.test.acceptance.framework.loanproduct.EditLoanProductPage;
 import org.mifos.test.acceptance.framework.loanproduct.EditLoanProductPreviewPage;
@@ -65,15 +70,13 @@ import org.mifos.test.acceptance.framework.search.SearchResultsPage;
 import org.mifos.test.acceptance.questionnaire.QuestionResponsePage;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 
-import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
+import com.thoughtworks.selenium.Selenium;
 
 /**
  * Holds methods common to most loan tests.
  *
  */
 public class LoanTestHelper {
-
     private final Selenium selenium;
     private final NavigationHelper navigationHelper;
 
@@ -97,7 +100,7 @@ public class LoanTestHelper {
                                              CreateLoanAccountSubmitParameters submitAccountParameters) {
         return navigateToLoanAccountEntryPage(searchParameters)
                 .submitAndNavigateToLoanAccountConfirmationPage(submitAccountParameters)
-                .navigateToLoanAccountDetailsPage();
+                .navigateToLoanAccountDetailsPage(submitAccountParameters);
     }
 
     /**
@@ -162,15 +165,21 @@ public class LoanTestHelper {
         LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
 
         EditLoanAccountStatusPage editAccountStatusPage = loanAccountPage.navigateToEditAccountStatus();
-        editAccountStatusPage.verifyPage();
 
-        editAccountStatusPage.submitAndNavigateToNextPage(params);
+        EditAccountStatusConfirmationPage editAccountStatusConfirmationPage = editAccountStatusPage.submitAndNavigateToNextPage(params);
 
         if (responseParameters != null) {
             populateQuestionGroupResponses(responseParameters);
         }
 
-        new EditAccountStatusConfirmationPage(selenium).submitAndNavigateToLoanAccountPage();
+        loanAccountPage = editAccountStatusConfirmationPage.submitAndNavigateToLoanAccountPage();
+        loanAccountPage.verifyStatus(params.getStatus(), params.getCancelReason());
+    }
+
+    public void verifyLastEntryInStatusHistory(String loanId, String oldStatus, String newStatus) {
+        LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
+        ViewLoanStatusHistoryPage viewLoanStatusHistoryPage = loanAccountPage.navigateToViewLoanStatusHistoryPage();
+        viewLoanStatusHistoryPage.verifyLastEntryInStatusHistory(oldStatus, newStatus);
     }
 
     private void populateQuestionGroupResponses(QuestionResponseParameters responseParameters) {
@@ -190,9 +199,10 @@ public class LoanTestHelper {
         DisburseLoanPage disburseLoanPage = prepareToDisburseLoan(loanId);
 
         DisburseLoanConfirmationPage disburseLoanConfirmationPage = disburseLoanPage.submitAndNavigateToDisburseLoanConfirmationPage(disburseParameters);
-        disburseLoanConfirmationPage.verifyPage();
 
-        return disburseLoanConfirmationPage.submitAndNavigateToLoanAccountPage();
+        LoanAccountPage loanAccountPage = disburseLoanConfirmationPage.submitAndNavigateToLoanAccountPage();
+        loanAccountPage.verifyStatus(LoanAccountPage.ACTIVE);
+        return loanAccountPage;
     }
 
     public void editLoanProduct(String loanProduct, boolean interestWaiver) {
@@ -291,7 +301,7 @@ public class LoanTestHelper {
      * @param amountPaid The amount typed in second pay row. Used to pay whole loan.
      * @return LoanAccountPage
      */
-    public LoanAccountPage redoLoanDisbursal(String clientName, String loanProduct, RedoLoanDisbursalParameters paramsPastDate, RedoLoanDisbursalParameters paramsCurrentDate, int amountPaid) {
+    public LoanAccountPage redoLoanDisbursal(String clientName, String loanProduct, RedoLoanDisbursalParameters paramsPastDate, RedoLoanDisbursalParameters paramsCurrentDate, int amountPaid, boolean testForm) {
         RedoLoanDisbursalEntryPage dataEntryPage = navigationHelper
             .navigateToAdminPage()
             .navigateToRedoLoanDisbursal()
@@ -300,12 +310,19 @@ public class LoanTestHelper {
             .submitAndNavigateToRedoLoanDisbursalEntryPage(loanProduct);
 
         if(paramsCurrentDate != null) { // tests current or future date if need to.
-            dataEntryPage = dataEntryPage.submitFutureDateAndReloadPageWithInputError(paramsCurrentDate);
+            dataEntryPage = dataEntryPage.submitInvalidDataAndReloadPageWithInputError(paramsCurrentDate);
             dataEntryPage.verifyFutureDateInputError();
+        }
+        if(testForm) {
+            RedoLoanDisbursalParameters clearedParameters = RedoLoanDisbursalParameters.createObjectWithClearedParameters();
+            dataEntryPage = dataEntryPage.submitInvalidDataAndReloadPageWithInputError(clearedParameters);
+            dataEntryPage.verifyAllFormErrors();
         }
 
         RedoLoanDisbursalSchedulePreviewPage schedulePreviewPage = dataEntryPage.submitAndNavigateToRedoLoanDisbursalSchedulePreviewPage(paramsPastDate);
-        schedulePreviewPage.typeAmountPaid(amountPaid);
+        if(amountPaid != 0) { // used to pay grater amount than default (ex. for closing loan)
+            schedulePreviewPage.typeAmountPaid(amountPaid, 2);
+        }
 
         return schedulePreviewPage
             .submitAndNavigateToRedoLoanDisbursalPreviewPage()
@@ -338,11 +355,34 @@ public class LoanTestHelper {
         return searchResultsPage;
     }
 
-    public void verifyHistoryAndSummaryReversedLoan(GroupViewDetailsPage clientViewDetailsPage) {
-        LoanAccountPage loanAccountPage = clientViewDetailsPage.navigateToClosedAccountsPage()
-            .navigateToLoanAccountPage();
-        loanAccountPage.verifyClosedLoanPerformanceHistory();
-        loanAccountPage.navigateToTransactionHistory();
+    /**
+     * Small verification of reversed loan.
+     * @param closedAccountPage
+     * @param loanID
+     */
+    public void verifyHistoryAndSummaryReversedLoan(ClosedAccountsPage closedAccountPage, String loanID) {
+        verifyHistoryAndSummaryReversedLoan(closedAccountPage, loanID, null, null, null);
+    }
+
+    /**
+     * Extended verification of reversed loan.
+     * @param closedAccountPage
+     * @param loanID
+     * @param totalOriginalLoan
+     * @param totalAmountPaid
+     * @param totalLoanBalance
+     */
+    public void verifyHistoryAndSummaryReversedLoan(ClosedAccountsPage closedAccountPage, String loanID, String totalOriginalLoan, String totalAmountPaid, String totalLoanBalance) {
+        LoanAccountPage loanAccountPage = closedAccountPage.verifyAndNavigateToOneClosedLoan(loanID);
+        loanAccountPage.verifyStatus(EditLoanAccountStatusParameters.CANCEL, EditLoanAccountStatusParameters.CANCEL_REASON_LOAN_REVERSAL);
+        if(totalOriginalLoan != null) {
+            loanAccountPage.verifyTotalOriginalLoan(totalOriginalLoan);
+            loanAccountPage.verifyTotalAmountPaid(totalAmountPaid);
+            loanAccountPage.verifyLoanTotalBalance(totalLoanBalance);
+            loanAccountPage.verifyClosedLoanPerformanceHistory();
+            TransactionHistoryPage transactionHistoryPage = loanAccountPage.navigateToTransactionHistory();
+            transactionHistoryPage.verifyTransactionHistory(0, 0, 4);
+        }
     }
 
     public LoanAccountPage navigateToLoanAccountPage(CreateLoanAccountSearchParameters searchParams) {
@@ -411,9 +451,13 @@ public class LoanTestHelper {
     public LoanAccountPage makePayment(DateTime paymentDate, String paymentAmount) throws UnsupportedEncodingException {
         PaymentParameters paymentParameters =setPaymentParams(paymentAmount, paymentDate);
         setApplicationTime(paymentDate).navigateBack();
-        return new LoanAccountPage(selenium).navigateToApplyPayment().
+        LoanAccountPage loanAccountPage = new LoanAccountPage(selenium).navigateToApplyPayment().
                 submitAndNavigateToApplyPaymentConfirmationPage(paymentParameters).
                 submitAndNavigateToLoanAccountDetailsPage();
+        AccountActivityPage accountActivityPage = loanAccountPage.navigateToAccountActivityPage();
+        accountActivityPage.verifyLastTotalPaid(paymentAmount);
+        accountActivityPage.navigateBack();
+        return loanAccountPage;
     }
 
     public PaymentParameters setPaymentParams(String amount, ReadableInstant paymentDate) {
@@ -469,5 +513,12 @@ public class LoanTestHelper {
         chargeParameters.setType(feeName);
         chargeParameters.setAmount(amount);
         return new LoanAccountPage(selenium).navigateToApplyCharge().submitAndNavigateToApplyChargeConfirmationPage(chargeParameters);
+    }
+
+    public void verifyTransactionHistory(String loanId, Double paymentAmount){
+        LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
+        TransactionHistoryPage transactionHistoryPage = loanAccountPage.navigateToTransactionHistory();
+
+        transactionHistoryPage.verifyTransactionHistory(paymentAmount, 1, 217);
     }
 }

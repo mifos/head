@@ -20,18 +20,26 @@
 
 package org.mifos.test.acceptance.framework.loan;
 
-import org.mifos.test.acceptance.framework.MifosPage;
+import org.mifos.test.acceptance.framework.AbstractPage;
+import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
 
-public class DisburseLoanConfirmationPage extends MifosPage {
-    public DisburseLoanConfirmationPage(Selenium selenium) {
+public class ViewLoanStatusHistoryPage extends AbstractPage{
+
+    public ViewLoanStatusHistoryPage(Selenium selenium) {
         super(selenium);
-        this.verifyPage("ReviewLoanDisbursement");
+        this.verifyPage("ViewLoanStatusHistory");
     }
 
-    public LoanAccountPage submitAndNavigateToLoanAccountPage() {
-        selenium.click("Review_loanDisbursement.button.submit");
+    public void verifyLastEntryInStatusHistory(String oldStatus, String newStatus) {
+        int lastRowId = selenium.getXpathCount("//table[@id='statusHistory']/tbody/tr").intValue() - 1;
+        Assert.assertEquals(selenium.getTable("statusHistory." + lastRowId + ".1"), oldStatus);
+        Assert.assertEquals(selenium.getTable("statusHistory." + lastRowId + ".2"), newStatus);
+    }
+
+    public LoanAccountPage navigateToLoanAccount(){
+        selenium.click("id=viewLoanStatusHistory.button.return");
         waitForPageToLoad();
         return new LoanAccountPage(selenium);
     }

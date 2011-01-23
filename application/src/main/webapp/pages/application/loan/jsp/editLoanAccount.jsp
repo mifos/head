@@ -382,7 +382,7 @@ explanation of the license and how it is applied.
 									isColonRequired="yes" bundle="loanUIResources"
 									isManadatoryIndicationNotRequired="yes" /></td>
 								<td valign="top"><mifos:select keyhm="Loan.PurposeOfLoan"
-									property="businessActivityId">
+									property="businessActivityId" styleId="editLoanAccount.input.purposeofloan">
 									<c:forEach var="BusinessActivity" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessActivities')}" >
 										<html-el:option value="${BusinessActivity.id}">${BusinessActivity.name}</html-el:option>
 									</c:forEach>
@@ -408,7 +408,7 @@ explanation of the license and how it is applied.
 					       
 									<c:otherwise>
 										<mifos:select keyhm="Loan.CollateralType"
-											property="collateralTypeId">
+											property="collateralTypeId" styleId="editLoanAccount.select.collateraltype">
 											<c:forEach var="CollateralType" items="${requestScope['CollateralTypes']}" >
 												<html-el:option value="${CollateralType.id}">${CollateralType.name}</html-el:option>
 											</c:forEach>
@@ -422,13 +422,13 @@ explanation of the license and how it is applied.
 								keyhm="Loan.CollateralNotes" name="Loan.CollateralNotes"
 								isColonRequired="yes" bundle="loanUIResources" /></td>
 							<td valign="top"><mifos:textarea keyhm="Loan.CollateralNotes" readonly="${loanfn:isDisabledWhileEditingGlim('collateralNotes',accountState)}"
-								property="collateralNote" style="width:320px; height:110px;"></mifos:textarea></td>
+								property="collateralNote" style="width:320px; height:110px;" styleId="editLoanAccount.textbox.collateralnotes"></mifos:textarea></td>
 						</tr>
                         <tr class="fontnormal">
                             <td align="right" valign="top" class="fontnormal"><mifos:mifoslabel
                                 keyhm="Loan.ExternalId" name="accounts.externalId"
                                 isColonRequired="yes" bundle="accountsUIResources" /></td>
-                            <td valign="top"><mifos:mifosalphanumtext keyhm="Loan.ExternalId" property="externalId">
+                            <td valign="top"><mifos:mifosalphanumtext keyhm="Loan.ExternalId" property="externalId" styleId="editLoanAccount.input.externalid">
                             </mifos:mifosalphanumtext></td>
                         </tr>
 					</table>

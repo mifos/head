@@ -24,12 +24,13 @@ public class EditLoanAccountStatusParameters {
     // Status constants
     public final static String APPROVED = "Application Approved";
     public final static String PARTIAL_APPLICATION = "Partial Application";
-    public final static String PENDING_APPROVAL = "Pending for Approval";
+    public final static String PENDING_APPROVAL = "Application Pending Approval";
     public final static String CANCEL = "Cancel";
 
     public final static String CANCEL_REASON_OTHER = "Other";
     public final static String CANCEL_REASON_WITHDRAW = "Withdraw";
     public final static String CANCEL_REASON_REJECTED = "Rejected";
+    public final static String CANCEL_REASON_LOAN_REVERSAL = "Loan reversal";
 
     private String status;
     private String note;
@@ -59,10 +60,10 @@ public class EditLoanAccountStatusParameters {
      */
     @SuppressWarnings("PMD.OnlyOneReturn")
     public int getStatusValue() {
-        if ("Partial Application".equals(status)) { return 1; }
-        if ("Pending for Approval".equals(status)) { return 2; }
-        if ("Application Approved".equals(status)) { return 3; }
-        if ("Cancel".equals(status)) { return 10; }
+        if (PARTIAL_APPLICATION.equals(status)) { return 1; }
+        if (PENDING_APPROVAL.equals(status)) { return 2; }
+        if (APPROVED.equals(status)) { return 3; }
+        if (CANCEL.equals(status)) { return 10; }
 
         return -1;
     }

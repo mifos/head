@@ -63,37 +63,6 @@ public class CreateSavingsAccountTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(sequential = true, groups = { "smoke", "savings", "acceptance", "ui" })
-    public void newVoluntaryClientSavingsAccount() throws Exception {
-
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
-
-        CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
-        searchParameters.setSearchString("Stu1233266079799 Client1233266079799");
-        searchParameters.setSavingsProduct("VolClientSavings3MoPost");
-
-        CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
-        submitAccountParameters.setAmount("200.0");
-
-        verifySavingsAccountCreation(searchParameters, submitAccountParameters);
-    }
-
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(sequential = true, groups = { "savings", "acceptance", "ui" })
-    public void newMandatoryClientSavingsAccount() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
-
-        CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
-        searchParameters.setSearchString("Stu1233266079799 Client1233266079799");
-        searchParameters.setSavingsProduct("MandClientSavings3MoPostMinBal");
-
-        CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
-        submitAccountParameters.setAmount("248.0");
-
-        verifySavingsAccountCreation(searchParameters, submitAccountParameters);
-    }
-
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(sequential = true, groups = { "savings", "acceptance", "ui" })
     public void newMandatoryClientSavingsAccountWithDateTypeCustomField() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_015_dbunit.xml", dataSource, selenium);
@@ -106,59 +75,6 @@ public class CreateSavingsAccountTest extends UiTestCaseBase {
         submitAccountParameters.setAmount("248.0");
 
         verifySavingsAccountCreationWithQG(searchParameters, submitAccountParameters);
-    }
-
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(sequential = true, groups = { "savings", "acceptance", "ui" })
-    public void newMandatoryGroupSavingsAccount() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
-
-        CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
-        searchParameters.setSearchString("MyGroup1232993846342");
-        searchParameters.setSavingsProduct("MandGroupSavingsPerIndiv1MoPost");
-
-        CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
-        submitAccountParameters.setAmount("534.0");
-
-        verifySavingsAccountCreation(searchParameters, submitAccountParameters);
-    }
-
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(sequential = true, groups = { "savings", "acceptance", "ui" })
-    public void newVoluntaryGroupSavingsAccount() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
-
-        CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
-        searchParameters.setSearchString("MyGroup1232993846342");
-        searchParameters.setSavingsProduct("VolGroupSavingsPerIndivMinBal1MoPost");
-
-        CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
-        submitAccountParameters.setAmount("234.0");
-
-        verifySavingsAccountCreation(searchParameters, submitAccountParameters);
-    }
-
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(sequential = true, groups = { "savings", "acceptance", "ui" })
-    public void newVoluntaryCenterSavingsAccount() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
-
-        CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
-        searchParameters.setSearchString("MyCenter1233266075715");
-        searchParameters.setSavingsProduct("VolCenterSavings3MoPost");
-
-        CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
-        submitAccountParameters.setAmount("7777.8");
-
-        verifySavingsAccountCreation(searchParameters, submitAccountParameters);
-    }
-
-    private void verifySavingsAccountCreation(CreateSavingsAccountSearchParameters searchParameters,
-            CreateSavingsAccountSubmitParameters submitAccountParameters) {
-        SavingsAccountDetailPage savingsAccountPage = savingsAccountHelper.createSavingsAccount(searchParameters, submitAccountParameters);
-        savingsAccountPage.verifyPage();
-        savingsAccountPage.verifySavingsAmount(submitAccountParameters.getAmount());
-        savingsAccountPage.verifySavingsProduct(searchParameters.getSavingsProduct());
     }
 
     private void verifySavingsAccountCreationWithQG(CreateSavingsAccountSearchParameters searchParameters,

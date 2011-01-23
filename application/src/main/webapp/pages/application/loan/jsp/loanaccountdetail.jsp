@@ -112,7 +112,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 						<tr>
 							<td class="fontnormalbold"><span class="fontnormal">
 							<mifoscustom:MifosImage id="${loanInformationDto.accountStateId}"
-								moduleName="org.mifos.accounts.util.resources.accountsImages" /> <c:out
+								moduleName="org.mifos.accounts.util.resources.accountsImages" /> <span id="loanaccountdetail.text.status"><c:out
 								value="${accountStateNameLocalised}" />&nbsp; 
 								<c:forEach
 								var="flagSet" items="${accountFlagNamesLocalised}">
@@ -121,13 +121,13 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							</c:forEach> </span></td>
 						</tr>
 						<tr>
-							<td class="fontnormal"><mifos:mifoslabel
+							<td class="fontnormal"><span id="loanaccountdetail.details.disbursaldateline"><mifos:mifoslabel
 								name="loan.proposed_date" />: <c:out
 								value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,loanInformationDto.disbursementDate)}" />
 							<c:if test="${loanInformationDto.redone}">
                                         &nbsp(<mifos:mifoslabel
 									name="loan.is_redo_loan" />)
-                                    </c:if></td>
+                                    </c:if></span></td>
 						</tr>
 						<tr id="Loan.PurposeOfLoan">
 							<td class="fontnormal"><mifos:mifoslabel
@@ -137,7 +137,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							<c:forEach var="busId"
 								items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessActivities')}">
 								<c:if test="${busId.id eq loanInformationDto.businessActivityId}">
-									<c:out value="${busId.name}" />
+									<span id="loanaccountdetail.text.purposeofloan"><c:out value="${busId.name}" /></span>
 								</c:if>
 							</c:forEach></td>
 						</tr>
@@ -321,8 +321,8 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 								value="${interestTypeNameLocalised}" /> <br>
 							<fmt:message key="loan.interestRate">
 								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" /></fmt:param>
-							</fmt:message>:&nbsp;<span class="fontnormal"><c:out
-								value="${loanInformationDto.interestRate}" />%&nbsp;<mifos:mifoslabel
+							</fmt:message>:&nbsp;<span class="fontnormal"><span id="loanaccountdetail.text.interestRate"><c:out
+								value="${loanInformationDto.interestRate}" /></span>%&nbsp;<mifos:mifoslabel
 								name="loan.apr" /> </span><br>
 							</span> <fmt:message key="loan.interestDisbursement">
 								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" /></fmt:param>
@@ -359,8 +359,8 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							</c:choose> <br>
 							<mifos:mifoslabel name="loan.grace_period_type" />:&nbsp; <c:out
 								value="${gracePeriodTypeNameLocalised}" /><br>
-							<mifos:mifoslabel name="loan.no_of_inst" />:&nbsp;<c:out
-								value="${loanInformationDto.noOfInstallments}" /> <mifos:mifoslabel
+							<mifos:mifoslabel name="loan.no_of_inst" />:&nbsp;<span id="loanaccountdetail.text.noOfInst"><c:out
+								value="${loanInformationDto.noOfInstallments}" /></span> <mifos:mifoslabel
 								name="loan.allowed_no_of_inst" />&nbsp;<c:out
 								value="${loanInformationDto.minNoOfInstall}" />
 							-&nbsp;<c:out
@@ -403,7 +403,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 								isColonRequired="yes" isManadatoryIndicationNotRequired="yes" />&nbsp;
 							<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'CollateralTypes')}" var="collateralType">
 								<c:if test="${collateralType.id eq loanInformationDto.collateralTypeId}">
-									<c:out value="${collateralType.name}" />
+									<span id="loanaccountdetail.text.collateraltype"><c:out value="${collateralType.name}" /></span>
 								</c:if>
 							</c:forEach></td>
 						</tr>
@@ -412,7 +412,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							<mifos:mifoslabel name="loan.collateral_notes"
 								keyhm="Loan.CollateralNotes" isColonRequired="yes"
 								isManadatoryIndicationNotRequired="yes" />&nbsp;<br>
-							<c:out value="${loanInformationDto.collateralNote}" />
+							<span id="loanaccountdetail.text.collateralname"><c:out value="${loanInformationDto.collateralNote}" /></span>
                             <br /></td>
 						</tr>
 						<script>
@@ -423,7 +423,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
                         <tr id="Loan.ExternalId">
                             <td class="fontnormalbold"><mifos:mifoslabel name="accounts.externalId"
                                 keyhm="Loan.ExternalId" isColonRequired="yes" isManadatoryIndicationNotRequired="yes" />
-                            &nbsp; <span class="fontnormal"><c:out value="${loanInformationDto.externalId}" /> </span></td>
+                            &nbsp; <span class="fontnormal"><span id="loanaccountdetail.text.externalid"><c:out value="${loanInformationDto.externalId}" /></span> </span></td>
                         </tr>
                         
                         <!-- Administrative documents -->

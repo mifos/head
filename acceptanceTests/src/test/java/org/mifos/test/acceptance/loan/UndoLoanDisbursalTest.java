@@ -82,6 +82,7 @@ public class UndoLoanDisbursalTest extends UiTestCaseBase {
         ClientViewDetailsPage clientViewDetailsPage = (ClientViewDetailsPage) loanTestHelper.reverseLoanDisbursal(clientLoanID, clientID, false, resultClickLink);
 
         clientViewDetailsPage.verifyLoanDoesntExist("Acct #000100000000215");
+        loanTestHelper.verifyHistoryAndSummaryReversedLoan(clientViewDetailsPage.navigateToClosedAccountsPage(), clientLoanID);
     }
 
     /*
@@ -90,19 +91,18 @@ public class UndoLoanDisbursalTest extends UiTestCaseBase {
      * Group loan.
      *
      * http://mifosforge.jira.com/browse/MIFOSTEST-20
-     * http://mifosforge.jira.com/browse/MIFOSTEST-24
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void undoGroupLoanDisbursal() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, START_DATA_SET, dataSource, selenium);
 
         String groupID = "0006-000000045";
-        String groupLoanID = "000100000000206"; // prev 000100000000206
+        String groupLoanID = "000100000000206";
         String resultClickLink = "MyGroup1233266255641: ID 0006-000000045";
 
         GroupViewDetailsPage groupViewDetailsPage = (GroupViewDetailsPage) loanTestHelper.reverseLoanDisbursal(groupLoanID, groupID, true, resultClickLink);
 
         groupViewDetailsPage.verifyLoanDoesntExist("Acct #000100000000206");
-        loanTestHelper.verifyHistoryAndSummaryReversedLoan(groupViewDetailsPage);
+        loanTestHelper.verifyHistoryAndSummaryReversedLoan(groupViewDetailsPage.navigateToClosedAccountsPage(), groupLoanID, "4290.0", "0.0", "4290.0");
     }
 }

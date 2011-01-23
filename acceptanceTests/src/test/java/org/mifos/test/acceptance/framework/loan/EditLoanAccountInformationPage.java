@@ -60,6 +60,18 @@ public class EditLoanAccountInformationPage extends MifosPage {
         if (editAccountParameters.getGracePeriod() != null) {
             selenium.type("editLoanAccount.input.gracePeriod", editAccountParameters.getGracePeriod());
         }
+        if (editAccountParameters.getCollateralNotes() != null) {
+            selenium.type("editLoanAccount.textbox.collateralnotes", editAccountParameters.getCollateralNotes());
+        }
+        if (editAccountParameters.getCollateralType() != null) {
+            selenium.type("editLoanAccount.select.collateraltype", editAccountParameters.getCollateralType());
+        }
+        if (editAccountParameters.getExternalID() != null) {
+            selenium.type("editLoanAccount.input.externalid", editAccountParameters.getExternalID());
+        }
+        if (editAccountParameters.getPurposeOfLoan() != null) {
+            selenium.type("editLoanAccount.input.purposeofloan", editAccountParameters.getPurposeOfLoan());
+        }
         return this;
     }
 

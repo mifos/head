@@ -21,18 +21,16 @@ package org.mifos.test.acceptance.framework.loan;
 
 import com.thoughtworks.selenium.Selenium;
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.testng.Assert;
 
 public class AccountActivityPage extends MifosPage{
 
-    public AccountActivityPage(){
-        super();
-    }
-
     public AccountActivityPage(Selenium selenium) {
         super(selenium);
+        this.verifyPage("ViewLoanAccountActivity");
     }
 
-        public String getRunningTotal() {
+    public String getRunningTotal() {
         return selenium.getTable("accountActivityTable.2.11").trim();
     }
 
@@ -66,5 +64,9 @@ public class AccountActivityPage extends MifosPage{
 
     public String getLastPrinciplePaid() {
         return selenium.getTable("accountActivityTable.2.2").trim();
+    }
+
+    public void verifyLastTotalPaid(String amount){
+        Assert.assertEquals(Double.parseDouble(getLastTotalPaid()), Double.parseDouble(amount));
     }
 }

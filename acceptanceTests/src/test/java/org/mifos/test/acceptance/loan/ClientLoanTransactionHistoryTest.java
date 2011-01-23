@@ -20,6 +20,10 @@
 
 package org.mifos.test.acceptance.loan;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.sql.SQLException;
+
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
@@ -28,6 +32,11 @@ import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.collectionsheet.CollectionSheetEntryCustomerAccountTest;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameters;
+import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
+import org.mifos.test.acceptance.framework.loan.EditLoanAccountInformationParameters;
+import org.mifos.test.acceptance.framework.loan.EditLoanAccountStatusParameters;
 import org.mifos.test.acceptance.framework.loan.PaymentParameters;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
@@ -40,7 +49,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"acceptance","ui", "loan"})
+@Test(sequential=true, groups={"acceptance", "ui", "loan"})
 public class ClientLoanTransactionHistoryTest extends UiTestCaseBase {
     private LoanTestHelper loanTestHelper;
 
@@ -50,6 +59,8 @@ public class ClientLoanTransactionHistoryTest extends UiTestCaseBase {
     private DbUnitUtilities dbUnitUtilities;
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
+
+    private DateTime systemDateTime;
 
     public static final String FEE_TRXN_DETAIL = "FEE_TRXN_DETAIL";
     public static final String FINANCIAL_TRXN = "FINANCIAL_TRXN";
@@ -72,8 +83,8 @@ public class ClientLoanTransactionHistoryTest extends UiTestCaseBase {
         super.setUp();
 
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = new DateTime(2009,2,7,12,0,0,0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        systemDateTime = new DateTime(2009,2,7,12,0,0,0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(systemDateTime);
 
         loanTestHelper = new LoanTestHelper(selenium);
     }
@@ -81,6 +92,45 @@ public class ClientLoanTransactionHistoryTest extends UiTestCaseBase {
     @AfterMethod
     public void logOut() {
         (new MifosPage(selenium)).logout();
+    }
+
+    //http://mifosforge.jira.com/browse/MIFOSTEST-361
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void verifyTransactionHistoryWithDoubleEntryAccounting() throws DatabaseUnitException, SQLException, IOException, URISyntaxException{
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
+        CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
+        CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
+        searchParameters.setLoanProduct("WeeklyFlatLoanWithOneTimeFees");
+        searchParameters.setSearchString("Stu1232993852651");
+        submitAccountParameters.setAmount("2000.0");
+        submitAccountParameters.setInterestRate("3.0");
+        submitAccountParameters.setNumberOfInstallments("11");
+        EditLoanAccountInformationParameters editLoanAccountInformationParameters = new EditLoanAccountInformationParameters();
+        editLoanAccountInformationParameters.setCollateralNotes("collateralNotes");
+        editLoanAccountInformationParameters.setExternalID("1234");
+        editLoanAccountInformationParameters.setPurposeOfLoan("0005-Pig Raising");
+        editLoanAccountInformationParameters.setCollateralType("Type 1");
+        DisburseLoanParameters disburseParameters = new DisburseLoanParameters();
+        disburseParameters.setDisbursalDateDD("07");
+        disburseParameters.setDisbursalDateMM("02");
+        disburseParameters.setDisbursalDateYYYY("2009");
+        disburseParameters.setPaymentType(PaymentParameters.CASH);
+        String paymentAmount = "200.0";
+        //When
+        String loanId = loanTestHelper.createLoanAccount(searchParameters, submitAccountParameters).getAccountId();
+        EditLoanAccountStatusParameters params = new EditLoanAccountStatusParameters();
+        params.setStatus(EditLoanAccountStatusParameters.APPROVED);
+        params.setNote("Approved.");
+        loanTestHelper.changeLoanAccountStatus(loanId, params);
+        //Then
+        loanTestHelper.verifyLastEntryInStatusHistory(loanId, EditLoanAccountStatusParameters.PENDING_APPROVAL, EditLoanAccountStatusParameters.APPROVED);
+        //When
+        loanTestHelper.changeLoanAccountInformation(loanId, new CreateLoanAccountSubmitParameters(), editLoanAccountInformationParameters);
+        loanTestHelper.disburseLoan(loanId, disburseParameters);
+        loanTestHelper.makePayment(systemDateTime.plusDays(10), paymentAmount);
+        //Then
+        loanTestHelper.verifyTransactionHistory(loanId, Double.valueOf(paymentAmount));
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")

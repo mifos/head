@@ -20,6 +20,8 @@
 
 package org.mifos.test.acceptance.framework.loan;
 
+import junit.framework.Assert;
+
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.center.CenterViewDetailsPage;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
@@ -60,5 +62,10 @@ public class ClosedAccountsPage extends MifosPage {
         selenium.click("getallclosedaccounts.link.viewLoanAccount");
         waitForPageToLoad();
         return new LoanAccountPage(selenium);
+    }
+
+    public LoanAccountPage verifyAndNavigateToOneClosedLoan(String loanID) {
+        Assert.assertTrue(selenium.isTextPresent(loanID));
+        return navigateToLoanAccountPage();
     }
 }
