@@ -456,6 +456,7 @@ public class LoanTestHelper {
                 submitAndNavigateToLoanAccountDetailsPage();
         AccountActivityPage accountActivityPage = loanAccountPage.navigateToAccountActivityPage();
         accountActivityPage.verifyLastTotalPaid(paymentAmount);
+        accountActivityPage.navigateBack();
         return loanAccountPage;
     }
 
