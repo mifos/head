@@ -1,107 +1,51 @@
-	function getAccountingDataForm() {
-		$.ajax({
-			url   : 'accountingDataForm.ftl',
-			cache : false,
-			error : function (xhr, ajaxOptions, thrownError){
+    function addDatePicker() {
+        var format = 'yy-mm-dd';
+        $(function() {
+            $("#fromDate").datepicker({
+                dateFormat: format,
+                showOn: "button",
+                buttonImage: "pages/framework/images/mainbox/calendaricon.gif",
+                buttonImageOnly: true
+            });
+            $("#fromDate").val(todayDate())
+        });
+        $(function() {
+            $("#toDate").datepicker({
+                dateFormat: format,
+                showOn: "button",
+                buttonImage: "pages/framework/images/mainbox/calendaricon.gif",
+                buttonImageOnly: true
+            });
+            $("#toDate").val(todayDate())
+        });
+    }
+
+    function todayDate() {
+        return new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getDate();
+    }
+
+    function goToAdmin() {
+    window.location.href="AdminAction.do?method=load";
+    }
+
+    function deleteCacheDir() {
+       var result = confirm("Are you sure you want to clear exports? This will clear all exports previously generated");
+        if(!result) {
+           return;
+         }
+        $.ajax({
+            url   : 'deleteCacheDir.ftl',
+            cache : false,
+            error : function (xhr, ajaxOptions, thrownError){
                     alert(xhr.responseText + thrownError);
                     },
-			success : function(data) {
-				      $("#view").html(data);
-				      addDatePicker();
-			        }
-		     })
-	}
+            success : function(data) {
+                      window.location.href=window.location.href;
+                    }
+              })
+    }
 
-	function getAccountingDataCacheInfo() {
-		$.ajax({
-			url   : 'renderAccountingDataCacheInfo.ftl',
-			cache : false,
-			error : function (xhr, ajaxOptions, thrownError){
-                    alert(xhr.responseText + thrownError);
-                    },
-			success : function(data) {
-				       $("#view").html(data);
-				       addDatePicker();
-			        }
-		     })
-	}
-	
-	function getAdvanceOptions() {
-		$.ajax({
-			url   : 'advanceOptions.ftl',
-			cache : false,
-			error : function (xhr, ajaxOptions, thrownError){
-                    alert(xhr.responseText + thrownError);
-                    },
-			success : function(data) {
-				       $("#view").html(data);
-				       addDatePicker();
-			        }
-		     })
-	}
-
-	function submitAccountingDataForm() {
-		var fromDate = document.getElementById("fromDate").value;
-		var toDate = document.getElementById("toDate").value;
-		getAccountionDataDetails(fromDate, toDate);
-	}
-
-	function getAccountionDataDetails(fromDate, toDate) {
-		document.getElementById("view").innerHTML = "<img src='image/loading.gif' />";
-		$.ajax({
-			url   : 'renderAccountingData.ftl',
-			cache : false,
-			data  : 'fromDate=' + fromDate + '&toDate=' + toDate,
-			error : function (xhr, ajaxOptions, thrownError){
-                    alert(xhr.responseText + thrownError);
-                    },
-			success : function(data) {
-				      $("#view").html(data);
-			        }
-		      })
-	}
-
-	function addDatePicker() {
-		var format = 'yy-mm-dd';
-		$(function() {
-			$("#fromDate").datepicker({
-		        dateFormat: format,
-		        showOn: "button",
-		        buttonImage: "pages/framework/images/mainbox/calendaricon.gif",
-				buttonImageOnly: true
-		    });
-			$("#fromDate").val(todayDate())
-		});
-		$(function() {
-			$("#toDate").datepicker({
-		        dateFormat: format,
-		        showOn: "button",
-		        buttonImage: "pages/framework/images/mainbox/calendaricon.gif",
-				buttonImageOnly: true
-		    });
-			$("#toDate").val(todayDate())
-		});
-	}
-
-	function todayDate() {
-		return new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getDate();
-	}
-
-	function deleteCacheDir() {
-		document.getElementById("view").innerHTML = "<img src='image/loading.gif' />";
-		$.ajax({
-			url   : 'deleteCacheDir.ftl',
-			cache : false,
-			error : function (xhr, ajaxOptions, thrownError){
-                    alert(xhr.responseText + thrownError);
-                    },
-			success : function(data) {
-				      $("#view").html(data);
-			        }
-		      })
-	}
-
-	
+    
 var gAutoPrint = true;
 
 function processPrint(table){

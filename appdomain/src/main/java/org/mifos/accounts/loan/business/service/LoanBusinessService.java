@@ -50,11 +50,7 @@ import org.mifos.platform.validations.Errors;
 import org.mifos.security.util.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 public class LoanBusinessService implements BusinessService {
 
@@ -270,7 +266,11 @@ public class LoanBusinessService implements BusinessService {
             Date currentDueDate = installment.getDueDateValue();
             long delta = DateUtils.getNumberOfDaysBetweenTwoDates(currentDueDate, oldPrevDate);
             Date newDueDate = DateUtils.addDays(newPrevDate, (int) delta);
-            installment.setDueDateValue(holidayService.getNextWorkingDay(newDueDate, officeId));
+            if (holidayService.isFutureRepaymentHoliday(DateUtils.getCalendar(newDueDate), officeId)) {
+                installment.setDueDateValue(holidayService.getNextWorkingDay(newDueDate, officeId));
+            } else {
+                installment.setDueDateValue(newDueDate);
+            }
             oldPrevDate = currentDueDate;
             newPrevDate = installment.getDueDateValue();
         }

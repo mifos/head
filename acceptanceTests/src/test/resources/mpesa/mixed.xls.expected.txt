@@ -1,17 +1,16 @@
 6 rows were read:
 
-0 rows contained no errors and will be imported
-1 rows will be ignored
-5 rows contained errors and were not imported
-Total amount of transactions imported: 0 
-Total amount of transactions with error: 6,805
+2 rows contained no errors and will be imported
+0 rows will be ignored
+4 rows contained errors and were not imported
+Total amount of transactions imported: 2095.0
+Total amount of disbursements imported: 0.0
+Total amount of transactions with error: 26710.0
 
 
 The following row(s) contain errors and will not be imported: 
-
-Row <24> error - THY89999 - No valid product name in "Transaction Party Details" field and ImportTransactionOrder property is not set 
+ 
 Row <25> error - Y29DW127 - Client with mobile number 0715575007 was not found 
 Row <26> error - Y28HL873 - Client with mobile number 0711821509 was not found 
-Row <27> error - Y28GK611 - No valid product name in "Transaction Party Details" field and ImportTransactionOrder property is not set
-Row <28> ignored - Y28GK612 - Transaction type "Business Payment to Customer" instead of "Pay Utility" 
-Row <29> error - GXX444 - No valid product name in "Transaction Party Details" field and ImportTransactionOrder property is not set
+Row <27> error - Y28GK611 - No valid accounts found with this transaction
+Row <28> error - Y28GK612 - Date does not begin with expected format (YYYY-MM-DD)

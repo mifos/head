@@ -20,8 +20,6 @@
 
 package org.mifos.platform.accounting.dao;
 
-import java.sql.SQLException;
-import java.util.Date;
 import java.util.List;
 
 import org.joda.time.LocalDate;
@@ -29,8 +27,6 @@ import org.mifos.platform.accounting.AccountingDto;
 
 public interface IAccountingDao {
 
-    List<AccountingDto> getAccountingData(Date startDate, Date endDate) throws SQLException;
-
-    List<AccountingDto> getAccountingData(LocalDate startDate, LocalDate endDate) throws SQLException;
+    List<AccountingDto> getAccountingDataByDate(LocalDate startDate, LocalDate endDate);
 
 }

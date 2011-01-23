@@ -22,12 +22,12 @@ package org.mifos.platform.accounting.tally;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.mifos.platform.accounting.AccountingDto;
+import org.mifos.platform.accounting.AccountingRuntimeException;
 import org.mifos.platform.accounting.VoucherType;
 import org.mifos.platform.accounting.tally.message.AllLedger;
 import org.mifos.platform.accounting.tally.message.TallyMessage;
@@ -39,15 +39,17 @@ import freemarker.template.TemplateException;
 
 public class TallyXMLGenerator {
 
+    private TallyXMLGenerator() {
+        // Hide utility method
+    }
+
     private static Configuration freemarkerConfiguration;
-    
-    private static TallyMessageGenerator tallyMessageGenerator = new TallyMessageGenerator();
 
-    private static SimpleDateFormat tallyDateFormat = new SimpleDateFormat("yyyyMMdd");
+    private final static TallyMessageGenerator tallyMessageGenerator = new TallyMessageGenerator();
 
-    public static String getTallyXML(List<AccountingDto> accountingData, String fileName) throws Exception {
+    public static String getTallyXML(List<AccountingDto> accountingData, String fileName) {
+        Template temp = getTemplate("master.template");
 
-        Template temp = buildFreemarkerConfiguration().getTemplate("master.ftl");
         String masterData = "";
         try {
             List<TallyMessage> tallyMessages = tallyMessageGenerator.generateTallyMessages(accountingData);
@@ -65,12 +67,11 @@ public class TallyXMLGenerator {
         tallyMessage.put("headOfficeName", "HEAD OFFICE");
         tallyMessage.put("data", masterData);
         StringWriter bow = new StringWriter();
-        temp.process(root, bow);
+        process(temp, root, bow);
         return bow.toString();
     }
 
-    private static String getMasterData(List<TallyMessage> tallyMessages, String fileName) throws IOException,
-            TemplateException {
+    private static String getMasterData(List<TallyMessage> tallyMessages, String fileName) {
         String tallyMessagesOutput = "";
         for (TallyMessage tallyMessage : tallyMessages) {
             tallyMessagesOutput += getTallyMessageData(tallyMessage, fileName);
@@ -78,23 +79,22 @@ public class TallyXMLGenerator {
         return tallyMessagesOutput;
     }
 
-    private static String getTallyMessageData(TallyMessage tallyMessage, String fileName) throws TemplateException,
-            IOException {
-        Template temp = buildFreemarkerConfiguration().getTemplate("tally_mesage.ftl");
+    private static String getTallyMessageData(TallyMessage tallyMessage, String fileName) {
+        Template temp = getTemplate("tally_mesage.template");
         /* Create a data-model */
         Map<String, Object> root = new HashMap<String, Object>();
         Map<String, Object> voucher = new HashMap<String, Object>();
         root.put("voucher", voucher);
-        voucher.put("type", tallyMessage.getVoucherType().value);
-        voucher.put("date", tallyDateFormat.format(tallyMessage.getVoucherDate()));
+        voucher.put("type", tallyMessage.getVoucherType().getValue());
+        voucher.put("date", TallyMessageGenerator.DATE_FORMAT.format(tallyMessage.getVoucherDate()));
         voucher.put("fileName", fileName);
         voucher.put("data", getVoucherData(tallyMessage));
         StringWriter bow = new StringWriter();
-        temp.process(root, bow);
+        process(temp, root, bow);
         return bow.toString() + "\n";
     }
 
-    private static String getVoucherData(TallyMessage tallyMessage) throws TemplateException, IOException {
+    private static String getVoucherData(TallyMessage tallyMessage) {
         String allLedgersOutput = "";
         // see payment specs for tally integration
         if (tallyMessage.getVoucherType() == VoucherType.PAYMENT) {
@@ -119,8 +119,8 @@ public class TallyXMLGenerator {
         return allLedgersOutput.substring(0, allLedgersOutput.length() - 1);
     }
 
-    private static String getAllLedgerData(AllLedger allLedger) throws TemplateException, IOException {
-        Template temp = buildFreemarkerConfiguration().getTemplate("all_ledgers.ftl");
+    private static String getAllLedgerData(AllLedger allLedger) {
+        Template temp = getTemplate("all_ledgers.template");
         /* Create a data-model */
         Map<String, Object> root = new HashMap<String, Object>();
         Map<String, Object> ledger = new HashMap<String, Object>();
@@ -135,8 +135,26 @@ public class TallyXMLGenerator {
         }
         ledger.put("branchName", allLedger.getBranchName());
         StringWriter bow = new StringWriter();
-        temp.process(root, bow);
+        process(temp, root, bow);
         return bow.toString() + "\n";
+    }
+
+    private static Template getTemplate(String templateName) {
+        try {
+            return buildFreemarkerConfiguration().getTemplate(templateName);
+        } catch (IOException e) {
+            throw new AccountingRuntimeException("creating template" + templateName, e);
+        }
+    }
+
+    private static void process(Template temp, Map<String, Object> root, StringWriter bow) {
+        try {
+            temp.process(root, bow);
+        } catch (TemplateException e) {
+            throw new AccountingRuntimeException(bow.toString(), e);
+        } catch (IOException e) {
+            throw new AccountingRuntimeException(bow.toString(), e);
+        }
     }
 
     private static Configuration buildFreemarkerConfiguration() {

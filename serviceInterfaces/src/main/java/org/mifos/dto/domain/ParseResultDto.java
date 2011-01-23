@@ -33,6 +33,7 @@ public class ParseResultDto {
 	private Integer numberOfErrorRows;
 	private BigDecimal totalAmountOfTransactionsImported;
 	private BigDecimal totalAmountOfTransactionsWithError;
+        private BigDecimal totalAmountOfDisbursementsImported;
 	private int numberRowSuccessfullyParsed;
 	private String statusLogFile;
 
@@ -49,53 +50,61 @@ public class ParseResultDto {
         return this.successfullyParsedPayments;
     }
 
-	public Integer getNumberOfErrorRows() {
-		return numberOfErrorRows;
-	}
+    public Integer getNumberOfErrorRows() {
+            return numberOfErrorRows;
+    }
 
-	public void setNumberOfErrorRows(Integer numberOfErrorRows) {
-		this.numberOfErrorRows = numberOfErrorRows;
-	}
+    public void setNumberOfErrorRows(Integer numberOfErrorRows) {
+            this.numberOfErrorRows = numberOfErrorRows;
+    }
 
-	public Integer getNumberOfIgnoredRows() {
-		return numberOfIgnoredRows;
-	}
+    public Integer getNumberOfIgnoredRows() {
+            return numberOfIgnoredRows;
+    }
 
-	public void setNumberOfIgnoredRows(Integer numberOfIgnoredRows) {
-		this.numberOfIgnoredRows = numberOfIgnoredRows;
-	}
+    public void setNumberOfIgnoredRows(Integer numberOfIgnoredRows) {
+            this.numberOfIgnoredRows = numberOfIgnoredRows;
+    }
 
-	public Integer getNumberOfReadRows() {
-		return numberOfReadRows;
-	}
+    public Integer getNumberOfReadRows() {
+            return numberOfReadRows;
+    }
 
-	public void setNumberOfReadRows(Integer numberOfReadRows) {
-		this.numberOfReadRows = numberOfReadRows;
-	}
+    public void setNumberOfReadRows(Integer numberOfReadRows) {
+            this.numberOfReadRows = numberOfReadRows;
+    }
 
-	public BigDecimal getTotalAmountOfTransactionsImported() {
-		return totalAmountOfTransactionsImported;
-	}
+    public BigDecimal getTotalAmountOfTransactionsImported() {
+            return totalAmountOfTransactionsImported;
+    }
 
-	public void setTotalAmountOfTransactionsImported(BigDecimal totalAmountOfTransactionsImported) {
-		this.totalAmountOfTransactionsImported = totalAmountOfTransactionsImported;
-	}
+    public void setTotalAmountOfTransactionsImported(BigDecimal totalAmountOfTransactionsImported) {
+            this.totalAmountOfTransactionsImported = totalAmountOfTransactionsImported;
+    }
 
-	public BigDecimal getTotalAmountOfTransactionsWithError() {
-		return totalAmountOfTransactionsWithError;
-	}
+    public BigDecimal getTotalAmountOfDisbursementsImported() {
+        return totalAmountOfDisbursementsImported;
+    }
 
-	public void setTotalAmountOfTransactionsWithError(BigDecimal totalAmountOfTransactionsWithError) {
-		this.totalAmountOfTransactionsWithError = totalAmountOfTransactionsWithError;
-	}
+    public void setTotalAmountOfDisbursementsImported(BigDecimal totalAmountOfDisbursementsImported) {
+        this.totalAmountOfDisbursementsImported = totalAmountOfDisbursementsImported;
+    }
 
-	public boolean isAmountInformationFilled() {
-		return totalAmountOfTransactionsImported != null && totalAmountOfTransactionsWithError != null;
-	}
+    public BigDecimal getTotalAmountOfTransactionsWithError() {
+            return totalAmountOfTransactionsWithError;
+    }
 
-	public boolean isExtraRowInformationFilled() {
-		return numberOfErrorRows != null && numberOfIgnoredRows != null && numberOfReadRows != null;
-	}
+    public void setTotalAmountOfTransactionsWithError(BigDecimal totalAmountOfTransactionsWithError) {
+            this.totalAmountOfTransactionsWithError = totalAmountOfTransactionsWithError;
+    }
+
+    public boolean isAmountInformationFilled() {
+            return totalAmountOfTransactionsImported != null && totalAmountOfTransactionsWithError != null;
+    }
+
+    public boolean isExtraRowInformationFilled() {
+            return numberOfErrorRows != null && numberOfIgnoredRows != null && numberOfReadRows != null;
+    }
 
     public int getNumberRowSuccessfullyParsed() {
         return this.numberRowSuccessfullyParsed;

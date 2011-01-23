@@ -41,6 +41,7 @@ import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.PaymentData;
+import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
@@ -79,14 +80,14 @@ public class StandardAccountService implements AccountService {
     private LoanBusinessService loanBusinessService;
     private HibernateTransactionHelper transactionHelper;
 
-    @Autowired
+    
     private LegacyMasterDao legacyMasterDao;
 
     @Autowired
     public StandardAccountService(LegacyAccountDao legacyAccountDao, LegacyLoanDao legacyLoanDao,
                                   LegacyAcceptedPaymentTypeDao acceptedPaymentTypePersistence, PersonnelDao personnelDao,
                                   CustomerDao customerDao, LoanBusinessService loanBusinessService,
-                                  HibernateTransactionHelper transactionHelper) {
+                                  HibernateTransactionHelper transactionHelper, LegacyMasterDao legacyMasterDao) {
         this.legacyAccountDao = legacyAccountDao;
         this.legacyLoanDao = legacyLoanDao;
         this.acceptedPaymentTypePersistence = acceptedPaymentTypePersistence;
@@ -94,6 +95,7 @@ public class StandardAccountService implements AccountService {
         this.customerDao = customerDao;
         this.loanBusinessService = loanBusinessService;
         this.transactionHelper = transactionHelper;
+        this.legacyMasterDao = legacyMasterDao;
     }
 
     @Override
@@ -456,4 +458,20 @@ public class StandardAccountService implements AccountService {
         List<AccountPaymentEntity> existentPaymentsWIthGivenReceiptNumber = this.legacyAccountDao.findAccountPaymentsByReceiptNumber(receiptNumber);
 		return existentPaymentsWIthGivenReceiptNumber != null && !existentPaymentsWIthGivenReceiptNumber.isEmpty();
 	}
+
+
+     @Override
+     public List<AccountReferenceDto> lookupLoanAccountReferencesFromClientPhoneNumberAndWithdrawAmount(
+             String phoneNumber, BigDecimal withdrawAmount) throws Exception {
+        List<AccountBO> accounts = this.legacyAccountDao.findApprovedLoansForClientWithPhoneNumber(phoneNumber);
+        List<AccountReferenceDto> result = new ArrayList<AccountReferenceDto>();
+        for (AccountBO account : accounts) {
+            LoanBO loanAccount = (LoanBO)account;
+            if (loanAccount.getLoanAmount().getAmount().compareTo(withdrawAmount) == 0) {
+                result.add(new AccountReferenceDto(account.getAccountId()));
+            }
+        }
+        return result;
+     }
+
 }

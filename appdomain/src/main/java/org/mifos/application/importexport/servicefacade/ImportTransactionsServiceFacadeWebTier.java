@@ -122,6 +122,7 @@ public class ImportTransactionsServiceFacadeWebTier implements ImportTransaction
         "%d rows contained errors and were not imported\n" +
         "\n" +
         "Total amount of transactions imported: %s\n" +
+        "Total amount of disbursements imported: %s\n" +
         "Total amount of transactions with error: %s\n" +
         "\n" +
         "%s";
@@ -137,24 +138,37 @@ public class ImportTransactionsServiceFacadeWebTier implements ImportTransaction
                 result.getNumberOfIgnoredRows(),
                 result.getNumberOfErrorRows(),
                 new Money(Money.getDefaultCurrency(), result.getTotalAmountOfTransactionsImported()).toString(),
+                new Money(Money.getDefaultCurrency(), result.getTotalAmountOfDisbursementsImported().toString()),
                 new Money(Money.getDefaultCurrency(), result.getTotalAmountOfTransactionsWithError()).toString(),
                 rowErrors);
     }
 
     @Override
-    public ParseResultDto confirmImport(String importPluginClassname, FileInputStream transactionsTempFile) {
+    public ParseResultDto confirmImport(String importPluginClassname, String tempFileName) {
 
         MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = new UserContextFactory().create(mifosUser);
 
+        FileInputStream fileInput = null;
         try {
             final TransactionImport transactionImport = getInitializedImportPlugin(importPluginClassname, userContext.getId());
-            final ParseResultDto importResult = transactionImport.parse(transactionsTempFile);
+            fileInput = new FileInputStream(tempFileName);
+            final ParseResultDto importResult = transactionImport.parse(fileInput);
+            fileInput.close();
 
-            transactionImport.store(transactionsTempFile);
+            fileInput = new FileInputStream(tempFileName);
+            transactionImport.store(fileInput);
             return importResult;
         } catch (Exception e) {
             throw new MifosRuntimeException(e);
+        } finally {
+            if (fileInput != null) {
+                try {
+                    fileInput.close();
+                } catch (Exception e2) {
+                    throw new MifosRuntimeException(e2);
+                }
+            }
         }
     }
 }

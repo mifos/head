@@ -20,7 +20,9 @@
 
 package org.mifos.platform.accounting.service;
 
+import java.util.ArrayList;
 import java.util.List;
+
 import org.joda.time.LocalDate;
 import org.mifos.platform.accounting.AccountingDto;
 import org.mifos.platform.accounting.dao.IAccountingDao;
@@ -31,9 +33,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class AccountingServiceImpl implements IAccountingService {
 
-    private AccountingDataCacheManager cacheManager;
+    private final AccountingDataCacheManager cacheManager;
 
-    private IAccountingDao accountingDao;
+    private final IAccountingDao accountingDao;
 
     @Autowired
     public AccountingServiceImpl(AccountingDataCacheManager cacheManager, IAccountingDao accountingDao) {
@@ -42,7 +44,7 @@ public class AccountingServiceImpl implements IAccountingService {
     }
 
     @Override
-    public String getTallyOutputFor(LocalDate startDate, LocalDate endDate) throws Exception {
+    public final String getTallyOutputFor(LocalDate startDate, LocalDate endDate) {
         String fileName = getTallyOutputFileName(startDate, endDate);
 
         List<AccountingDto> accountingData = getAccountingDataFor(startDate, endDate);
@@ -55,34 +57,36 @@ public class AccountingServiceImpl implements IAccountingService {
     }
 
     @Override
-    public List<AccountingDto> getAccountingDataFor(LocalDate startDate, LocalDate endDate) throws Exception {
+    public List<AccountingDto> getAccountingDataFor(LocalDate startDate, LocalDate endDate) {
         String fileName = cacheManager.getCacheFileName(startDate, endDate);
 
         if (cacheManager.isAccountingDataAlreadyInCache(fileName)) {
             return getAccoutingDataFromCache(fileName);
         }
-        return getAccoutningDataFromDatabaseAfterCaching(startDate, endDate);
-    }
-
-    private List<AccountingDto> getAccoutningDataFromDatabaseAfterCaching(LocalDate startDate, LocalDate endDate) throws Exception {
-        List<AccountingDto> accountingData = accountingDao.getAccountingData(startDate, endDate);
-        if (!accountingData.isEmpty()) {
-            cacheManager.writeAccountingDataToCache(accountingData, cacheManager.getCacheFileName(startDate, endDate));
-        }
+        List<AccountingDto> accountingData = new ArrayList<AccountingDto>();
+        accountingData = getAccoutningDataFromDatabaseAfterCaching(startDate, endDate);
         return accountingData;
     }
 
-    private List<AccountingDto> getAccoutingDataFromCache(String fileName) throws Exception {
+    private List<AccountingDto> getAccoutningDataFromDatabaseAfterCaching(LocalDate startDate, LocalDate endDate) {
+        List<AccountingDto> accountingData = accountingDao.getAccountingDataByDate(startDate, endDate);
+        if (!accountingData.isEmpty()) {
+            cacheManager.writeAccountingDataToCache(accountingData, cacheManager.getCacheFileName(startDate, endDate));
+        }
+        return cacheManager.getAccoutingDataFromCache(cacheManager.getCacheFileName(startDate, endDate));
+    }
+
+    private List<AccountingDto> getAccoutingDataFromCache(String fileName) {
         return cacheManager.getAccoutingDataFromCache(fileName);
     }
 
     @Override
-    public String getTallyOutputFileName(LocalDate startDate, LocalDate endDate) throws Exception{
-       return cacheManager.getTallyOutputFileName(startDate, endDate);
+    public String getTallyOutputFileName(LocalDate startDate, LocalDate endDate) {
+        return cacheManager.getTallyOutputFileName(startDate, endDate);
     }
 
     @Override
-    public List<AccountingCacheFileInfo> getAccountingDataCacheInfo() throws Exception{
+    public List<AccountingCacheFileInfo> getAccountingDataCacheInfo() {
         return cacheManager.getAccountingDataCacheInfo();
     }
 

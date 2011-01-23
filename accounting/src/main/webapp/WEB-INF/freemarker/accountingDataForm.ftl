@@ -19,15 +19,54 @@
 *  explanation of the license and how it is applied.
 --]
 [#include "layout.ftl"]
+[@adminLeftPaneLayout] <!--  Main Content Begins-->
+<span id="page.id" title="accounting_data"/>
+[@mifos.crumbs breadcrumbs /]
+  <div class="content ">
+        <STYLE TYPE="text/css"><!-- @import url(pages/css/jquery/jquery-ui.css); --></STYLE>
+        <script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
+        <script type="text/javascript" src="pages/js/jquery/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="pages/js/jquery/jquery.datePicker.min-2.1.2.js"></script>
+        <script type="text/javascript" src="pages/js/jquery/jquery.datePicker.configuration.js"></script>
+        <STYLE TYPE="text/css"><!-- @import url(pages/css/datepicker/datepicker.css); --></STYLE>
+        <script type="text/javascript" src="pages/framework/js/CommonUtilities.js"></script>
+		<!--[if IE]><script type="text/javascript" src="pages/js/jquery/jquery.bgiframe.js"></script><![endif]-->
+		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
+<script type="text/javascript" src="pages/accounting/js/accounting.js"></script>
+<p class="font15 orangeheading">[@spring.message "accounting.generateaccountingexports"/]</p>
+<p>&nbsp;</p>
+<div>[@spring.message "accounting.generateaccountingexports.instruction"/]</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
 <div align='center'>
-<form>
-From Date: <input type="text" id="fromDate" name="fromDate" readonly="readonly" />
-To Date: <input type="text" id="toDate" name="toDate" readonly="readonly" />
-          <div class="clear">&nbsp;</div>
+<script>addDatePicker();</script>
+<form action='renderAccountingData.ftl' method='post'>
+<div class="prepend-8  span-21 last width90prc">
+<div class="span-20 ">
+     <span class="span-5 rightAlign">
+     [@spring.message "accounting.generateaccountingexports.fromdate"/]:
+     </span>
+     <span class="span-5">
+     <input type="text" id="fromDate" name="fromDate" readonly="readonly" />
+     </span>
+</div>
+<div class="span-20 ">
+     <span class="span-5 rightAlign">
+     [@spring.message "accounting.generateaccountingexports.todate"/]: 
+     </span>
+     <span class="span-5">
+     <input type="text" id="toDate" name="toDate" readonly="readonly" />
+     </span>
+</div>
+</div>   
+	  <div class="clear">&nbsp;</div>
           <div class="buttonsSubmitCancel margin20right">
-             <input type="button" class="buttn" value="[@spring.message "submit"/]" onclick="javascript:submitAccountingDataForm()" />
-             <input type="button" class="buttn2" value="[@spring.message "cancel"/]" onclick="javascript:getAccountingDataForm()" />
+             <input type="submit" class="buttn" value="[@spring.message "submit"/]"/>
+             <input type="button" class="buttn2" value="[@spring.message "cancel"/]" onclick="javascript:goToAdmin()" />
            </div>
            <div class="clear">&nbsp;</div>
 </form>
 </div>
+  </div><!--Main Content Ends-->
+[/@adminLeftPaneLayout]

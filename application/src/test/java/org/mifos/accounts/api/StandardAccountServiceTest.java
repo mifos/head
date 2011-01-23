@@ -46,6 +46,7 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.persistence.LegacyAccountDao;
+import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.persistence.CustomerDao;
@@ -72,6 +73,9 @@ public class StandardAccountServiceTest {
 
     @Mock
     private LegacyAccountDao legacyAccountDao;
+
+    @Mock
+    private LegacyMasterDao legacyMasterDao;
 
     @Mock
     private CustomerPersistence customerPersistence;
@@ -112,8 +116,9 @@ public class StandardAccountServiceTest {
 
     @Before
     public void setup() {
-        standardAccountService = new StandardAccountService(legacyAccountDao, legacyLoanDao,
-                acceptedPaymentTypePersistence, personnelDao, customerDao, loanBusinessService, transactionHelper);
+        standardAccountService = new StandardAccountService(legacyAccountDao, 
+                legacyLoanDao,acceptedPaymentTypePersistence, personnelDao,
+                customerDao, loanBusinessService, transactionHelper, legacyMasterDao);
         Money.setDefaultCurrency(TestUtils.RUPEE);
         accountBO = new LoanAccountBuilder().withCustomer(customerBO).build();
         accountBO.setlegacyAccountDao(legacyAccountDao);

@@ -117,7 +117,7 @@ public class ImportTransactionsAction extends BaseAction {
                 importResult.getTotalAmountOfTransactionsImported()).toString());
 			request.setAttribute("totalAmountOfTransactionsWithError", new Money(Money.getDefaultCurrency(),
                 importResult.getTotalAmountOfTransactionsWithError()).toString());
-
+                        request.setAttribute("totalAmountOfDisbursementsTransactionsImported", new Money(Money.getDefaultCurrency(), importResult.getTotalAmountOfDisbursementsImported().toString()));
 			request.getSession().setAttribute(SESSION_ATTRIBUTE_LOG, importResult.getStatusLogFile().getBytes());
 			request.getSession().setAttribute(SESSION_ATTRIBUTE_LOG_FILENAME, statusLogfileName(importTransactionsFile.getFileName()));
 		} else {
@@ -156,13 +156,11 @@ public class ImportTransactionsAction extends BaseAction {
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         final String tempFilename = (String) request.getSession().getAttribute(IMPORT_TEMPORARY_FILENAME);
         final String importPluginClassname = (String) request.getSession().getAttribute(IMPORT_PLUGIN_CLASSNAME);
-        clearOurSessionVariables(request.getSession());
 
         final ImportTransactionsActionForm importTransactionsForm = (ImportTransactionsActionForm) form;
         final String importTransactionsFileName = importTransactionsForm.getImportTransactionsFile().getFileName();
 
-        FileInputStream transactionsTempFile = new FileInputStream(tempFilename);
-        final ParseResultDto importResult = this.importTransactionsServiceFacade.confirmImport(importPluginClassname, transactionsTempFile);
+        final ParseResultDto importResult = this.importTransactionsServiceFacade.confirmImport(importPluginClassname, tempFilename);
 
         if (null != importResult.getParseErrors() && !importResult.getParseErrors().isEmpty()) {
             for (String error : importResult.getParseErrors()) {
@@ -174,7 +172,6 @@ public class ImportTransactionsAction extends BaseAction {
 
         logger.info(importResult.getNumberRowSuccessfullyParsed() + " transaction(s) imported from "+ importTransactionsFileName + ".");
 
-        new File(tempFilename).delete();
         return mapping.findForward("import_confirm");
     }
 

@@ -23,9 +23,13 @@ package org.mifos.platform.accounting;
 public enum VoucherType {
     PAYMENT("Payment"), JOURNAL("Journal"), RECEIPT("Receipt");
 
-    public String value;
+    private final String value;
 
     VoucherType(final String value) {
-	this.value = value;
+        this.value = value;
+    }
+
+    public String getValue() {
+        return value;
     }
 }

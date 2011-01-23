@@ -36,7 +36,6 @@ public class ViewOrganizationSettingsPage extends MifosPage {
 
     }
 
-
     public void verifyFiscalYear(String[] expectedData) {
         for (String expected_FiscalYear : expectedData) {
             Assert.assertTrue(selenium.isTextPresent(expected_FiscalYear), "Expected settings in Fiscal year category: " + expected_FiscalYear);

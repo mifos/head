@@ -352,13 +352,6 @@ public class CustomerAccountBO extends AccountBO {
                 break;
             }
 
-            BigDecimal miscPenaltyToPay = leftFromPaidIn.min(customerSchedule.getMiscPenaltyDue().getAmount());
-            if (miscPenaltyToPay.compareTo(BigDecimal.ZERO) > 0) {
-                customerSchedule.payMiscPenalty(new Money(totalPaid.getCurrency(), miscPenaltyToPay));
-                customerSchedule.setPaymentDate(new java.sql.Date(paymentData.getTransactionDate().getTime()));
-                leftFromPaidIn = leftFromPaidIn.subtract(miscPenaltyToPay);
-            }
-
             final List<FeesTrxnDetailEntity> feeTrxns = new ArrayList<FeesTrxnDetailEntity>();
             for (AccountFeesActionDetailEntity accountFeesActionDetail : customerSchedule.getAccountFeesActionDetails()) {
                 if (leftFromPaidIn.compareTo(BigDecimal.ZERO) > 0) {
@@ -370,6 +363,13 @@ public class CustomerAccountBO extends AccountBO {
                     feeTrxns.add(feesTrxnDetailBO);
                     leftFromPaidIn = leftFromPaidIn.subtract(feeFromScheduleToPay);
                 }
+            }
+
+            BigDecimal miscPenaltyToPay = leftFromPaidIn.min(customerSchedule.getMiscPenaltyDue().getAmount());
+            if (miscPenaltyToPay.compareTo(BigDecimal.ZERO) > 0) {
+                customerSchedule.payMiscPenalty(new Money(totalPaid.getCurrency(), miscPenaltyToPay));
+                customerSchedule.setPaymentDate(new java.sql.Date(paymentData.getTransactionDate().getTime()));
+                leftFromPaidIn = leftFromPaidIn.subtract(miscPenaltyToPay);
             }
 
             BigDecimal miscFeeToPay = BigDecimal.ZERO;

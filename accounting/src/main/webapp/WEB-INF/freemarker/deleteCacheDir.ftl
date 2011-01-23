@@ -1,5 +1,4 @@
- [#ftl]
-[#--
+ [#ftl][#--
 * Copyright (c) 2005-2010 Grameen Foundation USA
 *  All rights reserved.
 *
@@ -17,8 +16,4 @@
 *
 *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 *  explanation of the license and how it is applied.
---]
-[#include "layout.ftl"]
-[#if result]
-Data store has been cleaned
-[/#if]
+--][#if result]true[#else]false[/#if]

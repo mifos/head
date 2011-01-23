@@ -20,21 +20,58 @@
 
 package org.mifos.platform.accounting.service;
 
-import static org.junit.Assert.fail;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.junit.Ignore;
+import org.joda.time.LocalDate;
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mifos.platform.accounting.AccountingDto;
+import org.mifos.platform.accounting.dao.IAccountingDao;
+import org.mockito.Mock;
+import static org.mockito.Mockito.*;
+import org.mockito.runners.MockitoJUnitRunner;
 
+@RunWith(MockitoJUnitRunner.class)
 public class AccountingServiceTest {
 
-	@Test @Ignore
-	public void testGetTallyOutputFor() {
-		fail("Not yet implemented");
-	}
+    @Mock
+    private IAccountingDao accountingDao;
 
-	@Test @Ignore
-	public void testGetAccountingDataFor() {
-		fail("Not yet implemented");
-	}
+    @Mock
+    private AccountingDataCacheManager cacheManager;
 
+    IAccountingService accountingService;
+
+    @Before
+    public void setUp() {
+        accountingService = new AccountingServiceImpl(cacheManager, accountingDao);
+    }
+
+    @Test
+    public void testGetTallyOutputFileName() throws Exception {
+        when(cacheManager.getTallyOutputFileName(any(LocalDate.class), any(LocalDate.class))).thenReturn("DummyFileName");
+        String fileName = accountingService.getTallyOutputFileName(createDate(2010, 8, 10), createDate(2010, 8, 10));
+        Assert.assertEquals("DummyFileName", fileName);
+    }
+
+    @Test
+    public void testGetTallyOutputFromCache() throws Exception {
+        when(cacheManager.getTallyOutputFileName(any(LocalDate.class), any(LocalDate.class))).thenReturn("DummyFileName");
+        List<AccountingDto> dataFromCache = new ArrayList<AccountingDto> ();
+        dataFromCache.add(new AccountingDto("branch", "2010-10-12", "RECEIPT", "234324", "GLCODE NAME", "5", "546"));
+        dataFromCache.add(new AccountingDto("branch", "2010-10-12", "RECEIPT", "15249", "GLCODE NAME", "6", "544"));
+        when(cacheManager.getAccoutingDataFromCache(any(String.class))).thenReturn(dataFromCache);
+        when(cacheManager.isAccountingDataAlreadyInCache(any(String.class))).thenReturn(true);
+
+        String output = accountingService.getTallyOutputFor(createDate(2010, 8, 10), createDate(2010, 8, 10));
+
+        Assert.assertTrue("Should be receipt type",output.contains("VCHTYPE=\"Receipt\""));
+    }
+
+    private LocalDate createDate(int year, int month, int day) {
+        return new LocalDate(year, month, day);
+    }
 }
