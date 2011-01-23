@@ -124,7 +124,7 @@ public class ClientLoanTransactionHistoryTest extends UiTestCaseBase {
         params.setNote("Approved.");
         loanTestHelper.changeLoanAccountStatus(loanId, params);
         //Then
-        loanTestHelper.verifyLastEntryInStatusHistory(loanId, loanTestHelper.PENDING_APPROVAL, loanTestHelper.APPROVED);
+        loanTestHelper.verifyLastEntryInStatusHistory(loanId, EditLoanAccountStatusParameters.PENDING_APPROVAL, EditLoanAccountStatusParameters.APPROVED);
         //When
         loanTestHelper.changeLoanAccountInformation(loanId, new CreateLoanAccountSubmitParameters(), editLoanAccountInformationParameters);
         loanTestHelper.disburseLoan(loanId, disburseParameters);

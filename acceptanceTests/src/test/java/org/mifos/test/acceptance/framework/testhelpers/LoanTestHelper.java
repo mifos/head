@@ -77,10 +77,6 @@ import com.thoughtworks.selenium.Selenium;
  *
  */
 public class LoanTestHelper {
-
-    public final static String APPROVED = "Application Approved";
-    public final static String PENDING_APPROVAL = "Application Pending Approval";
-    public final static String CANCEL_LOAN_REVERSAL = "Cancel  Loan reversal";
     private final Selenium selenium;
     private final NavigationHelper navigationHelper;
 
@@ -177,7 +173,7 @@ public class LoanTestHelper {
         }
 
         loanAccountPage = editAccountStatusConfirmationPage.submitAndNavigateToLoanAccountPage();
-        loanAccountPage.verifyStatus(params.getStatus());
+        loanAccountPage.verifyStatus(params.getStatus(), params.getCancelReason());
     }
 
     public void verifyLastEntryInStatusHistory(String loanId, String oldStatus, String newStatus) {
@@ -378,7 +374,7 @@ public class LoanTestHelper {
      */
     public void verifyHistoryAndSummaryReversedLoan(ClosedAccountsPage closedAccountPage, String loanID, String totalOriginalLoan, String totalAmountPaid, String totalLoanBalance) {
         LoanAccountPage loanAccountPage = closedAccountPage.verifyAndNavigateToOneClosedLoan(loanID);
-        loanAccountPage.verifyStatus(CANCEL_LOAN_REVERSAL);
+        loanAccountPage.verifyStatus(EditLoanAccountStatusParameters.CANCEL, EditLoanAccountStatusParameters.CANCEL_REASON_LOAN_REVERSAL);
         if(totalOriginalLoan != null) {
             loanAccountPage.verifyTotalOriginalLoan(totalOriginalLoan);
             loanAccountPage.verifyTotalAmountPaid(totalAmountPaid);

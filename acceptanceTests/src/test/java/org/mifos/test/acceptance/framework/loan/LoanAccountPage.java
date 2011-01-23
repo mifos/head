@@ -42,7 +42,7 @@ public class LoanAccountPage extends AbstractPage {
     }
 
     public void verifyLoanAmount(String amount) {
-        Assert.assertEquals(getOriginalLoanAmount(), amount);
+        Assert.assertEquals(Double.parseDouble(getOriginalLoanAmount()), Double.parseDouble(amount));
     }
 
     public void verifyLoanIsForClient(String clientName){
@@ -83,9 +83,18 @@ public class LoanAccountPage extends AbstractPage {
         Assert.assertTrue(selenium.isTextPresent("of payments: "+payments));
         Assert.assertTrue(selenium.isTextPresent("of missed payments: "+missedPayments));
     }
-
+    
     public void verifyStatus(String status) {
-        Assert.assertEquals(selenium.getText("loanaccountdetail.text.status"), status);
+        verifyStatus(status, null);
+    }
+
+    public void verifyStatus(String status, String cancelReason) {
+        if (EditLoanAccountStatusParameters.CANCEL.equals(status)) {
+            Assert.assertEquals(selenium.getText("loanaccountdetail.text.status"), status + "  " + cancelReason);
+        }
+        else {
+            Assert.assertEquals(selenium.getText("loanaccountdetail.text.status"), status);
+        }
     }
 
     public void verifyNumberOfInstallments(String numberOfInstallments) {
