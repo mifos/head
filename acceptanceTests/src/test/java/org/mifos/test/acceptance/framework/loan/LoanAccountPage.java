@@ -45,6 +45,10 @@ public class LoanAccountPage extends AbstractPage {
         Assert.assertEquals(Double.parseDouble(getOriginalLoanAmount()), Double.parseDouble(amount));
     }
 
+    public void verifyExactLoanAmount(String amount) {
+        Assert.assertEquals(getOriginalLoanAmount(), amount);
+    }
+
     public void verifyLoanIsForClient(String clientName){
         Assert.assertTrue(selenium.isTextPresent(clientName));
     }
