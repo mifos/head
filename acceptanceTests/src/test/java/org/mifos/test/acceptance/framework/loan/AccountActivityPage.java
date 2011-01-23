@@ -67,6 +67,6 @@ public class AccountActivityPage extends MifosPage{
     }
 
     public void verifyLastTotalPaid(String amount){
-        Assert.assertEquals(getLastTotalPaid(),amount);
+        Assert.assertEquals(Double.parseDouble(getLastTotalPaid()), Double.parseDouble(amount));
     }
 }
