@@ -530,6 +530,9 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : getAccountFeesActionDetails()) {
             balance = accountFeesActionDetailEntity.payFee(balance);
             Integer feeId = accountFeesActionDetailEntity.getAccountFeesActionDetailId();
+            if (feeId == null) { // special workaround for MIFOS-4517
+                feeId = accountFeesActionDetailEntity.hashCode();
+            }
             Money feeAllocated = accountFeesActionDetailEntity.getFeeAllocated();
             paymentAllocation.allocateForFee(feeId, feeAllocated);
         }
