@@ -22,12 +22,10 @@
         <dependency>
             <groupId>org.mifos</groupId>
             <artifactId>mifos-common</artifactId>
-            <version>1.8-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.mifos</groupId>
             <artifactId>mifos-serviceInterfaces</artifactId>
-            <version>1.8-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.markdownj</groupId>
@@ -77,10 +75,6 @@
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
         <dependency>
-            <groupId>findbugs</groupId>
-            <artifactId>annotations</artifactId>
-        </dependency>
-        <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
         </dependency>
@@ -96,6 +90,7 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
         </dependency>
+        
         <dependency>
             <groupId>org.dbunit</groupId>
             <artifactId>dbunit</artifactId>
@@ -114,6 +109,11 @@
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>findbugs</groupId>
+            <artifactId>annotations</artifactId>
             <scope>provided</scope>
         </dependency>
     </dependencies>
