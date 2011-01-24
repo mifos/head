@@ -26,7 +26,7 @@
 <div class="container webflow">
 	<br/>
 	<!-- flow progress indicator -->
-	<div class="bread-crumb borders span-24">
+	<div class="progress-tracker borders span-24">
 		<ul>
 		[#assign currentStateEncountered = false]
 		[#list states as state]

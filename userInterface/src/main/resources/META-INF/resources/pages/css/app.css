@@ -41,21 +41,21 @@ input.cancel
 	border-top: 0px;
 }
 
-/* webflow bread crumb */
-.bread-crumb
+/* webflow progress tracker */
+.progress-tracker
 {
 	color: silver;
 	height: 2em;
 }
 
-.bread-crumb ul
+.progress-tracker ul
 {
 	list-style: none;
 	padding: none;
 	margin: none;
 }
 
-.bread-crumb li
+.progress-tracker li
 {
 	float: left;
 	margin: 0 0.15em;
@@ -70,7 +70,7 @@ input.cancel
 	text-align: center;	
 }
 
-.bread-crumb li.active
+.progress-tracker li.active
 {
 	color: #CC6601;
 	font-weight: bold;
@@ -80,7 +80,7 @@ input.cancel
 	padding-left: 20px;
 }
 
-.bread-crumb li.completed
+.progress-tracker li.completed
 {
 	color: #C6C6C6;
 	font-weight: bold;
@@ -90,7 +90,7 @@ input.cancel
 	padding-left: 20px;
 }
 
-.bread-crumb li.incomplete
+.progress-tracker li.incomplete
 {
 	color: #F4CC9C;
 	font-weight: bold;
