@@ -33,6 +33,8 @@ public interface SavingsProductDao {
 
     SavingsOfferingBO findById(Integer productId);
 
+    SavingsOfferingBO findBySystemId(String globalPrdOfferingNum);
+
     ProductTypeEntity findSavingsProductConfiguration();
 
     void save(ProductTypeEntity savingsProductConfiguration);

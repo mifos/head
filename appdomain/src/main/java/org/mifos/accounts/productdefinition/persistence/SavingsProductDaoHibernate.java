@@ -34,7 +34,6 @@ public class SavingsProductDaoHibernate implements SavingsProductDao {
         this.genericDao = genericDao;
     }
 
-
     @Override
     @SuppressWarnings("unchecked")
     public List<PrdOfferingDto> findSavingsProductByCustomerLevel(CustomerLevelEntity customerLevel) {
@@ -77,6 +76,15 @@ public class SavingsProductDaoHibernate implements SavingsProductDao {
         queryParameters.put("prdOfferingId", productId.shortValue());
 
         return (SavingsOfferingBO) this.genericDao.executeUniqueResultNamedQuery("savingsProduct.byid", queryParameters);
+    }
+
+    @Override
+    public SavingsOfferingBO findBySystemId(String globalPrdOfferingNum) {
+
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("globalPrdOfferingNum", globalPrdOfferingNum);
+
+        return (SavingsOfferingBO) this.genericDao.executeUniqueResultNamedQuery("savingsProduct.byglobalid", queryParameters);
     }
 
     @Override

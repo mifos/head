@@ -175,11 +175,25 @@ public class SavingsBO extends AccountBO {
     /**
      * Responsible for creating savings account in valid initial state.
      */
+    public static SavingsBO createOpeningBalanceIndividualSavingsAccount(CustomerBO customer, SavingsOfferingBO savingsProduct,
+            Money recommendedOrMandatoryAmount, AccountState savingsAccountState, LocalDate createdDate, Integer createdById,
+            SavingsAccountActivationDetail activationDetails, PersonnelBO createdBy, Money openingBalance) {
+
+        RecommendedAmountUnit recommendedAmountUnit = RecommendedAmountUnit.COMPLETE_GROUP;
+        SavingsBO savingsAccount = new SavingsBO(savingsAccountState, customer, activationDetails, createdDate, createdById, savingsProduct, recommendedAmountUnit, recommendedOrMandatoryAmount, createdBy, openingBalance);
+
+        return savingsAccount;
+    }
+
+    /**
+     * Responsible for creating savings account in valid initial state.
+     */
     public static SavingsBO createIndividalSavingsAccount(CustomerBO customer, SavingsOfferingBO savingsProduct,
             Money recommendedOrMandatoryAmount, AccountState savingsAccountState, LocalDate createdDate, Integer createdById,
             CalendarEvent calendarEvents, PersonnelBO createdBy) {
 
-        SavingsAccountActivationDetail activationDetails = determineAccountActivationDetails(customer, savingsProduct, recommendedOrMandatoryAmount, savingsAccountState, calendarEvents);
+        LocalDate activationDate = new LocalDate();
+        SavingsAccountActivationDetail activationDetails = determineAccountActivationDetails(customer, savingsProduct, recommendedOrMandatoryAmount, savingsAccountState, calendarEvents, activationDate);
 
         Money startingBalance = Money.zero(savingsProduct.getCurrency());
         RecommendedAmountUnit recommendedAmountUnit = RecommendedAmountUnit.COMPLETE_GROUP;
@@ -269,14 +283,12 @@ public class SavingsBO extends AccountBO {
     }
 
     public static SavingsAccountActivationDetail determineAccountActivationDetails(CustomerBO customer, SavingsOfferingBO savingsProduct,
-            Money recommendedOrMandatoryAmount, AccountState savingsAccountState, CalendarEvent calendarEvents) {
+            Money recommendedOrMandatoryAmount, AccountState savingsAccountState, CalendarEvent calendarEvents, LocalDate activationDate) {
 
         List<AccountActionDateEntity> scheduledPayments = new ArrayList<AccountActionDateEntity>();
-        LocalDate activationDate = new LocalDate();
         LocalDate nextInterestPostingDate = new LocalDate();
 
         if (savingsAccountState.isActiveSavingsAccountState()) {
-            activationDate = new LocalDate();
             ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(customer.getCustomerMeetingValue());
             ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(calendarEvents.getWorkingDays(), calendarEvents.getHolidays());
 
@@ -291,7 +303,7 @@ public class SavingsBO extends AccountBO {
             }
 
             InterestScheduledEvent interestPostingEvent = new SavingsInterestScheduledEventFactory().createScheduledEventFrom(savingsProduct.getFreqOfPostIntcalc().getMeeting());
-            nextInterestPostingDate = interestPostingEvent.nextMatchingDateAfter(new LocalDate(startOfFiscalYear()),activationDate);
+            nextInterestPostingDate = interestPostingEvent.nextMatchingDateAfter(new LocalDate(startOfFiscalYear()), activationDate);
         }
 
         return new SavingsAccountActivationDetail(activationDate, nextInterestPostingDate, scheduledPayments);

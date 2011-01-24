@@ -390,4 +390,7 @@
 	<query name="loanProduct.byglobalid">
 		<![CDATA[from LoanOfferingBO lp where lp.globalPrdOfferingNum=:globalPrdOfferingNum]]>
 	</query>
+	<query name="savingsProduct.byglobalid">
+		<![CDATA[from SavingsOfferingBO sp where sp.globalPrdOfferingNum=:globalPrdOfferingNum]]>
+	</query>
 </hibernate-mapping>

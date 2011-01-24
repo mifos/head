@@ -47,6 +47,7 @@ import org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
+import org.mifos.accounts.savings.business.SavingsAccountActivationDetail;
 import org.mifos.accounts.savings.business.SavingsAccountTypeInspector;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.business.SavingsScheduleEntity;
@@ -100,6 +101,7 @@ import org.mifos.dto.domain.CreateAccountNote;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.DueOnDateDto;
 import org.mifos.dto.domain.NoteSearchDto;
+import org.mifos.dto.domain.OpeningBalanceSavingsAccount;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.domain.SavingsAccountClosureDto;
 import org.mifos.dto.domain.SavingsAccountCreationDto;
@@ -686,6 +688,50 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     }
 
     @Override
+    public String createSavingsAccount(OpeningBalanceSavingsAccount openingBalanceSavingsAccount) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        LocalDate createdDate = new LocalDate();
+        Integer createdById = user.getUserId();
+        PersonnelBO createdBy = this.personnelDao.findPersonnelById(createdById.shortValue());
+
+        CustomerBO customer = this.customerDao.findCustomerBySystemId(openingBalanceSavingsAccount.getCustomerGlobalId());
+        SavingsOfferingBO savingsProduct = this.savingsProductDao.findBySystemId(openingBalanceSavingsAccount.getProductGlobalId());
+
+        AccountState savingsAccountState = AccountState.fromShort(openingBalanceSavingsAccount.getAccountState());
+        Money recommendedOrMandatory = new Money(savingsProduct.getCurrency(), openingBalanceSavingsAccount.getRecommendedOrMandatoryAmount());
+        Money openingBalance = new Money(savingsProduct.getCurrency(), openingBalanceSavingsAccount.getOpeningBalance());
+
+        LocalDate activationDate = openingBalanceSavingsAccount.getActivationDate();
+
+        CalendarEvent calendarEvents = this.holidayDao.findCalendarEventsForThisYearAndNext(customer.getOfficeId());
+
+        SavingsAccountActivationDetail activationDetails = SavingsBO.determineAccountActivationDetails(customer, savingsProduct, recommendedOrMandatory, savingsAccountState, calendarEvents, activationDate);
+
+        SavingsBO savingsAccount = SavingsBO.createOpeningBalanceIndividualSavingsAccount(customer, savingsProduct, recommendedOrMandatory, savingsAccountState,
+                createdDate, createdById, activationDetails, createdBy, openingBalance);
+
+        try {
+            this.transactionHelper.startTransaction();
+            this.savingsDao.save(savingsAccount);
+            this.transactionHelper.flushSession();
+            savingsAccount.generateSystemId(createdBy.getOffice().getGlobalOfficeNum());
+            this.savingsDao.save(savingsAccount);
+            this.transactionHelper.commitTransaction();
+            return savingsAccount.getGlobalAccountNum();
+        } catch (BusinessRuleException e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new BusinessRuleException(e.getMessageKey(), e);
+        } catch (Exception e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            this.transactionHelper.closeSession();
+        }
+    }
+
+    @Override
     public Long createSavingsAccount(SavingsAccountCreationDto savingsAccountCreation) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -699,9 +745,6 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 
         Money recommendedOrMandatory = new Money(savingsProduct.getCurrency(), savingsAccountCreation.getRecommendedOrMandatoryAmount());
         AccountState savingsAccountState = AccountState.fromShort(savingsAccountCreation.getAccountState());
-
-        // NOTE - doesn't look like we create custom fields like this anymore but with questionaire API
-//        List<CustomerCustomFieldEntity> savingsCustomFields = CustomerCustomFieldEntity.fromDto(savingsAccountCreation.getCustomFields(), null);
 
         CalendarEvent calendarEvents = this.holidayDao.findCalendarEventsForThisYearAndNext(customer.getOfficeId());
 
