@@ -43,7 +43,8 @@
         	<props>
 		        <prop key="auto_import">
 		       		widgets/widgets.ftl as widget,
-		        	layouts/layouts.ftl as layout
+		        	layouts/layouts.ftl as layout,
+		        	/spring.ftl as spring
 		        </prop>
         	</props>
         </property>
