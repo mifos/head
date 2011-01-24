@@ -368,6 +368,23 @@ public class LoanAccountActionFormTest extends TestCase {
         Assert.assertEquals(0, actionErrors.size());
     }
 
+    public void testTransactionDateIsRequiredOnPayment() {
+        Money amount = new Money(rupee, "10");
+        RepaymentScheduleInstallment installment = new RepaymentScheduleInstallment(1, new Date(), amount, amount,
+                amount, amount, amount, locale);
+        PaymentDataHtmlBean bean = new PaymentDataHtmlBean(null, null, installment);
+        bean.setAmount("10");
+        bean.setDate("");
+        ActionErrors errors = new ActionErrors();
+        form.validateTransactionDateOnPayment(errors, bean);
+        Assert.assertEquals(1, errors.size());
+        errors = new ActionErrors();
+        bean.setDate("10/12/2010");
+        form.validateTransactionDateOnPayment(errors, bean);
+        Assert.assertEquals(0, errors.size());
+    }
+
+
     private ArrayList <FeeDto> createDefaultFees() {
         AmountFeeBO amountFee = createMock(AmountFeeBO.class);
         expect(amountFee.getFeeId()).andReturn(Short.valueOf("1"));

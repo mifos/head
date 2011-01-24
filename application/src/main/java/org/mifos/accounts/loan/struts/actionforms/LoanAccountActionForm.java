@@ -1375,7 +1375,7 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
         return select(paymentDataBeans, new org.mifos.framework.util.helpers.Predicate<PaymentDataHtmlBean>() {
             @Override
             public boolean evaluate(PaymentDataHtmlBean bean) {
-                return bean.hasValidAmount() && bean.hasTransactionDate();
+                return bean.hasValidAmount();
             }
         });
     }
@@ -1397,6 +1397,7 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
 
     private void validatePaymentDataHtmlBean(ActionErrors errors, MifosCurrency currency, Locale locale, CustomerBO customer,
                                              PaymentDataHtmlBean bean) throws MeetingException, InvalidDateException {
+        validateTransactionDateOnPayment(errors, bean);
         if (bean.hasValidAmount() && bean.hasTransactionDate()) {
             if (customer.isValidMeetingDate(bean.getTransactionDate())) {
                 validateTotalAmount(errors, locale, currency, bean);
@@ -1405,6 +1406,13 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
                 errors.add(LoanExceptionConstants.INVALIDTRANSACTIONDATE, new ActionMessage(
                         LoanExceptionConstants.INVALIDTRANSACTIONDATE));
             }
+        }
+    }
+
+    void validateTransactionDateOnPayment(ActionErrors errors, PaymentDataHtmlBean bean) {
+        if (bean.hasValidAmount() && bean.hasNoTransactionDate()) {
+            errors.add(LoanExceptionConstants.INVALIDTRANSACTIONDATE, new ActionMessage(
+                    LoanExceptionConstants.INVALIDTRANSACTIONDATE));
         }
     }
 
