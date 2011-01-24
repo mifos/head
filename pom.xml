@@ -39,6 +39,7 @@
         <powermock.version>1.4.7</powermock.version>
     </properties>
     <modules>
+        <module>db</module>
         <module>common</module>
         <module>domain-dto</module>
         <module>testFramework</module>
