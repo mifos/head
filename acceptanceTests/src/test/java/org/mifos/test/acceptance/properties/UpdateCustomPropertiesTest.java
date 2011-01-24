@@ -87,7 +87,8 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void changeDecimalsToThree() throws Exception {
+    //http://mifosforge.jira.com/browse/MIFOSTEST-200
+    public void changeDigitsAfterDecimal() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml", dataSource, selenium);
 
         propertiesHelper.setDigitsAfterDecimal(3);
@@ -95,7 +96,20 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
         LoanAccountPage loanAccountPage  = navigationHelper.navigateToLoanAccountPage("000100000000004");
         loanAccountPage.verifyExactLoanAmount("1000.000");
 
+        propertiesHelper.setDigitsAfterDecimal(2);
+
+        loanAccountPage  = navigationHelper.navigateToLoanAccountPage("000100000000004");
+        loanAccountPage.verifyExactLoanAmount("1000.00");
+
+        propertiesHelper.setDigitsAfterDecimal(0);
+
+        loanAccountPage  = navigationHelper.navigateToLoanAccountPage("000100000000004");
+        loanAccountPage.verifyExactLoanAmount("1000");
+
         propertiesHelper.setDigitsAfterDecimal(1);
+
+        loanAccountPage  = navigationHelper.navigateToLoanAccountPage("000100000000004");
+        loanAccountPage.verifyExactLoanAmount("1000.0");
 
     }
 
