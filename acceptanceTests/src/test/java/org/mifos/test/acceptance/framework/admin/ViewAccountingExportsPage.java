@@ -21,11 +21,32 @@
 package org.mifos.test.acceptance.framework.admin;
 
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
 
 public class ViewAccountingExportsPage extends MifosPage {
+
     public ViewAccountingExportsPage(Selenium selenium) {
         super(selenium);
     }
+
+    public ViewAccountingExportsPage verifyPage() {
+        verifyPage("view_accounting_data_exports");
+        return this;
+    }
+
+    public ViewAccountingExportsPage verifyExportsListExists() {
+        verifyPage();
+        Assert.assertTrue(selenium.isElementPresent("table"),"Accounting exports list table ");
+        return this;
+    }
+
+    public ViewAccountingExportsPage verifyNoExportPresent() {
+        selenium.isTextPresent("NO DATA");
+        return this;
+    }
+
+
+
 }

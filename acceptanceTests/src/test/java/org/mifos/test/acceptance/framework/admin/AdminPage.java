@@ -202,16 +202,16 @@ public class AdminPage extends MifosPage {
         return new SystemInfoPage(selenium);
     }
 
-    public SystemInfoPage navigateToViewAccountingExports() {
+    public ViewAccountingExportsPage navigateToViewAccountingExports() {
         selenium.click("admin.link.viewaccountingexports");
         waitForPageToLoad();
-        return new SystemInfoPage(selenium);
+        return new ViewAccountingExportsPage(selenium);
     }
 
-    public SystemInfoPage navigateToGenerateAccountingExports() {
+    public GenerateAccountingExportPage navigateToGenerateAccountingExports() {
         selenium.click("admin.link.generateaccountingexports");
         waitForPageToLoad();
-        return new SystemInfoPage(selenium);
+        return new GenerateAccountingExportPage(selenium);
     }
 
     public ViewLoanProductsPage navigateToViewLoanProducts() {

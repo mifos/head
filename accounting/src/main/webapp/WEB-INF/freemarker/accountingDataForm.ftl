@@ -20,7 +20,7 @@
 --]
 [#include "layout.ftl"]
 [@adminLeftPaneLayout] <!--  Main Content Begins-->
-<span id="page.id" title="accounting_data"/>
+<span id="page.id" title="accounting_data_form"/>
 [@mifos.crumbs breadcrumbs /]
   <div class="content ">
         <STYLE TYPE="text/css"><!-- @import url(pages/css/jquery/jquery-ui.css); --></STYLE>

@@ -19,7 +19,7 @@
 *  explanation of the license and how it is applied.
 --]
 [#include "layout.ftl"]
-<span id="page.id" title="accounting_data"/>
+<span id="page.id" title="view_accounting_data_exports"/>
         <STYLE TYPE="text/css"><!-- @import url(pages/css/jquery/jquery-ui.css); --></STYLE>
         <script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
         <script type="text/javascript" src="pages/js/jquery/jquery-ui.min.js"></script>
@@ -42,6 +42,7 @@
 [@spring.message "accounting.viewaccountingexports.instruction"/]
 <br />
 <br />
+<div id='table'>
 <table>
 <tr>
 <th class='drawtablehd'>File name</th><th class='drawtablehd'>Last generated</th><th class='drawtablehd'>Import Type</th><th class='drawtablehd'>Accounting Details</th>
@@ -57,6 +58,7 @@
      </tr>
 [/#list]
 </table>
+</div>
 <div class="clear">&nbsp;</div>
  <div class="buttonsSubmitCancel margin20right">
  <input type="button" class="buttn" value="[@spring.message "accounting.clearexports"/]" onclick="javascript:deleteCacheDir()" />

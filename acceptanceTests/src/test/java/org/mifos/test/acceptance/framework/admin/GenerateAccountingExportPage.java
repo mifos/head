@@ -21,11 +21,59 @@
 package org.mifos.test.acceptance.framework.admin;
 
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
 
 public class GenerateAccountingExportPage extends MifosPage {
+
     public GenerateAccountingExportPage(Selenium selenium) {
         super(selenium);
     }
+
+    public GenerateAccountingExportPage verifyPage() {
+        verifyPage("accounting_data_form");
+        return this;
+    }
+
+    public GenerateAccountingExportPage verifyDetailsTableExists() {
+        verifyPage("view_accounting_data_detail");
+        Assert.assertTrue(selenium.isElementPresent("table"),"Accounting data detail table ");
+        return this;
+    }
+
+    public static class GenerateAccountingSubmitParameters {
+
+        private String fromDate;
+        private String toDate;
+
+        public void setToDate(String toDate) {
+            this.toDate = toDate;
+        }
+
+        public String getToDate() {
+            return toDate;
+        }
+
+        public void setFromDate(String fromDate) {
+            this.fromDate = fromDate;
+        }
+
+        public String getFromDate() {
+            return fromDate;
+        }
+
+    }
+
+    public GenerateAccountingExportPage submitAndNavigateToViewAccountingDataPage(
+            GenerateAccountingSubmitParameters formParameters) {
+        selenium.type("toDate", formParameters.getToDate());
+        selenium.type("fromDate", formParameters.getFromDate());
+        selenium.click("submit");
+        waitForPageToLoad();
+
+        return new GenerateAccountingExportPage(selenium);
+
+    }
+
 }

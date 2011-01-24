@@ -19,7 +19,7 @@
 *  explanation of the license and how it is applied.
 --]
 [#include "layout.ftl"]
-<span id="page.id" title="accounting_data"/>
+<span id="page.id" title="view_accounting_data_detail"/>
         <STYLE TYPE="text/css"><!-- @import url(pages/css/jquery/jquery-ui.css); --></STYLE>
         <script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
         <script type="text/javascript" src="pages/js/jquery/jquery-ui.min.js"></script>
