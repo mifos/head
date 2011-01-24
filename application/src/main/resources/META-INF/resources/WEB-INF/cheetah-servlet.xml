@@ -41,7 +41,10 @@
         </property>
         <property name="freemarkerSettings">
         	<props>
-		        <prop key="auto_import">layouts/layouts.ftl as layout</prop>
+		        <prop key="auto_import">
+		       		widgets/widgets.ftl as widget,
+		        	layouts/layouts.ftl as layout
+		        </prop>
         	</props>
         </property>
     </bean>

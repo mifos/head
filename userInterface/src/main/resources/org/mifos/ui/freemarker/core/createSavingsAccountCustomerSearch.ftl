@@ -19,24 +19,26 @@
 *  explanation of the license and how it is applied.
 --]
 
-[@layout.webflow currentState="createSavingsAccount.progress.selectCustomer" 
-                 states=["createSavingsAccount.progress.selectCustomer", 
-                 		 "createSavingsAccount.progress.enterAccountInfo", 
-                 		 "createSavingsAccount.progress.reviewAndSubmit"]] 
+[@layout.webflow currentState="createSavingsAccount.flowState.selectCustomer" 
+                 states=["createSavingsAccount.flowState.selectCustomer", 
+                 		 "createSavingsAccount.flowState.enterAccountInfo", 
+                 		 "createSavingsAccount.flowState.reviewAndSubmit"]] 
 
 <h1>Create Savings Account - <b>Select a customer</b></h1>
 
 <p>Enter a Client or Group or Center name and click Search. Click Cancel to return to Clients & Accounts without submitting information.</p>
-
+<br/>
 <form action="${flowExecutionUrl}" method="post">
-	<div class="row">
-		<label for="searchString">Name:</label>
+	<div class="prepend-6">
+		<label class="span-1" for="searchString">Name:</label>
 		<input type="text" name="searchString">
 	</div>
-	<div class="row">
+	<br/>
+	<div class="prepend-7">
 		<input type="submit" class="submit" value="Search" name="_eventId_searchTermEntered" />
 		<input type="submit" class="cancel" value="Cancel" name="_eventId_cancel" />
 	</div>
 </form>
+<br/>
 
 [/@layout.webflow]

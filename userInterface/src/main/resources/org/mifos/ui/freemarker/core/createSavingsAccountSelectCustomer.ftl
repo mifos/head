@@ -19,10 +19,10 @@
 *  explanation of the license and how it is applied.
 --]
 
-[@layout.webflow currentState="createSavingsAccount.progress.enterAccountInfo" 
-                 states=["createSavingsAccount.progress.selectCustomer", 
-                 		 "createSavingsAccount.progress.enterAccountInfo", 
-                 		 "createSavingsAccount.progress.reviewAndSubmit"]] 
+[@layout.webflow currentState="createSavingsAccount.flowState.enterAccountInfo" 
+                 states=["createSavingsAccount.flowState.selectCustomer", 
+                 		 "createSavingsAccount.flowState.enterAccountInfo", 
+                 		 "createSavingsAccount.flowState.reviewAndSubmit"]] 
 
 <h1>Create Savings account - <b>Select a customer</b></h1>
 <p>To select, click on a resulting Client or Group or Center from the list below. Click Cancel to return to Clients & Accounts without submitting information.</p>

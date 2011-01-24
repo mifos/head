@@ -20,12 +20,13 @@
 --]
 
 [#macro webflow states currentState]
-[@mifos.header "title" /]
-[@mifos.topNavigationNoSecurity currentTab="ClientsAndAccounts" /]
+[@layout.header "title" /]
+[@widget.topNavigationNoSecurity currentTab="ClientsAndAccounts" /]
 
-<div class="content">
+<div class="container webflow">
+	<br/>
 	<!-- flow progress indicator -->
-	<div class="bread-crumb bordered">
+	<div class="bread-crumb borders span-24">
 		<ul>
 		[#assign currentStateEncountered = false]
 		[#list states as state]
@@ -40,13 +41,18 @@
 		[/#list]
 		</ul>
 	</div>
-	<div class="clearfix"/>
 	
 	<!-- flow content -->
-	<div class="flow-content bordered">
-		[#nested]
+	<br/>
+	<div class="content borders no-top-border span-24">
+		<div class="span-1">&nbsp;</div>
+		<div class="span-21">
+			<br/>
+			[#nested]
+		</div>
+		<div class="span-1 last">&nbsp;</div>
 	</div>
 </div>
 
-[@mifos.footer /]
+[@layout.footer /]
 [/#macro]

@@ -19,16 +19,10 @@
 *  explanation of the license and how it is applied.
 --]
 
-[#import "/newblueprintmacros.ftl" as mifos /]
 [#import "/spring.ftl" as spring /]
 
 [#--
-Add all layouts here. Spring is configured to auto load this file, and by extension, all the layouts defined here. 
+Add all widgets here. Spring is configured to auto load this file, and by extension, all widgets declared here. 
 --]
-[#include "common.ftl" /]
-[#include "webflow.ftl" /]
-
-[#--
-[#include "basic.ftl" /]
-[#include "admin.ftl" /]
---]
+[#include "breadcrumb.ftl" /]
+[#include "navigation.ftl" /]

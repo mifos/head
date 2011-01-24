@@ -1,10 +1,10 @@
 [#ftl]
 [#macro basic]
-[@mifos.header "title" /]
+[@header "title" /]
 
 <div class="content">
 [#nested]
 </div>
 
-[@mifos.footer /]
+[@footer /]
 [/#macro]
