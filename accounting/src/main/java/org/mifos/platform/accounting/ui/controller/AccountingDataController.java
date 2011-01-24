@@ -95,6 +95,15 @@ public class AccountingDataController {
         return mav;
     }
 
+    @RequestMapping("confirmExportsDelete.ftl")
+    public final ModelAndView confirmExportsDelete() {
+        ModelAndView mav = new ModelAndView("confirmExportsDelete");
+        List<BreadCrumbsLinks> breadcrumbs = new AdminBreadcrumbBuilder().withLink("accounting.viewaccountingexports",
+        "confirmExportsDelete.ftl").build();
+        mav.addObject("breadcrumbs", breadcrumbs);
+        return mav;
+    }
+
     @RequestMapping("deleteCacheDir.ftl")
     public final ModelAndView deleteCacheDir() {
         ModelAndView mav = new ModelAndView("deleteCacheDir");

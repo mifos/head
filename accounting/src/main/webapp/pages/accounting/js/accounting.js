@@ -27,12 +27,12 @@
     function goToAdmin() {
     window.location.href="AdminAction.do?method=load";
     }
+    
+    function gotToConfirmExportDeletePage() {
+        window.location.href='confirmExportsDelete.ftl';
+     }
 
     function deleteCacheDir() {
-       var result = confirm("Are you sure you want to clear exports? This will clear all exports previously generated");
-        if(!result) {
-           return;
-         }
         $.ajax({
             url   : 'deleteCacheDir.ftl',
             cache : false,
@@ -40,7 +40,7 @@
                     alert(xhr.responseText + thrownError);
                     },
             success : function(data) {
-                      window.location.href=window.location.href;
+                      window.location.href='renderAccountingDataCacheInfo.ftl';
                     }
               })
     }

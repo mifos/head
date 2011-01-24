@@ -20,6 +20,7 @@
 
 package org.mifos.platform.accounting.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.LocalDate;
@@ -59,16 +60,20 @@ public class AccountingServiceImpl implements IAccountingService {
     public final List<AccountingDto> getAccountingDataFor(LocalDate startDate, LocalDate endDate) {
         String fileName = cacheManager.getCacheFileName(startDate, endDate);
         if (!cacheManager.isAccountingDataAlreadyInCache(fileName)) {
-            writeToCache(startDate, endDate);
+            if(!writeToCache(startDate, endDate)) {
+                return new ArrayList<AccountingDto>();
+            }
         }
         return cacheManager.getAccoutingDataFromCache(fileName);
     }
 
-    private void writeToCache(LocalDate startDate, LocalDate endDate) {
+    private boolean writeToCache(LocalDate startDate, LocalDate endDate) {
         List<AccountingDto> accountingData = accountingDao.getAccountingDataByDate(startDate, endDate);
         if (!accountingData.isEmpty()) {
             cacheManager.writeAccountingDataToCache(accountingData, cacheManager.getCacheFileName(startDate, endDate));
+            return true;
         }
+        return false;
     }
 
     @Override
