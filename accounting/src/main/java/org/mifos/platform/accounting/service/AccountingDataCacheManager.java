@@ -29,6 +29,7 @@ import java.io.PrintWriter;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
@@ -158,7 +159,7 @@ public class AccountingDataCacheManager {
     private String parseNumber(String number) {
         // FIXME should use this from common util
         StringBuilder pattern = new StringBuilder();
-        DecimalFormat decimalFormat = new DecimalFormat();
+        DecimalFormat decimalFormat = (DecimalFormat) DecimalFormat.getCurrencyInstance(Locale.ENGLISH);
         for (Short i = 0; i < DIGITS_BEFORE_DECIMAL; i++) {
             pattern.append('#');
         }
