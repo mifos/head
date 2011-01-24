@@ -55,10 +55,10 @@ public class DateUtils {
     private static final Locale dateLocale = new Locale("en", "GB");
     public static final SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy", dateLocale);
 
-    private final static String dbFormat = "yyyy-MM-dd";
+    private static final String dbFormat = "yyyy-MM-dd";
 
     // this configured locale is not used for 1.1 but later
-    // private final static Locale internalLocale = Localization.getInstance()
+    // private static final Locale internalLocale = Localization.getInstance()
     // .getMainLocale();
     private static Locale internalLocale = new LocalizationConverter().getDateLocale();
     private static String dateSeparator = new LocalizationConverter().getDateSeparatorForCurrentLocale();

@@ -37,7 +37,7 @@ import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
-public class TallyXMLGenerator {
+public final class TallyXMLGenerator {
 
     private TallyXMLGenerator() {
         // Hide utility method
@@ -45,14 +45,14 @@ public class TallyXMLGenerator {
 
     private static Configuration freemarkerConfiguration;
 
-    private final static TallyMessageGenerator tallyMessageGenerator = new TallyMessageGenerator();
+    private static final TallyMessageGenerator TALLY_MESSAGE_GENERATOR = new TallyMessageGenerator();
 
     public static String getTallyXML(List<AccountingDto> accountingData, String fileName) {
         Template temp = getTemplate("master.template");
 
         String masterData = "";
         try {
-            List<TallyMessage> tallyMessages = tallyMessageGenerator.generateTallyMessages(accountingData);
+            List<TallyMessage> tallyMessages = TALLY_MESSAGE_GENERATOR.generateTallyMessages(accountingData);
             masterData = getMasterData(tallyMessages, fileName);
         } catch (Exception e) {
             masterData = "Contact admin: There was an error encountered :";
@@ -72,11 +72,11 @@ public class TallyXMLGenerator {
     }
 
     private static String getMasterData(List<TallyMessage> tallyMessages, String fileName) {
-        String tallyMessagesOutput = "";
+        StringBuffer tallyMessagesOutput = new StringBuffer();
         for (TallyMessage tallyMessage : tallyMessages) {
-            tallyMessagesOutput += getTallyMessageData(tallyMessage, fileName);
+            tallyMessagesOutput.append(getTallyMessageData(tallyMessage, fileName));
         }
-        return tallyMessagesOutput;
+        return tallyMessagesOutput.toString();
     }
 
     private static String getTallyMessageData(TallyMessage tallyMessage, String fileName) {
@@ -95,25 +95,25 @@ public class TallyXMLGenerator {
     }
 
     private static String getVoucherData(TallyMessage tallyMessage) {
-        String allLedgersOutput = "";
+        StringBuffer allLedgersOutput = new StringBuffer();
         // see payment specs for tally integration
         if (tallyMessage.getVoucherType() == VoucherType.PAYMENT) {
             // Add Debit Accounts
             for (AllLedger allLedger : tallyMessage.getAllLedgers()) {
                 if (allLedger.getIsDeemedPositive().equals(Boolean.TRUE)) {
-                    allLedgersOutput += getAllLedgerData(allLedger);
+                    allLedgersOutput.append(getAllLedgerData(allLedger));
                 }
             }
             // Add Credit Accounts
             for (AllLedger allLedger : tallyMessage.getAllLedgers()) {
                 if (allLedger.getIsDeemedPositive().equals(Boolean.FALSE)) {
-                    allLedgersOutput += getAllLedgerData(allLedger);
+                    allLedgersOutput.append(getAllLedgerData(allLedger));
                 }
             }
 
         } else {
             for (AllLedger allLedger : tallyMessage.getAllLedgers()) {
-                allLedgersOutput += getAllLedgerData(allLedger);
+                allLedgersOutput.append(getAllLedgerData(allLedger));
             }
         }
         return allLedgersOutput.substring(0, allLedgersOutput.length() - 1);

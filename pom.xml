@@ -36,8 +36,10 @@
         <spring.web.version>2.2.1.RELEASE</spring.web.version>
         <slf4j.version>1.6.1</slf4j.version>
         <project.dependency.version>1.8-SNAPSHOT</project.dependency.version>
+        <powermock.version>1.4.7</powermock.version>
     </properties>
     <modules>
+        <module>db</module>
         <module>common</module>
         <module>domain-dto</module>
         <module>testFramework</module>
@@ -223,11 +225,6 @@
                 <artifactId>spring-security-config</artifactId>
                 <version>${spring.sec.version}</version>
             </dependency>
-            <dependency>
-	            <groupId>commons-collections</groupId>
-	            <artifactId>commons-collections</artifactId>
-	            <version>3.2</version>
-        	</dependency>
             <dependency>
                 <groupId>org.aspectj</groupId>
                 <artifactId>aspectjrt</artifactId>
@@ -605,8 +602,20 @@
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-all</artifactId>
-                <version>1.8.0</version>
+                <version>1.8.5</version>
                 <scope>test</scope>
+            </dependency>
+            <dependency>
+               <groupId>org.powermock</groupId>
+               <artifactId>powermock-module-junit4</artifactId>
+               <version>${powermock.version}</version>
+               <scope>test</scope>
+            </dependency>
+            <dependency>
+               <groupId>org.powermock</groupId>
+               <artifactId>powermock-api-mockito</artifactId>
+               <version>${powermock.version}</version>
+               <scope>test</scope>
             </dependency>
             <dependency>
 	            <groupId>org.easymock</groupId>

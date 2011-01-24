@@ -11,6 +11,7 @@ import java.util.Locale;
 import org.joda.time.DateTime;
 import org.mifos.accounts.loan.util.helpers.CashFlowDataDto;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
+import org.mifos.config.AccountingRules;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.platform.cashflow.ui.model.MonthlyCashFlowForm;
 import org.mifos.platform.util.CollectionUtils;
@@ -71,7 +72,8 @@ public class CashFlowDataAdaptor {
         CashFlowDataDto cashflowDataDto = new CashFlowDataDto();
         cashflowDataDto.setMonth(monthlyCashflowform.getMonthInLocale());
         cashflowDataDto.setYear(String.valueOf(monthlyCashflowform.getYear()));
-        cashflowDataDto.setCumulativeCashFlow(String.valueOf(monthlyCashflowform.getCumulativeCashFlow().setScale(2, BigDecimal.ROUND_HALF_UP)));
+        cashflowDataDto.setCumulativeCashFlow(String.valueOf(monthlyCashflowform.getCumulativeCashFlow().setScale(
+                AccountingRules.getDigitsAfterDecimal(), BigDecimal.ROUND_HALF_UP)));
         cashflowDataDto.setMonthYear(monthlyCashflowform.getDateTime().toDate());
         cashflowDataDto.setNotes(monthlyCashflowform.getNotes());
 
@@ -86,14 +88,16 @@ public class CashFlowDataAdaptor {
 
     private String computeDiffBetweenCumulativeAndInstallment(DateTime dateOfCashFlow, BigDecimal cashflow) {
         BigDecimal totalInstallmentForMonth = cumulativeTotalForMonth(dateOfCashFlow);
-        return String.valueOf(cashflow.subtract(totalInstallmentForMonth).setScale(2, RoundingMode.HALF_UP));
+        return String.valueOf(cashflow.subtract(totalInstallmentForMonth).setScale(
+                AccountingRules.getDigitsAfterDecimal(), RoundingMode.HALF_UP));
     }
 
     private String computeDiffBetweenCumulativeAndInstallmentPercent(DateTime dateOfCashFlow, BigDecimal cashflow) {
         BigDecimal totalInstallmentForMonth = cumulativeTotalForMonth(dateOfCashFlow);
         String value;
         if (cashflow.doubleValue() != 0) {
-            value = String.valueOf(totalInstallmentForMonth.multiply(BigDecimal.valueOf(100)).divide(cashflow, 2, RoundingMode.HALF_UP));
+            value = String.valueOf(totalInstallmentForMonth.multiply(BigDecimal.valueOf(100)).divide(cashflow,
+                    AccountingRules.getDigitsAfterDecimal(), RoundingMode.HALF_UP));
         } else {
             value = "Infinity";
         }

@@ -33,15 +33,15 @@ public class TallyMessage {
 
     private final List<AllLedger> allLedgers;
 
-    public VoucherType getVoucherType() {
+    public final VoucherType getVoucherType() {
         return this.voucherType;
     }
 
-    public List<AllLedger> getAllLedgers() {
+    public final List<AllLedger> getAllLedgers() {
         return this.allLedgers;
     }
 
-    public Date getVoucherDate() {
+    public final Date getVoucherDate() {
         return voucherDate;
     }
 
@@ -52,18 +52,15 @@ public class TallyMessage {
         this.voucherDate = voucherDate;
     }
 
-    @SuppressWarnings("unused")
-    private TallyMessage() {
-        this(null, null, null);
-    }
-
     @Override
-    public String toString() {
-        String string = "";
-        for (AllLedger allLedger : allLedgers) {
-            string += allLedger + "\n";
+    public final String toString() {
+        StringBuilder sb = new StringBuilder();
+        if (allLedgers != null) {
+            for (AllLedger allLedger : allLedgers) {
+                sb.append(allLedger).append("\n");
+            }
         }
-        string = voucherType + ";" + voucherDate + ";" + "\n" + string;
-        return string;
+        sb.append(voucherType).append(";").append(voucherDate).append(";").append("\n");
+        return sb.toString();
     }
 }

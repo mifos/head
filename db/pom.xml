@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <artifactId>mifos-db</artifactId>
+    <name>Mifos - DB Management</name>
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <artifactId>mifos-parent</artifactId>
+        <groupId>org.mifos</groupId>
+        <version>1.8-SNAPSHOT</version>
+    </parent>
+
+    <properties>
+        <modules.root.dir>${basedir}/..</modules.root.dir>
+        <main.database.properties.file>${modules.root.dir}/appdomain/src/main/resources/org/mifos/config/resources/mainDatabase.properties</main.database.properties.file>
+        <mifos.overrides.home>${user.home}/.mifos/local.properties</mifos.overrides.home>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+                <version>1.0-alpha-1</version>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>read-project-properties</goal>
+                        </goals>
+                        <configuration>
+                            <quiet>true</quiet>
+                            <files>
+                                <file>${main.database.properties.file}</file>
+                                <file>${mifos.overrides.home}</file>
+                            </files>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-plugin</artifactId>
+                <version>1.9.3.0</version>
+                <configuration>
+                    <propertyFile>target/classes/liquibase.properties</propertyFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>update</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

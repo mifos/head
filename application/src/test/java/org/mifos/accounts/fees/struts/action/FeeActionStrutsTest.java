@@ -59,7 +59,7 @@ import org.mifos.security.util.UserContext;
 public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
 
     private static final double DELTA = 0.00000001;
-    private final static String GLOCDE_ID = "47";
+    private static final String GLOCDE_ID = "47";
 
     private FeeBO fee;
     private FeeBO fee1;

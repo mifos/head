@@ -47,21 +47,26 @@ public class AccountingDataCacheManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AccountingDataCacheManager.class);
 
+    // hardcoded FIXME there should be a common way of sharing application wide constants across modules
+    private static final int DIGITS_BEFORE_DECIMAL = 14;
+
     private String accountingDataPath;
     private Integer digitsAfterDecimal;
 
-    public List<AccountingDto> getAccoutingDataFromCache(String fileName) {
+    public final List<AccountingDto> getAccoutingDataFromCache(String fileName) {
 
         String accountingDataLocation = getAccoutingDataCachePath();
-
         File file = new File(accountingDataLocation + fileName);
+        return accountingDataFromCache(file);
+    }
 
+    public List<AccountingDto> accountingDataFromCache(File file) {
         BufferedReader br;
         try {
             br = new BufferedReader(new FileReader(file));
         } catch (FileNotFoundException e) {
-            LOGGER.error("Reading file from accounting cache" + file, e);
-            throw new AccountingRuntimeException("Reading file from accounting cache" + file, e);
+            LOGGER.error(file.toString(), e);
+            throw new AccountingRuntimeException(file.toString(), e);
         }
         String line = null;
 
@@ -110,12 +115,13 @@ public class AccountingDataCacheManager {
     }
 
     private int getDigitsAfterDecimal() {
-        if(digitsAfterDecimal != null) {
+        if (digitsAfterDecimal != null) {
             // Already read, avoid reading again to reduce processing
             return digitsAfterDecimal;
         }
         ConfigurationLocator configurationLocator = new ConfigurationLocator();
-        String customApplicationPropertyFile = configurationLocator.getConfigurationDirectory() + "/applicationConfiguration.custom.properties";
+        String customApplicationPropertyFile = configurationLocator.getConfigurationDirectory()
+                + "/applicationConfiguration.custom.properties";
         File appConfigFile = new File(customApplicationPropertyFile);
         Properties properties = new Properties();
         if (appConfigFile.exists() && appConfigFile.isFile()) {
@@ -125,7 +131,7 @@ public class AccountingDataCacheManager {
                 LOGGER.error(e.getMessage(), e);
             }
         } else {
-            //FIXME hardcoded default value, using property file only for custom value
+            // FIXME hardcoded default value, using property file only for custom value
             // There should be a way to read application properties across modules
             digitsAfterDecimal = 1;
         }
@@ -153,7 +159,7 @@ public class AccountingDataCacheManager {
         // FIXME should use this from common util
         StringBuilder pattern = new StringBuilder();
         DecimalFormat decimalFormat = new DecimalFormat();
-        for (Short i = 0; i < 14; i++) {
+        for (Short i = 0; i < DIGITS_BEFORE_DECIMAL; i++) {
             pattern.append('#');
         }
         pattern.append(decimalFormat.getDecimalFormatSymbols().getDecimalSeparator());
@@ -166,7 +172,7 @@ public class AccountingDataCacheManager {
         return decimalFormat.format(Double.parseDouble(number));
     }
 
-    public boolean isAccountingDataAlreadyInCache(String fileName) {
+    public final boolean isAccountingDataAlreadyInCache(String fileName) {
         return new File(getAccoutingDataCachePath() + fileName).isFile();
     }
 
@@ -176,8 +182,8 @@ public class AccountingDataCacheManager {
         try {
             out = new PrintWriter(file);
         } catch (FileNotFoundException e) {
-            LOGGER.error("Reading file from accounting cache" + file, e);
-            throw new AccountingRuntimeException("Reading file from accounting cache" + file, e);
+            LOGGER.error(file.toString(), e);
+            throw new AccountingRuntimeException(file.toString(), e);
         }
         out.println("branchname;voucherdate;vouchertype;glcode;glname;debit;credit");
         for (AccountingDto instance : accountingData) {
@@ -191,7 +197,7 @@ public class AccountingDataCacheManager {
         return startDate + " to " + endDate;
     }
 
-    public String getTallyOutputFileName(LocalDate startDate, LocalDate endDate) {
+    public final String getTallyOutputFileName(LocalDate startDate, LocalDate endDate) {
         return getFilePrefixDefinedByMFI() + getCacheFileName(startDate, endDate) + ".xml";
     }
 

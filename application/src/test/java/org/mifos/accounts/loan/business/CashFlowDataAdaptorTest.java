@@ -70,7 +70,7 @@ public class CashFlowDataAdaptorTest {
         List<CashFlowDataDto> cashflowDataDtos = adaptor.getCashflowDataDtos();
         Assert.assertNotNull(cashflowDataDtos);
         Assert.assertEquals(1, cashflowDataDtos.size());
-        Assert.assertEquals("50.00", cashflowDataDtos.get(0).getDiffCumulativeCashflowAndInstallment());
+        Assert.assertEquals("50.0", cashflowDataDtos.get(0).getDiffCumulativeCashflowAndInstallment());
     }
 
     @Test
@@ -93,7 +93,7 @@ public class CashFlowDataAdaptorTest {
         List<CashFlowDataDto> cashflowDataDtos = adaptor.getCashflowDataDtos();
         Assert.assertNotNull(cashflowDataDtos);
         Assert.assertEquals(1, cashflowDataDtos.size());
-        Assert.assertEquals("49.44", cashflowDataDtos.get(0).getDiffCumulativeCashflowAndInstallment());
+        Assert.assertEquals("49.4", cashflowDataDtos.get(0).getDiffCumulativeCashflowAndInstallment());
     }
 
     @Test
@@ -116,7 +116,7 @@ public class CashFlowDataAdaptorTest {
         List<CashFlowDataDto> cashflowDataDtos = adaptor.getCashflowDataDtos();
         Assert.assertNotNull(cashflowDataDtos);
         Assert.assertEquals(1, cashflowDataDtos.size());
-        Assert.assertEquals("0.00", cashflowDataDtos.get(0).getDiffCumulativeCashflowAndInstallment());
+        Assert.assertEquals("0.0", cashflowDataDtos.get(0).getDiffCumulativeCashflowAndInstallment());
     }
 
     @Test
@@ -139,7 +139,7 @@ public class CashFlowDataAdaptorTest {
         List<CashFlowDataDto> cashflowDataDtos = adaptor.getCashflowDataDtos();
         Assert.assertNotNull(cashflowDataDtos);
         Assert.assertEquals(1, cashflowDataDtos.size());
-        Assert.assertEquals("-50.00", cashflowDataDtos.get(0).getDiffCumulativeCashflowAndInstallment());
+        Assert.assertEquals("-50.0", cashflowDataDtos.get(0).getDiffCumulativeCashflowAndInstallment());
     }
 
     @Test
@@ -168,7 +168,7 @@ public class CashFlowDataAdaptorTest {
         List<CashFlowDataDto> cashflowDataDtos = adaptor.getCashflowDataDtos();
         Assert.assertNotNull(cashflowDataDtos);
         Assert.assertEquals(1, cashflowDataDtos.size());
-        Assert.assertEquals("100.00", cashflowDataDtos.get(0).getDiffCumulativeCashflowAndInstallment());
+        Assert.assertEquals("100.0", cashflowDataDtos.get(0).getDiffCumulativeCashflowAndInstallment());
     }
 
     @Test
@@ -191,7 +191,7 @@ public class CashFlowDataAdaptorTest {
         List<CashFlowDataDto> cashflowDataDtos = adaptor.getCashflowDataDtos();
         Assert.assertNotNull(cashflowDataDtos);
         Assert.assertEquals(1, cashflowDataDtos.size());
-        Assert.assertEquals("66.67", cashflowDataDtos.get(0).getDiffCumulativeCashflowAndInstallmentPercent());
+        Assert.assertEquals("66.7", cashflowDataDtos.get(0).getDiffCumulativeCashflowAndInstallmentPercent());
     }
 
     @Test
@@ -238,7 +238,7 @@ public class CashFlowDataAdaptorTest {
         List<CashFlowDataDto> cashflowDataDtos = adaptor.getCashflowDataDtos();
         Assert.assertNotNull(cashflowDataDtos);
         Assert.assertEquals(1, cashflowDataDtos.size());
-        Assert.assertEquals("100.00", cashflowDataDtos.get(0).getDiffCumulativeCashflowAndInstallmentPercent());
+        Assert.assertEquals("100.0", cashflowDataDtos.get(0).getDiffCumulativeCashflowAndInstallmentPercent());
     }
 
     @Test
@@ -261,7 +261,7 @@ public class CashFlowDataAdaptorTest {
         List<CashFlowDataDto> cashflowDataDtos = adaptor.getCashflowDataDtos();
         Assert.assertNotNull(cashflowDataDtos);
         Assert.assertEquals(1, cashflowDataDtos.size());
-        Assert.assertEquals("200.00", cashflowDataDtos.get(0).getDiffCumulativeCashflowAndInstallmentPercent());
+        Assert.assertEquals("200.0", cashflowDataDtos.get(0).getDiffCumulativeCashflowAndInstallmentPercent());
     }
 
     @Test
@@ -292,7 +292,7 @@ public class CashFlowDataAdaptorTest {
         List<CashFlowDataDto> cashflowDataDtos = adaptor.getCashflowDataDtos();
         Assert.assertNotNull(cashflowDataDtos);
         Assert.assertEquals(1, cashflowDataDtos.size());
-        Assert.assertEquals("71.43", cashflowDataDtos.get(0).getDiffCumulativeCashflowAndInstallmentPercent());
+        Assert.assertEquals("71.4", cashflowDataDtos.get(0).getDiffCumulativeCashflowAndInstallmentPercent());
     }
 
     @Test
