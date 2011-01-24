@@ -111,11 +111,13 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings({ "PMD.SignatureDeclareThrowsException"})
-    private void newMonthlyGroupLoanAccountWithMeetingOnSpecificDayOfMonth() throws Exception {
-
-        // FIXME - keithw - ignoring test as it uses a disbursement date that is not a working day when creating loan which causes it to fail.
+    public void newMonthlyGroupLoanAccountWithMeetingOnSpecificDayOfMonth() throws Exception {
+        //Given
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTime targetTime = new DateTime(2010,8,13,1,0,0,0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_005_dbunit.xml", dataSource, selenium);
-
+        //When
         homePage = loginSuccessfully();
 
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
