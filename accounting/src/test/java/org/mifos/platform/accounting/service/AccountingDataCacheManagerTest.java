@@ -20,8 +20,12 @@
 
 package org.mifos.platform.accounting.service;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import junit.framework.Assert;
 
@@ -57,8 +61,9 @@ public class AccountingDataCacheManagerTest {
         cacheManager.writeAccountingDataToCache(data, cacheFileName);
         List<AccountingDto> accountingData = cacheManager.getAccoutingDataFromCache(cacheFileName);
         Assert.assertEquals(2, accountingData.size());
+        DecimalFormat df = new DecimalFormat("#.0", new DecimalFormatSymbols(Locale.getDefault()));
         for (AccountingDto dto : accountingData) {
-            Assert.assertEquals("branch;2010-10-12;RECEIPT;234324;GLCODE NAME;5.0;546.0", dto.toString());
+            Assert.assertEquals("branch;2010-10-12;RECEIPT;234324;GLCODE NAME;"+df.format(5.0)+";"+df.format(546.0), dto.toString());
             Assert.assertEquals("GLCODE NAME", dto.getGlCodeName());
         }
     }
