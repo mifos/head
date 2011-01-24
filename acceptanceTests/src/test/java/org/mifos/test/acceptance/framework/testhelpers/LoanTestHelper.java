@@ -521,4 +521,30 @@ public class LoanTestHelper {
 
         transactionHistoryPage.verifyTransactionHistory(paymentAmount, 1, 217);
     }
+
+    public LoanAccountPage createTwoLoanAccountsWithMixedRestricedPoducts(CreateLoanAccountSearchParameters searchParams1, CreateLoanAccountSearchParameters searchParams2, DisburseLoanParameters disburseParams) {
+        EditLoanAccountStatusParameters statusParams = new EditLoanAccountStatusParameters();
+        statusParams.setStatus(EditLoanAccountStatusParameters.APPROVED);
+        statusParams.setNote("OK");
+
+        LoanAccountPage loanAccountPage = navigationHelper
+            .navigateToAdminPage()
+            .navigateToDefineProductMix()
+            .createOneMixAndNavigateToClientsAndAccounts(searchParams1.getLoanProduct(), searchParams2.getLoanProduct())
+            .navigateToCreateLoanAccountUsingLeftMenu()
+            .searchAndNavigateToCreateLoanAccountPage(searchParams1)
+            .continuePreviewSubmitAndNavigateToDetailsPage();
+        loanAccountPage.changeAccountStatus(statusParams);
+        loanAccountPage.navigateToDisburseLoan()
+            .submitAndNavigateToDisburseLoanConfirmationPage(disburseParams)
+            .submitAndNavigateToLoanAccountPage();
+
+        // create second account and try to disburse
+        return loanAccountPage.navigateToClientsAndAccountsUsingHeaderTab()
+            .navigateToCreateLoanAccountUsingLeftMenu()
+            .searchAndNavigateToCreateLoanAccountPage(searchParams2)
+            .continuePreviewSubmitAndNavigateToDetailsPage()
+            .changeAccountStatus(statusParams)
+            .tryNavigatingToDisburseLoanWithError();
+    }
 }

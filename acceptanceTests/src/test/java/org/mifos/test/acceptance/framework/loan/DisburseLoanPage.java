@@ -31,6 +31,7 @@ public class DisburseLoanPage extends MifosPage {
 
     public DisburseLoanPage(Selenium selenium) {
         super(selenium);
+        this.verifyPage("DisburseLoan");
     }
 
     public void verifyPage() {

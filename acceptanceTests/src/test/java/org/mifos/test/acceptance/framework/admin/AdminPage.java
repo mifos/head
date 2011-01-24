@@ -30,6 +30,7 @@ import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalSearchPage;
 import org.mifos.test.acceptance.framework.loan.UndoLoanDisbursalSearchPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductConfirmationPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
+import org.mifos.test.acceptance.framework.loanproduct.DefineProductMixPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.SubmitFormParameters;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPreviewPage;
 import org.mifos.test.acceptance.framework.loanproduct.ViewLoanProductsPage;
@@ -326,6 +327,12 @@ public class AdminPage extends MifosPage {
         selenium.click("admin.link.defineNewFees");
         waitForPageToLoad();
         return new FeesCreatePage(selenium);
+    }
+
+    public DefineProductMixPage navigateToDefineProductMix() {
+        selenium.click("admin.link.defineProductsMix");
+        waitForPageToLoad();
+        return new DefineProductMixPage(selenium);
     }
 
     public void defineNewFees (FeesCreatePage.SubmitFormParameters formParameters) {

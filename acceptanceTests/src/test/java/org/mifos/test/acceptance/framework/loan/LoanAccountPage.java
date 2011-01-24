@@ -22,6 +22,7 @@ package org.mifos.test.acceptance.framework.loan;
 
 import com.thoughtworks.selenium.Selenium;
 import org.mifos.test.acceptance.framework.AbstractPage;
+import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.questionnaire.ViewQuestionResponseDetailPage;
 import org.testng.Assert;
@@ -87,7 +88,7 @@ public class LoanAccountPage extends AbstractPage {
         Assert.assertTrue(selenium.isTextPresent("of payments: "+payments));
         Assert.assertTrue(selenium.isTextPresent("of missed payments: "+missedPayments));
     }
-    
+
     public void verifyStatus(String status) {
         verifyStatus(status, null);
     }
@@ -99,6 +100,10 @@ public class LoanAccountPage extends AbstractPage {
         else {
             Assert.assertEquals(selenium.getText("loanaccountdetail.text.status"), status);
         }
+    }
+
+    public void verifyError(String error) {
+        Assert.assertTrue(!selenium.isElementPresent("//span[@id='schedulePreview.error.message']/li[text()='"+error+"']"));
     }
 
     public void verifyNumberOfInstallments(String numberOfInstallments) {
@@ -223,6 +228,12 @@ public class LoanAccountPage extends AbstractPage {
         return new DisburseLoanPage(selenium);
     }
 
+    public LoanAccountPage tryNavigatingToDisburseLoanWithError() {
+        selenium.click("loanaccountdetail.link.disburseLoan");
+        waitForPageToLoad();
+        return new LoanAccountPage(selenium);
+    }
+
     public ApplyChargePage navigateToApplyCharge() {
         selenium.click("loanaccountdetail.link.applyCharges");
         waitForPageToLoad();
@@ -281,6 +292,12 @@ public class LoanAccountPage extends AbstractPage {
         selenium.click("id=loanaccountdetail.link.viewAccountActivity");
         waitForPageToLoad();
         return new AccountActivityPage(selenium);
+    }
+
+    public ClientsAndAccountsHomepage navigateToClientsAndAccountsUsingHeaderTab() {
+        selenium.click("clientsAndAccountsHeader.link.clientsAndAccounts");
+        waitForPageToLoad();
+        return new ClientsAndAccountsHomepage(selenium);
     }
 
     public String getTotalBalance() {
@@ -359,6 +376,12 @@ public class LoanAccountPage extends AbstractPage {
         selenium.click("loanaccountdetail.link.viewTransactionHistory");
         waitForPageToLoad();
         return new TransactionHistoryPage(selenium);
+    }
+
+    public LoanAccountPage changeAccountStatus(EditLoanAccountStatusParameters statusParams) {
+        return navigateToEditAccountStatus()
+                .submitAndNavigateToNextPage(statusParams)
+                .submitAndNavigateToLoanAccountPage();
     }
 }
 

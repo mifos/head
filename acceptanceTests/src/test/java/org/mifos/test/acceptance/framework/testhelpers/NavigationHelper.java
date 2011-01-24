@@ -163,5 +163,4 @@ public class NavigationHelper {
         clientPersonalDataPage=clientPersonalDataPage.create(formParameters);
         return clientPersonalDataPage.submitAndGotoCreateClientEnterMfiDataPage();
     }
-
 }

@@ -236,6 +236,37 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         loanAccountEntryPage.verifyAdditionalFeesAreEmpty();
     }
 
+    /**
+     * Verify a user is prevented to create loan accounts of loan products restricted by the mix.
+     * http://mifosforge.jira.com/browse/MIFOSTEST-94
+     * @throws Exception
+     */
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void createLoanAccountsWithRestrictedProductsMix() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTime targetTime = new DateTime(2011,1,24,15,0,0,0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+
+        CreateLoanAccountSearchParameters searchParams1 = new CreateLoanAccountSearchParameters();
+        searchParams1.setSearchString("MyGroup1233266255641");
+        searchParams1.setLoanProduct("WeeklyGroupFlatLoanWithOnetimeFee");
+        CreateLoanAccountSearchParameters searchParams2 = new CreateLoanAccountSearchParameters();
+        searchParams2.setSearchString("MyGroup1233266255641");
+        searchParams2.setLoanProduct("WeeklyGroupDeclineLoanWithPeriodicFee");
+        DisburseLoanParameters disburseParams = new DisburseLoanParameters();
+        disburseParams.setPaymentType(DisburseLoanParameters.CASH);
+        disburseParams.setDisbursalDateDD("24");
+        disburseParams.setDisbursalDateMM("01");
+        disburseParams.setDisbursalDateYYYY("2011");
+        String error = "The loan could not be disbursed as {0} and {1} are not allowed to co-exist";
+
+        LoanAccountPage loanAccountPage = loanTestHelper.createTwoLoanAccountsWithMixedRestricedPoducts(searchParams1, searchParams2, disburseParams);
+
+        loanAccountPage.verifyError(error);
+
+    }
+
     private String createLoanAndCheckAmount(CreateLoanAccountSearchParameters searchParameters,
                                             CreateLoanAccountSubmitParameters submitAccountParameters,
                                             QuestionResponseParameters questionResponseParameters) {
