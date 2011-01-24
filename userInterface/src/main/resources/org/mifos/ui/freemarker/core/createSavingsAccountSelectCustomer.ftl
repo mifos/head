@@ -19,7 +19,7 @@
 *  explanation of the license and how it is applied.
 --]
 
-[@layout.webflow currentState="createSavingsAccount.flowState.enterAccountInfo" 
+[@layout.webflow currentState="createSavingsAccount.flowState.selectCustomer" 
                  states=["createSavingsAccount.flowState.selectCustomer", 
                  		 "createSavingsAccount.flowState.enterAccountInfo", 
                  		 "createSavingsAccount.flowState.reviewAndSubmit"]] 
@@ -63,7 +63,7 @@ Previous	Results 1-10 of 11 	Next
 
 <!-- Cancel. Yeah, just one button. -->
 <form action="${flowExecutionUrl}" method="post">
-	<div class="row">
+	<div class="row prepend-10">
 		<input type="submit" class="cancel" value="Cancel" name="_eventId_cancel" />
 	</div>
 </form>
