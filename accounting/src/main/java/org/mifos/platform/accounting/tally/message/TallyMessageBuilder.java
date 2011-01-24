@@ -44,37 +44,30 @@ public class TallyMessageBuilder {
         if (this.voucherType == null) {
             throw new TallyMessageBuilderException("Voucher type can not be null.");
         }
-        if (this.branchName == null) {
-            throw new TallyMessageBuilderException("Branch name can not be null.");
+        if (this.branchName == null || branchName.equals("")) {
+            throw new TallyMessageBuilderException("Branch name can not be empty.");
         }
     }
 
-    public void addCreditEntry(AccountingDto voucherEntry, TallyMessageBuilder builder)
-            throws TallyMessageBuilderException {
+    public final TallyMessageBuilder addCreditEntry(AccountingDto voucherEntry) throws TallyMessageBuilderException {
         BigDecimal amount = new BigDecimal(voucherEntry.getCredit());
         if (amount.compareTo(BigDecimal.ZERO) < 0) {
             throw new TallyMessageBuilderException("Negative credit amount found:");
         }
-        if (amount.compareTo(BigDecimal.ZERO) > 0) {
-            builder.addAllLegderEntry(voucherEntry.getCredit(), voucherEntry.getGlCode(), false);
-        }
+        this.addAllLegderEntry(voucherEntry.getCredit(), voucherEntry.getGlCode(), false);
+        return this;
     }
 
-    public void addDebitEntry(AccountingDto voucherEntry, TallyMessageBuilder builder)
-            throws TallyMessageBuilderException {
+    public final TallyMessageBuilder addDebitEntry(AccountingDto voucherEntry) throws TallyMessageBuilderException {
         BigDecimal amount = new BigDecimal(voucherEntry.getDebit());
         if (amount.compareTo(BigDecimal.ZERO) < 0) {
             throw new TallyMessageBuilderException("Negative debit amount found:");
         }
-        if (amount.compareTo(BigDecimal.ZERO) > 0) {
-            builder.addAllLegderEntry(voucherEntry.getDebit(), voucherEntry.getGlCode(), true);
-        }
+        this.addAllLegderEntry(voucherEntry.getDebit(), voucherEntry.getGlCode(), true);
+        return this;
     }
 
-    public TallyMessageBuilder withVoucherDate(Date voucherDate) throws TallyMessageBuilderException {
-        if (this.voucherDate != null) {
-            throw new TallyMessageBuilderException("Voucher date is already assigned");
-        }
+    public final TallyMessageBuilder withVoucherDate(Date voucherDate) throws TallyMessageBuilderException {
         this.voucherDate = voucherDate;
         return this;
     }
@@ -84,7 +77,7 @@ public class TallyMessageBuilder {
         return this;
     }
 
-    public TallyMessage build() throws TallyMessageBuilderException {
+    public final TallyMessage build() throws TallyMessageBuilderException {
         if (voucherDate == null) {
             throw new TallyMessageBuilderException("Voucher date is required before building");
         }

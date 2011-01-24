@@ -21,6 +21,8 @@
 package org.mifos.accounts.api;
 
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.mifos.dto.domain.ParseResultDto;
 import org.mifos.dto.domain.UserReferenceDto;
@@ -56,19 +58,12 @@ public abstract class TransactionImport {
     public abstract String getDisplayName();
 
 
-      /**
-	 * If not null, defines name of property to display in Admin "miscellaneous" section
-	 */
-	public String getPropertyNameForAdminDisplay() {
-		return null;
-	}
-
-	/**
-	 * If not null, defines value of property to display in Admin "miscellaneous" section
-	 */
-	public String getPropertyValueForAdminDisplay() {
-		return null;
-	}
+    /**
+     * @return properties to display in Admin "miscellaneous" section
+     */
+    public Map<String,String> getPropertiesForAdminDisplay() {
+            return new HashMap<String, String>();
+    }
 
     /**
      * Mifos will call this method to provide an {@link AccountService} for use

@@ -20,27 +20,60 @@
 
 package org.mifos.platform.accounting.dao;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.LocalDate;
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mifos.platform.accounting.AccountingDto;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.Assert;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 
-//@RunWith(SpringJUnit4ClassRunner.class)
-//@ContextConfiguration(locations = { "/test-accounting-dbContext.xml", "/META-INF/spring/accountingIntegrationPluginContext.xml"})
+;
+
+@RunWith(MockitoJUnitRunner.class)
 public class AccountingDaoTest {
 
-    @Autowired
     private IAccountingDao accountingDao;
+
+    @Mock
+    private JdbcTemplate jdbcTemplate;
 
     @Test
     @Ignore
     public void shouldCallQueryAndReturnData() {
         List<AccountingDto> accountData = accountingDao.getAccountingDataByDate(new LocalDate(2010, 8, 10),
                 new LocalDate(2010, 8, 10));
-        Assert.notNull(accountData);
+        Assert.assertNull(accountData);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testDataSourcMockWithNull() throws SQLException {
+        accountingDao = new AccountingDaoImpl();
+        ((AccountingDaoImpl) accountingDao).setTestingJdbcTemplate(jdbcTemplate);
+        when(jdbcTemplate.query(any(String.class), any(Object[].class), any(ParameterizedRowMapper.class))).thenReturn(
+                null);
+        Assert.assertNull(accountingDao.getAccountingDataByDate(new LocalDate(2010, 8, 10), new LocalDate(2010, 8, 10)));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testDataSourcMockWithEmptyList() throws SQLException {
+        accountingDao = new AccountingDaoImpl();
+        ((AccountingDaoImpl) accountingDao).setTestingJdbcTemplate(jdbcTemplate);
+        when(jdbcTemplate.query(any(String.class), any(Object[].class), any(ParameterizedRowMapper.class))).thenReturn(
+                new ArrayList<Object>());
+        Assert.assertTrue(accountingDao.getAccountingDataByDate(new LocalDate(2010, 8, 10), new LocalDate(2010, 8, 10))
+                .isEmpty());
     }
 }

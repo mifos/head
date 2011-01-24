@@ -34,9 +34,9 @@ import org.mifos.platform.accounting.tally.message.TallyMessageBuilderException;
 
 public class TallyMessageGenerator {
 
-    public final static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
-    public List<TallyMessage> generateTallyMessages(List<AccountingDto> accountingData)
+    public final List<TallyMessage> generateTallyMessages(List<AccountingDto> accountingData)
             throws TallyMessageBuilderException, ParseException {
         List<TallyMessage> tallyMessages = new ArrayList<TallyMessage>();
 
@@ -63,8 +63,8 @@ public class TallyMessageGenerator {
             builder.withVoucherDate(getVoucherDate(voucher.get(0).getVoucherDate()));
 
             for (AccountingDto voucherEntry : voucher) {
-                builder.addCreditEntry(voucherEntry, builder);
-                builder.addDebitEntry(voucherEntry, builder);
+                builder.addCreditEntry(voucherEntry);
+                builder.addDebitEntry(voucherEntry);
             }
 
             tallyMessages.add(builder.build());

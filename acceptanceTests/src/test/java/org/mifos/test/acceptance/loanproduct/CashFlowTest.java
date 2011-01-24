@@ -183,7 +183,7 @@ public class CashFlowTest extends UiTestCaseBase {
     private void validateCashFlowForLoanAccount(DefineNewLoanProductPage.SubmitFormParameters formParameters, String minRc, String expectedRc) {
         DateTime disbursalDate = systemDateTime.plusDays(1); //next week tuesday
         int installment = 5;
-        double cashFlowIncremental = 5695.00;
+        double cashFlowIncremental = 5695.0;
         String loanProductName = formParameters.getOfferingName();
         int frequency = formParameters.getFreqOfInstallments();
         verifyCashFlowForLoanAccount(disbursalDate, installment, cashFlowIncremental, loanProductName, frequency);

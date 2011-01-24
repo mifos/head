@@ -275,7 +275,7 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
         double  cashFlow = cashFlowIncremental;
         boolean cashflowAdded = false;
         // TODO - English locale hard-coded
-        DecimalFormat df = new DecimalFormat("#.00", new DecimalFormatSymbols(Locale.ENGLISH));
+        DecimalFormat df = new DecimalFormat("#.0", new DecimalFormatSymbols(Locale.ENGLISH));
         for (int rowIndex = 1; rowIndex <= noOfMonths ; rowIndex++) {
             String cashFlowDisplayed = selenium.getText(tableXpath + "//tr[" + (rowIndex + 1) + "]/td[2]");
             Assert.assertEquals(cashFlowDisplayed, df.format(cashFlow));

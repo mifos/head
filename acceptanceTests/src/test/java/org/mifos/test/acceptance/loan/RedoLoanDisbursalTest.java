@@ -69,10 +69,10 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
     private InitializeApplicationRemoteTestingService initRemote;
     @Autowired
     private ApplicationDatabaseOperation applicationDatabaseOperation;
-    private final static String userLoginName = "test_user";
-    private final static String officeName = "test_office";
-    private final static String clientName = "test client";
-    private final static String userName="test user";
+    private static final String userLoginName = "test_user";
+    private static final String officeName = "test_office";
+    private static final String clientName = "test client";
+    private static final String userName="test user";
     LoanProductTestHelper loanProductTestHelper;
     DateTime systemDateTime;
     private FeeTestHelper feeTestHelper;

@@ -24,37 +24,39 @@ import org.joda.time.DateTime;
 
 public class AccountingCacheFileInfo {
 
-    private final DateTime lastModified;
+    private final String lastModified;
+
+    private final String startDate;
 
     private final String fileName;
+
+    private final String endDate;
 
     private final String mfiPrefix;
 
     public AccountingCacheFileInfo(DateTime lastModified, String mfiPrefix, String fileName) {
         super();
-        this.lastModified = lastModified;
+        this.lastModified = lastModified.toString("yyyy-MMM-dd HH:mm:sss z");
         this.fileName = fileName;
+        startDate = fileName.split(" to ")[0];
+        endDate = fileName.split(" to ")[1];
         this.mfiPrefix = mfiPrefix;
     }
 
-    public final DateTime getLastModified() {
+    public final String getLastModified() {
         return lastModified;
-    }
-
-    public final String getLastModifiedToString() {
-        return lastModified.toString("yyyy-MMM-dd HH:mm:sss z");
     }
 
     public final String getFileName() {
         return fileName;
     }
 
-    public final String getStartDateInString() {
-        return fileName.substring(0, 10);
+    public final String getStartDate() {
+        return startDate;
     }
 
-    public final String getEndDateInString() {
-        return fileName.substring(14, 24);
+    public final String getEndDate() {
+        return endDate;
     }
 
     public final String getMfiPrefix() {
