@@ -20,6 +20,7 @@
 
 package org.mifos.test.acceptance.loan;
 
+import org.joda.time.DateTime;
 import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -27,7 +28,9 @@ import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountEntryPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameters;
+import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountInformationParameters;
+import org.mifos.test.acceptance.framework.loan.EditLoanAccountStatusParameters;
 import org.mifos.test.acceptance.framework.loan.EditPreviewLoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
@@ -35,6 +38,7 @@ import org.mifos.test.acceptance.framework.loan.EditLoanAccountInformationPage;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.questionnaire.ViewQuestionResponseDetailPage;
+import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -152,7 +156,14 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
+    //http://mifosforge.jira.com/browse/MIFOSTEST-308
     public void newMonthlyClientLoanAccountWithMeetingOnSpecificDayOfMonth() throws Exception {
+        //Given
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTime targetTime = new DateTime(2011,2,1,13,0,0,0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
+
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("Client - Mary Monthly");
         searchParameters.setLoanProduct("MonthlyClientFlatLoan1stOfMonth");
@@ -160,15 +171,22 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
         submitAccountParameters.setAmount("1234.0");
         submitAccountParameters.setGracePeriodTypeNone(true);
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_004_dbunit.xml", dataSource, selenium);
-
-        createLoanAndCheckAmount(searchParameters, submitAccountParameters, null);
+        //Then
+        String loanId = createLoanAndCheckAmount(searchParameters, submitAccountParameters, null);
+        getLoanStatusActive(loanId);
     }
 
     @Test(sequential = true, groups = {"loan","acceptance","ui"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
+    //http://mifosforge.jira.com/browse/MIFOSTEST-308
     public void newMonthlyClientLoanAccountWithMeetingOnSameWeekAndWeekdayOfMonth() throws Exception {
+        //Given
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTime targetTime = new DateTime(2011,2,1,13,0,0,0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
+
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("Client - Mia Monthly3rdFriday");
         searchParameters.setLoanProduct("MonthlyClientFlatLoanThirdFridayOfMonth");
@@ -176,9 +194,10 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
         submitAccountParameters.setAmount("2765.0");
         submitAccountParameters.setGracePeriodTypeNone(true);
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_004_dbunit.xml", dataSource, selenium);
 
-        createLoanAndCheckAmount(searchParameters, submitAccountParameters, null);
+        //Then
+        String loanId = createLoanAndCheckAmount(searchParameters, submitAccountParameters, null);
+        getLoanStatusActive(loanId);
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -235,5 +254,20 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
             loanAccountPage = loanTestHelper.createLoanAccount(searchParameters, submitAccountParameters, questionResponseParameters);
         }
         return loanAccountPage;
+    }
+
+    private void getLoanStatusActive(String loanId){
+        EditLoanAccountStatusParameters editLoanAccountStatusParameters = new EditLoanAccountStatusParameters();
+        editLoanAccountStatusParameters.setStatus(EditLoanAccountStatusParameters.APPROVED);
+        editLoanAccountStatusParameters.setNote("test");
+        loanTestHelper.changeLoanAccountStatus(loanId, editLoanAccountStatusParameters);
+
+        DisburseLoanParameters disburseParameters = new DisburseLoanParameters();
+        disburseParameters.setPaymentType(DisburseLoanParameters.CASH);
+        disburseParameters.setDisbursalDateDD("01");
+        disburseParameters.setDisbursalDateMM("02");
+        disburseParameters.setDisbursalDateYYYY("2011");
+        //Then
+        loanTestHelper.disburseLoan(loanId, disburseParameters);
     }
 }

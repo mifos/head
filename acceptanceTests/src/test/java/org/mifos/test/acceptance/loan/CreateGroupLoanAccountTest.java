@@ -107,7 +107,6 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
         disburseParameters.setDisbursalDateDD("13");
         disburseParameters.setDisbursalDateMM("08");
         disburseParameters.setDisbursalDateYYYY("2010");
-        //Then
         loanTestHelper.disburseLoan(loanId, disburseParameters);
     }
 
