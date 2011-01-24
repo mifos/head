@@ -49,15 +49,17 @@ public class AccountingDataCacheManagerTest {
 
     @Test
     public void testAccoutingDataFromCache() throws Exception {
-        AccountingDto instance = new AccountingDto("branch", "2010-10-12", "RECEIPT", "234324", "GLCODE NAME", "5.45",
-                "546.45");
-        List<AccountingDto> accountingData = new ArrayList<AccountingDto>();
-        accountingData.add(instance);
+        List<AccountingDto> data = new ArrayList<AccountingDto>();
+        data.add(new AccountingDto("branch", "2010-10-12", "RECEIPT", "234324", "GLCODE NAME", "5", "546"));
+        data.add(new AccountingDto("branch", "2010-10-12", "RECEIPT", "234324", "GLCODE NAME", "5", "546"));
         LocalDate date = new LocalDate(2010, 10, 12);
         String cacheFileName = cacheManager.getCacheFileName(date, date);
-        cacheManager.writeAccountingDataToCache(accountingData, cacheFileName);
-        accountingData = cacheManager.getAccoutingDataFromCache(cacheFileName);
-        Assert.assertEquals(1, accountingData.size());
+        cacheManager.writeAccountingDataToCache(data, cacheFileName);
+        List<AccountingDto> accountingData = cacheManager.getAccoutingDataFromCache(cacheFileName);
+        Assert.assertEquals(2, accountingData.size());
+        for (AccountingDto dto : accountingData) {
+            Assert.assertEquals("branch;2010-10-12;RECEIPT;234324;GLCODE NAME;5.0;546.0", dto.toString());
+            Assert.assertEquals("GLCODE NAME", dto.getGlCodeName());
+        }
     }
-
 }

@@ -47,16 +47,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class AuditConfiguration {
 
-    private final static Map<String, String> entityToClassPath = new HashMap<String, String>();
+    private static final Map<String, String> entityToClassPath = new HashMap<String, String>();
 
-    public final static Map<Object, Map> entityMap = new HashMap<Object, Map>();
+    public static final Map<Object, Map> entityMap = new HashMap<Object, Map>();
     private Map<String, Map> propertyMap;
     private Map<String, String> valueMap;
 
-    public final static Map<Object, Map> entityMapForColumn = new HashMap<Object, Map>();
+    public static final Map<Object, Map> entityMapForColumn = new HashMap<Object, Map>();
     private Map<String, String> columnPropertyMap;
 
-    public final static Map<Object, EntitiesToLog> entitiesToLog = new HashMap<Object, EntitiesToLog>();
+    public static final Map<Object, EntitiesToLog> entitiesToLog = new HashMap<Object, EntitiesToLog>();
 
     private PropertyResourceBundle columnNames;
     static private Locale locale;

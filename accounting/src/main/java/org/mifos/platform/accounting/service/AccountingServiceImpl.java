@@ -20,7 +20,6 @@
 
 package org.mifos.platform.accounting.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.LocalDate;
@@ -57,46 +56,38 @@ public class AccountingServiceImpl implements IAccountingService {
     }
 
     @Override
-    public List<AccountingDto> getAccountingDataFor(LocalDate startDate, LocalDate endDate) {
+    public final List<AccountingDto> getAccountingDataFor(LocalDate startDate, LocalDate endDate) {
         String fileName = cacheManager.getCacheFileName(startDate, endDate);
-
-        if (cacheManager.isAccountingDataAlreadyInCache(fileName)) {
-            return getAccoutingDataFromCache(fileName);
+        if (!cacheManager.isAccountingDataAlreadyInCache(fileName)) {
+            writeToCache(startDate, endDate);
         }
-        List<AccountingDto> accountingData = new ArrayList<AccountingDto>();
-        accountingData = getAccoutningDataFromDatabaseAfterCaching(startDate, endDate);
-        return accountingData;
+        return cacheManager.getAccoutingDataFromCache(fileName);
     }
 
-    private List<AccountingDto> getAccoutningDataFromDatabaseAfterCaching(LocalDate startDate, LocalDate endDate) {
+    private void writeToCache(LocalDate startDate, LocalDate endDate) {
         List<AccountingDto> accountingData = accountingDao.getAccountingDataByDate(startDate, endDate);
         if (!accountingData.isEmpty()) {
             cacheManager.writeAccountingDataToCache(accountingData, cacheManager.getCacheFileName(startDate, endDate));
         }
-        return cacheManager.getAccoutingDataFromCache(cacheManager.getCacheFileName(startDate, endDate));
-    }
-
-    private List<AccountingDto> getAccoutingDataFromCache(String fileName) {
-        return cacheManager.getAccoutingDataFromCache(fileName);
     }
 
     @Override
-    public String getTallyOutputFileName(LocalDate startDate, LocalDate endDate) {
+    public final String getTallyOutputFileName(LocalDate startDate, LocalDate endDate) {
         return cacheManager.getTallyOutputFileName(startDate, endDate);
     }
 
     @Override
-    public List<AccountingCacheFileInfo> getAccountingDataCacheInfo() {
+    public final List<AccountingCacheFileInfo> getAccountingDataCacheInfo() {
         return cacheManager.getAccountingDataCacheInfo();
     }
 
     @Override
-    public Boolean deleteCacheDir() {
+    public final Boolean deleteCacheDir() {
         return cacheManager.deleteCacheDir();
     }
 
     @Override
-    public Boolean hasAlreadyRanQuery(LocalDate startDate, LocalDate endDate) {
+    public final Boolean hasAlreadyRanQuery(LocalDate startDate, LocalDate endDate) {
         String fileName = cacheManager.getCacheFileName(startDate, endDate);
         return cacheManager.isAccountingDataAlreadyInCache(fileName);
     }

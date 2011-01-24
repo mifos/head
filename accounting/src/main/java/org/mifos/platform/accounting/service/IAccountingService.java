@@ -27,7 +27,7 @@ import org.mifos.platform.accounting.AccountingDto;
 
 public interface IAccountingService {
 
-    String getTallyOutputFor(LocalDate startDate, LocalDate endDate) throws Exception;
+    String getTallyOutputFor(LocalDate startDate, LocalDate endDate);
 
     List<AccountingDto> getAccountingDataFor(LocalDate startDate, LocalDate endDate);
 

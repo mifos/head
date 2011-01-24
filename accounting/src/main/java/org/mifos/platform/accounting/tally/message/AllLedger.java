@@ -30,19 +30,19 @@ public class AllLedger {
 
     private final String branchName;
 
-    public Boolean getIsDeemedPositive() {
+    public final Boolean getIsDeemedPositive() {
         return isDeemedPositive;
     }
 
-    public String getAmount() {
+    public final String getAmount() {
         return this.amount;
     }
 
-    public String getBranchName() {
+    public final String getBranchName() {
         return this.branchName;
     }
 
-    public String getLedgerName() {
+    public final String getLedgerName() {
         return ledgerName;
     }
 
@@ -54,7 +54,7 @@ public class AllLedger {
     }
 
     @Override
-    public String toString() {
+    public final String toString() {
         return isDeemedPositive + ";" + ledgerName + ";" + amount + ";" + branchName;
     }
 }

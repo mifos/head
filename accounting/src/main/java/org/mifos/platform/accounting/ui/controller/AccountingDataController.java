@@ -42,21 +42,20 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class AccountingDataController {
 
-    private static final Logger logger = LoggerFactory.getLogger(AccountingDataController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AccountingDataController.class);
 
     private final IAccountingService accountingService;
 
-    private final static String FROM_DATE = "fromDate";
-    private final static String TO_DATE = "toDate";
+    private static final String FROM_DATE = "fromDate";
+    private static final String TO_DATE = "toDate";
 
     @Autowired
     public AccountingDataController(IAccountingService accountingService) {
-        super();
         this.accountingService = accountingService;
     }
 
     @RequestMapping("renderAccountingData.ftl")
-    public ModelAndView showAccountingDataFor(@RequestParam(value = FROM_DATE) String paramFromDate,
+    public final ModelAndView showAccountingDataFor(@RequestParam(value = FROM_DATE) String paramFromDate,
             @RequestParam(value = TO_DATE) String paramToDate) {
         DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
         LocalDate fromDate = fmt.parseDateTime(paramFromDate).toLocalDate();
@@ -70,7 +69,7 @@ public class AccountingDataController {
             hasAlreadyRanQuery = accountingService.hasAlreadyRanQuery(fromDate, toDate);
             accountingData = accountingService.getAccountingDataFor(fromDate, toDate);
         } catch (Exception e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         }
 
         ModelAndView mav = new ModelAndView("renderAccountingData");
@@ -88,7 +87,7 @@ public class AccountingDataController {
     }
 
     @RequestMapping("accountingDataForm.ftl")
-    public ModelAndView showAccountingDataForm() {
+    public final ModelAndView accountingDataForm() {
         ModelAndView mav = new ModelAndView("accountingDataForm");
         List<BreadCrumbsLinks> breadcrumbs = new AdminBreadcrumbBuilder().withLink(
                 "accounting.generateaccountingexports", "accountingDataForm.ftl").build();
@@ -97,21 +96,21 @@ public class AccountingDataController {
     }
 
     @RequestMapping("deleteCacheDir.ftl")
-    public ModelAndView deleteCacheDir() {
+    public final ModelAndView deleteCacheDir() {
         ModelAndView mav = new ModelAndView("deleteCacheDir");
         mav.addObject("result", accountingService.deleteCacheDir());
         return mav;
     }
 
     @RequestMapping("renderAccountingDataCacheInfo.ftl")
-    public ModelAndView showAccountingCacheInfo() {
+    public final ModelAndView accountingCacheInfo() {
         List<AccountingCacheFileInfo> files = null;
         List<BreadCrumbsLinks> breadcrumbs = new AdminBreadcrumbBuilder().withLink("accounting.viewaccountingexports",
                 "renderAccountingDataCacheInfo.ftl").build();
         try {
             files = accountingService.getAccountingDataCacheInfo();
         } catch (Exception e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         }
         ModelAndView mav = new ModelAndView("renderAccountingDataCacheInfo");
         mav.addObject("breadcrumbs", breadcrumbs);

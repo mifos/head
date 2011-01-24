@@ -20,6 +20,9 @@
 
 package org.mifos.platform.accounting.service;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,10 +34,11 @@ import org.junit.runner.RunWith;
 import org.mifos.platform.accounting.AccountingDto;
 import org.mifos.platform.accounting.dao.IAccountingDao;
 import org.mockito.Mock;
-import static org.mockito.Mockito.*;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(AccountingDataCacheManager.class)
 public class AccountingServiceTest {
 
     @Mock
@@ -52,23 +56,43 @@ public class AccountingServiceTest {
 
     @Test
     public void testGetTallyOutputFileName() throws Exception {
-        when(cacheManager.getTallyOutputFileName(any(LocalDate.class), any(LocalDate.class))).thenReturn("DummyFileName");
+        when(cacheManager.getTallyOutputFileName(any(LocalDate.class), any(LocalDate.class))).thenReturn(
+                "DummyFileName");
         String fileName = accountingService.getTallyOutputFileName(createDate(2010, 8, 10), createDate(2010, 8, 10));
         Assert.assertEquals("DummyFileName", fileName);
     }
 
     @Test
     public void testGetTallyOutputFromCache() throws Exception {
-        when(cacheManager.getTallyOutputFileName(any(LocalDate.class), any(LocalDate.class))).thenReturn("DummyFileName");
-        List<AccountingDto> dataFromCache = new ArrayList<AccountingDto> ();
+        when(cacheManager.getTallyOutputFileName(any(LocalDate.class), any(LocalDate.class))).thenReturn(
+                "DummyFileName");
+        List<AccountingDto> dataFromCache = new ArrayList<AccountingDto>();
         dataFromCache.add(new AccountingDto("branch", "2010-10-12", "RECEIPT", "234324", "GLCODE NAME", "5", "546"));
         dataFromCache.add(new AccountingDto("branch", "2010-10-12", "RECEIPT", "15249", "GLCODE NAME", "6", "544"));
-        when(cacheManager.getAccoutingDataFromCache(any(String.class))).thenReturn(dataFromCache);
         when(cacheManager.isAccountingDataAlreadyInCache(any(String.class))).thenReturn(true);
-
+        when(accountingDao.getAccountingDataByDate(any(LocalDate.class), any(LocalDate.class))).thenReturn(
+                dataFromCache);
+        when(cacheManager.getAccoutingDataFromCache(any(String.class))).thenReturn(dataFromCache);
         String output = accountingService.getTallyOutputFor(createDate(2010, 8, 10), createDate(2010, 8, 10));
+        Assert.assertTrue("Should be receipt type", output.contains("VCHTYPE=\"Receipt\""));
+    }
 
-        Assert.assertTrue("Should be receipt type",output.contains("VCHTYPE=\"Receipt\""));
+    @Test
+    public void testDeleteDataDir() {
+        when(cacheManager.deleteCacheDir()).thenReturn(true);
+        Assert.assertTrue(accountingService.deleteCacheDir());
+    }
+
+    @Test
+    public void testHasAlreadyRanQuery() {
+        when(cacheManager.isAccountingDataAlreadyInCache(any(String.class))).thenReturn(true);
+        Assert.assertTrue(accountingService.hasAlreadyRanQuery(createDate(2010, 8, 10), createDate(2010, 8, 10)));
+    }
+
+    @Test
+    public void testGetAccountingDataCacheInfo() {
+        when(cacheManager.getAccountingDataCacheInfo()).thenReturn(null);
+        Assert.assertNull(accountingService.getAccountingDataCacheInfo());
     }
 
     private LocalDate createDate(int year, int month, int day) {
