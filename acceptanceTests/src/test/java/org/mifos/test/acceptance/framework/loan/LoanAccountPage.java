@@ -383,5 +383,14 @@ public class LoanAccountPage extends AbstractPage {
                 .submitAndNavigateToNextPage(statusParams)
                 .submitAndNavigateToLoanAccountPage();
     }
+
+    public LoanAccountPage changeAccountStatusToAccepted() {
+        EditLoanAccountStatusParameters statusParams = new EditLoanAccountStatusParameters();
+        statusParams.setStatus(EditLoanAccountStatusParameters.APPROVED);
+        statusParams.setNote("OK");
+        return navigateToEditAccountStatus()
+                .submitAndNavigateToNextPage(statusParams)
+                .submitAndNavigateToLoanAccountPage();
+    }
 }
 

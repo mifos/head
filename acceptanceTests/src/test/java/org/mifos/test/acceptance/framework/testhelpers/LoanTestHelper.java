@@ -22,6 +22,7 @@ package org.mifos.test.acceptance.framework.testhelpers;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
+import java.util.List;
 
 import org.joda.time.DateTime;
 import org.joda.time.ReadableInstant;
@@ -43,6 +44,9 @@ import org.mifos.test.acceptance.framework.loan.CreateLoanAccountEntryPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameters;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountsEntryPage;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountsSuccessPage;
+import org.mifos.test.acceptance.framework.loan.CreateMultipleLoanAccountSelectParameters;
 import org.mifos.test.acceptance.framework.loan.DisburseLoanConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.DisburseLoanPage;
 import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
@@ -330,7 +334,7 @@ public class LoanTestHelper {
             .navigateToLoanAccountDetailsPage();
     }
 
-    /*
+    /**
      *
      * Reverses the loan disbursal account
      * @param accountID the id of loan account that should be reversed
@@ -523,10 +527,6 @@ public class LoanTestHelper {
     }
 
     public LoanAccountPage createTwoLoanAccountsWithMixedRestricedPoducts(CreateLoanAccountSearchParameters searchParams1, CreateLoanAccountSearchParameters searchParams2, DisburseLoanParameters disburseParams) {
-        EditLoanAccountStatusParameters statusParams = new EditLoanAccountStatusParameters();
-        statusParams.setStatus(EditLoanAccountStatusParameters.APPROVED);
-        statusParams.setNote("OK");
-
         LoanAccountPage loanAccountPage = navigationHelper
             .navigateToAdminPage()
             .navigateToDefineProductMix()
@@ -534,7 +534,7 @@ public class LoanTestHelper {
             .navigateToCreateLoanAccountUsingLeftMenu()
             .searchAndNavigateToCreateLoanAccountPage(searchParams1)
             .continuePreviewSubmitAndNavigateToDetailsPage();
-        loanAccountPage.changeAccountStatus(statusParams);
+        loanAccountPage.changeAccountStatusToAccepted();
         loanAccountPage.navigateToDisburseLoan()
             .submitAndNavigateToDisburseLoanConfirmationPage(disburseParams)
             .submitAndNavigateToLoanAccountPage();
@@ -544,7 +544,52 @@ public class LoanTestHelper {
             .navigateToCreateLoanAccountUsingLeftMenu()
             .searchAndNavigateToCreateLoanAccountPage(searchParams2)
             .continuePreviewSubmitAndNavigateToDetailsPage()
-            .changeAccountStatus(statusParams)
+            .changeAccountStatusToAccepted()
             .tryNavigatingToDisburseLoanWithError();
+    }
+
+    /**
+     * Creates multiple accounts and navigates to creation success page.
+     * Must be on Clients And Accounts page.
+     * @param multipleAccParameters
+     * @param clients
+     * @param loanPurpose
+     * @return
+     */
+    public CreateLoanAccountsSuccessPage createMultipleLoanAccounts(CreateMultipleLoanAccountSelectParameters multipleAccParameters, String[] clients, String loanPurpose) {
+        ClientsAndAccountsHomepage clientsAndAccountsHomepage = new ClientsAndAccountsHomepage(selenium);
+        CreateLoanAccountsEntryPage createLoanAccountsEntryPage = clientsAndAccountsHomepage
+            .navigateToCreateMultipleLoanAccountsUsingLeftMenu()
+            .searchAndNavigateToCreateMultipleLoanAccountsEntryPage(multipleAccParameters);
+
+        for(int i = 0; i < clients.length; i++) {
+            createLoanAccountsEntryPage.selectClients(i, clients[i]);
+            createLoanAccountsEntryPage.updateLoanPurposeForClient(i, loanPurpose);
+        }
+
+        return createLoanAccountsEntryPage.submitAndNavigateToCreateMultipleLoanAccountsSuccessPage();
+    }
+
+    public CreateLoanAccountsSuccessPage createMultipleLoanAccountsWithMixedRestricedPoducts(CreateMultipleLoanAccountSelectParameters multipleAccParameters1, CreateMultipleLoanAccountSelectParameters multipleAccParameters2, DisburseLoanParameters disburseParams, String[] clients) {
+        navigationHelper.navigateToAdminPage()
+            .navigateToDefineProductMix()
+            .createOneMixAndNavigateToClientsAndAccounts(multipleAccParameters1.getLoanProduct(), multipleAccParameters2.getLoanProduct());
+
+        CreateLoanAccountsSuccessPage createLoanAccountsSuccessPage = createMultipleLoanAccounts(multipleAccParameters1, clients, "0000-Animal Husbandry");
+        List<String> accountNumbers = createLoanAccountsSuccessPage.verifyAndGetLoanAccountNumbers(clients.length);
+        LoanAccountPage loanAccountPage = createLoanAccountsSuccessPage.selectLoansAndNavigateToLoanAccountPage(0);
+        for(int i = 0; i < accountNumbers.size(); i++) {
+            if(i > 0) {
+                loanAccountPage = loanAccountPage.navigateToClientsAndAccountsUsingHeaderTab()
+                    .searchForClient(accountNumbers.get(i))
+                    .navigateToLoanAccountSearchResult("Account # "+accountNumbers.get(i));
+            }
+            loanAccountPage.changeAccountStatusToAccepted();
+            loanAccountPage.navigateToDisburseLoan()
+                .submitAndNavigateToDisburseLoanConfirmationPage(disburseParams)
+                .submitAndNavigateToLoanAccountPage();
+        }
+        loanAccountPage.navigateToClientsAndAccountsUsingHeaderTab();
+        return createMultipleLoanAccounts(multipleAccParameters2, clients, "0000-Animal Husbandry");
     }
 }

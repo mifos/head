@@ -28,6 +28,8 @@ import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountEntryPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameters;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountsSuccessPage;
+import org.mifos.test.acceptance.framework.loan.CreateMultipleLoanAccountSelectParameters;
 import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountInformationParameters;
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountStatusParameters;
@@ -47,6 +49,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.List;
 import java.util.Random;
 
 @SuppressWarnings("PMD")
@@ -265,6 +268,57 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
 
         loanAccountPage.verifyError(error);
 
+    }
+
+    /**
+     * Verify a user is prevented from creating a second loan account
+     * (for two or more clients using the bulk loan creation pipeline)
+     * with a loan product restricted with the first loan.
+     * http://mifosforge.jira.com/browse/MIFOSTEST-95
+     * @throws Exception
+     */
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void createMultipleLoanAccountsWithRestrictedProductsMix() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTime targetTime = new DateTime(2011,1,24,15,0,0,0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+
+        CreateMultipleLoanAccountSelectParameters multipleAccParameters1 = new CreateMultipleLoanAccountSelectParameters();
+        multipleAccParameters1.setBranch("MyOffice1233265929385");
+        multipleAccParameters1.setLoanOfficer("Joe1233265931256 Guy1233265931256");
+        multipleAccParameters1.setCenter("MyCenter1233265933427");
+        multipleAccParameters1.setLoanProduct("WeeklyFlatLoanWithOneTimeFees");
+        CreateMultipleLoanAccountSelectParameters multipleAccParameters2 = new CreateMultipleLoanAccountSelectParameters();
+        multipleAccParameters2.setBranch("MyOffice1233265929385");
+        multipleAccParameters2.setLoanOfficer("Joe1233265931256 Guy1233265931256");
+        multipleAccParameters2.setCenter("MyCenter1233265933427");
+        multipleAccParameters2.setLoanProduct("WeeklyClientDeclinetLoanWithPeriodicFee");
+        DisburseLoanParameters disburseParams = new DisburseLoanParameters();
+        disburseParams.setPaymentType(DisburseLoanParameters.CASH);
+        disburseParams.setDisbursalDateDD("24");
+        disburseParams.setDisbursalDateMM("01");
+        disburseParams.setDisbursalDateYYYY("2011");
+        String error = "The loan could not be disbursed as {0} and {1} are not allowed to co-exist";
+        String[] clients = new String[3];
+        clients[0] = "Stu1233265941610 Client1233265941610";
+        clients[1] = "Stu1233265958456 Client1233265958456";
+        clients[2] = "Stu1233265968663 Client1233265968663";
+
+        CreateLoanAccountsSuccessPage createLoanAccountsSuccessPage = loanTestHelper.createMultipleLoanAccountsWithMixedRestricedPoducts(multipleAccParameters1, multipleAccParameters2, disburseParams, clients);
+        List<String> accountNumbers = createLoanAccountsSuccessPage.verifyAndGetLoanAccountNumbers(clients.length);
+        LoanAccountPage loanAccountPage = createLoanAccountsSuccessPage.selectLoansAndNavigateToLoanAccountPage(0);
+
+        for(int i = 0; i < accountNumbers.size(); i++) {
+            if(i > 0) {
+                loanAccountPage = loanAccountPage.navigateToClientsAndAccountsUsingHeaderTab()
+                    .searchForClient(accountNumbers.get(i))
+                    .navigateToLoanAccountSearchResult("Account # "+accountNumbers.get(i));
+            }
+            loanAccountPage.changeAccountStatusToAccepted();
+            loanAccountPage.tryNavigatingToDisburseLoanWithError();
+            loanAccountPage.verifyError(error);
+        }
     }
 
     private String createLoanAndCheckAmount(CreateLoanAccountSearchParameters searchParameters,
