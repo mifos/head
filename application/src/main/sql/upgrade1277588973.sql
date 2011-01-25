@@ -1,6 +1,6 @@
-/* 
+/*
  * Fix for existing data: MIFOS-1705
- * update loan_summary 'paid' amounts from financial_trxn postings for written-off 
+ * update loan_summary 'paid' amounts from financial_trxn postings for written-off
  * and rescheduled loan accounts
  */
 
@@ -17,7 +17,7 @@ left join    (select a.account_id,
         and fint.fin_action_id = 1
         and fint.debit_credit_flag = 1
         group by a.account_id) correct on correct.account_id = ls.account_id
-        
+
 set ls.principal_paid = abs(ifnull(correct.amount_paid,0));
 
 
@@ -34,7 +34,7 @@ left join    (select a.account_id,
         and fint.fin_action_id = 2
         and fint.debit_credit_flag = 1
         group by a.account_id) correct on correct.account_id = ls.account_id
-        
+
 set ls.interest_paid = abs(ifnull(correct.amount_paid,0));
 
 
@@ -51,7 +51,7 @@ left join    (select a.account_id,
         and fint.fin_action_id in (3, 4)
         and fint.debit_credit_flag = 1
         group by a.account_id) correct on correct.account_id = ls.account_id
-        
+
 set ls.fees_paid = abs(ifnull(correct.amount_paid,0));
 
 
@@ -68,7 +68,7 @@ left join    (select a.account_id,
         and fint.fin_action_id = 6
         and fint.debit_credit_flag = 1
         group by a.account_id) correct on correct.account_id = ls.account_id
-        
+
 set ls.penalty_paid = abs(ifnull(correct.amount_paid,0));
 
 

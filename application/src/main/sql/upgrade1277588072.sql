@@ -6,7 +6,7 @@ alter table holiday
 
 alter table holiday
     add column holiday_id int not null auto_increment primary key;
-    
+
 create table office_holiday (
   office_id smallint,
   holiday_id int,
@@ -22,11 +22,10 @@ create table office_holiday (
 )
 engine=innodb character set utf8;
 
-update office_holiday, office, holiday 
-    set office_holiday.office_id = office.office_id, 
-        office_holiday.holiday_id = holiday.office_id 
+update office_holiday, office, holiday
+    set office_holiday.office_id = office.office_id,
+        office_holiday.holiday_id = holiday.office_id
     where office.office_id = holiday.office_id;
 
 alter table holiday
     drop column office_id;
-    

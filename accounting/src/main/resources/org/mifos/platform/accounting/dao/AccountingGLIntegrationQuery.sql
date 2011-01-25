@@ -3,55 +3,55 @@ select tally.branchname, tally.voucherdate, tally.vouchertype, tally.glcode, tal
 from
 (
 /* Note: the query is has been made into a sub-select because some output columns were not being picked up on the ubuntu platform */
-select  o.display_name as "branchname", 
+select  o.display_name as "branchname",
 DATE_FORMAT(fintrxn.action_date, '%Y-%m-%d') as "voucherdate",
 
-(CASE fintrxn.fin_action_id 
+(CASE fintrxn.fin_action_id
 
 WHEN 1 then /*PRINCIPALPOSTING*/
-    (CASE atrxn.account_action_id 
+    (CASE atrxn.account_action_id
         WHEN 1 then 'RECEIPT' /*LoanRepayment*/
         WHEN 9 then 'JOURNAL' /*Adjustment (undoes LoanRepayment)*/
         WHEN 18 then 'JOURNAL' /*LoanReversal (reverses fees & payments parts)*/
-        ELSE concat('Unknown Account Action:', atrxn.account_action_id, ' for Finanical Action ', fintrxn.fin_action_id) 
+        ELSE concat('Unknown Account Action:', atrxn.account_action_id, ' for Finanical Action ', fintrxn.fin_action_id)
     END)
 WHEN 2 then /*INTERESTPOSTING*/
-    (CASE atrxn.account_action_id 
+    (CASE atrxn.account_action_id
         WHEN 1 then 'RECEIPT' /*LoanRepayment*/
         WHEN 9 then 'JOURNAL' /*Adjustment (undoes LoanRepayment)*/
         WHEN 18 then 'JOURNAL' /*LoanReversal (reverses fees & payments parts)*/
-        ELSE concat('Unknown Account Action:', atrxn.account_action_id, ' for Finanical Action ', fintrxn.fin_action_id) 
+        ELSE concat('Unknown Account Action:', atrxn.account_action_id, ' for Finanical Action ', fintrxn.fin_action_id)
     END)
 WHEN 4 then /*MISCFEEPOSTING*/
-    (CASE atrxn.account_action_id 
+    (CASE atrxn.account_action_id
         WHEN 1 then 'RECEIPT' /*LoanRepayment*/
         WHEN 9 then 'JOURNAL' /*Adjustment (undoes LoanRepayment)*/
         WHEN 18 then 'JOURNAL' /*LoanReversal (reverses fees & payments parts)*/
-        ELSE concat('Unknown Account Action:', atrxn.account_action_id, ' for Finanical Action ', fintrxn.fin_action_id) 
+        ELSE concat('Unknown Account Action:', atrxn.account_action_id, ' for Finanical Action ', fintrxn.fin_action_id)
     END)
 WHEN 6 then /*MISCPENALTYPOSTING*/
-    (CASE atrxn.account_action_id 
+    (CASE atrxn.account_action_id
         WHEN 1 then 'RECEIPT' /*LoanRepayment*/
         WHEN 9 then 'JOURNAL' /*Adjustment (undoes LoanRepayment)*/
         WHEN 12 then 'RECEIPT' /*CustomerAccountRepayment*/
         WHEN 18 then 'JOURNAL' /*LoanReversal (reverses fees & payments parts)*/
-        ELSE concat('Unknown Account Action:', atrxn.account_action_id, ' for Finanical Action ', fintrxn.fin_action_id) 
+        ELSE concat('Unknown Account Action:', atrxn.account_action_id, ' for Finanical Action ', fintrxn.fin_action_id)
     END)
 WHEN 3 then  /*FEEPOSTING*/
-    (CASE atrxn.account_action_id 
+    (CASE atrxn.account_action_id
         WHEN 1 then 'RECEIPT' /*Fee*/
         WHEN 4 then 'RECEIPT' /*Fee*/
         WHEN 9 then 'JOURNAL' /* Adjustment (undoes Fee) */
         WHEN 18 then 'JOURNAL' /*LoanReversal (reverses fees & payments parts)*/
         WHEN 12 then 'RECEIPT' /*Customer Fee*/
         WHEN 13 THEN 'JOURNAL' /*CustomerAdjustment*/
-        ELSE concat('Unknown Account Action:', atrxn.account_action_id, ' for Finanical Action ', fintrxn.fin_action_id) 
+        ELSE concat('Unknown Account Action:', atrxn.account_action_id, ' for Finanical Action ', fintrxn.fin_action_id)
     END)
 WHEN 7 then  /*DISBURSAL*/
-    (CASE atrxn.account_action_id 
+    (CASE atrxn.account_action_id
         WHEN 10 then 'PAYMENT' /*Disbursal*/
         WHEN 19 then 'JOURNAL' /*DisrbursalAmountReversal (undoes Disbursal part)*/
-        ELSE concat('Unknown Account Action:', atrxn.account_action_id, ' for Finanical Action ', fintrxn.fin_action_id) 
+        ELSE concat('Unknown Account Action:', atrxn.account_action_id, ' for Finanical Action ', fintrxn.fin_action_id)
     END)
 
 

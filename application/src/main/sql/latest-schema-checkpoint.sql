@@ -2100,7 +2100,7 @@ create table account (
   closed_date date,
   version_no integer,
   offsetting_allowable smallint not null,
-  external_id varchar(100),  
+  external_id varchar(100),
   primary key(account_id),
   foreign key(account_state_id)
     references account_state(account_state_id)
@@ -4531,13 +4531,13 @@ create table batch_branch_confirmation_disbursement(
   references batch_branch_cash_confirmation_report(branch_cash_confirmation_report_id)
 )engine=innodb character set utf8;
 
-create table imported_transactions_files 
-( file_name varchar(100) not null, 
-  submitted_on timestamp not null, 
+create table imported_transactions_files
+( file_name varchar(100) not null,
+  submitted_on timestamp not null,
   submitted_by smallint not null,
   primary key (file_name),
-  foreign key (submitted_by) 
-  references personnel(personnel_id) 
-  on delete no action 
+  foreign key (submitted_by)
+  references personnel(personnel_id)
+  on delete no action
   on update no action
 )engine=innodb character set utf8;

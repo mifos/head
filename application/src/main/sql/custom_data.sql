@@ -1,4 +1,4 @@
--- This SQL script contains custom data that is loaded for use in a 
+-- This SQL script contains custom data that is loaded for use in a
 -- test/demo/developer database and is not intended to be loaded in production
 
 -- Entity: Salutation
@@ -395,7 +395,7 @@ insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value
  insert into lookup_value(lookup_id,entity_id,lookup_name) values(110, 43, 'CollateralTypes-Type2');
  insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
  values(200, 1, 110, null);
- 
+
 insert into lookup_value(lookup_id,entity_id,lookup_name) values
 (65, 34, 'DBUpgrade.OfficeLevels.Unsued'),
 (71, 35, 'DBUpgrade.PrdApplicableMaster.Unused'),
