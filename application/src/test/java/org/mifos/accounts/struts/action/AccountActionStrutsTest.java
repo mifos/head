@@ -44,6 +44,7 @@ import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.screen.TransactionHistoryDto;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -133,7 +134,7 @@ public class AccountActionStrutsTest extends MifosMockStrutsTestCase {
 
         actionPerform();
         verifyForward("getTransactionHistory_success");
-        TestObjectFactory.flushandCloseSession();
+        StaticHibernateUtil.flushSession();
         accountBO = TestObjectFactory.getObject(AccountBO.class, loan.getAccountId());
         List<TransactionHistoryDto> trxnHistoryList = (List<TransactionHistoryDto>) SessionUtils.getAttribute(
                 SavingsConstants.TRXN_HISTORY_LIST, request);

@@ -166,10 +166,6 @@ public class TestObjectPersistence {
         StaticHibernateUtil.flushSession();
     }
 
-    public void flushandCloseSession() {
-        StaticHibernateUtil.flushSession();
-    }
-
     public <T> T getObject(Class<T> clazz, Integer pk) {
         return (T) StaticHibernateUtil.getSessionTL().get(clazz, pk);
     }

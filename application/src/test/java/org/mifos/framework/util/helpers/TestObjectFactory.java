@@ -1446,10 +1446,6 @@ public class TestObjectFactory {
         return userContext;
     }
 
-    public static void flushandCloseSession() {
-        testObjectPersistence.flushandCloseSession();
-    }
-
     public static CustomerBO getCustomer(final Integer customerId) {
         return testObjectPersistence.getCustomer(customerId);
     }

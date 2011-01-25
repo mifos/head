@@ -86,7 +86,7 @@ public class AccountActionDateEntityIntegrationTest extends AccountIntegrationTe
         group.getCustomerAccount().addAccountFees(accountFeesEntity);
         TestObjectFactory.updateObject(group);
 
-        TestObjectFactory.flushandCloseSession();
+        StaticHibernateUtil.flushSession();
         group = TestObjectFactory.getGroup(group.getCustomerId());
 
         CustomerScheduleEntity accountActionDateEntity = (CustomerScheduleEntity) group.getCustomerAccount()
@@ -106,7 +106,7 @@ public class AccountActionDateEntityIntegrationTest extends AccountIntegrationTe
             }
         }
         TestObjectFactory.updateObject(group);
-        TestObjectFactory.flushandCloseSession();
+        StaticHibernateUtil.flushSession();
 
         group = TestObjectFactory.getGroup(group.getCustomerId());
         CustomerScheduleEntity firstInstallment = (CustomerScheduleEntity) group.getCustomerAccount()

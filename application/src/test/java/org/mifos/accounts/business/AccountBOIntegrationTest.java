@@ -177,7 +177,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         IntegrationTestObjectMother.applyAccountPayment(loan, paymentData);
 
         TestObjectFactory.updateObject(loan);
-        TestObjectFactory.flushandCloseSession();
+        StaticHibernateUtil.flushSession();
         Assert.assertEquals("The amount returned for the payment should have been 1272", 700.0, loan.getLastPmntAmnt());
         groupLoan = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
     }
@@ -253,13 +253,13 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         IntegrationTestObjectMother.applyAccountPayment(loan, accountPaymentDataView);
 
         TestObjectFactory.updateObject(loan);
-        TestObjectFactory.flushandCloseSession();
+        StaticHibernateUtil.flushSession();
         loan = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
 
         List<AccountPaymentEntity> payments = loan.getAccountPayments();
         Assert.assertEquals(1, payments.size());
         AccountPaymentEntity accntPmnt = payments.iterator().next();
-        TestObjectFactory.flushandCloseSession();
+        StaticHibernateUtil.flushSession();
 
         Assert.assertEquals("Account payment retrieved should be zero with currency MFI currency", TestUtils
                 .createMoney(0), accntPmnt.getAmount());
@@ -297,7 +297,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
             Assert.assertEquals(ids.get(i), transactionHistoryDto.getAccountTrxnId());
             i++;
         }
-        TestObjectFactory.flushandCloseSession();
+        StaticHibernateUtil.flushSession();
         groupLoan = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
     }
 
@@ -321,7 +321,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         for (TransactionHistoryDto transactionHistoryDto : trxnHistlist) {
             Assert.assertEquals(transactionHistoryDto.getPostedBy(), personnel.getDisplayName());
         }
-        TestObjectFactory.flushandCloseSession();
+        StaticHibernateUtil.flushSession();
         groupLoan = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
     }
 
@@ -332,7 +332,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         AccountFeesEntity accountOneTimeFee = new AccountFeesEntity(groupLoan, oneTimeFee, new Double("1.0"));
         groupLoan.addAccountFees(accountOneTimeFee);
         legacyAccountDao.createOrUpdate(groupLoan);
-        TestObjectFactory.flushandCloseSession();
+        StaticHibernateUtil.flushSession();
         groupLoan = TestObjectFactory.getObject(LoanBO.class, groupLoan.getAccountId());
         Assert.assertEquals(1, groupLoan.getPeriodicFeeList().size());
     }
@@ -354,7 +354,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
 
     @Test
     public void testDeleteFutureInstallments() throws HibernateException, SystemException, AccountException {
-        TestObjectFactory.flushandCloseSession();
+        StaticHibernateUtil.flushSession();
         groupLoan = TestObjectFactory.getObject(LoanBO.class, groupLoan.getAccountId());
         groupLoan.deleteFutureInstallments();
         StaticHibernateUtil.flushAndClearSession();
@@ -364,7 +364,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
 
     @Test
     public void testUpdate() throws Exception {
-        TestObjectFactory.flushandCloseSession();
+        StaticHibernateUtil.flushSession();
         groupLoan = (LoanBO) StaticHibernateUtil.getSessionTL().get(LoanBO.class, groupLoan.getAccountId());
         groupLoan.setUserContext(TestUtils.makeUser());
 
@@ -374,7 +374,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
                 groupLoan);
         groupLoan.addAccountNotes(accountNotesEntity);
         TestObjectFactory.updateObject(groupLoan);
-        TestObjectFactory.flushandCloseSession();
+        StaticHibernateUtil.flushSession();
         groupLoan = (LoanBO) StaticHibernateUtil.getSessionTL().get(LoanBO.class, groupLoan.getAccountId());
         for (AccountNotesEntity accountNotes : groupLoan.getRecentAccountNotes()) {
             Assert.assertEquals("Last note added is account updated", "account updated", accountNotes.getComment());
