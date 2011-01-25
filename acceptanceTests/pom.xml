@@ -145,7 +145,7 @@
                 <browser>*firefox</browser>
             </properties>
         </profile>
-		<profile>
+        <profile>
             <id>chrome</id>
             <properties>
                 <browser>*chrome</browser>

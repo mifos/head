@@ -48,7 +48,7 @@
             <forward name="cancelLoanProductChangeLog" path="/loanproductaction.do?method=get"/>
 
         </action>
-	</action-mappings>
+    </action-mappings>
     <message-resources key="ProductDefUIResources"
                        parameter="org.mifos.config.localizedResources.ProductDefinitionResources"
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>

@@ -4,10 +4,10 @@
 <tableInfo>
   <headerDetails  headerStyle="drawtablerowbold"/> 
   <row totWidth="100" bottomLineRequired="false">
-	<column label="Date" value="userPrefferedTransactionDate" valueType="method" columnType="text">
+    <column label="Date" value="userPrefferedTransactionDate" valueType="method" columnType="text">
          <columnDetails  rowStyle="drawtablerow" colWidth="8"/>
     </column>
-	<column label="PaymentID" value="paymentId" valueType="method" columnType="text">
+    <column label="PaymentID" value="paymentId" valueType="method" columnType="text">
          <columnDetails  rowStyle="drawtablerow" colWidth="8"/>
     </column>
     <column label="TransactionID" value="accountTrxnId" valueType="method" columnType="text">

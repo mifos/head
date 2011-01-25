@@ -28,7 +28,7 @@
     </parent>
 
     <dependencies>
-    	<dependency>
+        <dependency>
             <groupId>org.mifos</groupId>
             <artifactId>mifos-serviceInterfaces</artifactId>
         </dependency>

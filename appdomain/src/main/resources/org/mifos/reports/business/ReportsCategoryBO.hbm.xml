@@ -15,7 +15,7 @@
     </set>   
     
     <property name="activityId" column="activity_id" type="short" />
-    		
+            
    </class> 
      
 </hibernate-mapping> 

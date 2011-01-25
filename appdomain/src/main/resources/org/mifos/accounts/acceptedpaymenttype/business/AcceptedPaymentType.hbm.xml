@@ -21,6 +21,6 @@
     <![CDATA[ from  AcceptedPaymentType paymentType where paymentType.acceptedPaymentTypeId =:paymentTypeId ]]>
    </query>
     <query name="acceptedpaymenttype.getAcceptedPaymentTypesForATransaction">
-	<![CDATA[from AcceptedPaymentType paymentType where paymentType.transactionTypeEntity.id=:transactionId ]]>
-	</query>
+    <![CDATA[from AcceptedPaymentType paymentType where paymentType.transactionTypeEntity.id=:transactionId ]]>
+    </query>
 </hibernate-mapping>

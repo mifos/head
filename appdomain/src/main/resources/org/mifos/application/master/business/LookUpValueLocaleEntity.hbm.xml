@@ -6,8 +6,8 @@
 <hibernate-mapping > 
   <class name="org.mifos.application.master.business.LookUpValueLocaleEntity" 
     table="lookup_value_locale" >
-  	<id column="lookup_value_id" name="lookUpValueId" type="java.lang.Integer" > 
-		<generator class="native"></generator>
+      <id column="lookup_value_id" name="lookUpValueId" type="java.lang.Integer" > 
+        <generator class="native"></generator>
     </id>
     <property column="lookup_id"  name="lookUpId"  />
     <property column="lookup_value"  name="lookUpValue"  type="java.lang.String"/>
@@ -19,7 +19,7 @@
   
   </class> 
   <query name="lookUpValueLocaleEntity.getByLocaleAndLookUpId">
-		<![CDATA[from org.mifos.application.master.business.LookUpValueLocaleEntity luvle 
-		         where luvle.localeId=:aLocaleId and luvle.lookUpId=:aLookUpId ]]>
+        <![CDATA[from org.mifos.application.master.business.LookUpValueLocaleEntity luvle 
+                 where luvle.localeId=:aLocaleId and luvle.lookUpId=:aLookUpId ]]>
   </query>
 </hibernate-mapping>

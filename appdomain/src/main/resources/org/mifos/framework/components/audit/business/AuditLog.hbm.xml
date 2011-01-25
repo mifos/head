@@ -13,19 +13,19 @@
         <property name="entityId" column="entity_id" access="field"/>
         <property name="entityType" column="entity_type" access="field"/>
         <property name="modifierName" column="modifier_name" access="field"/>
-	    <property name="updatedBy" column="changed_by" type="short" access="field"/>
+        <property name="updatedBy" column="changed_by" type="short" access="field"/>
         <property name="updatedDate" column="changed_date" access="field"/>
         
-        <set name="auditLogRecords"  cascade="all" 	inverse="true" table="change_log_detail" access="field" order-by="SEQUENCE_NUM">
+        <set name="auditLogRecords"  cascade="all"     inverse="true" table="change_log_detail" access="field" order-by="SEQUENCE_NUM">
             <key column="change_log_id"  />
             <one-to-many   class="org.mifos.framework.components.audit.business.AuditLogRecord"   />
-    	</set>	
+        </set>    
        
        
     </class>
    <query name="retrieveAuditLogRecords">
             <![CDATA[from org.mifos.framework.components.audit.business.AuditLog al where 
-           			 	al.entityType=:entityType and al.entityId=:entityId order by al.id desc]]>
+                            al.entityType=:entityType and al.entityId=:entityId order by al.id desc]]>
     </query>
    
 </hibernate-mapping>

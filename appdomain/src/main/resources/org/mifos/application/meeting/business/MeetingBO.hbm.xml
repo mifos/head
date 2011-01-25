@@ -9,9 +9,9 @@
         <id name="meetingId" column="meeting_id" type="integer" unsaved-value="null" access="field">
             <generator class="native"/>
         </id>
-		<version name="versionNo" column="version_no" type="integer" unsaved-value="null"/>
-	 	<one-to-one name="meetingDetails"  class="org.mifos.application.meeting.business.MeetingDetailsEntity"   lazy="false" cascade="all" property-ref="meeting" access="field"/>
-	 	<many-to-one name="meetingType" column="meeting_type_id"  class="org.mifos.application.meeting.business.MeetingTypeEntity"  insert="true" update="true"  unique="true" lazy="false" cascade="none" access="field"/>
+        <version name="versionNo" column="version_no" type="integer" unsaved-value="null"/>
+         <one-to-one name="meetingDetails"  class="org.mifos.application.meeting.business.MeetingDetailsEntity"   lazy="false" cascade="all" property-ref="meeting" access="field"/>
+         <many-to-one name="meetingType" column="meeting_type_id"  class="org.mifos.application.meeting.business.MeetingTypeEntity"  insert="true" update="true"  unique="true" lazy="false" cascade="none" access="field"/>
         <property name="meetingPlace" column="meeting_place" type="string" />
         <property name="meetingStartDate" column="start_date" type="date" access="field"/>  
     </class>

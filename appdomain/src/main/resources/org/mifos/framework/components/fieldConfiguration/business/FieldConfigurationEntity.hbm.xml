@@ -5,10 +5,10 @@
 
 <hibernate-mapping>
  <class 
- 	name="org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity" 
- 	table="field_configuration">
+     name="org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity" 
+     table="field_configuration">
      <id name="fieldConfigId" column="field_config_id">
-	      <generator class="native"/>
+          <generator class="native"/>
      </id>
     <property name="fieldName" column="field_name" />
     <many-to-one
@@ -22,7 +22,7 @@
  </class>
  <query name="getFieldList">
          <![CDATA[from org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity fce where 
-         			fce.entityMaster.id=:entityId]]>
+                     fce.entityMaster.id=:entityId]]>
  </query>
  <query name="getAllFieldConfigurationList">
          <![CDATA[from org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity fce]]>
@@ -30,7 +30,7 @@
  
  <query name="findVisibleMandatoryConfigurableFieldsApplicableTo">
          <![CDATA[from org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity fce where 
-         			fce.entityMaster.id=:entityId and fce.mandatoryFlag = 1 and fce.hiddenFlag=0]]>
+                     fce.entityMaster.id=:entityId and fce.mandatoryFlag = 1 and fce.hiddenFlag=0]]>
  </query>
 </hibernate-mapping>
  

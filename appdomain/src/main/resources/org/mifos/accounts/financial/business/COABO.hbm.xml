@@ -3,35 +3,35 @@
                             "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
                             "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
-	<class name="org.mifos.accounts.financial.business.COABO" table="coa">
-		<id name="accountId" column="coa_id" access="field">
-			<generator class="native" />
-		</id>
+    <class name="org.mifos.accounts.financial.business.COABO" table="coa">
+        <id name="accountId" column="coa_id" access="field">
+            <generator class="native" />
+        </id>
 
-		<property name="accountName" column="coa_name" access="field" />
-		<many-to-one name="associatedGlcode" column="glcode_id" 
-		    class="org.mifos.accounts.financial.business.GLCodeEntity" 
-		    fetch="join" cascade="none" update="false" insert="true" 
-		    unique="true" access="field" />
-		<many-to-one name="coaHierarchy" column="coa_id" 
-		    class="org.mifos.accounts.financial.business.COAHierarchyEntity" 
-		    lazy="false" cascade="none" update="false" insert="false" 
-		    unique="true" access="field" />
-		<set name="subCategory" cascade="none" inverse="true" 
-		    table="coahierarchy" lazy="false" fetch="join" access="field">
-			<key column="parent_coaid" />
+        <property name="accountName" column="coa_name" access="field" />
+        <many-to-one name="associatedGlcode" column="glcode_id" 
+            class="org.mifos.accounts.financial.business.GLCodeEntity" 
+            fetch="join" cascade="none" update="false" insert="true" 
+            unique="true" access="field" />
+        <many-to-one name="coaHierarchy" column="coa_id" 
+            class="org.mifos.accounts.financial.business.COAHierarchyEntity" 
+            lazy="false" cascade="none" update="false" insert="false" 
+            unique="true" access="field" />
+        <set name="subCategory" cascade="none" inverse="true" 
+            table="coahierarchy" lazy="false" fetch="join" access="field">
+            <key column="parent_coaid" />
 
-			<many-to-many 
-			    class="org.mifos.accounts.financial.business.COAHierarchyEntity" 
-			    column="coa_id" fetch="join" />
-		</set>
-		<!-- The corresponding Java type is simply a String, but
-		accessors/mutators of this field shall only use/provide the
-		GLCategoryType constant. -->
-		<property name="categoryType" column="category_type" access="field"
-		type="string" />
+            <many-to-many 
+                class="org.mifos.accounts.financial.business.COAHierarchyEntity" 
+                column="coa_id" fetch="join" />
+        </set>
+        <!-- The corresponding Java type is simply a String, but
+        accessors/mutators of this field shall only use/provide the
+        GLCategoryType constant. -->
+        <property name="categoryType" column="category_type" access="field"
+        type="string" />
 
-	</class>
+    </class>
     <query name="COABO.getTopLevelAccount"><![CDATA[ 
         select coa
         from org.mifos.accounts.financial.business.COABO coa,
@@ -66,11 +66,11 @@
             coa.associatedGlcode = glCodeEntity.glcodeId
         ]]>
     </query>
-	<query name="COABO.getAllCoa">
-		<![CDATA[
-		    from  org.mifos.accounts.financial.business.COABO coa
-		]]>
-	</query>
+    <query name="COABO.getAllCoa">
+        <![CDATA[
+            from  org.mifos.accounts.financial.business.COABO coa
+        ]]>
+    </query>
     
     
 </hibernate-mapping>

@@ -7,7 +7,7 @@
 <hibernate-mapping>
 
     <class name="org.mifos.reports.business.ReportsBO" 
-    	table="report">
+        table="report">
         <id name="reportId" column="report_id" type="short">
             <generator class="native"/>
         </id>
@@ -16,19 +16,19 @@
         <property name="activityId" column="activity_id" type="short" />    
         <property name="reportName" column="report_name" type="string" />    
         <property name="reportIdentifier" column="report_identifier" type="string" />        
-    	<many-to-one name="reportsCategoryBO" 
-    		column="report_category_id" 
-    		class="org.mifos.reports.business.ReportsCategoryBO" 
-    		/>   
-		<one-to-one 
-			name="reportsJasperMap" cascade="all"
-			class="org.mifos.reports.business.ReportsJasperMap" 
-			/>   
+        <many-to-one name="reportsCategoryBO" 
+            column="report_category_id" 
+            class="org.mifos.reports.business.ReportsCategoryBO" 
+            />   
+        <one-to-one 
+            name="reportsJasperMap" cascade="all"
+            class="org.mifos.reports.business.ReportsJasperMap" 
+            />   
 
     </class>
     
     <query name="getAllReports">
-   	       <![CDATA[ from ReportsCategoryBO ]]>
+              <![CDATA[ from ReportsCategoryBO ]]>
     </query> 
     
 </hibernate-mapping>

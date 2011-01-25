@@ -10,8 +10,8 @@
         <id name="personnelMovementId" column="personnel_movement_id" type="short" access="field">
             <generator class="native"/>
         </id>
-		 <property name="status" column="status" type="short" access="field"/>
-		<property name="startDate" column="start_date" type="date" access="field"/>                                        
+         <property name="status" column="status" type="short" access="field"/>
+        <property name="startDate" column="start_date" type="date" access="field"/>                                        
         <property name="endDate" column="end_date" type="date" />                                        
         <property name="updatedBy" column="updated_by" type="short" access="field"/>                                     
         <property name="updatedDate" column="updated_date" type="date" access="field"/>      

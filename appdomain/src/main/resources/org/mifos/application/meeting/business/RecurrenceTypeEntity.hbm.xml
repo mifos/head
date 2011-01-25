@@ -15,6 +15,6 @@
  
     </class>
     <query name="meeting.fetchAllReccurenceTypes">
-		<![CDATA[from org.mifos.application.meeting.business.RecurrenceTypeEntity]]>
-	</query>
+        <![CDATA[from org.mifos.application.meeting.business.RecurrenceTypeEntity]]>
+    </query>
 </hibernate-mapping>

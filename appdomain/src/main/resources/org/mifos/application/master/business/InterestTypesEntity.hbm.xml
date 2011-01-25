@@ -16,6 +16,6 @@
     </class>
     
     <query name="findInterestTypeById">
-		<![CDATA[from InterestTypesEntity i where i.id=:ID]]>
-	</query>
+        <![CDATA[from InterestTypesEntity i where i.id=:ID]]>
+    </query>
 </hibernate-mapping>

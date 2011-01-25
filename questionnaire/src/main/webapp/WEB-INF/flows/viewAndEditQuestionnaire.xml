@@ -30,15 +30,15 @@
         <on-entry>
             <evaluate result="flowScope.questionGroupInstanceDetails" expression="questionnaireServiceFacade.getQuestionGroupInstancesWithUnansweredQuestionGroups(requestParameters.entityId, requestParameters.event, requestParameters.source)"/>
         </on-entry>
-		<transition on="questionnaire" to="questionnaire">
+        <transition on="questionnaire" to="questionnaire">
             <evaluate expression="flowScope.questionGroupDetails.details.add(flowScope.questionGroupInstanceDetails.get(requestParameters._eventId_questionnaire).questionGroupDetail)"/>
         </transition>
         <transition on="cancel" to="viewDetails" bind="false" history="discard"/>
     </view-state>
 
     <view-state id="questionnaire" model="questionGroupDetails">
-		<transition on="saveQuestionnaire" to="saveQuestionnaire"/>
-		<transition on="cancel" to="viewDetails" bind="false" history="discard"/>
+        <transition on="saveQuestionnaire" to="saveQuestionnaire"/>
+        <transition on="cancel" to="viewDetails" bind="false" history="discard"/>
     </view-state>
 
     <action-state id="saveQuestionnaire">

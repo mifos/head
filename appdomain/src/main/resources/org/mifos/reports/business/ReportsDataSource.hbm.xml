@@ -8,17 +8,17 @@
      <id name="datasourceId" column="datasource_id" type="int">
          <generator class="native" />
      </id>
-    	<property name="name" column="name" type="string" />
-    	<property name="driver" column="driver" type="string" />
-	<property name="url" column="url" type="string" />
-	<property name="username" column="username" type="string" />
-	<property name="password" column="password" type="string" />
+        <property name="name" column="name" type="string" />
+        <property name="driver" column="driver" type="string" />
+    <property name="url" column="url" type="string" />
+    <property name="username" column="username" type="string" />
+    <property name="password" column="password" type="string" />
     </class> 
      <query name="getAllReportDataSource">
-   	       <![CDATA[ from ReportsDataSource ]]>
+              <![CDATA[ from ReportsDataSource ]]>
     </query> 
     <query name="viewDataSource">
-   	       <![CDATA[ from ReportsDataSource where datasource_id=:dataSourceId]]>
+              <![CDATA[ from ReportsDataSource where datasource_id=:dataSourceId]]>
     </query>
 
 </hibernate-mapping> 

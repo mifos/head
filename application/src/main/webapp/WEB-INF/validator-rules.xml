@@ -297,7 +297,7 @@
                        javax.servlet.http.HttpServletRequest"
               depends=""
                   msg="errors.url"/>
-	 
+     
      <!--
        This simply allows struts to include the validateUtilities into a page, it should
        not be used as a validation rule.

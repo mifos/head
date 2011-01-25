@@ -3,21 +3,21 @@
                             "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
                             "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
-	<class name="org.mifos.customers.surveys.business.SurveyQuestion" 
-		table="survey_questions">
-		<id name="surveyQuestionId" column="surveyquestion_id" type="integer" 
-			unsaved-value="0" access="field">
-			<generator class="native" />
-		</id>
-		<property name="mandatory" column="mandatory"/>
-		<property name="order" column="question_order" access="field"/>
-		<many-to-one name="survey" column="survey_id" 
-			class="org.mifos.customers.surveys.business.Survey"     
-		    access="field" not-null="true"/>
-		    
-		<many-to-one name="question" column="question_id" cascade="save-update" lazy="false"
-		    class="org.mifos.customers.surveys.business.Question"     
-		    access="field"/>
-	</class>
+    <class name="org.mifos.customers.surveys.business.SurveyQuestion" 
+        table="survey_questions">
+        <id name="surveyQuestionId" column="surveyquestion_id" type="integer" 
+            unsaved-value="0" access="field">
+            <generator class="native" />
+        </id>
+        <property name="mandatory" column="mandatory"/>
+        <property name="order" column="question_order" access="field"/>
+        <many-to-one name="survey" column="survey_id" 
+            class="org.mifos.customers.surveys.business.Survey"     
+            access="field" not-null="true"/>
+            
+        <many-to-one name="question" column="question_id" cascade="save-update" lazy="false"
+            class="org.mifos.customers.surveys.business.Question"     
+            access="field"/>
+    </class>
 </hibernate-mapping>
 

@@ -6,36 +6,36 @@
 
 <hibernate-mapping>
 
-	<class name="org.mifos.accounts.business.AccountStateEntity" table="account_state">
-		<id name="id" column="account_state_id" type="short">
-			<generator class="native" />
-		</id>
-		<property name="optional" column="currently_in_use" type="short" />
-		<many-to-one name="lookUpValue" column="lookup_id" class="org.mifos.application.master.business.LookUpValueEntity" cascade="none" update="false" unique="true" />
-		<many-to-one name="prdType" column="prd_type_id" class="org.mifos.accounts.productdefinition.business.ProductTypeEntity" cascade="none" update="false" unique="true" access="field"/>
+    <class name="org.mifos.accounts.business.AccountStateEntity" table="account_state">
+        <id name="id" column="account_state_id" type="short">
+            <generator class="native" />
+        </id>
+        <property name="optional" column="currently_in_use" type="short" />
+        <many-to-one name="lookUpValue" column="lookup_id" class="org.mifos.application.master.business.LookUpValueEntity" cascade="none" update="false" unique="true" />
+        <many-to-one name="prdType" column="prd_type_id" class="org.mifos.accounts.productdefinition.business.ProductTypeEntity" cascade="none" update="false" unique="true" access="field"/>
 
-		<set name="flagSet" table="account_state_flag">
-			<key column="status_id" />
-			<one-to-many class="org.mifos.accounts.business.AccountStateFlagEntity" />
-		</set>
-		<property name="description" column="status_description" type="java.lang.String" />
-	
-	</class>
+        <set name="flagSet" table="account_state_flag">
+            <key column="status_id" />
+            <one-to-many class="org.mifos.accounts.business.AccountStateFlagEntity" />
+        </set>
+        <property name="description" column="status_description" type="java.lang.String" />
+    
+    </class>
 
-	<!--Gets all possible states-->
-	<query name="accounts.retrieveAllAccountStates">
-		<![CDATA[from org.mifos.accounts.business.AccountStateEntity accountStateEntity 
-    	where accountStateEntity.prdType.productTypeID = :prdTypeId
-    	order by id]]>
-	</query>
-	<query name="accounts.retrieveAllActiveAccountStates">
-		<![CDATA[from org.mifos.accounts.business.AccountStateEntity accountStateEntity 
-    	where accountStateEntity.prdType.productTypeID = :prdTypeId
-    	and accountStateEntity.optional=:OPTIONAL_FLAG
-    	order by id]]>
-	</query>
+    <!--Gets all possible states-->
+    <query name="accounts.retrieveAllAccountStates">
+        <![CDATA[from org.mifos.accounts.business.AccountStateEntity accountStateEntity 
+        where accountStateEntity.prdType.productTypeID = :prdTypeId
+        order by id]]>
+    </query>
+    <query name="accounts.retrieveAllActiveAccountStates">
+        <![CDATA[from org.mifos.accounts.business.AccountStateEntity accountStateEntity 
+        where accountStateEntity.prdType.productTypeID = :prdTypeId
+        and accountStateEntity.optional=:OPTIONAL_FLAG
+        order by id]]>
+    </query>
 
-	<query name="accounts.getStates">
-		<![CDATA[from org.mifos.accounts.business.AccountStateEntity accountStateEntity where accountStateEntity.optional=:OPTIONAL_FLAG]]>
-	</query>
+    <query name="accounts.getStates">
+        <![CDATA[from org.mifos.accounts.business.AccountStateEntity accountStateEntity where accountStateEntity.optional=:OPTIONAL_FLAG]]>
+    </query>
 </hibernate-mapping>

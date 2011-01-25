@@ -14,13 +14,13 @@
     </class> 
     
      <query name="getAllReportParamsMap">
-   	       <![CDATA[ from ReportsParamsMap]]>
+              <![CDATA[ from ReportsParamsMap]]>
     </query> 
     <query name="findParamsOfReportId">
-    	<![CDATA[ from ReportsParamsMap where report_Id=:reportId ]]>
+        <![CDATA[ from ReportsParamsMap where report_Id=:reportId ]]>
     </query>
     <query name="findsInUseParam">
-    	<![CDATA[ from ReportsParamsMap where parameter_Id=:parameterId ]]>
+        <![CDATA[ from ReportsParamsMap where parameter_Id=:parameterId ]]>
     </query>
 
 </hibernate-mapping> 

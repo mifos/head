@@ -4,11 +4,11 @@
 
    <bean id="mifosAuthenticationAuthorizationService" class="org.mifos.security.AuthenticationAuthorizationServiceFacadeImpl"/>
 
-	<bean id="viewOrganizationSettingsServiceFacade" class="org.mifos.application.admin.business.service.ViewOrganizationSettingsServiceFacadeWebTier"/>
+    <bean id="viewOrganizationSettingsServiceFacade" class="org.mifos.application.admin.business.service.ViewOrganizationSettingsServiceFacadeWebTier"/>
 
-	<bean id="appliedUpgradesServiceFacade" class="org.mifos.application.admin.business.service.AppliedUpgradesServiceFacadeWebTier"/>
-	
-	<bean id="importTransactionsServiceFacade" class="org.mifos.application.importexport.servicefacade.ImportTransactionsServiceFacadeWebTier"/>
+    <bean id="appliedUpgradesServiceFacade" class="org.mifos.application.admin.business.service.AppliedUpgradesServiceFacadeWebTier"/>
+    
+    <bean id="importTransactionsServiceFacade" class="org.mifos.application.importexport.servicefacade.ImportTransactionsServiceFacadeWebTier"/>
 
     <bean id="loginServiceFacade" class="org.mifos.application.servicefacade.LoginServiceFacadeWebTier"/>
     
@@ -70,10 +70,10 @@
 
     <bean name="qgFlowsService" class="org.mifos.application.questionnaire.service.QGFlowsServiceImpl" />
  
-	<bean name="auditLogService" class="org.mifos.framework.components.audit.business.service.AuditLogServiceImpl" />
+    <bean name="auditLogService" class="org.mifos.framework.components.audit.business.service.AuditLogServiceImpl" />
 
-	<bean name="questionnaireServiceFacade" class="org.mifos.platform.questionnaire.service.QuestionnaireServiceFacadeImpl"/>
-	
+    <bean name="questionnaireServiceFacade" class="org.mifos.platform.questionnaire.service.QuestionnaireServiceFacadeImpl"/>
+    
     <bean name="installmentFormatValidator" class="org.mifos.accounts.loan.business.service.validators.InstallmentFormatValidatorImpl"/>
 
     <bean name="listOfInstallmentsValidator" class="org.mifos.accounts.loan.business.service.validators.ListOfInstallmentsValidatorImpl"/>

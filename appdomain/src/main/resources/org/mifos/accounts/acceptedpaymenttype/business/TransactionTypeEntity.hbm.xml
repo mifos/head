@@ -9,10 +9,10 @@
         <id name="transactionId" column="transaction_id" type="short">
             <generator class="native"/>
         </id>
- 		<property name="transactionName" column="transaction_name" type="string" not-null="true" />	  
+         <property name="transactionName" column="transaction_name" type="string" not-null="true" />      
     </class>
      <query name="getPaymentTypes">
-   	       <![CDATA[ from TransactionTypeEntity as trasaction where trasaction.transactionId=:TRANSACTION_ID ]]>
+              <![CDATA[ from TransactionTypeEntity as trasaction where trasaction.transactionId=:TRANSACTION_ID ]]>
     </query> 
     
 </hibernate-mapping><!-- web30205.mail.mud.yahoo.com uncompressed/chunked Mon Aug  6 13:27:11 PDT 2007 -->

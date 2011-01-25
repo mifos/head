@@ -7,7 +7,7 @@
 <hibernate-mapping>
 
     <class name="org.mifos.customers.business.CustomerMovementEntity" table="customer_movement">
-  		<id name="customerMovementId" column="customer_movement_id" type="integer" unsaved-value="-1" access="field">
+          <id name="customerMovementId" column="customer_movement_id" type="integer" unsaved-value="-1" access="field">
             <generator class="native"/>
         </id>
         <property name="status" column="status" type="short" access="field"/>

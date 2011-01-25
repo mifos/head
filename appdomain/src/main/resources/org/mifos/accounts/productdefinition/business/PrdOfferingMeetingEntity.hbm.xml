@@ -10,9 +10,9 @@
         <id name="prdOfferingMeetingId" column="prd_offering_meeting_id" access="field">
             <generator class="native"/>
         </id>
- 		<property name="meetingType" column="prd_offering_meeting_type_id" access="field"/>
+         <property name="meetingType" column="prd_offering_meeting_type_id" access="field"/>
 
- 		<many-to-one name="prdOffering" column="prd_offering_id" class="org.mifos.accounts.productdefinition.business.PrdOfferingBO" cascade="none" insert="true" update="true" access="field"/>
+         <many-to-one name="prdOffering" column="prd_offering_id" class="org.mifos.accounts.productdefinition.business.PrdOfferingBO" cascade="none" insert="true" update="true" access="field"/>
         <many-to-one name="meeting"  column="prd_meeting_id" class="org.mifos.application.meeting.business.MeetingBO" cascade="all" insert="true" update="true" unique="true"/>
     </class>
     

@@ -19,6 +19,6 @@
     </class>
     
     <query name="notes.getAllCustomerNotes">
-    	   <![CDATA[from org.mifos.customers.business.CustomerNoteEntity note where note.customer.customerId=:CUSTOMER_ID order by note.commentId desc]]>
+           <![CDATA[from org.mifos.customers.business.CustomerNoteEntity note where note.customer.customerId=:CUSTOMER_ID order by note.commentId desc]]>
      </query>
 </hibernate-mapping>

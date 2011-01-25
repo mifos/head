@@ -6,89 +6,89 @@
 
 <hibernate-mapping>
 
-	<class name="org.mifos.application.holiday.business.HolidayBO" table="holiday">
+    <class name="org.mifos.application.holiday.business.HolidayBO" table="holiday">
         <id name="id" column="holiday_id" type="int">
             <generator class="native"/>
         </id>
-	    <property name="holidayFromDate" column="holiday_from_date" type="date" />
-	    <property name="holidayThruDate" column="holiday_thru_date" type="date" />
-		<property name="holidayName" column="holiday_name" type="string" />
+        <property name="holidayFromDate" column="holiday_from_date" type="date" />
+        <property name="holidayThruDate" column="holiday_thru_date" type="date" />
+        <property name="holidayName" column="holiday_name" type="string" />
         <property name="repaymentRuleType" column="repayment_rule_id"
             type="org.mifos.application.holiday.util.helpers.RepaymentRuleUserType" not-null="true"/>
-		<property name="holidayChangesAppliedFlag" column="holiday_changes_applied_flag"/>        
-	</class>
+        <property name="holidayChangesAppliedFlag" column="holiday_changes_applied_flag"/>        
+    </class>
 
-	<!-- Holiday Specific Queries  -->
-	<query name="findById">
-		<![CDATA[from org.mifos.application.holiday.business.HolidayBO holidayBO
-	                  where holidayBO.id = :holidayId]]>
-	</query>
-	<query name="holiday.findCurrentAndFutureOfficeHolidaysEarliestFirst">
-   	       <![CDATA[select distinct holidayBO from org.mifos.customers.office.business.OfficeBO office
-   	       			join office.holidays holidayBO,
-   	       			org.mifos.customers.office.business.OfficeBO branch
+    <!-- Holiday Specific Queries  -->
+    <query name="findById">
+        <![CDATA[from org.mifos.application.holiday.business.HolidayBO holidayBO
+                      where holidayBO.id = :holidayId]]>
+    </query>
+    <query name="holiday.findCurrentAndFutureOfficeHolidaysEarliestFirst">
+              <![CDATA[select distinct holidayBO from org.mifos.customers.office.business.OfficeBO office
+                          join office.holidays holidayBO,
+                          org.mifos.customers.office.business.OfficeBO branch
                     where holidayBO.holidayThruDate >= date(:CURRENT_DATE)
-					and branch.searchId like concat(office.searchId, '%')
-					and branch.officeId = :OFFICE_ID
+                    and branch.searchId like concat(office.searchId, '%')
+                    and branch.officeId = :OFFICE_ID
                     order by holidayBO.holidayFromDate
-   	       ]]>
-	</query>
-	
-	<query name="holiday.findGivenDateInCurrentAndFutureOfficeHolidays">
-   	       <![CDATA[select distinct holidayBO from org.mifos.customers.office.business.OfficeBO office
-   	       			join office.holidays holidayBO,
-   	       			org.mifos.customers.office.business.OfficeBO branch
+              ]]>
+    </query>
+    
+    <query name="holiday.findGivenDateInCurrentAndFutureOfficeHolidays">
+              <![CDATA[select distinct holidayBO from org.mifos.customers.office.business.OfficeBO office
+                          join office.holidays holidayBO,
+                          org.mifos.customers.office.business.OfficeBO branch
                     where holidayBO.holidayFromDate <= date(:CURRENT_DATE)
                     and holidayBO.holidayThruDate >= date(:CURRENT_DATE)
-					and branch.searchId like concat(office.searchId, '%')
-					and branch.officeId = :OFFICE_ID
+                    and branch.searchId like concat(office.searchId, '%')
+                    and branch.officeId = :OFFICE_ID
                     order by holidayBO.holidayFromDate
-   	       ]]>
-	</query>
+              ]]>
+    </query>
 
 
-	<query name="holiday.getOfficeHolidays">
-   	       <![CDATA[select distinct holidayBO from org.mifos.customers.office.business.OfficeBO office
-   	       			   join office.holidays holidayBO
+    <query name="holiday.getOfficeHolidays">
+              <![CDATA[select distinct holidayBO from org.mifos.customers.office.business.OfficeBO office
+                             join office.holidays holidayBO
                        where ((holidayBO.holidayThruDate between :START_OF_YEAR and :END_OF_YEAR) 
-		               	or (holidayBO.holidayFromDate between :START_OF_YEAR and :END_OF_YEAR))
-		               	and office.officeId = :OFFICE_ID
+                           or (holidayBO.holidayFromDate between :START_OF_YEAR and :END_OF_YEAR))
+                           and office.officeId = :OFFICE_ID
                        order by holidayBO.holidayFromDate
-   	       ]]>
-	</query>
-	<query name="holiday.getUnappliedHolidaysEarliestFirst">
-			<![CDATA[from org.mifos.application.holiday.business.HolidayBO holidayBO
-	                  where holidayBO.holidayChangesAppliedFlag = 0
+              ]]>
+    </query>
+    <query name="holiday.getUnappliedHolidaysEarliestFirst">
+            <![CDATA[from org.mifos.application.holiday.business.HolidayBO holidayBO
+                      where holidayBO.holidayChangesAppliedFlag = 0
                        order by holidayBO.holidayFromDate
-			]]>
-	</query>
-	
-	
-	<query name="holiday.getDistinctYears">
-			<![CDATA[select distinct(holidayBO.holidayThruDate)
-					from org.mifos.application.holiday.business.HolidayBO holidayBO
-					order by holidayBO.holidayThruDate
-   	       ]]>
-	</query>
+            ]]>
+    </query>
+    
+    
+    <query name="holiday.getDistinctYears">
+            <![CDATA[select distinct(holidayBO.holidayThruDate)
+                    from org.mifos.application.holiday.business.HolidayBO holidayBO
+                    order by holidayBO.holidayThruDate
+              ]]>
+    </query>
 
-	<query name="holiday.getAll">
-			<![CDATA[from org.mifos.application.holiday.business.HolidayBO holidayBO]]>
-	</query>
-	
-	<sql-query name="holiday.applicableOffices">
-	    <return-scalar column="office_name" type="string"/>
-			select
-			    office.display_name as office_name
-			from holiday 
-			    join office_holiday on holiday.holiday_id = office_holiday.holiday_id
-			    join office on office_holiday.office_id = office.office_id
-			    left join office as parent on office.parent_office_id = parent.office_id
-			    left join office_holiday as parent_office_holiday on parent.office_id = parent_office_holiday.office_id
-			    and parent_office_holiday.holiday_id = holiday.holiday_id
-			    left join holiday as parent_holiday on parent_office_holiday.holiday_id = parent_holiday.holiday_id
-			where
-			    holiday.holiday_id = :HOLIDAY_ID
-			    and
-			    holiday.holiday_name != ifnull(parent_holiday.holiday_name, '')
-	</sql-query>
+    <query name="holiday.getAll">
+            <![CDATA[from org.mifos.application.holiday.business.HolidayBO holidayBO]]>
+    </query>
+    
+    <sql-query name="holiday.applicableOffices">
+        <return-scalar column="office_name" type="string"/>
+            select
+                office.display_name as office_name
+            from holiday 
+                join office_holiday on holiday.holiday_id = office_holiday.holiday_id
+                join office on office_holiday.office_id = office.office_id
+                left join office as parent on office.parent_office_id = parent.office_id
+                left join office_holiday as parent_office_holiday on parent.office_id = parent_office_holiday.office_id
+                and parent_office_holiday.holiday_id = holiday.holiday_id
+                left join holiday as parent_holiday on parent_office_holiday.holiday_id = parent_holiday.holiday_id
+            where
+                holiday.holiday_id = :HOLIDAY_ID
+                and
+                holiday.holiday_name != ifnull(parent_holiday.holiday_name, '')
+    </sql-query>
 </hibernate-mapping>

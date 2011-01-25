@@ -6,42 +6,42 @@
 
 <hibernate-mapping>
 
-	<class name="org.mifos.customers.office.business.OfficeBO" table="office">
-		<id name="officeId" column="office_id" type="short" access="field">
-			<generator class="native" />
-		</id>
-		<version name="versionNo" column="version_no" type="integer" unsaved-value="null"/>
-		<property name="searchId" column="search_id" type="string" />
-		<property name="officeName" column="display_name" type="string" />
-		<property name="createdDate" column="created_date" type="date" />
-		<property name="updatedDate" column="updated_date" type="date" />
-		<property name="globalOfficeNum" column="global_office_num"	type="string"  />
-		<property name="maxChildCount" column="max_child_count"	type="integer" access="field" />
-		<property name="operationMode" column="local_remote_flag" access="field" />
-		<property name="createdBy" column="created_by" />
-		<property name="updatedBy" column="updated_by" />
-		<property name="shortName" column="office_short_name" type="string" />
-		
-		 <many-to-one name="level" class="org.mifos.customers.office.business.OfficeLevelEntity" column="office_level_id" unique="true" insert="true" update="true" />
-		<many-to-one name="parentOffice"  class="org.mifos.customers.office.business.OfficeBO"	column="parent_office_id"  insert="true" update="true" cascade="none" />
-		<many-to-one name="status"	class="org.mifos.customers.office.business.OfficeStatusEntity" column="status_id" unique="true" insert="true" />
-		<set name="customFields" cascade="all" inverse="true"  table="office_custom_field" order-by="FIELD_ID">
-			<key column="office_id" />
-			<one-to-many class="org.mifos.customers.office.business.OfficeCustomFieldEntity" />
-		</set>
-		<set name="children"  inverse="true"  lazy="true" >
-			<key column="parent_office_id"  />
-			<one-to-many class="org.mifos.customers.office.business.OfficeBO"/>
-		</set>
+    <class name="org.mifos.customers.office.business.OfficeBO" table="office">
+        <id name="officeId" column="office_id" type="short" access="field">
+            <generator class="native" />
+        </id>
+        <version name="versionNo" column="version_no" type="integer" unsaved-value="null"/>
+        <property name="searchId" column="search_id" type="string" />
+        <property name="officeName" column="display_name" type="string" />
+        <property name="createdDate" column="created_date" type="date" />
+        <property name="updatedDate" column="updated_date" type="date" />
+        <property name="globalOfficeNum" column="global_office_num"    type="string"  />
+        <property name="maxChildCount" column="max_child_count"    type="integer" access="field" />
+        <property name="operationMode" column="local_remote_flag" access="field" />
+        <property name="createdBy" column="created_by" />
+        <property name="updatedBy" column="updated_by" />
+        <property name="shortName" column="office_short_name" type="string" />
+        
+         <many-to-one name="level" class="org.mifos.customers.office.business.OfficeLevelEntity" column="office_level_id" unique="true" insert="true" update="true" />
+        <many-to-one name="parentOffice"  class="org.mifos.customers.office.business.OfficeBO"    column="parent_office_id"  insert="true" update="true" cascade="none" />
+        <many-to-one name="status"    class="org.mifos.customers.office.business.OfficeStatusEntity" column="status_id" unique="true" insert="true" />
+        <set name="customFields" cascade="all" inverse="true"  table="office_custom_field" order-by="FIELD_ID">
+            <key column="office_id" />
+            <one-to-many class="org.mifos.customers.office.business.OfficeCustomFieldEntity" />
+        </set>
+        <set name="children"  inverse="true"  lazy="true" >
+            <key column="parent_office_id"  />
+            <one-to-many class="org.mifos.customers.office.business.OfficeBO"/>
+        </set>
 
-		<one-to-one name="address"	class="org.mifos.customers.office.business.OfficeAddressEntity"	cascade="all" property-ref="office" />
-	    <set name="holidays" table="office_holiday" access="field" cascade="all">
-	        <key column="office_id"/>
-	        <many-to-many column="holiday_id"
-	            class="org.mifos.application.holiday.business.HolidayBO"/>
-	    </set>
-	</class>
-	<query name="masterdata.activeBranches">
+        <one-to-one name="address"    class="org.mifos.customers.office.business.OfficeAddressEntity"    cascade="all" property-ref="office" />
+        <set name="holidays" table="office_holiday" access="field" cascade="all">
+            <key column="office_id"/>
+            <many-to-many column="holiday_id"
+                class="org.mifos.application.holiday.business.HolidayBO"/>
+        </set>
+    </class>
+    <query name="masterdata.activeBranches">
         <![CDATA[
         select new org.mifos.dto.domain.OfficeDetailsDto(
             office.officeId, office.officeName,office.level.id,office.versionNo
@@ -108,30 +108,30 @@
             <![CDATA[select count(*) from org.mifos.customers.office.business.OfficeBO office where office.level.id = :LEVEL_ID ]]>
     </query>
         <query name="get_active_offices">
-	        	   <![CDATA[from  org.mifos.customers.office.business.OfficeBO office 
-	        	   			where office.searchId like :officeSearchId and
-	        	   			office.level.id=:officeLevelId and office.status.id=:ACTIVE order by office.officeName ]]>
+                   <![CDATA[from  org.mifos.customers.office.business.OfficeBO office 
+                               where office.searchId like :officeSearchId and
+                               office.level.id=:officeLevelId and office.status.id=:ACTIVE order by office.officeName ]]>
         </query> 
 
-    <query name="office.getAllOfficesForCustomField">    		
+    <query name="office.getAllOfficesForCustomField">            
             <![CDATA[from org.mifos.customers.office.business.OfficeBO]]>
     </query>
-	<query name="masterdata.activeParents">
+    <query name="masterdata.activeParents">
         <![CDATA[select new org.mifos.dto.domain.OfficeDetailsDto(office.officeId, office.officeName,office.level.id,lv.lookUpName,office.versionNo) from org.mifos.customers.office.business.OfficeBO office ,org.mifos.application.master.business.LookUpValueEntity lv where lv.lookUpId=office.level.lookUpValue.lookUpId and  office.level.id < :LEVEL_ID and office.status.id=:STATUS_ID ]]>
     </query>          
     
     <!-- querys used by officeDao below this -->
     <query name="findOfficeById">
-		<![CDATA[from OfficeBO o where o.officeId = :OFFICE_ID]]>
+        <![CDATA[from OfficeBO o where o.officeId = :OFFICE_ID]]>
     </query>
     <query name="findOfficeDtoById">
-		<![CDATA[select new org.mifos.dto.domain.OfficeDto(o.officeId, o.officeName, o.searchId, o.shortName, o.globalOfficeNum, o.parentOffice.officeId, o.status.id, o.level.id) from OfficeBO o where o.officeId=:OFFICE_ID]]>
+        <![CDATA[select new org.mifos.dto.domain.OfficeDto(o.officeId, o.officeName, o.searchId, o.shortName, o.globalOfficeNum, o.parentOffice.officeId, o.status.id, o.level.id) from OfficeBO o where o.officeId=:OFFICE_ID]]>
     </query>
     <query name="findAllHeadOffices">
-		<![CDATA[select new org.mifos.dto.domain.OfficeDto(o.officeId, o.officeName, o.searchId, o.shortName, o.globalOfficeNum, o.parentOffice.officeId, o.status.id, o.level.id) from OfficeBO o where o.level.configured=1 and o.parentOffice is null order by o.level.id]]>
+        <![CDATA[select new org.mifos.dto.domain.OfficeDto(o.officeId, o.officeName, o.searchId, o.shortName, o.globalOfficeNum, o.parentOffice.officeId, o.status.id, o.level.id) from OfficeBO o where o.level.configured=1 and o.parentOffice is null order by o.level.id]]>
     </query>
     <query name="findAllNonHeadOfficesApplicableToOfficeHierarchy">
-		<![CDATA[select new org.mifos.dto.domain.OfficeDto(o.officeId, o.officeName, o.searchId, o.shortName, o.globalOfficeNum, o.parentOffice.officeId, o.status.id, o.level.id, o.parentOffice.officeName) from OfficeBO o where o.level.configured=1 order by o.level.id]]>
+        <![CDATA[select new org.mifos.dto.domain.OfficeDto(o.officeId, o.officeName, o.searchId, o.shortName, o.globalOfficeNum, o.parentOffice.officeId, o.status.id, o.level.id, o.parentOffice.officeName) from OfficeBO o where o.level.configured=1 order by o.level.id]]>
     </query>
     <query name="office.findActiveParents">
         <![CDATA[select new org.mifos.dto.domain.OfficeDto(o.officeId, o.officeName, o.searchId, o.shortName, o.globalOfficeNum, o.versionNo, o.status.id, o.level.id, lv.lookUpName) from OfficeBO o ,LookUpValueEntity lv where lv.lookUpId=o.level.lookUpValue.lookUpId and o.level.id < :LEVEL_ID and o.status.id=:STATUS_ID ]]>
@@ -142,16 +142,16 @@
     <query name="masterdata.activeLevels">
         <![CDATA[select new org.mifos.dto.domain.OfficeDetailsDto(ol.id,lv.lookUpName) from org.mifos.customers.office.business.OfficeLevelEntity ol ,org.mifos.application.master.business.LookUpValueEntity lv where lv.lookUpId=ol.lookUpValue.lookUpId and ol.configured=1 and ol.id !=1 order by ol.id  ]]>        
     </query>
-	 <query name="officeLevel.getOfficeLevelsWithConfiguration">
+     <query name="officeLevel.getOfficeLevelsWithConfiguration">
         <![CDATA[from org.mifos.customers.office.business.OfficeLevelEntity officeLevel order by officeLevel.id]]>
     </query>     
     <query name="office.getBranchParents">
-		<![CDATA[ select distinct o.parentOffice from org.mifos.customers.office.business.OfficeBO o where o.level.id = :LEVEL_ID and o.status.id = :STATUS_ID and o.searchId like :SEARCH_ID order by o.parentOffice.officeName,o.officeName ]]>
+        <![CDATA[ select distinct o.parentOffice from org.mifos.customers.office.business.OfficeBO o where o.level.id = :LEVEL_ID and o.status.id = :STATUS_ID and o.searchId like :SEARCH_ID order by o.parentOffice.officeName,o.officeName ]]>
     </query>
     <query name="holiday.topLevelOfficeNames">
-		<![CDATA[ select o.officeName from org.mifos.customers.office.business.OfficeBO o left join o.parentOffice p where o.officeId in (:OFFICE_IDS) and (p is null or p.officeId not in (:OFFICE_IDS)) order by o.level.id, p.officeName, o.officeName]]>
+        <![CDATA[ select o.officeName from org.mifos.customers.office.business.OfficeBO o left join o.parentOffice p where o.officeId in (:OFFICE_IDS) and (p is null or p.officeId not in (:OFFICE_IDS)) order by o.level.id, p.officeName, o.officeName]]>
     </query>
     <query name="holiday.retrieveOfficeNames">
-		<![CDATA[ select o.officeName from org.mifos.customers.office.business.OfficeBO o where o.officeId in (:OFFICE_IDS) order by o.officeName]]>
+        <![CDATA[ select o.officeName from org.mifos.customers.office.business.OfficeBO o where o.officeId in (:OFFICE_IDS) order by o.officeName]]>
     </query>
 </hibernate-mapping>

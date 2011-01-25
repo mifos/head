@@ -3,388 +3,388 @@
                             "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
                             "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
-	<class
-		name="org.mifos.accounts.productdefinition.business.PrdOfferingBO" table="prd_offering">
-		<id name="prdOfferingId" column="prd_offering_id"
-			access="field">
-			<generator class="native" />
-		</id>
-		<version name="versionNo" column="version_no" unsaved-value="null" />
-		<property name="globalPrdOfferingNum" column="global_prd_offering_num" update="false" access="field" />
-		<property name="startDate" column="start_date" />
-		<property name="endDate" column="end_date" />
-		<property name="prdOfferingName" column="prd_offering_name" />
-		<property name="prdOfferingShortName" column="prd_offering_short_name" />
-		<property name="prdMixFlag" column="prd_mix_flag" />
-		<property name="description" column="description" />
-		<property name="createdDate" column="created_date" update="false" />
-		<property name="createdBy" column="created_by" update="false" />
-		<property name="updatedDate" column="updated_date" />
-		<property name="updatedBy" column="updated_by" />
+    <class
+        name="org.mifos.accounts.productdefinition.business.PrdOfferingBO" table="prd_offering">
+        <id name="prdOfferingId" column="prd_offering_id"
+            access="field">
+            <generator class="native" />
+        </id>
+        <version name="versionNo" column="version_no" unsaved-value="null" />
+        <property name="globalPrdOfferingNum" column="global_prd_offering_num" update="false" access="field" />
+        <property name="startDate" column="start_date" />
+        <property name="endDate" column="end_date" />
+        <property name="prdOfferingName" column="prd_offering_name" />
+        <property name="prdOfferingShortName" column="prd_offering_short_name" />
+        <property name="prdMixFlag" column="prd_mix_flag" />
+        <property name="description" column="description" />
+        <property name="createdDate" column="created_date" update="false" />
+        <property name="createdBy" column="created_by" update="false" />
+        <property name="updatedDate" column="updated_date" />
+        <property name="updatedBy" column="updated_by" />
 
-		<many-to-one name="office" column="office_id"
-			class="org.mifos.customers.office.business.OfficeBO" cascade="none" access="field" />
-		<many-to-one name="prdCategory" column="prd_category_id"
-			class="org.mifos.accounts.productdefinition.business.ProductCategoryBO" cascade="none" />
-		<many-to-one name="prdStatus" column="offering_status_id"
-			class="org.mifos.accounts.productdefinition.business.PrdStatusEntity" cascade="none" />
-		<many-to-one name="prdType" column="prd_type_id"
-			class="org.mifos.accounts.productdefinition.business.ProductTypeEntity" access="field" cascade="none" />
-		<many-to-one name="prdApplicableMaster"
-			column="prd_applicable_master_id"
-			class="org.mifos.accounts.productdefinition.business.PrdApplicableMasterEntity"
-			cascade="none" />
+        <many-to-one name="office" column="office_id"
+            class="org.mifos.customers.office.business.OfficeBO" cascade="none" access="field" />
+        <many-to-one name="prdCategory" column="prd_category_id"
+            class="org.mifos.accounts.productdefinition.business.ProductCategoryBO" cascade="none" />
+        <many-to-one name="prdStatus" column="offering_status_id"
+            class="org.mifos.accounts.productdefinition.business.PrdStatusEntity" cascade="none" />
+        <many-to-one name="prdType" column="prd_type_id"
+            class="org.mifos.accounts.productdefinition.business.ProductTypeEntity" access="field" cascade="none" />
+        <many-to-one name="prdApplicableMaster"
+            column="prd_applicable_master_id"
+            class="org.mifos.accounts.productdefinition.business.PrdApplicableMasterEntity"
+            cascade="none" />
         <many-to-one name="currency" column="currency_id"
             class="org.mifos.application.master.business.MifosCurrency" cascade="none"
             update="false" insert="true" unique="true" access="field" />
 
-		<!-- bi-directional one-to-many association to PrdOfferingMix -->
-		<set name="collectionProductMix" lazy="false" inverse="true" cascade="none">
-			<key>
-				<column name="prd_offering_id" />
-			</key>
-			<one-to-many class="org.mifos.accounts.productsmix.business.ProductMixBO" />
-		</set>
-		<!-- bi-directional one-to-many association to PrdOfferingMix -->
-		<set name="prdOfferingNotAllowedId" lazy="false" inverse="true"
-			cascade="none">
-			<key>
-				<column name="prd_offering_not_allowed_id" />
-			</key>
-			<one-to-many class="org.mifos.accounts.productsmix.business.ProductMixBO" />
-		</set>
+        <!-- bi-directional one-to-many association to PrdOfferingMix -->
+        <set name="collectionProductMix" lazy="false" inverse="true" cascade="none">
+            <key>
+                <column name="prd_offering_id" />
+            </key>
+            <one-to-many class="org.mifos.accounts.productsmix.business.ProductMixBO" />
+        </set>
+        <!-- bi-directional one-to-many association to PrdOfferingMix -->
+        <set name="prdOfferingNotAllowedId" lazy="false" inverse="true"
+            cascade="none">
+            <key>
+                <column name="prd_offering_not_allowed_id" />
+            </key>
+            <one-to-many class="org.mifos.accounts.productsmix.business.ProductMixBO" />
+        </set>
 
         <set name="questionGroups" table="prd_offering_question_group" cascade="all">
             <key column="prd_offering_id" />
             <many-to-many column="question_group_id" class="org.mifos.accounts.productdefinition.business.QuestionGroupReference" />
         </set>
 
-		<joined-subclass
-			name="org.mifos.accounts.productdefinition.business.LoanOfferingBO"
-			table="loan_offering">
-			<key column="prd_offering_id"/>
-			<property name="maxInterestRate" column="max_interest_rate" />
-			<property name="minInterestRate" column="min_interest_rate" />
-			<property name="defInterestRate" column="def_interest_rate" />
-			<property name="gracePeriodDuration"
-				column="grace_period_duration" />
-			<property name="intDedDisbursement"
-				column="int_ded_disbursement_flag" access="field" type="short" />
-			<property name="prinDueLastInst"
-				column="prin_due_last_inst_flag" access="field" type="short" />
-			<property name="loanCounter" column="loan_counter_flag"
-				access="field" type="short" />
+        <joined-subclass
+            name="org.mifos.accounts.productdefinition.business.LoanOfferingBO"
+            table="loan_offering">
+            <key column="prd_offering_id"/>
+            <property name="maxInterestRate" column="max_interest_rate" />
+            <property name="minInterestRate" column="min_interest_rate" />
+            <property name="defInterestRate" column="def_interest_rate" />
+            <property name="gracePeriodDuration"
+                column="grace_period_duration" />
+            <property name="intDedDisbursement"
+                column="int_ded_disbursement_flag" access="field" type="short" />
+            <property name="prinDueLastInst"
+                column="prin_due_last_inst_flag" access="field" type="short" />
+            <property name="loanCounter" column="loan_counter_flag"
+                access="field" type="short" />
             <property name="waiverInterest" column="interest_waiver_flag"
-				access="field" type="short" />
+                access="field" type="short" />
             <property name="variableInstallmentsAllowed" column="variable_installment_flag"
-				access="field" type="short" />
-				
-	        <property name="cashFlowCheckEnabled" column="cash_flow_comparison_flag" type="short" access="field"/>
-		    
-			<many-to-one name="gracePeriodType"
-				column="graceperiod_type_id"
-				class="org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity"
-				cascade="none" />
-			<many-to-one name="interestTypes" column="interest_type_id"
-				class="org.mifos.application.master.business.InterestTypesEntity"
-				not-null="true" />
-			<many-to-one name="principalGLcode"
-				column="principal_glcode_id"
-				class="org.mifos.accounts.financial.business.GLCodeEntity"
-				insert="true" update="false" access="field" />
-			<many-to-one name="interestGLcode"
-				column="interest_glcode_id"
-				class="org.mifos.accounts.financial.business.GLCodeEntity"
-				insert="true" update="false" access="field" />
-			<many-to-one name="variableInstallmentDetails"
-				column="variable_installment_details_id"
-				class="org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO"
-				cascade="all" unique="true"/>
-			<many-to-one name="cashFlowDetail"
-				column="cash_flow_detail_id"
-				class="org.mifos.accounts.productdefinition.business.CashFlowDetail"
-				cascade="all" unique="true" insert="true" update="true" lazy="false"/>
+                access="field" type="short" />
+                
+            <property name="cashFlowCheckEnabled" column="cash_flow_comparison_flag" type="short" access="field"/>
+            
+            <many-to-one name="gracePeriodType"
+                column="graceperiod_type_id"
+                class="org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity"
+                cascade="none" />
+            <many-to-one name="interestTypes" column="interest_type_id"
+                class="org.mifos.application.master.business.InterestTypesEntity"
+                not-null="true" />
+            <many-to-one name="principalGLcode"
+                column="principal_glcode_id"
+                class="org.mifos.accounts.financial.business.GLCodeEntity"
+                insert="true" update="false" access="field" />
+            <many-to-one name="interestGLcode"
+                column="interest_glcode_id"
+                class="org.mifos.accounts.financial.business.GLCodeEntity"
+                insert="true" update="false" access="field" />
+            <many-to-one name="variableInstallmentDetails"
+                column="variable_installment_details_id"
+                class="org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO"
+                cascade="all" unique="true"/>
+            <many-to-one name="cashFlowDetail"
+                column="cash_flow_detail_id"
+                class="org.mifos.accounts.productdefinition.business.CashFlowDetail"
+                cascade="all" unique="true" insert="true" update="true" lazy="false"/>
 
-			<!--Mapping of loan offering to its associated funds-->
-			<set name="loanOfferingFunds" cascade="all,delete-orphan"
-				inverse="true" table="loan_offering_fund" access="field">
-				<key column="prd_offering_id" />
-				<one-to-many
-					class="org.mifos.accounts.productdefinition.business.LoanOfferingFundEntity" />
-			</set>
+            <!--Mapping of loan offering to its associated funds-->
+            <set name="loanOfferingFunds" cascade="all,delete-orphan"
+                inverse="true" table="loan_offering_fund" access="field">
+                <key column="prd_offering_id" />
+                <one-to-many
+                    class="org.mifos.accounts.productdefinition.business.LoanOfferingFundEntity" />
+            </set>
 
-			<set name="loanOfferingFees" cascade="all,delete-orphan"
-				inverse="true" table="prd_offering_fees" access="field">
-				<key column="prd_offering_id" />
-				<one-to-many
-					class="org.mifos.accounts.productdefinition.business.LoanOfferingFeesEntity" />
-			</set>
-			<set name="loanAmountFromLastLoan"
-				cascade="all,delete-orphan" inverse="true"
-				table="loan_amount_from_last_loan" access="field"
-				order-by="START_RANGE">
-				<key column="prd_offering_id" />
-				<one-to-many
-					class="org.mifos.accounts.productdefinition.business.LoanAmountFromLastLoanAmountBO" />
-			</set>
-			<set name="noOfInstallFromLastLoan"
-				cascade="all,delete-orphan" inverse="true"
-				table="no_of_install_from_last_loan" access="field"
-				order-by="START_RANGE">
-				<key column="prd_offering_id" />
-				<one-to-many
-					class="org.mifos.accounts.productdefinition.business.NoOfInstallFromLastLoanAmountBO" />
-			</set>
-			<set name="loanAmountFromLoanCycle"
-				cascade="all,delete-orphan" inverse="true"
-				table="loan_amount_from_loan_cycle" access="field"
-				order-by="RANGE_INDEX">
-				<key column="prd_offering_id" />
-				<one-to-many
-					class="org.mifos.accounts.productdefinition.business.LoanAmountFromLoanCycleBO" />
-			</set>
-			<set name="noOfInstallFromLoanCycle"
-				cascade="all,delete-orphan" inverse="true"
-				table="no_of_install_from_loan_cycle" access="field"
-				order-by="RANGE_INDEX">
-				<key column="prd_offering_id" />
-				<one-to-many
-					class="org.mifos.accounts.productdefinition.business.NoOfInstallFromLoanCycleBO" />
-			</set>
-			<set name="loanAmountSameForAllLoan"
-				cascade="all,delete-orphan" inverse="true" lazy="false"
-				table="loan_amount_same_for_all_loan" access="field">
-				<key column="prd_offering_id" />
-				<one-to-many
-					class="org.mifos.accounts.productdefinition.business.LoanAmountSameForAllLoanBO" />
-			</set>
-			<set name="noOfInstallSameForAllLoan"
-				cascade="all,delete-orphan" inverse="true" lazy="false"
-				table="no_of_install_same_for_all_loan" access="field">
-				<key column="prd_offering_id" />
-				<one-to-many
-					class="org.mifos.accounts.productdefinition.business.NoOfInstallSameForAllLoanBO" />
-			</set>
-			<one-to-one name="loanOfferingMeeting"
-				class="org.mifos.accounts.productdefinition.business.PrdOfferingMeetingEntity"
-				cascade="all" property-ref="prdOffering" />
+            <set name="loanOfferingFees" cascade="all,delete-orphan"
+                inverse="true" table="prd_offering_fees" access="field">
+                <key column="prd_offering_id" />
+                <one-to-many
+                    class="org.mifos.accounts.productdefinition.business.LoanOfferingFeesEntity" />
+            </set>
+            <set name="loanAmountFromLastLoan"
+                cascade="all,delete-orphan" inverse="true"
+                table="loan_amount_from_last_loan" access="field"
+                order-by="START_RANGE">
+                <key column="prd_offering_id" />
+                <one-to-many
+                    class="org.mifos.accounts.productdefinition.business.LoanAmountFromLastLoanAmountBO" />
+            </set>
+            <set name="noOfInstallFromLastLoan"
+                cascade="all,delete-orphan" inverse="true"
+                table="no_of_install_from_last_loan" access="field"
+                order-by="START_RANGE">
+                <key column="prd_offering_id" />
+                <one-to-many
+                    class="org.mifos.accounts.productdefinition.business.NoOfInstallFromLastLoanAmountBO" />
+            </set>
+            <set name="loanAmountFromLoanCycle"
+                cascade="all,delete-orphan" inverse="true"
+                table="loan_amount_from_loan_cycle" access="field"
+                order-by="RANGE_INDEX">
+                <key column="prd_offering_id" />
+                <one-to-many
+                    class="org.mifos.accounts.productdefinition.business.LoanAmountFromLoanCycleBO" />
+            </set>
+            <set name="noOfInstallFromLoanCycle"
+                cascade="all,delete-orphan" inverse="true"
+                table="no_of_install_from_loan_cycle" access="field"
+                order-by="RANGE_INDEX">
+                <key column="prd_offering_id" />
+                <one-to-many
+                    class="org.mifos.accounts.productdefinition.business.NoOfInstallFromLoanCycleBO" />
+            </set>
+            <set name="loanAmountSameForAllLoan"
+                cascade="all,delete-orphan" inverse="true" lazy="false"
+                table="loan_amount_same_for_all_loan" access="field">
+                <key column="prd_offering_id" />
+                <one-to-many
+                    class="org.mifos.accounts.productdefinition.business.LoanAmountSameForAllLoanBO" />
+            </set>
+            <set name="noOfInstallSameForAllLoan"
+                cascade="all,delete-orphan" inverse="true" lazy="false"
+                table="no_of_install_same_for_all_loan" access="field">
+                <key column="prd_offering_id" />
+                <one-to-many
+                    class="org.mifos.accounts.productdefinition.business.NoOfInstallSameForAllLoanBO" />
+            </set>
+            <one-to-one name="loanOfferingMeeting"
+                class="org.mifos.accounts.productdefinition.business.PrdOfferingMeetingEntity"
+                cascade="all" property-ref="prdOffering" />
 
-		</joined-subclass>
-		<joined-subclass
-			name="org.mifos.accounts.productdefinition.business.SavingsOfferingBO"
-			table="savings_offering">
-			<key column="prd_offering_id" />
+        </joined-subclass>
+        <joined-subclass
+            name="org.mifos.accounts.productdefinition.business.SavingsOfferingBO"
+            table="savings_offering">
+            <key column="prd_offering_id" />
 
-			<property name="interestRate" column="interest_rate"
-				type="double" not-null="true" />
-			<property name="recommendedAmount"
-				type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-				<column name="recommended_amount_currency_id" />
-				<column name="recommended_amount" />
-			</property>
-			<property name="maxAmntWithdrawl"
-				type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-				<column name="max_amnt_withdrawl_currency_id" />
-				<column name="max_amnt_withdrawl" />
-			</property>
-			<property name="minAmntForInt"
-				type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-				<column name="min_amnt_for_int_currency_id" />
-				<column name="min_amnt_for_int" />
-			</property>
+            <property name="interestRate" column="interest_rate"
+                type="double" not-null="true" />
+            <property name="recommendedAmount"
+                type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+                <column name="recommended_amount_currency_id" />
+                <column name="recommended_amount" />
+            </property>
+            <property name="maxAmntWithdrawl"
+                type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+                <column name="max_amnt_withdrawl_currency_id" />
+                <column name="max_amnt_withdrawl" />
+            </property>
+            <property name="minAmntForInt"
+                type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+                <column name="min_amnt_for_int_currency_id" />
+                <column name="min_amnt_for_int" />
+            </property>
 
-			<many-to-one name="recommendedAmntUnit"
-				column="recommended_amnt_unit_id"
-				class="org.mifos.accounts.productdefinition.business.RecommendedAmntUnitEntity"
-				cascade="none" />
-			<many-to-one name="savingsType" column="savings_type_id"
-				class="org.mifos.accounts.productdefinition.business.SavingsTypeEntity"
-				not-null="true" />
-			<many-to-one name="interestCalcType"
-				column="interest_calculation_type_id"
-				class="org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity"
-				not-null="true" />
+            <many-to-one name="recommendedAmntUnit"
+                column="recommended_amnt_unit_id"
+                class="org.mifos.accounts.productdefinition.business.RecommendedAmntUnitEntity"
+                cascade="none" />
+            <many-to-one name="savingsType" column="savings_type_id"
+                class="org.mifos.accounts.productdefinition.business.SavingsTypeEntity"
+                not-null="true" />
+            <many-to-one name="interestCalcType"
+                column="interest_calculation_type_id"
+                class="org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity"
+                not-null="true" />
 
-			<many-to-one name="depositGLCode" column="deposit_glcode_id"
-				class="org.mifos.accounts.financial.business.GLCodeEntity"
-				insert="true" update="false" access="field" />
-			<many-to-one name="interestGLCode"
-				column="interest_glcode_id"
-				class="org.mifos.accounts.financial.business.GLCodeEntity"
-				insert="true" update="false" access="field" />
+            <many-to-one name="depositGLCode" column="deposit_glcode_id"
+                class="org.mifos.accounts.financial.business.GLCodeEntity"
+                insert="true" update="false" access="field" />
+            <many-to-one name="interestGLCode"
+                column="interest_glcode_id"
+                class="org.mifos.accounts.financial.business.GLCodeEntity"
+                insert="true" update="false" access="field" />
 
-			<set name="savingsOfferingMeetings"
-				cascade="all,delete-orphan" inverse="true"
-				table="prd_offering_meeting" lazy="true" access="field">
-				<key column="prd_offering_id" />
-				<one-to-many
-					class="org.mifos.accounts.productdefinition.business.PrdOfferingMeetingEntity" />
-			</set>
-			
-			<set name="historicalInterestDetails" cascade="all,delete-orphan" inverse="true" table="savings_offering_historical_interest_detail" lazy="true" access="field">
-				<key column="product_id" />
-				<one-to-many class="org.mifos.accounts.savings.interest.SavingsProductHistoricalInterestDetail" />
-			</set>
-		</joined-subclass>
+            <set name="savingsOfferingMeetings"
+                cascade="all,delete-orphan" inverse="true"
+                table="prd_offering_meeting" lazy="true" access="field">
+                <key column="prd_offering_id" />
+                <one-to-many
+                    class="org.mifos.accounts.productdefinition.business.PrdOfferingMeetingEntity" />
+            </set>
+            
+            <set name="historicalInterestDetails" cascade="all,delete-orphan" inverse="true" table="savings_offering_historical_interest_detail" lazy="true" access="field">
+                <key column="product_id" />
+                <one-to-many class="org.mifos.accounts.savings.interest.SavingsProductHistoricalInterestDetail" />
+            </set>
+        </joined-subclass>
 
-	</class>
-	<query name="loanOffering.getApplicableProducts">
-		<![CDATA[from org.mifos.accounts.productdefinition.business.LoanOfferingBO loanOffering 
-				where loanOffering.prdApplicableMaster.id = :prdApplicableMaster 
-				and loanOffering.prdStatus.offeringStatusId = :prdStatus 
-				order by loanOffering.prdOfferingName]]>
-	</query>
-	<query name="product.maxprdofferingid">
-		<![CDATA[select max(prd.prdOfferingId) 
-		from org.mifos.accounts.productdefinition.business.PrdOfferingBO prd]]>
-	</query>
-	<query name="product.createofferingnamecount">
-		<![CDATA[select count(*) 
-		from org.mifos.accounts.productdefinition.business.PrdOfferingBO prd
-		where prd.prdOfferingName=:prdOfferingName]]>
-	</query>
-	<query name="product.createofferingshortnamecount">
-		<![CDATA[select count(*) 
-		from org.mifos.accounts.productdefinition.business.PrdOfferingBO prd
-		where prd.prdOfferingShortName=:prdOfferingShortName]]>
-	</query>
-	<query name="product.savingsapplicablerecurrencetypes">
-		<![CDATA[from org.mifos.application.meeting.business.RecurrenceTypeEntity recType 
-		where recType.recurrenceId=2 or recType.recurrenceId=3 
-		order by recType.recurrenceName]]>
-	</query>
+    </class>
+    <query name="loanOffering.getApplicableProducts">
+        <![CDATA[from org.mifos.accounts.productdefinition.business.LoanOfferingBO loanOffering 
+                where loanOffering.prdApplicableMaster.id = :prdApplicableMaster 
+                and loanOffering.prdStatus.offeringStatusId = :prdStatus 
+                order by loanOffering.prdOfferingName]]>
+    </query>
+    <query name="product.maxprdofferingid">
+        <![CDATA[select max(prd.prdOfferingId) 
+        from org.mifos.accounts.productdefinition.business.PrdOfferingBO prd]]>
+    </query>
+    <query name="product.createofferingnamecount">
+        <![CDATA[select count(*) 
+        from org.mifos.accounts.productdefinition.business.PrdOfferingBO prd
+        where prd.prdOfferingName=:prdOfferingName]]>
+    </query>
+    <query name="product.createofferingshortnamecount">
+        <![CDATA[select count(*) 
+        from org.mifos.accounts.productdefinition.business.PrdOfferingBO prd
+        where prd.prdOfferingShortName=:prdOfferingShortName]]>
+    </query>
+    <query name="product.savingsapplicablerecurrencetypes">
+        <![CDATA[from org.mifos.application.meeting.business.RecurrenceTypeEntity recType 
+        where recType.recurrenceId=2 or recType.recurrenceId=3 
+        order by recType.recurrenceName]]>
+    </query>
 
-	<query name="productOffering.getAllSavingsProducts">
-		<![CDATA[from org.mifos.accounts.productdefinition.business.SavingsOfferingBO savingsOffering order by savingsOffering.prdOfferingName]]>
-	</query>
+    <query name="productOffering.getAllSavingsProducts">
+        <![CDATA[from org.mifos.accounts.productdefinition.business.SavingsOfferingBO savingsOffering order by savingsOffering.prdOfferingName]]>
+    </query>
 
-	<query name="productOffering.getAllActiveSavingsProducts">
-		<![CDATA[from org.mifos.accounts.productdefinition.business.SavingsOfferingBO savingsOffering 
-		where savingsOffering.prdStatus.offeringStatusId = :prdStatus
-		order by savingsOffering.prdOfferingName]]>
-	</query>
+    <query name="productOffering.getAllActiveSavingsProducts">
+        <![CDATA[from org.mifos.accounts.productdefinition.business.SavingsOfferingBO savingsOffering 
+        where savingsOffering.prdStatus.offeringStatusId = :prdStatus
+        order by savingsOffering.prdOfferingName]]>
+    </query>
 
-	<query name="product.getAllLoanProducts">
-		<![CDATA[from org.mifos.accounts.productdefinition.business.LoanOfferingBO loanOffering order by loanOffering.prdOfferingName]]>
-	</query>
-	<sql-query name="findAllLoanProducts">
-		<return-scalar column="prdOfferingId" type="short" />
-		<return-scalar column="prdOfferingName" type="string" />
-		<return-scalar column="prdOfferingStatusId" type="short" />
-		<return-scalar column="prdOfferingStatusName" type="string" />	
-		<![CDATA[select po.prd_offering_id as prdOfferingId,
-				po.prd_offering_name as prdOfferingName,
-				po.offering_status_id as prdOfferingStatusId,
-				lv.lookup_name as prdOfferingStatusName
-				from prd_offering po 
-				join loan_offering lo on lo.prd_offering_id = po.prd_offering_id
+    <query name="product.getAllLoanProducts">
+        <![CDATA[from org.mifos.accounts.productdefinition.business.LoanOfferingBO loanOffering order by loanOffering.prdOfferingName]]>
+    </query>
+    <sql-query name="findAllLoanProducts">
+        <return-scalar column="prdOfferingId" type="short" />
+        <return-scalar column="prdOfferingName" type="string" />
+        <return-scalar column="prdOfferingStatusId" type="short" />
+        <return-scalar column="prdOfferingStatusName" type="string" />    
+        <![CDATA[select po.prd_offering_id as prdOfferingId,
+                po.prd_offering_name as prdOfferingName,
+                po.offering_status_id as prdOfferingStatusId,
+                lv.lookup_name as prdOfferingStatusName
+                from prd_offering po 
+                join loan_offering lo on lo.prd_offering_id = po.prd_offering_id
                 join prd_status ps on ps.offering_status_id = po.offering_status_id
                 join prd_state p on p. prd_state_id = ps.prd_state_id 
                 join lookup_value lv on lv.lookup_id = prd_state_lookup_id
                 order by po.prd_offering_name]]>
-	</sql-query>
-	<sql-query name="findAllSavingsProducts">
-		<return-scalar column="prdOfferingId" type="short" />
-		<return-scalar column="prdOfferingName" type="string" />
-		<return-scalar column="prdOfferingStatusId" type="short" />
-		<return-scalar column="prdOfferingStatusName" type="string" />	
-		<![CDATA[select po.prd_offering_id as prdOfferingId,
-				po.prd_offering_name as prdOfferingName,
-				po.offering_status_id as prdOfferingStatusId,
-				lv.lookup_name as prdOfferingStatusName
-				from prd_offering po 
-				join savings_offering so on so.prd_offering_id = po.prd_offering_id
+    </sql-query>
+    <sql-query name="findAllSavingsProducts">
+        <return-scalar column="prdOfferingId" type="short" />
+        <return-scalar column="prdOfferingName" type="string" />
+        <return-scalar column="prdOfferingStatusId" type="short" />
+        <return-scalar column="prdOfferingStatusName" type="string" />    
+        <![CDATA[select po.prd_offering_id as prdOfferingId,
+                po.prd_offering_name as prdOfferingName,
+                po.offering_status_id as prdOfferingStatusId,
+                lv.lookup_name as prdOfferingStatusName
+                from prd_offering po 
+                join savings_offering so on so.prd_offering_id = po.prd_offering_id
                 join prd_status ps on ps.offering_status_id = po.offering_status_id
                 join prd_state p on p. prd_state_id = ps.prd_state_id 
                 join lookup_value lv on lv.lookup_id = prd_state_lookup_id
                 order by po.prd_offering_name]]>
-	</sql-query>
-	<query name="product.getAllActiveLoanProducts">
-		<![CDATA[from org.mifos.accounts.productdefinition.business.LoanOfferingBO loanOffering where loanOffering.prdStatus.offeringStatusId = :prdStatus order by loanOffering.prdOfferingName]]>
-	</query>
+    </sql-query>
+    <query name="product.getAllActiveLoanProducts">
+        <![CDATA[from org.mifos.accounts.productdefinition.business.LoanOfferingBO loanOffering where loanOffering.prdStatus.offeringStatusId = :prdStatus order by loanOffering.prdOfferingName]]>
+    </query>
 
-	<query name="product.getLoanOfferingsNotMixed">
-		<![CDATA[from org.mifos.accounts.productdefinition.business.LoanOfferingBO  as loanOffering
-		 Where loanOffering.prdMixFlag is null
-		 and loanOffering.prdStatus.offeringStatusId = :prdStatus
-		 order by loanOffering.prdOfferingName]]>
-	</query>
-	<query name="product.getSavingOfferingsNotMixed">
-		<![CDATA[from org.mifos.accounts.productdefinition.business.SavingsOfferingBO as savingsOffering
-		 Where savingsOffering.prdMixFlag is null
-		 and savingsOffering.prdStatus.offeringStatusId = :prdStatus
-		 order by savingsOffering.prdOfferingName]]>
-	</query>
-	<query name="product.getActiveOfferingsForCustomer">
-		<![CDATA[from org.mifos.accounts.productdefinition.business.SavingsOfferingBO savingsOffering where savingsOffering.prdStatus.id=2 and savingsOffering.prdApplicableMaster.id=:prdApplicableTo]]>
-	</query>
+    <query name="product.getLoanOfferingsNotMixed">
+        <![CDATA[from org.mifos.accounts.productdefinition.business.LoanOfferingBO  as loanOffering
+         Where loanOffering.prdMixFlag is null
+         and loanOffering.prdStatus.offeringStatusId = :prdStatus
+         order by loanOffering.prdOfferingName]]>
+    </query>
+    <query name="product.getSavingOfferingsNotMixed">
+        <![CDATA[from org.mifos.accounts.productdefinition.business.SavingsOfferingBO as savingsOffering
+         Where savingsOffering.prdMixFlag is null
+         and savingsOffering.prdStatus.offeringStatusId = :prdStatus
+         order by savingsOffering.prdOfferingName]]>
+    </query>
+    <query name="product.getActiveOfferingsForCustomer">
+        <![CDATA[from org.mifos.accounts.productdefinition.business.SavingsOfferingBO savingsOffering where savingsOffering.prdStatus.id=2 and savingsOffering.prdApplicableMaster.id=:prdApplicableTo]]>
+    </query>
 
-	<query name="product.bytype">
-		<![CDATA[from org.mifos.accounts.productdefinition.business.PrdOfferingBO as prdOff 
-		where prdOff.prdType.productTypeID=:ProductType
-		and prdOff.prdStatus.offeringStatusId = :prdStatus
-		]]>
-	</query>
-	<query name="product.allowedproductofferingbytype">
-		<![CDATA[from org.mifos.accounts.productdefinition.business.PrdOfferingBO as prdOff
-		where prdOff.prdType.productTypeID=:ProductType
-		and prdOff.prdStatus.offeringStatusId = :prdStatus
-		and prdOff.prdOfferingId not in	(
-		select prdMixBO.prdOfferingNotAllowedId.prdOfferingId 
-		from org.mifos.accounts.productsmix.business.ProductMixBO prdMixBO
-		where prdMixBO.prdOfferingId.prdOfferingId=:prdOfferingId)
-		and prdOff.prdOfferingId not in	(
-		select prdMixBO.prdOfferingId.prdOfferingId 
-		from org.mifos.accounts.productsmix.business.ProductMixBO prdMixBO
-		where prdMixBO.prdOfferingNotAllowedId.prdOfferingId=:prdOfferingId)
-		order by prdOff.prdOfferingName
-		]]>
-	</query>
-	<query name="product.notallowedproductofferingbytype">
-		<![CDATA[from org.mifos.accounts.productdefinition.business.PrdOfferingBO as prdOff
-		where prdOff.prdOfferingId in (select prdMixBO.prdOfferingNotAllowedId.prdOfferingId
-		from org.mifos.accounts.productsmix.business.ProductMixBO prdMixBO
-		where prdMixBO.prdOfferingId.prdOfferingId=:prdOfferingId)
-		OR prdOff.prdOfferingId in (select prdMixBO.prdOfferingId.prdOfferingId 
-		from org.mifos.accounts.productsmix.business.ProductMixBO prdMixBO
-		where prdMixBO.prdOfferingNotAllowedId.prdOfferingId=:prdOfferingId)
-		order by prdOff.prdOfferingName
-		]]>
-	</query>
-	<query name="product.allowedproductformixproduct">
-		<![CDATA[from org.mifos.accounts.productdefinition.business.PrdOfferingBO as prdOff
-		where prdOff.prdStatus.offeringStatusId = :prdStatus
-		and prdOff.prdType.productTypeID=:ProductType
-		and prdOff.prdOfferingId not in	(select prdMixBO.prdOfferingId.prdOfferingId
-		from org.mifos.accounts.productsmix.business.ProductMixBO prdMixBO
-		where prdMixBO.prdOfferingNotAllowedId.prdOfferingId=:prdOfferingId)
-		order by prdOff.prdOfferingName
-		]]>
-	</query>
-	<query name="product.notallowedproductformixproduct">
-		<![CDATA[from org.mifos.accounts.productdefinition.business.PrdOfferingBO as prdOff
-		where prdOff.prdOfferingId in (select prdMixBO.prdOfferingId.prdOfferingId
-		from org.mifos.accounts.productsmix.business.ProductMixBO prdMixBO
-		where prdMixBO.prdOfferingNotAllowedId.prdOfferingId=:prdOfferingId)
-		order by prdOff.prdOfferingName
-		]]>
-	</query>
-	<query name="product.byid">
-		<![CDATA[from org.mifos.accounts.productdefinition.business.PrdOfferingBO prdOffering where prdOffering.prdOfferingId=:prdOfferingId order by prdOffering.prdOfferingName]]>
-	</query>
-	<query name="product.retrieveProductOfferingMix">
-		<![CDATA[from org.mifos.accounts.productdefinition.business.PrdOfferingBO prdOffering
+    <query name="product.bytype">
+        <![CDATA[from org.mifos.accounts.productdefinition.business.PrdOfferingBO as prdOff 
+        where prdOff.prdType.productTypeID=:ProductType
+        and prdOff.prdStatus.offeringStatusId = :prdStatus
+        ]]>
+    </query>
+    <query name="product.allowedproductofferingbytype">
+        <![CDATA[from org.mifos.accounts.productdefinition.business.PrdOfferingBO as prdOff
+        where prdOff.prdType.productTypeID=:ProductType
+        and prdOff.prdStatus.offeringStatusId = :prdStatus
+        and prdOff.prdOfferingId not in    (
+        select prdMixBO.prdOfferingNotAllowedId.prdOfferingId 
+        from org.mifos.accounts.productsmix.business.ProductMixBO prdMixBO
+        where prdMixBO.prdOfferingId.prdOfferingId=:prdOfferingId)
+        and prdOff.prdOfferingId not in    (
+        select prdMixBO.prdOfferingId.prdOfferingId 
+        from org.mifos.accounts.productsmix.business.ProductMixBO prdMixBO
+        where prdMixBO.prdOfferingNotAllowedId.prdOfferingId=:prdOfferingId)
+        order by prdOff.prdOfferingName
+        ]]>
+    </query>
+    <query name="product.notallowedproductofferingbytype">
+        <![CDATA[from org.mifos.accounts.productdefinition.business.PrdOfferingBO as prdOff
+        where prdOff.prdOfferingId in (select prdMixBO.prdOfferingNotAllowedId.prdOfferingId
+        from org.mifos.accounts.productsmix.business.ProductMixBO prdMixBO
+        where prdMixBO.prdOfferingId.prdOfferingId=:prdOfferingId)
+        OR prdOff.prdOfferingId in (select prdMixBO.prdOfferingId.prdOfferingId 
+        from org.mifos.accounts.productsmix.business.ProductMixBO prdMixBO
+        where prdMixBO.prdOfferingNotAllowedId.prdOfferingId=:prdOfferingId)
+        order by prdOff.prdOfferingName
+        ]]>
+    </query>
+    <query name="product.allowedproductformixproduct">
+        <![CDATA[from org.mifos.accounts.productdefinition.business.PrdOfferingBO as prdOff
+        where prdOff.prdStatus.offeringStatusId = :prdStatus
+        and prdOff.prdType.productTypeID=:ProductType
+        and prdOff.prdOfferingId not in    (select prdMixBO.prdOfferingId.prdOfferingId
+        from org.mifos.accounts.productsmix.business.ProductMixBO prdMixBO
+        where prdMixBO.prdOfferingNotAllowedId.prdOfferingId=:prdOfferingId)
+        order by prdOff.prdOfferingName
+        ]]>
+    </query>
+    <query name="product.notallowedproductformixproduct">
+        <![CDATA[from org.mifos.accounts.productdefinition.business.PrdOfferingBO as prdOff
+        where prdOff.prdOfferingId in (select prdMixBO.prdOfferingId.prdOfferingId
+        from org.mifos.accounts.productsmix.business.ProductMixBO prdMixBO
+        where prdMixBO.prdOfferingNotAllowedId.prdOfferingId=:prdOfferingId)
+        order by prdOff.prdOfferingName
+        ]]>
+    </query>
+    <query name="product.byid">
+        <![CDATA[from org.mifos.accounts.productdefinition.business.PrdOfferingBO prdOffering where prdOffering.prdOfferingId=:prdOfferingId order by prdOffering.prdOfferingName]]>
+    </query>
+    <query name="product.retrieveProductOfferingMix">
+        <![CDATA[from org.mifos.accounts.productdefinition.business.PrdOfferingBO prdOffering
         where prdOffering.prdMixFlag =1 order by prdOffering.prdOfferingName
-		]]>
-	</query>
-	<query name="savingsProduct.byid">
-		<![CDATA[from SavingsOfferingBO sp where sp.prdOfferingId=:prdOfferingId]]>
-	</query>
-	<query name="savingsProduct.openSavingsAccounts">
-		<![CDATA[select count(*) from SavingsBO s where s.savingsOffering.prdOfferingId=:prdOfferingId and s.accountState in (16, 18)]]>
-	</query>
-	
-	<query name="loanProduct.byid">
-		<![CDATA[from LoanOfferingBO lp where lp.prdOfferingId=:prdOfferingId]]>
-	</query>
+        ]]>
+    </query>
+    <query name="savingsProduct.byid">
+        <![CDATA[from SavingsOfferingBO sp where sp.prdOfferingId=:prdOfferingId]]>
+    </query>
+    <query name="savingsProduct.openSavingsAccounts">
+        <![CDATA[select count(*) from SavingsBO s where s.savingsOffering.prdOfferingId=:prdOfferingId and s.accountState in (16, 18)]]>
+    </query>
+    
+    <query name="loanProduct.byid">
+        <![CDATA[from LoanOfferingBO lp where lp.prdOfferingId=:prdOfferingId]]>
+    </query>
 </hibernate-mapping>

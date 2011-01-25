@@ -222,10 +222,10 @@
         </action>
 
         <!--  
-		<action path="/cashFlowForward" type="org.apache.struts.actions.ForwardAction"
-			parameter="/pages/application/loan/jsp/schedulePreview.jsp" input="/loanAccountAction.do?method=schedulePreview" scope="request"
-			validate="false">
-		</action>
+        <action path="/cashFlowForward" type="org.apache.struts.actions.ForwardAction"
+            parameter="/pages/application/loan/jsp/schedulePreview.jsp" input="/loanAccountAction.do?method=schedulePreview" scope="request"
+            validate="false">
+        </action>
         -->
         
         

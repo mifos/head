@@ -32,7 +32,7 @@
         </batch:step>
     </batch:job>
     <bean name="ProductStatusTasklet" class="org.mifos.framework.components.batchjobs.helpers.ProductStatusHelper" />
-	
+    
     <!--
                 SavingsIntPostingTask:
     -->
@@ -155,15 +155,15 @@
                 BranchReportTask:
     -->
     <bean name="BranchReportTask" parent="jobDetailBase" class="org.springframework.scheduling.quartz.JobDetailBean">
-	  <property name="jobClass" value="org.mifos.framework.components.batchjobs.helpers.BranchReportTask" />
-	  <property name="name" value="BranchReportTaskJob" />
-	</bean>
-	<bean id="branchReportTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+      <property name="jobClass" value="org.mifos.framework.components.batchjobs.helpers.BranchReportTask" />
+      <property name="name" value="BranchReportTaskJob" />
+    </bean>
+    <bean id="branchReportTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
         <property name="name" value="BranchReportTaskJob"/>
-	    <property name="jobDetail" ref="BranchReportTask" />
-	    <property name="cronExpression" value="0 5 0 * * ?" />
-	</bean>
-	<batch:job id="BranchReportTaskJob" parent="jobBase" job-repository="jobRepository">
+        <property name="jobDetail" ref="BranchReportTask" />
+        <property name="cronExpression" value="0 5 0 * * ?" />
+    </bean>
+    <batch:job id="BranchReportTaskJob" parent="jobBase" job-repository="jobRepository">
         <batch:step id="BranchReportTask-step-1">
             <batch:tasklet ref="BranchReportTaskTasklet" />
         </batch:step>
@@ -182,53 +182,53 @@
                 <prop key="org.quartz.jobStore.misfireThreshold">60000</prop>
             </props>
         </property>
-	    <property name="triggers">
-	        <list>
-	            <ref bean="productStatusTrigger" />
-	            <ref bean="savingsIntPostingTaskTrigger" />
-	            <ref bean="applyCustomerFeeChangesTaskTrigger" />
-	            <ref bean="loanArrearsAgingTaskTrigger" />
-	            <ref bean="applyHolidayChangesTaskTrigger" />
-	            <ref bean="loanArrearsAndPortfolioAtRiskTaskTrigger" />
-	            <ref bean="generateMeetingsForCustomerAndSavingsTaskTrigger" />
-	            <ref bean="branchReportTaskTrigger" />
-	        </list>
-	    </property>
-	</bean>
-	
-	<!--
+        <property name="triggers">
+            <list>
+                <ref bean="productStatusTrigger" />
+                <ref bean="savingsIntPostingTaskTrigger" />
+                <ref bean="applyCustomerFeeChangesTaskTrigger" />
+                <ref bean="loanArrearsAgingTaskTrigger" />
+                <ref bean="applyHolidayChangesTaskTrigger" />
+                <ref bean="loanArrearsAndPortfolioAtRiskTaskTrigger" />
+                <ref bean="generateMeetingsForCustomerAndSavingsTaskTrigger" />
+                <ref bean="branchReportTaskTrigger" />
+            </list>
+        </property>
+    </bean>
+    
+    <!--
         ========= Framework-specific configurations: =========
     -->
-	
-	<batch:job-repository
-	   id="jobRepository"
-	   transaction-manager="transactionManager"
-	   data-source="dataSource"
-	   table-prefix="BATCH_"
-	/>
-	
-	<bean id="transactionManager" class="org.springframework.batch.support.transaction.ResourcelessTransactionManager"/>
-	
-	<bean id="jobLauncher" class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
-	   <property name="jobRepository" ref="jobRepository" />
-	   <property name="taskExecutor">
-	       <bean class="org.springframework.core.task.SyncTaskExecutor" />
-	   </property>
-	</bean>
-		
-	<bean id="jobRegistry" class="org.springframework.batch.core.configuration.support.MapJobRegistry" />
-	
-	<bean id="jobExplorer" class="org.springframework.batch.core.explore.support.JobExplorerFactoryBean">
-	   <property name="dataSource" ref="dataSource" />
-	   <property name="tablePrefix" value="BATCH_" />
-	</bean>
-	
-	<bean id="jobRegistryBeanPostProcessor" class="org.springframework.batch.core.configuration.support.JobRegistryBeanPostProcessor">
-	    <property name="jobRegistry" ref="jobRegistry"/>
-	</bean>
-	
-	<bean id="jobDetailBase" class="org.springframework.scheduling.quartz.JobDetailBean">
-	   <property name="jobDataAsMap">
+    
+    <batch:job-repository
+       id="jobRepository"
+       transaction-manager="transactionManager"
+       data-source="dataSource"
+       table-prefix="BATCH_"
+    />
+    
+    <bean id="transactionManager" class="org.springframework.batch.support.transaction.ResourcelessTransactionManager"/>
+    
+    <bean id="jobLauncher" class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
+       <property name="jobRepository" ref="jobRepository" />
+       <property name="taskExecutor">
+           <bean class="org.springframework.core.task.SyncTaskExecutor" />
+       </property>
+    </bean>
+        
+    <bean id="jobRegistry" class="org.springframework.batch.core.configuration.support.MapJobRegistry" />
+    
+    <bean id="jobExplorer" class="org.springframework.batch.core.explore.support.JobExplorerFactoryBean">
+       <property name="dataSource" ref="dataSource" />
+       <property name="tablePrefix" value="BATCH_" />
+    </bean>
+    
+    <bean id="jobRegistryBeanPostProcessor" class="org.springframework.batch.core.configuration.support.JobRegistryBeanPostProcessor">
+        <property name="jobRegistry" ref="jobRegistry"/>
+    </bean>
+    
+    <bean id="jobDetailBase" class="org.springframework.scheduling.quartz.JobDetailBean">
+       <property name="jobDataAsMap">
         <map>
             <entry key="jobLocator" value-ref="jobRegistry" />
             <entry key="jobLauncher" value-ref="jobLauncher" />
@@ -236,16 +236,16 @@
             <entry key="jobRepository" value-ref="jobRepository" />
         </map>
     </property>
-	   
-	</bean>
-	
-	<batch:job id="jobBase" abstract="true">
-	    <batch:listeners>
-	        <batch:listener ref="jobListener"/>
-	    </batch:listeners>
-	</batch:job>
-	
-	<bean id="jobListener" class="org.mifos.framework.components.batchjobs.BatchJobListener" />
+       
+    </bean>
+    
+    <batch:job id="jobBase" abstract="true">
+        <batch:listeners>
+            <batch:listener ref="jobListener"/>
+        </batch:listeners>
+    </batch:job>
+    
+    <bean id="jobListener" class="org.mifos.framework.components.batchjobs.BatchJobListener" />
     
 </beans>
     

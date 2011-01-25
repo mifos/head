@@ -6,14 +6,14 @@
 <hibernate-mapping > 
   <class name="org.mifos.customers.client.business.CustomerPictureEntity" table="customer_picture" >
     <id column="picture_id" name="pictureId" type="integer" access="field"> 
-		<generator class="native"></generator>
+        <generator class="native"></generator>
     </id>
-	<property column="picture"  name="picture"  type="blob"/>
-	<many-to-one name="customer" column="customer_id"
-			class="org.mifos.customers.business.CustomerBO" unique="true" access="field"/>
+    <property column="picture"  name="picture"  type="blob"/>
+    <many-to-one name="customer" column="customer_id"
+            class="org.mifos.customers.business.CustomerBO" unique="true" access="field"/>
   </class> 
   
-  	<query name="Customer.getPicture">
-		<![CDATA[from org.mifos.customers.client.business.CustomerPictureEntity customerPicture where customerPicture.customer.customerId =:customerId]]>
-	</query>
+      <query name="Customer.getPicture">
+        <![CDATA[from org.mifos.customers.client.business.CustomerPictureEntity customerPicture where customerPicture.customer.customerId =:customerId]]>
+    </query>
 </hibernate-mapping>  

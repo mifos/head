@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding='UTF-8'?>
 <!DOCTYPE hibernate-mapping PUBLIC
-	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-	"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
-	<class name="org.mifos.reports.ui.SelectionItem">
-		<composite-id>
-			<key-property name="id" type="integer" access="field" />
-			<key-property name="displayName" type="string" access="field" />
-		</composite-id>
-	</class>
-	<class name="org.mifos.reports.ui.DateSelectionItem" mutable="false">
-		<id name="date" type="date" access="field" />
-	</class>
+    <class name="org.mifos.reports.ui.SelectionItem">
+        <composite-id>
+            <key-property name="id" type="integer" access="field" />
+            <key-property name="displayName" type="string" access="field" />
+        </composite-id>
+    </class>
+    <class name="org.mifos.reports.ui.DateSelectionItem" mutable="false">
+        <id name="date" type="date" access="field" />
+    </class>
 
-	<sql-query name="SelectionItem.get_active_offices">
-		<return alias="branchOffice" class="org.mifos.reports.ui.SelectionItem" />
-		SELECT office_id as {branchOffice.id}, display_name as
-		{branchOffice.displayName} from office
-		where search_id like :officeSearchId and
-		office_level_id=:officeLevelId and status_id=:ACTIVE order by office.display_name
-	</sql-query>
+    <sql-query name="SelectionItem.get_active_offices">
+        <return alias="branchOffice" class="org.mifos.reports.ui.SelectionItem" />
+        SELECT office_id as {branchOffice.id}, display_name as
+        {branchOffice.displayName} from office
+        where search_id like :officeSearchId and
+        office_level_id=:officeLevelId and status_id=:ACTIVE order by office.display_name
+    </sql-query>
 
-	<sql-query name="SelectionItem.get_active_loanofficers_under_office">
-		<return alias="loanOfficer" class="org.mifos.reports.ui.SelectionItem" />
-		SELECT personnel_id as {loanOfficer.id}, display_name as
-		{loanOfficer.displayName} from personnel
-		where personnel.level_id=:personnelLevelId and
-		personnel.office_id=:officeId and personnel.personnel_status=:ACTIVE
-		order by personnel.display_name
-	</sql-query>
+    <sql-query name="SelectionItem.get_active_loanofficers_under_office">
+        <return alias="loanOfficer" class="org.mifos.reports.ui.SelectionItem" />
+        SELECT personnel_id as {loanOfficer.id}, display_name as
+        {loanOfficer.displayName} from personnel
+        where personnel.level_id=:personnelLevelId and
+        personnel.office_id=:officeId and personnel.personnel_status=:ACTIVE
+        order by personnel.display_name
+    </sql-query>
 
-	<sql-query name="SelectionItem.get_active_customers_under_loanofficers">
-		<return alias="center" class="org.mifos.reports.ui.SelectionItem" />
-		SELECT customer_id as {center.id}, display_name as
-		{center.displayName} from customer
-		where customer.loan_officer_id=:personnelId and
-		customer.branch_id=:officeId and
-		customer.customer_level_id=:customerLevelId
-		and customer.status_id=:ACTIVE
+    <sql-query name="SelectionItem.get_active_customers_under_loanofficers">
+        <return alias="center" class="org.mifos.reports.ui.SelectionItem" />
+        SELECT customer_id as {center.id}, display_name as
+        {center.displayName} from customer
+        where customer.loan_officer_id=:personnelId and
+        customer.branch_id=:officeId and
+        customer.customer_level_id=:customerLevelId
+        and customer.status_id=:ACTIVE
 
-	</sql-query>
+    </sql-query>
 </hibernate-mapping>

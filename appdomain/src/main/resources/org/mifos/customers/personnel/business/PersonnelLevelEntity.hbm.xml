@@ -5,24 +5,24 @@
 
 <hibernate-mapping>
 
-	<class
-		name="org.mifos.customers.personnel.business.PersonnelLevelEntity"
-		table="personnel_level">
-		<id name="id" column="level_id" type="short"
-			access="field">
-			<generator class="native" />
-		</id>
+    <class
+        name="org.mifos.customers.personnel.business.PersonnelLevelEntity"
+        table="personnel_level">
+        <id name="id" column="level_id" type="short"
+            access="field">
+            <generator class="native" />
+        </id>
 
-		<property name="interactionFlag" column="interaction_flag"
-			type="short" access="field"/>
-		<many-to-one name="lookUpValue" column="level_name_id"
-			class="org.mifos.application.master.business.LookUpValueEntity"
-			cascade="none" update="false" unique="true" />
+        <property name="interactionFlag" column="interaction_flag"
+            type="short" access="field"/>
+        <many-to-one name="lookUpValue" column="level_name_id"
+            class="org.mifos.application.master.business.LookUpValueEntity"
+            cascade="none" update="false" unique="true" />
 
-		<many-to-one name="parent" column="parent_level_id"
-			class="org.mifos.customers.personnel.business.PersonnelLevelEntity"
-			lazy="false" access="field"/>
+        <many-to-one name="parent" column="parent_level_id"
+            class="org.mifos.customers.personnel.business.PersonnelLevelEntity"
+            lazy="false" access="field"/>
 
-	</class>
+    </class>
 
 </hibernate-mapping>

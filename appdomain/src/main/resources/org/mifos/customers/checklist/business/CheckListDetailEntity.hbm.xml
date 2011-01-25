@@ -16,9 +16,9 @@
         <many-to-one name="supportedLocales" column="locale_id" 
             class="org.mifos.application.master.business.SupportedLocalesEntity" 
             />         
-    	<many-to-one name="checkListBO" column="checklist_id" 
-    	    class="org.mifos.customers.checklist.business.CheckListBO" 
-    	    access="field" cascade="none" insert="true" update="true" />
+        <many-to-one name="checkListBO" column="checklist_id" 
+            class="org.mifos.customers.checklist.business.CheckListBO" 
+            access="field" cascade="none" insert="true" update="true" />
    
     </class>
     
