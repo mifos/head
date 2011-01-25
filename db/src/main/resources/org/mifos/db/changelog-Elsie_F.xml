@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+    <changeSet author="MIFOS-3703" id="1">
+        <createTable tableName="variable_installment_details">
+            <column name="id" autoIncrement="true" type="smallint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="min_gap_in_days" type="smallint"/>
+            <column name="max_gap_in_days" type="smallint"/>
+            <column name="min_loan_amount" type="decimal(21,4)"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="variable_installment_details"/>
+        </rollback>
+        <modifySql dbms="mysql" applyToRollback="false">
+            <append value=" engine=innodb character set utf8"/>
+        </modifySql>
+    </changeSet>
+    <changeSet author="MIFOS-3703" id="2">
+        <addColumn tableName="loan_offering">
+            <column name="variable_installment_flag" type="smallint" defaultValue="0"/>
+        </addColumn>
+        <addColumn tableName="loan_offering">
+            <column name="variable_installment_details_id" type="smallint"/>
+        </addColumn>
+        <addColumn tableName="variable_installment_details">
+            <column name="min_loan_amount_currency_id" type="smallint"/>
+        </addColumn>
+        <addForeignKeyConstraint constraintName="fk_lo_vid"
+                                 baseTableName="loan_offering" baseColumnNames="variable_installment_details_id"
+                                 referencedTableName="variable_installment_details" referencedColumnNames="id"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"/>
+        <rollback>
+            <dropForeignKeyConstraint baseTableName="loan_offering" constraintName="fk_lo_vid"/>
+            <dropColumn tableName="variable_installment_details" columnName="min_loan_amount_currency_id"/>
+            <dropColumn tableName="variable_installment_details" columnName="variable_installment_details_id"/>
+            <dropColumn tableName="variable_installment_details" columnName="variable_installment_flag"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="MIFOS-3770" id="1">
+        <createTable tableName="cash_flow_detail">
+            <column name="id" type="smallint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="cash_flow_threshold" type="decimal(13, 10)"/>
+            <column name="indebtedness_ratio" type="decimal(13, 10)"/>
+            <column name="repayment_capacity" type="decimal(13, 10)"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="cash_flow_detail"/>
+        </rollback>
+        <modifySql dbms="mysql" applyToRollback="false">
+            <append value=" engine=innodb character set utf8"/>
+        </modifySql>
+    </changeSet>
+    <changeSet author="MIFOS-3761" id="1">
+        <addColumn tableName="loan_offering">
+            <column name="cash_flow_comparison_flag" type="smallint" defaultValue="0"/>
+        </addColumn>
+        <addColumn tableName="loan_offering">
+            <column name="cash_flow_detail_id" type="smallint"/>
+        </addColumn>
+        <addForeignKeyConstraint constraintName="fk_lo_cfd"
+                                 baseTableName="loan_offering" baseColumnNames="cash_flow_detail_id"
+                                 referencedTableName="cash_flow_detail" referencedColumnNames="id"/>
+        <rollback>
+            <dropForeignKeyConstraint baseTableName="loan_offering" constraintName="fk_lo_cfd"/>
+            <dropColumn tableName="loan_offering" columnName="cash_flow_detail_id"/>
+            <dropColumn tableName="loan_offering" columnName="cash_flow_comparison_flag"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="MIFOS-3762" id="1">
+        <createTable tableName="cash_flow">
+            <column name="id" autoIncrement="true" type="int">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="capital" type="decimal(21, 4)"/>
+            <column name="liability" type="decimal(21, 4)"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="cash_flow"/>
+        </rollback>
+        <modifySql dbms="mysql" applyToRollback="false">
+            <append value=" engine=innodb character set utf8"/>
+        </modifySql>
+    </changeSet>
+    <changeSet author="MIFOS-3762" id="2">
+        <createTable tableName="monthly_cash_flow_details">
+            <column name="id" autoIncrement="true" type="int">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="cash_flow_id" type="int"/>
+            <column name="month_year" type="date"/>
+            <column name="revenue" type="decimal(21, 4)"/>
+            <column name="expenses" type="decimal(21, 4)"/>
+            <column name="notes" type="varchar(300)"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="monthly_cash_flow_details"/>
+        </rollback>
+        <modifySql dbms="mysql" applyToRollback="false">
+            <append value=" engine=innodb character set utf8"/>
+        </modifySql>
+    </changeSet>
+    <changeSet author="MIFOS-3762" id="3">
+        <addForeignKeyConstraint constraintName="fk_mcfd_cf"
+                                 baseTableName="monthly_cash_flow_details" baseColumnNames="cash_flow_id"
+                                 referencedTableName="cash_flow" referencedColumnNames="id"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"/>
+        <rollback>
+            <dropForeignKeyConstraint baseTableName="monthly_cash_flow_details" constraintName="fk_mcfd_cf"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="MIFOS-3762" id="4">
+        <createTable tableName="loan_cash_flow">
+            <column name="loan_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cash_flow_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <rollback>
+            <dropTable tableName="loan_cash_flow"/>
+        </rollback>
+        <modifySql dbms="mysql" applyToRollback="false">
+            <append value=" engine=innodb character set utf8"/>
+        </modifySql>
+    </changeSet>
+    <changeSet author="MIFOS-3762" id="5">
+        <addForeignKeyConstraint constraintName="fk_lcf_la"
+                                 baseTableName="loan_cash_flow" baseColumnNames="loan_id"
+                                 referencedTableName="loan_account" referencedColumnNames="account_id"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"/>
+        <addForeignKeyConstraint constraintName="fk_lcf_cf"
+                                 baseTableName="loan_cash_flow" baseColumnNames="cash_flow_id"
+                                 referencedTableName="cash_flow" referencedColumnNames="id"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"/>
+        <rollback>
+            <dropForeignKeyConstraint baseTableName="loan_cash_flow" constraintName="fk_lcf_cf"/>
+            <dropForeignKeyConstraint baseTableName="loan_cash_flow" constraintName="fk_lcf_la"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="MIFOS-4056" id="1">
+        <sql endDelimiter=";">
+            insert into lookup_value(lookup_id,entity_id,lookup_name) values((select max(lv.lookup_id)+1 from
+            lookup_value lv), 37, 'InterestTypes-DecliningPrincipalBalance');
+
+            insert into interest_types (interest_type_id, lookup_id, category_id, descripton) values(5, (select
+            lookup_id from lookup_value where entity_id =37 and lookup_name='InterestTypes-DecliningPrincipalBalance'),
+            1,'InterestTypes-DecliningPrincipalBalance');
+        </sql>
+        <rollback>
+            <sql endDelimiter=";">
+                delete from interest_types where interest_type_id = 5 and category_id = 1 and
+                descripton='InterestTypes-DecliningPrincipalBalance';
+
+                delete from lookup_value where entity_id=37 and lookup_name='InterestTypes-DecliningPrincipalBalance';
+            </sql>
+        </rollback>
+    </changeSet>
+    <changeSet author="MIFOS-4117" id="1">
+        <addColumn tableName="loan_schedule">
+            <column name="extra_interest" type="decimal(21,4)"/>
+        </addColumn>
+        <addColumn tableName="loan_schedule">
+            <column name="extra_interest_currency_id" type="smallint"/>
+        </addColumn>
+        <addColumn tableName="loan_schedule">
+            <column name="extra_interest_paid" type="decimal(21,4)"/>
+        </addColumn>
+        <addColumn tableName="loan_schedule">
+            <column name="extra_interest_paid_currency_id" type="smallint"/>
+        </addColumn>
+        <addForeignKeyConstraint constraintName="fk_ls.ei_cur"
+                                 baseTableName="loan_schedule" baseColumnNames="extra_interest_currency_id"
+                                 referencedTableName="currency" referencedColumnNames="currency_id"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"/>
+        <addForeignKeyConstraint constraintName="fk_ls.eip_cur"
+                                 baseTableName="loan_schedule" baseColumnNames="extra_interest_paid_currency_id"
+                                 referencedTableName="currency" referencedColumnNames="currency_id"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"/>
+        <rollback>
+            <dropForeignKeyConstraint baseTableName="loan_schedule" constraintName="fk_ls.eip_cur"/>
+            <dropForeignKeyConstraint baseTableName="loan_schedule" constraintName="fk_ls.ei_cur"/>
+            <dropColumn tableName="loan_schedule" columnName="extra_interest_paid_currency_id"/>
+            <dropColumn tableName="loan_schedule" columnName="extra_interest_paid"/>
+            <dropColumn tableName="loan_schedule" columnName="extra_interest_currency_id"/>
+            <dropColumn tableName="loan_schedule" columnName="extra_interest"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="MIFOS-4052" id="1">
+        <createTable tableName="original_loan_schedule">
+            <column name="id" autoIncrement="true" type="integer">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="account_id" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="customer_id" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="currency_id" type="smallint"/>
+            <column name="action_date" type="date"/>
+            <column name="principal" type="decimal(21,4)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="principal_currency_id" type="smallint"/>
+            <column name="interest" type="decimal(21,4)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="interest_currency_id" type="smallint"/>
+            <column name="penalty" type="decimal(21,4)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="penalty_currency_id" type="smallint"/>
+            <column name="misc_fees" type="decimal(21,4)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="misc_fees_currency_id" type="smallint"/>
+            <column name="misc_fees_paid" type="decimal(21,4)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="misc_fees_paid_currency_id" type="smallint"/>
+            <column name="misc_penalty" type="decimal(21,4)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="misc_penalty_currency_id" type="smallint"/>
+            <column name="misc_penalty_paid" type="decimal(21,4)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="misc_penalty_paid_currency_id" type="smallint"/>
+            <column name="principal_paid" type="decimal(21,4)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="principal_paid_currency_id" type="smallint"/>
+            <column name="interest_paid" type="decimal(21,4)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="interest_paid_currency_id" type="smallint"/>
+            <column name="penalty_paid" type="decimal(21,4)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="penalty_paid_currency_id" type="smallint"/>
+            <column name="payment_status" type="smallint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="installment_id" type="smallint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="payment_date" type="date"/>
+            <column name="parent_flag" type="smallint"/>
+            <column name="version_no" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="extra_interest" type="decimal(21,4)"/>
+            <column name="extra_interest_currency_id" type="smallint"/>
+            <column name="extra_interest_paid" type="decimal(21,4)"/>
+            <column name="extra_interest_paid_currency_id" type="smallint"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="original_loan_schedule"/>
+        </rollback>
+        <modifySql dbms="mysql" applyToRollback="false">
+            <append value=" engine=innodb character set utf8"/>
+        </modifySql>
+    </changeSet>
+    <changeSet author="MIFOS-4052" id="2">
+        <addForeignKeyConstraint constraintName="fk_ols_acc"
+                                 baseTableName="original_loan_schedule" baseColumnNames="account_id"
+                                 referencedTableName="account" referencedColumnNames="account_id"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"/>
+        <addForeignKeyConstraint constraintName="fk_ols.cur_cur"
+                                 baseTableName="original_loan_schedule" baseColumnNames="currency_id"
+                                 referencedTableName="currency" referencedColumnNames="currency_id"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"/>
+        <addForeignKeyConstraint constraintName="fk_ols.pc_cur"
+                                 baseTableName="original_loan_schedule" baseColumnNames="principal_currency_id"
+                                 referencedTableName="currency" referencedColumnNames="currency_id"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"/>
+        <addForeignKeyConstraint constraintName="fk_ols.ic_cur"
+                                 baseTableName="original_loan_schedule" baseColumnNames="interest_currency_id"
+                                 referencedTableName="currency" referencedColumnNames="currency_id"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"/>
+        <addForeignKeyConstraint constraintName="fk_ols.penalty_cur"
+                                 baseTableName="original_loan_schedule" baseColumnNames="penalty_currency_id"
+                                 referencedTableName="currency" referencedColumnNames="currency_id"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"/>
+        <addForeignKeyConstraint constraintName="fk_ols.mfc_cur"
+                                 baseTableName="original_loan_schedule" baseColumnNames="misc_fees_currency_id"
+                                 referencedTableName="currency" referencedColumnNames="currency_id"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"/>
+        <addForeignKeyConstraint constraintName="fk_ols.mfpc_cur"
+                                 baseTableName="original_loan_schedule" baseColumnNames="misc_fees_paid_currency_id"
+                                 referencedTableName="currency" referencedColumnNames="currency_id"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"/>
+        <addForeignKeyConstraint constraintName="fk_ols.mpc_cur"
+                                 baseTableName="original_loan_schedule" baseColumnNames="misc_penalty_currency_id"
+                                 referencedTableName="currency" referencedColumnNames="currency_id"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"/>
+        <addForeignKeyConstraint constraintName="fk_ols.ppc_cur"
+                                 baseTableName="original_loan_schedule" baseColumnNames="principal_paid_currency_id"
+                                 referencedTableName="currency" referencedColumnNames="currency_id"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"/>
+        <addForeignKeyConstraint constraintName="fk_ols.ipc_cur"
+                                 baseTableName="original_loan_schedule" baseColumnNames="interest_paid_currency_id"
+                                 referencedTableName="currency" referencedColumnNames="currency_id"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"/>
+        <addForeignKeyConstraint constraintName="fk_ols.penaltypaid_curr"
+                                 baseTableName="original_loan_schedule" baseColumnNames="penalty_paid_currency_id"
+                                 referencedTableName="currency" referencedColumnNames="currency_id"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"/>
+        <addForeignKeyConstraint constraintName="fk_ols.mppc_curr"
+                                 baseTableName="original_loan_schedule" baseColumnNames="misc_penalty_paid_currency_id"
+                                 referencedTableName="currency" referencedColumnNames="currency_id"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"/>
+        <addForeignKeyConstraint constraintName="fk_ols_customer"
+                                 baseTableName="original_loan_schedule" baseColumnNames="customer_id"
+                                 referencedTableName="customer" referencedColumnNames="customer_id"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"/>
+        <addForeignKeyConstraint constraintName="fk_ols.eic_curr"
+                                 baseTableName="original_loan_schedule" baseColumnNames="extra_interest_currency_id"
+                                 referencedTableName="currency" referencedColumnNames="currency_id"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"/>
+        <addForeignKeyConstraint constraintName="fk_ols.eip_curr"
+                                 baseTableName="original_loan_schedule"
+                                 baseColumnNames="extra_interest_paid_currency_id"
+                                 referencedTableName="currency" referencedColumnNames="currency_id"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"/>
+        <rollback>
+            <dropForeignKeyConstraint baseTableName="original_loan_schedule" constraintName="fk_ols.eip_curr"/>
+            <dropForeignKeyConstraint baseTableName="original_loan_schedule" constraintName="fk_ols.eic_curr"/>
+            <dropForeignKeyConstraint baseTableName="original_loan_schedule" constraintName="fk_ols_customer"/>
+            <dropForeignKeyConstraint baseTableName="original_loan_schedule" constraintName="fk_ols.mppc_curr"/>
+            <dropForeignKeyConstraint baseTableName="original_loan_schedule" constraintName="fk_ols.penaltypaid_curr"/>
+            <dropForeignKeyConstraint baseTableName="original_loan_schedule" constraintName="fk_ols.ipc_cur"/>
+            <dropForeignKeyConstraint baseTableName="original_loan_schedule" constraintName="fk_ols.ppc_cur"/>
+            <dropForeignKeyConstraint baseTableName="original_loan_schedule" constraintName="fk_ols.mpc_cur"/>
+            <dropForeignKeyConstraint baseTableName="original_loan_schedule" constraintName="fk_ols.mfpc_cur"/>
+            <dropForeignKeyConstraint baseTableName="original_loan_schedule" constraintName="fk_ols.mfc_cur"/>
+            <dropForeignKeyConstraint baseTableName="original_loan_schedule" constraintName="fk_ols.penalty_cur"/>
+            <dropForeignKeyConstraint baseTableName="original_loan_schedule" constraintName="fk_ols.ic_cur"/>
+            <dropForeignKeyConstraint baseTableName="original_loan_schedule" constraintName="fk_ols.pc_cur"/>
+            <dropForeignKeyConstraint baseTableName="original_loan_schedule" constraintName="fk_ols.cur_cur"/>
+            <dropForeignKeyConstraint baseTableName="original_loan_schedule" constraintName="fk_ols_acc"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="MIFOS-4052" id="3">
+        <createTable tableName="original_loan_fee_schedule">
+            <column name="account_fees_detail_id" autoIncrement="true" type="integer">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="id" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="installment_id" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fee_id" type="smallint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="account_fee_id" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="amount" type="decimal(21,4)"/>
+            <column name="amount_currency_id" type="smallint"/>
+            <column name="amount_paid" type="decimal(21,4)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="amount_paid_currency_id" type="smallint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version_no" type="integer">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <rollback>
+            <dropTable tableName="original_loan_fee_schedule"/>
+        </rollback>
+        <modifySql dbms="mysql" applyToRollback="false">
+            <append value=" engine=innodb character set utf8"/>
+        </modifySql>
+    </changeSet>
+    <changeSet author="MIFOS-4052" id="4">
+        <addForeignKeyConstraint constraintName="fk_olfs_ols"
+                                 baseTableName="original_loan_fee_schedule" baseColumnNames="id"
+                                 referencedTableName="original_loan_schedule" referencedColumnNames="id"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"/>
+        <addForeignKeyConstraint constraintName="fk_olfs.amt_cur"
+                                 baseTableName="original_loan_fee_schedule" baseColumnNames="amount_currency_id"
+                                 referencedTableName="currency" referencedColumnNames="currency_id"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"/>
+        <addForeignKeyConstraint constraintName="fk_olfs.amtpaid_cur"
+                                 baseTableName="original_loan_fee_schedule" baseColumnNames="amount_paid_currency_id"
+                                 referencedTableName="currency" referencedColumnNames="currency_id"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"/>
+        <addForeignKeyConstraint constraintName="fk_olfs_fee"
+                                 baseTableName="original_loan_fee_schedule" baseColumnNames="fee_id"
+                                 referencedTableName="fees" referencedColumnNames="fee_id"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"/>
+        <addForeignKeyConstraint constraintName="fk_olfs_afee"
+                                 baseTableName="original_loan_fee_schedule" baseColumnNames="account_fee_id"
+                                 referencedTableName="account_fees" referencedColumnNames="account_fee_id"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"/>
+        <rollback>
+            <dropForeignKeyConstraint baseTableName="original_loan_fee_schedule" constraintName="fk_olfs_afee"/>
+            <dropForeignKeyConstraint baseTableName="original_loan_fee_schedule" constraintName="fk_olfs_fee"/>
+            <dropForeignKeyConstraint baseTableName="original_loan_fee_schedule" constraintName="fk_olfs.amtpaid_cur"/>
+            <dropForeignKeyConstraint baseTableName="original_loan_fee_schedule" constraintName="fk_olfs.amt_cur"/>
+            <dropForeignKeyConstraint baseTableName="original_loan_fee_schedule" constraintName="fk_olfs_ols"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="MIFOS-4055" id="1">
+        <createTable tableName="calculated_interest_on_payment">
+            <column name="loan_account_trxn_id" type="integer">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="original_interest" type="decimal(21,4)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="original_interest_currency_id" type="smallint"/>
+            <column name="extra_interest_paid" type="decimal(21,4)"/>
+            <column name="extra_interest_paid_currency_id" type="smallint"/>
+            <column name="interest_due_till_paid" type="decimal(21,4)"/>
+            <column name="interest_due_till_paid_currency_id" type="smallint"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="calculated_interest_on_payment"/>
+        </rollback>
+        <modifySql dbms="mysql" applyToRollback="false">
+            <append value=" engine=innodb character set utf8"/>
+        </modifySql>
+    </changeSet>
+    <changeSet author="MIFOS-4055" id="2">
+        <addForeignKeyConstraint constraintName="fk_ciop_ltd"
+                                 baseTableName="calculated_interest_on_payment" baseColumnNames="loan_account_trxn_id"
+                                 referencedTableName="loan_trxn_detail" referencedColumnNames="account_trxn_id"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"/>
+        <addForeignKeyConstraint constraintName="fk_ciop.oic_cur"
+                                 baseTableName="calculated_interest_on_payment"
+                                 baseColumnNames="original_interest_currency_id"
+                                 referencedTableName="currency" referencedColumnNames="currency_id"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"/>
+        <addForeignKeyConstraint constraintName="fk_ciop.eipc_cur"
+                                 baseTableName="calculated_interest_on_payment"
+                                 baseColumnNames="extra_interest_paid_currency_id"
+                                 referencedTableName="currency" referencedColumnNames="currency_id"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"/>
+        <addForeignKeyConstraint constraintName="fk_ciop.ipc_cur"
+                                 baseTableName="calculated_interest_on_payment"
+                                 baseColumnNames="interest_due_till_paid_currency_id"
+                                 referencedTableName="currency" referencedColumnNames="currency_id"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"/>
+        <rollback>
+            <dropForeignKeyConstraint baseTableName="calculated_interest_on_payment" constraintName="fk_ciop.ipc_cur"/>
+            <dropForeignKeyConstraint baseTableName="calculated_interest_on_payment" constraintName="fk_ciop.eipc_cur"/>
+            <dropForeignKeyConstraint baseTableName="calculated_interest_on_payment" constraintName="fk_ciop.oic_cur"/>
+            <dropForeignKeyConstraint baseTableName="calculated_interest_on_payment" constraintName="fk_ciop_ltd"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>
