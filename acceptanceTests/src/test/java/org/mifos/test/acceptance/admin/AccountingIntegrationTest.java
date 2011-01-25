@@ -38,7 +38,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(groups = {"smoke", "admin", "acceptance","ui"})
+@Test(groups = {"admin", "acceptance","ui"})
 public class AccountingIntegrationTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;
@@ -65,22 +65,31 @@ public class AccountingIntegrationTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void verifyAccountingIntegrationWorkFlow() throws Exception {
+    public void verifyAccountingExportsWorkFlow() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_014_dbunit.xml", dataSource, selenium);
         AdminPage adminPage = loginAndGoToAdminPage();
-        ViewAccountingExportsPage viewAccountingExportsPage = adminPage.navigateToViewAccountingExports();
-        viewAccountingExportsPage.verifyPage();
-        viewAccountingExportsPage.verifyNoExportPresent();
-        viewAccountingExportsPage.navigateBack();
         GenerateAccountingExportPage generateAccountingExportsPage = adminPage.navigateToGenerateAccountingExports();
         generateAccountingExportsPage.verifyPage();
+        generateAccountingExportsPage.clickCancel();
+        adminPage.verifyPage();
+        generateAccountingExportsPage = adminPage.navigateToGenerateAccountingExports();
         GenerateAccountingSubmitParameters formParameters = new GenerateAccountingSubmitParameters();
         formParameters.setFromDate("2008-12-04");
         formParameters.setToDate("2008-12-04");
         generateAccountingExportsPage.submitAndNavigateToViewAccountingDataPage(formParameters);
         generateAccountingExportsPage.verifyDetailsTableExists();
-        viewAccountingExportsPage.navigateBack();
-        viewAccountingExportsPage.navigateBack();
+        generateAccountingExportsPage.navigateBack();
+        generateAccountingExportsPage.navigateBack();
+        ViewAccountingExportsPage viewAccountingExportsPage = adminPage.navigateToViewAccountingExports();
+        viewAccountingExportsPage.verifyPage();
+        viewAccountingExportsPage.clickCancel();
+        adminPage.verifyPage();
+        viewAccountingExportsPage = adminPage.navigateToViewAccountingExports();
+        viewAccountingExportsPage.clickClearExports();
+        viewAccountingExportsPage.verifyConfirmationPage();
+        viewAccountingExportsPage.clickSubmit();
+        viewAccountingExportsPage.verifyPage();
+        viewAccountingExportsPage.verifyNoExportPresent();
     }
 
     private AdminPage loginAndGoToAdminPage() {

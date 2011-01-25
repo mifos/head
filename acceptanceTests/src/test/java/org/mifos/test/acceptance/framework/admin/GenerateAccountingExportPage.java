@@ -42,6 +42,12 @@ public class GenerateAccountingExportPage extends MifosPage {
         return this;
     }
 
+    public GenerateAccountingExportPage clickCancel() {
+        selenium.click("cancel");
+        waitForPageToLoad();
+        return this;
+    }
+
     public static class GenerateAccountingSubmitParameters {
 
         private String fromDate;

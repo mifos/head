@@ -21,7 +21,7 @@
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
         <script type="text/javascript" src="pages/accounting/js/accounting.js"></script>
-        <span id="page.id" title="view_accounting_data_exports"/>
+        <span id="page.id" title="confirm_clear_exports"/>
 
 <div class="content "> <!--  Main Content Begins-->
    [@mifos.crumbs breadcrumbs /]
