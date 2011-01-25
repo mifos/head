@@ -25,13 +25,16 @@
     }
 
     function goToAdmin() {
-    window.location.href="AdminAction.do?method=load";
+         window.location.href="AdminAction.do?method=load";
     }
-    
+
     function gotToConfirmExportDeletePage() {
-        window.location.href='confirmExportsDelete.ftl';
+         window.location.href='confirmExportsDelete.ftl';
      }
 
+    function goToViewExports() {
+         window.location.href='renderAccountingDataCacheInfo.ftl';
+    }
     function deleteCacheDir() {
         $.ajax({
             url   : 'deleteCacheDir.ftl',
@@ -40,12 +43,12 @@
                     alert(xhr.responseText + thrownError);
                     },
             success : function(data) {
-                      window.location.href='renderAccountingDataCacheInfo.ftl';
+                         goToViewExports();
                     }
               })
     }
 
-    
+
 var gAutoPrint = true;
 
 function processPrint(table){
@@ -61,7 +64,7 @@ if (headTags.length > 0) html += headTags[0].innerHTML;
 html += '\n</HE' + 'AD>\n<BODY>\n';
 var printReadyElem = document.getElementById(table);
 
-if (printReadyElem != null) 
+if (printReadyElem != null)
 html += printReadyElem.innerHTML;
 else{
 alert("Error, no contents.");

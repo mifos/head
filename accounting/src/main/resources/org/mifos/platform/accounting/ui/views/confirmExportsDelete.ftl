@@ -22,20 +22,20 @@
 [@adminLeftPaneLayout]
         <script type="text/javascript" src="pages/accounting/js/accounting.js"></script>
         <span id="page.id" title="view_accounting_data_exports"/>
-        [@mifos.crumbs breadcrumbs /]
 
 <div class="content "> <!--  Main Content Begins-->
+   [@mifos.crumbs breadcrumbs /]
+ <div class="margin10lefttop">
+        <p class="font15 margin5topbottom"><b>[@spring.message "accounting.viewaccountingexports"/]</b> - <span class='font15 orangeheading'>[@spring.message "accounting.clearexports"/]</span></p>
     <br />
-        <p class="font15 orangeheading margin5topbottom">[@spring.message "accounting.viewaccountingexports"/]</p>
-    <br />
-    <br />
-        <p class="margin5top10bottom">[@spring.message "accounting.viewaccountingexports.instruction"/]<p>
+        <p class="margin5top10bottom"><font color="red">[@spring.message "accounting.clearexports.warning"/]</font></p>
+        <p class="margin5top10bottom">[@spring.message "accounting.clearexports.instruction"/]<p>
     <br />
     <br />
              <div class="buttonsSubmitCancel margin20right">
                  <input id='submit' type="button" class="buttn" value="[@spring.message "submit"/]" onclick="javascript:deleteCacheDir()" />
-                 <input id='cancel' type="button" class="buttn2" value="[@spring.message "cancel"/]" onclick="javascript:goToAdmin()" />
+                 <input id='cancel' type="button" class="buttn2" value="[@spring.message "cancel"/]" onclick="javascript:goToViewExports()" />
              </div>
-
+  </div>
 </div><!--Main Content Ends-->
 [/@adminLeftPaneLayout]

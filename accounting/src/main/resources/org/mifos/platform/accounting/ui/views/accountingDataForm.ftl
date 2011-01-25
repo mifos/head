@@ -31,44 +31,45 @@
         <SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
         <script type="text/javascript" src="pages/accounting/js/accounting.js"></script>
         <span id="page.id" title="accounting_data_form"/>
-        [@mifos.crumbs breadcrumbs /]
+
 
 <div class="content "> <!--  Main Content Begins-->
-
-   <p class="font15 orangeheading margin5topbottom">[@spring.message "accounting.generateaccountingexports"/]</p>
+   [@mifos.crumbs breadcrumbs /]
+ <div class="margin10lefttop">
+   <p class="font15 orangeheading margin10topbottom">[@spring.message "accounting.generateaccountingexports"/]</p>
    <br />
    <p class="margin5top10bottom">[@spring.message "accounting.generateaccountingexports.instruction"/]</p>
    <br />
    <br />
-   <br />
      <div align='center'>
          <script>addDatePicker();</script>
-         <form action='renderAccountingData.ftl' method='post'>
-            <div class="prepend-8  span-21 last width90prc">
-                <div class="span-20 ">
-                      <span class="span-5 rightAlign">
-                         [@spring.message "accounting.generateaccountingexports.fromdate"/]:
-                      </span>
-                      <span class="span-5">
-                        <input type="text" id="fromDate" name="fromDate" readonly="readonly" />
-                      </span>
-               </div>
-               <div class="span-20 ">
-                     <span class="span-5 rightAlign">
-                        [@spring.message "accounting.generateaccountingexports.todate"/]:
-                     </span>
-                     <span class="span-5">
-                       <input type="text" id="toDate" name="toDate" readonly="readonly" />
-                    </span>
-              </div>
-         </div>
-          <div class="clear">&nbsp;</div>
-              <div class="buttonsSubmitCancel margin20right">
-                 <input id='submit' type="submit" class="buttn" value="[@spring.message "submit"/]"/>
-                 <input id='cancel' type="button" class="buttn2" value="[@spring.message "cancel"/]" onclick="javascript:goToAdmin()" />
-              </div>
-          <div class="clear">&nbsp;</div>
-      </form>
+            <form action='renderAccountingData.ftl' method='post'>
+                    <div class="prepend-8  span-21 last width90prc">
+                        <div class="span-20 ">
+                              <span class="span-5 rightAlign">
+                                 [@spring.message "accounting.generateaccountingexports.fromdate"/]:
+                              </span>
+                              <span class="span-5">
+                                <input type="text" id="fromDate" name="fromDate" readonly="readonly" />
+                              </span>
+                       </div>
+                       <div class="span-20 ">
+                             <span class="span-5 rightAlign">
+                                [@spring.message "accounting.generateaccountingexports.todate"/]:
+                             </span>
+                             <span class="span-5">
+                               <input type="text" id="toDate" name="toDate" readonly="readonly" />
+                            </span>
+                      </div>
+                 </div>
+                  <div class="clear">&nbsp;</div>
+                      <div class="buttonsSubmitCancel margin20right">
+                         <input id='submit' type="submit" class="buttn" value="[@spring.message "submit"/]"/>
+                         <input id='cancel' type="button" class="buttn2" value="[@spring.message "cancel"/]" onclick="javascript:goToAdmin()" />
+                      </div>
+                  <div class="clear">&nbsp;</div>
+           </form>
     </div>
+</div>
 </div><!--Main Content Ends-->
 [/@adminLeftPaneLayout]

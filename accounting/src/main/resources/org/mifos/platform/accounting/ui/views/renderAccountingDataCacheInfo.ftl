@@ -22,12 +22,13 @@
 [@adminLeftPaneLayout]
         <script type="text/javascript" src="pages/accounting/js/accounting.js"></script>
         <span id="page.id" title="view_accounting_data_exports"/>
-        [@mifos.crumbs breadcrumbs /]
+
 
 <div class="content "> <!--  Main Content Begins-->
-    <br />
+   [@mifos.crumbs breadcrumbs /]
+ <div class="margin10lefttop">
+
         <p class="font15 orangeheading margin5topbottom">[@spring.message "accounting.viewaccountingexports"/]</p>
-    <br />
 
     [#if files?size = 0]
         [@spring.message "accounting.viewaccountingexports.nodata"/]
@@ -62,5 +63,6 @@
         </div>
 
     [/#if]
+    </div>
 </div><!--Main Content Ends-->
 [/@adminLeftPaneLayout]

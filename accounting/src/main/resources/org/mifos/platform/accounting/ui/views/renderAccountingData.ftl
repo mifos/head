@@ -22,18 +22,19 @@
 [@adminLeftPaneLayout]
         <script type="text/javascript" src="pages/accounting/js/accounting.js"></script>
         <span id="page.id" title="view_accounting_data_detail"/>
-        [@mifos.crumbs breadcrumbs /]
 
 <div class="content "> <!--  Main Content Begins-->
-    <br />
+   [@mifos.crumbs breadcrumbs /]
+ <div class="margin10lefttop">
+
+
         <p class="font15 orangeheading margin5topbottom">${fileName}</p>
-    <br />
+
 
     [#if hasAlreadyRanQuery]
         <p class="margin5top10bottom"><font color="red">[@spring.message "accounting.viewaccountingexports.warning"/]</font></p>
     [/#if]
 
-    <br />
     <br />
 
     [#if accountingData?size = 0]
@@ -41,18 +42,17 @@
     [#else]
         [@spring.message "accounting.viewaccountingexports.instruction"/]
 
-    <div align='right'>
-        <a target="_blank" href="pages/accounting/jsp/processTallyXMLOutput.jsp?fromDate=${fromDate}&toDate=${toDate}">Download Tally XML format</a>
-    </div>
-
-    <br />
-
-    <div align='right'>
-        <a href="javascript:void(processPrint('table'));">Print</a>
-    </div>
 
         <div id='table'>
             <table>
+                <tr>
+                  <td colspan='7'>
+                      <div align='right'>
+                           <a target="_blank" href="pages/accounting/jsp/processTallyXMLOutput.jsp?fromDate=${fromDate}&toDate=${toDate}">Download Tally XML format</a>
+                      </div>
+                      <div align='right'><a href="javascript:void(processPrint('table'));">Print</a> </div>
+                  </td>
+                </tr>
                 <tr>
                     <th class='drawtablehd'>Branch</th>
                     <th class='drawtablehd'>Voucher Date</th>
@@ -76,5 +76,6 @@
             </table>
         </div>
     [/#if]
+  </div>
 </div><!--Main Content Ends-->
 [/@adminLeftPaneLayout]
