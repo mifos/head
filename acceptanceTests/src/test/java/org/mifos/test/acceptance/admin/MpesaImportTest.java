@@ -35,6 +35,7 @@ import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.admin.ImportTransactionsPage;
+import org.mifos.test.acceptance.framework.admin.ViewOrganizationSettingsPage;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,7 +113,6 @@ public class MpesaImportTest extends UiTestCaseBase {
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         ImportTransactionsPage importTransactionsPage = adminPage.navigateToImportTransactionsPage();
         importTransactionsPage.verifyPage();
-        // try{ Thread.sleep(100000); } catch (Exception e) {}
         importTransactionsPage.reviewTransactions(importFile, EXCEL_IMPORT_TYPE);
     }
 
@@ -122,6 +122,13 @@ public class MpesaImportTest extends UiTestCaseBase {
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         ImportTransactionsPage importTransactionsPage = adminPage.navigateToImportTransactionsPage();
         importTransactionsPage.verifyPage();
+    }
+
+    @Test(enabled=false)
+    public void mpesaDisbursalLimit() {
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        ViewOrganizationSettingsPage viewOrganizationSettingsPage = adminPage.navigateToViewOrganizationSettingsPage();
+        viewOrganizationSettingsPage.verifyMiscellaneous(new String[]{"Max MPESA Disbursal Limit: 50000.0"});
     }
 
 }
