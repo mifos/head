@@ -32,7 +32,6 @@ import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.savings.business.SavingsBO;
-import org.mifos.accounts.savings.business.service.SavingsBusinessService;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.savings.struts.actionforms.SavingsApplyAdjustmentActionForm;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
@@ -41,8 +40,6 @@ import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.dto.domain.SavingsAdjustmentDto;
 import org.mifos.dto.screen.SavingsAdjustmentReferenceDto;
-import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -56,13 +53,6 @@ import org.mifos.service.BusinessRuleException;
  */
 @Deprecated
 public class SavingsApplyAdjustmentAction extends BaseAction {
-
-    private SavingsBusinessService savingsService;
-
-    @Override
-    protected BusinessService getService() throws ServiceException {
-        return getSavingsService();
-    }
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
@@ -189,13 +179,6 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
     private void doCleanUp(HttpServletRequest request) throws Exception {
         SessionUtils.removeAttribute(SavingsConstants.ACCOUNT_ACTION, request);
         SessionUtils.removeAttribute(SavingsConstants.CLIENT_NAME, request);
-    }
-
-    private SavingsBusinessService getSavingsService() {
-        if (savingsService == null) {
-            savingsService = new SavingsBusinessService();
-        }
-        return savingsService;
     }
 
     private AccountBusinessService getBizService() {

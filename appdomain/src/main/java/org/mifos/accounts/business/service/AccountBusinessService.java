@@ -20,7 +20,11 @@
 
 package org.mifos.accounts.business.service;
 
-import org.hibernate.Hibernate;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+
 import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountStateEntity;
@@ -42,12 +46,10 @@ import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountStateFlag;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.WaiveEnum;
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingHelper;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
-import org.mifos.application.util.helpers.EntityType;
 import org.mifos.config.AccountingRules;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerAccountBO;
@@ -64,11 +66,6 @@ import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
 
 public class AccountBusinessService implements BusinessService {
 
@@ -402,19 +399,6 @@ public class AccountBusinessService implements BusinessService {
             UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) {
         return getActivityMapper().isRemoveFeesPermittedForAccounts(accountTypes, customerLevel, userContext,
                 recordOfficeId, recordLoanOfficerId);
-    }
-
-    public List<CustomFieldDefinitionEntity> retrieveCustomFieldsDefinition(EntityType entityType)
-            throws ServiceException {
-
-        try {
-            List<CustomFieldDefinitionEntity> customFields = getlegacyAccountDao()
-                    .retrieveCustomFieldsDefinition(entityType.getValue());
-            Hibernate.initialize(customFields);
-            return customFields;
-        } catch (PersistenceException e) {
-            throw new ServiceException(e);
-        }
     }
 
     private LegacyAccountDao getlegacyAccountDao() {

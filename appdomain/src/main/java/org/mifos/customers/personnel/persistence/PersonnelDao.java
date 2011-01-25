@@ -22,7 +22,6 @@ package org.mifos.customers.personnel.persistence;
 
 import java.util.List;
 
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.dto.domain.CenterCreation;
 import org.mifos.dto.domain.PersonnelDto;
@@ -43,10 +42,6 @@ public interface PersonnelDao {
     MifosUser findAuthenticatedUserByUsername(String username);
 
     List<PersonnelDto> findActiveLoanOfficersForOffice(CenterCreation centerCreationDto);
-
-    List<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForPersonnel();
-
-    List<Object[]> getCustomFieldResponses(List<Short> customFieldIds);
 
     SystemUserSearchResultsDto search(UserSearchDto searchDto, MifosUser user);
 }

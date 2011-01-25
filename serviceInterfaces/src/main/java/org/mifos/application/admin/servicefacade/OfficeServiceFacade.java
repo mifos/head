@@ -22,7 +22,6 @@ package org.mifos.application.admin.servicefacade;
 
 import java.util.List;
 
-import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.dto.domain.OfficeDto;
 import org.mifos.dto.domain.OfficeHierarchyDto;
@@ -42,8 +41,6 @@ public interface OfficeServiceFacade {
     OfficeFormDto retrieveOfficeFormInformation(Short officeLevelId);
 
     OfficeDto retrieveOfficeById(Short id);
-
-    List<CustomFieldDto> retrieveCustomFieldsForOffice();
 
     ListElement createOffice(Short operationMode, OfficeDto officeDto);
 

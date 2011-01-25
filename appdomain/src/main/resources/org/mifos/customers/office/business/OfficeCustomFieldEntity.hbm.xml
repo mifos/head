@@ -15,18 +15,4 @@
 
         <many-to-one name="office" column="office_id" class="org.mifos.customers.office.business.OfficeBO"  cascade="none" insert="true" update="true" unique="true" access="field"/>
     </class>
-
-    <sql-query name="OfficeCustomFieldEntity.getResponses">
-        <return-scalar column="office_custom_field_id" type="integer" />
-        <return-scalar column="field_id" type="short" />
-        <return-scalar column="field_value" type="string" />
-        <return-scalar column="created_date" type="date" />
-        <return-scalar column="updated_date" type="date" />
-        <return-scalar column="created_by" type="short" />
-        <return-scalar column="updated_by" type="short" />
-        <return-scalar column="office_id" type="integer" />
-        <![CDATA[SELECT a.office_custom_field_id, a.field_id, a.field_value, b.created_date, b.updated_date, b.created_by, b.updated_by, b.office_id
-        FROM office_custom_field a join office b on a.office_id = b.office_id
-        where a.field_id in (:CUSTOM_FIELD_ID) order by b.office_id]]>
-    </sql-query>
 </hibernate-mapping>

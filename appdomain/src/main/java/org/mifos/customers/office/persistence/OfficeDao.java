@@ -23,7 +23,6 @@ package org.mifos.customers.office.persistence;
 import java.util.Collection;
 import java.util.List;
 
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficeLevelEntity;
@@ -59,8 +58,6 @@ public interface OfficeDao {
 
     List<String> topLevelOfficeNames(Collection<Short> idList);
 
-    List<CustomFieldDefinitionEntity> retrieveCustomFieldsForOffice();
-
     List<OfficeDto> findActiveParents(OfficeLevel officeLevel);
 
     OfficeLevelEntity retrieveOfficeLevel(OfficeLevel officeLevel);
@@ -76,10 +73,6 @@ public interface OfficeDao {
     void validateBranchIsActiveWithNoActivePersonnel(Short officeId, UserContext userContext) throws CustomerException;
 
     void validateNoOfficesExistGivenOfficeLevel(OfficeLevel regionaloffice);
-
-    List<Object[]> getCustomFieldResponses(List<Short> customFieldIds);
-
-    List<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForOffice();
 
     List<OfficeDetailsDto> findActiveBranches(Short branchId);
 }

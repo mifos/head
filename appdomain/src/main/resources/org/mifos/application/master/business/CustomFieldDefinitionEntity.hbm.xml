@@ -19,8 +19,4 @@
         <property name="mandatoryFlag" column="mandatory_flag" type="short"  not-null="true" access="field"/>
         <many-to-one name="lookUpEntity" column="entity_id" class="org.mifos.application.master.business.LookUpEntity"  not-null="true" lazy="false" access="field"/>
     </class>
-    <query name="retrieveCustomFields"><![CDATA[from CustomFieldDefinitionEntity as cfd where cfd.entityType = :entityType order by cfd.fieldId]]></query>
-    <query name="retrieveAllCustomFields"><![CDATA[from CustomFieldDefinitionEntity ]]></query>
-    <query name="retrieveOneCustomField"><![CDATA[from CustomFieldDefinitionEntity as cfd where cfd.fieldId = :fieldId]]></query>
-
 </hibernate-mapping>

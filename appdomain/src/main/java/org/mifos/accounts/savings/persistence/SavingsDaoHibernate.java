@@ -38,13 +38,10 @@ import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.interest.EndOfDayDetail;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.servicefacade.CollectionSheetCustomerSavingDto;
 import org.mifos.application.servicefacade.CollectionSheetCustomerSavingsAccountDto;
 import org.mifos.application.servicefacade.CustomerHierarchyParams;
-import org.mifos.application.util.helpers.EntityType;
 import org.mifos.dto.domain.CustomerNoteDto;
 import org.mifos.dto.domain.NoteSearchDto;
 import org.mifos.dto.screen.NotesSearchResultsDto;
@@ -207,23 +204,6 @@ public class SavingsDaoHibernate implements SavingsDao {
                 "findAllSavingAccountsForCustomerHierarchy", topOfHierarchyParameters,
                 CollectionSheetCustomerSavingsAccountDto.class);
     }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public final List<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForSavings() {
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put(MasterConstants.ENTITY_TYPE, EntityType.SAVINGS.getValue());
-        return (List<CustomFieldDefinitionEntity>) baseDao.executeNamedQuery(NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public List<Object[]> getCustomFieldResponses(List<Short> customFieldIds) {
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("CUSTOM_FIELD_ID", customFieldIds);
-        return (List<Object[]>) baseDao.executeNamedQuery("AccountCustomFieldEntity.getResponses", queryParameters);
-    }
-
 
     @Override
     public SavingsBO findBySystemId(String globalAccountNumber) {

@@ -28,7 +28,6 @@ import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.application.admin.servicefacade.OfficeServiceFacade;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.master.MessageLookup;
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.exceptions.OfficeException;
@@ -243,7 +242,7 @@ public class OfficeServiceFacadeWebTier implements OfficeServiceFacade {
     @Override
     public OfficeDto retrieveOfficeById(Short id) {
         OfficeBO officeBO = officeDao.findOfficeById(id);
-        List<CustomFieldDto> customFields = retrieveCustomFieldsForOffice();
+        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
         Short parentOfficeId = null;
         String parentOffineName = null;
         if(officeBO.getParentOffice() != null) {
@@ -261,14 +260,6 @@ public class OfficeServiceFacadeWebTier implements OfficeServiceFacade {
                 addressDto, customFields);
 
         return officeDto;
-    }
-
-    @Override
-    public List<CustomFieldDto> retrieveCustomFieldsForOffice() {
-        if (officeDao.retrieveCustomFieldsForOffice() != null) {
-            return CustomFieldDefinitionEntity.toDto(officeDao.retrieveCustomFieldsForOffice(), Locale.getDefault());
-        }
-        return null;
     }
 
     @Override

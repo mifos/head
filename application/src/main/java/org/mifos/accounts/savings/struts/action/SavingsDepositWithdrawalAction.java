@@ -38,7 +38,6 @@ import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.savings.business.SavingsBO;
-import org.mifos.accounts.savings.business.service.SavingsBusinessService;
 import org.mifos.accounts.savings.struts.actionforms.SavingsDepositWithdrawalActionForm;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
@@ -54,8 +53,6 @@ import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.dto.domain.SavingsDepositDto;
 import org.mifos.dto.domain.SavingsWithdrawalDto;
 import org.mifos.dto.screen.DepositWithdrawalReferenceDto;
-import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
@@ -72,13 +69,7 @@ import org.mifos.service.BusinessRuleException;
 @Deprecated
 public class SavingsDepositWithdrawalAction extends BaseAction {
 
-    private SavingsBusinessService savingsService;
     private AccountBusinessService accountsService;
-
-    @Override
-    protected BusinessService getService() throws ServiceException {
-        return getSavingsService();
-    }
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward load(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
@@ -259,13 +250,6 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
         SessionUtils.removeAttribute(AccountConstants.TRXN_TYPES, request);
         SessionUtils.removeAttribute(SavingsConstants.CLIENT_LIST, request);
         SessionUtils.removeAttribute(MasterConstants.PAYMENT_TYPE, request);
-    }
-
-    private SavingsBusinessService getSavingsService() {
-        if (savingsService == null) {
-            savingsService = new SavingsBusinessService();
-        }
-        return savingsService;
     }
 
     private AccountBusinessService getAccountsService() {

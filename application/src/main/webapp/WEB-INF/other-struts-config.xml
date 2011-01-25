@@ -343,17 +343,6 @@
             <forward name="preview_success" path="/pages/application/surveys/jsp/preview_question.jsp"/>
         </action>
 
-        <action path="/migrateAction"
-                type="org.mifos.application.questionnaire.migration.struts.action.MigrateAction"
-                parameter="method"
-                validate="false"
-                name="genericActionForm"
-                input="/migrateAction.do?method=validate">
-            <forward name="load_success" path="/pages/application/questionnaire/migration/jsp/migrate.jsp"/>
-            <forward name="migrate_success" path="/AdminAction.do?method=load" redirect="true"/>
-            <forward name="migrate_failure" path="/pages/application/questionnaire/migration/jsp/migrate.jsp"/>
-        </action>
-
         <action path="/surveyInstanceAction"
                 type="org.mifos.customers.surveys.struts.action.SurveyInstanceAction"
                 parameter="method"

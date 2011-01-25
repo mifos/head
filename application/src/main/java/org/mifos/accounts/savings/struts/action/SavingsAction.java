@@ -45,12 +45,10 @@ import org.mifos.accounts.productdefinition.business.RecommendedAmntUnitEntity;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsTypeEntity;
 import org.mifos.accounts.savings.business.SavingsBO;
-import org.mifos.accounts.savings.business.service.SavingsBusinessService;
 import org.mifos.accounts.savings.struts.actionforms.SavingsActionForm;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
@@ -67,7 +65,6 @@ import org.mifos.dto.screen.SavingsAccountDepositDueDto;
 import org.mifos.dto.screen.SavingsProductReferenceDto;
 import org.mifos.dto.screen.SavingsRecentActivityDto;
 import org.mifos.dto.screen.SavingsTransactionHistoryDto;
-import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.struts.action.BaseAction;
@@ -89,7 +86,7 @@ import org.slf4j.LoggerFactory;
 public class SavingsAction extends BaseAction {
 
     private static final Logger logger = LoggerFactory.getLogger(SavingsAction.class);
-    private SavingsBusinessService savingsService;
+
     private QuestionnaireServiceFacadeLocator questionnaireServiceFacadeLocator = new DefaultQuestionnaireServiceFacadeLocator();
     private QuestionnaireFlowAdapter createGroupQuestionnaire = new QuestionnaireFlowAdapter("Create", "Savings",
             ActionForwards.preview_success, "custSearchAction.do?method=loadMainSearch", questionnaireServiceFacadeLocator);
@@ -122,12 +119,6 @@ public class SavingsAction extends BaseAction {
     }
 
     public SavingsAction() throws Exception {
-        savingsService = new SavingsBusinessService();
-    }
-
-    @Override
-    protected BusinessService getService() {
-        return savingsService;
     }
 
     @TransactionDemarcate(saveToken = true)
@@ -168,7 +159,7 @@ public class SavingsAction extends BaseAction {
         SessionUtils.setCollectionAttribute(MasterConstants.RECOMMENDED_AMOUNT_UNIT, legacyMasterDao
                 .findMasterDataEntitiesWithLocale(RecommendedAmntUnitEntity.class, uc.getLocaleId()), request);
 
-        List<CustomFieldDefinitionEntity> customFieldDefinitions = savingsService.retrieveCustomFieldsDefinition();
+        List<CustomFieldDefinitionEntity> customFieldDefinitions = new ArrayList<CustomFieldDefinitionEntity>();
         SessionUtils.setCollectionAttribute(SavingsConstants.CUSTOM_FIELDS, customFieldDefinitions, request);
 
         SavingsProductReferenceDto savingsProductReferenceDto = this.savingsServiceFacade.retrieveSavingsProductReferenceData(productId);
@@ -272,7 +263,9 @@ public class SavingsAction extends BaseAction {
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
         SessionUtils.setCollectionAttribute(MasterConstants.SAVINGS_TYPE, legacyMasterDao.findMasterDataEntitiesWithLocale(SavingsTypeEntity.class, uc.getLocaleId()), request);
         SessionUtils.setCollectionAttribute(MasterConstants.RECOMMENDED_AMOUNT_UNIT, legacyMasterDao.findMasterDataEntitiesWithLocale(RecommendedAmntUnitEntity.class, uc.getLocaleId()), request);
-        SessionUtils.setCollectionAttribute(SavingsConstants.CUSTOM_FIELDS, savingsService.retrieveCustomFieldsDefinition(), request);
+
+        List<CustomFieldDefinitionEntity> customFieldDefinitions = new ArrayList<CustomFieldDefinitionEntity>();
+        SessionUtils.setCollectionAttribute(SavingsConstants.CUSTOM_FIELDS, customFieldDefinitions, request);
 
         SessionUtils.setAttribute(SavingsConstants.PRDOFFERING, savings.getSavingsOffering(), request);
 
@@ -325,12 +318,12 @@ public class SavingsAction extends BaseAction {
         SavingsBO savings = (SavingsBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
         SavingsActionForm actionForm = (SavingsActionForm) form;
 
-        List<CustomFieldDto> customFields = this.savingsServiceFacade.retrieveCustomFieldsForEdit(actionForm.getGlobalAccountNum());
+        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
 
         actionForm.setRecommendedAmount(savings.getRecommendedAmount().toString());
         actionForm.setAccountCustomFieldSet(customFields);
 
-        List<CustomFieldDefinitionEntity> customFieldDefinitions = savingsService.retrieveCustomFieldsDefinition();
+        List<CustomFieldDefinitionEntity> customFieldDefinitions = new ArrayList<CustomFieldDefinitionEntity>();
         SessionUtils.setCollectionAttribute(SavingsConstants.CUSTOM_FIELDS, customFieldDefinitions, request);
         return mapping.findForward("edit_success");
     }

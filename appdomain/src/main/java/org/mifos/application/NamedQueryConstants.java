@@ -184,11 +184,6 @@ public interface NamedQueryConstants {
     // BulkEntry
     String GET_FEE_AMOUNT_AT_DISBURSEMENT = "accounts.getFeeAmountAtDisbursement";
 
-    /* custom fields */
-    String RETRIEVE_CUSTOM_FIELDS = "retrieveCustomFields";
-    String RETRIEVE_ALL_CUSTOM_FIELDS = "retrieveAllCustomFields";
-    String RETRIEVE_ONE_CUSTOM_FIELD = "retrieveOneCustomField";
-
     String FETCH_PRODUCT_NAMES_FOR_GROUP = "Customer.fetchProductNamesForGroup";
     String FETCH_PRODUCT_NAMES_FOR_CLIENT = "Customer.fetchProductNamesForClient";
 
@@ -488,10 +483,6 @@ public interface NamedQueryConstants {
 
     String SCHEDULED_TASK_GET_LATEST_TASK = "scheduledTasks.getLatestTask";
     String SCHEDULED_TASK_GET_SUCCESSFUL_TASK = "scheduledTasks.getSuccessfulTask";
-
-    // Insert CustomerCustomFieldEntity entries
-    String INSERT_CUSTOMER_CUSTOM_FIELD_ENTITY = "CustomerCustomFieldEntity.insertEntries";
-
 
     String GET_ORIGINAL_SCHEDULE_BY_ACCOUNT_ID = "originalLoanScheduleEntity.getScheduleForLoan";
 }

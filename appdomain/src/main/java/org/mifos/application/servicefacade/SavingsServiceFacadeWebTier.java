@@ -51,7 +51,6 @@ import org.mifos.accounts.savings.business.SavingsAccountTypeInspector;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.accounts.savings.business.SavingsTrxnDetailEntity;
-import org.mifos.accounts.savings.business.service.SavingsBusinessService;
 import org.mifos.accounts.savings.interest.CalendarPeriod;
 import org.mifos.accounts.savings.interest.CalendarPeriodHelper;
 import org.mifos.accounts.savings.interest.EndOfDayDetail;
@@ -76,7 +75,6 @@ import org.mifos.accounts.util.helpers.SavingsPaymentData;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.master.MessageLookup;
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.MifosCurrency;
@@ -917,46 +915,6 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             dtoList.add(accountStatusChangeHistory.toDto());
         }
         return dtoList;
-    }
-
-    @Override
-    public List<CustomFieldDto> retrieveCustomFieldsForEdit(String globalAccountNum) {
-
-        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserContext userContext = toUserContext(user);
-
-        SavingsBO savingsAccount = this.savingsDao.findBySystemId(globalAccountNum);
-        savingsAccount.updateDetails(userContext);
-
-        try {
-            List<AccountCustomFieldEntity> customFieldEntities = new ArrayList<AccountCustomFieldEntity>(savingsAccount.getAccountCustomFields());
-            List<CustomFieldDefinitionEntity> customFieldDefinitions = new SavingsBusinessService().retrieveCustomFieldsDefinition();
-
-            List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
-
-            for (CustomFieldDefinitionEntity customFieldDef : customFieldDefinitions) {
-                boolean customFieldPresent = false;
-                for (AccountCustomFieldEntity customFieldEntity : customFieldEntities) {
-                    customFieldPresent = true;
-                    if (customFieldDef.getFieldId().equals(customFieldEntity.getFieldId())) {
-                        if (customFieldDef.getFieldType().equals(CustomFieldType.DATE.getValue())) {
-                            String locale = DateUtils.getUserLocaleDate(userContext.getPreferredLocale(), customFieldEntity.getFieldValue());
-                            customFields.add(new CustomFieldDto(customFieldEntity.getFieldId(), locale, customFieldDef.getFieldType()));
-                        } else {
-                            customFields.add(new CustomFieldDto(customFieldEntity.getFieldId(), customFieldEntity
-                                    .getFieldValue(), customFieldDef.getFieldType()));
-                        }
-                    }
-                }
-                if (!customFieldPresent) {
-                    customFields.add(new CustomFieldDto(customFieldDef.getFieldId(), customFieldDef.getDefaultValue(), customFieldDef.getFieldType()));
-                }
-            }
-
-            return customFields;
-        } catch (ServiceException e) {
-            throw new MifosRuntimeException(e);
-        }
     }
 
     @Override

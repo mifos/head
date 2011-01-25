@@ -14,9 +14,5 @@
 
     <bean id="collectionSheetDtoTranslator" class="org.mifos.application.servicefacade.CollectionSheetDtoTranslatorImpl"/>
 
-    <bean name="questionnaireMigration" class="org.mifos.application.questionnaire.migration.QuestionnaireMigration"/>
-
-    <bean name="questionnaireMigrationMapper" class="org.mifos.application.questionnaire.migration.mappers.QuestionnaireMigrationMapperImpl"/>
-
     <bean id="mifosAuthenticationAuthorizationService" class="org.mifos.security.AuthenticationAuthorizationServiceFacadeImpl" />
 </beans>
