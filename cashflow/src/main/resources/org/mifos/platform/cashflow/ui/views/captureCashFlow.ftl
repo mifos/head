@@ -27,13 +27,13 @@
 <div class="content_panel">
     <form name="captureCashFlowForm" action="captureCashFlow.ftl?execution=${flowExecutionKey}" method="POST" id="captureCashFlowForm">
         <center>
-            <fieldset id="cashFlows" style="width:85%;">
+            <fieldset id="cashFlows" style="width:80%;">
               <legend style="font-size:1em;">[@spring.message "cashflow.heading"/]</legend>
               <div id="allErrorsDiv" class="allErrorsDiv" align="left">
                 [@mifosmacros.showAllErrors "cashFlow.*"/]
               </div>
               <div id="note" align="left" >
-                   <span class="indigo fontBold"> [@spring.message "cashFlowForm.message"/] </span>
+                   <span class="fontBold"> [@spring.message "cashFlowForm.message"/] </span>
               </div>
               <br/>
               <table class="table_common" border="0">
@@ -59,28 +59,29 @@
               [#if captureCapitalLiabilityInfo]
                   <table>
                       <tr>
-                          <td>[@spring.message "cashFlow.totalCapital"/]</td>
+                          <td><span class="red">*</span>[@spring.message "cashFlow.totalCapital"/]</td>
                           <td>[@spring.formInput "cashFlow.totalCapital" ,'class="total-capital-liability"'/]</td>
                       </tr>
                       <tr>
-                          <td>[@spring.message "cashFlow.totalLiability"/]</td>
+                          <td><span class="red">*</span>[@spring.message "cashFlow.totalLiability"/]</td>
                           <td>[@spring.formInput "cashFlow.totalLiability" ,'class="total-capital-liability"'/]</td>
                       </tr>
                   </table>
               [/#if]
+                <center>
+                    <div class="button_footer">
+                        <div class="button_container">
+                            <input type="submit" id="_eventId_capture" name="_eventId_capture" value="[@spring.message "cashflow.submit"/]" class="buttn"/>
+                            &nbsp;
+                            <input type="submit" id="_eventId_cancel" name="_eventId_cancel" value="[@spring.message "cashflow.cancel"/]"  class="cancel cancelbuttn"/>
+                        </div>
+                    </div>
+                    [#if flowKey??]
+                    <input type="hidden" id="currentFlowKey" name="currentFlowKey" value="${flowKey}"/>
+                    [/#if]
+                </center>
             </fieldset>
-        <center>
-        <div class="button_footer">
-            <div class="button_container">
-                <input type="submit" id="_eventId_capture" name="_eventId_capture" value="[@spring.message "cashflow.submit"/]" class="buttn"/>
-                &nbsp;
-                <input type="submit" id="_eventId_cancel" name="_eventId_cancel" value="[@spring.message "cashflow.cancel"/]"  class="cancel cancelbuttn"/>
-            </div>
-        </div>
-    [#if flowKey??]
-        <input type="hidden" id="currentFlowKey" name="currentFlowKey" value="${flowKey}"/>
-    [/#if]
-
+        </center>
     </form>
 </div>
 [/@headerOnlyLayout]

@@ -82,7 +82,7 @@ public class CashFlowValidator {
 
     private void validateTotalCapital(MessageContext messageContext, BigDecimal totalCapital) {
         if (isNull(totalCapital)) {
-            String message = format("Total Capital should not be empty");
+            String message = format("Please specify the total capital");
             constructErrorMessage(CashFlowConstants.TOTAL_CAPITAL_SHOULD_NOT_BE_EMPTY, message, messageContext);
             return;
         }
@@ -95,7 +95,7 @@ public class CashFlowValidator {
 
     private void validateTotalLiability(MessageContext messageContext, BigDecimal totalLiability) {
         if (isNull(totalLiability)) {
-            String message = format("Total Liability should not be empty");
+            String message = format("Please specify the total liability");
             constructErrorMessage(CashFlowConstants.TOTAL_LIABILITY_SHOULD_NOT_BE_EMPTY, message, messageContext);
             return;
         }

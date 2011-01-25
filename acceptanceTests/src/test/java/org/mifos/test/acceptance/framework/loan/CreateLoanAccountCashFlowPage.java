@@ -73,8 +73,8 @@ public class CreateLoanAccountCashFlowPage extends AbstractPage{
         Assert.assertTrue(selenium.getValue(totalCapital).equals(""));
         Assert.assertTrue(selenium.getValue(totalLiability).equals(""));
         clickContinue();
-        Assert.assertTrue(selenium.isTextPresent("Total Capital should not be empty"));
-        Assert.assertTrue(selenium.isTextPresent("Total Liability should not be empty"));
+        Assert.assertTrue(selenium.isTextPresent("Please specify the total capital"));
+        Assert.assertTrue(selenium.isTextPresent("Please specify the total liability"));
 //        selenium.type(totalCapital,"abc");
 //        selenium.type(totalLiability,"abc");
 //        Assert.assertTrue(selenium.getValue(totalCapital).equals(""));
