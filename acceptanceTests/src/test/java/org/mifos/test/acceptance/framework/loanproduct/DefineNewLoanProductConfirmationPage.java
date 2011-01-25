@@ -22,6 +22,8 @@ package org.mifos.test.acceptance.framework.loanproduct;
 
 
 import com.thoughtworks.selenium.Selenium;
+
+import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.user.UserViewDetailsPage;
 
@@ -42,6 +44,12 @@ public class DefineNewLoanProductConfirmationPage extends MifosPage {
 
     public void verifyPage() {
         this.verifyPage("CreateLoanProductConfirmation");
+    }
+
+    public ClientsAndAccountsHomepage navigateToClientsAndAccountsUsingHeaderTab() {
+        selenium.click("header.link.clientsAndAccounts");
+        waitForPageToLoad();
+        return new ClientsAndAccountsHomepage(selenium);
     }
 
 }

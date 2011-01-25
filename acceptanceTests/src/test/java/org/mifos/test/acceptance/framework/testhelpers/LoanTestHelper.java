@@ -588,4 +588,35 @@ public class LoanTestHelper {
         ClientViewDetailsPage clientViewDetailsPage = navigationHelper.navigateToClientViewDetailsPage(clientName);
         clientViewDetailsPage.verifyPerformanceHistory(performanceHistoryAtributes);
     }
+
+    /**
+     * Apply one charge to account.
+     * Need to be on LoanAccountPage.
+     * @param chargeParameters
+     * @return
+     */
+    public LoanAccountPage applyOneChargeOnLoanAccount(ChargeParameters chargeParameters) {
+        LoanAccountPage loanAccountPage = new LoanAccountPage(selenium);
+        return loanAccountPage.navigateToApplyCharge()
+                .submitAndNavigateToApplyChargeConfirmationPage(chargeParameters);
+    }
+
+    public LoanAccountPage createProductAndThenAccount(DefineNewLoanProductPage.SubmitFormParameters productParams, CreateLoanAccountSearchParameters searchParams, DisburseLoanParameters disburseParams) {
+        DefineNewLoanProductPage defineNewLoanProductPage = navigationHelper
+            .navigateToAdminPage()
+            .navigateToDefineLoanProduct();
+        defineNewLoanProductPage.fillLoanParameters(productParams);
+
+        return defineNewLoanProductPage
+            .submitAndGotoNewLoanProductPreviewPage()
+            .submit()
+            .navigateToClientsAndAccountsUsingHeaderTab()
+            .navigateToCreateLoanAccountUsingLeftMenu()
+            .searchAndNavigateToCreateLoanAccountPage(searchParams)
+            .continuePreviewSubmitAndNavigateToDetailsPage()
+            .changeAccountStatusToAccepted()
+            .navigateToDisburseLoan()
+            .submitAndNavigateToDisburseLoanConfirmationPage(disburseParams)
+            .submitAndNavigateToLoanAccountPage();
+    }
 }

@@ -25,6 +25,7 @@ import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
+import org.mifos.test.acceptance.framework.loan.ChargeParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountEntryPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameters;
@@ -37,6 +38,8 @@ import org.mifos.test.acceptance.framework.loan.EditPreviewLoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountInformationPage;
+import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
+import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.questionnaire.ViewQuestionResponseDetailPage;
@@ -319,6 +322,49 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
             loanAccountPage.tryNavigatingToDisburseLoanWithError();
             loanAccountPage.verifyError(error);
         }
+    }
+
+    /**
+     * Verify loan product created with default loan amount and number of installments
+     * are "same for all loans" can be used to create new loan accounts with the correct default amounts.
+     * http://mifosforge.jira.com/browse/MIFOSTEST-97
+     * @throws Exception
+     */
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void verifyAccountFromProductInstallmentsSame() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTime targetTime = new DateTime(2011,1,24,15,0,0,0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+
+        DefineNewLoanProductPage.SubmitFormParameters productParams = FormParametersHelper.getWeeklyLoanProductParameters();
+        productParams.setOfferingName("ProdTest97");
+        productParams.setOfferingShortName("T97");
+        productParams.setMinLoanAmount("1000");
+        productParams.setMaxLoanAmount("10000");
+        productParams.setDefaultLoanAmount("5000");
+        productParams.setMinInstallemnts("10");
+        productParams.setMaxInstallments("100");
+        productParams.setDefInstallments("50");
+        CreateLoanAccountSearchParameters searchParams = new CreateLoanAccountSearchParameters();
+        searchParams.setSearchString("Stu1233265991241 Client1233265991241");
+        searchParams.setLoanProduct("ProdTest97");
+        DisburseLoanParameters disburseParams = new DisburseLoanParameters();
+        disburseParams.setPaymentType(DisburseLoanParameters.CASH);
+        disburseParams.setDisbursalDateDD("24");
+        disburseParams.setDisbursalDateMM("01");
+        disburseParams.setDisbursalDateYYYY("2011");
+        ChargeParameters chargeParameters = new ChargeParameters();
+        chargeParameters.setType(ChargeParameters.MISC_FEES);
+        chargeParameters.setAmount("599.0");
+
+        LoanAccountPage loanAccountPage = loanTestHelper.createProductAndThenAccount(productParams, searchParams, disburseParams);
+
+        loanAccountPage.verifyNumberOfInstallments("10", "100", "50");
+        loanAccountPage.verifyPrincipalBalance("5000.0");
+        loanTestHelper.applyOneChargeOnLoanAccount(chargeParameters);
+        loanAccountPage.navigateToViewInstallmentDetails()
+            .verifyInstallmentAmount(4, 1, "599.0");
     }
 
     private String createLoanAndCheckAmount(CreateLoanAccountSearchParameters searchParameters,

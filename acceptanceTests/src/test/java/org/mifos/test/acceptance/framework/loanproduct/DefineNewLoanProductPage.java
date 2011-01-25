@@ -92,6 +92,16 @@ public class DefineNewLoanProductPage extends AbstractPage {
         private String maxInterestRate;
         private String defaultInterestRate;
         private int freqOfInstallments;
+        private String minInstallemnts = "1";
+
+        public String getMinInstallemnts() {
+            return this.minInstallemnts;
+        }
+
+        public void setMinInstallemnts(String minInstallemnts) {
+            this.minInstallemnts = minInstallemnts;
+        }
+
         private String defInstallments;
         private String maxInstallments;
         private int gracePeriodType;
@@ -283,6 +293,9 @@ public class DefineNewLoanProductPage extends AbstractPage {
         selenium.type("createLoanProduct.input.minInterestRate", parameters.getMinInterestRate());
         selenium.type("createLoanProduct.input.defInterestRate", parameters.getDefaultInterestRate());
         selenium.click("name=freqOfInstallments value=" + parameters.getFreqOfInstallments());
+        if(!"1".equals(parameters.getMinInstallemnts())) {
+            selenium.type("minNoInstallments", parameters.getMinInstallemnts());
+        }
         selenium.type("maxNoInstallments", parameters.getMaxInstallments());
         selenium.type("defNoInstallments", parameters.getDefInstallments());
         selenium.select("gracePeriodType", "value=" + parameters.getGracePeriodType());
@@ -465,14 +478,12 @@ public class DefineNewLoanProductPage extends AbstractPage {
     }
 
     public void verifyFeeTypesBlocked(String[] feeNames) {
-        for (int index = 0; index < feeNames.length; index++) {
-            String feeName = feeNames[index];
+        for (String feeName : feeNames) {
             selenium.addSelection("feeId", "label=" + feeName);
         }
         selenium.click("LoanFeesList.button.add");
         submit();
-        for (int index = 0; index < feeNames.length; index++) {
-            String feeName = feeNames[index];
+        for (String feeName : feeNames) {
             isTextPresentInPage(feeName + " fee cannot be applied to variable installment loan product");
         }
     }

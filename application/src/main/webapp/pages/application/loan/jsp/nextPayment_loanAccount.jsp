@@ -91,7 +91,7 @@ explanation of the license and how it is applied.
 					</table>
 					<br>				
 					
-					<table width="60%" border="0" cellpadding="3" cellspacing="0">
+					<table id="loanInstallmentTable" width="60%" border="0" cellpadding="3" cellspacing="0">
 						<tr class="drawtablerowboldnoline">
 							<td width="60%">&nbsp;</td>
 							<td width="27%" align="right">

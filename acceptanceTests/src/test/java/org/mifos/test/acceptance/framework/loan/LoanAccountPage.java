@@ -85,6 +85,10 @@ public class LoanAccountPage extends AbstractPage {
         Assert.assertEquals(getTotalPaid(), amount);
     }
 
+    public void verifyPrincipalBalance(String value) {
+        Assert.assertEquals(getPrincipleBalance(), value);
+    }
+
     public void verifyPerformanceHistory(String payments, String missedPayments) {
         Assert.assertTrue(selenium.isTextPresent("of payments: "+payments));
         Assert.assertTrue(selenium.isTextPresent("of missed payments: "+missedPayments));
@@ -153,6 +157,10 @@ public class LoanAccountPage extends AbstractPage {
         if(editLoanAccountInformationParameters.getPurposeOfLoan()!=null){
             verifyPurposeOfLoan(editLoanAccountInformationParameters.getPurposeOfLoan());
         }
+    }
+
+    public void verifyNumberOfInstallments(String min, String max, String expected) {
+        Assert.assertTrue(selenium.isTextPresent("No. of installments: "+expected+" (Allowed Number of Installments: "+min+" - "+max+")"));
     }
 
     /**
