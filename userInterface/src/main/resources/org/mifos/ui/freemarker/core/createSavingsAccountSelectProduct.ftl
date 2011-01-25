@@ -33,19 +33,18 @@
 <br/>
 <br/>
 
-<form action="${flowExecutionUrl}" method="post">
-	<div class="row prepend-3">
-		<label for="selectedPrdOfferingId" class="span-5 mandatory">Savings instance name:<label>
+<form action="${flowExecutionUrl}" method="post" class="two-columns">
+	<fieldset>
+	<div class="row">
+		<label for="selectedPrdOfferingId" class="mandatory">Savings instance name:</label>
 		<select id="createsavingsaccount.select.savingsProduct" name="selectedPrdOfferingId">
 			<option>Product 1</option>
 			<option>Product 2</option>
 			<option>Product 3</option>
 		</select>
 	</div>
-	<br/>
-	<hr/>
-	<br/>
-	<div class="row prepend-8">
+	</fieldset>
+	<div class="row">
 		<input type="submit" class="submit" value="Continue" name="_eventId_productSelected" />
 		<input type="submit" class="cancel" value="Cancel" name="_eventId_cancel" />
 	</div>

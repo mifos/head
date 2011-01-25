@@ -41,6 +41,34 @@ input.cancel
 	border-top: 0px;
 }
 
+/* 2-column form */
+form.two-columns 
+{
+	padding: 0em;
+}
+
+form.two-columns label
+{
+	width: 25em;
+	float: left;
+	text-align: right;
+	margin-right: 0.5em;
+	display: block;
+}
+
+form.two-columns fieldset
+{
+	margin: 1em;
+	padding: 1em;
+	border-width: 0px 0px 1px 0px;
+	border-color: #D7DEEE;
+}
+
+form.two-columns input.submit
+{
+	margin-left: 27.5em; 
+}
+
 /* webflow progress tracker */
 .progress-tracker
 {

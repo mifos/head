@@ -28,13 +28,14 @@
 
 <p>Enter a Client or Group or Center name and click Search. Click Cancel to return to Clients & Accounts without submitting information.</p>
 <br/>
-<form action="${flowExecutionUrl}" method="post">
-	<div class="prepend-6">
-		<label class="span-1" for="searchString">Name:</label>
+<form action="${flowExecutionUrl}" method="post" class="two-columns">
+	<fieldset>
+	<div class="row">
+		<label for="searchString">Name:</label>
 		<input type="text" name="searchString">
 	</div>
-	<br/>
-	<div class="prepend-7">
+	</fieldset>
+	<div class="row">
 		<input type="submit" class="submit" value="Search" name="_eventId_searchTermEntered" />
 		<input type="submit" class="cancel" value="Cancel" name="_eventId_cancel" />
 	</div>
