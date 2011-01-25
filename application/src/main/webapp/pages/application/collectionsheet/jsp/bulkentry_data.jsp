@@ -159,7 +159,7 @@ explanation of the license and how it is applied.
 										</tr>
 										<tr valign="top">
 											<td width="77%" height="52" class="fontnormal">
-												<table width="590" border="0" cellspacing="0" cellpadding="0">
+												<table width="740" border="0" cellspacing="0" cellpadding="0">
 													<tr valign="top">
 														<td width="207" class="fontnormal">
 															<mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}" isColonRequired="Yes"/>
@@ -170,7 +170,7 @@ explanation of the license and how it is applied.
 															
 															<c:out value="${BulkEntry.loanOfficer.displayName}" />
 														</td>
-														<td width="383" class="fontnormal">
+														<td width="533" class="fontnormal">
 															<mifos:mifoslabel name="bulkEntry.pmnttype" isColonRequired="Yes"/>
 															
 
