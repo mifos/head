@@ -45,13 +45,13 @@
     [#assign headOffice][@mifostag.mifoslabel name="OfficeLevels-HeadOffice" /][/#assign]
     [@spring.messageArgs "ftlDefinedLabels.viewOfficeHierarchy.headOffice" , [headOffice]  /]
     </span><br/>
-	        
+            
     <span>
     [@spring.formCheckbox "formBean.regionalOffice" /]
     [#assign regionalOffice][@mifostag.mifoslabel name="OfficeLevels-RegionalOffice" /][/#assign]
     [@spring.messageArgs "ftlDefinedLabels.viewOfficeHierarchy.regionalOffice" , [regionalOffice]  /]
     </span><br/>
-       	       
+                  
      <span>
      [@spring.formCheckbox "formBean.subRegionalOffice" /]
      [#assign divisionalOffice][@mifostag.mifoslabel name="OfficeLevels-DivisionalOffice" /][/#assign]

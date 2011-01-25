@@ -37,9 +37,9 @@
                 <p class="fontBold margin10bottom">[@spring.message "manageProducts.editCategory.categoryDetails"/]</p>
                 [@mifos.showAllErrors "formBean.*"/]
                 <p class="margin10bottom"><span class="fontBold">[@spring.message "manageProducts.editCategory.categoryName"/]:&nbsp;</span>
-        	        <span class="">[@spring.bind "formBean.productCategoryName"/]<input type="hidden" name="${spring.status.expression}"
+                    <span class="">[@spring.bind "formBean.productCategoryName"/]<input type="hidden" name="${spring.status.expression}"
                                                                  value="${spring.status.value?default("")}"/>${formBean.productCategoryName}
-        	        </span>
+                    </span>
                 </p>
 
                 <p class="fontBold margin10bottom">[@spring.message "manageProducts.editCategory.description"/]:&nbsp;</p>
@@ -51,8 +51,8 @@
                 </div>
                 <p class="margin10bottom">
                     <span class="fontBold">[@spring.message "manageProducts.editCategory.status1"/]:&nbsp;</span>
-        	<span class="">
-        		[@spring.bind "formBean.productCategoryStatusId"/]
+            <span class="">
+                [@spring.bind "formBean.productCategoryStatusId"/]
                     <input type="hidden" name="${spring.status.expression}" value="${spring.status.value?default("")}"/>
                     [#switch formBean.productCategoryStatusId]
                         [#case "1"]

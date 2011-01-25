@@ -33,7 +33,7 @@
       </div>
       <div class="subcontent ">
       <form method="" action="" name="formname">
-      	<div class="fontBold red">[@spring.message "note"/]</div>
+          <div class="fontBold red">[@spring.message "note"/]</div>
         <p class="font15"><span class="fontBold">[@spring.message "manageLoanAccounts.redoLoanDisbursal.redoLoansAccount" /]</span>&nbsp;-&nbsp;<span class=" orangeheading">[@spring.message "manageLoanAccounts.redoLoanDisbursal.selectacustomer" /]</span></p>
         <p>[@spring.message "manageLoanAccounts.redoLoanDisbursal.enteraClientorGroupnameandclickSearch" /]</p>
         <p>&nbsp;&nbsp;</p>

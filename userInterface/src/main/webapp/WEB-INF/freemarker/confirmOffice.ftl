@@ -24,7 +24,7 @@
   <div class="content">
     <p class="orangeheading">[@spring.message "offices.youhavesuccessfullyaddedanewoffice"/] </p>
     <p><span class="fontBold">[@spring.message "offices.pleasenoteOffice1officehasbeenassignedthesystemIDnumber"/]</span><span class="fontBold">0005 </span></p>
-	<p><a href="officeDetails.html" class="fontBold">[@spring.message "offices.viewofficedetailsnow"/]</a></p>
+    <p><a href="officeDetails.html" class="fontBold">[@spring.message "offices.viewofficedetailsnow"/]</a></p>
 
     <div><a href="defineNewOffice.ftl">[@spring.message "offices.addanewoffice"/]</a></div>
   </div>

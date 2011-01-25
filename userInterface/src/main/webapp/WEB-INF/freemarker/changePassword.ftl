@@ -42,11 +42,11 @@
 
                     <div class="error">
                     [@spring.bind "formBean" /]
-  					[@spring.showErrors "<br>" /]
+                      [@spring.showErrors "<br>" /]
                     </div>
    
                     <div class="span-10 "><span class="rightAlign span-5">
-					<label for="changePassword.input.oldPassword">[@spring.message"changePassword.oldPassword"/]</label></span>
+                    <label for="changePassword.input.oldPassword">[@spring.message"changePassword.oldPassword"/]</label></span>
                     [@spring.bind "formBean.oldPassword" /]
                         <input type="password" id="changePassword.input.oldPassword" name="${spring.status.expression}"
                                value="${spring.status.value?default("")}"/>
@@ -54,7 +54,7 @@
                     </div>
 
                     <div class="span-10 "><span class="rightAlign span-5">
-				    <label for="changePassword.input.newPassword">[@spring.message"changePassword.newPassword"/]</label></span>
+                    <label for="changePassword.input.newPassword">[@spring.message"changePassword.newPassword"/]</label></span>
                     [@spring.bind "formBean.newPassword" /]
                         <input type="password" id="changePassword.input.newPassword" name="${spring.status.expression}"
                                value="${spring.status.value?default("")}"/>
@@ -62,7 +62,7 @@
                     </div>
 
                     <div class="span-10 "><span class="rightAlign span-5">
-					<label for="changePassword.input.confirmPassword">[@spring.message"changePassword.newPasswordConfirmation"/]</label></span>
+                    <label for="changePassword.input.confirmPassword">[@spring.message"changePassword.newPasswordConfirmation"/]</label></span>
                     [@spring.bind "formBean.newPasswordConfirmed" /]
                         <input type="password" id="changePassword.input.confirmPassword"
                                name="${spring.status.expression}" value="${spring.status.value?default("")}"/>

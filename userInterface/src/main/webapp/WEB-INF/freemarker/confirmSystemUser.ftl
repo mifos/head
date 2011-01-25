@@ -24,7 +24,7 @@
   <div class="content">
     <p class="orangeheading">[@spring.message "systemUser.youhavesuccessfullyaddedanewuser"/] </p>
     <div><span class="fontBold">[@spring.message "systemUser.pleaseNoteSystemUserhasbeenassignedthesystemIDnumber"/]</span><span class="fontBold">${userDetails.systemId}</span></div><br />
-	<p><a href="viewSystemUserDetails.ftl?id=${userDetails.id}" class="fontBold">[@spring.message "systemUser.viewuserdetailsnow"/]</a></p>
+    <p><a href="viewSystemUserDetails.ftl?id=${userDetails.id}" class="fontBold">[@spring.message "systemUser.viewuserdetailsnow"/]</a></p>
     <div><a href="user.ftl">[@spring.message "systemUser.addanewuser"/]</a></div>
   </div>
   <!--Main Content Ends-->

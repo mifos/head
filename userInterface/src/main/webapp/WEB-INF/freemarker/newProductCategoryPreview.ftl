@@ -42,25 +42,25 @@
           <div class="fontBold margin10bottom">[@spring.message "manageProducts.editCategory.categoryDetails"/] </div>
           [@mifos.showAllErrors "formBean.*"/]
           <p class="margin10bottom"">
-          	<span class="fontBold">[@spring.message "manageProducts.defineNewCategory.productType"/]</span><span>:&nbsp;[#switch formBean.productTypeId]
-                	[#case "1"]
-                		<span>
+              <span class="fontBold">[@spring.message "manageProducts.defineNewCategory.productType"/]</span><span>:&nbsp;[#switch formBean.productTypeId]
+                    [#case "1"]
+                        <span>
                             [#assign loan][@mifostag.mifoslabel name="Loan" /][/#assign]
                             [@spring.messageArgs "ftlDefinedLabels.manageProducts.editCategory.loan" , [loan]  /]
                         </span>
-                	[#break]
-                	[#case "2"]
-                		<span></span>&nbsp;<span>
+                    [#break]
+                    [#case "2"]
+                        <span></span>&nbsp;<span>
                              [#assign savings][@mifostag.mifoslabel name="Savings" /][/#assign]
                              [@spring.messageArgs "ftlDefinedLabels.manageProducts.editCategory.savings" , [savings]  /]
                         </span>
-                	[#break]
+                    [#break]
                 [/#switch] [@spring.bind "formBean.productTypeId"/]<input type="hidden" name="${spring.status.expression}" value="${spring.status.value?default("")}"/></span><br />
             <span class="fontBold">
-            	[@spring.message "manageProducts.editCategory.categoryName"/]:&nbsp;
+                [@spring.message "manageProducts.editCategory.categoryName"/]:&nbsp;
             </span>
             <span>${formBean.productCategoryName}
-            	[@spring.bind "formBean.productCategoryName"/]<input type="hidden" name="${spring.status.expression}" value="${spring.status.value?default("")}"/>
+                [@spring.bind "formBean.productCategoryName"/]<input type="hidden" name="${spring.status.expression}" value="${spring.status.value?default("")}"/>
             </span><br />
           </p>
           <div class="fontBold">[@spring.message "manageProducts.editCategory.description"/]</div>

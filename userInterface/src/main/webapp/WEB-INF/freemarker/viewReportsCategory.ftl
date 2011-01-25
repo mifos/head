@@ -22,15 +22,15 @@
 [@adminLeftPaneLayout]
 <!--  Main Content Begins-->  
   <div class=" content">
-  	<p class="bluedivs paddingLeft">
-  		<a href="AdminAction.do?method=load">[@spring.message "admin"/]</a>&nbsp;/&nbsp;<span class="fontBold">[@spring.message "admin.viewreportscategory"/]</span>
-  	</p>
+      <p class="bluedivs paddingLeft">
+          <a href="AdminAction.do?method=load">[@spring.message "admin"/]</a>&nbsp;/&nbsp;<span class="fontBold">[@spring.message "admin.viewreportscategory"/]</span>
+      </p>
     <p class="font15 orangeheading">[@spring.message "admin.viewreportscategory"/]</p>
     <p><span>[@spring.message "clickonEdit/Deletetomakechangestoareportcategoryor"/] </span><a href="defineReportCategory.ftl">[@spring.message "addanewreportcategory"/] </a></p>
     <div>&nbsp;</div>
     <div class="span-18">
-    	<div class="span-22  borderbtm paddingLeft">
-        	<span class="span-17 fontBold">[@spring.message "reports.categoryName"/]</span>
+        <div class="span-22  borderbtm paddingLeft">
+            <span class="span-17 fontBold">[@spring.message "reports.categoryName"/]</span>
             <span class="span-3 ">&nbsp;</span>
         </div>
         

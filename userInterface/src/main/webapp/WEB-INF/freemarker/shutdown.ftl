@@ -38,18 +38,18 @@
                     <div class="clear">&nbsp;</div>
                     <div class="span-23">
                         <span class="span-7">[@spring.message "systemAdministration.shutdown.shutdownStatus" /]</span>
-    	            <span class="span-11">${model.shutdownStatus}</span>
+                    <span class="span-11">${model.shutdownStatus}</span>
                     </div>
                     <div class="span-23">
                         <span class="span-7">[@spring.message "systemAdministration.shutdown.scheduleIn" /]</span>
-    	            <span class="span-11">
-    	            	[@spring.bind "shutdownFormBean.timeout" /]
+                    <span class="span-11">
+                        [@spring.bind "shutdownFormBean.timeout" /]
                         [#if shutdownFormBean.timeout??]
                         <input type="text" maxlength="7" id="timeout" name="${spring.status.expression}" value="${shutdownFormBean.timeout?c}" />&nbsp;[@spring.message "systemAdministration.shutdown.seconds" /]
                         [#else]
                         <input type="text" maxlength="7" id="timeout" name="${spring.status.expression}" value="" />&nbsp;[@spring.message "systemAdministration.shutdown.seconds" /]
                         [/#if]
-					</span>
+                    </span>
                     </div>
                     <div class="clear">&nbsp;</div>
                 </div>

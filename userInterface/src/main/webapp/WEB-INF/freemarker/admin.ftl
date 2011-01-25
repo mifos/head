@@ -42,7 +42,7 @@
       <p><span class="fontBold">[@spring.message "admin.organizationpreferences"/]</span>
       <ul>
         <li type="circle"><a id="admin.link.defineNewFees" href="feeaction.do?method=load&recordOfficeId=${model.request.getSession().getAttribute("UserContext").branchId}&recordLoanOfficerId=${model.request.getSession().getAttribute("UserContext").id}" >[@spring.message "admin.viewfees"/]</a>&nbsp;|&nbsp;<a eId="admin.link.defineNewFees" href="feeaction.do?method=load&recordOfficeId=${model.request.getSession().getAttribute("UserContext").branchId}&recordLoanOfficerId=${model.request.getSession().getAttribute("UserContext").id}">[@spring.message "admin.definenewfees"/]</a></li>
-        <li type="circle"><a id="admin.link.viewFunds" href="viewFunds.ftl" >[@spring.message "admin.viewfunds"/]</a>&nbsp;|&nbsp;<a Id="admin.link.defineNewFund"	href="defineNewFund.ftl">[@spring.message "admin.definenewfund"/]</a></li>
+        <li type="circle"><a id="admin.link.viewFunds" href="viewFunds.ftl" >[@spring.message "admin.viewfunds"/]</a>&nbsp;|&nbsp;<a Id="admin.link.defineNewFund"    href="defineNewFund.ftl">[@spring.message "admin.definenewfund"/]</a></li>
         <li type="circle"><a id="admin.link.viewChecklists" href="viewChecklists.ftl" >[@spring.message "admin.viewchecklists"/]</a>&nbsp;|&nbsp;<a Id="admin.link.defineNewChecklist" href="defineNewChecklist.ftl">[@spring.message "admin.definenewchecklist"/]</a></li>
         <li type="circle"><a id="admin.link.viewHolidays" href="viewHolidays.ftl" >[@spring.message "admin.viewholidays"/]</a>&nbsp;|&nbsp;<a Id="admin.link.defineNewHoliday" href="defineNewHoliday.ftl">[@spring.message "admin.definenewholidays"/]</a></li>
         <li type="circle"><a id="admin.link.defineAcceptedPaymentType" href="defineAcceptedPaymentTypes.ftl" >[@spring.message "admin.defineacceptedpayments"/]</a></li>
@@ -52,9 +52,9 @@
       <p><span class="fontBold">[@spring.message "admin.datadisplayandrules" /] </span>
       <ul>
         <li type="circle"><a id="admin.link.defineLabels" href="defineLabels.ftl">[@spring.message "admin.defineLabels"/]</a></li>
-        <li type="circle"><a id="admin.link.defineLookupOption"	href="defineLookupOptions.ftl">[@spring.message "admin.defineLookupOptions"/]</a></li>
+        <li type="circle"><a id="admin.link.defineLookupOption"    href="defineLookupOptions.ftl">[@spring.message "admin.defineLookupOptions"/]</a></li>
         <li type="circle"><a id="admin.link.defineHiddenMandatoryFields" href="defineMandatoryHiddenFields.ftl">[@spring.message "admin.definemandatory/hiddenfields"/]</a></li>
-        <li type="circle"><a id="admin.link.viewAdditionalFields" href="viewAdditionalFields.ftl">[@spring.message "admin.viewAdditionalFields"/]</a>&nbsp;|&nbsp;<a Id="admin.link.defineAdditionalFields"	href="defineAdditionalFields.ftl">[@spring.message "admin.defineAdditionalFields"/]</a></li>
+        <li type="circle"><a id="admin.link.viewAdditionalFields" href="viewAdditionalFields.ftl">[@spring.message "admin.viewAdditionalFields"/]</a>&nbsp;|&nbsp;<a Id="admin.link.defineAdditionalFields"    href="defineAdditionalFields.ftl">[@spring.message "admin.defineAdditionalFields"/]</a></li>
       </ul>
       </p>
       <p class="orangeheading">[@spring.message "admin.manageimports"/]</p>
@@ -100,7 +100,7 @@
       </p>
       <p class="orangeheading">[@spring.message "admin.managereports"/]</p>
       <ul>
-        <li type="circle"><a id="admin.link.ViewAdminDocuments" href="birtAdminDocumentUploadAction.do?method=getViewBirtAdminDocumentPage">[@spring.message "admin.viewadmindocuments"/]</a>&nbsp;|&nbsp;<a id="admin.link.uploadAdminDocuments"	href="birtAdminDocumentUploadAction.do?method=getBirtAdminDocumentUploadPage&viewPath=administerreports_path">[@spring.message "admin.uploadadmindocuments"/]</a></li>
+        <li type="circle"><a id="admin.link.ViewAdminDocuments" href="birtAdminDocumentUploadAction.do?method=getViewBirtAdminDocumentPage">[@spring.message "admin.viewadmindocuments"/]</a>&nbsp;|&nbsp;<a id="admin.link.uploadAdminDocuments"    href="birtAdminDocumentUploadAction.do?method=getBirtAdminDocumentUploadPage&viewPath=administerreports_path">[@spring.message "admin.uploadadmindocuments"/]</a></li>
         <li type="circle"><a id="admin.link.ViewReportsTemplates" href="birtReportsUploadAction.do?method=getViewReportPage">[@spring.message "admin.viewreportstemplates"/]</a>&nbsp;|&nbsp;<a id="admin.link.uploadReportTemplate" href="birtReportsUploadAction.do?method=getBirtReportsUploadPage&viewPath=administerreports_path">[@spring.message "admin.uploadreporttemplate"/]</a></li>
         <li type="circle"><a id="admin.link.ViewReportsCategory" href="reportsCategoryAction.do?method=viewReportsCategory">[@spring.message "admin.viewreportscategory"/]</a>&nbsp;|&nbsp;<a id="admin.link.defineNewCategory" href="reportsCategoryAction.do?method=loadDefineNewCategoryPage">[@spring.message "admin.definenewreportcategory"/]</a></li>
       </ul>

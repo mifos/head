@@ -62,12 +62,12 @@
                     </span>
               </div>
          </div>   
-		  <div class="clear">&nbsp;</div>
-		      <div class="buttonsSubmitCancel margin20right">
-		         <input id='submit' type="submit" class="buttn" value="[@spring.message "submit"/]"/>
-		         <input id='cancel' type="button" class="buttn2" value="[@spring.message "cancel"/]" onclick="javascript:goToAdmin()" />
-		      </div>
-		  <div class="clear">&nbsp;</div>
+          <div class="clear">&nbsp;</div>
+              <div class="buttonsSubmitCancel margin20right">
+                 <input id='submit' type="submit" class="buttn" value="[@spring.message "submit"/]"/>
+                 <input id='cancel' type="button" class="buttn2" value="[@spring.message "cancel"/]" onclick="javascript:goToAdmin()" />
+              </div>
+          <div class="clear">&nbsp;</div>
       </form>
     </div>
 </div><!--Main Content Ends-->

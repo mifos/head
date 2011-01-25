@@ -38,26 +38,26 @@
         
         <p class="fontBold"><a href="${flowExecutionUrl}&_eventId=officeSelected&officeId=1">[@spring.message "systemUsers.defineNewSystemUser.mifosHo"/]</a></p>
 
-		<ul>        
+        <ul>        
         [#list officeDetails.nonBranches as item]
-			<li><a href="${flowExecutionUrl}&_eventId=officeSelected&officeId=${item.id}">${item.name}</a></li>
+            <li><a href="${flowExecutionUrl}&_eventId=officeSelected&officeId=${item.id}">${item.name}</a></li>
         [/#list]
         </ul>
         
         [#list officeDetails.branchOnlyOfficeHierarchy as office]
-	        <div>${office.name}</div>
-	        <ul>    
-	       	[#list office.children as branch]
-			       	<li><a href="${flowExecutionUrl}&_eventId=officeSelected&officeId=${branch.id}">${branch.name}</a></li>
-	       	[/#list]
-	       	</ul>
-       	[/#list]
+            <div>${office.name}</div>
+            <ul>    
+               [#list office.children as branch]
+                       <li><a href="${flowExecutionUrl}&_eventId=officeSelected&officeId=${branch.id}">${branch.name}</a></li>
+               [/#list]
+               </ul>
+           [/#list]
         
         <hr />
         <div class="prepend-8">
-        	<form method="post" action="user.ftl?execution=${flowExecutionKey}">
-	        	<input class="buttn2" type="submit" name="_eventId_cancel" value="[@spring.message "cancel"/]" />
-	        </form>
+            <form method="post" action="user.ftl?execution=${flowExecutionKey}">
+                <input class="buttn2" type="submit" name="_eventId_cancel" value="[@spring.message "cancel"/]" />
+            </form>
         </div>
       </div>
       

@@ -63,45 +63,45 @@
     </div>
 
     <div class="span-22 borderbtm">
-        	<span class="span-8 paddingLeft">
+            <span class="span-8 paddingLeft">
                 [#assign externalId][@mifostag.mifoslabel name="OfficeLevels-BranchOffice" /][/#assign]
                 [@spring.messageArgs "ftlDefinedLabels.manadatoryHiddenFields.externalId" , [externalId]  /]
-        	</span>
-        	<span class="span-7 paddingLeft ">
-        		[@spring.bind "fields.hideSystemExternalId" /]
+            </span>
+            <span class="span-7 paddingLeft ">
+                [@spring.bind "fields.hideSystemExternalId" /]
                     <input type="hidden" name="_${spring.status.expression}" value="false"/>
-    			<input type="checkbox" id="${spring.status.expression}" name="${spring.status.expression}"
+                <input type="checkbox" id="${spring.status.expression}" name="${spring.status.expression}"
                        [#if spring.status.value?? && spring.status.value?string=="true"]checked="true" [/#if]
                     [#if fields.mandatorySystemExternalId=true]  disabled [/#if] onclick="disableFields(this)"/>
-        	</span>
-        	<span class="span-5 paddingLeft">
-        		[@spring.bind "fields.mandatorySystemExternalId" /]
+            </span>
+            <span class="span-5 paddingLeft">
+                [@spring.bind "fields.mandatorySystemExternalId" /]
                     <input type="hidden" name="_${spring.status.expression}" value="false"/>
-    			<input type="checkbox" id="${spring.status.expression}" name="${spring.status.expression}"
+                <input type="checkbox" id="${spring.status.expression}" name="${spring.status.expression}"
                        [#if spring.status.value?? && spring.status.value?string=="true"]checked="true" [/#if]
                     [#if fields.hideSystemExternalId=true]  disabled [/#if] onclick="disableFields(this)"/>
-        	</span>
+            </span>
     </div>
 
     <div class="span-22 borderbtm">
-        	<span class="span-8 paddingLeft">
+            <span class="span-8 paddingLeft">
             [#assign ethnicity][@mifostag.mifoslabel name="Ethinicity" /][/#assign]
             [@spring.messageArgs "ftlDefinedLabels.manadatoryHiddenFields.ethnicity" , [ethnicity]  /]
             </span>
-        	<span class="span-7 paddingLeft ">
-        	[@spring.bind "fields.hideSystemEthnicity" /]
+            <span class="span-7 paddingLeft ">
+            [@spring.bind "fields.hideSystemEthnicity" /]
                 <input type="hidden" name="_${spring.status.expression}" value="false"/>
-    			<input type="checkbox" id="${spring.status.expression}" name="${spring.status.expression}"
+                <input type="checkbox" id="${spring.status.expression}" name="${spring.status.expression}"
                        [#if spring.status.value?? && spring.status.value?string=="true"]checked="true" [/#if]
                     [#if fields.mandatorySystemEthnicity=true]  disabled [/#if] onclick="disableFields(this)"/>
-        	</span>
-        	<span class="span-5 paddingLeft">
-        	[@spring.bind "fields.mandatorySystemEthnicity" /]
+            </span>
+            <span class="span-5 paddingLeft">
+            [@spring.bind "fields.mandatorySystemEthnicity" /]
                 <input type="hidden" name="_${spring.status.expression}" value="false"/>
-    			<input type="checkbox" id="${spring.status.expression}" name="${spring.status.expression}"
+                <input type="checkbox" id="${spring.status.expression}" name="${spring.status.expression}"
                        [#if spring.status.value?? && spring.status.value?string=="true"]checked="true" [/#if]
                     [#if fields.hideSystemEthnicity=true]  disabled [/#if] onclick="disableFields(this)"/>
-        	</span>
+            </span>
     </div>
     <div class="span-22 borderbtm">
         <span class="span-8 paddingLeft">
