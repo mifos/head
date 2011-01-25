@@ -57,8 +57,8 @@ public class MpesaImportTest extends UiTestCaseBase {
     private NavigationHelper navigationHelper;
     private static final String EXCEL_IMPORT_TYPE = "M-PESA Excel 97(-2007)";
 
-	static final String[] TEST_FILES = new String[] { "loan_product_code.xls", "mixed.xls", "saving_and_loan.xls",
-		"savings_product_code.xls", "example_loan_disb.xls"};
+    static final String[] TEST_FILES = new String[] { "loan_product_code.xls", "mixed.xls", "saving_and_loan.xls",
+        "savings_product_code.xls", "example_loan_disb.xls"};
 
     @Autowired
     private DbUnitUtilities dbUnitUtilities;
@@ -78,41 +78,41 @@ public class MpesaImportTest extends UiTestCaseBase {
     @AfterMethod
     public void tearDown() {
         (new MifosPage(selenium)).logout();
-	}
+    }
 
     @SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.SystemPrintln"})
     @Test(enabled=false)
     public void importMpesaTransactions() throws Exception {
-		String dataset = "mpesa_export.xml";
+        String dataset = "mpesa_export.xml";
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, dataset, dataSource, selenium);
 
-		for (String importFile : TEST_FILES) {
-			String path = this.getClass().getResource("/mpesa/" + importFile).toString();
-			importTransaction(path);
-			checkIfOutputMatchesExpected(path);
-		}
+        for (String importFile : TEST_FILES) {
+            String path = this.getClass().getResource("/mpesa/" + importFile).toString();
+            importTransaction(path);
+            checkIfOutputMatchesExpected(path);
+        }
      }
 
-	private void checkIfOutputMatchesExpected(String path) throws FileNotFoundException, IOException, URISyntaxException {
-		DataInputStream in = new DataInputStream(new FileInputStream(new File(new URI(path + ".expected.txt"))));
-		BufferedReader br = new BufferedReader(new InputStreamReader(in));
-		String line = null;
-		while (true) {
-			line = br.readLine();
-			if (line == null) {
-				break;
-			}
-			if (!selenium.isTextPresent(line.trim())) {
-				Assert.fail("No text <" + line.trim() + "> present on the page");
-			}
-		}
-	}
+    private void checkIfOutputMatchesExpected(String path) throws FileNotFoundException, IOException, URISyntaxException {
+        DataInputStream in = new DataInputStream(new FileInputStream(new File(new URI(path + ".expected.txt"))));
+        BufferedReader br = new BufferedReader(new InputStreamReader(in));
+        String line = null;
+        while (true) {
+            line = br.readLine();
+            if (line == null) {
+                break;
+            }
+            if (!selenium.isTextPresent(line.trim())) {
+                Assert.fail("No text <" + line.trim() + "> present on the page");
+            }
+        }
+    }
 
     private void importTransaction(String importFile) {
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         ImportTransactionsPage importTransactionsPage = adminPage.navigateToImportTransactionsPage();
         importTransactionsPage.verifyPage();
-		// try{ Thread.sleep(100000); } catch (Exception e) {}
+        // try{ Thread.sleep(100000); } catch (Exception e) {}
         importTransactionsPage.reviewTransactions(importFile, EXCEL_IMPORT_TYPE);
     }
 

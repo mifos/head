@@ -64,8 +64,8 @@ public class ImportTransactionsAction extends BaseAction {
     private static final String IMPORT_TEMPORARY_FILENAME = "importTemporaryFilename";
     private static final String IMPORT_PLUGIN_CLASSNAME = "importPluginClassname";
 
-	public static final String SESSION_ATTRIBUTE_LOG = "importTransactionLog";
-	public static final String SESSION_ATTRIBUTE_LOG_FILENAME = "importTransactionLogFilename";
+    public static final String SESSION_ATTRIBUTE_LOG = "importTransactionLog";
+    public static final String SESSION_ATTRIBUTE_LOG_FILENAME = "importTransactionLogFilename";
 
     public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
@@ -108,21 +108,21 @@ public class ImportTransactionsAction extends BaseAction {
             submitButtonDisabled = true;
         }
 
-		if (importResult.isAmountInformationFilled() && importResult.isExtraRowInformationFilled()) {
-			request.setAttribute("isExtraInformationFilled", true);
-			request.setAttribute("numberOfErrorRows", importResult.getNumberOfErrorRows());
-			request.setAttribute("numberOfIgnoredRows", importResult.getNumberOfIgnoredRows());
-			request.setAttribute("numberOfReadRows", importResult.getNumberOfReadRows());
-			request.setAttribute("totalAmountOfTransactionsImported", new Money(Money.getDefaultCurrency(),
+        if (importResult.isAmountInformationFilled() && importResult.isExtraRowInformationFilled()) {
+            request.setAttribute("isExtraInformationFilled", true);
+            request.setAttribute("numberOfErrorRows", importResult.getNumberOfErrorRows());
+            request.setAttribute("numberOfIgnoredRows", importResult.getNumberOfIgnoredRows());
+            request.setAttribute("numberOfReadRows", importResult.getNumberOfReadRows());
+            request.setAttribute("totalAmountOfTransactionsImported", new Money(Money.getDefaultCurrency(),
                 importResult.getTotalAmountOfTransactionsImported()).toString());
-			request.setAttribute("totalAmountOfTransactionsWithError", new Money(Money.getDefaultCurrency(),
+            request.setAttribute("totalAmountOfTransactionsWithError", new Money(Money.getDefaultCurrency(),
                 importResult.getTotalAmountOfTransactionsWithError()).toString());
                         request.setAttribute("totalAmountOfDisbursementsTransactionsImported", new Money(Money.getDefaultCurrency(), importResult.getTotalAmountOfDisbursementsImported().toString()));
-			request.getSession().setAttribute(SESSION_ATTRIBUTE_LOG, importResult.getStatusLogFile().getBytes());
-			request.getSession().setAttribute(SESSION_ATTRIBUTE_LOG_FILENAME, statusLogfileName(importTransactionsFile.getFileName()));
-		} else {
-			request.setAttribute("isExtraInformationFilled", false);
-		}
+            request.getSession().setAttribute(SESSION_ATTRIBUTE_LOG, importResult.getStatusLogFile().getBytes());
+            request.getSession().setAttribute(SESSION_ATTRIBUTE_LOG_FILENAME, statusLogfileName(importTransactionsFile.getFileName()));
+        } else {
+            request.setAttribute("isExtraInformationFilled", false);
+        }
 
         request.setAttribute("importTransactionsErrors", errorsForDisplay);
         request.setAttribute("numSuccessfulRows", numberRowSuccessfullyParsed);
@@ -175,23 +175,23 @@ public class ImportTransactionsAction extends BaseAction {
         return mapping.findForward("import_confirm");
     }
 
-	public ActionForward downloadLog(@SuppressWarnings("unused") ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+    public ActionForward downloadLog(@SuppressWarnings("unused") ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
         HttpServletResponse response) throws Exception {
-		byte[] fileContents = (byte[]) request.getSession().getAttribute(ImportTransactionsAction.SESSION_ATTRIBUTE_LOG);
-		String fileName = (String) request.getSession().getAttribute(ImportTransactionsAction.SESSION_ATTRIBUTE_LOG_FILENAME);
-		response.setHeader("Content-disposition",
-				"attachment; filename=" + URLEncoder.encode(fileName, "UTF-8"));
-		response.setContentType("text/plain");
-		IOUtils.copy(new ByteArrayInputStream(fileContents), response.getOutputStream());
-		return null;
-	}
+        byte[] fileContents = (byte[]) request.getSession().getAttribute(ImportTransactionsAction.SESSION_ATTRIBUTE_LOG);
+        String fileName = (String) request.getSession().getAttribute(ImportTransactionsAction.SESSION_ATTRIBUTE_LOG_FILENAME);
+        response.setHeader("Content-disposition",
+                "attachment; filename=" + URLEncoder.encode(fileName, "UTF-8"));
+        response.setContentType("text/plain");
+        IOUtils.copy(new ByteArrayInputStream(fileContents), response.getOutputStream());
+        return null;
+    }
 
-	private String statusLogfileName(String uploadedFilename) {
-		if (uploadedFilename.contains(".")) {
+    private String statusLogfileName(String uploadedFilename) {
+        if (uploadedFilename.contains(".")) {
             return uploadedFilename.split("\\.")[0] + "-log.txt";
         }
-		return uploadedFilename + "-log.txt";
-	}
+        return uploadedFilename + "-log.txt";
+    }
 
     /**
      * Used to remove our (this action's) temporaries after use to keep them
@@ -202,8 +202,8 @@ public class ImportTransactionsAction extends BaseAction {
     private void clearOurSessionVariables(HttpSession session) {
         session.removeAttribute(IMPORT_TEMPORARY_FILENAME);
         session.removeAttribute(IMPORT_PLUGIN_CLASSNAME);
-		session.removeAttribute(SESSION_ATTRIBUTE_LOG);
-		session.removeAttribute(SESSION_ATTRIBUTE_LOG_FILENAME);
+        session.removeAttribute(SESSION_ATTRIBUTE_LOG);
+        session.removeAttribute(SESSION_ATTRIBUTE_LOG_FILENAME);
     }
 
     @Override

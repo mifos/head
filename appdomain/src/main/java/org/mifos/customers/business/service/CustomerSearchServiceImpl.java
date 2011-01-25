@@ -24,15 +24,15 @@ import org.mifos.dto.domain.CustomerDto;
 
 public class CustomerSearchServiceImpl implements CustomerSearchService {
 
-	private CustomerDao customerDao;
+    private CustomerDao customerDao;
 
-	public CustomerSearchServiceImpl(CustomerDao customerDao) {
-		this.customerDao = customerDao;
-	}
+    public CustomerSearchServiceImpl(CustomerDao customerDao) {
+        this.customerDao = customerDao;
+    }
 
-	@Override
-	public List<CustomerDto> findCustomersWithGivenPhoneNumber(String phoneNumber) {
-		return customerDao.findCustomersWithGivenPhoneNumber(phoneNumber);
-	}
+    @Override
+    public List<CustomerDto> findCustomersWithGivenPhoneNumber(String phoneNumber) {
+        return customerDao.findCustomersWithGivenPhoneNumber(phoneNumber);
+    }
 
 }

@@ -40,52 +40,52 @@ import org.mifos.framework.util.SqlUpgradeScriptFinder;
  */
 public class Upgrade1286195484 extends Upgrade {
 
-	/**
-	 * Add new column "phone_number_stripped" only if the column doesn't exist yet.
-	 */
-	public static void conditionalAlter(Connection connection) throws SQLException, IOException {
-		ResultSet rs = connection.createStatement().executeQuery(
-				"SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA=DATABASE()" +
-				" AND COLUMN_NAME='phone_number_stripped' AND TABLE_NAME='customer_address_detail'");
-		try {
-			if (!rs.first()) {
-				SqlUpgrade upgrade = SqlUpgradeScriptFinder.findUpgradeScript(
-						"upgrade1286195484.sql");
-				upgrade.runScript(connection);
-			}
-		} finally {
-			rs.close();
-		}
-	}
+    /**
+     * Add new column "phone_number_stripped" only if the column doesn't exist yet.
+     */
+    public static void conditionalAlter(Connection connection) throws SQLException, IOException {
+        ResultSet rs = connection.createStatement().executeQuery(
+                "SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA=DATABASE()" +
+                " AND COLUMN_NAME='phone_number_stripped' AND TABLE_NAME='customer_address_detail'");
+        try {
+            if (!rs.first()) {
+                SqlUpgrade upgrade = SqlUpgradeScriptFinder.findUpgradeScript(
+                        "upgrade1286195484.sql");
+                upgrade.runScript(connection);
+            }
+        } finally {
+            rs.close();
+        }
+    }
 
-	public static int COMMIT_EVERY = 100;
+    public static int COMMIT_EVERY = 100;
     public static int FLUSH_EVERY = 1000;
     public static int PRINT_EVERY = 10000;
 
     @Override
     public void upgrade(Connection connection) throws IOException, SQLException {
-		conditionalAlter(connection);
+        conditionalAlter(connection);
 
         Session session = StaticHibernateUtil.getSessionTL();
         ScrollableResults results = session.createQuery("from CustomerAddressDetailEntity").setCacheMode(CacheMode.IGNORE).scroll(ScrollMode.FORWARD_ONLY);
         Query update = session.createQuery("update CustomerAddressDetailEntity set address.phoneNumberStripped = :phoneNumberStripped where " +
-						"customerAddressId = :id");
-		Transaction t = session.beginTransaction();
-		int modifyCount = 0;
+                        "customerAddressId = :id");
+        Transaction t = session.beginTransaction();
+        int modifyCount = 0;
         int resultCount = 0;
         while (results.next()) {
             ++resultCount;
             CustomerAddressDetailEntity address = (CustomerAddressDetailEntity)results.get(0);
-			if (address.getAddress().getPhoneNumber() != null && !address.getAddress().getPhoneNumber().isEmpty()) {
-				update.setString("phoneNumberStripped", address.getAddress().getPhoneNumberStripped());
-				update.setInteger("id", address.getCustomerAddressId());
-				update.executeUpdate();
-				++modifyCount;
-				if (modifyCount % COMMIT_EVERY == 0) {
-					t.commit();
-					t = session.beginTransaction();
-				}
-			}
+            if (address.getAddress().getPhoneNumber() != null && !address.getAddress().getPhoneNumber().isEmpty()) {
+                update.setString("phoneNumberStripped", address.getAddress().getPhoneNumberStripped());
+                update.setInteger("id", address.getCustomerAddressId());
+                update.executeUpdate();
+                ++modifyCount;
+                if (modifyCount % COMMIT_EVERY == 0) {
+                    t.commit();
+                    t = session.beginTransaction();
+                }
+            }
             if (resultCount % FLUSH_EVERY == 0) {
                 session.flush();
                 session.clear();
@@ -95,8 +95,8 @@ public class Upgrade1286195484 extends Upgrade {
                 System.out.flush();
             }
         }
-		session.flush();
-		t.commit();
+        session.flush();
+        t.commit();
     }
 
 }

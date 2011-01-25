@@ -114,7 +114,7 @@ public class LegacyAccountDao extends LegacyGenericDao {
         return queryResult == null ? null : (AccountBO) queryResult;
     }
 
-	public AccountBO findSavingsByClientPhoneNumberAndProductShortName(String phoneNumber,
+    public AccountBO findSavingsByClientPhoneNumberAndProductShortName(String phoneNumber,
             String productShortName) throws PersistenceException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("phoneNumberStripped", MifosStringUtils.removeNondigits(phoneNumber));
@@ -137,7 +137,7 @@ public class LegacyAccountDao extends LegacyGenericDao {
         return queryResult == null ? null : (AccountBO) queryResult;
     }
 
-	public AccountBO findLoanByClientPhoneNumberAndProductShortName(String phoneNumber, String productShortName)
+    public AccountBO findLoanByClientPhoneNumberAndProductShortName(String phoneNumber, String productShortName)
             throws PersistenceException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("phoneNumberStripped", MifosStringUtils.removeNondigits(phoneNumber));
@@ -567,8 +567,8 @@ public class LegacyAccountDao extends LegacyGenericDao {
         return executeNamedQuery("getCustomerSchedulesForAccountThatAreWithinDates", parameters);
     }
 
-	public List<AccountPaymentEntity> findAccountPaymentsByReceiptNumber(String receiptNumber) throws PersistenceException {
-    	 Map<String, Object> parameters = new HashMap<String, Object>();
+    public List<AccountPaymentEntity> findAccountPaymentsByReceiptNumber(String receiptNumber) throws PersistenceException {
+         Map<String, Object> parameters = new HashMap<String, Object>();
          parameters.put("RECEIPT_NUMBER", receiptNumber);
 
          return executeNamedQuery("findAccountPaymentsByReceiptNumber", parameters);

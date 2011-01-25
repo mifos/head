@@ -94,31 +94,31 @@ public class HolidayFormBean {
         this.toYear = toYear;
     }
 
-	public boolean allToDateFieldsFilled() {
-		if (getToDay() == null) {
-			return false;
-		}
-		if (getToMonth() == null) {
-			return false;
-		}
-		if (getToYear() == null || getToYear().isEmpty()) {
-			return false;
-		}
-		return true;
-	}
+    public boolean allToDateFieldsFilled() {
+        if (getToDay() == null) {
+            return false;
+        }
+        if (getToMonth() == null) {
+            return false;
+        }
+        if (getToYear() == null || getToYear().isEmpty()) {
+            return false;
+        }
+        return true;
+    }
 
-	public boolean anyToDateFieldFilled() {
-		if (getToDay() != null) {
-			return true;
-		}
-		if (getToMonth() != null) {
-			return true;
-		}
-		if (getToYear() != null && !getToYear().isEmpty()) {
-			return true;
-		}
-		return false;
-	}
+    public boolean anyToDateFieldFilled() {
+        if (getToDay() != null) {
+            return true;
+        }
+        if (getToMonth() != null) {
+            return true;
+        }
+        if (getToYear() != null && !getToYear().isEmpty()) {
+            return true;
+        }
+        return false;
+    }
 
     public String getRepaymentRuleId() {
         return this.repaymentRuleId;

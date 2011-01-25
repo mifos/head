@@ -68,8 +68,8 @@ public class HolidayAndWorkingDaysScheduledDateGeneration implements ScheduledDa
         DateTime withoutAdjustment = new DateTime(matchingDayOfWeekDate);
         scheduledWithoutAdjustments.add(withoutAdjustment);
         for (int i = 0; i < occurences; i++) {
-        	withoutAdjustment = scheduledEvent.nextEventDateAfter(withoutAdjustment);
-        	scheduledWithoutAdjustments.add(withoutAdjustment);
+            withoutAdjustment = scheduledEvent.nextEventDateAfter(withoutAdjustment);
+            scheduledWithoutAdjustments.add(withoutAdjustment);
         }
 
         DateTime latestGeneratedDate = scheduledWithoutAdjustments.get(0);

@@ -59,8 +59,8 @@ public class Upgrade1285177663 extends Upgrade {
     @Override
     public void upgrade(Connection connection) throws IOException, SQLException {
 
-		// MIFOS-4004 - workaround for problem with incompatible Hibernate mappings and DB state
-		Upgrade1286195484.conditionalAlter(connection);
+        // MIFOS-4004 - workaround for problem with incompatible Hibernate mappings and DB state
+        Upgrade1286195484.conditionalAlter(connection);
 
         String key = "Recurring fees cleanup done for MIFOS-3712";
 

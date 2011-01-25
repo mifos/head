@@ -453,11 +453,11 @@ public class StandardAccountService implements AccountService {
         return cfgMng.getProperty(propertyKey);
     }
 
-	@Override
-	public boolean receiptExists(String receiptNumber) throws Exception {
+    @Override
+    public boolean receiptExists(String receiptNumber) throws Exception {
         List<AccountPaymentEntity> existentPaymentsWIthGivenReceiptNumber = this.legacyAccountDao.findAccountPaymentsByReceiptNumber(receiptNumber);
-		return existentPaymentsWIthGivenReceiptNumber != null && !existentPaymentsWIthGivenReceiptNumber.isEmpty();
-	}
+        return existentPaymentsWIthGivenReceiptNumber != null && !existentPaymentsWIthGivenReceiptNumber.isEmpty();
+    }
 
 
      @Override

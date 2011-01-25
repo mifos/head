@@ -143,9 +143,9 @@ public class QuestionnaireMigration {
                 update.setInteger("customFieldId", responseId);
                 update.executeUpdate();
                 if (modifyCount % COMMIT_EVERY == 0) {
-					StaticHibernateUtil.commitTransaction();
+                    StaticHibernateUtil.commitTransaction();
                     StaticHibernateUtil.startTransaction();
-				}
+                }
                 if (modifyCount % PRINT_EVERY == 0) {
                     System.out.print(".");
                     System.out.flush();

@@ -32,7 +32,7 @@ import org.mifos.dto.domain.UserReferenceDto;
  */
 public abstract class TransactionImport {
     private AccountService accountService;
-	private CustomerSearchService customerSearchService;
+    private CustomerSearchService customerSearchService;
     private UserReferenceDto userReferenceDto;
 
     /**
@@ -77,16 +77,16 @@ public abstract class TransactionImport {
         return accountService;
     }
 
-	/**
-	 * Injected by Mifos.
-	 */
+    /**
+     * Injected by Mifos.
+     */
     public void setCustomerSearchService(final CustomerSearchService customerSearchService) {
-		this.customerSearchService = customerSearchService;
+        this.customerSearchService = customerSearchService;
     }
 
-	protected CustomerSearchService getCustomerSearchService() {
-		return customerSearchService;
-	}
+    protected CustomerSearchService getCustomerSearchService() {
+        return customerSearchService;
+    }
 
     /**
      * Mifos will call this method to provide a {@link UserReferenceDto} for use

@@ -288,7 +288,7 @@ public class LoanPrdAction extends BaseAction {
         setDataIntoActionForm(loanOffering, loanPrdActionForm, request);
         setSelectedQuestionGroupsOnSession(request, loanOffering, getQuestionnaireServiceFacade(request));
         setCurrencyOnSession(request, loanOffering);
-		setRepaymentIndepOfMeetingEnabledFlag(request);
+        setRepaymentIndepOfMeetingEnabledFlag(request);
         logger.debug("manage of Loan Product Action called" + prdOfferingId);
         return mapping.findForward(ActionForwards.manage_success.toString());
     }
