@@ -20,7 +20,7 @@
 --]
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
-  <!--  Main Content Begins-->  
+  <!--  Main Content Begins-->
   <div class=" content">
       <span id="page.id" title="viewProductsMix" />
           [@mifos.crumbs breadcrumbs/]
@@ -50,6 +50,6 @@
                 </span>
                 </form>
             </div>
-       </div>       
+       </div>
   </div><!--Main Content Ends-->
-[/@adminLeftPaneLayout] 
+[/@adminLeftPaneLayout]

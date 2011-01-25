@@ -21,7 +21,7 @@
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]<!--Container Begins-->
 
-<!--  Main Content Begins-->  
+<!--  Main Content Begins-->
 <div class="content">
     <form method="post" name="shutdown" action="shutdown.ftl">
         [@mifos.crumbs breadcrumbs /]

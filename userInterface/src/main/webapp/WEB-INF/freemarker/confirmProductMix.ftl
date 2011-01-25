@@ -21,13 +21,13 @@
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
   <!--  Main Content Begins-->
-  <span id="page.id" title="createProductsMixConfirmation" />  
+  <span id="page.id" title="createProductsMixConfirmation" />
   <div class="content">
       <div class="marginLeft30 marginTop15">
           <p class="orangeheading marginTop15">[@spring.message "manageProductMix.youhavesuccessfullydefinedanewproductmix"/]</p>
           <span class="fontBold marginTop15"><a href="productMixDetails.ftl?prdOfferingId=${productId}&productType=1">[@spring.message "manageProductMix.viewproductmixdetailsnow"/]</a></span><br />
           <span class="marginTop15"><a href="defineProductMix.ftl">[@spring.message "manageProductMix.definemixforanewproduct"/]</a></span>
       </div>
-  </div>  
+  </div>
   <!--Main Content Ends-->
  [/@adminLeftPaneLayout]

@@ -19,7 +19,7 @@
 *  explanation of the license and how it is applied.
 --]
 [#include "layout.ftl"]
-[@adminLeftPaneLayout]  <!--  Main Content Begins-->  
+[@adminLeftPaneLayout]  <!--  Main Content Begins-->
   <div class="content">
       <form method="" action="" name="formname">
       <p class="bluedivs paddingLeft"><a href="admin.html">[@spring.message "admin"/]</a>&nbsp;/&nbsp;<span class="fontBold">[@spring.message "manageLoanAccounts.reverseLoansdisbursal"/]</span></p>
@@ -28,7 +28,7 @@
     <p class="paddingLeft">[@spring.message "manageLoanAccounts.reverseLoansdisbursal.searchLoansaccountbyID"/]<br />
       <input type="text" id="txtid"/>&nbsp;&nbsp;<input class="buttn" type="button" name="search" value="[@spring.message "admin.search"/]" onclick="#" />
     </p>
-    
-       </form> 
+
+       </form>
   </div><!--Main Content Ends-->
    [/@adminLeftPaneLayout]

@@ -70,8 +70,8 @@
           <p class="">
             <span><input class="insidebuttn" type="submit" name="EDIT" value="[@spring.message "manageProducts.editCategory.editcategoryinformation"/]"/></span>
           </p>
-          
-          <div class="clear">&nbsp;</div>          
+
+          <div class="clear">&nbsp;</div>
           <div class="buttonsSubmitCancel margin20right">
             <input class="buttn" type="submit" name="SUBMIT" value="[@spring.message "submit"/]"/>
             <input class="buttn2" type="submit" name="CANCEL" value="[@spring.message "cancel"/]"/>

@@ -27,7 +27,7 @@
           switchLoanAmountType();
           switchLoanInstallmentType();
     });
-    
+
 function addOption(root, text, value)
 {
   var newOpt = new Option(text, value);
@@ -36,7 +36,7 @@ function addOption(root, text, value)
 }
 
 function deleteOption(root, index)
-{ 
+{
   var rootLength= root.length;
   if(rootLength>0)
   {
@@ -50,8 +50,8 @@ function moveOptions(root, destination)
   var rootText = new Array();
   var rootValues = new Array();
   var rootCount = 0;
-  
-  var i; 
+
+  var i;
   for(i=rootLength-1; i>=0; i--)
   {
     if(root.options[i].selected)
@@ -61,11 +61,11 @@ function moveOptions(root, destination)
       deleteOption(root, i);
       rootCount++;
     }
-  }  
+  }
   for(i=rootCount-1; i>=0; i--)
   {
     addOption(destination, rootText[i], rootValues[i]);
-  }  
+  }
 }
 
 function selectAllOptions(outSel)
@@ -80,16 +80,16 @@ function selectAllOptions(outSel)
     }
 }
 
-function switchFrequencyMessage() 
+function switchFrequencyMessage()
 {
-    if (document.getElementById("installmentFrequencyPeriod0").checked == true) 
+    if (document.getElementById("installmentFrequencyPeriod0").checked == true)
     {
         document.getElementById("weekSpecifyMessage").style.display = "block";
         document.getElementById("weekLabelMessage").style.display = "inline";
         document.getElementById("monthSpecifyMessage").style.display = "none";
         document.getElementById("monthLabelMessage").style.display = "none";
-    } 
-    else 
+    }
+    else
     {
         document.getElementById("weekSpecifyMessage").style.display = "none";
         document.getElementById("weekLabelMessage").style.display = "none";
@@ -98,20 +98,20 @@ function switchFrequencyMessage()
     }
 }
 
-function switchLoanAmountType() 
+function switchLoanAmountType()
 {
-    if (document.getElementById("selectedLoanAmountCalculationType0").checked == true) 
+    if (document.getElementById("selectedLoanAmountCalculationType0").checked == true)
     {
         document.getElementById("loanamountoption0").style.display = "block";
         document.getElementById("loanamountoption1").style.display = "none";
         document.getElementById("loanamountoption2").style.display = "none";
-    } 
-    else if (document.getElementById("selectedLoanAmountCalculationType1").checked == true) 
+    }
+    else if (document.getElementById("selectedLoanAmountCalculationType1").checked == true)
     {
         document.getElementById("loanamountoption0").style.display = "none";
         document.getElementById("loanamountoption1").style.display = "block";
         document.getElementById("loanamountoption2").style.display = "none";
-    } 
+    }
     else if (document.getElementById("selectedLoanAmountCalculationType2").checked == true)
     {
         document.getElementById("loanamountoption0").style.display = "none";
@@ -120,20 +120,20 @@ function switchLoanAmountType()
     }
 }
 
-function switchLoanInstallmentType() 
+function switchLoanInstallmentType()
 {
-    if (document.getElementById("selectedInstallmentsCalculationType0").checked == true) 
+    if (document.getElementById("selectedInstallmentsCalculationType0").checked == true)
     {
         document.getElementById("installmentoption0").style.display = "block";
         document.getElementById("installmentoption1").style.display = "none";
         document.getElementById("installmentoption2").style.display = "none";
-    } 
-    else if (document.getElementById("selectedInstallmentsCalculationType1").checked == true) 
+    }
+    else if (document.getElementById("selectedInstallmentsCalculationType1").checked == true)
     {
         document.getElementById("installmentoption0").style.display = "none";
         document.getElementById("installmentoption1").style.display = "block";
         document.getElementById("installmentoption2").style.display = "none";
-    } 
+    }
     else if (document.getElementById("selectedInstallmentsCalculationType2").checked == true)
     {
         document.getElementById("installmentoption0").style.display = "none";
@@ -167,7 +167,7 @@ function switchLoanInstallmentType()
                     <input type="text" id="createLoanProduct.input.prdOffering" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />
                 </span>
             </div>
-            
+
             <div class="span-23 ">
                 <span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageLoanProducts.defineLoanProduct.shortname" /]&nbsp;:</span>
                 <span class="span-4">
@@ -175,21 +175,21 @@ function switchLoanInstallmentType()
                     <input type="text" size="3" maxlength="4" id="createLoanProduct.input.prdOfferingShortName" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />
                 </span>
             </div>
-            
+
             <div class="span-23 "><span class="pull-3 span-8 rightAlign">[@spring.message "manageLoanProducts.defineLoanProduct.description" /]&nbsp;:</span>
                 <span class="span-4">
                     [@spring.bind "loanProduct.generalDetails.description" /]
                     <textarea rows="7" cols="55" id="createLoanProduct.input.description" name="${spring.status.expression}">${spring.status.value?if_exists}</textarea>
                 </span>
             </div>
-            
+
             <div class="span-23">
                 <span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageLoanProducts.defineLoanProduct.productcategory" /]&nbsp;:</span>
                 <span class="span-4">
                     [@mifos.formSingleSelectWithPrompt "loanProduct.generalDetails.selectedCategory", loanProduct.generalDetails.categoryOptions, "--selectone--" /]
                   </span>
             </div>
-            
+
             <div class="span-23 last">
                 <span class="pull-3 span-8 rightAlign"><span class="red"> * </span>[@spring.message "manageLoanProducts.defineLoanProduct.startdate" /]&nbsp;:</span>
                 [@spring.bind "loanProduct.generalDetails.startDateDay" /]
@@ -199,7 +199,7 @@ function switchLoanInstallmentType()
                   [@spring.bind "loanProduct.generalDetails.startDateYear" /]
                   <span><input type="text" size="2" maxlength="4" id="startDateYY" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />[@spring.message "systemUser.enterUserDetails.YYYY"/]</span>
             </div>
-            
+
             <div class="span-23 last"> <span class="pull-3 span-8 rightAlign">[@spring.message "manageLoanProducts.defineLoanProduct.enddate" /]&nbsp;:</span>
                 [@spring.bind "loanProduct.generalDetails.endDateDay" /]
                 <span class="span-2"><input type="text" size="1" maxlength="2" id="endDateDD" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />[@spring.message "systemUser.enterUserDetails.DD"/]</span>
@@ -208,13 +208,13 @@ function switchLoanInstallmentType()
                 [@spring.bind "loanProduct.generalDetails.endDateYear" /]
                 <span class="span-3"><input type="text" size="2" maxlength="4" id="endDateYY" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />[@spring.message "systemUser.enterUserDetails.YYYY"/]</span>
             </div>
-            
+
             <div class="span-23 "><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageLoanProducts.defineLoanProduct.applicablefor" /]&nbsp;:</span>
                 <span class="span-4">
                 [@mifos.formSingleSelectWithPrompt "loanProduct.generalDetails.selectedApplicableFor", loanProduct.generalDetails.applicableForOptions, "--selectone--" /]
                   </span>
             </div>
-            
+
             [#if loanProduct.multiCurrencyEnabled]
             <div class="span-23 ">
                 <span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageLoanProducts.defineLoanProduct.currency" /]&nbsp;:</span>
@@ -223,13 +223,13 @@ function switchLoanInstallmentType()
                   </span>
             </div>
             [/#if]
-            
+
             <div class="span-23 "><span class="pull-3 span-8 rightAlign">[@spring.message "manageLoanProducts.defineLoanProduct.includeinLoancyclecounter" /]&nbsp;:</span>
                 <span class="span-4">
                     [@spring.formCheckbox "loanProduct.includeInLoanCycleCounter" "createLoanProduct.checkbox.loanCounter" /]
                   </span>
             </div>
-            
+
             <div class="span-23 ">
                 <span class="pull-3 span-8 rightAlign">[@spring.message "manageLoanProducts.defineLoanProduct.interestwaiver" /]&nbsp;:</span>
                 <span class="span-4">
@@ -239,16 +239,16 @@ function switchLoanInstallmentType()
           </div>
 
           <div class="clear">&nbsp;</div>
-          
+
           <p class="fontBold">[@spring.message "manageLoanProducts.defineLoanProduct.loanAmount" /]</p>
           <div class="prepend-2  span-23 last">
             <div class="span-23"><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageLoanProducts.defineLoanProduct.calculateLoanAmountas" /]&nbsp;:</span>
                 <div class="span-17">
                     [@spring.formRadioButtons "loanProduct.selectedLoanAmountCalculationType", loanProduct.loanAmountCalculationTypeOptions, "", "onclick='switchLoanAmountType();'" /]
                 </div>
-                
+
                 <div class="clear">&nbsp;</div>
-                
+
                 <div id="loanamountoption0" class="span-14 prepend-4">
                     <div class="span-14 bluedivs fontBold paddingLeft" >
                         <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.minloanamount" /]</span>
@@ -261,7 +261,7 @@ function switchLoanInstallmentType()
                         <span class="span-5 last">[@spring.formInput "loanProduct.loanAmountSameForAllLoans.theDefault" /]</span>
                     </div>
                 </div>
-                
+
                 <div id="loanamountoption1" class="span-23" style="display:none">
                     <div class="span-23 bluedivs fontBold paddingLeft" >
                         <span class="span-10">[@spring.message "manageLoanProducts.defineLoanProduct.lastLoanAmount" /]</span>
@@ -318,7 +318,7 @@ function switchLoanInstallmentType()
                         <span class="span-4 last">[@spring.formInput "loanProduct.loanAmountByLastLoanAmount[5].theDefault" "size=6"/]</span>
                     </div>
                 </div>
-                
+
                 <div id="loanamountoption2" class="span-17" style="display:none">
                     <div class="span-17 bluedivs fontBold paddingLeft" >
                         <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.loanCycleNo" /]</span>
@@ -372,13 +372,13 @@ function switchLoanInstallmentType()
             </div>
           </div>
           <div class="clear">&nbsp;</div>
-          
+
           <p class="fontBold">[@spring.message "manageLoanProducts.defineLoanProduct.interestrate" /] </p>
           <div class="prepend-2  span-21 last">
             <div class="span-23 "><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageLoanProducts.defineLoanProduct.interestratetype" /]&nbsp;:</span>
                 <span class="span-6">
                 [@mifos.formSingleSelectWithPrompt "loanProduct.selectedInterestRateCalculationType", loanProduct.interestRateCalculationTypeOptions, "--selectone--" /]
-                </span> 
+                </span>
             </div>
             <div class="span-23"><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageLoanProducts.defineLoanProduct.maxInterestrate" /]&nbsp;:</span>
             <span class="span-6">[@spring.formInput "loanProduct.maxInterestRate" /]&nbsp;(0 - 999)%</span>
@@ -398,7 +398,7 @@ function switchLoanInstallmentType()
                   <span class="span-6">[@mifos.formSingleSelectWithPrompt "loanProduct.generalDetails.selectedStatus", loanProduct.generalDetails.statusOptions, "--selectone--" /]</span>
             </div>
           </div>
-          
+
           <p class="fontBold">[@spring.message "manageLoanProducts.defineLoanProduct.repaymentSchedule" /]</p>
           <div class="prepend-2  span-23 last">
               <div class="span-23 ">
@@ -422,7 +422,7 @@ function switchLoanInstallmentType()
                 <div class="span-14">
                     [@spring.formRadioButtons "loanProduct.selectedInstallmentsCalculationType", loanProduct.installmentsCalculationTypeOptions, "", "onclick='switchLoanInstallmentType();'" /]
                 </div>
-                
+
                 <div class="clear">&nbsp;</div>
                 <div id="installmentoption0"  class="span-14 prepend-4">
                     <div class="span-14 bluedivs fontBold paddingLeft">
@@ -437,7 +437,7 @@ function switchLoanInstallmentType()
                         <span class="span-5 last">[@spring.formInput "loanProduct.installmentsSameForAllLoans.theDefault" /]</span>
                     </div>
                 </div>
-                
+
                 <div id="installmentoption1" class="span-23" style="display:none">
                     <div class="span-23 bluedivs fontBold paddingLeft" >
                         <span class="span-10">[@spring.message "manageLoanProducts.defineLoanProduct.lastLoanAmount" /]</span>
@@ -494,7 +494,7 @@ function switchLoanInstallmentType()
                         <span class="span-4 last">[@spring.formInput "loanProduct.installmentsByLastLoanAmount[5].theDefault" "size=6"/]</span>
                     </div>
                 </div>
-                
+
                 <div id="installmentoption2" class="span-17" style="display:none">
                     <div class="span-17 bluedivs fontBold paddingLeft" >
                         <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.loanCycleNo" /]</span>
@@ -539,9 +539,9 @@ function switchLoanInstallmentType()
                         <span class="span-4 last">[@spring.formInput "loanProduct.installmentsByLoanCycle[5].theDefault" /]</span>
                     </div>
                 </div>
-                
+
             </div>
-            
+
             <div class="span-23">
                 <span class="pull-3 span-8 rightAlign" id="gracepertype">[@spring.message "manageLoanProducts.defineLoanProduct.graceperiodtype" /]&nbsp;:</span>
                 <span class="span-15 last">
@@ -553,7 +553,7 @@ function switchLoanInstallmentType()
                 <span class="span-15 last">[@spring.formInput "loanProduct.gracePeriodDurationInInstallments" /]&nbsp;[@spring.message "manageLoanProducts.defineLoanProduct.installments" /]</span>
             </div>
           </div>
-          
+
           <div class="clear">&nbsp;</div>
           <p class="fontBold">[@spring.message "manageLoanProducts.defineLoanProduct.fees" /] </p>
           <div class="prepend-2  span-23 last">
@@ -599,13 +599,13 @@ function switchLoanInstallmentType()
                 <span class="span-6 ">
                     <span class="span-2">[@spring.message "manageLoanProducts.defineLoanProduct.interest" /]&nbsp;:</span>
                     <span class="span-3">
-                        [@mifos.formSingleSelectWithPrompt "loanProduct.selectedInterest", loanProduct.interestGeneralLedgerOptions, "--selectone--", "disabled=disabled" /]                
+                        [@mifos.formSingleSelectWithPrompt "loanProduct.selectedInterest", loanProduct.interestGeneralLedgerOptions, "--selectone--", "disabled=disabled" /]
                       </span>
-                
+
                     <span class="span-2">[@spring.message "manageLoanProducts.defineLoanProduct.principal" /]&nbsp;:</span>
-                        [@mifos.formSingleSelectWithPrompt "loanProduct.selectedPrincipal", loanProduct.principalGeneralLedgerOptions, "--selectone--", "disabled=disabled" /]    
+                        [@mifos.formSingleSelectWithPrompt "loanProduct.selectedPrincipal", loanProduct.principalGeneralLedgerOptions, "--selectone--", "disabled=disabled" /]
                     <span class="span-3">
-                      </span> 
+                      </span>
                    </span>
             </div>
           </div>
@@ -622,4 +622,4 @@ function switchLoanInstallmentType()
     </div>
   </div>
   <!--Main Content Ends-->
-  [@mifos.footer/]  
+  [@mifos.footer/]

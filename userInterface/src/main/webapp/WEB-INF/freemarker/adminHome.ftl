@@ -20,22 +20,22 @@
 --]
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
-        
+
     <div id="page-content">
       <div id ="adminPageContent">
         <h2 id="adminHome.heading">[@spring.message "administrativeTasks" /]</h2>
-        
+
             <p>
-            [@spring.message "administrativeTasksWelcome" /] 
+            [@spring.message "administrativeTasksWelcome" /]
             </p>
             <p>
             Branch id/User id: ${model.request.getSession().getAttribute("UserContext").branchId} / ${model.request.getSession().getAttribute("UserContext").id}
             </p>
-        
+
             <h3>[@spring.message "manageOrganization" /]</h3>
-            
+
                 <h4>[@spring.message "users" /]</h4>
-                
+
                     <ul class="navigation-list">
                     <li>[@spring.message "viewUsers" /]</li>
                     <li><a href="createUser.ftl" id="create.user">[@spring.message "defineNewUser" /]</a></li>
@@ -47,15 +47,15 @@
                     <li><a href="viewOffices.ftl" id="view.offices">[@spring.message "viewOffices" /]</a></li>
                     <li>[@spring.message "defineNewOffice" /]</li>
                     </ul>
-                
+
             <h3>[@spring.message "manageProducts" /]</h3>
-    
+
                 <h4>[@spring.message "manageLoanProducts" /]</h4>
-        
+
                     <ul class="navigation-list">
                         <li> <a href="viewLoanProducts.ftl" id="view.loan.products">[@spring.message "viewLoanProducts" /]</a> </li>
                         <li> <a href="createLoanProduct.ftl"id="create.loan.product">[@spring.message "defineLoanProduct" /]</a></li>
                     </ul>
-        </div>    
+        </div>
     </div>
 [/@adminLeftPaneLayout]

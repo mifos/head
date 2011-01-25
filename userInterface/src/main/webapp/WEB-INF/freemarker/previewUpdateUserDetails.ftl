@@ -26,7 +26,7 @@
         <div>[@spring.message "systemUsers.preview.reviewtheinformationbelow"/]</div>
         <p>&nbsp;</p>
         <p><span class="fontBold">[@spring.message "systemUsers.preview.office"/] </span><span>${userFormBean.officeName}</span></p>
-                
+
         <div>
             <span class="orangeheading">[@spring.message "systemUsers.preview.userInformation"/] </span>
             <span>&nbsp;</span>
@@ -37,7 +37,7 @@
                    [@mifosmacros.showAllErrors "userFormBean.*"/]
             </div>
             <div class="prepend-1  span-21 last">
-            
+
                 <div class="span-20 ">
                     <span class="fontBold">[@spring.message "systemUsers.preview.firstName"/]&nbsp;</span>
                     <span>${userFormBean.firstName?if_exists}</span>
@@ -54,7 +54,7 @@
                     <span class="fontBold">[@spring.message "systemUsers.preview.lastName"/]&nbsp;</span>
                     <span>${userFormBean.lastName?if_exists}</span>
                   </div>
-                <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.governmentID"/]&nbsp;</span><span>${userFormBean.governmentId?if_exists}</span> 
+                <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.governmentID"/]&nbsp;</span><span>${userFormBean.governmentId?if_exists}</span>
                   </div>
                 <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.email"/]&nbsp;</span><span>${userFormBean.email?if_exists}</span>
                 </div>
@@ -83,7 +83,7 @@
             </div>
             <div class="clear">&nbsp;</div>
             <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.officeAndPermissions"/]</span></div>
-          
+
             <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.userTitle"/]&nbsp;</span><span>${userFormBean.userTitleName?if_exists}</span>
             </div>
             <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.userHierarchy"/]&nbsp;</span><span>${userFormBean.userHierarchyName?if_exists}</span>
@@ -104,18 +104,18 @@
             </div>
              <div class="clear">&nbsp;</div>
             <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.additionalInformation"/]</span></div>
-            
+
             [#list userFormBean.customFields as additional]
                    <div class="span-20 ">
                        <span class="fontBold">${additional.label}:</span>
                        <span>${additional.fieldValue}</span>
                    </div>
             [/#list]
-            
+
             <div class="clear">&nbsp;</div>
                 <input class="buttn2" type="submit" name="_eventId_reedit" value="[@spring.message "systemUsers.preview.edituser"/]" />
             </div>
-            
+
             <div class="clear">&nbsp;</div>
             <hr />
             <div class="clear">&nbsp;</div>
@@ -125,6 +125,6 @@
             </div>
         </form>
       </div>
-    </div>  
+    </div>
   <!--Main Content Ends-->
  [/@adminLeftPaneLayout]

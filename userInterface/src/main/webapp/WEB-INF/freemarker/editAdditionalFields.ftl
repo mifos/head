@@ -20,7 +20,7 @@
 --]
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
-   <!--  Main Content Begins-->  
+   <!--  Main Content Begins-->
   <div class="content">
       <form method="" action="" name="formname">
       <p class="bluedivs paddingLeft"><a href="admin.ftl">[@spring.message "admin" /]</a>&nbsp;/&nbsp;<a href="viewAdditionalFields.ftl">[@spring.message "viewAdditionalFields" /]</a>&nbsp;/&nbsp;<a href="#">[@spring.message "personnel" /]</a></p>
@@ -65,9 +65,9 @@
                   <input class="buttn" type="button" name="preview" id="edit_additional_fields.button.preview" value="[@spring.message "preview"/]" onclick="#"/>
                   <input class="buttn2" type="button" name="cancel" id="edit_additional_fields.button.cancel" value="[@spring.message "cancel"/]" onclick="location.href='admin.ftl'"/>
             </div>
-            
+
     </div>
 
-       </form> 
+       </form>
   </div><!--Main Content Ends-->
 [/@adminLeftPaneLayout]

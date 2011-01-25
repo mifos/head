@@ -19,7 +19,7 @@
 *  explanation of the license and how it is applied.
 --]
 
-<head>    
+<head>
     <link rel="stylesheet" type="text/css" href="pages/css/viewAdmin4Testing.css" />
 </head>
 
@@ -31,7 +31,7 @@
     [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "manageReports.viewadministrativedocuments":""}/]
     [@mifos.crumbpairs breadcrumb /]
     <div class="content_panel">
-        <p> 
+        <p>
             Work in progress.
         </p>
         <fieldset>
@@ -47,5 +47,5 @@
             </ol>
         </fieldset>
     </div>
-    
+
 [/@adminLeftPaneLayout]

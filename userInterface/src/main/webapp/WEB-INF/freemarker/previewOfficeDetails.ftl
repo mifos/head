@@ -73,7 +73,7 @@
             <div> <input class="buttn2" type="submit" name="EDIT" value="[@spring.message "offices.viewOfficeDetails.editofficeinformation"/]"/>
             </div>
         </div>
-        
+
         <div class="clear">&nbsp;</div>
         <hr />
         <div class="prepend-8">

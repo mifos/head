@@ -40,7 +40,7 @@
                         <span><img src="pages/framework/images/status_closedblack.gif" /></span>&nbsp;
                         <span>
                             [#assign inactive][@mifostag.mifoslabel name="ProductState-Inactive" /][/#assign]
-                            [@spring.messageArgs "ftlDefinedLabels.inactive" , [inactive] /] 
+                            [@spring.messageArgs "ftlDefinedLabels.inactive" , [inactive] /]
                         </span>
                     [#break]
                 [/#switch]
@@ -54,17 +54,17 @@
                               [/#list]
                       </span>
                 </span>
-            </div>            
-        </div>        
+            </div>
+        </div>
         <p class="margin20lefttop">
         [@spring.message "manageProducts.editCategory.description"/]<br />
         [#if detailsDto.productCategoryDesc?exists && detailsDto.productCategoryDesc != "null" && detailsDto.productCategoryDesc!='']
         ${detailsDto.productCategoryDesc}
         [/#if]
         </span>
-        <span class="fontnormal"><br>        
+        <span class="fontnormal"><br>
         <br />
         </p>
     </div>
-  </div><!--Main Content Ends--> 
+  </div><!--Main Content Ends-->
 [/@adminLeftPaneLayout]

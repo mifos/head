@@ -19,7 +19,7 @@
 *  explanation of the license and how it is applied.
 --]
 [#include "layout.ftl"]
-[@adminLeftPaneLayout] 
+[@adminLeftPaneLayout]
         <script type="text/javascript" src="pages/accounting/js/accounting.js"></script>
         <span id="page.id" title="view_accounting_data_exports"/>
         [@mifos.crumbs breadcrumbs /]
@@ -43,7 +43,7 @@
                 <th class='drawtablehd'>Import Type</th>
                 <th class='drawtablehd'>Accounting Details</th>
             </tr>
-         [#list files as instance ] 
+         [#list files as instance ]
              <tr>
                  <td class="drawtablerow">${instance.mfiPrefix} ${instance.fileName}</td>
                  <td class="drawtablerow">${instance.lastModified}</td>

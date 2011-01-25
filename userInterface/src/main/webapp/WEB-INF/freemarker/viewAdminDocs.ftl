@@ -37,12 +37,12 @@
             <a href="birtAdminDocumentUploadAction.do?method=getBirtAdminDocumentUploadPage&viewPath=administerreports_path">
             [@spring.message "manageReports.uploadanewadmindoc"/]</a>
         </p>
-        
+
         <table width="75%" border="0" cellpadding="3" cellspacing="0" >
             [#list listofadministrativedocuments as adminDocument]
                 <tr>
                     <td height="30" colspan="2" class="blueline">${adminDocument.name}</td>
-                    <td width="45%" class="blueline"> 
+                    <td width="45%" class="blueline">
                         <a href="editAdminDocs.ftl?id=${adminDocument.id}">
                         [@spring.message "manageReports.edit"/]</a>
                         |
@@ -52,6 +52,6 @@
                 </tr>
             [/#list]
         </table>
-        
+
     </div>
 [/@adminLeftPaneLayout]

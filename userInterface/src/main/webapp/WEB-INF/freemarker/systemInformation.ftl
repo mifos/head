@@ -51,5 +51,5 @@
             <div><span class="width235pxfloatleft" id="sysinfo.text.osUser">[@spring.message "systemAdministration.viewsysteminformation.osuser" /]</span><span class="">${model.systemInformationDto.osUser}</span></div>
         </div>
     </div>
-  </div>  
+  </div>
 [/@adminLeftPaneLayout]

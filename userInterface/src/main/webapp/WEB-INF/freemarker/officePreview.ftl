@@ -19,12 +19,12 @@
 *  explanation of the license and how it is applied.
 --]
 [#include "layout.ftl"]
-[@adminLeftPaneLayout]   <!--  Main Content Begins-->  
+[@adminLeftPaneLayout]   <!--  Main Content Begins-->
   <div class=" content">
       <form method="POST" action="officePreview.ftl" name="updateOfficePreview">
     <div class="span-24">
-        [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "admin.viewOffices":"viewOffices.ftl","${officeFormBean.name}":"viewOfficeDetails.ftl?id=${officeFormBean.id}"}/]        
-        [@mifos.editPageBreadcrumbs breadcrumb/]           
+        [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "admin.viewOffices":"viewOffices.ftl","${officeFormBean.name}":"viewOfficeDetails.ftl?id=${officeFormBean.id}"}/]
+        [@mifos.editPageBreadcrumbs breadcrumb/]
         <div class="clear">&nbsp;</div>
         <div class="fontBold"><span>${officeFormBean.name}</span>&nbsp;-&nbsp;<span class="orangeheading"> [@spring.message "offices.previewOffice.previewOfficeInformation"/]</span></div>
         <p><span>[@spring.message "offices.editOfficeInformation.previewthefieldsbelow.ThenclickConfirm.ClickCanceltoreturntoOfficeDetailswithoutsubmittinginformation"/]</span></p>
@@ -67,7 +67,7 @@
             <div> <input class="buttn2" type="submit" name="EDIT" value="[@spring.message "offices.viewOfficeDetails.editofficeinformation"/]"/>
             </div>
         </div>
- 
+
         <div class="clear">&nbsp;</div>
         <hr />
         <div class="prepend-9">
@@ -75,6 +75,6 @@
           <input class="buttn2" type="submit" name="CANCEL" value="[@spring.message "cancel"/]"/>
         </div>
     </div>
-       </form> 
+       </form>
   </div><!--Main Content Ends-->
   [/@adminLeftPaneLayout]

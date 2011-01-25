@@ -39,9 +39,9 @@
             document.getElementById("selectedGroupSavingsApproach").disabled=true;
         }
     }
-    
+
     function fnCheckRecMand() {
-    
+
         if(document.getElementById("selectedDepositType").selectedIndex==1) {
             document.getElementById("mandamnt").style.display = "inline";
             document.getElementById("recamnt").style.display = "none";
@@ -60,7 +60,7 @@
     <div class="borders margin20lefttop width90prc">
         <div class="borderbtm width100prc height25px">
             <p class="span-17 timelineboldorange arrowIMG  padding20left" style="width:50%">
-                 [@spring.messageArgs "ftlDefinedLabels.manageProducts.defineSavingsProducts.savingsproductinformation" , [savings]  /]                
+                 [@spring.messageArgs "ftlDefinedLabels.manageProducts.defineSavingsProducts.savingsproductinformation" , [savings]  /]
             </p>
             <p class="span-3 timelineboldorange arrowIMG1 last padding20left10right width130px" style="float:right">[@spring.message "reviewAndSubmit" /]</p>
         </div>
@@ -73,7 +73,7 @@
             [@spring.bind "savingsProduct.generalDetails.name" /]
               <span class="fontBold margin5bottom">${spring.status.value?if_exists}</span>&nbsp;-
               <span class="orangeheading">
-                [@spring.messageArgs "ftlDefinedLabels.manageSavngsProducts.editsavingsproduct.editSavingsproductinformation" , [savings]  /]                
+                [@spring.messageArgs "ftlDefinedLabels.manageSavngsProducts.editsavingsproduct.editSavingsproductinformation" , [savings]  /]
               </span>
           </p>
           <div>
@@ -82,7 +82,7 @@
           <div><span class="red">* </span>[@spring.message "fieldsmarkedwithanasteriskarerequired." /]</div>
           [@mifos.showAllErrors "savingsProduct.*"/]
           <p class="fontBold margin10topbottom">
-                [@spring.messageArgs "ftlDefinedLabels.manageProducts.defineSavingsProducts.savingsproductdetails" , [savings]  /]                
+                [@spring.messageArgs "ftlDefinedLabels.manageProducts.defineSavingsProducts.savingsproductdetails" , [savings]  /]
           </p>
           <div class=" prepend-2  span-21 last">
               <div class="span-20 ">
@@ -112,7 +112,7 @@
                     [@mifos.formSingleSelectWithPrompt "savingsProduct.generalDetails.selectedCategory", savingsProduct.generalDetails.categoryOptions, "--selectone--" /]
                 </span>
             </div>
-            
+
             <div class="span-20 last">
                 <span class="  span-8 rightAlign"><span class="red"> * </span>[@spring.message "manageProducts.defineSavingsProducts.fromDate" /]:</span>
                 [@spring.bind "savingsProduct.generalDetails.startDateDay" /]
@@ -122,7 +122,7 @@
                   [@spring.bind "savingsProduct.generalDetails.startDateYear" /]
                   <span class="span-3"><input type="text" size="2" maxlength="4" id="startDateYY" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />[@spring.message "systemUser.enterUserDetails.YYYY"/]</span>
             </div>
-            
+
             <div class="span-20 last">
                 <span class="  span-8 rightAlign">[@spring.message "manageProducts.defineSavingsProducts.endDate" /]:</span>
                 [@spring.bind "savingsProduct.generalDetails.endDateDay" /]
@@ -132,7 +132,7 @@
                   [@spring.bind "savingsProduct.generalDetails.endDateYear" /]
                   <span class="span-3"><input type="text" size="2" maxlength="4" id="endDateYY" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />[@spring.message "systemUser.enterUserDetails.YYYY"/]</span>
             </div>
-            
+
             <div class="span-20 "><span class="  span-8 rightAlign"><span class="red">* </span>[@spring.message "manageProducts.defineSavingsProducts.applicablefor" /]:</span>
                 <span class="span-4">
                     [#if savingsProduct.notUpdateable]
@@ -182,7 +182,7 @@
                   <span class="span-6">[@mifos.formSingleSelectWithPrompt "savingsProduct.generalDetails.selectedStatus", savingsProduct.generalDetails.statusOptions, "--selectone--" /]</span>
             </div>
           </div>
-          
+
           <div class="clear">&nbsp;</div>
           <p class="fontBold margin10topbottom">[@spring.message "manageProducts.defineSavingsProducts.interestRate" /]</p>
           <div class=" prepend-2  span-21 last">

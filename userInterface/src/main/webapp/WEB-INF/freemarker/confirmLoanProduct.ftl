@@ -20,7 +20,7 @@
 --]
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
-   <!--  Main Content Begins-->  
+   <!--  Main Content Begins-->
   <div class="content">
     <p class="orangeheading marginBottom" style="font-size:15px;">[@spring.message "manageLoanProduct.youhavesuccessfullyaddedanewLoanproduct"/] </p>
     <p class="marginBottom"><span class="fontBold">[@spring.message "manageLoanProduct.pleaseNote"/]&nbsp;:</span><span>[@spring.message "manageLoanProduct.LoanProducthasbeenassignedthesystemIDnumber"/]&nbsp;:</span><span class="fontBold">${product.globalPrdOfferingNum}</span></p>
@@ -29,4 +29,3 @@
   </div>
   <!--Main Content Ends-->
   [/@adminLeftPaneLayout]
-  

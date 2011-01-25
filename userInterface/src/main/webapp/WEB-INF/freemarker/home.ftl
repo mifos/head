@@ -24,9 +24,9 @@
 
 [@mifos.header "title" /]
   [@mifos.topNavigation currentTab="Home" /]
-  [#include "homeLeftPane.ftl" ]  
-  
-  
+  [#include "homeLeftPane.ftl" ]
+
+
   <div id="page-content">
       <div id="homePageContent">
       [@form.form action="clientSearchResults.ftl" commandName="searchString"]
@@ -34,7 +34,7 @@
 
       <h2 id="hello.heading">[@spring.message "welcomeToMifos" /]</h2>
       <h4>[@spring.message "toQuicklyFindAClientYouCan"/]</h4>
-      <label id="clientSearch">[@spring.message "searchByName" /]</label> 
+      <label id="clientSearch">[@spring.message "searchByName" /]</label>
       [@form.input path="searchString"/]
       <input type="submit" value="[@spring.message "search" /]" class="buttn" id="clientSearch.form.submit" tabindex="6" />
       <h4>[@spring.message "toViewAListOfGroups"/]</h4>

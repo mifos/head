@@ -84,7 +84,7 @@
                 <span class="span-8 fontBold">[@spring.message "manageLoanProducts.previewLoanProduct.calculateLoanAmountas"/]:&nbsp;</span>
                 [#switch loanProduct.selectedLoanAmountCalculationType]
                     [#case "1"]
-                    <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.sameforallLoans" /]</span>    
+                    <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.sameforallLoans" /]</span>
                     [#break]
                     [#case "2"]
                     <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.bylastloanAmount" /]</span>
@@ -109,7 +109,7 @@
                 <span class="span-5 last">${loanProduct.loanAmountSameForAllLoans.theDefault}</span>
             </div>
               <div>&nbsp;</div>
-          </div>    
+          </div>
           [#break]
           [#case "2"]
           <div class="span-17 bluedivs fontBold paddingLeft">
@@ -171,7 +171,7 @@
               <div>&nbsp;</div>
           </div>
           [#break]
-          [/#switch]     
+          [/#switch]
 
           <div class="clear">&nbsp;</div>
           <p class="fontBold">[@spring.message "manageLoanProducts.previewLoanProduct.interestrate"/] </p>
@@ -212,7 +212,7 @@
               <span class="span-8 fontBold">[@spring.message "manageLoanProducts.previewLoanProduct.calculateofinstallmentsas"/]:&nbsp;</span>
               [#switch loanProduct.selectedInstallmentsCalculationType]
                     [#case "1"]
-                    <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.sameforallLoans" /]</span>    
+                    <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.sameforallLoans" /]</span>
                     [#break]
                     [#case "2"]
                     <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.bylastloanAmount" /]</span>
@@ -236,7 +236,7 @@
                 <span class="span-5 last">${loanProduct.installmentsSameForAllLoans.theDefault}</span>
             </div>
               <div>&nbsp;</div>
-          </div>    
+          </div>
           [#break]
           [#case "2"]
           <div class="span-20 ">
@@ -305,7 +305,7 @@
               <span class="span-8 fontBold">[@spring.message "manageLoanProducts.previewLoanProduct.graceperiodtype"/]:&nbsp;</span>
               [#switch loanProduct.selectedGracePeriodType]
                 [#case "1"]
-                <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.none" /]</span>    
+                <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.none" /]</span>
                 [#break]
                 [#case "2"]
                 <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.graceonallrepayments" /]</span>

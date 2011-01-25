@@ -22,7 +22,7 @@
 [#import "blueprintmacros.ftl" as mifos]
 [@mifos.header "title" /]
  [@mifos.topNavigationNoSecurity currentTab="Admin" /]
-  
+
   <div class="container">&nbsp;
   <!--  Main Content Begins-->
   <div class="content definePageMargin">
@@ -62,7 +62,7 @@
                     <span class="span-3"><br /><input class="buttn2" name="add" type="button" value="[@spring.message "add"/]" /><br /><br />
                     <input class="buttn2" name="remove" type="button" value="[@spring.message "remove"/]" /></span>
                     <span class="span-4">
-                    <select name="ListBox1" id="ListBox1" multiple="multiple" class="listSize">                        
+                    <select name="ListBox1" id="ListBox1" multiple="multiple" class="listSize">
                     </select></span>
                    </span>
             </div>

@@ -20,7 +20,7 @@
 --]
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
-  <!--  Main Content Begins-->  
+  <!--  Main Content Begins-->
    <div>
   <div class="content marginLeft30">
     <div class="orangeheading font14 marginLeft50">[@spring.message "admin.administrativeTasks" /]</div>
@@ -30,13 +30,13 @@
       <p class="orangeheading">[@spring.message "admin.manageOrganization" /]</p>
       <p class="fontBold">[@spring.message "admin.systemusers"/]</p>
       <ul>
-        <li type="circle"><a id="admin.link.viewSysUsers" href="viewSystemUsers.ftl">[@spring.message "admin.viewsystemusers"/]</a>&nbsp;|&nbsp;<a id="admin.link.defineNewUsers" href="user.ftl">[@spring.message "admin.definenewsystemuser" /]</a></li>       
+        <li type="circle"><a id="admin.link.viewSysUsers" href="viewSystemUsers.ftl">[@spring.message "admin.viewsystemusers"/]</a>&nbsp;|&nbsp;<a id="admin.link.defineNewUsers" href="user.ftl">[@spring.message "admin.definenewsystemuser" /]</a></li>
         <li type="circle"><a id="admin.link.manageRoles" href="manageRolesAndPermissions.ftl">[@spring.message "admin.managerolesandpermissions"/]</a></li>
       </ul>
       <p><span class="fontBold">[@spring.message "admin.offices"/]</span>
       <ul>
         <li type="circle"><a id="admin.link.viewOffices" href="viewOffices.ftl">[@spring.message "admin.viewOffices" /]</a>&nbsp;|&nbsp;<a Id="admin.link.defineNewOffice" href="defineNewOffice.ftl">[@spring.message "admin.defineNewOffice"/]</a></li>
-        <li type="circle"><a id="admin.link.viewOfficeHierarchy" href="viewOfficeHierarchy.ftl">[@spring.message "admin.viewofficehierarchy" /]</a></li>        
+        <li type="circle"><a id="admin.link.viewOfficeHierarchy" href="viewOfficeHierarchy.ftl">[@spring.message "admin.viewofficehierarchy" /]</a></li>
       </ul>
       </p>
       <p><span class="fontBold">[@spring.message "admin.organizationpreferences"/]</span>

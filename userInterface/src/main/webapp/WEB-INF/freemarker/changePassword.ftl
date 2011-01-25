@@ -44,7 +44,7 @@
                     [@spring.bind "formBean" /]
                       [@spring.showErrors "<br>" /]
                     </div>
-   
+
                     <div class="span-10 "><span class="rightAlign span-5">
                     <label for="changePassword.input.oldPassword">[@spring.message"changePassword.oldPassword"/]</label></span>
                     [@spring.bind "formBean.oldPassword" /]
@@ -80,4 +80,4 @@
         <!-- page-content -->
     </div>
 </div>
-[@mifos.footer /]   
+[@mifos.footer /]

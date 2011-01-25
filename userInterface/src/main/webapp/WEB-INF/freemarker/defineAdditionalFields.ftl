@@ -67,7 +67,7 @@
             <div class="span-20 "><span class="span-3 rightAlign">[@spring.message "datadisplayandrules.defineAdditionalFields.defaultValue" /]</span><span class="span-5">&nbsp;
                     <input type="text" /></span>
               </div>
-            
+
         </div>
         <div class="clear">&nbsp;</div>
         <hr />

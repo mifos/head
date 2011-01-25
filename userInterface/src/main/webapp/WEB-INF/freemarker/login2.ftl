@@ -49,8 +49,7 @@
         <label for="kludge"></label>
             <input type="submit" value="Login" class="buttn" id="login.form.submit" tabindex="3" />
     </fieldset>
-                    
+
     </div>
 [@mifos.footer /]
 
-   

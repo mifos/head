@@ -19,4 +19,4 @@
 *  explanation of the license and how it is applied.
 --]
 [#import "spring.ftl" as spring]
-${model.response.sendRedirect(model.response.encodeRedirectURL("home.ftl"))} 
+${model.response.sendRedirect(model.response.encodeRedirectURL("home.ftl"))}

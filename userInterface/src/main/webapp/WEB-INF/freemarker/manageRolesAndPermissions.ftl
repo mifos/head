@@ -20,12 +20,12 @@
 --]
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
-<!--  Main Content Begins-->  
+<!--  Main Content Begins-->
   <div class="content">
       <form method="" action="" name="formname">
       <div class="marginLeft10">
       <div class="bluedivs paddingLeft"><a href="admin.ftl">[@spring.message "admin"/]</a>&nbsp;/&nbsp;<span class="fontBold">[@spring.message "systemusers.managerolesandpermissions.rolesandpermissions"/]</span></div>
-    <div class="span-18">          
+    <div class="span-18">
         <div class="clear">&nbsp;</div>
         <p class="font15"><span class=" orangeheading">[@spring.message "systemusers.managerolesandpermissions.rolesandpermissions"/] </span></p>
         <div>[@spring.message "systemusers.managerolesandpermissions.aroleisthename"/]<br /> [@spring.message "systemusers.managerolesandpermissions.nameandtaskpermissions"/] <a href="#">[@spring.message "systemusers.managerolesandpermissions.newRole"/]</a></div>
@@ -37,6 +37,6 @@
         </div>
     </div>
     </div>
-       </form> 
+       </form>
   </div><!--Main Content Ends-->
   [/@adminLeftPaneLayout]

@@ -23,7 +23,7 @@
   <div class="content">
   <div class="bluedivs paddingLeft"><a href="admin.ftl">Admin</a>&nbsp;/&nbsp;<span class="fontBold">Define Lookup Options</span></div>
       <form method="" action="" name="formname">
-    <div class="span-21">          
+    <div class="span-21">
         <div class="clear">&nbsp;</div>
         <div ><span class="orangeheading">[@spring.message "dataDisplayAndRules.defineLookupOptions.defineLookupOptions" /]</span></div>
         <p class="error"></p>
@@ -42,7 +42,7 @@
                         </select></span>
                      <span class="span-3"><br /><input type="button" class="buttn2" value="[@spring.message "add"/]"/><br /><input type="button" class="buttn2" value="[@spring.message "edit"/]"/></span>
               </div>
-            <div class="clear">&nbsp;</div>    
+            <div class="clear">&nbsp;</div>
             <div class="span-19 marginBottom"><span class="span-4 rightAlign">[@spring.message "dataDisplayAndRules.defineLookupOptions.userTitle"/]&nbsp;:</span>
                     <span class="span-5"><select name="userTitle" size="5" style="width:140px;">
                             <option>[@spring.message "dataDisplayAndRules.defineLookupOptions.officer"/]</option>
@@ -169,6 +169,6 @@
         <div class="clear">&nbsp;</div>
         <hr />
     </div>
-       </form> 
+       </form>
   </div>
 [/@adminLeftPaneLayout]

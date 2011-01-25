@@ -19,7 +19,7 @@
 *  explanation of the license and how it is applied.
 --]
 [#include "layout.ftl"]
-[@adminLeftPaneLayout] 
+[@adminLeftPaneLayout]
         <script type="text/javascript" src="pages/accounting/js/accounting.js"></script>
         <span id="page.id" title="view_accounting_data_detail"/>
         [@mifos.crumbs breadcrumbs /]
@@ -66,7 +66,7 @@
                 <tr>
                     <td class="drawtablerow">${instance.branchName}</td>
                     <td class="drawtablerow">${instance.voucherDate}</td>
-                    <td class="drawtablerow">${instance.voucherType}</td> 
+                    <td class="drawtablerow">${instance.voucherType}</td>
                     <td class="drawtablerow">${instance.glCode}</td>
                     <td class="drawtablerow">${instance.glCodeName}</td>
                     <td class="drawtablerow">${instance.debit}</td>

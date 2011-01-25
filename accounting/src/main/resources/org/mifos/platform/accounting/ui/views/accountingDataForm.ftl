@@ -55,13 +55,13 @@
                </div>
                <div class="span-20 ">
                      <span class="span-5 rightAlign">
-                        [@spring.message "accounting.generateaccountingexports.todate"/]: 
+                        [@spring.message "accounting.generateaccountingexports.todate"/]:
                      </span>
                      <span class="span-5">
                        <input type="text" id="toDate" name="toDate" readonly="readonly" />
                     </span>
               </div>
-         </div>   
+         </div>
           <div class="clear">&nbsp;</div>
               <div class="buttonsSubmitCancel margin20right">
                  <input id='submit' type="submit" class="buttn" value="[@spring.message "submit"/]"/>

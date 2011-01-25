@@ -33,7 +33,7 @@
                   [#if officeFormBean.statusId == "1"]
                     <span><img src="pages/framework/images/status_activegreen.gif" /></span>&nbsp;<span>[@spring.message "active"/]</span>
                 [#elseif officeFormBean.statusId == "2"]
-                        <span><img src="pages/framework/images/status_closedblack.gif" /></span>&nbsp;<span>[@spring.message "inactive"/]</span>                            
+                        <span><img src="pages/framework/images/status_closedblack.gif" /></span>&nbsp;<span>[@spring.message "inactive"/]</span>
                 [/#if]
                 </div>
                 <span><span>[@spring.message "offices.viewOfficeDetails.officeshortname" /]&nbsp;:</span><span id="viewOfficeDetails.text.shortName">${officeFormBean.officeShortName}</span><br />
@@ -49,15 +49,15 @@
                     [#if officeFormBean.line1?has_content ]<span>${officeFormBean.line1}</span>,[/#if]
                     [#if officeFormBean.line2?has_content]<span>${officeFormBean.line2} </span>,[/#if]
                     [#if officeFormBean.line3?has_content]<span>${officeFormBean.line3}</span>[/#if]<br/>
-                    
+
                     <div>[#if officeFormBean.city?has_content]<span>${officeFormBean.city}</span><br/>[/#if]</div>
                     <div>[#if officeFormBean.state?has_content]<span>${officeFormBean.state}</span><br/>[/#if]</div>
                     <div>[#if officeFormBean.country?has_content]<span>${officeFormBean.country}</span><br/>[/#if]</div>
                     <div>[#if officeFormBean.zip?has_content]<span>${officeFormBean.zip}</span><br/>[/#if]</div><br />
-                    <div>[#if officeFormBean.phoneNumber?has_content]<span>[@spring.message "offices.viewOfficeDetails.phoneNumber" /]&nbsp;:</span> <span>${officeFormBean.phoneNumber}</span><br/>[/#if]</div>                                  
+                    <div>[#if officeFormBean.phoneNumber?has_content]<span>[@spring.message "offices.viewOfficeDetails.phoneNumber" /]&nbsp;:</span> <span>${officeFormBean.phoneNumber}</span><br/>[/#if]</div>
              [#else]
                     <br /><span>[@spring.message "offices.viewOfficeDetails.noAddressEntered" /] </span><br/>
-             [/#if]         
+             [/#if]
         </div>
     </div>
        </form>

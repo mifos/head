@@ -20,7 +20,7 @@
 --]
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
- <!--  Main Content Begins-->  
+ <!--  Main Content Begins-->
   <div class=" content">
       <form method="" action="" name="formname">
       <p class="bluedivs paddingLeft"><a href="admin.ftl">[@spring.message "admin"/]</a>&nbsp;/&nbsp;<span class="fontBold">[@spring.message "viewreports"/]</span></p>
@@ -83,6 +83,6 @@
             <span class="span-15 fontBold">[@spring.message "miscellaneous"/]</span>
         </div>
     </div>
-       </form> 
+       </form>
   </div><!--Main Content Ends-->
 [/@adminLeftPaneLayout]

@@ -27,7 +27,7 @@
   <div>
   <div class="sidebar ht600">
   [#include "adminLeftPane.ftl" ]
-  </div> 
+  </div>
    <!--  Main Content Begins-->
   <div class="content marginAuto">
     <div class="borders span-22">
@@ -44,14 +44,14 @@
                     </span>
                     <span class="span-5">${springMacroRequestContext.getMessage(ref.productTypeNameKey)}</span>
                 </div>
-                
+
                 <div class="span-20 ">
                     <span class="span-5 rightAlign">
                         [@spring.message "manageProducts.defineProductmix.productinstancename"/]
                     </span>
                     <span class="span-7">${ref.productName}</span>
                 </div>
-                
+
                 <div class="span-20 last">
                     [@spring.message "manageProduct.productMixDetails.allowedProducts"/]:
                     [#list ref.allowedProductMix as allowed]
@@ -64,9 +64,9 @@
                     [/#list]
                   </div>
                 <div class="clear">&nbsp;</div>
-                
+
                 <input type="hidden" name="FORMVIEW" id="formview" value="${formView}" />
-        
+
                 <div class="prepend-1">
                     <input type="submit" class="buttn2" name="EDIT" value="[@spring.message "manageProduct.productMixDetails.editproductmixinformation"/]"/>
                 </div>
@@ -74,9 +74,9 @@
                 <div class="prepend-10">
                     <input class="buttn" type="submit" id="holiday.button.submit" name="submit" value="[@spring.message "submit"/]" />
                     <input class="buttn2" type="submit" id="CANCEL" name="CANCEL" value="[@spring.message "cancel"/]"/>
-                </div>                        
+                </div>
             </div>
-            
+
         </form>
       </div>
       <!--Subcontent Ends-->
@@ -99,7 +99,7 @@
 }
 
 function deleteOption(root, index)
-{ 
+{
   var rootLength= root.length;
   if(rootLength>0)
   {
@@ -109,13 +109,13 @@ function deleteOption(root, index)
 
 function moveOptions(root, destination)
 {
-  
+
   var rootLength= root.length;
   var rootText = new Array();
   var rootValues = new Array();
   var rootCount = 0;
-  
-  var i; 
+
+  var i;
   for(i=rootLength-1; i>=0; i--)
   {
     if(root.options[i].selected)
@@ -125,11 +125,11 @@ function moveOptions(root, destination)
       deleteOption(root, i);
       rootCount++;
     }
-  }  
+  }
   for(i=rootCount-1; i>=0; i--)
   {
     addOption(destination, rootText[i], rootValues[i]);
-  }  
+  }
 }
 
 function selectAllOptions(outSel)
@@ -142,10 +142,10 @@ function selectAllOptions(outSel)
             outSel.options[i].selected=true;
         }
     }
-}    
+}
 </script>
-    
-  <!--  Main Content Begins-->  
+
+  <!--  Main Content Begins-->
        <div class="content">
           <p class="font15"><span class="fontBold">[@spring.message "manageProducts.defineProductmix.addanewproductmix"/]</span>&nbsp;--&nbsp;<span class="orangeheading"> [@spring.message "manageProducts.defineProductmix.enterproductmixinformation"/]</span></p>
           <div>[@spring.message "manageProducts.defineProductmix.completethefieldsbelow.ThenclickPreview.ClickCanceltoreturntoAdminwithoutsubmittinginformation"/] </div>
@@ -174,7 +174,7 @@ function selectAllOptions(outSel)
                         </select>
                     </span>
                 </div>
-                
+
                 <div class="span-20 ">
                     <span class="span-5">
                         <span class="red">* </span>[@spring.message "manageProducts.defineProductmix.productinstancename"/]&nbsp;:&nbsp;
@@ -192,17 +192,17 @@ function selectAllOptions(outSel)
                                 <option value="${value?html}"[@spring.checkSelected value/]>${value?html}</option>
                                 [/#list]
                             [/#if]
-                        </select>                       
+                        </select>
                     </span>
                 </div>
-                
+
                 <div class="span-20">
                       <div class="span-20">
                           <span class="pull-3 span-5">[@spring.message "manageProducts.defineProductmix.removenotallowedproducts"/]&nbsp;:&nbsp;</span>
                         <span class="span-12 ">
                             <span class="span-9">[@spring.message "manageProducts.defineProductmix.clickonaproductintherightboxtoselect.ThenclickRemove"/]</span>
                             <span class="span-4">
-                                [@spring.formMultiSelect "formBean.notAllowed", formBean.notAllowedProductOptions, "class=listSize" /]                                
+                                [@spring.formMultiSelect "formBean.notAllowed", formBean.notAllowedProductOptions, "class=listSize" /]
                             </span>
                             <span class="span-3">
                                 <br />
@@ -216,12 +216,12 @@ function selectAllOptions(outSel)
                            </span>
                     </div>
                   </div>
-                <div class="clear">&nbsp;</div>        
+                <div class="clear">&nbsp;</div>
                 <hr />
                 <div class="prepend-10">
                     <input class="buttn" type="submit" id="holiday.button.preview" name="preview"  value="[@spring.message "preview"/]" onclick="selectAllOptions(this.form.notAllowed);selectAllOptions(this.form.allowed);" />
                     <input class="buttn2" type="submit" id="CANCEL" name="CANCEL" value="[@spring.message "cancel"/]"/>
-                </div>                        
+                </div>
             </div>
         </form>
       <!--Subcontent Ends-->

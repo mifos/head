@@ -21,7 +21,7 @@
 [#import "blueprintmacros.ftl" as mifos]
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
-<!--  Main Content Begins-->  
+<!--  Main Content Begins-->
   <div class="content">
       <form method="post" action="viewSystemUsers.ftl" name="searchSystemUsers">
       [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "systemUsers.viewSystemUsers":""}/]
@@ -33,7 +33,7 @@
         <input class="buttn" type="submit" name="searchbutton    " value="Search"/>
     </p>
     </div>
-    <div class="marginTop20 marginLeft30">    
+    <div class="marginTop20 marginLeft30">
         [#list pagedResults.pagedUserDetails as userDetail]
             <hr />${userDetail_index + 1}.&nbsp;&nbsp;${userDetail.officeName} /<a href="viewSystemUserDetails.ftl?id=${userDetail.id}" id="userId_${userDetail.id}">${userDetail.firstName} ${userDetail.lastName}</a>
             [#if !userDetail_has_next]

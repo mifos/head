@@ -28,74 +28,74 @@ var arrElements = document.getElementsByTagName("input");
 var myname= box.id;
 var mylength=myname.length;
 var elementCache =new Array();
-var allChecked=true;    
+var allChecked=true;
 var indexof_ = myname.indexOf('_');
 var topElementName=myname.substring(0,indexof_);
 var index=0;
     if ( box.checked)
      {
 
-        
-        //we are iterating over the all the elements of type input on the page 
-         for (var i=0; i<arrElements.length; i++) 
+
+        //we are iterating over the all the elements of type input on the page
+         for (var i=0; i<arrElements.length; i++)
           {
                     //get pointer to current element: and get name and id of the current element
                     var name=arrElements[i].id;
                     var length= name.length;
-                    
+
                    /*
                    We have assigned the id's in hierarichal manner ie if parent is 0 first child is 0_0
                    second child is 0_1 etc so if length of the current element is grater than the checked
                    element the it may be the child of the current child element
                    */
-                   
-                   
+
+
                    /* Bug 26428  it was matching the unwanted childs also
                     changed how we are getting the child
                    */
-                   
+
                     if( length > mylength+1)
                         {
                              var substr=name.substring(0,mylength+1);
-                             //if this element is starting with the name of the current selected 
+                             //if this element is starting with the name of the current selected
                              //item then we need to check it as it is a child of the current seleted item
                             if ( substr == myname+"_")
                                   arrElements[i].checked=true;
                         }
-                        
+
                      var idxof_ = name.indexOf('_');
-                     
+
                     //if this element id name has _ then this is of our interest
                      if( idxof_ >0)
                      {
-                           //store all the element in a cache so that later on we need not to iterate 
+                           //store all the element in a cache so that later on we need not to iterate
                            //over all element again
                             if( name.substring(0,idxof_) == topElementName)
                             {
-                                elementCache[index++]=arrElements[i];    
+                                elementCache[index++]=arrElements[i];
                             }
                     }
-                    
+
          }
           // time to see whether we have checked all current level nodes
 
         /*
-        Next is logic that if we have selected all the current level elements then we need to 
+        Next is logic that if we have selected all the current level elements then we need to
         select the parent also and so on ...
-        */         
+        */
            while(myname.length >= 3)
         {
-            
-            indexof_=myname.lastIndexOf('_'); 
-            
+
+            indexof_=myname.lastIndexOf('_');
+
             //get the parent of this element
             var parentName = myname.substring(0,indexof_);
             //make the regular expression to match all the element at current level
             var pattern= new RegExp("^"+parentName+"_.");
-                 for (var i=0; i<elementCache.length; i++) 
-                  {    
+                 for (var i=0; i<elementCache.length; i++)
+                  {
                         if( true == pattern.test(elementCache[i].id))
-                            { 
+                            {
                                 if( elementCache[i].checked==false)
                                     {
                                         allChecked=false;
@@ -117,7 +117,7 @@ var index=0;
                         break;
                     }
 
-                              
+
         }
 
 
@@ -125,26 +125,26 @@ var index=0;
      }
     else
    {
-   
+
    // if user unchecks the checkbox we can uncheck all his childern
-         for (var i=0; i<arrElements.length; i++) 
+         for (var i=0; i<arrElements.length; i++)
           {    //get pointer to current element:
                    var name=arrElements[i].id;
-   
-   
+
+
                     var length= name.length;
- 
+
     //26505  fixed for unchecking ---
                      if( length > mylength+1)
                         {
                              var substr=name.substring(0,mylength+1);
-                             //if this element is starting with the name of the current selected 
+                             //if this element is starting with the name of the current selected
                              //item then we need to check it as it is a child of the current seleted item
                             if ( substr == myname+"_")
                                   arrElements[i].checked=false;
                         }
- 
- 
+
+
  /*
                     if( length > mylength)
                         {
@@ -152,13 +152,13 @@ var index=0;
                                 if ( substr == myname)
                                       arrElements[i].checked=false;
                         }
-                        
- */                                        
+
+ */
           }
     // time to unchek parents
            while(myname.length >= 3)
         {
-            indexof_=myname.lastIndexOf('_'); 
+            indexof_=myname.lastIndexOf('_');
             var parentName = myname.substring(0,indexof_);
             var parentElement = document.getElementById(parentName);
             parentElement.checked=false;
@@ -167,13 +167,13 @@ var index=0;
 
 
 
-   }   
+   }
 
 }
 </script>
 </head>
- 
-   <!--  Main Content Begins-->  
+
+   <!--  Main Content Begins-->
   <div class=" content">
       <form method="POST" action="modifyRole.ftl" name="formname">
     <div class="span-24 marginLeft30">
@@ -412,7 +412,7 @@ var index=0;
                 <span class="span-3 rightAlign"><input type="checkbox" name="activity(54)" value="208" id="3_0_24" onclick="doCheck(this)"/></span><span class="span-9 borderrt">[@spring.message "manageRoles.canaddanexistingclienttoagroup"/]</span>
                 <span class="span-8">[@spring.message "manageRoles.canaddanexistingclienttoagroup"/]</span>
             </div>
-            
+
             <div class="span-22 borderbtm">
                 <span class="span-2 rightAlign"><input type="checkbox"  name="activity(55)" value="checkbox"  id="3_1" onclick="doCheck(this)"/></span><span class="span-10 borderrt">[@spring.message "manageRoles.groups"/]</span>
                 <span class="span-8">[@spring.message "manageRoles.groups"/]</span>
@@ -505,7 +505,7 @@ var index=0;
                 <span class="span-3 rightAlign"><input type="checkbox" name="activity(77)" value="129" id="3_1_21" onclick="doCheck(this)"/></span><span class="span-9 borderrt">[@spring.message "manageRoles.canapplychargestogroupaccounts"/]</span>
                 <span class="span-8">[@spring.message "manageRoles.canapplychargestogroupaccounts"/]</span>
             </div>
-            
+
             <div class="span-22 borderbtm">
                 <span class="span-2 rightAlign"><input type="checkbox" name="activity(78)" value="checkbox" id="3_2" onclick="doCheck(this)"/></span><span class="span-10 borderrt">[@spring.message "manageRoles.centers"/]</span>
                 <span class="span-8">[@spring.message "manageRoles.centers"/]</span>
@@ -581,7 +581,7 @@ var index=0;
                 <span class="span-3 rightAlign"><input type="checkbox" name="activity(95)" value="195"  id="4_0_2" onclick="doCheck(this)"/></span><span class="span-9 borderrt">[@spring.message "manageRoles.canmodifylateness/dormancydefinition"/]</span>
                 <span class="span-8">[@spring.message "manageRoles.canmodifylateness/dormancydefinition"/]</span>
             </div>
-            
+
             <div class="span-22 borderbtm">
                 <span class="span-2 rightAlign"><input type="checkbox"  name="activity(96)" value="checkbox" id="4_1" onclick="doCheck(this)"/></span><span class="span-10 borderrt">[@spring.message "manageRoles.loanProducts"/]</span>
                 <span class="span-8">[@spring.message "manageRoles.loanProducts"/]</span>
@@ -618,7 +618,7 @@ var index=0;
                 <span class="span-3 rightAlign"><input type="checkbox" id="4_3_1"  name="activity(104)" value="211" onclick="doCheck(this)"/></span><span class="span-9 borderrt">[@spring.message "manageRoles.caneditproductmix"/]</span>
                 <span class="span-8">[@spring.message "manageRoles.caneditproductmix"/]</span>
             </div>
-            
+
         </div>
         <div class="clear">&nbsp;</div>
         <!--Sixth Table Starts-->
@@ -674,7 +674,7 @@ var index=0;
                 <span class="span-3 rightAlign"><input type="checkbox"name="activity(117)" value="179" id="5_0_10" onclick="doCheck(this)"/></span><span class="span-9 borderrt">[@spring.message "manageRoles.canaddnotestoloanaccount"/]</span>
                 <span class="span-8">[@spring.message "manageRoles.canaddnotestoloanaccount"/]</span>
             </div>
-            
+
             <div class="span-22 borderbtm">
                 <span class="span-2 rightAlign"><input type="checkbox" name="activity(118)" id="5_1" value="checkbox"  onclick="doCheck(this)"/></span><span class="span-10 borderrt">[@spring.message "manageRoles.loanTransactions"/]</span>
                 <span class="span-8">[@spring.message "manageRoles.loanTransactions"/]</span>
@@ -715,7 +715,7 @@ var index=0;
                 <span class="span-3 rightAlign"><input type="checkbox"  name="activity(127)" value="217" id="5_1_8" onclick="doCheck(this)"/></span><span class="span-9 borderrt">[@spring.message "manageRoles.canadjustpaymentwhen"/]</span>
                 <span class="span-9">[@spring.message "manageRoles.canadjustpaymentwhen"/]</span>
             </div>
-            
+
             <div class="span-22 borderbtm">
                 <span class="span-2 rightAlign"><input type="checkbox" name="activity(128)" value="202" id="5_2" onclick="doCheck(this)"/></span><span class="span-10 borderrt">[@spring.message "manageRoles.canreverseLoandisbursals"/]</span>
                 <span class="span-8">[@spring.message "manageRoles.canreverseLoandisbursals"/]</span>
@@ -956,6 +956,6 @@ var index=0;
         </div>
         <!--End of All Tables-->
     </div>
-       </form> 
+       </form>
   </div><!--Main Content Ends-->
 [/@adminLeftPaneLayout]

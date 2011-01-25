@@ -24,7 +24,7 @@
   <div class="content ">
   [@mifos.crumbs breadcrumbs/]
       <form method="" action="" name="formname">
-    <div class="span-24 marginLeft20px lineheight1p2">          
+    <div class="span-24 marginLeft20px lineheight1p2">
         <div class="clear">&nbsp;</div>
         <p class="font15 margin5top10bottom"><span class=" orangeheading">[@spring.message "organizationSettings.viewOrganizationSettings.organizationalSettings"/] </span></p>
         <p class="span-24">
@@ -33,7 +33,7 @@
             <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.allowcalendardefinitionfornextyear"/]</span>:&nbsp;<span class="fontnormal"> 30 days before end of current year</span></div>
             <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.startofWeek"/]</span>:&nbsp;<span class="fontnormal">${properties.startOfWeek}</span></div>
             <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.offdays"/]</span>:&nbsp;<span class="fontnormal">${properties.offDays}</span></div>
-            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.meetingincaseofaholiday"/]</span>:&nbsp;<span class="fontnormal">${properties.holidayMeeting} </span></div>          
+            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.meetingincaseofaholiday"/]</span>:&nbsp;<span class="fontnormal">${properties.holidayMeeting} </span></div>
         </p>
         <p class="span-24">
             <div class="fontBold marginTop10">[@spring.message "organizationSettings.viewOrganizationSettings.locale"/] </div>
@@ -62,7 +62,7 @@
                 <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.initialRoundOffMultiple"/]</span>:&nbsp;<span class="fontnormal">${currency.initialRoundOffMultiple}</span></div>
             [/#list]
         </p>
-        
+
         <p class="span-24">
             <div class="fontBold marginTop10">[@spring.message "organizationSettings.viewOrganizationSettings.clientrules"/]</div>
             <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.centerhierarchyexists"/]</span>:&nbsp;<span class="fontnormal">${properties.centerHierarchyExists}</span></div>
@@ -82,7 +82,7 @@
             <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.loanpendingapprovalstateenabled"/]</span>:&nbsp;<span class="fontnormal">${properties.loanPendingState}</span></div>
             <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.savingspendingapprovalstateenabled"/]</span>:&nbsp;<span class="fontnormal">${properties.savingsPendingState}</span></div>
         </p>
-        
+
         <p class="span-24">
             <div class="fontBold marginTop10">[@spring.message "organizationSettings.viewOrganizationSettings.miscellaneous"/]</div>
             <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.sessiontimeout"/]</span>:&nbsp;<span class="fontnormal">${properties.sessionTimeout}</span></div>
@@ -95,6 +95,6 @@
             [/#list]
         </p>
     </div>
-       </form> 
+       </form>
   </div><!--Main Content Ends-->
 [/@adminLeftPaneLayout]

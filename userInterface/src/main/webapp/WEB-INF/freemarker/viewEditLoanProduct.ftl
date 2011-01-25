@@ -20,7 +20,7 @@
 --]
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
-  <!--  Main Content Begins-->  
+  <!--  Main Content Begins-->
   <div class=" content marginLeft30">
         <div class="bluedivs paddingLeft">
             <a href="AdminAction.do?method=load">[@spring.message "admin"/]</a>&nbsp;/&nbsp;<a href="viewLoanProducts.ftl">[@spring.message "manageLoanProducts.editloanproduct.viewLoanProducts"/]</a>&nbsp;/&nbsp;<span class="fontBold">[@spring.message "manageLoanProducts.editloanproduct.loanProductName"/]</span>
@@ -37,13 +37,13 @@
                 [#case 4]
                 <span><img src="pages/framework/images/status_closedblack.gif" /></span>&nbsp;<span>[@spring.message "inactive"/]</span>
                 [#break]
-            [/#switch] 
+            [/#switch]
                <br />
             </div>
-            <span class="span-18 rightAlign"><a href="editLoanProduct.ftl?productId=${loanProductDetails.productDetails.id}">[@spring.message "manageLoanProducts.editloanproduct.editLoanproductinformation" /]</a></span>            
-        </div>        
+            <span class="span-18 rightAlign"><a href="editLoanProduct.ftl?productId=${loanProductDetails.productDetails.id}">[@spring.message "manageLoanProducts.editloanproduct.editLoanproductinformation" /]</a></span>
+        </div>
         <div class="clear">&nbsp;</div>
-        
+
         <p class="span-22 ">
             <div class="fontBold">[@spring.message "manageLoanProducts.editloanproduct.loanproductdetails" /]</div>
             <div class="span-22 ">
@@ -87,7 +87,7 @@
                 [#case 4]
                 <span>[@spring.message "manageProducts.defineSavingsProducts.allcustomers" /]</span>
                 [#break]
-                [/#switch] 
+                [/#switch]
             </div>
             [#if loanProductDetails.multiCurrencyEnabled]
             <div class="span-22">
@@ -109,7 +109,7 @@
                 <span class="span-8">[@spring.message "manageLoanProducts.editloanproduct.calculateLoanAmountas" /]</span>
                 [#switch loanProductDetails.loanAmountDetails.calculationType]
                     [#case 1]
-                    <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.sameforallLoans" /]</span>    
+                    <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.sameforallLoans" /]</span>
                     [#break]
                     [#case 2]
                     <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.bylastloanAmount" /]</span>
@@ -133,7 +133,7 @@
                     <span class="span-5 last">${loanProductDetails.loanAmountDetails.sameForAllLoanRange.theDefault}</span>
                 </div>
                   <div>&nbsp;</div>
-              </div>    
+              </div>
               [#break]
               [#case 2]
               <div class="span-17 bluedivs fontBold paddingLeft">
@@ -155,7 +155,7 @@
               </div>
               [#break]
               [#case 3]
-              
+
               <div class="span-20 ">
                   <div class="span-17 bluedivs fontBold paddingLeft">
                       <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.loanCycleNo"/]</span>
@@ -240,7 +240,7 @@
                 <span class="span-8">[@spring.message "manageLoanProducts.editloanproduct.calculateofinstallmentsas" /]</span>
                 [#switch loanProductDetails.repaymentDetails.installmentCalculationDetails.calculationType]
                     [#case 1]
-                    <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.sameforallLoans" /]</span>    
+                    <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.sameforallLoans" /]</span>
                     [#break]
                     [#case 2]
                     <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.bylastloanAmount" /]</span>
@@ -264,7 +264,7 @@
                     <span class="span-5 last">${loanProductDetails.repaymentDetails.installmentCalculationDetails.sameForAllLoanRange.theDefault}</span>
                 </div>
                   <div>&nbsp;</div>
-              </div>    
+              </div>
               [#break]
               [#case 2]
                   <div class="span-20 ">
@@ -331,12 +331,12 @@
                   </div>
               [#break]
              [/#switch]
-          
+
           <div class="span-22 ">
               <span class="span-8">[@spring.message "manageLoanProducts.editloanproduct.graceperiodtype" /]</span>
               [#switch loanProductDetails.repaymentDetails.gracePeriodType]
                 [#case 1]
-                <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.none" /]</span>    
+                <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.none" /]</span>
                 [#break]
                 [#case 2]
                 <span class="span-4">[@spring.message "manageLoanProducts.defineLoanProduct.graceonallrepayments" /]</span>
@@ -350,8 +350,8 @@
               <span class="span-8">[@spring.message "manageLoanProducts.editloanproduct.graceperiodduration" /]</span>
               <span class="span-4">${loanProductDetails.repaymentDetails.gracePeriodDuration}</span>
           </div>
-        </p> 
-        
+        </p>
+
         <p class="fontBold span-22 ">[@spring.message "manageLoanProducts.editloanproduct.fees" /]</p>
         <div class="span-20 ">
                 <span class="span-8">[@spring.message "manageLoanProducts.editloanproduct.fees" /]</span>
@@ -363,8 +363,8 @@
                 </ol>
                   </span>
         </div>
-        <div class="clear">&nbsp;</div>       
-        
+        <div class="clear">&nbsp;</div>
+
         <p class="span-22 ">
             <div class="fontBold span-22 ">[@spring.message "manageLoanProducts.editloanproduct.accounting" /]</div>
             <div class="span-20 ">
@@ -387,7 +387,7 @@
                 <span class="span-4">${loanProductDetails.principalGlCodeValue}</span>
             </div>
         </p>
-        <div class="clear">&nbsp;</div> 
+        <div class="clear">&nbsp;</div>
         <p class="span-22 ">
             <div class="span-22 "><a href="viewLoanProductChangeLog.ftl?productId=${loanProductDetails.productDetails.id}">[@spring.message "manageLoanProducts.editloanproduct.viewChangeLog" /]</a></div>
         </p>

@@ -20,7 +20,7 @@
 --]
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
-  <!--  Main Content Begins-->  
+  <!--  Main Content Begins-->
 <script type="text/javascript">
 function addOption(root, text, value)
 {
@@ -30,7 +30,7 @@ function addOption(root, text, value)
 }
 
 function deleteOption(root, index)
-{ 
+{
   var rootLength= root.length;
   if(rootLength>0)
   {
@@ -44,8 +44,8 @@ function moveOptions(root, destination)
   var rootText = new Array();
   var rootValues = new Array();
   var rootCount = 0;
-  
-  var i; 
+
+  var i;
   for(i=rootLength-1; i>=0; i--)
   {
     if(root.options[i].selected)
@@ -55,11 +55,11 @@ function moveOptions(root, destination)
       deleteOption(root, i);
       rootCount++;
     }
-  }  
+  }
   for(i=rootCount-1; i>=0; i--)
   {
     addOption(destination, rootText[i], rootValues[i]);
-  }  
+  }
 }
 
 function selectAllOptions(outSel)
@@ -73,43 +73,43 @@ function selectAllOptions(outSel)
         }
     }
 }
-</script> 
-  <!--  Main Content Begins-->  
-  <div class="content">        
+</script>
+  <!--  Main Content Begins-->
+  <div class="content">
         <form name="enterUserDetails" method="post" action="user.ftl?execution=${flowExecutionKey}">
         <div class="span-24">
-            
+
             [#assign breadcrumbs={"admin":"AdminAction.do?method=load","admin.viewsystemusers":"viewSystemUsers.ftl","${userFormBean.officeName}":"viewSystemUserDetails.ftl?id=${userFormBean.officeId}"}]
             [@mifos.editPageBreadcrumbs breadcrumbs/]
-            
+
             <div id="allErrorsDiv" class="allErrorsDiv">
                 [@mifosmacros.showAllErrors "userFormBean.*"/]
             </div>
-            
+
             <p class="font15">
                 <span class="fontBold">${userFormBean.officeName}</span>&nbsp;-&nbsp;<span class="orangeheading">[@spring.message "systemUsers.preview.edituser"/]</span>
             </p>
-            
+
             <p>[@spring.message "systemUsers.editSystemUser.infomessage"/]</p>
-                        
+
             <span class="red">* </span><span>[@spring.message "fieldsmarkedwithanasteriskarerequired"/]</span>
-                
+
             <div class="clear">&nbsp;</div>
-            
+
             <div class="fontBold">[@spring.message "systemUsers.preview.office" /]</div>
-            
+
             [@spring.formHiddenInput "userFormBean.officeId" /]
             <div class="marginTop15">
                 <span class="fontBold">[@spring.message "systemUsers.defineNewSystemUser.form.office" /]&nbsp;:</span>
                 <span>${userFormBean.officeName}</span>
-            </div>        
-            
+            </div>
+
             <div class="prepend-1  span-21 last marginTop15">
-            
+
                 <div class="marginTop15">
                     <span class="fontBold">[@spring.message "systemUsers.preview.userdetails" /]</span>
                 </div>
-            
+
                 <div class="span-21 prepend-2 ">
                     <span class="span-4 rightAlign">
                         <label for="firstName"><span class="red">*</span>[@spring.message "systemUsers.preview.firstName" /]:</label>
@@ -118,7 +118,7 @@ function selectAllOptions(outSel)
                         [@spring.formInput "userFormBean.firstName" /]
                     </span>
                 </div>
-                
+
                 <div class="span-21 prepend-2 ">
                     <span class="span-4 rightAlign">
                         <label for="middleName">[@spring.message "systemUsers.preview.middleName" /]:</label>
@@ -127,7 +127,7 @@ function selectAllOptions(outSel)
                         [@spring.formInput "userFormBean.middleName" /]
                     </span>
                 </div>
-                
+
                 <div class="span-21 prepend-2 ">
                     <span class="span-4 rightAlign">
                         <label for="secondLastName">[@spring.message "systemUsers.preview.secondLastName" /]:</label>
@@ -136,7 +136,7 @@ function selectAllOptions(outSel)
                         [@spring.formInput "userFormBean.secondLastName" /]
                     </span>
                 </div>
-                
+
                 <div class="span-21 prepend-2 ">
                     <span class="span-4 rightAlign">
                         <label for="lastName"><span class="red">*</span>[@spring.message "systemUsers.preview.lastName" /]:</label>
@@ -145,7 +145,7 @@ function selectAllOptions(outSel)
                         [@spring.formInput "userFormBean.lastName" /]
                     </span>
                 </div>
-                
+
                 <div class="span-21 prepend-2 ">
                     <span class="span-4 rightAlign">
                         <label for="governmentId">[@spring.message "systemUsers.preview.governmentID" /]:</label>
@@ -154,7 +154,7 @@ function selectAllOptions(outSel)
                         <span>${userFormBean.governmentId}</span>
                     </span>
                 </div>
-                
+
                 <div class="span-21 prepend-2 ">
                     <span class="span-4 rightAlign">
                         <label for="email">[@spring.message "systemUsers.preview.email" /]:</label>
@@ -163,14 +163,14 @@ function selectAllOptions(outSel)
                         [@spring.formInput "userFormBean.email" /]
                     </span>
                 </div>
-                
+
                 <div class="span-21 prepend-2 ">
                     <span class="span-4 rightAlign">
                         <span class="red">*</span>[@spring.message "systemUsers.preview.dateofBirth" /]:
                     </span>
                     <span>${userFormBean.dateOfBirth}</span>
                 </div>
-                
+
                 <div class="span-21 prepend-2 ">
                     <span class="span-4 rightAlign">
                         <label for="selectedMaritalStatus">[@spring.message "systemUsers.preview.maritalStatus" /]:</label>
@@ -179,7 +179,7 @@ function selectAllOptions(outSel)
                         [@mifos.formSingleSelectWithPrompt "userFormBean.selectedMaritalStatus", userFormBean.maritalStatusOptions, "--selectone--" /]
                     </span>
                 </div>
-            
+
                 <div class="span-21 prepend-2 ">
                        <span class="span-4 rightAlign">
                         <label for="selectedGender"><span class="red">*</span>[@spring.message "systemUsers.preview.gender" /]:</label>
@@ -188,7 +188,7 @@ function selectAllOptions(outSel)
                         [@mifos.formSingleSelectWithPrompt "userFormBean.selectedGender", userFormBean.genderOptions, "--selectone--" /]
                     </span>
                 </div>
-            
+
                 <div class="span-21 prepend-2 ">
                        <span class="span-4 rightAlign">
                         <label for="selectedPreferredLanguage">[@spring.message "systemUsers.preview.languagePreferred" /]:</label>
@@ -197,7 +197,7 @@ function selectAllOptions(outSel)
                         [@mifos.formSingleSelectWithPrompt "userFormBean.selectedPreferredLanguage", userFormBean.preferredLanguageOptions, "--selectone--" /]
                     </span>
                 </div>
-            
+
                 <div class="span-21 prepend-2 ">
                        <span class="span-4 rightAlign">
                         <span>[@spring.message "systemUsers.preview.mFIJoiningDate" /]:</span>
@@ -207,12 +207,12 @@ function selectAllOptions(outSel)
                     </span>
                 </div>
             </div>
-            
+
             <div class="prepend-1  span-21 last marginTop15">
                 <div class="marginTop15">
                     <span class="fontBold">[@spring.message "systemUsers.preview.address" /]</span>
                 </div>
-                
+
                 <div class="span-21 prepend-2 ">
                        <span class="span-4 rightAlign">
                         <label for="address.address1">[#if userFormBean.address.address1Mandatory]<span class="red">*</span>[/#if][@spring.message "systemUsers.preview.address1" /]:</label>
@@ -221,7 +221,7 @@ function selectAllOptions(outSel)
                         [@spring.formInput "userFormBean.address.address1" /]
                     </span>
                 </div>
-            
+
                 [#if userFormBean.address.address2Hidden]
                     [@spring.formHiddenInput "userFormBean.address.address2" /]
                 [#else]
@@ -237,7 +237,7 @@ function selectAllOptions(outSel)
 
                 [#if userFormBean.address.address3Hidden]
                 [@spring.formHiddenInput "userFormBean.address.address3" /]
-                   [#else]            
+                   [#else]
                 <div class="span-21 prepend-2 ">
                        <span class="span-4 rightAlign">
                         <label for="address.address3">[@spring.message "systemUsers.preview.address3" /]:</label>
@@ -247,10 +247,10 @@ function selectAllOptions(outSel)
                     </span>
                 </div>
                 [/#if]
-            
+
                 [#if userFormBean.address.cityDistrictHidden]
                 [@spring.formHiddenInput "userFormBean.address.cityDistrict" /]
-                [#else]            
+                [#else]
                 <div class="span-21 prepend-2 ">
                        <span class="span-4 rightAlign">
                         <label for="address.city">[@spring.message "systemUsers.preview.city" /]:</label>
@@ -260,7 +260,7 @@ function selectAllOptions(outSel)
                     </span>
                 </div>
                 [/#if]
-            
+
                 [#if userFormBean.address.stateHidden]
                 [@spring.formHiddenInput "userFormBean.address.state" /]
                 [#else]
@@ -273,7 +273,7 @@ function selectAllOptions(outSel)
                     </span>
                 </div>
                 [/#if]
-            
+
                 [#if userFormBean.address.countryHidden]
                 [@spring.formHiddenInput "userFormBean.address.country" /]
                 [#else]
@@ -286,7 +286,7 @@ function selectAllOptions(outSel)
                     </span>
                 </div>
                 [/#if]
-            
+
                 [#if userFormBean.address.postalCodeHidden]
                 [@spring.formHiddenInput "userFormBean.address.postalCode" /]
                 [#else]
@@ -299,7 +299,7 @@ function selectAllOptions(outSel)
                     </span>
                 </div>
                 [/#if]
-            
+
                 <div class="span-21 prepend-2 ">
                     <span class="span-4 rightAlign">
                            <label for="address.telephone">[@spring.message "systemUsers.preview.telephone" /]:</label>
@@ -308,14 +308,14 @@ function selectAllOptions(outSel)
                            [@spring.formInput "userFormBean.address.telephoneNumber" /]
                        </span>
                    </div>
-                   
+
                </div>
-            
+
             <div class="prepend-1  span-21 last marginTop15">
                 <div class="marginTop15">
                     <span class="fontBold">[@spring.message "systemUsers.preview.permissions" /]</span>
-                </div>                        
-                
+                </div>
+
                 <div class="span-21 prepend-2 ">
                        <span class="span-4 rightAlign">
                            <label for="userTitle">[@spring.message "systemUsers.preview.userTitle" /]:</label>
@@ -324,7 +324,7 @@ function selectAllOptions(outSel)
                         [@mifos.formSingleSelectWithPrompt "userFormBean.selectedUserTitle", userFormBean.userTitleOptions, "--selectone--" /]
                     </span>
                 </div>
-            
+
                 <div class="span-21 prepend-2 ">
                        <span class="span-4 rightAlign">
                            <label for="userTitle"><span class="red">*</span>[@spring.message "systemUsers.preview.userHierarchy" /]:</label>
@@ -333,8 +333,8 @@ function selectAllOptions(outSel)
                         [@mifos.formSingleSelectWithPrompt "userFormBean.selectedUserHierarchy", userFormBean.userHierarchyOptions, "--selectone--" /]
                     </span>
                 </div>
-            
-                  <div class="span-21 prepend-2 ">                   
+
+                  <div class="span-21 prepend-2 ">
                        <span class="span-2">[@spring.message "systemUsers.preview.roles" /]</span>
                        <span class="span-4">
                         [@spring.formMultiSelect "userFormBean.availableRoles", userFormBean.availableRolesOptions, "class=listSize" /]
@@ -347,17 +347,17 @@ function selectAllOptions(outSel)
                     </span>
                     <span class="span-4">
                         [@spring.formMultiSelect "userFormBean.selectedRoles", userFormBean.selectedRolesOptions, "class=listSize" /]
-                    </span>                   
+                    </span>
                 </div>
-                
+
             </div>
-            
+
             <div class="prepend-1  span-21 last marginTop15">
-                
+
                 <div class="marginTop15">
                     <span class="fontBold">[@spring.message "systemUsers.preview.logininfo" /]</span>
                 </div>
-                
+
                 <div class="span-21 prepend-2 ">
                     <span class="span-4 rightAlign">
                         <label for="username"><span class="red">*</span>[@spring.message "systemUsers.preview.userName" /]:</label>
@@ -366,7 +366,7 @@ function selectAllOptions(outSel)
                         [@spring.formInput "userFormBean.username" /]
                     </span>
                 </div>
-            
+
                 <div class="span-21 prepend-2 ">
                        <span class="span-4 rightAlign">
                            <label for="password"><span class="red">*</span>[@spring.message "systemUsers.preview.password" /]:</label>
@@ -375,7 +375,7 @@ function selectAllOptions(outSel)
                         [@spring.formPasswordInput "userFormBean.password" /]
                     </span>
                 </div>
-            
+
                 <div class="span-21 prepend-2 ">
                        <span class="span-4 rightAlign">
                            <label for="confirmedPassword"><span class="red">*</span>[@spring.message "systemUsers.preview.confirmedPassword" /]:</label>
@@ -385,9 +385,9 @@ function selectAllOptions(outSel)
                     </span>
                 </div>
             </div>
-            
+
             <div class="prepend-1  span-21 last marginTop15">
-                
+
                 <div class="span-21 prepend-2 ">
                     <span class="span-4 rightAlign">[@spring.message "systemUsers.preview.additionalInformation" /]</span>
                     [#assign fieldNumber = 0]
@@ -417,20 +417,20 @@ function selectAllOptions(outSel)
                             [#break]
                         [/#switch]
                         [#assign fieldNumber = fieldNumber + 1]
-                    [/#list]                    
+                    [/#list]
                 </div>
-                
+
             </div>
-            
+
             <div class="clear">&nbsp;</div>
                 <hr />
             <div class="clear">&nbsp;</div>
-            
+
             <div class="prepend-8">
                 <input class="buttn" type="submit" id="preview" name="_eventId_preview" value="[@spring.message "preview"/]" onclick="selectAllOptions(this.form.selectedRoles);selectAllOptions(this.form.availableRoles);" />
                 <input class="buttn2" type="submit" id="cancel" name="_eventId_cancel" value="[@spring.message "cancel"/]" />
             </div>
-            
+
         </div>
         </form>
   </div>

@@ -27,7 +27,7 @@
       <div class="left-pane-content">
           <h2>[@spring.message "manageClients" /]</h2>
           <div class="left-pane-heading-group">
-             [@spring.message "createNewGroup" /]<br/> 
+             [@spring.message "createNewGroup" /]<br/>
              <a href="createClient.ftl" >[@spring.message "createNewClient" /]</a>
           </div>
           <h2>[@spring.message "manageAccounts" /]</h2>

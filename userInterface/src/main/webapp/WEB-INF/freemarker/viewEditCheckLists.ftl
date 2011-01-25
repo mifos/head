@@ -19,13 +19,13 @@
 *  explanation of the license and how it is applied.
 --]
 [#include "layout.ftl"]
-[@adminLeftPaneLayout] <!--  Main Content Begins-->  
+[@adminLeftPaneLayout] <!--  Main Content Begins-->
   <div class="content">
  <div class="bluedivs paddingLeft"><a href="admin.ftl">[@spring.message "admin"/]</a>&nbsp;/&nbsp;<span class="fontBold">[@spring.message "organizationPreferences.editchecklist.viewEditChecklists"/]</span></div>
        <p>&nbsp;&nbsp;</p>
       <form method="" action="" name="formname">
     <div class="span-24">
-          
+
         <div class="span-24 ">
             <div class="span-15 ">
                 <div><span class="orangeheading">[@spring.message "organizationPreferences.editchecklist.checklistName" /]</span></div>
@@ -46,6 +46,6 @@
             </ul>
         </p>
     </div>
-       </form> 
+       </form>
   </div><!--Main Content Ends-->
-   [/@adminLeftPaneLayout] 
+   [/@adminLeftPaneLayout]
