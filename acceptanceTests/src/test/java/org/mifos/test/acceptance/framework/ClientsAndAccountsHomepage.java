@@ -32,8 +32,6 @@ import org.mifos.test.acceptance.framework.client.CreateClientEnterMfiDataPage;
 import org.mifos.test.acceptance.framework.client.CreateClientEnterPersonalDataPage;
 import org.mifos.test.acceptance.framework.client.CreateClientPreviewDataPage;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntrySelectPage;
-import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPage;
-import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPreviewDataPage;
 import org.mifos.test.acceptance.framework.group.GroupSearchPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountsSearchPage;
@@ -231,34 +229,5 @@ public class ClientsAndAccountsHomepage extends AbstractPage {
         selenium.click("clients_accounts.button.search");
         waitForPageToLoad();
         return new ClientSearchResultsPage(selenium);
-    }
-
-    // TODO this belongs in a helper
-    public ClientViewDetailsPage changeCustomerStatus(ClientViewDetailsPage clientDetailsPage) {
-        CustomerChangeStatusPage statusChangePage = clientDetailsPage.navigateToCustomerChangeStatusPage();
-
-        CustomerChangeStatusPage.SubmitFormParameters statusParameters = new CustomerChangeStatusPage.SubmitFormParameters();
-        statusParameters.setStatus(CustomerChangeStatusPage.SubmitFormParameters.PARTIAL_APPLICATION);
-        statusParameters.setNotes("Status change");
-
-        CustomerChangeStatusPreviewDataPage statusPreviewPage = statusChangePage.submitAndGotoCustomerChangeStatusPreviewDataPage(statusParameters);
-        ClientViewDetailsPage clientDetailsPage2 = statusPreviewPage.submitAndGotoClientViewDetailsPage();
-        clientDetailsPage2.verifyNotes(statusParameters.getNotes());
-
-        CustomerChangeStatusPage statusChangePage2 = clientDetailsPage2.navigateToCustomerChangeStatusPage();
-        statusParameters.setStatus(CustomerChangeStatusPage.SubmitFormParameters.PENDING_APPROVAL);
-        statusParameters.setNotes("notes");
-        CustomerChangeStatusPreviewDataPage statusPreviewPage2 =
-            statusChangePage2.submitAndGotoCustomerChangeStatusPreviewDataPage(statusParameters);
-
-        ClientViewDetailsPage clientDetailsPage3 = statusPreviewPage2.submitAndGotoClientViewDetailsPage();
-        clientDetailsPage3.verifyNotes(statusParameters.getNotes());
-
-        CustomerChangeStatusPage statusChangePage3 = clientDetailsPage3.navigateToCustomerChangeStatusPage();
-
-        ClientViewDetailsPage clientDetailsPage4 = statusChangePage3.cancelAndGotoClientViewDetailsPage(statusParameters);
-        clientDetailsPage4.verifyNotes(statusParameters.getNotes());
-
-        return clientDetailsPage4;
     }
 }

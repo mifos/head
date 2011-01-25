@@ -37,6 +37,7 @@ import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import org.mifos.test.acceptance.framework.client.CreateClientEnterMfiDataPage;
 import org.mifos.test.acceptance.framework.client.CreateClientEnterPersonalDataPage;
 import org.mifos.test.acceptance.framework.client.QuestionGroup;
+import org.mifos.test.acceptance.framework.testhelpers.ClientTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.CustomPropertiesHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.questionnaire.Choice;
@@ -71,6 +72,7 @@ public class ClientTest extends UiTestCaseBase {
 
     private NavigationHelper navigationHelper;
     CustomPropertiesHelper propertiesHelper;
+    ClientTestHelper clientTestHelper;
 
     @Autowired
     private DriverManagerDataSource dataSource;
@@ -99,6 +101,7 @@ public class ClientTest extends UiTestCaseBase {
         super.setUp();
         navigationHelper = new NavigationHelper(selenium);
         propertiesHelper = new CustomPropertiesHelper(selenium);
+        clientTestHelper = new ClientTestHelper();
         random = new Random();
     }
 
@@ -108,16 +111,15 @@ public class ClientTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // http://mifosforge.jira.com/browse/MIFOSTEST-208
     public void createClientAndChangeStatusTest() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities,
-                "acceptance_small_003_dbunit.xml",
-                dataSource, selenium);
-
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
         ClientsAndAccountsHomepage clientsAndAccountsPage = navigationHelper.navigateToClientsAndAccountsPage();
-
         ClientViewDetailsPage clientDetailsPage = clientsAndAccountsPage.createClientAndVerify("Joe1233171679953 Guy1233171679953", "MyOffice1233171674227");
 
-        clientsAndAccountsPage.changeCustomerStatus(clientDetailsPage);
+        //When / Then
+        clientTestHelper.changeCustomerStatus(clientDetailsPage);
     }
 
     // implementation of test described in issue 2454

@@ -45,7 +45,7 @@ public class CustomerChangeStatusPage extends MifosPage {
     @SuppressWarnings("PMD.TooManyFields") // lots of fields ok for form input case
     public static class SubmitFormParameters {
         // statuses
-        public static final int APPROVED = 3;
+        public static final int ACTIVE = 3;
         public static final int PARTIAL_APPLICATION = 1;
         public static final int PENDING_APPROVAL = 2;
 
