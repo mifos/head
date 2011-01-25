@@ -28,6 +28,7 @@ import org.mifos.test.acceptance.framework.admin.FeesCreatePage;
 import org.mifos.test.acceptance.framework.loan.ChargeParameters;
 import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
+import org.mifos.test.acceptance.framework.loan.PaymentParameters;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
 import org.mifos.test.acceptance.framework.office.OfficeParameters;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
@@ -118,14 +119,14 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
     }
 
     private void verifyMultipleDue(int noOfInstallments, String loanProductName) throws UnsupportedEncodingException {
-        createAndDisburseLoanAccount(noOfInstallments, systemDateTime.plusDays(1), loanProductName);
-        makePaymentAndVerifyPayment(systemDateTime.plusDays(24), "403", RepaymentScheduleData.MULTIPLE_DUE_FIRST_PAYMENT);//verify first the due fee is knocked
-        makePaymentAndVerifyPayment(systemDateTime.plusDays(26), "305.1", RepaymentScheduleData.MULTIPLE_DUE_SECOND_PAYMENT);//verify first the due fee is knocked
-        makePaymentAndVerifyPayment(systemDateTime.plusDays(29), "104.4", RepaymentScheduleData.MULTIPLE_DUE_THIRD_PAYMENT);//verify first the due fee is knocked
-        makePaymentAndVerifyPayment(systemDateTime.plusDays(29), "200", RepaymentScheduleData.MULTIPLE_DUE_FORTH_PAYMENT);//verify first the due fee is knocked
-        makePaymentAndVerifyPayment(systemDateTime.plusDays(29), "102.8", RepaymentScheduleData.MULTIPLE_DUE_FIFTH_PAYMENT);//same date, less payment
-        makePaymentAndVerifyPayment(systemDateTime.plusDays(35), "112.3", RepaymentScheduleData.MULTIPLE_DUE_SIXTH_PAYMENT);//verify first the due fee is knocked
-        makePaymentAndVerifyPayment(systemDateTime.plusDays(38), "291.9", RepaymentScheduleData.MULTIPLE_DUE_SEVENTH_PAYMENT);//verify first the due fee is knocked
+        String accountId = createAndDisburseLoanAccount(noOfInstallments, systemDateTime.plusDays(1), loanProductName).getAccountId();
+        makePaymentAndVerifyPayment(accountId, systemDateTime.plusDays(24), "403", RepaymentScheduleData.MULTIPLE_DUE_FIRST_PAYMENT);//verify first the due fee is knocked
+        makePaymentAndVerifyPayment(accountId, systemDateTime.plusDays(26), "305.1", RepaymentScheduleData.MULTIPLE_DUE_SECOND_PAYMENT);//verify first the due fee is knocked
+        makePaymentAndVerifyPayment(accountId, systemDateTime.plusDays(29), "104.4", RepaymentScheduleData.MULTIPLE_DUE_THIRD_PAYMENT);//verify first the due fee is knocked
+        makePaymentAndVerifyPayment(accountId, systemDateTime.plusDays(29), "200", RepaymentScheduleData.MULTIPLE_DUE_FORTH_PAYMENT);//verify first the due fee is knocked
+        makePaymentAndVerifyPayment(accountId, systemDateTime.plusDays(29), "102.8", RepaymentScheduleData.MULTIPLE_DUE_FIFTH_PAYMENT);//same date, less payment
+        makePaymentAndVerifyPayment(accountId, systemDateTime.plusDays(35), "112.3", RepaymentScheduleData.MULTIPLE_DUE_SIXTH_PAYMENT);//verify first the due fee is knocked
+        makePaymentAndVerifyPayment(accountId, systemDateTime.plusDays(38), "291.9", RepaymentScheduleData.MULTIPLE_DUE_SEVENTH_PAYMENT);//verify first the due fee is knocked
         verifyAdjustmentFromLoanAccountPage("291.9", RepaymentScheduleData.MULTIPLE_DUE_FIRST_ADJUSTMENT);
         verifyAdjustmentFromRepaymentSchedule("112.3", RepaymentScheduleData.MULTIPLE_DUE_SECOND_ADJUSTMENT);
         verifyAdjustmentFromInstallmentsDetails("102.8", RepaymentScheduleData.MULTIPLE_DUE_THIRD_ADJUSTMENT);
@@ -162,24 +163,24 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
 
     private void verifyLateLessPayment(int noOfInstallments, String loanProductName) throws UnsupportedEncodingException {
         DateTime paymentDate = systemDateTime.plusDays(12);
-        createAndDisburseLoanAccount(noOfInstallments, systemDateTime.plusDays(1), loanProductName);
-        makePaymentAndVerifyPayment(paymentDate, "100", RepaymentScheduleData.LATE_LESS_FIRST_PAYMENT);//verify first the due fee is knocked
-        makePaymentAndVerifyPayment(paymentDate, "5.3", RepaymentScheduleData.LATE_LESS_SECOND_PAYMENT);//verify due interest is knocked next
-        makePaymentAndVerifyPayment(paymentDate, "100", RepaymentScheduleData.LATE_LESS_THIRD_PAYMENT);//verify the due principle is knocked next
+        String accountId = createAndDisburseLoanAccount(noOfInstallments, systemDateTime.plusDays(1), loanProductName).getAccountId();
+        makePaymentAndVerifyPayment(accountId, paymentDate, "100", RepaymentScheduleData.LATE_LESS_FIRST_PAYMENT);//verify first the due fee is knocked
+        makePaymentAndVerifyPayment(accountId, paymentDate, "5.3", RepaymentScheduleData.LATE_LESS_SECOND_PAYMENT);//verify due interest is knocked next
+        makePaymentAndVerifyPayment(accountId, paymentDate, "100", RepaymentScheduleData.LATE_LESS_THIRD_PAYMENT);//verify the due principle is knocked next
     }
 
     private void verifyLateExcessPayment(int noOfInstallments, String loanProductName) throws UnsupportedEncodingException {
         DateTime paymentDate = systemDateTime.plusDays(12);
-        createAndDisburseLoanAccount(noOfInstallments,systemDateTime.plusDays(1),loanProductName);
-        makePaymentAndVerifyPayment(paymentDate, "354", RepaymentScheduleData.LATE_EXCESS_PAYMENT);
-        makePaymentAndVerifyPayment(paymentDate, "2.5", RepaymentScheduleData.LATE_EXCESS_SECOND_PAYMENT);//verifying only overdue interest in knocked
-        makePaymentAndVerifyPayment(paymentDate, "100", RepaymentScheduleData.LATE_EXCESS_THIRD_PAYMENT);//verify if future interest in reduced as the future principle is paid
+        String accountId = createAndDisburseLoanAccount(noOfInstallments,systemDateTime.plusDays(1),loanProductName).getAccountId();
+        makePaymentAndVerifyPayment(accountId, paymentDate, "354", RepaymentScheduleData.LATE_EXCESS_PAYMENT);
+        makePaymentAndVerifyPayment(accountId, paymentDate, "2.5", RepaymentScheduleData.LATE_EXCESS_SECOND_PAYMENT);//verifying only overdue interest in knocked
+        makePaymentAndVerifyPayment(accountId, paymentDate, "100", RepaymentScheduleData.LATE_EXCESS_THIRD_PAYMENT);//verify if future interest in reduced as the future principle is paid
     }
 
     private void verifyEarlyLessPayment(int noOfInstallments, String loanProductName) throws UnsupportedEncodingException {
         DateTime paymentDate = systemDateTime.plusDays(1);
-        createAndDisburseLoanAccount(noOfInstallments, systemDateTime.plusDays(1), loanProductName);
-        makePaymentAndVerifyPayment(paymentDate, "100", RepaymentScheduleData.EARLY_LESS_FIRST_PAYMENT); //verifying interest till date
+        String accountId = createAndDisburseLoanAccount(noOfInstallments, systemDateTime.plusDays(1), loanProductName).getAccountId();
+        makePaymentAndVerifyPayment(accountId, paymentDate, "100", RepaymentScheduleData.EARLY_LESS_FIRST_PAYMENT); //verifying interest till date
     }
 
     @Test(enabled=false)
@@ -190,12 +191,19 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
 
     private void verifyEarlyExcessPayment(int noOfInstallments, String loanProductName) throws UnsupportedEncodingException {
         DateTime paymentDate = systemDateTime.plusDays(1);
-        createAndDisburseLoanAccount(noOfInstallments, systemDateTime.plusDays(1), loanProductName);
-        makePaymentAndVerifyPayment(paymentDate, "280", RepaymentScheduleData.EARLY_EXCESS_FIRST_PAYMENT);
+        String accountID = createAndDisburseLoanAccount(noOfInstallments, systemDateTime.plusDays(1), loanProductName).getAccountId();
+        makePaymentAndVerifyPayment(accountID, paymentDate, "280", RepaymentScheduleData.EARLY_EXCESS_FIRST_PAYMENT);
     }
 
-    private void makePaymentAndVerifyPayment(DateTime paymentDate, String paymentAmount, String[][] expectedSchedule) throws UnsupportedEncodingException {
-        loanTestHelper.makePayment(paymentDate,paymentAmount).
+    private void makePaymentAndVerifyPayment(String accountID, DateTime paymentDate, String paymentAmount, String[][] expectedSchedule) throws UnsupportedEncodingException {
+        PaymentParameters paymentParameters = new PaymentParameters();
+        paymentParameters.setAmount(paymentAmount);
+        paymentParameters.setTransactionDateDD(Integer.toString(paymentDate.getDayOfMonth()));
+        paymentParameters.setTransactionDateMM(Integer.toString(paymentDate.getMonthOfYear()));
+        paymentParameters.setTransactionDateYYYY(Integer.toString(paymentDate.getYear()));
+        paymentParameters.setPaymentType(PaymentParameters.CASH);
+
+        loanTestHelper.applyPayment(accountID, paymentParameters).
                 navigateToRepaymentSchedulePage().
                 verifyScheduleTable(expectedSchedule).navigateToLoanAccountPage();
     }

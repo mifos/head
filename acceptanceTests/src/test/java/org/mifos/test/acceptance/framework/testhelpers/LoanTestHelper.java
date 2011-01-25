@@ -238,10 +238,7 @@ public class LoanTestHelper {
 
     public DisburseLoanPage prepareToDisburseLoan(String loanId) {
         LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
-
-        DisburseLoanPage disburseLoanPage = loanAccountPage.navigateToDisburseLoan();
-        disburseLoanPage.verifyPage();
-        return disburseLoanPage;
+        return loanAccountPage.navigateToDisburseLoan();
     }
 
     /**
@@ -252,10 +249,7 @@ public class LoanTestHelper {
      */
     public LoanAccountPage applyCharge(String loanId, ChargeParameters params) {
         LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
-
         ApplyChargePage applyChargePage = loanAccountPage.navigateToApplyCharge();
-        applyChargePage.verifyPage();
-
         loanAccountPage = applyChargePage.submitAndNavigateToApplyChargeConfirmationPage(params);
 
         return loanAccountPage;
@@ -291,12 +285,12 @@ public class LoanTestHelper {
         LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
 
         ApplyPaymentPage applyPaymentPage = loanAccountPage.navigateToApplyPayment();
-        applyPaymentPage.verifyPage();
-
         ApplyPaymentConfirmationPage applyPaymentConfirmationPage = applyPaymentPage.submitAndNavigateToApplyPaymentConfirmationPage(paymentParams);
-        applyPaymentConfirmationPage.verifyPage();
-
         loanAccountPage = applyPaymentConfirmationPage.submitAndNavigateToLoanAccountDetailsPage();
+
+        AccountActivityPage accountActivityPage = loanAccountPage.navigateToAccountActivityPage();
+        accountActivityPage.verifyLastTotalPaid(paymentParams.getAmount());
+        accountActivityPage.navigateBack();
 
         return loanAccountPage;
     }
@@ -453,10 +447,8 @@ public class LoanTestHelper {
         SearchResultsPage searchResultsPage = homePage.search(loanId);
         searchResultsPage.verifyPage();
         LoanAccountPage loanAccountPage = searchResultsPage.navigateToLoanAccountDetailPage(loanId);
+        return loanAccountPage.navigateToDisburseLoan();
 
-        DisburseLoanPage disburseLoanPage = loanAccountPage.navigateToDisburseLoan();
-        disburseLoanPage.verifyPage();
-        return disburseLoanPage;
     }
 
     public CreateLoanAccountEntryPage navigateToCreateLoanAccountEntryPageWithoutLogout(String clientName, String loanProductName) {
@@ -475,18 +467,6 @@ public class LoanTestHelper {
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         dateTimeUpdaterRemoteTestingService.setDateTime(systemDateTime);
         return new AbstractPage(selenium);
-    }
-
-    public LoanAccountPage makePayment(DateTime paymentDate, String paymentAmount) throws UnsupportedEncodingException {
-        PaymentParameters paymentParameters =setPaymentParams(paymentAmount, paymentDate);
-        setApplicationTime(paymentDate).navigateBack();
-        LoanAccountPage loanAccountPage = new LoanAccountPage(selenium).navigateToApplyPayment().
-                submitAndNavigateToApplyPaymentConfirmationPage(paymentParameters).
-                submitAndNavigateToLoanAccountDetailsPage();
-        AccountActivityPage accountActivityPage = loanAccountPage.navigateToAccountActivityPage();
-        accountActivityPage.verifyLastTotalPaid(paymentAmount);
-        accountActivityPage.navigateBack();
-        return loanAccountPage;
     }
 
     public PaymentParameters setPaymentParams(String amount, ReadableInstant paymentDate) {
@@ -516,13 +496,6 @@ public class LoanTestHelper {
         return disburseLoanParameters;
     }
 
-    public void disburseLoan(DateTime disbursalDate) throws UnsupportedEncodingException {
-        setApplicationTime(disbursalDate).navigateBack();
-        DisburseLoanParameters disburseLoanParameters = setDisbursalParams(disbursalDate);
-        new LoanAccountPage(selenium).navigateToDisburseLoan().
-        submitAndNavigateToDisburseLoanConfirmationPage(disburseLoanParameters).submitAndNavigateToLoanAccountPage();
-    }
-
     public EditLoanAccountStatusParameters setApprovedStatusParameters() {
         EditLoanAccountStatusParameters loanAccountStatusParameters = new EditLoanAccountStatusParameters();
         loanAccountStatusParameters.setStatus(EditLoanAccountStatusParameters.APPROVED);
@@ -535,13 +508,6 @@ public class LoanTestHelper {
                 navigateToEditAccountStatus().
                 submitAndNavigateToNextPage(setApprovedStatusParameters()).
                 submitAndNavigateToLoanAccountPage();
-    }
-
-    public LoanAccountPage applyCharges(String feeName, String amount) {
-        ChargeParameters chargeParameters = new ChargeParameters();
-        chargeParameters.setType(feeName);
-        chargeParameters.setAmount(amount);
-        return new LoanAccountPage(selenium).navigateToApplyCharge().submitAndNavigateToApplyChargeConfirmationPage(chargeParameters);
     }
 
     public void verifyTransactionHistory(String loanId, Double paymentAmount){

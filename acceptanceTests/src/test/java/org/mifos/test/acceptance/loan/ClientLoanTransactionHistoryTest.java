@@ -112,11 +112,16 @@ public class ClientLoanTransactionHistoryTest extends UiTestCaseBase {
         editLoanAccountInformationParameters.setPurposeOfLoan("0005-Pig Raising");
         editLoanAccountInformationParameters.setCollateralType("Type 1");
         DisburseLoanParameters disburseParameters = new DisburseLoanParameters();
-        disburseParameters.setDisbursalDateDD("07");
-        disburseParameters.setDisbursalDateMM("02");
-        disburseParameters.setDisbursalDateYYYY("2009");
+        disburseParameters.setDisbursalDateDD(Integer.toString(systemDateTime.getDayOfMonth()));
+        disburseParameters.setDisbursalDateMM(Integer.toString(systemDateTime.getMonthOfYear()));
+        disburseParameters.setDisbursalDateYYYY(Integer.toString(systemDateTime.getYear()));
         disburseParameters.setPaymentType(PaymentParameters.CASH);
-        String paymentAmount = "200.0";
+        PaymentParameters paymentParameters = new PaymentParameters();
+        paymentParameters.setAmount("200.0");
+        paymentParameters.setTransactionDateDD(Integer.toString(systemDateTime.plusDays(10).getDayOfMonth()));
+        paymentParameters.setTransactionDateMM(Integer.toString(systemDateTime.plusDays(10).getMonthOfYear()));
+        paymentParameters.setTransactionDateYYYY(Integer.toString(systemDateTime.plusDays(10).getYear()));
+        paymentParameters.setPaymentType(PaymentParameters.CASH);
         //When
         String loanId = loanTestHelper.createLoanAccount(searchParameters, submitAccountParameters).getAccountId();
         EditLoanAccountStatusParameters params = new EditLoanAccountStatusParameters();
@@ -128,9 +133,9 @@ public class ClientLoanTransactionHistoryTest extends UiTestCaseBase {
         //When
         loanTestHelper.changeLoanAccountInformation(loanId, new CreateLoanAccountSubmitParameters(), editLoanAccountInformationParameters);
         loanTestHelper.disburseLoan(loanId, disburseParameters);
-        loanTestHelper.makePayment(systemDateTime.plusDays(10), paymentAmount);
+        loanTestHelper.applyPayment(loanId, paymentParameters);
         //Then
-        loanTestHelper.verifyTransactionHistory(loanId, Double.valueOf(paymentAmount));
+        loanTestHelper.verifyTransactionHistory(loanId, Double.valueOf(paymentParameters.getAmount()));
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")

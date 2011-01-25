@@ -34,10 +34,6 @@ public class DisburseLoanPage extends MifosPage {
         this.verifyPage("DisburseLoan");
     }
 
-    public void verifyPage() {
-        this.verifyPage("DisburseLoan");
-    }
-
     public DisburseLoanConfirmationPage submitAndNavigateToDisburseLoanConfirmationPage(DisburseLoanParameters params) {
         this.typeTextIfNotEmpty("transactionDateDD", params.getDisbursalDateDD());
         this.typeTextIfNotEmpty("transactionDateMM", params.getDisbursalDateMM());

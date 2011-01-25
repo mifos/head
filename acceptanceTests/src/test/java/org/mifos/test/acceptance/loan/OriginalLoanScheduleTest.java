@@ -8,7 +8,9 @@ import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.FeesCreatePage;
 import org.mifos.test.acceptance.framework.loan.ChargeParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
+import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
+import org.mifos.test.acceptance.framework.loan.PaymentParameters;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
 import org.mifos.test.acceptance.framework.office.OfficeParameters;
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
@@ -89,8 +91,8 @@ public class OriginalLoanScheduleTest extends UiTestCaseBase {
         int interestType = DefineNewLoanProductPage.SubmitFormParameters.FLAT;
         applicationDatabaseOperation.updateLSIM(0);
         createLoanProduct(interestType);
-        verifyLoanAccountOriginalSchedule(systemDateTime.plusDays(1), systemDateTime, OriginalScheduleData.FLAT_LOAN_SCHEDULE, true, systemDateTime.plusDays(5));
-        applyChargesAndVerifySchedule(OriginalScheduleData.FLAT_LOAN_SCHEDULE);
+        String accountId = verifyLoanAccountOriginalSchedule(systemDateTime.plusDays(1), systemDateTime, OriginalScheduleData.FLAT_LOAN_SCHEDULE, true, systemDateTime.plusDays(5));
+        applyChargesAndVerifySchedule(accountId, OriginalScheduleData.FLAT_LOAN_SCHEDULE);
     }
 
     @Test(enabled=false)
@@ -125,27 +127,42 @@ public class OriginalLoanScheduleTest extends UiTestCaseBase {
         int interestType = DefineNewLoanProductPage.SubmitFormParameters.DECLINING_BALANCE_INTEREST_RECALCULATION;
         applicationDatabaseOperation.updateLSIM(1);
         createLoanProduct(interestType);
-        verifyLoanAccountOriginalSchedule(systemDateTime.plusDays(1), systemDateTime.plusDays(10), OriginalScheduleData.DEC_BAL_INT_RECALC_LOAN_EARLY_DISBURSAL_SCHEDULE, true, systemDateTime.plusDays(15));
-        applyChargesAndVerifySchedule(OriginalScheduleData.DEC_BAL_INT_RECALC_LOAN_EARLY_DISBURSAL_SCHEDULE);
+        String accountId = verifyLoanAccountOriginalSchedule(systemDateTime.plusDays(1), systemDateTime.plusDays(10), OriginalScheduleData.DEC_BAL_INT_RECALC_LOAN_EARLY_DISBURSAL_SCHEDULE, true, systemDateTime.plusDays(15));
+        applyChargesAndVerifySchedule(accountId, OriginalScheduleData.DEC_BAL_INT_RECALC_LOAN_EARLY_DISBURSAL_SCHEDULE);
     }
 
-    private void applyChargesAndVerifySchedule(String[][] loanSchedule) {
-        loanTestHelper.applyCharges(ChargeParameters.MISC_FEES, "10");
+    private void applyChargesAndVerifySchedule(String accountId, String[][] loanSchedule) {
+        ChargeParameters feeParameters = new ChargeParameters();
+        feeParameters.setAmount("10");
+        feeParameters.setType(ChargeParameters.MISC_FEES);
+        loanTestHelper.applyCharge(accountId, feeParameters);
         verifyOriginalSchedule(loanSchedule);
     }
 
 
-    private void verifyLoanAccountOriginalSchedule(DateTime creationDisbursalDate, DateTime disbursalDate, String[][] tableOnOriginalInstallment, boolean needApplyFee, DateTime paymentDate) throws UnsupportedEncodingException {
-        createLoanAccount(creationDisbursalDate, disbursalDate, needApplyFee);
-        loanTestHelper.applyCharges(ChargeParameters.MISC_FEES, "10");
+    private String verifyLoanAccountOriginalSchedule(DateTime creationDisbursalDate, DateTime disbursalDate, String[][] tableOnOriginalInstallment, boolean needApplyFee, DateTime paymentDate) throws UnsupportedEncodingException {
+        String accountId = createLoanAccount(creationDisbursalDate, disbursalDate, needApplyFee);
+
+        ChargeParameters feeParameters = new ChargeParameters();
+        feeParameters.setAmount("10");
+        feeParameters.setType(ChargeParameters.MISC_FEES);
+        loanTestHelper.applyCharge(accountId, feeParameters);
         verifyOriginalSchedule(tableOnOriginalInstallment);
-        loanTestHelper.makePayment(paymentDate, "100");
+
+        PaymentParameters paymentParameters = new PaymentParameters();
+        paymentParameters.setAmount("100.0");
+        paymentParameters.setTransactionDateDD(Integer.toString(paymentDate.getDayOfMonth()));
+        paymentParameters.setTransactionDateMM(Integer.toString(paymentDate.getMonthOfYear()));
+        paymentParameters.setTransactionDateYYYY(Integer.toString(paymentDate.getYear()));
+        paymentParameters.setPaymentType(PaymentParameters.CASH);
+        loanTestHelper.applyPayment(accountId, paymentParameters);
         verifyOriginalSchedule(tableOnOriginalInstallment);
+        return accountId;
     }
 
-    private void createLoanAccount(DateTime creationDisbursalDate, DateTime actualDisbursalDate, boolean needApplyFee) throws UnsupportedEncodingException {
+    private String createLoanAccount(DateTime creationDisbursalDate, DateTime actualDisbursalDate, boolean needApplyFee) throws UnsupportedEncodingException {
         navigationHelper.navigateToHomePage();
-        loanTestHelper.
+        LoanAccountPage loanAccountPage = loanTestHelper.
                 navigateToCreateLoanAccountEntryPageWithoutLogout(setLoanSearchParameters()).
                 setDisbursalDate(creationDisbursalDate).
                 clickContinue().clickPreviewAndGoToReviewLoanAccountPage().submit().navigateToLoanAccountDetailsPage();
@@ -155,7 +172,10 @@ public class OriginalLoanScheduleTest extends UiTestCaseBase {
             new LoanAccountPage(selenium).navigateToApplyCharge().applyFeeAndConfirm(chargeParameters);
         }
         loanTestHelper.approveLoan();
-        loanTestHelper.disburseLoan(actualDisbursalDate);
+        DisburseLoanParameters disburseParameters = loanTestHelper.setDisbursalParams(actualDisbursalDate);
+        String accountId = loanAccountPage.getAccountId();
+        loanTestHelper.disburseLoan(accountId, disburseParameters);
+        return loanAccountPage.getAccountId();
     }
 
     private LoanAccountPage verifyOriginalSchedule(String[][] tableOnOriginalInstallment) {
