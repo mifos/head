@@ -119,7 +119,7 @@ create table language (
   primary key(lang_id),
   foreign key(lookup_id)
     references lookup_value(lookup_id)
-  	  on delete no action
+        on delete no action
       on update no action
 )
 engine=innodb character set utf8;
@@ -154,7 +154,7 @@ create table fee_payment (
   primary key  (fee_payment_id),
   foreign key (fee_payment_lookup_id)
     references lookup_value (lookup_id)
-	  on delete no action
+      on delete no action
       on update no action
 ) engine=innodb character set utf8;
 
@@ -172,9 +172,9 @@ create table fund (
   fundcode_id smallint not null,
   primary key(fund_id),
   foreign key(fundcode_id)
-	references fund_code(fundcode_id)
-	  on delete no action
-	  on update no action
+    references fund_code(fundcode_id)
+      on delete no action
+      on update no action
 )
 engine=innodb character set utf8;
 
@@ -1091,7 +1091,7 @@ create table customer (
   ho_updated smallint,
   client_confidential smallint,
   mfi_joining_date date,
-  government_id	varchar(50),
+  government_id    varchar(50),
   customer_activation_date date,
   created_by smallint,
   updated_by smallint,
@@ -1189,9 +1189,9 @@ create table customer_detail (
       on delete no action
       on update no action,
   foreign key(poverty_status)
-  	references lookup_value(lookup_id)
-  	  on delete no action
-  	  on update no action
+      references lookup_value(lookup_id)
+        on delete no action
+        on update no action
 )
 engine=innodb character set utf8;
 
@@ -2402,9 +2402,9 @@ engine=innodb character set utf8;
 
 create table waive_off_history(
 waive_off_id    integer auto_increment not null,
-account_id	integer not null,
-waive_off_date	date not null,
-waive_off_type	varchar(20) not null,
+account_id    integer not null,
+waive_off_date    date not null,
+waive_off_type    varchar(20) not null,
 primary key  (waive_off_id),
 foreign key(account_id)
     references loan_account(account_id)
@@ -3538,7 +3538,7 @@ foreign key(currency_id)
     references currency(currency_id)
       on delete no action
       on update no action,
-	foreign key(currency_id)
+    foreign key(currency_id)
     references currency(currency_id)
       on delete no action
       on update no action,
@@ -3561,15 +3561,15 @@ foreign key(currency_id)
 )engine=innodb character set utf8;
 
 create table customer_attendance(
-	id integer auto_increment not null,
-	meeting_date date not null,
-	customer_id integer not null,
-	attendance smallint,
-	primary key(id),
-	foreign key(customer_id)
-	    references customer(customer_id)
-	      on delete no action
-	      on update no action
+    id integer auto_increment not null,
+    meeting_date date not null,
+    customer_id integer not null,
+    attendance smallint,
+    primary key(id),
+    foreign key(customer_id)
+        references customer(customer_id)
+          on delete no action
+          on update no action
 )
 engine=innodb character set utf8;
 
@@ -3589,7 +3589,7 @@ create table coll_sheet_customer (
   cust_id integer not null,
   cust_display_name varchar(200) not null,
   total_due_savings_loan decimal(10,3) ,
-  total_due_savings_loan_currency 	smallint ,
+  total_due_savings_loan_currency     smallint ,
   cust_accnt_fee decimal(10,3),
   cust_accnt_fee_currency smallint,
   cust__accnt_penalty decimal(10,3) ,

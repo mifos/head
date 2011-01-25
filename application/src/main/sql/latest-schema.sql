@@ -113,7 +113,7 @@ create table language (
   primary key(lang_id),
   foreign key(lookup_id)
     references lookup_value(lookup_id)
-  	  on delete no action
+        on delete no action
       on update no action
 )
 engine=innodb character set utf8;
@@ -148,7 +148,7 @@ create table fee_payment (
   primary key  (fee_payment_id),
   foreign key (fee_payment_lookup_id)
     references lookup_value (lookup_id)
-	  on delete no action
+      on delete no action
       on update no action
 ) engine=innodb character set utf8;
 
@@ -166,9 +166,9 @@ create table fund (
   fundcode_id smallint not null,
   primary key(fund_id),
   foreign key(fundcode_id)
-	references fund_code(fundcode_id)
-	  on delete no action
-	  on update no action
+    references fund_code(fundcode_id)
+      on delete no action
+      on update no action
 )
 engine=innodb character set utf8;
 
@@ -1070,7 +1070,7 @@ create table customer (
   ho_updated smallint,
   client_confidential smallint,
   mfi_joining_date date,
-  government_id	varchar(50),
+  government_id    varchar(50),
   customer_activation_date date,
   created_by smallint,
   updated_by smallint,
@@ -1173,9 +1173,9 @@ create table customer_detail (
       on delete no action
       on update no action,
   foreign key(poverty_status)
-  	references lookup_value(lookup_id)
-  	  on delete no action
-  	  on update no action
+      references lookup_value(lookup_id)
+        on delete no action
+        on update no action
 )
 engine=innodb character set utf8;
 
@@ -2405,9 +2405,9 @@ engine=innodb character set utf8;
 
 create table waive_off_history(
 waive_off_id    integer auto_increment not null,
-account_id	integer not null,
-waive_off_date	date not null,
-waive_off_type	varchar(20) not null,
+account_id    integer not null,
+waive_off_date    date not null,
+waive_off_type    varchar(20) not null,
 primary key  (waive_off_id),
 foreign key(account_id)
     references loan_account(account_id)
@@ -3547,7 +3547,7 @@ foreign key(currency_id)
     references currency(currency_id)
       on delete no action
       on update no action,
-	foreign key(currency_id)
+    foreign key(currency_id)
     references currency(currency_id)
       on delete no action
       on update no action,
@@ -3570,15 +3570,15 @@ foreign key(currency_id)
 )engine=innodb character set utf8;
 
 create table customer_attendance(
-	id integer auto_increment not null,
-	meeting_date date not null,
-	customer_id integer not null,
-	attendance smallint,
-	primary key(id),
-	foreign key(customer_id)
-	    references customer(customer_id)
-	      on delete no action
-	      on update no action
+    id integer auto_increment not null,
+    meeting_date date not null,
+    customer_id integer not null,
+    attendance smallint,
+    primary key(id),
+    foreign key(customer_id)
+        references customer(customer_id)
+          on delete no action
+          on update no action
 )
 engine=innodb character set utf8;
 
@@ -4442,8 +4442,8 @@ create table question_choice_tags(
 ) engine=innodb character set utf8;
 
 create table applied_upgrades(
-	upgrade_id integer not null,
-	primary key (upgrade_id)
+    upgrade_id integer not null,
+    primary key (upgrade_id)
 ) engine=innodb character set utf8;
 
 create table QRTZ_JOB_DETAILS(
@@ -4569,77 +4569,77 @@ create table QRTZ_LOCKS(
 ) engine=innodb character set utf8;
 
 create table BATCH_JOB_INSTANCE  (
-	job_instance_id bigint  not null primary key ,
-	version bigint ,
-	job_name varchar(100) not null,
-	job_key varchar(32) not null,
-	constraint job_inst_un unique (job_name, job_key)
+    job_instance_id bigint  not null primary key ,
+    version bigint ,
+    job_name varchar(100) not null,
+    job_key varchar(32) not null,
+    constraint job_inst_un unique (job_name, job_key)
 ) engine=innodb character set utf8;
 
 create table BATCH_JOB_EXECUTION  (
-	job_execution_id bigint  not null primary key ,
-	version bigint  ,
-	job_instance_id bigint not null,
-	create_time datetime not null,
-	start_time datetime default null ,
-	end_time datetime default null ,
-	status varchar(10) ,
-	exit_code varchar(20) ,
-	exit_message varchar(2500) ,
-	last_updated datetime,
-	constraint job_inst_exec_fk foreign key (job_instance_id)
-	references BATCH_JOB_INSTANCE(job_instance_id)
+    job_execution_id bigint  not null primary key ,
+    version bigint  ,
+    job_instance_id bigint not null,
+    create_time datetime not null,
+    start_time datetime default null ,
+    end_time datetime default null ,
+    status varchar(10) ,
+    exit_code varchar(20) ,
+    exit_message varchar(2500) ,
+    last_updated datetime,
+    constraint job_inst_exec_fk foreign key (job_instance_id)
+    references BATCH_JOB_INSTANCE(job_instance_id)
 ) engine=innodb character set utf8;
 
 create table BATCH_JOB_PARAMS  (
-	job_instance_id bigint not null ,
-	type_cd varchar(6) not null ,
-	key_name varchar(100) not null ,
-	string_val varchar(250) ,
-	date_val datetime default null ,
-	long_val bigint ,
-	double_val double precision ,
-	constraint job_inst_params_fk foreign key (job_instance_id)
-	references BATCH_JOB_INSTANCE(job_instance_id)
+    job_instance_id bigint not null ,
+    type_cd varchar(6) not null ,
+    key_name varchar(100) not null ,
+    string_val varchar(250) ,
+    date_val datetime default null ,
+    long_val bigint ,
+    double_val double precision ,
+    constraint job_inst_params_fk foreign key (job_instance_id)
+    references BATCH_JOB_INSTANCE(job_instance_id)
 ) engine=innodb character set utf8;
 
 create table BATCH_STEP_EXECUTION  (
-	step_execution_id bigint  not null primary key ,
-	version bigint not null,
-	step_name varchar(100) not null,
-	job_execution_id bigint not null,
-	start_time datetime not null ,
-	end_time datetime default null ,
-	status varchar(10) ,
-	commit_count bigint ,
-	read_count bigint ,
-	filter_count bigint ,
-	write_count bigint ,
-	read_skip_count bigint ,
-	write_skip_count bigint ,
-	process_skip_count bigint ,
-	rollback_count bigint ,
-	exit_code varchar(20) ,
-	exit_message varchar(2500) ,
-	last_updated datetime,
-	constraint job_exec_step_fk foreign key (job_execution_id)
-	references BATCH_JOB_EXECUTION(job_execution_id)
+    step_execution_id bigint  not null primary key ,
+    version bigint not null,
+    step_name varchar(100) not null,
+    job_execution_id bigint not null,
+    start_time datetime not null ,
+    end_time datetime default null ,
+    status varchar(10) ,
+    commit_count bigint ,
+    read_count bigint ,
+    filter_count bigint ,
+    write_count bigint ,
+    read_skip_count bigint ,
+    write_skip_count bigint ,
+    process_skip_count bigint ,
+    rollback_count bigint ,
+    exit_code varchar(20) ,
+    exit_message varchar(2500) ,
+    last_updated datetime,
+    constraint job_exec_step_fk foreign key (job_execution_id)
+    references BATCH_JOB_EXECUTION(job_execution_id)
 ) engine=innodb character set utf8;
 
 create table BATCH_STEP_EXECUTION_CONTEXT  (
-	step_execution_id bigint not null primary key,
-	short_context varchar(2500) not null,
-	serialized_context text ,
-	constraint step_exec_ctx_fk foreign key (step_execution_id)
-	references BATCH_STEP_EXECUTION(step_execution_id)
+    step_execution_id bigint not null primary key,
+    short_context varchar(2500) not null,
+    serialized_context text ,
+    constraint step_exec_ctx_fk foreign key (step_execution_id)
+    references BATCH_STEP_EXECUTION(step_execution_id)
 ) engine=innodb character set utf8;
 
 create table BATCH_JOB_EXECUTION_CONTEXT  (
-	job_execution_id bigint not null primary key,
-	short_context varchar(2500) not null,
-	serialized_context text ,
-	constraint job_exec_ctx_fk foreign key (job_execution_id)
-	references BATCH_JOB_EXECUTION(job_execution_id)
+    job_execution_id bigint not null primary key,
+    short_context varchar(2500) not null,
+    serialized_context text ,
+    constraint job_exec_ctx_fk foreign key (job_execution_id)
+    references BATCH_JOB_EXECUTION(job_execution_id)
 ) engine=innodb character set utf8;
 
 create table BATCH_STEP_EXECUTION_SEQ (id bigint not null) engine=myisam;
