@@ -28,6 +28,7 @@ import org.mifos.accounts.productdefinition.business.PrdStatusEntity;
 import org.mifos.accounts.productdefinition.business.ProductCategoryBO;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.center.persistence.CenterPersistence;
@@ -36,6 +37,7 @@ import org.mifos.customers.client.persistence.ClientPersistence;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.group.persistence.GroupPersistence;
 import org.mifos.customers.office.business.OfficeBO;
+import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.business.AbstractEntity;
@@ -198,11 +200,7 @@ public class TestObjectPersistence {
 
     public ClientBO getClient(Integer clientId) {
         ClientBO client = null;
-        try {
-            client = clientPersistence.getClient(clientId);
-        } catch (PersistenceException e) {
-            throw new RuntimeException(e);
-        }
+        client = ApplicationContextProvider.getBean(CustomerDao.class).findClientById(clientId);
         return client;
     }
 

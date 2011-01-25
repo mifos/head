@@ -236,4 +236,6 @@ public interface CustomerDao {
             Short officeId);
 
     List<ClientBO> findActiveClientsUnderParent(String searchId, Short branchId);
+
+    ClientBO findClientById(Integer integer);
 }

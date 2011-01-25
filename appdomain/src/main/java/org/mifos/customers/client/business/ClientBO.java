@@ -30,6 +30,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.Hibernate;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
@@ -775,13 +776,8 @@ public class ClientBO extends CustomerBO {
     private void createPicture(final InputStream picture) throws CustomerException {
         try {
             if (picture != null && picture.available() > 0) {
-                try {
-                    this.customerPicture = new CustomerPictureEntity(this, getClientPersistence().createBlob(picture));
-                } catch (PersistenceException e) {
-                    throw new CustomerException(e);
-                }
+                this.customerPicture = new CustomerPictureEntity(this, Hibernate.createBlob(picture));
             }
-
         } catch (IOException e) {
             throw new CustomerException(e);
         }

@@ -173,6 +173,11 @@ public class CustomerDaoHibernate implements CustomerDao {
     }
 
     @Override
+    public ClientBO findClientById(Integer clientId) {
+        return (ClientBO) genericDao.getSession().get(ClientBO.class, clientId);
+    }
+
+    @Override
     public ClientBO findClientBySystemId(String globalCustNum) {
         final HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("globalCustNum", globalCustNum);
