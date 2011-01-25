@@ -1,1 +1,0 @@
-update lookup_value set lookup_name = 'Permissions-Groups-CanEditCenterMembership' where lookup_name = 'Permissions-Groups-CanEditCenterClientship';
