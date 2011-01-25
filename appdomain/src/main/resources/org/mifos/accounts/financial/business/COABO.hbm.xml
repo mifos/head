@@ -9,20 +9,20 @@
         </id>
 
         <property name="accountName" column="coa_name" access="field" />
-        <many-to-one name="associatedGlcode" column="glcode_id" 
-            class="org.mifos.accounts.financial.business.GLCodeEntity" 
-            fetch="join" cascade="none" update="false" insert="true" 
+        <many-to-one name="associatedGlcode" column="glcode_id"
+            class="org.mifos.accounts.financial.business.GLCodeEntity"
+            fetch="join" cascade="none" update="false" insert="true"
             unique="true" access="field" />
-        <many-to-one name="coaHierarchy" column="coa_id" 
-            class="org.mifos.accounts.financial.business.COAHierarchyEntity" 
-            lazy="false" cascade="none" update="false" insert="false" 
+        <many-to-one name="coaHierarchy" column="coa_id"
+            class="org.mifos.accounts.financial.business.COAHierarchyEntity"
+            lazy="false" cascade="none" update="false" insert="false"
             unique="true" access="field" />
-        <set name="subCategory" cascade="none" inverse="true" 
+        <set name="subCategory" cascade="none" inverse="true"
             table="coahierarchy" lazy="false" fetch="join" access="field">
             <key column="parent_coaid" />
 
-            <many-to-many 
-                class="org.mifos.accounts.financial.business.COAHierarchyEntity" 
+            <many-to-many
+                class="org.mifos.accounts.financial.business.COAHierarchyEntity"
                 column="coa_id" fetch="join" />
         </set>
         <!-- The corresponding Java type is simply a String, but
@@ -32,36 +32,36 @@
         type="string" />
 
     </class>
-    <query name="COABO.getTopLevelAccount"><![CDATA[ 
+    <query name="COABO.getTopLevelAccount"><![CDATA[
         select coa
         from org.mifos.accounts.financial.business.COABO coa,
              org.mifos.accounts.financial.business.COAHierarchyEntity hierarchy,
              org.mifos.accounts.financial.business.GLCodeEntity glCode
-        where 
+        where
             coa.accountId = hierarchy.accountId and
             hierarchy.parentAccount is null and
             coa.associatedGlcode = glCode.glcodeId and
             coa.categoryType = :categoryType
         ]]>
     </query>
-    <query name="COABO.getTopLevelAccounts"><![CDATA[ 
+    <query name="COABO.getTopLevelAccounts"><![CDATA[
         select coa
         from org.mifos.accounts.financial.business.COABO coa,
              org.mifos.accounts.financial.business.COAHierarchyEntity hierarchy,
              org.mifos.accounts.financial.business.GLCodeEntity glCode
-        where 
+        where
             coa.accountId = hierarchy.accountId and
             hierarchy.parentAccount is null and
             coa.associatedGlcode = glCode.glcodeId
-        order by 
+        order by
             glCode.glcode
         ]]>
     </query>
-    <query name="COABO.getAccountIdForGLCode"><![CDATA[ 
+    <query name="COABO.getAccountIdForGLCode"><![CDATA[
         select coa.accountId
         from org.mifos.accounts.financial.business.COABO coa,
              org.mifos.accounts.financial.business.GLCodeEntity glCodeEntity
-        where 
+        where
             glCodeEntity.glcode = :glCode and
             coa.associatedGlcode = glCodeEntity.glcodeId
         ]]>
@@ -71,6 +71,6 @@
             from  org.mifos.accounts.financial.business.COABO coa
         ]]>
     </query>
-    
-    
+
+
 </hibernate-mapping>

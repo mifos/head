@@ -6,7 +6,7 @@
 
 <hibernate-mapping>
 
-    <class name="org.mifos.accounts.loan.business.LoanArrearsAgingEntity" 
+    <class name="org.mifos.accounts.loan.business.LoanArrearsAgingEntity"
         table="loan_arrears_aging">
         <id name="id" column="id" type="integer" unsaved-value="null" access="field">
             <generator class="native" />
@@ -42,7 +42,7 @@
         <many-to-one name="parentCustomer" column="parent_customer_id" class="org.mifos.customers.business.CustomerBO" cascade="none" update="true" insert="true" unique="true" access="field" />
         <many-to-one name="office" column="office_id" class="org.mifos.customers.office.business.OfficeBO" cascade="none" update="false" insert="true" unique="true" access="field" />
     </class>
-    
+
     <sql-query name="deleteAllLoanArrearsAging">
         <![CDATA[
                delete from loan_arrears_aging
@@ -54,7 +54,7 @@
                   days_in_arrears, overdue_principal, overdue_principal_currency_id, overdue_interest, overdue_interest_currency_id,
                   overdue_balance, overdue_balance_currency_id,  unpaid_principal,  unpaid_principal_currency_id, unpaid_interest,
                   unpaid_interest_currency_id, unpaid_balance, unpaid_balance_currency_id)
-  
+
                 /*all currency_id s must be the same, so just using one*/
                 select a.account_id, c.customer_id, c.display_name as customer_name, c.parent_customer_id, c.branch_id as office_id,
 

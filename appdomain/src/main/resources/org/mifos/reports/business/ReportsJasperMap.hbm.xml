@@ -6,7 +6,7 @@
 
 <hibernate-mapping>
 
-    <class name="org.mifos.reports.business.ReportsJasperMap" 
+    <class name="org.mifos.reports.business.ReportsJasperMap"
         table="report_jasper_map">
         <id name="reportId" column="report_id" type="short">
             <generator class="native"/>
@@ -21,6 +21,6 @@
     <query name="findJasperOfReportId">
         <![CDATA[ from ReportsJasperMap where report_Id=:reportId ]]>
     </query>
-   
-    
+
+
 </hibernate-mapping>

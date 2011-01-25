@@ -7,19 +7,19 @@
 <hibernate-mapping>
 
     <class name="org.mifos.customers.business.CustomerMeetingEntity" table="customer_meeting">
-        <id name="custMeetingId" column="customer_meeting_id" type="integer" 
+        <id name="custMeetingId" column="customer_meeting_id" type="integer"
             access="field">
             <generator class="native"/>
         </id>
-        
-        <many-to-one name="meeting" column="meeting_id"  
-            class="org.mifos.application.meeting.business.MeetingBO" 
-            insert="true" update="true"   unique="true" lazy="false" 
+
+        <many-to-one name="meeting" column="meeting_id"
+            class="org.mifos.application.meeting.business.MeetingBO"
+            insert="true" update="true"   unique="true" lazy="false"
             cascade="save-update" access="field"/>
-            
-         <many-to-one name="customer" column="customer_id"  
-             class="org.mifos.customers.business.CustomerBO" 
-             insert="true" update="true"  unique="true" 
+
+         <many-to-one name="customer" column="customer_id"
+             class="org.mifos.customers.business.CustomerBO"
+             insert="true" update="true"  unique="true"
              cascade="none" access="field"/>
     </class>
 </hibernate-mapping>

@@ -10,8 +10,8 @@
         <id name="hierarchyId" column="hierarchy_id" type="integer" access="field">
             <generator class="native"/>
         </id>
- 
-        
+
+
         <property name="status" column="status" type="short" access="field"/>
         <property name="createdDate" column="start_date" type="date" />
         <property name="endDate" column="end_date" type="date"   />

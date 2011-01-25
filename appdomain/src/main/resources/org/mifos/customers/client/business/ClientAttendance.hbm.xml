@@ -19,7 +19,7 @@
             class="org.mifos.customers.business.CustomerBO"
             cascade="none" update="false" insert="true" unique="true" />
     </class>
-    
-                
+
+
 </hibernate-mapping>
 

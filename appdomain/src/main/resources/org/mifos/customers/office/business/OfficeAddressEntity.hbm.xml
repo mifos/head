@@ -20,9 +20,9 @@
             <property name="zip" column="zip" type="string"   />
              <property name="phoneNumber" column="telephone" type="string"  />
         </component>
-    
+
     <many-to-one name="office" column="office_id" class="org.mifos.customers.office.business.OfficeBO"  access="field" />
-    
+
     </class>
 
 </hibernate-mapping>

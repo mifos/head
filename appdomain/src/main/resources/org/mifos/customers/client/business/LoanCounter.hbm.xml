@@ -7,8 +7,8 @@
         <id name="loanCounterId" column="loan_counter_id" type="integer" access="field">
             <generator class="native" />
         </id>
-        <property name="loanCycleCounter" column="loan_cycle_counter"/>   
+        <property name="loanCycleCounter" column="loan_cycle_counter"/>
         <many-to-one name="clientPerfHistory" column="client_perf_id" class="org.mifos.customers.client.business.ClientPerformanceHistoryEntity" access="field" />
         <many-to-one name="loanOffering" column="loan_offering_id" class="org.mifos.accounts.productdefinition.business.LoanOfferingBO" access="field" cascade="none"/>
-    </class>    
+    </class>
 </hibernate-mapping>

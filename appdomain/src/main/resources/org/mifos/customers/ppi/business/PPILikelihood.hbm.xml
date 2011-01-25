@@ -7,7 +7,7 @@
         <id name="likelihoodId" column="likelihood_id" type="integer" unsaved-value="0" access="field">
             <generator class="native" />
         </id>
-        <many-to-one name="survey" column="survey_id" class="org.mifos.customers.surveys.business.Survey"     
+        <many-to-one name="survey" column="survey_id" class="org.mifos.customers.surveys.business.Survey"
             access="field" not-null="true"/>
         <property name="scoreFrom" column="score_from" />
         <property name="scoreTo" column="score_to" />

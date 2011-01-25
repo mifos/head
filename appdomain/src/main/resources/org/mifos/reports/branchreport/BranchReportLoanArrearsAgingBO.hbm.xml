@@ -2,7 +2,7 @@
 <!DOCTYPE hibernate-mapping PUBLIC
                             "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
                             "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
-<!-- 
+<!--
 Copyright (c) 2005-2008 Grameen Foundation USA
 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
 All rights reserved.
@@ -21,7 +21,7 @@ permissions and limitations under the License.
 
 See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 explanation of the license and how it is applied.
--->                            
+-->
 <hibernate-mapping>
     <class
         name="org.mifos.reports.branchreport.BranchReportLoanArrearsAgingBO"
@@ -51,22 +51,22 @@ explanation of the license and how it is applied.
         </property>
         <many-to-one name="branchReport" column="branch_report_id" access="field"
             class="org.mifos.reports.branchreport.BranchReportBO">
-        </many-to-one>        
+        </many-to-one>
     </class>
 
     <sql-query
         name="branchReport.getBranchReportLoanArrearsAgingForDateAndBranch">
         <load-collection alias="loanArrears"
             role="org.mifos.reports.branchreport.BranchReportBO.loanArrearsAging" />
-        <![CDATA[SELECT {loanArrears.*} from batch_loan_arrears_aging as loanArrears, batch_branch_report as branchReport where 
-            branchReport.branch_report_id=loanArrears.branch_report_id 
-            and branchReport.run_date=:RUN_DATE 
+        <![CDATA[SELECT {loanArrears.*} from batch_loan_arrears_aging as loanArrears, batch_branch_report as branchReport where
+            branchReport.branch_report_id=loanArrears.branch_report_id
+            and branchReport.run_date=:RUN_DATE
             and branchReport.branch_id=:BRANCH_ID
             order by loanArrears.aging_period_id
         ]]>
     </sql-query>
     <sql-query name="branchReport.extractBranchReportLoanArrears">
-        <return-scalar column="clientsAgingCount" type="integer"/>         
+        <return-scalar column="clientsAgingCount" type="integer"/>
         <return-scalar column="loansAgingCount" type="integer"/>
         <return-scalar column="amountAgingCount" type="big_decimal"/>
         <return-scalar column="amountOutstandingAgingCount" type="big_decimal"/>
@@ -74,63 +74,63 @@ explanation of the license and how it is applied.
         <![CDATA[
             select (
                     select count(distinct laa.customer_id)
-                        from 
-                            loan_arrears_aging laa 
+                        from
+                            loan_arrears_aging laa
                         left join
                             customer cust on cust.customer_id=laa.customer_id
                         left join
                             customer_state cs on cs.status_id=cust.status_id
-                        left join 
-                            account acc on acc.account_id=laa.account_id 
-                        where 
+                        left join
+                            account acc on acc.account_id=laa.account_id
+                        where
                             cust.customer_level_id=:customerLevelId
-                        and 
+                        and
                             acc.account_state_id in (9)
                         and
                             (cs.description='Customer Was Active' or cs.description='Customer Was Hold')
                         and
                             laa.days_in_arrears >=:MIN_DAYS
                         and
-                            laa.days_in_arrears <=:MAX_DAYS 
-                        and 
-                            laa.customer_id 
-                            not in (select 
-                                        distinct laa1.customer_id 
+                            laa.days_in_arrears <=:MAX_DAYS
+                        and
+                            laa.customer_id
+                            not in (select
+                                        distinct laa1.customer_id
                                     from
-                                        loan_arrears_aging laa1 
-                                    where 
-                                        laa1.days_in_arrears >= :NOT_LESS_THAN_DAYS 
-                                    and 
+                                        loan_arrears_aging laa1
+                                    where
+                                        laa1.days_in_arrears >= :NOT_LESS_THAN_DAYS
+                                    and
                                         laa1.office_id=:officeId
-                                    ) 
+                                    )
                         and
                            laa.office_id=:officeId
-                    ) as clientsAgingCount, 
-                count(*) as loansAgingCount, 
-                round(ifnull(sum(coalesce(la.overdue_principal)),0),3) as amountAgingCount, 
+                    ) as clientsAgingCount,
+                count(*) as loansAgingCount,
+                round(ifnull(sum(coalesce(la.overdue_principal)),0),3) as amountAgingCount,
                 round(ifnull(sum(coalesce(la.unpaid_principal)),0),3) as amountOutstandingAgingCount,
                 round(ifnull(sum(coalesce(la.overdue_interest)),0),3) as interestAgingCount
-            from 
-                loan_arrears_aging la 
+            from
+                loan_arrears_aging la
             left join
                 customer cust on cust.customer_id=la.customer_id
             left join
                 customer_state cs on cs.status_id=cust.status_id
-            left join 
-                account acc on acc.account_id=la.account_id 
-            where 
+            left join
+                account acc on acc.account_id=la.account_id
+            where
                 cust.customer_level_id=:customerLevelId
             and
                 (cs.description='Customer Was Active' or cs.description='Customer Was Hold')
-            and 
+            and
                 acc.account_state_id in (9)
             and
-                la.days_in_arrears >=:MIN_DAYS 
+                la.days_in_arrears >=:MIN_DAYS
             and
-                la.days_in_arrears <=:MAX_DAYS 
-            and 
+                la.days_in_arrears <=:MAX_DAYS
+            and
                 la.office_id=:officeId
     ]]>
-    </sql-query>        
+    </sql-query>
 
 </hibernate-mapping>

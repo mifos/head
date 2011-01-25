@@ -24,26 +24,26 @@
     </class>
 
     <query name="product.searchcategories">
-        <![CDATA[from org.mifos.accounts.productdefinition.business.ProductCategoryBO pc 
+        <![CDATA[from org.mifos.accounts.productdefinition.business.ProductCategoryBO pc
         order by pc.productType.productTypeID,pc.productCategoryName]]>
     </query>
     <query name="product.updateduplcount">
-        <![CDATA[select count(*) from org.mifos.accounts.productdefinition.business.ProductCategoryBO pc 
+        <![CDATA[select count(*) from org.mifos.accounts.productdefinition.business.ProductCategoryBO pc
         where pc.productCategoryName=:productCategoryName and pc.productCategoryID != (:productCategoryID)]]>
     </query>
     <query name="product.maxprdcatid">
-        <![CDATA[select max(pc.productCategoryID) 
+        <![CDATA[select max(pc.productCategoryID)
         from org.mifos.accounts.productdefinition.business.ProductCategoryBO pc]]>
     </query>
     <query name="product.createduplcount">
-        <![CDATA[select count(*) from org.mifos.accounts.productdefinition.business.ProductCategoryBO pc 
+        <![CDATA[select count(*) from org.mifos.accounts.productdefinition.business.ProductCategoryBO pc
         where pc.productCategoryName=:productCategoryName]]>
     </query>
     <query name="productdefenition.getProductCategory">
         <![CDATA[from org.mifos.accounts.productdefinition.business.ProductCategoryBO pc where pc.globalPrdCategoryNum=:globalNum]]>
     </query>
     <query name="product.createapplicableproductcat">
-        <![CDATA[from org.mifos.accounts.productdefinition.business.ProductCategoryBO pc 
+        <![CDATA[from org.mifos.accounts.productdefinition.business.ProductCategoryBO pc
         where pc.productType.productTypeID=:productTypeID and pc.prdCategoryStatus.id=:prdCategoryStatusId order by pc.productCategoryName]]>
     </query>
     <query name="product.findById">

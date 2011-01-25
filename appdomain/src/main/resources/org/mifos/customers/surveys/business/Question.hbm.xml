@@ -30,10 +30,10 @@
     </query>
     <query name="questions.retrieveByText">
        <![CDATA[from Question as question where question.questionText=:QUESTION_TEXT]]>
-    </query>    
+    </query>
      <query name="questions.retrieveByAnswerType">
        <![CDATA[from Question as question where question.answerType=:ANSWER_TYPE]]>
-    </query>  
+    </query>
      <query name="Question.retrieveCountOfQuestionsWithText">
        <![CDATA[select count(*) from Question as question where question.questionText=:questionText]]>
     </query>

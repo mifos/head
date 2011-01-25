@@ -11,7 +11,7 @@
         </id>
         <version name="versionNo" column="version_no" type="integer" />
         <property name="name" type="string" column="role_name" />
-        
+
         <property name="createdDate" column="created_date" />
         <property name="createdBy" column="created_by" />
         <property name="updatedBy"  column="updated_by" />
@@ -23,14 +23,14 @@
                 class="org.mifos.security.rolesandpermission.business.RoleActivityEntity" />
         </set>
     </class>
-    
+
     <query name="getRoleForGivenName">
             <![CDATA[FROM RoleBO role WHERE role.name =:RoleName]]>
     </query>
-    
+
     <query name="getAllRoles">
             <![CDATA[ from RoleBO role order by role.name]]>
     </query>
-    
+
 </hibernate-mapping>
 

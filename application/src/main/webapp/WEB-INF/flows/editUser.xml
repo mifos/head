@@ -14,12 +14,12 @@
         <transition on="preview" to="prepareUserFormBeanForPreview" />
         <transition on="cancel" to="cancel" validate="false"/>
     </view-state>
-    
+
     <action-state id="prepareUserFormBeanForPreview">
         <evaluate expression="flowScope.userFormBean.prepareForPreview()" />
         <transition to="reviewUserDetailsStep" />
     </action-state>
-    
+
     <view-state id="reviewUserDetailsStep" view="reviewUserDetails" model="userFormBean">
         <transition on="reedit" to="editUserDetailsStep" validate="false">
             <evaluate expression="userFormBean.prepateForReEdit()" />
@@ -29,8 +29,8 @@
         </transition>
         <transition on="cancel" to="cancel" validate="false"/>
     </view-state>
-    
+
     <end-state id="success" view="externalRedirect:contextRelative:/AdminAction.do?method=load"/>
     <end-state id="cancel" view="externalRedirect:contextRelative:/AdminAction.do?method=load"/>
-    
+
 </flow>

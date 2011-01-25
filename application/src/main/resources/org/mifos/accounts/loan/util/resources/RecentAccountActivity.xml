@@ -2,7 +2,7 @@
 
 
 <tableInfo>
-  <headerDetails  headerStyle="drawtablerowbold"/> 
+  <headerDetails  headerStyle="drawtablerowbold"/>
   <row totWidth="100" bottomLineRequired="true">
     <column label="Date" value="userPrefferedDate" valueType="method" columnType="text">
          <columnDetails  rowStyle="drawtablerow" colWidth="25"/>

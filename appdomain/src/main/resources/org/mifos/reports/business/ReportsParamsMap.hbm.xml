@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE hibernate-mapping PUBLIC 
+<!DOCTYPE hibernate-mapping PUBLIC
     "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
     "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-  
-<hibernate-mapping > 
+
+<hibernate-mapping >
   <class name="org.mifos.reports.business.ReportsParamsMap" table="report_parameter_map" >
   <id name="mapId" column="map_id" type="int">
          <generator class="native" />
      </id>
-     
+
      <property name="reportId" column="report_id" type="int" />
-    <many-to-one name="reportsParams" column="parameter_id" class="org.mifos.reports.business.ReportsParams" />   
-    </class> 
-    
+    <many-to-one name="reportsParams" column="parameter_id" class="org.mifos.reports.business.ReportsParams" />
+    </class>
+
      <query name="getAllReportParamsMap">
               <![CDATA[ from ReportsParamsMap]]>
-    </query> 
+    </query>
     <query name="findParamsOfReportId">
         <![CDATA[ from ReportsParamsMap where report_Id=:reportId ]]>
     </query>
@@ -23,4 +23,4 @@
         <![CDATA[ from ReportsParamsMap where parameter_Id=:parameterId ]]>
     </query>
 
-</hibernate-mapping> 
+</hibernate-mapping>

@@ -2,7 +2,7 @@
 <!DOCTYPE hibernate-mapping PUBLIC
                             "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
                             "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
-<!-- 
+<!--
 Copyright (c) 2005-2008 Grameen Foundation USA
 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
 All rights reserved.
@@ -21,7 +21,7 @@ permissions and limitations under the License.
 
 See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 explanation of the license and how it is applied.
--->                            
+-->
 <hibernate-mapping>
     <class
         name="org.mifos.reports.cashconfirmationreport.BranchCashConfirmationIssueBO" table="batch_branch_confirmation_issue">
@@ -33,13 +33,13 @@ explanation of the license and how it is applied.
         <property name="actual" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
             <column name="actual_currency_id"/>
             <column name="actual"/>
-        </property>            
+        </property>
         <many-to-one name="branchCashConfirmationReport"
             column="branch_cash_confirmation_report_id" access="field"
             class="org.mifos.reports.cashconfirmationreport.BranchCashConfirmationReportBO">
         </many-to-one>
     </class>
-    
+
     <class
         name="org.mifos.reports.cashconfirmationreport.BranchCashConfirmationDisbursementBO" table="batch_branch_confirmation_disbursement">
         <id name="id" access="field" column="id">
@@ -50,31 +50,31 @@ explanation of the license and how it is applied.
         <property name="actual" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
             <column name="actual_currency_id"/>
             <column name="actual"/>
-        </property>            
+        </property>
         <many-to-one name="branchCashConfirmationReport"
             column="branch_cash_confirmation_report_id" access="field"
             class="org.mifos.reports.cashconfirmationreport.BranchCashConfirmationReportBO">
         </many-to-one>
-    </class>    
-    
-    <sql-query name="branchCashConfirmationReport.getCenterIssues">        
+    </class>
+
+    <sql-query name="branchCashConfirmationReport.getCenterIssues">
         <load-collection alias="centerIssues"
             role="org.mifos.reports.cashconfirmationreport.BranchCashConfirmationReportBO.centerIssues" />
-        <![CDATA[ SELECT {centerIssues.*} from batch_branch_confirmation_issue as centerIssues, 
-            batch_branch_cash_confirmation_report as report where 
+        <![CDATA[ SELECT {centerIssues.*} from batch_branch_confirmation_issue as centerIssues,
+            batch_branch_cash_confirmation_report as report where
             report.branch_cash_confirmation_report_id=centerIssues.branch_cash_confirmation_report_id
-            and report.run_date=:RUN_DATE 
+            and report.run_date=:RUN_DATE
             and report.branch_id=:BRANCH_ID
         ]]>
     </sql-query>
 
-    <sql-query name="branchCashConfirmationReport.getDisbursements">        
+    <sql-query name="branchCashConfirmationReport.getDisbursements">
         <load-collection alias="disbursements"
             role="org.mifos.reports.cashconfirmationreport.BranchCashConfirmationReportBO.disbursements" />
-        <![CDATA[ SELECT {disbursements.*} from batch_branch_confirmation_disbursement as disbursements, 
-            batch_branch_cash_confirmation_report as report where 
+        <![CDATA[ SELECT {disbursements.*} from batch_branch_confirmation_disbursement as disbursements,
+            batch_branch_cash_confirmation_report as report where
             report.branch_cash_confirmation_report_id=disbursements.branch_cash_confirmation_report_id
-            and report.run_date=:RUN_DATE 
+            and report.run_date=:RUN_DATE
             and report.branch_id=:BRANCH_ID
         ]]>
     </sql-query>

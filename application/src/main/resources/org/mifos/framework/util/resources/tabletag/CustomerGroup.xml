@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <table class="org.mifos.xyz" name="center" resourcebundle="resource"
-        xmlns="http://www.aditi.com" 
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xmlns="http://www.aditi.com"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.aditi.com tabletag.xsd ">
-  <path key="customersearch" forwardkey="mainSearch_success" action="custSearchAction.do"/> 
-  <pagerequirements numbersrequired="true" bluelinerequired="false"  blanklinerequired="true" headingrequired="true"/>  
+  <path key="customersearch" forwardkey="mainSearch_success" action="custSearchAction.do"/>
+  <pagerequirements numbersrequired="true" bluelinerequired="false"  blanklinerequired="true" headingrequired="true"/>
   <row>
     <column label="Group" labeltype="key" boldlabel="false" type="link" action="groupCustAction.do" styleClass="headingblue">
       <displayname bold="true">
@@ -19,8 +19,8 @@
         <parameter name="recordLoanOfficerId" value="loanOffcerGlobalNum" valuetype="method"/>
       </parameters>
     </column>
-  </row> 
-  
+  </row>
+
   <row>
       <column label="status" labeltype="key" boldlabel="true" type="text" image="true">
           <displayname>
@@ -33,7 +33,7 @@
           </displayname>
       </column>
   </row>
-  
+
   <row>
       <column label="Savings" labeltype="key" boldlabel="true" type="link" action="savingsAction.do">
           <displayname>
@@ -48,7 +48,7 @@
           </parameters>
       </column>
   </row>
-  
+
   <row>
       <column label="Loan" labeltype="key" boldlabel="true" type="link" action="loanAccountAction.do">
           <displayname>
@@ -63,7 +63,7 @@
           </parameters>
       </column>
   </row>
-  
+
 <row>
     <column label="alsosee" labeltype="key" boldlabel="false" type="link" action="custSearchAction.do">
         <displayname>
@@ -77,7 +77,7 @@
     <column label="/" labeltype="string" boldlabel="false" type="link" action="centerCustAction.do">
         <displayname>
             <fragment-name name="groupName" type="method" />
-            
+
         </displayname>
         <parameters>
             <parameter name="globalCustNum" value="groupGlobalCustNum" valuetype="method"/>
@@ -87,5 +87,5 @@
         </parameters>
     </column>
 </row>
-  
+
 </table>

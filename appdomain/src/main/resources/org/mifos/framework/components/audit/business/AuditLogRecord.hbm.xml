@@ -13,10 +13,10 @@
           <property name="fieldName" column="field_name" type="string" access="field"/>
         <property name="oldValue" column="old_value" type="string" access="field"/>
         <property name="newValue" column="new_value" type="string" access="field"/>
-        <many-to-one  name="auditLog" column="change_log_id" 
+        <many-to-one  name="auditLog" column="change_log_id"
             class="org.mifos.framework.components.audit.business.AuditLog"
             access="field"/>
-      
+
     </class>
-    
+
 </hibernate-mapping>

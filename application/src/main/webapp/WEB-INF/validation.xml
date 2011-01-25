@@ -869,7 +869,7 @@
                 <arg key="Savings.notes" />
             </field>
         </form>
-        
+
         <form name="/labelconfigurationaction">
             <field property="headOffice" depends="required">
                 <msg name="required" key="errors.mandatory" bundle="configurationUIResources" />

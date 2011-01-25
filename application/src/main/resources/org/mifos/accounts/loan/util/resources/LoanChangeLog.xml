@@ -2,7 +2,7 @@
 
 
 <tableInfo>
-  <headerDetails headerStyle="drawtablehd"/> 
+  <headerDetails headerStyle="drawtablehd"/>
   <row totWidth="100" bottomLineRequired="true">
     <column label="Date" value="mfiDate" valueType="method" columnType="text">
          <columnDetails  rowStyle="drawtablerow" colWidth="15" />
@@ -10,16 +10,16 @@
     <column label="Field" value="fieldName" valueType="method" columnType="text">
          <columnDetails  rowStyle="drawtablerow" colWidth="27"/>
     </column>
-    <column label="OldValue"    value="oldValue"  valueType="method"   columnType="text"> 
+    <column label="OldValue"    value="oldValue"  valueType="method"   columnType="text">
         <columnDetails   rowStyle="drawtablerow" colWidth="20"/>
     </column>
-    <column label="NewValue"    value="newValue"  valueType="method"   columnType="text"> 
+    <column label="NewValue"    value="newValue"  valueType="method"   columnType="text">
         <columnDetails   rowStyle="drawtablerow" colWidth="19"/>
     </column>
-    <column label="User"  value="userName"  valueType="method"   columnType="text"> 
+    <column label="User"  value="userName"  valueType="method"   columnType="text">
         <columnDetails   rowStyle="drawtablerow" colWidth="19"/>
     </column>
   </row>
 
-  
+
 </tableInfo>

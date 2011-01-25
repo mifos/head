@@ -15,5 +15,5 @@
          <many-to-one name="prdOffering" column="prd_offering_id" class="org.mifos.accounts.productdefinition.business.PrdOfferingBO" cascade="none" insert="true" update="true" access="field"/>
         <many-to-one name="meeting"  column="prd_meeting_id" class="org.mifos.application.meeting.business.MeetingBO" cascade="all" insert="true" update="true" unique="true"/>
     </class>
-    
+
 </hibernate-mapping>

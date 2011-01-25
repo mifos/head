@@ -19,7 +19,7 @@
     </class>
     <query name="accounts.getLastLoanAmount">
         <![CDATA[select loan.loanAmount from org.mifos.accounts.loan.business.LoanBO as loan,
-        org.mifos.accounts.business.AccountStatusChangeHistoryEntity as history 
+        org.mifos.accounts.business.AccountStatusChangeHistoryEntity as history
         where loan.accountId = history.account.accountId and history.accountStatusChangeId = ( select max(completeStatusHistory.accountStatusChangeId) from org.mifos.accounts.business.AccountStatusChangeHistoryEntity as completeStatusHistory,org.mifos.accounts.loan.business.LoanBO as completeLoanObject where completeLoanObject.accountId=completeStatusHistory.account.accountId and completeLoanObject.customer.customerId=:CUSTOMERID and completeStatusHistory.newStatus=6) ]]>
     </query>
 </hibernate-mapping>

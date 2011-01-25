@@ -15,7 +15,7 @@
         <property name="holidayName" column="holiday_name" type="string" />
         <property name="repaymentRuleType" column="repayment_rule_id"
             type="org.mifos.application.holiday.util.helpers.RepaymentRuleUserType" not-null="true"/>
-        <property name="holidayChangesAppliedFlag" column="holiday_changes_applied_flag"/>        
+        <property name="holidayChangesAppliedFlag" column="holiday_changes_applied_flag"/>
     </class>
 
     <!-- Holiday Specific Queries  -->
@@ -33,7 +33,7 @@
                     order by holidayBO.holidayFromDate
               ]]>
     </query>
-    
+
     <query name="holiday.findGivenDateInCurrentAndFutureOfficeHolidays">
               <![CDATA[select distinct holidayBO from org.mifos.customers.office.business.OfficeBO office
                           join office.holidays holidayBO,
@@ -50,7 +50,7 @@
     <query name="holiday.getOfficeHolidays">
               <![CDATA[select distinct holidayBO from org.mifos.customers.office.business.OfficeBO office
                              join office.holidays holidayBO
-                       where ((holidayBO.holidayThruDate between :START_OF_YEAR and :END_OF_YEAR) 
+                       where ((holidayBO.holidayThruDate between :START_OF_YEAR and :END_OF_YEAR)
                            or (holidayBO.holidayFromDate between :START_OF_YEAR and :END_OF_YEAR))
                            and office.officeId = :OFFICE_ID
                        order by holidayBO.holidayFromDate
@@ -62,8 +62,8 @@
                        order by holidayBO.holidayFromDate
             ]]>
     </query>
-    
-    
+
+
     <query name="holiday.getDistinctYears">
             <![CDATA[select distinct(holidayBO.holidayThruDate)
                     from org.mifos.application.holiday.business.HolidayBO holidayBO
@@ -74,12 +74,12 @@
     <query name="holiday.getAll">
             <![CDATA[from org.mifos.application.holiday.business.HolidayBO holidayBO]]>
     </query>
-    
+
     <sql-query name="holiday.applicableOffices">
         <return-scalar column="office_name" type="string"/>
             select
                 office.display_name as office_name
-            from holiday 
+            from holiday
                 join office_holiday on holiday.holiday_id = office_holiday.holiday_id
                 join office on office_holiday.office_id = office.office_id
                 left join office as parent on office.parent_office_id = parent.office_id

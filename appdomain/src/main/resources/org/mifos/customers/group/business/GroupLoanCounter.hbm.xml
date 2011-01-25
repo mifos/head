@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding='UTF-8'?>
-<!DOCTYPE hibernate-mapping PUBLIC 
+<!DOCTYPE hibernate-mapping PUBLIC
                             "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
                             "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
@@ -7,8 +7,8 @@
         <id name="loanCounterId" column="group_loan_counter_id" type="integer" access="field">
             <generator class="native" />
         </id>
-        <property name="loanCycleCounter" column="loan_cycle_counter" access="field"/>   
+        <property name="loanCycleCounter" column="loan_cycle_counter" access="field"/>
         <many-to-one name="groupPeformanceHistory" column="group_perf_id" class="org.mifos.customers.group.business.GroupPerformanceHistoryEntity" access="field" />
-        <many-to-one name="loanOffering" column="loan_offering_id" class="org.mifos.accounts.productdefinition.business.LoanOfferingBO" access="field" cascade="none"/>        
-    </class>    
+        <many-to-one name="loanOffering" column="loan_offering_id" class="org.mifos.accounts.productdefinition.business.LoanOfferingBO" access="field" cascade="none"/>
+    </class>
 </hibernate-mapping>

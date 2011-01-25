@@ -2,7 +2,7 @@
 
 
 <tableInfo>
-  <headerDetails  headerStyle="drawtablerowbold"/> 
+  <headerDetails  headerStyle="drawtablerowbold"/>
   <row totWidth="100">
     <column label="Installment" value="installment" valueType="method" columnType="text">
          <columnDetails  rowStyle="drawtablerow" colWidth="10"/>
@@ -24,5 +24,5 @@
     </column>
   </row>
 
-  
+
 </tableInfo>

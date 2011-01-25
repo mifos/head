@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tableInfo>
-  <headerDetails  headerStyle="drawtablerowbold"/> 
+  <headerDetails  headerStyle="drawtablerowbold"/>
   <row totWidth="96" bottomLineRequired="false">
     <column label="Date" value="userPrefferedDate" valueType="method" columnType="text">
          <columnDetails  rowStyle="drawtablerow" colWidth="22"/>

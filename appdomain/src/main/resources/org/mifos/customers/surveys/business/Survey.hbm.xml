@@ -16,7 +16,7 @@
             <index column="question_order"/>
             <one-to-many class="org.mifos.customers.surveys.business.SurveyQuestion"/>
         </list>
-        
+
         <joined-subclass table="ppi_survey" name="org.mifos.customers.ppi.business.PPISurvey">
             <key column="survey_id"/>
             <property name="veryPoorMin" column="very_poor_min"/>
@@ -58,7 +58,7 @@
     </query>
     <query name="surveys.retrieveCustomersSurveys">
         <![CDATA[from Survey as survey where survey.appliesTo='client' or survey.appliesTo='group' or survey.appliesTo='center' or survey.appliesTo='all' order by survey.name]]>
-    </query>    
+    </query>
     <query name="surveys.retrieveAccountsSurveys">
         <![CDATA[from Survey as survey where survey.appliesTo='loan' or survey.appliesTo='savings' or survey.appliesTo='all' order by survey.name]]>
     </query>

@@ -50,7 +50,7 @@
     </form-beans>
 
     <action-mappings>
-        
+
         <action path="/yourSettings" type="org.mifos.customers.personnel.struts.action.PersonnelSettingsAction"
                 name="personnelSettingsActionForm" parameter="method" validate="true"
                 input="/yourSettings.do?method=validate" scope="session">
@@ -486,5 +486,5 @@
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
     <!--  Accepted Payment Type resources -->
     <message-resources key="acceptedPaymentTypeUIResources"
-                       parameter="org.mifos.config.localizedResources.AcceptedPaymentTypeUIResources"/>                     
+                       parameter="org.mifos.config.localizedResources.AcceptedPaymentTypeUIResources"/>
 </struts-config>

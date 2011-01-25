@@ -13,7 +13,7 @@
 
         <version name="versionNo" column="version_no" type="integer" unsaved-value="null" />
 
-        <!-- Not a true identifier, just a counter. Another name for this 
+        <!-- Not a true identifier, just a counter. Another name for this
         property might be "installmentNumber". -->
         <property name="installmentId" column="installment_id" access="field" />
         <property name="actionDate" column="action_date" />
@@ -50,6 +50,6 @@
         <![CDATA[ from org.mifos.customers.business.CustomerScheduleEntity customerSchedule
                  where customerSchedule.id in (:ids)
         ]]>
-    </query>        
+    </query>
 
 </hibernate-mapping>

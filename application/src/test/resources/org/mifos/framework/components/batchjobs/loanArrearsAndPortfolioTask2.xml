@@ -3,11 +3,11 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
                         http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch-2.1.xsd">
-    
+
     <!--
         ========= Import declarations: =========
     -->
-    
+
     <bean id="integrationDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="${integration.database.driver}" />
         <property name="url"
@@ -45,7 +45,7 @@
     </batch:job>
     <bean name="LoanArrearsTaskTasklet" class="org.mifos.framework.components.batchjobs.helpers.MockLoanArrearsHelper" />
     <bean name="PortfolioAtRiskTaskTasklet" class="org.mifos.framework.components.batchjobs.helpers.PortfolioAtRiskHelper" />
-    
+
     <bean id="schedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="quartzProperties">
             <props>
@@ -64,13 +64,13 @@
             </list>
         </property>
     </bean>
-    
+
     <!--
         ========= Framework-specific configurations: =========
     -->
-    
+
     <bean id="configurationLocator" class="org.mifos.framework.util.ConfigurationLocator"/>
-    
+
     <bean id="defaultProperties" factory-bean="configurationLocator" factory-method="getSpringFilePath">
         <constructor-arg value="mainDatabase.properties"/>
     </bean>
@@ -82,7 +82,7 @@
     <bean id="customProperties" factory-bean="configurationLocator" factory-method="getSpringFilePath">
         <constructor-arg value="local.properties"/>
     </bean>
-    
+
     <bean id="mainPropertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
         <property name="ignoreResourceNotFound" value="false"/>
@@ -94,32 +94,32 @@
             </list>
         </property>
     </bean>
-    
+
     <batch:job-repository
        id="jobRepository"
        transaction-manager="transactionManager"
        data-source="integrationDataSource"
        table-prefix="BATCH_"
     />
-    
+
     <bean id="jobLauncher" class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
        <property name="jobRepository" ref="jobRepository" />
        <property name="taskExecutor">
            <bean class="org.springframework.core.task.SyncTaskExecutor" />
        </property>
     </bean>
-        
+
     <bean id="jobRegistry" class="org.springframework.batch.core.configuration.support.MapJobRegistry" />
-    
+
     <bean id="jobExplorer" class="org.springframework.batch.core.explore.support.JobExplorerFactoryBean">
        <property name="dataSource" ref="integrationDataSource" />
        <property name="tablePrefix" value="BATCH_" />
     </bean>
-    
+
     <bean id="jobRegistryBeanPostProcessor" class="org.springframework.batch.core.configuration.support.JobRegistryBeanPostProcessor">
         <property name="jobRegistry" ref="jobRegistry"/>
     </bean>
-    
+
     <bean id="jobDetailBase" class="org.springframework.scheduling.quartz.JobDetailBean">
        <property name="jobDataAsMap">
         <map>
@@ -129,15 +129,15 @@
             <entry key="jobRepository" value-ref="jobRepository" />
         </map>
     </property>
-       
+
     </bean>
-    
+
     <batch:job id="jobBase" abstract="true">
         <batch:listeners>
             <batch:listener ref="jobListener"/>
         </batch:listeners>
     </batch:job>
-    
+
     <bean id="jobListener" class="org.mifos.framework.components.batchjobs.BatchJobListener" />
-    
+
 </beans>

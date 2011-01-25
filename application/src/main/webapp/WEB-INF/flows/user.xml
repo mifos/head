@@ -12,7 +12,7 @@
         <transition on="officeSelected" to="createUserFormBean" />
         <transition on="cancel" to="cancel" />
     </view-state>
-    
+
     <action-state id="createUserFormBean">
         <evaluate expression="systemUserController.createUserFormBean(requestParameters.officeId, userFormBean)" result="flowScope.userFormBean" />
         <transition to="enterUserDetailsStep" />
@@ -22,12 +22,12 @@
         <transition on="preview" to="prepareUserFormBeanForPreview" />
         <transition on="cancel" to="cancel" validate="false"/>
     </view-state>
-    
+
     <action-state id="prepareUserFormBeanForPreview">
         <evaluate expression="flowScope.userFormBean.prepareForPreview()" />
         <transition to="reviewUserDetailsStep" />
     </action-state>
-    
+
     <view-state id="reviewUserDetailsStep" view="reviewUserDetails" model="userFormBean">
         <transition on="reedit" to="enterUserDetailsStep" validate="false">
             <evaluate expression="userFormBean.prepateForReEdit()" />
@@ -37,11 +37,11 @@
         </transition>
         <transition on="cancel" to="cancel" validate="false"/>
     </view-state>
-    
+
     <end-state id="success" view="confirmSystemUser">
         <output name="userDetails" value="flowScope.userDetails" />
     </end-state>
-    
+
     <end-state id="cancel" view="externalRedirect:contextRelative:/AdminAction.do?method=load"/>
-    
+
 </flow>

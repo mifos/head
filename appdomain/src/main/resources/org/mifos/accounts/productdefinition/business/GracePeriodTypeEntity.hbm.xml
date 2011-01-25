@@ -12,7 +12,7 @@
         </id>
          <many-to-one name="lookUpValue" class="org.mifos.application.master.business.LookUpValueEntity" column="lookup_id" insert="true" update="false"/>
     </class>
-    
+
     <query name="findGracePeriodTypeById">
         <![CDATA[from GracePeriodTypeEntity i where i.id=:ID]]>
     </query>

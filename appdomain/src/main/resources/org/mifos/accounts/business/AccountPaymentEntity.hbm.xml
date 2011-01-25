@@ -11,7 +11,7 @@
         <id name="paymentId" column="payment_id" type="integer" access="field">
             <generator class="native" />
         </id>
-        
+
         <property name="receiptNumber" column="receipt_number" type="string" access="field"/>
         <property name="voucherNumber" column="voucher_number" type="string" access="field"/>
         <property name="checkNumber" column="check_number" type="string" access="field"/>
@@ -19,14 +19,14 @@
         <property name="paymentDate" column="payment_date" type="date" access="field"/>
         <property name="receiptDate" column="receipt_date" type="date" access="field"/>
         <property name="amount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-         <column name="currency_id" /> 
+         <column name="currency_id" />
          <column name="amount" />
         </property>
         <property name="comment" column="comment" type="string" access="field"/>
         <many-to-one name="paymentType" column="payment_type_id"
             class="org.mifos.application.master.business.PaymentTypeEntity"
             cascade="none" update="false" insert="true" access="field"/>
-            
+
         <many-to-one name="account" column="account_id" class="org.mifos.accounts.business.AccountBO" access="field"/>
 
         <set name="accountTrxns" cascade="all" inverse="true" table="account_trxn" order-by="ACCOUNT_TRXN_ID desc">
@@ -37,8 +37,8 @@
     </class>
     <query name="accountPayment.maxAccPayment">
         <![CDATA[from org.mifos.accounts.business.AccountPaymentEntity accpayment
-                where accpayment.paymentId = (select max(accountPayment.paymentId) 
-                from org.mifos.accounts.business.AccountPaymentEntity accountPayment 
+                where accpayment.paymentId = (select max(accountPayment.paymentId)
+                from org.mifos.accounts.business.AccountPaymentEntity accountPayment
                 where accountPayment.account.accountId = :accountId)
                 ]]>
       </query>

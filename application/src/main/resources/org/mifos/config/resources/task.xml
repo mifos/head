@@ -3,11 +3,11 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
                         http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch-2.1.xsd">
-    
+
     <!--
         ========= Import declarations: =========
     -->
-    
+
     <import resource="dataSourceContext.xml" />
 
     <!--
@@ -32,7 +32,7 @@
         </batch:step>
     </batch:job>
     <bean name="ProductStatusTasklet" class="org.mifos.framework.components.batchjobs.helpers.ProductStatusHelper" />
-    
+
     <!--
                 SavingsIntPostingTask:
     -->
@@ -51,7 +51,7 @@
         </batch:step>
     </batch:job>
     <bean name="SavingsIntPostingTaskTasklet" class="org.mifos.framework.components.batchjobs.helpers.SavingsIntPostingHelper" />
-    
+
     <!--
                 ApplyCustomerFeeChangesTask:
     -->
@@ -70,7 +70,7 @@
         </batch:step>
     </batch:job>
     <bean name="ApplyCustomerFeeChangesTaskTasklet" class="org.mifos.framework.components.batchjobs.helpers.ApplyCustomerFeeChangesHelper" />
-    
+
     <!--
                 LoanArrearsAgingTask:
     -->
@@ -89,7 +89,7 @@
         </batch:step>
     </batch:job>
     <bean name="LoanArrearsAgingTaskTasklet" class="org.mifos.framework.components.batchjobs.helpers.LoanArrearsAgingHelper" />
-    
+
     <!--
                 ApplyHolidayChangesTask
     -->
@@ -108,7 +108,7 @@
         </batch:step>
     </batch:job>
     <bean name="ApplyHolidayChangesTaskTasklet" class="org.mifos.framework.components.batchjobs.helpers.ApplyHolidayChangesHelper" />
-    
+
     <!--
                 LoanArrearsAndPortfolioAtRiskTask:
     -->
@@ -131,7 +131,7 @@
     </batch:job>
     <bean name="LoanArrearsTaskTasklet" class="org.mifos.framework.components.batchjobs.helpers.LoanArrearsHelper" />
     <bean name="PortfolioAtRiskTaskTasklet" class="org.mifos.framework.components.batchjobs.helpers.PortfolioAtRiskHelper" />
-    
+
     <!--
                 GenerateMeetingsForCustomerAndSavingsTask:
     -->
@@ -150,7 +150,7 @@
         </batch:step>
     </batch:job>
     <bean name="GenerateMeetingsForCustomerAndSavingsTaskTasklet" class="org.mifos.framework.components.batchjobs.helpers.GenerateMeetingsForCustomerAndSavingsHelper" />
-    
+
     <!--
                 BranchReportTask:
     -->
@@ -169,7 +169,7 @@
         </batch:step>
     </batch:job>
     <bean name="BranchReportTaskTasklet" class="org.mifos.framework.components.batchjobs.helpers.BranchReportHelper" />
-    
+
     <bean id="schedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="quartzProperties">
             <props>
@@ -195,38 +195,38 @@
             </list>
         </property>
     </bean>
-    
+
     <!--
         ========= Framework-specific configurations: =========
     -->
-    
+
     <batch:job-repository
        id="jobRepository"
        transaction-manager="transactionManager"
        data-source="dataSource"
        table-prefix="BATCH_"
     />
-    
+
     <bean id="transactionManager" class="org.springframework.batch.support.transaction.ResourcelessTransactionManager"/>
-    
+
     <bean id="jobLauncher" class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
        <property name="jobRepository" ref="jobRepository" />
        <property name="taskExecutor">
            <bean class="org.springframework.core.task.SyncTaskExecutor" />
        </property>
     </bean>
-        
+
     <bean id="jobRegistry" class="org.springframework.batch.core.configuration.support.MapJobRegistry" />
-    
+
     <bean id="jobExplorer" class="org.springframework.batch.core.explore.support.JobExplorerFactoryBean">
        <property name="dataSource" ref="dataSource" />
        <property name="tablePrefix" value="BATCH_" />
     </bean>
-    
+
     <bean id="jobRegistryBeanPostProcessor" class="org.springframework.batch.core.configuration.support.JobRegistryBeanPostProcessor">
         <property name="jobRegistry" ref="jobRegistry"/>
     </bean>
-    
+
     <bean id="jobDetailBase" class="org.springframework.scheduling.quartz.JobDetailBean">
        <property name="jobDataAsMap">
         <map>
@@ -236,16 +236,15 @@
             <entry key="jobRepository" value-ref="jobRepository" />
         </map>
     </property>
-       
+
     </bean>
-    
+
     <batch:job id="jobBase" abstract="true">
         <batch:listeners>
             <batch:listener ref="jobListener"/>
         </batch:listeners>
     </batch:job>
-    
+
     <bean id="jobListener" class="org.mifos.framework.components.batchjobs.BatchJobListener" />
-    
+
 </beans>
-    

@@ -66,11 +66,11 @@
         </set>
 
     </class>
-    
+
     <query name="originalLoanScheduleEntity.getScheduleForLoan">
         <![CDATA[ from org.mifos.accounts.loan.business.OriginalLoanScheduleEntity originalLoanSchedule
                  where originalLoanSchedule.account.id = :id
         ]]>
-    </query>    
-    
+    </query>
+
 </hibernate-mapping>

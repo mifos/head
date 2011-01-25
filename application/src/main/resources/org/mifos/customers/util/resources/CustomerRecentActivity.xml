@@ -2,7 +2,7 @@
 
 
 <tableInfo>
-  <headerDetails headerStyle="drawtablerowboldnoline"/> 
+  <headerDetails headerStyle="drawtablerowboldnoline"/>
   <row totWidth="100" bottomLineRequired="true">
     <column label="Date" value="userPrefferedDate" valueType="method" columnType="text">
          <columnDetails  rowStyle="drawtablerow" colWidth="11" />
@@ -10,16 +10,16 @@
     <column label="Description" value="description" valueType="method" columnType="text">
          <columnDetails  rowStyle="drawtablerow" colWidth="40"/>
     </column>
-    <column label="Amount"    value="amount"  valueType="method"   columnType="text"> 
+    <column label="Amount"    value="amount"  valueType="method"   columnType="text">
         <columnDetails   rowStyle="drawtablerow" colWidth="22"/>
     </column>
-        <column label="Postedby"    value="postedBy"  valueType="method"   columnType="text"> 
+        <column label="Postedby"    value="postedBy"  valueType="method"   columnType="text">
         <columnDetails   rowStyle="drawtablerow" colWidth="27"/>
     </column>
   </row>
 
-  
+
 </tableInfo>
-   
-   
-   
+
+
+

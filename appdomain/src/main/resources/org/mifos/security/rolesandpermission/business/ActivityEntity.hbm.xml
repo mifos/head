@@ -26,7 +26,7 @@
             class="org.mifos.application.master.business.LookUpValueEntity"
             cascade="none" update="true" insert="true" access="field" />
     </class>
-    
+
     <query name="getAllActivities">
             <![CDATA[ from ActivityEntity ae order by ae.id]]>
     </query>
@@ -35,6 +35,6 @@
     </query>
     <query name="getActivityById">
         <![CDATA[from ActivityEntity ae where ae.id = :ACTIVITY_ID]]>
-    </query>    
+    </query>
 </hibernate-mapping>
 

@@ -193,7 +193,7 @@
             <forward name="previewEditMfiInfo_success"
                      path="/pages/application/client/jsp/preview_EditClientMfiInfo.jsp"/>
             <forward name="previewEditMfiInfo_failure" path="/pages/application/client/jsp/edit_ClientMfiInfo.jsp"/>
-            
+
             <!-- Modify number of rows for family -->
             <forward name="addFamilyRow_success" path="/pages/application/client/jsp/create_ClientFamilyInfo.jsp"/>
             <forward name="addFamilyRow_failure" path="/pages/application/client/jsp/create_ClientFamilyInfo.jsp"/>
@@ -207,7 +207,7 @@
                      path="/pages/application/client/jsp/edit_ClientPersonalInfo.jsp"/>
             <forward name="prevFamilyInfo_success" path="/pages/application/client/jsp/create_ClientFamilyInfo.jsp"/>
             <forward name="prevFamilyInfoNext_success" path="/pages/application/client/jsp/preview_ClientDetails.jsp"/>
-            <forward name="prevFamilyInfoNext_failure" path="/pages/application/client/jsp/create_ClientFamilyInfo.jsp"/>      
+            <forward name="prevFamilyInfoNext_failure" path="/pages/application/client/jsp/create_ClientFamilyInfo.jsp"/>
             <forward name="prevMFIInfo_success" path="/pages/application/client/jsp/create_ClientMfiInfo.jsp"/>
             <forward name="prevEditMfiInfo_success" path="/pages/application/client/jsp/edit_ClientMfiInfo.jsp"/>
             <!-- Previous Page Forwards End -->
@@ -282,9 +282,9 @@
                      path="/pages/application/savings/jsp/savingsaccountdepositduedetails.jsp"/>
             <forward name="waiveAmount_success" path="/savingsAction.do?method=getDepositDueDetails"/>
             <forward name="getStatusHistory_success" path="/pages/application/savings/jsp/viewstatuschangehistory.jsp"/>
-            
+
             <forward name="captureQuestionResponses" path="/pages/application/surveys/jsp/captureQuestionResponses.jsp"/>
-            
+
             <!--  Audit Log -->
             <forward name="viewSavingsChangeLog" path="/pages/application/savings/jsp/viewChangeLog.jsp"/>
             <forward name="cancelSavingsChangeLog" path="/savingsAction.do?method=get"/>
@@ -338,8 +338,8 @@
         org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit"/>
     </plug-in>
     <!-- Jan 16, 2008 the Spring app context is no longer initialized here
-         because of initialization ordering issues.  It is currently 
-         initialized in the ApplicationInitializer class. 
+         because of initialization ordering issues.  It is currently
+         initialized in the ApplicationInitializer class.
     <plug-in className="org.springframework.web.struts.ContextLoaderPlugIn">
         <set-property property="contextConfigLocation"
         value="/WEB-INF/classes/org/mifos/config/resources/applicationContext.xml"/>

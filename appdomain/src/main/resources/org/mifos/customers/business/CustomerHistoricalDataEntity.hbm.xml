@@ -34,5 +34,5 @@
         <property name="updatedBy" column="updated_by"  />
        <many-to-one name="customer" column="customer_id" class="org.mifos.customers.business.CustomerBO" insert="true" update="true" cascade="none" unique="true" access="field"/>
     </class>
-    
+
 </hibernate-mapping>

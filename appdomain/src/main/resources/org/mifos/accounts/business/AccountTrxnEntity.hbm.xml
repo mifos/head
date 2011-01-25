@@ -31,7 +31,7 @@
             class="org.mifos.customers.business.CustomerBO"
             cascade="none" update="false" insert="true" unique="true" access="field"/>
         <property name="amount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-         <column name="amount_currency_id" /> 
+         <column name="amount_currency_id" />
          <column name="amount" />
         </property>
 
@@ -44,7 +44,7 @@
         <many-to-one name="relatedTrxn" column="related_trxn_id"
                 class="org.mifos.accounts.business.AccountTrxnEntity"
                 cascade="all" insert="true" update="false" access="field" />
-                
+
         <set name="financialTransactions" inverse="true" cascade="all" lazy="true" access="field" order-by="TRXN_ID desc">
             <key column="account_trxn_id"/>
             <one-to-many class="org.mifos.accounts.financial.business.FinancialTransactionBO"/>
@@ -54,23 +54,23 @@
             table="loan_trxn_detail">
             <key column="account_trxn_id" />
             <property name="principalAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-             <column name="principal_amount_currency_id" /> 
+             <column name="principal_amount_currency_id" />
              <column name="principal_amount" />
             </property>
             <property name="interestAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-             <column name="interest_amount_currency_id" /> 
+             <column name="interest_amount_currency_id" />
              <column name="interest_amount" />
             </property>
             <property name="penaltyAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-             <column name="penalty_amount_currency_id" /> 
+             <column name="penalty_amount_currency_id" />
              <column name="penalty_amount" />
             </property>
             <property name="miscFeeAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-             <column name="misc_fee_amount_currency_id" /> 
+             <column name="misc_fee_amount_currency_id" />
              <column name="misc_fee_amount" />
             </property>
             <property name="miscPenaltyAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-             <column name="misc_penalty_amount_currency_id" /> 
+             <column name="misc_penalty_amount_currency_id" />
              <column name="misc_penalty_amount" />
             </property>
             <set name="feesTrxnDetails" inverse="true" cascade="all"
@@ -88,19 +88,19 @@
             table="savings_trxn_detail">
             <key column="account_trxn_id" />
             <property name="depositAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-             <column name="deposit_amount_currency_id" /> 
+             <column name="deposit_amount_currency_id" />
              <column name="deposit_amount" />
             </property>
             <property name="withdrawlAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-             <column name="withdrawal_amount_currency_id" /> 
+             <column name="withdrawal_amount_currency_id" />
              <column name="withdrawal_amount" />
             </property>
             <property name="balance" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-             <column name="balance_currency_id" /> 
+             <column name="balance_currency_id" />
              <column name="balance" />
             </property>
             <property name="interestAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-             <column name="interest_amount_currency_id" /> 
+             <column name="interest_amount_currency_id" />
              <column name="interest_amount" />
             </property>
         </joined-subclass>
@@ -109,15 +109,15 @@
             table="customer_trxn_detail">
             <key column="account_trxn_id" />
             <property name="totalAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-             <column name="total_amount_currency_id" /> 
+             <column name="total_amount_currency_id" />
              <column name="total_amount" />
             </property>
             <property name="miscFeeAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-             <column name="misc_fee_amount_currency_id" /> 
+             <column name="misc_fee_amount_currency_id" />
              <column name="misc_fee_amount" />
             </property>
             <property name="miscPenaltyAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-             <column name="misc_penalty_amount_currency_id" /> 
+             <column name="misc_penalty_amount_currency_id" />
              <column name="misc_penalty_amount" />
             </property>
             <set name="feesTrxnDetails" inverse="true" cascade="all"

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE hibernate-mapping PUBLIC 
+<!DOCTYPE hibernate-mapping PUBLIC
     "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
     "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-  
-<hibernate-mapping > 
+
+<hibernate-mapping >
   <class name="org.mifos.reports.business.ReportsParams" table="report_parameter" >
      <id name="parameterId" column="parameter_id" type="int">
          <generator class="native" />
@@ -13,18 +13,18 @@
         <property name="data" column="data" type="string" />
         <property name="description" column="description" type="string" />
         <property name="type" column="type" type="string" />
-          <many-to-one name="reportsDataSource" column="datasource_id" class="org.mifos.reports.business.ReportsDataSource" />   
+          <many-to-one name="reportsDataSource" column="datasource_id" class="org.mifos.reports.business.ReportsDataSource" />
 
-    </class> 
-     
+    </class>
+
 <query name="getAllReportParams">
               <![CDATA[ from ReportsParams]]>
-    </query> 
+    </query>
     <query name="findInUseDataSource">
               <![CDATA[ from ReportsParams where datasource_id=:dataSourceId]]>
-    </query> 
+    </query>
     <query name="viewParameter">
               <![CDATA[ from ReportsParams where parameter_id=:parameterId]]>
-    </query> 
+    </query>
 
-</hibernate-mapping> 
+</hibernate-mapping>

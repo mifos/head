@@ -1,10 +1,10 @@
 <ehcache>
 
     <!-- Sets the path to the directory where cache .data files are created.
-        
+
         If the path is a Java System Property it is replaced by
         its value in the running VM.
-        
+
         The following properties are translated:
         user.home - User's home directory
         user.dir - User's current working directory
@@ -14,9 +14,9 @@
 
     <!--Default Cache configuration. These will applied to caches programmatically created through
         the CacheManager.
-        
+
         The following attributes are required for defaultCache:
-        
+
         maxInMemory       - Sets the maximum number of objects that will be created in memory
         eternal           - Sets whether elements are eternal. If eternal,  timeouts are ignored and the element
         is never expired.
@@ -29,7 +29,7 @@
         Is only used if the element is not eternal.
         overflowToDisk    - Sets whether elements can overflow to disk when the in-memory cache
         has reached the maxInMemory limit.
-        
+
     -->
     <defaultCache maxElementsInMemory="100000" eternal="false"
         timeToIdleSeconds="86400" timeToLiveSeconds="86400"

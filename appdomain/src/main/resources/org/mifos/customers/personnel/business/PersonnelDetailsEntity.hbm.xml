@@ -11,8 +11,8 @@
             <generator class="foreign">
                 <param name="property">personnel</param>
             </generator>
-        </id> 
- 
+        </id>
+
          <component name="name" class="org.mifos.framework.business.util.Name">
             <property name="firstName" column="first_name" type="string" />
                 <property name="middleName" column="middle_name" type="string"   />
@@ -23,9 +23,9 @@
         <property name="dob" column="dob" type="date" access="field"/>
         <property name="maritalStatus" column="marital_status" type="integer" />
         <property name="gender" column="gender" type="integer" />
-        <property name="dateOfJoiningMFI" column="date_of_joining_mfi" type="date" />     
-        <property name="dateOfJoiningBranch" column="date_of_joining_branch" type="date" />                        
-        <property name="dateOfLeavingBranch" column="date_of_leaving_branch" type="date" />                                        
+        <property name="dateOfJoiningMFI" column="date_of_joining_mfi" type="date" />
+        <property name="dateOfJoiningBranch" column="date_of_joining_branch" type="date" />
+        <property name="dateOfLeavingBranch" column="date_of_leaving_branch" type="date" />
         <component name="address" class="org.mifos.framework.business.util.Address">
             <property name="line1" column="address_1" type="string"  />
             <property name="line2" column="address_2" type="string"   />
@@ -38,5 +38,5 @@
         </component>
         <one-to-one name="personnel" class="org.mifos.customers.personnel.business.PersonnelBO" cascade="all" access="field"/>
     </class>
-         
+
 </hibernate-mapping>

@@ -6,22 +6,22 @@
            http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
            http://www.springframework.org/schema/security
            http://www.springframework.org/schema/security/spring-security-3.0.xsd">
-           
+
     <beans:bean id="loginFormAuthentication" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
         <beans:property name="loginFormUrl" value="/login.ftl" />
     </beans:bean>
-    
+
     <beans:bean id="authenticationSuccessHandler" class="org.mifos.security.authentication.MifosAuthenticationSuccessHandler">
         <beans:property name="defaultTargetUrl" value="/custSearchAction.do?method=getHomePage" />
         <beans:property name="alwaysUseDefaultTargetUrl" value="true" />
     </beans:bean>
-    
+
     <beans:bean id="authenticationFailureHandler" class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler">
         <beans:property name="defaultFailureUrl" value="/login.ftl?accessDenied" />
     </beans:bean>
-    
+
     <global-method-security pre-post-annotations="enabled" />
-           
+
     <http auto-config="false" entry-point-ref="loginFormAuthentication" use-expressions="true">
         <custom-filter position="FORM_LOGIN_FILTER" ref="mifosLegacyAuthenticationFilter" />
         <intercept-url pattern="/ping.ftl" filters="none" />
@@ -32,11 +32,11 @@
 
         <intercept-url pattern="/**/*.css*" filters="none" />
         <intercept-url pattern="/**/*.gif" filters="none" />
-        <intercept-url pattern="/**/*.jpg" filters="none" />    
+        <intercept-url pattern="/**/*.jpg" filters="none" />
         <intercept-url pattern="/**/*.js" filters="none" />
-        <intercept-url pattern="/**/*.html" filters="none" />    
+        <intercept-url pattern="/**/*.html" filters="none" />
         <intercept-url pattern="/login.ftl*" filters="none" />
-        
+
         <intercept-url pattern="/createQuestion.ftl*" access="isFullyAuthenticated() and hasRole('ROLE_CAN_MANAGE_QUESTION_GROUPS')"/>
         <intercept-url pattern="/createQuestionGroup.ftl*" access="isFullyAuthenticated() and hasRole('ROLE_CAN_MANAGE_QUESTION_GROUPS')"/>
         <intercept-url pattern="/viewAndEditQuestion.ftl*" access="isFullyAuthenticated() and hasRole('ROLE_CAN_MANAGE_QUESTION_GROUPS')"/>
@@ -46,18 +46,18 @@
         <intercept-url pattern="/**" access="isFullyAuthenticated()" />
         <logout logout-success-url="/login.ftl?loggedout"/>
       </http>
-      
+
       <authentication-manager alias="authenticationManager">
         <authentication-provider ref="mifosAuthenticationProvider"/>
     </authentication-manager>
-    
+
       <beans:bean id="mifosLegacyAuthenticationFilter" class="org.mifos.security.authentication.MifosLegacyUsernamePasswordAuthenticationFilter">
           <beans:constructor-arg ref="loginServiceFacade" />
           <beans:property name="authenticationManager" ref="authenticationManager" />
           <beans:property name="authenticationSuccessHandler" ref="authenticationSuccessHandler" />
           <beans:property name="authenticationFailureHandler" ref="authenticationFailureHandler" />
       </beans:bean>
-      
+
     <beans:bean id="mifosAuthenticationProvider" class="org.mifos.security.authentication.MifosDaoAuthenticationProvider">
         <beans:property name="userDetailsService" ref="mifosAuthenticationAuthorizationService" />
     </beans:bean>

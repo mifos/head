@@ -5,7 +5,7 @@
 <hibernate-mapping>
 
     <query name="prefetchCustomerHierarchy">
-        <![CDATA[from org.mifos.customers.business.CustomerBO as c    
+        <![CDATA[from org.mifos.customers.business.CustomerBO as c
                 left outer join fetch c.customerAddressDetail
                  left outer join fetch c.historicalData
                   left outer join fetch c.customerMeeting
@@ -14,14 +14,14 @@
                 left outer join fetch c.customerDetail
                 left outer join fetch c.customerPicture
                 left outer join fetch c.clientPerformanceHistory cph
-                 left outer join fetch cph.loanCounters    
-                where c.office.id = :BRANCH_ID 
+                 left outer join fetch cph.loanCounters
+                where c.office.id = :BRANCH_ID
                 and c.customerStatus.id in (3,4,9,10,13)
                 and (c.searchId = :SEARCH_ID or c.searchId like :SEARCH_ID2)]]>
     </query>
 
     <query name="prefetchAccountData">
-        <![CDATA[from org.mifos.accounts.business.AccountBO as a    
+        <![CDATA[from org.mifos.accounts.business.AccountBO as a
                 left outer join fetch a.loanSummary
                 left outer join fetch a.performanceHistory
                 left outer join fetch a.loanArrearsAgingEntity
@@ -32,18 +32,18 @@
                 left outer join fetch md.meetingRecurrence
                 left outer join fetch a.savingsPerformance
                 inner join a.customer c
-                where c.office.id = :BRANCH_ID 
+                where c.office.id = :BRANCH_ID
                 and c.customerStatus.id in (3,4,9,10,13)
                 and a.id in (:ACCOUNT_IDS)
                 and (c.searchId = :SEARCH_ID or c.searchId like :SEARCH_ID2)]]>
     </query>
 
     <query name="prefetchLoanSchedules">
-        <![CDATA[from org.mifos.accounts.loan.business.LoanBO as la    
+        <![CDATA[from org.mifos.accounts.loan.business.LoanBO as la
                 inner join fetch la.accountActionDates aad
                 left outer join fetch aad.accountFeesActionDetails
                 inner join la.customer c
-                where c.office.id = :BRANCH_ID 
+                where c.office.id = :BRANCH_ID
                 and c.customerStatus.id in (3,4,9,10,13)
                 and la.id in (:ACCOUNT_IDS)
                 and (c.searchId = :SEARCH_ID or c.searchId like :SEARCH_ID2)
@@ -55,14 +55,14 @@
                 inner join fetch ca.accountActionDates aad
                 left outer join fetch aad.accountFeesActionDetails
                 inner join ca.customer c
-                where c.office.id = :BRANCH_ID 
+                where c.office.id = :BRANCH_ID
                 and ca.id in (:ACCOUNT_IDS)
                 and c.customerStatus.id in (3,4,9,10,13)
                 and (c.searchId = :SEARCH_ID or c.searchId like :SEARCH_ID2)]]>
     </query>
 
     <query name="prefetchAccountFeeDetails">
-        <![CDATA[from org.mifos.accounts.business.AccountBO as a    
+        <![CDATA[from org.mifos.accounts.business.AccountBO as a
                 inner join fetch a.accountFees af
                 inner join fetch af.fees f
                 inner join fetch f.feeFrequency ff
@@ -70,7 +70,7 @@
                 left outer join fetch fmf.meetingDetails md
                 left outer join fetch md.meetingRecurrence
                 inner join a.customer c
-                where c.office.id = :BRANCH_ID 
+                where c.office.id = :BRANCH_ID
                 and a.id in (:ACCOUNT_IDS)
                 and c.customerStatus.id in (3,4,9,10,13)
                 and (c.searchId = :SEARCH_ID or c.searchId like :SEARCH_ID2)]]>
@@ -78,9 +78,9 @@
 
 
     <query name="ClientAttendance.getAttendanceForClientsOnMeetingDate">
-       <![CDATA[select clientAttendance from org.mifos.customers.client.business.ClientAttendanceBO clientAttendance  
+       <![CDATA[select clientAttendance from org.mifos.customers.client.business.ClientAttendanceBO clientAttendance
        inner join clientAttendance.customer c
-       where c.office.id = :BRANCH_ID 
+       where c.office.id = :BRANCH_ID
        and c.searchId like :SEARCH_ID
        and c.customerStatus.id in (3,4,9,10,13)
        and clientAttendance.meetingDate = :MEETING_DATE ]]>
@@ -94,11 +94,11 @@
         <return-scalar column="searchId" type="string" />
         <return-scalar column="branchId" type="short" />
         <![CDATA[
-            select c.customer_id as customerId, 
-                    c.parent_customer_id as parentCustomerId, 
-                    c.customer_level_id as levelId, 
+            select c.customer_id as customerId,
+                    c.parent_customer_id as parentCustomerId,
+                    c.customer_level_id as levelId,
                     c.display_name as name,
-                    c.search_id as searchId, 
+                    c.search_id as searchId,
                     c.branch_id as branchId
             from customer c
             where c.customer_id = :CUSTOMER_ID
@@ -117,12 +117,12 @@
         <return-scalar column="branchId" type="short" />
         <return-scalar column="attendanceId" type="short" />
         <![CDATA[
-            select c.customer_id as customerId, 
-                    c.parent_customer_id as parentCustomerId, 
-                    c.customer_level_id as levelId, 
+            select c.customer_id as customerId,
+                    c.parent_customer_id as parentCustomerId,
+                    c.customer_level_id as levelId,
                     c.display_name as name,
-                    c.search_id as searchId, 
-                    c.branch_id as branchId, 
+                    c.search_id as searchId,
+                    c.branch_id as branchId,
                     ca.attendance as attendanceId
             from customer c
             left outer join customer_attendance ca on c.customer_id = ca.customer_id and ca.meeting_date = date(:TRANSACTION_DATE)
@@ -140,12 +140,12 @@
         <return-scalar column="branchId" type="short" />
         <return-scalar column="attendanceId" type="short" />
         <![CDATA[
-            select c.customer_id as customerId, 
-                    c.parent_customer_id as parentCustomerId, 
-                    c.customer_level_id as levelId, 
+            select c.customer_id as customerId,
+                    c.parent_customer_id as parentCustomerId,
+                    c.customer_level_id as levelId,
                     c.display_name as name,
-                    c.search_id as searchId, 
-                    c.branch_id as branchId, 
+                    c.search_id as searchId,
+                    c.branch_id as branchId,
                     ca.attendance as attendanceId
             from customer c
             left outer join customer_attendance ca on c.customer_id = ca.customer_id and ca.meeting_date = date(:TRANSACTION_DATE)
@@ -168,7 +168,7 @@
         <return-scalar column="payInterestAtDisbursement" type="short" />
         <![CDATA[
         select c.customer_id as customerId, a.account_id as accountId, a.account_state_id as accountStateId, po.prd_offering_short_name as productShortName, po.prd_offering_id as productId,
-                la.loan_amount_currency_id as currencyId, la.loan_amount as disbursementAmount, la.interest_at_disb as payInterestAtDisbursement       
+                la.loan_amount_currency_id as currencyId, la.loan_amount as disbursementAmount, la.interest_at_disb as payInterestAtDisbursement
                 from loan_account la
                 inner join account a on la.account_id=a.account_id
                 inner join customer c on a.customer_id=c.customer_id
@@ -191,7 +191,7 @@
         <return-scalar column="payInterestAtDisbursement" type="short" />
         <![CDATA[
         select c.customer_id as customerId, a.account_id as accountId, a.account_state_id as accountStateId, po.prd_offering_short_name as productShortName, po.prd_offering_id as productId,
-                la.loan_amount_currency_id as currencyId, la.loan_amount as disbursementAmount, la.interest_at_disb as payInterestAtDisbursement       
+                la.loan_amount_currency_id as currencyId, la.loan_amount as disbursementAmount, la.interest_at_disb as payInterestAtDisbursement
                 from loan_account la
                 inner join account a on la.account_id=a.account_id
                 inner join customer c on a.customer_id=c.customer_id
@@ -221,7 +221,7 @@
         <return-scalar column="miscPenaltyDue" type="big_decimal" />
         <return-scalar column="miscPenaltyPaid" type="big_decimal" />
         <![CDATA[
-            select c.customer_id as customerId, a.account_id as accountId, a.account_state_id as accountStateId, po.prd_offering_short_name as productShortName, po.prd_offering_id as productId, lse.principal_currency_id as currencyId, 
+            select c.customer_id as customerId, a.account_id as accountId, a.account_state_id as accountStateId, po.prd_offering_short_name as productShortName, po.prd_offering_id as productId, lse.principal_currency_id as currencyId,
                     sum(lse.principal) as principalDue,
                     sum(lse.principal_paid) as principalPaid,
                     sum(lse.interest) as interestDue,
@@ -265,7 +265,7 @@
         <return-scalar column="miscPenaltyDue" type="big_decimal" />
         <return-scalar column="miscPenaltyPaid" type="big_decimal" />
         <![CDATA[
-            select c.customer_id as customerId, a.account_id as accountId, a.account_state_id as accountStateId, po.prd_offering_short_name as productShortName, po.prd_offering_id as productId, lse.principal_currency_id as currencyId, 
+            select c.customer_id as customerId, a.account_id as accountId, a.account_state_id as accountStateId, po.prd_offering_short_name as productShortName, po.prd_offering_id as productId, lse.principal_currency_id as currencyId,
                     sum(lse.principal) as principalDue,
                     sum(lse.principal_paid) as principalPaid,
                     sum(lse.interest) as interestDue,
@@ -554,7 +554,7 @@
         <![CDATA[
            select c.customer_id as customerId,
                        a.account_id as accountId,
-                       po.prd_offering_id as productId, 
+                       po.prd_offering_id as productId,
                        po.prd_offering_short_name as productShortName,
                        s.recommended_amnt_unit_id as recommendedAmountUnitId,
                     sse.deposit_currency_id as currencyId,
@@ -590,7 +590,7 @@
         <![CDATA[
            select c.customer_id as customerId,
                        a.account_id as accountId,
-                       po.prd_offering_id as productId, 
+                       po.prd_offering_id as productId,
                        po.prd_offering_short_name as productShortName,
                        s.recommended_amnt_unit_id as recommendedAmountUnitId,
                     sse.deposit_currency_id as currencyId,
@@ -627,7 +627,7 @@
         <![CDATA[
            select c.customer_id as customerId,
                        a.account_id as accountId,
-                       po.prd_offering_id as productId, 
+                       po.prd_offering_id as productId,
                        po.prd_offering_short_name as productShortName,
                        s.recommended_amnt_unit_id as recommendedAmountUnitId,
                     sse.deposit_currency_id as currencyId,
@@ -663,7 +663,7 @@
         <![CDATA[
            select c.customer_id as customerId,
                        a.account_id as accountId,
-                       po.prd_offering_id as productId, 
+                       po.prd_offering_id as productId,
                        po.prd_offering_short_name as productShortName,
                        s.recommended_amnt_unit_id as recommendedAmountUnitId,
                     sse.deposit_currency_id as currencyId,
@@ -698,7 +698,7 @@
         <![CDATA[
             select a.account_id as accountId,
              sse.customer_id as customerId,
-             po.prd_offering_id as productId, 
+             po.prd_offering_id as productId,
             po.prd_offering_short_name as productShortName,
              sum(sse.deposit) as depositDue,
              sum(sse.deposit_paid) as depositPaid
@@ -730,7 +730,7 @@
         <![CDATA[
             select a.account_id as accountId,
              sse.customer_id as customerId,
-             po.prd_offering_id as productId, 
+             po.prd_offering_id as productId,
             po.prd_offering_short_name as productShortName,
              sum(sse.deposit) as depositDue,
              sum(sse.deposit_paid) as depositPaid
@@ -763,7 +763,7 @@
         <![CDATA[
             select a.account_id as accountId,
              sse.customer_id as customerId,
-             po.prd_offering_id as productId, 
+             po.prd_offering_id as productId,
                po.prd_offering_short_name as productShortName,
             s.recommended_amount as depositDue,
             0 as depositPaid
@@ -795,7 +795,7 @@
         <![CDATA[
             select a.account_id as accountId,
              sse.customer_id as customerId,
-             po.prd_offering_id as productId, 
+             po.prd_offering_id as productId,
             po.prd_offering_short_name as productShortName,
              s.recommended_amount as depositDue,
             0 as depositPaid
@@ -826,9 +826,9 @@
         <return-scalar column="customerLevelId" type="short" />
         <return-scalar column="recommendedAmountUnitId" type="short" />
         <![CDATA[
-            select c.customer_id as customerId, 
+            select c.customer_id as customerId,
             sa.account_id as accountId,
-             po.prd_offering_id as productId, 
+             po.prd_offering_id as productId,
             po.prd_offering_short_name as productShortName,
             sa.savings_balance_currency_id as currencyId,
             c.customer_level_id as customerLevelId,

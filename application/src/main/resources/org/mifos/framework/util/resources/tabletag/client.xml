@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <table class="org.mifos.xyz" name="client" resourcebundle="resource"
-        xmlns="http://www.aditi.com" 
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xmlns="http://www.aditi.com"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.aditi.com tabletag.xsd ">
-  <path key="" forwardkey="" action=""/> 
-  <pagerequirements numbersrequired="true" bluelinerequired="true" headingrequired="true"/>  
+  <path key="" forwardkey="" action=""/>
+  <pagerequirements numbersrequired="true" bluelinerequired="true" headingrequired="true"/>
   <row tdrequired="false">
     <column label="Client" labeltype="key" boldlabel="false" type="link" action="/client">
       <displayname bold="true">
@@ -16,8 +16,8 @@
         <parameter name="id" value="id" valuetype="method"/>
       </parameters>
     </column>
-  </row> 
-  
+  </row>
+
   <row tdrequired="true">
       <column label="status" labeltype="key" boldlabel="true" type="text" image="true">
           <displayname>
@@ -31,7 +31,7 @@
           </displayname>
       </column>
   </row>
-  
+
   <row>
       <column label="Savings" labeltype="key" boldlabel="true" type="link" action="/savings">
           <displayname>
@@ -44,7 +44,7 @@
           </parameters>
       </column>
   </row>
-  
+
   <row>
       <column label="Loan" labeltype="key" boldlabel="true" type="link" action="/loan">
           <displayname>
@@ -57,7 +57,7 @@
           </parameters>
       </column>
   </row>
-  
+
 <row>
     <column label="alsosee" labeltype="key" boldlabel="true" type="link" action="/branch">
         <displayname>
@@ -84,5 +84,5 @@
         </parameters>
     </column>
 </row>
-  
+
 </table>

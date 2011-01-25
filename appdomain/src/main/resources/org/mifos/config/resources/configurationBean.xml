@@ -3,9 +3,9 @@
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
     <bean id="configurationManager" class="org.mifos.config.business.MifosConfigurationManager" factory-method="getInstance"/>
-    
+
     <bean id="fiscalCalendarRules" class="org.mifos.config.FiscalCalendarRules">
         <constructor-arg ref="configurationManager"/>
     </bean>
-   
+
 </beans>

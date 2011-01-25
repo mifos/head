@@ -20,7 +20,7 @@
         <state>
             <statename>Cancel</statename>
             <stateid>15</stateid>
-        </state>        
+        </state>
         <state>
             <statename>PendingApproval</statename>
             <stateid>14</stateid>
@@ -62,7 +62,7 @@
             </possiblestates>
         </state>
     </stateConfiguration>
-    
+
         <stateConfiguration configurationName="configuration 2">
         <state>
             <statename>PartialApplication</statename>

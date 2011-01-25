@@ -10,10 +10,10 @@
         <id name="id" column="personnel_status_id"  unsaved-value="-1" access="field">
             <generator class="native"/>
         </id>
-             <many-to-one name="lookUpValue" column="lookup_id" class="org.mifos.application.master.business.LookUpValueEntity" 
-                cascade="none" update="false" unique="true"/>    
-        
-        
+             <many-to-one name="lookUpValue" column="lookup_id" class="org.mifos.application.master.business.LookUpValueEntity"
+                cascade="none" update="false" unique="true"/>
+
+
     </class>
 
 </hibernate-mapping>

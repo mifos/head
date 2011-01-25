@@ -12,7 +12,7 @@
         </id>
          <property name="recurrenceName" column="recurrence_name" type="string" access="field"/>
          <property name="description" column="description" type="string" access="field"/>
- 
+
     </class>
     <query name="meeting.fetchAllReccurenceTypes">
         <![CDATA[from org.mifos.application.meeting.business.RecurrenceTypeEntity]]>

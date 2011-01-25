@@ -2,7 +2,7 @@
 <!DOCTYPE hibernate-mapping PUBLIC
                             "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
                             "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
-<!-- 
+<!--
 Copyright (c) 2005-2008 Grameen Foundation USA
 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
 All rights reserved.
@@ -21,7 +21,7 @@ permissions and limitations under the License.
 
 See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 explanation of the license and how it is applied.
--->                            
+-->
 <hibernate-mapping>
     <class
         name="org.mifos.reports.branchreport.BranchReportStaffingLevelSummaryBO"
@@ -32,34 +32,34 @@ explanation of the license and how it is applied.
         </id>
         <property name="isTotal" column="role_id" type="integer" access="field" />
         <property name="titleName" column="role_name" type="string" access="field" />
-        <property name="personnelCount" column="personnel_count" type="integer" access="field" />         
+        <property name="personnelCount" column="personnel_count" type="integer" access="field" />
         <many-to-one name="branchReport" column="branch_report_id" access="field"
             class="org.mifos.reports.branchreport.BranchReportBO">
-        </many-to-one>        
+        </many-to-one>
     </class>
-    
+
     <sql-query
         name="branchReport.getBranchReportStaffingLevelSummaryForDateAndBranch">
         <load-collection alias="staffingLevelSummaries"
             role="org.mifos.reports.branchreport.BranchReportBO.staffingLevelSummaries" />
-        <![CDATA[ SELECT {staffingLevelSummaries.*} from batch_staffing_level_summary as staffingLevelSummaries, 
-            batch_branch_report as branchReport where 
-            branchReport.branch_report_id=staffingLevelSummaries.branch_report_id 
-            and branchReport.run_date=:RUN_DATE 
+        <![CDATA[ SELECT {staffingLevelSummaries.*} from batch_staffing_level_summary as staffingLevelSummaries,
+            batch_branch_report as branchReport where
+            branchReport.branch_report_id=staffingLevelSummaries.branch_report_id
+            and branchReport.run_date=:RUN_DATE
             and branchReport.branch_id=:BRANCH_ID
         ]]>
-    </sql-query>            
+    </sql-query>
 
     <sql-query name="branchReport.extractStaffingLevelSummaryForBranchByTitle">
         <return-scalar column="personnelCount" type="integer"/>
-        <return-scalar column="titleKey" type="string"/>         
-        <return-scalar column="titleValueOverride" type="string"/>         
+        <return-scalar column="titleKey" type="string"/>
+        <return-scalar column="titleValueOverride" type="string"/>
         <![CDATA[select count(*) as personnelCount, lv.lookup_name as titleKey, lvl.lookup_value as titleValueOverride
-            from personnel p left join lookup_value lv on p.title = lv.lookup_id  
-            left join lookup_value_locale lvl on lvl.lookup_value_id = lv.lookup_id 
-            where p.office_id = :officeId 
+            from personnel p left join lookup_value lv on p.title = lv.lookup_id
+            left join lookup_value_locale lvl on lvl.lookup_value_id = lv.lookup_id
+            where p.office_id = :officeId
             and p.personnel_status=1
             group by title;
         ]]>
-    </sql-query>            
+    </sql-query>
 </hibernate-mapping>

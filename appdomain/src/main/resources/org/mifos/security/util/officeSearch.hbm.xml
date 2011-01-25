@@ -11,13 +11,12 @@
    <property name="searchId" type="string" column="search_id" />
    <property name="parentOfficeId" type="short" column="parent_office_id" />
  </class>
- 
+
     <query name="getOfficeSearch">
             <![CDATA[FROM OfficeSearch WHERE search_id LIKE :pattern]]>
     </query>
     <query name="getOfficeSearchList">
             <![CDATA[from OfficeSearch]]>
     </query>
- 
+
 </hibernate-mapping>
-    

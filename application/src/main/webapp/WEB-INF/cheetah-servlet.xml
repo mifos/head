@@ -19,8 +19,8 @@
             </props>
         </property>
         <property name="exceptionAttribute" value="exception" />
-    </bean> 
-    
+    </bean>
+
     <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
         <property name="templateLoaderPaths">
             <list>
@@ -53,7 +53,7 @@
     <bean id="fmXmlEscape" class="freemarker.template.utility.XmlEscape"/>
 
     <bean class= "org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
-    
+
     <!-- Dispatches requests mapped to POJO @Controllers implementations -->
     <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
         <property name="webBindingInitializer">
@@ -62,13 +62,13 @@
             </bean>
         </property>
     </bean>
-    
+
     <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
 
     <bean id="mifosBeanValidator" class="org.mifos.platform.validation.MifosBeanValidator">
         <property name="targetValidator" ref="validator"/>
     </bean>
-    
+
     <bean name="testingService" class="org.mifos.framework.util.StandardTestingService"/>
 
     <context:component-scan base-package="org.mifos.ui.core.controller"/>

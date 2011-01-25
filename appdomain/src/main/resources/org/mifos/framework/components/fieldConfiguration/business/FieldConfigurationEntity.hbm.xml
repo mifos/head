@@ -4,8 +4,8 @@
                             "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
 
 <hibernate-mapping>
- <class 
-     name="org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity" 
+ <class
+     name="org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity"
      table="field_configuration">
      <id name="fieldConfigId" column="field_config_id">
           <generator class="native"/>
@@ -16,21 +16,20 @@
         name="entityMaster" column="entity_id" />
     <property name="mandatoryFlag" column="mandatory_flag"/>
     <property name="hiddenFlag" column="hidden_flag"/>
-    <many-to-one 
-        class="org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity" 
+    <many-to-one
+        class="org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity"
         name="parentFieldConfig" column="parent_field_config_id" />
  </class>
  <query name="getFieldList">
-         <![CDATA[from org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity fce where 
+         <![CDATA[from org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity fce where
                      fce.entityMaster.id=:entityId]]>
  </query>
  <query name="getAllFieldConfigurationList">
          <![CDATA[from org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity fce]]>
  </query>
- 
+
  <query name="findVisibleMandatoryConfigurableFieldsApplicableTo">
-         <![CDATA[from org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity fce where 
+         <![CDATA[from org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity fce where
                      fce.entityMaster.id=:entityId and fce.mandatoryFlag = 1 and fce.hiddenFlag=0]]>
  </query>
 </hibernate-mapping>
- 

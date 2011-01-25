@@ -5,145 +5,145 @@
         label.quickstart
         </leftmenulabel>
             <menugroup>
-                <displayname> 
-                    <namefragment>label.manage</namefragment> 
-                    <namefragment>label.clients</namefragment> 
+                <displayname>
+                    <namefragment>label.manage</namefragment>
+                    <namefragment>label.clients</namefragment>
                 </displayname>
                 <menuitem>
-                    <displayname> 
-                        <namefragment>label.createnew</namefragment> 
-                        <namefragment>Group</namefragment> 
+                    <displayname>
+                        <namefragment>label.createnew</namefragment>
+                        <namefragment>Group</namefragment>
                     </displayname>
                     <linkvalue>groupCustAction.do?method=hierarchyCheck&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=createGroup</linkvalue>
                 </menuitem>
                 <menuitem>
-                    <displayname> 
-                        <namefragment>label.createnew</namefragment> 
-                        <namefragment>Client</namefragment> 
+                    <displayname>
+                        <namefragment>label.createnew</namefragment>
+                        <namefragment>Client</namefragment>
                     </displayname>
                     <linkvalue>groupCustAction.do?method=loadSearch&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=createClient</linkvalue>
                 </menuitem>
             </menugroup>
             <menugroup>
-                <displayname> 
-                        <namefragment>label.manage</namefragment> 
-                        <namefragment>label.accounts</namefragment> 
+                <displayname>
+                        <namefragment>label.manage</namefragment>
+                        <namefragment>label.accounts</namefragment>
                 </displayname>
                 <menuitem>
-                    <displayname> 
-                        <namefragment>label.openNewLoanAccountPrefix</namefragment> 
-                        <namefragment>Loan</namefragment> 
-                        <namefragment>label.openNewLoanAccountSuffix</namefragment> 
+                    <displayname>
+                        <namefragment>label.openNewLoanAccountPrefix</namefragment>
+                        <namefragment>Loan</namefragment>
+                        <namefragment>label.openNewLoanAccountSuffix</namefragment>
                     </displayname>
                     <linkvalue> custSearchAction.do?method=loadSearch&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=loan    </linkvalue>
                 </menuitem>
                 <menuitem>
-                    <displayname> 
-                        <namefragment>label.openNewSavingsAccountPrefix</namefragment> 
+                    <displayname>
+                        <namefragment>label.openNewSavingsAccountPrefix</namefragment>
                         <namefragment>Savings</namefragment>
-                        <namefragment>label.openNewSavingsAccountSuffix</namefragment> 
+                        <namefragment>label.openNewSavingsAccountSuffix</namefragment>
                     </displayname>
                     <linkvalue>custSearchAction.do?method=loadSearch&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=savings</linkvalue>
                 </menuitem>
                 <menuitem>
-                    <displayname> 
-                        <namefragment>label.enter</namefragment> 
-                        <namefragment>label.collectionsheet</namefragment> 
+                    <displayname>
+                        <namefragment>label.enter</namefragment>
+                        <namefragment>label.collectionsheet</namefragment>
                         <namefragment>label.data</namefragment>
                     </displayname>
                     <linkvalue>collectionsheetaction.do?method=load&amp;recordOfficeId=0&amp;recordLoanOfficerId=0</linkvalue>
                 </menuitem>
-                
-                
+
+
             </menugroup>
     </topmenutab>
     <topmenutab name="Clients &amp; Accounts">
         <leftmenulabel>Client</leftmenulabel>
             <menugroup>
-                <displayname> 
-                        <namefragment>label.manage</namefragment> 
+                <displayname>
+                        <namefragment>label.manage</namefragment>
                         <namefragment>label.collectionsheets</namefragment>
                 </displayname>
                 <menuitem>
-                    <displayname> 
-                        <namefragment>label.enter</namefragment> 
-                        <namefragment>label.collectionsheet</namefragment> 
+                    <displayname>
+                        <namefragment>label.enter</namefragment>
+                        <namefragment>label.collectionsheet</namefragment>
                         <namefragment>label.data</namefragment>
                     </displayname>
                     <linkvalue>collectionsheetaction.do?method=load&amp;recordOfficeId=0&amp;recordLoanOfficerId=0</linkvalue>
                 </menuitem>
             </menugroup>
             <menugroup>
-                <displayname> 
-                        <namefragment>label.createnew</namefragment> 
+                <displayname>
+                        <namefragment>label.createnew</namefragment>
                         <namefragment>label.clients</namefragment>
 
                 </displayname>
                 <menuitem keyForHidden="ClientRules.CenterHierarchyExists">
-                    <displayname> 
-                        <namefragment>label.createnew</namefragment> 
+                    <displayname>
+                        <namefragment>label.createnew</namefragment>
                         <namefragment>Center</namefragment>
                     </displayname>
                     <linkvalue>centerCustAction.do?method=chooseOffice&amp;recordOfficeId=0&amp;recordLoanOfficerId=0</linkvalue>
                 </menuitem>
 
                 <menuitem>
-                    <displayname> 
-                        <namefragment>label.createnew</namefragment> 
+                    <displayname>
+                        <namefragment>label.createnew</namefragment>
                         <namefragment>Group</namefragment>
                     </displayname>
                     <linkvalue>groupCustAction.do?method=hierarchyCheck&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=createGroup</linkvalue>
                 </menuitem>
                 <menuitem>
-                    <displayname> 
-                        <namefragment>label.createnew</namefragment> 
+                    <displayname>
+                        <namefragment>label.createnew</namefragment>
                         <namefragment>Client</namefragment>
                     </displayname>
                     <linkvalue>groupCustAction.do?method=loadSearch&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=createClient</linkvalue>
                 </menuitem>
-                        
+
             </menugroup>
             <menugroup>
-                <displayname> 
-                        <namefragment>label.createnew</namefragment> 
+                <displayname>
+                        <namefragment>label.createnew</namefragment>
                         <namefragment>label.accounts</namefragment>
                 </displayname>
                 <menuitem>
-                    <displayname> 
-                        <namefragment>label.createSavingsAccountPrefix</namefragment> 
+                    <displayname>
+                        <namefragment>label.createSavingsAccountPrefix</namefragment>
                         <namefragment>Savings</namefragment>
-                        <namefragment>label.createSavingsAccountSuffix</namefragment>  
+                        <namefragment>label.createSavingsAccountSuffix</namefragment>
                     </displayname>
                     <linkvalue>custSearchAction.do?method=loadSearch&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=savings</linkvalue>
                 </menuitem>
-                    
+
                 <menuitem>
-                    <displayname> 
-                        <namefragment>label.createLoanAccountPrefix</namefragment> 
+                    <displayname>
+                        <namefragment>label.createLoanAccountPrefix</namefragment>
                         <namefragment>Loan</namefragment>
-                        <namefragment>label.createLoanAccountSuffix</namefragment>  
+                        <namefragment>label.createLoanAccountSuffix</namefragment>
                     </displayname>
                     <linkvalue>custSearchAction.do?method=loadSearch&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=loan</linkvalue>
-                </menuitem>        
-                
+                </menuitem>
+
                 <menuitem>
-                    <displayname> 
-                        <namefragment>label.createMultipleLoanAccountsPrefix</namefragment> 
+                    <displayname>
+                        <namefragment>label.createMultipleLoanAccountsPrefix</namefragment>
                         <namefragment>Loan</namefragment>
                         <namefragment>label.createMultipleLoanAccountsSuffix</namefragment>
                     </displayname>
                     <linkvalue>multipleloansaction.do?method=load&amp;recordOfficeId=0&amp;recordLoanOfficerId=0</linkvalue>
-                </menuitem>                
+                </menuitem>
             </menugroup>
             <menugroup>
-                <displayname> 
-                        <namefragment>label.manage</namefragment> 
+                <displayname>
+                        <namefragment>label.manage</namefragment>
                         <namefragment>label.accountSmall</namefragment>
                         <namefragment>label.status</namefragment>
                 </displayname>
                 <menuitem>
-                    <displayname> 
-                        <namefragment>label.changeAccountStatus</namefragment> 
+                    <displayname>
+                        <namefragment>label.changeAccountStatus</namefragment>
                     </displayname>
                     <linkvalue>ChangeAccountStatus.do?method=load&amp;recordOfficeId=0&amp;recordLoanOfficerId=0</linkvalue>
                 </menuitem>

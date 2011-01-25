@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <table class="org.mifos.xyz" name="center" resourcebundle="resource"
-        xmlns="http://www.aditi.com" 
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xmlns="http://www.aditi.com"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.aditi.com tabletag.xsd ">
-<path key="centerSearch" forwardkey="transferSearch_success" action="centerCustAction.do"/> 
-<pagerequirements flowRequired="true" numbersrequired="true" bluelinerequired="true" headingrequired="false" blanklinerequired="false" valignnumbers="true"/>  
-  
+<path key="centerSearch" forwardkey="transferSearch_success" action="centerCustAction.do"/>
+<pagerequirements flowRequired="true" numbersrequired="true" bluelinerequired="true" headingrequired="false" blanklinerequired="false" valignnumbers="true"/>
+
 <row>
     <column label="" labeltype="string" boldlabel="false" type="text" >
         <displayname>
@@ -24,5 +24,5 @@
         </parameters>
     </column>
 </row>
-  
+
 </table>

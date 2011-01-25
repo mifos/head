@@ -13,7 +13,7 @@
 
         <many-to-one name="lookUpValue" column="lookup_id" class="org.mifos.application.master.business.LookUpValueEntity" cascade="none" update="false" unique="true" />
     </class>
-    
+
     <query name="findApplicableProductTypeById">
         <![CDATA[from PrdApplicableMasterEntity i where i.id=:ID]]>
     </query>

@@ -6,7 +6,7 @@
 <hibernate-configuration>
 
     <session-factory>
-   
+
         <!-- master data mapping files-->
 
         <mapping class="org.mifos.accounts.business.AccountTypeEntity" />
@@ -19,7 +19,7 @@
         <!-- Product Definition -->
         <mapping resource="org/mifos/accounts/productdefinition/business/PrdCategoryStatusEntity.hbm.xml" />
         <!-- Product Mix -->
-        <mapping resource="org/mifos/accounts/productsmix/business/ProductMixBO.hbm.xml" />    
+        <mapping resource="org/mifos/accounts/productsmix/business/ProductMixBO.hbm.xml" />
 
         <!-- Audit Log -->
         <mapping class="org.mifos.framework.business.EntityMaster" />
@@ -75,7 +75,7 @@
         <mapping resource="org/mifos/application/meeting/business/MeetingRecurrenceEntity.hbm.xml" />
         <mapping resource="org/mifos/application/meeting/business/MeetingTypeEntity.hbm.xml" />
         <mapping resource="org/mifos/application/meeting/business/RecurrenceTypeEntity.hbm.xml" />
-        
+
         <!-- M2 style objects for Product offering-->
 
         <mapping resource="org/mifos/accounts/productdefinition/business/GracePeriodTypeEntity.hbm.xml" />
@@ -171,7 +171,7 @@
         <mapping resource="org/mifos/reports/business/ReportsParamsMap.hbm.xml" />
         <mapping resource="org/mifos/reports/business/ReportsJasperMap.hbm.xml" />
         <!-- End mapping files for reports -->
-        
+
         <mapping resource="org/mifos/customers/client/business/ClientAttendance.hbm.xml" />
 
         <mapping resource="org/mifos/framework/components/fieldConfiguration/business/FieldConfigurationEntity.hbm.xml" />
@@ -208,39 +208,39 @@
         <mapping class="org.mifos.application.master.business.FundCodeEntity" />
 
         <mapping resource="org/mifos/application/holiday/business/HolidayBO.hbm.xml" />
-        
-        <mapping resource="org/mifos/customers/surveys/business/SurveyInstance.hbm.xml"/>  
-        <mapping resource="org/mifos/customers/surveys/business/Survey.hbm.xml"/>  
-        <mapping resource="org/mifos/customers/surveys/business/Question.hbm.xml"/>          
-        <mapping resource="org/mifos/customers/surveys/business/QuestionChoice.hbm.xml"/>          
-         <mapping resource="org/mifos/customers/surveys/business/SurveyResponse.hbm.xml"/>  
+
+        <mapping resource="org/mifos/customers/surveys/business/SurveyInstance.hbm.xml"/>
+        <mapping resource="org/mifos/customers/surveys/business/Survey.hbm.xml"/>
+        <mapping resource="org/mifos/customers/surveys/business/Question.hbm.xml"/>
+        <mapping resource="org/mifos/customers/surveys/business/QuestionChoice.hbm.xml"/>
+         <mapping resource="org/mifos/customers/surveys/business/SurveyResponse.hbm.xml"/>
         <mapping resource="org/mifos/customers/surveys/business/SurveyQuestion.hbm.xml"/>
         <mapping resource="org/mifos/customers/ppi/business/PPILikelihood.hbm.xml"/>
         <mapping resource="org/mifos/accounts/acceptedpaymenttype/business/AcceptedPaymentType.hbm.xml" />
         <mapping resource="org/mifos/accounts/acceptedpaymenttype/business/TransactionTypeEntity.hbm.xml" />
-             
+
         <mapping resource="org/mifos/accounts/loan/business/MaxMinLoanAmount.hbm.xml" />
         <mapping resource="org/mifos/accounts/loan/business/MaxMinInterestRate.hbm.xml" />
-        <mapping resource="org/mifos/accounts/loan/business/MaxMinNoOfInstall.hbm.xml" />         
-        
+        <mapping resource="org/mifos/accounts/loan/business/MaxMinNoOfInstall.hbm.xml" />
+
         <!-- Administratives Documents  -->
         <mapping resource="org/mifos/reports/admindocuments/business/AdminDocAccStateMix.hbm.xml" />
         <mapping resource="org/mifos/reports/admindocuments/business/AdminDocument.hbm.xml" />
         <!--  -->
-        
+
         <!-- Branch Report -->
-        <mapping resource="org/mifos/reports/branchreport/BranchReportBO.hbm.xml" />                
-        <mapping resource="org/mifos/reports/branchreport/BranchReportClientSummaryBO.hbm.xml" />        
-        <mapping resource="org/mifos/reports/branchreport/BranchReportLoanArrearsAgingBO.hbm.xml" />        
-        <mapping resource="org/mifos/reports/branchreport/BranchReportStaffSummaryBO.hbm.xml" />        
-        <mapping resource="org/mifos/reports/branchreport/BranchReportStaffingLevelSummaryBO.hbm.xml" />        
-        <mapping resource="org/mifos/reports/branchreport/BranchReportLoanDetailsBO.hbm.xml" />        
-        <mapping resource="org/mifos/reports/branchreport/BranchReportLoanArrearsProfileBO.hbm.xml" />    
-        
-        <!--  Branch Cash Confirmation Report -->    
-        <mapping resource="org/mifos/reports/cashconfirmationreport/BranchCashConfirmationReportBO.hbm.xml" />    
-        <mapping resource="org/mifos/reports/cashconfirmationreport/BranchCashConfirmationCenterRecoveryBO.hbm.xml" />    
-        <mapping resource="org/mifos/reports/cashconfirmationreport/BranchCashConfirmationInfoBO.hbm.xml" />    
+        <mapping resource="org/mifos/reports/branchreport/BranchReportBO.hbm.xml" />
+        <mapping resource="org/mifos/reports/branchreport/BranchReportClientSummaryBO.hbm.xml" />
+        <mapping resource="org/mifos/reports/branchreport/BranchReportLoanArrearsAgingBO.hbm.xml" />
+        <mapping resource="org/mifos/reports/branchreport/BranchReportStaffSummaryBO.hbm.xml" />
+        <mapping resource="org/mifos/reports/branchreport/BranchReportStaffingLevelSummaryBO.hbm.xml" />
+        <mapping resource="org/mifos/reports/branchreport/BranchReportLoanDetailsBO.hbm.xml" />
+        <mapping resource="org/mifos/reports/branchreport/BranchReportLoanArrearsProfileBO.hbm.xml" />
+
+        <!--  Branch Cash Confirmation Report -->
+        <mapping resource="org/mifos/reports/cashconfirmationreport/BranchCashConfirmationReportBO.hbm.xml" />
+        <mapping resource="org/mifos/reports/cashconfirmationreport/BranchCashConfirmationCenterRecoveryBO.hbm.xml" />
+        <mapping resource="org/mifos/reports/cashconfirmationreport/BranchCashConfirmationInfoBO.hbm.xml" />
 
         <mapping resource="org/mifos/accounts/loan/business/CalculatedInterestOnPayment.hbm.xml" />
 

@@ -2,7 +2,7 @@
 <!DOCTYPE hibernate-mapping PUBLIC
                             "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
                             "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
-<!-- 
+<!--
 Copyright (c) 2005-2008 Grameen Foundation USA
 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
 All rights reserved.
@@ -21,7 +21,7 @@ permissions and limitations under the License.
 
 See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 explanation of the license and how it is applied.
--->                            
+-->
 <hibernate-mapping>
     <class name="org.mifos.reports.branchreport.BranchReportBO"
         table="batch_branch_report">
@@ -51,19 +51,19 @@ explanation of the license and how it is applied.
             <one-to-many
                 class="org.mifos.reports.branchreport.BranchReportStaffSummaryBO" />
         </set>
-        
+
         <set name="staffingLevelSummaries" cascade="all, delete-orphan" inverse="true" lazy="true" access="field">
             <key column="branch_report_id" not-null="true"/>
             <one-to-many
                 class="org.mifos.reports.branchreport.BranchReportStaffingLevelSummaryBO" />
         </set>
-        
+
         <set name="loanDetails" cascade="all, delete-orphan" inverse="true" lazy="true" access="field">
             <key column="branch_report_id" not-null="true"/>
             <one-to-many
                 class="org.mifos.reports.branchreport.BranchReportLoanDetailsBO" />
         </set>
-        
+
         <set name="loanArrearsProfile" cascade="all, delete-orphan" inverse="true" lazy="true" access="field">
             <key column="branch_report_id" not-null="true"/>
             <one-to-many

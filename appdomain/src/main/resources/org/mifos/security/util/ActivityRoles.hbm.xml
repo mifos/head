@@ -16,6 +16,5 @@
     <query name="getActivityRoles">
             <![CDATA[ from ActivityRoles]]>
     </query>
- 
+
 </hibernate-mapping>
-    

@@ -510,7 +510,7 @@
         <propertyName name="mfiJoiningDate" displayKey="Client.mfiJoiningDate" />
 
         <propertyName name="officeName" parentName="office" displayKey="customer.branch_membership" />
-        <!-- 
+        <!--
         <propertyName name="officeName" parentName="office" displayKey="BranchOffice,Customer.name" />
         -->
         <propertyName name="officeId" parentName="office" doNotLog="yes" />
@@ -786,7 +786,7 @@
                 <classPath  path="org.mifos.customers.personnel.business.PersonnelLevelEntity"/>
             </entityName>
         </propertyName>
-        <propertyName name="personnelCustomFieldId" parentName="customFields" doNotLog="yes" />        
+        <propertyName name="personnelCustomFieldId" parentName="customFields" doNotLog="yes" />
         <propertyName name="fieldId" parentName="customFields" displayKey="Personnel.customField.feildId" lookUp="yes" methodName="retrieveAllCustomFieldsDefinition"/>
         <propertyName name="fieldValue" parentName="customFields" displayKey="Personnel.customField.feildValue" />
         <propertyName name="firstName" parentName="personnelDetails" displayKey="Personnel.firstName"  />

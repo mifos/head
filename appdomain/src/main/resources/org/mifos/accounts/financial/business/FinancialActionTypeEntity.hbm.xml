@@ -11,7 +11,7 @@
     </class>
     <query name="GETALLFINANCIALACTION">
         <![CDATA[
-                from  org.mifos.accounts.financial.business.FinancialActionTypeEntity 
+                from  org.mifos.accounts.financial.business.FinancialActionTypeEntity
             ]]>
     </query>
 </hibernate-mapping>

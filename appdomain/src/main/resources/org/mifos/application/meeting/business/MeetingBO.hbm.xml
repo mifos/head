@@ -13,6 +13,6 @@
          <one-to-one name="meetingDetails"  class="org.mifos.application.meeting.business.MeetingDetailsEntity"   lazy="false" cascade="all" property-ref="meeting" access="field"/>
          <many-to-one name="meetingType" column="meeting_type_id"  class="org.mifos.application.meeting.business.MeetingTypeEntity"  insert="true" update="true"  unique="true" lazy="false" cascade="none" access="field"/>
         <property name="meetingPlace" column="meeting_place" type="string" />
-        <property name="meetingStartDate" column="start_date" type="date" access="field"/>  
+        <property name="meetingStartDate" column="start_date" type="date" access="field"/>
     </class>
 </hibernate-mapping>

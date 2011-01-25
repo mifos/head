@@ -78,9 +78,9 @@
                 access="field" type="short" />
             <property name="variableInstallmentsAllowed" column="variable_installment_flag"
                 access="field" type="short" />
-                
+
             <property name="cashFlowCheckEnabled" column="cash_flow_comparison_flag" type="short" access="field"/>
-            
+
             <many-to-one name="gracePeriodType"
                 column="graceperiod_type_id"
                 class="org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity"
@@ -220,7 +220,7 @@
                 <one-to-many
                     class="org.mifos.accounts.productdefinition.business.PrdOfferingMeetingEntity" />
             </set>
-            
+
             <set name="historicalInterestDetails" cascade="all,delete-orphan" inverse="true" table="savings_offering_historical_interest_detail" lazy="true" access="field">
                 <key column="product_id" />
                 <one-to-many class="org.mifos.accounts.savings.interest.SavingsProductHistoricalInterestDetail" />
@@ -229,28 +229,28 @@
 
     </class>
     <query name="loanOffering.getApplicableProducts">
-        <![CDATA[from org.mifos.accounts.productdefinition.business.LoanOfferingBO loanOffering 
-                where loanOffering.prdApplicableMaster.id = :prdApplicableMaster 
-                and loanOffering.prdStatus.offeringStatusId = :prdStatus 
+        <![CDATA[from org.mifos.accounts.productdefinition.business.LoanOfferingBO loanOffering
+                where loanOffering.prdApplicableMaster.id = :prdApplicableMaster
+                and loanOffering.prdStatus.offeringStatusId = :prdStatus
                 order by loanOffering.prdOfferingName]]>
     </query>
     <query name="product.maxprdofferingid">
-        <![CDATA[select max(prd.prdOfferingId) 
+        <![CDATA[select max(prd.prdOfferingId)
         from org.mifos.accounts.productdefinition.business.PrdOfferingBO prd]]>
     </query>
     <query name="product.createofferingnamecount">
-        <![CDATA[select count(*) 
+        <![CDATA[select count(*)
         from org.mifos.accounts.productdefinition.business.PrdOfferingBO prd
         where prd.prdOfferingName=:prdOfferingName]]>
     </query>
     <query name="product.createofferingshortnamecount">
-        <![CDATA[select count(*) 
+        <![CDATA[select count(*)
         from org.mifos.accounts.productdefinition.business.PrdOfferingBO prd
         where prd.prdOfferingShortName=:prdOfferingShortName]]>
     </query>
     <query name="product.savingsapplicablerecurrencetypes">
-        <![CDATA[from org.mifos.application.meeting.business.RecurrenceTypeEntity recType 
-        where recType.recurrenceId=2 or recType.recurrenceId=3 
+        <![CDATA[from org.mifos.application.meeting.business.RecurrenceTypeEntity recType
+        where recType.recurrenceId=2 or recType.recurrenceId=3
         order by recType.recurrenceName]]>
     </query>
 
@@ -259,7 +259,7 @@
     </query>
 
     <query name="productOffering.getAllActiveSavingsProducts">
-        <![CDATA[from org.mifos.accounts.productdefinition.business.SavingsOfferingBO savingsOffering 
+        <![CDATA[from org.mifos.accounts.productdefinition.business.SavingsOfferingBO savingsOffering
         where savingsOffering.prdStatus.offeringStatusId = :prdStatus
         order by savingsOffering.prdOfferingName]]>
     </query>
@@ -271,15 +271,15 @@
         <return-scalar column="prdOfferingId" type="short" />
         <return-scalar column="prdOfferingName" type="string" />
         <return-scalar column="prdOfferingStatusId" type="short" />
-        <return-scalar column="prdOfferingStatusName" type="string" />    
+        <return-scalar column="prdOfferingStatusName" type="string" />
         <![CDATA[select po.prd_offering_id as prdOfferingId,
                 po.prd_offering_name as prdOfferingName,
                 po.offering_status_id as prdOfferingStatusId,
                 lv.lookup_name as prdOfferingStatusName
-                from prd_offering po 
+                from prd_offering po
                 join loan_offering lo on lo.prd_offering_id = po.prd_offering_id
                 join prd_status ps on ps.offering_status_id = po.offering_status_id
-                join prd_state p on p. prd_state_id = ps.prd_state_id 
+                join prd_state p on p. prd_state_id = ps.prd_state_id
                 join lookup_value lv on lv.lookup_id = prd_state_lookup_id
                 order by po.prd_offering_name]]>
     </sql-query>
@@ -287,15 +287,15 @@
         <return-scalar column="prdOfferingId" type="short" />
         <return-scalar column="prdOfferingName" type="string" />
         <return-scalar column="prdOfferingStatusId" type="short" />
-        <return-scalar column="prdOfferingStatusName" type="string" />    
+        <return-scalar column="prdOfferingStatusName" type="string" />
         <![CDATA[select po.prd_offering_id as prdOfferingId,
                 po.prd_offering_name as prdOfferingName,
                 po.offering_status_id as prdOfferingStatusId,
                 lv.lookup_name as prdOfferingStatusName
-                from prd_offering po 
+                from prd_offering po
                 join savings_offering so on so.prd_offering_id = po.prd_offering_id
                 join prd_status ps on ps.offering_status_id = po.offering_status_id
-                join prd_state p on p. prd_state_id = ps.prd_state_id 
+                join prd_state p on p. prd_state_id = ps.prd_state_id
                 join lookup_value lv on lv.lookup_id = prd_state_lookup_id
                 order by po.prd_offering_name]]>
     </sql-query>
@@ -320,7 +320,7 @@
     </query>
 
     <query name="product.bytype">
-        <![CDATA[from org.mifos.accounts.productdefinition.business.PrdOfferingBO as prdOff 
+        <![CDATA[from org.mifos.accounts.productdefinition.business.PrdOfferingBO as prdOff
         where prdOff.prdType.productTypeID=:ProductType
         and prdOff.prdStatus.offeringStatusId = :prdStatus
         ]]>
@@ -330,11 +330,11 @@
         where prdOff.prdType.productTypeID=:ProductType
         and prdOff.prdStatus.offeringStatusId = :prdStatus
         and prdOff.prdOfferingId not in    (
-        select prdMixBO.prdOfferingNotAllowedId.prdOfferingId 
+        select prdMixBO.prdOfferingNotAllowedId.prdOfferingId
         from org.mifos.accounts.productsmix.business.ProductMixBO prdMixBO
         where prdMixBO.prdOfferingId.prdOfferingId=:prdOfferingId)
         and prdOff.prdOfferingId not in    (
-        select prdMixBO.prdOfferingId.prdOfferingId 
+        select prdMixBO.prdOfferingId.prdOfferingId
         from org.mifos.accounts.productsmix.business.ProductMixBO prdMixBO
         where prdMixBO.prdOfferingNotAllowedId.prdOfferingId=:prdOfferingId)
         order by prdOff.prdOfferingName
@@ -345,7 +345,7 @@
         where prdOff.prdOfferingId in (select prdMixBO.prdOfferingNotAllowedId.prdOfferingId
         from org.mifos.accounts.productsmix.business.ProductMixBO prdMixBO
         where prdMixBO.prdOfferingId.prdOfferingId=:prdOfferingId)
-        OR prdOff.prdOfferingId in (select prdMixBO.prdOfferingId.prdOfferingId 
+        OR prdOff.prdOfferingId in (select prdMixBO.prdOfferingId.prdOfferingId
         from org.mifos.accounts.productsmix.business.ProductMixBO prdMixBO
         where prdMixBO.prdOfferingNotAllowedId.prdOfferingId=:prdOfferingId)
         order by prdOff.prdOfferingName
@@ -383,7 +383,7 @@
     <query name="savingsProduct.openSavingsAccounts">
         <![CDATA[select count(*) from SavingsBO s where s.savingsOffering.prdOfferingId=:prdOfferingId and s.accountState in (16, 18)]]>
     </query>
-    
+
     <query name="loanProduct.byid">
         <![CDATA[from LoanOfferingBO lp where lp.prdOfferingId=:prdOfferingId]]>
     </query>

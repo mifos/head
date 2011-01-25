@@ -43,7 +43,7 @@
         </constructor-arg>
         <constructor-arg ref="branchCashConfirmationReportService" />
     </bean>
-    
+
     <bean
         class="org.mifos.reports.business.validator.SqlCollectionSheetReportParamValidator">
         <constructor-arg>
@@ -51,8 +51,8 @@
                 <value>report/CollectionSheetReport.rptdesign</value>
             </list>
         </constructor-arg>
-    </bean>    
-    
+    </bean>
+
     <bean
         class="org.mifos.reports.business.validator.JdbcBranchCashConfirmationReportParamValidator">
         <constructor-arg>
@@ -60,5 +60,5 @@
                 <value>report/BranchCashConfirmationReport.rptdesign</value>
             </list>
         </constructor-arg>
-    </bean>    
+    </bean>
 </beans>

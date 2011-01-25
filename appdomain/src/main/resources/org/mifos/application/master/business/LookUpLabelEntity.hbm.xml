@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE hibernate-mapping PUBLIC 
+<!DOCTYPE hibernate-mapping PUBLIC
     "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
     "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-  
-<hibernate-mapping > 
+
+<hibernate-mapping >
   <class name="org.mifos.application.master.business.LookUpLabelEntity" table="lookup_label" >
       <id name="LookUpLabelId" column="label_id" >
             <generator class="native" />
     </id>
     <property column="entity_name"  name="labelName"  type="java.lang.String"/>
     <property column="locale_id"  name="localeId" />
-    <many-to-one name="locale" column="locale_id" class="org.mifos.application.master.business.SupportedLocalesEntity"  unique="true" insert="false" update="false"/>    
-    <many-to-one name="lookUpEntity"  column="entity_id" class="org.mifos.application.master.business.LookUpEntity" />    
-  </class> 
-    
-</hibernate-mapping> 
+    <many-to-one name="locale" column="locale_id" class="org.mifos.application.master.business.SupportedLocalesEntity"  unique="true" insert="false" update="false"/>
+    <many-to-one name="lookUpEntity"  column="entity_id" class="org.mifos.application.master.business.LookUpEntity" />
+  </class>
+
+</hibernate-mapping>

@@ -15,16 +15,16 @@
         <param-value>en-US</param-value>
     </context-param>
 
-    <!-- 
+    <!--
         Default timezone setting.
         Examples: "Europe/Paris", "GMT+1".
-        Defaults to the container's timezone.        
+        Defaults to the container's timezone.
      -->
     <context-param>
         <param-name>BIRT_VIEWER_TIMEZONE</param-name>
         <param-value></param-value>
     </context-param>
-    
+
     <!--
         Report resources directory for preview. Defaults to ${birt home}
     -->
@@ -32,7 +32,7 @@
         <param-name>BIRT_VIEWER_WORKING_FOLDER</param-name>
         <param-value></param-value>
     </context-param>
-    
+
     <!--
         Temporary document files directory. Defaults to ${birt home}/documents
     -->
@@ -78,7 +78,7 @@
         <param-name>BIRT_VIEWER_SCRIPTLIB_DIR</param-name>
         <param-value></param-value>
     </context-param>
-    
+
     <!-- Resource location directory. Defaults to ${birt home} -->
     <context-param>
         <param-name>BIRT_RESOURCE_PATH</param-name>
@@ -156,7 +156,7 @@
         <filter-name>ViewerFilter</filter-name>
         <servlet-name>EngineServlet</servlet-name>
     </filter-mapping>
-                    
+
     <!-- Viewer Servlet Context Listener -->
     <listener>
         <listener-class>org.eclipse.birt.report.listener.ViewerServletContextListener</listener-class>
@@ -166,7 +166,7 @@
     <listener>
         <listener-class>org.eclipse.birt.report.listener.ViewerHttpSessionListener</listener-class>
     </listener>
-    
+
     <!-- Viewer Servlet, Supports SOAP -->
     <servlet>
         <servlet-name>ViewerServlet</servlet-name>
@@ -183,12 +183,12 @@
         <servlet-name>ViewerServlet</servlet-name>
         <url-pattern>/frameset</url-pattern>
     </servlet-mapping>
-    
+
     <servlet-mapping>
         <servlet-name>ViewerServlet</servlet-name>
         <url-pattern>/run</url-pattern>
     </servlet-mapping>
-    
+
     <servlet-mapping>
         <servlet-name>EngineServlet</servlet-name>
         <url-pattern>/preview</url-pattern>
@@ -202,18 +202,18 @@
     <servlet-mapping>
         <servlet-name>EngineServlet</servlet-name>
         <url-pattern>/parameter</url-pattern>
-    </servlet-mapping>    
+    </servlet-mapping>
 
     <servlet-mapping>
         <servlet-name>EngineServlet</servlet-name>
         <url-pattern>/document</url-pattern>
-    </servlet-mapping>    
+    </servlet-mapping>
 
     <servlet-mapping>
         <servlet-name>EngineServlet</servlet-name>
         <url-pattern>/output</url-pattern>
-    </servlet-mapping>    
-    
+    </servlet-mapping>
+
     <servlet-mapping>
         <servlet-name>EngineServlet</servlet-name>
         <url-pattern>/extract</url-pattern>
@@ -224,5 +224,5 @@
             <taglib-uri>/birt.tld</taglib-uri>
             <taglib-location>/WEB-INF/tlds/birt.tld</taglib-location>
         </taglib>
-    </jsp-config>        
+    </jsp-config>
 </web-app>

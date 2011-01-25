@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin>
-     <extension-point id="driverinfo" name="JDBC Driver Information Extension" 
+     <extension-point id="driverinfo" name="JDBC Driver Information Extension"
                schema="schema/driverinfo.exsd"/>
-               
+
    <extension
          point="org.eclipse.datatools.connectivity.oda.dataSource">
       <dataSource
@@ -136,7 +136,7 @@
                nativeDataType="TIMESTAMP"
                nativeDataTypeCode="93"
                odaScalarDataType="Timestamp"/>
-               
+
          <!--For Oracle TIMESTAMPTZ type -->
          <dataTypeMapping
                nativeDataType="TIMESTAMPTZ"
@@ -309,7 +309,7 @@
             class="org.eclipse.datatools.connectivity.oda.profile.OdaConnectionFactory"
             profile="%oda.data.source.id"/>
    </extension>
-   
+
    <extension
          point="org.eclipse.birt.report.data.oda.jdbc.driverinfo">
       <jdbcDriver

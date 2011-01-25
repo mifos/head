@@ -2,7 +2,7 @@
 
 
 <tableInfo>
-  <headerDetails headerStyle="fontnormalbold" /> 
+  <headerDetails headerStyle="fontnormalbold" />
   <row totWidth="100" bottomLineRequired="true">
     <column label="Date" value="UserPrefferedDate" valueType="method" columnType="text">
          <columnDetails  rowStyle="drawtablerow" colWidth="15" />
@@ -10,7 +10,7 @@
     <column label="OldStatus" value="oldStatusName" valueType="method" columnType="text">
          <columnDetails  rowStyle="drawtablerow" colWidth="20"/>
     </column>
-    
+
     <column label="NewStatus" value="newStatusName" valueType="method" columnType="text">
          <columnDetails  rowStyle="drawtablerow" colWidth="19"/>
     </column>
@@ -20,6 +20,6 @@
     </column>
   </row>
 </tableInfo>
-   
-   
-   
+
+
+

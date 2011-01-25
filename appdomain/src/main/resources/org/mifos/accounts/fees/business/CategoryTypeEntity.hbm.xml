@@ -10,8 +10,8 @@
         <id name="id" column="category_id" type="short">
             <generator class="native"/>
         </id>
-     <many-to-one name="lookUpValue" column="category_lookup_id" class="org.mifos.application.master.business.LookUpValueEntity" 
+     <many-to-one name="lookUpValue" column="category_lookup_id" class="org.mifos.application.master.business.LookUpValueEntity"
                 cascade="none" update="false" unique="true"/>
     </class>
-    
+
 </hibernate-mapping>

@@ -14,7 +14,7 @@
             <column name="min_amnt_for_int_currency_id" not-null="true"/>
             <column name="min_amnt_for_int" not-null="true"/>
         </property>
-        
+
         <many-to-one name="savingsProduct" column="product_id" class="org.mifos.accounts.productdefinition.business.PrdOfferingBO" cascade="all" insert="true" update="true" />
     </class>
 

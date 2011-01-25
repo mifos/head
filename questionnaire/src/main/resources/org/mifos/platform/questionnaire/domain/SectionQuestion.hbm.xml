@@ -11,7 +11,7 @@
         <property name="sequenceNumber" column="sequence_number" access="field"/>
 
         <many-to-one name="section" column="section_id"
-            class="org.mifos.platform.questionnaire.domain.Section"     
+            class="org.mifos.platform.questionnaire.domain.Section"
             access="field" not-null="true"/>
 
         <many-to-one name="question" column="question_id" cascade="save-update" lazy="false"

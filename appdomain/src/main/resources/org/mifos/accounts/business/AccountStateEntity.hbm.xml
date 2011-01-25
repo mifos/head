@@ -19,17 +19,17 @@
             <one-to-many class="org.mifos.accounts.business.AccountStateFlagEntity" />
         </set>
         <property name="description" column="status_description" type="java.lang.String" />
-    
+
     </class>
 
     <!--Gets all possible states-->
     <query name="accounts.retrieveAllAccountStates">
-        <![CDATA[from org.mifos.accounts.business.AccountStateEntity accountStateEntity 
+        <![CDATA[from org.mifos.accounts.business.AccountStateEntity accountStateEntity
         where accountStateEntity.prdType.productTypeID = :prdTypeId
         order by id]]>
     </query>
     <query name="accounts.retrieveAllActiveAccountStates">
-        <![CDATA[from org.mifos.accounts.business.AccountStateEntity accountStateEntity 
+        <![CDATA[from org.mifos.accounts.business.AccountStateEntity accountStateEntity
         where accountStateEntity.prdType.productTypeID = :prdTypeId
         and accountStateEntity.optional=:OPTIONAL_FLAG
         order by id]]>

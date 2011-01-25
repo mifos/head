@@ -9,7 +9,7 @@
         <id name="id" column="fee_frequency_id" unsaved-value="null">
             <generator class="native"/>
         </id>
-        <many-to-one name="lookUpValue" column="lookup_id" class="org.mifos.application.master.business.LookUpValueEntity" 
+        <many-to-one name="lookUpValue" column="lookup_id" class="org.mifos.application.master.business.LookUpValueEntity"
             cascade="none" update="false" unique="true"/>
     </class>
 </hibernate-mapping>

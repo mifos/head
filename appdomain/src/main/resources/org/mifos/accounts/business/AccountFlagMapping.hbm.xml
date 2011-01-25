@@ -11,8 +11,8 @@
         <id name="accountFlagId" column="account_flag_id" type="integer">
             <generator class="native"/>
         </id>
-        <property name="createdBy" column="created_by" not-null="true" update="false" />        
+        <property name="createdBy" column="created_by" not-null="true" update="false" />
            <property name="createdDate" column="created_date" not-null="true" update="false"/>
-           <many-to-one name="flag" column="flag_id" not-null="true"/>           
+           <many-to-one name="flag" column="flag_id" not-null="true"/>
     </class>
 </hibernate-mapping>

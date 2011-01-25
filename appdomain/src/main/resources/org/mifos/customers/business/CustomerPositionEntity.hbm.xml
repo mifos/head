@@ -12,7 +12,7 @@
         </id>
        <!-- <version name="versionNo" column="version_no" type="integer" unsaved-value="null"/>-->
        <many-to-one name="position" column="position_id" class="org.mifos.customers.business.PositionEntity" insert="true" update="false" access="field"/>
-       <many-to-one name="customer" column="customer_id" class="org.mifos.customers.business.CustomerBO"  insert="true" update="true" />    
-       <many-to-one name="parentCustomer" column="parent_customer_id" class="org.mifos.customers.business.CustomerBO"  insert="true" update="false" access="field"/>    
-    </class>    
+       <many-to-one name="customer" column="customer_id" class="org.mifos.customers.business.CustomerBO"  insert="true" update="true" />
+       <many-to-one name="parentCustomer" column="parent_customer_id" class="org.mifos.customers.business.CustomerBO"  insert="true" update="false" access="field"/>
+    </class>
 </hibernate-mapping>

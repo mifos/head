@@ -35,16 +35,16 @@
     <query name="productsmix.retrieveByProductID">
         <![CDATA[ from org.mifos.accounts.productsmix.business.ProductMixBO as prdmix where prdmix.prdOfferingId.prdOfferingId=:prdOfferingId ]]>
     </query>
-    
+
     <!-- This query obtains all not allowed products mix for a product instance -->
     <query name="productsmix.loadnotallowedproducts">
         <![CDATA[ select prdmix.prdOfferingNotAllowedId from  org.mifos.accounts.productsmix.business.ProductMixBO prdmix where prdmix.prdOfferingId.prdOfferingId=:prdofferingId ]]>
     </query>
     <query name="product.prdmixbyid">
         <![CDATA[from org.mifos.accounts.productsmix.business.ProductMixBO as prdmix where prdmix.prdOfferingId.prdOfferingId=:prdOfferingId and prdmix.prdOfferingNotAllowedId.prdOfferingId=:notAllowedPrdOfferingId]]>
-    </query>     
+    </query>
     <query name="product.doesprdofferingscancoexist">
         <![CDATA[from org.mifos.accounts.productsmix.business.ProductMixBO as prdmix where prdmix.prdOfferingId.prdOfferingId=:prdOfferingId_A and prdmix.prdOfferingNotAllowedId.prdOfferingId=:prdOfferingId_B]]>
-    </query>     
+    </query>
 
 </hibernate-mapping>

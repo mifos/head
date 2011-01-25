@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <table class="org.mifos.xyz" name="group" resourcebundle="resource"
-        xmlns="http://www.aditi.com" 
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xmlns="http://www.aditi.com"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.aditi.com tabletag.xsd ">
-<path key="GroupList" forwardkey="search_success" action="groupCustAction.do"/> 
-<pagerequirements numbersrequired="true" bluelinerequired="true" headingrequired="false" valignnumbers="false" blanklinerequired="false" bottombluelinerequired="true"/>  
+<path key="GroupList" forwardkey="search_success" action="groupCustAction.do"/>
+<pagerequirements numbersrequired="true" bluelinerequired="true" headingrequired="false" valignnumbers="false" blanklinerequired="false" bottombluelinerequired="true"/>
 <row>
     <column label="" labeltype="string" boldlabel="false" type="text" >
         <displayname>
@@ -27,5 +27,5 @@
         </parameters>
     </column>
 </row>
-  
+
 </table>

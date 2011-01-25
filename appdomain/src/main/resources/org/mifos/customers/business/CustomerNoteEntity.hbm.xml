@@ -12,12 +12,12 @@
         </id>
         <property name="commentDate" column="comment_date" type="date" access="field"/>
         <property name="comment" column="comment" type="string" access="field"/>
-       <!--  <property name="personnelId" column="field_officer_id" type="short" unique="false" update="true" insert="true" optimistic-lock="true" lazy="false" /> 
+       <!--  <property name="personnelId" column="field_officer_id" type="short" unique="false" update="true" insert="true" optimistic-lock="true" lazy="false" />
         <property name="customerId" column="customer_id"  unique="false" update="true" insert="true" optimistic-lock="true" lazy="false" /> -->
         <many-to-one  name="customer" column="customer_id" class="org.mifos.customers.business.CustomerBO" insert="true" update="false" unique="true" access="field"/>
         <many-to-one  name="personnel" column="field_officer_id" class="org.mifos.customers.personnel.business.PersonnelBO" insert="true" update="false" unique="true" access="field"/>
     </class>
-    
+
     <query name="notes.getAllCustomerNotes">
            <![CDATA[from org.mifos.customers.business.CustomerNoteEntity note where note.customer.customerId=:CUSTOMER_ID order by note.commentId desc]]>
      </query>

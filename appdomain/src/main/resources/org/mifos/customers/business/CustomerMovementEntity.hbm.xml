@@ -16,6 +16,6 @@
         <property name="updatedBy" column="updated_by" />
         <property name="updatedDate" column="updated_date" type="date" />
         <many-to-one name="customer" column="customer_id" class="org.mifos.customers.business.CustomerBO" insert="true" update="false" cascade="none" access="field"/>
-        <many-to-one name="office" column="office_id" class="org.mifos.customers.office.business.OfficeBO"  insert="true" update="false" cascade="none" access="field"/>        
+        <many-to-one name="office" column="office_id" class="org.mifos.customers.office.business.OfficeBO"  insert="true" update="false" cascade="none" access="field"/>
     </class>
  </hibernate-mapping>
