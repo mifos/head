@@ -2582,7 +2582,7 @@ create table account_payment (
   payment_type_id smallint not null,
   currency_id smallint,
   amount decimal(21,4) not null,
-  receipt_number varchar(25),
+  receipt_number varchar(60),
   voucher_number varchar(50),
   check_number varchar(50),
   payment_date date not null,
