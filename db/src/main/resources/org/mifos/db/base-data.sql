@@ -1,12 +1,12 @@
-/* This script represents the latest master data (data which is shipped
- with MIFOS and is more about the operation of MIFOS than business data).
-
- The point of having this file is to see the latest master data in one place,
-   rather than having to look through a bunch of upgrade scripts.  So we
-   should group things logically (by table or functionality, for example)
-   rather than historically.
-   We shouldn't have an INSERT followed by an UPDATE to the same row (unless
-   there is some special reason like foreign keys). */
+-- This script represents the latest master data (data which is shipped
+-- with MIFOS and is more about the operation of MIFOS than business data).
+--
+-- The point of having this file is to see the latest master data in one place,
+-- rather than having to look through a bunch of upgrade scripts.  So we
+-- should group things logically (by table or functionality, for example)
+-- rather than historically.
+-- We shouldn't have an INSERT followed by an UPDATE to the same row (unless
+-- there is some special reason like foreign keys).
 
 insert into applied_upgrades(upgrade_id) values(1277565300);
 insert into applied_upgrades(upgrade_id) values(1277565388);

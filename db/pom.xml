@@ -25,6 +25,38 @@
         </dependency>
     </dependencies>
 
+    <profiles>
+        <profile>
+            <id>with-rollback</id>
+            <activation>
+                <property>
+                    <name>doRollback</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.liquibase</groupId>
+                        <artifactId>liquibase-plugin</artifactId>
+                        <version>1.9.3.0</version>
+                        <configuration>
+                            <propertyFile>target/classes/liquibase.properties</propertyFile>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>rollback</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>rollback</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
     <build>
         <resources>
             <resource>
@@ -62,7 +94,8 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <phase>prepare-package</phase>
+                        <id>update</id>
+                        <phase>package</phase>
                         <goals>
                             <goal>update</goal>
                         </goals>
