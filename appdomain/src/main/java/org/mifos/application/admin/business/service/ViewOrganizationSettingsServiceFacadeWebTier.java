@@ -206,7 +206,7 @@ public class ViewOrganizationSettingsServiceFacadeWebTier implements ViewOrganiz
         Map<String, String> result = new LinkedHashMap<String, String>();
         for (TransactionImport ti : new PluginManager().loadImportPlugins()) {
             Map<String, String> properties = ti.getPropertiesForAdminDisplay();
-            Iterator iterator = properties.keySet().iterator();
+            Iterator<String> iterator = properties.keySet().iterator();
             while(iterator.hasNext())
             {
                 String key = String.valueOf(iterator.next());

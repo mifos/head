@@ -29,7 +29,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mifos.accounts.business.AccountBO;
-import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.struts.actionforms.ApplyChargeActionForm;
@@ -53,9 +52,8 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 
+@SuppressWarnings("unchecked")
 public class ApplyChargeActionStrutsTest extends MifosMockStrutsTestCase {
-
-
 
     private AccountBO accountBO;
 
@@ -224,9 +222,4 @@ public class ApplyChargeActionStrutsTest extends MifosMockStrutsTestCase {
                 startDate, loanOffering);
 
     }
-
-    private AccountBusinessService getAccountBusinessService() {
-        return new AccountBusinessService();
-    }
-
 }

@@ -68,7 +68,7 @@ public class LoanDisbursementActionForm extends AccountApplyPaymentActionForm im
         String method = request.getParameter(MethodNameConstants.METHOD);
         if (isPreviewMethod(method) && getPaymentAmountGreaterThanZero()
                 && StringUtils.isBlank(paymentModeOfPayment)) {
-            String errorMessage = getResourceBundle(getUserLocale(request)).getString("loan.paymentid");
+            String errorMessage = getResourceBundleForLocale(getUserLocale(request)).getString("loan.paymentid");
             errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY,
                     errorMessage));
         }
@@ -80,7 +80,7 @@ public class LoanDisbursementActionForm extends AccountApplyPaymentActionForm im
         return errors;
     }
 
-    private ResourceBundle getResourceBundle(Locale userLocale) {
+    private ResourceBundle getResourceBundleForLocale(Locale userLocale) {
         return ResourceBundle.getBundle(FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE, userLocale);
     }
 

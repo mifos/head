@@ -112,6 +112,7 @@ public class WebTierAccountServiceFacadeTest {
         rupee = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testGetAccountPaymentInformation() throws ServiceException, PersistenceException {
         Date paymentDate = TestUtils.getDate(12, 12, 2012);
@@ -134,6 +135,7 @@ public class WebTierAccountServiceFacadeTest {
         verify(acceptedPaymentTypePersistence, times(1)).getAcceptedPaymentTypesForATransaction(TEST_LOCALE, transactionId);
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testGetAccountPaymentInformationWhenPreviousPaymentsDoNotExist() throws ServiceException, PersistenceException {
         Date paymentDate = TestUtils.getDate(12, 12, 2012);

@@ -39,9 +39,8 @@ import org.mifos.framework.exceptions.EnumsNotLoadedException;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
+@SuppressWarnings("unchecked")
 public class EnumPluginStrutsTest extends MifosMockStrutsTestCase {
-
-
 
     private SavingsOfferingBO product;
 

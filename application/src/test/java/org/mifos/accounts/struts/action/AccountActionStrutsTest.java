@@ -50,18 +50,13 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
+@SuppressWarnings("unchecked")
 public class AccountActionStrutsTest extends MifosMockStrutsTestCase {
 
-
-
-    protected AccountBO accountBO = null;
-
+    private AccountBO accountBO = null;
     private CustomerBO center = null;
-
     private CustomerBO group = null;
-
     private UserContext userContext;
-
     private String flowKey;
 
     @Override

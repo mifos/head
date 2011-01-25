@@ -40,6 +40,7 @@ import org.mifos.application.NamedQueryConstants;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.LegacyGenericDao;
 
+@SuppressWarnings("unchecked")
 public class PrdOfferingPersistence extends LegacyGenericDao {
     private static final Logger logger = LoggerFactory.getLogger(PrdOfferingPersistence.class);
 
@@ -104,7 +105,6 @@ public class PrdOfferingPersistence extends LegacyGenericDao {
         return prdStatusList;
     }
 
-    @SuppressWarnings("cast")
     public List<PrdOfferingBO> getAllPrdOffringByType(String prdType) throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put(ProductDefinitionConstants.PRODUCTTYPE, Short.valueOf(prdType));
@@ -118,7 +118,6 @@ public class PrdOfferingPersistence extends LegacyGenericDao {
 
     }
 
-    @SuppressWarnings("cast")
     public List<PrdOfferingBO> getAllowedPrdOfferingsByType(String prdId, String prdType) throws PersistenceException {
 
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
@@ -149,7 +148,6 @@ public class PrdOfferingPersistence extends LegacyGenericDao {
 
     }
 
-    @SuppressWarnings("cast")
     public List<PrdOfferingBO> getNotAllowedPrdOfferingsByType(String prdId) throws PersistenceException {
 
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
@@ -158,7 +156,6 @@ public class PrdOfferingPersistence extends LegacyGenericDao {
 
     }
 
-    @SuppressWarnings("cast")
     public List<PrdOfferingBO> getNotAllowedPrdOfferingsForMixProduct(String prdId, String prdType)
             throws PersistenceException {
 
@@ -193,5 +190,4 @@ public class PrdOfferingPersistence extends LegacyGenericDao {
     public List<PrdOfferingBO> getPrdOfferingMix() throws PersistenceException {
         return (List<PrdOfferingBO>) executeNamedQuery(NamedQueryConstants.LOAD_PRODUCTS_OFFERING_MIX, null);
     }
-
 }

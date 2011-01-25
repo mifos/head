@@ -45,6 +45,7 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 /**
  * This class is used to persist objects created by TestObjectFactory.
  */
+@SuppressWarnings("unchecked")
 public class TestObjectPersistence {
 
     private CustomerPersistence customerPersistence = new CustomerPersistence();

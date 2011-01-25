@@ -41,9 +41,8 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
 
+@SuppressWarnings("unchecked")
 public class QuestionsActionStrutsTest extends MifosMockStrutsTestCase {
-
-
 
     @Before
     public void setUp() throws Exception {

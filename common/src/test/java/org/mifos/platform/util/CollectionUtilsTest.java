@@ -13,7 +13,7 @@ import static org.junit.Assert.assertThat;
 import static org.mifos.platform.util.CollectionUtils.asMap;
 import static org.mifos.platform.util.MapEntry.makeEntry;
 
-
+@SuppressWarnings("unchecked")
 public class CollectionUtilsTest extends TestCase {
 
     public void testAsMap() {
@@ -51,6 +51,7 @@ public class CollectionUtilsTest extends TestCase {
         assertEquals("Hi", CollectionUtils.toString(Arrays.asList("Hi")));
         assertEquals("Hi, Bye", CollectionUtils.toString(Arrays.asList("Hi", "Bye")));
     }
+
     public void testAddKeyValue() {
         Map<Integer, List<String>> multiMap = asMap(
                             makeEntry(1, asStringList("One")),

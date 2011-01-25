@@ -40,9 +40,8 @@ import org.mifos.framework.exceptions.ConstantsNotLoadedException;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
+@SuppressWarnings("unchecked")
 public class ConstPluginStrutsTest extends MifosMockStrutsTestCase {
-
-
 
     private SavingsOfferingBO product;
 

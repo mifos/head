@@ -257,6 +257,7 @@ public class PersonnelNoteActionStrutsTest extends MifosMockStrutsTestCase {
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, personnel, request);
     }
 
+    @Override
     public OfficeBO getBranchOffice() {
         return TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
     }

@@ -59,6 +59,7 @@ import org.mifos.reports.branchreport.BranchReportStaffingLevelSummaryBO;
 import org.mifos.reports.branchreport.LoanArrearsAgingPeriod;
 import org.mifos.reports.business.service.BranchReportIntegrationTestCase;
 
+@SuppressWarnings("unchecked")
 public class BranchReportPersistenceIntegrationTest extends BranchReportIntegrationTestCase {
 
     private static final Short LOAN_OFFICER_ID_SHORT = Short.valueOf("3");

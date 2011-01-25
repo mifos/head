@@ -69,6 +69,7 @@ import org.mifos.platform.validations.Errors;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+@SuppressWarnings("unchecked")
 @RunWith(MockitoJUnitRunner.class)
 public class LoanServiceFacadeWebTierTest {
 

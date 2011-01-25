@@ -24,7 +24,6 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.apache.struts.action.ActionMapping;
 import org.junit.Before;
 import org.junit.Test;
 import org.mifos.customers.surveys.SurveysConstants;
@@ -40,11 +39,9 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
 
+@SuppressWarnings("unchecked")
 public class SurveysActionStrutsTest extends MifosMockStrutsTestCase {
 
-
-
-    ActionMapping moduleMapping;
     private Question question;
     private Question question2;
 

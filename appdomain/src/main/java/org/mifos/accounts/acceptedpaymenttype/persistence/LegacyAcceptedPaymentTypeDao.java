@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+@SuppressWarnings("unchecked")
 public class LegacyAcceptedPaymentTypeDao extends LegacyGenericDao {
 
     private LegacyAcceptedPaymentTypeDao() {

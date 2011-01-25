@@ -58,11 +58,11 @@ public class QuestionDaoIntegrationTest {
     @Transactional
     public void testCountOfQuestionsWithTitle() throws SystemException {
         String questionTitle = "Title" + System.currentTimeMillis();
-        List result = questionDao.retrieveCountOfQuestionsWithText(questionTitle);
-        assertEquals((long) 0, result.get(0));
+        List<Long> result = questionDao.retrieveCountOfQuestionsWithText(questionTitle);
+        assertEquals(Long.valueOf(0), result.get(0));
         defineQuestion(questionTitle, DATE);
         result = questionDao.retrieveCountOfQuestionsWithText(questionTitle);
-        assertEquals((long) 1, result.get(0));
+        assertEquals(Long.valueOf(1), result.get(0));
     }
 
     @Test

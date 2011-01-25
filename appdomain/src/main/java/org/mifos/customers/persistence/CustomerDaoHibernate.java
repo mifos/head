@@ -1019,6 +1019,7 @@ public class CustomerDaoHibernate implements CustomerDao {
         return totalLoanAmount.toString();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public String getTotalOutstandingLoanAmountForGroupAndClientsOfGroups(String groupSearchId, Short groupOfficeId) {
         Map<String, Object> queryParameters = new HashMap<String, Object>();

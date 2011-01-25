@@ -32,6 +32,7 @@ import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+@SuppressWarnings("unchecked")
 @RunWith(MockitoJUnitRunner.class)
 public class LoanPrdActionTest {
     @Mock

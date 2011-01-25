@@ -53,6 +53,7 @@ import org.xml.sax.SAXException;
  * @deprecated As of Mifos release Leila E, replaced by
  *             {@link org.mifos.platform.questionnaire.parsers.QuestionGroupDefinitionParser}.
  */
+@Deprecated
 public class XmlPPISurveyParser {
 
     /** TODO: Should be private */

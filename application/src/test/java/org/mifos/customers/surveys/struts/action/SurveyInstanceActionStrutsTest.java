@@ -85,9 +85,8 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
 
+@SuppressWarnings("unchecked")
 public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
-
-
 
     private static final double DELTA = 0.00000001;
 
@@ -322,7 +321,6 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
 
         InstanceStatus status = InstanceStatus.COMPLETED;
 
-        int question3Id = question3.getQuestionId();
         addRequestParameter("value(response_" + surveyQuestion3.getSurveyQuestionId() + "_DD)", "14");
         addRequestParameter("value(response_" + surveyQuestion3.getSurveyQuestionId() + "_MM)", "30"); // an
         // invalid
@@ -728,5 +726,4 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
         IntegrationTestObjectMother.createPersonnel(personnel);
         return IntegrationTestObjectMother.findPersonnelById(personnel.getPersonnelId());
     }
-
 }

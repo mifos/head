@@ -74,22 +74,16 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 
+@SuppressWarnings("unchecked")
 public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
 
     private UserContext userContext;
-
     private CustomerBO group;
-
     private CustomerBO center;
-
     private SavingsBO savings;
-
     private SavingsBO savings3;
-
     private SavingsOfferingBO savingsOffering;
-
     private SavingsOfferingBO savingsOffering1;
-
     private SavingsOfferingBO savingsOffering2;
 
     @Autowired

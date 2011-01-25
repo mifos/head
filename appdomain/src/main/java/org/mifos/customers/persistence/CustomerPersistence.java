@@ -97,6 +97,7 @@ import org.mifos.framework.util.helpers.MifosStringUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
 
+@SuppressWarnings("unchecked")
 public class CustomerPersistence extends LegacyGenericDao {
 
     private final LegacyPersonnelDao legacyPersonnelDao = ApplicationContextProvider.getBean(LegacyPersonnelDao.class);

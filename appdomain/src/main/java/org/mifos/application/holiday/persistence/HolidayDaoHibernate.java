@@ -173,6 +173,7 @@ public class HolidayDaoHibernate implements HolidayDao {
         return isNotEmpty(holiday) && holiday.get(0).isFutureRepayment();
     }
 
+    @SuppressWarnings("unchecked")
     private List<HolidayBO> getHoliday(short officeId, String date) {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("CURRENT_DATE", date);

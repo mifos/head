@@ -29,36 +29,37 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 
+@SuppressWarnings("unchecked")
 public class HibernateHelperIntegrationTest extends MifosIntegrationTestCase {
 
     @Test
     public void testDTOBuilderCapitalize() {
         DTOBuilder dtoBuilder = new DTOBuilder();
-       Assert.assertEquals("String", dtoBuilder.capitalize("string"));
-       Assert.assertEquals("", dtoBuilder.capitalize(""));
+        Assert.assertEquals("String", dtoBuilder.capitalize("string"));
+        Assert.assertEquals("", dtoBuilder.capitalize(""));
     }
 
     @Test
     public void testDTOBuilderGetParameterTypes() throws Exception {
         DTOBuilder dtoBuilder = new DTOBuilder();
         Class[] classParams = dtoBuilder.getParameterTypes("long");
-       Assert.assertTrue(classParams[0].equals(Long.TYPE));
+        Assert.assertTrue(classParams[0].equals(Long.TYPE));
         classParams = dtoBuilder.getParameterTypes("integer");
-       Assert.assertTrue(classParams[0].equals(Integer.TYPE));
+        Assert.assertTrue(classParams[0].equals(Integer.TYPE));
         classParams = dtoBuilder.getParameterTypes("string");
-       Assert.assertTrue(classParams[0].equals(new String("").getClass()));
+        Assert.assertTrue(classParams[0].equals(new String("").getClass()));
         classParams = dtoBuilder.getParameterTypes("date");
-       Assert.assertTrue(classParams[0].equals(new java.util.GregorianCalendar().getClass().getSuperclass()));
+        Assert.assertTrue(classParams[0].equals(new java.util.GregorianCalendar().getClass().getSuperclass()));
         classParams = dtoBuilder.getParameterTypes("double");
-       Assert.assertTrue(classParams[0].equals(Double.TYPE));
+        Assert.assertTrue(classParams[0].equals(Double.TYPE));
         classParams = dtoBuilder.getParameterTypes("short");
-       Assert.assertTrue(classParams[0].equals(Short.TYPE));
+        Assert.assertTrue(classParams[0].equals(Short.TYPE));
         classParams = dtoBuilder.getParameterTypes("CHAR");
-       Assert.assertTrue(classParams[0].equals(Character.TYPE));
+        Assert.assertTrue(classParams[0].equals(Character.TYPE));
         classParams = dtoBuilder.getParameterTypes("TIMESTAMP");
-       Assert.assertTrue(classParams[0].equals(new java.sql.Timestamp(System.currentTimeMillis()).getClass()));
+        Assert.assertTrue(classParams[0].equals(new java.sql.Timestamp(System.currentTimeMillis()).getClass()));
         classParams = dtoBuilder.getParameterTypes("TIME");
-       Assert.assertTrue(classParams[0].equals(new java.sql.Time(System.currentTimeMillis()).getClass()));
+        Assert.assertTrue(classParams[0].equals(new java.sql.Time(System.currentTimeMillis()).getClass()));
         classParams = dtoBuilder.getParameterTypes("invalidDataType");
         Assert.assertNull(classParams);
     }
@@ -66,13 +67,13 @@ public class HibernateHelperIntegrationTest extends MifosIntegrationTestCase {
     @Test
     public void testDTOBuilderGetValue() {
         DTOBuilder dtoBuilder = new DTOBuilder();
-       Assert.assertEquals("string", dtoBuilder.getValue("string", "string"));
+        Assert.assertEquals("string", dtoBuilder.getValue("string", "string"));
         Long l = System.currentTimeMillis();
         Date date = new Date(l);
         Calendar c = new GregorianCalendar();
         Calendar cal = (Calendar) dtoBuilder.getValue(new Date(l), "date");
         c.setTime(date);
-       Assert.assertEquals(c.getTime(), cal.getTime());
+        Assert.assertEquals(c.getTime(), cal.getTime());
     }
 
 }

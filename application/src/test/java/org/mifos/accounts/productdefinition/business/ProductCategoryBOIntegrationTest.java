@@ -39,6 +39,7 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
+@SuppressWarnings("unchecked")
 public class ProductCategoryBOIntegrationTest extends MifosIntegrationTestCase {
 
     @Test

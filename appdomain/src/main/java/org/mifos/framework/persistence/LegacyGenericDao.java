@@ -94,6 +94,7 @@ public abstract class LegacyGenericDao {
      * This method takes the name of a named query to be executed as well as a
      * list of parameters that the query uses. It assumes the session is open.
      */
+    @SuppressWarnings("unchecked")
     public List executeNamedQuery(final String queryName, final Map<String, ?> queryParameters) throws PersistenceException {
         try {
             Query query = createdNamedQuery(queryName);

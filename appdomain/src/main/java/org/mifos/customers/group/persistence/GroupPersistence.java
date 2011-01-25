@@ -60,6 +60,7 @@ public class GroupPersistence extends LegacyGenericDao {
     private final CenterPersistence centerPersistence = new CenterPersistence();
     private final LegacyPersonnelDao legacyPersonnelDao = ApplicationContextProvider.getBean(LegacyPersonnelDao.class);
 
+    @SuppressWarnings("unchecked")
     public GroupBO findBySystemId(String globalCustNum) throws PersistenceException {
         Map<String, String> queryParameters = new HashMap<String, String>();
         GroupBO group = null;

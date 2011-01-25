@@ -35,10 +35,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class SecurityHelperIntegrationTest extends MifosIntegrationTestCase {
 
     @Autowired
-    LegacyRolesPermissionsDao legacyRolesPermissionsDao;
+    private LegacyRolesPermissionsDao legacyRolesPermissionsDao;
 
-    OfficePersistence officePersistence = new OfficePersistence();
+    private OfficePersistence officePersistence = new OfficePersistence();
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testGetUserRoles() throws Exception {
         Set<RoleBO> userRoles = legacyRolesPermissionsDao.getUserRoles((short) 1);

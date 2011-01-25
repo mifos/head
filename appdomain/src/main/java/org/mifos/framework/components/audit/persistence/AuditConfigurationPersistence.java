@@ -35,6 +35,7 @@ import org.mifos.framework.persistence.LegacyGenericDao;
 /**
  * no longer used???
  */
+@SuppressWarnings("unchecked")
 @Deprecated
 public class AuditConfigurationPersistence extends LegacyGenericDao {
 
