@@ -57,7 +57,7 @@ public class ViewOrganizationSettingsTest extends UiTestCaseBase {
         AdminPage adminPage = loginAndGoToAdminPage();
         ViewOrganizationSettingsPage viewOrganizationSettingsPage = adminPage.navigateToViewOrganizationSettingsPage();
         viewOrganizationSettingsPage.verifyPage();
-  
+
 
         String[] expectedFiscalYear = new String[]{
                 "Working days:",
@@ -116,7 +116,7 @@ public class ViewOrganizationSettingsTest extends UiTestCaseBase {
                 "Back dated transactions allowed:",
                 "Group loan with individual monitoring (GLIM):",
                 "Loan schedule independent of meeting (LSIM):"
-                       
+
         };
         viewOrganizationSettingsPage.verifyFiscalYear( expectedFiscalYear );
         viewOrganizationSettingsPage.verifyLocale( expectedLocale );

@@ -116,7 +116,7 @@ public class StandardAccountServiceTest {
 
     @Before
     public void setup() {
-        standardAccountService = new StandardAccountService(legacyAccountDao, 
+        standardAccountService = new StandardAccountService(legacyAccountDao,
                 legacyLoanDao,acceptedPaymentTypePersistence, personnelDao,
                 customerDao, loanBusinessService, transactionHelper, legacyMasterDao);
         Money.setDefaultCurrency(TestUtils.RUPEE);

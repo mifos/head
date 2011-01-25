@@ -44,7 +44,7 @@ public class CollectionUtilsTest extends TestCase {
         assertEquals(false, CollectionUtils.isNotEmpty(Collections.EMPTY_SET));
         assertEquals(false, CollectionUtils.isNotEmpty(null));
     }
-    
+
     public void testCollectionToString() {
         assertEquals("", CollectionUtils.toString(null));
         assertEquals("", CollectionUtils.toString(Collections.EMPTY_LIST));

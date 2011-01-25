@@ -144,7 +144,7 @@ public class QuestionGroupInstanceDaoIntegrationTest {
         assertThat(((QuestionGroupInstance) list.get(5)).getId(), is(questionGroupInstances.get(0).getId()));
         assertThat(((QuestionGroupInstance) list.get(6)).getId(), is(questionGroupInstances.get(5).getId()));
     }
-    
+
     @Test
     @Transactional(rollbackFor = DataAccessException.class)
     public void shouldGetAllLatestQuestionGroupInstancesByEntityAndEventSourceId() {

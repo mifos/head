@@ -92,7 +92,7 @@ public class Upgrade1288013750 extends Upgrade {
         Query query = session.createQuery("from Question where nickname = :nickname");
         query.setString("nickname", nickname);
         List results = query.list();
-        
+
         return !(results != null && results.size() > 1);
     }
 

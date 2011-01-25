@@ -128,7 +128,7 @@ public class PreviewProductMixController {
                     }
                 }
             }
-        }                        
+        }
     }
 
     /* Need to reset those attributes manually due to problem with reset them by Spring when select box is empty - morzechowski@soldevelo.com */

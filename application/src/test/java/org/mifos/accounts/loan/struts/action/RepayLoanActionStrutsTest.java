@@ -142,7 +142,7 @@ public class RepayLoanActionStrutsTest extends MifosMockStrutsTestCase {
                 loanSummaryEntity.getInterestPaid()).add(loanSummaryEntity.getPenaltyPaid()));
 
     }
-    
+
     @Test
     public void testMakeRepaymentForCurrentDateSameAsInstallmentDateWithInterestWaiver() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);

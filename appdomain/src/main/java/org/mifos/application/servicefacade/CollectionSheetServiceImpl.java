@@ -84,7 +84,7 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
         this.savingsDao = savingsDao;
         this.collectionSheetDao = collectionSheetDao;
     }
-    
+
     /**
      * The method saves a collection sheet.
      *

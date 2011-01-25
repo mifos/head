@@ -87,7 +87,7 @@ public class LoanAccountPage extends AbstractPage {
         Assert.assertTrue(selenium.isTextPresent("of payments: "+payments));
         Assert.assertTrue(selenium.isTextPresent("of missed payments: "+missedPayments));
     }
-    
+
     public void verifyStatus(String status) {
         verifyStatus(status, null);
     }

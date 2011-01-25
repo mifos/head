@@ -60,7 +60,7 @@ public class HolidayFormValidator implements Validator {
         if (formBean.anyToDateFieldFilled() && !formBean.allToDateFieldsFilled()) {
             errors.reject("holiday.thruDate.invalid", "Please specify thru Date.");
         }
-        
+
         try {
             if (formBean.getToDay() != null) {
                 dateTo = new DateTime().withDate(Integer.parseInt(formBean.getToYear()), formBean.getToMonth(), formBean.getToDay()).toDate();

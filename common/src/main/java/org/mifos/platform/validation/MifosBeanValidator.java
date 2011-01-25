@@ -31,7 +31,7 @@ import java.util.Set;
 
 
 public class MifosBeanValidator {
-    
+
     private MifosLocalValidatorFactoryBean targetValidator;
 
     public void setTargetValidator(LocalValidatorFactoryBean validator) {
@@ -58,7 +58,7 @@ public class MifosBeanValidator {
 
 
     private static class MifosLocalValidatorFactoryBean extends LocalValidatorFactoryBean {
-        //@see http://jira.springframework.org/browse/SPR-7062 
+        //@see http://jira.springframework.org/browse/SPR-7062
         private final LocalValidatorFactoryBean beanValidator;
 
         @SuppressWarnings("PMD.CallSuperInConstructor")

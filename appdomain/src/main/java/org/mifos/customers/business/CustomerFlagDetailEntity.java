@@ -58,8 +58,8 @@ public class CustomerFlagDetailEntity extends AbstractEntity {
     public CustomerStatusFlagEntity getStatusFlag() {
         return statusFlag;
     }
-    
-    
+
+
     public Short getCreatedBy() {
         return createdBy;
     }
@@ -75,5 +75,5 @@ public class CustomerFlagDetailEntity extends AbstractEntity {
     public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
     }
-    
+
 }

@@ -97,7 +97,7 @@ public class CollectionUtils {
         }
         return resultIndex;
     }
-    
+
     public static <T extends Comparable<T>> boolean isSecondValueGreaterThanFirstValue(T first, T second) {
         return first == null || second != null && second.compareTo(first) > 0;
     }

@@ -202,7 +202,7 @@ public class CalendarUtilsTest {
 
         assertThat(adjustedDate, is(monday29thOfMarch2010.plusDays(1)));
     }
-    
+
     /*
      * !!! This is unexpected behavior of CalendarUtils.getNextDateForMonthOnDate
      * shown while investigating MIFOS-3584.
@@ -213,7 +213,7 @@ public class CalendarUtilsTest {
         DateTime next = CalendarUtils.getNextDateForMonthOnDate(adjustedInstallementDate, 30, 1);
         assertThat(next, is(new DateTime(2010, 12, 30, 0, 0, 0, 0)));
     }
-    
+
     // The same unexpected behavior but with next day in new year
     @Test
     public void shouldPlaceNextMonthDateInTheSameMonth2() {
@@ -221,7 +221,7 @@ public class CalendarUtilsTest {
         DateTime next = CalendarUtils.getNextDateForMonthOnDate(adjustedInstallementDate, 30, 1);
         assertThat(next, is(new DateTime(2011, 1, 30, 0, 0, 0, 0)));
     }
-    
+
     // The same behavior with 'every' months set to 2
     @Test
     public void shouldPlaceNextMonthDateInTheSameMonthEvery2Months() {
@@ -261,5 +261,5 @@ public class CalendarUtilsTest {
 
         return firstWednesdayOfTwoMonthsAway;
     }
-    
+
 }

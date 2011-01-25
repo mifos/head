@@ -7,7 +7,7 @@ import org.junit.Test;
 import org.mifos.accounts.util.helpers.AccountState;
 
 public class AccountStateTest {
-    
+
     @Test
     public void isDisbursed(){
         assertFalse(AccountState.isDisbursed(AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER.getValue()));

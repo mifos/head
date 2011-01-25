@@ -53,7 +53,7 @@ public class LoanPrdActionTest {
     public void setUp() {
         loanPrdAction = new LoanPrdAction();
     }
-    
+
     @Test
     public void shouldSetQuestionGroupsOnSession() throws PageExpiredException {
         List<QuestionGroupDetail> questionGroupDetails = asList(getQuestionGroupDetail(1, "QG1", true), getQuestionGroupDetail(2, "QG2", true), getQuestionGroupDetail(3, "QG3", true));
@@ -120,7 +120,7 @@ public class LoanPrdActionTest {
         verify(session, times(1)).getAttribute(Constants.FLOWMANAGER);
         verify(flowManager, times(1)).getFromFlow(FLOW_KEY, ProductDefinitionConstants.SELECTEDQGLIST);
     }
-    
+
     private Set<QuestionGroupReference> getQustionGroups(int... questionGroupIds) {
         Set<QuestionGroupReference> questionGroupReferences = new HashSet<QuestionGroupReference>();
         for (int questionGroupId : questionGroupIds) {

@@ -57,7 +57,7 @@ public class ViewOfficeHierarchyTest extends UiTestCaseBase {
         AdminPage adminPage = loginAndGoToAdminPage();
         ViewOfficeHierarchyPage viewOfficeHierarchyPage = adminPage.navigateToViewOfficeHierarchyPage();
         viewOfficeHierarchyPage.verifyPage();
-  
+
         String[] expectedText = new String[]{
                 "The office hierarchy can have minimum two and maximum five levels",
                 "Check the levels to be included.",

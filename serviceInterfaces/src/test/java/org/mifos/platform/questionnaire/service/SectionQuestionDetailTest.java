@@ -29,7 +29,7 @@ import static org.hamcrest.CoreMatchers.*; // NOPMD
 import static org.junit.Assert.assertThat;
 
 public class SectionQuestionDetailTest {
-    
+
     @Test
     public void shouldGenerateValuesArrayFromSelections() {
         SectionQuestionDetail sectionQuestionDetail = new SectionQuestionDetail();
@@ -52,7 +52,7 @@ public class SectionQuestionDetailTest {
         assertSelection(selections.get(1), "Ch2", "Tag3");
         assertSelection(selections.get(2), "Ch3", null);
     }
-    
+
     @Test
     public void shouldMultiSelectValue() {
         SectionQuestionDetail sectionQuestionDetail = new SectionQuestionDetail();

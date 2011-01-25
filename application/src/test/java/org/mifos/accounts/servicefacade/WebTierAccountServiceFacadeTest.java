@@ -133,7 +133,7 @@ public class WebTierAccountServiceFacadeTest {
         verify(loanBO, times(1)).getTotalPaymentDue();
         verify(acceptedPaymentTypePersistence, times(1)).getAcceptedPaymentTypesForATransaction(TEST_LOCALE, transactionId);
     }
-    
+
     @Test
     public void testGetAccountPaymentInformationWhenPreviousPaymentsDoNotExist() throws ServiceException, PersistenceException {
         Date paymentDate = TestUtils.getDate(12, 12, 2012);
@@ -230,5 +230,5 @@ public class WebTierAccountServiceFacadeTest {
         verify(transactionHelper, never()).commitTransaction();
         verify(transactionHelper).rollbackTransaction();
     }
-    
+
 }

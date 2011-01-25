@@ -91,9 +91,9 @@ public class SavingsProductFormValidator implements Validator {
                 null != formBean.getGeneralDetails().getEndDateMonth() ||
                 null != formBean.getGeneralDetails().getEndDateMonth()) &&
                 formBean.getGeneralDetails().getEndDateAsDateTime() == null) {
-                errors.reject("Min.generalDetails.endDate");         
+                errors.reject("Min.generalDetails.endDate");
         }
-        
+
         if (formBean.getGeneralDetails().getStartDateAsDateTime() != null &&
                 formBean.getGeneralDetails().getEndDateAsDateTime() != null &&
                 formBean.getGeneralDetails().getStartDateAsDateTime().compareTo(formBean.getGeneralDetails().getEndDateAsDateTime()) > 0) {

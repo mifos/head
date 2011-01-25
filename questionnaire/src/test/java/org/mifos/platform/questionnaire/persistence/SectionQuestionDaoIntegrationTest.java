@@ -60,7 +60,7 @@ public class SectionQuestionDaoIntegrationTest {
 
     @Autowired
     private SectionQuestionDao sectionQuestionDao;
-    
+
     @Test
     @Transactional(rollbackFor = DataAccessException.class)
     public void shouldRetrieveSectionQuestionIdByQuestionGroupNameSectionNameQuestionId() {

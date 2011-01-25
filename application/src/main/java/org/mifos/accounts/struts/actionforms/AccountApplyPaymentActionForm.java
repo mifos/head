@@ -77,7 +77,7 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
      * Among other things, this field holds the PaymentTypes value for disbursements.
      */
     private String paymentTypeId;
-    
+
     private String waiverInterest;
 
     private String globalAccountNum;

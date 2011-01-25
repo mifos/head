@@ -91,7 +91,7 @@ public class InstallmentsValidatorTest {
         installmentsValidator.validateInstallmentSchedule(installments, variableInstallmentDetailsBO);
         verify(installmentRulesValidator).validateForMinimumInstallmentAmount(installments, variableInstallmentDetailsBO);
     }
-    
+
     private InstallmentValidationContext getValidationContext(Date disbursementDate) {
         return new InstallmentValidationContext(disbursementDate, new VariableInstallmentDetailsBO(), holidayServiceFacade, officeId);
     }
