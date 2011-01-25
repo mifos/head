@@ -20,21 +20,23 @@
 
 package org.mifos.test.acceptance.framework.client;
 
-import com.thoughtworks.selenium.Selenium;
+import static java.lang.String.format;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPage;
 import org.mifos.test.acceptance.framework.loan.AttachSurveyPage;
 import org.mifos.test.acceptance.framework.loan.ClosedAccountsPage;
+import org.mifos.test.acceptance.framework.loan.PerformanceHistoryAtributes;
 import org.mifos.test.acceptance.questionnaire.QuestionGroupResponsePage;
 import org.mifos.test.acceptance.questionnaire.QuestionnairePage;
 import org.mifos.test.acceptance.questionnaire.ViewQuestionResponseDetailPage;
 import org.testng.Assert;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import static java.lang.String.format;
+import com.thoughtworks.selenium.Selenium;
 
 public class ClientViewDetailsPage extends MifosPage {
     public static final String QUESTION_GROUP_DATE_JS = "window.document.getElementById('label.%s').innerHTML.trim()";
@@ -202,6 +204,39 @@ public class ClientViewDetailsPage extends MifosPage {
         selenium.click("viewClientDetails.link.editMeetingScheduleAddGroup");
         waitForPageToLoad();
         return new EditMeetingPage(selenium);
+    }
+
+    public void verifyLoanCycle(Integer loanCycle) {
+        Assert.assertEquals(selenium.getText("viewClientDetails.text.loancycle"), loanCycle.toString());
+    }
+
+    public void verifyLastLoanAmount(String lastLoanAmount) {
+        Assert.assertEquals(selenium.getText("viewClientDetails.text.lastloanamount"), lastLoanAmount);
+    }
+
+    public void verifynoOfActiveLoan(Integer count) {
+        Assert.assertEquals(selenium.getText("viewClientDetails.text.noactiveloans"), count.toString());
+    }
+
+    public void verifyDelinquentPortfolio(Double delinquentPortfolioValue) {
+        Assert.assertEquals(selenium.getText("viewClientDetails.text.delinquentportfolio"), delinquentPortfolioValue.toString());
+    }
+
+    public void verifyLoanCyclePerProduct(String product, Integer count) {
+        Assert.assertEquals(selenium.getText("viewClientDetails.text."+product),count.toString());
+    }
+
+    public void verifyPerformanceHistory(PerformanceHistoryAtributes performanceHistoryAtributes){
+        verifyLoanCycle(performanceHistoryAtributes.getLoanCycle());
+        verifyLastLoanAmount(performanceHistoryAtributes.getAmountOfLastLoan());
+        verifynoOfActiveLoan(performanceHistoryAtributes.getNoOfActiveLoan());
+        if(performanceHistoryAtributes.getDelinquentPortfolio()!=null){
+            verifyDelinquentPortfolio(performanceHistoryAtributes.getDelinquentPortfolio());
+        }
+        Map<String,Integer> loanCyclePerProduct = performanceHistoryAtributes.getLoanCyclePerProduct();
+        for (String product : loanCyclePerProduct.keySet()) {
+            verifyLoanCyclePerProduct(product, loanCyclePerProduct.get(product));
+        }
     }
 }
 

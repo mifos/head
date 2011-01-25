@@ -31,6 +31,7 @@ import org.testng.Assert;
 public class LoanAccountPage extends AbstractPage {
 
     public final static String ACTIVE = "Active in Good Standing";
+    public final static String CLOSED = "Closed- Obligation met";
 
 
     public LoanAccountPage(Selenium selenium) {

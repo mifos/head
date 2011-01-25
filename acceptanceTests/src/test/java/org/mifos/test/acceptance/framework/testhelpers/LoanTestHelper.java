@@ -34,6 +34,7 @@ import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.client.ClientSearchResultsPage;
+import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import org.mifos.test.acceptance.framework.loan.AccountActivityPage;
 import org.mifos.test.acceptance.framework.loan.ApplyChargePage;
 import org.mifos.test.acceptance.framework.loan.ApplyPaymentConfirmationPage;
@@ -58,10 +59,14 @@ import org.mifos.test.acceptance.framework.loan.EditLoanAccountStatusParameters;
 import org.mifos.test.acceptance.framework.loan.EditPreviewLoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.PaymentParameters;
+import org.mifos.test.acceptance.framework.loan.PerformanceHistoryAtributes;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalEntryPage;
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalParameters;
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalSchedulePreviewPage;
+import org.mifos.test.acceptance.framework.loan.RepayLoanConfirmationPage;
+import org.mifos.test.acceptance.framework.loan.RepayLoanPage;
+import org.mifos.test.acceptance.framework.loan.RepayLoanParameters;
 import org.mifos.test.acceptance.framework.loan.TransactionHistoryPage;
 import org.mifos.test.acceptance.framework.loan.ViewLoanStatusHistoryPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
@@ -255,6 +260,26 @@ public class LoanTestHelper {
 
         return loanAccountPage;
     }
+
+    /**
+     * Repay loan account with id <tt>loanId</tt>.
+     * @param loanId The account id.
+     * @return The loan account page for the loan account.
+     */
+    public LoanAccountPage repayLoan(String loanId) {
+        RepayLoanParameters params = new RepayLoanParameters();
+        params.setModeOfRepayment(RepayLoanParameters.CASH);
+
+        LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
+
+        RepayLoanPage repayLoanPage = loanAccountPage.navigateToRepayLoan();
+        RepayLoanConfirmationPage repayLoanConfirmationPage = repayLoanPage.submitAndNavigateToRepayLoanConfirmationPage(params);
+        loanAccountPage = repayLoanConfirmationPage.submitAndNavigateToLoanAccountDetailsPage();
+        loanAccountPage.verifyStatus(LoanAccountPage.CLOSED);
+
+        return loanAccountPage;
+    }
+
 
     /**
      * Applies a payment to the loan account with id <tt>loanId</tt>.
@@ -591,5 +616,10 @@ public class LoanTestHelper {
         }
         loanAccountPage.navigateToClientsAndAccountsUsingHeaderTab();
         return createMultipleLoanAccounts(multipleAccParameters2, clients, "0000-Animal Husbandry");
+    }
+
+    public void verifyPerformenceHistory(String clientName, PerformanceHistoryAtributes performanceHistoryAtributes){
+        ClientViewDetailsPage clientViewDetailsPage = navigationHelper.navigateToClientViewDetailsPage(clientName);
+        clientViewDetailsPage.verifyPerformanceHistory(performanceHistoryAtributes);
     }
 }
