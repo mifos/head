@@ -41,7 +41,7 @@ public class MeetingFactory {
             RankOfDay rank = null;
             Integer weekOfMonth = meetingDetailsDto.getRecurrenceDetails().getWeekOfMonth();
             if (weekOfMonth != null && weekOfMonth > 0) {
-                rank = RankOfDay.getRankOfDay(meetingDetailsDto.getRecurrenceDetails().getWeekOfMonth() + 1);
+                rank = RankOfDay.getRankOfDay(meetingDetailsDto.getRecurrenceDetails().getWeekOfMonth());
             }
 
             WeekDay weekDay = null;
