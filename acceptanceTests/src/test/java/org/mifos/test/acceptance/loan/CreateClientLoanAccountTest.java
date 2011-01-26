@@ -158,8 +158,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         submitAccountParameters.setAmount("1666.0");
         EditLoanAccountInformationParameters editAccountParameters = new EditLoanAccountInformationParameters();
         editAccountParameters.setGracePeriod("5");
-        EditPreviewLoanAccountPage editPreviewLoanAccountPage = loanTestHelper.changeLoanAccountInformation(loanId, submitAccountParameters, editAccountParameters);
-        editPreviewLoanAccountPage.submitAndNavigateToLoanAccountPage();
+        loanTestHelper.changeLoanAccountInformation(loanId, submitAccountParameters, editAccountParameters);
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")

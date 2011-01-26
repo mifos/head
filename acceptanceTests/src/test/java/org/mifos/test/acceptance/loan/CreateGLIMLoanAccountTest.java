@@ -79,7 +79,7 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
     @Test(enabled=true)
     // http://mifosforge.jira.com/browse/MIFOSTEST-132
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void checkGLIMInvalidDisbursementDateWhenEditingLoan() throws Exception {
+    public void checkGLIMLoanCreatedBySubmitForApproval() throws Exception {
         //Given
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         DateTime targetTime = new DateTime(2009,7,11,13,0,0,0);
@@ -115,7 +115,7 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
     @Test(enabled=true)
     // http://mifosforge.jira.com/browse/MIFOSTEST-133
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void checkLoanCreatedBySaveForLater() throws Exception {
+    public void checkGLIMLoanCreatedBySaveForLater() throws Exception {
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         DateTime targetTime = new DateTime(2009,7,11,13,0,0,0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
