@@ -35,7 +35,6 @@ import org.apache.struts.validator.ValidatorActionForm;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.config.AccountingRules;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationConstant;
@@ -181,19 +180,19 @@ public class BaseActionForm extends ValidatorActionForm {
     }
 
     protected DoubleConversionResult validateAmount(String amountString, MifosCurrency currency,
-            String fieldPropertyKey, ActionErrors errors, Locale locale, String propertyfileName) {
+                                                    String fieldPropertyKey, ActionErrors errors, Locale locale, String propertyfileName, String installmentNo) {
         String fieldName = lookupLocalizedPropertyValue(fieldPropertyKey, locale, propertyfileName);
         DoubleConversionResult conversionResult = parseDoubleForMoney(amountString, currency);
         for (ConversionError error : conversionResult.getErrors()) {
             String errorText = error.toLocalizedMessage(locale, currency);
-            addError(errors, fieldPropertyKey, "errors.generic", fieldName, errorText);
+            addError(errors, fieldPropertyKey, "errors.generic", fieldName, installmentNo,errorText);
         }
         return conversionResult;
     }
 
     protected DoubleConversionResult validateAmount(String amountString, String fieldPropertyKey, ActionErrors errors,
-            Locale locale, String propertyfileName) {
-        return validateAmount(amountString, null, fieldPropertyKey, errors, locale, propertyfileName);
+                                                    Locale locale, String propertyfileName) {
+        return validateAmount(amountString, null, fieldPropertyKey, errors, locale, propertyfileName, "");
     }
 
     protected DoubleConversionResult validateInterest(String interestString, String fieldPropertyKey,

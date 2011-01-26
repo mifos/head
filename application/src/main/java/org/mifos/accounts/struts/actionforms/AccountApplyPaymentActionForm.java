@@ -196,7 +196,7 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
             currency = AccountingRules.getCurrencyByCurrencyId(getCurrencyId());
         }
         DoubleConversionResult conversionResult = validateAmount(getAmount(), currency , AccountConstants.ACCOUNT_AMOUNT, errors, locale,
-                FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE);
+                FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE, "");
         if (amountCannotBeZero() && conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
             addError(errors, AccountConstants.ACCOUNT_AMOUNT, AccountConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
                     lookupLocalizedPropertyValue(AccountConstants.ACCOUNT_AMOUNT, locale, FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE));

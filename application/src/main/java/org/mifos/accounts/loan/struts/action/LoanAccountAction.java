@@ -966,7 +966,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             request.setAttribute(PERSPECTIVE, perspective);
             Integer customerId = loanAccountForm.getCustomerIdValue();
 
-            if (perspective.equals(PERSPECTIVE_VALUE_REDO_LOAN)) {
+            if (perspective.equals(PERSPECTIVE_VALUE_REDO_LOAN) && isInstallmentValid) {
                 UserContext userContext = getUserContext(request);
                 DateTime disbursementDate = getDisbursementDate(loanAccountForm, userContext.getPreferredLocale());
 

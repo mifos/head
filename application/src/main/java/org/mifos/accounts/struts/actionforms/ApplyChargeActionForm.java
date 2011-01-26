@@ -154,7 +154,7 @@ public class ApplyChargeActionForm extends BaseActionForm {
                 FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE);
         } else {
             conversionResult = validateAmount(getCharge(), getChargeCurrency(), AccountConstants.ACCOUNT_AMOUNT,
-                    errors, locale, FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE);
+                    errors, locale, FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE,"");
         }
         if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
             addError(errors, AccountConstants.ACCOUNT_AMOUNT, AccountConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,

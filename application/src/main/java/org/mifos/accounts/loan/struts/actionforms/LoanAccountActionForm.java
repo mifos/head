@@ -695,7 +695,7 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
 
     protected void validateLoanAmount(ActionErrors errors, Locale locale, MifosCurrency currency) {
         DoubleConversionResult conversionResult = validateAmount(getLoanAmount(), currency,
-                LoanConstants.LOAN_AMOUNT_KEY, errors, locale, FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE);
+                LoanConstants.LOAN_AMOUNT_KEY, errors, locale, FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE, "");
         Double loanAmountValue = conversionResult.getDoubleValue();
         if (conversionResult.getErrors().size() == 0) {
             if (loanAmountValue <= 0.0) {
@@ -722,7 +722,7 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
         for (FeeDto defaultFee : defaultFees) {
             if (defaultFee.getFeeType().equals(RateAmountFlag.AMOUNT)) {
                 DoubleConversionResult conversionResult = validateAmount(defaultFee.getAmount(), currency,
-                        LoanConstants.LOAN_DEFAULT_FEE_KEY, errors, locale, FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE);
+                        LoanConstants.LOAN_DEFAULT_FEE_KEY, errors, locale, FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE, "");
                 if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
                     addError(errors, LoanConstants.LOAN_DEFAULT_FEE_KEY,
                             LoanConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
@@ -753,7 +753,7 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
                 if (additionalFeeDetails.getFeeType().equals(RateAmountFlag.AMOUNT)) {
                     DoubleConversionResult conversionResult = validateAmount(additionalFee.getAmount(),
                             currency, LoanConstants.LOAN_ADDITIONAL_FEE_KEY, errors, locale,
-                            FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE);
+                            FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE, "");
                     if(validPositiveValue(errors, locale, conversionResult)) {
                         validateFeeTypeIfVariableInstallmentLoanType(errors, additionalFeeDetails);
                     }
@@ -1269,7 +1269,7 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
         for (LoanAccountDetailsDto listDetail : clientDetails) {
             if (getClients().contains(listDetail.getClientId())) {
                 DoubleConversionResult conversionResult = validateAmount(listDetail.getLoanAmount(), currency,
-                        LoanConstants.LOAN_AMOUNT_KEY, errors, locale, FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE);
+                        LoanConstants.LOAN_AMOUNT_KEY, errors, locale, FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE, "");
                 if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
                     addError(errors, LoanConstants.LOAN_AMOUNT_KEY, LoanConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
                             lookupLocalizedPropertyValue(LoanConstants.LOAN_AMOUNT_KEY, locale,
@@ -1352,8 +1352,9 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
                             LoanExceptionConstants.INVALIDTRANSACTIONDATE));
                     continue;
                 }
-                validateTotalAmountForConversionErrors(errors,bean,locale,currency);
-//                validateTotalAmount(errors, bean.getTotalAmount().toString(), locale, currency);
+                String installmentNo = bean.getInstallment().getInstallmentNumberAsString();
+//                validateTotalAmountForConversionErrors(errors,bean,locale,currency, installmentNo);
+                validateTotalAmount(errors, bean.getAmount(), locale, currency,installmentNo);
                 // User has enter a payment for future date
                 validateTransactionDate(errors, bean, getDisbursementDateValue(locale));
             }
@@ -1373,25 +1374,25 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
     }
 
     private void validateTotalAmountForConversionErrors(ActionErrors errors,
-                            PaymentDataHtmlBean bean, Locale locale, MifosCurrency currency) {
+                                                        PaymentDataHtmlBean bean, Locale locale, MifosCurrency currency, String installmentNo) {
         LocalizationConverter localizationConverter = new LocalizationConverter(currency);
         DoubleConversionResult conversionResult = localizationConverter.parseDoubleForInstallmentTotalAmount(bean.getAmount());
         List<ConversionError> conversionErrors = conversionResult.getErrors();
         if (!conversionErrors.isEmpty()) {
-            addError(errors,LoanConstants.LOAN_AMOUNT_KEY,LoanConstants.ERRORS_HAS_INVALID_FORMAT,
+            addError(errors, LoanConstants.LOAN_AMOUNT_KEY, LoanConstants.ERRORS_HAS_INVALID_FORMAT,
                     lookupLocalizedPropertyValue(LoanConstants.LOAN_AMOUNT_KEY, locale,
-                            FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE));
+                            FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE), installmentNo);
         }
 
     }
 
-    protected void validateTotalAmount(ActionErrors errors, String amount, Locale locale, MifosCurrency currency) {
+    protected void validateTotalAmount(ActionErrors errors, String amount, Locale locale, MifosCurrency currency, String installmentNo) {
         DoubleConversionResult conversionResult = validateAmount(amount, currency, LoanConstants.LOAN_AMOUNT_KEY, errors, locale,
-                FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE);
+                FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE," "+installmentNo);
         if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
             addError(errors, LoanConstants.LOAN_AMOUNT_KEY, LoanConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
                     lookupLocalizedPropertyValue(LoanConstants.LOAN_AMOUNT_KEY, locale,
-                            FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE));
+                            FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE), installmentNo);
         }
     }
 
