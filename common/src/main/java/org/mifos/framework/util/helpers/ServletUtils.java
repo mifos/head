@@ -25,8 +25,14 @@ import javax.servlet.http.HttpServletRequest;
 public class ServletUtils {
 
     public static String getParameter(HttpServletRequest request, String paramName) {
-        return request.getParameter(paramName) != null ? request.getParameter(paramName) : request
-                .getAttribute(paramName) != null ? request.getAttribute(paramName).toString() : null;
+        String param = null;
+        if (request.getParameter(paramName) != null) {
+            param = request.getParameter(paramName);
+        }
+        if (param == null && request.getAttribute(paramName) != null) {
+            param = request.getAttribute(paramName).toString();
+        }
+        return param;
     }
 
     public static Object getGlobal(HttpServletRequest request, String key) {

@@ -27,8 +27,8 @@ import java.util.Stack;
  */
 public class XmlBuilder {
 
-    private StringBuilder out = new StringBuilder();
-    private Stack openElements = new Stack();
+    private final StringBuilder out = new StringBuilder();
+    private final Stack openElements = new Stack();
 
     public void startTag(String tag, String... attributes) {
         out.append("<");
@@ -145,7 +145,7 @@ public class XmlBuilder {
     public void comment(String string) {
         out.append("<!--");
         String text = string.replaceAll("--", "__");
-        if (text.startsWith("-")) {
+        if (text.charAt(0) == '-') {
             text = "_" + text.substring(1);
         }
         if (text.endsWith("-")) {
