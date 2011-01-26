@@ -234,6 +234,7 @@ explanation of the license and how it is applied.
 			<input type="hidden" name="captureResponse_cancel" id="captureResponse_cancel" value="${requestScope.cancelToURL}"/>
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 			<html-el:hidden property="method" value="captureQuestionResponses" />
+            <html-el:hidden property="perspective" value="${requestScope.perspective}" />
 		</html-el:form>
 
 	</tiles:put>
