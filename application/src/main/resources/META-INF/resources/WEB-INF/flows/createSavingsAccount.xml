@@ -3,35 +3,37 @@
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
 
+	<input name="searchTerm" />
 	<view-state id="customerSearchStep" view="createSavingsAccountCustomerSearch">
-		<transition on="searchTermEntered" to="selectCustomerStep" />
-		<transition on="cancel" to="cancel" />
+		<transition on="searchTermEntered" to="selectCustomerStep">
+			<evaluate expression="createSavingsAccountController.searchCustomers(searchTerm)" result="flowScope.customers" />
+		</transition>
 	</view-state>
 
 	<view-state id="selectCustomerStep" view="createSavingsAccountSelectCustomer">
 		<transition on="customerSelected" to="selectProductOfferingStep" />
 		<transition on="searchTermEntered" to="selectCustomerStep" />
-		<transition on="cancel" to="cancel" />
 	</view-state>
 
 	<view-state id="selectProductOfferingStep" view="createSavingsAccountSelectProduct">
 		<transition on="productSelected" to="enterAccountDetailsStep" />
-		<transition on="cancel" to="cancel" />
 	</view-state>
 
 	<view-state id="enterAccountDetailsStep" view="createSavingsAccountEnterDetails">
 		<transition on="newProductSelected" to="enterAccountDetailsStep" />
 		<transition on="detailsEntered" to="previewStep" />
-		<transition on="cancel" to="cancel" />
 	</view-state>
 
 	<view-state id="previewStep" view="createSavingsAccountPreview">
 		<transition on="edit" to="enterAccountDetailsStep" />
 		<transition on="saveForLater" to="complete" /> <!-- TODO rename to save? -->
 		<transition on="saveForApproval" to="complete" /> <!-- TODO rename to approve/approval/get approval? -->
-		<transition on="cancel" to="cancel" />
 	</view-state>
 
 	<end-state id="complete" view="createSavingsAccountComplete" />
 	<end-state id="cancel" view="externalRedirect:contextRelative:/custSearchAction.do?method=loadSearch"/>
+	
+	<global-transitions>
+		<transition on="cancel" to="cancel" />
+	</global-transitions>
 </flow>

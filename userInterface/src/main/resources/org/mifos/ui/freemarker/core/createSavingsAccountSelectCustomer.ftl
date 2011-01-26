@@ -37,23 +37,10 @@
 </form>
 
 <!-- Search results -->
-[#-- skwoka: TODO move canned data to controller --]
-[#assign cannedResults={"Bangalore_branch1244723261188":"Test Customer1188:ID0011-000000087", 
-						"Bangalore_branch1244724101456" : "Test Customer1456:ID0012-000000088",
-						"Villupuram-I" : "Test Customer3940:ID0010-000000086",
-						"Chitradurga / Test center-12 / Test Group" : "Test Member T:ID0039-000000178",
-						"Bangalore_branch1244723261188 testcentre chandan" : "test test:ID0011-000000171",
-						"Chitradurga / Test center-12" : "Test Group:ID0039-000000177",
-						"Chitradurga / Ramnagara -12" : "tEST gROUP-12:ID0039-000000180",
-						"Bangalore_branch1244723261188 testcentre" : "testgroup:ID0011-000000093",
-						"Taguig Branch" : "test center:ID0003-000000145",
-						"Chitradurga" : "Test center-12:ID0039-000000175"
-						}]
-[#assign keys = cannedResults?keys]
 <div class="search-results">
 <ol>
-	[#list keys as key]
-		<li>${key} / <a href="${flowExecutionUrl}&_eventId=customerSelected">${cannedResults[key]}</a></li>
+	[#list customers as customer]
+		<li>${customer.displayName} / <a href="${flowExecutionUrl}&_eventId=customerSelected&customerId=${customer.customerId}">${customer.displayName}</a></li>
 	[/#list]
 </ol>
 </div>
