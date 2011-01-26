@@ -64,7 +64,11 @@ public class CenterTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
-    // http://mifosforge.jira.com/browse/MIFOSTEST-299
+    /**
+     * Capturing responses during the Center creation
+     * http://mifosforge.jira.com/browse/MIFOSTEST-665
+     * @throws Exception
+     */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createCenterTest() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
