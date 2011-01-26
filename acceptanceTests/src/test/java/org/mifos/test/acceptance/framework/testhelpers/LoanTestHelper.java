@@ -700,7 +700,7 @@ public class LoanTestHelper {
         return defineNewLoanProductPage
             .submitAndGotoNewLoanProductPreviewPage()
             .submit()
-            .navigateToViewLoanDetails();
+            .navigateToViewLoanDetailsPage();
     }
 
     public AdminPage loginAndNavigateToAdminPage() {
