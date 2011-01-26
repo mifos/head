@@ -60,6 +60,7 @@ import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalParameters;
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalSchedulePreviewPage;
 import org.mifos.test.acceptance.framework.loan.TransactionHistoryPage;
 import org.mifos.test.acceptance.framework.loan.ViewLoanStatusHistoryPage;
+import org.mifos.test.acceptance.framework.loan.RepayLoanParameters;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
 import org.mifos.test.acceptance.framework.loanproduct.EditLoanProductPage;
 import org.mifos.test.acceptance.framework.loanproduct.EditLoanProductPreviewPage;
@@ -520,5 +521,26 @@ public class LoanTestHelper {
         TransactionHistoryPage transactionHistoryPage = loanAccountPage.navigateToTransactionHistory();
 
         transactionHistoryPage.verifyTransactionHistory(paymentAmount, 1, 217);
+    }
+    public RepayLoanParameters setRepaymentParameters() {
+        RepayLoanParameters repayLoanParameters = new RepayLoanParameters();
+        repayLoanParameters.setModeOfRepayment(RepayLoanParameters.CASH);
+        repayLoanParameters.setReceiptDateDD("");
+        return repayLoanParameters;
+    }
+
+    public LoanAccountPage repayLoan(DateTime repaymentDate) throws UnsupportedEncodingException {
+        setApplicationTime(repaymentDate).navigateBack();
+        RepayLoanParameters params = setRepaymentParameters();
+        return new LoanAccountPage(selenium).navigateToRepayLoan().
+                submitAndNavigateToRepayLoanConfirmationPage(params).
+                submitAndNavigateToLoanAccountDetailsPage();
+    }
+
+
+    public void createLoanAccount(String clientName, String loanProductName) {
+        navigateToLoanAccountEntryPage(setLoanSearchParameters(clientName,loanProductName)).
+                clickContinueAndNavigateToLoanAccountConfirmationPage().
+                navigateToLoanAccountDetailsPage();
     }
 }

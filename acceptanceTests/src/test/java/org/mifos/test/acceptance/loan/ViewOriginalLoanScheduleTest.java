@@ -31,7 +31,7 @@ import static org.mifos.test.acceptance.framework.holiday.CreateHolidayEntryPage
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
 @Test(sequential = true, groups = {"loanproduct", "acceptance", "ui","smoke"})
-public class OriginalLoanScheduleTest extends UiTestCaseBase {
+public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
 
     @Autowired
     private ApplicationDatabaseOperation applicationDatabaseOperation;
@@ -46,6 +46,10 @@ public class OriginalLoanScheduleTest extends UiTestCaseBase {
     private NavigationHelper navigationHelper;
     String feeName = "loanWeeklyFee";
     boolean isSetUpDone = false;
+//    @Autowired
+//    private InitializeApplicationRemoteTestingService initRemote;
+//    @Autowired
+//    private DbUnitUtilities dbUnitUtilities;
 
     @AfterMethod
     public void logOut() {
@@ -57,7 +61,14 @@ public class OriginalLoanScheduleTest extends UiTestCaseBase {
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
-        if (isSetUpDone) {return;}
+        if (isSetUpDone) {
+            systemDateTime = new DateTime(2011, 10, 10, 10, 0, 0, 0);
+            loanTestHelper.setApplicationTime(systemDateTime);
+            return;
+        }
+//        // TODO: please ensure that the database contains Mrs Salutation!
+//        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
+//        // ---
         loanProductTestHelper = new LoanProductTestHelper(selenium);
         navigationHelper = new NavigationHelper(selenium);
         systemDateTime = new DateTime(2010, 10, 11, 10, 0, 0, 0);
@@ -84,7 +95,7 @@ public class OriginalLoanScheduleTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
-    @Test(enabled=false)
+    @Test(enabled=true)
     public void verifyForFlatLoanEarlyDisbursal() throws Exception {
         int interestType = DefineNewLoanProductPage.SubmitFormParameters.FLAT;
         applicationDatabaseOperation.updateLSIM(0);
@@ -93,7 +104,7 @@ public class OriginalLoanScheduleTest extends UiTestCaseBase {
         applyChargesAndVerifySchedule(OriginalScheduleData.FLAT_LOAN_SCHEDULE);
     }
 
-    @Test(enabled=false)
+    @Test(enabled=true)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyForVariableInstallmentLoanEarlyDisbursal() throws Exception {
         int interestType = DefineNewLoanProductPage.SubmitFormParameters.DECLINING_BALANCE;
@@ -103,10 +114,10 @@ public class OriginalLoanScheduleTest extends UiTestCaseBase {
                 navigateToDefineNewLoanPangAndFillMandatoryFields(formParameters).
                 fillVariableInstalmentOption("30","1","100").
                 submitAndGotoNewLoanProductPreviewPage().submit();
-        verifyLoanAccountOriginalSchedule(systemDateTime.plusDays(3), systemDateTime, OriginalScheduleData.VARIABLE_LOAN_LATE_DISBURSAL_SCHEDULE, false, systemDateTime.plusDays(5));
+        verifyLoanAccountOriginalSchedule(systemDateTime.plusDays(1), systemDateTime, OriginalScheduleData.VARIABLE_LOAN_EARLY_DISBURSAL_SCHEDULE, false, systemDateTime.plusDays(5));
     }
 
-    @Test(enabled=false)
+    @Test(enabled=true)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyForVariableInstallmentLoanLateDisbursal() throws Exception {
         int interestType = DefineNewLoanProductPage.SubmitFormParameters.DECLINING_BALANCE;
@@ -114,33 +125,63 @@ public class OriginalLoanScheduleTest extends UiTestCaseBase {
         DefineNewLoanProductPage.SubmitFormParameters formParameters = defineLoanProductParameters(interestType);
         loanProductTestHelper.
                 navigateToDefineNewLoanPangAndFillMandatoryFields(formParameters).
-                fillVariableInstalmentOption("10","1","100").
+                fillVariableInstalmentOption("20","1","100").
                 submitAndGotoNewLoanProductPreviewPage().submit();
-        verifyLoanAccountOriginalSchedule(systemDateTime.plusDays(1), systemDateTime.plusDays(10), OriginalScheduleData.VARIABLE_LOAN_EARLY_DISBURSAL_SCHEDULE, false, systemDateTime.plusDays(15));
+        verifyLoanAccountOriginalSchedule(systemDateTime, systemDateTime.plusDays(1), OriginalScheduleData.VARIABLE_LOAN_LATE_DISBURSAL_SCHEDULE, false, systemDateTime.plusDays(15));
     }
 
-    @Test(enabled=false)
+    @Test(enabled=true)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
-    public void verifyForDecBalIntReCalcLoanLateDisbursal() throws Exception {
+    public void verifyForDecBalIntReCalcLoanEarlyDisbursalLSIMOn() throws Exception {
         int interestType = DefineNewLoanProductPage.SubmitFormParameters.DECLINING_BALANCE_INTEREST_RECALCULATION;
         applicationDatabaseOperation.updateLSIM(1);
         createLoanProduct(interestType);
-        verifyLoanAccountOriginalSchedule(systemDateTime.plusDays(1), systemDateTime.plusDays(10), OriginalScheduleData.DEC_BAL_INT_RECALC_LOAN_EARLY_DISBURSAL_SCHEDULE, true, systemDateTime.plusDays(15));
-        applyChargesAndVerifySchedule(OriginalScheduleData.DEC_BAL_INT_RECALC_LOAN_EARLY_DISBURSAL_SCHEDULE);
+        verifyLoanAccountOriginalSchedule(systemDateTime.plusDays(1), systemDateTime, OriginalScheduleData.DEC_BAL_INT_RECALC_LOAN_EARLY_DISBURSAL_SCHEDULE_ON, true, systemDateTime.plusDays(15));
+        applyChargesAndVerifySchedule(OriginalScheduleData.DEC_BAL_INT_RECALC_LOAN_EARLY_DISBURSAL_SCHEDULE_ON);
     }
-
-    private void applyChargesAndVerifySchedule(String[][] loanSchedule) {
-        loanTestHelper.applyCharges(ChargeParameters.MISC_FEES, "10");
-        verifyOriginalSchedule(loanSchedule);
+    @Test(enabled=true)
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
+    public void verifyForDecBalIntReCalcLoanLateDisbursalLSIMOn() throws Exception {
+        int interestType = DefineNewLoanProductPage.SubmitFormParameters.DECLINING_BALANCE_INTEREST_RECALCULATION;
+        applicationDatabaseOperation.updateLSIM(1);
+        createLoanProduct(interestType);
+        verifyLoanAccountOriginalSchedule(systemDateTime, systemDateTime.plusDays(1), OriginalScheduleData.DEC_BAL_INT_RECALC_LOAN_LATE_DISBURSAL_SCHEDULE_ON, true, systemDateTime.plusDays(15));
+        applyChargesAndVerifySchedule(OriginalScheduleData.DEC_BAL_INT_RECALC_LOAN_LATE_DISBURSAL_SCHEDULE_ON);
     }
-
+    @Test(enabled=true)
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
+    public void verifyForDecBalIntReCalcLoanEarlyDisbursalLSIMOff() throws Exception {
+        int interestType = DefineNewLoanProductPage.SubmitFormParameters.DECLINING_BALANCE_INTEREST_RECALCULATION;
+        applicationDatabaseOperation.updateLSIM(0);
+        createLoanProduct(interestType);
+        verifyLoanAccountOriginalSchedule(systemDateTime.plusDays(1), systemDateTime, OriginalScheduleData.DEC_BAL_INT_RECALC_LOAN_EARLY_DISBURSAL_SCHEDULE_OFF, true, systemDateTime.plusDays(15));
+        applyChargesAndVerifySchedule(OriginalScheduleData.DEC_BAL_INT_RECALC_LOAN_EARLY_DISBURSAL_SCHEDULE_OFF);
+    }
+    @Test(enabled=true)
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
+    public void verifyForDecBalIntReCalcLoanLateDisbursalLSIMOff() throws Exception {
+        int interestType = DefineNewLoanProductPage.SubmitFormParameters.DECLINING_BALANCE_INTEREST_RECALCULATION;
+        applicationDatabaseOperation.updateLSIM(0);
+        createLoanProduct(interestType);
+        verifyLoanAccountOriginalSchedule(systemDateTime.plusDays(1), systemDateTime.plusDays(8), OriginalScheduleData.DEC_BAL_INT_RECALC_LOAN_LATE_DISBURSAL_SCHEDULE_OFF, true, systemDateTime.plusDays(15));
+        applyChargesAndVerifySchedule(OriginalScheduleData.DEC_BAL_INT_RECALC_LOAN_LATE_DISBURSAL_SCHEDULE_OFF);
+    }
 
     private void verifyLoanAccountOriginalSchedule(DateTime creationDisbursalDate, DateTime disbursalDate, String[][] tableOnOriginalInstallment, boolean needApplyFee, DateTime paymentDate) throws UnsupportedEncodingException {
         createLoanAccount(creationDisbursalDate, disbursalDate, needApplyFee);
+        verifyOriginalSchedule(tableOnOriginalInstallment);
         loanTestHelper.applyCharges(ChargeParameters.MISC_FEES, "10");
+        loanTestHelper.applyCharges(ChargeParameters.MISC_PENALTY, "10");
         verifyOriginalSchedule(tableOnOriginalInstallment);
         loanTestHelper.makePayment(paymentDate, "100");
         verifyOriginalSchedule(tableOnOriginalInstallment);
+    }
+
+
+    private void applyChargesAndVerifySchedule(String[][] loanSchedule) {
+        loanTestHelper.applyCharges(ChargeParameters.MISC_FEES, "10");
+        loanTestHelper.applyCharges(ChargeParameters.MISC_PENALTY, "10");
+        verifyOriginalSchedule(loanSchedule);
     }
 
     private void createLoanAccount(DateTime creationDisbursalDate, DateTime actualDisbursalDate, boolean needApplyFee) throws UnsupportedEncodingException {
@@ -154,6 +195,8 @@ public class OriginalLoanScheduleTest extends UiTestCaseBase {
             chargeParameters.setType(feeName);
             new LoanAccountPage(selenium).navigateToApplyCharge().applyFeeAndConfirm(chargeParameters);
         }
+        loanTestHelper.applyCharges(ChargeParameters.MISC_FEES, "10");
+        loanTestHelper.applyCharges(ChargeParameters.MISC_PENALTY, "10");
         loanTestHelper.approveLoan();
         loanTestHelper.disburseLoan(actualDisbursalDate);
     }

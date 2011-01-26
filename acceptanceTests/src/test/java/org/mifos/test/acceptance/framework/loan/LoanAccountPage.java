@@ -30,7 +30,7 @@ import org.testng.Assert;
 public class LoanAccountPage extends AbstractPage {
 
     public final static String ACTIVE = "Active in Good Standing";
-
+    String loanSummaryTable = "//table[@id='loanSummaryTable']";
 
     public LoanAccountPage(Selenium selenium) {
         super(selenium);
@@ -359,6 +359,29 @@ public class LoanAccountPage extends AbstractPage {
         selenium.click("loanaccountdetail.link.viewTransactionHistory");
         waitForPageToLoad();
         return new TransactionHistoryPage(selenium);
+    }
+
+    public LoanAccountPage verifyLoanStatus(String status) {
+        Assert.assertTrue(selenium.isTextPresent(status));
+        return this;
+    }
+
+    public LoanAccountPage verifyAccountSummary(String[][] accountSummaryTable) {
+        if (accountSummaryTable != null) {
+            for (int rowIndex = 0; rowIndex < accountSummaryTable.length; rowIndex++) {
+                String[] rowValues = accountSummaryTable[rowIndex];
+                int row = rowIndex + 1;
+                for (int columnIndex = 0; columnIndex < rowValues.length; columnIndex++) {
+                    String cellValue = rowValues[columnIndex];
+                    int column = columnIndex + 1;
+                    if (!"".equals(cellValue)) {
+                        String actualCellValue = selenium.getText(loanSummaryTable + "//tr[" + row + "]/td[" + column + "]");
+                        Assert.assertEquals(actualCellValue, cellValue, "In Schedule Table for row " + row + " and column " + column + " expected value is " + cellValue + " but the actual value is " + actualCellValue);
+                    }
+                }
+            }
+        }
+        return this;
     }
 }
 
