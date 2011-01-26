@@ -230,6 +230,8 @@ public class SavingsPostInterestTest {
         assertThat(interestPostingActivity.getActivity().getId(), is(AccountActionTypes.SAVINGS_INTEREST_POSTING.getValue()));
         assertThat(interestPostingActivity.getAmount(), is(TestUtils.createMoney("100")));
         assertThat(datePartOf(interestPostingActivity.getTrxnCreatedDate()), is(nextInterestPostingDate.toLocalDate()));
+
+        new DateTimeService().resetToCurrentSystemDateTime();
     }
 
     private LocalDate datePartOf(Timestamp timestamp) {
@@ -357,6 +359,8 @@ public class SavingsPostInterestTest {
 
         // verification
         assertThat(new LocalDate(savingsAccount.getLastIntPostDate()), is(nextInterestPostingDate.toLocalDate()));
+
+        new DateTimeService().resetToCurrentSystemDateTime();
     }
 
     @Test
@@ -392,6 +396,8 @@ public class SavingsPostInterestTest {
 
         // verification
         assertThat(new LocalDate(savingsAccount.getNextIntPostDate()), is(endOfMonthAfter(nextInterestPostingDate)));
+        
+        new DateTimeService().resetToCurrentSystemDateTime();
     }
 
     private LocalDate endOfMonthAfter(DateTime currentDate) {

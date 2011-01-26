@@ -111,6 +111,8 @@ public class SavingsIntPostingHelperIntegrationTest extends MifosIntegrationTest
                                               .withDepositOn("200", startOfFiscalYear.plusMonths(1))
                                               .build();
         IntegrationTestObjectMother.saveSavingsAccount(savings1);
+
+        new DateTimeService().resetToCurrentSystemDateTime();
     }
 
     private void createCenterGroupClientHierarchy(MeetingBO meetingFrequency) throws CustomerException {
