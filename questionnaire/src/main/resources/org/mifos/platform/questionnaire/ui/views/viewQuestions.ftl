@@ -45,5 +45,4 @@
         </ul>
     </div>
 </div>
-<h1> Hello Udai </h1>
 [/@adminLeftPaneLayout]
