@@ -69,6 +69,30 @@ form.two-columns input.submit
 	margin-left: 27.5em; 
 }
 
+/* product summary */
+.product-summary 
+{
+}
+
+.product-summary .attribute
+{
+	width: 27em;
+	margin-right: 0.5em;
+	text-align: right;
+	float: left;
+}
+
+.product-summary .value
+{
+	float: left;
+}
+
+.product-summary .row
+{
+	clear: both;
+	padding: 0.5em 0em;
+}
+
 /* webflow progress tracker */
 .progress-tracker
 {
