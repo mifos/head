@@ -26,6 +26,9 @@ import com.thoughtworks.selenium.Selenium;
 
 public class LoanProductDetailsPage  extends MifosPage {
 
+        public final static String lOAN_AMOUNT_SAME_TABLE = "loanAmountSameTable";
+        public final static String INSTALLMENTS_FROM_CYCLE_TABLE = "noOfInstallFromCycleTable";
+
         public LoanProductDetailsPage(Selenium selenium) {
             super(selenium);
         }
@@ -96,5 +99,19 @@ public class LoanProductDetailsPage  extends MifosPage {
         Assert.assertTrue(selenium.isTextPresent("Compare with Cash Flow: No"));
         Assert.assertTrue(!selenium.isTextPresent("Warning Threshold:"));
         return this;
+    }
+
+    public void verifyLoanAmountTableTypeSame(String min, String max, String def) {
+        Assert.assertEquals(selenium.getTable(lOAN_AMOUNT_SAME_TABLE+".1.0"), min);
+        Assert.assertEquals(selenium.getTable(lOAN_AMOUNT_SAME_TABLE+".1.1"), max);
+        Assert.assertEquals(selenium.getTable(lOAN_AMOUNT_SAME_TABLE+".1.2"), def);
+    }
+
+    public void verifyInstallmentsTableTypeFromCycle(String[][] installCycles) {
+        for(int i = 1; i <= installCycles.length; i++) {
+            Assert.assertEquals(selenium.getTable(INSTALLMENTS_FROM_CYCLE_TABLE+"."+i+".1"), installCycles[i-1][0]);
+            Assert.assertEquals(selenium.getTable(INSTALLMENTS_FROM_CYCLE_TABLE+"."+i+".2"), installCycles[i-1][1]);
+            Assert.assertEquals(selenium.getTable(INSTALLMENTS_FROM_CYCLE_TABLE+"."+i+".3"), installCycles[i-1][2]);
+        }
     }
 }

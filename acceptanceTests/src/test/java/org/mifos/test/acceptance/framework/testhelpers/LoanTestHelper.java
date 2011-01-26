@@ -669,4 +669,41 @@ public class LoanTestHelper {
             .submitAndNavigateToDisburseLoanConfirmationPage(disburseParams)
             .submitAndNavigateToLoanAccountPage();
     }
+
+    /**
+     * Method for creating default loan account.
+     * Doesn't matter on which page you currently are.
+     * Must be logged in.
+     */
+    public LoanAccountPage createAndActivateDefaultLoanAccount(CreateLoanAccountSearchParameters searchParams) {
+        MifosPage mifosPage = new MifosPage(selenium);
+        return mifosPage.navigateToClientsAndAccountsPageUsingHeaderTab()
+            .navigateToCreateLoanAccountUsingLeftMenu()
+            .searchAndNavigateToCreateLoanAccountPage(searchParams)
+            .continuePreviewSubmitAndNavigateToDetailsPage()
+            .changeAccountStatusToAccepted();
+    }
+
+    public LoanAccountPage createActivateAndDisburseDefaultLoanAccount(CreateLoanAccountSearchParameters searchParams, DisburseLoanParameters disburseParams) {
+        return createAndActivateDefaultLoanAccount(searchParams)
+                .navigateToDisburseLoan()
+                .submitAndNavigateToDisburseLoanConfirmationPage(disburseParams)
+                .submitAndNavigateToLoanAccountPage();
+    }
+
+    public LoanProductDetailsPage defineNewLoanProduct(DefineNewLoanProductPage.SubmitFormParameters productParams) {
+        MifosPage mifosPage = new MifosPage(selenium);
+        DefineNewLoanProductPage defineNewLoanProductPage = mifosPage.navigateToAdminPageUsingHeaderTab()
+            .navigateToDefineLoanProduct();
+        defineNewLoanProductPage.fillLoanParameters(productParams);
+
+        return defineNewLoanProductPage
+            .submitAndGotoNewLoanProductPreviewPage()
+            .submit()
+            .navigateToViewLoanDetails();
+    }
+
+    public AdminPage loginAndNavigateToAdminPage() {
+        return navigationHelper.navigateToAdminPage();
+    }
 }

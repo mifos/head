@@ -78,6 +78,12 @@ public class DefineNewLoanProductPage extends AbstractPage {
         // grace period type
         public static final int NONE = 1;
 
+        // Calculate # of Installments as
+        public static final int SAME_FOR_ALL_LOANS = 1;
+        public static final int BY_LAST_LOAN_AMOUNT = 2;
+        public static final int BY_LOAN_CYCLE = 3;
+        public static final int MAX_CYCLES = 6;
+
         private String branch;
         private String offeringName;
         private String offeringShortName;
@@ -92,7 +98,16 @@ public class DefineNewLoanProductPage extends AbstractPage {
         private String maxInterestRate;
         private String defaultInterestRate;
         private int freqOfInstallments;
+        private int calculateInstallments = SAME_FOR_ALL_LOANS;
         private String minInstallemnts = "1";
+        private String defInstallments;
+        private String maxInstallments;
+        private String[][] cycleInstallments = new String[MAX_CYCLES][3];
+        private int gracePeriodType;
+        private String interestGLCode;
+        private String principalGLCode;
+        private boolean interestWaiver;
+        private List<String> questionGroups;
 
         public String getMinInstallemnts() {
             return this.minInstallemnts;
@@ -101,14 +116,6 @@ public class DefineNewLoanProductPage extends AbstractPage {
         public void setMinInstallemnts(String minInstallemnts) {
             this.minInstallemnts = minInstallemnts;
         }
-
-        private String defInstallments;
-        private String maxInstallments;
-        private int gracePeriodType;
-        private String interestGLCode;
-        private String principalGLCode;
-        private boolean interestWaiver;
-        private List<String> questionGroups;
 
         public String getBranch() {
             return this.branch;
@@ -277,6 +284,46 @@ public class DefineNewLoanProductPage extends AbstractPage {
         public void setQuestionGroups(List<String> questionGroups) {
             this.questionGroups = questionGroups;
         }
+
+        public void setCalculateInstallments(int calculateInstallments) {
+            this.calculateInstallments = calculateInstallments;
+        }
+
+        public int getCalculateInstallments() {
+            return calculateInstallments;
+        }
+
+        public void setCycleInstallments(String[][] cycleInstallments) {
+            this.cycleInstallments = cycleInstallments.clone();
+        }
+
+        public String[][] getCycleInstallments() {
+            return cycleInstallments.clone();
+        }
+
+        public String getMinCycleInstallment(int row) {
+            return cycleInstallments[row][0];
+        }
+
+        public void setMinCycleInstallment(int row, String value) {
+            this.cycleInstallments[row][0] = value;
+        }
+
+        public String getMaxCycleInstallment(int row) {
+            return cycleInstallments[row][1];
+        }
+
+        public void setMaxCycleInstallment(int row, String value) {
+            this.cycleInstallments[row][1] = value;
+        }
+
+        public String getDefCycleInstallment(int row) {
+            return cycleInstallments[row][2];
+        }
+
+        public void setDefCycleInstallment(int row, String value) {
+            this.cycleInstallments[row][2] = value;
+        }
     }
 
     public DefineNewLoanProductPage fillLoanParameters(SubmitFormParameters parameters) {
@@ -293,11 +340,22 @@ public class DefineNewLoanProductPage extends AbstractPage {
         selenium.type("createLoanProduct.input.minInterestRate", parameters.getMinInterestRate());
         selenium.type("createLoanProduct.input.defInterestRate", parameters.getDefaultInterestRate());
         selenium.click("name=freqOfInstallments value=" + parameters.getFreqOfInstallments());
-        if(!"1".equals(parameters.getMinInstallemnts())) {
+        selenium.click("name=calcInstallmentType value=" + parameters.getCalculateInstallments());
+        if(parameters.getCalculateInstallments() == SubmitFormParameters.SAME_FOR_ALL_LOANS) {
             selenium.type("minNoInstallments", parameters.getMinInstallemnts());
+            selenium.type("maxNoInstallments", parameters.getMaxInstallments());
+            selenium.type("defNoInstallments", parameters.getDefInstallments());
         }
-        selenium.type("maxNoInstallments", parameters.getMaxInstallments());
-        selenium.type("defNoInstallments", parameters.getDefInstallments());
+    //    else if(parameters.getCalculateInstallments() == SubmitFormParameters.BY_LAST_LOAN_AMOUNT) {
+            // no test for this parameter
+   //     }
+        else {
+            for(int i = 1; i <= SubmitFormParameters.MAX_CYCLES; i++) {
+                selenium.type("minCycleInstallment"+i, parameters.getMinCycleInstallment(i-1));
+                selenium.type("maxCycleInstallment"+i, parameters.getMaxCycleInstallment(i-1));
+                selenium.type("defCycleInstallment"+i, parameters.getDefCycleInstallment(i-1));
+            }
+        }
         selenium.select("gracePeriodType", "value=" + parameters.getGracePeriodType());
         selenium.select("interestGLCode", "label=" + parameters.getInterestGLCode());
         selenium.select("principalGLCode", "label=" + parameters.getPrincipalGLCode());

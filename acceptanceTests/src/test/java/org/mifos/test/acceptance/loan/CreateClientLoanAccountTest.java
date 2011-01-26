@@ -39,6 +39,8 @@ import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountInformationPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
+import org.mifos.test.acceptance.framework.loanproduct.LoanProductDetailsPage;
+import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.SubmitFormParameters;
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
@@ -365,6 +367,54 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         loanTestHelper.applyOneChargeOnLoanAccount(chargeParameters);
         loanAccountPage.navigateToViewInstallmentDetails()
             .verifyInstallmentAmount(4, 1, "599.0");
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void verifyCreatingLoanAccountsOnProductWithLoanCycles() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTime targetTime = new DateTime(2011,1,24,15,0,0,0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+
+        DefineNewLoanProductPage.SubmitFormParameters productParams = FormParametersHelper.getWeeklyLoanProductParameters();
+        productParams.setOfferingName("ProdTest99");
+        productParams.setOfferingShortName("T99");
+        productParams.setMinLoanAmount("1000");
+        productParams.setMaxLoanAmount("10000");
+        productParams.setDefaultLoanAmount("5000");
+        productParams.setCalculateInstallments(SubmitFormParameters.BY_LOAN_CYCLE);
+        String[][] cycleInstallments = {
+            {"26", "52", "52"},
+            {"20", "30", "30"},
+            {"15", "25", "25"},
+            {"10", "15", "15"},
+            {"5", "10", "10"},
+            {"1", "5", "5"}
+        };
+        productParams.setCycleInstallments(cycleInstallments);
+        CreateLoanAccountSearchParameters searchParams = new CreateLoanAccountSearchParameters();
+        searchParams.setSearchString("Stu1233265991241 Client1233265991241");
+        searchParams.setLoanProduct("ProdTest99");
+        DisburseLoanParameters disburseParams = new DisburseLoanParameters();
+        disburseParams.setPaymentType(DisburseLoanParameters.CASH);
+        disburseParams.setDisbursalDateDD("24");
+        disburseParams.setDisbursalDateMM("01");
+        disburseParams.setDisbursalDateYYYY("2011");
+
+        loanTestHelper.loginAndNavigateToAdminPage();
+        LoanProductDetailsPage loanProductDetailsPage = loanTestHelper.defineNewLoanProduct(productParams);
+        loanProductDetailsPage.verifyLoanAmountTableTypeSame("1000.0", "10000.0", "5000.0");
+        loanProductDetailsPage.verifyInstallmentsTableTypeFromCycle(cycleInstallments);
+        LoanAccountPage loanAccountPage = loanTestHelper.createActivateAndDisburseDefaultLoanAccount(searchParams, disburseParams);
+        loanAccountPage.verifyNumberOfInstallments("26", "52", "52");
+        String loan1ID = loanAccountPage.getAccountId();
+        loanTestHelper.createActivateAndDisburseDefaultLoanAccount(searchParams, disburseParams);
+        loanAccountPage.verifyNumberOfInstallments("26", "52", "52");
+        String loan2ID = loanAccountPage.getAccountId();
+        loanTestHelper.repayLoan(loan1ID);
+        loanTestHelper.repayLoan(loan2ID);
+        loanTestHelper.createActivateAndDisburseDefaultLoanAccount(searchParams, disburseParams);
+        loanAccountPage.verifyNumberOfInstallments("20", "30", "30");
     }
 
     private String createLoanAndCheckAmount(CreateLoanAccountSearchParameters searchParameters,

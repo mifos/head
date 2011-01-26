@@ -25,7 +25,6 @@ import com.thoughtworks.selenium.Selenium;
 
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.MifosPage;
-import org.mifos.test.acceptance.framework.user.UserViewDetailsPage;
 
 
 public class DefineNewLoanProductConfirmationPage extends MifosPage {
@@ -36,10 +35,10 @@ public class DefineNewLoanProductConfirmationPage extends MifosPage {
     }
 
 
-    public UserViewDetailsPage navigateToViewLoanDetails() {
+    public LoanProductDetailsPage navigateToViewLoanDetails() {
         selenium.click("createLoanProductConfirmation.link.viewLoanDetails");
         waitForPageToLoad();
-        return new UserViewDetailsPage(selenium);
+        return new LoanProductDetailsPage(selenium);
     }
 
     public void verifyPage() {
