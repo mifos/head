@@ -46,6 +46,7 @@ import org.mifos.customers.group.business.GroupBO;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.test.framework.util.DatabaseCleaner;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -69,6 +70,8 @@ public class SavingsIntPostingHelperIntegrationTest extends MifosIntegrationTest
     @Before
     public void setUp() throws Exception {
         databaseCleaner.clean();
+
+        new DateTimeService().setCurrentDateTimeFixed(new DateTime().withDate(2010, 7, 13).toDateMidnight().toDateTime());
 
         DateTime startOfFiscalYear = new DateTime().withDate(2010, 1, 1);
         MeetingBO meetingFrequency = new MeetingBuilder().customerMeeting()

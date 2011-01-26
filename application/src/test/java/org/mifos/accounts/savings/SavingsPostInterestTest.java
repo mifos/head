@@ -65,6 +65,7 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.domain.builders.PersonnelBuilder;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.DateTimeService;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -196,6 +197,8 @@ public class SavingsPostInterestTest {
     @Test
     public void whenPostingInterestASavingsAcitvityIsAddedWithCorrectDetails() {
 
+        new DateTimeService().setCurrentDateTimeFixed(date(2010, 7, 13));
+
         // setup
         InterestScheduledEvent postingSchedule = new MonthlyOnLastDayOfMonthInterestScheduledEvent(1);
 
@@ -324,6 +327,8 @@ public class SavingsPostInterestTest {
     @Test
     public void whenPostingInterestLastInterestPostingDateIsPopulated() {
 
+        new DateTimeService().setCurrentDateTimeFixed(date(2010, 7, 13));
+
         // setup
         InterestScheduledEvent postingSchedule = new MonthlyOnLastDayOfMonthInterestScheduledEvent(1);
 
@@ -356,6 +361,8 @@ public class SavingsPostInterestTest {
 
     @Test
     public void whenPostingInterestNextInterestPostingDateIsPopulatedWithNextPostingDate() {
+
+        new DateTimeService().setCurrentDateTimeFixed(date(2010, 7, 13));
 
         // setup
         InterestScheduledEvent postingSchedule = new MonthlyOnLastDayOfMonthInterestScheduledEvent(1);
@@ -421,5 +428,9 @@ public class SavingsPostInterestTest {
 
         // verification
         assertThat(savingsAccount.getInterestToBePosted(), is(TestUtils.createMoney("0")));
+    }
+
+    private DateTime date(int year, int month, int day) {
+        return new DateTime().withDate(year, month, day).toDateMidnight().toDateTime();
     }
 }
