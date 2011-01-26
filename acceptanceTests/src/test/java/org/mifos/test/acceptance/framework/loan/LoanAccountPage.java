@@ -20,12 +20,13 @@
 
 package org.mifos.test.acceptance.framework.loan;
 
-import com.thoughtworks.selenium.Selenium;
 import org.mifos.test.acceptance.framework.AbstractPage;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.questionnaire.ViewQuestionResponseDetailPage;
 import org.testng.Assert;
+
+import com.thoughtworks.selenium.Selenium;
 
 @SuppressWarnings("PMD.SystemPrintln")
 public class LoanAccountPage extends AbstractPage {

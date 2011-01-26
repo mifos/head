@@ -20,26 +20,19 @@
 
 package org.mifos.test.acceptance.loan;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
-import org.mifos.test.acceptance.framework.loan.CreateLoanAccountConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountEntryPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameters;
 import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
-import org.mifos.test.acceptance.framework.loan.EditLoanAccountInformationPage;
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountInformationParameters;
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountStatusParameters;
-import org.mifos.test.acceptance.framework.loan.EditPreviewLoanAccountPage;
-import org.mifos.test.acceptance.framework.loan.GLIMClient;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
-import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,47 +72,6 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
-    private LoanAccountPage creationCheck(boolean creationType){
-
-        //When
-        CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
-        searchParameters.setSearchString("MyGroup1233266297718");
-        searchParameters.setLoanProduct("WeeklyGroupFlatLoanWithOnetimeFee");
-
-        CreateLoanAccountEntryPage loanAccountEntryPage = loanTestHelper.navigateToCreateLoanAccountEntryPage(searchParameters);
-
-        List<GLIMClient> clients= new ArrayList<GLIMClient>();
-        clients.add(new GLIMClient(0,"Stu1233266299995 Client1233266299995 \n Client Id: 0006-000000051", "9999.9", "0700-Marriage"));
-        clients.add(new GLIMClient(1, "Stu1233266309851 Client1233266309851 \n Client Id: 0006-000000052", "99999.9", "1008-Hospital"));
-        clients.add(new GLIMClient(2, "Stu1233266319760 Client1233266319760 \n Client Id: 0006-000000053", "99999.9", "1010-Education"));
-
-        for (GLIMClient glimClient : clients) {
-            loanAccountEntryPage.selectGLIMClients(glimClient.getClientNumber(), glimClient.getClientName(), glimClient.getLoanAmount(), glimClient.getLoanPurpose());
-        }
-        CreateLoanAccountConfirmationPage createLoanAccountConfirmationPage;
-        if(creationType==true) {
-            createLoanAccountConfirmationPage = loanAccountEntryPage.submitAndNavigateToGLIMLoanAccountConfirmationPage();
-        } else {
-            createLoanAccountConfirmationPage = loanAccountEntryPage.submitAndNavigateToGLIMLoanAccountConfirmationPageSaveForLaterButton();
-        }
-        LoanAccountPage loanAccountPage =  createLoanAccountConfirmationPage.navigateToLoanAccountDetailsPage();
-        //Then
-        if(creationType==true) {
-            loanAccountPage.verifyLoanIsPendingApproval();
-        } else {
-            loanAccountPage.verifyLoanIsInPartialApplication();
-        }
-        EditLoanAccountInformationPage editLoanAccountInformationPage = loanAccountPage.navigateToEditAccountInformation();
-
-        for (GLIMClient glimClient : clients) {
-            editLoanAccountInformationPage.verifyGLIMClient(glimClient.getClientNumber(), glimClient.getClientName(), glimClient.getLoanAmount(), glimClient.getLoanPurpose());
-        }
-
-        editLoanAccountInformationPage.navigateBack();
-
-        return loanAccountPage;
-    }
-
     /*
      * This test is to verify that you can edit a GLIM loan account after it has been
      * dibursed without getting an invalid disbursal date error. See MIFOS-2597.
@@ -135,7 +87,7 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
 
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
         //When
-        LoanAccountPage loanAccountPage = creationCheck(true);
+        LoanAccountPage loanAccountPage = loanTestHelper.createLoanAccountForMultipleClientsInGroup(true);
 
         String accountId = loanAccountPage.getAccountId();
 
@@ -144,8 +96,6 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
         statusParameters.setNote("Test");
 
         loanTestHelper.changeLoanAccountStatus(accountId, statusParameters);
-        //Then
-        //When
         DisburseLoanParameters params = new DisburseLoanParameters();
 
         params.setDisbursalDateDD("11");
@@ -159,9 +109,7 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
         EditLoanAccountInformationParameters editLoanAccountInformationParameters = new EditLoanAccountInformationParameters();
         editLoanAccountInformationParameters.setExternalID("ID2323ID");
 
-        loanAccountPage = editLoanAccount(accountId, editLoanAccountInformationParameters);
-        //Then
-        assertTextFoundOnPage(editLoanAccountInformationParameters.getExternalID());
+        loanTestHelper.changeLoanAccountInformation(accountId, new CreateLoanAccountSubmitParameters(), editLoanAccountInformationParameters);
    }
 
     @Test(enabled=true)
@@ -174,21 +122,7 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
 
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
 
-        creationCheck(false);
-    }
-
-
-    private LoanAccountPage editLoanAccount(String accountID, EditLoanAccountInformationParameters params) {
-        NavigationHelper helper = new NavigationHelper(selenium);
-
-        LoanAccountPage loanAccountPage = helper.navigateToLoanAccountPage(accountID);
-
-        EditLoanAccountInformationPage editAccountInformationPage = loanAccountPage.navigateToEditAccountInformation();
-        editAccountInformationPage.editExternalID(params);
-        EditPreviewLoanAccountPage editPreviewLoanAccountPage = editAccountInformationPage.submitAndNavigateToAccountInformationPreviewPage();
-        loanAccountPage = editPreviewLoanAccountPage.submitAndNavigateToLoanAccountPage();
-
-        return loanAccountPage;
+        loanTestHelper.createLoanAccountForMultipleClientsInGroup(false);
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")

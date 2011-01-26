@@ -21,6 +21,7 @@
 package org.mifos.test.acceptance.framework.testhelpers;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -41,6 +42,7 @@ import org.mifos.test.acceptance.framework.loan.ApplyPaymentConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.ApplyPaymentPage;
 import org.mifos.test.acceptance.framework.loan.ChargeParameters;
 import org.mifos.test.acceptance.framework.loan.ClosedAccountsPage;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountEntryPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
@@ -57,6 +59,7 @@ import org.mifos.test.acceptance.framework.loan.EditLoanAccountInformationParame
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountStatusPage;
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountStatusParameters;
 import org.mifos.test.acceptance.framework.loan.EditPreviewLoanAccountPage;
+import org.mifos.test.acceptance.framework.loan.GLIMClient;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.PaymentParameters;
 import org.mifos.test.acceptance.framework.loan.PerformanceHistoryAtributes;
@@ -114,6 +117,51 @@ public class LoanTestHelper {
 
     /**
      * Creates a loan account.
+     * @param loanSaveType : True - submit for approval, False - save for later
+     * @return LoanAccountPage
+     */
+    public LoanAccountPage createLoanAccountForMultipleClientsInGroup(boolean loanSaveType){
+
+        CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
+        searchParameters.setSearchString("MyGroup1233266297718");
+        searchParameters.setLoanProduct("WeeklyGroupFlatLoanWithOnetimeFee");
+
+        CreateLoanAccountEntryPage loanAccountEntryPage = this.navigateToCreateLoanAccountEntryPage(searchParameters);
+
+        List<GLIMClient> clients= new ArrayList<GLIMClient>();
+        clients.add(new GLIMClient(0,"Stu1233266299995 Client1233266299995 \n Client Id: 0006-000000051", "9999.9", "0700-Marriage"));
+        clients.add(new GLIMClient(1, "Stu1233266309851 Client1233266309851 \n Client Id: 0006-000000052", "99999.9", "1008-Hospital"));
+        clients.add(new GLIMClient(2, "Stu1233266319760 Client1233266319760 \n Client Id: 0006-000000053", "99999.9", "1010-Education"));
+
+        for (GLIMClient glimClient : clients) {
+            loanAccountEntryPage.selectGLIMClients(glimClient.getClientNumber(), glimClient.getClientName(), glimClient.getLoanAmount(), glimClient.getLoanPurpose());
+        }
+        CreateLoanAccountConfirmationPage createLoanAccountConfirmationPage;
+        if(loanSaveType) {
+            createLoanAccountConfirmationPage = loanAccountEntryPage.submitAndNavigateToGLIMLoanAccountConfirmationPage();
+        } else {
+            createLoanAccountConfirmationPage = loanAccountEntryPage.submitAndNavigateToGLIMLoanAccountConfirmationPageSaveForLaterButton();
+        }
+        LoanAccountPage loanAccountPage =  createLoanAccountConfirmationPage.navigateToLoanAccountDetailsPage();
+
+        if(loanSaveType) {
+            loanAccountPage.verifyLoanIsPendingApproval();
+        } else {
+            loanAccountPage.verifyLoanIsInPartialApplication();
+        }
+        EditLoanAccountInformationPage editLoanAccountInformationPage = loanAccountPage.navigateToEditAccountInformation();
+
+        for (GLIMClient glimClient : clients) {
+            editLoanAccountInformationPage.verifyGLIMClient(glimClient.getClientNumber(), glimClient.getClientName(), glimClient.getLoanAmount(), glimClient.getLoanPurpose());
+        }
+
+        editLoanAccountInformationPage.navigateBack();
+
+        return loanAccountPage;
+    }
+
+    /**
+     * Creates a loan account.
      * @param searchParameters Parameters to find the client/group that will be the owner of the account.
      * @param submitAccountParameters The parameters for the loan account.
      * @param questionResponseParameters The parameters for the create loan question responses.
@@ -147,11 +195,13 @@ public class LoanTestHelper {
      * @param editAccountParameters The edit loan parameters.
      * @return edit preview loan account page
      */
-    public EditPreviewLoanAccountPage changeLoanAccountInformation(String loanId, CreateLoanAccountSubmitParameters accountSubmitParameters, EditLoanAccountInformationParameters editAccountParameters) {
-        return navigationHelper.navigateToLoanAccountPage(loanId).
-                navigateToEditAccountInformation().
-                editAccountParams(accountSubmitParameters, editAccountParameters).
-                submitAndNavigateToAccountInformationPreviewPage();
+    public LoanAccountPage changeLoanAccountInformation(String loanId, CreateLoanAccountSubmitParameters accountSubmitParameters, EditLoanAccountInformationParameters editAccountParameters) {
+        LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
+        EditLoanAccountInformationPage editLoanAccountInformationPage = loanAccountPage.navigateToEditAccountInformation();
+        EditPreviewLoanAccountPage editPreviewLoanAccountPage = editLoanAccountInformationPage.editAccountParams(accountSubmitParameters, editAccountParameters).submitAndNavigateToAccountInformationPreviewPage();
+        loanAccountPage = editPreviewLoanAccountPage.submitAndNavigateToLoanAccountPage();
+        loanAccountPage.verifyLoanDetails(accountSubmitParameters, editAccountParameters);
+        return loanAccountPage;
     }
 
     public EditLoanAccountInformationPage changeLoanAccountInformationWithErrors(String loanId, CreateLoanAccountSubmitParameters accountSubmitParameters, EditLoanAccountInformationParameters editAccountParameters) {
