@@ -28,12 +28,12 @@ how log4j is setting up logging. -->
         <priority value="INFO"/>
     </category>
 
-     <category name="org.mifos.framework.util.ConfigurationLocator">
-       <priority value="INFO"/>
+    <category name="org.mifos.framework.util.ConfigurationLocator">
+        <priority value="INFO"/>
     </category>
 
-     <category name="org.mifos.framework.persistence.DatabaseMigrator">
-       <priority value="INFO"/>
+    <category name="org.mifos.framework.persistence.DatabaseMigrator">
+        <priority value="INFO"/>
     </category>
 
     <root>
