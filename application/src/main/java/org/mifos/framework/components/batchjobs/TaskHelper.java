@@ -25,6 +25,7 @@ import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.scope.context.ChunkContext;
@@ -50,6 +51,7 @@ public abstract class TaskHelper implements Tasklet {
 
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+        checkHibernateSession();
         Date scheduledFireTime = new Date(chunkContext.getStepContext().getStepExecution().getJobParameters().getLong(MifosBatchJob.JOB_EXECUTION_TIME_KEY));
         try {
             execute(scheduledFireTime.getTime());
@@ -58,6 +60,15 @@ public abstract class TaskHelper implements Tasklet {
             contribution.setExitStatus(ExitStatus.FAILED.addExitDescription(ex.getErrorMessage()));
         }
         return RepeatStatus.FINISHED;
+    }
+
+    private void checkHibernateSession() {
+        try {
+            StaticHibernateUtil.closeSession();
+            StaticHibernateUtil.getSessionTL().beginTransaction();
+        } catch (Exception e) {
+            StaticHibernateUtil.closeSession();
+        }
     }
 
     /**
