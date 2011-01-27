@@ -243,7 +243,6 @@ while(enn.hasMoreElements()){
 							</td>
 					</tr>
 					</table>
-					<br />
 					</td>
 					<td width="52%" valign="top" class="paddingleft"><span
 						class="headingorange"><mifos:mifoslabel name="admin.manageprd" /></span><br>
@@ -397,9 +396,7 @@ while(enn.hasMoreElements()){
                 </table>
                 <br>
 
-<!-- 
 		<span class="headingorange"><mifos:mifoslabel name="admin.manage.surveys" bundle="adminUIResources"/></span><br />
-		
                   <table width="90%" border="0" cellspacing="0" cellpadding="0">
                     <tr class="fontnormal">
                       <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
@@ -412,7 +409,6 @@ while(enn.hasMoreElements()){
 
                 </table>
                 <br>
-    -->            
                 <span class="headingorange"><mifos:mifoslabel name="admin.Manage" /> <mifos:mifoslabel name="admin.questions" /></span><br />
                 <table width="90%" border="0" cellspacing="0" cellpadding="0">
                 <tr class="fontnormal">
