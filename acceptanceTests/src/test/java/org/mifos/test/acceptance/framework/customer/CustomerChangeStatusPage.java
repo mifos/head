@@ -46,7 +46,7 @@ public class CustomerChangeStatusPage extends MifosPage {
     public static class SubmitFormParameters {
         // statuses
         public final static int ON_HOLD = 4;
-        public final static int APPROVED = 3;
+        public final static int ACTIVE = 3;
         public final static int PARTIAL_APPLICATION = 1;
         public final static int PENDING_APPROVAL = 2;
 
