@@ -1362,11 +1362,11 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
 
     @Override
     public List<ProductTypeDto> retrieveProductTypesApplicableToProductMix() {
-        List<ProductTypeDto> poductTypes = new ArrayList<ProductTypeDto>();
+        List<ProductTypeDto> productTypes = new ArrayList<ProductTypeDto>();
 
-        poductTypes.add(new ProductTypeDto(ProductType.LOAN.getValue().intValue(), "manageProduct.viewProductMix.loan"));
+        productTypes.add(new ProductTypeDto(ProductType.LOAN.getValue().intValue(), "manageProduct.viewProductMix.loan"));
 
-        return poductTypes;
+        return productTypes;
     }
 
     @Override
