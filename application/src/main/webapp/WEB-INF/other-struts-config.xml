@@ -311,7 +311,6 @@
             <forward name="load_success" path="/pages/application/holiday/jsp/create_officeHoliday.jsp"/>
         </action>
 
-<!-- 
         <action path="/surveysAction"
                 type="org.mifos.customers.surveys.struts.action.SurveysAction"
                 parameter="method"
@@ -369,7 +368,6 @@
             <forward name="update_success" path="/AdminAction.do?method=load" redirect="true"/>
             <forward name="get_success" path="/pages/application/ppi/jsp/get.jsp"/>
         </action>
--->        
     </action-mappings>
     
     <message-resources key="FrameworkUIResources" parameter="org.mifos.config.localizedResources.FrameworkUIResources"  />
