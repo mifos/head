@@ -49,7 +49,7 @@
 <div class="product-summary">
 	<div class="row">
 		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.description"/]</div>
-		<div class="value">Account for an individual to give savings option to a select member of their family.</div>
+		<div class="value">${product.savingsProductDetails.productDetails.description}</div>
 	</div>
 	<div class="row">
 		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.typeOfDeposits"/]:</div>
@@ -57,11 +57,11 @@
 	</div>
 	<div class="row">
 		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.maxWithdrawalAmount"/]:</div>
-		<div class="value">50.0</div>
+		<div class="value">TODO: localize ${product.savingsProductDetails.maxWithdrawal}</div>
 	</div>
 	<div class="row">
 		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.balanceForInterestCalculation"/]:</div>
-		<div class="value">Minimum Balance</div>
+		<div class="value">TODO interest calculation: ${product.savingsProductDetails.interestCalculationType}</div>
 	</div>
 	<div class="row">
 		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.periodForInterestCalculation"/]:</div>
