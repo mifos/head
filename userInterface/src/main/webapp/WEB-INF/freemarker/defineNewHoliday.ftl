@@ -39,11 +39,11 @@
                     <div class="prepend-3 span-22 last margin5bottom">
                     <span class="span-4 rightAlign" style="margin-top:6px;" ><span
                             class="red"> * </span>[@spring.message "organizationPreferences.definenewholiday.holidayName" /]</span>
-        	    <span class="span-4 margin5topbottom">
-        	    [@spring.bind "formBean.name" /]
+                <span class="span-4 margin5topbottom">
+                [@spring.bind "formBean.name" /]
                     <input type="text" id="holiday.input.name" name="${spring.status.expression}"
                            value="${spring.status.value?default("")}" size="45" maxlength="25"/>
-        	    </span>
+                </span>
                     </div>
                     <div class="prepend-3 span-22 last margin5bottom">
                     <span class="span-4 rightAlign"><span
@@ -80,7 +80,7 @@
                         <span class="span-4 rightAlign"><span
                                 class="red"> * </span>[@spring.message "organizationPreferences.definenewholiday.repaymentRule" /]</span>
                 <span class="span-5">
-            	    [@spring.bind "formBean.repaymentRuleId" /]
+                    [@spring.bind "formBean.repaymentRuleId" /]
                         <select id="holiday.input.repaymentrule" name="${spring.status.expression}">
                             <option value="-1" [@spring.checkSelected ""/]>${springMacroRequestContext.getMessage("--Select--")}</option>
                             [#if formBean.repaymentRuleOptions?is_hash]
@@ -93,7 +93,7 @@
                                     [/#list]
                             [/#if]
                         </select>
-				</span>
+                </span>
                     </div>
                     <div class="prepend-3 span-22 last margin5bottom">
                     <span class="span-4 rightAlign"><span

@@ -17,7 +17,7 @@ public class ViewAllQuestionsPage extends MifosPage {
     public QuestionDetailPage navigateToQuestionDetail(String title) {
         selenium.click("link="+title);
         waitForPageToLoad();
-        return new QuestionDetailPage(selenium);        
+        return new QuestionDetailPage(selenium);
     }
 
     public AdminPage navigateToAdminPage() {

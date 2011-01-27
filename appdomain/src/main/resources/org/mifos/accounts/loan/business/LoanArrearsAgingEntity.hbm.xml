@@ -6,82 +6,82 @@
 
 <hibernate-mapping>
 
-	<class name="org.mifos.accounts.loan.business.LoanArrearsAgingEntity" 
-		table="loan_arrears_aging">
-		<id name="id" column="id" type="integer" unsaved-value="null" access="field">
-			<generator class="native" />
-		</id>
-		<property name="customerName" column="customer_name"></property>
-		<property name="daysInArrears" column="days_in_arrears"></property>
-		<property name="overduePrincipal" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-			<column name="overdue_principal_currency_id" />
-			<column name="overdue_principal" />
-		</property>
-		<property name="overdueInterest" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-			<column name="overdue_interest_currency_id" />
-			<column name="overdue_interest" />
-		</property>
-		<property name="overdueBalance" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-			<column name="overdue_balance_currency_id" />
-			<column name="overdue_balance" />
-		</property>
-		<property name="unpaidPrincipal" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-			<column name="unpaid_principal_currency_id" />
-			<column name="unpaid_principal" />
-		</property>
-		<property name="unpaidInterest" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-			<column name="unpaid_interest_currency_id" />
-			<column name="unpaid_interest" />
-		</property>
-		<property name="unpaidBalance" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-			<column name="unpaid_balance_currency_id" />
-			<column name="unpaid_balance" />
-		</property>
-		<many-to-one name="customer" column="customer_id" class="org.mifos.customers.business.CustomerBO" cascade="none" update="false" insert="true" unique="true" access="field" />
-		<many-to-one name="loan" column="account_id" class="org.mifos.accounts.loan.business.LoanBO" cascade="none" update="true" insert="true"  unique="true" access="field" />
-		<many-to-one name="parentCustomer" column="parent_customer_id" class="org.mifos.customers.business.CustomerBO" cascade="none" update="true" insert="true" unique="true" access="field" />
-		<many-to-one name="office" column="office_id" class="org.mifos.customers.office.business.OfficeBO" cascade="none" update="false" insert="true" unique="true" access="field" />
-	</class>
-	
-	<sql-query name="deleteAllLoanArrearsAging">
-		<![CDATA[
-		   	delete from loan_arrears_aging
-		]]>
-	</sql-query>
-	<sql-query name="generateLoanArrearsAging">
-		<![CDATA[
-				insert into loan_arrears_aging(account_id, customer_id, customer_name, parent_customer_id, office_id,
-  				days_in_arrears, overdue_principal, overdue_principal_currency_id, overdue_interest, overdue_interest_currency_id,
-  				overdue_balance, overdue_balance_currency_id,  unpaid_principal,  unpaid_principal_currency_id, unpaid_interest,
-  				unpaid_interest_currency_id, unpaid_balance, unpaid_balance_currency_id)
-  
-				/*all currency_id s must be the same, so just using one*/
-				select a.account_id, c.customer_id, c.display_name as customer_name, c.parent_customer_id, c.branch_id as office_id,
+    <class name="org.mifos.accounts.loan.business.LoanArrearsAgingEntity"
+        table="loan_arrears_aging">
+        <id name="id" column="id" type="integer" unsaved-value="null" access="field">
+            <generator class="native" />
+        </id>
+        <property name="customerName" column="customer_name"></property>
+        <property name="daysInArrears" column="days_in_arrears"></property>
+        <property name="overduePrincipal" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+            <column name="overdue_principal_currency_id" />
+            <column name="overdue_principal" />
+        </property>
+        <property name="overdueInterest" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+            <column name="overdue_interest_currency_id" />
+            <column name="overdue_interest" />
+        </property>
+        <property name="overdueBalance" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+            <column name="overdue_balance_currency_id" />
+            <column name="overdue_balance" />
+        </property>
+        <property name="unpaidPrincipal" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+            <column name="unpaid_principal_currency_id" />
+            <column name="unpaid_principal" />
+        </property>
+        <property name="unpaidInterest" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+            <column name="unpaid_interest_currency_id" />
+            <column name="unpaid_interest" />
+        </property>
+        <property name="unpaidBalance" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+            <column name="unpaid_balance_currency_id" />
+            <column name="unpaid_balance" />
+        </property>
+        <many-to-one name="customer" column="customer_id" class="org.mifos.customers.business.CustomerBO" cascade="none" update="false" insert="true" unique="true" access="field" />
+        <many-to-one name="loan" column="account_id" class="org.mifos.accounts.loan.business.LoanBO" cascade="none" update="true" insert="true"  unique="true" access="field" />
+        <many-to-one name="parentCustomer" column="parent_customer_id" class="org.mifos.customers.business.CustomerBO" cascade="none" update="true" insert="true" unique="true" access="field" />
+        <many-to-one name="office" column="office_id" class="org.mifos.customers.office.business.OfficeBO" cascade="none" update="false" insert="true" unique="true" access="field" />
+    </class>
 
-				(to_days(:CURRENT_DATE) - to_days(min(ls.action_date))) as days_in_arrears,
+    <sql-query name="deleteAllLoanArrearsAging">
+        <![CDATA[
+               delete from loan_arrears_aging
+        ]]>
+    </sql-query>
+    <sql-query name="generateLoanArrearsAging">
+        <![CDATA[
+                insert into loan_arrears_aging(account_id, customer_id, customer_name, parent_customer_id, office_id,
+                  days_in_arrears, overdue_principal, overdue_principal_currency_id, overdue_interest, overdue_interest_currency_id,
+                  overdue_balance, overdue_balance_currency_id,  unpaid_principal,  unpaid_principal_currency_id, unpaid_interest,
+                  unpaid_interest_currency_id, unpaid_balance, unpaid_balance_currency_id)
 
-				sum(ls.principal - ls.principal_paid) as overdue_principal,
-				lsum.orig_principal_currency_id as overdue_principal_currency_id,
-				sum(ls.interest - ls.interest_paid) as overdue_interest,
-				lsum.orig_principal_currency_id as overdue_interest_currency_id,
-				sum((ls.principal - ls.principal_paid) + (ls.interest - ls.interest_paid)) as overdue_balance,
-				lsum.orig_principal_currency_id as overdue_balance_currency_id,
+                /*all currency_id s must be the same, so just using one*/
+                select a.account_id, c.customer_id, c.display_name as customer_name, c.parent_customer_id, c.branch_id as office_id,
 
-				(lsum.orig_principal - lsum.principal_paid) as unpaid_principal,
-				lsum.orig_principal_currency_id as unpaid_principal_currency_id,
-				(lsum.orig_interest - ifnull(lsum.interest_paid, 0.0000)) as unpaid_interest,
-				lsum.orig_principal_currency_id as unpaid_interest_currency_id,
-				((lsum.orig_principal - lsum.principal_paid) +  (lsum.orig_interest - lsum.interest_paid)) as unpaid_balance,
-				lsum.orig_principal_currency_id as unpaid_balance_currency_id
+                (to_days(:CURRENT_DATE) - to_days(min(ls.action_date))) as days_in_arrears,
 
-				from account a
-				join customer c on a.customer_id = c.customer_id
-				join loan_summary lsum on lsum.account_id = a.account_id
-				join loan_schedule ls on ls.account_id = a.account_id and ls.action_date < :CURRENT_DATE and ls.payment_status = 0
+                sum(ls.principal - ls.principal_paid) as overdue_principal,
+                lsum.orig_principal_currency_id as overdue_principal_currency_id,
+                sum(ls.interest - ls.interest_paid) as overdue_interest,
+                lsum.orig_principal_currency_id as overdue_interest_currency_id,
+                sum((ls.principal - ls.principal_paid) + (ls.interest - ls.interest_paid)) as overdue_balance,
+                lsum.orig_principal_currency_id as overdue_balance_currency_id,
 
-				where a.account_state_id = 9
-				group by a.account_id
-				order by a.account_id
-		]]>
-	</sql-query>
+                (lsum.orig_principal - lsum.principal_paid) as unpaid_principal,
+                lsum.orig_principal_currency_id as unpaid_principal_currency_id,
+                (lsum.orig_interest - ifnull(lsum.interest_paid, 0.0000)) as unpaid_interest,
+                lsum.orig_principal_currency_id as unpaid_interest_currency_id,
+                ((lsum.orig_principal - lsum.principal_paid) +  (lsum.orig_interest - lsum.interest_paid)) as unpaid_balance,
+                lsum.orig_principal_currency_id as unpaid_balance_currency_id
+
+                from account a
+                join customer c on a.customer_id = c.customer_id
+                join loan_summary lsum on lsum.account_id = a.account_id
+                join loan_schedule ls on ls.account_id = a.account_id and ls.action_date < :CURRENT_DATE and ls.payment_status = 0
+
+                where a.account_state_id = 9
+                group by a.account_id
+                order by a.account_id
+        ]]>
+    </sql-query>
 </hibernate-mapping>

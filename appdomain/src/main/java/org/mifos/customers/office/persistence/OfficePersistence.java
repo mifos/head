@@ -30,8 +30,6 @@ import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.office.business.OfficeTemplate;
-import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.office.util.helpers.OfficeStatus;
@@ -42,15 +40,14 @@ import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SecurityException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.LegacyGenericDao;
 import org.mifos.security.authorization.HierarchyManager;
 import org.mifos.security.util.OfficeCacheDto;
 import org.mifos.security.util.OfficeSearch;
 import org.mifos.security.util.SecurityConstants;
-import org.mifos.security.util.UserContext;
 
+@SuppressWarnings("unchecked")
 public class OfficePersistence extends LegacyGenericDao {
 
     public OfficePersistence() {

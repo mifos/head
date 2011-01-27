@@ -23,6 +23,6 @@
       <DATE>${voucher.date}</DATE>
       <VOUCHERTYPENAME>${voucher.type}</VOUCHERTYPENAME>
       <NARRATION>${voucher.fileName}</NARRATION>
-${voucher.data}     
+${voucher.data}
      </VOUCHER>
     </TALLYMESSAGE>

@@ -12,7 +12,7 @@
     </class>
 
     <query name="importfiles.getImportedFileByName">
-        <![CDATA[from org.mifos.application.importexport.business.ImportedFilesEntity as importedFiles 
+        <![CDATA[from org.mifos.application.importexport.business.ImportedFilesEntity as importedFiles
                  where importedFiles.fileName = :importedFileName]]>
     </query>
 </hibernate-mapping>

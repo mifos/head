@@ -24,7 +24,7 @@ explanation of the license and how it is applied.
 Chart of Accounts XML configuration. The filename starts with "mifos" so
 this file can be easily differentiated from other files on the CLASSPATH
 when Class.getResource() (or something similiar) is used to search for
-this file.  
+this file.
 
 "code" attributes refer to general ledger account codes. This attribute can
 contain numbers and letters.

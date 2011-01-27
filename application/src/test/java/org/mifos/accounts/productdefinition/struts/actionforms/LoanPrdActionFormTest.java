@@ -63,6 +63,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
+@SuppressWarnings("unchecked")
 @RunWith(MockitoJUnitRunner.class)
 public class LoanPrdActionFormTest {
 
@@ -255,7 +256,7 @@ public class LoanPrdActionFormTest {
         final FeeDto feeDto = Mockito.mock(FeeDto.class);
         loanPrdActionForm = new LoanPrdActionForm() {
             @Override
-            FeeDto getFeeDto(HttpServletRequest request, FeeBO fee) {
+            FeeDto getFeeDto(@SuppressWarnings("unused") HttpServletRequest request, @SuppressWarnings("unused") FeeBO fee) {
                 return feeDto;
             }
         };

@@ -61,6 +61,7 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
+@SuppressWarnings("unchecked")
 public class SurveyIntegrationTest extends MifosIntegrationTestCase {
 
     private static final double DELTA = 0.00000001;

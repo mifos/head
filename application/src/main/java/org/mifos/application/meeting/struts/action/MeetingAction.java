@@ -204,7 +204,6 @@ public class MeetingAction extends BaseAction {
             weekRankOfMonth = Short.valueOf(actionForm.getMonthRank());
         }
 
-
         switch (actionForm.getRecurrenceType()) {
         case DAILY:
             throw new UnsupportedOperationException("Daily recurrence is not supported for customer meetings.");
@@ -212,7 +211,12 @@ public class MeetingAction extends BaseAction {
             meetingUpdateRequest = new MeetingUpdateRequest(customerInSession.getCustomerId(), customerInSession.getVersionNo(), actionForm.getRecurrenceType().getValue(), actionForm.getMeetingPlace(), actionForm.getRecurWeekValue(), weekDay, monthDay, dayOfWeekOfMonth, weekRankOfMonth);
             break;
         case MONTHLY:
-            meetingUpdateRequest = new MeetingUpdateRequest(customerInSession.getCustomerId(), customerInSession.getVersionNo(), actionForm.getRecurrenceType().getValue(), actionForm.getMeetingPlace(), actionForm.getRecurWeekValue(), weekDay, monthDay, dayOfWeekOfMonth, weekRankOfMonth);
+            Short monthlyRecurValue = actionForm.getDayRecurMonthValue();
+            if (monthlyRecurValue == null) {
+                monthlyRecurValue = actionForm.getRecurMonthValue();
+            }
+
+            meetingUpdateRequest = new MeetingUpdateRequest(customerInSession.getCustomerId(), customerInSession.getVersionNo(), actionForm.getRecurrenceType().getValue(), actionForm.getMeetingPlace(), monthlyRecurValue, weekDay, monthDay, dayOfWeekOfMonth, weekRankOfMonth);
             break;
             default:
                 throw new UnsupportedOperationException("Unknown recurrence for customer meetings.");

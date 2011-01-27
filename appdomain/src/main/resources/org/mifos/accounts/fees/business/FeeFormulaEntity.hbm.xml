@@ -9,8 +9,8 @@
         <id name="id" column="formulaid" type="short">
             <generator class="native"/>
         </id>
- 
-		<many-to-one name="lookUpValue" column="forumla_lookup_id" class="org.mifos.application.master.business.LookUpValueEntity" 
-    		cascade="none" update="false" unique="true"/>
-	</class>
+
+        <many-to-one name="lookUpValue" column="forumla_lookup_id" class="org.mifos.application.master.business.LookUpValueEntity"
+            cascade="none" update="false" unique="true"/>
+    </class>
 </hibernate-mapping>

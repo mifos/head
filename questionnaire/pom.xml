@@ -28,7 +28,7 @@
     </parent>
 
     <dependencies>
-    	<dependency>
+        <dependency>
             <groupId>org.mifos</groupId>
             <artifactId>mifos-serviceInterfaces</artifactId>
         </dependency>
@@ -56,7 +56,7 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
         </dependency>
-        
+
         <!-- matchers introduce to source -->
         <dependency>
             <groupId>junit</groupId>
@@ -68,7 +68,7 @@
             <artifactId>hamcrest-all</artifactId>
             <scope>provided</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>org.springframework.webflow</groupId>
             <artifactId>spring-binding</artifactId>

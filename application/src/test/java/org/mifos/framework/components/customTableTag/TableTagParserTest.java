@@ -36,7 +36,7 @@ import org.mifos.core.ClasspathResource;
 import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.framework.exceptions.TableTagParseException;
 
-
+@SuppressWarnings("unchecked")
 public class TableTagParserTest {
 
     @Test

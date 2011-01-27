@@ -29,20 +29,19 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
 import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.reports.branchreport.BranchReportBO;
 import org.mifos.reports.branchreport.BranchReportBOFixture;
 import org.mifos.reports.branchreport.BranchReportStaffingLevelSummaryBO;
 import org.mifos.reports.business.service.BranchReportService;
 
+@SuppressWarnings("unchecked")
 public class BranchReportStaffingLevelSummaryHelperIntegrationTest extends MifosIntegrationTestCase {
 
     public static final Short BRANCH_ID = Short.valueOf("2");
 
     @Test
-    public void testPopulateStaffingLevelSummary() throws BatchJobException, ServiceException {
+    public void testPopulateStaffingLevelSummary() throws Exception {
         BranchReportBO branchReport = BranchReportBOFixture.createBranchReport(Integer.valueOf(1), BRANCH_ID, DateUtils
                 .currentDate());
         new BranchReportStaffingLevelSummaryHelper(branchReport, new BranchReportService())
@@ -50,7 +49,7 @@ public class BranchReportStaffingLevelSummaryHelperIntegrationTest extends Mifos
         assertStaffingLevelSummaries(branchReport);
     }
 
-    private void assertStaffingLevelSummaries(BranchReportBO branchReport) throws ServiceException {
+    private void assertStaffingLevelSummaries(BranchReportBO branchReport) {
         Set<BranchReportStaffingLevelSummaryBO> staffingLevelSummaries = branchReport.getStaffingLevelSummaries();
        Assert.assertEquals(1, staffingLevelSummaries.size());
         Collection retrievedRolenames = CollectionUtils.collect(staffingLevelSummaries, new Transformer() {

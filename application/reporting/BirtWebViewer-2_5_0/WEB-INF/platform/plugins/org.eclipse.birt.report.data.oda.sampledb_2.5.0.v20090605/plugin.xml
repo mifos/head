@@ -43,7 +43,7 @@
             </propertyGroup>
             <propertyVisibility name="odaDataSource" visibility="hide"/>
          </properties>
-      </dataSource>   
+      </dataSource>
       <dataSet
             defaultDisplayName="%select.dataset.name"
             id="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet">
@@ -128,16 +128,16 @@
                   nativeDataTypeCode="-4"
                   odaScalarDataType="String"/><!--Blob"/>-->
             <properties>
-            	<propertyGroup
-                	  defaultDisplayName="Query Properties"
-                  	name="queryProperties">
-               		<property
-                    	 type="string"
-                    	 defaultDisplayName="%dataset.property.queryTimeOut"
-                     	canInherit="true"
-                     	name="queryTimeOut"/>
-           		 </propertyGroup>
-         	</properties>
+                <propertyGroup
+                      defaultDisplayName="Query Properties"
+                      name="queryProperties">
+                       <property
+                         type="string"
+                         defaultDisplayName="%dataset.property.queryTimeOut"
+                         canInherit="true"
+                         name="queryTimeOut"/>
+                    </propertyGroup>
+             </properties>
       </dataSet>
 
    </extension>
@@ -158,7 +158,7 @@
             class="org.eclipse.datatools.connectivity.oda.profile.OdaConnectionFactory"
             profile="%oda.data.source.id"/>
    </extension>
-   
+
    <extension
          point="org.eclipse.birt.report.data.oda.jdbc.driverinfo">
       <jdbcDriver

@@ -301,7 +301,7 @@ public class Installment implements Comparable<Installment> {
     /**
     * Assumption: Make payment should not payoff all outstanding principal as repay does
      * When assumption is wrong, effective interest can be zero, which in turn corrupts
-     * applicable interest 
+     * applicable interest
     */
     public boolean hasEffectiveInterest() {
         return isGreaterThanZero(getEffectiveInterest());

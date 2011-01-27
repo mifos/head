@@ -3,119 +3,119 @@
                             "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
                             "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
-	<class name="org.mifos.customers.business.CustomerBO" table="customer">
-		<id name="customerId" column="customer_id" type="integer"
-			unsaved-value="-1" access="field">
-			<generator class="native" />
-		</id>
+    <class name="org.mifos.customers.business.CustomerBO" table="customer">
+        <id name="customerId" column="customer_id" type="integer"
+            unsaved-value="-1" access="field">
+            <generator class="native" />
+        </id>
 
-		<!--
-			Is this column just redundant with customerLevel? It would appear
-			so...
-		-->
-		<!--
-			According to <a
-			href="http://www.hibernate.org/hib_docs/reference/en/html/queryhql.html#queryhql-where">the
-			docs</a>, this is supposed to be used for ".class" predicates, so
-			this column may currently be misused.
-		-->
-		<discriminator>
-			<column name="discriminator" />
-		</discriminator>
+        <!--
+            Is this column just redundant with customerLevel? It would appear
+            so...
+        -->
+        <!--
+            According to <a
+            href="http://www.hibernate.org/hib_docs/reference/en/html/queryhql.html#queryhql-where">the
+            docs</a>, this is supposed to be used for ".class" predicates, so
+            this column may currently be misused.
+        -->
+        <discriminator>
+            <column name="discriminator" />
+        </discriminator>
 
-		<version name="versionNo" column="version_no" type="integer"
-			unsaved-value="null" />
-		<property name="globalCustNum" column="global_cust_num" type="string"
-			access="field" />
-		<property name="displayName" column="display_name" type="string" />
+        <version name="versionNo" column="version_no" type="integer"
+            unsaved-value="null" />
+        <property name="globalCustNum" column="global_cust_num" type="string"
+            access="field" />
+        <property name="displayName" column="display_name" type="string" />
 
-		<property name="displayAddress" column="display_address"
-			type="string" />
-		<property name="externalId" column="external_id" type="string" />
-		<property name="trained" column="trained" type="short"
-			access="field" />
-		<property name="trainedDate" column="trained_date" type="date" />
-		<property name="createdDate" column="created_date" type="date" />
-		<property name="updatedDate" column="updated_date" type="date" />
-		<property name="mfiJoiningDate" column="mfi_joining_date"
-			type="date" />
-		<property name="searchId" column="search_id" type="string" />
-		<property name="maxChildCount" column="max_child_count" type="integer"
-			access="field" />
-		<property name="createdBy" column="created_by" />
-		<property name="updatedBy" column="updated_by" />
-		<property name="blackListed" column="blacklisted" type="short"
-			access="field" />
-		<property name="customerActivationDate" column="customer_activation_date "
-			not-null="false" access="field" />
-		<many-to-one name="customerStatus" column="status_id"
-			class="org.mifos.customers.business.CustomerStatusEntity" insert="true"
-			update="true" unique="true" />
-		<many-to-one name="customerLevel" column="customer_level_id"
-			class="org.mifos.customers.business.CustomerLevelEntity" insert="true"
-			update="true" unique="true" access="field" />
-		<many-to-one name="personnel" column="loan_officer_id"
-			class="org.mifos.customers.personnel.business.PersonnelBO" unique="true"
-			insert="true" update="true" />
-		<many-to-one name="formedByPersonnel" column="customer_formedby_id"
-			class="org.mifos.customers.personnel.business.PersonnelBO" unique="true"
-			insert="true" update="true" access="field" />
-		<many-to-one name="office" column="branch_id"
-			class="org.mifos.customers.office.business.OfficeBO" unique="true"
-			insert="true" update="true" />
-		<one-to-one name="customerAddressDetail"
-			class="org.mifos.customers.business.CustomerAddressDetailEntity"
-			cascade="all" property-ref="customer" />
-		<many-to-one name="parentCustomer" column="parent_customer_id"
-			class="org.mifos.customers.business.CustomerBO" cascade="none"
-			insert="true" unique="true" update="true" />
-		<one-to-one name="historicalData"
-			class="org.mifos.customers.business.CustomerHistoricalDataEntity"
-			cascade="all" property-ref="customer" access="field" />
-		<one-to-one name="customerMeeting"
-			class="org.mifos.customers.business.CustomerMeetingEntity" cascade="all"
-			property-ref="customer" />
+        <property name="displayAddress" column="display_address"
+            type="string" />
+        <property name="externalId" column="external_id" type="string" />
+        <property name="trained" column="trained" type="short"
+            access="field" />
+        <property name="trainedDate" column="trained_date" type="date" />
+        <property name="createdDate" column="created_date" type="date" />
+        <property name="updatedDate" column="updated_date" type="date" />
+        <property name="mfiJoiningDate" column="mfi_joining_date"
+            type="date" />
+        <property name="searchId" column="search_id" type="string" />
+        <property name="maxChildCount" column="max_child_count" type="integer"
+            access="field" />
+        <property name="createdBy" column="created_by" />
+        <property name="updatedBy" column="updated_by" />
+        <property name="blackListed" column="blacklisted" type="short"
+            access="field" />
+        <property name="customerActivationDate" column="customer_activation_date "
+            not-null="false" access="field" />
+        <many-to-one name="customerStatus" column="status_id"
+            class="org.mifos.customers.business.CustomerStatusEntity" insert="true"
+            update="true" unique="true" />
+        <many-to-one name="customerLevel" column="customer_level_id"
+            class="org.mifos.customers.business.CustomerLevelEntity" insert="true"
+            update="true" unique="true" access="field" />
+        <many-to-one name="personnel" column="loan_officer_id"
+            class="org.mifos.customers.personnel.business.PersonnelBO" unique="true"
+            insert="true" update="true" />
+        <many-to-one name="formedByPersonnel" column="customer_formedby_id"
+            class="org.mifos.customers.personnel.business.PersonnelBO" unique="true"
+            insert="true" update="true" access="field" />
+        <many-to-one name="office" column="branch_id"
+            class="org.mifos.customers.office.business.OfficeBO" unique="true"
+            insert="true" update="true" />
+        <one-to-one name="customerAddressDetail"
+            class="org.mifos.customers.business.CustomerAddressDetailEntity"
+            cascade="all" property-ref="customer" />
+        <many-to-one name="parentCustomer" column="parent_customer_id"
+            class="org.mifos.customers.business.CustomerBO" cascade="none"
+            insert="true" unique="true" update="true" />
+        <one-to-one name="historicalData"
+            class="org.mifos.customers.business.CustomerHistoricalDataEntity"
+            cascade="all" property-ref="customer" access="field" />
+        <one-to-one name="customerMeeting"
+            class="org.mifos.customers.business.CustomerMeetingEntity" cascade="all"
+            property-ref="customer" />
 
-		<set name="customFields" cascade="all" lazy="true" access="field">
-			<key column="customer_id" update="false" />
-			<one-to-many class="org.mifos.customers.business.CustomerCustomFieldEntity" />
-		</set>
-		<set name="customerHierarchies" cascade="all" lazy="true" access="field">
-			<key column="customer_id" update="false" />
-			<one-to-many class="org.mifos.customers.business.CustomerHierarchyEntity" />
-		</set>
-		<set name="customerMovements" cascade="all" lazy="true" access="field">
-			<key column="customer_id" update="false" />
-			<one-to-many class="org.mifos.customers.business.CustomerMovementEntity" />
-		</set>
-		<set name="customerPositions" cascade="all" lazy="true" access="field">
-			<key column="parent_customer_id" update="false" />
-			<one-to-many class="org.mifos.customers.business.CustomerPositionEntity" />
-		</set>
+        <set name="customFields" cascade="all" lazy="true" access="field">
+            <key column="customer_id" update="false" />
+            <one-to-many class="org.mifos.customers.business.CustomerCustomFieldEntity" />
+        </set>
+        <set name="customerHierarchies" cascade="all" lazy="true" access="field">
+            <key column="customer_id" update="false" />
+            <one-to-many class="org.mifos.customers.business.CustomerHierarchyEntity" />
+        </set>
+        <set name="customerMovements" cascade="all" lazy="true" access="field">
+            <key column="customer_id" update="false" />
+            <one-to-many class="org.mifos.customers.business.CustomerMovementEntity" />
+        </set>
+        <set name="customerPositions" cascade="all" lazy="true" access="field">
+            <key column="parent_customer_id" update="false" />
+            <one-to-many class="org.mifos.customers.business.CustomerPositionEntity" />
+        </set>
 
-		<!--  <one-to-one name="customerAccount" cascade="all" class="org.mifos.accounts.business.AccountBO" /> -->
+        <!--  <one-to-one name="customerAccount" cascade="all" class="org.mifos.accounts.business.AccountBO" /> -->
 
-		<set name="accounts" cascade="all" table="account" lazy="true"
-			order-by="ACCOUNT_ID asc" access="field">
-			<key column="customer_id" />
-			<one-to-many class="org.mifos.accounts.business.AccountBO" />
-		</set>
-		<set name="customerNotes" cascade="all" inverse="true" table="customer_note"
-			lazy="true" order-by="COMMENT_ID desc" access="field">
-			<key column="customer_id" />
-			<many-to-many class="org.mifos.customers.business.CustomerNoteEntity"
-				column="comment_id" />
-		</set>
-		<set name="customerFlags" cascade="all,delete-orphan" lazy="true"
-			access="field">
-			<key column="customer_id" not-null="true" />
-			<one-to-many class="org.mifos.customers.business.CustomerFlagDetailEntity" />
-		</set>
+        <set name="accounts" cascade="all" table="account" lazy="true"
+            order-by="ACCOUNT_ID asc" access="field">
+            <key column="customer_id" />
+            <one-to-many class="org.mifos.accounts.business.AccountBO" />
+        </set>
+        <set name="customerNotes" cascade="all" inverse="true" table="customer_note"
+            lazy="true" order-by="COMMENT_ID desc" access="field">
+            <key column="customer_id" />
+            <many-to-many class="org.mifos.customers.business.CustomerNoteEntity"
+                column="comment_id" />
+        </set>
+        <set name="customerFlags" cascade="all,delete-orphan" lazy="true"
+            access="field">
+            <key column="customer_id" not-null="true" />
+            <one-to-many class="org.mifos.customers.business.CustomerFlagDetailEntity" />
+        </set>
 
-		<set name="children" inverse="true" access="field" lazy="true">
-			<key column="parent_customer_id" />
-			<one-to-many class="org.mifos.customers.business.CustomerBO" />
-		</set>
+        <set name="children" inverse="true" access="field" lazy="true">
+            <key column="parent_customer_id" />
+            <one-to-many class="org.mifos.customers.business.CustomerBO" />
+        </set>
 
                 <set name="nameDetailSet" cascade="all" table="customer_name_detail"
                         order-by="CUSTOMER_NAME_ID" access="field">
@@ -124,1744 +124,1744 @@
                                 class="org.mifos.customers.client.business.ClientNameDetailEntity" />
                 </set>
 
-		<subclass name="org.mifos.customers.center.business.CenterBO"
-			discriminator-value="CENTER"></subclass>
+        <subclass name="org.mifos.customers.center.business.CenterBO"
+            discriminator-value="CENTER"></subclass>
 
-		<subclass name="org.mifos.customers.group.business.GroupBO"
-			discriminator-value="GROUP">
-			<one-to-one name="groupPerformanceHistory"
-				class="org.mifos.customers.group.business.GroupPerformanceHistoryEntity"
-				cascade="all" property-ref="group" access="field" />
-		</subclass>
-		<subclass name="org.mifos.customers.client.business.ClientBO"
-			discriminator-value="CLIENT">
-			<property name="governmentId" column="government_id" type="string" />
-			<property name="dateOfBirth" column="date_of_birth" type="date" />
-			<property name="groupFlag" column="group_flag" type="short"
-				access="field" />
-			<property name="firstName" column="first_name" access="field" />
-			<property name="lastName" column="last_name" access="field" />
-			<property name="secondLastName" column="second_last_name"
-				access="field" />
-			<one-to-one name="customerDetail"
-				class="org.mifos.customers.client.business.ClientDetailEntity"
-				cascade="all" />
-			<one-to-one name="customerPicture"
-				class="org.mifos.customers.client.business.CustomerPictureEntity"
-				cascade="all" property-ref="customer" />
-			<one-to-one name="clientPerformanceHistory"
-				class="org.mifos.customers.client.business.ClientPerformanceHistoryEntity"
-				cascade="all" property-ref="client" />
+        <subclass name="org.mifos.customers.group.business.GroupBO"
+            discriminator-value="GROUP">
+            <one-to-one name="groupPerformanceHistory"
+                class="org.mifos.customers.group.business.GroupPerformanceHistoryEntity"
+                cascade="all" property-ref="group" access="field" />
+        </subclass>
+        <subclass name="org.mifos.customers.client.business.ClientBO"
+            discriminator-value="CLIENT">
+            <property name="governmentId" column="government_id" type="string" />
+            <property name="dateOfBirth" column="date_of_birth" type="date" />
+            <property name="groupFlag" column="group_flag" type="short"
+                access="field" />
+            <property name="firstName" column="first_name" access="field" />
+            <property name="lastName" column="last_name" access="field" />
+            <property name="secondLastName" column="second_last_name"
+                access="field" />
+            <one-to-one name="customerDetail"
+                class="org.mifos.customers.client.business.ClientDetailEntity"
+                cascade="all" />
+            <one-to-one name="customerPicture"
+                class="org.mifos.customers.client.business.CustomerPictureEntity"
+                cascade="all" property-ref="customer" />
+            <one-to-one name="clientPerformanceHistory"
+                class="org.mifos.customers.client.business.ClientPerformanceHistoryEntity"
+                cascade="all" property-ref="client" />
 
-			<set name="familyDetailSet" cascade="all" access="field">
-				<key column="customer_id" />
-				<one-to-many
-					class="org.mifos.customers.client.business.ClientFamilyDetailEntity" />
-			</set>
-			<set name="clientAttendances" cascade="all" inverse="true"
-				access="field">
-				<key column="customer_id" />
-				<one-to-many
-					class="org.mifos.customers.client.business.ClientAttendanceBO" />
-			</set>
-			<set name="offeringsAssociatedInCreate" table="client_initial_savings_offering"
-				inverse="true" cascade="save-update" access="field" lazy="true">
-				<key column="customer_id" />
-				<many-to-many
-					class="org.mifos.customers.client.business.ClientInitialSavingsOfferingEntity"
-					column="client_offering_id" />
-			</set>
-		</subclass>
+            <set name="familyDetailSet" cascade="all" access="field">
+                <key column="customer_id" />
+                <one-to-many
+                    class="org.mifos.customers.client.business.ClientFamilyDetailEntity" />
+            </set>
+            <set name="clientAttendances" cascade="all" inverse="true"
+                access="field">
+                <key column="customer_id" />
+                <one-to-many
+                    class="org.mifos.customers.client.business.ClientAttendanceBO" />
+            </set>
+            <set name="offeringsAssociatedInCreate" table="client_initial_savings_offering"
+                inverse="true" cascade="save-update" access="field" lazy="true">
+                <key column="customer_id" />
+                <many-to-many
+                    class="org.mifos.customers.client.business.ClientInitialSavingsOfferingEntity"
+                    column="client_offering_id" />
+            </set>
+        </subclass>
 
-	</class>
-	<!--
-		This query obtains the customer with the specified loan office
-		id,officeid,customerlevelid
-	-->
-	<query name="Customer.getParentCustomersForLoanOfficer">
-		<![CDATA[select new org.mifos.dto.domain.CustomerDto(customer.customerId,customer.displayName,customer.customerLevel.id,customer.searchId) from  org.mifos.customers.business.CustomerBO customer where customer.personnel.personnelId=:personnelId and 
-	        	   		customer.office.officeId=:officeId and customer.customerLevel.id=:customerLevelId and customer.customerStatus.id in (13,9,10) order by customer.displayName ]]>
-	</query>
-	<query name="Customer.getActiveChildrenForParent"><![CDATA[
-		select new org.mifos.dto.domain.CustomerDto(
-			customer.customerId,customer.displayName,
-			customer.parentCustomer.customerId,customer.customerLevel.id) 
-		from org.mifos.customers.business.CustomerBO as customer 
-		where customer.searchId like :SEARCH_STRING and 
-			customer.office.officeId = :OFFICE_ID and 
-			customer.customerStatus.id in (3,4,9,10) 
-		order by customer.displayName
-		]]>
-	</query>
-	<query name="Customer.getChildrenOtherThanClosed"><![CDATA[
-		from org.mifos.customers.business.CustomerBO as customer 
-		where customer.searchId like :SEARCH_STRING and 
-			customer.office.officeId = :OFFICE_ID and 
-			customer.customerLevel.id = :LEVEL_ID and 
-			customer.customerStatus.id not in (6,12)
-		]]>
-	</query>
-	<query name="Customer.getListOfClientsUnderGroupOtherThanClosedAndCancelled">
-		<![CDATA[select new org.mifos.dto.domain.CustomerDetailDto(customer.customerId, 
-		customer.displayName, customer.searchId, customer.globalCustNum)
-		from org.mifos.customers.business.CustomerBO as customer 
-		where customer.searchId like :SEARCH_STRING and 
-			customer.office.officeId = :OFFICE_ID and 
-			customer.customerLevel.id = 1 and 
-			customer.customerStatus.id not in (5,6) ]]>
-	</query>
-	<query name="Customer.getListOfGroupsUnderCenterOtherThanClosedAndCancelled">
-		<![CDATA[select new org.mifos.dto.domain.CustomerDetailDto(customer.customerId, 
-		customer.displayName, customer.searchId, customer.globalCustNum)
-		from org.mifos.customers.business.CustomerBO as customer 
-		where customer.searchId like :SEARCH_STRING and 
-			customer.office.officeId = :OFFICE_ID and 
-			customer.customerLevel.id = 2 and 
-			customer.customerStatus.id not in (11,12) ]]>
-	</query>
-	<query name="Customer.getChildrenOtherThanClosedAndCancelled">
-		<![CDATA[
-		from org.mifos.customers.business.CustomerBO as customer 
-		where customer.searchId like :SEARCH_STRING and 
-			customer.office.officeId = :OFFICE_ID and 
-			customer.customerLevel.id = :LEVEL_ID and 
-			customer.customerStatus.id not in (5,6,11,12) ]]>
-	</query>
-	<query name="Customer.getAllChildrenForCustomerLevel">
-		<![CDATA[
-		from org.mifos.customers.business.CustomerBO as customer 
-		where customer.searchId like :SEARCH_STRING and 
-		customer.office.officeId = :OFFICE_ID and 
-		customer.customerLevel.id = :LEVEL_ID]]>
-	</query>
-	<query name="Customer.getActiveAndOnHoldChildren">
-		<![CDATA[
-		from org.mifos.customers.business.CustomerBO as customer 
-		where customer.searchId like :SEARCH_STRING and 
-		customer.office.officeId = :OFFICE_ID and 
-		customer.customerLevel.id = :LEVEL_ID and 
-		customer.customerStatus.id in (3,4,9,10)]]>
-	</query>
-	<query name="Customer.getActiveAndOnHoldChildrenCount">
-		<![CDATA[
-		select count(*) from org.mifos.customers.business.CustomerBO as customer 
-		where customer.searchId like :SEARCH_STRING and 
-		customer.office.officeId = :OFFICE_ID and 
-		customer.customerLevel.id = :LEVEL_ID and 
-		customer.customerStatus.id in (3,4,9,10)]]>
-	</query>
-	<sql-query name="getClientDisplayDto">
-		<return-scalar column="customerId" type="integer" />
-		<return-scalar column="globalCustNum" type="string" />
-		<return-scalar column="displayName" type="string" />
-		<return-scalar column="parentDisplayName" type="string" />
-		<return-scalar column="branchName" type="string" />
-		<return-scalar column="externalId" type="string" />
-		<return-scalar column="customerFormedByDisplayName"
-			type="string" />
-		<return-scalar column="customerActivationDate" type="date" />
-		<return-scalar column="customerLevelId" type="short" />
-		<return-scalar column="customerStatusId" type="short" />
-		<return-scalar column="lookupName" type="string" />
-		<return-scalar column="trainedDate" type="date" />
-		<return-scalar column="dateOfBirth" type="date" />
-		<return-scalar column="governmentId" type="string" />
-		<return-scalar column="groupFlag" type="short" />
-		<return-scalar column="blacklisted" type="boolean" />
-		<return-scalar column="loanOfficerId" type="short" />
-		<return-scalar column="LoanOfficerName" type="string" />	
-		<return-scalar column="businessActivitiesName" type="string" />	
-		<return-scalar column="handicappedName" type="string" />	
-		<return-scalar column="maritalStatusName" type="string" />	
-		<return-scalar column="citizenshipName" type="string" />	
-		<return-scalar column="ethnicityName" type="string" />	
-		<return-scalar column="educationLevelName" type="string" />	
-		<return-scalar column="povertyStatusName" type="string" />		
-		<return-scalar column="numChildren" type="short" />		
-		<return-scalar column="pictureLength" type="integer" />
+    </class>
+    <!--
+        This query obtains the customer with the specified loan office
+        id,officeid,customerlevelid
+    -->
+    <query name="Customer.getParentCustomersForLoanOfficer">
+        <![CDATA[select new org.mifos.dto.domain.CustomerDto(customer.customerId,customer.displayName,customer.customerLevel.id,customer.searchId) from  org.mifos.customers.business.CustomerBO customer where customer.personnel.personnelId=:personnelId and
+                           customer.office.officeId=:officeId and customer.customerLevel.id=:customerLevelId and customer.customerStatus.id in (13,9,10) order by customer.displayName ]]>
+    </query>
+    <query name="Customer.getActiveChildrenForParent"><![CDATA[
+        select new org.mifos.dto.domain.CustomerDto(
+            customer.customerId,customer.displayName,
+            customer.parentCustomer.customerId,customer.customerLevel.id)
+        from org.mifos.customers.business.CustomerBO as customer
+        where customer.searchId like :SEARCH_STRING and
+            customer.office.officeId = :OFFICE_ID and
+            customer.customerStatus.id in (3,4,9,10)
+        order by customer.displayName
+        ]]>
+    </query>
+    <query name="Customer.getChildrenOtherThanClosed"><![CDATA[
+        from org.mifos.customers.business.CustomerBO as customer
+        where customer.searchId like :SEARCH_STRING and
+            customer.office.officeId = :OFFICE_ID and
+            customer.customerLevel.id = :LEVEL_ID and
+            customer.customerStatus.id not in (6,12)
+        ]]>
+    </query>
+    <query name="Customer.getListOfClientsUnderGroupOtherThanClosedAndCancelled">
+        <![CDATA[select new org.mifos.dto.domain.CustomerDetailDto(customer.customerId,
+        customer.displayName, customer.searchId, customer.globalCustNum)
+        from org.mifos.customers.business.CustomerBO as customer
+        where customer.searchId like :SEARCH_STRING and
+            customer.office.officeId = :OFFICE_ID and
+            customer.customerLevel.id = 1 and
+            customer.customerStatus.id not in (5,6) ]]>
+    </query>
+    <query name="Customer.getListOfGroupsUnderCenterOtherThanClosedAndCancelled">
+        <![CDATA[select new org.mifos.dto.domain.CustomerDetailDto(customer.customerId,
+        customer.displayName, customer.searchId, customer.globalCustNum)
+        from org.mifos.customers.business.CustomerBO as customer
+        where customer.searchId like :SEARCH_STRING and
+            customer.office.officeId = :OFFICE_ID and
+            customer.customerLevel.id = 2 and
+            customer.customerStatus.id not in (11,12) ]]>
+    </query>
+    <query name="Customer.getChildrenOtherThanClosedAndCancelled">
+        <![CDATA[
+        from org.mifos.customers.business.CustomerBO as customer
+        where customer.searchId like :SEARCH_STRING and
+            customer.office.officeId = :OFFICE_ID and
+            customer.customerLevel.id = :LEVEL_ID and
+            customer.customerStatus.id not in (5,6,11,12) ]]>
+    </query>
+    <query name="Customer.getAllChildrenForCustomerLevel">
+        <![CDATA[
+        from org.mifos.customers.business.CustomerBO as customer
+        where customer.searchId like :SEARCH_STRING and
+        customer.office.officeId = :OFFICE_ID and
+        customer.customerLevel.id = :LEVEL_ID]]>
+    </query>
+    <query name="Customer.getActiveAndOnHoldChildren">
+        <![CDATA[
+        from org.mifos.customers.business.CustomerBO as customer
+        where customer.searchId like :SEARCH_STRING and
+        customer.office.officeId = :OFFICE_ID and
+        customer.customerLevel.id = :LEVEL_ID and
+        customer.customerStatus.id in (3,4,9,10)]]>
+    </query>
+    <query name="Customer.getActiveAndOnHoldChildrenCount">
+        <![CDATA[
+        select count(*) from org.mifos.customers.business.CustomerBO as customer
+        where customer.searchId like :SEARCH_STRING and
+        customer.office.officeId = :OFFICE_ID and
+        customer.customerLevel.id = :LEVEL_ID and
+        customer.customerStatus.id in (3,4,9,10)]]>
+    </query>
+    <sql-query name="getClientDisplayDto">
+        <return-scalar column="customerId" type="integer" />
+        <return-scalar column="globalCustNum" type="string" />
+        <return-scalar column="displayName" type="string" />
+        <return-scalar column="parentDisplayName" type="string" />
+        <return-scalar column="branchName" type="string" />
+        <return-scalar column="externalId" type="string" />
+        <return-scalar column="customerFormedByDisplayName"
+            type="string" />
+        <return-scalar column="customerActivationDate" type="date" />
+        <return-scalar column="customerLevelId" type="short" />
+        <return-scalar column="customerStatusId" type="short" />
+        <return-scalar column="lookupName" type="string" />
+        <return-scalar column="trainedDate" type="date" />
+        <return-scalar column="dateOfBirth" type="date" />
+        <return-scalar column="governmentId" type="string" />
+        <return-scalar column="groupFlag" type="short" />
+        <return-scalar column="blacklisted" type="boolean" />
+        <return-scalar column="loanOfficerId" type="short" />
+        <return-scalar column="LoanOfficerName" type="string" />
+        <return-scalar column="businessActivitiesName" type="string" />
+        <return-scalar column="handicappedName" type="string" />
+        <return-scalar column="maritalStatusName" type="string" />
+        <return-scalar column="citizenshipName" type="string" />
+        <return-scalar column="ethnicityName" type="string" />
+        <return-scalar column="educationLevelName" type="string" />
+        <return-scalar column="povertyStatusName" type="string" />
+        <return-scalar column="numChildren" type="short" />
+        <return-scalar column="pictureLength" type="integer" />
         <return-scalar column="branchId" type="integer" />
-		<![CDATA[select c.customer_id as customerId,
-				c.global_cust_num as globalCustNum,
-				c.display_name as displayName,
-				parent.display_name as parentDisplayName,
-				o.display_name as branchName,
-				c.external_id as externalId,
-				formedby.display_name as customerFormedByDisplayName,
-				c.customer_activation_date as customerActivationDate,
-				c.customer_level_id as customerLevelId,
-				c.status_id as customerStatusId,
-				lv.lookup_name as lookupName,
-				c.trained_date as trainedDate,
-				c.date_of_birth as dateOfBirth,
-				c.government_id as governmentId,
-				c.group_flag as groupFlag,
-				c.blacklisted as blacklisted,
-				c.loan_officer_id as loanOfficerId,
-				loanOfficer.display_name as loanOfficerName,
-				lv_businessActivities.lookup_name as businessActivitiesName,
-				lv_handicapped.lookup_name as handicappedName,
-				lv_maritalStatus.lookup_name as maritalStatusName,
-				lv_citizenship.lookup_name as citizenshipName,
-				lv_ethnicity.lookup_name as ethnicityName,
-				lv_educationLevel.lookup_name as educationLevelName,
-				lv_povertyStatus.lookup_name as povertyStatusName,
-				cd.num_children as numChildren,
-				length(cp.picture) as pictureLength,
-				o.office_id as branchId
-				from customer c
-				left join customer parent on parent.customer_id = c.parent_customer_id
-				join customer_detail cd on cd.customer_id = c.customer_id
-				left join personnel formedby on formedby.personnel_id = c.customer_formedby_id
-				left join personnel loanOfficer on loanOfficer.personnel_id = c.loan_officer_id
-				left join customer_picture cp on cp.customer_id = c.customer_id
-				join office o on o.office_id = c.branch_id
-        		join customer_state cs on cs.status_id = c.status_id
-        		join lookup_value lv on lv.lookup_id = cs.status_lookup_id
-        		left join lookup_value lv_businessActivities on lv_businessActivities.lookup_id = cd.business_activities
-        		left join lookup_value lv_handicapped on lv_handicapped.lookup_id = cd.handicapped
-        		left join lookup_value lv_maritalStatus on lv_maritalStatus.lookup_id = cd.marital_status
-        		left join lookup_value lv_citizenship on lv_citizenship.lookup_id = cd.citizenship
-        		left join lookup_value lv_ethnicity on lv_ethnicity.lookup_id = cd.ethinicity
-        		left join lookup_value lv_educationLevel on lv_educationLevel.lookup_id = cd.education_level
-        		left join lookup_value lv_povertyStatus on lv_povertyStatus.lookup_id = cd.poverty_status
-				where c.customer_id = :CLIENT_ID]]>
-	</sql-query>
-	<sql-query name="getClientNameDetailDto">
-		<return-scalar column="spouseFatherValueLookUp" type="string" />
-		<return-scalar column="spouseFatherName" type="string" />
-		<![CDATA[select lv_spouseFather.lookup_name as spouseFatherValueLookUp,
-				cnd.display_name as spouseFatherName
-				from customer_name_detail cnd
-				left join spouse_father_lookup sfl on sfl.spouse_father_id = cnd.name_type
-        		left join lookup_value lv_spouseFather on lv_spouseFather.lookup_id = sfl.lookup_id
-				where cnd.customer_id = :CLIENT_ID and cnd.name_type !=3]]>
-	</sql-query>
-	<sql-query name="getClientFamilyDetailDto">
-		<return-scalar column="relationshipLookup" type="string" />
-		<return-scalar column="displayName" type="string" />
-		<return-scalar column="dateOfBirth" type="date" />
-		<return-scalar column="genderLookup" type="string" />
-		<return-scalar column="livingStatusLookup" type="string" />
-		<![CDATA[select lv_spouseFather.lookup_name as relationshipLookup,
-				cnd.display_name as displayName,
-				cfd.date_of_birth as dateOfBirth,
-				lv_gender.lookup_name as genderLookup,
-				lv_livingStatus.lookup_name as livingStatusLookup
-				from customer_name_detail cnd
-				left join customer_family_detail cfd on cfd.customer_name_id = cnd.customer_name_id
+        <![CDATA[select c.customer_id as customerId,
+                c.global_cust_num as globalCustNum,
+                c.display_name as displayName,
+                parent.display_name as parentDisplayName,
+                o.display_name as branchName,
+                c.external_id as externalId,
+                formedby.display_name as customerFormedByDisplayName,
+                c.customer_activation_date as customerActivationDate,
+                c.customer_level_id as customerLevelId,
+                c.status_id as customerStatusId,
+                lv.lookup_name as lookupName,
+                c.trained_date as trainedDate,
+                c.date_of_birth as dateOfBirth,
+                c.government_id as governmentId,
+                c.group_flag as groupFlag,
+                c.blacklisted as blacklisted,
+                c.loan_officer_id as loanOfficerId,
+                loanOfficer.display_name as loanOfficerName,
+                lv_businessActivities.lookup_name as businessActivitiesName,
+                lv_handicapped.lookup_name as handicappedName,
+                lv_maritalStatus.lookup_name as maritalStatusName,
+                lv_citizenship.lookup_name as citizenshipName,
+                lv_ethnicity.lookup_name as ethnicityName,
+                lv_educationLevel.lookup_name as educationLevelName,
+                lv_povertyStatus.lookup_name as povertyStatusName,
+                cd.num_children as numChildren,
+                length(cp.picture) as pictureLength,
+                o.office_id as branchId
+                from customer c
+                left join customer parent on parent.customer_id = c.parent_customer_id
+                join customer_detail cd on cd.customer_id = c.customer_id
+                left join personnel formedby on formedby.personnel_id = c.customer_formedby_id
+                left join personnel loanOfficer on loanOfficer.personnel_id = c.loan_officer_id
+                left join customer_picture cp on cp.customer_id = c.customer_id
+                join office o on o.office_id = c.branch_id
+                join customer_state cs on cs.status_id = c.status_id
+                join lookup_value lv on lv.lookup_id = cs.status_lookup_id
+                left join lookup_value lv_businessActivities on lv_businessActivities.lookup_id = cd.business_activities
+                left join lookup_value lv_handicapped on lv_handicapped.lookup_id = cd.handicapped
+                left join lookup_value lv_maritalStatus on lv_maritalStatus.lookup_id = cd.marital_status
+                left join lookup_value lv_citizenship on lv_citizenship.lookup_id = cd.citizenship
+                left join lookup_value lv_ethnicity on lv_ethnicity.lookup_id = cd.ethinicity
+                left join lookup_value lv_educationLevel on lv_educationLevel.lookup_id = cd.education_level
+                left join lookup_value lv_povertyStatus on lv_povertyStatus.lookup_id = cd.poverty_status
+                where c.customer_id = :CLIENT_ID]]>
+    </sql-query>
+    <sql-query name="getClientNameDetailDto">
+        <return-scalar column="spouseFatherValueLookUp" type="string" />
+        <return-scalar column="spouseFatherName" type="string" />
+        <![CDATA[select lv_spouseFather.lookup_name as spouseFatherValueLookUp,
+                cnd.display_name as spouseFatherName
+                from customer_name_detail cnd
+                left join spouse_father_lookup sfl on sfl.spouse_father_id = cnd.name_type
+                left join lookup_value lv_spouseFather on lv_spouseFather.lookup_id = sfl.lookup_id
+                where cnd.customer_id = :CLIENT_ID and cnd.name_type !=3]]>
+    </sql-query>
+    <sql-query name="getClientFamilyDetailDto">
+        <return-scalar column="relationshipLookup" type="string" />
+        <return-scalar column="displayName" type="string" />
+        <return-scalar column="dateOfBirth" type="date" />
+        <return-scalar column="genderLookup" type="string" />
+        <return-scalar column="livingStatusLookup" type="string" />
+        <![CDATA[select lv_spouseFather.lookup_name as relationshipLookup,
+                cnd.display_name as displayName,
+                cfd.date_of_birth as dateOfBirth,
+                lv_gender.lookup_name as genderLookup,
+                lv_livingStatus.lookup_name as livingStatusLookup
+                from customer_name_detail cnd
+                left join customer_family_detail cfd on cfd.customer_name_id = cnd.customer_name_id
 
-				left join spouse_father_lookup sfl on sfl.spouse_father_id = cnd.name_type
-        		left join lookup_value lv_spouseFather on lv_spouseFather.lookup_id = sfl.lookup_id
+                left join spouse_father_lookup sfl on sfl.spouse_father_id = cnd.name_type
+                left join lookup_value lv_spouseFather on lv_spouseFather.lookup_id = sfl.lookup_id
 
-        		left join lookup_value lv_gender on lv_gender.lookup_id = cfd.gender
-        		left join lookup_value lv_livingStatus on lv_livingStatus.lookup_id = cfd.living_status
-				where cnd.customer_id = :CLIENT_ID and cnd.name_type !=3]]>
-	</sql-query>
-	<sql-query name="getGroupDisplayDto">
-		<return-scalar column="customerId" type="integer" />
-		<return-scalar column="globalCustNum" type="string" />
-		<return-scalar column="displayName" type="string" />
-		<return-scalar column="parentDisplayName" type="string" />
-		<return-scalar column="branchId" type="short" />
-		<return-scalar column="externalId" type="string" />
-		<return-scalar column="customerFormedByDisplayName"
-			type="string" />
-		<return-scalar column="customerActivationDate" type="date" />
-		<return-scalar column="customerLevelId" type="short" />
-		<return-scalar column="customerStatusId" type="short" />
-		<return-scalar column="lookupName" type="string" />
-		<return-scalar column="trained" type="boolean" />
-		<return-scalar column="trainedDate" type="date" />
-		<return-scalar column="blacklisted" type="boolean" />
-		<return-scalar column="loanOfficerId" type="short" />
-		<return-scalar column="LoanOfficerName" type="string" />		
-		<![CDATA[select c.customer_id as customerId,
-				c.global_cust_num as globalCustNum,
-				c.display_name as displayName,
-				parent.display_name as parentDisplayName,
-				c.branch_id as branchId,
-				c.external_id as externalId,
-				formedby.display_name as customerFormedByDisplayName,
-				c.customer_activation_date as customerActivationDate,
-				c.customer_level_id as customerLevelId,
-				c.status_id as customerStatusId,
-				lv.lookup_name as lookupName,
-				c.trained as trained,
-				c.trained_date as trainedDate,
-				c.blacklisted as blacklisted,
-				c.loan_officer_id as loanOfficerId,
-				loanOfficer.display_name as loanOfficerName
-				from customer c
-				left join customer parent on parent.customer_id = c.parent_customer_id
-				left join personnel formedby on formedby.personnel_id = c.customer_formedby_id
-				left join personnel loanOfficer on loanOfficer.personnel_id = c.loan_officer_id
-        		join customer_state cs on cs.status_id = c.status_id
-        		join lookup_value lv on lv.lookup_id = cs.status_lookup_id
-				where c.customer_id = :GROUP_ID]]>
-	</sql-query>
-	<sql-query name="getCenterDisplayDto">
-		<return-scalar column="customerId" type="integer" />
-		<return-scalar column="globalCustNum" type="string" />
-		<return-scalar column="displayName" type="string" />
-		<return-scalar column="branchId" type="short" />
-		<return-scalar column="mfiJoiningDate" type="date" />
-		<return-scalar column="createdDate" type="date" />
-		<return-scalar column="versionNo" type="integer" />
-		<return-scalar column="externalId" type="string" />
-		<return-scalar column="customerLevelId" type="short" />
-		<return-scalar column="customerStatusId" type="short" />
-		<return-scalar column="lookupName" type="string" />
-		<return-scalar column="loanOfficerId" type="short" />
-		<return-scalar column="LoanOfficerName" type="string" />		
-		<![CDATA[select c.customer_id as customerId,
-				c.global_cust_num as globalCustNum,
-				c.display_name as displayName,
-				c.branch_id as branchId,
-				c.mfi_joining_date as mfiJoiningDate,
-				c.created_date as createdDate,
-				c.version_no as versionNo,
-				c.external_id as externalId,
-				c.customer_level_id as customerLevelId,
-				c.status_id as customerStatusId,
-				lv.lookup_name as lookupName,
-				c.loan_officer_id as loanOfficerId,
-				loanOfficer.display_name as loanOfficerName
-				from customer c
-				left join personnel loanOfficer on loanOfficer.personnel_id = c.loan_officer_id
-        		join customer_state cs on cs.status_id = c.status_id
-        		join lookup_value lv on lv.lookup_id = cs.status_lookup_id
-				where c.customer_id = :CENTER_ID]]>
-	</sql-query>
-	<sql-query name="Customer.getAvgLoanAmountForMemberInGoodOrBadStanding">
-		<return-scalar column="currency" type="short" />
-		<return-scalar column="numberOfLoansInGoodOrBadStanding"
-			type="integer" />
-		<return-scalar column="totalLoanAmountInGoodOrBadStanding"
-			type="big_decimal" />
-		<![CDATA[select ls.orig_principal_currency_id as currency,
-		count(*) as numberOfLoansInGoodOrBadStanding,
-		sum(ls.orig_principal - ls.principal_paid) as totalLoanAmountInGoodOrBadStanding
-		from loan_summary ls
-		inner join loan_account la on la.account_id = ls.account_id
-		inner join account a on a.account_id = la.account_id
-		inner join customer c on c.customer_id = a.customer_id
-		where c.search_id like :SEARCH_STRING
-    	and c.branch_id = :OFFICE_ID
-		and c.status_id in (3, 4)
-		and a.account_state_id in (5, 9)
-		group by ls.orig_principal_currency_id
-		]]>
-	</sql-query>
+                left join lookup_value lv_gender on lv_gender.lookup_id = cfd.gender
+                left join lookup_value lv_livingStatus on lv_livingStatus.lookup_id = cfd.living_status
+                where cnd.customer_id = :CLIENT_ID and cnd.name_type !=3]]>
+    </sql-query>
+    <sql-query name="getGroupDisplayDto">
+        <return-scalar column="customerId" type="integer" />
+        <return-scalar column="globalCustNum" type="string" />
+        <return-scalar column="displayName" type="string" />
+        <return-scalar column="parentDisplayName" type="string" />
+        <return-scalar column="branchId" type="short" />
+        <return-scalar column="externalId" type="string" />
+        <return-scalar column="customerFormedByDisplayName"
+            type="string" />
+        <return-scalar column="customerActivationDate" type="date" />
+        <return-scalar column="customerLevelId" type="short" />
+        <return-scalar column="customerStatusId" type="short" />
+        <return-scalar column="lookupName" type="string" />
+        <return-scalar column="trained" type="boolean" />
+        <return-scalar column="trainedDate" type="date" />
+        <return-scalar column="blacklisted" type="boolean" />
+        <return-scalar column="loanOfficerId" type="short" />
+        <return-scalar column="LoanOfficerName" type="string" />
+        <![CDATA[select c.customer_id as customerId,
+                c.global_cust_num as globalCustNum,
+                c.display_name as displayName,
+                parent.display_name as parentDisplayName,
+                c.branch_id as branchId,
+                c.external_id as externalId,
+                formedby.display_name as customerFormedByDisplayName,
+                c.customer_activation_date as customerActivationDate,
+                c.customer_level_id as customerLevelId,
+                c.status_id as customerStatusId,
+                lv.lookup_name as lookupName,
+                c.trained as trained,
+                c.trained_date as trainedDate,
+                c.blacklisted as blacklisted,
+                c.loan_officer_id as loanOfficerId,
+                loanOfficer.display_name as loanOfficerName
+                from customer c
+                left join customer parent on parent.customer_id = c.parent_customer_id
+                left join personnel formedby on formedby.personnel_id = c.customer_formedby_id
+                left join personnel loanOfficer on loanOfficer.personnel_id = c.loan_officer_id
+                join customer_state cs on cs.status_id = c.status_id
+                join lookup_value lv on lv.lookup_id = cs.status_lookup_id
+                where c.customer_id = :GROUP_ID]]>
+    </sql-query>
+    <sql-query name="getCenterDisplayDto">
+        <return-scalar column="customerId" type="integer" />
+        <return-scalar column="globalCustNum" type="string" />
+        <return-scalar column="displayName" type="string" />
+        <return-scalar column="branchId" type="short" />
+        <return-scalar column="mfiJoiningDate" type="date" />
+        <return-scalar column="createdDate" type="date" />
+        <return-scalar column="versionNo" type="integer" />
+        <return-scalar column="externalId" type="string" />
+        <return-scalar column="customerLevelId" type="short" />
+        <return-scalar column="customerStatusId" type="short" />
+        <return-scalar column="lookupName" type="string" />
+        <return-scalar column="loanOfficerId" type="short" />
+        <return-scalar column="LoanOfficerName" type="string" />
+        <![CDATA[select c.customer_id as customerId,
+                c.global_cust_num as globalCustNum,
+                c.display_name as displayName,
+                c.branch_id as branchId,
+                c.mfi_joining_date as mfiJoiningDate,
+                c.created_date as createdDate,
+                c.version_no as versionNo,
+                c.external_id as externalId,
+                c.customer_level_id as customerLevelId,
+                c.status_id as customerStatusId,
+                lv.lookup_name as lookupName,
+                c.loan_officer_id as loanOfficerId,
+                loanOfficer.display_name as loanOfficerName
+                from customer c
+                left join personnel loanOfficer on loanOfficer.personnel_id = c.loan_officer_id
+                join customer_state cs on cs.status_id = c.status_id
+                join lookup_value lv on lv.lookup_id = cs.status_lookup_id
+                where c.customer_id = :CENTER_ID]]>
+    </sql-query>
+    <sql-query name="Customer.getAvgLoanAmountForMemberInGoodOrBadStanding">
+        <return-scalar column="currency" type="short" />
+        <return-scalar column="numberOfLoansInGoodOrBadStanding"
+            type="integer" />
+        <return-scalar column="totalLoanAmountInGoodOrBadStanding"
+            type="big_decimal" />
+        <![CDATA[select ls.orig_principal_currency_id as currency,
+        count(*) as numberOfLoansInGoodOrBadStanding,
+        sum(ls.orig_principal - ls.principal_paid) as totalLoanAmountInGoodOrBadStanding
+        from loan_summary ls
+        inner join loan_account la on la.account_id = ls.account_id
+        inner join account a on a.account_id = la.account_id
+        inner join customer c on c.customer_id = a.customer_id
+        where c.search_id like :SEARCH_STRING
+        and c.branch_id = :OFFICE_ID
+        and c.status_id in (3, 4)
+        and a.account_state_id in (5, 9)
+        group by ls.orig_principal_currency_id
+        ]]>
+    </sql-query>
     <sql-query name="Customer.getTotalLoanAmountForGroup">
         <return-scalar column="currency" type="short"/>
         <return-scalar column="totalLoanAmount" type="big_decimal"/>
         <![CDATA[select ls.orig_principal_currency_id as currency,
-		sum(ls.orig_principal) as totalLoanAmount
-		from loan_summary ls
-		inner join loan_account la on la.account_id = ls.account_id
-		inner join account a on a.account_id = la.account_id
-		inner join customer c on c.customer_id = a.customer_id
-		where (c.search_id = :SEARCH_STRING or c.search_id like :SEARCH_STRING2)
-    	and c.branch_id = :OFFICE_ID
-		and c.status_id in (3, 4, 9, 10)
-		and a.account_state_id in (5, 9)
-		group by ls.orig_principal_currency_id
-		]]>
+        sum(ls.orig_principal) as totalLoanAmount
+        from loan_summary ls
+        inner join loan_account la on la.account_id = ls.account_id
+        inner join account a on a.account_id = la.account_id
+        inner join customer c on c.customer_id = a.customer_id
+        where (c.search_id = :SEARCH_STRING or c.search_id like :SEARCH_STRING2)
+        and c.branch_id = :OFFICE_ID
+        and c.status_id in (3, 4, 9, 10)
+        and a.account_state_id in (5, 9)
+        group by ls.orig_principal_currency_id
+        ]]>
     </sql-query>
-	<sql-query
-		name="Customer.getTotalOutstandingLoanAmountForGroupAndClientsOfGroups">
-		<return-scalar column="currency" type="short" />
-		<return-scalar column="totalOutstandingLoanAmount" type="big_decimal" />
-		<![CDATA[select ls.orig_principal_currency_id as currency,
-		sum(ls.orig_principal - ls.principal_paid) as totalOutstandingLoanAmount
-		from loan_summary ls
-		inner join loan_account la on la.account_id = ls.account_id
-		inner join account a on a.account_id = la.account_id
-		inner join customer c on c.customer_id = a.customer_id
-		where (c.search_id = :SEARCH_STRING or c.search_id like :SEARCH_STRING2)
-    	and c.branch_id = :OFFICE_ID
-		and c.status_id in (3, 4, 9, 10)
-		and a.account_state_id in (5, 9)
-		group by ls.orig_principal_currency_id
-		]]>
-	</sql-query>
-	<sql-query name="Customer.getTotalSavingsAmountForGroupandClientsOfGroup">
-		<return-scalar column="currency" type="short" />
-		<return-scalar column="totalSavingsAmount" type="big_decimal" />
-		<![CDATA[select sa.savings_balance_currency_id as currency,
-		sum(savings_balance) as totalSavingsAmount
-		from savings_account sa
-		inner join account a on a.account_id = sa.account_id
-		inner join customer c on c.customer_id = a.customer_id
-		where (c.search_id = :SEARCH_STRING or c.search_id like :SEARCH_STRING2)
-    	and c.branch_id = :OFFICE_ID
-		and c.status_id in (3 ,4, 9, 10)
-		and a.account_state_id in (16, 18)
-		group by sa.savings_balance_currency_id
-		]]>
-	</sql-query>
-	<sql-query name="Customer.getCustomerPositionDto">
-		<return-scalar column="lookupName" type="string" />
-		<return-scalar column="customerId" type="integer" />
-		<return-scalar column="customerDisplayName" type="string" />
-		<![CDATA[select lv.lookup_name as lookupName,
-				cp.customer_id as customerId,
-				c.display_name as customerDisplayName
-				from customer_position cp
-				join customer c on c.customer_id = cp.customer_id
-				join position p on p.position_id = cp.position_id
-				join lookup_value lv on lv.lookup_id = p.lookup_id
-				where cp.parent_customer_id = :PARENT_ID
-		]]>
-	</sql-query>
-	<sql-query name="Customer.getCustomerNoteDto">
-		<return-scalar column="commentDate" type="date" />
-		<return-scalar column="comment" type="string" />
-		<return-scalar column="personnelName" type="string" />
-		<![CDATA[select cn.comment_date as commentDate,
-				cn.comment as comment,
-				p.display_name as personnelName
-				from customer_note cn
-				join personnel p on p.personnel_id = cn.field_officer_id
-				where customer_id = :CUSTOMER_ID
-				order by comment_id desc
-		]]>
-	</sql-query>
-	<sql-query name="Customer.getCustomerSurveyDto">
-		<return-scalar column="instanceId" type="integer" />
-		<return-scalar column="surveyName" type="string" />
-		<return-scalar column="dateConducted" type="date" />
-		<![CDATA[SELECT si.instance_id as instanceId,
-				s.survey_name as surveyName,
-				si.date_conducted as dateConducted
-				from survey_instance si 
-				join survey s on s.survey_id = si.survey_id
-				where si.customer_id = :CUSTOMER_ID
-				order by s.survey_name
-		]]>
-	</sql-query>
-	<sql-query name="Customer.getLoanDetailDto">
-		<return-scalar column="globalAccountNum" type="string" />
-		<return-scalar column="prdOfferingName" type="string" />
-		<return-scalar column="accountStateId" type="short" />
-		<return-scalar column="lookupName" type="string" />
-		<return-scalar column="currency" type="short" />
-		<return-scalar column="outstandingBalance" type="big_decimal" />
-		<![CDATA[select a.global_account_num as globalAccountNum,
-				po.prd_offering_name as prdOfferingName,
-				a.account_state_id as accountStateId,
-				lv.lookup_name as lookupName,
-				ls.orig_principal_currency_id as currency,
-				((ls.orig_principal - ls.principal_paid) +
-					(ls.orig_interest - ls.interest_paid) +
-					(ls.orig_penalty - ls.penalty_paid) +
-					(ls.orig_fees - ls.fees_paid)) as outstandingBalance
-				from loan_summary ls
-				inner join loan_account la on la.account_id = ls.account_id
-				inner join account a on a.account_id = la.account_id
-    			inner join account_state ast on ast.account_state_id = a.account_state_id
-    			inner join prd_offering po on po.prd_offering_id = la.prd_offering_id
-				inner join customer c on c.customer_id = a.customer_id
-				inner join lookup_value lv on lv.lookup_id = ast.lookup_id
-				where c.customer_id = :CUSTOMER_ID
-		]]>
-	</sql-query>
-	<sql-query name="Customer.getSavingsDetailDto">
-		<return-scalar column="globalAccountNum" type="string" />
-		<return-scalar column="prdOfferingName" type="string" />
-		<return-scalar column="accountStateId" type="short" />
-		<return-scalar column="lookupName" type="string" />
-		<return-scalar column="currency" type="short" />
-		<return-scalar column="savingsBalance" type="big_decimal" />
-		<![CDATA[select a.global_account_num as globalAccountNum,
-				po.prd_offering_name as prdOfferingName,
-				a.account_state_id as accountStateId,
-				lv.lookup_name as lookupName,
-				sa.savings_balance_currency_id as currency,
-				sa.savings_balance as savingsBalance
-				from savings_account sa
-				inner join account a on a.account_id = sa.account_id
-    			inner join account_state ast on ast.account_state_id = a.account_state_id
-    			inner join prd_offering po on po.prd_offering_id = sa.prd_offering_id
-				inner join customer c on c.customer_id = a.customer_id
-				inner join lookup_value lv on lv.lookup_id = ast.lookup_id
-				where c.customer_id = :CUSTOMER_ID
-				and a.account_state_id not in (15, 17)
-				order by sa.account_id
-		]]>
-	</sql-query>
-	<sql-query name="getCustomerAccountSummaryDto">
-		<return-scalar column="globalAccountNum" type="string" />
-		<return-scalar column="currency" type="short" />
-		<return-scalar column="totalChargeDue" type="big_decimal" />
-		<return-scalar column="totalFeesDue" type="big_decimal" />
-		<![CDATA[select a.global_account_num as globalAccountNum,
-				cs.misc_fees_currency_id as currency,
-				((cs.misc_fees - cs.misc_fees_paid) +
-					(cs.misc_penalty - cs.misc_penalty_paid)) as totalChargeDue,
-				sum(cfs.amount - cfs.amount_paid) as totalFeesDue
-				from account a
-				join customer_schedule cs on cs.account_id = a.account_id
-				left join customer_fee_schedule cfs on cfs.id = cs.id
-				where a.customer_id = :CUSTOMER_ID
-				and (cs.action_date <= date(:TODAY) or cs.action_date = (select min(cs2.action_date)
-					from customer_schedule cs2
-					where cs2.account_id = cs.account_id
-					and cs2.action_date >= date(:TODAY)))
-				group by globalAccountNum, currency
-		]]>
-	</sql-query>
-	<sql-query name="Customer.getCustomFieldViewForCustomers">
-		<return-scalar column="fieldId" type="short" />
-		<return-scalar column="fieldValue" type="string" />
-		<return-scalar column="fieldType" type="short" />
-		<return-scalar column="mandatoryFlag" type="short" />
-		<return-scalar column="entityName" type="string" />
-		<![CDATA[select cfd.field_id as fieldId,
-				ccf.field_value as fieldValue,
-				cfd.field_type as fieldType,
-				cfd.mandatory_flag as mandatoryFlag,
-				le.entity_name as entityName
-				from custom_field_definition cfd
-				join lookup_entity le on le.entity_id = cfd.entity_id
-				left join customer_custom_field ccf on ccf.field_id = cfd.field_id
-						and ccf.customer_id = :CUSTOMER_ID
-				where cfd.entity_type = :ENTITY_TYPE
-		]]>
-	</sql-query>
-	<query name="Customer.getActiveLoanAccounts">
-		<![CDATA[
-		from org.mifos.accounts.loan.business.LoanBO as loan 
-		where loan.customer.customerId=:CUSTOMER_ID and 
-		loan.accountState.id in (1,2,3,4,5,9) ]]>
-	</query>
-	<query name="Customer.getActiveSavingsAccounts">
-		<![CDATA[
-		from org.mifos.accounts.savings.business.SavingsBO 
-			as savings 
-		where savings.customer.customerId=:CUSTOMER_ID and 
-			savings.accountState.id in (13,14,16,18) ]]>
-	</query>
-	<query name="customer.findById">
-		<![CDATA[from CustomerBO customer where customer.customerId = :CUSTOMER_ID ]]>
-	</query>
-	<query name="customer.findBySystemId">
-		<![CDATA[from org.mifos.customers.business.CustomerBO customer where customer.globalCustNum = :globalCustNum ]]>
-	</query>
-	<query name="customer.findCountBySystemId">
-		<![CDATA[select count(*) from org.mifos.customers.business.CustomerBO customer where customer.globalCustNum = :globalCustNum ]]>
-	</query>
+    <sql-query
+        name="Customer.getTotalOutstandingLoanAmountForGroupAndClientsOfGroups">
+        <return-scalar column="currency" type="short" />
+        <return-scalar column="totalOutstandingLoanAmount" type="big_decimal" />
+        <![CDATA[select ls.orig_principal_currency_id as currency,
+        sum(ls.orig_principal - ls.principal_paid) as totalOutstandingLoanAmount
+        from loan_summary ls
+        inner join loan_account la on la.account_id = ls.account_id
+        inner join account a on a.account_id = la.account_id
+        inner join customer c on c.customer_id = a.customer_id
+        where (c.search_id = :SEARCH_STRING or c.search_id like :SEARCH_STRING2)
+        and c.branch_id = :OFFICE_ID
+        and c.status_id in (3, 4, 9, 10)
+        and a.account_state_id in (5, 9)
+        group by ls.orig_principal_currency_id
+        ]]>
+    </sql-query>
+    <sql-query name="Customer.getTotalSavingsAmountForGroupandClientsOfGroup">
+        <return-scalar column="currency" type="short" />
+        <return-scalar column="totalSavingsAmount" type="big_decimal" />
+        <![CDATA[select sa.savings_balance_currency_id as currency,
+        sum(savings_balance) as totalSavingsAmount
+        from savings_account sa
+        inner join account a on a.account_id = sa.account_id
+        inner join customer c on c.customer_id = a.customer_id
+        where (c.search_id = :SEARCH_STRING or c.search_id like :SEARCH_STRING2)
+        and c.branch_id = :OFFICE_ID
+        and c.status_id in (3 ,4, 9, 10)
+        and a.account_state_id in (16, 18)
+        group by sa.savings_balance_currency_id
+        ]]>
+    </sql-query>
+    <sql-query name="Customer.getCustomerPositionDto">
+        <return-scalar column="lookupName" type="string" />
+        <return-scalar column="customerId" type="integer" />
+        <return-scalar column="customerDisplayName" type="string" />
+        <![CDATA[select lv.lookup_name as lookupName,
+                cp.customer_id as customerId,
+                c.display_name as customerDisplayName
+                from customer_position cp
+                join customer c on c.customer_id = cp.customer_id
+                join position p on p.position_id = cp.position_id
+                join lookup_value lv on lv.lookup_id = p.lookup_id
+                where cp.parent_customer_id = :PARENT_ID
+        ]]>
+    </sql-query>
+    <sql-query name="Customer.getCustomerNoteDto">
+        <return-scalar column="commentDate" type="date" />
+        <return-scalar column="comment" type="string" />
+        <return-scalar column="personnelName" type="string" />
+        <![CDATA[select cn.comment_date as commentDate,
+                cn.comment as comment,
+                p.display_name as personnelName
+                from customer_note cn
+                join personnel p on p.personnel_id = cn.field_officer_id
+                where customer_id = :CUSTOMER_ID
+                order by comment_id desc
+        ]]>
+    </sql-query>
+    <sql-query name="Customer.getCustomerSurveyDto">
+        <return-scalar column="instanceId" type="integer" />
+        <return-scalar column="surveyName" type="string" />
+        <return-scalar column="dateConducted" type="date" />
+        <![CDATA[SELECT si.instance_id as instanceId,
+                s.survey_name as surveyName,
+                si.date_conducted as dateConducted
+                from survey_instance si
+                join survey s on s.survey_id = si.survey_id
+                where si.customer_id = :CUSTOMER_ID
+                order by s.survey_name
+        ]]>
+    </sql-query>
+    <sql-query name="Customer.getLoanDetailDto">
+        <return-scalar column="globalAccountNum" type="string" />
+        <return-scalar column="prdOfferingName" type="string" />
+        <return-scalar column="accountStateId" type="short" />
+        <return-scalar column="lookupName" type="string" />
+        <return-scalar column="currency" type="short" />
+        <return-scalar column="outstandingBalance" type="big_decimal" />
+        <![CDATA[select a.global_account_num as globalAccountNum,
+                po.prd_offering_name as prdOfferingName,
+                a.account_state_id as accountStateId,
+                lv.lookup_name as lookupName,
+                ls.orig_principal_currency_id as currency,
+                ((ls.orig_principal - ls.principal_paid) +
+                    (ls.orig_interest - ls.interest_paid) +
+                    (ls.orig_penalty - ls.penalty_paid) +
+                    (ls.orig_fees - ls.fees_paid)) as outstandingBalance
+                from loan_summary ls
+                inner join loan_account la on la.account_id = ls.account_id
+                inner join account a on a.account_id = la.account_id
+                inner join account_state ast on ast.account_state_id = a.account_state_id
+                inner join prd_offering po on po.prd_offering_id = la.prd_offering_id
+                inner join customer c on c.customer_id = a.customer_id
+                inner join lookup_value lv on lv.lookup_id = ast.lookup_id
+                where c.customer_id = :CUSTOMER_ID
+        ]]>
+    </sql-query>
+    <sql-query name="Customer.getSavingsDetailDto">
+        <return-scalar column="globalAccountNum" type="string" />
+        <return-scalar column="prdOfferingName" type="string" />
+        <return-scalar column="accountStateId" type="short" />
+        <return-scalar column="lookupName" type="string" />
+        <return-scalar column="currency" type="short" />
+        <return-scalar column="savingsBalance" type="big_decimal" />
+        <![CDATA[select a.global_account_num as globalAccountNum,
+                po.prd_offering_name as prdOfferingName,
+                a.account_state_id as accountStateId,
+                lv.lookup_name as lookupName,
+                sa.savings_balance_currency_id as currency,
+                sa.savings_balance as savingsBalance
+                from savings_account sa
+                inner join account a on a.account_id = sa.account_id
+                inner join account_state ast on ast.account_state_id = a.account_state_id
+                inner join prd_offering po on po.prd_offering_id = sa.prd_offering_id
+                inner join customer c on c.customer_id = a.customer_id
+                inner join lookup_value lv on lv.lookup_id = ast.lookup_id
+                where c.customer_id = :CUSTOMER_ID
+                and a.account_state_id not in (15, 17)
+                order by sa.account_id
+        ]]>
+    </sql-query>
+    <sql-query name="getCustomerAccountSummaryDto">
+        <return-scalar column="globalAccountNum" type="string" />
+        <return-scalar column="currency" type="short" />
+        <return-scalar column="totalChargeDue" type="big_decimal" />
+        <return-scalar column="totalFeesDue" type="big_decimal" />
+        <![CDATA[select a.global_account_num as globalAccountNum,
+                cs.misc_fees_currency_id as currency,
+                ((cs.misc_fees - cs.misc_fees_paid) +
+                    (cs.misc_penalty - cs.misc_penalty_paid)) as totalChargeDue,
+                sum(cfs.amount - cfs.amount_paid) as totalFeesDue
+                from account a
+                join customer_schedule cs on cs.account_id = a.account_id
+                left join customer_fee_schedule cfs on cfs.id = cs.id
+                where a.customer_id = :CUSTOMER_ID
+                and (cs.action_date <= date(:TODAY) or cs.action_date = (select min(cs2.action_date)
+                    from customer_schedule cs2
+                    where cs2.account_id = cs.account_id
+                    and cs2.action_date >= date(:TODAY)))
+                group by globalAccountNum, currency
+        ]]>
+    </sql-query>
+    <sql-query name="Customer.getCustomFieldViewForCustomers">
+        <return-scalar column="fieldId" type="short" />
+        <return-scalar column="fieldValue" type="string" />
+        <return-scalar column="fieldType" type="short" />
+        <return-scalar column="mandatoryFlag" type="short" />
+        <return-scalar column="entityName" type="string" />
+        <![CDATA[select cfd.field_id as fieldId,
+                ccf.field_value as fieldValue,
+                cfd.field_type as fieldType,
+                cfd.mandatory_flag as mandatoryFlag,
+                le.entity_name as entityName
+                from custom_field_definition cfd
+                join lookup_entity le on le.entity_id = cfd.entity_id
+                left join customer_custom_field ccf on ccf.field_id = cfd.field_id
+                        and ccf.customer_id = :CUSTOMER_ID
+                where cfd.entity_type = :ENTITY_TYPE
+        ]]>
+    </sql-query>
+    <query name="Customer.getActiveLoanAccounts">
+        <![CDATA[
+        from org.mifos.accounts.loan.business.LoanBO as loan
+        where loan.customer.customerId=:CUSTOMER_ID and
+        loan.accountState.id in (1,2,3,4,5,9) ]]>
+    </query>
+    <query name="Customer.getActiveSavingsAccounts">
+        <![CDATA[
+        from org.mifos.accounts.savings.business.SavingsBO
+            as savings
+        where savings.customer.customerId=:CUSTOMER_ID and
+            savings.accountState.id in (13,14,16,18) ]]>
+    </query>
+    <query name="customer.findById">
+        <![CDATA[from CustomerBO customer where customer.customerId = :CUSTOMER_ID ]]>
+    </query>
+    <query name="customer.findBySystemId">
+        <![CDATA[from org.mifos.customers.business.CustomerBO customer where customer.globalCustNum = :globalCustNum ]]>
+    </query>
+    <query name="customer.findCountBySystemId">
+        <![CDATA[select count(*) from org.mifos.customers.business.CustomerBO customer where customer.globalCustNum = :globalCustNum ]]>
+    </query>
 
-	<query name="customer.findCountByGovernmentId">
-		<![CDATA[select count(*) from org.mifos.customers.business.CustomerBO customer where customer.governmentId = :governmentId ]]>
-	</query>
+    <query name="customer.findCountByGovernmentId">
+        <![CDATA[select count(*) from org.mifos.customers.business.CustomerBO customer where customer.governmentId = :governmentId ]]>
+    </query>
 
-	<query name="customer.findCenterSystemId">
-		<![CDATA[from org.mifos.customers.center.business.CenterBO as center where center.globalCustNum = :globalCustNum ]]>
-	</query>
+    <query name="customer.findCenterSystemId">
+        <![CDATA[from org.mifos.customers.center.business.CenterBO as center where center.globalCustNum = :globalCustNum ]]>
+    </query>
 
-	<query name="Customer.getCustomersByLevelId">
-		<![CDATA[from  org.mifos.customers.business.CustomerBO customer 
-	        	   				where customer.customerLevel.id=:customerLevelId
-	        	   	]]>
-	</query>
+    <query name="Customer.getCustomersByLevelId">
+        <![CDATA[from  org.mifos.customers.business.CustomerBO customer
+                                   where customer.customerLevel.id=:customerLevelId
+                       ]]>
+    </query>
 
-	<query name="Customer.getCenterCount">
-	    <![CDATA[select count(*) from org.mifos.customers.center.business.CenterBO as center where center.displayName=:DISPLAY_NAME]]>
-	</query>
-	
+    <query name="Customer.getCenterCount">
+        <![CDATA[select count(*) from org.mifos.customers.center.business.CenterBO as center where center.displayName=:DISPLAY_NAME]]>
+    </query>
+
     <query name="maxIdOfCustomersWithNoParentWithinOffice">
-	    <![CDATA[select max(c.customerId) from org.mifos.customers.business.CustomerBO as c where c.office.officeId=:OFFICE_ID and c.parentCustomer is null order by c.customerId]]>
-	</query>
-	
+        <![CDATA[select max(c.customerId) from org.mifos.customers.business.CustomerBO as c where c.office.officeId=:OFFICE_ID and c.parentCustomer is null order by c.customerId]]>
+    </query>
+
     <query name="countOfClients">
-	    <![CDATA[select count(*) from org.mifos.customers.client.business.ClientBO as client]]>
-	</query>
-	
-	<query name="countOfGroups">
-	    <![CDATA[select count(*) from org.mifos.customers.group.business.GroupBO as group]]>
-	</query>
+        <![CDATA[select count(*) from org.mifos.customers.client.business.ClientBO as client]]>
+    </query>
 
-	<query name="Customer.getGroupCountByGroupNameAndOffice">
-	     <![CDATA[select count(*) from org.mifos.customers.group.business.GroupBO as gp where gp.displayName=:DISPLAY_NAME and gp.office.officeId=:OFFICE_ID]]>
-	</query>
+    <query name="countOfGroups">
+        <![CDATA[select count(*) from org.mifos.customers.group.business.GroupBO as group]]>
+    </query>
 
-	<query name="customer.findGroupSystemId">
-		<![CDATA[from org.mifos.customers.group.business.GroupBO as groups where groups.globalCustNum = :globalCustNum ]]>
-	</query>
-	<query name="customer.findClientSystemId">
-		<![CDATA[from org.mifos.customers.client.business.ClientBO as client where client.globalCustNum = :globalCustNum ]]>
-	</query>
-	<query name="Customer.getAllChildren">
-		<![CDATA[from org.mifos.customers.business.CustomerBO as customer where customer.searchId like :SEARCH_STRING and customer.office.officeId = :OFFICE_ID and customer.customerLevel.id < :LEVEL_ID and customer.customerStatus.id in (3,4,9,10)]]>
-	</query>
-	<query name="Customer.getCustomerCountForOffice">
-	    <![CDATA[select count(*) from org.mifos.customers.business.CustomerBO as customer where customer.customerLevel.id =:LEVEL_ID and customer.office.officeId =:OFFICE_ID]]>
-	</query>
-	<query name="Customer.getSearchIdsForOffice">
-	    <![CDATA[select searchId from org.mifos.customers.business.CustomerBO as customer where customer.customerLevel.id =:LEVEL_ID and customer.office.officeId =:OFFICE_ID]]>
-	</query>
-	<query name="Customer.getNonClosedClientBasedOnGovtId">
-	    <![CDATA[select count(*) from org.mifos.customers.client.business.ClientBO as client where 
-			    client.customerLevel.id =:LEVEL_ID and client.governmentId =:GOVT_ID and client.customerStatus.id!=:clientStatus and
-	    		((:customerId = 0) or (:customerId != 0 and client.customerId !=:customerId))
-	    ]]>
-	</query>
-	<query name="Customer.getClosedClientBasedOnGovtId">
-	    <![CDATA[select count(*) from org.mifos.customers.client.business.ClientBO as client where 
-			    client.customerLevel.id =:LEVEL_ID and client.governmentId =:GOVT_ID and client.customerStatus.id=:clientStatus and
-	    		((:customerId = 0) or (:customerId != 0 and client.customerId !=:customerId))
-	    ]]>
-	</query>
-	<query name="Customer.getBlackListedClientBasedOnNameAndDateOfBirth">
- 	    <![CDATA[select count(*) 
- 	    	from org.mifos.customers.client.business.ClientBO as client 
- 	    	where client.displayName = :clientName and client.customerLevel.id =:LEVELID and client.dateOfBirth=date(:DATE_OFBIRTH) 
- 	    	and client.blackListed = 1 and ((:customerId = 0) or (:customerId != 0 and client.customerId !=:customerId))
-		]]>
-	</query>
-	<query name="Customer.getClosedClientBasedOnNameAndDateOfBirth">
- 	    <![CDATA[select count(*) 
- 	    	from org.mifos.customers.client.business.ClientBO as client 
- 	    	where client.displayName = :clientName and client.customerLevel.id =:LEVELID and client.dateOfBirth=date(:DATE_OFBIRTH) 
- 	    	and client.customerStatus.id=:clientStatus
-			and ((:customerId = 0) or (:customerId != 0 and client.customerId !=:customerId))
-		]]>
-	</query>
-	<query name="Customer.getNonClosedClientBasedOnNameAndDateOfBirth">
- 	    <![CDATA[select count(*) 
- 	    	from org.mifos.customers.client.business.ClientBO as client 
- 	    	where client.displayName = :clientName and client.customerLevel.id =:LEVELID and client.dateOfBirth=date(:DATE_OFBIRTH) 
- 	    	and client.customerStatus.id!=:clientStatus
-			and ((:customerId = 0) or (:customerId != 0 and client.customerId !=:customerId))
-		]]>
+    <query name="Customer.getGroupCountByGroupNameAndOffice">
+         <![CDATA[select count(*) from org.mifos.customers.group.business.GroupBO as gp where gp.displayName=:DISPLAY_NAME and gp.office.officeId=:OFFICE_ID]]>
+    </query>
 
-		<!--
-			NOTE: care must be taken with the query above to use java.sql.Date
-			objects and not java.util.Date objects when clients A more defensive
-			query would be as below, where we explicity ignore time information
-			more fine grained than "day". Unfortunately, Mayfly can't deal with
-			the generated SQL at this time. <![CDATA[select count(*) from
-			org.mifos.customers.client.business.ClientBO as client where
-			(client.displayName = :clientName and client.customerLevel.id
-			=:LEVELID and day(client.dateOfBirth) = day(:DATE_OFBIRTH) and
-			month(client.dateOfBirth) = month(:DATE_OFBIRTH) and
-			year(client.dateOfBirth) = year(:DATE_OFBIRTH) and :customerId = 0)
-			or (:customerId != 0 and client.displayName = :clientName and
-			client.customerLevel.id =:LEVELID and day(client.dateOfBirth) =
-			day(:DATE_OFBIRTH) and month(client.dateOfBirth) =
-			month(:DATE_OFBIRTH) and year(client.dateOfBirth) =
-			year(:DATE_OFBIRTH) and client.customerId !=:customerId)]]>
-		-->
-	</query>
+    <query name="customer.findGroupSystemId">
+        <![CDATA[from org.mifos.customers.group.business.GroupBO as groups where groups.globalCustNum = :globalCustNum ]]>
+    </query>
+    <query name="customer.findClientSystemId">
+        <![CDATA[from org.mifos.customers.client.business.ClientBO as client where client.globalCustNum = :globalCustNum ]]>
+    </query>
+    <query name="Customer.getAllChildren">
+        <![CDATA[from org.mifos.customers.business.CustomerBO as customer where customer.searchId like :SEARCH_STRING and customer.office.officeId = :OFFICE_ID and customer.customerLevel.id < :LEVEL_ID and customer.customerStatus.id in (3,4,9,10)]]>
+    </query>
+    <query name="Customer.getCustomerCountForOffice">
+        <![CDATA[select count(*) from org.mifos.customers.business.CustomerBO as customer where customer.customerLevel.id =:LEVEL_ID and customer.office.officeId =:OFFICE_ID]]>
+    </query>
+    <query name="Customer.getSearchIdsForOffice">
+        <![CDATA[select searchId from org.mifos.customers.business.CustomerBO as customer where customer.customerLevel.id =:LEVEL_ID and customer.office.officeId =:OFFICE_ID]]>
+    </query>
+    <query name="Customer.getNonClosedClientBasedOnGovtId">
+        <![CDATA[select count(*) from org.mifos.customers.client.business.ClientBO as client where
+                client.customerLevel.id =:LEVEL_ID and client.governmentId =:GOVT_ID and client.customerStatus.id!=:clientStatus and
+                ((:customerId = 0) or (:customerId != 0 and client.customerId !=:customerId))
+        ]]>
+    </query>
+    <query name="Customer.getClosedClientBasedOnGovtId">
+        <![CDATA[select count(*) from org.mifos.customers.client.business.ClientBO as client where
+                client.customerLevel.id =:LEVEL_ID and client.governmentId =:GOVT_ID and client.customerStatus.id=:clientStatus and
+                ((:customerId = 0) or (:customerId != 0 and client.customerId !=:customerId))
+        ]]>
+    </query>
+    <query name="Customer.getBlackListedClientBasedOnNameAndDateOfBirth">
+         <![CDATA[select count(*)
+             from org.mifos.customers.client.business.ClientBO as client
+             where client.displayName = :clientName and client.customerLevel.id =:LEVELID and client.dateOfBirth=date(:DATE_OFBIRTH)
+             and client.blackListed = 1 and ((:customerId = 0) or (:customerId != 0 and client.customerId !=:customerId))
+        ]]>
+    </query>
+    <query name="Customer.getClosedClientBasedOnNameAndDateOfBirth">
+         <![CDATA[select count(*)
+             from org.mifos.customers.client.business.ClientBO as client
+             where client.displayName = :clientName and client.customerLevel.id =:LEVELID and client.dateOfBirth=date(:DATE_OFBIRTH)
+             and client.customerStatus.id=:clientStatus
+            and ((:customerId = 0) or (:customerId != 0 and client.customerId !=:customerId))
+        ]]>
+    </query>
+    <query name="Customer.getNonClosedClientBasedOnNameAndDateOfBirth">
+         <![CDATA[select count(*)
+             from org.mifos.customers.client.business.ClientBO as client
+             where client.displayName = :clientName and client.customerLevel.id =:LEVELID and client.dateOfBirth=date(:DATE_OFBIRTH)
+             and client.customerStatus.id!=:clientStatus
+            and ((:customerId = 0) or (:customerId != 0 and client.customerId !=:customerId))
+        ]]>
 
-	<query name="Customer.getLOForCustomer">
-	    <![CDATA[select customer.personnel.personnelId from org.mifos.customers.business.CustomerBO as customer where customer.customerId =:CUSTOMER_ID)]]>
-	</query>
+        <!--
+            NOTE: care must be taken with the query above to use java.sql.Date
+            objects and not java.util.Date objects when clients A more defensive
+            query would be as below, where we explicity ignore time information
+            more fine grained than "day". Unfortunately, Mayfly can't deal with
+            the generated SQL at this time. <![CDATA[select count(*) from
+            org.mifos.customers.client.business.ClientBO as client where
+            (client.displayName = :clientName and client.customerLevel.id
+            =:LEVELID and day(client.dateOfBirth) = day(:DATE_OFBIRTH) and
+            month(client.dateOfBirth) = month(:DATE_OFBIRTH) and
+            year(client.dateOfBirth) = year(:DATE_OFBIRTH) and :customerId = 0)
+            or (:customerId != 0 and client.displayName = :clientName and
+            client.customerLevel.id =:LEVELID and day(client.dateOfBirth) =
+            day(:DATE_OFBIRTH) and month(client.dateOfBirth) =
+            month(:DATE_OFBIRTH) and year(client.dateOfBirth) =
+            year(:DATE_OFBIRTH) and client.customerId !=:customerId)]]>
+        -->
+    </query>
 
-	<query name="customer.viewallclosedaccounts">
-		<![CDATA[from org.mifos.accounts.business.AccountBO account where account.customer.customerId=:customerId
-					and account.accountType.accountTypeId=:accountTypeId and account.accountState.id in(6,7,8,10,15,17) ]]>
-	</query>
+    <query name="Customer.getLOForCustomer">
+        <![CDATA[select customer.personnel.personnelId from org.mifos.customers.business.CustomerBO as customer where customer.customerId =:CUSTOMER_ID)]]>
+    </query>
+
+    <query name="customer.viewallclosedaccounts">
+        <![CDATA[from org.mifos.accounts.business.AccountBO account where account.customer.customerId=:customerId
+                    and account.accountType.accountTypeId=:accountTypeId and account.accountState.id in(6,7,8,10,15,17) ]]>
+    </query>
     <query name="customer.viewallclosedloanandsavingsaccounts">
-		<![CDATA[from org.mifos.accounts.business.AccountBO account where account.customer.customerId=:customerId
-					and account.accountType.accountTypeId in (1, 2) and account.accountState.id in (6,7,8,10,15,17) ]]>
-	</query>
-	<query name="Customer.getActiveCustomersForLO">
-	        	   <![CDATA[select count(*) from org.mifos.customers.business.CustomerBO as customer where customer.personnel.personnelId=:userId and customer.office.officeId=:officeId and customer.customerStatus.id not in (5,6,11,12,14) ]]>
-	</query>
-	<query name="Customer.getAllCustomersForLO">
-	        	   <![CDATA[select count(*) from org.mifos.customers.business.CustomerBO as customer where customer.personnel.personnelId=:userId and customer.office.officeId=:officeId ]]>
-	</query>
-	<query name="Customer.fetchProductNamesWithLoanCounterEnabled">
-	        	   <![CDATA[select lo.loanOffering.prdOfferingName from org.mifos.accounts.loan.business.LoanBO as lo where lo.customer.customerId=:customerId and lo.loanOffering.loanCounter=1 and lo.accountState.id in (3,4,5,6,9) order by lo.loanOffering.prdOfferingName asc]]>
-	</query>
+        <![CDATA[from org.mifos.accounts.business.AccountBO account where account.customer.customerId=:customerId
+                    and account.accountType.accountTypeId in (1, 2) and account.accountState.id in (6,7,8,10,15,17) ]]>
+    </query>
+    <query name="Customer.getActiveCustomersForLO">
+                   <![CDATA[select count(*) from org.mifos.customers.business.CustomerBO as customer where customer.personnel.personnelId=:userId and customer.office.officeId=:officeId and customer.customerStatus.id not in (5,6,11,12,14) ]]>
+    </query>
+    <query name="Customer.getAllCustomersForLO">
+                   <![CDATA[select count(*) from org.mifos.customers.business.CustomerBO as customer where customer.personnel.personnelId=:userId and customer.office.officeId=:officeId ]]>
+    </query>
+    <query name="Customer.fetchProductNamesWithLoanCounterEnabled">
+                   <![CDATA[select lo.loanOffering.prdOfferingName from org.mifos.accounts.loan.business.LoanBO as lo where lo.customer.customerId=:customerId and lo.loanOffering.loanCounter=1 and lo.accountState.id in (3,4,5,6,9) order by lo.loanOffering.prdOfferingName asc]]>
+    </query>
 
-	<sql-query name="Customer.fetchProductNamesForGroup">
-		<return-scalar column="productName" type="string" />
-		<return-scalar column="loanCounter" type="integer" />
-	     <![CDATA[
-			select po.prd_offering_name as productName, glc.loan_cycle_counter as loanCounter 
-			from group_loan_counter glc, group_perf_history gph,  prd_offering po
-			where glc.group_perf_id=gph.id 
-			and po.prd_offering_id=glc.loan_offering_id
-			and gph.customer_id = :customerId
-			order by productName
-	     ]]>
-	</sql-query>
+    <sql-query name="Customer.fetchProductNamesForGroup">
+        <return-scalar column="productName" type="string" />
+        <return-scalar column="loanCounter" type="integer" />
+         <![CDATA[
+            select po.prd_offering_name as productName, glc.loan_cycle_counter as loanCounter
+            from group_loan_counter glc, group_perf_history gph,  prd_offering po
+            where glc.group_perf_id=gph.id
+            and po.prd_offering_id=glc.loan_offering_id
+            and gph.customer_id = :customerId
+            order by productName
+         ]]>
+    </sql-query>
 
-	<sql-query name="Customer.fetchProductNamesForClient">
-		<return-scalar column="productName" type="string" />
-		<return-scalar column="loanCounter" type="integer" />
-	     <![CDATA[
-			select po.prd_offering_name as productName, lc.loan_cycle_counter as loanCounter 
-			from loan_counter lc, client_perf_history cph,  prd_offering po
-			where lc.client_perf_id=cph.id 			
-			and po.prd_offering_id=lc.loan_offering_id
-			and cph.customer_id = :customerId
-			order by productName
-	     ]]>
-	</sql-query>
+    <sql-query name="Customer.fetchProductNamesForClient">
+        <return-scalar column="productName" type="string" />
+        <return-scalar column="loanCounter" type="integer" />
+         <![CDATA[
+            select po.prd_offering_name as productName, lc.loan_cycle_counter as loanCounter
+            from loan_counter lc, client_perf_history cph,  prd_offering po
+            where lc.client_perf_id=cph.id
+            and po.prd_offering_id=lc.loan_offering_id
+            and cph.customer_id = :customerId
+            order by productName
+         ]]>
+    </sql-query>
 
 
-	<query name="Customer.cust_count_search">
-	        	   <![CDATA[select count(distinct c.customerId) 
-	        	   from org.mifos.customers.business.CustomerBO as c  
-	        	   left join c.parentCustomer as pa 
-	        	   left join pa.parentCustomer as papa 
-	        	   left join c.office as off  
-	        	   left join c.personnel as per 
+    <query name="Customer.cust_count_search">
+                   <![CDATA[select count(distinct c.customerId)
+                   from org.mifos.customers.business.CustomerBO as c
+                   left join c.parentCustomer as pa
+                   left join pa.parentCustomer as papa
+                   left join c.office as off
+                   left join c.personnel as per
                            left join c.nameDetailSet as cnd
-	        	   where ( 
-	        	         (:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID) 
-	        	         or :USERLEVEL_ID!=:LOID) 
-	        	         and c.office.officeId=:OFFICEID 
-	        	         and ((c.customerLevel.id !=:LEVELID and c.displayName like :SEARCH_STRING) 
-	        	              or (c.customerLevel.id =:LEVELID 
-	        	              
-	        	               
-	        	              and (c.firstName like :SEARCH_STRING 
-	        	              or c.lastName like :SEARCH_STRING 
-	        	              or c.secondLastName like :SEARCH_STRING
-	        	              or c.displayName like :SEARCH_STRING
+                   where (
+                         (:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID)
+                         or :USERLEVEL_ID!=:LOID)
+                         and c.office.officeId=:OFFICEID
+                         and ((c.customerLevel.id !=:LEVELID and c.displayName like :SEARCH_STRING)
+                              or (c.customerLevel.id =:LEVELID
+
+
+                              and (c.firstName like :SEARCH_STRING
+                              or c.lastName like :SEARCH_STRING
+                              or c.secondLastName like :SEARCH_STRING
+                              or c.displayName like :SEARCH_STRING
                                       or (c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING2)
-	        	              or (
+                              or (
                                           cnd.nameType = 3 and cnd.name.middleName like :SEARCH_STRING2 and
                                           c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING3)
-	        	              )
-	        	              
-	        	               )
-	        	         ) ]]>
-	</query>
-	<query name="Customer.cust_search">
-	        	   <![CDATA[select distinct c.customerId  ,c.displayName ,c.globalCustNum,c.customerLevel.id,off.officeId,off.officeName,per.displayName,per.personnelId,c.customerStatus.id,pa.displayName, pa.globalCustNum,papa.displayName,papa.globalCustNum 
-	        	   from org.mifos.customers.business.CustomerBO as c  
-	        	   left join c.parentCustomer as pa 
-	        	   left join pa.parentCustomer as papa 
-	        	   left join c.office as off  
-	        	   left join c.personnel as per  
+                              )
+
+                               )
+                         ) ]]>
+    </query>
+    <query name="Customer.cust_search">
+                   <![CDATA[select distinct c.customerId  ,c.displayName ,c.globalCustNum,c.customerLevel.id,off.officeId,off.officeName,per.displayName,per.personnelId,c.customerStatus.id,pa.displayName, pa.globalCustNum,papa.displayName,papa.globalCustNum
+                   from org.mifos.customers.business.CustomerBO as c
+                   left join c.parentCustomer as pa
+                   left join pa.parentCustomer as papa
+                   left join c.office as off
+                   left join c.personnel as per
                            left join c.nameDetailSet as cnd
-	        	   where ( 
-	        	         (:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID) 
-	        	         or :USERLEVEL_ID!=:LOID) 
-	        	         and c.office.officeId=:OFFICEID 
-	        	         and ((c.customerLevel.id !=:LEVELID and c.displayName like :SEARCH_STRING) 
-	        	              or (c.customerLevel.id =:LEVELID 
-	        	              
-	        	               
-	        	              and (c.firstName like :SEARCH_STRING 
-	        	              or c.lastName like :SEARCH_STRING 
-	        	              or c.secondLastName like :SEARCH_STRING
-	        	              or c.displayName like :SEARCH_STRING
+                   where (
+                         (:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID)
+                         or :USERLEVEL_ID!=:LOID)
+                         and c.office.officeId=:OFFICEID
+                         and ((c.customerLevel.id !=:LEVELID and c.displayName like :SEARCH_STRING)
+                              or (c.customerLevel.id =:LEVELID
+
+
+                              and (c.firstName like :SEARCH_STRING
+                              or c.lastName like :SEARCH_STRING
+                              or c.secondLastName like :SEARCH_STRING
+                              or c.displayName like :SEARCH_STRING
                                       or (c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING2)
                                       or (
                                           cnd.nameType = 3 and cnd.name.middleName like :SEARCH_STRING2 and
                                           c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING3)
-	        	              )
+                              )
                                       )
-	        	         ) order by c.customerLevel.id,c.lastName,c.firstName]]>
-	</query>
-	<query name="Customer.cust_search_noofficeid">
-	        	   <![CDATA[select distinct c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.id,off.officeId,off.officeName,per.displayName,per.personnelId,c.customerStatus.id,pa.displayName, pa.globalCustNum,papa.displayName,papa.globalCustNum from 
-	        	    org.mifos.customers.business.CustomerBO as c 
-	        	    left join c.parentCustomer as pa 
-	        	    left join pa.parentCustomer as papa  
-	        	    left join c.office as off  
-	        	    left join c.personnel as per
+                         ) order by c.customerLevel.id,c.lastName,c.firstName]]>
+    </query>
+    <query name="Customer.cust_search_noofficeid">
+                   <![CDATA[select distinct c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.id,off.officeId,off.officeName,per.displayName,per.personnelId,c.customerStatus.id,pa.displayName, pa.globalCustNum,papa.displayName,papa.globalCustNum from
+                    org.mifos.customers.business.CustomerBO as c
+                    left join c.parentCustomer as pa
+                    left join pa.parentCustomer as papa
+                    left join c.office as off
+                    left join c.personnel as per
                             left join c.nameDetailSet as cnd
-                    where ( 
-                    		((:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID) or (:USERLEVEL_ID!=:LOID)) 
-                         and (off.searchId like :OFFICE_SEARCH_ID) 
+                    where (
+                            ((:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID) or (:USERLEVEL_ID!=:LOID))
+                         and (off.searchId like :OFFICE_SEARCH_ID)
                          and (
-                               (c.customerLevel.id in (2,3)  and c.displayName like :SEARCH_STRING) 
-                    		   or (c.customerLevel.id =:LEVELID and 
-                    		   (c.firstName like :SEARCH_STRING or c.lastName like :SEARCH_STRING or c.secondLastName like :SEARCH_STRING 
-	        	              			or c.displayName like :SEARCH_STRING
+                               (c.customerLevel.id in (2,3)  and c.displayName like :SEARCH_STRING)
+                               or (c.customerLevel.id =:LEVELID and
+                               (c.firstName like :SEARCH_STRING or c.lastName like :SEARCH_STRING or c.secondLastName like :SEARCH_STRING
+                                          or c.displayName like :SEARCH_STRING
                                    or (c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING2)
-                    		   or (
+                               or (
                                           cnd.nameType = 3 and cnd.name.middleName like :SEARCH_STRING2 and
                                           c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING3)
-                    		   ))
-                    		   )
-                    		 ) 
+                               ))
+                               )
+                             )
                     order by c.customerLevel.id,c.lastName,c.firstName]]>
-	</query>
-	<query name="Customer.cust_count_search_noofficeid">
-	        	   <![CDATA[select  count(distinct c.customerId) from  
-	        	    org.mifos.customers.business.CustomerBO as c 
-	        	    left join c.parentCustomer as pa left join pa.parentCustomer as papa  
-	        	    left join c.office as off  
-	        	    left join c.personnel as per 
+    </query>
+    <query name="Customer.cust_count_search_noofficeid">
+                   <![CDATA[select  count(distinct c.customerId) from
+                    org.mifos.customers.business.CustomerBO as c
+                    left join c.parentCustomer as pa left join pa.parentCustomer as papa
+                    left join c.office as off
+                    left join c.personnel as per
                             left join c.nameDetailSet as cnd
-                    where ( 
-                    		((:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID) or (:USERLEVEL_ID!=:LOID)) 
-                         and (off.searchId like :OFFICE_SEARCH_ID) 
+                    where (
+                            ((:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID) or (:USERLEVEL_ID!=:LOID))
+                         and (off.searchId like :OFFICE_SEARCH_ID)
                          and (
-                               (c.customerLevel.id in (2,3)  and c.displayName like :SEARCH_STRING) 
-                    		   or (c.customerLevel.id =:LEVELID and 
-                    		   (c.firstName like :SEARCH_STRING or c.lastName like :SEARCH_STRING or c.secondLastName like :SEARCH_STRING 
-	        	              			or c.displayName like :SEARCH_STRING
+                               (c.customerLevel.id in (2,3)  and c.displayName like :SEARCH_STRING)
+                               or (c.customerLevel.id =:LEVELID and
+                               (c.firstName like :SEARCH_STRING or c.lastName like :SEARCH_STRING or c.secondLastName like :SEARCH_STRING
+                                          or c.displayName like :SEARCH_STRING
                                    or (c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING2)
-                    		   or (
+                               or (
                                           cnd.nameType = 3 and cnd.name.middleName like :SEARCH_STRING2 and
                                           c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING3)
-                    		   ))
-                    		   )
-                    		 ) 
-					]]>
-	</query>
+                               ))
+                               )
+                             )
+                    ]]>
+    </query>
 
-	<query name="Customer.cust_count_search_first_and_last_name">
-	        	   <![CDATA[select count(*) 
-	        	   from org.mifos.customers.business.CustomerBO as c  
-	        	   left join c.parentCustomer as pa 
-	        	   left join pa.parentCustomer as papa 
-	        	   left join c.office as off  
-	        	   left join c.personnel as per 
-	        	   where ( 
-	        	         (:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID) 
-	        	         or :USERLEVEL_ID!=:LOID) 
-	        	         and c.office.officeId=:OFFICEID 
-	        	         and c.customerLevel.id =:LEVELID 
-	        	              and (c.firstName like :SEARCH_STRING1 
-	        	              and  c.lastName like :SEARCH_STRING2 
-	        	         ) ]]>
-	</query>
-	<query name="Customer.cust_search_first_and_last_name">
-	        	   <![CDATA[select  c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.id,off.officeId,off.officeName,per.displayName,per.personnelId,c.customerStatus.id,pa.displayName, pa.globalCustNum,papa.displayName,papa.globalCustNum 
-	        	   from org.mifos.customers.business.CustomerBO as c  
-	        	   left join c.parentCustomer as pa 
-	        	   left join pa.parentCustomer as papa 
-	        	   left join c.office as off  
-	        	   left join c.personnel as per  
-	        	   where ((:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID) 
-	        	         or :USERLEVEL_ID!=:LOID) 
-	        	         and c.office.officeId=:OFFICEID 
-	        	         and ((c.customerLevel.id =:LEVELID 
-	        	              and (c.firstName like :SEARCH_STRING1 
-	        	              and  c.lastName like :SEARCH_STRING2 
-	        	              )
-	        	               )
-	        	         ) order by c.customerLevel.id,c.lastName,c.firstName]]>
-	</query>
-	<query name="Customer.cust_search_noofficeid_first_and_last_name">
-	        	   <![CDATA[select   c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.id,off.officeId,off.officeName,per.displayName,per.personnelId,c.customerStatus.id,pa.displayName, pa.globalCustNum,papa.displayName,papa.globalCustNum from 
-	        	    org.mifos.customers.business.CustomerBO as c 
-	        	    left join c.parentCustomer as pa 
-	        	    left join pa.parentCustomer as papa  
-	        	    left join c.office as off  
-	        	    left join c.personnel as per
-                    where ( 
-                    		((:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID) or (:USERLEVEL_ID!=:LOID)) 
-                         and (off.searchId like :OFFICE_SEARCH_ID) 
+    <query name="Customer.cust_count_search_first_and_last_name">
+                   <![CDATA[select count(*)
+                   from org.mifos.customers.business.CustomerBO as c
+                   left join c.parentCustomer as pa
+                   left join pa.parentCustomer as papa
+                   left join c.office as off
+                   left join c.personnel as per
+                   where (
+                         (:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID)
+                         or :USERLEVEL_ID!=:LOID)
+                         and c.office.officeId=:OFFICEID
+                         and c.customerLevel.id =:LEVELID
+                              and (c.firstName like :SEARCH_STRING1
+                              and  c.lastName like :SEARCH_STRING2
+                         ) ]]>
+    </query>
+    <query name="Customer.cust_search_first_and_last_name">
+                   <![CDATA[select  c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.id,off.officeId,off.officeName,per.displayName,per.personnelId,c.customerStatus.id,pa.displayName, pa.globalCustNum,papa.displayName,papa.globalCustNum
+                   from org.mifos.customers.business.CustomerBO as c
+                   left join c.parentCustomer as pa
+                   left join pa.parentCustomer as papa
+                   left join c.office as off
+                   left join c.personnel as per
+                   where ((:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID)
+                         or :USERLEVEL_ID!=:LOID)
+                         and c.office.officeId=:OFFICEID
+                         and ((c.customerLevel.id =:LEVELID
+                              and (c.firstName like :SEARCH_STRING1
+                              and  c.lastName like :SEARCH_STRING2
+                              )
+                               )
+                         ) order by c.customerLevel.id,c.lastName,c.firstName]]>
+    </query>
+    <query name="Customer.cust_search_noofficeid_first_and_last_name">
+                   <![CDATA[select   c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.id,off.officeId,off.officeName,per.displayName,per.personnelId,c.customerStatus.id,pa.displayName, pa.globalCustNum,papa.displayName,papa.globalCustNum from
+                    org.mifos.customers.business.CustomerBO as c
+                    left join c.parentCustomer as pa
+                    left join pa.parentCustomer as papa
+                    left join c.office as off
+                    left join c.personnel as per
+                    where (
+                            ((:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID) or (:USERLEVEL_ID!=:LOID))
+                         and (off.searchId like :OFFICE_SEARCH_ID)
                          and ((c.customerLevel.id =:LEVELID and (c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING2  ))
-                    		   )
-                    		 ) 
+                               )
+                             )
                     order by c.customerLevel.id,c.lastName,c.firstName]]>
-	</query>
-	<query name="Customer.cust_count_search_noofficeid_first_and_last_name">
-	        	   <![CDATA[select  count(c.customerId) from  
-	        	    org.mifos.customers.business.CustomerBO as c 
-	        	    left join c.parentCustomer as pa left join pa.parentCustomer as papa  
-	        	    left join c.office as off  
-	        	    left join c.personnel as per 
-                    where ( 
-                    		((:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID) or (:USERLEVEL_ID!=:LOID)) 
-                         and (off.searchId like :OFFICE_SEARCH_ID) 
+    </query>
+    <query name="Customer.cust_count_search_noofficeid_first_and_last_name">
+                   <![CDATA[select  count(c.customerId) from
+                    org.mifos.customers.business.CustomerBO as c
+                    left join c.parentCustomer as pa left join pa.parentCustomer as papa
+                    left join c.office as off
+                    left join c.personnel as per
+                    where (
+                            ((:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID) or (:USERLEVEL_ID!=:LOID))
+                         and (off.searchId like :OFFICE_SEARCH_ID)
                          and (
-                               (c.customerLevel.id =:LEVELID and (c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING2 
+                               (c.customerLevel.id =:LEVELID and (c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING2
                                 ))
-                    		   )
-                    		 ) 
-					]]>
-	</query>
+                               )
+                             )
+                    ]]>
+    </query>
 
-	<query name="Customer.cust_idsearch_withoutoffice">
-	        	   <![CDATA[select c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.id, off.officeId,off.officeName,per.displayName,per.personnelId,c.customerStatus.id,pa.displayName, pa.globalCustNum, papa.displayName,papa.globalCustNum  
-	        	   from org.mifos.customers.business.CustomerBO as c 
-	        	   left join c.parentCustomer as pa 
-	        	   left join pa.parentCustomer as papa 
-	        	   left join c.office as off  
-	        	   left join c.personnel as per where  c.globalCustNum=:SEARCH_STRING and off.searchId like :SEARCH_ID]]>
-	</query>
+    <query name="Customer.cust_idsearch_withoutoffice">
+                   <![CDATA[select c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.id, off.officeId,off.officeName,per.displayName,per.personnelId,c.customerStatus.id,pa.displayName, pa.globalCustNum, papa.displayName,papa.globalCustNum
+                   from org.mifos.customers.business.CustomerBO as c
+                   left join c.parentCustomer as pa
+                   left join pa.parentCustomer as papa
+                   left join c.office as off
+                   left join c.personnel as per where  c.globalCustNum=:SEARCH_STRING and off.searchId like :SEARCH_ID]]>
+    </query>
 
-	<query name="Customer.cust_govidsearch_withoutoffice">
-	        	   <![CDATA[select c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.id, off.officeId,off.officeName,per.displayName,per.personnelId,c.customerStatus.id,pa.displayName, pa.globalCustNum, papa.displayName,papa.globalCustNum
-	        	   from org.mifos.customers.business.CustomerBO as c
-	        	   left join c.parentCustomer as pa
-	        	   left join pa.parentCustomer as papa
-	        	   left join c.office as off
-	        	   left join c.personnel as per where  c.governmentId=:SEARCH_STRING and off.searchId like :SEARCH_ID]]>
-	</query>
+    <query name="Customer.cust_govidsearch_withoutoffice">
+                   <![CDATA[select c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.id, off.officeId,off.officeName,per.displayName,per.personnelId,c.customerStatus.id,pa.displayName, pa.globalCustNum, papa.displayName,papa.globalCustNum
+                   from org.mifos.customers.business.CustomerBO as c
+                   left join c.parentCustomer as pa
+                   left join pa.parentCustomer as papa
+                   left join c.office as off
+                   left join c.personnel as per where  c.governmentId=:SEARCH_STRING and off.searchId like :SEARCH_ID]]>
+    </query>
 
-	<query name="Customer.cust_phonesearch_withoutoffice">
-	        	   <![CDATA[select c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.id, off.officeId,off.officeName,per.displayName,per.personnelId,c.customerStatus.id,pa.displayName, pa.globalCustNum, papa.displayName,papa.globalCustNum
-	        	   from org.mifos.customers.business.CustomerBO as c
-	        	   left join c.parentCustomer as pa
-	        	   left join pa.parentCustomer as papa
-	        	   left join c.office as off
-	        	   left join c.personnel as per where c.customerAddressDetail.address.phoneNumberStripped=:SEARCH_STRING and off.searchId like :SEARCH_ID]]>
-	</query>
+    <query name="Customer.cust_phonesearch_withoutoffice">
+                   <![CDATA[select c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.id, off.officeId,off.officeName,per.displayName,per.personnelId,c.customerStatus.id,pa.displayName, pa.globalCustNum, papa.displayName,papa.globalCustNum
+                   from org.mifos.customers.business.CustomerBO as c
+                   left join c.parentCustomer as pa
+                   left join pa.parentCustomer as papa
+                   left join c.office as off
+                   left join c.personnel as per where c.customerAddressDetail.address.phoneNumberStripped=:SEARCH_STRING and off.searchId like :SEARCH_ID]]>
+    </query>
 
-	<query name="Customer.cust_idsearch">
-	        	   <![CDATA[select c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.id, off.officeId,off.officeName,per.displayName,per.personnelId,c.customerStatus.id,pa.displayName, pa.globalCustNum, papa.displayName,papa.globalCustNum  
-	        	   from org.mifos.customers.business.CustomerBO as c 
-	        	   left join c.parentCustomer as pa 
-	        	   left join pa.parentCustomer as papa 
-	        	   left join c.office as off  
-	        	   left join c.personnel as per where c.office.officeId=:OFFICEID and c.globalCustNum=:SEARCH_STRING and per.personnelId =:ID ]]>
-	</query>
+    <query name="Customer.cust_idsearch">
+                   <![CDATA[select c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.id, off.officeId,off.officeName,per.displayName,per.personnelId,c.customerStatus.id,pa.displayName, pa.globalCustNum, papa.displayName,papa.globalCustNum
+                   from org.mifos.customers.business.CustomerBO as c
+                   left join c.parentCustomer as pa
+                   left join pa.parentCustomer as papa
+                   left join c.office as off
+                   left join c.personnel as per where c.office.officeId=:OFFICEID and c.globalCustNum=:SEARCH_STRING and per.personnelId =:ID ]]>
+    </query>
 
-	<query name="Customer.cust_govidsearch">
-	        	   <![CDATA[select c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.id, off.officeId,off.officeName,per.displayName,per.personnelId,c.customerStatus.id,pa.displayName, pa.globalCustNum, papa.displayName,papa.globalCustNum
-	        	   from org.mifos.customers.business.CustomerBO as c
-	        	   left join c.parentCustomer as pa
-	        	   left join pa.parentCustomer as papa
-	        	   left join c.office as off
-	        	   left join c.personnel as per where c.office.officeId=:OFFICEID and c.governmentId=:SEARCH_STRING and per.personnelId =:ID ]]>
-	</query>
+    <query name="Customer.cust_govidsearch">
+                   <![CDATA[select c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.id, off.officeId,off.officeName,per.displayName,per.personnelId,c.customerStatus.id,pa.displayName, pa.globalCustNum, papa.displayName,papa.globalCustNum
+                   from org.mifos.customers.business.CustomerBO as c
+                   left join c.parentCustomer as pa
+                   left join pa.parentCustomer as papa
+                   left join c.office as off
+                   left join c.personnel as per where c.office.officeId=:OFFICEID and c.governmentId=:SEARCH_STRING and per.personnelId =:ID ]]>
+    </query>
 
-	<query name="Customer.cust_phonesearch">
-	        	   <![CDATA[select c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.id, off.officeId,off.officeName,per.displayName,per.personnelId,c.customerStatus.id,pa.displayName, pa.globalCustNum, papa.displayName,papa.globalCustNum
-	        	   from org.mifos.customers.business.CustomerBO as c
-	        	   left join c.parentCustomer as pa
-	        	   left join pa.parentCustomer as papa
-	        	   left join c.office as off
+    <query name="Customer.cust_phonesearch">
+                   <![CDATA[select c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.id, off.officeId,off.officeName,per.displayName,per.personnelId,c.customerStatus.id,pa.displayName, pa.globalCustNum, papa.displayName,papa.globalCustNum
+                   from org.mifos.customers.business.CustomerBO as c
+                   left join c.parentCustomer as pa
+                   left join pa.parentCustomer as papa
+                   left join c.office as off
                            left join c.personnel as per where c.office.officeId=:OFFICEID and
                            c.customerAddressDetail.address.phoneNumberStripped=:SEARCH_STRING and per.personnelId =:ID ]]>
-	</query>
-	<query name="Customer.cust_idsearch_withoutoffice_count">
-	        	   <![CDATA[select count(*)
-	        	   from org.mifos.customers.business.CustomerBO as c 
-	        	   left join c.parentCustomer as pa 
-	        	   left join pa.parentCustomer as papa 
-	        	   left join c.office as off  
-	        	   left join c.personnel as per where  c.globalCustNum=:SEARCH_STRING and off.searchId like :SEARCH_ID]]>
-	</query>
+    </query>
+    <query name="Customer.cust_idsearch_withoutoffice_count">
+                   <![CDATA[select count(*)
+                   from org.mifos.customers.business.CustomerBO as c
+                   left join c.parentCustomer as pa
+                   left join pa.parentCustomer as papa
+                   left join c.office as off
+                   left join c.personnel as per where  c.globalCustNum=:SEARCH_STRING and off.searchId like :SEARCH_ID]]>
+    </query>
 
-	<query name="Customer.cust_govidsearch_withoutoffice_count">
-	        	   <![CDATA[select count(*)
-	        	   from org.mifos.customers.business.CustomerBO as c
-	        	   left join c.parentCustomer as pa
-	        	   left join pa.parentCustomer as papa
-	        	   left join c.office as off
-	        	   left join c.personnel as per where  c.governmentId=:SEARCH_STRING and off.searchId like :SEARCH_ID]]>
-	</query>
+    <query name="Customer.cust_govidsearch_withoutoffice_count">
+                   <![CDATA[select count(*)
+                   from org.mifos.customers.business.CustomerBO as c
+                   left join c.parentCustomer as pa
+                   left join pa.parentCustomer as papa
+                   left join c.office as off
+                   left join c.personnel as per where  c.governmentId=:SEARCH_STRING and off.searchId like :SEARCH_ID]]>
+    </query>
 
-	<query name="Customer.cust_phonesearch_withoutoffice_count">
-	        	   <![CDATA[select count(*)
-	        	   from org.mifos.customers.business.CustomerBO as c
-	        	   left join c.parentCustomer as pa
-	        	   left join pa.parentCustomer as papa
-	        	   left join c.office as off
+    <query name="Customer.cust_phonesearch_withoutoffice_count">
+                   <![CDATA[select count(*)
+                   from org.mifos.customers.business.CustomerBO as c
+                   left join c.parentCustomer as pa
+                   left join pa.parentCustomer as papa
+                   left join c.office as off
                            left join c.personnel as per where
                            c.customerAddressDetail.address.phoneNumberStripped=:SEARCH_STRING and off.searchId like :SEARCH_ID]]>
-	</query>
+    </query>
 
-	<query name="Customer.cust_idsearch_count">
-	        	   <![CDATA[select count(*)
-	        	   from org.mifos.customers.business.CustomerBO as c
-	        	   left join c.parentCustomer as pa
-	        	   left join pa.parentCustomer as papa
-	        	   left join c.office as off
-	        	   left join c.personnel as per where c.office.officeId=:OFFICEID and c.globalCustNum=:SEARCH_STRING and per.personnelId =:ID ]]>
-	</query>
+    <query name="Customer.cust_idsearch_count">
+                   <![CDATA[select count(*)
+                   from org.mifos.customers.business.CustomerBO as c
+                   left join c.parentCustomer as pa
+                   left join pa.parentCustomer as papa
+                   left join c.office as off
+                   left join c.personnel as per where c.office.officeId=:OFFICEID and c.globalCustNum=:SEARCH_STRING and per.personnelId =:ID ]]>
+    </query>
 
-	<query name="Customer.cust_govidsearch_count">
-	        	   <![CDATA[select count(*)
-	        	   from org.mifos.customers.business.CustomerBO as c
-	        	   left join c.parentCustomer as pa
-	        	   left join pa.parentCustomer as papa
-	        	   left join c.office as off
-	        	   left join c.personnel as per where c.office.officeId=:OFFICEID and c.governmentId=:SEARCH_STRING and per.personnelId =:ID ]]>
-	</query>
+    <query name="Customer.cust_govidsearch_count">
+                   <![CDATA[select count(*)
+                   from org.mifos.customers.business.CustomerBO as c
+                   left join c.parentCustomer as pa
+                   left join pa.parentCustomer as papa
+                   left join c.office as off
+                   left join c.personnel as per where c.office.officeId=:OFFICEID and c.governmentId=:SEARCH_STRING and per.personnelId =:ID ]]>
+    </query>
 
-	<query name="Customer.cust_phonesearch_count">
-	        	   <![CDATA[select count(*)
-	        	   from org.mifos.customers.business.CustomerBO as c
-	        	   left join c.parentCustomer as pa
-	        	   left join pa.parentCustomer as papa
-	        	   left join c.office as off
+    <query name="Customer.cust_phonesearch_count">
+                   <![CDATA[select count(*)
+                   from org.mifos.customers.business.CustomerBO as c
+                   left join c.parentCustomer as pa
+                   left join pa.parentCustomer as papa
+                   left join c.office as off
                            left join c.personnel as per where c.office.officeId=:OFFICEID and
                            c.customerAddressDetail.address.phoneNumberStripped=:SEARCH_STRING and per.personnelId =:ID ]]>
-	</query>
+    </query>
 
-	<query name="Customer.cust_idsearch_nonLo">
-	        	   <![CDATA[select c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.id, off.officeId,off.officeName,per.displayName,per.personnelId,c.customerStatus.id,pa.displayName, pa.globalCustNum, papa.displayName,papa.globalCustNum  
-	        	   from org.mifos.customers.business.CustomerBO as c 
-	        	   left join c.parentCustomer as pa 
-	        	   left join pa.parentCustomer as papa 
-	        	   left join c.office as off  
-	        	   left join c.personnel as per where c.office.officeId=:OFFICEID and c.globalCustNum=:SEARCH_STRING and off.searchId like :SEARCH_ID ]]>
-	</query>
+    <query name="Customer.cust_idsearch_nonLo">
+                   <![CDATA[select c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.id, off.officeId,off.officeName,per.displayName,per.personnelId,c.customerStatus.id,pa.displayName, pa.globalCustNum, papa.displayName,papa.globalCustNum
+                   from org.mifos.customers.business.CustomerBO as c
+                   left join c.parentCustomer as pa
+                   left join pa.parentCustomer as papa
+                   left join c.office as off
+                   left join c.personnel as per where c.office.officeId=:OFFICEID and c.globalCustNum=:SEARCH_STRING and off.searchId like :SEARCH_ID ]]>
+    </query>
 
-	<query name="Customer.cust_govidsearch_nonLo">
-	        	   <![CDATA[select c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.id, off.officeId,off.officeName,per.displayName,per.personnelId,c.customerStatus.id,pa.displayName, pa.globalCustNum, papa.displayName,papa.globalCustNum
-	        	   from org.mifos.customers.business.CustomerBO as c
-	        	   left join c.parentCustomer as pa
-	        	   left join pa.parentCustomer as papa
-	        	   left join c.office as off
-	        	   left join c.personnel as per where c.office.officeId=:OFFICEID and c.governmentId=:SEARCH_STRING and off.searchId like :SEARCH_ID ]]>
-	</query>
+    <query name="Customer.cust_govidsearch_nonLo">
+                   <![CDATA[select c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.id, off.officeId,off.officeName,per.displayName,per.personnelId,c.customerStatus.id,pa.displayName, pa.globalCustNum, papa.displayName,papa.globalCustNum
+                   from org.mifos.customers.business.CustomerBO as c
+                   left join c.parentCustomer as pa
+                   left join pa.parentCustomer as papa
+                   left join c.office as off
+                   left join c.personnel as per where c.office.officeId=:OFFICEID and c.governmentId=:SEARCH_STRING and off.searchId like :SEARCH_ID ]]>
+    </query>
 
-	<query name="Customer.cust_phonesearch_nonLo">
-	        	   <![CDATA[select c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.id, off.officeId,off.officeName,per.displayName,per.personnelId,c.customerStatus.id,pa.displayName, pa.globalCustNum, papa.displayName,papa.globalCustNum
-	        	   from org.mifos.customers.business.CustomerBO as c
-	        	   left join c.parentCustomer as pa
-	        	   left join pa.parentCustomer as papa
-	        	   left join c.office as off
+    <query name="Customer.cust_phonesearch_nonLo">
+                   <![CDATA[select c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.id, off.officeId,off.officeName,per.displayName,per.personnelId,c.customerStatus.id,pa.displayName, pa.globalCustNum, papa.displayName,papa.globalCustNum
+                   from org.mifos.customers.business.CustomerBO as c
+                   left join c.parentCustomer as pa
+                   left join pa.parentCustomer as papa
+                   left join c.office as off
                            left join c.personnel as per where c.office.officeId=:OFFICEID and
                            c.customerAddressDetail.address.phoneNumberStripped=:SEARCH_STRING and off.searchId like :SEARCH_ID ]]>
-	</query>
+    </query>
 
-	<query name="Customer.cust_idsearch_count_nonLo">
-	        	   <![CDATA[select count(*)  
-	        	   from org.mifos.customers.business.CustomerBO as c 
-	        	   left join c.parentCustomer as pa 
-	        	   left join pa.parentCustomer as papa 
-	        	   left join c.office as off  
-	        	   left join c.personnel as per where c.office.officeId=:OFFICEID and c.globalCustNum=:SEARCH_STRING and off.searchId like :SEARCH_ID ]]>
-	</query>
+    <query name="Customer.cust_idsearch_count_nonLo">
+                   <![CDATA[select count(*)
+                   from org.mifos.customers.business.CustomerBO as c
+                   left join c.parentCustomer as pa
+                   left join pa.parentCustomer as papa
+                   left join c.office as off
+                   left join c.personnel as per where c.office.officeId=:OFFICEID and c.globalCustNum=:SEARCH_STRING and off.searchId like :SEARCH_ID ]]>
+    </query>
 
-	<query name="Customer.cust_govidsearch_count_nonLo">
-	        	   <![CDATA[select count(*)
-	        	   from org.mifos.customers.business.CustomerBO as c
-	        	   left join c.parentCustomer as pa
-	        	   left join pa.parentCustomer as papa
-	        	   left join c.office as off
-	        	   left join c.personnel as per where c.office.officeId=:OFFICEID and c.governmentId=:SEARCH_STRING and off.searchId like :SEARCH_ID ]]>
-	</query>
+    <query name="Customer.cust_govidsearch_count_nonLo">
+                   <![CDATA[select count(*)
+                   from org.mifos.customers.business.CustomerBO as c
+                   left join c.parentCustomer as pa
+                   left join pa.parentCustomer as papa
+                   left join c.office as off
+                   left join c.personnel as per where c.office.officeId=:OFFICEID and c.governmentId=:SEARCH_STRING and off.searchId like :SEARCH_ID ]]>
+    </query>
 
-	<query name="Customer.cust_phonesearch_count_nonLo">
-	        	   <![CDATA[select count(*)
-	        	   from org.mifos.customers.business.CustomerBO as c
-	        	   left join c.parentCustomer as pa
-	        	   left join pa.parentCustomer as papa
-	        	   left join c.office as off
+    <query name="Customer.cust_phonesearch_count_nonLo">
+                   <![CDATA[select count(*)
+                   from org.mifos.customers.business.CustomerBO as c
+                   left join c.parentCustomer as pa
+                   left join pa.parentCustomer as papa
+                   left join c.office as off
                            left join c.personnel as per where c.office.officeId=:OFFICEID and
                            c.customerAddressDetail.address.phoneNumberStripped=:SEARCH_STRING and off.searchId like :SEARCH_ID ]]>
-	</query>
+    </query>
 
-	<query name="search_Centers">
-	        	   <![CDATA[select  customer.office.officeId, customer.office.officeName,customer.globalCustNum,customer.displayName 
-	        	   from org.mifos.customers.business.CustomerBO customer 
-	        	   where ((customer.personnel.personnelId=:USER_ID and :USER_LEVEL_ID=:LO_LEVEL_ID)
-	        	   or(:USER_LEVEL_ID!=:LO_LEVEL_ID)) 
-	        	   and customer.office.searchId like :SEARCH_ID 
-	        	   and customer.displayName like :CENTER_NAME 
-	        	   and customer.customerLevel.id =:LEVEL_ID 
-	        	   and customer.customerStatus.id = :STATUS_ID 
-	        	   ORDER BY customer.office.officeName ,customer.displayName ]]>
-	</query>
+    <query name="search_Centers">
+                   <![CDATA[select  customer.office.officeId, customer.office.officeName,customer.globalCustNum,customer.displayName
+                   from org.mifos.customers.business.CustomerBO customer
+                   where ((customer.personnel.personnelId=:USER_ID and :USER_LEVEL_ID=:LO_LEVEL_ID)
+                   or(:USER_LEVEL_ID!=:LO_LEVEL_ID))
+                   and customer.office.searchId like :SEARCH_ID
+                   and customer.displayName like :CENTER_NAME
+                   and customer.customerLevel.id =:LEVEL_ID
+                   and customer.customerStatus.id = :STATUS_ID
+                   ORDER BY customer.office.officeName ,customer.displayName ]]>
+    </query>
 
-	<query name="count_search_Centers">
-	        	   <![CDATA[select count(*) 
-	        	   from org.mifos.customers.business.CustomerBO customer 
-	        	   where ((customer.personnel.personnelId=:USER_ID and :USER_LEVEL_ID=:LO_LEVEL_ID)
-	        	   or(:USER_LEVEL_ID!=:LO_LEVEL_ID)) 
-	        	   and customer.office.searchId like :SEARCH_ID 
-	        	   and customer.displayName like :CENTER_NAME 
-	        	   and customer.customerLevel.id =:LEVEL_ID 
-	        	   and customer.customerStatus.id = :STATUS_ID
-	        	    ]]>
-	</query>
-	<query name="group_SearchWithCenter">
-	        	   <![CDATA[select  customer.office.officeName,customer.displayName,customer.parentCustomer.displayName, customer.customerId 
-	        	   from org.mifos.customers.business.CustomerBO customer 
-	        	   where ((customer.personnel.personnelId=:USER_ID 
-	        	   and :USER_LEVEL_ID=:LO_LEVEL_ID)
-	        	   or(:USER_LEVEL_ID!=:LO_LEVEL_ID)) 
-	        	   and customer.office.searchId like :SEARCH_ID 
-	        	   and customer.displayName like :SEARCH_STRING 
-	        	   and customer.customerLevel.id =:LEVEL_ID 
-	        	   and customer.customerStatus.id in (7,8,9,10) 
-	        	   ORDER BY customer.office.officeName,customer.parentCustomer.displayName ,customer.displayName]]>
-	</query>
-	<query name="group_SearchWithCenterForAddingGroupMember">
-	        	   <![CDATA[select  customer.office.officeName,customer.displayName,customer.parentCustomer.displayName, customer.customerId 
-	        	   from org.mifos.customers.business.CustomerBO customer 
-	        	   where ((customer.personnel.personnelId=:USER_ID 
-	        	   and :USER_LEVEL_ID=:LO_LEVEL_ID)
-	        	   or(:USER_LEVEL_ID!=:LO_LEVEL_ID)) 
-	        	   and customer.office.searchId like :SEARCH_ID 
-	        	   and customer.displayName like :SEARCH_STRING 
-	        	   and customer.customerLevel.id =:LEVEL_ID 
-	        	   and customer.customerStatus.id in (7,8,9) 
-	        	   ORDER BY customer.office.officeName,customer.parentCustomer.displayName ,customer.displayName]]>
-	</query>
+    <query name="count_search_Centers">
+                   <![CDATA[select count(*)
+                   from org.mifos.customers.business.CustomerBO customer
+                   where ((customer.personnel.personnelId=:USER_ID and :USER_LEVEL_ID=:LO_LEVEL_ID)
+                   or(:USER_LEVEL_ID!=:LO_LEVEL_ID))
+                   and customer.office.searchId like :SEARCH_ID
+                   and customer.displayName like :CENTER_NAME
+                   and customer.customerLevel.id =:LEVEL_ID
+                   and customer.customerStatus.id = :STATUS_ID
+                    ]]>
+    </query>
+    <query name="group_SearchWithCenter">
+                   <![CDATA[select  customer.office.officeName,customer.displayName,customer.parentCustomer.displayName, customer.customerId
+                   from org.mifos.customers.business.CustomerBO customer
+                   where ((customer.personnel.personnelId=:USER_ID
+                   and :USER_LEVEL_ID=:LO_LEVEL_ID)
+                   or(:USER_LEVEL_ID!=:LO_LEVEL_ID))
+                   and customer.office.searchId like :SEARCH_ID
+                   and customer.displayName like :SEARCH_STRING
+                   and customer.customerLevel.id =:LEVEL_ID
+                   and customer.customerStatus.id in (7,8,9,10)
+                   ORDER BY customer.office.officeName,customer.parentCustomer.displayName ,customer.displayName]]>
+    </query>
+    <query name="group_SearchWithCenterForAddingGroupMember">
+                   <![CDATA[select  customer.office.officeName,customer.displayName,customer.parentCustomer.displayName, customer.customerId
+                   from org.mifos.customers.business.CustomerBO customer
+                   where ((customer.personnel.personnelId=:USER_ID
+                   and :USER_LEVEL_ID=:LO_LEVEL_ID)
+                   or(:USER_LEVEL_ID!=:LO_LEVEL_ID))
+                   and customer.office.searchId like :SEARCH_ID
+                   and customer.displayName like :SEARCH_STRING
+                   and customer.customerLevel.id =:LEVEL_ID
+                   and customer.customerStatus.id in (7,8,9)
+                   ORDER BY customer.office.officeName,customer.parentCustomer.displayName ,customer.displayName]]>
+    </query>
 
-	<query name="count_group_SearchWithCenter">
-	        	   <![CDATA[select count(*) from 
-	        	   org.mifos.customers.business.CustomerBO customer 
-	        	   where ((customer.personnel.personnelId=:USER_ID and :USER_LEVEL_ID=:LO_LEVEL_ID)
-	        	   or(:USER_LEVEL_ID!=:LO_LEVEL_ID)) 
-	        	   and customer.office.searchId like :SEARCH_ID 
-	        	   and customer.displayName like :SEARCH_STRING 
-	        	   and customer.customerLevel.id =:LEVEL_ID 
-	        	   and customer.customerStatus.id in (7,8,9,10) 
-	        	   	]]>
-	</query>
-	<query name="count_group_SearchWithCenterForAddingGroupMember">
-	        	   <![CDATA[select count(*) from 
-	        	   org.mifos.customers.business.CustomerBO customer 
-	        	   where ((customer.personnel.personnelId=:USER_ID and :USER_LEVEL_ID=:LO_LEVEL_ID)
-	        	   or(:USER_LEVEL_ID!=:LO_LEVEL_ID)) 
-	        	   and customer.office.searchId like :SEARCH_ID 
-	        	   and customer.displayName like :SEARCH_STRING 
-	        	   and customer.customerLevel.id =:LEVEL_ID 
-	        	   and customer.customerStatus.id in (7,8,9) 
-	        	   	]]>
-	</query>
-
-
-	<query name="group_SearchWithoutCenter">
-	        	   <![CDATA[select  customer.office.officeName,customer.displayName,customer.customerId 
-	        	   from org.mifos.customers.business.CustomerBO customer 
-	        	   where ((customer.personnel.personnelId=:USER_ID and :USER_LEVEL_ID=:LO_LEVEL_ID)
-	        	   or(:USER_LEVEL_ID!=:LO_LEVEL_ID)) 
-	        	   and customer.office.searchId like :SEARCH_ID 
-	        	   and customer.displayName like :SEARCH_STRING 
-	        	   and customer.customerLevel.id =:LEVEL_ID 
-	        	   and  customer.customerStatus.id in (7,8,9,10)
-	        	   ORDER BY customer.office.officeName,customer.displayName]]>
-	</query>
-	<query name="group_SearchWithoutCenterForAddingGroupMember">
-	        	   <![CDATA[select  customer.office.officeName,customer.displayName,customer.customerId 
-	        	   from org.mifos.customers.business.CustomerBO customer 
-	        	   where ((customer.personnel.personnelId=:USER_ID and :USER_LEVEL_ID=:LO_LEVEL_ID)
-	        	   or(:USER_LEVEL_ID!=:LO_LEVEL_ID)) 
-	        	   and customer.office.searchId like :SEARCH_ID 
-	        	   and customer.displayName like :SEARCH_STRING 
-	        	   and customer.customerLevel.id =:LEVEL_ID 
-	        	   and  customer.customerStatus.id in (7,8,9)
-	        	   ORDER BY customer.office.officeName,customer.displayName]]>
-	</query>
-
-	<query name="count_group_SearchWithoutCenter">
-	        	   <![CDATA[select count(*) 
-	        	   from org.mifos.customers.business.CustomerBO customer 
-	        	   where ((customer.personnel.personnelId=:USER_ID and :USER_LEVEL_ID=:LO_LEVEL_ID)
-	        	   or(:USER_LEVEL_ID!=:LO_LEVEL_ID)) 
-	        	   and customer.office.searchId like :SEARCH_ID 
-	        	   and customer.displayName like :SEARCH_STRING 
-	        	   and customer.customerLevel.id =:LEVEL_ID 
-	        	   and  customer.customerStatus.id in (7,8,9,10) 
-	        	   ]]>
-	</query>
-	<query name="count_group_SearchWithoutCenterForAddingGroupMember">
-	        	   <![CDATA[select count(*) 
-	        	   from org.mifos.customers.business.CustomerBO customer 
-	        	   where ((customer.personnel.personnelId=:USER_ID and :USER_LEVEL_ID=:LO_LEVEL_ID)
-	        	   or(:USER_LEVEL_ID!=:LO_LEVEL_ID)) 
-	        	   and customer.office.searchId like :SEARCH_ID 
-	        	   and customer.displayName like :SEARCH_STRING 
-	        	   and customer.customerLevel.id =:LEVEL_ID 
-	        	   and  customer.customerStatus.id in (7,8,9) 
-	        	   ]]>
-	</query>
+    <query name="count_group_SearchWithCenter">
+                   <![CDATA[select count(*) from
+                   org.mifos.customers.business.CustomerBO customer
+                   where ((customer.personnel.personnelId=:USER_ID and :USER_LEVEL_ID=:LO_LEVEL_ID)
+                   or(:USER_LEVEL_ID!=:LO_LEVEL_ID))
+                   and customer.office.searchId like :SEARCH_ID
+                   and customer.displayName like :SEARCH_STRING
+                   and customer.customerLevel.id =:LEVEL_ID
+                   and customer.customerStatus.id in (7,8,9,10)
+                       ]]>
+    </query>
+    <query name="count_group_SearchWithCenterForAddingGroupMember">
+                   <![CDATA[select count(*) from
+                   org.mifos.customers.business.CustomerBO customer
+                   where ((customer.personnel.personnelId=:USER_ID and :USER_LEVEL_ID=:LO_LEVEL_ID)
+                   or(:USER_LEVEL_ID!=:LO_LEVEL_ID))
+                   and customer.office.searchId like :SEARCH_ID
+                   and customer.displayName like :SEARCH_STRING
+                   and customer.customerLevel.id =:LEVEL_ID
+                   and customer.customerStatus.id in (7,8,9)
+                       ]]>
+    </query>
 
 
-	<query name="Customer.cust_for_account">
-		<![CDATA[select  cust.displayName,cust.customerId,customerOne.displayName,customerTwo.displayName,off.officeName,cust.globalCustNum  
-		from org.mifos.customers.business.CustomerBO as cust 
-		left join cust.parentCustomer as customerOne 
-		left join customerOne.parentCustomer as customerTwo 
-		left join cust.office as off 
-		where (:GROUP_LOAN_ALLOWED=true 
-				and cust.customerLevel.id =2 
-				and off.searchId like :SEARCH_ID 
-				and cust.personnel.personnelId=:PERSONNEL_ID  
-				and cust.displayName like :SEARCH_STRING) 
-			or (cust.customerLevel.id =1 
-			    and (cust.displayName like :SEARCH_STRING 
-			         or cust.lastName like :SEARCH_STRING 
-			         or cust.secondLastName like :SEARCH_STRING 
-			        ) 
-			    and off.searchId like :SEARCH_ID 
-			    and cust.personnel.personnelId=:PERSONNEL_ID 
-			    and cust.customerStatus.id in (3,9)
-			   ) order by  cust.customerLevel.id,cust.lastName,cust.firstName,cust.displayName ]]>
-	</query>
-	<query name="Customer.count_cust_for_account">
-		<![CDATA[select  count(*) 
-		from org.mifos.customers.business.CustomerBO as cust 
-		left join cust.parentCustomer as customerOne 
-		left join customerOne.parentCustomer as customerTwo 
-		left join cust.office as off 
-		where (:GROUP_LOAN_ALLOWED=true 
-				and cust.customerLevel.id =2 
-				and off.searchId like :SEARCH_ID 
-				and cust.personnel.personnelId=:PERSONNEL_ID  
-				and cust.displayName like :SEARCH_STRING) 
-			or (cust.customerLevel.id =1 
-			    and (cust.displayName like :SEARCH_STRING 
-			         or cust.lastName like :SEARCH_STRING 
-			         or cust.secondLastName like :SEARCH_STRING 
-			        ) 
-			    and off.searchId like :SEARCH_ID 
-			    and cust.personnel.personnelId=:PERSONNEL_ID 
-			    and cust.customerStatus.id in (3,9)
-			   ) ]]>
-	</query>
-	<query name="Customer.cust_account_Search">
-		<![CDATA[select cust.displayName,cust.customerId,customerOne.displayName,customerTwo.displayName,off.officeName,cust.globalCustNum  
-		from org.mifos.customers.business.CustomerBO as cust 
-		left join cust.parentCustomer as customerOne 
-		left join customerOne.parentCustomer as customerTwo 
-		left join cust.office as off
-        where (:GROUP_LOAN_ALLOWED=true and cust.customerLevel.id =2 and cust.customerStatus.id =9 and cust.displayName like :SEARCH_STRING and off.searchId like :SEARCH_ID) 
-		or (cust.customerLevel.id =1  and 
-		      (cust.displayName like :SEARCH_STRING 
-		       or cust.lastName like :SEARCH_STRING 
-		       or cust.secondLastName like :SEARCH_STRING 
-		      )
-		   and off.searchId like :SEARCH_ID 
-	   	  and cust.customerStatus.id =3
-	   	)
+    <query name="group_SearchWithoutCenter">
+                   <![CDATA[select  customer.office.officeName,customer.displayName,customer.customerId
+                   from org.mifos.customers.business.CustomerBO customer
+                   where ((customer.personnel.personnelId=:USER_ID and :USER_LEVEL_ID=:LO_LEVEL_ID)
+                   or(:USER_LEVEL_ID!=:LO_LEVEL_ID))
+                   and customer.office.searchId like :SEARCH_ID
+                   and customer.displayName like :SEARCH_STRING
+                   and customer.customerLevel.id =:LEVEL_ID
+                   and  customer.customerStatus.id in (7,8,9,10)
+                   ORDER BY customer.office.officeName,customer.displayName]]>
+    </query>
+    <query name="group_SearchWithoutCenterForAddingGroupMember">
+                   <![CDATA[select  customer.office.officeName,customer.displayName,customer.customerId
+                   from org.mifos.customers.business.CustomerBO customer
+                   where ((customer.personnel.personnelId=:USER_ID and :USER_LEVEL_ID=:LO_LEVEL_ID)
+                   or(:USER_LEVEL_ID!=:LO_LEVEL_ID))
+                   and customer.office.searchId like :SEARCH_ID
+                   and customer.displayName like :SEARCH_STRING
+                   and customer.customerLevel.id =:LEVEL_ID
+                   and  customer.customerStatus.id in (7,8,9)
+                   ORDER BY customer.office.officeName,customer.displayName]]>
+    </query>
+
+    <query name="count_group_SearchWithoutCenter">
+                   <![CDATA[select count(*)
+                   from org.mifos.customers.business.CustomerBO customer
+                   where ((customer.personnel.personnelId=:USER_ID and :USER_LEVEL_ID=:LO_LEVEL_ID)
+                   or(:USER_LEVEL_ID!=:LO_LEVEL_ID))
+                   and customer.office.searchId like :SEARCH_ID
+                   and customer.displayName like :SEARCH_STRING
+                   and customer.customerLevel.id =:LEVEL_ID
+                   and  customer.customerStatus.id in (7,8,9,10)
+                   ]]>
+    </query>
+    <query name="count_group_SearchWithoutCenterForAddingGroupMember">
+                   <![CDATA[select count(*)
+                   from org.mifos.customers.business.CustomerBO customer
+                   where ((customer.personnel.personnelId=:USER_ID and :USER_LEVEL_ID=:LO_LEVEL_ID)
+                   or(:USER_LEVEL_ID!=:LO_LEVEL_ID))
+                   and customer.office.searchId like :SEARCH_ID
+                   and customer.displayName like :SEARCH_STRING
+                   and customer.customerLevel.id =:LEVEL_ID
+                   and  customer.customerStatus.id in (7,8,9)
+                   ]]>
+    </query>
+
+
+    <query name="Customer.cust_for_account">
+        <![CDATA[select  cust.displayName,cust.customerId,customerOne.displayName,customerTwo.displayName,off.officeName,cust.globalCustNum
+        from org.mifos.customers.business.CustomerBO as cust
+        left join cust.parentCustomer as customerOne
+        left join customerOne.parentCustomer as customerTwo
+        left join cust.office as off
+        where (:GROUP_LOAN_ALLOWED=true
+                and cust.customerLevel.id =2
+                and off.searchId like :SEARCH_ID
+                and cust.personnel.personnelId=:PERSONNEL_ID
+                and cust.displayName like :SEARCH_STRING)
+            or (cust.customerLevel.id =1
+                and (cust.displayName like :SEARCH_STRING
+                     or cust.lastName like :SEARCH_STRING
+                     or cust.secondLastName like :SEARCH_STRING
+                    )
+                and off.searchId like :SEARCH_ID
+                and cust.personnel.personnelId=:PERSONNEL_ID
+                and cust.customerStatus.id in (3,9)
+               ) order by  cust.customerLevel.id,cust.lastName,cust.firstName,cust.displayName ]]>
+    </query>
+    <query name="Customer.count_cust_for_account">
+        <![CDATA[select  count(*)
+        from org.mifos.customers.business.CustomerBO as cust
+        left join cust.parentCustomer as customerOne
+        left join customerOne.parentCustomer as customerTwo
+        left join cust.office as off
+        where (:GROUP_LOAN_ALLOWED=true
+                and cust.customerLevel.id =2
+                and off.searchId like :SEARCH_ID
+                and cust.personnel.personnelId=:PERSONNEL_ID
+                and cust.displayName like :SEARCH_STRING)
+            or (cust.customerLevel.id =1
+                and (cust.displayName like :SEARCH_STRING
+                     or cust.lastName like :SEARCH_STRING
+                     or cust.secondLastName like :SEARCH_STRING
+                    )
+                and off.searchId like :SEARCH_ID
+                and cust.personnel.personnelId=:PERSONNEL_ID
+                and cust.customerStatus.id in (3,9)
+               ) ]]>
+    </query>
+    <query name="Customer.cust_account_Search">
+        <![CDATA[select cust.displayName,cust.customerId,customerOne.displayName,customerTwo.displayName,off.officeName,cust.globalCustNum
+        from org.mifos.customers.business.CustomerBO as cust
+        left join cust.parentCustomer as customerOne
+        left join customerOne.parentCustomer as customerTwo
+        left join cust.office as off
+        where (:GROUP_LOAN_ALLOWED=true and cust.customerLevel.id =2 and cust.customerStatus.id =9 and cust.displayName like :SEARCH_STRING and off.searchId like :SEARCH_ID)
+        or (cust.customerLevel.id =1  and
+              (cust.displayName like :SEARCH_STRING
+               or cust.lastName like :SEARCH_STRING
+               or cust.secondLastName like :SEARCH_STRING
+              )
+           and off.searchId like :SEARCH_ID
+             and cust.customerStatus.id =3
+           )
         order by  cust.customerLevel.id,cust.lastName,cust.firstName,cust.displayName ]]>
-	</query>
+    </query>
 
 
-	<query name="Customer.cust_count_account_Search">
-		<![CDATA[select count(*)  
-		from org.mifos.customers.business.CustomerBO as cust 
-		left join cust.parentCustomer as customerOne 
-		left join customerOne.parentCustomer as customerTwo 
-		left join cust.office as off 
-		where (:GROUP_LOAN_ALLOWED=true and cust.customerLevel.id =2 and cust.customerStatus.id =9 and cust.displayName like :SEARCH_STRING and off.searchId like :SEARCH_ID) 
-		or (cust.customerLevel.id =1  and 
-		      (cust.displayName like :SEARCH_STRING 
-		       or cust.lastName like :SEARCH_STRING 
-		       or cust.secondLastName like :SEARCH_STRING 
-		      )
-		   and off.searchId like :SEARCH_ID 
-	   	  and cust.customerStatus.id =3
-	   	) ]]>
-	</query>
-	<query name="Customer.customersForSavingsAccount">
-		<![CDATA[select cust.displayName,cust.customerId,customerOne.displayName,customerTwo.displayName,off.officeName,cust.globalCustNum  
-		from org.mifos.customers.business.CustomerBO as cust 
-		left join cust.parentCustomer as customerOne 
-		left join customerOne.parentCustomer as customerTwo 
-		left join cust.office as off
-		where ( ((cust.customerLevel.id =3 and cust.customerStatus.id =13) 
-		        or (cust.customerLevel.id =2 and cust.customerStatus.id =9))  
-		        and off.searchId like :SEARCH_ID and cust.personnel.personnelId=:PERSONNEL_ID  
-		        and cust.displayName like :SEARCH_STRING) 
-		        or (cust.customerLevel.id =1 
-		            and (cust.displayName like :SEARCH_STRING 
-		                or cust.lastName like :SEARCH_STRING 
-		                or cust.secondLastName like :SEARCH_STRING ) 
-		            and off.searchId like :SEARCH_ID 
-		            and cust.personnel.personnelId=:PERSONNEL_ID 
-		            and cust.customerStatus.id=3)
-		             order by  cust.customerLevel.id,cust.lastName,cust.firstName,cust.displayName ]]>
-	</query>
-	<query name="Customer.count_customersForSavingsAccount">
-		<![CDATA[select count(*)  
-		from org.mifos.customers.business.CustomerBO as cust 
-		left join cust.parentCustomer as customerOne 
-		left join customerOne.parentCustomer as customerTwo 
-		left join cust.office as off
-		where ( ((cust.customerLevel.id =3 and cust.customerStatus.id =13) 
-		        or (cust.customerLevel.id =2 and cust.customerStatus.id =9))  
-		        and off.searchId like :SEARCH_ID and cust.personnel.personnelId=:PERSONNEL_ID  
-		        and cust.displayName like :SEARCH_STRING) 
-		        or (cust.customerLevel.id =1 
-		            and (cust.displayName like :SEARCH_STRING 
-		                or cust.lastName like :SEARCH_STRING 
-		                or cust.secondLastName like :SEARCH_STRING ) 
-		            and off.searchId like :SEARCH_ID 
-		            and cust.personnel.personnelId=:PERSONNEL_ID 
-		            and cust.customerStatus.id=3) 
-	    ]]>
-	</query>
-	<query name="Customer.customersForSavingsAccountNonLO">
-		<![CDATA[select  cust.displayName,cust.customerId,customerOne.displayName,customerTwo.displayName,off.officeName,cust.globalCustNum  
-		from org.mifos.customers.business.CustomerBO as cust 
-		left join cust.parentCustomer as customerOne 
-		left join customerOne.parentCustomer as customerTwo 
-		left join cust.office as off where (  ((cust.customerLevel.id =3 and cust.customerStatus.id =13) 
-					or (cust.customerLevel.id =2 and cust.customerStatus.id =9)) 
-				and cust.displayName like :SEARCH_STRING and off.searchId like :SEARCH_ID) 
-				or (cust.customerLevel.id =1 
-				    and (cust.displayName like :SEARCH_STRING 
-				         or cust.lastName like :SEARCH_STRING 
-				         or cust.secondLastName like :SEARCH_STRING ) 
-				    and off.searchId like :SEARCH_ID 
-				    and cust.customerStatus.id =3)
-			 order by  cust.customerLevel.id,cust.lastName,cust.firstName,cust.displayName ]]>
-	</query>
+    <query name="Customer.cust_count_account_Search">
+        <![CDATA[select count(*)
+        from org.mifos.customers.business.CustomerBO as cust
+        left join cust.parentCustomer as customerOne
+        left join customerOne.parentCustomer as customerTwo
+        left join cust.office as off
+        where (:GROUP_LOAN_ALLOWED=true and cust.customerLevel.id =2 and cust.customerStatus.id =9 and cust.displayName like :SEARCH_STRING and off.searchId like :SEARCH_ID)
+        or (cust.customerLevel.id =1  and
+              (cust.displayName like :SEARCH_STRING
+               or cust.lastName like :SEARCH_STRING
+               or cust.secondLastName like :SEARCH_STRING
+              )
+           and off.searchId like :SEARCH_ID
+             and cust.customerStatus.id =3
+           ) ]]>
+    </query>
+    <query name="Customer.customersForSavingsAccount">
+        <![CDATA[select cust.displayName,cust.customerId,customerOne.displayName,customerTwo.displayName,off.officeName,cust.globalCustNum
+        from org.mifos.customers.business.CustomerBO as cust
+        left join cust.parentCustomer as customerOne
+        left join customerOne.parentCustomer as customerTwo
+        left join cust.office as off
+        where ( ((cust.customerLevel.id =3 and cust.customerStatus.id =13)
+                or (cust.customerLevel.id =2 and cust.customerStatus.id =9))
+                and off.searchId like :SEARCH_ID and cust.personnel.personnelId=:PERSONNEL_ID
+                and cust.displayName like :SEARCH_STRING)
+                or (cust.customerLevel.id =1
+                    and (cust.displayName like :SEARCH_STRING
+                        or cust.lastName like :SEARCH_STRING
+                        or cust.secondLastName like :SEARCH_STRING )
+                    and off.searchId like :SEARCH_ID
+                    and cust.personnel.personnelId=:PERSONNEL_ID
+                    and cust.customerStatus.id=3)
+                     order by  cust.customerLevel.id,cust.lastName,cust.firstName,cust.displayName ]]>
+    </query>
+    <query name="Customer.count_customersForSavingsAccount">
+        <![CDATA[select count(*)
+        from org.mifos.customers.business.CustomerBO as cust
+        left join cust.parentCustomer as customerOne
+        left join customerOne.parentCustomer as customerTwo
+        left join cust.office as off
+        where ( ((cust.customerLevel.id =3 and cust.customerStatus.id =13)
+                or (cust.customerLevel.id =2 and cust.customerStatus.id =9))
+                and off.searchId like :SEARCH_ID and cust.personnel.personnelId=:PERSONNEL_ID
+                and cust.displayName like :SEARCH_STRING)
+                or (cust.customerLevel.id =1
+                    and (cust.displayName like :SEARCH_STRING
+                        or cust.lastName like :SEARCH_STRING
+                        or cust.secondLastName like :SEARCH_STRING )
+                    and off.searchId like :SEARCH_ID
+                    and cust.personnel.personnelId=:PERSONNEL_ID
+                    and cust.customerStatus.id=3)
+        ]]>
+    </query>
+    <query name="Customer.customersForSavingsAccountNonLO">
+        <![CDATA[select  cust.displayName,cust.customerId,customerOne.displayName,customerTwo.displayName,off.officeName,cust.globalCustNum
+        from org.mifos.customers.business.CustomerBO as cust
+        left join cust.parentCustomer as customerOne
+        left join customerOne.parentCustomer as customerTwo
+        left join cust.office as off where (  ((cust.customerLevel.id =3 and cust.customerStatus.id =13)
+                    or (cust.customerLevel.id =2 and cust.customerStatus.id =9))
+                and cust.displayName like :SEARCH_STRING and off.searchId like :SEARCH_ID)
+                or (cust.customerLevel.id =1
+                    and (cust.displayName like :SEARCH_STRING
+                         or cust.lastName like :SEARCH_STRING
+                         or cust.secondLastName like :SEARCH_STRING )
+                    and off.searchId like :SEARCH_ID
+                    and cust.customerStatus.id =3)
+             order by  cust.customerLevel.id,cust.lastName,cust.firstName,cust.displayName ]]>
+    </query>
 
 
-	<query name="Customer.count_customersForSavingsAccountNonLO">
-		<![CDATA[select  count(*) 
-		from org.mifos.customers.business.CustomerBO as cust 
-		left join cust.parentCustomer as customerOne 
-		left join customerOne.parentCustomer as customerTwo 
-		left join cust.office as off
-		where (  ((cust.customerLevel.id =3 and cust.customerStatus.id =13) 
-					or (cust.customerLevel.id =2 and cust.customerStatus.id =9)) 
-				and cust.displayName like :SEARCH_STRING and off.searchId like :SEARCH_ID) 
-				or (cust.customerLevel.id =1 
-				    and (cust.displayName like :SEARCH_STRING 
-				         or cust.lastName like :SEARCH_STRING 
-				         or cust.secondLastName like :SEARCH_STRING ) 
-				    and off.searchId like :SEARCH_ID 
-				    and cust.customerStatus.id =3) 
-		   ]]>
-	</query>
-	<query name="Customer.get_loanofficer_centers">
-	        	   <![CDATA[from  org.mifos.customers.business.CustomerBO customer 
-	        	   				where customer.personnel.personnelId=:personnelId and 
-	        	   				customer.office.officeId=:officeId and 
-	        	   				customer.customerLevel.id=:customerLevelId 
-	        	   				and customer.customerStatus.id=:CENTERACTIVE
-	        	   	]]>
-	</query>
-	<sql-query name="Customer.get_loanofficer_list_of_active_centers">
-		<return-scalar column="customerId" type="integer" />
-		<return-scalar column="displayName" type="string" />
-		<return-scalar column="searchId" type="string" />
-		<return-scalar column="globalCustNum" type="string" />
-		<![CDATA[
-			select c.customer_id as customerId, 
-					c.display_name as displayName,
-					c.search_id as searchId, 
-					c.global_cust_num as globalCustNum
-			from customer c
-			where c.loan_officer_id=:personnelId  
-	        and c.branch_id=:officeId  
-	        and c.customer_level_id=:customerLevelId 
-			and c.status_id = :CENTERACTIVE
-		]]>
-	</sql-query>
-	<query name="Customer.get_loanofficer_groups">
-	        	   <![CDATA[from  org.mifos.customers.business.CustomerBO customer 
-	        	   where customer.personnel.personnelId=:personnelId 
-	        	   and customer.office.officeId=:officeId 
-	        	   	and customer.customerLevel.id=:customerLevelId 
-	        	   	and customer.customerStatus.id in (7,8,9,10)]]>
-	</query>
-	<sql-query name="Customer.get_loanofficer_list_of_groups">
-		<return-scalar column="customerId" type="integer" />
-		<return-scalar column="displayName" type="string" />
-		<return-scalar column="searchId" type="string" />
-		<return-scalar column="globalCustNum" type="string" />
-		<![CDATA[
-			select c.customer_id as customerId, 
-					c.display_name as displayName,
-					c.search_id as searchId, 
-					c.global_cust_num as globalCustNum
-			from customer c
-			where c.loan_officer_id=:personnelId  
-	        and c.branch_id=:officeId  
-	        and c.customer_level_id=:customerLevelId 
-			and c.status_id in (7,8,9,10)
-		]]>
-	</sql-query>
-	<query name="numberOfMeetingsAttended">
-		        	   <![CDATA[select count(*) from org.mifos.customers.client.business.ClientAttendanceBO customerAttendance where customerAttendance.meetingDate > date(:DATEONEYEARBEFORE) and customerAttendance.attendance in (1,4) and customerAttendance.customer.customerId=:CUSTOMERID )]]>
-	</query>
-	<query name="numberOfMeetingsMissed">
-		        	   <![CDATA[select count(*) from org.mifos.customers.client.business.ClientAttendanceBO customerAttendance where customerAttendance.meetingDate > date(:DATEONEYEARBEFORE) and customerAttendance.attendance in (2,3) and customerAttendance.customer.customerId=:CUSTOMERID )]]>
-	</query>
-	<query name="Customer.getActiveClientsUnderParent">
-		<![CDATA[from org.mifos.customers.client.business.ClientBO as client
-				 where client.searchId like :SEARCH_STRING and client.office.officeId = :OFFICE_ID 
-				 and client.customerStatus.id in (3,4) order by client.customerActivationDate]]>
-	</query>
-	<query name="Customer.getActiveClientsUnderGroup">
-		<![CDATA[from org.mifos.customers.client.business.ClientBO as client
-				 where client.parentCustomer.customerId  = :GROUP_ID 
-				 and client.customerStatus.id in (3,4) order by client.customerActivationDate]]>
-	</query>
-	<query name="Customer.getActiveClientsCountUnderOffice">
-		<![CDATA[select count(*) from org.mifos.customers.client.business.ClientBO as client
-				 where client.office=:Office
-				 and client.customerStatus.description='Customer Was Active']]>
-	</query>
+    <query name="Customer.count_customersForSavingsAccountNonLO">
+        <![CDATA[select  count(*)
+        from org.mifos.customers.business.CustomerBO as cust
+        left join cust.parentCustomer as customerOne
+        left join customerOne.parentCustomer as customerTwo
+        left join cust.office as off
+        where (  ((cust.customerLevel.id =3 and cust.customerStatus.id =13)
+                    or (cust.customerLevel.id =2 and cust.customerStatus.id =9))
+                and cust.displayName like :SEARCH_STRING and off.searchId like :SEARCH_ID)
+                or (cust.customerLevel.id =1
+                    and (cust.displayName like :SEARCH_STRING
+                         or cust.lastName like :SEARCH_STRING
+                         or cust.secondLastName like :SEARCH_STRING )
+                    and off.searchId like :SEARCH_ID
+                    and cust.customerStatus.id =3)
+           ]]>
+    </query>
+    <query name="Customer.get_loanofficer_centers">
+                   <![CDATA[from  org.mifos.customers.business.CustomerBO customer
+                                   where customer.personnel.personnelId=:personnelId and
+                                   customer.office.officeId=:officeId and
+                                   customer.customerLevel.id=:customerLevelId
+                                   and customer.customerStatus.id=:CENTERACTIVE
+                       ]]>
+    </query>
+    <sql-query name="Customer.get_loanofficer_list_of_active_centers">
+        <return-scalar column="customerId" type="integer" />
+        <return-scalar column="displayName" type="string" />
+        <return-scalar column="searchId" type="string" />
+        <return-scalar column="globalCustNum" type="string" />
+        <![CDATA[
+            select c.customer_id as customerId,
+                    c.display_name as displayName,
+                    c.search_id as searchId,
+                    c.global_cust_num as globalCustNum
+            from customer c
+            where c.loan_officer_id=:personnelId
+            and c.branch_id=:officeId
+            and c.customer_level_id=:customerLevelId
+            and c.status_id = :CENTERACTIVE
+        ]]>
+    </sql-query>
+    <query name="Customer.get_loanofficer_groups">
+                   <![CDATA[from  org.mifos.customers.business.CustomerBO customer
+                   where customer.personnel.personnelId=:personnelId
+                   and customer.office.officeId=:officeId
+                       and customer.customerLevel.id=:customerLevelId
+                       and customer.customerStatus.id in (7,8,9,10)]]>
+    </query>
+    <sql-query name="Customer.get_loanofficer_list_of_groups">
+        <return-scalar column="customerId" type="integer" />
+        <return-scalar column="displayName" type="string" />
+        <return-scalar column="searchId" type="string" />
+        <return-scalar column="globalCustNum" type="string" />
+        <![CDATA[
+            select c.customer_id as customerId,
+                    c.display_name as displayName,
+                    c.search_id as searchId,
+                    c.global_cust_num as globalCustNum
+            from customer c
+            where c.loan_officer_id=:personnelId
+            and c.branch_id=:officeId
+            and c.customer_level_id=:customerLevelId
+            and c.status_id in (7,8,9,10)
+        ]]>
+    </sql-query>
+    <query name="numberOfMeetingsAttended">
+                       <![CDATA[select count(*) from org.mifos.customers.client.business.ClientAttendanceBO customerAttendance where customerAttendance.meetingDate > date(:DATEONEYEARBEFORE) and customerAttendance.attendance in (1,4) and customerAttendance.customer.customerId=:CUSTOMERID )]]>
+    </query>
+    <query name="numberOfMeetingsMissed">
+                       <![CDATA[select count(*) from org.mifos.customers.client.business.ClientAttendanceBO customerAttendance where customerAttendance.meetingDate > date(:DATEONEYEARBEFORE) and customerAttendance.attendance in (2,3) and customerAttendance.customer.customerId=:CUSTOMERID )]]>
+    </query>
+    <query name="Customer.getActiveClientsUnderParent">
+        <![CDATA[from org.mifos.customers.client.business.ClientBO as client
+                 where client.searchId like :SEARCH_STRING and client.office.officeId = :OFFICE_ID
+                 and client.customerStatus.id in (3,4) order by client.customerActivationDate]]>
+    </query>
+    <query name="Customer.getActiveClientsUnderGroup">
+        <![CDATA[from org.mifos.customers.client.business.ClientBO as client
+                 where client.parentCustomer.customerId  = :GROUP_ID
+                 and client.customerStatus.id in (3,4) order by client.customerActivationDate]]>
+    </query>
+    <query name="Customer.getActiveClientsCountUnderOffice">
+        <![CDATA[select count(*) from org.mifos.customers.client.business.ClientBO as client
+                 where client.office=:Office
+                 and client.customerStatus.description='Customer Was Active']]>
+    </query>
 
-	<query name="Customer.getActiveOrHoldClientsCountUnderOffice">
-		<![CDATA[select count(*) from org.mifos.customers.client.business.ClientBO as client
-				 where client.office=:Office
-				 and client.customerStatus.description in ('Customer Was Active','Customer Was Hold')]]>
-	</query>
+    <query name="Customer.getActiveOrHoldClientsCountUnderOffice">
+        <![CDATA[select count(*) from org.mifos.customers.client.business.ClientBO as client
+                 where client.office=:Office
+                 and client.customerStatus.description in ('Customer Was Active','Customer Was Hold')]]>
+    </query>
 
-	<query name="Customer.getVeryPoorActiveOrHoldClientsCountUnderOffice">
-		<![CDATA[select count(*) from org.mifos.customers.client.business.ClientBO as client
-				 where client.office=:Office
-				 and client.customerStatus.description in ('Customer Was Active','Customer Was Hold')
-				 and client.customerDetail.povertyStatus=41]]>
-	</query>
+    <query name="Customer.getVeryPoorActiveOrHoldClientsCountUnderOffice">
+        <![CDATA[select count(*) from org.mifos.customers.client.business.ClientBO as client
+                 where client.office=:Office
+                 and client.customerStatus.description in ('Customer Was Active','Customer Was Hold')
+                 and client.customerDetail.povertyStatus=41]]>
+    </query>
 
-	<query name="Customer.getVeryPoorClientsCountUnderOffice">
-		<![CDATA[select count(*) from org.mifos.customers.client.business.ClientBO as client
-				 where client.office=:Office
-				 and client.customerStatus.description='Customer Was Active'
-				 and client.customerDetail.povertyStatus=41]]>
-	</query>
-	<query name="Customers.getActiveBorrowersCountUnderOffice">
-		<![CDATA[from org.mifos.customers.client.business.ClientBO as client
-				 where client.office=:Office
-				 and client.customerStatus.description='Customer Was Active']]>
-	</query>
-	<query name="Customers.getVeryPoorBorrowersCountUnderOffice">
-		<![CDATA[from org.mifos.customers.client.business.ClientBO as client
-				 where client.office=:Office
-				 and client.customerStatus.description='Customer Was Active'
-				 and client.customerDetail.povertyStatus=41]]>
-	</query>
-	<query name="Customers.getReplacementsCountUnderOffice">
-		<![CDATA[from org.mifos.customers.client.business.ClientBO as client
-				 where client.office=:Office]]>
-	</query>
-	<query name="Customers.getVeryPoorClientsUnderOffice">
-		<![CDATA[from org.mifos.customers.client.business.ClientBO as client
-				 where client.office=:Office
-				 and client.customerDetail.povertyStatus=41]]>
-	</query>
+    <query name="Customer.getVeryPoorClientsCountUnderOffice">
+        <![CDATA[select count(*) from org.mifos.customers.client.business.ClientBO as client
+                 where client.office=:Office
+                 and client.customerStatus.description='Customer Was Active'
+                 and client.customerDetail.povertyStatus=41]]>
+    </query>
+    <query name="Customers.getActiveBorrowersCountUnderOffice">
+        <![CDATA[from org.mifos.customers.client.business.ClientBO as client
+                 where client.office=:Office
+                 and client.customerStatus.description='Customer Was Active']]>
+    </query>
+    <query name="Customers.getVeryPoorBorrowersCountUnderOffice">
+        <![CDATA[from org.mifos.customers.client.business.ClientBO as client
+                 where client.office=:Office
+                 and client.customerStatus.description='Customer Was Active'
+                 and client.customerDetail.povertyStatus=41]]>
+    </query>
+    <query name="Customers.getReplacementsCountUnderOffice">
+        <![CDATA[from org.mifos.customers.client.business.ClientBO as client
+                 where client.office=:Office]]>
+    </query>
+    <query name="Customers.getVeryPoorClientsUnderOffice">
+        <![CDATA[from org.mifos.customers.client.business.ClientBO as client
+                 where client.office=:Office
+                 and client.customerDetail.povertyStatus=41]]>
+    </query>
 
-	<sql-query name="Customers.getDormantClientsCountByLoanAccountForOffice">
-		<return-scalar column="dormantLoanAccounts" type="integer" />
-		<![CDATA[select count(distinct(c.customer_id)) as dormantLoanAccounts from customer c
-				    left join 
-				    	customer_state cs on cs.status_id=c.status_id
-					where c.customer_id not in
-					(
-					    select cust.customer_id from customer cust, account acc, loan_account la 
-					    where (cust.created_date > date_sub(current_date, interval :loanCyclePeriod day)
-					    or la.disbursement_date > date_sub(current_date, interval :loanCyclePeriod day))
-					    and cust.customer_id = acc.customer_id
-					    and acc.account_id = la.account_id
-					    and cust.branch_id = :officeId
-					)
-					and c.branch_id = :officeId
+    <sql-query name="Customers.getDormantClientsCountByLoanAccountForOffice">
+        <return-scalar column="dormantLoanAccounts" type="integer" />
+        <![CDATA[select count(distinct(c.customer_id)) as dormantLoanAccounts from customer c
+                    left join
+                        customer_state cs on cs.status_id=c.status_id
+                    where c.customer_id not in
+                    (
+                        select cust.customer_id from customer cust, account acc, loan_account la
+                        where (cust.created_date > date_sub(current_date, interval :loanCyclePeriod day)
+                        or la.disbursement_date > date_sub(current_date, interval :loanCyclePeriod day))
+                        and cust.customer_id = acc.customer_id
+                        and acc.account_id = la.account_id
+                        and cust.branch_id = :officeId
+                    )
+                    and c.branch_id = :officeId
                     and cs.description='Customer Was Active'
                     and c.customer_level_id=:customerLevelId
-		]]>
-	</sql-query>
-	<sql-query
-		name="Customers.getVeryPoorDormantClientsCountByLoanAccountForOffice">
-		<return-scalar column="veryPoorDormantLoanAccounts"
-			type="integer" />
-		<![CDATA[select count(distinct(c.customer_id)) as veryPoorDormantLoanAccounts from customer c
-				    left join customer_detail cd on cd.customer_id=c.customer_id
-				    left join customer_state cs on cs.status_id=c.status_id
-		    	where c.customer_id not in
-				    (
-				        select cust.customer_id from customer cust, customer_detail cust_detail, account acc, loan_account la 
-				        where (cust.created_date > date_sub(current_date, interval :loanCyclePeriod day)
-				        or la.disbursement_date > date_sub(current_date, interval :loanCyclePeriod day))
-				        and cust.customer_id=cust_detail.customer_id
-				        and cust.customer_id = acc.customer_id
-				        and acc.account_id = la.account_id
-				        and cust.branch_id = :officeId
-				        and cust_detail.poverty_status=41
-				    )
-				    and c.branch_id = :officeId
-				    and c.customer_level_id=:customerLevelId
+        ]]>
+    </sql-query>
+    <sql-query
+        name="Customers.getVeryPoorDormantClientsCountByLoanAccountForOffice">
+        <return-scalar column="veryPoorDormantLoanAccounts"
+            type="integer" />
+        <![CDATA[select count(distinct(c.customer_id)) as veryPoorDormantLoanAccounts from customer c
+                    left join customer_detail cd on cd.customer_id=c.customer_id
+                    left join customer_state cs on cs.status_id=c.status_id
+                where c.customer_id not in
+                    (
+                        select cust.customer_id from customer cust, customer_detail cust_detail, account acc, loan_account la
+                        where (cust.created_date > date_sub(current_date, interval :loanCyclePeriod day)
+                        or la.disbursement_date > date_sub(current_date, interval :loanCyclePeriod day))
+                        and cust.customer_id=cust_detail.customer_id
+                        and cust.customer_id = acc.customer_id
+                        and acc.account_id = la.account_id
+                        and cust.branch_id = :officeId
+                        and cust_detail.poverty_status=41
+                    )
+                    and c.branch_id = :officeId
+                    and c.customer_level_id=:customerLevelId
                     and cs.description='Customer Was Active'
-				    and cd.poverty_status=41
-		]]>
-	</sql-query>
-	<sql-query name="Customers.getDormantClientsCountBySavingAccountForOffice">
-		<return-scalar column="dormantSavingAccounts" type="integer" />
-		<![CDATA[select count(distinct(c.customer_id)) as dormantSavingAccounts from customer c
-					left join customer_state cs on cs.status_id=c.status_id
-					where c.customer_id not in
-					(
-					    select cust.customer_id from customer cust, account acc, savings_account sa 
-					    where (cust.created_date > date_sub(current_date, interval :loanCyclePeriod day)
-					    or sa.activation_date > date_sub(current_date, interval :loanCyclePeriod day))
-					    and cust.customer_id = acc.customer_id
-					    and acc.account_id = sa.account_id
-					    and cust.branch_id = :officeId
-					)
-					and c.branch_id = :officeId
-					and c.customer_level_id=:customerLevelId
-					and cs.description='Customer Was Active'
-		]]>
-	</sql-query>
-	<sql-query
-		name="Customers.getVeryPoorDormantClientsCountBySavingAccountForOffice">
-		<return-scalar column="veryPoorDormantSavingAccounts"
-			type="integer" />
-		<![CDATA[select count(distinct(c.customer_id)) as veryPoorDormantSavingAccounts from customer c, customer_detail cd
-				    where c.customer_id not in
-				    (
-				        select cust.customer_id from customer cust, customer_detail cust_detail, account acc, savings_account sa 
-				        where (cust.created_date > date_sub(current_date, interval :loanCyclePeriod day)
-				        or sa.activation_date > date_sub(current_date, interval :loanCyclePeriod day))
-				        and cust.customer_id=cust_detail.customer_id
-				        and cust.customer_id = acc.customer_id
-				        and acc.account_id = sa.account_id
-				        and cust.branch_id = :officeId
-				        and cust_detail.poverty_status=41
-				    )
-				    and c.branch_id = :officeId
-				    and c.customer_level_id=:customerLevelId
-				    and c.customer_id=cd.customer_id
-				    and cd.poverty_status=41
-		]]>
-	</sql-query>
-	<sql-query name="Customer.Sql.getCustomerCountForOffice">
-		<return-scalar column="customerCount" type="integer" />
-		<![CDATA[
-			SELECT 
-				count(distinct cust.customer_id) as customerCount
-			from
-				customer cust
-			where
-				cust.customer_level_id=:customerLevelId
-			and
-				cust.branch_id=:officeId
-			and
-			    (cust.status_id = 9 or cust.status_id = 13)
-		]]>
-	</sql-query>
-	<sql-query name="Customer.Sql.getCustomerCountBasedOnStatusForOffice">
-		<return-scalar column="customerStatus" type="string" />
-		<return-scalar column="customerCount" type="integer" />
-		<![CDATA[
-			SELECT 
-				cs.description as customerStatus,
-				count(distinct cust.customer_id) as customerCount
-			from 
-				customer cust 
-			left join 
-				customer_state cs on cs.status_id=cust.status_id 
-			where 
-				cust.customer_level_id=:customerLevelId 
-			and
-				cust.branch_id=:officeId 
-			and
-				cs.description in (:customerStatusDescription)
-			group by
-				cs.description 
-		]]>
-	</sql-query>
-	<sql-query
-		name="Customer.Sql.getVeryPoorCustomerCountBasedOnStatusForOffice">
-		<return-scalar column="customerStatus" type="string" />
-		<return-scalar column="customerCount" type="integer" />
-		<![CDATA[
-			SELECT 
-				cs.description as customerStatus,
-				count(distinct cust.customer_id) as customerCount
-			from 
-				customer cust 
-			left join 
-				customer_state cs on cs.status_id=cust.status_id 
-			left join
-				customer_detail cd on cd.customer_id=cust.customer_id
-			where 
-				cust.customer_level_id=:customerLevelId 
-			and
-				cust.branch_id=:officeId 
-			and
-				cs.description in (:customerStatusDescription)
-			and
-				cd.poverty_status=41
-			group by
-				cs.description
-		]]>
-	</sql-query>
-	<sql-query name="Customer.Sql.getActiveAccountUserCountForOffice">
-		<return-scalar column="customerCount" type="integer" />
-	<![CDATA[
-		SELECT 
-				count(distinct cust.customer_id) as customerCount
-			from 
-				customer cust  			
- 			left join
-  				account acc on acc.customer_id=cust.customer_id
-  			left join
-  				loan_account lacc on acc.account_id = lacc.account_id  			
- 			where 
-  				cust.customer_level_id=:customerLevelId
- 			and
-  				cust.branch_id=:officeId
- 			and 
-  				cust.status_id= 3
- 			and 
-  				acc.account_type_id=:accountTypeId
- 			and
-  				acc.account_state_id in (:accountStateIds)
-	]]>
-	</sql-query>
-	<sql-query name="Customer.Sql.getVeryPoorActiveBorrowersCountForOffice">
-		<return-scalar column="customerCount" type="integer" />
-	<![CDATA[
-			SELECT 
-				count(distinct cust.customer_id) as customerCount
-			from 
-				customer cust 
- 			left join
-  				account acc on acc.customer_id=cust.customer_id
-  			left join
-  				loan_account lacc on acc.account_id = lacc.account_id  			
- 			left join
-  				customer_detail cd on cd.customer_id=cust.customer_id
- 			where 
-  				cust.customer_level_id=:customerLevelId
- 			and
-  				cust.branch_id=:officeId
- 			and 
-  				cust.status_id = 3
- 			and 
-  				acc.account_type_id=:accountTypeId
- 			and
-  				acc.account_state_id in (:accountStateIds)
-			and
-				cd.poverty_status=41
-	]]>
-	</sql-query>
-	<sql-query name="Customer.Sql.getReplacementCountForOffice">
-		<return-scalar column="customerCount" type="integer" />
-	<![CDATA[
-			SELECT 
-				count(distinct cust.customer_id) as customerCount
-			from 
-				customer cust 
-			left join 
-				customer_custom_field ccf on ccf.customer_id = cust.customer_id 
-			where 
-				cust.branch_id=:officeId 
-			and 
-				cust.customer_level_id=:customerLevelId 
-			and 
-				ccf.field_id=:fieldId
-			and 
-				ccf.field_value=:fieldValue
-	]]>
-	</sql-query>
-	<sql-query name="Customer.Sql.getVeryPoorReplacementCountForOffice">
-		<return-scalar column="customerCount" type="integer" />
-	<![CDATA[
-		SELECT 
-				count(distinct cust.customer_id) as customerCount
-			from 
-				customer cust 
-			left join 
-				customer_custom_field ccf on ccf.customer_id = cust.customer_id 
-			left join 
-				customer_detail cd on cd.customer_id = cust.customer_id 
-			where 
-				cust.branch_id=:officeId
-			and 
-				cust.customer_level_id =:customerLevelId
-			and 
-				ccf.field_id=:fieldId
-			and 
-				ccf.field_value=:fieldValue
-			and 
-				cd.poverty_status=41
-	]]>
-	</sql-query>
-	<!--
-		All clients to be considered when calculating very poor dormant
-		clients (see previous query)
-	-->
-	<query name="Customers.getVeryPoorClientsToConsiderForDormantCount">
-		<![CDATA[from org.mifos.customers.client.business.ClientBO as client
-				 where client.office=:Office
-				 and client.customerStatus.description='Customer Was Active'
+                    and cd.poverty_status=41
+        ]]>
+    </sql-query>
+    <sql-query name="Customers.getDormantClientsCountBySavingAccountForOffice">
+        <return-scalar column="dormantSavingAccounts" type="integer" />
+        <![CDATA[select count(distinct(c.customer_id)) as dormantSavingAccounts from customer c
+                    left join customer_state cs on cs.status_id=c.status_id
+                    where c.customer_id not in
+                    (
+                        select cust.customer_id from customer cust, account acc, savings_account sa
+                        where (cust.created_date > date_sub(current_date, interval :loanCyclePeriod day)
+                        or sa.activation_date > date_sub(current_date, interval :loanCyclePeriod day))
+                        and cust.customer_id = acc.customer_id
+                        and acc.account_id = sa.account_id
+                        and cust.branch_id = :officeId
+                    )
+                    and c.branch_id = :officeId
+                    and c.customer_level_id=:customerLevelId
+                    and cs.description='Customer Was Active'
+        ]]>
+    </sql-query>
+    <sql-query
+        name="Customers.getVeryPoorDormantClientsCountBySavingAccountForOffice">
+        <return-scalar column="veryPoorDormantSavingAccounts"
+            type="integer" />
+        <![CDATA[select count(distinct(c.customer_id)) as veryPoorDormantSavingAccounts from customer c, customer_detail cd
+                    where c.customer_id not in
+                    (
+                        select cust.customer_id from customer cust, customer_detail cust_detail, account acc, savings_account sa
+                        where (cust.created_date > date_sub(current_date, interval :loanCyclePeriod day)
+                        or sa.activation_date > date_sub(current_date, interval :loanCyclePeriod day))
+                        and cust.customer_id=cust_detail.customer_id
+                        and cust.customer_id = acc.customer_id
+                        and acc.account_id = sa.account_id
+                        and cust.branch_id = :officeId
+                        and cust_detail.poverty_status=41
+                    )
+                    and c.branch_id = :officeId
+                    and c.customer_level_id=:customerLevelId
+                    and c.customer_id=cd.customer_id
+                    and cd.poverty_status=41
+        ]]>
+    </sql-query>
+    <sql-query name="Customer.Sql.getCustomerCountForOffice">
+        <return-scalar column="customerCount" type="integer" />
+        <![CDATA[
+            SELECT
+                count(distinct cust.customer_id) as customerCount
+            from
+                customer cust
+            where
+                cust.customer_level_id=:customerLevelId
+            and
+                cust.branch_id=:officeId
+            and
+                (cust.status_id = 9 or cust.status_id = 13)
+        ]]>
+    </sql-query>
+    <sql-query name="Customer.Sql.getCustomerCountBasedOnStatusForOffice">
+        <return-scalar column="customerStatus" type="string" />
+        <return-scalar column="customerCount" type="integer" />
+        <![CDATA[
+            SELECT
+                cs.description as customerStatus,
+                count(distinct cust.customer_id) as customerCount
+            from
+                customer cust
+            left join
+                customer_state cs on cs.status_id=cust.status_id
+            where
+                cust.customer_level_id=:customerLevelId
+            and
+                cust.branch_id=:officeId
+            and
+                cs.description in (:customerStatusDescription)
+            group by
+                cs.description
+        ]]>
+    </sql-query>
+    <sql-query
+        name="Customer.Sql.getVeryPoorCustomerCountBasedOnStatusForOffice">
+        <return-scalar column="customerStatus" type="string" />
+        <return-scalar column="customerCount" type="integer" />
+        <![CDATA[
+            SELECT
+                cs.description as customerStatus,
+                count(distinct cust.customer_id) as customerCount
+            from
+                customer cust
+            left join
+                customer_state cs on cs.status_id=cust.status_id
+            left join
+                customer_detail cd on cd.customer_id=cust.customer_id
+            where
+                cust.customer_level_id=:customerLevelId
+            and
+                cust.branch_id=:officeId
+            and
+                cs.description in (:customerStatusDescription)
+            and
+                cd.poverty_status=41
+            group by
+                cs.description
+        ]]>
+    </sql-query>
+    <sql-query name="Customer.Sql.getActiveAccountUserCountForOffice">
+        <return-scalar column="customerCount" type="integer" />
+    <![CDATA[
+        SELECT
+                count(distinct cust.customer_id) as customerCount
+            from
+                customer cust
+             left join
+                  account acc on acc.customer_id=cust.customer_id
+              left join
+                  loan_account lacc on acc.account_id = lacc.account_id
+             where
+                  cust.customer_level_id=:customerLevelId
+             and
+                  cust.branch_id=:officeId
+             and
+                  cust.status_id= 3
+             and
+                  acc.account_type_id=:accountTypeId
+             and
+                  acc.account_state_id in (:accountStateIds)
+    ]]>
+    </sql-query>
+    <sql-query name="Customer.Sql.getVeryPoorActiveBorrowersCountForOffice">
+        <return-scalar column="customerCount" type="integer" />
+    <![CDATA[
+            SELECT
+                count(distinct cust.customer_id) as customerCount
+            from
+                customer cust
+             left join
+                  account acc on acc.customer_id=cust.customer_id
+              left join
+                  loan_account lacc on acc.account_id = lacc.account_id
+             left join
+                  customer_detail cd on cd.customer_id=cust.customer_id
+             where
+                  cust.customer_level_id=:customerLevelId
+             and
+                  cust.branch_id=:officeId
+             and
+                  cust.status_id = 3
+             and
+                  acc.account_type_id=:accountTypeId
+             and
+                  acc.account_state_id in (:accountStateIds)
+            and
+                cd.poverty_status=41
+    ]]>
+    </sql-query>
+    <sql-query name="Customer.Sql.getReplacementCountForOffice">
+        <return-scalar column="customerCount" type="integer" />
+    <![CDATA[
+            SELECT
+                count(distinct cust.customer_id) as customerCount
+            from
+                customer cust
+            left join
+                customer_custom_field ccf on ccf.customer_id = cust.customer_id
+            where
+                cust.branch_id=:officeId
+            and
+                cust.customer_level_id=:customerLevelId
+            and
+                ccf.field_id=:fieldId
+            and
+                ccf.field_value=:fieldValue
+    ]]>
+    </sql-query>
+    <sql-query name="Customer.Sql.getVeryPoorReplacementCountForOffice">
+        <return-scalar column="customerCount" type="integer" />
+    <![CDATA[
+        SELECT
+                count(distinct cust.customer_id) as customerCount
+            from
+                customer cust
+            left join
+                customer_custom_field ccf on ccf.customer_id = cust.customer_id
+            left join
+                customer_detail cd on cd.customer_id = cust.customer_id
+            where
+                cust.branch_id=:officeId
+            and
+                cust.customer_level_id =:customerLevelId
+            and
+                ccf.field_id=:fieldId
+            and
+                ccf.field_value=:fieldValue
+            and
+                cd.poverty_status=41
+    ]]>
+    </sql-query>
+    <!--
+        All clients to be considered when calculating very poor dormant
+        clients (see previous query)
+    -->
+    <query name="Customers.getVeryPoorClientsToConsiderForDormantCount">
+        <![CDATA[from org.mifos.customers.client.business.ClientBO as client
+                 where client.office=:Office
+                 and client.customerStatus.description='Customer Was Active'
                  and client.customerDetail.povertyStatus=41]]>
-	</query>
+    </query>
 
-	<query name="Customers.getDropOutClientsCountUnderOffice">
-		<![CDATA[select count(*) from org.mifos.customers.client.business.ClientBO as client
-				 where client.office=:Office
-				 and client.customerStatus.description='Customer Was Close']]>
-	</query>
+    <query name="Customers.getDropOutClientsCountUnderOffice">
+        <![CDATA[select count(*) from org.mifos.customers.client.business.ClientBO as client
+                 where client.office=:Office
+                 and client.customerStatus.description='Customer Was Close']]>
+    </query>
 
-	<query name="Customers.getVeryPoorDropOutClientsCountUnderOffice">
-		<![CDATA[select count(*) from org.mifos.customers.client.business.ClientBO as client
-				 where client.office=:Office
-				 and client.customerStatus.description='Customer Was Close'
-				 and client.customerDetail.povertyStatus=41]]>
-	</query>
+    <query name="Customers.getVeryPoorDropOutClientsCountUnderOffice">
+        <![CDATA[select count(*) from org.mifos.customers.client.business.ClientBO as client
+                 where client.office=:Office
+                 and client.customerStatus.description='Customer Was Close'
+                 and client.customerDetail.povertyStatus=41]]>
+    </query>
 
-	<query name="Customers.getOnHoldClientsCountUnderOffice">
-		<![CDATA[select count(*) from org.mifos.customers.client.business.ClientBO as client
-				 where client.office=:Office
-				 and client.customerStatus.description='Customer Was Hold']]>
-	</query>
+    <query name="Customers.getOnHoldClientsCountUnderOffice">
+        <![CDATA[select count(*) from org.mifos.customers.client.business.ClientBO as client
+                 where client.office=:Office
+                 and client.customerStatus.description='Customer Was Hold']]>
+    </query>
 
-	<query name="Customers.getVeryPoorOnHoldClientsCountUnderOffice">
-		<![CDATA[select count(*) from org.mifos.customers.client.business.ClientBO as client
-				 where client.office=:Office
-				 and client.customerStatus.description='Customer Was Hold'
-				 and client.customerDetail.povertyStatus=41]]>
-	</query>
+    <query name="Customers.getVeryPoorOnHoldClientsCountUnderOffice">
+        <![CDATA[select count(*) from org.mifos.customers.client.business.ClientBO as client
+                 where client.office=:Office
+                 and client.customerStatus.description='Customer Was Hold'
+                 and client.customerDetail.povertyStatus=41]]>
+    </query>
 
-	<query name="Customers.getActiveSaversCountUnderOffice">
-		<![CDATA[from org.mifos.customers.client.business.ClientBO as client
-				 where client.office=:Office
-				 and client.customerStatus.description='Customer Was Active']]>
-	</query>
+    <query name="Customers.getActiveSaversCountUnderOffice">
+        <![CDATA[from org.mifos.customers.client.business.ClientBO as client
+                 where client.office=:Office
+                 and client.customerStatus.description='Customer Was Active']]>
+    </query>
 
-	<query name="Customers.getVeryPoorActiveSaversCountUnderOffice">
-		<![CDATA[from org.mifos.customers.client.business.ClientBO as client
-				 where client.office=:Office
-				 and client.customerStatus.description='Customer Was Active'
-				 and client.customerDetail.povertyStatus=41]]>
-	</query>
-	<!-- account_type_id=1 is for loan account -->
-	<sql-query name="Customer.getTotalAmountForGroup">
-		<return-scalar column="groupTotalAmount" type="big_decimal" />	
-		<![CDATA[
-			select ifnull(sum(loanSummary.orig_principal - loanSummary.principal_paid), 0) as groupTotalAmount 
-			from loan_summary loanSummary, account acc, customer cust where loanSummary.account_id = acc.account_id 
-			and acc.customer_id = cust.customer_id and acc.account_state_id=:accountState
-			and cust.customer_id=:customerId and acc.account_type_id=1
-		]]>
-	</sql-query>
-	<sql-query name="Customer.getLoanSummaryCurrenciesForGroup">
-		<![CDATA[
-			select distinct(loanSummary.orig_principal_currency_id)  
-			from loan_summary loanSummary, account acc, customer cust where loanSummary.account_id = acc.account_id 
-			and acc.customer_id = cust.customer_id and acc.account_state_id=:accountState
-			and cust.customer_id=:customerId and acc.account_type_id=1
-		]]>
-	</sql-query>
-	<!--
-		account_type_id=1 is for loan account, customer_level_id=1 is for
-		client, and status_id=3 for active and status_id=4 is for active on
-		hold. The clients of the group are found by
-	-->
-	<sql-query name="Customer.getTotalAmountForAllClientsOfGroup">
-		<return-scalar column="clientTotalAmount" type="big_decimal" />	
-		<![CDATA[
-			select ifnull(sum(loanSummary.orig_principal - loanSummary.principal_paid), 0) as clientTotalAmount 
-			from loan_summary loanSummary, account acc, customer cust where loanSummary.account_id = acc.account_id 
-			and acc.customer_id = cust.customer_id and acc.account_state_id=:accountState
-			and cust.customer_level_id = 1 and cust.status_id in (3,4)
-			and cust.branch_id=:officeId and cust.search_id like :searchId and acc.account_type_id=1
-		]]>
-	</sql-query>
-	<sql-query name="Customer.getLoanSummaryCurrenciesForAllClientsOfGroup">
-		<![CDATA[
-			select distinct(loanSummary.orig_principal_currency_id)  
-			from loan_summary loanSummary, account acc, customer cust where loanSummary.account_id = acc.account_id 
-			and acc.customer_id = cust.customer_id and acc.account_state_id=:accountState
-			and cust.customer_level_id = 1 and cust.status_id in (3,4)
-			and cust.branch_id=:officeId and cust.search_id like :searchId and acc.account_type_id=1
-		]]>
-	</sql-query>
+    <query name="Customers.getVeryPoorActiveSaversCountUnderOffice">
+        <![CDATA[from org.mifos.customers.client.business.ClientBO as client
+                 where client.office=:Office
+                 and client.customerStatus.description='Customer Was Active'
+                 and client.customerDetail.povertyStatus=41]]>
+    </query>
+    <!-- account_type_id=1 is for loan account -->
+    <sql-query name="Customer.getTotalAmountForGroup">
+        <return-scalar column="groupTotalAmount" type="big_decimal" />
+        <![CDATA[
+            select ifnull(sum(loanSummary.orig_principal - loanSummary.principal_paid), 0) as groupTotalAmount
+            from loan_summary loanSummary, account acc, customer cust where loanSummary.account_id = acc.account_id
+            and acc.customer_id = cust.customer_id and acc.account_state_id=:accountState
+            and cust.customer_id=:customerId and acc.account_type_id=1
+        ]]>
+    </sql-query>
+    <sql-query name="Customer.getLoanSummaryCurrenciesForGroup">
+        <![CDATA[
+            select distinct(loanSummary.orig_principal_currency_id)
+            from loan_summary loanSummary, account acc, customer cust where loanSummary.account_id = acc.account_id
+            and acc.customer_id = cust.customer_id and acc.account_state_id=:accountState
+            and cust.customer_id=:customerId and acc.account_type_id=1
+        ]]>
+    </sql-query>
+    <!--
+        account_type_id=1 is for loan account, customer_level_id=1 is for
+        client, and status_id=3 for active and status_id=4 is for active on
+        hold. The clients of the group are found by
+    -->
+    <sql-query name="Customer.getTotalAmountForAllClientsOfGroup">
+        <return-scalar column="clientTotalAmount" type="big_decimal" />
+        <![CDATA[
+            select ifnull(sum(loanSummary.orig_principal - loanSummary.principal_paid), 0) as clientTotalAmount
+            from loan_summary loanSummary, account acc, customer cust where loanSummary.account_id = acc.account_id
+            and acc.customer_id = cust.customer_id and acc.account_state_id=:accountState
+            and cust.customer_level_id = 1 and cust.status_id in (3,4)
+            and cust.branch_id=:officeId and cust.search_id like :searchId and acc.account_type_id=1
+        ]]>
+    </sql-query>
+    <sql-query name="Customer.getLoanSummaryCurrenciesForAllClientsOfGroup">
+        <![CDATA[
+            select distinct(loanSummary.orig_principal_currency_id)
+            from loan_summary loanSummary, account acc, customer cust where loanSummary.account_id = acc.account_id
+            and acc.customer_id = cust.customer_id and acc.account_state_id=:accountState
+            and cust.customer_level_id = 1 and cust.status_id in (3,4)
+            and cust.branch_id=:officeId and cust.search_id like :searchId and acc.account_type_id=1
+        ]]>
+    </sql-query>
 
-	<!--
-		customer_level_id = 2 is for group. Status is 9 is group active and 10
-		is group on hold
-	-->
-	<query name="Customer.getAllBasicGroupInfo">
-		<![CDATA[select new org.mifos.customers.group.BasicGroupInfo(customer.customerId, customer.office.officeId, customer.searchId, customer.displayName)
-		 from org.mifos.customers.business.CustomerBO as customer where customer.customerLevel.id =2 and customer.customerStatus in (9, 10) order by customer.customerId]]>
-	</query>
+    <!--
+        customer_level_id = 2 is for group. Status is 9 is group active and 10
+        is group on hold
+    -->
+    <query name="Customer.getAllBasicGroupInfo">
+        <![CDATA[select new org.mifos.customers.group.BasicGroupInfo(customer.customerId, customer.office.officeId, customer.searchId, customer.displayName)
+         from org.mifos.customers.business.CustomerBO as customer where customer.customerLevel.id =2 and customer.customerStatus in (9, 10) order by customer.customerId]]>
+    </query>
 
         <query name="Customer.findCustomersWithGivenPhoneNumber">
-            <![CDATA[from org.mifos.customers.business.CustomerBO customer 
+            <![CDATA[from org.mifos.customers.business.CustomerBO customer
             where customer.customerAddressDetail.address.phoneNumberStripped=:phoneNumberStripped]]>
         </query>
 

@@ -50,11 +50,11 @@
                         <span class="span-11 width50prc">
                             [@spring.messageArgs "ftlDefinedLabels.manageProducts.editLatenessDormancy.specifyTheNumberOfDaysOfNonPayment" , [loan]  /]
                         </span>
-    	            <span class="span-8">
-    	            	[@spring.bind "formBean.latenessDays" /]
+                    <span class="span-8">
+                        [@spring.bind "formBean.latenessDays" /]
                             <input size="4" maxlength="4" type="text" id="lateness" name="${spring.status.expression}"
                                    value="${spring.status.value?default("")}">&nbsp;[@spring.message "manageProducts.editLatenessDormancy.days" /]
-					</span>
+                    </span>
                     </div>
                     <div class="clear">&nbsp;</div>
                 </div>
@@ -71,7 +71,7 @@
                             [@spring.messageArgs "ftlDefinedLabels.manageProducts.editLatenessDormancy.specifyTheNumberOfDaysToDefineDormancy" , [savings]  /]
                         </span>
                 <span class="span-8">
-                	[@spring.bind "formBean.dormancyDays" /]
+                    [@spring.bind "formBean.dormancyDays" /]
                         <input size="4" maxlength="4" type="text" id="dormancy" name="${spring.status.expression}"
                                value="${spring.status.value?default("")}">&nbsp;[@spring.message "manageProducts.editLatenessDormancy.days"/]
                 </span>

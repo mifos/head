@@ -35,6 +35,7 @@ import org.mifos.application.meeting.business.RecurrenceTypeEntity;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.LegacyGenericDao;
 
+@SuppressWarnings("unchecked")
 public class SavingsPrdPersistence extends LegacyGenericDao {
 
     public SavingsOfferingBO getSavingsProduct(Short prdOfferingId) throws PersistenceException {

@@ -6,20 +6,20 @@
 
 <hibernate-mapping>
 
-	<class
-		name="org.mifos.accounts.productdefinition.business.LoanAmountFromLoanCycleBO"
-		table="loan_amount_from_loan_cycle">
-		<id name="loanAmountFromLoanCycleID"
-			column="loan_amount_from_loan_cycle_id" access="field">
-			<generator class="native" />
-		</id>
-		<property name="minLoanAmount" column="min_loan_amount" access="field"/>
-		<property name="maxLoanAmount" column="max_loan_amnt" access="field"/>
-		<property name="defaultLoanAmount" column="default_loan_amount" access="field"/>
-		<property name="rangeIndex" column="range_index" access="field"/>
-		<many-to-one name="loanOffering" column="prd_offering_id"
-			class="org.mifos.accounts.productdefinition.business.LoanOfferingBO"
-			cascade="none" insert="true" update="true" unique="true"
-			access="field" />
-	</class>
+    <class
+        name="org.mifos.accounts.productdefinition.business.LoanAmountFromLoanCycleBO"
+        table="loan_amount_from_loan_cycle">
+        <id name="loanAmountFromLoanCycleID"
+            column="loan_amount_from_loan_cycle_id" access="field">
+            <generator class="native" />
+        </id>
+        <property name="minLoanAmount" column="min_loan_amount" access="field"/>
+        <property name="maxLoanAmount" column="max_loan_amnt" access="field"/>
+        <property name="defaultLoanAmount" column="default_loan_amount" access="field"/>
+        <property name="rangeIndex" column="range_index" access="field"/>
+        <many-to-one name="loanOffering" column="prd_offering_id"
+            class="org.mifos.accounts.productdefinition.business.LoanOfferingBO"
+            cascade="none" insert="true" update="true" unique="true"
+            access="field" />
+    </class>
 </hibernate-mapping>

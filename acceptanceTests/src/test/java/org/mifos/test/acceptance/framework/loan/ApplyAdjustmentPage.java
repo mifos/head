@@ -38,11 +38,27 @@ public class ApplyAdjustmentPage extends AbstractPage {
 
     public LoanAccountPage verifyAdjustment(String adjustmentAmount) {
         Assert.assertTrue(selenium.isTextPresent("Last payment made: " + adjustmentAmount + " "));
+        fillAdjustmentFields(adjustmentAmount);
+        return new LoanAccountPage(selenium);
+    }
+
+    private void fillAdjustmentFields(String adjustmentAmount) {
         selenium.click("applyadjustment.input.revertLastPayment");
         selenium.type("applyadjustment.input.note", "testNotes paid Amount: " + adjustmentAmount);
         selenium.click("applyadjustment.button.submit");
         waitForPageToLoad();
         selenium.click("applyadjustment.button.submit");
+        waitForPageToLoad();
+    }
+
+    public ApplyAdjustmentPage verifyAdjustBackdatedPermission() {
+        fillAdjustmentFields("10");
+        Assert.assertTrue(selenium.isTextPresent("You do not have permissions to perform this activity. Contact your system administrator to grant you required permissions and try again."));
+        return this;
+    }
+
+    public LoanAccountPage cancelAdjustment() {
+        selenium.click("applyadjustment.button.cancel");
         waitForPageToLoad();
         return new LoanAccountPage(selenium);
     }
@@ -56,5 +72,18 @@ public class ApplyAdjustmentPage extends AbstractPage {
         selenium.click("applyadjustment.button.submit");
         waitForPageToLoad();
         return new LoanAccountPage(selenium);
+    }
+    public LoanAccountPage verifyRepayAdjustment(String loanAmount) {
+        Assert.assertTrue(selenium.isTextPresent(loanAmount));
+        selenium.click("applyadjustment.button.submit");
+        waitForPageToLoad();
+        return new LoanAccountPage(selenium);
+    }
+
+    public ApplyAdjustmentPage verifyAdjustBackdatedPermissionOnRepay() {
+        selenium.click("applyadjustment.button.submit");
+        waitForPageToLoad();
+        Assert.assertTrue(selenium.isTextPresent("You do not have permissions to perform this activity. Contact your system administrator to grant you required permissions and try again."));
+        return this;
     }
 }

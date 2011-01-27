@@ -719,4 +719,26 @@ public class LoanTestHelper {
     public AdminPage loginAndNavigateToAdminPage() {
         return navigationHelper.navigateToAdminPage();
     }
+
+    public RepayLoanParameters setRepaymentParameters() {
+        RepayLoanParameters repayLoanParameters = new RepayLoanParameters();
+        repayLoanParameters.setModeOfRepayment(RepayLoanParameters.CASH);
+        repayLoanParameters.setReceiptDateDD("");
+        return repayLoanParameters;
+    }
+
+    public LoanAccountPage repayLoan(DateTime repaymentDate) throws UnsupportedEncodingException {
+        setApplicationTime(repaymentDate).navigateBack();
+        RepayLoanParameters params = setRepaymentParameters();
+        return new LoanAccountPage(selenium).navigateToRepayLoan().
+                submitAndNavigateToRepayLoanConfirmationPage(params).
+                submitAndNavigateToLoanAccountDetailsPage();
+    }
+
+
+    public void createLoanAccount(String clientName, String loanProductName) {
+        navigateToLoanAccountEntryPage(setLoanSearchParameters(clientName,loanProductName)).
+                clickContinueAndNavigateToLoanAccountConfirmationPage().
+                navigateToLoanAccountDetailsPage();
+    }
 }

@@ -3,14 +3,14 @@
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
 
-	<var name="questionGroupForm" class="org.mifos.platform.questionnaire.ui.model.QuestionGroupForm"/>
+    <var name="questionGroupForm" class="org.mifos.platform.questionnaire.ui.model.QuestionGroupForm"/>
 
     <view-state id="viewQuestionGroupDetail">
         <on-entry>
             <set name="flowScope.questionGroupId" value="requestParameters.questionGroupId" type="int"/>
             <evaluate expression="questionnaireServiceFacade.getQuestionGroupDetail(flowScope.questionGroupId)" result="questionGroupForm.questionGroupDetail"/>
         </on-entry>
-		<transition on="editQuestionGroup" to="editQuestionGroup"/>
+        <transition on="editQuestionGroup" to="editQuestionGroup"/>
     </view-state>
 
     <view-state id="editQuestionGroup" model="questionGroupForm">
@@ -33,7 +33,7 @@
         <transition on="removeChoiceTag" to="removeChoiceTag"/>
         <transition on="removeSmartChoice" to="removeChoice"/>
         <transition on="defineQuestionGroup" to="defineQuestionGroup"/>
-		<transition on="cancel" to="viewAndEditQuestionGroup"/>
+        <transition on="cancel" to="viewAndEditQuestionGroup"/>
     </view-state>
 
     <action-state id="deleteSection">
@@ -79,22 +79,22 @@
     </action-state>
 
     <action-state id="addChoice">
-    	<evaluate expression="questionGroupForm.currentQuestion.addAnswerChoice()"/>
+        <evaluate expression="questionGroupForm.currentQuestion.addAnswerChoice()"/>
         <transition to="editQuestionGroup" />
     </action-state>
 
     <action-state id="addSmartChoice">
-    	<evaluate expression="questionGroupForm.currentQuestion.addAnswerSmartChoice()"/>
+        <evaluate expression="questionGroupForm.currentQuestion.addAnswerSmartChoice()"/>
         <transition to="editQuestionGroup" />
     </action-state>
 
     <action-state id="removeChoice">
-    	<evaluate expression="questionGroupForm.currentQuestion.removeChoice(requestParameters._eventId_removeChoice)"/>
+        <evaluate expression="questionGroupForm.currentQuestion.removeChoice(requestParameters._eventId_removeChoice)"/>
         <transition to="editQuestionGroup" />
     </action-state>
 
     <action-state id="removeChoiceTag">
-    	<evaluate expression="questionGroupForm.currentQuestion.removeChoiceTag(requestParameters._eventId_removeChoiceTag)"/>
+        <evaluate expression="questionGroupForm.currentQuestion.removeChoiceTag(requestParameters._eventId_removeChoiceTag)"/>
         <transition to="editQuestionGroup" />
     </action-state>
 

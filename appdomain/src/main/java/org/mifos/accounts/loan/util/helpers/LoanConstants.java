@@ -122,7 +122,7 @@ public interface LoanConstants {
     Short INTEREST_DEDUCTED_AT_DISBURSEMENT = 1;
 
     String TOTAL_REPAYMENT_AMOUNT = "totalRepaymentAmount";
-    String WAIVED_REPAYMENT_AMOUNT = "waivedRepaymentAmount";    
+    String WAIVED_REPAYMENT_AMOUNT = "waivedRepaymentAmount";
     String DONOT_PAY_FEES_PENALTY_INTEREST = "doNotPayFeesPenaltyAndInterest";
     String PAY_FEES_PENALTY_INTEREST = "payFeesPenaltyAndInterest";
     String PAY_FEES_PENALTY = "payFeesPenalty";

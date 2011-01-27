@@ -23,40 +23,21 @@ package org.mifos.framework.components.audit.persistence;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.hibernate.HibernateException;
 import org.mifos.accounts.productdefinition.business.PrdStatusEntity;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.MessageLookup;
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.master.business.LookUpLabelEntity;
-import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.meeting.business.RecurrenceTypeEntity;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.LegacyGenericDao;
 
+/**
+ * no longer used???
+ */
+@SuppressWarnings("unchecked")
+@Deprecated
 public class AuditConfigurationPersistence extends LegacyGenericDao {
-
-    public Map<String, String> retrieveAllCustomFieldsDefinition(Short localeId) throws PersistenceException {
-        Map<String, String> valueMap = new HashMap<String, String>();
-        try {
-            List<CustomFieldDefinitionEntity> customFields = executeNamedQuery(
-                    NamedQueryConstants.RETRIEVE_ALL_CUSTOM_FIELDS, null);
-            for (CustomFieldDefinitionEntity field : customFields) {
-                LookUpEntity lookUpEntity = field.getLookUpEntity();
-                Set<LookUpLabelEntity> lookUpLabelSet = lookUpEntity.getLookUpLabels();
-                for (LookUpLabelEntity lookUpLabel : lookUpLabelSet) {
-                    if (lookUpLabel.getLocaleId().equals(localeId)) {
-                        valueMap.put(field.getFieldId().toString(), lookUpLabel.getLabelText());
-                    }
-                }
-            }
-        } catch (HibernateException e) {
-            throw new PersistenceException(e);
-        }
-        return valueMap;
-    }
 
     public Map<String, String> retrieveProductStatus(Short localeId) throws PersistenceException {
         Map<String, String> valueMap = new HashMap<String, String>();

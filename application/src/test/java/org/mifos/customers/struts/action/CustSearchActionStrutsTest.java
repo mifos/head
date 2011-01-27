@@ -52,9 +52,8 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
+@SuppressWarnings("unchecked")
 public class CustSearchActionStrutsTest extends MifosMockStrutsTestCase {
-
-
 
     private UserContext userContext;
     private String flowKey;

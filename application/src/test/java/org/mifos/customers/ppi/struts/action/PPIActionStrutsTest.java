@@ -72,6 +72,7 @@ public class PPIActionStrutsTest extends MifosMockStrutsTestCase {
        Assert.assertEquals("Test Survey", retrieved.getName());
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testConfigureNoExistingPPISurvey() throws Exception {
         setRequestPathInfo("/ppiAction");

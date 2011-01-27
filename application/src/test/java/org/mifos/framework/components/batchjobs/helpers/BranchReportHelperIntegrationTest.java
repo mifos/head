@@ -50,6 +50,7 @@ import org.mifos.reports.business.service.BranchReportIntegrationTestCase;
 import org.mifos.reports.business.service.BranchReportService;
 import org.mifos.reports.business.service.IBranchReportService;
 
+@SuppressWarnings("unchecked")
 public class BranchReportHelperIntegrationTest extends BranchReportIntegrationTestCase {
 
     private BranchReportHelper branchReportHelper;

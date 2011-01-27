@@ -46,6 +46,7 @@ public class ConfigurationPersistence extends LegacyGenericDao {
 
     public static final String CONFIGURATION_KEY_JASPER_REPORT_IS_HIDDEN = ConfigConstants.JASPER_REPORT_IS_HIDDEN;
 
+    @SuppressWarnings("unchecked")
     public MifosCurrency getCurrency(String currencyCode) throws RuntimeException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("currencyCode", currencyCode);

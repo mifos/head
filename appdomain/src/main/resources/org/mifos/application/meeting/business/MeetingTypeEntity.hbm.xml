@@ -11,6 +11,6 @@
             <generator class="native"/>
         </id>
          <property name="meetingPurpose" column="meeting_purpose" type="string" access="field" />
-         <property name="description" column="description" type="string" access="field"/> 
+         <property name="description" column="description" type="string" access="field"/>
     </class>
 </hibernate-mapping>

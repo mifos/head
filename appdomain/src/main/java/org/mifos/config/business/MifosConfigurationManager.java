@@ -291,21 +291,25 @@ public class MifosConfigurationManager implements Configuration {
         return configuration.getInteger(key, defaultValue);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Iterator getKeys() {
         return configuration.getKeys();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Iterator getKeys(String key) {
         return configuration.getKeys(key);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List getList(String key) {
         return configuration.getList(key);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List getList(String key, List defaultValue) {
         return configuration.getList(key, defaultValue);

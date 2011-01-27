@@ -9,11 +9,11 @@
     <class name="org.mifos.accounts.loan.business.LoanPerformanceHistoryEntity" table="loan_perf_history">
        <id name="id" column="id" type="integer" access="field">
             <generator class="native"/>
-	   </id>
-        
+       </id>
+
         <property name="noOfPayments" column="no_of_payments" />
-		<property name="loanMaturityDate" column="loan_maturity_date" type="date"/>
+        <property name="loanMaturityDate" column="loan_maturity_date" type="date"/>
         <many-to-one name="loan" column="account_id" class="org.mifos.accounts.loan.business.LoanBO"  unique="true" access="field"/>
-    </class>    
-    
+    </class>
+
 </hibernate-mapping>

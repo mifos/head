@@ -206,7 +206,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                Assert.assertEquals("Month(s)", auditLogRecord.getNewValue());
             }
         }
-        
+
 
     }
 

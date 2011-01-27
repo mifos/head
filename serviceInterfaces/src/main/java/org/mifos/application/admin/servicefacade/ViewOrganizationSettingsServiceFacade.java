@@ -32,6 +32,6 @@ public interface ViewOrganizationSettingsServiceFacade {
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_VIEW_SYSTEM_INFO')")
     Properties getOrganizationSettings(HttpSession session);
 
-	 @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_VIEW_SYSTEM_INFO')")
+     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_VIEW_SYSTEM_INFO')")
     Map<String, String> getDisplayablePluginsProperties();
 }

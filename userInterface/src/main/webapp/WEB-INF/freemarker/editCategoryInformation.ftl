@@ -29,7 +29,7 @@
             <div class="clear">&nbsp;</div>
             <p class="font15">
                 <span class="fontBold">[@spring.bind "formBean.productCategoryName"/]${spring.status.value?default("")}</span>&nbsp;-&nbsp;
-    		<span class="orangeheading">
+            <span class="orangeheading">
             [@spring.message "manageProducts.editCategory.editcategoryinformation" /]
             </span>
             </p>
@@ -49,29 +49,29 @@
 
             <div class="prepend-3 span-22 last">
                 <div class="span-22">
-        		<span class="span-4 rightAlign">
-        			<span class="red"> * </span>
+                <span class="span-4 rightAlign">
+                    <span class="red"> * </span>
                 [@spring.message "manageProducts.editCategory.categoryName" /]
-        		</span>
-        		<span class="span-4">
-        		[@spring.bind "formBean.productCategoryName"/]
+                </span>
+                <span class="span-4">
+                [@spring.bind "formBean.productCategoryName"/]
                     <input type="text" name="${spring.status.expression}" value="${spring.status.value?default("")}"/>
-        		</span>
+                </span>
                 </div>
                 <div class="span-22">
-            	<span class="span-4 rightAlign">
+                <span class="span-4 rightAlign">
                 [@spring.message "manageProducts.editCategory.description" /]
                 </span>
-            	<span>
-            	[@spring.bind "formBean.productCategoryDesc"/]
+                <span>
+                [@spring.bind "formBean.productCategoryDesc"/]
                     <textarea cols="50" rows="6"
                               name="${spring.status.expression}">${spring.status.value?default("")}</textarea>
-            	</span>
+                </span>
                 </div>
             </div>
             <div class="prepend-3 span-22 last">
             <span class="span-4 rightAlign">
-            	<span class="red"> * </span>
+                <span class="red"> * </span>
             [@spring.message "manageProducts.editCategory.status1" /]&nbsp;:
             </span>
             <span class="span-4 margin10left">

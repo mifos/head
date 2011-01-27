@@ -2,18 +2,18 @@
 
 
 <tableInfo>
-  <headerDetails headerStyle="drawtablerowboldnoline"/> 
+  <headerDetails headerStyle="drawtablerowboldnoline"/>
   <row totWidth="100" bottomLineRequired="true">
-	<column label="FeeType" value="feeName" valueType="method" columnType="text">
+    <column label="FeeType" value="feeName" valueType="method" columnType="text">
          <columnDetails  rowStyle="drawtablerow" colWidth="50" />
     </column>
-	<column label="Amount"    value="amount"  valueType="method"   columnType="text"> 
-	    <columnDetails   rowStyle="drawtablerow" colWidth="50"/>
+    <column label="Amount"    value="amount"  valueType="method"   columnType="text">
+        <columnDetails   rowStyle="drawtablerow" colWidth="50"/>
     </column>
   </row>
 
-  
+
 </tableInfo>
-   
-   
-   
+
+
+

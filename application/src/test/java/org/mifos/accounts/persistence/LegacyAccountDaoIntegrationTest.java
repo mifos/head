@@ -61,14 +61,12 @@ import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.holiday.persistence.HolidayDaoHibernate;
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.servicefacade.TestCollectionSheetRetrieveSavingsAccountsUtils;
-import org.mifos.application.util.helpers.EntityType;
 import org.mifos.customers.business.CustomerScheduleEntity;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficeDao;
@@ -282,15 +280,6 @@ public class LegacyAccountDaoIntegrationTest extends AccountIntegrationTestCase 
         queryResult = legacyAccountDao.search(center.getCustomerAccount().getGlobalAccountNum(), (short) 3);
         Assert.assertNull(queryResult);
     }
-
-    @Test
-    public void testRetrieveCustomFieldsDefinition() throws Exception {
-        List<CustomFieldDefinitionEntity> customFields = legacyAccountDao
-                .retrieveCustomFieldsDefinition(EntityType.LOAN.getValue());
-        Assert.assertNotNull(customFields);
-        Assert.assertEquals(LOAN_CUSTOMFIELDS_NUMBER, customFields.size());
-    }
-
 
     @Test
     public void testGetListOfAccountIdsHavingLoanSchedulesWithinAHoliday() throws Exception {

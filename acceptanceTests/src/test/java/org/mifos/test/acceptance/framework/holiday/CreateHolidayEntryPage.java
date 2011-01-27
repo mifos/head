@@ -162,7 +162,7 @@ public class CreateHolidayEntryPage extends MifosPage {
                 return selenium.isElementPresent("id=1");
             }
         };
-        
+
         selenium.click("holiday.button.preview");
         waitForPageToLoad();
 

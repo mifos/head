@@ -6,15 +6,15 @@
 
 <hibernate-mapping>
     <class name="org.mifos.customers.client.business.ClientInitialSavingsOfferingEntity" table="client_initial_savings_offering">
-        <id name="clientOfferingId" column="client_offering_id" type="integer" 
+        <id name="clientOfferingId" column="client_offering_id" type="integer"
             access="field">
             <generator class="native"/>
         </id>
-        <many-to-one name="client" column="customer_id" 
-            class="org.mifos.customers.client.business.ClientBO" 
+        <many-to-one name="client" column="customer_id"
+            class="org.mifos.customers.client.business.ClientBO"
             insert="true" update="true" access="field"/>
-        <many-to-one name="savingsOffering" column="prd_offering_id" 
-            class="org.mifos.accounts.productdefinition.business.SavingsOfferingBO" 
+        <many-to-one name="savingsOffering" column="prd_offering_id"
+            class="org.mifos.accounts.productdefinition.business.SavingsOfferingBO"
             insert="true" update="true" access="field"/>
-    </class>    
+    </class>
 </hibernate-mapping>

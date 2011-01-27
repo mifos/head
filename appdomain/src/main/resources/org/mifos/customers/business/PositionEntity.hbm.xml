@@ -5,13 +5,13 @@
 
 
 <hibernate-mapping>
-	<class name="org.mifos.customers.business.PositionEntity"
-		table="position">
-		<id name="id" column="position_id" unsaved-value="-1">
-			<generator class="native" />
-		</id>
+    <class name="org.mifos.customers.business.PositionEntity"
+        table="position">
+        <id name="id" column="position_id" unsaved-value="-1">
+            <generator class="native" />
+        </id>
 
-        <many-to-one name="lookUpValue" column="lookup_id" class="org.mifos.application.master.business.LookUpValueEntity" 
-    			cascade="none" update="false" unique="true"/>
-	</class>
+        <many-to-one name="lookUpValue" column="lookup_id" class="org.mifos.application.master.business.LookUpValueEntity"
+                cascade="none" update="false" unique="true"/>
+    </class>
 </hibernate-mapping>

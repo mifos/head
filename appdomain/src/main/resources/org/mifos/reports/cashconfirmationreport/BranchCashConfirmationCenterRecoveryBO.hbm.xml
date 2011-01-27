@@ -2,7 +2,7 @@
 <!DOCTYPE hibernate-mapping PUBLIC
                             "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
                             "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
-<!-- 
+<!--
 Copyright (c) 2005-2008 Grameen Foundation USA
 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
 All rights reserved.
@@ -21,44 +21,44 @@ permissions and limitations under the License.
 
 See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 explanation of the license and how it is applied.
--->                            
+-->
 <hibernate-mapping>
-	<class name="org.mifos.reports.cashconfirmationreport.BranchCashConfirmationCenterRecoveryBO"
-		table="batch_branch_confirmation_recovery">
-		<id name="recoveryId" access="field"
-			column="recovery_id">
-			<generator class="native" />
-		</id>
-		
-		<property name="productOffering" column="product_name" access="field"></property>
-		<property name="due" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-			<column name="due_currency_id"/>
-			<column name="due"/>
-		</property>
+    <class name="org.mifos.reports.cashconfirmationreport.BranchCashConfirmationCenterRecoveryBO"
+        table="batch_branch_confirmation_recovery">
+        <id name="recoveryId" access="field"
+            column="recovery_id">
+            <generator class="native" />
+        </id>
 
-		<property name="actual" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-			<column name="actual_currency_id"/>
-			<column name="actual"/>
-		</property>
-		
-		<property name="arrears" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-			<column name="arrears_currency_id"/>
-			<column name="arrears"/>
-		</property>
-		
-		<many-to-one name="branchCashConfirmationReport" column="branch_cash_confirmation_report_id" access="field"
-			class="org.mifos.reports.cashconfirmationreport.BranchCashConfirmationReportBO">
-		</many-to-one>		
-	</class>
-	<sql-query
-		name="branchCashConfirmationReport.getCenterRecoveries">
-		<load-collection alias="centerRecoveries"
-			role="org.mifos.reports.cashconfirmationreport.BranchCashConfirmationReportBO.centerRecoveries"/>
-		<![CDATA[ SELECT {centerRecoveries.*} from batch_branch_confirmation_recovery as centerRecoveries, 
-			batch_branch_cash_confirmation_report as report where 
-			report.branch_cash_confirmation_report_id=centerRecoveries.branch_cash_confirmation_report_id
-			and report.run_date=:RUN_DATE 
-			and report.branch_id=:BRANCH_ID
-		]]>
-	</sql-query>
+        <property name="productOffering" column="product_name" access="field"></property>
+        <property name="due" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
+            <column name="due_currency_id"/>
+            <column name="due"/>
+        </property>
+
+        <property name="actual" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
+            <column name="actual_currency_id"/>
+            <column name="actual"/>
+        </property>
+
+        <property name="arrears" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
+            <column name="arrears_currency_id"/>
+            <column name="arrears"/>
+        </property>
+
+        <many-to-one name="branchCashConfirmationReport" column="branch_cash_confirmation_report_id" access="field"
+            class="org.mifos.reports.cashconfirmationreport.BranchCashConfirmationReportBO">
+        </many-to-one>
+    </class>
+    <sql-query
+        name="branchCashConfirmationReport.getCenterRecoveries">
+        <load-collection alias="centerRecoveries"
+            role="org.mifos.reports.cashconfirmationreport.BranchCashConfirmationReportBO.centerRecoveries"/>
+        <![CDATA[ SELECT {centerRecoveries.*} from batch_branch_confirmation_recovery as centerRecoveries,
+            batch_branch_cash_confirmation_report as report where
+            report.branch_cash_confirmation_report_id=centerRecoveries.branch_cash_confirmation_report_id
+            and report.run_date=:RUN_DATE
+            and report.branch_id=:BRANCH_ID
+        ]]>
+    </sql-query>
 </hibernate-mapping>

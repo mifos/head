@@ -21,14 +21,12 @@
 package org.mifos.customers.persistence;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 
 import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerBO;
@@ -93,18 +91,6 @@ public interface CustomerDao {
     CenterBO findCenterBySystemId(String globalCustNum);
 
     List<ClientBO> findActiveClientsUnderGroup(CustomerBO customer);
-
-    List<CustomFieldDto> retrieveCustomFieldsForCenter(UserContext userContext);
-
-    List<CustomFieldDto> retrieveCustomFieldsForPersonnel(Locale preferredLocale);
-
-    List<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForPersonnel();
-
-    List<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForCenter();
-
-    List<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForGroup();
-
-    List<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForClient();
 
     List<FeeBO> retrieveFeesApplicableToCenters();
 
@@ -239,8 +225,6 @@ public interface CustomerDao {
 
     List<PersonnelLevelEntity> retrievePersonnelLevels();
 
-    List<Object[]> getCustomFieldResponses(List<Short> customFieldIds);
-
     /**
      * <code>phoneNumber</code> is stripped to contain numeric characters only
      */
@@ -252,4 +236,6 @@ public interface CustomerDao {
             Short officeId);
 
     List<ClientBO> findActiveClientsUnderParent(String searchId, Short branchId);
+
+    ClientBO findClientById(Integer integer);
 }

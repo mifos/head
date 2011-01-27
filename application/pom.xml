@@ -277,13 +277,13 @@
             <groupId>org.mifos</groupId>
             <artifactId>mifos-appdomain</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>jsp-api</artifactId>
             <scope>provided</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
@@ -937,7 +937,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- 
+            <!--
             <plugin>
                 <groupId>org.mifos.maven</groupId>
                 <artifactId>mifos-settings-sanitizer</artifactId>

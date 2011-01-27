@@ -1,1 +1,0 @@
-create index cust_government_idx on customer (government_id);

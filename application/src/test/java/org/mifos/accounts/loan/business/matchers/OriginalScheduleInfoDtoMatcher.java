@@ -30,6 +30,7 @@ public class OriginalScheduleInfoDtoMatcher extends TypeSafeMatcher<OriginalSche
         this.obj = obj;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public boolean matchesSafely(OriginalScheduleInfoDto other) {
         return other.getLoanAmount().equals(obj.getLoanAmount())

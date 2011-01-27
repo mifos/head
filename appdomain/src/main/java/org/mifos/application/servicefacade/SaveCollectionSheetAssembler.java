@@ -44,8 +44,7 @@ import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.client.business.ClientAttendanceBO;
 import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.client.persistence.ClientPersistence;
-import org.mifos.customers.persistence.CustomerPersistence;
+import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -61,14 +60,14 @@ public class SaveCollectionSheetAssembler {
 
     private static final Logger logger = LoggerFactory.getLogger(SaveCollectionSheetAssembler.class);
 
-    private final CustomerPersistence customerPersistence = new CustomerPersistence();
-    private final ClientPersistence clientPersistence = new ClientPersistence();
-
     @Autowired
     private LegacyPersonnelDao legacyPersonnelDao;
 
     @Autowired
     private ClientAttendanceDao clientAttendanceDao;
+
+    @Autowired
+    private CustomerDao customerDao;
 
     @Autowired
     private LegacyLoanDao legacyLoanDao;
@@ -123,52 +122,48 @@ public class SaveCollectionSheetAssembler {
 
                 if (isDeposit || isWithdrawal) {
                     boolean storeAccountForSavingLater = false;
-                    try {
-                        final CustomerBO payingCustomer = customerPersistence.getCustomer(customerId);
-                        SavingsBO account = savingsDao.findById(saveCollectionSheetCustomerSaving
-                                .getAccountId());
+                    final CustomerBO payingCustomer = customerDao.findCustomerById(customerId);
+                    SavingsBO account = savingsDao.findById(saveCollectionSheetCustomerSaving
+                            .getAccountId());
 
-                        if (isDeposit) {
-                            final AccountPaymentEntity accountDeposit = new AccountPaymentEntity(account, new Money(
-                                    Money.getDefaultCurrency(), amountToDeposit.toString()), receiptNumber,
-                                    receiptDate, paymentType, paymentDate);
-                            accountDeposit.setCreatedByUser(user);
+                    if (isDeposit) {
+                        final AccountPaymentEntity accountDeposit = new AccountPaymentEntity(account, new Money(
+                                Money.getDefaultCurrency(), amountToDeposit.toString()), receiptNumber,
+                                receiptDate, paymentType, paymentDate);
+                        accountDeposit.setCreatedByUser(user);
 
-                            try {
-                                account.deposit(accountDeposit, payingCustomer);
-                                storeAccountForSavingLater = true;
-                            } catch (AccountException e) {
-                                logger.warn("Savings deposit on account [" + account.getAccountId()
-                                        + "] failed. Account changes will not be persisted due to: " + e.getMessage());
-                                failedSavingsDepositAccountNums.add(account.getAccountId().toString());
-                            }
+                        try {
+                            account.deposit(accountDeposit, payingCustomer);
+                            storeAccountForSavingLater = true;
+                        } catch (AccountException e) {
+                            logger.warn("Savings deposit on account [" + account.getAccountId()
+                                    + "] failed. Account changes will not be persisted due to: " + e.getMessage());
+                            failedSavingsDepositAccountNums.add(account.getAccountId().toString());
                         }
+                    }
 
-                        if (isWithdrawal) {
-                            final AccountPaymentEntity accountWithdrawal = new AccountPaymentEntity(account, new Money(
-                                    Money.getDefaultCurrency(), amountToWithdraw.toString()), receiptNumber,
-                                    receiptDate, paymentType, paymentDate);
-                            accountWithdrawal.setCreatedByUser(user);
+                    if (isWithdrawal) {
+                        final AccountPaymentEntity accountWithdrawal = new AccountPaymentEntity(account, new Money(
+                                Money.getDefaultCurrency(), amountToWithdraw.toString()), receiptNumber,
+                                receiptDate, paymentType, paymentDate);
+                        accountWithdrawal.setCreatedByUser(user);
 
-                            try {
-                                account.withdraw(accountWithdrawal, payingCustomer);
-                                storeAccountForSavingLater = true;
-                            } catch (AccountException e) {
-                                logger.warn("Savings withdrawal on account [" + account.getAccountId()
-                                        + "] failed. Account changes will not be persisted due to: " + e.getMessage());
-                                failedSavingsWithdrawalNums.add(account.getAccountId().toString());
-                            }
+                        try {
+                            account.withdraw(accountWithdrawal, payingCustomer);
+                            storeAccountForSavingLater = true;
+                        } catch (AccountException e) {
+                            logger.warn("Savings withdrawal on account [" + account.getAccountId()
+                                    + "] failed. Account changes will not be persisted due to: " + e.getMessage());
+                            failedSavingsWithdrawalNums.add(account.getAccountId().toString());
                         }
+                    }
 
-                        if (storeAccountForSavingLater) {
-                            if (!savingsList.contains(account)) {
-                                savingsList.add(account);
-                            }
-                        } else {
-                            StaticHibernateUtil.getSessionTL().evict(account);
+                    if (storeAccountForSavingLater) {
+                        if (!savingsList.contains(account)) {
+                            savingsList.add(account);
                         }
-                    } catch (PersistenceException e) {
-                        throw new MifosRuntimeException(e);
+                    } else {
+                        StaticHibernateUtil.getSessionTL().evict(account);
                     }
                 }
             }
@@ -312,7 +307,7 @@ public class SaveCollectionSheetAssembler {
         try {
             clientAttendanceList = clientAttendanceDao.findClientAttendance(branchId, searchId, transactionDate);
             for (SaveCollectionSheetCustomerDto saveCollectionSheetCustomer : saveCollectionSheetCustomers) {
-                ClientBO client = clientPersistence.getClient(saveCollectionSheetCustomer.getCustomerId());
+                ClientBO client = customerDao.findClientById(saveCollectionSheetCustomer.getCustomerId());
 
                 if (null != client) {
                     ClientAttendanceBO clientAttendance = findClientAttendance(clientAttendanceList, client);

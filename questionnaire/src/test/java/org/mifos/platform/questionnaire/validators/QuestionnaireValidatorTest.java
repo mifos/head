@@ -144,7 +144,7 @@ public class QuestionnaireValidatorTest {
             fail("Should not have thrown the exception");
         }
     }
-    
+
     @Test
     public void shouldNotThrowExceptionForNumericQuestionTypeWhenOnlyMaxBoundGiven() {
         try {

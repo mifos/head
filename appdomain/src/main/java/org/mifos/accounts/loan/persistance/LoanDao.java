@@ -23,7 +23,6 @@ package org.mifos.accounts.loan.persistance;
 import java.util.List;
 
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.dto.domain.SurveyDto;
 
 public interface LoanDao {
@@ -35,10 +34,6 @@ public interface LoanDao {
     void save(LoanBO loanAccount);
 
     List<SurveyDto> getAccountSurveyDto(Integer accountId);
-
-    List<Object[]> getCustomFieldResponses(List<Short> customFieldIds);
-
-    List<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForLoan();
 
     List<LoanBO> findIndividualLoans(Integer accountId);
 }

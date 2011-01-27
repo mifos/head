@@ -20,13 +20,13 @@
 --]
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
-  <!--  Main Content Begins-->  
+  <!--  Main Content Begins-->
   <div class="content">
     <p class="orangeheading font15">[@spring.message "youhavesuccessfullyaddedanewproductcategory"/]</p>
     <p><span class="fontBold">[@spring.message "pleaseNoteProductcategoryhasbeenassignedthesystemIDnumber"/]</span><span class="fontBold">1-038 </span></p>
     <p class="fontBold"><a href="categoryDetails.html">[@spring.message "viewcategorydetailsnow"/]</a></p>
     <p><a href="defineNewCategory.ftl">[@spring.message "defineanewproductcategory"/]</a></p>
-    
-    
+
+
   </div><!--Main Content Ends-->
   [/@adminLeftPaneLayout]

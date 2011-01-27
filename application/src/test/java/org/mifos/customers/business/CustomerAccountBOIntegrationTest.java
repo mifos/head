@@ -245,7 +245,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
                 CUSTOMER_MEETING));
         center = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test", meeting);
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
-        TestObjectFactory.flushandCloseSession();
+        StaticHibernateUtil.flushSession();
         center = TestObjectFactory.getCustomer(center.getCustomerId());
         group = TestObjectFactory.getCustomer(group.getCustomerId());
         customerAccountBO = group.getCustomerAccount();
@@ -274,7 +274,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
                 CUSTOMER_MEETING));
         center = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test", meeting);
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
-        TestObjectFactory.flushandCloseSession();
+        StaticHibernateUtil.flushSession();
         center = TestObjectFactory.getCustomer(center.getCustomerId());
         group = TestObjectFactory.getCustomer(group.getCustomerId());
         customerAccountBO = group.getCustomerAccount();
@@ -312,7 +312,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
                 CUSTOMER_MEETING));
         center = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test", meeting);
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
-        TestObjectFactory.flushandCloseSession();
+        StaticHibernateUtil.flushSession();
         center = TestObjectFactory.getCustomer(center.getCustomerId());
         group = TestObjectFactory.getCustomer(group.getCustomerId());
         customerAccountBO = group.getCustomerAccount();
@@ -351,7 +351,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
                 CUSTOMER_MEETING));
         center = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test", meeting);
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
-        TestObjectFactory.flushandCloseSession();
+        StaticHibernateUtil.flushSession();
         center = TestObjectFactory.getCustomer(center.getCustomerId());
         group = TestObjectFactory.getCustomer(group.getCustomerId());
         customerAccountBO = group.getCustomerAccount();
@@ -392,7 +392,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
                 CUSTOMER_MEETING));
         center = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test", meeting);
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
-        TestObjectFactory.flushandCloseSession();
+        StaticHibernateUtil.flushSession();
         center = TestObjectFactory.getCustomer(center.getCustomerId());
         group = TestObjectFactory.getCustomer(group.getCustomerId());
         customerAccountBO = group.getCustomerAccount();
@@ -433,7 +433,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
                 CUSTOMER_MEETING));
         center = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test", meeting);
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_PARTIAL, center);
-        TestObjectFactory.flushandCloseSession();
+        StaticHibernateUtil.flushSession();
         center = TestObjectFactory.getCustomer(center.getCustomerId());
         group = TestObjectFactory.getCustomer(group.getCustomerId());
         customerAccountBO = group.getCustomerAccount();
@@ -454,7 +454,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         center = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test", meeting);
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
 
-        TestObjectFactory.flushandCloseSession();
+        StaticHibernateUtil.flushSession();
         center = TestObjectFactory.getCustomer(center.getCustomerId());
         group = TestObjectFactory.getCustomer(group.getCustomerId());
         customerAccountBO = group.getCustomerAccount();
@@ -491,7 +491,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
 //                CUSTOMER_MEETING));
 //        center = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test", meeting);
 //        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
-//        TestObjectFactory.flushandCloseSession();
+//        StaticHibernateUtil.flushSession();
 //        center = TestObjectFactory.getCustomer(center.getCustomerId());
 //        group = TestObjectFactory.getCustomer(group.getCustomerId());
 //        customerAccountBO = group.getCustomerAccount();
@@ -549,7 +549,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
                 CUSTOMER_MEETING));
         center = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test", meeting);
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
-        TestObjectFactory.flushandCloseSession();
+        StaticHibernateUtil.flushSession();
         center = TestObjectFactory.getCustomer(center.getCustomerId());
         group = TestObjectFactory.getCustomer(group.getCustomerId());
         customerAccountBO = group.getCustomerAccount();
@@ -1036,7 +1036,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
                 TestUtils.createMoney(30), AccountConstants.PAYMENT_RCVD, new Date(System.currentTimeMillis() + 345600000)));
         customerAccountBO.update();
         StaticHibernateUtil.flushAndClearSession();
-        TestObjectFactory.flushandCloseSession();
+        StaticHibernateUtil.flushSession();
         customerAccountBO = TestObjectFactory.getCustomer(client.getCustomerId()).getCustomerAccount();
         UserContext uc = TestUtils.makeUser();
         customerAccountBO.setUserContext(uc);
@@ -1114,7 +1114,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         accountPaymentEntity.addAccountTrxn(accountTrxnEntity);
         AccountTestUtils.addAccountPayment(accountPaymentEntity, customerAccountBO);
         TestObjectFactory.updateObject(customerAccountBO);
-        TestObjectFactory.flushandCloseSession();
+        StaticHibernateUtil.flushSession();
     }
 
     private Date incrementCurrentDate(final int noOfDays) {

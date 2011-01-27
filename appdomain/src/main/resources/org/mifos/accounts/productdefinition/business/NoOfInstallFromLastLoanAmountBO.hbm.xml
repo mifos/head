@@ -6,21 +6,21 @@
 
 <hibernate-mapping>
 
-	<class
-		name="org.mifos.accounts.productdefinition.business.NoOfInstallFromLastLoanAmountBO"
-		table="no_of_install_from_last_loan">
-		<id name="noOfInstallFromLastLoanID"
-			column="no_of_install_from_last_loan_id" access="field">
-			<generator class="native" />
-		</id>
-		<property name="endRange" column="end_range" />
-		<property name="startRange" column="start_range" />
-		<property name="minNoOfInstall" column="min_no_install " />
-		<property name="maxNoOfInstall" column=" max_no_install" />
-		<property name="defaultNoOfInstall" column="default_no_install" />
-		<many-to-one name="loanOffering" column="prd_offering_id "
-			class="org.mifos.accounts.productdefinition.business.LoanOfferingBO"
-			unique="true" lazy="false" cascade="none" insert="true" update="true"
-			access="field" />
-	</class>
+    <class
+        name="org.mifos.accounts.productdefinition.business.NoOfInstallFromLastLoanAmountBO"
+        table="no_of_install_from_last_loan">
+        <id name="noOfInstallFromLastLoanID"
+            column="no_of_install_from_last_loan_id" access="field">
+            <generator class="native" />
+        </id>
+        <property name="endRange" column="end_range" />
+        <property name="startRange" column="start_range" />
+        <property name="minNoOfInstall" column="min_no_install " />
+        <property name="maxNoOfInstall" column=" max_no_install" />
+        <property name="defaultNoOfInstall" column="default_no_install" />
+        <many-to-one name="loanOffering" column="prd_offering_id "
+            class="org.mifos.accounts.productdefinition.business.LoanOfferingBO"
+            unique="true" lazy="false" cascade="none" insert="true" update="true"
+            access="field" />
+    </class>
 </hibernate-mapping>

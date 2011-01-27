@@ -57,9 +57,8 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 
+@SuppressWarnings("unchecked")
 public class CustomerUIHelperFnStrutsTest extends MifosMockStrutsTestCase {
-
-
 
     private CustomerBO center;
     private CustomerBO group;

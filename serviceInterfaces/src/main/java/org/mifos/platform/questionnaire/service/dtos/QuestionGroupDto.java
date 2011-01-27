@@ -35,7 +35,7 @@ public class QuestionGroupDto implements Serializable {
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = "SE_BAD_FIELD")
     @XStreamImplicit(itemFieldName = "section")
     private List<SectionDto> sections;
-    @XStreamImplicit(itemFieldName = "eventSource")    
+    @XStreamImplicit(itemFieldName = "eventSource")
     private List<EventSourceDto> eventSourceDtos;
     private boolean editable;
     private boolean ppi;

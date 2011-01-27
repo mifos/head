@@ -131,7 +131,7 @@ public class LoanApplyFeeSchedulingIntegrationTest extends MifosIntegrationTestC
         accountBO = getLoanAccount(startDate.toDate(), AccountState.LOAN_APPROVED);
 
         Money intialTotalFeeAmount = ((LoanBO) accountBO).getLoanSummary().getOriginalFees();
-        TestObjectFactory.flushandCloseSession();
+        StaticHibernateUtil.flushSession();
 
         // create holiday on first installment date
         buildAndPersistHoliday(startDate.plusWeeks(1), startDate.plusWeeks(1),
@@ -211,7 +211,7 @@ public class LoanApplyFeeSchedulingIntegrationTest extends MifosIntegrationTestC
         accountBO = getLoanAccount(startDate.toDate(), AccountState.LOAN_APPROVED);
 
         Money intialTotalFeeAmount = ((LoanBO) accountBO).getLoanSummary().getOriginalFees();
-        TestObjectFactory.flushandCloseSession();
+        StaticHibernateUtil.flushSession();
 
         // create holiday on first installment date
         buildAndPersistHoliday(startDate.plusWeeks(1), startDate.plusWeeks(1),
@@ -373,7 +373,7 @@ public class LoanApplyFeeSchedulingIntegrationTest extends MifosIntegrationTestC
             // repayment is on the given startDate, may 23rd
         accountBO = getLoanAccount(startDate.toDate(), AccountState.LOAN_APPROVED);
 
-            TestObjectFactory.flushandCloseSession();
+            StaticHibernateUtil.flushSession();
 
             // create that pushes fourth and later installments out three weeks
             buildAndPersistHoliday(startDate.plusWeeks(4), startDate.plusWeeks(6),

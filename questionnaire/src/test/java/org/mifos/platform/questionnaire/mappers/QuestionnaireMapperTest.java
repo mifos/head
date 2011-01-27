@@ -92,7 +92,6 @@ import static org.mockito.Mockito.when;
 public class QuestionnaireMapperTest {
     private static final String TITLE = "Title";
     private QuestionnaireMapper questionnaireMapper;
-    private static final String SECTION_NAME = "S1";
     private static final String SECTION = "section";
 
     @Mock
@@ -111,8 +110,6 @@ public class QuestionnaireMapperTest {
     public void setUp() {
         questionnaireMapper = new QuestionnaireMapperImpl(eventSourceDao, questionDao, questionGroupDao, sectionQuestionDao, questionGroupInstanceDao);
     }
-
-
 
     @Test
     public void shouldMapQuestionDtoToQuestionEntity() {
@@ -248,7 +245,7 @@ public class QuestionnaireMapperTest {
 
     @Test
     public void shouldMapQuestionGroupDefinitionToQuestionGroup() {
-        when(eventSourceDao.retrieveByEventAndSource(anyString(), anyString())).thenReturn(new ArrayList());
+        when(eventSourceDao.retrieveByEventAndSource(anyString(), anyString())).thenReturn(new ArrayList<EventSourceEntity>());
         when(questionDao.getDetails(12)).thenReturn(new QuestionEntity());
         EventSourceDto eventSourceDto = getEventSource("Create", "Client");
         List<SectionDetail> sectionDetails = asList(getSectionDefinition("S1", 12, TITLE), getSectionDefinition("S2", 0, TITLE));
@@ -263,7 +260,7 @@ public class QuestionnaireMapperTest {
 
     @Test
     public void shouldMapQuestionGroupDefinitionToExistingQuestionGroup() {
-        when(eventSourceDao.retrieveByEventAndSource(anyString(), anyString())).thenReturn(new ArrayList());
+        when(eventSourceDao.retrieveByEventAndSource(anyString(), anyString())).thenReturn(new ArrayList<EventSourceEntity>());
         when(questionDao.getDetails(12)).thenReturn(new QuestionEntity());
         Section section = getSection("S1");
         when(questionGroupDao.getDetails(123)).thenReturn(getQuestionGroup(123, "QG Title", section));
@@ -297,7 +294,7 @@ public class QuestionnaireMapperTest {
         when(questionGroupDao.retrieveSectionByNameAndQuestionGroupId("Misc", 123)).thenReturn(asList(section));
         when(questionGroupDao.getDetails(questionGroupId)).thenReturn(getQuestionGroup(questionGroupId, "QG Title", section));
         when(sectionQuestionDao.retrieveFromQuestionIdSectionId(222, 999)).thenReturn(asList(sectionQuestion));
-        when(eventSourceDao.retrieveByEventAndSource(anyString(), anyString())).thenReturn(new ArrayList());
+        when(eventSourceDao.retrieveByEventAndSource(anyString(), anyString())).thenReturn(new ArrayList<EventSourceEntity>());
         QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(questionGroupDetail);
         assertQuestionGroupForExistingQuestion(questionGroup, QuestionGroupState.ACTIVE);
         verify(questionGroupDao).retrieveSectionByNameAndQuestionGroupId("Misc", 123);

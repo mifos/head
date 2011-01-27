@@ -41,12 +41,10 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
+@SuppressWarnings("unchecked")
 public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
 
-
-
     private UserContext userContext;
-
     private String flowKey;
 
     @Before
@@ -265,7 +263,6 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
         verifyForward(ActionForwards.create_success.toString());
-        OffActionForm offActionForm = (OffActionForm) request.getSession().getAttribute("offActionForm");
         fm = (FlowManager) SessionUtils.getAttribute(Constants.FLOWMANAGER, request.getSession());
         Assert.assertEquals(false, fm.isFlowValid(flowKey));
     }
@@ -305,7 +302,6 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
 
         actionPerform();
         verifyForward(ActionForwards.create_success.toString());
-        OffActionForm offActionForm = (OffActionForm) request.getSession().getAttribute("offActionForm");
         fm = (FlowManager) SessionUtils.getAttribute(Constants.FLOWMANAGER, request.getSession());
         Assert.assertEquals(false, fm.isFlowValid(flowKey));
 

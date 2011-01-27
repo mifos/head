@@ -3,14 +3,14 @@
                             "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
                             "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
-	<class name="org.mifos.accounts.fees.business.FeeFrequencyEntity" table="fee_frequency">
-		<id name="feeFrequencyId" column="fee_frequency_id" unsaved-value="null" access="field">
-			<generator class="native" />
-		</id>
+    <class name="org.mifos.accounts.fees.business.FeeFrequencyEntity" table="fee_frequency">
+        <id name="feeFrequencyId" column="fee_frequency_id" unsaved-value="null" access="field">
+            <generator class="native" />
+        </id>
 
-		<many-to-one name="feeFrequencyType" column="fee_frequencytype_id" class="org.mifos.accounts.fees.business.FeeFrequencyTypeEntity" insert="true" update="false" lazy="false" access="field" />
-		<many-to-one name="feePayment" column="frequency_payment_id" class="org.mifos.accounts.fees.business.FeePaymentEntity" insert="true" update="false" lazy="false" access="field" />
-		<many-to-one name="feeMeetingFrequency" column="frequency_meeting_id" class="org.mifos.application.meeting.business.MeetingBO" cascade="all" insert="true" update="true" lazy="false" access="field" />
-		<many-to-one name="fee" column="fee_id" class="org.mifos.accounts.fees.business.FeeBO" access="field" />
-	</class>
+        <many-to-one name="feeFrequencyType" column="fee_frequencytype_id" class="org.mifos.accounts.fees.business.FeeFrequencyTypeEntity" insert="true" update="false" lazy="false" access="field" />
+        <many-to-one name="feePayment" column="frequency_payment_id" class="org.mifos.accounts.fees.business.FeePaymentEntity" insert="true" update="false" lazy="false" access="field" />
+        <many-to-one name="feeMeetingFrequency" column="frequency_meeting_id" class="org.mifos.application.meeting.business.MeetingBO" cascade="all" insert="true" update="true" lazy="false" access="field" />
+        <many-to-one name="fee" column="fee_id" class="org.mifos.accounts.fees.business.FeeBO" access="field" />
+    </class>
 </hibernate-mapping>

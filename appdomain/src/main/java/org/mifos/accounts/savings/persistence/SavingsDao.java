@@ -24,7 +24,6 @@ import java.util.List;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.interest.EndOfDayDetail;
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.servicefacade.CollectionSheetCustomerSavingDto;
 import org.mifos.application.servicefacade.CollectionSheetCustomerSavingsAccountDto;
@@ -58,10 +57,6 @@ public interface SavingsDao {
     List<CollectionSheetCustomerSavingsAccountDto> findAllSavingAccountsForCustomerHierarchy(
             CustomerHierarchyParams customerHierarchyParams);
 
-    List<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForSavings();
-
-    List<Object[]> getCustomFieldResponses(List<Short> customFieldIds);
-
     List<EndOfDayDetail> retrieveAllEndOfDayDetailsFor(MifosCurrency currency, Long savingsId);
 
     List<Integer> retrieveAllActiveAndInActiveSavingsAccountsPendingInterestPostingOn(LocalDate interestPostingDate);
@@ -71,5 +66,4 @@ public interface SavingsDao {
     NotesSearchResultsDto searchNotes(NoteSearchDto noteSearch);
 
     void save(List<SavingsBO> savingsAccounts);
-
 }

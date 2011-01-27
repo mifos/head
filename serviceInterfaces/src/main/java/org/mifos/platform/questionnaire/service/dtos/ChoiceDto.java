@@ -67,7 +67,7 @@ public class ChoiceDto implements Serializable {
     public void setTags(List<String> tags) {
         this.tags = tags;
     }
-    
+
     public String getCommaSeparatedTags() {
         return CollectionUtils.toString(this.tags);
     }

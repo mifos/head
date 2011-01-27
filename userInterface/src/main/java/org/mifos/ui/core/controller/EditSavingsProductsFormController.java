@@ -58,7 +58,7 @@ public class EditSavingsProductsFormController {
         this.adminServiceFacade=adminServicefacade;
     }
 
-	@InitBinder
+    @InitBinder
     protected void initBinder(WebDataBinder binder) {
         LazyBindingErrorProcessor errorProcessor = new LazyBindingErrorProcessor();
         binder.setValidator(new SavingsProductFormValidator(errorProcessor));

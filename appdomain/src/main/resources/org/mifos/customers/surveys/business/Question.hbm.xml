@@ -3,37 +3,37 @@
                             "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
                             "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
-	<class name="org.mifos.customers.surveys.business.Question" table="questions">
-		<id name="questionId" column="question_id" type="integer" unsaved-value="0" access="field">
-			<generator class="native"/>
-		</id>
+    <class name="org.mifos.customers.surveys.business.Question" table="questions">
+        <id name="questionId" column="question_id" type="integer" unsaved-value="0" access="field">
+            <generator class="native"/>
+        </id>
         <property name="nickname" column="nickname"/>
-		<property name="questionText" column="question_text"/>
-		<property name="answerType" column="answer_type" />
-		<property name="questionState" column="question_state"/>
-		<property name="numericMin" column="numeric_min"/>
-		<property name="numericMax" column="numeric_max"/>
-		<list name="choices" cascade="all" lazy="false">
-			<key column="question_id" not-null="true"/>
-			<index column="choice_order"/>
-			<one-to-many class="org.mifos.customers.surveys.business.QuestionChoice"/>
-		</list>
-	</class>
-	<query name="questions.getNum">
+        <property name="questionText" column="question_text"/>
+        <property name="answerType" column="answer_type" />
+        <property name="questionState" column="question_state"/>
+        <property name="numericMin" column="numeric_min"/>
+        <property name="numericMax" column="numeric_max"/>
+        <list name="choices" cascade="all" lazy="false">
+            <key column="question_id" not-null="true"/>
+            <index column="choice_order"/>
+            <one-to-many class="org.mifos.customers.surveys.business.QuestionChoice"/>
+        </list>
+    </class>
+    <query name="questions.getNum">
        <![CDATA[select count(*) from Question as question where question.answerType in (1,2,3,4,5,6)]]>
     </query>
-	<query name="questions.retrieveAll">
+    <query name="questions.retrieveAll">
        <![CDATA[from Question as question where question.answerType in (1,2,3,4,5,6) order by question.questionText]]>
     </query>
- 	<query name="Question.retrieveByState">
+     <query name="Question.retrieveByState">
        <![CDATA[from Question as question where question.questionState=:QUESTION_STATE and question.answerType in (1,2,3,4,5,6) order by question.questionText]]>
     </query>
     <query name="questions.retrieveByText">
        <![CDATA[from Question as question where question.questionText=:QUESTION_TEXT]]>
-    </query>    
+    </query>
      <query name="questions.retrieveByAnswerType">
        <![CDATA[from Question as question where question.answerType=:ANSWER_TYPE]]>
-    </query>  
+    </query>
      <query name="Question.retrieveCountOfQuestionsWithText">
        <![CDATA[select count(*) from Question as question where question.questionText=:questionText]]>
     </query>

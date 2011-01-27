@@ -4,53 +4,53 @@ This file contains test data for the junit tests.
 
 /* Area office It belongs to the head office created by master scripts */
 insert into office(office_id, parent_office_id, global_office_num, status_id, office_code_id, office_level_id,  search_id, office_short_name, max_child_count,local_remote_flag, display_name, created_by, created_date, updated_by, updated_date, version_no)
- 		values(2,1,'0002',1,null,4,'1.1.1.','MIF2',2,1,'TestAreaOffice',null,null,null,null,1);
- 		
-insert into office_address (office_address_id, office_id, address_1, address_2, address_3, 
-city, state, country, zip, telephone) 
+         values(2,1,'0002',1,null,4,'1.1.1.','MIF2',2,1,'TestAreaOffice',null,null,null,null,1);
+
+insert into office_address (office_address_id, office_id, address_1, address_2, address_3,
+city, state, country, zip, telephone)
 values(2,2,'add2',null,null,null,null,null,null,null);
 
 /* Branch office It belongs to the area office created by test script statements above*/
 insert into office(office_id, parent_office_id, global_office_num, status_id, office_code_id, office_level_id,  search_id, office_short_name, max_child_count,local_remote_flag, display_name, created_by, created_date, updated_by, updated_date, version_no)
- 		values(3,2,'0003',1,null,5,'1.1.1.1.','MIF3',2,1,'TestBranchOffice',null,null,null,null,1); 		
+         values(3,2,'0003',1,null,5,'1.1.1.1.','MIF3',2,1,'TestBranchOffice',null,null,null,null,1);
 
-insert into office_address (office_address_id, office_id, address_1, address_2, address_3, 
-city, state, country, zip, telephone) 
+insert into office_address (office_address_id, office_id, address_1, address_2, address_3,
+city, state, country, zip, telephone)
 values(3,3,'add3',null,null,null,null,null,null,null);
 
 
- 
- /*Non loan officer belonging to branch office with office id 3 */		
+
+ /*Non loan officer belonging to branch office with office id 3 */
 insert into personnel(personnel_id,level_id,global_personnel_num,office_id,
-	title,personnel_status,preferred_locale,
-	search_id,max_child_count,password,login_name,email_id,password_changed,
-	display_name,created_by,created_date,updated_by,updated_date,
-	no_of_tries,last_login,locked,version_no)
+    title,personnel_status,preferred_locale,
+    search_id,max_child_count,password,login_name,email_id,password_changed,
+    display_name,created_by,created_date,updated_by,updated_date,
+    no_of_tries,last_login,locked,version_no)
 values(2,2,'2',3,
-	1,1,1,
-	null,1,null,'nonloanofficer',null,1,
-	'non loan officer',1,null,1,null,
-	4,null,0,0);
+    1,1,1,
+    null,1,null,'nonloanofficer',null,1,
+    'non loan officer',1,null,1,null,
+    4,null,0,0);
 
-insert into personnel_details values(2,'testnon loan officer',null,null,'MFI','123','1979-12-12',null,50,null,null,null,'Bangalore',null,null,'Bangalore','Bangalore','Bangalore',null,null);	
+insert into personnel_details values(2,'testnon loan officer',null,null,'MFI','123','1979-12-12',null,50,null,null,null,'Bangalore',null,null,'Bangalore','Bangalore','Bangalore',null,null);
 
-insert into personnel_role (personnel_role_id, role_id, personnel_id) 
+insert into personnel_role (personnel_role_id, role_id, personnel_id)
 values(2,1,2);
 /*Loan officer belonging to branch*/
 insert into personnel(personnel_id,level_id,global_personnel_num,office_id,
-	title,personnel_status,preferred_locale,
-	search_id,max_child_count,password,login_name,email_id,password_changed,
-	display_name,created_by,created_date,updated_by,updated_date,
-	no_of_tries,last_login,locked,version_no) 
+    title,personnel_status,preferred_locale,
+    search_id,max_child_count,password,login_name,email_id,password_changed,
+    display_name,created_by,created_date,updated_by,updated_date,
+    no_of_tries,last_login,locked,version_no)
 values(3,1,'3',3,
-	1,1,1,
-	null,1,null,'loanofficer',null,1,
-	'loan officer',1,null,1,null,
-	4,null,0,0);
+    1,1,1,
+    null,1,null,'loanofficer',null,1,
+    'loan officer',1,null,1,null,
+    4,null,0,0);
 
 insert into personnel_details values(3,'testloan officer',null,null,'MFI','123','1979-12-12',null,50,null,null,null,'Bangalore',null,null,'Bangalore','Bangalore','Bangalore',null,null);
 
-insert into personnel_role (personnel_role_id, role_id, personnel_id) 
+insert into personnel_role (personnel_role_id, role_id, personnel_id)
 values(3,1,3);
 
 insert into role(role_id,role_name,version_no,created_by,created_date,updated_by,updated_date)
@@ -196,7 +196,7 @@ update field_configuration set mandatory_flag = 0, hidden_flag = 1
 update field_configuration set mandatory_flag = 1, hidden_flag = 1
   where field_name = 'PostalCode' and entity_id = 12;
 update field_configuration set mandatory_flag = 0, hidden_flag = 0
-  where field_name = 'PostalCode' and entity_id = 20;  
+  where field_name = 'PostalCode' and entity_id = 20;
 update field_configuration set mandatory_flag = 0, hidden_flag = 1
   where field_name = 'PhoneNumber' and entity_id = 1;
 update field_configuration set mandatory_flag = 0, hidden_flag = 1
@@ -269,7 +269,7 @@ insert into lookup_label(label_id,entity_id,locale_id,entity_name)values
 
 /* The table Custom Field Definition will contain the additional information fields that an MFI configure Mifosthat will be required to be shown for a client , group etc for the MFI - Configuration */
 /* Client*/
-insert into custom_field_definition(field_id,entity_id,field_type,entity_type,mandatory_flag,level_id,default_value) values 
+insert into custom_field_definition(field_id,entity_id,field_type,entity_type,mandatory_flag,level_id,default_value) values
 (3,58,2,1,0,1,null),
 /*Group*/
 (4,59,2,12,0,2,null),

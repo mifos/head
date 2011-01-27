@@ -34,9 +34,9 @@ public enum RankOfDay {
     FOURTH((short) 4),
     LAST  ((short) 5);
 
-    Short value;
+    private Short value;
 
-    RankOfDay(final Short value) {
+    private RankOfDay(final Short value) {
         this.value = value;
     }
 
@@ -57,6 +57,7 @@ public enum RankOfDay {
         return getRankOfDay(value.intValue());
     }
 
+    @SuppressWarnings("unchecked")
     public static List<RankOfDay> getRankOfDayList() {
         return Arrays.asList(values());
     }

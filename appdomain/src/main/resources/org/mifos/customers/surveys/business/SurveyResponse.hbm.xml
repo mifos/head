@@ -3,24 +3,24 @@
                             "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
                             "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
-	
-	
-	<class name="org.mifos.customers.surveys.business.SurveyResponse" table="survey_response">
-		<id name="responseId" column="response_id" type="integer" unsaved-value="0" access="field">
-			<generator class="native"/>
-		</id>
-		<many-to-one name="instance" column="instance_id" cascade="save-update" access="field" not-null="true"/>
-		<many-to-one name="surveyQuestion" column="survey_question_id" cascade="save-update" access="field" not-null="true"/>
-		<property name="freetextValue" column="freetext_value"/>
-		<property name="dateValue" column="date_value"/>
-		<property name="numberValue" column="number_value"/>
-		<property name="multiSelectValue" column="multi_select_value"/>
-		<many-to-one name="choiceValue" column="choice_value" cascade="save-update" access="field"/>
-	</class>
-	<query name="surveys.retrieveAllResponses">
-		<![CDATA[from SurveyResponse as response]]>
-	</query>
-	<query name="surveys.retrieveResponsesByInstance">
-		<![CDATA[from SurveyResponse as response where response.instance =:INSTANCE order by response.instance.survey.surveyId, response.surveyQuestion.order]]>
-	</query>
+
+
+    <class name="org.mifos.customers.surveys.business.SurveyResponse" table="survey_response">
+        <id name="responseId" column="response_id" type="integer" unsaved-value="0" access="field">
+            <generator class="native"/>
+        </id>
+        <many-to-one name="instance" column="instance_id" cascade="save-update" access="field" not-null="true"/>
+        <many-to-one name="surveyQuestion" column="survey_question_id" cascade="save-update" access="field" not-null="true"/>
+        <property name="freetextValue" column="freetext_value"/>
+        <property name="dateValue" column="date_value"/>
+        <property name="numberValue" column="number_value"/>
+        <property name="multiSelectValue" column="multi_select_value"/>
+        <many-to-one name="choiceValue" column="choice_value" cascade="save-update" access="field"/>
+    </class>
+    <query name="surveys.retrieveAllResponses">
+        <![CDATA[from SurveyResponse as response]]>
+    </query>
+    <query name="surveys.retrieveResponsesByInstance">
+        <![CDATA[from SurveyResponse as response where response.instance =:INSTANCE order by response.instance.survey.surveyId, response.surveyQuestion.order]]>
+    </query>
 </hibernate-mapping>

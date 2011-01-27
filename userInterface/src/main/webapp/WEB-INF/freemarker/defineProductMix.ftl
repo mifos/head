@@ -68,14 +68,14 @@ function moveOptions(root, destination)
 
 function selectAllOptions(outSel)
 {
-	if(null != outSel) {
-	 	var selLength =outSel.length;
-		outSel.multiple=true;
-		for(i=selLength-1; i>=0; i--)
-		{
-			outSel.options[i].selected=true;
-		}
-	}
+    if(null != outSel) {
+         var selLength =outSel.length;
+        outSel.multiple=true;
+        for(i=selLength-1; i>=0; i--)
+        {
+            outSel.options[i].selected=true;
+        }
+    }
 }
 </script>
 
@@ -95,56 +95,56 @@ function selectAllOptions(outSel)
           [@mifos.showAllErrors "formBean.*"/]
           <p class="fontBold margin20topbottom">[@spring.message "manageProducts.defineProductmix.productmixdetails"/] </p>
         <form name="productsmixform" id="productsmixform" method="post" action="defineProductMix.ftl">
-        	<div class="prepend-3  span-21 last width90prc">
-        		<div class="span-20 ">
-	        		<span class="span-5 rightAlign">
-	        			<span class="red">* </span>[@spring.message "manageProducts.defineProductmix.producttype"/]&nbsp;:&nbsp;
-	        		</span>
-        			<span class="span-5">
-	   					[@spring.bind "formBean.productTypeId" /]
-					    <select id="${spring.status.expression}" name="${spring.status.expression}" onchange="return productsmixform.submit();">
-					        <option value="" [@spring.checkSelected ""/]>${springMacroRequestContext.getMessage("--Select--")}</option>
-					        [#if formBean.productTypeOptions?is_hash]
-					            [#list formBean.productTypeOptions?keys as value]
-					            <option value="${value?html}"[@spring.checkSelected value/]>${springMacroRequestContext.getMessage(formBean.productTypeOptions[value]?html)}</option>
-					            [/#list]
-					        [#else]
-					            [#list formBean.productTypeOptions as value]
-					            <option value="${value?html}"[@spring.checkSelected value/]>${springMacroRequestContext.getMessage(value?html)}</option>
-					            [/#list]
-					        [/#if]
-					    </select>
-				    </span>
-				</div>
+            <div class="prepend-3  span-21 last width90prc">
+                <div class="span-20 ">
+                    <span class="span-5 rightAlign">
+                        <span class="red">* </span>[@spring.message "manageProducts.defineProductmix.producttype"/]&nbsp;:&nbsp;
+                    </span>
+                    <span class="span-5">
+                           [@spring.bind "formBean.productTypeId" /]
+                        <select id="${spring.status.expression}" name="${spring.status.expression}" onchange="return productsmixform.submit();">
+                            <option value="" [@spring.checkSelected ""/]>${springMacroRequestContext.getMessage("--Select--")}</option>
+                            [#if formBean.productTypeOptions?is_hash]
+                                [#list formBean.productTypeOptions?keys as value]
+                                <option value="${value?html}"[@spring.checkSelected value/]>${springMacroRequestContext.getMessage(formBean.productTypeOptions[value]?html)}</option>
+                                [/#list]
+                            [#else]
+                                [#list formBean.productTypeOptions as value]
+                                <option value="${value?html}"[@spring.checkSelected value/]>${springMacroRequestContext.getMessage(value?html)}</option>
+                                [/#list]
+                            [/#if]
+                        </select>
+                    </span>
+                </div>
 
-				<div class="span-20 ">
-					<span class="span-5 rightAlign">
-						<span class="red">* </span>[@spring.message "manageProducts.defineProductmix.productinstancename"/]&nbsp;:&nbsp;
-					</span>
-					<span class="span-7">
-						[@spring.bind "formBean.productId" /]
-					    <select id="${spring.status.expression}" name="${spring.status.expression}" onchange="return productsmixform.submit();">
-					        <option value="" [@spring.checkSelected ""/]>${springMacroRequestContext.getMessage("--Select--")}</option>
-					        [#if formBean.productNameOptions?is_hash]
-					            [#list formBean.productNameOptions?keys as value]
-					            <option value="${value?html}"[@spring.checkSelected value/]>${formBean.productNameOptions[value]?html}</option>
-					            [/#list]
-					        [#else]
-					            [#list formBean.productNameOptions as value]
-					            <option value="${value?html}"[@spring.checkSelected value/]>${value?html}</option>
-					            [/#list]
-					        [/#if]
-					    </select>
-				    </span>
-				</div>
+                <div class="span-20 ">
+                    <span class="span-5 rightAlign">
+                        <span class="red">* </span>[@spring.message "manageProducts.defineProductmix.productinstancename"/]&nbsp;:&nbsp;
+                    </span>
+                    <span class="span-7">
+                        [@spring.bind "formBean.productId" /]
+                        <select id="${spring.status.expression}" name="${spring.status.expression}" onchange="return productsmixform.submit();">
+                            <option value="" [@spring.checkSelected ""/]>${springMacroRequestContext.getMessage("--Select--")}</option>
+                            [#if formBean.productNameOptions?is_hash]
+                                [#list formBean.productNameOptions?keys as value]
+                                <option value="${value?html}"[@spring.checkSelected value/]>${formBean.productNameOptions[value]?html}</option>
+                                [/#list]
+                            [#else]
+                                [#list formBean.productNameOptions as value]
+                                <option value="${value?html}"[@spring.checkSelected value/]>${value?html}</option>
+                                [/#list]
+                            [/#if]
+                        </select>
+                    </span>
+                </div>
 
-				<div class="span-20 last margin20topbottom width100prc">
-	          		<div class="span-20 width100prc">
-	          			<span class="pull-3 span-8 rightAlign">[@spring.message "manageProducts.defineProductmix.removenotallowedproducts"/]&nbsp;:&nbsp;</span>
-	            		<span class="span-12 " style="width:auto">
-	                		<span class="span-9">[@spring.message "manageProducts.defineProductmix.clickonaproductintherightboxtoselect.ThenclickRemove"/]</span>
-	                		<br/>
-	                    	<div class="margin10topbottomrgin">
+                <div class="span-20 last margin20topbottom width100prc">
+                      <div class="span-20 width100prc">
+                          <span class="pull-3 span-8 rightAlign">[@spring.message "manageProducts.defineProductmix.removenotallowedproducts"/]&nbsp;:&nbsp;</span>
+                        <span class="span-12 " style="width:auto">
+                            <span class="span-9">[@spring.message "manageProducts.defineProductmix.clickonaproductintherightboxtoselect.ThenclickRemove"/]</span>
+                            <br/>
+                            <div class="margin10topbottomrgin">
                                 <span class="span-4" style="width:auto">
                                     [@spring.formMultiSelect "formBean.notAllowed", formBean.notAllowedProductOptions, "class=listSize" /]
                                 </span>
@@ -158,16 +158,16 @@ function selectAllOptions(outSel)
                                     [@spring.formMultiSelect "formBean.allowed", formBean.allowedProductOptions, "class=listSize" /]
                                 </span>
                             </div>
-	               		</span>
-	            	</div>
-	          	</div>
-				<div class="clear">&nbsp;</div>
-        	</div>
-        	<div class="clear">&nbsp;</div>
-	        <div class="buttonsSubmitCancel" style="margin-right:20px;">
-	            <input class="buttn" type="submit" id="holiday.button.preview" name="preview"  value="[@spring.message "preview"/]" onclick="selectAllOptions(this.form.notAllowed);selectAllOptions(this.form.allowed);" />
-	            <input class="buttn2" type="submit" id="CANCEL" name="CANCEL" value="[@spring.message "cancel"/]"/>
-	        </div>
+                           </span>
+                    </div>
+                  </div>
+                <div class="clear">&nbsp;</div>
+            </div>
+            <div class="clear">&nbsp;</div>
+            <div class="buttonsSubmitCancel" style="margin-right:20px;">
+                <input class="buttn" type="submit" id="holiday.button.preview" name="preview"  value="[@spring.message "preview"/]" onclick="selectAllOptions(this.form.notAllowed);selectAllOptions(this.form.allowed);" />
+                <input class="buttn2" type="submit" id="CANCEL" name="CANCEL" value="[@spring.message "cancel"/]"/>
+            </div>
             <!--Subcontent Ends-->
         </form>
     </div>

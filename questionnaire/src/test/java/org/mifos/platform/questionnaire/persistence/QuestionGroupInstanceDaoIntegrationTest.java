@@ -20,10 +20,20 @@
 
 package org.mifos.platform.questionnaire.persistence;
 
+import static java.lang.System.currentTimeMillis;
+import static java.util.Arrays.asList;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.List;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.platform.questionnaire.domain.EventSourceEntity;
 import org.mifos.platform.questionnaire.domain.QuestionGroup;
 import org.mifos.platform.questionnaire.domain.QuestionGroupInstance;
 import org.mifos.platform.questionnaire.domain.QuestionGroupResponse;
@@ -41,17 +51,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Arrays;
-
-import static java.lang.System.currentTimeMillis;
-import static java.util.Arrays.asList;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/test-questionnaire-dbContext.xml", "/test-questionnaire-persistenceContext.xml", "/META-INF/spring/QuestionnaireContext.xml"})
@@ -101,10 +100,10 @@ public class QuestionGroupInstanceDaoIntegrationTest {
         QuestionGroupInstance instance1 = getQuestionGroupInstance(1, questionGroup, 101, "Foo Bar1", "Foo Bar2");
         QuestionGroupInstance instance2 = getQuestionGroupInstance(2, questionGroup, 101, "Hello World1", "Hello World2");
         questionGroupInstanceDao.saveOrUpdateAll(asList(instance1, instance2));
-        List instances = questionGroupInstanceDao.retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(101, questionGroupDetail.getId());
+        List<QuestionGroupInstance> instances = questionGroupInstanceDao.retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(101, questionGroupDetail.getId());
         assertThat(instances, is(notNullValue()));
         assertThat(instances.size(), is(1));
-        QuestionGroupInstance qGInst = (QuestionGroupInstance) instances.get(0);
+        QuestionGroupInstance qGInst = instances.get(0);
         assertThat(qGInst.getVersionNum(), is(2));
         assertThat(qGInst.getEntityId(), is(101));
         assertThat(qGInst.getQuestionGroup().getId(), is(questionGroupDetail.getId()));
@@ -132,19 +131,19 @@ public class QuestionGroupInstanceDaoIntegrationTest {
                 getQuestionGroupInstance(2010, 7, 26, questionGroup3, 101, 1)
         );
         questionGroupInstanceDao.saveOrUpdateAll(questionGroupInstances);
-        int eventSourceId = ((EventSourceEntity) eventSourceDao.retrieveByEventAndSource("View", "Client").get(0)).getId();
-        List list = questionGroupInstanceDao.retrieveQuestionGroupInstancesByEntityIdAndEventSourceId(101, eventSourceId);
+        int eventSourceId = (eventSourceDao.retrieveByEventAndSource("View", "Client").get(0)).getId();
+        List<QuestionGroupInstance> list = questionGroupInstanceDao.retrieveQuestionGroupInstancesByEntityIdAndEventSourceId(101, eventSourceId);
         assertThat(list, is(notNullValue()));
         assertThat(list.size(), is(7));
-        assertThat(((QuestionGroupInstance) list.get(0)).getId(), is(questionGroupInstances.get(4).getId()));
-        assertThat(((QuestionGroupInstance) list.get(1)).getId(), is(questionGroupInstances.get(6).getId()));
-        assertThat(((QuestionGroupInstance) list.get(2)).getId(), is(questionGroupInstances.get(3).getId()));
-        assertThat(((QuestionGroupInstance) list.get(3)).getId(), is(questionGroupInstances.get(1).getId()));
-        assertThat(((QuestionGroupInstance) list.get(4)).getId(), is(questionGroupInstances.get(2).getId()));
-        assertThat(((QuestionGroupInstance) list.get(5)).getId(), is(questionGroupInstances.get(0).getId()));
-        assertThat(((QuestionGroupInstance) list.get(6)).getId(), is(questionGroupInstances.get(5).getId()));
+        assertThat((list.get(0)).getId(), is(questionGroupInstances.get(4).getId()));
+        assertThat((list.get(1)).getId(), is(questionGroupInstances.get(6).getId()));
+        assertThat((list.get(2)).getId(), is(questionGroupInstances.get(3).getId()));
+        assertThat((list.get(3)).getId(), is(questionGroupInstances.get(1).getId()));
+        assertThat((list.get(4)).getId(), is(questionGroupInstances.get(2).getId()));
+        assertThat((list.get(5)).getId(), is(questionGroupInstances.get(0).getId()));
+        assertThat((list.get(6)).getId(), is(questionGroupInstances.get(5).getId()));
     }
-    
+
     @Test
     @Transactional(rollbackFor = DataAccessException.class)
     public void shouldGetAllLatestQuestionGroupInstancesByEntityAndEventSourceId() {
@@ -166,12 +165,12 @@ public class QuestionGroupInstanceDaoIntegrationTest {
         //  questionGroupInstanceDao.retrieveQuestionGroupInstancesByEntityIdAndEventSourceId(101, eventSourceId)
         //  is a hack to flush the entities as method under test is in SQL and not HQL
         questionGroupInstanceDao.retrieveQuestionGroupInstancesByEntityIdAndEventSourceId(101, eventSourceId);
-        List list = questionGroupInstanceDao.retrieveLatestQuestionGroupInstancesByEntityIdAndEventSourceId(101, eventSourceId);
+        List<QuestionGroupInstance> list = questionGroupInstanceDao.retrieveLatestQuestionGroupInstancesByEntityIdAndEventSourceId(101, eventSourceId);
         assertThat(list, is(notNullValue()));
         assertThat(list.size(), is(3));
-        assertThat(((QuestionGroupInstance) list.get(0)).getId(), is(questionGroupInstances.get(4).getId()));
-        assertThat(((QuestionGroupInstance) list.get(1)).getId(), is(questionGroupInstances.get(6).getId()));
-        assertThat(((QuestionGroupInstance) list.get(2)).getId(), is(questionGroupInstances.get(1).getId()));
+        assertThat((list.get(0)).getId(), is(questionGroupInstances.get(4).getId()));
+        assertThat((list.get(1)).getId(), is(questionGroupInstances.get(6).getId()));
+        assertThat((list.get(2)).getId(), is(questionGroupInstances.get(1).getId()));
     }
 
     private QuestionDetail defineQuestion(String questionTitle, QuestionType questionType) throws SystemException {

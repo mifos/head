@@ -60,7 +60,7 @@
         [@spring.formInput "questionDefinition.currentQuestion.currentChoice", 'maxlength="200"'/]
         <input type="submit" id="_eventId_addChoice" name="_eventId_addChoice" class="buttn"
                value="[@spring.message "questionnaire.quesiton.add"/] >>">
-        
+
         <table class="table_common" border="0" >
             <thead>
                <tr>

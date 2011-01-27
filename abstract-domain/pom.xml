@@ -24,15 +24,15 @@
         <groupId>org.mifos</groupId>
         <version>1.8-SNAPSHOT</version>
     </parent>
-    
+
     <dependencies>
-    	<dependency>
+        <dependency>
             <groupId>org.mifos</groupId>
             <artifactId>mifos-common</artifactId>
         </dependency>
         <dependency>
-	        <groupId>org.mifos</groupId>
-	        <artifactId>mifos-domain-dto</artifactId>
+            <groupId>org.mifos</groupId>
+            <artifactId>mifos-domain-dto</artifactId>
         </dependency>
         <dependency>
             <groupId>log4j</groupId>
@@ -66,7 +66,7 @@
             <artifactId>hamcrest-all</artifactId>
             <scope>test</scope>
         </dependency>
-	</dependencies>
+    </dependencies>
 
     <build>
         <defaultGoal>jar</defaultGoal>
@@ -92,7 +92,7 @@
                     <target>1.6</target>
                 </configuration>
             </plugin>
-            
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -112,7 +112,7 @@
                     <reportsDirectory>${project.build.directory}/surefire-reports/unit</reportsDirectory>
                 </configuration>
             </plugin>
-            
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>

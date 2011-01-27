@@ -3,15 +3,15 @@
                             "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
                             "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
-	<class name="org.mifos.platform.cashflow.domain.CashFlow" table="cash_flow">
-		<id name="id" column="id" type="integer" unsaved-value="0" access="field">
-			<generator class="native"/>
-		</id>
-		<bag name="monthlyCashFlows" cascade="all" lazy="false" access="field">
-			<key column="cash_flow_id" not-null="true"/>
-			<one-to-many class="org.mifos.platform.cashflow.domain.MonthlyCashFlow"/>
-		</bag>
+    <class name="org.mifos.platform.cashflow.domain.CashFlow" table="cash_flow">
+        <id name="id" column="id" type="integer" unsaved-value="0" access="field">
+            <generator class="native"/>
+        </id>
+        <bag name="monthlyCashFlows" cascade="all" lazy="false" access="field">
+            <key column="cash_flow_id" not-null="true"/>
+            <one-to-many class="org.mifos.platform.cashflow.domain.MonthlyCashFlow"/>
+        </bag>
         <property name="totalCapital" column="capital" access="field"/>
         <property name="totalLiability" column="liability" access="field"/>
-	</class>
+    </class>
 </hibernate-mapping>

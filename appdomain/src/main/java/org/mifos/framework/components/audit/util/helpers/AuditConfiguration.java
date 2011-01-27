@@ -40,11 +40,10 @@ import org.mifos.customers.personnel.business.PersonnelLevelEntity;
 import org.mifos.customers.personnel.business.PersonnelStatusEntity;
 import org.mifos.dto.domain.ValueListElement;
 import org.mifos.framework.components.audit.persistence.AuditConfigurationPersistence;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.FilePaths;
-import org.springframework.beans.factory.annotation.Autowired;
 
+@SuppressWarnings("unchecked")
 public class AuditConfiguration {
 
     private static final Map<String, String> entityToClassPath = new HashMap<String, String>();

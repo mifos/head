@@ -202,53 +202,53 @@ public class CalendarUtilsTest {
 
         assertThat(adjustedDate, is(monday29thOfMarch2010.plusDays(1)));
     }
-    
+
     /*
      * !!! This is unexpected behavior of CalendarUtils.getNextDateForMonthOnDate
      * shown while investigating MIFOS-3584.
      */
     @Test
     public void shouldPlaceNextMonthDateInTheSameMonth() {
-    	DateTime adjustedInstallementDate = new DateTime(2010, 11, 1, 0, 0, 0, 0);
-    	DateTime next = CalendarUtils.getNextDateForMonthOnDate(adjustedInstallementDate, 30, 1);
-    	assertThat(next, is(new DateTime(2010, 12, 30, 0, 0, 0, 0)));
+        DateTime adjustedInstallementDate = new DateTime(2010, 11, 1, 0, 0, 0, 0);
+        DateTime next = CalendarUtils.getNextDateForMonthOnDate(adjustedInstallementDate, 30, 1);
+        assertThat(next, is(new DateTime(2010, 12, 30, 0, 0, 0, 0)));
     }
-    
+
     // The same unexpected behavior but with next day in new year
     @Test
     public void shouldPlaceNextMonthDateInTheSameMonth2() {
-    	DateTime adjustedInstallementDate = new DateTime(2010, 12, 1, 0, 0, 0, 0);
-    	DateTime next = CalendarUtils.getNextDateForMonthOnDate(adjustedInstallementDate, 30, 1);
-    	assertThat(next, is(new DateTime(2011, 1, 30, 0, 0, 0, 0)));
+        DateTime adjustedInstallementDate = new DateTime(2010, 12, 1, 0, 0, 0, 0);
+        DateTime next = CalendarUtils.getNextDateForMonthOnDate(adjustedInstallementDate, 30, 1);
+        assertThat(next, is(new DateTime(2011, 1, 30, 0, 0, 0, 0)));
     }
-    
+
     // The same behavior with 'every' months set to 2
     @Test
     public void shouldPlaceNextMonthDateInTheSameMonthEvery2Months() {
-    	DateTime adjustedInstallementDate = new DateTime(2010, 6, 1, 0, 0, 0, 0);
-    	DateTime next = CalendarUtils.getNextDateForMonthOnDate(adjustedInstallementDate, 30, 2);
-    	assertThat(next, is(new DateTime(2010, 8, 30, 0, 0, 0, 0)));
+        DateTime adjustedInstallementDate = new DateTime(2010, 6, 1, 0, 0, 0, 0);
+        DateTime next = CalendarUtils.getNextDateForMonthOnDate(adjustedInstallementDate, 30, 2);
+        assertThat(next, is(new DateTime(2010, 8, 30, 0, 0, 0, 0)));
     }
 
     @Test
     public void shouldSelectMarchFor28February() {
-    	DateTime lastDayOfFebruary = new DateTime(2006, 2, 28, 0, 0, 0, 0);
-    	DateTime next = CalendarUtils.getNextDateForMonthOnDate(lastDayOfFebruary, 31, 1);
-    	assertThat(next, is(new DateTime(2006, 3, 31, 0, 0, 0, 0)));
+        DateTime lastDayOfFebruary = new DateTime(2006, 2, 28, 0, 0, 0, 0);
+        DateTime next = CalendarUtils.getNextDateForMonthOnDate(lastDayOfFebruary, 31, 1);
+        assertThat(next, is(new DateTime(2006, 3, 31, 0, 0, 0, 0)));
     }
 
     @Test
     public void shouldSelectAugustFor28June() {
-    	DateTime lastDayOfJune = new DateTime(2006, 6, 30, 0, 0, 0, 0);
-    	DateTime next = CalendarUtils.getNextDateForMonthOnDate(lastDayOfJune, 31, 3);
-    	assertThat(next, is(new DateTime(2006, 9, 30, 0, 0, 0, 0)));
+        DateTime lastDayOfJune = new DateTime(2006, 6, 30, 0, 0, 0, 0);
+        DateTime next = CalendarUtils.getNextDateForMonthOnDate(lastDayOfJune, 31, 3);
+        assertThat(next, is(new DateTime(2006, 9, 30, 0, 0, 0, 0)));
     }
 
     @Test
     public void shouldSelectNextMonth() {
-    	DateTime lastDayOfJune = new DateTime(2006, 6, 30, 0, 0, 0, 0);
-    	DateTime next = CalendarUtils.getNextDateForMonthOnDate(lastDayOfJune, 31, 1);
-    	assertThat(next, is(new DateTime(2006, 7, 31, 0, 0, 0, 0)));
+        DateTime lastDayOfJune = new DateTime(2006, 6, 30, 0, 0, 0, 0);
+        DateTime next = CalendarUtils.getNextDateForMonthOnDate(lastDayOfJune, 31, 1);
+        assertThat(next, is(new DateTime(2006, 7, 31, 0, 0, 0, 0)));
     }
 
     private DateTime firstWednesdayOfTwoMonthsAway() {
@@ -261,5 +261,5 @@ public class CalendarUtilsTest {
 
         return firstWednesdayOfTwoMonthsAway;
     }
-    
+
 }

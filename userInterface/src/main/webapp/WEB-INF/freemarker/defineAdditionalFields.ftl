@@ -39,9 +39,9 @@
             <p class="fontBold">[@spring.message "datadisplayandrules.defineAdditionalFields.additionalfielddetails" /] </p>
             <p>&nbsp;&nbsp;</p>
         <div class="prepend-3  span-21 last">
-        	<div class="span-20 "><span class="span-3 rightAlign"><span class="red">* </span>[@spring.message "datadisplayandrules.defineAdditionalFields.category" /]</span><span class="span-4">&nbsp;
-   					<select name="select">
-      					<option >[@spring.message "--Select--"/]</option>
+            <div class="span-20 "><span class="span-3 rightAlign"><span class="red">* </span>[@spring.message "datadisplayandrules.defineAdditionalFields.category" /]</span><span class="span-4">&nbsp;
+                       <select name="select">
+                          <option >[@spring.message "--Select--"/]</option>
                         <option >[@spring.message "datadisplayandrules.viewadditionalfields.personnel"/]</option>
                         <option >[@spring.message "datadisplayandrules.viewadditionalfields.office"/]</option>
                         <option >[@spring.message "datadisplayandrules.viewadditionalfields.client"/]</option>
@@ -49,25 +49,25 @@
                         <option >[@spring.message "datadisplayandrules.viewadditionalfields.center"/]</option>
                         <option >[@spring.message "datadisplayandrules.viewadditionalfields.loan"/]</option>
                         <option >[@spring.message "datadisplayandrules.viewadditionalfields.savings"/]</option>
-				    </select></span>
-			</div>
-        	<div class="span-20 "><span class="span-3 rightAlign"><span class="red">* </span>[@spring.message "datadisplayandrules.defineAdditionalFields.label" /]</span><span class="span-5">&nbsp;
-    				<input type="text" id="define_additional_fields.input.labelName" /></span>
-  			</div>
+                    </select></span>
+            </div>
+            <div class="span-20 "><span class="span-3 rightAlign"><span class="red">* </span>[@spring.message "datadisplayandrules.defineAdditionalFields.label" /]</span><span class="span-5">&nbsp;
+                    <input type="text" id="define_additional_fields.input.labelName" /></span>
+              </div>
             <div class="span-20 "><span class="span-3 rightAlign">[@spring.message "datadisplayandrules.editadditionalfields.mandatory" /]</span><span class="span-4">&nbsp;
-    				<input type="checkbox" /></span>
-  			</div>
+                    <input type="checkbox" /></span>
+              </div>
             <div class="span-20 "><span class="span-3 rightAlign"><span class="red">* </span>[@spring.message "datadisplayandrules.defineAdditionalFields.dataType" /]</span><span class="span-5">&nbsp;
-   					<select name="select">
-      					<option >[@spring.message "--Select--"/]</option>
+                       <select name="select">
+                          <option >[@spring.message "--Select--"/]</option>
                         <option >[@spring.message "datadisplayandrules.defineAdditionalFields.numeric"/]</option>
                         <option >[@spring.message "datadisplayandrules.defineAdditionalFields.text"/]</option>
-				    </select></span>
-			</div>
+                    </select></span>
+            </div>
             <div class="span-20 "><span class="span-3 rightAlign">[@spring.message "datadisplayandrules.defineAdditionalFields.defaultValue" /]</span><span class="span-5">&nbsp;
-    				<input type="text" /></span>
-  			</div>
-            
+                    <input type="text" /></span>
+              </div>
+
         </div>
         <div class="clear">&nbsp;</div>
         <hr />

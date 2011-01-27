@@ -122,7 +122,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                 // What are the others?
             }
         }
-        
+
 
     }
 

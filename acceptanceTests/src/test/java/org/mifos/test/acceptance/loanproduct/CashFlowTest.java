@@ -251,6 +251,6 @@ public class CashFlowTest extends UiTestCaseBase {
                 verifyCashFlowInViewLoanProductPage(warningThreshold,indebtentValue,repaymentValue);
     }
 
-    
+
 }
 

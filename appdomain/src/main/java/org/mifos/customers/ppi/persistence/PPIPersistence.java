@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.hibernate.Query;
 import org.mifos.application.NamedQueryConstants;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.ppi.business.PPIChoice;
 import org.mifos.customers.ppi.business.PPISurvey;
 import org.mifos.customers.ppi.helpers.Country;
@@ -34,8 +35,8 @@ import org.mifos.customers.surveys.business.SurveyResponse;
 import org.mifos.customers.surveys.helpers.AnswerType;
 import org.mifos.customers.surveys.persistence.SurveysPersistence;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.PersistenceException;
 
+@SuppressWarnings("unchecked")
 public class PPIPersistence extends SurveysPersistence {
 
     public PPISurvey retrieveActivePPISurvey() {
@@ -83,7 +84,7 @@ public class PPIPersistence extends SurveysPersistence {
     }
 
     @Override
-    public List<SurveyResponse> retrieveResponsesByInstance(SurveyInstance instance) throws PersistenceException {
+    public List<SurveyResponse> retrieveResponsesByInstance(SurveyInstance instance) {
         List<SurveyResponse> list = super.retrieveResponsesByInstance(instance);
         for (SurveyResponse response : list) {
             if (response.getQuestion().getAnswerType() == AnswerType.CHOICE.getValue()) {
@@ -92,7 +93,7 @@ public class PPIPersistence extends SurveysPersistence {
                     try {
                         response.setChoiceValue(ppiChoice);
                     } catch (ApplicationException e) {
-                        throw new PersistenceException(e);
+                        throw new MifosRuntimeException(e);
                     }
                 }
             }

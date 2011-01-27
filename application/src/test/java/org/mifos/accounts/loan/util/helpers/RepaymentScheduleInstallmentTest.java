@@ -60,7 +60,7 @@ public class RepaymentScheduleInstallmentTest {
         assertThat(installment.getMiscFees(),is(asMoney("100")));
     }
 
-    
+
     private RepaymentScheduleInstallment getRepaymentScheduleInstallment(String dueDate, int installment,
                                                                          String principal, String interest,
                                                                          String fees, String total, String miscFee) {

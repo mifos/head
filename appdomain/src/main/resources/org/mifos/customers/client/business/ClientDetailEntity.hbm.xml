@@ -8,10 +8,10 @@
     <class name="org.mifos.customers.client.business.ClientDetailEntity" table="customer_detail">
        <id name="customerId" column="customer_id" type="integer" access="field">
             <generator class="foreign">
-            	<param name="property">client</param>
+                <param name="property">client</param>
             </generator>
         </id>
- 		
+
         <property name="ethinicity" column="ethinicity" type="integer"   />
         <property name="citizenship" column="citizenship" type="integer"  />
         <property name="handicapped" column="handicapped" type="integer"   />
@@ -26,5 +26,5 @@
         <property name="povertyLikelihoodPercent" column="poverty_lhood_pct" />
         <one-to-one name="client" class="org.mifos.customers.client.business.ClientBO" cascade="all" access="field"/>
     </class>
-         
+
 </hibernate-mapping>

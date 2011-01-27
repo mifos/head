@@ -494,8 +494,10 @@ public class MeetingBO extends AbstractBusinessObject {
                 meeting = new MeetingBO(meetingDto.getDayOfMonth(), meetingDto.getRecursEvery(), startDate,
                         MeetingType.CUSTOMER_MEETING, meetingDto.getMeetingPlace());
             } else {
-                meeting = new MeetingBO(meetingDto.getMonthWeek(), meetingDto.getRankOfDay(), meetingDto
-                        .getRecursEvery(), startDate, MeetingType.CUSTOMER_MEETING, meetingDto.getMeetingPlace());
+
+                RankOfDay rank = RankOfDay.getRankOfDay(meetingDto.getRankOfDay());
+                WeekDay weekDay = WeekDay.getWeekDay(meetingDto.getMonthWeek());
+                meeting = new MeetingBO(weekDay, rank, meetingDto.getRecursEvery(), startDate, MeetingType.CUSTOMER_MEETING, meetingDto.getMeetingPlace());
             }
             break;
         default:

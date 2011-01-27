@@ -93,6 +93,8 @@ insert into applied_upgrades(upgrade_id) values(1298198335);
 insert into applied_upgrades(upgrade_id) values(1299279218);
 insert into applied_upgrades(upgrade_id) values(1294738016);
 insert into applied_upgrades(upgrade_id) values(1294927843);
+insert into applied_upgrades(upgrade_id) values(1295985566);
+insert into applied_upgrades(upgrade_id) values(1296137314);
 
 /* The table Currency holds configuration related items for a currency like
  * display symbol, rounding mode etc which is to be applied on a currency.
@@ -107,7 +109,7 @@ insert into applied_upgrades(upgrade_id) values(1294927843);
  * changing currency configuration.
  * http://mifos.org/developers/wiki/ConfiguringMifos#application-wide-install-time-settings
  */
-insert into currency (currency_id, currency_code, rounding_amount, currency_name) values 
+insert into currency (currency_id, currency_code, rounding_amount, currency_name) values
 (1, 'USD', 1, 'US Dollar'),
 (2, 'INR', 1, 'Indian Rupee'),
 (3, 'EUR', 1, 'Euro' ),
@@ -1724,7 +1726,7 @@ insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value
 values(923, 1, 578, null);
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(626, 91, 'RepaymentRule-RepaymentMoratorium');
 -- This was not added in Upgrade238, testing might missed it because of bug MIFOS-2875
--- Not sure if it's going to be a severe problem  
+-- Not sure if it's going to be a severe problem
 -- INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
 -- VALUES(957, 1, 626, NULL);
 
@@ -2747,7 +2749,7 @@ insert into field_configuration(field_config_id,field_name,entity_id,mandatory_f
 -- this row was CollectionSheetHelper.daysInAdvance
 -- (value now stored in applicationConfiguration.default.properties)
 -- Adam [ Thu Dec 20 22:28:57 PST 2007 ]
-insert into config_key_value_integer(configuration_key, configuration_value) values 
+insert into config_key_value_integer(configuration_key, configuration_value) values
 ('x',0),
 -- this row was sessionTimeout (see web.xml for configured session timeout)
 -- Adam [ Thu Dec 20 22:28:58 PST 2007 ]
@@ -2808,7 +2810,7 @@ insert into transaction_type (transaction_id,transaction_name) values
 (5,'Client Fees/penalty payments');
 
 /* The table Accepted Payment Type will contain the different payment modes supported by the system - System*/
-insert into accepted_payment_type (accepted_payment_type_id,transaction_id,payment_type_id) values 
+insert into accepted_payment_type (accepted_payment_type_id,transaction_id,payment_type_id) values
 (1,1,1),
 (2,2,1),
 (3,3,1),
@@ -2861,7 +2863,7 @@ insert into activity(activity_id,parent_id,activity_name_lookup_id,description_l
 insert into roles_activity values (204,1);
 
 
-insert into repayment_rule(repayment_rule_id, repayment_rule_lookup_id) values 
+insert into repayment_rule(repayment_rule_id, repayment_rule_lookup_id) values
  (1,576)
 ,(2,577)
 ,(3,578)
@@ -2967,7 +2969,7 @@ insert into report(report_category_id,report_name,report_identifier, activity_id
 (6,'Branch Cash Confirmation Report','branch_cash_confirmation_report',231,1),
 (6,'Branch Progress Report','branch_progress_report',232,1);
 
-insert into report_jasper_map (report_category_id,report_name,report_identifier,report_jasper) values 
+insert into report_jasper_map (report_category_id,report_name,report_identifier,report_jasper) values
 (1,'Collection Sheet Report','collection_sheet_report','CollectionSheetReport.rptdesign'),
 (6,'Branch Cash Confirmation Report','branch_cash_confirmation_report','BranchCashConfirmationReport.rptdesign'),
 (6,'Branch Progress Report','branch_progress_report','ProgressReport.rptdesign');
@@ -3230,7 +3232,7 @@ insert into language(lang_id,lang_name,lang_short_name,lookup_id) values(11,'Hun
 insert into supported_locale(locale_id,country_id,lang_id,locale_name,default_locale) values(47,51,11,'Hungarian-Hungary',0);
 
 /* Upgrade 255,256 START*/
-insert into lookup_value (lookup_id, entity_id, lookup_name) values 
+insert into lookup_value (lookup_id, entity_id, lookup_name) values
 (628,87,'Permissions.CanViewDetailedAgingOfPortfolioAtRiskReport'),
 (629,87,'Permissions.CanViewGeneralLedgerReport');
 insert into lookup_value_locale (lookup_value_id, locale_id, lookup_id, lookup_value) values
@@ -3242,7 +3244,7 @@ insert into activity (activity_id, parent_id, activity_name_lookup_id, descripti
 insert into roles_activity (activity_id, role_id) values
 (236,1),
 (237,1);
-insert into report (report_id, report_category_id, report_name, report_identifier, activity_id, report_active) values 
+insert into report (report_id, report_category_id, report_name, report_identifier, activity_id, report_active) values
 (4,6,'Detailed Aging Of Portfolio At Risk Report','detailed_aging_of_portfolio_at_risk_report',236,1),
 (5,6,'General Ledger Report','general_ledger_report',237,1);
 insert into report_jasper_map (report_id, report_category_id, report_name, report_identifier, report_jasper) values
@@ -3373,3 +3375,15 @@ insert into activity(activity_id,parent_id,activity_name_lookup_id,description_l
     (select lookup_id from lookup_value where entity_id =87 and lookup_name='Permissions-Clients-CanEditPhoneNumber'));
 insert into roles_activity values (245,1);
 /* Upgrade - 1294927843*/
+
+/* Upgrade - 1296137314 */
+insert into lookup_value(lookup_id,entity_id,lookup_name)
+    values((select max(lv.lookup_id)+1 from lookup_value lv),87,'Permissions-CanUseAccountingIntegration');
+insert into lookup_value_locale(lookup_value_id, locale_id, lookup_id, lookup_value)
+    values(968,1,(select lookup_id from lookup_value where entity_id =87 and lookup_name='Permissions-CanUseAccountingIntegration'),null);
+insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id)values
+    (246,196,
+    (select lookup_id from lookup_value where entity_id =87 and lookup_name='Permissions-CanUseAccountingIntegration'),
+    (select lookup_id from lookup_value where entity_id =87 and lookup_name='Permissions-CanUseAccountingIntegration'));
+insert into roles_activity values (246,1);
+/* Upgrade - 1296137314 */

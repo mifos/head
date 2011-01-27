@@ -31,6 +31,7 @@ import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfi
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.LegacyGenericDao;
 
+@SuppressWarnings("unchecked")
 public class LegacyFieldConfigurationDao extends LegacyGenericDao {
 
     private LegacyFieldConfigurationDao() {

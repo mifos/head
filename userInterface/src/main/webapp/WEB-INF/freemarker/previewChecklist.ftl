@@ -38,16 +38,16 @@
           <p class="fontBold">[@spring.message "organizationPreferences.previewChecklist.checklistdetails"/]</p>
           <p>&nbsp;&nbsp;</p>
           <p class="span-22">
-          	<span class="fontBold">[@spring.message "organizationPreferences.previewChecklist.Name"/]: </span><span>&nbsp;</span><br />
+              <span class="fontBold">[@spring.message "organizationPreferences.previewChecklist.Name"/]: </span><span>&nbsp;</span><br />
             <span class="fontBold">[@spring.message "organizationPreferences.previewChecklist.type"/]: </span><span>&nbsp;</span><br />
             <span class="fontBold">[@spring.message "organizationPreferences.previewChecklist.displayedwhenmovingintoStatus"/] </span><span>&nbsp;</span><br />
           </p>
           <p>&nbsp;&nbsp;</p>
           <p>&nbsp;&nbsp;</p>
           <p class="span-22">
-          	<div class="fontBold">[@spring.message "organizationPreferences.previewChecklist.items"/]</div>
+              <div class="fontBold">[@spring.message "organizationPreferences.previewChecklist.items"/]</div>
             <ul style="list-style:none">
-            	<li>[@spring.message "organizationPreferences.previewChecklist.items1"/]</li>
+                <li>[@spring.message "organizationPreferences.previewChecklist.items1"/]</li>
                 <li>[@spring.message "organizationPreferences.previewChecklist.items2"/]</li>
             </ul>
             <div class="clear">&nbsp;</div>

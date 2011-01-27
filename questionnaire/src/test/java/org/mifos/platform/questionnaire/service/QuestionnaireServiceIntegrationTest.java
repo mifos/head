@@ -81,6 +81,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/test-questionnaire-dbContext.xml", "/test-questionnaire-persistenceContext.xml", "/META-INF/spring/QuestionnaireContext.xml"})
 @TransactionConfiguration(transactionManager = "platformTransactionManager", defaultRollback = true)
@@ -274,6 +275,7 @@ public class QuestionnaireServiceIntegrationTest {
         assertThat(actualQuestions.get(2).getText(), is(expectedOrderTitles.get(2)));
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     @Transactional(rollbackFor = DataAccessException.class)
     public void shouldGetAllQuestionGroups() throws SystemException {

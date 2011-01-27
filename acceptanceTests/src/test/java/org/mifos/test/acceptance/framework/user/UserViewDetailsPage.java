@@ -115,7 +115,7 @@ public class UserViewDetailsPage extends MifosPage {
         Assert.assertTrue(!selenium.isTextPresent("Indebtedness Rate:"));
         Assert.assertTrue(!selenium.isTextPresent("Repayment Capacity:"));
         return this;
-        
+
     }
 
     public UserViewDetailsPage verifyInterestTypeInSummary(String interestType) {

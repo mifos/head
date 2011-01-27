@@ -1,6 +1,6 @@
 -- This script is used for masking/hiding the sensitive information from a given Mifos database
 -- TODO
--- * Replace password hash to default password hash 
+-- * Replace password hash to default password hash
 
 update personnel set display_name = concat("user-",personnel_id), email_id=NULL;
 update personnel set login_name = concat("user-",personnel_id) where personnel_id>1;

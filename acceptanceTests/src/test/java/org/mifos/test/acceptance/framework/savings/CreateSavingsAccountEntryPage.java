@@ -53,7 +53,7 @@ public class CreateSavingsAccountEntryPage extends AbstractPage {
         // TODO - select some answer
         selenium.click("captureQuestionResponses.button.continue");
         waitForPageToLoad();
-        
+
         selenium.isVisible("createsavingsaccountpreview.button.submitForApproval");
         selenium.click("createsavingsaccountpreview.button.submitForApproval");
         waitForPageToLoad();

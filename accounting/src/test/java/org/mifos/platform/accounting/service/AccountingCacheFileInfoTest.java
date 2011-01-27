@@ -47,14 +47,12 @@ public class AccountingCacheFileInfoTest {
     @Test
     public void testAccountingCacheFileInfo() {
         DateTime dateTime = new DateTime(2010, 05, 07, 5, 1, 20, 0);
-        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MMM-dd HH:mm:sss z").withLocale(Locale.getDefault());
-        String expectedDateTime =  formatter.print(dateTime.getMillis());
-        AccountingCacheFileInfo a = new AccountingCacheFileInfo(dateTime, "Mifos Accounting Export ",
-                "2010-05-05 to 2010-06-07");
-        Assert.assertEquals("Mifos Accounting Export ", a.getMfiPrefix());
-        Assert.assertEquals(expectedDateTime, a.getLastModified());
+        ExportFileInfo a = new ExportFileInfo(dateTime.toString("yyyy-MMM-dd HH:mm:sss z"),
+                "Mifos Accounting Export 2010-05-05 to 2010-06-07", "2010-05-05", "2010-06-07", true);
+        Assert.assertEquals(dateTime.toString("yyyy-MMM-dd HH:mm:sss z"), a.getLastModified());
         Assert.assertEquals("2010-05-05", a.getStartDate());
         Assert.assertEquals("2010-06-07", a.getEndDate());
-        Assert.assertEquals("2010-05-05 to 2010-06-07", a.getFileName());
+        Assert.assertEquals("Mifos Accounting Export 2010-05-05 to 2010-06-07", a.getFileName());
+        Assert.assertEquals(true, a.getIsExistInCache());
     }
 }

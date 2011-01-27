@@ -64,7 +64,7 @@ public class AccountFeesActionDetailEntityIntegrationTest extends MifosIntegrati
             }
         }
     }
-    
+
     @Test
     public void testMakeEarlyRepaymentEnteriesForFeePaymentWithInterestWaiver() {
         for (AccountActionDateEntity installment : accountBO.getAccountActionDates()) {

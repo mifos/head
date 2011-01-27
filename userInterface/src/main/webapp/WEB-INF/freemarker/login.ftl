@@ -36,18 +36,18 @@
         <!--Begining of Right side div-->
         <div class="span-8 last" style="text-align:left; width:290px">
           <div class="error">
-          	<span id="login.error.message">
-          		[#if Session.SPRING_SECURITY_LAST_EXCEPTION?? && Session.SPRING_SECURITY_LAST_EXCEPTION.message?has_content]
-		 					<span>${Session.SPRING_SECURITY_LAST_EXCEPTION.message}</span><br/>
-				[/#if]
-			</span>
-		</div>
-		<div style="text-align:right;">
-          	<span class="normalFont"><label for="login.input.username">[@spring.message "login.UserName" /]</label>:&nbsp;</span>
+              <span id="login.error.message">
+                  [#if Session.SPRING_SECURITY_LAST_EXCEPTION?? && Session.SPRING_SECURITY_LAST_EXCEPTION.message?has_content]
+                             <span>${Session.SPRING_SECURITY_LAST_EXCEPTION.message}</span><br/>
+                [/#if]
+            </span>
+        </div>
+        <div style="text-align:right;">
+              <span class="normalFont"><label for="login.input.username">[@spring.message "login.UserName" /]</label>:&nbsp;</span>
             <span ><input class="focused" type="text" name="j_username" id="login.input.username"></span>
           </div>
           <div class="paddingTop5" style="text-align:right;">
-          	<span class="normalFont">&nbsp;<label for="login.input.password">[@spring.message "login.password"/]</label>:&nbsp;</span>
+              <span class="normalFont">&nbsp;<label for="login.input.password">[@spring.message "login.password"/]</label>:&nbsp;</span>
             <span><input type="password" name="j_password" id="login.input.password"></span>
         </div>
           <div>&nbsp;</div>

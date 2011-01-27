@@ -4,462 +4,462 @@
                             "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
 
-	<class name="org.mifos.accounts.business.AccountBO" table="account">
-		<id name="accountId" column="account_id" type="integer" access="field">
-			<generator class="native" />
-		</id>
-		<version name="versionNo" column="version_no" type="integer"
-			unsaved-value="null" />
+    <class name="org.mifos.accounts.business.AccountBO" table="account">
+        <id name="accountId" column="account_id" type="integer" access="field">
+            <generator class="native" />
+        </id>
+        <version name="versionNo" column="version_no" type="integer"
+            unsaved-value="null" />
 
-		<property name="offsettingAllowable" column="offsetting_allowable"
-			type="integer" />
-		<property name="globalAccountNum" column="global_account_num"
-			access="field" />
-		<property name="externalId" column="external_id" access="field" />
-		<property name="createdBy" column="created_by" not-null="true"
-			update="false" lazy="true" />
-		<property name="createdDate" column="created_date" not-null="true"
-			update="false" lazy="true" />
-		<property name="updatedBy" column="updated_by" lazy="true" />
-		<property name="updatedDate" column="updated_date" lazy="true" />
-		<property name="closedDate" column="closed_date" lazy="true" />
+        <property name="offsettingAllowable" column="offsetting_allowable"
+            type="integer" />
+        <property name="globalAccountNum" column="global_account_num"
+            access="field" />
+        <property name="externalId" column="external_id" access="field" />
+        <property name="createdBy" column="created_by" not-null="true"
+            update="false" lazy="true" />
+        <property name="createdDate" column="created_date" not-null="true"
+            update="false" lazy="true" />
+        <property name="updatedBy" column="updated_by" lazy="true" />
+        <property name="updatedDate" column="updated_date" lazy="true" />
+        <property name="closedDate" column="closed_date" lazy="true" />
 
-		<many-to-one name="customer" column="customer_id"
-			class="org.mifos.customers.business.CustomerBO" cascade="none"
-			update="false" insert="true" unique="true" access="field" />
-		<many-to-one name="office" column="office_id"
-			class="org.mifos.customers.office.business.OfficeBO" cascade="none"
-			update="false" insert="true" unique="true" access="field" />
-		<many-to-one name="accountState" column="account_state_id"
-			class="org.mifos.accounts.business.AccountStateEntity" cascade="none"
-			update="true" insert="true" unique="true" />
-		<many-to-one name="accountType" column="account_type_id"
-			class="org.mifos.accounts.business.AccountTypeEntity" cascade="none"
-			update="false" insert="true" unique="true" access="field" />
-		<many-to-one name="personnel" column="personnel_id"
-			class="org.mifos.customers.personnel.business.PersonnelBO" cascade="none"
-			update="true" insert="true" unique="true" access="field" />
+        <many-to-one name="customer" column="customer_id"
+            class="org.mifos.customers.business.CustomerBO" cascade="none"
+            update="false" insert="true" unique="true" access="field" />
+        <many-to-one name="office" column="office_id"
+            class="org.mifos.customers.office.business.OfficeBO" cascade="none"
+            update="false" insert="true" unique="true" access="field" />
+        <many-to-one name="accountState" column="account_state_id"
+            class="org.mifos.accounts.business.AccountStateEntity" cascade="none"
+            update="true" insert="true" unique="true" />
+        <many-to-one name="accountType" column="account_type_id"
+            class="org.mifos.accounts.business.AccountTypeEntity" cascade="none"
+            update="false" insert="true" unique="true" access="field" />
+        <many-to-one name="personnel" column="personnel_id"
+            class="org.mifos.customers.personnel.business.PersonnelBO" cascade="none"
+            update="true" insert="true" unique="true" access="field" />
 
-		<set name="accountNotes" cascade="all" inverse="true" table="account_notes"
-			lazy="true" order-by="ACCOUNT_NOTES_ID desc" access="field">
-			<key column="account_id" />
-			<many-to-many class="org.mifos.accounts.business.AccountNotesEntity"
-				column="account_notes_id" />
-		</set>
-		<set name="accountFees" cascade="all" inverse="true" lazy="true"
-			table="account_fees" access="field">
-			<key column="account_id" />
-			<many-to-many class="org.mifos.accounts.business.AccountFeesEntity"
-				column="account_fee_id" />
-		</set>
-		<bag name="accountPayments" cascade="all" inverse="true"
-			table="account_payment" lazy="false" order-by="PAYMENT_ID desc">
-			<key column="account_id" />
-			<one-to-many class="org.mifos.accounts.business.AccountPaymentEntity" />
-		</bag>
-		<set name="accountCustomFields" cascade="all" inverse="true" lazy="true"
-			access="field">
-			<key column="account_id" />
-			<one-to-many class="org.mifos.accounts.business.AccountCustomFieldEntity" />
-		</set>
-		<bag name="accountStatusChangeHistory" cascade="all" inverse="true"
-			table="account_status_change_history" lazy="true"
-			order-by="ACCOUNT_STATUS_CHANGE_ID asc" access="field">
-			<key column="account_id" />
-			<one-to-many
-				class="org.mifos.accounts.business.AccountStatusChangeHistoryEntity" />
-		</bag>
-		<set name="accountFlags" cascade="all" lazy="true" access="field">
-			<key column="account_id" not-null="true" />
-			<one-to-many class="org.mifos.accounts.business.AccountFlagMapping" />
-		</set>
-		<!-- This is for loan account-->
-		<joined-subclass name="org.mifos.accounts.loan.business.LoanBO"
-			table="loan_account">
-			<key column="account_id" />
+        <set name="accountNotes" cascade="all" inverse="true" table="account_notes"
+            lazy="true" order-by="ACCOUNT_NOTES_ID desc" access="field">
+            <key column="account_id" />
+            <many-to-many class="org.mifos.accounts.business.AccountNotesEntity"
+                column="account_notes_id" />
+        </set>
+        <set name="accountFees" cascade="all" inverse="true" lazy="true"
+            table="account_fees" access="field">
+            <key column="account_id" />
+            <many-to-many class="org.mifos.accounts.business.AccountFeesEntity"
+                column="account_fee_id" />
+        </set>
+        <bag name="accountPayments" cascade="all" inverse="true"
+            table="account_payment" lazy="false" order-by="PAYMENT_ID desc">
+            <key column="account_id" />
+            <one-to-many class="org.mifos.accounts.business.AccountPaymentEntity" />
+        </bag>
+        <set name="accountCustomFields" cascade="all" inverse="true" lazy="true"
+            access="field">
+            <key column="account_id" />
+            <one-to-many class="org.mifos.accounts.business.AccountCustomFieldEntity" />
+        </set>
+        <bag name="accountStatusChangeHistory" cascade="all" inverse="true"
+            table="account_status_change_history" lazy="true"
+            order-by="ACCOUNT_STATUS_CHANGE_ID asc" access="field">
+            <key column="account_id" />
+            <one-to-many
+                class="org.mifos.accounts.business.AccountStatusChangeHistoryEntity" />
+        </bag>
+        <set name="accountFlags" cascade="all" lazy="true" access="field">
+            <key column="account_id" not-null="true" />
+            <one-to-many class="org.mifos.accounts.business.AccountFlagMapping" />
+        </set>
+        <!-- This is for loan account-->
+        <joined-subclass name="org.mifos.accounts.loan.business.LoanBO"
+            table="loan_account">
+            <key column="account_id" />
 
-			<property name="redone" column="redone" type="boolean" />
-			<property name="groupFlag" column="group_flag" />
-			<property name="businessActivityId" column="business_activities_id" />
-			<property name="interestRate" column="interest_rate" lazy="true" />
-			<property name="noOfInstallments" column="no_of_installments"
-				not-null="true" />
-			<property name="disbursementDate" column="disbursement_date" />
-			<property name="collateralNote" column="collateral_note" />
-			<property name="collateralTypeId" column="collateral_type_id" />
-			<property name="gracePeriodDuration" column="grace_period_duration" />
-			<property name="intrestAtDisbursement" access="field"
-				column="interest_at_disb" />
-			<property name="gracePeriodPenalty" column="grace_period_penalty"
-				update="false" />
+            <property name="redone" column="redone" type="boolean" />
+            <property name="groupFlag" column="group_flag" />
+            <property name="businessActivityId" column="business_activities_id" />
+            <property name="interestRate" column="interest_rate" lazy="true" />
+            <property name="noOfInstallments" column="no_of_installments"
+                not-null="true" />
+            <property name="disbursementDate" column="disbursement_date" />
+            <property name="collateralNote" column="collateral_note" />
+            <property name="collateralTypeId" column="collateral_type_id" />
+            <property name="gracePeriodDuration" column="grace_period_duration" />
+            <property name="intrestAtDisbursement" access="field"
+                column="interest_at_disb" />
+            <property name="gracePeriodPenalty" column="grace_period_penalty"
+                update="false" />
 
-			<property name="loanAmount"
-				type="org.mifos.framework.util.helpers.MoneyCompositeUserType" lazy="true">
-				<column name="loan_amount_currency_id" />
-				<column name="loan_amount" />
-			</property>
-			<property name="loanBalance"
-				type="org.mifos.framework.util.helpers.MoneyCompositeUserType" lazy="true">
-				<column name="loan_balance_currency_id" />
-				<column name="loan_balance" />
-			</property>
+            <property name="loanAmount"
+                type="org.mifos.framework.util.helpers.MoneyCompositeUserType" lazy="true">
+                <column name="loan_amount_currency_id" />
+                <column name="loan_amount" />
+            </property>
+            <property name="loanBalance"
+                type="org.mifos.framework.util.helpers.MoneyCompositeUserType" lazy="true">
+                <column name="loan_balance_currency_id" />
+                <column name="loan_balance" />
+            </property>
 
-			<many-to-one name="loanOffering" column="prd_offering_id"
-				class="org.mifos.accounts.productdefinition.business.LoanOfferingBO"
-				unique="true" cascade="none" insert="true" update="false" access="field" />
-			<many-to-one name="fund" column="fund_id"
-				class="org.mifos.accounts.fund.business.FundBO" cascade="none"
-				insert="true" unique="true" />
-			<many-to-one name="loanMeeting" column="meeting_id"
-				access="field" class="org.mifos.application.meeting.business.MeetingBO"
-				unique="true" insert="true" cascade="all" />
-			<many-to-one name="gracePeriodType" column="grace_period_type_id"
-				class="org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity"
-				unique="true" cascade="none" insert="true" update="true" />
-			<many-to-one name="interestType" column="interest_type_id"
-				class="org.mifos.application.master.business.InterestTypesEntity"
-				cascade="none" update="false" insert="true" unique="true" />
-			<one-to-one name="loanSummary"
-				class="org.mifos.accounts.loan.business.LoanSummaryEntity" cascade="all"
-				access="field" />
-			<one-to-one name="performanceHistory"
-				class="org.mifos.accounts.loan.business.LoanPerformanceHistoryEntity"
-				cascade="all" property-ref="loan" access="field" />
-			<one-to-one name="loanArrearsAgingEntity"
-				class="org.mifos.accounts.loan.business.LoanArrearsAgingEntity"
-				cascade="all" property-ref="loan" />
-			<one-to-one name="maxMinLoanAmount"
-				class="org.mifos.accounts.loan.business.MaxMinLoanAmount" cascade="all"
-				access="field" />
-			<one-to-one name="maxMinInterestRate"
-				class="org.mifos.accounts.loan.business.MaxMinInterestRate" cascade="all"
-				access="field" />
-			<one-to-one name="maxMinNoOfInstall"
-				class="org.mifos.accounts.loan.business.MaxMinNoOfInstall" cascade="all"
-				access="field" />
-
-
-			<bag name="loanActivityDetails" cascade="all" inverse="true"
-				access="field" table="loan_activity_details" lazy="true" order-by="ID desc">
-				<key column="account_id" />
-				<one-to-many class="org.mifos.accounts.loan.business.LoanActivityEntity" />
-			</bag>
-			<set name="accountActionDates" cascade="all" inverse="true" lazy="true"
-				order-by="INSTALLMENT_ID asc" access="field">
-				<key column="account_id" />
-				<one-to-many class="org.mifos.accounts.loan.business.LoanScheduleEntity" />
-			</set>
-
-			<many-to-one name="parentAccount" column="parent_account_id"
-				class="org.mifos.accounts.loan.business.LoanBO" not-null="false">
-			</many-to-one>
-
-			<property name="recurMonth" column="recur_month" type="short" />
-			<property name="monthWeek" column="month_week"
-				type="org.mifos.application.meeting.util.helpers.WeekDayUserType" />
-			<property name="monthRank" column="month_rank"
-				type="org.mifos.application.meeting.util.helpers.RankOfDayUserType" />
-
-		</joined-subclass>
-		<!-- This is for savings account-->
-		<joined-subclass name="org.mifos.accounts.savings.business.SavingsBO"
-			table="savings_account">
-			<key column="account_id" />
-			<property name="recommendedAmount"
-				type="org.mifos.framework.util.helpers.MoneyCompositeUserType" lazy="true">
-				<column name="recommended_amount_currency_id" />
-				<column name="recommended_amount" />
-			</property>
-			<property name="savingsBalance"
-				type="org.mifos.framework.util.helpers.MoneyCompositeUserType" lazy="true">
-				<column name="savings_balance_currency_id" />
-				<column name="savings_balance" />
-			</property>
-			<property name="interestToBePosted"
-				type="org.mifos.framework.util.helpers.MoneyCompositeUserType" lazy="true">
-				<column name="int_to_be_posted_currency_id" />
-				<column name="int_to_be_posted" />
-			</property>
-			<!-- 
-			<property name="minAmntForInt" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" lazy="true" access="field">
-				<column name="min_amnt_for_int_currency_id" />
-				<column name="min_amnt_for_int" />
-			</property>
-			-->
-			
-			<property name="activationDate" column="activation_date" lazy="true" access="field"/>
-			<!--  <property name="lastIntCalcDate" column="last_int_calc_date" lazy="true" access="field"/> -->
-			<property name="lastIntPostDate" column="last_int_post_date" lazy="true" access="field"/>
-			<!-- <property name="nextIntCalcDate" column="next_int_calc_date" lazy="true" access="field"/> -->
-			<property name="nextIntPostDate" column="next_int_post_date" lazy="true" access="field"/>
-			<!-- Date of interest calculation in between the period, might be done when interest rate changes etc. -->
-			<!-- <property name="interIntCalcDate" column="inter_int_calc_date" lazy="true" access="field"/> -->
-
-			<!-- 
-			<many-to-one name="timePerForInstcalc" column="time_per_for_int_calc" class="org.mifos.application.meeting.business.MeetingBO" cascade="all"
-				insert="true" update="true" unique="true" access="field"/>
-				-->
-			<many-to-one name="recommendedAmntUnit" column="recommended_amnt_unit_id"
-				class="org.mifos.accounts.productdefinition.business.RecommendedAmntUnitEntity"
-				insert="true" update="false" cascade="none" />
+            <many-to-one name="loanOffering" column="prd_offering_id"
+                class="org.mifos.accounts.productdefinition.business.LoanOfferingBO"
+                unique="true" cascade="none" insert="true" update="false" access="field" />
+            <many-to-one name="fund" column="fund_id"
+                class="org.mifos.accounts.fund.business.FundBO" cascade="none"
+                insert="true" unique="true" />
+            <many-to-one name="loanMeeting" column="meeting_id"
+                access="field" class="org.mifos.application.meeting.business.MeetingBO"
+                unique="true" insert="true" cascade="all" />
+            <many-to-one name="gracePeriodType" column="grace_period_type_id"
+                class="org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity"
+                unique="true" cascade="none" insert="true" update="true" />
+            <many-to-one name="interestType" column="interest_type_id"
+                class="org.mifos.application.master.business.InterestTypesEntity"
+                cascade="none" update="false" insert="true" unique="true" />
+            <one-to-one name="loanSummary"
+                class="org.mifos.accounts.loan.business.LoanSummaryEntity" cascade="all"
+                access="field" />
+            <one-to-one name="performanceHistory"
+                class="org.mifos.accounts.loan.business.LoanPerformanceHistoryEntity"
+                cascade="all" property-ref="loan" access="field" />
+            <one-to-one name="loanArrearsAgingEntity"
+                class="org.mifos.accounts.loan.business.LoanArrearsAgingEntity"
+                cascade="all" property-ref="loan" />
+            <one-to-one name="maxMinLoanAmount"
+                class="org.mifos.accounts.loan.business.MaxMinLoanAmount" cascade="all"
+                access="field" />
+            <one-to-one name="maxMinInterestRate"
+                class="org.mifos.accounts.loan.business.MaxMinInterestRate" cascade="all"
+                access="field" />
+            <one-to-one name="maxMinNoOfInstall"
+                class="org.mifos.accounts.loan.business.MaxMinNoOfInstall" cascade="all"
+                access="field" />
 
 
-			<property name="interestRate" column="interest_rate" lazy="true" access="field" />
-			<many-to-one name="interestCalcType" column="interest_calculation_type_id"
-				class="org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity" access="field" />
-			<many-to-one name="savingsType" column="savings_type_id"
-				class="org.mifos.accounts.productdefinition.business.SavingsTypeEntity"
-				insert="true" update="false" cascade="none" access="field" />
-				
-			<many-to-one name="savingsOffering" column="prd_offering_id"
-				class="org.mifos.accounts.productdefinition.business.SavingsOfferingBO"
-				unique="true" cascade="none" insert="true" update="false" />
-			<one-to-one name="savingsPerformance"
-				class="org.mifos.accounts.savings.business.SavingsPerformanceEntity"
-				cascade="all" property-ref="savings" />
-			<set name="savingsActivityDetails" cascade="all" inverse="true"
-				table="savings_activity_details" lazy="true" order-by="ID desc">
-				<key column="account_id" />
-				<one-to-many
-					class="org.mifos.accounts.savings.business.SavingsActivityEntity" />
-			</set>
-			<set name="accountActionDates" cascade="all" inverse="true" lazy="true"
-				order-by="INSTALLMENT_ID asc" access="field">
-				<key column="account_id" />
-				<one-to-many
-					class="org.mifos.accounts.savings.business.SavingsScheduleEntity" />
-			</set>
-		</joined-subclass>
-		<!-- This is for customer account-->
-		<joined-subclass name="org.mifos.customers.business.CustomerAccountBO"
-			table="customer_account">
-			<key column="account_id" />
-			<bag name="customerActivitDetails" cascade="all" inverse="true"
-				table="customer_account_activity" lazy="true" order-by="CREATED_DATE desc">
-				<key column="account_id" />
-				<one-to-many class="org.mifos.customers.business.CustomerActivityEntity" />
-			</bag>
-			<set name="accountActionDates" cascade="all" inverse="true"
-				table="customer_schedule" lazy="true" order-by="INSTALLMENT_ID asc"
-				access="field">
-				<key column="account_id" />
-				<one-to-many class="org.mifos.customers.business.CustomerScheduleEntity" />
-			</set>
-		</joined-subclass>
-	</class>
-	<query name="accounts.getLastMeetingDateforCustomer">
-		<![CDATA[select max(accountTrxn.actionDate)	
-		    from org.mifos.customers.business.CustomerScheduleEntity accountTrxn 
-			where accountTrxn.customer.customerId = :CUSTOMER_ID 
-			and accountTrxn.actionDate <= date(:ACTION_DATE)
-		]]>
-	</query>
+            <bag name="loanActivityDetails" cascade="all" inverse="true"
+                access="field" table="loan_activity_details" lazy="true" order-by="ID desc">
+                <key column="account_id" />
+                <one-to-many class="org.mifos.accounts.loan.business.LoanActivityEntity" />
+            </bag>
+            <set name="accountActionDates" cascade="all" inverse="true" lazy="true"
+                order-by="INSTALLMENT_ID asc" access="field">
+                <key column="account_id" />
+                <one-to-many class="org.mifos.accounts.loan.business.LoanScheduleEntity" />
+            </set>
 
-	<query name="accounts.getApplicableSavingsProductOfferings">
-		<![CDATA[select prdOffering.prdOfferingId as prdOfferingId,
-		    prdOffering.prdOfferingName as prdOfferingName,
-		    prdOffering.globalPrdOfferingNum as globalPrdOfferingNum
-			from org.mifos.accounts.productdefinition.business.PrdOfferingBO prdOffering
-			where prdOffering.prdType.productTypeID = :prdTypeId and prdOffering.prdStatus.offeringStatusId = :prdStatus
-			and prdOffering.prdApplicableMaster.id = :prdApplicableMaster 
-			order by prdOffering.prdOfferingName
-		]]>
-	</query>
-	<!--
-		The following query is to obtain the max account id in the system
-	-->
-	<query name="accounts.getMaxAccountId">
-		<![CDATA[select max(account.accountId)	from AccountBO account 	]]>
-	</query>
-	<query name="accounts.findBySystemId">
-		<![CDATA[from org.mifos.accounts.business.AccountBO account 
-			where account.globalAccountNum = :globalAccountNumber ]]>
-	</query>
-	<query name="loan.findById">
-		<![CDATA[from LoanBO loan where loan.accountId = :ACCOUNT_ID]]>
-	</query>
-	<query name="accounts.findLoanBySystemId">
-		<![CDATA[from org.mifos.accounts.loan.business.LoanBO account 
-			where account.globalAccountNum = :globalAccountNumber ]]>
-	</query>
-	<query name="accounts.findLoanByExternalId">
-		<![CDATA[from org.mifos.accounts.loan.business.LoanBO account 
-			where account.externalId = :externalId ]]>
-	</query>
-	<query name="accounts.findIndividualLoans">
-		<![CDATA[from org.mifos.accounts.loan.business.LoanBO account
-			where 
-			account.parentAccount.accountId =:accountId
-			group by account.accountId]]>
-	</query>
+            <many-to-one name="parentAccount" column="parent_account_id"
+                class="org.mifos.accounts.loan.business.LoanBO" not-null="false">
+            </many-to-one>
 
-	<query name="accounts.retrieveLastTrxn">
-		<![CDATA[from org.mifos.accounts.savings.business.SavingsTrxnDetailEntity savingsTrxn 
-			where  savingsTrxn.accountTrxnId = (select max(savingsTrxn1.accountTrxnId) 
-			from org.mifos.accounts.savings.business.SavingsTrxnDetailEntity savingsTrxn1 
-			where savingsTrxn1.account.accountId=:accountId and savingsTrxn1.actionDate <= date(:date))]]>
-	</query>
+            <property name="recurMonth" column="recur_month" type="short" />
+            <property name="monthWeek" column="month_week"
+                type="org.mifos.application.meeting.util.helpers.WeekDayUserType" />
+            <property name="monthRank" column="month_rank"
+                type="org.mifos.application.meeting.util.helpers.RankOfDayUserType" />
 
-	<query name="accounts.retrieveFirstTrxn">
-		<![CDATA[from org.mifos.accounts.savings.business.SavingsTrxnDetailEntity savingsTrxn 
-			where  savingsTrxn.accountTrxnId = (select min(savingsTrxn1.accountTrxnId) 
-			from org.mifos.accounts.savings.business.SavingsTrxnDetailEntity savingsTrxn1 
-			where savingsTrxn1.account.accountId=:accountId)]]>
-	</query>
+        </joined-subclass>
+        <!-- This is for savings account-->
+        <joined-subclass name="org.mifos.accounts.savings.business.SavingsBO"
+            table="savings_account">
+            <key column="account_id" />
+            <property name="recommendedAmount"
+                type="org.mifos.framework.util.helpers.MoneyCompositeUserType" lazy="true">
+                <column name="recommended_amount_currency_id" />
+                <column name="recommended_amount" />
+            </property>
+            <property name="savingsBalance"
+                type="org.mifos.framework.util.helpers.MoneyCompositeUserType" lazy="true">
+                <column name="savings_balance_currency_id" />
+                <column name="savings_balance" />
+            </property>
+            <property name="interestToBePosted"
+                type="org.mifos.framework.util.helpers.MoneyCompositeUserType" lazy="true">
+                <column name="int_to_be_posted_currency_id" />
+                <column name="int_to_be_posted" />
+            </property>
+            <!--
+            <property name="minAmntForInt" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" lazy="true" access="field">
+                <column name="min_amnt_for_int_currency_id" />
+                <column name="min_amnt_for_int" />
+            </property>
+            -->
 
-	<query name="accounts.retrieveSavingsAccounts">
-		<![CDATA[from org.mifos.accounts.savings.business.SavingsBO savings 
-			where savings.savingsOffering.prdOfferingId=:prdOfferingId and savings.accountState.id in (16,18) ]]>
-	</query>
+            <property name="activationDate" column="activation_date" lazy="true" access="field"/>
+            <!--  <property name="lastIntCalcDate" column="last_int_calc_date" lazy="true" access="field"/> -->
+            <property name="lastIntPostDate" column="last_int_post_date" lazy="true" access="field"/>
+            <!-- <property name="nextIntCalcDate" column="next_int_calc_date" lazy="true" access="field"/> -->
+            <property name="nextIntPostDate" column="next_int_post_date" lazy="true" access="field"/>
+            <!-- Date of interest calculation in between the period, might be done when interest rate changes etc. -->
+            <!-- <property name="interIntCalcDate" column="inter_int_calc_date" lazy="true" access="field"/> -->
 
-	<query name="accounts.retrieveSavingsAccountsForCustomer">
-		<![CDATA[from org.mifos.accounts.savings.business.SavingsBO savings 
-			where savings.customer.customerId=:customerId and savings.accountState.id in (16,18) ]]>
-	</query>
-	<!-- Get the closed savings accounts	-->
-	<query name="accounts.viewallsavingsclosedaccounts">
-		<![CDATA[from org.mifos.accounts.business.AccountBO account 
-			where account.customer.customerId=:customerId
-			and account.accountType.accountTypeId=2 and account.accountState.id in(15,17) ]]>
-	</query>
-	<query name="accounts.getCustomerAccountActionDates">
-		<![CDATA[from org.mifos.customers.business.CustomerScheduleEntity accountActionDates 
-			where accountActionDates.account.accountId = :ACCOUNT_ID and 
-			accountActionDates.actionDate <= date(:ACTION_DATE) and accountActionDates.paymentStatus = :PAYMENT_STATUS]]>
-	</query>
+            <!--
+            <many-to-one name="timePerForInstcalc" column="time_per_for_int_calc" class="org.mifos.application.meeting.business.MeetingBO" cascade="all"
+                insert="true" update="true" unique="true" access="field"/>
+                -->
+            <many-to-one name="recommendedAmntUnit" column="recommended_amnt_unit_id"
+                class="org.mifos.accounts.productdefinition.business.RecommendedAmntUnitEntity"
+                insert="true" update="false" cascade="none" />
 
-	<!-- Get the Loan accounts	that are in arrears-->
-	<query name="accounts.GetLoanArrearsInGoodStanding">
-		<![CDATA[select distinct(account.accountId) from org.mifos.accounts.loan.business.LoanBO account
-			join  account.accountActionDates as actiondate
-			where account.accountType.accountTypeId=:ACCOUNTTYPE_ID
-			and account.accountState.id = :LOANACTIVEINGOODSTAND
-			and actiondate.actionDate < date(:CHECKDATE)
-			and actiondate.paymentStatus=:PAYMENTSTATUS 
-			group by account.accountId]]>
-	</query>
-	<!-- Get all Loan accounts by customer (active in good/Bad Standing)-->
-	<query name="accounts.GetAllLoanByCustomer">
-		<![CDATA[from org.mifos.accounts.loan.business.LoanBO account
-			where 
-			account.accountState.id in (:loanactiveingoodstand,:loanactiveinbadstand)
-			and account.accountType.accountTypeId = :accounttype_id
-			and account.customer.customerId=:customer
-			group by account.accountId]]>
-	</query>
-	<query name="findAllLoanAccountsForGroups">
-		<![CDATA[from org.mifos.accounts.loan.business.LoanBO account
-			where account.customer.customerLevel.id=:CUSTOMER_LEVEL_ID]]>
-	</query>
 
-	<query name="accounts.retrieveSavingsAccountsIntPost">
-		<![CDATA[select savings.accountId from org.mifos.accounts.savings.business.SavingsBO savings
-			where  savings.nextIntPostDate < date(:currentDate) and savings.accountState.id in (16,18)) ]]>
-	</query>
+            <property name="interestRate" column="interest_rate" lazy="true" access="field" />
+            <many-to-one name="interestCalcType" column="interest_calculation_type_id"
+                class="org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity" access="field" />
+            <many-to-one name="savingsType" column="savings_type_id"
+                class="org.mifos.accounts.productdefinition.business.SavingsTypeEntity"
+                insert="true" update="false" cascade="none" access="field" />
 
-	<query name="accounts.retrieveAccountsForCustomer">
-		<![CDATA[from org.mifos.accounts.business.AccountBO account 
-			where account.accountType.accountTypeId = :ACCOUNT_TYPE_ID and (account.customer.searchId 
-			like :SEARCH_STRING1 or account.customer.searchId like :SEARCH_STRING2) and 
-			account.customer.office.officeId = :OFFICE_ID)]]>
-	</query>
+            <many-to-one name="savingsOffering" column="prd_offering_id"
+                class="org.mifos.accounts.productdefinition.business.SavingsOfferingBO"
+                unique="true" cascade="none" insert="true" update="false" />
+            <one-to-one name="savingsPerformance"
+                class="org.mifos.accounts.savings.business.SavingsPerformanceEntity"
+                cascade="all" property-ref="savings" />
+            <set name="savingsActivityDetails" cascade="all" inverse="true"
+                table="savings_activity_details" lazy="true" order-by="ID desc">
+                <key column="account_id" />
+                <one-to-many
+                    class="org.mifos.accounts.savings.business.SavingsActivityEntity" />
+            </set>
+            <set name="accountActionDates" cascade="all" inverse="true" lazy="true"
+                order-by="INSTALLMENT_ID asc" access="field">
+                <key column="account_id" />
+                <one-to-many
+                    class="org.mifos.accounts.savings.business.SavingsScheduleEntity" />
+            </set>
+        </joined-subclass>
+        <!-- This is for customer account-->
+        <joined-subclass name="org.mifos.customers.business.CustomerAccountBO"
+            table="customer_account">
+            <key column="account_id" />
+            <bag name="customerActivitDetails" cascade="all" inverse="true"
+                table="customer_account_activity" lazy="true" order-by="CREATED_DATE desc">
+                <key column="account_id" />
+                <one-to-many class="org.mifos.customers.business.CustomerActivityEntity" />
+            </bag>
+            <set name="accountActionDates" cascade="all" inverse="true"
+                table="customer_schedule" lazy="true" order-by="INSTALLMENT_ID asc"
+                access="field">
+                <key column="account_id" />
+                <one-to-many class="org.mifos.customers.business.CustomerScheduleEntity" />
+            </set>
+        </joined-subclass>
+    </class>
+    <query name="accounts.getLastMeetingDateforCustomer">
+        <![CDATA[select max(accountTrxn.actionDate)
+            from org.mifos.customers.business.CustomerScheduleEntity accountTrxn
+            where accountTrxn.customer.customerId = :CUSTOMER_ID
+            and accountTrxn.actionDate <= date(:ACTION_DATE)
+        ]]>
+    </query>
 
-	<sql-query name="savings.retrieveTotalSavingsForCustomer">
-		<return-scalar column="total_balance_currency_id" type="integer" />
-		<return-scalar column="total_balance" type="big_decimal" />
-	    <![CDATA[select s.savings_balance_currency_id as total_balance_currency_id, sum(s.savings_balance) as total_balance
-				from customer c
-				join account a on a.customer_id = c.customer_id
-				join savings_account s on s.account_id = a.account_id
-				where (c.search_id like :SEARCH_STRING1 or c.search_id like :SEARCH_STRING2)
-				and c.branch_id = :OFFICE_ID
-				group by s.savings_balance_currency_id
-			]]>
-	</sql-query>
-	<sql-query name="loan.retrieveTotalLoanForCustomer">
-		<return-scalar column="currency_id" type="integer" />
-		<return-scalar column="total_loan" type="big_decimal" />
-	    <![CDATA[select ls.principal_currency_id as currency_id, sum(ls.principal) as total_loan
-				from customer c
-				join account a on a.customer_id = c.customer_id
-				join loan_schedule ls on ls.account_id = a.account_id
-				where (c.search_id like :SEARCH_STRING1 or c.search_id like :SEARCH_STRING2)
-				and c.branch_id = :OFFICE_ID
-				and a.account_state_id in (5,9)
-				group by ls.principal_currency_id
-			]]>
-	</sql-query>
+    <query name="accounts.getApplicableSavingsProductOfferings">
+        <![CDATA[select prdOffering.prdOfferingId as prdOfferingId,
+            prdOffering.prdOfferingName as prdOfferingName,
+            prdOffering.globalPrdOfferingNum as globalPrdOfferingNum
+            from org.mifos.accounts.productdefinition.business.PrdOfferingBO prdOffering
+            where prdOffering.prdType.productTypeID = :prdTypeId and prdOffering.prdStatus.offeringStatusId = :prdStatus
+            and prdOffering.prdApplicableMaster.id = :prdApplicableMaster
+            order by prdOffering.prdOfferingName
+        ]]>
+    </query>
+    <!--
+        The following query is to obtain the max account id in the system
+    -->
+    <query name="accounts.getMaxAccountId">
+        <![CDATA[select max(account.accountId)    from AccountBO account     ]]>
+    </query>
+    <query name="accounts.findBySystemId">
+        <![CDATA[from org.mifos.accounts.business.AccountBO account
+            where account.globalAccountNum = :globalAccountNumber ]]>
+    </query>
+    <query name="loan.findById">
+        <![CDATA[from LoanBO loan where loan.accountId = :ACCOUNT_ID]]>
+    </query>
+    <query name="accounts.findLoanBySystemId">
+        <![CDATA[from org.mifos.accounts.loan.business.LoanBO account
+            where account.globalAccountNum = :globalAccountNumber ]]>
+    </query>
+    <query name="accounts.findLoanByExternalId">
+        <![CDATA[from org.mifos.accounts.loan.business.LoanBO account
+            where account.externalId = :externalId ]]>
+    </query>
+    <query name="accounts.findIndividualLoans">
+        <![CDATA[from org.mifos.accounts.loan.business.LoanBO account
+            where
+            account.parentAccount.accountId =:accountId
+            group by account.accountId]]>
+    </query>
 
-	<query name="countOfLoanAccounts">
-		<![CDATA[select count(*) from org.mifos.accounts.loan.business.LoanBO loans]]>
-	</query>
+    <query name="accounts.retrieveLastTrxn">
+        <![CDATA[from org.mifos.accounts.savings.business.SavingsTrxnDetailEntity savingsTrxn
+            where  savingsTrxn.accountTrxnId = (select max(savingsTrxn1.accountTrxnId)
+            from org.mifos.accounts.savings.business.SavingsTrxnDetailEntity savingsTrxn1
+            where savingsTrxn1.account.accountId=:accountId and savingsTrxn1.actionDate <= date(:date))]]>
+    </query>
 
-	<query name="countOfSavingsAccounts">
-		<![CDATA[select count(*) from org.mifos.accounts.savings.business.SavingsBO savings]]>
-	</query>
+    <query name="accounts.retrieveFirstTrxn">
+        <![CDATA[from org.mifos.accounts.savings.business.SavingsTrxnDetailEntity savingsTrxn
+            where  savingsTrxn.accountTrxnId = (select min(savingsTrxn1.accountTrxnId)
+            from org.mifos.accounts.savings.business.SavingsTrxnDetailEntity savingsTrxn1
+            where savingsTrxn1.account.accountId=:accountId)]]>
+    </query>
 
-	<query name="accounts.countOfMissedDeposits">
-		<![CDATA[select count(*) from 
-			org.mifos.accounts.savings.business.SavingsScheduleEntity  actionDate
-			where actionDate.account.accountId = :ACCOUNT_ID and
-			actionDate.account.accountType.accountTypeId=:ACCOUNT_TYPE_ID
-			and actionDate.account.accountState.id =:ACTIVE
-			and actionDate.actionDate < date(:CHECKDATE)
-			and actionDate.paymentStatus=:PAYMENTSTATUS 
-			]]>
-	</query>
-	<query name="accounts.countOfMissedDepositsPaidAfterDueDate">
-		<![CDATA[select count(*) 
-			from org.mifos.accounts.savings.business.SavingsScheduleEntity actionDate
-			where actionDate.account.accountId = :ACCOUNT_ID and
-			actionDate.account.accountType.accountTypeId=:ACCOUNT_TYPE_ID
-			and actionDate.account.accountState.id =:ACTIVE
-			and actionDate.paymentDate > actionDate.actionDate
-			and actionDate.paymentStatus=:PAYMENTSTATUS 
-			]]>
-	</query>
+    <query name="accounts.retrieveSavingsAccounts">
+        <![CDATA[from org.mifos.accounts.savings.business.SavingsBO savings
+            where savings.savingsOffering.prdOfferingId=:prdOfferingId and savings.accountState.id in (16,18) ]]>
+    </query>
 
-	<query name="accounts.retrieveCustomerAccountWithAccountActions">
-		<![CDATA[from org.mifos.customers.business.CustomerAccountBO account
-			left join account.accountActionDates where account.accountId=:accountId ]]>
-	</query>
+    <query name="accounts.retrieveSavingsAccountsForCustomer">
+        <![CDATA[from org.mifos.accounts.savings.business.SavingsBO savings
+            where savings.customer.customerId=:customerId and savings.accountState.id in (16,18) ]]>
+    </query>
+    <!-- Get the closed savings accounts    -->
+    <query name="accounts.viewallsavingsclosedaccounts">
+        <![CDATA[from org.mifos.accounts.business.AccountBO account
+            where account.customer.customerId=:customerId
+            and account.accountType.accountTypeId=2 and account.accountState.id in(15,17) ]]>
+    </query>
+    <query name="accounts.getCustomerAccountActionDates">
+        <![CDATA[from org.mifos.customers.business.CustomerScheduleEntity accountActionDates
+            where accountActionDates.account.accountId = :ACCOUNT_ID and
+            accountActionDates.actionDate <= date(:ACTION_DATE) and accountActionDates.paymentStatus = :PAYMENT_STATUS]]>
+    </query>
 
-	<query name="accounts.retrieveLoanAccountWithAccountActions">
-		<![CDATA[from org.mifos.accounts.loan.business.LoanBO account 
-			left join account.accountActionDates where account.accountId=:accountId ]]>
-	</query>
+    <!-- Get the Loan accounts    that are in arrears-->
+    <query name="accounts.GetLoanArrearsInGoodStanding">
+        <![CDATA[select distinct(account.accountId) from org.mifos.accounts.loan.business.LoanBO account
+            join  account.accountActionDates as actiondate
+            where account.accountType.accountTypeId=:ACCOUNTTYPE_ID
+            and account.accountState.id = :LOANACTIVEINGOODSTAND
+            and actiondate.actionDate < date(:CHECKDATE)
+            and actiondate.paymentStatus=:PAYMENTSTATUS
+            group by account.accountId]]>
+    </query>
+    <!-- Get all Loan accounts by customer (active in good/Bad Standing)-->
+    <query name="accounts.GetAllLoanByCustomer">
+        <![CDATA[from org.mifos.accounts.loan.business.LoanBO account
+            where
+            account.accountState.id in (:loanactiveingoodstand,:loanactiveinbadstand)
+            and account.accountType.accountTypeId = :accounttype_id
+            and account.customer.customerId=:customer
+            group by account.accountId]]>
+    </query>
+    <query name="findAllLoanAccountsForGroups">
+        <![CDATA[from org.mifos.accounts.loan.business.LoanBO account
+            where account.customer.customerLevel.id=:CUSTOMER_LEVEL_ID]]>
+    </query>
 
-	<query name="accounts.retrieveSavingsAccountWithAccountActions">
-		<![CDATA[from org.mifos.accounts.savings.business.SavingsBO account 
-			left join account.accountActionDates as actionDates 
-			where account.accountId=:accountId]]>
-	</query>
+    <query name="accounts.retrieveSavingsAccountsIntPost">
+        <![CDATA[select savings.accountId from org.mifos.accounts.savings.business.SavingsBO savings
+            where  savings.nextIntPostDate < date(:currentDate) and savings.accountState.id in (16,18)) ]]>
+    </query>
 
-	<sql-query name="getActiveCustomerAccountIdsForGenerateMeetingsTask">
-		<return-scalar column="accountId" type="integer" />
-	    <![CDATA[select a.account_id as accountId
-				from account a
-				join customer_account ca on ca.account_id = a.account_id
-				join customer c on c.customer_id = a.customer_id
-				where c.status_id in (3,9,13)
-				and a.account_state_id = 11
-				and (select max(cs.installment_id) from customer_schedule cs
-					where cs.account_id = a.account_id
-					and cs.action_date <= date(:DATE)) + 4 >
+    <query name="accounts.retrieveAccountsForCustomer">
+        <![CDATA[from org.mifos.accounts.business.AccountBO account
+            where account.accountType.accountTypeId = :ACCOUNT_TYPE_ID and (account.customer.searchId
+            like :SEARCH_STRING1 or account.customer.searchId like :SEARCH_STRING2) and
+            account.customer.office.officeId = :OFFICE_ID)]]>
+    </query>
 
-					(select max(cs2.installment_id) from customer_schedule cs2
-					where cs2.account_id = a.account_id)
-			]]>
-	</sql-query>
+    <sql-query name="savings.retrieveTotalSavingsForCustomer">
+        <return-scalar column="total_balance_currency_id" type="integer" />
+        <return-scalar column="total_balance" type="big_decimal" />
+        <![CDATA[select s.savings_balance_currency_id as total_balance_currency_id, sum(s.savings_balance) as total_balance
+                from customer c
+                join account a on a.customer_id = c.customer_id
+                join savings_account s on s.account_id = a.account_id
+                where (c.search_id like :SEARCH_STRING1 or c.search_id like :SEARCH_STRING2)
+                and c.branch_id = :OFFICE_ID
+                group by s.savings_balance_currency_id
+            ]]>
+    </sql-query>
+    <sql-query name="loan.retrieveTotalLoanForCustomer">
+        <return-scalar column="currency_id" type="integer" />
+        <return-scalar column="total_loan" type="big_decimal" />
+        <![CDATA[select ls.principal_currency_id as currency_id, sum(ls.principal) as total_loan
+                from customer c
+                join account a on a.customer_id = c.customer_id
+                join loan_schedule ls on ls.account_id = a.account_id
+                where (c.search_id like :SEARCH_STRING1 or c.search_id like :SEARCH_STRING2)
+                and c.branch_id = :OFFICE_ID
+                and a.account_state_id in (5,9)
+                group by ls.principal_currency_id
+            ]]>
+    </sql-query>
 
-	<sql-query name="getCustomerAccountsWithSchedulesMissingPeriodicFees">
-		<return-scalar column="accountId" type="integer" />
-	    <![CDATA[
+    <query name="countOfLoanAccounts">
+        <![CDATA[select count(*) from org.mifos.accounts.loan.business.LoanBO loans]]>
+    </query>
+
+    <query name="countOfSavingsAccounts">
+        <![CDATA[select count(*) from org.mifos.accounts.savings.business.SavingsBO savings]]>
+    </query>
+
+    <query name="accounts.countOfMissedDeposits">
+        <![CDATA[select count(*) from
+            org.mifos.accounts.savings.business.SavingsScheduleEntity  actionDate
+            where actionDate.account.accountId = :ACCOUNT_ID and
+            actionDate.account.accountType.accountTypeId=:ACCOUNT_TYPE_ID
+            and actionDate.account.accountState.id =:ACTIVE
+            and actionDate.actionDate < date(:CHECKDATE)
+            and actionDate.paymentStatus=:PAYMENTSTATUS
+            ]]>
+    </query>
+    <query name="accounts.countOfMissedDepositsPaidAfterDueDate">
+        <![CDATA[select count(*)
+            from org.mifos.accounts.savings.business.SavingsScheduleEntity actionDate
+            where actionDate.account.accountId = :ACCOUNT_ID and
+            actionDate.account.accountType.accountTypeId=:ACCOUNT_TYPE_ID
+            and actionDate.account.accountState.id =:ACTIVE
+            and actionDate.paymentDate > actionDate.actionDate
+            and actionDate.paymentStatus=:PAYMENTSTATUS
+            ]]>
+    </query>
+
+    <query name="accounts.retrieveCustomerAccountWithAccountActions">
+        <![CDATA[from org.mifos.customers.business.CustomerAccountBO account
+            left join account.accountActionDates where account.accountId=:accountId ]]>
+    </query>
+
+    <query name="accounts.retrieveLoanAccountWithAccountActions">
+        <![CDATA[from org.mifos.accounts.loan.business.LoanBO account
+            left join account.accountActionDates where account.accountId=:accountId ]]>
+    </query>
+
+    <query name="accounts.retrieveSavingsAccountWithAccountActions">
+        <![CDATA[from org.mifos.accounts.savings.business.SavingsBO account
+            left join account.accountActionDates as actionDates
+            where account.accountId=:accountId]]>
+    </query>
+
+    <sql-query name="getActiveCustomerAccountIdsForGenerateMeetingsTask">
+        <return-scalar column="accountId" type="integer" />
+        <![CDATA[select a.account_id as accountId
+                from account a
+                join customer_account ca on ca.account_id = a.account_id
+                join customer c on c.customer_id = a.customer_id
+                where c.status_id in (3,9,13)
+                and a.account_state_id = 11
+                and (select max(cs.installment_id) from customer_schedule cs
+                    where cs.account_id = a.account_id
+                    and cs.action_date <= date(:DATE)) + 4 >
+
+                    (select max(cs2.installment_id) from customer_schedule cs2
+                    where cs2.account_id = a.account_id)
+            ]]>
+    </sql-query>
+
+    <sql-query name="getCustomerAccountsWithSchedulesMissingPeriodicFees">
+        <return-scalar column="accountId" type="integer" />
+        <![CDATA[
 select a.account_id as accountId
-from account a 
+from account a
 join customer c on c.customer_id = a.customer_id
 join customer_schedule cs on cs.account_id = a.account_id
-left join customer_fee_schedule cfs on cfs.id = cs.id  
+left join customer_fee_schedule cfs on cfs.id = cs.id
 where exists
 (select 'f' from customer_fee_schedule cfs2
 join customer_schedule cs2 on cs2.id = cfs2.id
@@ -467,396 +467,396 @@ where cs2.account_id = a.account_id)
 and c.status_id in (3,9,13) and a.account_state_id = 11
 group by a.customer_id, a.account_id
 having max(cs.installment_id) > max(cfs.installment_id)
-			]]>
-	</sql-query>
+            ]]>
+    </sql-query>
 
 
-	<sql-query name="getActiveSavingsAccountIdsForGenerateMeetingsTask">
-		<return-scalar column="accountId" type="integer" />
-	    <![CDATA[select a.account_id as accountId
-				from account a
-				join savings_account sa on sa.account_id = a.account_id
-				join customer c on c.customer_id = a.customer_id
-				where c.status_id in (3,9,13)
-				and a.account_state_id in (16, 18)
-				and (select max(ss.installment_id) from saving_schedule ss
-					where ss.account_id = a.account_id
-					and ss.action_date <= date(:DATE)) + 4 >
+    <sql-query name="getActiveSavingsAccountIdsForGenerateMeetingsTask">
+        <return-scalar column="accountId" type="integer" />
+        <![CDATA[select a.account_id as accountId
+                from account a
+                join savings_account sa on sa.account_id = a.account_id
+                join customer c on c.customer_id = a.customer_id
+                where c.status_id in (3,9,13)
+                and a.account_state_id in (16, 18)
+                and (select max(ss.installment_id) from saving_schedule ss
+                    where ss.account_id = a.account_id
+                    and ss.action_date <= date(:DATE)) + 4 >
 
-					(select max(ss2.installment_id) from saving_schedule ss2
-					where ss2.account_id = a.account_id)
-			]]>
-	</sql-query>
+                    (select max(ss2.installment_id) from saving_schedule ss2
+                    where ss2.account_id = a.account_id)
+            ]]>
+    </sql-query>
 
-	<query name="accounts.getFeeAmountAtDisbursement">
-		<![CDATA[  from org.mifos.accounts.business.AccountFeesEntity afe 
-			where afe.account.accountId = :ACCOUNT_ID 
-			and afe.fees.feeFrequency.feePayment.id = 2]]>
-	</query>
+    <query name="accounts.getFeeAmountAtDisbursement">
+        <![CDATA[  from org.mifos.accounts.business.AccountFeesEntity afe
+            where afe.account.accountId = :ACCOUNT_ID
+            and afe.fees.feeFrequency.feePayment.id = 2]]>
+    </query>
 
-	<query name="account.getSearchResults">
-		<![CDATA[from org.mifos.accounts.loan.business.LoanBO loanAccount
-				where loanAccount.accountState.id = :CURRENT_STATUS
-				and loanAccount.office.officeId = :OFFICE_ID
-				and loanAccount.personnel.personnelId = :PERSONNEL_ID
-				and loanAccount.accountType.accountTypeId != 4
-				order by loanAccount.accountId]]>
-	</query>
-	<query name="accounts.account_IdSearch">
-		<![CDATA[select c.customerId,c.displayName ,c.globalCustNum,c.customerLevel.id, off.officeId,off.officeName,per.displayName, per.personnelId,a.accountState.id, pa.displayName, pa.globalCustNum, papa.displayName,papa.globalCustNum  
-	        	   from org.mifos.customers.business.CustomerBO as c 
-	        	   left join  c.accounts as a  
-	        	   left join c.parentCustomer as pa 
-	        	   left join pa.parentCustomer as papa 
-	        	   left join c.office as off  left join c.personnel as per 
-	        	   where off.officeId=:OFFICEID and a.globalAccountNum =:SEARCH_STRING ]]>
-	</query>
-	<query name="accounts.account_IdSearch_withoutoffice">
-		<![CDATA[select c.customerId,c.displayName ,c.globalCustNum,c.customerLevel.id, off.officeId,off.officeName,per.displayName, per.personnelId,a.accountState.id, pa.displayName, pa.globalCustNum, papa.displayName,papa.globalCustNum  
-	        	   from org.mifos.customers.business.CustomerBO as c 
-	        	   left join  c.accounts as a  
-	        	   left join c.parentCustomer as pa 
-	        	   left join pa.parentCustomer as papa 
-	        	   left join c.office as off  
-	        	   left join c.personnel as per where a.globalAccountNum =:SEARCH_STRING ]]>
-	</query>
-	<query name="accounts.account_IdSearch_withoutoffice_count">
-		<![CDATA[select count(*) 
-	        	   from org.mifos.accounts.business.AccountBO account  where
-	        	   account.globalAccountNum =:SEARCH_STRING and account.accountType.accountTypeId !=3 ]]>
-	</query>
-	<query name="accounts.account_IdSearch_count">
-		<![CDATA[
-		select count(*) 	   from org.mifos.accounts.business.AccountBO account  where  
-	        	   account.globalAccountNum =:SEARCH_STRING and account.accountType.accountTypeId !=3 
-	        	   and account.customer.office.officeId=:OFFICEID ]]>
-	</query>
+    <query name="account.getSearchResults">
+        <![CDATA[from org.mifos.accounts.loan.business.LoanBO loanAccount
+                where loanAccount.accountState.id = :CURRENT_STATUS
+                and loanAccount.office.officeId = :OFFICE_ID
+                and loanAccount.personnel.personnelId = :PERSONNEL_ID
+                and loanAccount.accountType.accountTypeId != 4
+                order by loanAccount.accountId]]>
+    </query>
+    <query name="accounts.account_IdSearch">
+        <![CDATA[select c.customerId,c.displayName ,c.globalCustNum,c.customerLevel.id, off.officeId,off.officeName,per.displayName, per.personnelId,a.accountState.id, pa.displayName, pa.globalCustNum, papa.displayName,papa.globalCustNum
+                   from org.mifos.customers.business.CustomerBO as c
+                   left join  c.accounts as a
+                   left join c.parentCustomer as pa
+                   left join pa.parentCustomer as papa
+                   left join c.office as off  left join c.personnel as per
+                   where off.officeId=:OFFICEID and a.globalAccountNum =:SEARCH_STRING ]]>
+    </query>
+    <query name="accounts.account_IdSearch_withoutoffice">
+        <![CDATA[select c.customerId,c.displayName ,c.globalCustNum,c.customerLevel.id, off.officeId,off.officeName,per.displayName, per.personnelId,a.accountState.id, pa.displayName, pa.globalCustNum, papa.displayName,papa.globalCustNum
+                   from org.mifos.customers.business.CustomerBO as c
+                   left join  c.accounts as a
+                   left join c.parentCustomer as pa
+                   left join pa.parentCustomer as papa
+                   left join c.office as off
+                   left join c.personnel as per where a.globalAccountNum =:SEARCH_STRING ]]>
+    </query>
+    <query name="accounts.account_IdSearch_withoutoffice_count">
+        <![CDATA[select count(*)
+                   from org.mifos.accounts.business.AccountBO account  where
+                   account.globalAccountNum =:SEARCH_STRING and account.accountType.accountTypeId !=3 ]]>
+    </query>
+    <query name="accounts.account_IdSearch_count">
+        <![CDATA[
+        select count(*)        from org.mifos.accounts.business.AccountBO account  where
+                   account.globalAccountNum =:SEARCH_STRING and account.accountType.accountTypeId !=3
+                   and account.customer.office.officeId=:OFFICEID ]]>
+    </query>
 
-	<query name="accounts.account_list_IdSearch">
-		<![CDATA[select account.globalAccountNum,account.accountType.accountTypeId 
-		from org.mifos.accounts.business.AccountBO account 
-		left join account.customer 
-		where account.customer.customerId=:customerId 
-		and (account.accountType.accountTypeId=:loanAccountTypeId or account.accountType.accountTypeId=:savingsAccountTypeId) 
-		and account.globalAccountNum=:searchString ]]>
-	</query>
+    <query name="accounts.account_list_IdSearch">
+        <![CDATA[select account.globalAccountNum,account.accountType.accountTypeId
+        from org.mifos.accounts.business.AccountBO account
+        left join account.customer
+        where account.customer.customerId=:customerId
+        and (account.accountType.accountTypeId=:loanAccountTypeId or account.accountType.accountTypeId=:savingsAccountTypeId)
+        and account.globalAccountNum=:searchString ]]>
+    </query>
 
-	<query name="accounts.getAllLoanAccounts">
-		<![CDATA[from org.mifos.accounts.loan.business.LoanBO]]>
-	</query>
+    <query name="accounts.getAllLoanAccounts">
+        <![CDATA[from org.mifos.accounts.loan.business.LoanBO]]>
+    </query>
 
-	<query name="loan.getCosigningLoansOfClientsForGlim">
-		<![CDATA[select loan from org.mifos.accounts.loan.business.LoanBO loan where loan.parentAccount.accountId=:accountId]]>
-	</query>
+    <query name="loan.getCosigningLoansOfClientsForGlim">
+        <![CDATA[select loan from org.mifos.accounts.loan.business.LoanBO loan where loan.parentAccount.accountId=:accountId]]>
+    </query>
 
-	<sql-query name="findLoanFeeSchedulesForALoanSchedule">
-		<return-scalar column="feeAmountDue" type="big_decimal" />
-		<return-scalar column="feeAmountPaid" type="big_decimal" />
-		<![CDATA[
-		   	select 	sum(lfs.amount) as feeAmountDue,
-					sum(lfs.amount_paid) as feeAmountPaid
-			from  loan_fee_schedule lfs
-			where lfs.id = :LOAN_SCHEDULE_ID
-		]]>
-	</sql-query>
+    <sql-query name="findLoanFeeSchedulesForALoanSchedule">
+        <return-scalar column="feeAmountDue" type="big_decimal" />
+        <return-scalar column="feeAmountPaid" type="big_decimal" />
+        <![CDATA[
+               select     sum(lfs.amount) as feeAmountDue,
+                    sum(lfs.amount_paid) as feeAmountPaid
+            from  loan_fee_schedule lfs
+            where lfs.id = :LOAN_SCHEDULE_ID
+        ]]>
+    </sql-query>
 
 
-	<sql-query name="getListOfAccountIdsHavingLoanSchedulesWithinAHoliday">
-		<return-scalar column="accountId" type="integer" />
-		<return-scalar column="officeId" type="short" />
-		<return-scalar column="meetingId" type="integer" />
-		<![CDATA[select account.account_id as accountId, account.office_id as officeId, loan_account.meeting_id as meetingId
-				from account
-                join (select branch.office_id 
-                    	from office ofull
-                    	join office_holiday oh on oh.office_id = ofull.office_id 
-                    			and oh.holiday_id = :HOLIDAY_ID,
-                    	office branch
-                    	where branch.search_id like concat(ofull.search_id, '%')) branch 
-                    			on branch.office_id = account.office_Id
-                    			
+    <sql-query name="getListOfAccountIdsHavingLoanSchedulesWithinAHoliday">
+        <return-scalar column="accountId" type="integer" />
+        <return-scalar column="officeId" type="short" />
+        <return-scalar column="meetingId" type="integer" />
+        <![CDATA[select account.account_id as accountId, account.office_id as officeId, loan_account.meeting_id as meetingId
+                from account
+                join (select branch.office_id
+                        from office ofull
+                        join office_holiday oh on oh.office_id = ofull.office_id
+                                and oh.holiday_id = :HOLIDAY_ID,
+                        office branch
+                        where branch.search_id like concat(ofull.search_id, '%')) branch
+                                on branch.office_id = account.office_Id
+
                 join loan_account on loan_account.account_id = account.account_id
-			    join loan_schedule schedule on account.account_id = schedule.account_id
-			        and schedule.action_date between date(:HOLIDAY_FROM_DATE) and date(:HOLIDAY_THRU_DATE)
-				group by account.account_id
-		]]>
-	</sql-query>
+                join loan_schedule schedule on account.account_id = schedule.account_id
+                    and schedule.action_date between date(:HOLIDAY_FROM_DATE) and date(:HOLIDAY_THRU_DATE)
+                group by account.account_id
+        ]]>
+    </sql-query>
 
-	<sql-query name="getListOfAccountIdsHavingSavingsSchedulesWithinAHoliday">
-		<return-scalar column="accountId" type="integer" />
-		<return-scalar column="officeId" type="short" />
-		<return-scalar column="meetingId" type="integer" />
-		<![CDATA[select account.account_id as accountId, account.office_id as officeId, customer_meeting.meeting_id as meetingId
-				from account
-                join (select branch.office_id 
-                    	from office ofull
-                    	join office_holiday oh on oh.office_id = ofull.office_id 
-                    			and oh.holiday_id = :HOLIDAY_ID,
-                    	office branch
-                    	where branch.search_id like concat(ofull.search_id, '%')) branch 
-                    			on branch.office_id = account.office_Id
-                    			
+    <sql-query name="getListOfAccountIdsHavingSavingsSchedulesWithinAHoliday">
+        <return-scalar column="accountId" type="integer" />
+        <return-scalar column="officeId" type="short" />
+        <return-scalar column="meetingId" type="integer" />
+        <![CDATA[select account.account_id as accountId, account.office_id as officeId, customer_meeting.meeting_id as meetingId
+                from account
+                join (select branch.office_id
+                        from office ofull
+                        join office_holiday oh on oh.office_id = ofull.office_id
+                                and oh.holiday_id = :HOLIDAY_ID,
+                        office branch
+                        where branch.search_id like concat(ofull.search_id, '%')) branch
+                                on branch.office_id = account.office_Id
+
                 join customer_meeting on customer_meeting.customer_id = account.customer_id
-			    join saving_schedule schedule on account.account_id = schedule.account_id
-			        and schedule.action_date between date(:HOLIDAY_FROM_DATE) and date(:HOLIDAY_THRU_DATE)
-				group by account.account_id
-		]]>
-	</sql-query>
+                join saving_schedule schedule on account.account_id = schedule.account_id
+                    and schedule.action_date between date(:HOLIDAY_FROM_DATE) and date(:HOLIDAY_THRU_DATE)
+                group by account.account_id
+        ]]>
+    </sql-query>
 
-	<sql-query name="getListOfAccountIdsHavingCustomerSchedulesWithinAHoliday">
-		<return-scalar column="accountId" type="integer" />
-		<return-scalar column="officeId" type="short" />
-		<return-scalar column="meetingId" type="integer" />
-		<![CDATA[select account.account_id as accountId, account.office_id as officeId, customer_meeting.meeting_id as meetingId
-				from account
-                join (select branch.office_id 
-                    	from office ofull
-                    	join office_holiday oh on oh.office_id = ofull.office_id 
-                    			and oh.holiday_id = :HOLIDAY_ID,
-                    	office branch
-                    	where branch.search_id like concat(ofull.search_id, '%')) branch 
-                    			on branch.office_id = account.office_Id
-                    			
+    <sql-query name="getListOfAccountIdsHavingCustomerSchedulesWithinAHoliday">
+        <return-scalar column="accountId" type="integer" />
+        <return-scalar column="officeId" type="short" />
+        <return-scalar column="meetingId" type="integer" />
+        <![CDATA[select account.account_id as accountId, account.office_id as officeId, customer_meeting.meeting_id as meetingId
+                from account
+                join (select branch.office_id
+                        from office ofull
+                        join office_holiday oh on oh.office_id = ofull.office_id
+                                and oh.holiday_id = :HOLIDAY_ID,
+                        office branch
+                        where branch.search_id like concat(ofull.search_id, '%')) branch
+                                on branch.office_id = account.office_Id
+
                 join customer_meeting on customer_meeting.customer_id = account.customer_id
-			    join customer_schedule schedule on account.account_id = schedule.account_id
-			        and schedule.action_date between date(:HOLIDAY_FROM_DATE) and date(:HOLIDAY_THRU_DATE)
-				group by account.account_id
-		]]>
-	</sql-query>
-	
-	<query name="getLoanSchedulesForAccountThatAreWithinDates">
-		<![CDATA[ from org.mifos.accounts.loan.business.LoanScheduleEntity actionDate
-				 where actionDate.actionDate >= date(:FROM_DATE)
-				   and actionDate.actionDate <= date(:THRU_DATE)
-				   and actionDate.account.accountId = :ACCOUNT_ID
-		]]>
-	</query>
+                join customer_schedule schedule on account.account_id = schedule.account_id
+                    and schedule.action_date between date(:HOLIDAY_FROM_DATE) and date(:HOLIDAY_THRU_DATE)
+                group by account.account_id
+        ]]>
+    </sql-query>
 
-	<query name="getSavingsSchedulesForAccountThatAreWithinDates">
-		<![CDATA[ from org.mifos.accounts.savings.business.SavingsScheduleEntity actionDate
-				 where actionDate.actionDate >= date(:FROM_DATE)
-				   and actionDate.actionDate <= date(:THRU_DATE)
-				   and actionDate.account.accountId = :ACCOUNT_ID
-		]]>
-	</query>
+    <query name="getLoanSchedulesForAccountThatAreWithinDates">
+        <![CDATA[ from org.mifos.accounts.loan.business.LoanScheduleEntity actionDate
+                 where actionDate.actionDate >= date(:FROM_DATE)
+                   and actionDate.actionDate <= date(:THRU_DATE)
+                   and actionDate.account.accountId = :ACCOUNT_ID
+        ]]>
+    </query>
 
-	<query name="getCustomerSchedulesForAccountThatAreWithinDates">
-		<![CDATA[ from org.mifos.customers.business.CustomerScheduleEntity actionDate
-				 where actionDate.actionDate >= date(:FROM_DATE)
-				   and actionDate.actionDate <= date(:THRU_DATE)
-				   and actionDate.account.accountId = :ACCOUNT_ID
-		]]>
-	</query>
+    <query name="getSavingsSchedulesForAccountThatAreWithinDates">
+        <![CDATA[ from org.mifos.accounts.savings.business.SavingsScheduleEntity actionDate
+                 where actionDate.actionDate >= date(:FROM_DATE)
+                   and actionDate.actionDate <= date(:THRU_DATE)
+                   and actionDate.account.accountId = :ACCOUNT_ID
+        ]]>
+    </query>
 
-	<query name="accounts.findLoanByClientGovernmentIdAndProductShortName">
-        <![CDATA[from org.mifos.accounts.business.AccountBO account 
+    <query name="getCustomerSchedulesForAccountThatAreWithinDates">
+        <![CDATA[ from org.mifos.customers.business.CustomerScheduleEntity actionDate
+                 where actionDate.actionDate >= date(:FROM_DATE)
+                   and actionDate.actionDate <= date(:THRU_DATE)
+                   and actionDate.account.accountId = :ACCOUNT_ID
+        ]]>
+    </query>
+
+    <query name="accounts.findLoanByClientGovernmentIdAndProductShortName">
+        <![CDATA[from org.mifos.accounts.business.AccountBO account
         where account.customer.governmentId = :clientGovernmentId
         and account.accountType.accountTypeId = :loanAccountTypeId
         and account.loanOffering.prdOfferingShortName = :productShortName
         and account.accountState.id in (5,9)]]>
-	</query>
+    </query>
 
-	<query name="accounts.findSavingsByClientGovernmentIdAndProductShortName">
-        <![CDATA[from org.mifos.accounts.business.AccountBO account 
+    <query name="accounts.findSavingsByClientGovernmentIdAndProductShortName">
+        <![CDATA[from org.mifos.accounts.business.AccountBO account
         where account.customer.governmentId = :clientGovernmentId
         and account.accountType.accountTypeId = :savingsAccountTypeId
         and account.savingsOffering.prdOfferingShortName = :productShortName
         and account.accountState.id in (16,18)]]>
-	</query>
+    </query>
 
-	<query name="accounts.findLoanByClientPhoneNumberAndProductShortName">
-        <![CDATA[from org.mifos.accounts.business.AccountBO account 
+    <query name="accounts.findLoanByClientPhoneNumberAndProductShortName">
+        <![CDATA[from org.mifos.accounts.business.AccountBO account
         where account.customer.customerAddressDetail.address.phoneNumberStripped=:phoneNumberStripped
         and account.accountType.accountTypeId = :loanAccountTypeId
         and account.loanOffering.prdOfferingShortName = :productShortName
         and account.accountState.id in (5,9)]]>
-	</query>
+    </query>
 
-	<query name="accounts.findApprovedLoansForClientWithPhoneNumber">
-        <![CDATA[from org.mifos.accounts.business.AccountBO account 
+    <query name="accounts.findApprovedLoansForClientWithPhoneNumber">
+        <![CDATA[from org.mifos.accounts.business.AccountBO account
         where account.customer.customerAddressDetail.address.phoneNumberStripped=:phoneNumberStripped
         and account.accountType.accountTypeId = :loanAccountTypeId
         and account.accountState.id = 3]]>
-	</query>
+    </query>
 
-	<query name="accounts.findSavingsByClientPhoneNumberAndProductShortName">
-        <![CDATA[from org.mifos.accounts.business.AccountBO account 
+    <query name="accounts.findSavingsByClientPhoneNumberAndProductShortName">
+        <![CDATA[from org.mifos.accounts.business.AccountBO account
         where account.customer.customerAddressDetail.address.phoneNumberStripped=:phoneNumberStripped
         and account.accountType.accountTypeId = :savingsAccountTypeId
         and account.savingsOffering.prdOfferingShortName = :productShortName
         and account.accountState.id in (16,18)]]>
-	</query>
+    </query>
 
-	<query name="findGLIMLoanAccountsByCustomerId">
-        <![CDATA[from org.mifos.accounts.loan.business.LoanBO account 
-        where account.customer.customerId = :CUSTOMER_ID 
+    <query name="findGLIMLoanAccountsByCustomerId">
+        <![CDATA[from org.mifos.accounts.loan.business.LoanBO account
+        where account.customer.customerId = :CUSTOMER_ID
         and account.parentAccount is not null]]>
-	</query>
+    </query>
 
 
 
 
 
-	<!--
-		Query for Collect Sheet Report. Really a loan report as no savings or
-		customer charges are involved. Its a complicated query that contains a
-		number of assumptions that seem to be GK related (e.g. no group
-		loans). However, GK have their own version of the report and the sql
-		GK use is an amended version of the query below. The query is made up
-		of 4 "sub-queries". For performance reasons each subquery uses similar
-		criteria to restrict searches to just those active clients that match
-		the input meeting date. i.e. there's a bit of duplication but it was
-		needed for speed. This out of the box mifos collection sheet report
-		may be reviewed from a functional perspective.
-	-->
-	<sql-query name="collectionSheet.extractCollectionSheetReportData">
-		<return-scalar column="colldate" type="string" />
-		<return-scalar column="offid" type="integer" />
-		<return-scalar column="offname" type="string" />
-		<return-scalar column="staffid" type="integer" />
-		<return-scalar column="staffname" type="string" />
-		<return-scalar column="kendraid" type="integer" />
-		<return-scalar column="kendraname" type="string" />
-		<return-scalar column="groupid" type="integer" />
-		<return-scalar column="groupname" type="string" />
-		<return-scalar column="Memid" type="integer" />
-		<return-scalar column="Memname" type="string" />
+    <!--
+        Query for Collect Sheet Report. Really a loan report as no savings or
+        customer charges are involved. Its a complicated query that contains a
+        number of assumptions that seem to be GK related (e.g. no group
+        loans). However, GK have their own version of the report and the sql
+        GK use is an amended version of the query below. The query is made up
+        of 4 "sub-queries". For performance reasons each subquery uses similar
+        criteria to restrict searches to just those active clients that match
+        the input meeting date. i.e. there's a bit of duplication but it was
+        needed for speed. This out of the box mifos collection sheet report
+        may be reviewed from a functional perspective.
+    -->
+    <sql-query name="collectionSheet.extractCollectionSheetReportData">
+        <return-scalar column="colldate" type="string" />
+        <return-scalar column="offid" type="integer" />
+        <return-scalar column="offname" type="string" />
+        <return-scalar column="staffid" type="integer" />
+        <return-scalar column="staffname" type="string" />
+        <return-scalar column="kendraid" type="integer" />
+        <return-scalar column="kendraname" type="string" />
+        <return-scalar column="groupid" type="integer" />
+        <return-scalar column="groupname" type="string" />
+        <return-scalar column="Memid" type="integer" />
+        <return-scalar column="Memname" type="string" />
 
-		<return-scalar column="loanbal" type="string" />
-		<return-scalar column="tloanbal" type="big_decimal" />
-		<return-scalar column="loandue" type="string" />
-		<return-scalar column="tloandue" type="big_decimal" />
+        <return-scalar column="loanbal" type="string" />
+        <return-scalar column="tloanbal" type="big_decimal" />
+        <return-scalar column="loandue" type="string" />
+        <return-scalar column="tloandue" type="big_decimal" />
 
-		<return-scalar column="loandis" type="string" />
-		<return-scalar column="tloandis" type="big_decimal" />
-		<return-scalar column="loanfees" type="string" />
-		<return-scalar column="tloanfees" type="big_decimal" />	    
-	    
-	    <![CDATA[	    
-select coll.*, 
-       ifnull(loan.loanbal,0) as loanbal, 
-       round(ifnull(loan.tloanbal,0),0) as tloanbal, 
-       
+        <return-scalar column="loandis" type="string" />
+        <return-scalar column="tloandis" type="big_decimal" />
+        <return-scalar column="loanfees" type="string" />
+        <return-scalar column="tloanfees" type="big_decimal" />
+
+        <![CDATA[
+select coll.*,
+       ifnull(loan.loanbal,0) as loanbal,
+       round(ifnull(loan.tloanbal,0),0) as tloanbal,
+
        ifnull(loanduesch.loandue,0) as loandue ,
        round(ifnull(loanduesch.tloandue,0),0) as tloandue ,
-       
+
        ifnull(ld.loandis,0) as loandis,
-       round(ifnull(ld.tloandis,0),null) as tloandis, 
-       
-       ifnull(ld.loanfees,0) as loanfees, 
+       round(ifnull(ld.tloandis,0),null) as tloandis,
+
+       ifnull(ld.loanfees,0) as loanfees,
        round(ifnull(ld.tloanfees,0),null) as tloanfees from
-       
+
        (select concat(right(date(:MEETING_DATE),2), "-",left(right(date(:MEETING_DATE),5),2),"-",
-        left(date(:MEETING_DATE),4)) as colldate ,        
-        o.office_id as offid, 
+        left(date(:MEETING_DATE),4)) as colldate ,
+        o.office_id as offid,
         o.display_name as offname,
-        p.personnel_id as staffid,  
-        p.display_name as staffname, 
-        k.customer_id as kendraid, 
-        k.display_name as kendraname, 
+        p.personnel_id as staffid,
+        p.display_name as staffname,
+        k.customer_id as kendraid,
+        k.display_name as kendraname,
         g.customer_id as groupid,
         g.display_name as groupname,
-        m.customer_id as Memid, 
+        m.customer_id as Memid,
         m.display_name as Memname
-        
-	from customer k
-	 left join personnel p on k.loan_officer_id = p.personnel_id
-	 left join office o on p.office_id = o.office_id
-	 left join customer g on g.parent_customer_id = k.customer_id
-	 left join customer m on m.parent_customer_id = g.customer_id
-	 left join customer_meeting cm on cm.customer_id=k.customer_id
-	 left join recurrence_detail rd on rd.meeting_id = cm.meeting_id
-	 left join recur_on_day r on r.details_id = rd.details_id	
 
-	 where o.office_id = :BRANCH_ID
-       
-	 and p.personnel_status = 1
-	 and p.personnel_id = (case(:PERSONNEL_ID) when 'all'  then p.personnel_id else (:PERSONNEL_ID) end)
-	 and k.customer_id = (case (:CENTER_ID)  when 'all' then k.customer_id else (:CENTER_ID) end)
+    from customer k
+     left join personnel p on k.loan_officer_id = p.personnel_id
+     left join office o on p.office_id = o.office_id
+     left join customer g on g.parent_customer_id = k.customer_id
+     left join customer m on m.parent_customer_id = g.customer_id
+     left join customer_meeting cm on cm.customer_id=k.customer_id
+     left join recurrence_detail rd on rd.meeting_id = cm.meeting_id
+     left join recur_on_day r on r.details_id = rd.details_id
+
+     where o.office_id = :BRANCH_ID
+
+     and p.personnel_status = 1
+     and p.personnel_id = (case(:PERSONNEL_ID) when 'all'  then p.personnel_id else (:PERSONNEL_ID) end)
+     and k.customer_id = (case (:CENTER_ID)  when 'all' then k.customer_id else (:CENTER_ID) end)
      and k.status_id = 13 and k.branch_id = :BRANCH_ID and k.customer_level_id = 3
      and g.status_id = 9  and g.branch_id = :BRANCH_ID and g.customer_level_id = 2
      and m.status_id = 3  and m.branch_id = :BRANCH_ID and m.customer_level_id = 1
-	 and r.days = dayofweek(:MEETING_DATE)
-	   
+     and r.days = dayofweek(:MEETING_DATE)
+
      order by k.customer_id, g.customer_id, m.customer_id) coll
-       
-	left join
-	(select a.customer_id as customer_id, 
-	 	group_concat(
-	 	  concat_ws(':',po.prd_offering_short_name, 
-	 	    round(ls.orig_principal + ls.orig_interest + ls.orig_fees + 
-	 	      ls.orig_penalty - ls.principal_paid - round(ls.interest_paid,2)- 
-	 	      round(ls.fees_paid,2) - ls.penalty_paid, 0
-	 	    )
-	 	  ) order by po.prd_offering_short_name separator '||'
-	 	) as loanbal, 
-	 	sum(ls.orig_principal+ls.orig_interest+ls.orig_fees+ls.orig_penalty
-	 	  -ls.principal_paid-round(ls.interest_paid,2)-round(ls.fees_paid,2)-
-	 	  ls.penalty_paid) as tloanbal 
+
+    left join
+    (select a.customer_id as customer_id,
+         group_concat(
+           concat_ws(':',po.prd_offering_short_name,
+             round(ls.orig_principal + ls.orig_interest + ls.orig_fees +
+               ls.orig_penalty - ls.principal_paid - round(ls.interest_paid,2)-
+               round(ls.fees_paid,2) - ls.penalty_paid, 0
+             )
+           ) order by po.prd_offering_short_name separator '||'
+         ) as loanbal,
+         sum(ls.orig_principal+ls.orig_interest+ls.orig_fees+ls.orig_penalty
+           -ls.principal_paid-round(ls.interest_paid,2)-round(ls.fees_paid,2)-
+           ls.penalty_paid) as tloanbal
      from customer k
      join customer_meeting cm on cm.customer_id = k.customer_id
      join recurrence_detail rd on rd.meeting_id = cm.meeting_id
-     join recur_on_day r on r.details_id = rd.details_id	
-	 join personnel p on k.loan_officer_id = p.personnel_id
-     
-	 join customer g on g.parent_customer_id = k.customer_id
-	 join customer m on m.parent_customer_id = g.customer_id
-                                    
+     join recur_on_day r on r.details_id = rd.details_id
+     join personnel p on k.loan_officer_id = p.personnel_id
+
+     join customer g on g.parent_customer_id = k.customer_id
+     join customer m on m.parent_customer_id = g.customer_id
+
      join account a on a.customer_id = m.customer_id
-     join loan_account la on la.account_id = a.account_id 
+     join loan_account la on la.account_id = a.account_id
      join loan_summary ls on ls.account_id=la.account_id
      join prd_offering po on po.prd_offering_id = la.prd_offering_id
-	 	
-	 where a.account_state_id in (5, 9) 
+
+     where a.account_state_id in (5, 9)
      and a.account_type_id = 1
-           
-	 and p.personnel_status = 1
-	 and p.personnel_id = (case(:PERSONNEL_ID) when 'all'  then p.personnel_id else (:PERSONNEL_ID) end)
-	 and k.customer_id = (case (:CENTER_ID)  when 'all' then k.customer_id else (:CENTER_ID) end)
+
+     and p.personnel_status = 1
+     and p.personnel_id = (case(:PERSONNEL_ID) when 'all'  then p.personnel_id else (:PERSONNEL_ID) end)
+     and k.customer_id = (case (:CENTER_ID)  when 'all' then k.customer_id else (:CENTER_ID) end)
      and k.status_id = 13 and k.branch_id = :BRANCH_ID and k.customer_level_id = 3
      and g.status_id = 9  and g.branch_id = :BRANCH_ID and g.customer_level_id = 2
      and m.status_id = 3  and m.branch_id = :BRANCH_ID and m.customer_level_id = 1
-	 and r.days = dayofweek(:MEETING_DATE)
+     and r.days = dayofweek(:MEETING_DATE)
 
-	 group by a.customer_id
-	 ) loan on coll.memid = loan.customer_id
+     group by a.customer_id
+     ) loan on coll.memid = loan.customer_id
 
-	 left join
-        (select loansch.customer_id as customer_id, 
-	         group_concat(ifnull(loansch.loandue,0) order by loansch.loandue separator '||') as loandue , 
-	         ifnull(sum(loansch.tloandue),0) as tloandue 
+     left join
+        (select loansch.customer_id as customer_id,
+             group_concat(ifnull(loansch.loandue,0) order by loansch.loandue separator '||') as loandue ,
+             ifnull(sum(loansch.tloandue),0) as tloandue
         from
-                 (select a.customer_id as customer_id, 
+                 (select a.customer_id as customer_id,
                          concat_ws(':',po.prd_offering_short_name, ifnull(round(
                             sum(
-                         (l.principal+l.interest+l.penalty+ifnull(l.misc_fees,0)) - 
+                         (l.principal+l.interest+l.penalty+ifnull(l.misc_fees,0)) -
                          (l.principal_paid+l.interest_paid+l.penalty_paid+ifnull(l.misc_fees_paid,0))
                             ),2),0)
-                         ) as loandue, 
+                         ) as loandue,
                          ifnull(sum(
-                         (l.principal+l.interest+l.penalty+ifnull(l.misc_fees,0)) - 
+                         (l.principal+l.interest+l.penalty+ifnull(l.misc_fees,0)) -
                          (l.principal_paid+l.interest_paid+l.penalty_paid+ifnull(l.misc_fees_paid,0))
                          ),0)
                           as tloandue
                  from customer k
                  join customer_meeting cm on cm.customer_id = k.customer_id
                  join recurrence_detail rd on rd.meeting_id = cm.meeting_id
-                 join recur_on_day r on r.details_id = rd.details_id	
+                 join recur_on_day r on r.details_id = rd.details_id
                  join personnel p on k.loan_officer_id = p.personnel_id
-     
+
                  join customer g on g.parent_customer_id = k.customer_id
                  join customer m on m.parent_customer_id = g.customer_id
-                                    
+
                  join account a on a.customer_id = m.customer_id
-                 join loan_account la on la.account_id = a.account_id 
+                 join loan_account la on la.account_id = a.account_id
                  join loan_schedule l on l.account_id=la.account_id
                  join prd_offering po on po.prd_offering_id = la.prd_offering_id
-			 
-                 where l.action_date <= date(:MEETING_DATE) 
-                 and l.payment_status = 0 
-                 and a.account_state_id in (5, 9) 
-                 and a.account_type_id = 1      
-                 
+
+                 where l.action_date <= date(:MEETING_DATE)
+                 and l.payment_status = 0
+                 and a.account_state_id in (5, 9)
+                 and a.account_type_id = 1
+
                  and p.personnel_status = 1
                  and p.personnel_id = (case(:PERSONNEL_ID) when 'all'  then p.personnel_id else (:PERSONNEL_ID) end)
                  and k.customer_id = (case (:CENTER_ID)  when 'all' then k.customer_id else (:CENTER_ID) end)
@@ -864,43 +864,43 @@ select coll.*,
                  and g.status_id = 9  and g.branch_id = :BRANCH_ID and g.customer_level_id = 2
                  and m.status_id = 3  and m.branch_id =:BRANCH_ID and m.customer_level_id = 1
                  and r.days = dayofweek(:MEETING_DATE)
-     
+
                  group by l.account_id) loansch
-           group by loansch.customer_id 
+           group by loansch.customer_id
            ) loanduesch on coll.memid = loanduesch.customer_id
 
-	   left join
-           (select loandisb.customer_id as customer_id, 
-            	    group_concat(ifnull(loandisb.loandis,0) order by loandisb.loandis separator '||') as loandis,
-            	    sum(loandisb.tloandis) as tloandis, 
-            	    group_concat(ifnull(loandisb.loanfees,0) order by loandisb.loandis separator '||') as loanfees, 
-            	    sum(loandisb.tloanfees) as tloanfees 
+       left join
+           (select loandisb.customer_id as customer_id,
+                    group_concat(ifnull(loandisb.loandis,0) order by loandisb.loandis separator '||') as loandis,
+                    sum(loandisb.tloandis) as tloandis,
+                    group_concat(ifnull(loandisb.loanfees,0) order by loandisb.loandis separator '||') as loanfees,
+                    sum(loandisb.tloanfees) as tloanfees
             from
-                (select a.customer_id as customer_id, 
-		            concat_ws(':',po.prd_offering_short_name, round(la.loan_amount,0)) as loandis,
-		            la.loan_amount as tloandis,
-                    concat_ws(':',po.prd_offering_short_name,round(ls.orig_fees,0)) as loanfees, 
+                (select a.customer_id as customer_id,
+                    concat_ws(':',po.prd_offering_short_name, round(la.loan_amount,0)) as loandis,
+                    la.loan_amount as tloandis,
+                    concat_ws(':',po.prd_offering_short_name,round(ls.orig_fees,0)) as loanfees,
                     ls.orig_fees as tloanfees
                 from customer k
                 join customer_meeting cm on cm.customer_id = k.customer_id
                 join recurrence_detail rd on rd.meeting_id = cm.meeting_id
-                join recur_on_day r on r.details_id = rd.details_id	
+                join recur_on_day r on r.details_id = rd.details_id
                 join personnel p on k.loan_officer_id = p.personnel_id
-     
+
                 join customer g on g.parent_customer_id = k.customer_id
                 join customer m on m.parent_customer_id = g.customer_id
-                                    
+
                 join account a on a.customer_id = m.customer_id
                 join loan_account la on la.account_id = a.account_id
                 left join loan_summary ls on ls.account_id = la.account_id
                 join prd_offering po on po.prd_offering_id = la.prd_offering_id
-                
-			    where la.disbursement_date = date(:MEETING_DATE) 
-			    and a.account_state_id = 3 
-			    and a.office_id = :BRANCH_ID
-			    and a.account_type_id = 1 
-                
-                and p.personnel_status = 1 
+
+                where la.disbursement_date = date(:MEETING_DATE)
+                and a.account_state_id = 3
+                and a.office_id = :BRANCH_ID
+                and a.account_type_id = 1
+
+                and p.personnel_status = 1
                 and p.personnel_id = (case(:PERSONNEL_ID) when 'all'  then p.personnel_id else (:PERSONNEL_ID) end)
                 and k.customer_id = (case (:CENTER_ID)  when 'all' then k.customer_id else (:CENTER_ID) end)
                 and k.status_id = 13 and k.branch_id = :BRANCH_ID and k.customer_level_id = 3
@@ -908,65 +908,65 @@ select coll.*,
                 and m.status_id = 3  and m.branch_id = :BRANCH_ID and m.customer_level_id = 1
                 and r.days = dayofweek(:MEETING_DATE)
 
-		     ) loandisb 
-             group by loandisb.customer_id 
+             ) loandisb
+             group by loandisb.customer_id
              ) ld on coll.memid = ld.customer_id
           ]]>
-	</sql-query>
+    </sql-query>
 
-	<sql-query name="Account.getAccountSurveyDto">
-		<return-scalar column="instanceId" type="integer" />
-		<return-scalar column="surveyName" type="string" />
-		<return-scalar column="dateConducted" type="date" />
-		<![CDATA[SELECT si.instance_id as instanceId,
-				s.survey_name as surveyName,
-				si.date_conducted as dateConducted
-				from survey_instance si 
-				join survey s on s.survey_id = si.survey_id
-				where si.account_id = :ACCOUNT_ID
-				order by s.survey_name
-		]]>
-	</sql-query>
+    <sql-query name="Account.getAccountSurveyDto">
+        <return-scalar column="instanceId" type="integer" />
+        <return-scalar column="surveyName" type="string" />
+        <return-scalar column="dateConducted" type="date" />
+        <![CDATA[SELECT si.instance_id as instanceId,
+                s.survey_name as surveyName,
+                si.date_conducted as dateConducted
+                from survey_instance si
+                join survey s on s.survey_id = si.survey_id
+                where si.account_id = :ACCOUNT_ID
+                order by s.survey_name
+        ]]>
+    </sql-query>
 
-	<query name="findAccountPaymentsByReceiptNumber">
+    <query name="findAccountPaymentsByReceiptNumber">
         <![CDATA[from org.mifos.accounts.business.AccountPaymentEntity accountPayment
         where accountPayment.receiptNumber = :RECEIPT_NUMBER ]]>
-	</query>
-	
-	<sql-query name="savings.retrieveAllEndOfDayTransactionDetails">
-	   <return-scalar column="dayOfYear" type="date" />
-	   <return-scalar column="totalDeposits" type="big_decimal" />
-	   <return-scalar column="totalWithdrawals" type="big_decimal" />
-	   <return-scalar column="totalInterest" type="big_decimal" />
-	   <![CDATA[select ifnull(atxn.action_date, date('3001-01-01')) as dayOfYear,
-					sum(stxn.deposit_amount) as totalDeposits,
-					sum(stxn.withdrawal_amount) as totalWithdrawals,
-					sum(stxn.interest_amount) as totalInterest
-					from account_trxn atxn
-					inner join  savings_trxn_detail stxn on atxn.account_trxn_id = stxn.account_trxn_id
-					where atxn.account_action_id in (6,7, 11, 14)
-					and account_id = :ACCOUNT_ID
-					group by dayOfYear
-					/*
-					6 Deposit
-					7 Withdrawal
-					11 Interest_posting
-					14 SavingsAdjustment - but covers deposits and withdrawals
-					*/
-					]]>
-	</sql-query>
+    </query>
+
+    <sql-query name="savings.retrieveAllEndOfDayTransactionDetails">
+       <return-scalar column="dayOfYear" type="date" />
+       <return-scalar column="totalDeposits" type="big_decimal" />
+       <return-scalar column="totalWithdrawals" type="big_decimal" />
+       <return-scalar column="totalInterest" type="big_decimal" />
+       <![CDATA[select ifnull(atxn.action_date, date('3001-01-01')) as dayOfYear,
+                    sum(stxn.deposit_amount) as totalDeposits,
+                    sum(stxn.withdrawal_amount) as totalWithdrawals,
+                    sum(stxn.interest_amount) as totalInterest
+                    from account_trxn atxn
+                    inner join  savings_trxn_detail stxn on atxn.account_trxn_id = stxn.account_trxn_id
+                    where atxn.account_action_id in (6,7, 11, 14)
+                    and account_id = :ACCOUNT_ID
+                    group by dayOfYear
+                    /*
+                    6 Deposit
+                    7 Withdrawal
+                    11 Interest_posting
+                    14 SavingsAdjustment - but covers deposits and withdrawals
+                    */
+                    ]]>
+    </sql-query>
 
     <sql-query name="AccountCustomFieldEntity.getResponses">
         <return-scalar column="account_custom_field_id" type="integer" />
-		<return-scalar column="field_id" type="short" />
-		<return-scalar column="field_value" type="string" />
+        <return-scalar column="field_id" type="short" />
+        <return-scalar column="field_value" type="string" />
         <return-scalar column="created_date" type="date" />
         <return-scalar column="updated_date" type="date" />
         <return-scalar column="created_by" type="short" />
         <return-scalar column="updated_by" type="short" />
         <return-scalar column="account_id" type="integer" />
-	    <![CDATA[SELECT a.account_custom_field_id, a.field_id, a.field_value, b.created_date, b.updated_date, b.created_by, b.updated_by, b.account_id
-	    FROM account_custom_field a join account b on a.account_id = b.account_id
-	    where a.field_id in (:CUSTOM_FIELD_ID) order by b.account_id]]>
-	</sql-query>
+        <![CDATA[SELECT a.account_custom_field_id, a.field_id, a.field_value, b.created_date, b.updated_date, b.created_by, b.updated_by, b.account_id
+        FROM account_custom_field a join account b on a.account_id = b.account_id
+        where a.field_id in (:CUSTOM_FIELD_ID) order by b.account_id]]>
+    </sql-query>
 </hibernate-mapping>

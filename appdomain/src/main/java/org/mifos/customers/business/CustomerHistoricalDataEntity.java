@@ -53,13 +53,13 @@ public class CustomerHistoricalDataEntity extends AbstractEntity {
     private Date mfiJoiningDate;
 
     private Date createdDate;
-    
+
     private Short createdBy;
-    
+
     private Date updatedDate;
-    
+
     private Short updatedBy;
-    
+
     private Integer versionNo;
 
     public CustomerHistoricalDataEntity(CustomerBO customer) {
@@ -147,8 +147,8 @@ public class CustomerHistoricalDataEntity extends AbstractEntity {
     public Money getLoanAmount() {
         return loanAmount;
     }
-    
-    
+
+
     public Short getCreatedBy() {
         return createdBy;
     }

@@ -489,6 +489,7 @@ public class LegacyLoanDao extends LegacyGenericDao {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public List<OriginalLoanScheduleEntity> getOriginalLoanScheduleEntity(Integer accountId) throws PersistenceException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("id", accountId);

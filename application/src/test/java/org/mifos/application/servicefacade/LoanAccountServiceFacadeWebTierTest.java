@@ -242,7 +242,7 @@ public class LoanAccountServiceFacadeWebTierTest {
         Double expectedDue = interest.subtract(interestPaid).getAmount().doubleValue();
         assertThat(interestDue.doubleValue(), is(expectedDue));
     }
-    
+
     @Test
     public void shouldReturnInterestDueForNextInstallmentForDIPBLoanWithDoNotWaiveInterest() {
         LoanScheduleEntity loanScheduleEntity = new LoanScheduleEntity(){};

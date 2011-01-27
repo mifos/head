@@ -33,7 +33,7 @@
     <div class="marginLeft30">
         <div class="span-21 borderbtm">
             <div class="clear">&nbsp;</div>
-            
+
             [#list model.batchjobs as batchjob]
                 [#if batchjob.name == model.jobFailName]
                     <p class="font15"><span class="orangeheading">${batchjob.name}&nbsp;[@spring.message "systemAdministration.batchjobs.batchjobsFailDetails" /]</span></p><br>

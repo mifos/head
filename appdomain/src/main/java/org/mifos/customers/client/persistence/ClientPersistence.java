@@ -28,20 +28,12 @@ import org.hibernate.Hibernate;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.exceptions.CustomerException;
-import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.LegacyGenericDao;
 
 public class ClientPersistence extends LegacyGenericDao {
-
-    /**
-     * Get a client by Id and inject any required dependencies
-     */
-    public ClientBO getClient(final Integer customerId) throws PersistenceException {
-        return getPersistentObject(ClientBO.class, customerId);
-    }
 
     public Blob createBlob(final InputStream picture) throws PersistenceException {
         try {

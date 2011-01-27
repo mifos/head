@@ -31,7 +31,7 @@ import java.util.Set;
 
 
 public class MifosBeanValidator {
-    
+
     private MifosLocalValidatorFactoryBean targetValidator;
 
     public void setTargetValidator(LocalValidatorFactoryBean validator) {
@@ -58,7 +58,7 @@ public class MifosBeanValidator {
 
 
     private static class MifosLocalValidatorFactoryBean extends LocalValidatorFactoryBean {
-        //@see http://jira.springframework.org/browse/SPR-7062 
+        //@see http://jira.springframework.org/browse/SPR-7062
         private final LocalValidatorFactoryBean beanValidator;
 
         @SuppressWarnings("PMD.CallSuperInConstructor")
@@ -69,16 +69,16 @@ public class MifosBeanValidator {
         public Errors checkConstraints(Object target, Class<?>...groups) {
            BeanPropertyBindingResult errors = new BeanPropertyBindingResult(target, target.getClass().getSimpleName());
            Set<ConstraintViolation<Object>> result = this.beanValidator.validate(target, groups);
-		   for (ConstraintViolation<Object> violation : result) {
-			  String field = violation.getPropertyPath().toString();
-			  FieldError fieldError = errors.getFieldError(field);
-			  if (fieldError == null || !fieldError.isBindingFailure()) {
-				errors.rejectValue(field,
-						violation.getConstraintDescriptor().getAnnotation().annotationType().getSimpleName(),
-						getArgumentsForConstraint(errors.getObjectName(), field, violation.getConstraintDescriptor()),
-						violation.getMessage());
-			  }
-		   }
+           for (ConstraintViolation<Object> violation : result) {
+              String field = violation.getPropertyPath().toString();
+              FieldError fieldError = errors.getFieldError(field);
+              if (fieldError == null || !fieldError.isBindingFailure()) {
+                errors.rejectValue(field,
+                        violation.getConstraintDescriptor().getAnnotation().annotationType().getSimpleName(),
+                        getArgumentsForConstraint(errors.getObjectName(), field, violation.getConstraintDescriptor()),
+                        violation.getMessage());
+              }
+           }
            return errors;
         }
     }

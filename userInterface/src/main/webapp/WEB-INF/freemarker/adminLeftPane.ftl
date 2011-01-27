@@ -21,9 +21,9 @@
 [#import "spring.ftl" as spring]
 [#import "newblueprintmacros.ftl" as mifos]
 [#-- <div class="left-pane">
-	  <div class="left-pane-header">[@spring.message "administrativeTasks" /]</div>
-	  <div class="left-pane-content">
-   	  </div>
+      <div class="left-pane-header">[@spring.message "administrativeTasks" /]</div>
+      <div class="left-pane-content">
+         </div>
 </div>--]
  <div  class="sidebar ht550">
   <div>

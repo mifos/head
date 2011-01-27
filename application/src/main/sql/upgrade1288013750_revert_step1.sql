@@ -1,1 +1,0 @@
-alter table questions drop column nickname;

@@ -29,19 +29,18 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.taglib.TagUtils;
 import org.mifos.application.master.MessageLookup;
-import org.mifos.application.master.business.CustomFieldCategory;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.application.master.persistence.LegacyMasterDao;
-import org.mifos.application.servicefacade.ApplicationContextProvider;
-import org.mifos.application.util.helpers.EntityType;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.security.util.UserContext;
 
+/**
+ * @deprecated - remove - custom fields no longer supported: remove tag from web.xml etc
+ */
+@Deprecated
 public class CustomFieldsListTag extends BodyTagSupport { // SimpleTagSupport {
     private String actionName;
 
@@ -112,27 +111,12 @@ public class CustomFieldsListTag extends BodyTagSupport { // SimpleTagSupport {
         return html;
     }
 
-    public String getCustomFieldsList(UserContext userContext) throws PersistenceException {
-        LegacyMasterDao master = ApplicationContextProvider.getBean(LegacyMasterDao.class);
-        EntityType entityType = CustomFieldCategory.getCustomFieldCategoryFromString(category).mapToEntityType();
-
-        XmlBuilder html = new XmlBuilder();
-
-        int index = 1;
-        for (CustomFieldDefinitionEntity customField : master.retrieveCustomFieldsDefinition(entityType)) {
-            html.append(getRow(customField, userContext, index));
-            ++index;
-        }
-
-        return html.getOutput();
-    }
-
     @Override
     public int doEndTag() throws JspException {
         try {
             UserContext userContext = (UserContext) pageContext.getSession().getAttribute(Constants.USERCONTEXT);
 
-            TagUtils.getInstance().write(pageContext, getCustomFieldsList(userContext));
+            TagUtils.getInstance().write(pageContext, "");
 
         } catch (Exception e) {
             /**

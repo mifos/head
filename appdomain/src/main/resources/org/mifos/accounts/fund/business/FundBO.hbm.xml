@@ -22,7 +22,7 @@
     </query>
     <query name="fund.getFundCodes"><![CDATA[from org.mifos.application.master.business.FundCodeEntity]]></query>
     <query name="fund.checkFundNameExist">
-		<![CDATA[select count(*) from org.mifos.accounts.fund.business.FundBO fund where fund.fundName = :FUND_NAME]]>
-	</query>
-	<query name="product.srcfund"><![CDATA[from org.mifos.accounts.fund.business.FundBO fund]]></query>
+        <![CDATA[select count(*) from org.mifos.accounts.fund.business.FundBO fund where fund.fundName = :FUND_NAME]]>
+    </query>
+    <query name="product.srcfund"><![CDATA[from org.mifos.accounts.fund.business.FundBO fund]]></query>
 </hibernate-mapping>

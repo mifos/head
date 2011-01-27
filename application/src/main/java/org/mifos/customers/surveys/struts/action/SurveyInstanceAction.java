@@ -44,7 +44,6 @@ import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.savings.business.SavingsBO;
-import org.mifos.accounts.savings.business.service.SavingsBusinessService;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.customers.api.CustomerLevel;
@@ -54,7 +53,6 @@ import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.ppi.business.PPISurvey;
 import org.mifos.customers.ppi.business.PPISurveyInstance;
 import org.mifos.customers.ppi.helpers.PovertyBand;
@@ -378,7 +376,6 @@ public class SurveyInstanceAction extends BaseAction {
             LoanBO loanBO = service.findBySystemId(globalNum);
             return loanBO.getLoanOffering().getPrdOfferingName() + "# " + globalNum;
         } else if (surveyType == SurveyType.SAVINGS) {
-            SavingsBusinessService service = new SavingsBusinessService();
             SavingsBO savingsBO = savingsDao.findBySystemId(globalNum);
             return savingsBO.getSavingsOffering().getPrdOfferingName() + "# " + globalNum;
         }
@@ -400,7 +397,6 @@ public class SurveyInstanceAction extends BaseAction {
             LoanBO loanBO = service.findBySystemId(globalNum);
             return loanBO;
         } else if (surveyType == SurveyType.SAVINGS) {
-            SavingsBusinessService service = new SavingsBusinessService();
             SavingsBO savingsBO = savingsDao.findBySystemId(globalNum);
             return savingsBO;
         }

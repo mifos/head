@@ -59,7 +59,7 @@ public class ShutdownController {
     protected ShutdownController(final ShutdownServiceFacade shutdownServiceFacade) {
         this.shutdownServiceFacade = shutdownServiceFacade;
     }
-    
+
     @ModelAttribute("breadcrumbs")
     public List<BreadCrumbsLinks> showBreadCrumbs() {
         return new AdminBreadcrumbBuilder().withLink("admin.shutdown", "shutdown.ftl").build();

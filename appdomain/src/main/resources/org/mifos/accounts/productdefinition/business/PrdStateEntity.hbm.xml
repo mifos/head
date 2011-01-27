@@ -12,5 +12,5 @@
         </id>
         <many-to-one name="lookUpValue" column="prd_state_lookup_id" class="org.mifos.application.master.business.LookUpValueEntity" />
     </class>
-    
+
 </hibernate-mapping>

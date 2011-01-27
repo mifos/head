@@ -20,10 +20,10 @@
 --]
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
-   <!--  Main Content Begins-->  
+   <!--  Main Content Begins-->
   <div class="content">
-  	<form method="" action="" name="formname">
-  	<p class="bluedivs paddingLeft"><a href="admin.ftl">[@spring.message "admin" /]</a>&nbsp;/&nbsp;<a href="viewAdditionalFields.ftl">[@spring.message "viewAdditionalFields" /]</a>&nbsp;/&nbsp;<a href="#">[@spring.message "personnel" /]</a></p>
+      <form method="" action="" name="formname">
+      <p class="bluedivs paddingLeft"><a href="admin.ftl">[@spring.message "admin" /]</a>&nbsp;/&nbsp;<a href="viewAdditionalFields.ftl">[@spring.message "viewAdditionalFields" /]</a>&nbsp;/&nbsp;<a href="#">[@spring.message "personnel" /]</a></p>
     <p class="font15"><span class="fontBold">[@spring.message "datadisplayandrules.editadditionalfields" /]</span>&nbsp;-&nbsp;<span class="orangeheading">[@spring.message "datadisplayandrules.editadditionalfields.enteradditionalfieldinformation" /]</span></p>
     <div>[@spring.message "datadisplayandrules.editadditionalfields.completethefieldsbelow.ThenclickPreview.ClickCanceltoreturntoAdminwithoutsubmittinginformation." /] </div>
     <p><span class="red">* </span>[@spring.message "fieldsmarkedwithanasteriskarerequired." /]</p>
@@ -31,9 +31,9 @@
     <p class="fontBold">[@spring.message "datadisplayandrules.editadditionalfields.additionalfielddetails" /]</p>
     <p>&nbsp;&nbsp;</p>
     <div class="prepend-1 span-21 last">
-        	<div class="span-20 prepend-3 "><span class="span-3 rightAlign"><span class="red">* </span>[@spring.message "datadisplayandrules.editadditionalfields.category" /]</span><span class="span-4">&nbsp;
-   					<select name="select" disabled="disabled">
-      					<option >[@spring.message "--Select--" /]</option>
+            <div class="span-20 prepend-3 "><span class="span-3 rightAlign"><span class="red">* </span>[@spring.message "datadisplayandrules.editadditionalfields.category" /]</span><span class="span-4">&nbsp;
+                       <select name="select" disabled="disabled">
+                          <option >[@spring.message "--Select--" /]</option>
                         <option >[@spring.message "datadisplayandrules.editadditionalfields.personnel" /]</option>
                         <option >[@spring.message "datadisplayandrules.editadditionalfields.office" /]</option>
                         <option >[@spring.message "datadisplayandrules.editadditionalfields.client" /]</option>
@@ -41,33 +41,33 @@
                         <option >[@spring.message "datadisplayandrules.editadditionalfields.center" /]</option>
                         <option >[@spring.message "datadisplayandrules.editadditionalfields.loan" /]</option>
                         <option >[@spring.message "offices.viewOfficeDetails.additionalinformation" /]</option>
-				    </select></span>
-			</div>
-        	<div class="span-20 prepend-3 "><span class="span-3 rightAlign"><span class="red">* </span>[@spring.message "datadisplayandrules.editadditionalfields.label" /]</span>&nbsp;<span class="span-4">
-    				<input type="text" /></span>
-  			</div>
+                    </select></span>
+            </div>
+            <div class="span-20 prepend-3 "><span class="span-3 rightAlign"><span class="red">* </span>[@spring.message "datadisplayandrules.editadditionalfields.label" /]</span>&nbsp;<span class="span-4">
+                    <input type="text" /></span>
+              </div>
             <div class="span-20 prepend-3"><span class="span-3 rightAlign">[@spring.message "datadisplayandrules.editadditionalfields.mandatory" /]</span>&nbsp;<span class="span-4">
-    				<input type="checkbox" /></span>
-  			</div>
+                    <input type="checkbox" /></span>
+              </div>
             <div class="span-20 prepend-3"><span class="span-3 rightAlign"><span class="red">* </span>[@spring.message "datadisplayandrules.editadditionalfields.dataType" /]</span>&nbsp;<span class="span-4">
-   					<select name="select" disabled="disabled">
-      					<option >[@spring.message "--Select--" /]</option>
+                       <select name="select" disabled="disabled">
+                          <option >[@spring.message "--Select--" /]</option>
                         <option >[@spring.message "datadisplayandrules.editadditionalfields.numeric" /]</option>
                         <option >[@spring.message "datadisplayandrules.editadditionalfields.text" /]</option>
-				    </select></span>
-			</div>
+                    </select></span>
+            </div>
             <div class="span-20 prepend-3"><span class="span-3 rightAlign">[@spring.message "datadisplayandrules.editadditionalfields.defaultValue" /]</span>&nbsp;<span class="span-4">
-    				<input type="text" /></span>
-  			</div>
+                    <input type="text" /></span>
+              </div>
             <div class="clear">&nbsp;</div>
             <hr />
             <div class="prepend-9">
-          		<input class="buttn" type="button" name="preview" id="edit_additional_fields.button.preview" value="[@spring.message "preview"/]" onclick="#"/>
-          		<input class="buttn2" type="button" name="cancel" id="edit_additional_fields.button.cancel" value="[@spring.message "cancel"/]" onclick="location.href='admin.ftl'"/>
-    		</div>
-            
+                  <input class="buttn" type="button" name="preview" id="edit_additional_fields.button.preview" value="[@spring.message "preview"/]" onclick="#"/>
+                  <input class="buttn2" type="button" name="cancel" id="edit_additional_fields.button.cancel" value="[@spring.message "cancel"/]" onclick="location.href='admin.ftl'"/>
+            </div>
+
     </div>
 
-   	</form> 
+       </form>
   </div><!--Main Content Ends-->
 [/@adminLeftPaneLayout]

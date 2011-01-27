@@ -97,7 +97,7 @@ public class PortfolioAtRiskHelperIntegrationTest extends MifosIntegrationTestCa
         }
         TestObjectFactory.updateObject(client);
         TestObjectFactory.updateObject(group);
-        TestObjectFactory.flushandCloseSession();
+        StaticHibernateUtil.flushSession();
 
         PortfolioAtRiskHelper portfolioAtRiskHelper = new PortfolioAtRiskHelper();//(PortfolioAtRiskHelper) portfolioAtRiskTask.getTaskHelper();
         portfolioAtRiskHelper.execute(System.currentTimeMillis());

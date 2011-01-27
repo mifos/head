@@ -237,7 +237,7 @@ public class QuestionGroupFormTest {
         questionGroupForm.removeSection(sectionName);
         assertThatQuestionFormHasNoSection(questionGroupForm);
     }
-    
+
     @Test
     public void testIsDuplicateTitle() {
         QuestionGroupForm questionGroupForm = new QuestionGroupForm();

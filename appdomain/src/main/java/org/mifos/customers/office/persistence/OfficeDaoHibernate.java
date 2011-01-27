@@ -25,17 +25,13 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.MessageLookup;
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
-import org.mifos.application.master.util.helpers.MasterConstants;
-import org.mifos.application.util.helpers.EntityType;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.exceptions.CustomerException;
@@ -321,38 +317,6 @@ public class OfficeDaoHibernate implements OfficeDao {
             throw new OfficeException(OfficeConstants.OFFICESHORTNAMEEXIST);
         }
     }
-
-    @Override
-    public List<CustomFieldDefinitionEntity> retrieveCustomFieldsForOffice() {
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put(MasterConstants.ENTITY_TYPE, EntityType.OFFICE.getValue());
-
-        return retrieveCustomFieldDefinitions(queryParameters);
-    }
-
-    @SuppressWarnings("unchecked")
-    private List<CustomFieldDefinitionEntity> retrieveCustomFieldDefinitions(Map<String, Object> queryParameters) {
-        List<CustomFieldDefinitionEntity> customFieldsForCenter = (List<CustomFieldDefinitionEntity>) genericDao.executeNamedQuery("retrieveCustomFields", queryParameters);
-        return customFieldsForCenter;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public final List<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForOffice() {
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put(MasterConstants.ENTITY_TYPE, EntityType.OFFICE.getValue());
-        return (List<CustomFieldDefinitionEntity>) genericDao.executeNamedQuery(NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public List<Object[]> getCustomFieldResponses(List<Short> customFieldIds) {
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("CUSTOM_FIELD_ID", customFieldIds);
-        return (List<Object[]>) genericDao.executeNamedQuery("OfficeCustomFieldEntity.getResponses", queryParameters);
-    }
-
-
 
     @SuppressWarnings("unchecked")
     @Override

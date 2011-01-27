@@ -74,7 +74,7 @@ public class PluginManager {
             ti.setAccountService(new StandardAccountService(ApplicationContextProvider.getBean(LegacyAccountDao.class), ApplicationContextProvider.getBean(LegacyLoanDao.class),
                     ApplicationContextProvider.getBean(LegacyAcceptedPaymentTypeDao.class), new PersonnelDaoHibernate(new GenericDaoHibernate()),
                     new CustomerDaoHibernate(new GenericDaoHibernate()), ApplicationContextProvider.getBean(LoanBusinessService.class), new HibernateTransactionHelperForStaticHibernateUtil(), ApplicationContextProvider.getBean(LegacyMasterDao.class)) );
-	    ti.setCustomerSearchService(new CustomerSearchServiceImpl(new CustomerDaoHibernate(new GenericDaoHibernate())));
+        ti.setCustomerSearchService(new CustomerSearchServiceImpl(new CustomerDaoHibernate(new GenericDaoHibernate())));
             plugins.add(ti);
         }
         return plugins;

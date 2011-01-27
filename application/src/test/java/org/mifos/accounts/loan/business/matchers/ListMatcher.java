@@ -38,7 +38,7 @@ public class ListMatcher<T> extends TypeSafeMatcher<List<T>> {
             if(!obj.contains(t))
                 return false;
         }
-        return true;  
+        return true;
     }
 
     @Override

@@ -147,6 +147,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
             }
             throw new Error(e);
         }
+        logger.info("Mifos is ready.");
     }
 
     public void dbUpgrade(ApplicationContext applicationContext) throws ConfigurationException, PersistenceException, FinancialException, TaskSystemException {

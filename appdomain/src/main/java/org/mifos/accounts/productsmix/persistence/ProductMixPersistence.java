@@ -34,6 +34,7 @@ import org.mifos.application.NamedQueryConstants;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.LegacyGenericDao;
 
+@SuppressWarnings("unchecked")
 public class ProductMixPersistence extends LegacyGenericDao {
 
     private static final Logger logger = LoggerFactory.getLogger(ProductMixPersistence.class);

@@ -1,20 +1,20 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-configuration PUBLIC
-	"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
-	"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+    "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
-	<session-factory>
-		<mapping class="org.mifos.platform.questionnaire.domain.EventEntity" />
-		<mapping class="org.mifos.platform.questionnaire.domain.EventSourceEntity"/>
+    <session-factory>
+        <mapping class="org.mifos.platform.questionnaire.domain.EventEntity" />
+        <mapping class="org.mifos.platform.questionnaire.domain.EventSourceEntity"/>
 
-		<mapping resource="org/mifos/platform/questionnaire/domain/QuestionEntity.hbm.xml" />
-		<mapping resource="org/mifos/platform/questionnaire/domain/QuestionChoiceEntity.hbm.xml" />
-		<mapping resource="org/mifos/platform/questionnaire/domain/QuestionGroup.hbm.xml" />
-		<mapping resource="org/mifos/platform/questionnaire/domain/Section.hbm.xml" />
-		<mapping resource="org/mifos/platform/questionnaire/domain/SectionQuestion.hbm.xml" />
+        <mapping resource="org/mifos/platform/questionnaire/domain/QuestionEntity.hbm.xml" />
+        <mapping resource="org/mifos/platform/questionnaire/domain/QuestionChoiceEntity.hbm.xml" />
+        <mapping resource="org/mifos/platform/questionnaire/domain/QuestionGroup.hbm.xml" />
+        <mapping resource="org/mifos/platform/questionnaire/domain/Section.hbm.xml" />
+        <mapping resource="org/mifos/platform/questionnaire/domain/SectionQuestion.hbm.xml" />
 
         <mapping resource="org/mifos/platform/questionnaire/domain/QuestionGroupInstance.hbm.xml" />
         <mapping resource="org/mifos/platform/questionnaire/domain/QuestionGroupResponse.hbm.xml" />
         <mapping resource="org/mifos/platform/questionnaire/domain/ChoiceTagEntity.hbm.xml" />
-	</session-factory>
+    </session-factory>
 </hibernate-configuration>

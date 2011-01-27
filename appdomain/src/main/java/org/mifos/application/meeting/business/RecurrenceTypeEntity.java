@@ -30,9 +30,7 @@ import org.mifos.framework.business.AbstractEntity;
 public class RecurrenceTypeEntity extends AbstractEntity {
 
     private Short recurrenceId;
-
     private String recurrenceName;
-
     private String description;
 
     public RecurrenceTypeEntity(RecurrenceType recurrence) {

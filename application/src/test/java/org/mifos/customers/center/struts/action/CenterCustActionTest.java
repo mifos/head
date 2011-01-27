@@ -53,6 +53,7 @@ import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+@SuppressWarnings("unchecked")
 @RunWith(MockitoJUnitRunner.class)
 public class CenterCustActionTest {
 

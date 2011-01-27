@@ -3,7 +3,7 @@
                             "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
                             "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
-	<class name="org.mifos.platform.questionnaire.domain.QuestionGroupResponse" table="question_group_response">
+    <class name="org.mifos.platform.questionnaire.domain.QuestionGroupResponse" table="question_group_response">
         <id name="id" column="id" type="integer" unsaved-value="0" access="field">
             <generator class="native" />
         </id>

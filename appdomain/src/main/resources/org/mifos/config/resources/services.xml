@@ -4,16 +4,16 @@
 
    <bean id="mifosAuthenticationAuthorizationService" class="org.mifos.security.AuthenticationAuthorizationServiceFacadeImpl"/>
 
-	<bean id="viewOrganizationSettingsServiceFacade" class="org.mifos.application.admin.business.service.ViewOrganizationSettingsServiceFacadeWebTier"/>
+    <bean id="viewOrganizationSettingsServiceFacade" class="org.mifos.application.admin.business.service.ViewOrganizationSettingsServiceFacadeWebTier"/>
 
-	<bean id="appliedUpgradesServiceFacade" class="org.mifos.application.admin.business.service.AppliedUpgradesServiceFacadeWebTier"/>
-	
-	<bean id="importTransactionsServiceFacade" class="org.mifos.application.importexport.servicefacade.ImportTransactionsServiceFacadeWebTier"/>
+    <bean id="appliedUpgradesServiceFacade" class="org.mifos.application.admin.business.service.AppliedUpgradesServiceFacadeWebTier"/>
+
+    <bean id="importTransactionsServiceFacade" class="org.mifos.application.importexport.servicefacade.ImportTransactionsServiceFacadeWebTier"/>
 
     <bean id="loginServiceFacade" class="org.mifos.application.servicefacade.LoginServiceFacadeWebTier"/>
-    
+
     <bean id="adminServiceFacade" class="org.mifos.application.servicefacade.AdminServiceFacadeWebTier"/>
-    
+
     <bean id="personnelServiceFacade" class="org.mifos.application.servicefacade.PersonnelServiceFacadeWebTier"/>
 
     <bean id="RolesPermissionServiceFacade" class="org.mifos.application.servicefacade.RolesPermissionServiceFacadeWebTier"/>
@@ -29,51 +29,51 @@
     <bean id="loanPrdBusinessService" class="org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService" />
 
     <bean id="loanAccountServiceFacade" class="org.mifos.application.servicefacade.LoanAccountServiceFacadeWebTier" />
-    
+
     <bean id="collectionSheetService" class="org.mifos.application.servicefacade.CollectionSheetServiceImpl"/>
-    
+
     <bean id="saveCollectionSheetAssembler" class="org.mifos.application.servicefacade.SaveCollectionSheetAssembler"/>
-    
+
     <bean id="savingsServiceFacade" class="org.mifos.application.servicefacade.SavingsServiceFacadeWebTier" />
-    
+
     <bean id="customerServiceFacade" class="org.mifos.application.servicefacade.CustomerServiceFacadeWebTier" />
-    
+
     <bean id="centerServiceFacade" class="org.mifos.application.servicefacade.CenterServiceFacadeWebTier" />
-    
+
     <bean id="groupServiceFacade" class="org.mifos.application.servicefacade.GroupServiceFacadeWebTier" />
-    
+
     <bean id="clientServiceFacade" class="org.mifos.application.servicefacade.ClientServiceFacadeWebTier" />
-    
+
     <bean id="meetingServiceFacade" class="org.mifos.application.servicefacade.MeetingServiceFacadeWebTier" />
-    
+
     <bean id="holidayServiceFacade" class="org.mifos.application.holiday.persistence.HolidayServiceFacadeWebTier" />
-    
+
     <bean id="officeServiceFacade" class="org.mifos.customers.office.business.service.OfficeServiceFacadeWebTier" />
-    
+
     <bean id="hibernateTransactionHelper" class="org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil" />
-    
+
     <bean id="importedFilesService" class="org.mifos.application.importexport.business.service.ImportedFilesServiceImpl" />
-    
+
     <bean id="customerService" class="org.mifos.customers.business.service.CustomerServiceImpl" />
-    
+
     <bean id="holidayService" class="org.mifos.application.holiday.business.service.HolidayServiceImpl" />
-    
+
     <bean id="feeService" class="org.mifos.accounts.fees.business.service.FeeServiceImpl" />
-    
+
     <bean id="productService" class="org.mifos.accounts.productdefinition.business.service.ProductServiceImpl" />
 
     <bean id="officeHierarchyService" class="org.mifos.customers.office.business.service.OfficeHierarchyServiceImpl" />
-    
+
     <bean id="mandatoryHiddenFieldService" class="org.mifos.customers.office.business.service.MandatoryHiddenFieldServiceImpl" />
 
     <bean id="personnelService" class="org.mifos.customers.personnel.business.service.PersonnelServiceImpl" />
 
     <bean name="qgFlowsService" class="org.mifos.application.questionnaire.service.QGFlowsServiceImpl" />
- 
-	<bean name="auditLogService" class="org.mifos.framework.components.audit.business.service.AuditLogServiceImpl" />
 
-	<bean name="questionnaireServiceFacade" class="org.mifos.platform.questionnaire.service.QuestionnaireServiceFacadeImpl"/>
-	
+    <bean name="auditLogService" class="org.mifos.framework.components.audit.business.service.AuditLogServiceImpl" />
+
+    <bean name="questionnaireServiceFacade" class="org.mifos.platform.questionnaire.service.QuestionnaireServiceFacadeImpl"/>
+
     <bean name="installmentFormatValidator" class="org.mifos.accounts.loan.business.service.validators.InstallmentFormatValidatorImpl"/>
 
     <bean name="listOfInstallmentsValidator" class="org.mifos.accounts.loan.business.service.validators.ListOfInstallmentsValidatorImpl"/>

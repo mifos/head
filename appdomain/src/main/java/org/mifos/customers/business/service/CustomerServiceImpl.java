@@ -41,14 +41,12 @@ import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.master.MessageLookup;
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.servicefacade.CustomerStatusUpdate;
-import org.mifos.application.util.helpers.EntityType;
 import org.mifos.calendar.CalendarEvent;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.persistence.ConfigurationPersistence;
@@ -224,11 +222,7 @@ public class CustomerServiceImpl implements CustomerService {
             try {
                 if (clientSavingsProduct.isActive()) {
 
-                    List<CustomFieldDefinitionEntity> customFieldDefs = new SavingsPersistence()
-                            .retrieveCustomFieldsDefinition(EntityType.SAVINGS.getValue());
-
-                    List<CustomFieldDto> savingCustomFieldViews = CustomFieldDefinitionEntity.toDto(
-                            customFieldDefs, userContext.getPreferredLocale());
+                    List<CustomFieldDto> savingCustomFieldViews = new ArrayList<CustomFieldDto>();
 
                     SavingsBO savingsAccount = new SavingsBO(userContext, clientSavingsProduct, client,
                             AccountState.SAVINGS_ACTIVE, clientSavingsProduct.getRecommendedAmount(),
@@ -236,9 +230,6 @@ public class CustomerServiceImpl implements CustomerService {
 
                     savingsAccounts.add(savingsAccount);
                 }
-
-            } catch (PersistenceException pe) {
-                throw new MifosRuntimeException(pe);
             } catch (AccountException pe) {
                 throw new MifosRuntimeException(pe);
             }
@@ -755,11 +746,7 @@ public class CustomerServiceImpl implements CustomerService {
 
                             if (savingsOffering.isActive()) {
 
-                                List<CustomFieldDefinitionEntity> customFieldDefs = client.getSavingsPersistence()
-                                        .retrieveCustomFieldsDefinition(EntityType.SAVINGS.getValue());
-
-                                List<CustomFieldDto> customerFieldsForSavings = CustomFieldDefinitionEntity.toDto(
-                                        customFieldDefs, customer.getUserContext().getPreferredLocale());
+                                List<CustomFieldDto> customerFieldsForSavings = new ArrayList<CustomFieldDto>();
 
                                 client.addAccount(new SavingsBO(client.getUserContext(), savingsOffering, client,
                                         AccountState.SAVINGS_ACTIVE, savingsOffering.getRecommendedAmount(),
