@@ -20,41 +20,7 @@
 
 package org.mifos.test.acceptance.client;
 
-import org.junit.Assert;
-import org.mifos.framework.util.DbUnitUtilities;
-import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
-import org.mifos.test.acceptance.framework.MifosPage;
-import org.mifos.test.acceptance.framework.UiTestCaseBase;
-import org.mifos.test.acceptance.framework.admin.AdminPage;
-import org.mifos.test.acceptance.questionnaire.EditQuestionPage;
-import org.mifos.test.acceptance.questionnaire.QuestionDetailPage;
-import org.mifos.test.acceptance.questionnaire.ViewAllQuestionsPage;
-import org.mifos.test.acceptance.framework.client.ClientEditMFIPage;
-import org.mifos.test.acceptance.framework.client.ClientEditMFIParameters;
-import org.mifos.test.acceptance.framework.client.ClientEditMFIPreviewPage;
-import org.mifos.test.acceptance.framework.client.ClientSearchResultsPage;
-import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
-import org.mifos.test.acceptance.framework.client.CreateClientEnterMfiDataPage;
-import org.mifos.test.acceptance.framework.client.CreateClientEnterPersonalDataPage;
-import org.mifos.test.acceptance.framework.client.QuestionGroup;
-import org.mifos.test.acceptance.framework.testhelpers.ClientTestHelper;
-import org.mifos.test.acceptance.framework.testhelpers.CustomPropertiesHelper;
-import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
-import org.mifos.test.acceptance.questionnaire.Choice;
-import org.mifos.test.acceptance.questionnaire.CreateQuestionGroupPage;
-import org.mifos.test.acceptance.questionnaire.CreateQuestionGroupParameters;
-import org.mifos.test.acceptance.questionnaire.CreateQuestionPage;
-import org.mifos.test.acceptance.questionnaire.CreateQuestionParameters;
-import org.mifos.test.acceptance.questionnaire.QuestionGroupResponsePage;
-import org.mifos.test.acceptance.questionnaire.QuestionnairePage;
-import org.mifos.test.acceptance.questionnaire.ViewQuestionResponseDetailPage;
-import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.test.context.ContextConfiguration;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import static java.util.Arrays.asList;
 
 import java.util.Calendar;
 import java.util.Collections;
@@ -64,7 +30,48 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
-import static java.util.Arrays.asList;
+import org.junit.Assert;
+import org.mifos.framework.util.DbUnitUtilities;
+import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
+import org.mifos.test.acceptance.framework.HomePage;
+import org.mifos.test.acceptance.framework.MifosPage;
+import org.mifos.test.acceptance.framework.UiTestCaseBase;
+import org.mifos.test.acceptance.framework.admin.AdminPage;
+import org.mifos.test.acceptance.framework.client.ClientEditMFIPage;
+import org.mifos.test.acceptance.framework.client.ClientEditMFIParameters;
+import org.mifos.test.acceptance.framework.client.ClientEditMFIPreviewPage;
+import org.mifos.test.acceptance.framework.client.ClientEditPersonalInfoPage;
+import org.mifos.test.acceptance.framework.client.ClientNotesPage;
+import org.mifos.test.acceptance.framework.client.ClientSearchResultsPage;
+import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
+import org.mifos.test.acceptance.framework.client.CreateClientEnterMfiDataPage;
+import org.mifos.test.acceptance.framework.client.CreateClientEnterPersonalDataPage;
+import org.mifos.test.acceptance.framework.client.QuestionGroup;
+import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPage;
+import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPreviewDataPage;
+import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPage.SubmitFormParameters;
+import org.mifos.test.acceptance.framework.search.SearchResultsPage;
+import org.mifos.test.acceptance.framework.testhelpers.ClientTestHelper;
+import org.mifos.test.acceptance.framework.testhelpers.CustomPropertiesHelper;
+import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
+import org.mifos.test.acceptance.questionnaire.Choice;
+import org.mifos.test.acceptance.questionnaire.CreateQuestionGroupPage;
+import org.mifos.test.acceptance.questionnaire.CreateQuestionGroupParameters;
+import org.mifos.test.acceptance.questionnaire.CreateQuestionPage;
+import org.mifos.test.acceptance.questionnaire.CreateQuestionParameters;
+import org.mifos.test.acceptance.questionnaire.EditQuestionPage;
+import org.mifos.test.acceptance.questionnaire.QuestionDetailPage;
+import org.mifos.test.acceptance.questionnaire.QuestionGroupResponsePage;
+import org.mifos.test.acceptance.questionnaire.QuestionnairePage;
+import org.mifos.test.acceptance.questionnaire.ViewAllQuestionsPage;
+import org.mifos.test.acceptance.questionnaire.ViewQuestionResponseDetailPage;
+import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.test.context.ContextConfiguration;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
 @Test(sequential = true, groups = {"client", "acceptance", "ui", "smoke"})
@@ -121,6 +128,59 @@ public class ClientTest extends UiTestCaseBase {
         //When / Then
         clientTestHelper.changeCustomerStatus(clientDetailsPage);
     }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    //http://mifosforge.jira.com/browse/MIFOSTEST-310
+    public void searchClientAndEditExistingClientDetails() throws Exception{
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
+
+        HomePage homePage = navigationHelper.navigateToHomePage();
+        homePage = searchForClient("Stu123",homePage,38);
+        homePage = searchForClient("zzz",homePage, 0);
+
+        SearchResultsPage searchResultsPage = homePage.search("Stu1232993852651 Client1232993852651");
+        searchResultsPage.verifyPage();
+        int numResults = searchResultsPage.countSearchResults();
+        Assert.assertEquals( numResults, 1 );
+
+        ClientViewDetailsPage viewDetailsPage = searchResultsPage.navigateToClientViewDetailsPage("link=Stu1232993852651 Client1232993852651*");
+        ClientNotesPage notesPage = viewDetailsPage.navigateToNotesPage();
+        notesPage.addNotePreviewAndSubmit("test note");
+        viewDetailsPage.verifyNotes("test note");
+
+        CustomerChangeStatusPage changeStatusPage = viewDetailsPage.navigateToCustomerChangeStatusPage();
+        SubmitFormParameters parameters = new SubmitFormParameters();
+        parameters.setStatus(SubmitFormParameters.ON_HOLD);
+        parameters.setNotes("test");
+        CustomerChangeStatusPreviewDataPage changeStatusPreviewDataPage = changeStatusPage.submitAndGotoCustomerChangeStatusPreviewDataPage(parameters);
+        viewDetailsPage = changeStatusPreviewDataPage.submitAndGotoClientViewDetailsPage();
+        viewDetailsPage.verifyStatus("On Hold");
+
+        ClientEditPersonalInfoPage editPersonalInfoPage = viewDetailsPage.editPersonalInformation();
+        CreateClientEnterPersonalDataPage.SubmitFormParameters parameters2 = new CreateClientEnterPersonalDataPage.SubmitFormParameters();
+        parameters2.setSpouseFirstName("FatherFirstnameTest");
+        parameters2.setSpouseLastName("FatherLastNameTest");
+        parameters2.setSpouseNameType(CreateClientEnterPersonalDataPage.SubmitFormParameters.FATHER);
+        parameters2.setDateOfBirthYYYY("1960");
+        parameters2.setDateOfBirthMM("08");
+        parameters2.setDateOfBirthDD("01");
+        viewDetailsPage = editPersonalInfoPage.submitAndNavigateToViewDetailsPage(parameters2);
+        viewDetailsPage.verifySpouseFather("FatherFirstnameTest FatherLastNameTest");
+
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    private HomePage searchForClient(String clientName, HomePage homePage, int expectedNumberOfClients) throws Exception {
+        SearchResultsPage searchResultsPage = homePage.search(clientName);
+        searchResultsPage.verifyPage();
+        int numResults = searchResultsPage.countSearchResults();
+        Assert.assertEquals( numResults, expectedNumberOfClients );
+
+        selenium.click("clientsAndAccountsHeader.link.home");
+        selenium.waitForPageToLoad("30000");
+
+        return new HomePage(selenium);
+     }
 
     // implementation of test described in issue 2454
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")

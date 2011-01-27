@@ -158,6 +158,12 @@ public class ClientViewDetailsPage extends MifosPage {
         return new ClientEditFamilyPage(selenium);
     }
 
+    public ClientEditPersonalInfoPage editPersonalInformation(){
+        selenium.click("viewClientDetails.link.editPersonalInformation");
+        waitForPageToLoad();
+        return new ClientEditPersonalInfoPage(selenium);
+    }
+
     public AttachSurveyPage navigateToAttachSurveyPage() {
         selenium.click("viewClientDetails.link.attachSurvey");
         waitForPageToLoad();
