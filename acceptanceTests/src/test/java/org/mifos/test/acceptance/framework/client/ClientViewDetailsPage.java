@@ -30,6 +30,7 @@ import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPage;
 import org.mifos.test.acceptance.framework.loan.AttachSurveyPage;
 import org.mifos.test.acceptance.framework.loan.ClosedAccountsPage;
+import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.PerformanceHistoryAtributes;
 import org.mifos.test.acceptance.questionnaire.QuestionGroupResponsePage;
 import org.mifos.test.acceptance.questionnaire.QuestionnairePage;
@@ -204,6 +205,12 @@ public class ClientViewDetailsPage extends MifosPage {
         selenium.click("viewClientDetails.link.editMeetingScheduleAddGroup");
         waitForPageToLoad();
         return new EditMeetingPage(selenium);
+    }
+
+    public LoanAccountPage navigateToOnlyLoanAccount() {
+        selenium.click("viewClientDetails.link.viewLoanAccount");
+        waitForPageToLoad();
+        return new LoanAccountPage(selenium);
     }
 
     public void verifyLoanCycle(Integer loanCycle) {
