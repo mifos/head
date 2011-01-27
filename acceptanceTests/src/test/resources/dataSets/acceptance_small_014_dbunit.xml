@@ -352,6 +352,7 @@
   <activity activity_id="243" parent_id="203" activity_name_lookup_id="653" description_lookup_id="653"/>
   <activity activity_id="244" parent_id="113" activity_name_lookup_id="655" description_lookup_id="655"/>
   <activity activity_id="245" parent_id="34" activity_name_lookup_id="656" description_lookup_id="656"/>
+  <activity activity_id="246" parent_id="196" activity_name_lookup_id="657" description_lookup_id="657"/>
   <admin_document/>
   <admin_document_acc_state_mix/>
   <applied_upgrades upgrade_id="1277565300"/>
@@ -428,6 +429,8 @@
   <applied_upgrades upgrade_id="1292241366"/>
   <applied_upgrades upgrade_id="1294738016"/>
   <applied_upgrades upgrade_id="1294927843"/>
+  <applied_upgrades upgrade_id="1295985566"/>
+  <applied_upgrades upgrade_id="1296137314"/>
   <applied_upgrades upgrade_id="1298198335"/>
   <applied_upgrades upgrade_id="1299279218"/>
   <attendance/>
@@ -2492,6 +2495,7 @@
   <lookup_value lookup_id="654" entity_id="37" lookup_name="InterestTypes-DecliningPrincipalBalance"/>
   <lookup_value lookup_id="655" entity_id="87" lookup_name="Permissions-CanAdjustBackDatedTransactions"/>
   <lookup_value lookup_id="656" entity_id="87" lookup_name="Permissions-Clients-CanEditPhoneNumber"/>
+  <lookup_value lookup_id="657" entity_id="87" lookup_name="Permissions-CanUseAccountingIntegration"/>
   <lookup_value_locale lookup_value_id="1" locale_id="1" lookup_id="1"/>
   <lookup_value_locale lookup_value_id="3" locale_id="1" lookup_id="2"/>
   <lookup_value_locale lookup_value_id="5" locale_id="1" lookup_id="3"/>
@@ -2873,6 +2877,7 @@
   <lookup_value_locale lookup_value_id="968" locale_id="1" lookup_id="653"/>
   <lookup_value_locale lookup_value_id="969" locale_id="1" lookup_id="655"/>
   <lookup_value_locale lookup_value_id="970" locale_id="1" lookup_id="656"/>
+  <lookup_value_locale lookup_value_id="971" locale_id="1" lookup_id="657"/>
   <max_min_interest_rate account_id="4" min_interest_rate="3.0000" max_interest_rate="30.0000"/>
   <max_min_interest_rate account_id="6" min_interest_rate="3.0000" max_interest_rate="30.0000"/>
   <max_min_interest_rate account_id="8" min_interest_rate="3.0000" max_interest_rate="30.0000"/>
@@ -3289,6 +3294,7 @@
   <roles_activity activity_id="243" role_id="1"/>
   <roles_activity activity_id="244" role_id="1"/>
   <roles_activity activity_id="245" role_id="1"/>
+  <roles_activity activity_id="246" role_id="1"/>
   <saving_schedule/>
   <savings_account/>
   <savings_activity_details/>
