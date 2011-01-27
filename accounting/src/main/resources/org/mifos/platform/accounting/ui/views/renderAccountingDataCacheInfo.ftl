@@ -35,7 +35,9 @@
     [#else]
         <p class="margin5top10bottom">[@spring.message "accounting.viewaccountingexports.cache.instruction"/]<p>
         <br />
-
+    <div id='auto_export_table'></div>
+    <div id='add_auto_export'><a href='#' onclick='javascript:loadExportsList(10);'>Show Past Exports from Today</a></div>
+    <br />
     <div id='table'>
         <table>
             <tr>
@@ -46,7 +48,7 @@
             </tr>
          [#list files as instance ]
              <tr>
-                 <td class="drawtablerow">${instance.mfiPrefix} ${instance.fileName}</td>
+                 <td class="drawtablerow">${instance.fileName}</td>
                  <td class="drawtablerow">${instance.lastModified}</td>
                  <td class="drawtablerow">
                 <a target='_blank' href='pages/accounting/jsp/processTallyXMLOutput.jsp?fromDate=${instance.startDate}&toDate=${instance.endDate}'>Tally&nbsp; XML</a>

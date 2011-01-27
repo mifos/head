@@ -35,6 +35,7 @@
     function goToViewExports() {
          window.location.href='renderAccountingDataCacheInfo.ftl';
     }
+    
     function deleteCacheDir() {
         $.ajax({
             url   : 'deleteCacheDir.ftl',
@@ -46,6 +47,31 @@
                          goToViewExports();
                     }
               })
+    }
+    
+   function loadExportsList(i) {
+        $.ajax({
+            url   : 'generateExportsList.ftl?listSize='+i,
+            cache : false,
+            error : function (xhr, ajaxOptions, thrownError){
+                    alert(xhr.responseText + thrownError);
+                    },
+            success : function(data) {
+                         $("#auto_export_table").html(data);
+                         addExportListLink(i);
+                    }
+              })
+    }
+    function addExportListLink(i) {
+        if(i == 0 ) {
+                      $("#add_auto_export").html("<a href='#' onclick='javascript:loadExportsList(10);'>Show Past Exports from Today</a>");
+                      $('#auto_export_table').html('');
+       } else {
+             $("#add_auto_export").html("<a href='#' onclick='javascript:loadExportsList("+(i+10)+");'>More 10</a> &nbsp;&nbsp;&nbsp;"
+                                       +"<a href='#' onclick='javascript:loadExportsList("+(i-10)+");'>Less 10</a>&nbsp;&nbsp;&nbsp;"
+                                       +"<a href='#' onclick='javascript:loadExportsList(0);'>Clear</a>&nbsp;&nbsp;&nbsp;");
+              }
+             
     }
 
 

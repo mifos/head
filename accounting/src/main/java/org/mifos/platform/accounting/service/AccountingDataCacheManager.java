@@ -206,12 +206,17 @@ public class AccountingDataCacheManager {
         return "Mifos Accounting Export ";
     }
 
-    public final List<AccountingCacheFileInfo> getAccountingDataCacheInfo() {
-        List<AccountingCacheFileInfo> info = new ArrayList<AccountingCacheFileInfo>();
+    public final List<ExportFileInfo> getAccountingDataCacheInfo() {
+        List<ExportFileInfo> info = new ArrayList<ExportFileInfo>();
         File directory = new File(getAccoutingDataCachePath());
+
         for (File file : directory.listFiles()) {
-            info.add(new AccountingCacheFileInfo(new DateTime(file.lastModified()), getFilePrefixDefinedByMFI(), file
-                    .getName()));
+            String startDate = file.getName().split(" to ")[0];
+            String endDate = file.getName().split(" to ")[1];
+            String fileName = getFilePrefixDefinedByMFI() + file.getName();
+            String lastModified = new DateTime(file.lastModified()).toString("yyyy-MMM-dd HH:mm:sss z");
+            Boolean existInCache = true;
+            info.add(new ExportFileInfo(lastModified, fileName,  startDate, endDate, existInCache));
         }
         return info;
     }

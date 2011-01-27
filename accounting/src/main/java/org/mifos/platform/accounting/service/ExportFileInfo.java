@@ -20,9 +20,7 @@
 
 package org.mifos.platform.accounting.service;
 
-import org.joda.time.DateTime;
-
-public class AccountingCacheFileInfo {
+public class ExportFileInfo {
 
     private final String lastModified;
 
@@ -32,16 +30,17 @@ public class AccountingCacheFileInfo {
 
     private final String endDate;
 
-    private final String mfiPrefix;
+    private final Boolean existInCache;
 
-    public AccountingCacheFileInfo(DateTime lastModified, String mfiPrefix, String fileName) {
+    public ExportFileInfo(String lastModified, String fileName, String startDate, String endDate, Boolean existInCache) {
         super();
-        this.lastModified = lastModified.toString("yyyy-MMM-dd HH:mm:sss z");
+        this.lastModified = lastModified;
         this.fileName = fileName;
-        startDate = fileName.split(" to ")[0];
-        endDate = fileName.split(" to ")[1];
-        this.mfiPrefix = mfiPrefix;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.existInCache = existInCache;
     }
+
 
     public final String getLastModified() {
         return lastModified;
@@ -59,7 +58,7 @@ public class AccountingCacheFileInfo {
         return endDate;
     }
 
-    public final String getMfiPrefix() {
-        return mfiPrefix;
+    public Boolean getIsExistInCache() {
+        return existInCache;
     }
 }
