@@ -5,6 +5,7 @@
 
 	<input name="searchTerm" />
 	<input name="customerId" />
+	<input name="productId" />
 	
 	<view-state id="customerSearchStep" view="createSavingsAccountCustomerSearch">
 		<transition on="searchTermEntered" to="selectCustomerStep">
@@ -21,7 +22,10 @@
 	</view-state>
 
 	<view-state id="selectProductOfferingStep" view="createSavingsAccountSelectProduct">
-		<transition on="productSelected" to="enterAccountDetailsStep" />
+		<transition on="productSelected" to="enterAccountDetailsStep">
+			<set name="requestScope.productId" value="requestParameters.selectedPrdOfferingId" type="int"/>
+			<evaluate expression="createSavingsAccountController.getProduct(productId)" result="conversationScope.product" />
+		</transition>
 	</view-state>
 
 	<view-state id="enterAccountDetailsStep" view="createSavingsAccountEnterDetails">

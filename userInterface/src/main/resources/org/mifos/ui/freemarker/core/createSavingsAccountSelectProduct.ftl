@@ -39,7 +39,7 @@
 		<label for="selectedPrdOfferingId" class="mandatory">Savings instance name:</label>
 		<select id="createsavingsaccount.select.savingsProduct" name="selectedPrdOfferingId">
 			[#list products as product]
-			<option>${product.prdOfferingName}</option>
+			<option value="${product.prdOfferingId}">${product.prdOfferingName}</option>
 			[/#list]
 		</select>
 	</div>
