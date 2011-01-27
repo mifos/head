@@ -48,35 +48,35 @@
 <p><b>Savings product summary</b></p>
 <div class="product-summary">
 	<div class="row">
-		<div class="attribute">Description:</div>
+		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.description"/]</div>
 		<div class="value">Account for an individual to give savings option to a select member of their family.</div>
 	</div>
 	<div class="row">
-		<div class="attribute">Type of deposits:</div>
+		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.typeOfDeposits"/]:</div>
 		<div class="value">Voluntary</div>
 	</div>
 	<div class="row">
-		<div class="attribute">Max amount per withdrawal:</div>
+		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.maxWithdrawalAmount"/]:</div>
 		<div class="value">50.0</div>
 	</div>
 	<div class="row">
-		<div class="attribute">Balance used for Interest rate calculation:</div>
+		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.balanceForInterestCalculation"/]:</div>
 		<div class="value">Minimum Balance</div>
 	</div>
 	<div class="row">
-		<div class="attribute">Time period for Interest rate calculation:</div>
+		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.periodForInterestCalculation"/]:</div>
 		<div class="value">30 day(s)</div>
 	</div>
 	<div class="row">
-		<div class="attribute">Frequency of Interest posting to accounts:</div>
+		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.interestPostingFrequency"/]:</div>
 		<div class="value">1 month(s)</div>
 	</div>
 	<div class="row">
-		<div class="attribute">Min balance required for Interest rate calculation:</div>
+		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.minBalanceForInterestCalculation"/]:</div>
 		<div class="value">50.0</div>
 	</div>
 	<div class="row">
-		<div class="attribute">Interest rate:</div>
+		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.interestRate"/]:</div>
 		<div class="value">25.0 %</div>
 	</div>
 </div>
