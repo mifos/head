@@ -19,6 +19,7 @@
         <sql.resources.target.directory>${basedir}/src/main/sql</sql.resources.target.directory>
         <!--A very large number for rollback count-->
         <liquibase.rollbackCount>1000</liquibase.rollbackCount>
+        <liquibase.migrationSqlOutputFile>target/classes/update-master.sql</liquibase.migrationSqlOutputFile>
     </properties>
 
     <dependencies>
@@ -53,6 +54,23 @@
                                 <file>${mifos.overrides.home}</file>
                             </files>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-maven-plugin</artifactId>
+                <version>2.0.0</version>
+                <configuration>
+                    <propertyFile>target/classes/liquibase.properties</propertyFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>update-sql</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>updateSQL</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
