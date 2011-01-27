@@ -735,6 +735,24 @@ public class LoanTestHelper {
                 submitAndNavigateToLoanAccountDetailsPage();
     }
 
+    public LoanAccountPage makePayment(DateTime paymentDate, String paymentAmount) throws UnsupportedEncodingException {
+        PaymentParameters paymentParameters =setPaymentParams(paymentAmount, paymentDate);
+        setApplicationTime(paymentDate).navigateBack();
+        LoanAccountPage loanAccountPage = new LoanAccountPage(selenium).navigateToApplyPayment().
+                submitAndNavigateToApplyPaymentConfirmationPage(paymentParameters).
+                submitAndNavigateToLoanAccountDetailsPage();
+        AccountActivityPage accountActivityPage = loanAccountPage.navigateToAccountActivityPage();
+        accountActivityPage.verifyLastTotalPaid(paymentAmount);
+        accountActivityPage.navigateBack();
+        return loanAccountPage;
+    }
+
+    public void disburseLoan(DateTime disbursalDate) throws UnsupportedEncodingException {
+        setApplicationTime(disbursalDate).navigateBack();
+        DisburseLoanParameters disburseLoanParameters = setDisbursalParams(disbursalDate);
+        new LoanAccountPage(selenium).navigateToDisburseLoan().
+        submitAndNavigateToDisburseLoanConfirmationPage(disburseLoanParameters).submitAndNavigateToLoanAccountPage();
+    }
 
     public void createLoanAccount(String clientName, String loanProductName) {
         navigateToLoanAccountEntryPage(setLoanSearchParameters(clientName,loanProductName)).
