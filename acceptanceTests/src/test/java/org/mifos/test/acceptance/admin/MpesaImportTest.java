@@ -160,7 +160,7 @@ public class MpesaImportTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.SystemPrintln"})
-    @Test(enabled=true)
+    @Test(enabled=false)
     public void importMpesaTransactions() throws Exception {
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         ViewOrganizationSettingsPage viewOrganizationSettingsPage = adminPage.navigateToViewOrganizationSettingsPage();
