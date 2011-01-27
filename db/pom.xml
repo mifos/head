@@ -14,8 +14,11 @@
 
     <properties>
         <modules.root.dir>${basedir}/..</modules.root.dir>
-        <main.database.properties.file>${modules.root.dir}/appdomain/src/main/resources/org/mifos/config/resources/mainDatabase.properties</main.database.properties.file>
+        <integration.database.properties.file>${modules.root.dir}/application/src/test/resources/org/mifos/config/resources/integrationDatabase.properties</integration.database.properties.file>
         <mifos.overrides.home>${user.home}/.mifos/local.properties</mifos.overrides.home>
+        <sql.resources.target.directory>${basedir}/src/main/sql</sql.resources.target.directory>
+        <!--A very large number for rollback count-->
+        <liquibase.rollbackCount>1000</liquibase.rollbackCount>
     </properties>
 
     <dependencies>
@@ -24,38 +27,6 @@
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
     </dependencies>
-
-    <profiles>
-        <profile>
-            <id>with-rollback</id>
-            <activation>
-                <property>
-                    <name>doRollback</name>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.liquibase</groupId>
-                        <artifactId>liquibase-maven-plugin</artifactId>
-                        <version>2.0.0</version>
-                        <configuration>
-                            <propertyFile>target/classes/liquibase.properties</propertyFile>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>rollback</id>
-                                <phase>prepare-package</phase>
-                                <goals>
-                                    <goal>rollback</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 
     <build>
         <resources>
@@ -78,9 +49,64 @@
                         <configuration>
                             <quiet>true</quiet>
                             <files>
-                                <file>${main.database.properties.file}</file>
+                                <file>${integration.database.properties.file}</file>
                                 <file>${mifos.overrides.home}</file>
                             </files>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>sql-maven-plugin</artifactId>
+                <version>1.2</version>
+                <configuration>
+                    <driver>com.mysql.jdbc.Driver</driver>
+                    <url>jdbc:mysql://${integration.database.host}:${integration.database.port}/?${integration.database.params}</url>
+                    <username>${integration.database.user}</username>
+                    <password>${integration.database.password}</password>
+                    <autocommit>true</autocommit>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>mysql</groupId>
+                        <artifactId>mysql-connector-java</artifactId>
+                        <version>5.1.13</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <id>drop_db</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <sqlCommand>DROP DATABASE IF EXISTS ${integration.database}</sqlCommand>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>create_db</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <sqlCommand>CREATE DATABASE ${integration.database}</sqlCommand>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>populate_db</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <sqlCommand>USE ${integration.database}</sqlCommand>
+                            <srcFiles>
+                                <srcFile>${sql.resources.target.directory}/base-schema.sql</srcFile>
+                                <srcFile>${sql.resources.target.directory}/base-data.sql</srcFile>
+                            </srcFiles>
                         </configuration>
                     </execution>
                 </executions>
@@ -95,7 +121,31 @@
                 <executions>
                     <execution>
                         <id>update</id>
-                        <phase>package</phase>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>update</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-maven-plugin</artifactId>
+                <version>2.0.0</version>
+                <configuration>
+                    <propertyFile>target/classes/liquibase.properties</propertyFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>validate-rollback</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>rollback</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>validate-update</id>
+                        <phase>post-integration-test</phase>
                         <goals>
                             <goal>update</goal>
                         </goals>

@@ -1,4 +1,4 @@
-/* This script represents the latest schema.
+-- This script represents the latest schema.
 -- Applying it should be the same as
 -- Start with the latest-schema.sql from version foo of mifos
 -- apply all upgrade_to_*.sql upgrades between foo and now
@@ -13,7 +13,7 @@
 -- merge add-version.sql
 -- merge Index.sql
 -- merge all upgrade_to_*.sql files to date
-*/
+
 create table currency (
   currency_id smallint auto_increment not null,
   currency_name varchar(50),
