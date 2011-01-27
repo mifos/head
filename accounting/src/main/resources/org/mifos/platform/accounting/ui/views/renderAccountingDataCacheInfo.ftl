@@ -35,8 +35,6 @@
     [#else]
         <p class="margin5top10bottom">[@spring.message "accounting.viewaccountingexports.cache.instruction"/]<p>
         <br />
-    <div id='auto_export_table'></div>
-    <div id='add_auto_export'><a href='#' onclick='javascript:loadExportsList(10);'>Show Past Exports from Today</a></div>
     <br />
     <div id='table'>
         <table>
@@ -66,5 +64,8 @@
 
     [/#if]
     </div>
+    <br />
+    <div id='auto_export_table'></div>
+    <div id='add_auto_export'><a href='#' onclick='javascript:loadExportsList(10);'>Show Alls Days' Export</a></div>
 </div><!--Main Content Ends-->
 [/@adminLeftPaneLayout]

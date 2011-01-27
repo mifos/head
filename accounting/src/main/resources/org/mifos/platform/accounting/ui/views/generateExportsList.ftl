@@ -27,7 +27,14 @@
          [#list exports as instance ]
              <tr>
                  <td class="drawtablerow" colspan=2>${instance.fileName}</td>
-                 <td class="drawtablerow" colspan=2><a href='renderAccountingData.ftl?fromDate=${instance.startDate}&toDate=${instance.endDate}'>Generate and View Details</a></td>
+                [#if instance.isExistInCache]
+                <td class="drawtablerow">
+                <a target='_blank' href='pages/accounting/jsp/processTallyXMLOutput.jsp?fromDate=${instance.startDate}&toDate=${instance.endDate}'>Tally&nbsp; XML</a>
+                </td>
+                 <td class="drawtablerow"><a href='renderAccountingData.ftl?fromDate=${instance.startDate}&toDate=${instance.endDate}'>View Details</a></td>
+                [#else]
+                <td class="drawtablerow" colspan=2><a href='renderAccountingData.ftl?fromDate=${instance.startDate}&toDate=${instance.endDate}'>Generate and View Details</a></td>
+                [/#if]
              </tr>
         [/#list]
         </table>

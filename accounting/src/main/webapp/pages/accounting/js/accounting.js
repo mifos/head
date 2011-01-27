@@ -64,12 +64,12 @@
     }
     function addExportListLink(i) {
         if(i == 0 ) {
-                      $("#add_auto_export").html("<a href='#' onclick='javascript:loadExportsList(10);'>Show Past Exports from Today</a>");
+                      $("#add_auto_export").html("<a href='#' onclick='javascript:loadExportsList(10);'>Show Alls Days' Export</a>");
                       $('#auto_export_table').html('');
        } else {
              $("#add_auto_export").html("<a href='#' onclick='javascript:loadExportsList("+(i+10)+");'>More 10</a> &nbsp;&nbsp;&nbsp;"
                                        +"<a href='#' onclick='javascript:loadExportsList("+(i-10)+");'>Less 10</a>&nbsp;&nbsp;&nbsp;"
-                                       +"<a href='#' onclick='javascript:loadExportsList(0);'>Clear</a>&nbsp;&nbsp;&nbsp;");
+                                       +"<a href='#' onclick='javascript:loadExportsList(0);'>Back</a>&nbsp;&nbsp;&nbsp;");
               }
              
     }

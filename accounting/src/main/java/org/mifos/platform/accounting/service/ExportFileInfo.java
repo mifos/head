@@ -30,15 +30,15 @@ public class ExportFileInfo {
 
     private final String endDate;
 
-    private final Boolean existInCache;
+    private final Boolean isExistInCache;
 
-    public ExportFileInfo(String lastModified, String fileName, String startDate, String endDate, Boolean existInCache) {
+    public ExportFileInfo(String lastModified, String fileName, String startDate, String endDate, Boolean isExistInCache) {
         super();
         this.lastModified = lastModified;
         this.fileName = fileName;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.existInCache = existInCache;
+        this.isExistInCache = isExistInCache;
     }
 
 
@@ -59,6 +59,6 @@ public class ExportFileInfo {
     }
 
     public Boolean getIsExistInCache() {
-        return existInCache;
+        return isExistInCache;
     }
 }
