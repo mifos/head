@@ -38,9 +38,9 @@
 	<div class="row">
 		<label for="selectedPrdOfferingId" class="mandatory">Savings instance name:</label>
 		<select id="createsavingsaccount.select.savingsProduct" name="selectedPrdOfferingId">
-			<option>Product 1</option>
-			<option>Product 2</option>
-			<option>Product 3</option>
+			[#list products as product]
+			<option>${product.prdOfferingName}</option>
+			[/#list]
 		</select>
 	</div>
 	</fieldset>

@@ -4,6 +4,8 @@
       xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
 
 	<input name="searchTerm" />
+	<input name="customerId" />
+	
 	<view-state id="customerSearchStep" view="createSavingsAccountCustomerSearch">
 		<transition on="searchTermEntered" to="selectCustomerStep">
 			<evaluate expression="createSavingsAccountController.searchCustomers(searchTerm)" result="flowScope.customers" />
@@ -11,7 +13,10 @@
 	</view-state>
 
 	<view-state id="selectCustomerStep" view="createSavingsAccountSelectCustomer">
-		<transition on="customerSelected" to="selectProductOfferingStep" />
+		<transition on="customerSelected" to="selectProductOfferingStep">
+			<set name="requestScope.customerId" value="requestParameters.customerId" type="int"/>
+			<evaluate expression="createSavingsAccountController.getProductOfferings(customerId)" result="flowScope.products" />
+		</transition>
 		<transition on="searchTermEntered" to="selectCustomerStep" />
 	</view-state>
 

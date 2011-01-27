@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.mifos.application.servicefacade.SavingsServiceFacade;
 import org.mifos.dto.domain.CustomerDto;
+import org.mifos.dto.domain.PrdOfferingDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -36,6 +37,11 @@ public class CreateSavingsAccountController {
 	public CreateSavingsAccountController() {
 	}
 
+	public List<PrdOfferingDto> getProductOfferings(Integer customerId) {
+        List<PrdOfferingDto> savingsProducts = savingsServiceFacade.retrieveApplicableSavingsProductsForCustomer(customerId);
+		return savingsProducts;
+	}
+	
 	public List<CustomerDto> searchCustomers(String searchTerm) {
 		// TODO replace stub data
 		List<CustomerDto> searchResults = new ArrayList<CustomerDto>();
