@@ -86,6 +86,10 @@ public class LoanAccountPage extends AbstractPage {
         Assert.assertEquals(getTotalPaid(), amount);
     }
 
+    public void verifyPrincipalOriginal(String value) {
+        Assert.assertEquals(getOriginalLoanAmount(), value);
+    }
+
     public void verifyPrincipalBalance(String value) {
         Assert.assertEquals(getPrincipleBalance(), value);
     }

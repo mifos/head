@@ -386,7 +386,7 @@ public class LoanTestHelper {
             dataEntryPage = dataEntryPage.submitInvalidDataAndReloadPageWithInputError(paramsCurrentDate);
             dataEntryPage.verifyFutureDateInputError();
         }
-        if(testForm) {
+        if(testForm) {  // tests clear form
             RedoLoanDisbursalParameters clearedParameters = RedoLoanDisbursalParameters.createObjectWithClearedParameters();
             dataEntryPage = dataEntryPage.submitInvalidDataAndReloadPageWithInputError(clearedParameters);
             dataEntryPage.verifyAllFormErrors();
@@ -398,6 +398,19 @@ public class LoanTestHelper {
         }
 
         return schedulePreviewPage
+            .submitAndNavigateToRedoLoanDisbursalPreviewPage()
+            .submitAndNavigateToLoanAccountConfirmationPage()
+            .navigateToLoanAccountDetailsPage();
+    }
+
+    public LoanAccountPage redoLoanDisbursalWithGLIMandLSIM(String clientName, String loanProduct, RedoLoanDisbursalParameters paramsPastDate) {
+        return navigationHelper
+            .navigateToAdminPage()
+            .navigateToRedoLoanDisbursal()
+            .searchAndNavigateToRedoLoanDisbursalPage(clientName)
+            .navigateToRedoLoanDisbursalChooseLoanProductPage(clientName)
+            .submitAndNavigateToRedoLoanDisbursalEntryPage(loanProduct)
+            .submitWithGLIMandLSIPAndNavigateToPreviewPage(paramsPastDate)
             .submitAndNavigateToRedoLoanDisbursalPreviewPage()
             .submitAndNavigateToLoanAccountConfirmationPage()
             .navigateToLoanAccountDetailsPage();
