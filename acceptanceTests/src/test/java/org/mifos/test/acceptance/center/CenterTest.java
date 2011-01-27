@@ -27,8 +27,8 @@ import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.center.CenterViewDetailsPage;
 import org.mifos.test.acceptance.framework.center.CreateCenterEnterDataPage;
 import org.mifos.test.acceptance.framework.center.MeetingParameters;
+import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 import org.mifos.test.acceptance.framework.testhelpers.CenterTestHelper;
-import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -54,8 +54,7 @@ public class CenterTest extends UiTestCaseBase {
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
-        NavigationHelper navigationHelper = new NavigationHelper(selenium);
-        centerTestHelper = new CenterTestHelper(navigationHelper);
+        centerTestHelper = new CenterTestHelper(selenium);
         new InitializeApplicationRemoteTestingService().reinitializeApplication(selenium);
     }
 
@@ -71,17 +70,48 @@ public class CenterTest extends UiTestCaseBase {
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createCenterTest() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_016_dbunit.xml", dataSource, selenium);
 
         CreateCenterEnterDataPage.SubmitFormParameters formParameters = getCenterParameters("Fantastico", "Joe1233171679953 Guy1233171679953");
         String officeName = "MyOffice1233171674227";
+        QuestionResponseParameters responseParams = getQuestionResponseParameters("answer1");
+        QuestionResponseParameters responseParams2 = getQuestionResponseParameters("answer2");
 
-        CenterViewDetailsPage centerViewDetailsPage = centerTestHelper.createCenter(formParameters, officeName);
+        CenterViewDetailsPage centerViewDetailsPage = centerTestHelper.createCenterWithQuestionGroupsEdited(formParameters, officeName, responseParams, responseParams2);
+        centerViewDetailsPage.navigateToViewAdditionalInformation().navigateBack();
+      //  centerViewDetailsPage.navigateToAdminPageUsingHeaderTab();
+
 
         centerViewDetailsPage.verifyActiveCenter(formParameters);
     }
 
-    public CreateCenterEnterDataPage.SubmitFormParameters getCenterParameters(String centerName, String loanOfficer) {
+    private QuestionResponseParameters getQuestionResponseParameters(String answer) {
+        QuestionResponseParameters responseParams = new QuestionResponseParameters();
+        responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[0].questions[0].value", "good");
+        responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[0].questions[1].valuesAsArray", "february:feb");
+        responseParams.addTextAnswer("questionGroups[0].sectionDetails[0].questions[2].value", answer);
+        responseParams.addTextAnswer("questionGroups[0].sectionDetails[0].questions[3].value", answer);
+
+        responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[0].value", "24/01/2011");
+        responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[1].valuesAsArray", "green");
+        responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[2].value", "10");
+        responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[3].value", "10");
+
+        responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[0].questions[0].valuesAsArray", "red");
+        responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[0].questions[1].valuesAsArray", "Everything");
+        responseParams.addTextAnswer("questionGroups[1].sectionDetails[0].questions[2].value", answer);
+        responseParams.addTextAnswer("questionGroups[1].sectionDetails[0].questions[3].value", answer);
+
+        responseParams.addTextAnswer("questionGroups[1].sectionDetails[1].questions[0].value", "24/01/2011");
+        responseParams.addTextAnswer("questionGroups[1].sectionDetails[1].questions[1].value", "10");
+        responseParams.addTextAnswer("questionGroups[1].sectionDetails[1].questions[2].value", "10");
+        responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[3].value", "yes");
+        responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[4].valuesAsArray", "answer2:2");
+
+        return responseParams;
+    }
+
+    private CreateCenterEnterDataPage.SubmitFormParameters getCenterParameters(String centerName, String loanOfficer) {
         CreateCenterEnterDataPage.SubmitFormParameters formParameters = new CreateCenterEnterDataPage.SubmitFormParameters();
         formParameters.setCenterName(centerName);
         formParameters.setLoanOfficer(loanOfficer);
