@@ -165,14 +165,14 @@ public class GroupPersistence extends LegacyGenericDao {
             short userId = 1; // this is bach job, so no user
             Date currentDate = new DateTimeService().getCurrentJavaSqlDate();
             Query query = session.createSQLQuery("update customer set updated_by = " + userId + ", updated_date='" + currentDate + "' where customer_id=" + groupId.toString());
-            int rows = (Integer) query.uniqueResult();
+            int rows = query.executeUpdate();
 
             if (rows != 1) {
                 throw new PersistenceException("Unable to update group table for group id " + groupId.toString());
             }
 
             query = session.createSQLQuery("update group_perf_history set portfolio_at_risk = " + portfolioAtRisk + " where customer_id=" + groupId.toString());
-            rows = (Integer) query.uniqueResult();
+            rows = query.executeUpdate();
 
             if (rows != 1) {
                 throw new PersistenceException("Unable to update group performance history for group id " + groupId.toString());
