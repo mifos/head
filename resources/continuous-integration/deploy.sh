@@ -28,7 +28,7 @@ if [ -n "$TEST_SERVER_PORT" ]; then
         # resources on birch if some unforseen problem occurs.
         sleep 1
         set +e # or a failure would stop the script prematurely
-        curl --fail http://ci.mifos.org:$TEST_SERVER_PORT/mifos/
+        curl --fail --location http://ci.mifos.org:$TEST_SERVER_PORT/mifos/
         can_hit_test_server=$?
     done
 fi
