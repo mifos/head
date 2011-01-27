@@ -1,4 +1,4 @@
--- This script represents the latest schema.
+/* This script represents the latest schema.
 -- Applying it should be the same as
 -- Start with the latest-schema.sql from version foo of mifos
 -- apply all upgrade_to_*.sql upgrades between foo and now
@@ -13,7 +13,7 @@
 -- merge add-version.sql
 -- merge Index.sql
 -- merge all upgrade_to_*.sql files to date
-
+*/
 create table currency (
   currency_id smallint auto_increment not null,
   currency_name varchar(50),
@@ -27,7 +27,7 @@ create table lookup_entity (
   entity_id smallint auto_increment not null,
   entity_name varchar(100) not null,
 
-  -- Is this used for anything?  It seems like it should just be removed.
+  /* Is this used for anything?  It seems like it should just be removed.*/
   description varchar(200),
   primary key(entity_id)
 )
@@ -43,14 +43,14 @@ create table country (
 )
 engine=innodb character set utf8;
 
--- TODO: drop this table and move data to "coa" table
+/* TODO: drop this table and move data to "coa" table*/
 create table gl_code (
   glcode_id smallint auto_increment not null,
   glcode_value varchar(50) not null,
   primary key(glcode_id)
 )
 engine=innodb character set utf8;
--- enforce uniqueness for GLCODE_VALUE
+/* enforce uniqueness for GLCODE_VALUE*/
 create unique index glcode_value_idx on gl_code (glcode_value);
 
 create table lookup_value (
@@ -819,7 +819,7 @@ create index personnel_office_idx on personnel (office_id);
 create unique index personnel_login_idx on personnel (login_name);
 
 
--- Seems not to be used by anything
+/* Seems not to be used by anything*/
 create table  fee_update_type (
 fee_update_type_id smallint auto_increment not null ,
 lookup_id integer not null,
@@ -3410,7 +3410,7 @@ create table customer_attendance_types(
 engine=innodb character set utf8;
 
 
--- TODO: a better name for this table would be "gl_account"
+/* TODO: a better name for this table would be "gl_account"*/
 create table coa (
   coa_id smallint auto_increment not null,
   coa_name varchar(150) not null,
@@ -3423,7 +3423,7 @@ create table coa (
       on update no action
 )engine=innodb character set utf8;
 
--- TODO: drop this table, it isn't being used
+/* TODO: drop this table, it isn't being used*/
 create table coa_idmapper(
   constant_id smallint not null ,
   coa_id smallint not null,
@@ -3445,7 +3445,7 @@ create table financial_action (
       on update no action
 )engine=innodb character set utf8;
 
--- TODO: drop this table, just move "parent_coaid" column to "coa" table
+/* TODO: drop this table, just move "parent_coaid" column to "coa" table*/
 create table coahierarchy (
   coa_id smallint not null ,
   parent_coaid smallint,
@@ -3731,7 +3731,7 @@ engine=innodb character set utf8;
 
 create index loan_counter_client_perf_idx on loan_counter (client_perf_id);
 
--- Begin tables for the Reports Mini Portal
+/* Begin tables for the Reports Mini Portal*/
 
 
 create table report_datasource (
@@ -3789,9 +3789,9 @@ create table report_parameter_map (
   index report_id (report_id),
   index parameter_id (parameter_id)
 ) engine=innodb character set utf8;
--- end tables for the Reports Mini Portal
+/* end tables for the Reports Mini Portal*/
 
--- start tables for surveys module
+/* start tables for surveys module*/
 create table survey (
   survey_id integer auto_increment not null,
   survey_name varchar(200) not null,
@@ -3946,9 +3946,9 @@ create table survey_response (
 ) engine=innodb character set utf8;
 
 
--- end tables for surveys module
+/* end tables for surveys module*/
 
--- defining table for products mix
+/* defining table for products mix*/
 
 create table prd_offering_mix (
   prd_offering_mix_id  integer auto_increment not null,
@@ -3973,7 +3973,7 @@ create table prd_offering_mix (
 ) engine=innodb character set utf8;
 
 
--- tables for loan defaults based on last loan
+/* tables for loan defaults based on last loan*/
 
 create table loan_amount_from_last_loan (
 loan_amount_from_last_loan_id  smallint auto_increment not null,

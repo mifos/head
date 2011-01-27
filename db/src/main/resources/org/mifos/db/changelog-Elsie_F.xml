@@ -3,7 +3,7 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
-    <changeSet author="MIFOS-3703" id="1">
+    <changeSet id="MIFOS-3703_1" author="Kalyan Akella">
         <createTable tableName="variable_installment_details">
             <column name="id" autoIncrement="true" type="smallint">
                 <constraints primaryKey="true" nullable="false"/>
@@ -12,14 +12,11 @@
             <column name="max_gap_in_days" type="smallint"/>
             <column name="min_loan_amount" type="decimal(21,4)"/>
         </createTable>
-        <rollback>
-            <dropTable tableName="variable_installment_details"/>
-        </rollback>
-        <modifySql dbms="mysql" applyToRollback="false">
+        <modifySql dbms="mysql">
             <append value=" engine=innodb character set utf8"/>
         </modifySql>
     </changeSet>
-    <changeSet author="MIFOS-3703" id="2">
+    <changeSet id="MIFOS-3703_2" author="Kalyan Akella">
         <addColumn tableName="loan_offering">
             <column name="variable_installment_flag" type="smallint" defaultValue="0"/>
         </addColumn>
@@ -36,11 +33,11 @@
         <rollback>
             <dropForeignKeyConstraint baseTableName="loan_offering" constraintName="fk_lo_vid"/>
             <dropColumn tableName="variable_installment_details" columnName="min_loan_amount_currency_id"/>
-            <dropColumn tableName="variable_installment_details" columnName="variable_installment_details_id"/>
-            <dropColumn tableName="variable_installment_details" columnName="variable_installment_flag"/>
+            <dropColumn tableName="loan_offering" columnName="variable_installment_details_id"/>
+            <dropColumn tableName="loan_offering" columnName="variable_installment_flag"/>
         </rollback>
     </changeSet>
-    <changeSet author="MIFOS-3770" id="1">
+    <changeSet id="MIFOS-3770_1" author="Vinod John">
         <createTable tableName="cash_flow_detail">
             <column name="id" type="smallint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -49,14 +46,11 @@
             <column name="indebtedness_ratio" type="decimal(13, 10)"/>
             <column name="repayment_capacity" type="decimal(13, 10)"/>
         </createTable>
-        <rollback>
-            <dropTable tableName="cash_flow_detail"/>
-        </rollback>
-        <modifySql dbms="mysql" applyToRollback="false">
+        <modifySql dbms="mysql">
             <append value=" engine=innodb character set utf8"/>
         </modifySql>
     </changeSet>
-    <changeSet author="MIFOS-3761" id="1">
+    <changeSet id="MIFOS-3761_1" author="Vinod John">
         <addColumn tableName="loan_offering">
             <column name="cash_flow_comparison_flag" type="smallint" defaultValue="0"/>
         </addColumn>
@@ -72,7 +66,7 @@
             <dropColumn tableName="loan_offering" columnName="cash_flow_comparison_flag"/>
         </rollback>
     </changeSet>
-    <changeSet author="MIFOS-3762" id="1">
+    <changeSet id="MIFOS-3762_1" author="Vinod John">
         <createTable tableName="cash_flow">
             <column name="id" autoIncrement="true" type="int">
                 <constraints primaryKey="true" nullable="false"/>
@@ -80,14 +74,11 @@
             <column name="capital" type="decimal(21, 4)"/>
             <column name="liability" type="decimal(21, 4)"/>
         </createTable>
-        <rollback>
-            <dropTable tableName="cash_flow"/>
-        </rollback>
-        <modifySql dbms="mysql" applyToRollback="false">
+        <modifySql dbms="mysql">
             <append value=" engine=innodb character set utf8"/>
         </modifySql>
     </changeSet>
-    <changeSet author="MIFOS-3762" id="2">
+    <changeSet id="MIFOS-3762_2" author="Vinod John">
         <createTable tableName="monthly_cash_flow_details">
             <column name="id" autoIncrement="true" type="int">
                 <constraints primaryKey="true" nullable="false"/>
@@ -98,14 +89,11 @@
             <column name="expenses" type="decimal(21, 4)"/>
             <column name="notes" type="varchar(300)"/>
         </createTable>
-        <rollback>
-            <dropTable tableName="monthly_cash_flow_details"/>
-        </rollback>
-        <modifySql dbms="mysql" applyToRollback="false">
+        <modifySql dbms="mysql">
             <append value=" engine=innodb character set utf8"/>
         </modifySql>
     </changeSet>
-    <changeSet author="MIFOS-3762" id="3">
+    <changeSet id="MIFOS-3762_3" author="Vinod John">
         <addForeignKeyConstraint constraintName="fk_mcfd_cf"
                                  baseTableName="monthly_cash_flow_details" baseColumnNames="cash_flow_id"
                                  referencedTableName="cash_flow" referencedColumnNames="id"
@@ -114,7 +102,7 @@
             <dropForeignKeyConstraint baseTableName="monthly_cash_flow_details" constraintName="fk_mcfd_cf"/>
         </rollback>
     </changeSet>
-    <changeSet author="MIFOS-3762" id="4">
+    <changeSet id="MIFOS-3762_4" author="Vinod John">
         <createTable tableName="loan_cash_flow">
             <column name="loan_id" type="int">
                 <constraints nullable="false"/>
@@ -123,14 +111,11 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <rollback>
-            <dropTable tableName="loan_cash_flow"/>
-        </rollback>
-        <modifySql dbms="mysql" applyToRollback="false">
+        <modifySql dbms="mysql">
             <append value=" engine=innodb character set utf8"/>
         </modifySql>
     </changeSet>
-    <changeSet author="MIFOS-3762" id="5">
+    <changeSet id="MIFOS-3762_5" author="Vinod John">
         <addForeignKeyConstraint constraintName="fk_lcf_la"
                                  baseTableName="loan_cash_flow" baseColumnNames="loan_id"
                                  referencedTableName="loan_account" referencedColumnNames="account_id"
@@ -144,7 +129,7 @@
             <dropForeignKeyConstraint baseTableName="loan_cash_flow" constraintName="fk_lcf_la"/>
         </rollback>
     </changeSet>
-    <changeSet author="MIFOS-4056" id="1">
+    <changeSet id="MIFOS-4056_1" author="Vinod John">
         <sql endDelimiter=";">
             insert into lookup_value(lookup_id,entity_id,lookup_name) values((select max(lv.lookup_id)+1 from
             lookup_value lv), 37, 'InterestTypes-DecliningPrincipalBalance');
@@ -162,7 +147,7 @@
             </sql>
         </rollback>
     </changeSet>
-    <changeSet author="MIFOS-4117" id="1">
+    <changeSet id="MIFOS-4117_1" author="Kalyan Akella">
         <addColumn tableName="loan_schedule">
             <column name="extra_interest" type="decimal(21,4)"/>
         </addColumn>
@@ -192,7 +177,7 @@
             <dropColumn tableName="loan_schedule" columnName="extra_interest"/>
         </rollback>
     </changeSet>
-    <changeSet author="MIFOS-4052" id="1">
+    <changeSet id="MIFOS-4052_1" author="Praveena G">
         <createTable tableName="original_loan_schedule">
             <column name="id" autoIncrement="true" type="integer">
                 <constraints primaryKey="true" nullable="false"/>
@@ -261,14 +246,11 @@
             <column name="extra_interest_paid" type="decimal(21,4)"/>
             <column name="extra_interest_paid_currency_id" type="smallint"/>
         </createTable>
-        <rollback>
-            <dropTable tableName="original_loan_schedule"/>
-        </rollback>
-        <modifySql dbms="mysql" applyToRollback="false">
+        <modifySql dbms="mysql">
             <append value=" engine=innodb character set utf8"/>
         </modifySql>
     </changeSet>
-    <changeSet author="MIFOS-4052" id="2">
+    <changeSet id="MIFOS-4052_2" author="Praveena G">
         <addForeignKeyConstraint constraintName="fk_ols_acc"
                                  baseTableName="original_loan_schedule" baseColumnNames="account_id"
                                  referencedTableName="account" referencedColumnNames="account_id"
@@ -348,7 +330,7 @@
             <dropForeignKeyConstraint baseTableName="original_loan_schedule" constraintName="fk_ols_acc"/>
         </rollback>
     </changeSet>
-    <changeSet author="MIFOS-4052" id="3">
+    <changeSet id="MIFOS-4052_3" author="Praveena G">
         <createTable tableName="original_loan_fee_schedule">
             <column name="account_fees_detail_id" autoIncrement="true" type="integer">
                 <constraints primaryKey="true" nullable="false"/>
@@ -377,14 +359,11 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <rollback>
-            <dropTable tableName="original_loan_fee_schedule"/>
-        </rollback>
-        <modifySql dbms="mysql" applyToRollback="false">
+        <modifySql dbms="mysql">
             <append value=" engine=innodb character set utf8"/>
         </modifySql>
     </changeSet>
-    <changeSet author="MIFOS-4052" id="4">
+    <changeSet id="MIFOS-4052_4" author="Praveena G">
         <addForeignKeyConstraint constraintName="fk_olfs_ols"
                                  baseTableName="original_loan_fee_schedule" baseColumnNames="id"
                                  referencedTableName="original_loan_schedule" referencedColumnNames="id"
@@ -413,7 +392,7 @@
             <dropForeignKeyConstraint baseTableName="original_loan_fee_schedule" constraintName="fk_olfs_ols"/>
         </rollback>
     </changeSet>
-    <changeSet author="MIFOS-4055" id="1">
+    <changeSet id="MIFOS-4055_1" author="Kalyan Akella">
         <createTable tableName="calculated_interest_on_payment">
             <column name="loan_account_trxn_id" type="integer">
                 <constraints nullable="false" primaryKey="true"/>
@@ -427,14 +406,11 @@
             <column name="interest_due_till_paid" type="decimal(21,4)"/>
             <column name="interest_due_till_paid_currency_id" type="smallint"/>
         </createTable>
-        <rollback>
-            <dropTable tableName="calculated_interest_on_payment"/>
-        </rollback>
-        <modifySql dbms="mysql" applyToRollback="false">
+        <modifySql dbms="mysql" >
             <append value=" engine=innodb character set utf8"/>
         </modifySql>
     </changeSet>
-    <changeSet author="MIFOS-4055" id="2">
+    <changeSet id="MIFOS-4055_2" author="Kalyan Akella">
         <addForeignKeyConstraint constraintName="fk_ciop_ltd"
                                  baseTableName="calculated_interest_on_payment" baseColumnNames="loan_account_trxn_id"
                                  referencedTableName="loan_trxn_detail" referencedColumnNames="account_trxn_id"
@@ -459,6 +435,80 @@
             <dropForeignKeyConstraint baseTableName="calculated_interest_on_payment" constraintName="fk_ciop.eipc_cur"/>
             <dropForeignKeyConstraint baseTableName="calculated_interest_on_payment" constraintName="fk_ciop.oic_cur"/>
             <dropForeignKeyConstraint baseTableName="calculated_interest_on_payment" constraintName="fk_ciop_ltd"/>
+        </rollback>
+    </changeSet>
+    <changeSet id="MIFOS-4451_1" author="Kalyan Akella">
+        <sql endDelimiter=";">
+            insert into lookup_value(lookup_id,entity_id,lookup_name) values((select max(lv.lookup_id)+1 from
+            lookup_value lv), 87, 'Permissions-CanAdjustBackDatedTransactions');
+
+            insert into lookup_value_locale(locale_id,lookup_id,lookup_value) VALUES(1,
+            (select lookup_id from lookup_value where entity_id =87 and
+            lookup_name='Permissions-CanAdjustBackDatedTransactions'),null);
+
+            insert into activity(activity_id,parent_id, activity_name_lookup_id, DESCRIPTION_lookup_id) values(244,113,
+            (select lookup_id from lookup_value where entity_id =87 and
+            lookup_name='Permissions-CanAdjustBackDatedTransactions'),
+            (select lookup_id from lookup_value where entity_id =87 and
+            lookup_name='Permissions-CanAdjustBackDatedTransactions'));
+
+            insert into roles_activity(activity_id, role_id) values(244, 1);
+        </sql>
+        <rollback>
+            <sql endDelimiter=";">
+                delete from roles_activity where activity_id = 244 and role_id = 1;
+
+                delete from activity where activity_id = 244 and parent_id = 113 and
+                activity_name_lookup_id = (select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanAdjustBackDatedTransactions') and
+                DESCRIPTION_lookup_id=(select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanAdjustBackDatedTransactions');
+
+                delete from lookup_value_locale where locale_id = 1 and
+                lookup_id = (select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-CanAdjustBackDatedTransactions')
+                and lookup_value is null;
+
+                delete from lookup_value where entity_id = 87 and lookup_name =
+                'Permissions-CanAdjustBackDatedTransactions';
+            </sql>
+        </rollback>
+    </changeSet>
+    <changeSet id="MIFOS_4438_1" author="Piotr Bogacz">
+        <sql endDelimiter=";">
+            insert into lookup_value(lookup_id,entity_id,lookup_name) values((select max(lv.lookup_id)+1 from
+            lookup_value lv), 87, 'Permissions-Clients-CanEditPhoneNumber');
+
+            insert into lookup_value_locale(locale_id,lookup_id,lookup_value) VALUES(1,
+            (select lookup_id from lookup_value where entity_id =87 and
+            lookup_name='Permissions-Clients-CanEditPhoneNumber'),null);
+
+            insert into activity(activity_id,parent_id, activity_name_lookup_id, DESCRIPTION_lookup_id) values(245,34,
+            (select lookup_id from lookup_value where entity_id =87 and
+            lookup_name='Permissions-Clients-CanEditPhoneNumber'),
+            (select lookup_id from lookup_value where entity_id =87 and
+            lookup_name='Permissions-Clients-CanEditPhoneNumber'));
+
+            insert into roles_activity(activity_id, role_id) values(245, 1);
+        </sql>
+        <rollback>
+            <sql endDelimiter=";">
+                delete from roles_activity where activity_id = 245 and role_id = 1;
+
+                delete from activity where activity_id = 245 and parent_id = 34 and
+                activity_name_lookup_id = (select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-Clients-CanEditPhoneNumber') and
+                DESCRIPTION_lookup_id=(select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-Clients-CanEditPhoneNumber');
+
+                delete from lookup_value_locale where locale_id = 1 and
+                lookup_id = (select lookup_id from lookup_value where entity_id =87 and
+                lookup_name='Permissions-Clients-CanEditPhoneNumber')
+                and lookup_value is null;
+
+                delete from lookup_value where entity_id = 87 and lookup_name =
+                'Permissions-Clients-CanEditPhoneNumber';
+            </sql>
         </rollback>
     </changeSet>
 </databaseChangeLog>
