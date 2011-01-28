@@ -19,7 +19,7 @@
 *  explanation of the license and how it is applied.
 --]
 
-[@layout.webflow currentState="createSavingsAccount.flowState.enterAccountInfo" 
+[@layout.webflow currentState="createSavingsAccount.flowState.reviewAndSubmit" 
                  states=["createSavingsAccount.flowState.selectCustomer", 
                  		 "createSavingsAccount.flowState.enterAccountInfo", 
                  		 "createSavingsAccount.flowState.reviewAndSubmit"]] 
@@ -65,13 +65,15 @@
 		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.interestRate"/]:</div>
 		<div class="value">25.0 %</div>
 	</div>
+	<div class="clear"/>
 </div>
 <br/>
 
 <p><b>Savings account details</b></p>
 <div class="summary">
-		<div class="attribute">Recommended amount for deposit:</div>
-		<div class="value">12345</div>
+	<div class="attribute">Recommended amount for deposit:</div>
+	<div class="value">12345</div>
+	<div class="clear"/>
 </div>
 
 <form action="${flowExecutionUrl}" method="post">
