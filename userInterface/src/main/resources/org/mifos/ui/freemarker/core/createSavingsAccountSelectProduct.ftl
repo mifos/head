@@ -43,7 +43,7 @@
 		</select>
 	</div>
 	</fieldset>
-	<div class="row">
+	<div class="row webflow-controls">
 		<input type="submit" class="submit" value="Continue" name="_eventId_productSelected" />
 		<input type="submit" class="cancel" value="Cancel" name="_eventId_cancel" />
 	</div>

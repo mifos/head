@@ -106,8 +106,10 @@ form.two-columns fieldset
 {
 	margin: 1em;
 	padding: 1em;
-	border-width: 0px 0px 1px 0px;
+	border-width: 0px;
+/*	
 	border-color: #D7DEEE;
+*/	
 }
 
 form.two-columns input.submit
@@ -214,6 +216,11 @@ form.two-columns input.submit
 	font-weight: bold;
 }
 
+.centered
+{
+	text-align: center;
+}
+
 .account-number
 {
 	font-weight: bold;
@@ -228,4 +235,15 @@ form.two-columns input.submit
 .standout
 {
 	font-weight: bold;
+}
+
+.webflow-controls
+{
+	border-top: 1px solid #D7DEEE;
+	padding-top: 1.5em;
+}
+
+.webflow-controls input
+{
+	margin-left: 1em;
 }

@@ -87,9 +87,7 @@
 	<div class="clear"/>
 </div>
 <br/>
-
-
-<form action="${flowExecutionUrl}" method="post">
+<form action="${flowExecutionUrl}" method="post" class="webflow-controls centered">
 	<div class="row">
 		<input type="submit" class="submit" value="Save for later" name="_eventId_saveForLater" />
 		<input type="submit" class="submit" value="Save for approval" name="_eventId_saveForApproval" />

@@ -50,8 +50,8 @@
 Previous	Results 1-10 of 11 	Next
 
 <!-- Cancel. Yeah, just one button. -->
-<form action="${flowExecutionUrl}" method="post">
-	<div class="row prepend-10">
+<form action="${flowExecutionUrl}" method="post" class="webflow-controls">
+	<div class="row centered">
 		<input type="submit" class="cancel" value="Cancel" name="_eventId_cancel" />
 	</div>
 </form>
