@@ -33,6 +33,16 @@
             <id>maven-site</id>
             <url>file:/var/www/mifos-maven-site</url>
         </site>
+        <repository>
+            <id>mifos-releases</id>
+            <name>Mifos Releases</name>
+            <url>http://maven.mifos.org/nexus/content/repositories/mifos-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>mifos-snapshots</id>
+            <name>Mifos Snapshots</name>
+            <url>http://maven.mifos.org/nexus/content/repositories/mifos-snapshots/</url>
+        </snapshotRepository>
     </distributionManagement>
 
     <properties>
