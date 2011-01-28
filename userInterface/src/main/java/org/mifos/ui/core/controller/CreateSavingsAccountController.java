@@ -23,8 +23,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.mifos.application.servicefacade.SavingsServiceFacade;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerDto;
 import org.mifos.dto.domain.PrdOfferingDto;
+import org.mifos.dto.domain.SavingsAccountCreationDto;
+import org.mifos.dto.domain.SavingsAccountDetailDto;
+import org.mifos.dto.domain.SavingsProductDto;
 import org.mifos.dto.screen.CustomerSearchResultsDto;
 import org.mifos.dto.screen.SavingsProductReferenceDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +43,36 @@ public class CreateSavingsAccountController {
 	public CreateSavingsAccountController() {
 	}
 
+	public SavingsAccountDetailDto createAccountInPartialApplicationState(
+			SavingsProductReferenceDto productReference) {
+		Short accountState = 13; // TOOD grab state from constant. NOT from
+		return createAccount(productReference, accountState);
+	}
+
+	public SavingsAccountDetailDto createAccountInPendingApprovalState(
+			SavingsProductReferenceDto productReference) {
+		Short accountState = 14; // TOOD grab state from constant. NOT from
+		return createAccount(productReference, accountState);
+	}
+
+	private SavingsAccountDetailDto createAccount(
+			SavingsProductReferenceDto productReference, Short accountState) {
+		SavingsProductDto savingsProduct = productReference
+				.getSavingsProductDetails();
+		Integer productId = savingsProduct.getProductDetails().getId();
+		Integer customerId = '5'; // TODO
+		String recommendedOrMandatoryAmount = "100"; // TODO grab from request
+		List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>(); // TODO
+		SavingsAccountCreationDto savingsAccountCreation = new SavingsAccountCreationDto(
+				productId, customerId, accountState,
+				recommendedOrMandatoryAmount, customFields);
+		Long savingsId = savingsServiceFacade
+				.createSavingsAccount(savingsAccountCreation);
+		SavingsAccountDetailDto savingsAccountDetailDto = savingsServiceFacade
+				.retrieveSavingsAccountDetails(savingsId);
+		return savingsAccountDetailDto;
+	}
+
 	public SavingsProductReferenceDto getProduct(Integer productId) {
 		SavingsProductReferenceDto product = savingsServiceFacade
 				.retrieveSavingsProductReferenceData(productId);
@@ -51,10 +85,12 @@ public class CreateSavingsAccountController {
 		return savingsProducts;
 	}
 
-	public CustomerSearchResultsDto searchCustomers(CustomerSearchFormBean formBean) {
+	public CustomerSearchResultsDto searchCustomers(
+			CustomerSearchFormBean formBean) {
 		// TODO replace stub data
-//		CustomerSearchDto searchDto = new CustomerSearchDto(formBean.getSearchString(), 1, 10);
-//		someFacade.searchCustomers(searchDto)...
+		// CustomerSearchDto searchDto = new
+		// CustomerSearchDto(formBean.getSearchString(), 1, 10);
+		// someFacade.searchCustomers(searchDto)...
 		List<CustomerDto> pagedDetails = new ArrayList<CustomerDto>();
 		for (int i = 0; i < 50; i++) {
 			Integer customerId = new Integer(i);
@@ -65,7 +101,8 @@ public class CreateSavingsAccountController {
 					parentCustomerId, levelId);
 			pagedDetails.add(customer);
 		}
-		CustomerSearchResultsDto resultsDto = new CustomerSearchResultsDto(pagedDetails.size(), 1, 100, 100, pagedDetails);
+		CustomerSearchResultsDto resultsDto = new CustomerSearchResultsDto(
+				pagedDetails.size(), 1, 100, 100, pagedDetails);
 		return resultsDto;
 	}
 }

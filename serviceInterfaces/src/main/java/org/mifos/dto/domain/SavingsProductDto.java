@@ -20,10 +20,11 @@
 
 package org.mifos.dto.domain;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 @SuppressWarnings("PMD")
-public class SavingsProductDto {
+public class SavingsProductDto implements Serializable {
 
     private boolean openSavingsAccountsExist = true;
     private final ProductDetailsDto productDetails;

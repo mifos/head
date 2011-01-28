@@ -20,9 +20,11 @@
 
 package org.mifos.dto.domain;
 
+import java.io.Serializable;
+
 import org.joda.time.DateTime;
 
-public class ProductDetailsDto {
+public class ProductDetailsDto implements Serializable {
 
     private Integer id;
     private String globalNumber;
