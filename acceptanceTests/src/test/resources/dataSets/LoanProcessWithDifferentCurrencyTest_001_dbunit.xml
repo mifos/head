@@ -286,6 +286,7 @@
   <activity activity_id="243" parent_id="203" activity_name_lookup_id="713" description_lookup_id="713"/>
   <activity activity_id="244" parent_id="113" activity_name_lookup_id="715" description_lookup_id="715"/>
   <activity activity_id="245" parent_id="34" activity_name_lookup_id="716" description_lookup_id="716"/>
+  <activity activity_id="246" parent_id="196" activity_name_lookup_id="717" description_lookup_id="717"/>
   <admin_document/>
   <admin_document_acc_state_mix/>
   <applied_upgrades upgrade_id="1277565300"/>
@@ -362,6 +363,8 @@
   <applied_upgrades upgrade_id="1292241366"/>
   <applied_upgrades upgrade_id="1294738016"/>
   <applied_upgrades upgrade_id="1294927843"/>
+  <applied_upgrades upgrade_id="1295985566"/>
+  <applied_upgrades upgrade_id="1296137314"/>
   <applied_upgrades upgrade_id="1298198335"/>
   <applied_upgrades upgrade_id="1299279218"/>
   <attendance/>
@@ -1981,6 +1984,7 @@
   <lookup_value lookup_id="714" entity_id="37" lookup_name="InterestTypes-DecliningPrincipalBalance"/>
   <lookup_value lookup_id="715" entity_id="87" lookup_name="Permissions-CanAdjustBackDatedTransactions"/>
   <lookup_value lookup_id="716" entity_id="87" lookup_name="Permissions-Clients-CanEditPhoneNumber"/>
+  <lookup_value lookup_id="717" entity_id="87" lookup_name="Permissions-CanUseAccountingIntegration"/>
   <lookup_value_locale lookup_value_id="1" locale_id="1" lookup_id="1"/>
   <lookup_value_locale lookup_value_id="3" locale_id="1" lookup_id="2"/>
   <lookup_value_locale lookup_value_id="5" locale_id="1" lookup_id="3"/>
@@ -2527,6 +2531,7 @@
   <lookup_value_locale lookup_value_id="965" locale_id="1" lookup_id="713"/>
   <lookup_value_locale lookup_value_id="966" locale_id="1" lookup_id="715"/>
   <lookup_value_locale lookup_value_id="967" locale_id="1" lookup_id="716"/>
+  <lookup_value_locale lookup_value_id="968" locale_id="1" lookup_id="717"/>
   <max_min_interest_rate/>
   <max_min_loan_amount/>
   <max_min_no_of_install/>
@@ -2829,6 +2834,7 @@
   <roles_activity activity_id="243" role_id="1"/>
   <roles_activity activity_id="244" role_id="1"/>
   <roles_activity activity_id="245" role_id="1"/>
+  <roles_activity activity_id="246" role_id="1"/>
   <saving_schedule/>
   <savings_account/>
   <savings_activity_details/>

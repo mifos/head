@@ -94,6 +94,7 @@ insert into applied_upgrades(upgrade_id) values(1299279218);
 insert into applied_upgrades(upgrade_id) values(1294738016);
 insert into applied_upgrades(upgrade_id) values(1294927843);
 insert into applied_upgrades(upgrade_id) values(1295985566);
+insert into applied_upgrades(upgrade_id) values(1296137314);
 
 /* The table Currency holds configuration related items for a currency like
  * display symbol, rounding mode etc which is to be applied on a currency.
@@ -3374,3 +3375,15 @@ insert into activity(activity_id,parent_id,activity_name_lookup_id,description_l
     (select lookup_id from lookup_value where entity_id =87 and lookup_name='Permissions-Clients-CanEditPhoneNumber'));
 insert into roles_activity values (245,1);
 /* Upgrade - 1294927843*/
+
+/* Upgrade - 1296137314 */
+insert into lookup_value(lookup_id,entity_id,lookup_name)
+    values((select max(lv.lookup_id)+1 from lookup_value lv),87,'Permissions-CanUseAccountingIntegration');
+insert into lookup_value_locale(lookup_value_id, locale_id, lookup_id, lookup_value)
+    values(968,1,(select lookup_id from lookup_value where entity_id =87 and lookup_name='Permissions-CanUseAccountingIntegration'),null);
+insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id)values
+    (246,196,
+    (select lookup_id from lookup_value where entity_id =87 and lookup_name='Permissions-CanUseAccountingIntegration'),
+    (select lookup_id from lookup_value where entity_id =87 and lookup_name='Permissions-CanUseAccountingIntegration'));
+insert into roles_activity values (246,1);
+/* Upgrade - 1296137314 */
