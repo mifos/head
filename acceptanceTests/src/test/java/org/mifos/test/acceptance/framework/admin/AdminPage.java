@@ -45,6 +45,7 @@ import org.mifos.test.acceptance.questionnaire.CreateQuestionPage;
 import org.mifos.test.acceptance.questionnaire.ViewAllQuestionGroupsPage;
 import org.mifos.test.acceptance.questionnaire.ViewAllQuestionsPage;
 import org.mifos.test.acceptance.util.StringUtil;
+import org.testng.Assert;
 
 /**
  * Encapsulates the GUI based actions that can
@@ -299,6 +300,12 @@ public class AdminPage extends MifosPage {
         return new AdminPage(selenium);
     }
 
+    public AdminPage failNavigationToImportTransactionsPage() {
+        selenium.click("admin.link.manageImports");
+        waitForPageToLoad();
+        return new AdminPage(selenium);
+    }
+
     public ImportTransactionsPage navigateToImportTransactionsPage() {
         selenium.click("admin.link.manageImports");
         waitForPageToLoad();
@@ -365,5 +372,9 @@ public class AdminPage extends MifosPage {
         selenium.click("header.link.clientsAndAccounts");
         waitForPageToLoad();
         return new ClientsAndAccountsHomepage(selenium);
+    }
+
+    public void verifyError(String error){
+        Assert.assertTrue(selenium.isTextPresent(error));
     }
 }

@@ -42,6 +42,10 @@ public class SavingsAccountDetailPage extends AbstractPage {
         Assert.assertTrue(selenium.isTextPresent(amount));
     }
 
+    public void verifyDate(String date){
+        Assert.assertTrue(selenium.isTextPresent(date));
+    }
+
     public void verifySavingsProduct(String savingsProduct) {
         Assert.assertTrue(selenium.isTextPresent(savingsProduct));
 

@@ -32,6 +32,9 @@
       [#if model.accountingRulesResult??]
           [@spring.message "updatingAccountingRules"/]&nbsp;: <div id="CustomProperties.accountingRules.result">${model.accountingRulesResult}</div>
       [/#if]
+      [#if model.ImportResult??]
+	      [@spring.message "updatingImport"/]&nbsp;: <div id="CustomProperties.import.result">${model.ImportResult}</div>
+      [/#if]
       [#if model.fiscalCalendarRulesResult??]
           [@spring.message "updatingFiscalCalendarRules"/]&nbsp;: <div id="CustomProperties.accountingRules.result">${model.fiscalCalendarRulesResult}</div>
       [/#if]

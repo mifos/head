@@ -57,6 +57,8 @@ public class CustomPropertiesUpdateController extends AbstractController {
 
             handleFamilyDetails(request, response, errorMessages, model);
 
+            handleImport(request, response, errorMessages, model);
+
             model.put("request", request);
             Map<String, Object> status = new HashMap<String, Object>();
             status.put("errorMessages", errorMessages);
@@ -166,6 +168,25 @@ public class CustomPropertiesUpdateController extends AbstractController {
         } else if (StringUtils.isNotBlank(languageCode) || StringUtils.isNotBlank(countryCode)) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             errorMessages.add("You must include both Localization.LanguageCode and Localization.CountryCode as parameters!");
+        }
+    }
+
+    private void handleImport(HttpServletRequest request, HttpServletResponse response,
+            List<String> errorMessages, Map<String, Object> model) {
+        try {
+            Enumeration<?> paramNames = request.getParameterNames();
+            while (paramNames.hasMoreElements()) {
+                String importParamName = (String) paramNames.nextElement();
+                if (importParamName.startsWith("ke.co.safaricom.MPesaXlsImporter")) {
+                    String importParamValue = request.getParameter(importParamName);
+                    testingService.setImport(importParamName, importParamValue);
+                    model.put("ImportResult", importParamName + ": " + importParamValue);
+                }
+            }
+        } catch (MifosException e) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            errorMessages.add("Something was wrong with your Import parameters: "
+                    + new LogUtils().getStackTrace(e));
         }
     }
 
