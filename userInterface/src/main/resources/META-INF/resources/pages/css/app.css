@@ -23,7 +23,7 @@ input.submit
     height: 20px
 }
 
-input.cancel
+input.cancel, input.edit
 {
 	font-family: Arial, Verdana, Helvetica, sans-serif;
 	font-size: 9pt;
@@ -56,23 +56,30 @@ input.cancel
 	border-top: 0px;
 }
 
-div.information-display, div.summary 
+div.summary 
 {
-	width: 80%;
-	background: green;
+}
+
+div.summary .divider
+{
+	font-weight: bold;
 }
 
 div.summary .attribute 
 {
 	font-weight: bold;
-	width: 50%;
 	float: left;
 }
 
 div.summary .value 
 {
-	width: 50%;
 	float: left;
+	margin-left: 0.25em;
+}
+
+div.summary .row
+{
+	clear: both;
 }
 
 /* 2-column form */

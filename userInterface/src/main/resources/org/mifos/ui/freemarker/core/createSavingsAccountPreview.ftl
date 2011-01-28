@@ -28,11 +28,19 @@
 <p>Review the information below. Click Submit if you are satisfied or click Edit to make changes. Click Cancel to return to Clients & Accounts without submitting information.</p>
 <br/>
 
-<b>Account Owner</b>: Test Customer1188
+<p><span class="standout">Account Owner</span>: Test Customer1188</p>
 <br/>
 
-<p><b>Savings product summary</b></p>
+<p class="standout">Savings account information</p>
+<br/>
+
 <div class="summary">
+	<div class="row">
+		<div class="attribute">Savings instance name:</div>
+		<div class="value">TODO</div>
+	</div>
+	<div class="row">&nbsp;</div>
+	<div class="row divider">Instance information</div>
 	<div class="row">
 		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.description"/]</div>
 		<div class="value">${product.savingsProductDetails.productDetails.description}</div>
@@ -65,20 +73,24 @@
 		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.interestRate"/]:</div>
 		<div class="value">25.0 %</div>
 	</div>
+	<div class="row">&nbsp;</div>
+	<div class="row">
+		<div class="attribute">Recommended amount for deposit:</div>
+		<div class="value">12345</div>
+	</div>
+	<div class="row">&nbsp;</div>
+	<div class="row">
+		<form action="${flowExecutionUrl}" method="post">
+			<input type="submit" class="edit" value="Edit Savings account information" name="_eventId_edit" />
+		</form>
+	</div>
 	<div class="clear"/>
 </div>
 <br/>
 
-<p><b>Savings account details</b></p>
-<div class="summary">
-	<div class="attribute">Recommended amount for deposit:</div>
-	<div class="value">12345</div>
-	<div class="clear"/>
-</div>
 
 <form action="${flowExecutionUrl}" method="post">
 	<div class="row">
-		<input type="submit" class="submit" value="Edit" name="_eventId_edit" />
 		<input type="submit" class="submit" value="Save for later" name="_eventId_saveForLater" />
 		<input type="submit" class="submit" value="Save for approval" name="_eventId_saveForApproval" />
 		<input type="submit" class="cancel" value="Cancel" name="_eventId_cancel" />
