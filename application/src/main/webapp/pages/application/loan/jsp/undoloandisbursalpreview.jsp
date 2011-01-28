@@ -120,7 +120,7 @@ explanation of the license and how it is applied.
 								</td>
 							</tr>
 							<c:forEach varStatus="loopStatus1" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'payments')}" var="payment">
-							<c:if test="${payment.total.amountDoubleValue > 0.0}">
+							<c:if test="${payment.totalValue > 0.0}">
 							<bean:define id="ctr1" toScope="request" >
 								<c:out value="${loopStatus1.index}" />
 							</bean:define>

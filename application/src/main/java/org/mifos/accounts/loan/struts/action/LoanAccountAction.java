@@ -963,6 +963,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         boolean isInstallmentValid = validateInstallments(request, loanAccountForm);
         String perspective = loanAccountForm.getPerspective();
         if (perspective != null) {
+            request.setAttribute(PERSPECTIVE, perspective);
             Integer customerId = loanAccountForm.getCustomerIdValue();
 
             if (perspective.equals(PERSPECTIVE_VALUE_REDO_LOAN)) {
@@ -1001,7 +1002,6 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                     SessionUtils.setCollectionAttribute("loanAccountDetailsView", loanPreviewDto.getLoanAccountDetailsView(), request);
                 }
             }
-            request.setAttribute(PERSPECTIVE, perspective);
         }
         // TODO need to figure out a way to avoid putting 'installments' onto session - required for mifostabletag in createloanpreview.jsp
         setInstallmentsOnSession(request, loanAccountForm);

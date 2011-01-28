@@ -1046,6 +1046,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         Money total = removeSign(loanActivity.getFee()).add(removeSign(loanActivity.getPenalty())).add(
                 removeSign(loanActivity.getPrincipal())).add(removeSign(loanActivity.getInterest()));
         loanActivityDto.setTotal(total.toString());
+        loanActivityDto.setTotalValue(total.getAmount().doubleValue());
         loanActivityDto.setTimeStamp(loanActivity.getTrxnCreatedDate());
         loanActivityDto.setRunningBalanceInterest(loanActivity.getInterestOutstanding().toString());
         loanActivityDto.setRunningBalancePrinciple(loanActivity.getPrincipalOutstanding().toString());
@@ -1266,6 +1267,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                         LoanActivityDto loanActivityDto = new LoanActivityDto();
                         loanActivityDto.setActionDate(accountPayment.getPaymentDate());
                         loanActivityDto.setTotal(amount.toString());
+                        loanActivityDto.setTotalValue(amount.getAmount().doubleValue());
                         payments.add(0, loanActivityDto);
                     }
                 }

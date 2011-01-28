@@ -172,6 +172,7 @@ public class LoanActivityEntity extends AbstractEntity {
         loanActivityDto.setFees(removeSign(this.fee).toString());
         Money total = removeSign(this.fee).add(removeSign(this.penalty)).add(removeSign(this.principal)).add(removeSign(this.interest));
         loanActivityDto.setTotal(total.toString());
+        loanActivityDto.setTotalValue(total.getAmount().doubleValue());
         loanActivityDto.setTimeStamp(this.trxnCreatedDate);
         loanActivityDto.setRunningBalanceInterest(this.interestOutstanding.toString());
         loanActivityDto.setRunningBalancePrinciple(this.principalOutstanding.toString());

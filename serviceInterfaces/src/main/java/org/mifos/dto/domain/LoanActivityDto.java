@@ -43,6 +43,7 @@ public class LoanActivityDto implements Serializable {
     private Locale locale = null;
     private java.sql.Timestamp timeStamp;
     private String runningBalancePrincipleWithInterestAndFees;
+    private double totalValue;
 //    private String userPrefferedDate;
 
     public LoanActivityDto() {
@@ -177,5 +178,11 @@ public class LoanActivityDto implements Serializable {
         this.runningBalancePrincipleWithInterestAndFees = runningBalancePrincipleWithInterestAndFees;
     }
 
+    public void setTotalValue(double totalValue) {
+        this.totalValue = totalValue;
+    }
 
+    public double getTotalValue() {
+        return totalValue;
+    }
 }
