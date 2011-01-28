@@ -116,6 +116,18 @@ public class LoanTestHelper {
     }
 
     /**
+     * Creates loan account with default paramteres.
+     * @param searchParameters
+     * @return
+     */
+    public LoanAccountPage createDefaultLoanAccount(CreateLoanAccountSearchParameters searchParameters) {
+        return navigationHelper.navigateToClientsAndAccountsPage()
+            .navigateToCreateLoanAccountUsingLeftMenu()
+            .searchAndNavigateToCreateLoanAccountPage(searchParameters)
+            .continuePreviewSubmitAndNavigateToDetailsPage();
+    }
+
+    /**
      * Creates a loan account.
      * @param loanSaveType : True - submit for approval, False - save for later
      * @return LoanAccountPage
