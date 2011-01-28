@@ -22,6 +22,7 @@ package org.mifos.customers.group.struts.action;
 
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -110,7 +111,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
     private final Short officeId = 3;
 
     @Override
-    protected void setStrutsConfig() {
+    protected void setStrutsConfig() throws IOException {
         super.setStrutsConfig();
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/customer-struts-config.xml");
     }

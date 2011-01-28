@@ -20,6 +20,7 @@
 
 package org.mifos.accounts.struts.action;
 
+import java.io.IOException;
 import java.sql.Date;
 
 import junit.framework.Assert;
@@ -47,6 +48,9 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
 
+import java.io.IOException;
+import java.sql.Date;
+
 public class NotesActionStrutsTest extends MifosMockStrutsTestCase {
 
 
@@ -72,7 +76,7 @@ public class NotesActionStrutsTest extends MifosMockStrutsTestCase {
     private String flowKey;
 
     @Override
-    protected void setStrutsConfig() {
+    protected void setStrutsConfig() throws IOException {
         super.setStrutsConfig();
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/accounts-struts-config.xml");
     }

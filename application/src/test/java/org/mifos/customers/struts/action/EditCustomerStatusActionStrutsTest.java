@@ -20,6 +20,7 @@
 
 package org.mifos.customers.struts.action;
 
+import java.io.IOException;
 import java.sql.Date;
 import java.util.List;
 
@@ -84,7 +85,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
     private OfficeBO office;
 
     @Override
-    protected void setStrutsConfig() {
+    protected void setStrutsConfig() throws IOException {
         super.setStrutsConfig();
         try {
 

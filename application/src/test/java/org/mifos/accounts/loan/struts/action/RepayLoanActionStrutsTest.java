@@ -20,6 +20,7 @@
 
 package org.mifos.accounts.loan.struts.action;
 
+import java.io.IOException;
 import java.util.Date;
 
 import junit.framework.Assert;
@@ -46,6 +47,11 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
+import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 public class RepayLoanActionStrutsTest extends MifosMockStrutsTestCase {
 
     protected AccountBO accountBO = null;
@@ -57,7 +63,7 @@ public class RepayLoanActionStrutsTest extends MifosMockStrutsTestCase {
     private String flowKey;
 
     @Override
-    protected void setStrutsConfig() {
+    protected void setStrutsConfig() throws IOException {
         super.setStrutsConfig();
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/accounts-struts-config.xml");
     }

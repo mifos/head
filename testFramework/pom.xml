@@ -1,16 +1,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    
     <groupId>org.mifos</groupId>
     <artifactId>mifos-testFramework</artifactId>
     <packaging>jar</packaging>
     <version>1.8-SNAPSHOT</version>
     <name>Mifos - Test Framework</name>
     <url>http://www.mifos.org</url>
+    
     <parent>
         <groupId>org.mifos</groupId>
         <artifactId>mifos-parent</artifactId>
         <version>1.8-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <dependencies>
@@ -80,11 +83,6 @@
     </dependencies>
     <build>
         <defaultGoal>jar:jar</defaultGoal>
-        <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
-        <scriptSourceDirectory>${basedir}/src/main/scripts</scriptSourceDirectory>
-        <testSourceDirectory>${basedir}/src/test/java</testSourceDirectory>
-        <outputDirectory>${basedir}/target/classes</outputDirectory>
-        <testOutputDirectory>${basedir}/target/test-classes</testOutputDirectory>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

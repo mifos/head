@@ -25,6 +25,7 @@ import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
 import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
+import java.io.IOException;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -84,7 +85,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
     private FeeBO fee;
 
     @Override
-    protected void setStrutsConfig() {
+    protected void setStrutsConfig() throws IOException {
         super.setStrutsConfig();
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/productdefinition-struts-config.xml");
     }

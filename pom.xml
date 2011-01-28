@@ -1,12 +1,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <groupId>org.mifos</groupId>
     <artifactId>mifos-parent</artifactId>
     <packaging>pom</packaging>
     <version>1.8-SNAPSHOT</version>
     <name>Mifos - Parent</name>
     <description>Mifos is a Web application and platform for microfinance portfolio management.</description>
+
+    <url>http://www.mifos.org</url>
+    <organization>
+        <name>Mifos</name>
+        <url>http://mifos.org</url>
+    </organization>
     <issueManagement>
         <system>JIRA</system>
         <url>http://mifosforge.jira.com/</url>
@@ -37,6 +44,7 @@
         <slf4j.version>1.6.1</slf4j.version>
         <project.dependency.version>1.8-SNAPSHOT</project.dependency.version>
         <powermock.version>1.4.7</powermock.version>
+        <varying.target.dir>target</varying.target.dir>
     </properties>
     <modules>
         <module>db</module>
@@ -53,7 +61,67 @@
         <module>appdomain</module>
         <module>application</module>
         <module>acceptanceTests</module>
+        <module>reporting</module>
+        <module>server</module>
+        <module>war</module>
+        <module>reporting-libs</module>
     </modules>
+
+
+    <!-- Details about the m2e profiles are documented in the pom.xml.readme.txt, 
+        and http://mifosforge.jira.com/wiki/display/~vorburger/WorkspaceSettings, 
+        for http://mifosforge.jira.com/browse/MIFOS-4099 -->
+    <profiles>
+        <profile>
+            <id>eclipse-folders</id>
+            <activation>
+                <property>
+                    <name>m2e.version</name>
+                </property>
+            </activation>
+            <properties>
+                <!-- See pom.xml.readme.txt; override in case we're running inside Eclipse. 
+                    This directory HAS TO MATCH what is in an Eclipse project's .classpath -->
+                <varying.target.dir>targetEclipse</varying.target.dir>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>m2e</id>
+            <activation>
+                <property>
+                    <name>m2e.version</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.maven.ide.eclipse</groupId>
+                        <artifactId>lifecycle-mapping</artifactId>
+                        <version>0.10.0</version>
+                        <configuration>
+                            <mappingId>customizable</mappingId>
+                            <configurators>
+                                <configurator id='org.maven.ide.eclipse.jdt.javaConfigurator' />
+                            </configurators>
+                            <!-- Actually, no thank you very much, do not copy resources for me! 
+                                (It slows down and doesn't even work well anyway...) <mojoExecutions> <mojoExecution>org.apache.maven.plugins:maven-resources-plugin::</mojoExecution> 
+                                </mojoExecutions> -->
+                        </configuration>
+                    </plugin>
+                </plugins>
+                <pluginManagement>
+                    <plugins>
+                        <!-- Actually if we don't do <mojoExecution>org.apache.maven.plugins:maven-resources-plugin::</mojoExecution> 
+                            above, then we also don't really have to fix the maven-resources-plugin version 
+                            here... <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-resources-plugin</artifactId> 
+                            <version>2.4</version> </plugin> -->
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+    </profiles>
+
 
     <!--
         Only mention our repository, following "open source" guidance at
@@ -138,6 +206,22 @@
                 <groupId>org.mifos</groupId>
                 <artifactId>mifos-appdomain</artifactId>
                 <version>1.8-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mifos</groupId>
+                <artifactId>mifos-webapp</artifactId>
+                <version>1.8-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mifos</groupId>
+                <artifactId>mifos-reporting</artifactId>
+                <version>1.8-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mifos</groupId>
+                <artifactId>mifos-reporting-libs</artifactId>
+                <version>1.8-SNAPSHOT</version>
+                <type>pom</type>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
@@ -606,16 +690,16 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-               <groupId>org.powermock</groupId>
-               <artifactId>powermock-module-junit4</artifactId>
-               <version>${powermock.version}</version>
-               <scope>test</scope>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-module-junit4</artifactId>
+                <version>${powermock.version}</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
-               <groupId>org.powermock</groupId>
-               <artifactId>powermock-api-mockito</artifactId>
-               <version>${powermock.version}</version>
-               <scope>test</scope>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-api-mockito</artifactId>
+                <version>${powermock.version}</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.easymock</groupId>
@@ -641,8 +725,8 @@
                 <version>4.5</version>
                 <scope>test</scope>
             </dependency>
-             <dependency>
-            <groupId>junit-addons</groupId>
+            <dependency>
+                <groupId>junit-addons</groupId>
                 <artifactId>junit-addons</artifactId>
                 <version>1.4</version>
                 <scope>test</scope>
@@ -663,14 +747,28 @@
                 <version>1.1</version>
                 <scope>test</scope>
             </dependency>
+
+            <dependency>
+                <groupId>org.seleniumhq.selenium</groupId>
+                <artifactId>selenium</artifactId>
+                <version>2.0b1</version>
+                <exclusions>
+                    <!-- htmlunit drags along a Xalan & Xerces, on the same classpath as 
+                        main Mifos in the mifos-server setup, which causes Mifos to have issues (e.g. 
+                        failing to validate mifosChartOfAccounts.xml). So for now, in this 'everything-in-process' 
+                        set-up, no selenium-htmlunit-driver... -->
+                    <exclusion>
+                        <groupId>org.seleniumhq.selenium</groupId>
+                        <artifactId>selenium-htmlunit-driver</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
-    <organization>
-        <name>Mifos</name>
-        <url>http://mifos.org</url>
-    </organization>
 
     <build>
+        <directory>${basedir}/${varying.target.dir}</directory>
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -694,6 +792,7 @@
             </plugins>
         </pluginManagement>
     </build>
+
     <reporting>
         <plugins>
             <plugin>

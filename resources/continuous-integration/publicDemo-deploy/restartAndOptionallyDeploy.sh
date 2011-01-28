@@ -24,7 +24,7 @@ fi
 # unlock mifos user account and reset password; this account sometimes gets
 # locked out. db connection settings here are duplicated in
 # mifos_conf/local.properties
-cat $WORKSPACE/application/src/main/sql/init_mifos_password.sql | \
+cat $WORKSPACE/application/src/main/resources/sql/init_mifos_password.sql | \
     mysql -u hudson -phudson hudson_mifos_public_demo
 echo 'update personnel set locked=0, no_of_tries=0 where personnel_id=1' | \
     mysql -u hudson -phudson hudson_mifos_public_demo

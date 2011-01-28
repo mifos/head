@@ -1,30 +1,38 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    
     <groupId>org.mifos</groupId>
+    <!-- TODO Could rename this module from mifos-webapp to mifos-application (in line with physical module folder name!),
+    	 now that we have a mifos-war, and that this is actually not a 'webapp' (?!) anymore, for clarity? -->
     <artifactId>mifos-webapp</artifactId>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <version>1.8-SNAPSHOT</version>
     <name>Mifos - Application</name>
+    
     <parent>
         <groupId>org.mifos</groupId>
         <artifactId>mifos-parent</artifactId>
         <version>1.8-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
+    
     <scm>
         <url>git://mifos.git.sourceforge.net/gitroot/mifos/head</url>
         <connection>scm:git:git://mifos.git.sourceforge.net/gitroot/mifos/</connection>
         <developerConnection>scm:git:ssh://mifos.git.sourceforge.net/gitroot/mifos/head</developerConnection>
     </scm>
+    
     <properties>
         <modules.root.dir>${basedir}/..</modules.root.dir>
         <jdk.version>1.6</jdk.version>
         <current.release.name>mifos-f-${env.BUILD_TAG}</current.release.name>
         <test.database.properties.file>${basedir}/src/test/resources/org/mifos/config/resources/integrationDatabase.properties</test.database.properties.file>
         <main.database.properties.file>${basedir}/src/main/resources/org/mifos/config/resources/mainDatabase.properties</main.database.properties.file>
-        <sql.resources.src.directory>${modules.root.dir}/application/src/main/sql</sql.resources.src.directory>
+        <sql.resources.src.directory>${modules.root.dir}/application/src/main/resources/sql</sql.resources.src.directory>
         <sql.resources.target.directory>${project.build.outputDirectory}/sql</sql.resources.target.directory>
-        <test.sql.resources.src.directory>${modules.root.dir}/application/src/test/sql</test.sql.resources.src.directory>
+        <!-- TODO test.sql.resources.src.directory application/src/test/(resources/)sql doesn't seem to be used, remove? -->
+        <test.sql.resources.src.directory>${modules.root.dir}/application/src/test/resources/sql</test.sql.resources.src.directory>
         <create.props.skip>true</create.props.skip>
         <!-- mimics ConfigurationLocator directory search behavior -->
         <mifos.overrides.conf>${mifos.conf}/local.properties</mifos.overrides.conf>
@@ -277,7 +285,10 @@
             <groupId>org.mifos</groupId>
             <artifactId>mifos-appdomain</artifactId>
         </dependency>
-
+		<dependency>
+			<groupId>org.mifos</groupId>
+			<artifactId>mifos-reporting</artifactId>
+		</dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>jsp-api</artifactId>
@@ -470,6 +481,7 @@
             <artifactId>struts-legacy</artifactId>
         </dependency>
         <dependency>
+<<<<<<< HEAD
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-mapper-asl</artifactId>
         </dependency>
@@ -492,6 +504,10 @@
         <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
+=======
+            <groupId>strutstest</groupId>
+            <artifactId>strutstest</artifactId>
+>>>>>>> vorburger/MIFOS-4099__NewWorkspace_Re-Rebased
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -546,13 +562,6 @@
         </dependency>
     </dependencies>
     <build>
-        <finalName>${project.artifactId}</finalName>
-        <defaultGoal>war:war</defaultGoal>
-        <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
-        <testSourceDirectory>${basedir}/src/test/java</testSourceDirectory>
-        <outputDirectory>${basedir}/target/mifos-webapp/WEB-INF/classes</outputDirectory>
-        <testOutputDirectory>${basedir}/target/test-classes</testOutputDirectory>
-
         <resources>
             <resource>
                 <directory>${sql.resources.src.directory}</directory>
@@ -562,14 +571,6 @@
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
-            </resource>
-            <resource>
-                <directory>${modules.root.dir}/questionnaire/src/main/webapp/pages</directory>
-                <targetPath>pages</targetPath>
-            </resource>
-            <resource>
-                <directory>${modules.root.dir}/userInterface/src/main/webapp/pages</directory>
-                <targetPath>pages</targetPath>
             </resource>
         </resources>
         <testResources>
@@ -823,6 +824,7 @@
                     </execution>
                 </executions>
             </plugin>
+<!--            
             <plugin>
                 <groupId>org.codehaus.mojo.jspc</groupId>
                 <artifactId>jspc-maven-plugin</artifactId>
@@ -843,16 +845,23 @@
                 </dependencies>
                 <configuration>
                     <includeInProject>false</includeInProject>
-                    <!--
+                    < ! - -
                         we'll still catch noncompliance with taglibs even if this is false, and if it is true, the
                         compiled JSPs are included in the project (even if includeInProject=false!)
-                    -->
+                    - - >
                     <compile>false</compile>
-                    <!-- makes output cleaner (less verbose) -->
+                    < ! - - makes output cleaner (less verbose) - - >
                     <showSuccess>false</showSuccess>
+					<sources>
+						<directory>${basedir}/src/main/resources/META-INF/resources</directory>
+						<includes>
+							<include>**/*.jsp</include>
+						</includes>
+					</sources>
                 </configuration>
             </plugin>
-            <plugin>
+ -->
+             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.1.1-mifos-mexec-68-patch</version>
@@ -875,50 +884,6 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>2.0.2</version>
-                <configuration>
-                    <webResources>
-                        <!-- TODO: reporting seems to have been removed, can the next three be cleaned-up??? -->
-                        <resource>
-                            <directory>${basedir}/reporting/BirtReportDesign</directory>
-                            <targetPath>report</targetPath>
-                        </resource>
-                        <resource>
-                            <directory>${basedir}/reporting/BirtReportResource</directory>
-                            <targetPath>report/BirtReportResource</targetPath>
-                        </resource>
-                        <resource>
-                            <directory>${basedir}/reporting/BirtWebViewer-2_5_0</directory>
-                            <excludes>
-                                <exclude>*.jsp</exclude>
-                                <exclude>*.rptdesign</exclude>
-                                <exclude>**/web.xml</exclude>
-                            </excludes>
-                        </resource>
-                        <!-- TODO: How about using Maven WAR Overlay instead of this manual listing???
-                            @see http://maven.apache.org/plugins/maven-war-plugin/overlays.html -->
-                        <resource>
-                            <directory>${modules.root.dir}/userInterface/src/main/webapp</directory>
-                            <targetPath>.</targetPath>
-                        </resource>
-                        <resource>
-                            <directory>${modules.root.dir}/questionnaire/src/main/webapp</directory>
-                            <targetPath>.</targetPath>
-                        </resource>
-                        <resource>
-                            <directory>${modules.root.dir}/cashflow/src/main/webapp</directory>
-                            <targetPath>.</targetPath>
-                        </resource>
-                        <resource>
-                            <directory>${modules.root.dir}/accounting/src/main/webapp</directory>
-                            <targetPath>.</targetPath>
-                        </resource>
-                    </webResources>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.mifos.maven</groupId>
@@ -983,27 +948,6 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.2-beta-3</version>
-                <executions>
-                    <execution>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <finalName>${current.release.name}</finalName>
-                    <appendAssemblyId>false</appendAssemblyId>
-                    <descriptors>
-                        <descriptor>src/main/assembly/release.xml</descriptor>
-                    </descriptors>
-                    <outputDirectory>target</outputDirectory>
-                    <workDirectory>target/assembly/work</workDirectory>
-                </configuration>
             </plugin>
         </plugins>
     </build>

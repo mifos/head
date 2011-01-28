@@ -12,6 +12,7 @@
         <groupId>org.mifos</groupId>
         <artifactId>mifos-parent</artifactId>
         <version>1.8-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <properties>
@@ -111,8 +112,6 @@
     </dependencies>
     <build>
         <defaultGoal>jar</defaultGoal>
-        <sourceDirectory>src/main/java</sourceDirectory>
-        <outputDirectory>target/classes</outputDirectory>
         <resources>
             <resource>
                 <directory>do-not-inherit-from-parent</directory>

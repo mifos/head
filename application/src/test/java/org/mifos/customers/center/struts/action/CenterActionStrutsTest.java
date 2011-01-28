@@ -22,6 +22,7 @@ package org.mifos.customers.center.struts.action;
 
 import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -82,7 +83,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
     private static final String dateFormat = "dd/MM/yyyy";
 
     @Override
-    protected void setStrutsConfig() {
+    protected void setStrutsConfig() throws IOException {
         super.setStrutsConfig();
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/customer-struts-config.xml");
     }

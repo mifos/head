@@ -24,6 +24,7 @@ import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_ME
 import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
+import java.io.IOException;
 import java.util.Date;
 
 import junit.framework.Assert;
@@ -52,6 +53,13 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
+import java.io.IOException;
+import java.util.Date;
+
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
+
 public class ReverseLoanDisbursalActionStrutsTest extends MifosMockStrutsTestCase {
 
 
@@ -69,7 +77,7 @@ public class ReverseLoanDisbursalActionStrutsTest extends MifosMockStrutsTestCas
     private String flowKey;
 
     @Override
-    protected void setStrutsConfig() {
+    protected void setStrutsConfig() throws IOException {
         super.setStrutsConfig();
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/accounts-struts-config.xml");
     }

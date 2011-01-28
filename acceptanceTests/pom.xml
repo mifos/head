@@ -12,6 +12,7 @@
         <groupId>org.mifos</groupId>
         <artifactId>mifos-parent</artifactId>
         <version>1.8-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <properties>
@@ -25,7 +26,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <database.properties.file>${modules.root.dir}/acceptanceTests/src/test/resources/org/mifos/config/resources/acceptanceDatabase.properties</database.properties.file>
-        <sql.resources.src.directory>${modules.root.dir}/application/src/main/sql</sql.resources.src.directory>
+        <sql.resources.src.directory>${modules.root.dir}/application/src/main/resources/sql</sql.resources.src.directory>
         <sql.resources.target.directory>${project.build.outputDirectory}/sql</sql.resources.target.directory>
         <!-- mimics ConfigurationLocator directory search behavior -->
         <mifos.overrides.conf>${mifos.conf}/local.properties</mifos.overrides.conf>
@@ -194,7 +195,7 @@
     <dependencies>
         <dependency>
             <groupId>org.mifos</groupId>
-            <artifactId>mifos-webapp</artifactId>
+            <artifactId>mifos-war</artifactId>
             <version>1.8-SNAPSHOT</version>
             <type>war</type>
         </dependency>
@@ -264,11 +265,6 @@
 
     <build>
         <defaultGoal>integration-test</defaultGoal>
-        <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
-        <scriptSourceDirectory>${basedir}/src/main/scripts</scriptSourceDirectory>
-        <testSourceDirectory>${basedir}/src/test/java</testSourceDirectory>
-        <outputDirectory>target/classes</outputDirectory>
-        <testOutputDirectory>target/test-classes</testOutputDirectory>
 
         <resources>
             <resource>
@@ -480,7 +476,7 @@
                         <deployables>
                             <deployable>
                                 <groupId>org.mifos</groupId>
-                                <artifactId>mifos-webapp</artifactId>
+                                <artifactId>mifos-war</artifactId>
                                 <type>war</type>
                                 <properties>
                                     <context>mifos</context>
