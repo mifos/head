@@ -17,11 +17,29 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
+package org.mifos.dto.domain;
 
-package org.mifos.customers.util.helpers;
+public class CustomerSearchDto {
 
-import org.mifos.customers.api.DataTransferObject;
+	private final String searchTerm;
+	private final Integer page;
+	private final Integer pageSize;
 
-public class CustomerSearchResultsDto implements DataTransferObject {
+	public CustomerSearchDto(String searchTerm, Integer page, Integer pageSize) {
+		this.searchTerm = searchTerm;
+		this.page = page;
+		this.pageSize = pageSize;
+	}
 
+	public Integer getPage() {
+		return this.page;
+	}
+
+	public Integer getPageSize() {
+		return this.pageSize;
+	}
+
+	public String getSearchTerm() {
+		return this.searchTerm;
+	}
 }

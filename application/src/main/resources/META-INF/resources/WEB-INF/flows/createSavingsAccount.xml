@@ -11,7 +11,7 @@
 	
 	<view-state id="customerSearchStep" view="createSavingsAccountCustomerSearch" model="customerSearchFormBean">
 		<transition on="searchTermEntered" to="selectCustomerStep" validate="true">
-			<evaluate expression="createSavingsAccountController.searchCustomers(customerSearchFormBean)" result="flowScope.customers" />
+			<evaluate expression="createSavingsAccountController.searchCustomers(customerSearchFormBean)" result="flowScope.customerSearchResultsDto" />
 		</transition>
 	</view-state>
 

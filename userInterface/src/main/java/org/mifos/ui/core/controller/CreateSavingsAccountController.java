@@ -25,6 +25,7 @@ import java.util.List;
 import org.mifos.application.servicefacade.SavingsServiceFacade;
 import org.mifos.dto.domain.CustomerDto;
 import org.mifos.dto.domain.PrdOfferingDto;
+import org.mifos.dto.screen.CustomerSearchResultsDto;
 import org.mifos.dto.screen.SavingsProductReferenceDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -50,9 +51,11 @@ public class CreateSavingsAccountController {
 		return savingsProducts;
 	}
 
-	public List<CustomerDto> searchCustomers(CustomerSearchFormBean formBean) {
+	public CustomerSearchResultsDto searchCustomers(CustomerSearchFormBean formBean) {
 		// TODO replace stub data
-		List<CustomerDto> searchResults = new ArrayList<CustomerDto>();
+//		CustomerSearchDto searchDto = new CustomerSearchDto(formBean.getSearchString(), 1, 10);
+//		someFacade.searchCustomers(searchDto)...
+		List<CustomerDto> pagedDetails = new ArrayList<CustomerDto>();
 		for (int i = 0; i < 50; i++) {
 			Integer customerId = new Integer(i);
 			String displayName = "Customer " + i;
@@ -60,8 +63,9 @@ public class CreateSavingsAccountController {
 			Short levelId = 1;
 			CustomerDto customer = new CustomerDto(customerId, displayName,
 					parentCustomerId, levelId);
-			searchResults.add(customer);
+			pagedDetails.add(customer);
 		}
-		return searchResults;
+		CustomerSearchResultsDto resultsDto = new CustomerSearchResultsDto(pagedDetails.size(), 1, 100, 100, pagedDetails);
+		return resultsDto;
 	}
 }

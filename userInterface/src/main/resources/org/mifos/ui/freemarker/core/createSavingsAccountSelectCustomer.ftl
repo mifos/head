@@ -40,7 +40,7 @@
 <!-- Search results -->
 <div class="search-results">
 <ol>
-	[#list customers as customer]
+	[#list customerSearchResultsDto.pagedDetails as customer]
 		<li>${customer.displayName} / <a href="${flowExecutionUrl}&_eventId=customerSelected&customerId=${customer.customerId}">${customer.displayName}</a></li>
 	[/#list]
 </ol>
