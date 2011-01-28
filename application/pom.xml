@@ -481,7 +481,6 @@
             <artifactId>struts-legacy</artifactId>
         </dependency>
         <dependency>
-<<<<<<< HEAD
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-mapper-asl</artifactId>
         </dependency>
@@ -504,10 +503,6 @@
         <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
-=======
-            <groupId>strutstest</groupId>
-            <artifactId>strutstest</artifactId>
->>>>>>> vorburger/MIFOS-4099__NewWorkspace_Re-Rebased
             <scope>test</scope>
         </dependency>
         <dependency>
