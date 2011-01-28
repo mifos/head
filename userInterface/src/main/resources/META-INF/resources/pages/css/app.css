@@ -3,6 +3,8 @@
 h1.success
 {
 	color: #CC6601;
+	background-color: #FFFFFF;
+	padding: 0px;
 }
 
 h1 .standout
