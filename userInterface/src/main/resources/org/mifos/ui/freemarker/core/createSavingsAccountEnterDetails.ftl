@@ -24,12 +24,12 @@
                  		 "createSavingsAccount.flowState.enterAccountInfo", 
                  		 "createSavingsAccount.flowState.reviewAndSubmit"]] 
 
-<h1>Create Savings account - <b>Enter Savings account information</b></h1>
+<h1>Create Savings account - <span class="standout">Enter Savings account information</span></h1>
 <p>Select a Savings instance. Then click Continue. Click Cancel to return to Clients & Accounts without submitting information.</p>
 <p>*Fields marked with an asterisk are required.</p>
 <br/>
 
-<b>Account Owner</b>: Test Customer1188
+<p><span class="standout">Account Owner</span>: Test Customer1188</p>
 <br/>
 
 <form action="${flowExecutionUrl}&_eventId=newProductSelected" method="post" class="two-columns">

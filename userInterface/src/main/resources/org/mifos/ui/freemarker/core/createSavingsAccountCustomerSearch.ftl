@@ -24,7 +24,7 @@
                  		 "createSavingsAccount.flowState.enterAccountInfo", 
                  		 "createSavingsAccount.flowState.reviewAndSubmit"]] 
 
-<h1>Create Savings Account - <b>Select a customer</b></h1>
+<h1>Create Savings Account - <span class="standout">Select a customer</span></h1>
 
 <p>Enter a Client or Group or Center name and click Search. Click Cancel to return to Clients & Accounts without submitting information.</p>
 <br/>

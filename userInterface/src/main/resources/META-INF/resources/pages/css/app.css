@@ -5,6 +5,11 @@ h1.success
 	color: #CC6601;
 }
 
+h1 .standout
+{
+    color: #CC6601;
+}
+
 input.submit
 {
 	font-family: Arial, Verdana, Helvetica, sans-serif;

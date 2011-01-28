@@ -24,7 +24,7 @@
                  		 "createSavingsAccount.flowState.enterAccountInfo", 
                  		 "createSavingsAccount.flowState.reviewAndSubmit"]] 
 
-<h1>Create Savings account - <b>Preview Savings account information</b></h1>
+<h1>Create Savings account - <span class="standout">Preview Savings account information</span></h1>
 <p>Review the information below. Click Submit if you are satisfied or click Edit to make changes. Click Cancel to return to Clients & Accounts without submitting information.</p>
 <br/>
 
