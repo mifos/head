@@ -71,4 +71,28 @@
 		</attribute>
 
 	</tag>
+	
+	<tag>
+		<name>surveyquestion</name>
+		<tag-class>org.mifos.customers.surveys.struts.tag.QuestionTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<name>questionId</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		
+		<attribute>
+			<name>isDisabled</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		
+		<attribute>
+			<name>value</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
 </taglib>
+
