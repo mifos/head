@@ -32,6 +32,7 @@
 <p><span class="standout">Account Owner</span>: Test Customer1188</p>
 <br/>
 
+[@form.errors "accountDetailFormBean.*"/]
 <form action="${flowExecutionUrl}&_eventId=newProductSelected" method="post" class="two-columns">
 	<fieldset>
 	<div class="row">

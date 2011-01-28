@@ -20,11 +20,12 @@
 
 package org.mifos.dto.screen;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.mifos.dto.domain.SavingsProductDto;
 
-public class SavingsProductReferenceDto {
+public class SavingsProductReferenceDto implements Serializable {
 
     private final List<ListElement> interestCalcTypeOptions;
     private final SavingsProductDto savingsProductDetails;

@@ -4,6 +4,7 @@
       xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
 
 	<var name="customerSearchFormBean" class="org.mifos.ui.core.controller.CustomerSearchFormBean" />
+	<var name="accountDetailFormBean" class="org.mifos.ui.core.controller.AccountDetailFormBean" />
 
 	<input name="searchTerm" />
 	<input name="customerId" />
@@ -30,8 +31,11 @@
 		</transition>
 	</view-state>
 
-	<view-state id="enterAccountDetailsStep" view="createSavingsAccountEnterDetails">
-		<transition on="newProductSelected" to="enterAccountDetailsStep">
+	<view-state id="enterAccountDetailsStep" view="createSavingsAccountEnterDetails" model="accountDetailFormBean">
+		<on-entry>
+			<evaluate expression="flowScope.accountDetailFormBean.setProduct(conversationScope.product)" />
+		</on-entry>
+		<transition on="newProductSelected" to="enterAccountDetailsStep" validate="false">
 			<!-- TODO use on state entry instead of duplicating code from above? -->
 			<set name="requestScope.productId" value="requestParameters.selectedPrdOfferingId" type="int"/>
 			<evaluate expression="createSavingsAccountController.getProduct(productId)" result="conversationScope.product" />
@@ -45,7 +49,6 @@
 			<evaluate expression="createSavingsAccountController.createAccountInPartialApplicationState(conversationScope.product)" result="flowScope.account" />
 		</transition>
 		<transition on="saveForApproval" to="complete" >
-			<!-- TODO conditional transition base on result of exec -->
 			<evaluate expression="createSavingsAccountController.createAccountInPendingApprovalState(conversationScope.product)" result="flowScope.account" />
 		</transition>
 	</view-state>
