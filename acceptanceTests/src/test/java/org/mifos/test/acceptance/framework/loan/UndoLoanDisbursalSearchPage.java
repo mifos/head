@@ -20,6 +20,7 @@
 
 package org.mifos.test.acceptance.framework.loan;
 
+import org.junit.Assert;
 import org.mifos.test.acceptance.framework.MifosPage;
 
 import com.thoughtworks.selenium.Selenium;
@@ -36,5 +37,13 @@ public class UndoLoanDisbursalSearchPage extends MifosPage {
         waitForPageToLoad();
 
         return new UndoLoanDisbursalEntryPage(selenium);
+    }
+
+    public void verifyLoanCantBeReversed(String loanID) {
+        selenium.type("undoloandisbursalsearch.input.search", loanID);
+        selenium.click("undoloandisbursalsearch.button.search");
+        waitForPageToLoad();
+        this.verifyPage("UndoLoanDisbursalSearch");
+        Assert.assertTrue(selenium.isTextPresent("No search results found."));
     }
 }
