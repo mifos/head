@@ -326,6 +326,8 @@
             <forward name="create_success" path="/pages/application/surveys/jsp/create_survey_success.jsp"/>
             <forward name="print_success" path="/pages/application/surveys/jsp/printer_version.jsp"/>
         </action>
+
+
         <action path="/questionsAction"
                 type="org.mifos.customers.surveys.struts.action.QuestionsAction"
                 parameter="method"
@@ -340,6 +342,7 @@
             <forward name="update_success" path="/pages/application/surveys/jsp/question_details.jsp"/>
             <forward name="preview_success" path="/pages/application/surveys/jsp/preview_question.jsp"/>
         </action>
+
         <action path="/surveyInstanceAction"
                 type="org.mifos.customers.surveys.struts.action.SurveyInstanceAction"
                 parameter="method"
@@ -368,8 +371,42 @@
             <forward name="update_success" path="/AdminAction.do?method=load" redirect="true"/>
             <forward name="get_success" path="/pages/application/ppi/jsp/get.jsp"/>
         </action>
+
+        <action path="/moratoriumAction"
+                type="org.mifos.application.moratorium.struts.action.MoratoriumAction"
+                parameter="method"
+                scope="session"
+                validate="true"
+                input="/moratoriumAction.do?method=validate"
+                name="moratoriumActionForm">
+            <forward name="configure" path="/pages/application/moratorium/jsp/configureMoratorium.jsp"/>
+            <forward name="loadSearch" path="/pages/application/moratorium/jsp/configureClientMoratorium.jsp"/>
+            <forward name="loadSearchForBranch" path="/pages/application/moratorium/jsp/configureBranchMoratorium.jsp"/>
+            <forward name="load" path="/pages/application/moratorium/jsp/applyMoratorium.jsp"/>
+            <forward name="loadForBranch" path="/pages/application/moratorium/jsp/applyMoratoriumForBranch.jsp"/>
+            <forward name="create" path="/pages/application/moratorium/jsp/applyMoratoriumConfirm.jsp"/>
+            <forward name="createForBranch" path="/pages/application/moratorium/jsp/applyBranchMoratoriumConfirm.jsp"/>
+            <forward name="previewCreateMoratorium_failure"
+                     path="/pages/application/moratorium/jsp/applyMoratorium.jsp"/>
+            <forward name="previewCreateBranchMoratorium_failure"
+                     path="/pages/application/moratorium/jsp/applyMoratoriumForBranch.jsp"/>
+            <forward name="get_success" path="/pages/application/moratorium/jsp/viewMoratoriums.jsp"/>
+            <forward name="edit_success" path="/pages/application/moratorium/jsp/editMoratoriums.jsp"/>
+            <forward name="editpreview_success" path="/pages/application/moratorium/jsp/editMoratoriumsPreview.jsp"/>
+            <forward name="update_success" path="/moratoriumAction.do?method=get"/>
+            <forward name="editPreviewMoratorium_failure" path="/pages/application/moratorium/jsp/editMoratoriums.jsp"/>
+            <forward name="liftPreviewMoratorium_failure" path="/pages/application/moratorium/jsp/liftMoratoriums.jsp"/>
+            <forward name="create_success" path="/AdminAction.do?method=load"></forward>
+            <forward name="previous_success" path="/pages/application/moratorium/jsp/applyMoratorium.jsp"></forward>
+            <forward name="previous_success_for_branch"
+                     path="/pages/application/moratorium/jsp/applyMoratoriumForBranch.jsp"></forward>
+            <forward name="edit_previous_success"
+                     path="/pages/application/moratorium/jsp/editMoratoriums.jsp"></forward>
+            <forward name="lift_previous_success"
+                     path="/pages/application/moratorium/jsp/liftMoratoriums.jsp"></forward>
+        </action>
+
     </action-mappings>
-    
     <message-resources key="FrameworkUIResources" parameter="org.mifos.config.localizedResources.FrameworkUIResources"  />
     <message-resources key="UIResources" parameter="org.mifos.config.localizedResources.UIResources"
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
@@ -427,7 +464,6 @@
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
 
     <!-- Moratorium resources -->
-    <!-- 
     <message-resources key="moratoriumUIResources"
                        parameter="org.mifos.application.moratorium.util.resources.MoratoriumUIResources"
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
@@ -437,7 +473,6 @@
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
     <message-resources key="PPIUIResources" parameter="org.mifos.config.localizedResources.PPIUIResources"
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
-                       -->
     <!--  Accepted Payment Type resources -->
     <message-resources key="acceptedPaymentTypeUIResources"
                        parameter="org.mifos.config.localizedResources.AcceptedPaymentTypeUIResources"/>
