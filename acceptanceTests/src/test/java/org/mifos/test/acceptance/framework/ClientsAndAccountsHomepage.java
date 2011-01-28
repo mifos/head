@@ -21,6 +21,7 @@
 package org.mifos.test.acceptance.framework;
 
 import com.thoughtworks.selenium.Selenium;
+
 import org.mifos.test.acceptance.framework.center.CreateCenterChooseOfficePage;
 import org.mifos.test.acceptance.framework.center.MeetingParameters;
 import org.mifos.test.acceptance.framework.client.ChooseOfficePage;
@@ -32,6 +33,7 @@ import org.mifos.test.acceptance.framework.client.CreateClientEnterMfiDataPage;
 import org.mifos.test.acceptance.framework.client.CreateClientEnterPersonalDataPage;
 import org.mifos.test.acceptance.framework.client.CreateClientPreviewDataPage;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntrySelectPage;
+import org.mifos.test.acceptance.framework.group.CreateGroupSearchPage;
 import org.mifos.test.acceptance.framework.group.GroupSearchPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountsSearchPage;
@@ -88,6 +90,12 @@ public class ClientsAndAccountsHomepage extends AbstractPage {
         selenium.click("menu.link.label.createnew.client");
         waitForPageToLoad();
         return new GroupSearchPage(selenium);
+    }
+
+    public CreateGroupSearchPage navigateToCreateNewGroupPage() {
+        selenium.click("menu.link.label.createnew.group");
+        waitForPageToLoad();
+        return new CreateGroupSearchPage(selenium);
     }
 
     // TODO belongs in a helper

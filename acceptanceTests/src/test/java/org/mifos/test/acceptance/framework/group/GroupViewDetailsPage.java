@@ -29,6 +29,9 @@ import org.testng.Assert;
 import com.thoughtworks.selenium.Selenium;
 
 public class GroupViewDetailsPage extends MifosPage {
+
+    public final static String STATUS_PENDING_APPROVAL = "Pending Approval";
+
     public GroupViewDetailsPage() {
         super();
     }

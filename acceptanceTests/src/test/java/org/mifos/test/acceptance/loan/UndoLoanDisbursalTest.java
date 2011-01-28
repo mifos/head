@@ -116,7 +116,7 @@ public class UndoLoanDisbursalTest extends UiTestCaseBase {
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void areverseGroupLoanWhenAccInDiffStatuses() throws Exception {
+    public void reverseGroupLoanWhenAccInDiffStatuses() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, START_DATA_SET, dataSource, selenium);
 
         String groupName = "MyGroup1233266255641";

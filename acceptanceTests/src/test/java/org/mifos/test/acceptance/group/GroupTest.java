@@ -38,6 +38,7 @@ import org.mifos.test.acceptance.framework.group.CreateGroupSearchPage;
 import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
 import org.mifos.test.acceptance.framework.login.LoginPage;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
+import org.mifos.test.acceptance.framework.testhelpers.GroupTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.questionnaire.Choice;
 import org.mifos.test.acceptance.questionnaire.CreateQuestionGroupPage;
@@ -78,6 +79,8 @@ public class GroupTest extends UiTestCaseBase {
     private static final String NUMBER = "Number";
     private static final String SMART_SELECT = "Smart Select";
 
+    private GroupTestHelper groupTestHelper;
+
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     @BeforeMethod(groups = {"smoke","group","acceptance","ui"})
@@ -86,6 +89,7 @@ public class GroupTest extends UiTestCaseBase {
         appLauncher = new AppLauncher(selenium);
         navigationHelper = new NavigationHelper(selenium);
         random = new Random();
+        groupTestHelper = new GroupTestHelper(navigationHelper);
     }
 
     @AfterMethod(groups = {"smoke","group","acceptance","ui"})
@@ -102,7 +106,7 @@ public class GroupTest extends UiTestCaseBase {
         SearchResultsPage searchResultsPage = homePage.search("mygroup");
         searchResultsPage.verifyPage();
         // click on any search result leading to a group dashboard
-        GroupViewDetailsPage groupViewDetailsPage = searchResultsPage.navigateToGroupViewDetailsPage("link=MyGroup*");
+        searchResultsPage.navigateToGroupViewDetailsPage("link=MyGroup*");
     }
 
     @Test(sequential = true, groups = {"smoke","group","acceptance","ui"})
@@ -194,6 +198,25 @@ public class GroupTest extends UiTestCaseBase {
         responsePage.verifyQuestionPresent(question1, "30");
         responsePage.verifyQuestionPresent(question2, "Choice", "Choice2");
         responsePage.navigateToDetailsPage();
+    }
+
+    /**
+     * Verify when Pending Approval (Groups) is set to default(true);
+     * the system transitions the account to this state when creating new groups
+     * http://mifosforge.jira.com/browse/MIFOSTEST-210
+     * @throws Exception
+     */
+    @Test(groups = {"smoke","group","acceptance","ui"})
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
+    public void verifyPendingApprovalSetToDefault() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
+
+        CreateGroupSubmitParameters groupParams = getGenericGroupFormParameters();
+        String centerName = "MyCenter1233171688286";
+
+        GroupViewDetailsPage groupViewDetailsPage = groupTestHelper.createNewGroup(centerName, groupParams);
+
+        groupViewDetailsPage.verifyStatus(GroupViewDetailsPage.STATUS_PENDING_APPROVAL);
     }
 
     private Map<String, String> getChoiceTags() {
