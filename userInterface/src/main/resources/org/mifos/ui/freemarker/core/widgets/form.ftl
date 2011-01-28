@@ -19,6 +19,8 @@
 *  explanation of the license and how it is applied.
 --]
 
+[#import "/spring.ftl" as spring /]
+
 [#-- FIXME: these macros are copied from newblueprintmacros.ftl. They've been moved here for better organization. Delete from newblueprintmacros.ftl. --]
 
 [#-- TODO: add documentation --]
@@ -36,4 +38,23 @@
             [/#list]
         [/#if]
     </select>
+[/#macro]
+
+[#-- 
+Display form validation errors in one place.
+
+springBindPath: The path for Spring bind. For example, "userFormBean.*" 
+				See http://static.springsource.org/spring/docs/1.1.5/taglib/tag/BindTag.html
+--]
+[#macro errors springBindPath]
+    [@spring.bind springBindPath/]
+    [#if spring.status.errorMessages?size > 0]
+		<div class="validationErrors">
+			<ul>
+			[#list spring.status.errorMessages as error]
+		      <li><b>${error}</b></li>
+			[/#list]
+		    </ul>
+		</div>
+	[/#if]
 [/#macro]

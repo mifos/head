@@ -50,7 +50,7 @@ public class CreateSavingsAccountController {
 		return savingsProducts;
 	}
 
-	public List<CustomerDto> searchCustomers(String searchTerm) {
+	public List<CustomerDto> searchCustomers(CustomerSearchFormBean formBean) {
 		// TODO replace stub data
 		List<CustomerDto> searchResults = new ArrayList<CustomerDto>();
 		for (int i = 0; i < 50; i++) {

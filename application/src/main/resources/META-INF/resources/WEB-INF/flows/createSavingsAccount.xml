@@ -3,22 +3,24 @@
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
 
+	<var name="customerSearchFormBean" class="org.mifos.ui.core.controller.CustomerSearchFormBean" />
+
 	<input name="searchTerm" />
 	<input name="customerId" />
 	<input name="productId" />
 	
-	<view-state id="customerSearchStep" view="createSavingsAccountCustomerSearch">
-		<transition on="searchTermEntered" to="selectCustomerStep">
-			<evaluate expression="createSavingsAccountController.searchCustomers(searchTerm)" result="flowScope.customers" />
+	<view-state id="customerSearchStep" view="createSavingsAccountCustomerSearch" model="customerSearchFormBean">
+		<transition on="searchTermEntered" to="selectCustomerStep" validate="true">
+			<evaluate expression="createSavingsAccountController.searchCustomers(customerSearchFormBean)" result="flowScope.customers" />
 		</transition>
 	</view-state>
 
-	<view-state id="selectCustomerStep" view="createSavingsAccountSelectCustomer">
+	<view-state id="selectCustomerStep" view="createSavingsAccountSelectCustomer" model="customerSearchFormBean">
 		<transition on="customerSelected" to="selectProductOfferingStep">
 			<set name="requestScope.customerId" value="requestParameters.customerId" type="int"/>
 			<evaluate expression="createSavingsAccountController.getProductOfferings(customerId)" result="flowScope.products" />
 		</transition>
-		<transition on="searchTermEntered" to="selectCustomerStep" />
+		<transition on="searchTermEntered" to="selectCustomerStep" validate="true" />
 	</view-state>
 
 	<view-state id="selectProductOfferingStep" view="createSavingsAccountSelectProduct">

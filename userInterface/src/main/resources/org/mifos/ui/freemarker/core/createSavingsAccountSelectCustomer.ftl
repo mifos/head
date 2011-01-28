@@ -28,10 +28,11 @@
 <p>To select, click on a resulting Client or Group or Center from the list below. Click Cancel to return to Clients & Accounts without submitting information.</p>
 
 <!-- Client search form -->
+[@form.errors "customerSearchFormBean.*"/]
 <form action="${flowExecutionUrl}" method="post">
 	<div class="row">
 		<label for="searchString">Search for:</label>
-		<input type="text" name="searchString">
+		[@spring.formInput "customerSearchFormBean.searchString" /]
 		<input type="submit" class="submit" value="Search" name="_eventId_searchTermEntered" />
 	</div>
 </form>

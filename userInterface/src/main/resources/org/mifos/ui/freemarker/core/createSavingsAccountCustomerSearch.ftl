@@ -28,11 +28,13 @@
 
 <p>Enter a Client or Group or Center name and click Search. Click Cancel to return to Clients & Accounts without submitting information.</p>
 <br/>
+
+[@form.errors "customerSearchFormBean.*"/]
 <form action="${flowExecutionUrl}" method="post" class="two-columns">
 	<fieldset>
 	<div class="row">
 		<label for="searchString">Name:</label>
-		<input type="text" name="searchString">
+		[@spring.formInput "customerSearchFormBean.searchString" /]
 	</div>
 	</fieldset>
 	<div class="row">
