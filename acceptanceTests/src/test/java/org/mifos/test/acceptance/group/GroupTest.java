@@ -228,14 +228,16 @@ public class GroupTest extends UiTestCaseBase {
 
     private void createQuestionGroupForCreateGroup(String questionGroupTitle, String question1, String question2, List<Choice> choices) {
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
-        CreateQuestionPage createQuestionPage = adminPage.navigateToCreateQuestionPage().verifyPage();
+        CreateQuestionPage createQuestionPage = adminPage.navigateToCreateQuestionPage();
         createQuestionPage.addQuestion(getCreateQuestionParams(question1, NUMBER, 10, 100, null));
         createQuestionPage.addQuestion(getCreateQuestionParams(question2, SMART_SELECT, null, null, choices));
         adminPage = createQuestionPage.submitQuestions();
 
-        CreateQuestionGroupPage createQuestionGroupPage = adminPage.navigateToCreateQuestionGroupPage().verifyPage();
+        CreateQuestionGroupPage createQuestionGroupPage = adminPage.navigateToCreateQuestionGroupPage();
         CreateQuestionGroupParameters parameters = getCreateQuestionGroupParameters(questionGroupTitle, asList(question1, question2));
-        createQuestionGroupPage.addSection(parameters);
+        for(String section : parameters.getExistingQuestions().keySet()){
+            createQuestionGroupPage.addExistingQuestion(section, parameters.getExistingQuestions().get(section));
+        }
         createQuestionGroupPage.markEveryOtherQuestionsMandatory(asList(question1));
         createQuestionGroupPage.submit(parameters);
     }
@@ -255,8 +257,9 @@ public class GroupTest extends UiTestCaseBase {
         parameters.setTitle(questionGroupTitle);
         parameters.setAppliesTo("Create Group");
         parameters.setAnswerEditable(true);
-        parameters.setSectionName("Default Section");
-        parameters.setQuestions(questions);
+        for (String question : questions) {
+            parameters.addExistingQuestion("Default Section", question);
+        }
         return parameters;
     }
 

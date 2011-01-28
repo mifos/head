@@ -369,18 +369,22 @@ public class ClientTest extends UiTestCaseBase {
         response = "Hello World";
 
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
-        CreateQuestionPage createQuestionPage = adminPage.navigateToCreateQuestionPage().verifyPage();
+        CreateQuestionPage createQuestionPage = adminPage.navigateToCreateQuestionPage();
         createQuestionPage.addQuestion(getCreateQuestionParams(question1, FREE_TEXT, null));
         createQuestionPage.addQuestion(getCreateQuestionParams(question2, MULTI_SELECT, asList("Choice1", "Choice2", "Choice3", "Choice4")));
         adminPage = createQuestionPage.submitQuestions();
 
-        CreateQuestionGroupPage createQuestionGroupPage = adminPage.navigateToCreateQuestionGroupPage().verifyPage();
+        CreateQuestionGroupPage createQuestionGroupPage = adminPage.navigateToCreateQuestionGroupPage();
         CreateQuestionGroupParameters parameters;
         parameters = getCreateQuestionGroupParameters(questionGroupTitle, asList(question1), "View Client", "Section1");
-        createQuestionGroupPage.addSection(parameters);
+        for(String section : parameters.getExistingQuestions().keySet()){
+            createQuestionGroupPage.addExistingQuestion(section, parameters.getExistingQuestions().get(section));
+        }
         createQuestionGroupPage.markEveryOtherQuestionsMandatory(asList(question1));
         parameters = getCreateQuestionGroupParameters(questionGroupTitle, asList(question2), "View Client", "Section2");
-        createQuestionGroupPage.addSection(parameters);
+        for(String section : parameters.getExistingQuestions().keySet()){
+            createQuestionGroupPage.addExistingQuestion(section, parameters.getExistingQuestions().get(section));
+        }
         createQuestionGroupPage.submit(parameters);
     }
 
@@ -433,14 +437,16 @@ public class ClientTest extends UiTestCaseBase {
 
     private void createQuestionGroupForCreateClient(String qgTitle, String q1, String q2, List<Choice> choiceTags) {
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
-        CreateQuestionPage cqPage = adminPage.navigateToCreateQuestionPage().verifyPage();
+        CreateQuestionPage cqPage = adminPage.navigateToCreateQuestionPage();
         cqPage.addQuestion(getCreateQuestionParams(q1, NUMBER, 10, 100, null));
         cqPage.addQuestion(getCreateQuestionParams(q2, SMART_SELECT, null, null, choiceTags));
         adminPage = cqPage.submitQuestions();
 
-        CreateQuestionGroupPage cqGroupPage = adminPage.navigateToCreateQuestionGroupPage().verifyPage();
+        CreateQuestionGroupPage cqGroupPage = adminPage.navigateToCreateQuestionGroupPage();
         CreateQuestionGroupParameters parameters = getCreateQuestionGroupParameters(qgTitle, asList(q1, q2), "Create Client", "Section1");
-        cqGroupPage.addSection(parameters);
+        for(String section : parameters.getExistingQuestions().keySet()){
+            cqGroupPage.addExistingQuestion(section, parameters.getExistingQuestions().get(section));
+        }
         cqGroupPage.markEveryOtherQuestionsMandatory(asList(q1));
         cqGroupPage.submit(parameters);
     }
@@ -450,8 +456,9 @@ public class ClientTest extends UiTestCaseBase {
         parameters.setTitle(questionGroupTitle);
         parameters.setAppliesTo(appliesTo);
         parameters.setAnswerEditable(true);
-        parameters.setSectionName(sectionName);
-        parameters.setQuestions(questions);
+        for (String question : questions) {
+            parameters.addExistingQuestion(sectionName, question);
+        }
         return parameters;
     }
 
