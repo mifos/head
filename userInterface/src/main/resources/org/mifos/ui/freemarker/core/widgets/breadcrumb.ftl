@@ -36,7 +36,7 @@
 [#macro crumbpairs breadcrumbs lastEntryIsText="true"]
 <div class="breadcrumb">
 	    [#list breadcrumbs?keys as text]
-  			[#if text_has_next || lastEntryIsText=="false"]
+  			[#if text_has_next || lastEntryIsText=="false"] [#-- <item>_has_next is a special loop variable --]
     			<a href="${breadcrumbs[text]}">[@spring.messageText text, text/]</a>&nbsp;/
             [#else]
                 <span class="fontBold">[@spring.messageText text, text/]</span>
