@@ -60,7 +60,7 @@ public class CreateSavingsAccountController {
 		SavingsProductDto savingsProduct = productReference
 				.getSavingsProductDetails();
 		Integer productId = savingsProduct.getProductDetails().getId();
-		Integer customerId = '5'; // TODO
+		Integer customerId = 5; // TODO
 		String recommendedOrMandatoryAmount = "100"; // TODO grab from request
 		List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>(); // TODO
 		SavingsAccountCreationDto savingsAccountCreation = new SavingsAccountCreationDto(
