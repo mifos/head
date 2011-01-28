@@ -51,6 +51,23 @@ input.cancel
 	border-top: 0px;
 }
 
+div.information-display, div.summary 
+{
+	width: 80%;
+	background: green;
+}
+
+div.summary .attribute 
+{
+	font-weight: bold;
+	width: 50%;
+}
+
+div.summary .value 
+{
+	width: 50%;
+}
+
 /* 2-column form */
 form.two-columns 
 {
