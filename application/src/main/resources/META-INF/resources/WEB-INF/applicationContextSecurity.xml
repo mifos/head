@@ -43,6 +43,14 @@
         <intercept-url pattern="/viewAndEditQuestionGroup.ftl*" access="isFullyAuthenticated() and hasRole('ROLE_CAN_MANAGE_QUESTION_GROUPS')"/>
         <intercept-url pattern="/uploadQuestionGroup.ftl*" access="isFullyAuthenticated() and hasRole('ROLE_CAN_MANAGE_QUESTION_GROUPS')"/>
 
+        <intercept-url pattern="/accountingDataForm.ftl*" access="isFullyAuthenticated() and hasRole('ROLE_CAN_USE_ACCOUNTING_INTEGRATION')"/>
+        <intercept-url pattern="/confirmExportsDelete.ftl*" access="isFullyAuthenticated() and hasRole('ROLE_CAN_USE_ACCOUNTING_INTEGRATION')"/>
+        <intercept-url pattern="/deleteCacheDir.ftl*" access="isFullyAuthenticated() and hasRole('ROLE_CAN_USE_ACCOUNTING_INTEGRATION')"/>
+        <intercept-url pattern="/generateExportsList.ftl*" access="isFullyAuthenticated() and hasRole('ROLE_CAN_USE_ACCOUNTING_INTEGRATION')"/>
+        <intercept-url pattern="/renderAccountingData.ftl*" access="isFullyAuthenticated() and hasRole('ROLE_CAN_USE_ACCOUNTING_INTEGRATION')"/>
+        <intercept-url pattern="/renderAccountingDataCacheInfo.ftl*" access="isFullyAuthenticated() and hasRole('ROLE_CAN_USE_ACCOUNTING_INTEGRATION')"/>
+        <intercept-url pattern="/pages/accounting/jsp/processTallyXMLOutput.jsp*" access="isFullyAuthenticated() and hasRole('ROLE_CAN_USE_ACCOUNTING_INTEGRATION')"/>
+
         <intercept-url pattern="/**" access="isFullyAuthenticated()" />
         <logout logout-success-url="/login.ftl?loggedout"/>
       </http>
