@@ -1,5 +1,10 @@
 /* Mifos specific CSS */
 
+h1.success
+{
+	color: #CC6601;
+}
+
 input.submit
 {
 	font-family: Arial, Verdana, Helvetica, sans-serif;
@@ -61,11 +66,13 @@ div.summary .attribute
 {
 	font-weight: bold;
 	width: 50%;
+	float: left;
 }
 
 div.summary .value 
 {
 	width: 50%;
+	float: left;
 }
 
 /* 2-column form */
@@ -191,6 +198,22 @@ form.two-columns input.submit
 }
 
 .search-results li a
+{
+	font-weight: bold;
+}
+
+.account-number
+{
+	font-weight: bold;
+}
+
+.suggestion 
+{
+	color: #CC6601;
+	font-weight: bold;
+}
+
+.standout
 {
 	font-weight: bold;
 }
