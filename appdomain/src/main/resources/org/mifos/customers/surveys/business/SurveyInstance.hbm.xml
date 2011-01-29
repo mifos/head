@@ -19,12 +19,6 @@
             <key column="instance_id" />
             <one-to-many class="org.mifos.customers.surveys.business.SurveyResponse" />
         </set>
-
-        <joined-subclass table="ppi_survey_instance" name="org.mifos.customers.ppi.business.PPISurveyInstance">
-            <key column="instance_id"/>
-            <property name="bottomHalfBelowPovertyLinePercent" column="bottom_half_below"/>
-            <property name="topHalfBelowPovertyLinePercent" column="top_half_below"/>
-        </joined-subclass>
     </class>
     <query name="surveys.retrieveInstancesByCustomer">
         <![CDATA[from SurveyInstance as instance where instance.customer=:INSTANCE_CUSTOMER order by instance.survey.name]]>
