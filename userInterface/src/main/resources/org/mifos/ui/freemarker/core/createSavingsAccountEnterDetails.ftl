@@ -29,10 +29,10 @@
 <p>*Fields marked with an asterisk are required.</p>
 <br/>
 
-<p><span class="standout">Account Owner</span>: Test Customer1188</p>
+<p><span class="standout">Account Owner</span>: ${savingsAccountFormBean.customer.displayName}</p>
 <br/>
 
-[@form.errors "accountDetailFormBean.*"/]
+[@form.errors "savingsAccountFormBean.*"/]
 <form action="${flowExecutionUrl}&_eventId=newProductSelected" method="post" class="two-columns">
 	<fieldset>
 	<div class="row">
@@ -50,7 +50,7 @@
 <div class="product-summary">
 	<div class="row">
 		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.description"/]</div>
-		<div class="value">${product.savingsProductDetails.productDetails.description}</div>
+		<div class="value">${savingsAccountFormBean.product.savingsProductDetails.productDetails.description}</div>
 	</div>
 	<div class="row">
 		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.typeOfDeposits"/]:</div>
@@ -58,11 +58,11 @@
 	</div>
 	<div class="row">
 		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.maxWithdrawalAmount"/]:</div>
-		<div class="value">TODO: localize ${product.savingsProductDetails.maxWithdrawal}</div>
+		<div class="value">TODO: localize ${savingsAccountFormBean.product.savingsProductDetails.maxWithdrawal}</div>
 	</div>
 	<div class="row">
 		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.balanceForInterestCalculation"/]:</div>
-		<div class="value">TODO interest calculation: ${product.savingsProductDetails.interestCalculationType}</div>
+		<div class="value">TODO interest calculation: ${savingsAccountFormBean.product.savingsProductDetails.interestCalculationType}</div>
 	</div>
 	<div class="row">
 		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.periodForInterestCalculation"/]:</div>
@@ -103,7 +103,6 @@
 <script type="text/javascript">
 $(document).ready(function() {
 	$('select').change(function(e) {
-		console.log('changed!', e);
 		$(this).closest('form').submit();
 				
 	});

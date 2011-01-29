@@ -3,23 +3,19 @@
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
 
-	<var name="customerSearchFormBean" class="org.mifos.ui.core.controller.CustomerSearchFormBean" />
-	<var name="accountDetailFormBean" class="org.mifos.ui.core.controller.AccountDetailFormBean" />
-
-	<input name="searchTerm" />
-	<input name="customerId" />
-	<input name="productId" />
+	<var name="savingsAccountFormBean" class="org.mifos.ui.core.controller.CreateSavingsAccountFormBean" />
 	
-	<view-state id="customerSearchStep" view="createSavingsAccountCustomerSearch" model="customerSearchFormBean">
+	<view-state id="customerSearchStep" view="createSavingsAccountCustomerSearch" model="savingsAccountFormBean">
 		<transition on="searchTermEntered" to="selectCustomerStep" validate="true">
-			<evaluate expression="createSavingsAccountController.searchCustomers(customerSearchFormBean)" result="flowScope.customerSearchResultsDto" />
+			<evaluate expression="createSavingsAccountController.searchCustomers(savingsAccountFormBean)" result="flowScope.customerSearchResultsDto" />
 		</transition>
 	</view-state>
 
-	<view-state id="selectCustomerStep" view="createSavingsAccountSelectCustomer" model="customerSearchFormBean">
+	<view-state id="selectCustomerStep" view="createSavingsAccountSelectCustomer" model="savingsAccountFormBean">
 		<transition on="customerSelected" to="selectProductOfferingStep">
-			<set name="requestScope.customerId" value="requestParameters.customerId" type="int"/>
-			<evaluate expression="createSavingsAccountController.getProductOfferings(customerId)" result="flowScope.products" />
+			<set name="requestScope.customerId" value="requestParameters.customerId" type="int" />
+			<evaluate expression="createSavingsAccountController.customerSelected(customerId, savingsAccountFormBean)" />
+			<evaluate expression="createSavingsAccountController.getProductOfferings(savingsAccountFormBean)" />
 		</transition>
 		<transition on="searchTermEntered" to="selectCustomerStep" validate="true" />
 	</view-state>
@@ -27,18 +23,15 @@
 	<view-state id="selectProductOfferingStep" view="createSavingsAccountSelectProduct">
 		<transition on="productSelected" to="enterAccountDetailsStep">
 			<set name="requestScope.productId" value="requestParameters.selectedPrdOfferingId" type="int"/>
-			<evaluate expression="createSavingsAccountController.getProduct(productId)" result="conversationScope.product" />
+			<evaluate expression="createSavingsAccountController.loadProduct(productId, savingsAccountFormBean)" />
 		</transition>
 	</view-state>
 
-	<view-state id="enterAccountDetailsStep" view="createSavingsAccountEnterDetails" model="accountDetailFormBean">
-		<on-entry>
-			<evaluate expression="flowScope.accountDetailFormBean.setProduct(conversationScope.product)" />
-		</on-entry>
+	<view-state id="enterAccountDetailsStep" view="createSavingsAccountEnterDetails" model="savingsAccountFormBean">
 		<transition on="newProductSelected" to="enterAccountDetailsStep" validate="false">
 			<!-- TODO use on state entry instead of duplicating code from above? -->
 			<set name="requestScope.productId" value="requestParameters.selectedPrdOfferingId" type="int"/>
-			<evaluate expression="createSavingsAccountController.getProduct(productId)" result="conversationScope.product" />
+			<evaluate expression="createSavingsAccountController.loadProduct(productId, savingsAccountFormBean)" />
 		</transition>
 		<transition on="detailsEntered" to="previewStep" />
 	</view-state>
@@ -46,10 +39,10 @@
 	<view-state id="previewStep" view="createSavingsAccountPreview">
 		<transition on="edit" to="enterAccountDetailsStep" />
 		<transition on="saveForLater" to="complete">
-			<evaluate expression="createSavingsAccountController.createAccountInPartialApplicationState(conversationScope.product)" result="flowScope.account" />
+			<evaluate expression="createSavingsAccountController.createAccountInPartialApplicationState(savingsAccountFormBean)" result="flowScope.account" />
 		</transition>
 		<transition on="saveForApproval" to="complete" >
-			<evaluate expression="createSavingsAccountController.createAccountInPendingApprovalState(conversationScope.product)" result="flowScope.account" />
+			<evaluate expression="createSavingsAccountController.createAccountInPendingApprovalState(savingsAccountFormBean)" result="flowScope.account" />
 		</transition>
 	</view-state>
 

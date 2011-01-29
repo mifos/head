@@ -28,7 +28,7 @@
 <p>Review the information below. Click Submit if you are satisfied or click Edit to make changes. Click Cancel to return to Clients & Accounts without submitting information.</p>
 <br/>
 
-<p><span class="standout">Account Owner</span>: Test Customer1188</p>
+<p><span class="standout">Account Owner</span>: ${savingsAccountFormBean.customer.displayName}</p>
 <br/>
 
 <p class="standout">Savings account information</p>
@@ -43,7 +43,7 @@
 	<div class="row divider">Instance information</div>
 	<div class="row">
 		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.description"/]</div>
-		<div class="value">${product.savingsProductDetails.productDetails.description}</div>
+		<div class="value">${savingsAccountFormBean.product.savingsProductDetails.productDetails.description}</div>
 	</div>
 	<div class="row">
 		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.typeOfDeposits"/]:</div>
@@ -51,11 +51,11 @@
 	</div>
 	<div class="row">
 		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.maxWithdrawalAmount"/]:</div>
-		<div class="value">TODO: localize ${product.savingsProductDetails.maxWithdrawal}</div>
+		<div class="value">TODO: localize ${savingsAccountFormBean.product.savingsProductDetails.maxWithdrawal}</div>
 	</div>
 	<div class="row">
 		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.balanceForInterestCalculation"/]:</div>
-		<div class="value">TODO interest calculation: ${product.savingsProductDetails.interestCalculationType}</div>
+		<div class="value">TODO interest calculation: ${savingsAccountFormBean.product.savingsProductDetails.interestCalculationType}</div>
 	</div>
 	<div class="row">
 		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.periodForInterestCalculation"/]:</div>

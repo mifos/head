@@ -21,7 +21,13 @@
 package org.mifos.ui.core.controller;
 
 import java.io.Serializable;
+import java.util.List;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+
+import org.mifos.dto.domain.CustomerDto;
+import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.screen.SavingsProductReferenceDto;
 import org.mifos.platform.validation.MifosBeanValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,19 +35,35 @@ import org.springframework.binding.message.MessageContext;
 import org.springframework.binding.validation.ValidationContext;
 
 /**
- * @deprecated by CreateSavingsAccountFormBean.
+ * An object to hold information collected in create savings account process.
  */
-public class AccountDetailFormBean implements Serializable {
+public class CreateSavingsAccountFormBean implements Serializable {
 
+	private CustomerDto customer;
+
+	@Pattern(regexp = "^", groups = CustomerSearchStep.class)
+	private String searchString;
+
+	@NotNull(groups = { MandatorySavings.class, EnterAccountInfoStep.class })
 	private Float depositAmount;
 
 	private SavingsProductReferenceDto product;
+
+	private List<PrdOfferingDto> productOfferings;
 
 	@Autowired
 	private transient MifosBeanValidator validator;
 
 	public void setValidator(MifosBeanValidator validator) {
 		this.validator = validator;
+	}
+
+	public void setCustomer(CustomerDto customer) {
+		this.customer = customer;
+	}
+
+	public CustomerDto getCustomer() {
+		return customer;
 	}
 
 	public void setDepositAmount(Float depositAmount) {
@@ -52,20 +74,59 @@ public class AccountDetailFormBean implements Serializable {
 		return depositAmount;
 	}
 
+	public void setSearchString(String searchString) {
+		this.searchString = searchString;
+	}
+
+	public String getSearchString() {
+		return searchString;
+	}
+
 	/**
 	 * Sets the savings product associated with the (new) savings account. The
 	 * product can be referenced in form validation.
 	 * 
-	 * @param product An instance of {@link SavingsProductReferenceDto}
+	 * @param product
+	 *            An instance of {@link SavingsProductReferenceDto}
 	 */
 	public void setProduct(SavingsProductReferenceDto product) {
 		this.product = product;
 	}
 
+	public SavingsProductReferenceDto getProduct() {
+		return product;
+	}
+
+	public void setProductOfferings(List<PrdOfferingDto> productOfferings) {
+		this.productOfferings = productOfferings;
+	}
+
+	public List<PrdOfferingDto> getProductOfferings() {
+		return productOfferings;
+	}
+
+	/**
+	 * Validation method that Spring webflow calls on state transition out of
+	 * customerSearchStep.
+	 */
+	public void validateCustomerSearchStep(ValidationContext context) {
+		MessageContext messages = context.getMessageContext();
+		validator.validate(this, messages, CustomerSearchStep.class);
+	}
+
+	/**
+	 * Validation method that Spring webflow calls on state transition out of
+	 * selectCustomerStep.
+	 */
+	public void validateSelectCustomerStep(ValidationContext context) {
+		MessageContext messages = context.getMessageContext();
+		validator.validate(this, messages);
+	}
+
 	public void validateEnterAccountDetailsStep(ValidationContext context) {
 		MessageContext messages = context.getMessageContext();
 		validator.validate(this, messages);
-		
+
 		// TODO: need to get access to domain constants from controller ...
 		// public static final short SAVINGS_MANDATORY= 1;
 		// public static final short SAVINGS_VOLUNTARY= 2;
@@ -80,4 +141,22 @@ public class AccountDetailFormBean implements Serializable {
 		// result = true;
 		// }
 	}
+}
+
+/**
+ * Marker interfaces for JSR-303 validation groups.
+ */
+interface CustomerSearchStep {
+}
+
+interface SelectProductStep {
+}
+
+interface EnterAccountInfoStep {
+}
+
+interface MandatorySavings {
+}
+
+interface VoluntarySavings {
 }

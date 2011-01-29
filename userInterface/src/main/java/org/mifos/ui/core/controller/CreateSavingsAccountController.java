@@ -44,15 +44,15 @@ public class CreateSavingsAccountController {
 	}
 
 	public SavingsAccountDetailDto createAccountInPartialApplicationState(
-			SavingsProductReferenceDto productReference) {
+			CreateSavingsAccountFormBean formBean) {
 		Short accountState = 13; // TOOD grab state from constant. NOT from
-		return createAccount(productReference, accountState);
+		return createAccount(formBean.getProduct(), accountState);
 	}
-
+	
 	public SavingsAccountDetailDto createAccountInPendingApprovalState(
-			SavingsProductReferenceDto productReference) {
+			CreateSavingsAccountFormBean formBean) {
 		Short accountState = 14; // TOOD grab state from constant. NOT from
-		return createAccount(productReference, accountState);
+		return createAccount(formBean.getProduct(), accountState);
 	}
 
 	private SavingsAccountDetailDto createAccount(
@@ -73,20 +73,27 @@ public class CreateSavingsAccountController {
 		return savingsAccountDetailDto;
 	}
 
-	public SavingsProductReferenceDto getProduct(Integer productId) {
-		SavingsProductReferenceDto product = savingsServiceFacade
-				.retrieveSavingsProductReferenceData(productId);
-		return product;
+	public void customerSelected(Integer customerId, CreateSavingsAccountFormBean formBean) {
+		CustomerDto customer = new CustomerDto(); // TODO use service facade to load customer
+		customer.setCustomerId(customerId);
+		customer.setDisplayName("FIXME - CreateSavingsAccountController");
+		formBean.setCustomer(customer);
 	}
 
-	public List<PrdOfferingDto> getProductOfferings(Integer customerId) {
+	public void loadProduct(Integer productId, CreateSavingsAccountFormBean formBean) {
+		SavingsProductReferenceDto product = savingsServiceFacade
+				.retrieveSavingsProductReferenceData(productId);
+		formBean.setProduct(product);
+	}
+	
+	public void getProductOfferings(CreateSavingsAccountFormBean formBean) {
 		List<PrdOfferingDto> savingsProducts = savingsServiceFacade
-				.retrieveApplicableSavingsProductsForCustomer(customerId);
-		return savingsProducts;
+				.retrieveApplicableSavingsProductsForCustomer(formBean.getCustomer().getCustomerId());
+		formBean.setProductOfferings(savingsProducts);
 	}
 
 	public CustomerSearchResultsDto searchCustomers(
-			CustomerSearchFormBean formBean) {
+			CreateSavingsAccountFormBean formBean) {
 		// TODO replace stub data
 		// CustomerSearchDto searchDto = new
 		// CustomerSearchDto(formBean.getSearchString(), 1, 10);
@@ -94,7 +101,7 @@ public class CreateSavingsAccountController {
 		List<CustomerDto> pagedDetails = new ArrayList<CustomerDto>();
 		for (int i = 0; i < 50; i++) {
 			Integer customerId = new Integer(i);
-			String displayName = "Customer " + i;
+			String displayName = formBean.getSearchString() + " - " + i;
 			Integer parentCustomerId = new Integer(1);
 			Short levelId = 1;
 			CustomerDto customer = new CustomerDto(customerId, displayName,

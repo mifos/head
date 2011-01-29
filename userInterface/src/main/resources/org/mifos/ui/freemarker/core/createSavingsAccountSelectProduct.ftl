@@ -29,7 +29,7 @@
 <p>*Fields marked with an asterisk are required.</p>
 <br/>
 
-<p><span class="standout">Account Owner</span>: Test Customer1188</p>
+<p><span class="standout">Account Owner</span>: ${savingsAccountFormBean.customer.displayName}</p>
 <br/>
 
 <form action="${flowExecutionUrl}" method="post" class="two-columns">
@@ -37,7 +37,7 @@
 	<div class="row">
 		<label for="selectedPrdOfferingId" class="mandatory">Savings instance name:</label>
 		<select id="createsavingsaccount.select.savingsProduct" name="selectedPrdOfferingId">
-			[#list products as product]
+			[#list savingsAccountFormBean.productOfferings as product]
 			<option value="${product.prdOfferingId}">${product.prdOfferingName}</option>
 			[/#list]
 		</select>

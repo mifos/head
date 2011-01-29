@@ -29,12 +29,12 @@
 <p>Enter a Client or Group or Center name and click Search. Click Cancel to return to Clients & Accounts without submitting information.</p>
 <br/>
 
-[@form.errors "customerSearchFormBean.*"/]
+[@form.errors "savingsAccountFormBean.*"/]
 <form action="${flowExecutionUrl}" method="post" class="two-columns">
 	<fieldset>
 	<div class="row">
 		<label for="searchString">Name:</label>
-		[@spring.formInput "customerSearchFormBean.searchString" /]
+		[@spring.formInput "savingsAccountFormBean.searchString" /]
 	</div>
 	</fieldset>
 	<div class="row">
