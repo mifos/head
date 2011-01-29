@@ -171,7 +171,7 @@ public class ClientTest extends UiTestCaseBase {
         viewDetailsPage.verifySpouseFather("FatherFirstnameTest FatherLastNameTest");
 
     }
-
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-236
     public void createClientOutsideGroup() throws Exception {
         //Given
