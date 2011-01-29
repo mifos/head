@@ -70,7 +70,7 @@ import servletunit.struts.MockStrutsTestCase;
  */
 public class MifosMockStrutsTestCase extends MifosIntegrationTestCase {
 
-    protected MockStruts mockSturts = new MockStruts();
+    protected MockStruts mockStruts = new MockStruts();
 
     protected HttpServletRequest request;
 
@@ -92,22 +92,22 @@ public class MifosMockStrutsTestCase extends MifosIntegrationTestCase {
     		fail(r.getDescription() + " does not exist or is not readable");
     	}
     	File webResourcesDirectory = r.getFile().getParentFile().getParentFile();
-    	mockSturts.setContextDirectory(webResourcesDirectory);
+        mockStruts.setContextDirectory(webResourcesDirectory);
     	
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/other-struts-config.xml");
 
-        request = mockSturts.getMockRequest();
-        context = mockSturts.getMockContext();
+        request = mockStruts.getMockRequest();
+        context = mockStruts.getMockContext();
     }
 
     protected void setConfigFile(String pathname) {
-        mockSturts.setConfigFile(pathname);
+        mockStruts.setConfigFile(pathname);
     }
 
 
     @Before
     public void beforeStrutsTest() throws Exception {
-        mockSturts.setUp();
+        mockStruts.setUp();
         if (!strutsConfigSet) {
             setStrutsConfig();
             strutsConfigSet = true;
@@ -126,7 +126,7 @@ public class MifosMockStrutsTestCase extends MifosIntegrationTestCase {
         getActionServlet().getServletContext().removeAttribute(ShutdownManager.class.getName());
         doCleanUp(request);
         doCleanUp(request.getSession());
-        mockSturts.tearDown();
+        mockStruts.tearDown();
         TestUtils.dereferenceObjects(this);
     }
 
@@ -217,75 +217,75 @@ public class MifosMockStrutsTestCase extends MifosIntegrationTestCase {
     }
 
     protected void verifyNoActionMessages() {
-        mockSturts.verifyNoActionMessages();
+        mockStruts.verifyNoActionMessages();
     }
 
     protected void verifyNoActionErrors() {
-        mockSturts.verifyNoActionErrors();
+        mockStruts.verifyNoActionErrors();
     }
 
     protected void actionPerform() {
-        mockSturts.actionPerform();
+        mockStruts.actionPerform();
     }
 
     protected void setRequestPathInfo(String pathInfo) {
-        mockSturts.setRequestPathInfo(pathInfo);
+        mockStruts.setRequestPathInfo(pathInfo);
     }
 
     protected void verifyForward(String forwardName) {
-        mockSturts.verifyForward(forwardName);
+        mockStruts.verifyForward(forwardName);
     }
 
     protected void verifyInputForward() {
-        mockSturts.verifyInputForward();
+        mockStruts.verifyInputForward();
     }
 
     protected void verifyActionErrors(String[] errorNames) {
-        mockSturts.verifyActionErrors(errorNames);
+        mockStruts.verifyActionErrors(errorNames);
     }
 
     protected HttpSession getSession() {
-        return mockSturts.getSession();
+        return mockStruts.getSession();
     }
 
     protected void setActionForm(ActionForm form) {
-        mockSturts.setActionForm(form);
+        mockStruts.setActionForm(form);
     }
 
     protected HttpServletRequest getRequest() {
-        return mockSturts.getRequest();
+        return mockStruts.getRequest();
     }
 
     protected ActionServlet getActionServlet() {
-        return mockSturts.getActionServlet();
+        return mockStruts.getActionServlet();
     }
 
     protected void verifyForwardPath(String forwardPath) {
-        mockSturts.verifyForwardPath(forwardPath);
+        mockStruts.verifyForwardPath(forwardPath);
     }
 
     protected ActionForm getActionForm() {
-        return mockSturts.getActionForm();
+        return mockStruts.getActionForm();
     }
 
     protected HttpServletResponseSimulator getMockResponse() {
-        return mockSturts.getMockResponse();
+        return mockStruts.getMockResponse();
     }
 
     protected HttpServletRequestSimulator getMockRequest() {
-        return mockSturts.getMockRequest();
+        return mockStruts.getMockRequest();
     }
 
     protected void addRequestParameter(String parameterName, String parameterValue) {
-        mockSturts.addRequestParameter(parameterName, parameterValue);
+        mockStruts.addRequestParameter(parameterName, parameterValue);
     }
 
     protected void addRequestParameter(String parameterName, String[] parameterValues) {
-        mockSturts.addRequestParameter(parameterName, parameterValues);
+        mockStruts.addRequestParameter(parameterName, parameterValues);
     }
 
     protected void clearRequestParameters() {
-        mockSturts.clearRequestParameters();
+        mockStruts.clearRequestParameters();
     }
 
     class MockStruts extends MockStrutsTestCase {
