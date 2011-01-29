@@ -356,17 +356,6 @@ explanation of the license and how it is applied.
 						</tr>
 					</table>
 					<table width="96%" border="0" cellpadding="3" cellspacing="0">
-						<%-- Surveys
-              <tr>
-                <td width="47%" height="23" class="headingorange">
-                <mifos:mifoslabel name="Group.surveys"  bundle="GroupUIResources"></mifos:mifoslabel>
-                </td>
-                <td width="53%" align="right" class="fontnormal8pt">
-                <a id="viewgroupdetails.link.attachSurvey" href="#">
-	                <mifos:mifoslabel name="Group.attachsurvey"  bundle="GroupUIResources"></mifos:mifoslabel>
-                </a></td>
-              </tr>
-              --%>
 						<tr>
 
 						</tr>

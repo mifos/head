@@ -54,7 +54,6 @@ import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.EntityType;
-import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
 import org.mifos.config.util.helpers.ConfigurationConstants;
@@ -85,7 +84,6 @@ import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.util.helpers.Param;
 import org.mifos.dto.domain.CenterDisplayDto;
 import org.mifos.dto.domain.CenterPerformanceHistoryDto;
-import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerAccountSummaryDto;
 import org.mifos.dto.domain.CustomerAddressDto;
 import org.mifos.dto.domain.CustomerDetailDto;
@@ -97,7 +95,6 @@ import org.mifos.dto.domain.CustomerPositionOtherDto;
 import org.mifos.dto.domain.LoanDetailDto;
 import org.mifos.dto.domain.PersonnelDto;
 import org.mifos.dto.domain.SavingsDetailDto;
-import org.mifos.dto.domain.SurveyDto;
 import org.mifos.dto.domain.ValueListElement;
 import org.mifos.dto.screen.ClientDisplayDto;
 import org.mifos.dto.screen.ClientFamilyDetailOtherDto;
@@ -671,84 +668,6 @@ public class CustomerDaoHibernate implements CustomerDao {
             return new CustomerMeetingDto(meetingSchedule, meetingPlace);
         }
         return null;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public List<SurveyDto> getCustomerSurveyDto(final Integer customerId) {
-
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("CUSTOMER_ID", customerId);
-        List<Object[]> queryResult = (List<Object[]>) this.genericDao.executeNamedQuery(
-                "Customer.getCustomerSurveyDto", queryParameters);
-
-        if (queryResult.size() == 0) {
-            return null;
-        }
-
-        List<SurveyDto> customerSurveys = new ArrayList<SurveyDto>();
-        Integer instanceId;
-        String surveyName;
-        Date dateConducted;
-
-        for (Object[] customerSurvey : queryResult) {
-            instanceId = (Integer) customerSurvey[0];
-            surveyName = (String) customerSurvey[1];
-            dateConducted = (Date) customerSurvey[2];
-
-            customerSurveys.add(new SurveyDto(instanceId, surveyName, dateConducted));
-        }
-        return customerSurveys;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public List<CustomFieldDto> getCustomFieldViewForCustomers(Integer customerId, Short entityTypeId,
-            UserContext userContext) {
-
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("CUSTOMER_ID", customerId);
-        queryParameters.put("ENTITY_TYPE", entityTypeId);
-        List<Object[]> queryResult = (List<Object[]>) this.genericDao.executeNamedQuery(
-                "Customer.getCustomFieldViewForCustomers", queryParameters);
-
-        if (queryResult.size() == 0) {
-            return null;
-        }
-
-        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
-
-        Short fieldId;
-        String fieldValue;
-        Short fieldType;
-        Short mandatoryFlag;
-        String entityName;
-
-        boolean mandatory = false;
-        String mandatoryString;
-
-        for (Object[] customField : queryResult) {
-            fieldId = (Short) customField[0];
-            fieldValue = (String) customField[1];
-            fieldType = (Short) customField[2];
-            mandatoryFlag = (Short) customField[3];
-            entityName = (String) customField[4];
-
-            if (mandatoryFlag > 0) {
-                mandatory = true;
-            }
-
-            mandatoryString = MessageLookup.getInstance().lookup(YesNoFlag.fromInt(mandatoryFlag),
-                    userContext.getCurrentLocale());
-
-            CustomFieldDto customFieldDto = new CustomFieldDto(fieldId, fieldValue, fieldType);
-            customFieldDto.setMandatory(mandatory);
-            customFieldDto.setLookUpEntityType(entityName);
-            customFieldDto.setMandatoryString(mandatoryString);
-
-            customFields.add(customFieldDto);
-        }
-        return customFields;
     }
 
     /**

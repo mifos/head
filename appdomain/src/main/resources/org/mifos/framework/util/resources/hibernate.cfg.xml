@@ -209,13 +209,6 @@
 
         <mapping resource="org/mifos/application/holiday/business/HolidayBO.hbm.xml" />
 
-        <mapping resource="org/mifos/customers/surveys/business/SurveyInstance.hbm.xml"/>
-        <mapping resource="org/mifos/customers/surveys/business/Survey.hbm.xml"/>
-        <mapping resource="org/mifos/customers/surveys/business/Question.hbm.xml"/>
-        <mapping resource="org/mifos/customers/surveys/business/QuestionChoice.hbm.xml"/>
-         <mapping resource="org/mifos/customers/surveys/business/SurveyResponse.hbm.xml"/>
-        <mapping resource="org/mifos/customers/surveys/business/SurveyQuestion.hbm.xml"/>
-        <mapping resource="org/mifos/customers/ppi/business/PPILikelihood.hbm.xml"/>
         <mapping resource="org/mifos/accounts/acceptedpaymenttype/business/AcceptedPaymentType.hbm.xml" />
         <mapping resource="org/mifos/accounts/acceptedpaymenttype/business/TransactionTypeEntity.hbm.xml" />
 

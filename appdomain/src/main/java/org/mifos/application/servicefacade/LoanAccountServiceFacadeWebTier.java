@@ -20,6 +20,17 @@
 
 package org.mifos.application.servicefacade;
 
+import static org.apache.commons.lang.StringUtils.EMPTY;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
+import static org.mifos.framework.util.CollectionUtils.collect;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.api.AccountService;
@@ -95,8 +106,6 @@ import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
-import org.mifos.customers.surveys.helpers.SurveyType;
-import org.mifos.customers.surveys.persistence.SurveysPersistence;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AccountStatusDto;
 import org.mifos.dto.domain.AccountUpdateStatus;
@@ -159,17 +168,6 @@ import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import static org.apache.commons.lang.StringUtils.EMPTY;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
-import static org.mifos.framework.util.CollectionUtils.collect;
 
 public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade {
 
@@ -922,8 +920,8 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             fundName = loan.getFund().getFundName();
         }
 
-        SurveysPersistence surveysPersistence = new SurveysPersistence();
-        boolean activeSurveys = surveysPersistence.isActiveSurveysForSurveyType(SurveyType.LOAN);
+//        boolean activeSurveys = surveysPersistence.isActiveSurveysForSurveyType(SurveyType.LOAN);
+        boolean activeSurveys = false;
         List<SurveyDto> accountSurveys = loanDao.getAccountSurveyDto(loan.getAccountId());
 
         LoanSummaryDto loanSummary = new LoanSummaryDto(loan.getLoanSummary().getOriginalPrincipal().toString(), loan.getLoanSummary().getPrincipalPaid().toString(),
