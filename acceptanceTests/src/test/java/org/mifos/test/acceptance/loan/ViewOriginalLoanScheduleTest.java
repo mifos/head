@@ -8,9 +8,7 @@ import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.FeesCreatePage;
 import org.mifos.test.acceptance.framework.loan.ChargeParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
-import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
-import org.mifos.test.acceptance.framework.loan.PaymentParameters;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
 import org.mifos.test.acceptance.framework.office.OfficeParameters;
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
@@ -195,13 +193,7 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
 
         verifyOriginalSchedule(tableOnOriginalInstallment);
 
-        PaymentParameters paymentParameters = new PaymentParameters();
-        paymentParameters.setAmount("100.0");
-        paymentParameters.setTransactionDateDD(Integer.toString(paymentDate.getDayOfMonth()));
-        paymentParameters.setTransactionDateMM(Integer.toString(paymentDate.getMonthOfYear()));
-        paymentParameters.setTransactionDateYYYY(Integer.toString(paymentDate.getYear()));
-        paymentParameters.setPaymentType(PaymentParameters.CASH);
-        loanTestHelper.applyPayment(accountId, paymentParameters);
+        loanTestHelper.makePayment(paymentDate, "100");
         verifyOriginalSchedule(tableOnOriginalInstallment);
         return accountId;
     }
@@ -225,9 +217,8 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
         feeParameters.setType(ChargeParameters.MISC_PENALTY);
         loanTestHelper.applyCharge(accountId, feeParameters);
         loanTestHelper.approveLoan();
-        DisburseLoanParameters disburseParameters = loanTestHelper.setDisbursalParams(actualDisbursalDate);
-        loanTestHelper.disburseLoan(accountId, disburseParameters);
-        return loanAccountPage.getAccountId();
+        loanTestHelper.disburseLoan(actualDisbursalDate);
+        return accountId;
     }
 
     private LoanAccountPage verifyOriginalSchedule(String[][] tableOnOriginalInstallment) {

@@ -29,7 +29,6 @@ import org.mifos.test.acceptance.framework.admin.FeesCreatePage;
 import org.mifos.test.acceptance.framework.loan.ChargeParameters;
 import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
-import org.mifos.test.acceptance.framework.loan.PaymentParameters;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
 import org.mifos.test.acceptance.framework.office.OfficeParameters;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
@@ -233,17 +232,11 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
         makePaymentAndVerifyPayment(accountID, paymentDate, "280", RepaymentScheduleData.EARLY_EXCESS_FIRST_PAYMENT);
     }
 
-    private void makePaymentAndVerifyPayment(String accountID, DateTime paymentDate, String paymentAmount, String[][] expectedSchedule) throws UnsupportedEncodingException {
-        PaymentParameters paymentParameters = new PaymentParameters();
-        paymentParameters.setAmount(paymentAmount);
-        paymentParameters.setTransactionDateDD(Integer.toString(paymentDate.getDayOfMonth()));
-        paymentParameters.setTransactionDateMM(Integer.toString(paymentDate.getMonthOfYear()));
-        paymentParameters.setTransactionDateYYYY(Integer.toString(paymentDate.getYear()));
-        paymentParameters.setPaymentType(PaymentParameters.CASH);
-
-        loanTestHelper.applyPayment(accountID, paymentParameters).
+    private String makePaymentAndVerifyPayment(String accountId, DateTime paymentDate, String paymentAmount, String[][] expectedSchedule) throws UnsupportedEncodingException {
+        loanTestHelper.makePayment(paymentDate, paymentAmount).
                 navigateToRepaymentSchedulePage().
                 verifyScheduleTable(expectedSchedule).navigateToLoanAccountPage();
+        return accountId;
     }
 
     private LoanAccountPage createAndDisburseLoanAccount(int noOfInstallments, DateTime disbursalDate, String loanProductName) throws UnsupportedEncodingException {

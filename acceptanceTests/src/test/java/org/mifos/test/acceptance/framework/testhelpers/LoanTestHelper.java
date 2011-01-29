@@ -762,8 +762,10 @@ public class LoanTestHelper {
     public void disburseLoan(DateTime disbursalDate) throws UnsupportedEncodingException {
         setApplicationTime(disbursalDate).navigateBack();
         DisburseLoanParameters disburseLoanParameters = setDisbursalParams(disbursalDate);
-        new LoanAccountPage(selenium).navigateToDisburseLoan().
-        submitAndNavigateToDisburseLoanConfirmationPage(disburseLoanParameters).submitAndNavigateToLoanAccountPage();
+        LoanAccountPage loanAccountPage = new LoanAccountPage(selenium).navigateToDisburseLoan().
+                submitAndNavigateToDisburseLoanConfirmationPage(disburseLoanParameters).
+                submitAndNavigateToLoanAccountPage();
+        loanAccountPage.verifyStatus(LoanAccountPage.ACTIVE);
     }
 
     public void createLoanAccount(String clientName, String loanProductName) {
