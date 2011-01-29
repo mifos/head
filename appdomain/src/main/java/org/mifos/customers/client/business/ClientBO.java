@@ -64,7 +64,6 @@ import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.surveys.business.SurveyInstance;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.ClientFamilyInfoUpdate;
@@ -1017,10 +1016,6 @@ public class ClientBO extends CustomerBO {
     private boolean isClientCancelledOrClosed() {
         return getStatus() == CustomerStatus.CLIENT_CLOSED || getStatus() == CustomerStatus.CLIENT_CANCELLED ? true
                 : false;
-    }
-
-    public void attachPpiSurveyInstance(final SurveyInstance ppiSurvey) {
-        /* TODO not implemented yet */
     }
 
     @Override

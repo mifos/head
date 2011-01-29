@@ -21,7 +21,4 @@
     <bean id="legacyPersonnelDao" class="org.mifos.customers.personnel.persistence.LegacyPersonnelDao"/>
 
     <bean id="legacyAuditDao" class="org.mifos.framework.components.audit.persistence.LegacyAuditDao" />
-
-    <bean id="surveysPersistence" class="org.mifos.customers.surveys.persistence.SurveysPersistence" />
-
 </beans>

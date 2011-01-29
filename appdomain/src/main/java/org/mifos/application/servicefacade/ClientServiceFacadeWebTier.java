@@ -61,8 +61,6 @@ import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
-import org.mifos.customers.surveys.helpers.SurveyType;
-import org.mifos.customers.surveys.persistence.SurveysPersistence;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.AddressDto;
 import org.mifos.dto.domain.ApplicableAccountFeeDto;
@@ -478,9 +476,10 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
 
         CustomerMeetingDto customerMeeting = customerDao.getCustomerMeetingDto(client.getCustomerMeeting(), userContext);
 
-        Boolean activeSurveys = new SurveysPersistence().isActiveSurveysForSurveyType(SurveyType.CLIENT);
+        Boolean activeSurveys = Boolean.FALSE;
+//        Boolean activeSurveys = new SurveysPersistence().isActiveSurveysForSurveyType(SurveyType.CLIENT);
 
-        List<SurveyDto> customerSurveys = customerDao.getCustomerSurveyDto(clientId);
+        List<SurveyDto> customerSurveys = new ArrayList<SurveyDto>();
 
         return new ClientInformationDto(clientDisplay, customerAccountSummary, clientPerformanceHistory, clientAddress,
                 recentCustomerNotes, customerFlags, loanDetail, savingsDetail, customerMeeting, activeSurveys, customerSurveys);

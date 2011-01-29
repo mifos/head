@@ -37,7 +37,6 @@ import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.MeetingFactory;
-import org.mifos.application.util.helpers.EntityType;
 import org.mifos.config.ClientRules;
 import org.mifos.core.CurrencyMismatchException;
 import org.mifos.core.MifosRuntimeException;
@@ -57,8 +56,6 @@ import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
-import org.mifos.customers.surveys.helpers.SurveyType;
-import org.mifos.customers.surveys.persistence.SurveysPersistence;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.AddressDto;
 import org.mifos.dto.domain.ApplicableAccountFeeDto;
@@ -325,12 +322,11 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
 
         CustomerMeetingDto customerMeeting = this.customerDao.getCustomerMeetingDto(group.getCustomerMeeting(), userContext);
 
-        boolean activeSurveys = new SurveysPersistence().isActiveSurveysForSurveyType(SurveyType.GROUP);
+        boolean activeSurveys = false;
+//        boolean activeSurveys = new SurveysPersistence().isActiveSurveysForSurveyType(SurveyType.GROUP);
 
-        List<SurveyDto> customerSurveys = this.customerDao.getCustomerSurveyDto(groupId);
-
-        List<CustomFieldDto> customFields = this.customerDao.getCustomFieldViewForCustomers(groupId, EntityType.GROUP
-                .getValue(), userContext);
+        List<SurveyDto> customerSurveys = new ArrayList<SurveyDto>();
+        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
 
         return new GroupInformationDto(groupDisplay, customerAccountSummary, groupPerformanceHistory, groupAddress,
                 clients, recentCustomerNotes, customerPositions, customerFlags, loanDetail, savingsDetail,
