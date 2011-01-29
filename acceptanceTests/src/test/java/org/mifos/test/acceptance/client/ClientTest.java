@@ -37,6 +37,7 @@ import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
+import org.mifos.test.acceptance.framework.center.MeetingParameters;
 import org.mifos.test.acceptance.framework.client.ClientEditMFIPage;
 import org.mifos.test.acceptance.framework.client.ClientEditMFIParameters;
 import org.mifos.test.acceptance.framework.client.ClientEditMFIPreviewPage;
@@ -44,8 +45,10 @@ import org.mifos.test.acceptance.framework.client.ClientEditPersonalInfoPage;
 import org.mifos.test.acceptance.framework.client.ClientNotesPage;
 import org.mifos.test.acceptance.framework.client.ClientSearchResultsPage;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
+import org.mifos.test.acceptance.framework.client.CreateClientConfirmationPage;
 import org.mifos.test.acceptance.framework.client.CreateClientEnterMfiDataPage;
 import org.mifos.test.acceptance.framework.client.CreateClientEnterPersonalDataPage;
+import org.mifos.test.acceptance.framework.client.CreateClientPreviewDataPage;
 import org.mifos.test.acceptance.framework.client.QuestionGroup;
 import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPage;
 import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPreviewDataPage;
@@ -168,6 +171,29 @@ public class ClientTest extends UiTestCaseBase {
         viewDetailsPage.verifySpouseFather("FatherFirstnameTest FatherLastNameTest");
 
     }
+
+    // http://mifosforge.jira.com/browse/MIFOSTEST-236
+    public void createClientOutsideGroup() throws Exception {
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
+        //When
+        CreateClientEnterMfiDataPage clientEnterMfiDataPage = navigationHelper.navigateToCreateClientEnterMfiDataPage("MyOffice1232993831593");
+
+        CreateClientEnterMfiDataPage.SubmitFormParameters parameters = new CreateClientEnterMfiDataPage.SubmitFormParameters();
+        parameters.setLoanOfficerId("Joe1232993835093 Guy1232993835093");
+
+        MeetingParameters meeting = new MeetingParameters();
+        meeting.setMeetingPlace("testMeetingPlace");
+        meeting.setWeekFrequency("1");
+        meeting.setWeekDay(MeetingParameters.MONDAY);
+        parameters.setMeeting(meeting);
+
+        CreateClientPreviewDataPage createClientPreviewDataPage = clientEnterMfiDataPage.submitAndGotoCreateClientPreviewDataPage(parameters);
+        CreateClientConfirmationPage clientConfirmationPage = createClientPreviewDataPage.submit();
+        //Then
+        clientConfirmationPage.navigateToClientViewDetailsPage();
+    }
+
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     private HomePage searchForClient(String clientName, HomePage homePage, int expectedNumberOfClients) throws Exception {
