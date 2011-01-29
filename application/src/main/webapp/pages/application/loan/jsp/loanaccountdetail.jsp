@@ -412,7 +412,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							<mifos:mifoslabel name="loan.collateral_notes"
 								keyhm="Loan.CollateralNotes" isColonRequired="yes"
 								isManadatoryIndicationNotRequired="yes" />&nbsp;<br>
-							<span id="loanaccountdetail.text.collateralname"><c:out value="${loanInformationDto.collateralNote}" /></span>
+							<span id="loanaccountdetail.text.collateralnote"><c:out value="${loanInformationDto.collateralNote}" /></span>
                             <br /></td>
 						</tr>
 						<script>

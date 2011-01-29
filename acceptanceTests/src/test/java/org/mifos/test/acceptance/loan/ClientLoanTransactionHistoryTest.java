@@ -133,6 +133,7 @@ public class ClientLoanTransactionHistoryTest extends UiTestCaseBase {
         //When
         loanTestHelper.changeLoanAccountInformation(loanId, new CreateLoanAccountSubmitParameters(), editLoanAccountInformationParameters);
         loanTestHelper.disburseLoan(loanId, disburseParameters);
+        loanTestHelper.setApplicationTime(systemDateTime.plusDays(10));
         loanTestHelper.applyPayment(loanId, paymentParameters);
         //Then
         loanTestHelper.verifyTransactionHistory(loanId, Double.valueOf(paymentParameters.getAmount()));

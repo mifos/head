@@ -131,7 +131,7 @@ public class LoanAccountPage extends AbstractPage {
     }
 
     public void verifyCollateralNotes(String note) {
-        Assert.assertEquals(selenium.getText("loanaccountdetail.text.note"), note);
+        Assert.assertEquals(selenium.getText("loanaccountdetail.text.collateralnote"), note);
     }
 
     public void verifyCollateralType(String type) {
@@ -159,7 +159,7 @@ public class LoanAccountPage extends AbstractPage {
             verifyCollateralType(editLoanAccountInformationParameters.getCollateralType());
         }
         if(editLoanAccountInformationParameters.getExternalID()!=null){
-            verifyInterestRate(submitAccountParameters.getInterestRate());
+            verifyExternalId(editLoanAccountInformationParameters.getExternalID());
         }
         if(editLoanAccountInformationParameters.getPurposeOfLoan()!=null){
             verifyPurposeOfLoan(editLoanAccountInformationParameters.getPurposeOfLoan());
