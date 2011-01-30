@@ -430,25 +430,16 @@ public class PersonnelBO extends AbstractBusinessObject {
 
     public void login(final String password) throws PersonnelException {
 
-        final String KEYUSERINACTIVE = "AbstractUserDetailsAuthenticationProvider.disabled";
-        final String KEYUSERLOCKED = "AbstractUserDetailsAuthenticationProvider.locked";
-
-        if (!isActive()) {
-            throw new PersonnelException(KEYUSERINACTIVE);
-        }
-        if (isLocked()) {
-            throw new PersonnelException(KEYUSERLOCKED);
-        }
         if (!isPasswordValid(password)) {
             updateNoOfTries();
-            throw new PersonnelException(INVALIDOLDPASSWORD);
-        }
-        resetNoOfTries();
+        } else {
+            resetNoOfTries();
 
-        if (isPasswordChanged()) {
-            this.lastLogin = new DateTime().toDate();
+            if (isPasswordChanged()) {
+                this.lastLogin = new DateTime().toDate();
+            }
+            logger.info("Login successful for user=" + this.userName + ", branchID=" + this.office.getGlobalOfficeNum());
         }
-        logger.info("Login successful for user=" + this.userName + ", branchID=" + this.office.getGlobalOfficeNum());
     }
 
     public void updatePassword(final String oldPassword, final String newPassword) throws PersonnelException {
