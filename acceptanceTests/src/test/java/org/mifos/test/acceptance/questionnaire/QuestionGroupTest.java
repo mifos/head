@@ -146,6 +146,7 @@ public class QuestionGroupTest extends UiTestCaseBase {
         assertTextFoundOnPage(TITLE_MISSING);
         assertTextFoundOnPage(APPLIES_TO_MISSING);
         assertTextFoundOnPage(SECTION_MISSING);
+        createQuestionGroupPage.addEmptySection("Empty Section");
         for(String section : parameters.getExistingQuestions().keySet()){
             createQuestionGroupPage.addExistingQuestion(section, parameters.getExistingQuestions().get(section));
         }
@@ -211,7 +212,7 @@ public class QuestionGroupTest extends UiTestCaseBase {
         parameters.setTitle(title);
         parameters.setAppliesTo(appliesTo);
         parameters.setAnswerEditable(isAnswerEditable);
-        for (String question : questionsNotToSelect) {
+        for (String question : questionsToSelect) {
             parameters.addExistingQuestion(sectionName, question);
         }
         for(String section : parameters.getExistingQuestions().keySet()){
@@ -223,7 +224,9 @@ public class QuestionGroupTest extends UiTestCaseBase {
         createQuestionParameters.setType("Free Text");
         createQuestionParameters.setText(questionToAdd);
         createQuestionGroupPage.setSection(SECTION_MISC);
-        createQuestionGroupPage.addNewQuestion(createQuestionParameters);
+        if (questionToAdd != null) {
+            createQuestionGroupPage.addNewQuestion(createQuestionParameters);
+        }
         createQuestionGroupPage.submit(parameters);
         assertPage(AdminPage.PAGE_ID);
     }

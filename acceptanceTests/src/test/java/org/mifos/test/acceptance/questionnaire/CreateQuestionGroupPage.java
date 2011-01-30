@@ -29,7 +29,9 @@ public class CreateQuestionGroupPage extends CreateQuestionGroupRootPage {
     }
 
     public void submit(CreateQuestionGroupParameters createQuestionGroupParameters) {
-        selenium.type("name=title", createQuestionGroupParameters.getTitle());
+        if (createQuestionGroupParameters.getTitle() != null) {
+            selenium.type("name=title", createQuestionGroupParameters.getTitle());
+        }
         if (createQuestionGroupParameters.isAnswerEditable()) {
            selenium.click("id=editable");
         }
@@ -39,10 +41,20 @@ public class CreateQuestionGroupPage extends CreateQuestionGroupRootPage {
     }
 
     private void selectAppliesTo(String appliesTo) {
-        if ("--select one--".equals(appliesTo)) {
+        if (appliesTo == null || "--select one--".equals(appliesTo)) {
             return;
         }
 
         selenium.addSelection("id=eventSourceIds", "label=" + appliesTo);
+    }
+
+    public void addEmptySection(String sectionName) {
+        selenium.check("id=addQuestionFlag0");
+        if (!selenium.isVisible("id=selectQuestionsDiv")) {
+            selenium.fireEvent("name=addQuestionFlag", "change");
+        }
+        selenium.type("id=sectionName", sectionName);
+        selenium.click("id=_eventId_addSection");
+        waitForPageToLoad();
     }
 }
