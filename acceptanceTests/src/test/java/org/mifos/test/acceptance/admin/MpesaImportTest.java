@@ -180,6 +180,8 @@ public class MpesaImportTest extends UiTestCaseBase {
         ViewOrganizationSettingsPage viewOrganizationSettingsPage = adminPage.navigateToViewOrganizationSettingsPage();
         viewOrganizationSettingsPage.verifyMiscellaneous(new String[]{"Max MPESA Disbursal Limit: 50000.0"});
 
+        propertiesHelper.setImportTransactionOrder("AL3,AL5");
+
         String dataset = "mpesa_export.xml";
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, dataset, dataSource, selenium);
 
