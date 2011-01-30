@@ -7,24 +7,6 @@
            http://www.springframework.org/schema/security
            http://www.springframework.org/schema/security/spring-security-3.0.xsd">
            
-     <beans:bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
-        <beans:property name="basenames">
-            <beans:list>
-                <beans:value>classpath:org/mifos/ui/localizedProperties/messages</beans:value>
-            </beans:list>
-        </beans:property>
-        <beans:property name="fileEncodings" value="UTF-8" />
-        <beans:property name="defaultEncoding" value="UTF-8" />
-    </beans:bean>
-    
-    <beans:bean id="messageSourceAccessor" class="org.springframework.context.support.MessageSourceAccessor">
-        <beans:constructor-arg ref="messageSource" />
-    </beans:bean>
-    
-    <beans:bean id="userDetailsChecker" class="org.mifos.security.MifosUserDetailsChecker">
-        <beans:constructor-arg ref="messageSourceAccessor" />
-    </beans:bean>
-
     <beans:bean id="loginFormAuthentication" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
         <beans:property name="loginFormUrl" value="/login.ftl" />
     </beans:bean>

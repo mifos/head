@@ -117,9 +117,16 @@ public class MifosLegacyUsernamePasswordAuthenticationFilter extends UsernamePas
         final String username = obtainUsername(request);
         request.setAttribute("username", username);
         final String password = obtainPassword(request);
-        loginServiceFacade.login(username, password);
+
+        if (authenticationIsUnsuccessfulDueToCredentials(failed)) {
+            loginServiceFacade.login(username, password);
+        }
 
         super.unsuccessfulAuthentication(request, response, failed);
+    }
+
+    private boolean authenticationIsUnsuccessfulDueToCredentials(AuthenticationException failed) {
+        return failed == null;
     }
 
     @Override
