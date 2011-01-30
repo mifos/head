@@ -189,17 +189,6 @@ explanation of the license and how it is applied.
                 </td>
               </tr>
               <tr class="fontnormal">
-                <td align="right"><mifos:mifoslabel name="Personnel.LanguagePreferred"  bundle="PersonnelUIResources"></mifos:mifoslabel></td>
-                <td>
-                 <mifos:select name="personActionForm" property="preferredLocale">
-					<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'languageList')}"
-					var="languageList">
-					<html-el:option value="${languageList.id}">${languageList.name}</html-el:option>
-					</c:forEach>
-				 </mifos:select>
-                </td>
-              </tr>
-              <tr class="fontnormal">
                 <td align="right"><mifos:mifoslabel name="Personnel.DOJMFI"  bundle="PersonnelUIResources"></mifos:mifoslabel></td>
                 <td><c:out value="${personActionForm.dateOfJoiningMFI}" /></td>
               </tr>

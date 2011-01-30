@@ -203,18 +203,6 @@ explanation of the license and how it is applied.
 									</td>
 								</tr>
 								<tr class="fontnormal">
-									<td align="right"><mifos:mifoslabel
-										name="Personnel.LanguagePreferred" /></td>
-									<td>
-                                        <mifos:select name="personActionForm" property="preferredLocale">
-                                            <c:forEach items="${definePersonnelDto.languageList}"
-                                                       var="languageList">
-                                                <html-el:option value="${languageList.id}">${languageList.name}</html-el:option>
-                                            </c:forEach>
-                                        </mifos:select>
-									</td>
-								</tr>
-								<tr class="fontnormal">
 									<td align="right"><mifos:mifoslabel name="Personnel.DOJMFI" /></td>
 									<td><date:datetag property="dateOfJoiningMFI" /></td>
 								</tr>
