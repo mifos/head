@@ -29,16 +29,6 @@ explanation of the license and how it is applied.
 <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
 <fmt:setBundle basename="org.mifos.config.localizedResources.adminUIResources"/>
 
-<!--  <%
-java.util.Enumeration enn = session.getAttributeNames();
-
-while(enn.hasMoreElements()){
-	String s = enn.nextElement().toString();
-	out.println(s + " " + session.getAttribute(s).toString());
-}
-
-%> -->
-
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
         <span id="page.id" title="admin" ></span>
