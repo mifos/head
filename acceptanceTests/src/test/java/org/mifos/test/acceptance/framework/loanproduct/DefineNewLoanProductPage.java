@@ -107,6 +107,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
         private String interestGLCode;
         private String principalGLCode;
         private boolean interestWaiver;
+        private boolean includeInLoanCounter;
         private List<String> questionGroups;
 
         public String getMinInstallemnts() {
@@ -275,6 +276,14 @@ public class DefineNewLoanProductPage extends AbstractPage {
 
         public boolean isInterestWaiver() {
             return interestWaiver;
+        }
+
+        public boolean isIncludeInLoanCounter() {
+            return includeInLoanCounter;
+        }
+
+        public void setIncludeInLoanCounter(boolean includeInLoanCounter) {
+            this.includeInLoanCounter = includeInLoanCounter;
         }
 
         public List<String> getQuestionGroups() {

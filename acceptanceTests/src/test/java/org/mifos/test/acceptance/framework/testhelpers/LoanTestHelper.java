@@ -287,6 +287,16 @@ public class LoanTestHelper {
         editLoanProductPreviewPage.submit();
     }
 
+    public void editLoanProductIncludeInLoanCounter(String loanProduct, boolean includeInLoanCounter) {
+        EditLoanProductPage editLoanProductPage = navigationHelper.navigateToAdminPage().
+                navigateToViewLoanProducts().
+                viewLoanProductDetails(loanProduct).
+                editLoanProduct();
+        DefineNewLoanProductPage.SubmitFormParameters formParameters = new DefineNewLoanProductPage.SubmitFormParameters();
+        formParameters.setIncludeInLoanCounter(includeInLoanCounter);
+        editLoanProductPage.submitIncludeInLoanCounter(formParameters).submit();
+    }
+
     public void editLoanProduct(String loanProduct, String... questionGroup) {
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         ViewLoanProductsPage viewLoanProducts = adminPage.navigateToViewLoanProducts();

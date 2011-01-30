@@ -97,6 +97,8 @@ public class LoanAccountPerformanceHistoryTest extends UiTestCaseBase {
         disburseParameters.setPaymentType(PaymentParameters.CASH);
         PerformanceHistoryAtributes performanceHistoryAtributes = new PerformanceHistoryAtributes();
         performanceHistoryAtributes.setDelinquentPortfolio(0.0);
+        loanTestHelper.editLoanProductIncludeInLoanCounter("WeeklyFlatLoanWithOneTimeFees", true);
+        loanTestHelper.editLoanProductIncludeInLoanCounter("MyLoanProduct1232993826860", true);
 
         //When
         Map<String,String> loanIds = new HashMap<String,String>();
