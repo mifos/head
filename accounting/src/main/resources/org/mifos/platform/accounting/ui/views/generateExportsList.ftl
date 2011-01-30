@@ -29,11 +29,16 @@
                  <td class="drawtablerow" colspan=2>${instance.fileName}</td>
                 [#if instance.isExistInCache]
                 <td class="drawtablerow">
-                <a target='_blank' href='pages/accounting/jsp/processTallyXMLOutput.jsp?fromDate=${instance.startDate}&toDate=${instance.endDate}'>Tally&nbsp; XML</a>
+                    <a href='renderAccountingData.ftl?fromDate=${instance.startDate}&toDate=${instance.endDate}' title='This export has already been generated'>
+                        View Details &nbsp; (Generated on - ${instance.lastModified})
+                    </a>
                 </td>
-                 <td class="drawtablerow"><a href='renderAccountingData.ftl?fromDate=${instance.startDate}&toDate=${instance.endDate}'>View Details</a></td>
                 [#else]
-                <td class="drawtablerow" colspan=2><a href='renderAccountingData.ftl?fromDate=${instance.startDate}&toDate=${instance.endDate}'>Generate and View Details</a></td>
+                <td class="drawtablerow" colspan=2>
+                    <a href='renderAccountingData.ftl?fromDate=${instance.startDate}&toDate=${instance.endDate}' title='This export has not been generated'>
+                        Generate and View Details
+                    </a>
+                </td>
                 [/#if]
              </tr>
         [/#list]

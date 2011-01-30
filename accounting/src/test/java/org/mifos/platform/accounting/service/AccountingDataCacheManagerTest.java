@@ -59,7 +59,7 @@ public class AccountingDataCacheManagerTest {
         LocalDate date = new LocalDate(2010, 10, 12);
         String cacheFileName = cacheManager.getCacheFileName(date, date);
         cacheManager.writeAccountingDataToCache(data, cacheFileName);
-        List<AccountingDto> accountingData = cacheManager.getAccoutingDataFromCache(cacheFileName);
+        List<AccountingDto> accountingData = cacheManager.getExportDetails(cacheFileName);
         Assert.assertEquals(2, accountingData.size());
         DecimalFormat df = new DecimalFormat("#.0", new DecimalFormatSymbols(Locale.ENGLISH));
         for (AccountingDto dto : accountingData) {
