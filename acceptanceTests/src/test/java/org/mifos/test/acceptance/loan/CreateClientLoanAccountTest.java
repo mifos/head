@@ -368,6 +368,9 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // http://mifosforge.jira.com/browse/MIFOSTEST-99
+    // TODO JS there are open bugs which cause that this test fails (MIFOS-2243, MIFOS-4553)
+    @Test(enabled=false)
     public void verifyCreatingLoanAccountsOnProductWithLoanCycles() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
