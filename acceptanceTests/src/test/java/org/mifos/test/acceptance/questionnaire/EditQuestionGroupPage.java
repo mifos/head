@@ -34,4 +34,14 @@ public class EditQuestionGroupPage extends CreateQuestionGroupRootPage {
         waitForPageToLoad();
         return new QuestionGroupDetailPage(selenium);
     }
+
+    public QuestionGroupDetailPage activate() {
+        selenium.click("id=active0");
+        return submit();
+    }
+
+    public QuestionGroupDetailPage deactivate() {
+        selenium.click("id=active1");
+        return submit();
+    }
 }
