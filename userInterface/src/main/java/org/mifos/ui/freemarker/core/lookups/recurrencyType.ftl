@@ -22,44 +22,44 @@
 [#import "/spring.ftl" as spring /]
 
 [#-- 
-Lookup recurrency name given an ID. 
+Lookup recurrence name given an ID. 
 Defined in org.mifos.application.meeting.util.helpers.RecurrencyType
 --]
-[#macro recurrencyType recurrencyTypeId]
+[#macro recurrenceType recurrencyTypeId]
     [#-- WEEKLY(Short.valueOf("1")), '
     	 MONTHLY(Short.valueOf("2")), 
     	 DAILY(Short.valueOf("3")); --]
 	[#if recurrencyTypeId == 1]
-		[@spring.message "ftl.macro.lookup.recurrencyType.weekly" /]
+		[@spring.message "ftl.macro.lookup.recurrenceType.weekly" /]
 	[#elseif recurrencyTypeId == 2]
-		[@spring.message "ftl.macro.lookup.recurrencyType.monthly" /]
+		[@spring.message "ftl.macro.lookup.recurrenceType.monthly" /]
 	[#elseif recurrencyTypeId == 3]
-		[@spring.message "ftl.macro.lookup.recurrencyType.daily" /]
+		[@spring.message "ftl.macro.lookup.recurrenceType.daily" /]
 	[#else]
-		[@spring.message "ftl.macro.lookup.recurrencyType.undefined" /]
+		[@spring.message "ftl.macro.lookup.recurrenceType.undefined" /]
 	[/#if]	
 [/#macro]
 
 [#-- 
-Lookup recurring period given an ID. 
+Lookup recurrence frequency given an ID. 
 Defined in org.mifos.application.meeting.util.helpers.RecurrencyType
 --]
-[#macro recurringPeriod recurrencyTypeId]
+[#macro recurrencyFrequence recurrencyTypeId]
     [#-- WEEKLY(Short.valueOf("1")), '
     	 MONTHLY(Short.valueOf("2")), 
     	 DAILY(Short.valueOf("3")); --]
 	[#if recurrencyTypeId == 1]
-		[@spring.message "ftl.macro.lookup.recurringPeriod.week" /]
+		[@spring.message "ftl.macro.lookup.recurrenceFrequency.week" /]
 	[#elseif recurrencyTypeId == 2]
-		[@spring.message "ftl.macro.lookup.recurringPeriod.month" /]
+		[@spring.message "ftl.macro.lookup.recurrenceFrequency.month" /]
 	[#elseif recurrencyTypeId == 3]
-		[@spring.message "ftl.macro.lookup.recurringPeriod.day" /]
+		[@spring.message "ftl.macro.lookup.recurrenceFrequency.day" /]
 	[#else]
-		[@spring.message "ftl.macro.lookup.recurringPeriod.undefined" /]
+		[@spring.message "ftl.macro.lookup.recurrenceFrequency.undefined" /]
 	[/#if]	
 [/#macro]
 
 [#-- Single purpose macro that returns the localized name where recurring period is MONTH --]
-[#macro recurringPeriodMonth]
-	[@spring.message "ftl.macro.lookup.recurringPeriod.month" /]
+[#macro recurringFrequencyMonth]
+	[@spring.message "ftl.macro.lookup.recurrenceFrequency.month" /]
 [/#macro]
