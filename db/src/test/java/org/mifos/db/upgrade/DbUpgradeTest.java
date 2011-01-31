@@ -22,6 +22,7 @@ package org.mifos.db.upgrade;
 import liquibase.Liquibase;
 import liquibase.changelog.ChangeSet;
 import liquibase.exception.LiquibaseException;
+import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -89,6 +90,12 @@ public class DbUpgradeTest {
         assertTrue(dbUpgradeValidationResult.allUpgradesApplied());
         assertEquals("\nList of unapplied upgrades:\n", dbUpgradeValidationResult.getUnAppliedChangeSets());
         verify(liquibase).listUnrunChangeSets("");
+    }
+
+    @Test
+    public void testUpgrade() throws Exception {
+       dbUpgrade.upgrade();
+       verify(liquibase).update(StringUtils.EMPTY);
     }
 
 }

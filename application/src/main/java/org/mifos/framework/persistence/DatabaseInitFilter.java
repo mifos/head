@@ -110,7 +110,7 @@ public class DatabaseInitFilter implements Filter {
 
     private DbUpgrade getDbUpgradeValidator(FilterConfig filterConfig) {
         return (DbUpgrade) WebApplicationContextUtils.
-                getRequiredWebApplicationContext(filterConfig.getServletContext()).getBean("dbUpgradeValidator");
+                getRequiredWebApplicationContext(filterConfig.getServletContext()).getBean("dbUpgrade");
     }
 
     public void destroy() {

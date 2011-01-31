@@ -20,6 +20,7 @@
 
 package org.mifos.framework.persistence;
 
+import org.mifos.db.upgrade.DbUpgrade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.mifos.core.ClasspathResource;
@@ -169,6 +170,11 @@ public class DatabaseMigrator {
         } else {
             upgrade(true);
         }
+    }
+
+    public void upgrade(ApplicationContext applicationContext) throws Exception {
+        DbUpgrade dbUpgrade = (DbUpgrade) applicationContext.getBean("dbUpgrade");
+        dbUpgrade.upgrade();
     }
 
     public boolean checkForUnAppliedUpgrades() throws Exception {

@@ -65,8 +65,6 @@ import javax.servlet.ServletRequestEvent;
 import javax.servlet.ServletRequestListener;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.sql.Driver;
 import java.sql.DriverManager;
@@ -176,7 +174,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
 
         if (!databaseError.isError) {
             try {
-                migrator.upgrade();
+                migrator.upgrade(applicationContext);
             } catch (Throwable t) {
                 setDatabaseError(DatabaseErrorCode.UPGRADE_FAILURE, "Failed to upgrade database.", t);
             }

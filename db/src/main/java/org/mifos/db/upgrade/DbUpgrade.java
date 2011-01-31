@@ -26,6 +26,7 @@ import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.DatabaseException;
 import liquibase.exception.LiquibaseException;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.ResourceLoader;
 
@@ -41,18 +42,18 @@ public class DbUpgrade implements ResourceLoaderAware {
 
     public DbUpgradeValidationResult validate() throws SQLException, LiquibaseException {
         Liquibase liquibase = getLiquibase();
-        return new DbUpgradeValidationResult(liquibase.listUnrunChangeSets(""));
+        return new DbUpgradeValidationResult(liquibase.listUnrunChangeSets(StringUtils.EMPTY));
+    }
+
+    public void upgrade() throws SQLException, LiquibaseException {
+        Liquibase liquibase = getLiquibase();
+        liquibase.update(StringUtils.EMPTY);
     }
 
     Liquibase getLiquibase() throws SQLException, LiquibaseException {
         Connection connection = dataSource.getConnection();
         Database database = getDatabase(connection);
         return new Liquibase(changeLog, new ResourceOpener(changeLog, resourceLoader), database);
-    }
-
-    private Database getDatabase(Connection connection) throws DatabaseException {
-        return DatabaseFactory.getInstance().
-                findCorrectDatabaseImplementation(new JdbcConnection(connection));
     }
 
     // setter for DI
@@ -68,5 +69,10 @@ public class DbUpgrade implements ResourceLoaderAware {
     // setter for DI
     public void setChangeLog(String changeLog) {
         this.changeLog = changeLog;
+    }
+
+    private Database getDatabase(Connection connection) throws DatabaseException {
+        return DatabaseFactory.getInstance().
+                findCorrectDatabaseImplementation(new JdbcConnection(connection));
     }
 }
