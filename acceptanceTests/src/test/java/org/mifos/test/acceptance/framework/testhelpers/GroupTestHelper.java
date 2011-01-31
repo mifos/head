@@ -39,4 +39,12 @@ public class GroupTestHelper {
             .submitNewGroupForApproval(groupParams)
             .navigateToGroupDetailsPage();
     }
+    public GroupViewDetailsPage createNewGroupWithoutPendingForApproval(String centerName, CreateGroupSubmitParameters groupParams) {
+        return navigationHelper
+            .navigateToClientsAndAccountsPage()
+            .navigateToCreateNewGroupPage()
+            .searchAndNavigateToCreateGroupPage(centerName)
+            .submitNewGroupForApprove(groupParams)
+            .navigateToGroupDetailsPage();
+    }
 }

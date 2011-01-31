@@ -134,4 +134,8 @@ public class CustomPropertiesHelper {
     public void setImportTransactionOrder(String order){
         selenium.open(UPDATE_PAGE + "?ke.co.safaricom.MPesaXlsImporter.ImportTransactionOrder=" + order);
     }
+
+    public void setGroupPendingApprovalStateEnabled(String enabled){
+        selenium.open(UPDATE_PAGE + "?ProcessFlow.GroupPendingApprovalStateEnabled=" + enabled);
+    }
 }

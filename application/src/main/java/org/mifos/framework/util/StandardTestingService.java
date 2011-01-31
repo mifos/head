@@ -223,4 +223,16 @@ public class StandardTestingService implements TestingService {
         }
         configMgr.setProperty(importParamName, importParamValue);
     }
+
+    @Override
+    public void setProcessFlow(String processFlowParamName, String processFlowParamValue)
+            throws MifosException {
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
+        if (processFlowParamValue == null || processFlowParamValue.equals("")) {
+            configMgr.clearProperty(processFlowParamName);
+            return;
+        }
+        configMgr.setProperty(processFlowParamName, processFlowParamValue);
+
+    }
 }

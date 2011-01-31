@@ -28,6 +28,8 @@ import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.center.CreateCenterEnterDataPage;
 import org.mifos.test.acceptance.framework.center.CreateMeetingPage;
 import org.mifos.test.acceptance.framework.client.CreateClientEnterMfiDataPage;
+import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
+import org.mifos.test.acceptance.framework.group.CreateGroupEntryPage.CreateGroupSubmitParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
@@ -36,6 +38,7 @@ import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPrevi
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.SubmitFormParameters;
 import org.mifos.test.acceptance.framework.testhelpers.CustomPropertiesHelper;
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
+import org.mifos.test.acceptance.framework.testhelpers.GroupTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,6 +78,21 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
     @AfterMethod
     public void logOut() {
         (new MifosPage(selenium)).logout();
+    }
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    //http://mifosforge.jira.com/browse/MIFOSTEST-195
+    public void verifyPropertyGroupPendingApprovalStateEnabled() throws Exception{
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
+        propertiesHelper.setGroupPendingApprovalStateEnabled("false");
+        //When
+        GroupTestHelper groupTestHelper = new GroupTestHelper(navigationHelper);
+        CreateGroupSubmitParameters groupParams = new CreateGroupSubmitParameters();
+        groupParams.setGroupName("testGroup123123123123");
+        GroupViewDetailsPage groupViewDetailsPage = groupTestHelper.createNewGroupWithoutPendingForApproval("MyCenter1232993841778" , groupParams);
+        //Then
+        groupViewDetailsPage.verifyStatus("Active");
+
     }
 
     public void changeLocale() {
@@ -215,4 +233,5 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
             previewPage.verifyErrorInForm(errorInterestDigitsAfterDecimal);
         }
     }
+
 }
