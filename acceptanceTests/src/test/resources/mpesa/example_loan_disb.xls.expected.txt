@@ -1,15 +1,16 @@
 9 rows were read:
 
-5 rows contained no errors and will be imported
-0 rows will be ignored
+4 rows contained no errors and will be imported
+1 rows will be ignored
 4 rows contained errors and were not imported
 
-Total amount of transactions imported: 19250.0
-Total amount of disbursements imported: 19155.0
+Total amount of transactions imported: 17995.0
+Total amount of disbursements imported: 17900.0
 Total amount of transactions with error: 26710.0
 
 The following row(s) contain errors and will not be imported:
 
+Row <25> ignored - C94ZH942 - Receipt ID duplicated
 Row <29> error - Y29DW127 - Client with mobile number 0715575007 was not found
 Row <30> error - Y28HL873 - Client with mobile number 0711821509 was not found
 Row <31> error - Y28GK611 - No valid accounts found with this transaction
