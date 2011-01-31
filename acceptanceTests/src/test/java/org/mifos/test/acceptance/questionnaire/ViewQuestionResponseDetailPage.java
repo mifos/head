@@ -21,6 +21,8 @@
 package org.mifos.test.acceptance.questionnaire;
 
 import com.thoughtworks.selenium.Selenium;
+
+import org.junit.Assert;
 import org.mifos.test.acceptance.framework.MifosPage;
 
 import static org.junit.Assert.assertTrue;
@@ -39,6 +41,22 @@ public class ViewQuestionResponseDetailPage extends MifosPage {
         for (String answer : answers) {
             assertTrue(selenium.isTextPresent(answer));
         }
+    }
+
+    public void verifyQuestionsDoesnotappear(String[] questions) {
+        for (String question : questions) {
+            Assert.assertFalse(selenium.isTextPresent(question));
+        }
+    }
+
+    public void verifyEditButtonDisabled(String number) {
+        Assert.assertFalse(selenium.isTextPresent("xpath=//a[@questiongroupinstancedetailindex='"+number+"']"));
+    }
+
+    public QuestionnairePage navigateToEditSection(String number) {
+        selenium.click("xpath=//a[@questiongroupinstancedetailindex='"+number+"']");
+        waitForPageToLoad();
+        return new QuestionnairePage(selenium);
     }
 
     public void navigateToDetailsPage() {

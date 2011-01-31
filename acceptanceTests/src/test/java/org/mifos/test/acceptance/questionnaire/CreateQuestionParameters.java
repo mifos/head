@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CreateQuestionParameters {
+
+    public static final String TYPE_FREE_TEXT = "Free Text";
+
     private String text;
 
     private String type;

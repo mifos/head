@@ -21,6 +21,8 @@
 package org.mifos.test.acceptance.questionnaire;
 
 import com.thoughtworks.selenium.Selenium;
+
+import org.junit.Assert;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.group.CreateGroupConfirmationPage;
 import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
@@ -44,6 +46,18 @@ public class QuestionResponsePage extends MifosPage {
         populateTextAnswer(questionInputId, answer);
         navigateToNextPage();
         assertTrue(selenium.isTextPresent("Please specify a number between " + minimum + " and " + maximum + " for " + questionTitle));
+    }
+
+    public void verifyQuestionsDoesnotappear(String[] questions) {
+        for (String question : questions) {
+            Assert.assertFalse(selenium.isTextPresent(question));
+        }
+    }
+
+    public void verifyQuestionsExists(String[] questions) {
+        for(String question: questions) {
+            Assert.assertTrue(selenium.isTextPresent(question));
+        }
     }
 
     public void populateSmartSelect(String smartSelectId, Map<String, String> tags) {

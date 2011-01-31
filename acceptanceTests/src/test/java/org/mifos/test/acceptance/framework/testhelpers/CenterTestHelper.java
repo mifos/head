@@ -64,4 +64,17 @@ public class CenterTestHelper {
 
         return new CreateCenterPreviewDataPage(selenium).submit().navigateToCenterViewDetailsPage();
     }
+
+    public QuestionResponsePage navigateToQuestionResponsePageWhenCreatingCenter(CreateCenterEnterDataPage.SubmitFormParameters formParameters, String officeName) {
+        QuestionResponsePage responsePage = navigationHelper
+            .navigateToClientsAndAccountsPage()
+            .navigateToCreateNewCenterPage()
+            .selectOffice(officeName)
+            .submitAndNavigateToQuestionResponsePage(formParameters);
+        return responsePage;
+    }
+
+    public CenterViewDetailsPage navigateToCenterViewDetailsPage(String centerName) {
+        return navigationHelper.navigateToCenterViewDetailsPage(centerName);
+    }
 }

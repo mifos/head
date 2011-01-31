@@ -21,6 +21,8 @@
 package org.mifos.test.acceptance.questionnaire;
 
 import com.thoughtworks.selenium.Selenium;
+
+import org.junit.Assert;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 
@@ -33,10 +35,15 @@ public class QuestionnairePage extends MifosPage {
 
     public QuestionnairePage(Selenium selenium) {
         super(selenium);
+        verifyPage("questionnaire");
     }
 
     public void verifyPage() {
         super.verifyPage("questionnaire");
+    }
+
+    public void verifyField(String locator, String text) {
+        Assert.assertEquals(selenium.getText(locator), text);
     }
 
     public void setResponse(String question, String answer) {
