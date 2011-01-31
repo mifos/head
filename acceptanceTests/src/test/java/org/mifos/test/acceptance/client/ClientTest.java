@@ -22,6 +22,7 @@ package org.mifos.test.acceptance.client;
 
 import static java.util.Arrays.asList;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
@@ -53,10 +54,12 @@ import org.mifos.test.acceptance.framework.client.QuestionGroup;
 import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPage;
 import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPreviewDataPage;
 import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPage.SubmitFormParameters;
+import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
 import org.mifos.test.acceptance.framework.testhelpers.ClientTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.CustomPropertiesHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
+import org.mifos.test.acceptance.framework.testhelpers.QuestionGroupTestHelper;
 import org.mifos.test.acceptance.questionnaire.Choice;
 import org.mifos.test.acceptance.questionnaire.CreateQuestionGroupPage;
 import org.mifos.test.acceptance.questionnaire.CreateQuestionGroupParameters;
@@ -65,10 +68,12 @@ import org.mifos.test.acceptance.questionnaire.CreateQuestionParameters;
 import org.mifos.test.acceptance.questionnaire.EditQuestionPage;
 import org.mifos.test.acceptance.questionnaire.QuestionDetailPage;
 import org.mifos.test.acceptance.questionnaire.QuestionGroupResponsePage;
+import org.mifos.test.acceptance.questionnaire.QuestionResponsePage;
 import org.mifos.test.acceptance.questionnaire.QuestionnairePage;
 import org.mifos.test.acceptance.questionnaire.ViewAllQuestionsPage;
 import org.mifos.test.acceptance.questionnaire.ViewQuestionResponseDetailPage;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
+import org.mifos.test.acceptance.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
@@ -83,6 +88,7 @@ public class ClientTest extends UiTestCaseBase {
     private NavigationHelper navigationHelper;
     CustomPropertiesHelper propertiesHelper;
     ClientTestHelper clientTestHelper;
+    QuestionGroupTestHelper questionGroupTestHelper;
 
     @Autowired
     private DriverManagerDataSource dataSource;
@@ -111,7 +117,8 @@ public class ClientTest extends UiTestCaseBase {
         super.setUp();
         navigationHelper = new NavigationHelper(selenium);
         propertiesHelper = new CustomPropertiesHelper(selenium);
-        clientTestHelper = new ClientTestHelper();
+        clientTestHelper = new ClientTestHelper(selenium);
+        questionGroupTestHelper = new QuestionGroupTestHelper(selenium);
         random = new Random();
     }
 
@@ -416,6 +423,7 @@ public class ClientTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createClientWithQuestionGroups() throws Exception {
+        /*
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
 
         String questionGroupTitle = "QG1" + random.nextInt(100);
@@ -439,7 +447,43 @@ public class ClientTest extends UiTestCaseBase {
         Map<String,String> tags = new HashMap<String, String>();
         tags.put("Tag1", "Choice1");
         tags.put("Tag3", "Choice2");
-        return tags;
+        return tags;*/
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_016_dbunit.xml", dataSource, selenium);
+        CreateClientEnterPersonalDataPage.SubmitFormParameters formParameters = new CreateClientEnterPersonalDataPage.SubmitFormParameters();
+        formParameters.setSalutation(CreateClientEnterPersonalDataPage.SubmitFormParameters.MRS);
+        formParameters.setFirstName("test");
+        formParameters.setLastName("Customer" + StringUtil.getRandomString(8));
+        formParameters.setDateOfBirthDD("01");
+        formParameters.setDateOfBirthMM("02");
+        formParameters.setDateOfBirthYYYY("1988");
+        formParameters.setGender(CreateClientEnterPersonalDataPage.SubmitFormParameters.FEMALE);
+        formParameters.setPovertyStatus(CreateClientEnterPersonalDataPage.SubmitFormParameters.POOR);
+        formParameters.setHandicapped("Yes");
+        formParameters.setSpouseNameType(CreateClientEnterPersonalDataPage.SubmitFormParameters.FATHER);
+        formParameters.setSpouseFirstName("father");
+        formParameters.setSpouseLastName("lastname" + StringUtil.getRandomString(8));
+
+        QuestionResponseParameters responseParams = new QuestionResponseParameters();
+        responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[0].questions[1].value", "yes");
+        responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[0].questions[2].value", "good");
+        responseParams.addTextAnswer("questionGroups[1].sectionDetails[1].questions[2].value", "qwer");
+
+        clientTestHelper.createClientWithQuestionGroups(formParameters,"MyGroup1233266031669", "Joe1233265931256 Guy1233265931256", responseParams);
+        CreateQuestionGroupParameters createQuestionGroupParameters = new CreateQuestionGroupParameters();
+        createQuestionGroupParameters.addExistingQuestion("Sec 1", "question 2");
+        createQuestionGroupParameters.addExistingQuestion("Sec 1", "question 5");
+        questionGroupTestHelper.addQuestionsToQuestionGroup("CreateClientQG", createQuestionGroupParameters.getExistingQuestions());
+        List<String> questionToDesactivate = new ArrayList<String>();
+        questionToDesactivate.add("question 2");
+        questionToDesactivate.add("SingleSelectQuestion");
+        questionToDesactivate.add("DateQuestion");
+        questionToDesactivate.add("Number");
+        questionToDesactivate.add("NumberQuestion2");
+        for (String question : questionToDesactivate) {
+            questionGroupTestHelper.markQuestionAsInactive(question);
+        }
+        questionGroupTestHelper.markQuestionGroupAsInactive("CreateClientQG2");
+        clientTestHelper.navigateToQuestionResponsePage(formParameters,"MyGroup1233266031669");
     }
 
     private QuestionnairePage checkMandatoryQuestionValidation(String questionGroupTitle, String question1, String question2, ClientViewDetailsPage viewDetailsPage) {

@@ -20,15 +20,33 @@
 
 package org.mifos.test.acceptance.framework.testhelpers;
 
+import org.mifos.test.acceptance.framework.center.MeetingParameters;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
+import org.mifos.test.acceptance.framework.client.CreateClientConfirmationPage;
+import org.mifos.test.acceptance.framework.client.CreateClientEnterMfiDataPage;
+import org.mifos.test.acceptance.framework.client.CreateClientEnterPersonalDataPage;
+import org.mifos.test.acceptance.framework.client.CreateClientPreviewDataPage;
 import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPage;
 import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPreviewDataPage;
+import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
+import org.mifos.test.acceptance.questionnaire.QuestionResponsePage;
+
+import com.thoughtworks.selenium.Selenium;
 
 public class ClientTestHelper {
 
+    private final NavigationHelper navigationHelper;
+    private final Selenium selenium;
     public static final String ACTIVE = "Active";
     public static final String PENDING_APPROVAL = "Application Pending Approval";
     public static final String PARTIAL_APPLICATION = "Partial Application";
+
+
+
+    public ClientTestHelper(Selenium selenium) {
+        this.navigationHelper = new NavigationHelper(selenium);
+        this.selenium = selenium;
+    }
 
     public ClientViewDetailsPage changeCustomerStatus(ClientViewDetailsPage clientDetailsPage) {
 
@@ -70,5 +88,49 @@ public class ClientTestHelper {
         ClientViewDetailsPage clientDetailsPage5 = statusChangePage4.cancelAndGotoClientViewDetailsPage(statusParameters);
         clientDetailsPage5.verifyNotes(statusParameters.getNotes());
         return clientDetailsPage5;
+    }
+
+
+    public ClientViewDetailsPage createClientWithQuestionGroups(CreateClientEnterPersonalDataPage.SubmitFormParameters parameters, String group, String loanOfficer, QuestionResponseParameters responseParams) {
+        QuestionResponsePage questionResponsePage = navigateToQuestionResponsePage(parameters,group);
+        questionResponsePage.populateAnswers(responseParams);
+        questionResponsePage.navigateToNextPage();
+        navigateToConfirmationPage(loanOfficer);
+        return navigateToClientViewDetails(parameters);
+    }
+
+    public QuestionResponsePage navigateToQuestionResponsePage(CreateClientEnterPersonalDataPage.SubmitFormParameters parameters, String group) {
+        return navigationHelper
+        .navigateToClientsAndAccountsPage()
+        .navigateToCreateNewClientPage()
+        .selectGroup(group)
+        .create(parameters)
+        .submitAndGotoCaptureQuestionResponsePage();
+    }
+
+    private ClientViewDetailsPage navigateToClientViewDetails(CreateClientEnterPersonalDataPage.SubmitFormParameters formParameters) {
+        ClientViewDetailsPage clientViewDetailsPage = new CreateClientConfirmationPage(selenium).navigateToClientViewDetailsPage();
+        clientViewDetailsPage.verifyName(formParameters.getFirstName() + " " + formParameters.getLastName());
+        clientViewDetailsPage.verifyDateOfBirth(formParameters.getDateOfBirthDD(), formParameters.getDateOfBirthMM(), formParameters.getDateOfBirthYYYY());
+        clientViewDetailsPage.verifySpouseFather(formParameters.getSpouseFirstName() + " " + formParameters.getSpouseLastName());
+        clientViewDetailsPage.verifyHandicapped(formParameters.getHandicapped());
+        return clientViewDetailsPage;
+    }
+
+    private CreateClientConfirmationPage navigateToConfirmationPage(String loanOfficer) {
+        CreateClientEnterMfiDataPage.SubmitFormParameters mfiFormParameters = new CreateClientEnterMfiDataPage.SubmitFormParameters();
+        mfiFormParameters.setLoanOfficerId(loanOfficer);
+
+        MeetingParameters meetingFormParameters = new MeetingParameters();
+        meetingFormParameters.setWeekFrequency("1");
+        meetingFormParameters.setWeekDay(MeetingParameters.WEDNESDAY);
+        meetingFormParameters.setMeetingPlace("Bangalore");
+
+        mfiFormParameters.setMeeting(meetingFormParameters);
+
+        CreateClientPreviewDataPage clientPreviewDataPage = new CreateClientEnterMfiDataPage(selenium).submitAndGotoCreateClientPreviewDataPage(mfiFormParameters);
+        CreateClientConfirmationPage clientConfirmationPage = clientPreviewDataPage.submit();
+        clientConfirmationPage.verifyPage();
+        return clientConfirmationPage;
     }
 }
