@@ -25,9 +25,14 @@ import org.joda.time.DateTime;
 import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
+import org.mifos.test.acceptance.framework.admin.AdminPage;
+import org.mifos.test.acceptance.framework.admin.DefineAcceptedPaymentTypesPage;
 import org.mifos.test.acceptance.framework.loan.AccountActivityPage;
 import org.mifos.test.acceptance.framework.loan.ChargeParameters;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameters;
 import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
+import org.mifos.test.acceptance.framework.loan.EditLoanAccountStatusParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.RepayLoanConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.RepayLoanPage;
@@ -94,6 +99,65 @@ public class LoanRepayTest extends UiTestCaseBase {
         verifyLoanStateAndAccountSummary();
         verifyRepaymentSchedule();
         verifyAccountActivity();
+    }
+
+    //http://mifosforge.jira.com/browse/MIFOSTEST-251
+    public void paymentTypeForLoanRepayments()  throws Exception{
+        //Given
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTime targetTime = new DateTime(2011,2,1,13,0,0,0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
+
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        DefineAcceptedPaymentTypesPage defineAcceptedPaymentTypesPage = adminPage.navigateToDefineAcceptedPaymentType();
+        defineAcceptedPaymentTypesPage.addLoanRepaymentsPaymentType(defineAcceptedPaymentTypesPage.CHEQUE);
+
+        adminPage = navigationHelper.navigateToAdminPage();
+        defineAcceptedPaymentTypesPage = adminPage.navigateToDefineAcceptedPaymentType();
+        defineAcceptedPaymentTypesPage.addLoanRepaymentsPaymentType(defineAcceptedPaymentTypesPage.VOUCHER);
+
+        //When
+        CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
+        searchParameters.setSearchString("Client - Mary Monthly");
+        searchParameters.setLoanProduct("MonthlyClientFlatLoan1stOfMonth");
+
+        CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
+        submitAccountParameters.setAmount("1423.0");
+        submitAccountParameters.setGracePeriodTypeNone(true);
+
+        LoanAccountPage loanAccountPage;
+        loanAccountPage=loanTestHelper.createLoanAccount(searchParameters, submitAccountParameters);
+        String lid=loanAccountPage.getAccountId();
+        EditLoanAccountStatusParameters params = new EditLoanAccountStatusParameters();
+        params.setStatus(EditLoanAccountStatusParameters.APPROVED);
+        params.setNote("Test");
+
+        loanTestHelper.changeLoanAccountStatus(lid, params);
+        loanTestHelper.disburseLoan(lid, getDisburseLoanParameters());
+
+        loanAccountPage=navigationHelper.navigateToLoanAccountPage(lid);
+        loanAccountPage.navigateToRepayLoan();
+        String[] modesOfPayment=selenium.getSelectOptions("RepayLoan.input.modeOfRepayment");
+
+        //Then
+        Assert.assertEquals(RepayLoanParameters.CASH,modesOfPayment[1]);
+        Assert.assertEquals(RepayLoanParameters.CHEQUE,modesOfPayment[2]);
+        Assert.assertEquals(RepayLoanParameters.VOUCHER,modesOfPayment[3]);
+
+        //When
+        lid="000100000000004";
+        loanTestHelper.disburseLoan(lid, getDisburseLoanParameters());
+
+        loanAccountPage=navigationHelper.navigateToLoanAccountPage(lid);
+        loanAccountPage.navigateToRepayLoan();
+        String[] modesOfPayment2=selenium.getSelectOptions("RepayLoan.input.modeOfRepayment");
+
+        //Then
+        Assert.assertEquals(RepayLoanParameters.CASH,modesOfPayment2[1]);
+        Assert.assertEquals(RepayLoanParameters.CHEQUE,modesOfPayment2[2]);
+        Assert.assertEquals(RepayLoanParameters.VOUCHER,modesOfPayment2[3]);
+
     }
 
     private void verifyAccountActivity() {
