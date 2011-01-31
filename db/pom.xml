@@ -16,7 +16,7 @@
         <modules.root.dir>${basedir}/..</modules.root.dir>
         <integration.database.properties.file>${modules.root.dir}/application/src/test/resources/org/mifos/config/resources/integrationDatabase.properties</integration.database.properties.file>
         <mifos.overrides.home>${user.home}/.mifos/local.properties</mifos.overrides.home>
-        <sql.resources.target.directory>${basedir}/src/main/sql</sql.resources.target.directory>
+        <sql.resources.target.directory>${basedir}/src/main/resources/sql</sql.resources.target.directory>
         <!--A very large number for rollback count-->
         <liquibase.rollbackCount>1000</liquibase.rollbackCount>
         <liquibase.migrationSqlOutputFile>target/classes/update-master.sql</liquibase.migrationSqlOutputFile>
@@ -24,8 +24,46 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.8.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>3.0.5.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>org.springframework.test</artifactId>
+            <version>3.0.0.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mifos</groupId>
+            <artifactId>mifos-common</artifactId>
+            <version>1.8-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>c3p0</groupId>
+            <artifactId>c3p0</artifactId>
+            <version>0.9.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>3.0.5.RELEASE</version>
+        </dependency>
+        <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
         </dependency>
     </dependencies>
 

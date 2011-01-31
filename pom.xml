@@ -131,6 +131,11 @@
             </dependency>
             <dependency>
                 <groupId>org.mifos</groupId>
+                <artifactId>mifos-db</artifactId>
+                <version>1.8-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mifos</groupId>
                 <artifactId>mifos-cashflow</artifactId>
                 <version>1.8-SNAPSHOT</version>
             </dependency>
@@ -590,6 +595,11 @@
                 <groupId>struts</groupId>
                 <artifactId>struts-legacy</artifactId>
                 <version>1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-core</artifactId>
+                <version>2.0.0</version>
             </dependency>
             <dependency>
                 <groupId>strutstest</groupId>

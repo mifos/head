@@ -10,4 +10,5 @@
     <import resource="classpath:META-INF/spring/QuestionnaireContext.xml"/>
     <import resource="classpath:META-INF/spring/CashFlowContext.xml"/>
     <import resource="classpath:META-INF/spring/accountingIntegrationPluginContext.xml"/>
+    <import resource="classpath:META-INF/spring/DbUpgradeContext.xml"/>
 </beans>

@@ -249,7 +249,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         xml.text("\n");
 
         if (databaseError.errorCode.equals(DatabaseErrorCode.UPGRADE_FAILURE)) {
-            xml.text("Unable to apply database upgrades");
+            xml.text("Please apply upgrade DB and restart the server");
         }
         xml.endTag("p");
         if (databaseError.errorCode.equals(DatabaseErrorCode.CONNECTION_FAILURE)) {
@@ -272,7 +272,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         xml.text(getDatabaseConnectionInfo());
         xml.endTag("p");
         xml.text("\n");
-        addStackTraceHtml(xml);
+        addExceptionMessage(xml);
     }
 
     private static void addConnectionFailureMessage(XmlBuilder xml) {
@@ -303,16 +303,14 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         xml.text("\n");
     }
 
-    private static void addStackTraceHtml(XmlBuilder xml) {
+    private static void addExceptionMessage(XmlBuilder xml) {
         xml.startTag("p");
-        xml.text("Stack trace:");
+        xml.text("Error Message:");
         xml.endTag("p");
         xml.text("\n");
 
         xml.startTag("pre");
-        StringWriter stackTrace = new StringWriter();
-        databaseError.error.printStackTrace(new PrintWriter(stackTrace));
-        xml.text("\n" + stackTrace.toString());
+        xml.text("\n" + databaseError.error.getMessage());
         xml.endTag("pre");
         xml.text("\n");
     }
