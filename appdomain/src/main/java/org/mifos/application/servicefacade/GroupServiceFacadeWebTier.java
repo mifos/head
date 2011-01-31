@@ -191,7 +191,7 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
     }
 
     @Override
-    public CustomerDetailsDto createNewGroup(GroupCreationDetail actionForm, MeetingDto meetingDto) {
+    public CustomerDetailsDto createNewGroup(GroupCreationDetail groupCreationDetail, MeetingDto meetingDto) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = toUserContext(user);
@@ -202,21 +202,21 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
         GroupBO group;
 
         try {
-            List<AccountFeesEntity> feesForCustomerAccount = convertFeeViewsToAccountFeeEntities(actionForm.getFeesToApply());
+            List<AccountFeesEntity> feesForCustomerAccount = convertFeeViewsToAccountFeeEntities(groupCreationDetail.getFeesToApply());
 
-            PersonnelBO formedBy = this.personnelDao.findPersonnelById(actionForm.getLoanOfficerId());
+            PersonnelBO formedBy = this.personnelDao.findPersonnelById(groupCreationDetail.getLoanOfficerId());
 
             Short officeId;
 
-            String groupName = actionForm.getDisplayName();
-            CustomerStatus customerStatus = CustomerStatus.fromInt(actionForm.getCustomerStatus());
-            String externalId = actionForm.getExternalId();
-            boolean trained = actionForm.isTrained();
-            DateTime trainedOn = actionForm.getTrainedOn();
-            DateTime mfiJoiningDate = actionForm.getMfiJoiningDate();
-            DateTime activationDate = actionForm.getActivationDate();
+            String groupName = groupCreationDetail.getDisplayName();
+            CustomerStatus customerStatus = CustomerStatus.fromInt(groupCreationDetail.getCustomerStatus());
+            String externalId = groupCreationDetail.getExternalId();
+            boolean trained = groupCreationDetail.isTrained();
+            DateTime trainedOn = groupCreationDetail.getTrainedOn();
+            DateTime mfiJoiningDate = groupCreationDetail.getMfiJoiningDate();
+            DateTime activationDate = groupCreationDetail.getActivationDate();
 
-            AddressDto dto = actionForm.getAddressDto();
+            AddressDto dto = groupCreationDetail.getAddressDto();
             Address address = null;
             if (dto != null) {
                 address = new Address(dto.getLine1(), dto.getLine2(), dto.getLine3(), dto.getCity(), dto.getState(), dto.getCountry(), dto.getZip(), dto.getPhoneNumber());
@@ -230,7 +230,7 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
 
             if (ClientRules.getCenterHierarchyExists()) {
 
-                CenterBO parentCustomer = this.customerDao.findCenterBySystemId(actionForm.getParentSystemId());
+                CenterBO parentCustomer = this.customerDao.findCenterBySystemId(groupCreationDetail.getParentSystemId());
 //                loanOfficerId = parentCustomer.getPersonnel().getPersonnelId();
                 officeId = parentCustomer.getOffice().getOfficeId();
 
@@ -241,10 +241,10 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
             } else {
 
                 // create group without center as parent
-                Short loanOfficerId = actionForm.getLoanOfficerId() != null ? actionForm.getLoanOfficerId() : userContext.getId();
-                officeId = actionForm.getOfficeId();
+                Short loanOfficerId = groupCreationDetail.getLoanOfficerId() != null ? groupCreationDetail.getLoanOfficerId() : userContext.getId();
+                officeId = groupCreationDetail.getOfficeId();
 
-                OfficeBO office = this.officeDao.findOfficeById(actionForm.getOfficeId());
+                OfficeBO office = this.officeDao.findOfficeById(groupCreationDetail.getOfficeId());
                 PersonnelBO loanOfficer = this.personnelDao.findPersonnelById(loanOfficerId);
 
                 int numberOfCustomersInOfficeAlready = customerDao.retrieveLastSearchIdValueForNonParentCustomersInOffice(officeId);
@@ -656,5 +656,13 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
             Short recordLoanOfficerId) {
         return ActivityMapper.getInstance().isAddingHistoricaldataPermittedForCustomers(customerLevel, userContext,
                 recordOfficeId, recordLoanOfficerId);
+    }
+
+    public void setLegacyMasterDao(LegacyMasterDao legacyMasterDao) {
+        this.legacyMasterDao = legacyMasterDao;
+    }
+
+    public void setTransactionHelper(HibernateTransactionHelper transactionHelper) {
+        this.transactionHelper = transactionHelper;
     }
 }
