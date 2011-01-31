@@ -32,3 +32,14 @@ class that defines the concept.
 
 [#include "recurrencyType.ftl" /]
 [#include "savingsType.ftl" /]
+
+[#-- 
+Generic lookup macro. Lookup values are stored in "map". Map keys and lookupKey should be of type String. 
+--]
+[#macro fromMap map lookupKey]
+	[#list map?keys as key]
+		[#if key == lookupKey ]
+			[@spring.message map[key] /]
+		[/#if]
+	[/#list]		
+[/#macro]

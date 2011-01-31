@@ -20,7 +20,9 @@
 package org.mifos.ui.core.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.mifos.application.servicefacade.SavingsServiceFacade;
 import org.mifos.dto.domain.CustomFieldDto;
@@ -48,7 +50,7 @@ public class CreateSavingsAccountController {
 		Short accountState = 13; // TOOD grab state from constant. NOT from
 		return createAccount(formBean.getProduct(), accountState);
 	}
-	
+
 	public SavingsAccountDetailDto createAccountInPendingApprovalState(
 			CreateSavingsAccountFormBean formBean) {
 		Short accountState = 14; // TOOD grab state from constant. NOT from
@@ -73,23 +75,30 @@ public class CreateSavingsAccountController {
 		return savingsAccountDetailDto;
 	}
 
-	public void customerSelected(Integer customerId, CreateSavingsAccountFormBean formBean) {
-		CustomerDto customer = new CustomerDto(); // TODO use service facade to load customer
+	public void customerSelected(Integer customerId,
+			CreateSavingsAccountFormBean formBean) {
+		CustomerDto customer = new CustomerDto(); // TODO use service facade to
+													// load customer
 		customer.setCustomerId(customerId);
 		customer.setDisplayName("FIXME - CreateSavingsAccountController");
 		formBean.setCustomer(customer);
 	}
 
-	public void loadProduct(Integer productId, CreateSavingsAccountFormBean formBean) {
+	public void loadProduct(Integer productId,
+			CreateSavingsAccountFormBean formBean) {
+
 		SavingsProductReferenceDto product = savingsServiceFacade
 				.retrieveSavingsProductReferenceData(productId);
 		formBean.setProduct(product);
-		formBean.setDepositAmount(product.getSavingsProductDetails().getAmountForDeposit());
+		formBean.setDepositAmount(product.getSavingsProductDetails()
+				.getAmountForDeposit());
+		formBean.setSavingsTypes(getSavingsTypes());
 	}
-	
+
 	public void getProductOfferings(CreateSavingsAccountFormBean formBean) {
 		List<PrdOfferingDto> savingsProducts = savingsServiceFacade
-				.retrieveApplicableSavingsProductsForCustomer(formBean.getCustomer().getCustomerId());
+				.retrieveApplicableSavingsProductsForCustomer(formBean
+						.getCustomer().getCustomerId());
 		formBean.setProductOfferings(savingsProducts);
 	}
 
@@ -112,5 +121,17 @@ public class CreateSavingsAccountController {
 		CustomerSearchResultsDto resultsDto = new CustomerSearchResultsDto(
 				pagedDetails.size(), 1, 100, 100, pagedDetails);
 		return resultsDto;
+	}
+
+	/**
+	 * @see org.mifos.accounts.productdefinition.util.helpers.SavingsType
+	 * @return A map of savings type ID to message key which points to a
+	 *         localized name.
+	 */
+	private Map<String, String> getSavingsTypes() {
+		Map<String, String> map = new HashMap<String, String>(2);
+		map.put("1", "createSavingsAccount.savingsType.mandatory"); // mandatory
+		map.put("2", "createSavingsAccount.savingsType.voluntary"); // voluntary
+		return map;
 	}
 }

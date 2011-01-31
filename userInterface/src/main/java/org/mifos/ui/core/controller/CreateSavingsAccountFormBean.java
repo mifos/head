@@ -22,6 +22,7 @@ package org.mifos.ui.core.controller;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.constraints.NotNull;
 
@@ -50,6 +51,8 @@ public class CreateSavingsAccountFormBean implements Serializable {
 	private SavingsProductReferenceDto product;
 
 	private List<PrdOfferingDto> productOfferings;
+
+	private Map<String, String> savingsTypes;
 
 	@Autowired
 	private transient MifosBeanValidator validator;
@@ -140,6 +143,14 @@ public class CreateSavingsAccountFormBean implements Serializable {
 		// } else if (depositType == 2) { // voluntary
 		// result = true;
 		// }
+	}
+
+	public void setSavingsTypes(Map<String, String> savingsTypes) {
+		this.savingsTypes = savingsTypes;
+	}
+
+	public Map<String, String> getSavingsTypes() {
+		return savingsTypes;
 	}
 }
 
