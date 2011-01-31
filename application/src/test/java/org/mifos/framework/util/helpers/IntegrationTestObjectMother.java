@@ -91,7 +91,7 @@ public class IntegrationTestObjectMother {
     private static PersonnelBO systemUser = null;
 
     // office
-    private static final Short SAMPLE_BRANCH_OFFICE = 3;
+    public static final Short SAMPLE_BRANCH_OFFICE = 3;
     private static OfficeBO sampleBranchOffice = null;
 
     // DAO's for fetching existing data within database
