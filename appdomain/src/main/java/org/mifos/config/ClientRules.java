@@ -144,6 +144,11 @@ public class ClientRules {
         return centerHierarchyExists;
     }
 
+    public static void setCenterHierarchyExists(boolean exists) {
+        centerHierarchyExists = exists;
+    }
+
+
     /** Can group loans exist? */
     public static Boolean getGroupCanApplyLoans() {
         if (groupCanApplyLoans == null) {
@@ -382,9 +387,7 @@ public class ClientRules {
     }
 
     public static void intializeFamilyConfig() throws ConfigurationException {
-                 setFamilyDetailsRequired(ClientFamilyInfoConfig.getAreFamilyDetailsRequired());
-                 setMaximumNumberOfFamilyMembers(ClientFamilyInfoConfig.getMaximumNumberOfFamilyMembers());
-             }
-
-
+        setFamilyDetailsRequired(ClientFamilyInfoConfig.getAreFamilyDetailsRequired());
+        setMaximumNumberOfFamilyMembers(ClientFamilyInfoConfig.getMaximumNumberOfFamilyMembers());
+    }
 }
