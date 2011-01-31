@@ -30,7 +30,7 @@
         <!--[if IE]><script type="text/javascript" src="pages/js/jquery/jquery.bgiframe.js"></script><![endif]-->
         <SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
         <script type="text/javascript" src="pages/accounting/js/accounting.js"></script>
-        <span id="page.id" title="accounting_data_form"/>
+        <span id="page.id" title="accounting_data_form"></span>
 
 
 <div class="content "> <!--  Main Content Begins-->

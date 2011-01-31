@@ -20,7 +20,7 @@
 --]
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
- <span id="page.id" title="AppliedUpgrades" />
+ <span id="page.id" title="AppliedUpgrades"></span>
  [@mifos.crumb "admin.viewSystemInformation.viewAppliedUpgrades"/]
       <div id="content_panel" style="padding-left: 0px; margin-left: 20px; margin-top: 10px; font-size:12px">
           <div class="fontBold">[@spring.message "systemAdministration.viewsysteminformation.mifosDatabaseVersion.listOfAppliedDatabaseUpgrades"/]</div>

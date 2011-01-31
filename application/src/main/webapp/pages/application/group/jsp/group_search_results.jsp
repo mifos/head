@@ -38,7 +38,7 @@ function goToCancelPage()
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
-	<span id="page.id" title="GroupSearchResults" />
+	<span id="page.id" title="GroupSearchResults"></span>
 	
 <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
 <fmt:setBundle basename="org.mifos.config.localizedResources.GroupUIResources"/>

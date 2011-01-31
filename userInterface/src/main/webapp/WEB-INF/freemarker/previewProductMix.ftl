@@ -25,7 +25,7 @@
 [@mifos.topNavigationNoSecurity currentTab="Admin" /]
   <div class="container">&nbsp;
   <!--  Main Content Begins-->
-  <span id="page.id" title="previewProductsMix" />
+  <span id="page.id" title="previewProductsMix"></span>
 <div class="content definePageMargin">
     <div class="borders margin20lefttop width90prc">
         <div class="borderbtm width100prc height25px">

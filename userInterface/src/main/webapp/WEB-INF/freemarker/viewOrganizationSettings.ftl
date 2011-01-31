@@ -20,7 +20,7 @@
 --]
 [#include "layout.ftl"]
 [@adminLeftPaneLayout] <!--  Main Content Begins-->
-<span id="page.id" title="view_organization_settings"/>
+<span id="page.id" title="view_organization_settings"></span>
   <div class="content ">
   [@mifos.crumbs breadcrumbs/]
       <form method="" action="" name="formname">

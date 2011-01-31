@@ -22,7 +22,7 @@
 [#import "blueprintmacros.ftl" as mifos]
 
 [@mifos.header "login" /]
-<span id="page.id" title="changePassword"/>
+<span id="page.id" title="changePassword"></span>
 <div class="container">&nbsp;
     <!--Header-->
     <div class="topAlign append-1"><a href="j_spring_security_logout">[@spring.message "changePassword.logOut"/]</a>

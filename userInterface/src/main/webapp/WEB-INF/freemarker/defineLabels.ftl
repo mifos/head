@@ -22,7 +22,7 @@
 [@adminLeftPaneLayout]
    <!--  Main Content Begins-->
   <div class=" content">
-  <span id="page.id" title="defineLabels" />
+  <span id="page.id" title="defineLabels"></span>
 
     [@mifos.crumbs breadcrumbs/]
 

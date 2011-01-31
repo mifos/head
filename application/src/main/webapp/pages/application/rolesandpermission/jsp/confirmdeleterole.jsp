@@ -28,7 +28,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-	<span id="page.id" title="confirmdeleterole" />
+	<span id="page.id" title="confirmdeleterole"></span>
 
 		<script language="javascript"
 			src="pages/application/rolesandpermission/js/checkBoxLogic.js">

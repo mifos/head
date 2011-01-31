@@ -21,7 +21,7 @@
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
   <!--  Main Content Begins-->
-  <span id="page.id" title="createProductsMixConfirmation" />
+  <span id="page.id" title="createProductsMixConfirmation"></span>
   <div class="content">
       <div class="marginLeft30 marginTop15">
           <p class="orangeheading marginTop15">[@spring.message "manageProductMix.youhavesuccessfullydefinedanewproductmix"/]</p>

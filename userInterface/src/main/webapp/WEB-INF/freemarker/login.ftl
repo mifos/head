@@ -23,7 +23,7 @@
 [#import "blueprintmacros.ftl" as mifos]
 [@mifos.header "mifos" /]
 <!-- Container Begins-->
-<span id="page.id" title="Login" />
+<span id="page.id" title="Login"></span>
 <div class="container" align="center"> &nbsp;
   <!--Header-->
   <span class="logo"></span>

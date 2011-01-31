@@ -81,7 +81,7 @@ function selectAllOptions(outSel)
 
   <div class="container">&nbsp;
   <!--  Main Content Begins-->
-  <span id="page.id" title="createProductsMix" />
+  <span id="page.id" title="createProductsMix"></span>
   <div class="content definePageMargin">
     <div class="borders margin20lefttop width90prc">
       <div class="borderbtm width100prc height25px">
