@@ -38,21 +38,21 @@ public class ApplyAdjustmentPage extends AbstractPage {
 
     public LoanAccountPage verifyAdjustment(String adjustmentAmount) {
         Assert.assertTrue(selenium.isTextPresent("Last payment made: " + adjustmentAmount + " "));
-        fillAdjustmentFields(adjustmentAmount);
-        return new LoanAccountPage(selenium);
+        return fillAdjustmentFieldsAndSubmit(adjustmentAmount);
     }
 
-    private void fillAdjustmentFields(String adjustmentAmount) {
+    public LoanAccountPage fillAdjustmentFieldsAndSubmit(String adjustmentAmount) {
         selenium.click("applyadjustment.input.revertLastPayment");
         selenium.type("applyadjustment.input.note", "testNotes paid Amount: " + adjustmentAmount);
         selenium.click("applyadjustment.button.submit");
         waitForPageToLoad();
         selenium.click("applyadjustment.button.submit");
         waitForPageToLoad();
+        return new LoanAccountPage(selenium);
     }
 
     public ApplyAdjustmentPage verifyAdjustBackdatedPermission() {
-        fillAdjustmentFields("10");
+        fillAdjustmentFieldsAndSubmit("10");
         Assert.assertTrue(selenium.isTextPresent("You do not have permissions to perform this activity. Contact your system administrator to grant you required permissions and try again."));
         return this;
     }

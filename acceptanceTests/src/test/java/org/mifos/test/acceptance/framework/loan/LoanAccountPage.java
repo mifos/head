@@ -33,6 +33,7 @@ import com.thoughtworks.selenium.Selenium;
 public class LoanAccountPage extends AbstractPage {
 
     public final static String ACTIVE = "Active in Good Standing";
+    public final static String ACTIVE_BAD = "Active in Bad Standing";
     public final static String CLOSED = "Closed- Obligation met";
 
     String loanSummaryTable = "//table[@id='loanSummaryTable']";

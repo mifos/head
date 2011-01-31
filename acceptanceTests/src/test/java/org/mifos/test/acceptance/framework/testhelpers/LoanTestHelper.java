@@ -783,4 +783,17 @@ public class LoanTestHelper {
                 clickContinueAndNavigateToLoanAccountConfirmationPage().
                 navigateToLoanAccountDetailsPage();
     }
+
+    public LoanAccountPage applyMultipleAdjustments(String loanAcountID, int howMany) {
+        LoanAccountPage loanAccountPage = navigationHelper
+            .navigateToClientsAndAccountsPage()
+            .searchForClient(loanAcountID)
+            .navigateToLoanAccountSearchResult("Account # "+loanAcountID);
+        for(int i = 0; i < howMany; i++) {
+            loanAccountPage
+                .navigateToApplyAdjustment()
+                .fillAdjustmentFieldsAndSubmit("note note note");
+        }
+        return loanAccountPage;
+    }
 }
