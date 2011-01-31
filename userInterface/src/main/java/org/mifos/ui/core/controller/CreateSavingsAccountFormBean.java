@@ -54,6 +54,10 @@ public class CreateSavingsAccountFormBean implements Serializable {
 
 	private Map<String, String> savingsTypes;
 
+	private Map<String, String> recurrenceTypes;
+	
+	private Map<String, String> recurrenceFrequencies;
+
 	@Autowired
 	private transient MifosBeanValidator validator;
 
@@ -151,6 +155,22 @@ public class CreateSavingsAccountFormBean implements Serializable {
 
 	public Map<String, String> getSavingsTypes() {
 		return savingsTypes;
+	}
+
+	public void setRecurrenceTypes(Map<String, String> recurrenceTypes) {
+		this.recurrenceTypes = recurrenceTypes;
+	}
+
+	public Map<String, String> getRecurrenceTypes() {
+		return recurrenceTypes;
+	}
+
+	public void setRecurrenceFrequencies(Map<String, String> recurrenceFrequencies) {
+		this.recurrenceFrequencies = recurrenceFrequencies;
+	}
+
+	public Map<String, String> getRecurrenceFrequencies() {
+		return recurrenceFrequencies;
 	}
 }
 

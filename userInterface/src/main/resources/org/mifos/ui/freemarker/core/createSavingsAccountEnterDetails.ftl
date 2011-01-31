@@ -74,14 +74,14 @@
 		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.periodForInterestCalculation"/]:</div>
 		<div class="value">
 			${savingsAccountFormBean.product.savingsProductDetails.interestCalculationFrequency}
-			[@lookup.recurringPeriod savingsAccountFormBean.product.savingsProductDetails.interestCalculationFrequencyPeriod /]
+			[@lookup.fromMap savingsAccountFormBean.recurrenceFrequencies savingsAccountFormBean.product.savingsProductDetails.interestCalculationFrequencyPeriod?string /]
 		</div>
 	</div>
 	<div class="row">
 		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.interestPostingFrequency"/]:</div>
 		<div class="value">
 			${savingsAccountFormBean.product.savingsProductDetails.interestPostingMonthlyFrequency}
-			[@lookup.recurringPeriodMonth /]
+			[@lookup.recurringFrequencyMonth /]
 		</div>
 	</div>
 	<div class="row">

@@ -93,6 +93,8 @@ public class CreateSavingsAccountController {
 		formBean.setDepositAmount(product.getSavingsProductDetails()
 				.getAmountForDeposit());
 		formBean.setSavingsTypes(getSavingsTypes());
+		formBean.setRecurrenceTypes(getRecurrenceTypes());
+		formBean.setRecurrenceFrequencies(getRecurrenceFrequencies());
 	}
 
 	public void getProductOfferings(CreateSavingsAccountFormBean formBean) {
@@ -121,6 +123,31 @@ public class CreateSavingsAccountController {
 		CustomerSearchResultsDto resultsDto = new CustomerSearchResultsDto(
 				pagedDetails.size(), 1, 100, 100, pagedDetails);
 		return resultsDto;
+	}
+
+	/**
+	 * @see org.mifos.application.meeting.util.helpers.RecurrenceType
+	 * @return A map of recurrence type ID to message key which points to a
+	 *         localized name.
+	 */
+	private Map<String, String> getRecurrenceFrequencies() {
+		Map<String, String> map = new HashMap<String, String>(3);
+		map.put("2", "createSavingsAccount.recurrenceFrequency.month"); // monthly
+		map.put("3", "createSavingsAccount.recurrenceFrequency.day"); // daily
+		return map;
+	}
+
+	/**
+	 * @see org.mifos.application.meeting.util.helpers.RecurrenceType
+	 * @return A map of recurrence type ID to message key which points to a
+	 *         localized name.
+	 */
+	private Map<String, String> getRecurrenceTypes() {
+		Map<String, String> map = new HashMap<String, String>(3);
+		map.put("1", "createSavingsAccount.recurrenceType.weekly"); // weekly
+		map.put("2", "createSavingsAccount.recurrenceType.monthly"); // monthly
+		map.put("3", "createSavingsAccount.recurrenceType.daily"); // daily
+		return map;
 	}
 
 	/**
