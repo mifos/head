@@ -24,7 +24,7 @@
 [@mifos.header "title" /]
 [@mifos.topNavigationNoSecurity currentTab="Admin" /]
 <!--  Main Content Begins-->
-<span id="page.id" title="newFund" />
+<span id="page.id" title="newFund"></span>
 <div class="content definePageMargin">
     <div class="borders margin20lefttop width90prc">
         <div class="borderbtm width100prc height25px">

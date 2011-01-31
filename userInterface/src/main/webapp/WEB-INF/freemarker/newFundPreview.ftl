@@ -23,7 +23,7 @@
 [@mifos.header "title" /]
 [@mifos.topNavigationNoSecurity currentTab="Admin" /]
 <!--  Container Begins-->
-<span id="page.id" title="newFundPreview" />
+<span id="page.id" title="newFundPreview"></span>
 <div class="content definePageMargin">
     <div class="borders margin20lefttop width90prc">
         <div class="borderbtm width100prc height25px">

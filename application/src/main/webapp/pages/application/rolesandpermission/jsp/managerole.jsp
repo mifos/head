@@ -31,7 +31,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-	<span id="page.id" title="managerole" />
+	<span id="page.id" title="managerole"></span>
 		<script language="javascript"
 			src="pages/application/rolesandpermission/js/checkBoxLogic.js">
 </script>

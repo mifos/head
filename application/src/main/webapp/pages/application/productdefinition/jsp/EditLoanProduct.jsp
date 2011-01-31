@@ -33,7 +33,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-		<span id="page.id" title="EditLoanProduct" />
+		<span id="page.id" title="EditLoanProduct"></span>
 		<script src="pages/framework/js/date.js"></script>
 		<script type="text/javascript" src="pages/application/loan/js/EditLoanProduct.js"></script>
         <html-el:form action="/loanproductaction"

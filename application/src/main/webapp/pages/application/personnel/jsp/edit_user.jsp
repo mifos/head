@@ -28,7 +28,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".view">
  <tiles:put name="body" type="string">
- <span id="page.id" title="edit_user" />
+ <span id="page.id" title="edit_user"></span>
  
 <script language="javascript">
 
@@ -271,9 +271,10 @@ explanation of the license and how it is applied.
               </tr>
               <tr class="fontnormal">
                 <td align="right">
-                <span id="edit_user.label.country">
-			<mifos:mifoslabel name="Personnel.Country"  bundle="PersonnelUIResources" keyhm="Personnel.Country"></mifos:mifoslabel>		</td>
+           <span id="edit_user.label.country">
+			<mifos:mifoslabel name="Personnel.Country"  bundle="PersonnelUIResources" keyhm="Personnel.Country"></mifos:mifoslabel>
 			</span>
+			</td>
                 <td>	
                     <mifos:mifosalphanumtext styleId="edit_user.input.country" name="personActionForm" property="address.country" keyhm="Personnel.Country" maxlength="100"/>
                 </td>

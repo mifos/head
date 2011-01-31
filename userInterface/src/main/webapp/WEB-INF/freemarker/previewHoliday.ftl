@@ -20,7 +20,7 @@
 --]
 [#include "layout.ftl"]
 [@adminLeftPaneLayout] <!--  Main Content Begins-->
-<span id="page.id" title="Review_holidayCreation"/>
+<span id="page.id" title="Review_holidayCreation"></span>
 <div class="content">
     <div class="span-24">
     [@mifos.crumbs breadcrumbs /]

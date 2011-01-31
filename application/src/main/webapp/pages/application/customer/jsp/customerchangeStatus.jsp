@@ -30,7 +30,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-	<span id="page.id" title="CustomerChangeStatus" />
+	<span id="page.id" title="CustomerChangeStatus"></span>
 		<script language="javascript">
 			function goToCancelPage(form){
 				form.action="editCustomerStatusAction.do?method=cancelStatus";
