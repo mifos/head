@@ -24,8 +24,8 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import org.mifos.dto.domain.CustomerDto;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.screen.SavingsProductReferenceDto;
@@ -41,11 +41,11 @@ public class CreateSavingsAccountFormBean implements Serializable {
 
 	private CustomerDto customer;
 
-	@Pattern(regexp = "^", groups = CustomerSearchStep.class)
+	@NotEmpty(groups = CustomerSearchStep.class)
 	private String searchString;
 
 	@NotNull(groups = { MandatorySavings.class, EnterAccountInfoStep.class })
-	private Float depositAmount;
+	private Double depositAmount;
 
 	private SavingsProductReferenceDto product;
 
@@ -66,11 +66,11 @@ public class CreateSavingsAccountFormBean implements Serializable {
 		return customer;
 	}
 
-	public void setDepositAmount(Float depositAmount) {
+	public void setDepositAmount(Double depositAmount) {
 		this.depositAmount = depositAmount;
 	}
 
-	public Float getDepositAmount() {
+	public Double getDepositAmount() {
 		return depositAmount;
 	}
 
@@ -120,7 +120,7 @@ public class CreateSavingsAccountFormBean implements Serializable {
 	 */
 	public void validateSelectCustomerStep(ValidationContext context) {
 		MessageContext messages = context.getMessageContext();
-		validator.validate(this, messages);
+		validator.validate(this, messages, CustomerSearchStep.class);
 	}
 
 	public void validateEnterAccountDetailsStep(ValidationContext context) {

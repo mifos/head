@@ -54,31 +54,47 @@
 	</div>
 	<div class="row">
 		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.typeOfDeposits"/]:</div>
-		<div class="value">Voluntary</div>
+		<div class="value">[@lookup.savingsType savingsAccountFormBean.product.savingsProductDetails.depositType /]</div>
 	</div>
 	<div class="row">
 		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.maxWithdrawalAmount"/]:</div>
-		<div class="value">TODO: localize ${savingsAccountFormBean.product.savingsProductDetails.maxWithdrawal}</div>
+		<div class="value">${savingsAccountFormBean.product.savingsProductDetails.maxWithdrawal}</div>
 	</div>
 	<div class="row">
 		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.balanceForInterestCalculation"/]:</div>
-		<div class="value">TODO interest calculation: ${savingsAccountFormBean.product.savingsProductDetails.interestCalculationType}</div>
+		<div class="value">
+			[#list savingsAccountFormBean.product.interestCalcTypeOptions as option]
+				[#if option.id == savingsAccountFormBean.product.savingsProductDetails.interestCalculationType ]
+					${option.name}
+				[/#if] 
+			[/#list]
+		</div>
 	</div>
 	<div class="row">
 		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.periodForInterestCalculation"/]:</div>
-		<div class="value">30 day(s)</div>
+		<div class="value">
+			${savingsAccountFormBean.product.savingsProductDetails.interestCalculationFrequency}
+			[@lookup.recurringPeriod savingsAccountFormBean.product.savingsProductDetails.interestCalculationFrequencyPeriod /]
+		</div>
 	</div>
 	<div class="row">
 		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.interestPostingFrequency"/]:</div>
-		<div class="value">1 month(s)</div>
+		<div class="value">
+			${savingsAccountFormBean.product.savingsProductDetails.interestPostingMonthlyFrequency}
+			[@lookup.recurringPeriodMonth /]
+		</div>
 	</div>
 	<div class="row">
 		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.minBalanceForInterestCalculation"/]:</div>
-		<div class="value">50.0</div>
+		<div class="value">
+			${savingsAccountFormBean.product.savingsProductDetails.minBalanceForInterestCalculation}
+		</div>
 	</div>
 	<div class="row">
 		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.interestRate"/]:</div>
-		<div class="value">25.0 %</div>
+		<div class="value">
+			${savingsAccountFormBean.product.savingsProductDetails.interestRate} %
+		</div>
 	</div>
 </div>
 <br/>

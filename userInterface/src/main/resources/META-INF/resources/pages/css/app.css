@@ -122,6 +122,7 @@ form.two-columns input.submit
 /* product summary */
 .product-summary 
 {
+	width: 90%;
 }
 
 .product-summary .attribute
@@ -135,6 +136,7 @@ form.two-columns input.submit
 .product-summary .value
 {
 	float: left;
+	width: 30em;
 }
 
 .product-summary .row

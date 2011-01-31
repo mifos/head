@@ -84,6 +84,7 @@ public class CreateSavingsAccountController {
 		SavingsProductReferenceDto product = savingsServiceFacade
 				.retrieveSavingsProductReferenceData(productId);
 		formBean.setProduct(product);
+		formBean.setDepositAmount(product.getSavingsProductDetails().getAmountForDeposit());
 	}
 	
 	public void getProductOfferings(CreateSavingsAccountFormBean formBean) {
