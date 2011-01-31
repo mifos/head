@@ -15,7 +15,7 @@
 	} catch (Exception e) {
 		e.printStackTrace();
 	}
-	String fileName = accountingService.getTallyOutputFileName(fromDate, toDate);
+	String fileName = accountingService.getExportOutputFileName(fromDate, toDate);
 	response.setHeader("Content-Disposition","attachment;filename=\"" + fileName);
 	response.setContentType("application/octet-stream");
     out.print(tallyXML);
