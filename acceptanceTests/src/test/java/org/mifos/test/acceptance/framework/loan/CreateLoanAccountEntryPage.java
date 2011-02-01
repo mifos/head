@@ -162,6 +162,22 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
         Assert.assertEquals(selenium.getTable("installments." + "7" + ".1"), "21-Mar-2011");
     }
 
+    public ViewInstallmentDetailsPage createLoanAccountAndReviewInstallmentsForNextWorkingRule(CreateLoanAccountSubmitParameters formParameters){
+        ViewInstallmentDetailsPage page = submitAndNavigateToLoanPreviewPage(formParameters);
+        verifyInstallmentsForHolidaysForNextWorkingDayRule();
+        return page;
+    }
+
+    public void verifyInstallmentsForHolidaysForNextWorkingDayRule(){
+        Assert.assertEquals(selenium.getTable("installments." + "1" + ".1"), "15-Feb-2011");
+        Assert.assertEquals(selenium.getTable("installments." + "2" + ".1"), "15-Feb-2011");
+        Assert.assertEquals(selenium.getTable("installments." + "3" + ".1"), "21-Feb-2011");
+
+        Assert.assertEquals(selenium.getTable("installments." + "5" + ".1"), "15-Mar-2011");
+        Assert.assertEquals(selenium.getTable("installments." + "6" + ".1"), "15-Mar-2011");
+        Assert.assertEquals(selenium.getTable("installments." + "7" + ".1"), "21-Mar-2011");
+    }
+
     public CreateLoanAccountConfirmationPage submitAndNavigateToGLIMLoanAccountConfirmationPage() {
         submit();
         return navigateToConfirmationPage();

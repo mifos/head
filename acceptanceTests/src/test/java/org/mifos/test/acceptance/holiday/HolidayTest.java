@@ -171,6 +171,37 @@ public class HolidayTest extends UiTestCaseBase {
         loanTestHelper.reviewInstallmentsForHolidaySameDayRule(searchParameters, submitAccountParameters);
     }
 
+    //http://mifosforge.jira.com/browse/MIFOSTEST-81
+    public void holidaysRepaymentRuleNextWorkingDay() throws Exception {
+        //Given
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTime targetTime = new DateTime(2011,1,31,13,0,0,0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
+        //When
+        CreateHolidaySubmitParameters param1 = getHolidayParametersForNextMeeting();
+        CreateHolidaySubmitParameters param2 = getHolidayParametersForNextMeeting2();
+        param1.setRepaymentRule(CreateHolidaySubmitParameters.NEXT_WORKING_DAY);
+        param2.setRepaymentRule(CreateHolidaySubmitParameters.NEXT_WORKING_DAY);
+
+        createHolidayForInstallments(param1);
+        createHolidayForInstallments(param2);
+
+        CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
+        searchParameters.setSearchString("Stu1232993852651 Client1232993852651");
+        searchParameters.setLoanProduct("MyLoanProduct1232993826860");
+
+        CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
+        submitAccountParameters.setAmount("1423.0");
+        submitAccountParameters.setGracePeriodTypeNone(true);
+        submitAccountParameters.setDd("31");
+        submitAccountParameters.setMm("01");
+        submitAccountParameters.setYy("2011");
+
+        //Then
+        loanTestHelper.reviewInstallmentsForHolidayNextWorkingDayRule(searchParameters, submitAccountParameters);
+    }
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     private void verifyHolidayData(String resultDataSetFile) throws Exception {
         IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromDataSetDirectoryFile(resultDataSetFile);
