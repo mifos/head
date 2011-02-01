@@ -21,9 +21,11 @@
 package org.mifos.ui.core.controller;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -46,6 +48,7 @@ public class CreateSavingsAccountFormBean implements Serializable {
 	private String searchString;
 
 	@NotNull(groups = { MandatorySavings.class, EnterAccountInfoStep.class })
+	@DecimalMin(value = "0")
 	private Double depositAmount;
 
 	private SavingsProductReferenceDto product;
@@ -55,7 +58,7 @@ public class CreateSavingsAccountFormBean implements Serializable {
 	private Map<String, String> savingsTypes;
 
 	private Map<String, String> recurrenceTypes;
-	
+
 	private Map<String, String> recurrenceFrequencies;
 
 	@Autowired
@@ -131,22 +134,16 @@ public class CreateSavingsAccountFormBean implements Serializable {
 	}
 
 	public void validateEnterAccountDetailsStep(ValidationContext context) {
-		MessageContext messages = context.getMessageContext();
-		validator.validate(this, messages);
-
 		// TODO: need to get access to domain constants from controller ...
 		// public static final short SAVINGS_MANDATORY= 1;
 		// public static final short SAVINGS_VOLUNTARY= 2;
-
-		// validate recommended amount
-		// final Integer depositType =
-		// productReference.getSavingsProductDetails()
-		// .getDepositType();
-		// if (depositType == 1) { // mandatory
-		// result = true;
-		// } else if (depositType == 2) { // voluntary
-		// result = true;
-		// }
+		MessageContext messages = context.getMessageContext();
+		Class[] validationGroups = {};
+		if (this.product.getSavingsProductDetails().getDepositType() == 1) {
+			Class[] groups = { MandatorySavings.class };
+			validationGroups = groups;
+		}
+		validator.validate(this, messages, validationGroups);
 	}
 
 	public void setSavingsTypes(Map<String, String> savingsTypes) {
@@ -165,7 +162,8 @@ public class CreateSavingsAccountFormBean implements Serializable {
 		return recurrenceTypes;
 	}
 
-	public void setRecurrenceFrequencies(Map<String, String> recurrenceFrequencies) {
+	public void setRecurrenceFrequencies(
+			Map<String, String> recurrenceFrequencies) {
 		this.recurrenceFrequencies = recurrenceFrequencies;
 	}
 

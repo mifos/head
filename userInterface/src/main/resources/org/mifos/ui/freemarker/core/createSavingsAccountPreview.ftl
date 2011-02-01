@@ -81,8 +81,14 @@
 	</div>
 	<div class="row">&nbsp;</div>
 	<div class="row">
-		<div class="attribute">Recommended amount for deposit:</div>
-		<div class="value">${savingsAccountFormBean.depositAmount}</div>
+		<div class="attribute">
+			[#if savingsAccountFormBean.product.savingsProductDetails.depositType?string == "1"]
+				[@spring.message "createSavingsAccount.enterAccountInfo.depositAmount.mandatory" /]:
+			[#elseif savingsAccountFormBean.product.savingsProductDetails.depositType?string == "2"]
+				[@spring.message "createSavingsAccount.enterAccountInfo.depositAmount.voluntary" /]:
+			[/#if]
+		</div>
+		<div class="value">${savingsAccountFormBean.depositAmount ! "0"}</div>
 	</div>
 	<div class="row">&nbsp;</div>
 	<div class="row">

@@ -24,8 +24,6 @@
                  		 "createSavingsAccount.flowState.enterAccountInfo", 
                  		 "createSavingsAccount.flowState.reviewAndSubmit"]] 
 
-[@form.errors "savingsAccountFormBean.*"/]
-
 <h1>Create Savings account - <span class="standout">Enter Savings account information</span></h1>
 <p>Select a Savings instance. Then click Continue. Click Cancel to return to Clients & Accounts without submitting information.</p>
 <p>*Fields marked with an asterisk are required.</p>
@@ -100,7 +98,11 @@
 <form action="${flowExecutionUrl}" method="post" class="two-columns">
 	<fieldset>
 	<div class="row">
-		<label for="selectedPrdOfferingId" class="mandatory">Recommended amount for deposit:</label>
+		[#if savingsAccountFormBean.product.savingsProductDetails.depositType?string == "1"]
+			<label for="selectedPrdOfferingId" class="mandatory">[@spring.message "createSavingsAccount.enterAccountInfo.depositAmount.mandatory" /]:</label>
+		[#elseif savingsAccountFormBean.product.savingsProductDetails.depositType?string == "2"]
+			<label for="selectedPrdOfferingId">[@spring.message "createSavingsAccount.enterAccountInfo.depositAmount.voluntary" /]:</label>
+		[/#if]
 		[@spring.formInput "savingsAccountFormBean.depositAmount" /]
 	</div>
 	</fieldset>
