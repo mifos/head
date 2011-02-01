@@ -118,8 +118,32 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
             selenium.select("monthRank", formParameters.getLsimMonthRank());
             selenium.select("monthWeek", formParameters.getLsimWeekDay());
         }
-
+        if (formParameters.getDd() != null){
+            selenium.type("disbursementDateDD", formParameters.getDd());
+        }
+        if (formParameters.getMm() != null){
+            selenium.type("disbursementDateDD", formParameters.getMm());
+        }
+        if (formParameters.getYy() != null){
+            selenium.type("disbursementDateDD", formParameters.getYy());
+        }
         submit();
+    }
+
+    public void verifyInstallmentsForHolidays(){
+        Assert.assertEquals(selenium.getTable("installments." + "1" + ".1"), "21-Feb-2011");
+        Assert.assertEquals(selenium.getTable("installments." + "2" + ".1"), "21-Feb-2011");
+        Assert.assertEquals(selenium.getTable("installments." + "3" + ".1"), "21-Feb-2011");
+
+        Assert.assertEquals(selenium.getTable("installments." + "5" + ".1"), "21-Mar-2011");
+        Assert.assertEquals(selenium.getTable("installments." + "6" + ".1"), "21-Mar-2011");
+        Assert.assertEquals(selenium.getTable("installments." + "7" + ".1"), "21-Mar-2011");
+    }
+
+    public ViewInstallmentDetailsPage createLoanAccountAndReviewInstallments(CreateLoanAccountSubmitParameters formParameters){
+        ViewInstallmentDetailsPage page = submitAndNavigateToLoanPreviewPage(formParameters);
+        verifyInstallmentsForHolidays();
+        return page;
     }
 
     public CreateLoanAccountConfirmationPage submitAndNavigateToGLIMLoanAccountConfirmationPage() {

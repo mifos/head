@@ -71,6 +71,7 @@ import org.mifos.test.acceptance.framework.loan.RepayLoanConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.RepayLoanPage;
 import org.mifos.test.acceptance.framework.loan.RepayLoanParameters;
 import org.mifos.test.acceptance.framework.loan.TransactionHistoryPage;
+import org.mifos.test.acceptance.framework.loan.ViewInstallmentDetailsPage;
 import org.mifos.test.acceptance.framework.loan.ViewLoanStatusHistoryPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
 import org.mifos.test.acceptance.framework.loanproduct.EditLoanProductPage;
@@ -795,5 +796,9 @@ public class LoanTestHelper {
                 .fillAdjustmentFieldsAndSubmit("note note note");
         }
         return loanAccountPage;
+    }
+
+    public ViewInstallmentDetailsPage reviewInstallments(CreateLoanAccountSearchParameters searchParameters, CreateLoanAccountSubmitParameters submitAccountParameters) {
+        return navigateToLoanAccountEntryPage(searchParameters).createLoanAccountAndReviewInstallments(submitAccountParameters);
     }
 }
