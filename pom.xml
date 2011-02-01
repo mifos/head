@@ -49,8 +49,8 @@
         <powermock.version>1.4.7</powermock.version>
     </properties>
     <modules>
-        <module>db</module>
         <module>common</module>
+        <module>db</module>
         <module>domain-dto</module>
         <module>testFramework</module>
         <module>serviceInterfaces</module>
@@ -102,6 +102,11 @@
             <dependency>
                 <groupId>org.mifos</groupId>
                 <artifactId>mifos-common</artifactId>
+                <version>1.8-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mifos</groupId>
+                <artifactId>mifos-db</artifactId>
                 <version>1.8-SNAPSHOT</version>
             </dependency>
             <dependency>

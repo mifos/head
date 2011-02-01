@@ -2,9 +2,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <artifactId>mifos-db</artifactId>
-    <name>Mifos - DB Management</name>
     <modelVersion>4.0.0</modelVersion>
+    <groupId>org.mifos</groupId>
+    <artifactId>mifos-db</artifactId>
+    <packaging>jar</packaging>
+    <version>1.8-SNAPSHOT</version>
+    <name>Mifos - DB Management</name>
 
     <parent>
         <artifactId>mifos-parent</artifactId>
@@ -17,9 +20,8 @@
         <integration.database.properties.file>${modules.root.dir}/application/src/test/resources/org/mifos/config/resources/integrationDatabase.properties</integration.database.properties.file>
         <mifos.overrides.home>${user.home}/.mifos/local.properties</mifos.overrides.home>
         <sql.resources.target.directory>${basedir}/src/main/resources/sql</sql.resources.target.directory>
-        <!--A very large number for rollback count-->
+        <!--A large number for rollback count-->
         <liquibase.rollbackCount>1000</liquibase.rollbackCount>
-        <liquibase.migrationSqlOutputFile>target/classes/update-master.sql</liquibase.migrationSqlOutputFile>
     </properties>
 
     <dependencies>
@@ -72,6 +74,7 @@
         </dependency>
     </dependencies>
 
+    <!--TODO: DB updates/rollbacks must not happen if tests are skipped-->
     <build>
         <resources>
             <resource>
@@ -97,23 +100,6 @@
                                 <file>${mifos.overrides.home}</file>
                             </files>
                         </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.liquibase</groupId>
-                <artifactId>liquibase-maven-plugin</artifactId>
-                <version>2.0.0</version>
-                <configuration>
-                    <propertyFile>target/classes/liquibase.properties</propertyFile>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>update-sql</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>updateSQL</goal>
-                        </goals>
                     </execution>
                 </executions>
             </plugin>
@@ -167,6 +153,7 @@
                             <srcFiles>
                                 <srcFile>${sql.resources.target.directory}/base-schema.sql</srcFile>
                                 <srcFile>${sql.resources.target.directory}/base-data.sql</srcFile>
+                                <srcFile>${sql.test.resources.target.directory}/test-data.sql</srcFile>
                             </srcFiles>
                         </configuration>
                     </execution>
