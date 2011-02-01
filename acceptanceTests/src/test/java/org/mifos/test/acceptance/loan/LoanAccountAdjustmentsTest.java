@@ -26,6 +26,7 @@ import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalParameters;
+import org.mifos.test.acceptance.framework.loan.TransactionHistoryPage;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
@@ -55,7 +56,7 @@ public class LoanAccountAdjustmentsTest extends UiTestCaseBase {
         super.setUp();
 
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = new DateTime(2011,1,31,15,0,0,0);
+        DateTime targetTime = new DateTime(2011,2,1,15,0,0,0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
 
         loanTestHelper = new LoanTestHelper(selenium);
@@ -81,11 +82,40 @@ public class LoanAccountAdjustmentsTest extends UiTestCaseBase {
         redoParams.setDisbursalDateDD("06");
         redoParams.setDisbursalDateMM("01");
         redoParams.setDisbursalDateYYYY("2011");
+
         LoanAccountPage loanAccountPage = loanTestHelper.redoLoanDisbursal(client, "WeeklyFlatLoanWithOneTimeFees", redoParams, null, 0, false);
         String loanID = loanAccountPage.getAccountId();
         loanAccountPage = loanTestHelper.applyMultipleAdjustments(loanID, 2);
 
         loanAccountPage.verifyPerformanceHistory("1", "2");
         loanAccountPage.verifyStatus(LoanAccountPage.ACTIVE_BAD);
+    }
+
+    /**
+     * Verify multiple adjustment changes are logged in transaction history with proper GL codes,
+     * account summary changes when the account status is "Active in Bad Standing".
+     * http://mifosforge.jira.com/browse/MIFOSTEST-27
+     * @throws Exception
+     */
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void verifyChangesInTransactionHistory() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
+
+        RedoLoanDisbursalParameters redoParams = new RedoLoanDisbursalParameters();
+        redoParams.setDisbursalDateDD("07");
+        redoParams.setDisbursalDateMM("01");
+        redoParams.setDisbursalDateYYYY("2010");
+
+        LoanAccountPage loanAccountPage = loanTestHelper.redoLoanDisbursal("MyGroup1233266255641", "WeeklyGroupFlatLoanWithOnetimeFee", redoParams, null, 0, false);
+
+        String loanID = loanAccountPage.getAccountId();
+        loanAccountPage = loanTestHelper.applyMultipleAdjustments(loanID, 5);
+
+        loanAccountPage.verifyStatus(LoanAccountPage.ACTIVE_BAD);
+   //     loanAccountPage.verifyTotalOriginalLoan("4294.2");
+        loanAccountPage.verifyTotalAmountPaid("3951.0");
+        loanAccountPage.verifyAccountSummary("339.0", "03/02/2011", "339.0");
+        TransactionHistoryPage transactionHistoryPage = loanAccountPage.navigateToTransactionHistory();
+        transactionHistoryPage.verifyTransactionHistory(3951.0, 52, 238);
     }
 }

@@ -102,6 +102,11 @@ public class LoanAccountPage extends AbstractPage {
         Assert.assertTrue(selenium.isTextPresent("of missed payments: "+missedPayments));
     }
 
+    public void verifyAccountSummary(String totalAmount, String date, String amountInArrears) {
+        Assert.assertTrue(selenium.isTextPresent("Total amount due on "+date+": "+totalAmount));
+        Assert.assertTrue(selenium.isTextPresent("Amount in arrears: "+amountInArrears));
+    }
+
     public void verifyStatus(String status) {
         verifyStatus(status, null);
     }
@@ -178,14 +183,19 @@ public class LoanAccountPage extends AbstractPage {
      */
     public String getAccountId() {
         String returnId = "-1";
-        String heading = selenium.getAttribute("loanaccountdetail.link.editAccountInformation@href");
-        System.err.println("heADING: " + heading);
-        String[] linkParts = heading.split("&");
-        for (String part : linkParts) {
-            String[] partOfLink = part.split("=");
-            // this is an ID that identifies the account
-            if ("globalAccountNum".equals(partOfLink[0])) {
-                returnId = partOfLink[1];
+        if(selenium.isElementPresent("loanaccountdetail.text.loanid")) {
+            returnId = selenium.getText("loanaccountdetail.text.loanid");
+        }
+        else {
+            String heading = selenium.getAttribute("loanaccountdetail.link.editAccountInformation@href");
+            System.err.println("heADING: " + heading);
+            String[] linkParts = heading.split("&");
+            for (String part : linkParts) {
+                String[] partOfLink = part.split("=");
+                // this is an ID that identifies the account
+                if ("globalAccountNum".equals(partOfLink[0])) {
+                    returnId = partOfLink[1];
+                }
             }
         }
         return returnId;

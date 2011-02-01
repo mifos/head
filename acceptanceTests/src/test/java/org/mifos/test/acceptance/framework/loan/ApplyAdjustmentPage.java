@@ -42,10 +42,12 @@ public class ApplyAdjustmentPage extends AbstractPage {
     }
 
     public LoanAccountPage fillAdjustmentFieldsAndSubmit(String adjustmentAmount) {
-        selenium.click("applyadjustment.input.revertLastPayment");
-        selenium.type("applyadjustment.input.note", "testNotes paid Amount: " + adjustmentAmount);
-        selenium.click("applyadjustment.button.submit");
-        waitForPageToLoad();
+        if(selenium.isElementPresent("applyadjustment.input.revertLastPayment")) {
+            selenium.click("applyadjustment.input.revertLastPayment");
+            selenium.type("applyadjustment.input.note", "testNotes paid Amount: " + adjustmentAmount);
+            selenium.click("applyadjustment.button.submit");
+            waitForPageToLoad();
+        }
         selenium.click("applyadjustment.button.submit");
         waitForPageToLoad();
         return new LoanAccountPage(selenium);
