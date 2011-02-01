@@ -68,6 +68,19 @@ public class SavingsAccountHelper {
         savingsAccountDetailPage.verifyPage();
         return savingsAccountDetailPage;
     }
+    public SavingsAccountDetailPage createSavingsAccountWithoutPendingApprovalState(CreateSavingsAccountSearchParameters searchParameters,
+            CreateSavingsAccountSubmitParameters submitAccountParameters){
+        CreateSavingsAccountSearchPage createSavingsAccountSearchPage = navigateToCreateSavingsAccountSearchPage();
+        createSavingsAccountSearchPage.verifyPage();
+        CreateSavingsAccountEntryPage createSavingsAccountEntryPage = createSavingsAccountSearchPage.searchAndNavigateToCreateSavingsAccountPage(searchParameters);
+        createSavingsAccountEntryPage.verifyPage();
+        CreateSavingsAccountConfirmationPage createSavingsAccountConfirmationPage =
+            createSavingsAccountEntryPage.submitAndNavigateToSavingsAccountConfirmationPageWithoutPendingApprovalState(submitAccountParameters);
+        createSavingsAccountConfirmationPage.verifyPage();
+        SavingsAccountDetailPage savingsAccountDetailPage = createSavingsAccountConfirmationPage.navigateToSavingsAccountDetailsPage();
+        savingsAccountDetailPage.verifyPage();
+        return savingsAccountDetailPage;
+    }
 
     private CreateSavingsAccountSearchPage navigateToCreateSavingsAccountSearchPage() {
       LoginPage loginPage = new AppLauncher(selenium).launchMifos().logout();

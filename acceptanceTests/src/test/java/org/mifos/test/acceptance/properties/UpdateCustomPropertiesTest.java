@@ -60,6 +60,7 @@ import org.testng.annotations.Test;
 public class UpdateCustomPropertiesTest extends UiTestCaseBase {
     NavigationHelper navigationHelper;
     CustomPropertiesHelper propertiesHelper;
+    SavingsAccountHelper savingsAccountHelper;
 
     @Autowired
     private DriverManagerDataSource dataSource;
@@ -78,12 +79,40 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
     public void setUp() throws Exception {
         navigationHelper = new NavigationHelper(selenium);
         propertiesHelper = new CustomPropertiesHelper(selenium);
+        savingsAccountHelper = new SavingsAccountHelper(selenium);
         super.setUp();
     }
 
     @AfterMethod
     public void logOut() {
         (new MifosPage(selenium)).logout();
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    //http://mifosforge.jira.com/browse/MIFOSTEST-216
+    public void verifyPropertySavingsPendingApprovalStateEnabled() throws Exception{
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
+        propertiesHelper.setSavingsPendingApprovalStateEnabled("false");
+        //When
+        CreateSavingsAccountSearchParameters searchParameters = getCreateSavingsAccountSearchParameters();
+        CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
+        submitAccountParameters.setAmount("248.0");
+        SavingsAccountDetailPage savingsAccountPage = savingsAccountHelper.createSavingsAccountWithoutPendingApprovalState(searchParameters, submitAccountParameters);
+        savingsAccountPage.verifyPage();
+        //Then
+        savingsAccountPage.verifySavingsAmount(submitAccountParameters.getAmount());
+        savingsAccountPage.verifySavingsProduct(searchParameters.getSavingsProduct());
+        savingsAccountPage.verifyStatus("Active");
+
+        propertiesHelper.setSavingsPendingApprovalStateEnabled("true");
+    }
+
+    private CreateSavingsAccountSearchParameters getCreateSavingsAccountSearchParameters(){
+        CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
+        searchParameters.setSearchString("Stu1233266079799 Client1233266079799");
+        searchParameters.setSavingsProduct("MandClientSavings3MoPostMinBal");
+        return searchParameters;
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -95,14 +124,10 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
         propertiesHelper.setLoanPendingApprovalStateEnabled("true");
         propertiesHelper.setGroupPendingApprovalStateEnabled("true");
         //When
-        CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
-        searchParameters.setSearchString("Stu1233266079799 Client1233266079799");
-        searchParameters.setSavingsProduct("MandClientSavings3MoPostMinBal");
+        CreateSavingsAccountSearchParameters searchParameters = getCreateSavingsAccountSearchParameters();
 
         CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
         submitAccountParameters.setAmount("248.0");
-
-        SavingsAccountHelper savingsAccountHelper = new SavingsAccountHelper(selenium);
 
         SavingsAccountDetailPage savingsAccountPage = savingsAccountHelper.createSavingsAccount(searchParameters, submitAccountParameters);
         savingsAccountPage.verifyPage();
@@ -120,7 +145,6 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
         LoanTestHelper loanTestHelper = new LoanTestHelper(selenium);
         LoanAccountPage loanAccountPage = loanTestHelper.createLoanAccount(searchParameters2, submitAccountParameters2);
         loanAccountPage.verifyStatus("Application Pending Approval");
-
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
