@@ -24,64 +24,64 @@
                  		 "createSavingsAccount.flowState.enterAccountInfo", 
                  		 "createSavingsAccount.flowState.reviewAndSubmit"]] 
 
-<h1>Create Savings account - <span class="standout">Enter Savings account information</span></h1>
-<p>Select a Savings instance. Then click Continue. Click Cancel to return to Clients & Accounts without submitting information.</p>
-<p>*Fields marked with an asterisk are required.</p>
+<h1>[@spring.message "createSavingsAccount.enterAccountInfo.pageTitle" /] - <span class="standout">[@spring.message "createSavingsAccount.enterAccountInfo.pageSubtitle" /]</span></h1>
+<p>[@spring.message "createSavingsAccount.enterAccountInfo.instructions" /]</p>
+<p>[@spring.message "createSavingsAccount.enterAccountInfo.requiredFieldsInstructions" /]</p>
 <br/>
 
-<p><span class="standout">Account Owner</span>: ${savingsAccountFormBean.customer.displayName}</p>
+<p><span class="standout">[@spring.message "createSavingsAccount.enterAccountInfo.accountOwnerName" /]</span> ${savingsAccountFormBean.customer.displayName}</p>
 <br/>
 
 [@form.errors "savingsAccountFormBean.*"/]
 <form action="${flowExecutionUrl}&_eventId=newProductSelected" method="post" class="two-columns">
 	<fieldset>
 	<div class="row">
-		<label for="productId" class="mandatory">Savings instance name:</label>
+		<label for="productId" class="mandatory">[@spring.message "createSavingsAccount.enterAccountInfo.selectSavingsProduct" /]</label>
 		[@form.singleSelectWithPrompt "savingsAccountFormBean.productId" savingsAccountFormBean.productOfferingOptions "createSavingsAccount.selectProduct.selectPrompt" /]
 	</div>
 	</fieldset>
 </form>
 
-<p><b>Savings product summary</b></p>
+<p><b>[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.header" /]</b></p>
 <div class="product-summary">
 	<div class="row">
 		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.description"/]</div>
 		<div class="value">${savingsAccountFormBean.product.savingsProductDetails.productDetails.description}</div>
 	</div>
 	<div class="row">
-		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.typeOfDeposits"/]:</div>
+		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.typeOfDeposits"/]</div>
 		<div class="value">[@lookup.fromMap savingsAccountFormBean.savingsTypes savingsAccountFormBean.product.savingsProductDetails.depositType?string /]</div>
 	</div>
 	<div class="row">
-		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.maxWithdrawalAmount"/]:</div>
+		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.maxWithdrawalAmount"/]</div>
 		<div class="value">${savingsAccountFormBean.product.savingsProductDetails.maxWithdrawal}</div>
 	</div>
 	<div class="row">
-		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.balanceForInterestCalculation"/]:</div>
+		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.balanceForInterestCalculation"/]</div>
 		<div class="value">[@lookup.fromList savingsAccountFormBean.product.interestCalcTypeOptions savingsAccountFormBean.product.savingsProductDetails.interestCalculationType?string /]</div>
 	</div>
 	<div class="row">
-		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.periodForInterestCalculation"/]:</div>
+		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.periodForInterestCalculation"/]</div>
 		<div class="value">
 			${savingsAccountFormBean.product.savingsProductDetails.interestCalculationFrequency}
 			[@lookup.fromMap savingsAccountFormBean.recurrenceFrequencies savingsAccountFormBean.product.savingsProductDetails.interestCalculationFrequencyPeriod?string /]
 		</div>
 	</div>
 	<div class="row">
-		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.interestPostingFrequency"/]:</div>
+		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.interestPostingFrequency"/]</div>
 		<div class="value">
 			${savingsAccountFormBean.product.savingsProductDetails.interestPostingMonthlyFrequency}
 			[@lookup.recurringFrequencyMonth /]
 		</div>
 	</div>
 	<div class="row">
-		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.minBalanceForInterestCalculation"/]:</div>
+		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.minBalanceForInterestCalculation"/]</div>
 		<div class="value">
 			${savingsAccountFormBean.product.savingsProductDetails.minBalanceForInterestCalculation}
 		</div>
 	</div>
 	<div class="row">
-		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.interestRate"/]:</div>
+		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.interestRate"/]</div>
 		<div class="value">
 			${savingsAccountFormBean.product.savingsProductDetails.interestRate} %
 		</div>
@@ -90,21 +90,21 @@
 <br/>
 <br/>
 
-<p><b>Savings account details</b></p>
+<p><b>[@spring.message "createSavingsAccount.enterAccountInfo.savingAccountDetail.header" /]</b></p>
 <form action="${flowExecutionUrl}" method="post" class="two-columns">
 	<fieldset>
 	<div class="row">
 		[#if savingsAccountFormBean.product.savingsProductDetails.depositType?string == "1"]
-			<label for="selectedPrdOfferingId" class="mandatory">[@spring.message "createSavingsAccount.enterAccountInfo.depositAmount.mandatory" /]:</label>
+			<label for="selectedPrdOfferingId" class="mandatory">[@spring.message "createSavingsAccount.enterAccountInfo.savingAccountDetail.depositAmount.mandatory" /]</label>
 		[#elseif savingsAccountFormBean.product.savingsProductDetails.depositType?string == "2"]
-			<label for="selectedPrdOfferingId">[@spring.message "createSavingsAccount.enterAccountInfo.depositAmount.voluntary" /]:</label>
+			<label for="selectedPrdOfferingId">[@spring.message "createSavingsAccount.enterAccountInfo.savingAccountDetail.depositAmount.voluntary" /]</label>
 		[/#if]
 		[@spring.formInput "savingsAccountFormBean.depositAmount" /]
 	</div>
 	</fieldset>
 	<div class="row webflow-controls">
-		<input type="submit" class="submit" value="Continue" name="_eventId_detailsEntered" />
-		<input type="submit" class="cancel" value="Cancel" name="_eventId_cancel" />
+		[@form.submitButton "createSavingsAccount.enterAccountInfo.continueButton" "detailsEntered" /]
+		[@form.cancelButton "createSavingsAccount.enterAccountInfo.cancelButton" "cancel" /]
 	</div>
 </form>
 

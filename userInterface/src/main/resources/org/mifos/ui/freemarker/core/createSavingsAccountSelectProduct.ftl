@@ -24,24 +24,24 @@
                  		 "createSavingsAccount.flowState.enterAccountInfo", 
                  		 "createSavingsAccount.flowState.reviewAndSubmit"]] 
 
-<h1>Create Savings account - <span class="standout">Enter Savings account information</span></h1>
-<p>Select a Savings instance. Then click Continue. Click Cancel to return to Clients & Accounts without submitting information.</p>
-<p>*Fields marked with an asterisk are required.</p>
+<h1>[@spring.message "createSavingsAccount.selectProduct.pageTitle" /] - <span class="standout">[@spring.message "createSavingsAccount.selectProduct.pageSubtitle" /]</span></h1>
+<p>[@spring.message "createSavingsAccount.selectProduct.instructions" /]</p>
+<p>[@spring.message "createSavingsAccount.selectProduct.requiredFieldsInstructions" /]</p>
 <br/>
 
-<p><span class="standout">Account Owner</span>: ${savingsAccountFormBean.customer.displayName}</p>
+<p><span class="standout">[@spring.message "createSavingsAccount.selectProduct.accountOwnerName" /]</span> ${savingsAccountFormBean.customer.displayName}</p>
 <br/>
 
 <form action="${flowExecutionUrl}" method="post" class="two-columns">
 	<fieldset>
 	<div class="row">
-		<label for="productId" class="mandatory">Savings instance name:</label>
+		<label for="productId" class="mandatory">[@spring.message "createSavingsAccount.selectProduct.selectSavingsProduct" /]</label>
 		[@form.singleSelectWithPrompt "savingsAccountFormBean.productId" savingsAccountFormBean.productOfferingOptions "createSavingsAccount.selectProduct.selectPrompt" /]
 	</div>
 	</fieldset>
 	<div class="row webflow-controls">
-		<input type="submit" class="submit" value="Continue" name="_eventId_productSelected" />
-		<input type="submit" class="cancel" value="Cancel" name="_eventId_cancel" />
+		[@form.submitButton "createSavingsAccount.selectProduct.continueButton" "productSelected" /]
+		[@form.cancelButton "createSavingsAccount.selectProduct.cancelButton" "cancel" /]
 	</div>
 </form>
 
