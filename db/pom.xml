@@ -6,13 +6,13 @@
     <groupId>org.mifos</groupId>
     <artifactId>mifos-db</artifactId>
     <packaging>jar</packaging>
-    <version>1.8-SNAPSHOT</version>
+    <version>1.9-SNAPSHOT</version>
     <name>Mifos - DB Management</name>
 
     <parent>
         <artifactId>mifos-parent</artifactId>
         <groupId>org.mifos</groupId>
-        <version>1.8-SNAPSHOT</version>
+        <version>1.9-SNAPSHOT</version>
     </parent>
 
     <properties>

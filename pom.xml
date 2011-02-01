@@ -4,7 +4,7 @@
     <groupId>org.mifos</groupId>
     <artifactId>mifos-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.8-SNAPSHOT</version>
+    <version>1.9-SNAPSHOT</version>
     <name>Mifos - Parent</name>
     <description>Mifos is a Web application and platform for microfinance portfolio management.</description>
     <issueManagement>
@@ -45,7 +45,7 @@
         <spring.sec.version>3.0.4.RELEASE</spring.sec.version>
         <spring.web.version>2.2.1.RELEASE</spring.web.version>
         <slf4j.version>1.6.1</slf4j.version>
-        <project.dependency.version>1.8-SNAPSHOT</project.dependency.version>
+        <project.dependency.version>1.9-SNAPSHOT</project.dependency.version>
         <powermock.version>1.4.7</powermock.version>
     </properties>
     <modules>
@@ -90,7 +90,7 @@
             <dependency>
                 <groupId>org.mifos</groupId>
                 <artifactId>mifos-testFramework</artifactId>
-                <version>1.8-SNAPSHOT</version>
+                <version>1.9-SNAPSHOT</version>
                 <scope>test</scope>
                 <exclusions>
                     <exclusion>
@@ -102,62 +102,62 @@
             <dependency>
                 <groupId>org.mifos</groupId>
                 <artifactId>mifos-common</artifactId>
-                <version>1.8-SNAPSHOT</version>
+                <version>1.9-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.mifos</groupId>
                 <artifactId>mifos-db</artifactId>
-                <version>1.8-SNAPSHOT</version>
+                <version>1.9-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.mifos</groupId>
                 <artifactId>mifos-domain-dto</artifactId>
-                <version>1.8-SNAPSHOT</version>
+                <version>1.9-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.mifos</groupId>
                 <artifactId>mifos-accounting</artifactId>
-                <version>1.8-SNAPSHOT</version>
+                <version>1.9-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.mifos</groupId>
                 <artifactId>mifos-serviceInterfaces</artifactId>
-                <version>1.8-SNAPSHOT</version>
+                <version>1.9-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.mifos</groupId>
                 <artifactId>mifos-userInterface</artifactId>
-                <version>1.8-SNAPSHOT</version>
+                <version>1.9-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.mifos</groupId>
                 <artifactId>mifos-questionnaire</artifactId>
-                <version>1.8-SNAPSHOT</version>
+                <version>1.9-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.mifos</groupId>
                 <artifactId>mifos-db</artifactId>
-                <version>1.8-SNAPSHOT</version>
+                <version>1.9-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.mifos</groupId>
                 <artifactId>mifos-cashflow</artifactId>
-                <version>1.8-SNAPSHOT</version>
+                <version>1.9-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.mifos</groupId>
                 <artifactId>mifos-abstract-domain</artifactId>
-                <version>1.8-SNAPSHOT</version>
+                <version>1.9-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.mifos</groupId>
                 <artifactId>mifos-organization</artifactId>
-                <version>1.8-SNAPSHOT</version>
+                <version>1.9-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.mifos</groupId>
                 <artifactId>mifos-appdomain</artifactId>
-                <version>1.8-SNAPSHOT</version>
+                <version>1.9-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
