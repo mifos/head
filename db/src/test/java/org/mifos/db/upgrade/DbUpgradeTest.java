@@ -41,6 +41,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DbUpgradeTest {
+    public static final String CONTEXTS = "expansion";
     private DbUpgrade dbUpgrade;
     private String changeLog = "classpath:/change.xml";
     @Mock
@@ -74,28 +75,28 @@ public class DbUpgradeTest {
     public void testValidateWhenUnAppliedUpgradesExist() throws Exception {
         when(changeSet1.toString()).thenReturn("changeSet1");
         when(changeSet2.toString()).thenReturn("changeSet2");
-        when(liquibase.listUnrunChangeSets("")).thenReturn(Arrays.<ChangeSet>asList(changeSet1, changeSet2));
+        when(liquibase.listUnrunChangeSets(CONTEXTS)).thenReturn(Arrays.<ChangeSet>asList(changeSet1, changeSet2));
         DbUpgradeValidationResult dbUpgradeValidationResult = dbUpgrade.validate();
         assertFalse(dbUpgradeValidationResult.allUpgradesApplied());
         assertEquals("\nList of unapplied upgrades:\n" +
                 "\tchangeSet1\n" +
                 "\tchangeSet2\n", dbUpgradeValidationResult.getUnAppliedChangeSets());
-        verify(liquibase).listUnrunChangeSets("");
+        verify(liquibase).listUnrunChangeSets(CONTEXTS);
     }
 
     @Test
     public void testValidateWhenAllUpgradesAreApplied() throws Exception {
-        when(liquibase.listUnrunChangeSets("")).thenReturn(Arrays.<ChangeSet>asList());
+        when(liquibase.listUnrunChangeSets(CONTEXTS)).thenReturn(Arrays.<ChangeSet>asList());
         DbUpgradeValidationResult dbUpgradeValidationResult = dbUpgrade.validate();
         assertTrue(dbUpgradeValidationResult.allUpgradesApplied());
         assertEquals("\nList of unapplied upgrades:\n", dbUpgradeValidationResult.getUnAppliedChangeSets());
-        verify(liquibase).listUnrunChangeSets("");
+        verify(liquibase).listUnrunChangeSets(CONTEXTS);
     }
 
     @Test
     public void testUpgrade() throws Exception {
        dbUpgrade.upgrade();
-       verify(liquibase).update(StringUtils.EMPTY);
+       verify(liquibase).update(CONTEXTS);
     }
 
 }

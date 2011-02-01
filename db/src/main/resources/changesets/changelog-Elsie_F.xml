@@ -3,7 +3,7 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
-    <changeSet id="MIFOS-3703_1" author="Kalyan Akella">
+    <changeSet id="MIFOS-3703_1" author="Kalyan Akella" context="expansion">
         <createTable tableName="variable_installment_details">
             <column name="id" autoIncrement="true" type="smallint">
                 <constraints primaryKey="true" nullable="false"/>
@@ -16,7 +16,7 @@
             <append value=" engine=innodb character set utf8"/>
         </modifySql>
     </changeSet>
-    <changeSet id="MIFOS-3703_2" author="Kalyan Akella">
+    <changeSet id="MIFOS-3703_2" author="Kalyan Akella" context="expansion">
         <addColumn tableName="loan_offering">
             <column name="variable_installment_flag" type="smallint" defaultValue="0"/>
         </addColumn>
@@ -37,7 +37,7 @@
             <dropColumn tableName="loan_offering" columnName="variable_installment_flag"/>
         </rollback>
     </changeSet>
-    <changeSet id="MIFOS-3770_1" author="Vinod John">
+    <changeSet id="MIFOS-3770_1" author="Vinod John" context="expansion">
         <createTable tableName="cash_flow_detail">
             <column name="id" type="smallint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -50,7 +50,7 @@
             <append value=" engine=innodb character set utf8"/>
         </modifySql>
     </changeSet>
-    <changeSet id="MIFOS-3761_1" author="Vinod John">
+    <changeSet id="MIFOS-3761_1" author="Vinod John" context="expansion">
         <addColumn tableName="loan_offering">
             <column name="cash_flow_comparison_flag" type="smallint" defaultValue="0"/>
         </addColumn>
@@ -66,7 +66,7 @@
             <dropColumn tableName="loan_offering" columnName="cash_flow_comparison_flag"/>
         </rollback>
     </changeSet>
-    <changeSet id="MIFOS-3762_1" author="Vinod John">
+    <changeSet id="MIFOS-3762_1" author="Vinod John" context="expansion">
         <createTable tableName="cash_flow">
             <column name="id" autoIncrement="true" type="int">
                 <constraints primaryKey="true" nullable="false"/>
@@ -78,7 +78,7 @@
             <append value=" engine=innodb character set utf8"/>
         </modifySql>
     </changeSet>
-    <changeSet id="MIFOS-3762_2" author="Vinod John">
+    <changeSet id="MIFOS-3762_2" author="Vinod John" context="expansion">
         <createTable tableName="monthly_cash_flow_details">
             <column name="id" autoIncrement="true" type="int">
                 <constraints primaryKey="true" nullable="false"/>
@@ -93,7 +93,7 @@
             <append value=" engine=innodb character set utf8"/>
         </modifySql>
     </changeSet>
-    <changeSet id="MIFOS-3762_3" author="Vinod John">
+    <changeSet id="MIFOS-3762_3" author="Vinod John" context="expansion">
         <addForeignKeyConstraint constraintName="fk_mcfd_cf"
                                  baseTableName="monthly_cash_flow_details" baseColumnNames="cash_flow_id"
                                  referencedTableName="cash_flow" referencedColumnNames="id"
@@ -102,7 +102,7 @@
             <dropForeignKeyConstraint baseTableName="monthly_cash_flow_details" constraintName="fk_mcfd_cf"/>
         </rollback>
     </changeSet>
-    <changeSet id="MIFOS-3762_4" author="Vinod John">
+    <changeSet id="MIFOS-3762_4" author="Vinod John" context="expansion">
         <createTable tableName="loan_cash_flow">
             <column name="loan_id" type="int">
                 <constraints nullable="false"/>
@@ -115,7 +115,7 @@
             <append value=" engine=innodb character set utf8"/>
         </modifySql>
     </changeSet>
-    <changeSet id="MIFOS-3762_5" author="Vinod John">
+    <changeSet id="MIFOS-3762_5" author="Vinod John" context="expansion">
         <addForeignKeyConstraint constraintName="fk_lcf_la"
                                  baseTableName="loan_cash_flow" baseColumnNames="loan_id"
                                  referencedTableName="loan_account" referencedColumnNames="account_id"
@@ -129,7 +129,7 @@
             <dropForeignKeyConstraint baseTableName="loan_cash_flow" constraintName="fk_lcf_la"/>
         </rollback>
     </changeSet>
-    <changeSet id="MIFOS-4056_1" author="Vinod John">
+    <changeSet id="MIFOS-4056_1" author="Vinod John" context="expansion">
         <sql endDelimiter=";">
             insert into lookup_value(lookup_id,entity_id,lookup_name) values((select max(lv.lookup_id)+1 from
             lookup_value lv), 37, 'InterestTypes-DecliningPrincipalBalance');
@@ -147,7 +147,7 @@
             </sql>
         </rollback>
     </changeSet>
-    <changeSet id="MIFOS-4117_1" author="Kalyan Akella">
+    <changeSet id="MIFOS-4117_1" author="Kalyan Akella" context="expansion">
         <addColumn tableName="loan_schedule">
             <column name="extra_interest" type="decimal(21,4)"/>
         </addColumn>
@@ -177,7 +177,7 @@
             <dropColumn tableName="loan_schedule" columnName="extra_interest"/>
         </rollback>
     </changeSet>
-    <changeSet id="MIFOS-4052_1" author="Praveena G">
+    <changeSet id="MIFOS-4052_1" author="Praveena G" context="expansion">
         <createTable tableName="original_loan_schedule">
             <column name="id" autoIncrement="true" type="integer">
                 <constraints primaryKey="true" nullable="false"/>
@@ -250,7 +250,7 @@
             <append value=" engine=innodb character set utf8"/>
         </modifySql>
     </changeSet>
-    <changeSet id="MIFOS-4052_2" author="Praveena G">
+    <changeSet id="MIFOS-4052_2" author="Praveena G" context="expansion">
         <addForeignKeyConstraint constraintName="fk_ols_acc"
                                  baseTableName="original_loan_schedule" baseColumnNames="account_id"
                                  referencedTableName="account" referencedColumnNames="account_id"
@@ -330,7 +330,7 @@
             <dropForeignKeyConstraint baseTableName="original_loan_schedule" constraintName="fk_ols_acc"/>
         </rollback>
     </changeSet>
-    <changeSet id="MIFOS-4052_3" author="Praveena G">
+    <changeSet id="MIFOS-4052_3" author="Praveena G" context="expansion">
         <createTable tableName="original_loan_fee_schedule">
             <column name="account_fees_detail_id" autoIncrement="true" type="integer">
                 <constraints primaryKey="true" nullable="false"/>
@@ -363,7 +363,7 @@
             <append value=" engine=innodb character set utf8"/>
         </modifySql>
     </changeSet>
-    <changeSet id="MIFOS-4052_4" author="Praveena G">
+    <changeSet id="MIFOS-4052_4" author="Praveena G" context="expansion">
         <addForeignKeyConstraint constraintName="fk_olfs_ols"
                                  baseTableName="original_loan_fee_schedule" baseColumnNames="id"
                                  referencedTableName="original_loan_schedule" referencedColumnNames="id"
@@ -392,7 +392,7 @@
             <dropForeignKeyConstraint baseTableName="original_loan_fee_schedule" constraintName="fk_olfs_ols"/>
         </rollback>
     </changeSet>
-    <changeSet id="MIFOS-4055_1" author="Kalyan Akella">
+    <changeSet id="MIFOS-4055_1" author="Kalyan Akella" context="expansion">
         <createTable tableName="calculated_interest_on_payment">
             <column name="loan_account_trxn_id" type="integer">
                 <constraints nullable="false" primaryKey="true"/>
@@ -410,7 +410,7 @@
             <append value=" engine=innodb character set utf8"/>
         </modifySql>
     </changeSet>
-    <changeSet id="MIFOS-4055_2" author="Kalyan Akella">
+    <changeSet id="MIFOS-4055_2" author="Kalyan Akella" context="expansion">
         <addForeignKeyConstraint constraintName="fk_ciop_ltd"
                                  baseTableName="calculated_interest_on_payment" baseColumnNames="loan_account_trxn_id"
                                  referencedTableName="loan_trxn_detail" referencedColumnNames="account_trxn_id"
@@ -437,7 +437,7 @@
             <dropForeignKeyConstraint baseTableName="calculated_interest_on_payment" constraintName="fk_ciop_ltd"/>
         </rollback>
     </changeSet>
-    <changeSet id="MIFOS-4451_1" author="Kalyan Akella">
+    <changeSet id="MIFOS-4451_1" author="Kalyan Akella" context="expansion">
         <sql endDelimiter=";">
             insert into lookup_value(lookup_id,entity_id,lookup_name) values((select max(lv.lookup_id)+1 from
             lookup_value lv), 87, 'Permissions-CanAdjustBackDatedTransactions');
@@ -474,7 +474,7 @@
             </sql>
         </rollback>
     </changeSet>
-    <changeSet id="MIFOS_4438_1" author="Piotr Bogacz">
+    <changeSet id="MIFOS_4438_1" author="Piotr Bogacz" context="expansion">
         <sql endDelimiter=";">
             insert into lookup_value(lookup_id,entity_id,lookup_name) values((select max(lv.lookup_id)+1 from
             lookup_value lv), 87, 'Permissions-Clients-CanEditPhoneNumber');

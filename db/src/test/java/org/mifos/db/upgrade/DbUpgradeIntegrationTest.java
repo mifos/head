@@ -39,12 +39,12 @@ public class DbUpgradeIntegrationTest {
     DbUpgrade dbUpgrade;
 
     @Test
-    public void test() throws SQLException, LiquibaseException {
+    public void testSpringWiringForDbUpgrade() throws SQLException, LiquibaseException {
         DbUpgradeValidationResult validationResult = dbUpgrade.validate();
         Assert.assertNotNull(validationResult);
-        Assert.assertEquals(false, validationResult.allUpgradesApplied());
         String unAppliedChangeSets = validationResult.getUnAppliedChangeSets();
         Assert.assertNotNull(unAppliedChangeSets);
+        Assert.assertEquals("\nList of unapplied upgrades:\n".equals(unAppliedChangeSets), validationResult.allUpgradesApplied());
     }
 
 }

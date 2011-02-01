@@ -26,7 +26,6 @@ import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.DatabaseException;
 import liquibase.exception.LiquibaseException;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.ResourceLoader;
 
@@ -36,18 +35,19 @@ import java.sql.SQLException;
 
 public class DbUpgrade implements ResourceLoaderAware {
 
+    public static final String EXPANSION = "expansion";
     private ResourceLoader resourceLoader;
     private DataSource dataSource;
     private String changeLog;
 
     public DbUpgradeValidationResult validate() throws SQLException, LiquibaseException {
         Liquibase liquibase = getLiquibase();
-        return new DbUpgradeValidationResult(liquibase.listUnrunChangeSets(StringUtils.EMPTY));
+        return new DbUpgradeValidationResult(liquibase.listUnrunChangeSets(EXPANSION));
     }
 
     public void upgrade() throws SQLException, LiquibaseException {
         Liquibase liquibase = getLiquibase();
-        liquibase.update(StringUtils.EMPTY);
+        liquibase.update(EXPANSION);
     }
 
     Liquibase getLiquibase() throws SQLException, LiquibaseException {
