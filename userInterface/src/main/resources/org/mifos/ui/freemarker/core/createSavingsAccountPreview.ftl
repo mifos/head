@@ -37,7 +37,7 @@
 <div class="summary">
 	<div class="row">
 		<div class="attribute">Savings instance name:</div>
-		<div class="value">TODO</div>
+		<div class="value">${savingsAccountFormBean.product.savingsProductDetails.productDetails.name}</div>
 	</div>
 	<div class="row">&nbsp;</div>
 	<div class="row divider">Instance information</div>
@@ -47,36 +47,42 @@
 	</div>
 	<div class="row">
 		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.typeOfDeposits"/]:</div>
-		<div class="value">Voluntary</div>
+		<div class="value">[@lookup.fromMap savingsAccountFormBean.savingsTypes savingsAccountFormBean.product.savingsProductDetails.depositType?string /]</div>
 	</div>
 	<div class="row">
 		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.maxWithdrawalAmount"/]:</div>
-		<div class="value">TODO: localize ${savingsAccountFormBean.product.savingsProductDetails.maxWithdrawal}</div>
+		<div class="value">${savingsAccountFormBean.product.savingsProductDetails.maxWithdrawal}</div>
 	</div>
 	<div class="row">
 		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.balanceForInterestCalculation"/]:</div>
-		<div class="value">TODO interest calculation: ${savingsAccountFormBean.product.savingsProductDetails.interestCalculationType}</div>
+		<div class="value">[@lookup.fromList savingsAccountFormBean.product.interestCalcTypeOptions savingsAccountFormBean.product.savingsProductDetails.interestCalculationType?string /]</div>
 	</div>
 	<div class="row">
 		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.periodForInterestCalculation"/]:</div>
-		<div class="value">30 day(s)</div>
+		<div class="value">
+			${savingsAccountFormBean.product.savingsProductDetails.interestCalculationFrequency}
+			[@lookup.fromMap savingsAccountFormBean.recurrenceFrequencies savingsAccountFormBean.product.savingsProductDetails.interestCalculationFrequencyPeriod?string /]
+		</div>
 	</div>
 	<div class="row">
 		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.interestPostingFrequency"/]:</div>
-		<div class="value">1 month(s)</div>
+		<div class="value">
+			${savingsAccountFormBean.product.savingsProductDetails.interestPostingMonthlyFrequency}
+			[@lookup.recurringFrequencyMonth /]
+		</div>
 	</div>
 	<div class="row">
 		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.minBalanceForInterestCalculation"/]:</div>
-		<div class="value">50.0</div>
+		<div class="value">${savingsAccountFormBean.product.savingsProductDetails.minBalanceForInterestCalculation}</div>
 	</div>
 	<div class="row">
 		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.interestRate"/]:</div>
-		<div class="value">25.0 %</div>
+		<div class="value">${savingsAccountFormBean.product.savingsProductDetails.interestRate} %</div>
 	</div>
 	<div class="row">&nbsp;</div>
 	<div class="row">
 		<div class="attribute">Recommended amount for deposit:</div>
-		<div class="value">12345</div>
+		<div class="value">${savingsAccountFormBean.depositAmount}</div>
 	</div>
 	<div class="row">&nbsp;</div>
 	<div class="row">

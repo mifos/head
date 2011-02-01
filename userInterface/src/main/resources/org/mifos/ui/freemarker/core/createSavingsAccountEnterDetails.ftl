@@ -64,13 +64,7 @@
 	</div>
 	<div class="row">
 		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.balanceForInterestCalculation"/]:</div>
-		<div class="value">
-			[#list savingsAccountFormBean.product.interestCalcTypeOptions as option]
-				[#if option.id == savingsAccountFormBean.product.savingsProductDetails.interestCalculationType ]
-					${option.name}
-				[/#if] 
-			[/#list]
-		</div>
+		<div class="value">[@lookup.fromList savingsAccountFormBean.product.interestCalcTypeOptions savingsAccountFormBean.product.savingsProductDetails.interestCalculationType?string /]</div>
 	</div>
 	<div class="row">
 		<div class="attribute">[@spring.message "createSavingsAccount.enterAccountInfo.productSummary.periodForInterestCalculation"/]:</div>

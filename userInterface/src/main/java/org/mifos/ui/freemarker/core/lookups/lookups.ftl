@@ -43,3 +43,14 @@ Generic lookup macro. Lookup values are stored in "map". Map keys and lookupKey 
 		[/#if]
 	[/#list]		
 [/#macro]
+
+[#-- 
+Generic lookup macro. Lookup values are stored in a list of ListElement. 
+--]
+[#macro fromList lookupList lookupKey]
+	[#list lookupList as lookup]
+		[#if lookup.id?string == lookupKey]
+			${lookup.name}
+		[/#if]
+	[/#list]
+[/#macro]
