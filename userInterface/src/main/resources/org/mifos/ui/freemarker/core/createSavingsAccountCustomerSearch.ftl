@@ -38,8 +38,8 @@
 	</div>
 	</fieldset>
 	<div class="row">
-		<input type="submit" class="submit" value="Search" name="_eventId_searchTermEntered" />
-		<input type="submit" class="cancel" value="Cancel" name="_eventId_cancel" />
+		[@form.submitButton "createSavingsAccount.customerSearch.searchButton" "searchTermEntered" /]
+		[@form.cancelButton "createSavingsAccount.customerSearch.cancelButton" "cancel" /]
 	</div>
 </form>
 <br/>

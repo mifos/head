@@ -24,16 +24,16 @@
                  		 "createSavingsAccount.flowState.enterAccountInfo", 
                  		 "createSavingsAccount.flowState.reviewAndSubmit"]] 
 
-<h1>Create Savings account - <span class="standout">Select a customer</span></h1>
-<p>To select, click on a resulting Client or Group or Center from the list below. Click Cancel to return to Clients & Accounts without submitting information.</p>
+<h1>[@spring.message "createSavingsAccount.selectCustomer.pageTitle" /] - <span class="standout">[@spring.message "createSavingsAccount.selectCustomer.pageSubtitle" /]</span></h1>
+<p>[@spring.message "createSavingsAccount.selectCustomer.instructions" /]</p>
 
 <!-- Client search form -->
 [@form.errors "savingsAccountFormBean.*"/]
 <form action="${flowExecutionUrl}" method="post">
 	<div class="row">
-		<label for="searchString">Search for:</label>
+		<label for="searchString">[@spring.message "createSavingsAccount.selectCustomer.searchTerm" /]:</label>
 		[@spring.formInput "savingsAccountFormBean.searchString" /]
-		<input type="submit" class="submit" value="Search" name="_eventId_searchTermEntered" />
+		[@form.submitButton "createSavingsAccount.selectCustomer.searchButton" "searchTermEntered" /]
 	</div>
 </form>
 
@@ -52,7 +52,7 @@ Previous	Results 1-10 of 11 	Next
 <!-- Cancel. Yeah, just one button. -->
 <form action="${flowExecutionUrl}" method="post" class="webflow-controls">
 	<div class="row centered">
-		<input type="submit" class="cancel" value="Cancel" name="_eventId_cancel" />
+		[@form.cancelButton "createSavingsAccount.selectCustomer.cancelButton" "cancel" /]
 	</div>
 </form>
 
