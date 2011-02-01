@@ -24,8 +24,8 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.NotEmpty;
 import org.mifos.dto.domain.CustomerDto;
@@ -46,9 +46,11 @@ public class CreateSavingsAccountFormBean implements Serializable {
 	@NotEmpty(groups = CustomerSearchStep.class)
 	private String searchString;
 
-	@NotNull(groups = { MandatorySavings.class, EnterAccountInfoStep.class })
-	@DecimalMin(value = "0")
-	private Double depositAmount;
+	@Pattern(regexp = "^[0-9]+(\\.[0-9]{1,2})?$?", groups = { MandatorySavings.class })
+	private String mandatoryDepositAmount;
+
+	@Pattern(regexp = "^[0-9]+(\\.[0-9]{1,2})?$", groups = { VoluntarySavings.class })
+	private String voluntaryDepositAmount;
 
 	private SavingsProductReferenceDto product;
 
@@ -78,14 +80,6 @@ public class CreateSavingsAccountFormBean implements Serializable {
 
 	public CustomerDto getCustomer() {
 		return customer;
-	}
-
-	public void setDepositAmount(Double depositAmount) {
-		this.depositAmount = depositAmount;
-	}
-
-	public Double getDepositAmount() {
-		return depositAmount;
 	}
 
 	public void setSearchString(String searchString) {
@@ -164,6 +158,10 @@ public class CreateSavingsAccountFormBean implements Serializable {
 		if (this.product.getSavingsProductDetails().getDepositType() == 1) {
 			Class[] groups = { MandatorySavings.class };
 			validationGroups = groups;
+		} else if (this.product.getSavingsProductDetails().getDepositType() == 2
+				&& !"".equals(this.voluntaryDepositAmount)) {
+			Class[] groups = { VoluntarySavings.class };
+			validationGroups = groups;
 		}
 		validator.validate(this, messages, validationGroups);
 	}
@@ -199,6 +197,22 @@ public class CreateSavingsAccountFormBean implements Serializable {
 
 	public Map<String, String> getRecurrenceFrequencies() {
 		return recurrenceFrequencies;
+	}
+
+	public void setMandatoryDepositAmount(String mandatoryDepositAmount) {
+		this.mandatoryDepositAmount = mandatoryDepositAmount;
+	}
+
+	public String getMandatoryDepositAmount() {
+		return mandatoryDepositAmount;
+	}
+
+	public void setVoluntaryDepositAmount(String voluntaryDepositAmount) {
+		this.voluntaryDepositAmount = voluntaryDepositAmount;
+	}
+
+	public String getVoluntaryDepositAmount() {
+		return voluntaryDepositAmount;
 	}
 }
 

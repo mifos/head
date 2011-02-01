@@ -96,10 +96,11 @@
 	<div class="row">
 		[#if savingsAccountFormBean.product.savingsProductDetails.depositType?string == "1"]
 			<label for="selectedPrdOfferingId" class="mandatory">[@spring.message "createSavingsAccount.enterAccountInfo.savingAccountDetail.depositAmount.mandatory" /]</label>
+			[@spring.formInput "savingsAccountFormBean.mandatoryDepositAmount" /]
 		[#elseif savingsAccountFormBean.product.savingsProductDetails.depositType?string == "2"]
 			<label for="selectedPrdOfferingId">[@spring.message "createSavingsAccount.enterAccountInfo.savingAccountDetail.depositAmount.voluntary" /]</label>
+			[@spring.formInput "savingsAccountFormBean.voluntaryDepositAmount" /]
 		[/#if]
-		[@spring.formInput "savingsAccountFormBean.depositAmount" /]
 	</div>
 	</fieldset>
 	<div class="row webflow-controls">

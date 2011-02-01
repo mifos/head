@@ -64,8 +64,14 @@ public class CreateSavingsAccountController {
 				.getSavingsProductDetails();
 		Integer productId = savingsProduct.getProductDetails().getId();
 		Integer customerId = formBean.getCustomer().getCustomerId();
-		String recommendedOrMandatoryAmount = formBean.getDepositAmount()
-				.toString();
+		// FIXME - code smell! use constants
+		String depositAmount = savingsProduct.getDepositType() == 1 ? formBean
+				.getMandatoryDepositAmount() : formBean
+				.getVoluntaryDepositAmount();
+		if ("".equals(depositAmount)) {
+			depositAmount = "0"; // stops number format exception
+		}
+		String recommendedOrMandatoryAmount = depositAmount.toString();
 		List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>(); // TODO
 		SavingsAccountCreationDto savingsAccountCreation = new SavingsAccountCreationDto(
 				productId, customerId, accountState,
@@ -93,8 +99,10 @@ public class CreateSavingsAccountController {
 				.retrieveSavingsProductReferenceData(productId);
 		formBean.setProductId(productId);
 		formBean.setProduct(product);
-		formBean.setDepositAmount(product.getSavingsProductDetails()
-				.getAmountForDeposit());
+		formBean.setMandatoryDepositAmount(product.getSavingsProductDetails()
+				.getAmountForDeposit().toString());
+		formBean.setVoluntaryDepositAmount(product.getSavingsProductDetails()
+				.getAmountForDeposit().toString());
 		formBean.setSavingsTypes(getSavingsTypes());
 		formBean.setRecurrenceTypes(getRecurrenceTypes());
 		formBean.setRecurrenceFrequencies(getRecurrenceFrequencies());
