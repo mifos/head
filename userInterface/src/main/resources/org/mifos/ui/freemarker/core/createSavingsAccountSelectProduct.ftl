@@ -32,6 +32,7 @@
 <p><span class="standout">[@spring.message "createSavingsAccount.selectProduct.accountOwnerName" /]</span> ${savingsAccountFormBean.customer.displayName}</p>
 <br/>
 
+[@form.errors "savingsAccountFormBean.*"/]
 <form action="${flowExecutionUrl}" method="post" class="two-columns">
 	<fieldset>
 	<div class="row">

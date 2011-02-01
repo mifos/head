@@ -52,6 +52,7 @@ public class CreateSavingsAccountFormBean implements Serializable {
 
 	private SavingsProductReferenceDto product;
 
+	@NotNull(groups = { SelectProductStep.class })
 	private Integer productId;
 
 	private List<PrdOfferingDto> productOfferings;
@@ -143,6 +144,15 @@ public class CreateSavingsAccountFormBean implements Serializable {
 	public void validateSelectCustomerStep(ValidationContext context) {
 		MessageContext messages = context.getMessageContext();
 		validator.validate(this, messages, CustomerSearchStep.class);
+	}
+
+	/**
+	 * Validation method that Spring webflow calls on state transition out of
+	 * selectProductOfferingStep.
+	 */
+	public void validateSelectProductOfferingStep(ValidationContext context) {
+		MessageContext messages = context.getMessageContext();
+		validator.validate(this, messages, SelectProductStep.class);
 	}
 
 	public void validateEnterAccountDetailsStep(ValidationContext context) {

@@ -20,7 +20,7 @@
 		<transition on="searchTermEntered" to="selectCustomerStep" validate="true" />
 	</view-state>
 
-	<view-state id="selectProductOfferingStep" view="createSavingsAccountSelectProduct">
+	<view-state id="selectProductOfferingStep" view="createSavingsAccountSelectProduct" model="savingsAccountFormBean">
 		<transition on="productSelected" to="enterAccountDetailsStep">
 			<set name="requestScope.productId" value="requestParameters.productId" type="int"/>
 			<evaluate expression="createSavingsAccountController.loadProduct(productId, savingsAccountFormBean)" />
