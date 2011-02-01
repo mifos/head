@@ -2820,11 +2820,10 @@ public class LoanBO extends AccountBO {
 
     private void setCalculatedInterestIfApplicable(LoanTrxnDetailEntity loanTrxnDetailEntity,
                                                    LoanScheduleEntity loanSchedule, Money interestDue) {
-        if (!isDecliningBalanceInterestRecalculation()) {
-            return;
+        if (isDecliningBalanceInterestRecalculation()) {
+            loanTrxnDetailEntity.computeAndSetCalculatedInterestOnPayment(
+                    loanSchedule.getInterest(), loanSchedule.getExtraInterestPaid(), interestDue);
         }
-        loanTrxnDetailEntity.computeAndSetCalculatedInterestOnPayment(
-                loanSchedule.getInterest(), loanSchedule.getExtraInterestPaid(), interestDue);
     }
 
     private void makeEarlyRepaymentForFutureInstallments(final AccountPaymentEntity accountPaymentEntity,

@@ -276,7 +276,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 
     private Money calculateAdjustedInterest(CalculatedInterestOnPayment interestOnPayment, Money overdueInterestPaid,
                                             LoanTrxnDetailEntity loanReverseTrxn) {
-        if (((LoanBO)account).isDecliningBalanceInterestRecalculation()) {
+        if (interestOnPayment != null && ((LoanBO)account).isDecliningBalanceInterestRecalculation()) {
             return interestOnPayment.getOriginalInterest().subtract(loanReverseTrxn.getInterestAmount()).subtract(overdueInterestPaid.
                     add(interestOnPayment.getInterestDueTillPaid()));
         }
