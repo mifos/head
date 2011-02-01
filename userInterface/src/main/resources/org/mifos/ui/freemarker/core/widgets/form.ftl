@@ -58,3 +58,27 @@ springBindPath: The path for Spring bind. For example, "userFormBean.*"
 		</div>
 	[/#if]
 [/#macro]
+
+[#-- 
+Renders a submit button.
+--]
+[#macro submitButton buttonLabel webflowEvent=""]
+	[#if webflowEvent?length == 0]
+		[#assign name="" /]
+	[#else]
+		[#assign name="_eventId_${webflowEvent}" /]
+	[/#if]
+	<input type="submit" class="submit" value="[@spring.message buttonLabel /]" name="${name}" />
+[/#macro]
+
+[#-- 
+Renders a cancel button.
+--]
+[#macro cancelButton buttonLabel webflowEvent=""]
+	[#if webflowEvent?length == 0]
+		[#assign name="" /]
+	[#else]
+		[#assign name="_eventId_${webflowEvent}" /]
+	[/#if]
+	<input type="submit" class="cancel" value="[@spring.message buttonLabel /]" name="${name}" />
+[/#macro]
