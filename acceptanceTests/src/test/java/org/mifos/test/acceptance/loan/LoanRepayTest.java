@@ -50,7 +50,7 @@ import java.sql.SQLException;
 
 @SuppressWarnings("PMD")
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(sequential = true, groups = {"acceptance", "ui", "loan", "smoke"})
+@Test(sequential = true, groups = {"acceptance", "ui", "loan"})
 public class LoanRepayTest extends UiTestCaseBase {
     @Autowired
     private DriverManagerDataSource dataSource;

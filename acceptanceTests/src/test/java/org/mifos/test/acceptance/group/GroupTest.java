@@ -109,7 +109,7 @@ public class GroupTest extends UiTestCaseBase {
         searchResultsPage.navigateToGroupViewDetailsPage("link=MyGroup*");
     }
 
-    @Test(sequential = true, groups = {"smoke","group","acceptance","ui"})
+    @Test(sequential = true, groups = {"group","acceptance","ui"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     // http://mifosforge.jira.com/browse/MIFOSTEST-301
     public void createGroupInPendingApprovalStateTest() throws Exception {
@@ -206,7 +206,7 @@ public class GroupTest extends UiTestCaseBase {
      * http://mifosforge.jira.com/browse/MIFOSTEST-210
      * @throws Exception
      */
-    @Test(groups = {"smoke","group","acceptance","ui"})
+    @Test(groups = {"group","acceptance","ui"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void verifyPendingApprovalSetToDefault() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
