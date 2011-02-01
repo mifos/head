@@ -46,6 +46,18 @@ public class LoanAccountPage extends AbstractPage {
         Assert.assertEquals(selenium.getText("LoanAccountDetail.text.loanFees"), expectedFee);
     }
 
+    public void verifyOneTimeFeeExists(String expectedFee, int feeIndex) {
+        Assert.assertEquals(selenium.getText("loanAccountDetail.text.oneTimeFeeName_" + feeIndex), expectedFee);
+    }
+
+    public void verifyNoOneTimeFeesExist() {
+        Assert.assertFalse(selenium.isElementPresent("id=loanAccountDetail.text.oneTimeFeeName_1"));
+    }
+
+    public void verifyNoOneTimeFeeRemovalLinkExists() {
+        Assert.assertFalse(selenium.isElementPresent("id=loanAccountDetail.link.removeOneTimeFee"));
+    }
+
     public void verifyLoanAmount(String amount) {
         Assert.assertEquals(Double.parseDouble(getOriginalLoanAmount()), Double.parseDouble(amount));
     }
@@ -387,6 +399,14 @@ public class LoanAccountPage extends AbstractPage {
         return this;
 
     }
+
+    public LoanAccountPage removeOneTimeFee(int feeIndex) {
+//        selenium.click("loanAccountDetail.link.removeOneTimeFee_" + feeIndex);
+        selenium.click("loanAccountDetail.link.removeOneTimeFee");
+        waitForPageToLoad();
+        return this;
+    }
+
 
     public ApplyAdjustmentPage navigateToApplyAdjustment() {
         selenium.click("loanaccountdetail.link.applyAdjustment");
