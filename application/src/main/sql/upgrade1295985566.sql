@@ -1,1 +1,0 @@
-alter table account_payment modify column receipt_number varchar(60);

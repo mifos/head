@@ -161,16 +161,8 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                 .getMifosCurrency(new ConfigurationPersistence()));
         AccountingRules.init(); // load the additional currencies
         Money.setDefaultCurrency(AccountingRules.getMifosCurrency(new ConfigurationPersistence()));
-        DatabaseMigrator migrator = new DatabaseMigrator(applicationContext);
-        try {
-            /*
-             * This is an easy way to force an actual database query to happen via Hibernate. Simply opening a
-             * Hibernate session may not actually connect to the database.
-             */
-            migrator.isNSDU();
-        } catch (Throwable t) {
-            setDatabaseError(DatabaseErrorCode.CONNECTION_FAILURE, "Unable to connect to database.", t);
-        }
+        DatabaseMigrator migrator = new DatabaseMigrator();
+        initializeDBConnectionForHibernate(migrator);
 
         if (!databaseError.isError) {
             try {
@@ -184,6 +176,18 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
             databaseError.logError();
         } else {
             initializeDB(applicationContext);
+        }
+    }
+
+    private void initializeDBConnectionForHibernate(DatabaseMigrator migrator) {
+        try {
+            /*
+             * This is an easy way to force an actual database query to happen via Hibernate. Simply opening a
+             * Hibernate session may not actually connect to the database.
+             */
+            migrator.isNSDU();
+        } catch (Throwable t) {
+            setDatabaseError(DatabaseErrorCode.CONNECTION_FAILURE, "Unable to connect to database.", t);
         }
     }
 
