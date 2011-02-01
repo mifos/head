@@ -24,16 +24,16 @@
                  		 "createSavingsAccount.flowState.enterAccountInfo", 
                  		 "createSavingsAccount.flowState.reviewAndSubmit"]] 
 
-<h1>Create Savings Account - <span class="standout">Select a customer</span></h1>
+<h1>[@spring.message "createSavingsAccount.customerSearch.pageTitle" /] - <span class="standout">[@spring.message "createSavingsAccount.customerSearch.pageSubtitle" /]</span></h1>
 
-<p>Enter a Client or Group or Center name and click Search. Click Cancel to return to Clients & Accounts without submitting information.</p>
+<p>[@spring.message "createSavingsAccount.customerSearch.instructions" /]</p>
 <br/>
 
 [@form.errors "savingsAccountFormBean.*"/]
 <form action="${flowExecutionUrl}" method="post" class="two-columns">
 	<fieldset>
 	<div class="row">
-		<label for="searchString">Name:</label>
+		<label for="searchString">[@spring.message "createSavingsAccount.customerSearch.searchTerm" /]:</label>
 		[@spring.formInput "savingsAccountFormBean.searchString" /]
 	</div>
 	</fieldset>
