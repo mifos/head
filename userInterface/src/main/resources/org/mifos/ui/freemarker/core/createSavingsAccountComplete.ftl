@@ -26,16 +26,16 @@
 
 <h1 class="success">You have successfully created a new Savings account</h1>
 
-<p><span class="standout">Please Note:</span> A new Savings account for Test Customer1188 has been assigned account # <span class="account-number">000100000000567</span>. You can enter an account number into the search box to access account details.</p>
+<p><span class="standout">Please Note:</span> A new Savings account for Test Customer1188 has been assigned account # <span class="account-number">${account.globalAccountNum}</span>. You can enter an account number into the search box to access account details.</p>
 <br/>
 
-<p><a href="" class="standout">View Savings account details now</a></p>
+<p><a href="savingsAction.do?method=get&globalAccountNum=${account.globalAccountNum}" class="standout">View Savings account details now</a></p>
 <br/>
 
 <div class="suggestion">Suggested next steps</div>
 <ul>
-	<li><a href="">Open a new Savings account</a></li>
-	<li><a href="">Open a new Loan account</a></li>
+	<li><a href="${flowExecutionUrl}">Open a new Savings account</a></li>
+	<li><a href="loanAccountAction.do?method=getPrdOfferings&customerId=${savingsAccountFormBean.customer.customerId}">Open a new Loan account</a></li>
 </ul>
  
 [/@layout.webflow]

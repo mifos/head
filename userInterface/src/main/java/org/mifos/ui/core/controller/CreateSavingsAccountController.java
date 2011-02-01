@@ -48,22 +48,24 @@ public class CreateSavingsAccountController {
 	public SavingsAccountDetailDto createAccountInPartialApplicationState(
 			CreateSavingsAccountFormBean formBean) {
 		Short accountState = 13; // TOOD grab state from constant. NOT from
-		return createAccount(formBean.getProduct(), accountState);
+		return createAccount(formBean, accountState);
 	}
 
 	public SavingsAccountDetailDto createAccountInPendingApprovalState(
 			CreateSavingsAccountFormBean formBean) {
 		Short accountState = 14; // TOOD grab state from constant. NOT from
-		return createAccount(formBean.getProduct(), accountState);
+		return createAccount(formBean, accountState);
 	}
 
 	private SavingsAccountDetailDto createAccount(
-			SavingsProductReferenceDto productReference, Short accountState) {
+			CreateSavingsAccountFormBean formBean, Short accountState) {
+		SavingsProductReferenceDto productReference = formBean.getProduct();
 		SavingsProductDto savingsProduct = productReference
 				.getSavingsProductDetails();
 		Integer productId = savingsProduct.getProductDetails().getId();
-		Integer customerId = 5; // TODO
-		String recommendedOrMandatoryAmount = "100"; // TODO grab from request
+		Integer customerId = formBean.getCustomer().getCustomerId();
+		String recommendedOrMandatoryAmount = formBean.getDepositAmount()
+				.toString();
 		List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>(); // TODO
 		SavingsAccountCreationDto savingsAccountCreation = new SavingsAccountCreationDto(
 				productId, customerId, accountState,
