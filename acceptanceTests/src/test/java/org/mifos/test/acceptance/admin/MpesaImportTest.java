@@ -49,6 +49,7 @@ import org.mifos.test.acceptance.framework.loan.ViewRepaymentSchedulePage;
 import org.mifos.test.acceptance.framework.savings.SavingsAccountDetailPage;
 import org.mifos.test.acceptance.framework.testhelpers.CustomPropertiesHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
+import org.mifos.test.acceptance.framework.testhelpers.SavingsAccountHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,6 +79,7 @@ public class MpesaImportTest extends UiTestCaseBase {
         "savings_product_code.xls", "example_loan_disb.xls"};
 
     static final String FILE_WITH_NO_ERRORS = "import_no_errors.xls";
+    static final String FILE_WITH_OVERPAYMENT_AMOUNT = "overpayment.xls";
 
     @Autowired
     private DbUnitUtilities dbUnitUtilities;
@@ -303,4 +305,38 @@ public class MpesaImportTest extends UiTestCaseBase {
         copyPluginFromTemp(tempFileName);
     }
 
+    /**
+     * MPESA - Import has expected errors due to invalid data
+     * and overpayment amount and user is not able to continue
+     * http://mifosforge.jira.com/browse/MIFOSTEST-692
+     * @throws Exception
+     */
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled = true)
+    public void failImportTransaction() throws Exception {
+        //Given
+        String path = this.getClass().getResource("/mpesa/" + FILE_WITH_OVERPAYMENT_AMOUNT).toString();
+        String dataset = "mpesa_export.xml";
+
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, dataset, dataSource, selenium);
+
+        propertiesHelper.setImportTransactionOrder("AL3,AL5");
+
+        SavingsAccountHelper savingsAccountHelper = new SavingsAccountHelper(selenium);
+        savingsAccountHelper.closeSavingsAccount("000100000000019","Close account");
+
+        //When
+        ImportTransactionsPage importTransactionsPage = importTransaction(path);
+        importTransactionsPage.checkErrors(new String[]{"Row <24> error - THY89933"
+                + " - Last account is a loan account but the total paid in amount"
+                + " is greater than the total due amount"});
+
+        //Then
+        LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage("000100000000013");
+        loanAccountPage.verifyStatus(LoanAccountPage.ACTIVE);
+        loanAccountPage.verifyExactLoanAmount("2000.0");
+
+        TransactionHistoryPage transactionHistoryPage = loanAccountPage.navigateToTransactionHistoryPage();
+        transactionHistoryPage.verifyTransactionHistory(183, 1, 6);
+    }
 }

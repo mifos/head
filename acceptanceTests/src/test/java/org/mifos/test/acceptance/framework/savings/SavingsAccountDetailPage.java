@@ -70,4 +70,9 @@ public class SavingsAccountDetailPage extends AbstractPage {
         return new SavingsDepositWithdrawalPage(selenium);
     }
 
+    public SavingsCloseAccountPage navigateToCloseAccount() {
+        selenium.click("savingsaccountdetail.link.closeAccount");
+        waitForPageToLoad();
+        return new SavingsCloseAccountPage(selenium);
+    }
 }
