@@ -44,6 +44,7 @@
 		        <prop key="auto_import">
 		       		widgets/widgets.ftl as widget,
 		       		widgets/form.ftl as form,
+		       		widgets/i18n.ftl as i18n,
 		        	layouts/layouts.ftl as layout,
 		        	lookups/lookups.ftl as lookup,
 		        	/spring.ftl as spring
