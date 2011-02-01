@@ -65,7 +65,7 @@ import org.mifos.customers.business.PositionEntity;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.ClientInitialSavingsOfferingEntity;
-import org.mifos.customers.client.persistence.ClientPersistence;
+import org.mifos.customers.client.persistence.LegacyClientDao;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
@@ -357,7 +357,7 @@ public class CustomerServiceImpl implements CustomerService {
             InputStream pictureSteam = personalInfo.getPicture();
 
             if (pictureSteam != null) {
-                Blob pictureAsBlob = new ClientPersistence().createBlob(pictureSteam);
+                Blob pictureAsBlob = new LegacyClientDao().createBlob(pictureSteam);
                 client.createOrUpdatePicture(pictureAsBlob);
             }
 

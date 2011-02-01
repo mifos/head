@@ -56,7 +56,7 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerHierarchyEntity;
 import org.mifos.customers.business.CustomerMeetingEntity;
 import org.mifos.customers.business.CustomerStatusEntity;
-import org.mifos.customers.client.persistence.ClientPersistence;
+import org.mifos.customers.client.persistence.LegacyClientDao;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
@@ -104,7 +104,7 @@ public class ClientBO extends CustomerBO {
     private final Set<ClientAttendanceBO> clientAttendances;
     private Set<ClientInitialSavingsOfferingEntity> offeringsAssociatedInCreate;
 
-    private ClientPersistence clientPersistence = null;
+    private LegacyClientDao clientPersistence = null;
     private SavingsPersistence savingsPersistence = null;
     private SavingsPrdPersistence savingsPrdPersistence = null;
     private OfficePersistence officePersistence = null;
@@ -1071,14 +1071,14 @@ public class ClientBO extends CustomerBO {
         return savingsPrdPersistence;
     }
 
-    public ClientPersistence getClientPersistence() {
+    public LegacyClientDao getClientPersistence() {
         if (null == clientPersistence) {
-            clientPersistence = new ClientPersistence();
+            clientPersistence = new LegacyClientDao();
         }
         return clientPersistence;
     }
 
-    public void setClientPersistence(final ClientPersistence clientPersistence) {
+    public void setClientPersistence(final LegacyClientDao clientPersistence) {
         this.clientPersistence = clientPersistence;
     }
 

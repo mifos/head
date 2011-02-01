@@ -141,7 +141,7 @@ import org.mifos.customers.checklist.business.CustomerCheckListBO;
 import org.mifos.customers.client.business.ClientAttendanceBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.NameType;
-import org.mifos.customers.client.persistence.ClientPersistence;
+import org.mifos.customers.client.persistence.LegacyClientDao;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.GroupTemplate;
 import org.mifos.customers.group.business.GroupBO;
@@ -461,7 +461,7 @@ public class TestObjectFactory {
                     new OfficePersistence().getOffice(SAMPLE_BRANCH_OFFICE), parentCustomer, dateOfBirth, governmentId,
                     null, null, YesNoFlag.YES.getValue(), clientNameDetailDto, spouseNameDetailView,
                     clientPersonalDetailDto, null);
-            new ClientPersistence().saveClient(client);
+            new LegacyClientDao().saveClient(client);
         } catch (CustomerException e) {
             throw new RuntimeException(e);
         } catch (PersistenceException e) {
@@ -493,7 +493,7 @@ public class TestObjectFactory {
                             .getOffice(SAMPLE_BRANCH_OFFICE), meeting, systemUser, new DateTimeService()
                             .getCurrentJavaDateTime(), null, null, null, YesNoFlag.NO.getValue(), clientNameDetailDto,
                     spouseNameDetailView, clientPersonalDetailDto, null);
-            new ClientPersistence().saveClient(client);
+            new LegacyClientDao().saveClient(client);
             StaticHibernateUtil.flushSession();
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -549,7 +549,7 @@ public class TestObjectFactory {
                         clientNameDetailDto, spouseNameDetailView, clientPersonalDetailDto, null);
             }
 
-            new ClientPersistence().saveClient(client);
+            new LegacyClientDao().saveClient(client);
             StaticHibernateUtil.flushSession();
 
         } catch (Exception e) {

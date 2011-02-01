@@ -33,7 +33,7 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.center.persistence.CenterPersistence;
 import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.client.persistence.ClientPersistence;
+import org.mifos.customers.client.persistence.LegacyClientDao;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.group.persistence.GroupPersistence;
 import org.mifos.customers.office.business.OfficeBO;
@@ -52,7 +52,7 @@ public class TestObjectPersistence {
 
     private CustomerPersistence customerPersistence = new CustomerPersistence();
     private GroupPersistence groupPersistence = new GroupPersistence();
-    private ClientPersistence clientPersistence = new ClientPersistence();
+    private LegacyClientDao clientPersistence = new LegacyClientDao();
     private CenterPersistence centerPersistence = new CenterPersistence();
 
     /**

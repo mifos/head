@@ -33,7 +33,7 @@ import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.LegacyGenericDao;
 
-public class ClientPersistence extends LegacyGenericDao {
+public class LegacyClientDao extends LegacyGenericDao {
 
     public Blob createBlob(final InputStream picture) throws PersistenceException {
         try {

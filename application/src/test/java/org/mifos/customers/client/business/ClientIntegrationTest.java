@@ -50,7 +50,7 @@ import org.mifos.config.ClientRules;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerMovementEntity;
 import org.mifos.customers.center.business.CenterBO;
-import org.mifos.customers.client.persistence.ClientPersistence;
+import org.mifos.customers.client.persistence.LegacyClientDao;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
@@ -119,7 +119,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         String hd = "**FOO**";
         client.setPovertyLikelihoodPercent(pct);
         client.getCustomerDetail().setHandicappedDetails(hd);
-        new ClientPersistence().createOrUpdate(client);
+        new LegacyClientDao().createOrUpdate(client);
         StaticHibernateUtil.flushSession();
         ClientBO retrievedClient = (ClientBO) StaticHibernateUtil.getSessionTL().get(ClientBO.class,
                 client.getCustomerId());
@@ -237,7 +237,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
                 CustomerStatus.CLIENT_PARTIAL, null, null, null, null, null, offerings, personnel, officeBo, null,
                 null, null, null, null, YesNoFlag.YES.getValue(), clientNameDetailDto, spouseNameDetailView,
                 clientPersonalDetailDto, null);
-        new ClientPersistence().saveClient(client);
+        new LegacyClientDao().saveClient(client);
         StaticHibernateUtil.flushSession();
 
         client = customerDao.findClientById(client.getCustomerId());
@@ -315,7 +315,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
                 .fromInt(new Short("1")), null, null, null, null, null, null, personnel, officeBo, null, null, null,
                 null, null, YesNoFlag.YES.getValue(), clientNameDetailDto, spouseNameDetailView, clientPersonalDetailDto,
                 null);
-        new ClientPersistence().saveClient(client);
+        new LegacyClientDao().saveClient(client);
         StaticHibernateUtil.flushSession();
         client = TestObjectFactory.getClient(client.getCustomerId());
         Assert.assertEquals(name, client.getDisplayName());
@@ -346,7 +346,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
                 new OfficePersistence().getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE), getMeeting(), personnel,
                 null, null, null, null, YesNoFlag.NO.getValue(), clientNameDetailDto, spouseNameDetailView,
                 clientPersonalDetailDto, null);
-        new ClientPersistence().saveClient(client);
+        new LegacyClientDao().saveClient(client);
         StaticHibernateUtil.flushSession();
         client = TestObjectFactory.getClient(client.getCustomerId());
         Assert.assertEquals(name, client.getDisplayName());
@@ -382,7 +382,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
                 .fromInt(new Short("1")), null, null, null, null, null, null, personnel, group.getOffice(), group,
                 null, null, null, null, YesNoFlag.YES.getValue(), clientNameDetailDto, spouseNameDetailView,
                 clientPersonalDetailDto, null);
-        new ClientPersistence().saveClient(client);
+        new LegacyClientDao().saveClient(client);
         StaticHibernateUtil.flushSession();
         client = TestObjectFactory.getClient(client.getCustomerId());
         Assert.assertEquals(name, client.getDisplayName());
@@ -506,7 +506,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
                 .fromInt(new Short("1")), null, null, null, getCustomFields(), null, null, personnel, office, meeting,
                 personnel, null, null, null, null, YesNoFlag.YES.getValue(), clientNameDetailDto,
                 spouseNameDetailView, clientPersonalDetailDto, null);
-        new ClientPersistence().saveClient(client);
+        new LegacyClientDao().saveClient(client);
         StaticHibernateUtil.flushSession();
         client = TestObjectFactory.getClient(client.getCustomerId());
         Assert.assertEquals(displayName, client.getDisplayName());

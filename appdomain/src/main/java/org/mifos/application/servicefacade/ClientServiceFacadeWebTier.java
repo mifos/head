@@ -54,7 +54,7 @@ import org.mifos.customers.client.business.ClientFamilyDetailEntity;
 import org.mifos.customers.client.business.ClientInitialSavingsOfferingEntity;
 import org.mifos.customers.client.business.ClientNameDetailEntity;
 import org.mifos.customers.client.business.ClientPerformanceHistoryEntity;
-import org.mifos.customers.client.persistence.ClientPersistence;
+import org.mifos.customers.client.persistence.LegacyClientDao;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficeDao;
@@ -359,7 +359,7 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
 
             Blob pictureAsBlob = null;
             if (clientCreationDetail.getPicture() != null) {
-                pictureAsBlob = new ClientPersistence().createBlob(clientCreationDetail.getPicture());
+                pictureAsBlob = new LegacyClientDao().createBlob(clientCreationDetail.getPicture());
             }
 
             CustomerStatus clientStatus = CustomerStatus.fromInt(clientCreationDetail.getClientStatus());
