@@ -158,7 +158,7 @@ public class FeeTest extends UiTestCaseBase {
         // add and verify that the fee cannot be removed from an application approved account
         loanTestHelper.applyChargeUsingFeeLabel(applicationApprovedAccountId, feeParameters);
         loanTestHelper.verifyOneTimeFee(oneTimeFee, 1);
-        loanTestHelper.verifyNoOneTimeFeeRemovalLinkExists();
+        loanTestHelper.verifyNoOneTimeFeeRemovalLinkExists(1);
     }
 
 

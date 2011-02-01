@@ -814,9 +814,9 @@ public class LoanTestHelper {
         loanAccountPage.verifyNoOneTimeFeesExist();
     }
 
-    public void verifyNoOneTimeFeeRemovalLinkExists() {
+    public void verifyNoOneTimeFeeRemovalLinkExists(int feeIndex) {
         LoanAccountPage loanAccountPage = new LoanAccountPage(selenium);
-        loanAccountPage.verifyNoOneTimeFeeRemovalLinkExists();
+        loanAccountPage.verifyNoOneTimeFeeRemovalLinkExists(feeIndex);
     }
 
 }

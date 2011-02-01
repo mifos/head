@@ -54,8 +54,8 @@ public class LoanAccountPage extends AbstractPage {
         Assert.assertFalse(selenium.isElementPresent("id=loanAccountDetail.text.oneTimeFeeName_1"));
     }
 
-    public void verifyNoOneTimeFeeRemovalLinkExists() {
-        Assert.assertFalse(selenium.isElementPresent("id=loanAccountDetail.link.removeOneTimeFee"));
+    public void verifyNoOneTimeFeeRemovalLinkExists(int feeIndex) {
+        Assert.assertFalse(selenium.isElementPresent("id=loanAccountDetail.link.removeOneTimeFee_" + feeIndex));
     }
 
     public void verifyLoanAmount(String amount) {
@@ -401,8 +401,7 @@ public class LoanAccountPage extends AbstractPage {
     }
 
     public LoanAccountPage removeOneTimeFee(int feeIndex) {
-//        selenium.click("loanAccountDetail.link.removeOneTimeFee_" + feeIndex);
-        selenium.click("loanAccountDetail.link.removeOneTimeFee");
+        selenium.click("loanAccountDetail.link.removeOneTimeFee_" + feeIndex);
         waitForPageToLoad();
         return this;
     }

@@ -518,8 +518,8 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 										<span class="fontnormal"> <c:out
 										value="${feesSet.accountFeeAmount}" />&nbsp;
 										<!-- if account state is LOAN_PARTIAL_APPLICATION or LOAN_PENDING_APPROVAL then enable removal -->
-									<c:if test="${loanInformationDto.accountStateId == '1' || loanInformationDto.accountStateId == '2'}">
-										<html-el:link styleId="loanAccountDetail.link.removeOneTimeFee"
+									<c:if test="${loanInformationDto.accountStateId == '1' || loanInformationDto.accountStateId == '2'}">					
+											<html-el:link styleId="loanAccountDetail.link.removeOneTimeFee_${status.count}"
 											href="accountAppAction.do?method=removeFees&feeId=${feesSet.feeId}&globalAccountNum=${loanInformationDto.globalAccountNum}&accountId=${loanInformationDto.accountId}&recordOfficeId=${loanInformationDto.officeId}&recordLoanOfficerId=${loanInformationDto.personnelId}&createdDate=${loanInformationDto.createdDate}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}&input=Loan">
 											<mifos:mifoslabel name="loan.remove" />
 										</html-el:link> 
