@@ -25,8 +25,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <database.properties.file>${modules.root.dir}/acceptanceTests/src/test/resources/org/mifos/config/resources/acceptanceDatabase.properties</database.properties.file>
-        <sql.resources.src.directory>${modules.root.dir}/application/src/main/sql</sql.resources.src.directory>
-        <sql.resources.target.directory>${project.build.outputDirectory}/sql</sql.resources.target.directory>
+        <sql.resources.main.directory>${modules.root.dir}/db/src/main/resources/sql</sql.resources.main.directory>
+        <sql.resources.test.directory>${modules.root.dir}/db/src/test/resources/sql</sql.resources.test.directory>
         <!-- mimics ConfigurationLocator directory search behavior -->
         <mifos.overrides.conf>${mifos.conf}/local.properties</mifos.overrides.conf>
         <mifos.overrides.env>${env.MIFOS_CONF}/local.properties</mifos.overrides.env>
@@ -270,14 +270,6 @@
         <outputDirectory>target/classes</outputDirectory>
         <testOutputDirectory>target/test-classes</testOutputDirectory>
 
-        <resources>
-            <resource>
-                <directory>${sql.resources.src.directory}</directory>
-                <filtering>true</filtering>
-                <targetPath>sql</targetPath>
-            </resource>
-        </resources>
-
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -351,10 +343,10 @@
                         <configuration>
                             <sqlCommand>USE ${acceptance.database}</sqlCommand>
                             <srcFiles>
-                                <srcFile>${sql.resources.target.directory}/latest-schema.sql</srcFile>
-                                <srcFile>${sql.resources.target.directory}/latest-data.sql</srcFile>
-                                <srcFile>${sql.resources.target.directory}/custom_data.sql</srcFile>
-                                <srcFile>${sql.resources.target.directory}/init_mifos_password.sql</srcFile>
+                                <srcFile>${sql.resources.main.directory}/base-schema.sql</srcFile>
+                                <srcFile>${sql.resources.main.directory}/base-data.sql</srcFile>
+                                <srcFile>${sql.resources.test.directory}/acceptance_test_data.sql</srcFile>
+                                <srcFile>${sql.resources.test.directory}/init_mifos_password.sql</srcFile>
                             </srcFiles>
                         </configuration>
                     </execution>

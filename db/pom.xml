@@ -19,7 +19,8 @@
         <modules.root.dir>${basedir}/..</modules.root.dir>
         <integration.database.properties.file>${modules.root.dir}/application/src/test/resources/org/mifos/config/resources/integrationDatabase.properties</integration.database.properties.file>
         <mifos.overrides.home>${user.home}/.mifos/local.properties</mifos.overrides.home>
-        <sql.resources.target.directory>${basedir}/src/main/resources/sql</sql.resources.target.directory>
+        <sql.resources.main.directory>${basedir}/src/main/resources/sql</sql.resources.main.directory>
+        <sql.resources.test.directory>${basedir}/src/test/resources/sql</sql.resources.test.directory>
         <!--A large number for rollback count-->
         <liquibase.rollbackCount>1000</liquibase.rollbackCount>
     </properties>
@@ -151,9 +152,9 @@
                         <configuration>
                             <sqlCommand>USE ${integration.database}</sqlCommand>
                             <srcFiles>
-                                <srcFile>${sql.resources.target.directory}/base-schema.sql</srcFile>
-                                <srcFile>${sql.resources.target.directory}/base-data.sql</srcFile>
-                                <srcFile>${sql.test.resources.target.directory}/test-data.sql</srcFile>
+                                <srcFile>${sql.resources.main.directory}/base-schema.sql</srcFile>
+                                <srcFile>${sql.resources.main.directory}/base-data.sql</srcFile>
+                                <srcFile>${sql.resources.test.directory}/integration_test_data.sql</srcFile>
                             </srcFiles>
                         </configuration>
                     </execution>

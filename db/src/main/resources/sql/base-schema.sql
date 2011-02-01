@@ -1,8 +1,9 @@
 -- This script represents the latest schema.
+
 -- Applying it should be the same as
 -- Start with the latest-schema.sql from version foo of mifos
 -- apply all upgrade_to_*.sql upgrades between foo and now
---
+
 -- Applying this file also should also be the same as
 -- upgrading from the start:
 -- Start with mifosdbcreationscript.sql
@@ -27,7 +28,7 @@ create table lookup_entity (
   entity_id smallint auto_increment not null,
   entity_name varchar(100) not null,
 
-  /* Is this used for anything?  It seems like it should just be removed.*/
+  -- Is this used for anything?  It seems like it should just be removed.
   description varchar(200),
   primary key(entity_id)
 )
@@ -43,14 +44,14 @@ create table country (
 )
 engine=innodb character set utf8;
 
-/* TODO: drop this table and move data to "coa" table*/
+-- TODO: drop this table and move data to "coa" table
 create table gl_code (
   glcode_id smallint auto_increment not null,
   glcode_value varchar(50) not null,
   primary key(glcode_id)
 )
 engine=innodb character set utf8;
-/* enforce uniqueness for GLCODE_VALUE*/
+-- enforce uniqueness for GLCODE_VALUE
 create unique index glcode_value_idx on gl_code (glcode_value);
 
 create table lookup_value (
@@ -112,7 +113,7 @@ create table language (
   primary key(lang_id),
   foreign key(lookup_id)
     references lookup_value(lookup_id)
-  	  on delete no action
+        on delete no action
       on update no action
 )
 engine=innodb character set utf8;
@@ -147,7 +148,7 @@ create table fee_payment (
   primary key  (fee_payment_id),
   foreign key (fee_payment_lookup_id)
     references lookup_value (lookup_id)
-	  on delete no action
+      on delete no action
       on update no action
 ) engine=innodb character set utf8;
 
@@ -165,9 +166,9 @@ create table fund (
   fundcode_id smallint not null,
   primary key(fund_id),
   foreign key(fundcode_id)
-	references fund_code(fundcode_id)
-	  on delete no action
-	  on update no action
+    references fund_code(fundcode_id)
+      on delete no action
+      on update no action
 )
 engine=innodb character set utf8;
 
@@ -819,7 +820,7 @@ create index personnel_office_idx on personnel (office_id);
 create unique index personnel_login_idx on personnel (login_name);
 
 
-/* Seems not to be used by anything*/
+-- Seems not to be used by anything
 create table  fee_update_type (
 fee_update_type_id smallint auto_increment not null ,
 lookup_id integer not null,
@@ -1059,12 +1060,17 @@ create table customer (
   parent_customer_id integer,
   created_date date,
   updated_date date,
+
+  /* We could have a UNIQUE constraint on the combination
+     of SEARCH_ID and BRANCH_ID if we want (search ID's are
+     only unique within a branch). */
   search_id varchar(100),
+
   max_child_count integer,
   ho_updated smallint,
   client_confidential smallint,
   mfi_joining_date date,
-  government_id	varchar(50),
+  government_id    varchar(50),
   customer_activation_date date,
   created_by smallint,
   updated_by smallint,
@@ -1167,9 +1173,9 @@ create table customer_detail (
       on delete no action
       on update no action,
   foreign key(poverty_status)
-  	references lookup_value(lookup_id)
-  	  on delete no action
-  	  on update no action
+      references lookup_value(lookup_id)
+        on delete no action
+        on update no action
 )
 engine=innodb character set utf8;
 
@@ -1231,6 +1237,25 @@ create unique index prd_offering_short_name_idx on prd_offering (prd_offering_sh
 create index prd_offering_office_idx on prd_offering (office_id);
 create index prd_type_idx on prd_offering (prd_type_id);
 
+create table variable_installment_details (
+  id smallint auto_increment not null,
+  min_gap_in_days smallint,
+  max_gap_in_days smallint,
+  min_loan_amount decimal(21,4),
+  min_loan_amount_currency_id smallint,
+  primary key(id)
+)
+engine=innodb character set utf8;
+
+create table cash_flow_detail (
+  id smallint auto_increment not null,
+  cash_flow_threshold decimal(13, 10),
+  indebtedness_ratio decimal(13, 10),
+  repayment_capacity decimal(13, 10),
+  primary key(id)
+)
+engine=innodb character set utf8;
+
 create table loan_offering (
   prd_offering_id smallint not null,
   interest_type_id smallint not null,
@@ -1259,6 +1284,10 @@ create table loan_offering (
   interest_glcode_id smallint not null,
   penalties_glcode_id smallint,
   interest_waiver_flag smallint default 0,
+  variable_installment_flag smallint default 0,
+  variable_installment_details_id smallint,
+  cash_flow_comparison_flag smallint default 0,
+  cash_flow_detail_id smallint,
   primary key(prd_offering_id),
   foreign key(principal_glcode_id)
     references gl_code(glcode_id)
@@ -1302,6 +1331,14 @@ create table loan_offering (
       on update no action,
   foreign key(default_loan_amount_currency_id)
     references currency(currency_id)
+      on delete no action
+      on update no action,
+  foreign key(variable_installment_details_id)
+    references variable_installment_details(id)
+      on delete no action
+      on update no action,
+  foreign key(cash_flow_detail_id)
+    references cash_flow_detail(id)
       on delete no action
       on update no action
 )
@@ -2368,9 +2405,9 @@ engine=innodb character set utf8;
 
 create table waive_off_history(
 waive_off_id    integer auto_increment not null,
-account_id	integer not null,
-waive_off_date	date not null,
-waive_off_type	varchar(20) not null,
+account_id    integer not null,
+waive_off_date    date not null,
+waive_off_type    varchar(20) not null,
 primary key  (waive_off_id),
 foreign key(account_id)
     references loan_account(account_id)
@@ -2579,7 +2616,7 @@ create table account_payment (
   payment_type_id smallint not null,
   currency_id smallint,
   amount decimal(21,4) not null,
-  receipt_number varchar(25),
+  receipt_number varchar(60),
   voucher_number varchar(50),
   check_number varchar(50),
   payment_date date not null,
@@ -2687,6 +2724,13 @@ create table loan_schedule (
   payment_date date,
   parent_flag smallint,
   version_no integer not null,
+
+  extra_interest decimal(21,4),
+  extra_interest_currency_id smallint,
+
+  extra_interest_paid decimal(21,4),
+  extra_interest_paid_currency_id smallint,
+
   primary key(id),
   foreign key(account_id)
     references account(account_id)
@@ -2750,6 +2794,16 @@ create table loan_schedule (
 
   foreign key(customer_id)
     references customer(customer_id)
+      on delete no action
+      on update no action,
+
+  foreign key(extra_interest_currency_id)
+    references currency(currency_id)
+      on delete no action
+      on update no action,
+
+  foreign key(extra_interest_paid_currency_id)
+    references currency(currency_id)
       on delete no action
       on update no action
 )
@@ -3410,7 +3464,7 @@ create table customer_attendance_types(
 engine=innodb character set utf8;
 
 
-/* TODO: a better name for this table would be "gl_account"*/
+-- TODO: a better name for this table would be "gl_account"
 create table coa (
   coa_id smallint auto_increment not null,
   coa_name varchar(150) not null,
@@ -3423,7 +3477,7 @@ create table coa (
       on update no action
 )engine=innodb character set utf8;
 
-/* TODO: drop this table, it isn't being used*/
+-- TODO: drop this table, it isn't being used
 create table coa_idmapper(
   constant_id smallint not null ,
   coa_id smallint not null,
@@ -3445,7 +3499,7 @@ create table financial_action (
       on update no action
 )engine=innodb character set utf8;
 
-/* TODO: drop this table, just move "parent_coaid" column to "coa" table*/
+-- TODO: drop this table, just move "parent_coaid" column to "coa" table
 create table coahierarchy (
   coa_id smallint not null ,
   parent_coaid smallint,
@@ -3493,7 +3547,7 @@ foreign key(currency_id)
     references currency(currency_id)
       on delete no action
       on update no action,
-	foreign key(currency_id)
+    foreign key(currency_id)
     references currency(currency_id)
       on delete no action
       on update no action,
@@ -3516,15 +3570,15 @@ foreign key(currency_id)
 )engine=innodb character set utf8;
 
 create table customer_attendance(
-	id integer auto_increment not null,
-	meeting_date date not null,
-	customer_id integer not null,
-	attendance smallint,
-	primary key(id),
-	foreign key(customer_id)
-	    references customer(customer_id)
-	      on delete no action
-	      on update no action
+    id integer auto_increment not null,
+    meeting_date date not null,
+    customer_id integer not null,
+    attendance smallint,
+    primary key(id),
+    foreign key(customer_id)
+        references customer(customer_id)
+          on delete no action
+          on update no action
 )
 engine=innodb character set utf8;
 
@@ -3731,7 +3785,7 @@ engine=innodb character set utf8;
 
 create index loan_counter_client_perf_idx on loan_counter (client_perf_id);
 
-/* Begin tables for the Reports Mini Portal*/
+-- Begin tables for the Reports Mini Portal
 
 
 create table report_datasource (
@@ -3789,9 +3843,9 @@ create table report_parameter_map (
   index report_id (report_id),
   index parameter_id (parameter_id)
 ) engine=innodb character set utf8;
-/* end tables for the Reports Mini Portal*/
+-- end tables for the Reports Mini Portal
 
-/* start tables for surveys module*/
+-- start tables for surveys module
 create table survey (
   survey_id integer auto_increment not null,
   survey_name varchar(200) not null,
@@ -3946,9 +4000,9 @@ create table survey_response (
 ) engine=innodb character set utf8;
 
 
-/* end tables for surveys module*/
+-- end tables for surveys module
 
-/* defining table for products mix*/
+-- defining table for products mix
 
 create table prd_offering_mix (
   prd_offering_mix_id  integer auto_increment not null,
@@ -3973,7 +4027,7 @@ create table prd_offering_mix (
 ) engine=innodb character set utf8;
 
 
-/* tables for loan defaults based on last loan*/
+-- tables for loan defaults based on last loan
 
 create table loan_amount_from_last_loan (
 loan_amount_from_last_loan_id  smallint auto_increment not null,
@@ -4388,8 +4442,8 @@ create table question_choice_tags(
 ) engine=innodb character set utf8;
 
 create table applied_upgrades(
-	upgrade_id integer not null,
-	primary key (upgrade_id)
+    upgrade_id integer not null,
+    primary key (upgrade_id)
 ) engine=innodb character set utf8;
 
 create table QRTZ_JOB_DETAILS(
@@ -4515,77 +4569,77 @@ create table QRTZ_LOCKS(
 ) engine=innodb character set utf8;
 
 create table BATCH_JOB_INSTANCE  (
-	job_instance_id bigint  not null primary key ,
-	version bigint ,
-	job_name varchar(100) not null,
-	job_key varchar(32) not null,
-	constraint job_inst_un unique (job_name, job_key)
+    job_instance_id bigint  not null primary key ,
+    version bigint ,
+    job_name varchar(100) not null,
+    job_key varchar(32) not null,
+    constraint job_inst_un unique (job_name, job_key)
 ) engine=innodb character set utf8;
 
 create table BATCH_JOB_EXECUTION  (
-	job_execution_id bigint  not null primary key ,
-	version bigint  ,
-	job_instance_id bigint not null,
-	create_time datetime not null,
-	start_time datetime default null ,
-	end_time datetime default null ,
-	status varchar(10) ,
-	exit_code varchar(20) ,
-	exit_message varchar(2500) ,
-	last_updated datetime,
-	constraint job_inst_exec_fk foreign key (job_instance_id)
-	references BATCH_JOB_INSTANCE(job_instance_id)
+    job_execution_id bigint  not null primary key ,
+    version bigint  ,
+    job_instance_id bigint not null,
+    create_time datetime not null,
+    start_time datetime default null ,
+    end_time datetime default null ,
+    status varchar(10) ,
+    exit_code varchar(20) ,
+    exit_message varchar(2500) ,
+    last_updated datetime,
+    constraint job_inst_exec_fk foreign key (job_instance_id)
+    references BATCH_JOB_INSTANCE(job_instance_id)
 ) engine=innodb character set utf8;
 
 create table BATCH_JOB_PARAMS  (
-	job_instance_id bigint not null ,
-	type_cd varchar(6) not null ,
-	key_name varchar(100) not null ,
-	string_val varchar(250) ,
-	date_val datetime default null ,
-	long_val bigint ,
-	double_val double precision ,
-	constraint job_inst_params_fk foreign key (job_instance_id)
-	references BATCH_JOB_INSTANCE(job_instance_id)
+    job_instance_id bigint not null ,
+    type_cd varchar(6) not null ,
+    key_name varchar(100) not null ,
+    string_val varchar(250) ,
+    date_val datetime default null ,
+    long_val bigint ,
+    double_val double precision ,
+    constraint job_inst_params_fk foreign key (job_instance_id)
+    references BATCH_JOB_INSTANCE(job_instance_id)
 ) engine=innodb character set utf8;
 
 create table BATCH_STEP_EXECUTION  (
-	step_execution_id bigint  not null primary key ,
-	version bigint not null,
-	step_name varchar(100) not null,
-	job_execution_id bigint not null,
-	start_time datetime not null ,
-	end_time datetime default null ,
-	status varchar(10) ,
-	commit_count bigint ,
-	read_count bigint ,
-	filter_count bigint ,
-	write_count bigint ,
-	read_skip_count bigint ,
-	write_skip_count bigint ,
-	process_skip_count bigint ,
-	rollback_count bigint ,
-	exit_code varchar(20) ,
-	exit_message varchar(2500) ,
-	last_updated datetime,
-	constraint job_exec_step_fk foreign key (job_execution_id)
-	references BATCH_JOB_EXECUTION(job_execution_id)
+    step_execution_id bigint  not null primary key ,
+    version bigint not null,
+    step_name varchar(100) not null,
+    job_execution_id bigint not null,
+    start_time datetime not null ,
+    end_time datetime default null ,
+    status varchar(10) ,
+    commit_count bigint ,
+    read_count bigint ,
+    filter_count bigint ,
+    write_count bigint ,
+    read_skip_count bigint ,
+    write_skip_count bigint ,
+    process_skip_count bigint ,
+    rollback_count bigint ,
+    exit_code varchar(20) ,
+    exit_message varchar(2500) ,
+    last_updated datetime,
+    constraint job_exec_step_fk foreign key (job_execution_id)
+    references BATCH_JOB_EXECUTION(job_execution_id)
 ) engine=innodb character set utf8;
 
 create table BATCH_STEP_EXECUTION_CONTEXT  (
-	step_execution_id bigint not null primary key,
-	short_context varchar(2500) not null,
-	serialized_context text ,
-	constraint step_exec_ctx_fk foreign key (step_execution_id)
-	references BATCH_STEP_EXECUTION(step_execution_id)
+    step_execution_id bigint not null primary key,
+    short_context varchar(2500) not null,
+    serialized_context text ,
+    constraint step_exec_ctx_fk foreign key (step_execution_id)
+    references BATCH_STEP_EXECUTION(step_execution_id)
 ) engine=innodb character set utf8;
 
 create table BATCH_JOB_EXECUTION_CONTEXT  (
-	job_execution_id bigint not null primary key,
-	short_context varchar(2500) not null,
-	serialized_context text ,
-	constraint job_exec_ctx_fk foreign key (job_execution_id)
-	references BATCH_JOB_EXECUTION(job_execution_id)
+    job_execution_id bigint not null primary key,
+    short_context varchar(2500) not null,
+    serialized_context text ,
+    constraint job_exec_ctx_fk foreign key (job_execution_id)
+    references BATCH_JOB_EXECUTION(job_execution_id)
 ) engine=innodb character set utf8;
 
 create table BATCH_STEP_EXECUTION_SEQ (id bigint not null) engine=myisam;
@@ -4601,6 +4655,38 @@ create table prd_offering_question_group(
     foreign key (question_group_id) references question_group(id)
 ) engine=innodb character set utf8;
 
+create table cash_flow  (
+  id int auto_increment not null primary key,
+  capital decimal(21, 4),
+  liability decimal(21, 4)
+) engine=innodb character set utf8;
+
+create table monthly_cash_flow_details(
+  id int auto_increment not null primary key,
+  cash_flow_id int,
+  month_year date,
+  revenue decimal(21, 4) not null,
+  expenses decimal(21, 4) not null,
+  notes varchar(300),
+  foreign key(cash_flow_id)
+  references cash_flow(id)
+   on delete no action
+   on update no action
+) engine=innodb character set utf8;
+
+create table loan_cash_flow  (
+  loan_id int not null,
+  cash_flow_id int not null,
+  foreign key(loan_id)
+  references loan_account(account_id)
+   on delete no action
+   on update no action,
+  foreign key(cash_flow_id)
+  references cash_flow(id)
+   on delete no action
+   on update no action
+) engine=innodb character set utf8;
+
 create table savings_offering_historical_interest_detail (
   id integer auto_increment not null,
   period_start_date date not null,
@@ -4611,5 +4697,198 @@ create table savings_offering_historical_interest_detail (
   product_id smallint not null,
   primary key(id),
   foreign key (product_id) references savings_offering (prd_offering_id)
+)
+engine=innodb character set utf8;
+
+create table original_loan_schedule (
+  id integer auto_increment not null,
+  account_id integer not null,
+  customer_id integer not null,
+  currency_id smallint,
+  action_date date,
+
+  principal decimal(21,4) not null,
+  principal_currency_id smallint,
+
+  interest decimal(21,4) not null,
+  interest_currency_id smallint,
+
+  penalty decimal(21,4) not null,
+  penalty_currency_id smallint,
+
+  misc_fees decimal(21,4),
+  misc_fees_currency_id smallint,
+
+  misc_fees_paid decimal(21,4),
+  misc_fees_paid_currency_id smallint,
+
+  misc_penalty decimal(21,4),
+  misc_penalty_currency_id smallint,
+
+  misc_penalty_paid decimal(21,4),
+  misc_penalty_paid_currency_id smallint,
+
+  principal_paid decimal(21,4),
+  principal_paid_currency_id smallint,
+
+  interest_paid decimal(21,4),
+  interest_paid_currency_id smallint,
+
+  penalty_paid decimal(21,4),
+  penalty_paid_currency_id smallint,
+
+  payment_status smallint not null,
+  installment_id smallint not null,
+  payment_date date,
+  parent_flag smallint,
+  version_no integer not null,
+
+  extra_interest decimal(21,4),
+  extra_interest_currency_id smallint,
+
+  extra_interest_paid decimal(21,4),
+  extra_interest_paid_currency_id smallint,
+
+  primary key(id),
+  foreign key(account_id)
+    references account(account_id)
+      on delete no action
+      on update no action,
+ foreign key(currency_id)
+    references currency(currency_id)
+      on delete no action
+      on update no action,
+
+
+  foreign key(principal_currency_id)
+    references currency(currency_id)
+      on delete no action
+      on update no action,
+
+  foreign key(interest_currency_id)
+    references currency(currency_id)
+      on delete no action
+      on update no action,
+
+  foreign key(penalty_currency_id)
+    references currency(currency_id)
+      on delete no action
+      on update no action,
+
+  foreign key(misc_fees_currency_id)
+    references currency(currency_id)
+      on delete no action
+      on update no action,
+
+  foreign key(misc_fees_paid_currency_id)
+    references currency(currency_id)
+      on delete no action
+      on update no action,
+
+  foreign key(misc_penalty_currency_id)
+    references currency(currency_id)
+      on delete no action
+      on update no action,
+
+  foreign key(principal_paid_currency_id)
+    references currency(currency_id)
+      on delete no action
+      on update no action,
+
+  foreign key(interest_paid_currency_id)
+    references currency(currency_id)
+      on delete no action
+      on update no action,
+
+  foreign key(penalty_paid_currency_id)
+    references currency(currency_id)
+      on delete no action
+      on update no action,
+
+  foreign key(misc_penalty_paid_currency_id)
+    references currency(currency_id)
+      on delete no action
+      on update no action,
+
+  foreign key(customer_id)
+    references customer(customer_id)
+      on delete no action
+      on update no action,
+
+  foreign key(extra_interest_currency_id)
+    references currency(currency_id)
+      on delete no action
+      on update no action,
+
+  foreign key(extra_interest_paid_currency_id)
+    references currency(currency_id)
+      on delete no action
+      on update no action
+)
+engine=innodb character set utf8;
+
+create table original_loan_fee_schedule (
+  account_fees_detail_id integer auto_increment not null,
+  id integer not null,
+  installment_id integer not null,
+  fee_id smallint not null,
+  account_fee_id integer not null,
+  amount decimal(21,4),
+  amount_currency_id smallint,
+  amount_paid decimal(21,4) not null,
+  amount_paid_currency_id smallint not null,
+  version_no integer not null,
+  primary key(account_fees_detail_id),
+  foreign key(id)
+    references original_loan_schedule(id)
+      on delete no action
+      on update no action,
+  foreign key(amount_currency_id)
+    references currency(currency_id)
+      on delete no action
+      on update no action,
+  foreign key(amount_paid_currency_id)
+    references currency(currency_id)
+      on delete no action
+      on update no action,
+  foreign key(fee_id)
+    references fees(fee_id),
+  foreign key(account_fee_id)
+    references account_fees(account_fee_id)
+)
+engine=innodb character set utf8;
+
+create table calculated_interest_on_payment (
+  loan_account_trxn_id integer not null,
+
+  original_interest decimal(21,4) not null,
+  original_interest_currency_id smallint,
+
+  extra_interest_paid decimal(21,4),
+  extra_interest_paid_currency_id smallint,
+
+  interest_due_till_paid decimal(21,4),
+  interest_due_till_paid_currency_id smallint,
+
+  primary key(loan_account_trxn_id),
+  foreign key(loan_account_trxn_id)
+    references loan_trxn_detail(account_trxn_id)
+      on delete no action
+      on update no action,
+
+  foreign key(original_interest_currency_id)
+    references currency(currency_id)
+      on delete no action
+      on update no action,
+
+  foreign key(extra_interest_paid_currency_id)
+    references currency(currency_id)
+      on delete no action
+      on update no action,
+
+  foreign key(interest_due_till_paid_currency_id)
+    references currency(currency_id)
+      on delete no action
+      on update no action
 )
 engine=innodb character set utf8;

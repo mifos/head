@@ -1,12 +1,21 @@
 -- This script represents the latest master data (data which is shipped
 -- with MIFOS and is more about the operation of MIFOS than business data).
---
--- The point of having this file is to see the latest master data in one place,
--- rather than having to look through a bunch of upgrade scripts.  So we
--- should group things logically (by table or functionality, for example)
--- rather than historically.
--- We shouldn't have an INSERT followed by an UPDATE to the same row (unless
--- there is some special reason like foreign keys).
+
+/* The point of having this file is to see the latest master data in one place,
+   rather than having to look through a bunch of upgrade scripts.  So we
+   should group things logically (by table or functionality, for example)
+   rather than historically.
+   We shouldn't have an INSERT followed by an UPDATE to the same row (unless
+   there is some special reason like foreign keys). */
+
+-- Applying it should be the same as:
+-- Start with mifosmasterdata.sql
+-- apply rmpmasterdata.sql
+-- apply Iteration14-DML-DBScripts10102006.sql
+-- apply Iteration15-DBScripts20061012.sql
+-- apply add-version.sql
+-- apply Index.sql
+-- apply all upgrades to date
 
 insert into applied_upgrades(upgrade_id) values(1277565300);
 insert into applied_upgrades(upgrade_id) values(1277565388);
@@ -60,8 +69,12 @@ insert into applied_upgrades(upgrade_id) values(1283320210);
 insert into applied_upgrades(upgrade_id) values(1283416834);
 insert into applied_upgrades(upgrade_id) values(1283765911);
 insert into applied_upgrades(upgrade_id) values(1284365506);
+insert into applied_upgrades(upgrade_id) values(1284977483);
 insert into applied_upgrades(upgrade_id) values(1284986654);
+insert into applied_upgrades(upgrade_id) values(1285046834);
 insert into applied_upgrades(upgrade_id) values(1285177663);
+insert into applied_upgrades(upgrade_id) values(1285651956);
+insert into applied_upgrades(upgrade_id) values(1285812348);
 insert into applied_upgrades(upgrade_id) values(1286195484);
 insert into applied_upgrades(upgrade_id) values(1286529235);
 insert into applied_upgrades(upgrade_id) values(1286780611);
@@ -69,8 +82,19 @@ insert into applied_upgrades(upgrade_id) values(1287934290);
 insert into applied_upgrades(upgrade_id) values(1288013750);
 insert into applied_upgrades(upgrade_id) values(1288349766);
 insert into applied_upgrades(upgrade_id) values(1288869198);
+insert into applied_upgrades(upgrade_id) values(1289125815);
+insert into applied_upgrades(upgrade_id) values(1289541994);
+insert into applied_upgrades(upgrade_id) values(1289994929);
 insert into applied_upgrades(upgrade_id) values(1290720085);
 insert into applied_upgrades(upgrade_id) values(1291245955);
+insert into applied_upgrades(upgrade_id) values(1292234934);
+insert into applied_upgrades(upgrade_id) values(1292241366);
+insert into applied_upgrades(upgrade_id) values(1298198335);
+insert into applied_upgrades(upgrade_id) values(1299279218);
+insert into applied_upgrades(upgrade_id) values(1294738016);
+insert into applied_upgrades(upgrade_id) values(1294927843);
+insert into applied_upgrades(upgrade_id) values(1295985566);
+insert into applied_upgrades(upgrade_id) values(1296137314);
 
 /* The table Currency holds configuration related items for a currency like
  * display symbol, rounding mode etc which is to be applied on a currency.
@@ -415,6 +439,7 @@ values(1,'English','EN',189);
 insert into supported_locale(locale_id,country_id,lang_id,locale_name,default_locale)
 values(1,6,1,'EN',1);
 
+-- Entity: ClientStatus
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(1, 1, 'ClientStatus-PartialApplication');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(1, 1, 1, null);
@@ -433,6 +458,7 @@ values(9, 1, 5, null);
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(6, 1, 'ClientStatus-Closed');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(11, 1, 6, null);
+-- Entity: GroupStatus
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(7, 2, 'GroupStatus-PartialApplication');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(13, 1, 7, null);
@@ -451,18 +477,21 @@ values(21, 1, 11, null);
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(12, 2, 'GroupStatus-Closed');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(23, 1, 12, null);
+-- Entity: CenterStatus
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(13, 3, 'CenterStatus-Active');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(25, 1, 13, null);
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(14, 3, 'CenterStatus-Inactive');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(27, 1, 14, null);
+-- Entity: OfficeStatus
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(15, 4, 'OfficeStatus-Active');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(29, 1, 15, null);
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(16, 4, 'OfficeStatus-Inactive');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(31, 1, 16, null);
+-- Entity: AccountState
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(17, 5, 'AccountState-PartialApplication');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(33, 1, 17, null);
@@ -495,6 +524,7 @@ insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value
 values(261, 1, 141, null);
 
 /* duplicate that appears to be unused */
+-- Entity: PersonnelStatus
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(26, 6, 'PersonnelStatusUnused-Active');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(51, 1, 26, null);
@@ -502,6 +532,7 @@ insert into lookup_value(lookup_id,entity_id,lookup_name) values(27, 6, 'Personn
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(53, 1, 27, null);
 
+-- Entity: GroupFlag
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(28, 7, 'GroupFlag-Withdraw');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(55, 1, 28, null);
@@ -523,6 +554,7 @@ values(65, 1, 33, null);
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(34, 7, 'GroupFlag-Other');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(67, 1, 34, null);
+-- Entity: FeeType
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(35, 8, 'FeeType-MaintenanceFee');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(69, 1, 35, null);
@@ -535,6 +567,8 @@ values(73, 1, 37, null);
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(38, 8, 'FeeType-MeetingCharges');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(75, 1, 38, null);
+-- Entity: Titles
+-- Entity: PovertyStatus
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(41, 10, 'PovertyStatus-VeryPoor');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(81, 1, 41, null);
@@ -544,12 +578,46 @@ values(83, 1, 42, null);
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(43, 10, 'PovertyStatus-NonPoor');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(85, 1, 43, null);
+-- Entity: Center
+-- Entity: Group
+-- Entity: Client
+-- Entity: Office
+-- Entity: Salutation
+-- Entity: Gender
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(49, 16, 'Gender-Male');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(97, 1, 49, null);
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(50, 16, 'Gender-Female');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(99, 1, 50, null);
+-- Entity: MaritalStatus
+-- Entity: Citizenship
+-- Entity: Ethinicity
+-- Entity: EducationLevel
+-- these values are removed in version 198, will be completely removed later on
+-- Entity: BusinessActivities
+-- INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(136, 21, 'BusinessActivities-DailyLabour');
+-- INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
+-- VALUES(251, 1, 136, NULL);
+-- INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(137, 21, 'BusinessActivities-Agriculture');
+-- INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
+-- VALUES(253, 1, 137, NULL);
+-- INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(144, 21, 'BusinessActivities-AnimalHusbandry');
+-- INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
+-- VALUES(265, 1, 144, NULL);
+-- INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(145, 21, 'BusinessActivities-MicroEnterprise');
+-- INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
+-- VALUES(266, 1, 145, NULL);
+-- INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(222, 21, 'BusinessActivities-Production');
+-- INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
+-- VALUES(430, 1, 222, NULL);
+-- INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(225, 21, 'BusinessActivities-Trading');
+-- INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
+-- VALUES(432, 1, 225, NULL);
+-- Entity: Handicapped
+-- Entity: ClientFormedBy
+-- Entity: PostalCode
+-- Entity: ProductState
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(51, 25, 'ProductState-Active');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(101, 1, 51, null);
@@ -559,18 +627,23 @@ values(103, 1, 52, null);
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(53, 25, 'ProductState-Close');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(105, 1, 53, null);
+-- Entity: Loan
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(54, 26, 'Loan-Loan');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(107, 1, 54, null);
+-- Entity: Savings
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(55, 27, 'Savings-Savings');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(109, 1, 55, null);
+-- Entity: PersonnelTitles
+-- Entity: PersonnelLevels
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(60, 30, 'PersonnelLevels-LoanOfficer');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(119, 1, 60, null);
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(61, 30, 'PersonnelLevels-NonLoanOfficer');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(120, 1, 61, null);
+-- Entity: OfficeLevels
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(104, 34, 'OfficeLevels-HeadOffice');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(189, 1, 104, null);
@@ -586,6 +659,7 @@ values(195, 1, 107, null);
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(108, 34, 'OfficeLevels-BranchOffice');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(197, 1, 108, null);
+-- Entity: PrdApplicableMaster
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(68, 35, 'PrdApplicableMaster-Clients');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(135, 1, 68, null);
@@ -595,6 +669,7 @@ values(136, 1, 69, null);
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(70, 35, 'PrdApplicableMaster-Centers');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(137, 1, 70, null);
+-- Entity: InterestTypes
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(79, 37, 'InterestTypes-Flat');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(157, 1, 79, null);
@@ -604,6 +679,7 @@ values(158, 1, 80, null);
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(604,37, 'InterestTypes-DecliningBalance-EqualPrincipalInstallment');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(946, 1, 604, null);
+-- Entity: CategoryType
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(81, 38, 'CategoryType-AllCustomers');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(161, 1, 81, null);
@@ -625,12 +701,14 @@ values(166, 1, 86, null);
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(87, 38, 'CategoryType-Savings');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(167, 1, 87, null);
+-- Entity: InterestCalcRule
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(88, 39, 'InterestCalcRule-AlwaysRecalculate');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(168, 1, 88, null);
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(89, 39, 'InterestCalcRule-NeverRecalculate');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(169, 1, 89, null);
+-- Entity: GracePeriodTypes
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(96, 41, 'GracePeriodTypes-None');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(176, 1, 96, null);
@@ -640,18 +718,29 @@ values(177, 1, 97, null);
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(98, 41, 'GracePeriodTypes-PrincipalOnlyGrace');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(178, 1, 98, null);
+-- these values are removed in version 198, will be completely removed later on
+-- Entity: CollateralTypes
+-- INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(109, 43, 'CollateralTypes-Type1');
+-- INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
+-- VALUES(199, 1, 109, NULL);
+-- INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(110, 43, 'CollateralTypes-Type2');
+-- INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
+-- VALUES(200, 1, 110, NULL);
+-- Entity: OfficeCode
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(111, 44, 'OfficeCode-Code1');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(201, 1, 111, null);
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(112, 44, 'OfficeCode-Code2');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(203, 1, 112, null);
+-- Entity: ProductCategoryStatus
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(113, 45, 'ProductCategoryStatus-Inactive');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(205, 1, 113, null);
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(114, 45, 'ProductCategoryStatus-Active');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(207, 1, 114, null);
+-- Entity: ProductStatus
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(115, 46, 'ProductStatus-Active');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(209, 1, 115, null);
@@ -661,30 +750,35 @@ values(211, 1, 116, null);
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(117, 46, 'ProductStatus-Closed');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(213, 1, 117, null);
+-- Entity: SavingsType
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(118, 47, 'SavingsType-Mandatory');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(215, 1, 118, null);
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(119, 47, 'SavingsType-Voluntary');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(217, 1, 119, null);
+-- Entity: RecommendedAmtUnit
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(120, 48, 'RecommendedAmtUnit-PerIndividual');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(219, 1, 120, null);
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(121, 48, 'RecommendedAmtUnit-CompleteGroup');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(221, 1, 121, null);
+-- Entity: IntCalTypes
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(122, 49, 'IntCalTypes-MinimumBalance');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(223, 1, 122, null);
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(123, 49, 'IntCalTypes-AverageBalance');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(225, 1, 123, null);
+-- Entity: YESNO
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(124, 50, 'YESNO-Yes');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(227, 1, 124, null);
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(125, 50, 'YESNO-No');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(229, 1, 125, null);
+-- Entity: AccountType
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(126, 51, 'AccountType-Loan');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(231, 1, 126, null);
@@ -694,18 +788,21 @@ values(233, 1, 127, null);
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(140, 51, 'AccountType-Customer');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(259, 1, 140, null);
+-- Entity: SpouseFather
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(128, 52, 'SpouseFather-Spouse');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(235, 1, 128, null);
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(129, 52, 'SpouseFather-Father');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(237, 1, 129, null);
+-- Entity: CustomerStatus
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(142, 53, 'CustomerStatus-CustomerAccountActive');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(263, 1, 142, null);
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(143, 53, 'CustomerStatus-CustomerAccountInactive');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(264, 1, 143, null);
+-- Entity: FeePayment
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(146, 54, 'FeePayment-Upfront');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(267, 1, 146, null);
@@ -715,6 +812,7 @@ values(269, 1, 147, null);
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(148, 54, 'FeePayment-TimeOfFirstLoanRepayment');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(271, 1, 148, null);
+-- Entity: FeeFormulaMaster
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(149, 55, 'FeeFormulaMaster-LoanAmount');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(273, 1, 149, null);
@@ -724,21 +822,26 @@ values(275, 1, 150, null);
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(151, 55, 'FeeFormulaMaster-Interest');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(277, 1, 151, null);
+-- Entity: PersonnelStatus
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(152, 56, 'PersonnelStatus-Active');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(279, 1, 152, null);
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(153, 56, 'PersonnelStatus-Inactive');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(281, 1, 153, null);
+-- Entity: Personnel
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(154, 57, 'Personnel-Personnel');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(283, 1, 154, null);
+-- Entity: ExternalId
+-- Entity: FeeStatus
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(165, 68, 'FeeStatus-Active');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(305, 1, 165, null);
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(166, 68, 'FeeStatus-Inactive');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(307, 1, 166, null);
+-- Entity: AccountAction
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(167, 69, 'AccountAction-LoanRepayment');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(309, 1, 167, null);
@@ -796,6 +899,7 @@ values(917, 1, 572, null);
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(573, 69, 'AccountAction-DisrbursalAmountReversal');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(918, 1, 573, null);
+-- Entity: AccountFlags
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(174, 70, 'AccountFlags-Withdraw');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(323, 1, 174, null);
@@ -808,6 +912,7 @@ values(327, 1, 176, null);
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(571, 70, 'AccountFlags-LoanReversal');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(916, 1, 571, null);
+-- Entity: PaymentType
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(177, 71, 'PaymentType-Cash');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(329, 1, 177, null);
@@ -817,6 +922,7 @@ values(912, 1, 179, null);
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(180, 71, 'PaymentType-Cheque');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(913, 1, 180, null);
+-- Entity: SavingsStatus
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(181, 72, 'SavingsStatus-PartialApplication');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(337, 1, 181, null);
@@ -835,6 +941,7 @@ values(345, 1, 185, null);
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(210, 72, 'SavingsStatus-Inactive');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(407, 1, 210, null);
+-- Entity: Position
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(186, 73, 'Position-CenterLeader');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(347, 1, 186, null);
@@ -847,8 +954,11 @@ values(351, 1, 188, null);
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(216, 73, 'Position-GroupSecretary');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(418, 1, 216, null);
+-- Entity: Language
+-- INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(189, 74, 'Language-English');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(376, 1, 189, null);
+-- Entity: CustomerAttendance
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(194, 75, 'CustomerAttendance-P');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(386, 1, 194, null);
@@ -861,6 +971,7 @@ values(390, 1, 196, null);
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(197, 75, 'CustomerAttendance-L');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(392, 1, 197, null);
+-- Entity: FinancialAction
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(198, 76, 'FinancialAction-Principal');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(394, 1, 198, null);
@@ -927,6 +1038,8 @@ values(708, 1, 370, null);
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(550, 76, 'FinancialAction-LoanWrittenOff');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(888, 1, 550, null);
+-- Entity: BulkEntry
+-- Entity: SavingsAccountFlag
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(211, 78, 'SavingsAccountFlag-Withdraw');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(409, 1, 211, null);
@@ -936,6 +1049,15 @@ values(411, 1, 212, null);
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(213, 78, 'SavingsAccountFlag-Blacklisted');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(413, 1, 213, null);
+-- Entity: Address3
+-- Entity: City
+-- Entity: Interest
+-- Entity: LoanPurposes
+-- Entity: State
+-- Entity: Address1
+-- Entity: Address2
+-- Entity: GovernmentId
+-- Entity: Permissions
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(371, 87, 'Permissions-OrganizationManagement');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(709, 1, 371, null);
@@ -1318,6 +1440,86 @@ insert into lookup_value(lookup_id,entity_id,lookup_name) values(504, 87, 'Permi
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(842, 1, 504, null);
 
+-- commenting  lookup values for Jasper reports that no longer ship by default - pbiligi
+-- INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(505, 87, 'Permissions-CanViewClientSummaryHistoryReport');
+-- INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
+-- VALUES(843, 1, 505, NULL);
+-- INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(506, 87, 'Permissions-CanViewClientProductWiseHistoryReport');
+-- INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
+-- VALUES(844, 1, 506, NULL);
+-- INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(507, 87, 'Permissions-CanViewClientSettlementInfoReport');
+-- INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
+-- VALUES(845, 1, 507, NULL);
+-- INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(508, 87, 'Permissions-CanViewClientLoanRepaymentSchedule');
+-- INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
+-- VALUES(846, 1, 508, NULL);
+-- INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(509, 87, 'Permissions-CanViewClientFeesChargesAndPenaltiesReport');
+-- INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
+-- VALUES(847, 1, 509, NULL);
+-- INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(510, 87, 'Permissions-CanViewClientPendingApprovalReport');
+-- INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
+-- VALUES(848, 1, 510, NULL);
+-- INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(511, 87, 'Permissions-CanViewClientsWithoutSavingsAccount');
+-- INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
+-- VALUES(849, 1, 511, NULL);
+-- INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(512, 87, 'Permissions-CanViewCollectionSheet');
+-- INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
+-- VALUES(850, 1, 512, NULL);
+-- INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(513, 87, 'Permissions-CanViewDailyCashConfirmationReportStaffWise');
+-- INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
+-- VALUES(851, 1, 513, NULL);
+-- INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(514, 87, 'Permissions-CanViewDailyCashFlowReportBranch');
+-- INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
+-- VALUES(852, 1, 514, NULL);
+-- INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(515, 87, 'Permissions-CanViewFundRequirementReport');
+-- INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
+-- VALUES(853, 1, 515, NULL);
+-- INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(516, 87, 'Permissions-CanViewDailyTransactionSummaryReport');
+-- INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
+-- VALUES(854, 1, 516, NULL);
+-- INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(517, 87, 'Permissions-CanViewBranchPerformanceStatusReport');
+-- INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
+-- VALUES(855, 1, 517, NULL);
+-- INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(518, 87, 'Permissions-CanViewAreaPerformanceStatusReport');
+-- INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
+-- VALUES(856, 1, 518, NULL);
+-- INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(519, 87, 'Permissions-CanViewDivisionPerformanceStatusReport');
+-- INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
+-- VALUES(857, 1, 519, NULL);
+-- INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(520, 87, 'Permissions-CanViewRegionPerformanceStatusReport');
+-- INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
+-- VALUES(858, 1, 520, NULL);
+-- INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(521, 87, 'Permissions-CanViewGrameenKootaPerformanceStatusReport');
+-- INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
+-- VALUES(859, 1, 521, NULL);
+-- INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(522, 87, 'Permissions-CanViewStaffPerformanceReport');
+-- INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
+-- VALUES(860, 1, 522, NULL);
+-- INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(523, 87, 'Permissions-CanViewOutreachReport');
+-- INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
+-- VALUES(861, 1, 523, NULL);
+-- INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(524, 87, 'Permissions-CanViewCenterSummaryReport');
+-- INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
+-- VALUES(862, 1, 524, NULL);
+-- INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(525, 87, 'Permissions-CanViewLoanProductDistributionActivityWiseSizeWizeProductWiseSequencyWise');
+-- INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
+-- VALUES(863, 1, 525, NULL);
+-- INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(526, 87, 'Permissions-CanViewBranchDueDisbursementReport');
+-- INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
+-- VALUES(864, 1, 526, NULL);
+-- INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(527, 87, 'Permissions-CanViewLoansPendingApprovalReport');
+-- INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
+-- VALUES(865, 1, 527, NULL);
+-- INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(528, 87, 'Permissions-CanViewLoanAccountsReports');
+-- INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
+-- VALUES(866, 1, 528, NULL);
+-- INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(529, 87, 'Permissions-CanViewDailyPortfolioQualityDataReportAgingAnalysis');
+-- INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
+-- VALUES(867, 1, 529, NULL);
+-- INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(530, 87, 'Permissions-CanViewCenterMeetingSchedule');
+-- INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
+-- VALUES(868, 1, 530, NULL);
+
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(531, 87, 'Permissions-CanRepayLoan');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(869, 1, 531, null);
@@ -1497,18 +1699,22 @@ insert into lookup_value_locale(lookup_value_id, locale_id, lookup_id, lookup_va
 insert into lookup_value (lookup_id, entity_id, lookup_name) values(627, 87, 'Permissions-CanDefineHoliday');
 insert into lookup_value_locale(lookup_value_id, locale_id, lookup_id, lookup_value) values(957, 1, 627, null);
 
+-- Entity: ServiceCharge
+-- Entity: feeUpdationType
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(556, 89, 'feeUpdationType-AppliesToExistingFutureAccounts');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(894, 1, 556, null);
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(557, 89, 'feeUpdationType-AppliesToFutureAccounts');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(895, 1, 557, null);
+-- Entity: FeeFrequency
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(558, 90, 'FeeFrequency-Periodic');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(896, 1, 558, null);
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(559, 90, 'FeeFrequency-OneTime');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(897, 1, 559, null);
+-- Entity: RepaymentRule
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(576, 91, 'RepaymentRule-SameDay');
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(921, 1, 576, null);
@@ -1519,6 +1725,10 @@ insert into lookup_value(lookup_id,entity_id,lookup_name) values(578, 91, 'Repay
 insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
 values(923, 1, 578, null);
 insert into lookup_value(lookup_id,entity_id,lookup_name) values(626, 91, 'RepaymentRule-RepaymentMoratorium');
+-- This was not added in Upgrade238, testing might missed it because of bug MIFOS-2875
+-- Not sure if it's going to be a severe problem
+-- INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
+-- VALUES(957, 1, 626, NULL);
 
 
 
@@ -1527,6 +1737,17 @@ insert into lookup_value(lookup_id,entity_id,lookup_name) values
 (621, 92, 'NotTogether'),
 (622, 52, 'Mother'),
 (623, 52, 'Child');
+-- Potentially unused or orphaned lookup_values
+-- Keep them here for a while and if everything is ok, they will be removed
+-- INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES
+-- (65, 34, 'DBUpgrade.OfficeLevels.Unsued'),
+-- (71, 35, 'DBUpgrade.PrdApplicableMaster.Unused'),
+-- (90, 39, 'DBUpgrade.InterestCalcRule.Unused'),
+-- (223, 79, 'DBUpgrade.Address3.Unused'),
+-- (224, 80, 'DBUpgrade.City.Unused'),
+-- (259, 82, 'DBUpgrade.LoanPurposes1.Unused'),
+-- (263, 82, 'DBUpgrade.LoanPurposes2.Unused');
+
 
 /*Personnel Level*/
 /* The table personnel level will contain the personnel hierarchy supported by the MFI(This feature is currently not supported) - Configuration */
@@ -1745,6 +1966,7 @@ insert into account_type(account_type_id,lookup_id,description) values
 (1,126,'Loan Account'),
 (2,127,'Savings Account'),
 (3,140,'Customer Account'),
+-- Add an Individual Loan Account Type (A virtual Loan Account)
 (4,126,'Individual Loan Account');
 
 /* The table SPOUSE_FATHER_LOOKUP contains the spouse father data which is used in display - System */
@@ -2138,6 +2360,33 @@ insert into activity(activity_id,parent_id,activity_name_lookup_id,description_l
 (150,141,503,503 ),
 (151,141,504,504 ),
 
+-- commenting  activities for Jasper reports that no longer ship by default - pbiligi
+-- (152,145,505,505 ),
+-- (153,145,506,506 ),
+-- (154,145,507,507 ),
+-- (155,145,508,508 ),
+-- (156,145,509,509 ),
+-- (157,145,510,510 ),
+-- (158,145,511,511 ),
+-- (159,146,512,512 ),
+-- (160,147,513,513 ),
+-- (161,147,514,514 ),
+-- (162,147,515,515 ),
+-- (163,147,516,516 ),
+-- (164,148,517,517 ),
+-- (165,148,518,518 ),
+-- (166,148,519,519 ),
+-- (167,148,520,520 ),
+-- (168,148,521,521 ),
+-- (169,148,522,522 ),
+-- (170,148,523,523 ),
+-- (171,148,524,524 ),
+-- (172,149,525,525 ),
+-- (173,149,526,526 ),
+-- (174,149,527,527 ),
+-- (175,149,528,528 ),
+-- (176,150,529,529 ),
+-- (177,151,530,530 ),
 
 (178,113,531,531 ),
 (179,100,532,532 ),
@@ -2284,7 +2533,33 @@ insert into roles_activity(activity_id,role_id)values
 (149,1),
 (150,1),
 (151,1),
-
+-- commenting Admin activities related  to jasper reports which are not shipped by default - pbiligi
+-- (152,1),
+-- (153,1),
+-- (154,1),
+-- (155,1),
+-- (156,1),
+-- (157,1),
+-- (158,1),
+-- (159,1),
+-- (160,1),
+-- (161,1),
+-- (162,1),
+-- (163,1),
+-- (164,1),
+-- (165,1),
+-- (166,1),
+-- (167,1),
+-- (168,1),
+-- (169,1),
+-- (170,1),
+-- (171,1),
+-- (172,1),
+-- (173,1),
+-- (174,1),
+-- (175,1),
+-- (176,1),
+-- (177,1),
 
 (178,1),
 (179,1),
@@ -2471,8 +2746,13 @@ insert into field_configuration(field_config_id,field_name,entity_id,mandatory_f
 (85,'FamilyDetails',1,1,0);
 
 /* The table CONFIG_KEY_VALUE_INTEGER holds generic key-value pair configuration data for integer values */
+-- this row was CollectionSheetHelper.daysInAdvance
+-- (value now stored in applicationConfiguration.default.properties)
+-- Adam [ Thu Dec 20 22:28:57 PST 2007 ]
 insert into config_key_value_integer(configuration_key, configuration_value) values
 ('x',0),
+-- this row was sessionTimeout (see web.xml for configured session timeout)
+-- Adam [ Thu Dec 20 22:28:58 PST 2007 ]
 (' ',0),
 ('jasperReportIsHidden',1),
 ('loanIndividualMonitoringIsEnabled',0),
@@ -2557,20 +2837,28 @@ insert into fund(fund_id,fundcode_id,fund_name,version_no)values
 (5,1,'Funding Org D',0);
 
 
+-- Begin data for Reports Mini Portal
+
+-- INSERT INTO LOOKUP_VALUE_LOCALE VALUES(915,1,570,'Can reverse Loan disbursals');
 insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id) values(202,99,570,570);
 insert into roles_activity values (202,1);
 
+-- INSERT INTO LOOKUP_VALUE_LOCALE VALUES(916,1,571,'Loan reversal');
 insert into account_state_flag(
   flag_id,lookup_id,status_id,flag_description,retain_flag)
   values(7,571,10,'Loan reversal',0);
 
+-- INSERT INTO LOOKUP_VALUE_LOCALE VALUES(917,1,572,'Loan Reversal');
 insert into account_action(account_action_id,lookup_id) values(18,572);
 
+-- INSERT INTO LOOKUP_VALUE_LOCALE VALUES(918,1,573,'Disrbursal amount Reversal');
 insert into account_action(account_action_id,lookup_id) values(19,573);
 
+-- INSERT INTO LOOKUP_VALUE_LOCALE VALUES(919,1,574,'Configuration Management');
 insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id) values(203,null,574,574);
 insert into roles_activity values (203,1);
 
+-- INSERT INTO LOOKUP_VALUE_LOCALE VALUES(920,1,575,'Can define labels');
 insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id) values(204,203,575,575);
 insert into roles_activity values (204,1);
 
@@ -2582,16 +2870,26 @@ insert into repayment_rule(repayment_rule_id, repayment_rule_lookup_id) values
 ,(4,626)
 ;
 
+-- INSERT INTO LOOKUP_VALUE_LOCALE VALUES(924,1,579,'Can define hidden/mandatory fields');
 insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id) values(205,203,579,579);
 insert into roles_activity values (205,1);
 insert into field_configuration(field_config_id,field_name,entity_id,mandatory_flag,hidden_flag)
 values(74,'AssignClients',1,0,0);
 
+-- INSERT INTO LOOKUP_VALUE_LOCALE VALUES(925,1,580,'Can remove clients from groups');
 insert into activity(activity_id,parent_id,
   activity_name_lookup_id,description_lookup_id)
   values(206,34,580,580);
 insert into roles_activity values (206,1);
 
+-- INSERT INTO LOOKUP_VALUE_LOCALE VALUES(926,1,581,'Can view Detailed Aging of Portfolio at Risk');
+-- INSERT INTO ACTIVITY(ACTIVITY_ID,PARENT_ID,
+--  ACTIVITY_NAME_LOOKUP_ID,DESCRIPTION_LOOKUP_ID)
+--  VALUES(207,150,581,581);
+-- INSERT INTO ROLES_ACTIVITY VALUES (207,1);
+
+-- INSERT INTO LOOKUP_VALUE_LOCALE
+--  VALUES(927,1,582,'Can add an existing client to a group');
 insert into activity(activity_id,parent_id,
   activity_name_lookup_id,description_lookup_id)
   values(208,34,582,582);
@@ -2602,26 +2900,39 @@ insert into activity(activity_id,parent_id,
   values(229,145,607,607);
 insert into roles_activity values (229,1);
 
+-- INSERT INTO LOOKUP_VALUE_LOCALE VALUES(928,1,583,'Product Mix');
 insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id) values(209,89,583,583);
 
 insert into roles_activity values (209,1);
 
+-- INSERT INTO LOOKUP_VALUE_LOCALE VALUES(929,1,584,'Can define product mix');
 insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id) values(210,209,584,584);
 insert into roles_activity values (210,1);
 
+-- INSERT INTO LOOKUP_VALUE_LOCALE VALUES(930,1,585,'Can edit product mix');
 insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id) values(211,209,585,585);
 insert into roles_activity values (211,1);
 
+-- INSERT INTO LOOKUP_VALUE_LOCALE VALUES(931,1,586,'Can view Active Loans By Loan Officer');
+-- INSERT INTO ACTIVITY(ACTIVITY_ID,PARENT_ID,
+--   ACTIVITY_NAME_LOOKUP_ID,DESCRIPTION_LOOKUP_ID)
+--  VALUES(212,150,586,586);
+-- INSERT INTO ROLES_ACTIVITY VALUES (212,1);
+
+-- INSERT INTO LOOKUP_VALUE_LOCALE VALUES(932,1,587,'Can Define Lookup Values');
 insert into activity(activity_id,parent_id,activity_name_lookup_id,
   description_lookup_id) values(213,203,587,587);
 insert into roles_activity values (213,1);
 
+-- INSERT INTO LOOKUP_VALUE_LOCALE VALUES(933,1,588,'Can upload report template');
 insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id) values(214,141,588,588);
 insert into roles_activity values (214,1);
 
+-- INSERT INTO LOOKUP_VALUE_LOCALE VALUES(934,1,589,'Can view reports');
 insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id) values(215,141,589,589);
 insert into roles_activity values (215,1);
 
+-- INSERT INTO LOOKUP_VALUE_LOCALE VALUES(935,1,590,'Can edit report information');
 insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id) values(216,141,590,590);
 insert into roles_activity values (216,1);
 
@@ -2671,14 +2982,17 @@ update report_category set activity_id=147 where report_category_id=5;
 update report_category set activity_id=150 where report_category_id=6;
 update report_category set activity_id=151 where report_category_id=7;
 
+-- INSERT INTO LOOKUP_VALUE_LOCALE VALUES(936,1,591,'Can adjust payment when account status is "closed-obligation met"');
 insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id) values(217,113,591,591);
 insert into roles_activity values (217,1);
 
+-- INSERT INTO LOOKUP_VALUE_LOCALE VALUES(937,1,592,'Can redo Loan disbursals');
 insert into activity(activity_id,parent_id,activity_name_lookup_id,
   description_lookup_id)
   values(218,99,592,592);
 insert into roles_activity values (218,1);
 
+-- INSERT INTO LOOKUP_VALUE_LOCALE VALUES(938,1,593,'Can define Accepted Payment Type');
 insert into activity(activity_id,parent_id,activity_name_lookup_id,
   description_lookup_id)
   values(219,1,593,593);
@@ -2687,30 +3001,38 @@ insert into roles_activity values (219,1);
 
 update report set report_active = 1;
 
+-- INSERT INTO LOOKUP_VALUE_LOCALE VALUES(939,1,594,'Can define new report category');
 insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id) values(220,141,594,594);
 insert into roles_activity values (220,1);
 
+-- INSERT INTO LOOKUP_VALUE_LOCALE VALUES(940,1,595,'Can view report category');
 insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id) values(221,141,595,595);
 insert into roles_activity values (221,1);
 
+-- INSERT INTO LOOKUP_VALUE_LOCALE VALUES(941,1,596,'Can delete report category');
 insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id) values(222,141,596,596);
 insert into roles_activity values (222,1);
 
+-- INSERT INTO LOOKUP_VALUE_LOCALE VALUES(942,1,597,'Can download report template');
 insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id) values(223,141,597,597);
 insert into roles_activity values (223,1);
 
+-- INSERT INTO LOOKUP_VALUE_LOCALE VALUES(943,1,598,'Can define custom fields');
 insert into activity(activity_id,parent_id,activity_name_lookup_id,
   description_lookup_id) values(224,203,598,598);
 insert into roles_activity values (224,1);
 
+-- INSERT INTO LOOKUP_VALUE_LOCALE VALUES(944,1,602,'Can upload admin documents');
 insert into activity(activity_id,parent_id,activity_name_lookup_id,
   description_lookup_id) values(225,141,602,602);
 insert into roles_activity values (225,1);
 
+-- INSERT INTO LOOKUP_VALUE_LOCALE VALUES(945,1,603,'Can view admin documents');
 insert into activity(activity_id,parent_id,activity_name_lookup_id,
   description_lookup_id) values(226,141,603,603);
 insert into roles_activity values (226,1);
 
+-- INSERT INTO LOOKUP_VALUE_LOCALE VALUES(947,1,605,'Can view system information');
 insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id)
 values(227,null,605,605);
 insert into roles_activity values (227,1);
@@ -2723,30 +3045,37 @@ insert into activity(activity_id,parent_id,activity_name_lookup_id,description_l
 values(230,203,608,608);
 insert into roles_activity values (230,1);
 
+-- For permission "Can import transaction" under Bulk catagory
 insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id)
 values(233,196,619,619);
 insert into roles_activity values (233,1);
 
+-- For permission "Can open shutdown page" under System Information category
 insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id)
 values(234,227,625,625);
 insert into roles_activity values (234,1);
 
+-- For permission "Can view active sessions" under System Information category
 insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id)
 values(238,227,630,630);
 insert into roles_activity values (238,1);
 
+-- For permission "Can shut down Mifos" under System Information category
 insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id)
 values(239,227,631,631);
 insert into roles_activity values (239,1);
 
+-- For permission "Can run Batch Jobs on demand" under System Information category
 insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id)
 values(241,227,633,633);
 insert into roles_activity values (241,1);
 
+-- For permission "Can update Batch Jobs configuration" under System Information category
 insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id)
 values(242,227,634,634);
 insert into roles_activity values (242,1);
 
+-- For permission "Can define holiday" under Organization Management category
 insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id)
 values(235,1,627,627);
 insert into roles_activity values (235,1);
@@ -2999,10 +3328,62 @@ insert into event_sources (id, entity_type_id, event_id, description) values
 
 /* Upgrade - 1288869198 Permissions to activate question groups*/
 insert into lookup_value (lookup_id, entity_id, lookup_name) values
-(635,87,'Permissions-CanActivateQuestionGroups');
-insert into lookup_value_locale(lookup_value_id, locale_id, lookup_id, lookup_value) values(965, 1, 635, null);
+    ((select max(lv.lookup_id)+1 from lookup_value lv),87,'Permissions-CanActivateQuestionGroups');
+insert into lookup_value_locale(lookup_value_id, locale_id, lookup_id, lookup_value) values(965, 1,
+                (select lookup_id from lookup_value where entity_id =87 and lookup_name='Permissions-CanActivateQuestionGroups'),
+                null);
 insert into activity (activity_id, parent_id, activity_name_lookup_id, description_lookup_id) values
-(243,203,635,635);
+(243,203,
+    (select lookup_id from lookup_value where entity_id =87 and lookup_name='Permissions-CanActivateQuestionGroups'),
+    (select lookup_id from lookup_value where entity_id =87 and lookup_name='Permissions-CanActivateQuestionGroups'));
 insert into roles_activity (activity_id, role_id) values
 (243,1);
 /* Upgrade - 1288869198*/
+
+/* Upgrade - 1289125815 Interest type declining principle type*/
+insert into lookup_value(lookup_id,entity_id,lookup_name)
+    values((select max(lv.lookup_id)+1 from lookup_value lv), 37, 'InterestTypes-DecliningPrincipalBalance');
+insert into interest_types (interest_type_id, lookup_id, category_id, descripton)
+    values(5,
+            (select lookup_id from lookup_value
+                where entity_id =37 and lookup_name='InterestTypes-DecliningPrincipalBalance'),
+           1,'InterestTypes-DecliningPrincipalBalance');
+/* Upgrade - 1289125815 */
+
+/* Upgrade - 1294738016 Permission to adjust back-dated transactions */
+insert into lookup_value (lookup_id, entity_id, lookup_name) values
+    ((select max(lv.lookup_id)+1 from lookup_value lv),87,'Permissions-CanAdjustBackDatedTransactions');
+insert into lookup_value_locale(lookup_value_id, locale_id, lookup_id, lookup_value) values(966, 1,
+                (select lookup_id from lookup_value where entity_id =87 and lookup_name='Permissions-CanAdjustBackDatedTransactions'),
+                null);
+insert into activity (activity_id, parent_id, activity_name_lookup_id, description_lookup_id) values
+(244,113,
+    (select lookup_id from lookup_value where entity_id =87 and lookup_name='Permissions-CanAdjustBackDatedTransactions'),
+    (select lookup_id from lookup_value where entity_id =87 and lookup_name='Permissions-CanAdjustBackDatedTransactions'));
+insert into roles_activity (activity_id, role_id) values (244,1);
+/* Upgrade - 1294738016 */
+
+/* Upgrade - 1294927843*/
+
+insert into lookup_value(lookup_id,entity_id,lookup_name)
+    values((select max(lv.lookup_id)+1 from lookup_value lv),87,'Permissions-Clients-CanEditPhoneNumber');
+insert into lookup_value_locale(lookup_value_id, locale_id, lookup_id, lookup_value)
+    values(967,1,(select lookup_id from lookup_value where entity_id =87 and lookup_name='Permissions-Clients-CanEditPhoneNumber'),null);
+insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id)values
+    (245,34,
+    (select lookup_id from lookup_value where entity_id =87 and lookup_name='Permissions-Clients-CanEditPhoneNumber'),
+    (select lookup_id from lookup_value where entity_id =87 and lookup_name='Permissions-Clients-CanEditPhoneNumber'));
+insert into roles_activity values (245,1);
+/* Upgrade - 1294927843*/
+
+/* Upgrade - 1296137314 */
+insert into lookup_value(lookup_id,entity_id,lookup_name)
+    values((select max(lv.lookup_id)+1 from lookup_value lv),87,'Permissions-CanUseAccountingIntegration');
+insert into lookup_value_locale(lookup_value_id, locale_id, lookup_id, lookup_value)
+    values(968,1,(select lookup_id from lookup_value where entity_id =87 and lookup_name='Permissions-CanUseAccountingIntegration'),null);
+insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id)values
+    (246,196,
+    (select lookup_id from lookup_value where entity_id =87 and lookup_name='Permissions-CanUseAccountingIntegration'),
+    (select lookup_id from lookup_value where entity_id =87 and lookup_name='Permissions-CanUseAccountingIntegration'));
+insert into roles_activity values (246,1);
+/* Upgrade - 1296137314 */
