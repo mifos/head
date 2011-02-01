@@ -32,14 +32,20 @@ import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
 import org.mifos.test.acceptance.framework.group.CreateGroupEntryPage.CreateGroupSubmitParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPreviewPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.SubmitFormParameters;
+import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSearchParameters;
+import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSubmitParameters;
+import org.mifos.test.acceptance.framework.savings.SavingsAccountDetailPage;
 import org.mifos.test.acceptance.framework.testhelpers.CustomPropertiesHelper;
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.framework.testhelpers.GroupTestHelper;
+import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
+import org.mifos.test.acceptance.framework.testhelpers.SavingsAccountHelper;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -79,8 +85,46 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
     public void logOut() {
         (new MifosPage(selenium)).logout();
     }
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    //http://mifosforge.jira.com/browse/MIFOSTEST-195
+    //http://mifosforge.jira.com/browse/MIFOSTEST-215
+    public void verifyPropertyPendingApprovalStateEnabledForSavingsAndLoanAccounts() throws Exception{
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
+        propertiesHelper.setSavingsPendingApprovalStateEnabled("true");
+        propertiesHelper.setLoanPendingApprovalStateEnabled("true");
+        propertiesHelper.setGroupPendingApprovalStateEnabled("true");
+        //When
+        CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
+        searchParameters.setSearchString("Stu1233266079799 Client1233266079799");
+        searchParameters.setSavingsProduct("MandClientSavings3MoPostMinBal");
+
+        CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
+        submitAccountParameters.setAmount("248.0");
+
+        SavingsAccountHelper savingsAccountHelper = new SavingsAccountHelper(selenium);
+
+        SavingsAccountDetailPage savingsAccountPage = savingsAccountHelper.createSavingsAccount(searchParameters, submitAccountParameters);
+        savingsAccountPage.verifyPage();
+        //Then
+        savingsAccountPage.verifySavingsAmount(submitAccountParameters.getAmount());
+        savingsAccountPage.verifySavingsProduct(searchParameters.getSavingsProduct());
+        savingsAccountPage.verifyStatus("Application Pending Approval");
+        //when
+        CreateLoanAccountSearchParameters searchParameters2 = new CreateLoanAccountSearchParameters();
+        searchParameters2.setSearchString("Stu1233266079799 Client1233266079799");
+        searchParameters2.setLoanProduct("MonthlyClientFlatLoanWithFees");
+        CreateLoanAccountSubmitParameters submitAccountParameters2 = new CreateLoanAccountSubmitParameters();
+        submitAccountParameters2.setAmount("2765.0");
+        submitAccountParameters2.setGracePeriodTypeNone(true);
+        LoanTestHelper loanTestHelper = new LoanTestHelper(selenium);
+        LoanAccountPage loanAccountPage = loanTestHelper.createLoanAccount(searchParameters2, submitAccountParameters2);
+        loanAccountPage.verifyStatus("Application Pending Approval");
+
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    //http://mifosforge.jira.com/browse/MIFOSTEST-211
     public void verifyPropertyGroupPendingApprovalStateEnabled() throws Exception{
         //Given
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);

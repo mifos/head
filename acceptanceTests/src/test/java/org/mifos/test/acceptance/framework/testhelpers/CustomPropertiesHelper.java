@@ -138,4 +138,12 @@ public class CustomPropertiesHelper {
     public void setGroupPendingApprovalStateEnabled(String enabled){
         selenium.open(UPDATE_PAGE + "?ProcessFlow.GroupPendingApprovalStateEnabled=" + enabled);
     }
+
+    public void setSavingsPendingApprovalStateEnabled(String enabled){
+        selenium.open(UPDATE_PAGE + "?ProcessFlow.SavingsPendingApprovalStateEnabled=" + enabled);
+    }
+
+    public void setLoanPendingApprovalStateEnabled(String enabled){
+        selenium.open(UPDATE_PAGE + "?ProcessFlow.LoanPendingApprovalStateEnabled=" + enabled);
+    }
 }

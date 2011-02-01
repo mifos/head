@@ -48,7 +48,9 @@ public class SavingsAccountDetailPage extends AbstractPage {
 
     public void verifySavingsProduct(String savingsProduct) {
         Assert.assertTrue(selenium.isTextPresent(savingsProduct));
-
+    }
+    public void verifyStatus(String status){
+        Assert.assertEquals(selenium.getText("savingsaccountdetail.status.text"),status);
     }
     public AccountAddNotesPage navigateToAddNotesPage() {
         selenium.click("savingsaccountdetail.link.addANotes");
