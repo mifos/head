@@ -801,4 +801,8 @@ public class LoanTestHelper {
     public ViewInstallmentDetailsPage reviewInstallments(CreateLoanAccountSearchParameters searchParameters, CreateLoanAccountSubmitParameters submitAccountParameters) {
         return navigateToLoanAccountEntryPage(searchParameters).createLoanAccountAndReviewInstallments(submitAccountParameters);
     }
+
+    public ViewInstallmentDetailsPage reviewInstallmentsForHolidaySameDayRule(CreateLoanAccountSearchParameters searchParameters, CreateLoanAccountSubmitParameters submitAccountParameters) {
+        return navigateToLoanAccountEntryPage(searchParameters).createLoanAccountAndReviewInstallmentsForSameDayRule(submitAccountParameters);
+    }
 }
