@@ -25,7 +25,7 @@ import java.util.List;
 @SuppressWarnings("PMD")
 public class QuestionEntity implements Serializable, Comparable<QuestionEntity> {
     private static final long serialVersionUID = -2L;
-    
+
     private int questionId;
 
     private AnswerType answerType;

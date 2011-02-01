@@ -29,7 +29,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-	<span id="page.id" title="CustEditHistoricalData" />
+	<span id="page.id" title="CustEditHistoricalData"></span>
 		<script language="javascript" SRC="pages/framework/js/date.js"></script>
 		<script language="javascript">
   function goToCancelPage(){

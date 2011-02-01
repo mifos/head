@@ -38,6 +38,7 @@ import org.mifos.test.acceptance.framework.group.CreateGroupSearchPage;
 import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
 import org.mifos.test.acceptance.framework.login.LoginPage;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
+import org.mifos.test.acceptance.framework.testhelpers.GroupTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.questionnaire.Choice;
 import org.mifos.test.acceptance.questionnaire.CreateQuestionGroupPage;
@@ -78,6 +79,8 @@ public class GroupTest extends UiTestCaseBase {
     private static final String NUMBER = "Number";
     private static final String SMART_SELECT = "Smart Select";
 
+    private GroupTestHelper groupTestHelper;
+
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     @BeforeMethod(groups = {"smoke","group","acceptance","ui"})
@@ -86,6 +89,7 @@ public class GroupTest extends UiTestCaseBase {
         appLauncher = new AppLauncher(selenium);
         navigationHelper = new NavigationHelper(selenium);
         random = new Random();
+        groupTestHelper = new GroupTestHelper(navigationHelper);
     }
 
     @AfterMethod(groups = {"smoke","group","acceptance","ui"})
@@ -102,10 +106,10 @@ public class GroupTest extends UiTestCaseBase {
         SearchResultsPage searchResultsPage = homePage.search("mygroup");
         searchResultsPage.verifyPage();
         // click on any search result leading to a group dashboard
-        GroupViewDetailsPage groupViewDetailsPage = searchResultsPage.navigateToGroupViewDetailsPage("link=MyGroup*");
+        searchResultsPage.navigateToGroupViewDetailsPage("link=MyGroup*");
     }
 
-    @Test(sequential = true, groups = {"smoke","group","acceptance","ui"})
+    @Test(sequential = true, groups = {"group","acceptance","ui"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     // http://mifosforge.jira.com/browse/MIFOSTEST-301
     public void createGroupInPendingApprovalStateTest() throws Exception {
@@ -196,6 +200,25 @@ public class GroupTest extends UiTestCaseBase {
         responsePage.navigateToDetailsPage();
     }
 
+    /**
+     * Verify when Pending Approval (Groups) is set to default(true);
+     * the system transitions the account to this state when creating new groups
+     * http://mifosforge.jira.com/browse/MIFOSTEST-210
+     * @throws Exception
+     */
+    @Test(groups = {"group","acceptance","ui"})
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
+    public void verifyPendingApprovalSetToDefault() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
+
+        CreateGroupSubmitParameters groupParams = getGenericGroupFormParameters();
+        String centerName = "MyCenter1233171688286";
+
+        GroupViewDetailsPage groupViewDetailsPage = groupTestHelper.createNewGroup(centerName, groupParams);
+
+        groupViewDetailsPage.verifyStatus(GroupViewDetailsPage.STATUS_PENDING_APPROVAL);
+    }
+
     private Map<String, String> getChoiceTags() {
         Map<String,String> tags = new HashMap<String, String>();
         tags.put("Tag1", "Choice1");
@@ -205,14 +228,16 @@ public class GroupTest extends UiTestCaseBase {
 
     private void createQuestionGroupForCreateGroup(String questionGroupTitle, String question1, String question2, List<Choice> choices) {
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
-        CreateQuestionPage createQuestionPage = adminPage.navigateToCreateQuestionPage().verifyPage();
+        CreateQuestionPage createQuestionPage = adminPage.navigateToCreateQuestionPage();
         createQuestionPage.addQuestion(getCreateQuestionParams(question1, NUMBER, 10, 100, null));
         createQuestionPage.addQuestion(getCreateQuestionParams(question2, SMART_SELECT, null, null, choices));
         adminPage = createQuestionPage.submitQuestions();
 
-        CreateQuestionGroupPage createQuestionGroupPage = adminPage.navigateToCreateQuestionGroupPage().verifyPage();
+        CreateQuestionGroupPage createQuestionGroupPage = adminPage.navigateToCreateQuestionGroupPage();
         CreateQuestionGroupParameters parameters = getCreateQuestionGroupParameters(questionGroupTitle, asList(question1, question2));
-        createQuestionGroupPage.addSection(parameters);
+        for(String section : parameters.getExistingQuestions().keySet()){
+            createQuestionGroupPage.addExistingQuestion(section, parameters.getExistingQuestions().get(section));
+        }
         createQuestionGroupPage.markEveryOtherQuestionsMandatory(asList(question1));
         createQuestionGroupPage.submit(parameters);
     }
@@ -232,8 +257,9 @@ public class GroupTest extends UiTestCaseBase {
         parameters.setTitle(questionGroupTitle);
         parameters.setAppliesTo("Create Group");
         parameters.setAnswerEditable(true);
-        parameters.setSectionName("Default Section");
-        parameters.setQuestions(questions);
+        for (String question : questions) {
+            parameters.addExistingQuestion("Default Section", question);
+        }
         return parameters;
     }
 

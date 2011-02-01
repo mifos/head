@@ -37,6 +37,7 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.security.util.UserContext;
 
+@SuppressWarnings("unchecked")
 public class ProductCategoryPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     private ProductCategoryPersistence productCategoryPersistence;

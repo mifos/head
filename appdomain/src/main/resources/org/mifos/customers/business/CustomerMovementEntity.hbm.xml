@@ -7,7 +7,7 @@
 <hibernate-mapping>
 
     <class name="org.mifos.customers.business.CustomerMovementEntity" table="customer_movement">
-  		<id name="customerMovementId" column="customer_movement_id" type="integer" unsaved-value="-1" access="field">
+          <id name="customerMovementId" column="customer_movement_id" type="integer" unsaved-value="-1" access="field">
             <generator class="native"/>
         </id>
         <property name="status" column="status" type="short" access="field"/>
@@ -16,6 +16,6 @@
         <property name="updatedBy" column="updated_by" />
         <property name="updatedDate" column="updated_date" type="date" />
         <many-to-one name="customer" column="customer_id" class="org.mifos.customers.business.CustomerBO" insert="true" update="false" cascade="none" access="field"/>
-        <many-to-one name="office" column="office_id" class="org.mifos.customers.office.business.OfficeBO"  insert="true" update="false" cascade="none" access="field"/>        
+        <many-to-one name="office" column="office_id" class="org.mifos.customers.office.business.OfficeBO"  insert="true" update="false" cascade="none" access="field"/>
     </class>
  </hibernate-mapping>

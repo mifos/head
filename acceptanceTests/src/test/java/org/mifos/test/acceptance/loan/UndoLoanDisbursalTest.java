@@ -25,6 +25,9 @@ import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
+import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
+import org.mifos.test.acceptance.framework.loan.UndoLoanDisbursalSearchPage;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
@@ -64,45 +67,77 @@ public class UndoLoanDisbursalTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
-    /*
+    /**
      * Verifies that the loan is successfully reversed if the Account ID
      * is of a loan which is "active in bad standing".
      * Client loan.
-     *
      * http://mifosforge.jira.com/browse/MIFOSTEST-22
+     * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void undoClientLoanDisbursal() throws Exception {
+    public void undoClientLoanActiveInBadStanding() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, START_DATA_SET, dataSource, selenium);
 
         String clientID = "0005-000000028";
-        String clientLoanID = "000100000000215"; // prev 000100000000121
+        String clientLoanID = "000100000000215";
         String resultClickLink = "Stu1233266109404 Client1233266109404: ID 0005-000000028";
 
         ClientViewDetailsPage clientViewDetailsPage = (ClientViewDetailsPage) loanTestHelper.reverseLoanDisbursal(clientLoanID, clientID, false, resultClickLink);
 
-        clientViewDetailsPage.verifyLoanDoesntExist("Acct #000100000000215");
+        clientViewDetailsPage.verifyLoanDoesntExist("Acct #"+clientLoanID);
         loanTestHelper.verifyHistoryAndSummaryReversedLoan(clientViewDetailsPage.navigateToClosedAccountsPage(), clientLoanID);
     }
 
-    /*
+    /**
      * Verifies that the loan is successfully reversed if the Account ID
      * is of a loan which is "active in good standing".
-     * Group loan.
-     *
+     * Client loan.
      * http://mifosforge.jira.com/browse/MIFOSTEST-20
+     * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void undoGroupLoanDisbursal() throws Exception {
+    public void undoClientLoanActiveInGoodStanding() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, START_DATA_SET, dataSource, selenium);
 
+        String clientID = "0005-000000028";
+        String clientLoanID = "000100000000182";
+        String resultClickLink = "Stu1233266109404 Client1233266109404: ID 0005-000000028";
+
+        ClientViewDetailsPage clientViewDetailsPage = (ClientViewDetailsPage) loanTestHelper.reverseLoanDisbursal(clientLoanID, clientID, false, resultClickLink);
+
+        clientViewDetailsPage.verifyLoanDoesntExist("Acct #"+clientLoanID);
+        loanTestHelper.verifyHistoryAndSummaryReversedLoan(clientViewDetailsPage.navigateToClosedAccountsPage(), clientLoanID, "3003.0", "0.0", "3003.0");
+    }
+
+    /**
+     * Verify whether the user can reverse a Group loan when the Account is in different statuses
+     * Group loan.
+     * http://mifosforge.jira.com/browse/MIFOSTEST-26
+     * @throws Exception
+     */
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void reverseGroupLoanWhenAccInDiffStatuses() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, START_DATA_SET, dataSource, selenium);
+
+        String groupName = "MyGroup1233266255641";
         String groupID = "0006-000000045";
         String groupLoanID = "000100000000206";
         String resultClickLink = "MyGroup1233266255641: ID 0006-000000045";
 
+        CreateLoanAccountSearchParameters searchParams = new CreateLoanAccountSearchParameters();
+        searchParams.setSearchString(groupName);
+        searchParams.setLoanProduct("WeeklyGroupFlatLoanWithOnetimeFee");
+
+
+        LoanAccountPage loanAccountPage = loanTestHelper.createDefaultLoanAccount(searchParams);
+        String loanID = loanAccountPage.getAccountId();
+        UndoLoanDisbursalSearchPage undoSearchPage = loanAccountPage
+            .navigateToAdminPageUsingHeaderTab()
+            .navigateToUndoLoanDisbursal();
+        undoSearchPage.verifyLoanCantBeReversed(loanID);
+
         GroupViewDetailsPage groupViewDetailsPage = (GroupViewDetailsPage) loanTestHelper.reverseLoanDisbursal(groupLoanID, groupID, true, resultClickLink);
 
-        groupViewDetailsPage.verifyLoanDoesntExist("Acct #000100000000206");
-        loanTestHelper.verifyHistoryAndSummaryReversedLoan(groupViewDetailsPage.navigateToClosedAccountsPage(), groupLoanID, "4290.0", "0.0", "4290.0");
+        groupViewDetailsPage.verifyLoanDoesntExist("Acct #"+groupLoanID);
     }
 }

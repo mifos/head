@@ -24,18 +24,31 @@ import java.util.List;
 
 import org.joda.time.LocalDate;
 import org.mifos.platform.accounting.AccountingDto;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface IAccountingService {
 
-    String getTallyOutputFor(LocalDate startDate, LocalDate endDate);
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_USE_ACCOUNTING_INTEGRATION')")
+    String getExportOutput(LocalDate startDate, LocalDate endDate);
 
-    List<AccountingDto> getAccountingDataFor(LocalDate startDate, LocalDate endDate);
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_USE_ACCOUNTING_INTEGRATION')")
+    List<AccountingDto> getExportDetails(LocalDate startDate, LocalDate endDate);
 
-    List<AccountingCacheFileInfo> getAccountingDataCacheInfo();
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_USE_ACCOUNTING_INTEGRATION')")
+    List<ExportFileInfo> getAllExports(Integer size);
 
-    String getTallyOutputFileName(LocalDate startDate, LocalDate endDate);
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_USE_ACCOUNTING_INTEGRATION')")
+    List<ExportFileInfo> getGeneratedExports(Integer size);
 
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_USE_ACCOUNTING_INTEGRATION')")
+    List<ExportFileInfo> getNotGeneratedExports(Integer size);
+
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_USE_ACCOUNTING_INTEGRATION')")
+    String getExportOutputFileName(LocalDate startDate, LocalDate endDate);
+
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_USE_ACCOUNTING_INTEGRATION')")
     Boolean hasAlreadyRanQuery(LocalDate startDate, LocalDate endDate);
 
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_USE_ACCOUNTING_INTEGRATION')")
     Boolean deleteCacheDir();
 }

@@ -131,7 +131,7 @@
         </tr>
         [/#list]
     </tbody>
-    </table>  
+    </table>
 </div>
 <div class="add_question">
     <div class="button_container">

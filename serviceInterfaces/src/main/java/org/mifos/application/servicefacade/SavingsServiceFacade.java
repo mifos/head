@@ -104,9 +104,6 @@ public interface SavingsServiceFacade {
     List<SavingsStatusChangeHistoryDto> retrieveStatusChangeHistory(String globalAccountNum);
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_EDIT_UPDATE_SAVINGS_ACCOUNT')")
-    List<CustomFieldDto> retrieveCustomFieldsForEdit(String globalAccountNum);
-
-    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_EDIT_UPDATE_SAVINGS_ACCOUNT')")
     void updateSavingsAccountDetails(Long savingsId, String recommendedAmount, List<CustomFieldDto> accountCustomFieldSet);
 
     @PreAuthorize("isFullyAuthenticated()")

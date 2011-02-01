@@ -30,43 +30,43 @@
 [#-- usage   [@mifos.topNavigation currentTab="Home" /] --]
 [#macro topNavigation currentTab]
 <div id = "homePageHeader">
-	<IMG id="logo" height=70 alt=""
-					src="pages/framework/images/logo.jpg" width=200></td>
+    <IMG id="logo" height=70 alt=""
+                    src="pages/framework/images/logo.jpg" width=200></td>
 
-	<div id="top-right-links">
+    <div id="top-right-links">
       <a id="settings" href="#">[@spring.message "yourSettings"/]</a> |
-   	<a id="logout_link" href="j_spring_security_logout">[@spring.message "logout"/]</a>
-	</div>
-	<div id="top-menu-bar">
-		<ul id="simple-menu">
-		<li><a href="home.ftl" id="header.tab.home" title="[@spring.message "tab.Home" /]" [#if currentTab == "Home"]class="current"[/#if]>[@spring.message "tab.Home" /]</a></li>
-		<li><a href="clientsAndAccounts.ftl" id="header.tab.clientsAndAccounts" title="[@spring.message "tab.ClientsAndAccounts" /]" [#if currentTab == "ClientsAndAccounts"]class="current"[/#if]>[@spring.message "tab.ClientsAndAccounts" /]</a></li>
-		<li><a href="" id="header.tab.reports" title="[@spring.message "tab.Reports" /]" [#if currentTab == "Reports"]class="current"[/#if]>[@spring.message "tab.Reports" /]</a></li>
-		[@security.authorize ifAllGranted="ROLE_ADMIN"]
-		<li><a href="AdminAction.do?method=load"  id="header.tab.admin" title="[@spring.message "tab.Admin" /]" [#if currentTab == "Admin"]class="current"[/#if]>[@spring.message "tab.Admin" /]</a></li>
-		[/@security.authorize]
-		</ul>
-	</div>
+       <a id="logout_link" href="j_spring_security_logout">[@spring.message "logout"/]</a>
+    </div>
+    <div id="top-menu-bar">
+        <ul id="simple-menu">
+        <li><a href="home.ftl" id="header.tab.home" title="[@spring.message "tab.Home" /]" [#if currentTab == "Home"]class="current"[/#if]>[@spring.message "tab.Home" /]</a></li>
+        <li><a href="clientsAndAccounts.ftl" id="header.tab.clientsAndAccounts" title="[@spring.message "tab.ClientsAndAccounts" /]" [#if currentTab == "ClientsAndAccounts"]class="current"[/#if]>[@spring.message "tab.ClientsAndAccounts" /]</a></li>
+        <li><a href="" id="header.tab.reports" title="[@spring.message "tab.Reports" /]" [#if currentTab == "Reports"]class="current"[/#if]>[@spring.message "tab.Reports" /]</a></li>
+        [@security.authorize ifAllGranted="ROLE_ADMIN"]
+        <li><a href="AdminAction.do?method=load"  id="header.tab.admin" title="[@spring.message "tab.Admin" /]" [#if currentTab == "Admin"]class="current"[/#if]>[@spring.message "tab.Admin" /]</a></li>
+        [/@security.authorize]
+        </ul>
+    </div>
 </div>
 [/#macro]
 
 [#macro topNavigationNoSecurity currentTab]
 <div id = "homePageHeader">
-	<IMG id="logo" height=70 alt=""
-					src="images/logo.jpg" width=200></td>
+    <IMG id="logo" height=70 alt=""
+                    src="images/logo.jpg" width=200></td>
 
-	<div id="top-right-links">
+    <div id="top-right-links">
       <a id="settings" href="#">[@spring.message "yourSettings"/]</a> |
-   	<a id="logout" href="j_spring_security_logout">[@spring.message "logout"/]</a>
-	</div>
-	<div id="top-menu-bar">
-		<ul id="simple-menu">
-		<li><a href="home.ftl" id="header.tab.home" title="[@spring.message "tab.Home" /]" [#if currentTab == "Home"]class="current"[/#if]>[@spring.message "tab.Home" /]</a></li>
-		<li><a href="clientsAndAccounts.ftl" id="header.tab.clientsAndAccounts" title="[@spring.message "tab.ClientsAndAccounts" /]" [#if currentTab == "ClientsAndAccounts"]class="current"[/#if]>[@spring.message "tab.ClientsAndAccounts" /]</a></li>
-		<li><a href="" id="header.tab.reports" title="[@spring.message "tab.Reports" /]" [#if currentTab == "Reports"]class="current"[/#if]>[@spring.message "tab.Reports" /]</a></li>
-		<li><a href="AdminAction.do?method=load"  id="header.tab.admin" title="[@spring.message "tab.Admin" /]" [#if currentTab == "Admin"]class="current"[/#if]>[@spring.message "tab.Admin" /]</a></li>
-		</ul>
-	</div>
+       <a id="logout" href="j_spring_security_logout">[@spring.message "logout"/]</a>
+    </div>
+    <div id="top-menu-bar">
+        <ul id="simple-menu">
+        <li><a href="home.ftl" id="header.tab.home" title="[@spring.message "tab.Home" /]" [#if currentTab == "Home"]class="current"[/#if]>[@spring.message "tab.Home" /]</a></li>
+        <li><a href="clientsAndAccounts.ftl" id="header.tab.clientsAndAccounts" title="[@spring.message "tab.ClientsAndAccounts" /]" [#if currentTab == "ClientsAndAccounts"]class="current"[/#if]>[@spring.message "tab.ClientsAndAccounts" /]</a></li>
+        <li><a href="" id="header.tab.reports" title="[@spring.message "tab.Reports" /]" [#if currentTab == "Reports"]class="current"[/#if]>[@spring.message "tab.Reports" /]</a></li>
+        <li><a href="AdminAction.do?method=load"  id="header.tab.admin" title="[@spring.message "tab.Admin" /]" [#if currentTab == "Admin"]class="current"[/#if]>[@spring.message "tab.Admin" /]</a></li>
+        </ul>
+    </div>
 </div>
 [/#macro]
 
@@ -121,24 +121,24 @@
     [#if spring.status.errorMessages?size > 0]
     <div class="marginLeft30">
         <ul class="error">
-	     [#list spring.status.errorMessages as error]
-	      <li><b>${error}</b></li>
-	     [/#list]
-	    </ul>
-	</div>
-	[/#if]
+         [#list spring.status.errorMessages as error]
+          <li><b>${error}</b></li>
+         [/#list]
+        </ul>
+    </div>
+    [/#if]
 [/#macro]
 
 [#macro formCheckbox path attributes=""]
-	[@spring.bind path /]
+    [@spring.bind path /]
     [#assign id="${spring.status.expression}"]
     [#assign isSelected = spring.status.value?? && spring.status.value?string=="true"]
-	<input type="hidden" name="_${id}" value="true"/>
-	<input type="checkbox" id="${id}" name="${id}"[#if isSelected] checked="checked"[/#if] ${attributes}/>
+    <input type="hidden" name="_${id}" value="true"/>
+    <input type="checkbox" id="${id}" name="${id}"[#if isSelected] checked="checked"[/#if] ${attributes}/>
 [/#macro]
 
 [#macro formCheckboxes path options separator attributes=""]
-	[@spring.bind path /]
+    [@spring.bind path /]
     [#if options?is_hash]
         [#list options?keys as value]
         [#assign id="${spring.status.expression}${value_index}"]
@@ -158,7 +158,7 @@
 [/#macro]
 
 [#macro formCheckboxesWithTags path options separator attributes=""]
-	[@spring.bind path /]
+    [@spring.bind path /]
     [#list options as option]
         [#if option.tags?exists && option.tags?size > 0]
             [#list option.tags as tag]
@@ -178,7 +178,7 @@
 [/#macro]
 
 [#macro formRadioButtons path options separator attributes=""]
-	[@spring.bind path /]
+    [@spring.bind path /]
     [#list options as value]
     [#assign id="${spring.status.expression}${value_index}"]
     <input type="radio" id="${id}" name="${spring.status.expression}" value="${value?html}"[#if spring.stringStatusValue == value] checked="checked"[/#if] ${attributes}[@spring.closeTag/]

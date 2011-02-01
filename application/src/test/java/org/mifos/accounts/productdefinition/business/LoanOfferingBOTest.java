@@ -24,7 +24,7 @@ public class LoanOfferingBOTest {
         loanOfferingBO.setCashFlowDetail(null);
         assertFalse(loanOfferingBO.shouldCaptureCapitalAndLiabilityInformation());
     }
-    
+
     @Test
     public void shouldValidateCashFlowForInstallments() {
         LoanOfferingBO loanOfferingBO = new LoanOfferingBO();

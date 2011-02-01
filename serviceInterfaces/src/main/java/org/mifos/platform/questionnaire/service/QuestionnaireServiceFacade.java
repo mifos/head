@@ -82,5 +82,5 @@ public interface QuestionnaireServiceFacade {
     // Added for data migration. Shouldn't be used outside.
     Integer createQuestion(QuestionDto questionDto);
 
-	void applyToAllLoanProducts(Integer entityId);
+    void applyToAllLoanProducts(Integer entityId);
 }

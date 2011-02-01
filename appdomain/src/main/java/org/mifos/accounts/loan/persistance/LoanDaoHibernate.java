@@ -10,9 +10,6 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.master.util.helpers.MasterConstants;
-import org.mifos.application.util.helpers.EntityType;
 import org.mifos.dto.domain.SurveyDto;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -65,22 +62,6 @@ public class LoanDaoHibernate implements LoanDao {
             accountSurveys.add(new SurveyDto(instanceId, surveyName, dateConducted));
         }
         return accountSurveys;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public final List<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForLoan() {
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put(MasterConstants.ENTITY_TYPE, EntityType.LOAN.getValue());
-        return (List<CustomFieldDefinitionEntity>) genericDao.executeNamedQuery(NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public List<Object[]> getCustomFieldResponses(List<Short> customFieldIds) {
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("CUSTOM_FIELD_ID", customFieldIds);
-        return (List<Object[]>) genericDao.executeNamedQuery("AccountCustomFieldEntity.getResponses", queryParameters);
     }
 
     @Override

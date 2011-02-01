@@ -10,10 +10,10 @@
         <id name="personnelRoleId" column="personnel_role_id" type="integer" unsaved-value="-1" access="field">
                 <generator class="native"/>
         </id>
-     	<many-to-one name="personnel" column="personnel_id" class="org.mifos.customers.personnel.business.PersonnelBO" access="field"/>
+         <many-to-one name="personnel" column="personnel_id" class="org.mifos.customers.personnel.business.PersonnelBO" access="field"/>
         <many-to-one  name="role"  column="role_id" class="org.mifos.security.rolesandpermission.business.RoleBO" lazy="false" access="field"/>
    </class>
    <query name="getPersonnelRoleCount">
-   		<![CDATA[select count(*) from org.mifos.customers.personnel.business.PersonnelRoleEntity personnelRole where personnelRole.role.id=:roleId ]]>
+           <![CDATA[select count(*) from org.mifos.customers.personnel.business.PersonnelRoleEntity personnelRole where personnelRole.role.id=:roleId ]]>
    </query>
 </hibernate-mapping>

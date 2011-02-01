@@ -41,7 +41,7 @@ import static org.junit.Assert.assertTrue;
 import static org.testng.Assert.assertEquals;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(sequential = true, groups = {"client", "acceptance", "ui", "smoke"})
+@Test(sequential = true, groups = {"client", "acceptance", "ui"})
 public class QuestionGroupTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;
@@ -113,20 +113,24 @@ public class QuestionGroupTest extends UiTestCaseBase {
 
     private void testEditQuestionGroupDetail(QuestionGroupDetailPage questionGroupDetailPage) {
         EditQuestionGroupPage editQuestionGroupPage = questionGroupDetailPage.navigateToEditPage();
-        editQuestionGroupPage.verifyPage();
         editQuestionGroupPage.setTitle(qgTitle3);
         CreateQuestionGroupParameters createQuestionGroupParameters = new CreateQuestionGroupParameters();
-        createQuestionGroupParameters.setSectionName("New Section");
-        createQuestionGroupParameters.setQuestions(asList(qTitle4));
-        editQuestionGroupPage.addSection(createQuestionGroupParameters);
-        editQuestionGroupPage.addQuestion(qTitle5, "Hello World");
+        createQuestionGroupParameters.addExistingQuestion("New Section", qTitle4);
+        for(String section : createQuestionGroupParameters.getExistingQuestions().keySet()){
+            editQuestionGroupPage.addExistingQuestion(section, createQuestionGroupParameters.getExistingQuestions().get(section));
+        }
+        CreateQuestionParameters createQuestionParameters= new CreateQuestionParameters();
+        createQuestionParameters.setType("Free Text");
+        createQuestionParameters.setText(qTitle5);
+        editQuestionGroupPage.setSection("Hello World");
+        editQuestionGroupPage.addNewQuestion(createQuestionParameters);
         editQuestionGroupPage.submit();
         questionGroupDetailPage.verifyPage();
         questionGroupDetailPage.navigateToViewQuestionGroupsPage();
     }
 
     private AdminPage createQuestions(String... qTitles) {
-        CreateQuestionPage createQuestionPage = getAdminPage().navigateToCreateQuestionPage().verifyPage();
+        CreateQuestionPage createQuestionPage = getAdminPage().navigateToCreateQuestionPage();
         CreateQuestionParameters parameters = new CreateQuestionParameters();
         for (String qTitle : qTitles) {
             parameters.setText(qTitle);
@@ -142,7 +146,10 @@ public class QuestionGroupTest extends UiTestCaseBase {
         assertTextFoundOnPage(TITLE_MISSING);
         assertTextFoundOnPage(APPLIES_TO_MISSING);
         assertTextFoundOnPage(SECTION_MISSING);
-        createQuestionGroupPage.addSection(parameters);
+        createQuestionGroupPage.addEmptySection("Empty Section");
+        for(String section : parameters.getExistingQuestions().keySet()){
+            createQuestionGroupPage.addExistingQuestion(section, parameters.getExistingQuestions().get(section));
+        }
         assertTextFoundOnPage(QUESTION_MISSING);
     }
 
@@ -174,7 +181,7 @@ public class QuestionGroupTest extends UiTestCaseBase {
     }
 
     private CreateQuestionGroupPage getCreateQuestionGroupPage(AdminPage adminPage) {
-        return adminPage.navigateToCreateQuestionGroupPage().verifyPage();
+        return adminPage.navigateToCreateQuestionGroupPage();
     }
 
     private void testViewQuestionGroups(ViewAllQuestionGroupsPage viewQuestionGroupsPage) {
@@ -205,13 +212,21 @@ public class QuestionGroupTest extends UiTestCaseBase {
         parameters.setTitle(title);
         parameters.setAppliesTo(appliesTo);
         parameters.setAnswerEditable(isAnswerEditable);
-        parameters.setSectionName(sectionName);
-        parameters.setQuestions(questionsToSelect);
-        createQuestionGroupPage.addSection(parameters);
+        for (String question : questionsToSelect) {
+            parameters.addExistingQuestion(sectionName, question);
+        }
+        for(String section : parameters.getExistingQuestions().keySet()){
+            createQuestionGroupPage.addExistingQuestion(section, parameters.getExistingQuestions().get(section));
+        }
         createQuestionGroupPage.markEveryOtherQuestionsMandatory(questionsToSelect);
-        assertPage(CreateQuestionGroupPage.PAGE_ID);
         assertTrue(createQuestionGroupPage.getAvailableQuestions().containsAll(questionsNotToSelect));
-        createQuestionGroupPage.addQuestion(questionToAdd, SECTION_MISC);
+        CreateQuestionParameters createQuestionParameters= new CreateQuestionParameters();
+        createQuestionParameters.setType("Free Text");
+        createQuestionParameters.setText(questionToAdd);
+        createQuestionGroupPage.setSection(SECTION_MISC);
+        if (questionToAdd != null) {
+            createQuestionGroupPage.addNewQuestion(createQuestionParameters);
+        }
         createQuestionGroupPage.submit(parameters);
         assertPage(AdminPage.PAGE_ID);
     }

@@ -24,8 +24,8 @@ how log4j is setting up logging. -->
         </layout>
     </appender>
 
-    <category name="org.hibernate"> 
-        <priority value="WARN"/> 
+    <category name="org.hibernate">
+        <priority value="WARN"/>
     </category>
 
     <category name="org.hibernate.engine.StatefulPersistenceContext.ProxyWarnLog" additivity="true">

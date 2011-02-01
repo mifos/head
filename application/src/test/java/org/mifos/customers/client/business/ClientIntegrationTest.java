@@ -57,6 +57,7 @@ import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
+import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
@@ -67,6 +68,7 @@ import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class ClientIntegrationTest extends MifosIntegrationTestCase {
 
@@ -83,6 +85,9 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
     private Short officeId = 1;
     private OfficeBO office;
     private OfficeBO officeBo;
+
+    @Autowired
+    private CustomerDao customerDao;
 
     @Before
     public void setUp() throws Exception {
@@ -235,7 +240,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         new ClientPersistence().saveClient(client);
         StaticHibernateUtil.flushSession();
 
-        client = new ClientPersistence().getClient(client.getCustomerId());
+        client = customerDao.findClientById(client.getCustomerId());
         Assert.assertEquals(offerings.size(), client.getOfferingsAssociatedInCreate().size());
         for (ClientInitialSavingsOfferingEntity clientOffering : client.getOfferingsAssociatedInCreate()) {
             if (clientOffering.getSavingsOffering().getPrdOfferingId().equals(savingsOffering1.getPrdOfferingId())) {

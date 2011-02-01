@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -38,9 +37,6 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.master.util.helpers.MasterConstants;
-import org.mifos.application.util.helpers.EntityType;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelRoleEntity;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
@@ -186,22 +182,6 @@ public class PersonnelDaoHibernate implements PersonnelDao {
         } catch (MissingResourceException e) {
             return "ROLE_UNDEFINED";
         }
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public final List<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForPersonnel() {
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put(MasterConstants.ENTITY_TYPE, EntityType.PERSONNEL.getValue());
-        return (List<CustomFieldDefinitionEntity>) genericDao.executeNamedQuery(NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public List<Object[]> getCustomFieldResponses(List<Short> customFieldIds) {
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("CUSTOM_FIELD_ID", customFieldIds);
-        return (List<Object[]>) genericDao.executeNamedQuery("PersonnelCustomFieldEntity.getResponses", queryParameters);
     }
 
     @SuppressWarnings("unchecked")

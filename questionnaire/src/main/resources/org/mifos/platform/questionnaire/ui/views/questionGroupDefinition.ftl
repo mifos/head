@@ -90,7 +90,7 @@
 
     <div id="divSections">
         [#list questionGroupForm.sections as section]
-        
+
         <div style="width: 100%">
             <b>${section.name}:&nbsp;&nbsp;</b>
             [#assign sectionRemovable = false]

@@ -31,7 +31,7 @@ public class QuestionGroup implements Serializable {
     //TODO: For the time being to resolve dependencies
     // should extend AbstractEntity? move AbstractEntity to common module first
     private static final long serialVersionUID = -1324084579942599901L;
-    
+
     private int id;
 
     private String title;

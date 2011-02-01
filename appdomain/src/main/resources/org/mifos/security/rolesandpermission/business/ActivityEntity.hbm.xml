@@ -4,37 +4,37 @@
                             "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
 
 <hibernate-mapping>
-	<class
-		name="org.mifos.security.rolesandpermission.business.ActivityEntity"
-		table="activity">
-		<id name="id" type="short" column="activity_id" access="field">
-		</id>
-		<set name="roles" cascade="all,delete-orphan" inverse="true" lazy="true" access="field">
-			<key column="activity_id" />
-			<one-to-many
-				class="org.mifos.security.rolesandpermission.business.RoleActivityEntity" />
-		</set>
-		<many-to-one name="parent" column="parent_id"
-			class="org.mifos.security.rolesandpermission.business.ActivityEntity"
-			cascade="none" update="true" insert="true" access="field" />
-		<many-to-one name="activityNameLookupValues"
-			column="activity_name_lookup_id"
-			class="org.mifos.application.master.business.LookUpValueEntity"
-			cascade="none" update="true" insert="true" access="field" />
-		<many-to-one name="descriptionLookupValues"
-			column="description_lookup_id"
-			class="org.mifos.application.master.business.LookUpValueEntity"
-			cascade="none" update="true" insert="true" access="field" />
-	</class>
-	
-	<query name="getAllActivities">
+    <class
+        name="org.mifos.security.rolesandpermission.business.ActivityEntity"
+        table="activity">
+        <id name="id" type="short" column="activity_id" access="field">
+        </id>
+        <set name="roles" cascade="all,delete-orphan" inverse="true" lazy="true" access="field">
+            <key column="activity_id" />
+            <one-to-many
+                class="org.mifos.security.rolesandpermission.business.RoleActivityEntity" />
+        </set>
+        <many-to-one name="parent" column="parent_id"
+            class="org.mifos.security.rolesandpermission.business.ActivityEntity"
+            cascade="none" update="true" insert="true" access="field" />
+        <many-to-one name="activityNameLookupValues"
+            column="activity_name_lookup_id"
+            class="org.mifos.application.master.business.LookUpValueEntity"
+            cascade="none" update="true" insert="true" access="field" />
+        <many-to-one name="descriptionLookupValues"
+            column="description_lookup_id"
+            class="org.mifos.application.master.business.LookUpValueEntity"
+            cascade="none" update="true" insert="true" access="field" />
+    </class>
+
+    <query name="getAllActivities">
             <![CDATA[ from ActivityEntity ae order by ae.id]]>
     </query>
-	<query name="activityEntity.getActivityEntityByLookUpValueEntity">
+    <query name="activityEntity.getActivityEntityByLookUpValueEntity">
             <![CDATA[ from ActivityEntity ae where ae.activityNameLookupValues=:aLookUpValueEntity]]>
     </query>
     <query name="getActivityById">
-		<![CDATA[from ActivityEntity ae where ae.id = :ACTIVITY_ID]]>
-    </query>    
+        <![CDATA[from ActivityEntity ae where ae.id = :ACTIVITY_ID]]>
+    </query>
 </hibernate-mapping>
 

@@ -1,2 +1,0 @@
-alter table customer_address_detail add column phone_number_stripped varchar(20);
-create index customer_address_detail_phone_number_stripped_idx on customer_address_detail (phone_number_stripped);

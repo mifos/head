@@ -26,11 +26,10 @@
  </class>
        <query name="getPersonRoles">
             <![CDATA[from PersonRoles p where p.id =:ID]]>
-      </query>      
+      </query>
       <query name="getPerson">
             <![CDATA[from PersonRoles p where p.loginName =:NAME]]>
      </query>
- 
- 
+
+
 </hibernate-mapping>
-    

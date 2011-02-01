@@ -6,11 +6,11 @@
 
 <hibernate-mapping>
 
-	<class name="org.mifos.accounts.productdefinition.business.RecommendedAmntUnitEntity" table="recommended_amnt_unit">
-		<id name="id" column="recommended_amnt_unit_id">
-			<generator class="native" />
-		</id>
+    <class name="org.mifos.accounts.productdefinition.business.RecommendedAmntUnitEntity" table="recommended_amnt_unit">
+        <id name="id" column="recommended_amnt_unit_id">
+            <generator class="native" />
+        </id>
 
-		<many-to-one name="lookUpValue" column="lookup_id" class="org.mifos.application.master.business.LookUpValueEntity" cascade="none" update="false" unique="true" />
-	</class>
+        <many-to-one name="lookUpValue" column="lookup_id" class="org.mifos.application.master.business.LookUpValueEntity" cascade="none" update="false" unique="true" />
+    </class>
 </hibernate-mapping>

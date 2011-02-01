@@ -2,7 +2,7 @@
 <!DOCTYPE hibernate-mapping PUBLIC
                             "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
                             "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
-<!-- 
+<!--
 Copyright (c) 2005-2008 Grameen Foundation USA
 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
 All rights reserved.
@@ -21,326 +21,326 @@ permissions and limitations under the License.
 
 See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 explanation of the license and how it is applied.
--->                            
+-->
 <hibernate-mapping>
-	<class
-		name="org.mifos.reports.branchreport.BranchReportStaffSummaryBO"
-		table="batch_staff_summary">
-		<id name="staffSummaryId" column="staff_summary_id"
-			type="integer" access="field">
-			<generator class="native" />
-		</id>
-		<property name="personnelId" column="personnel_id" access="field"/>
-		<property name="personnelName" column="personnel_name" access="field"/>
-		<property name="joiningDate" column="joining_date" access="field"/>
-		<property name="activeBorrowersCount" column="active_borrowers" access="field"/>
-		<property name="activeLoansCount" column="active_loans" access="field"/>
-		<property name="centerCount" column="center_count" access="field"/>
-		<property name="clientCount" column="client_count" access="field"/>
-		<property name="loanAmountOutstanding" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-			<column name="loan_amount_outstanding_currency_id"/> 
-			<column name="loan_amount_outstanding"/> 
-		</property>
-		<property name="interestAndFeesAmountOutstanding" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-			<column name="interest_fees_outstanding_currency_id"/>
-			<column name="interest_fees_outstanding"/>
-		</property>
-		<property name="portfolioAtRisk" column="portfolio_at_risk" access="field"/>
-		<property name="totalClientsEnrolled" column="total_clients_enrolled" access="field"/>
-		<property name="clientsEnrolledThisMonth" column="clients_enrolled_this_month" access="field"/>
-		<property name="loanArrearsAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-			<column name="loan_arrears_amount_currency_id"/> 
-			<column name="loan_arrears_amount"/> 
-		</property>		
-		
-		<many-to-one name="branchReport" column="branch_report_id" access="field"
-			class="org.mifos.reports.branchreport.BranchReportBO">
-		</many-to-one>		
-	</class>
-	<sql-query
-		name="branchReport.getBranchReportStaffSummaryForDateAndBranch">
-		<load-collection alias="staffSummary"
-			role="org.mifos.reports.branchreport.BranchReportBO.staffSummaries" />
-		<![CDATA[SELECT {staffSummary.*} from batch_staff_summary as staffSummary, batch_branch_report as branchReport where 
-			branchReport.branch_report_id=staffSummary.branch_report_id 
-			and branchReport.run_date=:RUN_DATE 
-			and branchReport.branch_id=:BRANCH_ID
-			order by staffSummary.personnel_name
-		]]>
-	</sql-query>
-	
-	<sql-query name="branchReport.extractStaffSummaryActiveBorrowersLoans">
-	    <return-scalar column="personnelId" type="short"/>
-	    <return-scalar column="personnelName" type="string"/>
-	    <return-scalar column="personnelJoiningDate" type="date"/>
-	    <return-scalar column="activeBorrowersCount" type="integer"/>
-	    <return-scalar column="activeLoansCount" type="integer"/>
-	    <![CDATA[select personnel.personnel_id as personnelId, personnel.display_name as personnelName,
-	      			personnel_details.date_of_joining_mfi as personnelJoiningDate, 
-					ifnull(staff_summary.activeBorrowersCount,0) as activeBorrowersCount,
-					ifnull(staff_summary.activeLoansCount,0) as activeLoansCount					
-					from personnel left join 
-						(select p.personnel_id as personnelId,
-			            ifnull(count(distinct c.customer_id),0) as activeBorrowersCount,
-	                    ifnull(count(acc.account_id),0) as activeLoansCount
-	        			from customer c, customer_state cs, account acc, personnel p
-				        where c.branch_id=:officeId and c.customer_level_id=1
-					    and c.customer_id=acc.customer_id and (acc.account_state_id=5 or  acc.account_state_id=9) 
-				        and c.loan_officer_id=p.personnel_id 
-	 			        and cs.status_id=c.status_id and (cs.description='Customer Was Active' or cs.description='Customer Was Hold')
-					    group by c.loan_officer_id) staff_summary
-			     	on personnel.personnel_id=staff_summary.personnelid, personnel_details
-				    where personnel.personnel_id=personnel_details.personnel_id
-				    and personnel.office_id=:officeId
-				    and personnel.personnel_status=1
-				    and personnel.level_id = 1
-	          ]]>
-	</sql-query>
-	
-	<sql-query name="branchReport.extractStaffSummaryCenterAndClientCount">	
-	    <return-scalar column="personnelId" type="short"/>	
-	    <return-scalar column="centerCount" type="integer"/>	
-	    <return-scalar column="clientCount" type="integer"/>	
-	    <![CDATA[
-		    SELECT 
-					p.personnel_id as personnelId, 
-					(select 
-							count(centers.customer_id) 
-						from 
-							customer centers 
-						left join
-							customer_state cs on cs.status_id=centers.status_id
-						where 
-							cs.description='Customer Was Active'
-						and    
-							centers.customer_level_id=3 
-						and 
-							centers.loan_officer_id=p.personnel_id
-					) as centerCount, 
-					(select 
-							count(clients.customer_id) 
-						from 
-							customer clients 
-						left join
-							customer_state cs on cs.status_id=clients.status_id
-						where 
-							cs.description='Customer Was Active'
-						and    
-							clients.customer_level_id=1 
-						and 
-							clients.loan_officer_id=p.personnel_id
-					) as clientCount 
-				from 
-					personnel p 
-				where 
-					p.office_id = :officeId
-				and 
-					p.personnel_status=1 
-				and 
-					p.level_id=1
-				group by 
-					p.personnel_id
+    <class
+        name="org.mifos.reports.branchreport.BranchReportStaffSummaryBO"
+        table="batch_staff_summary">
+        <id name="staffSummaryId" column="staff_summary_id"
+            type="integer" access="field">
+            <generator class="native" />
+        </id>
+        <property name="personnelId" column="personnel_id" access="field"/>
+        <property name="personnelName" column="personnel_name" access="field"/>
+        <property name="joiningDate" column="joining_date" access="field"/>
+        <property name="activeBorrowersCount" column="active_borrowers" access="field"/>
+        <property name="activeLoansCount" column="active_loans" access="field"/>
+        <property name="centerCount" column="center_count" access="field"/>
+        <property name="clientCount" column="client_count" access="field"/>
+        <property name="loanAmountOutstanding" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
+            <column name="loan_amount_outstanding_currency_id"/>
+            <column name="loan_amount_outstanding"/>
+        </property>
+        <property name="interestAndFeesAmountOutstanding" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
+            <column name="interest_fees_outstanding_currency_id"/>
+            <column name="interest_fees_outstanding"/>
+        </property>
+        <property name="portfolioAtRisk" column="portfolio_at_risk" access="field"/>
+        <property name="totalClientsEnrolled" column="total_clients_enrolled" access="field"/>
+        <property name="clientsEnrolledThisMonth" column="clients_enrolled_this_month" access="field"/>
+        <property name="loanArrearsAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
+            <column name="loan_arrears_amount_currency_id"/>
+            <column name="loan_arrears_amount"/>
+        </property>
+
+        <many-to-one name="branchReport" column="branch_report_id" access="field"
+            class="org.mifos.reports.branchreport.BranchReportBO">
+        </many-to-one>
+    </class>
+    <sql-query
+        name="branchReport.getBranchReportStaffSummaryForDateAndBranch">
+        <load-collection alias="staffSummary"
+            role="org.mifos.reports.branchreport.BranchReportBO.staffSummaries" />
+        <![CDATA[SELECT {staffSummary.*} from batch_staff_summary as staffSummary, batch_branch_report as branchReport where
+            branchReport.branch_report_id=staffSummary.branch_report_id
+            and branchReport.run_date=:RUN_DATE
+            and branchReport.branch_id=:BRANCH_ID
+            order by staffSummary.personnel_name
+        ]]>
+    </sql-query>
+
+    <sql-query name="branchReport.extractStaffSummaryActiveBorrowersLoans">
+        <return-scalar column="personnelId" type="short"/>
+        <return-scalar column="personnelName" type="string"/>
+        <return-scalar column="personnelJoiningDate" type="date"/>
+        <return-scalar column="activeBorrowersCount" type="integer"/>
+        <return-scalar column="activeLoansCount" type="integer"/>
+        <![CDATA[select personnel.personnel_id as personnelId, personnel.display_name as personnelName,
+                      personnel_details.date_of_joining_mfi as personnelJoiningDate,
+                    ifnull(staff_summary.activeBorrowersCount,0) as activeBorrowersCount,
+                    ifnull(staff_summary.activeLoansCount,0) as activeLoansCount
+                    from personnel left join
+                        (select p.personnel_id as personnelId,
+                        ifnull(count(distinct c.customer_id),0) as activeBorrowersCount,
+                        ifnull(count(acc.account_id),0) as activeLoansCount
+                        from customer c, customer_state cs, account acc, personnel p
+                        where c.branch_id=:officeId and c.customer_level_id=1
+                        and c.customer_id=acc.customer_id and (acc.account_state_id=5 or  acc.account_state_id=9)
+                        and c.loan_officer_id=p.personnel_id
+                         and cs.status_id=c.status_id and (cs.description='Customer Was Active' or cs.description='Customer Was Hold')
+                        group by c.loan_officer_id) staff_summary
+                     on personnel.personnel_id=staff_summary.personnelid, personnel_details
+                    where personnel.personnel_id=personnel_details.personnel_id
+                    and personnel.office_id=:officeId
+                    and personnel.personnel_status=1
+                    and personnel.level_id = 1
+              ]]>
+    </sql-query>
+
+    <sql-query name="branchReport.extractStaffSummaryCenterAndClientCount">
+        <return-scalar column="personnelId" type="short"/>
+        <return-scalar column="centerCount" type="integer"/>
+        <return-scalar column="clientCount" type="integer"/>
+        <![CDATA[
+            SELECT
+                    p.personnel_id as personnelId,
+                    (select
+                            count(centers.customer_id)
+                        from
+                            customer centers
+                        left join
+                            customer_state cs on cs.status_id=centers.status_id
+                        where
+                            cs.description='Customer Was Active'
+                        and
+                            centers.customer_level_id=3
+                        and
+                            centers.loan_officer_id=p.personnel_id
+                    ) as centerCount,
+                    (select
+                            count(clients.customer_id)
+                        from
+                            customer clients
+                        left join
+                            customer_state cs on cs.status_id=clients.status_id
+                        where
+                            cs.description='Customer Was Active'
+                        and
+                            clients.customer_level_id=1
+                        and
+                            clients.loan_officer_id=p.personnel_id
+                    ) as clientCount
+                from
+                    personnel p
+                where
+                    p.office_id = :officeId
+                and
+                    p.personnel_status=1
+                and
+                    p.level_id=1
+                group by
+                    p.personnel_id
                  ]]>
-	</sql-query>
-	<!--
-			select c.LOAN_OFFICER_ID as personnelId, (select count(centers.CUSTOMER_ID) from Customer centers 
-							where centers.CUSTOMER_LEVEL_ID=3 and centers.LOAN_OFFICER_ID=c.LOAN_OFFICER_ID) as centerCount, 
-							(select count(clients.CUSTOMER_ID) from Customer clients
-							where clients.CUSTOMER_LEVEL_ID=1 and clients.LOAN_OFFICER_ID=c.LOAN_OFFICER_ID) as clientCount 
-							from Customer c, Personnel p
-							where c.LOAN_OFFICER_ID = p.PERSONNEL_ID
-							and p.OFFICE_ID = :officeId
-						    and p.PERSONNEL_STATUS=1					
-							group by c.LOAN_OFFICER_ID
-	-->
-	<sql-query name="branchReport.extractLoanAmountOutstanding">
-		<return-scalar column="personnelId" type="short"/>
-		<return-scalar column="loanAmountOutstanding" type="big_decimal"/>
-		<return-scalar column="interestAndFeesAmountOutstanding" type="big_decimal"/>
-		<![CDATA[
-			select 
-					p.personnel_id as personnelId, 
-					round(sum(loan.orig_principal-loan.principal_paid),2) as loanAmountOutstanding,
-					round(sum(loan.orig_interest-loan.interest_paid),2) as interestAndFeesAmountOutstanding 
-				from 
-					account act
-			        left join 
-			                loan_summary loan on loan.account_id=act.account_id
-			        left join
-			                customer c on c.customer_id=act.customer_id
-			        left join
-			                customer_state cs on cs.status_id=c.status_id
-			        left join
-			                personnel p on c.loan_officer_id=p.personnel_id
-				where 
-			                cs.description='Customer Was Active'
-				and 
-					act.account_state_id=5
-				and 
-					c.customer_level_id=1
-				and 
-					p.personnel_status=1
-				and 
-					p.office_id=:officeId 
-				group by 
-					p.personnel_id			
-		]]>		   
-	</sql-query>
-	<!--
-			select p.personnel_id as personnelId,
-					   round(sum(loan.orig_principal-loan.principal_paid),2) as loanAmountOutstanding,
-					   round(sum((loan.orig_interest+loan.orig_fees)-(loan.interest_paid+loan.fees_paid)),2) as interestAndFeesAmountOutstanding
-					   from Customer c,loan_summary loan,account act, personnel p
-					   where c.customer_id=act.customer_id 
-					   and act.account_id=loan.account_id  
-					   and act.account_state_id=5 
-					   and c.LOAN_OFFICER_ID=p.PERSONNEL_ID  
-					   and c.CUSTOMER_LEVEL_ID=1 
-					   and p.personnel_status=1
-					   and p.office_id=:officeId
-					   and loan.orig_principal_currency_id=:currencyId
-					   and loan.principal_paid_currency_id=:currencyId
-					   and loan.orig_interest_currency_id=:currencyId
-					   and loan.orig_fees_currency_id=:currencyId
-					   and loan.interest_paid_currency_id=:currencyId
-					   group by p.personnel_id
-	-->
-	<sql-query name="branchReport.extractPortfolioAtRisk">
-		<return-scalar column="personnelId" type="short"/>	
-		<return-scalar column="portfolioAtRisk" type="big_decimal"/>	
-		<![CDATA[
-			SELECT 
-			        p1.personnel_id as personnelId,
-			        sum(round(ifnull((num.un_prin/den.un_prin)* 100, 0) ,2)) as portfolioAtRisk 
-			from 
-				personnel p1
-			left join 
-				(select 
-			                    sum(laa.unpaid_principal) as un_prin,
-			                    c.loan_officer_id as personnel_id
-			            from 
-			                    loan_arrears_aging laa
-				    left join
-				            customer c on c.customer_id=laa.customer_id
-				    left join
-				            account acc on acc.account_id=laa.account_id
-				    left join
-				            customer_state cs on cs.status_id=c.status_id
-			            where 
-			                    cs.description='Customer Was Active'
-				    and
-			                    acc.account_state_id in (9)
-				    and
-			                    c.customer_level_id=1 
-			            and 
-			                    c.branch_id=:officeId
-			            and 
-			                    laa.days_in_arrears>=:daysInArrears
-			            group by 
-			                    c.loan_officer_id
-			        ) num
-			        on p1.personnel_id=num.personnel_id,
-			        (select 
-			                    sum(ls.orig_principal-ls.principal_paid) as un_prin
-			            from 
-			                    loan_summary ls
-				    left join
-			                    account acc on acc.account_id=ls.account_id
-				    left join
-			                    customer c on c.customer_id=acc.customer_id
-				    left join
-			                    customer_state cs on cs.status_id=c.status_id
-				                                where 
-			                    cs.description='Customer Was Active'
-				    and
-				            acc.account_state_id in (5,9)
-			            and 
-			                    c.branch_id=:officeId
-			            and 
-			                    c.customer_level_id=1
-			            ) den   
-			
-			where 
-			        p1.level_id=1 
-			and 
-			        p1.office_id=:officeId
-			and 
-			        p1.personnel_status=1 
-			group by 
-			        p1.personnel_id	
-		]]>
-	</sql-query>
-	<!--
-		SELECT p1.PERSONNEL_ID as personnelId,
-				        ROUND(IFNULL(((SELECT SUM(loan_arrears_aging.unpaid_principal) FROM loan_arrears_aging, customer 
-				        WHERE customer.LOAN_OFFICER_ID=p1.PERSONNEL_ID 
-				        AND customer.CUSTOMER_LEVEL_ID=1
-				        AND customer.CUSTOMER_ID=loan_arrears_aging.CUSTOMER_ID
-				        AND loan_arrears_aging.OFFICE_ID=:officeId
-				        AND days_in_arrears>=:daysInArrears)
-				        /(SELECT SUM(UNPAID_PRINCIPAL) FROM loan_arrears_aging, customer 
-				            WHERE customer.CUSTOMER_ID=loan_arrears_aging.CUSTOMER_ID
-				            AND loan_arrears_aging.DAYS_IN_ARREARS>=:daysInArrears
-				            AND loan_arrears_aging.OFFICE_ID=:officeId
-				            AND customer.CUSTOMER_LEVEL_ID=1)) * 100, 0)
-				    ,2) AS portfolioAtRisk
-				FROM personnel p1
-				WHERE p1.LEVEL_ID=1
-				AND p1.OFFICE_ID=:officeId
-				AND p1.PERSONNEL_STATUS=1
-				GROUP BY p1.PERSONNEL_ID
-	-->
-	<sql-query name="branchReport.extractTotalClientsFormedByPersonnel">
-		<return-scalar column="personnelId" type="short"/>	
-		<return-scalar column="totalClientsFormed" type="integer"/>	
-		<![CDATA[
-		    select customer_formedby_id as personnelId, count(customer_formedby_id) as totalClientsFormed
-		     from customer where customer_formedby_id in (:personnelIdList)
-		     and customer.customer_level_id = 1
-		    group by customer_formedby_id
-		]]>
-	</sql-query>
+    </sql-query>
+    <!--
+            select c.LOAN_OFFICER_ID as personnelId, (select count(centers.CUSTOMER_ID) from Customer centers
+                            where centers.CUSTOMER_LEVEL_ID=3 and centers.LOAN_OFFICER_ID=c.LOAN_OFFICER_ID) as centerCount,
+                            (select count(clients.CUSTOMER_ID) from Customer clients
+                            where clients.CUSTOMER_LEVEL_ID=1 and clients.LOAN_OFFICER_ID=c.LOAN_OFFICER_ID) as clientCount
+                            from Customer c, Personnel p
+                            where c.LOAN_OFFICER_ID = p.PERSONNEL_ID
+                            and p.OFFICE_ID = :officeId
+                            and p.PERSONNEL_STATUS=1
+                            group by c.LOAN_OFFICER_ID
+    -->
+    <sql-query name="branchReport.extractLoanAmountOutstanding">
+        <return-scalar column="personnelId" type="short"/>
+        <return-scalar column="loanAmountOutstanding" type="big_decimal"/>
+        <return-scalar column="interestAndFeesAmountOutstanding" type="big_decimal"/>
+        <![CDATA[
+            select
+                    p.personnel_id as personnelId,
+                    round(sum(loan.orig_principal-loan.principal_paid),2) as loanAmountOutstanding,
+                    round(sum(loan.orig_interest-loan.interest_paid),2) as interestAndFeesAmountOutstanding
+                from
+                    account act
+                    left join
+                            loan_summary loan on loan.account_id=act.account_id
+                    left join
+                            customer c on c.customer_id=act.customer_id
+                    left join
+                            customer_state cs on cs.status_id=c.status_id
+                    left join
+                            personnel p on c.loan_officer_id=p.personnel_id
+                where
+                            cs.description='Customer Was Active'
+                and
+                    act.account_state_id=5
+                and
+                    c.customer_level_id=1
+                and
+                    p.personnel_status=1
+                and
+                    p.office_id=:officeId
+                group by
+                    p.personnel_id
+        ]]>
+    </sql-query>
+    <!--
+            select p.personnel_id as personnelId,
+                       round(sum(loan.orig_principal-loan.principal_paid),2) as loanAmountOutstanding,
+                       round(sum((loan.orig_interest+loan.orig_fees)-(loan.interest_paid+loan.fees_paid)),2) as interestAndFeesAmountOutstanding
+                       from Customer c,loan_summary loan,account act, personnel p
+                       where c.customer_id=act.customer_id
+                       and act.account_id=loan.account_id
+                       and act.account_state_id=5
+                       and c.LOAN_OFFICER_ID=p.PERSONNEL_ID
+                       and c.CUSTOMER_LEVEL_ID=1
+                       and p.personnel_status=1
+                       and p.office_id=:officeId
+                       and loan.orig_principal_currency_id=:currencyId
+                       and loan.principal_paid_currency_id=:currencyId
+                       and loan.orig_interest_currency_id=:currencyId
+                       and loan.orig_fees_currency_id=:currencyId
+                       and loan.interest_paid_currency_id=:currencyId
+                       group by p.personnel_id
+    -->
+    <sql-query name="branchReport.extractPortfolioAtRisk">
+        <return-scalar column="personnelId" type="short"/>
+        <return-scalar column="portfolioAtRisk" type="big_decimal"/>
+        <![CDATA[
+            SELECT
+                    p1.personnel_id as personnelId,
+                    sum(round(ifnull((num.un_prin/den.un_prin)* 100, 0) ,2)) as portfolioAtRisk
+            from
+                personnel p1
+            left join
+                (select
+                                sum(laa.unpaid_principal) as un_prin,
+                                c.loan_officer_id as personnel_id
+                        from
+                                loan_arrears_aging laa
+                    left join
+                            customer c on c.customer_id=laa.customer_id
+                    left join
+                            account acc on acc.account_id=laa.account_id
+                    left join
+                            customer_state cs on cs.status_id=c.status_id
+                        where
+                                cs.description='Customer Was Active'
+                    and
+                                acc.account_state_id in (9)
+                    and
+                                c.customer_level_id=1
+                        and
+                                c.branch_id=:officeId
+                        and
+                                laa.days_in_arrears>=:daysInArrears
+                        group by
+                                c.loan_officer_id
+                    ) num
+                    on p1.personnel_id=num.personnel_id,
+                    (select
+                                sum(ls.orig_principal-ls.principal_paid) as un_prin
+                        from
+                                loan_summary ls
+                    left join
+                                account acc on acc.account_id=ls.account_id
+                    left join
+                                customer c on c.customer_id=acc.customer_id
+                    left join
+                                customer_state cs on cs.status_id=c.status_id
+                                                where
+                                cs.description='Customer Was Active'
+                    and
+                            acc.account_state_id in (5,9)
+                        and
+                                c.branch_id=:officeId
+                        and
+                                c.customer_level_id=1
+                        ) den
 
-	<sql-query name="branchReport.extractTotalClientsFormedByPersonnelThisMonth">
-		<return-scalar column="personnelId" type="short"/>	
-		<return-scalar column="clientsFormedThisMonth" type="integer"/>	
-		<![CDATA[
-		    select customer_formedby_id as personnelId, count(customer_formedby_id) as clientsFormedThisMonth
-		     from customer c where customer_formedby_id in (:personnelIdList)
-   		     and c.customer_level_id = 1
-		     and c.customer_activation_date between date(concat(year(current_date),'-',month(current_date),'-01')) and 
-					last_day(current_date)
-		    group by customer_formedby_id
-		]]>
-	</sql-query>	
+            where
+                    p1.level_id=1
+            and
+                    p1.office_id=:officeId
+            and
+                    p1.personnel_status=1
+            group by
+                    p1.personnel_id
+        ]]>
+    </sql-query>
+    <!--
+        SELECT p1.PERSONNEL_ID as personnelId,
+                        ROUND(IFNULL(((SELECT SUM(loan_arrears_aging.unpaid_principal) FROM loan_arrears_aging, customer
+                        WHERE customer.LOAN_OFFICER_ID=p1.PERSONNEL_ID
+                        AND customer.CUSTOMER_LEVEL_ID=1
+                        AND customer.CUSTOMER_ID=loan_arrears_aging.CUSTOMER_ID
+                        AND loan_arrears_aging.OFFICE_ID=:officeId
+                        AND days_in_arrears>=:daysInArrears)
+                        /(SELECT SUM(UNPAID_PRINCIPAL) FROM loan_arrears_aging, customer
+                            WHERE customer.CUSTOMER_ID=loan_arrears_aging.CUSTOMER_ID
+                            AND loan_arrears_aging.DAYS_IN_ARREARS>=:daysInArrears
+                            AND loan_arrears_aging.OFFICE_ID=:officeId
+                            AND customer.CUSTOMER_LEVEL_ID=1)) * 100, 0)
+                    ,2) AS portfolioAtRisk
+                FROM personnel p1
+                WHERE p1.LEVEL_ID=1
+                AND p1.OFFICE_ID=:officeId
+                AND p1.PERSONNEL_STATUS=1
+                GROUP BY p1.PERSONNEL_ID
+    -->
+    <sql-query name="branchReport.extractTotalClientsFormedByPersonnel">
+        <return-scalar column="personnelId" type="short"/>
+        <return-scalar column="totalClientsFormed" type="integer"/>
+        <![CDATA[
+            select customer_formedby_id as personnelId, count(customer_formedby_id) as totalClientsFormed
+             from customer where customer_formedby_id in (:personnelIdList)
+             and customer.customer_level_id = 1
+            group by customer_formedby_id
+        ]]>
+    </sql-query>
 
-	<sql-query name="branchReport.extractLoanArrearsAmountForPersonnel">
-		<return-scalar column="personnelId" type="short"/>	
-		<return-scalar column="loanArrearsAmount" type="big_decimal"/>	
-		<![CDATA[			
-			select 
-				c.loan_officer_id as personnelId, 
-				round(sum(laa.overdue_principal),2) as loanArrearsAmount 
-			from 
-				customer c, 
-				loan_arrears_aging laa,
-				customer_state cs,
-			    account acc
-			where 		   
-				acc.account_id=laa.account_id 
-			and
-			    acc.account_state_id in (9)
-			and
-				laa.customer_id = c.customer_id 
-			and 
-				c.loan_officer_id in (:personnelIdList) 
-			and
-				c.customer_level_id = 1
-		    and cs.status_id=c.status_id
-		    and (cs.description='Customer Was Active' or cs.description='Customer Was Hold')
-			group by 
-				c.loan_officer_id				
-		]]>
-	</sql-query>	
+    <sql-query name="branchReport.extractTotalClientsFormedByPersonnelThisMonth">
+        <return-scalar column="personnelId" type="short"/>
+        <return-scalar column="clientsFormedThisMonth" type="integer"/>
+        <![CDATA[
+            select customer_formedby_id as personnelId, count(customer_formedby_id) as clientsFormedThisMonth
+             from customer c where customer_formedby_id in (:personnelIdList)
+                and c.customer_level_id = 1
+             and c.customer_activation_date between date(concat(year(current_date),'-',month(current_date),'-01')) and
+                    last_day(current_date)
+            group by customer_formedby_id
+        ]]>
+    </sql-query>
+
+    <sql-query name="branchReport.extractLoanArrearsAmountForPersonnel">
+        <return-scalar column="personnelId" type="short"/>
+        <return-scalar column="loanArrearsAmount" type="big_decimal"/>
+        <![CDATA[
+            select
+                c.loan_officer_id as personnelId,
+                round(sum(laa.overdue_principal),2) as loanArrearsAmount
+            from
+                customer c,
+                loan_arrears_aging laa,
+                customer_state cs,
+                account acc
+            where
+                acc.account_id=laa.account_id
+            and
+                acc.account_state_id in (9)
+            and
+                laa.customer_id = c.customer_id
+            and
+                c.loan_officer_id in (:personnelIdList)
+            and
+                c.customer_level_id = 1
+            and cs.status_id=c.status_id
+            and (cs.description='Customer Was Active' or cs.description='Customer Was Hold')
+            group by
+                c.loan_officer_id
+        ]]>
+    </sql-query>
 
 </hibernate-mapping>

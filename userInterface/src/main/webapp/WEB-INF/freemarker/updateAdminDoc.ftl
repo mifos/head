@@ -19,8 +19,8 @@
 *  explanation of the license and how it is applied.
 --]
 
-<head>	
-	<link rel="stylesheet" type="text/css" href="pages/css/viewAdmin4Testing.css" />
+<head>
+    <link rel="stylesheet" type="text/css" href="pages/css/viewAdmin4Testing.css" />
 </head>
 
 [#include "layout.ftl"]
@@ -30,22 +30,22 @@
     <span id="page.id" title="editAdministrativeDocuments"></span>
     [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "manageReports.viewadministrativedocuments":""}/]
     [@mifos.crumbpairs breadcrumb /]
-	<div class="content_panel">
-        <p> 
-        	Work in progress.
+    <div class="content_panel">
+        <p>
+            Work in progress.
         </p>
         <fieldset>
-			<legend>Updated data</legend>
-			<ol>
-			<li><label>Document Name:</label> ${formBean.name}</li>
-			<li><label>Account Type:</label> ${formBean.accountType}</li>
-			<li><label>Status:</label>
-			[#list formBean.showStatus as fields]
-				${fields}
-			[/#list]
-			</li>
-			</ol>
-		</fieldset>
-	</div>
-	
+            <legend>Updated data</legend>
+            <ol>
+            <li><label>Document Name:</label> ${formBean.name}</li>
+            <li><label>Account Type:</label> ${formBean.accountType}</li>
+            <li><label>Status:</label>
+            [#list formBean.showStatus as fields]
+                ${fields}
+            [/#list]
+            </li>
+            </ol>
+        </fieldset>
+    </div>
+
 [/@adminLeftPaneLayout]

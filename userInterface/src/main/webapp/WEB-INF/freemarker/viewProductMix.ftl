@@ -20,36 +20,36 @@
 --]
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
-  <!--  Main Content Begins-->  
+  <!--  Main Content Begins-->
   <div class=" content">
-  	<span id="page.id" title="viewProductsMix" />
-  		[@mifos.crumbs breadcrumbs/]
-		<div class="margin20lefttop">
-			<form method="" action="" name="formname">
-				<p class="font15 orangeheading">[@spring.message "admin.viewproductsmix"/]</p>
-				<p class="margin5top10bottom">[@spring.message "manageProduct.viewProductMix.clickonaproductinstancebelowtoviewmixdetailsandmakechangesor" /] <a href="defineProductMix.ftl" >[@spring.message "admin.defineproductsmix"/] </a></p>
-				<div>
-	   	 			<span class="fontBold">
+      <span id="page.id" title="viewProductsMix"></span>
+          [@mifos.crumbs breadcrumbs/]
+        <div class="margin20lefttop">
+            <form method="" action="" name="formname">
+                <p class="font15 orangeheading">[@spring.message "admin.viewproductsmix"/]</p>
+                <p class="margin5top10bottom">[@spring.message "manageProduct.viewProductMix.clickonaproductinstancebelowtoviewmixdetailsandmakechangesor" /] <a href="defineProductMix.ftl" >[@spring.message "admin.defineproductsmix"/] </a></p>
+                <div>
+                        <span class="fontBold">
                         [#assign loan][@mifostag.mifoslabel name="Loan" /][/#assign]
                         [@spring.messageArgs "ftlDefinedLabels.manageProduct.viewProductMix.loan" , [loan]  /]
                         </span>
-	   	 			<ul>
-	   	 			[#list mixList.mix as text]
-	   	 				[#if text_has_next]
-	   	 					<li><a href="productMixDetails.ftl?prdOfferingId=${text.prdOfferingId}&productType=${text.productTypeID}">${text.prdOfferingName} </a></li>
-	   	 				[#else]
-	   	 				    <li><a href="productMixDetails.ftl?prdOfferingId=${text.prdOfferingId}&productType=${text.productTypeID}">${text.prdOfferingName} </a></li>
-	   	 				[/#if]
-	   	 			[/#list]
-	   	 			</ul>
-   	 			</div>
-   	 			<div>
-   	 			<span class="fontBold">
+                        <ul>
+                        [#list mixList.mix as text]
+                            [#if text_has_next]
+                                <li><a href="productMixDetails.ftl?prdOfferingId=${text.prdOfferingId}&productType=${text.productTypeID}">${text.prdOfferingName} </a></li>
+                            [#else]
+                                <li><a href="productMixDetails.ftl?prdOfferingId=${text.prdOfferingId}&productType=${text.productTypeID}">${text.prdOfferingName} </a></li>
+                            [/#if]
+                        [/#list]
+                        </ul>
+                    </div>
+                    <div>
+                    <span class="fontBold">
                     [#assign savings][@mifostag.mifoslabel name="Savings" /][/#assign]
                     [@spring.messageArgs "ftlDefinedLabels.manageProduct.viewProductMix.savings" , [savings]  /]
                 </span>
-   	 		</form>
-   	 	</div>
-  	 </div>  	 
+                </form>
+            </div>
+       </div>
   </div><!--Main Content Ends-->
-[/@adminLeftPaneLayout] 
+[/@adminLeftPaneLayout]

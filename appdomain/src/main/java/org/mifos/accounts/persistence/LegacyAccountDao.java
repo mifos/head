@@ -20,6 +20,13 @@
 
 package org.mifos.accounts.persistence;
 
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.hibernate.Hibernate;
@@ -47,7 +54,6 @@ import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.holiday.business.Holiday;
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerScheduleEntity;
 import org.mifos.customers.checklist.business.AccountCheckListBO;
@@ -64,13 +70,6 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.LegacyGenericDao;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.MifosStringUtils;
-
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 /**
  * FIXME: the term "account" has two meanings in this class:
@@ -114,7 +113,7 @@ public class LegacyAccountDao extends LegacyGenericDao {
         return queryResult == null ? null : (AccountBO) queryResult;
     }
 
-	public AccountBO findSavingsByClientPhoneNumberAndProductShortName(String phoneNumber,
+    public AccountBO findSavingsByClientPhoneNumberAndProductShortName(String phoneNumber,
             String productShortName) throws PersistenceException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("phoneNumberStripped", MifosStringUtils.removeNondigits(phoneNumber));
@@ -137,7 +136,7 @@ public class LegacyAccountDao extends LegacyGenericDao {
         return queryResult == null ? null : (AccountBO) queryResult;
     }
 
-	public AccountBO findLoanByClientPhoneNumberAndProductShortName(String phoneNumber, String productShortName)
+    public AccountBO findLoanByClientPhoneNumberAndProductShortName(String phoneNumber, String productShortName)
             throws PersistenceException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("phoneNumberStripped", MifosStringUtils.removeNondigits(phoneNumber));
@@ -287,13 +286,6 @@ public class LegacyAccountDao extends LegacyGenericDao {
         }
         return queryResult;
 
-    }
-
-    public List<CustomFieldDefinitionEntity> retrieveCustomFieldsDefinition(Short entityType)
-            throws PersistenceException {
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put(AccountConstants.ENTITY_TYPE, entityType);
-        return executeNamedQuery(NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
     }
 
     /*
@@ -567,8 +559,8 @@ public class LegacyAccountDao extends LegacyGenericDao {
         return executeNamedQuery("getCustomerSchedulesForAccountThatAreWithinDates", parameters);
     }
 
-	public List<AccountPaymentEntity> findAccountPaymentsByReceiptNumber(String receiptNumber) throws PersistenceException {
-    	 Map<String, Object> parameters = new HashMap<String, Object>();
+    public List<AccountPaymentEntity> findAccountPaymentsByReceiptNumber(String receiptNumber) throws PersistenceException {
+         Map<String, Object> parameters = new HashMap<String, Object>();
          parameters.put("RECEIPT_NUMBER", receiptNumber);
 
          return executeNamedQuery("findAccountPaymentsByReceiptNumber", parameters);

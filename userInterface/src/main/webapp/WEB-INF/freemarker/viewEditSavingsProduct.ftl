@@ -22,7 +22,7 @@
 [@adminLeftPaneLayout]
 [#assign savings][@mifostag.mifoslabel name="Savings" /][/#assign]
 <!--  Main Content Begins-->
-<span id="page.id" title="SavingsProductDetails" />
+<span id="page.id" title="SavingsProductDetails"></span>
 
 <div class="content">
     <div>
@@ -31,7 +31,7 @@
             [@spring.message "admin" /]</a>
             &nbsp;/
             <a href="viewSavingsProducts.ftl">
-               [@spring.messageArgs "ftlDefinedLabels.manageSavngsProducts.editsavingsproduct.viewSavingsproducts" , [savings]  /]                
+               [@spring.messageArgs "ftlDefinedLabels.manageSavngsProducts.editsavingsproduct.viewSavingsproducts" , [savings]  /]
             </a>&nbsp;/
             <span class="fontBold">${savingsProductDetails.productDetails.name}</span>
         </div>
@@ -58,7 +58,7 @@
                                 src="pages/framework/images/status_closedblack.gif"/></span>&nbsp;
                                 <span>
                                     [#assign inactive][@mifostag.mifoslabel name="ProductState-Inactive" /][/#assign]
-                                    [@spring.messageArgs "ftlDefinedLabels.inactive" , [inactive] /]                                     
+                                    [@spring.messageArgs "ftlDefinedLabels.inactive" , [inactive] /]
                                 </span>
                         [#break]
                 [/#switch]
@@ -66,7 +66,7 @@
             <div style="height:5px;" class="clear">&nbsp;</div>
             <p class="span-24 ">
             <div class="fontBold black-subheading">
-                [@spring.messageArgs "ftlDefinedLabels.manageSavngsProducts.editsavingsproduct.savingsproductdetails" , [savings]  /]                
+                [@spring.messageArgs "ftlDefinedLabels.manageSavngsProducts.editsavingsproduct.savingsproductdetails" , [savings]  /]
             </div>
             <div>
                 <span>[@spring.message "manageSavngsProducts.editsavingsproduct.productinstancename" /]</span>

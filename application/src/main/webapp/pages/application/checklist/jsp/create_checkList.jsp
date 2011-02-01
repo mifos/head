@@ -32,7 +32,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".create">
 	<tiles:put name="body" type="string">
-	<span id="page.id" title="create_checkList" />
+	<span id="page.id" title="create_checkList"></span>
 	
 <SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 		<script language="JavaScript"
@@ -146,7 +146,7 @@ explanation of the license and how it is applied.
 										items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'checkList_masterData')}"
 										varStatus="loop">
 										<html-el:hidden property="isCustomers"
-											value="${item.isCustomer}" />
+											value="${item.customer}" />
 										<html-el:hidden property="masterIds"
 											value="${item.masterTypeId}" />
 										<html-el:hidden property="masterNames"

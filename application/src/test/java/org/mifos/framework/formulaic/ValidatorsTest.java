@@ -33,6 +33,7 @@ import junit.framework.TestCase;
 import org.joda.time.DateMidnight;
 import org.testng.annotations.Test;
 
+@SuppressWarnings("unchecked")
 @Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
 public class ValidatorsTest extends TestCase {
 

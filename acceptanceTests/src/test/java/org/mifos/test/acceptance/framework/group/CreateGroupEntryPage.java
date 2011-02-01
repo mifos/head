@@ -20,12 +20,12 @@
 
 package org.mifos.test.acceptance.framework.group;
 
-import org.mifos.test.acceptance.framework.AbstractPage;
+import org.mifos.test.acceptance.framework.MifosPage;
 
 import com.thoughtworks.selenium.Selenium;
 import org.mifos.test.acceptance.questionnaire.QuestionResponsePage;
 
-public class CreateGroupEntryPage extends AbstractPage {
+public class CreateGroupEntryPage extends MifosPage {
 
     public void verifyPage() {
         this.verifyPage("LoanCreationDetail");
@@ -64,19 +64,19 @@ public class CreateGroupEntryPage extends AbstractPage {
 
     private void enterGroupData(CreateGroupSubmitParameters formParameters) {
         selenium.type("creategroup.input.displayName", formParameters.getGroupName());
-        selenium.select("formedByPersonnel", formParameters.getRecruitedBy());
-        selenium.type("trainedDateDD", formParameters.getTrainedDateDay());
-        selenium.type("trainedDateMM", formParameters.getTrainedDateMonth());
-        selenium.type("trainedDateYY", formParameters.getTrainedDateYear());
-        selenium.type("creategroup.input.externalId", formParameters.getExternalId());
-        selenium.type("creategroup.input.address1", formParameters.getAddressOne());
-        selenium.type("creategroup.input.address2", formParameters.getAddressTwo());
-        selenium.type("creategroup.input.address3", formParameters.getAddressThree());
-        selenium.type("creategroup.input.city", formParameters.getCity());
-        selenium.type("creategroup.input.state", formParameters.getState());
-        selenium.type("creategroup.input.country", formParameters.getCountry());
-        selenium.type("creategroup.input.postalCode", formParameters.getPostalCode());
-        selenium.type("creategroup.input.telephone", formParameters.getTelephone());
+        typeTextIfNotEmpty("formedByPersonnel", formParameters.getRecruitedBy());
+        typeTextIfNotEmpty("trainedDateDD", formParameters.getTrainedDateDay());
+        typeTextIfNotEmpty("trainedDateMM", formParameters.getTrainedDateMonth());
+        typeTextIfNotEmpty("trainedDateYY", formParameters.getTrainedDateYear());
+        typeTextIfNotEmpty("creategroup.input.externalId", formParameters.getExternalId());
+        typeTextIfNotEmpty("creategroup.input.address1", formParameters.getAddressOne());
+        typeTextIfNotEmpty("creategroup.input.address2", formParameters.getAddressTwo());
+        typeTextIfNotEmpty("creategroup.input.address3", formParameters.getAddressThree());
+        typeTextIfNotEmpty("creategroup.input.city", formParameters.getCity());
+        typeTextIfNotEmpty("creategroup.input.state", formParameters.getState());
+        typeTextIfNotEmpty("creategroup.input.country", formParameters.getCountry());
+        typeTextIfNotEmpty("creategroup.input.postalCode", formParameters.getPostalCode());
+        typeTextIfNotEmpty("creategroup.input.telephone", formParameters.getTelephone());
     }
 
     @SuppressWarnings("PMD.TooManyFields")

@@ -28,14 +28,14 @@ public class ParseResultDto {
     private final List<String> parseErrors;
     private final List<AccountPaymentParametersDto> successfullyParsedPayments;
 
-	private Integer numberOfReadRows;
-	private Integer numberOfIgnoredRows;
-	private Integer numberOfErrorRows;
-	private BigDecimal totalAmountOfTransactionsImported;
-	private BigDecimal totalAmountOfTransactionsWithError;
+    private Integer numberOfReadRows;
+    private Integer numberOfIgnoredRows;
+    private Integer numberOfErrorRows;
+    private BigDecimal totalAmountOfTransactionsImported;
+    private BigDecimal totalAmountOfTransactionsWithError;
         private BigDecimal totalAmountOfDisbursementsImported;
-	private int numberRowSuccessfullyParsed;
-	private String statusLogFile;
+    private int numberRowSuccessfullyParsed;
+    private String statusLogFile;
 
     public ParseResultDto(final List<String> parseErrors, final List<AccountPaymentParametersDto> successfullyParsedRows) {
         this.parseErrors = parseErrors;

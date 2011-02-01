@@ -97,6 +97,7 @@ import org.mifos.framework.util.helpers.MifosStringUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
 
+@SuppressWarnings("unchecked")
 public class CustomerPersistence extends LegacyGenericDao {
 
     private final LegacyPersonnelDao legacyPersonnelDao = ApplicationContextProvider.getBean(LegacyPersonnelDao.class);
@@ -126,72 +127,72 @@ public class CustomerPersistence extends LegacyGenericDao {
         }
     };
 
-	private class SearchTemplate {
+    private class SearchTemplate {
 
-		String searchString;
-		Short officeId;
-		Short userId;
+        String searchString;
+        Short officeId;
+        Short userId;
 
-		// queries must be set before calling "doSeach"
-		String queryNoOffice;
-		String queryNoOfficeCount;
+        // queries must be set before calling "doSeach"
+        String queryNoOffice;
+        String queryNoOfficeCount;
 
-		String queryNormal;
-		String queryNormalCount;
+        String queryNormal;
+        String queryNormalCount;
 
-		String queryNonOfficer;
-		String queryNonOfficerCount;
+        String queryNonOfficer;
+        String queryNonOfficerCount;
 
-		SearchTemplate(final String searchString, final Short officeId, final Short userId) {
-			this.searchString = searchString;
-			this.officeId = officeId;
-			this.userId = userId;
-		}
+        SearchTemplate(final String searchString, final Short officeId, final Short userId) {
+            this.searchString = searchString;
+            this.officeId = officeId;
+            this.userId = userId;
+        }
 
-		QueryResult doSearch()
-				throws HibernateSearchException, SystemException, PersistenceException {
+        QueryResult doSearch()
+                throws HibernateSearchException, SystemException, PersistenceException {
 
-			String[] namedQuery = new String[2];
-			List<Param> paramList = new ArrayList<Param>();
-			QueryInputs queryInputs = new QueryInputs();
-			String[] Names = {"customerId", "centerName", "centerGlobalCustNum", "customerType", "branchGlobalNum",
-				"branchName", "loanOfficerName", "loanOffcerGlobalNum", "customerStatus", "groupName",
-				"groupGlobalCustNum", "clientName", "clientGlobalCustNum", "loanGlobalAccountNumber"};
-			QueryResult queryResult = QueryFactory.getQueryResult(CustomerSearchConstants.CUSTOMERSEARCHRESULTS);
-			queryInputs.setPath("org.mifos.customers.business.CustomerSearchDto");
-			queryInputs.setAliasNames(Names);
-			queryResult.setQueryInputs(queryInputs);
-			queryInputs.setQueryStrings(namedQuery);
-			queryInputs.setParamList(paramList);
-			PersonnelBO personnel = legacyPersonnelDao.getPersonnel(userId);
+            String[] namedQuery = new String[2];
+            List<Param> paramList = new ArrayList<Param>();
+            QueryInputs queryInputs = new QueryInputs();
+            String[] Names = {"customerId", "centerName", "centerGlobalCustNum", "customerType", "branchGlobalNum",
+                "branchName", "loanOfficerName", "loanOffcerGlobalNum", "customerStatus", "groupName",
+                "groupGlobalCustNum", "clientName", "clientGlobalCustNum", "loanGlobalAccountNumber"};
+            QueryResult queryResult = QueryFactory.getQueryResult(CustomerSearchConstants.CUSTOMERSEARCHRESULTS);
+            queryInputs.setPath("org.mifos.customers.business.CustomerSearchDto");
+            queryInputs.setAliasNames(Names);
+            queryResult.setQueryInputs(queryInputs);
+            queryInputs.setQueryStrings(namedQuery);
+            queryInputs.setParamList(paramList);
+            PersonnelBO personnel = legacyPersonnelDao.getPersonnel(userId);
 
-			if (officeId != null && officeId.shortValue() == 0) {
-				namedQuery[0] = queryNoOfficeCount;
-				namedQuery[1] = queryNoOffice;
-				if (personnel.getLevelEnum() == PersonnelLevel.LOAN_OFFICER) {
-					paramList.add(typeNameValue("String", "SEARCH_ID", personnel.getOffice().getSearchId()));
-				} else {
-					paramList.add(typeNameValue("String", "SEARCH_ID", personnel.getOffice().getSearchId() + "%"));
-				}
-			} else {
-				paramList.add(typeNameValue("Short", "OFFICEID", officeId));
-				if (personnel.getLevelEnum() == PersonnelLevel.LOAN_OFFICER) {
-					paramList.add(typeNameValue("String", "ID", personnel.getPersonnelId()));
-					namedQuery[0] = queryNormalCount;
-					namedQuery[1] = queryNormal;
-				} else {
-					paramList.add(typeNameValue("String", "SEARCH_ID", personnel.getOffice().getSearchId() + "%"));
-					namedQuery[0] = queryNonOfficerCount;
-					namedQuery[1] = queryNonOfficer;
-				}
-			}
+            if (officeId != null && officeId.shortValue() == 0) {
+                namedQuery[0] = queryNoOfficeCount;
+                namedQuery[1] = queryNoOffice;
+                if (personnel.getLevelEnum() == PersonnelLevel.LOAN_OFFICER) {
+                    paramList.add(typeNameValue("String", "SEARCH_ID", personnel.getOffice().getSearchId()));
+                } else {
+                    paramList.add(typeNameValue("String", "SEARCH_ID", personnel.getOffice().getSearchId() + "%"));
+                }
+            } else {
+                paramList.add(typeNameValue("Short", "OFFICEID", officeId));
+                if (personnel.getLevelEnum() == PersonnelLevel.LOAN_OFFICER) {
+                    paramList.add(typeNameValue("String", "ID", personnel.getPersonnelId()));
+                    namedQuery[0] = queryNormalCount;
+                    namedQuery[1] = queryNormal;
+                } else {
+                    paramList.add(typeNameValue("String", "SEARCH_ID", personnel.getOffice().getSearchId() + "%"));
+                    namedQuery[0] = queryNonOfficerCount;
+                    namedQuery[1] = queryNonOfficer;
+                }
+            }
 
-			paramList.add(typeNameValue("String", "SEARCH_STRING", searchString));
+            paramList.add(typeNameValue("String", "SEARCH_STRING", searchString));
 
-			return queryResult;
+            return queryResult;
 
-		}
-	}
+        }
+    }
 
     public void saveCustomer(final CustomerBO customer) throws CustomerException {
         try {
@@ -304,17 +305,17 @@ public class CustomerPersistence extends LegacyGenericDao {
         try {
 
            queryResult = ApplicationContextProvider.getBean(LegacyAccountDao.class).search(searchString, officeId);
-			if (queryResult == null) {
-				queryResult = idSearch(searchString, officeId, userId);
-				if (queryResult == null) {
-					queryResult = governmentIdSearch(searchString, officeId, userId);
-					if (queryResult == null) {
-						queryResult = phoneNumberSearch(searchString, officeId, userId);
-						if (queryResult == null) {
-							queryResult = mainSearch(searchString, officeId, userId, userOfficeId);
-						}
-					}
-				}
+            if (queryResult == null) {
+                queryResult = idSearch(searchString, officeId, userId);
+                if (queryResult == null) {
+                    queryResult = governmentIdSearch(searchString, officeId, userId);
+                    if (queryResult == null) {
+                        queryResult = phoneNumberSearch(searchString, officeId, userId);
+                        if (queryResult == null) {
+                            queryResult = mainSearch(searchString, officeId, userId, userOfficeId);
+                        }
+                    }
+                }
             }
 
         } catch (HibernateSearchException e) {
@@ -414,27 +415,27 @@ public class CustomerPersistence extends LegacyGenericDao {
         }
         paramList.add(typeNameValue("String", "SEARCH_STRING", "%" + searchString + "%"));
         if (searchString.contains(" ")) {
-			List<String> words = new ArrayList<String>(Arrays.asList(searchString.split(" +")));
-			// we support up to 3 words for client search, so join more words with spaces or fill with empty
-			// strings to get exactly 3 words
-			if (words.size() > 3) {
-				for (int i = 3; i < words.size(); ++i) {
-					words.set(2, words.get(2) + " " + words.get(i));
-				}
-				words = words.subList(0, 2);
-			} else if (words.size() < 3) {
-				int elementsToAdd = 3 - words.size();
-				for (int i = 0; i < elementsToAdd; ++i) {
-					words.add("");
-				}
-			}
+            List<String> words = new ArrayList<String>(Arrays.asList(searchString.split(" +")));
+            // we support up to 3 words for client search, so join more words with spaces or fill with empty
+            // strings to get exactly 3 words
+            if (words.size() > 3) {
+                for (int i = 3; i < words.size(); ++i) {
+                    words.set(2, words.get(2) + " " + words.get(i));
+                }
+                words = words.subList(0, 2);
+            } else if (words.size() < 3) {
+                int elementsToAdd = 3 - words.size();
+                for (int i = 0; i < elementsToAdd; ++i) {
+                    words.add("");
+                }
+            }
             paramList.add(typeNameValue("String", "SEARCH_STRING1", words.get(0)));
             paramList.add(typeNameValue("String", "SEARCH_STRING2", words.get(1)));
-			paramList.add(typeNameValue("String", "SEARCH_STRING3", words.get(2)));
+            paramList.add(typeNameValue("String", "SEARCH_STRING3", words.get(2)));
         } else {
             paramList.add(typeNameValue("String", "SEARCH_STRING1", searchString));
             paramList.add(typeNameValue("String", "SEARCH_STRING2", ""));
-			paramList.add(typeNameValue("String", "SEARCH_STRING3", ""));
+            paramList.add(typeNameValue("String", "SEARCH_STRING3", ""));
         }
         setParams(paramList, userId);
         queryResult.setQueryInputs(queryInputs);
@@ -516,14 +517,14 @@ public class CustomerPersistence extends LegacyGenericDao {
 
     }
 
-	private QueryResult governmentIdSearch(final String searchString, final Short officeId, final Short userId)
+    private QueryResult governmentIdSearch(final String searchString, final Short officeId, final Short userId)
             throws HibernateSearchException, SystemException, PersistenceException {
 
-		if (!isCustomerExistWithGovernmentId(searchString)) {
-			return null;
-		}
+        if (!isCustomerExistWithGovernmentId(searchString)) {
+            return null;
+        }
 
-		SearchTemplate template = new SearchTemplate(searchString, officeId, userId);
+        SearchTemplate template = new SearchTemplate(searchString, officeId, userId);
 
         template.queryNoOfficeCount = NamedQueryConstants.CUSTOMER_GOVERNMENT_ID_SEARCH_NOOFFICEID_COUNT;
         template.queryNoOffice = NamedQueryConstants.CUSTOMER_GOVERNMENT_ID_SEARCH_NOOFFICEID;
@@ -531,25 +532,25 @@ public class CustomerPersistence extends LegacyGenericDao {
         template.queryNormalCount = NamedQueryConstants.CUSTOMER_GOVERNMENT_ID_SEARCH_COUNT;
         template.queryNormal = NamedQueryConstants.CUSTOMER_GOVERNMENT_ID_SEARCH;
 
-		template.queryNonOfficerCount = NamedQueryConstants.CUSTOMER_GOVERNMENT_ID_SEARCH_COUNT_NONLO;
+        template.queryNonOfficerCount = NamedQueryConstants.CUSTOMER_GOVERNMENT_ID_SEARCH_COUNT_NONLO;
         template.queryNonOfficer = NamedQueryConstants.CUSTOMER_GOVERNMENT_ID_SEARCH_NONLO;
 
-		return template.doSearch();
+        return template.doSearch();
     }
 
    private QueryResult phoneNumberSearch(final String searchString, final Short officeId, final Short userId)
-			throws HibernateSearchException, SystemException, PersistenceException {
+            throws HibernateSearchException, SystemException, PersistenceException {
 
-		String phoneNumberWithStrippedNonnumerics = MifosStringUtils.removeNondigits(searchString);
-		if (phoneNumberWithStrippedNonnumerics.isEmpty()) {
+        String phoneNumberWithStrippedNonnumerics = MifosStringUtils.removeNondigits(searchString);
+        if (phoneNumberWithStrippedNonnumerics.isEmpty()) {
             return null;
         }
-		List<CustomerDto> customersWithThisPhoneNumber = new CustomerDaoHibernate((new GenericDaoHibernate())).
-				findCustomersWithGivenPhoneNumber(phoneNumberWithStrippedNonnumerics);
-		if (customersWithThisPhoneNumber == null || customersWithThisPhoneNumber.isEmpty()) {
-			return null;
-		}
-		SearchTemplate template = new SearchTemplate(phoneNumberWithStrippedNonnumerics, officeId, userId);
+        List<CustomerDto> customersWithThisPhoneNumber = new CustomerDaoHibernate((new GenericDaoHibernate())).
+                findCustomersWithGivenPhoneNumber(phoneNumberWithStrippedNonnumerics);
+        if (customersWithThisPhoneNumber == null || customersWithThisPhoneNumber.isEmpty()) {
+            return null;
+        }
+        SearchTemplate template = new SearchTemplate(phoneNumberWithStrippedNonnumerics, officeId, userId);
 
         template.queryNoOfficeCount = NamedQueryConstants.CUSTOMER_PHONE_SEARCH_NOOFFICEID_COUNT;
         template.queryNoOffice = NamedQueryConstants.CUSTOMER_PHONE_SEARCH_NOOFFICEID;
@@ -557,10 +558,10 @@ public class CustomerPersistence extends LegacyGenericDao {
         template.queryNormalCount = NamedQueryConstants.CUSTOMER_PHONE_SEARCH_COUNT;
         template.queryNormal = NamedQueryConstants.CUSTOMER_PHONE_SEARCH;
 
-		template.queryNonOfficerCount = NamedQueryConstants.CUSTOMER_PHONE_SEARCH_COUNT_NONLO;
+        template.queryNonOfficerCount = NamedQueryConstants.CUSTOMER_PHONE_SEARCH_COUNT_NONLO;
         template.queryNonOfficer = NamedQueryConstants.CUSTOMER_PHONE_SEARCH_NONLO;
 
-		return template.doSearch();
+        return template.doSearch();
    }
 
     private boolean isCustomerExist(final String globalCustNum) throws PersistenceException {

@@ -46,6 +46,7 @@ public class ActivityMapperTest extends TestCase {
     private UserContext userContext;
     private ActivityMapper activityMapper;
 
+    @Override
     public void setUp(){
         initMocks(this);
         authorizationManager = mock(AuthorizationManager.class);

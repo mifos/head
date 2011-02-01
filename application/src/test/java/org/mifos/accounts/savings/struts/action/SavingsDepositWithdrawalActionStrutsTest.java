@@ -63,9 +63,8 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 
+@SuppressWarnings("unchecked")
 public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTestCase {
-
-
 
     private UserContext userContext;
     private CustomerBO group;

@@ -32,6 +32,7 @@ import org.mifos.application.NamedQueryConstants;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.LegacyGenericDao;
 
+@SuppressWarnings("unchecked")
 public class ProductCategoryPersistence extends LegacyGenericDao {
 
     public Short getMaxPrdCategoryId() throws PersistenceException {
@@ -83,7 +84,6 @@ public class ProductCategoryPersistence extends LegacyGenericDao {
 
     }
 
-    @SuppressWarnings("cast")
     public ProductTypeEntity getProductTypesByID() throws PersistenceException {
         return (ProductTypeEntity) executeNamedQuery(NamedQueryConstants.GET_PRD_TYPES, null);
     }

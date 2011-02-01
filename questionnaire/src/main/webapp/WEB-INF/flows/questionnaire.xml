@@ -17,7 +17,7 @@
 
     <view-state id="selectQuestionnaire">
         <transition on="selectQuestionnaire" to="recordSelection"/>
-		<transition on="cancel" to="viewClientDetails" bind="false" history="discard"/>
+        <transition on="cancel" to="viewClientDetails" bind="false" history="discard"/>
     </view-state>
 
     <action-state id="recordSelection">
@@ -26,8 +26,8 @@
     </action-state>
 
     <view-state id="questionnaire" model="questionGroupDetails">
-		<transition on="saveQuestionnaire" to="saveQuestionnaire"/>
-		<transition on="cancel" to="viewClientDetails" bind="false" history="discard"/>
+        <transition on="saveQuestionnaire" to="saveQuestionnaire"/>
+        <transition on="cancel" to="viewClientDetails" bind="false" history="discard"/>
     </view-state>
 
     <action-state id="saveQuestionnaire">

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+    <preConditions>
+        <dbms type="mysql"/>
+    </preConditions>
+<!--    <changeSet author="MIFOS-Release-E" id="1">
+        <sqlFile path="org/mifos/db/base-schema.sql" endDelimiter=";"/>
+        <rollback/>
+    </changeSet>
+    <changeSet author="MIFOS-Release-E" id="2">
+        <sqlFile path="org/mifos/db/base-data.sql" endDelimiter=";"/>
+        <rollback/>
+    </changeSet>
+    <include file="org/mifos/db/changelog-Elsie_F.xml"/>-->
+</databaseChangeLog>

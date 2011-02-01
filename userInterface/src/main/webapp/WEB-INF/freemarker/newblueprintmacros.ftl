@@ -31,37 +31,37 @@
 [#macro topNavigation currentTab]
 <div id="header">
     <div class="topAlign append-1">
-		<span class="logo"></span>
-		<a href="yourSettings.do?method=get" title="[@spring.message "yourSettings"/]">[@spring.message "yourSettings"/]</a>&nbsp;|&nbsp;
-		<a id="logout_link" href="j_spring_security_logout" title="[@spring.message "logout"/]">[@spring.message "logout"/]</a>
-	</div>
+        <span class="logo"></span>
+        <a href="yourSettings.do?method=get" title="[@spring.message "yourSettings"/]">[@spring.message "yourSettings"/]</a>&nbsp;|&nbsp;
+        <a id="logout_link" href="j_spring_security_logout" title="[@spring.message "logout"/]">[@spring.message "logout"/]</a>
+    </div>
     <div>
-		<span class="menu">
-		  <a id="header.link.home" href="custSearchAction.do?method=getHomePage" class="[#if currentTab == "Home"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.Home" /]">[@spring.message "tab.Home" /]</a>
-		  <a id="header.link.clientsAndAccounts" href="custSearchAction.do?method=loadMainSearch" class="[#if currentTab == "ClientsAndAccounts"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.ClientsAndAccounts" /]">[@spring.message "tab.ClientsAndAccounts" /]</a>
-		  <a id="header.link.reports" href="reportsAction.do?method=load" class="[#if currentTab == "Reports"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.Reports" /]">[@spring.message "tab.Reports" /]</a>
-		  [@security.authorize ifAllGranted="ROLE_ADMIN"]
-		  <a id="header.link.admin" href="AdminAction.do?method=load" class="[#if currentTab == "Admin"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.Admin" /]">[@spring.message "tab.Admin" /]</a></span>
-		  [/@security.authorize]
-		</span>
-	</div>
+        <span class="menu">
+          <a id="header.link.home" href="custSearchAction.do?method=getHomePage" class="[#if currentTab == "Home"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.Home" /]">[@spring.message "tab.Home" /]</a>
+          <a id="header.link.clientsAndAccounts" href="custSearchAction.do?method=loadMainSearch" class="[#if currentTab == "ClientsAndAccounts"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.ClientsAndAccounts" /]">[@spring.message "tab.ClientsAndAccounts" /]</a>
+          <a id="header.link.reports" href="reportsAction.do?method=load" class="[#if currentTab == "Reports"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.Reports" /]">[@spring.message "tab.Reports" /]</a>
+          [@security.authorize ifAllGranted="ROLE_ADMIN"]
+          <a id="header.link.admin" href="AdminAction.do?method=load" class="[#if currentTab == "Admin"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.Admin" /]">[@spring.message "tab.Admin" /]</a></span>
+          [/@security.authorize]
+        </span>
+    </div>
 </div>
 [/#macro]
 
 [#macro topNavigationNoSecurity currentTab]
 <div id="header">
-	<div class="site_logo">
-		<span class="logo"></span>
-		<a href="yourSettings.do?method=get" title="[@spring.message "yourSettings"/]">[@spring.message "yourSettings"/]</a>&nbsp;|&nbsp;
-		<a id="logout_link" href="j_spring_security_logout" title="[@spring.message "logout"/]">[@spring.message "logout"/]</a>
-	</div>
+    <div class="site_logo">
+        <span class="logo"></span>
+        <a href="yourSettings.do?method=get" title="[@spring.message "yourSettings"/]">[@spring.message "yourSettings"/]</a>&nbsp;|&nbsp;
+        <a id="logout_link" href="j_spring_security_logout" title="[@spring.message "logout"/]">[@spring.message "logout"/]</a>
+    </div>
     <div class="top_menu">
-		<ul>
-		 <li><a id="header.link.home" href="custSearchAction.do?method=getHomePage" class="[#if currentTab == "Home"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.Home" /]">[@spring.message "tab.Home" /]</a>
-		 </li> <li> <a id="header.link.clientsAndAccounts" href="custSearchAction.do?method=loadMainSearch" class="[#if currentTab == "ClientsAndAccounts"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.ClientsAndAccounts" /]">[@spring.message "tab.ClientsAndAccounts" /]</a>
-		 </li> <li> <a id="header.link.reports" href="reportsAction.do?method=load" class="[#if currentTab == "Reports"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.Reports" /]">[@spring.message "tab.Reports" /]</a>
-		  </li> <li><a id="header.link.admin" href="AdminAction.do?method=load" class="[#if currentTab == "Admin"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.Admin" /]">[@spring.message "tab.Admin" /]</a></li>
-	 </ul>
+        <ul>
+         <li><a id="header.link.home" href="custSearchAction.do?method=getHomePage" class="[#if currentTab == "Home"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.Home" /]">[@spring.message "tab.Home" /]</a>
+         </li> <li> <a id="header.link.clientsAndAccounts" href="custSearchAction.do?method=loadMainSearch" class="[#if currentTab == "ClientsAndAccounts"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.ClientsAndAccounts" /]">[@spring.message "tab.ClientsAndAccounts" /]</a>
+         </li> <li> <a id="header.link.reports" href="reportsAction.do?method=load" class="[#if currentTab == "Reports"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.Reports" /]">[@spring.message "tab.Reports" /]</a>
+          </li> <li><a id="header.link.admin" href="AdminAction.do?method=load" class="[#if currentTab == "Admin"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.Admin" /]">[@spring.message "tab.Admin" /]</a></li>
+     </ul>
     </div>
 
 </div>
@@ -69,23 +69,23 @@
 
 [#macro crumbs breadcrumbs]
 <div class="breadcrumb">
-	    [#list breadcrumbs as messages]
-  			[#if messages_has_next]
-    			<a href="${messages.link}">[@spring.message "${messages.message}" /]</a>&nbsp;/&nbsp;[#else]<span class="fontBold">[@spring.messageText "${messages.message}","${messages.message}" /]</span>
-  			[/#if]
-  		[/#list]
+        [#list breadcrumbs as messages]
+              [#if messages_has_next]
+                <a href="${messages.link}">[@spring.message "${messages.message}" /]</a>&nbsp;/&nbsp;[#else]<span class="fontBold">[@spring.messageText "${messages.message}","${messages.message}" /]</span>
+              [/#if]
+          [/#list]
  </div>
 [/#macro]
 
 +[#macro crumbpairs breadcrumbs lastEntryIsText="true"]
 <div class="breadcrumb">
-	    [#list breadcrumbs?keys as text]
-  			[#if text_has_next || lastEntryIsText=="false"]
-    			<a href="${breadcrumbs[text]}">[@spring.messageText text, text/]</a>&nbsp;/
+        [#list breadcrumbs?keys as text]
+              [#if text_has_next || lastEntryIsText=="false"]
+                <a href="${breadcrumbs[text]}">[@spring.messageText text, text/]</a>&nbsp;/
             [#else]
                 <span class="fontBold">[@spring.messageText text, text/]</span>
-   			[/#if]
-  		[/#list]
+               [/#if]
+          [/#list]
  </div>
 [/#macro]
 
@@ -112,12 +112,12 @@
     [#if spring.status.errorMessages?size > 0]
     <div class="marginLeft30">
         <ul class="error">
-	     [#list spring.status.errorMessages as error]
-	      <li><b>${error}</b></li>
-	     [/#list]
-	    </ul>
-	</div>
-	[/#if]
+         [#list spring.status.errorMessages as error]
+          <li><b>${error}</b></li>
+         [/#list]
+        </ul>
+    </div>
+    [/#if]
 [/#macro]
 
 [#macro formSingleSelectWithPrompt path options selectPrompt attributes=""]
@@ -143,9 +143,9 @@
 
 [#macro editPageBreadcrumbs breadcrumbs]
 <div class="breadcrumb">
-	    [#list breadcrumbs?keys as text]  			
-    			<a href="${breadcrumbs[text]}">[@spring.messageText text, text/]</a>&nbsp;[#if text_has_next]/[/#if]  &nbsp;   			
-  		[/#list]
+        [#list breadcrumbs?keys as text]
+                <a href="${breadcrumbs[text]}">[@spring.messageText text, text/]</a>&nbsp;[#if text_has_next]/[/#if]  &nbsp;
+          [/#list]
  </div>
 [/#macro]
 

@@ -35,7 +35,7 @@ explanation of the license and how it is applied.
 <%-- Struts Tiles definition for the header and menu --%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-	    <span id="page.id" title="CenterDetails" />
+	    <span id="page.id" title="CenterDetails"></span>
 		<script language="javascript">
   function GoToEditPage(){
 	centerActionForm.action="centerAction.do?method=manage";

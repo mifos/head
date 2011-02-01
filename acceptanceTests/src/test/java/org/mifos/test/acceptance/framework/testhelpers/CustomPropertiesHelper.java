@@ -126,4 +126,12 @@ public class CustomPropertiesHelper {
     public void setAdditionalCurrenciesCode(String additionalCurrencies) {
         selenium.open(UPDATE_PAGE + "?AccountingRules.AdditionalCurrencyCodes=" + additionalCurrencies);
     }
+
+    /**
+     * Set order of products a transaction import
+     * @param order
+     */
+    public void setImportTransactionOrder(String order){
+        selenium.open(UPDATE_PAGE + "?ke.co.safaricom.MPesaXlsImporter.ImportTransactionOrder=" + order);
+    }
 }

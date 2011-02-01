@@ -184,11 +184,6 @@ public interface NamedQueryConstants {
     // BulkEntry
     String GET_FEE_AMOUNT_AT_DISBURSEMENT = "accounts.getFeeAmountAtDisbursement";
 
-    /* custom fields */
-    String RETRIEVE_CUSTOM_FIELDS = "retrieveCustomFields";
-    String RETRIEVE_ALL_CUSTOM_FIELDS = "retrieveAllCustomFields";
-    String RETRIEVE_ONE_CUSTOM_FIELD = "retrieveOneCustomField";
-
     String FETCH_PRODUCT_NAMES_FOR_GROUP = "Customer.fetchProductNamesForGroup";
     String FETCH_PRODUCT_NAMES_FOR_CLIENT = "Customer.fetchProductNamesForClient";
 
@@ -324,7 +319,7 @@ public interface NamedQueryConstants {
     String CUSTOMER_GOVERNMENT_ID_SEARCH_NOOFFICEID = "Customer.cust_govidsearch_withoutoffice";
     String CUSTOMER_GOVERNMENT_ID_SEARCH_NOOFFICEID_COUNT = "Customer.cust_govidsearch_withoutoffice_count";
 
-	String CUSTOMER_PHONE_SEARCH_NOOFFICEID = "Customer.cust_phonesearch_withoutoffice";
+    String CUSTOMER_PHONE_SEARCH_NOOFFICEID = "Customer.cust_phonesearch_withoutoffice";
     String CUSTOMER_PHONE_SEARCH_NOOFFICEID_COUNT = "Customer.cust_phonesearch_withoutoffice_count";
 
     String CUSTOMER_ID_SEARCH = "Customer.cust_idsearch";
@@ -333,7 +328,7 @@ public interface NamedQueryConstants {
     String CUSTOMER_GOVERNMENT_ID_SEARCH = "Customer.cust_govidsearch";
     String CUSTOMER_GOVERNMENT_ID_SEARCH_COUNT = "Customer.cust_govidsearch_count";
 
-	String CUSTOMER_PHONE_SEARCH = "Customer.cust_phonesearch";
+    String CUSTOMER_PHONE_SEARCH = "Customer.cust_phonesearch";
     String CUSTOMER_PHONE_SEARCH_COUNT = "Customer.cust_phonesearch_count";
 
     String CUSTOMER_ID_SEARCH_NONLO = "Customer.cust_idsearch_nonLo";
@@ -342,7 +337,7 @@ public interface NamedQueryConstants {
     String CUSTOMER_GOVERNMENT_ID_SEARCH_NONLO = "Customer.cust_govidsearch_nonLo";
     String CUSTOMER_GOVERNMENT_ID_SEARCH_COUNT_NONLO = "Customer.cust_govidsearch_count_nonLo";
 
-	String CUSTOMER_PHONE_SEARCH_NONLO = "Customer.cust_phonesearch_nonLo";
+    String CUSTOMER_PHONE_SEARCH_NONLO = "Customer.cust_phonesearch_nonLo";
     String CUSTOMER_PHONE_SEARCH_COUNT_NONLO = "Customer.cust_phonesearch_count_nonLo";
 
     String ACCOUNT_ID_SEARCH = "accounts.account_IdSearch";
@@ -488,10 +483,6 @@ public interface NamedQueryConstants {
 
     String SCHEDULED_TASK_GET_LATEST_TASK = "scheduledTasks.getLatestTask";
     String SCHEDULED_TASK_GET_SUCCESSFUL_TASK = "scheduledTasks.getSuccessfulTask";
-
-    // Insert CustomerCustomFieldEntity entries
-    String INSERT_CUSTOMER_CUSTOM_FIELD_ENTITY = "CustomerCustomFieldEntity.insertEntries";
-
 
     String GET_ORIGINAL_SCHEDULE_BY_ACCOUNT_ID = "originalLoanScheduleEntity.getScheduleForLoan";
 }

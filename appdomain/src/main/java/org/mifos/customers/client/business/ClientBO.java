@@ -30,6 +30,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.Hibernate;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
@@ -45,9 +46,7 @@ import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.master.MessageLookup;
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.ClientRules;
 import org.mifos.config.FiscalCalendarRules;
@@ -65,7 +64,6 @@ import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.surveys.business.SurveyInstance;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.ClientFamilyInfoUpdate;
@@ -777,13 +775,8 @@ public class ClientBO extends CustomerBO {
     private void createPicture(final InputStream picture) throws CustomerException {
         try {
             if (picture != null && picture.available() > 0) {
-                try {
-                    this.customerPicture = new CustomerPictureEntity(this, getClientPersistence().createBlob(picture));
-                } catch (PersistenceException e) {
-                    throw new CustomerException(e);
-                }
+                this.customerPicture = new CustomerPictureEntity(this, Hibernate.createBlob(picture));
             }
-
         } catch (IOException e) {
             throw new CustomerException(e);
         }
@@ -953,11 +946,9 @@ public class ClientBO extends CustomerBO {
                     SavingsOfferingBO savingsOffering = getSavingsPrdPersistence().getSavingsProduct(
                             clientOffering.getSavingsOffering().getPrdOfferingId());
                     if (savingsOffering.isActive()) {
-                        List<CustomFieldDefinitionEntity> customFieldDefs = getSavingsPersistence()
-                                .retrieveCustomFieldsDefinition(EntityType.SAVINGS.getValue());
                         addAccount(new SavingsBO(getUserContext(), savingsOffering, this, AccountState.SAVINGS_ACTIVE,
                                 savingsOffering.getRecommendedAmount(),
-                                createCustomFieldViewsForClientSavingsAccount(customFieldDefs)));
+                                new ArrayList<CustomFieldDto>()));
                     }
                 } catch (PersistenceException pe) {
                     throw new CustomerException(pe);
@@ -966,16 +957,6 @@ public class ClientBO extends CustomerBO {
                 }
             }
         }
-    }
-
-    private List<CustomFieldDto> createCustomFieldViewsForClientSavingsAccount(
-            final List<CustomFieldDefinitionEntity> customFieldDefs) {
-        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
-        for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
-            customFields.add(new CustomFieldDto(customFieldDef.getFieldId(), customFieldDef.getDefaultValue(),
-                    customFieldDef.getFieldType()));
-        }
-        return customFields;
     }
 
     public boolean isGroupStatusLower(final Short clientStatusId, final Short parentStatus) {
@@ -1035,10 +1016,6 @@ public class ClientBO extends CustomerBO {
     private boolean isClientCancelledOrClosed() {
         return getStatus() == CustomerStatus.CLIENT_CLOSED || getStatus() == CustomerStatus.CLIENT_CANCELLED ? true
                 : false;
-    }
-
-    public void attachPpiSurveyInstance(final SurveyInstance ppiSurvey) {
-        /* TODO not implemented yet */
     }
 
     @Override

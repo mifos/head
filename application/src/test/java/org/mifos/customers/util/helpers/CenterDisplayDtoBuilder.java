@@ -31,7 +31,7 @@ public class CenterDisplayDtoBuilder {
     final String globalCustNum = "XXX-" + customerId;
     final String displayName = "centerXX";
     final Short branchId = Short.valueOf("1");
-    final Date mfiJoiningDate = new DateTime().minusDays(1).toDateMidnight().toDate(); 
+    final Date mfiJoiningDate = new DateTime().minusDays(1).toDateMidnight().toDate();
     final Date createdDate = new DateTime().minusDays(1).toDateMidnight().toDate();
     final Integer versionNo = Integer.valueOf(1);
     final String externalId = "";
@@ -40,7 +40,7 @@ public class CenterDisplayDtoBuilder {
     final String customerStatusName = "";
     final Short loanOfficerId = Short.valueOf("1");
     final String loanOfficerName = "loanOfficerXX";
-    
+
     public CenterDisplayDto build() {
         return new CenterDisplayDto(customerId, globalCustNum, displayName, branchId, mfiJoiningDate, createdDate, versionNo, externalId, customerLevelId, customerStatusId, customerStatusName, loanOfficerId, loanOfficerName);
     }

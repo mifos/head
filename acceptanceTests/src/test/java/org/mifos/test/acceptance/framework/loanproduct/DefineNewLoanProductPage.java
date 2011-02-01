@@ -78,6 +78,12 @@ public class DefineNewLoanProductPage extends AbstractPage {
         // grace period type
         public static final int NONE = 1;
 
+        // Calculate # of Installments as
+        public static final int SAME_FOR_ALL_LOANS = 1;
+        public static final int BY_LAST_LOAN_AMOUNT = 2;
+        public static final int BY_LOAN_CYCLE = 3;
+        public static final int MAX_CYCLES = 6;
+
         private String branch;
         private String offeringName;
         private String offeringShortName;
@@ -92,13 +98,25 @@ public class DefineNewLoanProductPage extends AbstractPage {
         private String maxInterestRate;
         private String defaultInterestRate;
         private int freqOfInstallments;
+        private int calculateInstallments = SAME_FOR_ALL_LOANS;
+        private String minInstallemnts = "1";
         private String defInstallments;
         private String maxInstallments;
+        private String[][] cycleInstallments = new String[MAX_CYCLES][3];
         private int gracePeriodType;
         private String interestGLCode;
         private String principalGLCode;
         private boolean interestWaiver;
+        private boolean includeInLoanCounter;
         private List<String> questionGroups;
+
+        public String getMinInstallemnts() {
+            return this.minInstallemnts;
+        }
+
+        public void setMinInstallemnts(String minInstallemnts) {
+            this.minInstallemnts = minInstallemnts;
+        }
 
         public String getBranch() {
             return this.branch;
@@ -260,12 +278,60 @@ public class DefineNewLoanProductPage extends AbstractPage {
             return interestWaiver;
         }
 
+        public boolean isIncludeInLoanCounter() {
+            return includeInLoanCounter;
+        }
+
+        public void setIncludeInLoanCounter(boolean includeInLoanCounter) {
+            this.includeInLoanCounter = includeInLoanCounter;
+        }
+
         public List<String> getQuestionGroups() {
             return questionGroups;
         }
 
         public void setQuestionGroups(List<String> questionGroups) {
             this.questionGroups = questionGroups;
+        }
+
+        public void setCalculateInstallments(int calculateInstallments) {
+            this.calculateInstallments = calculateInstallments;
+        }
+
+        public int getCalculateInstallments() {
+            return calculateInstallments;
+        }
+
+        public void setCycleInstallments(String[][] cycleInstallments) {
+            this.cycleInstallments = cycleInstallments.clone();
+        }
+
+        public String[][] getCycleInstallments() {
+            return cycleInstallments.clone();
+        }
+
+        public String getMinCycleInstallment(int row) {
+            return cycleInstallments[row][0];
+        }
+
+        public void setMinCycleInstallment(int row, String value) {
+            this.cycleInstallments[row][0] = value;
+        }
+
+        public String getMaxCycleInstallment(int row) {
+            return cycleInstallments[row][1];
+        }
+
+        public void setMaxCycleInstallment(int row, String value) {
+            this.cycleInstallments[row][1] = value;
+        }
+
+        public String getDefCycleInstallment(int row) {
+            return cycleInstallments[row][2];
+        }
+
+        public void setDefCycleInstallment(int row, String value) {
+            this.cycleInstallments[row][2] = value;
         }
     }
 
@@ -283,8 +349,22 @@ public class DefineNewLoanProductPage extends AbstractPage {
         selenium.type("createLoanProduct.input.minInterestRate", parameters.getMinInterestRate());
         selenium.type("createLoanProduct.input.defInterestRate", parameters.getDefaultInterestRate());
         selenium.click("name=freqOfInstallments value=" + parameters.getFreqOfInstallments());
-        selenium.type("maxNoInstallments", parameters.getMaxInstallments());
-        selenium.type("defNoInstallments", parameters.getDefInstallments());
+        selenium.click("name=calcInstallmentType value=" + parameters.getCalculateInstallments());
+        if(parameters.getCalculateInstallments() == SubmitFormParameters.SAME_FOR_ALL_LOANS) {
+            selenium.type("minNoInstallments", parameters.getMinInstallemnts());
+            selenium.type("maxNoInstallments", parameters.getMaxInstallments());
+            selenium.type("defNoInstallments", parameters.getDefInstallments());
+        }
+    //    else if(parameters.getCalculateInstallments() == SubmitFormParameters.BY_LAST_LOAN_AMOUNT) {
+            // no test for this parameter
+   //     }
+        else {
+            for(int i = 1; i <= SubmitFormParameters.MAX_CYCLES; i++) {
+                selenium.type("minCycleInstallment"+i, parameters.getMinCycleInstallment(i-1));
+                selenium.type("maxCycleInstallment"+i, parameters.getMaxCycleInstallment(i-1));
+                selenium.type("defCycleInstallment"+i, parameters.getDefCycleInstallment(i-1));
+            }
+        }
         selenium.select("gracePeriodType", "value=" + parameters.getGracePeriodType());
         selenium.select("interestGLCode", "label=" + parameters.getInterestGLCode());
         selenium.select("principalGLCode", "label=" + parameters.getPrincipalGLCode());
@@ -329,7 +409,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
 
     public DefineNewLoanProductPage verifyVariableInstalmentOptionsFields() {
         fillInstalmentOptionsAndSubmit("text,", "text,", "text,");
-        isTextPresentInPage("The min installment amount for variable installments is invalid because only positive numbers or decimal separator are allowed");
+        isTextPresentInPage("The min installment amount for variable installments is invalid because only positive numbers and decimal separator are allowed");
         Assert.assertTrue(!selenium.getValue(maxInstalmentGapTextBox).contains("text") & !selenium.getValue(maxInstalmentGapTextBox).contains(","));
         Assert.assertTrue(!selenium.getValue(minInstalmentGapTextBox).contains("text") & !selenium.getValue(minInstalmentGapTextBox).contains(","));
 
@@ -340,7 +420,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
         fillInstalmentOptionsAndSubmit("-1", "-1", "-1");
         isTextPresentInPage("Minimum gap must not be zero or negative for loans with variable installments");
         isTextPresentInPage("Minimum gap must not be zero or negative for loans with variable installments");
-        isTextPresentInPage("The min installment amount for variable installments is invalid because only positive numbers or decimal separator are allowed");
+        isTextPresentInPage("The min installment amount for variable installments is invalid because only positive numbers and decimal separator are allowed");
 
         fillInstalmentOptionsAndSubmit("0", "0", "0");
         isTextPresentInPage("Minimum gap must not be zero or negative for loans with variable installments");
@@ -420,17 +500,17 @@ public class DefineNewLoanProductPage extends AbstractPage {
     private void verifyMinimumLimitForCashFlow() {
         fillCashFlow("-1", "-1", "149.9");
         submitAndGotoNewLoanProductPreviewPage();
-        isTextPresentInPage("The Indebtedness Ratio is invalid because only positive numbers or decimal separator are allowed");
+        isTextPresentInPage("The Indebtedness Ratio is invalid because only positive numbers and decimal separator are allowed");
         isTextPresentInPage("The Repayment Capacity is invalid because it is not in between 150.0 and 1000.0");
-        isTextPresentInPage("The Warning Threshold is invalid because only positive numbers or decimal separator are allowed");
+        isTextPresentInPage("The Warning Threshold is invalid because only positive numbers and decimal separator are allowed");
     }
 
     private void verifyNonNumericForCashFlow() {
         fillCashFlow("abc", "abc", "abc");
         submitAndGotoNewLoanProductPreviewPage();
-        isTextPresentInPage("The Warning Threshold is invalid because only positive numbers or decimal separator are allowed");
-        isTextPresentInPage("The Indebtedness Ratio is invalid because only positive numbers or decimal separator are allowed");
-        isTextPresentInPage("The Indebtedness Ratio is invalid because only positive numbers or decimal separator are allowed");
+        isTextPresentInPage("The Warning Threshold is invalid because only positive numbers and decimal separator are allowed");
+        isTextPresentInPage("The Indebtedness Ratio is invalid because only positive numbers and decimal separator are allowed");
+        isTextPresentInPage("The Indebtedness Ratio is invalid because only positive numbers and decimal separator are allowed");
     }
 
     private void verifyMaximumLimitForCashFlow() {
@@ -465,14 +545,12 @@ public class DefineNewLoanProductPage extends AbstractPage {
     }
 
     public void verifyFeeTypesBlocked(String[] feeNames) {
-        for (int index = 0; index < feeNames.length; index++) {
-            String feeName = feeNames[index];
+        for (String feeName : feeNames) {
             selenium.addSelection("feeId", "label=" + feeName);
         }
         selenium.click("LoanFeesList.button.add");
         submit();
-        for (int index = 0; index < feeNames.length; index++) {
-            String feeName = feeNames[index];
+        for (String feeName : feeNames) {
             isTextPresentInPage(feeName + " fee cannot be applied to variable installment loan product");
         }
     }

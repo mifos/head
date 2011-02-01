@@ -53,11 +53,11 @@ public class LegacyAuditDao extends LegacyGenericDao {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public List<AuditLog> getAuditLogRecords(Short entityType, Integer entityId) throws PersistenceException {
         Map<String, Object> queryParameter = new HashMap<String, Object>();
         queryParameter.put("entityType", entityType);
         queryParameter.put("entityId", entityId);
         return executeNamedQuery(NamedQueryConstants.RETRIEVE_AUDIT_LOG_RECORD, queryParameter);
     }
-
 }

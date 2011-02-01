@@ -127,7 +127,7 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
     public void testGetAppllicableFees() throws Exception {
         AccountBusinessService accountBusinessService = new AccountBusinessService();
         accountBO = getLoanAccount();
-        TestObjectFactory.flushandCloseSession();
+        StaticHibernateUtil.flushSession();
         center = TestObjectFactory.getCustomer(center.getCustomerId());
         group = TestObjectFactory.getCustomer(group.getCustomerId());
         accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
@@ -141,7 +141,7 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
     public void testGetAppllicableFeesForInstallmentStartingOnCurrentDate() throws Exception {
         AccountBusinessService accountBusinessService = new AccountBusinessService();
         accountBO = getLoanAccountWithAllTypesOfFees();
-        TestObjectFactory.flushandCloseSession();
+        StaticHibernateUtil.flushSession();
         center = TestObjectFactory.getCustomer(center.getCustomerId());
         group = TestObjectFactory.getCustomer(group.getCustomerId());
         accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
@@ -179,7 +179,7 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
         PersonnelBO loggedInUser = IntegrationTestObjectMother.testUser();
         accountBO.changeStatus(AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER, null, "", loggedInUser);
         TestObjectFactory.updateObject(accountBO);
-        TestObjectFactory.flushandCloseSession();
+        StaticHibernateUtil.flushSession();
         center = TestObjectFactory.getCustomer(center.getCustomerId());
         group = TestObjectFactory.getCustomer(group.getCustomerId());
         StaticHibernateUtil.flushAndClearSession();
@@ -215,7 +215,7 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
 
         AccountBusinessService accountBusinessService = new AccountBusinessService();
         CustomerAccountBO customerAccountBO = getCustomerAccountWithAllTypesOfFees();
-        TestObjectFactory.flushandCloseSession();
+        StaticHibernateUtil.flushSession();
         center = TestObjectFactory.getCustomer(center.getCustomerId());
         StaticHibernateUtil.flushAndClearSession();
         UserContext uc = TestUtils.makeUser();

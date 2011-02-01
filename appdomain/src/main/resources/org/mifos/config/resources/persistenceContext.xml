@@ -14,10 +14,10 @@
       http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.0.xsd">
 
     <context:annotation-config/>
-	<aop:aspectj-autoproxy/>
-	
-	<tx:annotation-driven transaction-manager="platformTransactionManager" order="200"/>
-	
+    <aop:aspectj-autoproxy/>
+
+    <tx:annotation-driven transaction-manager="platformTransactionManager" order="200"/>
+
     <bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean" destroy-method="destroy">
         <property name="dataSource" ref="dataSource"/>
         <property name="configLocations">

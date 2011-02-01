@@ -40,7 +40,7 @@ import org.testng.annotations.Test;
 
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(sequential = true, groups = {"smoke", "loanproduct", "acceptance"})
+@Test(sequential = true, groups = { "loanproduct", "acceptance"})
 public class CashFlowTest extends UiTestCaseBase {
 
     @Autowired
@@ -251,6 +251,6 @@ public class CashFlowTest extends UiTestCaseBase {
                 verifyCashFlowInViewLoanProductPage(warningThreshold,indebtentValue,repaymentValue);
     }
 
-    
+
 }
 

@@ -20,8 +20,10 @@
 
 package org.mifos.platform.accounting.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.platform.accounting.AccountingDto;
 import org.mifos.platform.accounting.dao.IAccountingDao;
@@ -43,10 +45,10 @@ public class AccountingServiceImpl implements IAccountingService {
     }
 
     @Override
-    public final String getTallyOutputFor(LocalDate startDate, LocalDate endDate) {
-        String fileName = getTallyOutputFileName(startDate, endDate);
+    public final String getExportOutput(LocalDate startDate, LocalDate endDate) {
+        String fileName = getExportOutputFileName(startDate, endDate);
 
-        List<AccountingDto> accountingData = getAccountingDataFor(startDate, endDate);
+        List<AccountingDto> accountingData = getExportDetails(startDate, endDate);
 
         String output = "NO DATA";
         if (!accountingData.isEmpty()) {
@@ -56,29 +58,28 @@ public class AccountingServiceImpl implements IAccountingService {
     }
 
     @Override
-    public final List<AccountingDto> getAccountingDataFor(LocalDate startDate, LocalDate endDate) {
+    public final List<AccountingDto> getExportDetails(LocalDate startDate, LocalDate endDate) {
         String fileName = cacheManager.getCacheFileName(startDate, endDate);
         if (!cacheManager.isAccountingDataAlreadyInCache(fileName)) {
-            writeToCache(startDate, endDate);
+            if(!writeToCache(startDate, endDate)) {
+                return new ArrayList<AccountingDto>();
+            }
         }
-        return cacheManager.getAccoutingDataFromCache(fileName);
+        return cacheManager.getExportDetails(fileName);
     }
 
-    private void writeToCache(LocalDate startDate, LocalDate endDate) {
+    private boolean writeToCache(LocalDate startDate, LocalDate endDate) {
         List<AccountingDto> accountingData = accountingDao.getAccountingDataByDate(startDate, endDate);
         if (!accountingData.isEmpty()) {
             cacheManager.writeAccountingDataToCache(accountingData, cacheManager.getCacheFileName(startDate, endDate));
+            return true;
         }
+        return false;
     }
 
     @Override
-    public final String getTallyOutputFileName(LocalDate startDate, LocalDate endDate) {
+    public final String getExportOutputFileName(LocalDate startDate, LocalDate endDate) {
         return cacheManager.getTallyOutputFileName(startDate, endDate);
-    }
-
-    @Override
-    public final List<AccountingCacheFileInfo> getAccountingDataCacheInfo() {
-        return cacheManager.getAccountingDataCacheInfo();
     }
 
     @Override
@@ -90,6 +91,56 @@ public class AccountingServiceImpl implements IAccountingService {
     public final Boolean hasAlreadyRanQuery(LocalDate startDate, LocalDate endDate) {
         String fileName = cacheManager.getCacheFileName(startDate, endDate);
         return cacheManager.isAccountingDataAlreadyInCache(fileName);
+    }
+
+    @Override
+    public List<ExportFileInfo> getAllExports(Integer size) {
+        List<ExportFileInfo> exports = new ArrayList<ExportFileInfo>();
+        LocalDate today = new LocalDate();
+        for (int i = 0; i < size; i++) {
+            LocalDate date = today.minusDays(i);
+            ExportFileInfo export;
+            if(hasAlreadyRanQuery(date, date)) {
+                export = cacheManager.getExportFileInfoFromCache(date, date);
+            } else {
+                export = getNotGeneratedExportFileInfo(date, date);
+            }
+            exports.add(export);
+        }
+        return exports;
+    }
+
+    private ExportFileInfo getNotGeneratedExportFileInfo(LocalDate startDate, LocalDate endDate) {
+        String fileName = cacheManager.getFilePrefixDefinedByMFI() + cacheManager.getCacheFileName(startDate, endDate);
+        String lastModified = new DateTime().toString("yyyy-MMM-dd HH:mm:sss z");
+        Boolean existInCache = false;
+        ExportFileInfo export = new ExportFileInfo(lastModified, fileName, startDate.toString(), endDate.toString(), existInCache);
+        return export;
+    }
+
+    @Override
+    public List<ExportFileInfo> getGeneratedExports(Integer size) {
+        List<ExportFileInfo> exports = cacheManager.getGeneratedExports();
+        if(size < exports.size()) {
+            return exports.subList(0, size);
+        }
+        return exports;
+    }
+
+    @Override
+    public List<ExportFileInfo> getNotGeneratedExports(Integer size) {
+        List<ExportFileInfo> exports = new ArrayList<ExportFileInfo>();
+        LocalDate date = new LocalDate();
+        for (int i = 0; i < size;) {
+            ExportFileInfo export;
+            if(!hasAlreadyRanQuery(date, date)) {
+                export = getNotGeneratedExportFileInfo(date, date);
+                exports.add(export);
+                i++;
+            }
+            date = date.minusDays(1);
+        }
+        return exports;
     }
 
 }

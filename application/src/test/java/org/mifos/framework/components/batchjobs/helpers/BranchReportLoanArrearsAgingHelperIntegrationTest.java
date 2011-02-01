@@ -54,6 +54,7 @@ import org.mifos.reports.business.service.BranchReportIntegrationTestCase;
 import org.mifos.reports.business.service.BranchReportService;
 import org.mifos.reports.business.service.IBranchReportService;
 
+@SuppressWarnings("unchecked")
 public class BranchReportLoanArrearsAgingHelperIntegrationTest extends BranchReportIntegrationTestCase {
 
     private IBranchReportService branchReportServiceMock;

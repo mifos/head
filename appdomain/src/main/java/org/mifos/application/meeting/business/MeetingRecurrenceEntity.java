@@ -187,7 +187,7 @@ public class MeetingRecurrenceEntity extends AbstractEntity {
 
         Integer weekOfMonth = Integer.valueOf(0);
         if (this.rankOfDay != null) {
-            weekOfMonth = this.rankOfDay.ordinal();
+            weekOfMonth = this.rankOfDay.getValue().intValue();
         }
 
         Integer dayOfWeek = Integer.valueOf(0);

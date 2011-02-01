@@ -5,19 +5,19 @@
 
 <hibernate-mapping>
 
-	<class
-		name="org.mifos.accounts.loan.business.MaxMinInterestRate"
-		table="max_min_interest_rate">
-		<id name="accountId" column="account_id" type="integer"
-			access="field">
-			<generator class="foreign">
-				<param name="property">loan</param>
-			</generator>
-		</id>
-		<property name="minLoanAmount" column="min_interest_rate" />
-		<property name="maxLoanAmount" column="max_interest_rate" />
-		<one-to-one name="loan"
-			class="org.mifos.accounts.loan.business.LoanBO"
-			access="field" />
-	</class>
+    <class
+        name="org.mifos.accounts.loan.business.MaxMinInterestRate"
+        table="max_min_interest_rate">
+        <id name="accountId" column="account_id" type="integer"
+            access="field">
+            <generator class="foreign">
+                <param name="property">loan</param>
+            </generator>
+        </id>
+        <property name="minLoanAmount" column="min_interest_rate" />
+        <property name="maxLoanAmount" column="max_interest_rate" />
+        <one-to-one name="loan"
+            class="org.mifos.accounts.loan.business.LoanBO"
+            access="field" />
+    </class>
 </hibernate-mapping>

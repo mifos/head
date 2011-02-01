@@ -86,6 +86,15 @@ public class EditLoanProductPage extends MifosPage {
         return editSubmit();
     }
 
+    public EditLoanProductPreviewPage submitIncludeInLoanCounter(SubmitFormParameters formParameters) {
+        if (formParameters.isIncludeInLoanCounter()) {
+            selenium.check("EditLoanProduct.input.includeInLoanCycleCounter");
+        } else {
+            selenium.uncheck("EditLoanProduct.input.includeInLoanCycleCounter");
+        }
+        return editSubmit();
+    }
+
     public EditLoanProductPreviewPage submitQuestionGroupChanges(SubmitFormParameters formParameters) {
         List<String> questionGroups = formParameters.getQuestionGroups();
         if (CollectionUtils.isNotEmpty(questionGroups)) {

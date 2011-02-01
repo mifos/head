@@ -35,9 +35,7 @@ import org.mifos.accounts.business.AccountStateMachines;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.savings.business.SavingsBO;
-import org.mifos.accounts.savings.business.service.SavingsBusinessService;
 import org.mifos.accounts.savings.persistence.SavingsDao;
-import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.savings.struts.actionforms.SavingsActionForm;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
@@ -65,7 +63,6 @@ import org.mifos.framework.hibernate.helper.AuditTransactionForTests;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
-import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.MifosUser;
@@ -77,22 +74,16 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 
+@SuppressWarnings("unchecked")
 public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
 
     private UserContext userContext;
-
     private CustomerBO group;
-
     private CustomerBO center;
-
     private SavingsBO savings;
-
     private SavingsBO savings3;
-
     private SavingsOfferingBO savingsOffering;
-
     private SavingsOfferingBO savingsOffering1;
-
     private SavingsOfferingBO savingsOffering2;
 
     @Autowired
@@ -184,61 +175,6 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
             AccountState state) throws Exception {
         return TestObjectFactory.createSavingsAccount(globalAccountNum, group, state, new Date(), savingsOffering,
                 userContext);
-    }
-
-    @Test
-    public void testSuccessfulUpdate_WithCustomField() throws Exception {
-        createInitialObjects();
-        Date currentDate = new Date(System.currentTimeMillis());
-        savingsOffering = TestObjectFactory.createSavingsProduct("sav prd2", "prd2", currentDate,
-                RecommendedAmountUnit.COMPLETE_GROUP);
-        savings = new SavingsBO(userContext, savingsOffering, group, AccountState.SAVINGS_PARTIAL_APPLICATION,
-                new Money(getCurrency(), "100"), null);
-        savings.save();
-        StaticHibernateUtil.flushSession();
-        savings = savingsDao.findById(savings.getAccountId());
-        savings.setUserContext(userContext);
-        Assert.assertEquals(0, savings.getAccountCustomFields().size());
-        SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
-        setRequestPathInfo("/savingsAction.do");
-        addRequestParameter("method", "get");
-        addRequestParameter("globalAccountNum", savings.getGlobalAccountNum());
-        actionPerform();
-
-        setRequestPathInfo("/savingsAction.do");
-        addRequestParameter("method", "edit");
-        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
-        actionPerform();
-
-        setRequestPathInfo("/savingsAction.do");
-        addRequestParameter("method", "editPreview");
-        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
-        actionPerform();
-
-        addRequestParameter("recommendedAmount", "600.0");
-        setRequestPathInfo("/savingsAction.do");
-        addRequestParameter("method", "update");
-        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
-        List<CustomFieldDefinitionEntity> customFieldDefs = new SavingsBusinessService()
-                .retrieveCustomFieldsDefinition();
-        int i = 0;
-        for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
-            addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
-            addRequestParameter("customField[" + i + "].fieldValue", "12");
-            i++;
-        }
-        actionPerform();
-        verifyForward("update_success");
-
-        verifyNoActionErrors();
-        verifyNoActionMessages();
-        StaticHibernateUtil.flushSession();
-        savingsOffering = null;
-        savings = savingsDao.findById(savings.getAccountId());
-        Assert.assertNotNull(savings);
-        Assert.assertEquals(TestUtils.createMoney(600.0), savings.getRecommendedAmount());
-        Assert.assertEquals(1, savings.getAccountCustomFields().size());
-
     }
 
     @Test
@@ -447,14 +383,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("recommendedAmount", "600.0");
         setRequestPathInfo("/savingsAction.do");
         addRequestParameter("method", "update");
-        List<CustomFieldDefinitionEntity> customFieldDefs = new SavingsBusinessService()
-                .retrieveCustomFieldsDefinition();
-        int i = 0;
-        for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
-            addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
-            addRequestParameter("customField[" + i + "].fieldValue", "12");
-            i++;
-        }
+
         actionPerform();
         verifyForward("update_success");
         String globalAccountNum = (String) request.getAttribute(SavingsConstants.GLOBALACCOUNTNUM);
@@ -621,14 +550,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("recommendedAmount", "600.0");
         setRequestPathInfo("/savingsAction.do");
         addRequestParameter("method", "update");
-        List<CustomFieldDefinitionEntity> customFieldDefs = new SavingsBusinessService()
-                .retrieveCustomFieldsDefinition();
-        int i = 0;
-        for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
-            addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
-            addRequestParameter("customField[" + i + "].fieldValue", "12");
-            i++;
-        }
+
         actionPerform();
         verifyForward("update_success");
         String globalAccountNum = (String) request.getAttribute(SavingsConstants.GLOBALACCOUNTNUM);

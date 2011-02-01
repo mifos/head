@@ -47,6 +47,7 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 
+@SuppressWarnings("unchecked")
 public class InterceptHelper {
 
     private static final  Logger logger = LoggerFactory.getLogger(InterceptHelper.class);

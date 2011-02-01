@@ -21,7 +21,7 @@
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
 <!--  Main Content Begins-->
-<span id="page.id" title="view_organizational_holidays"/>
+<span id="page.id" title="view_organizational_holidays"></span>
 <div class=" content">
 
 [@mifos.crumbs breadcrumbs /]

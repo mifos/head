@@ -30,22 +30,19 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.MessageLookup;
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomValueDto;
 import org.mifos.application.master.business.CustomValueListElementDto;
 import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
-import org.mifos.application.master.util.helpers.MasterConstants;
-import org.mifos.application.util.helpers.EntityType;
 import org.mifos.config.business.MifosConfiguration;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.dto.domain.ValueListElement;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.Transactional;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.hibernate.helper.Transactional;
 import org.mifos.framework.persistence.LegacyGenericDao;
 import org.mifos.framework.util.helpers.SearchUtils;
 import org.mifos.security.activity.DynamicLookUpValueCreationTypes;
@@ -143,25 +140,6 @@ public class LegacyMasterDao extends LegacyGenericDao {
             return masterDataEntity;
         }
         throw new PersistenceException("errors.entityNotFound");
-    }
-
-    /**
-     * @deprecated - use CustomerDao#retrieveCustomFieldsForCenter
-     */
-    @SuppressWarnings("unchecked")
-    @Deprecated
-    public List<CustomFieldDefinitionEntity> retrieveCustomFieldsDefinition(final EntityType entityType)
-            throws PersistenceException {
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put(MasterConstants.ENTITY_TYPE, entityType.getValue());
-        return executeNamedQuery(NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
-    }
-
-    public CustomFieldDefinitionEntity retrieveOneCustomFieldDefinition(final Short fieldId) throws PersistenceException {
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("fieldId", fieldId);
-        return (CustomFieldDefinitionEntity) execUniqueResultNamedQuery(NamedQueryConstants.RETRIEVE_ONE_CUSTOM_FIELD,
-                queryParameters);
     }
 
     /**

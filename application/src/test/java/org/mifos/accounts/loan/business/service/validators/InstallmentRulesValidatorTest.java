@@ -96,7 +96,7 @@ public class InstallmentRulesValidatorTest {
         assertErrorEntry(errorEntries.get(0), AccountConstants.INSTALLMENT_DUEDATE_LESS_THAN_MIN_GAP, "3");
         assertErrorEntry(errorEntries.get(1), AccountConstants.INSTALLMENT_DUEDATE_LESS_THAN_MIN_GAP, "7");
     }
-    
+
     @Test
     public void shouldValidateMinimumGapOfFiveDaysForFirstInstallmentAndDisbursementDate() {
         RepaymentScheduleInstallment installment1 = installmentBuilder.reset(locale).withInstallment(1).withDueDateValue("01-Nov-2010").build();
@@ -126,7 +126,7 @@ public class InstallmentRulesValidatorTest {
         assertErrorEntry(errorEntries.get(1), AccountConstants.INSTALLMENT_DUEDATE_MORE_THAN_MAX_GAP, "5");
         assertErrorEntry(errorEntries.get(2), AccountConstants.INSTALLMENT_DUEDATE_MORE_THAN_MAX_GAP, "6");
     }
-    
+
     @Test
     public void shouldValidateMaximumGapOfFiveDaysForFirstInstallmentAndDisbursementDate() {
         RepaymentScheduleInstallment installment1 = installmentBuilder.reset(locale).withInstallment(1).withDueDateValue("01-Nov-2010").build();

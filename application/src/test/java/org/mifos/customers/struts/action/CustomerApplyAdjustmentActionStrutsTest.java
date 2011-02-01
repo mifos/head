@@ -46,6 +46,7 @@ import org.mifos.customers.business.CustomerTrxnDetailEntity;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -246,7 +247,7 @@ public class CustomerApplyAdjustmentActionStrutsTest extends MifosMockStrutsTest
         AccountTestUtils.addAccountPayment(accountPaymentEntity, customerAccountBO);
 
         TestObjectFactory.updateObject(customerAccountBO);
-        TestObjectFactory.flushandCloseSession();
+        StaticHibernateUtil.flushSession();
         customerAccountBO = TestObjectFactory.getObject(CustomerAccountBO.class, customerAccountBO.getAccountId());
         client = customerAccountBO.getCustomer();
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request);

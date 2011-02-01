@@ -23,6 +23,7 @@ package org.mifos.framework.util.helpers;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("unchecked")
 public class TestObjectsHolder {
 
     List testObjects = new ArrayList();

@@ -32,7 +32,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"acceptance","ui","smoke"})
+@Test(sequential = true, groups = {"acceptance","ui"})
 
 public class ViewOfficeHierarchyTest extends UiTestCaseBase {
 
@@ -57,7 +57,7 @@ public class ViewOfficeHierarchyTest extends UiTestCaseBase {
         AdminPage adminPage = loginAndGoToAdminPage();
         ViewOfficeHierarchyPage viewOfficeHierarchyPage = adminPage.navigateToViewOfficeHierarchyPage();
         viewOfficeHierarchyPage.verifyPage();
-  
+
         String[] expectedText = new String[]{
                 "The office hierarchy can have minimum two and maximum five levels",
                 "Check the levels to be included.",

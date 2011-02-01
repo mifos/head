@@ -33,7 +33,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"acceptance","ui","smoke"})
+@Test(sequential = true, groups = {"acceptance","ui"})
 
 public class ViewOrganizationSettingsTest extends UiTestCaseBase {
 
@@ -57,7 +57,7 @@ public class ViewOrganizationSettingsTest extends UiTestCaseBase {
         AdminPage adminPage = loginAndGoToAdminPage();
         ViewOrganizationSettingsPage viewOrganizationSettingsPage = adminPage.navigateToViewOrganizationSettingsPage();
         viewOrganizationSettingsPage.verifyPage();
-  
+
 
         String[] expectedFiscalYear = new String[]{
                 "Working days:",
@@ -116,7 +116,7 @@ public class ViewOrganizationSettingsTest extends UiTestCaseBase {
                 "Back dated transactions allowed:",
                 "Group loan with individual monitoring (GLIM):",
                 "Loan schedule independent of meeting (LSIM):"
-                       
+
         };
         viewOrganizationSettingsPage.verifyFiscalYear( expectedFiscalYear );
         viewOrganizationSettingsPage.verifyLocale( expectedLocale );

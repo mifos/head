@@ -9,10 +9,10 @@
         <id name="detailsId" column="details_id" type="integer" access="field">
             <generator class="native"/>
         </id>
-		<version name="versionNo" column="version_no" type="integer" unsaved-value="null"/>
-		 <many-to-one name="meeting" column="meeting_id"  class="org.mifos.application.meeting.business.MeetingBO"  insert="true" update="true" unique="true" lazy="false" access="field"/>
- 		<many-to-one name="recurrenceType" column="recurrence_id"  class="org.mifos.application.meeting.business.RecurrenceTypeEntity" insert="true" update="true"  unique="true" lazy="false" cascade="none" access="field"/>
- 		<one-to-one name="meetingRecurrence"   class="org.mifos.application.meeting.business.MeetingRecurrenceEntity"   lazy="false" cascade="all" property-ref="meetingDetails" access="field"/>
-        <property name="recurAfter" column="recur_after" type="short" /> 
+        <version name="versionNo" column="version_no" type="integer" unsaved-value="null"/>
+         <many-to-one name="meeting" column="meeting_id"  class="org.mifos.application.meeting.business.MeetingBO"  insert="true" update="true" unique="true" lazy="false" access="field"/>
+         <many-to-one name="recurrenceType" column="recurrence_id"  class="org.mifos.application.meeting.business.RecurrenceTypeEntity" insert="true" update="true"  unique="true" lazy="false" cascade="none" access="field"/>
+         <one-to-one name="meetingRecurrence"   class="org.mifos.application.meeting.business.MeetingRecurrenceEntity"   lazy="false" cascade="all" property-ref="meetingDetails" access="field"/>
+        <property name="recurAfter" column="recur_after" type="short" />
     </class>
 </hibernate-mapping>

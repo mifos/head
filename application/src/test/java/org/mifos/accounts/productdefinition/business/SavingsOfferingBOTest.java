@@ -11,7 +11,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.springframework.test.annotation.ExpectedException;
 
 public class SavingsOfferingBOTest {
-    
+
     @Test
     @ExpectedException(value = ProductDefinitionException.class)
     public void testInvalidConnectionThrowsExceptionInSave() throws PersistenceException {

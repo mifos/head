@@ -1186,7 +1186,14 @@ public class AccountBO extends AbstractBusinessObject {
             ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, holidays);
 
             List<Date> dueDates = new ArrayList<Date>();
-            List<DateTime> installmentDates = dateGeneration.generateScheduledDates(occurrences, startFromMeetingDate, scheduledEvent);
+            // FIXME - keithw - this whole area of installment creation should be pulled out of domain
+            DateTime startFromDayAfterAssignedMeetingDateRatherThanSkippingInstallments = startFromMeetingDate;
+            if (this.isLoanAccount()) {
+                // ensure loans that are created or disbursed on a meeting date start on next valid meeting date and not todays meeting
+                // ensure loans that are created or disbrsed before a meeting date start on next valid meeting date
+                startFromDayAfterAssignedMeetingDateRatherThanSkippingInstallments = startFromMeetingDate.plusDays(1);
+            }
+            List<DateTime> installmentDates = dateGeneration.generateScheduledDates(occurrences, startFromDayAfterAssignedMeetingDateRatherThanSkippingInstallments, scheduledEvent);
             for (DateTime installmentDate : installmentDates) {
                 dueDates.add(installmentDate.toDate());
             }

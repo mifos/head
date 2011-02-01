@@ -33,21 +33,16 @@ import org.mifos.application.master.business.CustomValueListElementDto;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
-import org.mifos.application.util.helpers.EntityType;
-import org.mifos.config.LocalizedTextLookup;
 import org.mifos.dto.domain.ValueListElement;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.security.activity.DynamicLookUpValueCreationTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class LegacyMasterDaoIntegrationTest extends MifosIntegrationTestCase {
 
-    final private static short DEFAULT_LOCALE = (short) 1;
-
     @Autowired
-    LegacyMasterDao legacyMasterDao;
+    private LegacyMasterDao legacyMasterDao;
 
     @After
     public void tearDown() throws Exception {
@@ -85,7 +80,7 @@ public class LegacyMasterDaoIntegrationTest extends MifosIntegrationTestCase {
     }
 
     @Test
-    public void testRetrieveMasterEntities() throws NumberFormatException, PersistenceException {
+    public void testRetrieveMasterEntities() throws Exception {
         List<ValueListElement> masterEntity = legacyMasterDao.findValueListElements(MasterConstants.LOAN_PURPOSES);
         // 131 if includes the empty lookup_name for lookup id 259, 263
        Assert.assertEquals(131, masterEntity.size());
@@ -103,20 +98,8 @@ public class LegacyMasterDaoIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    @Test@Ignore
-    public void retrieveCustomFieldsDefinitionForInvalidConnection() throws Exception {
-        try {
-            legacyMasterDao.retrieveCustomFieldsDefinition(EntityType.CLIENT);
-            Assert.fail();
-        } catch (Exception e) {
-           Assert.assertTrue(true);
-        } finally {
-            StaticHibernateUtil.flushSession();
-        }
-    }
-
     @Test
-    public void testGetMasterEntityName() throws NumberFormatException, PersistenceException {
+    public void testGetMasterEntityName() throws Exception {
        Assert.assertEquals("Partial Application", legacyMasterDao.getMessageForLookupEntity(1));
     }
 
@@ -146,7 +129,7 @@ public class LegacyMasterDaoIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private boolean foundStringInCustomValueList(final String CustomValueListName,
-            final String searchString, final short localId) throws PersistenceException {
+            final String searchString) throws Exception {
         List<ValueListElement> salutations = legacyMasterDao.findValueListElements(CustomValueListName);
         boolean foundString = false;
         for (ValueListElement entity : salutations) {
@@ -158,7 +141,7 @@ public class LegacyMasterDaoIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private Integer findValueListElementId(final LegacyMasterDao legacyMasterDao, final String CustomValueListName,
-            final String searchString, final short localId) throws PersistenceException {
+            final String searchString) throws Exception {
         List<ValueListElement> salutations = legacyMasterDao.findValueListElements(CustomValueListName);
         Integer elementId = null;
         for (ValueListElement entity : salutations) {
@@ -176,13 +159,11 @@ public class LegacyMasterDaoIntegrationTest extends MifosIntegrationTestCase {
 
         // add a CustomValueListElementDto to the list
         final String NEW_SALUTATION_STRING = "Sir";
-        LocalizedTextLookup lookupValueEntity = legacyMasterDao.addValueListElementForLocale(
-                DynamicLookUpValueCreationTypes.LookUpOption, salutationValueList.getEntityId(), NEW_SALUTATION_STRING);
+        legacyMasterDao.addValueListElementForLocale(DynamicLookUpValueCreationTypes.LookUpOption, salutationValueList.getEntityId(), NEW_SALUTATION_STRING);
         StaticHibernateUtil.flushSession();
 
         // verify that the new salutation was created
-        Integer newSalutationId = findValueListElementId(legacyMasterDao, MasterConstants.SALUTATION,
-                NEW_SALUTATION_STRING, DEFAULT_LOCALE);
+        Integer newSalutationId = findValueListElementId(legacyMasterDao, MasterConstants.SALUTATION, NEW_SALUTATION_STRING);
        Assert.assertTrue(newSalutationId != null);
 
         StaticHibernateUtil.flushAndClearSession();
@@ -190,8 +171,7 @@ public class LegacyMasterDaoIntegrationTest extends MifosIntegrationTestCase {
         legacyMasterDao.deleteValueListElement(newSalutationId);
 
         // verify that the new salutation was deleted
-        Assert.assertFalse(foundStringInCustomValueList(MasterConstants.SALUTATION, NEW_SALUTATION_STRING,
-                DEFAULT_LOCALE));
+        Assert.assertFalse(foundStringInCustomValueList(MasterConstants.SALUTATION, NEW_SALUTATION_STRING));
     }
 
     @Test
@@ -224,5 +204,4 @@ public class LegacyMasterDaoIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.flushSession();
 
     }
-
 }

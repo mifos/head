@@ -38,9 +38,9 @@ public class CustomerAddressDetailEntity extends AbstractEntity {
 
     private Address address;
 
-	public Integer getCustomerAddressId() {
-		return customerAddressId;
-	}
+    public Integer getCustomerAddressId() {
+        return customerAddressId;
+    }
 
     /*
      * Adding a default constructor is hibernate's requirement and should not be

@@ -24,12 +24,14 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import org.apache.struts.taglib.TagUtils;
-import org.mifos.application.master.MessageLookup;
-import org.mifos.application.master.business.CustomFieldCategory;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.security.util.UserContext;
 
+/**
+ * @deprecated  - remove - custom fields no longer supported
+ */
+@Deprecated
 public class CustomFieldCategoryListTag extends BodyTagSupport {
     private String actionName;
 
@@ -82,12 +84,6 @@ public class CustomFieldCategoryListTag extends BodyTagSupport {
     String getCustomFieldCategoryList(UserContext userContext) throws Exception {
         XmlBuilder html = new XmlBuilder();
         html.startTag("table", "width", "95%", "border", "0", "cellspacing", "0", "cellpadding", "0");
-
-        CustomFieldCategory[] values = CustomFieldCategory.values();
-        for (CustomFieldCategory value : values) {
-            String category = MessageLookup.getInstance().lookupLabel(value.name());
-            html.append(getCategoryRow(value.name(), category));
-        }
 
         html.endTag("table");
 

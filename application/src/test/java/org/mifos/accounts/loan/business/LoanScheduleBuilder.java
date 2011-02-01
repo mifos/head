@@ -69,7 +69,7 @@ public class LoanScheduleBuilder {
         loanScheduleEntity.setPenalty(new Money(loanScheduleEntity.getCurrency(), penalty));
         return this;
     }
-    
+
     public LoanScheduleBuilder withMiscPenalty(double miscPenalty) {
         loanScheduleEntity.setMiscPenalty(new Money(loanScheduleEntity.getCurrency(), miscPenalty));
         return this;

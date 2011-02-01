@@ -20,6 +20,7 @@
 
 package org.mifos.test.acceptance.framework;
 
+import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.login.LoginPage;
 
 import com.thoughtworks.selenium.Selenium;
@@ -116,5 +117,35 @@ public class MifosPage extends AbstractPage {
             return false;
         }
         return true;
+    }
+
+    public ClientsAndAccountsHomepage navigateToClientsAndAccountsPageUsingHeaderTab() {
+        // id is sometimes different
+        if(selenium.isElementPresent("header.link.clientsAndAccounts")) {
+            selenium.click("header.link.clientsAndAccounts");
+        }
+        else if(selenium.isElementPresent("clientsAndAccountsHeader.link.clientsAndAccounts")) {
+            selenium.click("clientsAndAccountsHeader.link.clientsAndAccounts");
+        }
+        else {
+            selenium.click("homeheader.link.clientsAndAccounts");
+        }
+        waitForPageToLoad();
+        return new ClientsAndAccountsHomepage(selenium);
+    }
+
+    public AdminPage navigateToAdminPageUsingHeaderTab() {
+     // id is sometimes different
+        if(selenium.isElementPresent("header.link.admin")) {
+            selenium.click("header.link.admin");
+        }
+        else if(selenium.isElementPresent("clientsAndAccountsHeader.link.admin")) {
+            selenium.click("clientsAndAccountsHeader.link.admin");
+        }
+        else {
+            selenium.click("homeheader.link.admin");
+        }
+        waitForPageToLoad();
+        return new AdminPage(selenium);
     }
 }

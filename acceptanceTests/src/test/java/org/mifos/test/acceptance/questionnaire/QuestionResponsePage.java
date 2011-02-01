@@ -33,6 +33,7 @@ import static org.junit.Assert.assertTrue;
 public class QuestionResponsePage extends MifosPage {
     public QuestionResponsePage(Selenium selenium) {
         super(selenium);
+        super.verifyPage("captureQuestionResponse");
     }
 
     public void verifyPage() {
@@ -96,7 +97,7 @@ public class QuestionResponsePage extends MifosPage {
     }
 
     private void populateSingleSelectAnswer(String questionInputId, String answer) {
-        selenium.check(questionInputId + " value=" + answer);        
+        selenium.check(questionInputId + " value=" + answer);
         // TODO for more than 6 answers: selenium.select(questionInputId, answer);
     }
 }

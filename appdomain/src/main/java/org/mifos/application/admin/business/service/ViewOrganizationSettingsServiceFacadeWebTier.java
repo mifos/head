@@ -36,6 +36,7 @@ import org.mifos.config.business.service.ConfigurationBusinessService;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -200,16 +201,21 @@ public class ViewOrganizationSettingsServiceFacadeWebTier implements ViewOrganiz
         return m.lookup(YesNoFlag.NO);
     }
 
-	@Override
-	public Map<String, String> getDisplayablePluginsProperties() {
-		Map<String, String> result = new LinkedHashMap<String, String>();
-		for (TransactionImport ti : new PluginManager().loadImportPlugins()) {
-			String key = ti.getPropertyNameForAdminDisplay();
-			String value = ti.getPropertyValueForAdminDisplay();
-			if (key != null && value != null) {
-                result.put(key, value);
+    @Override
+    public Map<String, String> getDisplayablePluginsProperties() {
+        Map<String, String> result = new LinkedHashMap<String, String>();
+        for (TransactionImport ti : new PluginManager().loadImportPlugins()) {
+            Map<String, String> properties = ti.getPropertiesForAdminDisplay();
+            Iterator<String> iterator = properties.keySet().iterator();
+            while(iterator.hasNext())
+            {
+                String key = String.valueOf(iterator.next());
+                String value = String.valueOf(properties.get(key));
+                if (key != null && value != null) {
+                    result.put(key, value);
+                }
             }
-		}
-		return result;
-	}
+        }
+        return result;
+    }
 }

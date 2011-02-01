@@ -30,9 +30,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -51,13 +49,11 @@ import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.MessageLookup;
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.EntityType;
-import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
 import org.mifos.config.util.helpers.ConfigurationConstants;
@@ -88,7 +84,6 @@ import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.util.helpers.Param;
 import org.mifos.dto.domain.CenterDisplayDto;
 import org.mifos.dto.domain.CenterPerformanceHistoryDto;
-import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerAccountSummaryDto;
 import org.mifos.dto.domain.CustomerAddressDto;
 import org.mifos.dto.domain.CustomerDetailDto;
@@ -100,7 +95,6 @@ import org.mifos.dto.domain.CustomerPositionOtherDto;
 import org.mifos.dto.domain.LoanDetailDto;
 import org.mifos.dto.domain.PersonnelDto;
 import org.mifos.dto.domain.SavingsDetailDto;
-import org.mifos.dto.domain.SurveyDto;
 import org.mifos.dto.domain.ValueListElement;
 import org.mifos.dto.screen.ClientDisplayDto;
 import org.mifos.dto.screen.ClientFamilyDetailOtherDto;
@@ -176,6 +170,11 @@ public class CustomerDaoHibernate implements CustomerDao {
     }
 
     @Override
+    public ClientBO findClientById(Integer clientId) {
+        return (ClientBO) genericDao.getSession().get(ClientBO.class, clientId);
+    }
+
+    @Override
     public ClientBO findClientBySystemId(String globalCustNum) {
         final HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("globalCustNum", globalCustNum);
@@ -200,59 +199,6 @@ public class CustomerDaoHibernate implements CustomerDao {
         queryParameters.put("GROUP_ID", customer.getCustomerId());
         return (List<ClientBO>) genericDao.executeNamedQuery(NamedQueryConstants.ACTIVE_CLIENTS_UNDER_GROUP,
                 queryParameters);
-    }
-
-    @Override
-    public List<CustomFieldDto> retrieveCustomFieldsForCenter(UserContext userContext) {
-        List<CustomFieldDefinitionEntity> customFieldsForCenter = retrieveCustomFieldEntitiesForCenter();
-
-        return CustomFieldDefinitionEntity.toDto(customFieldsForCenter, userContext.getPreferredLocale());
-    }
-
-    @Override
-    public final List<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForCenter() {
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put(MasterConstants.ENTITY_TYPE, EntityType.CENTER.getValue());
-
-        return retrieveCustomFieldDefinitions(queryParameters);
-    }
-
-    @Override
-    public List<CustomFieldDto> retrieveCustomFieldsForPersonnel(Locale preferredLocale) {
-        List<CustomFieldDefinitionEntity> customFieldsForPersonnel = retrieveCustomFieldEntitiesForPersonnel();
-        return CustomFieldDefinitionEntity.toDto(customFieldsForPersonnel, preferredLocale);
-    }
-
-    @Override
-    public List<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForPersonnel() {
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put(MasterConstants.ENTITY_TYPE, EntityType.PERSONNEL.getValue());
-
-        return retrieveCustomFieldDefinitions(queryParameters);
-    }
-
-    @Override
-    public List<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForGroup() {
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put(MasterConstants.ENTITY_TYPE, EntityType.GROUP.getValue());
-
-        return retrieveCustomFieldDefinitions(queryParameters);
-
-    }
-
-    @Override
-    public final List<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForClient() {
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put(MasterConstants.ENTITY_TYPE, EntityType.CLIENT.getValue());
-
-        return retrieveCustomFieldDefinitions(queryParameters);
-    }
-
-    @SuppressWarnings("unchecked")
-    private List<CustomFieldDefinitionEntity> retrieveCustomFieldDefinitions(Map<String, Object> queryParameters) {
-        List<CustomFieldDefinitionEntity> customFieldsForCenter = (List<CustomFieldDefinitionEntity>) genericDao
-                .executeNamedQuery(NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
-        return customFieldsForCenter;
     }
 
     @Override
@@ -731,84 +677,6 @@ public class CustomerDaoHibernate implements CustomerDao {
         return null;
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public List<SurveyDto> getCustomerSurveyDto(final Integer customerId) {
-
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("CUSTOMER_ID", customerId);
-        List<Object[]> queryResult = (List<Object[]>) this.genericDao.executeNamedQuery(
-                "Customer.getCustomerSurveyDto", queryParameters);
-
-        if (queryResult.size() == 0) {
-            return null;
-        }
-
-        List<SurveyDto> customerSurveys = new ArrayList<SurveyDto>();
-        Integer instanceId;
-        String surveyName;
-        Date dateConducted;
-
-        for (Object[] customerSurvey : queryResult) {
-            instanceId = (Integer) customerSurvey[0];
-            surveyName = (String) customerSurvey[1];
-            dateConducted = (Date) customerSurvey[2];
-
-            customerSurveys.add(new SurveyDto(instanceId, surveyName, dateConducted));
-        }
-        return customerSurveys;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public List<CustomFieldDto> getCustomFieldViewForCustomers(Integer customerId, Short entityTypeId,
-            UserContext userContext) {
-
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("CUSTOMER_ID", customerId);
-        queryParameters.put("ENTITY_TYPE", entityTypeId);
-        List<Object[]> queryResult = (List<Object[]>) this.genericDao.executeNamedQuery(
-                "Customer.getCustomFieldViewForCustomers", queryParameters);
-
-        if (queryResult.size() == 0) {
-            return null;
-        }
-
-        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
-
-        Short fieldId;
-        String fieldValue;
-        Short fieldType;
-        Short mandatoryFlag;
-        String entityName;
-
-        boolean mandatory = false;
-        String mandatoryString;
-
-        for (Object[] customField : queryResult) {
-            fieldId = (Short) customField[0];
-            fieldValue = (String) customField[1];
-            fieldType = (Short) customField[2];
-            mandatoryFlag = (Short) customField[3];
-            entityName = (String) customField[4];
-
-            if (mandatoryFlag > 0) {
-                mandatory = true;
-            }
-
-            mandatoryString = MessageLookup.getInstance().lookup(YesNoFlag.fromInt(mandatoryFlag),
-                    userContext.getCurrentLocale());
-
-            CustomFieldDto customFieldDto = new CustomFieldDto(fieldId, fieldValue, fieldType);
-            customFieldDto.setMandatory(mandatory);
-            customFieldDto.setLookUpEntityType(entityName);
-            customFieldDto.setMandatoryString(mandatoryString);
-
-            customFields.add(customFieldDto);
-        }
-        return customFields;
-    }
-
     /**
      * FIXME: THIS METHOD DOES NOT WORK. Specifically, the portfolioAtRisk calculation. Please see issue 2204.
      */
@@ -1082,6 +950,7 @@ public class CustomerDaoHibernate implements CustomerDao {
         return totalLoanAmount.toString();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public String getTotalOutstandingLoanAmountForGroupAndClientsOfGroups(String groupSearchId, Short groupOfficeId) {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
@@ -1706,14 +1575,6 @@ public class CustomerDaoHibernate implements CustomerDao {
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<Object[]> getCustomFieldResponses(List<Short> customFieldIds) {
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("CUSTOM_FIELD_ID", customFieldIds);
-        return (List<Object[]>) this.genericDao.executeNamedQuery("CustomerCustomFieldEntity.getResponses", queryParameters);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
     public List<CustomerDto> findCustomersWithGivenPhoneNumber(String phoneNumber) {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("phoneNumberStripped", MifosStringUtils.removeNondigits(phoneNumber));
@@ -1726,13 +1587,6 @@ public class CustomerDaoHibernate implements CustomerDao {
             customerDtos.add(customerDto);
         }
         return customerDtos;
-    }
-
-    @SuppressWarnings("unchecked")
-    public Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForCenterIterator() {
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put(MasterConstants.ENTITY_TYPE, EntityType.CENTER.getValue());
-        return (Iterator<CustomFieldDefinitionEntity>) genericDao.executeNamedQueryIterator(NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
     }
 
     @SuppressWarnings("unchecked")

@@ -28,7 +28,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 <tiles:put name="body" type="string">
-<span id="page.id" title="ConfirmBranchTransfer" />
+<span id="page.id" title="ConfirmBranchTransfer"></span>
 <SCRIPT SRC="pages/application/group/js/groupcommon.js"></SCRIPT>
 <script language="javascript">
 

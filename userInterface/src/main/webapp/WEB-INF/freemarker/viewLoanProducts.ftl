@@ -20,27 +20,27 @@
 --]
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
-    <!--  Main Content Begins-->  
+    <!--  Main Content Begins-->
   <div class="content">
   [@mifos.crumbs breadcrumbs/]
   <p>&nbsp;&nbsp;</p>
-    	<p class="marginLeft30 font15 orangeheading">[@spring.message "admin.viewLoanProducts"/]</p>
-    	<p class="marginLeft30">[@spring.message "manageLoanProducts.viewLoanProducts.clickonaLoanproductbelowtoviewdetailsandmakechangesor"/] <a href="defineLoanProducts.ftl">[@spring.message "admin.definenewLoanproduct"/]</a></p>
-    	<div class="marginTop15">
-    	<div class="span-22 marginLeft30"> 
-   		[#list formBean as loanProduct]
-   		    <div>
-    		<img src="pages/framework/images/bullet_circle.gif" width="9" height="11"/><a href="viewEditLoanProduct.ftl?productId=${loanProduct.prdOfferingId}">${loanProduct.prdOfferingName}</a>
-        	[#switch loanProduct.prdOfferingStatusId]
-              	[#case 1]
+        <p class="marginLeft30 font15 orangeheading">[@spring.message "admin.viewLoanProducts"/]</p>
+        <p class="marginLeft30">[@spring.message "manageLoanProducts.viewLoanProducts.clickonaLoanproductbelowtoviewdetailsandmakechangesor"/] <a href="defineLoanProducts.ftl">[@spring.message "admin.definenewLoanproduct"/]</a></p>
+        <div class="marginTop15">
+        <div class="span-22 marginLeft30">
+           [#list formBean as loanProduct]
+               <div>
+            <img src="pages/framework/images/bullet_circle.gif" width="9" height="11"/><a href="viewEditLoanProduct.ftl?productId=${loanProduct.prdOfferingId}">${loanProduct.prdOfferingName}</a>
+            [#switch loanProduct.prdOfferingStatusId]
+                  [#case 1]
                 [#break]
                 [#case 4]
                 <span><img src="pages/framework/images/status_closedblack.gif" />[@spring.message "inactive"/]</span>
                 [#break]
              [/#switch]
-            </div> 
-	    [/#list] 
-    	</div> 
+            </div>
+        [/#list]
+        </div>
     </div>
   </div>
   <!--Main Content Ends-->

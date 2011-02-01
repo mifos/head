@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE hibernate-mapping PUBLIC 
+<!DOCTYPE hibernate-mapping PUBLIC
     "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
     "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-  
-<hibernate-mapping > 
+
+<hibernate-mapping >
   <class name="org.mifos.customers.client.business.CustomerPictureEntity" table="customer_picture" >
-    <id column="picture_id" name="pictureId" type="integer" access="field"> 
-		<generator class="native"></generator>
+    <id column="picture_id" name="pictureId" type="integer" access="field">
+        <generator class="native"></generator>
     </id>
-	<property column="picture"  name="picture"  type="blob"/>
-	<many-to-one name="customer" column="customer_id"
-			class="org.mifos.customers.business.CustomerBO" unique="true" access="field"/>
-  </class> 
-  
-  	<query name="Customer.getPicture">
-		<![CDATA[from org.mifos.customers.client.business.CustomerPictureEntity customerPicture where customerPicture.customer.customerId =:customerId]]>
-	</query>
-</hibernate-mapping>  
+    <property column="picture"  name="picture"  type="blob"/>
+    <many-to-one name="customer" column="customer_id"
+            class="org.mifos.customers.business.CustomerBO" unique="true" access="field"/>
+  </class>
+
+      <query name="Customer.getPicture">
+        <![CDATA[from org.mifos.customers.client.business.CustomerPictureEntity customerPicture where customerPicture.customer.customerId =:customerId]]>
+    </query>
+</hibernate-mapping>

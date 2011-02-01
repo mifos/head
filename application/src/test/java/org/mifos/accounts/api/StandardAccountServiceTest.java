@@ -41,7 +41,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentTypeDao;
 import org.mifos.accounts.business.AccountBO;
-import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.persistance.LegacyLoanDao;
@@ -52,8 +51,8 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
+import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.domain.builders.LoanAccountBuilder;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AccountReferenceDto;
@@ -116,7 +115,7 @@ public class StandardAccountServiceTest {
 
     @Before
     public void setup() {
-        standardAccountService = new StandardAccountService(legacyAccountDao, 
+        standardAccountService = new StandardAccountService(legacyAccountDao,
                 legacyLoanDao,acceptedPaymentTypePersistence, personnelDao,
                 customerDao, loanBusinessService, transactionHelper, legacyMasterDao);
         Money.setDefaultCurrency(TestUtils.RUPEE);
@@ -126,7 +125,7 @@ public class StandardAccountServiceTest {
 
     @Ignore
     @Test
-    public void testMakeLoanPayment() throws PersistenceException, AccountException {
+    public void testMakeLoanPayment() throws Exception {
         short userId = 1;
         int accountId = 100;
         int customerId = 1;
@@ -169,7 +168,7 @@ public class StandardAccountServiceTest {
         short userId = 1;
         int accountId = 100;
         String paymentAmount = "100";
-        List<AccountPaymentParametersDto> accountPaymentParametersDtoList = new ArrayList();
+        List<AccountPaymentParametersDto> accountPaymentParametersDtoList = new ArrayList<AccountPaymentParametersDto>();
         AccountPaymentParametersDto dto1 = createAccountPaymentParametersDto(userId, accountId, paymentAmount);
         AccountPaymentParametersDto dto2 = createAccountPaymentParametersDto(userId, accountId, paymentAmount);
         accountPaymentParametersDtoList.add(dto1);
@@ -224,7 +223,7 @@ public class StandardAccountServiceTest {
     public void testFailureOfLookupLoanAccountReferenceFromGlobalAccountNumber() throws Exception {
         String globalAccountNumber = "123456789012345";
         when(legacyAccountDao.findBySystemId(globalAccountNumber)).thenReturn(null);
-        AccountReferenceDto accountReferenceDto = standardAccountService
-                .lookupLoanAccountReferenceFromGlobalAccountNumber(globalAccountNumber);
+
+        standardAccountService.lookupLoanAccountReferenceFromGlobalAccountNumber(globalAccountNumber);
     }
 }

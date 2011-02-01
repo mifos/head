@@ -13,26 +13,26 @@
         <version name="versionNo" column="version_no" type="integer" unsaved-value="null"/>
         <property name="productName" column="product_name" />
         <property name="loanAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-			<column name="loan_amount_currency_id" />
-			<column name="loan_amount" />
-		</property>
+            <column name="loan_amount_currency_id" />
+            <column name="loan_amount" />
+        </property>
         <property name="totalAmountPaid" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-			<column name="total_amount_paid_currency_id" />
-			<column name="total_amount_paid" />
-		</property>
-		<property name="interestPaid" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-			<column name="interest_paid_currency_id" />
-			<column name="interest_paid" />
-		</property>
+            <column name="total_amount_paid_currency_id" />
+            <column name="total_amount_paid" />
+        </property>
+        <property name="interestPaid" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+            <column name="interest_paid_currency_id" />
+            <column name="interest_paid" />
+        </property>
         <property name="missedPaymentsCount" column="missed_payments_count" />
-	    <property name="totalPaymentsCount" column="total_payments_count" />
-	    <property name="notes" column="notes"    />
-	    <property name="loanCycleNumber" column="loan_cycle_number"  />
-	    <property name="createdDate" column="created_date"  />
-     	<property name="updatedDate" column="updated_date"  />
-    	<property name="createdBy" column="created_by"  />
-    	<property name="updatedBy" column="updated_by"  />
+        <property name="totalPaymentsCount" column="total_payments_count" />
+        <property name="notes" column="notes"    />
+        <property name="loanCycleNumber" column="loan_cycle_number"  />
+        <property name="createdDate" column="created_date"  />
+         <property name="updatedDate" column="updated_date"  />
+        <property name="createdBy" column="created_by"  />
+        <property name="updatedBy" column="updated_by"  />
        <many-to-one name="customer" column="customer_id" class="org.mifos.customers.business.CustomerBO" insert="true" update="true" cascade="none" unique="true" access="field"/>
     </class>
-    
+
 </hibernate-mapping>

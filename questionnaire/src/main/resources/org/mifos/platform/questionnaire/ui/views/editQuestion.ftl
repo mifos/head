@@ -29,7 +29,7 @@
 <script src="pages/questionnaire/js/editQuestion.js" type="text/javascript"></script>
 <div class=" content">
     <span id="page.id" title="editQuestion"></span>
-    [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.view.questions":"viewQuestions.ftl", "questionnaire.editquestion":""}/]    
+    [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.view.questions":"viewQuestions.ftl", "questionnaire.editquestion":""}/]
     [@mifos.crumbpairs breadcrumb/]
 
     <div class="content_panel">

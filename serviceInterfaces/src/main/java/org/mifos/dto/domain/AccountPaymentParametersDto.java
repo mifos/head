@@ -61,7 +61,7 @@ public class AccountPaymentParametersDto {
 
     /** Customer making the payment */
     private CustomerDto customer;
-    
+
     /** Optional transaction type indicator */
     TransactionType transactionType;
 

@@ -27,7 +27,7 @@ import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.mifos.platform.accounting.AccountingDto;
-import org.mifos.platform.accounting.service.AccountingCacheFileInfo;
+import org.mifos.platform.accounting.service.ExportFileInfo;
 import org.mifos.platform.accounting.service.IAccountingService;
 import org.mifos.ui.core.controller.AdminBreadcrumbBuilder;
 import org.mifos.ui.core.controller.BreadCrumbsLinks;
@@ -48,6 +48,8 @@ public class AccountingDataController {
 
     private static final String FROM_DATE = "fromDate";
     private static final String TO_DATE = "toDate";
+    private static final String LIST_SIZE = "listSize";
+    private static final String LIST_TYPE = "listType";
 
     @Autowired
     public AccountingDataController(IAccountingService accountingService) {
@@ -65,9 +67,9 @@ public class AccountingDataController {
 
         List<AccountingDto> accountingData = new ArrayList<AccountingDto>();
         try {
-            fileName = accountingService.getTallyOutputFileName(fromDate, toDate).replace(".xml", "");
+            fileName = accountingService.getExportOutputFileName(fromDate, toDate).replace(".xml", "");
             hasAlreadyRanQuery = accountingService.hasAlreadyRanQuery(fromDate, toDate);
-            accountingData = accountingService.getAccountingDataFor(fromDate, toDate);
+            accountingData = accountingService.getExportDetails(fromDate, toDate);
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         }
@@ -95,6 +97,15 @@ public class AccountingDataController {
         return mav;
     }
 
+    @RequestMapping("confirmExportsDelete.ftl")
+    public final ModelAndView confirmExportsDelete() {
+        ModelAndView mav = new ModelAndView("confirmExportsDelete");
+        List<BreadCrumbsLinks> breadcrumbs = new AdminBreadcrumbBuilder().withLink("accounting.viewaccountingexports",
+        "confirmExportsDelete.ftl").build();
+        mav.addObject("breadcrumbs", breadcrumbs);
+        return mav;
+    }
+
     @RequestMapping("deleteCacheDir.ftl")
     public final ModelAndView deleteCacheDir() {
         ModelAndView mav = new ModelAndView("deleteCacheDir");
@@ -102,19 +113,34 @@ public class AccountingDataController {
         return mav;
     }
 
-    @RequestMapping("renderAccountingDataCacheInfo.ftl")
-    public final ModelAndView accountingCacheInfo() {
-        List<AccountingCacheFileInfo> files = null;
-        List<BreadCrumbsLinks> breadcrumbs = new AdminBreadcrumbBuilder().withLink("accounting.viewaccountingexports",
-                "renderAccountingDataCacheInfo.ftl").build();
-        try {
-            files = accountingService.getAccountingDataCacheInfo();
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
-        }
-        ModelAndView mav = new ModelAndView("renderAccountingDataCacheInfo");
-        mav.addObject("breadcrumbs", breadcrumbs);
-        mav.addObject("files", files);
+    @RequestMapping("generateExportsList.ftl")
+    public final ModelAndView generateList(@RequestParam(value = LIST_SIZE, required=false) Integer paramListSize, @RequestParam(value = LIST_TYPE, required=false) String listType) {
+        ModelAndView mav = new ModelAndView("generateExportsList");
+        List<ExportFileInfo> exports = getExports(paramListSize, listType);
+        mav.addObject("exports", exports);
+        mav.addObject("size", paramListSize);
         return mav;
     }
+
+    private List<ExportFileInfo> getExports(Integer size, String listType) {
+        List<ExportFileInfo> exports;
+        if(listType != null && listType.equals("notgenerated")) {
+            exports = accountingService.getNotGeneratedExports(size);
+        } else if (listType != null && listType.equals("generated")) {
+            exports = accountingService.getGeneratedExports(size);
+        } else {
+            exports = accountingService.getAllExports(size);
+        }
+        return exports;
+    }
+
+    @RequestMapping("renderAccountingDataCacheInfo.ftl")
+    public final ModelAndView listAllExports() {
+        List<BreadCrumbsLinks> breadcrumbs = new AdminBreadcrumbBuilder().withLink("accounting.viewaccountingexports",
+                "renderAccountingDataCacheInfo.ftl").build();
+        ModelAndView mav = new ModelAndView("renderAccountingDataCacheInfo");
+        mav.addObject("breadcrumbs", breadcrumbs);
+        return mav;
+    }
+
 }

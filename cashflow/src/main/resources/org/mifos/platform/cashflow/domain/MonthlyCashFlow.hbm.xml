@@ -3,13 +3,13 @@
                             "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
                             "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
-	<class name="org.mifos.platform.cashflow.domain.MonthlyCashFlow" table="monthly_cash_flow_details">
-		<id name="id" column="id" type="integer" unsaved-value="0" access="field">
-			<generator class="native"/>
-		</id>
+    <class name="org.mifos.platform.cashflow.domain.MonthlyCashFlow" table="monthly_cash_flow_details">
+        <id name="id" column="id" type="integer" unsaved-value="0" access="field">
+            <generator class="native"/>
+        </id>
         <property name="monthYear" column="month_year" access="field" type="date"/>
         <property name="revenue" column="revenue" access="field"/>
         <property name="expenses" column="expenses" access="field"/>
         <property name="notes" column="notes" access="field"/>
-  	</class>
+      </class>
 </hibernate-mapping>

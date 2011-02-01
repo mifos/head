@@ -20,6 +20,8 @@
 
 package org.mifos.customers.group.persistence;
 
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.ClientRules;
@@ -45,8 +47,7 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.LegacyGenericDao;
 import org.mifos.framework.util.DateTimeService;
 
-import java.sql.Connection;
-import java.sql.Statement;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -60,6 +61,7 @@ public class GroupPersistence extends LegacyGenericDao {
     private final CenterPersistence centerPersistence = new CenterPersistence();
     private final LegacyPersonnelDao legacyPersonnelDao = ApplicationContextProvider.getBean(LegacyPersonnelDao.class);
 
+    @SuppressWarnings("unchecked")
     public GroupBO findBySystemId(String globalCustNum) throws PersistenceException {
         Map<String, String> queryParameters = new HashMap<String, String>();
         GroupBO group = null;
@@ -155,45 +157,34 @@ public class GroupPersistence extends LegacyGenericDao {
     public boolean updateGroupInfoAndGroupPerformanceHistoryForPortfolioAtRisk(double portfolioAtRisk, Integer groupId)
             throws Exception {
         boolean result = false;
-        Connection connection = null;
-
+        Session session = StaticHibernateUtil.getSessionTL();
         try {
-            connection = StaticHibernateUtil.getConnection();
-            connection.setAutoCommit(false);
-            Statement statement = connection.createStatement();
+
+            session.beginTransaction();
+
             short userId = 1; // this is bach job, so no user
-            java.sql.Date currentDate = new DateTimeService().getCurrentJavaSqlDate();
+            Date currentDate = new DateTimeService().getCurrentJavaSqlDate();
+            Query query = session.createSQLQuery("update customer set updated_by = " + userId + ", updated_date='" + currentDate + "' where customer_id=" + groupId.toString());
+            int rows = query.executeUpdate();
 
-            int rows = statement.executeUpdate("update customer set updated_by = " + userId + ", updated_date='"
-                    + currentDate + "' where customer_id=" + groupId.toString());
-
-            statement.close();
             if (rows != 1) {
                 throw new PersistenceException("Unable to update group table for group id " + groupId.toString());
             }
-            statement = connection.createStatement();
-            rows = statement.executeUpdate("update group_perf_history set portfolio_at_risk = " + portfolioAtRisk
-                    + " where customer_id=" + groupId.toString());
 
-            statement.close();
+            query = session.createSQLQuery("update group_perf_history set portfolio_at_risk = " + portfolioAtRisk + " where customer_id=" + groupId.toString());
+            rows = query.executeUpdate();
+
             if (rows != 1) {
-                throw new PersistenceException("Unable to update group performance history for group id "
-                        + groupId.toString());
+                throw new PersistenceException("Unable to update group performance history for group id " + groupId.toString());
             }
-            connection.commit();
             result = true;
+
         } catch (Exception ex) {
-            if (connection != null) {
-                connection.rollback();
-            }
+            session.getTransaction().rollback();
             throw new PersistenceException(ex);
         } finally {
-            if (connection != null) {
-                connection.close();
                 StaticHibernateUtil.closeSession();
-            }
         }
-
         return result;
     }
 

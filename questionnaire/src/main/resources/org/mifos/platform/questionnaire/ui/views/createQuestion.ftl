@@ -26,7 +26,7 @@
 <script type="text/javascript" src="pages/js/jquery/jquery.keyfilter-1.7.js"></script>
 <script type="text/javascript" src="pages/framework/js/CommonUtilities.js"></script>
 <script src="pages/questionnaire/js/createQuestion.js" type="text/javascript"></script>
-<span id="page.id" title="createQuestion"/>
+<span id="page.id" title="createQuestion"></span>
 <div class=" content">
     [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.add.questions":""}/]
 [@mifos.crumbpairs breadcrumb/]

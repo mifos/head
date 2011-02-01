@@ -23,7 +23,7 @@
 [#include "layout.ftl"]
 
 [@adminLeftPaneLayout]
-<span id="page.id" title="admin" />
+<span id="page.id" title="admin"></span>
 <div class="content_panel">
     <div class="marginLeft30 marginTop20">
         <h3 id="accessDeniedHeading">[@spring.message "accessDeniedHeading" /]</h3>

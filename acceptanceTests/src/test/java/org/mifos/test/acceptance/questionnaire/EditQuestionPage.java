@@ -21,16 +21,11 @@ package org.mifos.test.acceptance.questionnaire;
 
 import com.thoughtworks.selenium.Selenium;
 
-public class EditQuestionPage extends CreateQuestionPage {
+public class EditQuestionPage extends CreateQuestionRootPage {
 
     public EditQuestionPage(Selenium selenium) {
         super(selenium);
-    }
-
-    @Override
-    public EditQuestionPage verifyPage() {
         verifyPage("editQuestion");
-        return this;
     }
 
     public QuestionDetailPage activate() {

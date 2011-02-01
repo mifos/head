@@ -158,7 +158,7 @@ public class PortfolioAtRiskCalculationIntegrationTest extends MifosIntegrationT
     @Test
     public void testGeneratePortfolioAtRiskForTaskNoPayment() throws Exception {
         createInitialObject();
-        TestObjectFactory.flushandCloseSession();
+        StaticHibernateUtil.flushSession();
         group = TestObjectFactory.getGroup(group.getCustomerId());
         client = TestObjectFactory.getClient(client.getCustomerId());
 
@@ -174,7 +174,7 @@ public class PortfolioAtRiskCalculationIntegrationTest extends MifosIntegrationT
                 ((LoanBO) account).handleArrears();
             }
         }
-        TestObjectFactory.flushandCloseSession();
+        StaticHibernateUtil.flushSession();
         group = TestObjectFactory.getGroup(group.getCustomerId());
         double portfolioAtRisk = PortfolioAtRiskCalculation.generatePortfolioAtRiskForTask(group.getCustomerId(), group
                 .getOffice().getOfficeId(), group.getSearchId() + ".%");
@@ -190,7 +190,7 @@ public class PortfolioAtRiskCalculationIntegrationTest extends MifosIntegrationT
     @Test
     public void testGeneratePortfolioAtRiskForTaskSomePayments() throws Exception {
         createInitialObject();
-        TestObjectFactory.flushandCloseSession();
+        StaticHibernateUtil.flushSession();
         group = TestObjectFactory.getGroup(group.getCustomerId());
         client = TestObjectFactory.getClient(client.getCustomerId());
 
@@ -208,7 +208,7 @@ public class PortfolioAtRiskCalculationIntegrationTest extends MifosIntegrationT
                 loan.handleArrears();
             }
         }
-        TestObjectFactory.flushandCloseSession();
+        StaticHibernateUtil.flushSession();
         group = TestObjectFactory.getGroup(group.getCustomerId());
         double portfolioAtRisk = PortfolioAtRiskCalculation.generatePortfolioAtRiskForTask(group.getCustomerId(), group
                 .getOffice().getOfficeId(), group.getSearchId() + ".%");

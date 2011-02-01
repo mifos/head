@@ -32,7 +32,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-	<span id="page.id" title="manage_checkList" />
+	<span id="page.id" title="manage_checkList"></span>
 	
 		<script language="JavaScript"
 			src="pages/application/checklist/js/validator.js"
@@ -116,7 +116,7 @@ explanation of the license and how it is applied.
 
 										var="item" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'checkList_masterData')}" varStatus="loop">
 										<html-el:hidden property="isCustomers"
-											value="${item.isCustomer}" />
+											value="${item.customer}" />
 										<html-el:hidden property="masterIds"
 											value="${item.masterTypeId}" />
 										<html-el:hidden property="masterNames"

@@ -114,7 +114,7 @@ public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends 
             int noOfInstallments = savings.getAccountActionDates().size();
 
             AccountTestUtils.changeInstallmentDatesToPreviousDate(savings);
-            TestObjectFactory.flushandCloseSession();
+            StaticHibernateUtil.flushSession();
             savings = TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
             new GenerateMeetingsForCustomerAndSavingsTask().getTaskHelper().execute(System.currentTimeMillis());
             savings = TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
@@ -156,7 +156,7 @@ public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends 
             Integer client2CustomerAccountInstallments = client2CustomerAccount.getAccountActionDates().size();
             AccountTestUtils.changeInstallmentDatesToPreviousDate(client2CustomerAccount);
 
-            TestObjectFactory.flushandCloseSession();
+            StaticHibernateUtil.flushSession();
             savings = TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
             new GenerateMeetingsForCustomerAndSavingsTask().getTaskHelper().execute(System.currentTimeMillis());
             savings = TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
@@ -190,7 +190,7 @@ public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends 
         Date meetingStartDate = savings.getCustomer().getCustomerMeeting().getMeeting().getStartDate();
         int noOfInstallments = savings.getAccountActionDates().size();
         AccountTestUtils.changeInstallmentDatesToPreviousDateExceptLastInstallment(savings, 7);
-        TestObjectFactory.flushandCloseSession();
+        StaticHibernateUtil.flushSession();
         savings = TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
         new GenerateMeetingsForCustomerAndSavingsTask().getTaskHelper().execute(System.currentTimeMillis());
         StaticHibernateUtil.flushAndClearSession();

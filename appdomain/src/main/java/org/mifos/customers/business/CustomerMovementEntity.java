@@ -42,7 +42,7 @@ public class CustomerMovementEntity extends AbstractEntity {
     private final OfficeBO office;
 
     private Date updatedDate;
-    
+
     private Short updatedBy;
 
     public CustomerMovementEntity(CustomerBO customer, Date startDate) {
@@ -94,7 +94,7 @@ public class CustomerMovementEntity extends AbstractEntity {
         setUpdatedDate(new DateTimeService().getCurrentJavaDateTime());
         setEndDate(new DateTimeService().getCurrentJavaDateTime());
     }
-    
+
         public Short getUpdatedBy() {
         return updatedBy;
     }

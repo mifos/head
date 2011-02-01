@@ -10,13 +10,13 @@
         <id name="commentId" column="comment_id" type="integer" access="field">
             <generator class="native"/>
         </id>
- 
+
         <property name="commentDate" column="comment_date" type="date" access="field" />
         <property name="comment" column="comments" type="string" access="field"/>
         <many-to-one  name="officer" column="officer_id" class="org.mifos.customers.personnel.business.PersonnelBO" insert="true" update="false" unique="true" access="field"/>
         <many-to-one  name="personnel" column="personnel_id" class="org.mifos.customers.personnel.business.PersonnelBO" insert="true" update="false" unique="true" access="field"/>
     </class>
     <query name="personnel.getAllPersonnelNotes">
-    	   <![CDATA[from org.mifos.customers.personnel.business.PersonnelNotesEntity note where note.personnel.personnelId=:PERSONNEL_ID order by note.commentId desc]]>
+           <![CDATA[from org.mifos.customers.personnel.business.PersonnelNotesEntity note where note.personnel.personnelId=:PERSONNEL_ID order by note.commentId desc]]>
      </query>
 </hibernate-mapping>

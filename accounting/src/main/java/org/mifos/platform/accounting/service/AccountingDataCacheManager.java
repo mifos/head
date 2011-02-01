@@ -29,6 +29,7 @@ import java.io.PrintWriter;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
@@ -53,7 +54,7 @@ public class AccountingDataCacheManager {
     private String accountingDataPath;
     private Integer digitsAfterDecimal;
 
-    public final List<AccountingDto> getAccoutingDataFromCache(String fileName) {
+    public final List<AccountingDto> getExportDetails(String fileName) {
 
         String accountingDataLocation = getAccoutingDataCachePath();
         File file = new File(accountingDataLocation + fileName);
@@ -158,7 +159,7 @@ public class AccountingDataCacheManager {
     private String parseNumber(String number) {
         // FIXME should use this from common util
         StringBuilder pattern = new StringBuilder();
-        DecimalFormat decimalFormat = new DecimalFormat();
+        DecimalFormat decimalFormat = (DecimalFormat) DecimalFormat.getCurrencyInstance(Locale.ENGLISH);
         for (Short i = 0; i < DIGITS_BEFORE_DECIMAL; i++) {
             pattern.append('#');
         }
@@ -205,14 +206,30 @@ public class AccountingDataCacheManager {
         return "Mifos Accounting Export ";
     }
 
-    public final List<AccountingCacheFileInfo> getAccountingDataCacheInfo() {
-        List<AccountingCacheFileInfo> info = new ArrayList<AccountingCacheFileInfo>();
+    public final ExportFileInfo getExportFileInfoFromCache(LocalDate startDate, LocalDate endDate) {
+        String fileName = getCacheFileName(startDate, endDate);
+        File export = new File(getAccoutingDataCachePath() + "/" + fileName);
+        return getExportFileInfo(export);
+    }
+
+    public final List<ExportFileInfo> getGeneratedExports() {
+        List<ExportFileInfo> info = new ArrayList<ExportFileInfo>();
         File directory = new File(getAccoutingDataCachePath());
+
         for (File file : directory.listFiles()) {
-            info.add(new AccountingCacheFileInfo(new DateTime(file.lastModified()), getFilePrefixDefinedByMFI(), file
-                    .getName()));
+            info.add(getExportFileInfo(file));
         }
         return info;
+    }
+
+    protected ExportFileInfo getExportFileInfo(File file) {
+        String startDate = file.getName().split(" to ")[0];
+        String endDate = file.getName().split(" to ")[1];
+        String fileName = getFilePrefixDefinedByMFI() + file.getName();
+        String lastModified = new DateTime(file.lastModified()).toString("yyyy-MMM-dd HH:mm:sss z");
+        Boolean existInCache = true;
+        ExportFileInfo export= new ExportFileInfo(lastModified, fileName,  startDate, endDate, existInCache);
+        return export;
     }
 
 }

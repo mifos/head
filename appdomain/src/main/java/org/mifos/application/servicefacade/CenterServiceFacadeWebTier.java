@@ -66,8 +66,6 @@ import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelNotesEntity;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
-import org.mifos.customers.surveys.helpers.SurveyType;
-import org.mifos.customers.surveys.persistence.SurveysPersistence;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.dto.domain.AddressDto;
@@ -377,11 +375,11 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
 
         CustomerMeetingDto customerMeeting = customerDao.getCustomerMeetingDto(center.getCustomerMeeting(), userContext);
 
-        Boolean activeSurveys = new SurveysPersistence().isActiveSurveysForSurveyType(SurveyType.CENTER);
+        Boolean activeSurveys = Boolean.FALSE;//new SurveysPersistence().isActiveSurveysForSurveyType(SurveyType.CENTER);
 
-        List<SurveyDto> customerSurveys = customerDao.getCustomerSurveyDto(centerId);
+        List<SurveyDto> customerSurveys = new ArrayList<SurveyDto>();
 
-        List<CustomFieldDto> customFields = customerDao.getCustomFieldViewForCustomers(centerId, EntityType.CENTER.getValue(), userContext);
+        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
 
         return new CenterInformationDto(centerDisplay, customerAccountSummary, centerPerformanceHistory, centerAddress,
                 groups, recentCustomerNotes, customerPositions, savingsDetail, customerMeeting, activeSurveys,

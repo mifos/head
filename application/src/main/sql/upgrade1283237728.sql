@@ -1,1 +1,0 @@
-alter table loan_offering add interest_waiver_flag smallint default 0;

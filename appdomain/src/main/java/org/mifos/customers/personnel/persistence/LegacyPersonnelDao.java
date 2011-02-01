@@ -249,6 +249,7 @@ public class LegacyPersonnelDao extends LegacyGenericDao {
         return executeNamedQuery(NamedQueryConstants.SUPPORTED_LOCALE_LIST, null);
     }
 
+    @SuppressWarnings("unchecked")
     public List getAvailableLanguages() throws PersistenceException {
         return executeNamedQuery(NamedQueryConstants.AVAILABLE_LANGUAGES, null);
     }

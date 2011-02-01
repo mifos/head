@@ -95,9 +95,19 @@ public class TransactionHistoryPage extends AbstractPage {
                 paymentCount++;
             }
         }
-        Assert.assertEquals(amountPaid, debitSum, amountPaid / 1000.0); // TODO from some reasons debit in transaction history differs minimally from amountPaid 
+        Assert.assertEquals(amountPaid, debitSum, amountPaid / 1000.0); // TODO from some reasons debit in transaction history differs minimally from amountPaid
         Assert.assertEquals(amountPaid, creditSum, amountPaid / 1000.0); // TODO from some reasons credit in transaction history differs minimally from amountPaid
         Assert.assertEquals(transactionCount, paymentCount);
+    }
+
+    /**
+     * Verifies transaction history with user name
+     * @param userName
+     */
+    public void verifyPostedBy(String userName, int maxRowCount) {
+        for(int i = 1;i <= maxRowCount; i++) {
+            Assert.assertEquals(userName, getPostedBy(i));
+        }
     }
 
     public String getPaymentID(int row) {
@@ -118,6 +128,10 @@ public class TransactionHistoryPage extends AbstractPage {
 
     public String getCredit(int row) {
         return selenium.getTable(TABLE_ID+"."+row+".6");
+    }
+
+    public String getPostedBy(int row){
+        return selenium.getTable(TABLE_ID+"."+row+".9");
     }
 
     public String getNotes(int row) {

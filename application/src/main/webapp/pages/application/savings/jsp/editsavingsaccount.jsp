@@ -30,7 +30,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-	<span id="page.id" title="editsavingsaccount" />
+	<span id="page.id" title="editsavingsaccount"></span>
 		<SCRIPT SRC="pages/application/savings/js/CreateSavingsAccount.js"></SCRIPT>
         <SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
 	<html-el:form method="post" action="/savingsAction.do?method=editPreview" >

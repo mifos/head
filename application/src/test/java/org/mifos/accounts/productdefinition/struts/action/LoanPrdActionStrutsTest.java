@@ -75,16 +75,12 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
 
+@SuppressWarnings("unchecked")
 public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
 
-
-
     private LoanOfferingBO loanOffering;
-
     private String flowKey;
-
-    UserContext userContext = null;
-
+    private UserContext userContext = null;
     private FeeBO fee;
 
     @Override
@@ -1116,8 +1112,8 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
                 ProductDefinitionConstants.LOANPRODUCTLIST, request);
         Assert.assertNotNull(loanOfferings);
        Assert.assertEquals(2, loanOfferings.size());
-        Short DEFAULT_LOCALE_ID = (short) 1;
-        for (LoanOfferingBO loanOfferingBO : loanOfferings) {
+
+       for (LoanOfferingBO loanOfferingBO : loanOfferings) {
             loanOfferingBO = (LoanOfferingBO) StaticHibernateUtil.getSessionTL().get(LoanOfferingBO.class,
                     loanOfferingBO.getPrdOfferingId());
             Assert.assertNotNull(loanOfferingBO.getPrdOfferingName());

@@ -118,8 +118,6 @@ import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
-import org.mifos.customers.surveys.helpers.SurveyType;
-import org.mifos.customers.surveys.persistence.SurveysPersistence;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AccountStatusDto;
 import org.mifos.dto.domain.AccountUpdateStatus;
@@ -1663,8 +1661,8 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             fundName = loan.getFund().getFundName();
         }
 
-        SurveysPersistence surveysPersistence = new SurveysPersistence();
-        boolean activeSurveys = surveysPersistence.isActiveSurveysForSurveyType(SurveyType.LOAN);
+//        boolean activeSurveys = surveysPersistence.isActiveSurveysForSurveyType(SurveyType.LOAN);
+        boolean activeSurveys = false;
         List<SurveyDto> accountSurveys = loanDao.getAccountSurveyDto(loan.getAccountId());
 
         LoanSummaryDto loanSummary = new LoanSummaryDto(loan.getLoanSummary().getOriginalPrincipal().toString(), loan.getLoanSummary().getPrincipalPaid().toString(),

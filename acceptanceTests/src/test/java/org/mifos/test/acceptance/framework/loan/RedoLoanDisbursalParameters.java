@@ -20,6 +20,9 @@
 
 package org.mifos.test.acceptance.framework.loan;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class RedoLoanDisbursalParameters {
     private String disbursalDateDD;
     private String disbursalDateMM;
@@ -27,6 +30,11 @@ public class RedoLoanDisbursalParameters {
     private String loanAmount;
     private String interestRate;
     private String numberOfInstallments;
+
+    private final List<Integer> clientsIDs = new ArrayList<Integer>();
+    private final List<String> clientsAmounts = new ArrayList<String>();
+    private final List<String> clientsPurposes = new ArrayList<String>();
+    private int clientsCount = 0;
 
     static public RedoLoanDisbursalParameters createObjectWithClearedParameters() {
         RedoLoanDisbursalParameters parameters = new RedoLoanDisbursalParameters();
@@ -74,5 +82,32 @@ public class RedoLoanDisbursalParameters {
     }
     public void setNumberOfInstallments(String numberOfInstallments) {
         this.numberOfInstallments = numberOfInstallments;
+    }
+
+    public void addClient(int clientID, String amount, String purpose) {
+        this.clientsIDs.add(clientID);
+        this.clientsAmounts.add(amount);
+        this.clientsPurposes.add(purpose);
+        this.clientsCount++;
+    }
+
+    public int getCLientsID(int i) {
+        return this.clientsIDs.get(i);
+    }
+
+    public String getClientsAmount(int i) {
+        return this.clientsAmounts.get(i);
+    }
+
+    public String getClientsPurpose(int i) {
+        return this.clientsPurposes.get(i);
+    }
+
+    public void setClientsCount(int clients_count) {
+        this.clientsCount = clients_count;
+    }
+
+    public int getClientsCount() {
+        return clientsCount;
     }
 }

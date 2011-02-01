@@ -48,7 +48,7 @@ public class ViewOrganizationSettingsController {
         ModelAndView modelAndView = new ModelAndView("viewOrganizationSettings");
         Properties p = viewOrganizationSettingsServiceFacade.getOrganizationSettings(request.getSession());
         modelAndView.addObject("properties", p);
-		modelAndView.addObject("pluginsPropsMap", viewOrganizationSettingsServiceFacade.getDisplayablePluginsProperties());
+        modelAndView.addObject("pluginsPropsMap", viewOrganizationSettingsServiceFacade.getDisplayablePluginsProperties());
         modelAndView.addObject("breadcrumbs", new AdminBreadcrumbBuilder().withLink("admin.viewOrganizationSettings", "viewOrganizationSettings.ftl").build());
 
         return modelAndView;

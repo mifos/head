@@ -31,7 +31,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
-        <span id="page.id" title="BulkEntry"/>
+        <span id="page.id" title="BulkEntry"></span>
 		<script src="pages/js/jquery/jquery-1.4.2.min.js"></script>
 		<script language="javascript">
 		<!--
@@ -333,7 +333,7 @@ explanation of the license and how it is applied.
 												<mifos:mifoslabel keyhm="BulkEntry.ReceiptId" isColonRequired="Yes" name="bulkEntry.rcptid" />
 											</td>
 											<td>
-												<mifos:mifosalphanumtext styleId="bulkentry.input.receiptId" keyhm="BulkEntry.ReceiptId" property="receiptId" style="width:136px" maxlength="25" />
+												<mifos:mifosalphanumtext styleId="bulkentry.input.receiptId" keyhm="BulkEntry.ReceiptId" property="receiptId" style="width:272px" maxlength="60" />
 											</td>
 										</tr>
 										<tr class="fontnormal">

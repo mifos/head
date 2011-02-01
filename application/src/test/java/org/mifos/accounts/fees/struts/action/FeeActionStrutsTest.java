@@ -46,7 +46,6 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.dto.screen.FeeParameters;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
@@ -56,6 +55,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
 
+@SuppressWarnings("unchecked")
 public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
 
     private static final double DELTA = 0.00000001;
@@ -466,7 +466,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     @Test
-    public void testFailureEditPreviewForAmount() throws PageExpiredException {
+    public void testFailureEditPreviewForAmount() throws Exception {
         fee = TestObjectFactory.createOneTimeAmountFee("One Time Fee", FeeCategory.ALLCUSTOMERS, "12.34",
                 FeePayment.UPFRONT);
         LookUpValueEntity lookUpValue = new LookUpValueEntity();
@@ -491,7 +491,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     @Test
-    public void testFailureEditPreviewForZeroAmount() throws PageExpiredException {
+    public void testFailureEditPreviewForZeroAmount() throws Exception {
         fee = TestObjectFactory.createOneTimeAmountFee("One Time Fee", FeeCategory.ALLCUSTOMERS, "12.34",
                 FeePayment.UPFRONT);
         LookUpValueEntity lookUpValue = new LookUpValueEntity();

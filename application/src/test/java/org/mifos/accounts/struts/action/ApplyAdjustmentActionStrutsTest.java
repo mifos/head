@@ -245,7 +245,7 @@ public class ApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestCase {
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING), personnel, loan);
         AccountTestUtils.addToAccountStatusChangeHistory(loan, historyEntity);
         TestObjectFactory.updateObject(loan);
-        TestObjectFactory.flushandCloseSession();
+        StaticHibernateUtil.flushSession();
         loan = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
         historyEntity = new AccountStatusChangeHistoryEntity(new AccountStateEntity(
                 AccountState.LOAN_ACTIVE_IN_BAD_STANDING), new AccountStateEntity(
@@ -287,7 +287,7 @@ public class ApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("method", "loadAdjustment");
         setRequestPathInfo("/applyAdjustment");
         TestObjectFactory.updateObject(loan);
-        TestObjectFactory.flushandCloseSession();
+        StaticHibernateUtil.flushSession();
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         actionPerform();
         loan = (LoanBO) TestObjectFactory.getObject(AccountBO.class, loan.getAccountId());
@@ -300,7 +300,7 @@ public class ApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestCase {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         loan = (LoanBO) getLoanAccount();
         applyPayment(loan, 0);
-        TestObjectFactory.flushandCloseSession();
+        StaticHibernateUtil.flushSession();
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
         setRequestPathInfo("/applyAdjustment");
         addRequestParameter("method", "applyAdjustment");

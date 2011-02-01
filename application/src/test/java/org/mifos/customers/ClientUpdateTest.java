@@ -25,13 +25,10 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.application.holiday.persistence.HolidayDao;
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.business.service.CustomerServiceImpl;
@@ -232,7 +229,6 @@ public class ClientUpdateTest {
 
         // stubbing
         when(customerDao.findCustomerById(clientPersonalInfoUpdate.getCustomerId())).thenReturn(mockedClient);
-        when(customerDao.retrieveCustomFieldEntitiesForClient()).thenReturn(new ArrayList<CustomFieldDefinitionEntity>());
 
         // exercise test
         customerService.updateClientPersonalInfo(userContext, clientPersonalInfoUpdate);
@@ -250,7 +246,6 @@ public class ClientUpdateTest {
 
         // stubbing
         when(customerDao.findCustomerById(clientPersonalInfoUpdate.getCustomerId())).thenReturn(mockedClient);
-        when(customerDao.retrieveCustomFieldEntitiesForClient()).thenReturn(new ArrayList<CustomFieldDefinitionEntity>());
         doThrow(new RuntimeException()).when(customerDao).save(mockedClient);
 
         // exercise test
@@ -270,7 +265,6 @@ public class ClientUpdateTest {
 
         // stubbing
         when(customerDao.findCustomerById(clientPersonalInfoUpdate.getCustomerId())).thenReturn(mockedClient);
-        when(customerDao.retrieveCustomFieldEntitiesForClient()).thenReturn(new ArrayList<CustomFieldDefinitionEntity>());
         doThrow(new CustomerException(ClientConstants.INVALID_DOB_EXCEPTION)).when(mockedClient).updatePersonalInfo(clientPersonalInfoUpdate);
 
         // exercise test

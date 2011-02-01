@@ -97,6 +97,26 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
     public void logOut() {
         (new MifosPage(selenium)).logout();
     }
+    /**
+     * Verify whether a loan can be redone on a past date with GLIM and LSIM turned on.
+     * http://mifosforge.jira.com/browse/MIFOSTEST-18
+     * @throws Exception
+     */
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void redoLoanOnPastDateWithLSIMAndGLIM() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
+        RedoLoanDisbursalParameters paramsPastDate = new RedoLoanDisbursalParameters();
+        paramsPastDate.setDisbursalDateDD("03");
+        paramsPastDate.setDisbursalDateMM("07");
+        paramsPastDate.setDisbursalDateYYYY("2009");
+        paramsPastDate.addClient(1, "3000.0", "0000-Animal Husbandry");
+        paramsPastDate.addClient(2, "3000.0", "0000-Animal Husbandry");
+
+        LoanAccountPage loanAccountPage = loanTestHelper.redoLoanDisbursalWithGLIMandLSIM("MyGroup1233266255641", "WeeklyGroupFlatLoanWithOnetimeFee", paramsPastDate);
+
+        loanAccountPage.verifyStatus(LoanAccountPage.ACTIVE);
+        loanAccountPage.verifyPrincipalOriginal("6000.0");
+    }
 
     /*
      * Verify a redone loan directly moves into "Closed-Met Obligation"
@@ -195,8 +215,11 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
         loanAccountPage.verifyStatus("Active in Bad Standing");
     }
 
+    /**
+     * FIXME - disabling to ask about functionality
+     */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled=true)
+    @Test(enabled=false)
     public void redoLoanDisbursalForVariableInstallmentLoan() throws Exception {
         dataSetUpForVariableInstallmentLoan();
         applicationDatabaseOperation.updateLSIM(1);
@@ -224,8 +247,11 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
                 verifyRunningBalance(RedoLoanScheduleData.VARIABLE_LOAN_SCHEDULE_2,RedoLoanScheduleData.VARIABLE_LOAN_RUNNING_BALANCE_2);
     }
 
+    /**
+     * FIXME - disabling to ask about functionality
+     */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled=true)
+    @Test(enabled=false)
     public void redoLoanDisbursalForDecliningBalanceLoan() throws Exception {
         dataSetUpForVariableInstallmentLoan();
         applicationDatabaseOperation.updateLSIM(1);

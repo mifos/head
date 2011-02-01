@@ -34,6 +34,7 @@ import junit.framework.TestCase;
 
 import org.mifos.framework.util.helpers.Transformer;
 
+@SuppressWarnings("unchecked")
 public class CollectionUtilsTest extends TestCase {
 
     public void testAsListReturnsOneElementPassed() {

@@ -41,20 +41,17 @@ import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.savings.SavingBOTestUtils;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.business.SavingsTrxnDetailEntity;
-import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountStates;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.PaymentStatus;
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.config.business.Configuration;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.checklist.business.AccountCheckListBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
@@ -67,8 +64,6 @@ import org.mifos.security.util.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase {
-
-    private final int SAVINGS_CUSTOMFIELDS_NUMBER = 1;
 
     private UserContext userContext;
     private SavingsPersistence savingsPersistence;
@@ -110,14 +105,6 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
         accountCheckList = null;
         TestObjectFactory.removeObject(savingsOffering2);
         StaticHibernateUtil.flushSession();
-    }
-
-    @Test
-    public void testRetrieveCustomFieldsDefinition() throws Exception {
-        List<CustomFieldDefinitionEntity> customFields = savingsPersistence
-                .retrieveCustomFieldsDefinition(SavingsConstants.SAVINGS_CUSTOM_FIELD_ENTITY_TYPE);
-        Assert.assertNotNull(customFields);
-        Assert.assertEquals(SAVINGS_CUSTOMFIELDS_NUMBER, customFields.size());
     }
 
     @Test

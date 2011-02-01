@@ -30,8 +30,8 @@ import org.joda.time.DateTime;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.center.CenterTemplate;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.exceptions.CustomerException;
@@ -42,10 +42,8 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.util.helpers.Param;
-import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.QueryFactory;
@@ -68,6 +66,7 @@ public class CenterPersistence extends LegacyGenericDao {
         return getPersistentObject(CenterBO.class, customerId);
     }
 
+    @SuppressWarnings("unchecked")
     public CenterBO findBySystemId(String globalCustNum) throws PersistenceException {
         Map<String, String> queryParameters = new HashMap<String, String>();
         CenterBO center = null;
@@ -129,13 +128,6 @@ public class CenterPersistence extends LegacyGenericDao {
         PersonnelBO loanOfficer = legacyPersonnelDao.getPersonnel(template.getLoanOfficerId());
         int numberOfCustomersInOfficeAlready = 1;
         MeetingBO meeting = template.getMeeting();
-
-        List<CustomFieldDto> customFieldDto = new ArrayList<CustomFieldDto>();
-        if (template.getCustomFieldViews() != null) {
-            customFieldDto = template.getCustomFieldViews();
-        }
-
-        List<CustomerCustomFieldEntity> customFields = CustomerCustomFieldEntity.fromDto(customFieldDto, null);
 
         CenterBO center = CenterBO.createNew(userContext, template.getDisplayName(), new DateTime(template.getMfiJoiningDate()), meeting, loanOfficer,
                 centerOffice, numberOfCustomersInOfficeAlready, template.getAddress(), template.getExternalId(), new DateMidnight().toDateTime());

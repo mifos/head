@@ -4,35 +4,35 @@
                             "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
 
-	<class name="org.mifos.accounts.savings.business.SavingsScheduleEntity" table="saving_schedule">
-		<id name="actionDateId" column="id" type="integer" unsaved-value="-1" access="field">
-			<generator class="native" />
-		</id>
+    <class name="org.mifos.accounts.savings.business.SavingsScheduleEntity" table="saving_schedule">
+        <id name="actionDateId" column="id" type="integer" unsaved-value="-1" access="field">
+            <generator class="native" />
+        </id>
 
-		<version name="versionNo" column="version_no" type="integer" unsaved-value="null" />
+        <version name="versionNo" column="version_no" type="integer" unsaved-value="null" />
 
-		<property name="installmentId" column="installment_id" access="field" />
-		<property name="actionDate" column="action_date" />
-		<property name="paymentStatus" column="payment_status" />
-		<property name="paymentDate" column="payment_date" lazy="true" />
+        <property name="installmentId" column="installment_id" access="field" />
+        <property name="actionDate" column="action_date" />
+        <property name="paymentStatus" column="payment_status" />
+        <property name="paymentDate" column="payment_date" lazy="true" />
 
-		<property name="deposit" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-			<column name="deposit_currency_id" />
-			<column name="deposit" />
-		</property>
-		<property name="depositPaid" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-			<column name="deposit_paid_currency_id" />
-			<column name="deposit_paid" />
-		</property>
+        <property name="deposit" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+            <column name="deposit_currency_id" />
+            <column name="deposit" />
+        </property>
+        <property name="depositPaid" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+            <column name="deposit_paid_currency_id" />
+            <column name="deposit_paid" />
+        </property>
 
-		<many-to-one name="account" column="account_id" class="org.mifos.accounts.business.AccountBO" unique="true" cascade="none" insert="true" update="true" access="field" />
-		<many-to-one name="customer" column="customer_id" class="org.mifos.customers.business.CustomerBO" access="field" />
-	</class>
-				
-	<query name="savingsScheduleEntity.getScheduleForIds">
-		<![CDATA[ from org.mifos.accounts.savings.business.SavingsScheduleEntity savingSchedule
-				 where savingSchedule.id in (:ids)
-		]]>
-	</query>			
+        <many-to-one name="account" column="account_id" class="org.mifos.accounts.business.AccountBO" unique="true" cascade="none" insert="true" update="true" access="field" />
+        <many-to-one name="customer" column="customer_id" class="org.mifos.customers.business.CustomerBO" access="field" />
+    </class>
+
+    <query name="savingsScheduleEntity.getScheduleForIds">
+        <![CDATA[ from org.mifos.accounts.savings.business.SavingsScheduleEntity savingSchedule
+                 where savingSchedule.id in (:ids)
+        ]]>
+    </query>
 
 </hibernate-mapping>

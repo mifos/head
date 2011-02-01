@@ -24,7 +24,7 @@
 [@mifos.header "title" /]
 [@mifos.topNavigationNoSecurity currentTab="Admin" /]
 <!--  Main Content Begins-->
-<span id="page.id" title="newFund" />
+<span id="page.id" title="newFund"></span>
 <div class="content definePageMargin">
     <div class="borders margin20lefttop width90prc">
         <div class="borderbtm width100prc height25px">
@@ -55,13 +55,13 @@
                         [@spring.bind "formBean.name"/]
                             <input type="text" name="${spring.status.expression}" id="${spring.status.expression}"
                                    value="${spring.status.value?if_exists}"/>
-    				</span>
+                    </span>
                         </div>
                         <div class="span-20 "><span class="span-3 rightAlign"><span
                                 class="red">* </span>[@spring.message "organizationPreferences.definenewfund.fundCode"/]:</span><span
                                 class="span-5">&nbsp;
                         [@mifos.formSingleSelectWithPrompt "formBean.codeId", code,"--selectone--" /]
-				    </span>
+                    </span>
                         </div>
                     </div>
                 </div>

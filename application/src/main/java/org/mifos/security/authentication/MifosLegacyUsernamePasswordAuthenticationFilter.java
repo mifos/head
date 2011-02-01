@@ -111,6 +111,25 @@ public class MifosLegacyUsernamePasswordAuthenticationFilter extends UsernamePas
     }
 
     @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+            AuthenticationException failed) throws IOException, ServletException {
+
+        final String username = obtainUsername(request);
+        request.setAttribute("username", username);
+        final String password = obtainPassword(request);
+
+        if (authenticationIsUnsuccessfulDueToCredentials(failed)) {
+            loginServiceFacade.login(username, password);
+        }
+
+        super.unsuccessfulAuthentication(request, response, failed);
+    }
+
+    private boolean authenticationIsUnsuccessfulDueToCredentials(AuthenticationException failed) {
+        return failed == null;
+    }
+
+    @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
             Authentication authResult) throws IOException, ServletException {
 

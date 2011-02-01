@@ -10,11 +10,11 @@
 
   <action-mappings>
 
-    <action path="/manageImportAction" 
-            name="importTransactionsForm" 
-            type="org.mifos.application.importexport.struts.action.ImportTransactionsAction" 
-            scope="session" 
-            validate="true" 
+    <action path="/manageImportAction"
+            name="importTransactionsForm"
+            type="org.mifos.application.importexport.struts.action.ImportTransactionsAction"
+            scope="session"
+            validate="true"
             parameter="method"
             input="/manageImportAction.do?method=load" >
 
