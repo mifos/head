@@ -35,12 +35,8 @@
 <form action="${flowExecutionUrl}" method="post" class="two-columns">
 	<fieldset>
 	<div class="row">
-		<label for="selectedPrdOfferingId" class="mandatory">Savings instance name:</label>
-		<select id="createsavingsaccount.select.savingsProduct" name="selectedPrdOfferingId">
-			[#list savingsAccountFormBean.productOfferings as product]
-			<option value="${product.prdOfferingId}">${product.prdOfferingName}</option>
-			[/#list]
-		</select>
+		<label for="productId" class="mandatory">Savings instance name:</label>
+		[@form.singleSelectWithPrompt "savingsAccountFormBean.productId" savingsAccountFormBean.productOfferingOptions "createSavingsAccount.selectProduct.selectPrompt" /]
 	</div>
 	</fieldset>
 	<div class="row webflow-controls">

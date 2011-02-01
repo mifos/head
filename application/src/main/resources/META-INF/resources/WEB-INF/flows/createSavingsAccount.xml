@@ -22,7 +22,7 @@
 
 	<view-state id="selectProductOfferingStep" view="createSavingsAccountSelectProduct">
 		<transition on="productSelected" to="enterAccountDetailsStep">
-			<set name="requestScope.productId" value="requestParameters.selectedPrdOfferingId" type="int"/>
+			<set name="requestScope.productId" value="requestParameters.productId" type="int"/>
 			<evaluate expression="createSavingsAccountController.loadProduct(productId, savingsAccountFormBean)" />
 		</transition>
 	</view-state>
@@ -30,7 +30,7 @@
 	<view-state id="enterAccountDetailsStep" view="createSavingsAccountEnterDetails" model="savingsAccountFormBean">
 		<transition on="newProductSelected" to="enterAccountDetailsStep" validate="false">
 			<!-- TODO use on state entry instead of duplicating code from above? -->
-			<set name="requestScope.productId" value="requestParameters.selectedPrdOfferingId" type="int"/>
+			<set name="requestScope.productId" value="requestParameters.productId" type="int"/>
 			<evaluate expression="createSavingsAccountController.loadProduct(productId, savingsAccountFormBean)" />
 		</transition>
 		<transition on="detailsEntered" to="previewStep" />

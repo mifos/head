@@ -91,6 +91,7 @@ public class CreateSavingsAccountController {
 
 		SavingsProductReferenceDto product = savingsServiceFacade
 				.retrieveSavingsProductReferenceData(productId);
+		formBean.setProductId(productId);
 		formBean.setProduct(product);
 		formBean.setDepositAmount(product.getSavingsProductDetails()
 				.getAmountForDeposit());
@@ -103,7 +104,14 @@ public class CreateSavingsAccountController {
 		List<PrdOfferingDto> savingsProducts = savingsServiceFacade
 				.retrieveApplicableSavingsProductsForCustomer(formBean
 						.getCustomer().getCustomerId());
+		Map<String, String> offerings = new HashMap<String, String>(
+				savingsProducts.size());
+		for (PrdOfferingDto offering : savingsProducts) {
+			offerings.put(offering.getPrdOfferingId().toString(),
+					offering.getPrdOfferingName());
+		}
 		formBean.setProductOfferings(savingsProducts);
+		formBean.setProductOfferingOptions(offerings);
 	}
 
 	public CustomerSearchResultsDto searchCustomers(

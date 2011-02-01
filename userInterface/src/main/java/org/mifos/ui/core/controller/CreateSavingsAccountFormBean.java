@@ -21,7 +21,6 @@
 package org.mifos.ui.core.controller;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -53,7 +52,11 @@ public class CreateSavingsAccountFormBean implements Serializable {
 
 	private SavingsProductReferenceDto product;
 
+	private Integer productId;
+
 	private List<PrdOfferingDto> productOfferings;
+
+	private Map<String, String> productOfferingOptions;
 
 	private Map<String, String> savingsTypes;
 
@@ -115,6 +118,15 @@ public class CreateSavingsAccountFormBean implements Serializable {
 		return productOfferings;
 	}
 
+	public void setProductOfferingOptions(
+			Map<String, String> productOfferingOptions) {
+		this.productOfferingOptions = productOfferingOptions;
+	}
+
+	public Map<String, String> getProductOfferingOptions() {
+		return productOfferingOptions;
+	}
+
 	/**
 	 * Validation method that Spring webflow calls on state transition out of
 	 * customerSearchStep.
@@ -144,6 +156,14 @@ public class CreateSavingsAccountFormBean implements Serializable {
 			validationGroups = groups;
 		}
 		validator.validate(this, messages, validationGroups);
+	}
+
+	public void setProductId(Integer productId) {
+		this.productId = productId;
+	}
+
+	public Integer getProductId() {
+		return productId;
 	}
 
 	public void setSavingsTypes(Map<String, String> savingsTypes) {

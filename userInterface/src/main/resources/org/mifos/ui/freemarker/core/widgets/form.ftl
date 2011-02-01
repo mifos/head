@@ -24,7 +24,7 @@
 [#-- FIXME: these macros are copied from newblueprintmacros.ftl. They've been moved here for better organization. Delete from newblueprintmacros.ftl. --]
 
 [#-- TODO: add documentation --]
-[#macro formSingleSelectWithPrompt path options selectPrompt attributes=""]
+[#macro singleSelectWithPrompt path options selectPrompt attributes=""]
     [@spring.bind path/]
     <select id="${spring.status.expression}" name="${spring.status.expression}" ${attributes}>
         <option value="" [@spring.checkSelected ""/]>[@spring.message "${selectPrompt}"/]</option>

@@ -36,12 +36,8 @@
 <form action="${flowExecutionUrl}&_eventId=newProductSelected" method="post" class="two-columns">
 	<fieldset>
 	<div class="row">
-		<label for="selectedPrdOfferingId" class="mandatory">Savings instance name:</label>
-		<select id="createsavingsaccount.select.savingsProduct" name="selectedPrdOfferingId">
-			<option>Product 1</option>
-			<option>Product 2</option>
-			<option>Product 3</option>
-		</select>
+		<label for="productId" class="mandatory">Savings instance name:</label>
+		[@form.singleSelectWithPrompt "savingsAccountFormBean.productId" savingsAccountFormBean.productOfferingOptions "createSavingsAccount.selectProduct.selectPrompt" /]
 	</div>
 	</fieldset>
 </form>
