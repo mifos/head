@@ -235,4 +235,17 @@ public class StandardTestingService implements TestingService {
         configMgr.setProperty(processFlowParamName, processFlowParamValue);
 
     }
+
+    @Override
+    public void setClientRules(String clientRulesParamName, String clientRulesParamValue)
+        throws MifosException {
+    MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
+    if (clientRulesParamName == null || clientRulesParamValue.equals("")) {
+        configMgr.clearProperty(clientRulesParamName);
+        return;
+    }
+    configMgr.setProperty(clientRulesParamName, clientRulesParamValue);
+
+}
+
 }

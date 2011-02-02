@@ -20,6 +20,8 @@
 
 package org.mifos.test.acceptance.framework.testhelpers;
 
+import org.mifos.config.ClientRules;
+
 import com.thoughtworks.selenium.Selenium;
 
 public class CustomPropertiesHelper {
@@ -69,7 +71,7 @@ public class CustomPropertiesHelper {
     }
 
     public void setCenterHierarchyExists(String exists){
-        selenium.open(UPDATE_PAGE + "?ClientRules.CenterHierarchyExists=" + exists);
+        selenium.open(UPDATE_PAGE + "?"+ClientRules.ClientRulesCenterHierarchyExists+"=" + exists);
     }
 
     /**

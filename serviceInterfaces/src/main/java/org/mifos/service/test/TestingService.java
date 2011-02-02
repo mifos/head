@@ -52,6 +52,7 @@ public interface TestingService {
     void setMaximumAgeForNewClient(int age);
     void setAreFamilyDetailsRequired(boolean flag);
     void setMaximumNumberOfFamilyMembers(int number);
+    void setClientRules(String clientRulesParamName, String clientRulesParamValue) throws MifosException;
     void runIndividualBatchJob(String jobName, ServletContext servletContext) throws MifosException;
     void runAllBatchJobs(ServletContext servletContext);
 }

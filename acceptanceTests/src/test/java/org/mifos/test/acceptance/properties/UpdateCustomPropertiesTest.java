@@ -93,6 +93,19 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    //http://mifosforge.jira.com/browse/MIFOSTEST-232
+    public void verifyPropertyClientRulesCenterHierarchyExistsFalse() throws Exception{
+        //Given
+        propertiesHelper.setCenterHierarchyExists("false");
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
+        //When
+        navigationHelper.navigateToClientsAndAccountsPage();
+        //Then
+        Assert.assertFalse(selenium.isElementPresent("menu.link.label.createnew.center"));
+        propertiesHelper.setCenterHierarchyExists("true");
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     //http://mifosforge.jira.com/browse/MIFOSTEST-231
     public void verifyPropertyClientRulesCenterHierarchyExistsTrue() throws Exception{
         //Given
