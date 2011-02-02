@@ -72,4 +72,12 @@ public class ImportTransactionsPage extends MifosPage {
             }
         }
     }
+
+    public ImportTransactionsPage failImportTransaction(String importFile, String importFormat) {
+        selenium.select("importPluginName", "label=" + importFormat);
+        selenium.type("importTransactionsFile", importFile);
+        selenium.click("import_transactions.button.review");
+        waitForPageToLoad();
+        return new ImportTransactionsPage(selenium);
+    }
 }

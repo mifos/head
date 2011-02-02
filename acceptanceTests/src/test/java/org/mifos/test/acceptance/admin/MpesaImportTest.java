@@ -339,4 +339,59 @@ public class MpesaImportTest extends UiTestCaseBase {
         TransactionHistoryPage transactionHistoryPage = loanAccountPage.navigateToTransactionHistoryPage();
         transactionHistoryPage.verifyTransactionHistory(183, 1, 6);
     }
+
+    /**
+     * MPESA - Import has errors and user chooses to import
+     * a different file with some valid and invalid data.
+     * http://mifosforge.jira.com/browse/MIFOSTEST-695
+     * @throws Exception
+     */
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled = true)
+    public void importTheSameFiles() throws Exception {
+        //Given
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTime targetTime = new DateTime(2011,01,28,12,0,0,0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        String path = this.getClass().getResource("/mpesa/" + FILE_WITH_NO_ERRORS).toString();
+        String dataset = "mpesa_export.xml";
+
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, dataset, dataSource, selenium);
+
+        propertiesHelper.setImportTransactionOrder("AL3,AL5");
+
+        //When
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        ImportTransactionsPage importTransactionsPage = adminPage.navigateToImportTransactionsPage();
+        ImportTransactionsConfirmationPage importTransactionsConfirmationPage = importTransactionsPage.importTransactions(path, EXCEL_IMPORT_TYPE);
+
+        //Then
+        importTransactionsConfirmationPage.verifyImportSuccess("You have successfully imported transactions.");
+        LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage("000100000000013");
+        loanAccountPage.verifyStatus(LoanAccountPage.CLOSED);
+
+        ViewRepaymentSchedulePage viewRepaymentSchedulePage = loanAccountPage.navigateToRepaymentSchedulePage();
+        viewRepaymentSchedulePage.verifyFirstInstallmentDate(5, 3, "28-Jan-2011");
+
+        loanAccountPage = viewRepaymentSchedulePage.navigateToLoanAccountPage();
+
+        loanAccountPage.verifyPerformanceHistory("11", "11");
+
+        TransactionHistoryPage transactionHistoryPage = loanAccountPage.navigateToTransactionHistoryPage();
+
+        transactionHistoryPage.verifyTransactionHistory(2013, 2, 48);
+        transactionHistoryPage.verifyPostedBy("mifos", 48);
+
+        SavingsAccountDetailPage savingsAccountDetailPage = navigationHelper.navigateToSavingsAccountDetailPage("000100000000015");
+        savingsAccountDetailPage.verifySavingsAmount("3170.0");
+        savingsAccountDetailPage.verifyDate("28/01/2011");
+
+        //When
+        adminPage = navigationHelper.navigateToAdminPage();
+        importTransactionsPage = adminPage.navigateToImportTransactionsPage();
+        importTransactionsPage = importTransactionsPage.failImportTransaction(path, EXCEL_IMPORT_TYPE);
+
+        //Then
+        importTransactionsPage.checkErrors(new String[]{"Same file has been already imported. Please import a different file."});
+    }
 }
