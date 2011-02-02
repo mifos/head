@@ -148,6 +148,52 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
     }
 
     /**
+     * Verify loan amount with number of installments by loan cycle can be used to create new loans.
+     * http://mifosforge.jira.com/browse/MIFOSTEST-107
+     * @throws Exception
+     */
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void verifyAmounttAndInstallmentsByCycles() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
+
+        DefineNewLoanProductPage.SubmitFormParameters productParams = FormParametersHelper.getWeeklyLoanProductParameters();
+        productParams.setOfferingName("product107");
+        productParams.setOfferingShortName("p107");
+        productParams.setCalculateLoanAmount(SubmitFormParameters.BY_LOAN_CYCLE);
+        String[][] cycleLoanAmount = {
+            {"1000.0", "5000.0", "3000.0"},
+            {"2000.0", "6000.0", "4000.0"},
+            {"3000.0", "7000.0", "5000.0"},
+            {"4000.0", "8000.0", "6000.0"},
+            {"5000.0", "9000.0", "7000.0"},
+            {"6000.0", "10000.0", "8000.0"}
+        };
+        productParams.setCycleLoanAmount(cycleLoanAmount);
+        productParams.setCalculateInstallments(SubmitFormParameters.BY_LOAN_CYCLE);
+        String[][] calculateInstallments = {
+            {"26", "52", "52"},
+            {"20", "30", "30"},
+            {"15", "25", "25"},
+            {"10", "15", "15"},
+            {"5", "10", "10"},
+            {"1", "5", "5"}
+        };
+        productParams.setCycleInstallments(calculateInstallments);
+        CreateLoanAccountSearchParameters searchParams = new CreateLoanAccountSearchParameters();
+        searchParams.setSearchString("Stu1233266053368 Client1233266053368");
+        searchParams.setLoanProduct("product107");
+        DisburseLoanParameters disburseParams = DisburseLoanParameters.getDisbursalParameters("02", "02", "2011");
+
+        LoanProductDetailsPage loanProductDetailsPage = loanTestHelper.defineNewLoanProduct(productParams);
+        loanProductDetailsPage.verifyLoanAmountTableTypeFromCycle(cycleLoanAmount);
+        loanProductDetailsPage.verifyInstallmentsTableTypeFromCycle(calculateInstallments);
+        LoanAccountPage loanAccountPage = loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"1000.0", "5000.0", "3000.0"}, null, new String[]{"26", "52", "52"});
+        loanAccountPage.disburseLoan(disburseParams);
+
+        loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"1000.0", "5000.0", "3000.0"}, null, new String[]{"26", "52", "52"});
+    }
+
+    /**
      * Verify loan amount with number of installments by last loan amount can be used to create new loans.
      * http://mifosforge.jira.com/browse/MIFOSTEST-110
      * @throws Exception
