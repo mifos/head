@@ -23,7 +23,7 @@ package org.mifos.dto.screen;
 import java.io.Serializable;
 import java.util.List;
 
-import org.mifos.dto.domain.CustomerDto;
+import org.mifos.dto.domain.CustomerSearchResultDto;
 
 public class CustomerSearchResultsDto implements Serializable {
 
@@ -31,10 +31,10 @@ public class CustomerSearchResultsDto implements Serializable {
 	private final int firstResult;
 	private final Integer page;
 	private final Integer pageSize;
-	private final List<CustomerDto> pagedDetails;
+	private final List<CustomerSearchResultDto> pagedDetails;
 
 	public CustomerSearchResultsDto(Integer totalCount, int firstResult,
-			Integer page, Integer pageSize, List<CustomerDto> pagedDetails) {
+			Integer page, Integer pageSize, List<CustomerSearchResultDto> pagedDetails) {
 		this.totalCount = totalCount;
 		this.firstResult = firstResult;
 		this.page = page;
@@ -73,7 +73,7 @@ public class CustomerSearchResultsDto implements Serializable {
 		return this.pageSize;
 	}
 
-	public List<CustomerDto> getPagedDetails() {
+	public List<CustomerSearchResultDto> getPagedDetails() {
 		return this.pagedDetails;
 	}
 }

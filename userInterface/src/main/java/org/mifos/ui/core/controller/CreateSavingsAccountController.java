@@ -27,6 +27,7 @@ import java.util.Map;
 import org.mifos.application.servicefacade.SavingsServiceFacade;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerDto;
+import org.mifos.dto.domain.CustomerSearchResultDto;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.domain.SavingsAccountCreationDto;
 import org.mifos.dto.domain.SavingsAccountDetailDto;
@@ -128,14 +129,15 @@ public class CreateSavingsAccountController {
 		// CustomerSearchDto searchDto = new
 		// CustomerSearchDto(formBean.getSearchString(), 1, 10);
 		// someFacade.searchCustomers(searchDto)...
-		List<CustomerDto> pagedDetails = new ArrayList<CustomerDto>();
-		for (int i = 0; i < 50; i++) {
+		List<CustomerSearchResultDto> pagedDetails = new ArrayList<CustomerSearchResultDto>();
+		for (int i = 10; i < 100; i++) {
 			Integer customerId = new Integer(i);
-			String displayName = formBean.getSearchString() + " - " + i;
-			Integer parentCustomerId = new Integer(1);
-			Short levelId = 1;
-			CustomerDto customer = new CustomerDto(customerId, displayName,
-					parentCustomerId, levelId);
+			CustomerSearchResultDto customer = new CustomerSearchResultDto();
+			customer.setCustomerId(customerId);
+			customer.setClientName(formBean.getSearchString() + " (Client) " + i);
+			customer.setBranchName("Branch " + i);
+			customer.setGroupName("Group " + i);
+			customer.setCenterName("Center " + i);
 			pagedDetails.add(customer);
 		}
 		CustomerSearchResultsDto resultsDto = new CustomerSearchResultsDto(

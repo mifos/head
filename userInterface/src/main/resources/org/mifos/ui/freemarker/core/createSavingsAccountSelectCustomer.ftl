@@ -26,6 +26,7 @@
 
 <h1>[@spring.message "createSavingsAccount.selectCustomer.pageTitle" /] - <span class="standout">[@spring.message "createSavingsAccount.selectCustomer.pageSubtitle" /]</span></h1>
 <p>[@spring.message "createSavingsAccount.selectCustomer.instructions" /]</p>
+<br/>
 
 <!-- Client search form -->
 [@form.errors "savingsAccountFormBean.*"/]
@@ -38,16 +39,48 @@
 </form>
 
 <!-- Search results -->
+<br/>
 <div class="search-results">
-<ol>
-	[#list customerSearchResultsDto.pagedDetails as customer]
-		<li>${customer.displayName} / <a href="${flowExecutionUrl}&_eventId=customerSelected&customerId=${customer.customerId}">${customer.displayName}</a></li>
-	[/#list]
-</ol>
+<style type="text/css" title="currentStyle">
+	@import "pages/css/datatables/demo_table_jui.css";
+	@import "pages/css/datatables/custom.css";
+</style>
+<script src="pages/js/datatables/jquery.dataTables.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	var options = {
+		"bPaginate": true,
+		"bLengthChange": true,
+		"bFilter": true,
+		"bSort": true,
+		"bInfo": true,
+		"bAutoWidth": true 
+		};
+	$('#customerSearchResults').dataTable(options);
+});
+</script>
+<table id="customerSearchResults" class="datatable">
+	<thead>
+		<tr>
+			<th>Branch</th>
+			<th>Center</th>
+			<th>Group</th>
+			<th>Client</th>
+		</tr>
+	</thead>
+	<tbody>
+		[#list customerSearchResultsDto.pagedDetails as customer]
+			<tr>
+				<td>${customer.branchName}</td>
+				<td>${customer.centerName!"fixme"}</td>
+				<td>${customer.groupName}</td>
+				<td><a href="${flowExecutionUrl}&_eventId=customerSelected&customerId=${customer.customerId}">${customer.clientName}</a></td>
+			</tr>
+		[/#list]
+	</tbody>
+</table>
 </div>
-
-[#-- skwoka: TODO pagination --]
-Previous	Results 1-10 of 11 	Next
+<div class="clear"/>
 
 <!-- Cancel. Yeah, just one button. -->
 <form action="${flowExecutionUrl}" method="post" class="webflow-controls">
