@@ -1194,7 +1194,7 @@ public class AccountBO extends AbstractBusinessObject {
         return dueInstallmentDates;
     }
 
-    private List<InstallmentDate> createInstallmentDates(final Short installmentToSkip, final List<Date> dueDates) {
+    protected List<InstallmentDate> createInstallmentDates(final Short installmentToSkip, final List<Date> dueDates) {
         List<InstallmentDate> installmentDates = new ArrayList<InstallmentDate>();
         int installmentId = 1;
         for (Date date : dueDates) {
