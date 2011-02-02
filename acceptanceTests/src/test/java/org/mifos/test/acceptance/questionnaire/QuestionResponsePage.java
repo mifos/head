@@ -24,6 +24,7 @@ import com.thoughtworks.selenium.Selenium;
 
 import org.junit.Assert;
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.mifos.test.acceptance.framework.client.CreateClientEnterMfiDataPage;
 import org.mifos.test.acceptance.framework.group.CreateGroupConfirmationPage;
 import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
@@ -53,12 +54,16 @@ public class QuestionResponsePage extends MifosPage {
             Assert.assertFalse(selenium.isTextPresent(question));
         }
     }
-
     public void verifyQuestionsExists(String[] questions) {
         for(String question: questions) {
             Assert.assertTrue(selenium.isTextPresent(question));
         }
     }
+    public void verifySectionDoesnotappear(String section ) {
+            Assert.assertFalse(selenium.isTextPresent(section));
+    }
+
+
 
     public void populateSmartSelect(String smartSelectId, Map<String, String> tags) {
         for (String tag : tags.keySet()) {
@@ -87,6 +92,11 @@ public class QuestionResponsePage extends MifosPage {
     public void navigateToNextPage() {
         selenium.click("captureQuestionResponses.button.continue");
         waitForPageToLoad();
+    }
+
+    public CreateClientEnterMfiDataPage navigateToNextPageClientCreation() {
+        navigateToNextPage();
+        return new CreateClientEnterMfiDataPage(selenium);
     }
 
     public GroupViewDetailsPage navigateToCreateGroupDetailsPage(String status) {

@@ -20,16 +20,24 @@
 
 package org.mifos.test.acceptance.framework.testhelpers;
 
+import java.util.Map;
+
+import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.center.MeetingParameters;
+import org.mifos.test.acceptance.framework.client.ChooseOfficePage;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import org.mifos.test.acceptance.framework.client.CreateClientConfirmationPage;
+import org.mifos.test.acceptance.framework.client.CreateClientEnterFamilyDetailsPage;
 import org.mifos.test.acceptance.framework.client.CreateClientEnterMfiDataPage;
 import org.mifos.test.acceptance.framework.client.CreateClientEnterPersonalDataPage;
 import org.mifos.test.acceptance.framework.client.CreateClientPreviewDataPage;
 import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPage;
 import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPreviewDataPage;
+import org.mifos.test.acceptance.framework.group.GroupSearchPage;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
+import org.mifos.test.acceptance.framework.util.UiTestUtils;
 import org.mifos.test.acceptance.questionnaire.QuestionResponsePage;
+import org.mifos.test.acceptance.util.StringUtil;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -91,11 +99,12 @@ public class ClientTestHelper {
     }
 
 
-    public ClientViewDetailsPage createClientWithQuestionGroups(CreateClientEnterPersonalDataPage.SubmitFormParameters parameters, String group, String loanOfficer, QuestionResponseParameters responseParams) {
+    public ClientViewDetailsPage createClientWithQuestionGroups(CreateClientEnterPersonalDataPage.SubmitFormParameters parameters, String group, QuestionResponseParameters responseParams) {
         QuestionResponsePage questionResponsePage = navigateToQuestionResponsePage(parameters,group);
         questionResponsePage.populateAnswers(responseParams);
-        questionResponsePage.navigateToNextPage();
-        navigateToConfirmationPage(loanOfficer);
+        CreateClientEnterMfiDataPage createClientEnterMfiDataPage = questionResponsePage.navigateToNextPageClientCreation();
+        CreateClientPreviewDataPage clientPreviewDataPage = createClientEnterMfiDataPage.navigateToPreview();
+        clientPreviewDataPage.submit();
         return navigateToClientViewDetails(parameters);
     }
 
@@ -106,6 +115,32 @@ public class ClientTestHelper {
         .selectGroup(group)
         .create(parameters)
         .submitAndGotoCaptureQuestionResponsePage();
+    }
+
+    public ClientViewDetailsPage createClientAndVerify(String loanOfficer, String officeName) {
+        CreateClientEnterPersonalDataPage.SubmitFormParameters formParameters = createClient(loanOfficer, officeName);
+        return navigateToClientViewDetails(formParameters);
+    }
+
+    public CreateClientEnterPersonalDataPage.SubmitFormParameters createClient(String loanOfficer, String officeName) {
+        CreateClientEnterPersonalDataPage clientPersonalDataPage = navigateToPersonalDataPage(officeName);
+        CreateClientEnterPersonalDataPage.SubmitFormParameters formParameters = FormParametersHelper.getClientEnterPersonalDataPageFormParameters();
+        clientPersonalDataPage=clientPersonalDataPage.create(formParameters);
+        clientPersonalDataPage.submitAndGotoCreateClientEnterMfiDataPage();
+        navigateToConfirmationPage(loanOfficer);
+        return formParameters;
+    }
+
+    public ClientViewDetailsPage createClientWithQuestionGroups(String loanOfficer, String officeName, Map<String, String> choiceTags, String answer) {
+        CreateClientEnterPersonalDataPage clientPersonalDataPage = navigateToPersonalDataPage(officeName);
+        CreateClientEnterPersonalDataPage.SubmitFormParameters formParameters = FormParametersHelper.getClientEnterPersonalDataPageFormParameters();
+        clientPersonalDataPage = clientPersonalDataPage.create(formParameters);
+        QuestionResponsePage questionResponsePage = clientPersonalDataPage.submitAndGotoCaptureQuestionResponsePage();
+        questionResponsePage.populateTextAnswer("name=questionGroups[0].sectionDetails[0].questions[0].value", answer);
+        questionResponsePage.populateSmartSelect("txtListSearch", choiceTags);
+        questionResponsePage.navigateToNextPage();
+        navigateToConfirmationPage(loanOfficer);
+        return navigateToClientViewDetails(formParameters);
     }
 
     private ClientViewDetailsPage navigateToClientViewDetails(CreateClientEnterPersonalDataPage.SubmitFormParameters formParameters) {
@@ -133,4 +168,85 @@ public class ClientTestHelper {
         clientConfirmationPage.verifyPage();
         return clientConfirmationPage;
     }
+
+    private CreateClientEnterPersonalDataPage navigateToPersonalDataPage(String officeName) {
+        ClientsAndAccountsHomepage clientsAndAccountsPage = navigationHelper.navigateToClientsAndAccountsPage();
+        GroupSearchPage groupSearchPage = clientsAndAccountsPage.navigateToCreateNewClientPage();
+        ChooseOfficePage chooseOfficePage = groupSearchPage.navigateToCreateClientWithoutGroupPage();
+        return chooseOfficePage.chooseOffice(officeName);
+    }
+
+    public CreateClientEnterPersonalDataPage createClient(String officeName, String dd, String mm, String yy){
+        CreateClientEnterPersonalDataPage clientPersonalDataPage = navigateToPersonalDataPage(officeName);
+        CreateClientEnterPersonalDataPage.SubmitFormParameters formParameters = new CreateClientEnterPersonalDataPage.SubmitFormParameters();
+        formParameters.setSalutation(CreateClientEnterPersonalDataPage.SubmitFormParameters.MRS);
+        formParameters.setFirstName("test");
+        formParameters.setLastName("Customer" + StringUtil.getRandomString(8));
+        formParameters.setDateOfBirthDD(dd);
+        formParameters.setDateOfBirthMM(mm);
+        formParameters.setDateOfBirthYYYY(yy);
+        formParameters.setGender(CreateClientEnterPersonalDataPage.SubmitFormParameters.FEMALE);
+        formParameters.setPovertyStatus(CreateClientEnterPersonalDataPage.SubmitFormParameters.POOR);
+        formParameters.setHandicapped("Yes");
+        formParameters.setSpouseNameType(CreateClientEnterPersonalDataPage.SubmitFormParameters.FATHER);
+        formParameters.setSpouseFirstName("father");
+        formParameters.setSpouseLastName("lastname" + StringUtil.getRandomString(8));
+        return clientPersonalDataPage.create(formParameters);
+    }
+
+
+    public CreateClientEnterPersonalDataPage createClientForFamilyInfo(String officeName, String dd, String mm, String yy) {
+        CreateClientEnterPersonalDataPage clientPersonalDataPage = navigateToPersonalDataPage(officeName);
+         CreateClientEnterPersonalDataPage.SubmitFormParameters formParameters = new CreateClientEnterPersonalDataPage.SubmitFormParameters();
+         formParameters.setLastName("Customer" + StringUtil.getRandomString(8));
+         formParameters.setSalutation(CreateClientEnterPersonalDataPage.SubmitFormParameters.MRS);
+         formParameters.setFirstName("test");
+         formParameters.setDateOfBirthYYYY(yy);
+         formParameters.setLastName("Customer" + StringUtil.getRandomString(8));
+         formParameters.setDateOfBirthDD(dd);
+         formParameters.setDateOfBirthMM(mm);
+         formParameters.setGender(CreateClientEnterPersonalDataPage.SubmitFormParameters.FEMALE);
+         formParameters.setPovertyStatus(CreateClientEnterPersonalDataPage.SubmitFormParameters.POOR);
+         formParameters.setHandicapped("Yes");
+         return clientPersonalDataPage.createWithoutSpouse(formParameters);
+     }
+
+    public CreateClientEnterFamilyDetailsPage createFamily(String fname, String lname, String dd, String mm, String yy, CreateClientEnterFamilyDetailsPage page) {
+         CreateClientEnterFamilyDetailsPage.SubmitFormParameters formParameters = new CreateClientEnterFamilyDetailsPage.SubmitFormParameters();
+         formParameters.setRelationship(CreateClientEnterFamilyDetailsPage.SubmitFormParameters.FATHER);
+         formParameters.setFirstName(fname);
+         formParameters.setLastName(lname);
+         formParameters.setDateOfBirthDD(dd);
+         formParameters.setDateOfBirthMM(mm);
+         formParameters.setDateOfBirthYY(yy);
+         formParameters.setGender(CreateClientEnterFamilyDetailsPage.SubmitFormParameters.MALE);
+         formParameters.setLivingStatus(CreateClientEnterFamilyDetailsPage.SubmitFormParameters.TOGETHER);
+         return page.createMember(formParameters);
+    }
+
+    public CreateClientEnterFamilyDetailsPage createFamilyWithoutLookups(Integer relation,Integer gender, Integer livingStatus,CreateClientEnterFamilyDetailsPage page) {
+        CreateClientEnterFamilyDetailsPage.SubmitFormParameters formParameters = new CreateClientEnterFamilyDetailsPage.SubmitFormParameters();
+        formParameters.setRelationship(relation);
+        formParameters.setFirstName("fname");
+        formParameters.setLastName("lname");
+        formParameters.setDateOfBirthDD("11");
+        formParameters.setDateOfBirthMM("1");
+        formParameters.setDateOfBirthYY("2009");
+        formParameters.setGender(gender);
+        formParameters.setLivingStatus(livingStatus);
+        return page.createMember(formParameters);
+   }
+
+   public CreateClientPreviewDataPage createClientMFIInformationAndGoToPreviewPage(String loanOfficer,CreateClientEnterMfiDataPage clientMfiDataPage) {
+       CreateClientEnterMfiDataPage.SubmitFormParameters mfiFormParameters = new CreateClientEnterMfiDataPage.SubmitFormParameters();
+       mfiFormParameters.setLoanOfficerId(loanOfficer);
+
+       MeetingParameters meetingFormParameters = new MeetingParameters();
+       meetingFormParameters.setWeekFrequency("1");
+       meetingFormParameters.setWeekDay(MeetingParameters.WEDNESDAY);
+       meetingFormParameters.setMeetingPlace("Mangalore");
+
+       mfiFormParameters.setMeeting(meetingFormParameters);
+       return clientMfiDataPage.submitAndGotoCreateClientPreviewDataPage(mfiFormParameters);
+   }
 }
