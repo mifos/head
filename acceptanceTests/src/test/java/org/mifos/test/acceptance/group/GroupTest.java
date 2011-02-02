@@ -35,6 +35,7 @@ import org.mifos.test.acceptance.framework.group.EditGroupStatusPage;
 import org.mifos.test.acceptance.framework.group.EditGroupStatusParameters;
 import org.mifos.test.acceptance.framework.group.CreateGroupEntryPage.CreateGroupSubmitParameters;
 import org.mifos.test.acceptance.framework.group.CreateGroupSearchPage;
+import org.mifos.test.acceptance.framework.group.GroupStatus;
 import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
 import org.mifos.test.acceptance.framework.login.LoginPage;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
@@ -126,7 +127,7 @@ public class GroupTest extends UiTestCaseBase {
         //When
         EditGroupStatusPage editGroupStatusPage = groupDetailsPage.navigateToEditGroupStatusPage();
         EditGroupStatusParameters editGroupStatusParameters = new EditGroupStatusParameters();
-        editGroupStatusParameters.setStatus(EditGroupStatusParameters.ACTIVE);
+        editGroupStatusParameters.setStatus(GroupStatus.ACTIVE);
         editGroupStatusParameters.setNote("test");
         EditGroupStatusConfirmationPage confirmationPage2 = editGroupStatusPage.submitAndNavigateToEditStatusConfirmationPage(editGroupStatusParameters);
         GroupViewDetailsPage detailsPage = confirmationPage2.navigateToGroupDetailsPage();
@@ -151,7 +152,7 @@ public class GroupTest extends UiTestCaseBase {
         //When
         EditGroupStatusPage editGroupStatusPage = groupDetailsPage.navigateToEditGroupStatusPage();
         EditGroupStatusParameters editGroupStatusParameters = new EditGroupStatusParameters();
-        editGroupStatusParameters.setStatus(EditGroupStatusParameters.PENDING_APPROVAL);
+        editGroupStatusParameters.setStatus(GroupStatus.PENDING_APPROVAL);
         editGroupStatusParameters.setNote("test");
         EditGroupStatusConfirmationPage confirmationPage2 = editGroupStatusPage.submitAndNavigateToEditStatusConfirmationPage(editGroupStatusParameters);
         GroupViewDetailsPage detailsPage = confirmationPage2.navigateToGroupDetailsPage();

@@ -20,6 +20,7 @@
 
 package org.mifos.test.acceptance.framework.testhelpers;
 
+import org.mifos.test.acceptance.framework.group.CreateGroupEntryPage;
 import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
 import org.mifos.test.acceptance.framework.group.CreateGroupEntryPage.CreateGroupSubmitParameters;
 
@@ -32,19 +33,27 @@ public class GroupTestHelper {
     }
 
     public GroupViewDetailsPage createNewGroup(String centerName, CreateGroupSubmitParameters groupParams) {
-        return navigationHelper
-            .navigateToClientsAndAccountsPage()
-            .navigateToCreateNewGroupPage()
-            .searchAndNavigateToCreateGroupPage(centerName)
+        return navigateToCreateGroupEntryPage(centerName)
             .submitNewGroupForApproval(groupParams)
             .navigateToGroupDetailsPage();
     }
+
     public GroupViewDetailsPage createNewGroupWithoutPendingForApproval(String centerName, CreateGroupSubmitParameters groupParams) {
-        return navigationHelper
-            .navigateToClientsAndAccountsPage()
-            .navigateToCreateNewGroupPage()
-            .searchAndNavigateToCreateGroupPage(centerName)
+        return navigateToCreateGroupEntryPage(centerName)
             .submitNewGroupForApprove(groupParams)
             .navigateToGroupDetailsPage();
+    }
+
+    public GroupViewDetailsPage createNewGroupPartialApplication(String centerName, CreateGroupSubmitParameters groupParams) {
+        return navigateToCreateGroupEntryPage(centerName)
+            .submitNewGroupForPartialApplication(groupParams)
+            .navigateToGroupDetailsPage();
+    }
+
+    private CreateGroupEntryPage navigateToCreateGroupEntryPage(String centerName){
+        return navigationHelper
+        .navigateToClientsAndAccountsPage()
+        .navigateToCreateNewGroupPage()
+        .searchAndNavigateToCreateGroupPage(centerName);
     }
 }

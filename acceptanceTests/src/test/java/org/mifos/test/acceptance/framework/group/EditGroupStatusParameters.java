@@ -21,39 +21,32 @@
 package org.mifos.test.acceptance.framework.group;
 
 public class EditGroupStatusParameters {
-    public static final String ON_HOLD = "On Hold";
-    public static final String ACTIVE = "Active";
-    public static final String CLOSED = "Closed";
-    public static final String PENDING_APPROVAL = "Application Pending Approval";
 
     private String note;
-    private String cancelReason;
-    private String status;
-
-    @SuppressWarnings("PMD.OnlyOneReturn")
-    public int getStatusValue(){
-        if("Partial Application".equals(status)) { return 7; }
-        if("Application Pending Approval".equals(status)) { return 8; }
-        if("Active".equals(status)) { return 9; }
-        return -1;
-    }
+    private GroupCancelCloseReason cancelReason;
+    private GroupStatus status;
 
     public String getNote() {
         return this.note;
     }
+
     public void setNote(String note) {
         this.note = note;
     }
-    public String getCancelReason() {
+
+    public GroupCancelCloseReason getCancelReason() {
         return this.cancelReason;
     }
-    public void setCancelReason(String cancelReason) {
+
+    public void setCancelReason(GroupCancelCloseReason cancelReason) {
         this.cancelReason = cancelReason;
     }
-    public String getStatus() {
+
+    public GroupStatus getStatus() {
         return this.status;
     }
-    public void setStatus(String status) {
+
+    public void setStatus(GroupStatus status) {
         this.status = status;
     }
 }
