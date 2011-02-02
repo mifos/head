@@ -42,19 +42,24 @@
 <br/>
 <div class="search-results">
 <style type="text/css" title="currentStyle">
-	@import "pages/css/datatables/demo_table_jui.css";
+	@import "pages/css/datatables/table_jui.css";
 	@import "pages/css/datatables/custom.css";
 </style>
 <script src="pages/js/datatables/jquery.dataTables.min.js" type="text/javascript"></script>
 <script type="text/javascript">
 $(document).ready(function() {
+	var languageOptions = {
+		"sUrl": "jqueryDatatableMessages.ftl"
+		};
 	var options = {
 		"bPaginate": true,
 		"bLengthChange": true,
 		"bFilter": true,
 		"bSort": true,
 		"bInfo": true,
-		"bAutoWidth": true 
+		"bAutoWidth": true,
+		"sPaginationType": "full_numbers",
+		"oLanguage": languageOptions
 		};
 	$('#customerSearchResults').dataTable(options);
 });
@@ -72,7 +77,7 @@ $(document).ready(function() {
 		[#list customerSearchResultsDto.pagedDetails as customer]
 			<tr>
 				<td>${customer.branchName}</td>
-				<td>${customer.centerName!"fixme"}</td>
+				<td>${customer.centerName}</td>
 				<td>${customer.groupName}</td>
 				<td><a href="${flowExecutionUrl}&_eventId=customerSelected&customerId=${customer.customerId}">${customer.clientName}</a></td>
 			</tr>
