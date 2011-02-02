@@ -2103,16 +2103,31 @@ public class LoanBO extends AccountBO {
                         .getOriginalPenalty().subtract(loanSummary.getPenaltyPaid()), trxnDate);
     }
 
-    private Short getInstallmentSkipToStartRepayment() {
+    private Short getInstallmentSkipToStartRepayment(final boolean isRepaymentIndepOfMeetingEnabled) {
+        /*
+         * TODO: if interest deducted at disbursement is re-enabled, then we need to figure out why this logic was here.
+         * This logic broke grace period functionality in normal loan cases and was removed as part of MIFOS-1994
+         *
+         * boolean isInterestDeductedatDisbursement = isInterestDeductedAtDisbursement(); if
+         * (isRepaymentIndepOfMeetingEnabled) { isInterestDeductedatDisbursement = !isInterestDeductedAtDisbursement();
+         * } else { isInterestDeductedatDisbursement = isInterestDeductedAtDisbursement(); } if
+         * (isInterestDeductedatDisbursement) { return (short) 0; }
+         */
 
-        Short installmentsToSkip = Short.valueOf("0");
+        // in the default case of loan schedules tied to meeting schedules,
+        // the loan is disbursed at the first meeting (#0) and the first
+        // payment is made at the following meeting (#1)
+        short firstRepaymentInstallment = 1;
+        // if LoanScheduleIndependentofMeeting is on, then repayments start on
+        // the first meeting in the schedule (#0)
+        if (isRepaymentIndepOfMeetingEnabled) {
+            firstRepaymentInstallment = 0;
+        }
 
         if (getGraceType() == GraceType.PRINCIPALONLYGRACE || getGraceType() == GraceType.NONE) {
-            installmentsToSkip = Short.valueOf("0");
-        } else {
-            installmentsToSkip = getGracePeriodDuration();
+            return firstRepaymentInstallment;
         }
-        return installmentsToSkip;
+        return (short) (getGracePeriodDuration() + firstRepaymentInstallment);
     }
 
     private String getRateBasedOnFormula(final Double rate, final FeeFormulaEntity formula, final Money loanInterest) {
@@ -2274,10 +2289,10 @@ public class LoanBO extends AccountBO {
 
         // Get the full list of all loan InstallmentDate(s), past, present and future, without adjusting for holidays.
         // This will work correctly only if adjusting periodic fees is done when no installments have been paid
-//        boolean isRepaymentIndepOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
-//        List<InstallmentDate> nonAdjustedInstallmentDates = getInstallmentDates(getLoanMeeting(), noOfInstallments,
-//                getInstallmentSkipToStartRepayment(), isRepaymentIndepOfMeetingEnabled,
-//                false);
+        boolean isRepaymentIndepOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
+        List<InstallmentDate> nonAdjustedInstallmentDates = getInstallmentDates(getLoanMeeting(), noOfInstallments,
+                getInstallmentSkipToStartRepayment(isRepaymentIndepOfMeetingEnabled), isRepaymentIndepOfMeetingEnabled,
+                false);
 
         // Use handlePeriodic to adjust fee installments for holiday periods and combine multiple fee installments due
         // for the
@@ -3024,12 +3039,12 @@ public class LoanBO extends AccountBO {
             setLoanMeeting(newMeetingForRepaymentDay);
         }
         List<InstallmentDate> installmentDates = getInstallmentDates(getLoanMeeting(), noOfInstallments,
-                getInstallmentSkipToStartRepayment(), isRepaymentIndepOfMeetingEnabled);
+                getInstallmentSkipToStartRepayment(isRepaymentIndepOfMeetingEnabled), isRepaymentIndepOfMeetingEnabled);
 
         // installment dates that have not been adjusted for holidays
-//        List<InstallmentDate> nonAdjustedInstallmentDates = getInstallmentDates(getLoanMeeting(), noOfInstallments,
-//                getInstallmentSkipToStartRepayment(isRepaymentIndepOfMeetingEnabled), isRepaymentIndepOfMeetingEnabled,
-//                false);
+        List<InstallmentDate> nonAdjustedInstallmentDates = getInstallmentDates(getLoanMeeting(), noOfInstallments,
+                getInstallmentSkipToStartRepayment(isRepaymentIndepOfMeetingEnabled), isRepaymentIndepOfMeetingEnabled,
+                false);
 
         logger.debug("Obtained intallments dates");
 
