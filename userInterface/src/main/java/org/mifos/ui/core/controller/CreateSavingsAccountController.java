@@ -135,9 +135,9 @@ public class CreateSavingsAccountController {
 			CustomerSearchResultDto customer = new CustomerSearchResultDto();
 			customer.setCustomerId(customerId);
 			customer.setClientName(formBean.getSearchString() + " (Client) " + i);
-			customer.setBranchName("Branch " + i);
-			customer.setGroupName("Group " + i);
-			customer.setCenterName("Center " + i);
+			customer.setBranchName("Branch " + (i + 100));
+			customer.setGroupName("Group " + (i + 200));
+			customer.setCenterName("Center " + (i + 300));
 			pagedDetails.add(customer);
 		}
 		CustomerSearchResultsDto resultsDto = new CustomerSearchResultsDto(
