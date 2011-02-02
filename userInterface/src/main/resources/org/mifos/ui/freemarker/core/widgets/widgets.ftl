@@ -25,4 +25,5 @@
 Add all widgets here. Spring is configured to auto load this file, and by extension, all widgets declared here. 
 --]
 [#include "breadcrumb.ftl" /]
+[#include "datatable.ftl" /]
 [#include "navigation.ftl" /]
