@@ -175,11 +175,7 @@ explanation of the license and how it is applied.
 								</c:otherwise>
 							</c:choose> </span> <br>
 	
-									<fmt:message key="product.include.interest.waiver">
-                                    <fmt:param><mifos:mifoslabel
-                                    name="${ConfigurationConstants.LOAN}"
-                                    bundle="ProductDefUIResources" /></fmt:param>
-                                    </fmt:message>:
+									<mifos:mifoslabel	name="product.include.interest.waiver" bundle="ProductDefUIResources" />:
                                     <span class="fontnormal">
                                     <c:choose>
 										<c:when
