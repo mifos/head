@@ -42,6 +42,16 @@ public class ApplyChargePage extends MifosPage {
         return new LoanAccountPage(selenium);
     }
 
+    public LoanAccountPage submitUsingLabelAndNavigateToApplyChargeConfirmationPage(ChargeParameters params)
+    {
+        selenium.select("applyCharges.input.type", params.getType());
+        this.typeTextIfNotEmpty("applyCharges.input.amount", params.getAmount());
+        selenium.click("applyCharges.button.submit");
+        waitForPageToLoad();
+
+        return new LoanAccountPage(selenium);
+    }
+
     public void verifyBlockedFee(String[] blockedInterest) {
         for (String element : blockedInterest) {
             String fee = element;
