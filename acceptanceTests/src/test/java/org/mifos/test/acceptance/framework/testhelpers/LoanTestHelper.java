@@ -751,7 +751,6 @@ public class LoanTestHelper {
             .navigateToAdminPage()
             .navigateToDefineLoanProduct();
         defineNewLoanProductPage.fillLoanParameters(productParams);
-
         return defineNewLoanProductPage
             .submitAndGotoNewLoanProductPreviewPage()
             .submit()

@@ -108,6 +108,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
         private String defInstallments;
         private String maxInstallments;
         private String[][] cycleInstallments = new String[MAX_CYCLES][3];
+        private String[][] installmentsByLastLoanAmount = new String[MAX_CYCLES][4];
         private int gracePeriodType;
         private String interestGLCode;
         private String principalGLCode;
@@ -378,6 +379,46 @@ public class DefineNewLoanProductPage extends AbstractPage {
         public void setDefCycleLoanAmount(int row, String value) {
             this.cycleLoanAmount[row][2] = value;
         }
+
+        public void setInstallmentsByLastLoanAmount(String[][] installmentsByLastLoanAmount) {
+            this.installmentsByLastLoanAmount = installmentsByLastLoanAmount.clone();
+        }
+
+        public String[][] getInstallmentsByLastLoanAmount() {
+            return installmentsByLastLoanAmount.clone();
+        }
+
+        public String getLastInstallmentByLastLoanAmount(int row) {
+            return installmentsByLastLoanAmount[row][0];
+        }
+
+        public void setLastInstallmentByLastLoanAmount(int row, String value) {
+            this.installmentsByLastLoanAmount[row][0] = value;
+        }
+
+        public String getMinInstallmentByLastLoanAmount(int row) {
+            return installmentsByLastLoanAmount[row][1];
+        }
+
+        public void setMinInstallmentByLastLoanAmount(int row, String value) {
+            this.installmentsByLastLoanAmount[row][1] = value;
+        }
+
+        public String getMaxInstallmentByLastLoanAmount(int row) {
+            return installmentsByLastLoanAmount[row][2];
+        }
+
+        public void setMaxInstallmentByLastLoanAmount(int row, String value) {
+            this.installmentsByLastLoanAmount[row][2] = value;
+        }
+
+        public String getDefInstallmentByLastLoanAmount(int row) {
+            return installmentsByLastLoanAmount[row][3];
+        }
+
+        public void setDefInstallmentByLastLoanAmount(int row, String value) {
+            this.installmentsByLastLoanAmount[row][3] = value;
+        }
     }
 
     public DefineNewLoanProductPage fillLoanParameters(SubmitFormParameters parameters) {
@@ -413,9 +454,15 @@ public class DefineNewLoanProductPage extends AbstractPage {
             selenium.type("maxNoInstallments", parameters.getMaxInstallments());
             selenium.type("defNoInstallments", parameters.getDefInstallments());
         }
-    //    else if(parameters.getCalculateInstallments() == SubmitFormParameters.BY_LAST_LOAN_AMOUNT) {
-            // no test for this parameter
-   //     }
+        else if(parameters.getCalculateInstallments() == SubmitFormParameters.BY_LAST_LOAN_AMOUNT) {
+            for(int i = 1; i <= SubmitFormParameters.MAX_CYCLES; i++) {
+                selenium.typeKeys("endInstallmentRange"+i, parameters.getLastInstallmentByLastLoanAmount(i-1));
+                selenium.fireEvent("endInstallmentRange"+i, "blur");
+                selenium.type("minLoanInstallment"+i, parameters.getMinInstallmentByLastLoanAmount(i-1));
+                selenium.type("maxLoanInstallment"+i, parameters.getMaxInstallmentByLastLoanAmount(i-1));
+                selenium.type("defLoanInstallment"+i, parameters.getDefInstallmentByLastLoanAmount(i-1));
+            }
+        }
         else {
             for(int i = 1; i <= SubmitFormParameters.MAX_CYCLES; i++) {
                 selenium.type("minCycleInstallment"+i, parameters.getMinCycleInstallment(i-1));

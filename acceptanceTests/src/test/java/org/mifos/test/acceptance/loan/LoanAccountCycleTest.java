@@ -72,6 +72,40 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
     }
 
     /**
+     * Verify the loan product creation for the new loan product when
+     * the "Calculate Loan Amount as:" " same for all loans." and
+     * "Calculate # of Installments as:" "by last loan amount"
+     * http://mifosforge.jira.com/browse/MIFOSTEST-101
+     * @throws Exception
+     */
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void verifyProductCreationWhenInstallmentsByLastAmount() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
+
+        DefineNewLoanProductPage.SubmitFormParameters productParams = FormParametersHelper.getWeeklyLoanProductParameters();
+        productParams.setOfferingName("product101");
+        productParams.setOfferingShortName("p101");
+        productParams.setMinLoanAmount("1000.0");
+        productParams.setMaxLoanAmount("7000.0");
+        productParams.setDefaultLoanAmount("2000.0");
+        productParams.setCalculateInstallments(SubmitFormParameters.BY_LAST_LOAN_AMOUNT);
+        String[][] calculateInstallments = {
+            {"1000", "5", "10", "5"},
+            {"2000", "10", "20", "15"},
+            {"3000", "10", "30", "25"},
+            {"4000", "20", "50", "30"},
+            {"5000", "20", "50", "35"},
+            {"6000", "30", "60", "40"}
+        };
+        productParams.setInstallmentsByLastLoanAmount(calculateInstallments);
+
+
+        LoanProductDetailsPage loanProductDetailsPage = loanTestHelper.defineNewLoanProduct(productParams);
+        loanProductDetailsPage.verifyInstallmentTableTypeFromLastAmount(calculateInstallments);
+        loanProductDetailsPage.verifyLoanAmountTableTypeSame("1000.0", "7000.0", "2000.0");
+    }
+
+    /**
      * Verify loan amount with number of installments is same for all loan can be used to create new loans.
      * http://mifosforge.jira.com/browse/MIFOSTEST-105
      * @throws Exception
