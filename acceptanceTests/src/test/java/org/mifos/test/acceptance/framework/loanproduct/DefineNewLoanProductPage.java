@@ -84,15 +84,20 @@ public class DefineNewLoanProductPage extends AbstractPage {
         public static final int BY_LOAN_CYCLE = 3;
         public static final int MAX_CYCLES = 6;
 
+        // product category
+        public static final String CATEGORY_OTHER = "Other";
+
         private String branch;
         private String offeringName;
         private String offeringShortName;
         private String description;
         private String category;
         private int applicableFor;
+        private int calculateLoanAmount = SAME_FOR_ALL_LOANS;
         private String minLoanAmount;
         private String maxLoanAmount;
         private String defaultLoanAmount;
+        private String[][] cycleLoanAmount = new String[MAX_CYCLES][3];
         private int interestTypes;
         private String minInterestRate;
         private String maxInterestRate;
@@ -333,6 +338,46 @@ public class DefineNewLoanProductPage extends AbstractPage {
         public void setDefCycleInstallment(int row, String value) {
             this.cycleInstallments[row][2] = value;
         }
+
+        public void setCalculateLoanAmount(int calculateLoanAmount) {
+            this.calculateLoanAmount = calculateLoanAmount;
+        }
+
+        public int getCalculateLoanAmount() {
+            return calculateLoanAmount;
+        }
+
+        public void setCycleLoanAmount(String[][] cycleLoanAmount) {
+            this.cycleLoanAmount = cycleLoanAmount.clone();
+        }
+
+        public String[][] getCycleLoanAmount() {
+            return cycleLoanAmount.clone();
+        }
+
+        public String getMinCycleLoanAmount(int row) {
+            return cycleLoanAmount[row][0];
+        }
+
+        public void setMinCycleLoanAmount(int row, String value) {
+            this.cycleLoanAmount[row][0] = value;
+        }
+
+        public String getMaxCycleLoanAmount(int row) {
+            return cycleLoanAmount[row][1];
+        }
+
+        public void setMaxCycleLoanAmount(int row, String value) {
+            this.cycleLoanAmount[row][1] = value;
+        }
+
+        public String getDefCycleLoanAmount(int row) {
+            return cycleLoanAmount[row][2];
+        }
+
+        public void setDefCycleLoanAmount(int row, String value) {
+            this.cycleLoanAmount[row][2] = value;
+        }
     }
 
     public DefineNewLoanProductPage fillLoanParameters(SubmitFormParameters parameters) {
@@ -341,9 +386,22 @@ public class DefineNewLoanProductPage extends AbstractPage {
         selenium.type("createLoanProduct.input.description", parameters.getDescription());
         selenium.select("prdCategory", "label=" + parameters.getCategory());
         selenium.select("prdApplicableMaster", "value=" + parameters.getApplicableFor());
-        selenium.type("minLoanAmount", parameters.getMinLoanAmount());
-        selenium.type("maxLoanAmount", parameters.getMaxLoanAmount());
-        selenium.type("defaultLoanAmount", parameters.getDefaultLoanAmount());
+        selenium.click("name=loanAmtCalcType value=" + parameters.getCalculateLoanAmount());
+        if(parameters.getCalculateLoanAmount() == SubmitFormParameters.SAME_FOR_ALL_LOANS) {
+            selenium.type("minLoanAmount", parameters.getMinLoanAmount());
+            selenium.type("maxLoanAmount", parameters.getMaxLoanAmount());
+            selenium.type("defaultLoanAmount", parameters.getDefaultLoanAmount());
+        }
+   //     else if(parameters.getCalculateLoanAmount() == SubmitFormParameters.BY_LAST_LOAN_AMOUNT) {
+            // no test for this parameter
+   //     }
+        else {
+            for(int i = 1; i <= SubmitFormParameters.MAX_CYCLES; i++) {
+                selenium.type("cycleLoanMinLoanAmt"+i, parameters.getMinCycleLoanAmount(i-1));
+                selenium.type("cycleLoanMaxLoanAmt"+i, parameters.getMaxCycleLoanAmount(i-1));
+                selenium.type("cycleLoanDefaultLoanAmt"+i, parameters.getDefCycleLoanAmount(i-1));
+            }
+        }
         selenium.select("interestTypes", "value=" + parameters.getInterestTypes());
         selenium.type("createLoanProduct.input.maxInterestRate", parameters.getMaxInterestRate());
         selenium.type("createLoanProduct.input.minInterestRate", parameters.getMinInterestRate());

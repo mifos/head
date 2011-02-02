@@ -727,9 +727,28 @@ public class LoanTestHelper {
                 .submitAndNavigateToLoanAccountPage();
     }
 
+    public LoanAccountPage createWithVerificationAndActivationLoanAccount(CreateLoanAccountSearchParameters searchParams, String[] amounts, String[] interestRate, String[] installments) {
+        CreateLoanAccountEntryPage createLoanAccountEntryPage = navigationHelper
+                .navigateToClientsAndAccountsPage()
+                .navigateToCreateLoanAccountUsingLeftMenu()
+                .searchAndNavigateToCreateLoanAccountPage(searchParams);
+        if(amounts != null) {
+            createLoanAccountEntryPage.verifyAllowedAmounts(amounts[0], amounts[1], amounts[2]);
+        }
+        if(interestRate != null) {
+            createLoanAccountEntryPage.verifyAllowedInterestRate(interestRate[0], interestRate[1], interestRate[2]);
+        }
+        if(installments != null) {
+            createLoanAccountEntryPage.verifyAllowedInstallments(installments[0], installments[1], installments[2]);
+        }
+        return createLoanAccountEntryPage
+            .continuePreviewSubmitAndNavigateToDetailsPage()
+            .changeAccountStatusToAccepted();
+    }
+
     public LoanProductDetailsPage defineNewLoanProduct(DefineNewLoanProductPage.SubmitFormParameters productParams) {
-        MifosPage mifosPage = new MifosPage(selenium);
-        DefineNewLoanProductPage defineNewLoanProductPage = mifosPage.navigateToAdminPageUsingHeaderTab()
+        DefineNewLoanProductPage defineNewLoanProductPage = navigationHelper
+            .navigateToAdminPage()
             .navigateToDefineLoanProduct();
         defineNewLoanProductPage.fillLoanParameters(productParams);
 

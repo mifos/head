@@ -448,5 +448,11 @@ public class LoanAccountPage extends AbstractPage {
         }
         return this;
     }
+
+    public LoanAccountPage disburseLoan(DisburseLoanParameters disburseParams) {
+        return navigateToDisburseLoan()
+        .submitAndNavigateToDisburseLoanConfirmationPage(disburseParams)
+        .submitAndNavigateToLoanAccountPage();
+    }
 }
 

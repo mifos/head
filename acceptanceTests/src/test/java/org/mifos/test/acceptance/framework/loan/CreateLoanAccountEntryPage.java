@@ -344,4 +344,19 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
         }
         return this;
     }
+
+    public void verifyAllowedAmounts(String min, String max, String def) {
+        Assert.assertTrue(selenium.isTextPresent("(Allowed Amount:   "+min+"   -   "+max+" )"));
+        Assert.assertEquals(selenium.getValue("loancreationdetails.input.sumLoanAmount"), def);
+    }
+
+    public void verifyAllowedInterestRate(String min, String max, String def) {
+        Assert.assertTrue(selenium.isTextPresent("(Allowed Interest rate amount   "+min+"   -   "+max+" %)"));
+        Assert.assertEquals(selenium.getValue("loancreationdetails.input.interestRate"), def);
+    }
+
+    public void verifyAllowedInstallments(String min, String max, String def) {
+        Assert.assertTrue(selenium.isTextPresent("(Allowed Number of Installments:   "+min+"   -   "+max+" )"));
+        Assert.assertEquals(selenium.getValue("loancreationdetails.input.numberOfInstallments"), def);
+    }
 }

@@ -27,7 +27,9 @@ import com.thoughtworks.selenium.Selenium;
 public class LoanProductDetailsPage  extends MifosPage {
 
         public final static String lOAN_AMOUNT_SAME_TABLE = "loanAmountSameTable";
+        public final static String LOAN_AMOUNT_FROM_CYCLE_TABLE = "loanAmountFromCycleTable";
         public final static String INSTALLMENTS_FROM_CYCLE_TABLE = "noOfInstallFromCycleTable";
+        public final static String INSTALLMENTS_SAME_TABLE = "noOfInstallSameTable";
 
         public LoanProductDetailsPage(Selenium selenium) {
             super(selenium);
@@ -113,5 +115,19 @@ public class LoanProductDetailsPage  extends MifosPage {
             Assert.assertEquals(selenium.getTable(INSTALLMENTS_FROM_CYCLE_TABLE+"."+i+".2"), installCycles[i-1][1]);
             Assert.assertEquals(selenium.getTable(INSTALLMENTS_FROM_CYCLE_TABLE+"."+i+".3"), installCycles[i-1][2]);
         }
+    }
+
+    public void verifyLoanAmountTableTypeFromCycle(String[][] loanAmountCycles) {
+        for(int i = 1; i <= loanAmountCycles.length; i++) {
+            Assert.assertEquals(selenium.getTable(LOAN_AMOUNT_FROM_CYCLE_TABLE+"."+i+".1"), loanAmountCycles[i-1][0]);
+            Assert.assertEquals(selenium.getTable(LOAN_AMOUNT_FROM_CYCLE_TABLE+"."+i+".2"), loanAmountCycles[i-1][1]);
+            Assert.assertEquals(selenium.getTable(LOAN_AMOUNT_FROM_CYCLE_TABLE+"."+i+".3"), loanAmountCycles[i-1][2]);
+        }
+    }
+
+    public void verifyInstallments(String min, String max, String def) {
+        Assert.assertEquals(selenium.getTable(INSTALLMENTS_SAME_TABLE+".1.0"), min);
+        Assert.assertEquals(selenium.getTable(INSTALLMENTS_SAME_TABLE+".1.1"), max);
+        Assert.assertEquals(selenium.getTable(INSTALLMENTS_SAME_TABLE+".1.2"), def);
     }
 }
