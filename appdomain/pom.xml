@@ -6,7 +6,7 @@
     <groupId>org.mifos</groupId>
     <artifactId>mifos-appdomain</artifactId>
     <packaging>jar</packaging>
-    <version>1.8-SNAPSHOT</version>
+    <version>1.9-SNAPSHOT</version>
     <name>Mifos - Application Domain</name>
     <url>http://www.mifos.org</url>
 
@@ -22,7 +22,7 @@
     <parent>
         <artifactId>mifos-parent</artifactId>
         <groupId>org.mifos</groupId>
-        <version>1.8-SNAPSHOT</version>
+        <version>1.9-SNAPSHOT</version>
     </parent>
 
     <dependencies>

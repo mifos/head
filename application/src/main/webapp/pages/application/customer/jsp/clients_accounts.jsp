@@ -107,7 +107,7 @@ explanation of the license and how it is applied.
 								<tr class="fontnormal">
 									<td width="100%" colspan="2" class="bglightblue"><span
 										class="heading"> <mifos:mifoslabel
-										name="CustomerSearch.select" />&nbsp; <mifos:mifoslabel
+										name="CustomerSearch.select" />&nbsp;<mifos:mifoslabel
 										name="${ConfigurationConstants.BRANCHOFFICE}" /> </span></td>
 								</tr>
 							</table>

@@ -201,6 +201,7 @@ public class DataSetUpgradeUtil {
     public static ApplicationContext initializeSpring() {
         return new ClassPathXmlApplicationContext(
                                     "classpath:/org/mifos/config/resources/applicationContext.xml",
+                                    "classpath:META-INF/spring/DbUpgradeContext.xml",
                                     "classpath:META-INF/spring/QuestionnaireContext.xml");
     }
 

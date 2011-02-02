@@ -65,8 +65,6 @@ import javax.servlet.ServletRequestEvent;
 import javax.servlet.ServletRequestListener;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.sql.Driver;
 import java.sql.DriverManager;
@@ -163,20 +161,12 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                 .getMifosCurrency(new ConfigurationPersistence()));
         AccountingRules.init(); // load the additional currencies
         Money.setDefaultCurrency(AccountingRules.getMifosCurrency(new ConfigurationPersistence()));
-        DatabaseMigrator migrator = new DatabaseMigrator(applicationContext);
-        try {
-            /*
-             * This is an easy way to force an actual database query to happen via Hibernate. Simply opening a
-             * Hibernate session may not actually connect to the database.
-             */
-            migrator.isNSDU();
-        } catch (Throwable t) {
-            setDatabaseError(DatabaseErrorCode.CONNECTION_FAILURE, "Unable to connect to database.", t);
-        }
+        DatabaseMigrator migrator = new DatabaseMigrator();
+        initializeDBConnectionForHibernate(migrator);
 
         if (!databaseError.isError) {
             try {
-                migrator.upgrade();
+                migrator.upgrade(applicationContext);
             } catch (Throwable t) {
                 setDatabaseError(DatabaseErrorCode.UPGRADE_FAILURE, "Failed to upgrade database.", t);
             }
@@ -186,6 +176,18 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
             databaseError.logError();
         } else {
             initializeDB(applicationContext);
+        }
+    }
+
+    private void initializeDBConnectionForHibernate(DatabaseMigrator migrator) {
+        try {
+            /*
+             * This is an easy way to force an actual database query to happen via Hibernate. Simply opening a
+             * Hibernate session may not actually connect to the database.
+             */
+            migrator.isNSDU();
+        } catch (Throwable t) {
+            setDatabaseError(DatabaseErrorCode.CONNECTION_FAILURE, "Unable to connect to database.", t);
         }
     }
 
@@ -249,7 +251,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         xml.text("\n");
 
         if (databaseError.errorCode.equals(DatabaseErrorCode.UPGRADE_FAILURE)) {
-            xml.text("Unable to apply database upgrades");
+            xml.text("Please apply upgrade DB and restart the server");
         }
         xml.endTag("p");
         if (databaseError.errorCode.equals(DatabaseErrorCode.CONNECTION_FAILURE)) {
@@ -272,7 +274,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         xml.text(getDatabaseConnectionInfo());
         xml.endTag("p");
         xml.text("\n");
-        addStackTraceHtml(xml);
+        addExceptionMessage(xml);
     }
 
     private static void addConnectionFailureMessage(XmlBuilder xml) {
@@ -303,16 +305,14 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         xml.text("\n");
     }
 
-    private static void addStackTraceHtml(XmlBuilder xml) {
+    private static void addExceptionMessage(XmlBuilder xml) {
         xml.startTag("p");
-        xml.text("Stack trace:");
+        xml.text("Error Message:");
         xml.endTag("p");
         xml.text("\n");
 
         xml.startTag("pre");
-        StringWriter stackTrace = new StringWriter();
-        databaseError.error.printStackTrace(new PrintWriter(stackTrace));
-        xml.text("\n" + stackTrace.toString());
+        xml.text("\n" + databaseError.error.getMessage());
         xml.endTag("pre");
         xml.text("\n");
     }

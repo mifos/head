@@ -4,7 +4,7 @@
     <groupId>org.mifos</groupId>
     <artifactId>mifos-accounting</artifactId>
     <packaging>jar</packaging>
-    <version>1.8-SNAPSHOT</version>
+    <version>1.9-SNAPSHOT</version>
     <name>Mifos - Accounting Integration</name>
     <description>Mifos Accounting Integration</description>
     <url>http://www.mifos.org</url>
@@ -12,7 +12,7 @@
     <parent>
         <artifactId>mifos-parent</artifactId>
         <groupId>org.mifos</groupId>
-        <version>1.8-SNAPSHOT</version>
+        <version>1.9-SNAPSHOT</version>
     </parent>
 
     <build>

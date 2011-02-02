@@ -20,19 +20,17 @@
 
 package org.mifos.framework.persistence;
 
+import org.mifos.db.upgrade.DbUpgradeValidationResult;
+import org.mifos.db.upgrade.DbUpgrade;
+import org.mifos.framework.ApplicationInitializer;
+import org.mifos.framework.DatabaseErrorCode;
+import org.mifos.framework.struts.tags.XmlBuilder;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+
+import javax.servlet.*;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletResponse;
-
-import org.mifos.framework.ApplicationInitializer;
-import org.mifos.framework.struts.tags.XmlBuilder;
 
 public class DatabaseInitFilter implements Filter {
 
@@ -97,12 +95,22 @@ public class DatabaseInitFilter implements Filter {
     }
 
     public void init(FilterConfig filterConfig) {
-        DatabaseMigrator migrator = new DatabaseMigrator();
         try {
-            databaseVerified = !migrator.checkForUnAppliedUpgrades();
+            DbUpgrade dbUpgrade = getDbUpgradeValidator(filterConfig);
+            DbUpgradeValidationResult validationResult = dbUpgrade.validate();
+            databaseVerified = validationResult.allUpgradesApplied();
+            if (!databaseVerified) {
+                ApplicationInitializer.setDatabaseError(DatabaseErrorCode.UPGRADE_FAILURE, "There are un applied db upgrades: ",
+                        new RuntimeException(validationResult.getUnAppliedChangeSets()));
+            }
         } catch (Exception e) {
            filterConfig.getServletContext().log("Failed to check for unapplied upgrades upgrades",e );
         }
+    }
+
+    private DbUpgrade getDbUpgradeValidator(FilterConfig filterConfig) {
+        return (DbUpgrade) WebApplicationContextUtils.
+                getRequiredWebApplicationContext(filterConfig.getServletContext()).getBean("dbUpgrade");
     }
 
     public void destroy() {

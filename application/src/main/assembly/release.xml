@@ -5,21 +5,21 @@
     </formats>
     <fileSets>
         <fileSet>
-            <outputDirectory>sql</outputDirectory>
-            <directory>src/main/sql</directory>
-            <includes>
-                <include>create_mifos_db.sql</include>
-                <include>latest-schema.sql</include>
-                <include>latest-data.sql</include>
-                <include>init_mifos_password.sql</include>
-            </includes>
-        </fileSet>
-        <fileSet>
-            <outputDirectory></outputDirectory>
+            <outputDirectory/>
             <directory>${basedir}/..</directory>
             <includes>
                 <include>LICENSE*</include>
                 <include>INSTALL*</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <outputDirectory>db</outputDirectory>
+            <directory>../db</directory>
+            <includes>
+                <include>src/main/resources/liquibase.properties</include>
+                <include>src/main/changesets/*.xml</include>
+                <include>src/main/sql/*.sql</include>
+                <include>deploy/**/*.*</include>
             </includes>
         </fileSet>
     </fileSets>
@@ -35,12 +35,12 @@
         </file>
         <file>
             <source>target/mifos-webapp.war</source>
-            <outputDirectory></outputDirectory>
+            <outputDirectory/>
             <destName>mifos.war</destName>
         </file>
         <file>
             <source>release/install-ubuntu.sh</source>
-            <outputDirectory></outputDirectory>
+            <outputDirectory/>
         </file>
     </files>
 </assembly>
