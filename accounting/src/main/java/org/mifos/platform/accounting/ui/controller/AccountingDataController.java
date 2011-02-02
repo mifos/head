@@ -88,15 +88,6 @@ public class AccountingDataController {
         return mav;
     }
 
-    @RequestMapping("accountingDataForm.ftl")
-    public final ModelAndView accountingDataForm() {
-        ModelAndView mav = new ModelAndView("accountingDataForm");
-        List<BreadCrumbsLinks> breadcrumbs = new AdminBreadcrumbBuilder().withLink(
-                "accounting.generateaccountingexports", "accountingDataForm.ftl").build();
-        mav.addObject("breadcrumbs", breadcrumbs);
-        return mav;
-    }
-
     @RequestMapping("confirmExportsDelete.ftl")
     public final ModelAndView confirmExportsDelete() {
         ModelAndView mav = new ModelAndView("confirmExportsDelete");

@@ -190,9 +190,6 @@ explanation of the license and how it is applied.
 									<td width="97%">
 										<a id="admin.link.viewaccountingexports" href="renderAccountingDataCacheInfo.ftl">
 										<mifos:mifoslabel name="admin.importexport.viewaccountingexports" bundle="adminUIResources" /></a>
-                                        |
-										<a id="admin.link.generateaccountingexports" href="accountingDataForm.ftl">
-										<mifos:mifoslabel name="admin.importexport.generateaccountingexports" bundle="adminUIResources" /></a>
                                         </td>
 								</tr>
 							</table>
