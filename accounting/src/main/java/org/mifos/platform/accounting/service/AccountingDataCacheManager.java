@@ -226,7 +226,7 @@ public class AccountingDataCacheManager {
         String startDate = file.getName().split(" to ")[0];
         String endDate = file.getName().split(" to ")[1];
         String fileName = getFilePrefixDefinedByMFI() + file.getName();
-        String lastModified = new DateTime(file.lastModified()).toString("yyyy-MMM-dd HH:mm:sss z");
+        String lastModified = new DateTime(file.lastModified()).toString("yyyy-MMM-dd HH:mm z");
         Boolean existInCache = true;
         ExportFileInfo export= new ExportFileInfo(lastModified, fileName,  startDate, endDate, existInCache);
         return export;

@@ -76,6 +76,9 @@
             </table>
         </div>
     [/#if]
+         <div class="buttonsSubmitCancel margin20right">
+            <input id='back' type="button" class="buttn" value="Back to Previous Page" onclick="javascript:goToViewExports();" />
+        </div>
   </div>
 </div><!--Main Content Ends-->
 [/@adminLeftPaneLayout]
