@@ -93,7 +93,6 @@ import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.holiday.business.Holiday;
-import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
@@ -106,7 +105,6 @@ import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.AccountingRules;
-import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.business.Configuration;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.business.CustomerBO;
@@ -2993,45 +2991,13 @@ public class LoanBO extends AccountBO {
         if (isRepaymentIndepOfMeetingEnabled && newMeetingForRepaymentDay != null) {
             setLoanMeeting(newMeetingForRepaymentDay);
         }
+        List<InstallmentDate> installmentDates = getInstallmentDates(getLoanMeeting(), noOfInstallments,
+                getInstallmentSkipToStartRepayment(isRepaymentIndepOfMeetingEnabled), isRepaymentIndepOfMeetingEnabled);
 
-        List<InstallmentDate> installmentDates = new ArrayList<InstallmentDate>();
-        if (isRepaymentIndepOfMeetingEnabled) {
-
-            // for now only go through this code if LSIM is ON
-            installmentDates = getInstallmentDates(getLoanMeeting(), noOfInstallments,
-                    getInstallmentSkipToStartRepayment(isRepaymentIndepOfMeetingEnabled),
-                    isRepaymentIndepOfMeetingEnabled);
-
-            // installment dates that have not been adjusted for holidays
-//            List<InstallmentDate> nonAdjustedInstallmentDates = getInstallmentDates(getLoanMeeting(), noOfInstallments,
-//                    getInstallmentSkipToStartRepayment(isRepaymentIndepOfMeetingEnabled),
-//                    isRepaymentIndepOfMeetingEnabled, false);
-        } else {
-            Short gracePeriodOf = getGracePeriodDuration();
-
-            if (noOfInstallments > 0) {
-                List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
-                List<Holiday> holidays = new ArrayList<Holiday>();
-
-                DateTime startFromMeetingDate = new DateTime(this.disbursementDate).plusDays(1);
-
-                HolidayDao holidayDao = ApplicationContextProvider.getBean(HolidayDao.class);
-                holidays = holidayDao.findAllHolidaysFromDateAndNext(getOffice().getOfficeId(), startFromMeetingDate.toLocalDate().toString());
-
-                final int occurrences = noOfInstallments + gracePeriodOf;
-
-                ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(getLoanMeeting());
-                ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, holidays);
-
-                List<Date> dueDates = new ArrayList<Date>();
-                List<DateTime> installmentDateTimes = dateGeneration.generateScheduledDates(occurrences, startFromMeetingDate, scheduledEvent);
-                for (DateTime installmentDate : installmentDateTimes) {
-                    dueDates.add(installmentDate.toDate());
-                }
-
-                installmentDates = createInstallmentDates(gracePeriodOf, dueDates);
-            }
-        }
+        // installment dates that have not been adjusted for holidays
+        List<InstallmentDate> nonAdjustedInstallmentDates = getInstallmentDates(getLoanMeeting(), noOfInstallments,
+                getInstallmentSkipToStartRepayment(isRepaymentIndepOfMeetingEnabled), isRepaymentIndepOfMeetingEnabled,
+                false);
 
         logger.debug("Obtained intallments dates");
 
