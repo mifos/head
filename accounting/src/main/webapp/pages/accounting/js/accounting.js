@@ -73,14 +73,20 @@
 
         if(type != "all") {
            options += "<br/><a href='#' onclick=\"javascript:loadExportsList(10,'all');\" title='Get all exports generated/not generated'>Show all exports</a>";
+        } else {
+           options += "<br/>Show all exports";
         }
 
         if(type != "generated") {
            options += "<br/><a href='#' onclick=\"javascript:loadExportsList(10,'generated');\" title='Get only generated exports'>Show only generated exports</a>";
+        } else {
+           options += "<br/>Show only generated exports";
         }
 
        if(type != "notgenerated") {
            options += "<br/><a href='#' onclick=\"javascript:loadExportsList(10,'notgenerated');\" title='Get only not generated exports'>Show only not generated exports</a>";
+        } else {
+           options += "<br/>Show only not generated exports";
         }
 
            $("#export_list_options").html(options);

@@ -112,7 +112,7 @@ public class AccountingServiceImpl implements IAccountingService {
 
     private ExportFileInfo getNotGeneratedExportFileInfo(LocalDate startDate, LocalDate endDate) {
         String fileName = cacheManager.getFilePrefixDefinedByMFI() + cacheManager.getCacheFileName(startDate, endDate);
-        String lastModified = new DateTime().toString("yyyy-MMM-dd HH:mm:sss z");
+        String lastModified = new DateTime().toString("yyyy-MMM-dd HH:mm z");
         Boolean existInCache = false;
         ExportFileInfo export = new ExportFileInfo(lastModified, fileName, startDate.toString(), endDate.toString(), existInCache);
         return export;

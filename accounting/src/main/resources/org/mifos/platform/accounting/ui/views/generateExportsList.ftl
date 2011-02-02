@@ -30,13 +30,14 @@
                 [#if instance.isExistInCache]
                 <td class="drawtablerow">
                     <a href='renderAccountingData.ftl?fromDate=${instance.startDate}&toDate=${instance.endDate}' title='This export has already been generated'>
-                        View Details &nbsp; (Generated on - ${instance.lastModified})
+                        View Details
                     </a>
+                    &nbsp; (Generated on ${instance.lastModified})
                 </td>
                 [#else]
                 <td class="drawtablerow" colspan=2>
                     <a href='renderAccountingData.ftl?fromDate=${instance.startDate}&toDate=${instance.endDate}' title='This export has not been generated'>
-                        Generate and View Details
+                        Generate Export and View Details
                     </a>
                 </td>
                 [/#if]
