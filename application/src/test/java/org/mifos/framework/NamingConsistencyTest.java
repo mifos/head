@@ -42,7 +42,7 @@ public class NamingConsistencyTest {
      */
     @Test
     public void integrationTestsNameCheck() throws ClassNotFoundException, IOException {
-		for (Class<?> clazz : getClasses("org.mifos", "Test")) {
+        for (Class<?> clazz : getClasses("org.mifos", "Test")) {
             String clazzName = clazz.getName();
             if (!clazzName.endsWith("IntegrationTest") && !clazzName.endsWith("StrutsTest")) {
                 if (clazz.getSuperclass().equals(MifosIntegrationTestCase.class)
