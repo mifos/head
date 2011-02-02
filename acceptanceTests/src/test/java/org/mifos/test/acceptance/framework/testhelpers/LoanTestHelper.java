@@ -329,6 +329,21 @@ public class LoanTestHelper {
     }
 
     /**
+     * Applies a charge to the loan account with id <tt>loanId</tt>.  Uses the fee label
+     * rather than type value to select the fee.
+     * @param loanId The account id.
+     * @param params The charge parameters (amount and type).
+     * @return The loan account page for the loan account.
+     */
+    public LoanAccountPage applyChargeUsingFeeLabel(String loanId, ChargeParameters params) {
+        LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
+        ApplyChargePage applyChargePage = loanAccountPage.navigateToApplyCharge();
+        loanAccountPage = applyChargePage.submitUsingLabelAndNavigateToApplyChargeConfirmationPage(params);
+
+        return loanAccountPage;
+    }
+
+    /**
      * Repay loan account with id <tt>loanId</tt>.
      * @param loanId The account id.
      * @return The loan account page for the loan account.
@@ -827,4 +842,25 @@ public class LoanTestHelper {
     public ViewInstallmentDetailsPage reviewInstallmentsForHolidayNextWorkingDayRule(CreateLoanAccountSearchParameters searchParameters, CreateLoanAccountSubmitParameters submitAccountParameters) {
         return navigateToLoanAccountEntryPage(searchParameters).createLoanAccountAndReviewInstallmentsForNextWorkingRule(submitAccountParameters);
     }
+
+    public void verifyOneTimeFee(String expectedFee, int feeIndex) {
+        LoanAccountPage loanAccountPage = new LoanAccountPage(selenium);
+        loanAccountPage.verifyOneTimeFeeExists(expectedFee, feeIndex);
+    }
+
+    public void removeOneTimeFee(int feeIndex) {
+        LoanAccountPage loanAccountPage = new LoanAccountPage(selenium);
+        loanAccountPage.removeOneTimeFee(feeIndex);
+    }
+
+    public void verifyNoOneTimeFeesExist() {
+        LoanAccountPage loanAccountPage = new LoanAccountPage(selenium);
+        loanAccountPage.verifyNoOneTimeFeesExist();
+    }
+
+    public void verifyNoOneTimeFeeRemovalLinkExists(int feeIndex) {
+        LoanAccountPage loanAccountPage = new LoanAccountPage(selenium);
+        loanAccountPage.verifyNoOneTimeFeeRemovalLinkExists(feeIndex);
+    }
+
 }
