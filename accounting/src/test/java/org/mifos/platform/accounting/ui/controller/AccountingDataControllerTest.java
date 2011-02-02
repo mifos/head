@@ -41,11 +41,6 @@ public class AccountingDataControllerTest {
     }
 
     @Test
-    public void testAccountingDataForm() {
-        accountingDataController.accountingDataForm();
-    }
-
-    @Test
     public void testDeleteCacheDir() {
         accountingDataController.deleteCacheDir();
     }

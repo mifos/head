@@ -210,12 +210,6 @@ public class AdminPage extends MifosPage {
         return new ViewAccountingExportsPage(selenium);
     }
 
-    public GenerateAccountingExportPage navigateToGenerateAccountingExports() {
-        selenium.click("admin.link.generateaccountingexports");
-        waitForPageToLoad();
-        return new GenerateAccountingExportPage(selenium);
-    }
-
     public ViewLoanProductsPage navigateToViewLoanProducts() {
         selenium.click("admin.link.viewLoanProducts");
         waitForPageToLoad();
