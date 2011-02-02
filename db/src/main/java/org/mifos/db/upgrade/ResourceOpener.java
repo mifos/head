@@ -20,6 +20,7 @@
 package org.mifos.db.upgrade;
 
 import liquibase.resource.ResourceAccessor;
+import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 
@@ -30,13 +31,12 @@ import java.net.URL;
 import java.util.Enumeration;
 import java.util.Vector;
 
-public class ResourceOpener implements ResourceAccessor {
-    private String parentFile;
+public class ResourceOpener implements ResourceAccessor, ResourceLoaderAware {
+    private String changeLog;
     private ResourceLoader resourceLoader;
 
-    public ResourceOpener(String parentFile, ResourceLoader resourceLoader) {
-        this.parentFile = parentFile;
-        this.resourceLoader = resourceLoader;
+    public ResourceOpener(String changeLog) {
+        this.changeLog = changeLog;
     }
 
     public InputStream getResourceAsStream(String file) throws IOException {
@@ -61,7 +61,7 @@ public class ResourceOpener implements ResourceAccessor {
     }
 
     private String adjustClasspath(String file) {
-        return isClasspathPrefixPresent(parentFile) && !isClasspathPrefixPresent(file)
+        return isClasspathPrefixPresent(changeLog) && !isClasspathPrefixPresent(file)
                 ? ResourceLoader.CLASSPATH_URL_PREFIX + file
                 : file;
     }
@@ -72,5 +72,14 @@ public class ResourceOpener implements ResourceAccessor {
 
     public ClassLoader toClassLoader() {
         return resourceLoader.getClassLoader();
+    }
+
+    @Override
+    public void setResourceLoader(ResourceLoader resourceLoader) {
+        this.resourceLoader = resourceLoader;
+    }
+
+    public String getChangeLog() {
+        return changeLog;
     }
 }

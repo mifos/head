@@ -20,17 +20,19 @@
 
 package org.mifos.framework.persistence;
 
+import org.mifos.db.upgrade.DatabaseUpgradeSupport;
 import org.mifos.db.upgrade.DbUpgradeValidationResult;
-import org.mifos.db.upgrade.DbUpgrade;
 import org.mifos.framework.ApplicationInitializer;
 import org.mifos.framework.DatabaseErrorCode;
 import org.mifos.framework.struts.tags.XmlBuilder;
-import org.springframework.web.context.support.WebApplicationContextUtils;
+import org.mifos.framework.util.helpers.ServletUtils;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+
+import static org.mifos.db.upgrade.DatabaseUpgradeSupport.BEAN_NAME;
 
 public class DatabaseInitFilter implements Filter {
 
@@ -96,8 +98,8 @@ public class DatabaseInitFilter implements Filter {
 
     public void init(FilterConfig filterConfig) {
         try {
-            DbUpgrade dbUpgrade = getDbUpgradeValidator(filterConfig);
-            DbUpgradeValidationResult validationResult = dbUpgrade.validate();
+            DatabaseUpgradeSupport databaseUpgradeSupport = ServletUtils.getBean(filterConfig.getServletContext(), BEAN_NAME);
+            DbUpgradeValidationResult validationResult = databaseUpgradeSupport.validate();
             databaseVerified = validationResult.allUpgradesApplied();
             if (!databaseVerified) {
                 ApplicationInitializer.setDatabaseError(DatabaseErrorCode.UPGRADE_FAILURE, "There are un applied db upgrades: ",
@@ -106,11 +108,6 @@ public class DatabaseInitFilter implements Filter {
         } catch (Exception e) {
            filterConfig.getServletContext().log("Failed to check for unapplied upgrades upgrades",e );
         }
-    }
-
-    private DbUpgrade getDbUpgradeValidator(FilterConfig filterConfig) {
-        return (DbUpgrade) WebApplicationContextUtils.
-                getRequiredWebApplicationContext(filterConfig.getServletContext()).getBean("dbUpgrade");
     }
 
     public void destroy() {

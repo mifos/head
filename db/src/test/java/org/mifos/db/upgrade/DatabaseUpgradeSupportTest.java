@@ -21,54 +21,42 @@ package org.mifos.db.upgrade;
 
 import liquibase.Liquibase;
 import liquibase.changelog.ChangeSet;
-import liquibase.exception.LiquibaseException;
-import org.apache.commons.lang.StringUtils;
+import liquibase.changelog.RanChangeSet;
+import liquibase.database.Database;
+import liquibase.exception.DatabaseException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.core.io.ResourceLoader;
 
-import javax.sql.DataSource;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.List;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class DbUpgradeTest {
+public class DatabaseUpgradeSupportTest {
     public static final String CONTEXTS = "expansion";
-    private DbUpgrade dbUpgrade;
-    private String changeLog = "classpath:/change.xml";
-    @Mock
-    private DataSource dataSource;
-    @Mock
-    private ResourceLoader resourceLoader;
-    @Mock
-    private Connection connection;
+    private DatabaseUpgradeSupport databaseUpgradeSupport;
     @Mock
     private Liquibase liquibase;
     @Mock
     private ChangeSet changeSet1;
     @Mock
     private ChangeSet changeSet2;
+    @Mock
+    private Database database;
 
     @Before
     public void setUp() throws Exception {
-        dbUpgrade = new DbUpgrade() {
-            @Override
-            Liquibase getLiquibase() throws SQLException, LiquibaseException {
-                return liquibase;
-            }
-        };
-        dbUpgrade.setChangeLog(changeLog);
-        dbUpgrade.setDataSource(dataSource);
-        dbUpgrade.setResourceLoader(resourceLoader);
-        connection = null;
+        databaseUpgradeSupport = new DatabaseUpgradeSupport(database, liquibase);
     }
 
     @Test
@@ -76,7 +64,7 @@ public class DbUpgradeTest {
         when(changeSet1.toString()).thenReturn("changeSet1");
         when(changeSet2.toString()).thenReturn("changeSet2");
         when(liquibase.listUnrunChangeSets(CONTEXTS)).thenReturn(Arrays.<ChangeSet>asList(changeSet1, changeSet2));
-        DbUpgradeValidationResult dbUpgradeValidationResult = dbUpgrade.validate();
+        DbUpgradeValidationResult dbUpgradeValidationResult = databaseUpgradeSupport.validate();
         assertFalse(dbUpgradeValidationResult.allUpgradesApplied());
         assertEquals("\nList of unapplied upgrades:\n" +
                 "\tchangeSet1\n" +
@@ -87,7 +75,7 @@ public class DbUpgradeTest {
     @Test
     public void testValidateWhenAllUpgradesAreApplied() throws Exception {
         when(liquibase.listUnrunChangeSets(CONTEXTS)).thenReturn(Arrays.<ChangeSet>asList());
-        DbUpgradeValidationResult dbUpgradeValidationResult = dbUpgrade.validate();
+        DbUpgradeValidationResult dbUpgradeValidationResult = databaseUpgradeSupport.validate();
         assertTrue(dbUpgradeValidationResult.allUpgradesApplied());
         assertEquals("\nList of unapplied upgrades:\n", dbUpgradeValidationResult.getUnAppliedChangeSets());
         verify(liquibase).listUnrunChangeSets(CONTEXTS);
@@ -95,8 +83,19 @@ public class DbUpgradeTest {
 
     @Test
     public void testUpgrade() throws Exception {
-       dbUpgrade.upgrade();
+       databaseUpgradeSupport.upgrade();
        verify(liquibase).update(CONTEXTS);
+    }
+
+    @Test
+    public void shouldRetrieveAllRanUpgrades() throws SQLException, DatabaseException {
+        RanChangeSet ranChangeSet1 = new RanChangeSet(changeSet1);
+        RanChangeSet ranChangeSet2 = new RanChangeSet(changeSet2);
+        when(database.getRanChangeSetList()).thenReturn(Arrays.asList(ranChangeSet1, ranChangeSet2));
+        List<RanChangeSet> changeSets = databaseUpgradeSupport.listRanUpgrades();
+        assertThat(changeSets, is(not(nullValue())));
+        assertThat(changeSets.size(), is(2));
+        verify(database).getRanChangeSetList();
     }
 
 }

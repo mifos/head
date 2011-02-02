@@ -20,7 +20,7 @@
 
 package org.mifos.framework.persistence;
 
-import org.mifos.db.upgrade.DbUpgrade;
+import org.mifos.db.upgrade.DatabaseUpgradeSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -62,8 +62,8 @@ public class DatabaseMigrator {
     }
 
     public void upgrade(ApplicationContext applicationContext) throws Exception {
-        DbUpgrade dbUpgrade = (DbUpgrade) applicationContext.getBean("dbUpgrade");
-        dbUpgrade.upgrade();
+        DatabaseUpgradeSupport databaseUpgradeSupport = (DatabaseUpgradeSupport) applicationContext.getBean("databaseUpgradeSupport");
+        databaseUpgradeSupport.upgrade();
     }
 
     public List<Integer> getAppliedUpgrades() {

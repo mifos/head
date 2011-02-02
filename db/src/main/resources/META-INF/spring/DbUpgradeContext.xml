@@ -2,8 +2,12 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
-    <bean id="dbUpgrade" class="org.mifos.db.upgrade.DbUpgrade">
-        <property name="dataSource" ref="dataSource"/>
-        <property name="changeLog" value="classpath:/changesets/changelog-master.xml"/>
+    <bean id="databaseUpgradeSupport" class="org.mifos.db.upgrade.DatabaseUpgradeSupport">
+        <constructor-arg name="dataSource" ref="dataSource"/>
+        <constructor-arg name="resourceOpener" ref="resourceOpener"/>
+    </bean>
+
+    <bean id="resourceOpener" class="org.mifos.db.upgrade.ResourceOpener">
+        <constructor-arg name="changeLog" value="classpath:/changesets/changelog-master.xml" />
     </bean>
 </beans>

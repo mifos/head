@@ -42,9 +42,11 @@ import org.joda.time.format.ISODateTimeFormat;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.core.ClasspathResource;
 import org.mifos.core.MifosRuntimeException;
+import org.mifos.db.upgrade.DatabaseUpgradeSupport;
 import org.mifos.framework.persistence.DatabaseMigrator;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.StandardTestingService;
+import org.mifos.framework.util.helpers.ServletUtils;
 
 /**
  * JDBC URL parsing code in this class is <a
@@ -74,6 +76,7 @@ public class SystemInfo implements Serializable {
     private String infoSource;
     private URI infoURL;
     private String databaseUser;
+    private DatabaseUpgradeSupport databaseUpgradeSupport;
 
     // Note: make sure to close the connection that got the metadata!
     public SystemInfo(DatabaseMetaData databaseMetaData, ServletContext context, Locale locale, boolean getInfoSource) {
@@ -107,6 +110,7 @@ public class SystemInfo implements Serializable {
         } catch (SQLException e) {
             throw new MifosRuntimeException(e);
         }
+        databaseUpgradeSupport = ServletUtils.getBean(context, DatabaseUpgradeSupport.BEAN_NAME);
     }
 
     public String getApplicationVersion() {
@@ -126,10 +130,8 @@ public class SystemInfo implements Serializable {
     }
 
     private String getReleaseSchemaName() {
-        Reader reader = null;
-        BufferedReader bufferedReader = null;
-        Integer upgradeId = null;
-        List<Integer> releaseUpgrades = new ArrayList<Integer>();
+        Reader reader;
+        BufferedReader bufferedReader;
         try {
             reader = ClasspathResource.getInstance("/sql/").getAsReader("release-upgrades.txt");
             bufferedReader = new BufferedReader(reader);
@@ -323,7 +325,7 @@ public class SystemInfo implements Serializable {
     public List<Integer> getReleaseUpgrades() {
         Reader reader = null;
         BufferedReader bufferedReader = null;
-        Integer upgradeId = null;
+        Integer upgradeId;
         List<Integer> releaseUpgrades = new ArrayList<Integer>();
         try {
             reader = ClasspathResource.getInstance("/sql/").getAsReader("release-upgrades.txt");

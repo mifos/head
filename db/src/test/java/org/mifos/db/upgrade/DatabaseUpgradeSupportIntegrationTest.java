@@ -33,14 +33,14 @@ import java.sql.SQLException;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/test-dbContext.xml", "/META-INF/spring/DbUpgradeContext.xml"})
 @TransactionConfiguration(transactionManager = "platformTransactionManager", defaultRollback = true)
-public class DbUpgradeIntegrationTest {
+public class DatabaseUpgradeSupportIntegrationTest {
 
     @Autowired
-    DbUpgrade dbUpgrade;
+    DatabaseUpgradeSupport databaseUpgradeSupport;
 
     @Test
     public void testSpringWiringForDbUpgrade() throws SQLException, LiquibaseException {
-        DbUpgradeValidationResult validationResult = dbUpgrade.validate();
+        DbUpgradeValidationResult validationResult = databaseUpgradeSupport.validate();
         Assert.assertNotNull(validationResult);
         String unAppliedChangeSets = validationResult.getUnAppliedChangeSets();
         Assert.assertNotNull(unAppliedChangeSets);
