@@ -68,6 +68,10 @@ public class CustomPropertiesHelper {
         selenium.open(UPDATE_PAGE + "?ClientRules.MaximumAgeForNewClients=" + maximumAge);
     }
 
+    public void setCenterHierarchyExists(String exists){
+        selenium.open(UPDATE_PAGE + "?ClientRules.CenterHierarchyExists=" + exists);
+    }
+
     /**
      * This is to decide whether the user requires to store the client family information
      * See application\src\main\resources\org\mifos\config\resources\applicationConfiguration.default.properties

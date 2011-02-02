@@ -25,8 +25,10 @@ import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
+import org.mifos.test.acceptance.framework.center.CenterViewDetailsPage;
 import org.mifos.test.acceptance.framework.center.CreateCenterEnterDataPage;
 import org.mifos.test.acceptance.framework.center.CreateMeetingPage;
+import org.mifos.test.acceptance.framework.center.MeetingParameters;
 import org.mifos.test.acceptance.framework.client.CreateClientEnterMfiDataPage;
 import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
 import org.mifos.test.acceptance.framework.group.CreateGroupEntryPage.CreateGroupSubmitParameters;
@@ -40,6 +42,7 @@ import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSearchParameters;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSubmitParameters;
 import org.mifos.test.acceptance.framework.savings.SavingsAccountDetailPage;
+import org.mifos.test.acceptance.framework.testhelpers.CenterTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.CustomPropertiesHelper;
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.framework.testhelpers.GroupTestHelper;
@@ -61,7 +64,7 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
     NavigationHelper navigationHelper;
     CustomPropertiesHelper propertiesHelper;
     SavingsAccountHelper savingsAccountHelper;
-
+    CenterTestHelper centerTestHelper;
     @Autowired
     private DriverManagerDataSource dataSource;
     @Autowired
@@ -75,17 +78,38 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
-    @BeforeMethod
+    @BeforeMethod(alwaysRun=true)
     public void setUp() throws Exception {
         navigationHelper = new NavigationHelper(selenium);
         propertiesHelper = new CustomPropertiesHelper(selenium);
         savingsAccountHelper = new SavingsAccountHelper(selenium);
+        centerTestHelper = new CenterTestHelper(selenium);
         super.setUp();
     }
 
     @AfterMethod
     public void logOut() {
         (new MifosPage(selenium)).logout();
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    //http://mifosforge.jira.com/browse/MIFOSTEST-231
+    public void verifyPropertyClientRulesCenterHierarchyExistsTrue() throws Exception{
+        //Given
+        propertiesHelper.setCenterHierarchyExists("true");
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
+        //When
+        CreateCenterEnterDataPage.SubmitFormParameters formParameters = new CreateCenterEnterDataPage.SubmitFormParameters();
+        formParameters.setCenterName("testCenterName12123");
+        formParameters.setLoanOfficer("Joe1232993835093 Guy1232993835093");
+        MeetingParameters meeting = new MeetingParameters();
+        meeting.setMeetingPlace("Bangalore");
+        meeting.setWeekDay(MeetingParameters.WEDNESDAY);
+        meeting.setWeekFrequency("1");
+        formParameters.setMeeting(meeting);
+        CenterViewDetailsPage centerViewDetailsPage = centerTestHelper.createCenter(formParameters, "MyOffice1232993831593");
+        //Then
+        centerViewDetailsPage.verifyActiveCenter(formParameters);
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
