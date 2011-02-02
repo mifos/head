@@ -106,11 +106,6 @@
             </dependency>
             <dependency>
                 <groupId>org.mifos</groupId>
-                <artifactId>mifos-db</artifactId>
-                <version>1.9-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>org.mifos</groupId>
                 <artifactId>mifos-domain-dto</artifactId>
                 <version>1.9-SNAPSHOT</version>
             </dependency>
