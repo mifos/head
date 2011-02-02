@@ -80,6 +80,8 @@ public class MpesaImportTest extends UiTestCaseBase {
 
     static final String FILE_WITH_NO_ERRORS = "import_no_errors.xls";
     static final String FILE_WITH_OVERPAYMENT_AMOUNT = "overpayment.xls";
+    static final String DISBURSAL_IMPORT = "disbursal_import.xls";
+    static final String PAYMENT_IMPORT = "payment_import.xls";
 
     @Autowired
     private DbUnitUtilities dbUnitUtilities;
@@ -393,5 +395,41 @@ public class MpesaImportTest extends UiTestCaseBase {
 
         //Then
         importTransactionsPage.checkErrors(new String[]{"Same file has been already imported. Please import a different file."});
+    }
+
+    /**
+     * Digits after decimal validate occurs for disbursal and payment import
+     * http://mifosforge.jira.com/browse/MIFOSTEST-278
+     * @throws Exception
+     */
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled = true)
+    public void validateImport() throws Exception {
+        //Given
+        String path = this.getClass().getResource("/mpesa/" + DISBURSAL_IMPORT).toString();
+        String dataset = "mpesa_export.xml";
+
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, dataset, dataSource, selenium);
+
+        propertiesHelper.setImportTransactionOrder("AL3,AL5");
+        propertiesHelper.setDigitsAfterDecimal(0);
+        //When
+        ImportTransactionsPage importTransactionsPage = importTransaction(path);
+
+        //Then
+        importTransactionsPage.checkErrors(new String[]{"Row <24> error - "
+                + "C94ZH942 - Number of fraction digits in the \"Withdrawn\""
+                + " column - 3 - is greater than configured for the currency - 0"});
+
+        //When
+        path = this.getClass().getResource("/mpesa/" + PAYMENT_IMPORT).toString();
+        importTransactionsPage = importTransaction(path);
+
+        //Then
+        importTransactionsPage.checkErrors(new String[]{"Row <24> error - THY89933"
+                + " - Number of fraction digits in the \"Paid In\" column - 3 - "
+                + "is greater than configured for the currency - 0"});
+
+        propertiesHelper.setDigitsAfterDecimal(1);
     }
 }
