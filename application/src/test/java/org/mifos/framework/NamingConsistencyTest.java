@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.Test;
@@ -41,7 +42,7 @@ public class NamingConsistencyTest {
      */
     @Test
     public void integrationTestsNameCheck() throws ClassNotFoundException, IOException {
-        for (Class<?> clazz : getClasses("org.mifos", "Test")) {
+		for (Class<?> clazz : getClasses("org.mifos", "Test")) {
             String clazzName = clazz.getName();
             if (!clazzName.endsWith("IntegrationTest") && !clazzName.endsWith("StrutsTest")) {
                 if (clazz.getSuperclass().equals(MifosIntegrationTestCase.class)
@@ -52,8 +53,7 @@ public class NamingConsistencyTest {
         }
     }
 
-    private static Class<?>[] getClasses(String packageName, String endsWith) throws ClassNotFoundException,
-            IOException {
+    private static Iterable<Class<?>> getClasses(String packageName, String endsWith) throws ClassNotFoundException, IOException {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         assert classLoader != null;
         String path = packageName.replace('.', '/');
@@ -63,17 +63,16 @@ public class NamingConsistencyTest {
             URL resource = resources.nextElement();
             dirs.add(new File(resource.getFile()));
         }
-        ArrayList<Class<?>> classes = new ArrayList<Class<?>>();
+        List<Class<?>> classes = new LinkedList<Class<?>>();
         for (File directory : dirs) {
-            classes.addAll(findClasses(directory, packageName, endsWith, classes));
+            findClasses(directory, packageName, endsWith, classes);
         }
-        return classes.toArray(new Class[classes.size()]);
+        return classes;
     }
 
-    private static List<Class<?>> findClasses(File directory, String packageName, String endsWith,
-            ArrayList<Class<?>> classes) throws ClassNotFoundException {
+    private static void findClasses(File directory, String packageName, String endsWith, List<Class<?>> classes) throws ClassNotFoundException {
         if (!directory.exists()) {
-            return classes;
+            return;
         }
         File[] files = directory.listFiles();
         for (File file : files) {
@@ -85,6 +84,5 @@ public class NamingConsistencyTest {
                 classes.add(Class.forName(className));
             }
         }
-        return classes;
     }
 }
