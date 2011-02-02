@@ -26,7 +26,8 @@
 
 <h1 class="success">[@spring.message "createSavingsAccount.accountCreated.successMessage" /]</h1>
 
-<p><span class="standout">Please Note:</span> A new Savings account for ${savingsAccountFormBean.customer.displayName} has been assigned account # <span class="account-number">${account.globalAccountNum}</span>. You can enter an account number into the search box to access account details.</p>
+[#assign args=[savingsAccountFormBean.customer.displayName, account.globalAccountNum] /]
+<p>[@spring.messageArgs "createSavingsAccount.accountCreated.accountDetails" args /]</p>
 <br/>
 
 <p><a href="savingsAction.do?method=get&globalAccountNum=${account.globalAccountNum}" class="standout">[@spring.message "createSavingsAccount.accountCreated.action.viewSavingsAccount" /]</a></p>
