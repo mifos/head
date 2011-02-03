@@ -33,7 +33,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.LegacyGenericDao;
 
 @SuppressWarnings("unchecked")
-public class ProductCategoryPersistence extends LegacyGenericDao {
+public class LegacyProductCategoryDao extends LegacyGenericDao {
 
     public Short getMaxPrdCategoryId() throws PersistenceException {
         return (Short) execUniqueResultNamedQuery(NamedQueryConstants.PRODUCTCATEGORIES_MAX, null);

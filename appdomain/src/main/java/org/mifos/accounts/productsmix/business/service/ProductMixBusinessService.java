@@ -28,7 +28,7 @@ import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.accounts.productdefinition.persistence.PrdOfferingPersistence;
-import org.mifos.accounts.productdefinition.persistence.ProductCategoryPersistence;
+import org.mifos.accounts.productdefinition.persistence.LegacyProductCategoryDao;
 import org.mifos.accounts.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.accounts.productsmix.business.ProductMixBO;
 import org.mifos.accounts.productsmix.persistence.LegacyProductMixDao;
@@ -58,7 +58,7 @@ public class ProductMixBusinessService implements BusinessService {
 
     public List<ProductTypeEntity> getProductTypes() throws ServiceException {
         try {
-            return new ProductCategoryPersistence().getProductTypes();
+            return new LegacyProductCategoryDao().getProductTypes();
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }

@@ -24,7 +24,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionException;
-import org.mifos.accounts.productdefinition.persistence.ProductCategoryPersistence;
+import org.mifos.accounts.productdefinition.persistence.LegacyProductCategoryDao;
 import org.mifos.accounts.productdefinition.util.helpers.PrdCategoryStatus;
 import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.customers.office.business.OfficeBO;
@@ -157,7 +157,7 @@ public class ProductCategoryBO extends AbstractBusinessObject {
         globalPrdOfferingNum.append("-");
         Short maxPrdID;
         try {
-            maxPrdID = new ProductCategoryPersistence().getMaxPrdCategoryId();
+            maxPrdID = new LegacyProductCategoryDao().getMaxPrdCategoryId();
         } catch (PersistenceException e) {
             throw new ProductDefinitionException(e);
         }
@@ -171,7 +171,7 @@ public class ProductCategoryBO extends AbstractBusinessObject {
     private void validateDuplicateProductCategoryName(final String productCategoryName) throws ProductDefinitionException {
         logger.debug("Checking for duplicate product category name");
         try {
-            if (!new ProductCategoryPersistence().getProductCategory(productCategoryName).equals(Integer.valueOf("0"))) {
+            if (!new LegacyProductCategoryDao().getProductCategory(productCategoryName).equals(Integer.valueOf("0"))) {
                 throw new ProductDefinitionException(ProductDefinitionConstants.DUPLICATE_CATEGORY_NAME);
             }
         } catch (PersistenceException e) {
@@ -184,7 +184,7 @@ public class ProductCategoryBO extends AbstractBusinessObject {
             throws ProductDefinitionException {
         logger.debug("Checking for duplicate product category name");
         try {
-            if (!new ProductCategoryPersistence().getProductCategory(productCategoryName, productCategoryId).equals(Integer.valueOf("0"))) {
+            if (!new LegacyProductCategoryDao().getProductCategory(productCategoryName, productCategoryId).equals(Integer.valueOf("0"))) {
                 throw new ProductDefinitionException(ProductDefinitionConstants.DUPLICATE_CATEGORY_NAME);
             }
         } catch (PersistenceException e) {
@@ -203,7 +203,7 @@ public class ProductCategoryBO extends AbstractBusinessObject {
         this.productCategoryDesc = productCategoryDesc;
         this.prdCategoryStatus = prdCategoryStatus;
         try {
-            new ProductCategoryPersistence().createOrUpdate(this);
+            new LegacyProductCategoryDao().createOrUpdate(this);
         } catch (PersistenceException e) {
             throw new ProductDefinitionException(e);
         }
@@ -216,7 +216,7 @@ public class ProductCategoryBO extends AbstractBusinessObject {
     @Deprecated
     public void save() throws ProductDefinitionException {
         try {
-            new ProductCategoryPersistence().createOrUpdate(this);
+            new LegacyProductCategoryDao().createOrUpdate(this);
         } catch (PersistenceException e) {
             throw new ProductDefinitionException(e);
         }

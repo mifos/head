@@ -40,13 +40,13 @@ import org.mifos.security.util.UserContext;
 @SuppressWarnings("unchecked")
 public class ProductCategoryPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
-    private ProductCategoryPersistence productCategoryPersistence;
+    private LegacyProductCategoryDao productCategoryPersistence;
 
     private UserContext userContext = null;
 
     @Before
     public void setUp() throws Exception {
-        productCategoryPersistence = new ProductCategoryPersistence();
+        productCategoryPersistence = new LegacyProductCategoryDao();
     }
 
     @After
