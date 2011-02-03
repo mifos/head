@@ -216,7 +216,7 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled=false) // FIXME
+    @Test(enabled=true)
     public void redoLoanDisbursalForVariableInstallmentLoan() throws Exception {
         dataSetUpForVariableInstallmentLoan();
         applicationDatabaseOperation.updateLSIM(1);
@@ -245,7 +245,7 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled=false)  // FIXME
+    @Test(enabled=true)
     public void redoLoanDisbursalForDecliningBalanceLoan() throws Exception {
         dataSetUpForVariableInstallmentLoan();
         applicationDatabaseOperation.updateLSIM(1);
