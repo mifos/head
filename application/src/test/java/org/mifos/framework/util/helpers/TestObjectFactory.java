@@ -461,7 +461,7 @@ public class TestObjectFactory {
                     new OfficePersistence().getOffice(SAMPLE_BRANCH_OFFICE), parentCustomer, dateOfBirth, governmentId,
                     null, null, YesNoFlag.YES.getValue(), clientNameDetailDto, spouseNameDetailView,
                     clientPersonalDetailDto, null);
-            new LegacyClientDao().saveClient(client);
+            ApplicationContextProvider.getBean(LegacyClientDao.class).saveClient(client);
         } catch (CustomerException e) {
             throw new RuntimeException(e);
         } catch (PersistenceException e) {
@@ -493,7 +493,7 @@ public class TestObjectFactory {
                             .getOffice(SAMPLE_BRANCH_OFFICE), meeting, systemUser, new DateTimeService()
                             .getCurrentJavaDateTime(), null, null, null, YesNoFlag.NO.getValue(), clientNameDetailDto,
                     spouseNameDetailView, clientPersonalDetailDto, null);
-            new LegacyClientDao().saveClient(client);
+            ApplicationContextProvider.getBean(LegacyClientDao.class).saveClient(client);
             StaticHibernateUtil.flushSession();
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -549,7 +549,7 @@ public class TestObjectFactory {
                         clientNameDetailDto, spouseNameDetailView, clientPersonalDetailDto, null);
             }
 
-            new LegacyClientDao().saveClient(client);
+            ApplicationContextProvider.getBean(LegacyClientDao.class).saveClient(client);
             StaticHibernateUtil.flushSession();
 
         } catch (Exception e) {

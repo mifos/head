@@ -52,7 +52,6 @@ public class TestObjectPersistence {
 
     private CustomerPersistence customerPersistence = new CustomerPersistence();
     private GroupPersistence groupPersistence = new GroupPersistence();
-    private LegacyClientDao clientPersistence = new LegacyClientDao();
     private CenterPersistence centerPersistence = new CenterPersistence();
 
     /**

@@ -35,6 +35,9 @@ import org.mifos.framework.persistence.LegacyGenericDao;
 
 public class LegacyClientDao extends LegacyGenericDao {
 
+    private LegacyClientDao() {
+    }
+
     public Blob createBlob(final InputStream picture) throws PersistenceException {
         try {
             return Hibernate.createBlob(picture);

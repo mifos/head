@@ -359,7 +359,7 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
 
             Blob pictureAsBlob = null;
             if (clientCreationDetail.getPicture() != null) {
-                pictureAsBlob = new LegacyClientDao().createBlob(clientCreationDetail.getPicture());
+                pictureAsBlob = ApplicationContextProvider.getBean(LegacyClientDao.class).createBlob(clientCreationDetail.getPicture());
             }
 
             CustomerStatus clientStatus = CustomerStatus.fromInt(clientCreationDetail.getClientStatus());

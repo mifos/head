@@ -103,8 +103,6 @@ public class ClientBO extends CustomerBO {
     private Set<ClientFamilyDetailEntity> familyDetailSet;
     private final Set<ClientAttendanceBO> clientAttendances;
     private Set<ClientInitialSavingsOfferingEntity> offeringsAssociatedInCreate;
-
-    private LegacyClientDao clientPersistence = null;
     private SavingsPersistence savingsPersistence = null;
     private SavingsPrdPersistence savingsPrdPersistence = null;
     private OfficePersistence officePersistence = null;
@@ -1069,17 +1067,6 @@ public class ClientBO extends CustomerBO {
             savingsPrdPersistence = new SavingsPrdPersistence();
         }
         return savingsPrdPersistence;
-    }
-
-    public LegacyClientDao getClientPersistence() {
-        if (null == clientPersistence) {
-            clientPersistence = new LegacyClientDao();
-        }
-        return clientPersistence;
-    }
-
-    public void setClientPersistence(final LegacyClientDao clientPersistence) {
-        this.clientPersistence = clientPersistence;
     }
 
     public boolean isClosedOrCancelled() {

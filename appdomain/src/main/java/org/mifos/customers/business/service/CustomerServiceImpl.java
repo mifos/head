@@ -46,6 +46,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.servicefacade.CustomerStatusUpdate;
 import org.mifos.calendar.CalendarEvent;
 import org.mifos.config.FiscalCalendarRules;
@@ -357,7 +358,7 @@ public class CustomerServiceImpl implements CustomerService {
             InputStream pictureSteam = personalInfo.getPicture();
 
             if (pictureSteam != null) {
-                Blob pictureAsBlob = new LegacyClientDao().createBlob(pictureSteam);
+                Blob pictureAsBlob = ApplicationContextProvider.getBean(LegacyClientDao.class).createBlob(pictureSteam);
                 client.createOrUpdatePicture(pictureAsBlob);
             }
 
