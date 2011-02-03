@@ -62,7 +62,7 @@ import org.mifos.accounts.productdefinition.business.service.SavingsPrdBusinessS
 import org.mifos.accounts.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.productdefinition.persistence.PrdOfferingPersistence;
-import org.mifos.accounts.productdefinition.persistence.ProductCategoryPersistence;
+import org.mifos.accounts.productdefinition.persistence.LegacyProductCategoryDao;
 import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
 import org.mifos.accounts.productdefinition.util.helpers.PrdCategoryStatus;
@@ -168,7 +168,13 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     private LegacyAcceptedPaymentTypeDao legacyAcceptedPaymentTypeDao;
 
     @Autowired
+    private LegacyProductCategoryDao legacyProductCategoryDao;
+
+    @Autowired
     LegacyMasterDao legacyMasterDao;
+
+    @Autowired
+    LegacyProductMixDao legacyProductMixDao;
 
     @Autowired
     LegacyFieldConfigurationDao legacyFieldConfigurationDao;
@@ -1291,7 +1297,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
             StringBuilder globalPrdOfferingNum = new StringBuilder();
             globalPrdOfferingNum.append(userContext.getBranchId());
             globalPrdOfferingNum.append("-");
-            Short maxPrdID = new ProductCategoryPersistence().getMaxPrdCategoryId();
+            Short maxPrdID = legacyProductCategoryDao.getMaxPrdCategoryId();
             globalPrdOfferingNum.append(StringUtils.leftPad(String.valueOf(maxPrdID != null ? maxPrdID + 1
                     : ProductDefinitionConstants.DEFAULTMAX), 3, '0'));
             String globalNumber = globalPrdOfferingNum.toString();
@@ -1436,14 +1442,14 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
 
             for (ProductMixBO oldNotAllowedProduct : product.getCollectionProductMix() ) {
 
-                ProductMixBO productMix = new LegacyProductMixDao().getPrdOfferingMixByPrdOfferingID(productId
+                ProductMixBO productMix = legacyProductMixDao.getPrdOfferingMixByPrdOfferingID(productId
                         .shortValue(), oldNotAllowedProduct.getPrdOfferingNotAllowedId().getPrdOfferingId());
 
                 if (null != productMix) {
                     applicationConfigurationDao.delete(productMix);
                     StaticHibernateUtil.flushSession();
                 }
-                ProductMixBO alternateproductmix = new LegacyProductMixDao().getPrdOfferingMixByPrdOfferingID(
+                ProductMixBO alternateproductmix = legacyProductMixDao.getPrdOfferingMixByPrdOfferingID(
                         oldNotAllowedProduct.getPrdOfferingNotAllowedId().getPrdOfferingId(), productId.shortValue());
 
                 if (null != alternateproductmix) {
