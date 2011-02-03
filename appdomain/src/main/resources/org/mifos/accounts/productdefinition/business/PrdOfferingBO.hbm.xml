@@ -369,22 +369,13 @@
         order by prdOff.prdOfferingName
         ]]>
     </query>
+    <query name="product.retrieveProductOfferingMix">
+        <![CDATA[from org.mifos.accounts.productdefinition.business.PrdOfferingBO prdOffering
+        where prdOffering.prdMixFlag =1 order by prdOffering.prdOfferingName]]>
+	</query>
     <query name="product.byid">
         <![CDATA[from org.mifos.accounts.productdefinition.business.PrdOfferingBO prdOffering where prdOffering.prdOfferingId=:prdOfferingId order by prdOffering.prdOfferingName]]>
     </query>
-    <query name="product.retrieveProductOfferingMix">
-        <![CDATA[from org.mifos.accounts.productdefinition.business.PrdOfferingBO prdOffering
-        where prdOffering.prdMixFlag =1 order by prdOffering.prdOfferingName
-<<<<<<< HEAD
-		]]>
-	</query>
-	<query name="savingsProduct.byid">
-		<![CDATA[from SavingsOfferingBO sp where sp.prdOfferingId=:prdOfferingId]]>
-	</query>
-	<query name="savingsProduct.openSavingsAccounts">
-		<![CDATA[select count(*) from SavingsBO s where s.savingsOffering.prdOfferingId=:prdOfferingId and s.accountState in (16, 18)]]>
-	</query>
-	
 	<query name="loanProduct.byid">
 		<![CDATA[from LoanOfferingBO lp where lp.prdOfferingId=:prdOfferingId]]>
 	</query>
@@ -394,18 +385,10 @@
 	<query name="savingsProduct.byglobalid">
 		<![CDATA[from SavingsOfferingBO sp where sp.globalPrdOfferingNum=:globalPrdOfferingNum]]>
 	</query>
-=======
-        ]]>
-    </query>
     <query name="savingsProduct.byid">
         <![CDATA[from SavingsOfferingBO sp where sp.prdOfferingId=:prdOfferingId]]>
     </query>
     <query name="savingsProduct.openSavingsAccounts">
         <![CDATA[select count(*) from SavingsBO s where s.savingsOffering.prdOfferingId=:prdOfferingId and s.accountState in (16, 18)]]>
     </query>
-
-    <query name="loanProduct.byid">
-        <![CDATA[from LoanOfferingBO lp where lp.prdOfferingId=:prdOfferingId]]>
-    </query>
->>>>>>> master
 </hibernate-mapping>
