@@ -42,7 +42,7 @@ import org.mifos.reports.cashconfirmationreport.BranchCashConfirmationReportBO;
 public class BranchCashConfirmationReportPersistenceIntegrationTest extends BranchReportIntegrationTestCase {
 
     private Session session;
-    private BranchCashConfirmationReportPersistence persistence;
+    private LegacyBranchCashConfirmationReportDao persistence;
     private BranchCashConfirmationReportBO reportBO;
     private BranchCashConfirmationReportBO firstJanReportBO;
 
@@ -52,7 +52,7 @@ public class BranchCashConfirmationReportPersistenceIntegrationTest extends Bran
         session = StaticHibernateUtil.getSessionTL();
 //        transaction = session.beginTransaction();
 
-        persistence = new BranchCashConfirmationReportPersistence();
+        persistence = new LegacyBranchCashConfirmationReportDao();
 
         reportBO = new BranchCashConfirmationReportBO(BRANCH_ID_SHORT, RUN_DATE);
         firstJanReportBO = new BranchCashConfirmationReportBO(BRANCH_ID_SHORT, FIRST_JAN_2008);

@@ -35,15 +35,15 @@ import org.mifos.reports.cashconfirmationreport.BranchCashConfirmationCenterReco
 import org.mifos.reports.cashconfirmationreport.BranchCashConfirmationDisbursementBO;
 import org.mifos.reports.cashconfirmationreport.BranchCashConfirmationInfoBO;
 import org.mifos.reports.cashconfirmationreport.BranchCashConfirmationReportHeader;
-import org.mifos.reports.cashconfirmationreport.persistence.BranchCashConfirmationReportPersistence;
+import org.mifos.reports.cashconfirmationreport.persistence.LegacyBranchCashConfirmationReportDao;
 
 public class BranchCashConfirmationReportService implements IBranchCashConfirmationReportService {
 
-    private BranchCashConfirmationReportPersistence branchCashConfirmationReportPersistence;
+    private LegacyBranchCashConfirmationReportDao branchCashConfirmationReportPersistence;
     private OfficeBusinessService officeBusinessService;
 
     public BranchCashConfirmationReportService(
-            BranchCashConfirmationReportPersistence branchCashConfirmationReportPersistence,
+            LegacyBranchCashConfirmationReportDao branchCashConfirmationReportPersistence,
             OfficeBusinessService officeBusinessService) {
         this.branchCashConfirmationReportPersistence = branchCashConfirmationReportPersistence;
         this.officeBusinessService = officeBusinessService;
