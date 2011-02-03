@@ -41,7 +41,7 @@ public class ProductMixPersistenceIntegrationTest extends MifosIntegrationTestCa
     SavingsOfferingBO saving1;
     SavingsOfferingBO saving2;
     ProductMixBO prdmix;
-    ProductMixPersistence productMixPersistence = new ProductMixPersistence();
+    LegacyProductMixDao productMixPersistence = new LegacyProductMixDao();
 
     @After
     public void tearDown() throws Exception {

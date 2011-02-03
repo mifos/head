@@ -35,9 +35,9 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.LegacyGenericDao;
 
 @SuppressWarnings("unchecked")
-public class ProductMixPersistence extends LegacyGenericDao {
+public class LegacyProductMixDao extends LegacyGenericDao {
 
-    private static final Logger logger = LoggerFactory.getLogger(ProductMixPersistence.class);
+    private static final Logger logger = LoggerFactory.getLogger(LegacyProductMixDao.class);
 
     public ProductMixBO getAllLoanOfferingMixByID(Short prdofferingMixId) throws PersistenceException {
         logger.debug("in getAllLoanOfferingMix");

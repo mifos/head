@@ -70,7 +70,7 @@ import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConsta
 import org.mifos.accounts.productdefinition.util.helpers.ProductType;
 import org.mifos.accounts.productsmix.business.ProductMixBO;
 import org.mifos.accounts.productsmix.business.service.ProductMixBusinessService;
-import org.mifos.accounts.productsmix.persistence.ProductMixPersistence;
+import org.mifos.accounts.productsmix.persistence.LegacyProductMixDao;
 import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
@@ -1436,14 +1436,14 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
 
             for (ProductMixBO oldNotAllowedProduct : product.getCollectionProductMix() ) {
 
-                ProductMixBO productMix = new ProductMixPersistence().getPrdOfferingMixByPrdOfferingID(productId
+                ProductMixBO productMix = new LegacyProductMixDao().getPrdOfferingMixByPrdOfferingID(productId
                         .shortValue(), oldNotAllowedProduct.getPrdOfferingNotAllowedId().getPrdOfferingId());
 
                 if (null != productMix) {
                     applicationConfigurationDao.delete(productMix);
                     StaticHibernateUtil.flushSession();
                 }
-                ProductMixBO alternateproductmix = new ProductMixPersistence().getPrdOfferingMixByPrdOfferingID(
+                ProductMixBO alternateproductmix = new LegacyProductMixDao().getPrdOfferingMixByPrdOfferingID(
                         oldNotAllowedProduct.getPrdOfferingNotAllowedId().getPrdOfferingId(), productId.shortValue());
 
                 if (null != alternateproductmix) {

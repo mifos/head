@@ -24,7 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
 import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionException;
-import org.mifos.accounts.productsmix.persistence.ProductMixPersistence;
+import org.mifos.accounts.productsmix.persistence.LegacyProductMixDao;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.exceptions.PersistenceException;
 
@@ -76,7 +76,7 @@ public class ProductMixBO extends AbstractBusinessObject {
     public void update() throws ProductDefinitionException {
         try {
             setUpdateDetails();
-            new ProductMixPersistence().createOrUpdate(this);
+            new LegacyProductMixDao().createOrUpdate(this);
         } catch (PersistenceException e) {
             throw new ProductDefinitionException(e);
         }
@@ -84,7 +84,7 @@ public class ProductMixBO extends AbstractBusinessObject {
 
     public void delete() throws ProductDefinitionException {
         try {
-            new ProductMixPersistence().delete(this);
+            new LegacyProductMixDao().delete(this);
         } catch (PersistenceException e) {
             throw new ProductDefinitionException(e);
         }
@@ -92,7 +92,7 @@ public class ProductMixBO extends AbstractBusinessObject {
 
     public void save() throws ProductDefinitionException {
         try {
-            new ProductMixPersistence().createOrUpdate(this);
+            new LegacyProductMixDao().createOrUpdate(this);
         } catch (PersistenceException e) {
             throw new ProductDefinitionException(e);
         }
@@ -100,7 +100,7 @@ public class ProductMixBO extends AbstractBusinessObject {
 
     public boolean doesPrdOfferingsCanCoexist(Short idPrdOff_A, Short idPrdOff_B) throws PersistenceException {
         try {
-            return new ProductMixPersistence().doesPrdOfferingsCanCoexist(idPrdOff_A, idPrdOff_B);
+            return new LegacyProductMixDao().doesPrdOfferingsCanCoexist(idPrdOff_A, idPrdOff_B);
         } catch (PersistenceException e) {
             throw new PersistenceException(e);
         }
