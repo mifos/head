@@ -1,8 +1,23 @@
-<assembly>
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
     <id>release</id>
     <formats>
         <format>zip</format>
     </formats>
+    <includeBaseDirectory>true</includeBaseDirectory>
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>db/lib</outputDirectory>
+            <useProjectArtifact>true</useProjectArtifact>
+            <unpack>false</unpack>
+            <scope>runtime</scope>
+            <includes>
+                <include>*liquibase*jar</include>
+                <include>*mysql*jar</include>
+            </includes>
+        </dependencySet>
+    </dependencySets>
     <fileSets>
         <fileSet>
             <outputDirectory/>
@@ -13,19 +28,35 @@
             </includes>
         </fileSet>
         <fileSet>
-            <outputDirectory>db</outputDirectory>
-            <directory>../db</directory>
+            <outputDirectory>db/changesets</outputDirectory>
+            <directory>${basedir}/../db/src/main/resources/changesets</directory>
             <includes>
-                <include>src/main/resources/liquibase.properties</include>
-                <include>src/main/changesets/*.xml</include>
-                <include>src/main/sql/*.sql</include>
-                <include>deploy/**/*.*</include>
+                <include>*.xml</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <outputDirectory>db/bin</outputDirectory>
+            <directory>${basedir}/../db/deploy</directory>
+            <includes>
+                <include>*.bat</include>
+                <include>*.sh</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <outputDirectory>db/sql</outputDirectory>
+            <directory>${basedir}/../db/src/main/resources/sql</directory>
+            <includes>
+                <include>*.sql</include>
             </includes>
         </fileSet>
     </fileSets>
     <files>
         <file>
-            <source>../appdomain/target/applicationConfiguration.custom.properties</source>
+            <source>${basedir}/../db/deploy/mifos-db.properties</source>
+            <outputDirectory>db</outputDirectory>
+        </file>
+        <file>
+            <source>${basedir}/../appdomain/target/applicationConfiguration.custom.properties</source>
             <outputDirectory>config</outputDirectory>
         </file>
         <file>

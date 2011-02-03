@@ -100,6 +100,11 @@
             <artifactId>mifos-appdomain</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.mifos</groupId>
+            <artifactId>mifos-db</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>jsp-api</artifactId>
             <scope>provided</scope>
@@ -524,7 +529,6 @@
                                 <exclude>org/mifos/framework/components/batchjobs/TaskRunningIntegrationTest.java</exclude>
                                 <exclude>org/mifos/framework/components/batchjobs/helpers/ProductStatusHelperIntegrationTest.java</exclude>
                                 <exclude>org/mifos/framework/components/batchjobs/BatchJobCatchUpIntegrationTest.java</exclude>
-                                <exclude>org/mifos/framework/persistence/LatestTestAfterCheckpointIntegrationTest.java</exclude>
                             </excludes>
                             <includes>
                                 <include>**/*IntegrationTest.java</include>
@@ -535,29 +539,6 @@
                             </systemProperties>
                             <argLine>${maven.surefire.memory}</argLine>
                             <reportsDirectory>${project.build.directory}/surefire-reports/integration/no_db_commits</reportsDirectory>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>integration-test-dbupgrade</id>
-                        <phase>integration-test</phase>
-                        <goals>
-                            <goal>test</goal>
-                        </goals>
-                        <configuration>
-                            <testNGArtifactName>null</testNGArtifactName>
-                            <printSummary>true</printSummary>
-                            <redirectTestOutputToFile>true</redirectTestOutputToFile>
-                            <excludes>
-                                <exclude>none</exclude>
-                            </excludes>
-                            <includes>
-                                <include>org/mifos/framework/persistence/LatestTestAfterCheckpointIntegrationTest.java</include>
-                            </includes>
-                            <systemProperties>
-                                <mifos.mode>integration</mifos.mode>
-                            </systemProperties>
-                            <argLine>${maven.surefire.memory}</argLine>
-                            <reportsDirectory>${project.build.directory}/surefire-reports/integration/dataupgrade</reportsDirectory>
                         </configuration>
                     </execution>
                 </executions>
