@@ -34,10 +34,16 @@ import org.mifos.framework.persistence.LegacyGenericDao;
 
 /**
  * no longer used???
+ *
+ * It is used by private AuditConfiguration#callMethodToCreateValueMap(String, Short), Using reflection api
+ *
  */
 @SuppressWarnings("unchecked")
 @Deprecated
-public class AuditConfigurationPersistence extends LegacyGenericDao {
+public class LegacyAuditLookupValuesDao extends LegacyGenericDao {
+
+    private LegacyAuditLookupValuesDao() {
+    }
 
     public Map<String, String> retrieveProductStatus(Short localeId) throws PersistenceException {
         Map<String, String> valueMap = new HashMap<String, String>();
@@ -56,8 +62,7 @@ public class AuditConfigurationPersistence extends LegacyGenericDao {
     public Map<String, String> retrieveRecurrenceTypes(Short localeId) throws PersistenceException {
         Map<String, String> valueMap = new HashMap<String, String>();
         try {
-            List<RecurrenceTypeEntity> recurrenceTypes = executeNamedQuery(
-                    NamedQueryConstants.FETCH_ALL_RECURRENCE_TYPES, null);
+            List<RecurrenceTypeEntity> recurrenceTypes = executeNamedQuery(NamedQueryConstants.FETCH_ALL_RECURRENCE_TYPES, null);
             for (RecurrenceTypeEntity recurrence : recurrenceTypes) {
                 valueMap.put(recurrence.getRecurrenceId().toString(), recurrence.getRecurrenceName());
             }
