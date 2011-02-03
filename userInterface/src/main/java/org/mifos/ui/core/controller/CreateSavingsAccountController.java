@@ -40,145 +40,146 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class CreateSavingsAccountController {
 
-	@Autowired
-	private SavingsServiceFacade savingsServiceFacade;
+    @Autowired
+    private SavingsServiceFacade savingsServiceFacade;
 
-	public CreateSavingsAccountController() {
-	}
+    public CreateSavingsAccountController() {
+    }
 
-	public SavingsAccountDetailDto createAccountInPartialApplicationState(
-			CreateSavingsAccountFormBean formBean) {
-		Short accountState = 13; // TOOD grab state from constant. NOT from
-		return createAccount(formBean, accountState);
-	}
+    public SavingsAccountDetailDto createAccountInPartialApplicationState(
+            CreateSavingsAccountFormBean formBean) {
+        Short accountState = 13; // TOOD grab state from constant. NOT from
+        return createAccount(formBean, accountState);
+    }
 
-	public SavingsAccountDetailDto createAccountInPendingApprovalState(
-			CreateSavingsAccountFormBean formBean) {
-		Short accountState = 14; // TOOD grab state from constant. NOT from
-		return createAccount(formBean, accountState);
-	}
+    public SavingsAccountDetailDto createAccountInPendingApprovalState(
+            CreateSavingsAccountFormBean formBean) {
+        Short accountState = 14; // TOOD grab state from constant. NOT from
+        return createAccount(formBean, accountState);
+    }
 
-	private SavingsAccountDetailDto createAccount(
-			CreateSavingsAccountFormBean formBean, Short accountState) {
-		SavingsProductReferenceDto productReference = formBean.getProduct();
-		SavingsProductDto savingsProduct = productReference
-				.getSavingsProductDetails();
-		Integer productId = savingsProduct.getProductDetails().getId();
-		Integer customerId = formBean.getCustomer().getCustomerId();
-		// FIXME - code smell! use constants
-		String depositAmount = savingsProduct.getDepositType() == 1 ? formBean
-				.getMandatoryDepositAmount() : formBean
-				.getVoluntaryDepositAmount();
-		if ("".equals(depositAmount)) {
-			depositAmount = "0"; // stops number format exception
-		}
-		String recommendedOrMandatoryAmount = depositAmount.toString();
-		List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>(); // TODO
-		SavingsAccountCreationDto savingsAccountCreation = new SavingsAccountCreationDto(
-				productId, customerId, accountState,
-				recommendedOrMandatoryAmount, customFields);
-		Long savingsId = savingsServiceFacade
-				.createSavingsAccount(savingsAccountCreation);
-		SavingsAccountDetailDto savingsAccountDetailDto = savingsServiceFacade
-				.retrieveSavingsAccountDetails(savingsId);
-		return savingsAccountDetailDto;
-	}
+    private SavingsAccountDetailDto createAccount(
+            CreateSavingsAccountFormBean formBean, Short accountState) {
+        SavingsProductReferenceDto productReference = formBean.getProduct();
+        SavingsProductDto savingsProduct = productReference
+                .getSavingsProductDetails();
+        Integer productId = savingsProduct.getProductDetails().getId();
+        Integer customerId = formBean.getCustomer().getCustomerId();
+        // FIXME - code smell! use constants
+        String depositAmount = savingsProduct.getDepositType() == 1 ? formBean
+                .getMandatoryDepositAmount() : formBean
+                .getVoluntaryDepositAmount();
+        if ("".equals(depositAmount)) {
+            depositAmount = "0"; // stops number format exception
+        }
+        String recommendedOrMandatoryAmount = depositAmount.toString();
+        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>(); // TODO
+        SavingsAccountCreationDto savingsAccountCreation = new SavingsAccountCreationDto(
+                productId, customerId, accountState,
+                recommendedOrMandatoryAmount, customFields);
+        Long savingsId = savingsServiceFacade
+                .createSavingsAccount(savingsAccountCreation);
+        SavingsAccountDetailDto savingsAccountDetailDto = savingsServiceFacade
+                .retrieveSavingsAccountDetails(savingsId);
+        return savingsAccountDetailDto;
+    }
 
-	public void customerSelected(Integer customerId,
-			CreateSavingsAccountFormBean formBean) {
-		CustomerDto customer = new CustomerDto(); // TODO use service facade to
-													// load customer
-		customer.setCustomerId(customerId);
-		customer.setDisplayName("FIXME - CreateSavingsAccountController");
-		formBean.setCustomer(customer);
-	}
+    public void customerSelected(Integer customerId,
+            CreateSavingsAccountFormBean formBean) {
+        CustomerDto customer = new CustomerDto(); // TODO use service facade to
+                                                  // load customer
+        customer.setCustomerId(customerId);
+        customer.setDisplayName("FIXME - CreateSavingsAccountController");
+        formBean.setCustomer(customer);
+    }
 
-	public void loadProduct(Integer productId,
-			CreateSavingsAccountFormBean formBean) {
+    public void loadProduct(Integer productId,
+            CreateSavingsAccountFormBean formBean) {
 
-		SavingsProductReferenceDto product = savingsServiceFacade
-				.retrieveSavingsProductReferenceData(productId);
-		formBean.setProductId(productId);
-		formBean.setProduct(product);
-		formBean.setMandatoryDepositAmount(product.getSavingsProductDetails()
-				.getAmountForDeposit().toString());
-		formBean.setVoluntaryDepositAmount(product.getSavingsProductDetails()
-				.getAmountForDeposit().toString());
-		formBean.setSavingsTypes(getSavingsTypes());
-		formBean.setRecurrenceTypes(getRecurrenceTypes());
-		formBean.setRecurrenceFrequencies(getRecurrenceFrequencies());
-	}
+        SavingsProductReferenceDto product = savingsServiceFacade
+                .retrieveSavingsProductReferenceData(productId);
+        formBean.setProductId(productId);
+        formBean.setProduct(product);
+        formBean.setMandatoryDepositAmount(product.getSavingsProductDetails()
+                .getAmountForDeposit().toString());
+        formBean.setVoluntaryDepositAmount(product.getSavingsProductDetails()
+                .getAmountForDeposit().toString());
+        formBean.setSavingsTypes(getSavingsTypes());
+        formBean.setRecurrenceTypes(getRecurrenceTypes());
+        formBean.setRecurrenceFrequencies(getRecurrenceFrequencies());
+    }
 
-	public void getProductOfferings(CreateSavingsAccountFormBean formBean) {
-		List<PrdOfferingDto> savingsProducts = savingsServiceFacade
-				.retrieveApplicableSavingsProductsForCustomer(formBean
-						.getCustomer().getCustomerId());
-		Map<String, String> offerings = new HashMap<String, String>(
-				savingsProducts.size());
-		for (PrdOfferingDto offering : savingsProducts) {
-			offerings.put(offering.getPrdOfferingId().toString(),
-					offering.getPrdOfferingName());
-		}
-		formBean.setProductOfferings(savingsProducts);
-		formBean.setProductOfferingOptions(offerings);
-	}
+    public void getProductOfferings(CreateSavingsAccountFormBean formBean) {
+        List<PrdOfferingDto> savingsProducts = savingsServiceFacade
+                .retrieveApplicableSavingsProductsForCustomer(formBean
+                        .getCustomer().getCustomerId());
+        Map<String, String> offerings = new HashMap<String, String>(
+                savingsProducts.size());
+        for (PrdOfferingDto offering : savingsProducts) {
+            offerings.put(offering.getPrdOfferingId().toString(),
+                    offering.getPrdOfferingName());
+        }
+        formBean.setProductOfferings(savingsProducts);
+        formBean.setProductOfferingOptions(offerings);
+    }
 
-	public CustomerSearchResultsDto searchCustomers(
-			CreateSavingsAccountFormBean formBean) {
-		// TODO replace stub data
-		// CustomerSearchDto searchDto = new
-		// CustomerSearchDto(formBean.getSearchString(), 1, 10);
-		// someFacade.searchCustomers(searchDto)...
-		List<CustomerSearchResultDto> pagedDetails = new ArrayList<CustomerSearchResultDto>();
-		for (int i = 10; i < 100; i++) {
-			Integer customerId = new Integer(i);
-			CustomerSearchResultDto customer = new CustomerSearchResultDto();
-			customer.setCustomerId(customerId);
-			customer.setClientName(formBean.getSearchString() + " (Client) " + i);
-			customer.setBranchName("Branch " + (i + 100));
-			customer.setGroupName("Group " + (i + 200));
-			customer.setCenterName("Center " + (i + 300));
-			pagedDetails.add(customer);
-		}
-		CustomerSearchResultsDto resultsDto = new CustomerSearchResultsDto(
-				pagedDetails.size(), 1, 100, 100, pagedDetails);
-		return resultsDto;
-	}
+    public CustomerSearchResultsDto searchCustomers(
+            CreateSavingsAccountFormBean formBean) {
+        // TODO replace stub data
+        // CustomerSearchDto searchDto = new
+        // CustomerSearchDto(formBean.getSearchString(), 1, 10);
+        // someFacade.searchCustomers(searchDto)...
+        List<CustomerSearchResultDto> pagedDetails = new ArrayList<CustomerSearchResultDto>();
+        for (int i = 10; i < 100; i++) {
+            Integer customerId = new Integer(i);
+            CustomerSearchResultDto customer = new CustomerSearchResultDto();
+            customer.setCustomerId(customerId);
+            customer.setClientName(formBean.getSearchString() + " (Client) "
+                    + i);
+            customer.setBranchName("Branch " + (i + 100));
+            customer.setGroupName("Group " + (i + 200));
+            customer.setCenterName("Center " + (i + 300));
+            pagedDetails.add(customer);
+        }
+        CustomerSearchResultsDto resultsDto = new CustomerSearchResultsDto(
+                pagedDetails.size(), 1, 100, 100, pagedDetails);
+        return resultsDto;
+    }
 
-	/**
-	 * @see org.mifos.application.meeting.util.helpers.RecurrenceType
-	 * @return A map of recurrence type ID to message key which points to a
-	 *         localized name.
-	 */
-	private Map<String, String> getRecurrenceFrequencies() {
-		Map<String, String> map = new HashMap<String, String>(3);
-		map.put("2", "createSavingsAccount.recurrenceFrequency.month"); // monthly
-		map.put("3", "createSavingsAccount.recurrenceFrequency.day"); // daily
-		return map;
-	}
+    /**
+     * @see org.mifos.application.meeting.util.helpers.RecurrenceType
+     * @return A map of recurrence type ID to message key which points to a
+     *         localized name.
+     */
+    private Map<String, String> getRecurrenceFrequencies() {
+        Map<String, String> map = new HashMap<String, String>(3);
+        map.put("2", "createSavingsAccount.recurrenceFrequency.month"); // monthly
+        map.put("3", "createSavingsAccount.recurrenceFrequency.day"); // daily
+        return map;
+    }
 
-	/**
-	 * @see org.mifos.application.meeting.util.helpers.RecurrenceType
-	 * @return A map of recurrence type ID to message key which points to a
-	 *         localized name.
-	 */
-	private Map<String, String> getRecurrenceTypes() {
-		Map<String, String> map = new HashMap<String, String>(3);
-		map.put("1", "createSavingsAccount.recurrenceType.weekly"); // weekly
-		map.put("2", "createSavingsAccount.recurrenceType.monthly"); // monthly
-		map.put("3", "createSavingsAccount.recurrenceType.daily"); // daily
-		return map;
-	}
+    /**
+     * @see org.mifos.application.meeting.util.helpers.RecurrenceType
+     * @return A map of recurrence type ID to message key which points to a
+     *         localized name.
+     */
+    private Map<String, String> getRecurrenceTypes() {
+        Map<String, String> map = new HashMap<String, String>(3);
+        map.put("1", "createSavingsAccount.recurrenceType.weekly"); // weekly
+        map.put("2", "createSavingsAccount.recurrenceType.monthly"); // monthly
+        map.put("3", "createSavingsAccount.recurrenceType.daily"); // daily
+        return map;
+    }
 
-	/**
-	 * @see org.mifos.accounts.productdefinition.util.helpers.SavingsType
-	 * @return A map of savings type ID to message key which points to a
-	 *         localized name.
-	 */
-	private Map<String, String> getSavingsTypes() {
-		Map<String, String> map = new HashMap<String, String>(2);
-		map.put("1", "createSavingsAccount.savingsType.mandatory"); // mandatory
-		map.put("2", "createSavingsAccount.savingsType.voluntary"); // voluntary
-		return map;
-	}
+    /**
+     * @see org.mifos.accounts.productdefinition.util.helpers.SavingsType
+     * @return A map of savings type ID to message key which points to a
+     *         localized name.
+     */
+    private Map<String, String> getSavingsTypes() {
+        Map<String, String> map = new HashMap<String, String>(2);
+        map.put("1", "createSavingsAccount.savingsType.mandatory"); // mandatory
+        map.put("2", "createSavingsAccount.savingsType.voluntary"); // voluntary
+        return map;
+    }
 }

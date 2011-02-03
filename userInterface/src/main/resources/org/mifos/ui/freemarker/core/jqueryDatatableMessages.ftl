@@ -23,19 +23,19 @@
 
 [#import "spring.ftl" as spring /]
 {
-	"sProcessing":   "[@spring.message "jquery.datatables.processing" /]",
-	"sLengthMenu":   "[@spring.message "jquery.datatables.hitsPerPageSelector" /]",
-	"sZeroRecords":  "[@spring.message "jquery.datatables.noHits" /]",
-	"sInfo":         "[@spring.message "jquery.datatables.info.withHits" /]",
-	"sInfoEmpty":    "[@spring.message "jquery.datatables.info.noHits" /]",
-	"sInfoFiltered": "[@spring.message "jquery.datatables.info.hitsFiltered" /]",
-	"sInfoPostFix":  "",
-	"sSearch":       "[@spring.message "jquery.datatables.filter" /]",
-	"sUrl": "",
-	"oPaginate": {
-		"sFirst":    "[@spring.message "jquery.datatables.firstPage" /]",
-		"sPrevious": "[@spring.message "jquery.datatables.previousPage" /]",
-		"sNext":     "[@spring.message "jquery.datatables.nextPage" /]",
-		"sLast":     "[@spring.message "jquery.datatables.lastPage" /]"
-	}
+    "sProcessing":   "[@spring.message "jquery.datatables.processing" /]",
+    "sLengthMenu":   "[@spring.message "jquery.datatables.hitsPerPageSelector" /]",
+    "sZeroRecords":  "[@spring.message "jquery.datatables.noHits" /]",
+    "sInfo":         "[@spring.message "jquery.datatables.info.withHits" /]",
+    "sInfoEmpty":    "[@spring.message "jquery.datatables.info.noHits" /]",
+    "sInfoFiltered": "[@spring.message "jquery.datatables.info.hitsFiltered" /]",
+    "sInfoPostFix":  "",
+    "sSearch":       "[@spring.message "jquery.datatables.filter" /]",
+    "sUrl": "",
+    "oPaginate": {
+        "sFirst":    "[@spring.message "jquery.datatables.firstPage" /]",
+        "sPrevious": "[@spring.message "jquery.datatables.previousPage" /]",
+        "sNext":     "[@spring.message "jquery.datatables.nextPage" /]",
+        "sLast":     "[@spring.message "jquery.datatables.lastPage" /]"
+    }
 }

@@ -26,10 +26,10 @@
 [#-- 
 Renders an HTML select element.
 
-	path        : spring bind path 
-	options     : An map of id (option value) to name (option label) or just a simple List of values (id or string).
-	selectPrompt: A value to display when the select input is first rendered. For example, "--Select--".
-	attributes  : Extra HTML attributes that should be added to the select element. For example, "class=blah" and "id=blah".
+    path        : spring bind path 
+    options     : An map of id (option value) to name (option label) or just a simple List of values (id or string).
+    selectPrompt: A value to display when the select input is first rendered. For example, "--Select--".
+    attributes  : Extra HTML attributes that should be added to the select element. For example, "class=blah" and "id=blah".
 --]
 [#macro singleSelectWithPrompt path options selectPrompt attributes=""]
     [@spring.bind path/]
@@ -50,48 +50,48 @@ Renders an HTML select element.
 [#-- 
 Display form validation errors in one place.
 
-	springBindPath: The path for Spring bind. For example, "userFormBean.*" 
-					See http://static.springsource.org/spring/docs/1.1.5/taglib/tag/BindTag.html
+    springBindPath: The path for Spring bind. For example, "userFormBean.*" 
+                    See http://static.springsource.org/spring/docs/1.1.5/taglib/tag/BindTag.html
 --]
 [#macro errors springBindPath]
     [@spring.bind springBindPath/]
     [#if spring.status.errorMessages?size > 0]
-		<div class="validationErrors">
-			<ul>
-			[#list spring.status.errorMessages as error]
-		      <li><b>${error}</b></li>
-			[/#list]
-		    </ul>
-		</div>
-	[/#if]
+        <div class="validationErrors">
+            <ul>
+            [#list spring.status.errorMessages as error]
+              <li><b>${error}</b></li>
+            [/#list]
+            </ul>
+        </div>
+    [/#if]
 [/#macro]
 
 [#-- 
 Renders a submit button.
 
-	buttonLabel : The value shown on the button.
-	webflowEvent: If this button is part of a form that drives webflow, you may specify the event Id here.
+    buttonLabel : The value shown on the button.
+    webflowEvent: If this button is part of a form that drives webflow, you may specify the event Id here.
 --]
 [#macro submitButton buttonLabel webflowEvent=""]
-	[#if webflowEvent?length == 0]
-		[#assign name="" /]
-	[#else]
-		[#assign name="_eventId_${webflowEvent}" /]
-	[/#if]
-	<input type="submit" class="submit" value="[@spring.message buttonLabel /]" name="${name}" />
+    [#if webflowEvent?length == 0]
+        [#assign name="" /]
+    [#else]
+        [#assign name="_eventId_${webflowEvent}" /]
+    [/#if]
+    <input type="submit" class="submit" value="[@spring.message buttonLabel /]" name="${name}" />
 [/#macro]
 
 [#-- 
 Renders a cancel button.
 
-	buttonLabel : The value shown on the button.
-	webflowEvent: If this button is part of a form that drives webflow, you may specify the event Id here.
+    buttonLabel : The value shown on the button.
+    webflowEvent: If this button is part of a form that drives webflow, you may specify the event Id here.
 --]
 [#macro cancelButton buttonLabel webflowEvent=""]
-	[#if webflowEvent?length == 0]
-		[#assign name="" /]
-	[#else]
-		[#assign name="_eventId_${webflowEvent}" /]
-	[/#if]
-	<input type="submit" class="cancel" value="[@spring.message buttonLabel /]" name="${name}" />
+    [#if webflowEvent?length == 0]
+        [#assign name="" /]
+    [#else]
+        [#assign name="_eventId_${webflowEvent}" /]
+    [/#if]
+    <input type="submit" class="cancel" value="[@spring.message buttonLabel /]" name="${name}" />
 [/#macro]

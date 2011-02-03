@@ -24,35 +24,35 @@
 [@widget.topNavigationNoSecurity currentTab="ClientsAndAccounts" /]
 
 <div class="container webflow">
-	<br/>
-	<!-- flow progress indicator -->
-	<div class="progress-tracker borders span-24">
-		<ul>
-		[#assign currentStateEncountered = false]
-		[#list states as state]
-			[#assign cssClass = "incomplete"]
-			[#if state == currentState]
-				[#assign currentStateEncountered = true]
-				[#assign cssClass = "active"]
-			[#elseif currentStateEncountered == false]
-				[#assign cssClass = "completed"]
-			[/#if]
-			<li class="${cssClass}">[@spring.message state /]</li>
-		[/#list]
-		</ul>
-	</div>
-	
-	<!-- flow content -->
-	<br/>
-	<div class="content borders no-top-border span-24">
-		<div class="span-1">&nbsp;</div>
-		<div class="span-21">
-			<br/>
-			[#nested]
-			<br/>
-		</div>
-		<div class="span-1 last">&nbsp;</div>
-	</div>
+    <br/>
+    <!-- flow progress indicator -->
+    <div class="progress-tracker borders span-24">
+        <ul>
+        [#assign currentStateEncountered = false]
+        [#list states as state]
+            [#assign cssClass = "incomplete"]
+            [#if state == currentState]
+                [#assign currentStateEncountered = true]
+                [#assign cssClass = "active"]
+            [#elseif currentStateEncountered == false]
+                [#assign cssClass = "completed"]
+            [/#if]
+            <li class="${cssClass}">[@spring.message state /]</li>
+        [/#list]
+        </ul>
+    </div>
+    
+    <!-- flow content -->
+    <br/>
+    <div class="content borders no-top-border span-24">
+        <div class="span-1">&nbsp;</div>
+        <div class="span-21">
+            <br/>
+            [#nested]
+            <br/>
+        </div>
+        <div class="span-1 last">&nbsp;</div>
+    </div>
 </div>
 
 [@layout.footer /]

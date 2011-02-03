@@ -27,11 +27,11 @@ created using the output of AdminBreadcrumbBuild.
 --]
 [#macro crumbs breadcrumbs]
 <div class="breadcrumb">
-	    [#list breadcrumbs as messages]
-  			[#if messages_has_next]
-    			<a href="${messages.link}">[@spring.message "${messages.message}" /]</a>&nbsp;/&nbsp;[#else]<span class="fontBold">[@spring.messageText "${messages.message}","${messages.message}" /]</span>
-  			[/#if]
-  		[/#list]
+        [#list breadcrumbs as messages]
+            [#if messages_has_next]
+                <a href="${messages.link}">[@spring.message "${messages.message}" /]</a>&nbsp;/&nbsp;[#else]<span class="fontBold">[@spring.messageText "${messages.message}","${messages.message}" /]</span>
+            [/#if]
+        [/#list]
  </div>
 [/#macro]
 
@@ -41,13 +41,13 @@ responsible for populating the hash.
 --]
 [#macro crumbpairs breadcrumbs lastEntryIsText="true"]
 <div class="breadcrumb">
-	    [#list breadcrumbs?keys as text]
-  			[#if text_has_next || lastEntryIsText=="false"] [#-- <item>_has_next is a special loop variable --]
-    			<a href="${breadcrumbs[text]}">[@spring.messageText text, text/]</a>&nbsp;/
+        [#list breadcrumbs?keys as text]
+            [#if text_has_next || lastEntryIsText=="false"] [#-- <item>_has_next is a special loop variable --]
+                <a href="${breadcrumbs[text]}">[@spring.messageText text, text/]</a>&nbsp;/
             [#else]
                 <span class="fontBold">[@spring.messageText text, text/]</span>
-   			[/#if]
-  		[/#list]
+            [/#if]
+        [/#list]
  </div>
 [/#macro]
 
@@ -59,8 +59,8 @@ responsible for populating the hash.
 [#-- See crumbpairs macro --]
 [#macro editPageBreadcrumbs breadcrumbs]
 <div class="breadcrumb">
-	    [#list breadcrumbs?keys as text]  			
-    			<a href="${breadcrumbs[text]}">[@spring.messageText text, text/]</a>&nbsp;[#if text_has_next]/[/#if]  &nbsp;   			
-  		[/#list]
+        [#list breadcrumbs?keys as text]            
+                <a href="${breadcrumbs[text]}">[@spring.messageText text, text/]</a>&nbsp;[#if text_has_next]/[/#if]  &nbsp;            
+        [/#list]
  </div>
 [/#macro]

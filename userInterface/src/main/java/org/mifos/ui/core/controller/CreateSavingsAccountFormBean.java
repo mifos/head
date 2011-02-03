@@ -41,179 +41,179 @@ import org.springframework.binding.validation.ValidationContext;
  */
 public class CreateSavingsAccountFormBean implements Serializable {
 
-	private CustomerDto customer;
+    private CustomerDto customer;
 
-	@NotEmpty(groups = CustomerSearchStep.class)
-	private String searchString;
+    @NotEmpty(groups = CustomerSearchStep.class)
+    private String searchString;
 
-	@Pattern(regexp = "^[0-9]+(\\.[0-9]{1,2})?$?", groups = { MandatorySavings.class })
-	private String mandatoryDepositAmount;
+    @Pattern(regexp = "^[0-9]+(\\.[0-9]{1,2})?$?", groups = { MandatorySavings.class })
+    private String mandatoryDepositAmount;
 
-	@Pattern(regexp = "^[0-9]+(\\.[0-9]{1,2})?$", groups = { VoluntarySavings.class })
-	private String voluntaryDepositAmount;
+    @Pattern(regexp = "^[0-9]+(\\.[0-9]{1,2})?$", groups = { VoluntarySavings.class })
+    private String voluntaryDepositAmount;
 
-	private SavingsProductReferenceDto product;
+    private SavingsProductReferenceDto product;
 
-	@NotNull(groups = { SelectProductStep.class })
-	private Integer productId;
+    @NotNull(groups = { SelectProductStep.class })
+    private Integer productId;
 
-	private List<PrdOfferingDto> productOfferings;
+    private List<PrdOfferingDto> productOfferings;
 
-	private Map<String, String> productOfferingOptions;
+    private Map<String, String> productOfferingOptions;
 
-	private Map<String, String> savingsTypes;
+    private Map<String, String> savingsTypes;
 
-	private Map<String, String> recurrenceTypes;
+    private Map<String, String> recurrenceTypes;
 
-	private Map<String, String> recurrenceFrequencies;
+    private Map<String, String> recurrenceFrequencies;
 
-	@Autowired
-	private transient MifosBeanValidator validator;
+    @Autowired
+    private transient MifosBeanValidator validator;
 
-	public void setValidator(MifosBeanValidator validator) {
-		this.validator = validator;
-	}
+    public void setValidator(MifosBeanValidator validator) {
+        this.validator = validator;
+    }
 
-	public void setCustomer(CustomerDto customer) {
-		this.customer = customer;
-	}
+    public void setCustomer(CustomerDto customer) {
+        this.customer = customer;
+    }
 
-	public CustomerDto getCustomer() {
-		return customer;
-	}
+    public CustomerDto getCustomer() {
+        return customer;
+    }
 
-	public void setSearchString(String searchString) {
-		this.searchString = searchString;
-	}
+    public void setSearchString(String searchString) {
+        this.searchString = searchString;
+    }
 
-	public String getSearchString() {
-		return searchString;
-	}
+    public String getSearchString() {
+        return searchString;
+    }
 
-	/**
-	 * Sets the savings product associated with the (new) savings account. The
-	 * product can be referenced in form validation.
-	 * 
-	 * @param product
-	 *            An instance of {@link SavingsProductReferenceDto}
-	 */
-	public void setProduct(SavingsProductReferenceDto product) {
-		this.product = product;
-	}
+    /**
+     * Sets the savings product associated with the (new) savings account. The
+     * product can be referenced in form validation.
+     * 
+     * @param product
+     *            An instance of {@link SavingsProductReferenceDto}
+     */
+    public void setProduct(SavingsProductReferenceDto product) {
+        this.product = product;
+    }
 
-	public SavingsProductReferenceDto getProduct() {
-		return product;
-	}
+    public SavingsProductReferenceDto getProduct() {
+        return product;
+    }
 
-	public void setProductOfferings(List<PrdOfferingDto> productOfferings) {
-		this.productOfferings = productOfferings;
-	}
+    public void setProductOfferings(List<PrdOfferingDto> productOfferings) {
+        this.productOfferings = productOfferings;
+    }
 
-	public List<PrdOfferingDto> getProductOfferings() {
-		return productOfferings;
-	}
+    public List<PrdOfferingDto> getProductOfferings() {
+        return productOfferings;
+    }
 
-	public void setProductOfferingOptions(
-			Map<String, String> productOfferingOptions) {
-		this.productOfferingOptions = productOfferingOptions;
-	}
+    public void setProductOfferingOptions(
+            Map<String, String> productOfferingOptions) {
+        this.productOfferingOptions = productOfferingOptions;
+    }
 
-	public Map<String, String> getProductOfferingOptions() {
-		return productOfferingOptions;
-	}
+    public Map<String, String> getProductOfferingOptions() {
+        return productOfferingOptions;
+    }
 
-	/**
-	 * Validation method that Spring webflow calls on state transition out of
-	 * customerSearchStep.
-	 */
-	public void validateCustomerSearchStep(ValidationContext context) {
-		MessageContext messages = context.getMessageContext();
-		validator.validate(this, messages, CustomerSearchStep.class);
-	}
+    /**
+     * Validation method that Spring webflow calls on state transition out of
+     * customerSearchStep.
+     */
+    public void validateCustomerSearchStep(ValidationContext context) {
+        MessageContext messages = context.getMessageContext();
+        validator.validate(this, messages, CustomerSearchStep.class);
+    }
 
-	/**
-	 * Validation method that Spring webflow calls on state transition out of
-	 * selectCustomerStep.
-	 */
-	public void validateSelectCustomerStep(ValidationContext context) {
-		MessageContext messages = context.getMessageContext();
-		validator.validate(this, messages, CustomerSearchStep.class);
-	}
+    /**
+     * Validation method that Spring webflow calls on state transition out of
+     * selectCustomerStep.
+     */
+    public void validateSelectCustomerStep(ValidationContext context) {
+        MessageContext messages = context.getMessageContext();
+        validator.validate(this, messages, CustomerSearchStep.class);
+    }
 
-	/**
-	 * Validation method that Spring webflow calls on state transition out of
-	 * selectProductOfferingStep.
-	 */
-	public void validateSelectProductOfferingStep(ValidationContext context) {
-		MessageContext messages = context.getMessageContext();
-		validator.validate(this, messages, SelectProductStep.class);
-	}
+    /**
+     * Validation method that Spring webflow calls on state transition out of
+     * selectProductOfferingStep.
+     */
+    public void validateSelectProductOfferingStep(ValidationContext context) {
+        MessageContext messages = context.getMessageContext();
+        validator.validate(this, messages, SelectProductStep.class);
+    }
 
-	public void validateEnterAccountDetailsStep(ValidationContext context) {
-		// TODO: need to get access to domain constants from controller ...
-		// public static final short SAVINGS_MANDATORY= 1;
-		// public static final short SAVINGS_VOLUNTARY= 2;
-		MessageContext messages = context.getMessageContext();
-		Class[] validationGroups = {};
-		if (this.product.getSavingsProductDetails().getDepositType() == 1) {
-			Class[] groups = { MandatorySavings.class };
-			validationGroups = groups;
-		} else if (this.product.getSavingsProductDetails().getDepositType() == 2
-				&& !"".equals(this.voluntaryDepositAmount)) {
-			Class[] groups = { VoluntarySavings.class };
-			validationGroups = groups;
-		}
-		validator.validate(this, messages, validationGroups);
-	}
+    public void validateEnterAccountDetailsStep(ValidationContext context) {
+        // TODO: need to get access to domain constants from controller ...
+        // public static final short SAVINGS_MANDATORY= 1;
+        // public static final short SAVINGS_VOLUNTARY= 2;
+        MessageContext messages = context.getMessageContext();
+        Class[] validationGroups = {};
+        if (this.product.getSavingsProductDetails().getDepositType() == 1) {
+            Class[] groups = { MandatorySavings.class };
+            validationGroups = groups;
+        } else if (this.product.getSavingsProductDetails().getDepositType() == 2
+                && !"".equals(this.voluntaryDepositAmount)) {
+            Class[] groups = { VoluntarySavings.class };
+            validationGroups = groups;
+        }
+        validator.validate(this, messages, validationGroups);
+    }
 
-	public void setProductId(Integer productId) {
-		this.productId = productId;
-	}
+    public void setProductId(Integer productId) {
+        this.productId = productId;
+    }
 
-	public Integer getProductId() {
-		return productId;
-	}
+    public Integer getProductId() {
+        return productId;
+    }
 
-	public void setSavingsTypes(Map<String, String> savingsTypes) {
-		this.savingsTypes = savingsTypes;
-	}
+    public void setSavingsTypes(Map<String, String> savingsTypes) {
+        this.savingsTypes = savingsTypes;
+    }
 
-	public Map<String, String> getSavingsTypes() {
-		return savingsTypes;
-	}
+    public Map<String, String> getSavingsTypes() {
+        return savingsTypes;
+    }
 
-	public void setRecurrenceTypes(Map<String, String> recurrenceTypes) {
-		this.recurrenceTypes = recurrenceTypes;
-	}
+    public void setRecurrenceTypes(Map<String, String> recurrenceTypes) {
+        this.recurrenceTypes = recurrenceTypes;
+    }
 
-	public Map<String, String> getRecurrenceTypes() {
-		return recurrenceTypes;
-	}
+    public Map<String, String> getRecurrenceTypes() {
+        return recurrenceTypes;
+    }
 
-	public void setRecurrenceFrequencies(
-			Map<String, String> recurrenceFrequencies) {
-		this.recurrenceFrequencies = recurrenceFrequencies;
-	}
+    public void setRecurrenceFrequencies(
+            Map<String, String> recurrenceFrequencies) {
+        this.recurrenceFrequencies = recurrenceFrequencies;
+    }
 
-	public Map<String, String> getRecurrenceFrequencies() {
-		return recurrenceFrequencies;
-	}
+    public Map<String, String> getRecurrenceFrequencies() {
+        return recurrenceFrequencies;
+    }
 
-	public void setMandatoryDepositAmount(String mandatoryDepositAmount) {
-		this.mandatoryDepositAmount = mandatoryDepositAmount;
-	}
+    public void setMandatoryDepositAmount(String mandatoryDepositAmount) {
+        this.mandatoryDepositAmount = mandatoryDepositAmount;
+    }
 
-	public String getMandatoryDepositAmount() {
-		return mandatoryDepositAmount;
-	}
+    public String getMandatoryDepositAmount() {
+        return mandatoryDepositAmount;
+    }
 
-	public void setVoluntaryDepositAmount(String voluntaryDepositAmount) {
-		this.voluntaryDepositAmount = voluntaryDepositAmount;
-	}
+    public void setVoluntaryDepositAmount(String voluntaryDepositAmount) {
+        this.voluntaryDepositAmount = voluntaryDepositAmount;
+    }
 
-	public String getVoluntaryDepositAmount() {
-		return voluntaryDepositAmount;
-	}
+    public String getVoluntaryDepositAmount() {
+        return voluntaryDepositAmount;
+    }
 }
 
 /**

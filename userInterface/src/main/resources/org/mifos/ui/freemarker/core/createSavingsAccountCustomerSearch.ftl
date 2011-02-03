@@ -21,8 +21,8 @@
 
 [@layout.webflow currentState="createSavingsAccount.flowState.selectCustomer" 
                  states=["createSavingsAccount.flowState.selectCustomer", 
-                 		 "createSavingsAccount.flowState.enterAccountInfo", 
-                 		 "createSavingsAccount.flowState.reviewAndSubmit"]] 
+                         "createSavingsAccount.flowState.enterAccountInfo", 
+                         "createSavingsAccount.flowState.reviewAndSubmit"]] 
 
 <h1>[@spring.message "createSavingsAccount.customerSearch.pageTitle" /] - <span class="standout">[@spring.message "createSavingsAccount.customerSearch.pageSubtitle" /]</span></h1>
 
@@ -31,16 +31,16 @@
 
 [@form.errors "savingsAccountFormBean.*"/]
 <form action="${flowExecutionUrl}" method="post" class="two-columns">
-	<fieldset>
-	<div class="row">
-		<label for="searchString">[@spring.message "createSavingsAccount.customerSearch.searchTerm" /]:</label>
-		[@spring.formInput "savingsAccountFormBean.searchString" /]
-	</div>
-	</fieldset>
-	<div class="row">
-		[@form.submitButton "createSavingsAccount.customerSearch.searchButton" "searchTermEntered" /]
-		[@form.cancelButton "createSavingsAccount.customerSearch.cancelButton" "cancel" /]
-	</div>
+    <fieldset>
+    <div class="row">
+        <label for="searchString">[@spring.message "createSavingsAccount.customerSearch.searchTerm" /]:</label>
+        [@spring.formInput "savingsAccountFormBean.searchString" /]
+    </div>
+    </fieldset>
+    <div class="row">
+        [@form.submitButton "createSavingsAccount.customerSearch.searchButton" "searchTermEntered" /]
+        [@form.cancelButton "createSavingsAccount.customerSearch.cancelButton" "cancel" /]
+    </div>
 </form>
 <br/>
 

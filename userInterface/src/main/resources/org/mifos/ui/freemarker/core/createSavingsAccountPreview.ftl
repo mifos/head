@@ -21,8 +21,8 @@
 
 [@layout.webflow currentState="createSavingsAccount.flowState.reviewAndSubmit" 
                  states=["createSavingsAccount.flowState.selectCustomer", 
-                 		 "createSavingsAccount.flowState.enterAccountInfo", 
-                 		 "createSavingsAccount.flowState.reviewAndSubmit"]] 
+                         "createSavingsAccount.flowState.enterAccountInfo", 
+                         "createSavingsAccount.flowState.reviewAndSubmit"]] 
 
 <h1>[@spring.message "createSavingsAccount.preview.pageTitle" /] - <span class="standout">[@spring.message "createSavingsAccount.preview.pageSubtitle" /]</span></h1>
 <p>[@spring.message "createSavingsAccount.preview.instructions" /]</p>
@@ -35,75 +35,75 @@
 <br/>
 
 <div class="summary">
-	<div class="row">
-		<div class="attribute">[@spring.message "createSavingsAccount.preview.savingsInstanceName" /]</div>
-		<div class="value">${savingsAccountFormBean.product.savingsProductDetails.productDetails.name}</div>
-	</div>
-	<div class="row">&nbsp;</div>
-	<div class="row divider">[@spring.message "createSavingsAccount.preview.instanceInfo" /]</div>
-	<div class="row">
-		<div class="attribute">[@spring.message "createSavingsAccount.preview.productSummary.description"/]</div>
-		<div class="value">${savingsAccountFormBean.product.savingsProductDetails.productDetails.description}</div>
-	</div>
-	<div class="row">
-		<div class="attribute">[@spring.message "createSavingsAccount.preview.productSummary.typeOfDeposits"/]</div>
-		<div class="value">[@lookup.fromMap savingsAccountFormBean.savingsTypes savingsAccountFormBean.product.savingsProductDetails.depositType?string /]</div>
-	</div>
-	<div class="row">
-		<div class="attribute">[@spring.message "createSavingsAccount.preview.productSummary.maxWithdrawalAmount"/]</div>
-		<div class="value">${savingsAccountFormBean.product.savingsProductDetails.maxWithdrawal}</div>
-	</div>
-	<div class="row">
-		<div class="attribute">[@spring.message "createSavingsAccount.preview.productSummary.balanceForInterestCalculation"/]</div>
-		<div class="value">[@lookup.fromList savingsAccountFormBean.product.interestCalcTypeOptions savingsAccountFormBean.product.savingsProductDetails.interestCalculationType?string /]</div>
-	</div>
-	<div class="row">
-		<div class="attribute">[@spring.message "createSavingsAccount.preview.productSummary.periodForInterestCalculation"/]</div>
-		<div class="value">
-			${savingsAccountFormBean.product.savingsProductDetails.interestCalculationFrequency}
-			[@lookup.fromMap savingsAccountFormBean.recurrenceFrequencies savingsAccountFormBean.product.savingsProductDetails.interestCalculationFrequencyPeriod?string /]
-		</div>
-	</div>
-	<div class="row">
-		<div class="attribute">[@spring.message "createSavingsAccount.preview.productSummary.interestPostingFrequency"/]</div>
-		<div class="value">
-			${savingsAccountFormBean.product.savingsProductDetails.interestPostingMonthlyFrequency}
-			[@lookup.recurringFrequencyMonth /]
-		</div>
-	</div>
-	<div class="row">
-		<div class="attribute">[@spring.message "createSavingsAccount.preview.productSummary.minBalanceForInterestCalculation"/]</div>
-		<div class="value">${savingsAccountFormBean.product.savingsProductDetails.minBalanceForInterestCalculation}</div>
-	</div>
-	<div class="row">
-		<div class="attribute">[@spring.message "createSavingsAccount.preview.productSummary.interestRate"/]</div>
-		<div class="value">${savingsAccountFormBean.product.savingsProductDetails.interestRate} %</div>
-	</div>
-	<div class="row">&nbsp;</div>
-	<div class="row">
-		[#if savingsAccountFormBean.product.savingsProductDetails.depositType?string == "1"]
-			<div class="attribute">[@spring.message "createSavingsAccount.preview.savingAccountDetail.depositAmount.mandatory" /]</div>
-			<div class="value">${savingsAccountFormBean.mandatoryDepositAmount ! "0"}</div>
-		[#elseif savingsAccountFormBean.product.savingsProductDetails.depositType?string == "2"]
-			<div class="attribute">[@spring.message "createSavingsAccount.preview.savingAccountDetail.depositAmount.voluntary" /]</div>
-			<div class="value">${savingsAccountFormBean.voluntaryDepositAmount ! "0"}</div>
-		[/#if]
-	</div>
-	<div class="row">&nbsp;</div>
-	<div class="row">
-		<form action="${flowExecutionUrl}" method="post">
-			<input type="submit" class="edit" value="Edit Savings account information" name="_eventId_edit" />
-		</form>
-	</div>
-	<div class="clear"/>
+    <div class="row">
+        <div class="attribute">[@spring.message "createSavingsAccount.preview.savingsInstanceName" /]</div>
+        <div class="value">${savingsAccountFormBean.product.savingsProductDetails.productDetails.name}</div>
+    </div>
+    <div class="row">&nbsp;</div>
+    <div class="row divider">[@spring.message "createSavingsAccount.preview.instanceInfo" /]</div>
+    <div class="row">
+        <div class="attribute">[@spring.message "createSavingsAccount.preview.productSummary.description"/]</div>
+        <div class="value">${savingsAccountFormBean.product.savingsProductDetails.productDetails.description}</div>
+    </div>
+    <div class="row">
+        <div class="attribute">[@spring.message "createSavingsAccount.preview.productSummary.typeOfDeposits"/]</div>
+        <div class="value">[@lookup.fromMap savingsAccountFormBean.savingsTypes savingsAccountFormBean.product.savingsProductDetails.depositType?string /]</div>
+    </div>
+    <div class="row">
+        <div class="attribute">[@spring.message "createSavingsAccount.preview.productSummary.maxWithdrawalAmount"/]</div>
+        <div class="value">${savingsAccountFormBean.product.savingsProductDetails.maxWithdrawal}</div>
+    </div>
+    <div class="row">
+        <div class="attribute">[@spring.message "createSavingsAccount.preview.productSummary.balanceForInterestCalculation"/]</div>
+        <div class="value">[@lookup.fromList savingsAccountFormBean.product.interestCalcTypeOptions savingsAccountFormBean.product.savingsProductDetails.interestCalculationType?string /]</div>
+    </div>
+    <div class="row">
+        <div class="attribute">[@spring.message "createSavingsAccount.preview.productSummary.periodForInterestCalculation"/]</div>
+        <div class="value">
+            ${savingsAccountFormBean.product.savingsProductDetails.interestCalculationFrequency}
+            [@lookup.fromMap savingsAccountFormBean.recurrenceFrequencies savingsAccountFormBean.product.savingsProductDetails.interestCalculationFrequencyPeriod?string /]
+        </div>
+    </div>
+    <div class="row">
+        <div class="attribute">[@spring.message "createSavingsAccount.preview.productSummary.interestPostingFrequency"/]</div>
+        <div class="value">
+            ${savingsAccountFormBean.product.savingsProductDetails.interestPostingMonthlyFrequency}
+            [@lookup.recurringFrequencyMonth /]
+        </div>
+    </div>
+    <div class="row">
+        <div class="attribute">[@spring.message "createSavingsAccount.preview.productSummary.minBalanceForInterestCalculation"/]</div>
+        <div class="value">${savingsAccountFormBean.product.savingsProductDetails.minBalanceForInterestCalculation}</div>
+    </div>
+    <div class="row">
+        <div class="attribute">[@spring.message "createSavingsAccount.preview.productSummary.interestRate"/]</div>
+        <div class="value">${savingsAccountFormBean.product.savingsProductDetails.interestRate} %</div>
+    </div>
+    <div class="row">&nbsp;</div>
+    <div class="row">
+        [#if savingsAccountFormBean.product.savingsProductDetails.depositType?string == "1"]
+            <div class="attribute">[@spring.message "createSavingsAccount.preview.savingAccountDetail.depositAmount.mandatory" /]</div>
+            <div class="value">${savingsAccountFormBean.mandatoryDepositAmount ! "0"}</div>
+        [#elseif savingsAccountFormBean.product.savingsProductDetails.depositType?string == "2"]
+            <div class="attribute">[@spring.message "createSavingsAccount.preview.savingAccountDetail.depositAmount.voluntary" /]</div>
+            <div class="value">${savingsAccountFormBean.voluntaryDepositAmount ! "0"}</div>
+        [/#if]
+    </div>
+    <div class="row">&nbsp;</div>
+    <div class="row">
+        <form action="${flowExecutionUrl}" method="post">
+            <input type="submit" class="edit" value="Edit Savings account information" name="_eventId_edit" />
+        </form>
+    </div>
+    <div class="clear"/>
 </div>
 <br/>
 <form action="${flowExecutionUrl}" method="post" class="webflow-controls centered">
-	<div class="row">
-		[@form.submitButton "createSavingsAccount.preview.saveForLaterButton" "saveForLater" /]
-		[@form.submitButton "createSavingsAccount.preview.saveForApprovalButton" "saveForApproval" /]
-		[@form.cancelButton "createSavingsAccount.preview.cancelButton" "cancel" /]
-	</div>
+    <div class="row">
+        [@form.submitButton "createSavingsAccount.preview.saveForLaterButton" "saveForLater" /]
+        [@form.submitButton "createSavingsAccount.preview.saveForApprovalButton" "saveForApproval" /]
+        [@form.cancelButton "createSavingsAccount.preview.cancelButton" "cancel" /]
+    </div>
 </form>
 
 [/@layout.webflow]

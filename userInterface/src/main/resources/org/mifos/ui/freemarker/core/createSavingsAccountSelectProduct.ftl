@@ -21,8 +21,8 @@
 
 [@layout.webflow currentState="createSavingsAccount.flowState.enterAccountInfo" 
                  states=["createSavingsAccount.flowState.selectCustomer", 
-                 		 "createSavingsAccount.flowState.enterAccountInfo", 
-                 		 "createSavingsAccount.flowState.reviewAndSubmit"]] 
+                         "createSavingsAccount.flowState.enterAccountInfo", 
+                         "createSavingsAccount.flowState.reviewAndSubmit"]] 
 
 <h1>[@spring.message "createSavingsAccount.selectProduct.pageTitle" /] - <span class="standout">[@spring.message "createSavingsAccount.selectProduct.pageSubtitle" /]</span></h1>
 <p>[@spring.message "createSavingsAccount.selectProduct.instructions" /]</p>
@@ -34,16 +34,16 @@
 
 [@form.errors "savingsAccountFormBean.*"/]
 <form action="${flowExecutionUrl}" method="post" class="two-columns">
-	<fieldset>
-	<div class="row">
-		<label for="productId" class="mandatory">[@spring.message "createSavingsAccount.selectProduct.selectSavingsProduct" /]</label>
-		[@form.singleSelectWithPrompt "savingsAccountFormBean.productId" savingsAccountFormBean.productOfferingOptions "createSavingsAccount.selectProduct.selectPrompt" /]
-	</div>
-	</fieldset>
-	<div class="row webflow-controls">
-		[@form.submitButton "createSavingsAccount.selectProduct.continueButton" "productSelected" /]
-		[@form.cancelButton "createSavingsAccount.selectProduct.cancelButton" "cancel" /]
-	</div>
+    <fieldset>
+    <div class="row">
+        <label for="productId" class="mandatory">[@spring.message "createSavingsAccount.selectProduct.selectSavingsProduct" /]</label>
+        [@form.singleSelectWithPrompt "savingsAccountFormBean.productId" savingsAccountFormBean.productOfferingOptions "createSavingsAccount.selectProduct.selectPrompt" /]
+    </div>
+    </fieldset>
+    <div class="row webflow-controls">
+        [@form.submitButton "createSavingsAccount.selectProduct.continueButton" "productSelected" /]
+        [@form.cancelButton "createSavingsAccount.selectProduct.cancelButton" "cancel" /]
+    </div>
 </form>
 
 [/@layout.webflow]

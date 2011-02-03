@@ -25,8 +25,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
- * This controller serves localized message bundle used by Datatables
- * jQuery plugin.
+ * This controller serves localized message bundle used by Datatables jQuery
+ * plugin.
  * 
  * @see http://www.datatables.net/examples/advanced_init/language_file.html
  * @see http://www.datatables.net/usage/i18n (oLanguage.sUrl)
@@ -35,8 +35,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequestMapping(value = "/jqueryDatatableMessages")
 public class JqueryDatatableMessageController {
 
-	@RequestMapping(method = RequestMethod.GET)
-	public void messages() {
-		// empty
-	}
+    @RequestMapping(method = RequestMethod.GET)
+    public void messages() {
+        // empty
+    }
 }

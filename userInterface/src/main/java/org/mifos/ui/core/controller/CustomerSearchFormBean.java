@@ -35,39 +35,39 @@ import org.springframework.binding.validation.ValidationContext;
  */
 public class CustomerSearchFormBean implements Serializable {
 
-	@NotEmpty
-	private String searchString;
+    @NotEmpty
+    private String searchString;
 
-	@Autowired
-	private transient MifosBeanValidator validator;
+    @Autowired
+    private transient MifosBeanValidator validator;
 
-	public void setValidator(MifosBeanValidator validator) {
-		this.validator = validator;
-	}
+    public void setValidator(MifosBeanValidator validator) {
+        this.validator = validator;
+    }
 
-	public void setSearchString(String searchString) {
-		this.searchString = searchString;
-	}
+    public void setSearchString(String searchString) {
+        this.searchString = searchString;
+    }
 
-	public String getSearchString() {
-		return searchString;
-	}
+    public String getSearchString() {
+        return searchString;
+    }
 
-	/**
-	 * Validation method that Spring webflow calls on state transition out of
-	 * customerSearchStep.
-	 */
-	public void validateCustomerSearchStep(ValidationContext context) {
-		MessageContext messages = context.getMessageContext();
-		validator.validate(this, messages);
-	}
+    /**
+     * Validation method that Spring webflow calls on state transition out of
+     * customerSearchStep.
+     */
+    public void validateCustomerSearchStep(ValidationContext context) {
+        MessageContext messages = context.getMessageContext();
+        validator.validate(this, messages);
+    }
 
-	/**
-	 * Validation method that Spring webflow calls on state transition out of
-	 * selectCustomerStep.
-	 */
-	public void validateSelectCustomerStep(ValidationContext context) {
-		MessageContext messages = context.getMessageContext();
-		validator.validate(this, messages);
-	}
+    /**
+     * Validation method that Spring webflow calls on state transition out of
+     * selectCustomerStep.
+     */
+    public void validateSelectCustomerStep(ValidationContext context) {
+        MessageContext messages = context.getMessageContext();
+        validator.validate(this, messages);
+    }
 }
