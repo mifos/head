@@ -30,7 +30,7 @@ import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
-import org.mifos.accounts.fees.persistence.FeePersistence;
+import org.mifos.accounts.fees.persistence.FeeDao;
 import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.MessageLookup;
@@ -116,6 +116,9 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
 
     @Autowired
     private LegacyMasterDao legacyMasterDao;
+
+    @Autowired
+    private FeeDao feeDao;
 
     @Autowired
     public GroupServiceFacadeWebTier(CustomerService customerService, OfficeDao officeDao,
@@ -265,7 +268,7 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
     private List<AccountFeesEntity> convertFeeViewsToAccountFeeEntities(List<ApplicableAccountFeeDto> feesToApply) {
         List<AccountFeesEntity> feesForCustomerAccount = new ArrayList<AccountFeesEntity>();
         for (ApplicableAccountFeeDto feeDto : feesToApply) {
-            FeeBO fee = new FeePersistence().getFee(feeDto.getFeeId().shortValue());
+            FeeBO fee = feeDao.findById(feeDto.getFeeId().shortValue());
             Double feeAmount = new LocalizationConverter().getDoubleValueForCurrentLocale(feeDto.getAmount());
 
             AccountBO nullReferenceForNow = null;

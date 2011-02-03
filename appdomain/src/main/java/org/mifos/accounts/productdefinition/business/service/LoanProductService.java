@@ -24,10 +24,11 @@ import java.util.List;
 
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
-import org.mifos.accounts.fees.persistence.FeePersistence;
+import org.mifos.accounts.fees.persistence.FeeDao;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.framework.business.service.Service;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -81,7 +82,7 @@ public class LoanProductService implements Service {
     public void getDefaultAndAdditionalFees(Short loanProductId, UserContext userContext, List<FeeDto> defaultFees,
             List<FeeDto> additionalFees) throws ServiceException, PersistenceException {
         LoanOfferingBO loanOffering = new LoanPrdPersistence().getLoanOffering(loanProductId);
-        List<FeeBO> fees = new FeePersistence().getAllAppllicableFeeForLoanCreation();
+        List<FeeBO> fees = ApplicationContextProvider.getBean(FeeDao.class).getAllAppllicableFeeForLoanCreation();
         for (FeeBO fee : fees) {
             if (!fee.isPeriodic()
                     || (MeetingBO.isMeetingMatched(fee.getFeeFrequency().getFeeMeetingFrequency(), loanOffering

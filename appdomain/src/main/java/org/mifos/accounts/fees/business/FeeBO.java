@@ -29,7 +29,6 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.mifos.accounts.fees.exceptions.FeeException;
-import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.accounts.fees.servicefacade.FeeDto;
 import org.mifos.accounts.fees.servicefacade.FeeFrequencyDto;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
@@ -41,6 +40,7 @@ import org.mifos.accounts.fees.util.helpers.FeeStatus;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.financial.servicefacade.GLCodeDto;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
@@ -205,7 +205,7 @@ public abstract class FeeBO extends AbstractBusinessObject {
     public void update() throws FeeException {
         try {
             setUpdateDetails();
-            getFeePersistence().createOrUpdate(this);
+            ApplicationContextProvider.getBean(LegacyAccountDao.class).createOrUpdate(this);
         } catch (PersistenceException e) {
             throw new FeeException(FeeConstants.FEE_UPDATE_ERROR, e);
         }
@@ -215,14 +215,10 @@ public abstract class FeeBO extends AbstractBusinessObject {
 
     public void save() throws FeeException {
         try {
-            getFeePersistence().createOrUpdate(this);
+            ApplicationContextProvider.getBean(LegacyAccountDao.class).createOrUpdate(this);
         } catch (PersistenceException he) {
             throw new FeeException(FeeConstants.FEE_CREATE_ERROR, he);
         }
-    }
-
-    protected FeePersistence getFeePersistence() {
-        return new FeePersistence();
     }
 
     public boolean isActive() {

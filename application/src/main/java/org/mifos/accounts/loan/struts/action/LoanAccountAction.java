@@ -36,7 +36,6 @@ import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
-import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.loan.business.CashFlowDataAdaptor;
 import org.mifos.accounts.loan.business.LoanBO;
@@ -702,7 +701,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         List<AccountFeesEntity> fees = new ArrayList<AccountFeesEntity>();
         List<FeeDto> accouontFees = loanActionForm.getFeesToApply();
         for (FeeDto accountFee : accouontFees) {
-            FeeBO feeEntity = new FeePersistence().getFee(Short.valueOf(accountFee.getFeeId()));
+            FeeBO feeEntity = feeDao.findById(Short.valueOf(accountFee.getFeeId()));
             Double feeAmount = new LocalizationConverter().getDoubleValueForCurrentLocale(accountFee.getAmount());
             fees.add(new AccountFeesEntity(null, feeEntity, feeAmount));
         }
@@ -1015,7 +1014,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             List<AccountFeesEntity> fees = new ArrayList<AccountFeesEntity>();
             List<FeeDto> accouontFees = loanAccountActionForm.getFeesToApply();
             for (FeeDto accountFee : accouontFees) {
-                FeeBO feeEntity = new FeePersistence().getFee(Short.valueOf(accountFee.getFeeId()));
+                FeeBO feeEntity = feeDao.findById(Short.valueOf(accountFee.getFeeId()));
                 Double feeAmount = new LocalizationConverter().getDoubleValueForCurrentLocale(accountFee.getAmount());
                 fees.add(new AccountFeesEntity(null, feeEntity, feeAmount));
             }
@@ -1295,7 +1294,9 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         LoanBO loan = getLoan(loanId);
         loan.updateDetails(userContext);
         Errors errors = loanBusinessService.computeExtraInterest(loan, viewDate);
-        if (errors.hasErrors()) loanAccountActionForm.resetScheduleViewDate();
+        if (errors.hasErrors()) {
+            loanAccountActionForm.resetScheduleViewDate();
+        }
 
         OriginalScheduleInfoDto originalSchedule = this.loanServiceFacade.retrieveOriginalLoanSchedule(loanId, locale);
 

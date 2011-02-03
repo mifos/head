@@ -50,7 +50,7 @@ import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
-import org.mifos.accounts.fees.persistence.FeePersistence;
+import org.mifos.accounts.fees.persistence.FeeDao;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.loan.business.LoanActivityEntity;
@@ -200,6 +200,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     private final ScheduleCalculatorAdaptor scheduleCalculatorAdaptor;
     private final LoanBusinessService loanBusinessService;
     private final HibernateTransactionHelper transactionHelper;
+
+    @Autowired
+    private FeeDao feeDao;
 
     @Autowired
     private LegacyMasterDao legacyMasterDao;
@@ -1334,7 +1337,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             List<AccountFeesEntity> fees = new ArrayList<AccountFeesEntity>();
             List<CreateAccountFeeDto> accouontFees = loanActionForm.getFees();
             for (CreateAccountFeeDto accountFee : accouontFees) {
-                FeeBO feeEntity = new FeePersistence().getFee(accountFee.getFeeId().shortValue());
+                FeeBO feeEntity = feeDao.findById(accountFee.getFeeId().shortValue());
                 Double feeAmount = new LocalizationConverter().getDoubleValueForCurrentLocale(accountFee.getAmount());
                 fees.add(new AccountFeesEntity(null, feeEntity, feeAmount));
             }
@@ -1434,7 +1437,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             List<AccountFeesEntity> fees = new ArrayList<AccountFeesEntity>();
             List<CreateAccountFeeDto> accouontFees = loanAccountInfoDto.getFees();
             for (CreateAccountFeeDto accountFee : accouontFees) {
-                FeeBO feeEntity = new FeePersistence().getFee(accountFee.getFeeId().shortValue());
+                FeeBO feeEntity = feeDao.findById(accountFee.getFeeId().shortValue());
                 Double feeAmount = new LocalizationConverter().getDoubleValueForCurrentLocale(accountFee.getAmount());
                 fees.add(new AccountFeesEntity(null, feeEntity, feeAmount));
             }
