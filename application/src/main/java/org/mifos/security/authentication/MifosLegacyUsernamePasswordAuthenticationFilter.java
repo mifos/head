@@ -126,7 +126,7 @@ public class MifosLegacyUsernamePasswordAuthenticationFilter extends UsernamePas
     }
 
     private boolean authenticationIsUnsuccessfulDueToCredentials(AuthenticationException failed) {
-        return failed == null;
+        return failed != null;
     }
 
     @Override
