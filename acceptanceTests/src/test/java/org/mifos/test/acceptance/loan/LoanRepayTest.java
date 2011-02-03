@@ -99,7 +99,7 @@ public class LoanRepayTest extends UiTestCaseBase {
         Assert.assertEquals(accountActivityPage.getLastInterestPaid(),"7.6");
         Assert.assertEquals(accountActivityPage.getLastFeePaid().trim(),"10.0");
         Assert.assertEquals(accountActivityPage.getLastPenaltyPaid(),"5.0");
-        Assert.assertEquals(accountActivityPage.getLastTotalPaid(),"1022.6");
+        Assert.assertEquals(accountActivityPage.getLastTotalPaid(),"1024.5");
         Assert.assertEquals(accountActivityPage.getRunningPrinciple(),"0.0");
         Assert.assertEquals(accountActivityPage.getRunningInterest(),"0.0");
         Assert.assertEquals(accountActivityPage.getRunningFees(),"0.0");
@@ -180,7 +180,7 @@ public class LoanRepayTest extends UiTestCaseBase {
         Assert.assertFalse(repayLoanPage.isWaiveInterestSelected());
         Assert.assertEquals(repayLoanPage.totalRepaymentAmount(), "1026.4");
         Assert.assertTrue(repayLoanPage.isTotalRepaymentAmountVisible());
-        Assert.assertEquals(repayLoanPage.waivedRepaymentAmount(), "1022.6");
+        Assert.assertEquals(repayLoanPage.waivedRepaymentAmount(), "1024.5");
         Assert.assertFalse(repayLoanPage.isWaivedRepaymentAmoutVisible());
         Assert.assertFalse(repayLoanPage.isWaiverInterestWarningVisible());
         Assert.assertEquals(repayLoanPage.isWaiverInterestSelectorVisible(), isWaiverInterestSelectorVisible);
