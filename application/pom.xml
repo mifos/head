@@ -100,11 +100,6 @@
             <artifactId>mifos-appdomain</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.mifos</groupId>
-            <artifactId>mifos-db</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>jsp-api</artifactId>
             <scope>provided</scope>
