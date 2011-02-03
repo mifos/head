@@ -11,6 +11,7 @@
     <import resource="services.xml" />
     <import resource="legacy-daos.xml" />
     <import resource="legacy-services.xml" />
+    <import resource="classpath:META-INF/spring/DbUpgradeContext.xml" />
 
     <bean id="applicationContextProvider" class="org.mifos.application.servicefacade.ApplicationContextProvider">
          <property name="applicationContextHolder" ref="applicationContextHolder" />
