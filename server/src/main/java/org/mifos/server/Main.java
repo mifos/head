@@ -30,12 +30,12 @@ package org.mifos.server;
  * @author Michael Vorburger
  */
 public class Main {
-	
-	// Very simply for now; could later read a conf/server.properties, set to tmp/, configure a logs/ etc.
-	
-	public static void main(String[] args) throws Exception {
-		final int port = Integer.parseInt(args[0]);
-		final ServerLauncher serverLauncher = new ServerLauncher(port);
-		serverLauncher.startServer();
-	}
+
+    // Very simply for now; could later read a conf/server.properties, set to tmp/, configure a logs/ etc.
+
+    public static void main(String[] args) throws Exception {
+        final int port = Integer.parseInt(args[0]);
+        final ServerLauncher serverLauncher = new ServerLauncher(port);
+        serverLauncher.startServer();
+    }
 }

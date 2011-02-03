@@ -30,8 +30,7 @@ import org.eclipse.jetty.webapp.WebAppContext;
 /**
  * FragmentFolderConfiguration.
  * 
- * Extension of FragmentConfiguration to support web-fragment.xml
- * in folders as well as inside JARs.
+ * Extension of FragmentConfiguration to support web-fragment.xml in folders as well as inside JARs.
  * 
  * @see FragmentConfiguration
  * 
@@ -41,23 +40,20 @@ import org.eclipse.jetty.webapp.WebAppContext;
  */
 public class FragmentFolderConfiguration extends FragmentConfiguration {
 
-	/**
-	 * Overriden method which, contrary to the original implementation in the parent class,
-	 * add directly the web-fragment.xml resource to the MetaData, instead of re-creating it
-	 * with a forced jar prefix.
-	 */
-	@Override
+    /**
+     * Overriden method which, contrary to the original implementation in the parent class, add directly the
+     * web-fragment.xml resource to the MetaData, instead of re-creating it with a forced jar prefix.
+     */
+    @Override
     @SuppressWarnings("unchecked")
-	public void findWebFragments(WebAppContext context, MetaData metaData) throws Exception {
-		final List<Resource> frags = (List<Resource>)context.getAttribute(FRAGMENT_RESOURCES);
-        if (frags!=null)
-        {
-            for (final Resource frag : frags)
-            {
-            	final Resource parentResource = Util.chop(frag.getURL(), "/META-INF/web-fragment.xml");
+    public void findWebFragments(WebAppContext context, MetaData metaData) throws Exception {
+        final List<Resource> frags = (List<Resource>) context.getAttribute(FRAGMENT_RESOURCES);
+        if (frags != null) {
+            for (final Resource frag : frags) {
+                final Resource parentResource = Util.chop(frag.getURL(), "/META-INF/web-fragment.xml");
                 metaData.addFragment(parentResource, frag);
             }
         }
-	}
+    }
 
 }
