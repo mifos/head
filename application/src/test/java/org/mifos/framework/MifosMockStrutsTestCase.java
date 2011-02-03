@@ -44,6 +44,7 @@ import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.domain.builders.MifosUserBuilder;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
+import org.mifos.framework.struts.ActionServlet30;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Flow;
@@ -92,6 +93,17 @@ public class MifosMockStrutsTestCase extends MifosIntegrationTestCase {
         mockStruts.setContextDirectory(webResourcesDirectory);
 
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/other-struts-config.xml");
+
+        /*
+         * Because there is no more old-style web.xml as strutstest expects, we simply hard-code our ActionServlet
+         * (actually our new ActionServlet30).
+         * 
+         * Because web.xml (now web-fragment.xml) isn't actually read, the ActionServlet is not initialized with servlet
+         * init-params config for all /WEB-INF/*-struts-config.xml listed in web(-fragment).xml, nor are the
+         * context-param read into config initParameter from web.xml by the MockStrutsTestCase. All Mifos *StrutsTest
+         * don't seem to need that though, and pass with this.
+         */
+        mockStruts.setActionServlet(new ActionServlet30());
 
         request = mockStruts.getMockRequest();
         context = mockStruts.getMockContext();

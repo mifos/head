@@ -43,6 +43,9 @@ import org.apache.struts.action.ActionServlet;
  * Servlet 3.0 API, the hard-coding can be removed and some commented out code
  * activated.)
  * 
+ * This class is declared in the web-fragment.xml (instead of the original ActionServlet),
+ * as well as used hard-coded in the MifosMockStrutsTestCase (see there for details).
+ * 
  * @author Michael Vorburger
  */
 public class ActionServlet30 extends ActionServlet {
