@@ -24,7 +24,7 @@ import org.mifos.test.acceptance.framework.AbstractPage;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
-import org.mifos.test.acceptance.questionnaire.ViewQuestionResponseDetailPage;
+import org.mifos.test.acceptance.framework.questionnaire.ViewQuestionResponseDetailPage;
 import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;

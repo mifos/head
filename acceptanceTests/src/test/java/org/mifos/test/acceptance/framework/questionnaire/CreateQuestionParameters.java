@@ -1,4 +1,4 @@
-package org.mifos.test.acceptance.questionnaire;
+package org.mifos.test.acceptance.framework.questionnaire;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,11 +79,11 @@ public class CreateQuestionParameters {
         return "Number".equals(getType());
     }
 
-    boolean questionHasAnswerChoices() {
+    public boolean questionHasAnswerChoices() {
         return "Multi Select".equals(getType()) || "Single Select".equals(getType());
     }
 
-    boolean questionHasSmartAnswerChoices() {
+    public boolean questionHasSmartAnswerChoices() {
         return "Smart Select".equals(getType());
     }
 }

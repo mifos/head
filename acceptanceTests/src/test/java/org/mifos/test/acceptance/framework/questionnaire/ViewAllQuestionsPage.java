@@ -1,4 +1,4 @@
-package org.mifos.test.acceptance.questionnaire;
+package org.mifos.test.acceptance.framework.questionnaire;
 
 import com.thoughtworks.selenium.Selenium;
 import org.mifos.test.acceptance.framework.MifosPage;

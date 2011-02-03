@@ -1,4 +1,4 @@
-package org.mifos.test.acceptance.questionnaire;
+package org.mifos.test.acceptance.framework.questionnaire;
 
 import java.util.List;
 

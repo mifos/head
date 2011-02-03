@@ -18,7 +18,7 @@
  *  explanation of the license and how it is applied.
  */
 
-package org.mifos.test.acceptance.questionnaire;
+package org.mifos.test.acceptance.framework.questionnaire;
 
 import java.util.ArrayList;
 import java.util.HashMap;

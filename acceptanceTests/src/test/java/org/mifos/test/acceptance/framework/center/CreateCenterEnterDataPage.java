@@ -21,7 +21,7 @@
 package org.mifos.test.acceptance.framework.center;
 
 import org.mifos.test.acceptance.framework.MifosPage;
-import org.mifos.test.acceptance.questionnaire.QuestionResponsePage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 
 import com.thoughtworks.selenium.Selenium;
 

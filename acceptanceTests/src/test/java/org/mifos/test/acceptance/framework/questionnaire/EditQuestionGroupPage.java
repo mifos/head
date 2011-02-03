@@ -18,31 +18,20 @@
  *  explanation of the license and how it is applied.
  */
 
-package org.mifos.test.acceptance.questionnaire;
+package org.mifos.test.acceptance.framework.questionnaire;
 
 import com.thoughtworks.selenium.Selenium;
-import org.mifos.test.acceptance.framework.MifosPage;
 
-import static org.junit.Assert.assertTrue;
+public class EditQuestionGroupPage extends CreateQuestionGroupRootPage {
 
-public class ViewQuestionResponseDetailPage extends MifosPage {
-    public ViewQuestionResponseDetailPage(Selenium selenium) {
+    public EditQuestionGroupPage(Selenium selenium) {
         super(selenium);
+        verifyPage("editQuestionGroup");
     }
 
-    public void verifyPage() {
-        super.verifyPage("display_question_group_responses");
-    }
-
-    public void verifyQuestionPresent(String question, String... answers) {
-        assertTrue(selenium.isTextPresent(question));
-        for (String answer : answers) {
-            assertTrue(selenium.isTextPresent(answer));
-        }
-    }
-
-    public void navigateToDetailsPage() {
-        selenium.click("_eventId_cancel");
+    public QuestionGroupDetailPage submit() {
+        selenium.click("id=_eventId_defineQuestionGroup");
         waitForPageToLoad();
+        return new QuestionGroupDetailPage(selenium);
     }
 }

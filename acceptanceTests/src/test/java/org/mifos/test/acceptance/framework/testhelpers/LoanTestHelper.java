@@ -78,8 +78,8 @@ import org.mifos.test.acceptance.framework.loanproduct.EditLoanProductPreviewPag
 import org.mifos.test.acceptance.framework.loanproduct.LoanProductDetailsPage;
 import org.mifos.test.acceptance.framework.loanproduct.ViewLoanProductsPage;
 import org.mifos.test.acceptance.framework.login.LoginPage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
-import org.mifos.test.acceptance.questionnaire.QuestionResponsePage;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 
 import com.thoughtworks.selenium.Selenium;

@@ -24,7 +24,7 @@ import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.center.CreateCenterEnterDataPage.SubmitFormParameters;
 import org.mifos.test.acceptance.framework.loan.AttachSurveyPage;
 import org.mifos.test.acceptance.framework.loan.ClosedAccountsPage;
-import org.mifos.test.acceptance.questionnaire.ViewQuestionResponseDetailPage;
+import org.mifos.test.acceptance.framework.questionnaire.ViewQuestionResponseDetailPage;
 import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
