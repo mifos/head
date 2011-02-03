@@ -64,8 +64,7 @@ import servletunit.struts.MockStrutsTestCase;
 
 /**
  * All classes extending this class must be names as <b>*StrutsTest.java</b> to support maven-surefire-plugin autofind
- * feature.
- * <br />
+ * feature. <br />
  * <br />
  */
 public class MifosMockStrutsTestCase extends MifosIntegrationTestCase {
@@ -79,21 +78,19 @@ public class MifosMockStrutsTestCase extends MifosIntegrationTestCase {
     private boolean strutsConfigSet = false;
 
     protected void setStrutsConfig() throws IOException {
-        /* 
-         * Add a pointer to the context directory so that the web.xml file can
-         * be located when running test cases using the junit plugin inside
-         * Eclipse.
+        /*
+         * Add a pointer to the context directory so that the web.xml file can be located when running test cases using
+         * the junit plugin inside Eclipse.
          * 
-         * Find the Web Resources dir (where WEB-INF lives) via Classpath, not
-         * hard-coded filenames.
+         * Find the Web Resources dir (where WEB-INF lives) via Classpath, not hard-coded filenames.
          */
-    	Resource r = new ClassPathResource("META-INF/resources/WEB-INF/struts-config.xml");
-    	if (!r.exists() || !r.isReadable()) {
-    		fail(r.getDescription() + " does not exist or is not readable");
-    	}
-    	File webResourcesDirectory = r.getFile().getParentFile().getParentFile();
+        Resource r = new ClassPathResource("META-INF/resources/WEB-INF/struts-config.xml");
+        if (!r.exists() || !r.isReadable()) {
+            fail(r.getDescription() + " does not exist or is not readable");
+        }
+        File webResourcesDirectory = r.getFile().getParentFile().getParentFile();
         mockStruts.setContextDirectory(webResourcesDirectory);
-    	
+
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/other-struts-config.xml");
 
         request = mockStruts.getMockRequest();
@@ -103,7 +100,6 @@ public class MifosMockStrutsTestCase extends MifosIntegrationTestCase {
     protected void setConfigFile(String pathname) {
         mockStruts.setConfigFile(pathname);
     }
-
 
     @Before
     public void beforeStrutsTest() throws Exception {
