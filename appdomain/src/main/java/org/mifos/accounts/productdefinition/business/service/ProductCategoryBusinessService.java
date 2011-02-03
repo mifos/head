@@ -26,6 +26,7 @@ import org.mifos.accounts.productdefinition.business.PrdCategoryStatusEntity;
 import org.mifos.accounts.productdefinition.business.ProductCategoryBO;
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
 import org.mifos.accounts.productdefinition.persistence.LegacyProductCategoryDao;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -64,7 +65,7 @@ public class ProductCategoryBusinessService implements BusinessService {
     }
 
     protected LegacyProductCategoryDao getProductCategoryPersistence() {
-        return new LegacyProductCategoryDao();
+        return ApplicationContextProvider.getBean(LegacyProductCategoryDao.class);
     }
 
     public List<PrdCategoryStatusEntity> getProductCategoryStatusList() throws ServiceException {

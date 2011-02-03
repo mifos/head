@@ -58,7 +58,7 @@ public class ProductMixBusinessService implements BusinessService {
 
     public List<ProductTypeEntity> getProductTypes() throws ServiceException {
         try {
-            return new LegacyProductCategoryDao().getProductTypes();
+            return ApplicationContextProvider.getBean(LegacyProductCategoryDao.class).getProductTypes();
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }

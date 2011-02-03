@@ -36,39 +36,39 @@ import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.security.util.UserContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @SuppressWarnings("unchecked")
 public class ProductCategoryPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
-    private LegacyProductCategoryDao productCategoryPersistence;
+    @Autowired
+    private LegacyProductCategoryDao legacyProductCategoryDao;
 
     private UserContext userContext = null;
 
     @Before
     public void setUp() throws Exception {
-        productCategoryPersistence = new LegacyProductCategoryDao();
     }
 
     @After
     public void tearDown() throws Exception {
-        productCategoryPersistence = null;
         userContext = null;
     }
 
     @Test
     public void testGetMaxPrdCategoryId() throws Exception {
-       Assert.assertEquals(Short.valueOf("2"), productCategoryPersistence.getMaxPrdCategoryId());
+       Assert.assertEquals(Short.valueOf("2"), legacyProductCategoryDao.getMaxPrdCategoryId());
     }
 
     @Test
     public void testGetProductCategory() throws Exception {
-       Assert.assertEquals(Integer.valueOf("0"), productCategoryPersistence.getProductCategory("product"));
+       Assert.assertEquals(Integer.valueOf("0"), legacyProductCategoryDao.getProductCategory("product"));
     }
 
 
     @Test
     public void testGetProductTypes() throws Exception {
-        List<ProductTypeEntity> productTypeList = productCategoryPersistence.getProductTypes();
+        List<ProductTypeEntity> productTypeList = legacyProductCategoryDao.getProductTypes();
        Assert.assertEquals(2, productTypeList.size());
         for (ProductTypeEntity productTypeEntity : productTypeList) {
             if (productTypeEntity.getType() == ProductType.LOAN) {
@@ -82,7 +82,7 @@ public class ProductCategoryPersistenceIntegrationTest extends MifosIntegrationT
 
     @Test
     public void testGetProductTypesByType() throws Exception {
-        ProductTypeEntity productTypeEntity = productCategoryPersistence.getProductTypes(ProductType.LOAN.getValue());
+        ProductTypeEntity productTypeEntity = legacyProductCategoryDao.getProductTypes(ProductType.LOAN.getValue());
         Assert.assertNotNull(productTypeEntity);
         if (productTypeEntity.getType() == ProductType.LOAN) {
            Assert.assertEquals("Loan", productTypeEntity.getName());
@@ -93,12 +93,12 @@ public class ProductCategoryPersistenceIntegrationTest extends MifosIntegrationT
 
     @Test
     public void testGetPrdCategory() throws Exception {
-       Assert.assertEquals(Integer.valueOf("0"), productCategoryPersistence.getProductCategory("product category",
+       Assert.assertEquals(Integer.valueOf("0"), legacyProductCategoryDao.getProductCategory("product category",
                 getProductCategory().get(0).getProductCategoryID()));
         ProductCategoryBO productCategoryBO = createProductCategory();
-       Assert.assertEquals(Integer.valueOf("0"), productCategoryPersistence.getProductCategory("product category",
+       Assert.assertEquals(Integer.valueOf("0"), legacyProductCategoryDao.getProductCategory("product category",
                 getProductCategory().get(2).getProductCategoryID()));
-       Assert.assertEquals(Integer.valueOf("1"), productCategoryPersistence.getProductCategory("product category",
+       Assert.assertEquals(Integer.valueOf("1"), legacyProductCategoryDao.getProductCategory("product category",
                 getProductCategory().get(1).getProductCategoryID()));
         deleteProductCategory(productCategoryBO);
     }
@@ -106,20 +106,20 @@ public class ProductCategoryPersistenceIntegrationTest extends MifosIntegrationT
     @Test
     public void testFindByGlobalNum() throws Exception {
         ProductCategoryBO productCategoryBO = createProductCategory();
-        Assert.assertNotNull(productCategoryPersistence.findByGlobalNum(productCategoryBO.getGlobalPrdCategoryNum()));
+        Assert.assertNotNull(legacyProductCategoryDao.findByGlobalNum(productCategoryBO.getGlobalPrdCategoryNum()));
         deleteProductCategory(productCategoryBO);
     }
 
     @Test
     public void testGetProductCategoryStatusList() throws Exception {
-       Assert.assertEquals(2, productCategoryPersistence.getProductCategoryStatusList().size());
+       Assert.assertEquals(2, legacyProductCategoryDao.getProductCategoryStatusList().size());
     }
 
     @Test
     public void testGetAllCategories() throws Exception {
-       Assert.assertEquals(2, productCategoryPersistence.getAllCategories().size());
+       Assert.assertEquals(2, legacyProductCategoryDao.getAllCategories().size());
         ProductCategoryBO productCategoryBO = createProductCategory();
-       Assert.assertEquals(3, productCategoryPersistence.getAllCategories().size());
+       Assert.assertEquals(3, legacyProductCategoryDao.getAllCategories().size());
         deleteProductCategory(productCategoryBO);
     }
 
@@ -137,7 +137,7 @@ public class ProductCategoryPersistenceIntegrationTest extends MifosIntegrationT
 
     private ProductCategoryBO createProductCategory() throws Exception {
         userContext = TestUtils.makeUser();
-        ProductCategoryBO productCategoryBO = new ProductCategoryBO(userContext, productCategoryPersistence
+        ProductCategoryBO productCategoryBO = new ProductCategoryBO(userContext, legacyProductCategoryDao
                 .getProductTypes().get(0), "product category", "created a category");
         productCategoryBO.save();
         StaticHibernateUtil.flushSession();

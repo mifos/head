@@ -31,5 +31,7 @@
      <bean id="selectionItemDao" class="org.mifos.reports.business.dao.SelectionItemDaoHibernate" />
      
      <bean id="legacyProductMixDao" class="org.mifos.accounts.productsmix.persistence.LegacyProductMixDao" />
+     
+     <bean id="legacyProductCategoryDao" class="org.mifos.accounts.productdefinition.persistence.LegacyProductCategoryDao" />
 
 </beans>

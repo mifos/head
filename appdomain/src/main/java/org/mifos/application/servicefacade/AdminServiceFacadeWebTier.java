@@ -168,6 +168,9 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     private LegacyAcceptedPaymentTypeDao legacyAcceptedPaymentTypeDao;
 
     @Autowired
+    private LegacyProductCategoryDao legacyProductCategoryDao;
+
+    @Autowired
     LegacyMasterDao legacyMasterDao;
 
     @Autowired
@@ -1294,7 +1297,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
             StringBuilder globalPrdOfferingNum = new StringBuilder();
             globalPrdOfferingNum.append(userContext.getBranchId());
             globalPrdOfferingNum.append("-");
-            Short maxPrdID = new LegacyProductCategoryDao().getMaxPrdCategoryId();
+            Short maxPrdID = legacyProductCategoryDao.getMaxPrdCategoryId();
             globalPrdOfferingNum.append(StringUtils.leftPad(String.valueOf(maxPrdID != null ? maxPrdID + 1
                     : ProductDefinitionConstants.DEFAULTMAX), 3, '0'));
             String globalNumber = globalPrdOfferingNum.toString();
