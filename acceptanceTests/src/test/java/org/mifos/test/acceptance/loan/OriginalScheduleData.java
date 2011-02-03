@@ -36,7 +36,7 @@ public class OriginalScheduleData {
             {"4", "08-Nov-2011", "200.7", "1.3", "100.0", "302.0"},
             {"5", "22-Nov-2011", "202.9", "1.6", "100.0", "304.4"}};
     public static final String[][] DEC_BAL_INT_RECALC_LOAN_EARLY_DISBURSAL_SCHEDULE_OFF = {{"Installment", "DueDate", "Principal", "Interest", "Fees", "Total (with Penalty)"},
-            {"1", "11-Oct-2011", "197.6", "4.4", "110.0", "322.0"}};
+            {"1", "11-Oct-2011", "201.5", "4.4", "110.0", "322.0"}};
     //    public static final String[][] DEC_BAL_INT_RECALC_LOAN_EARLY_DISBURSAL_SCHEDULE_OFF = {{"Installment", "DueDate", "Principal", "Interest", "Fees", "Total (with Penalty)"},
 //            {"1", "11-Oct-2011", "221.5", "0.5", "100.0", "322.0"},
 //            {"2", "18-Oct-2011", "199.0", "3.0", "100.0", "302.0"},
