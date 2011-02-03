@@ -87,7 +87,7 @@ public class MifosMockStrutsTestCase extends MifosIntegrationTestCase {
          * Find the Web Resources dir (where WEB-INF lives) via Classpath, not
          * hard-coded filenames.
          */
-    	Resource r = new ClassPathResource("/WEB-INF/struts-config.xml");
+    	Resource r = new ClassPathResource("META-INF/resources/WEB-INF/struts-config.xml");
     	if (!r.exists() || !r.isReadable()) {
     		fail(r.getDescription() + " does not exist or is not readable");
     	}
