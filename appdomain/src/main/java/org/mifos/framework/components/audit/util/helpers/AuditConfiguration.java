@@ -253,13 +253,15 @@ public class AuditConfiguration {
         return propertyMap;
     }
 
+    //FIXME I use reflect for invoking methods of Dao (Not type safe)
     private Map<String, String> callMethodToCreateValueMap(String methodName, Short localeId) throws SystemException {
         valueMap = new HashMap<String, String>();
         Method[] methods = LegacyAuditLookupValuesDao.class.getMethods();
         for (Method method : methods) {
             if (method.getName().equalsIgnoreCase(methodName)) {
                 try {
-                    valueMap = (Map<String, String>) method.invoke(new LegacyAuditLookupValuesDao(), new Object[] { localeId });
+                    LegacyAuditLookupValuesDao legacyAuditLookupValuesDao = ApplicationContextProvider.getBean(LegacyAuditLookupValuesDao.class);
+                    valueMap = (Map<String, String>) method.invoke(legacyAuditLookupValuesDao, new Object[] { localeId });
                 } catch (Exception e) {
                     throw new SystemException(e);
                 }

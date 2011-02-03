@@ -24,4 +24,6 @@
 
     <bean id="legacyClientDao" class="org.mifos.customers.client.persistence.LegacyClientDao" />
 
+    <bean id="legacyAuditLookupValuesDao" class="org.mifos.framework.components.audit.persistence.LegacyAuditLookupValuesDao" />
+
 </beans>
