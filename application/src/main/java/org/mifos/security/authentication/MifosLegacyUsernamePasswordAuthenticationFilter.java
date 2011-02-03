@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.servicefacade.NewLoginServiceFacade;
@@ -118,15 +119,15 @@ public class MifosLegacyUsernamePasswordAuthenticationFilter extends UsernamePas
         request.setAttribute("username", username);
         final String password = obtainPassword(request);
 
-        if (authenticationIsUnsuccessfulDueToCredentials(failed)) {
+        if (authenticationIsUnsuccessfulDueToInvalidPassword(failed, username)) {
             loginServiceFacade.login(username, password);
         }
 
         super.unsuccessfulAuthentication(request, response, failed);
     }
 
-    private boolean authenticationIsUnsuccessfulDueToCredentials(AuthenticationException failed) {
-        return failed != null;
+    private boolean authenticationIsUnsuccessfulDueToInvalidPassword(AuthenticationException failed, String username) {
+        return StringUtils.isNotBlank(username) && failed != null;
     }
 
     @Override
