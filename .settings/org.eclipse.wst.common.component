@@ -43,5 +43,6 @@
         <wb-resource deploy-path="/" source-path="/questionnaire/src/main/webapp/pages"/>
         <wb-resource deploy-path="/" source-path="/userInterface/src/main/webapp/pages"/>
         <wb-resource deploy-path="/" source-path="/application/src/test/resources"/>
+        <wb-resource deploy-path="/" source-path="/db/src/main/java"/>
     </wb-module>
 </project-modules>

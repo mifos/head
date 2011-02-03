@@ -41,6 +41,7 @@
 	<classpathentry excluding="**" kind="src" output="application/target/test-classes" path="application/src/test/resources"/>
 	<classpathentry kind="src" output="acceptanceTests/target/test-classes" path="acceptanceTests/src/test/java"/>
 	<classpathentry excluding="**" kind="src" output="acceptanceTests/target/test-classes" path="acceptanceTests/src/test/resources"/>
+	<classpathentry kind="src" path="db/src/main/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="con" path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER"/>
