@@ -27,9 +27,16 @@
           <div>&nbsp;</div>
 
           <ul style="list-style-type: decimal">
-              [#list upgrades as upgrade]
-                  <li>${upgrade?c}</li>
-              [/#list]
+              <table>
+                  [#list upgrades as upgrade]
+                  <tr>
+                      <td>${upgrade.id}</td>
+                      <td>${upgrade.author}</td>
+                      <td>${upgrade.dateExecuted?datetime}</td>
+                      <td>${upgrade.execType}</td>
+                  </tr>
+                  [/#list]
+              </table>
           </ul>
 
       </div>

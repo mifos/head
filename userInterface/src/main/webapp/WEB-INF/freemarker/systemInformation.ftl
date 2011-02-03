@@ -35,7 +35,6 @@
             <div><span class="width235pxfloatleft" id="sysinfo.text.databaseVendor">[@spring.message "systemAdministration.viewsysteminformation.databaseVendor" /]</span><span class="">${model.systemInformationDto.databaseVendor}/${model.systemInformationDto.databaseVersion}</span></div>
             <div><span class="width235pxfloatleft" id="sysinfo.text.driverName">[@spring.message "systemAdministration.viewsysteminformation.databaseDriverVersion" /]</span><span class="">${model.systemInformationDto.databaseDriverName}/${model.systemInformationDto.databaseDriverVersion}</span></div>
             <div><span class="width235pxfloatleft" id="sysinfo.text.applicationServerInfo">[@spring.message "systemAdministration.viewsysteminformation.applicationServer" /]</span><span class="">${model.systemInformationDto.applicationServerInfo}</span></div>
-            <div><span class="width235pxfloatleft" id="sysinfo.text.applicationVersion">[@spring.message "systemAdministration.viewsysteminformation.mifosDatabaseVersion" /]</span><span class=""> <a  href="appliedUpgrades.ftl">${model.systemInformationDto.applicationVersion}</a></span></div>
             <div><span class="width235pxfloatleft" id="sysinfo.text.releaseName">[@spring.message "systemAdministration.viewsysteminformation.releaseName" /]</span><span class="">${model.systemInformationDto.releaseName}</span></div>
             <div><span class="width235pxfloatleft" id="sysinfo.text.commitIdentifier">[@spring.message "systemAdministration.viewsysteminformation.commitIdentifier" /]</span><span class="">${model.systemInformationDto.commitIdentifier}</span></div>
             <div><span class="width235pxfloatleft" id="sysinfo.text.buildDate">[@spring.message "systemAdministration.viewsysteminformation.buildDate" /]</span><span class="">${model.systemInformationDto.buildDate}</span></div>
@@ -49,6 +48,7 @@
             <div><span class="width235pxfloatleft">[@spring.message "systemAdministration.viewsysteminformation.dateandTime" /]</span><span id="sysinfo.text.dateTime" class="">${model.systemInformationDto.dateTimeString}</span></div>
             <div><span class="width235pxfloatleft" id="sysinfo.text.dateTimeIso8601">[@spring.message "systemAdministration.viewsysteminformation.dateandTimeinISO8601format" /]</span><span class="">${model.systemInformationDto.dateTimeStringIso8601}</span></div>
             <div><span class="width235pxfloatleft" id="sysinfo.text.osUser">[@spring.message "systemAdministration.viewsysteminformation.osuser" /]</span><span class="">${model.systemInformationDto.osUser}</span></div>
+            <div><span class="width235pxfloatleft" id="sysinfo.text.applicationVersion"><a  href="appliedUpgrades.ftl">[@spring.message "systemAdministration.viewsysteminformation.appliedUpgrades" /]</a></span></div>
         </div>
     </div>
   </div>

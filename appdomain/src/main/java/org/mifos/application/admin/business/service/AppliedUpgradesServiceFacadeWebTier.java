@@ -1,24 +1,23 @@
 package org.mifos.application.admin.business.service;
 
-import java.util.List;
-
 import org.mifos.application.admin.servicefacade.AppliedUpgradesServiceFacade;
-import org.mifos.application.admin.system.persistence.AppliedUpgradesDao;
+import org.mifos.db.upgrade.ChangeSetInfo;
+import org.mifos.db.upgrade.DatabaseUpgradeSupport;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 public class AppliedUpgradesServiceFacadeWebTier implements AppliedUpgradesServiceFacade {
 
-    private AppliedUpgradesDao appliedUpgradeDao;
+    private DatabaseUpgradeSupport databaseUpgradeSupport;
 
     @Autowired
-    public AppliedUpgradesServiceFacadeWebTier(AppliedUpgradesDao appliedUpgradesDao){
-        this.appliedUpgradeDao = appliedUpgradesDao;
-
+    public AppliedUpgradesServiceFacadeWebTier(DatabaseUpgradeSupport databaseUpgradeSupport){
+        this.databaseUpgradeSupport = databaseUpgradeSupport;
     }
 
     @Override
-    public List<Integer> getAppliedUpgrades() {
-        return appliedUpgradeDao.getAppliedUpgrades();
+    public List<ChangeSetInfo> getAppliedUpgrades() {
+        return  databaseUpgradeSupport.listRanUpgrades();
     }
-
 }

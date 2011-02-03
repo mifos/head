@@ -27,6 +27,9 @@ import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.DatabaseException;
 import liquibase.exception.LiquibaseException;
+import org.mifos.core.MifosRuntimeException;
+import org.mifos.platform.util.CollectionUtils;
+import org.mifos.platform.util.Transformer;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
@@ -67,7 +70,16 @@ public class DatabaseUpgradeSupport {
         liquibase.update(EXPANSION);
     }
 
-    public List<RanChangeSet> listRanUpgrades() throws SQLException, DatabaseException {
-        return database.getRanChangeSetList();
+    public List<ChangeSetInfo> listRanUpgrades() {
+        try {
+            return CollectionUtils.collect(database.getRanChangeSetList(), new Transformer<RanChangeSet, ChangeSetInfo>() {
+                @Override
+                public ChangeSetInfo transform(RanChangeSet ranChangeSet) {
+                    return new ChangeSetInfo(ranChangeSet);
+                }
+            });
+        } catch (DatabaseException e) {
+            throw new MifosRuntimeException(e);
+        }
     }
 }

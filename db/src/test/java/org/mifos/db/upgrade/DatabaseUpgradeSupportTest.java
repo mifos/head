@@ -23,20 +23,16 @@ import liquibase.Liquibase;
 import liquibase.changelog.ChangeSet;
 import liquibase.changelog.RanChangeSet;
 import liquibase.database.Database;
-import liquibase.exception.DatabaseException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -88,11 +84,11 @@ public class DatabaseUpgradeSupportTest {
     }
 
     @Test
-    public void shouldRetrieveAllRanUpgrades() throws SQLException, DatabaseException {
+    public void shouldRetrieveAllRanUpgrades() throws Exception {
         RanChangeSet ranChangeSet1 = new RanChangeSet(changeSet1);
         RanChangeSet ranChangeSet2 = new RanChangeSet(changeSet2);
         when(database.getRanChangeSetList()).thenReturn(Arrays.asList(ranChangeSet1, ranChangeSet2));
-        List<RanChangeSet> changeSets = databaseUpgradeSupport.listRanUpgrades();
+        List<ChangeSetInfo> changeSets = databaseUpgradeSupport.listRanUpgrades();
         assertThat(changeSets, is(not(nullValue())));
         assertThat(changeSets.size(), is(2));
         verify(database).getRanChangeSetList();
