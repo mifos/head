@@ -31,6 +31,7 @@ import org.mifos.accounts.productdefinition.business.service.SavingsPrdBusinessS
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.reports.business.dto.CollectionSheetReportData;
 import org.mifos.reports.util.helpers.ReportUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 
 /**
@@ -38,12 +39,13 @@ import org.springframework.core.io.ClassPathResource;
  */
 public class BirtCollectionSheetReportService implements ICollectionSheetReportService {
 
-    private final BirtCollectionSheetService collectionSheetService;
+    private final BirtCollectionSheetService birtCollectionSheetService;
     private final ReportProductOfferingService reportProductOfferingService;
 
-    public BirtCollectionSheetReportService(final BirtCollectionSheetService collectionSheetService, final ReportProductOfferingService reportProductOfferingService) {
+    @Autowired
+    public BirtCollectionSheetReportService(final BirtCollectionSheetService birtCollectionSheetService, final ReportProductOfferingService reportProductOfferingService) {
         super();
-        this.collectionSheetService = collectionSheetService;
+        this.birtCollectionSheetService = birtCollectionSheetService;
         this.reportProductOfferingService = reportProductOfferingService;
     }
 
@@ -58,7 +60,7 @@ public class BirtCollectionSheetReportService implements ICollectionSheetReportS
             final Integer personnelId, final Integer centerId) throws ServiceException {
         try {
             Date meetingDateAsDate = ReportUtils.parseReportDate(meetingDate);
-            return collectionSheetService.extractReportData(branchId, meetingDateAsDate, personnelId, centerId);
+            return birtCollectionSheetService.extractReportData(branchId, meetingDateAsDate, personnelId, centerId);
         } catch (ParseException e) {
             throw new ServiceException(e);
         }

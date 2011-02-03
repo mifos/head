@@ -242,14 +242,6 @@
             <version>1.7R2</version>
         </dependency>
         <dependency>
-            <groupId>org.springmodules</groupId>
-            <artifactId>spring-modules-cache</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.sf.ehcache</groupId>
-            <artifactId>ehcache</artifactId>
-        </dependency>
-        <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
         </dependency>

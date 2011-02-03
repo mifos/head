@@ -40,7 +40,7 @@ import org.mifos.reports.cashconfirmationreport.BranchCashConfirmationReportBO;
 
 public class LegacyBranchCashConfirmationReportDao extends LegacyGenericDao {
 
-    public LegacyBranchCashConfirmationReportDao() {
+    private LegacyBranchCashConfirmationReportDao() {
         super();
     }
 

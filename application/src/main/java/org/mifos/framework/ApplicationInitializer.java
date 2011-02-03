@@ -123,8 +123,6 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
     public void init(ServletContextEvent servletContextEvent) {
         ServletContext servletContext = servletContextEvent.getServletContext();
         try {
-            // prevent ehcache "phone home"
-            System.setProperty("net.sf.ehcache.skipUpdateCheck", "true");
             // prevent quartz "phone home"
             System.setProperty("org.terracotta.quartz.skipUpdateCheck", "true");
 
@@ -384,10 +382,6 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         StaticHibernateUtil.shutdown();
         unregisterMySQLDriver();
         cancelMySQLStatement();
-
-        // kill ehcache threads
-        // (net.sf.ehcache.store.DiskStore$SpoolAndExpiryThread)
-        // hooked in as a listener in web.xml
         logger.info("destroyed context");
     }
 

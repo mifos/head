@@ -12,6 +12,7 @@
     <import resource="legacy-daos.xml" />
     <import resource="legacy-services.xml" />
     <import resource="classpath:META-INF/spring/DbUpgradeContext.xml" />
+    <import resource="classpath:org/mifos/config/reportParameterValidators.xml" />
 
     <bean id="applicationContextProvider" class="org.mifos.application.servicefacade.ApplicationContextProvider">
          <property name="applicationContextHolder" ref="applicationContextHolder" />

@@ -1,5 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+    
+    <bean id="birtCollectionSheetService" class="org.mifos.reports.business.service.BirtCollectionSheetService" />
+    <bean id="officeBusinessService" class="org.mifos.customers.office.business.service.OfficeBusinessService" />
+    <bean id="personnelBusinessService" class="org.mifos.customers.personnel.business.service.PersonnelBusinessService" />
+
+    <bean id="customerBusinessService" class="org.mifos.customers.business.service.CustomerBusinessService" />
+    <bean id="accountBusinessService" class="org.mifos.accounts.business.service.AccountBusinessService" />
+    <bean id="savingsPrdBusinessService" class="org.mifos.accounts.productdefinition.business.service.SavingsPrdBusinessService" />
+    <bean id="loanPrdBusinessService" class="org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService" />
+    <bean id="branchReportPersistence" class="org.mifos.reports.branchreport.persistence.BranchReportPersistence" />
+
+    <bean id="reportProductOfferingService" class="org.mifos.reports.business.service.ReportProductOfferingService">
+        <constructor-arg ref="loanPrdBusinessService" />
+        <constructor-arg ref="savingsPrdBusinessService" />
+        <constructor-arg>
+            <value>
+                classpath:org/mifos/reports/resources/CollectionSheetReport.properties
+            </value>
+        </constructor-arg>
+    </bean>
+
+    <bean id="cascadingReportParameterService" class="org.mifos.reports.business.service.CascadingReportParameterService" />
+
+    <bean id="defaultCollectionSheetReportService" class="org.mifos.reports.business.service.BirtCollectionSheetReportService" />
+
+    <bean id="collectionSheetReportService" factory-method="decorate" class="org.mifos.framework.business.service.ServiceDecoratorFactory">
+        <constructor-arg type="org.mifos.reports.business.service.ICollectionSheetReportService" ref="defaultCollectionSheetReportService" />
+        <constructor-arg>
+            <bean
+                class="org.mifos.framework.components.logger.ServiceActivityLogger">
+                <constructor-arg value="CollectionSheetReportService" />
+            </bean>
+        </constructor-arg>
+    </bean>
+
+    <bean name="branchReportConfigService" class="org.mifos.reports.business.service.BranchReportConfigService">
+        <constructor-arg>
+            <value>
+                classpath:org/mifos/reports/resources/ProgressReport.properties
+            </value>
+        </constructor-arg>
+    </bean>
+
+    <bean name="hoCashConfirmationConfigService" class="org.mifos.reports.business.service.HOCashConfirmationConfigService">
+        <constructor-arg>
+            <value>
+                classpath:org/mifos/reports/resources/HOCashConfirmationReport.properties
+            </value>
+        </constructor-arg>
+    </bean>
+
+    <bean name="cashConfirmationConfigService" class="org.mifos.reports.business.service.CashConfirmationConfigService">
+        <constructor-arg>
+            <value>
+                classpath:org/mifos/reports/resources/BranchCashConfirmationReport.properties
+            </value>
+        </constructor-arg>
+    </bean>
+
+    <bean name="branchReportService" class="org.mifos.reports.business.service.BranchReportService" />
+
+    <bean name="branchCashConfirmationReportService" class="org.mifos.reports.business.service.BranchCashConfirmationReportService" />
 
 </beans>
