@@ -71,7 +71,6 @@ import org.mifos.test.acceptance.framework.loan.RepayLoanConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.RepayLoanPage;
 import org.mifos.test.acceptance.framework.loan.RepayLoanParameters;
 import org.mifos.test.acceptance.framework.loan.TransactionHistoryPage;
-import org.mifos.test.acceptance.framework.loan.ViewInstallmentDetailsPage;
 import org.mifos.test.acceptance.framework.loan.ViewLoanStatusHistoryPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
 import org.mifos.test.acceptance.framework.loanproduct.EditLoanProductPage;
@@ -82,6 +81,7 @@ import org.mifos.test.acceptance.framework.login.LoginPage;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
 import org.mifos.test.acceptance.questionnaire.QuestionResponsePage;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
+import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -831,16 +831,17 @@ public class LoanTestHelper {
         return loanAccountPage;
     }
 
-    public ViewInstallmentDetailsPage reviewInstallments(CreateLoanAccountSearchParameters searchParameters, CreateLoanAccountSubmitParameters submitAccountParameters) {
-        return navigateToLoanAccountEntryPage(searchParameters).createLoanAccountAndReviewInstallments(submitAccountParameters);
+    public void verifyRepaymentScheduleForHolidays(String... dates){
+        int i=3;
+        for(String date : dates)
+        {
+            verifyCellValueOfInstallments(i++, 2, date);
+            //Assert.assertEquals(selenium.getTable("installments.tbody." + Integer.toString(i++) + ".2"), date);
+        }
     }
 
-    public ViewInstallmentDetailsPage reviewInstallmentsForHolidaySameDayRule(CreateLoanAccountSearchParameters searchParameters, CreateLoanAccountSubmitParameters submitAccountParameters) {
-        return navigateToLoanAccountEntryPage(searchParameters).createLoanAccountAndReviewInstallmentsForSameDayRule(submitAccountParameters);
-    }
-
-    public ViewInstallmentDetailsPage reviewInstallmentsForHolidayNextWorkingDayRule(CreateLoanAccountSearchParameters searchParameters, CreateLoanAccountSubmitParameters submitAccountParameters) {
-        return navigateToLoanAccountEntryPage(searchParameters).createLoanAccountAndReviewInstallmentsForNextWorkingRule(submitAccountParameters);
+    private void verifyCellValueOfInstallments(int row, int column, String value) {
+        Assert.assertEquals(selenium.getText("//table[@id='installments']//tr[" + (row + 1) + "]/td[" + column + "]"), value);
     }
 
     public void verifyOneTimeFee(String expectedFee, int feeIndex) {

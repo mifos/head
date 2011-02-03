@@ -20,6 +20,9 @@
 
 package org.mifos.test.acceptance.holiday;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.dbunit.dataset.IDataSet;
 import org.joda.time.DateTime;
 import org.mifos.framework.util.DbUnitUtilities;
@@ -33,7 +36,10 @@ import org.mifos.test.acceptance.framework.holiday.ViewHolidaysPage;
 import org.mifos.test.acceptance.framework.holiday.CreateHolidayEntryPage.CreateHolidaySubmitParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameters;
+import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
+import org.mifos.test.acceptance.framework.testhelpers.BatchJobHelper;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
+import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +55,7 @@ import org.testng.annotations.Test;
 public class HolidayTest extends UiTestCaseBase {
 
     private LoanTestHelper loanTestHelper;
+    private NavigationHelper navigationHelper;
 
     @Autowired
     private DriverManagerDataSource dataSource;
@@ -67,13 +74,13 @@ public class HolidayTest extends UiTestCaseBase {
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
+        navigationHelper = new NavigationHelper(selenium);
         loanTestHelper = new LoanTestHelper(selenium);
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         DateTime targetTime = new DateTime(2009,2,23,2,0,0,0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
 
         appLauncher = new AppLauncher(selenium);
-
     }
 
     @AfterMethod
@@ -137,7 +144,8 @@ public class HolidayTest extends UiTestCaseBase {
         submitAccountParameters.setYy("2011");
 
         //Then
-        loanTestHelper.reviewInstallments(searchParameters, submitAccountParameters);
+        loanTestHelper.createLoanAccount(searchParameters, submitAccountParameters).navigateToRepaymentSchedulePage();
+        loanTestHelper.verifyRepaymentScheduleForHolidays("21-Feb-2011","21-Feb-2011","21-Feb-2011","28-Feb-2011" ,"21-Mar-2011","21-Mar-2011","21-Mar-2011");
     }
 
     //http://mifosforge.jira.com/browse/MIFOSTEST-78
@@ -166,9 +174,9 @@ public class HolidayTest extends UiTestCaseBase {
         submitAccountParameters.setDd("31");
         submitAccountParameters.setMm("01");
         submitAccountParameters.setYy("2011");
-
         //Then
-        loanTestHelper.reviewInstallmentsForHolidaySameDayRule(searchParameters, submitAccountParameters);
+        loanTestHelper.createLoanAccount(searchParameters, submitAccountParameters).navigateToRepaymentSchedulePage();
+        loanTestHelper.verifyRepaymentScheduleForHolidays("07-Feb-2011","14-Feb-2011","21-Feb-2011","28-Feb-2011", "07-Mar-2011","14-Mar-2011","21-Mar-2011");
     }
 
     //http://mifosforge.jira.com/browse/MIFOSTEST-81
@@ -197,9 +205,43 @@ public class HolidayTest extends UiTestCaseBase {
         submitAccountParameters.setDd("31");
         submitAccountParameters.setMm("01");
         submitAccountParameters.setYy("2011");
-
         //Then
-        loanTestHelper.reviewInstallmentsForHolidayNextWorkingDayRule(searchParameters, submitAccountParameters);
+        loanTestHelper.createLoanAccount(searchParameters, submitAccountParameters).navigateToRepaymentSchedulePage();
+        loanTestHelper.verifyRepaymentScheduleForHolidays("15-Feb-2011","15-Feb-2011","21-Feb-2011","28-Feb-2011" ,"15-Mar-2011","15-Mar-2011","21-Mar-2011");
+    }
+
+    //http://mifosforge.jira.com/browse/MIFOSTEST-75
+    public void holidaysRepaymentRuleWithBatchJobs() throws Exception {
+        //Given
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTime targetTime = new DateTime(2011,1,31,13,0,0,0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
+        //When
+        CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
+        searchParameters.setSearchString("Stu1232993852651 Client1232993852651");
+        searchParameters.setLoanProduct("MyLoanProduct1232993826860");
+
+        CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
+        submitAccountParameters.setAmount("1423.0");
+        submitAccountParameters.setGracePeriodTypeNone(true);
+        submitAccountParameters.setDd("31");
+        submitAccountParameters.setMm("01");
+        submitAccountParameters.setYy("2011");
+        LoanAccountPage page =  loanTestHelper.createLoanAccount(searchParameters, submitAccountParameters);
+        String lid = page.getAccountId();
+        page.navigateToRepaymentSchedulePage();
+        loanTestHelper.verifyRepaymentScheduleForHolidays("07-Feb-2011","14-Feb-2011","21-Feb-2011","28-Feb-2011", "07-Mar-2011","14-Mar-2011","21-Mar-2011");
+        createHolidayForInstallments(getHolidayParametersForNextMeeting());
+        createHolidayForInstallments(getHolidayParametersForNextMeeting2());
+        //Then
+        List<String> jobsToRun = new ArrayList<String>();
+        jobsToRun.add("ApplyHolidayChangesTaskJob");
+        new BatchJobHelper(selenium).runSomeBatchJobs(jobsToRun);
+
+        navigationHelper.navigateToHomePage();
+        navigationHelper.navigateToLoanAccountPage(lid).navigateToRepaymentSchedulePage();
+        loanTestHelper.verifyRepaymentScheduleForHolidays("21-Feb-2011","21-Feb-2011","21-Feb-2011","28-Feb-2011" ,"21-Mar-2011","21-Mar-2011","21-Mar-2011");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -256,7 +298,7 @@ public class HolidayTest extends UiTestCaseBase {
         params.setSelectedOfficeIds("1");
         return params;
     }
-//
+
     private CreateHolidaySubmitParameters getHolidayParametersForNextMeeting2() {
         CreateHolidaySubmitParameters params = new CreateHolidayEntryPage.CreateHolidaySubmitParameters();
         params.setName("Holiday Test2");
