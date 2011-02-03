@@ -80,10 +80,6 @@ public class LoanRepayTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
-    /**
-     * FIXME - disabling to ask about functionality
-     */
-    @Test(enabled=false)
     public void repay() {
         chargeFeeAndPenalty();
         loanTestHelper.disburseLoan(loanId, getDisburseLoanParameters());

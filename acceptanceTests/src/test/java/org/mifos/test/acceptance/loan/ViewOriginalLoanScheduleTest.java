@@ -94,11 +94,8 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
         dataSetup.createHoliday(systemDateTime.plusDays(36), null, CreateHolidaySubmitParameters.NEXT_MEETING_OR_REPAYMENT);//15/11/2011
     }
 
-    /**
-     * FIXME - disabling to ask about functionality
-     */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
-    @Test(enabled=false)
+    @Test(enabled=true)
     public void verifyForFlatLoanEarlyDisbursal() throws Exception {
         int interestType = DefineNewLoanProductPage.SubmitFormParameters.FLAT;
         applicationDatabaseOperation.updateLSIM(0);
@@ -120,10 +117,7 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
         verifyLoanAccountOriginalSchedule(systemDateTime.plusDays(1), systemDateTime, OriginalScheduleData.VARIABLE_LOAN_EARLY_DISBURSAL_SCHEDULE, false, systemDateTime.plusDays(5));
     }
 
-    /**
-     * FIXME - disabling to ask about functionality
-     */
-    @Test(enabled=false)
+    @Test(enabled=true)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyForVariableInstallmentLoanLateDisbursal() throws Exception {
         int interestType = DefineNewLoanProductPage.SubmitFormParameters.DECLINING_BALANCE;
@@ -136,10 +130,7 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
         verifyLoanAccountOriginalSchedule(systemDateTime, systemDateTime.plusDays(1), OriginalScheduleData.VARIABLE_LOAN_LATE_DISBURSAL_SCHEDULE, false, systemDateTime.plusDays(15));
     }
 
-    /**
-     * FIXME - disabling to ask about functionality
-     */
-    @Test(enabled=false)
+    @Test(enabled=true)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyForDecBalIntReCalcLoanEarlyDisbursalLSIMOn() throws Exception {
         int interestType = DefineNewLoanProductPage.SubmitFormParameters.DECLINING_BALANCE_INTEREST_RECALCULATION;
@@ -158,11 +149,7 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
         loanTestHelper.applyCharge(accountId, feeParameters);
         verifyOriginalSchedule(loanSchedule);
     }
-
-    /**
-     * FIXME - disabling to ask about functionality
-     */
-    @Test(enabled=false)
+    @Test(enabled=true)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyForDecBalIntReCalcLoanEarlyDisbursalLSIMOff() throws Exception {
         int interestType = DefineNewLoanProductPage.SubmitFormParameters.DECLINING_BALANCE_INTEREST_RECALCULATION;
