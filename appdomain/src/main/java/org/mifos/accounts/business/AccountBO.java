@@ -117,7 +117,7 @@ public class AccountBO extends AbstractBusinessObject {
      */
     private final Set<AccountFeesEntity> accountFees;
     private final Set<AccountActionDateEntity> accountActionDates;
-    private List<AccountPaymentEntity> accountPayments;
+    protected List<AccountPaymentEntity> accountPayments;
     private Set<AccountCustomFieldEntity> accountCustomFields;
 
     private LegacyAccountDao legacyAccountDao = null;
