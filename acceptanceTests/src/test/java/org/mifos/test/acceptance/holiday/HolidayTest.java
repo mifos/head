@@ -227,6 +227,33 @@ public class HolidayTest extends UiTestCaseBase {
         loanTestHelper.verifyRepaymentScheduleForHolidays("07-Feb-2011","14-Feb-2011","21-Feb-2011","28-Feb-2011", "07-Mar-2011","14-Mar-2011","21-Mar-2011");
     }
 
+    //http://mifosforge.jira.com/browse/MIFOSTEST-76
+    public void holidaysRepaymentRuleNextWorkingDayWithBatchJobs() throws Exception {
+        //Given
+        setDate();
+        //When
+        CreateLoanAccountSearchParameters searchParameters=setSearchParameters();
+        CreateLoanAccountSubmitParameters submitAccountParameters = setSubmitParameters();
+
+        LoanAccountPage page =  loanTestHelper.createLoanAccount(searchParameters, submitAccountParameters);
+        String lid = page.getAccountId();
+        page.navigateToRepaymentSchedulePage();
+        loanTestHelper.verifyRepaymentScheduleForHolidays("07-Feb-2011","14-Feb-2011","21-Feb-2011","28-Feb-2011", "07-Mar-2011","14-Mar-2011","21-Mar-2011");
+
+        CreateHolidaySubmitParameters param1 = getHolidayParametersForNextMeeting();
+        CreateHolidaySubmitParameters param2 = getHolidayParametersForNextMeeting2();
+        param1.setRepaymentRule(CreateHolidaySubmitParameters.NEXT_WORKING_DAY);
+        param2.setRepaymentRule(CreateHolidaySubmitParameters.NEXT_WORKING_DAY);
+
+        createHolidayForInstallments(param1);
+        createHolidayForInstallments(param2);
+        //Then
+        runBatchJobsForHoliday();
+
+        navigationHelper.navigateToLoanAccountPage(lid).navigateToRepaymentSchedulePage();
+        loanTestHelper.verifyRepaymentScheduleForHolidays("15-Feb-2011","15-Feb-2011","21-Feb-2011","28-Feb-2011" ,"15-Mar-2011","15-Mar-2011","21-Mar-2011");
+    }
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     private void verifyHolidayData(String resultDataSetFile) throws Exception {
         IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromDataSetDirectoryFile(resultDataSetFile);
