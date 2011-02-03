@@ -32,6 +32,7 @@ import org.mifos.accounts.productdefinition.persistence.ProductCategoryPersisten
 import org.mifos.accounts.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.accounts.productsmix.business.ProductMixBO;
 import org.mifos.accounts.productsmix.persistence.LegacyProductMixDao;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -40,14 +41,14 @@ import org.mifos.security.util.UserContext;
 
 public class ProductMixBusinessService implements BusinessService {
 
-    private final LegacyProductMixDao productMixPersistence;
-
-    public ProductMixBusinessService(LegacyProductMixDao productMixPersistence) {
-        this.productMixPersistence = productMixPersistence;
-    }
+    private LegacyProductMixDao legacyProductMixDao;
 
     public ProductMixBusinessService() {
-        this(new LegacyProductMixDao());
+        this(ApplicationContextProvider.getBean(LegacyProductMixDao.class));
+    }
+
+    public ProductMixBusinessService(LegacyProductMixDao legacyProductMixDao) {
+        this.legacyProductMixDao = legacyProductMixDao;
     }
 
     @Override
@@ -179,7 +180,7 @@ public class ProductMixBusinessService implements BusinessService {
 
     public List<ProductMixBO> getAllProductMix() throws ServiceException {
         try {
-            return new LegacyProductMixDao().getAllProductMix();
+            return legacyProductMixDao.getAllProductMix();
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
@@ -196,7 +197,7 @@ public class ProductMixBusinessService implements BusinessService {
     public ProductMixBO getPrdOfferingMixByPrdOfferingID(Short productID, Short notAllowedProductID)
             throws ServiceException {
         try {
-            return new LegacyProductMixDao().getPrdOfferingMixByPrdOfferingID(productID, notAllowedProductID);
+            return legacyProductMixDao.getPrdOfferingMixByPrdOfferingID(productID, notAllowedProductID);
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
@@ -204,7 +205,7 @@ public class ProductMixBusinessService implements BusinessService {
 
     public List<ProductMixBO> getProductMixByID() throws ServiceException {
         try {
-            return new LegacyProductMixDao().getAllProductMix();
+            return legacyProductMixDao.getAllProductMix();
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
@@ -212,7 +213,7 @@ public class ProductMixBusinessService implements BusinessService {
 
     public List<PrdOfferingBO> getNotAllowedProducts(Short prdofferingId) throws ServiceException {
         try {
-            return new LegacyProductMixDao().getNotAllowedProducts(prdofferingId);
+            return legacyProductMixDao.getNotAllowedProducts(prdofferingId);
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
@@ -220,7 +221,7 @@ public class ProductMixBusinessService implements BusinessService {
 
     public boolean canProductsCoExist(LoanOfferingBO offeringBO, LoanOfferingBO offeringBO2)
             throws PersistenceException {
-        return productMixPersistence.doesPrdOfferingsCanCoexist(offeringBO.getPrdOfferingId(), offeringBO2
+        return legacyProductMixDao.doesPrdOfferingsCanCoexist(offeringBO.getPrdOfferingId(), offeringBO2
                 .getPrdOfferingId());
     }
 

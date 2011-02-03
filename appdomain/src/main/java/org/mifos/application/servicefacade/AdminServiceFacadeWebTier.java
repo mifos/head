@@ -171,6 +171,9 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     LegacyMasterDao legacyMasterDao;
 
     @Autowired
+    LegacyProductMixDao legacyProductMixDao;
+
+    @Autowired
     LegacyFieldConfigurationDao legacyFieldConfigurationDao;
 
     @Autowired
@@ -1436,14 +1439,14 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
 
             for (ProductMixBO oldNotAllowedProduct : product.getCollectionProductMix() ) {
 
-                ProductMixBO productMix = new LegacyProductMixDao().getPrdOfferingMixByPrdOfferingID(productId
+                ProductMixBO productMix = legacyProductMixDao.getPrdOfferingMixByPrdOfferingID(productId
                         .shortValue(), oldNotAllowedProduct.getPrdOfferingNotAllowedId().getPrdOfferingId());
 
                 if (null != productMix) {
                     applicationConfigurationDao.delete(productMix);
                     StaticHibernateUtil.flushSession();
                 }
-                ProductMixBO alternateproductmix = new LegacyProductMixDao().getPrdOfferingMixByPrdOfferingID(
+                ProductMixBO alternateproductmix = legacyProductMixDao.getPrdOfferingMixByPrdOfferingID(
                         oldNotAllowedProduct.getPrdOfferingNotAllowedId().getPrdOfferingId(), productId.shortValue());
 
                 if (null != alternateproductmix) {
