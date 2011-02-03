@@ -21,7 +21,10 @@
 
 [#-- FIXME: these macros are copied from newblueprintmacros.ftl. They've been moved here for better organization. Delete from newblueprintmacros.ftl. --]
 
-[#-- TODO: add documentation --]
+[#-- 
+Creates a simple breadcrumb from a List of BreadCrumbLinks object. The list can be 
+created using the output of AdminBreadcrumbBuild. 
+--]
 [#macro crumbs breadcrumbs]
 <div class="breadcrumb">
 	    [#list breadcrumbs as messages]
@@ -32,7 +35,10 @@
  </div>
 [/#macro]
 
-[#-- TODO: add documentation --]
+[#-- 
+Creates a simple breadcrumb from a Hash (label -> URL). FTL calling this macro is 
+responsible for populating the hash.
+--]
 [#macro crumbpairs breadcrumbs lastEntryIsText="true"]
 <div class="breadcrumb">
 	    [#list breadcrumbs?keys as text]
@@ -45,12 +51,12 @@
  </div>
 [/#macro]
 
-[#-- TODO: add documentation --]
+[#-- Create a simple (1 item) admin bread crumb trail. --]
 [#macro crumb url]
     <div class="breadcrumb"><a href="AdminAction.do?method=load">[@spring.message "tab.Admin"/]</a>&nbsp;/&nbsp;<span class="fontBold">[@spring.message "${url}"/]</span></div>
 [/#macro]
 
-[#-- TODO: add documentation --]
+[#-- See crumbpairs macro --]
 [#macro editPageBreadcrumbs breadcrumbs]
 <div class="breadcrumb">
 	    [#list breadcrumbs?keys as text]  			
