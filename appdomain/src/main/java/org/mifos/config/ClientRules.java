@@ -24,8 +24,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.business.MifosConfigurationManager;
@@ -35,6 +33,8 @@ import org.mifos.config.util.helpers.ConfigConstants;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.Constants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ClientRules {
     public static final String ClientRulesCenterHierarchyExists = "ClientRules.CenterHierarchyExists";

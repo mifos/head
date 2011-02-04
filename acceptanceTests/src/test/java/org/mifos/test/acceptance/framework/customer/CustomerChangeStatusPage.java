@@ -38,7 +38,7 @@ public class CustomerChangeStatusPage extends MifosPage {
         if(customerStatusParameters.getGroupStatus()!=null)
         {
             selenium.check("name=newStatusId value=" + customerStatusParameters.getGroupStatus().getId());
-            selenium.fireEvent("name=newStatusId", "change");
+            selenium.fireEvent("name=newStatusId value=" + customerStatusParameters.getGroupStatus().getId(), "click");
             if(customerStatusParameters.getGroupStatus().equals(GroupStatus.CANCELLED)){
                 selenium.select("customerchangeStatus.input.cancel_reason", "value="+customerStatusParameters.getCancelReason().getId());
             }

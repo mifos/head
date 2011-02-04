@@ -28,7 +28,7 @@ public class CreateClientPreviewDataPage extends MifosPage {
 
     public CreateClientPreviewDataPage(Selenium selenium) {
         super(selenium);
-        this.verifyPage("preview_ClientDetails");
+        this.verifyPage("PreviewClientPersonalInfo");
     }
 
     public CreateClientConfirmationPage submit() {
