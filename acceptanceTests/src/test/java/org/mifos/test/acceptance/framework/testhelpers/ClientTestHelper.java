@@ -23,6 +23,7 @@ package org.mifos.test.acceptance.framework.testhelpers;
 import java.util.Map;
 
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 import org.mifos.test.acceptance.framework.center.MeetingParameters;
 import org.mifos.test.acceptance.framework.client.ChooseOfficePage;
 import org.mifos.test.acceptance.framework.client.ClientStatus;
@@ -38,7 +39,6 @@ import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPreviewP
 import org.mifos.test.acceptance.framework.group.EditCustomerStatusParameters;
 import org.mifos.test.acceptance.framework.group.GroupSearchPage;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
-import org.mifos.test.acceptance.questionnaire.QuestionResponsePage;
 import org.mifos.test.acceptance.util.StringUtil;
 
 import com.thoughtworks.selenium.Selenium;
