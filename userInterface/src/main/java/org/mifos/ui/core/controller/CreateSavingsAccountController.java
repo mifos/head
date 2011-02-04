@@ -45,6 +45,16 @@ public class CreateSavingsAccountController {
     private static final short ACCOUNT_STATE_PENDNG_APPROVAL = 14;
     private static final short ACCOUNT_STATE_ACTIVE = 16;
 
+    // FIXME code smell! copied from SavingsType. SavingsType should be made
+    // publicly available
+    private static final int MANDATORY_DEPOSIT = 1;
+    private static final int VOLUNTARY_DEPOSIT = 2;
+
+    // FIXME same problem as above
+    private static final int RECURRENCE_WEEKLY = 1;
+    private static final int RECURRENCE_MONTHLY = 2;
+    private static final int RECURRENCE_DAILY = 3;
+
     @Autowired
     private SavingsServiceFacade savingsServiceFacade;
 
@@ -77,7 +87,7 @@ public class CreateSavingsAccountController {
         Integer productId = savingsProduct.getProductDetails().getId();
         Integer customerId = formBean.getCustomer().getCustomerId();
         // FIXME - code smell! use constants
-        String depositAmount = savingsProduct.getDepositType() == 1 ? formBean
+        String depositAmount = savingsProduct.getDepositType() == MANDATORY_DEPOSIT ? formBean
                 .getMandatoryDepositAmount() : formBean
                 .getVoluntaryDepositAmount();
         if ("".equals(depositAmount)) {
@@ -164,8 +174,10 @@ public class CreateSavingsAccountController {
      */
     private Map<String, String> getRecurrenceFrequencies() {
         Map<String, String> map = new HashMap<String, String>(3);
-        map.put("2", "createSavingsAccount.recurrenceFrequency.month"); // monthly
-        map.put("3", "createSavingsAccount.recurrenceFrequency.day"); // daily
+        map.put(Integer.toString(RECURRENCE_MONTHLY),
+                "createSavingsAccount.recurrenceFrequency.month");
+        map.put(Integer.toString(RECURRENCE_DAILY),
+                "createSavingsAccount.recurrenceFrequency.day");
         return map;
     }
 
@@ -176,9 +188,12 @@ public class CreateSavingsAccountController {
      */
     private Map<String, String> getRecurrenceTypes() {
         Map<String, String> map = new HashMap<String, String>(3);
-        map.put("1", "createSavingsAccount.recurrenceType.weekly"); // weekly
-        map.put("2", "createSavingsAccount.recurrenceType.monthly"); // monthly
-        map.put("3", "createSavingsAccount.recurrenceType.daily"); // daily
+        map.put(Integer.toString(RECURRENCE_WEEKLY),
+                "createSavingsAccount.recurrenceType.weekly");
+        map.put(Integer.toString(RECURRENCE_MONTHLY),
+                "createSavingsAccount.recurrenceType.monthly");
+        map.put(Integer.toString(RECURRENCE_DAILY),
+                "createSavingsAccount.recurrenceType.daily");
         return map;
     }
 
@@ -189,8 +204,10 @@ public class CreateSavingsAccountController {
      */
     private Map<String, String> getSavingsTypes() {
         Map<String, String> map = new HashMap<String, String>(2);
-        map.put("1", "createSavingsAccount.savingsType.mandatory"); // mandatory
-        map.put("2", "createSavingsAccount.savingsType.voluntary"); // voluntary
+        map.put(Integer.toString(MANDATORY_DEPOSIT),
+                "createSavingsAccount.savingsType.mandatory");
+        map.put(Integer.toString(VOLUNTARY_DEPOSIT),
+                "createSavingsAccount.savingsType.voluntary");
         return map;
     }
 }
