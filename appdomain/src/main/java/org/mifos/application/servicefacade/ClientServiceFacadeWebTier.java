@@ -34,7 +34,7 @@ import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.persistence.FeeDao;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
-import org.mifos.accounts.productdefinition.persistence.SavingsPrdPersistence;
+import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -118,6 +118,9 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
     private final CustomerDao customerDao;
     private final CustomerService customerService;
     private final FeeDao feeDao;
+
+    @Autowired
+    private SavingsProductDao savingsProductDao;
 
     @Autowired
     public ClientServiceFacadeWebTier(CustomerService customerService, OfficeDao officeDao,
@@ -313,7 +316,7 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
                     for (SavingsDetailDto savingsOffering : allowedSavingProducts) {
                         if (productId.equals(savingsOffering.getPrdOfferingId())) {
 
-                            SavingsOfferingBO savingsProduct = new SavingsPrdPersistence().getSavingsProduct(productId);
+                            SavingsOfferingBO savingsProduct = savingsProductDao.findById(productId.intValue());
                             selectedOfferings.add(savingsProduct);
                         }
                     }

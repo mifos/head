@@ -1524,7 +1524,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
             }
 
             List<ListElement> timePeriodOptions = new ArrayList<ListElement>();
-            List<RecurrenceTypeEntity> applicableRecurrences = service.getSavingsApplicableRecurrenceTypes();
+            List<RecurrenceTypeEntity> applicableRecurrences = savingsProductDao.getSavingsApplicableRecurrenceTypes();
             for (RecurrenceTypeEntity entity : applicableRecurrences) {
                 timePeriodOptions.add(new ListElement(entity.getRecurrenceId().intValue(), entity.getRecurrenceName()));
             }

@@ -34,6 +34,7 @@ import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
+import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
@@ -113,6 +114,9 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Autowired
     LegacyMasterDao legacyMasterDao;
+
+    @Autowired
+    private SavingsProductDao savingsProductDao;
 
     @Autowired
     public CustomerServiceImpl(CustomerDao customerDao, PersonnelDao personnelDao, OfficeDao officeDao,
@@ -742,8 +746,8 @@ public class CustomerServiceImpl implements CustomerService {
                 if (client.getOfferingsAssociatedInCreate() != null) {
                     for (ClientInitialSavingsOfferingEntity clientOffering : client.getOfferingsAssociatedInCreate()) {
                         try {
-                            SavingsOfferingBO savingsOffering = client.getSavingsPrdPersistence().getSavingsProduct(
-                                    clientOffering.getSavingsOffering().getPrdOfferingId());
+                            SavingsOfferingBO savingsOffering = savingsProductDao.findById(
+                                    clientOffering.getSavingsOffering().getPrdOfferingId().intValue());
 
                             if (savingsOffering.isActive()) {
 
@@ -753,8 +757,6 @@ public class CustomerServiceImpl implements CustomerService {
                                         AccountState.SAVINGS_ACTIVE, savingsOffering.getRecommendedAmount(),
                                         customerFieldsForSavings));
                             }
-                        } catch (PersistenceException pe) {
-                            throw new CustomerException(pe);
                         } catch (AccountException pe) {
                             throw new CustomerException(pe);
                         }

@@ -27,8 +27,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.mifos.accounts.productdefinition.persistence.LoanPrdPersistence;
-import org.mifos.accounts.productdefinition.persistence.SavingsPrdPersistence;
+import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.business.SystemConfiguration;
@@ -101,7 +102,7 @@ public class ConfigurationInitializer {
     private void setLateNessAndDormancyDaysForAccount(Map<Key, Object> officeConfigMap) throws SystemException,
             ApplicationException {
         Short latenessDays = new LoanPrdPersistence().retrieveLatenessForPrd();
-        Short dormancyDays = new SavingsPrdPersistence().retrieveDormancyDays();
+        Short dormancyDays = ApplicationContextProvider.getBean(SavingsProductDao.class).findSavingsProductConfiguration().getDormancyDays();
         officeConfigMap.put(new Key(getHeadOffice().getOfficeId(), ConfigConstants.LATENESS_DAYS), latenessDays);
         officeConfigMap.put(new Key(getHeadOffice().getOfficeId(), ConfigConstants.DORMANCY_DAYS), dormancyDays);
     }
