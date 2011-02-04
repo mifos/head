@@ -38,9 +38,9 @@ import org.mifos.reports.cashconfirmationreport.BranchCashConfirmationDisburseme
 import org.mifos.reports.cashconfirmationreport.BranchCashConfirmationInfoBO;
 import org.mifos.reports.cashconfirmationreport.BranchCashConfirmationReportBO;
 
-public class BranchCashConfirmationReportPersistence extends LegacyGenericDao {
+public class LegacyBranchCashConfirmationReportDao extends LegacyGenericDao {
 
-    public BranchCashConfirmationReportPersistence() {
+    public LegacyBranchCashConfirmationReportDao() {
         super();
     }
 
