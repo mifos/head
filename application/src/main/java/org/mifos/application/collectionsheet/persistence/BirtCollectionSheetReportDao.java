@@ -43,6 +43,10 @@ import org.mifos.reports.business.dto.CollectionSheetReportData;
  */
 public class BirtCollectionSheetReportDao extends LegacyGenericDao {
 
+    private BirtCollectionSheetReportDao () {
+
+    }
+
     private static final String ALL_VALUE = "ALL";
 
     public List<CollectionSheetReportData> extractReportData(Integer branchId, Date meetingDate, Integer personnelId,

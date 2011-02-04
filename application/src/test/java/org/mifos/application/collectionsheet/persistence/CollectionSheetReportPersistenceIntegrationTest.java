@@ -32,6 +32,7 @@ import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.reports.business.dto.CollectionSheetReportData;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class CollectionSheetReportPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
@@ -40,10 +41,13 @@ public class CollectionSheetReportPersistenceIntegrationTest extends MifosIntegr
     private static final Date MEETING_DATE = DateUtils.getDate(2007, Calendar.JUNE, 22);
     private static final Integer BRANCH_ID = Integer.valueOf("12");
 
+    @Autowired
+    BirtCollectionSheetReportDao birtCollectionSheetReportDao;
+
     @Test
     public void testReportQueryIsValid() throws Exception {
         try {
-            new BirtCollectionSheetReportDao().extractReportData(BRANCH_ID, MEETING_DATE, PERSONNEL_ID, CENTER_ID);
+            birtCollectionSheetReportDao.extractReportData(BRANCH_ID, MEETING_DATE, PERSONNEL_ID, CENTER_ID);
         } catch (Exception e) {
             Assert.fail("Collection Sheet Report Query should not throw exception");
         }
@@ -58,7 +62,7 @@ public class CollectionSheetReportPersistenceIntegrationTest extends MifosIntegr
         results.add(new Object[] { "22-06-2007", 14, " Office 13", 4, " system user 5", 19, " center-29", 199,
                 "group-199", 833, "client-833", "GL:11550||EL:200||SPL:4200", BigDecimal.valueOf(15950.0), "0",
                 BigDecimal.ZERO, "0", BigDecimal.ZERO, "0", BigDecimal.ZERO });
-        List<CollectionSheetReportData> reportData = new BirtCollectionSheetReportDao().convertResultToDTO(results);
+        List<CollectionSheetReportData> reportData = birtCollectionSheetReportDao.convertResultToDTO(results);
         Assert.assertEquals(2, reportData.size());
     }
 
