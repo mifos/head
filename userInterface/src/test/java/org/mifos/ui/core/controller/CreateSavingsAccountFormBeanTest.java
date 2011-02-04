@@ -22,6 +22,7 @@ package org.mifos.ui.core.controller;
 
 import junit.framework.Assert;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import org.junit.Before;
 import org.junit.Test;
 import org.mifos.platform.validation.MifosBeanValidator;
@@ -64,17 +65,13 @@ public class CreateSavingsAccountFormBeanTest {
         Assert.assertEquals(1, messages.length);
         Message message = messages[0];
         Assert.assertEquals("searchString", message.getSource());
-        checkErrorType(ErrorTypes.NotEmpty, message);
+        verifyErrorMessage(NotEmpty.class, message);
     }
 
-    private void checkErrorType(ErrorTypes errorType, Message message) {
-        String expected = errorType.name() + "."
+    private void verifyErrorMessage(Class constraint, Message message) {
+        String expected = constraint.getSimpleName() + "."
                 + formBean.getClass().getSimpleName() + "."
                 + message.getSource();
         Assert.assertEquals(expected, message.getText());
     }
-}
-
-enum ErrorTypes {
-    NotEmpty
 }
