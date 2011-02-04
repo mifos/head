@@ -1410,6 +1410,25 @@ public class LoanBO extends AccountBO {
         }
     }
 
+    @Override
+    public AccountPaymentEntity getLastPmntToBeAdjusted() {
+        AccountPaymentEntity accntPmnt = null;
+        // MIFOS-4238: we don't want to show disbursal amount as an adjustment amount
+        int i = 0;
+        for (AccountPaymentEntity accntPayment : accountPayments) {
+            i = i + 1;
+            if (i == accountPayments.size()) {
+                break;
+            }
+            if (accntPayment.getAmount().isNonZero()) {
+                accntPmnt = accntPayment;
+                break;
+            }
+
+        }
+        return accntPmnt;
+    }
+
     private void waiveFeeAmountDue() throws AccountException {
         List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForNextInstallmentAndArrears();
         LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountActionDateList

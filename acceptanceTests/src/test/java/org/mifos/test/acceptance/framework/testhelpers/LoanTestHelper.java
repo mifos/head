@@ -78,8 +78,8 @@ import org.mifos.test.acceptance.framework.loanproduct.EditLoanProductPreviewPag
 import org.mifos.test.acceptance.framework.loanproduct.LoanProductDetailsPage;
 import org.mifos.test.acceptance.framework.loanproduct.ViewLoanProductsPage;
 import org.mifos.test.acceptance.framework.login.LoginPage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
-import org.mifos.test.acceptance.questionnaire.QuestionResponsePage;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 
 import com.thoughtworks.selenium.Selenium;
@@ -323,6 +323,21 @@ public class LoanTestHelper {
         LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
         ApplyChargePage applyChargePage = loanAccountPage.navigateToApplyCharge();
         loanAccountPage = applyChargePage.submitAndNavigateToApplyChargeConfirmationPage(params);
+
+        return loanAccountPage;
+    }
+
+    /**
+     * Applies a charge to the loan account with id <tt>loanId</tt>.  Uses the fee label
+     * rather than type value to select the fee.
+     * @param loanId The account id.
+     * @param params The charge parameters (amount and type).
+     * @return The loan account page for the loan account.
+     */
+    public LoanAccountPage applyChargeUsingFeeLabel(String loanId, ChargeParameters params) {
+        LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
+        ApplyChargePage applyChargePage = loanAccountPage.navigateToApplyCharge();
+        loanAccountPage = applyChargePage.submitUsingLabelAndNavigateToApplyChargeConfirmationPage(params);
 
         return loanAccountPage;
     }
@@ -783,4 +798,25 @@ public class LoanTestHelper {
                 clickContinueAndNavigateToLoanAccountConfirmationPage().
                 navigateToLoanAccountDetailsPage();
     }
+
+    public void verifyOneTimeFee(String expectedFee, int feeIndex) {
+        LoanAccountPage loanAccountPage = new LoanAccountPage(selenium);
+        loanAccountPage.verifyOneTimeFeeExists(expectedFee, feeIndex);
+    }
+
+    public void removeOneTimeFee(int feeIndex) {
+        LoanAccountPage loanAccountPage = new LoanAccountPage(selenium);
+        loanAccountPage.removeOneTimeFee(feeIndex);
+    }
+
+    public void verifyNoOneTimeFeesExist() {
+        LoanAccountPage loanAccountPage = new LoanAccountPage(selenium);
+        loanAccountPage.verifyNoOneTimeFeesExist();
+    }
+
+    public void verifyNoOneTimeFeeRemovalLinkExists(int feeIndex) {
+        LoanAccountPage loanAccountPage = new LoanAccountPage(selenium);
+        loanAccountPage.verifyNoOneTimeFeeRemovalLinkExists(feeIndex);
+    }
+
 }

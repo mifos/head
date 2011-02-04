@@ -24,7 +24,7 @@ import org.mifos.test.acceptance.framework.AbstractPage;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
-import org.mifos.test.acceptance.questionnaire.ViewQuestionResponseDetailPage;
+import org.mifos.test.acceptance.framework.questionnaire.ViewQuestionResponseDetailPage;
 import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
@@ -44,6 +44,18 @@ public class LoanAccountPage extends AbstractPage {
 
     public void verifyFeeExists(String expectedFee) {
         Assert.assertEquals(selenium.getText("LoanAccountDetail.text.loanFees"), expectedFee);
+    }
+
+    public void verifyOneTimeFeeExists(String expectedFee, int feeIndex) {
+        Assert.assertEquals(selenium.getText("loanAccountDetail.text.oneTimeFeeName_" + feeIndex), expectedFee);
+    }
+
+    public void verifyNoOneTimeFeesExist() {
+        Assert.assertFalse(selenium.isElementPresent("id=loanAccountDetail.text.oneTimeFeeName_1"));
+    }
+
+    public void verifyNoOneTimeFeeRemovalLinkExists(int feeIndex) {
+        Assert.assertFalse(selenium.isElementPresent("id=loanAccountDetail.link.removeOneTimeFee_" + feeIndex));
     }
 
     public void verifyLoanAmount(String amount) {
@@ -387,6 +399,13 @@ public class LoanAccountPage extends AbstractPage {
         return this;
 
     }
+
+    public LoanAccountPage removeOneTimeFee(int feeIndex) {
+        selenium.click("loanAccountDetail.link.removeOneTimeFee_" + feeIndex);
+        waitForPageToLoad();
+        return this;
+    }
+
 
     public ApplyAdjustmentPage navigateToApplyAdjustment() {
         selenium.click("loanaccountdetail.link.applyAdjustment");

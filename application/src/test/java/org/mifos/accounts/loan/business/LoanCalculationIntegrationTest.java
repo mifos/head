@@ -370,7 +370,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         for (int i = 0; i < schedules.length; i++) {
             Money zeroAmount = new Money(getCurrency(), "0");
             Assert.assertEquals(schedules[i].getPrincipalPaid(), zeroAmount);
-            if (i != schedules.length - 1) {
+            if (i == 0) {
                 Assert.assertNotNull(schedules[i].getPaymentDate());
             } else {
                 Assert.assertNull(schedules[i].getPaymentDate());

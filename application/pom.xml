@@ -25,7 +25,6 @@
         <sql.resources.src.directory>${modules.root.dir}/application/src/main/sql</sql.resources.src.directory>
         <sql.resources.target.directory>${project.build.outputDirectory}/sql</sql.resources.target.directory>
         <test.sql.resources.src.directory>${modules.root.dir}/application/src/test/sql</test.sql.resources.src.directory>
-        <create.props.skip>true</create.props.skip>
         <!-- mimics ConfigurationLocator directory search behavior -->
         <mifos.overrides.conf>${mifos.conf}/local.properties</mifos.overrides.conf>
         <mifos.overrides.env>${env.MIFOS_CONF}/local.properties</mifos.overrides.env>
@@ -43,9 +42,6 @@
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
-            <properties>
-                <create.props.skip>false</create.props.skip>
-            </properties>
         </profile>
     </profiles>
 
@@ -585,30 +581,6 @@
                     <!-- makes output cleaner (less verbose) -->
                     <showSuccess>false</showSuccess>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.1.1-mifos-mexec-68-patch</version>
-                <executions>
-                    <execution>
-                        <id>create_props</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>${basedir}/src/main/resources/org/mifos/config/localizedResources/create_props.sh</executable>
-                            <workingDirectory>${java.io.tmpdir}</workingDirectory>
-                            <outputFile>${basedir}/target/create_props.out</outputFile>
-                            <arguments>
-                                <argument>${basedir}/src/main/resources/org/mifos/config/localizedResources</argument>
-                                <argument>${basedir}/target/mifos-webapp/WEB-INF/classes/org/mifos/config/localizedResources</argument>
-                            </arguments>
-                            <skip>${create.props.skip}</skip>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

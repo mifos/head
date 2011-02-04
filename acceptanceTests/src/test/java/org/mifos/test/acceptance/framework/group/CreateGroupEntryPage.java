@@ -23,7 +23,7 @@ package org.mifos.test.acceptance.framework.group;
 import org.mifos.test.acceptance.framework.MifosPage;
 
 import com.thoughtworks.selenium.Selenium;
-import org.mifos.test.acceptance.questionnaire.QuestionResponsePage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 
 public class CreateGroupEntryPage extends MifosPage {
 
