@@ -4,7 +4,7 @@
 
 	<groupId>org.mifos</groupId>
 	<artifactId>mifos-server</artifactId>
-	<version>1.8-SNAPSHOT</version>
+	<version>1.9-SNAPSHOT</version>
 
 	<name>Mifos - Server</name>
 	<description>Embedded Servlet Container Web Server. 
@@ -14,7 +14,7 @@ but could technically be used for running acceptanceTests, Demo/Test instances, 
 	<parent>
 		<groupId>org.mifos</groupId>
 		<artifactId>mifos-parent</artifactId>
-		<version>1.8-SNAPSHOT</version>
+		<version>1.9-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 

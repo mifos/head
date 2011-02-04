@@ -225,17 +225,17 @@
             <dependency>
                 <groupId>org.mifos</groupId>
                 <artifactId>mifos-webapp</artifactId>
-                <version>1.8-SNAPSHOT</version>
+                <version>1.9-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.mifos</groupId>
                 <artifactId>mifos-reporting</artifactId>
-                <version>1.8-SNAPSHOT</version>
+                <version>1.9-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.mifos</groupId>
                 <artifactId>mifos-reporting-libs</artifactId>
-                <version>1.8-SNAPSHOT</version>
+                <version>1.9-SNAPSHOT</version>
                 <type>pom</type>
             </dependency>
             <dependency>
