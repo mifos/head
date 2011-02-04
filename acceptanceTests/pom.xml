@@ -86,7 +86,7 @@
                     <plugin>
                         <groupId>org.codehaus.cargo</groupId>
                         <artifactId>cargo-maven2-plugin</artifactId>
-                        <version>1.0</version>
+                        <version>1.0.3</version>
                         <configuration>
                             <container>
                                 <home>${tomcat.home.directory}</home>
@@ -101,14 +101,14 @@
             </build>
         </profile>
         <profile>
-            <id>tomcat6x</id>
+            <id>tomcat7x</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <container.name>tomcat6x</container.name>
+                <container.name>tomcat7x</container.name>
                 <container.url>${tomcat.container.url}</container.url>
-                <tomcat.version>6.0.29</tomcat.version>
+                <tomcat.version>7.0.6</tomcat.version>
                 <war.target>${tomcat.home.directory}/webapps</war.target>
             </properties>
             <build>
