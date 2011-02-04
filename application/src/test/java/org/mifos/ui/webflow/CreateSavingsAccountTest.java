@@ -24,11 +24,11 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.mifos.platform.validation.MifosBeanValidator;
 import org.mifos.ui.core.controller.CreateSavingsAccountController;
 import org.mifos.ui.core.controller.CreateSavingsAccountFormBean;
-import org.mockito.Mock;
 import org.springframework.webflow.config.FlowDefinitionResource;
 import org.springframework.webflow.config.FlowDefinitionResourceFactory;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
@@ -51,11 +51,14 @@ import org.springframework.webflow.test.execution.AbstractXmlFlowExecutionTests;
  */
 public class CreateSavingsAccountTest extends AbstractXmlFlowExecutionTests {
 
-    @Mock
-    private CreateSavingsAccountController controller = mock(CreateSavingsAccountController.class);
+    private CreateSavingsAccountController controller;
+    private CreateSavingsAccountFormBean formBean;
 
-    @Mock
-    private CreateSavingsAccountFormBean formBean = mock(CreateSavingsAccountFormBean.class);
+    @Before
+    public void setUp() {
+        controller = mock(CreateSavingsAccountController.class);
+        formBean = mock(CreateSavingsAccountFormBean.class);
+    }
 
     @Test
     public void testStartFlow() {
