@@ -23,7 +23,7 @@ package org.mifos.test.acceptance.framework.loan;
 import org.mifos.test.acceptance.framework.MifosPage;
 
 import com.thoughtworks.selenium.Selenium;
-import org.mifos.test.acceptance.questionnaire.QuestionnairePage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionnairePage;
 
 public class AttachSurveyPage extends MifosPage {
     public AttachSurveyPage(Selenium selenium) {

@@ -24,16 +24,16 @@ import java.util.List;
 import java.util.Map;
 
 import org.mifos.test.acceptance.framework.admin.AdminPage;
-import org.mifos.test.acceptance.questionnaire.CreateQuestionGroupPage;
-import org.mifos.test.acceptance.questionnaire.CreateQuestionGroupParameters;
-import org.mifos.test.acceptance.questionnaire.CreateQuestionPage;
-import org.mifos.test.acceptance.questionnaire.CreateQuestionParameters;
-import org.mifos.test.acceptance.questionnaire.EditQuestionGroupPage;
-import org.mifos.test.acceptance.questionnaire.EditQuestionPage;
-import org.mifos.test.acceptance.questionnaire.QuestionDetailPage;
-import org.mifos.test.acceptance.questionnaire.QuestionGroupDetailPage;
-import org.mifos.test.acceptance.questionnaire.ViewAllQuestionGroupsPage;
-import org.mifos.test.acceptance.questionnaire.ViewAllQuestionsPage;
+import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionGroupPage;
+import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionGroupParameters;
+import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionPage;
+import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionParameters;
+import org.mifos.test.acceptance.framework.questionnaire.EditQuestionGroupPage;
+import org.mifos.test.acceptance.framework.questionnaire.ViewAllQuestionGroupsPage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionDetailPage;
+import org.mifos.test.acceptance.framework.questionnaire.ViewAllQuestionsPage;
+import org.mifos.test.acceptance.framework.questionnaire.EditQuestionPage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionGroupDetailPage;
 
 import com.thoughtworks.selenium.Selenium;
 

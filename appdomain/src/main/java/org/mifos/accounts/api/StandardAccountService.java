@@ -65,6 +65,7 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.service.BusinessRuleException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.hibernate.NonUniqueResultException;
 
 /**
  * A service class implementation to expose basic functions on loans. As an external API, this class should not expose
@@ -410,7 +411,7 @@ public class StandardAccountService implements AccountService {
         try {
             lookupLoanAccountReferenceFromClientPhoneNumberAndLoanProductShortName(phoneNumber, loanProductShortName);
         } catch (Exception e) {
-            if (e.getMessage().contains("org.hibernate.NonUniqueResultException")) {
+            if (e.getCause() instanceof NonUniqueResultException) {
                 return true;
             }
         }
@@ -434,7 +435,7 @@ public class StandardAccountService implements AccountService {
         try {
             lookupSavingsAccountReferenceFromClientPhoneNumberAndSavingsProductShortName(phoneNumber, loanProductShortName);
         } catch (Exception e) {
-            if (e.getMessage().contains("org.hibernate.NonUniqueResultException")) {
+            if (e.getCause() instanceof NonUniqueResultException) {
                 return true;
             }
         }

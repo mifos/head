@@ -168,15 +168,12 @@ public class LoanAdjustmentsIntegrationTest extends MifosIntegrationTestCase {
         loan.updateDetails(TestUtils.makeUserWithLocales());
         // pay 3 installments
         makePayment(loan, "333.0");
-        loan = (LoanBO) legacyAccountDao.getAccount(loan.getAccountId());
         loan.updateDetails(TestUtils.makeUserWithLocales());
 
         makeEarlyPayment(loan);
-        loan = (LoanBO) legacyAccountDao.getAccount(loan.getAccountId());
         loan.updateDetails(TestUtils.makeUserWithLocales());
 
         adjustLastLoanPayment(loan, loan.getUserContext());
-        loan = (LoanBO) legacyAccountDao.getAccount(loan.getAccountId());
         loan.updateDetails(TestUtils.makeUserWithLocales());
 
         assertNotNull("Account Status Change History Should Not Be Null", loan.getAccountStatusChangeHistory());
@@ -205,18 +202,15 @@ public class LoanAdjustmentsIntegrationTest extends MifosIntegrationTestCase {
 
         // pay 3 installments
         makePayment(loan, "333.0");
-        loan = (LoanBO) legacyAccountDao.getAccount(loan.getAccountId());
         loan.updateDetails(TestUtils.makeUserWithLocales());
 
         makeEarlyPayment(loan);
-        loan = (LoanBO) legacyAccountDao.getAccount(loan.getAccountId());
         loan.updateDetails(TestUtils.makeUserWithLocales());
 
         // ensure loan is in bad standing when reopened
         new DateTimeService().setCurrentDateTimeFixed(date(2010, 11, 13));
 
         adjustLastLoanPayment(loan, loan.getUserContext());
-        loan = (LoanBO) legacyAccountDao.getAccount(loan.getAccountId());
         loan.updateDetails(TestUtils.makeUserWithLocales());
 
         AccountStateEntity currentStatus = loan.getAccountState();
@@ -235,19 +229,16 @@ public class LoanAdjustmentsIntegrationTest extends MifosIntegrationTestCase {
 
         // pay 2 installments
         makePayment(loan, "222.0");
-        loan = (LoanBO) legacyAccountDao.getAccount(loan.getAccountId());
         loan.updateDetails(TestUtils.makeUserWithLocales());
 
         // pay 1 more installment
         makePayment(loan, "111.0");
-        loan = (LoanBO) legacyAccountDao.getAccount(loan.getAccountId());
         loan.updateDetails(TestUtils.makeUserWithLocales());
 
         // Ensure that after the adjustment the loan is calculated to be in bad standing.
         new DateTimeService().setCurrentDateTimeFixed(date(2010, 11, 13));
 
         adjustLastLoanPayment(loan, loan.getUserContext());
-        loan = (LoanBO) legacyAccountDao.getAccount(loan.getAccountId());
         loan.updateDetails(TestUtils.makeUserWithLocales());
 
         assertNotNull("Account Status Change History Should Not Be Null", loan.getAccountStatusChangeHistory());
@@ -320,10 +311,8 @@ public class LoanAdjustmentsIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private void adjustLastLoanPayment(LoanBO loan, UserContext userContext) throws AccountException, PersistenceException {
-        LoanBO tempLoan = (LoanBO) legacyAccountDao.getAccount(loan.getAccountId());
-        tempLoan.setUserContext(userContext);
         PersonnelBO loggedInUser = IntegrationTestObjectMother.testUser();
-        tempLoan.adjustLastPayment("Undo last payment", loggedInUser);
+        loan.adjustLastPayment("Undo last payment", loggedInUser);
         StaticHibernateUtil.flushSession();
     }
 

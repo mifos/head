@@ -46,10 +46,6 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
     private NavigationHelper navigationHelper;
     String feeName = "loanWeeklyFee";
     boolean isSetUpDone = false;
-//    @Autowired
-//    private InitializeApplicationRemoteTestingService initRemote;
-//    @Autowired
-//    private DbUnitUtilities dbUnitUtilities;
 
     @AfterMethod
     public void logOut() {
@@ -132,7 +128,7 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
 
     @Test(enabled=true)
     /**
-     * early disbursement of loan is not working (interest type doesnt not matter in relation to scheduling of dates.)
+     * disbale for now.
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyForDecBalIntReCalcLoanEarlyDisbursalLSIMOn() throws Exception {

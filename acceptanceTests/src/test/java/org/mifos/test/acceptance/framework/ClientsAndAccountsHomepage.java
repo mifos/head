@@ -29,6 +29,7 @@ import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountsSearchPage;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSearchPage;
 
+
 import com.thoughtworks.selenium.Selenium;
 
 public class ClientsAndAccountsHomepage extends AbstractPage {

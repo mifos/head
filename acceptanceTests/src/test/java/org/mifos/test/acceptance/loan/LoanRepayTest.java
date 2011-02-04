@@ -160,10 +160,10 @@ public class LoanRepayTest extends UiTestCaseBase {
         LoanAccountPage accountPage = navigationHelper.navigateToLoanAccountPage(loanId);
         AccountActivityPage accountActivityPage = accountPage.navigateToAccountActivityPage();
         Assert.assertEquals(accountActivityPage.getLastPrinciplePaid(),"1000.0");
-        Assert.assertEquals(accountActivityPage.getLastInterestPaid(),"7.6");
+        Assert.assertEquals(accountActivityPage.getLastInterestPaid(),"9.5");
         Assert.assertEquals(accountActivityPage.getLastFeePaid().trim(),"10.0");
         Assert.assertEquals(accountActivityPage.getLastPenaltyPaid(),"5.0");
-        Assert.assertEquals(accountActivityPage.getLastTotalPaid(),"1022.6");
+        Assert.assertEquals(accountActivityPage.getLastTotalPaid(),"1024.5");
         Assert.assertEquals(accountActivityPage.getRunningPrinciple(),"0.0");
         Assert.assertEquals(accountActivityPage.getRunningInterest(),"0.0");
         Assert.assertEquals(accountActivityPage.getRunningFees(),"0.0");
@@ -173,7 +173,7 @@ public class LoanRepayTest extends UiTestCaseBase {
     private void verifyRepaymentSchedule() {
         LoanAccountPage accountPage = navigationHelper.navigateToLoanAccountPage(loanId);
         accountPage.navigateToRepaymentSchedulePage();
-        Assert.assertEquals(selenium.getTable("repaymentScheduleTable.7.4").trim(),"0.0");
+        Assert.assertEquals(selenium.getTable("repaymentScheduleTable.7.4").trim(),"1.9");
     }
 
     private void verifyLoanStateAndAccountSummary() {
@@ -182,8 +182,8 @@ public class LoanRepayTest extends UiTestCaseBase {
         Assert.assertEquals(accountPage.getOriginalLoanAmount(), "1000.0");
         Assert.assertEquals(accountPage.getPrinciplePaid(), "1000.0");
         Assert.assertEquals(accountPage.getPrincipleBalance(), "0.0");
-        Assert.assertEquals(accountPage.getOriginalInterestAmount(), "7.6");
-        Assert.assertEquals(accountPage.getInterestPaid(), "7.6");
+        Assert.assertEquals(accountPage.getOriginalInterestAmount(), "9.5");
+        Assert.assertEquals(accountPage.getInterestPaid(), "9.5");
         Assert.assertEquals(accountPage.getInterestBalance(), "0.0");
         Assert.assertEquals(accountPage.getOriginalFeesAmount(), "10.0");
         Assert.assertEquals(accountPage.getFeesPaid(), "10.0");
@@ -191,8 +191,8 @@ public class LoanRepayTest extends UiTestCaseBase {
         Assert.assertEquals(accountPage.getOriginalPenaltyAmount(), "5.0");
         Assert.assertEquals(accountPage.getPenaltyPaid(), "5.0");
         Assert.assertEquals(accountPage.getPenaltyBalance(), "0.0");
-        Assert.assertEquals(accountPage.getOriginalTotalAmount(), "1022.6");
-        Assert.assertEquals(accountPage.getTotalPaid(), "1022.6");
+        Assert.assertEquals(accountPage.getOriginalTotalAmount(), "1024.5");
+        Assert.assertEquals(accountPage.getTotalPaid(), "1024.5");
         Assert.assertEquals(accountPage.getTotalBalance(), "0.0");
     }
 
@@ -213,9 +213,9 @@ public class LoanRepayTest extends UiTestCaseBase {
 
     private void verifySelectionOfWaiveInterest(RepayLoanPage repayLoanPage) {
         Assert.assertTrue(repayLoanPage.isWaiveInterestSelected());
-        Assert.assertEquals(repayLoanPage.totalRepaymentAmount(), "1024.5");
+        Assert.assertEquals(repayLoanPage.totalRepaymentAmount(), "1026.4");
         Assert.assertFalse(repayLoanPage.isTotalRepaymentAmountVisible());
-        Assert.assertEquals(repayLoanPage.waivedRepaymentAmount(), "1022.6");
+        Assert.assertEquals(repayLoanPage.waivedRepaymentAmount(), "1024.5");
         Assert.assertTrue(repayLoanPage.isWaivedRepaymentAmoutVisible());
         Assert.assertTrue(repayLoanPage.isWaiverInterestWarningVisible());
         Assert.assertTrue(repayLoanPage.isWaiverInterestSelectorVisible());
@@ -242,9 +242,9 @@ public class LoanRepayTest extends UiTestCaseBase {
 
     private void verifySelectionOfDoNotWaiveInterest(RepayLoanPage repayLoanPage, boolean isWaiverInterestSelectorVisible) {
         Assert.assertFalse(repayLoanPage.isWaiveInterestSelected());
-        Assert.assertEquals(repayLoanPage.totalRepaymentAmount(), "1024.5");
+        Assert.assertEquals(repayLoanPage.totalRepaymentAmount(), "1026.4");
         Assert.assertTrue(repayLoanPage.isTotalRepaymentAmountVisible());
-        Assert.assertEquals(repayLoanPage.waivedRepaymentAmount(), "1022.6");
+        Assert.assertEquals(repayLoanPage.waivedRepaymentAmount(), "1024.5");
         Assert.assertFalse(repayLoanPage.isWaivedRepaymentAmoutVisible());
         Assert.assertFalse(repayLoanPage.isWaiverInterestWarningVisible());
         Assert.assertEquals(repayLoanPage.isWaiverInterestSelectorVisible(), isWaiverInterestSelectorVisible);

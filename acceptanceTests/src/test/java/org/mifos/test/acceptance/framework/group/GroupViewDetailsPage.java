@@ -25,7 +25,7 @@ import org.mifos.test.acceptance.framework.center.CenterViewDetailsPage;
 import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPage;
 import org.mifos.test.acceptance.framework.loan.AttachSurveyPage;
 import org.mifos.test.acceptance.framework.loan.ClosedAccountsPage;
-import org.mifos.test.acceptance.questionnaire.ViewQuestionResponseDetailPage;
+import org.mifos.test.acceptance.framework.questionnaire.ViewQuestionResponseDetailPage;
 import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;

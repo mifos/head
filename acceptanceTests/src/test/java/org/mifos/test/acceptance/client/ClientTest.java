@@ -20,6 +20,7 @@
 
 package org.mifos.test.acceptance.client;
 
+
 import static java.util.Arrays.asList;
 
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+
 
 import org.junit.Assert;
 import org.mifos.framework.util.DbUnitUtilities;
@@ -52,28 +54,33 @@ import org.mifos.test.acceptance.framework.client.CreateClientEnterPersonalDataP
 import org.mifos.test.acceptance.framework.client.CreateClientPreviewDataPage;
 import org.mifos.test.acceptance.framework.client.QuestionGroup;
 import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPage;
+
 import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPreviewPage;
 import org.mifos.test.acceptance.framework.group.CreateGroupEntryPage.CreateGroupSubmitParameters;
 import org.mifos.test.acceptance.framework.group.EditCustomerStatusParameters;
 import org.mifos.test.acceptance.framework.group.GroupCloseReason;
 import org.mifos.test.acceptance.framework.group.GroupStatus;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
+
+import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionGroupPage;
+import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionGroupParameters;
+import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionPage;
+import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionParameters;
+import org.mifos.test.acceptance.framework.questionnaire.EditQuestionPage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionDetailPage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionGroupResponsePage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionnairePage;
+import org.mifos.test.acceptance.framework.questionnaire.ViewAllQuestionsPage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
+
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
 import org.mifos.test.acceptance.framework.testhelpers.ClientTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.CustomPropertiesHelper;
 import org.mifos.test.acceptance.framework.testhelpers.GroupTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
+
 import org.mifos.test.acceptance.framework.testhelpers.QuestionGroupTestHelper;
-import org.mifos.test.acceptance.questionnaire.CreateQuestionGroupPage;
-import org.mifos.test.acceptance.questionnaire.CreateQuestionGroupParameters;
-import org.mifos.test.acceptance.questionnaire.CreateQuestionPage;
-import org.mifos.test.acceptance.questionnaire.CreateQuestionParameters;
-import org.mifos.test.acceptance.questionnaire.EditQuestionPage;
-import org.mifos.test.acceptance.questionnaire.QuestionDetailPage;
-import org.mifos.test.acceptance.questionnaire.QuestionGroupResponsePage;
-import org.mifos.test.acceptance.questionnaire.QuestionResponsePage;
-import org.mifos.test.acceptance.questionnaire.QuestionnairePage;
-import org.mifos.test.acceptance.questionnaire.ViewAllQuestionsPage;
+
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.mifos.test.acceptance.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
