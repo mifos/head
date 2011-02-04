@@ -42,7 +42,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"acceptance", "ui", "loan"})
+@Test(sequential=true, groups={"acceptance", "ui", "loan", "smoke"})
 public class LoanAccountCycleTest extends UiTestCaseBase {
     private LoanTestHelper loanTestHelper;
 
@@ -89,14 +89,7 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
         productParams.setMaxLoanAmount("7000.0");
         productParams.setDefaultLoanAmount("2000.0");
         productParams.setCalculateInstallments(SubmitFormParameters.BY_LAST_LOAN_AMOUNT);
-        String[][] calculateInstallments = {
-            {"1000", "5", "10", "5"},
-            {"2000", "10", "20", "15"},
-            {"3000", "10", "30", "25"},
-            {"4000", "20", "50", "30"},
-            {"5000", "20", "50", "35"},
-            {"6000", "30", "60", "40"}
-        };
+        String[][] calculateInstallments = getInstallmentsFromLastAmount();
         productParams.setInstallmentsByLastLoanAmount(calculateInstallments);
 
 
@@ -118,14 +111,7 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
         productParams.setOfferingName("product105");
         productParams.setOfferingShortName("p105");
         productParams.setCalculateLoanAmount(SubmitFormParameters.BY_LOAN_CYCLE);
-        String[][] cycleLoanAmount = {
-            {"1000.0", "5000.0", "3000.0"},
-            {"2000.0", "6000.0", "4000.0"},
-            {"3000.0", "7000.0", "5000.0"},
-            {"4000.0", "8000.0", "6000.0"},
-            {"5000.0", "9000.0", "7000.0"},
-            {"6000.0", "10000.0", "8000.0"}
-        };
+        String[][] cycleLoanAmount = getAmountsByCycle();
         productParams.setCycleLoanAmount(cycleLoanAmount);
         productParams.setMinInstallemnts("10");
         productParams.setMaxInstallments("100");
@@ -160,24 +146,10 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
         productParams.setOfferingName("product107");
         productParams.setOfferingShortName("p107");
         productParams.setCalculateLoanAmount(SubmitFormParameters.BY_LOAN_CYCLE);
-        String[][] cycleLoanAmount = {
-            {"1000.0", "5000.0", "3000.0"},
-            {"2000.0", "6000.0", "4000.0"},
-            {"3000.0", "7000.0", "5000.0"},
-            {"4000.0", "8000.0", "6000.0"},
-            {"5000.0", "9000.0", "7000.0"},
-            {"6000.0", "10000.0", "8000.0"}
-        };
+        String[][] cycleLoanAmount = getAmountsByCycle();
         productParams.setCycleLoanAmount(cycleLoanAmount);
         productParams.setCalculateInstallments(SubmitFormParameters.BY_LOAN_CYCLE);
-        String[][] calculateInstallments = {
-            {"26", "52", "52"},
-            {"20", "30", "30"},
-            {"15", "25", "25"},
-            {"10", "15", "15"},
-            {"5", "10", "10"},
-            {"1", "5", "5"}
-        };
+        String[][] calculateInstallments = getInstallmentsByCycle();
         productParams.setCycleInstallments(calculateInstallments);
         CreateLoanAccountSearchParameters searchParams = new CreateLoanAccountSearchParameters();
         searchParams.setSearchString("Stu1233266053368 Client1233266053368");
@@ -206,24 +178,10 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
         productParams.setOfferingName("product110");
         productParams.setOfferingShortName("p110");
         productParams.setCalculateLoanAmount(SubmitFormParameters.BY_LOAN_CYCLE);
-        String[][] cycleLoanAmount = {
-            {"1000.0", "5000.0", "3000.0"},
-            {"2000.0", "6000.0", "4000.0"},
-            {"3000.0", "7000.0", "5000.0"},
-            {"4000.0", "8000.0", "6000.0"},
-            {"5000.0", "9000.0", "7000.0"},
-            {"6000.0", "10000.0", "8000.0"}
-        };
+        String[][] cycleLoanAmount = getAmountsByCycle();
         productParams.setCycleLoanAmount(cycleLoanAmount);
         productParams.setCalculateInstallments(SubmitFormParameters.BY_LAST_LOAN_AMOUNT);
-        String[][] calculateInstallments = {
-            {"1000", "5", "10", "5"},
-            {"2000", "10", "20", "15"},
-            {"3000", "10", "30", "25"},
-            {"4000", "20", "50", "30"},
-            {"5000", "20", "50", "35"},
-            {"6000", "30", "60", "40"}
-        };
+        String[][] calculateInstallments = getInstallmentsFromLastAmount();
         productParams.setInstallmentsByLastLoanAmount(calculateInstallments);
         CreateLoanAccountSearchParameters searchParams = new CreateLoanAccountSearchParameters();
         searchParams.setSearchString("Stu1233266053368 Client1233266053368");
@@ -255,14 +213,7 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
         productParams.setOfferingName("product112");
         productParams.setOfferingShortName("p112");
         productParams.setCalculateLoanAmount(SubmitFormParameters.BY_LAST_LOAN_AMOUNT);
-        String[][] lastLoanAmount = {
-            {"1000", "500.0", "1500.0", "1200.0"},
-            {"2000", "1500.0", "2500.0", "2200.0"},
-            {"3000", "2500.0", "3500.0", "3200.0"},
-            {"4000", "3500.0", "4500.0", "4200.0"},
-            {"5000", "4500.0", "5500.0", "5200.0"},
-            {"6000", "5500.0", "6500.0", "6200.0"}
-        };
+        String[][] lastLoanAmount = getAmountsFromLastAmount();
         productParams.setAmountsByLastLoanAmount(lastLoanAmount);
         productParams.setMinInstallemnts("10");
         productParams.setMaxInstallments("100");
@@ -297,24 +248,10 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
         productParams.setOfferingName("product114");
         productParams.setOfferingShortName("p114");
         productParams.setCalculateLoanAmount(SubmitFormParameters.BY_LAST_LOAN_AMOUNT);
-        String[][] lastLoanAmount = {
-            {"1000", "500.0", "1500.0", "1200.0"},
-            {"2000", "1500.0", "2500.0", "2200.0"},
-            {"3000", "2500.0", "3500.0", "3200.0"},
-            {"4000", "3500.0", "4500.0", "4200.0"},
-            {"5000", "4500.0", "5500.0", "5200.0"},
-            {"6000", "5500.0", "6500.0", "6200.0"}
-        };
+        String[][] lastLoanAmount = getAmountsFromLastAmount();
         productParams.setAmountsByLastLoanAmount(lastLoanAmount);
         productParams.setCalculateInstallments(SubmitFormParameters.BY_LOAN_CYCLE);
-        String[][] calculateInstallments = {
-            {"26", "52", "52"},
-            {"20", "30", "30"},
-            {"15", "25", "25"},
-            {"10", "15", "15"},
-            {"5", "10", "10"},
-            {"1", "5", "5"}
-        };
+        String[][] calculateInstallments = getInstallmentsByCycle();
         productParams.setCycleInstallments(calculateInstallments);
         CreateLoanAccountSearchParameters searchParams = new CreateLoanAccountSearchParameters();
         searchParams.setSearchString("Stu1233266053368 Client1233266053368");
@@ -331,5 +268,84 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
         loanTestHelper.repayLoan(loanFirstID);
 
         loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"1500.0", "2500.0", "2200.0"}, null, new String[]{"20", "30", "30"});
+    }
+
+    /**
+     * Verify loan amount with number of installments by last loan amount can be used to create new loans.
+     * http://mifosforge.jira.com/browse/MIFOSTEST-116
+     * @throws Exception
+     */
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void verifyAmountsAndInstallmentsByLastAmount() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
+
+        DefineNewLoanProductPage.SubmitFormParameters productParams = FormParametersHelper.getWeeklyLoanProductParameters();
+        productParams.setOfferingName("product116");
+        productParams.setOfferingShortName("p116");
+        productParams.setCalculateLoanAmount(SubmitFormParameters.BY_LAST_LOAN_AMOUNT);
+        String[][] lastLoanAmount = getAmountsFromLastAmount();
+        productParams.setAmountsByLastLoanAmount(lastLoanAmount);
+        productParams.setCalculateInstallments(SubmitFormParameters.BY_LAST_LOAN_AMOUNT);
+        String[][] calculateInstallments = getInstallmentsFromLastAmount();
+        productParams.setInstallmentsByLastLoanAmount(calculateInstallments);
+        CreateLoanAccountSearchParameters searchParams = new CreateLoanAccountSearchParameters();
+        searchParams.setSearchString("Stu1233266053368 Client1233266053368");
+        searchParams.setLoanProduct("product116");
+        DisburseLoanParameters disburseParams = DisburseLoanParameters.getDisbursalParameters("02", "02", "2011");
+
+        LoanProductDetailsPage loanProductDetailsPage = loanTestHelper.defineNewLoanProduct(productParams);
+        loanProductDetailsPage.verifyAmountTableTypeFromLastAmount(lastLoanAmount);
+        loanProductDetailsPage.verifyInstallmentTableTypeFromLastAmount(calculateInstallments);
+        LoanAccountPage loanAccountPage = loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"500.0", "1500.0", "1200.0"}, null, new String[]{"5", "10", "5"});
+        String loanFirstID = loanAccountPage.getAccountId();
+        loanAccountPage.disburseLoan(disburseParams);
+        loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"500.0", "1500.0", "1200.0"}, null, new String[]{"5", "10", "5"});
+        loanTestHelper.repayLoan(loanFirstID);
+
+        loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"1500.0", "2500.0", "2200.0"}, null, new String[]{"10", "20", "15"});
+    }
+
+    private String[][] getInstallmentsFromLastAmount() {
+        return new String[][] {
+                {"1000", "5", "10", "5"},
+                {"2000", "10", "20", "15"},
+                {"3000", "10", "30", "25"},
+                {"4000", "20", "50", "30"},
+                {"5000", "20", "50", "35"},
+                {"6000", "30", "60", "40"}
+            };
+    }
+
+    private String[][] getAmountsFromLastAmount() {
+        return new String[][] {
+                {"1000", "500.0", "1500.0", "1200.0"},
+                {"2000", "1500.0", "2500.0", "2200.0"},
+                {"3000", "2500.0", "3500.0", "3200.0"},
+                {"4000", "3500.0", "4500.0", "4200.0"},
+                {"5000", "4500.0", "5500.0", "5200.0"},
+                {"6000", "5500.0", "6500.0", "6200.0"}
+            };
+    }
+
+    private String[][] getAmountsByCycle() {
+        return new String[][] {
+                {"1000.0", "5000.0", "3000.0"},
+                {"2000.0", "6000.0", "4000.0"},
+                {"3000.0", "7000.0", "5000.0"},
+                {"4000.0", "8000.0", "6000.0"},
+                {"5000.0", "9000.0", "7000.0"},
+                {"6000.0", "10000.0", "8000.0"}
+            };
+    }
+
+    private String[][] getInstallmentsByCycle() {
+        return new String[][] {
+                {"26", "52", "52"},
+                {"20", "30", "30"},
+                {"15", "25", "25"},
+                {"10", "15", "15"},
+                {"5", "10", "10"},
+                {"1", "5", "5"}
+            };
     }
 }
