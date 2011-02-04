@@ -28,7 +28,6 @@ import org.mifos.platform.validation.MifosBeanValidator;
 import org.mifos.ui.core.controller.CreateSavingsAccountController;
 import org.mifos.ui.core.controller.CreateSavingsAccountFormBean;
 import org.mockito.Mock;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.webflow.config.FlowDefinitionResource;
 import org.springframework.webflow.config.FlowDefinitionResourceFactory;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
@@ -51,13 +50,11 @@ import org.springframework.webflow.test.execution.AbstractXmlFlowExecutionTests;
  */
 public class CreateSavingsAccountTest extends AbstractXmlFlowExecutionTests {
 
-    MifosBeanValidator validator = new MifosBeanValidator();
-    LocalValidatorFactoryBean targetValidator = new LocalValidatorFactoryBean();
+    @Mock
+    private CreateSavingsAccountController controller = mock(CreateSavingsAccountController.class);
 
     @Mock
-    CreateSavingsAccountController controller = mock(CreateSavingsAccountController.class);
-
-    CreateSavingsAccountFormBean formBean = new CreateSavingsAccountFormBean();
+    private CreateSavingsAccountFormBean formBean = mock(CreateSavingsAccountFormBean.class);
 
     @Test
     public void testStartFlow() {
@@ -195,10 +192,12 @@ public class CreateSavingsAccountTest extends AbstractXmlFlowExecutionTests {
     protected void configureFlowBuilderContext(
             MockFlowBuilderContext builderContext) {
 
-        builderContext.registerBean("validator", validator);
+        // setup bean dependencies
         builderContext.registerBean("createSavingsAccountController",
                 controller);
         builderContext.registerBean("savingsAccountFormBean", formBean);
+        builderContext
+                .registerBean("validator", mock(MifosBeanValidator.class));
     }
 
     @Override
