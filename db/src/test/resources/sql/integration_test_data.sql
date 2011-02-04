@@ -421,7 +421,7 @@ insert into office_address (office_address_id, office_id, address_1, address_2, 
 city, state, country, zip, telephone)
 values(3,3,'add3',null,null,null,null,null,null,null);
 
- --Non loan officer belonging to branch office with office id 3
+-- Non loan officer belonging to branch office with office id 3
 insert into personnel(personnel_id,level_id,global_personnel_num,office_id,
     title,personnel_status,preferred_locale,
     search_id,max_child_count,password,login_name,email_id,password_changed,
