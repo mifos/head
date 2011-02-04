@@ -79,6 +79,7 @@ public class CreateClientEnterMfiDataPage extends MifosPage {
 
     public CreateClientPreviewDataPage navigateToPreview(){
         selenium.click("create_ClientMfiInfo.button.preview");
+        waitForPageToLoad();
         return new CreateClientPreviewDataPage(selenium);
     }
 }
