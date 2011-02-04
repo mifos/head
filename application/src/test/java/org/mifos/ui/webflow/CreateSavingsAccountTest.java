@@ -22,6 +22,7 @@ package org.mifos.ui.webflow;
 
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 import org.junit.Test;
 import org.mifos.platform.validation.MifosBeanValidator;
@@ -75,23 +76,26 @@ public class CreateSavingsAccountTest extends AbstractXmlFlowExecutionTests {
         context.setEventId("searchTermEntered");
         resumeFlow(context);
 
+        verify(controller).searchCustomers(formBean);
         assertCurrentStateEquals("selectCustomerStep");
     }
 
     @Test
     public void testSelectCustomerStep_CustomerSelected() {
 
+        Integer customerId = 1;
         setCurrentState("selectCustomerStep");
 
         doNothing().when(controller).getProductOfferings(formBean);
 
         MockExternalContext context = new MockExternalContext();
         MockParameterMap requestParameterMap = new MockParameterMap();
-        requestParameterMap.put("customerId", "1");
+        requestParameterMap.put("customerId", customerId.toString());
         context.setRequestParameterMap(requestParameterMap);
         context.setEventId("customerSelected");
         resumeFlow(context);
 
+        verify(controller).customerSelected(customerId, formBean);
         assertCurrentStateEquals("selectProductOfferingStep");
     }
 
@@ -104,22 +108,25 @@ public class CreateSavingsAccountTest extends AbstractXmlFlowExecutionTests {
         context.setEventId("searchTermEntered");
         resumeFlow(context);
 
+        verify(controller).searchCustomers(formBean);
         assertCurrentStateEquals("selectCustomerStep");
     }
 
     public void testSelectProductOfferingStep_ProductSelected() {
 
+        Integer productId = 1;
         setCurrentState("selectProductOfferingStep");
 
         doNothing().when(controller).loadProduct(1, formBean);
 
         MockExternalContext context = new MockExternalContext();
         MockParameterMap requestParameterMap = new MockParameterMap();
-        requestParameterMap.put("productId", "1");
+        requestParameterMap.put("productId", productId.toString());
         context.setRequestParameterMap(requestParameterMap);
         context.setEventId("productSelected");
         resumeFlow(context);
 
+        verify(controller).loadProduct(productId, formBean);
         assertCurrentStateEquals("enterAccountDetailsStep");
     }
 
@@ -138,15 +145,17 @@ public class CreateSavingsAccountTest extends AbstractXmlFlowExecutionTests {
     @Test
     public void testEnterAccountDetailsStep_NewProductSelected() {
 
+        Integer productId = 1;
         setCurrentState("enterAccountDetailsStep");
 
         MockExternalContext context = new MockExternalContext();
         MockParameterMap requestParameterMap = new MockParameterMap();
-        requestParameterMap.put("productId", "1");
+        requestParameterMap.put("productId", productId.toString());
         context.setRequestParameterMap(requestParameterMap);
         context.setEventId("newProductSelected");
         resumeFlow(context);
 
+        verify(controller).loadProduct(productId, formBean);
         assertCurrentStateEquals("enterAccountDetailsStep");
     }
 
@@ -171,6 +180,7 @@ public class CreateSavingsAccountTest extends AbstractXmlFlowExecutionTests {
         context.setEventId("saveForLater");
         resumeFlow(context);
 
+        verify(controller).createAccountInPartialApplicationState(formBean);
         assertFlowExecutionEnded();
         assertFlowExecutionOutcomeEquals("complete");
     }
@@ -184,6 +194,7 @@ public class CreateSavingsAccountTest extends AbstractXmlFlowExecutionTests {
         context.setEventId("saveForApproval");
         resumeFlow(context);
 
+        verify(controller).createAccountInPendingApprovalState(formBean);
         assertFlowExecutionEnded();
         assertFlowExecutionOutcomeEquals("complete");
     }
