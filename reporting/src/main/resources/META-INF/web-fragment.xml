@@ -5,7 +5,6 @@
 	
 	<name>Mifos BIRT Reporting</name>
     <description>Microfinance portfolio management BIRT Reporting Web frontend.</description>
-    <display-name>Mifos BIRT Reporting Web Application Fragment</display-name>
 
     <!-- Birt Reports Validation Flow Servlet -->
     <servlet>
