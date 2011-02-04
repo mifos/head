@@ -17,7 +17,9 @@
             <evaluate expression="createSavingsAccountController.customerSelected(customerId, savingsAccountFormBean)" />
             <evaluate expression="createSavingsAccountController.getProductOfferings(savingsAccountFormBean)" />
         </transition>
-        <transition on="searchTermEntered" to="selectCustomerStep" validate="true" />
+        <transition on="searchTermEntered" to="selectCustomerStep" validate="true">
+            <evaluate expression="createSavingsAccountController.searchCustomers(savingsAccountFormBean)" result="flowScope.customerSearchResultsDto" />
+        </transition>
     </view-state>
 
     <view-state id="selectProductOfferingStep" view="createSavingsAccountSelectProduct" model="savingsAccountFormBean">
