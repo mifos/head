@@ -18,33 +18,31 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.test.acceptance.framework.customer;
+package org.mifos.test.acceptance.framework.client;
 
 import org.mifos.test.acceptance.framework.MifosPage;
-import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 
 import com.thoughtworks.selenium.Selenium;
 
-public class CustomerChangeStatusPreviewDataPage extends MifosPage {
+public class GroupSearchAddMemberPage extends MifosPage{
 
-    public CustomerChangeStatusPreviewDataPage() {
-        super();
-    }
-
-    /**
-     * @param selenium
-     */
-    public CustomerChangeStatusPreviewDataPage(Selenium selenium) {
+    public GroupSearchAddMemberPage(Selenium selenium) {
         super(selenium);
+        this.verifyPage("GroupSearchAddMember");
     }
 
-    public void verifyPage() {
-        this.verifyPage("customerchangeStatusPreview");
+    private void setSearchedGroupName(String groupName){
+        selenium.type("group_search_addMember.input.search", groupName);
     }
 
-    public ClientViewDetailsPage submitAndGotoClientViewDetailsPage() {
-        selenium.click("customerchangeStatusPreview.button.submit");
+    private void search(){
+        selenium.click("group_search_addMember.button.search");
         waitForPageToLoad();
-        return new ClientViewDetailsPage(selenium);
+    }
+
+    public GroupSearchAddClientPage searchGroup(String groupName){
+        setSearchedGroupName(groupName);
+        search();
+        return new GroupSearchAddClientPage(selenium);
     }
 }

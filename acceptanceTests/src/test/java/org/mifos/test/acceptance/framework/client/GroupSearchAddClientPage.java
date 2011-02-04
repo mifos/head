@@ -24,23 +24,20 @@ import org.mifos.test.acceptance.framework.MifosPage;
 
 import com.thoughtworks.selenium.Selenium;
 
-public class CreateClientPreviewDataPage extends MifosPage {
+public class GroupSearchAddClientPage extends MifosPage{
 
-    public CreateClientPreviewDataPage(Selenium selenium) {
+    public GroupSearchAddClientPage(Selenium selenium) {
         super(selenium);
-        this.verifyPage("preview_ClientDetails");
+        this.verifyPage("GroupSearchAddClient");
     }
 
-    public CreateClientConfirmationPage submit() {
-        selenium.click("preview_ClientDetails.button.submitForApproval");
+    public ConfirmAddClientToGroupPage selectGroupToAdd(String groupName){
+        selenium.click("link=" + groupName + "*");
         waitForPageToLoad();
-        return new CreateClientConfirmationPage(selenium);
+        return new ConfirmAddClientToGroupPage(selenium);
     }
 
-    public CreateClientEnterFamilyDetailsPage edit() {
-        selenium.click("preview_ClientDetails.button.editFamilyInformation");
-        waitForPageToLoad();
-        return new CreateClientEnterFamilyDetailsPage(selenium);
+    public void verifyNoResult(){
+        selenium.isTextPresent("No results found for");
     }
-
 }

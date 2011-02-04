@@ -18,29 +18,30 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.test.acceptance.framework.client;
+package org.mifos.test.acceptance.framework.group;
 
-import org.mifos.test.acceptance.framework.MifosPage;
+public enum GroupCancelReason {
 
-import com.thoughtworks.selenium.Selenium;
+    WITHDRAW ("Withdraw", 11),
+    REJECTED("Rejected", 12),
+    BLACKLISTED("Blacklisted", 13),
+    DUPLICATED("Duplicated", 14),
+    OTHER("Other", 15);
 
-public class CreateClientPreviewDataPage extends MifosPage {
+    private final String purposeText;
+    private final Integer id;
 
-    public CreateClientPreviewDataPage(Selenium selenium) {
-        super(selenium);
-        this.verifyPage("preview_ClientDetails");
+    private GroupCancelReason(String purposeText, Integer id) {
+        this.purposeText = purposeText;
+        this.id = id;
     }
 
-    public CreateClientConfirmationPage submit() {
-        selenium.click("preview_ClientDetails.button.submitForApproval");
-        waitForPageToLoad();
-        return new CreateClientConfirmationPage(selenium);
+    public String getPurposeText() {
+        return this.purposeText;
     }
 
-    public CreateClientEnterFamilyDetailsPage edit() {
-        selenium.click("preview_ClientDetails.button.editFamilyInformation");
-        waitForPageToLoad();
-        return new CreateClientEnterFamilyDetailsPage(selenium);
+    public Integer getId() {
+        return this.id;
     }
 
 }

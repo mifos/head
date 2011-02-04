@@ -22,65 +22,40 @@ package org.mifos.test.acceptance.framework.customer;
 
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
+import org.mifos.test.acceptance.framework.group.EditCustomerStatusParameters;
+import org.mifos.test.acceptance.framework.group.GroupStatus;
 
 import com.thoughtworks.selenium.Selenium;
 
 public class CustomerChangeStatusPage extends MifosPage {
 
-    public CustomerChangeStatusPage() {
-        super();
-    }
-
-    /**
-     * @param selenium
-     */
     public CustomerChangeStatusPage(Selenium selenium) {
         super(selenium);
+        this.verifyPage("CustomerChangeStatus");
     }
 
-    public void verifyPage() {
-        this.verifyPage("customerchangeStatus");
-    }
-
-    @SuppressWarnings("PMD.TooManyFields") // lots of fields ok for form input case
-    public static class SubmitFormParameters {
-        // statuses
-        public final static int ON_HOLD = 4;
-        public final static int ACTIVE = 3;
-        public final static int PARTIAL_APPLICATION = 1;
-        public final static int PENDING_APPROVAL = 2;
-
-        private int status;
-        private String notes;
-
-        public int getStatus() {
-            return this.status;
+    public CustomerChangeStatusPreviewPage setChangeStatusParametersAndSubmit(EditCustomerStatusParameters customerStatusParameters){
+        if(customerStatusParameters.getGroupStatus()!=null)
+        {
+            selenium.check("name=newStatusId value=" + customerStatusParameters.getGroupStatus().getId());
+            selenium.fireEvent("name=newStatusId", "change");
+            if(customerStatusParameters.getGroupStatus().equals(GroupStatus.CANCELLED)){
+                selenium.select("customerchangeStatus.input.cancel_reason", "value="+customerStatusParameters.getCancelReason().getId());
+            }
+            if(customerStatusParameters.getGroupStatus().equals(GroupStatus.CLOSED)){
+                selenium.select("customerchangeStatus.input.cancel_reason", "value="+customerStatusParameters.getCloseReason().getId());
+            }
         }
-
-        public void setStatus(int status) {
-            this.status = status;
+        if(customerStatusParameters.getClientStatus()!=null){
+            selenium.check("name=newStatusId value=" + customerStatusParameters.getClientStatus().getId());
         }
-
-        public String getNotes() {
-            return this.notes;
-        }
-
-        public void setNotes(String notes) {
-            this.notes = notes;
-        }
-    }
-
-    public CustomerChangeStatusPreviewDataPage submitAndGotoCustomerChangeStatusPreviewDataPage(SubmitFormParameters parameters) {
-        selenium.check("name=newStatusId value="+ parameters.getStatus());
-        typeTextIfNotEmpty("customerchangeStatus.input.notes", parameters.getNotes());
+        selenium.type("customerchangeStatus.input.notes", customerStatusParameters.getNote());
         selenium.click("customerchangeStatus.button.preview");
         waitForPageToLoad();
-        return new CustomerChangeStatusPreviewDataPage(selenium);
+        return new CustomerChangeStatusPreviewPage(selenium);
     }
 
-    public ClientViewDetailsPage cancelAndGotoClientViewDetailsPage(SubmitFormParameters parameters) {
-        //checkIfNotEmpty("customerchangeStatus.input.status", parameters.getStatus());
-        //typeTextIfNotEmpty("customerchangeStatus.input.notes", parameters.getNotes());
+    public ClientViewDetailsPage cancelAndGotoClientViewDetailsPage() {
         selenium.click("customerchangeStatus.button.cancel");
         waitForPageToLoad();
         return new ClientViewDetailsPage(selenium);

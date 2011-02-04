@@ -191,7 +191,7 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
         propertiesHelper.setGroupPendingApprovalStateEnabled("false");
         //When
-        GroupTestHelper groupTestHelper = new GroupTestHelper(navigationHelper);
+        GroupTestHelper groupTestHelper = new GroupTestHelper(selenium);
         CreateGroupSubmitParameters groupParams = new CreateGroupSubmitParameters();
         groupParams.setGroupName("testGroup123123123123");
         GroupViewDetailsPage groupViewDetailsPage = groupTestHelper.createNewGroupWithoutPendingForApproval("MyCenter1232993841778" , groupParams);

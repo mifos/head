@@ -170,6 +170,12 @@ public class ClientViewDetailsPage extends MifosPage {
         return new AttachSurveyPage(selenium);
     }
 
+    public GroupSearchClientTransferPage navigateToEditRemoveGroupMembership(){
+        selenium.click("viewClientDetails.link.editRemoveGroupMembership");
+        waitForPageToLoad();
+        return new GroupSearchClientTransferPage(selenium);
+    }
+
 
     public Map<Integer, QuestionGroup> getQuestionGroupInstances() {
         int rows = Integer.valueOf(selenium.getEval("window.document.getElementById('questionGroupInstances').getElementsByTagName('a').length"));

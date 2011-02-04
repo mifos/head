@@ -20,33 +20,27 @@
 
 package org.mifos.test.acceptance.framework.group;
 
-public class EditGroupStatusParameters {
+public enum GroupCloseReason {
 
-    private String note;
-    private GroupCancelCloseReason cancelReason;
-    private GroupStatus status;
+    TRANSFERRED("Transferred", 16),
+    DUPLICATED("Duplicated", 17),
+    BLACKLISTED("Blacklisted", 18),
+    LEFT_PROGRAM("Left Program", 19),
+    OTHER("Other", 20);
 
-    public String getNote() {
-        return this.note;
+    private final String purposeText;
+    private final Integer id;
+
+    private GroupCloseReason(String purposeText, Integer id) {
+        this.purposeText = purposeText;
+        this.id = id;
     }
 
-    public void setNote(String note) {
-        this.note = note;
+    public String getPurposeText() {
+        return this.purposeText;
     }
 
-    public GroupCancelCloseReason getCancelReason() {
-        return this.cancelReason;
-    }
-
-    public void setCancelReason(GroupCancelCloseReason cancelReason) {
-        this.cancelReason = cancelReason;
-    }
-
-    public GroupStatus getStatus() {
-        return this.status;
-    }
-
-    public void setStatus(GroupStatus status) {
-        this.status = status;
+    public Integer getId() {
+        return this.id;
     }
 }

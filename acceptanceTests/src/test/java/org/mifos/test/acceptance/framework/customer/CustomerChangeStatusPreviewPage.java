@@ -18,27 +18,30 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.test.acceptance.framework.group;
+package org.mifos.test.acceptance.framework.customer;
 
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
+import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
 
 import com.thoughtworks.selenium.Selenium;
 
+public class CustomerChangeStatusPreviewPage extends MifosPage {
 
-public class EditGroupStatusPage extends MifosPage {
-    public EditGroupStatusPage(Selenium selenium) {
+    public CustomerChangeStatusPreviewPage(Selenium selenium) {
         super(selenium);
-        this.verifyPage("CustomerChangeStatus");
+        this.verifyPage("CustomerChangeStatusPreview");
     }
 
-    public EditGroupStatusConfirmationPage submitAndNavigateToEditStatusConfirmationPage(EditGroupStatusParameters params) {
-        selenium.check("name=newStatusId value=" + params.getStatus().getId());
-        if(params.getStatus().equals(GroupStatus.CANCELLED) || params.getStatus().equals(GroupStatus.CLOSED)){
-            selenium.select("customerchangeStatus.input.cancel_reason", "value="+params.getCancelReason().getId());
-        }
-        selenium.type("customerchangeStatus.input.notes", params.getNote());
-        selenium.click("customerchangeStatus.button.preview");
+    public ClientViewDetailsPage submitAndGotoClientViewDetailsPage() {
+        selenium.click("customerchangeStatusPreview.button.submit");
         waitForPageToLoad();
-        return new EditGroupStatusConfirmationPage(selenium);
+        return new ClientViewDetailsPage(selenium);
+    }
+
+    public GroupViewDetailsPage navigateToGroupDetailsPage() {
+        selenium.click("customerchangeStatusPreview.button.submit");
+        waitForPageToLoad();
+        return new GroupViewDetailsPage(selenium);
     }
 }

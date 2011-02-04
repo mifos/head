@@ -24,23 +24,20 @@ import org.mifos.test.acceptance.framework.MifosPage;
 
 import com.thoughtworks.selenium.Selenium;
 
-public class CreateClientPreviewDataPage extends MifosPage {
+public class DeleteGroupMembershipPage extends MifosPage{
 
-    public CreateClientPreviewDataPage(Selenium selenium) {
+    public DeleteGroupMembershipPage(Selenium selenium) {
         super(selenium);
-        this.verifyPage("preview_ClientDetails");
+        this.verifyPage("DeleteGroupMembership");
     }
 
-    public CreateClientConfirmationPage submit() {
-        selenium.click("preview_ClientDetails.button.submitForApproval");
+    private void submit(){
+        selenium.click("deletegroupmembership.button.submit");
         waitForPageToLoad();
-        return new CreateClientConfirmationPage(selenium);
     }
 
-    public CreateClientEnterFamilyDetailsPage edit() {
-        selenium.click("preview_ClientDetails.button.editFamilyInformation");
-        waitForPageToLoad();
-        return new CreateClientEnterFamilyDetailsPage(selenium);
+    public ClientViewDetailsPage confirmDeleteGroupMembership(){
+        submit();
+        return new ClientViewDetailsPage(selenium);
     }
-
 }

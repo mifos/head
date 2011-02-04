@@ -25,14 +25,17 @@ import java.util.Map;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.center.MeetingParameters;
 import org.mifos.test.acceptance.framework.client.ChooseOfficePage;
+import org.mifos.test.acceptance.framework.client.ClientStatus;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import org.mifos.test.acceptance.framework.client.CreateClientConfirmationPage;
 import org.mifos.test.acceptance.framework.client.CreateClientEnterFamilyDetailsPage;
 import org.mifos.test.acceptance.framework.client.CreateClientEnterMfiDataPage;
 import org.mifos.test.acceptance.framework.client.CreateClientEnterPersonalDataPage;
 import org.mifos.test.acceptance.framework.client.CreateClientPreviewDataPage;
+import org.mifos.test.acceptance.framework.client.GroupSearchAddClientPage;
 import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPage;
-import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPreviewDataPage;
+import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPreviewPage;
+import org.mifos.test.acceptance.framework.group.EditCustomerStatusParameters;
 import org.mifos.test.acceptance.framework.group.GroupSearchPage;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 import org.mifos.test.acceptance.questionnaire.QuestionResponsePage;
@@ -58,42 +61,42 @@ public class ClientTestHelper {
     public ClientViewDetailsPage changeCustomerStatus(ClientViewDetailsPage clientDetailsPage) {
 
         CustomerChangeStatusPage statusChangePage = clientDetailsPage.navigateToCustomerChangeStatusPage();
-        CustomerChangeStatusPage.SubmitFormParameters statusParameters = new CustomerChangeStatusPage.SubmitFormParameters();
-        statusParameters.setStatus(CustomerChangeStatusPage.SubmitFormParameters.PARTIAL_APPLICATION);
-        statusParameters.setNotes("Status change");
+        EditCustomerStatusParameters editCustomerStatusParameters = new EditCustomerStatusParameters();
+        editCustomerStatusParameters.setClientStatus(ClientStatus.PARTIAL);
+        editCustomerStatusParameters.setNote("Status change");
 
-        CustomerChangeStatusPreviewDataPage statusPreviewPage = statusChangePage.submitAndGotoCustomerChangeStatusPreviewDataPage(statusParameters);
+        CustomerChangeStatusPreviewPage statusPreviewPage = statusChangePage.setChangeStatusParametersAndSubmit(editCustomerStatusParameters);
         ClientViewDetailsPage clientDetailsPage2 = statusPreviewPage.submitAndGotoClientViewDetailsPage();
         clientDetailsPage2.verifyStatus(PARTIAL_APPLICATION);
-        clientDetailsPage2.verifyNotes(statusParameters.getNotes());
+        clientDetailsPage2.verifyNotes(editCustomerStatusParameters.getNote());
 
 
         CustomerChangeStatusPage statusChangePage2 = clientDetailsPage2.navigateToCustomerChangeStatusPage();
-        statusParameters.setStatus(CustomerChangeStatusPage.SubmitFormParameters.PENDING_APPROVAL);
-        statusParameters.setNotes("notes");
-        CustomerChangeStatusPreviewDataPage statusPreviewPage2 =
-            statusChangePage2.submitAndGotoCustomerChangeStatusPreviewDataPage(statusParameters);
+        editCustomerStatusParameters.setClientStatus(ClientStatus.PENDING_APPROVAL);
+        editCustomerStatusParameters.setNote("notes");
+        CustomerChangeStatusPreviewPage statusPreviewPage2 =
+            statusChangePage2.setChangeStatusParametersAndSubmit(editCustomerStatusParameters);
 
 
         ClientViewDetailsPage clientDetailsPage3 = statusPreviewPage2.submitAndGotoClientViewDetailsPage();
-        clientDetailsPage3.verifyNotes(statusParameters.getNotes());
+        clientDetailsPage3.verifyNotes(editCustomerStatusParameters.getNote());
         clientDetailsPage2.verifyStatus(PENDING_APPROVAL);
 
         CustomerChangeStatusPage statusChangePage3 = clientDetailsPage3.navigateToCustomerChangeStatusPage();
-        statusParameters.setStatus(CustomerChangeStatusPage.SubmitFormParameters.ACTIVE);
-        statusParameters.setNotes("notes");
-        CustomerChangeStatusPreviewDataPage statusPreviewPage3 =
-            statusChangePage3.submitAndGotoCustomerChangeStatusPreviewDataPage(statusParameters);
+        editCustomerStatusParameters.setClientStatus(ClientStatus.ACTIVE);
+        editCustomerStatusParameters.setNote("notes");
+        CustomerChangeStatusPreviewPage statusPreviewPage3 =
+            statusChangePage3.setChangeStatusParametersAndSubmit(editCustomerStatusParameters);
 
 
         ClientViewDetailsPage clientDetailsPage4 = statusPreviewPage3.submitAndGotoClientViewDetailsPage();
-        clientDetailsPage4.verifyNotes(statusParameters.getNotes());
+        clientDetailsPage4.verifyNotes(editCustomerStatusParameters.getNote());
         clientDetailsPage3.verifyStatus(ACTIVE);
 
         CustomerChangeStatusPage statusChangePage4 = clientDetailsPage4.navigateToCustomerChangeStatusPage();
 
-        ClientViewDetailsPage clientDetailsPage5 = statusChangePage4.cancelAndGotoClientViewDetailsPage(statusParameters);
-        clientDetailsPage5.verifyNotes(statusParameters.getNotes());
+        ClientViewDetailsPage clientDetailsPage5 = statusChangePage4.cancelAndGotoClientViewDetailsPage();
+        clientDetailsPage5.verifyNotes(editCustomerStatusParameters.getNote());
         return clientDetailsPage5;
     }
 
@@ -114,6 +117,38 @@ public class ClientTestHelper {
         .selectGroup(group)
         .create(parameters)
         .submitAndGotoCaptureQuestionResponsePage();
+    }
+
+    private GroupSearchAddClientPage navigateToGroupSearchAddClientResult(String clientName, String groupName){
+        return navigationHelper.navigateToClientViewDetailsPage(clientName)
+        .navigateToEditMeetingSchedule()
+        .addGroupMembership()
+        .searchGroup(groupName);
+    }
+
+    public void tryAddClientToClosedGroup(String clientName, String groupName){
+        navigateToGroupSearchAddClientResult(clientName, groupName)
+            .verifyNoResult();
+    }
+
+    public void addClientToGroupWithErrors(String clientName, String groupName){
+        navigateToGroupSearchAddClientResult(clientName, groupName)
+            .selectGroupToAdd(groupName)
+            .submitAddGroupWithError();
+    }
+
+    public void addClientToGroup(String clientName, String groupName){
+        navigateToGroupSearchAddClientResult(clientName, groupName)
+            .selectGroupToAdd(groupName)
+            .submitAddGroup();
+    }
+
+    public void deleteClientGroupMembership(String clientName){
+        navigationHelper
+            .navigateToClientViewDetailsPage(clientName)
+            .navigateToEditRemoveGroupMembership()
+            .deleteGroupMembership()
+            .confirmDeleteGroupMembership();
     }
 
     public ClientViewDetailsPage createClientAndVerify(String loanOfficer, String officeName) {

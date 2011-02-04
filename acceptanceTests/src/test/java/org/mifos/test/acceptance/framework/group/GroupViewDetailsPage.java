@@ -21,6 +21,7 @@
 package org.mifos.test.acceptance.framework.group;
 
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPage;
 import org.mifos.test.acceptance.framework.loan.AttachSurveyPage;
 import org.mifos.test.acceptance.framework.loan.ClosedAccountsPage;
 import org.mifos.test.acceptance.questionnaire.ViewQuestionResponseDetailPage;
@@ -62,10 +63,10 @@ public class GroupViewDetailsPage extends MifosPage {
         return new ClosedAccountsPage(selenium);
     }
 
-    public EditGroupStatusPage navigateToEditGroupStatusPage() {
+    public CustomerChangeStatusPage navigateToEditGroupStatusPage() {
         selenium.click("viewgroupdetails.link.editStatus");
         waitForPageToLoad();
-        return new EditGroupStatusPage(selenium);
+        return new CustomerChangeStatusPage(selenium);
     }
 
     public HistoricalDataPage navigateToHistoricalDataPage() {

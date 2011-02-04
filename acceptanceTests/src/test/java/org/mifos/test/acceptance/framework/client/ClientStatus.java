@@ -20,27 +20,29 @@
 
 package org.mifos.test.acceptance.framework.client;
 
-import org.mifos.test.acceptance.framework.MifosPage;
+public enum ClientStatus {
 
-import com.thoughtworks.selenium.Selenium;
+    PARTIAL ("Partial Application", 1),
+    PENDING_APPROVAL ("Application Pending Approval", 2),
+    ACTIVE ("Active", 3),
+    ON_HOLD ("On Hold", 4),
+    CANCELLED ("Cancelled", 5),
+    CLOSED ("Closed", 6);
 
-public class CreateClientPreviewDataPage extends MifosPage {
+    private final String statusText;
+    private final Integer id;
 
-    public CreateClientPreviewDataPage(Selenium selenium) {
-        super(selenium);
-        this.verifyPage("preview_ClientDetails");
+    private ClientStatus(String statusText, Integer id) {
+        this.statusText = statusText;
+        this.id = id;
     }
 
-    public CreateClientConfirmationPage submit() {
-        selenium.click("preview_ClientDetails.button.submitForApproval");
-        waitForPageToLoad();
-        return new CreateClientConfirmationPage(selenium);
+    public String getStatusText() {
+        return this.statusText;
     }
 
-    public CreateClientEnterFamilyDetailsPage edit() {
-        selenium.click("preview_ClientDetails.button.editFamilyInformation");
-        waitForPageToLoad();
-        return new CreateClientEnterFamilyDetailsPage(selenium);
+    public Integer getId() {
+        return this.id;
     }
 
 }

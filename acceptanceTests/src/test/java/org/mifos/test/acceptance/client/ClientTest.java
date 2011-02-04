@@ -44,6 +44,7 @@ import org.mifos.test.acceptance.framework.client.ClientEditMFIPreviewPage;
 import org.mifos.test.acceptance.framework.client.ClientEditPersonalInfoPage;
 import org.mifos.test.acceptance.framework.client.ClientNotesPage;
 import org.mifos.test.acceptance.framework.client.ClientSearchResultsPage;
+import org.mifos.test.acceptance.framework.client.ClientStatus;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import org.mifos.test.acceptance.framework.client.CreateClientConfirmationPage;
 import org.mifos.test.acceptance.framework.client.CreateClientEnterMfiDataPage;
@@ -51,12 +52,16 @@ import org.mifos.test.acceptance.framework.client.CreateClientEnterPersonalDataP
 import org.mifos.test.acceptance.framework.client.CreateClientPreviewDataPage;
 import org.mifos.test.acceptance.framework.client.QuestionGroup;
 import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPage;
-import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPage.SubmitFormParameters;
-import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPreviewDataPage;
+import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPreviewPage;
+import org.mifos.test.acceptance.framework.group.CreateGroupEntryPage.CreateGroupSubmitParameters;
+import org.mifos.test.acceptance.framework.group.EditCustomerStatusParameters;
+import org.mifos.test.acceptance.framework.group.GroupCloseReason;
+import org.mifos.test.acceptance.framework.group.GroupStatus;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
 import org.mifos.test.acceptance.framework.testhelpers.ClientTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.CustomPropertiesHelper;
+import org.mifos.test.acceptance.framework.testhelpers.GroupTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.framework.testhelpers.QuestionGroupTestHelper;
 import org.mifos.test.acceptance.questionnaire.CreateQuestionGroupPage;
@@ -83,9 +88,10 @@ import org.testng.annotations.Test;
 public class ClientTest extends UiTestCaseBase {
 
     private NavigationHelper navigationHelper;
-    CustomPropertiesHelper propertiesHelper;
-    ClientTestHelper clientTestHelper;
-    QuestionGroupTestHelper questionGroupTestHelper;
+    private CustomPropertiesHelper propertiesHelper;
+    private ClientTestHelper clientTestHelper;
+    private QuestionGroupTestHelper questionGroupTestHelper;
+    private GroupTestHelper groupTestHelper;
 
     @Autowired
     private DriverManagerDataSource dataSource;
@@ -116,6 +122,7 @@ public class ClientTest extends UiTestCaseBase {
         propertiesHelper = new CustomPropertiesHelper(selenium);
         clientTestHelper = new ClientTestHelper(selenium);
         questionGroupTestHelper = new QuestionGroupTestHelper(selenium);
+        groupTestHelper = new GroupTestHelper(selenium);
         random = new Random();
     }
 
@@ -155,11 +162,11 @@ public class ClientTest extends UiTestCaseBase {
         viewDetailsPage.verifyNotes("test note");
 
         CustomerChangeStatusPage changeStatusPage = viewDetailsPage.navigateToCustomerChangeStatusPage();
-        SubmitFormParameters parameters = new SubmitFormParameters();
-        parameters.setStatus(SubmitFormParameters.ON_HOLD);
-        parameters.setNotes("test");
-        CustomerChangeStatusPreviewDataPage changeStatusPreviewDataPage = changeStatusPage.submitAndGotoCustomerChangeStatusPreviewDataPage(parameters);
-        viewDetailsPage = changeStatusPreviewDataPage.submitAndGotoClientViewDetailsPage();
+        EditCustomerStatusParameters parameters = new EditCustomerStatusParameters();
+        parameters.setClientStatus(ClientStatus.ON_HOLD);
+        parameters.setNote("test");
+        CustomerChangeStatusPreviewPage changeStatusPreviewPage = changeStatusPage.setChangeStatusParametersAndSubmit(parameters);
+        viewDetailsPage = changeStatusPreviewPage.submitAndGotoClientViewDetailsPage();
         viewDetailsPage.verifyStatus("On Hold");
 
         ClientEditPersonalInfoPage editPersonalInfoPage = viewDetailsPage.editPersonalInformation();
@@ -467,6 +474,52 @@ public class ClientTest extends UiTestCaseBase {
         questionResponsePage.verifyQuestionsDoesnotappear(questionToDesactivate.toArray(new String[questionToDesactivate.size()]));
         questionResponsePage.verifyQuestionsExists(questionToAdd.toArray(new String[questionToAdd.size()]));
         questionResponsePage.verifySectionDoesnotappear("Sec 2");
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // http://mifosforge.jira.com/browse/MIFOSTEST-35
+    public void addingMemeberToGroupWithDiffrentStatuses() throws Exception {
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
+        String groupName = "testGroup";
+        String clientName = "test";
+        CreateGroupSubmitParameters groupParams = new CreateGroupSubmitParameters();
+        groupParams.setGroupName(groupName);
+        EditCustomerStatusParameters editCustomerStatusParameters = new EditCustomerStatusParameters();
+        editCustomerStatusParameters.setNote("change status");
+
+        //When
+        ClientViewDetailsPage clientDetailsPage = clientTestHelper.createClientAndVerify("Joe1233171679953 Guy1233171679953", "MyOffice1233171674227");
+        clientTestHelper.changeCustomerStatus(clientDetailsPage);
+        groupTestHelper.createNewGroupPartialApplication("MyCenter1233171688286", groupParams);
+        //Then
+        clientTestHelper.addClientToGroupWithErrors(clientName, groupName);
+
+        //When
+        editCustomerStatusParameters.setGroupStatus(GroupStatus.PENDING_APPROVAL);
+        groupTestHelper.changeGroupStatus(groupName, editCustomerStatusParameters);
+        //Then
+        clientTestHelper.addClientToGroupWithErrors(clientName, groupName);
+
+        //When
+        editCustomerStatusParameters.setGroupStatus(GroupStatus.ACTIVE);
+        groupTestHelper.changeGroupStatus(groupName, editCustomerStatusParameters);
+        //Then
+        clientTestHelper.addClientToGroup(clientName, groupName);
+
+        //When
+        clientTestHelper.deleteClientGroupMembership(clientName);
+        editCustomerStatusParameters.setGroupStatus(GroupStatus.ON_HOLD);
+        groupTestHelper.changeGroupStatus(groupName, editCustomerStatusParameters);
+        //Then
+        clientTestHelper.addClientToGroupWithErrors(clientName, groupName);
+
+        //When
+        editCustomerStatusParameters.setGroupStatus(GroupStatus.CLOSED);
+        editCustomerStatusParameters.setCloseReason(GroupCloseReason.DUPLICATED);
+        groupTestHelper.changeGroupStatus(groupName, editCustomerStatusParameters);
+        //Then
+        clientTestHelper.tryAddClientToClosedGroup(clientName, groupName);
     }
 
     private QuestionnairePage checkMandatoryQuestionValidation(String questionGroupTitle, String question1, String question2, ClientViewDetailsPage viewDetailsPage) {

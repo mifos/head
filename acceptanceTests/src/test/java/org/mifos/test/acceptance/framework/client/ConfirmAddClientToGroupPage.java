@@ -24,23 +24,26 @@ import org.mifos.test.acceptance.framework.MifosPage;
 
 import com.thoughtworks.selenium.Selenium;
 
-public class CreateClientPreviewDataPage extends MifosPage {
+public class ConfirmAddClientToGroupPage extends MifosPage{
 
-    public CreateClientPreviewDataPage(Selenium selenium) {
+    public ConfirmAddClientToGroupPage(Selenium selenium) {
         super(selenium);
-        this.verifyPage("preview_ClientDetails");
+        this.verifyPage("ConfirmAddClientToGroup");
     }
 
-    public CreateClientConfirmationPage submit() {
-        selenium.click("preview_ClientDetails.button.submitForApproval");
+    private void submit(){
+        selenium.click("confirmAddClientToGroup.button.submit");
         waitForPageToLoad();
-        return new CreateClientConfirmationPage(selenium);
     }
 
-    public CreateClientEnterFamilyDetailsPage edit() {
-        selenium.click("preview_ClientDetails.button.editFamilyInformation");
-        waitForPageToLoad();
-        return new CreateClientEnterFamilyDetailsPage(selenium);
+    public ClientViewDetailsPage submitAddGroup(){
+        submit();
+        return new ClientViewDetailsPage(selenium);
+    }
+
+    public ConfirmAddClientToGroupPage submitAddGroupWithError(){
+        submit();
+        return new ConfirmAddClientToGroupPage(selenium);
     }
 
 }
