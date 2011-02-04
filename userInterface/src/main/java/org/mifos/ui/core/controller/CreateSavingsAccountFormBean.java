@@ -41,11 +41,17 @@ import org.springframework.binding.validation.ValidationContext;
  */
 public class CreateSavingsAccountFormBean implements Serializable {
 
+    // FIXME code smell! copied from SavingsType. SavingsType should be made
+    // publicly available
+    static final int MANDATORY_DEPOSIT = 1;
+    static final int VOLUNTARY_DEPOSIT = 2;
+
     private CustomerDto customer;
 
     @NotEmpty(groups = CustomerSearchStep.class)
     private String searchString;
 
+    @NotNull(groups = { MandatorySavings.class })
     @Pattern(regexp = "^[0-9]+(\\.[0-9]{1,2})?$?", groups = { MandatorySavings.class })
     private String mandatoryDepositAmount;
 
@@ -150,15 +156,12 @@ public class CreateSavingsAccountFormBean implements Serializable {
     }
 
     public void validateEnterAccountDetailsStep(ValidationContext context) {
-        // TODO: need to get access to domain constants from controller ...
-        // public static final short SAVINGS_MANDATORY= 1;
-        // public static final short SAVINGS_VOLUNTARY= 2;
         MessageContext messages = context.getMessageContext();
         Class[] validationGroups = {};
-        if (this.product.getSavingsProductDetails().getDepositType() == 1) {
+        if (this.product.getSavingsProductDetails().getDepositType() == MANDATORY_DEPOSIT) {
             Class[] groups = { MandatorySavings.class };
             validationGroups = groups;
-        } else if (this.product.getSavingsProductDetails().getDepositType() == 2
+        } else if (this.product.getSavingsProductDetails().getDepositType() == VOLUNTARY_DEPOSIT
                 && !"".equals(this.voluntaryDepositAmount)) {
             Class[] groups = { VoluntarySavings.class };
             validationGroups = groups;
