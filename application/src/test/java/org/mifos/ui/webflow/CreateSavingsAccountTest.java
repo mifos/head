@@ -41,6 +41,10 @@ import org.springframework.webflow.test.execution.AbstractXmlFlowExecutionTests;
 /**
  * Tests Create Savings Account webflow.
  * 
+ * Methods use the following naming convention:
+ * 
+ * test<state id>_<event id>
+ * 
  * @see http 
  *      ://static.springsource.org/spring-webflow/docs/2.0.x/reference/htmlsingle
  *      /spring-webflow-reference.html#testing
