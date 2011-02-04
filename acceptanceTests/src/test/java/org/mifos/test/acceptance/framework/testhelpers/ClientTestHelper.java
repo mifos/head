@@ -166,6 +166,14 @@ public class ClientTestHelper {
             .confirmDeleteGroupMembership();
     }
 
+    public void deleteClientGroupMembershipWithError(String clientName){
+        navigationHelper
+            .navigateToClientViewDetailsPage(clientName)
+            .navigateToEditRemoveGroupMembership()
+            .deleteGroupMembership()
+            .confirmDeleteGroupMembershipFail();
+    }
+
     public ClientViewDetailsPage createClientAndVerify(String loanOfficer, String officeName) {
         CreateClientEnterPersonalDataPage.SubmitFormParameters formParameters = createClient(loanOfficer, officeName);
         return navigateToClientViewDetails(formParameters);

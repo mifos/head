@@ -40,4 +40,9 @@ public class DeleteGroupMembershipPage extends MifosPage{
         submit();
         return new ClientViewDetailsPage(selenium);
     }
+
+    public DeleteGroupMembershipPage confirmDeleteGroupMembershipFail(){
+        submit();
+        return new DeleteGroupMembershipPage(selenium);
+    }
 }
