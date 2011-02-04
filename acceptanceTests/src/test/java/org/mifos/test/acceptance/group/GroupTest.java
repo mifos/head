@@ -220,6 +220,36 @@ public class GroupTest extends UiTestCaseBase {
         groupViewDetailsPage.verifyStatus(GroupViewDetailsPage.STATUS_PENDING_APPROVAL);
     }
 
+    /**
+     * Create group and change center membership for group
+     * http://mifosforge.jira.com/browse/MIFOSTEST-655
+     * @throws Exception
+     */
+    @Test(groups = {"smoke","group","acceptance","ui"})
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void verifyChangeCenterMembership() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
+
+        String centerName = "MyCenter1233171688286";
+        String newCenterName = "MyCenter1232993841778";
+        String groupName = "Group655";
+        CreateGroupSubmitParameters groupParams = getGenericGroupFormParameters();
+        groupParams.setGroupName(groupName);
+        EditCustomerStatusParameters groupStatusParams = new EditCustomerStatusParameters();
+        groupStatusParams.setNote("note");
+
+        GroupViewDetailsPage groupViewDetailsPage = groupTestHelper.createNewGroupPartialApplication(centerName, groupParams);
+        groupViewDetailsPage.verifyStatus(GroupViewDetailsPage.STATUS_PARTIAL_APPLICATION);
+        groupStatusParams.setGroupStatus(GroupStatus.PENDING_APPROVAL);
+        groupTestHelper.changeGroupStatus(groupName, groupStatusParams);
+        groupStatusParams.setGroupStatus(GroupStatus.ACTIVE);
+        groupViewDetailsPage = groupTestHelper.changeGroupStatus(groupName, groupStatusParams);
+        groupViewDetailsPage.verifyStatus(GroupViewDetailsPage.STATUS_ACTIVE);
+        groupViewDetailsPage = groupTestHelper.changeGroupCenterMembership(groupName, newCenterName);
+
+        groupViewDetailsPage.navigateToGroupsCenter(newCenterName);
+    }
+
     private Map<String, String> getChoiceTags() {
         Map<String,String> tags = new HashMap<String, String>();
         tags.put("Tag1", "Choice1");

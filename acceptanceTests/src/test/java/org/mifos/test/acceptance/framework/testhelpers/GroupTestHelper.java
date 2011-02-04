@@ -67,4 +67,12 @@ public class GroupTestHelper {
             .setChangeStatusParametersAndSubmit(editCustomerStatusParameters)
             .navigateToGroupDetailsPage();
     }
+
+    public GroupViewDetailsPage changeGroupCenterMembership(String groupName, String centerName) {
+        return navigationHelper
+            .navigateToGroupViewDetailsPage(groupName)
+            .navigateToEditCenterMembership()
+            .selectCenterAndNavigateToEditCenterMembershiConfirmationPage(centerName)
+            .submitAndNavigateToGroupDetailsPage();
+    }
 }
