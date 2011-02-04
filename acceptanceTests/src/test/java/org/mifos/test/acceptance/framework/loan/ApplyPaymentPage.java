@@ -29,9 +29,6 @@ public class ApplyPaymentPage extends MifosPage {
 
     public ApplyPaymentPage(Selenium selenium) {
         super(selenium);
-    }
-
-    public void verifyPage() {
         verifyPage("ApplyPayment");
     }
 

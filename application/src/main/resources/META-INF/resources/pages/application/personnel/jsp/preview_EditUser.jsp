@@ -29,7 +29,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".view">
  <tiles:put name="body" type="string">
- <span id="page.id" title="preview_EditUser" />
+ <span id="page.id" title="preview_EditUser"></span>
  <SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
  <script language="javascript">
   function goToEditPage(){
@@ -163,19 +163,22 @@ explanation of the license and how it is applied.
 				<c:out value="${genderlist.name}"/><br>
 			</c:if>
 		</c:forEach>
-	</span> <br>
-      	<mifos:mifoslabel name="Personnel.LanguagePreferred"  bundle="PersonnelUIResources"></mifos:mifoslabel> 
+	</span>
+	<br>
+	<!-- 
+    <mifos:mifoslabel name="Personnel.LanguagePreferred"  bundle="PersonnelUIResources" /> 
 	<span class="fontnormal">
 		<c:forEach	items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'languageList')}"	var="item">
 			<c:if test="${personActionForm.preferredLocale == item.id}">
 				<c:out value="${item.name}"/>
 			</c:if>
 		</c:forEach> 
-	</span> <br>
-      	<mifos:mifoslabel name="Personnel.DOJMFI"  bundle="PersonnelUIResources"></mifos:mifoslabel> 
+	</span>
+	<br>
+	-->
+    <mifos:mifoslabel name="Personnel.DOJMFI"  bundle="PersonnelUIResources" /> 
 	<span class="fontnormal">
 		<c:out value="${personActionForm.dateOfJoiningMFI}" />
-
 	</span><br>
       <mifos:mifoslabel name="Personnel.Status"  bundle="PersonnelUIResources"></mifos:mifoslabel>: 
 	<span class="fontnormal">

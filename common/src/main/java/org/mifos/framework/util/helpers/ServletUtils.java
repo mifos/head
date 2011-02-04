@@ -20,6 +20,9 @@
 
 package org.mifos.framework.util.helpers;
 
+import org.springframework.web.context.support.WebApplicationContextUtils;
+
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 public class ServletUtils {
@@ -39,4 +42,7 @@ public class ServletUtils {
         return request.getSession().getServletContext().getAttribute(key);
     }
 
+    public static <T> T getBean(ServletContext servletContext, String beanName) {
+        return (T) WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext).getBean(beanName);
+    }
 }

@@ -21,12 +21,15 @@
 package org.mifos.test.acceptance.properties;
 
 import org.mifos.framework.util.DbUnitUtilities;
+import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.center.CreateCenterEnterDataPage;
 import org.mifos.test.acceptance.framework.center.CreateMeetingPage;
 import org.mifos.test.acceptance.framework.client.CreateClientEnterMfiDataPage;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchPage;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPreviewPage;
@@ -87,7 +90,8 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void changeDecimalsToThree() throws Exception {
+    //http://mifosforge.jira.com/browse/MIFOSTEST-200
+    public void changeDigitsAfterDecimal() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml", dataSource, selenium);
 
         propertiesHelper.setDigitsAfterDecimal(3);
@@ -95,7 +99,57 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
         LoanAccountPage loanAccountPage  = navigationHelper.navigateToLoanAccountPage("000100000000004");
         loanAccountPage.verifyExactLoanAmount("1000.000");
 
+        propertiesHelper.setDigitsAfterDecimal(2);
+
+        loanAccountPage  = navigationHelper.navigateToLoanAccountPage("000100000000004");
+        loanAccountPage.verifyExactLoanAmount("1000.00");
+
+        propertiesHelper.setDigitsAfterDecimal(0);
+
+        loanAccountPage  = navigationHelper.navigateToLoanAccountPage("000100000000004");
+        loanAccountPage.verifyExactLoanAmount("1000");
+
         propertiesHelper.setDigitsAfterDecimal(1);
+
+        loanAccountPage  = navigationHelper.navigateToLoanAccountPage("000100000000004");
+        loanAccountPage.verifyExactLoanAmount("1000.0");
+
+    }
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    //http://mifosforge.jira.com/browse/MIFOSTEST-195
+    public void checkNumberDigitsBeforeDecimalForAmountAndAfterDecimalForInterest() throws Exception{
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
+        //When
+        ClientsAndAccountsHomepage accountsHomepage = navigationHelper.navigateToClientsAndAccountsPage();
+        CreateLoanAccountSearchPage accountSearchPage = accountsHomepage.navigateToCreateLoanAccountUsingLeftMenu();
+
+        CreateLoanAccountSearchParameters formParameters = new CreateLoanAccountSearchParameters();
+        formParameters.setLoanProduct("MonthlyClientFlatLoanWithFees");
+        formParameters.setSearchString("Stu1232993852651 Client1232993852651");
+        accountSearchPage.searchAndNavigateToCreateLoanAccountPage(formParameters);
+
+        selenium.type("loancreationdetails.input.sumLoanAmount", "123456789012345");
+        selenium.type("loancreationdetails.input.interestRate", "12.000001");
+        selenium.click("loancreationdetails.button.continue");
+        selenium.waitForPageToLoad("30000");
+        //Then
+        String error = selenium.getText("loancreationdetails.error.message");
+        boolean interestError = error.contains("The Interest ratethe number of digits after the decimal separator exceeds the allowed number 5 is invalid because");
+        boolean amountError = error.contains("The Amount is invalid because the number of digits before the decimal separator exceeds the allowed number 14");
+        Assert.assertEquals(interestError, true);
+        Assert.assertEquals(amountError, true);
+        //When
+        selenium.type("loancreationdetails.input.sumLoanAmount", "12345678901234");
+        selenium.type("loancreationdetails.input.interestRate", "12.00001");
+        selenium.click("loancreationdetails.button.continue");
+        selenium.waitForPageToLoad("30000");
+        //Then
+        error = selenium.getText("loancreationdetails.error.message");
+        interestError = error.contains("The Interest ratethe number of digits after the decimal separator exceeds the allowed number 5 is invalid because");
+        amountError = error.contains("The Amount is invalid because the number of digits before the decimal separator exceeds the allowed number 14");
+        Assert.assertEquals(interestError, false);
+        Assert.assertEquals(amountError, false);
 
     }
 

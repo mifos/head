@@ -136,4 +136,13 @@ public class LoanProductDaoHibernateIntegrationTest extends MifosIntegrationTest
         List<Object[]> queryResult = loanProductDao.findAllLoanProducts();
         assertThat(queryResult, is(notNullValue()));
     }
+
+    @Test
+    public void testShouldLoanProductsByGlobalSystemId() {
+
+        // exercise test
+        LoanOfferingBO queryResult = loanProductDao.findBySystemId(activeLoanProduct.getGlobalPrdOfferingNum());
+        assertThat(queryResult, is(notNullValue()));
+        assertThat(queryResult.getGlobalPrdOfferingNum(), is(notNullValue()));
+    }
 }

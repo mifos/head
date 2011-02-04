@@ -29,6 +29,7 @@ public class CollectionSheetEntryConfirmationPage extends MifosPage {
 
     public CollectionSheetEntryConfirmationPage(Selenium selenium) {
         super(selenium);
+        this.verifyPage("BulkEntryConfirmation");
     }
 
     public CollectionSheetEntryConfirmationPage verifyPage() {

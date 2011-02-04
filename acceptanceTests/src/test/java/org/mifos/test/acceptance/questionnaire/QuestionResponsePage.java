@@ -33,6 +33,7 @@ import static org.junit.Assert.assertTrue;
 public class QuestionResponsePage extends MifosPage {
     public QuestionResponsePage(Selenium selenium) {
         super(selenium);
+        super.verifyPage("captureQuestionResponse");
     }
 
     public void verifyPage() {

@@ -20,6 +20,18 @@
 
 package org.mifos.application.admin.system;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
+import org.mifos.application.master.MessageLookup;
+import org.mifos.core.ClasspathResource;
+import org.mifos.core.MifosRuntimeException;
+import org.mifos.framework.persistence.DatabaseMigrator;
+import org.mifos.framework.util.DateTimeService;
+import org.mifos.framework.util.StandardTestingService;
+
+import javax.servlet.ServletContext;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
@@ -32,19 +44,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-
-import javax.servlet.ServletContext;
-
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
-import org.mifos.application.master.MessageLookup;
-import org.mifos.core.ClasspathResource;
-import org.mifos.core.MifosRuntimeException;
-import org.mifos.framework.persistence.DatabaseMigrator;
-import org.mifos.framework.util.DateTimeService;
-import org.mifos.framework.util.StandardTestingService;
 
 /**
  * JDBC URL parsing code in this class is <a
@@ -126,10 +125,8 @@ public class SystemInfo implements Serializable {
     }
 
     private String getReleaseSchemaName() {
-        Reader reader = null;
-        BufferedReader bufferedReader = null;
-        Integer upgradeId = null;
-        List<Integer> releaseUpgrades = new ArrayList<Integer>();
+        Reader reader;
+        BufferedReader bufferedReader;
         try {
             reader = ClasspathResource.getInstance("/sql/").getAsReader("release-upgrades.txt");
             bufferedReader = new BufferedReader(reader);
@@ -320,10 +317,17 @@ public class SystemInfo implements Serializable {
         this.osUser = osUser;
     }
 
-    public List<Integer> getReleaseUpgrades() {
+
+
+    /**
+     * @deprecated this method employs the NSDU upgrade mechanism to figure out the release upgrades.
+     * Since NSDU is currently de-commissioned, use the getReleaseUpgrades()
+     * @return the list of release upgrade IDs applied in the current database
+     */
+    private List<Integer> getReleaseUpgrades() {
         Reader reader = null;
         BufferedReader bufferedReader = null;
-        Integer upgradeId = null;
+        Integer upgradeId;
         List<Integer> releaseUpgrades = new ArrayList<Integer>();
         try {
             reader = ClasspathResource.getInstance("/sql/").getAsReader("release-upgrades.txt");

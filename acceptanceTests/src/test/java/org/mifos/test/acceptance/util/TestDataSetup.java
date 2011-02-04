@@ -90,7 +90,7 @@ public class TestDataSetup {
     private CustomerChangeStatusPage.SubmitFormParameters setApprovalStatus() {
         CustomerChangeStatusPage.SubmitFormParameters approvalStatusParameters = new CustomerChangeStatusPage.SubmitFormParameters();
         approvalStatusParameters.setNotes("For Test");
-        approvalStatusParameters.setStatus(CustomerChangeStatusPage.SubmitFormParameters.APPROVED);
+        approvalStatusParameters.setStatus(CustomerChangeStatusPage.SubmitFormParameters.ACTIVE);
         return approvalStatusParameters;
     }
 

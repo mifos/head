@@ -50,19 +50,22 @@ public class RedoLoanDisbursalEntryPage extends MifosPage {
         Assert.assertTrue(selenium.isTextPresent("Please specify a valid disbursal date."));
     }
 
+    public RedoLoanDisbursalSchedulePreviewPage submitWithGLIMandLSIPAndNavigateToPreviewPage(RedoLoanDisbursalParameters params) {
+        typeData(params);
+        typeGLIMData(params);
+        submit();
+        return new RedoLoanDisbursalSchedulePreviewPage(selenium);
+    }
+
     public RedoLoanDisbursalSchedulePreviewPage submitAndNavigateToRedoLoanDisbursalSchedulePreviewPage(RedoLoanDisbursalParameters params) {
         typeData(params);
-
         submit();
-
         return new RedoLoanDisbursalSchedulePreviewPage(selenium);
     }
 
     public RedoLoanDisbursalEntryPage submitInvalidDataAndReloadPageWithInputError(RedoLoanDisbursalParameters params) {
         typeData(params);
-
         submit();
-
         return new RedoLoanDisbursalEntryPage(selenium);
     }
 
@@ -75,6 +78,14 @@ public class RedoLoanDisbursalEntryPage extends MifosPage {
         selenium.type("disbursementDateYY", params.getDisbursalDateYYYY());
 
         selenium.fireEvent("disbursementDateYY", "blur");
+    }
+
+    private void typeGLIMData(RedoLoanDisbursalParameters params) {
+        for(int i = 0; i < params.getClientsCount(); i++) {
+            selenium.click("clients["+params.getCLientsID(i)+"]");
+            selenium.type("clientDetails["+params.getCLientsID(i)+"].loanAmount", params.getClientsAmount(i));
+            selenium.select("clientDetails["+params.getCLientsID(i)+"].businessActivity", params.getClientsPurpose(i));
+        }
     }
 
     private void submit() {

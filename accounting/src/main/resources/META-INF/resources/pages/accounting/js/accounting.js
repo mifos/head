@@ -49,31 +49,48 @@
               })
     }
     
-   function loadExportsList(i) {
+   function loadExportsList(size, type) {
         $.ajax({
-            url   : 'generateExportsList.ftl?listSize='+i,
+            url   : 'generateExportsList.ftl?listSize='+size+'&listType='+type,
             cache : false,
             error : function (xhr, ajaxOptions, thrownError){
                     alert(xhr.responseText + thrownError);
                     },
             success : function(data) {
-                         $("#auto_export_table").html(data);
-                         addExportListLink(i);
+                         $("#export_list").html(data);
+                         addExportListLink(size, type);
                     }
               })
     }
-    function addExportListLink(i) {
-        if(i == 0 ) {
-                      $("#add_auto_export").html("<a href='#' onclick='javascript:loadExportsList(10);'>Show Alls Days' Export</a>");
-                      $('#auto_export_table').html('');
-       } else {
-             $("#add_auto_export").html("<a href='#' onclick='javascript:loadExportsList("+(i+10)+");'>More 10</a> &nbsp;&nbsp;&nbsp;"
-                                       +"<a href='#' onclick='javascript:loadExportsList("+(i-10)+");'>Less 10</a>&nbsp;&nbsp;&nbsp;"
-                                       +"<a href='#' onclick='javascript:loadExportsList(0);'>Back</a>&nbsp;&nbsp;&nbsp;");
-              }
-             
-    }
 
+    function addExportListLink(size, type) {
+        var options = "<a href='#' onclick=\"javascript:loadExportsList("+(size+10)+",'"+type+"');\" title='Add 10 previous exports on screen'>More 10</a> &nbsp;";
+
+        if(size != 10 ) {
+           options += "<a href='#' onclick=\"javascript:loadExportsList("+(size-10)+",'"+type+"');\" title='Remove 10 previous exports on screen'>Less 10</a>&nbsp;";
+           options += "<a href='#' onclick=\"javascript:loadExportsList(10,'"+type+"');\" title='Go back to list of 10 exports'>Back</a>";
+        }
+
+        if(type != "all") {
+           options += "<br/><a href='#' onclick=\"javascript:loadExportsList(10,'all');\" title='Get all exports generated/not generated'>Show all exports</a>";
+        } else {
+           options += "<br/>Show all exports";
+        }
+
+        if(type != "generated") {
+           options += "<br/><a href='#' onclick=\"javascript:loadExportsList(10,'generated');\" title='Get only generated exports'>Show only generated exports</a>";
+        } else {
+           options += "<br/>Show only generated exports";
+        }
+
+       if(type != "notgenerated") {
+           options += "<br/><a href='#' onclick=\"javascript:loadExportsList(10,'notgenerated');\" title='Get only not generated exports'>Show only not generated exports</a>";
+        } else {
+           options += "<br/>Show only not generated exports";
+        }
+
+           $("#export_list_options").html(options);
+    }
 
 var gAutoPrint = true;
 

@@ -20,16 +20,21 @@
 
 package org.mifos.test.acceptance.framework.loan;
 
-import com.thoughtworks.selenium.Selenium;
 import org.mifos.test.acceptance.framework.AbstractPage;
+import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
+import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.questionnaire.ViewQuestionResponseDetailPage;
 import org.testng.Assert;
+
+import com.thoughtworks.selenium.Selenium;
 
 @SuppressWarnings("PMD.SystemPrintln")
 public class LoanAccountPage extends AbstractPage {
 
     public final static String ACTIVE = "Active in Good Standing";
+    public final static String CLOSED = "Closed- Obligation met";
+
     String loanSummaryTable = "//table[@id='loanSummaryTable']";
 
     public LoanAccountPage(Selenium selenium) {
@@ -83,6 +88,14 @@ public class LoanAccountPage extends AbstractPage {
         Assert.assertEquals(getTotalPaid(), amount);
     }
 
+    public void verifyPrincipalOriginal(String value) {
+        Assert.assertEquals(getOriginalLoanAmount(), value);
+    }
+
+    public void verifyPrincipalBalance(String value) {
+        Assert.assertEquals(getPrincipleBalance(), value);
+    }
+
     public void verifyPerformanceHistory(String payments, String missedPayments) {
         Assert.assertTrue(selenium.isTextPresent("of payments: "+payments));
         Assert.assertTrue(selenium.isTextPresent("of missed payments: "+missedPayments));
@@ -101,6 +114,10 @@ public class LoanAccountPage extends AbstractPage {
         }
     }
 
+    public void verifyError(String error) {
+        Assert.assertTrue(!selenium.isElementPresent("//span[@id='schedulePreview.error.message']/li[text()='"+error+"']"));
+    }
+
     public void verifyNumberOfInstallments(String numberOfInstallments) {
         Assert.assertEquals(selenium.getText("loanaccountdetail.text.noOfInst"), numberOfInstallments);
     }
@@ -114,7 +131,7 @@ public class LoanAccountPage extends AbstractPage {
     }
 
     public void verifyCollateralNotes(String note) {
-        Assert.assertEquals(selenium.getText("loanaccountdetail.text.note"), note);
+        Assert.assertEquals(selenium.getText("loanaccountdetail.text.collateralnote"), note);
     }
 
     public void verifyCollateralType(String type) {
@@ -142,11 +159,15 @@ public class LoanAccountPage extends AbstractPage {
             verifyCollateralType(editLoanAccountInformationParameters.getCollateralType());
         }
         if(editLoanAccountInformationParameters.getExternalID()!=null){
-            verifyInterestRate(submitAccountParameters.getInterestRate());
+            verifyExternalId(editLoanAccountInformationParameters.getExternalID());
         }
         if(editLoanAccountInformationParameters.getPurposeOfLoan()!=null){
             verifyPurposeOfLoan(editLoanAccountInformationParameters.getPurposeOfLoan());
         }
+    }
+
+    public void verifyNumberOfInstallments(String min, String max, String expected) {
+        Assert.assertTrue(selenium.isTextPresent("No. of installments: "+expected+" (Allowed Number of Installments: "+min+" - "+max+")"));
     }
 
     /**
@@ -223,6 +244,12 @@ public class LoanAccountPage extends AbstractPage {
         return new DisburseLoanPage(selenium);
     }
 
+    public LoanAccountPage tryNavigatingToDisburseLoanWithError() {
+        selenium.click("loanaccountdetail.link.disburseLoan");
+        waitForPageToLoad();
+        return new LoanAccountPage(selenium);
+    }
+
     public ApplyChargePage navigateToApplyCharge() {
         selenium.click("loanaccountdetail.link.applyCharges");
         waitForPageToLoad();
@@ -281,6 +308,18 @@ public class LoanAccountPage extends AbstractPage {
         selenium.click("id=loanaccountdetail.link.viewAccountActivity");
         waitForPageToLoad();
         return new AccountActivityPage(selenium);
+    }
+
+    public ClientsAndAccountsHomepage navigateToClientsAndAccountsUsingHeaderTab() {
+        selenium.click("clientsAndAccountsHeader.link.clientsAndAccounts");
+        waitForPageToLoad();
+        return new ClientsAndAccountsHomepage(selenium);
+    }
+
+    public AdminPage navigateToAdminPageUsingHeaderTab() {
+        selenium.click("clientsAndAccountsHeader.link.admin");
+        waitForPageToLoad();
+        return new AdminPage(selenium);
     }
 
     public String getTotalBalance() {
@@ -359,6 +398,21 @@ public class LoanAccountPage extends AbstractPage {
         selenium.click("loanaccountdetail.link.viewTransactionHistory");
         waitForPageToLoad();
         return new TransactionHistoryPage(selenium);
+    }
+
+    public LoanAccountPage changeAccountStatus(EditLoanAccountStatusParameters statusParams) {
+        return navigateToEditAccountStatus()
+                .submitAndNavigateToNextPage(statusParams)
+                .submitAndNavigateToLoanAccountPage();
+    }
+
+    public LoanAccountPage changeAccountStatusToAccepted() {
+        EditLoanAccountStatusParameters statusParams = new EditLoanAccountStatusParameters();
+        statusParams.setStatus(EditLoanAccountStatusParameters.APPROVED);
+        statusParams.setNote("OK");
+        return navigateToEditAccountStatus()
+                .submitAndNavigateToNextPage(statusParams)
+                .submitAndNavigateToLoanAccountPage();
     }
 
     public LoanAccountPage verifyLoanStatus(String status) {

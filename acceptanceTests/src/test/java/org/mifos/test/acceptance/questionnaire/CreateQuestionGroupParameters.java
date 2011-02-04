@@ -20,19 +20,23 @@
 
 package org.mifos.test.acceptance.questionnaire;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CreateQuestionGroupParameters {
-    private String title = "";
-    private String appliesTo = "--select one--";
-    private String sectionName = "";
-    private List<String> sectionQuestions;
-
-    public boolean isAnswerEditable() {
-        return answerEditable;
-    }
-
+    private String title;
+    private String appliesTo;
+    private Map<String, List<CreateQuestionParameters>> newQuestions;
+    private Map<String, List<String>> existingQuestions;
     private boolean answerEditable = false;
+
+    public CreateQuestionGroupParameters() {
+        super();
+        newQuestions = new HashMap<String, List<CreateQuestionParameters>>();
+        existingQuestions = new HashMap<String, List<String>>();
+    }
 
     public String getTitle() {
         return title;
@@ -50,23 +54,42 @@ public class CreateQuestionGroupParameters {
         return appliesTo;
     }
 
-    public String getSectionName() {
-        return sectionName;
-    }
-
-    public void setSectionName(String sectionName) {
-        this.sectionName = sectionName;
-    }
-
-    public void setQuestions(List<String> sectionQuestions) {
-        this.sectionQuestions = sectionQuestions;
-    }
-
-    public List<String> getSectionQuestions() {
-        return sectionQuestions;
+    public boolean isAnswerEditable() {
+        return answerEditable;
     }
 
     public void setAnswerEditable(boolean editable) {
         this.answerEditable = editable;
+    }
+
+    public Map<String, List<String>> getExistingQuestions() {
+        return this.existingQuestions;
+    }
+
+    public void setExistingQuestions(Map<String, List<String>> existingQuestions) {
+        this.existingQuestions = existingQuestions;
+    }
+
+
+    public Map<String, List<CreateQuestionParameters>> getNewQuestions() {
+        return this.newQuestions;
+    }
+
+    public void setNewQuestions(Map<String, List<CreateQuestionParameters>> newQuestions) {
+        this.newQuestions = newQuestions;
+    }
+
+    public void addExistingQuestion(String section,String question){
+        if(!this.existingQuestions.containsKey(section)){
+            this.existingQuestions.put(section, new ArrayList<String>());
+        }
+        this.existingQuestions.get(section).add(question);
+    }
+
+    public void addNewQuestion(String section, CreateQuestionParameters question){
+        if(!this.newQuestions.containsKey(section)){
+            this.newQuestions.put(section, new ArrayList<CreateQuestionParameters>());
+        }
+        this.newQuestions.get(section).add(question);
     }
 }

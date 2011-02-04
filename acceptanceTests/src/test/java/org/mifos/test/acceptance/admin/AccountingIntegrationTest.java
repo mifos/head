@@ -26,8 +26,6 @@ import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
-import org.mifos.test.acceptance.framework.admin.GenerateAccountingExportPage;
-import org.mifos.test.acceptance.framework.admin.GenerateAccountingExportPage.GenerateAccountingSubmitParameters;
 import org.mifos.test.acceptance.framework.admin.ViewAccountingExportsPage;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,18 +66,6 @@ public class AccountingIntegrationTest extends UiTestCaseBase {
     public void verifyAccountingExportsWorkFlow() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_014_dbunit.xml", dataSource, selenium);
         AdminPage adminPage = loginAndGoToAdminPage();
-        GenerateAccountingExportPage generateAccountingExportsPage = adminPage.navigateToGenerateAccountingExports();
-        generateAccountingExportsPage.verifyPage();
-        generateAccountingExportsPage.clickCancel();
-        adminPage.verifyPage();
-        generateAccountingExportsPage = adminPage.navigateToGenerateAccountingExports();
-        GenerateAccountingSubmitParameters formParameters = new GenerateAccountingSubmitParameters();
-        formParameters.setFromDate("2008-12-04");
-        formParameters.setToDate("2008-12-04");
-        generateAccountingExportsPage.submitAndNavigateToViewAccountingDataPage(formParameters);
-        generateAccountingExportsPage.verifyDetailsTableExists();
-        generateAccountingExportsPage.navigateBack();
-        generateAccountingExportsPage.navigateBack();
         ViewAccountingExportsPage viewAccountingExportsPage = adminPage.navigateToViewAccountingExports();
         viewAccountingExportsPage.verifyPage();
         viewAccountingExportsPage.clickCancel();

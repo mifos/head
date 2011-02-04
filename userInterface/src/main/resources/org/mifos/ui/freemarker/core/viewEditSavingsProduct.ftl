@@ -22,7 +22,7 @@
 [@adminLeftPaneLayout]
 [#assign savings][@mifostag.mifoslabel name="Savings" /][/#assign]
 <!--  Main Content Begins-->
-<span id="page.id" title="SavingsProductDetails" />
+<span id="page.id" title="SavingsProductDetails"></span>
 
 <div class="content">
     <div>

@@ -20,7 +20,7 @@
 --]
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
-<span id="page.id" title="create_officeHoliday"/>
+<span id="page.id" title="create_officeHoliday"></span>
 <div class="content">
     <div class="span-24">
     [@mifos.crumbs breadcrumbs /]

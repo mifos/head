@@ -49,6 +49,7 @@ public class BranchReportParamValidator extends AbstractReportParameterValidator
         }
     }
 
+    @Override
     public BranchReportParameterForm buildReportParameterForm(HttpServletRequest request) {
         return BranchReportParameterForm.build(request);
     }

@@ -56,7 +56,6 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerHierarchyEntity;
 import org.mifos.customers.business.CustomerMeetingEntity;
 import org.mifos.customers.business.CustomerStatusEntity;
-import org.mifos.customers.client.persistence.ClientPersistence;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
@@ -64,7 +63,6 @@ import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.surveys.business.SurveyInstance;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.ClientFamilyInfoUpdate;
@@ -104,8 +102,6 @@ public class ClientBO extends CustomerBO {
     private Set<ClientFamilyDetailEntity> familyDetailSet;
     private final Set<ClientAttendanceBO> clientAttendances;
     private Set<ClientInitialSavingsOfferingEntity> offeringsAssociatedInCreate;
-
-    private ClientPersistence clientPersistence = null;
     private SavingsPersistence savingsPersistence = null;
     private SavingsPrdPersistence savingsPrdPersistence = null;
     private OfficePersistence officePersistence = null;
@@ -1019,10 +1015,6 @@ public class ClientBO extends CustomerBO {
                 : false;
     }
 
-    public void attachPpiSurveyInstance(final SurveyInstance ppiSurvey) {
-        /* TODO not implemented yet */
-    }
-
     @Override
     public void updatePerformanceHistoryOnDisbursement(final LoanBO loan, final Money disburseAmount) {
         ClientPerformanceHistoryEntity performanceHistory = (ClientPerformanceHistoryEntity) getPerformanceHistory();
@@ -1074,17 +1066,6 @@ public class ClientBO extends CustomerBO {
             savingsPrdPersistence = new SavingsPrdPersistence();
         }
         return savingsPrdPersistence;
-    }
-
-    public ClientPersistence getClientPersistence() {
-        if (null == clientPersistence) {
-            clientPersistence = new ClientPersistence();
-        }
-        return clientPersistence;
-    }
-
-    public void setClientPersistence(final ClientPersistence clientPersistence) {
-        this.clientPersistence = clientPersistence;
     }
 
     public boolean isClosedOrCancelled() {

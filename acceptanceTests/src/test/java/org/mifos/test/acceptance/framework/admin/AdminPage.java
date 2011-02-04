@@ -30,6 +30,7 @@ import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalSearchPage;
 import org.mifos.test.acceptance.framework.loan.UndoLoanDisbursalSearchPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductConfirmationPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
+import org.mifos.test.acceptance.framework.loanproduct.DefineProductMixPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.SubmitFormParameters;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPreviewPage;
 import org.mifos.test.acceptance.framework.loanproduct.ViewLoanProductsPage;
@@ -44,6 +45,7 @@ import org.mifos.test.acceptance.questionnaire.CreateQuestionPage;
 import org.mifos.test.acceptance.questionnaire.ViewAllQuestionGroupsPage;
 import org.mifos.test.acceptance.questionnaire.ViewAllQuestionsPage;
 import org.mifos.test.acceptance.util.StringUtil;
+import org.testng.Assert;
 
 /**
  * Encapsulates the GUI based actions that can
@@ -208,12 +210,6 @@ public class AdminPage extends MifosPage {
         return new ViewAccountingExportsPage(selenium);
     }
 
-    public GenerateAccountingExportPage navigateToGenerateAccountingExports() {
-        selenium.click("admin.link.generateaccountingexports");
-        waitForPageToLoad();
-        return new GenerateAccountingExportPage(selenium);
-    }
-
     public ViewLoanProductsPage navigateToViewLoanProducts() {
         selenium.click("admin.link.viewLoanProducts");
         waitForPageToLoad();
@@ -298,6 +294,12 @@ public class AdminPage extends MifosPage {
         return new AdminPage(selenium);
     }
 
+    public AdminPage failNavigationToImportTransactionsPage() {
+        selenium.click("admin.link.manageImports");
+        waitForPageToLoad();
+        return new AdminPage(selenium);
+    }
+
     public ImportTransactionsPage navigateToImportTransactionsPage() {
         selenium.click("admin.link.manageImports");
         waitForPageToLoad();
@@ -326,6 +328,12 @@ public class AdminPage extends MifosPage {
         selenium.click("admin.link.defineNewFees");
         waitForPageToLoad();
         return new FeesCreatePage(selenium);
+    }
+
+    public DefineProductMixPage navigateToDefineProductMix() {
+        selenium.click("admin.link.defineProductsMix");
+        waitForPageToLoad();
+        return new DefineProductMixPage(selenium);
     }
 
     public void defineNewFees (FeesCreatePage.SubmitFormParameters formParameters) {
@@ -358,5 +366,9 @@ public class AdminPage extends MifosPage {
         selenium.click("header.link.clientsAndAccounts");
         waitForPageToLoad();
         return new ClientsAndAccountsHomepage(selenium);
+    }
+
+    public void verifyError(String error){
+        Assert.assertTrue(selenium.isTextPresent(error));
     }
 }

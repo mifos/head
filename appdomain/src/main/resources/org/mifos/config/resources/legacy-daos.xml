@@ -22,6 +22,16 @@
 
     <bean id="legacyAuditDao" class="org.mifos.framework.components.audit.persistence.LegacyAuditDao" />
 
-    <bean id="surveysPersistence" class="org.mifos.customers.surveys.persistence.SurveysPersistence" />
+    <bean id="legacyClientDao" class="org.mifos.customers.client.persistence.LegacyClientDao" />
+
+    <bean id="legacyAuditLookupValuesDao" class="org.mifos.framework.components.audit.persistence.LegacyAuditLookupValuesDao" />
+    
+    <bean id="legacyBranchCashConfirmationReportDao" class="org.mifos.reports.cashconfirmationreport.persistence.LegacyBranchCashConfirmationReportDao" />
+    
+     <bean id="selectionItemDao" class="org.mifos.reports.business.dao.SelectionItemDaoHibernate" />
+     
+     <bean id="legacyProductMixDao" class="org.mifos.accounts.productsmix.persistence.LegacyProductMixDao" />
+     
+     <bean id="legacyProductCategoryDao" class="org.mifos.accounts.productdefinition.persistence.LegacyProductCategoryDao" />
 
 </beans>

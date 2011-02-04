@@ -23,16 +23,17 @@ package org.mifos.application.servicefacade;
 import java.util.List;
 
 import org.joda.time.LocalDate;
+import org.mifos.dto.domain.AccountStatusDto;
+import org.mifos.dto.domain.AccountUpdateStatus;
 import org.mifos.dto.domain.AuditLogDto;
 import org.mifos.dto.domain.CreateAccountNote;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.NoteSearchDto;
+import org.mifos.dto.domain.OpeningBalanceSavingsAccount;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.domain.SavingsAccountClosureDto;
 import org.mifos.dto.domain.SavingsAccountCreationDto;
 import org.mifos.dto.domain.SavingsAccountDetailDto;
-import org.mifos.dto.domain.AccountStatusDto;
-import org.mifos.dto.domain.AccountUpdateStatus;
 import org.mifos.dto.domain.SavingsAdjustmentDto;
 import org.mifos.dto.domain.SavingsDepositDto;
 import org.mifos.dto.domain.SavingsStatusChangeHistoryDto;
@@ -80,6 +81,9 @@ public interface SavingsServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     Long createSavingsAccount(SavingsAccountCreationDto savingsAccountCreation);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    String createSavingsAccount(OpeningBalanceSavingsAccount openingBalanceSavingsAccount);
 
     @PreAuthorize("isFullyAuthenticated()")
     AccountStatusDto retrieveAccountStatuses(Long savingsId);

@@ -46,6 +46,7 @@ public interface TestingService {
     void setLocale(String languageCode, String countryCode) throws MifosException;
     void setAccountingRules(String accountingRulesParamName, String accountingRulesParamValue) throws MifosException;
     void setFiscalCalendarRules(String workingDays, String ScheduleMeetingIfNonWorkingDay) throws MifosException;
+    void setImport(String importParamName, String importParamValue) throws MifosException;
     void setMinimumAgeForNewClient(int age);
     void setMaximumAgeForNewClient(int age);
     void setAreFamilyDetailsRequired(boolean flag);

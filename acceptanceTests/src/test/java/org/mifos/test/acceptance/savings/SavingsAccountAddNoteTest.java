@@ -87,7 +87,7 @@ public class SavingsAccountAddNoteTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    @Test(enabled=false)
+    @Test(enabled=true)
     public void addNoteToSavingsAccountAndVerifyAllNotes() throws Exception {
         initData();
 

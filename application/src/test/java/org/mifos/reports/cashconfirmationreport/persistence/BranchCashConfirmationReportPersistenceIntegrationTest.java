@@ -38,11 +38,14 @@ import org.mifos.reports.cashconfirmationreport.BranchCashConfirmationDisburseme
 import org.mifos.reports.cashconfirmationreport.BranchCashConfirmationInfoBO;
 import org.mifos.reports.cashconfirmationreport.BranchCashConfirmationIssueBO;
 import org.mifos.reports.cashconfirmationreport.BranchCashConfirmationReportBO;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class BranchCashConfirmationReportPersistenceIntegrationTest extends BranchReportIntegrationTestCase {
 
     private Session session;
-    private BranchCashConfirmationReportPersistence persistence;
+
+    @Autowired
+    private LegacyBranchCashConfirmationReportDao persistence;
     private BranchCashConfirmationReportBO reportBO;
     private BranchCashConfirmationReportBO firstJanReportBO;
 
@@ -51,8 +54,6 @@ public class BranchCashConfirmationReportPersistenceIntegrationTest extends Bran
     public void setUp() throws Exception {
         session = StaticHibernateUtil.getSessionTL();
 //        transaction = session.beginTransaction();
-
-        persistence = new BranchCashConfirmationReportPersistence();
 
         reportBO = new BranchCashConfirmationReportBO(BRANCH_ID_SHORT, RUN_DATE);
         firstJanReportBO = new BranchCashConfirmationReportBO(BRANCH_ID_SHORT, FIRST_JAN_2008);

@@ -214,4 +214,13 @@ public class StandardTestingService implements TestingService {
         }
     }
 
+    @Override
+    public void setImport(String importParamName, String importParamValue) throws MifosException {
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
+        if (importParamValue == null || importParamValue.equals("")) {
+            configMgr.clearProperty(importParamName);
+            return;
+        }
+        configMgr.setProperty(importParamName, importParamValue);
+    }
 }

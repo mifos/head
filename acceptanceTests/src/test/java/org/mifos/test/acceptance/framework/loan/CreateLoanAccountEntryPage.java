@@ -50,6 +50,7 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
 
     public CreateLoanAccountEntryPage(Selenium selenium) {
         super(selenium);
+        verifyPage("LoanCreationDetail");
     }
 
     public CreateLoanAccountConfirmationPage submitAndNavigateToLoanAccountConfirmationPage(CreateLoanAccountSubmitParameters formParameters) {
@@ -136,6 +137,17 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
     private void submit() {
         selenium.click(continueButton);
         waitForPageToLoad();
+    }
+
+    public LoanAccountPage continuePreviewSubmitAndNavigateToDetailsPage() {
+        submit();
+        selenium.click("schedulePreview.button.preview");
+        waitForPageToLoad();
+        selenium.click("createloanpreview.button.submitForApproval");
+        waitForPageToLoad();
+        selenium.click("CreateLoanAccountConfirmation.link.viewLoanDetails");
+        waitForPageToLoad();
+        return new LoanAccountPage(selenium);
     }
 
     public HomePage navigateToHomePage(){

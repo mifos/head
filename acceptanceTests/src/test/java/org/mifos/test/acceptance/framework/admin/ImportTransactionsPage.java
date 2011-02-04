@@ -57,4 +57,11 @@ public class ImportTransactionsPage extends MifosPage {
 
     }
 
+     public AdminPage cancelImportTransaction()
+    {
+        selenium.click("import_transactions_results.button.cancel");
+        waitForPageToLoad();
+
+        return new AdminPage(selenium);
+    }
 }

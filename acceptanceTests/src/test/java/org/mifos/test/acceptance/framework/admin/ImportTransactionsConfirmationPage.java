@@ -23,6 +23,7 @@ package org.mifos.test.acceptance.framework.admin;
 import org.mifos.test.acceptance.framework.MifosPage;
 
 import com.thoughtworks.selenium.Selenium;
+import org.testng.Assert;
 
 public class ImportTransactionsConfirmationPage extends MifosPage {
 
@@ -34,4 +35,8 @@ public class ImportTransactionsConfirmationPage extends MifosPage {
         verifyPage("import.transactions.confirm");
     }
 
+    public void verifyImportSuccess(String text)
+    {
+        Assert.assertEquals(selenium.getText("importexport.label.importsuccess"),text);
+    }
 }

@@ -35,7 +35,7 @@ explanation of the license and how it is applied.
 <!-- Tile  definitions -->
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
-	<span id="page.id" title="CreateClientMfiInfo" />	
+	<span id="page.id" title="CreateClientMfiInfo"></span>	
 		<script language="javascript" SRC="pages/framework/js/date.js"></script>
 		<script language="javascript">
 

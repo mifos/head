@@ -141,7 +141,7 @@ public class SavingsDaoHibernateIntegrationTest extends MifosIntegrationTestCase
     public void shouldRetrieveAllEndOfDayActvityOnSavingsAccount() {
 
         // setup
-        savingsProduct = new SavingsProductBuilder().mandatory().appliesToClientsOnly().buildForIntegrationTests();
+        savingsProduct = new SavingsProductBuilder().voluntary().appliesToClientsOnly().buildForIntegrationTests();
         savingsAccount = new SavingsAccountBuilder().withSavingsProduct(savingsProduct).withDepositOf("50")
                 .withCustomer(client).withCreatedBy(IntegrationTestObjectMother.testUser()).build();
         IntegrationTestObjectMother.saveSavingsProductAndAssociatedSavingsAccounts(savingsProduct, savingsAccount);

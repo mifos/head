@@ -28,7 +28,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".clientsacclayoutmenu">
 	<tiles:put name="body" type="string">
-    <span id="page.id" title="ClientsAccounts"/>	
+    <span id="page.id" title="ClientsAccounts"></span>	
 		<html-el:form action="custSearchAction.do">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
@@ -107,7 +107,7 @@ explanation of the license and how it is applied.
 								<tr class="fontnormal">
 									<td width="100%" colspan="2" class="bglightblue"><span
 										class="heading"> <mifos:mifoslabel
-										name="CustomerSearch.select" />&nbsp; <mifos:mifoslabel
+										name="CustomerSearch.select" />&nbsp;<mifos:mifoslabel
 										name="${ConfigurationConstants.BRANCHOFFICE}" /> </span></td>
 								</tr>
 							</table>

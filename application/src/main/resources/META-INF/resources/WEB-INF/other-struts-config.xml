@@ -368,16 +368,10 @@
                        parameter="org.mifos.config.localizedResources.HolidayUIResources"
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
 
-    <!-- Moratorium resources -->
-    <message-resources key="moratoriumUIResources"
-                       parameter="org.mifos.application.moratorium.util.resources.MoratoriumUIResources"
-                       factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
-
     <message-resources key="SurveysUIResources"
                        parameter="org.mifos.config.localizedResources.SurveysUIResources"
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
-    <message-resources key="PPIUIResources" parameter="org.mifos.config.localizedResources.PPIUIResources"
-                       factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
+                       
     <!--  Accepted Payment Type resources -->
     <message-resources key="acceptedPaymentTypeUIResources"
                        parameter="org.mifos.config.localizedResources.AcceptedPaymentTypeUIResources"/>

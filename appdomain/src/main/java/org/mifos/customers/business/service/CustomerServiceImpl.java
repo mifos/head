@@ -46,6 +46,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.servicefacade.CustomerStatusUpdate;
 import org.mifos.calendar.CalendarEvent;
 import org.mifos.config.FiscalCalendarRules;
@@ -65,7 +66,7 @@ import org.mifos.customers.business.PositionEntity;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.ClientInitialSavingsOfferingEntity;
-import org.mifos.customers.client.persistence.ClientPersistence;
+import org.mifos.customers.client.persistence.LegacyClientDao;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
@@ -357,7 +358,7 @@ public class CustomerServiceImpl implements CustomerService {
             InputStream pictureSteam = personalInfo.getPicture();
 
             if (pictureSteam != null) {
-                Blob pictureAsBlob = new ClientPersistence().createBlob(pictureSteam);
+                Blob pictureAsBlob = ApplicationContextProvider.getBean(LegacyClientDao.class).createBlob(pictureSteam);
                 client.createOrUpdatePicture(pictureAsBlob);
             }
 

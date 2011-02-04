@@ -37,7 +37,7 @@ import org.mifos.config.ClientRules;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.NameType;
-import org.mifos.customers.client.persistence.ClientPersistence;
+import org.mifos.customers.client.persistence.LegacyClientDao;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
@@ -57,18 +57,17 @@ import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class AddGroupMembershipActionStrutsTest extends MifosMockStrutsTestCase {
 
-
-
-    private CenterBO center;
     private GroupBO group;
     private ClientBO client;
     private MeetingBO meeting;
-    private OfficeBO office;
-
     private String flowKey;
+
+    @Autowired
+    LegacyClientDao legacyClientDao;
 
     @Override
     protected void setStrutsConfig() throws IOException {
@@ -95,8 +94,6 @@ public class AddGroupMembershipActionStrutsTest extends MifosMockStrutsTestCase 
     public void tearDown() throws Exception {
         client = null;
         group = null;
-        center = null;
-        office = null;
     }
 
     @Test
@@ -187,7 +184,7 @@ public class AddGroupMembershipActionStrutsTest extends MifosMockStrutsTestCase 
                 .fromInt(new Short("1")), null, null, new Address(), getCustomFields(), null, null, personnel, office,
                 meeting, personnel, new java.util.Date(), null, null, null, YesNoFlag.NO.getValue(),
                 clientNameDetailDto, spouseNameDetailView, clientPersonalDetailDto, null);
-        new ClientPersistence().saveClient(client);
+        legacyClientDao.saveClient(client);
         StaticHibernateUtil.flushSession();
         client = TestObjectFactory.getClient(Integer.valueOf(client.getCustomerId()).intValue());
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);

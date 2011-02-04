@@ -43,7 +43,7 @@ import static java.util.Arrays.asList;
 import static org.testng.Assert.assertEquals;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(sequential = true, groups = {"client", "acceptance", "ui", "smoke"})
+@Test(sequential = true, groups = {"client", "acceptance", "ui"})
 public class QuestionTest extends UiTestCaseBase {
     private AppLauncher appLauncher;
     @Autowired
@@ -129,7 +129,7 @@ public class QuestionTest extends UiTestCaseBase {
 
 
     private void testGetCreateQuestionPage() {
-        createQuestionPage = adminPage.navigateToCreateQuestionPage().verifyPage();
+        createQuestionPage = adminPage.navigateToCreateQuestionPage();
     }
 
     private void testForAtLeastTwoChoices() {
@@ -285,7 +285,6 @@ public class QuestionTest extends UiTestCaseBase {
 
     private void testDuplicateTitleForExistingQuestionInDB() {
         CreateQuestionPage createQuestionPage = adminPage.navigateToCreateQuestionPage();
-        createQuestionPage.verifyPage();
         createQuestionParameters.setText(title + DATE);
         createQuestionPage.addQuestion(createQuestionParameters);
         Assert.assertTrue(selenium.isTextPresent(DUPLICATE_TITLE), "Duplicate title error should appear");

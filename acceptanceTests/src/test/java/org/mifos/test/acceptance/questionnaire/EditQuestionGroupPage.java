@@ -22,15 +22,11 @@ package org.mifos.test.acceptance.questionnaire;
 
 import com.thoughtworks.selenium.Selenium;
 
-public class EditQuestionGroupPage extends CreateQuestionGroupPage {
+public class EditQuestionGroupPage extends CreateQuestionGroupRootPage {
+
     public EditQuestionGroupPage(Selenium selenium) {
         super(selenium);
-    }
-
-    @Override
-    public EditQuestionGroupPage verifyPage() {
         verifyPage("editQuestionGroup");
-        return this;
     }
 
     public QuestionGroupDetailPage submit() {

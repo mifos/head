@@ -38,7 +38,7 @@ explanation of the license and how it is applied.
   	}
 	</script>
   <tiles:put name="body" type="string">
-  <span id="page.id" title="birtReportPreview" />  
+  <span id="page.id" title="birtReportPreview"></span>  
 		<html-el:form method="post"
 			action="/birtReportsUploadAction.do?method=upload">
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">

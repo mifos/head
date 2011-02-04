@@ -41,11 +41,11 @@ import org.mifos.reports.cashconfirmationreport.BranchCashConfirmationDisburseme
 import org.mifos.reports.cashconfirmationreport.BranchCashConfirmationInfoBO;
 import org.mifos.reports.cashconfirmationreport.BranchCashConfirmationIssueBO;
 import org.mifos.reports.cashconfirmationreport.BranchCashConfirmationReportBO;
-import org.mifos.reports.cashconfirmationreport.persistence.BranchCashConfirmationReportPersistence;
+import org.mifos.reports.cashconfirmationreport.persistence.LegacyBranchCashConfirmationReportDao;
 
 public class BranchCashConfirmationReportServiceIntegrationTest extends BranchReportIntegrationTestCase {
 
-    private BranchCashConfirmationReportPersistence persistenceMock;
+    private LegacyBranchCashConfirmationReportDao persistenceMock;
     private BranchCashConfirmationReportService service;
 
     @Test
@@ -79,7 +79,7 @@ public class BranchCashConfirmationReportServiceIntegrationTest extends BranchRe
     @Override
     @Before
     public void setUp() throws Exception {
-        persistenceMock = createMock(BranchCashConfirmationReportPersistence.class);
+        persistenceMock = createMock(LegacyBranchCashConfirmationReportDao.class);
         service = new BranchCashConfirmationReportService(persistenceMock, new OfficeBusinessService());
     }
 }

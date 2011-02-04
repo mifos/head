@@ -26,7 +26,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".create">
 	<tiles:put name="body" type="string">
-	<span id="page.id" title="create_user" />
+	<span id="page.id" title="create_user"></span>
 	
 		<script language="javascript">
 
@@ -200,18 +200,6 @@ explanation of the license and how it is applied.
 											<html-el:option value="${genderlist.id}">${genderlist.name}</html-el:option>
 											</c:forEach>
 										</mifos:select>
-									</td>
-								</tr>
-								<tr class="fontnormal">
-									<td align="right"><mifos:mifoslabel
-										name="Personnel.LanguagePreferred" /></td>
-									<td>
-                                        <mifos:select name="personActionForm" property="preferredLocale">
-                                            <c:forEach items="${definePersonnelDto.languageList}"
-                                                       var="languageList">
-                                                <html-el:option value="${languageList.id}">${languageList.name}</html-el:option>
-                                            </c:forEach>
-                                        </mifos:select>
 									</td>
 								</tr>
 								<tr class="fontnormal">
