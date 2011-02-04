@@ -522,6 +522,39 @@ public class ClientTest extends UiTestCaseBase {
         clientTestHelper.tryAddClientToClosedGroup(clientName, groupName);
     }
 
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // http://mifosforge.jira.com/browse/MIFOSTEST-40
+    public void addingMemeberOnHoldStatusToGroupWithDiffrentStatuses() throws Exception {
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
+        String groupName = "testGroup";
+        String clientName = "test";
+        CreateGroupSubmitParameters groupParams = new CreateGroupSubmitParameters();
+        groupParams.setGroupName(groupName);
+        EditCustomerStatusParameters editCustomerStatusParameters = new EditCustomerStatusParameters();
+        editCustomerStatusParameters.setNote("change status");
+
+        //When
+        ClientViewDetailsPage clientDetailsPage = clientTestHelper.createClientAndVerify("Joe1233171679953 Guy1233171679953", "MyOffice1233171674227");
+        clientTestHelper.changeCustomerStatus(clientDetailsPage, ClientStatus.ACTIVE);
+        clientTestHelper.changeCustomerStatus(clientDetailsPage, ClientStatus.ON_HOLD);
+        groupTestHelper.createNewGroupPartialApplication("MyCenter1233171688286", groupParams);
+        //Then
+        clientTestHelper.addClientToGroupWithErrors(clientName, groupName);
+
+        //When
+        editCustomerStatusParameters.setGroupStatus(GroupStatus.PENDING_APPROVAL);
+        groupTestHelper.changeGroupStatus(groupName, editCustomerStatusParameters);
+        //Then
+        clientTestHelper.addClientToGroupWithErrors(clientName, groupName);
+
+        //When
+        editCustomerStatusParameters.setGroupStatus(GroupStatus.ACTIVE);
+        groupTestHelper.changeGroupStatus(groupName, editCustomerStatusParameters);
+        //Then
+        clientTestHelper.addClientToGroup(clientName, groupName);
+    }
+
     private QuestionnairePage checkMandatoryQuestionValidation(String questionGroupTitle, String question1, String question2, ClientViewDetailsPage viewDetailsPage) {
         QuestionnairePage questionnairePage = viewDetailsPage.getQuestionnairePage(questionGroupTitle);
         questionnairePage.setResponsesForMultiSelect(question2, 4, "Choice1", "Choice3", "Choice4");

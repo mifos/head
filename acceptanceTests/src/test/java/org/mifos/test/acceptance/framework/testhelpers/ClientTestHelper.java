@@ -100,6 +100,21 @@ public class ClientTestHelper {
         return clientDetailsPage5;
     }
 
+    public ClientViewDetailsPage changeCustomerStatus(ClientViewDetailsPage clientDetailsPage, ClientStatus targetStatus) {
+
+        CustomerChangeStatusPage statusChangePage = clientDetailsPage.navigateToCustomerChangeStatusPage();
+        EditCustomerStatusParameters editCustomerStatusParameters = new EditCustomerStatusParameters();
+        editCustomerStatusParameters.setClientStatus(targetStatus);
+        editCustomerStatusParameters.setNote("Status change");
+
+        CustomerChangeStatusPreviewPage statusPreviewPage = statusChangePage.setChangeStatusParametersAndSubmit(editCustomerStatusParameters);
+        ClientViewDetailsPage newClientDetailsPage = statusPreviewPage.submitAndGotoClientViewDetailsPage();
+        newClientDetailsPage.verifyStatus(targetStatus.getStatusText());
+        newClientDetailsPage.verifyNotes(editCustomerStatusParameters.getNote());
+
+        return newClientDetailsPage;
+    }
+
 
     public ClientViewDetailsPage createClientWithQuestionGroups(CreateClientEnterPersonalDataPage.SubmitFormParameters parameters, String group, QuestionResponseParameters responseParams) {
         QuestionResponsePage questionResponsePage = navigateToQuestionResponsePage(parameters,group);
