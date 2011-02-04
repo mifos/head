@@ -138,7 +138,7 @@ public class CreateSavingsAccountFormBeanTest {
     }
 
     @Test
-    public void validateEnterAccountDetailsStep_MandatoryDeposit_InvalidFormatAmountShouldFail() {
+    public void validateEnterAccountDetailsStep_MandatoryDeposit_InvalidAmountShouldFail() {
         validateEnterAccountDetailsStep_MandatoryDeposit("xyz", Pattern.class,
                 false);
     }
@@ -148,8 +148,29 @@ public class CreateSavingsAccountFormBeanTest {
         validateEnterAccountDetailsStep_MandatoryDeposit("123.0", null, true);
     }
 
+    @Test
+    public void validateEnterAccountDetailsStep_VoluntaryDeposit_EmptyAmountShouldPass() {
+        validateEnterAccountDetailsStep_VoluntaryDeposit("", null, true);
+    }
+
+    @Test
+    public void validateEnterAccountDetailsStep_VoluntaryDeposit_NullAmountShouldPass() {
+        validateEnterAccountDetailsStep_VoluntaryDeposit(null, null, true);
+    }
+
+    @Test
+    public void validateEnterAccountDetailsStep_VoluntaryDeposit_NumericAmountShouldPass() {
+        validateEnterAccountDetailsStep_VoluntaryDeposit("12.34", null, true);
+    }
+
+    @Test
+    public void validateEnterAccountDetailsStep_VoluntaryDeposit_InvalidAmountShouldFail() {
+        validateEnterAccountDetailsStep_VoluntaryDeposit("xyz.efg", Pattern.class,
+                false);
+    }
+
     private void validateEnterAccountDetailsStep_MandatoryDeposit(
-            String amount, Class expectedViolation, boolean passExpected) {
+            String amount, Class expectedViolation, boolean expectingPass) {
         setDepositType(formBean, CreateSavingsAccountFormBean.MANDATORY_DEPOSIT);
         formBean.setMandatoryDepositAmount(amount);
         formBean.validateEnterAccountDetailsStep(validationContext);
@@ -157,13 +178,33 @@ public class CreateSavingsAccountFormBeanTest {
         MessageContext messageContext = validationContext.getMessageContext();
         Message[] messages = messageContext.getAllMessages();
 
-        if (passExpected) {
+        if (expectingPass) {
             Assert.assertEquals(0, messages.length);
             return;
         } else {
             Assert.assertEquals(1, messages.length);
             Message message = messages[0];
             Assert.assertEquals("mandatoryDepositAmount", message.getSource());
+            verifyErrorMessage(expectedViolation, message);
+        }
+    }
+
+    private void validateEnterAccountDetailsStep_VoluntaryDeposit(
+            String amount, Class expectedViolation, boolean expectingPass) {
+        setDepositType(formBean, CreateSavingsAccountFormBean.VOLUNTARY_DEPOSIT);
+        formBean.setVoluntaryDepositAmount(amount);
+        formBean.validateEnterAccountDetailsStep(validationContext);
+
+        MessageContext messageContext = validationContext.getMessageContext();
+        Message[] messages = messageContext.getAllMessages();
+
+        if (expectingPass) {
+            Assert.assertEquals(0, messages.length);
+            return;
+        } else {
+            Assert.assertEquals(1, messages.length);
+            Message message = messages[0];
+            Assert.assertEquals("voluntaryDepositAmount", message.getSource());
             verifyErrorMessage(expectedViolation, message);
         }
     }
