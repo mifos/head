@@ -25,7 +25,7 @@ import static org.mifos.reports.ui.SelectionItem.ALL_LOAN_OFFICER_SELECTION_ITEM
 
 import java.util.List;
 
-import org.mifos.application.collectionsheet.persistence.BirtCollectionSheetReportPersistence;
+import org.mifos.application.collectionsheet.persistence.BirtCollectionSheetReportDao;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.reports.business.dto.CollectionSheetReportData;
@@ -35,14 +35,14 @@ import org.mifos.reports.business.dto.CollectionSheetReportData;
  */
 public class BirtCollectionSheetService {
 
-    private final BirtCollectionSheetReportPersistence collectionSheetReportPersistence;
+    private final BirtCollectionSheetReportDao collectionSheetReportPersistence;
 
-    public BirtCollectionSheetService(final BirtCollectionSheetReportPersistence collectionSheetReportPersistence) {
+    public BirtCollectionSheetService(final BirtCollectionSheetReportDao collectionSheetReportPersistence) {
         this.collectionSheetReportPersistence = collectionSheetReportPersistence;
     }
 
     public BirtCollectionSheetService() {
-        this(new BirtCollectionSheetReportPersistence());
+        this(new BirtCollectionSheetReportDao());
     }
 
     // FIXME - #00001 - keithw - write mockito unit tests around this to replace easymock tests that existed in CollectionSheetServiceIntegrationTest

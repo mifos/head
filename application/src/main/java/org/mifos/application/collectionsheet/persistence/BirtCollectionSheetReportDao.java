@@ -37,11 +37,11 @@ import org.mifos.framework.persistence.LegacyGenericDao;
 import org.mifos.reports.business.dto.CollectionSheetReportData;
 
 /**
- * FIXME - #00001 - keithw - rename to BirtCollectionSheetReportDao and convert to DAO structure.
+ * FIXME
  *
  * All methods make call to large collection sheet query now stored in AccountBO.hbm.xml
  */
-public class BirtCollectionSheetReportPersistence extends LegacyGenericDao {
+public class BirtCollectionSheetReportDao extends LegacyGenericDao {
 
     private static final String ALL_VALUE = "ALL";
 
