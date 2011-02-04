@@ -40,21 +40,32 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class CreateSavingsAccountController {
 
+    // FIXME: grab from org.mifos.accounts.util.helpers.AccountState enum
+    private static final short ACCOUNT_STATE_PARTIAL_APPLICAITON = 13;
+    private static final short ACCOUNT_STATE_PENDNG_APPROVAL = 14;
+    private static final short ACCOUNT_STATE_ACTIVE = 16;
+
     @Autowired
     private SavingsServiceFacade savingsServiceFacade;
 
     public CreateSavingsAccountController() {
     }
 
+    public SavingsAccountDetailDto createAccountInActiveState(
+            CreateSavingsAccountFormBean formBean) {
+        Short accountState = ACCOUNT_STATE_ACTIVE;
+        return createAccount(formBean, accountState);
+    }
+
     public SavingsAccountDetailDto createAccountInPartialApplicationState(
             CreateSavingsAccountFormBean formBean) {
-        Short accountState = 13; // TOOD grab state from constant. NOT from
+        Short accountState = ACCOUNT_STATE_PARTIAL_APPLICAITON;
         return createAccount(formBean, accountState);
     }
 
     public SavingsAccountDetailDto createAccountInPendingApprovalState(
             CreateSavingsAccountFormBean formBean) {
-        Short accountState = 14; // TOOD grab state from constant. NOT from
+        Short accountState = ACCOUNT_STATE_PENDNG_APPROVAL;
         return createAccount(formBean, accountState);
     }
 

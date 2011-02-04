@@ -40,6 +40,9 @@
 
     <view-state id="previewStep" view="createSavingsAccountPreview">
         <transition on="edit" to="enterAccountDetailsStep" />
+        <transition on="approve" to="complete">
+            <evaluate expression="createSavingsAccountController.createAccountInActiveState(savingsAccountFormBean)" result="flowScope.account" />
+        </transition>
         <transition on="saveForLater" to="complete">
             <evaluate expression="createSavingsAccountController.createAccountInPartialApplicationState(savingsAccountFormBean)" result="flowScope.account" />
         </transition>

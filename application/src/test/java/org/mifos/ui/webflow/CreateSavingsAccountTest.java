@@ -202,6 +202,20 @@ public class CreateSavingsAccountTest extends AbstractXmlFlowExecutionTests {
         assertFlowExecutionOutcomeEquals("complete");
     }
 
+    @Test
+    public void testPreviewStep_SaveForApproved() {
+
+        setCurrentState("previewStep");
+
+        MockExternalContext context = new MockExternalContext();
+        context.setEventId("approve");
+        resumeFlow(context);
+
+        verify(controller).createAccountInActiveState(formBean);
+        assertFlowExecutionEnded();
+        assertFlowExecutionOutcomeEquals("complete");
+    }
+
     @Override
     protected void configureFlowBuilderContext(
             MockFlowBuilderContext builderContext) {
