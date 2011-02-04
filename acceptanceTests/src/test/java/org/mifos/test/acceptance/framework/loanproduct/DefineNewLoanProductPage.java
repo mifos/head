@@ -98,6 +98,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
         private String maxLoanAmount;
         private String defaultLoanAmount;
         private String[][] cycleLoanAmount = new String[MAX_CYCLES][3];
+        private String[][] amountsByLastLoanAmount = new String[MAX_CYCLES][4];
         private int interestTypes;
         private String minInterestRate;
         private String maxInterestRate;
@@ -419,6 +420,46 @@ public class DefineNewLoanProductPage extends AbstractPage {
         public void setDefInstallmentByLastLoanAmount(int row, String value) {
             this.installmentsByLastLoanAmount[row][3] = value;
         }
+
+        public void setAmountsByLastLoanAmount(String[][] amountsByLastLoanAmount) {
+            this.amountsByLastLoanAmount = amountsByLastLoanAmount.clone();
+        }
+
+        public String[][] getAmountsByLastLoanAmount() {
+            return amountsByLastLoanAmount.clone();
+        }
+
+        public String getLastAmountByLastLoanAmount(int row) {
+            return amountsByLastLoanAmount[row][0];
+        }
+
+        public void setLastAmountByLastLoanAmount(int row, String value) {
+            this.amountsByLastLoanAmount[row][0] = value;
+        }
+
+        public String getMinAmountByLastLoanAmount(int row) {
+            return amountsByLastLoanAmount[row][1];
+        }
+
+        public void setMinAmountByLastLoanAmount(int row, String value) {
+            this.amountsByLastLoanAmount[row][1] = value;
+        }
+
+        public String getMaxAmountByLastLoanAmount(int row) {
+            return amountsByLastLoanAmount[row][2];
+        }
+
+        public void setMaxAmountByLastLoanAmount(int row, String value) {
+            this.amountsByLastLoanAmount[row][2] = value;
+        }
+
+        public String getDefAmountByLastLoanAmount(int row) {
+            return amountsByLastLoanAmount[row][3];
+        }
+
+        public void setDefAmountByLastLoanAmount(int row, String value) {
+            this.amountsByLastLoanAmount[row][3] = value;
+        }
     }
 
     public DefineNewLoanProductPage fillLoanParameters(SubmitFormParameters parameters) {
@@ -433,9 +474,15 @@ public class DefineNewLoanProductPage extends AbstractPage {
             selenium.type("maxLoanAmount", parameters.getMaxLoanAmount());
             selenium.type("defaultLoanAmount", parameters.getDefaultLoanAmount());
         }
-   //     else if(parameters.getCalculateLoanAmount() == SubmitFormParameters.BY_LAST_LOAN_AMOUNT) {
-            // no test for this parameter
-   //     }
+        else if(parameters.getCalculateLoanAmount() == SubmitFormParameters.BY_LAST_LOAN_AMOUNT) {
+            for(int i = 1; i <= SubmitFormParameters.MAX_CYCLES; i++) {
+                selenium.typeKeys("endRangeLoanAmt"+i, parameters.getLastAmountByLastLoanAmount(i-1));
+                selenium.fireEvent("endRangeLoanAmt"+i, "blur");
+                selenium.type("lastLoanMinLoanAmt"+i, parameters.getMinAmountByLastLoanAmount(i-1));
+                selenium.type("lastLoanMaxLoanAmt"+i, parameters.getMaxAmountByLastLoanAmount(i-1));
+                selenium.type("lastLoanDefaultLoanAmt"+i, parameters.getDefAmountByLastLoanAmount(i-1));
+            }
+        }
         else {
             for(int i = 1; i <= SubmitFormParameters.MAX_CYCLES; i++) {
                 selenium.type("cycleLoanMinLoanAmt"+i, parameters.getMinCycleLoanAmount(i-1));

@@ -241,4 +241,46 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
 
         loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"2000.0", "6000.0", "4000.0"}, null, new String[]{"10", "30", "25"});
     }
+
+    /**
+     * Verify loan amount with number of installments is same for all loan can be used to create new loans.
+     * http://mifosforge.jira.com/browse/MIFOSTEST-112
+     * @throws Exception
+     */
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void verifyAmountByLastAmountAndInstallment() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
+
+        DefineNewLoanProductPage.SubmitFormParameters productParams = FormParametersHelper.getWeeklyLoanProductParameters();
+        productParams.setOfferingName("product112");
+        productParams.setOfferingShortName("p112");
+        productParams.setCalculateLoanAmount(SubmitFormParameters.BY_LAST_LOAN_AMOUNT);
+        String[][] lastLoanAmount = {
+            {"1000", "500.0", "1500.0", "1200.0"},
+            {"2000", "1500.0", "2500.0", "2200.0"},
+            {"3000", "2500.0", "3500.0", "3200.0"},
+            {"4000", "3500.0", "4500.0", "4200.0"},
+            {"5000", "4500.0", "5500.0", "5200.0"},
+            {"6000", "5500.0", "6500.0", "6200.0"}
+        };
+        productParams.setAmountsByLastLoanAmount(lastLoanAmount);
+        productParams.setMinInstallemnts("10");
+        productParams.setMaxInstallments("100");
+        productParams.setDefInstallments("50");
+        CreateLoanAccountSearchParameters searchParams = new CreateLoanAccountSearchParameters();
+        searchParams.setSearchString("Stu1233266053368 Client1233266053368");
+        searchParams.setLoanProduct("product112");
+        DisburseLoanParameters disburseParams = DisburseLoanParameters.getDisbursalParameters("02", "02", "2011");
+
+        LoanProductDetailsPage loanProductDetailsPage = loanTestHelper.defineNewLoanProduct(productParams);
+        loanProductDetailsPage.verifyAmountTableTypeFromLastAmount(lastLoanAmount);
+        loanProductDetailsPage.verifyInstallments("10", "100", "50");
+        LoanAccountPage loanAccountPage = loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"500.0", "1500.0", "1200.0"}, null, null);
+        String loanFirstID = loanAccountPage.getAccountId();
+        loanAccountPage.disburseLoan(disburseParams);
+        loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"500.0", "1500.0", "1200.0"}, null, null);
+        loanTestHelper.repayLoan(loanFirstID);
+
+        loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"1500.0", "2500.0", "2200.0"}, null, null);
+    }
 }
