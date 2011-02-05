@@ -104,7 +104,7 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
 
         //Then
         Assert.assertFalse(selenium.isElementPresent("menu.link.label.createnew.center"));
-        Assert.assertTrue(selenium.isTextPresent("To review or edit a Client, Group, or account"));
+        Assert.assertTrue(selenium.isTextPresent("To review or edit a Client, Group or account"));
 
         //Given
         propertiesHelper.setCenterHierarchyExists("true");
@@ -114,7 +114,7 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
 
         //Then
         Assert.assertTrue(selenium.isElementPresent("menu.link.label.createnew.center"));
-        Assert.assertTrue(selenium.isTextPresent("To review or edit a Client, Group, Center, or account"));
+        Assert.assertTrue(selenium.isTextPresent("To review or edit a Client, Group, Center or account"));
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
