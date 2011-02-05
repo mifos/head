@@ -61,7 +61,7 @@ public class CustomPropertiesUpdateController extends AbstractController {
 
             handleProcessFLow(request, response, errorMessages, model);
 
-            handleCenterHierarchy(request, response, errorMessages, model);
+            handleCenterHierarchy(request, model);
 
             model.put("request", request);
             Map<String, Object> status = new HashMap<String, Object>();
@@ -73,18 +73,13 @@ public class CustomPropertiesUpdateController extends AbstractController {
         return returnValue;
     }
 
-    private void handleCenterHierarchy(HttpServletRequest request, HttpServletResponse response,
-            List<String> errorMessages, Map<String, Object> model) {
-        try {
-            String clientRulesParamValue = request.getParameter("ClientRules.CenterHierarchyExists");
-            testingService.setClientRules("ClientRules.CenterHierarchyExists", clientRulesParamValue);
-            model.put("clientRulesResult", "ClientRules.CenterHierarchyExists" + ": " + clientRulesParamValue);
-        } catch (MifosException e) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            errorMessages.add("Something was wrong with your ClientRules.CenterHierarchyExists: "
-                    + new LogUtils().getStackTrace(e));
+    private void handleCenterHierarchy(HttpServletRequest request, Map<String, Object> model) {
+        String centerHierarchyExists = request.getParameter("ClientRules.CenterHierarchyExists");
+        if (StringUtils.isNotBlank(centerHierarchyExists)) {
+            boolean required=Boolean.valueOf(centerHierarchyExists);
+            testingService.setCenterHierarchyExists(required);
+            model.put("clientRulesResult", "centerHierarchyExists: " + centerHierarchyExists);
         }
-
     }
 
     private void handleMinMaxClientAge(HttpServletRequest request, HttpServletResponse response,

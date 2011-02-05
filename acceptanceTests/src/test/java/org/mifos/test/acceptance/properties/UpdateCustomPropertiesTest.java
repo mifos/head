@@ -96,21 +96,34 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
     //http://mifosforge.jira.com/browse/MIFOSTEST-232
     public void verifyPropertyClientRulesCenterHierarchyExistsFalse() throws Exception{
         //Given
-        propertiesHelper.setCenterHierarchyExists("false");
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
+        propertiesHelper.setCenterHierarchyExists("false");
+
         //When
         navigationHelper.navigateToClientsAndAccountsPage();
+
         //Then
         Assert.assertFalse(selenium.isElementPresent("menu.link.label.createnew.center"));
+        Assert.assertTrue(selenium.isTextPresent("To review or edit a Client, Group, or account"));
+
+        //Given
         propertiesHelper.setCenterHierarchyExists("true");
+
+        //When
+        navigationHelper.navigateToClientsAndAccountsPage();
+
+        //Then
+        Assert.assertTrue(selenium.isElementPresent("menu.link.label.createnew.center"));
+        Assert.assertTrue(selenium.isTextPresent("To review or edit a Client, Group, Center, or account"));
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     //http://mifosforge.jira.com/browse/MIFOSTEST-231
     public void verifyPropertyClientRulesCenterHierarchyExistsTrue() throws Exception{
         //Given
-        propertiesHelper.setCenterHierarchyExists("true");
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
+        propertiesHelper.setCenterHierarchyExists("true");
+
         //When
         CreateCenterEnterDataPage.SubmitFormParameters formParameters = new CreateCenterEnterDataPage.SubmitFormParameters();
         formParameters.setCenterName("testCenterName12123");
@@ -121,6 +134,7 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
         meeting.setWeekFrequency("1");
         formParameters.setMeeting(meeting);
         CenterViewDetailsPage centerViewDetailsPage = centerTestHelper.createCenter(formParameters, "MyOffice1232993831593");
+
         //Then
         centerViewDetailsPage.verifyActiveCenter(formParameters);
     }
