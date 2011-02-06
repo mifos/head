@@ -141,7 +141,7 @@ public class ClientTestHelper {
         .searchGroup(groupName);
     }
 
-    public void tryAddClientToClosedGroup(String clientName, String groupName){
+    public void tryAddClientToClosedOrOnHoldGroup(String clientName, String groupName){
         navigateToGroupSearchAddClientResult(clientName, groupName)
             .verifyNoResult();
     }
@@ -150,6 +150,15 @@ public class ClientTestHelper {
         navigateToGroupSearchAddClientResult(clientName, groupName)
             .selectGroupToAdd(groupName)
             .submitAddGroupWithError();
+    }
+
+    public void transferClientToGroupWithErrors(String clientName, String groupName){
+        navigationHelper
+                .navigateToClientViewDetailsPage(clientName)
+                .navigateToEditRemoveGroupMembership()
+                .searchGroup(groupName)
+                .selectGroupToAdd(groupName)
+                .submitAddGroupWithError();
     }
 
     public void addClientToGroup(String clientName, String groupName){

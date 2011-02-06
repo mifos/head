@@ -519,14 +519,14 @@ public class ClientTest extends UiTestCaseBase {
         editCustomerStatusParameters.setGroupStatus(GroupStatus.ON_HOLD);
         groupTestHelper.changeGroupStatus(groupName, editCustomerStatusParameters);
         //Then
-        clientTestHelper.addClientToGroupWithErrors(clientName, groupName);
+        clientTestHelper.tryAddClientToClosedOrOnHoldGroup(clientName, groupName);
 
         //When
         editCustomerStatusParameters.setGroupStatus(GroupStatus.CLOSED);
         editCustomerStatusParameters.setCloseReason(GroupCloseReason.DUPLICATED);
         groupTestHelper.changeGroupStatus(groupName, editCustomerStatusParameters);
         //Then
-        clientTestHelper.tryAddClientToClosedGroup(clientName, groupName);
+        clientTestHelper.tryAddClientToClosedOrOnHoldGroup(clientName, groupName);
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")

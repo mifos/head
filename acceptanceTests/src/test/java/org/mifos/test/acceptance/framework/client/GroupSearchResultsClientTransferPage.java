@@ -20,35 +20,23 @@
 
 package org.mifos.test.acceptance.framework.client;
 
+import com.thoughtworks.selenium.Selenium;
 import org.mifos.test.acceptance.framework.MifosPage;
 
-import com.thoughtworks.selenium.Selenium;
+public class GroupSearchResultsClientTransferPage extends MifosPage {
 
-public class GroupSearchClientTransferPage extends MifosPage {
-
-    public GroupSearchClientTransferPage(Selenium selenium) {
+    public GroupSearchResultsClientTransferPage(Selenium selenium) {
         super(selenium);
-        this.verifyPage("GroupSearchClientTransfer");
+        this.verifyPage("GroupSearchResultsClientTransfer");
     }
 
-    public DeleteGroupMembershipPage deleteGroupMembership(){
-        selenium.click("group_search_client_transfer.link.removeGroupMembership");
+    public ConfirmParentTransferPage selectGroupToAdd(String groupName){
+        selenium.click("link=" + groupName + "*");
         waitForPageToLoad();
-        return new DeleteGroupMembershipPage(selenium);
+        return new ConfirmParentTransferPage(selenium);
     }
 
-    private void setSearchedGroupName(String groupName){
-        selenium.type("group_search_client_transfer.input.search", groupName);
-    }
-
-    private void search(){
-        selenium.click("group_search_client_transfer.button.search");
-        waitForPageToLoad();
-    }
-
-    public GroupSearchResultsClientTransferPage searchGroup(String groupName){
-        setSearchedGroupName(groupName);
-        search();
-        return new GroupSearchResultsClientTransferPage(selenium);
+    public void verifyNoResult(){
+        selenium.isTextPresent("No results found for");
     }
 }
