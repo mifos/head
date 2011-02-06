@@ -126,6 +126,10 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
         verifyLoanAccountOriginalSchedule(systemDateTime, systemDateTime.plusDays(1), OriginalScheduleData.VARIABLE_LOAN_LATE_DISBURSAL_SCHEDULE, false, systemDateTime.plusDays(15));
     }
 
+    /**
+     * FIXME - KEITHW - This test is disabled as its failing for case where loan when disbursed early with LSIM on seems to miss the nearest installment date but
+     * I cannot replicate this manually
+     */
     @Test(enabled=false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyForDecBalIntReCalcLoanEarlyDisbursalLSIMOn() throws Exception {
