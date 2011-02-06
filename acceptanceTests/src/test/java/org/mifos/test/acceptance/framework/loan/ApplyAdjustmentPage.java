@@ -42,6 +42,11 @@ public class ApplyAdjustmentPage extends AbstractPage {
     }
 
     public LoanAccountPage fillAdjustmentFieldsAndSubmit(String adjustmentAmount) {
+        applyAdjustment(adjustmentAmount);
+        return new LoanAccountPage(selenium);
+    }
+
+    private void applyAdjustment(String adjustmentAmount) {
         if(selenium.isElementPresent("applyadjustment.input.revertLastPayment")) {
             selenium.click("applyadjustment.input.revertLastPayment");
             selenium.type("applyadjustment.input.note", "testNotes paid Amount: " + adjustmentAmount);
@@ -50,11 +55,10 @@ public class ApplyAdjustmentPage extends AbstractPage {
         }
         selenium.click("applyadjustment.button.submit");
         waitForPageToLoad();
-        return new LoanAccountPage(selenium);
     }
 
     public ApplyAdjustmentPage verifyAdjustBackdatedPermission() {
-        fillAdjustmentFieldsAndSubmit("10");
+        applyAdjustment("10");
         Assert.assertTrue(selenium.isTextPresent("You do not have permissions to perform this activity. Contact your system administrator to grant you required permissions and try again."));
         return this;
     }
