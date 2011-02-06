@@ -63,6 +63,7 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
 
 
     private static final double[] BASIC_CUSTOMER_ACCT_VALUES = new double[] {  51.0, 77.0, 123.0, 251.0, 44.0 };
+    private static final double[] TEST_ACCT_VALUES = {  11.0, 22.0, 33.0, 44.0, 33.0 };
     private static final double[] FIRST_PARTIAL_CUSTOMER_ACCT_VALUES = new double[] { 51.0, 0.0, 123.0, 0.0, 44.0 };
 
 
@@ -132,7 +133,7 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
     public void unpaidFeeDisplayedOnSecondCollectionSheetEntryAndSaved() throws Exception {
         SubmitFormParameters formParameters = getFormParametersForTestOffice();
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
-        CollectionSheetEntryConfirmationPage confirmationPage = enterAndSubmitCustomerAccountData(formParameters, FIRST_PARTIAL_CUSTOMER_ACCT_VALUES);
+        CollectionSheetEntryConfirmationPage confirmationPage = enterAndSubmitCustomerAccountDataOnSecondEditing(formParameters, TEST_ACCT_VALUES, FIRST_PARTIAL_CUSTOMER_ACCT_VALUES);
         //navigate back to collection sheet entry
         HomePage homePage = confirmationPage.navigateToHomePage();
         ClientsAndAccountsHomepage clientsAndAccountsPage = homePage.navigateToClientsAndAccountsUsingHeaderTab();
@@ -164,6 +165,35 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
         CollectionSheetEntryConfirmationPage confirmationPage =
             previewPage.submitAndGotoCollectionSheetEntryConfirmationPage();
         confirmationPage.verifyPage();
+        return confirmationPage;
+    }
+
+    private CollectionSheetEntryConfirmationPage enterAndSubmitCustomerAccountDataOnSecondEditing(SubmitFormParameters formParameters, double[] testAcctValues, double[] customerAcctValues) {
+        CollectionSheetEntrySelectPage selectPage =
+            new CollectionSheetEntryTestHelper(selenium).loginAndNavigateToCollectionSheetEntrySelectPage();
+        selectPage.verifyPage();
+        CollectionSheetEntryEnterDataPage enterDataPage = selectCenterAndContinue(formParameters, selectPage);
+
+        enterFirstGroupCustomerAccountValues(enterDataPage, testAcctValues);
+        enterGenericCustomerAccountValues(enterDataPage);
+
+        CollectionSheetEntryPreviewDataPage previewPage =
+            enterDataPage.submitAndGotoCollectionSheetEntryPreviewDataPage();
+
+        enterDataPage = previewPage.editAndGoToCollectionSheetEntryEnterDataPage();
+
+        enterDataPage.verifyCustomerAccountValue(0, 6, 11.0);
+        enterDataPage.verifyCustomerAccountValue(1, 6, 22.0);
+        enterDataPage.verifyCustomerAccountValue(2, 6, 33.0);
+        enterDataPage.verifyCustomerAccountValue(3, 6, 44.0);
+        enterDataPage.verifyCustomerAccountValue(4, 6, 33.0);
+
+        enterFirstGroupCustomerAccountValues(enterDataPage, customerAcctValues);
+
+        previewPage = enterDataPage.submitAndGotoCollectionSheetEntryPreviewDataPage();
+
+        CollectionSheetEntryConfirmationPage confirmationPage =
+            previewPage.submitAndGotoCollectionSheetEntryConfirmationPage();
         return confirmationPage;
     }
 

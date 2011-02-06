@@ -21,7 +21,6 @@
 package org.mifos.test.acceptance.client;
 
 import org.mifos.framework.util.DbUnitUtilities;
-import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.client.ClientEditFamilyPage;
@@ -32,8 +31,8 @@ import org.mifos.test.acceptance.framework.client.CreateClientEnterFamilyDetails
 import org.mifos.test.acceptance.framework.client.CreateClientEnterMfiDataPage;
 import org.mifos.test.acceptance.framework.client.CreateClientEnterPersonalDataPage;
 import org.mifos.test.acceptance.framework.client.CreateClientPreviewDataPage;
+import org.mifos.test.acceptance.framework.testhelpers.ClientTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.CustomPropertiesHelper;
-import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -49,7 +48,7 @@ import org.testng.annotations.Test;
 
 public class AddFamilyDetailsTest extends UiTestCaseBase {
 
-    private NavigationHelper navigationHelper;
+    private ClientTestHelper clientTestHelper;
     CustomPropertiesHelper propertiesHelper;
 
     @Autowired
@@ -65,8 +64,8 @@ public class AddFamilyDetailsTest extends UiTestCaseBase {
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
-        navigationHelper = new NavigationHelper(selenium);
         propertiesHelper = new CustomPropertiesHelper(selenium);
+        clientTestHelper = new ClientTestHelper(selenium);
     }
 
     @AfterMethod
@@ -83,14 +82,13 @@ public class AddFamilyDetailsTest extends UiTestCaseBase {
                 dataSource, selenium);
         propertiesHelper.setAreFamilyDetailsRequired(true);
         propertiesHelper.setMaximumNumberOfFamilyMemebers(10);
-        ClientsAndAccountsHomepage clientsAndAccountsPage = navigationHelper.navigateToClientsAndAccountsPage();
-        CreateClientEnterPersonalDataPage clientPersonalDataPage= clientsAndAccountsPage.createClientForFamilyInfo( "MyOffice1233171674227","11","12","1988");
+        CreateClientEnterPersonalDataPage clientPersonalDataPage= clientTestHelper.createClientForFamilyInfo( "MyOffice1233171674227","11","12","1988");
         CreateClientEnterFamilyDetailsPage clientFamilyDataPage=clientPersonalDataPage.submitAndGotoCreateClientEnterFamilyDetailsPage();
         clientFamilyDataPage.verifyPage("CreateClientFamilyInfo");
-        clientFamilyDataPage=clientsAndAccountsPage.createFamily("fname", "lname", "11", "01", "1987", clientFamilyDataPage);
+        clientFamilyDataPage=clientTestHelper.createFamily("fname", "lname", "11", "01", "1987", clientFamilyDataPage);
         CreateClientEnterMfiDataPage nextPage=clientFamilyDataPage.submitAndGotoCreateClientEnterMfiDataPage();
         nextPage.verifyPage("CreateClientMfiInfo");
-        CreateClientPreviewDataPage clientPreviewDataPage=clientsAndAccountsPage.createClientMFIInformationAndGoToPreviewPage("Joe1233171679953 Guy1233171679953",nextPage);
+        CreateClientPreviewDataPage clientPreviewDataPage=clientTestHelper.createClientMFIInformationAndGoToPreviewPage("Joe1233171679953 Guy1233171679953",nextPage);
         CreateClientEnterFamilyDetailsPage editPage=clientPreviewDataPage.edit();
         editPage.verifyPage("CreateClientFamilyInfo");
         propertiesHelper.setAreFamilyDetailsRequired(false);
@@ -104,10 +102,9 @@ public class AddFamilyDetailsTest extends UiTestCaseBase {
                 "acceptance_small_003_dbunit.xml",
                 dataSource, selenium);
         propertiesHelper.setAreFamilyDetailsRequired(true);
-        ClientsAndAccountsHomepage clientsAndAccountsPage = navigationHelper.navigateToClientsAndAccountsPage();
-        CreateClientEnterPersonalDataPage clientPersonalDataPage= clientsAndAccountsPage.createClientForFamilyInfo("MyOffice1233171674227","11","12","1988");
+        CreateClientEnterPersonalDataPage clientPersonalDataPage= clientTestHelper.createClientForFamilyInfo("MyOffice1233171674227","11","12","1988");
         CreateClientEnterFamilyDetailsPage clientFamilyDataPage=clientPersonalDataPage.submitAndGotoCreateClientEnterFamilyDetailsPage();
-        clientFamilyDataPage=clientsAndAccountsPage.createFamilyWithoutLookups(1,49,0,clientFamilyDataPage);
+        clientFamilyDataPage=clientTestHelper.createFamilyWithoutLookups(1,49,0,clientFamilyDataPage);
         CreateClientEnterMfiDataPage nextPage=clientFamilyDataPage.submitAndGotoCreateClientEnterMfiDataPage();
         nextPage.verifyPage("CreateClientFamilyInfo");
         propertiesHelper.setAreFamilyDetailsRequired(false);
@@ -121,8 +118,7 @@ public class AddFamilyDetailsTest extends UiTestCaseBase {
                 "acceptance_small_003_dbunit.xml",
                 dataSource, selenium);
         propertiesHelper.setAreFamilyDetailsRequired(true);
-        ClientsAndAccountsHomepage clientsAndAccountsPage = navigationHelper.navigateToClientsAndAccountsPage();
-        CreateClientEnterPersonalDataPage clientPersonalDataPage= clientsAndAccountsPage.createClientForFamilyInfo( "MyOffice1233171674227","11","12","1988");
+        CreateClientEnterPersonalDataPage clientPersonalDataPage= clientTestHelper.createClientForFamilyInfo( "MyOffice1233171674227","11","12","1988");
         CreateClientEnterFamilyDetailsPage clientFamilyDataPage=clientPersonalDataPage.submitAndGotoCreateClientEnterFamilyDetailsPage();
         clientFamilyDataPage.addRow();
         Assert.assertTrue(selenium.isElementPresent("familyRelationship[1]"), "The element for familyRelationship in the added row was not found");
@@ -139,12 +135,11 @@ public class AddFamilyDetailsTest extends UiTestCaseBase {
                 dataSource, selenium);
         propertiesHelper.setAreFamilyDetailsRequired(true);
         propertiesHelper.setMaximumNumberOfFamilyMemebers(10);
-        ClientsAndAccountsHomepage clientsAndAccountsPage = navigationHelper.navigateToClientsAndAccountsPage();
-        CreateClientEnterPersonalDataPage clientPersonalDataPage= clientsAndAccountsPage.createClientForFamilyInfo( "MyOffice1233171674227","11","12","1988");
+        CreateClientEnterPersonalDataPage clientPersonalDataPage= clientTestHelper.createClientForFamilyInfo( "MyOffice1233171674227","11","12","1988");
         CreateClientEnterFamilyDetailsPage clientFamilyDataPage=clientPersonalDataPage.submitAndGotoCreateClientEnterFamilyDetailsPage();
-        clientFamilyDataPage=clientsAndAccountsPage.createFamily("fname", "lname", "11", "01", "1987", clientFamilyDataPage);
+        clientFamilyDataPage=clientTestHelper.createFamily("fname", "lname", "11", "01", "1987", clientFamilyDataPage);
         CreateClientEnterMfiDataPage nextPage=clientFamilyDataPage.submitAndGotoCreateClientEnterMfiDataPage();
-        clientsAndAccountsPage.createClientMFIInformationAndGoToPreviewPage("Joe1233171679953 Guy1233171679953",nextPage);
+        clientTestHelper.createClientMFIInformationAndGoToPreviewPage("Joe1233171679953 Guy1233171679953",nextPage);
         Assert.assertEquals(selenium.getText("displayName"), "fname lname");
         propertiesHelper.setAreFamilyDetailsRequired(false);
     }
@@ -156,12 +151,11 @@ public class AddFamilyDetailsTest extends UiTestCaseBase {
                 dataSource, selenium);
         propertiesHelper.setAreFamilyDetailsRequired(true);
         propertiesHelper.setMaximumNumberOfFamilyMemebers(10);
-        ClientsAndAccountsHomepage clientsAndAccountsPage = navigationHelper.navigateToClientsAndAccountsPage();
-        CreateClientEnterPersonalDataPage clientPersonalDataPage= clientsAndAccountsPage.createClientForFamilyInfo( "MyOffice1233171674227","11","12","1988");
+        CreateClientEnterPersonalDataPage clientPersonalDataPage= clientTestHelper.createClientForFamilyInfo( "MyOffice1233171674227","11","12","1988");
         CreateClientEnterFamilyDetailsPage clientFamilyDataPage=clientPersonalDataPage.submitAndGotoCreateClientEnterFamilyDetailsPage();
-        clientFamilyDataPage=clientsAndAccountsPage.createFamily("fname", "lname", "11", "01", "1987", clientFamilyDataPage);
+        clientFamilyDataPage=clientTestHelper.createFamily("fname", "lname", "11", "01", "1987", clientFamilyDataPage);
         CreateClientEnterMfiDataPage nextPage=clientFamilyDataPage.submitAndGotoCreateClientEnterMfiDataPage();
-        CreateClientPreviewDataPage clientPreviewDataPage=clientsAndAccountsPage.createClientMFIInformationAndGoToPreviewPage("Joe1233171679953 Guy1233171679953",nextPage);
+        CreateClientPreviewDataPage clientPreviewDataPage=clientTestHelper.createClientMFIInformationAndGoToPreviewPage("Joe1233171679953 Guy1233171679953",nextPage);
         CreateClientEnterFamilyDetailsPage editPage=clientPreviewDataPage.edit();
         editPage.verifyPage("CreateClientFamilyInfo");
         propertiesHelper.setAreFamilyDetailsRequired(false);
@@ -174,12 +168,11 @@ public class AddFamilyDetailsTest extends UiTestCaseBase {
                 dataSource, selenium);
         propertiesHelper.setAreFamilyDetailsRequired(true);
         propertiesHelper.setMaximumNumberOfFamilyMemebers(10);
-        ClientsAndAccountsHomepage clientsAndAccountsPage = navigationHelper.navigateToClientsAndAccountsPage();
-        CreateClientEnterPersonalDataPage clientPersonalDataPage= clientsAndAccountsPage.createClientForFamilyInfo( "MyOffice1233171674227","11","12","1988");
+        CreateClientEnterPersonalDataPage clientPersonalDataPage= clientTestHelper.createClientForFamilyInfo( "MyOffice1233171674227","11","12","1988");
         CreateClientEnterFamilyDetailsPage clientFamilyDataPage=clientPersonalDataPage.submitAndGotoCreateClientEnterFamilyDetailsPage();
-        clientFamilyDataPage=clientsAndAccountsPage.createFamily("fname", "lname", "11", "01", "1987", clientFamilyDataPage);
+        clientFamilyDataPage=clientTestHelper.createFamily("fname", "lname", "11", "01", "1987", clientFamilyDataPage);
         CreateClientEnterMfiDataPage nextPage=clientFamilyDataPage.submitAndGotoCreateClientEnterMfiDataPage();
-        CreateClientPreviewDataPage clientPreviewDataPage=clientsAndAccountsPage.createClientMFIInformationAndGoToPreviewPage("Joe1233171679953 Guy1233171679953",nextPage);
+        CreateClientPreviewDataPage clientPreviewDataPage=clientTestHelper.createClientMFIInformationAndGoToPreviewPage("Joe1233171679953 Guy1233171679953",nextPage);
         clientPreviewDataPage.submit();
         selenium.click("client_creationConfirmation.link.viewClientDetailsLink");
         selenium.waitForPageToLoad("30000");
@@ -194,12 +187,11 @@ public class AddFamilyDetailsTest extends UiTestCaseBase {
                 dataSource, selenium);
         propertiesHelper.setAreFamilyDetailsRequired(true);
         propertiesHelper.setMaximumNumberOfFamilyMemebers(10);
-        ClientsAndAccountsHomepage clientsAndAccountsPage1 = navigationHelper.navigateToClientsAndAccountsPage();
-        CreateClientEnterPersonalDataPage clientPersonalDataPage1= clientsAndAccountsPage1.createClientForFamilyInfo( "MyOffice1233171674227","11","12","1988");
+        CreateClientEnterPersonalDataPage clientPersonalDataPage1= clientTestHelper.createClientForFamilyInfo( "MyOffice1233171674227","11","12","1988");
         CreateClientEnterFamilyDetailsPage clientFamilyDataPage=clientPersonalDataPage1.submitAndGotoCreateClientEnterFamilyDetailsPage();
-        clientFamilyDataPage=clientsAndAccountsPage1.createFamily("fname", "lname", "11", "01", "1987", clientFamilyDataPage);
+        clientFamilyDataPage=clientTestHelper.createFamily("fname", "lname", "11", "01", "1987", clientFamilyDataPage);
         CreateClientEnterMfiDataPage nextPage=clientFamilyDataPage.submitAndGotoCreateClientEnterMfiDataPage();
-        CreateClientPreviewDataPage clientPreviewDataPage1=clientsAndAccountsPage1.createClientMFIInformationAndGoToPreviewPage("Joe1233171679953 Guy1233171679953",nextPage);
+        CreateClientPreviewDataPage clientPreviewDataPage1=clientTestHelper.createClientMFIInformationAndGoToPreviewPage("Joe1233171679953 Guy1233171679953",nextPage);
         clientPreviewDataPage1.submit();
         selenium.click("client_creationConfirmation.link.viewClientDetailsLink");
         selenium.waitForPageToLoad("30000");

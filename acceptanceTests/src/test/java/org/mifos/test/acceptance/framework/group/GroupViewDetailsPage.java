@@ -21,6 +21,8 @@
 package org.mifos.test.acceptance.framework.group;
 
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.mifos.test.acceptance.framework.center.CenterViewDetailsPage;
+import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPage;
 import org.mifos.test.acceptance.framework.loan.AttachSurveyPage;
 import org.mifos.test.acceptance.framework.loan.ClosedAccountsPage;
 import org.mifos.test.acceptance.framework.questionnaire.ViewQuestionResponseDetailPage;
@@ -31,6 +33,8 @@ import com.thoughtworks.selenium.Selenium;
 public class GroupViewDetailsPage extends MifosPage {
 
     public final static String STATUS_PENDING_APPROVAL = "Pending Approval";
+    public final static String STATUS_PARTIAL_APPLICATION = "Partial Application";
+    public final static String STATUS_ACTIVE = "Active";
 
     public GroupViewDetailsPage() {
         super();
@@ -62,10 +66,10 @@ public class GroupViewDetailsPage extends MifosPage {
         return new ClosedAccountsPage(selenium);
     }
 
-    public EditGroupStatusPage navigateToEditGroupStatusPage() {
+    public CustomerChangeStatusPage navigateToEditGroupStatusPage() {
         selenium.click("viewgroupdetails.link.editStatus");
         waitForPageToLoad();
-        return new EditGroupStatusPage(selenium);
+        return new CustomerChangeStatusPage(selenium);
     }
 
     public HistoricalDataPage navigateToHistoricalDataPage() {
@@ -100,5 +104,11 @@ public class GroupViewDetailsPage extends MifosPage {
 
     public void verifyLoanDoesntExist(String loanID) {
         Assert.assertFalse(selenium.isTextPresent(loanID));
+    }
+
+    public CenterViewDetailsPage navigateToGroupsCenter(String centerName) {
+        selenium.click("link="+centerName);
+        waitForPageToLoad();
+        return new CenterViewDetailsPage(selenium);
     }
 }

@@ -88,8 +88,8 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 					<table width="96%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
 							<td width="62%" class="headingorange"><c:out
-								value="${loanInformationDto.prdOfferingName}" />&nbsp;# <c:out
-								value="${loanInformationDto.globalAccountNum}" /> <br>
+								value="${loanInformationDto.prdOfferingName}" />&nbsp;# <span id="loanaccountdetail.text.loanid"><c:out
+								value="${loanInformationDto.globalAccountNum}" /></span> <br>
 							</td>
 							<td width="38%" rowspan="2" align="right" valign="top"
 								class="fontnormal"><c:if

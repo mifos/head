@@ -68,6 +68,10 @@ public class CustomPropertiesHelper {
         selenium.open(UPDATE_PAGE + "?ClientRules.MaximumAgeForNewClients=" + maximumAge);
     }
 
+    public void setCenterHierarchyExists(String exists){
+        selenium.open(UPDATE_PAGE + "?ClientRules.CenterHierarchyExists=" + exists);
+    }
+
     /**
      * This is to decide whether the user requires to store the client family information
      * See application\src\main\resources\org\mifos\config\resources\applicationConfiguration.default.properties
@@ -133,5 +137,17 @@ public class CustomPropertiesHelper {
      */
     public void setImportTransactionOrder(String order){
         selenium.open(UPDATE_PAGE + "?ke.co.safaricom.MPesaXlsImporter.ImportTransactionOrder=" + order);
+    }
+
+    public void setGroupPendingApprovalStateEnabled(String enabled){
+        selenium.open(UPDATE_PAGE + "?ProcessFlow.GroupPendingApprovalStateEnabled=" + enabled);
+    }
+
+    public void setSavingsPendingApprovalStateEnabled(String enabled){
+        selenium.open(UPDATE_PAGE + "?ProcessFlow.SavingsPendingApprovalStateEnabled=" + enabled);
+    }
+
+    public void setLoanPendingApprovalStateEnabled(String enabled){
+        selenium.open(UPDATE_PAGE + "?ProcessFlow.LoanPendingApprovalStateEnabled=" + enabled);
     }
 }

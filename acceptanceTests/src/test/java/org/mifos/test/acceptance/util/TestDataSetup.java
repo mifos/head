@@ -1,14 +1,16 @@
 package org.mifos.test.acceptance.util;
 
-import com.thoughtworks.selenium.Selenium;
+import java.sql.SQLException;
+
 import org.joda.time.ReadableInstant;
 import org.joda.time.format.DateTimeFormat;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.admin.FeesCreatePage;
 import org.mifos.test.acceptance.framework.center.MeetingParameters;
+import org.mifos.test.acceptance.framework.client.ClientStatus;
 import org.mifos.test.acceptance.framework.client.CreateClientEnterMfiDataPage;
 import org.mifos.test.acceptance.framework.client.CreateClientEnterPersonalDataPage;
-import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPage;
+import org.mifos.test.acceptance.framework.group.EditCustomerStatusParameters;
 import org.mifos.test.acceptance.framework.holiday.CreateHolidayEntryPage;
 import org.mifos.test.acceptance.framework.office.OfficeParameters;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
@@ -16,7 +18,7 @@ import org.mifos.test.acceptance.framework.testhelpers.OfficeHelper;
 import org.mifos.test.acceptance.framework.testhelpers.UserHelper;
 import org.mifos.test.acceptance.framework.user.CreateUserParameters;
 
-import java.sql.SQLException;
+import com.thoughtworks.selenium.Selenium;
 
 public class TestDataSetup {
 
@@ -69,7 +71,7 @@ public class TestDataSetup {
                 submitAndGotoCreateClientPreviewDataPage(defineMfiData(loanOfficerName)).
                 submit().navigateToClientViewDetailsPage().
                 navigateToCustomerChangeStatusPage().
-                submitAndGotoCustomerChangeStatusPreviewDataPage(setApprovalStatus()).
+                setChangeStatusParametersAndSubmit(setApprovalStatus()).
                 submitAndGotoClientViewDetailsPage().
                 navigateToEditMeetingSchedule().
                 editClientMeeting(setMeetingScheduleParameters());
@@ -87,11 +89,11 @@ public class TestDataSetup {
                 submit();
     }
 
-    private CustomerChangeStatusPage.SubmitFormParameters setApprovalStatus() {
-        CustomerChangeStatusPage.SubmitFormParameters approvalStatusParameters = new CustomerChangeStatusPage.SubmitFormParameters();
-        approvalStatusParameters.setNotes("For Test");
-        approvalStatusParameters.setStatus(CustomerChangeStatusPage.SubmitFormParameters.ACTIVE);
-        return approvalStatusParameters;
+    private EditCustomerStatusParameters setApprovalStatus() {
+        EditCustomerStatusParameters parameters = new EditCustomerStatusParameters();
+        parameters.setClientStatus(ClientStatus.ACTIVE);
+        parameters.setNote("For Test");
+        return parameters;
     }
 
     private CreateClientEnterMfiDataPage.SubmitFormParameters defineMfiData(String userName) {

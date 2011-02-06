@@ -22,29 +22,26 @@ package org.mifos.test.acceptance.framework.customer;
 
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
+import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
 
 import com.thoughtworks.selenium.Selenium;
 
-public class CustomerChangeStatusPreviewDataPage extends MifosPage {
+public class CustomerChangeStatusPreviewPage extends MifosPage {
 
-    public CustomerChangeStatusPreviewDataPage() {
-        super();
-    }
-
-    /**
-     * @param selenium
-     */
-    public CustomerChangeStatusPreviewDataPage(Selenium selenium) {
+    public CustomerChangeStatusPreviewPage(Selenium selenium) {
         super(selenium);
-    }
-
-    public void verifyPage() {
-        this.verifyPage("customerchangeStatusPreview");
+        this.verifyPage("CustomerChangeStatusPreview");
     }
 
     public ClientViewDetailsPage submitAndGotoClientViewDetailsPage() {
         selenium.click("customerchangeStatusPreview.button.submit");
         waitForPageToLoad();
         return new ClientViewDetailsPage(selenium);
+    }
+
+    public GroupViewDetailsPage navigateToGroupDetailsPage() {
+        selenium.click("customerchangeStatusPreview.button.submit");
+        waitForPageToLoad();
+        return new GroupViewDetailsPage(selenium);
     }
 }

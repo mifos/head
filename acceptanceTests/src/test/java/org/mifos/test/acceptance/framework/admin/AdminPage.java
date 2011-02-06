@@ -371,4 +371,10 @@ public class AdminPage extends MifosPage {
     public void verifyError(String error){
         Assert.assertTrue(selenium.isTextPresent(error));
     }
+
+    public DefineAcceptedPaymentTypesPage navigateToDefineAcceptedPaymentType() {
+        selenium.click("admin.link.defineAcceptedPaymentType");
+        waitForPageToLoad();
+        return new DefineAcceptedPaymentTypesPage(selenium);
+    }
 }

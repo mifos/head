@@ -7,6 +7,7 @@ import org.mifos.test.acceptance.framework.center.MeetingParameters;
 public class EditMeetingPage extends MifosPage {
     public EditMeetingPage(Selenium selenium) {
         super(selenium);
+        this.verifyPage("updatemeeting");
     }
 
     public ClientViewDetailsPage editClientMeeting(MeetingParameters parameters) {
@@ -14,6 +15,12 @@ public class EditMeetingPage extends MifosPage {
         selenium.click("//input[@value='Save']");
         waitForPageToLoad();
         return new ClientViewDetailsPage(selenium);
+    }
+
+    public GroupSearchAddMemberPage addGroupMembership(){
+        selenium.click("updatemeeting.link.addGroupMembership");
+        waitForPageToLoad();
+        return new GroupSearchAddMemberPage(selenium);
     }
 
 }

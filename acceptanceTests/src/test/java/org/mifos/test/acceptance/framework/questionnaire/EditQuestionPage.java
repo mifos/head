@@ -31,12 +31,14 @@ public class EditQuestionPage extends CreateQuestionRootPage {
     public QuestionDetailPage activate() {
         selenium.click("id=currentQuestion.active0");
         selenium.click("id=_eventId_update");
+        waitForPageToLoad();
         return new QuestionDetailPage(selenium);
     }
 
     public QuestionDetailPage deactivate() {
         selenium.click("id=currentQuestion.active1");
         selenium.click("id=_eventId_update");
+        waitForPageToLoad();
         return new QuestionDetailPage(selenium);
     }
 

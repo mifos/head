@@ -51,6 +51,15 @@ public class CreateGroupEntryPage extends MifosPage {
         waitForPageToLoad();
         return new CreateGroupConfirmationPage(selenium);
     }
+    public CreateGroupConfirmationPage submitNewGroupForApprove(CreateGroupSubmitParameters formParameters) {
+        enterGroupData(formParameters);
+        selenium.click("creategroup.button.preview");
+        waitForPageToLoad();
+        selenium.isVisible("previewgroup.button.approve");
+        selenium.click("previewgroup.button.approve");
+        waitForPageToLoad();
+        return new CreateGroupConfirmationPage(selenium);
+    }
 
     public CreateGroupConfirmationPage submitNewGroupForPartialApplication(CreateGroupSubmitParameters formParameters) {
         enterGroupData(formParameters);

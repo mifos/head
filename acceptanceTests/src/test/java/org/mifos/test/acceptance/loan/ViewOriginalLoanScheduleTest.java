@@ -127,7 +127,8 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
     }
 
     /**
-     * disbale for now.
+     * FIXME - KEITHW - This test is disabled as its failing for case where loan when disbursed early with LSIM on seems to miss the nearest installment date but
+     * I cannot replicate this manually
      */
     @Test(enabled=false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception

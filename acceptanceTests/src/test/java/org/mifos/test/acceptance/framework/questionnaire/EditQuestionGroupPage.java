@@ -20,6 +20,8 @@
 
 package org.mifos.test.acceptance.framework.questionnaire;
 
+import java.util.List;
+
 import com.thoughtworks.selenium.Selenium;
 
 public class EditQuestionGroupPage extends CreateQuestionGroupRootPage {
@@ -33,5 +35,26 @@ public class EditQuestionGroupPage extends CreateQuestionGroupRootPage {
         selenium.click("id=_eventId_defineQuestionGroup");
         waitForPageToLoad();
         return new QuestionGroupDetailPage(selenium);
+    }
+
+    public QuestionGroupDetailPage activate() {
+        selenium.click("id=active0");
+        return submit();
+    }
+
+    public QuestionGroupDetailPage deactivate() {
+        selenium.click("id=active1");
+        return submit();
+    }
+
+    /* TODO: if needed add more types to add. For now it is only Free Text questions */
+    public void addNewQuestions(List<CreateQuestionParameters> questions) {
+        selenium.click("addQuestionFlag1");
+        for(CreateQuestionParameters question : questions) {
+            selenium.type("currentQuestion.text", question.getText());
+            selenium.select("currentQuestion.type", question.getType());
+            selenium.click("_eventId_addQuestion");
+            waitForPageToLoad();
+        }
     }
 }

@@ -402,7 +402,6 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         disburseParams.setDisbursalDateMM("01");
         disburseParams.setDisbursalDateYYYY("2011");
 
-        loanTestHelper.loginAndNavigateToAdminPage();
         LoanProductDetailsPage loanProductDetailsPage = loanTestHelper.defineNewLoanProduct(productParams);
         loanProductDetailsPage.verifyLoanAmountTableTypeSame("1000.0", "10000.0", "5000.0");
         loanProductDetailsPage.verifyInstallmentsTableTypeFromCycle(cycleInstallments);
@@ -411,9 +410,9 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         String loan1ID = loanAccountPage.getAccountId();
         loanTestHelper.createActivateAndDisburseDefaultLoanAccount(searchParams, disburseParams);
         loanAccountPage.verifyNumberOfInstallments("26", "52", "52");
-        String loan2ID = loanAccountPage.getAccountId();
+     //   String loan2ID = loanAccountPage.getAccountId();
         loanTestHelper.repayLoan(loan1ID);
-        loanTestHelper.repayLoan(loan2ID);
+     //   loanTestHelper.repayLoan(loan2ID);
         loanTestHelper.createActivateAndDisburseDefaultLoanAccount(searchParams, disburseParams);
         loanAccountPage.verifyNumberOfInstallments("20", "30", "30");
     }

@@ -23,6 +23,7 @@ package org.mifos.test.acceptance.framework.admin;
 import org.mifos.test.acceptance.framework.MifosPage;
 
 import com.thoughtworks.selenium.Selenium;
+import org.testng.Assert;
 
 public class ImportTransactionsPage extends MifosPage {
 
@@ -57,11 +58,26 @@ public class ImportTransactionsPage extends MifosPage {
 
     }
 
-     public AdminPage cancelImportTransaction()
-    {
+    public AdminPage cancelImportTransaction() {
         selenium.click("import_transactions_results.button.cancel");
         waitForPageToLoad();
 
         return new AdminPage(selenium);
+    }
+
+    public void checkErrors(String[] errors) {
+        for(String error : errors) {
+            if (!selenium.isTextPresent(error)) {
+                Assert.fail("No text <" + error + "> present on the page");
+            }
+        }
+    }
+
+    public ImportTransactionsPage failImportTransaction(String importFile, String importFormat) {
+        selenium.select("importPluginName", "label=" + importFormat);
+        selenium.type("importTransactionsFile", importFile);
+        selenium.click("import_transactions.button.review");
+        waitForPageToLoad();
+        return new ImportTransactionsPage(selenium);
     }
 }

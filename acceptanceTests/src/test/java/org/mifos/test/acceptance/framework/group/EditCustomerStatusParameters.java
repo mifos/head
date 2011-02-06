@@ -20,40 +20,55 @@
 
 package org.mifos.test.acceptance.framework.group;
 
-public class EditGroupStatusParameters {
-    public static final String ON_HOLD = "On Hold";
-    public static final String ACTIVE = "Active";
-    public static final String CLOSED = "Closed";
-    public static final String PENDING_APPROVAL = "Application Pending Approval";
+import org.mifos.test.acceptance.framework.client.ClientStatus;
+
+public class EditCustomerStatusParameters {
 
     private String note;
-    private String cancelReason;
-    private String status;
-
-    @SuppressWarnings("PMD.OnlyOneReturn")
-    public int getStatusValue(){
-        if("Partial Application".equals(status)) { return 7; }
-        if("Application Pending Approval".equals(status)) { return 8; }
-        if("Active".equals(status)) { return 9; }
-        return -1;
-    }
+    private GroupCancelReason cancelReason;
+    private GroupCloseReason closeReason;
+    private GroupStatus groupStatus;
+    private ClientStatus clientStatus;
 
     public String getNote() {
         return this.note;
     }
+
     public void setNote(String note) {
         this.note = note;
     }
-    public String getCancelReason() {
+
+    public GroupCancelReason getCancelReason() {
         return this.cancelReason;
     }
-    public void setCancelReason(String cancelReason) {
+
+    public void setCancelReason(GroupCancelReason cancelReason) {
         this.cancelReason = cancelReason;
     }
-    public String getStatus() {
-        return this.status;
+
+    public GroupCloseReason getCloseReason() {
+        return this.closeReason;
     }
-    public void setStatus(String status) {
-        this.status = status;
+
+    public void setCloseReason(GroupCloseReason closeReason) {
+        this.closeReason = closeReason;
     }
+
+    public GroupStatus getGroupStatus() {
+        return this.groupStatus;
+    }
+
+    public void setGroupStatus(GroupStatus groupStatus) {
+        this.groupStatus = groupStatus;
+    }
+
+    public ClientStatus getClientStatus() {
+        return this.clientStatus;
+    }
+
+    public void setClientStatus(ClientStatus clientStatus) {
+        this.clientStatus = clientStatus;
+    }
+
+
 }

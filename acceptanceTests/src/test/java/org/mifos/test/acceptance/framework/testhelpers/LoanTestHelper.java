@@ -81,6 +81,7 @@ import org.mifos.test.acceptance.framework.login.LoginPage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
+import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -741,12 +742,30 @@ public class LoanTestHelper {
                 .submitAndNavigateToLoanAccountPage();
     }
 
+    public LoanAccountPage createWithVerificationAndActivationLoanAccount(CreateLoanAccountSearchParameters searchParams, String[] amounts, String[] interestRate, String[] installments) {
+        CreateLoanAccountEntryPage createLoanAccountEntryPage = navigationHelper
+                .navigateToClientsAndAccountsPage()
+                .navigateToCreateLoanAccountUsingLeftMenu()
+                .searchAndNavigateToCreateLoanAccountPage(searchParams);
+        if(amounts != null) {
+            createLoanAccountEntryPage.verifyAllowedAmounts(amounts[0], amounts[1], amounts[2]);
+        }
+        if(interestRate != null) {
+            createLoanAccountEntryPage.verifyAllowedInterestRate(interestRate[0], interestRate[1], interestRate[2]);
+        }
+        if(installments != null) {
+            createLoanAccountEntryPage.verifyAllowedInstallments(installments[0], installments[1], installments[2]);
+        }
+        return createLoanAccountEntryPage
+            .continuePreviewSubmitAndNavigateToDetailsPage()
+            .changeAccountStatusToAccepted();
+    }
+
     public LoanProductDetailsPage defineNewLoanProduct(DefineNewLoanProductPage.SubmitFormParameters productParams) {
-        MifosPage mifosPage = new MifosPage(selenium);
-        DefineNewLoanProductPage defineNewLoanProductPage = mifosPage.navigateToAdminPageUsingHeaderTab()
+        DefineNewLoanProductPage defineNewLoanProductPage = navigationHelper
+            .navigateToAdminPage()
             .navigateToDefineLoanProduct();
         defineNewLoanProductPage.fillLoanParameters(productParams);
-
         return defineNewLoanProductPage
             .submitAndGotoNewLoanProductPreviewPage()
             .submit()
@@ -797,6 +816,32 @@ public class LoanTestHelper {
         navigateToLoanAccountEntryPage(setLoanSearchParameters(clientName,loanProductName)).
                 clickContinueAndNavigateToLoanAccountConfirmationPage().
                 navigateToLoanAccountDetailsPage();
+    }
+
+    public LoanAccountPage applyMultipleAdjustments(String loanAcountID, int howMany) {
+        LoanAccountPage loanAccountPage = navigationHelper
+            .navigateToClientsAndAccountsPage()
+            .searchForClient(loanAcountID)
+            .navigateToLoanAccountSearchResult("Account # "+loanAcountID);
+        for(int i = 0; i < howMany; i++) {
+            loanAccountPage
+                .navigateToApplyAdjustment()
+                .fillAdjustmentFieldsAndSubmit("note note note");
+        }
+        return loanAccountPage;
+    }
+
+    public void verifyRepaymentScheduleForHolidays(String... dates){
+        int i=3;
+        for(String date : dates)
+        {
+            verifyCellValueOfInstallments(i++, 2, date);
+            //Assert.assertEquals(selenium.getTable("installments.tbody." + Integer.toString(i++) + ".2"), date);
+        }
+    }
+
+    private void verifyCellValueOfInstallments(int row, int column, String value) {
+        Assert.assertEquals(selenium.getText("//table[@id='installments']//tr[" + (row + 1) + "]/td[" + column + "]"), value);
     }
 
     public void verifyOneTimeFee(String expectedFee, int feeIndex) {
