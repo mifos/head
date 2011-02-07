@@ -148,6 +148,10 @@ public class ClientRules {
         centerHierarchyExists = exists;
     }
 
+    public static void setGroupCanApplyLoans(boolean flag) {
+        groupCanApplyLoans = flag;
+    }
+
 
     /** Can group loans exist? */
     public static Boolean getGroupCanApplyLoans() {

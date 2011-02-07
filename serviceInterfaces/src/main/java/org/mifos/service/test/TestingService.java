@@ -53,6 +53,7 @@ public interface TestingService {
     void setAreFamilyDetailsRequired(boolean flag);
     void setMaximumNumberOfFamilyMembers(int number);
     void setCenterHierarchyExists(boolean flag);
+    void setGroupCanApplyLoans(boolean flag);
     void runIndividualBatchJob(String jobName, ServletContext servletContext) throws MifosException;
     void runAllBatchJobs(ServletContext servletContext);
     void setClientNameSequence(String[] nameSequence);

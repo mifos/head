@@ -72,6 +72,10 @@ public class CustomPropertiesHelper {
         selenium.open(UPDATE_PAGE + "?ClientRules.CenterHierarchyExists=" + exists);
     }
 
+    public void setGroupCanApplyLoans(String exists){
+        selenium.open(UPDATE_PAGE + "?ClientRules.GroupCanApplyLoans=" + exists);
+    }
+
     /**
      * Determines ordering of displayed client name.
      * @param sequence Name sequence, comma-separated values.

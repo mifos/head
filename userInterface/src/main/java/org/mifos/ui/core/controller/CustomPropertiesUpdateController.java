@@ -65,6 +65,8 @@ public class CustomPropertiesUpdateController extends AbstractController {
 
             handleClientNameSequence(request, model);
 
+            handleGroupCanApplyLoans(request, model);
+
             model.put("request", request);
             Map<String, Object> status = new HashMap<String, Object>();
             status.put("errorMessages", errorMessages);
@@ -90,6 +92,15 @@ public class CustomPropertiesUpdateController extends AbstractController {
             boolean required=Boolean.valueOf(centerHierarchyExists);
             testingService.setCenterHierarchyExists(required);
             model.put("clientRulesResult", "centerHierarchyExists: " + centerHierarchyExists);
+        }
+    }
+
+    private void handleGroupCanApplyLoans(HttpServletRequest request, Map<String, Object> model) {
+        String groupCanApplyLoans = request.getParameter("ClientRules.GroupCanApplyLoans");
+        if (StringUtils.isNotBlank(groupCanApplyLoans)) {
+            boolean required=Boolean.valueOf(groupCanApplyLoans);
+            testingService.setGroupCanApplyLoans(required);
+            model.put("clientRulesResult", "groupCanApplyLoans: " + groupCanApplyLoans);
         }
     }
 

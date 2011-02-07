@@ -193,6 +193,12 @@ public class StandardTestingService implements TestingService {
     }
 
     @Override
+    public void setGroupCanApplyLoans(boolean flag) {
+        ClientRules.setGroupCanApplyLoans(flag);
+        MifosConfigurationManager.getInstance().setProperty(ClientRules.ClientRulesGroupCanApplyLoans, flag);
+    }
+
+    @Override
     public void runAllBatchJobs(final ServletContext ctx) {
         logger.info("running all batch jobs");
         MifosScheduler mifosScheduler = (MifosScheduler) ctx.getAttribute(MifosScheduler.class.getName());

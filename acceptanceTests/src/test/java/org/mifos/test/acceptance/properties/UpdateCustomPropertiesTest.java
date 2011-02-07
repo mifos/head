@@ -93,6 +93,19 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    //http://mifosforge.jira.com/browse/MIFOSTEST-234
+    public void verifyPropertyGroupCanApplyLoansFalse() throws Exception{
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
+        propertiesHelper.setGroupCanApplyLoans("false");
+        navigationHelper.navigateToGroupViewDetailsPage("MyGroup1232993846342");
+        Assert.assertFalse(selenium.isElementPresent("viewgroupdetails.link.newLoanAccount"));
+        //When
+        navigationHelper.navigateToClientsAndAccountsPage();
+        propertiesHelper.setGroupCanApplyLoans("true");
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     //http://mifosforge.jira.com/browse/MIFOSTEST-232
     public void verifyPropertyClientRulesCenterHierarchyExistsFalse() throws Exception{
         //Given
