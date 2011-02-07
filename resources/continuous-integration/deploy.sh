@@ -35,7 +35,8 @@ function updateDbProperties {
          s/@PASSWORD@/$PASSWORD/g;
          s/@SCHEMA_NAME@/$SCHEMA_NAME/g;
          s/@DB_HOST@/$DB_HOST/g;
-         s/@DB_PORT@/$DB_PORT/g' -i $dbProperties
+         s/@DB_PORT@/$DB_PORT/g' $dbProperties > $dbProperties.tmp
+    mv $dbProperties.tmp $dbProperties
 }
 
 function deployMifos {
