@@ -63,6 +63,8 @@ public class CustomPropertiesUpdateController extends AbstractController {
 
             handleCenterHierarchy(request, model);
 
+            handleClientNameSequence(request, model);
+
             model.put("request", request);
             Map<String, Object> status = new HashMap<String, Object>();
             status.put("errorMessages", errorMessages);
@@ -71,6 +73,15 @@ public class CustomPropertiesUpdateController extends AbstractController {
             returnValue = modelAndView;
         }
         return returnValue;
+    }
+
+    private void handleClientNameSequence(HttpServletRequest request, Map<String, Object> model) {
+        String nameSequenceString = request.getParameter("ClientRules.NameSequence");
+        if (StringUtils.isNotBlank(nameSequenceString)) {
+            String[] nameSequence = nameSequenceString.split(",");
+            testingService.setClientNameSequence(nameSequence);
+            model.put("clientRulesResult", "NameSequence: " + nameSequenceString);
+        }
     }
 
     private void handleCenterHierarchy(HttpServletRequest request, Map<String, Object> model) {

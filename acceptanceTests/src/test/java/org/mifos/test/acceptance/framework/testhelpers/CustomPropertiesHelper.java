@@ -73,6 +73,15 @@ public class CustomPropertiesHelper {
     }
 
     /**
+     * Determines ordering of displayed client name.
+     * @param sequence Name sequence, comma-separated values.
+     * ex. "first_name,middle_name,last_name,second_last_name"
+     */
+    public void setClientsNameSequence(String sequence) {
+        selenium.open(UPDATE_PAGE + "?ClientRules.NameSequence=" + sequence);
+    }
+
+    /**
      * This is to decide whether the user requires to store the client family information
      * See application\src\main\resources\org\mifos\config\resources\applicationConfiguration.default.properties
      * @param req True if its required and false if its not required

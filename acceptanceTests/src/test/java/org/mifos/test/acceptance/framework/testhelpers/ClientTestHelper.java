@@ -315,4 +315,16 @@ public class ClientTestHelper {
        mfiFormParameters.setMeeting(meetingFormParameters);
        return clientMfiDataPage.submitAndGotoCreateClientPreviewDataPage(mfiFormParameters);
    }
+
+   public ClientViewDetailsPage createNewClient(String groupName, CreateClientEnterPersonalDataPage.SubmitFormParameters clientParams) {
+       return navigationHelper
+           .navigateToClientsAndAccountsPage()
+           .navigateToCreateNewClientPage()
+           .selectGroup(groupName)
+           .create(clientParams)
+           .submitAndGotoCreateClientEnterMfiDataPage()
+           .navigateToPreview()
+           .submit()
+           .navigateToClientViewDetailsPage();
+   }
 }

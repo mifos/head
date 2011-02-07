@@ -231,6 +231,10 @@ public class ClientRules {
         return cfgValue;
     }
 
+    public static void setNameSequence(String[] nameSequence) {
+        ClientRules.nameSequence = nameSequence;
+    }
+
     /*
      * Fetches and populates ClientRules#nameSequence.
      */

@@ -247,4 +247,9 @@ public class StandardTestingService implements TestingService {
         configMgr.setProperty(processFlowParamName, processFlowParamValue);
 
     }
+
+    @Override
+    public void setClientNameSequence(String[] nameSequence) {
+        ClientRules.setNameSequence(nameSequence);
+    }
 }

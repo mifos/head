@@ -77,6 +77,10 @@ public class ClientViewDetailsPage extends MifosPage {
         return selenium.getText("viewClientDetails.text.notes");
     }
 
+    public void verifyHeading(String heading) {
+        Assert.assertEquals(getHeading(), heading);
+    }
+
     public void verifyName(String fullName) {
         Assert.assertTrue(getHeading().contains(fullName));
     }

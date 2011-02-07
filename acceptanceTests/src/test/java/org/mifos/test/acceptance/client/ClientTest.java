@@ -188,6 +188,7 @@ public class ClientTest extends UiTestCaseBase {
         viewDetailsPage.verifySpouseFather("FatherFirstnameTest FatherLastNameTest");
 
     }
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-236
     public void createClientOutsideGroup() throws Exception {
@@ -582,6 +583,46 @@ public class ClientTest extends UiTestCaseBase {
 
         //When / Then
         clientTestHelper.deleteClientGroupMembershipWithError(clientName);
+    }
+
+    /**
+     * Verify that sequence of client names in the properties file is used
+     * for displaying the order of client names in the UI
+     * http://mifosforge.jira.com/browse/MIFOSTEST-205
+     * @throws Exception
+     */
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void averifySequenceOfClientNamesInPropertiesFile() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
+
+        String groupName = "MyGroup1233266255641";
+        CreateClientEnterPersonalDataPage.SubmitFormParameters clientParams = new CreateClientEnterPersonalDataPage.SubmitFormParameters();
+        clientParams.setSalutation(CreateClientEnterPersonalDataPage.SubmitFormParameters.MRS);
+        clientParams.setFirstName("firstName");
+        clientParams.setMiddleName("middleName");
+        clientParams.setLastName("lastName");
+        clientParams.setSecondLastName("secondLastName");
+        clientParams.setDateOfBirthDD("22");
+        clientParams.setDateOfBirthMM("05");
+        clientParams.setDateOfBirthYYYY("1987");
+        clientParams.setGender(CreateClientEnterPersonalDataPage.SubmitFormParameters.FEMALE);
+        clientParams.setPovertyStatus(CreateClientEnterPersonalDataPage.SubmitFormParameters.POOR);
+        clientParams.setSpouseNameType(CreateClientEnterPersonalDataPage.SubmitFormParameters.FATHER);
+        clientParams.setSpouseFirstName("fatherName");
+        clientParams.setSpouseLastName("fatherLastName");
+
+        ClientViewDetailsPage clientViewDetailsPage = clientTestHelper.createNewClient(groupName, clientParams);
+        clientViewDetailsPage.verifyHeading("firstName middleName lastName secondLastName");
+
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
+        propertiesHelper.setClientsNameSequence("last_name,second_last_name,middle_name,first_name");
+        clientViewDetailsPage = clientTestHelper.createNewClient(groupName, clientParams);
+        clientViewDetailsPage.verifyHeading("lastName secondLastName middleName firstName");
+
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
+        propertiesHelper.setClientsNameSequence("first_name,middle_name,last_name,second_last_name");
+        clientViewDetailsPage = clientTestHelper.createNewClient(groupName, clientParams);
+        clientViewDetailsPage.verifyHeading("firstName middleName lastName secondLastName");
     }
 
     private QuestionnairePage checkMandatoryQuestionValidation(String questionGroupTitle, String question1, String question2, ClientViewDetailsPage viewDetailsPage) {
