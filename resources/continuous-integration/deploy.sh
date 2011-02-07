@@ -70,7 +70,7 @@ cUrl
 
 # Test new version of application against new db
 stopTomcat
-deploy
+deployMifos
 startTomcat
 cUrl
 
