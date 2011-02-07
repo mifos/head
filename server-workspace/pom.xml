@@ -3,13 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.mifos</groupId>
-	<artifactId>mifos-server</artifactId>
+	<artifactId>mifos-server-workspace</artifactId>
 	<version>1.9-SNAPSHOT</version>
 
-	<name>Mifos - Server</name>
-	<description>Embedded Servlet Container Web Server. 
-Principally for Mifos Eclipse (or other IDE) and Maven-based Development Environment,
-but could technically be used for running acceptanceTests, Demo/Test instances, or even &quot;all-in-one&quot; real deployment scenarios.</description>
+	<name>Mifos - Workspace Server</name>
+	<description>For Mifos Eclipse Maven-based Development Environment (or any other IDE with M2E-like Maven support)</description>
 
 	<parent>
 		<groupId>org.mifos</groupId>

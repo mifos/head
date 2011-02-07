@@ -72,7 +72,8 @@
         <module>application</module>
         <module>acceptanceTests</module>
         <module>reporting</module>
-        <module>server</module>
+        <module>server-jetty</module>
+        <module>server-workspace</module>
         <module>war</module>
         <module>reporting-libs</module>
     </modules>
