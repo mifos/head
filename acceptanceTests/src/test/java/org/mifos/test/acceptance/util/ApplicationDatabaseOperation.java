@@ -16,6 +16,10 @@ public class ApplicationDatabaseOperation {
     private DriverManagerDataSource dataSource;
     private Connection connection;
 
+    public void updateCustomerState(String statusID, String inUse) throws SQLException {
+        getStatement().executeUpdate("UPDATE CUSTOMER_STATE l SET CURRENTLY_IN_USE= " + inUse + " WHERE l.STATUS_ID=" + statusID);
+        closeConnection();
+    }
 
     public void  updateLSIM(int lsimValue) throws SQLException {
         getStatement().executeUpdate("update config_key_value_integer set configuration_value=" + lsimValue + " where configuration_key='repaymentSchedulesIndependentOfMeetingIsEnabled'");

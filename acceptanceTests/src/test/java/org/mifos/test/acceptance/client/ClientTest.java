@@ -82,6 +82,7 @@ import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.framework.testhelpers.QuestionGroupTestHelper;
 
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
+import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
 import org.mifos.test.acceptance.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -101,13 +102,14 @@ public class ClientTest extends UiTestCaseBase {
     private GroupTestHelper groupTestHelper;
 
     @Autowired
+    private ApplicationDatabaseOperation applicationDatabaseOperation;
+    @Autowired
     private DriverManagerDataSource dataSource;
     @Autowired
     private DbUnitUtilities dbUnitUtilities;
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
-    private Random random;
-    private static final String FREE_TEXT = "Free Text";
+
     public static final String MULTI_SELECT = "Multi Select";
     public static final String EXPECTED_DATE_FORMAT = "%02d/%02d/%04d";
     public static final String NUMBER = "Number";
@@ -130,7 +132,6 @@ public class ClientTest extends UiTestCaseBase {
         clientTestHelper = new ClientTestHelper(selenium);
         questionGroupTestHelper = new QuestionGroupTestHelper(selenium);
         groupTestHelper = new GroupTestHelper(selenium);
-        random = new Random();
     }
 
     @AfterMethod(alwaysRun = true)
@@ -403,6 +404,7 @@ public class ClientTest extends UiTestCaseBase {
     }
 
     private void createQuestionGroup() {
+        Random random = new Random();
         questionGroupTitle = "QG1" + random.nextInt(100);
         question1 = "FT_" + random.nextInt(100);
         question2 = "MS_" + random.nextInt(100);
@@ -410,7 +412,7 @@ public class ClientTest extends UiTestCaseBase {
 
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         CreateQuestionPage createQuestionPage = adminPage.navigateToCreateQuestionPage();
-        createQuestionPage.addQuestion(getCreateQuestionParams(question1, FREE_TEXT, null));
+        createQuestionPage.addQuestion(getCreateQuestionParams(question1, "Free Text", null));
         createQuestionPage.addQuestion(getCreateQuestionParams(question2, MULTI_SELECT, asList("Choice1", "Choice2", "Choice3", "Choice4")));
         adminPage = createQuestionPage.submitQuestions();
 
@@ -592,7 +594,7 @@ public class ClientTest extends UiTestCaseBase {
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void averifySequenceOfClientNamesInPropertiesFile() throws Exception {
+    public void verifySequenceOfClientNamesInPropertiesFile() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
 
         String groupName = "MyGroup1233266255641";
@@ -623,6 +625,25 @@ public class ClientTest extends UiTestCaseBase {
         propertiesHelper.setClientsNameSequence("first_name,middle_name,last_name,second_last_name");
         clientViewDetailsPage = clientTestHelper.createNewClient(groupName, clientParams);
         clientViewDetailsPage.verifyHeading("firstName middleName lastName secondLastName");
+    }
+
+    /**
+     * Verify when Pending Approval (Clients) is set to false;
+     * the system transitions the account to 'Active state' when creating new clients
+     * http://mifosforge.jira.com/browse/MIFOSTEST-209
+     * @throws Exception
+     */
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void verifyClientCreatedWithActiveStatus() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
+        applicationDatabaseOperation.updateCustomerState("2", "0");
+        propertiesHelper.setClientPendingApprovalStateEnabled("false");
+
+        String officeName = "MyOffice1233171674227";
+        String loanOfficer = "Joe1233171679953 Guy1233171679953";
+
+        ClientViewDetailsPage clientViewDetailsPage = clientTestHelper.createClientAndVerify(loanOfficer, officeName);
+        clientViewDetailsPage.verifyStatus("Active");
     }
 
     private QuestionnairePage checkMandatoryQuestionValidation(String questionGroupTitle, String question1, String question2, ClientViewDetailsPage viewDetailsPage) {
