@@ -6,7 +6,7 @@ controlScript=$WORKSPACE/resources/continuous-integration/deploy/tomcat/control.
 lastStableWAR=$WORKSPACE/../lastStable/org.mifos\$mifos-webapp/archive/org.mifos/mifos-webapp/*/*.war
 deployRoot=$HOME/deploys/mifos-$JOB_NAME-deploy
 targetWARlocation=$deployRoot/tomcat6/webapps/mifos.war
-dbProperties=$WORKSPACE/db/target/release/db/bin/mifos-db.properties
+dbProperties=$WORKSPACE/db/target/release/db/mifos-db.properties
 expandScript=$WORKSPACE/db/target/release/db/bin/expand_db.sh
 contractScript=$WORKSPACE/db/target/release/db/bin/contract_db.sh
 
