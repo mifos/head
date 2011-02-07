@@ -47,6 +47,8 @@
         <slf4j.version>1.6.1</slf4j.version>
         <project.dependency.version>1.9-SNAPSHOT</project.dependency.version>
         <powermock.version>1.4.7</powermock.version>
+        <liquibase.version>2.0.0</liquibase.version>
+        <mysql.connector.version>5.1.13</mysql.connector.version>
     </properties>
     <modules>
         <module>common</module>
@@ -290,7 +292,7 @@
             <dependency>
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
-                <version>5.1.13</version>
+                <version>${mysql.connector.version}</version>
             </dependency>
             <dependency>
                 <groupId>findbugs</groupId>
@@ -521,7 +523,7 @@
             <dependency>
                 <groupId>org.liquibase</groupId>
                 <artifactId>liquibase-core</artifactId>
-                <version>2.0.0</version>
+                <version>${liquibase.version}</version>
             </dependency>
             <dependency>
                 <groupId>strutstest</groupId>

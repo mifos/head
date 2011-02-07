@@ -5,19 +5,6 @@
     <formats>
         <format>zip</format>
     </formats>
-    <includeBaseDirectory>true</includeBaseDirectory>
-    <dependencySets>
-        <dependencySet>
-            <outputDirectory>db/lib</outputDirectory>
-            <useProjectArtifact>true</useProjectArtifact>
-            <unpack>false</unpack>
-            <scope>runtime</scope>
-            <includes>
-                <include>*liquibase*jar</include>
-                <include>*mysql*jar</include>
-            </includes>
-        </dependencySet>
-    </dependencySets>
     <fileSets>
         <fileSet>
             <outputDirectory/>
@@ -28,33 +15,11 @@
             </includes>
         </fileSet>
         <fileSet>
-            <outputDirectory>db/changesets</outputDirectory>
-            <directory>${basedir}/../db/src/main/resources/changesets</directory>
-            <includes>
-                <include>*.xml</include>
-            </includes>
-        </fileSet>
-        <fileSet>
-            <outputDirectory>db/bin</outputDirectory>
-            <directory>${basedir}/../db/deploy</directory>
-            <includes>
-                <include>*.bat</include>
-                <include>*.sh</include>
-            </includes>
-        </fileSet>
-        <fileSet>
-            <outputDirectory>db/sql</outputDirectory>
-            <directory>${basedir}/../db/src/main/resources/sql</directory>
-            <includes>
-                <include>*.sql</include>
-            </includes>
+            <outputDirectory>db</outputDirectory>
+            <directory>${basedir}/../db/target/release/db</directory>
         </fileSet>
     </fileSets>
     <files>
-        <file>
-            <source>${basedir}/../db/deploy/mifos-db.properties</source>
-            <outputDirectory>db</outputDirectory>
-        </file>
         <file>
             <source>${basedir}/../appdomain/target/applicationConfiguration.custom.properties</source>
             <outputDirectory>config</outputDirectory>
