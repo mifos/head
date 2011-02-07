@@ -20,10 +20,7 @@
 
 package org.mifos.framework.components.customTableTag;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -32,7 +29,7 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
-import org.mifos.core.ClasspathResource;
+import org.mifos.core.MifosResourceUtil;
 import org.mifos.framework.exceptions.TableTagParseException;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.w3c.dom.Document;
@@ -51,27 +48,24 @@ public class TableTagParser {
         return instance;
     }
 
-    public Table parser(String filename) throws TableTagParseException {
+    public Table parser(String file) throws TableTagParseException {
         Table table = null;
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
             SchemaFactory schfactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
             schfactory.setErrorHandler(null);
-            Schema schema = schfactory.newSchema(new StreamSource(new File(ClasspathResource
-                    .getURI(FilePaths.CUSTOMTABLETAGXSD))));
+            Schema schema = schfactory.newSchema(new StreamSource(MifosResourceUtil.getClassPathResource(FilePaths.CUSTOMTABLETAGXSD)));
             factory.setNamespaceAware(false);
             factory.setValidating(false);
             factory.setSchema(schema);
 
             DocumentBuilder builder = factory.newDocumentBuilder();
             builder.setErrorHandler(null);
-            Document document = builder.parse(filename);
+            Document document = builder.parse(MifosResourceUtil.getClassPathResource(file));
 
             table = createTable(document);
 
-        } catch (URISyntaxException e) {
-            throw new TableTagParseException(e);
         } catch (ParserConfigurationException e) {
             throw new TableTagParseException(e);
         } catch (IOException e) {
@@ -231,11 +225,6 @@ public class TableTagParser {
                     TableTagConstants.VALUETYPE).getNodeValue());
         }
         return actionParam;
-    }
-
-    public static void main(String args[]) throws Exception {
-        TableTagParser ttp = new TableTagParser();
-        ttp.parser("classes/component/example.xml");
     }
 
 }

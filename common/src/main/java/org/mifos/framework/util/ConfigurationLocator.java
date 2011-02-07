@@ -29,6 +29,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
+import org.mifos.core.MifosResourceUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -135,13 +136,13 @@ public class ConfigurationLocator {
     private File getConfigurationFile(String filename) throws IOException {
         for (String directoryPath : getDirectoriesToSearch()) {
             if (StringUtils.isNotBlank(directoryPath)) {
-                File file = new File(directoryPath, filename);
+                File file = MifosResourceUtil.getFile(directoryPath +"/"+ filename);
                 if (file.exists()) {
                     return file;
                 }
             }
         }
-        return new ClassPathResource(getDefaultConfigPath() + filename).getFile();
+        return MifosResourceUtil.getClassPathResource(getDefaultConfigPath() + filename);
     }
 
     private String getHomeProperty() {

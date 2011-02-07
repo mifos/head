@@ -21,6 +21,7 @@
 package org.mifos.framework.util;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.sql.Connection;
@@ -44,17 +45,18 @@ import org.dbunit.dataset.IDataSet;
 import org.dbunit.operation.DatabaseOperation;
 import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.config.exceptions.ConfigurationException;
+import org.mifos.core.MifosResourceUtil;
 import org.mifos.framework.ApplicationInitializer;
 import org.mifos.framework.components.batchjobs.exceptions.TaskSystemException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.SqlExecutor;
-import org.mifos.framework.persistence.SqlResource;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.service.test.TestingService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.util.Log4jConfigurer;
+import org.springframework.util.ResourceUtils;
 
 
 @SuppressWarnings( { "PMD.SystemPrintln", "PMD.SingularField" })
@@ -177,7 +179,7 @@ public class DataSetUpgradeUtil {
             jdbcConnection = DriverManager.getConnection(getUrl(databaseName, port, params), user, password);
             jdbcConnection.setAutoCommit(false);
             resetDatabase(databaseName, jdbcConnection);
-            SqlExecutor.execute(SqlResource.getInstance().getAsStream(schemaFileName), jdbcConnection);
+            SqlExecutor.execute(MifosResourceUtil.getSQLFileAsStream(schemaFileName), jdbcConnection);
             jdbcConnection.commit();
             jdbcConnection.setAutoCommit(true);
             IDatabaseConnection databaseConnection = new DatabaseConnection(jdbcConnection);
@@ -234,7 +236,8 @@ public class DataSetUpgradeUtil {
     }
 
 
-    private void defineOptions() {
+    @SuppressWarnings("static-access")
+	private void defineOptions() {
         outputFile = OptionBuilder.withArgName( "data set file name" )
         .withLongOpt("dataset")
         .hasArg()
@@ -330,9 +333,12 @@ public class DataSetUpgradeUtil {
             }
             if( line.hasOption( SCHEMA_FILE_OPTION_NAME ) ) {
                 schemaFileName = line.getOptionValue(SCHEMA_FILE_OPTION_NAME);
-                if (SqlResource.getInstance().getURI(schemaFileName) == null) {
-                    fail("Unable to find schema file: " + schemaFileName);
-                }
+                try {
+					MifosResourceUtil.getSQLFileAsReader(schemaFileName);
+				} catch (FileNotFoundException e) {
+					fail("Unable to find schema file: " + schemaFileName);
+					e.printStackTrace();
+				}
             }
             if( line.hasOption( PORT_OPTION_NAME ) ) {
                 port = line.getOptionValue(PORT_OPTION_NAME);

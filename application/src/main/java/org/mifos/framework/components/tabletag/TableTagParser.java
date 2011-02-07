@@ -28,8 +28,9 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.mifos.core.ClasspathResource;
+import org.mifos.core.MifosResourceUtil;
 import org.mifos.framework.exceptions.TableTagParseException;
+import org.springframework.core.io.ClassPathResource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -66,7 +67,7 @@ public class TableTagParser {
 
             DocumentBuilder builder = factory.newDocumentBuilder();
             builder.setErrorHandler(null);
-            Document document = builder.parse(new File(ClasspathResource.getURI(filename)));
+            Document document = builder.parse(MifosResourceUtil.getClassPathResource(filename));
             /*
              * NodeList tableNodeList =
              * document.getElementsByTagName(TableTagConstants.TABLE); table =
@@ -89,8 +90,6 @@ public class TableTagParser {
             throw new TableTagParseException(saxpe);
         } catch (SAXException saxe) {
             throw new TableTagParseException(saxe);
-        } catch (URISyntaxException urise) {
-            throw new TableTagParseException(urise);
         }
         return table;
     }

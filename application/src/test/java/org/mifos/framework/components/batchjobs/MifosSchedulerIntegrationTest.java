@@ -32,10 +32,10 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.mifos.core.MifosResourceUtil;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.components.batchjobs.exceptions.TaskSystemException;
 import org.mifos.framework.util.ConfigurationLocator;
-import org.springframework.core.io.ClassPathResource;
 
 public class MifosSchedulerIntegrationTest extends MifosIntegrationTestCase {
 
@@ -69,7 +69,7 @@ public class MifosSchedulerIntegrationTest extends MifosIntegrationTestCase {
     private MifosScheduler getMifosScheduler(String taskConfigurationPath) throws TaskSystemException, IOException, FileNotFoundException {
         ConfigurationLocator mockConfigurationLocator = createMock(ConfigurationLocator.class);
         expect(mockConfigurationLocator.getFile(SchedulerConstants.CONFIGURATION_FILE_NAME)).andReturn(
-                new ClassPathResource(taskConfigurationPath).getFile());
+                MifosResourceUtil.getClassPathResource(taskConfigurationPath));
         expectLastCall().times(2);
         replay(mockConfigurationLocator);
 

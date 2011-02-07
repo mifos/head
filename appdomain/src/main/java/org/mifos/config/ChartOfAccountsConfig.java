@@ -20,13 +20,10 @@
 
 package org.mifos.config;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Properties;
 import java.util.Set;
 
 import javax.xml.XMLConstants;
@@ -45,9 +42,8 @@ import org.hibernate.Session;
 import org.mifos.accounts.financial.business.COABO;
 import org.mifos.accounts.financial.business.GLCategoryType;
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.config.exceptions.ConfigurationException;
-import org.mifos.core.ClasspathResource;
+import org.mifos.core.MifosResourceUtil;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.ConfigurationLocator;
 import org.springframework.core.io.ClassPathResource;
@@ -93,10 +89,10 @@ public class ChartOfAccountsConfig {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder parser = dbf.newDocumentBuilder();
             if (FilePaths.CHART_OF_ACCOUNTS_DEFAULT.equals(chartOfAccountsXml)) { // default chart of accounts
-                document = parser.parse(new File(ClasspathResource.getURI(chartOfAccountsXml)));
+                document = parser.parse(MifosResourceUtil.getClassPathResource(chartOfAccountsXml));
             }
             else { // custom chart of accounts
-                document = parser.parse(new File(chartOfAccountsXml));
+                document = parser.parse(MifosResourceUtil.getFile(chartOfAccountsXml));
             }
 
             // create a SchemaFactory capable of understanding XML schemas
@@ -110,7 +106,7 @@ public class ChartOfAccountsConfig {
                 InputStream in = ChartOfAccountsConfig.class.getClassLoader().getResourceAsStream(FilePaths.CHART_OF_ACCOUNTS_SCHEMA);
                 schemaFile = new StreamSource(in);
             } else {
-                schemaFile = new StreamSource(new File(ClasspathResource.getURI(FilePaths.CHART_OF_ACCOUNTS_SCHEMA)));
+                schemaFile = new StreamSource(MifosResourceUtil.getFile(FilePaths.CHART_OF_ACCOUNTS_SCHEMA));
             }
 
             Schema schema = factory.newSchema(schemaFile);
@@ -121,8 +117,6 @@ public class ChartOfAccountsConfig {
         } catch (IOException e) {
             throw new ConfigurationException(e);
         } catch (SAXException e) {
-            throw new ConfigurationException(e);
-        } catch (URISyntaxException e) {
             throw new ConfigurationException(e);
         } catch (ParserConfigurationException e) {
             throw new ConfigurationException(e);
@@ -144,7 +138,7 @@ public class ChartOfAccountsConfig {
      *
      * @param session Session
      * @return relative path to Chart of Accounts config file that the
-     *         {@link ClasspathResource} can use to derive the actual on-disk
+     *         {@link MifosResourceUtil} can use to derive the actual on-disk
      *         location.
      */
     public static String getCoaUri(Session session) {

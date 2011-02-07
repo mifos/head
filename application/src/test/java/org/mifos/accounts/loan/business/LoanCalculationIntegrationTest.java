@@ -53,7 +53,7 @@ import org.mifos.config.AccountingRules;
 import org.mifos.config.AccountingRulesConstants;
 import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.config.persistence.ConfigurationPersistence;
-import org.mifos.core.ClasspathResource;
+import org.mifos.core.MifosResourceUtil;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
@@ -70,6 +70,8 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.util.ResourceUtils;
 
 import java.io.*;
 import java.math.BigDecimal;
@@ -176,8 +178,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
     private void runOne999AccountTestCaseWithDataFromSpreadSheetForLastPaymentReversal(String fileName,
             int expected999AccountTransactions, int paymentToReverse, boolean payLastPayment)
-            throws NumberFormatException, SystemException, ApplicationException,
-            URISyntaxException {
+            throws Exception {
 
         LoanTestCaseData testCaseData = loadSpreadSheetData(fileName);
         Results calculatedResults = new Results();
@@ -219,8 +220,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
     private void runOne999AccountTestCaseWithDataFromSpreadSheetForLoanReversal(String fileName,
             int expected999AccountTransactions, int paymentToReverse, boolean payLastPayment)
-            throws NumberFormatException, SystemException, ApplicationException,
-            URISyntaxException {
+            throws Exception {
 
         LoanTestCaseData testCaseData = loadSpreadSheetData(fileName);
         Results calculatedResults = new Results();
@@ -333,8 +333,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    private void runOneLoanScheduleGenerationForLastPaymentReversal(String fileName) throws NumberFormatException,
-            SystemException, ApplicationException, URISyntaxException
+    private void runOneLoanScheduleGenerationForLastPaymentReversal(String fileName) throws Exception
 
     {
 
@@ -346,8 +345,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    private void runOneLoanScheduleGenerationForLoanReversal(String fileName) throws NumberFormatException,
-            PropertyNotFoundException, SystemException, ApplicationException, URISyntaxException
+    private void runOneLoanScheduleGenerationForLoanReversal(String fileName) throws Exception
 
     {
 
@@ -640,8 +638,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    private void run999AccountWhenLoanIsRepaid(String fileName) throws NumberFormatException,
-            PropertyNotFoundException, SystemException, ApplicationException, URISyntaxException {
+    private void run999AccountWhenLoanIsRepaid(String fileName) throws Exception {
 
         LoanTestCaseData testCaseData = loadSpreadSheetData(fileName);
         InternalConfiguration config = testCaseData.getInternalConfig();
@@ -740,8 +737,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     // verify that 999 account transactions are logged after last payment is
     // made
     @Test
-    public void testPositive999AccountTest2LoanWithFees() throws NumberFormatException, PropertyNotFoundException,
-            SystemException, ApplicationException, URISyntaxException {
+    public void testPositive999AccountTest2LoanWithFees() throws Exception {
         String dataFileName = "account999-withfees.csv";
         runOne999AccountTestCaseLoanWithFees(rootPath + dataFileName);
     }
@@ -788,8 +784,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     // verify that 999 account transactions are logged after last payment is
     // made
     @Test
-    public void test999Account() throws NumberFormatException, SystemException,
-            ApplicationException, URISyntaxException {
+    public void test999Account() throws Exception {
         String dataFileName = "account999-test2.csv";
         runOne999AccountTestCaseWithDataFromSpreadSheet(rootPath + dataFileName);
     }
@@ -797,8 +792,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     // verify that 999 account transactions are logged after last payment is
     // made
     @Test
-    public void test999AccountTest1() throws NumberFormatException, SystemException,
-            ApplicationException, URISyntaxException {
+    public void test999AccountTest1() throws Exception {
         String dataFileName = "account999-test1.csv";
         runOne999AccountTestCaseWithDataFromSpreadSheet(rootPath + dataFileName);
     }
@@ -816,8 +810,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
     // payment is reversed and repay to the last payment
     @Test
-    public void test999AccountForMiddlePaymentReversalAndPayToLastPayment() throws NumberFormatException,
-            SystemException, ApplicationException, URISyntaxException {
+    public void test999AccountForMiddlePaymentReversalAndPayToLastPayment() throws Exception {
         String dataFileName = "account999-test3.csv";
         int expected999AccountTransactions = 2;
         int paymentToReverse = 2;
@@ -969,8 +962,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(expected999Account, calculated999Account);
     }
 
-    private void runOne999AccountTestCaseWithDataFromSpreadSheet(String fileName) throws NumberFormatException,
-            SystemException, ApplicationException, URISyntaxException {
+    private void runOne999AccountTestCaseWithDataFromSpreadSheet(String fileName) throws Exception {
 
         LoanTestCaseData testCaseData = loadSpreadSheetData(fileName);
         Results calculatedResults = new Results();
@@ -1011,8 +1003,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    private void runOne999AccountTestCaseLoanWithFees(String fileName) throws NumberFormatException,
-            SystemException, ApplicationException, URISyntaxException {
+    private void runOne999AccountTestCaseLoanWithFees(String fileName) throws Exception {
         if (isAllConsoleOutputEnabled() || isFileNameConsoleOutputEnabled()) {
             System.out.println("Running 999 Account Test with Fees: " + fileName);
         }
@@ -1077,8 +1068,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     // verify that 999 account transactions are logged after last payment is
     // made
     @Test
-    public void testPositive999AccountTest2() throws NumberFormatException, SystemException,
-            ApplicationException, URISyntaxException {
+    public void testPositive999AccountTest2() throws Exception {
         String dataFileName = "account999-test3.csv";
         runOne999AccountTestCaseWithDataFromSpreadSheet(rootPath + dataFileName);
     }
@@ -1894,8 +1884,8 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    private LoanTestCaseData loadSpreadSheetData(String fileName) throws URISyntaxException {
-        File file = new File(ClasspathResource.getURI(fileName));
+    private LoanTestCaseData loadSpreadSheetData(String fileName) throws Exception {
+        File file = MifosResourceUtil.getClassPathResource(fileName);
         FileInputStream fileInputStream = null;
         InputStreamReader inputStreamReader = null;
         BufferedReader bufferedReader = null;
@@ -1977,7 +1967,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
      * payments and compares
      */
     private void runOneTestCaseWithDataFromSpreadSheet(String directoryName, String fileName)
-            throws NumberFormatException, PropertyNotFoundException, SystemException, ApplicationException,
+            throws Exception,
             URISyntaxException {
 
         if (isAllConsoleOutputEnabled() || isFileNameConsoleOutputEnabled()) {
@@ -1992,8 +1982,8 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    private String[] getCSVFiles(String directoryPath) throws URISyntaxException {
-        File dir = new File(ClasspathResource.getURI(directoryPath));
+    private String[] getCSVFiles(String directoryPath) throws Exception {
+        File dir = MifosResourceUtil.getClassPathResource(directoryPath);
 
         FilenameFilter filter = new FilenameFilter() {
             public boolean accept(File dir, String name) {
@@ -2005,8 +1995,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     }
 
     @Test
-    public void testCaseWithDataFromSpreadSheets() throws NumberFormatException, PropertyNotFoundException,
-            SystemException, ApplicationException, URISyntaxException {
+    public void testCaseWithDataFromSpreadSheets() throws Exception {
         // String rootPath =
         // "org/mifos/accounts/loan/business/testCaseData/flatInterest/";
         String rootPath = "org/mifos/accounts/loan/business/testCaseData/";
@@ -2019,8 +2008,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     }
 
     @Test
-    public void testIssue1623FromSpreadSheets() throws NumberFormatException, PropertyNotFoundException,
-            SystemException, ApplicationException, URISyntaxException {
+    public void testIssue1623FromSpreadSheets() throws Exception {
 
         String rootPath = "org/mifos/accounts/loan/business/testCaseData/";
         String[] dataFileNames = { "loan-repayment-master-issue1623.csv" };
