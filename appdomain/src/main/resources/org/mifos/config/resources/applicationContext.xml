@@ -2,15 +2,15 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-    <import resource="configurationBean.xml" />
-    <import resource="messageSourceBean.xml" />
-    <import resource="financialRulesBean.xml" />
-    <import resource="persistenceContext.xml" />
-    <import resource="classpath*:org/mifos/**/dataSourceContext.xml" />
-    <import resource="hibernate-daos.xml" />
-    <import resource="services.xml" />
-    <import resource="legacy-daos.xml" />
-    <import resource="legacy-services.xml" />
+    <import resource="classpath:org/mifos/config/resources/configurationBean.xml" />
+    <import resource="classpath:org/mifos/config/resources/messageSourceBean.xml" />
+    <import resource="classpath:org/mifos/config/resources/financialRulesBean.xml" />
+    <import resource="classpath:org/mifos/config/resources/persistenceContext.xml" />
+    <import resource="classpath:org/mifos/config/resources/dataSourceContext.xml" />
+    <import resource="classpath:org/mifos/config/resources/hibernate-daos.xml" />
+    <import resource="classpath:org/mifos/config/resources/services.xml" />
+    <import resource="classpath:org/mifos/config/resources/legacy-daos.xml" />
+    <import resource="classpath:org/mifos/config/resources/legacy-services.xml" />
     <import resource="classpath:META-INF/spring/DbUpgradeContext.xml" />
     <import resource="classpath:org/mifos/config/reportParameterValidators.xml" />
 

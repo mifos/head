@@ -8,7 +8,7 @@
         ========= Import declarations: =========
     -->
 
-    <import resource="dataSourceContext.xml" />
+    <import resource="classpath:org/mifos/config/resources/dataSourceContext.xml" />
 
     <!--
         ========= Batch jobs configurations: =========
