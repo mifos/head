@@ -18,24 +18,32 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.server.workspace;
+package org.mifos.server;
+
+import java.io.File;
+
+import org.eclipse.jetty.webapp.WebAppContext;
 
 /**
- * Main class.
+ * WAR-based Jetty-based web application starter.
  * 
- * This is simple, and useful e.g. within Eclipse.
- * 
- * @see ch.vorburger.modudemo.server.launcher.Launcher
+ * Web Application is not on the classpath here, File-based WAR must be given.
  * 
  * @author Michael Vorburger
  */
-public class WorkspaceServerLauncherMain {
+public class WARServerLauncher extends AbstractServerLauncher {
 
-    // Very simply for now; could later read a conf/server.properties, set to tmp/, configure a logs/ etc.
+    private final File warFile;
 
-    public static void main(String[] args) throws Exception {
-        final int port = Integer.parseInt(args[0]);
-        final WorkspaceServerLauncher serverLauncher = new WorkspaceServerLauncher(port, "mifos");
-        serverLauncher.startServer();
+    public WARServerLauncher(int httpPort, String urlContext, File warFile) {
+        super(httpPort, urlContext);
+        this.warFile = warFile;
     }
+
+    @Override
+    protected WebAppContext createWebAppContext() throws Exception {
+        WebAppContext warCtx = new WebAppContext(warFile.toURI().toString(), getContext());
+        return warCtx;
+    }
+
 }

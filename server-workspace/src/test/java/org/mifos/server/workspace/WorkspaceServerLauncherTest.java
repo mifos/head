@@ -45,7 +45,7 @@ public class WorkspaceServerLauncherTest {
 
 	@BeforeClass
 	public static void beforeClass() throws Exception {
-		serverLauncher = new WorkspaceServerLauncher();
+		serverLauncher = new WorkspaceServerLauncher(8088, "mifos");
 		serverLauncher.startServer();
 	}
 

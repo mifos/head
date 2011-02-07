@@ -20,7 +20,12 @@
 
 package org.mifos.server.wartest;
 
+import static org.junit.Assert.assertTrue;
+
+import java.io.File;
+
 import org.junit.Test;
+import org.mifos.server.WARServerLauncher;
 
 /**
  * Tests launching of a packaged Mifos WAR. All the dependencies / web modules
@@ -38,11 +43,12 @@ public class MifosPackagedWARBasicTest {
 	
 	@Test
 	public void testPackagedWARStartup() throws Exception {
-/*		
-		serverLauncher = new ServerLauncher();
+	    File testWARFile = new File("../war/target/mifos.war");
+	    assertTrue(testWARFile.toString() + " doesn't exist?!", testWARFile.exists());
+	    
+        WARServerLauncher serverLauncher = new WARServerLauncher(7077, "mifos", testWARFile );
 		serverLauncher.startServer();
 		serverLauncher.stopServer();
 		serverLauncher = null;
-*/		
 	}
 }
