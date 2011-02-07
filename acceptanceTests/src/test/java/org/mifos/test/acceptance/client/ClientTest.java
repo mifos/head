@@ -503,13 +503,13 @@ public class ClientTest extends UiTestCaseBase {
         clientTestHelper.changeCustomerStatus(clientDetailsPage, ClientStatus.ACTIVE);
         groupTestHelper.createNewGroupPartialApplication("MyCenter1233171688286", groupParams);
         //Then
-        clientTestHelper.addClientToGroupWithErrors(clientName, groupName);
+        clientTestHelper.addClientToGroupWithErrorGroupLowerStatus(clientName, groupName);
 
         //When
         editCustomerStatusParameters.setGroupStatus(GroupStatus.PENDING_APPROVAL);
         groupTestHelper.changeGroupStatus(groupName, editCustomerStatusParameters);
         //Then
-        clientTestHelper.addClientToGroupWithErrors(clientName, groupName);
+        clientTestHelper.addClientToGroupWithErrorGroupLowerStatus(clientName, groupName);
 
         //When
         editCustomerStatusParameters.setGroupStatus(GroupStatus.ACTIVE);
@@ -526,7 +526,7 @@ public class ClientTest extends UiTestCaseBase {
 
         //When
         editCustomerStatusParameters.setGroupStatus(GroupStatus.CLOSED);
-        editCustomerStatusParameters.setCloseReason(GroupCloseReason.DUPLICATED);
+        editCustomerStatusParameters.setCloseReason(GroupCloseReason.DUPLICATE);
         groupTestHelper.changeGroupStatus(groupName, editCustomerStatusParameters);
         //Then
         clientTestHelper.tryAddClientToClosedOrOnHoldGroup(clientName, groupName);
@@ -550,13 +550,13 @@ public class ClientTest extends UiTestCaseBase {
         clientTestHelper.changeCustomerStatus(clientDetailsPage, ClientStatus.ON_HOLD);
         groupTestHelper.createNewGroupPartialApplication("MyCenter1233171688286", groupParams);
         //Then
-        clientTestHelper.addClientToGroupWithErrors(clientName, groupName);
+        clientTestHelper.addClientToGroupWithErrorGroupLowerStatus(clientName, groupName);
 
         //When
         editCustomerStatusParameters.setGroupStatus(GroupStatus.PENDING_APPROVAL);
         groupTestHelper.changeGroupStatus(groupName, editCustomerStatusParameters);
         //Then
-        clientTestHelper.addClientToGroupWithErrors(clientName, groupName);
+        clientTestHelper.addClientToGroupWithErrorGroupLowerStatus(clientName, groupName);
 
         //When
         editCustomerStatusParameters.setGroupStatus(GroupStatus.ACTIVE);

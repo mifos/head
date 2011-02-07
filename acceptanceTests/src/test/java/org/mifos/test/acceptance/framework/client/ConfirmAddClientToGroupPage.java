@@ -21,6 +21,7 @@
 package org.mifos.test.acceptance.framework.client;
 
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -41,8 +42,13 @@ public class ConfirmAddClientToGroupPage extends MifosPage{
         return new ClientViewDetailsPage(selenium);
     }
 
-    public ConfirmAddClientToGroupPage submitAddGroupWithError(){
+    public void verifyGroupLowerStatusError(){
+        Assert.assertTrue(selenium.isTextPresent("Group status should be higher than that of Client"));
+    }
+
+    public ConfirmAddClientToGroupPage submitAddGroupWithErrorGroupLowerStatus(){
         submit();
+        verifyGroupLowerStatusError();
         return new ConfirmAddClientToGroupPage(selenium);
     }
 

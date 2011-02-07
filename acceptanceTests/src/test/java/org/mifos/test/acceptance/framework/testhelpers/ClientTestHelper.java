@@ -146,10 +146,10 @@ public class ClientTestHelper {
             .verifyNoResult();
     }
 
-    public void addClientToGroupWithErrors(String clientName, String groupName){
+    public void addClientToGroupWithErrorGroupLowerStatus(String clientName, String groupName){
         navigateToGroupSearchAddClientResult(clientName, groupName)
             .selectGroupToAdd(groupName)
-            .submitAddGroupWithError();
+            .submitAddGroupWithErrorGroupLowerStatus();
     }
 
     public void transferClientToGroupWithErrors(String clientName, String groupName){
@@ -162,9 +162,12 @@ public class ClientTestHelper {
     }
 
     public void addClientToGroup(String clientName, String groupName){
-        navigateToGroupSearchAddClientResult(clientName, groupName)
+        ClientViewDetailsPage clientViewDetailsPage = navigateToGroupSearchAddClientResult(clientName, groupName)
             .selectGroupToAdd(groupName)
             .submitAddGroup();
+        clientViewDetailsPage.verifyGroupMemberShip(groupName);
+        String clientMeetingschedule = clientViewDetailsPage.getMeetingSchedule();
+        navigationHelper.navigateToGroupViewDetailsPage(groupName).verifyMeetingSchedule(clientMeetingschedule);
     }
 
     public void deleteClientGroupMembership(String clientName){

@@ -45,8 +45,37 @@ public class GroupViewDetailsPage extends MifosPage {
         verifyPage("ViewGroupDetails");
     }
 
+    @Deprecated
     public void verifyStatus(String status) {
         Assert.assertTrue(selenium.isTextPresent(status), "Expected string: " + status);
+    }
+
+    public String getGroupStatus(){
+        return selenium.getText("viewgroupdetails.text.status");
+    }
+
+    public String getMeetingSchedule(){
+        return selenium.getText("viewgroupdetails.text.meetingSchedule");
+    }
+
+    public String getCancelCloseReason(){
+        return selenium.getText("viewgroupdetails.text.closeCancelReason");
+    }
+
+    public void verifyMeetingSchedule(String meetingShedule){
+        Assert.assertEquals(getMeetingSchedule(),meetingShedule);
+    }
+
+    public void verifyStatus(EditCustomerStatusParameters editCustomerStatusParameters) {
+        Assert.assertEquals(getGroupStatus(), editCustomerStatusParameters.getGroupStatus().getStatusText());
+        if(editCustomerStatusParameters.getGroupStatus().equals(GroupStatus.CANCELLED)){
+            Assert.assertEquals(getCancelCloseReason(), editCustomerStatusParameters.getCancelReason().getPurposeText());
+        }
+        else{
+            if(editCustomerStatusParameters.getGroupStatus().equals(GroupStatus.CLOSED)){
+                Assert.assertEquals(getCancelCloseReason(), editCustomerStatusParameters.getCloseReason().getPurposeText());
+            }
+        }
     }
 
     public CenterSearchTransferGroupPage editCenterMembership() {

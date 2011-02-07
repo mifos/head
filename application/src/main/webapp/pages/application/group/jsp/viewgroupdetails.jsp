@@ -72,12 +72,12 @@ explanation of the license and how it is applied.
 						<tr>
 							<td class="fontnormalbold"><span class="fontnormal"> <mifoscustom:MifosImage
 								id="${groupInformationDto.groupDisplay.customerStatusId}" moduleName="org.mifos.customers.util.resources.customerImages" />
-							<c:out value="${groupInformationDto.groupDisplay.customerStatusName}" /> <c:forEach
+							<span id="viewgroupdetails.text.status"><c:out value="${groupInformationDto.groupDisplay.customerStatusName}" /></span> <c:forEach
 								var="flagSet" items="${groupInformationDto.customerFlags}">
 								<span class="fontnormal"> <c:if
 									test="${groupInformationDto.groupDisplay.blackListed}">
 									<mifoscustom:MifosImage id="blackListed" moduleName="org.mifos.customers.util.resources.customerImages" />
-								</c:if> <c:out value="${flagSet.statusFlagName}" /> </span>
+								</c:if> <span id="viewgroupdetails.text.closeCancelReason"><c:out value="${flagSet.statusFlagName}" /> </span></span>
 							</c:forEach> <span class="fontnormal"><br>
 							<mifos:mifoslabel name="Group.systemId" bundle="GroupUIResources" />
 							<c:out value="${groupInformationDto.groupDisplay.globalCustNum}" /> </span><br>
@@ -546,8 +546,8 @@ explanation of the license and how it is applied.
 												
 												<br>
 											<mifos:mifoslabel name="Group.meetings"
-												bundle="GroupUIResources" />&nbsp; <c:out
-												value="${groupInformationDto.customerMeeting.meetingSchedule}" /></span>
+												bundle="GroupUIResources" />&nbsp; <span id="viewgroupdetails.text.meetingSchedule"><c:out
+												value="${groupInformationDto.customerMeeting.meetingSchedule}" /></span></span>
 											<span class="fontnormal"><br></span>
 											</span> <span class="fontnormal"> <c:if
 												test="${groupInformationDto.customerMeeting.meetingPlace!=null && !empty groupInformationDto.customerMeeting.meetingPlace}">
@@ -574,8 +574,8 @@ explanation of the license and how it is applied.
 												name="Group.meetingdetails" bundle="GroupUIResources"></mifos:mifoslabel>
 											<span class="fontnormalRed"><br>
 											<mifos:mifoslabel name="Group.meetings"
-												bundle="GroupUIResources" /> <c:out
-												value="${groupInformationDto.customerMeeting.meetingSchedule}" />
+												bundle="GroupUIResources" /> <span id="viewgroupdetails.text.meetingSchedule"><c:out
+												value="${groupInformationDto.customerMeeting.meetingSchedule}" /></span>
 											</span> <br>
 											<span class="fontnormal"> <c:out
 												value="${groupInformationDto.customerMeeting.meetingPlace}" />

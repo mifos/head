@@ -61,11 +61,13 @@ public class GroupTestHelper {
     }
 
     public GroupViewDetailsPage changeGroupStatus(String groupName, EditCustomerStatusParameters editCustomerStatusParameters){
-        return navigationHelper
+        GroupViewDetailsPage groupViewDetailsPage = navigationHelper
             .navigateToGroupViewDetailsPage(groupName)
             .navigateToEditGroupStatusPage()
             .setChangeStatusParametersAndSubmit(editCustomerStatusParameters)
             .navigateToGroupDetailsPage();
+        groupViewDetailsPage.verifyStatus(editCustomerStatusParameters);
+        return groupViewDetailsPage;
     }
 
     public GroupViewDetailsPage changeGroupCenterMembership(String groupName, String centerName) {

@@ -81,6 +81,22 @@ public class ClientViewDetailsPage extends MifosPage {
         Assert.assertEquals(getHeading(), heading);
     }
 
+    public String getMeetingSchedule(){
+        return selenium.getText("viewClientDetails.text.meetingSchedule");
+    }
+
+    public String getGroupMembership(){
+        return selenium.getText("viewClientDetails.text.groupMembership");
+    }
+
+    public void verifyMeetingSchedule(String meetingShedule){
+        Assert.assertEquals(getMeetingSchedule(),meetingShedule);
+    }
+
+    public void verifyGroupMemberShip(String groupName){
+        Assert.assertEquals(getGroupMembership(), groupName);
+    }
+
     public void verifyName(String fullName) {
         Assert.assertTrue(getHeading().contains(fullName));
     }
