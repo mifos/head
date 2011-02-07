@@ -146,11 +146,9 @@ function goToCancelPage(){
 								</tr>
 								<tr>
 									<td class="fontnormalbold">
-									<mifos:mifoslabel name="${ConfigurationConstants.CITY}"
-										bundle="OfficeResources"></mifos:mifoslabel>:<span
-										class="fontnormal"> <c:out
-										value="${offActionForm.address.city}"></c:out>
-									</span>
+										<mifos:mifoslabel name="${ConfigurationConstants.CITY}" bundle="OfficeUIResources" isColonRequired="yes"/>
+										<span class="fontnormal"> <c:out value="${offActionForm.address.city}"></c:out></span>
+									</td>
 								</tr>
 								<tr id="Office.State">
 									<td class="fontnormalbold"><mifos:mifoslabel
