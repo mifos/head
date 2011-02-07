@@ -35,7 +35,7 @@
             <set name="requestScope.productId" value="requestParameters.productId" type="int"/>
             <evaluate expression="createSavingsAccountController.loadProduct(productId, savingsAccountFormBean)" />
         </transition>
-        <transition on="detailsEntered" to="previewStep" />
+        <transition on="detailsEntered" to="isQuestionnaireRequired" />
     </view-state>
 
     <view-state id="previewStep" view="createSavingsAccountPreview">
@@ -51,6 +51,14 @@
         </transition>
     </view-state>
 
+    <decision-state id="isQuestionnaireRequired">
+        <if test="createSavingsAccountController.isQuestionnaireRequired()" then="questionnaireStep" else="previewStep"/>
+    </decision-state>
+
+    <view-state id="questionnaireStep" view="captureQuestionnaireResponses">
+        <transition on="questionnaireAnswered" to="previewStep"></transition>
+    </view-state>
+    
     <end-state id="complete" view="createSavingsAccountComplete" />
     <end-state id="cancel" view="externalRedirect:contextRelative:/custSearchAction.do?method=loadSearch"/>
     

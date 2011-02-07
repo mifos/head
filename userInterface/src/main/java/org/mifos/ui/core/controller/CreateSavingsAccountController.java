@@ -114,6 +114,10 @@ public class CreateSavingsAccountController {
         formBean.setCustomer(customer);
     }
 
+    public boolean isQuestionnaireRequired() {
+        return true;
+    }
+    
     public void loadProduct(Integer productId,
             CreateSavingsAccountFormBean formBean) {
 

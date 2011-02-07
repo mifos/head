@@ -23,6 +23,7 @@ package org.mifos.ui.webflow;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -133,9 +134,29 @@ public class CreateSavingsAccountTest extends AbstractXmlFlowExecutionTests {
         assertCurrentStateEquals("enterAccountDetailsStep");
     }
 
+    /**
+     * Account info entry step is complete. There is questionnaire to be filled.
+     */
     @Test
-    public void testEnterAccountDetailsStep_DetailsEntered() {
+    public void testEnterAccountDetailsStep_DetailsEntered_WithQuestionnaire() {
 
+        when(controller.isQuestionnaireRequired()).thenReturn(Boolean.TRUE);
+        setCurrentState("enterAccountDetailsStep");
+
+        MockExternalContext context = new MockExternalContext();
+        context.setEventId("detailsEntered");
+        resumeFlow(context);
+
+        assertCurrentStateEquals("questionnaireStep");
+    }
+
+    /**
+     * Account info entry step is complete. There is NO questionnaire to be filled.
+     */
+    @Test
+    public void testEnterAccountDetailsStep_DetailsEntered_NoQuestionnaire() {
+
+        when(controller.isQuestionnaireRequired()).thenReturn(Boolean.FALSE);
         setCurrentState("enterAccountDetailsStep");
 
         MockExternalContext context = new MockExternalContext();
@@ -144,7 +165,7 @@ public class CreateSavingsAccountTest extends AbstractXmlFlowExecutionTests {
 
         assertCurrentStateEquals("previewStep");
     }
-
+    
     @Test
     public void testEnterAccountDetailsStep_NewProductSelected() {
 
