@@ -22,6 +22,7 @@ package org.mifos.dto.domain;
 
 import java.util.List;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 
 public class ParseResultDto {
@@ -33,13 +34,16 @@ public class ParseResultDto {
     private Integer numberOfErrorRows;
     private BigDecimal totalAmountOfTransactionsImported;
     private BigDecimal totalAmountOfTransactionsWithError;
-        private BigDecimal totalAmountOfDisbursementsImported;
+    private BigDecimal totalAmountOfDisbursementsImported;
     private int numberRowSuccessfullyParsed;
     private String statusLogFile;
 
     public ParseResultDto(final List<String> parseErrors, final List<AccountPaymentParametersDto> successfullyParsedRows) {
         this.parseErrors = parseErrors;
         this.successfullyParsedPayments = successfullyParsedRows;
+        this.totalAmountOfDisbursementsImported = new BigDecimal(BigInteger.ZERO);
+        this.totalAmountOfTransactionsImported = new BigDecimal(BigInteger.ZERO);
+        this.totalAmountOfTransactionsWithError = new BigDecimal(BigInteger.ZERO);
     }
 
     public List<String> getParseErrors() {
