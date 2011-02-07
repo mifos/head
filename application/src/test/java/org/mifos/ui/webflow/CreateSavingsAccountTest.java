@@ -143,7 +143,7 @@ public class CreateSavingsAccountTest extends AbstractXmlFlowExecutionTests {
      * for "Create Savings" work flow.
      */
     @Test
-    public void testEnterAccountDetailsStep_DetailsEntered_WithQuestionnaire() {
+    public void testEnterAccountDetailsStep_DetailsEntered_WithQuestionGroup() {
 
         List<QuestionGroupDetail> groups = new ArrayList<QuestionGroupDetail>();
         groups.add(new QuestionGroupDetail());
@@ -155,7 +155,7 @@ public class CreateSavingsAccountTest extends AbstractXmlFlowExecutionTests {
         context.setEventId("detailsEntered");
         resumeFlow(context);
 
-        assertCurrentStateEquals("questionnaireStep");
+        assertCurrentStateEquals("answerQuestionGroupStep");
     }
 
     /**
@@ -163,7 +163,7 @@ public class CreateSavingsAccountTest extends AbstractXmlFlowExecutionTests {
      * for "Create Savings" work flow.
      */
     @Test
-    public void testEnterAccountDetailsStep_DetailsEntered_NoQuestionnaire() {
+    public void testEnterAccountDetailsStep_DetailsEntered_NoQuestionGroup() {
 
         when(controller.getQuestionGroups()).thenReturn(new ArrayList<QuestionGroupDetail>());
         

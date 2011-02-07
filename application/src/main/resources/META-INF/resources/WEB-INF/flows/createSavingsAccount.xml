@@ -35,7 +35,7 @@
             <set name="requestScope.productId" value="requestParameters.productId" type="int"/>
             <evaluate expression="createSavingsAccountController.loadProduct(productId, savingsAccountFormBean)" />
         </transition>
-        <transition on="detailsEntered" to="isQuestionnaireRequired" />
+        <transition on="detailsEntered" to="questionGroupStep" />
     </view-state>
 
     <view-state id="previewStep" view="createSavingsAccountPreview">
@@ -51,15 +51,15 @@
         </transition>
     </view-state>
 
-    <decision-state id="isQuestionnaireRequired">
+    <decision-state id="questionGroupStep">
         <on-entry>
             <evaluate expression="createSavingsAccountController.getQuestionGroups()" result="flowScope.questionGroups" result-type="java.util.List" />
         </on-entry>
-        <if test="flowScope.questionGroups.size() > 0" then="questionnaireStep" else="previewStep"/>
+        <if test="flowScope.questionGroups.size() > 0" then="answerQuestionGroupStep" else="previewStep"/>
     </decision-state>
 
-    <view-state id="questionnaireStep" view="captureQuestionnaireResponses">
-        <transition on="questionnaireAnswered" to="previewStep"></transition>
+    <view-state id="answerQuestionGroupStep" view="captureQuestionnaireResponses">
+        <transition on="questionsAnswered" to="previewStep"></transition>
     </view-state>
     
     <end-state id="complete" view="createSavingsAccountComplete" />
