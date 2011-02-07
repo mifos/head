@@ -52,7 +52,10 @@
     </view-state>
 
     <decision-state id="isQuestionnaireRequired">
-        <if test="createSavingsAccountController.isQuestionnaireRequired()" then="questionnaireStep" else="previewStep"/>
+        <on-entry>
+            <evaluate expression="createSavingsAccountController.getQuestionGroups()" result="flowScope.questionGroups" result-type="java.util.List" />
+        </on-entry>
+        <if test="flowScope.questionGroups.size() > 0" then="questionnaireStep" else="previewStep"/>
     </decision-state>
 
     <view-state id="questionnaireStep" view="captureQuestionnaireResponses">

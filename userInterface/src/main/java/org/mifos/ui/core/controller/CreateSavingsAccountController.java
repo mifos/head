@@ -34,6 +34,8 @@ import org.mifos.dto.domain.SavingsAccountDetailDto;
 import org.mifos.dto.domain.SavingsProductDto;
 import org.mifos.dto.screen.CustomerSearchResultsDto;
 import org.mifos.dto.screen.SavingsProductReferenceDto;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
+import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -57,6 +59,9 @@ public class CreateSavingsAccountController {
 
     @Autowired
     private SavingsServiceFacade savingsServiceFacade;
+
+    @Autowired
+    private QuestionnaireServiceFacade questionnaireServiceFacade;
 
     public CreateSavingsAccountController() {
     }
@@ -114,10 +119,12 @@ public class CreateSavingsAccountController {
         formBean.setCustomer(customer);
     }
 
-    public boolean isQuestionnaireRequired() {
-        return true;
+    public List<QuestionGroupDetail> getQuestionGroups() {
+        List<QuestionGroupDetail> questionGroups = questionnaireServiceFacade
+                .getQuestionGroups("Create", "Savings");
+        return questionGroups;
     }
-    
+
     public void loadProduct(Integer productId,
             CreateSavingsAccountFormBean formBean) {
 

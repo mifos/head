@@ -25,8 +25,12 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.validation.MifosBeanValidator;
 import org.mifos.ui.core.controller.CreateSavingsAccountController;
 import org.mifos.ui.core.controller.CreateSavingsAccountFormBean;
@@ -135,12 +139,16 @@ public class CreateSavingsAccountTest extends AbstractXmlFlowExecutionTests {
     }
 
     /**
-     * Account info entry step is complete. There is questionnaire to be filled.
+     * Account info entry step is complete. There is a question group defined
+     * for "Create Savings" work flow.
      */
     @Test
     public void testEnterAccountDetailsStep_DetailsEntered_WithQuestionnaire() {
 
-        when(controller.isQuestionnaireRequired()).thenReturn(Boolean.TRUE);
+        List<QuestionGroupDetail> groups = new ArrayList<QuestionGroupDetail>();
+        groups.add(new QuestionGroupDetail());
+        when(controller.getQuestionGroups()).thenReturn(groups);
+        
         setCurrentState("enterAccountDetailsStep");
 
         MockExternalContext context = new MockExternalContext();
@@ -151,12 +159,14 @@ public class CreateSavingsAccountTest extends AbstractXmlFlowExecutionTests {
     }
 
     /**
-     * Account info entry step is complete. There is NO questionnaire to be filled.
+     * Account info entry step is complete. There is NO question group defined
+     * for "Create Savings" work flow.
      */
     @Test
     public void testEnterAccountDetailsStep_DetailsEntered_NoQuestionnaire() {
 
-        when(controller.isQuestionnaireRequired()).thenReturn(Boolean.FALSE);
+        when(controller.getQuestionGroups()).thenReturn(new ArrayList<QuestionGroupDetail>());
+        
         setCurrentState("enterAccountDetailsStep");
 
         MockExternalContext context = new MockExternalContext();
@@ -165,7 +175,7 @@ public class CreateSavingsAccountTest extends AbstractXmlFlowExecutionTests {
 
         assertCurrentStateEquals("previewStep");
     }
-    
+
     @Test
     public void testEnterAccountDetailsStep_NewProductSelected() {
 
