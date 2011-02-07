@@ -148,7 +148,7 @@ public class CreateSavingsAccountTest extends AbstractXmlFlowExecutionTests {
         List<QuestionGroupDetail> groups = new ArrayList<QuestionGroupDetail>();
         groups.add(new QuestionGroupDetail());
         when(controller.getQuestionGroups()).thenReturn(groups);
-        
+
         setCurrentState("enterAccountDetailsStep");
 
         MockExternalContext context = new MockExternalContext();
@@ -165,8 +165,9 @@ public class CreateSavingsAccountTest extends AbstractXmlFlowExecutionTests {
     @Test
     public void testEnterAccountDetailsStep_DetailsEntered_NoQuestionGroup() {
 
-        when(controller.getQuestionGroups()).thenReturn(new ArrayList<QuestionGroupDetail>());
-        
+        when(controller.getQuestionGroups()).thenReturn(
+                new ArrayList<QuestionGroupDetail>());
+
         setCurrentState("enterAccountDetailsStep");
 
         MockExternalContext context = new MockExternalContext();
@@ -191,6 +192,18 @@ public class CreateSavingsAccountTest extends AbstractXmlFlowExecutionTests {
 
         verify(controller).loadProduct(productId, formBean);
         assertCurrentStateEquals("enterAccountDetailsStep");
+    }
+
+    @Test
+    public void testAnswerQuestionGroupStep_QuestionsAnswered() {
+
+        setCurrentState("answerQuestionGroupStep");
+
+        MockExternalContext context = new MockExternalContext();
+        context.setEventId("questionsAnswered");
+        resumeFlow(context);
+
+        assertCurrentStateEquals("previewStep");
     }
 
     @Test
