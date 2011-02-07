@@ -18,7 +18,7 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.server;
+package org.mifos.server.workspace;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,7 +45,7 @@ import org.eclipse.jetty.webapp.WebInfConfiguration;
  * 
  * @author Michael Vorburger
  */
-public class ServerLauncher {
+public class WorkspaceServerLauncher {
 
     private static final String WEB_INF_WEB_XML = "WEB-INF/web.xml";
 
@@ -55,15 +55,15 @@ public class ServerLauncher {
     private Server server;
     private WebContextWithExtraConfigurations webAppContext;
 
-    public ServerLauncher() {
+    public WorkspaceServerLauncher() {
         this(8080);
     }
 
-    public ServerLauncher(int httpPort) {
+    public WorkspaceServerLauncher(int httpPort) {
         this(httpPort, "mifos");
     }
 
-    public ServerLauncher(int httpPort, String urlContext) {
+    public WorkspaceServerLauncher(int httpPort, String urlContext) {
         this.port = httpPort;
         this.context = urlContext;
     }
@@ -174,7 +174,7 @@ public class ServerLauncher {
     }
 
     private static Collection<URL> getResources(String resource) throws IOException {
-        final ClassLoader cl = ServerLauncher.class.getClassLoader(); // OR
+        final ClassLoader cl = WorkspaceServerLauncher.class.getClassLoader(); // OR
                                                                       // Thread.currentThread().getContextClassLoader();
         final Enumeration<URL> urls = cl.getResources(resource);
         final LinkedList<URL> list = new LinkedList<URL>();

@@ -4,7 +4,6 @@
 
 	<groupId>org.mifos</groupId>
 	<artifactId>mifos-server-workspace</artifactId>
-	<version>1.9-SNAPSHOT</version>
 
 	<name>Mifos - Workspace Server</name>
 	<description>For Mifos Eclipse Maven-based Development Environment (or any other IDE with M2E-like Maven support)</description>
@@ -16,32 +15,17 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<properties>
-		<jetty.version>7.2.0.v20101020</jetty.version>
-	</properties>
-
 	<dependencies>
+		<!-- Jetty Server -->
+		<dependency>
+			<groupId>org.mifos</groupId>
+			<artifactId>mifos-server-jetty</artifactId>
+		</dependency>
+		
 		<!-- Mifos -->
 		<dependency>
 			<groupId>org.mifos</groupId>
 			<artifactId>mifos-webapp</artifactId>
-		</dependency>
-
-		<!-- Jetty -->
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-webapp</artifactId>
-			<version>${jetty.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-util</artifactId>
-			<version>${jetty.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.mortbay.jetty</groupId>
-			<artifactId>jsp-2.1-glassfish</artifactId>
-			<version>2.1.v20100127</version>
 		</dependency>
 
 		<!-- Selenium 2.0 (WebDriver) -->

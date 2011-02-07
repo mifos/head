@@ -18,7 +18,7 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.server;
+package org.mifos.server.workspace;
 
 import java.util.List;
 

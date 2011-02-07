@@ -18,24 +18,31 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.server;
+package org.mifos.server.wartest;
+
+import org.junit.Test;
 
 /**
- * Main class.
- * 
- * This is simple, and useful e.g. within Eclipse.
- * 
- * @see ch.vorburger.modudemo.server.launcher.Launcher
+ * Tests launching of a packaged Mifos WAR. All the dependencies / web modules
+ * are read from within the WAR in this test. The application is NOT on the
+ * (Maven provided) classpath here - only the Jetty web container is.
  * 
  * @author Michael Vorburger
  */
-public class Main {
+public class MifosPackagedWARBasicTest {
 
-    // Very simply for now; could later read a conf/server.properties, set to tmp/, configure a logs/ etc.
-
-    public static void main(String[] args) throws Exception {
-        final int port = Integer.parseInt(args[0]);
-        final ServerLauncher serverLauncher = new ServerLauncher(port);
-        serverLauncher.startServer();
-    }
+	// TODO When acceptanceTest is WebDriver instead of Selenium-based, and uses
+	// server-jetty instead of Cargo for start-up, this test can go into
+	// acceptanceTest (and the entire war-test module would no longer needed -
+	// be the same thing?)
+	
+	@Test
+	public void testPackagedWARStartup() throws Exception {
+/*		
+		serverLauncher = new ServerLauncher();
+		serverLauncher.startServer();
+		serverLauncher.stopServer();
+		serverLauncher = null;
+*/		
+	}
 }

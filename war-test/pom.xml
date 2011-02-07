@@ -15,6 +15,23 @@
 	<name>Mifos - Test of packaged WAR</name>
 	<description>Integration tests the packaged WAR</description>
 
-	<!-- Mifos Application must not be listed as dependency here! -->
+	<dependencies>
+		<!-- Mifos Application must not be listed as dependency here! -->
+
+		<!-- Jetty Server -->
+		<dependency>
+			<groupId>org.mifos</groupId>
+			<artifactId>mifos-server-jetty</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Mifos Application must not be listed as dependency here! -->
+	</dependencies>
+
 
 </project>
