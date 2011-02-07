@@ -199,6 +199,12 @@ public class StandardTestingService implements TestingService {
     }
 
     @Override
+    public void setClientCanExistOutsideGroup(boolean flag){
+        ClientRules.setClientCanExistOutsideGroup(flag);
+        MifosConfigurationManager.getInstance().setProperty(ClientRules.ClientRulesClientCanExistOutsideGroup, flag);
+    }
+
+    @Override
     public void runAllBatchJobs(final ServletContext ctx) {
         logger.info("running all batch jobs");
         MifosScheduler mifosScheduler = (MifosScheduler) ctx.getAttribute(MifosScheduler.class.getName());

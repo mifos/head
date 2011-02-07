@@ -72,8 +72,12 @@ public class CustomPropertiesHelper {
         selenium.open(UPDATE_PAGE + "?ClientRules.CenterHierarchyExists=" + exists);
     }
 
-    public void setGroupCanApplyLoans(String exists){
-        selenium.open(UPDATE_PAGE + "?ClientRules.GroupCanApplyLoans=" + exists);
+    public void setGroupCanApplyLoans(String flag){
+        selenium.open(UPDATE_PAGE + "?ClientRules.GroupCanApplyLoans=" + flag);
+    }
+
+    public void setClientCanExistOutsideGroup(String flag){
+        selenium.open(UPDATE_PAGE + "?ClientRules.ClientCanExistOutsideGroup=" + flag);
     }
 
     /**

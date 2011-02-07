@@ -93,6 +93,19 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    //http://mifosforge.jira.com/browse/MIFOSTEST-235
+    public void verifyPropertyClientRulesClientCanExistOutsideGroupFalse() throws Exception{
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
+        propertiesHelper.setClientCanExistOutsideGroup("false");
+        //When
+        navigationHelper.navigateToClientsAndAccountsPage().navigateToCreateNewClientPage();
+        //Then
+        Assert.assertFalse(selenium.isElementPresent("group_search.link.membershipNotRequired"));
+        propertiesHelper.setClientCanExistOutsideGroup("true");
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     //http://mifosforge.jira.com/browse/MIFOSTEST-234
     public void verifyPropertyGroupCanApplyLoansTrue() throws Exception{
         //Given

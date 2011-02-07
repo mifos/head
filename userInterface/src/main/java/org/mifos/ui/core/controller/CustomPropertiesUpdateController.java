@@ -67,6 +67,8 @@ public class CustomPropertiesUpdateController extends AbstractController {
 
             handleGroupCanApplyLoans(request, model);
 
+            handleClientCanExistOutsideGroup(request, model);
+
             model.put("request", request);
             Map<String, Object> status = new HashMap<String, Object>();
             status.put("errorMessages", errorMessages);
@@ -92,6 +94,15 @@ public class CustomPropertiesUpdateController extends AbstractController {
             boolean required=Boolean.valueOf(centerHierarchyExists);
             testingService.setCenterHierarchyExists(required);
             model.put("clientRulesResult", "centerHierarchyExists: " + centerHierarchyExists);
+        }
+    }
+
+    private void handleClientCanExistOutsideGroup(HttpServletRequest request, Map<String, Object> model) {
+        String clientCanExistOutsideGroup = request.getParameter("ClientRules.ClientCanExistOutsideGroup");
+        if (StringUtils.isNotBlank(clientCanExistOutsideGroup)) {
+            boolean required=Boolean.valueOf(clientCanExistOutsideGroup);
+            testingService.setClientCanExistOutsideGroup(required);
+            model.put("clientRulesResult", "clientCanExistOutsideGroup: " + clientCanExistOutsideGroup);
         }
     }
 

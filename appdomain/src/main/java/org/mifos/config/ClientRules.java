@@ -152,6 +152,10 @@ public class ClientRules {
         groupCanApplyLoans = flag;
     }
 
+    public static void setClientCanExistOutsideGroup(boolean flag){
+        clientCanExistOutsideGroup = flag;
+    }
+
 
     /** Can group loans exist? */
     public static Boolean getGroupCanApplyLoans() {
