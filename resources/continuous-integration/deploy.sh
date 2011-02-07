@@ -6,6 +6,9 @@ controlScript=$WORKSPACE/resources/continuous-integration/deploy/tomcat/control.
 lastStableWAR=$WORKSPACE/../lastStable/org.mifos\$mifos-webapp/archive/org.mifos/mifos-webapp/*/*.war
 deployRoot=$HOME/deploys/mifos-$JOB_NAME-deploy
 targetWARlocation=$deployRoot/tomcat6/webapps/mifos.war
+dbProperties=$WORKSPACE/db/target/release/db/bin/mifos-db.properties
+expandScript=$WORKSPACE/db/target/release/db/bin/expand_db.sh
+contractScript=$WORKSPACE/db/target/release/db/bin/contract_db.sh
 
 function cUrl {
     # If TEST_SERVER_PORT is set by Hudson, we can test if the deployed test server
@@ -27,6 +30,14 @@ function cUrl {
     fi
 }
 
+function updateDbProperties {
+    sed 's/@USERNAME@/$USERNAME/g;
+         s/@PASSWORD@/$PASSWORD/g;
+         s/@SCHEMA_NAME@/$SCHEMA_NAME/g;
+         s/@DB_HOST@/$DB_HOST/g;
+         s/@DB_PORT@/$DB_PORT/g' < $dbProperties > $dbProperties
+}
+
 function deployMifos {
     rm -f $deployRoot/tomcat6/logs/*
     rm -rf $deployRoot/tomcat6/webapps/mifos
@@ -43,15 +54,16 @@ function stopTomcat {
 }
 
 function doExpansion {
-    $WORKSPACE/db/target/release/db/bin/expand_db.sh
+    $expandScript
 }
 
 function doContraction {
-    $WORKSPACE/db/target/release/db/bin/contract_db.sh
+    $contractScript
 }
 
 # Test the previous version of application against new db
 stopTomcat
+updateDbProperties
 doExpansion
 startTomcat
 cUrl
@@ -64,6 +76,7 @@ cUrl
 
 # Test new version of application after contraction
 stopTomcat
+updateDbProperties
 doContraction
 startTomcat
 cUrl
