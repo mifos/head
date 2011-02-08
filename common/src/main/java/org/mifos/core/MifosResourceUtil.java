@@ -37,7 +37,6 @@ import org.springframework.util.ResourceUtils;
 
 /**
  * Load resources from the classpath.
- *
  */
 public class MifosResourceUtil {
 
@@ -65,6 +64,10 @@ public class MifosResourceUtil {
         return new FileInputStream(getFile("/sql/" + fileName));
     }
 
+    /**
+     * @deprecated Please replace usages of this method by getClassPathResourceAsURI(), and remove this method ASAP
+     */
+    @Deprecated
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"OS_OPEN_STREAM_EXCEPTION_PATH","OBL_UNSATISFIED_OBLIGATION"}, justification="this is a bug")
     public static File getClassPathResource(String fileName) throws IOException {
         URL url = new ClassPathResource(fileName).getURL();
@@ -97,6 +100,24 @@ public class MifosResourceUtil {
     
     public static String getURI(String fileName) throws IOException {
         return new ClassPathResource(fileName).getURI().toString();
+    }
+
+    /**
+     * Find a Resource on the Classpath and return it's URI (as a String).
+     * 
+     * Intended for calling code which accepts URI, such as the javax.xml APIs. Better than File-based API, which should
+     * never be used. Better than InputStream, because an InputStream needs to be closed by somebody - and that's
+     * usually forgotten.
+     * 
+     * If calling code can deal directly with a org.springframework.core.io.Resource, that's always preferable over a
+     * raw URI.
+     * 
+     * @param path
+     *            Path on the classpath, e.g. "org/mifos/something.xml"
+     * @return a Stringified Classpath URI
+     */
+    public static String getClassPathResourceAsURI(String path) throws IOException {
+        return new ClassPathResource(path).getURI().toString();
     }
 
 }
