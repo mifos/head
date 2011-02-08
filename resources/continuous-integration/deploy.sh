@@ -9,6 +9,7 @@ targetWARlocation=$deployRoot/tomcat6/webapps/mifos.war
 dbProperties=$WORKSPACE/db/target/release/db/mifos-db.properties
 expandScript=$WORKSPACE/db/target/release/db/bin/expand_db.sh
 contractScript=$WORKSPACE/db/target/release/db/bin/contract_db.sh
+liquibaseScript=$WORKSPACE/db/target/release/db/bin/liquibase.sh
 
 function cUrl {
     # If TEST_SERVER_PORT is set by Hudson, we can test if the deployed test server
@@ -54,10 +55,14 @@ function stopTomcat {
 }
 
 function doExpansion {
+    chmod +x $expandScript
+    chmod +x $liquibaseScript
     $expandScript
 }
 
 function doContraction {
+    chmod +x $contractScript
+    chmod +x $liquibaseScript
     $contractScript
 }
 
