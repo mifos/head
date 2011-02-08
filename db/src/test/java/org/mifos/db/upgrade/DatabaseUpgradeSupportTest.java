@@ -23,14 +23,15 @@ import liquibase.Liquibase;
 import liquibase.changelog.ChangeSet;
 import liquibase.changelog.RanChangeSet;
 import liquibase.database.Database;
+import liquibase.exception.LiquibaseException;
+import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
@@ -39,7 +40,8 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DatabaseUpgradeSupportTest {
-    public static final String CONTEXTS = "expansion";
+    public static final String EXPANSION = "expansion";
+    public static final String CONTRACTION = "contraction";
     private DatabaseUpgradeSupport databaseUpgradeSupport;
     @Mock
     private Liquibase liquibase;
@@ -59,28 +61,28 @@ public class DatabaseUpgradeSupportTest {
     public void testValidateWhenUnAppliedUpgradesExist() throws Exception {
         when(changeSet1.toString()).thenReturn("changeSet1");
         when(changeSet2.toString()).thenReturn("changeSet2");
-        when(liquibase.listUnrunChangeSets(CONTEXTS)).thenReturn(Arrays.<ChangeSet>asList(changeSet1, changeSet2));
+        when(liquibase.listUnrunChangeSets(EXPANSION)).thenReturn(Arrays.<ChangeSet>asList(changeSet1, changeSet2));
         DbUpgradeValidationResult dbUpgradeValidationResult = databaseUpgradeSupport.validate();
         assertFalse(dbUpgradeValidationResult.allUpgradesApplied());
         assertEquals("\nList of unapplied upgrades:\n" +
                 "\tchangeSet1\n" +
                 "\tchangeSet2\n", dbUpgradeValidationResult.getUnAppliedChangeSets());
-        verify(liquibase).listUnrunChangeSets(CONTEXTS);
+        verify(liquibase).listUnrunChangeSets(EXPANSION);
     }
 
     @Test
     public void testValidateWhenAllUpgradesAreApplied() throws Exception {
-        when(liquibase.listUnrunChangeSets(CONTEXTS)).thenReturn(Arrays.<ChangeSet>asList());
+        when(liquibase.listUnrunChangeSets(EXPANSION)).thenReturn(Arrays.<ChangeSet>asList());
         DbUpgradeValidationResult dbUpgradeValidationResult = databaseUpgradeSupport.validate();
         assertTrue(dbUpgradeValidationResult.allUpgradesApplied());
         assertEquals("\nList of unapplied upgrades:\n", dbUpgradeValidationResult.getUnAppliedChangeSets());
-        verify(liquibase).listUnrunChangeSets(CONTEXTS);
+        verify(liquibase).listUnrunChangeSets(EXPANSION);
     }
 
     @Test
     public void testUpgrade() throws Exception {
-       databaseUpgradeSupport.upgrade();
-       verify(liquibase).update(CONTEXTS);
+        databaseUpgradeSupport.upgrade();
+        verify(liquibase).update(EXPANSION);
     }
 
     @Test
@@ -93,5 +95,22 @@ public class DatabaseUpgradeSupportTest {
         assertThat(changeSets.size(), is(2));
         verify(database).getRanChangeSetList();
     }
+
+    @Test
+    public void listUnrunChangeSets() throws LiquibaseException {
+        when(changeSet1.getId()).thenReturn("id1");
+        when(changeSet1.getAuthor()).thenReturn("author1");
+        Set<String> contextSet = new HashSet<String>();
+        contextSet.add(EXPANSION);
+        when(changeSet1.getContexts()).thenReturn(contextSet);
+        when(liquibase.listUnrunChangeSets(StringUtils.EMPTY)).thenReturn(Arrays.<ChangeSet>asList(changeSet1));
+        List<UnRunChangeSetInfo> unRunChangeSetInfo = databaseUpgradeSupport.listUnRunChangeSets();
+        verify(liquibase).listUnrunChangeSets(StringUtils.EMPTY);
+        UnRunChangeSetInfo unRunChangeSetInfo1 = unRunChangeSetInfo.get(0);
+        assertThat(unRunChangeSetInfo1.getId(), is("id1"));
+        assertThat(unRunChangeSetInfo1.getAuthor(), is("author1"));
+        assertThat(unRunChangeSetInfo1.getContexts(), is("["+EXPANSION+"]"));
+    }
+
 
 }

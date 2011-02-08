@@ -21,6 +21,7 @@
 package org.mifos.db.upgrade;
 
 import liquibase.Liquibase;
+import liquibase.changelog.ChangeSet;
 import liquibase.changelog.RanChangeSet;
 import liquibase.database.Database;
 import liquibase.database.DatabaseFactory;
@@ -34,6 +35,8 @@ import org.mifos.platform.util.Transformer;
 import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.List;
+
+import static org.apache.commons.lang.StringUtils.EMPTY;
 
 public class DatabaseUpgradeSupport {
 
@@ -79,6 +82,19 @@ public class DatabaseUpgradeSupport {
                 }
             });
         } catch (DatabaseException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+
+    public List<UnRunChangeSetInfo> listUnRunChangeSets() {
+        try {
+            return CollectionUtils.collect(liquibase.listUnrunChangeSets(EMPTY), new Transformer<ChangeSet, UnRunChangeSetInfo>() {
+                @Override
+                public UnRunChangeSetInfo transform(ChangeSet changeSet) {
+                    return new UnRunChangeSetInfo(changeSet);
+                }
+            });
+        } catch (LiquibaseException e) {
             throw new MifosRuntimeException(e);
         }
     }

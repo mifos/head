@@ -28,12 +28,38 @@
 
           <ul style="list-style-type: decimal">
               <table>
-                  [#list upgrades as upgrade]
+                  <thead>
+                      <th width="25%">[@spring.message "admin.viewSystemInformation.id"/]</th>
+                      <th width="25%">[@spring.message "admin.viewSystemInformation.author"/]</th>
+                      <th width="25%">[@spring.message "admin.viewSystemInformation.dateExecuted"/]</th>
+                      <th width="25%">[@spring.message "admin.viewSystemInformation.executionType"/]</th>
+                  </thead>
+                  [#list appliedChangeSets as appliedChangeSet]
                   <tr>
-                      <td>${upgrade.id}</td>
-                      <td>${upgrade.author}</td>
-                      <td>${upgrade.dateExecuted?datetime}</td>
-                      <td>${upgrade.execType}</td>
+                      <td width="25%">${appliedChangeSet.id}</td>
+                      <td width="25%">${appliedChangeSet.author}</td>
+                      <td width="25%">${appliedChangeSet.dateExecuted?datetime}</td>
+                      <td width="25%">${appliedChangeSet.execType}</td>
+                  </tr>
+                  [/#list]
+              </table>
+          </ul>
+
+          <div class="fontBold">[@spring.message "systemAdministration.viewsysteminformation.mifosDatabaseVersion.listOfUnAppliedDatabaseUpgrades"/]</div>
+          <div>&nbsp;</div>
+
+          <ul style="list-style-type: decimal">
+              <table>
+                  <thead>
+                      <th width="25%">[@spring.message "admin.viewSystemInformation.id"/]</th>
+                      <th width="25%">[@spring.message "admin.viewSystemInformation.author"/]</th>
+                      <th width="25%">[@spring.message "admin.viewSystemInformation.contexts"/]</th>
+                  </thead>
+                  [#list unRunChangeSets as unRunChangeSet]
+                  <tr>
+                      <td width="25%">${unRunChangeSet.id}</td>
+                      <td width="25%">${unRunChangeSet.author}</td>
+                      <td width="25%">${unRunChangeSet.contexts}</td>
                   </tr>
                   [/#list]
               </table>
