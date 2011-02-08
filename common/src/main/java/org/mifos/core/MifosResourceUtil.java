@@ -65,7 +65,7 @@ public class MifosResourceUtil {
     }
 
     /**
-     * @deprecated Please replace usages of this method by getClassPathResourceAsURI(), and remove this method ASAP
+     * @deprecated Please replace usages of this method by e.g. {@link #getClassPathResourceAsURI(String)}, and remove this method ASAP.
      */
     @Deprecated
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"OS_OPEN_STREAM_EXCEPTION_PATH","OBL_UNSATISFIED_OBLIGATION"}, justification="this is a bug")
@@ -110,7 +110,7 @@ public class MifosResourceUtil {
      * usually forgotten.
      * 
      * If calling code can deal directly with a org.springframework.core.io.Resource, that's always preferable over a
-     * raw URI.
+     * raw URI; simply use new ClassPathResource(path) in that case.
      * 
      * @param path
      *            Path on the classpath, e.g. "org/mifos/something.xml"
