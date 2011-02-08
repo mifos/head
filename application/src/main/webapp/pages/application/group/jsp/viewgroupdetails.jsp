@@ -636,8 +636,8 @@ explanation of the license and how it is applied.
 								<fmt:message key="Group.hashof">
 						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></fmt:param>
 					</fmt:message> 
-								<c:out
-								value="${groupInformationDto.groupPerformanceHistory.activeClientCount}" />
+								<span id="viewgroupdetails.text.numberOfClientsInGroup"><c:out
+								value="${groupInformationDto.groupPerformanceHistory.activeClientCount}" /></span>
 							</span></td>
 						</tr>
 						<tr>
@@ -656,8 +656,8 @@ explanation of the license and how it is applied.
 								<fmt:message key="Group.Avgindividual">
 						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
 					</fmt:message>   
-								<c:out
-								value="${groupInformationDto.groupPerformanceHistory.avgLoanAmountForMember}" /></span></td>
+								<span id="viewgroupdetails.text.avgIndyvidualLoanSize"><c:out
+								value="${groupInformationDto.groupPerformanceHistory.avgLoanAmountForMember}" /></span></span></td>
 						</tr>
 						<tr>
 							<td class="paddingL10"><span class="fontnormal8pt"> 
@@ -665,8 +665,8 @@ explanation of the license and how it is applied.
 						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
 					</fmt:message>    
 								
-								<c:out
-								value="${groupInformationDto.groupPerformanceHistory.totalOutStandingLoanAmount}" /></span></td>
+								<span id="viewgroupdetails.text.totalLoanPortfolio"><c:out
+								value="${groupInformationDto.groupPerformanceHistory.totalOutStandingLoanAmount}" /></span></span></td>
 						</tr>
 						<tr>
 							<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel

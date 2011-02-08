@@ -38,6 +38,7 @@ import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPage;
 import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPreviewPage;
 import org.mifos.test.acceptance.framework.group.EditCustomerStatusParameters;
 import org.mifos.test.acceptance.framework.group.GroupSearchPage;
+import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 import org.mifos.test.acceptance.util.StringUtil;
 
@@ -165,17 +166,35 @@ public class ClientTestHelper {
         ClientViewDetailsPage clientViewDetailsPage = navigateToGroupSearchAddClientResult(clientName, groupName)
             .selectGroupToAdd(groupName)
             .submitAddGroup();
-        clientViewDetailsPage.verifyGroupMemberShip(groupName);
+        clientViewDetailsPage.verifyGroupMembership(groupName);
         String clientMeetingschedule = clientViewDetailsPage.getMeetingSchedule();
         navigationHelper.navigateToGroupViewDetailsPage(groupName).verifyMeetingSchedule(clientMeetingschedule);
     }
 
-    public void deleteClientGroupMembership(String clientName){
-        navigationHelper
-            .navigateToClientViewDetailsPage(clientName)
-            .navigateToEditRemoveGroupMembership()
+    public void deleteClientGroupMembership(String clientName, String note){
+        ClientViewDetailsPage clientViewDetailsPage = navigationHelper.navigateToClientViewDetailsPage(clientName);
+        String oldMeetingshedule = clientViewDetailsPage.getMeetingSchedule();
+        String groupName = clientViewDetailsPage.getGroupMembership();
+
+        GroupViewDetailsPage groupViewDetailsPage = navigationHelper.navigateToGroupViewDetailsPage(groupName);
+        Integer activeClients = Integer.parseInt(groupViewDetailsPage.getNumberOfClientsInGroup());
+        String avgIndyvidualLoanSize = groupViewDetailsPage.getAvgIndyvidualLoanSize();
+        String totalLoanPortfolio = groupViewDetailsPage.getTotalLoanPortfolio();
+
+        clientViewDetailsPage = navigationHelper.navigateToClientViewDetailsPage(clientName);
+        clientViewDetailsPage = clientViewDetailsPage.navigateToEditRemoveGroupMembership()
             .deleteGroupMembership()
-            .confirmDeleteGroupMembership();
+            .confirmDeleteGroupMembership(note);
+
+        clientViewDetailsPage.verifyMeetingSchedule(oldMeetingshedule);
+        clientViewDetailsPage.verifyNotes(note);
+        clientViewDetailsPage.navigateToClientViewChangeLog()
+            .verifyLastEntryOnChangeLog("Name", groupName, "-", "mifos");
+
+        groupViewDetailsPage = navigationHelper.navigateToGroupViewDetailsPage(groupName);
+        groupViewDetailsPage.verifyNumberOfClientsInGroup(Integer.toString(activeClients-1));
+        groupViewDetailsPage.verifyAvgIndyvidualLoanSize(avgIndyvidualLoanSize);
+        groupViewDetailsPage.verifyTotalLoanPortfolio(totalLoanPortfolio);
     }
 
     public void deleteClientGroupMembershipWithError(String clientName){

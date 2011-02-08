@@ -93,7 +93,7 @@ public class ClientViewDetailsPage extends MifosPage {
         Assert.assertEquals(getMeetingSchedule(),meetingShedule);
     }
 
-    public void verifyGroupMemberShip(String groupName){
+    public void verifyGroupMembership(String groupName){
         Assert.assertEquals(getGroupMembership(), groupName);
     }
 
@@ -158,6 +158,12 @@ public class ClientViewDetailsPage extends MifosPage {
 
     public void verifyLoanDoesntExist(String loanID) {
         Assert.assertFalse(selenium.isTextPresent(loanID));
+    }
+
+    public ClientViewChangeLogPage navigateToClientViewChangeLog() {
+        selenium.click("viewClientDetails.link.viewChangeLog");
+        waitForPageToLoad();
+        return new ClientViewChangeLogPage(selenium);
     }
 
     public ClientNotesPage navigateToAllNotesPage() {

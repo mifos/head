@@ -62,6 +62,30 @@ public class GroupViewDetailsPage extends MifosPage {
         return selenium.getText("viewgroupdetails.text.closeCancelReason");
     }
 
+    public String getNumberOfClientsInGroup(){
+        return selenium.getText("viewgroupdetails.text.numberOfClientsInGroup");
+    }
+
+    public String getAvgIndyvidualLoanSize(){
+        return selenium.getText("viewgroupdetails.text.avgIndyvidualLoanSize");
+    }
+
+    public String getTotalLoanPortfolio(){
+        return selenium.getText("viewgroupdetails.text.totalLoanPortfolio");
+    }
+
+    public void verifyNumberOfClientsInGroup(String numberOfClientsInGroup){
+        Assert.assertEquals(getNumberOfClientsInGroup(),numberOfClientsInGroup);
+    }
+
+    public void verifyAvgIndyvidualLoanSize(String avgIndyvidualLoanSize){
+        Assert.assertEquals(getAvgIndyvidualLoanSize(),avgIndyvidualLoanSize);
+    }
+
+    public void verifyTotalLoanPortfolio(String totalLoanPortfolio){
+        Assert.assertEquals(getTotalLoanPortfolio(), totalLoanPortfolio);
+    }
+
     public void verifyMeetingSchedule(String meetingShedule){
         Assert.assertEquals(getMeetingSchedule(),meetingShedule);
     }

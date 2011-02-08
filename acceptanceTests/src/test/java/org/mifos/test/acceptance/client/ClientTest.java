@@ -518,7 +518,7 @@ public class ClientTest extends UiTestCaseBase {
         clientTestHelper.addClientToGroup(clientName, groupName);
 
         //When
-        clientTestHelper.deleteClientGroupMembership(clientName);
+        clientTestHelper.deleteClientGroupMembership(clientName, "remove group membership");
         editCustomerStatusParameters.setGroupStatus(GroupStatus.ON_HOLD);
         groupTestHelper.changeGroupStatus(groupName, editCustomerStatusParameters);
         //Then
@@ -644,6 +644,17 @@ public class ClientTest extends UiTestCaseBase {
 
         ClientViewDetailsPage clientViewDetailsPage = clientTestHelper.createClientAndVerify(loanOfficer, officeName);
         clientViewDetailsPage.verifyStatus("Active");
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // http://mifosforge.jira.com/browse/MIFOSTEST-48
+    public void removeClientWithLoanFromGroup() throws Exception {
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
+        String clientName = "Stu1232993852651 Client1232993852651";
+
+        //When / Then
+        clientTestHelper.deleteClientGroupMembership(clientName, "remove group membership");
     }
 
     private QuestionnairePage checkMandatoryQuestionValidation(String questionGroupTitle, String question1, String question2, ClientViewDetailsPage viewDetailsPage) {
