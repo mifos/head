@@ -1,39 +1,39 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<groupId>org.mifos</groupId>
-	<artifactId>mifos-server-workspace</artifactId>
+    <groupId>org.mifos</groupId>
+    <artifactId>mifos-server-workspace</artifactId>
 
-	<name>Mifos - Workspace Server</name>
-	<description>For Mifos Eclipse Maven-based Development Environment (or any other IDE with M2E-like Maven support)</description>
+    <name>Mifos - Workspace Server</name>
+    <description>For Mifos Eclipse Maven-based Development Environment (or any other IDE with M2E-like Maven support)</description>
 
-	<parent>
-		<groupId>org.mifos</groupId>
-		<artifactId>mifos-parent</artifactId>
-		<version>1.9-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath>
-	</parent>
+    <parent>
+        <groupId>org.mifos</groupId>
+        <artifactId>mifos-parent</artifactId>
+        <version>1.9-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
 
-	<dependencies>
-		<!-- Jetty Server -->
-		<dependency>
-			<groupId>org.mifos</groupId>
-			<artifactId>mifos-server-jetty</artifactId>
-		</dependency>
-		
-		<!-- Mifos -->
-		<dependency>
-			<groupId>org.mifos</groupId>
-			<artifactId>mifos-webapp</artifactId>
-		</dependency>
+    <dependencies>
+        <!-- Jetty Server -->
+        <dependency>
+            <groupId>org.mifos</groupId>
+            <artifactId>mifos-server-jetty</artifactId>
+        </dependency>
 
-		<!-- Selenium 2.0 (WebDriver) -->
-		<dependency>
-			<groupId>org.seleniumhq.selenium</groupId>
-			<artifactId>selenium</artifactId>
-			<scope>test</scope>
-		</dependency>
+        <!-- Mifos -->
+        <dependency>
+            <groupId>org.mifos</groupId>
+            <artifactId>mifos-webapp</artifactId>
+        </dependency>
 
-	</dependencies>
+        <!-- Selenium 2.0 (WebDriver) -->
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
 </project>

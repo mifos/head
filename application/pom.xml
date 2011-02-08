@@ -1,28 +1,28 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    
+
     <groupId>org.mifos</groupId>
     <!-- TODO Could rename this module from mifos-webapp to mifos-application (in line with physical module folder name!),
-    	 now that we have a mifos-war, and that this is actually not a 'webapp' (?!) anymore, for clarity? -->
+         now that we have a mifos-war, and that this is actually not a 'webapp' (?!) anymore, for clarity? -->
     <artifactId>mifos-webapp</artifactId>
     <packaging>jar</packaging>
     <version>1.9-SNAPSHOT</version>
     <name>Mifos - Application</name>
-    
+
     <parent>
         <groupId>org.mifos</groupId>
         <artifactId>mifos-parent</artifactId>
         <version>1.9-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    
+
     <scm>
         <url>git://mifos.git.sourceforge.net/gitroot/mifos/head</url>
         <connection>scm:git:git://mifos.git.sourceforge.net/gitroot/mifos/</connection>
         <developerConnection>scm:git:ssh://mifos.git.sourceforge.net/gitroot/mifos/head</developerConnection>
     </scm>
-    
+
     <properties>
         <modules.root.dir>${basedir}/..</modules.root.dir>
         <jdk.version>1.6</jdk.version>
@@ -595,12 +595,12 @@
                     <compile>false</compile>
                     < ! - - makes output cleaner (less verbose) - - >
                     <showSuccess>false</showSuccess>
-					<sources>
-						<directory>${basedir}/src/main/resources/META-INF/resources</directory>
-						<includes>
-							<include>**/*.jsp</include>
-						</includes>
-					</sources>
+                    <sources>
+                        <directory>${basedir}/src/main/resources/META-INF/resources</directory>
+                        <includes>
+                            <include>**/*.jsp</include>
+                        </includes>
+                    </sources>
                 </configuration>
             </plugin>
  -->

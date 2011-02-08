@@ -1,66 +1,66 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<groupId>org.mifos</groupId>
-	<artifactId>mifos-war</artifactId>
-	<version>1.9-SNAPSHOT</version>
-	<packaging>war</packaging>
+    <groupId>org.mifos</groupId>
+    <artifactId>mifos-war</artifactId>
+    <version>1.9-SNAPSHOT</version>
+    <packaging>war</packaging>
 
-	<name>Mifos - WAR</name>
-	<description>The actual mifos.war (as the mifos-webapp/application is now a JAR)</description>
+    <name>Mifos - WAR</name>
+    <description>The actual mifos.war (as the mifos-webapp/application is now a JAR)</description>
     <properties>
         <current.release.name>mifos-${env.BUILD_TAG}</current.release.name>
     </properties>
-	<parent>
-		<groupId>org.mifos</groupId>
-		<artifactId>mifos-parent</artifactId>
-		<version>1.9-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath>
-	</parent>
+    <parent>
+        <groupId>org.mifos</groupId>
+        <artifactId>mifos-parent</artifactId>
+        <version>1.9-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.mifos</groupId>
-			<artifactId>mifos-webapp</artifactId>
-			<version>1.9-SNAPSHOT</version>
-		</dependency>
-	</dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>org.mifos</groupId>
+            <artifactId>mifos-webapp</artifactId>
+            <version>1.9-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 
-	<build>
-		<finalName>mifos</finalName>
-		<defaultGoal>war:war</defaultGoal>
+    <build>
+        <finalName>mifos</finalName>
+        <defaultGoal>war:war</defaultGoal>
 
-		<plugins>
-		    <plugin>
+        <plugins>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.1.1</version>
                 <configuration>
-                <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
             </plugin>
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.2-beta-3</version>
-				<executions>
-					<execution>
-						<phase>install</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<finalName>${current.release.name}</finalName>
-					<appendAssemblyId>false</appendAssemblyId>
-					<descriptors>
-						<descriptor>src/main/assembly/release.xml</descriptor>
-					</descriptors>
-					<outputDirectory>target</outputDirectory>
-					<workDirectory>target/assembly/work</workDirectory>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.2-beta-3</version>
+                <executions>
+                    <execution>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <finalName>${current.release.name}</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <descriptors>
+                        <descriptor>src/main/assembly/release.xml</descriptor>
+                    </descriptors>
+                    <outputDirectory>target</outputDirectory>
+                    <workDirectory>target/assembly/work</workDirectory>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

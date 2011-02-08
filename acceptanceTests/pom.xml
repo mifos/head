@@ -364,8 +364,8 @@
                                 <!--<property>-->
                                     <!--<name>listener</name>-->
                                     <!--<value>org.mifos.test.acceptance.framework.ScreenShotListener</value>-->
-                                <!--</property>-->
-                            <!--</properties>-->
+                                    <!--</property>-->
+                                <!--</properties>-->
                         </configuration>
                     </execution>
                     <execution>
@@ -384,8 +384,8 @@
                                 <!--<property>-->
                                     <!--<name>listener</name>-->
                                     <!--<value>org.mifos.test.acceptance.framework.ScreenShotListener</value>-->
-                                <!--</property>-->
-                            <!--</properties>-->
+                                    <!--</property>-->
+                                <!--</properties>-->
                         </configuration>
                     </execution>
                 </executions>
