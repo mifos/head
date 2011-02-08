@@ -131,6 +131,4 @@ public class MifosResourceUtil {
     public static String getURI(String fileName) throws IOException {
         return getClassPathResourceAsURI(fileName);
     }
-
-    
 }
