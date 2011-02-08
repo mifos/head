@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <flow xmlns="http://www.springframework.org/schema/webflow"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
 
     <var name="savingsAccountFormBean" class="org.mifos.ui.core.controller.CreateSavingsAccountFormBean" />
 
@@ -10,7 +10,7 @@
     <decision-state id="start">
         <if test="requestParameters.customerId == null" then="customerSearchStep" else="doCustomerSelected" />
     </decision-state>
-    
+
     <view-state id="customerSearchStep" view="createSavingsAccountCustomerSearch" model="savingsAccountFormBean">
         <transition on="searchTermEntered" to="selectCustomerStep" validate="true">
             <evaluate expression="createSavingsAccountController.searchCustomers(savingsAccountFormBean)" result="flowScope.customerSearchResultsDto" />
@@ -31,7 +31,7 @@
         </evaluate>
         <transition on="outcome.success" to="selectProductOfferingStep"/>
     </action-state>
-    
+
     <view-state id="selectProductOfferingStep" view="createSavingsAccountSelectProduct" model="savingsAccountFormBean">
         <on-entry>
             <evaluate expression="createSavingsAccountController.getProductOfferings(savingsAccountFormBean)" />
@@ -86,10 +86,10 @@
     <view-state id="editQuestionGroupStep" view="createSavingsAccountQuestionnaire" model="savingsAccountFormBean">
         <transition on="questionsAnswered" to="previewStep" />
     </view-state>
-    
+
     <end-state id="complete" view="createSavingsAccountComplete" />
     <end-state id="cancel" view="externalRedirect:contextRelative:/createSavingsAccount.ftl"/>
-    
+
     <global-transitions>
         <transition on="cancel" to="cancel" validate="false" history="invalidate"/>
     </global-transitions>
