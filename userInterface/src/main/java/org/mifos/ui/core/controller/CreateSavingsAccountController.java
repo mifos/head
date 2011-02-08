@@ -29,6 +29,7 @@ import javax.validation.ValidationException;
 import org.mifos.application.servicefacade.SavingsServiceFacade;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerDto;
+import org.mifos.dto.domain.CustomerSearchDto;
 import org.mifos.dto.domain.CustomerSearchResultDto;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.domain.SavingsAccountCreationDto;
@@ -198,24 +199,12 @@ public class CreateSavingsAccountController {
 
     public CustomerSearchResultsDto searchCustomers(
             CreateSavingsAccountFormBean formBean) {
-        // TODO replace stub data
-        // CustomerSearchDto searchDto = new
-        // CustomerSearchDto(formBean.getSearchString(), 1, 10);
-        // someFacade.searchCustomers(searchDto)...
-        List<CustomerSearchResultDto> pagedDetails = new ArrayList<CustomerSearchResultDto>();
-        for (int i = 10; i < 100; i++) {
-            Integer customerId = new Integer(i);
-            CustomerSearchResultDto customer = new CustomerSearchResultDto();
-            customer.setCustomerId(customerId);
-            customer.setClientName(formBean.getSearchString() + " (Client) "
-                    + i);
-            customer.setBranchName("Branch " + (i + 100));
-            customer.setGroupName("Group " + (i + 200));
-            customer.setCenterName("Center " + (i + 300));
-            pagedDetails.add(customer);
-        }
-        CustomerSearchResultsDto resultsDto = new CustomerSearchResultsDto(
-                pagedDetails.size(), 1, 100, 100, pagedDetails);
+    	
+    	// FIXME - keithw - selected pageNumber and pageSize info should be passed in on bean.
+    	CustomerSearchDto customerSearchDto = new CustomerSearchDto(formBean.getSearchString(), Integer.valueOf(1), Integer.valueOf(10));
+    	List<CustomerSearchResultDto> pagedDetails = this.savingsServiceFacade.retrieveCustomerThatQualifyForSavings(customerSearchDto);
+    	
+        CustomerSearchResultsDto resultsDto = new CustomerSearchResultsDto(pagedDetails.size(), 1, 1, 10, pagedDetails);
         return resultsDto;
     }
 

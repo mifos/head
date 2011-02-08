@@ -69,6 +69,7 @@ import org.mifos.accounts.savings.persistence.SavingsDao;
 import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountPaymentData;
+import org.mifos.accounts.util.helpers.AccountSearchResultsDto;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.accounts.util.helpers.SavingsPaymentData;
@@ -96,6 +97,8 @@ import org.mifos.dto.domain.AccountUpdateStatus;
 import org.mifos.dto.domain.AuditLogDto;
 import org.mifos.dto.domain.CreateAccountNote;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.domain.CustomerSearchDto;
+import org.mifos.dto.domain.CustomerSearchResultDto;
 import org.mifos.dto.domain.DueOnDateDto;
 import org.mifos.dto.domain.NoteSearchDto;
 import org.mifos.dto.domain.PrdOfferingDto;
@@ -116,11 +119,13 @@ import org.mifos.dto.screen.SavingsRecentActivityDto;
 import org.mifos.dto.screen.SavingsTransactionHistoryDto;
 import org.mifos.framework.components.audit.business.service.AuditBusinessService;
 import org.mifos.framework.components.audit.util.helpers.AuditLogView;
+import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.StatesInitializationException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
+import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -1092,4 +1097,39 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             this.transactionHelper.closeSession();
         }
     }
+
+	@Override
+	public List<CustomerSearchResultDto> retrieveCustomerThatQualifyForSavings(CustomerSearchDto customerSearchDto) {
+		
+		MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+        
+		try {
+			List<CustomerSearchResultDto> pagedDetails = new ArrayList<CustomerSearchResultDto>();
+			
+			QueryResult customerForSavings = new CustomerPersistence().searchCustForSavings(customerSearchDto.getSearchTerm(), userContext.getId());
+			
+			int position = (customerSearchDto.getPage() * customerSearchDto.getPageSize()) - (customerSearchDto.getPageSize()-1);
+			List<AccountSearchResultsDto> pagedResults = customerForSavings.get(position, customerSearchDto.getPageSize());
+			int i=1;
+			for (AccountSearchResultsDto customerBO : pagedResults) {
+		          CustomerSearchResultDto customer = new CustomerSearchResultDto();
+		          customer.setCustomerId(customerBO.getClientId());
+		          customer.setBranchName(customerBO.getOfficeName());
+		          
+	        	  customer.setCenterName(StringUtils.defaultIfEmpty(customerBO.getCenterName(), "no center"));
+	        	  customer.setGroupName(StringUtils.defaultIfEmpty(customerBO.getGroupName(), "no group"));
+	        	  customer.setClientName(customerBO.getClientName());
+		          
+		          pagedDetails.add(customer);
+		          i++;
+			}
+			return pagedDetails;
+		} catch (PersistenceException e) {
+			throw new MifosRuntimeException(e);
+		} catch (HibernateSearchException e) {
+			throw new MifosRuntimeException(e);
+		}
+
+	}
 }

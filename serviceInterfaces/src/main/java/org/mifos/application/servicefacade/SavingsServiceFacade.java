@@ -26,6 +26,8 @@ import org.joda.time.LocalDate;
 import org.mifos.dto.domain.AuditLogDto;
 import org.mifos.dto.domain.CreateAccountNote;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.domain.CustomerSearchDto;
+import org.mifos.dto.domain.CustomerSearchResultDto;
 import org.mifos.dto.domain.NoteSearchDto;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.domain.SavingsAccountClosureDto;
@@ -122,4 +124,7 @@ public interface SavingsServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     void addNote(CreateAccountNote accountNote);
+    
+    @PreAuthorize("isFullyAuthenticated()")
+	List<CustomerSearchResultDto> retrieveCustomerThatQualifyForSavings(CustomerSearchDto customerSearchDto);
 }
