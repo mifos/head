@@ -156,7 +156,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 
     @Autowired
     private LegacyAcceptedPaymentTypeDao legacyAcceptedPaymentTypeDao;
-    
+
     @Autowired
     private QuestionnaireServiceFacade questionnaireServiceFacade;
 
@@ -165,7 +165,8 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     private SavingsInterestScheduledEventFactory savingsInterestScheduledEventFactory = new SavingsInterestScheduledEventFactory();
 
     @Autowired
-    public SavingsServiceFacadeWebTier(SavingsDao savingsDao, SavingsProductDao savingsProductDao, PersonnelDao personnelDao, CustomerDao customerDao, HolidayDao holidayDao) {
+    public SavingsServiceFacadeWebTier(SavingsDao savingsDao, SavingsProductDao savingsProductDao,
+            PersonnelDao personnelDao, CustomerDao customerDao, HolidayDao holidayDao) {
         this.savingsDao = savingsDao;
         this.savingsProductDao = savingsProductDao;
         this.personnelDao = personnelDao;
@@ -240,12 +241,15 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         payment.setReceiptNum(savingsWithdrawal.getReceiptId());
         payment.setCustomer(customer);
 
-        List<EndOfDayDetail> allEndOfDayDetailsForAccount = savingsDao.retrieveAllEndOfDayDetailsFor(savingsAccount.getCurrency(), savingsWithdrawal.getSavingsId());
+        List<EndOfDayDetail> allEndOfDayDetailsForAccount = savingsDao.retrieveAllEndOfDayDetailsFor(
+                savingsAccount.getCurrency(), savingsWithdrawal.getSavingsId());
         MifosCurrency currencyInUse = savingsAccount.getCurrency();
         LocalDate dateOfWithdrawal = new LocalDate(payment.getTransactionDate());
-        Money balanceOnDateOfWithdrawal = calculateAccountBalanceOn(dateOfWithdrawal.plusDays(1), allEndOfDayDetailsForAccount, currencyInUse);
+        Money balanceOnDateOfWithdrawal = calculateAccountBalanceOn(dateOfWithdrawal.plusDays(1),
+                allEndOfDayDetailsForAccount, currencyInUse);
         if (payment.getTotalAmount().isGreaterThan(balanceOnDateOfWithdrawal)) {
-            throw new BusinessRuleException("errors.insufficentbalance", new String[] { savingsAccount.getGlobalAccountNum()});
+            throw new BusinessRuleException("errors.insufficentbalance",
+                    new String[] { savingsAccount.getGlobalAccountNum() });
         }
 
         try {
@@ -306,8 +310,9 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     /**
      * This method is responsible for posting interest for the last posting period only.
      *
-     * It assumes that interest calculation and interest posting frequencies cannot change on savings product of savings account.
-     * It assumes that the interest posting date is correct and valid with respect to the interest posting frequency of the product/account.
+     * It assumes that interest calculation and interest posting frequencies cannot change on savings product of savings
+     * account. It assumes that the interest posting date is correct and valid with respect to the interest posting
+     * frequency of the product/account.
      */
     @Override
     public void postInterestForLastPostingPeriod(LocalDate dateBatchJobIsScheduled) {
@@ -317,24 +322,29 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 
         PersonnelBO createdBy = this.personnelDao.findPersonnelById(userContext.getId());
 
-        List<Integer> accountIds = this.savingsDao.retrieveAllActiveAndInActiveSavingsAccountsPendingInterestPostingOn(dateBatchJobIsScheduled);
+        List<Integer> accountIds = this.savingsDao
+                .retrieveAllActiveAndInActiveSavingsAccountsPendingInterestPostingOn(dateBatchJobIsScheduled);
         for (Integer savingsId : accountIds) {
             SavingsBO savingsAccount = this.savingsDao.findById(Long.valueOf(savingsId));
             savingsAccount.updateDetails(userContext);
 
-            List<EndOfDayDetail> allEndOfDayDetailsForAccount = savingsDao.retrieveAllEndOfDayDetailsFor(savingsAccount.getCurrency(), Long.valueOf(savingsId));
+            List<EndOfDayDetail> allEndOfDayDetailsForAccount = savingsDao.retrieveAllEndOfDayDetailsFor(
+                    savingsAccount.getCurrency(), Long.valueOf(savingsId));
 
             LocalDate interestPostingDate = new LocalDate(savingsAccount.getNextIntPostDate());
 
-            InterestScheduledEvent postingSchedule = savingsInterestScheduledEventFactory.createScheduledEventFrom(savingsAccount.getInterestPostingMeeting());
+            InterestScheduledEvent postingSchedule = savingsInterestScheduledEventFactory
+                    .createScheduledEventFrom(savingsAccount.getInterestPostingMeeting());
             LocalDate startOfPeriod = postingSchedule.findFirstDateOfPeriodForMatchingDate(interestPostingDate);
             CalendarPeriod lastInterestPostingPeriod = new CalendarPeriod(startOfPeriod, interestPostingDate);
 
-            InterestPostingPeriodResult interestPostingPeriodResult = determinePostingPeriodResult(lastInterestPostingPeriod, savingsAccount, allEndOfDayDetailsForAccount);
+            InterestPostingPeriodResult interestPostingPeriodResult = determinePostingPeriodResult(
+                    lastInterestPostingPeriod, savingsAccount, allEndOfDayDetailsForAccount);
             savingsAccount.postInterest(postingSchedule, interestPostingPeriodResult, createdBy);
 
-            StringBuilder postingInfoMessage = new StringBuilder().append("account id: ").append(
-                    savingsAccount.getAccountId()).append("posting interest: ").append(interestPostingPeriodResult);
+            StringBuilder postingInfoMessage = new StringBuilder().append("account id: ")
+                    .append(savingsAccount.getAccountId()).append("posting interest: ")
+                    .append(interestPostingPeriodResult);
 
             logger.info(postingInfoMessage.toString());
 
@@ -352,7 +362,8 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         }
     }
 
-    private Money calculateAccountBalanceOn(LocalDate date, List<EndOfDayDetail> allEndOfDayDetailsForAccount, MifosCurrency currency) {
+    private Money calculateAccountBalanceOn(LocalDate date, List<EndOfDayDetail> allEndOfDayDetailsForAccount,
+            MifosCurrency currency) {
 
         Money balance = Money.zero(currency);
         for (EndOfDayDetail endOfDayDetail : allEndOfDayDetailsForAccount) {
@@ -366,7 +377,8 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     // TODO - move into InterestPostingPeriodCalculator
     private InterestPostingPeriodResult doCalculateInterestForPostingPeriod(CalendarPeriod interestPostingPeriod,
             Money startingBalanceForPeriod, List<SavingsProductHistoricalInterestDetail> historicalInterestDetails,
-            List<EndOfDayDetail> allEndOfDayDetailsForAccount, SavingsInterestDetail interestDetail, InterestScheduledEvent interestCalculationEvent) {
+            List<EndOfDayDetail> allEndOfDayDetailsForAccount, SavingsInterestDetail interestDetail,
+            InterestScheduledEvent interestCalculationEvent) {
 
         InterestPostingPeriodResult postingPeriodResult = new InterestPostingPeriodResult(interestPostingPeriod);
         Money runningBalance = startingBalanceForPeriod;
@@ -376,31 +388,40 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             List<CalendarPeriod> interestCalculationPeriods = new ArrayList<CalendarPeriod>();
 
             // 1. determine all valid interest calculation periods that fall within this posting period and create a
-            //    interest calculation period calculator for each one (to handle possible different interest rates)
+            // interest calculation period calculator for each one (to handle possible different interest rates)
             LocalDate firstActivityDate = allEndOfDayDetailsForAccount.get(0).getDate();
 
             if (interestPostingPeriod.contains(firstActivityDate)) {
-                interestCalculationPeriods = this.interestCalculationIntervalHelper.determineAllPossiblePeriods(firstActivityDate, interestCalculationEvent, interestPostingPeriod.getEndDate());
+                interestCalculationPeriods = this.interestCalculationIntervalHelper.determineAllPossiblePeriods(
+                        firstActivityDate, interestCalculationEvent, interestPostingPeriod.getEndDate());
             } else {
-                interestCalculationPeriods = this.interestCalculationIntervalHelper.determineAllPossiblePeriods(interestPostingPeriod.getStartDate(), interestCalculationEvent, interestPostingPeriod.getEndDate());
+                interestCalculationPeriods = this.interestCalculationIntervalHelper.determineAllPossiblePeriods(
+                        interestPostingPeriod.getStartDate(), interestCalculationEvent,
+                        interestPostingPeriod.getEndDate());
             }
 
             for (CalendarPeriod calendarPeriod : interestCalculationPeriods) {
-                NonCompoundingInterestCalculator interestCalculationPeriodCalculator = createInterestCalculationPeriodCalculator(interestDetail, interestCalculationEvent);
-                SavingsProductHistoricalInterestDetail historicalInterestDetail = findMatchingHistoricalInterestDetail(historicalInterestDetails, calendarPeriod);
+                NonCompoundingInterestCalculator interestCalculationPeriodCalculator = createInterestCalculationPeriodCalculator(
+                        interestDetail, interestCalculationEvent);
+                SavingsProductHistoricalInterestDetail historicalInterestDetail = findMatchingHistoricalInterestDetail(
+                        historicalInterestDetails, calendarPeriod);
                 if (historicalInterestDetail != null) {
                     int accountingNumberOfInterestDaysInYear = AccountingRules.getNumberOfInterestDays();
-                    SavingsInterestDetail historicalSavingsInterestDetail = new SavingsInterestDetail(interestDetail.getInterestCalcType(), historicalInterestDetail.getInterestRate(),
+                    SavingsInterestDetail historicalSavingsInterestDetail = new SavingsInterestDetail(
+                            interestDetail.getInterestCalcType(), historicalInterestDetail.getInterestRate(),
                             accountingNumberOfInterestDaysInYear, historicalInterestDetail.getMinAmntForInt());
-                    interestCalculationPeriodCalculator = createInterestCalculationPeriodCalculator(historicalSavingsInterestDetail, interestCalculationEvent);
+                    interestCalculationPeriodCalculator = createInterestCalculationPeriodCalculator(
+                            historicalSavingsInterestDetail, interestCalculationEvent);
                 }
 
                 // 2. populate InterestCalculationPeriodDetail with valid end of day details for calculation period
                 InterestCalculationPeriodDetail interestCalculationPeriodDetail = InterestCalculationPeriodDetail
-                .populatePeriodDetailBasedOnInterestCalculationInterval(calendarPeriod, allEndOfDayDetailsForAccount, runningBalance);
+                        .populatePeriodDetailBasedOnInterestCalculationInterval(calendarPeriod,
+                                allEndOfDayDetailsForAccount, runningBalance);
 
                 // 3. calculate average principal, total principal and interest details for calculation period.
-                InterestCalculationPeriodResult calculationPeriodResult = interestCalculationPeriodCalculator.calculateCalculationPeriodDetail(interestCalculationPeriodDetail);
+                InterestCalculationPeriodResult calculationPeriodResult = interestCalculationPeriodCalculator
+                        .calculateCalculationPeriodDetail(interestCalculationPeriodDetail);
 
                 // 4. only sum the total principal as 'interest calculation periods are non-compounding'
                 runningBalance = runningBalance.add(calculationPeriodResult.getTotalPrincipal());
@@ -413,7 +434,8 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         return postingPeriodResult;
     }
 
-    private SavingsProductHistoricalInterestDetail findMatchingHistoricalInterestDetail(List<SavingsProductHistoricalInterestDetail> historicalInterestDetails, CalendarPeriod calendarPeriod) {
+    private SavingsProductHistoricalInterestDetail findMatchingHistoricalInterestDetail(
+            List<SavingsProductHistoricalInterestDetail> historicalInterestDetails, CalendarPeriod calendarPeriod) {
         SavingsProductHistoricalInterestDetail match = null;
         SavingsProductHistoricalInterestDetail closestMatch = null;
         for (SavingsProductHistoricalInterestDetail historicalInterestDetail : historicalInterestDetails) {
@@ -433,8 +455,8 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         return match;
     }
 
-    private NonCompoundingInterestCalculator createInterestCalculationPeriodCalculator(SavingsInterestDetail interestDetail,
-            InterestScheduledEvent interestCalculationEvent) {
+    private NonCompoundingInterestCalculator createInterestCalculationPeriodCalculator(
+            SavingsInterestDetail interestDetail, InterestScheduledEvent interestCalculationEvent) {
         InterestCalculator interestCalculator = SavingsInterestCalculatorFactory.create(interestDetail);
 
         NonCompoundingInterestCalculator interestCalculationPeriodCalculator = new InterestCalculationPeriodCalculator(
@@ -454,7 +476,8 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 
         SavingsBO savingsAccount = this.savingsDao.findById(savingsId);
 
-        InterestScheduledEvent postingSchedule = savingsInterestScheduledEventFactory.createScheduledEventFrom(savingsAccount.getInterestPostingMeeting());
+        InterestScheduledEvent postingSchedule = savingsInterestScheduledEventFactory
+                .createScheduledEventFrom(savingsAccount.getInterestPostingMeeting());
         LocalDate nextPostingDate = new LocalDate(savingsAccount.getNextIntPostDate());
         LocalDate startOfPostingPeriod = postingSchedule.findFirstDateOfPeriodForMatchingDate(nextPostingDate);
 
@@ -465,31 +488,39 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             postingPeriodAtClosure = new CalendarPeriod(startOfPostingPeriod, closureDate);
         }
 
-        List<EndOfDayDetail> allEndOfDayDetailsForAccount = savingsDao.retrieveAllEndOfDayDetailsFor(savingsAccount.getCurrency(), Long.valueOf(savingsId));
+        List<EndOfDayDetail> allEndOfDayDetailsForAccount = savingsDao.retrieveAllEndOfDayDetailsFor(
+                savingsAccount.getCurrency(), Long.valueOf(savingsId));
 
-        InterestPostingPeriodResult postingPeriodAtClosureResult = determinePostingPeriodResult(postingPeriodAtClosure, savingsAccount, allEndOfDayDetailsForAccount);
+        InterestPostingPeriodResult postingPeriodAtClosureResult = determinePostingPeriodResult(postingPeriodAtClosure,
+                savingsAccount, allEndOfDayDetailsForAccount);
 
         Money endOfAccountBalance = postingPeriodAtClosureResult.getPeriodBalance();
         Money interestAmountAtClosure = postingPeriodAtClosureResult.getPeriodInterest();
 
         List<ListElement> depositPaymentTypes = retrieveDepositPaymentTypes(userContext);
 
-        return new SavingsAccountClosureDto(new LocalDate(), endOfAccountBalance.toString(), interestAmountAtClosure.toString(), depositPaymentTypes);
+        return new SavingsAccountClosureDto(new LocalDate(), endOfAccountBalance.toString(),
+                interestAmountAtClosure.toString(), depositPaymentTypes);
     }
 
-    private InterestPostingPeriodResult determinePostingPeriodResult(CalendarPeriod postingPeriod, SavingsBO savingsAccount, List<EndOfDayDetail> allEndOfDayDetailsForAccount) {
+    private InterestPostingPeriodResult determinePostingPeriodResult(CalendarPeriod postingPeriod,
+            SavingsBO savingsAccount, List<EndOfDayDetail> allEndOfDayDetailsForAccount) {
 
-        List<SavingsProductHistoricalInterestDetail>  historicalInterestDetails = savingsAccount.getHistoricalInterestDetailsForPeriod(postingPeriod);
+        List<SavingsProductHistoricalInterestDetail> historicalInterestDetails = savingsAccount
+                .getHistoricalInterestDetailsForPeriod(postingPeriod);
 
         MifosCurrency currencyInUse = savingsAccount.getCurrency();
-        Money startingBalanceForPeriod = calculateAccountBalanceOn(postingPeriod.getStartDate(), allEndOfDayDetailsForAccount, currencyInUse);
+        Money startingBalanceForPeriod = calculateAccountBalanceOn(postingPeriod.getStartDate(),
+                allEndOfDayDetailsForAccount, currencyInUse);
 
         InterestCalcType interestCalcType = savingsAccount.getInterestCalcType();
         int accountingNumberOfInterestDaysInYear = AccountingRules.getNumberOfInterestDays();
-        SavingsInterestDetail interestDetail = new SavingsInterestDetail(interestCalcType, savingsAccount.getInterestRate(),
-                accountingNumberOfInterestDaysInYear, savingsAccount.getMinAmntForInt());
+        SavingsInterestDetail interestDetail = new SavingsInterestDetail(interestCalcType,
+                savingsAccount.getInterestRate(), accountingNumberOfInterestDaysInYear,
+                savingsAccount.getMinAmntForInt());
 
-        InterestScheduledEvent interestCalculationEvent = new SavingsInterestScheduledEventFactory().createScheduledEventFrom(savingsAccount.getInterestCalculationMeeting());
+        InterestScheduledEvent interestCalculationEvent = new SavingsInterestScheduledEventFactory()
+                .createScheduledEventFrom(savingsAccount.getInterestCalculationMeeting());
 
         return doCalculateInterestForPostingPeriod(postingPeriod, startingBalanceForPeriod, historicalInterestDetails,
                 allEndOfDayDetailsForAccount, interestDetail, interestCalculationEvent);
@@ -508,7 +539,8 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         LocalDate closureDate = closeAccountDto.getDateOfWithdrawal();
 
         // Assumption that all previous interest postings occured correctly
-        InterestScheduledEvent postingSchedule = savingsInterestScheduledEventFactory.createScheduledEventFrom(savingsAccount.getInterestPostingMeeting());
+        InterestScheduledEvent postingSchedule = savingsInterestScheduledEventFactory
+                .createScheduledEventFrom(savingsAccount.getInterestPostingMeeting());
         LocalDate nextPostingDate = new LocalDate(savingsAccount.getNextIntPostDate());
         LocalDate startOfPostingPeriod = postingSchedule.findFirstDateOfPeriodForMatchingDate(nextPostingDate);
 
@@ -519,17 +551,21 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             postingPeriodAtClosure = new CalendarPeriod(startOfPostingPeriod, closureDate);
         }
 
-        List<EndOfDayDetail> allEndOfDayDetailsForAccount = savingsDao.retrieveAllEndOfDayDetailsFor(savingsAccount.getCurrency(), Long.valueOf(savingsId));
+        List<EndOfDayDetail> allEndOfDayDetailsForAccount = savingsDao.retrieveAllEndOfDayDetailsFor(
+                savingsAccount.getCurrency(), Long.valueOf(savingsId));
 
-        InterestPostingPeriodResult postingPeriodAtClosureResult = determinePostingPeriodResult(postingPeriodAtClosure, savingsAccount, allEndOfDayDetailsForAccount);
+        InterestPostingPeriodResult postingPeriodAtClosureResult = determinePostingPeriodResult(postingPeriodAtClosure,
+                savingsAccount, allEndOfDayDetailsForAccount);
         savingsAccount.postInterest(postingSchedule, postingPeriodAtClosureResult, createdBy);
 
-        AccountNotesEntity notesEntity = new AccountNotesEntity(new DateTimeService().getCurrentJavaSqlDate(), notes, createdBy, savingsAccount);
+        AccountNotesEntity notesEntity = new AccountNotesEntity(new DateTimeService().getCurrentJavaSqlDate(), notes,
+                createdBy, savingsAccount);
 
         try {
             CustomerBO customer = savingsAccount.getCustomer();
             if (closeAccountDto.getCustomerId() != null) {
-                List<CustomerBO> clientList = new CustomerPersistence().getActiveAndOnHoldChildren(savingsAccount.getCustomer().getSearchId(), savingsAccount.getCustomer().getOfficeId(), CustomerLevel.CLIENT);
+                List<CustomerBO> clientList = new CustomerPersistence().getActiveAndOnHoldChildren(savingsAccount
+                        .getCustomer().getSearchId(), savingsAccount.getCustomer().getOfficeId(), CustomerLevel.CLIENT);
 
                 for (CustomerBO client : clientList) {
                     if (closeAccountDto.getCustomerId().intValue() == client.getCustomerId().intValue()) {
@@ -545,7 +581,9 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             if (closeAccountDto.getDateOfReceipt() != null) {
                 receiptDate = closeAccountDto.getDateOfReceipt().toDateMidnight().toDate();
             }
-            AccountPaymentEntity closeAccount = new AccountPaymentEntity(savingsAccount, amount, closeAccountDto.getReceiptId(), receiptDate, paymentType, closeAccountDto.getDateOfWithdrawal().toDateMidnight().toDate());
+            AccountPaymentEntity closeAccount = new AccountPaymentEntity(savingsAccount, amount,
+                    closeAccountDto.getReceiptId(), receiptDate, paymentType, closeAccountDto.getDateOfWithdrawal()
+                            .toDateMidnight().toDate());
 
             this.transactionHelper.startTransaction();
             this.transactionHelper.beginAuditLoggingFor(savingsAccount);
@@ -578,15 +616,19 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 
             List<ListElement> clients = new ArrayList<ListElement>();
             if (savingsAccount.isGroupModelWithIndividualAccountability()) {
-                List<CustomerBO> activeAndOnHoldClients = new CustomerPersistence().getActiveAndOnHoldChildren(savingsAccount.getCustomer().getSearchId(), savingsAccount.getCustomer().getOfficeId(), CustomerLevel.CLIENT);
+                List<CustomerBO> activeAndOnHoldClients = new CustomerPersistence().getActiveAndOnHoldChildren(
+                        savingsAccount.getCustomer().getSearchId(), savingsAccount.getCustomer().getOfficeId(),
+                        CustomerLevel.CLIENT);
                 for (CustomerBO client : activeAndOnHoldClients) {
                     clients.add(new ListElement(client.getCustomerId(), client.getDisplayName()));
                 }
             }
 
             List<AccountActionEntity> trxnTypes = new ArrayList<AccountActionEntity>();
-            trxnTypes.add(new AccountBusinessService().getAccountAction(AccountActionTypes.SAVINGS_DEPOSIT.getValue(),userContext.getLocaleId()));
-            trxnTypes.add(new AccountBusinessService().getAccountAction(AccountActionTypes.SAVINGS_WITHDRAWAL.getValue(),userContext.getLocaleId()));
+            trxnTypes.add(new AccountBusinessService().getAccountAction(AccountActionTypes.SAVINGS_DEPOSIT.getValue(),
+                    userContext.getLocaleId()));
+            trxnTypes.add(new AccountBusinessService().getAccountAction(
+                    AccountActionTypes.SAVINGS_WITHDRAWAL.getValue(), userContext.getLocaleId()));
 
             List<ListElement> transactionTypes = new ArrayList<ListElement>();
             for (AccountActionEntity accountActionEntity : trxnTypes) {
@@ -601,7 +643,9 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             List<ListElement> depositPaymentTypes = retrieveDepositPaymentTypes(userContext);
 
             List<ListElement> withdrawalPaymentTypes = new ArrayList<ListElement>();
-            List<PaymentTypeEntity> withdrawalPaymentEntityTypes = legacyAcceptedPaymentTypeDao.getAcceptedPaymentTypesForATransaction(userContext.getLocaleId(), TrxnTypes.savings_withdrawal.getValue());
+            List<PaymentTypeEntity> withdrawalPaymentEntityTypes = legacyAcceptedPaymentTypeDao
+                    .getAcceptedPaymentTypesForATransaction(userContext.getLocaleId(),
+                            TrxnTypes.savings_withdrawal.getValue());
             for (PaymentTypeEntity paymentTypeEntity : withdrawalPaymentEntityTypes) {
 
                 LookUpValueEntity lookupValue = paymentTypeEntity.getLookUpValue();
@@ -616,7 +660,8 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             boolean backDatedTransactionsAllowed = AccountingRules.isBackDatedTxnAllowed();
             LocalDate defaultTransactionDate = new LocalDate();
 
-            return new DepositWithdrawalReferenceDto(transactionTypes, depositPaymentTypes, withdrawalPaymentTypes, clients, backDatedTransactionsAllowed, defaultTransactionDate, depositDue, withdrawalDue);
+            return new DepositWithdrawalReferenceDto(transactionTypes, depositPaymentTypes, withdrawalPaymentTypes,
+                    clients, backDatedTransactionsAllowed, defaultTransactionDate, depositDue, withdrawalDue);
         } catch (ServiceException e) {
             throw new MifosRuntimeException(e);
         } catch (PersistenceException e) {
@@ -627,7 +672,9 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     private List<ListElement> retrieveDepositPaymentTypes(UserContext userContext) {
         try {
             List<ListElement> depositPaymentTypes = new ArrayList<ListElement>();
-            List<PaymentTypeEntity> acceptedPaymentEntityTypes = legacyAcceptedPaymentTypeDao.getAcceptedPaymentTypesForATransaction(userContext.getLocaleId(), TrxnTypes.savings_deposit.getValue());
+            List<PaymentTypeEntity> acceptedPaymentEntityTypes = legacyAcceptedPaymentTypeDao
+                    .getAcceptedPaymentTypesForATransaction(userContext.getLocaleId(),
+                            TrxnTypes.savings_deposit.getValue());
             for (PaymentTypeEntity paymentTypeEntity : acceptedPaymentEntityTypes) {
 
                 LookUpValueEntity lookupValue = paymentTypeEntity.getLookUpValue();
@@ -666,19 +713,20 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             }
         }
 
-       return new SavingsAdjustmentReferenceDto(clientName, amount, depositOrWithdrawal);
+        return new SavingsAdjustmentReferenceDto(clientName, amount, depositOrWithdrawal);
     }
 
     @Override
     public List<PrdOfferingDto> retrieveApplicableSavingsProductsForCustomer(Integer customerId) {
 
-            List<PrdOfferingDto> applicableSavingsProducts = new ArrayList<PrdOfferingDto>();
+        List<PrdOfferingDto> applicableSavingsProducts = new ArrayList<PrdOfferingDto>();
 
-            CustomerBO customer = this.customerDao.findCustomerById(customerId);
+        CustomerBO customer = this.customerDao.findCustomerById(customerId);
 
-            applicableSavingsProducts = this.savingsProductDao.findSavingsProductByCustomerLevel(customer.getCustomerLevel());
+        applicableSavingsProducts = this.savingsProductDao.findSavingsProductByCustomerLevel(customer
+                .getCustomerLevel());
 
-            return applicableSavingsProducts;
+        return applicableSavingsProducts;
     }
 
     @Override
@@ -687,14 +735,16 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         SavingsOfferingBO savingsProduct = this.savingsProductDao.findById(productId);
 
         List<ListElement> interestCalcTypeOptions = new ArrayList<ListElement>();
-        List<InterestCalcTypeEntity> interestCalculationTypes = this.savingsProductDao.retrieveInterestCalculationTypes();
+        List<InterestCalcTypeEntity> interestCalculationTypes = this.savingsProductDao
+                .retrieveInterestCalculationTypes();
         for (InterestCalcTypeEntity entity : interestCalculationTypes) {
             interestCalcTypeOptions.add(new ListElement(entity.getId().intValue(), entity.getName()));
         }
 
         boolean savingsPendingApprovalEnabled = ProcessFlowRules.isSavingsPendingApprovalStateEnabled();
 
-        return new SavingsProductReferenceDto(interestCalcTypeOptions, savingsProduct.toFullDto(), savingsPendingApprovalEnabled);
+        return new SavingsProductReferenceDto(interestCalcTypeOptions, savingsProduct.toFullDto(),
+                savingsPendingApprovalEnabled);
     }
 
     @Override
@@ -706,21 +756,26 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         Integer createdById = user.getUserId();
         PersonnelBO createdBy = this.personnelDao.findPersonnelById(createdById.shortValue());
 
-        CustomerBO customer = this.customerDao.findCustomerBySystemId(openingBalanceSavingsAccount.getCustomerGlobalId());
-        SavingsOfferingBO savingsProduct = this.savingsProductDao.findBySystemId(openingBalanceSavingsAccount.getProductGlobalId());
+        CustomerBO customer = this.customerDao.findCustomerBySystemId(openingBalanceSavingsAccount
+                .getCustomerGlobalId());
+        SavingsOfferingBO savingsProduct = this.savingsProductDao.findBySystemId(openingBalanceSavingsAccount
+                .getProductGlobalId());
 
         AccountState savingsAccountState = AccountState.fromShort(openingBalanceSavingsAccount.getAccountState());
-        Money recommendedOrMandatory = new Money(savingsProduct.getCurrency(), openingBalanceSavingsAccount.getRecommendedOrMandatoryAmount());
+        Money recommendedOrMandatory = new Money(savingsProduct.getCurrency(),
+                openingBalanceSavingsAccount.getRecommendedOrMandatoryAmount());
         Money openingBalance = new Money(savingsProduct.getCurrency(), openingBalanceSavingsAccount.getOpeningBalance());
 
         LocalDate activationDate = openingBalanceSavingsAccount.getActivationDate();
 
         CalendarEvent calendarEvents = this.holidayDao.findCalendarEventsForThisYearAndNext(customer.getOfficeId());
 
-        SavingsAccountActivationDetail activationDetails = SavingsBO.determineAccountActivationDetails(customer, savingsProduct, recommendedOrMandatory, savingsAccountState, calendarEvents, activationDate);
+        SavingsAccountActivationDetail activationDetails = SavingsBO.determineAccountActivationDetails(customer,
+                savingsProduct, recommendedOrMandatory, savingsAccountState, calendarEvents, activationDate);
 
-        SavingsBO savingsAccount = SavingsBO.createOpeningBalanceIndividualSavingsAccount(customer, savingsProduct, recommendedOrMandatory, savingsAccountState,
-                createdDate, createdById, activationDetails, createdBy, openingBalance);
+        SavingsBO savingsAccount = SavingsBO.createOpeningBalanceIndividualSavingsAccount(customer, savingsProduct,
+                recommendedOrMandatory, savingsAccountState, createdDate, createdById, activationDetails, createdBy,
+                openingBalance);
 
         try {
             this.transactionHelper.startTransaction();
@@ -742,7 +797,8 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     }
 
     @Override
-    public Long createSavingsAccount(SavingsAccountCreationDto savingsAccountCreation, List<QuestionGroupDetail> questionGroups) {
+    public Long createSavingsAccount(SavingsAccountCreationDto savingsAccountCreation,
+            List<QuestionGroupDetail> questionGroups) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -753,26 +809,30 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         CustomerBO customer = this.customerDao.findCustomerById(savingsAccountCreation.getCustomerId());
         SavingsOfferingBO savingsProduct = this.savingsProductDao.findById(savingsAccountCreation.getProductId());
 
-        Money recommendedOrMandatory = new Money(savingsProduct.getCurrency(), savingsAccountCreation.getRecommendedOrMandatoryAmount());
+        Money recommendedOrMandatory = new Money(savingsProduct.getCurrency(),
+                savingsAccountCreation.getRecommendedOrMandatoryAmount());
         AccountState savingsAccountState = AccountState.fromShort(savingsAccountCreation.getAccountState());
 
         CalendarEvent calendarEvents = this.holidayDao.findCalendarEventsForThisYearAndNext(customer.getOfficeId());
 
-        SavingsAccountTypeInspector savingsAccountWrapper = new SavingsAccountTypeInspector(customer, savingsProduct.getRecommendedAmntUnit());
+        SavingsAccountTypeInspector savingsAccountWrapper = new SavingsAccountTypeInspector(customer,
+                savingsProduct.getRecommendedAmntUnit());
 
         try {
             SavingsBO savingsAccount = null;
             if (savingsAccountWrapper.isIndividualSavingsAccount()) {
 
-                savingsAccount = SavingsBO.createIndividalSavingsAccount(customer, savingsProduct, recommendedOrMandatory, savingsAccountState,
-                        createdDate, createdById, calendarEvents, createdBy);
+                savingsAccount = SavingsBO.createIndividalSavingsAccount(customer, savingsProduct,
+                        recommendedOrMandatory, savingsAccountState, createdDate, createdById, calendarEvents,
+                        createdBy);
 
             } else if (savingsAccountWrapper.isJointSavingsAccountWithClientTracking()) {
 
-                List<CustomerBO> activeAndOnHoldClients = new CustomerPersistence().getActiveAndOnHoldChildren(customer.getSearchId(),
-                        customer.getOfficeId(), CustomerLevel.CLIENT);
-                savingsAccount = SavingsBO.createJointSavingsAccount(customer, savingsProduct, recommendedOrMandatory, savingsAccountState,
-                        createdDate, createdById, calendarEvents, createdBy, activeAndOnHoldClients);
+                List<CustomerBO> activeAndOnHoldClients = new CustomerPersistence().getActiveAndOnHoldChildren(
+                        customer.getSearchId(), customer.getOfficeId(), CustomerLevel.CLIENT);
+                savingsAccount = SavingsBO.createJointSavingsAccount(customer, savingsProduct, recommendedOrMandatory,
+                        savingsAccountState, createdDate, createdById, calendarEvents, createdBy,
+                        activeAndOnHoldClients);
             }
 
             this.transactionHelper.startTransaction();
@@ -781,15 +841,15 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             savingsAccount.generateSystemId(createdBy.getOffice().getGlobalOfficeNum());
             this.savingsDao.save(savingsAccount);
             this.transactionHelper.flushSession();
-            
+
             // save question groups
             if (!questionGroups.isEmpty()) {
-            	Integer eventSourceId = questionnaireServiceFacade.getEventSourceId("Create", "Savings");
-                QuestionGroupDetails questionGroupDetails = new QuestionGroupDetails(
-                		Integer.valueOf(user.getUserId()).shortValue(), savingsAccount.getAccountId(), eventSourceId, questionGroups);
+                Integer eventSourceId = questionnaireServiceFacade.getEventSourceId("Create", "Savings");
+                QuestionGroupDetails questionGroupDetails = new QuestionGroupDetails(Integer.valueOf(user.getUserId())
+                        .shortValue(), savingsAccount.getAccountId(), eventSourceId, questionGroups);
                 questionnaireServiceFacade.saveResponses(questionGroupDetails);
             }
-            
+
             this.transactionHelper.commitTransaction();
             return savingsAccount.getAccountId().longValue();
         } catch (BusinessRuleException e) {
@@ -802,11 +862,11 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             this.transactionHelper.closeSession();
         }
     }
-    
-	@Override
-	public Long createSavingsAccount(SavingsAccountCreationDto savingsAccountCreation) {
-		return createSavingsAccount(savingsAccountCreation, new ArrayList<QuestionGroupDetail>());
-	}
+
+    @Override
+    public Long createSavingsAccount(SavingsAccountCreationDto savingsAccountCreation) {
+        return createSavingsAccount(savingsAccountCreation, new ArrayList<QuestionGroupDetail>());
+    }
 
     @Override
     public AccountStatusDto retrieveAccountStatuses(Long savingsId) {
@@ -820,7 +880,8 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             List<ListElement> savingsStatesList = new ArrayList<ListElement>();
             AccountStateMachines.getInstance().initializeSavingsStates();
 
-            List<AccountStateEntity> statusList = AccountStateMachines.getInstance().getSavingsStatusList(savingsAccount.getAccountState());
+            List<AccountStateEntity> statusList = AccountStateMachines.getInstance().getSavingsStatusList(
+                    savingsAccount.getAccountState());
             for (AccountStateEntity accountState : statusList) {
                 accountState.setLocaleId(userContext.getLocaleId());
                 savingsStatesList.add(new ListElement(accountState.getId().intValue(), accountState.getName()));
@@ -846,7 +907,8 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             this.transactionHelper.beginAuditLoggingFor(savingsAccount);
             AccountState newStatus = AccountState.fromShort(updateStatus.getNewStatusId());
 
-            // FIXME - keithw - refactor savings specific logic out of changeStatus and create savings statue machine wrapper.
+            // FIXME - keithw - refactor savings specific logic out of changeStatus and create savings statue machine
+            // wrapper.
             savingsAccount.changeStatus(newStatus, updateStatus.getFlagId(), updateStatus.getComment(), loggedInUser);
             this.savingsDao.save(savingsAccount);
             this.transactionHelper.commitTransaction();
@@ -882,7 +944,8 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             if (!scheduledDeposit.isPaid() && scheduledDeposit.isBeforeOrOn(nextDueDate)) {
                 SavingsScheduleEntity savingsScheduledDeposit = (SavingsScheduleEntity) scheduledDeposit;
                 totalDue = totalDue.add(savingsScheduledDeposit.getTotalDepositDue());
-                previousDueDates.add(new DueOnDateDto(new LocalDate(scheduledDeposit.getActionDate()), savingsScheduledDeposit.getTotalDepositDue().toString()));
+                previousDueDates.add(new DueOnDateDto(new LocalDate(scheduledDeposit.getActionDate()),
+                        savingsScheduledDeposit.getTotalDepositDue().toString()));
             }
         }
 
@@ -891,7 +954,8 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         AccountStateEntity accountStateEntity = savingsAccount.getAccountState();
         accountStateEntity.setLocaleId(userContext.getLocaleId());
 
-        return new SavingsAccountDepositDueDto(nextdueDate, previousDueDates, accountStateEntity.getId(), accountStateEntity.getName());
+        return new SavingsAccountDepositDueDto(nextdueDate, previousDueDates, accountStateEntity.getId(),
+                accountStateEntity.getName());
     }
 
     @Override
@@ -931,7 +995,8 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
                     SavingsTransactionHistoryDto savingsTransactionHistoryDto = new SavingsTransactionHistoryDto();
 
                     savingsTransactionHistoryDto.setTransactionDate(financialTransactionBO.getActionDate());
-                    String preferredTransactionDate = DateUtils.getUserLocaleDate(userContext.getPreferredLocale(), financialTransactionBO.getActionDate().toString());
+                    String preferredTransactionDate = DateUtils.getUserLocaleDate(userContext.getPreferredLocale(),
+                            financialTransactionBO.getActionDate().toString());
                     savingsTransactionHistoryDto.setUserPrefferedTransactionDate(preferredTransactionDate);
 
                     savingsTransactionHistoryDto.setPaymentId(accountTrxnEntity.getAccountPayment().getPaymentId());
@@ -939,14 +1004,18 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
                     savingsTransactionHistoryDto.setType(financialTransactionBO.getFinancialAction().getName());
                     savingsTransactionHistoryDto.setGlcode(financialTransactionBO.getGlcode().getGlcode());
                     if (financialTransactionBO.isDebitEntry()) {
-                        savingsTransactionHistoryDto.setDebit(String.valueOf(removeSign(financialTransactionBO.getPostedAmount())));
+                        savingsTransactionHistoryDto.setDebit(String.valueOf(removeSign(financialTransactionBO
+                                .getPostedAmount())));
                     } else if (financialTransactionBO.isCreditEntry()) {
-                        savingsTransactionHistoryDto.setCredit(String.valueOf(removeSign(financialTransactionBO.getPostedAmount())));
+                        savingsTransactionHistoryDto.setCredit(String.valueOf(removeSign(financialTransactionBO
+                                .getPostedAmount())));
                     }
-                    savingsTransactionHistoryDto.setBalance(String.valueOf(removeSign(((SavingsTrxnDetailEntity) accountTrxnEntity).getBalance())));
+                    savingsTransactionHistoryDto.setBalance(String
+                            .valueOf(removeSign(((SavingsTrxnDetailEntity) accountTrxnEntity).getBalance())));
                     savingsTransactionHistoryDto.setClientName(accountTrxnEntity.getCustomer().getDisplayName());
                     savingsTransactionHistoryDto.setPostedDate(financialTransactionBO.getPostedDate());
-                    String preferredDate = DateUtils.getUserLocaleDate(userContext.getPreferredLocale(), financialTransactionBO.getPostedDate().toString());
+                    String preferredDate = DateUtils.getUserLocaleDate(userContext.getPreferredLocale(),
+                            financialTransactionBO.getPostedDate().toString());
                     savingsTransactionHistoryDto.setUserPrefferedPostedDate(preferredDate);
                     if (accountTrxnEntity.getPersonnel() != null) {
                         savingsTransactionHistoryDto.setPostedBy(accountTrxnEntity.getPersonnel().getDisplayName());
@@ -988,7 +1057,8 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     }
 
     @Override
-    public void updateSavingsAccountDetails(Long savingsId, String recommendedOrMandatoryAmount, List<CustomFieldDto> customFields) {
+    public void updateSavingsAccountDetails(Long savingsId, String recommendedOrMandatoryAmount,
+            List<CustomFieldDto> customFields) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = toUserContext(user);
@@ -1110,7 +1180,8 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         List<AuditLogDto> auditLogDtos = new ArrayList<AuditLogDto>();
         AuditBusinessService auditBusinessService = new AuditBusinessService();
         try {
-            List<AuditLogView> auditLogs = auditBusinessService.getAuditLogRecords(EntityType.SAVINGS.getValue(), savingsId.intValue());
+            List<AuditLogView> auditLogs = auditBusinessService.getAuditLogRecords(EntityType.SAVINGS.getValue(),
+                    savingsId.intValue());
             for (AuditLogView auditLogView : auditLogs) {
                 auditLogDtos.add(auditLogView.toDto());
             }
@@ -1145,8 +1216,8 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         PersonnelBO createdBy = this.personnelDao.findPersonnelById(accountNote.getCreatedById().shortValue());
         SavingsBO savingsAccount = this.savingsDao.findById(accountNote.getAccountId().longValue());
 
-        AccountNotesEntity accountNotes = new AccountNotesEntity(new java.sql.Date(accountNote.getCommentDate().toDateMidnight().toDate().getTime()),
-                accountNote.getComment(), createdBy, savingsAccount);
+        AccountNotesEntity accountNotes = new AccountNotesEntity(new java.sql.Date(accountNote.getCommentDate()
+                .toDateMidnight().toDate().getTime()), accountNote.getComment(), createdBy, savingsAccount);
 
         try {
             this.transactionHelper.startTransaction();
@@ -1163,60 +1234,64 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         }
     }
 
-	@Override
-	public List<CustomerSearchResultDto> retrieveCustomerThatQualifyForSavings(CustomerSearchDto customerSearchDto) {
-		
-		MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    @Override
+    public List<CustomerSearchResultDto> retrieveCustomerThatQualifyForSavings(CustomerSearchDto customerSearchDto) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = toUserContext(user);
-        
-		try {
-			List<CustomerSearchResultDto> pagedDetails = new ArrayList<CustomerSearchResultDto>();
-			
-			QueryResult customerForSavings = new CustomerPersistence().searchCustForSavings(customerSearchDto.getSearchTerm(), userContext.getId());
-			
-			int position = this.resultsetOffset(customerSearchDto.getPage(), customerSearchDto.getPageSize());
-			List<AccountSearchResultsDto> pagedResults = customerForSavings.get(position, customerSearchDto.getPageSize());
-			int i=1;
-			for (AccountSearchResultsDto customerBO : pagedResults) {
-		          CustomerSearchResultDto customer = new CustomerSearchResultDto();
-		          customer.setCustomerId(customerBO.getClientId());
-		          customer.setBranchName(customerBO.getOfficeName());
-		          customer.setGlobalId(customerBO.getGlobelNo());
-		          
-	        	  customer.setCenterName(StringUtils.defaultIfEmpty(customerBO.getCenterName(), "no center"));
-	        	  customer.setGroupName(StringUtils.defaultIfEmpty(customerBO.getGroupName(), "no group"));
-	        	  customer.setClientName(customerBO.getClientName());
-		          
-		          pagedDetails.add(customer);
-		          i++;
-			}
-			return pagedDetails;
-		} catch (PersistenceException e) {
-			throw new MifosRuntimeException(e);
-		} catch (HibernateSearchException e) {
-			throw new MifosRuntimeException(e);
-		}
 
-	}
+        try {
+            List<CustomerSearchResultDto> pagedDetails = new ArrayList<CustomerSearchResultDto>();
 
-	/**
-	 * Calculate the correct offset in SQL "limit" clause.
-	 * 
-	 * This method has protected visibility so that it can be tested.
-	 * 
-	 * @param currentPage Current page number. Page number starts at 1.
-	 * @param itemsPerPage Number of entries per page.
-	 * @return
-	 */
-	protected int resultsetOffset(int currentPage, int itemsPerPage) {
-	    return (currentPage - 1) * itemsPerPage;
-	}
-	
-	@Override
-	public CustomerDto retreieveCustomerDetails(Integer customerId) {
-		CustomerBO customer = this.customerDao.findCustomerById(customerId);
-		return new CustomerDto(customerId, customer.getDisplayName(), customer.getGlobalCustNum(), 
-				customer.getStatus().getValue(), customer.getCustomerLevel().getId(), 
-				customer.getVersionNo(), customer.getOfficeId(), customer.getLoanOfficerId());
-	}
+            QueryResult customerForSavings = new CustomerPersistence().searchCustForSavings(
+                    customerSearchDto.getSearchTerm(), userContext.getId());
+
+            int position = this.resultsetOffset(customerSearchDto.getPage(), customerSearchDto.getPageSize());
+            List<AccountSearchResultsDto> pagedResults = customerForSavings.get(position,
+                    customerSearchDto.getPageSize());
+            int i = 1;
+            for (AccountSearchResultsDto customerBO : pagedResults) {
+                CustomerSearchResultDto customer = new CustomerSearchResultDto();
+                customer.setCustomerId(customerBO.getClientId());
+                customer.setBranchName(customerBO.getOfficeName());
+                customer.setGlobalId(customerBO.getGlobelNo());
+
+                customer.setCenterName(StringUtils.defaultIfEmpty(customerBO.getCenterName(), "no center"));
+                customer.setGroupName(StringUtils.defaultIfEmpty(customerBO.getGroupName(), "no group"));
+                customer.setClientName(customerBO.getClientName());
+
+                pagedDetails.add(customer);
+                i++;
+            }
+            return pagedDetails;
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
+        } catch (HibernateSearchException e) {
+            throw new MifosRuntimeException(e);
+        }
+
+    }
+
+    /**
+     * Calculate the correct offset in SQL "limit" clause.
+     *
+     * This method has protected visibility so that it can be tested.
+     *
+     * @param currentPage
+     *            Current page number. Page number starts at 1.
+     * @param itemsPerPage
+     *            Number of entries per page.
+     * @return
+     */
+    protected int resultsetOffset(int currentPage, int itemsPerPage) {
+        return (currentPage - 1) * itemsPerPage;
+    }
+
+    @Override
+    public CustomerDto retreieveCustomerDetails(Integer customerId) {
+        CustomerBO customer = this.customerDao.findCustomerById(customerId);
+        return new CustomerDto(customerId, customer.getDisplayName(), customer.getGlobalCustNum(), customer.getStatus()
+                .getValue(), customer.getCustomerLevel().getId(), customer.getVersionNo(), customer.getOfficeId(),
+                customer.getLoanOfficerId());
+    }
 }
