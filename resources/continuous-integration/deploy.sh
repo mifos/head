@@ -7,6 +7,7 @@ lastStableWAR=$WORKSPACE/../lastStable/org.mifos\$mifos-webapp/archive/org.mifos
 deployRoot=$HOME/deploys/mifos-$JOB_NAME-deploy
 targetWARlocation=$deployRoot/tomcat6/webapps/mifos.war
 dbProperties=$WORKSPACE/db/target/release/db/mifos-db.properties
+dbPropertiesTemplate=$WORKSPACE/db/target/release/db/mifos-db-template.properties
 expandScript=$WORKSPACE/db/target/release/db/bin/expand_db.sh
 contractScript=$WORKSPACE/db/target/release/db/bin/contract_db.sh
 liquibaseScript=$WORKSPACE/db/target/release/db/bin/liquibase.sh
@@ -36,7 +37,7 @@ function updateDbProperties {
          s/@PASSWORD@/$PASSWORD/g;
          s/@SCHEMA_NAME@/$SCHEMA_NAME/g;
          s/@DB_HOST@/$DB_HOST/g;
-         s/@DB_PORT@/$DB_PORT/g" -i $dbProperties
+         s/@DB_PORT@/$DB_PORT/g" $dbPropertiesTemplate > $dbProperties
 }
 
 function deployMifos {

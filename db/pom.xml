@@ -93,7 +93,7 @@
                                 <resource>
                                     <directory>${basedir}/../db/bin/</directory>
                                     <includes>
-                                        <include>mifos-db.properties</include>
+                                        <include>mifos-db-template.properties</include>
                                     </includes>
                                     <filtering>false</filtering>
                                 </resource>
