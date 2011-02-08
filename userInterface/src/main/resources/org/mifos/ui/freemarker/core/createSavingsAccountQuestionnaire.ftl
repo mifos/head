@@ -19,7 +19,9 @@
 *  explanation of the license and how it is applied.
 --]
 
+[#-- 
 [#import "/questionnaireWidgets.ftl" as questionnaire /]
+--]
 
 [@layout.webflow currentState="createSavingsAccount.flowState.reviewAndSubmit" 
                  states=["createSavingsAccount.flowState.selectCustomer", 
