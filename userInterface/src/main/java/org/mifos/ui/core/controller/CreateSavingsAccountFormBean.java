@@ -31,6 +31,9 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.mifos.dto.domain.CustomerDto;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.screen.SavingsProductReferenceDto;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
+import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.validation.MifosBeanValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.binding.message.MessageContext;
@@ -51,6 +54,8 @@ public class CreateSavingsAccountFormBean implements Serializable {
     @NotEmpty(groups = CustomerSearchStep.class)
     private String searchString;
 
+    // TODO grab format in mifos code base. LocalizationConverter.
+    // parseDoubleForMoney
     @NotNull(groups = { MandatorySavings.class })
     @Pattern(regexp = "^[0-9]+(\\.[0-9]{1,2})?$?", groups = { MandatorySavings.class })
     private String mandatoryDepositAmount;
@@ -63,6 +68,9 @@ public class CreateSavingsAccountFormBean implements Serializable {
     @NotNull(groups = { SelectProductStep.class })
     private Integer productId;
 
+//    @Valid
+    private List<QuestionGroupDetail> questionGroups;
+    
     private List<PrdOfferingDto> productOfferings;
 
     private Map<String, String> productOfferingOptions;
@@ -169,6 +177,16 @@ public class CreateSavingsAccountFormBean implements Serializable {
         validator.validate(this, messages, validationGroups);
     }
 
+    public void validateAnswerQuestionGroupStep(ValidationContext context) {
+        
+//        try {
+//        } catch (Exception e) {
+//            
+//        }
+        MessageContext messages = context.getMessageContext();
+        validator.validate(this, messages);
+    }
+    
     public void setProductId(Integer productId) {
         this.productId = productId;
     }
@@ -217,6 +235,22 @@ public class CreateSavingsAccountFormBean implements Serializable {
     public String getVoluntaryDepositAmount() {
         return voluntaryDepositAmount;
     }
+
+    public void setQuestionGroups(List<QuestionGroupDetail> questionGroups) {
+        this.questionGroups = questionGroups;
+    }
+
+    public List<QuestionGroupDetail> getQuestionGroups() {
+        return questionGroups;
+    }
+    
+    /**
+     * This is only used to pass a QuestionGroupDetails object to QuestionGroupController for validation.
+     * @return
+     */
+    public QuestionGroupDetails getQuestionGroupDetails() {
+        return new QuestionGroupDetails(0, 0, 0, getQuestionGroups());
+    }
 }
 
 /**
@@ -235,4 +269,7 @@ interface MandatorySavings {
 }
 
 interface VoluntarySavings {
+}
+
+interface QuestionGroupStep {
 }

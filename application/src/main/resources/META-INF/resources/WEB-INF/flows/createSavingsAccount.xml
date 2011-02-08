@@ -53,13 +53,21 @@
 
     <decision-state id="questionGroupStep">
         <on-entry>
-            <evaluate expression="createSavingsAccountController.getQuestionGroups()" result="flowScope.questionGroups" result-type="java.util.List" />
+            <evaluate expression="createSavingsAccountController.loadQuestionGroups(savingsAccountFormBean)" />
         </on-entry>
-        <if test="flowScope.questionGroups.size() > 0" then="answerQuestionGroupStep" else="previewStep"/>
+        <if test="savingsAccountFormBean.questionGroups.size() > 0" then="answerQuestionGroupStep" else="previewStep"/>
     </decision-state>
 
-    <view-state id="answerQuestionGroupStep" view="captureQuestionnaireResponses">
-        <transition on="questionsAnswered" to="previewStep"></transition>
+    <view-state id="answerQuestionGroupStep" view="createSavingsAccountQuestionnaire" model="savingsAccountFormBean">
+        <transition on="questionsAnswered" to="previewStep" validate="false">
+            <evaluate expression="createSavingsAccountController.validateQuestionGroups(savingsAccountFormBean)"/>
+            <!--<evaluate expression="questionnaireServiceFacade.validateResponses(savingsAccountFormBean.questionGroups)"/>-->
+        </transition>
+<!--
+        <evaluate expression="questionGroupController.saveQuestionnaire(savingsAccountFormBean.questionGroupDetails, 0, flowRequestContext)"/>
+        <transition on="success" to="previewStep"/>
+        <transition on="failure" to="answerQuestionGroupStep"/>
+-->
     </view-state>
     
     <end-state id="complete" view="createSavingsAccountComplete" />

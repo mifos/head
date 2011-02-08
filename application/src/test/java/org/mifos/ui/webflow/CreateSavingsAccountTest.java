@@ -21,6 +21,7 @@
 package org.mifos.ui.webflow;
 
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -28,9 +29,12 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.ValidationException;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
+import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.validation.MifosBeanValidator;
 import org.mifos.ui.core.controller.CreateSavingsAccountController;
 import org.mifos.ui.core.controller.CreateSavingsAccountFormBean;
@@ -38,6 +42,7 @@ import org.springframework.webflow.config.FlowDefinitionResource;
 import org.springframework.webflow.config.FlowDefinitionResourceFactory;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
+import org.springframework.webflow.execution.FlowExecution;
 import org.springframework.webflow.test.MockExternalContext;
 import org.springframework.webflow.test.MockFlowBuilderContext;
 import org.springframework.webflow.test.MockParameterMap;
@@ -58,11 +63,13 @@ public class CreateSavingsAccountTest extends AbstractXmlFlowExecutionTests {
 
     private CreateSavingsAccountController controller;
     private CreateSavingsAccountFormBean formBean;
-
+    private QuestionnaireServiceFacade questionnaireServiceFacade;
+    
     @Before
     public void setUp() {
         controller = mock(CreateSavingsAccountController.class);
         formBean = mock(CreateSavingsAccountFormBean.class);
+        questionnaireServiceFacade = mock(QuestionnaireServiceFacade.class);
     }
 
     @Test
@@ -147,7 +154,7 @@ public class CreateSavingsAccountTest extends AbstractXmlFlowExecutionTests {
 
         List<QuestionGroupDetail> groups = new ArrayList<QuestionGroupDetail>();
         groups.add(new QuestionGroupDetail());
-        when(controller.getQuestionGroups()).thenReturn(groups);
+        when(formBean.getQuestionGroups()).thenReturn(groups);
 
         setCurrentState("enterAccountDetailsStep");
 
@@ -195,8 +202,12 @@ public class CreateSavingsAccountTest extends AbstractXmlFlowExecutionTests {
     }
 
     @Test
-    public void testAnswerQuestionGroupStep_QuestionsAnswered() {
+    public void testAnswerQuestionGroupStep_QuestionsAnswered_NoValidationError() {
 
+        List<QuestionGroupDetail> questionGroups = new ArrayList<QuestionGroupDetail>();
+//        List<QuestionGroupDetail> questionGroups = null;
+        doNothing().when(questionnaireServiceFacade).validateResponses(questionGroups);
+        
         setCurrentState("answerQuestionGroupStep");
 
         MockExternalContext context = new MockExternalContext();
@@ -204,8 +215,29 @@ public class CreateSavingsAccountTest extends AbstractXmlFlowExecutionTests {
         resumeFlow(context);
 
         assertCurrentStateEquals("previewStep");
+        verify(questionnaireServiceFacade).validateResponses(questionGroups);
     }
 
+    @Test
+    public void testAnswerQuestionGroupStep_QuestionsAnswered_WithValidationError() {
+        List<QuestionGroupDetail> questionGroups = new ArrayList<QuestionGroupDetail>();
+        QuestionGroupDetail detail = new QuestionGroupDetail();
+        questionGroups.add(detail);
+        formBean.setQuestionGroups(questionGroups);
+        Exception e = new ValidationException("Simulated error");
+        doThrow(e).when(questionnaireServiceFacade).validateResponses(questionGroups);
+        when(formBean.getQuestionGroups()).thenReturn(questionGroups);
+        
+        setCurrentState("answerQuestionGroupStep");
+
+        MockExternalContext context = new MockExternalContext();
+        context.setEventId("questionsAnswered");
+        resumeFlow(context);
+
+        verify(questionnaireServiceFacade).validateResponses(questionGroups);
+        assertCurrentStateEquals("answerQuestionGroupStep");
+    }
+    
     @Test
     public void testPreviewStep_Edit() {
 
@@ -268,6 +300,7 @@ public class CreateSavingsAccountTest extends AbstractXmlFlowExecutionTests {
         builderContext.registerBean("createSavingsAccountController",
                 controller);
         builderContext.registerBean("savingsAccountFormBean", formBean);
+        builderContext.registerBean("questionnaireServiceFacade", questionnaireServiceFacade);
         builderContext
                 .registerBean("validator", mock(MifosBeanValidator.class));
     }

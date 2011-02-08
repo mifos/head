@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.ValidationException;
+
 import org.mifos.application.servicefacade.SavingsServiceFacade;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerDto;
@@ -35,8 +37,11 @@ import org.mifos.dto.domain.SavingsProductDto;
 import org.mifos.dto.screen.CustomerSearchResultsDto;
 import org.mifos.dto.screen.SavingsProductReferenceDto;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
+import org.mifos.security.MifosUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 
 @Controller
@@ -91,6 +96,8 @@ public class CreateSavingsAccountController {
                 .getSavingsProductDetails();
         Integer productId = savingsProduct.getProductDetails().getId();
         Integer customerId = formBean.getCustomer().getCustomerId();
+
+        // Store savings account
         // FIXME - code smell! use constants
         String depositAmount = savingsProduct.getDepositType() == MANDATORY_DEPOSIT ? formBean
                 .getMandatoryDepositAmount() : formBean
@@ -107,7 +114,24 @@ public class CreateSavingsAccountController {
                 .createSavingsAccount(savingsAccountCreation);
         SavingsAccountDetailDto savingsAccountDetailDto = savingsServiceFacade
                 .retrieveSavingsAccountDetails(savingsId);
+
+        // Store question responses
+        saveQuestionResponses(savingsId,
+                formBean.getQuestionGroups());
+
         return savingsAccountDetailDto;
+    }
+
+    private void saveQuestionResponses(Long savingsId,
+            List<QuestionGroupDetail> questionGroups) {
+        MifosUser loggedinUser = ((MifosUser) SecurityContextHolder
+                .getContext().getAuthentication().getPrincipal());
+        Integer eventSourceId = questionnaireServiceFacade.getEventSourceId(
+                "Create", "Savings");
+        QuestionGroupDetails questionGroupDetails = new QuestionGroupDetails(
+                loggedinUser.getUserId(), savingsId.intValue(), eventSourceId,
+                questionGroups);
+        questionnaireServiceFacade.saveResponses(questionGroupDetails);
     }
 
     public void customerSelected(Integer customerId,
@@ -123,6 +147,23 @@ public class CreateSavingsAccountController {
         List<QuestionGroupDetail> questionGroups = questionnaireServiceFacade
                 .getQuestionGroups("Create", "Savings");
         return questionGroups;
+    }
+
+    public void loadQuestionGroups(CreateSavingsAccountFormBean formBean) {
+        List<QuestionGroupDetail> questionGroups = questionnaireServiceFacade
+                .getQuestionGroups("Create", "Savings");
+        formBean.setQuestionGroups(questionGroups);
+    }
+    
+    public boolean validateQuestionGroups(CreateSavingsAccountFormBean formBean) {
+        boolean success;
+        try {
+            questionnaireServiceFacade.validateResponses(formBean.getQuestionGroups());
+            success = true;
+        } catch (ValidationException e) {
+            success = false;
+        }
+        return success;
     }
 
     public void loadProduct(Integer productId,
