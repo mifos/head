@@ -32,10 +32,11 @@ import org.mifos.dto.domain.CustomerDto;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.screen.SavingsProductReferenceDto;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
-import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.validation.MifosBeanValidator;
+import org.mifos.platform.validations.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.binding.message.MessageBuilder;
 import org.springframework.binding.message.MessageContext;
 import org.springframework.binding.validation.ValidationContext;
 
@@ -68,9 +69,8 @@ public class CreateSavingsAccountFormBean implements Serializable {
     @NotNull(groups = { SelectProductStep.class })
     private Integer productId;
 
-//    @Valid
     private List<QuestionGroupDetail> questionGroups;
-    
+
     private List<PrdOfferingDto> productOfferings;
 
     private Map<String, String> productOfferingOptions;
@@ -83,6 +83,9 @@ public class CreateSavingsAccountFormBean implements Serializable {
 
     @Autowired
     private transient MifosBeanValidator validator;
+
+    @Autowired
+    private transient QuestionnaireServiceFacade questionnaireServiceFacade;
 
     public void setValidator(MifosBeanValidator validator) {
         this.validator = validator;
@@ -178,15 +181,22 @@ public class CreateSavingsAccountFormBean implements Serializable {
     }
 
     public void validateAnswerQuestionGroupStep(ValidationContext context) {
-        
-//        try {
-//        } catch (Exception e) {
-//            
-//        }
         MessageContext messages = context.getMessageContext();
-        validator.validate(this, messages);
+        try {
+            questionnaireServiceFacade.validateResponses(this
+                    .getQuestionGroups());
+        } catch (ValidationException e) {
+            if (e.hasChildExceptions()) {
+                List<ValidationException> children = e.getChildExceptions();
+                for (ValidationException child : children) {
+                    messages.addMessage(new MessageBuilder().error()
+                            .source(child.getIdentifier()).code(child.getKey())
+                            .arg(child.getIdentifier()).build());
+                }
+            }
+        }
     }
-    
+
     public void setProductId(Integer productId) {
         this.productId = productId;
     }
@@ -243,14 +253,6 @@ public class CreateSavingsAccountFormBean implements Serializable {
     public List<QuestionGroupDetail> getQuestionGroups() {
         return questionGroups;
     }
-    
-    /**
-     * This is only used to pass a QuestionGroupDetails object to QuestionGroupController for validation.
-     * @return
-     */
-    public QuestionGroupDetails getQuestionGroupDetails() {
-        return new QuestionGroupDetails(0, 0, 0, getQuestionGroups());
-    }
 }
 
 /**
@@ -269,7 +271,4 @@ interface MandatorySavings {
 }
 
 interface VoluntarySavings {
-}
-
-interface QuestionGroupStep {
 }

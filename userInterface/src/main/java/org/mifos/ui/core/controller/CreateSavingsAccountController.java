@@ -24,8 +24,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.validation.ValidationException;
-
 import org.mifos.application.servicefacade.SavingsServiceFacade;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerDto;
@@ -156,17 +154,6 @@ public class CreateSavingsAccountController {
         formBean.setQuestionGroups(questionGroups);
     }
     
-    public boolean validateQuestionGroups(CreateSavingsAccountFormBean formBean) {
-        boolean success;
-        try {
-            questionnaireServiceFacade.validateResponses(formBean.getQuestionGroups());
-            success = true;
-        } catch (ValidationException e) {
-            success = false;
-        }
-        return success;
-    }
-
     public void loadProduct(Integer productId,
             CreateSavingsAccountFormBean formBean) {
 

@@ -53,18 +53,14 @@
                 <ol id="responses">
                     [#list sectionDetail.questions as question]
                     <li class="marginTop15" style='background-color: ${((question_index % 2)==0)?string("#F2F2F2", "#FFFFFF")}'>
-                        <label for="details[questionGroup.sectionDetails[${sectionDetail_index}].questions[${question_index}].value">
+                        <label for="questionGroups[${questionGroup_index}].sectionDetails[${sectionDetail_index}].questions[${question_index}].value">
                             [#if question.mandatory]<span class="red">*</span>[/#if]
                             ${question.text}
                             [#if question.questionType=="DATE"](dd/mm/yyyy)&nbsp[/#if]:
-                            
-                            type=${question.questionType}
                         </label>
                         [#switch question.questionType]
                           [#case "FREETEXT"]
-                          [#--
-                            [@spring.formTextarea "savingsAccountFormBean.questionGroups[${questionGroup_index}].sectionDetails[${sectionDetail_index}].questions[${question_index}]", 'rows="4" cols="50" maxlength="200"' /]
-                          --]
+                            [@spring.formTextarea "savingsAccountFormBean.questionGroups[${questionGroup_index}].sectionDetails[${sectionDetail_index}].questions[${question_index}].value", 'rows="4" cols="50" maxlength="200"' /]
                           [#break]
                           [#case "NUMERIC"]
                             [@spring.formInput "savingsAccountFormBean.questionGroups[${questionGroup_index}].sectionDetails[${sectionDetail_index}].questions[${question_index}].value", 'maxlength="30"' /]
