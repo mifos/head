@@ -21,10 +21,9 @@
 package org.mifos.framework.util;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,7 +31,6 @@ import org.apache.commons.lang.StringUtils;
 import org.mifos.core.MifosResourceUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
 
 /**
  * Encapsulates logic for determining which directory to look in for
@@ -48,13 +46,13 @@ public class ConfigurationLocator {
     private static final String HOME_PROPERTY_NAME = "user.home";
     private static final String MIFOS_USER_CONFIG_DIRECTORY_NAME = ".mifos";
     private static final String DEFAULT_CONFIGURATION_PATH = "org/mifos/config/resources/";
-    private static final Logger logger = LoggerFactory.getLogger(ConfigurationLocator.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ConfigurationLocator.class.getName());
 
     @SuppressWarnings("PMD.ImmutableField")
     private ConfigurationLocatorHelper configurationLocatorHelper;
     private String defaultConfigPath;
-    private static final Pattern propertyPattern = Pattern.compile("\\$\\{([^\\$\\s/\\{\\}]+)\\}");
-    private static final Pattern envVarPattern = Pattern.compile("\\$([^\\$\\W\\{\\}/]+)");
+    private static final Pattern PROPERTY_PATTERN = Pattern.compile("\\$\\{([^\\$\\s/\\{\\}]+)\\}");
+    private static final Pattern ENV_VAR_PATTERN = Pattern.compile("\\$([^\\$\\W\\{\\}/]+)");
 
     public ConfigurationLocator() {
         super();
@@ -65,51 +63,26 @@ public class ConfigurationLocator {
      * Will not throw an exception if the file is not found. This method may be
      * used to find files in cases where we don't care if the file cannot be
      * found.
+     * @throws IOException
      */
     @SuppressWarnings("PMD")
-    public String getSpringFilePath(String filename) {
-        String returnValue = null;
-        try {
-            returnValue = "file:" + getFilePath(filename);
-        } catch (FileNotFoundException e) {
-            /*
-             * Ignore so we can allow Spring to refer to "optional" files. This
-             * may not be the correct approach--we may want to instead allow
-             * this behavior (ignoring the exception) to be configurable.
-             */
-            returnValue = "";
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    public String getCustomFilePath(String filename) throws IOException {
+        String returnValue = filename;
+        LOGGER.info("Checking existance of : " + filename);
+        File configFile = getFile(filename);
+        if(configFile != null && configFile.exists()) {
+            returnValue = "file:"+ configFile.getAbsolutePath();
+            LOGGER.info("Custom configuration file exists : " + returnValue);
         }
-
-        if (StringUtils.isBlank(returnValue)) {
-            // try and find it on class path instead
-            String configFilePath = "org/mifos/config/resources/" + filename;
-            ClassPathResource configfile = new ClassPathResource(configFilePath);
-            logger.info("Checking on classpath for existance of: " + configFilePath);
-
-            Properties props = new Properties();
-            if (configfile.exists()) {
-                logger.info(configfile.getFilename() + " exists on classpath");
-                InputStream in = ConfigurationLocator.class.getClassLoader().getResourceAsStream(configFilePath);
-                if (in != null) {
-                    try {
-                        props.load(in);
-                        logger.info(props.toString());
-                        returnValue = "classpath:" + configFilePath;
-                        logger.info("returning: " + returnValue);
-                    } catch (IOException e) {
-                        returnValue = "";
-                    }
-                }
-            }
-        }
-
         return returnValue;
     }
 
     public String getFilePath(String filename) throws IOException {
-        return getFile(filename).getAbsolutePath();
+        File file = getFile(filename);
+        if(file != null && file.exists()){
+           return file.getAbsolutePath(); // NOPMD by ugupta on 8/2/11 9:27 AM
+        }
+        return null;
     }
 
     private String[] getDirectoriesToSearch() {
@@ -125,11 +98,25 @@ public class ConfigurationLocator {
     public String getConfigurationDirectory() {
         for (String directoryPath : getDirectoriesToSearch()) {
             if (directoryExists(directoryPath)) {
-                logger.info("ConfigurationLocator found configuration directory: " + directoryPath);
+                LOGGER.info("ConfigurationLocator found configuration directory: " + directoryPath);
                 return directoryPath;
             }
         }
         return CURRENT_WORKING_DIRECTORY_PATH;
+    }
+
+    @SuppressWarnings({"PMD.AvoidInstantiatingObjectsInLoops", "PMD.OnlyOneReturn"})
+    private InputStream getConfiguration(String filename) throws IOException {
+        for (String directoryPath : getDirectoriesToSearch()) {
+            if (StringUtils.isNotBlank(directoryPath)) {
+                File file = MifosResourceUtil.getFile(directoryPath +"/"+ filename);
+                if (file.exists()) {
+                    LOGGER.info("ConfigurationLocator found configuration file: " + file);
+                    return new FileInputStream(file);
+                }
+            }
+        }
+        return MifosResourceUtil.getClassPathResourceAsStream(getDefaultConfigPath() + filename);
     }
 
     @SuppressWarnings({"PMD.AvoidInstantiatingObjectsInLoops", "PMD.OnlyOneReturn"})
@@ -138,11 +125,18 @@ public class ConfigurationLocator {
             if (StringUtils.isNotBlank(directoryPath)) {
                 File file = MifosResourceUtil.getFile(directoryPath +"/"+ filename);
                 if (file.exists()) {
+                    LOGGER.info("ConfigurationLocator found configuration file: " + file);
                     return file;
                 }
             }
         }
-        return MifosResourceUtil.getClassPathResource(getDefaultConfigPath() + filename);
+        File file = null;
+        try {
+            file = MifosResourceUtil.getClassPathResource(getDefaultConfigPath() + filename);
+        } catch (IOException e) {
+            LOGGER.info("file not found : " + filename);
+        }
+        return file;
     }
 
     private String getHomeProperty() {
@@ -157,10 +151,12 @@ public class ConfigurationLocator {
         return configurationLocatorHelper.getFile(directory);
     }
 
+    public InputStream getFileInputStream(String filename) throws IOException {
+        return getConfiguration(filename);
+    }
+
     public File getFile(String filename) throws IOException {
-        File fileToReturn = getConfigurationFile(filename);
-        logger.info("ConfigurationLocator found configuration file: " + fileToReturn);
-        return fileToReturn;
+        return getConfigurationFile(filename);
     }
 
     public void setConfigurationLocatorHelper(ConfigurationLocatorHelper fileFactory) {
@@ -183,7 +179,7 @@ public class ConfigurationLocator {
     }
 
     private void resolveEnvironmentProperties(String fileName, StringBuilder fileBuffer) {
-        Matcher envVarMatcher = envVarPattern.matcher(fileName);
+        Matcher envVarMatcher = ENV_VAR_PATTERN.matcher(fileName);
         while (envVarMatcher.find()) {
             String envVar = envVarMatcher.group();
             String environmentProperty = configurationLocatorHelper.getEnvironmentProperty(envVar.substring(1));
@@ -194,7 +190,7 @@ public class ConfigurationLocator {
     }
 
     private void resolveHomeProperties(String fileName, StringBuilder fileBuffer) {
-        Matcher matcher = propertyPattern.matcher(fileName);
+        Matcher matcher = PROPERTY_PATTERN.matcher(fileName);
         while (matcher.find()) {
             String property = matcher.group();
             String homeProperty = configurationLocatorHelper.getHomeProperty(property.substring(2, property.length() - 1));

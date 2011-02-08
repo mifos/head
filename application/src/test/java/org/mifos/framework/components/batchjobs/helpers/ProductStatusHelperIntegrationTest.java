@@ -163,8 +163,8 @@ public class ProductStatusHelperIntegrationTest extends MifosIntegrationTestCase
 
     private MifosScheduler getMifosScheduler(String taskConfigurationPath) throws TaskSystemException, IOException, FileNotFoundException {
         ConfigurationLocator mockConfigurationLocator = createMock(ConfigurationLocator.class);
-        expect(mockConfigurationLocator.getFile(SchedulerConstants.CONFIGURATION_FILE_NAME)).andReturn(
-                MifosResourceUtil.getClassPathResource(taskConfigurationPath));
+        expect(mockConfigurationLocator.getFileInputStream(SchedulerConstants.CONFIGURATION_FILE_NAME)).andReturn(
+                MifosResourceUtil.getClassPathResourceAsStream(taskConfigurationPath));
         expectLastCall().times(2);
         replay(mockConfigurationLocator);
         MifosScheduler mifosScheduler = new MifosScheduler();

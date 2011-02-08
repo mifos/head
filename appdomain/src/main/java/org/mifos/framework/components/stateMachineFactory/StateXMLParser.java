@@ -80,7 +80,7 @@ public class StateXMLParser {
 
             DocumentBuilder builder = factory.newDocumentBuilder();
             builder.setErrorHandler(null);
-            Document document = builder.parse(MifosResourceUtil.getClassPathResource(filename));
+            Document document = builder.parse(MifosResourceUtil.getClassPathResourceAsStream(filename));
             Node mapToprocess = null;
             /*
              * String configurationName = ""; if

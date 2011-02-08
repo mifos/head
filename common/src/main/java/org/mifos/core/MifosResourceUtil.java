@@ -23,10 +23,14 @@ package org.mifos.core;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Reader;
+import java.net.URL;
+import java.util.logging.Logger;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.ResourceUtils;
@@ -35,8 +39,9 @@ import org.springframework.util.ResourceUtils;
  * Load resources from the classpath.
  *
  */
-
 public class MifosResourceUtil {
+
+    private static final Logger LOGGER = Logger.getLogger(MifosResourceUtil.class.getName());
 
     public static File getFile(String fileNameWithLocation) {
         File file;
@@ -57,11 +62,37 @@ public class MifosResourceUtil {
     }
 
     public static InputStream getSQLFileAsStream(String fileName) throws FileNotFoundException {
-        return new FileInputStream(getFile("/sql/", fileName));
+        return new FileInputStream(getFile("/sql/" + fileName));
     }
 
-    public static File getClassPathResource(String file) throws IOException {
-        return new ClassPathResource(file).getFile();
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"OS_OPEN_STREAM_EXCEPTION_PATH","OBL_UNSATISFIED_OBLIGATION"}, justification="this is a bug")
+    public static File getClassPathResource(String fileName) throws IOException {
+        URL url = new ClassPathResource(fileName).getURL();
+        File file = null;
+        if (url.getProtocol().equals(ResourceUtils.URL_PROTOCOL_FILE)) {
+            file = new ClassPathResource(fileName).getFile();
+        } else if (url.getProtocol().equals(ResourceUtils.URL_PROTOCOL_JAR)) {
+            LOGGER.warning("Creating tmp file from InputSteam, use InputStream instead of file " + url);
+            LOGGER.warning("Can not extract file from a jar in a container " + url);
+            InputStream stream = getClassPathResourceAsStream(fileName);
+            File jarResource = File.createTempFile("Mifos", ".xml");
+            @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="")
+            OutputStream out = new FileOutputStream(jarResource);
+            byte buf[] = new byte[1024];
+            int len;
+            while ((len = stream.read(buf)) > 0) { // NOPMD by ugupta on 7/2/11 5:23 PM
+                out.write(buf, 0, len);
+            }
+            out.close();
+            stream.close();
+            file = jarResource;
+            LOGGER.warning("Created tmp file " + jarResource);
+        }
+        return file;
+    }
+
+    public static InputStream getClassPathResourceAsStream(String fileName) {
+        return Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName);
     }
 
 }

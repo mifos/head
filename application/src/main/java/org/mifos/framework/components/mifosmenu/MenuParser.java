@@ -20,10 +20,7 @@
 
 package org.mifos.framework.components.mifosmenu;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -38,7 +35,6 @@ import org.mifos.core.MifosResourceUtil;
 import org.mifos.framework.exceptions.MenuParseException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.FilePaths;
-import org.springframework.core.io.ClassPathResource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -61,12 +57,12 @@ public class MenuParser {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             SchemaFactory schfactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
             schfactory.setErrorHandler(null);
-            Schema schema = schfactory.newSchema(new StreamSource(MifosResourceUtil.getClassPathResource(FilePaths.MENUSCHEMA)));
+            Schema schema = schfactory.newSchema(new StreamSource(MifosResourceUtil.getClassPathResourceAsStream(FilePaths.MENUSCHEMA)));
             factory.setNamespaceAware(false);
             factory.setValidating(false);
             factory.setSchema(schema);
             DocumentBuilder builder = factory.newDocumentBuilder();
-            Document document = builder.parse(MifosResourceUtil.getClassPathResource(FilePaths.MENUPATH));
+            Document document = builder.parse(MifosResourceUtil.getClassPathResourceAsStream(FilePaths.MENUPATH));
             NodeList tabNodeList = document.getElementsByTagName(MenuConstants.TOPMENUTAB);
             Menu leftMenus[] = new Menu[tabNodeList.getLength()];
             for (int i = 0; i < tabNodeList.getLength(); i++) {

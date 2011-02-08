@@ -129,7 +129,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
     protected CustomerBO group = null;
 
-    private CustomerBO client = null;
+    private final CustomerBO client = null;
     private BigDecimal savedInitialRoundOffMultiple = null;
     private BigDecimal savedFinalRoundOffMultiple = null;
     private RoundingMode savedCurrencyRoundingMode = null;
@@ -139,8 +139,8 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     private int savedDaysInYear = 0;
 
     private UserContext userContext;
-    private boolean allConsoleOutputEnabled = false;
-    private boolean isFileNameConsoleOutputEnabled = false;
+    private final boolean allConsoleOutputEnabled = false;
+    private final boolean isFileNameConsoleOutputEnabled = false;
 
     @Autowired
     private LegacyLoanDao legacyLoanDao;
@@ -1885,7 +1885,6 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private LoanTestCaseData loadSpreadSheetData(String fileName) throws Exception {
-        File file = MifosResourceUtil.getClassPathResource(fileName);
         FileInputStream fileInputStream = null;
         InputStreamReader inputStreamReader = null;
         BufferedReader bufferedReader = null;
@@ -1895,8 +1894,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         String line = null;
 
         try {
-            fileInputStream = new FileInputStream(file);
-            inputStreamReader = new InputStreamReader(fileInputStream);
+            inputStreamReader = new InputStreamReader(MifosResourceUtil.getClassPathResourceAsStream(fileName));
             bufferedReader = new BufferedReader(inputStreamReader);
 
             // dataInputStream.available() returns 0 if the file does not have
@@ -1986,6 +1984,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         File dir = MifosResourceUtil.getClassPathResource(directoryPath);
 
         FilenameFilter filter = new FilenameFilter() {
+            @Override
             public boolean accept(File dir, String name) {
                 return name.endsWith(".csv");
             }
@@ -2070,7 +2069,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    private String[] flatTestCases = { "testcase-2008-05-12-flat-set1.01", "testcase-2008-05-12-flat-set1.02",
+    private final String[] flatTestCases = { "testcase-2008-05-12-flat-set1.01", "testcase-2008-05-12-flat-set1.02",
             "testcase-2008-05-12-flat-set1.03", "testcase-2008-05-12-flat-set1.04", "testcase-2008-05-12-flat-set1.05",
             "testcase-2008-05-12-flat-set1.06", "testcase-2008-05-12-flat-set1.07", "testcase-2008-05-12-flat-set1.08",
             "testcase-2008-05-12-flat-set1.09", "testcase-2008-05-12-flat-set1.10", "testcase-2008-05-12-flat-set1.11",
@@ -2078,16 +2077,16 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
             "testcase-2008-05-12-flat-set1.15", "testcase-2008-05-12-flat-set1.16", "testcase-2008-05-12-flat-set1.17",
             "testcase-2008-05-12-flat-set1.18", "testcase-2008-05-12-flat-set1.19" };
 
-    private String[] flatNegativeLastPaymentTestCases = { "testcase-2008-05-27-flat-negative-payment-set1.01.csv",
+    private final String[] flatNegativeLastPaymentTestCases = { "testcase-2008-05-27-flat-negative-payment-set1.01.csv",
             "testcase-2008-05-27-flat-negative-payment-set1.02.csv",
             "testcase-2008-05-27-flat-negative-payment-set1.03.csv" };
 
-    private String[] decliningNegativeLastPaymentTestCases = {
+    private final String[] decliningNegativeLastPaymentTestCases = {
             "testcase-2008-05-27-declining-negative-payment-set1.01.csv",
             "testcase-2008-05-27-declining-negative-payment-set1.02.csv",
             "testcase-2008-05-27-declining-negative-payment-set1.03.csv" };
 
-    private String[] flatGraceFeeTestCases = { "testcase-2008-05-13-flat-grace-fee-set1.01",
+    private final String[] flatGraceFeeTestCases = { "testcase-2008-05-13-flat-grace-fee-set1.01",
             "testcase-2008-05-13-flat-grace-fee-set1.02", "testcase-2008-05-13-flat-grace-fee-set1.03",
             "testcase-2008-05-13-flat-grace-fee-set1.04", "testcase-2008-05-13-flat-grace-fee-set1.05",
             "testcase-2008-05-13-flat-grace-fee-set1.06", "testcase-2008-05-13-flat-grace-fee-set1.07",
@@ -2102,7 +2101,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
             "testcase-2008-05-13-flat-grace-fee-set1.24", "testcase-2008-05-13-flat-grace-fee-set1.25",
             "testcase-2008-05-13-flat-grace-fee-set1.26" };
 
-    private String[] decliningEPIGraceFeeTestCases = { "testcase-2008-06-27-decliningEPI-grace-fee-set1.01",
+    private final String[] decliningEPIGraceFeeTestCases = { "testcase-2008-06-27-decliningEPI-grace-fee-set1.01",
             "testcase-2008-06-27-decliningEPI-grace-fee-set1.02", "testcase-2008-06-27-decliningEPI-grace-fee-set1.03",
             "testcase-2008-06-27-decliningEPI-grace-fee-set1.04", "testcase-2008-06-27-decliningEPI-grace-fee-set1.05",
             "testcase-2008-06-27-decliningEPI-grace-fee-set1.06", "testcase-2008-06-27-decliningEPI-grace-fee-set1.07",
@@ -2119,7 +2118,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
     };
 
-    private String[] decliningGraceFeeTestCases = { "testcase-2008-05-13-declining-grace-fee-set1.01",
+    private final String[] decliningGraceFeeTestCases = { "testcase-2008-05-13-declining-grace-fee-set1.01",
             "testcase-2008-05-13-declining-grace-fee-set1.02", "testcase-2008-05-13-declining-grace-fee-set1.03",
             "testcase-2008-05-13-declining-grace-fee-set1.04", "testcase-2008-05-13-declining-grace-fee-set1.05",
             "testcase-2008-05-13-declining-grace-fee-set1.06", "testcase-2008-05-13-declining-grace-fee-set1.07",
@@ -2134,7 +2133,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
             "testcase-2008-05-13-declining-grace-fee-set1.24", "testcase-2008-05-13-declining-grace-fee-set1.25",
             "testcase-2008-05-13-declining-grace-fee-set1.26" };
 
-    private String[] selectedCaseNumbers = {
+    private final String[] selectedCaseNumbers = {
     // "set1.01", //JDBC error could not insert LoanOfferingBO
     // "set1.02a",
     // "set1.03", //negative principal payments

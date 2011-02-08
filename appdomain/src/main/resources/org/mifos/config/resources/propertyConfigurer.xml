@@ -4,27 +4,11 @@
 
     <bean id="configurationLocator" class="org.mifos.framework.util.ConfigurationLocator"/>
 
-    <bean id="defaultProperties" factory-bean="configurationLocator" factory-method="getSpringFilePath">
-        <constructor-arg value="mainDatabase.properties"/>
-    </bean>
-
-    <bean id="applicationProperties" factory-bean="configurationLocator" factory-method="getSpringFilePath">
-        <constructor-arg value="applicationConfiguration.default.properties"/>
-    </bean>
-
-    <bean id="applicationCustomProperties" factory-bean="configurationLocator" factory-method="getSpringFilePath">
+    <bean id="applicationCustomProperties" factory-bean="configurationLocator" factory-method="getCustomFilePath">
         <constructor-arg value="applicationConfiguration.custom.properties"/>
     </bean>
 
-    <bean id="integrationProperties" factory-bean="configurationLocator" factory-method="getSpringFilePath">
-        <constructor-arg value="integrationDatabase.properties"/>
-    </bean>
-
-    <bean id="acceptanceProperties" factory-bean="configurationLocator" factory-method="getSpringFilePath">
-        <constructor-arg value="acceptanceDatabase.properties"/>
-    </bean>
-
-    <bean id="customProperties" factory-bean="configurationLocator" factory-method="getSpringFilePath">
+    <bean id="customProperties" factory-bean="configurationLocator" factory-method="getCustomFilePath">
         <constructor-arg value="local.properties"/>
     </bean>
 
@@ -33,11 +17,11 @@
         <property name="ignoreResourceNotFound" value="true"/>
         <property name="locations">
             <list>
-                <ref bean="defaultProperties"/>
-                <ref bean="integrationProperties"/>
-                <ref bean="acceptanceProperties"/>
+                <value>classpath:org/mifos/config/resources/mainDatabase.properties</value>
+                <value>classpath:org/mifos/config/resources/integrationDatabase.properties</value>
+                <value>classpath:org/mifos/config/resources/acceptanceDatabase.properties</value>
                 <ref bean="customProperties"/>
-                <ref bean="applicationProperties"/>
+                <value>classpath:org/mifos/config/resources/applicationConfiguration.default.properties</value>
                 <ref bean="applicationCustomProperties"/>
             </list>
         </property>

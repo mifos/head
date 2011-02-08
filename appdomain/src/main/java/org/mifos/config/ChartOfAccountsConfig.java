@@ -89,7 +89,7 @@ public class ChartOfAccountsConfig {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder parser = dbf.newDocumentBuilder();
             if (FilePaths.CHART_OF_ACCOUNTS_DEFAULT.equals(chartOfAccountsXml)) { // default chart of accounts
-                document = parser.parse(MifosResourceUtil.getClassPathResource(chartOfAccountsXml));
+                document = parser.parse(MifosResourceUtil.getClassPathResourceAsStream(chartOfAccountsXml));
             }
             else { // custom chart of accounts
                 document = parser.parse(MifosResourceUtil.getFile(chartOfAccountsXml));
@@ -142,9 +142,9 @@ public class ChartOfAccountsConfig {
      *         location.
      */
     public static String getCoaUri(Session session) {
-        String customCoaPath;
+        InputStream customCoaPath;
         try {
-            customCoaPath = new ConfigurationLocator().getFilePath(FilePaths.CHART_OF_ACCOUNTS_CUSTOM);
+            customCoaPath = new ConfigurationLocator().getFileInputStream(FilePaths.CHART_OF_ACCOUNTS_CUSTOM);
         } catch (IOException e) {
             customCoaPath = null;
         }
@@ -152,7 +152,7 @@ public class ChartOfAccountsConfig {
         final boolean customCoaExists = customCoaPath != null;
 
         if (customCoaExists) {
-            return customCoaPath;
+            return FilePaths.CHART_OF_ACCOUNTS_CUSTOM;
         }
 
         // if data exists in the database, the only way to add GL accounts is

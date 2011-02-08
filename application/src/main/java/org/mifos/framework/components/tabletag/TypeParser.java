@@ -63,7 +63,7 @@ public class TypeParser {
 
             DocumentBuilder builder = factory.newDocumentBuilder();
             builder.setErrorHandler(null);
-            Document document = builder.parse(MifosResourceUtil.getClassPathResource(filename));
+            Document document = builder.parse(MifosResourceUtil.getClassPathResourceAsStream(filename));
             Node fileNode = document.getFirstChild();
             file = new Files();
             file.setFileName(createFileName(fileNode));

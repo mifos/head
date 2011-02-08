@@ -20,17 +20,13 @@
 
 package org.mifos.framework.components.tabletag;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.mifos.core.MifosResourceUtil;
 import org.mifos.framework.exceptions.TableTagParseException;
-import org.springframework.core.io.ClassPathResource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -67,7 +63,7 @@ public class TableTagParser {
 
             DocumentBuilder builder = factory.newDocumentBuilder();
             builder.setErrorHandler(null);
-            Document document = builder.parse(MifosResourceUtil.getClassPathResource(filename));
+            Document document = builder.parse(MifosResourceUtil.getClassPathResourceAsStream(filename));
             /*
              * NodeList tableNodeList =
              * document.getElementsByTagName(TableTagConstants.TABLE); table =

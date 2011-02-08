@@ -20,10 +20,6 @@
 
 package org.mifos.config.business;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -35,10 +31,9 @@ import java.util.logging.Logger;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationConverter;
-import org.mifos.framework.exceptions.SystemException;
+import org.mifos.core.MifosResourceUtil;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.util.ConfigurationLocator;
-import org.mifos.service.test.TestMode;
-import org.springframework.core.io.ClassPathResource;
 
 /**
  * This is a quick initial sketch of a class for managing configuration values
@@ -91,66 +86,23 @@ public class MifosConfigurationManager implements Configuration {
         return configurationManagerInstance;
     }
 
-    private MifosConfigurationManager() {
-
-        String configFilePath = "org/mifos/config/resources/applicationConfiguration.default.properties";
-        ClassPathResource configfile = new ClassPathResource(configFilePath);
-        logger.info("Checking existance of: " + configFilePath);
-
-        Properties props = new Properties();
-        if (configfile.exists()) {
-            logger.info(configfile.getFilename() + " exists on classpath");
-            InputStream in = MifosConfigurationManager.class.getClassLoader().getResourceAsStream(configFilePath);
-            if (in == null) {
-                //File not found! (Manage the problem)
-            }
-            try {
-                props.load(in);
-                logger.info(props.toString());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        ConfigurationLocator configurationLocator = new ConfigurationLocator();
-//
-//        try {
-//            File defaults = configurationLocator.getFile(DEFAULT_CONFIG_PROPS_FILENAME);
-//            props.load(new BufferedInputStream(new FileInputStream(defaults)));
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-
-        // FIXME - see if we can remove use of standard testing service from here?
-//        TestMode currentTestMode = new StandardTestingService().getTestMode();
-        TestMode currentTestMode = TestMode.MAIN;
-        File customConfigFile = null;
-
-        try {
-            if (TestMode.MAIN == currentTestMode) {
-                customConfigFile = configurationLocator.getFile(CUSTOM_CONFIG_PROPS_FILENAME);
-                props.load(new BufferedInputStream(new FileInputStream(customConfigFile)));
-            } else if (TestMode.ACCEPTANCE == currentTestMode) {
-                customConfigFile = configurationLocator.getFile(ACCEPTANCE_CONFIG_PROPS_FILENAME);
-                props.load(new BufferedInputStream(new FileInputStream(customConfigFile)));
-            }
-        } catch (FileNotFoundException e) {
-            /*
-             * An FileNotFoundException will be thrown if a file is not found by
-             * getFile(); for normal runtime and acceptance testing modes, the
-             * custom config file is optional, hence, ignore the exception.
-             */
-        } catch (IOException e) {
-            /*
-             * An IOException is thrown by ClassPathResource if the file is not
-             * found. Integration tests require a (dummy) custom config file and
-             * we should fail if the file is missing.
-             */
-            throw new SystemException(e);
-        }
-
-        configuration = ConfigurationConverter.getConfiguration(props);
-    }
+	private MifosConfigurationManager() {
+		String defaultConfig = "org/mifos/config/resources/applicationConfiguration.default.properties";
+		Properties props = new Properties();
+		try {
+			InputStream applicationConfig = MifosResourceUtil.getClassPathResourceAsStream(defaultConfig);
+			ConfigurationLocator configurationLocator = new ConfigurationLocator();
+			InputStream customApplicationConfig = configurationLocator.getFileInputStream(CUSTOM_CONFIG_PROPS_FILENAME);
+			if(customApplicationConfig != null) {
+				applicationConfig = customApplicationConfig;
+			}
+			props.load(applicationConfig);
+			logger.info(props.toString());
+		} catch (IOException e) {
+			throw new MifosRuntimeException(e);
+		}
+		configuration = ConfigurationConverter.getConfiguration(props);
+	}
 
     public Configuration getConfiguration() {
         return configuration;
