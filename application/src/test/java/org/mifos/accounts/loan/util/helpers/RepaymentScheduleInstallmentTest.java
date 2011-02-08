@@ -1,17 +1,17 @@
 package org.mifos.accounts.loan.util.helpers;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-
-import java.math.BigDecimal;
-import java.util.Locale;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.util.helpers.Money;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import java.math.BigDecimal;
+import java.util.Locale;
+
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RepaymentScheduleInstallmentTest {
@@ -60,6 +60,21 @@ public class RepaymentScheduleInstallmentTest {
         assertThat(installment.getMiscFees(),is(asMoney("100")));
     }
 
+    @Test
+    public void shouldDetermineWhetherPrincipalIsZero() {
+        RepaymentScheduleInstallment installment;
+        installment = getRepaymentScheduleInstallment("25-Sep-2010", 1, "178.6", "20.4", "1", "300", "100");
+        assertThat(installment.isPrincipalZero(), is(false));
+
+        installment = getRepaymentScheduleInstallment("25-Sep-2010", 1, "0", "20.4", "1", "300", "100");
+        assertThat(installment.isPrincipalZero(), is(true));
+
+        installment.setPrincipal(null);
+        assertThat(installment.isPrincipalZero(), is(true));
+
+        installment.setPrincipal(Money.zero(rupee));
+        assertThat(installment.isPrincipalZero(), is(true));
+    }
 
     private RepaymentScheduleInstallment getRepaymentScheduleInstallment(String dueDate, int installment,
                                                                          String principal, String interest,

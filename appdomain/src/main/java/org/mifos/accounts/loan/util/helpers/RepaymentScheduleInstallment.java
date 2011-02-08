@@ -20,15 +20,15 @@
 
 package org.mifos.accounts.loan.util.helpers;
 
-import java.io.Serializable;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-
 import org.joda.time.LocalDate;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
+
+import java.io.Serializable;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class RepaymentScheduleInstallment implements Serializable {
 
@@ -220,5 +220,9 @@ public class RepaymentScheduleInstallment implements Serializable {
 
     public Money getFeesWithMiscFee() {
         return getFees().add(getMiscFees());
+    }
+
+    public boolean isPrincipalZero() {
+        return principal == null || principal.isZero();
     }
 }

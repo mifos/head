@@ -337,6 +337,37 @@ public class LoanBusinessServiceTest {
     }
 
     @Test
+    public void shouldGenerateInstallmentScheduleFromRepaymentScheduleUsingDailyInterestForNonZeroPrincipals() {
+        RepaymentScheduleInstallment installment1 =
+                getRepaymentScheduleInstallment("01-Sep-2010", 1, "0.0", "4.6", "1", "75", "0", "0");
+        RepaymentScheduleInstallment installment2 =
+                getRepaymentScheduleInstallment("08-Sep-2010", 2, "94.8", "4.2", "1", "100", "0", "0");
+        RepaymentScheduleInstallment installment3 =
+                getRepaymentScheduleInstallment("15-Sep-2010", 3, "95.3", "3.7", "1", "100", "0", "0");
+        RepaymentScheduleInstallment installment4 =
+                getRepaymentScheduleInstallment("15-Oct-2010", 4, "84.9", "14.1", "1", "100", "0", "0");
+        RepaymentScheduleInstallment installment5 =
+                getRepaymentScheduleInstallment("25-Oct-2010", 5, "94.9", "4.2", "1", "100", "0", "0");
+        RepaymentScheduleInstallment installment6 =
+                getRepaymentScheduleInstallment("01-Nov-2010", 6, "96.5", "2.5", "1", "100", "0", "0");
+        RepaymentScheduleInstallment installment7 =
+                getRepaymentScheduleInstallment("18-Nov-2010", 7, "439.2", "4.9", "1", "445.1", "0", "0");
+        List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3,
+                installment4, installment5, installment6, installment7);
+        Date disbursementDate = TestUtils.getDate(25, 8, 2010);
+        final Money loanAmount = new Money(rupee, "1000");
+        loanBusinessService.applyDailyInterestRates(new LoanScheduleGenerationDto(disbursementDate, loanAmount, 24d, installments));
+
+        assertInstallment(installment1, "0.0", "4.6");
+        assertInstallment(installment2, "94.7", "4.3");
+        assertInstallment(installment3, "95.2", "3.8");
+        assertInstallment(installment4, "84.4", "14.6");
+        assertInstallment(installment5, "94.7", "4.3");
+        assertInstallment(installment6, "96.4", "2.6");
+        assertInstallment(installment7, "465.2", "5.2");
+    }
+
+    @Test
     public void shouldMaintainInstallmentGapsPostDisbursal() {
         RepaymentScheduleInstallment installment1 =
                 getRepaymentScheduleInstallment("01-Sep-2010", 1, "94.4", "4.6", "1", "75", "0", "0");
