@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans xmlns="http://www.springframework.org/schema/security"
-  xmlns:beans="http://www.springframework.org/schema/beans"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://www.springframework.org/schema/beans
-           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-           http://www.springframework.org/schema/security
-           http://www.springframework.org/schema/security/spring-security-3.0.xsd">
-           
+    xmlns:beans="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/security
+    http://www.springframework.org/schema/security/spring-security-3.0.xsd">
+
     <beans:bean id="loginFormAuthentication" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
         <beans:property name="loginFormUrl" value="/login.ftl" />
     </beans:bean>
@@ -52,18 +52,18 @@
 
         <intercept-url pattern="/**" access="isFullyAuthenticated()" />
         <logout logout-success-url="/login.ftl?loggedout"/>
-      </http>
+    </http>
 
-      <authentication-manager alias="authenticationManager">
+    <authentication-manager alias="authenticationManager">
         <authentication-provider ref="mifosAuthenticationProvider"/>
     </authentication-manager>
 
-      <beans:bean id="mifosLegacyAuthenticationFilter" class="org.mifos.security.authentication.MifosLegacyUsernamePasswordAuthenticationFilter">
-          <beans:constructor-arg ref="loginServiceFacade" />
-          <beans:property name="authenticationManager" ref="authenticationManager" />
-          <beans:property name="authenticationSuccessHandler" ref="authenticationSuccessHandler" />
-          <beans:property name="authenticationFailureHandler" ref="authenticationFailureHandler" />
-      </beans:bean>
+    <beans:bean id="mifosLegacyAuthenticationFilter" class="org.mifos.security.authentication.MifosLegacyUsernamePasswordAuthenticationFilter">
+        <beans:constructor-arg ref="loginServiceFacade" />
+        <beans:property name="authenticationManager" ref="authenticationManager" />
+        <beans:property name="authenticationSuccessHandler" ref="authenticationSuccessHandler" />
+        <beans:property name="authenticationFailureHandler" ref="authenticationFailureHandler" />
+    </beans:bean>
 
     <beans:bean id="mifosAuthenticationProvider" class="org.mifos.security.authentication.MifosDaoAuthenticationProvider">
         <beans:property name="userDetailsService" ref="mifosAuthenticationAuthorizationService" />
