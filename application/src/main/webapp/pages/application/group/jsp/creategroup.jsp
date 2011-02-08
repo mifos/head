@@ -279,7 +279,7 @@ explanation of the license and how it is applied.
 										<c:if test="${CenterHierarchyExist == false}">
 											<tr class="fontnormal">
 												<td align="right" class="fontnormal">
-													<mifos:mifoslabel name="Group.loanofficer" mandatory="yes" bundle="GroupUIResources"></mifos:mifoslabel>
+													<mifos:mifoslabel name="Group.loanofficer" bundle="GroupUIResources"></mifos:mifoslabel>
 												</td>
 												<td>
 													<mifos:select name="groupCustActionForm" property="loanOfficerId" size="1" onchange="populateDefaultFormedBy(this)">
