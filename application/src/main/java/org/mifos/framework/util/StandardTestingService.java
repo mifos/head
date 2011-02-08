@@ -261,6 +261,11 @@ public class StandardTestingService implements TestingService {
     }
 
     @Override
+    public void setBackDatedTransactionsAllowed(boolean flag) {
+        MifosConfigurationManager.getInstance().setProperty("BackDatedTransactionsAllowed", flag);
+    }
+
+    @Override
     public void setClientNameSequence(String[] nameSequence) {
         ClientRules.setNameSequence(nameSequence);
     }

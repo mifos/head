@@ -80,6 +80,10 @@ public class CustomPropertiesHelper {
         selenium.open(UPDATE_PAGE + "?ClientRules.ClientCanExistOutsideGroup=" + flag);
     }
 
+    public void setBackDatedTransactionsAllowed(String flag){
+        selenium.open(UPDATE_PAGE + "?BackDatedTransactionsAllowed=" + flag);
+    }
+
     /**
      * Determines ordering of displayed client name.
      * @param sequence Name sequence, comma-separated values.

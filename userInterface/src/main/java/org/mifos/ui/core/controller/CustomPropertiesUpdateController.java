@@ -69,6 +69,8 @@ public class CustomPropertiesUpdateController extends AbstractController {
 
             handleClientCanExistOutsideGroup(request, model);
 
+            handleBackDatedTransactionsAllowed(request, model);
+
             model.put("request", request);
             Map<String, Object> status = new HashMap<String, Object>();
             status.put("errorMessages", errorMessages);
@@ -112,6 +114,15 @@ public class CustomPropertiesUpdateController extends AbstractController {
             boolean required=Boolean.valueOf(groupCanApplyLoans);
             testingService.setGroupCanApplyLoans(required);
             model.put("clientRulesResult", "groupCanApplyLoans: " + groupCanApplyLoans);
+        }
+    }
+
+    private void handleBackDatedTransactionsAllowed(HttpServletRequest request, Map<String, Object> model) {
+        String backDatedTransactionsAllowed = request.getParameter("BackDatedTransactionsAllowed");
+        if (StringUtils.isNotBlank(backDatedTransactionsAllowed)) {
+            boolean allowed=Boolean.valueOf(backDatedTransactionsAllowed);
+            testingService.setBackDatedTransactionsAllowed(allowed);
+            model.put("clientRulesResult", "backDatedTransactionsAllowed: " + backDatedTransactionsAllowed);
         }
     }
 

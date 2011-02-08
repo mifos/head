@@ -55,6 +55,7 @@ public interface TestingService {
     void setCenterHierarchyExists(boolean flag);
     void setGroupCanApplyLoans(boolean flag);
     void setClientCanExistOutsideGroup(boolean flag);
+    void setBackDatedTransactionsAllowed(boolean flag);
     void runIndividualBatchJob(String jobName, ServletContext servletContext) throws MifosException;
     void runAllBatchJobs(ServletContext servletContext);
     void setClientNameSequence(String[] nameSequence);

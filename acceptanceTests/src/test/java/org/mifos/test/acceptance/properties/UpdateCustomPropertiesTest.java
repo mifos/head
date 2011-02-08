@@ -93,6 +93,18 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    //http://mifosforge.jira.com/browse/MIFOSTEST-228
+    public void verifyPropertyBackDatedTransactionsAllowedFalse() throws Exception{
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
+        propertiesHelper.setBackDatedTransactionsAllowed("false");
+        //When
+        navigationHelper.navigateToLoanAccountPage("000100000000004").navigateToDisburseLoan().verifyDisbursalDateIsDisabled();
+        //Then
+        propertiesHelper.setBackDatedTransactionsAllowed("true");
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     //http://mifosforge.jira.com/browse/MIFOSTEST-235
     public void verifyPropertyClientRulesClientCanExistOutsideGroupFalse() throws Exception{
         //Given
