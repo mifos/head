@@ -17,24 +17,28 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-
 package org.mifos.test.acceptance.framework.savingsproduct;
 
 import org.mifos.test.acceptance.framework.MifosPage;
 
 import com.thoughtworks.selenium.Selenium;
 
-public class SavingsProductDetailsPage extends MifosPage {
+public class ViewSavingsProductsPage extends MifosPage {
 
-    public SavingsProductDetailsPage(Selenium selenium) {
+    public ViewSavingsProductsPage(Selenium selenium) {
         super(selenium);
-        waitForPageToLoad();
-        verifyPage("SavingsProductDetails");
     }
 
-    public EditSavingsProductPage editSavingsProduct() {
-        selenium.click("SavingsProductDetails.link.editSavingsProduct");
-        waitForPageToLoad();
-        return new EditSavingsProductPage(selenium);
+    public ViewSavingsProductsPage verifyPage() {
+        verifyPage("View_AllSavingsProduct");
+        return this;
     }
+
+    public SavingsProductDetailsPage viewSavingsProductDetails(String savingsProduct) {
+        selenium.click("link=" + savingsProduct + "*");
+        waitForPageToLoad();
+        return new SavingsProductDetailsPage(selenium);
+
+    }
+
 }

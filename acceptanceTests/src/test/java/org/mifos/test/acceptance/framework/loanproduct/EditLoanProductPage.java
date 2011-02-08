@@ -54,11 +54,64 @@ public class EditLoanProductPage extends MifosPage {
         return editSubmit();
     }
 
+    public EditLoanProductPreviewPage submitRequiredDescriptionAndInterestChanges(SubmitFormParameters parameters) {
+            selenium.type("EditLoanProduct.input.name", parameters.getOfferingName());
+            selenium.type("EditLoanProduct.input.shortName", parameters.getOfferingShortName());
+            selenium.type("EditLoanProduct.input.description", parameters.getDescription());
+            selenium.type("startDateDD", parameters.getStartDateDd());
+            selenium.type("startDateMM", parameters.getStartDateMm());
+            selenium.type("startDateYY", parameters.getStartDateYy());
+            selenium.type("EditLoanProduct.input.maxInterestRate", parameters.getMaxInterestRate());
+            selenium.type("EditLoanProduct.input.minInterestRate", parameters.getMinInterestRate() );
+            selenium.type("EditLoanProduct.input.defaultInterestRate", parameters.getDefaultInterestRate());
+
+            if(parameters.getProductCategory()==0) {
+                selenium.select("EditLoanProduct.input.category", "value=");
+            } else {
+                selenium.select("EditLoanProduct.input.category", "value="+parameters.getProductCategory());
+            }
+            if (parameters.getApplicableFor()==0) {
+                selenium.select("EditLoanProduct.input.applicableFor", "value=");
+            } else {
+                selenium.select("EditLoanProduct.input.applicableFor", "value=" + parameters.getApplicableFor());
+            }
+
+            if(parameters.getStatus()==0) {
+                selenium.select("EditLoanProduct.input.status","value=");
+            } else {
+                selenium.select("EditLoanProduct.input.status","value=" + parameters.getStatus());
+            }
+
+            if(parameters.getInterestTypes()==0) {
+                selenium.select("EditLoanProduct.input.interestTypes", "value=" );
+            } else {
+                selenium.select("EditLoanProduct.input.interestTypes", "value=" + parameters.getInterestTypes());
+            }
+        return editSubmit();
+    }
+
     public void verifyModifiedDescriptionAndInterest(SubmitFormParameters formParameters) {
         Assert.assertEquals(getDescription(), formParameters.getDescription());
         Assert.assertEquals(getMinInterestRate(), formParameters.getMinInterestRate());
         Assert.assertEquals(getMaxInterestRate(), formParameters.getMaxInterestRate());
         Assert.assertEquals(getDefaultInterestRate(), formParameters.getDefaultInterestRate());
+    }
+
+    public void verifyModifiedLoanProduct(SubmitFormParameters formParameters) {
+        Assert.assertEquals(getDescription(), formParameters.getDescription());
+        Assert.assertEquals(getMinInterestRate(), formParameters.getMinInterestRate());
+        Assert.assertEquals(getMaxInterestRate(), formParameters.getMaxInterestRate());
+        Assert.assertEquals(getDefaultInterestRate(), formParameters.getDefaultInterestRate());
+        Assert.assertEquals(selenium.getValue("EditLoanProduct.input.name"), formParameters.getOfferingName());
+        Assert.assertEquals(selenium.getValue("EditLoanProduct.input.shortName"), formParameters.getOfferingShortName());
+        Assert.assertEquals(selenium.getValue("startDateDD"), formParameters.getStartDateDd());
+        Assert.assertEquals(selenium.getValue("startDateMM"), formParameters.getStartDateMm());
+        Assert.assertEquals(selenium.getValue("startDateYY"), formParameters.getStartDateYy());
+
+        Assert.assertEquals(selenium.getSelectedValue("EditLoanProduct.input.applicableFor"), Integer.toString(formParameters.getApplicableFor()));
+        Assert.assertEquals(selenium.getSelectedValue("EditLoanProduct.input.status"), Integer.toString(formParameters.getStatus()));
+        Assert.assertEquals(selenium.getSelectedValue("EditLoanProduct.input.interestTypes"), Integer.toString(formParameters.getInterestTypes()));
+        Assert.assertEquals(selenium.getSelectedValue("EditLoanProduct.input.category"), Integer.toString(formParameters.getProductCategory()));
     }
 
     private String getDefaultInterestRate() {

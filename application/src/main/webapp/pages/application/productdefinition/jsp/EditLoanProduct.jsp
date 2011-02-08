@@ -136,7 +136,7 @@ explanation of the license and how it is applied.
 						<tr class="fontnormal">
 							<td align="right"><mifos:mifoslabel name="product.prodcat"
 								mandatory="yes" bundle="ProductDefUIResources" isColonRequired="yes"/></td>
-							<td valign="top"><mifos:select property="prdCategory">
+							<td valign="top"><mifos:select  styleId="EditLoanProduct.input.category" property="prdCategory">
 								<c:forEach
 									items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'LoanProductCategoryList')}"
 									var="category">
@@ -158,7 +158,7 @@ explanation of the license and how it is applied.
 							<td align="right"><mifos:mifoslabel mandatory="yes"
 								name="product.applfor" bundle="ProductDefUIResources" isColonRequired="yes"/></td>
 							<td valign="top"><mifos:select
-								property="prdApplicableMaster">
+								styleId="EditLoanProduct.input.applicableFor" property="prdApplicableMaster">
 								<c:forEach
 									items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'LoanApplForList')}"
 									var="prdAppl">
@@ -534,7 +534,7 @@ explanation of the license and how it is applied.
 							<td width="30%" align="right"><mifos:mifoslabel
 								mandatory="yes" name="product.chgStatus"
 								bundle="ProductDefUIResources" /> :</td>
-							<td width="70%"><mifos:select property="prdStatus">
+							<td width="70%"><mifos:select styleId="EditLoanProduct.input.status" property="prdStatus">
 								<c:forEach
 									items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'LoanPrdStatusList')}"
 									var="status">
@@ -564,7 +564,7 @@ explanation of the license and how it is applied.
 								bundle="ProductDefUIResources" /></fmt:param>
 								</fmt:message>:</td>
 							<td width="70%" valign="top"><mifos:select
-								property="interestTypes">
+								styleId="EditLoanProduct.input.interestTypes" property="interestTypes">
 								<c:forEach
 									items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'InterestTypesList')}"
 									var="intType">

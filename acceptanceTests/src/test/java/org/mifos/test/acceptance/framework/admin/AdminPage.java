@@ -43,6 +43,7 @@ import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionPage;
 import org.mifos.test.acceptance.framework.questionnaire.ViewAllQuestionGroupsPage;
 import org.mifos.test.acceptance.framework.questionnaire.ViewAllQuestionsPage;
 import org.mifos.test.acceptance.framework.savingsproduct.DefineNewSavingsProductPage;
+import org.mifos.test.acceptance.framework.savingsproduct.ViewSavingsProductsPage;
 import org.mifos.test.acceptance.framework.user.CreateUserParameters;
 import org.mifos.test.acceptance.util.StringUtil;
 import org.testng.Assert;
@@ -214,6 +215,12 @@ public class AdminPage extends MifosPage {
         selenium.click("admin.link.viewLoanProducts");
         waitForPageToLoad();
         return new ViewLoanProductsPage(selenium);
+    }
+
+    public ViewSavingsProductsPage navigateToViewSavingsProducts() {
+        selenium.click("admin.link.viewSavingsProducts");
+        waitForPageToLoad();
+        return new ViewSavingsProductsPage(selenium);
     }
 
     public ViewAdditionalFieldCategoriesPage navigateToViewAdditionalFields() {
