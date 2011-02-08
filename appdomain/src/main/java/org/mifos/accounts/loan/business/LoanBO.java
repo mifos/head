@@ -922,11 +922,19 @@ public class LoanBO extends AccountBO {
                 throw new AccountException(AccountExceptionConstants.CANT_APPLY_FEE_EXCEPTION);
             }
 
-            totalFeeAmount = updateAccountActionDateEntity(installmentIds, feeId);
-            updateAccountFeesEntity(feeId);
+            if (fee.isTimeOfDisbursement()) {
+                AccountFeesEntity accountFee = getAccountFees(feeId);
+                totalFeeAmount = accountFee.getAccountFeeAmount();
+                removeAccountFee(accountFee);
+                this.delete(accountFee);
+            } else {
+                totalFeeAmount = updateAccountActionDateEntity(installmentIds, feeId);
+                updateAccountFeesEntity(feeId);
+            }
+
             updateTotalFeeAmount(totalFeeAmount);
-            FeeBO feesBO = getAccountFeesObject(feeId);
-            String description = feesBO.getFeeName() + " " + AccountConstants.FEES_REMOVED;
+
+            String description = fee.getFeeName() + " " + AccountConstants.FEES_REMOVED;
             updateAccountActivity(null, null, totalFeeAmount, null, personnelId, description);
 
             if (!havePaymentsBeenMade()) {
