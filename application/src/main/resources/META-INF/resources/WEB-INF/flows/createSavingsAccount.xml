@@ -59,17 +59,7 @@
     </decision-state>
 
     <view-state id="answerQuestionGroupStep" view="createSavingsAccountQuestionnaire" model="savingsAccountFormBean">
-        <transition on="questionsAnswered" to="previewStep">
-            <!--
-            <evaluate expression="createSavingsAccountController.validateQuestionGroups(savingsAccountFormBean)"/>
-            <evaluate expression="questionnaireServiceFacade.validateResponses(savingsAccountFormBean.questionGroups)"/>
-            -->
-        </transition>
-<!--
-        <evaluate expression="questionGroupController.saveQuestionnaire(savingsAccountFormBean.questionGroupDetails, 0, flowRequestContext)"/>
-        <transition on="success" to="previewStep"/>
-        <transition on="failure" to="answerQuestionGroupStep"/>
--->
+        <transition on="questionsAnswered" to="previewStep" />
     </view-state>
     
     <end-state id="complete" view="createSavingsAccountComplete" />
