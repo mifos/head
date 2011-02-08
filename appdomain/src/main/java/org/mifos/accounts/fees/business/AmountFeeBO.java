@@ -132,8 +132,15 @@ public class AmountFeeBO extends FeeBO {
 
     @Override
     public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof AmountFeeBO)) {
+            return false;
+        }
+
         AmountFeeBO rhs = (AmountFeeBO) obj;
-        return super.equals(obj) && new EqualsBuilder().append(this.feeAmount, rhs.feeAmount).isEquals();
+        return super.equals(obj) && new EqualsBuilder().append(this.getFeeAmount(), rhs.getFeeAmount()).isEquals();
     }
 
     @Override
