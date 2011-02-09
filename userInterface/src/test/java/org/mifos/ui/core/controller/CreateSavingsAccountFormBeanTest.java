@@ -20,8 +20,12 @@
 
 package org.mifos.ui.core.controller;
 
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -33,7 +37,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mifos.dto.domain.SavingsProductDto;
 import org.mifos.dto.screen.SavingsProductReferenceDto;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
+import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.validation.MifosBeanValidator;
+import org.mifos.platform.validations.ValidationException;
 import org.mifos.ui.validation.StubValidationContext;
 import org.springframework.binding.message.Message;
 import org.springframework.binding.message.MessageContext;
@@ -50,6 +57,10 @@ public class CreateSavingsAccountFormBeanTest {
 
     private LocalValidatorFactoryBean targetValidator;
 
+    private QuestionnaireServiceFacade questionnaireServiceFacade;
+
+    private ValidationException validationException;
+    
     @Before
     public void setUp() {
         validator = new MifosBeanValidator();
@@ -60,7 +71,13 @@ public class CreateSavingsAccountFormBeanTest {
         formBean = new CreateSavingsAccountFormBean();
         formBean.setValidator(validator);
 
+        questionnaireServiceFacade = mock(QuestionnaireServiceFacade.class);
+        formBean.setQuestionnaireServiceFascade(questionnaireServiceFacade);
+
         validationContext = new StubValidationContext();
+        
+        validationException = new ValidationException("Root");
+        validationException.addChildException(new ValidationException("Child"));
     }
 
     @Test
@@ -165,8 +182,35 @@ public class CreateSavingsAccountFormBeanTest {
 
     @Test
     public void validateEnterAccountDetailsStep_VoluntaryDeposit_InvalidAmountShouldFail() {
-        validateEnterAccountDetailsStep_VoluntaryDeposit("xyz.efg", Pattern.class,
-                false);
+        validateEnterAccountDetailsStep_VoluntaryDeposit("xyz.efg",
+                Pattern.class, false);
+    }
+
+    @Test
+    public void validateAnswerQuestionGroupStep_EmptyQuestionGroupShouldPass() {
+        List<QuestionGroupDetail> questionGroups = new ArrayList<QuestionGroupDetail>();
+        formBean.setQuestionGroups(questionGroups);
+        formBean.validateAnswerQuestionGroupStep(validationContext);
+
+        MessageContext messageContext = validationContext.getMessageContext();
+        Message[] messages = messageContext.getAllMessages();
+        Assert.assertEquals(0, messages.length);
+    }
+
+    @Test
+    public void validateAnswerQuestionGroupStep_MissingMandatoryResponseShouldFail() {
+
+        List<QuestionGroupDetail> questionGroups = new ArrayList<QuestionGroupDetail>();
+        formBean.setQuestionGroups(questionGroups);
+        
+        doThrow(validationException).when(questionnaireServiceFacade).validateResponses(
+                formBean.getQuestionGroups());
+
+        formBean.validateAnswerQuestionGroupStep(validationContext);
+
+        MessageContext messageContext = validationContext.getMessageContext();
+        Message[] messages = messageContext.getAllMessages();
+        Assert.assertEquals(1, messages.length);
     }
 
     private void validateEnterAccountDetailsStep_MandatoryDeposit(

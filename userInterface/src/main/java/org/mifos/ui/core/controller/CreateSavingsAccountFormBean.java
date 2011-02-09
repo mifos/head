@@ -91,6 +91,10 @@ public class CreateSavingsAccountFormBean implements Serializable {
         this.validator = validator;
     }
 
+    public void setQuestionnaireServiceFascade(QuestionnaireServiceFacade questionnaireServiceFacade) {
+        this.questionnaireServiceFacade = questionnaireServiceFacade;
+    }
+    
     public void setCustomer(CustomerDto customer) {
         this.customer = customer;
     }
