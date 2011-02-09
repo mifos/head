@@ -10,7 +10,6 @@ form.two-columns label {
 
 /* CSS for widget */
 .questionnaire-widget .question {
-    border-width: 1px;
 }
 
 .questionnaire-widget .odd {
@@ -28,13 +27,13 @@ form.two-columns label {
 }
 
 div.question {
-    text-align: right;
     float: left;
     width: 25em;
 }
 
 div.question > label {
-    text-align: left;
+    float: right;
+	text-align: inherit;
 }
 
 .answer {
