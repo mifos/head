@@ -80,13 +80,23 @@ public class PersonnelTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
+    //http://mifosforge.jira.com/browse/MIFOSTEST-296
     @Test(enabled=true, groups = {"smoke"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createUserTest() throws Exception {
+        //Given
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
 
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
-        userHelper.createUser(adminPage.getAdminUserParameters(), "MyOffice1233171674227");
+        CreateUserParameters formParameters = adminPage.getAdminUserParameters();
+        //When
+        userHelper.createUser(formParameters, "MyOffice1233171674227");
+        LoginPage loginPage = new AppLauncher(selenium).launchMifos();
+        loginPage.verifyPage();
+        //Then
+        HomePage homePage = loginPage.loginSuccessfulAsWithChnagePasw(formParameters.getUserName(), formParameters.getPassword());
+        homePage.verifyPage();
+
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
