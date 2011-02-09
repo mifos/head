@@ -237,7 +237,7 @@ public class LoanBusinessService implements BusinessService {
             Money miscPenality = installment.getMiscPenalty();
             Money total = installment.getTotalValue();
             Money principal = total.subtract(interest.add(fees).add(miscFee).add(miscPenality));
-            if (!installment.isPrincipalZero()) installment.setPrincipalAndInterest(interest, principal);
+            installment.setPrincipalAndInterest(interest, principal);
             initialDueDate = currentDueDate;
             principalOutstanding = principalOutstanding.subtract(principal);
             runningPrincipal = runningPrincipal.add(principal);
