@@ -96,8 +96,13 @@ Renders a cancel button.
     <input type="submit" class="cancel" value="[@spring.message buttonLabel /]" name="${name}" />
 [/#macro]
 
+[#-- TODO add documentation. --]
+[#macro checkboxes path options attributes=""]
+    [@checkboxesWithTags path options '' attributes /]
+[/#macro]
+
 [#-- TODO add documentation. copied from macros.ftl --]
-[#macro checkboxesWithTags path options separator attributes=""]
+[#macro checkboxesWithTags path options separator="" attributes=""]
     [@spring.bind path /]
     [#list options as option]
         [#if option.tags?exists && option.tags?size > 0]
@@ -123,6 +128,6 @@ Renders a cancel button.
     [#list options as value]
     [#assign id="${spring.status.expression}${value_index}"]
     <input type="radio" id="${id}" name="${spring.status.expression}" value="${value?html}"[#if spring.stringStatusValue == value] checked="checked"[/#if] ${attributes}[@spring.closeTag/]
-    <label for="${id}" style="float:none;">${value?html}</label>${separator}
+    <label for="${id}">${value?html}</label>${separator}
     [/#list]
 [/#macro]
