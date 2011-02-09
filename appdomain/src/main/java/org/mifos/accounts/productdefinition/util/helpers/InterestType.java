@@ -20,6 +20,8 @@
 
 package org.mifos.accounts.productdefinition.util.helpers;
 
+import org.mifos.core.MifosRuntimeException;
+
 public enum InterestType {
 
     FLAT((short) 1), DECLINING((short) 2), COMPOUND((short) 3), DECLINING_EPI((short) 4)/* Equal Principal Installments*/
@@ -32,6 +34,14 @@ public enum InterestType {
         this.value = value;
     }
 
+    public static boolean isDecliningInterestType(int interestTypeNum) {
+        return fromInt(interestTypeNum).equals(DECLINING);
+    }
+
+    public static boolean isDecliningInterestPrincipalBalanceType(int interestTypeNum) {
+        return fromInt(interestTypeNum).equals(DECLINING_PB);
+    }
+
     public Short getValue() {
         return value;
     }
@@ -42,7 +52,10 @@ public enum InterestType {
                 return candidate;
             }
         }
-        throw new RuntimeException("interest type " + value + " not recognized");
+        throw new MifosRuntimeException("interest type " + value + " not recognized");
     }
 
+    public String getValueAsString() {
+        return value.toString();
+    }
 }

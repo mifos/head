@@ -314,7 +314,8 @@ public interface ProductDefinitionConstants {
     String INDEBTEDNESS_RATIO_INVALID = "errors.indebtednessRatioInvalid";
     String REPAYMENT_CAPACITY_INVALID_FORMAT = "errors.repaymentCapacityInvalidFormat";
     String REPAYMENT_CAPACITY_INVALID = "errors.repaymentCapacityInvalid";
-    String INVALID_INTEREST_TYPE = "errors.interestTypeInvalidForVariableInstallment";
+    String INVALID_INTEREST_TYPE_FOR_VARIABLE_INSTALLMENT = "errors.interestTypeInvalidForVariableInstallment";
     String PERIODIC_FEE_NOT_APPLICABLE = "errors.periodicFeeNotApplicableForVariableInstallment";
     String FEE_WITH_PERCENT_INTEREST_NOT_APPLICABLE = "errors.feeCaliculatedAsPercentOfInterestCannotBeAppliedToVariableInstallmentLoan";
+    String INVALID_INTEREST_TYPE_FOR_GRACE_PERIODS = "errors.interestTypeInvalidForGracePeriods";
 }
