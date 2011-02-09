@@ -20,6 +20,10 @@
 
 package org.mifos.application.meeting.business;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -35,16 +39,10 @@ import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.dto.domain.MeetingDetailsDto;
 import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.domain.MeetingTypeDto;
-import org.mifos.dto.domain.MeetingUpdateRequest;
 import org.mifos.framework.business.AbstractBusinessObject;
-import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.schedule.ScheduledEvent;
 import org.mifos.schedule.ScheduledEventFactory;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 
 /**
  * A better name for MeetingBO would be along the lines of "ScheduledEvent". To
@@ -477,34 +475,6 @@ public class MeetingBO extends AbstractBusinessObject {
         }
 
         return isDifferent;
-    }
-
-    public static MeetingBO fromDto(MeetingUpdateRequest meetingDto) throws MeetingException {
-        MeetingBO meeting = null;
-        Date startDate = new DateTimeService().getCurrentJavaDateTime();
-
-        RecurrenceType recurringType = RecurrenceType.fromInt(meetingDto.getRecurrenceType());
-        switch (recurringType) {
-        case WEEKLY:
-            meeting = new MeetingBO(meetingDto.getWeekDay(), meetingDto.getRecursEvery(), startDate,
-                    MeetingType.CUSTOMER_MEETING, meetingDto.getMeetingPlace());
-            break;
-        case MONTHLY:
-            if (meetingDto.getDayOfMonth() != null) {
-                meeting = new MeetingBO(meetingDto.getDayOfMonth(), meetingDto.getRecursEvery(), startDate,
-                        MeetingType.CUSTOMER_MEETING, meetingDto.getMeetingPlace());
-            } else {
-
-                RankOfDay rank = RankOfDay.getRankOfDay(meetingDto.getRankOfDay());
-                WeekDay weekDay = WeekDay.getWeekDay(meetingDto.getMonthWeek());
-                meeting = new MeetingBO(weekDay, rank, meetingDto.getRecursEvery(), startDate, MeetingType.CUSTOMER_MEETING, meetingDto.getMeetingPlace());
-            }
-            break;
-        default:
-            break;
-        }
-
-        return meeting;
     }
 
     public MeetingDto toDto() {

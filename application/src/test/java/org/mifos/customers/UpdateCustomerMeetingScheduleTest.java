@@ -45,7 +45,6 @@ import org.mifos.customers.business.service.CustomerAccountFactory;
 import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.business.service.CustomerServiceImpl;
 import org.mifos.customers.center.business.CenterBO;
-import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
@@ -54,13 +53,12 @@ import org.mifos.domain.builders.CalendarEventBuilder;
 import org.mifos.domain.builders.CenterBuilder;
 import org.mifos.domain.builders.CustomerAccountBuilder;
 import org.mifos.domain.builders.MeetingBuilder;
-import org.mifos.domain.builders.MeetingUpdateRequestBuilder;
-import org.mifos.dto.domain.MeetingUpdateRequest;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+import org.mifos.service.BusinessRuleException;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -117,39 +115,36 @@ public class UpdateCustomerMeetingScheduleTest {
         ((CustomerServiceImpl)customerService).setCustomerAccountFactory(customerAccountFactory);
     }
 
-    @Test(expected = CustomerException.class)
+    @Test(expected = BusinessRuleException.class)
     public void throwsCheckedExceptionWhenCustomerIsNotTopOfCustomerHierarchy() throws Exception {
 
         // setup
-        Integer customerId = Integer.valueOf(1);
-        MeetingUpdateRequest meetingUpdateRequest = new MeetingUpdateRequestBuilder().withCustomerId(customerId).build();
-        UserContext userContext = TestUtils.makeUser();
+        MeetingBO newMeeting = new MeetingBuilder().build();
 
         // stubbing
-        when(customerDao.findCustomerById(customerId)).thenReturn(mockedCenter);
-        doThrow(new CustomerException(CustomerConstants.INVALID_MEETING)).when(mockedCenter).validateIsTopOfHierarchy();
+        doThrow(new BusinessRuleException(CustomerConstants.INVALID_MEETING)).when(mockedCenter).validateIsTopOfHierarchy();
 
         // exercise test
-        customerService.updateCustomerMeetingSchedule(meetingUpdateRequest, userContext);
+        customerService.updateCustomerMeetingSchedule(newMeeting, mockedCenter);
 
         // verification
         verify(mockedCenter).validateIsTopOfHierarchy();
     }
 
-    @Test(expected = CustomerException.class)
+    @Test(expected = BusinessRuleException.class)
     public void throwsCheckedExceptionWhenUserDoesNotHavePermissionToEditMeetingSchedule() throws Exception {
 
         // setup
-        Integer customerId = Integer.valueOf(1);
-        MeetingUpdateRequest meetingUpdateRequest = new MeetingUpdateRequestBuilder().withCustomerId(customerId).build();
         UserContext userContext = TestUtils.makeUser();
+        MeetingBO newMeeting = new MeetingBuilder().build();
+        newMeeting.updateDetails(userContext);
 
         // stubbing
-        when(customerDao.findCustomerById(customerId)).thenReturn(mockedCenter);
-        doThrow(new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED)).when(customerDao).checkPermissionForEditMeetingSchedule(userContext, mockedCenter);
+        when(mockedCenter.getUserContext()).thenReturn(TestUtils.makeUser());
+        doThrow(new BusinessRuleException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED)).when(customerDao).checkPermissionForEditMeetingSchedule(userContext, mockedCenter);
 
         // exercise test
-        customerService.updateCustomerMeetingSchedule(meetingUpdateRequest, userContext);
+        customerService.updateCustomerMeetingSchedule(newMeeting, mockedCenter);
 
         // verification
         verify(customerDao).checkPermissionForEditMeetingSchedule(userContext, mockedCenter);
@@ -160,23 +155,18 @@ public class UpdateCustomerMeetingScheduleTest {
 
         // setup
         UserContext userContext = TestUtils.makeUser();
-        MeetingBO weeklyMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).occuringOnA(WeekDay.MONDAY).build();
+        MeetingBO weeklyMondayMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).occuringOnA(WeekDay.MONDAY).build();
+        weeklyMondayMeeting.updateDetails(userContext);
 
         CustomerAccountBuilder accountBuilder = new CustomerAccountBuilder();
-        CenterBO center = new CenterBuilder().active().with(weeklyMeeting).withAccount(accountBuilder).build();
-
-        Integer customerId = Integer.valueOf(1);
-        MeetingUpdateRequest meetingUpdateRequest = new MeetingUpdateRequestBuilder().withCustomerId(customerId).with(WeekDay.MONDAY).build();
-
-        // stubbing
-        when(customerDao.findCustomerById(customerId)).thenReturn(center);
+        CenterBO center = new CenterBuilder().active().with(weeklyMondayMeeting).withAccount(accountBuilder).build();
 
         // pre - verification
         assertThatAllCustomerSchedulesOccuringBeforeOrOnCurrentInstallmentPeriodRemainUnchanged(center, WeekDay.MONDAY);
         assertThatAllCustomerSchedulesOccuringAfterCurrentInstallmentPeriodFallOnDayOfWeek(center, WeekDay.MONDAY);
 
         // exercise test
-        customerService.updateCustomerMeetingSchedule(meetingUpdateRequest, userContext);
+        customerService.updateCustomerMeetingSchedule(weeklyMondayMeeting, mockedCenter);
 
         // verification
         assertThatAllCustomerSchedulesOccuringBeforeOrOnCurrentInstallmentPeriodRemainUnchanged(center, WeekDay.MONDAY);
@@ -190,22 +180,22 @@ public class UpdateCustomerMeetingScheduleTest {
         UserContext userContext = TestUtils.makeUser();
         DateTime mondayTwoWeeksAgo = new DateTime().withDayOfWeek(DayOfWeek.monday()).minusWeeks(2);
         MeetingBO weeklyMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).withStartDate(mondayTwoWeeksAgo).build();
+        weeklyMeeting.updateDetails(userContext);
 
         CustomerAccountBuilder accountBuilder = new CustomerAccountBuilder();
         CenterBO center = new CenterBuilder().active().with(weeklyMeeting).withAccount(accountBuilder).build();
 
-        Integer customerId = Integer.valueOf(1);
-        MeetingUpdateRequest meetingUpdateRequest = new MeetingUpdateRequestBuilder().withCustomerId(customerId).with(WeekDay.WEDNESDAY).build();
+        MeetingBO weeklyWednesdayMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).occuringOnA(WeekDay.WEDNESDAY).build();
+        weeklyWednesdayMeeting.updateDetails(userContext);
 
         // stubbing
-        when(customerDao.findCustomerById(customerId)).thenReturn(center);
         when(holidayDao.findCalendarEventsForThisYearAndNext(anyShort())).thenReturn(new CalendarEventBuilder().build());
 
         // pre - verification
         assertThatAllCustomerSchedulesOccuringAfterCurrentInstallmentPeriodFallOnDayOfWeek(center, WeekDay.MONDAY);
 
         // exercise test
-        customerService.updateCustomerMeetingSchedule(meetingUpdateRequest, userContext);
+        customerService.updateCustomerMeetingSchedule(weeklyWednesdayMeeting, center);
 
         // verification
         assertThatAllCustomerSchedulesOccuringBeforeOrOnCurrentInstallmentPeriodRemainUnchanged(center, WeekDay.MONDAY);
@@ -217,20 +207,19 @@ public class UpdateCustomerMeetingScheduleTest {
 
         // setup
         UserContext userContext = TestUtils.makeUser();
-        Integer customerId = Integer.valueOf(1);
         CustomerAccountBuilder accountBuilder = new CustomerAccountBuilder();
 
         CenterBO center = new CenterBuilder().active().withAccount(accountBuilder).build();
         center.setCustomerMeeting(null);
 
-        MeetingUpdateRequest meetingUpdateRequest = new MeetingUpdateRequestBuilder().withCustomerId(customerId).with(WeekDay.WEDNESDAY).build();
+        MeetingBO weeklyWednesdayMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).occuringOnA(WeekDay.WEDNESDAY).build();
+        weeklyWednesdayMeeting.updateDetails(userContext);
 
         // stubbing
-        when(customerDao.findCustomerById(customerId)).thenReturn(center);
         when(holidayDao.findCalendarEventsForThisYearAndNext(anyShort())).thenReturn(new CalendarEventBuilder().build());
 
         // exercise test
-        customerService.updateCustomerMeetingSchedule(meetingUpdateRequest, userContext);
+        customerService.updateCustomerMeetingSchedule(weeklyWednesdayMeeting, center);
 
         // verification
         assertThat(center.getCustomerMeeting(), is(notNullValue()));
