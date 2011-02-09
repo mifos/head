@@ -116,9 +116,9 @@ A widget to render the UI for collecting questionnaire responses.
                 </fieldset>
                 [/#list]
             [/#list]            
-            <div class="row webflow-controls">
-                [@form.submitButton "createSavingsAccount.enterAccountInfo.continueButton" "questionsAnswered" /]
-                [@form.cancelButton "createSavingsAccount.enterAccountInfo.cancelButton" "cancel" /]
+            <div class="row">
+                [@form.submitButton "questionnaire.continue" "questionsAnswered" /]
+                [@form.cancelButton "questionnaire.cancel" "cancel" /]
             </div>
         </form>
     </div>
