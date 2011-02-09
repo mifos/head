@@ -4,6 +4,10 @@ form.two-columns fieldset {
     padding: 0em;
 }
 
+form.two-columns label {
+    width: auto;
+}
+
 /* CSS for widget */
 .questionnaire-widget .question {
     border-width: 1px;
@@ -11,14 +15,26 @@ form.two-columns fieldset {
 
 .questionnaire-widget .odd {
     background-color: #F2F2F2;
+    padding: 10px;
 }
 
 .questionnaire-widget .even {
-    background-color: #FF0000;
+    background-color: #FFFFFF;
+    padding: 10px;
 }
 
 .question {
     float: left;
+}
+
+div.question {
+    text-align: right;
+    float: left;
+    width: 25em;
+}
+
+div.question > label {
+    text-align: left;
 }
 
 .answer {
@@ -26,9 +42,15 @@ form.two-columns fieldset {
 }
 
 div.answer > label {
-    color: orange;
     width: auto;
     text-align: left;
     float: none;
     display: inline;
 }
+
+/*
+label.question > .text-wrap {
+    text-align: left;
+    float: left;
+}
+*/

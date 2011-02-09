@@ -59,11 +59,13 @@ A widget to render the UI for collecting questionnaire responses.
                         [#list sectionDetail.questions as question]
                         <!-- question -->
                         <div class='row ${((question_index % 2) == 0)?string("even", "odd")}'>
-                            <label class="question" for="questionGroups[${questionGroup_index}].sectionDetails[${sectionDetail_index}].questions[${question_index}].value">
-                                [#if question.mandatory]<span class="red">*</span>[/#if]
-                                ${question.text}
-                                [#if question.questionType=="DATE"](dd/mm/yyyy)&nbsp[/#if]:
-                            </label>
+							<div class="question">
+								<label class="question" for="questionGroups[${questionGroup_index}].sectionDetails[${sectionDetail_index}].questions[${question_index}].value">
+									[#if question.mandatory]<span class="red">*</span>[/#if]
+									${question.text}
+									[#if question.questionType=="DATE"](dd/mm/yyyy)&nbsp[/#if]:
+								</label>
+							</div>
                             <div class="answer">
                             
                                 [#switch question.questionType]
@@ -115,12 +117,14 @@ A widget to render the UI for collecting questionnaire responses.
                                      Unknown question type ${question.questionType}
                                 [/#switch]
                             </div><!-- answer -->
-                        </div><!-- row -->
                 	    <div class="clear">&nbsp;</div><!-- clear -->
-                        [/#list]
+                        </div><!-- row -->
+                        [/#list][#-- questions --]
                 </fieldset>
-                [/#list]
-            [/#list]            
+                <br/>
+                [/#list][#-- sections --]
+            [/#list][#-- groups --]
+            
             <div class="row">
                 [@form.submitButton "questionnaire.continue" "questionsAnswered" /]
                 [@form.cancelButton "questionnaire.cancel" "cancel" /]
