@@ -54,7 +54,7 @@ explanation of the license and how it is applied.
 								<td width="62%" class="headingorange">
 									<c:out value="${BusinessKey.savingsOffering.prdOfferingName}" />
 									#
-									<c:out value="${BusinessKey.globalAccountNum}" />
+									<span id="savingsaccountdetail.text.savingsId"><c:out value="${BusinessKey.globalAccountNum}" /></span>
 									<br>
 								</td>
 								<td width="38%" rowspan="2" align="right" valign="top" class="fontnormal">

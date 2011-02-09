@@ -31,13 +31,14 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
-
 import org.junit.Assert;
 import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
+import org.mifos.test.acceptance.framework.account.AccountStatus;
+import org.mifos.test.acceptance.framework.account.EditAccountStatusParameters;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.center.MeetingParameters;
 import org.mifos.test.acceptance.framework.client.ClientEditMFIPage;
@@ -54,14 +55,12 @@ import org.mifos.test.acceptance.framework.client.CreateClientEnterPersonalDataP
 import org.mifos.test.acceptance.framework.client.CreateClientPreviewDataPage;
 import org.mifos.test.acceptance.framework.client.QuestionGroup;
 import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPage;
-
 import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPreviewPage;
 import org.mifos.test.acceptance.framework.group.CreateGroupEntryPage.CreateGroupSubmitParameters;
 import org.mifos.test.acceptance.framework.group.EditCustomerStatusParameters;
 import org.mifos.test.acceptance.framework.group.GroupCloseReason;
 import org.mifos.test.acceptance.framework.group.GroupStatus;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
-
 import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionGroupPage;
 import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionGroupParameters;
 import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionPage;
@@ -69,18 +68,18 @@ import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionParameter
 import org.mifos.test.acceptance.framework.questionnaire.EditQuestionPage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionDetailPage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionGroupResponsePage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionnairePage;
 import org.mifos.test.acceptance.framework.questionnaire.ViewAllQuestionsPage;
-import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
-
+import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSearchParameters;
+import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSubmitParameters;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
 import org.mifos.test.acceptance.framework.testhelpers.ClientTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.CustomPropertiesHelper;
 import org.mifos.test.acceptance.framework.testhelpers.GroupTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
-
 import org.mifos.test.acceptance.framework.testhelpers.QuestionGroupTestHelper;
-
+import org.mifos.test.acceptance.framework.testhelpers.SavingsAccountHelper;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
 import org.mifos.test.acceptance.util.StringUtil;
@@ -92,7 +91,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(sequential = true, groups = {"client", "acceptance", "ui", "smoke"})
+@SuppressWarnings("PMD.TooManyFields")
+//@Test(sequential = true, groups = {"client", "acceptance", "ui", "smoke"})
 public class ClientTest extends UiTestCaseBase {
 
     private NavigationHelper navigationHelper;
@@ -100,6 +100,7 @@ public class ClientTest extends UiTestCaseBase {
     private ClientTestHelper clientTestHelper;
     private QuestionGroupTestHelper questionGroupTestHelper;
     private GroupTestHelper groupTestHelper;
+    private SavingsAccountHelper savingsAccountHelper;
 
     @Autowired
     private ApplicationDatabaseOperation applicationDatabaseOperation;
@@ -132,6 +133,7 @@ public class ClientTest extends UiTestCaseBase {
         clientTestHelper = new ClientTestHelper(selenium);
         questionGroupTestHelper = new QuestionGroupTestHelper(selenium);
         groupTestHelper = new GroupTestHelper(selenium);
+        savingsAccountHelper = new SavingsAccountHelper(selenium);
     }
 
     @AfterMethod(alwaysRun = true)
@@ -650,11 +652,58 @@ public class ClientTest extends UiTestCaseBase {
     // http://mifosforge.jira.com/browse/MIFOSTEST-48
     public void removeClientWithLoanFromGroup() throws Exception {
         //Given
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_015_dbunit.xml", dataSource, selenium);
         String clientName = "Stu1232993852651 Client1232993852651";
+        String groupName = navigationHelper.navigateToClientViewDetailsPage(clientName).getGroupMembership();
+        CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
+        searchParameters.setSearchString(groupName);
+        searchParameters.setSavingsProduct("MandGroupSavingsPerIndiv1MoPost");
+
+        CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
+        submitAccountParameters.setAmount("250.0");
+
+        String savingsId = savingsAccountHelper.createSavingsAccountWithQG(searchParameters, submitAccountParameters).getAccountId();
+        EditAccountStatusParameters editAccountStatusParameters =new EditAccountStatusParameters();
+        editAccountStatusParameters.setAccountStatus(AccountStatus.SAVINGS_ACTIVE);
+        editAccountStatusParameters.setNote("change status to active");
+        savingsAccountHelper.changeStatus(savingsId, editAccountStatusParameters);
+
 
         //When / Then
         clientTestHelper.deleteClientGroupMembership(clientName, "remove group membership");
+    }
+
+    @Test(sequential = true, groups = {"client", "acceptance", "ui", "smoke"})
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // http://mifosforge.jira.com/browse/MIFOSTEST-52
+    public void removeClientWithSavingsFromGroupWithSavingsCheckGroupCalculation() throws Exception {
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_015_dbunit.xml", dataSource, selenium);
+        String clientName = "Stu1232993852651 Client1232993852651";
+        String groupName = navigationHelper.navigateToClientViewDetailsPage(clientName).getGroupMembership();
+        CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
+        CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
+        submitAccountParameters.setAmount("240.0");
+        EditAccountStatusParameters editAccountStatusParameters =new EditAccountStatusParameters();
+        editAccountStatusParameters.setAccountStatus(AccountStatus.SAVINGS_ACTIVE);
+        editAccountStatusParameters.setNote("change status to active");
+
+        //When
+        searchParameters.setSearchString(clientName);
+        searchParameters.setSavingsProduct("MandClientSavings3MoPostMinBal");
+        String savingsId = savingsAccountHelper.createSavingsAccountWithQG(searchParameters, submitAccountParameters).getAccountId();
+        savingsAccountHelper.changeStatus(savingsId, editAccountStatusParameters);
+
+        searchParameters.setSearchString(groupName);
+        searchParameters.setSavingsProduct("MandGroupSavingsPerIndiv1MoPost");
+        savingsId = savingsAccountHelper.createSavingsAccountWithQG(searchParameters, submitAccountParameters).getAccountId();
+        savingsAccountHelper.changeStatus(savingsId, editAccountStatusParameters);
+
+        clientTestHelper.deleteClientGroupMembership(clientName, "remove group membership");
+        Integer numberOfGroupMembers = Integer.parseInt(navigationHelper.navigateToGroupViewDetailsPage(groupName).getNumberOfClientsInGroup());
+
+        //Then
+        savingsAccountHelper.verifyTotalAmountDue(savingsId, numberOfGroupMembers, Float.parseFloat(submitAccountParameters.getAmount()));
     }
 
     private QuestionnairePage checkMandatoryQuestionValidation(String questionGroupTitle, String question1, String question2, ClientViewDetailsPage viewDetailsPage) {

@@ -23,6 +23,7 @@ package org.mifos.test.acceptance.framework.savings;
 import org.mifos.test.acceptance.framework.AbstractPage;
 import org.mifos.test.acceptance.framework.loan.AccountAddNotesPage;
 import org.mifos.test.acceptance.framework.loan.AccountNotesPage;
+import org.mifos.test.acceptance.framework.loan.AccountChangeStatusPage;
 import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
@@ -58,6 +59,12 @@ public class SavingsAccountDetailPage extends AbstractPage {
         return new AccountAddNotesPage(selenium);
     }
 
+    public ViewDepositDueDetailsPage navigateToViewDepositDueDetails(){
+        selenium.click("savingsaccountdetail.link.viewDepositDueDetails");
+        waitForPageToLoad();
+        return new ViewDepositDueDetailsPage(selenium);
+    }
+
     public AccountNotesPage navigateToAccountNotesPage() {
         selenium.click("savingsaccountdetail.link.seeAllNotes");
         waitForPageToLoad();
@@ -74,5 +81,15 @@ public class SavingsAccountDetailPage extends AbstractPage {
         selenium.click("savingsaccountdetail.link.closeAccount");
         waitForPageToLoad();
         return new SavingsCloseAccountPage(selenium);
+    }
+
+    public AccountChangeStatusPage navigateToEditAccountStatus() {
+        selenium.click("savingsaccountdetail.link.editAccountStatus");
+        waitForPageToLoad();
+        return new AccountChangeStatusPage(selenium);
+    }
+
+    public String getAccountId() {
+            return selenium.getText("savingsaccountdetail.text.savingsId");
     }
 }

@@ -56,7 +56,7 @@ import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
 import org.mifos.test.acceptance.framework.loan.EditAccountStatusConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountInformationPage;
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountInformationParameters;
-import org.mifos.test.acceptance.framework.loan.EditLoanAccountStatusPage;
+import org.mifos.test.acceptance.framework.loan.AccountChangeStatusPage;
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountStatusParameters;
 import org.mifos.test.acceptance.framework.loan.EditPreviewLoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.GLIMClient;
@@ -236,9 +236,9 @@ public class LoanTestHelper {
     public void changeLoanAccountStatusProvidingQuestionGroupResponses(String loanId, EditLoanAccountStatusParameters params, QuestionResponseParameters responseParameters) {
         LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
 
-        EditLoanAccountStatusPage editAccountStatusPage = loanAccountPage.navigateToEditAccountStatus();
+        AccountChangeStatusPage accountChangeStatusPage = loanAccountPage.navigateToEditAccountStatus();
 
-        EditAccountStatusConfirmationPage editAccountStatusConfirmationPage = editAccountStatusPage.submitAndNavigateToNextPage(params);
+        EditAccountStatusConfirmationPage editAccountStatusConfirmationPage = accountChangeStatusPage.submitAndNavigateToNextPage(params);
 
         if (responseParameters != null) {
             populateQuestionGroupResponses(responseParameters);

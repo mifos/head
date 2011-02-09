@@ -20,17 +20,20 @@
 
 package org.mifos.test.acceptance.framework.loan;
 
-import com.thoughtworks.selenium.Selenium;
 import org.apache.commons.lang.StringUtils;
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.mifos.test.acceptance.framework.account.EditAccountStatusParameters;
+
+import com.thoughtworks.selenium.Selenium;
 
 
-public class EditLoanAccountStatusPage extends MifosPage {
-    public EditLoanAccountStatusPage(Selenium selenium) {
+public class AccountChangeStatusPage extends MifosPage {
+    public AccountChangeStatusPage(Selenium selenium) {
         super(selenium);
         this.verifyPage("ChangeStatus");
     }
 
+    @Deprecated
     public EditAccountStatusConfirmationPage submitAndNavigateToNextPage(EditLoanAccountStatusParameters params) {
         /* usually this would be an "id=..." locator but since this is a radio button we have to use
            name + value (id + value is not supported by Selenium). */
@@ -46,6 +49,16 @@ public class EditLoanAccountStatusPage extends MifosPage {
 
         selenium.click("change_status.button.submit");
 
+        waitForPageToLoad();
+        return new EditAccountStatusConfirmationPage(selenium);
+    }
+
+    public EditAccountStatusConfirmationPage setChangeStatusParametersAndSubmit(EditAccountStatusParameters editAccountStatusParameters){
+            selenium.check("name=newStatusId value=" + editAccountStatusParameters.getAccountStatus().getId());
+            selenium.fireEvent("name=newStatusId value=" + editAccountStatusParameters.getAccountStatus().getId(), "click");
+
+        selenium.type("change_status.input.note", editAccountStatusParameters.getNote());
+        selenium.click("change_status.button.submit");
         waitForPageToLoad();
         return new EditAccountStatusConfirmationPage(selenium);
     }

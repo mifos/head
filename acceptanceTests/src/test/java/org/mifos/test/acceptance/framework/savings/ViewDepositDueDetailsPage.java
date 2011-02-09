@@ -17,34 +17,26 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-
-package org.mifos.test.acceptance.framework.loan;
+package org.mifos.test.acceptance.framework.savings;
 
 import org.mifos.test.acceptance.framework.MifosPage;
-import org.mifos.test.acceptance.framework.savings.SavingsAccountDetailPage;
+import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
 
+public class ViewDepositDueDetailsPage extends MifosPage{
 
-public class EditAccountStatusConfirmationPage extends MifosPage {
-
-    public EditAccountStatusConfirmationPage(Selenium selenium) {
+    public ViewDepositDueDetailsPage(Selenium selenium) {
         super(selenium);
+        this.verifyPage("savingsaccountdepositduedetails");
     }
 
-    public void verifyPage() {
-        this.verifyPage("ChangeStatusPreview");
+    public Float getTotalAmountDue(){
+        return Float.parseFloat(selenium.getTable("DepositDueDetailsTable.4.1"));
     }
 
-    public LoanAccountPage submitAndNavigateToLoanAccountPage() {
-        selenium.click("change_status_preview.button.submit");
-        waitForPageToLoad();
-        return new LoanAccountPage(selenium);
+    public void verifyTotalAmountDue(Integer numberOfGroupMembers, Float amountPerMember){
+        Assert.assertEquals(getTotalAmountDue(), (numberOfGroupMembers*amountPerMember));
     }
 
-    public SavingsAccountDetailPage submitAndNavigateToSavingAccountPage() {
-        selenium.click("change_status_preview.button.submit");
-        waitForPageToLoad();
-        return new SavingsAccountDetailPage(selenium);
-    }
 }

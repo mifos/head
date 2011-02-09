@@ -23,8 +23,11 @@ package org.mifos.test.acceptance.framework.testhelpers;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
+import org.mifos.test.acceptance.framework.account.EditAccountStatusParameters;
 import org.mifos.test.acceptance.framework.loan.AccountAddNotesPage;
+import org.mifos.test.acceptance.framework.loan.AccountChangeStatusPage;
 import org.mifos.test.acceptance.framework.loan.AccountPreviewNotesPage;
+import org.mifos.test.acceptance.framework.loan.EditAccountStatusConfirmationPage;
 import org.mifos.test.acceptance.framework.login.LoginPage;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountConfirmationPage;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountEntryPage;
@@ -33,11 +36,12 @@ import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSearchPar
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSubmitParameters;
 import org.mifos.test.acceptance.framework.savings.DepositWithdrawalSavingsParameters;
 import org.mifos.test.acceptance.framework.savings.SavingsAccountDetailPage;
+import org.mifos.test.acceptance.framework.savings.SavingsCloseAccountPage;
 import org.mifos.test.acceptance.framework.savings.SavingsDepositWithdrawalConfirmationPage;
 import org.mifos.test.acceptance.framework.savings.SavingsDepositWithdrawalPage;
+import org.mifos.test.acceptance.framework.savings.ViewDepositDueDetailsPage;
 
 import com.thoughtworks.selenium.Selenium;
-import org.mifos.test.acceptance.framework.savings.SavingsCloseAccountPage;
 
 /**
  * Holds methods common to most savings account tests.
@@ -46,9 +50,11 @@ import org.mifos.test.acceptance.framework.savings.SavingsCloseAccountPage;
 public class SavingsAccountHelper {
 
     private final Selenium selenium;
+    private final NavigationHelper navigationHelper;
 
     public SavingsAccountHelper(Selenium selenium) {
         this.selenium = selenium;
+        this.navigationHelper = new NavigationHelper(selenium);
     }
 
     /**
@@ -146,5 +152,24 @@ public class SavingsAccountHelper {
         savingsAccountDetailPage = savingsCloseAccountPage.closeSavingsAccount(notes);
         savingsAccountDetailPage.verifyPage();
         return savingsAccountDetailPage;
+    }
+
+    public SavingsAccountDetailPage changeStatus(String savingsId, EditAccountStatusParameters editAccountStatusParameters){
+        SavingsAccountDetailPage savingsAccountDetailPage = navigationHelper.navigateToSavingsAccountDetailPage(savingsId);
+
+        AccountChangeStatusPage accountChangeStatusPage = savingsAccountDetailPage.navigateToEditAccountStatus();
+
+        EditAccountStatusConfirmationPage editAccountStatusConfirmationPage = accountChangeStatusPage.setChangeStatusParametersAndSubmit(editAccountStatusParameters);
+
+        savingsAccountDetailPage = editAccountStatusConfirmationPage.submitAndNavigateToSavingAccountPage();
+        savingsAccountDetailPage.verifyStatus(editAccountStatusParameters.getAccountStatus().getStatusText());
+
+        return savingsAccountDetailPage;
+    }
+
+    public void verifyTotalAmountDue(String savingsId, Integer numberOfGroupMembers, Float amountPerMember){
+        SavingsAccountDetailPage savingsAccountDetailPage = navigationHelper.navigateToSavingsAccountDetailPage(savingsId);
+        ViewDepositDueDetailsPage viewDepositDueDetailsPage = savingsAccountDetailPage.navigateToViewDepositDueDetails();
+        viewDepositDueDetailsPage.verifyTotalAmountDue(numberOfGroupMembers, amountPerMember);
     }
 }
