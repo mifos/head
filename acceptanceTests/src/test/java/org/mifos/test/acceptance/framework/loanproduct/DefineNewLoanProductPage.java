@@ -540,6 +540,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
                 selenium.type("cycleLoanDefaultLoanAmt"+i, parameters.getDefCycleLoanAmount(i-1));
             }
         }
+        selectWaiverInterest(parameters);
         selenium.select("interestTypes", "value=" + parameters.getInterestTypes());
         selenium.type("createLoanProduct.input.maxInterestRate", parameters.getMaxInterestRate());
         selenium.type("createLoanProduct.input.minInterestRate", parameters.getMinInterestRate());
@@ -572,6 +573,14 @@ public class DefineNewLoanProductPage extends AbstractPage {
         selenium.select("principalGLCode", "label=" + parameters.getPrincipalGLCode());
         selectQuestionGroups(parameters.getQuestionGroups());
         return this;
+    }
+
+    private void selectWaiverInterest(SubmitFormParameters parameters){
+        if(parameters.isInterestWaiver()){
+            selenium.check("createLoanProduct.checkbox.waiverInterest");
+        }else{
+            selenium.uncheck("createLoanProduct.checkbox.waiverInterest");
+        }
     }
 
     private void selectQuestionGroups(List<String> questionGroups) {
