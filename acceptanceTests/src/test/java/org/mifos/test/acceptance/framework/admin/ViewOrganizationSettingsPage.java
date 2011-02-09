@@ -37,47 +37,109 @@ public class ViewOrganizationSettingsPage extends MifosPage {
     }
 
     public void verifyFiscalYear(String[] expectedData) {
-        for (String expected_FiscalYear : expectedData) {
-            Assert.assertTrue(selenium.isTextPresent(expected_FiscalYear), "Expected settings in Fiscal year category: " + expected_FiscalYear);
+        for (String expected : expectedData) {
+            Assert.assertTrue(selenium.getText("//div[@id='fiscalyear']").contains(expected));
         }
     }
 
     public void verifyLocale(String[] expectedData) {
-        for (String expected_Locale : expectedData) {
-            Assert.assertTrue(selenium.isTextPresent(expected_Locale), "Expected settings in Locale category: " + expected_Locale);
+        for (String expected : expectedData) {
+            Assert.assertTrue(selenium.getText("//div[@id='locale']").contains(expected));
         }
     }
 
     public void verifyAccountingRules(String[] expectedData) {
-        for (String expected_AccountingRules : expectedData) {
-            Assert.assertTrue(selenium.isTextPresent(expected_AccountingRules), "Expected settings in Accounting rules category: " + expected_AccountingRules);
+        for (String expected : expectedData) {
+            Assert.assertTrue(selenium.getText("//div[@id='accountingrules']").contains(expected));
         }
     }
 
     public void verifyCurrencies(String[] expectedData) {
-        for (String expected_Currencies : expectedData) {
-            Assert.assertTrue(selenium.isTextPresent(expected_Currencies), "Expected settings in Currencies category: " + expected_Currencies);
+        for (String expected : expectedData) {
+            Assert.assertTrue(selenium.getText("//div[@id='currencies']").contains(expected));
         }
     }
 
     public void verifyClientRules(String[] expectedData) {
-        for (String expected_ClientRules : expectedData) {
-            Assert.assertTrue(selenium.isTextPresent(expected_ClientRules), "Expected settings in Client rules category: " + expected_ClientRules);
+        for (String expected : expectedData) {
+            Assert.assertTrue(selenium.getText("//div[@id='clientrules']").contains(expected));
         }
     }
 
     public void verifyProcessFlow(String[] expectedData) {
-        for (String expected_ProcessFlow : expectedData) {
-            Assert.assertTrue(selenium.isTextPresent(expected_ProcessFlow), "Expected settings in Process flow category: " + expected_ProcessFlow);
+        for (String expected : expectedData) {
+            Assert.assertTrue(selenium.getText("//div[@id='processflow']").contains(expected));
         }
     }
 
     public void verifyMiscellaneous(String[] expectedData) {
-        for (String expected_Miscellaneous : expectedData) {
-            Assert.assertTrue(selenium.isTextPresent(expected_Miscellaneous), "Expected settings in Miscellaneous category: " + expected_Miscellaneous);
+        for (String expected : expectedData) {
+            Assert.assertTrue(selenium.getText("//div[@id='miscellaneous']").contains(expected));
         }
     }
 
+    public void verifyDefaultConfiguration() {
+        verifyAccountingRules(getDefaultAccountingRules());
+        verifyClientRules(getDefaultClientRules());
+        verifyCurrencies(getDefaultCurrencies());
+        verifyFiscalYear(getDefaultFiscalYear());
+        verifyLocale(getDefaultLocale());
+        verifyMiscellaneous(getDefaultMiscellaneous());
+        verifyProcessFlow(getDefaultProcessFlow());
+    }
+
+    public String[] getDefaultFiscalYear() {
+        return new String[] { "Working days: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday",
+                "Allow calendar definition for next year:  30 days before end of current year",
+                "Start of Week: Monday",
+                "Non-working days: Sunday",
+                "Meeting in case of non-working day: same_day" };
+    }
+
+    public String[] getDefaultFiscalYearValues() {
+        return new String[] { "Monday, Tuesday, Wednesday, Thursday, Friday, Saturday",
+                "30 days before end of current year", "Monday", "Sunday", "same_day" };
+    }
+
+    public String[] getDefaultLocale() {
+        return new String[] { "Country: GB", "Language: EN" };
+    }
+
+    public String[] getDefaultAccountingRules() {
+        return new String[] { "Maximum Interest: 999.0", "Minimum Interest: 0.0",
+                "Number of digits before decimal: 14", "Number of digits after decimal for interest: 5",
+                "Number of digits before decimal for interest: 10", "Number of interest days: 365",
+                "Currency Rounding Mode: HALF_UP", "Initial Rounding Mode: HALF_UP", "Final Rounding Mode: CEILING" };
+    }
+
+    public String[] getDefaultCurrencies() {
+        return new String[] { "Currency: INR", "Number of digits after decimal: 1", "Final Round Off Multiple: 1",
+                "Initial Round Off Multiple: 1" };
+    }
+
+    public String[] getDefaultCurrenciesValues() {
+        return new String[] { "INR", "1", "1", "1" };
+    }
+
+    public String[] getDefaultClientRules() {
+        return new String[] { "Center hierarchy exists: Yes", "Groups allowed to apply for loans: Yes",
+                "Client can exist outside group: Yes",
+                "Name sequence: first_name, middle_name, last_name, second_last_name", "Age check enabled: No",
+                "Minimum allowed age for new clients: 0", "Maximum allowed age for new clients: 0",
+                "Additional family details required: No", "Maximum number of family members: 10" };
+    }
+
+    public String[] getDefaultProcessFlow() {
+        return new String[] { "Client pending approval state enabled: Yes",
+                "Group pending approval state enabled: Yes", "Loan pending approval state enabled: Yes",
+                "Savings pending approval state enabled: Yes" };
+    }
+
+    public String[] getDefaultMiscellaneous() {
+        return new String[] { "Session timeout: 30",
+                "Number of days in advance the collection sheet should be generated: 1",
+                "Back dated transactions allowed: Yes", "Group loan with individual monitoring (GLIM): No",
+                "Loan schedule independent of meeting (LSIM): No" };
+    }
+
 }
-
-

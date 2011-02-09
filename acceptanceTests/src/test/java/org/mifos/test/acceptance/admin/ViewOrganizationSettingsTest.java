@@ -27,6 +27,7 @@ import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.admin.ViewOrganizationSettingsPage;
+import org.mifos.test.acceptance.framework.testhelpers.CustomPropertiesHelper;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -54,78 +55,26 @@ public class ViewOrganizationSettingsTest extends UiTestCaseBase {
 
     @Test
     public void verifyViewOrganizationSettingsPage() {
+        //When
         AdminPage adminPage = loginAndGoToAdminPage();
         ViewOrganizationSettingsPage viewOrganizationSettingsPage = adminPage.navigateToViewOrganizationSettingsPage();
+
         viewOrganizationSettingsPage.verifyPage();
+        //Then
+        viewOrganizationSettingsPage.verifyDefaultConfiguration();
+        //When
+        CustomPropertiesHelper customPropertiesHelper = new CustomPropertiesHelper(selenium);
+        customPropertiesHelper.setDigitsAfterDecimal(3);
+        customPropertiesHelper.setGroupCanApplyLoans("false");
 
+        adminPage = loginAndGoToAdminPage();
+        viewOrganizationSettingsPage = adminPage.navigateToViewOrganizationSettingsPage();
+        //Then
+        viewOrganizationSettingsPage.verifyClientRules(new String[]{"Groups allowed to apply for loans: No"});
+        viewOrganizationSettingsPage.verifyCurrencies(new String[]{"Number of digits after decimal: 3"});
 
-        String[] expectedFiscalYear = new String[]{
-                "Working days:",
-                "Allow calendar definition for next year:",
-                "Start of Week:",
-                "Non-working days:",
-                "Meeting in case of non-working day:"
-        };
-
-        String[] expectedLocale = new String[]{
-                "Country:",
-                "Language:"
-        };
-
-        String[] expectedAccountingRules = new String[]{
-                "Maximum Interest:",
-                "Minimum Interest:",
-                "Number of digits before decimal:",
-                "Number of digits after decimal for interest:",
-                "Number of digits before decimal for interest:",
-                "Number of interest days:",
-                "Currency Rounding Mode:",
-                "Initial Rounding Mode:",
-                "Final Rounding Mode:"
-        };
-
-        String[] expectedCurrencies = new String[]{
-                "Currency:",
-                "Number of digits after decimal:",
-                "Final Round Off Multiple:",
-                "Initial Round Off Multiple:"
-        };
-
-        String[] expectedClientRules = new String[]{
-                "Center hierarchy exists:",
-                "Groups allowed to apply for loans:",
-                "Client can exist outside group:",
-                "Name sequence:",
-                "Age check enabled:",
-                "Minimum allowed age for new clients:",
-                "Maximum allowed age for new clients:",
-                "Additional family details required:",
-                "Maximum number of family members:"
-        };
-
-        String[] expectedProcessFlow = new String[]{
-                "Client pending approval state enabled:",
-                "Group pending approval state enabled:",
-                "Loan pending approval state enabled:",
-                "Savings pending approval state enabled:"
-        };
-
-        String[] expectedMiscellaneous = new String[]{
-                "Session timeout:",
-                "Number of days in advance the collection sheet should be generated:",
-                "Back dated transactions allowed:",
-                "Group loan with individual monitoring (GLIM):",
-                "Loan schedule independent of meeting (LSIM):"
-
-        };
-        viewOrganizationSettingsPage.verifyFiscalYear( expectedFiscalYear );
-        viewOrganizationSettingsPage.verifyLocale( expectedLocale );
-        viewOrganizationSettingsPage.verifyAccountingRules( expectedAccountingRules );
-        viewOrganizationSettingsPage.verifyCurrencies( expectedCurrencies );
-        viewOrganizationSettingsPage.verifyClientRules( expectedClientRules );
-        viewOrganizationSettingsPage.verifyProcessFlow( expectedProcessFlow );
-        viewOrganizationSettingsPage.verifyMiscellaneous( expectedMiscellaneous );
-
+        customPropertiesHelper.setDigitsAfterDecimal(1);
+        customPropertiesHelper.setGroupCanApplyLoans("true");
     }
     private AdminPage loginAndGoToAdminPage() {
         HomePage homePage = appLauncher.launchMifos().loginSuccessfullyUsingDefaultCredentials();

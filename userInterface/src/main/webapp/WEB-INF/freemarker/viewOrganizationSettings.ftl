@@ -29,67 +29,81 @@
         <p class="font15 margin5top10bottom"><span class=" orangeheading">[@spring.message "organizationSettings.viewOrganizationSettings.organizationalSettings"/] </span></p>
         <p class="span-24">
             <div class="fontBold">[@spring.message "organizationSettings.viewOrganizationSettings.fiscalyear"/] </div>
-            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.workingdays"/]</span>:&nbsp;<span class="fontnormal">${properties.workingDays}</span></div>
-            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.allowcalendardefinitionfornextyear"/]</span>:&nbsp;<span class="fontnormal"> 30 days before end of current year</span></div>
-            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.startofWeek"/]</span>:&nbsp;<span class="fontnormal">${properties.startOfWeek}</span></div>
-            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.offdays"/]</span>:&nbsp;<span class="fontnormal">${properties.offDays}</span></div>
-            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.meetingincaseofaholiday"/]</span>:&nbsp;<span class="fontnormal">${properties.holidayMeeting} </span></div>
+            <div id="fiscalyear">
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.workingdays"/]</span>:&nbsp;<span class="fontnormal">${properties.workingDays}</span></div>
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.allowcalendardefinitionfornextyear"/]</span>:&nbsp;<span class="fontnormal"> 30 days before end of current year</span></div>
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.startofWeek"/]</span>:&nbsp;<span class="fontnormal">${properties.startOfWeek}</span></div>
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.offdays"/]</span>:&nbsp;<span class="fontnormal">${properties.offDays}</span></div>
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.meetingincaseofaholiday"/]</span>:&nbsp;<span class="fontnormal">${properties.holidayMeeting} </span></div>
+	        </div>
         </p>
         <p class="span-24">
             <div class="fontBold marginTop10">[@spring.message "organizationSettings.viewOrganizationSettings.locale"/] </div>
-            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.country"/]</span>:&nbsp;<span class="fontnormal">${properties.localeCountryCode}</span></div>
-            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.language"/]</span>:&nbsp;<span class="fontnormal">${properties.localeLanguageCode}</span></div>
+            <div id="locale">
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.country"/]</span>:&nbsp;<span class="fontnormal">${properties.localeCountryCode}</span></div>
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.language"/]</span>:&nbsp;<span class="fontnormal">${properties.localeLanguageCode}</span></div>
+            </div>
         </p>
         <p class="span-24">
             <div class="fontBold marginTop10">[@spring.message "organizationSettings.viewOrganizationSettings.accountingrules"/] </div>
-            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.maximumInterest"/]</span>:&nbsp;<span class="fontnormal">${properties.maxInterest}</span></div>
-            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.minimumInterest"/]</span>:&nbsp;<span class="fontnormal">${properties.minInterest}</span></div>
-            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.numberofdigitsbeforedecimal"/]</span>:&nbsp;<span class="fontnormal">${properties.digitsBeforeDecimal}</span></div>
-            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.numberofdigitsafterdecimalforinterest"/]</span>:&nbsp;<span class="fontnormal">${properties.intDigitsAfterDecimal}</span></div>
-            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.numberofdigitsbeforedecimalforinterest"/]</span>:&nbsp;<span class="fontnormal">${properties.intDigitsBeforeDecimal}</span></div>
-            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.numberofinterestdays"/]</span>:&nbsp;<span class="fontnormal">${properties.interestDays}</span></div>
-            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.currencyRoundingMode"/]</span>:&nbsp;<span class="fontnormal">${properties.currencyRoundingMode}</span></div>
-            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.initialRoundingMode"/]</span>:&nbsp;<span class="fontnormal">${properties.initialRoundingMode}</span></div>
-            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.finalRoundingMode"/]</span>:&nbsp;<span class="fontnormal">${properties.finalRoundingMode}</span></div>
+            <div id="accountingrules">
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.maximumInterest"/]</span>:&nbsp;<span class="fontnormal">${properties.maxInterest}</span></div>
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.minimumInterest"/]</span>:&nbsp;<span class="fontnormal">${properties.minInterest}</span></div>
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.numberofdigitsbeforedecimal"/]</span>:&nbsp;<span class="fontnormal">${properties.digitsBeforeDecimal}</span></div>
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.numberofdigitsafterdecimalforinterest"/]</span>:&nbsp;<span class="fontnormal">${properties.intDigitsAfterDecimal}</span></div>
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.numberofdigitsbeforedecimalforinterest"/]</span>:&nbsp;<span class="fontnormal">${properties.intDigitsBeforeDecimal}</span></div>
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.numberofinterestdays"/]</span>:&nbsp;<span class="fontnormal">${properties.interestDays}</span></div>
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.currencyRoundingMode"/]</span>:&nbsp;<span class="fontnormal">${properties.currencyRoundingMode}</span></div>
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.initialRoundingMode"/]</span>:&nbsp;<span class="fontnormal">${properties.initialRoundingMode}</span></div>
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.finalRoundingMode"/]</span>:&nbsp;<span class="fontnormal">${properties.finalRoundingMode}</span></div>
+	       </div>
        </p>
 
         <p class="span-24">
             <div class="fontBold marginTop10">[@spring.message "organizationSettings.viewOrganizationSettings.currencies"/] </div>
-            [#list properties.currencies as currency]
-                <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.currency"/]</span>:&nbsp;<span class="fontnormal">${currency.code}</span></div>
-                <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.numberofdigitsafterdecimal"/]</span>:&nbsp;<span class="fontnormal">${currency.digitsAfterDecimal}</span></div>
-                <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.finalRoundOffMultiple"/]</span>:&nbsp;<span class="fontnormal">${currency.finalRoundOffMultiple}</span></div>
-                <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.initialRoundOffMultiple"/]</span>:&nbsp;<span class="fontnormal">${currency.initialRoundOffMultiple}</span></div>
-            [/#list]
+            <div id="currencies">
+	            [#list properties.currencies as currency]
+	                <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.currency"/]</span>:&nbsp;<span class="fontnormal">${currency.code}</span></div>
+	                <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.numberofdigitsafterdecimal"/]</span>:&nbsp;<span class="fontnormal">${currency.digitsAfterDecimal}</span></div>
+	                <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.finalRoundOffMultiple"/]</span>:&nbsp;<span class="fontnormal">${currency.finalRoundOffMultiple}</span></div>
+	                <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.initialRoundOffMultiple"/]</span>:&nbsp;<span class="fontnormal">${currency.initialRoundOffMultiple}</span></div>
+	            [/#list]
+            </div>
         </p>
 
         <p class="span-24">
             <div class="fontBold marginTop10">[@spring.message "organizationSettings.viewOrganizationSettings.clientrules"/]</div>
-            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.centerhierarchyexists"/]</span>:&nbsp;<span class="fontnormal">${properties.centerHierarchyExists}</span></div>
-            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.groupsallowedtoapplyforloans"/]</span>:&nbsp;<span class="fontnormal">${properties.loansForGroups}</span></div>
-            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.clientcanexistoutsidegroup"/]</span>:&nbsp;<span class="fontnormal">${properties.clientsOutsideGroups}</span></div>
-            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.namesequence"/]</span>:&nbsp;<span class="fontnormal">${properties.nameSequence}</span></div>
-            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.agecheckenabled"/]</span>:&nbsp;<span class="fontnormal">${properties.isAgeCheckEnabled}</span></div>
-            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.minimumallowedagefornewclients"/]</span>:&nbsp;<span class="fontnormal">${properties.minimumAge}</span></div>
-            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.maximumallowedagefornewclients"/]</span>:&nbsp;<span class="fontnormal">${properties.maximumAge}</span></div>
-            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.additionalfamilydetailsrequired"/]</span>:&nbsp;<span class="fontnormal">${properties.isFamilyDetailsRequired}</span></div>
-            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.maximumnumberoffamilymembers"/]</span>:&nbsp;<span class="fontnormal">${properties.maximumNumberOfFamilyMembers}</span></div>
+            <div id="clientrules">
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.centerhierarchyexists"/]</span>:&nbsp;<span class="fontnormal">${properties.centerHierarchyExists}</span></div>
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.groupsallowedtoapplyforloans"/]</span>:&nbsp;<span class="fontnormal">${properties.loansForGroups}</span></div>
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.clientcanexistoutsidegroup"/]</span>:&nbsp;<span class="fontnormal">${properties.clientsOutsideGroups}</span></div>
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.namesequence"/]</span>:&nbsp;<span class="fontnormal">${properties.nameSequence}</span></div>
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.agecheckenabled"/]</span>:&nbsp;<span class="fontnormal">${properties.isAgeCheckEnabled}</span></div>
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.minimumallowedagefornewclients"/]</span>:&nbsp;<span class="fontnormal">${properties.minimumAge}</span></div>
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.maximumallowedagefornewclients"/]</span>:&nbsp;<span class="fontnormal">${properties.maximumAge}</span></div>
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.additionalfamilydetailsrequired"/]</span>:&nbsp;<span class="fontnormal">${properties.isFamilyDetailsRequired}</span></div>
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.maximumnumberoffamilymembers"/]</span>:&nbsp;<span class="fontnormal">${properties.maximumNumberOfFamilyMembers}</span></div>
+            </div>
         </p>
         <p class="span-24">
             <div class="fontBold marginTop10">[@spring.message "organizationSettings.viewOrganizationSettings.processflow/optionalstate"/]</div>
-            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.clientpendingapprovalstateenabled"/]</span>:&nbsp;<span class="fontnormal">${properties.clientPendingState}</span></div>
-            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.grouppendingapprovalstateenabled"/]</span>:&nbsp;<span class="fontnormal">${properties.groupPendingState}</span></div>
-            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.loanpendingapprovalstateenabled"/]</span>:&nbsp;<span class="fontnormal">${properties.loanPendingState}</span></div>
-            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.savingspendingapprovalstateenabled"/]</span>:&nbsp;<span class="fontnormal">${properties.savingsPendingState}</span></div>
+            <div id="processflow">
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.clientpendingapprovalstateenabled"/]</span>:&nbsp;<span class="fontnormal">${properties.clientPendingState}</span></div>
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.grouppendingapprovalstateenabled"/]</span>:&nbsp;<span class="fontnormal">${properties.groupPendingState}</span></div>
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.loanpendingapprovalstateenabled"/]</span>:&nbsp;<span class="fontnormal">${properties.loanPendingState}</span></div>
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.savingspendingapprovalstateenabled"/]</span>:&nbsp;<span class="fontnormal">${properties.savingsPendingState}</span></div>
+            </div>
         </p>
 
         <p class="span-24">
             <div class="fontBold marginTop10">[@spring.message "organizationSettings.viewOrganizationSettings.miscellaneous"/]</div>
-            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.sessiontimeout"/]</span>:&nbsp;<span class="fontnormal">${properties.sessionTimeout}</span></div>
-            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.numberofdaysinadvancethecollectionsheetshouldbegenerated"/]</span>:&nbsp;<span class="fontnormal">${properties.collectionSheetAdvanceDays}</span></div>
-            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.backdatedtransactionsallowed"/]</span>:&nbsp;<span class="fontnormal">${properties.backDatedTransactions}</span></div>
-            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.glim"/]</span>:&nbsp;<span class="fontnormal">${properties.glim}</span></div>
-            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.lsim"/]</span>:&nbsp;<span class="fontnormal">${properties.lsim}</span></div>
+            <div id="miscellaneous">
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.sessiontimeout"/]</span>:&nbsp;<span class="fontnormal">${properties.sessionTimeout}</span></div>
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.numberofdaysinadvancethecollectionsheetshouldbegenerated"/]</span>:&nbsp;<span class="fontnormal">${properties.collectionSheetAdvanceDays}</span></div>
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.backdatedtransactionsallowed"/]</span>:&nbsp;<span class="fontnormal">${properties.backDatedTransactions}</span></div>
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.glim"/]</span>:&nbsp;<span class="fontnormal">${properties.glim}</span></div>
+	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.lsim"/]</span>:&nbsp;<span class="fontnormal">${properties.lsim}</span></div>
+            </div>
             [#list pluginsPropsMap?keys as key]
                 <div><span class="fontnormal">${key}</span>:&nbsp;<span class="fontnormal">${pluginsPropsMap[key]}</span></div>
             [/#list]
