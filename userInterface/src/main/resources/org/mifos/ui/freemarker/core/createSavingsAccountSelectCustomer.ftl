@@ -56,7 +56,7 @@
                 <td>${customer.branchName}</td>
                 <td>${customer.centerName}</td>
                 <td>${customer.groupName}</td>
-                <td><a href="${flowExecutionUrl}&_eventId=customerSelected&customerId=${customer.customerId}">${customer.clientName}</a></td>
+                <td><a href="${flowExecutionUrl}&_eventId=customerSelected&customerId=${customer.customerId}">${customer.clientName}: ${customer.globalId}</a></td>
             </tr>
         [/#list]
     </tbody>

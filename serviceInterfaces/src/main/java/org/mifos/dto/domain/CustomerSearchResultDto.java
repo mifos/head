@@ -29,6 +29,7 @@ public class CustomerSearchResultDto implements Serializable {
 	private String centerName;
 	private String groupName;
 	private String clientName;
+	private String globalId;
 
 	public Integer getCustomerId() {
 		return customerId;
@@ -69,4 +70,12 @@ public class CustomerSearchResultDto implements Serializable {
 	public String getClientName() {
 		return clientName;
 	}
+
+    public void setGlobalId(String globalId) {
+        this.globalId = globalId;
+    }
+
+    public String getGlobalId() {
+        return globalId;
+    }
 }

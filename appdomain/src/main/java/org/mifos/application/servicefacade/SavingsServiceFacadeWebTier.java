@@ -1116,6 +1116,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 		          CustomerSearchResultDto customer = new CustomerSearchResultDto();
 		          customer.setCustomerId(customerBO.getClientId());
 		          customer.setBranchName(customerBO.getOfficeName());
+		          customer.setGlobalId(customerBO.getGlobelNo());
 		          
 	        	  customer.setCenterName(StringUtils.defaultIfEmpty(customerBO.getCenterName(), "no center"));
 	        	  customer.setGroupName(StringUtils.defaultIfEmpty(customerBO.getGroupName(), "no group"));
