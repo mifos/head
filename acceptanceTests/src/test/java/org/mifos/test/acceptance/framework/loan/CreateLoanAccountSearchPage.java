@@ -40,7 +40,7 @@ public class CreateLoanAccountSearchPage extends AbstractPage {
         selenium.type("cust_search_account.input.searchString", formParameters.getSearchString());
         selenium.click("cust_search_account.button.search");
         waitForPageToLoad();
-        selenium.click("link=" + formParameters.getSearchString() + "*");
+        selenium.click("link=*" + formParameters.getSearchString() + "*");
         waitForPageToLoad();
         selenium.select("id=loancreationprodofferingselect.select.loanProduct", "label="+ formParameters.getLoanProduct());
         selenium.click ("id=loancreationprdofferingselect.button.continue");

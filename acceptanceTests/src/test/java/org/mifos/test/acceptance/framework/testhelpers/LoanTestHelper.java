@@ -42,6 +42,7 @@ import org.mifos.test.acceptance.framework.loan.ApplyPaymentConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.ApplyPaymentPage;
 import org.mifos.test.acceptance.framework.loan.ChargeParameters;
 import org.mifos.test.acceptance.framework.loan.ClosedAccountsPage;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountCashFlowPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountEntryPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchPage;
@@ -864,4 +865,7 @@ public class LoanTestHelper {
         loanAccountPage.verifyNoOneTimeFeeRemovalLinkExists(feeIndex);
     }
 
+    public CreateLoanAccountCashFlowPage navigateToCreateLoanAccountCashFlowPage(CreateLoanAccountSearchParameters searchParams) {
+        return navigateToCreateLoanAccountEntryPage(searchParams).submitAndNavigateToCreateLoanAccountCashFlowPage();
+    }
 }

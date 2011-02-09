@@ -75,6 +75,11 @@ public class CollectionSheetEntryAttendanceTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
+    /**
+     * Verify Entering attendance for one center doesn't affect other centers.
+     * http://mifosforge.jira.com/browse/MIFOSTEST-5
+     * @throws Exception
+     */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyEnteringAttendanceForOneCenterDoesntAffectOtherCenters() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml", dataSource, selenium);

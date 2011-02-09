@@ -4,7 +4,9 @@ import com.thoughtworks.selenium.Selenium;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.mifos.test.acceptance.framework.AbstractPage;
+import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
+import org.mifos.test.acceptance.framework.util.UiTestUtils;
 import org.testng.Assert;
 
 import java.util.Locale;
@@ -13,12 +15,16 @@ public class CreateLoanAccountCashFlowPage extends AbstractPage{
     String totalCapital = "totalCapital";
     String totalLiability = "totalLiability";
 
+    private final static int FIELD_MAX_DIGITS = 10;
+    private final static int FIELD_MAX_DECIMAL_PLACES = 3;
+
     public CreateLoanAccountCashFlowPage(Selenium selenium) {
         super(selenium);
+        this.verifyPage("captureCashFlow");
     }
 
     public CreateLoanAccountCashFlowPage verifyPage() {
-        this.verifyPage("");
+        this.verifyPage("captureCashFlow");
         return this;
     }
 
@@ -47,6 +53,75 @@ public class CreateLoanAccountCashFlowPage extends AbstractPage{
         return this;
     }
 
+    public void verifyTableExist() {
+        Assert.assertEquals(selenium.getText("//thead/tr[1]/th[1]"), "Month");
+        Assert.assertEquals(selenium.getText("//thead/tr[1]/th[2]"), "*Expense");
+        Assert.assertEquals(selenium.getText("//thead/tr[1]/th[3]"), "*Revenue");
+        Assert.assertEquals(selenium.getText("//thead/tr[1]/th[4]"), "Notes");
+    }
+
+    public void verifyInvalidTextTyped() {
+        String keys = "qwertyuiop[]asdfghjkl;'zxcvbnm ?><{}|\\_+-=!@#$%^&*()";
+        for(int i = 0; i < keys.length(); i++) {
+            selenium.keyPress("monthlyCashFlows[0].expense", keys.substring(i, i+1));
+            selenium.keyPress("monthlyCashFlows[0].revenue", keys.substring(i, i+1));
+        }
+        Assert.assertEquals(selenium.getText("monthlyCashFlows[0].expense"), "");
+        Assert.assertEquals(selenium.getText("monthlyCashFlows[0].revenue"), "");
+        selenium.type("monthlyCashFlows[0].expense", "");
+        selenium.type("monthlyCashFlows[0].revenue", "");
+    }
+
+    public void verifyErrorsOnPage() {
+        Assert.assertTrue(selenium.isTextPresent("Please specify expense for "));
+        Assert.assertTrue(selenium.isTextPresent("Please specify revenue for "));
+    }
+
+    private String getNumbers(int length) {
+        StringBuffer ret = new StringBuffer("");
+        for(int i = 0; i < length; i++) {
+            ret.append('1');
+        }
+        return ret.toString();
+    }
+
+    public void verifyErrorsOnFields() {
+        String error = "Invalid amount. Maximum of 10 digits and 3 decimal places are supported.";
+        String lengthMaxDigits = getNumbers(FIELD_MAX_DIGITS);
+        String lengthMaxDecimal = "0."+getNumbers(FIELD_MAX_DECIMAL_PLACES);
+        String lengthWrongDigits = getNumbers(FIELD_MAX_DIGITS+1);
+        String lengthWrongDecimal = "0."+getNumbers(FIELD_MAX_DECIMAL_PLACES+1);
+
+        selenium.typeKeys("monthlyCashFlows[0].expense", lengthMaxDigits);
+        selenium.focus("monthlyCashFlows[0].expense");
+        selenium.focus("monthlyCashFlows[1].expense");
+        UiTestUtils.sleep(500);
+        Assert.assertFalse(selenium.isTextPresent(error));
+        selenium.type("monthlyCashFlows[0].expense", "");
+
+        selenium.type("monthlyCashFlows[0].expense", lengthMaxDecimal);
+        selenium.focus("monthlyCashFlows[0].expense");
+        selenium.focus("monthlyCashFlows[1].expense");
+        UiTestUtils.sleep(500);
+        Assert.assertFalse(selenium.isTextPresent(error));
+        selenium.type("monthlyCashFlows[0].expense", "");
+
+        selenium.type("monthlyCashFlows[0].expense", lengthWrongDecimal);
+        selenium.focus("monthlyCashFlows[0].expense");
+        selenium.focus("monthlyCashFlows[1].expense");
+        UiTestUtils.sleep(500);
+        Assert.assertTrue(selenium.isTextPresent(error));
+        selenium.type("monthlyCashFlows[0].expense", "");
+
+        selenium.typeKeys("monthlyCashFlows[0].expense", lengthWrongDigits);
+        selenium.focus("monthlyCashFlows[0].expense");
+        selenium.focus("monthlyCashFlows[1].expense");
+        UiTestUtils.sleep(500);
+        Assert.assertTrue(selenium.isTextPresent(error));
+        selenium.type("monthlyCashFlows[0].expense", "");
+        selenium.fireEvent("monthlyCashFlows[0].expense", "focus");
+    }
+
     public CreateLoanAccountCashFlowPage enterValidData(String expense, double incremental, int cashFlowBase, String totalCapital, String totalLiability) {
         int noOfMonths = selenium.getXpathCount("//input[contains(@id,'expense')]").intValue();
         for (int rowIndex = 1; rowIndex <= noOfMonths ; rowIndex++) {
@@ -63,10 +138,19 @@ public class CreateLoanAccountCashFlowPage extends AbstractPage{
         return this;
     }
 
-    public CreateLoanAccountReviewInstallmentPage clickContinue() {
+    private void submit() {
         selenium.click("_eventId_capture");
         waitForPageToLoad();
+    }
+
+    public CreateLoanAccountReviewInstallmentPage clickContinue() {
+        submit();
         return new CreateLoanAccountReviewInstallmentPage(selenium);
+    }
+
+    public CreateLoanAccountCashFlowPage submitWithErrors() {
+        submit();
+        return this;
     }
 
     public CreateLoanAccountCashFlowPage verifyCashFlowFields() {
@@ -88,5 +172,11 @@ public class CreateLoanAccountCashFlowPage extends AbstractPage{
         clickContinue();
         Assert.assertTrue(selenium.isTextPresent("Indebtedness rate of the client is 49.99 % which should be lesser than the allowable value of " + maxValue + " %"));
         return this;
+    }
+
+    public ClientsAndAccountsHomepage cancel() {
+        selenium.click("_eventId_cancel");
+        waitForPageToLoad();
+        return new ClientsAndAccountsHomepage(selenium);
     }
 }

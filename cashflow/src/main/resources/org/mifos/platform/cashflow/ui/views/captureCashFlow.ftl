@@ -24,6 +24,7 @@
 <script type="text/javascript" src="pages/js/jquery/jquery.validate.min.js"></script>
 <script type="text/javascript" src="pages/framework/js/CommonUtilities.js"></script>
 <script type="text/javascript" src="pages/cashflow/js/captureCashFlow.js"></script>
+<span id="page.id" title="captureCashFlow"></span>
 <div class="content_panel">
     <form name="captureCashFlowForm" action="captureCashFlow.ftl?execution=${flowExecutionKey}" method="POST" id="captureCashFlowForm">
         <center>

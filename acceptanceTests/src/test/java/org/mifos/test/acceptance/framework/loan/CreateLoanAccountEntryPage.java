@@ -142,6 +142,11 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
 
     }
 
+    public CreateLoanAccountCashFlowPage submitAndNavigateToCreateLoanAccountCashFlowPage() {
+        submit();
+        return new CreateLoanAccountCashFlowPage(selenium);
+    }
+
     private void submit() {
         selenium.click(continueButton);
         waitForPageToLoad();
