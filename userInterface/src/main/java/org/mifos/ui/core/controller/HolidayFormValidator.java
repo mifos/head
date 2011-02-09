@@ -79,6 +79,10 @@ public class HolidayFormValidator implements Validator {
             errors.reject("holiday.fromDate.invalid", "From Date cannot be in the past.");
         }
 
+		if (dateFrom != null && new DateMidnight(dateFrom).compareTo(new DateMidnight()) == 0) {
+            errors.reject("holiday.fromDate.invalid", "From Date cannot be today's date.");
+        }
+
         if (formBean.getRepaymentRuleId() == null || Integer.parseInt(formBean.getRepaymentRuleId()) < 0) {
             errors.reject("holiday.repaymentrule.required", "Please specify Repayment Rule.");
         }
