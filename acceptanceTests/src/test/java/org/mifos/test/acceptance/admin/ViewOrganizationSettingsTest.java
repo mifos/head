@@ -54,11 +54,11 @@ public class ViewOrganizationSettingsTest extends UiTestCaseBase {
     }
 
     @Test
+    //http://mifosforge.jira.com/browse/MIFOSTEST-259
     public void verifyViewOrganizationSettingsPage() {
         //When
         AdminPage adminPage = loginAndGoToAdminPage();
         ViewOrganizationSettingsPage viewOrganizationSettingsPage = adminPage.navigateToViewOrganizationSettingsPage();
-
         viewOrganizationSettingsPage.verifyPage();
         //Then
         viewOrganizationSettingsPage.verifyDefaultConfiguration();
