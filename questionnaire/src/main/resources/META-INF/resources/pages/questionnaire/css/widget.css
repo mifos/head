@@ -33,7 +33,7 @@ div.question {
 
 div.question > label {
     float: right;
-	text-align: inherit;
+    text-align: inherit;
 }
 
 .answer {
@@ -46,10 +46,3 @@ div.answer > label {
     float: none;
     display: inline;
 }
-
-/*
-label.question > .text-wrap {
-    text-align: left;
-    float: left;
-}
-*/

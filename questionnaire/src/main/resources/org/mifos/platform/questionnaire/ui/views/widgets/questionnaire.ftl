@@ -59,26 +59,26 @@ A widget to render the UI for collecting questionnaire responses.
                         [#list sectionDetail.questions as question]
                         <!-- question -->
                         <div class='row ${((question_index % 2) == 0)?string("even", "odd")}'>
-							<div class="question">
-								<label class="question" for="questionGroups[${questionGroup_index}].sectionDetails[${sectionDetail_index}].questions[${question_index}].value">
-									[#if question.mandatory]<span class="red">*</span>[/#if]
-									${question.text}
-									[#if question.questionType=="DATE"](dd/mm/yyyy)&nbsp[/#if]:
-								</label>
-							</div>
+                            <div class="question">
+                                <label class="question" for="questionGroups[${questionGroup_index}].sectionDetails[${sectionDetail_index}].questions[${question_index}].value">
+                                    [#if question.mandatory]<span class="red">*</span>[/#if]
+                                    ${question.text}
+                                    [#if question.questionType=="DATE"](dd/mm/yyyy)&nbsp[/#if]:
+                                </label>
+                            </div>
                             <div class="answer">
                             
                                 [#switch question.questionType]
                                   [#case "FREETEXT"]
-                                  	<!-- freetext -->
+                                    <!-- freetext -->
                                     [@spring.formTextarea "${formBeanName}.questionGroups[${questionGroup_index}].sectionDetails[${sectionDetail_index}].questions[${question_index}].value", 'rows="4" cols="50" maxlength="200"' /]
                                   [#break]
                                   [#case "NUMERIC"]
-                                  	<!-- numeric -->
+                                    <!-- numeric -->
                                     [@spring.formInput "${formBeanName}.questionGroups[${questionGroup_index}].sectionDetails[${sectionDetail_index}].questions[${question_index}].value", 'maxlength="30"' /]
                                   [#break]
                                   [#case "DATE"]
-                                  	<!-- date -->
+                                    <!-- date -->
                                     [@spring.formInput "${formBeanName}.questionGroups[${questionGroup_index}].sectionDetails[${sectionDetail_index}].questions[${question_index}].value", 'maxlength="10" class="date-pick"' /]
                                   [#break]
                                   [#case "MULTI_SELECT"]
@@ -106,10 +106,10 @@ A widget to render the UI for collecting questionnaire responses.
                                   [#break]
                                   [#case "SINGLE_SELECT"]
                                           [#if question.answerChoices?size > 6]
-    		                              <!-- single select: select -->
+                                          <!-- single select: select -->
                                           [@form.singleSelectWithPrompt "${formBeanName}.questionGroups[${questionGroup_index}].sectionDetails[${sectionDetail_index}].questions[${question_index}].value", question.answerChoices, "--selectone--", ''/]
                                           [#else]
-            		                      <!-- single select: radio -->
+                                          <!-- single select: radio -->
                                           [@form.radioButtons "${formBeanName}.questionGroups[${questionGroup_index}].sectionDetails[${sectionDetail_index}].questions[${question_index}].value", question.answerChoices,'<br/>', ''/]
                                           [/#if]
                                   [#break]
@@ -117,7 +117,7 @@ A widget to render the UI for collecting questionnaire responses.
                                      Unknown question type ${question.questionType}
                                 [/#switch]
                             </div><!-- answer -->
-                	    <div class="clear">&nbsp;</div><!-- clear -->
+                        <div class="clear">&nbsp;</div><!-- clear -->
                         </div><!-- row -->
                         [/#list][#-- questions --]
                 </fieldset>
