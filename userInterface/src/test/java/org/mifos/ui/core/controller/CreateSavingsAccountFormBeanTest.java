@@ -60,7 +60,7 @@ public class CreateSavingsAccountFormBeanTest {
     private QuestionnaireServiceFacade questionnaireServiceFacade;
 
     private ValidationException validationException;
-    
+
     @Before
     public void setUp() {
         validator = new MifosBeanValidator();
@@ -75,7 +75,7 @@ public class CreateSavingsAccountFormBeanTest {
         formBean.setQuestionnaireServiceFascade(questionnaireServiceFacade);
 
         validationContext = new StubValidationContext();
-        
+
         validationException = new ValidationException("Root");
         validationException.addChildException(new ValidationException("Child"));
     }
@@ -202,9 +202,9 @@ public class CreateSavingsAccountFormBeanTest {
 
         List<QuestionGroupDetail> questionGroups = new ArrayList<QuestionGroupDetail>();
         formBean.setQuestionGroups(questionGroups);
-        
-        doThrow(validationException).when(questionnaireServiceFacade).validateResponses(
-                formBean.getQuestionGroups());
+
+        doThrow(validationException).when(questionnaireServiceFacade)
+                .validateResponses(formBean.getQuestionGroups());
 
         formBean.validateAnswerQuestionGroupStep(validationContext);
 
