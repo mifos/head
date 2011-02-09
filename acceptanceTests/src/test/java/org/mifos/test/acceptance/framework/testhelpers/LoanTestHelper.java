@@ -611,6 +611,13 @@ public class LoanTestHelper {
                 submitAndNavigateToLoanAccountPage();
     }
 
+    public LoanAccountPage applyCharge(String feeName, String amount) {
+        ChargeParameters chargeParameters = new ChargeParameters();
+        chargeParameters.setType(feeName);
+        chargeParameters.setAmount(amount);
+        return new LoanAccountPage(selenium).navigateToApplyCharge().submitAndNavigateToApplyChargeConfirmationPage(chargeParameters);
+    }
+
     public void verifyTransactionHistory(String loanId, Double paymentAmount){
         LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
         TransactionHistoryPage transactionHistoryPage = loanAccountPage.navigateToTransactionHistory();
@@ -791,7 +798,7 @@ public class LoanTestHelper {
                 submitAndNavigateToLoanAccountDetailsPage();
     }
 
-    public LoanAccountPage makePayment(DateTime paymentDate, String paymentAmount) throws UnsupportedEncodingException {
+    public LoanAccountPage  makePayment(DateTime paymentDate, String paymentAmount) throws UnsupportedEncodingException {
         PaymentParameters paymentParameters =setPaymentParams(paymentAmount, paymentDate);
         setApplicationTime(paymentDate).navigateBack();
         LoanAccountPage loanAccountPage = new LoanAccountPage(selenium).navigateToApplyPayment().
