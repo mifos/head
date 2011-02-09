@@ -124,10 +124,6 @@
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
-                <includes>
-                    <include>**/*.ftl</include>
-                    <include>**/*.properties</include>
-                </includes>
             </resource>
         </resources>
 
