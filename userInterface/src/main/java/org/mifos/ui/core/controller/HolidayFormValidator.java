@@ -71,6 +71,8 @@ public class HolidayFormValidator implements Validator {
             }
         }
 
+        // FIXME - keithw - the follow validation performed below is really business logic validation and not web-data-validation
+        // it should exist in one place within the domain layer
         if (dateFrom != null && dateTo != null && new DateTime(dateFrom).compareTo(new DateTime(dateTo)) > 0) {
             errors.reject("holiday.fromDate.invalid", "From Date is greater than To Date.");
         }
@@ -82,6 +84,7 @@ public class HolidayFormValidator implements Validator {
 		if (dateFrom != null && new DateMidnight(dateFrom).compareTo(new DateMidnight()) == 0) {
             errors.reject("holiday.fromDate.invalid", "From Date cannot be today's date.");
         }
+		// end of business logic rules
 
         if (formBean.getRepaymentRuleId() == null || Integer.parseInt(formBean.getRepaymentRuleId()) < 0) {
             errors.reject("holiday.repaymentrule.required", "Please specify Repayment Rule.");
