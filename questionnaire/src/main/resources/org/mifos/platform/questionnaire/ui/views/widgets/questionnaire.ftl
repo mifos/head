@@ -48,7 +48,7 @@ A widget to render the UI for collecting questionnaire responses.
         [/#if]
         
         [@form.errors "${formBeanName}.*" /]
-        <form action="${flowExecutionUrl}" method="post" class="two-columns">
+        <form id="questionnaire" name="questionnaire" action="${flowExecutionUrl}" method="post" class="two-columns">
             [#list formBean.questionGroups as questionGroup]        
                 [#list questionGroup.sectionDetails as sectionDetail]
                 <!-- section detail -->

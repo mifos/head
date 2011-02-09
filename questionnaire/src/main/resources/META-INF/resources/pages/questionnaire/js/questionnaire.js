@@ -16,7 +16,7 @@ $(document).ready(function(){
     );
 
     $(".date-pick").change(function(event) {
-        $("#survey").valid();
+        $("#questionnaire").valid();
     });
 
     $.validator.addMethod('date-pick', function (value) {
