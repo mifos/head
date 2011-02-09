@@ -66,6 +66,21 @@ public class NavigationHelper {
         return adminPage;
     }
 
+    public HomePage navigateToHomePageAsLogedUser(String userName, String password) {
+        LoginPage loginPage = new AppLauncher(selenium).launchMifos();
+        loginPage.verifyPage();
+        HomePage homePage = loginPage.loginSuccessfulAs(userName, password);
+        homePage.verifyPage();
+        return homePage;
+    }
+
+    public AdminPage navigateToAdminPageAsLogedUser(String userName, String password) {
+        HomePage homePage = navigateToHomePageAsLogedUser(userName,password);
+        AdminPage adminPage = homePage.navigateToAdminPage();
+        adminPage.verifyPage();
+        return adminPage;
+    }
+
     public LoanAccountPage navigateToLoanAccountPage(String loanAccountID) {
         HomePage homePage = navigateToHomePage();
         SearchResultsPage searchResultsPage = homePage.search(loanAccountID);
