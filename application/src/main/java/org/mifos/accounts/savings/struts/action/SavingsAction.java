@@ -218,9 +218,7 @@ public class SavingsAction extends BaseAction {
         customer = this.customerDao.findCustomerById(customerId);
         checkPermissionForCreate(accountState, uc, customer.getOffice().getOfficeId(), customer.getPersonnel().getPersonnelId());
 
-        List<CustomFieldDto> customFields = savingsActionForm.getAccountCustomFieldSet();
-
-        SavingsAccountCreationDto savingsAccountCreation = new SavingsAccountCreationDto(productId, customerId, accountState, recommendedOrMandatoryAmount, customFields);
+        SavingsAccountCreationDto savingsAccountCreation = new SavingsAccountCreationDto(productId, customerId, accountState, recommendedOrMandatoryAmount);
         Long savingsId = this.savingsServiceFacade.createSavingsAccount(savingsAccountCreation);
 
         SavingsBO saving = this.savingsDao.findById(savingsId);

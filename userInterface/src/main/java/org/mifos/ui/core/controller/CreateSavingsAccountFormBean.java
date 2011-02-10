@@ -45,8 +45,9 @@ import org.springframework.binding.validation.ValidationContext;
  */
 public class CreateSavingsAccountFormBean implements Serializable {
 
-    // FIXME code smell! copied from SavingsType. SavingsType should be made
-    // publicly available
+    // FIXME - keithw - there is no need to differentiate between madatory and voluntary deposit amount
+    // 		 - there is only one field on the form - deposit amount and at creation we use the 
+    //       - product definition to determine if it is mandatory or voluntary?
     static final int MANDATORY_DEPOSIT = 1;
     static final int VOLUNTARY_DEPOSIT = 2;
 
@@ -57,6 +58,9 @@ public class CreateSavingsAccountFormBean implements Serializable {
 
     // TODO grab format in mifos code base. LocalizationConverter.
     // parseDoubleForMoney
+    // FIXME - keithw - there is no need to differentiate between madatory and voluntary deposit amount
+    // 		 - there is only one field on the form - deposit amount and at creation we use the 
+    //       - product definition to determine if it is mandatory or voluntary?
     @NotNull(groups = { MandatorySavings.class })
     @Pattern(regexp = "^[0-9]+(\\.[0-9]{1,2})?$?", groups = { MandatorySavings.class })
     private String mandatoryDepositAmount;

@@ -19,13 +19,11 @@
  */
 package org.mifos.ui.core.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.mifos.application.servicefacade.SavingsServiceFacade;
-import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerDto;
 import org.mifos.dto.domain.CustomerSearchDto;
 import org.mifos.dto.domain.CustomerSearchResultDto;
@@ -51,8 +49,9 @@ public class CreateSavingsAccountController {
     private static final short ACCOUNT_STATE_PENDNG_APPROVAL = 14;
     private static final short ACCOUNT_STATE_ACTIVE = 16;
 
-    // FIXME code smell! copied from SavingsType. SavingsType should be made
-    // publicly available
+    // FIXME - keithw - there is no need to differentiate between madatory and voluntary deposit amount
+    // 		 - there is only one field on the form - deposit amount and at creation we use the 
+    //       - product definition to determine if it is mandatory or voluntary?
     private static final int MANDATORY_DEPOSIT = 1;
     private static final int VOLUNTARY_DEPOSIT = 2;
 
@@ -88,35 +87,33 @@ public class CreateSavingsAccountController {
         return createAccount(formBean, accountState);
     }
 
-    private SavingsAccountDetailDto createAccount(
-            CreateSavingsAccountFormBean formBean, Short accountState) {
-        SavingsProductReferenceDto productReference = formBean.getProduct();
-        SavingsProductDto savingsProduct = productReference
-                .getSavingsProductDetails();
+    private SavingsAccountDetailDto createAccount(CreateSavingsAccountFormBean formBean, Short accountState) {
+        
+    	SavingsProductReferenceDto productReference = formBean.getProduct();
+        SavingsProductDto savingsProduct = productReference.getSavingsProductDetails();
         Integer productId = savingsProduct.getProductDetails().getId();
         Integer customerId = formBean.getCustomer().getCustomerId();
 
-        // Store savings account
-        // FIXME - code smell! use constants
+        // FIXME - keithw - there is no need to differentiate between madatory and voluntary deposit amount
+        // 		 - there is only one field on the form - deposit amount and at creation we use the 
+        //       - product definition to determine if it is mandatory or voluntary?
         String depositAmount = savingsProduct.getDepositType() == MANDATORY_DEPOSIT ? formBean
                 .getMandatoryDepositAmount() : formBean
                 .getVoluntaryDepositAmount();
         if ("".equals(depositAmount)) {
             depositAmount = "0"; // stops number format exception
         }
+        
         String recommendedOrMandatoryAmount = depositAmount.toString();
-        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>(); // TODO
         SavingsAccountCreationDto savingsAccountCreation = new SavingsAccountCreationDto(
                 productId, customerId, accountState,
-                recommendedOrMandatoryAmount, customFields);
-        Long savingsId = savingsServiceFacade
-                .createSavingsAccount(savingsAccountCreation);
-        SavingsAccountDetailDto savingsAccountDetailDto = savingsServiceFacade
-                .retrieveSavingsAccountDetails(savingsId);
+                recommendedOrMandatoryAmount);
+        
+        Long savingsId = savingsServiceFacade.createSavingsAccount(savingsAccountCreation);
+        SavingsAccountDetailDto savingsAccountDetailDto = savingsServiceFacade.retrieveSavingsAccountDetails(savingsId);
 
         // Store question responses
-        saveQuestionResponses(savingsId,
-                formBean.getQuestionGroups());
+        saveQuestionResponses(savingsId, formBean.getQuestionGroups());
 
         return savingsAccountDetailDto;
     }
