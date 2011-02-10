@@ -97,6 +97,7 @@ import org.mifos.dto.domain.AccountUpdateStatus;
 import org.mifos.dto.domain.AuditLogDto;
 import org.mifos.dto.domain.CreateAccountNote;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.domain.CustomerDto;
 import org.mifos.dto.domain.CustomerSearchDto;
 import org.mifos.dto.domain.CustomerSearchResultDto;
 import org.mifos.dto.domain.DueOnDateDto;
@@ -1132,5 +1133,13 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 			throw new MifosRuntimeException(e);
 		}
 
+	}
+
+	@Override
+	public CustomerDto retreieveCustomerDetails(Integer customerId) {
+		CustomerBO customer = this.customerDao.findCustomerById(customerId);
+		return new CustomerDto(customerId, customer.getDisplayName(), customer.getGlobalCustNum(), 
+				customer.getStatus().getValue(), customer.getCustomerLevel().getId(), 
+				customer.getVersionNo(), customer.getOfficeId(), customer.getLoanOfficerId());
 	}
 }

@@ -133,12 +133,9 @@ public class CreateSavingsAccountController {
         questionnaireServiceFacade.saveResponses(questionGroupDetails);
     }
 
-    public void customerSelected(Integer customerId,
-            CreateSavingsAccountFormBean formBean) {
-        CustomerDto customer = new CustomerDto(); // TODO use service facade to
-                                                  // load customer
-        customer.setCustomerId(customerId);
-        customer.setDisplayName("FIXME - CreateSavingsAccountController");
+    public void customerSelected(Integer customerId, CreateSavingsAccountFormBean formBean) {
+    	
+        CustomerDto customer = savingsServiceFacade.retreieveCustomerDetails(customerId); 
         formBean.setCustomer(customer);
     }
 
