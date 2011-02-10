@@ -34,11 +34,8 @@ import org.mifos.dto.domain.SavingsProductDto;
 import org.mifos.dto.screen.CustomerSearchResultsDto;
 import org.mifos.dto.screen.SavingsProductReferenceDto;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
-import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
-import org.mifos.security.MifosUser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 
 @Controller
@@ -93,27 +90,10 @@ public class CreateSavingsAccountController {
         SavingsAccountCreationDto savingsAccountCreation = new SavingsAccountCreationDto(
                 productId, customerId, accountState, recommendedOrMandatoryAmount);
         
-        Long savingsId = savingsServiceFacade.createSavingsAccount(savingsAccountCreation);
+        Long savingsId = savingsServiceFacade.createSavingsAccount(savingsAccountCreation, formBean.getQuestionGroups());
         SavingsAccountDetailDto savingsAccountDetailDto = savingsServiceFacade.retrieveSavingsAccountDetails(savingsId);
 
-        // Store question responses
-        if (!formBean.getQuestionGroups().isEmpty()) {
-        	saveQuestionResponses(savingsId, formBean.getQuestionGroups());
-        }
-
         return savingsAccountDetailDto;
-    }
-
-    private void saveQuestionResponses(Long savingsId,
-            List<QuestionGroupDetail> questionGroups) {
-        MifosUser loggedinUser = ((MifosUser) SecurityContextHolder
-                .getContext().getAuthentication().getPrincipal());
-        Integer eventSourceId = questionnaireServiceFacade.getEventSourceId(
-                "Create", "Savings");
-        QuestionGroupDetails questionGroupDetails = new QuestionGroupDetails(
-                loggedinUser.getUserId(), savingsId.intValue(), eventSourceId,
-                questionGroups);
-        questionnaireServiceFacade.saveResponses(questionGroupDetails);
     }
 
     public void customerSelected(Integer customerId, CreateSavingsAccountFormBean formBean) {
@@ -122,15 +102,18 @@ public class CreateSavingsAccountController {
         formBean.setCustomer(customer);
     }
 
+    /**
+     * FIXME - keithw - remove as only used from test.
+     */
+    @Deprecated
     public List<QuestionGroupDetail> getQuestionGroups() {
         List<QuestionGroupDetail> questionGroups = questionnaireServiceFacade
                 .getQuestionGroups("Create", "Savings");
         return questionGroups;
     }
-
+    
     public void loadQuestionGroups(CreateSavingsAccountFormBean formBean) {
-        List<QuestionGroupDetail> questionGroups = questionnaireServiceFacade
-                .getQuestionGroups("Create", "Savings");
+        List<QuestionGroupDetail> questionGroups = questionnaireServiceFacade.getQuestionGroups("Create", "Savings");
         formBean.setQuestionGroups(questionGroups);
     }
     
@@ -149,14 +132,11 @@ public class CreateSavingsAccountController {
     }
 
     public void getProductOfferings(CreateSavingsAccountFormBean formBean) {
-        List<PrdOfferingDto> savingsProducts = savingsServiceFacade
-                .retrieveApplicableSavingsProductsForCustomer(formBean
-                        .getCustomer().getCustomerId());
-        Map<String, String> offerings = new HashMap<String, String>(
-                savingsProducts.size());
+        List<PrdOfferingDto> savingsProducts = savingsServiceFacade.retrieveApplicableSavingsProductsForCustomer(formBean.getCustomer().getCustomerId());
+        Map<String, String> offerings = new HashMap<String, String>(savingsProducts.size());
+        
         for (PrdOfferingDto offering : savingsProducts) {
-            offerings.put(offering.getPrdOfferingId().toString(),
-                    offering.getPrdOfferingName());
+            offerings.put(offering.getPrdOfferingId().toString(), offering.getPrdOfferingName());
         }
         formBean.setProductOfferings(savingsProducts);
         formBean.setProductOfferingOptions(offerings);

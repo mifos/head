@@ -131,6 +131,9 @@ import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.MoneyUtils;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
+import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
@@ -151,6 +154,9 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 
     @Autowired
     private LegacyAcceptedPaymentTypeDao legacyAcceptedPaymentTypeDao;
+    
+    @Autowired
+    private QuestionnaireServiceFacade questionnaireServiceFacade;
 
     private HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
     private CalendarPeriodHelper interestCalculationIntervalHelper = new CalendarPeriodHelper();
@@ -690,7 +696,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     }
 
     @Override
-    public Long createSavingsAccount(SavingsAccountCreationDto savingsAccountCreation) {
+    public Long createSavingsAccount(SavingsAccountCreationDto savingsAccountCreation, List<QuestionGroupDetail> questionGroups) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -703,9 +709,6 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 
         Money recommendedOrMandatory = new Money(savingsProduct.getCurrency(), savingsAccountCreation.getRecommendedOrMandatoryAmount());
         AccountState savingsAccountState = AccountState.fromShort(savingsAccountCreation.getAccountState());
-
-        // NOTE - doesn't look like we create custom fields like this anymore but with questionaire API
-//        List<CustomerCustomFieldEntity> savingsCustomFields = CustomerCustomFieldEntity.fromDto(savingsAccountCreation.getCustomFields(), null);
 
         CalendarEvent calendarEvents = this.holidayDao.findCalendarEventsForThisYearAndNext(customer.getOfficeId());
 
@@ -731,6 +734,16 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             this.transactionHelper.flushSession();
             savingsAccount.generateSystemId(createdBy.getOffice().getGlobalOfficeNum());
             this.savingsDao.save(savingsAccount);
+            this.transactionHelper.flushSession();
+            
+            // save question groups
+            if (!questionGroups.isEmpty()) {
+            	Integer eventSourceId = questionnaireServiceFacade.getEventSourceId("Create", "Savings");
+                QuestionGroupDetails questionGroupDetails = new QuestionGroupDetails(
+                		Integer.valueOf(user.getUserId()).shortValue(), savingsAccount.getAccountId(), eventSourceId, questionGroups);
+                questionnaireServiceFacade.saveResponses(questionGroupDetails);
+            }
+            
             this.transactionHelper.commitTransaction();
             return savingsAccount.getAccountId().longValue();
         } catch (BusinessRuleException e) {
@@ -743,6 +756,11 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             this.transactionHelper.closeSession();
         }
     }
+    
+	@Override
+	public Long createSavingsAccount(SavingsAccountCreationDto savingsAccountCreation) {
+		return createSavingsAccount(savingsAccountCreation, new ArrayList<QuestionGroupDetail>());
+	}
 
     @Override
     public AccountStatusDto retrieveAccountStatuses(Long savingsId) {

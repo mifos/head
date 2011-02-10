@@ -47,6 +47,7 @@ import org.mifos.dto.screen.SavingsAdjustmentReferenceDto;
 import org.mifos.dto.screen.SavingsProductReferenceDto;
 import org.mifos.dto.screen.SavingsRecentActivityDto;
 import org.mifos.dto.screen.SavingsTransactionHistoryDto;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface SavingsServiceFacade {
@@ -83,6 +84,9 @@ public interface SavingsServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     Long createSavingsAccount(SavingsAccountCreationDto savingsAccountCreation);
+    
+    @PreAuthorize("isFullyAuthenticated()")
+	Long createSavingsAccount(SavingsAccountCreationDto savingsAccountCreation, List<QuestionGroupDetail> questionGroups);
 
     @PreAuthorize("isFullyAuthenticated()")
     AccountStatusDto retrieveAccountStatuses(Long savingsId);
