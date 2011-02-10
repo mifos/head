@@ -99,12 +99,14 @@
 </div>
 <br/>
 
-<!-- question group preview -->
-[@questionnaire.preview savingsAccountFormBean.questionGroups /]
-<form action="${flowExecutionUrl}" method="post">
-    <input type="submit" class="edit" value="[@spring.message "createSavingsAccount.preview.editQuestionGroupButton" /]" name="_eventId_editQuestionGroup" />
-</form>
-<br/>
+[#if savingsAccountFormBean.questionGroups?size > 0]
+    <!-- question group preview -->
+    [@questionnaire.preview savingsAccountFormBean.questionGroups /]
+    <form action="${flowExecutionUrl}" method="post">
+        <input type="submit" class="edit" value="[@spring.message "createSavingsAccount.preview.editQuestionGroupButton" /]" name="_eventId_editQuestionGroup" />
+    </form>
+    <br/>
+[/#if]
 
 <form action="${flowExecutionUrl}" method="post" class="webflow-controls centered">
     <div class="row">
