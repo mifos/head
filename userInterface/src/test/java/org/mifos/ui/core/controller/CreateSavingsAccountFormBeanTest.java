@@ -50,15 +50,10 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 public class CreateSavingsAccountFormBeanTest {
 
     private CreateSavingsAccountFormBean formBean;
-
     private ValidationContext validationContext;
-
     private MifosBeanValidator validator;
-
     private LocalValidatorFactoryBean targetValidator;
-
     private QuestionnaireServiceFacade questionnaireServiceFacade;
-
     private ValidationException validationException;
 
     @Before
@@ -166,27 +161,6 @@ public class CreateSavingsAccountFormBeanTest {
     }
 
     @Test
-    public void validateEnterAccountDetailsStep_VoluntaryDeposit_EmptyAmountShouldPass() {
-        validateEnterAccountDetailsStep_VoluntaryDeposit("", null, true);
-    }
-
-    @Test
-    public void validateEnterAccountDetailsStep_VoluntaryDeposit_NullAmountShouldPass() {
-        validateEnterAccountDetailsStep_VoluntaryDeposit(null, null, true);
-    }
-
-    @Test
-    public void validateEnterAccountDetailsStep_VoluntaryDeposit_NumericAmountShouldPass() {
-        validateEnterAccountDetailsStep_VoluntaryDeposit("12.34", null, true);
-    }
-
-    @Test
-    public void validateEnterAccountDetailsStep_VoluntaryDeposit_InvalidAmountShouldFail() {
-        validateEnterAccountDetailsStep_VoluntaryDeposit("xyz.efg",
-                Pattern.class, false);
-    }
-
-    @Test
     public void validateAnswerQuestionGroupStep_EmptyQuestionGroupShouldPass() {
         List<QuestionGroupDetail> questionGroups = new ArrayList<QuestionGroupDetail>();
         formBean.setQuestionGroups(questionGroups);
@@ -214,7 +188,7 @@ public class CreateSavingsAccountFormBeanTest {
     }
 
     private void validateEnterAccountDetailsStep_MandatoryDeposit(
-            String amount, Class expectedViolation, boolean expectingPass) {
+            String amount, @SuppressWarnings("rawtypes") Class expectedViolation, boolean expectingPass) {
         setDepositType(formBean, CreateSavingsAccountFormBean.MANDATORY_DEPOSIT);
         formBean.setMandatoryDepositAmount(amount);
         formBean.validateEnterAccountDetailsStep(validationContext);
@@ -233,26 +207,6 @@ public class CreateSavingsAccountFormBeanTest {
         }
     }
 
-    private void validateEnterAccountDetailsStep_VoluntaryDeposit(
-            String amount, Class expectedViolation, boolean expectingPass) {
-        setDepositType(formBean, CreateSavingsAccountFormBean.VOLUNTARY_DEPOSIT);
-        formBean.setVoluntaryDepositAmount(amount);
-        formBean.validateEnterAccountDetailsStep(validationContext);
-
-        MessageContext messageContext = validationContext.getMessageContext();
-        Message[] messages = messageContext.getAllMessages();
-
-        if (expectingPass) {
-            Assert.assertEquals(0, messages.length);
-            return;
-        } else {
-            Assert.assertEquals(1, messages.length);
-            Message message = messages[0];
-            Assert.assertEquals("voluntaryDepositAmount", message.getSource());
-            verifyErrorMessage(expectedViolation, message);
-        }
-    }
-
     /**
      * Sets deposit type in the form bean.
      */
@@ -265,7 +219,7 @@ public class CreateSavingsAccountFormBeanTest {
         formBean.setProduct(productRef);
     }
 
-    private void verifyErrorMessage(Class constraint, Message message) {
+    private void verifyErrorMessage(@SuppressWarnings("rawtypes") Class constraint, Message message) {
         String expected = constraint.getSimpleName() + "."
                 + formBean.getClass().getSimpleName() + "."
                 + message.getSource();

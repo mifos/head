@@ -49,12 +49,6 @@ public class CreateSavingsAccountController {
     private static final short ACCOUNT_STATE_PENDNG_APPROVAL = 14;
     private static final short ACCOUNT_STATE_ACTIVE = 16;
 
-    // FIXME - keithw - there is no need to differentiate between madatory and voluntary deposit amount
-    // 		 - there is only one field on the form - deposit amount and at creation we use the 
-    //       - product definition to determine if it is mandatory or voluntary?
-    private static final int MANDATORY_DEPOSIT = 1;
-    private static final int VOLUNTARY_DEPOSIT = 2;
-
     // FIXME same problem as above
     private static final int RECURRENCE_WEEKLY = 1;
     private static final int RECURRENCE_MONTHLY = 2;
@@ -94,26 +88,18 @@ public class CreateSavingsAccountController {
         Integer productId = savingsProduct.getProductDetails().getId();
         Integer customerId = formBean.getCustomer().getCustomerId();
 
-        // FIXME - keithw - there is no need to differentiate between madatory and voluntary deposit amount
-        // 		 - there is only one field on the form - deposit amount and at creation we use the 
-        //       - product definition to determine if it is mandatory or voluntary?
-        String depositAmount = savingsProduct.getDepositType() == MANDATORY_DEPOSIT ? formBean
-                .getMandatoryDepositAmount() : formBean
-                .getVoluntaryDepositAmount();
-        if ("".equals(depositAmount)) {
-            depositAmount = "0"; // stops number format exception
-        }
-        
-        String recommendedOrMandatoryAmount = depositAmount.toString();
+        // TODO - deposit amount should be validated before reaching here...
+        String recommendedOrMandatoryAmount = formBean.getMandatoryDepositAmount();
         SavingsAccountCreationDto savingsAccountCreation = new SavingsAccountCreationDto(
-                productId, customerId, accountState,
-                recommendedOrMandatoryAmount);
+                productId, customerId, accountState, recommendedOrMandatoryAmount);
         
         Long savingsId = savingsServiceFacade.createSavingsAccount(savingsAccountCreation);
         SavingsAccountDetailDto savingsAccountDetailDto = savingsServiceFacade.retrieveSavingsAccountDetails(savingsId);
 
         // Store question responses
-        saveQuestionResponses(savingsId, formBean.getQuestionGroups());
+        if (!formBean.getQuestionGroups().isEmpty()) {
+        	saveQuestionResponses(savingsId, formBean.getQuestionGroups());
+        }
 
         return savingsAccountDetailDto;
     }
@@ -156,8 +142,6 @@ public class CreateSavingsAccountController {
         formBean.setProductId(productId);
         formBean.setProduct(product);
         formBean.setMandatoryDepositAmount(product.getSavingsProductDetails()
-                .getAmountForDeposit().toString());
-        formBean.setVoluntaryDepositAmount(product.getSavingsProductDetails()
                 .getAmountForDeposit().toString());
         formBean.setSavingsTypes(getSavingsTypes());
         formBean.setRecurrenceTypes(getRecurrenceTypes());
@@ -226,9 +210,9 @@ public class CreateSavingsAccountController {
      */
     private Map<String, String> getSavingsTypes() {
         Map<String, String> map = new HashMap<String, String>(2);
-        map.put(Integer.toString(MANDATORY_DEPOSIT),
+        map.put(Integer.toString(1),
                 "createSavingsAccount.savingsType.mandatory");
-        map.put(Integer.toString(VOLUNTARY_DEPOSIT),
+        map.put(Integer.toString(2),
                 "createSavingsAccount.savingsType.voluntary");
         return map;
     }

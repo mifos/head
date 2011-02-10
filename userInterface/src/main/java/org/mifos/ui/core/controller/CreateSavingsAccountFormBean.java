@@ -56,17 +56,9 @@ public class CreateSavingsAccountFormBean implements Serializable {
     @NotEmpty(groups = CustomerSearchStep.class)
     private String searchString;
 
-    // TODO grab format in mifos code base. LocalizationConverter.
-    // parseDoubleForMoney
-    // FIXME - keithw - there is no need to differentiate between madatory and voluntary deposit amount
-    // 		 - there is only one field on the form - deposit amount and at creation we use the 
-    //       - product definition to determine if it is mandatory or voluntary?
     @NotNull(groups = { MandatorySavings.class })
     @Pattern(regexp = "^[0-9]+(\\.[0-9]{1,2})?$?", groups = { MandatorySavings.class })
     private String mandatoryDepositAmount;
-
-    @Pattern(regexp = "^[0-9]+(\\.[0-9]{1,2})?$", groups = { VoluntarySavings.class })
-    private String voluntaryDepositAmount;
 
     private SavingsProductReferenceDto product;
 
@@ -176,16 +168,7 @@ public class CreateSavingsAccountFormBean implements Serializable {
 
     public void validateEnterAccountDetailsStep(ValidationContext context) {
         MessageContext messages = context.getMessageContext();
-        Class[] validationGroups = {};
-        if (this.product.getSavingsProductDetails().getDepositType() == MANDATORY_DEPOSIT) {
-            Class[] groups = { MandatorySavings.class };
-            validationGroups = groups;
-        } else if (this.product.getSavingsProductDetails().getDepositType() == VOLUNTARY_DEPOSIT
-                && !"".equals(this.voluntaryDepositAmount)) {
-            Class[] groups = { VoluntarySavings.class };
-            validationGroups = groups;
-        }
-        validator.validate(this, messages, validationGroups);
+        validator.validate(this, messages, MandatorySavings.class);
     }
 
     public void validateAnswerQuestionGroupStep(ValidationContext context) {
@@ -246,14 +229,6 @@ public class CreateSavingsAccountFormBean implements Serializable {
         return mandatoryDepositAmount;
     }
 
-    public void setVoluntaryDepositAmount(String voluntaryDepositAmount) {
-        this.voluntaryDepositAmount = voluntaryDepositAmount;
-    }
-
-    public String getVoluntaryDepositAmount() {
-        return voluntaryDepositAmount;
-    }
-
     public void setQuestionGroups(List<QuestionGroupDetail> questionGroups) {
         this.questionGroups = questionGroups;
     }
@@ -276,7 +251,4 @@ interface EnterAccountInfoStep {
 }
 
 interface MandatorySavings {
-}
-
-interface VoluntarySavings {
 }

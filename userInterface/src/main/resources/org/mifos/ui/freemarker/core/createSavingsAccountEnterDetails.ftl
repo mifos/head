@@ -94,18 +94,12 @@
 <form action="${flowExecutionUrl}" method="post" class="two-columns">
     <fieldset>
     <div class="row">
-        <!-- 
-        FIXME - keithw - there is no need to differentiate between madatory and voluntary deposit amount
-              - there is only one field on the form - deposit amount and at creation we use the 
-              - product definition to determine if it is mandatory or voluntary?
-        -->
         [#if savingsAccountFormBean.product.savingsProductDetails.depositType?string == "1"]
             <label for="selectedPrdOfferingId" class="mandatory">[@spring.message "createSavingsAccount.enterAccountInfo.savingAccountDetail.depositAmount.mandatory" /]</label>
-            [@spring.formInput "savingsAccountFormBean.mandatoryDepositAmount" /]
         [#elseif savingsAccountFormBean.product.savingsProductDetails.depositType?string == "2"]
             <label for="selectedPrdOfferingId">[@spring.message "createSavingsAccount.enterAccountInfo.savingAccountDetail.depositAmount.voluntary" /]</label>
-            [@spring.formInput "savingsAccountFormBean.voluntaryDepositAmount" /]
         [/#if]
+        [@spring.formInput "savingsAccountFormBean.mandatoryDepositAmount" /]
     </div>
     </fieldset>
     <div class="row webflow-controls">
