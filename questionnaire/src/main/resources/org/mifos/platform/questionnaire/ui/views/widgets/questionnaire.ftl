@@ -86,20 +86,20 @@ A widget to render the UI for collecting questionnaire responses.
                                     [@form.checkboxes "${formBeanName}.questionGroups[${questionGroup_index}].sectionDetails[${sectionDetail_index}].questions[${question_index}].values", question.answerChoices, "<br/>" /]
                                   [#break]
                                   [#case "SMART_SELECT"]
-                                  <!-- smart select -->
-                                      <input type="text" autocomplete="off" id="txtListSearch" name="txtListSearch" style="width:21em;" class="txtListSearch"/>
-                                        <div class="questionList" id="questionList" style="overflow:auto; width:19em; height:180px; border:1px solid #336699; padding-left:5px">
-                                            [@form.checkboxes "${formBeanName}.questionGroups[${questionGroup_index}].sectionDetails[${sectionDetail_index}].questions[${question_index}].values", question.answerChoices ,',<br/>', ''/]
-                                        </div>
+                                    <!-- smart select -->
+                                    <input type="text" autocomplete="off" id="txtListSearch" name="txtListSearch" style="width:21em;" class="txtListSearch"/>
+                                    <div class="questionList" id="questionList" style="overflow:auto; width:19em; height:180px; border:1px solid #336699; padding-left:5px">
+                                        [@form.checkboxes "${formBeanName}.questionGroups[${questionGroup_index}].sectionDetails[${sectionDetail_index}].questions[${question_index}].values", question.answerChoices ,',<br/>', ''/]
+                                    </div>
                                   [#break]
                                   [#case "SINGLE_SELECT"]
-                                          [#if question.answerChoices?size > 6]
+                                      [#if question.answerChoices?size > 6]
                                           <!-- single select: select -->
                                           [@form.singleSelectWithPrompt "${formBeanName}.questionGroups[${questionGroup_index}].sectionDetails[${sectionDetail_index}].questions[${question_index}].value", question.answerChoices, "--selectone--", ''/]
-                                          [#else]
+                                      [#else]
                                           <!-- single select: radio -->
                                           [@form.radioButtons "${formBeanName}.questionGroups[${questionGroup_index}].sectionDetails[${sectionDetail_index}].questions[${question_index}].value", question.answerChoices,'<br/>', ''/]
-                                          [/#if]
+                                      [/#if]
                                   [#break]
                                   [#default]
                                      Unknown question type ${question.questionType}
