@@ -120,3 +120,30 @@ A widget to render the UI for collecting questionnaire responses.
         </form>
     </div>
 [/#macro]
+
+[#-- Render question groups for preview. --]
+[#macro preview questionGroups]
+<div class="summary">
+    [#list questionGroups as questionGroup]
+        [#list questionGroup.sectionDetails as sectionDetail]
+            <div class="standout">${sectionDetail.name}</div>
+            [#list sectionDetail.questions as question]
+                <div class="row">
+                    <div class="attribute">${question.text}:</div>
+                    <div class="value">
+                        [#if question.questionType == 'MULTI_SELECT' || question.questionType == 'SMART_SELECT']
+                            [#list question.valuesAsArray as value]
+                                ${value}[#if value_has_next], [/#if]
+                            [/#list]
+                        [#else]
+                            ${question.answer}
+                        [/#if]
+                    </div>
+                </div>
+            [/#list][#-- question --]
+        [/#list][#-- sectionDetail --]
+        <div class="row">&nbsp;</div>
+    [/#list][#-- questionGroup --]
+    <div class="clear"/>
+</div>
+[/#macro]

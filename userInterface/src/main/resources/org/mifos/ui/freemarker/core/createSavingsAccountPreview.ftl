@@ -18,6 +18,7 @@
 *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 *  explanation of the license and how it is applied.
 --]
+[#import "/widgets/questionnaire.ftl" as questionnaire /]
 
 [@layout.webflow currentState="createSavingsAccount.flowState.reviewAndSubmit" 
                  states=["createSavingsAccount.flowState.selectCustomer", 
@@ -91,12 +92,20 @@
     <div class="row">&nbsp;</div>
     <div class="row">
         <form action="${flowExecutionUrl}" method="post">
-            <input type="submit" class="edit" value="Edit Savings account information" name="_eventId_edit" />
+            <input type="submit" class="edit" value="[@spring.message "createSavingsAccount.preview.editAccountDetailsButton" /]" name="_eventId_editAccountDetails" />
         </form>
     </div>
     <div class="clear"/>
 </div>
 <br/>
+
+<!-- question group preview -->
+[@questionnaire.preview savingsAccountFormBean.questionGroups /]
+<form action="${flowExecutionUrl}" method="post">
+    <input type="submit" class="edit" value="[@spring.message "createSavingsAccount.preview.editQuestionGroupButton" /]" name="_eventId_editQuestionGroup" />
+</form>
+<br/>
+
 <form action="${flowExecutionUrl}" method="post" class="webflow-controls centered">
     <div class="row">
         [@form.submitButton "createSavingsAccount.preview.saveForLaterButton" "saveForLater" /]

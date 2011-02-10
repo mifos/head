@@ -22,6 +22,7 @@ package org.mifos.ui.webflow;
 
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -235,15 +236,28 @@ public class CreateSavingsAccountTest extends AbstractXmlFlowExecutionTests {
     }
 
     @Test
-    public void testPreviewStep_Edit() {
+    public void testPreviewStep_EditAccountDetails() {
 
         setCurrentState("previewStep");
 
         MockExternalContext context = new MockExternalContext();
-        context.setEventId("edit");
+        context.setEventId("editAccountDetails");
         resumeFlow(context);
 
-        assertCurrentStateEquals("enterAccountDetailsStep");
+        verify(controller, never()).loadQuestionGroups(formBean);
+        assertCurrentStateEquals("editAccountDetailsStep");
+    }
+
+    @Test
+    public void testPreviewStep_EditQuestionGroup() {
+        setCurrentState("previewStep");
+
+        MockExternalContext context = new MockExternalContext();
+        context.setEventId("editQuestionGroup");
+        resumeFlow(context);
+
+        verify(controller, never()).loadQuestionGroups(formBean);
+        assertCurrentStateEquals("editQuestionGroupStep");
     }
 
     @Test

@@ -76,6 +76,7 @@ div.summary .attribute
 {
     font-weight: bold;
     float: left;
+    max-width: 80%;
 }
 
 div.summary .value 

@@ -51,8 +51,19 @@
         <transition on="detailsEntered" to="questionGroupStep" />
     </view-state>
 
+    <view-state id="editAccountDetailsStep" view="createSavingsAccountEnterDetails" model="savingsAccountFormBean">
+        <transition on="newProductSelected" to="reviseAccountDetailsStep">
+            <!-- TODO use on state entry instead of duplicating code from above? -->
+            <!-- FIXME use action-state? -->
+            <set name="requestScope.productId" value="requestParameters.productId" type="int"/>
+            <evaluate expression="createSavingsAccountController.loadProduct(productId, savingsAccountFormBean)" />
+        </transition>
+        <transition on="detailsEntered" to="previewStep" />
+    </view-state>
+
     <view-state id="previewStep" view="createSavingsAccountPreview">
-        <transition on="edit" to="enterAccountDetailsStep" />
+        <transition on="editAccountDetails" to="editAccountDetailsStep" />
+        <transition on="editQuestionGroup" to="editQuestionGroupStep" />
         <transition on="approve" to="complete">
             <evaluate expression="createSavingsAccountController.createAccountInActiveState(savingsAccountFormBean)" result="flowScope.account" />
         </transition>
@@ -72,6 +83,10 @@
     </decision-state>
 
     <view-state id="answerQuestionGroupStep" view="createSavingsAccountQuestionnaire" model="savingsAccountFormBean">
+        <transition on="questionsAnswered" to="previewStep" />
+    </view-state>
+
+    <view-state id="editQuestionGroupStep" view="createSavingsAccountQuestionnaire" model="savingsAccountFormBean">
         <transition on="questionsAnswered" to="previewStep" />
     </view-state>
     
