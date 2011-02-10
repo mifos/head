@@ -69,7 +69,29 @@ public class CreateSavingsAccountTest extends AbstractXmlFlowExecutionTests {
     }
 
     @Test
-    public void testStartFlow() {
+    public void testStartFlow_CustomerIdProvided() {
+
+        Integer customerId = 1;
+        doNothing().when(controller).customerSelected(customerId, formBean);
+        doNothing().when(controller).getProductOfferings(formBean);
+
+        MutableAttributeMap input = new LocalAttributeMap();
+        MockParameterMap requestParameterMap = new MockParameterMap();
+        requestParameterMap.put("customerId", customerId.toString());
+
+        MockExternalContext context = new MockExternalContext();
+        context.setRequestParameterMap(requestParameterMap);
+        startFlow(input, context);
+
+        assertCurrentStateEquals("selectProductOfferingStep");
+        // FIXME should check customerSelected and getProductOfferings are
+        // invoked.
+        // verify(controller).customerSelected(customerId, formBean);
+        // verify(controller).getProductOfferings(formBean);
+    }
+
+    @Test
+    public void testStartFlow_CustomerIdNotProvided() {
 
         MutableAttributeMap input = new LocalAttributeMap();
         MockExternalContext context = new MockExternalContext();
