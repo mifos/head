@@ -1638,9 +1638,13 @@ public class LoanBO extends AccountBO {
                          * The amount due is not necessarily zero for this case.
                          */
                         if (accntActionDate.isPaid()) {
-                            increaseInterest = increaseInterest.add(accntActionDate.getInterestDue());
-                            increaseFees = increaseFees.add(accntActionDate.getTotalFeeDueWithMiscFeeDue());
-                            increasePenalty = increasePenalty.add(accntActionDate.getPenaltyDue());
+                            increaseInterest = increaseInterest.add(accntActionDate.getInterestDue()).
+                                    add(loanTrxn.getInterestAmount());
+                            increaseFees = increaseFees.add(accntActionDate.getMiscFeeDue()).
+                                    add(loanTrxn.getMiscFeeAmount());
+                            increaseFees = increaseFees.add(accntActionDate.getTotalFeeDue());
+                            increasePenalty = increasePenalty.add(accntActionDate.getPenaltyDue()).
+                                    add(loanTrxn.getPenaltyAmount());
                         }
 
                         accntActionDate.setPaymentStatus(PaymentStatus.UNPAID);
