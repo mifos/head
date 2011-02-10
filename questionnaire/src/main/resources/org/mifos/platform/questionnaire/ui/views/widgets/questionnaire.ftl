@@ -58,13 +58,13 @@ A widget to render the UI for collecting questionnaire responses.
                 <fieldset>
                         [#list sectionDetail.questions as question]
                         <!-- question -->
+                        
                         <div class='row ${((question_index % 2) == 0)?string("even", "odd")}'>
                             <div class="question">
-                                <label class="question" for="questionGroups[${questionGroup_index}].sectionDetails[${sectionDetail_index}].questions[${question_index}].value">
-                                    [#if question.mandatory]<span class="red">*</span>[/#if]
+                                [@form.label "questionGroups[${questionGroup_index}].sectionDetails[${sectionDetail_index}].questions[${question_index}].value" question.mandatory "class='question'"]
                                     ${question.text}
                                     [#if question.questionType=="DATE"](dd/mm/yyyy)&nbsp[/#if]:
-                                </label>
+                                [/@form.label]
                             </div>
                             <div class="answer">
                             

@@ -221,6 +221,10 @@ form.two-columns input.submit
     font-weight: bold;
 }
 
+.mandatory {
+	color: red;
+}
+
 .centered
 {
     text-align: center;

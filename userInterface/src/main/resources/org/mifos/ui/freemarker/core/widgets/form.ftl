@@ -67,6 +67,17 @@ Display form validation errors in one place.
 [/#macro]
 
 [#-- 
+Renders a HTML label tag. Handy when building a mandatory field label.
+
+    for            : the input element this label applies to. has the same meaning as <label for="">
+    required       : indicate whether the label applies to a required/mandatory field
+    htmlAttributes : any extra HTML attributes that should be included, such as ID, CLASS
+ --]
+[#macro label for required=false htmlAttributes=""]
+    <label for="${for}" ${htmlAttributes}>[#if required]<span class="mandatory">*</span>[/#if][#nested]</label>
+[/#macro]
+
+[#-- 
 Renders a submit button.
 
     buttonLabel : The value shown on the button.

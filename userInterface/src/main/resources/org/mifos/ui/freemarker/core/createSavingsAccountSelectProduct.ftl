@@ -36,7 +36,7 @@
 <form action="${flowExecutionUrl}" method="post" class="two-columns">
     <fieldset>
     <div class="row">
-        <label for="productId" class="mandatory">[@spring.message "createSavingsAccount.selectProduct.selectSavingsProduct" /]</label>
+        [@form.label "productId" true][@spring.message "createSavingsAccount.selectProduct.selectSavingsProduct" /][/@form.label]
         [@form.singleSelectWithPrompt "savingsAccountFormBean.productId" savingsAccountFormBean.productOfferingOptions "createSavingsAccount.selectProduct.selectPrompt" /]
     </div>
     </fieldset>

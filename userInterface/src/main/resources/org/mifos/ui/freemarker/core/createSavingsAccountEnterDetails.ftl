@@ -36,7 +36,7 @@
 <form action="${flowExecutionUrl}&_eventId=newProductSelected" method="post" class="two-columns">
     <fieldset>
     <div class="row">
-        <label for="productId" class="mandatory">[@spring.message "createSavingsAccount.enterAccountInfo.selectSavingsProduct" /]</label>
+        [@form.label "productId" true][@spring.message "createSavingsAccount.enterAccountInfo.selectSavingsProduct" /][/@form.label]
         [@form.singleSelectWithPrompt "savingsAccountFormBean.productId" savingsAccountFormBean.productOfferingOptions "createSavingsAccount.selectProduct.selectPrompt" /]
     </div>
     </fieldset>
@@ -95,9 +95,9 @@
     <fieldset>
     <div class="row">
         [#if savingsAccountFormBean.product.savingsProductDetails.depositType?string == "1"]
-            <label for="selectedPrdOfferingId" class="mandatory">[@spring.message "createSavingsAccount.enterAccountInfo.savingAccountDetail.depositAmount.mandatory" /]</label>
+            [@form.label "mandatoryDepositAmount" true][@spring.message "createSavingsAccount.enterAccountInfo.savingAccountDetail.depositAmount.mandatory" /][/@form.label]
         [#elseif savingsAccountFormBean.product.savingsProductDetails.depositType?string == "2"]
-            <label for="selectedPrdOfferingId">[@spring.message "createSavingsAccount.enterAccountInfo.savingAccountDetail.depositAmount.voluntary" /]</label>
+            [@form.label "mandatoryDepositAmount" false][@spring.message "createSavingsAccount.enterAccountInfo.savingAccountDetail.depositAmount.voluntary" /][/@form.label]
         [/#if]
         [@spring.formInput "savingsAccountFormBean.mandatoryDepositAmount" /]
     </div>
