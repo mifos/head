@@ -742,6 +742,20 @@ public class ClientTest extends UiTestCaseBase {
         savingsAccountHelper.verifyTotalAmountDue(savingsId, numberOfGroupMembers, Float.parseFloat(submitAccountParameters.getAmount()));
     }
 
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // http://mifosforge.jira.com/browse/MIFOSTEST-43
+    public void addingMemeberPendingApprovalStatusToGroupWithActiveStatus() throws Exception {
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
+        String groupName = "MyGroup1232993846342";
+
+        //When
+        String clientName = clientTestHelper.createClientAndVerify("Joe1233171679953 Guy1233171679953", "MyOffice1233171674227").getHeading();
+
+        //Then
+        clientTestHelper.addClientToGroup(clientName, groupName);
+    }
+
     private QuestionnairePage checkMandatoryQuestionValidation(String questionGroupTitle, String question1, String question2, ClientViewDetailsPage viewDetailsPage) {
         QuestionnairePage questionnairePage = viewDetailsPage.getQuestionnairePage(questionGroupTitle);
         questionnairePage.setResponsesForMultiSelect(question2, 4, "Choice1", "Choice3", "Choice4");
