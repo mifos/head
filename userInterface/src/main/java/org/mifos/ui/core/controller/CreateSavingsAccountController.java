@@ -103,16 +103,6 @@ public class CreateSavingsAccountController {
         formBean.setCustomer(customer);
     }
 
-    /**
-     * FIXME - keithw - remove as only used from test.
-     */
-    @Deprecated
-    public List<QuestionGroupDetail> getQuestionGroups() {
-        List<QuestionGroupDetail> questionGroups = questionnaireServiceFacade
-                .getQuestionGroups("Create", "Savings");
-        return questionGroups;
-    }
-    
     public void loadQuestionGroups(CreateSavingsAccountFormBean formBean) {
         List<QuestionGroupDetail> questionGroups = questionnaireServiceFacade.getQuestionGroups("Create", "Savings");
         formBean.setQuestionGroups(questionGroups);

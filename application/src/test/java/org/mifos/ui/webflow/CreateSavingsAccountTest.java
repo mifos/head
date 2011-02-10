@@ -189,8 +189,8 @@ public class CreateSavingsAccountTest extends AbstractXmlFlowExecutionTests {
     @Test
     public void testEnterAccountDetailsStep_DetailsEntered_NoQuestionGroup() {
 
-        when(controller.getQuestionGroups()).thenReturn(
-                new ArrayList<QuestionGroupDetail>());
+        List<QuestionGroupDetail> groups = new ArrayList<QuestionGroupDetail>();
+        when(formBean.getQuestionGroups()).thenReturn(groups);
 
         setCurrentState("enterAccountDetailsStep");
 
