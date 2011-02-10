@@ -44,7 +44,6 @@
 
     <view-state id="enterAccountDetailsStep" view="createSavingsAccountEnterDetails" model="savingsAccountFormBean">
         <transition on="newProductSelected" to="enterAccountDetailsStep">
-            <!-- TODO use on state entry instead of duplicating code from above? -->
             <set name="requestScope.productId" value="requestParameters.productId" type="int"/>
             <evaluate expression="createSavingsAccountController.loadProduct(productId, savingsAccountFormBean)" />
         </transition>
@@ -53,8 +52,6 @@
 
     <view-state id="editAccountDetailsStep" view="createSavingsAccountEnterDetails" model="savingsAccountFormBean">
         <transition on="newProductSelected" to="reviseAccountDetailsStep">
-            <!-- TODO use on state entry instead of duplicating code from above? -->
-            <!-- FIXME use action-state? -->
             <set name="requestScope.productId" value="requestParameters.productId" type="int"/>
             <evaluate expression="createSavingsAccountController.loadProduct(productId, savingsAccountFormBean)" />
         </transition>
