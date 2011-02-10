@@ -81,16 +81,16 @@ public class LoanProductDetailsPage  extends MifosPage {
     }
 
     public LoanProductDetailsPage verifyCashFlowOfEditedLoan(String warningThreshold, String indebetedValue, String repaymentCapacityValue) {
-        Assert.assertTrue(selenium.isTextPresent("Compare with Cash Flow: Yes"));
+        Assert.assertTrue(selenium.isTextPresent("Compare with Client's Monthly Cash Flow: Yes"));
         if ("".equals(warningThreshold)) {
             Assert.assertTrue(selenium.isTextPresent("Warning Threshold: N/A"));
         } else {
             Assert.assertTrue(selenium.isTextPresent("Warning Threshold: " + warningThreshold + " %"));
         }
         if ("".equals(indebetedValue)) {
-            Assert.assertTrue(selenium.isTextPresent("Indebtedness Rate: N/A"));
+            Assert.assertTrue(selenium.isTextPresent("Maximum Allowed Debt Ratio: N/A"));
         } else {
-            Assert.assertTrue(selenium.isTextPresent("Indebtedness Rate: " + indebetedValue + " %"));
+            Assert.assertTrue(selenium.isTextPresent("Maximum Allowed Debt Ratio: " + indebetedValue + " %"));
         }
         if ("".equals(repaymentCapacityValue)) {
             Assert.assertTrue(selenium.isTextPresent("Repayment Capacity: N/A"));
@@ -101,7 +101,7 @@ public class LoanProductDetailsPage  extends MifosPage {
     }
 
     public LoanProductDetailsPage verifyCashFlowUncheckedInEditedProduct() {
-        Assert.assertTrue(selenium.isTextPresent("Compare with Cash Flow: No"));
+        Assert.assertTrue(selenium.isTextPresent("Compare with Client's Monthly Cash Flow: No"));
         Assert.assertTrue(!selenium.isTextPresent("Warning Threshold:"));
         return this;
     }
