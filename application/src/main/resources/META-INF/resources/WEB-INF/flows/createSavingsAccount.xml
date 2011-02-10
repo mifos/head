@@ -26,16 +26,16 @@
 
     <action-state id="doCustomerSelected">
         <set name="requestScope.customerId" value="requestParameters.customerId" type="int" />
-        <evaluate expression="createSavingsAccountController.customerSelected(customerId, savingsAccountFormBean)" >
-            <attribute name="name" value="outcome1"/>
+        <evaluate expression="createSavingsAccountController.customerSelected(customerId, savingsAccountFormBean)">
+            <attribute name="name" value="outcome"/>
         </evaluate>
-        <evaluate expression="createSavingsAccountController.getProductOfferings(savingsAccountFormBean)" >
-            <attribute name="name" value="outcome2"/>
-        </evaluate>
-        <transition on="outcome2.success" to="selectProductOfferingStep"/>
+        <transition on="outcome.success" to="selectProductOfferingStep"/>
     </action-state>
     
     <view-state id="selectProductOfferingStep" view="createSavingsAccountSelectProduct" model="savingsAccountFormBean">
+        <on-entry>
+            <evaluate expression="createSavingsAccountController.getProductOfferings(savingsAccountFormBean)" />
+        </on-entry>
         <transition on="productSelected" to="enterAccountDetailsStep">
             <set name="requestScope.productId" value="requestParameters.productId" type="int"/>
             <evaluate expression="createSavingsAccountController.loadProduct(productId, savingsAccountFormBean)" />

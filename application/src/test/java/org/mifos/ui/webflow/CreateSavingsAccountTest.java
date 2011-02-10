@@ -72,8 +72,6 @@ public class CreateSavingsAccountTest extends AbstractXmlFlowExecutionTests {
     public void testStartFlow_CustomerIdProvided() {
 
         Integer customerId = 1;
-        doNothing().when(controller).customerSelected(customerId, formBean);
-        doNothing().when(controller).getProductOfferings(formBean);
 
         MutableAttributeMap input = new LocalAttributeMap();
         MockParameterMap requestParameterMap = new MockParameterMap();
@@ -85,7 +83,7 @@ public class CreateSavingsAccountTest extends AbstractXmlFlowExecutionTests {
 
         assertCurrentStateEquals("selectProductOfferingStep");
         // FIXME should check customerSelected and getProductOfferings are
-        // invoked.
+        // invoked. Somehow formBean is a different instance??
         // verify(controller).customerSelected(customerId, formBean);
         // verify(controller).getProductOfferings(formBean);
     }
@@ -129,6 +127,7 @@ public class CreateSavingsAccountTest extends AbstractXmlFlowExecutionTests {
         resumeFlow(context);
 
         verify(controller).customerSelected(customerId, formBean);
+        verify(controller).getProductOfferings(formBean);
         assertCurrentStateEquals("selectProductOfferingStep");
     }
 
