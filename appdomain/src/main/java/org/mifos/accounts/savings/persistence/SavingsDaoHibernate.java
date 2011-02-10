@@ -45,6 +45,7 @@ import org.mifos.application.servicefacade.CustomerHierarchyParams;
 import org.mifos.dto.domain.CustomerNoteDto;
 import org.mifos.dto.domain.NoteSearchDto;
 import org.mifos.dto.screen.NotesSearchResultsDto;
+import org.mifos.dto.screen.SearchDetailsDto;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.slf4j.Logger;
@@ -304,7 +305,8 @@ public class SavingsDaoHibernate implements SavingsDao {
             pageDtoResults.add(new CustomerNoteDto(note.getCommentDate(), note.getComment(), note.getPersonnelName()));
         }
 
-        NotesSearchResultsDto resultsDto = new NotesSearchResultsDto(totalNumberOfSavingsNotes.intValue(), firstResult, noteSearch.getPage(), noteSearch.getPageSize(), pageDtoResults);
+        SearchDetailsDto searchDetails = new SearchDetailsDto(totalNumberOfSavingsNotes.intValue(), firstResult, noteSearch.getPage(), noteSearch.getPageSize());
+        NotesSearchResultsDto resultsDto = new NotesSearchResultsDto(searchDetails, pageDtoResults);
 
         return resultsDto;
     }

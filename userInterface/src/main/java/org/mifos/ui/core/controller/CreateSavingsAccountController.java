@@ -33,6 +33,7 @@ import org.mifos.dto.domain.SavingsAccountDetailDto;
 import org.mifos.dto.domain.SavingsProductDto;
 import org.mifos.dto.screen.CustomerSearchResultsDto;
 import org.mifos.dto.screen.SavingsProductReferenceDto;
+import org.mifos.dto.screen.SearchDetailsDto;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -149,7 +150,8 @@ public class CreateSavingsAccountController {
     	CustomerSearchDto customerSearchDto = new CustomerSearchDto(formBean.getSearchString(), Integer.valueOf(1), Integer.valueOf(10));
     	List<CustomerSearchResultDto> pagedDetails = this.savingsServiceFacade.retrieveCustomerThatQualifyForSavings(customerSearchDto);
     	
-        CustomerSearchResultsDto resultsDto = new CustomerSearchResultsDto(pagedDetails.size(), 1, 1, 10, pagedDetails);
+    	SearchDetailsDto searchDetails = new SearchDetailsDto(pagedDetails.size(), 1, 1, 10);
+        CustomerSearchResultsDto resultsDto = new CustomerSearchResultsDto(searchDetails, pagedDetails);
         return resultsDto;
     }
 

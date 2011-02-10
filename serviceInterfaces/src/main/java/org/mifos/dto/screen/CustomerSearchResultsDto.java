@@ -25,54 +25,22 @@ import java.util.List;
 
 import org.mifos.dto.domain.CustomerSearchResultDto;
 
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID"}, justification="should disable at filter level and also for pmd - not important for us")
 public class CustomerSearchResultsDto implements Serializable {
 
-	private final Integer totalCount;
-	private final int firstResult;
-	private final Integer page;
-	private final Integer pageSize;
+	private final SearchDetailsDto searchDetails;
 	private final List<CustomerSearchResultDto> pagedDetails;
 
-	public CustomerSearchResultsDto(Integer totalCount, int firstResult,
-			Integer page, Integer pageSize, List<CustomerSearchResultDto> pagedDetails) {
-		this.totalCount = totalCount;
-		this.firstResult = firstResult;
-		this.page = page;
-		this.pageSize = pageSize;
+	public CustomerSearchResultsDto(SearchDetailsDto searchDetails, List<CustomerSearchResultDto> pagedDetails) {
+		this.searchDetails = searchDetails;
 		this.pagedDetails = pagedDetails;
 	}
 
-	public String getCurrentRange() {
-
-		int upperRange = this.firstResult + this.pageSize;
-
-		if (upperRange > totalCount) {
-			upperRange = totalCount;
-		}
-
-		return this.firstResult + "-" + upperRange;
+	public SearchDetailsDto getSearchDetails() {
+		return searchDetails;
 	}
-
-	public boolean isNotLastPage() {
-		return firstResult + pageSize < (totalCount);
-	}
-
-	public Integer getTotalCount() {
-		return this.totalCount;
-	}
-
-	public int getFirstResult() {
-		return this.firstResult;
-	}
-
-	public Integer getPage() {
-		return this.page;
-	}
-
-	public Integer getPageSize() {
-		return this.pageSize;
-	}
-
+	
 	public List<CustomerSearchResultDto> getPagedDetails() {
 		return this.pagedDetails;
 	}

@@ -26,49 +26,12 @@ import org.mifos.dto.domain.CustomerNoteDto;
 
 public class NotesSearchResultsDto {
 
-    private final Integer totalCount;
-    private final int firstResult;
-    private final Integer page;
-    private final Integer pageSize;
+    private final SearchDetailsDto searchDetails;
     private final List<CustomerNoteDto> pagedDetails;
-
-    public NotesSearchResultsDto(Integer totalCount, int firstResult, Integer page, Integer pageSize, List<CustomerNoteDto> pagedDetails) {
-        this.totalCount = totalCount;
-        this.firstResult = firstResult;
-        this.page = page;
-        this.pageSize = pageSize;
-        this.pagedDetails = pagedDetails;
-    }
-
-    public String getCurrentRange() {
-
-        int upperRange = this.firstResult + this.pageSize;
-
-        if (upperRange > totalCount) {
-            upperRange = totalCount;
-        }
-
-        return this.firstResult + "-" + upperRange;
-    }
-
-    public boolean isNotLastPage() {
-        return firstResult+pageSize < (totalCount);
-    }
-
-    public Integer getTotalCount() {
-        return this.totalCount;
-    }
-
-    public int getFirstResult() {
-        return this.firstResult;
-    }
-
-    public Integer getPage() {
-        return this.page;
-    }
-
-    public Integer getPageSize() {
-        return this.pageSize;
+    
+    public NotesSearchResultsDto(SearchDetailsDto searchDetails, List<CustomerNoteDto> pagedDetails) {
+        this.searchDetails = searchDetails;
+		this.pagedDetails = pagedDetails;
     }
 
     public List<CustomerNoteDto> getPagedDetails() {
