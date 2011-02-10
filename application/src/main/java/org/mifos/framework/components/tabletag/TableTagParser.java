@@ -63,7 +63,7 @@ public class TableTagParser {
 
             DocumentBuilder builder = factory.newDocumentBuilder();
             builder.setErrorHandler(null);
-            Document document = builder.parse(MifosResourceUtil.getClassPathResourceAsStream(filename));
+            Document document = builder.parse(MifosResourceUtil.getClassPathResource(filename));
             /*
              * NodeList tableNodeList =
              * document.getElementsByTagName(TableTagConstants.TABLE); table =
@@ -78,14 +78,8 @@ public class TableTagParser {
             table.setPageRequirements(createPageRequirements(tableNode));
             table.setRow(createRow(tableNode));
 
-        } catch (ParserConfigurationException pce) {
-            throw new TableTagParseException(pce);
-        } catch (IOException ioe) {
-            throw new TableTagParseException(ioe);
-        } catch (SAXParseException saxpe) {
-            throw new TableTagParseException(saxpe);
-        } catch (SAXException saxe) {
-            throw new TableTagParseException(saxe);
+        } catch (Exception e) {
+            throw new TableTagParseException(e);
         }
         return table;
     }

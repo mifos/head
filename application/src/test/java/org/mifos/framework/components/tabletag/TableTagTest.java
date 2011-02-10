@@ -142,7 +142,7 @@ public class TableTagTest extends TestCase {
                         Text.getImage(customerSearchDto, "13", locale));
     }
 
-    public void xtestTableTagParser() throws Exception {
+    public void testTableTagParser() throws Exception {
         Table table = TableTagParser.getInstance().parser("org/mifos/framework/util/resources/tabletag/viewUsers.xml");
         Path path[] = table.getPath();
         for (Path element : path) {
@@ -204,7 +204,7 @@ public class TableTagTest extends TestCase {
 
     }
 
-    public void xtestHelperCache() throws Exception {
+    public void testHelperCache() throws Exception {
 
         TableTag tableTag = new TableTag("single");
         tableTag.setName("viewUsers");
