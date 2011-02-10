@@ -27,7 +27,7 @@ import org.mifos.dto.domain.CustomerNoteDto;
 public class NotesSearchResultsDto {
 
     private final SearchDetailsDto searchDetails;
-    private final List<CustomerNoteDto> pagedDetails;
+	private final List<CustomerNoteDto> pagedDetails;
     
     public NotesSearchResultsDto(SearchDetailsDto searchDetails, List<CustomerNoteDto> pagedDetails) {
         this.searchDetails = searchDetails;
@@ -37,4 +37,8 @@ public class NotesSearchResultsDto {
     public List<CustomerNoteDto> getPagedDetails() {
         return this.pagedDetails;
     }
+    
+    public SearchDetailsDto getSearchDetails() {
+		return searchDetails;
+	}
 }
