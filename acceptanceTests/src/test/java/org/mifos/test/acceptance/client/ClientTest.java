@@ -92,7 +92,7 @@ import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
 @SuppressWarnings("PMD.TooManyFields")
-//@Test(sequential = true, groups = {"client", "acceptance", "ui", "smoke"})
+@Test(sequential = true, groups = {"client", "acceptance", "ui", "smoke"})
 public class ClientTest extends UiTestCaseBase {
 
     private NavigationHelper navigationHelper;
@@ -673,7 +673,6 @@ public class ClientTest extends UiTestCaseBase {
         clientTestHelper.deleteClientGroupMembership(clientName, "remove group membership");
     }
 
-    @Test(sequential = true, groups = {"client", "acceptance", "ui", "smoke"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-52
     public void removeClientWithSavingsFromGroupWithSavingsCheckGroupCalculation() throws Exception {
@@ -703,6 +702,43 @@ public class ClientTest extends UiTestCaseBase {
         Integer numberOfGroupMembers = Integer.parseInt(navigationHelper.navigateToGroupViewDetailsPage(groupName).getNumberOfClientsInGroup());
 
         //Then
+        savingsAccountHelper.verifyTotalAmountDue(savingsId, numberOfGroupMembers, Float.parseFloat(submitAccountParameters.getAmount()));
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // http://mifosforge.jira.com/browse/MIFOSTEST-45
+    public void addClientWithSavingToGroupWithSavingsCheckGroupCalculation() throws Exception {
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_015_dbunit.xml", dataSource, selenium);
+
+        String groupName = "MyGroup1232993846342";
+
+        CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
+        CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
+        submitAccountParameters.setAmount("240.0");
+        EditAccountStatusParameters editAccountStatusParameters =new EditAccountStatusParameters();
+        editAccountStatusParameters.setAccountStatus(AccountStatus.SAVINGS_ACTIVE);
+        editAccountStatusParameters.setNote("change status to active");
+
+        //When
+        ClientViewDetailsPage clientDetailsPage = clientTestHelper.createClientAndVerify("Joe1233171679953 Guy1233171679953", "MyOffice1233171674227");
+        clientTestHelper.changeCustomerStatus(clientDetailsPage, ClientStatus.ACTIVE);
+        String clientName = clientDetailsPage.getHeading();
+
+        searchParameters.setSavingsProduct("MandClientSavings3MoPostMinBal");
+        searchParameters.setSearchString(clientName);
+        String savingsId = savingsAccountHelper.createSavingsAccountWithQG(searchParameters, submitAccountParameters).getAccountId();
+        savingsAccountHelper.changeStatus(savingsId, editAccountStatusParameters);
+
+        searchParameters.setSavingsProduct("MandGroupSavingsPerIndiv1MoPost");
+        searchParameters.setSearchString(groupName);
+        savingsId = savingsAccountHelper.createSavingsAccountWithQG(searchParameters, submitAccountParameters).getAccountId();
+        savingsAccountHelper.changeStatus(savingsId, editAccountStatusParameters);
+
+        clientTestHelper.addClientToGroup(clientName, groupName);
+
+        //Then
+        Integer numberOfGroupMembers = Integer.parseInt(navigationHelper.navigateToGroupViewDetailsPage(groupName).getNumberOfClientsInGroup());
         savingsAccountHelper.verifyTotalAmountDue(savingsId, numberOfGroupMembers, Float.parseFloat(submitAccountParameters.getAmount()));
     }
 

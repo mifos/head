@@ -29,14 +29,26 @@ public class ViewDepositDueDetailsPage extends MifosPage{
     public ViewDepositDueDetailsPage(Selenium selenium) {
         super(selenium);
         this.verifyPage("savingsaccountdepositduedetails");
+
     }
 
     public Float getTotalAmountDue(){
-        return Float.parseFloat(selenium.getTable("DepositDueDetailsTable.4.1"));
+        int rowCount = selenium.getXpathCount("//table[@id='DepositDueDetailsTable']/tbody/tr").intValue();
+        return Float.parseFloat(selenium.getTable("DepositDueDetailsTable." + (rowCount - 2) + ".1"));
+    }
+
+    public Float getNextdeposit(){
+        return Float.parseFloat(selenium.getTable("DepositDueDetailsTable.1.1"));
+    }
+
+    public Float getSubTotal(){
+        int rowCount = selenium.getXpathCount("//table[@id='DepositDueDetailsTable']/tbody/tr").intValue();
+        return Float.parseFloat(selenium.getTable("DepositDueDetailsTable." + (rowCount - 3) + ".1"));
     }
 
     public void verifyTotalAmountDue(Integer numberOfGroupMembers, Float amountPerMember){
-        Assert.assertEquals(getTotalAmountDue(), (numberOfGroupMembers*amountPerMember));
+        Assert.assertEquals(getNextdeposit(), (numberOfGroupMembers*amountPerMember));
+        Assert.assertEquals(getTotalAmountDue(), (numberOfGroupMembers*amountPerMember+getSubTotal()));
     }
 
 }
