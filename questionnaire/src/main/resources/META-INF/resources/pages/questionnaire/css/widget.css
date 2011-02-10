@@ -14,12 +14,12 @@ form.two-columns label {
 
 .questionnaire-widget .odd {
     background-color: #F2F2F2;
-    padding: 10px;
+    padding: 5px;
 }
 
 .questionnaire-widget .even {
     background-color: #FFFFFF;
-    padding: 10px;
+    padding: 5px;
 }
 
 .question {

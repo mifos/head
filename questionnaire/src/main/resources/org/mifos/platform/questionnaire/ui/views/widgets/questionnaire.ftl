@@ -82,27 +82,15 @@ A widget to render the UI for collecting questionnaire responses.
                                     [@spring.formInput "${formBeanName}.questionGroups[${questionGroup_index}].sectionDetails[${sectionDetail_index}].questions[${question_index}].value", 'maxlength="10" class="date-pick"' /]
                                   [#break]
                                   [#case "MULTI_SELECT"]
-                                  <!-- multi-select -->
-                                  <fieldset>
-                                    <ol class="noPadding">
-                                      <li class="noPadding">
-                                        [@form.checkboxes "${formBeanName}.questionGroups[${questionGroup_index}].sectionDetails[${sectionDetail_index}].questions[${question_index}].values", question.answerChoices /]
-                                      </li>
-                                    </ol>
-                                  </fieldset>
+                                    <!-- multi-select -->
+                                    [@form.checkboxes "${formBeanName}.questionGroups[${questionGroup_index}].sectionDetails[${sectionDetail_index}].questions[${question_index}].values", question.answerChoices, "<br/>" /]
                                   [#break]
                                   [#case "SMART_SELECT"]
                                   <!-- smart select -->
-                                  <fieldset>
-                                        <li class="noPadding">
-                                          <input type="text" autocomplete="off" id="txtListSearch" name="txtListSearch" style="width:21em;" class="txtListSearch"/>
-                                        </li>
-                                        <ol class="questionList" id="questionList" style="overflow:auto; width:19em; height:180px; border:1px solid #336699; padding-left:5px">
-                                            <li style="padding-bottom: 0pt;">
-                                                [@form.checkboxesWithTags "${formBeanName}.questionGroups[${questionGroup_index}].sectionDetails[${sectionDetail_index}].questions[${question_index}].values", question.answerChoices ,'</li><li class="noPadding">', ''/]
-                                            </li>
-                                        </ol>
-                                  </fieldset>
+                                      <input type="text" autocomplete="off" id="txtListSearch" name="txtListSearch" style="width:21em;" class="txtListSearch"/>
+                                        <div class="questionList" id="questionList" style="overflow:auto; width:19em; height:180px; border:1px solid #336699; padding-left:5px">
+                                            [@form.checkboxes "${formBeanName}.questionGroups[${questionGroup_index}].sectionDetails[${sectionDetail_index}].questions[${question_index}].values", question.answerChoices ,',<br/>', ''/]
+                                        </div>
                                   [#break]
                                   [#case "SINGLE_SELECT"]
                                           [#if question.answerChoices?size > 6]
@@ -117,7 +105,7 @@ A widget to render the UI for collecting questionnaire responses.
                                      Unknown question type ${question.questionType}
                                 [/#switch]
                             </div><!-- answer -->
-                        <div class="clear">&nbsp;</div><!-- clear -->
+                        <div class="clear"></div><!-- clear -->
                         </div><!-- row -->
                         [/#list][#-- questions --]
                 </fieldset>
