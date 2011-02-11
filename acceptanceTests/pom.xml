@@ -18,11 +18,9 @@
 
     <properties>
         <modules.root.dir>${basedir}/..</modules.root.dir>
-        <cargo.install.directory>${basedir}/target/installs</cargo.install.directory>
         <selenium.background>true</selenium.background>
         <selenium.log.output>true</selenium.log.output>
-        <tomcat.container.url>http://www.apache.org/dist/tomcat/tomcat-6/v${tomcat.version}/bin/apache-tomcat-${tomcat.version}.zip</tomcat.container.url>
-        <cargo.wait>false</cargo.wait>
+        <t7mp.wait>false</t7mp.wait>
         <jdk.version>1.6</jdk.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -323,11 +321,9 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <tomcatHttpPort>8083</tomcatHttpPort>
-                    <tomcatShutdownPort>8005</tomcatShutdownPort>
-                    <tomcatShutdownCommand>SHUTDOWN</tomcatShutdownCommand>
+                    <tomcatHttpPort>${server.port}</tomcatHttpPort>
                     <tomcatVersion>7.0.6</tomcatVersion>
-                    <tomcatSetAwait>false</tomcatSetAwait>
+                    <tomcatSetAwait>${t7mp.wait}</tomcatSetAwait>
                     <lookInside>false</lookInside>
                     <systemProperties>
                         <systemProperty>
