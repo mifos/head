@@ -4892,3 +4892,26 @@ create table calculated_interest_on_payment (
       on update no action
 )
 engine=innodb character set utf8;
+
+CREATE TABLE  DATABASECHANGELOG (
+  ID varchar(63) NOT NULL,
+  AUTHOR varchar(63) NOT NULL,
+  FILENAME varchar(200) NOT NULL,
+  DATEEXECUTED datetime NOT NULL,
+  ORDEREXECUTED int(11) NOT NULL,
+  EXECTYPE varchar(10) NOT NULL,
+  MD5SUM varchar(35) DEFAULT NULL,
+  DESCRIPTION varchar(255) DEFAULT NULL,
+  COMMENTS varchar(255) DEFAULT NULL,
+  TAG varchar(255) DEFAULT NULL,
+  LIQUIBASE varchar(20) DEFAULT NULL,
+  PRIMARY KEY (ID,AUTHOR,FILENAME)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE  DATABASECHANGELOGLOCK (
+  ID int(11) NOT NULL,
+  LOCKED tinyint(1) NOT NULL,
+  LOCKGRANTED datetime DEFAULT NULL,
+  LOCKEDBY varchar(255) DEFAULT NULL,
+  PRIMARY KEY (ID)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;

@@ -39,6 +39,7 @@ import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 /**
  *
@@ -60,7 +61,7 @@ public class LoginServiceFacadeWebTier implements NewLoginServiceFacade {
 
         PersonnelBO user = this.personnelDao.findPersonnelByUsername(username);
         if (user == null) {
-            throw new BusinessRuleException(LoginConstants.KEYINVALIDUSER);
+            throw new UsernameNotFoundException(LoginConstants.KEYINVALIDUSER);
         }
 
         Locale preferredLocale = Localization.getInstance().getConfiguredLocale();
