@@ -321,7 +321,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <tomcatHttpPort>${server.port}</tomcatHttpPort>
+                    <tomcatHttpPort>${servlet.port}</tomcatHttpPort>
                     <tomcatVersion>7.0.6</tomcatVersion>
                     <tomcatSetAwait>${t7mp.wait}</tomcatSetAwait>
                     <lookInside>false</lookInside>
