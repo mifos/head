@@ -162,7 +162,7 @@ explanation of the license and how it is applied.
                                                     </c:otherwise>
                                                     </c:choose>
                                                     <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
-                                                    <mifos:mifoslabel name="accounts.account" />&nbsp;-&nbsp;
+                                                    <mifos:mifoslabel name="accounts.accountLower" />&nbsp;-&nbsp;
                                                 </span>
 												<mifos:mifoslabel name="loan.review&edit" />
 											</td>
