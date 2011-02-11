@@ -73,6 +73,16 @@
                 <selenium.port>4445</selenium.port>
             </properties>
         </profile>
+        <profile>
+            <id>continuous-integration</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <!-- leaving <acceptanceTest.groups.to.run> empty means to run everything -->
+                <acceptanceTest.groups.to.run></acceptanceTest.groups.to.run>
+            </properties>
+        </profile>
     </profiles>
     <dependencies>
         <dependency>
