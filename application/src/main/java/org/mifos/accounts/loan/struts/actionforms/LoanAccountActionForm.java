@@ -99,6 +99,7 @@ import static org.apache.commons.lang.StringUtils.isBlank;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.PERSPECTIVE_VALUE_REDO_LOAN;
 import static org.mifos.framework.util.CollectionUtils.select;
 import static org.mifos.platform.util.CollectionUtils.collect;
+import static org.mifos.platform.util.CollectionUtils.isNotEmpty;
 import static org.mifos.platform.util.CollectionUtils.itemIndexOutOfAscendingOrder;
 
 public class LoanAccountActionForm extends BaseActionForm implements QuestionResponseCapturer, CashFlowCaptor {
@@ -1625,6 +1626,28 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
         setScheduleViewDate(new SimpleDateFormat("dd/MM/yyyy", Locale.US).format(new DateTimeService().getCurrentJavaSqlDate()));
     }
 
+    public List<FeeDto> getApplicableFees() {
+        List<FeeDto> applicableFees = new ArrayList<FeeDto>();
+        addDefaultFees(applicableFees);
+        addAdditionalFees(applicableFees);
+        return applicableFees;
+    }
+
+    private void addAdditionalFees(List<FeeDto> applicableFees) {
+        if (isNotEmpty(additionalFees)) {
+            for (FeeDto additionalFee : additionalFees) {
+                if (additionalFee.isNotEmpty()) applicableFees.add(additionalFee);
+            }
+        }
+    }
+
+    private void addDefaultFees(List<FeeDto> applicableFees) {
+        if (isNotEmpty(defaultFees)) {
+            for (FeeDto defaultFee : defaultFees) {
+                if (defaultFee.isNotEmpty()) applicableFees.add(defaultFee);
+            }
+        }
+    }
 
     private static class RemoveEmptyClientDetailsForUncheckedClients implements Predicate {
 

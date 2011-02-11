@@ -193,4 +193,8 @@ public class FeeDto implements DataTransferObject {
     public boolean isWeekly() {
         return RecurrenceType.WEEKLY.equals(this.frequencyType);
     }
+
+    public boolean isNotEmpty() {
+        return StringUtils.isNotEmpty(feeId);
+    }
 }
