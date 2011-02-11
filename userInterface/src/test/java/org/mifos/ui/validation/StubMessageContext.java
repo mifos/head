@@ -30,7 +30,7 @@ import org.springframework.binding.message.MessageCriteria;
 import org.springframework.binding.message.MessageResolver;
 import org.springframework.context.MessageSource;
 
-class StubMessageContext implements MessageContext {
+public class StubMessageContext implements MessageContext {
 
     private List<Message> messages = new ArrayList<Message>();
 

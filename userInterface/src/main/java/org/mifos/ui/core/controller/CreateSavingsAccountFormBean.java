@@ -35,8 +35,8 @@ import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.validation.MifosBeanValidator;
 import org.mifos.platform.validations.ValidationException;
+import org.mifos.ui.core.controller.util.ValidationExceptionMessageExtractor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.binding.message.MessageBuilder;
 import org.springframework.binding.message.MessageContext;
 import org.springframework.binding.validation.ValidationContext;
 
@@ -179,14 +179,8 @@ public class CreateSavingsAccountFormBean implements Serializable {
             questionnaireServiceFacade.validateResponses(this
                     .getQuestionGroups());
         } catch (ValidationException e) {
-            if (e.hasChildExceptions()) {
-                List<ValidationException> children = e.getChildExceptions();
-                for (ValidationException child : children) {
-                    messages.addMessage(new MessageBuilder().error()
-                            .source(child.getIdentifier()).code(child.getKey())
-                            .arg(child.getIdentifier()).build());
-                }
-            }
+            ValidationExceptionMessageExtractor extractor = new ValidationExceptionMessageExtractor();
+            extractor.extract(messages, e);
         }
     }
 
