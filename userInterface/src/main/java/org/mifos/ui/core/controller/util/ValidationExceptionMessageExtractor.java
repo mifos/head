@@ -47,10 +47,8 @@ public class ValidationExceptionMessageExtractor  {
                     extractBadNumericResponseException(context, (BadNumericResponseException) child);
                 } else if (child instanceof MandatoryAnswerNotFoundException) {
                     extractMandatoryAnswerNotFoundException(context, (MandatoryAnswerNotFoundException) child);
-                } else if (child instanceof ValidationException) {
-                    extractDefault(context, child);
                 } else {
-                    throw new IllegalArgumentException("Unhandled exception type: " + child.getClass());
+                    extractDefault(context, child);
                 }
             }
         }
