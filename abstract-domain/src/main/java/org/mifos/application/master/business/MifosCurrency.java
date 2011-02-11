@@ -49,7 +49,7 @@ import org.mifos.framework.business.AbstractEntity;
 )
 @Entity
 @Table(name = "CURRENCY")
-public final class MifosCurrency extends AbstractEntity {
+public class MifosCurrency extends AbstractEntity {
 
     public static final short CEILING_MODE = 1;
     public static final short FLOOR_MODE = 2;

@@ -22,11 +22,15 @@ package org.mifos.clientportfolio.newloan.domain;
 
 import java.util.List;
 
-import org.joda.time.DateTime;
-import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+public class IndividualLoanScheduleImpl implements IndividualLoanSchedule {
 
-public interface LoanScheduleFactory {
+    private final List<LoanScheduleRepaymentItem> loanScheduleItems;
 
-    IndividualLoanSchedule create(List<DateTime> loanScheduleDates, LoanOfferingBO loanProduct);
+    public IndividualLoanScheduleImpl(List<LoanScheduleRepaymentItem> loanScheduleItems) {
+        this.loanScheduleItems = loanScheduleItems;
+    }
 
+    public List<LoanScheduleRepaymentItem> getLoanScheduleItems() {
+        return this.loanScheduleItems;
+    }
 }

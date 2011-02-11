@@ -23,31 +23,33 @@ package org.mifos.clientportfolio.newloan.applicationservice;
 import java.util.List;
 
 import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.clientportfolio.newloan.domain.IndividualLoan;
 import org.mifos.clientportfolio.newloan.domain.IndividualLoanImpl;
+import org.mifos.clientportfolio.newloan.domain.IndividualLoanSchedule;
 import org.mifos.clientportfolio.newloan.domain.LoanScheduleFactory;
+import org.mifos.clientportfolio.newloan.domain.RecurringScheduledEventFactory;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.schedule.ScheduledDateGeneration;
 import org.mifos.schedule.ScheduledEvent;
-import org.mifos.schedule.ScheduledEventFactory;
-import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration;
 
 public class IndividualLoanAssembler implements LoanAssembler {
 
     private final LoanProductDao loanProductDao;
     private final CustomerDao customerDao;
-    private final LoanScheduleFactory loanRepaymentFactory;
+    private final LoanScheduleFactory loanScheduleFactory;
     private final ScheduledDateGeneration scheduledDateGeneration;
+    private final RecurringScheduledEventFactory scheduledEventFactory;
 
-    public IndividualLoanAssembler(LoanProductDao loanProductDao, CustomerDao customerDao, LoanScheduleFactory loanRepaymentFactory, ScheduledDateGeneration scheduledDateGeneration) {
+    public IndividualLoanAssembler(LoanProductDao loanProductDao, CustomerDao customerDao, LoanScheduleFactory loanScheduleFactory,
+            ScheduledDateGeneration scheduledDateGeneration, RecurringScheduledEventFactory scheduledEventFactory) {
         this.loanProductDao = loanProductDao;
         this.customerDao = customerDao;
-        this.loanRepaymentFactory = loanRepaymentFactory;
+        this.loanScheduleFactory = loanScheduleFactory;
         this.scheduledDateGeneration = scheduledDateGeneration;
+        this.scheduledEventFactory = scheduledEventFactory;
     }
 
     @Override
@@ -59,9 +61,10 @@ public class IndividualLoanAssembler implements LoanAssembler {
         int occurences = 12;
         DateTime lastScheduledDate = new DateTime();
 
-        // create scheduled event factory
-        ScheduledEvent scheduledEvent = new ScheduledEventFactory().createScheduledEventFrom(loanProduct.getLoanOfferingMeetingValue());
+        ScheduledEvent scheduledEvent = scheduledEventFactory.createScheduledEventFrom(loanProduct.getLoanOfferingMeetingValue());
         List<DateTime> loanScheduleDates = scheduledDateGeneration.generateScheduledDates(occurences, lastScheduledDate, scheduledEvent);
+
+        IndividualLoanSchedule loanSchedule = loanScheduleFactory.create(loanScheduleDates, loanProduct);
 
         return new IndividualLoanImpl();
     }

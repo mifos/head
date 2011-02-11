@@ -27,11 +27,13 @@ import static org.mockito.Mockito.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.clientportfolio.newloan.domain.ClientId;
 import org.mifos.clientportfolio.newloan.domain.IndividualLoan;
 import org.mifos.clientportfolio.newloan.domain.LoanProductId;
 import org.mifos.clientportfolio.newloan.domain.LoanScheduleFactory;
+import org.mifos.clientportfolio.newloan.domain.RecurringScheduledEventFactory;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.schedule.ScheduledDateGeneration;
 import org.mockito.Mock;
@@ -44,16 +46,19 @@ public class IndividualLoanAssemblerTest {
 
     @Mock private LoanProductDao loanProductDao;
     @Mock private CustomerDao customerDao;
-    @Mock private LoanScheduleFactory loanRepaymentFactory;
+    @Mock private LoanScheduleFactory loanScheduleFactory;
     @Mock private ScheduledDateGeneration scheduledDateGeneration;
+    @Mock private RecurringScheduledEventFactory scheduledEventFactory;
 
     // stubs
     private LoanProductId loanProductId = new LoanProductId("LPLPLP-001");
     private ClientId clientId = new ClientId("CCC-001");
+    @Mock private LoanOfferingBO loanProduct;
 
     @Before
     public void setup() {
-        loanAssembler = new IndividualLoanAssembler(loanProductDao, customerDao, loanRepaymentFactory, scheduledDateGeneration);
+        loanAssembler = new IndividualLoanAssembler(loanProductDao, customerDao, loanScheduleFactory,
+                scheduledDateGeneration, scheduledEventFactory);
     }
 
     @Test
@@ -61,6 +66,9 @@ public class IndividualLoanAssemblerTest {
 
         // setup
         IndividualLoanRequest individualLoanRequest = new IndividualLoanRequestBuilder().with(loanProductId).build();
+
+        // stubbing
+        when(loanProductDao.findBySystemId(loanProductId.globalId())).thenReturn(loanProduct);
 
         // exercise test
         IndividualLoan individualLoan = loanAssembler.assembleFrom(individualLoanRequest);
@@ -74,8 +82,12 @@ public class IndividualLoanAssemblerTest {
     public void shouldRetrieveClientWhenAssembling() {
 
         // setup
-        IndividualLoanRequest individualLoanRequest = new IndividualLoanRequestBuilder().with(clientId)
+        IndividualLoanRequest individualLoanRequest = new IndividualLoanRequestBuilder().with(loanProductId)
+                                                                                        .with(clientId)
                                                                                         .build();
+
+        // stubbing
+        when(loanProductDao.findBySystemId(loanProductId.globalId())).thenReturn(loanProduct);
 
         // exercise test
         loanAssembler.assembleFrom(individualLoanRequest);

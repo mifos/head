@@ -20,13 +20,11 @@
 
 package org.mifos.clientportfolio.newloan.domain;
 
-import java.util.List;
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.schedule.ScheduledEvent;
 
-import org.joda.time.DateTime;
-import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+public interface RecurringScheduledEventFactory {
 
-public interface LoanScheduleFactory {
-
-    IndividualLoanSchedule create(List<DateTime> loanScheduleDates, LoanOfferingBO loanProduct);
+    ScheduledEvent createScheduledEventFrom(MeetingBO loanProductMeeting);
 
 }

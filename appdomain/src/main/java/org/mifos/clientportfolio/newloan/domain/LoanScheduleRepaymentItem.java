@@ -20,13 +20,6 @@
 
 package org.mifos.clientportfolio.newloan.domain;
 
-import java.util.List;
-
-import org.joda.time.DateTime;
-import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
-
-public interface LoanScheduleFactory {
-
-    IndividualLoanSchedule create(List<DateTime> loanScheduleDates, LoanOfferingBO loanProduct);
+public interface LoanScheduleRepaymentItem {
 
 }
