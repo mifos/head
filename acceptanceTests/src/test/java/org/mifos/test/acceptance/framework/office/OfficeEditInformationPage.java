@@ -18,34 +18,33 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.test.acceptance.framework.admin;
+package org.mifos.test.acceptance.framework.office;
 
 import org.mifos.test.acceptance.framework.MifosPage;
-import org.mifos.test.acceptance.framework.office.OfficeViewDetailsPage;
-import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
 
-public class ViewOfficesPage extends MifosPage {
-    public ViewOfficesPage(Selenium selenium) {
+public class OfficeEditInformationPage extends MifosPage {
+
+    private final static String LOCATOR_FORM_STATUS = "name=officeStatus";
+
+    public final static String STATUS_ACTIVE = "Active";
+    public final static String STATUS_INACTIVE = "Inactive";
+
+    public OfficeEditInformationPage(Selenium selenium) {
         super(selenium);
+        verifyPage("editoffice");
     }
 
-    public ViewOfficesPage verifyPage() {
-        verifyPage("viewOffices");
-        return this;
-    }
-
-    public void verifyOfficeList(String[] expectedData) {
-        for (String expectedOfficeLink : expectedData) {
-            Assert.assertTrue(selenium.isTextPresent(expectedOfficeLink), "Expected link: " + expectedOfficeLink);
-        }
-
-    }
-
-    public OfficeViewDetailsPage navigateToOfficeViewDetailsPage(String officeName) {
-        selenium.click("link=*"+officeName+"*");
+    private OfficeEditPreviewPage submit() {
+        selenium.click("editoffice.button.preview");
         waitForPageToLoad();
-        return new OfficeViewDetailsPage(selenium);
+        return new OfficeEditPreviewPage(selenium);
     }
+
+    public OfficeViewDetailsPage changeStatusAndSubmit(String status) {
+        selenium.select(LOCATOR_FORM_STATUS, status);
+        return submit().submit();
+    }
+
 }

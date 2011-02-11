@@ -26,6 +26,11 @@ import com.thoughtworks.selenium.Selenium;
 
 public class EditUserDataPage extends MifosPage {
 
+    private static final String LOCATOR_FORM_STATUS = "name=status";
+
+    public static final String STATUS_ACTIVE = "1";
+    public static final String STATUS_INACTIVE = "2";
+
     public EditUserDataPage() {
         super();
     }
@@ -35,6 +40,12 @@ public class EditUserDataPage extends MifosPage {
      */
     public EditUserDataPage(Selenium selenium) {
         super(selenium);
+    }
+
+    private EditUserPreviewDataPage submit() {
+        selenium.click("edit_user.button.preview");
+        waitForPageToLoad();
+        return new EditUserPreviewDataPage(selenium);
     }
 
     public EditUserPreviewDataPage submitAndGotoEditUserPreviewDataPage(CreateUserParameters parameters) {
@@ -50,8 +61,11 @@ public class EditUserDataPage extends MifosPage {
         selectValueIfNotZero("level", parameters.getUserLevel());
         typeTextIfNotEmpty("edit_user.input.userPassword", parameters.getPassword());
         typeTextIfNotEmpty("edit_user.input.passwordRepeat", parameters.getPasswordRepeat());
-        selenium.click("edit_user.button.preview");
-        waitForPageToLoad();
-        return new EditUserPreviewDataPage(selenium);
+        return submit();
+    }
+
+    public UserViewDetailsPage changeStatusAndSubmit(String status) {
+        selenium.select(LOCATOR_FORM_STATUS, status);
+        return submit().submit();
     }
 }

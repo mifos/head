@@ -104,6 +104,12 @@ public class AdminPage extends MifosPage {
         return new ChooseOfficePage(selenium);
     }
 
+    public ViewSystemUsersPage navigateToViewSystemUsersPage() {
+        selenium.click("admin.link.viewSysUsers");
+        waitForPageToLoad();
+        return new ViewSystemUsersPage(selenium);
+    }
+
     public ViewOfficesPage navigateToViewOfficesPage() {
         selenium.click("admin.link.viewOffices");
         waitForPageToLoad();

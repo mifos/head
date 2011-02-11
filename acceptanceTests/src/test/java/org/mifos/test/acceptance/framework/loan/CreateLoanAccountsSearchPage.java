@@ -20,11 +20,14 @@
 
 package org.mifos.test.acceptance.framework.loan;
 
+import org.junit.Assert;
 import org.mifos.test.acceptance.framework.AbstractPage;
 
 import com.thoughtworks.selenium.Selenium;
 
 public class CreateLoanAccountsSearchPage extends AbstractPage {
+    private String selectedBranch = "";
+    private String selectedOfficer = "";
 
     public CreateLoanAccountsSearchPage(Selenium selenium) {
         super(selenium);
@@ -36,12 +39,9 @@ public class CreateLoanAccountsSearchPage extends AbstractPage {
     }
 
     public CreateLoanAccountsEntryPage searchAndNavigateToCreateMultipleLoanAccountsEntryPage(CreateMultipleLoanAccountSelectParameters formParameters) {
-        selenium.select("id=createMultipleLoanAccounts.select.branchOffice", "label=" + formParameters.getBranch());
-        waitForPageToLoad();
-        selenium.select("id=createMultipleLoanAccounts.select.loanOfficer", "label="+ formParameters.getLoanOfficer());
-        waitForPageToLoad();
-        selenium.select("id=createMultipleLoanAccounts.select.center", "label="+ formParameters.getCenter());
-        waitForPageToLoad();
+        selectBranch(formParameters.getBranch());
+        selectOfficer(formParameters.getLoanOfficer());
+        selectCenter(formParameters.getCenter());
         selenium.select("id=createMultipleLoanAccounts.select.loanProduct", "label="+ formParameters.getLoanProduct());
         selenium.click ("id=createMultipleLoanAccounts.button.submit");
         waitForPageToLoad();
@@ -49,4 +49,59 @@ public class CreateLoanAccountsSearchPage extends AbstractPage {
         return new CreateLoanAccountsEntryPage(selenium);
     }
 
+    public void selectBranch(String branch) {
+        selenium.select("id=createMultipleLoanAccounts.select.branchOffice", "label=" + branch);
+        if(!selectedBranch.equals(branch)) {
+            selectedBranch = branch;
+            waitForPageToLoad();
+        }
+    }
+
+    public void selectOfficer(String officer) {
+        selenium.select("id=createMultipleLoanAccounts.select.loanOfficer", "label="+ officer);
+        if(!selectedOfficer.equals(officer)) {
+            selectedOfficer = officer;
+            waitForPageToLoad();
+        }
+    }
+
+    public void selectCenter(String center) {
+        selenium.select("id=createMultipleLoanAccounts.select.center", "label="+ center);
+        waitForPageToLoad();
+    }
+
+    public void selectBranchOfficerAndCenter(String branch, String officer, String center) {
+        selectBranch(branch);
+        selectOfficer(officer);
+        selectCenter(center);
+    }
+
+    public void verifyBranchNotInSelectOptions(String branch) {
+        String[] branches = selenium.getSelectOptions("id=createMultipleLoanAccounts.select.branchOffice");
+        Assert.assertTrue(checkNotInOptions(branches, branch));
+    }
+
+    public void verifyOfficerNotInSelectOptions(String branch, String officer) {
+        selectBranch(branch);
+        String[] officers = selenium.getSelectOptions("id=createMultipleLoanAccounts.select.loanOfficer");
+        Assert.assertTrue(checkNotInOptions(officers, officer));
+    }
+
+    public void verifyCenterIsNotInSelectOptions(String branch, String officer, String center) {
+        selectBranch(branch);
+        selectOfficer(officer);
+        String[] centers = selenium.getSelectOptions("id=createMultipleLoanAccounts.select.center");
+        Assert.assertTrue(checkNotInOptions(centers, center));
+    }
+
+    private boolean checkNotInOptions(String[] options, String value) {
+        boolean result = true;
+        for(String option : options) {
+            if(option.equals(value)) {
+                result = false;
+                break;
+            }
+        }
+        return result;
+    }
 }

@@ -20,6 +20,7 @@
 
 package org.mifos.test.acceptance.framework.group;
 
+import org.mifos.test.acceptance.center.CenterStatus;
 import org.mifos.test.acceptance.framework.client.ClientStatus;
 
 public class EditCustomerStatusParameters {
@@ -29,6 +30,7 @@ public class EditCustomerStatusParameters {
     private GroupCloseReason closeReason;
     private GroupStatus groupStatus;
     private ClientStatus clientStatus;
+    private CenterStatus centerStatus;
 
     public String getNote() {
         return this.note;
@@ -68,6 +70,14 @@ public class EditCustomerStatusParameters {
 
     public void setClientStatus(ClientStatus clientStatus) {
         this.clientStatus = clientStatus;
+    }
+
+    public void setCenterStatus(CenterStatus centerStatus) {
+        this.centerStatus = centerStatus;
+    }
+
+    public CenterStatus getCenterStatus() {
+        return centerStatus;
     }
 
 

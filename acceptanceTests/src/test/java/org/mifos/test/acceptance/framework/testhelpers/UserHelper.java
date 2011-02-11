@@ -57,4 +57,13 @@ public class UserHelper {
 
         return userDetailsPage;
     }
+
+    public UserViewDetailsPage changeUserStatus(String userName, String status) {
+        return navigationHelper
+            .navigateToAdminPage()
+            .navigateToViewSystemUsersPage()
+            .searchAndNavigateToUserViewDetailsPage(userName)
+            .navigateToEditUserDataPage()
+            .changeStatusAndSubmit(status);
+    }
 }

@@ -21,42 +21,19 @@
 package org.mifos.test.acceptance.framework.office;
 
 import org.mifos.test.acceptance.framework.MifosPage;
-import org.mifos.test.acceptance.framework.admin.AdminPage;
 
 import com.thoughtworks.selenium.Selenium;
 
-public class OfficeViewDetailsPage extends MifosPage {
+public class OfficeEditPreviewPage extends MifosPage {
 
-    public OfficeViewDetailsPage(Selenium selenium) {
+    public OfficeEditPreviewPage(Selenium selenium) {
         super(selenium);
+        verifyPage("edit_preview_office");
     }
 
-    public void verifyPage() {
-        verifyPage("viewOfficeDetails");
-    }
-
-    public String getOfficeName() {
-        return selenium.getText("viewOfficeDetails.text.officeName");
-    }
-
-    public String getShortName() {
-        return selenium.getText("viewOfficeDetails.text.shortName");
-    }
-
-    public String getOfficeType() {
-        return selenium.getText("viewOfficeDetails.text.officeLevel");
-    }
-
-    public AdminPage navigateToAdminPage() {
-        selenium.click("viewOfficeDetails.link.admin");
+    public OfficeViewDetailsPage submit() {
+        selenium.click("edit_preview_office.button.submit");
         waitForPageToLoad();
-        return new AdminPage(selenium);
+        return new OfficeViewDetailsPage(selenium);
     }
-
-    public OfficeEditInformationPage navigateToOfficeEditInformationPage() {
-        selenium.click("viewOfficeDetails.link.editOfficeInformation");
-        waitForPageToLoad();
-        return new OfficeEditInformationPage(selenium);
-    }
-
 }

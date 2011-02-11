@@ -22,6 +22,7 @@ package org.mifos.test.acceptance.framework.center;
 
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.center.CreateCenterEnterDataPage.SubmitFormParameters;
+import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPage;
 import org.mifos.test.acceptance.framework.loan.AttachSurveyPage;
 import org.mifos.test.acceptance.framework.loan.ClosedAccountsPage;
 import org.mifos.test.acceptance.framework.questionnaire.ViewQuestionResponseDetailPage;
@@ -77,5 +78,11 @@ public class CenterViewDetailsPage extends MifosPage {
         selenium.click("groupdetail.link.questionGroups");
         waitForPageToLoad();
         return new ViewQuestionResponseDetailPage(selenium);
+    }
+
+    public CustomerChangeStatusPage navigateToCustomerChangeStatusPage() {
+        selenium.click("viewCenterDetails.link.edit");
+        waitForPageToLoad();
+        return new CustomerChangeStatusPage(selenium);
     }
 }

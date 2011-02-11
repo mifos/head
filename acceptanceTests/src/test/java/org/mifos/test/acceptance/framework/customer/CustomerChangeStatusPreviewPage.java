@@ -21,6 +21,7 @@
 package org.mifos.test.acceptance.framework.customer;
 
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.mifos.test.acceptance.framework.center.CenterViewDetailsPage;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
 
@@ -37,6 +38,12 @@ public class CustomerChangeStatusPreviewPage extends MifosPage {
         selenium.click("customerchangeStatusPreview.button.submit");
         waitForPageToLoad();
         return new ClientViewDetailsPage(selenium);
+    }
+
+    public CenterViewDetailsPage submitAndNavigateToCenterViewDetailsPage() {
+        selenium.click("customerchangeStatusPreview.button.submit");
+        waitForPageToLoad();
+        return new CenterViewDetailsPage(selenium);
     }
 
     public GroupViewDetailsPage navigateToGroupDetailsPage() {
