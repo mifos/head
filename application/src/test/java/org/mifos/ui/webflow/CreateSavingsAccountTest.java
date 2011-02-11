@@ -20,7 +20,9 @@
 
 package org.mifos.ui.webflow;
 
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -83,10 +85,8 @@ public class CreateSavingsAccountTest extends AbstractXmlFlowExecutionTests {
         startFlow(input, context);
 
         assertCurrentStateEquals("selectProductOfferingStep");
-        // FIXME should check customerSelected and getProductOfferings are
-        // invoked. Somehow formBean is a different instance??
-        // verify(controller).customerSelected(customerId, formBean);
-        // verify(controller).getProductOfferings(formBean);
+        verify(controller).customerSelected(eq(customerId), any(CreateSavingsAccountFormBean.class));
+        verify(controller).getProductOfferings(any(CreateSavingsAccountFormBean.class));
     }
 
     @Test
