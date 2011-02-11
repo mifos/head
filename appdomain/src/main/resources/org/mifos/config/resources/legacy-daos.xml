@@ -33,5 +33,7 @@
      <bean id="legacyProductMixDao" class="org.mifos.accounts.productsmix.persistence.LegacyProductMixDao" />
      
      <bean id="legacyProductCategoryDao" class="org.mifos.accounts.productdefinition.persistence.LegacyProductCategoryDao" />
+     
+     <bean id="birtCollectionSheetReportDao" class="org.mifos.application.collectionsheet.persistence.BirtCollectionSheetReportDao" />
 
 </beans>

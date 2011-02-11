@@ -3387,3 +3387,5 @@ insert into activity(activity_id,parent_id,activity_name_lookup_id,description_l
     (select lookup_id from lookup_value where entity_id =87 and lookup_name='Permissions-CanUseAccountingIntegration'));
 insert into roles_activity values (246,1);
 /* Upgrade - 1296137314 */
+
+insert into DATABASECHANGELOGLOCK(id, locked) values (1,0);

@@ -421,7 +421,7 @@ insert into office_address (office_address_id, office_id, address_1, address_2, 
 city, state, country, zip, telephone)
 values(3,3,'add3',null,null,null,null,null,null,null);
 
- --Non loan officer belonging to branch office with office id 3
+-- Non loan officer belonging to branch office with office id 3
 insert into personnel(personnel_id,level_id,global_personnel_num,office_id,
     title,personnel_status,preferred_locale,
     search_id,max_child_count,password,login_name,email_id,password_changed,
@@ -437,7 +437,7 @@ insert into personnel_details values(2,'testnon loan officer',null,null,'MFI','1
 
 insert into personnel_role (personnel_role_id, role_id, personnel_id)
 values(2,1,2);
---Loan officer belonging to branch
+-- Loan officer belonging to branch
 insert into personnel(personnel_id,level_id,global_personnel_num,office_id,
     title,personnel_status,preferred_locale,
     search_id,max_child_count,password,login_name,email_id,password_changed,
@@ -672,21 +672,21 @@ insert into lookup_label(label_id,entity_id,locale_id,entity_name)values
 -- Client
 insert into custom_field_definition(field_id,entity_id,field_type,entity_type,mandatory_flag,level_id,default_value) values
 (3,58,2,1,0,1,null),
---Group
+-- Group
 (4,59,2,12,0,2,null),
---Center
+-- Center
 (5,60,2,20,0,3,null),
 (6,61,1,20,0,3,null),
---Personnel
+-- Personnel
 (9,62,2,17,0,1,null),
---Office
+-- Office
 (10,62,2,15,0,1,null),
 (11,63,1,15,1,2,null),
 (12,64,1,15,1,2,null),
 (13,65,1,15,0,2,null),
---Loan
+-- Loan
 (7,66,2,22,0,1,null),
---Savings
+-- Savings
 (8,67,2,21,0,1,null);
 
 -- The table Personnelcustom field contains the additional information of the default user  - Configuration

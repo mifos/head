@@ -80,7 +80,7 @@ explanation of the license and how it is applied.
 								<td class="fontnormalbold">
 									<span class="fontnormal">
 										<mifoscustom:MifosImage	id="${BusinessKey.accountState.id}" moduleName="org.mifos.accounts.util.resources.accountsImages" />
-										<c:out value="${BusinessKey.accountState.name}" />&nbsp; 
+										<span id="savingsaccountdetail.status.text" ><c:out value="${BusinessKey.accountState.name}" /></span>&nbsp; 
 										<c:forEach var="flagSet" items="${BusinessKey.accountFlags}">
 											<span class="fontnormal">
 												<c:if test="${flagSet.flag.id == 6}">

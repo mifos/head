@@ -20,23 +20,59 @@
 
 package org.mifos.test.acceptance.framework.testhelpers;
 
-import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
+import org.mifos.test.acceptance.framework.group.CreateGroupEntryPage;
 import org.mifos.test.acceptance.framework.group.CreateGroupEntryPage.CreateGroupSubmitParameters;
+import org.mifos.test.acceptance.framework.group.EditCustomerStatusParameters;
+import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
+
+import com.thoughtworks.selenium.Selenium;
 
 public class GroupTestHelper {
 
     private final NavigationHelper navigationHelper;
 
-    public GroupTestHelper(NavigationHelper navigationHelper) {
-        this.navigationHelper = navigationHelper;
+    public GroupTestHelper(Selenium selenium) {
+        this.navigationHelper = new  NavigationHelper(selenium);
     }
 
     public GroupViewDetailsPage createNewGroup(String centerName, CreateGroupSubmitParameters groupParams) {
-        return navigationHelper
-            .navigateToClientsAndAccountsPage()
-            .navigateToCreateNewGroupPage()
-            .searchAndNavigateToCreateGroupPage(centerName)
+        return navigateToCreateGroupEntryPage(centerName)
             .submitNewGroupForApproval(groupParams)
             .navigateToGroupDetailsPage();
+    }
+
+    public GroupViewDetailsPage createNewGroupWithoutPendingForApproval(String centerName, CreateGroupSubmitParameters groupParams) {
+        return navigateToCreateGroupEntryPage(centerName)
+            .submitNewGroupForApprove(groupParams)
+            .navigateToGroupDetailsPage();
+    }
+
+    public GroupViewDetailsPage createNewGroupPartialApplication(String centerName, CreateGroupSubmitParameters groupParams) {
+        return navigateToCreateGroupEntryPage(centerName)
+            .submitNewGroupForPartialApplication(groupParams)
+            .navigateToGroupDetailsPage();
+    }
+
+    private CreateGroupEntryPage navigateToCreateGroupEntryPage(String centerName){
+        return navigationHelper
+        .navigateToClientsAndAccountsPage()
+        .navigateToCreateNewGroupPage()
+        .searchAndNavigateToCreateGroupPage(centerName);
+    }
+
+    public GroupViewDetailsPage changeGroupStatus(String groupName, EditCustomerStatusParameters editCustomerStatusParameters){
+        return navigationHelper
+            .navigateToGroupViewDetailsPage(groupName)
+            .navigateToEditGroupStatusPage()
+            .setChangeStatusParametersAndSubmit(editCustomerStatusParameters)
+            .navigateToGroupDetailsPage();
+    }
+
+    public GroupViewDetailsPage changeGroupCenterMembership(String groupName, String centerName) {
+        return navigationHelper
+            .navigateToGroupViewDetailsPage(groupName)
+            .navigateToEditCenterMembership()
+            .selectCenterAndNavigateToEditCenterMembershiConfirmationPage(centerName)
+            .submitAndNavigateToGroupDetailsPage();
     }
 }

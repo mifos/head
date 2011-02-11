@@ -55,6 +55,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
@@ -120,7 +121,11 @@ public class MifosLegacyUsernamePasswordAuthenticationFilter extends UsernamePas
         final String password = obtainPassword(request);
 
         if (authenticationIsUnsuccessfulDueToInvalidPassword(failed, username)) {
-            loginServiceFacade.login(username, password);
+            try {
+                loginServiceFacade.login(username, password);
+            } catch (UsernameNotFoundException e) {
+                // ignore and let spring security handle BadCredentialsException
+            }
         }
 
         super.unsuccessfulAuthentication(request, response, failed);

@@ -59,6 +59,10 @@ public class CustomPropertiesUpdateController extends AbstractController {
 
             handleImport(request, response, errorMessages, model);
 
+            handleProcessFLow(request, response, errorMessages, model);
+
+            handleCenterHierarchy(request, model);
+
             model.put("request", request);
             Map<String, Object> status = new HashMap<String, Object>();
             status.put("errorMessages", errorMessages);
@@ -67,6 +71,15 @@ public class CustomPropertiesUpdateController extends AbstractController {
             returnValue = modelAndView;
         }
         return returnValue;
+    }
+
+    private void handleCenterHierarchy(HttpServletRequest request, Map<String, Object> model) {
+        String centerHierarchyExists = request.getParameter("ClientRules.CenterHierarchyExists");
+        if (StringUtils.isNotBlank(centerHierarchyExists)) {
+            boolean required=Boolean.valueOf(centerHierarchyExists);
+            testingService.setCenterHierarchyExists(required);
+            model.put("clientRulesResult", "centerHierarchyExists: " + centerHierarchyExists);
+        }
     }
 
     private void handleMinMaxClientAge(HttpServletRequest request, HttpServletResponse response,
@@ -186,6 +199,25 @@ public class CustomPropertiesUpdateController extends AbstractController {
         } catch (MifosException e) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             errorMessages.add("Something was wrong with your Import parameters: "
+                    + new LogUtils().getStackTrace(e));
+        }
+    }
+
+    private void handleProcessFLow(HttpServletRequest request, HttpServletResponse response,
+            List<String> errorMessages, Map<String, Object> model) {
+        try {
+            Enumeration<?> paramNames = request.getParameterNames();
+            while (paramNames.hasMoreElements()) {
+                String processFlowParamName = (String) paramNames.nextElement();
+                if (processFlowParamName.startsWith("ProcessFlow")) {
+                    String processFlowParamValue = request.getParameter(processFlowParamName);
+                    testingService.setProcessFlow(processFlowParamName, processFlowParamValue);
+                    model.put("processFlowResult", processFlowParamName + ": " + processFlowParamValue);
+                }
+            }
+        } catch (MifosException e) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            errorMessages.add("Something was wrong with your Process Flow parameters: "
                     + new LogUtils().getStackTrace(e));
         }
     }

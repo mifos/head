@@ -58,7 +58,6 @@ import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.business.FeeFormulaEntity;
 import org.mifos.accounts.fees.business.RateFeeBO;
-import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.accounts.fees.util.helpers.FeeFormula;
 import org.mifos.accounts.fees.util.helpers.FeePayment;
 import org.mifos.accounts.fees.util.helpers.FeeStatus;
@@ -1047,7 +1046,7 @@ public class LoanBO extends AccountBO {
             if (dueInstallments.isEmpty()) {
                 throw new AccountException(AccountConstants.NOMOREINSTALLMENTS);
             }
-            FeeBO fee = new FeePersistence().getFee(feeId);
+            FeeBO fee = getFeeDao().findById(feeId);
 
             if (havePaymentsBeenMade()
                     && (fee.doesFeeInvolveFractionalAmounts() || !MoneyUtils.isRoundedAmount(charge))) {
@@ -1409,6 +1408,25 @@ public class LoanBO extends AccountBO {
         } catch (PersistenceException e) {
             throw new AccountException(e);
         }
+    }
+
+    @Override
+    public AccountPaymentEntity getLastPmntToBeAdjusted() {
+        AccountPaymentEntity accntPmnt = null;
+        // MIFOS-4238: we don't want to show disbursal amount as an adjustment amount
+        int i = 0;
+        for (AccountPaymentEntity accntPayment : accountPayments) {
+            i = i + 1;
+            if (i == accountPayments.size()) {
+                break;
+            }
+            if (accntPayment.getAmount().isNonZero()) {
+                accntPmnt = accntPayment;
+                break;
+            }
+
+        }
+        return accntPmnt;
     }
 
     private void waiveFeeAmountDue() throws AccountException {
@@ -1996,7 +2014,7 @@ public class LoanBO extends AccountBO {
             logger.debug(
                     "AccountFeeAmount for amount fee.." + feeAmount);
         } else if (accountFees.getFees().getFeeType()== RateAmountFlag.RATE) {
-            RateFeeBO rateFeeBO = new FeePersistence().getRateFee(accountFees.getFees().getFeeId());
+            RateFeeBO rateFeeBO = (RateFeeBO) getFeeDao().findById(accountFees.getFees().getFeeId());
             accountFeeAmount = new Money(getCurrency(), getRateBasedOnFormula(feeAmount, rateFeeBO.getFeeFormula(),
                     loanInterest));
             logger.debug(
@@ -2544,7 +2562,7 @@ public class LoanBO extends AccountBO {
     private void buildAccountFee(final List<FeeDto> feeDtos) {
         if (feeDtos != null && feeDtos.size() > 0) {
             for (FeeDto feeDto : feeDtos) {
-                FeeBO fee = new FeePersistence().getFee(feeDto.getFeeIdValue());
+                FeeBO fee = getFeeDao().findById(feeDto.getFeeIdValue());
                 this.addAccountFees(new AccountFeesEntity(this, fee, feeDto.getAmountMoney()));
             }
         }
@@ -3694,7 +3712,7 @@ public class LoanBO extends AccountBO {
             logger.debug(
                     "AccountFeeAmount for amount fee.." + feeAmount);
         } else if (accountFees.getFees().getFeeType().equals(RateAmountFlag.RATE)) {
-            RateFeeBO rateFeeBO = new FeePersistence().getRateFee(accountFees.getFees().getFeeId());
+            RateFeeBO rateFeeBO = (RateFeeBO) getFeeDao().findById(accountFees.getFees().getFeeId());
             accountFeeAmount = new Money(getCurrency(), getRateBasedOnFormula(feeAmount, rateFeeBO.getFeeFormula(),
                     loanInterest));
             logger.debug(

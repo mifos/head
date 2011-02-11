@@ -21,34 +21,50 @@
 package org.mifos.application.servicefacade;
 
 import org.mifos.accounts.servicefacade.UserContextFactory;
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.business.MeetingFactory;
+import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.service.CustomerService;
-import org.mifos.dto.domain.MeetingUpdateRequest;
-import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.customers.persistence.CustomerDao;
+import org.mifos.dto.domain.MeetingDto;
 import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
-import org.mifos.service.BusinessRuleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 public class MeetingServiceFacadeWebTier implements MeetingServiceFacade {
 
     private final CustomerService customerService;
+    private final CustomerDao customerDao;
+    private MeetingFactory meetingFactory = new MeetingFactory();
+    private UserContextFactory userContextFactory = new UserContextFactory();
 
     @Autowired
-    public MeetingServiceFacadeWebTier(CustomerService customerService) {
+    public MeetingServiceFacadeWebTier(CustomerService customerService, CustomerDao customerDao) {
         this.customerService = customerService;
+        this.customerDao = customerDao;
     }
 
     @Override
-    public void updateCustomerMeeting(MeetingUpdateRequest meetingUpdateRequest) {
+    public void updateCustomerMeeting(MeetingDto meetingUpdateRequest, Integer customerId) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserContext userContext = new UserContextFactory().create(user);
+        UserContext userContext = userContextFactory.create(user);
 
-        try {
-            customerService.updateCustomerMeetingSchedule(meetingUpdateRequest, userContext);
-        } catch (ApplicationException e) {
-            throw new BusinessRuleException(e.getKey(), e);
-        }
+        MeetingBO meeting = meetingFactory.create(meetingUpdateRequest);
+        meeting.updateDetails(userContext);
+
+        CustomerBO customer = this.customerDao.findCustomerById(customerId);
+        customer.updateDetails(userContext);
+
+        customerService.updateCustomerMeetingSchedule(meeting, customer);
+    }
+
+    public void setMeetingFactory(MeetingFactory meetingFactory) {
+        this.meetingFactory = meetingFactory;
+    }
+
+    public void setUserContextFactory(UserContextFactory userContextFactory) {
+        this.userContextFactory = userContextFactory;
     }
 }

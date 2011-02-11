@@ -32,9 +32,9 @@ import org.mifos.test.acceptance.framework.loan.AttachSurveyPage;
 import org.mifos.test.acceptance.framework.loan.ClosedAccountsPage;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.PerformanceHistoryAtributes;
-import org.mifos.test.acceptance.questionnaire.QuestionGroupResponsePage;
-import org.mifos.test.acceptance.questionnaire.QuestionnairePage;
-import org.mifos.test.acceptance.questionnaire.ViewQuestionResponseDetailPage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionGroupResponsePage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionnairePage;
+import org.mifos.test.acceptance.framework.questionnaire.ViewQuestionResponseDetailPage;
 import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
@@ -168,6 +168,12 @@ public class ClientViewDetailsPage extends MifosPage {
         selenium.click("viewClientDetails.link.attachSurvey");
         waitForPageToLoad();
         return new AttachSurveyPage(selenium);
+    }
+
+    public GroupSearchClientTransferPage navigateToEditRemoveGroupMembership(){
+        selenium.click("viewClientDetails.link.editRemoveGroupMembership");
+        waitForPageToLoad();
+        return new GroupSearchClientTransferPage(selenium);
     }
 
 

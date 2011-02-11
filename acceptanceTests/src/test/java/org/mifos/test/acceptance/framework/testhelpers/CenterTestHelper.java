@@ -25,7 +25,7 @@ import org.mifos.test.acceptance.framework.center.CreateCenterConfirmationPage;
 import org.mifos.test.acceptance.framework.center.CreateCenterEnterDataPage;
 import org.mifos.test.acceptance.framework.center.CreateCenterPreviewDataPage;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
-import org.mifos.test.acceptance.questionnaire.QuestionResponsePage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -63,5 +63,18 @@ public class CenterTestHelper {
         responsePage.navigateToNextPage();
 
         return new CreateCenterPreviewDataPage(selenium).submit().navigateToCenterViewDetailsPage();
+    }
+
+    public QuestionResponsePage navigateToQuestionResponsePageWhenCreatingCenter(CreateCenterEnterDataPage.SubmitFormParameters formParameters, String officeName) {
+        QuestionResponsePage responsePage = navigationHelper
+            .navigateToClientsAndAccountsPage()
+            .navigateToCreateNewCenterPage()
+            .selectOffice(officeName)
+            .submitAndNavigateToQuestionResponsePage(formParameters);
+        return responsePage;
+    }
+
+    public CenterViewDetailsPage navigateToCenterViewDetailsPage(String centerName) {
+        return navigationHelper.navigateToCenterViewDetailsPage(centerName);
     }
 }

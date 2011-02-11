@@ -38,12 +38,12 @@ import org.mifos.test.acceptance.framework.loanproduct.multicurrrency.DefineNewD
 import org.mifos.test.acceptance.framework.loanproduct.multicurrrency.DefineNewDifferentCurrencyLoanProductPage.SubmitMultiCurrencyFormParameters;
 import org.mifos.test.acceptance.framework.office.ChooseOfficePage;
 import org.mifos.test.acceptance.framework.office.CreateOfficeEnterDataPage;
+import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionGroupPage;
+import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionPage;
+import org.mifos.test.acceptance.framework.questionnaire.ViewAllQuestionGroupsPage;
+import org.mifos.test.acceptance.framework.questionnaire.ViewAllQuestionsPage;
 import org.mifos.test.acceptance.framework.savingsproduct.DefineNewSavingsProductPage;
 import org.mifos.test.acceptance.framework.user.CreateUserParameters;
-import org.mifos.test.acceptance.questionnaire.CreateQuestionGroupPage;
-import org.mifos.test.acceptance.questionnaire.CreateQuestionPage;
-import org.mifos.test.acceptance.questionnaire.ViewAllQuestionGroupsPage;
-import org.mifos.test.acceptance.questionnaire.ViewAllQuestionsPage;
 import org.mifos.test.acceptance.util.StringUtil;
 import org.testng.Assert;
 
@@ -370,5 +370,11 @@ public class AdminPage extends MifosPage {
 
     public void verifyError(String error){
         Assert.assertTrue(selenium.isTextPresent(error));
+    }
+
+    public DefineAcceptedPaymentTypesPage navigateToDefineAcceptedPaymentType() {
+        selenium.click("admin.link.defineAcceptedPaymentType");
+        waitForPageToLoad();
+        return new DefineAcceptedPaymentTypesPage(selenium);
     }
 }

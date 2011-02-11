@@ -39,7 +39,7 @@ import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
-import org.mifos.accounts.productdefinition.persistence.SavingsPrdPersistence;
+import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.util.helpers.AccountState;
@@ -47,6 +47,7 @@ import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.ClientRules;
 import org.mifos.config.FiscalCalendarRules;
@@ -103,7 +104,6 @@ public class ClientBO extends CustomerBO {
     private final Set<ClientAttendanceBO> clientAttendances;
     private Set<ClientInitialSavingsOfferingEntity> offeringsAssociatedInCreate;
     private SavingsPersistence savingsPersistence = null;
-    private SavingsPrdPersistence savingsPrdPersistence = null;
     private OfficePersistence officePersistence = null;
 
     public static ClientBO createNewInGroupHierarchy(UserContext userContext, String clientName,
@@ -940,15 +940,13 @@ public class ClientBO extends CustomerBO {
         if (offeringsAssociatedInCreate != null) {
             for (ClientInitialSavingsOfferingEntity clientOffering : offeringsAssociatedInCreate) {
                 try {
-                    SavingsOfferingBO savingsOffering = getSavingsPrdPersistence().getSavingsProduct(
-                            clientOffering.getSavingsOffering().getPrdOfferingId());
+                    SavingsOfferingBO savingsOffering = ApplicationContextProvider.getBean(SavingsProductDao.class).findById(
+                            clientOffering.getSavingsOffering().getPrdOfferingId().intValue());
                     if (savingsOffering.isActive()) {
                         addAccount(new SavingsBO(getUserContext(), savingsOffering, this, AccountState.SAVINGS_ACTIVE,
                                 savingsOffering.getRecommendedAmount(),
                                 new ArrayList<CustomFieldDto>()));
                     }
-                } catch (PersistenceException pe) {
-                    throw new CustomerException(pe);
                 } catch (AccountException pe) {
                     throw new CustomerException(pe);
                 }
@@ -1044,28 +1042,6 @@ public class ClientBO extends CustomerBO {
     public void updatePerformanceHistoryOnLastInstlPayment(final LoanBO loan, final Money totalAmount)
             throws CustomerException {
         updatePerformanceHistoryOnRepayment(loan, totalAmount);
-    }
-
-    public void setSavingsPersistence(final SavingsPersistence savingsPersistence) {
-        this.savingsPersistence = savingsPersistence;
-    }
-
-    public SavingsPersistence getSavingsPersistence() {
-        if (null == savingsPersistence) {
-            savingsPersistence = new SavingsPersistence();
-        }
-        return savingsPersistence;
-    }
-
-    public void setSavingsPrdPersistence(final SavingsPrdPersistence savingsPrdPersistence) {
-        this.savingsPrdPersistence = savingsPrdPersistence;
-    }
-
-    public SavingsPrdPersistence getSavingsPrdPersistence() {
-        if (null == savingsPrdPersistence) {
-            savingsPrdPersistence = new SavingsPrdPersistence();
-        }
-        return savingsPrdPersistence;
     }
 
     public boolean isClosedOrCancelled() {

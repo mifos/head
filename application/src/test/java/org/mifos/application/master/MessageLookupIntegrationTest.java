@@ -126,4 +126,17 @@ public class MessageLookupIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    @Test
+    public void shouldHaveDefaultLabelOfAddress1() {
+
+     // Get the default label for ADDRESS1 from main locale
+     Assert.assertEquals("Address 1", messageLookup.lookupLabel(ConfigurationConstants.ADDRESS1));
+    }
+
+    @Test
+    public void shouldHaveDefaultLabelOfAddress2() {
+
+     // Get the default label for ADDRESS1 from main locale
+     Assert.assertEquals("Address 2", messageLookup.lookupLabel(ConfigurationConstants.ADDRESS2));
+    }
 }

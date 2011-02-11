@@ -35,7 +35,7 @@ import org.mifos.accounts.acceptedpaymenttype.business.TransactionTypeEntity;
 import org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentTypeDao;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.fees.business.FeeBO;
-import org.mifos.accounts.fees.persistence.FeePersistence;
+import org.mifos.accounts.fees.persistence.FeeDao;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.financial.business.service.FinancialBusinessService;
 import org.mifos.accounts.financial.business.service.GeneralLedgerDao;
@@ -163,6 +163,9 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     private final FundDao fundDao;
     private final GeneralLedgerDao generalLedgerDao;
     private LoanProductAssembler loanProductAssembler;
+
+    @Autowired
+    private FeeDao feeDao;
 
     @Autowired
     private LegacyAcceptedPaymentTypeDao legacyAcceptedPaymentTypeDao;
@@ -1521,7 +1524,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
             }
 
             List<ListElement> timePeriodOptions = new ArrayList<ListElement>();
-            List<RecurrenceTypeEntity> applicableRecurrences = service.getSavingsApplicableRecurrenceTypes();
+            List<RecurrenceTypeEntity> applicableRecurrences = savingsProductDao.getSavingsApplicableRecurrenceTypes();
             for (RecurrenceTypeEntity entity : applicableRecurrences) {
                 timePeriodOptions.add(new ListElement(entity.getRecurrenceId().intValue(), entity.getRecurrenceName()));
             }
@@ -1588,7 +1591,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
             }
 
             List<ListElement> loanFee = new ArrayList<ListElement>();
-            List<FeeBO> fees = new FeePersistence().getAllAppllicableFeeForLoanCreation();
+            List<FeeBO> fees = feeDao.getAllAppllicableFeeForLoanCreation();
             for (FeeBO fee : fees) {
                 loanFee.add(new ListElement(fee.getFeeId().intValue(), fee.getFeeName()));
             }

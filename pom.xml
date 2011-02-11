@@ -54,6 +54,8 @@
         <slf4j.version>1.6.1</slf4j.version>
         <powermock.version>1.4.7</powermock.version>
         <varying.target.dir>target</varying.target.dir>
+        <liquibase.version>2.0.0</liquibase.version>
+        <mysql.connector.version>5.1.13</mysql.connector.version>
     </properties>
     <modules>
         <module>common</module>

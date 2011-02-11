@@ -6,7 +6,6 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 import org.mifos.accounts.fees.exceptions.FeeException;
-import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
 import org.mifos.accounts.fees.util.helpers.FeePayment;
@@ -29,25 +28,6 @@ public class FeeBOTest {
                     return officePersistence;
                 }
             };
-            Assert.fail("should fail because of invalid session");
-        } catch (FeeException e) {
-        }
-    }
-
-    @Test
-    @ExpectedException(value = FeeException.class)
-    public void testInvalidConnectionThrowsExceptionInSave() throws PersistenceException{
-        final FeePersistence feePersistence = mock(FeePersistence.class);
-        try {
-            FeeBO feeBO = new RateFeeBO() {
-                @Override
-                protected FeePersistence getFeePersistence() {
-                    return feePersistence;    //To change body of overridden methods use File | Settings | File Templates.
-                }
-
-            };
-            when(feePersistence.createOrUpdate(feeBO)).thenThrow(new PersistenceException("some exception"));
-            feeBO.save();
             Assert.fail("should fail because of invalid session");
         } catch (FeeException e) {
         }

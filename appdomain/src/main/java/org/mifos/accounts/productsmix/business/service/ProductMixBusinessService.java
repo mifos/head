@@ -25,11 +25,9 @@ import java.util.List;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
-import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.accounts.productdefinition.persistence.PrdOfferingPersistence;
 import org.mifos.accounts.productdefinition.persistence.LegacyProductCategoryDao;
-import org.mifos.accounts.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.accounts.productsmix.business.ProductMixBO;
 import org.mifos.accounts.productsmix.persistence.LegacyProductMixDao;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
@@ -91,22 +89,6 @@ public class ProductMixBusinessService implements BusinessService {
     public List<LoanOfferingBO> getLoanOfferingsByID(Short localeId) throws ServiceException {
         try {
             return new LoanPrdPersistence().getAllActiveLoanOfferings(localeId);
-        } catch (PersistenceException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    public List<SavingsOfferingBO> getAllSavingsProducts() throws ServiceException {
-        try {
-            return new SavingsPrdPersistence().getAllActiveSavingsProducts();
-        } catch (PersistenceException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    public List<SavingsOfferingBO> getSavingsOfferingsNotMixed(Short localeId) throws ServiceException {
-        try {
-            return new SavingsPrdPersistence().getSavingsOfferingsNotMixed(localeId);
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }

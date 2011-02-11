@@ -20,15 +20,17 @@
 
 package org.mifos.test.acceptance.client;
 
+
 import static java.util.Arrays.asList;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+
 
 import org.junit.Assert;
 import org.mifos.framework.util.DbUnitUtilities;
@@ -44,6 +46,7 @@ import org.mifos.test.acceptance.framework.client.ClientEditMFIPreviewPage;
 import org.mifos.test.acceptance.framework.client.ClientEditPersonalInfoPage;
 import org.mifos.test.acceptance.framework.client.ClientNotesPage;
 import org.mifos.test.acceptance.framework.client.ClientSearchResultsPage;
+import org.mifos.test.acceptance.framework.client.ClientStatus;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import org.mifos.test.acceptance.framework.client.CreateClientConfirmationPage;
 import org.mifos.test.acceptance.framework.client.CreateClientEnterMfiDataPage;
@@ -51,24 +54,35 @@ import org.mifos.test.acceptance.framework.client.CreateClientEnterPersonalDataP
 import org.mifos.test.acceptance.framework.client.CreateClientPreviewDataPage;
 import org.mifos.test.acceptance.framework.client.QuestionGroup;
 import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPage;
-import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPreviewDataPage;
-import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPage.SubmitFormParameters;
+
+import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPreviewPage;
+import org.mifos.test.acceptance.framework.group.CreateGroupEntryPage.CreateGroupSubmitParameters;
+import org.mifos.test.acceptance.framework.group.EditCustomerStatusParameters;
+import org.mifos.test.acceptance.framework.group.GroupCloseReason;
+import org.mifos.test.acceptance.framework.group.GroupStatus;
+import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
+
+import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionGroupPage;
+import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionGroupParameters;
+import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionPage;
+import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionParameters;
+import org.mifos.test.acceptance.framework.questionnaire.EditQuestionPage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionDetailPage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionGroupResponsePage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionnairePage;
+import org.mifos.test.acceptance.framework.questionnaire.ViewAllQuestionsPage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
+
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
 import org.mifos.test.acceptance.framework.testhelpers.ClientTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.CustomPropertiesHelper;
+import org.mifos.test.acceptance.framework.testhelpers.GroupTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
-import org.mifos.test.acceptance.questionnaire.Choice;
-import org.mifos.test.acceptance.questionnaire.CreateQuestionGroupPage;
-import org.mifos.test.acceptance.questionnaire.CreateQuestionGroupParameters;
-import org.mifos.test.acceptance.questionnaire.CreateQuestionPage;
-import org.mifos.test.acceptance.questionnaire.CreateQuestionParameters;
-import org.mifos.test.acceptance.questionnaire.EditQuestionPage;
-import org.mifos.test.acceptance.questionnaire.QuestionDetailPage;
-import org.mifos.test.acceptance.questionnaire.QuestionGroupResponsePage;
-import org.mifos.test.acceptance.questionnaire.QuestionnairePage;
-import org.mifos.test.acceptance.questionnaire.ViewAllQuestionsPage;
-import org.mifos.test.acceptance.questionnaire.ViewQuestionResponseDetailPage;
+
+import org.mifos.test.acceptance.framework.testhelpers.QuestionGroupTestHelper;
+
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
+import org.mifos.test.acceptance.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
@@ -81,8 +95,10 @@ import org.testng.annotations.Test;
 public class ClientTest extends UiTestCaseBase {
 
     private NavigationHelper navigationHelper;
-    CustomPropertiesHelper propertiesHelper;
-    ClientTestHelper clientTestHelper;
+    private CustomPropertiesHelper propertiesHelper;
+    private ClientTestHelper clientTestHelper;
+    private QuestionGroupTestHelper questionGroupTestHelper;
+    private GroupTestHelper groupTestHelper;
 
     @Autowired
     private DriverManagerDataSource dataSource;
@@ -111,7 +127,9 @@ public class ClientTest extends UiTestCaseBase {
         super.setUp();
         navigationHelper = new NavigationHelper(selenium);
         propertiesHelper = new CustomPropertiesHelper(selenium);
-        clientTestHelper = new ClientTestHelper();
+        clientTestHelper = new ClientTestHelper(selenium);
+        questionGroupTestHelper = new QuestionGroupTestHelper(selenium);
+        groupTestHelper = new GroupTestHelper(selenium);
         random = new Random();
     }
 
@@ -125,8 +143,7 @@ public class ClientTest extends UiTestCaseBase {
     public void createClientAndChangeStatusTest() throws Exception {
         //Given
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
-        ClientsAndAccountsHomepage clientsAndAccountsPage = navigationHelper.navigateToClientsAndAccountsPage();
-        ClientViewDetailsPage clientDetailsPage = clientsAndAccountsPage.createClientAndVerify("Joe1233171679953 Guy1233171679953", "MyOffice1233171674227");
+        ClientViewDetailsPage clientDetailsPage = clientTestHelper.createClientAndVerify("Joe1233171679953 Guy1233171679953", "MyOffice1233171674227");
 
         //When / Then
         clientTestHelper.changeCustomerStatus(clientDetailsPage);
@@ -152,11 +169,11 @@ public class ClientTest extends UiTestCaseBase {
         viewDetailsPage.verifyNotes("test note");
 
         CustomerChangeStatusPage changeStatusPage = viewDetailsPage.navigateToCustomerChangeStatusPage();
-        SubmitFormParameters parameters = new SubmitFormParameters();
-        parameters.setStatus(SubmitFormParameters.ON_HOLD);
-        parameters.setNotes("test");
-        CustomerChangeStatusPreviewDataPage changeStatusPreviewDataPage = changeStatusPage.submitAndGotoCustomerChangeStatusPreviewDataPage(parameters);
-        viewDetailsPage = changeStatusPreviewDataPage.submitAndGotoClientViewDetailsPage();
+        EditCustomerStatusParameters parameters = new EditCustomerStatusParameters();
+        parameters.setClientStatus(ClientStatus.ON_HOLD);
+        parameters.setNote("test");
+        CustomerChangeStatusPreviewPage changeStatusPreviewPage = changeStatusPage.setChangeStatusParametersAndSubmit(parameters);
+        viewDetailsPage = changeStatusPreviewPage.submitAndGotoClientViewDetailsPage();
         viewDetailsPage.verifyStatus("On Hold");
 
         ClientEditPersonalInfoPage editPersonalInfoPage = viewDetailsPage.editPersonalInformation();
@@ -238,15 +255,13 @@ public class ClientTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(groups = {"smoke"})
     public void createClientWithCorrectAgeTest() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities,
                 "acceptance_small_003_dbunit.xml",
                 dataSource, selenium);
         propertiesHelper.setMinimumAgeForClients(18);
         propertiesHelper.setMaximumAgeForClients(60);
-        ClientsAndAccountsHomepage clientsAndAccountsPage = navigationHelper.navigateToClientsAndAccountsPage();
-        CreateClientEnterPersonalDataPage clientPersonalDataPage = clientsAndAccountsPage.createClient("MyOffice1233171674227", "11", "12", "1987");
+        CreateClientEnterPersonalDataPage clientPersonalDataPage = clientTestHelper.createClient("MyOffice1233171674227", "11", "12", "1987");
         CreateClientEnterMfiDataPage nextPage = clientPersonalDataPage.submitAndGotoCreateClientEnterMfiDataPage();
         nextPage.verifyPage("CreateClientMfiInfo");
     }
@@ -258,8 +273,7 @@ public class ClientTest extends UiTestCaseBase {
                 dataSource, selenium);
         propertiesHelper.setMinimumAgeForClients(18);
         propertiesHelper.setMaximumAgeForClients(60);
-        ClientsAndAccountsHomepage clientsAndAccountsPage = navigationHelper.navigateToClientsAndAccountsPage();
-        CreateClientEnterPersonalDataPage clientPersonalDataPage = clientsAndAccountsPage.createClient("MyOffice1233171674227", "11", "12", "1940");
+        CreateClientEnterPersonalDataPage clientPersonalDataPage = clientTestHelper.createClient("MyOffice1233171674227", "11", "12", "1940");
         CreateClientEnterPersonalDataPage nextPage = clientPersonalDataPage.dontLoadNext();
         nextPage.verifyPage("CreateClientPersonalInfo");
     }
@@ -271,8 +285,7 @@ public class ClientTest extends UiTestCaseBase {
                 dataSource, selenium);
         propertiesHelper.setMinimumAgeForClients(18);
         propertiesHelper.setMaximumAgeForClients(60);
-        ClientsAndAccountsHomepage clientsAndAccountsPage = navigationHelper.navigateToClientsAndAccountsPage();
-        CreateClientEnterPersonalDataPage clientPersonalDataPage = clientsAndAccountsPage.createClient("MyOffice1233171674227", "11", "12", "1995");
+        CreateClientEnterPersonalDataPage clientPersonalDataPage = clientTestHelper.createClient("MyOffice1233171674227", "11", "12", "1995");
         CreateClientEnterPersonalDataPage nextPage = clientPersonalDataPage.dontLoadNext();
         nextPage.verifyPage("CreateClientPersonalInfo");
     }
@@ -415,31 +428,160 @@ public class ClientTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // http://mifosforge.jira.com/browse/MIFOSTEST-681
     public void createClientWithQuestionGroups() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_016_dbunit.xml", dataSource, selenium);
+        CreateClientEnterPersonalDataPage.SubmitFormParameters formParameters = new CreateClientEnterPersonalDataPage.SubmitFormParameters();
+        formParameters.setSalutation(CreateClientEnterPersonalDataPage.SubmitFormParameters.MRS);
+        formParameters.setFirstName("test");
+        formParameters.setLastName("Customer" + StringUtil.getRandomString(8));
+        formParameters.setDateOfBirthDD("01");
+        formParameters.setDateOfBirthMM("02");
+        formParameters.setDateOfBirthYYYY("1988");
+        formParameters.setGender(CreateClientEnterPersonalDataPage.SubmitFormParameters.FEMALE);
+        formParameters.setPovertyStatus(CreateClientEnterPersonalDataPage.SubmitFormParameters.POOR);
+        formParameters.setHandicapped("Yes");
+        formParameters.setSpouseNameType(CreateClientEnterPersonalDataPage.SubmitFormParameters.FATHER);
+        formParameters.setSpouseFirstName("father");
+        formParameters.setSpouseLastName("lastname" + StringUtil.getRandomString(8));
 
-        String questionGroupTitle = "QG1" + random.nextInt(100);
-        String question1 = "NU_" + random.nextInt(100);
-        String question2 = "SS_" + random.nextInt(100);
-        String answer = "30";
-        List<Choice> choices = asList(new Choice("Choice1", asList("Tag1", "Tag2")), new Choice("Choice2", asList("Tag3", "Tag4")));
+        QuestionResponseParameters responseParams = new QuestionResponseParameters();
+        responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[0].questions[1].value", "yes");
+        responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[0].questions[2].value", "good");
+        responseParams.addTextAnswer("questionGroups[1].sectionDetails[1].questions[2].value", "qwer");
 
-        createQuestionGroupForCreateClient(questionGroupTitle, question1, question2, choices);
-        ClientsAndAccountsHomepage clientsAndAccountsPage = navigationHelper.navigateToClientsAndAccountsPage();
+        List<String> questionToAdd= new ArrayList<String>();
+        questionToAdd.add("question 2");
+        questionToAdd.add("question 5");
 
-        ClientViewDetailsPage clientDetailsPage = clientsAndAccountsPage.createClientWithQuestionGroups("Joe1233171679953 Guy1233171679953",
-                                                "MyOffice1233171674227", getChoiceTags(), answer);
-        ViewQuestionResponseDetailPage responseDetailPage = clientDetailsPage.navigateToViewAdditionalInformationPage();
-        responseDetailPage.verifyQuestionPresent(question1, answer);
-        responseDetailPage.verifyQuestionPresent(question2, "Choice1", "Choice2");
-        responseDetailPage.navigateToDetailsPage();
+        List<String> questionToDesactivate = new ArrayList<String>();
+        questionToDesactivate.add("question 6");
+        questionToDesactivate.add("SingleSelectQuestion");
+        questionToDesactivate.add("DateQuestion");
+        questionToDesactivate.add("Number");
+        questionToDesactivate.add("NumberQuestion2");
+
+        //When
+        clientTestHelper.createClientWithQuestionGroups(formParameters,"MyGroup1233266031669", responseParams);
+
+        CreateQuestionGroupParameters createQuestionGroupParameters = new CreateQuestionGroupParameters();
+        for (String question : questionToAdd) {
+            createQuestionGroupParameters.addExistingQuestion("Sec 1", question);
+        }
+        questionGroupTestHelper.addQuestionsToQuestionGroup("CreateClientQG", createQuestionGroupParameters.getExistingQuestions());
+
+        for (String question : questionToDesactivate) {
+            questionGroupTestHelper.markQuestionAsInactive(question);
+        }
+        questionGroupTestHelper.markQuestionGroupAsInactive("CreateClientQG2");
+
+        QuestionResponsePage questionResponsePage = clientTestHelper.navigateToQuestionResponsePage(formParameters,"MyGroup1233266031669");
+        //Then
+        questionResponsePage.verifyQuestionsDoesnotappear(questionToDesactivate.toArray(new String[questionToDesactivate.size()]));
+        questionResponsePage.verifyQuestionsExists(questionToAdd.toArray(new String[questionToAdd.size()]));
+        questionResponsePage.verifySectionDoesnotappear("Sec 2");
     }
 
-    private Map<String, String> getChoiceTags() {
-        Map<String,String> tags = new HashMap<String, String>();
-        tags.put("Tag1", "Choice1");
-        tags.put("Tag3", "Choice2");
-        return tags;
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // http://mifosforge.jira.com/browse/MIFOSTEST-35
+    public void addingMemeberToGroupWithDiffrentStatuses() throws Exception {
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
+        String groupName = "testGroup";
+        String clientName = "test";
+        CreateGroupSubmitParameters groupParams = new CreateGroupSubmitParameters();
+        groupParams.setGroupName(groupName);
+        EditCustomerStatusParameters editCustomerStatusParameters = new EditCustomerStatusParameters();
+        editCustomerStatusParameters.setNote("change status");
+
+        //When
+        ClientViewDetailsPage clientDetailsPage = clientTestHelper.createClientAndVerify("Joe1233171679953 Guy1233171679953", "MyOffice1233171674227");
+        clientTestHelper.changeCustomerStatus(clientDetailsPage, ClientStatus.ACTIVE);
+        groupTestHelper.createNewGroupPartialApplication("MyCenter1233171688286", groupParams);
+        //Then
+        clientTestHelper.addClientToGroupWithErrors(clientName, groupName);
+
+        //When
+        editCustomerStatusParameters.setGroupStatus(GroupStatus.PENDING_APPROVAL);
+        groupTestHelper.changeGroupStatus(groupName, editCustomerStatusParameters);
+        //Then
+        clientTestHelper.addClientToGroupWithErrors(clientName, groupName);
+
+        //When
+        editCustomerStatusParameters.setGroupStatus(GroupStatus.ACTIVE);
+        groupTestHelper.changeGroupStatus(groupName, editCustomerStatusParameters);
+        //Then
+        clientTestHelper.addClientToGroup(clientName, groupName);
+
+        //When
+        clientTestHelper.deleteClientGroupMembership(clientName);
+        editCustomerStatusParameters.setGroupStatus(GroupStatus.ON_HOLD);
+        groupTestHelper.changeGroupStatus(groupName, editCustomerStatusParameters);
+        //Then
+        clientTestHelper.tryAddClientToClosedOrOnHoldGroup(clientName, groupName);
+
+        //When
+        editCustomerStatusParameters.setGroupStatus(GroupStatus.CLOSED);
+        editCustomerStatusParameters.setCloseReason(GroupCloseReason.DUPLICATED);
+        groupTestHelper.changeGroupStatus(groupName, editCustomerStatusParameters);
+        //Then
+        clientTestHelper.tryAddClientToClosedOrOnHoldGroup(clientName, groupName);
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // http://mifosforge.jira.com/browse/MIFOSTEST-40
+    public void addingMemeberOnHoldStatusToGroupWithDiffrentStatuses() throws Exception {
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
+        String groupName = "testGroup";
+        String clientName = "test";
+        CreateGroupSubmitParameters groupParams = new CreateGroupSubmitParameters();
+        groupParams.setGroupName(groupName);
+        EditCustomerStatusParameters editCustomerStatusParameters = new EditCustomerStatusParameters();
+        editCustomerStatusParameters.setNote("change status");
+
+        //When
+        ClientViewDetailsPage clientDetailsPage = clientTestHelper.createClientAndVerify("Joe1233171679953 Guy1233171679953", "MyOffice1233171674227");
+        clientTestHelper.changeCustomerStatus(clientDetailsPage, ClientStatus.ACTIVE);
+        clientTestHelper.changeCustomerStatus(clientDetailsPage, ClientStatus.ON_HOLD);
+        groupTestHelper.createNewGroupPartialApplication("MyCenter1233171688286", groupParams);
+        //Then
+        clientTestHelper.addClientToGroupWithErrors(clientName, groupName);
+
+        //When
+        editCustomerStatusParameters.setGroupStatus(GroupStatus.PENDING_APPROVAL);
+        groupTestHelper.changeGroupStatus(groupName, editCustomerStatusParameters);
+        //Then
+        clientTestHelper.addClientToGroupWithErrors(clientName, groupName);
+
+        //When
+        editCustomerStatusParameters.setGroupStatus(GroupStatus.ACTIVE);
+        groupTestHelper.changeGroupStatus(groupName, editCustomerStatusParameters);
+        //Then
+        clientTestHelper.addClientToGroup(clientName, groupName);
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // http://mifosforge.jira.com/browse/MIFOSTEST-51
+    public void tryRemoveClientWithLoanFromGroup() throws Exception {
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
+        String clientName = "Stu1233266021748 Client1233266021748";
+
+        //When / Then
+        clientTestHelper.deleteClientGroupMembershipWithError(clientName);
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // http://mifosforge.jira.com/browse/MIFOSTEST-50
+    public void tryRemoveClientWithLoanFromGroupWithLoan() throws Exception {
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
+        String clientName = "Stu1233266257960 Client1233266257960";
+
+        //When / Then
+        clientTestHelper.deleteClientGroupMembershipWithError(clientName);
     }
 
     private QuestionnairePage checkMandatoryQuestionValidation(String questionGroupTitle, String question1, String question2, ClientViewDetailsPage viewDetailsPage) {
@@ -461,22 +603,6 @@ public class ClientTest extends UiTestCaseBase {
         return Collections.max(keys);
     }
 
-    private void createQuestionGroupForCreateClient(String qgTitle, String q1, String q2, List<Choice> choiceTags) {
-        AdminPage adminPage = navigationHelper.navigateToAdminPage();
-        CreateQuestionPage cqPage = adminPage.navigateToCreateQuestionPage();
-        cqPage.addQuestion(getCreateQuestionParams(q1, NUMBER, 10, 100, null));
-        cqPage.addQuestion(getCreateQuestionParams(q2, SMART_SELECT, null, null, choiceTags));
-        adminPage = cqPage.submitQuestions();
-
-        CreateQuestionGroupPage cqGroupPage = adminPage.navigateToCreateQuestionGroupPage();
-        CreateQuestionGroupParameters parameters = getCreateQuestionGroupParameters(qgTitle, asList(q1, q2), "Create Client", "Section1");
-        for(String section : parameters.getExistingQuestions().keySet()){
-            cqGroupPage.addExistingQuestion(section, parameters.getExistingQuestions().get(section));
-        }
-        cqGroupPage.markEveryOtherQuestionsMandatory(asList(q1));
-        cqGroupPage.submit(parameters);
-    }
-
     private CreateQuestionGroupParameters getCreateQuestionGroupParameters(String questionGroupTitle, List<String> questions, String appliesTo, String sectionName) {
         CreateQuestionGroupParameters parameters = new CreateQuestionGroupParameters();
         parameters.setTitle(questionGroupTitle);
@@ -495,15 +621,4 @@ public class ClientTest extends UiTestCaseBase {
         parameters.setChoicesFromStrings(choices);
         return parameters;
     }
-
-    private CreateQuestionParameters getCreateQuestionParams(String title, String type, Integer numericMin, Integer numericMax, List<Choice> choices) {
-        CreateQuestionParameters parameters = new CreateQuestionParameters();
-        parameters.setText(title);
-        parameters.setType(type);
-        parameters.setChoices(choices);
-        parameters.setNumericMin(numericMin);
-        parameters.setNumericMax(numericMax);
-        return parameters;
-    }
-
 }

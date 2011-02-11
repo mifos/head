@@ -24,7 +24,7 @@ import org.mifos.test.acceptance.framework.AbstractPage;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
-import org.mifos.test.acceptance.questionnaire.ViewQuestionResponseDetailPage;
+import org.mifos.test.acceptance.framework.questionnaire.ViewQuestionResponseDetailPage;
 import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
@@ -33,6 +33,7 @@ import com.thoughtworks.selenium.Selenium;
 public class LoanAccountPage extends AbstractPage {
 
     public final static String ACTIVE = "Active in Good Standing";
+    public final static String ACTIVE_BAD = "Active in Bad Standing";
     public final static String CLOSED = "Closed- Obligation met";
 
     String loanSummaryTable = "//table[@id='loanSummaryTable']";
@@ -44,6 +45,18 @@ public class LoanAccountPage extends AbstractPage {
 
     public void verifyFeeExists(String expectedFee) {
         Assert.assertEquals(selenium.getText("LoanAccountDetail.text.loanFees"), expectedFee);
+    }
+
+    public void verifyOneTimeFeeExists(String expectedFee, int feeIndex) {
+        Assert.assertEquals(selenium.getText("loanAccountDetail.text.oneTimeFeeName_" + feeIndex), expectedFee);
+    }
+
+    public void verifyNoOneTimeFeesExist() {
+        Assert.assertFalse(selenium.isElementPresent("id=loanAccountDetail.text.oneTimeFeeName_1"));
+    }
+
+    public void verifyNoOneTimeFeeRemovalLinkExists(int feeIndex) {
+        Assert.assertFalse(selenium.isElementPresent("id=loanAccountDetail.link.removeOneTimeFee_" + feeIndex));
     }
 
     public void verifyLoanAmount(String amount) {
@@ -99,6 +112,11 @@ public class LoanAccountPage extends AbstractPage {
     public void verifyPerformanceHistory(String payments, String missedPayments) {
         Assert.assertTrue(selenium.isTextPresent("of payments: "+payments));
         Assert.assertTrue(selenium.isTextPresent("of missed payments: "+missedPayments));
+    }
+
+    public void verifyAccountSummary(String totalAmount, String date, String amountInArrears) {
+        Assert.assertTrue(selenium.isTextPresent("Total amount due on "+date+": "+totalAmount));
+        Assert.assertTrue(selenium.isTextPresent("Amount in arrears: "+amountInArrears));
     }
 
     public void verifyStatus(String status) {
@@ -177,14 +195,19 @@ public class LoanAccountPage extends AbstractPage {
      */
     public String getAccountId() {
         String returnId = "-1";
-        String heading = selenium.getAttribute("loanaccountdetail.link.editAccountInformation@href");
-        System.err.println("heADING: " + heading);
-        String[] linkParts = heading.split("&");
-        for (String part : linkParts) {
-            String[] partOfLink = part.split("=");
-            // this is an ID that identifies the account
-            if ("globalAccountNum".equals(partOfLink[0])) {
-                returnId = partOfLink[1];
+        if(selenium.isElementPresent("loanaccountdetail.text.loanid")) {
+            returnId = selenium.getText("loanaccountdetail.text.loanid");
+        }
+        else {
+            String heading = selenium.getAttribute("loanaccountdetail.link.editAccountInformation@href");
+            System.err.println("heADING: " + heading);
+            String[] linkParts = heading.split("&");
+            for (String part : linkParts) {
+                String[] partOfLink = part.split("=");
+                // this is an ID that identifies the account
+                if ("globalAccountNum".equals(partOfLink[0])) {
+                    returnId = partOfLink[1];
+                }
             }
         }
         return returnId;
@@ -388,6 +411,13 @@ public class LoanAccountPage extends AbstractPage {
 
     }
 
+    public LoanAccountPage removeOneTimeFee(int feeIndex) {
+        selenium.click("loanAccountDetail.link.removeOneTimeFee_" + feeIndex);
+        waitForPageToLoad();
+        return this;
+    }
+
+
     public ApplyAdjustmentPage navigateToApplyAdjustment() {
         selenium.click("loanaccountdetail.link.applyAdjustment");
         waitForPageToLoad();
@@ -436,6 +466,12 @@ public class LoanAccountPage extends AbstractPage {
             }
         }
         return this;
+    }
+
+    public LoanAccountPage disburseLoan(DisburseLoanParameters disburseParams) {
+        return navigateToDisburseLoan()
+        .submitAndNavigateToDisburseLoanConfirmationPage(disburseParams)
+        .submitAndNavigateToLoanAccountPage();
     }
 }
 

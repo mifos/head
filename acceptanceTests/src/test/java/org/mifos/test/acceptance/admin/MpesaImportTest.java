@@ -49,6 +49,7 @@ import org.mifos.test.acceptance.framework.loan.ViewRepaymentSchedulePage;
 import org.mifos.test.acceptance.framework.savings.SavingsAccountDetailPage;
 import org.mifos.test.acceptance.framework.testhelpers.CustomPropertiesHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
+import org.mifos.test.acceptance.framework.testhelpers.SavingsAccountHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,6 +79,9 @@ public class MpesaImportTest extends UiTestCaseBase {
         "savings_product_code.xls", "example_loan_disb.xls"};
 
     static final String FILE_WITH_NO_ERRORS = "import_no_errors.xls";
+    static final String FILE_WITH_OVERPAYMENT_AMOUNT = "overpayment.xls";
+    static final String DISBURSAL_IMPORT = "disbursal_import.xls";
+    static final String PAYMENT_IMPORT = "payment_import.xls";
 
     @Autowired
     private DbUnitUtilities dbUnitUtilities;
@@ -304,4 +308,129 @@ public class MpesaImportTest extends UiTestCaseBase {
         copyPluginFromTemp(tempFileName);
     }
 
+    /**
+     * MPESA - Import has expected errors due to invalid data
+     * and overpayment amount and user is not able to continue
+     * http://mifosforge.jira.com/browse/MIFOSTEST-692
+     * @throws Exception
+     */
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled = true)
+    public void failImportTransaction() throws Exception {
+        //Given
+        String path = this.getClass().getResource("/mpesa/" + FILE_WITH_OVERPAYMENT_AMOUNT).toString();
+        String dataset = "mpesa_export.xml";
+
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, dataset, dataSource, selenium);
+
+        propertiesHelper.setImportTransactionOrder("AL3,AL5");
+
+        SavingsAccountHelper savingsAccountHelper = new SavingsAccountHelper(selenium);
+        savingsAccountHelper.closeSavingsAccount("000100000000019","Close account");
+
+        //When
+        ImportTransactionsPage importTransactionsPage = importTransaction(path);
+        importTransactionsPage.checkErrors(new String[]{"Row <24> error - THY89933"
+                + " - Last account is a loan account but the total paid in amount"
+                + " is greater than the total due amount"});
+
+        //Then
+        LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage("000100000000013");
+        loanAccountPage.verifyStatus(LoanAccountPage.ACTIVE);
+        loanAccountPage.verifyExactLoanAmount("2000.0");
+
+        TransactionHistoryPage transactionHistoryPage = loanAccountPage.navigateToTransactionHistoryPage();
+        transactionHistoryPage.verifyTransactionHistory(183, 1, 6);
+    }
+
+    /**
+     * MPESA - Import has errors and user chooses to import
+     * a different file with some valid and invalid data.
+     * http://mifosforge.jira.com/browse/MIFOSTEST-695
+     * @throws Exception
+     */
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled = true)
+    public void importTheSameFiles() throws Exception {
+        //Given
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTime targetTime = new DateTime(2011,01,28,12,0,0,0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        String path = this.getClass().getResource("/mpesa/" + FILE_WITH_NO_ERRORS).toString();
+        String dataset = "mpesa_export.xml";
+
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, dataset, dataSource, selenium);
+
+        propertiesHelper.setImportTransactionOrder("AL3,AL5");
+
+        //When
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        ImportTransactionsPage importTransactionsPage = adminPage.navigateToImportTransactionsPage();
+        ImportTransactionsConfirmationPage importTransactionsConfirmationPage = importTransactionsPage.importTransactions(path, EXCEL_IMPORT_TYPE);
+
+        //Then
+        importTransactionsConfirmationPage.verifyImportSuccess("You have successfully imported transactions.");
+        LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage("000100000000013");
+        loanAccountPage.verifyStatus(LoanAccountPage.CLOSED);
+
+        ViewRepaymentSchedulePage viewRepaymentSchedulePage = loanAccountPage.navigateToRepaymentSchedulePage();
+        viewRepaymentSchedulePage.verifyFirstInstallmentDate(5, 3, "28-Jan-2011");
+
+        loanAccountPage = viewRepaymentSchedulePage.navigateToLoanAccountPage();
+
+        loanAccountPage.verifyPerformanceHistory("11", "11");
+
+        TransactionHistoryPage transactionHistoryPage = loanAccountPage.navigateToTransactionHistoryPage();
+
+        transactionHistoryPage.verifyTransactionHistory(2013, 2, 48);
+        transactionHistoryPage.verifyPostedBy("mifos", 48);
+
+        SavingsAccountDetailPage savingsAccountDetailPage = navigationHelper.navigateToSavingsAccountDetailPage("000100000000015");
+        savingsAccountDetailPage.verifySavingsAmount("3170.0");
+        savingsAccountDetailPage.verifyDate("28/01/2011");
+
+        //When
+        adminPage = navigationHelper.navigateToAdminPage();
+        importTransactionsPage = adminPage.navigateToImportTransactionsPage();
+        importTransactionsPage = importTransactionsPage.failImportTransaction(path, EXCEL_IMPORT_TYPE);
+
+        //Then
+        importTransactionsPage.checkErrors(new String[]{"Same file has been already imported. Please import a different file."});
+    }
+
+    /**
+     * Digits after decimal validate occurs for disbursal and payment import
+     * http://mifosforge.jira.com/browse/MIFOSTEST-278
+     * @throws Exception
+     */
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled = true)
+    public void validateImport() throws Exception {
+        //Given
+        String path = this.getClass().getResource("/mpesa/" + DISBURSAL_IMPORT).toString();
+        String dataset = "mpesa_export.xml";
+
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, dataset, dataSource, selenium);
+
+        propertiesHelper.setImportTransactionOrder("AL3,AL5");
+        propertiesHelper.setDigitsAfterDecimal(0);
+        //When
+        ImportTransactionsPage importTransactionsPage = importTransaction(path);
+
+        //Then
+        importTransactionsPage.checkErrors(new String[]{"Row <24> error - "
+                + "C94ZH942 - Number of fraction digits in the \"Withdrawn\""
+                + " column - 3 - is greater than configured for the currency - 0"});
+
+        //When
+        path = this.getClass().getResource("/mpesa/" + PAYMENT_IMPORT).toString();
+        importTransactionsPage = importTransaction(path);
+
+        //Then
+        importTransactionsPage.checkErrors(new String[]{"Row <24> error - THY89933"
+                + " - Number of fraction digits in the \"Paid In\" column - 3 - "
+                + "is greater than configured for the currency - 0"});
+
+        propertiesHelper.setDigitsAfterDecimal(1);
+    }
 }

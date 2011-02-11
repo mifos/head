@@ -33,6 +33,9 @@ public class CreateLoanAccountSubmitParameters {
     private boolean gracePeriodTypeNone;
     private String interestRate;
     private String numberOfInstallments;
+    private String dd;
+    private String mm;
+    private String yy;
 
 
     public String getInterestRate() {
@@ -128,5 +131,29 @@ public class CreateLoanAccountSubmitParameters {
 
     public void setGracePeriodTypeNone(boolean gracePeriodTypeNone) {
         this.gracePeriodTypeNone = gracePeriodTypeNone;
+    }
+
+    public String getDd() {
+        return this.dd;
+    }
+
+    public void setDd(String dd) {
+        this.dd = dd;
+    }
+
+    public String getMm() {
+        return this.mm;
+    }
+
+    public void setMm(String mm) {
+        this.mm = mm;
+    }
+
+    public String getYy() {
+        return this.yy;
+    }
+
+    public void setYy(String yy) {
+        this.yy = yy;
     }
 }

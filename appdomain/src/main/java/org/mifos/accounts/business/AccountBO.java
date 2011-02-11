@@ -43,6 +43,7 @@ import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeBO;
+import org.mifos.accounts.fees.persistence.FeeDao;
 import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
 import org.mifos.accounts.fees.util.helpers.FeeStatus;
 import org.mifos.accounts.financial.business.FinancialTransactionBO;
@@ -116,7 +117,7 @@ public class AccountBO extends AbstractBusinessObject {
      */
     private final Set<AccountFeesEntity> accountFees;
     private final Set<AccountActionDateEntity> accountActionDates;
-    private List<AccountPaymentEntity> accountPayments;
+    protected List<AccountPaymentEntity> accountPayments;
     private Set<AccountCustomFieldEntity> accountCustomFields;
 
     private LegacyAccountDao legacyAccountDao = null;
@@ -140,6 +141,10 @@ public class AccountBO extends AbstractBusinessObject {
             dateTimeService = new DateTimeService();
         }
         return dateTimeService;
+    }
+
+    protected FeeDao getFeeDao() {
+        return ApplicationContextProvider.getBean(FeeDao.class);
     }
 
     public void setDateTimeService(final DateTimeService dateTimeService) {

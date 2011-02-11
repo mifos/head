@@ -27,8 +27,9 @@ import java.util.Locale;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.fees.business.FeeBO;
-import org.mifos.accounts.fees.persistence.FeePersistence;
+import org.mifos.accounts.fees.persistence.FeeDao;
 import org.mifos.accounts.fees.util.helpers.FeeChangeType;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.Localization;
 import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.persistence.CustomerPersistence;
@@ -45,12 +46,16 @@ public class ApplyCustomerFeeChangesHelper extends TaskHelper {
         super();
     }
 
+    public FeeDao getFeeDao() {
+        return ApplicationContextProvider.getBean(FeeDao.class);
+    }
+
     @Override
     public void execute(@SuppressWarnings("unused") long timeInMillis) throws BatchJobException {
         List<String> errorList = new ArrayList<String>();
         List<Short> updatedFeeIds = new ArrayList<Short>();
         try {
-            updatedFeeIds = new FeePersistence().getUpdatedFeesForCustomer();
+            updatedFeeIds = getFeeDao().getUpdatedFeesForCustomer();
         } catch (Exception e) {
             errorList.add(e.getMessage());
             throw new BatchJobException(SchedulerConstants.FAILURE, errorList);
@@ -58,8 +63,7 @@ public class ApplyCustomerFeeChangesHelper extends TaskHelper {
 
         for (Short feeId : updatedFeeIds) {
             try {
-                FeeBO hydratedFee = new FeePersistence().findFeeById(feeId);
-                hydratedFee = new FeePersistence().getFee(feeId, hydratedFee.getFeeType());
+                FeeBO hydratedFee = getFeeDao().findById(feeId);
 
                 if (!hydratedFee.getFeeChangeType().equals(FeeChangeType.NOT_UPDATED)) {
                     List<AccountBO> accounts = new CustomerPersistence().getCustomerAccountsForFee(hydratedFee.getFeeId());

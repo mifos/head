@@ -26,6 +26,8 @@ import org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity;
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
+import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.application.meeting.business.RecurrenceTypeEntity;
 import org.mifos.customers.business.CustomerLevelEntity;
 import org.mifos.dto.domain.PrdOfferingDto;
 
@@ -40,6 +42,14 @@ public interface SavingsProductDao {
     void save(ProductTypeEntity savingsProductConfiguration);
 
     List<Object[]> findAllSavingsProducts();
+
+    List<SavingsBO> retrieveSavingsAccountsForPrd(Short prdOfferingId);
+
+    List<RecurrenceTypeEntity> getSavingsApplicableRecurrenceTypes();
+
+    List<SavingsOfferingBO> getAllActiveSavingsProducts();
+
+    List<SavingsOfferingBO> getSavingsOfferingsNotMixed(Short localeId);
 
     InterestCalcTypeEntity retrieveInterestCalcType(InterestCalcType interestCalcType);
 

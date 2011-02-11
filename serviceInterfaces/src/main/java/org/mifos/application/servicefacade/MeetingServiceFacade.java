@@ -20,12 +20,12 @@
 
 package org.mifos.application.servicefacade;
 
-import org.mifos.dto.domain.MeetingUpdateRequest;
+import org.mifos.dto.domain.MeetingDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface MeetingServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
-    void updateCustomerMeeting(MeetingUpdateRequest meetingUpdateRequest);
+    void updateCustomerMeeting(MeetingDto meetingDto, Integer customerId);
 
 }

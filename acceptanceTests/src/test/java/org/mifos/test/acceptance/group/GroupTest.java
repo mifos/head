@@ -20,33 +20,41 @@
 
 package org.mifos.test.acceptance.group;
 
+import static java.util.Arrays.asList;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
 import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
+import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPage;
+import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPreviewPage;
 import org.mifos.test.acceptance.framework.group.CenterSearchTransferGroupPage;
 import org.mifos.test.acceptance.framework.group.ConfirmCenterMembershipPage;
 import org.mifos.test.acceptance.framework.group.CreateGroupConfirmationPage;
 import org.mifos.test.acceptance.framework.group.CreateGroupEntryPage;
-import org.mifos.test.acceptance.framework.group.EditGroupStatusConfirmationPage;
-import org.mifos.test.acceptance.framework.group.EditGroupStatusPage;
-import org.mifos.test.acceptance.framework.group.EditGroupStatusParameters;
 import org.mifos.test.acceptance.framework.group.CreateGroupEntryPage.CreateGroupSubmitParameters;
 import org.mifos.test.acceptance.framework.group.CreateGroupSearchPage;
+import org.mifos.test.acceptance.framework.group.EditCustomerStatusParameters;
+import org.mifos.test.acceptance.framework.group.GroupStatus;
 import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
 import org.mifos.test.acceptance.framework.login.LoginPage;
+import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionGroupParameters;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
 import org.mifos.test.acceptance.framework.testhelpers.GroupTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
-import org.mifos.test.acceptance.questionnaire.Choice;
-import org.mifos.test.acceptance.questionnaire.CreateQuestionGroupPage;
-import org.mifos.test.acceptance.questionnaire.CreateQuestionGroupParameters;
-import org.mifos.test.acceptance.questionnaire.CreateQuestionPage;
-import org.mifos.test.acceptance.questionnaire.CreateQuestionParameters;
-import org.mifos.test.acceptance.questionnaire.QuestionResponsePage;
-import org.mifos.test.acceptance.questionnaire.ViewQuestionResponseDetailPage;
+import org.mifos.test.acceptance.framework.questionnaire.Choice;
+import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionGroupPage;
+import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionPage;
+import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionParameters;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
+import org.mifos.test.acceptance.framework.questionnaire.ViewQuestionResponseDetailPage;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.mifos.test.acceptance.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,13 +63,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
-import static java.util.Arrays.asList;
 
 @SuppressWarnings("PMD")
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
@@ -89,7 +90,7 @@ public class GroupTest extends UiTestCaseBase {
         appLauncher = new AppLauncher(selenium);
         navigationHelper = new NavigationHelper(selenium);
         random = new Random();
-        groupTestHelper = new GroupTestHelper(navigationHelper);
+        groupTestHelper = new GroupTestHelper(selenium);
     }
 
     @AfterMethod(groups = {"smoke","group","acceptance","ui"})
@@ -124,12 +125,12 @@ public class GroupTest extends UiTestCaseBase {
         //Then
         groupDetailsPage.verifyStatus("Application Pending*");
         //When
-        EditGroupStatusPage editGroupStatusPage = groupDetailsPage.navigateToEditGroupStatusPage();
-        EditGroupStatusParameters editGroupStatusParameters = new EditGroupStatusParameters();
-        editGroupStatusParameters.setStatus(EditGroupStatusParameters.ACTIVE);
-        editGroupStatusParameters.setNote("test");
-        EditGroupStatusConfirmationPage confirmationPage2 = editGroupStatusPage.submitAndNavigateToEditStatusConfirmationPage(editGroupStatusParameters);
-        GroupViewDetailsPage detailsPage = confirmationPage2.navigateToGroupDetailsPage();
+        CustomerChangeStatusPage customerChangeStatusPage = groupDetailsPage.navigateToEditGroupStatusPage();
+        EditCustomerStatusParameters editCustomerStatusParameters = new EditCustomerStatusParameters();
+        editCustomerStatusParameters.setGroupStatus(GroupStatus.ACTIVE);
+        editCustomerStatusParameters.setNote("test");
+        CustomerChangeStatusPreviewPage customerChangeStatusPreviewPage = customerChangeStatusPage.setChangeStatusParametersAndSubmit(editCustomerStatusParameters);
+        GroupViewDetailsPage detailsPage = customerChangeStatusPreviewPage.navigateToGroupDetailsPage();
         //Then
         detailsPage.verifyStatus("Active*");
     }
@@ -149,12 +150,12 @@ public class GroupTest extends UiTestCaseBase {
         //Then
         groupDetailsPage.verifyStatus("Partial Application*");
         //When
-        EditGroupStatusPage editGroupStatusPage = groupDetailsPage.navigateToEditGroupStatusPage();
-        EditGroupStatusParameters editGroupStatusParameters = new EditGroupStatusParameters();
-        editGroupStatusParameters.setStatus(EditGroupStatusParameters.PENDING_APPROVAL);
-        editGroupStatusParameters.setNote("test");
-        EditGroupStatusConfirmationPage confirmationPage2 = editGroupStatusPage.submitAndNavigateToEditStatusConfirmationPage(editGroupStatusParameters);
-        GroupViewDetailsPage detailsPage = confirmationPage2.navigateToGroupDetailsPage();
+        CustomerChangeStatusPage customerChangeStatusPage = groupDetailsPage.navigateToEditGroupStatusPage();
+        EditCustomerStatusParameters editCustomerStatusParameters = new EditCustomerStatusParameters();
+        editCustomerStatusParameters.setGroupStatus(GroupStatus.PENDING_APPROVAL);
+        editCustomerStatusParameters.setNote("test");
+        CustomerChangeStatusPreviewPage customerChangeStatusPreviewPage = customerChangeStatusPage.setChangeStatusParametersAndSubmit(editCustomerStatusParameters);
+        GroupViewDetailsPage detailsPage = customerChangeStatusPreviewPage.navigateToGroupDetailsPage();
         //Then
         detailsPage.verifyStatus("Application Pending Approval*");
     }
@@ -217,6 +218,36 @@ public class GroupTest extends UiTestCaseBase {
         GroupViewDetailsPage groupViewDetailsPage = groupTestHelper.createNewGroup(centerName, groupParams);
 
         groupViewDetailsPage.verifyStatus(GroupViewDetailsPage.STATUS_PENDING_APPROVAL);
+    }
+
+    /**
+     * Create group and change center membership for group
+     * http://mifosforge.jira.com/browse/MIFOSTEST-655
+     * @throws Exception
+     */
+    @Test(groups = {"smoke","group","acceptance","ui"})
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void verifyChangeCenterMembership() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
+
+        String centerName = "MyCenter1233171688286";
+        String newCenterName = "MyCenter1232993841778";
+        String groupName = "Group655";
+        CreateGroupSubmitParameters groupParams = getGenericGroupFormParameters();
+        groupParams.setGroupName(groupName);
+        EditCustomerStatusParameters groupStatusParams = new EditCustomerStatusParameters();
+        groupStatusParams.setNote("note");
+
+        GroupViewDetailsPage groupViewDetailsPage = groupTestHelper.createNewGroupPartialApplication(centerName, groupParams);
+        groupViewDetailsPage.verifyStatus(GroupViewDetailsPage.STATUS_PARTIAL_APPLICATION);
+        groupStatusParams.setGroupStatus(GroupStatus.PENDING_APPROVAL);
+        groupTestHelper.changeGroupStatus(groupName, groupStatusParams);
+        groupStatusParams.setGroupStatus(GroupStatus.ACTIVE);
+        groupViewDetailsPage = groupTestHelper.changeGroupStatus(groupName, groupStatusParams);
+        groupViewDetailsPage.verifyStatus(GroupViewDetailsPage.STATUS_ACTIVE);
+        groupViewDetailsPage = groupTestHelper.changeGroupCenterMembership(groupName, newCenterName);
+
+        groupViewDetailsPage.navigateToGroupsCenter(newCenterName);
     }
 
     private Map<String, String> getChoiceTags() {

@@ -38,11 +38,14 @@ import org.mifos.core.MifosException;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.components.batchjobs.MifosScheduler;
 import org.mifos.framework.components.batchjobs.exceptions.TaskSystemException;
+import org.mifos.framework.components.mifosmenu.MenuBuilder;
+import org.mifos.framework.components.mifosmenu.MenuRepository;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.security.authorization.AuthorizationManager;
 import org.mifos.security.authorization.HierarchyManager;
 import org.mifos.service.test.TestMode;
 import org.mifos.service.test.TestingService;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Encapsulates all logic necessary to have the application behave differently during acceptance and integration tests.
@@ -181,6 +184,15 @@ public class StandardTestingService implements TestingService {
     }
 
     @Override
+    public void setCenterHierarchyExists(boolean flag) {
+        ClientRules.setCenterHierarchyExists(flag);
+        MifosConfigurationManager.getInstance().setProperty(ClientRules.ClientRulesCenterHierarchyExists, flag);
+        // we need to rebuild menus after changing this setting
+        MenuRepository.getInstance().removeMenuForAllLocale();
+        MenuRepository.getInstance().setCrudeMenu(null);
+    }
+
+    @Override
     public void runAllBatchJobs(final ServletContext ctx) {
         logger.info("running all batch jobs");
         MifosScheduler mifosScheduler = (MifosScheduler) ctx.getAttribute(MifosScheduler.class.getName());
@@ -222,5 +234,17 @@ public class StandardTestingService implements TestingService {
             return;
         }
         configMgr.setProperty(importParamName, importParamValue);
+    }
+
+    @Override
+    public void setProcessFlow(String processFlowParamName, String processFlowParamValue)
+            throws MifosException {
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
+        if (processFlowParamValue == null || processFlowParamValue.equals("")) {
+            configMgr.clearProperty(processFlowParamName);
+            return;
+        }
+        configMgr.setProperty(processFlowParamName, processFlowParamValue);
+
     }
 }
