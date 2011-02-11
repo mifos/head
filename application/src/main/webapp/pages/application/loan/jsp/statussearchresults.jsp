@@ -164,7 +164,7 @@ explanation of the license and how it is applied.
 										<mifos:mifoslabel name="accountStatus.id" />
 										<c:out value="${loan.customer.globalCustNum}" />
 										<br>
-										<span class="fontnormalbold"> <mifos:mifoslabel name="accountStatus.loanofficer" /> </span>
+										<span class="fontnormalbold"> <mifos:mifoslabel name="accountStatus.loanofficerColon"/> </span>
 										<c:out value="${loan.customer.personnel.displayName}" />
 										<br>
 
