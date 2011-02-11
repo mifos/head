@@ -21,7 +21,6 @@
 package org.mifos.framework.components.customTableTag;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Locale;
 
@@ -29,7 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
-import org.mifos.core.MifosResourceUtil;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.TableTagParseException;
 import org.mifos.framework.util.helpers.Constants;

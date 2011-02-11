@@ -94,5 +94,9 @@ public class MifosResourceUtil {
     public static InputStream getClassPathResourceAsStream(String fileName) {
         return Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName);
     }
+    
+    public static String getURI(String fileName) throws IOException {
+        return new ClassPathResource(fileName).getURI().toString();
+    }
 
 }

@@ -63,7 +63,7 @@ public class TableTagParser {
 
             DocumentBuilder builder = factory.newDocumentBuilder();
             builder.setErrorHandler(null);
-            Document document = builder.parse(MifosResourceUtil.getClassPathResource(filename));
+            Document document = builder.parse(MifosResourceUtil.getURI(filename));
             /*
              * NodeList tableNodeList =
              * document.getElementsByTagName(TableTagConstants.TABLE); table =

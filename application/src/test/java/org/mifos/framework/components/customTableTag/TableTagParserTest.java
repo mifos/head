@@ -22,6 +22,7 @@ package org.mifos.framework.components.customTableTag;
 
 import static junitx.framework.StringAssert.assertContains;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -45,7 +46,7 @@ public class TableTagParserTest {
             Assert.fail();
         } catch (TableTagParseException e) {
            Assert.assertEquals("exception.framework.TableTagParseException", e.getKey());
-            ObjectAssert.assertInstanceOf(IllegalArgumentException.class, e.getCause());
+            ObjectAssert.assertInstanceOf(FileNotFoundException.class, e.getCause());
         }
     }
 

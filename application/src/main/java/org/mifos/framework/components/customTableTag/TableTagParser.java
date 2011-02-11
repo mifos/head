@@ -20,11 +20,9 @@
 
 package org.mifos.framework.components.customTableTag;
 
-import java.io.IOException;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
@@ -37,8 +35,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
 public class TableTagParser {
 
@@ -55,26 +51,18 @@ public class TableTagParser {
 
             SchemaFactory schfactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
             schfactory.setErrorHandler(null);
-            Schema schema = schfactory.newSchema(new StreamSource(MifosResourceUtil.getClassPathResourceAsStream(FilePaths.CUSTOMTABLETAGXSD)));
+            Schema schema = schfactory.newSchema(new StreamSource(MifosResourceUtil.getURI(FilePaths.CUSTOMTABLETAGXSD)));
             factory.setNamespaceAware(false);
             factory.setValidating(false);
             factory.setSchema(schema);
 
             DocumentBuilder builder = factory.newDocumentBuilder();
             builder.setErrorHandler(null);
-            Document document = builder.parse(MifosResourceUtil.getClassPathResourceAsStream(file));
+            Document document = builder.parse(MifosResourceUtil.getURI(file));
 
             table = createTable(document);
 
-        } catch (ParserConfigurationException e) {
-            throw new TableTagParseException(e);
-        } catch (IllegalArgumentException e) {
-            throw new TableTagParseException(e);
-        } catch (IOException e) {
-            throw new TableTagParseException(e);
-        } catch (SAXParseException e) {
-            throw new TableTagParseException(e);
-        } catch (SAXException e) {
+        } catch (Exception e) {
             throw new TableTagParseException(e);
         }
         return table;
