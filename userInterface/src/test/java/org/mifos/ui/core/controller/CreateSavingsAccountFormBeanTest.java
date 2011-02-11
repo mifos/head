@@ -51,15 +51,13 @@ public class CreateSavingsAccountFormBeanTest {
 
     private CreateSavingsAccountFormBean formBean;
     private ValidationContext validationContext;
-    private MifosBeanValidator validator;
-    private LocalValidatorFactoryBean targetValidator;
     private QuestionnaireServiceFacade questionnaireServiceFacade;
     private ValidationException validationException;
 
     @Before
     public void setUp() {
-        validator = new MifosBeanValidator();
-        targetValidator = new LocalValidatorFactoryBean();
+        MifosBeanValidator validator = new MifosBeanValidator();
+        LocalValidatorFactoryBean targetValidator = new LocalValidatorFactoryBean();
         targetValidator.afterPropertiesSet();
         validator.setTargetValidator(targetValidator);
 
@@ -76,7 +74,7 @@ public class CreateSavingsAccountFormBeanTest {
     }
 
     @Test
-    public void validateCustomerSearchStep_EmptySearchStringShouldFail() {
+    public void validateCustomerSearchStepEmptySearchStringShouldFail() {
         formBean.validateCustomerSearchStep(validationContext);
 
         MessageContext messageContext = validationContext.getMessageContext();
@@ -89,7 +87,7 @@ public class CreateSavingsAccountFormBeanTest {
     }
 
     @Test
-    public void validateCustomerSearchStep_NonEmptySearchStringShouldPass() {
+    public void validateCustomerSearchStepNonEmptySearchStringShouldPass() {
         formBean.setSearchString("foo");
         formBean.validateCustomerSearchStep(validationContext);
 
@@ -100,21 +98,21 @@ public class CreateSavingsAccountFormBeanTest {
     }
 
     @Test
-    public void validateSelectCustomerStep_EmptySearchStringShouldFail() {
+    public void validateSelectCustomerStepEmptySearchStringShouldFail() {
         // new search term entered in select customer step. this transitions
         // back to customer search step.
-        validateCustomerSearchStep_EmptySearchStringShouldFail();
+        validateCustomerSearchStepEmptySearchStringShouldFail();
     }
 
     @Test
-    public void validateSelectCustomerStep_NonEmptySearchStringShouldPass() {
+    public void validateSelectCustomerStepNonEmptySearchStringShouldPass() {
         // new search term entered in select customer step. this transitions
         // back to customer search step.
-        validateCustomerSearchStep_NonEmptySearchStringShouldPass();
+        validateCustomerSearchStepNonEmptySearchStringShouldPass();
     }
 
     @Test
-    public void validateSelectProductOfferingStep_EmptyProductIdShouldFail() {
+    public void validateSelectProductOfferingStepEmptyProductIdShouldFail() {
         formBean.validateSelectProductOfferingStep(validationContext);
 
         MessageContext messageContext = validationContext.getMessageContext();
@@ -127,7 +125,7 @@ public class CreateSavingsAccountFormBeanTest {
     }
 
     @Test
-    public void validateSelectProductOfferingStep_NonEmptyProductIdShouldPass() {
+    public void validateSelectProductOfferingStepNonEmptyProductIdShouldPass() {
         formBean.setProductId(1);
         formBean.validateSelectProductOfferingStep(validationContext);
 
@@ -138,30 +136,30 @@ public class CreateSavingsAccountFormBeanTest {
     }
 
     @Test
-    public void validateEnterAccountDetailsStep_MandatoryDeposit_EmptyAmountShouldFail() {
-        validateEnterAccountDetailsStep_MandatoryDeposit("", Pattern.class,
+    public void validateEnterAccountDetailsStepMandatoryDepositEmptyAmountShouldFail() {
+        validateEnterAccountDetailsStepMandatoryDeposit("", Pattern.class,
                 false);
     }
 
     @Test
-    public void validateEnterAccountDetailsStep_MandatoryDeposit_NullAmountShouldFail() {
-        validateEnterAccountDetailsStep_MandatoryDeposit(null, NotNull.class,
+    public void validateEnterAccountDetailsStepMandatoryDepositNullAmountShouldFail() {
+        validateEnterAccountDetailsStepMandatoryDeposit(null, NotNull.class,
                 false);
     }
 
     @Test
-    public void validateEnterAccountDetailsStep_MandatoryDeposit_InvalidAmountShouldFail() {
-        validateEnterAccountDetailsStep_MandatoryDeposit("xyz", Pattern.class,
+    public void validateEnterAccountDetailsStepMandatoryDepositInvalidAmountShouldFail() {
+        validateEnterAccountDetailsStepMandatoryDeposit("xyz", Pattern.class,
                 false);
     }
 
     @Test
-    public void validateEnterAccountDetailsStep_MandatoryDeposit_NumericAmountShouldPass() {
-        validateEnterAccountDetailsStep_MandatoryDeposit("123.0", null, true);
+    public void validateEnterAccountDetailsStepMandatoryDepositNumericAmountShouldPass() {
+        validateEnterAccountDetailsStepMandatoryDeposit("123.0", null, true);
     }
 
     @Test
-    public void validateAnswerQuestionGroupStep_EmptyQuestionGroupShouldPass() {
+    public void validateAnswerQuestionGroupStepEmptyQuestionGroupShouldPass() {
         List<QuestionGroupDetail> questionGroups = new ArrayList<QuestionGroupDetail>();
         formBean.setQuestionGroups(questionGroups);
         formBean.validateAnswerQuestionGroupStep(validationContext);
@@ -172,7 +170,7 @@ public class CreateSavingsAccountFormBeanTest {
     }
 
     @Test
-    public void validateAnswerQuestionGroupStep_MissingMandatoryResponseShouldFail() {
+    public void validateAnswerQuestionGroupStepMissingMandatoryResponseShouldFail() {
 
         List<QuestionGroupDetail> questionGroups = new ArrayList<QuestionGroupDetail>();
         formBean.setQuestionGroups(questionGroups);
@@ -187,7 +185,7 @@ public class CreateSavingsAccountFormBeanTest {
         Assert.assertEquals(1, messages.length);
     }
 
-    private void validateEnterAccountDetailsStep_MandatoryDeposit(
+    private void validateEnterAccountDetailsStepMandatoryDeposit(
             String amount, @SuppressWarnings("rawtypes") Class expectedViolation, boolean expectingPass) {
         setDepositType(formBean, CreateSavingsAccountFormBean.MANDATORY_DEPOSIT);
         formBean.setMandatoryDepositAmount(amount);

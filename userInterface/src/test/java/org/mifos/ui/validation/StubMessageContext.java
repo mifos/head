@@ -32,9 +32,9 @@ import org.springframework.context.MessageSource;
 
 public class StubMessageContext implements MessageContext {
 
-    private List<Message> messages = new ArrayList<Message>();
+    private final List<Message> messages = new ArrayList<Message>();
 
-    private MessageSource messageSource;
+    private final MessageSource messageSource;
 
     private final Locale locale = Locale.ENGLISH;
 
@@ -44,22 +44,22 @@ public class StubMessageContext implements MessageContext {
 
     @Override
     public Message[] getAllMessages() {
-        return messages.toArray(new Message[0]);
+        return messages.toArray(new Message[messages.size()]);
     }
 
     @Override
     public Message[] getMessagesBySource(Object source) {
-        return (Message[]) messages.toArray();
+        return messages.toArray(new Message[messages.size()]);
     }
 
     @Override
     public Message[] getMessagesByCriteria(MessageCriteria criteria) {
-        return (Message[]) messages.toArray();
+        return messages.toArray(new Message[messages.size()]);
     }
 
     @Override
     public boolean hasErrorMessages() {
-        return messages.size() > 0;
+        return !messages.isEmpty();
     }
 
     @Override

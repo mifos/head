@@ -45,25 +45,25 @@ public class ValidationExceptionMessageExtractorTest {
     }
 
     @Test
-    public void testBadNumericResponseException_NoBound() {
+    public void testBadNumericResponseExceptionNoBound() {
         BadNumericResponseException e = new BadNumericResponseException("Title", null, null);
         testBadNumericResponseException(e, "questionnaire.invalid.numeric.response");
     }
     
     @Test
-    public void testBadNumericResponseException_UpperLowerBounds() {
+    public void testBadNumericResponseExceptionUpperLowerBounds() {
         BadNumericResponseException e = new BadNumericResponseException("Title", 0, 100);
         testBadNumericResponseException(e, "questionnaire.invalid.numeric.range.response");
     }
 
     @Test
-    public void testBadNumericResponseException_LowerBoundOnly() {
+    public void testBadNumericResponseExceptionLowerBoundOnly() {
         BadNumericResponseException e = new BadNumericResponseException("Title", 0, null);
         testBadNumericResponseException(e, "questionnaire.invalid.numeric.min.response");
     }
 
     @Test
-    public void testBadNumericResponseException_UpperBoundOnly() {
+    public void testBadNumericResponseExceptionUpperBoundOnly() {
         BadNumericResponseException e = new BadNumericResponseException("Title", null, 100);
         testBadNumericResponseException(e, "questionnaire.invalid.numeric.max.response");
     }

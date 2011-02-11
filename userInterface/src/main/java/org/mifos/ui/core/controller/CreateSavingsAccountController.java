@@ -58,7 +58,8 @@ public class CreateSavingsAccountController {
     @Autowired
     private QuestionnaireServiceFacade questionnaireServiceFacade;
 
-    public CreateSavingsAccountController() {
+    protected CreateSavingsAccountController() {
+        // needed by spring @Autowired
     }
 
     public SavingsAccountDetailDto createAccountInActiveState(

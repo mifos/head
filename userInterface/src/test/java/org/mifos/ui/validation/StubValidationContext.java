@@ -31,7 +31,7 @@ import org.springframework.binding.validation.ValidationContext;
  */
 public class StubValidationContext implements ValidationContext {
 
-    private MessageContext messageContext = new StubMessageContext();
+    private final MessageContext messageContext = new StubMessageContext();
 
     @Override
     public MessageContext getMessageContext() {
