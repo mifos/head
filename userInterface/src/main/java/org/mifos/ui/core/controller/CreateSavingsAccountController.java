@@ -43,9 +43,9 @@ import org.springframework.stereotype.Controller;
 public class CreateSavingsAccountController {
 
     // FIXME: grab from org.mifos.accounts.util.helpers.AccountState enum
-    private static final short ACCOUNT_STATE_PARTIAL_APPLICAITON = 13;
-    private static final short ACCOUNT_STATE_PENDNG_APPROVAL = 14;
-    private static final short ACCOUNT_STATE_ACTIVE = 16;
+    private static final int ACCOUNT_STATE_PARTIAL_APPLICAITON = 13;
+    private static final int ACCOUNT_STATE_PENDNG_APPROVAL = 14;
+    private static final int ACCOUNT_STATE_ACTIVE = 16;
 
     // FIXME same problem as above
     private static final int RECURRENCE_WEEKLY = 1;
@@ -142,8 +142,7 @@ public class CreateSavingsAccountController {
     	List<CustomerSearchResultDto> pagedDetails = this.savingsServiceFacade.retrieveCustomerThatQualifyForSavings(customerSearchDto);
     	
     	SearchDetailsDto searchDetails = new SearchDetailsDto(pagedDetails.size(), 1, 1, 10);
-        CustomerSearchResultsDto resultsDto = new CustomerSearchResultsDto(searchDetails, pagedDetails);
-        return resultsDto;
+        return new CustomerSearchResultsDto(searchDetails, pagedDetails);
     }
 
     /**
