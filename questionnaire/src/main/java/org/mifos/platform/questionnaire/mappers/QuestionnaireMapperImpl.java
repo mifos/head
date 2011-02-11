@@ -287,7 +287,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         List<EventSourceDto> eventSourceDtos = mapToEventSource(questionGroup.getEventSources());
         return new QuestionGroupDetail(questionGroup.getId(), questionGroup.getTitle(),
                 eventSourceDtos, sectionDetails, questionGroup.isEditable(),
-                QuestionGroupState.ACTIVE.equals(questionGroup.getState()));
+                QuestionGroupState.ACTIVE.equals(questionGroup.getState()), questionGroup.isPpi());
     }
 
     private List<EventSourceDto> mapToEventSource(Set<EventSourceEntity> eventSources) {

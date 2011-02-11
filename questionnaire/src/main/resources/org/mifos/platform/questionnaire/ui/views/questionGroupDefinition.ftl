@@ -37,12 +37,17 @@
             <li class="long_t_box">
                 <label for="title"><span class="red">*</span>[@spring.message
                     "questionnaire.questionGroupTitle"/]:</label>
-
-                    [@spring.formInput "questionGroupForm.title",
-                    'maxlength="50"
-                    onkeypress="return FnCheckNumCharsOnPress(event,this);"
-                    onblur="return FnCheckNumChars(event,this);return FnEscape(event,this)"'/]
-
+                    [#if questionGroupForm.questionGroupDetail.ppi]
+                        [@spring.formInput "questionGroupForm.title",
+                        'maxlength="50" disabled="true"
+                        onkeypress="return FnCheckNumCharsOnPress(event,this);"
+                        onblur="return FnCheckNumChars(event,this);return FnEscape(event,this)"'/]
+                    [#else]
+                        [@spring.formInput "questionGroupForm.title",
+                        'maxlength="50"
+                        onkeypress="return FnCheckNumCharsOnPress(event,this);"
+                        onblur="return FnCheckNumChars(event,this);return FnEscape(event,this)"'/]
+                    [/#if]
             </li>
             <li>
                 <label for="eventSourceId"><span class="red">*</span>[@spring.message
