@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2010 Grameen Foundation USA
+ * Copyright Grameen Foundation USA
  * All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,7 +26,7 @@ package org.mifos.reports.exceptions;
 
 
 
- * Copyright (c) 2005-2006 Grameen Foundation USA
+ * Copyright Grameen Foundation USA
 
  * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
 
@@ -35,7 +35,7 @@ package org.mifos.reports.exceptions;
 
 
  * Apache License
- * Copyright (c) 2005-2006 Grameen Foundation USA
+ * Copyright Grameen Foundation USA
  *
 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
