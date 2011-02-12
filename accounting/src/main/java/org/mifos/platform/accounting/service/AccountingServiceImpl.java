@@ -94,10 +94,10 @@ public class AccountingServiceImpl implements IAccountingService {
     }
 
     @Override
-    public List<ExportFileInfo> getAllExports(Integer size) {
+    public List<ExportFileInfo> getLastTenExports(Integer listStartDay) {
         List<ExportFileInfo> exports = new ArrayList<ExportFileInfo>();
         LocalDate today = new LocalDate();
-        for (int i = 0; i < size; i++) {
+        for (int i = listStartDay; i < listStartDay + 10; i++) {
             LocalDate date = today.minusDays(i);
             ExportFileInfo export;
             if(hasAlreadyRanQuery(date, date)) {
@@ -116,31 +116,6 @@ public class AccountingServiceImpl implements IAccountingService {
         Boolean existInCache = false;
         ExportFileInfo export = new ExportFileInfo(lastModified, fileName, startDate.toString(), endDate.toString(), existInCache);
         return export;
-    }
-
-    @Override
-    public List<ExportFileInfo> getGeneratedExports(Integer size) {
-        List<ExportFileInfo> exports = cacheManager.getGeneratedExports();
-        if(size < exports.size()) {
-            return exports.subList(0, size);
-        }
-        return exports;
-    }
-
-    @Override
-    public List<ExportFileInfo> getNotGeneratedExports(Integer size) {
-        List<ExportFileInfo> exports = new ArrayList<ExportFileInfo>();
-        LocalDate date = new LocalDate();
-        for (int i = 0; i < size;) {
-            ExportFileInfo export;
-            if(!hasAlreadyRanQuery(date, date)) {
-                export = getNotGeneratedExportFileInfo(date, date);
-                exports.add(export);
-                i++;
-            }
-            date = date.minusDays(1);
-        }
-        return exports;
     }
 
 }

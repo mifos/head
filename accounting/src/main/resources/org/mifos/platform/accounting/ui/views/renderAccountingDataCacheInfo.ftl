@@ -35,8 +35,15 @@
         <br />
     <br />
     <div id='table'>
-            <div id='export_list'></div>
-    <div id='export_list_options'><script>loadExportsList(10,"all");</script></div>
+         
+            <div id='export_list'><script>loadExportsList(0);</script></div>
+    </div>
+    <div align='center'>
+    <b>
+    <span id='previous'></span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <span id='results'></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <span id='next'></span>
+    </b>
     </div>
 
         <div class="buttonsSubmitCancel margin20right">
