@@ -1,5 +1,5 @@
 <%--
-Copyright (c) 2005-2010 Grameen Foundation USA
+Copyright Grameen Foundation USA
 All rights reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -187,7 +187,7 @@ explanation of the license and how it is applied.
                                                     </c:otherwise>
                                                     </c:choose>
                                                     <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
-                                                    <mifos:mifoslabel name="accounts.account" />&nbsp;-&nbsp;
+                                                    <mifos:mifoslabel name="accounts.accountLower" />&nbsp;-&nbsp;
                                                 </span>
 												<mifos:mifoslabel name="loan.preview" />
 												<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
@@ -388,10 +388,7 @@ explanation of the license and how it is applied.
 												<br>
 												<mifos:mifoslabel name="loan.charged_applied" />
 												<br>
-												<span class="fontnormal"> <br/> <html-el:button styleId="createloanpreview.button.edit" property="editButton" styleClass="insidebuttn" onclick="fnEdit(this.form)">
-													<mifos:mifoslabel name="loan.edit_loan_acc" />
-												</html-el:button> </span>
-												<br/>
+												<br>
 												<c:forEach var="fee" items="${requestScope.feeFormulaList}" varStatus="loopStatus3">
 													<input type="hidden" id="FEE_${fee.feeFormulaId}" value="${fee.feeFormulaName}" />
 												</c:forEach>
@@ -432,8 +429,13 @@ explanation of the license and how it is applied.
 														<!--</span>-->
 													</c:if>
 												</c:forEach>
+												<br>
+
+												<span class="fontnormal"> <br/> <html-el:button styleId="createloanpreview.button.edit" property="editButton" styleClass="insidebuttn" onclick="fnEdit(this.form)">
+													<mifos:mifoslabel name="loan.edit_loan_acc" />
+												</html-el:button> </span>
 												<span class="fontnormal"> <br> <br> </span>
-												
+
 												<table width="80%" border="0" cellspacing="0" cellpadding="0">
 													<tr>
 														<td class="headingorange">

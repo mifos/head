@@ -1,5 +1,5 @@
 <%--
-Copyright (c) 2005-2010 Grameen Foundation USA
+Copyright Grameen Foundation USA
 All rights reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -86,7 +86,7 @@ explanation of the license and how it is applied.
                     </span>
                     <br/>
                     <mifoscustom:mifostabletag source="originalInstallments" scope="session"
-                        xmlFileName="ProposedRepaymentSchedule.xml"
+                        xmlFileName="OriginalSchedule.xml"
                         moduleName="org/mifos/accounts/loan/util/resources" passLocale="true"/>
                     <br>
                     					                    

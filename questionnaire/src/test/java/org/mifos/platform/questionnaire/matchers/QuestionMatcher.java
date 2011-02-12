@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2010 Grameen Foundation USA
+ * Copyright Grameen Foundation USA
 
  *  All rights reserved.
  *

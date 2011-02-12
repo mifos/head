@@ -111,8 +111,6 @@
                 input="/loginAction.do?method=validate" parameter="method" validate="true" scope="session">
             <forward name="loadChangePassword_success" path="/pages/application/login/jsp/changePassword.jsp"/>
             <forward name="login_success" path="/custSearchAction.do?method=getHomePage" redirect="true"/>
-            <forward name="login_failure" path="/pages/application/login/jsp/login.jsp"/>
-            <forward name="load_success" path="/pages/application/login/jsp/login.jsp"/>
             <forward name="logout_success" path="/loginAction.do?method=load"/>
             <forward name="cancel_success" path="/loginAction.do?method=logout"/>
             <forward name="updatePassword_success" path="/custSearchAction.do?method=getHomePage" redirect="true"/>

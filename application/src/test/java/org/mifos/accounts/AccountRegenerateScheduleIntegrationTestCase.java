@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2010 Grameen Foundation USA
+ * Copyright Grameen Foundation USA
  * All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -76,7 +76,6 @@ import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.domain.builders.MeetingBuilder;
-import org.mifos.dto.domain.MeetingUpdateRequest;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -434,12 +433,8 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
 
         CustomerService customerService = ApplicationContextProvider.getBean(CustomerService.class);
 
-        MeetingUpdateRequest meetingUpdateRequest = new MeetingUpdateRequest(center.getCustomerId(), center.getVersionNo(), newMeeting.getRecurrenceType().getValue(),
-                newMeeting.getMeetingPlace(),
-                newMeeting.getRecurAfter(), newMeeting.getMeetingDetails().getWeekDay().getValue(),
-                newMeeting.getMeetingDetails().getDayNumber(), newMeeting.getMeetingDetails().getWeekDay().getValue(),
-                newMeeting.getMeetingDetails().getWeekRank().getValue());
-        customerService.updateCustomerMeetingSchedule(meetingUpdateRequest, TestUtils.makeUser());
+        newMeeting.updateDetails(TestUtils.makeUser());
+        customerService.updateCustomerMeetingSchedule(newMeeting, center);
 
         TestObjectFactory.updateObject(center);
 

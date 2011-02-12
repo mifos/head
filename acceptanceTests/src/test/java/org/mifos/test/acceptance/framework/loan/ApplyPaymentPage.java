@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2010 Grameen Foundation USA
+ * Copyright Grameen Foundation USA
  * All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,6 +34,16 @@ public class ApplyPaymentPage extends MifosPage {
 
     public ApplyPaymentConfirmationPage submitAndNavigateToApplyPaymentConfirmationPage(PaymentParameters params)
     {
+        enterPaymentData(params);
+        return new ApplyPaymentConfirmationPage(selenium);
+    }
+
+    public void verifyPaymentPriorLastPaymentDate(PaymentParameters params) {
+        enterPaymentData(params);
+        selenium.isTextPresent("Date of transaction cannot be less than the last payment date");
+    }
+
+    private void enterPaymentData(PaymentParameters params) {
         selenium.type("transactionDateDD", params.getTransactionDateDD());
         selenium.type("transactionDateMM", params.getTransactionDateMM());
         selenium.type("transactionDateYY", params.getTransactionDateYYYY());
@@ -50,7 +60,5 @@ public class ApplyPaymentPage extends MifosPage {
 
         selenium.click("applypayment.button.reviewTransaction");
         waitForPageToLoad();
-
-        return new ApplyPaymentConfirmationPage(selenium);
     }
 }

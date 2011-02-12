@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2010 Grameen Foundation USA
+ * Copyright Grameen Foundation USA
  * All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,6 +28,6 @@ public enum Methods {
     updateStatus, chooseOffice, loadChangePassword, login, logout, updatePassword, loadUnLockUser, unLockUserAccount,
     viewAllFunds, previousStatus, cancelStatus, previewHistoricalData, updateMfiInfo, getLoanOfficers, getCenters,
     removeGroupMemberShip, loadGrpMemberShip, updateParent, addEditLookupOption, addEditLookupOption_cancel, editField,
-    familyInfoNext, prevFamilyInfoNext, addFamilyRow, editAddFamilyRow, previewEditFamilyInfo, shutdown, cancelShutdown
-
+    familyInfoNext, prevFamilyInfoNext, addFamilyRow, editAddFamilyRow, previewEditFamilyInfo, shutdown, cancelShutdown,
+    previewOnly
 }

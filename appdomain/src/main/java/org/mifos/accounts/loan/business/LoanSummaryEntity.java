@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2010 Grameen Foundation USA
+ * Copyright Grameen Foundation USA
  * All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -226,7 +226,7 @@ public class LoanSummaryEntity extends AbstractEntity {
         originalPrincipal = originalPrincipal.add(principal);
         originalFees = originalFees.add(fees);
         originalPenalty = originalPenalty.add(penalty);
-        originalInterest = interest;
+        originalInterest = originalInterest.add(interest);
         rawAmountTotal = rawAmountTotal.add(interest.add(fees));
     }
 

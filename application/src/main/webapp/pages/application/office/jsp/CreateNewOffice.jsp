@@ -1,5 +1,5 @@
 <%-- 
-Copyright (c) 2005-2008 Grameen Foundation USA
+Copyright Grameen Foundation USA
 All rights reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -179,19 +179,18 @@ explanation of the license and how it is applied.
 										maxlength="200"/></td>
 								</tr>
 								<tr class="fontnormal">
-									<td align="right"><span id="CreateNewOffice.label.address3"><mifos:mifoslabel
-										name="${ConfigurationConstants.ADDRESS3}"
-										bundle="OfficeUIResources" 
-										keyhm="Office.Address3"
-										isColonRequired="yes"/></span></td>
-									<td><mifos:mifosalphanumtext styleId="CreateNewOffice.input.address3" property="address.line3"
-										maxlength="200" keyhm="Office.Address3"/></td>
+									<td align="right">
+										<span id="CreateNewOffice.label.address3">
+										<mifos:mifoslabel name="${ConfigurationConstants.ADDRESS3}" bundle="OfficeUIResources" keyhm="Office.Address3" isColonRequired="yes"/>
+										</span>
+									</td>
+									<td><mifos:mifosalphanumtext styleId="CreateNewOffice.input.address3" property="address.line3" maxlength="200" keyhm="Office.Address3"/></td>
 								</tr>
 								<tr class="fontnormal">
-									<td align="right"><span id="CreateNewOffice.label.city"><mifos:mifoslabel
-										name="${ConfigurationConstants.CITY}" bundle="OfficeResources" keyhm="Office.City" isColonRequired="yes"/></span></td>
-									<td><mifos:mifosalphanumtext styleId="CreateNewOffice.input.city" property="address.city"
-										maxlength="100" keyhm="Office.City"/></td>
+									<td align="right">
+										<span id="CreateNewOffice.label.city"><mifos:mifoslabel name="${ConfigurationConstants.CITY}" bundle="OfficeUIResources" keyhm="Office.City" isColonRequired="yes"/></span>
+									</td>
+									<td><mifos:mifosalphanumtext styleId="CreateNewOffice.input.city" property="address.city" maxlength="100" keyhm="Office.City"/></td>
 								</tr>
 								<tr class="fontnormal">
 									<td align="right"><span id="CreateNewOffice.label.state"><mifos:mifoslabel

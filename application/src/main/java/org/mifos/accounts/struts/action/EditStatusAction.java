@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2010 Grameen Foundation USA
+ * Copyright Grameen Foundation USA
  * All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,16 +34,20 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountStateEntity;
+import org.mifos.accounts.business.AccountStateFlagEntity;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.struts.actionforms.EditStatusActionForm;
 import org.mifos.accounts.util.helpers.AccountTypes;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
+import org.mifos.customers.business.CustomerStatusEntity;
+import org.mifos.customers.business.CustomerStatusFlagEntity;
 import org.mifos.customers.checklist.business.AccountCheckListBO;
 import org.mifos.dto.domain.AccountStatusDto;
 import org.mifos.dto.domain.AccountUpdateStatus;
@@ -101,6 +105,13 @@ public class EditStatusAction extends BaseAction {
             editStatusActionForm.setInput("savings");
         }
         List<AccountStateEntity> accountStatuses = new AccountBusinessService().getStatusList(accountBO.getAccountState(), accountBO.getType(), userContext.getLocaleId());
+
+        for (AccountStateEntity customerStatusEntity : accountStatuses) {
+            for (AccountStateFlagEntity flag : customerStatusEntity.getFlagSet()) {
+                String statusMessageText = MessageLookup.getInstance().lookup(flag.getLookUpValue().getPropertiesKey());
+                flag.setStatusFlagMessageText(statusMessageText);
+            }
+        }
 
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, accountBO, request);
         SessionUtils.setCollectionAttribute(SavingsConstants.STATUS_LIST, accountStatuses, request);

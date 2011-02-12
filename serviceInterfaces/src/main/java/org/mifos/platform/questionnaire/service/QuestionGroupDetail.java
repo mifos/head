@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2010 Grameen Foundation USA
+ * Copyright Grameen Foundation USA
  *  All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -38,6 +38,7 @@ public class QuestionGroupDetail implements Serializable {
     private List<EventSourceDto> eventSourceDtos;
     private boolean editable;
     private boolean active;
+    private boolean ppi;
 
     public QuestionGroupDetail() {
         this(0, null, new ArrayList<EventSourceDto>(), new ArrayList<SectionDetail>(), false);
@@ -58,6 +59,16 @@ public class QuestionGroupDetail implements Serializable {
         this.eventSourceDtos = eventSourceDtos;
         this.editable = editable;
         this.active = active;
+    }
+
+    public QuestionGroupDetail(int id, String title, List<EventSourceDto> eventSourceDtos, List<SectionDetail> sectionDetails, boolean editable, boolean active, boolean ppi) {
+        this.id = id;
+        this.title = title;
+        this.sectionDetails = sectionDetails;
+        this.eventSourceDtos = eventSourceDtos;
+        this.editable = editable;
+        this.active = active;
+        this.ppi = ppi;
     }
 
     public String getTitle() {
@@ -113,6 +124,14 @@ public class QuestionGroupDetail implements Serializable {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public boolean isPpi() {
+        return ppi;
+    }
+
+    public void setPpi(boolean ppi) {
+        this.ppi = ppi;
     }
 
     public boolean isNewQuestionGroup() {

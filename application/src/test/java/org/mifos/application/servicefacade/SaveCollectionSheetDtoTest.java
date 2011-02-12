@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2010 Grameen Foundation USA
+ * Copyright Grameen Foundation USA
  * All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -46,6 +46,7 @@ public class SaveCollectionSheetDtoTest {
     private LocalDate validDate = new LocalDate();
     private Short validPaymentType = PaymentTypes.CHEQUE.getValue();
     private Short invalidPaymentType = Short.valueOf("-1");
+    private Short customPaymentType = Short.valueOf("4");
     private Short validAttendanceId = AttendanceType.LATE.getValue();
 
     @Test
@@ -63,6 +64,25 @@ public class SaveCollectionSheetDtoTest {
         } catch (SaveCollectionSheetException e) {
             newSuccess = false;
         }
+        assertThat("New was not successful", newSuccess, is(true));
+    }
+
+    @Test
+    public void shouldBeSuccessfulWithCustomPaymentType() {
+
+        Boolean newSuccess = true;
+        try {
+            List<SaveCollectionSheetCustomerDto> saveCollectionSheetCustomers = new ArrayList<SaveCollectionSheetCustomerDto>();
+            SaveCollectionSheetCustomerDto saveCollectionSheetCustomer = new SaveCollectionSheetCustomerDto(
+                    validCustomerId, null, null, null, null, null, null);
+            saveCollectionSheetCustomers.add(saveCollectionSheetCustomer);
+
+            new SaveCollectionSheetDto(saveCollectionSheetCustomers, customPaymentType, validDate, null, null,
+                    validUserId);
+        } catch (SaveCollectionSheetException e) {
+            newSuccess = false;
+        }
+
         assertThat("New was not successful", newSuccess, is(true));
     }
 

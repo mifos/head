@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2010 Grameen Foundation USA
+ * Copyright Grameen Foundation USA
  * All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -321,6 +321,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("displayName", "group");
         addRequestParameter("status", CustomerStatus.GROUP_PENDING.getValue().toString());
         addRequestParameter("formedByPersonnel", center.getPersonnel().getPersonnelId().toString());
+        addRequestParameter("loanOfficerId", center.getLoanOfficerId().toString());
         int i = 0;
         for (CustomFieldDto customFieldDef : customFieldDefs) {
             addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
@@ -411,6 +412,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("displayName", "group");
         addRequestParameter("status", CustomerStatus.GROUP_PENDING.getValue().toString());
         addRequestParameter("formedByPersonnel", center.getPersonnel().getPersonnelId().toString());
+        addRequestParameter("loanOfficerId", center.getLoanOfficerId().toString());
         int i = 0;
         for (CustomFieldDto customFieldDef : customFieldDefs) {
             addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());

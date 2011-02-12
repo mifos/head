@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2010 Grameen Foundation USA
+ * Copyright Grameen Foundation USA
  * All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -83,8 +83,9 @@ public class GroupCustActionForm extends CustomerActionForm  implements Question
                 validateTrained(request, errors);
                 validateConfigurableMandatoryFields(request, errors, EntityType.GROUP);
                 validateCustomFieldsForCustomers(request, errors);
-            } else if (method.equals(Methods.preview.toString())) {
+            } else if (method.equals(Methods.preview.toString()) || method.equals(Methods.previewOnly.toString())) {
                 validateName(errors);
+                validateLO(errors);
                 validateFormedByPersonnel(errors);
                 validateTrained(request, errors);
                 validateConfigurableMandatoryFields(request, errors, EntityType.GROUP);

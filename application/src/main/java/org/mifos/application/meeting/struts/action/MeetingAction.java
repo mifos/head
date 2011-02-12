@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2010 Grameen Foundation USA
+ * Copyright Grameen Foundation USA
  * All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,7 +26,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -44,7 +43,7 @@ import org.mifos.config.FiscalCalendarRules;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.dto.domain.MeetingUpdateRequest;
+import org.mifos.dto.domain.MeetingDto;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.CloseSession;
@@ -124,10 +123,15 @@ public class MeetingAction extends BaseAction {
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         MeetingActionForm actionForm = (MeetingActionForm) form;
+        MeetingBO meeting = createMeeting(actionForm);
         CustomerBO customerInSession = (CustomerBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
 
-        MeetingUpdateRequest meetingUpdateRequest = createMeetingUupdateRequest(customerInSession, actionForm);
-        meetingServiceFacade.updateCustomerMeeting(meetingUpdateRequest);
+        MeetingDto meetingDto = null;
+        if (meeting!= null) {
+            meetingDto = meeting.toDto();
+        }
+
+        meetingServiceFacade.updateCustomerMeeting(meetingDto, customerInSession.getCustomerId());
 
         ActionForwards forward = forwardForUpdate(actionForm.getCustomerLevelValue());
         return mapping.findForward(forward.toString());
@@ -178,51 +182,6 @@ public class MeetingAction extends BaseAction {
             }
         }
         form.setMeetingPlace(meeting.getMeetingPlace());
-    }
-
-    private MeetingUpdateRequest createMeetingUupdateRequest(CustomerBO customerInSession, MeetingActionForm actionForm) {
-
-        MeetingUpdateRequest meetingUpdateRequest;
-
-        Short weekDay = null;
-        if (StringUtils.isNotBlank(actionForm.getWeekDay())) {
-            weekDay = Short.valueOf(actionForm.getWeekDay());
-        }
-
-        Short monthDay = null;
-        if (StringUtils.isNotBlank(actionForm.getMonthDay())) {
-            monthDay = Short.valueOf(actionForm.getMonthDay());
-        }
-
-        Short dayOfWeekOfMonth = null;
-        if (StringUtils.isNotBlank(actionForm.getMonthWeek())) {
-            dayOfWeekOfMonth = Short.valueOf(actionForm.getMonthWeek());
-        }
-
-        Short weekRankOfMonth = null;
-        if (StringUtils.isNotBlank(actionForm.getMonthRank())) {
-            weekRankOfMonth = Short.valueOf(actionForm.getMonthRank());
-        }
-
-        switch (actionForm.getRecurrenceType()) {
-        case DAILY:
-            throw new UnsupportedOperationException("Daily recurrence is not supported for customer meetings.");
-        case WEEKLY:
-            meetingUpdateRequest = new MeetingUpdateRequest(customerInSession.getCustomerId(), customerInSession.getVersionNo(), actionForm.getRecurrenceType().getValue(), actionForm.getMeetingPlace(), actionForm.getRecurWeekValue(), weekDay, monthDay, dayOfWeekOfMonth, weekRankOfMonth);
-            break;
-        case MONTHLY:
-            Short monthlyRecurValue = actionForm.getDayRecurMonthValue();
-            if (monthlyRecurValue == null) {
-                monthlyRecurValue = actionForm.getRecurMonthValue();
-            }
-
-            meetingUpdateRequest = new MeetingUpdateRequest(customerInSession.getCustomerId(), customerInSession.getVersionNo(), actionForm.getRecurrenceType().getValue(), actionForm.getMeetingPlace(), monthlyRecurValue, weekDay, monthDay, dayOfWeekOfMonth, weekRankOfMonth);
-            break;
-            default:
-                throw new UnsupportedOperationException("Unknown recurrence for customer meetings.");
-        }
-
-        return meetingUpdateRequest;
     }
 
     private MeetingBO createMeeting(MeetingActionForm form) throws MeetingException {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2010 Grameen Foundation USA
+ * Copyright Grameen Foundation USA
  * All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,6 +29,10 @@ public enum GraceType {
         this.value = value;
     }
 
+    public static boolean isGraceTypeNONE(Short graceTypeValue) {
+        return graceTypeValue == null || graceTypeValue.equals(NONE.getValue());
+    }
+
     public Short getValue() {
         return value;
     }
@@ -40,5 +44,9 @@ public enum GraceType {
             }
         }
         throw new RuntimeException("no grace type " + value);
+    }
+
+    public String getValueAsString() {
+        return value.toString();
     }
 }

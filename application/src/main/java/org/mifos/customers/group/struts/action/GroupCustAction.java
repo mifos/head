@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2010 Grameen Foundation USA
+ * Copyright Grameen Foundation USA
  * All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -40,6 +40,7 @@ import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFac
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.questionnaire.struts.QuestionnaireServiceFacadeLocator;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.application.util.helpers.Methods;
 import org.mifos.config.ClientRules;
 import org.mifos.config.ProcessFlowRules;
 import org.mifos.customers.center.business.CenterBO;
@@ -104,6 +105,7 @@ public class GroupCustAction extends CustAction {
         }
 
         SessionUtils.setAttribute(CustomerConstants.URL_MAP, null, request.getSession(false));
+        SessionUtils.setAttribute(GroupConstants.PREVIEW_CREATE_NEW_GROUP_FAILURE, false, request);
 
         return mapping.findForward(actionForward.toString());
     }
@@ -468,7 +470,9 @@ public class GroupCustAction extends CustAction {
     public ActionForward validate(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         String method = (String) request.getAttribute("methodCalled");
-
+        if(Methods.previewOnly.toString().equals(method)) {
+            SessionUtils.setAttribute(GroupConstants.PREVIEW_CREATE_NEW_GROUP_FAILURE, true, request);
+        }
         return mapping.findForward(method + "_failure");
     }
 

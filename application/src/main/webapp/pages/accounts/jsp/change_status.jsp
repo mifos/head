@@ -1,5 +1,5 @@
 <%--
-Copyright (c) 2005-2008 Grameen Foundation USA
+Copyright Grameen Foundation USA
 All rights reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -137,12 +137,12 @@ explanation of the license and how it is applied.
 										</tr>
 										<tr class="fontnormal">
 											<td align="center">&nbsp;</td>
-											<td><c:set var="flags" scope="request"
-												value="${status.flagSet}" /> <mifos:select
-												name="editStatusActionForm" styleId="change_status.input.cancel_reason" property="flagId" size="1" disabled="true">
-												<html-el:options collection="flags" property="id"
-													labelProperty="lookUpValue.messageText" />
-											</mifos:select></td>
+											<td>
+											<c:set var="flags" scope="request" value="${status.flagSet}" /> 
+											<mifos:select name="editStatusActionForm" styleId="change_status.input.cancel_reason" property="flagId" size="1" disabled="true">
+												<html-el:options collection="flags" property="id" labelProperty="statusFlagMessageText" />
+											</mifos:select>
+											</td>
 										</tr>
 									</c:if>
 								</c:forEach>

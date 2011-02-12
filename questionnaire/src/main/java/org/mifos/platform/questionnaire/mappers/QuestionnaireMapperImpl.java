@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2010 Grameen Foundation USA
+ * Copyright Grameen Foundation USA
  *  All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -287,7 +287,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         List<EventSourceDto> eventSourceDtos = mapToEventSource(questionGroup.getEventSources());
         return new QuestionGroupDetail(questionGroup.getId(), questionGroup.getTitle(),
                 eventSourceDtos, sectionDetails, questionGroup.isEditable(),
-                QuestionGroupState.ACTIVE.equals(questionGroup.getState()));
+                QuestionGroupState.ACTIVE.equals(questionGroup.getState()), questionGroup.isPpi());
     }
 
     private List<EventSourceDto> mapToEventSource(Set<EventSourceEntity> eventSources) {

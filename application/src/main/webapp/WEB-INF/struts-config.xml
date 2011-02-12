@@ -117,6 +117,7 @@
                 input="/groupCustAction.do?method=validate" scope="session">
             <forward name="loadCreateGroup" path="/groupCustAction.do?method=chooseOffice"/>
             <forward name="loadCenterSearch" path="/centerCustAction.do?method=loadSearch"/>
+            <forward name="previewOnly_failure" path="/pages/application/group/jsp/creategroup.jsp"/>
             <forward name="chooseOffice_success" path="/pages/application/group/jsp/branchlist.jsp"/>
             <forward name="load_success" path="/pages/application/group/jsp/creategroup.jsp"/>
             <forward name="loadMeeting_success" path="/meetingAction.do?method=load&amp;customerLevel=2"/>

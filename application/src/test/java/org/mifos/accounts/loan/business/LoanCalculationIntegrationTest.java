@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2010 Grameen Foundation USA
+ * Copyright Grameen Foundation USA
  * All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -766,7 +766,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     @Test
     public void test999AccountForLastPaymentReversal() throws Exception {
         String dataFileName = "account999-test3.csv";
-        int expected999AccountTransactions = 2;
+        int expected999AccountTransactions = 4;
         int paymentToReverse = 3;
         boolean payLastPayment = false;
         runOne999AccountTestCaseWithDataFromSpreadSheetForLastPaymentReversal(rootPath + dataFileName,

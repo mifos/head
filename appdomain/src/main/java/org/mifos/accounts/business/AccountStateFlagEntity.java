@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2010 Grameen Foundation USA
+ * Copyright Grameen Foundation USA
  * All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,19 +28,17 @@ import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 
 public class AccountStateFlagEntity extends MasterDataEntity {
-    private String flagDescription;
 
     /** The composite primary key value */
     private Short id;
-
+    private String flagDescription;
     private Short localeId;
+    private Short retained;
+    private Short statusId;
+    private String statusFlagMessageText = "";
 
     /** The value of the lookupValue association. */
     private LookUpValueEntity lookUpValue;
-
-    private Short retained;
-
-    private Short statusId;
 
     protected AccountStateFlagEntity() {
     }
@@ -103,15 +101,19 @@ public class AccountStateFlagEntity extends MasterDataEntity {
         this.lookUpValue = lookUpValue;
     }
 
-    protected void setName(String name) {
-        MessageLookup.getInstance().updateLookupValue(getLookUpValue(), name);
-    }
-
     void setRetained(Short retained) {
         this.retained = retained;
     }
 
     public void setStatusId(Short statusId) {
         this.statusId = statusId;
+    }
+
+    public String getStatusFlagMessageText() {
+        return this.statusFlagMessageText;
+    }
+
+    public void setStatusFlagMessageText(String statusFlagMessageText) {
+        this.statusFlagMessageText = statusFlagMessageText;
     }
 }

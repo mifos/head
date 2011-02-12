@@ -1,5 +1,5 @@
 <%--
-Copyright (c) 2005-2008 Grameen Foundation USA
+Copyright Grameen Foundation USA
 All rights reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,12 +20,13 @@ explanation of the license and how it is applied.
 <!-- preview_ClientDetails.jsp -->
 
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
-<%@taglib uri="/tags/mifos-html" prefix="mifos"%>
+<%@ taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-<%@taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
-<%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
+<%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
+<%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic"%>
+<%@ taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@ taglib uri="/customer/customerfunctions" prefix="customerfn"%>
 
@@ -173,11 +174,17 @@ explanation of the license and how it is applied.
 											</html-el:messages></font>
 									</td>
 								</tr>
+								<logic:messagesPresent>
 								<!-- Error Messages -->
 								<tr>
-									<td><font class="fontnormalRedBold"><span id="preview_ClientDetails.error.message"><html-el:errors
-										bundle="ClientUIResources" /></font></td>
+									<td>
+									<br>
+									<font class="fontnormalRedBold">
+										<span id="preview_ClientDetails.error.message"><html-el:errors bundle="ClientUIResources" /></span>
+									</font>
+									</td>
 								</tr>
+								</logic:messagesPresent>
 							</table>
 							<table width="93%" border="0" cellpadding="0" cellspacing="0">
 								<tr>

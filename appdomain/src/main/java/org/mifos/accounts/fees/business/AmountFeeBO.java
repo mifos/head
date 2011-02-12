@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2010 Grameen Foundation USA
+ * Copyright Grameen Foundation USA
  * All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -132,8 +132,15 @@ public class AmountFeeBO extends FeeBO {
 
     @Override
     public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof AmountFeeBO)) {
+            return false;
+        }
+
         AmountFeeBO rhs = (AmountFeeBO) obj;
-        return super.equals(obj) && new EqualsBuilder().append(this.feeAmount, rhs.feeAmount).isEquals();
+        return super.equals(obj) && new EqualsBuilder().append(this.getFeeAmount(), rhs.getFeeAmount()).isEquals();
     }
 
     @Override

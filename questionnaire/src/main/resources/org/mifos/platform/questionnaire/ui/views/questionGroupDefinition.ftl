@@ -1,6 +1,6 @@
 [#ftl]
 [#--
-* Copyright (c) 2005-2010 Grameen Foundation USA
+* Copyright Grameen Foundation USA
 *  All rights reserved.
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -37,12 +37,17 @@
             <li class="long_t_box">
                 <label for="title"><span class="red">*</span>[@spring.message
                     "questionnaire.questionGroupTitle"/]:</label>
-
-                    [@spring.formInput "questionGroupForm.title",
-                    'maxlength="50"
-                    onkeypress="return FnCheckNumCharsOnPress(event,this);"
-                    onblur="return FnCheckNumChars(event,this);return FnEscape(event,this)"'/]
-
+                    [#if questionGroupForm.questionGroupDetail.ppi]
+                        [@spring.formInput "questionGroupForm.title",
+                        'maxlength="50" disabled="true"
+                        onkeypress="return FnCheckNumCharsOnPress(event,this);"
+                        onblur="return FnCheckNumChars(event,this);return FnEscape(event,this)"'/]
+                    [#else]
+                        [@spring.formInput "questionGroupForm.title",
+                        'maxlength="50"
+                        onkeypress="return FnCheckNumCharsOnPress(event,this);"
+                        onblur="return FnCheckNumChars(event,this);return FnEscape(event,this)"'/]
+                    [/#if]
             </li>
             <li>
                 <label for="eventSourceId"><span class="red">*</span>[@spring.message

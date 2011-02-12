@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2010 Grameen Foundation USA
+ * Copyright Grameen Foundation USA
  * All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,12 +20,12 @@
 
 package org.mifos.application.servicefacade;
 
-import org.mifos.dto.domain.MeetingUpdateRequest;
+import org.mifos.dto.domain.MeetingDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface MeetingServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
-    void updateCustomerMeeting(MeetingUpdateRequest meetingUpdateRequest);
+    void updateCustomerMeeting(MeetingDto meetingDto, Integer customerId);
 
 }
