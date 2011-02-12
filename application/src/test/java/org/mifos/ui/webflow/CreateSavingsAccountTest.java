@@ -113,6 +113,17 @@ public class CreateSavingsAccountTest extends AbstractXmlFlowExecutionTests {
     }
 
     @Test
+    public void testCustomerSearchStep_Cancel() {
+        setCurrentState("customerSearchStep");
+        
+        MockExternalContext context = new MockExternalContext();
+        context.setEventId("cancel");
+        resumeFlow(context);
+        
+        assertFlowExecutionEnded();
+    }
+
+    @Test
     public void testSelectCustomerStep_CustomerSelected() {
 
         Integer customerId = 1;
@@ -145,6 +156,18 @@ public class CreateSavingsAccountTest extends AbstractXmlFlowExecutionTests {
         assertCurrentStateEquals("selectCustomerStep");
     }
 
+    @Test
+    public void testSelectCustomerStep_Cancel() {
+        setCurrentState("selectCustomerStep");
+        
+        MockExternalContext context = new MockExternalContext();
+        context.setEventId("cancel");
+        resumeFlow(context);
+        
+        assertFlowExecutionEnded();
+    }
+
+    @Test
     public void testSelectProductOfferingStep_ProductSelected() {
 
         Integer productId = 1;
@@ -163,6 +186,17 @@ public class CreateSavingsAccountTest extends AbstractXmlFlowExecutionTests {
         assertCurrentStateEquals("enterAccountDetailsStep");
     }
 
+    @Test
+    public void testSelectProductOfferingStep_Cancel() {
+        setCurrentState("selectProductOfferingStep");
+        
+        MockExternalContext context = new MockExternalContext();
+        context.setEventId("cancel");
+        resumeFlow(context);
+        
+        assertFlowExecutionEnded();
+    }
+    
     /**
      * Account info entry step is complete. There is a question group defined
      * for "Create Savings" work flow.
@@ -220,6 +254,17 @@ public class CreateSavingsAccountTest extends AbstractXmlFlowExecutionTests {
     }
 
     @Test
+    public void testEnterAccountDetailsStep_Cancel() {
+        setCurrentState("enterAccountDetailsStep");
+        
+        MockExternalContext context = new MockExternalContext();
+        context.setEventId("cancel");
+        resumeFlow(context);
+        
+        assertFlowExecutionEnded();
+    }
+    
+    @Test
     public void testAnswerQuestionGroupStep_QuestionsAnswered() {
 
         List<QuestionGroupDetail> questionGroups = new ArrayList<QuestionGroupDetail>();
@@ -235,6 +280,17 @@ public class CreateSavingsAccountTest extends AbstractXmlFlowExecutionTests {
         assertCurrentStateEquals("previewStep");
     }
 
+    @Test
+    public void testAnswerQuestionGroupStep_Cancel() {
+        setCurrentState("answerQuestionGroupStep");
+        
+        MockExternalContext context = new MockExternalContext();
+        context.setEventId("cancel");
+        resumeFlow(context);
+        
+        assertFlowExecutionEnded();
+    }
+    
     @Test
     public void testPreviewStep_EditAccountDetails() {
 
@@ -302,6 +358,17 @@ public class CreateSavingsAccountTest extends AbstractXmlFlowExecutionTests {
         assertFlowExecutionOutcomeEquals("complete");
     }
 
+    @Test
+    public void testPreviewStep_Cancel() {
+        setCurrentState("previewStep");
+        
+        MockExternalContext context = new MockExternalContext();
+        context.setEventId("cancel");
+        resumeFlow(context);
+        
+        assertFlowExecutionEnded();
+    }
+    
     @Override
     protected void configureFlowBuilderContext(
             MockFlowBuilderContext builderContext) {
