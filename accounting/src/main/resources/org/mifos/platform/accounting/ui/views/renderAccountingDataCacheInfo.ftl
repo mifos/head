@@ -36,7 +36,7 @@
     <br />
     <div id='table'>
          
-            <div id='export_list'><script>loadExportsList(0);</script></div>
+            <div id='export_list'><script>loadExportsList(0,100);</script></div>
     </div>
     <div align='center'>
     <b>

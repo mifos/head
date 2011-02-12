@@ -23,7 +23,7 @@ function deleteCacheDir() {
 	})
 }
 
-function loadExportsList(listStartDay) {
+function loadExportsList(listStartDay, totalNumberOfExports) {
 	$.ajax({
 		url : 'generateExportsList.ftl?listStartDay=' + listStartDay +'&type=all',
 		cache : false,
@@ -32,23 +32,31 @@ function loadExportsList(listStartDay) {
 		},
 		success : function(data) {
 			$("#export_list").html(data);
-			addExportListLink(listStartDay);
+			addExportListLink(listStartDay, totalNumberOfExports);
 		}
 	})
 }
 
-function addExportListLink(listStartDay) {
+function addExportListLink(listStartDay, totalNumberOfExports) {
 	
 	if(listStartDay == 0) {
 	   $("#previous").html("<font color='grey'>Previous</font>");
-	} else {
-        $("#previous").html("<a href='#' onclick=\"javascript:loadExportsList("+ (listStartDay-10) + ");\">Previous</a>");
-        }
+	} 
+	else 
+	{
+        $("#previous").html("<a href='#' onclick=\"javascript:loadExportsList("+ (listStartDay-10) + ","+totalNumberOfExports+");\">Previous</a>");
+    }
         
-        $("#results").html("Results "+(listStartDay+1)+"-"+(listStartDay +10)+" of 100");
+        $("#results").html("Results "+(listStartDay+1)+"-"+(listStartDay +10)+" of "+totalNumberOfExports);
 		
+	if(listStartDay > (totalNumberOfExports - 11)) {
+	   $("#next").html("<font color='grey'>Next</font>");
+	} 
+	else 
+	{
+        $("#next").html("<a href='#' onclick=\"javascript:loadExportsList("+ (listStartDay+10) + ","+totalNumberOfExports+");\">Next</a>");
+    }	
 		
-		$("#next").html("<a href='#' onclick=\"javascript:loadExportsList("+ (listStartDay+10) + ");\">Next</a>");
 }
 
 var gAutoPrint = true;
