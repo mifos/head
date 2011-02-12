@@ -20,36 +20,13 @@
 
 package org.mifos.accounts.loan.struts.actionforms;
 
-import static org.apache.commons.lang.StringUtils.EMPTY;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.classextension.EasyMock.createMock;
-import static org.easymock.classextension.EasyMock.replay;
-import static org.easymock.classextension.EasyMock.verify;
-import static org.mifos.accounts.loan.util.helpers.LoanAccountActionFormTestConstants.LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_100;
-import static org.mifos.accounts.loan.util.helpers.LoanAccountActionFormTestConstants.LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_AND_PURPOSE_NULL;
-import static org.mifos.accounts.loan.util.helpers.LoanAccountActionFormTestConstants.LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_AND_PURPOSE_NULL2;
-import static org.mifos.accounts.loan.util.helpers.LoanAccountActionFormTestConstants.LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_NULL;
-import static org.mifos.accounts.loan.util.helpers.LoanAccountActionFormTestConstants.LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_ZERO;
-import static org.mifos.accounts.loan.util.helpers.LoanAccountActionFormTestConstants.LOAN_ACCOUNT_DETAILS_WITH_PURPOSE_EMPTY;
-import static org.mifos.accounts.loan.util.helpers.LoanAccountActionFormTestConstants.LOAN_ACCOUNT_DETAILS_WITH_PURPOSE_NULL;
-import static org.mifos.accounts.loan.util.helpers.LoanAccountActionFormTestConstants.LOAN_ACCOUNT_DETAILS_WITH_VALID_PURPOSE;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Locale;
-
-import javax.servlet.http.HttpServletRequest;
-
 import junit.framework.Assert;
 import junit.framework.TestCase;
-
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.accounts.fees.business.AmountFeeBO;
-import org.mifos.accounts.fees.business.FeeFormulaEntity;
 import org.mifos.accounts.fees.business.FeeDto;
+import org.mifos.accounts.fees.business.FeeFormulaEntity;
 import org.mifos.accounts.fees.business.RateFeeBO;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
@@ -65,6 +42,14 @@ import org.mifos.framework.components.fieldConfiguration.business.FieldConfigura
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
+
+import static org.apache.commons.lang.StringUtils.EMPTY;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.classextension.EasyMock.*;
+import static org.mifos.accounts.loan.util.helpers.LoanAccountActionFormTestConstants.*;
 
 
 public class LoanAccountActionFormTest extends TestCase {
@@ -357,5 +342,22 @@ public class LoanAccountActionFormTest extends TestCase {
         expect(feeFormulaEntity.getFormulaString()).andReturn("FormulaString");
         replay(feeFormulaEntity);
         return feeFormulaEntity;
+    }
+
+    public void testGetApplicableFees() {
+        form.setDefaultFees(Arrays.asList(getFee("DefaultFee1"), getFee(null), getFee("DefaultFee3")));
+        form.setAdditionalFees(Arrays.asList(getFee("AdditionalFee1"), getFee("")));
+        List<FeeDto> applicableFees = form.getApplicableFees();
+        Assert.assertNotNull(applicableFees);
+        Assert.assertEquals(3, applicableFees.size());
+        Assert.assertEquals("DefaultFee1", applicableFees.get(0).getFeeId());
+        Assert.assertEquals("DefaultFee3", applicableFees.get(1).getFeeId());
+        Assert.assertEquals("AdditionalFee1", applicableFees.get(2).getFeeId());
+    }
+
+    private FeeDto getFee(String feeId) {
+        FeeDto feeDto = new FeeDto();
+        feeDto.setFeeId(feeId);
+        return feeDto;
     }
 }

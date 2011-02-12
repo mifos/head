@@ -476,7 +476,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                 }
             }
         }
-        SessionUtils.setCollectionAttribute(CustomerConstants.ACCOUNT_FEES, loanActionForm.getAdditionalFees(), request);
+        SessionUtils.setCollectionAttribute(CustomerConstants.ACCOUNT_FEES, loanActionForm.getApplicableFees(), request);
 
         questionGroupFilter.setLoanOfferingBO(getLoanOffering(loanActionForm.getPrdOfferingIdValue(), userContext.getLocaleId()));
         return createLoanQuestionnaire.fetchAppliedQuestions(mapping, loanActionForm, request, ActionForwards.schedulePreview_success);

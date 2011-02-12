@@ -81,6 +81,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 import static org.apache.commons.lang.StringUtils.isBlank;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.PERSPECTIVE_VALUE_REDO_LOAN;
 
@@ -1456,6 +1457,30 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
     }
 
     private boolean isRedoOperation() {
-        return PERSPECTIVE_VALUE_REDO_LOAN.equals(perspective) && CollectionUtils.isNotEmpty(paymentDataBeans);
+        return PERSPECTIVE_VALUE_REDO_LOAN.equals(perspective) && isNotEmpty(paymentDataBeans);
     }
+
+    public List<FeeDto> getApplicableFees() {
+        List<FeeDto> applicableFees = new ArrayList<FeeDto>();
+        addDefaultFees(applicableFees);
+        addAdditionalFees(applicableFees);
+        return applicableFees;
+    }
+
+    private void addAdditionalFees(List<FeeDto> applicableFees) {
+        if (isNotEmpty(additionalFees)) {
+            for (FeeDto additionalFee : additionalFees) {
+                if (additionalFee.isNotEmpty()) applicableFees.add(additionalFee);
+            }
+        }
+    }
+
+    private void addDefaultFees(List<FeeDto> applicableFees) {
+        if (isNotEmpty(defaultFees)) {
+            for (FeeDto defaultFee : defaultFees) {
+                if (defaultFee.isNotEmpty()) applicableFees.add(defaultFee);
+            }
+        }
+    }
+
 }

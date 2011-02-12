@@ -178,4 +178,7 @@ public class FeeDto implements DataTransferObject {
        return (getCurrencyId()== null || getCurrencyId().equals(currencyId));
     }
 
+    public boolean isNotEmpty() {
+        return StringUtils.isNotEmpty(feeId);
+    }
 }

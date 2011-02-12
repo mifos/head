@@ -60,6 +60,7 @@ explanation of the license and how it is applied.
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanAccountOwner')}" var="customer" />
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanAmount')}" var="loanAmount" />
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'disbursementDate')}" var="disbursementDate" />
+		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'accountFees')}" var="accountFees" />
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td height="470" align="left" valign="top" bgcolor="#FFFFFF">
@@ -185,23 +186,21 @@ explanation of the license and how it is applied.
 												:&nbsp; <span class="fontnormal"> <c:out value="${loanAmount}" /> <br> </span>
 												<mifos:mifoslabel name="loan.proposed_date" />
 												:&nbsp; <span class="fontnormal"> <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,disbursementDate)}" /> <br> </span> <span class="fontnormal"> <br> </span>
-												<c:forEach items="${accountFees}" var="feesSet">
-													<c:if test="${feesSet.timeOfDisbursement}">
-														<table cellpadding="0" cellspacing="0">
-															<tr>
-																<td class="fontnormalbold" align="left">
-																	<c:out value="${feesSet.fees.feeName}" />
-																	&nbsp;
-																	<mifos:mifoslabel name="loan.amt" />
-																	:&nbsp;
-																</td>
-																<td class="fontnormal" align="left">
-																	<c:out value="${feesSet.accountFeeAmount}" />
-																	&nbsp;&nbsp;
-																</td>
-															</tr>
-														</table>
-													</c:if>
+												<c:forEach items="${accountFees}" var="accountFee">
+                                                    <table cellpadding="0" cellspacing="0">
+                                                        <tr>
+                                                            <td class="fontnormalbold" align="left">
+                                                                <c:out value="${accountFee.feeName}" />
+                                                                &nbsp;
+                                                                <mifos:mifoslabel name="loan.amt" />
+                                                                :&nbsp;
+                                                            </td>
+                                                            <td class="fontnormal" align="left">
+                                                                <c:out value="${accountFee.amount}" />
+                                                                &nbsp;&nbsp;
+                                                            </td>
+                                                        </tr>
+                                                    </table>
 												</c:forEach>
 												<span class="fontnormal"> <br> </span>
                                             </td>
