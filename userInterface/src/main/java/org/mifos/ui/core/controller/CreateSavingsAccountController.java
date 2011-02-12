@@ -62,6 +62,20 @@ public class CreateSavingsAccountController {
         // needed by spring @Autowired
     }
 
+    /**
+     * For unit testing.
+     */
+    protected void setQuestionnaireServiceFacade(QuestionnaireServiceFacade questionnaireServiceFacade) {
+        this.questionnaireServiceFacade = questionnaireServiceFacade;
+    }
+
+    /**
+     * For unit testing.
+     */
+    protected void setSavingsServiceFacade(SavingsServiceFacade savingsServiceFacade) {
+       this.savingsServiceFacade = savingsServiceFacade;
+    }
+    
     public SavingsAccountDetailDto createAccountInActiveState(
             CreateSavingsAccountFormBean formBean) {
         Short accountState = ACCOUNT_STATE_ACTIVE;
