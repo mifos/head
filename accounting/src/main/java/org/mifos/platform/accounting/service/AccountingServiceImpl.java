@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.mifos.platform.accounting.AccountingDto;
 import org.mifos.platform.accounting.dao.IAccountingDao;
@@ -37,6 +38,8 @@ public class AccountingServiceImpl implements IAccountingService {
     private final AccountingDataCacheManager cacheManager;
 
     private final IAccountingDao accountingDao;
+
+    private static final int LIST_SIZE = 10;
 
     @Autowired
     public AccountingServiceImpl(AccountingDataCacheManager cacheManager, IAccountingDao accountingDao) {
@@ -94,24 +97,28 @@ public class AccountingServiceImpl implements IAccountingService {
     }
 
     @Override
-    public List<ExportFileInfo> getAllExports(Integer size) {
+    public List<ExportFileInfo> getLastTenExports(Integer listStartDay) {
+        LocalDate runningDate = new LocalDate().minusDays(listStartDay);
         List<ExportFileInfo> exports = new ArrayList<ExportFileInfo>();
-        LocalDate today = new LocalDate();
-        for (int i = 0; i < size; i++) {
-            LocalDate date = today.minusDays(i);
+        for (int i = 0; i < LIST_SIZE && isCurrentDateUnderStartOfFinancialTrxn(runningDate); i++) {
+            runningDate = runningDate.minusDays(1);
             ExportFileInfo export;
-            if(hasAlreadyRanQuery(date, date)) {
-                export = cacheManager.getExportFileInfoFromCache(date, date);
+            if(hasAlreadyRanQuery(runningDate, runningDate)) {
+                export = cacheManager.getExportFileInfoFromCache(runningDate, runningDate);
             } else {
-                export = getNotGeneratedExportFileInfo(date, date);
+                export = getNotGeneratedExportFileInfo(runningDate, runningDate);
             }
             exports.add(export);
         }
         return exports;
     }
 
+    private boolean isCurrentDateUnderStartOfFinancialTrxn(LocalDate currentDate) {
+        return currentDate.isAfter(accountingDao.getStartDateOfFinancialTransactions());
+    }
+
     private ExportFileInfo getNotGeneratedExportFileInfo(LocalDate startDate, LocalDate endDate) {
-        String fileName = cacheManager.getFilePrefixDefinedByMFI() + cacheManager.getCacheFileName(startDate, endDate);
+        String fileName = cacheManager.getExportFileName(startDate, endDate);
         String lastModified = new DateTime().toString("yyyy-MMM-dd HH:mm z");
         Boolean existInCache = false;
         ExportFileInfo export = new ExportFileInfo(lastModified, fileName, startDate.toString(), endDate.toString(), existInCache);
@@ -119,28 +126,9 @@ public class AccountingServiceImpl implements IAccountingService {
     }
 
     @Override
-    public List<ExportFileInfo> getGeneratedExports(Integer size) {
-        List<ExportFileInfo> exports = cacheManager.getGeneratedExports();
-        if(size < exports.size()) {
-            return exports.subList(0, size);
-        }
-        return exports;
+    public Integer getNumberDaysFromStartOfFinancialTransactions() {
+        LocalDate startDate = accountingDao.getStartDateOfFinancialTransactions();
+        LocalDate endDate = new LocalDate();
+        return Days.daysBetween(startDate, endDate).getDays();
     }
-
-    @Override
-    public List<ExportFileInfo> getNotGeneratedExports(Integer size) {
-        List<ExportFileInfo> exports = new ArrayList<ExportFileInfo>();
-        LocalDate date = new LocalDate();
-        for (int i = 0; i < size;) {
-            ExportFileInfo export;
-            if(!hasAlreadyRanQuery(date, date)) {
-                export = getNotGeneratedExportFileInfo(date, date);
-                exports.add(export);
-                i++;
-            }
-            date = date.minusDays(1);
-        }
-        return exports;
-    }
-
 }

@@ -30,20 +30,29 @@
 
         <p class="font15 orangeheading margin5topbottom">[@spring.message "accounting.viewaccountingexports"/]</p>
 
-
+[#if numberDaysFromStartOfFinancialTransactions = 0]
+      <b>[@spring.message "accounting.viewaccountingexports.nodata"/]:</b>
+      <p> transactions should exist to convert into Accounting data
+[#else]
         <p class="margin5top10bottom">[@spring.message "accounting.viewaccountingexports.cache.instruction"/]<p>
         <br />
     <br />
     <div id='table'>
-            <div id='export_list'></div>
-    <div id='export_list_options'><script>loadExportsList(10,"all");</script></div>
+         
+            <div id='export_list'><script>loadExportsList(0,${numberDaysFromStartOfFinancialTransactions});</script></div>
     </div>
-
+    <div align='center'>
+    <b>
+    <span id='previous'></span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <span id='results'></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <span id='next'></span>
+    </b>
+    </div>
         <div class="buttonsSubmitCancel margin20right">
             <input id='clearexport' type="button" class="buttn" value="[@spring.message "accounting.clearexports"/]" onclick="javascript:gotToConfirmExportDeletePage()" />
             <input id='cancel' type="button" class="buttn2" value="[@spring.message "cancel"/]" onclick="javascript:goToAdmin()" />
         </div>
-
+[/#if]
     </div>
     <br />
 </div><!--Main Content Ends-->

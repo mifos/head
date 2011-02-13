@@ -20,13 +20,16 @@
 
 package org.mifos.platform.accounting.dao;
 
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
 import org.mifos.framework.persistence.SqlExecutor;
 import org.mifos.platform.accounting.AccountingDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +63,16 @@ public class AccountingDaoImpl implements IAccountingDao {
     public final List<AccountingDto> getAccountingDataByDate(LocalDate startDate, LocalDate endDate) {
         Object[] parameter = new Object[] { startDate.toString(), endDate.toString() };
         return jdbcTemplate.query(getAccountingDataQuery(), parameter, MAPPER);
+    }
+
+    @Override
+    public final LocalDate getStartDateOfFinancialTransactions() {
+        String date = jdbcTemplate.queryForObject("select min(posted_date) from financial_trxn", String.class);
+        LocalDate lDate = new LocalDate();
+        if(StringUtils.isNotBlank(date)) {
+            lDate = DateTimeFormat.forPattern("yyyy-MM-dd").parseDateTime(date).toLocalDate();
+        }
+        return lDate;
     }
 
     private String getAccountingDataQuery() {
