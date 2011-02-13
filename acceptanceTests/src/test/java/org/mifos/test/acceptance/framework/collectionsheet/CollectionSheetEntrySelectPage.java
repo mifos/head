@@ -171,22 +171,24 @@ public class CollectionSheetEntrySelectPage extends MifosPage {
     }
 
     public CollectionSheetEntryEnterDataPage submitAndGotoCollectionSheetEntryEnterDataPage(
-            SubmitFormParameters parameters) {
-        boolean onlyTypeIfEmpty = true;
-        boolean waitForPageToLoad = true;
-        CollectionSheetEntryEnterDataPage collectionSheetEntryEnterDataPage = submitAndGotoCollectionSheetEntryEnterDataPageWithoutVerifyingPage(
+            SubmitFormParameters parameters, boolean onlyTypeIfEmpty, boolean waitForPageToLoad) {
+        submitAndGotoCollectionSheetEntryEnterDataPageWithoutVerifyingPage(
                 parameters, onlyTypeIfEmpty, waitForPageToLoad);
-        collectionSheetEntryEnterDataPage.verifyPage();
-        return collectionSheetEntryEnterDataPage;
+        return new CollectionSheetEntryEnterDataPage(selenium);
     }
 
-    public CollectionSheetEntryEnterDataPage submitAndGotoCollectionSheetEntryEnterDataPageWithoutVerifyingPage(
+    public CollectionSheetEntryEnterDataPage submitAndGotoCollectionSheetEntryEnterDataPage(
+            SubmitFormParameters parameters) {
+        return submitAndGotoCollectionSheetEntryEnterDataPage(parameters, true, true);
+    }
+
+    public void submitAndGotoCollectionSheetEntryEnterDataPageWithoutVerifyingPage(
             SubmitFormParameters parameters, boolean onlyTypeIfEmpty, boolean waitForPageToLoad) {
 
         fillOutDropDownMenus(parameters, waitForPageToLoad);
-        CollectionSheetEntryEnterDataPage collectionSheetEntryEnterDataPage = fillOutTransactionAndReceiptFieldsAndContinue(
-                parameters, onlyTypeIfEmpty);
-        return collectionSheetEntryEnterDataPage;
+        fillOutTransactionAndReceiptFields(parameters, onlyTypeIfEmpty);
+        selenium.click(CONTINUE_BUTTON_ID);
+        waitForPageToLoad();
     }
 
     private void fillOutDropDownMenus(SubmitFormParameters parameters, boolean waitForPageToLoad) {
@@ -222,8 +224,7 @@ public class CollectionSheetEntrySelectPage extends MifosPage {
         }
     }
 
-    private CollectionSheetEntryEnterDataPage fillOutTransactionAndReceiptFieldsAndContinue(
-            SubmitFormParameters parameters, boolean onlyTypeIfEmpty) {
+    private void fillOutTransactionAndReceiptFields(SubmitFormParameters parameters, boolean onlyTypeIfEmpty) {
         typeText("transactionDateDD", parameters.getTransactionDay(), onlyTypeIfEmpty);
         typeText("transactionDateMM", parameters.getTransactionMonth(), onlyTypeIfEmpty);
         typeText("transactionDateYY", parameters.getTransactionYear(), onlyTypeIfEmpty);
@@ -232,11 +233,6 @@ public class CollectionSheetEntrySelectPage extends MifosPage {
         typeText("receiptDateDD", parameters.getReceiptDay(), onlyTypeIfEmpty);
         typeText("receiptDateMM", parameters.getReceiptMonth(), onlyTypeIfEmpty);
         typeText("receiptDateYY", parameters.getReceiptYear(), onlyTypeIfEmpty);
-        selenium.click(CONTINUE_BUTTON_ID);
-        waitForPageToLoad();
-        CollectionSheetEntryEnterDataPage collectionSheetEntryEnterDataPage = new CollectionSheetEntryEnterDataPage(
-                selenium);
-        return collectionSheetEntryEnterDataPage;
     }
 
     private void typeText(String locator, String value, boolean onlyTypeIfEmpty) {

@@ -100,7 +100,7 @@ public class CollectionSheetEntrySimpleTest extends UiTestCaseBase {
         onlyTypeIfFieldIsEmpty = false;
         waitForPageToLoad = false;
         CollectionSheetEntryEnterDataPage enterDataPage =
-            collectionSheetEntrySelectPageWithError.submitAndGotoCollectionSheetEntryEnterDataPageWithoutVerifyingPage(validFormParameters, onlyTypeIfFieldIsEmpty, waitForPageToLoad);
+            collectionSheetEntrySelectPageWithError.submitAndGotoCollectionSheetEntryEnterDataPage(validFormParameters, onlyTypeIfFieldIsEmpty, waitForPageToLoad);
         enterDataPage.verifyPage();
     }
 

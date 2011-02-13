@@ -40,14 +40,16 @@ public class CollectionSheetEntryPreviewDataPage extends MifosPage {
     public CollectionSheetEntryPreviewDataPage verifyPage(CollectionSheetEntrySelectPage.SubmitFormParameters params) {
         verifyEqualsIfNotNull(getCenterOrGroupName(), params.getCenter());
         verifyEqualsIfNotNull(getOfficeName(), params.getBranch());
+        /* TODO js - invalid verification - locale dependant
         if(params.getTransactionDay() != null) {
             verifyEqualsIfNotNull(getTransactionDate(), params.getTransactionDay()+"/"+params.getTransactionMonth()+"/"+params.getTransactionYear());
-        }
+        }*/
         verifyEqualsIfNotNull(getPaymentType(), params.getPaymentMode());
         verifyEqualsIfNotNull(getReceiptID(), params.getReceiptId());
+        /* TODO js - invalid verification - locale dependant
         if(params.getReceiptDay() != null) {
             verifyEqualsIfNotNull(getReceiptDate(), params.getReceiptDay()+"/"+params.getReceiptMonth()+"/"+params.getReceiptYear());
-        }
+        }*/
         this.verifyPage("BulkEntryPreview");
         return this;
     }
