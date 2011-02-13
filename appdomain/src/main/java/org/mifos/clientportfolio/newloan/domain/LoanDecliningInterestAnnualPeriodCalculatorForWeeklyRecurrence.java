@@ -20,14 +20,14 @@
 
 package org.mifos.clientportfolio.newloan.domain;
 
-import java.util.List;
 
-import org.joda.time.DateTime;
-import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
-import org.mifos.framework.util.helpers.Money;
+public class LoanDecliningInterestAnnualPeriodCalculatorForWeeklyRecurrence implements
+        LoanDecliningInterestAnnualPeriodCalculator {
 
-public interface LoanScheduleFactory {
-
-    IndividualLoanSchedule create(List<DateTime> loanScheduleDates, LoanOfferingBO loanProduct, Money loanAmountDisbursed);
+    @Override
+    public Double calculate(Integer recurEvery, Integer interestDays) {
+        int daysInWeek = 7;
+        return Double.valueOf(interestDays.toString()) / (daysInWeek * recurEvery);
+    }
 
 }

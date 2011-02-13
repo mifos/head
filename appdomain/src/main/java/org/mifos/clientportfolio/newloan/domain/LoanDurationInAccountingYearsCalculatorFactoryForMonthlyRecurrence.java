@@ -20,14 +20,22 @@
 
 package org.mifos.clientportfolio.newloan.domain;
 
-import java.util.List;
+import org.mifos.accounts.util.helpers.AccountConstants;
 
-import org.joda.time.DateTime;
-import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
-import org.mifos.framework.util.helpers.Money;
+public class LoanDurationInAccountingYearsCalculatorFactoryForMonthlyRecurrence implements
+        LoanDurationInAccountingYearsCalculator {
 
-public interface LoanScheduleFactory {
+    @Override
+    public Double calculate(Integer recurringEvery, Integer numberOfInstallments, Integer interestDays) {
 
-    IndividualLoanSchedule create(List<DateTime> loanScheduleDates, LoanOfferingBO loanProduct, Money loanAmountDisbursed);
+        int daysInMonth = 30;
+        int duration = numberOfInstallments * recurringEvery;
+
+        double totalMonthDays = duration * daysInMonth;
+
+        // TODO - keithw - ask why duration of loan is worked out for 360 financial year for monthly loans.
+        //      - is it related to assumption that month has exactly 30days so 12 months = 360 days
+        return totalMonthDays / AccountConstants.INTEREST_DAYS_360;
+    }
 
 }

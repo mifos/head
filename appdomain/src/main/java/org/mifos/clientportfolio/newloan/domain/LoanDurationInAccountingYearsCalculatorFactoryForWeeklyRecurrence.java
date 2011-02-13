@@ -20,14 +20,24 @@
 
 package org.mifos.clientportfolio.newloan.domain;
 
-import java.util.List;
+import org.mifos.accounts.util.helpers.AccountConstants;
+import org.mifos.service.BusinessRuleException;
 
-import org.joda.time.DateTime;
-import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
-import org.mifos.framework.util.helpers.Money;
+public class LoanDurationInAccountingYearsCalculatorFactoryForWeeklyRecurrence implements
+        LoanDurationInAccountingYearsCalculator {
 
-public interface LoanScheduleFactory {
+    @Override
+    public Double calculate(Integer recurringEvery, Integer numberOfInstallments, Integer interestDays) {
 
-    IndividualLoanSchedule create(List<DateTime> loanScheduleDates, LoanOfferingBO loanProduct, Money loanAmountDisbursed);
+        if (interestDays != AccountConstants.INTEREST_DAYS_360 && interestDays != AccountConstants.INTEREST_DAYS_365) {
+            throw new BusinessRuleException(AccountConstants.NOT_SUPPORTED_INTEREST_DAYS);
+        }
+
+        int daysInWeek = 7;
+        int duration = numberOfInstallments * recurringEvery;
+
+        double totalWeekDays = duration * daysInWeek;
+        return totalWeekDays / interestDays;
+    }
 
 }

@@ -20,14 +20,18 @@
 
 package org.mifos.clientportfolio.newloan.domain;
 
-import java.util.List;
 
-import org.joda.time.DateTime;
-import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
-import org.mifos.framework.util.helpers.Money;
+public class LoanDecliningInterestAnnualPeriodCalculatorForMonthlyRecurrence implements
+        LoanDecliningInterestAnnualPeriodCalculator {
 
-public interface LoanScheduleFactory {
-
-    IndividualLoanSchedule create(List<DateTime> loanScheduleDates, LoanOfferingBO loanProduct, Money loanAmountDisbursed);
+    @Override
+    public Double calculate(Integer recurEvery, Integer interestDays) {
+        /*
+         * FIXME - keithw - The use of monthly interest here does not distinguish between the 360 (with equal 30 day months) and the 365
+         * day year cases. Should it?
+         */
+        Integer period = recurEvery * 12;
+        return period.doubleValue();
+    }
 
 }

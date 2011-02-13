@@ -20,14 +20,8 @@
 
 package org.mifos.clientportfolio.newloan.domain;
 
-import java.util.List;
+public interface LoanDurationInAccountingYearsCalculator {
 
-import org.joda.time.DateTime;
-import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
-import org.mifos.framework.util.helpers.Money;
-
-public interface LoanScheduleFactory {
-
-    IndividualLoanSchedule create(List<DateTime> loanScheduleDates, LoanOfferingBO loanProduct, Money loanAmountDisbursed);
+    Double calculate(Integer recurringEvery, Integer numberOfInstallments, Integer interestDays);
 
 }

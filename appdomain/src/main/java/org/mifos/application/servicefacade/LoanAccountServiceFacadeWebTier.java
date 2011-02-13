@@ -523,7 +523,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                     .toDateMidnight().toDateTime(), scheduledEvent);
         }
 
-        IndividualLoanSchedule loanSchedule = new IndividualLoanScheduleFactory().create(loanScheduleDates, loanProduct);
+        IndividualLoanSchedule loanSchedule = new IndividualLoanScheduleFactory().create(loanScheduleDates, loanProduct, loanAmountDisbursed);
         List<LoanScheduleEntity> scheduledLoanRepayments = translateToLoanScheduleEntity(loanSchedule, customer);
 
         LoanBO loan = LoanBO.createOpeningBalanceLoan(userContext, loanProduct, customer, loanApprovedState,

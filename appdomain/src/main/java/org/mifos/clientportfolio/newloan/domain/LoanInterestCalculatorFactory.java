@@ -20,14 +20,11 @@
 
 package org.mifos.clientportfolio.newloan.domain;
 
-import java.util.List;
+import org.mifos.accounts.productdefinition.util.helpers.GraceType;
+import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 
-import org.joda.time.DateTime;
-import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
-import org.mifos.framework.util.helpers.Money;
+public interface LoanInterestCalculatorFactory {
 
-public interface LoanScheduleFactory {
-
-    IndividualLoanSchedule create(List<DateTime> loanScheduleDates, LoanOfferingBO loanProduct, Money loanAmountDisbursed);
+    LoanInterestCalculator create(InterestType interestType, GraceType graceType);
 
 }

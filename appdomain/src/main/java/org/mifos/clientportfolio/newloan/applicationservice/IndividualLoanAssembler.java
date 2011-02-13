@@ -32,6 +32,7 @@ import org.mifos.clientportfolio.newloan.domain.LoanScheduleFactory;
 import org.mifos.clientportfolio.newloan.domain.RecurringScheduledEventFactory;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.persistence.CustomerDao;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.schedule.ScheduledDateGeneration;
 import org.mifos.schedule.ScheduledEvent;
 
@@ -64,7 +65,9 @@ public class IndividualLoanAssembler implements LoanAssembler {
         ScheduledEvent scheduledEvent = scheduledEventFactory.createScheduledEventFrom(loanProduct.getLoanOfferingMeetingValue());
         List<DateTime> loanScheduleDates = scheduledDateGeneration.generateScheduledDates(occurences, lastScheduledDate, scheduledEvent);
 
-        IndividualLoanSchedule loanSchedule = loanScheduleFactory.create(loanScheduleDates, loanProduct);
+        // FIXME - assemble loanAmount from dto
+        Money loanAmount = null;
+        IndividualLoanSchedule loanSchedule = loanScheduleFactory.create(loanScheduleDates, loanProduct, loanAmount);
 
         return new IndividualLoanImpl();
     }

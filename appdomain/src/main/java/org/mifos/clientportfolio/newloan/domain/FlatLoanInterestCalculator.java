@@ -20,14 +20,20 @@
 
 package org.mifos.clientportfolio.newloan.domain;
 
-import java.util.List;
+import java.math.BigDecimal;
 
-import org.joda.time.DateTime;
-import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.util.helpers.Money;
 
-public interface LoanScheduleFactory {
+public class FlatLoanInterestCalculator implements LoanInterestCalculator {
 
-    IndividualLoanSchedule create(List<DateTime> loanScheduleDates, LoanOfferingBO loanProduct, Money loanAmountDisbursed);
+    @Override
+    public Money calculate(LoanInterestCalculationDetails loanInterestCalculationDetails) {
+        Money loanAmount = loanInterestCalculationDetails.getLoanAmount();
+        Double interestRate = loanInterestCalculationDetails.getInterestRate();
+        Double durationInYears = loanInterestCalculationDetails.getInterestRate();
+
+        // FIXME - keithw - the calls to Money.multiply() and Money.divide() round prematurely
+        return loanAmount.multiply(interestRate).multiply(durationInYears).divide(new BigDecimal("100"));
+    }
 
 }

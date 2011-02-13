@@ -105,6 +105,9 @@ import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
+import org.mifos.clientportfolio.newloan.domain.IndividualLoanSchedule;
+import org.mifos.clientportfolio.newloan.domain.IndividualLoanScheduleFactory;
+import org.mifos.clientportfolio.newloan.domain.LoanScheduleDetail;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.business.Configuration;
@@ -3086,30 +3089,40 @@ public class LoanBO extends AccountBO {
 
         logger.debug("Obtained intallments dates");
 
-        Money loanInterest = getLoanInterest_v2();
+        // ok, installment dates are known and loan product information
+        // details required for creating loan schedule (using product definition and those details that are overriden from definition in loan
+        LoanScheduleDetail loanScheduleDetails = new LoanScheduleDetail();
+
+        List<DateTime> loanScheduleDates = new ArrayList<DateTime>();
+        for (InstallmentDate installmentDate : installmentDates) {
+            loanScheduleDates.add(new DateTime(installmentDate.getInstallmentDueDate()));
+        }
+        IndividualLoanSchedule individualLoanSchedule = new IndividualLoanScheduleFactory().create(loanScheduleDates, this.loanOffering, this.loanAmount);
+
+        // FIXME - keithw - replace all of below with factory usage
+        Money loanInterest = Money.zero(); // getLoanInterest_v2();
+
+
         List<EMIInstallment> EMIInstallments = generateEMI_v2(loanInterest);
 
         logger.debug("Emi installment  obtained ");
 
         validateSize(installmentDates, EMIInstallments);
-        List<FeeInstallment> feeInstallment = new ArrayList<FeeInstallment>();
-        if (getAccountFees().size() != 0) {
+        List<FeeInstallment> feeInstallments = new ArrayList<FeeInstallment>();
+        if (!getAccountFees().isEmpty()) {
             /*
              * KEITH TODO: The loan interest is not correct for declining balance modes, and appears to be causing unit
              * test to fail for this mode. For declining-balance loans, to calculate the loan interest you must either
              * (a) apply a complicated formula (b) compute the sum of interest paid across all installments.
              */
             populateAccountFeeAmount(getAccountFees(), loanInterest);
-            ScheduledEvent meetingScheduledEvent = ScheduledEventFactory
-                    .createScheduledEventFrom(this.getLoanMeeting());
-            feeInstallment = FeeInstallment.createMergedFeeInstallments(meetingScheduledEvent, getAccountFees(),
-                    installmentDates.size());
-            // feeInstallment = mergeFeeInstallments(getFeeInstallments(installmentDates, nonAdjustedInstallmentDates));
+            ScheduledEvent meetingScheduledEvent = ScheduledEventFactory.createScheduledEventFrom(this.getLoanMeeting());
+            feeInstallments = FeeInstallment.createMergedFeeInstallments(meetingScheduledEvent, getAccountFees(),installmentDates.size());
         }
 
         logger.debug("Fee installment obtained ");
 
-        generateRepaymentSchedule(installmentDates, EMIInstallments, feeInstallment);
+        generateRepaymentSchedule(installmentDates, EMIInstallments, feeInstallments);
 
         logger.debug("Meeting schedule generated  ");
 
@@ -3158,23 +3171,10 @@ public class LoanBO extends AccountBO {
         return interest;
     }
 
-    private Money getLoanInterest_v2() throws AccountException {
-
-        Money interest = null;
-        if (getLoanOffering().getInterestTypes().getId().equals(InterestType.FLAT.getValue())) {
-            interest = getFlatInterestAmount_v2();
-        }
-        if (getLoanOffering().getInterestTypes().getId().equals(InterestType.DECLINING.getValue())) {
-            interest = getDecliningInterestAmount_v2();
-        } else if (getLoanOffering().getInterestTypes().getId().equals(InterestType.DECLINING_EPI.getValue())) {
-            interest = getDecliningEPIAmount_v2();
-        }
-        return interest;
-    }
-
     /**
      * remove dependence on installmentEndDate
      */
+    @Deprecated
     private Money getFlatInterestAmount_v2() throws AccountException {
         // TODO: interest rate should be a BigDecimal ?
         Double interestRate = getInterestRate();
