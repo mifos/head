@@ -126,11 +126,11 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
         newLoanProductPage.fillLoanParameters(formParameters);
         DefineNewLoanProductPreviewPage previewPage = newLoanProductPage.submitAndGotoNewLoanProductPreviewPage();
         //Then
-        Assert.assertTrue(selenium.isTextPresent("Can waive interest on Prepay loan: Yes"));
+        Assert.assertTrue(selenium.isTextPresent("Can waive interest on repay loan: Yes"));
         //When
         LoanProductDetailsPage loanProductDetailsPage = previewPage.submit().navigateToViewLoanDetailsPage();
         //Then
-        Assert.assertTrue(selenium.isTextPresent("Can waive interest on Prepay loan: Yes"));
+        Assert.assertTrue(selenium.isTextPresent("Can waive interest on repay loan: Yes"));
         //When
         EditLoanProductPage editLoanProductPage = loanProductDetailsPage.editLoanProduct();
         //Then
@@ -138,11 +138,11 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
         //When
         EditLoanProductPreviewPage editLoanProductPreviewPage = editLoanProductPage.editSubmit();
         //Then
-        Assert.assertTrue(selenium.isTextPresent("Can waive interest on Prepay loan: Yes"));
+        Assert.assertTrue(selenium.isTextPresent("Can waive interest on repay loan: Yes"));
         //When
         loanProductDetailsPage = editLoanProductPreviewPage.submit();
         //Then
-        Assert.assertTrue(selenium.isTextPresent("Can waive interest on Prepay loan: Yes"));
+        Assert.assertTrue(selenium.isTextPresent("Can waive interest on repay loan: Yes"));
 
         //When
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
