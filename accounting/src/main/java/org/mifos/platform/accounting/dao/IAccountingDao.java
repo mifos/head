@@ -20,6 +20,7 @@
 
 package org.mifos.platform.accounting.dao;
 
+import java.sql.Date;
 import java.util.List;
 
 import org.joda.time.LocalDate;
@@ -28,5 +29,7 @@ import org.mifos.platform.accounting.AccountingDto;
 public interface IAccountingDao {
 
     List<AccountingDto> getAccountingDataByDate(LocalDate startDate, LocalDate endDate);
+
+    LocalDate getStartDateOfFinancialTransactions();
 
 }
