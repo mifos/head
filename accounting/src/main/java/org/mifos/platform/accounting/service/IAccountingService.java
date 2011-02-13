@@ -38,6 +38,9 @@ public interface IAccountingService {
     List<ExportFileInfo> getLastTenExports(Integer listStartDay);
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_USE_ACCOUNTING_INTEGRATION')")
+    Integer getNumberDaysFromStartOfFinancialTransactions();
+
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_USE_ACCOUNTING_INTEGRATION')")
     String getExportOutputFileName(LocalDate startDate, LocalDate endDate);
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_USE_ACCOUNTING_INTEGRATION')")

@@ -49,6 +49,7 @@ public class AccountingDataController {
     private static final String FROM_DATE = "fromDate";
     private static final String TO_DATE = "toDate";
     private static final String LIST_START_DAY = "listStartDay";
+
     @Autowired
     public AccountingDataController(IAccountingService accountingService) {
         this.accountingService = accountingService;
@@ -117,6 +118,7 @@ public class AccountingDataController {
                 "renderAccountingDataCacheInfo.ftl").build();
         ModelAndView mav = new ModelAndView("renderAccountingDataCacheInfo");
         mav.addObject("breadcrumbs", breadcrumbs);
+        mav.addObject("numberDaysFromStartOfFinancialTransactions",accountingService.getNumberDaysFromStartOfFinancialTransactions());
         return mav;
     }
 

@@ -20,6 +20,9 @@
 
 package org.mifos.platform.accounting.service;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
+
 public class ExportFileInfo {
 
     private final String lastModified;
@@ -60,5 +63,10 @@ public class ExportFileInfo {
 
     public Boolean getIsExistInCache() {
         return isExistInCache;
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
     }
 }
