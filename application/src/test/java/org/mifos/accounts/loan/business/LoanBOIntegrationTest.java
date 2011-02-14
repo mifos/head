@@ -4558,7 +4558,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         }
 
         accountBO.setUserContext(TestUtils.makeUser());
-        for (AccountFeesEntity accountFeesEntity : accountBO.getAccountFees()) {
+        for (AccountFeesEntity accountFeesEntity : accountBO.getAccountFeesIncludingInactiveFees()) {
             accountBO.applyCharge(accountFeesEntity.getFees().getFeeId(), Double.valueOf("200"));
         }
         StaticHibernateUtil.flushAndClearSession();

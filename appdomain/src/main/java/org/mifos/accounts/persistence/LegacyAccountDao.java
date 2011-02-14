@@ -235,15 +235,16 @@ public class LegacyAccountDao extends LegacyGenericDao {
     public List<FeeBO> getAllApplicableFees(Integer accountId, FeeCategory categoryType) throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("accountId", accountId);
-        queryParameters.put("feeFrequencyTypeId", FeeFrequencyType.PERIODIC.getValue());
+
         queryParameters.put("active", FeeStatus.ACTIVE.getValue());
         if (categoryType.getValue().equals(FeeCategory.LOAN.getValue())) {
             queryParameters.put("category", FeeCategory.LOAN.getValue());
             return executeNamedQuery(NamedQueryConstants.GET_ALL_APPLICABLE_LOAN_FEE, queryParameters);
         }
-            queryParameters.put("category1", FeeCategory.ALLCUSTOMERS.getValue());
-            queryParameters.put("category2", categoryType.getValue());
-            return executeNamedQuery(NamedQueryConstants.GET_ALL_APPLICABLE_CUSTOMER_FEE, queryParameters);
+        queryParameters.put("feeFrequencyTypeId", FeeFrequencyType.PERIODIC.getValue());
+        queryParameters.put("category1", FeeCategory.ALLCUSTOMERS.getValue());
+        queryParameters.put("category2", categoryType.getValue());
+        return executeNamedQuery(NamedQueryConstants.GET_ALL_APPLICABLE_CUSTOMER_FEE, queryParameters);
     }
 
     public QueryResult search(String queryString, Short officeId) throws PersistenceException {

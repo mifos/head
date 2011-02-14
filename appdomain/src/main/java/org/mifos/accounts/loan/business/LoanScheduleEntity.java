@@ -294,6 +294,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         return chargeWaived;
     }
 
+    // watch out, this relies on passing in the same reference as the object held in the collection
     void removeAccountFeesActionDetailEntity(AccountFeesActionDetailEntity accountFeesActionDetailEntity) {
         accountFeesActionDetails.remove(accountFeesActionDetailEntity);
     }

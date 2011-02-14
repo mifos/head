@@ -187,14 +187,9 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
         UserContext uc = TestUtils.makeUser();
         List<ApplicableCharge> applicableChargeList = accountBusinessService.getAppllicableFees(accountBO
                 .getAccountId(), uc);
-        Assert.assertEquals(6, applicableChargeList.size());
+        Assert.assertEquals(3, applicableChargeList.size());
         for (ApplicableCharge applicableCharge : applicableChargeList) {
-            if (applicableCharge.getFeeName().equalsIgnoreCase("Upfront Fee")) {
-                // this is a rate, so we shouldn't have a trailing ".0"
-                Assert.assertEquals("20", applicableCharge.getAmountOrRate());
-                Assert.assertNotNull(applicableCharge.getFormula());
-                Assert.assertNull(applicableCharge.getPeriodicity());
-            } else if (applicableCharge.getFeeName().equalsIgnoreCase("Periodic Fee")) {
+            if (applicableCharge.getFeeName().equalsIgnoreCase("Periodic Fee")) {
                 Assert.assertEquals(new Money(getCurrency(), "200.0"), new Money(getCurrency(), applicableCharge
                         .getAmountOrRate()));
                 Assert.assertNull(applicableCharge.getFormula());
