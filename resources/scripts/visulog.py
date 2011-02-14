@@ -5,7 +5,7 @@ visulog - Colorize Mifos Tomcat log output based on log message severity level.
 '''
 
 '''
-Copyright Grameen Foundation USA
+Copyright (c) 2005-2010 Grameen Foundation USA
 All rights reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
