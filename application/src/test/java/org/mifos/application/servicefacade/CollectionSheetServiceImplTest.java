@@ -129,7 +129,8 @@ public class CollectionSheetServiceImplTest {
 
         // loanRepayments
         final CollectionSheetCustomerLoanDto firstLoanAccount = new CollectionSheetCustomerLoanDto();
-        firstLoanAccount.setPrincipalDue(BigDecimal.valueOf(Double.valueOf("25.2")));
+        firstLoanAccount.setPrincipalDue(BigDecimal.valueOf(Double.valueOf("9999.9999")));
+        firstLoanAccount.setInterestDue(BigDecimal.valueOf(Double.valueOf("1243.7299")));
 
         final List<CollectionSheetCustomerLoanDto> centerLoanAccounts = new ArrayList<CollectionSheetCustomerLoanDto>();
         centerLoanAccounts.add(firstLoanAccount);
@@ -153,7 +154,7 @@ public class CollectionSheetServiceImplTest {
         final CollectionSheetCustomerDto hierarchyRoot = collectionSheet.getCollectionSheetCustomer().get(0);
         assertThat(hierarchyRoot.getCollectionSheetCustomerLoan().size(), is(1));
         final CollectionSheetCustomerLoanDto returnedLoan = hierarchyRoot.getCollectionSheetCustomerLoan().get(0);
-        assertThat(returnedLoan.getTotalRepaymentDue(), is(Double.valueOf("25.2")));
+        assertThat(returnedLoan.getTotalRepaymentDue(), is(Double.valueOf("11243.7298")));
     }
 
     @Test

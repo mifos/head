@@ -2734,7 +2734,7 @@ public class LoanBO extends AccountBO {
 
     private LoanPaymentTypes getLoanPaymentType(final Money amount) {
         Money totalPaymentDue = getTotalPaymentDue();
-        if (amount.equals(totalPaymentDue)) {
+        if (amount.equals(totalPaymentDue) || totalPaymentDue.subtract(amount).isTinyAmount()) {
             return LoanPaymentTypes.FULL_PAYMENT;
         } else if (amount.isLessThan(totalPaymentDue)) {
             return LoanPaymentTypes.PARTIAL_PAYMENT;
