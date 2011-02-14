@@ -811,8 +811,8 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             LoanAccountActionForm loanActionForm) throws ApplicationException {
 
         Short productId = loanActionForm.getPrdOfferingIdValue();
-        LoanOfferingBO loanOffering = new LoanPrdBusinessService()
-                .getLoanOffering(productId, userContext.getLocaleId());
+        LoanOfferingBO loanOffering = this.loanProductDao.findById(productId.intValue());
+//        new LoanPrdBusinessService().getLoanOffering(productId, userContext.getLocaleId());
 
         Money loanAmount = new Money(loanOffering.getCurrency(), loanActionForm.getLoanAmount());
         Short numOfInstallments = loanActionForm.getNoOfInstallmentsValue();

@@ -3100,7 +3100,7 @@ public class LoanBO extends AccountBO {
         IndividualLoanSchedule individualLoanSchedule = new IndividualLoanScheduleFactory().create(loanScheduleDates, this.loanOffering, this.loanAmount);
 
         // FIXME - keithw - replace all of below with factory usage
-        Money loanInterest = Money.zero(); // getLoanInterest_v2();
+        Money loanInterest = getLoanInterest_v2();
 
 
         List<EMIInstallment> EMIInstallments = generateEMI_v2(loanInterest);
@@ -3127,6 +3127,32 @@ public class LoanBO extends AccountBO {
         logger.debug("Meeting schedule generated  ");
 
         applyRounding_v2();
+    }
+
+    // FIXME to be removed
+    private Money getLoanInterest_v2() throws AccountException {
+
+        Double durationInYears = getTotalDurationInYears_v2();
+
+        Money interest = null;
+
+        InterestType interestType = InterestType.fromInt(this.interestType.getId());
+        switch (interestType) {
+        case FLAT:
+            // FIXME - keithw - the calls to Money.multiply() and Money.divide() round prematurely!
+            interest = loanAmount.multiply(interestRate).multiply(durationInYears).divide(new BigDecimal("100"));
+            break;
+        case DECLINING:
+            interest = getDecliningInterestAmount_v2();
+            break;
+        case DECLINING_EPI:
+            interest = getDecliningEPIAmount_v2();
+            break;
+        default:
+            break;
+        }
+
+        return interest;
     }
 
     /**

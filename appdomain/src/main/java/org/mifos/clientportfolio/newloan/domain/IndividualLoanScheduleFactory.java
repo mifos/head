@@ -104,13 +104,7 @@ public class IndividualLoanScheduleFactory implements LoanScheduleFactory {
         LoanInterestCalculatorFactory loanInterestCalculatorFactory = new LoanInterestCalculatorFactoryImpl();
         LoanInterestCalculator loanInterestCalculator = loanInterestCalculatorFactory.create(interestType, graceType);
         Money loanInterest = loanInterestCalculator.calculate(loanInterestCalculationDetails);
-
-
-
-
-
-
-
+        // end of loan Interest creation
 
         List<EMIInstallment> EMIInstallments = generateEMI_v2(loanInterest, loanMeeting, graceType,
                 gracePeriodDuration, loanAmount, numberOfInstallments, interestRate, interestDays,
