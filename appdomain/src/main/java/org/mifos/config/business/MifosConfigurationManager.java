@@ -86,23 +86,24 @@ public class MifosConfigurationManager implements Configuration {
         return configurationManagerInstance;
     }
 
-	private MifosConfigurationManager() {
-		String defaultConfig = "org/mifos/config/resources/applicationConfiguration.default.properties";
-		Properties props = new Properties();
-		try {
-			InputStream applicationConfig = MifosResourceUtil.getClassPathResourceAsStream(defaultConfig);
-			ConfigurationLocator configurationLocator = new ConfigurationLocator();
-			InputStream customApplicationConfig = configurationLocator.getFileInputStream(CUSTOM_CONFIG_PROPS_FILENAME);
-			if(customApplicationConfig != null) {
-				applicationConfig = customApplicationConfig;
-			}
-			props.load(applicationConfig);
-			logger.info(props.toString());
-		} catch (IOException e) {
-			throw new MifosRuntimeException(e);
-		}
-		configuration = ConfigurationConverter.getConfiguration(props);
-	}
+    private MifosConfigurationManager() {
+        String defaultConfig = "org/mifos/config/resources/applicationConfiguration.default.properties";
+        Properties props = new Properties();
+        try {
+            InputStream applicationConfig = MifosResourceUtil.getClassPathResourceAsStream(defaultConfig);
+            props.load(applicationConfig);
+
+            ConfigurationLocator configurationLocator = new ConfigurationLocator();
+            InputStream customApplicationConfig = configurationLocator.getFileInputStream(CUSTOM_CONFIG_PROPS_FILENAME);
+            if(customApplicationConfig != null) {
+                props.load(customApplicationConfig);
+            }
+            logger.info(props.toString());
+        } catch (IOException e) {
+            throw new MifosRuntimeException(e);
+        }
+        configuration = ConfigurationConverter.getConfiguration(props);
+    }
 
     public Configuration getConfiguration() {
         return configuration;
