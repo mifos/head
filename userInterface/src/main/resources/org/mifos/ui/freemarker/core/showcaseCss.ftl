@@ -125,23 +125,27 @@ Each label-input pair should be wrapped in a <span class="code">div</span> tag w
 <hr/>
 
 <p><span class="css-classname">notice</span>:</p><br/>
-<div class="notice">Hello world!</div>
+<div class="notice">You may want to refine your search.</div>
 <hr/>
 
 <p><span class="css-classname">validationErrors</span>:</p><br/>
-<div class="validationErrors">Oops! Check your inputs.</div>
+<div class="validationErrors">Input value is out of range.</div>
 <hr/>
 
 <p><span class="css-classname">error</span>:</p><br/>
-<div class="error">Something is on fire!</div>
+<div class="error">A serious problem has occurred.</div>
 <hr/>
 
 <p><span class="css-classname">suggestion</span>:</p><br/>
-<div class="suggestion">Measure twice, cut once.</div>
+<div class="suggestion">Suggested next steps:</div>
 <hr/>
 
 <p><span class="css-classname">standout</span>:</p><br/>
-<p>Some <span class="standout">standout</span> text.</p>
+<p>Make text <span class="standout">standout</span>.</p>
+<hr/>
+
+<p><span class="css-classname">standout</span> (in <span class="code">&lt;h1&gt;</span>):</p><br/>
+<h1>Create Savings Account - <span class="standout">Select a customer</span></h1>
 <hr/>
 
 <p><span class="css-classname">account-number</span>:</p><br/>
