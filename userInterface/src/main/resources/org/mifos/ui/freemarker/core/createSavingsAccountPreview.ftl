@@ -35,7 +35,7 @@
 <p class="standout">[@spring.message "createSavingsAccount.preview.productSummary.header" /]</p>
 <br/>
 
-<div class="summary">
+<div class="preview">
     <div class="row">
         <div class="attribute">[@spring.message "createSavingsAccount.preview.savingsInstanceName" /]</div>
         <div class="value">${savingsAccountFormBean.product.savingsProductDetails.productDetails.name}</div>

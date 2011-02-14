@@ -63,29 +63,29 @@ input.cancel, input.edit
     border-top: 0px;
 }
 
-div.summary 
+div.preview 
 {
 }
 
-div.summary .divider
+div.preview .divider
 {
     font-weight: bold;
 }
 
-div.summary .attribute 
+div.preview .attribute 
 {
     font-weight: bold;
     float: left;
     max-width: 80%;
 }
 
-div.summary .value 
+div.preview .value 
 {
     float: left;
     margin-left: 0.25em;
 }
 
-div.summary .row
+div.preview .row
 {
     clear: both;
 }
