@@ -19,6 +19,7 @@
  */
 package org.mifos.test.acceptance.questionnaire;
 
+import org.mifos.test.acceptance.framework.client.ClientViewChangeLogPage;
 import java.util.Arrays;
 import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.AppLauncher;
@@ -42,7 +43,11 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
+import org.mifos.test.acceptance.framework.testhelpers.ClientTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.QuestionGroupTestHelper;
 
 import static java.util.Arrays.asList;
@@ -65,6 +70,7 @@ public class QuestionGroupTest extends UiTestCaseBase {
     private InitializeApplicationRemoteTestingService initRemote;
 
     private QuestionGroupTestHelper questionGroupTestHelper;
+    private ClientTestHelper clientTestHelper;
     private static final String START_DATA_SET = "acceptance_small_003_dbunit.xml";
     private String qgTitle1, qgTitle2, qgTitle3;
     private String qTitle1, qTitle2, qTitle3, qTitle4, qTitle5;
@@ -76,6 +82,7 @@ public class QuestionGroupTest extends UiTestCaseBase {
     public static final String SECTION_DEFAULT = "Default";
     private static final String SECTION_MISC = "Misc";
     private static final String VIEW_CLIENT_QUESTION_GROUP = "ViewClientQG";
+    private static final String CLIENT = "Stu1232993852651 Client1232993852651";
     private static final List<String> EMPTY_LIST = new ArrayList<String>();
     private static final List<String> QUESTIONS_LIST = new ArrayList<String>(Arrays.asList("CreateClientQG",
         "CreateClientQG2", "ViewClientQG", "ViewClientQG2", "Survey 1", "CloseClientQG", "CloseClientQG2",
@@ -90,6 +97,7 @@ public class QuestionGroupTest extends UiTestCaseBase {
         super.setUp();
         appLauncher = new AppLauncher(selenium);
         questionGroupTestHelper = new QuestionGroupTestHelper(selenium);
+        clientTestHelper = new ClientTestHelper(selenium);
         qgTitle1 = "QuestionGroup1 " + System.currentTimeMillis();
         qgTitle2 = "QuestionGroup2 " + System.currentTimeMillis();
         qgTitle3 = "QuestionGroup3 " + System.currentTimeMillis();
@@ -149,6 +157,37 @@ public class QuestionGroupTest extends UiTestCaseBase {
         //Then
         viewAllQuestionGroupsPage.verifyInactiveQuestions(0,0);
 
+    }
+
+    /**
+     * Verifying that Change Log for Question Groups has an appropriate format
+     * http://mifosforge.jira.com/browse/MIFOSTEST-667
+     * @throws Exception
+     */
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void testChangeLog() throws Exception{
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_016_dbunit.xml", dataSource, selenium);
+        ClientViewDetailsPage clientViewDetailsPage = clientTestHelper.navigateToClientViewDetailsPage(CLIENT);
+
+        //When
+        Map<String,Integer> questions = new HashMap<String, Integer>();
+        questions.put("question 4:yes",0);
+        clientViewDetailsPage = clientTestHelper.editQuestionGroupResponses(
+                clientViewDetailsPage, "0",
+                questions);
+
+        questions = new HashMap<String, Integer>();
+        questions.put("Number:123",1);
+        questions.put("NumberQuestion2:9",1);
+        clientViewDetailsPage = clientTestHelper.editQuestionGroupResponses(
+                clientViewDetailsPage, "0",
+                questions);
+        
+        //Then
+        ClientViewChangeLogPage clientViewChangeLogPage = clientViewDetailsPage.navigateToClientViewChangeLog();
+        clientViewChangeLogPage.verifyChangeLog(asList("CreateClientQG/Sec 2/Number","CreateClientQG/Sec 2/NumberQuestion2"),
+                asList("-","-"), asList("123","9"), asList("mifos","mifos"),3);
     }
 
     private void testViewQuestionGroups() {

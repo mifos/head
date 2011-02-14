@@ -4,6 +4,7 @@ import org.mifos.test.acceptance.framework.MifosPage;
 import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
+import java.util.List;
 
 public class ClientViewChangeLogPage extends MifosPage{
 
@@ -19,4 +20,16 @@ public class ClientViewChangeLogPage extends MifosPage{
         Assert.assertEquals(selenium.getTable("auditLogRecords.1.4"),user);
     }
 
+    public void verifyChangeLog(List<String> fields, List<String> oldvalues, List<String> newValues, List<String> users, int maxRows) {
+        for(int i=0;i<fields.size();i++) {
+            Assert.assertTrue(selenium.isTextPresent(fields.get(i)));
+            for(int j=0;j<maxRows;j++) {
+                if(selenium.getTable("auditLogRecords."+j+".1").equals(fields.get(i))) {
+                    Assert.assertEquals(selenium.getTable("auditLogRecords."+j+".2"),oldvalues.get(i));
+                    Assert.assertEquals(selenium.getTable("auditLogRecords."+j+".3"),newValues.get(i));
+                    Assert.assertEquals(selenium.getTable("auditLogRecords."+j+".4"),users.get(i));
+                }
+            }
+        }
+    }
 }

@@ -41,8 +41,9 @@ import org.mifos.test.acceptance.framework.group.GroupSearchPage;
 import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 import org.mifos.test.acceptance.util.StringUtil;
-
 import com.thoughtworks.selenium.Selenium;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionnairePage;
+import org.mifos.test.acceptance.framework.questionnaire.ViewQuestionResponseDetailPage;
 
 public class ClientTestHelper {
 
@@ -339,7 +340,7 @@ public class ClientTestHelper {
    }
 
    public ClientViewDetailsPage createNewClient(String groupName, CreateClientEnterPersonalDataPage.SubmitFormParameters clientParams) {
-       return navigationHelper
+        return navigationHelper
            .navigateToClientsAndAccountsPage()
            .navigateToCreateNewClientPage()
            .selectGroup(groupName)
@@ -348,5 +349,30 @@ public class ClientTestHelper {
            .navigateToPreview()
            .submit()
            .navigateToClientViewDetailsPage();
+   }
+
+   public ClientViewDetailsPage navigateToClientViewDetailsPage(String clientName) {
+        ClientViewDetailsPage clientViewDetailsPage =  navigationHelper.navigateToClientViewDetailsPage(clientName);
+        clientViewDetailsPage.verifyPage("ViewClientDetails");
+
+        return clientViewDetailsPage;
+   }
+
+   public ClientViewDetailsPage editQuestionGroupResponses(ClientViewDetailsPage clientViewDetailsPage, String numberSection, Map<String, Integer> questions) {
+        ViewQuestionResponseDetailPage viewQuestionResponseDetailPage = clientViewDetailsPage.navigateToViewAdditionalInformationPage();
+        viewQuestionResponseDetailPage.verifyPage();
+        QuestionnairePage questionnairePage = viewQuestionResponseDetailPage.navigateToEditSection(numberSection);
+        questionnairePage.verifyPage();
+        for(String key : questions.keySet()) {
+            if(Integer.valueOf(questions.get(key)) == 0) {
+                questionnairePage.checkResponse(key.split(":")[0],key.split(":")[1]);
+            } else {
+                questionnairePage.setResponse(key.split(":")[0],key.split(":")[1]);
+            }
+        }
+        
+        ClientViewDetailsPage clientViewDetailsPage2 = (ClientViewDetailsPage)questionnairePage.submit();
+        clientViewDetailsPage2.verifyPage("ViewClientDetails");
+        return clientViewDetailsPage2;
    }
 }
