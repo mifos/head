@@ -139,7 +139,7 @@ public final class Money implements Serializable, Comparable<Money> {
             return this;
         }
         checkCurrenciesDifferent(this, money);
-        return new Money(currency, amount.subtract(money.getAmount()));
+        return new Money(money.getCurrency(), amount.subtract(money.getAmount()));
     }
 
     public Money multiply(Double factor) {
@@ -323,7 +323,7 @@ public final class Money implements Serializable, Comparable<Money> {
     }
 
     private static void checkCurrenciesDifferent(Money m1, Money m2) {
-        if (!m1.getCurrency().equals(m2.getCurrency())) {
+        if (!m1.getCurrency().getCurrencyId().equals(m2.getCurrency().getCurrencyId())) {
             throw new CurrencyMismatchException(ExceptionConstants.ILLEGALMONEYOPERATION);
         }
     }

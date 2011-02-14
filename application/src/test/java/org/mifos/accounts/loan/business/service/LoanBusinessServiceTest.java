@@ -1,6 +1,4 @@
-package org.mifos.accounts.loan.business.service;
 /*
-
  * Copyright (c) 2005-2010 Grameen Foundation USA
  * All rights reserved.
  *
@@ -19,6 +17,8 @@ package org.mifos.accounts.loan.business.service;
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
+
+package org.mifos.accounts.loan.business.service;
 
 import junit.framework.Assert;
 import org.junit.Before;
@@ -65,13 +65,13 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.*;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LoanBusinessServiceTest {
@@ -158,7 +158,7 @@ public class LoanBusinessServiceTest {
     }
 
     @Test
-    public void shouldComputeVariableInstallmentScheduleForVariableInstallmentsIfVariableInstallmentsIsEnabled() {
+    public void shouldComputeVariableInstallmentScheduleForVariableInstallmentsIfVariableInstallmentsIsEnabled() throws Exception {
         RepaymentScheduleInstallment installment1 =
                 getRepaymentScheduleInstallment("01-Sep-2010", 1, "94.4", "4.6", "1", "75", "0", "0");
         RepaymentScheduleInstallment installment2 =
@@ -171,6 +171,7 @@ public class LoanBusinessServiceTest {
         when(loanAccountActionForm.getLoanAmountValue()).thenReturn(new Money(rupee, "1000"));
         when(loanAccountActionForm.getInterestRate()).thenReturn("24");
         when(loanAccountActionForm.isVariableInstallmentsAllowed()).thenReturn(true);
+        when(legacyLoanDao.findBySystemId(anyString())).thenReturn(loanBO);
         when(loanBO.toRepaymentScheduleDto(locale)).thenReturn(installments);
         loanBusinessService.
                 applyDailyInterestRatesWhereApplicable(new LoanScheduleGenerationDto(TestUtils.getDate(22, 8, 2010),
@@ -202,7 +203,7 @@ public class LoanBusinessServiceTest {
     }
 
     @Test
-    public void shouldComputeVariableInstallmentScheduleForVariableInstallmentsIfInterestTypeIsDecliningPrincipalBalance() {
+    public void shouldComputeVariableInstallmentScheduleForVariableInstallmentsIfInterestTypeIsDecliningPrincipalBalance() throws Exception {
         RepaymentScheduleInstallment installment1 =
                 getRepaymentScheduleInstallment("01-Sep-2010", 1, "94.4", "4.6", "1", "75", "0", "0");
         RepaymentScheduleInstallment installment2 =
@@ -215,6 +216,7 @@ public class LoanBusinessServiceTest {
         when(loanAccountActionForm.getLoanAmountValue()).thenReturn(new Money(rupee, "1000"));
         when(loanAccountActionForm.getInterestRate()).thenReturn("24");
         when(loanAccountActionForm.isVariableInstallmentsAllowed()).thenReturn(false);
+        when(legacyLoanDao.findBySystemId(anyString())).thenReturn(loanBO);
         when(loanBO.toRepaymentScheduleDto(locale)).thenReturn(installments);
         when(loanBO.isDecliningBalanceInterestRecalculation()).thenReturn(true);
         loanBusinessService.applyDailyInterestRatesWhereApplicable(new LoanScheduleGenerationDto(TestUtils.getDate(22, 8, 2010),
@@ -227,11 +229,13 @@ public class LoanBusinessServiceTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void shouldNotComputeVariableInstallmentSchedule() {
+    public void shouldNotComputeVariableInstallmentSchedule() throws Exception {
         LoanAccountActionForm loanAccountActionForm = mock(LoanAccountActionForm.class);
         when(loanAccountActionForm.isVariableInstallmentsAllowed()).thenReturn(false);
         InterestTypesEntity interestTypesEntity = new InterestTypesEntity(InterestType.DECLINING);
         when(loanBO.getInterestType()).thenReturn(interestTypesEntity);
+        when(legacyLoanDao.findBySystemId(anyString())).thenReturn(loanBO);
+
         loanBusinessService.applyDailyInterestRatesWhereApplicable(new LoanScheduleGenerationDto(TestUtils.getDate(22, 8, 2010),
                 loanBO, loanAccountActionForm.isVariableInstallmentsAllowed(), loanAccountActionForm.getLoanAmountValue(),
                 loanAccountActionForm.getInterestDoubleValue()), locale);

@@ -38,6 +38,7 @@ import org.mifos.application.holiday.business.service.HolidayService;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.business.service.ConfigurationBusinessService;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.business.AbstractBusinessObject;
@@ -212,9 +213,14 @@ public class LoanBusinessService implements BusinessService {
     }
 
     public List<RepaymentScheduleInstallment> applyDailyInterestRatesWhereApplicable(LoanScheduleGenerationDto loanScheduleGenerationDto, Locale locale) {
-        LoanBO loanBO = loanScheduleGenerationDto.getLoanBO();
-        List<RepaymentScheduleInstallment> installments = loanBO.toRepaymentScheduleDto(locale);
-        return applyDailyInterestRatesWhereApplicable(loanScheduleGenerationDto, installments);
+//        try {
+//            LoanBO loanBO = this.legacyLoanDao.findBySystemId(loanScheduleGenerationDto.getLoanBO().getGlobalAccountNum());
+            LoanBO loanBO = loanScheduleGenerationDto.getLoanBO();
+            List<RepaymentScheduleInstallment> installments = loanBO.toRepaymentScheduleDto(locale);
+            return applyDailyInterestRatesWhereApplicable(loanScheduleGenerationDto, installments);
+//        } catch (PersistenceException e) {
+//            throw new MifosRuntimeException(e);
+//        }
     }
 
     private boolean dailyInterestRatesApplicable(LoanScheduleGenerationDto loanScheduleGenerationDto, LoanBO loanBO) {
@@ -324,7 +330,9 @@ public class LoanBusinessService implements BusinessService {
     public Errors computeExtraInterest(LoanBO loan, Date asOfDate) {
         Errors errors = new Errors();
         validateForComputeExtraInterestDate(loan, asOfDate, errors);
-        if (!errors.hasErrors()) scheduleCalculatorAdaptor.computeExtraInterest(loan, asOfDate);
+        if (!errors.hasErrors()) {
+            scheduleCalculatorAdaptor.computeExtraInterest(loan, asOfDate);
+        }
         return errors;
     }
 

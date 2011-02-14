@@ -21,6 +21,7 @@
 package org.mifos.accounts.loan.persistance;
 
 import org.hibernate.Criteria;
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -215,7 +216,15 @@ public class LegacyLoanDao extends LegacyGenericDao {
     }
 
     public LoanBO getAccount(final Integer accountId) throws PersistenceException {
-        return getPersistentObject(LoanBO.class, accountId);
+        LoanBO loan = getPersistentObject(LoanBO.class, accountId);
+        if (loan.getLoanOffering() != null) {
+            Hibernate.initialize(loan.getLoanOffering());
+
+            if (loan.getLoanOffering().getCurrency() != null) {
+                Hibernate.initialize(loan.getLoanOffering().getCurrency());
+            }
+        }
+        return loan;
     }
 
     @SuppressWarnings("unchecked")
