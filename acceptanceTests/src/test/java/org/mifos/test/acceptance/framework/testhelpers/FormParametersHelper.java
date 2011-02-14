@@ -51,6 +51,21 @@ public class FormParametersHelper {
         formParameters.setPrincipalGLCode("1506");
         return formParameters;
     }
+    public static  DefineNewLoanProductPage.SubmitFormParameters getWeeklyLoanProductParametersWithInstallmentsSetsByLastLoanAmount() {
+        DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
+        formParameters.setCalculateInstallments(DefineNewLoanProductPage.SubmitFormParameters.BY_LAST_LOAN_AMOUNT);
+        String[][] installmentsByLastLoanAmount = {
+                {"1000", "5", "10", "5"},
+                {"2000", "10", "20", "15"},
+                {"3000", "10", "30", "25"},
+                {"4000", "20", "50", "30"},
+                {"5000", "20", "50", "35"},
+                {"6000", "30", "60", "40"}
+
+        };
+        formParameters.setInstallmentsByLastLoanAmount(installmentsByLastLoanAmount);
+        return formParameters;
+    }
 
     public static DefineNewLoanProductPage.SubmitFormParameters getMonthlyLoanProductParameters() {
         DefineNewLoanProductPage.SubmitFormParameters formParameters = new DefineNewLoanProductPage.SubmitFormParameters();

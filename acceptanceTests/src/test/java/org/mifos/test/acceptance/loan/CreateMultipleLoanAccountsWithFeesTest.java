@@ -31,7 +31,11 @@ import org.mifos.test.acceptance.framework.loan.CreateLoanAccountsSearchPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountsSuccessPage;
 import org.mifos.test.acceptance.framework.loan.CreateMultipleLoanAccountSelectParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
+import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
 import org.mifos.test.acceptance.framework.login.LoginPage;
+import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
+import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
+import org.mifos.test.acceptance.loanproduct.LoanProductTestHelper;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -46,6 +50,8 @@ import org.testng.annotations.Test;
 public class CreateMultipleLoanAccountsWithFeesTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;
+    private LoanProductTestHelper loanProductTestHelper;
+    private LoanTestHelper loanTestHelper;
 
     @Autowired
     private DriverManagerDataSource dataSource;
@@ -61,6 +67,8 @@ public class CreateMultipleLoanAccountsWithFeesTest extends UiTestCaseBase {
         super.setUp();
         dbUnitUtilities.loadDataFromFile("acceptance_small_004_dbunit.xml", dataSource);
         appLauncher = new AppLauncher(selenium);
+        loanProductTestHelper = new LoanProductTestHelper(selenium);
+        loanTestHelper = new LoanTestHelper(selenium);
     }
 
     @AfterMethod
@@ -91,6 +99,32 @@ public class CreateMultipleLoanAccountsWithFeesTest extends UiTestCaseBase {
         LoanAccountPage loanAccountPage = createLoanAccountsSuccessPage.selectLoansAndNavigateToLoanAccountPage(0);
         loanAccountPage.verifyFeeExists("2.7");
     }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // http://mifosforge.jira.com/browse/MIFOSTEST-54
+    public void createBulkLoanAccountsInPendingApprovalStatus() throws Exception{
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
+        DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParametersWithInstallmentsSetsByLastLoanAmount();
+        CreateMultipleLoanAccountSelectParameters multipleAccParameters = new CreateMultipleLoanAccountSelectParameters();
+        multipleAccParameters.setBranch("MyOffice1233265929385");
+        multipleAccParameters.setLoanOfficer("Joe1233265931256 Guy1233265931256");
+        multipleAccParameters.setCenter("MyCenter1233265933427");
+        multipleAccParameters.setLoanProduct(formParameters.getOfferingName());
+        String[] clients = new String[3];
+        clients[0] = "Stu1233265941610 Client1233265941610";
+        clients[1] = "Stu1233265958456 Client1233265958456";
+        clients[2] = "Stu1233265968663 Client1233265968663";
+
+        //When
+        loanProductTestHelper.defineNewLoanProduct(formParameters);
+
+        //Then
+        loanTestHelper.createMultipleLoanAccountsAndVerify(multipleAccParameters, clients, "0000-Animal Husbandry");
+    }
+
+
+
 
     private CreateLoanAccountsSearchPage navigateToCreateLoanAccountsSearchPage() {
         LoginPage loginPage = appLauncher.launchMifos();

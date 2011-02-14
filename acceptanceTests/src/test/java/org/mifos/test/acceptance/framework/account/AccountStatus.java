@@ -21,9 +21,15 @@ package org.mifos.test.acceptance.framework.account;
 
 public enum AccountStatus {
 
+    LOAN_PARTIAL ("Partial Application", 1),
+    LOAN_PENDING_APPROVAL ("Application Pending Approval", 2),
+    LOAN_APPROVED("Application Approved", 3),
+    LOAN_CLOSED_WRITTENOFF ("Closed- Written Off", 7),
+    LOAN_CLOSED_RESHEDULED ("Closed- Rescheduled", 8),
+    LOAN_CANCEL ("Cancel", 10),
     SAVINGS_PARTIAL ("Partial Application", 13),
     SAVINGS_PENDING_APPROVAL ("Application Pending Approval", 14),
-    SAVINGS_CANCELLED ("Cancelled", 15),
+    SAVINGS_CANCEL ("Cancel", 15),
     SAVINGS_ACTIVE ("Active", 16),
     SAVINGS_INACTIVE ("Inactive", 18);
 

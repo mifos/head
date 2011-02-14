@@ -29,7 +29,6 @@ import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameter
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.UndoLoanDisbursalSearchPage;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
-import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -58,8 +57,7 @@ public class UndoLoanDisbursalTest extends UiTestCaseBase {
     public void setUp() throws Exception {
         super.setUp();
 
-        NavigationHelper navigationHelper = new NavigationHelper(selenium);
-        loanTestHelper = new LoanTestHelper(selenium, navigationHelper);
+        loanTestHelper = new LoanTestHelper(selenium);
     }
 
     @AfterMethod

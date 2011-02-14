@@ -89,8 +89,7 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
         DateTime targetTime = new DateTime(2009,7,26,15,0,0,0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
 
-        NavigationHelper navigationHelper = new NavigationHelper(selenium);
-        loanTestHelper = new LoanTestHelper(selenium, navigationHelper);
+        loanTestHelper = new LoanTestHelper(selenium);
     }
 
     @AfterMethod

@@ -159,7 +159,7 @@ explanation of the license and how it is applied.
 									<font class="fontnormalRedBold">  <span id="CreateMultipleLoanAccountsSearchResults.error.message"> <html-el:errors bundle="loanUIResources" /> </span></font>
 									<br>
 									<!-- begin search results list -->
-									<table width="96%" border="0" cellpadding="3" cellspacing="0">
+									<table id="SearchClients" width="96%" border="0" cellpadding="3" cellspacing="0">
 										<tr>
 											<td width="5%" valign="top" class="drawtablerowboldnolinebg">
 												<input id="CreateMultipleLoanAccountsSearchResults.input.selectAll" type="checkbox" onclick="selectAll(this)" name="selectAll1">

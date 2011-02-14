@@ -77,6 +77,10 @@ public class ClientViewDetailsPage extends MifosPage {
         return selenium.getText("viewClientDetails.text.notes");
     }
 
+    public String getLastLoanAmount() {
+        return selenium.getText("viewClientDetails.text.lastloanamount");
+    }
+
     public void verifyHeading(String heading) {
         Assert.assertEquals(getHeading(), heading);
     }
@@ -264,7 +268,7 @@ public class ClientViewDetailsPage extends MifosPage {
     }
 
     public void verifyLastLoanAmount(String lastLoanAmount) {
-        Assert.assertEquals(selenium.getText("viewClientDetails.text.lastloanamount"), lastLoanAmount);
+        Assert.assertEquals(getLastLoanAmount(), lastLoanAmount);
     }
 
     public void verifynoOfActiveLoan(Integer count) {
