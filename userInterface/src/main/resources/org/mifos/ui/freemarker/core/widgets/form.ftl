@@ -83,7 +83,7 @@ Renders a submit button.
     buttonLabel : The value shown on the button.
     webflowEvent: If this button is part of a form that drives webflow, you may specify the event Id here.
 --]
-[#macro submitButton buttonLabel webflowEvent=""]
+[#macro submitButton buttonLabel="widget.form.buttonLabel.submit" webflowEvent=""]
     [#if webflowEvent?length == 0]
         [#assign name="" /]
     [#else]
@@ -98,7 +98,7 @@ Renders a cancel button.
     buttonLabel : The value shown on the button.
     webflowEvent: If this button is part of a form that drives webflow, you may specify the event Id here.
 --]
-[#macro cancelButton buttonLabel webflowEvent=""]
+[#macro cancelButton buttonLabel="widget.form.buttonLabel.cancel" webflowEvent=""]
     [#if webflowEvent?length == 0]
         [#assign name="" /]
     [#else]
