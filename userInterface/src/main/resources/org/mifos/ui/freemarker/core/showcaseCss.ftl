@@ -19,7 +19,7 @@
 *  explanation of the license and how it is applied.
 --]
 
-[@layout.basic]
+[@layout.basic currentTab="Home"]
 
 <style type="text/css">
 .css-classname {

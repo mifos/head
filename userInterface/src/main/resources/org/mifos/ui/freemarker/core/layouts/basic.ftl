@@ -19,9 +19,9 @@
 *  explanation of the license and how it is applied.
 --]
 
-[#macro basic]
+[#macro basic currentTab]
 [@layout.header "title" /]
-[@widget.topNavigationNoSecurity currentTab="Home" /]
+[@widget.topNavigationNoSecurity currentTab /]
 
 <div class="container">
     <br/>
