@@ -164,4 +164,10 @@ public class GroupViewDetailsPage extends MifosPage {
         waitForPageToLoad();
         return new CenterViewDetailsPage(selenium);
     }
+
+    public ViewGroupChargesDetailPage navigateToViewGroupChargesDetailPage(){
+        selenium.click("viewgroupdetails.link.viewDetails");
+        waitForPageToLoad();
+        return new ViewGroupChargesDetailPage(selenium);
+    }
 }
