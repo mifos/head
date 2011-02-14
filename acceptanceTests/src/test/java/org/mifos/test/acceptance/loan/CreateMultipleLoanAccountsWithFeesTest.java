@@ -80,12 +80,23 @@ public class CreateMultipleLoanAccountsWithFeesTest extends UiTestCaseBase {
         clients[0] = "Stu1233265941610 Client1233265941610";
         clients[1] = "Stu1233265958456 Client1233265958456";
         clients[2] = "Stu1233265968663 Client1233265968663";
+        String[] clientsDeselected = new String[9];
+        clientsDeselected[0] = "Stu1233265978656 Client1233265978656";
+        clientsDeselected[1] = "Stu1233265991241 Client1233265991241";
+        clientsDeselected[2] = "Stu1233266001331 Client1233266001331";
+        clientsDeselected[3] = "Stu1233266011478 Client1233266011478";
+        clientsDeselected[4] = "Stu1233266021748 Client1233266021748";
+        clientsDeselected[5] = "Stu1233266033986 Client1233266033986";
+        clientsDeselected[6] = "Stu1233266043526 Client1233266043526";
+        clientsDeselected[7] = "Stu1233266053368 Client1233266053368";
+        clientsDeselected[8] = "Stu1233266063395 Client1233266063395";
 
         //When
         loanProductTestHelper.defineNewLoanProduct(formParameters);
 
         //Then
         loanTestHelper.createMultipleLoanAccountsAndVerify(multipleAccParameters, clients, "0000-Animal Husbandry", loanTestHelper.METHOD_SUBMIT_FOR_APPROVAL);
+        loanTestHelper.verifyLoansAreNotOnClientsLoanLists(clientsDeselected, formParameters.getOfferingName());
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")

@@ -37,7 +37,7 @@ public class ClientSearchResultsPage extends MifosPage {
     }
 
     public ClientViewDetailsPage navigateToSearchResult(String linkText) {
-        selenium.click("link=" + linkText);
+        selenium.click("link=" + linkText + "*");
         waitForPageToLoad();
         return new ClientViewDetailsPage(selenium);
     }

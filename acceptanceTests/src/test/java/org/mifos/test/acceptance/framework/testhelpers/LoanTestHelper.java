@@ -707,6 +707,17 @@ public class LoanTestHelper {
         }
     }
 
+    public void verifyLoansAreNotOnClientsLoanLists(String[] clients, String productName) {
+        ClientsAndAccountsHomepage clientsAndAccountsHomepage = navigationHelper.navigateToClientsAndAccountsPage();
+        for(String client : clients) {
+            ClientViewDetailsPage clientViewDetailsPage = clientsAndAccountsHomepage
+                .searchForClient(client)
+                .navigateToSearchResult(client);
+            clientViewDetailsPage.verifyLoanDoesntExist(productName);
+            clientsAndAccountsHomepage = clientViewDetailsPage.navigateToClientsAndAccountsPageUsingHeaderTab();
+        }
+    }
+
 
     public CreateLoanAccountsSuccessPage createMultipleLoanAccountsWithMixedRestricedPoducts(CreateMultipleLoanAccountSelectParameters multipleAccParameters1, CreateMultipleLoanAccountSelectParameters multipleAccParameters2, DisburseLoanParameters disburseParams, String[] clients) {
         navigationHelper.navigateToAdminPage()
