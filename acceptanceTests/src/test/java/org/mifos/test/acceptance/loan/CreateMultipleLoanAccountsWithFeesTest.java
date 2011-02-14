@@ -65,7 +65,6 @@ public class CreateMultipleLoanAccountsWithFeesTest extends UiTestCaseBase {
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
-        dbUnitUtilities.loadDataFromFile("acceptance_small_004_dbunit.xml", dataSource);
         appLauncher = new AppLauncher(selenium);
         loanProductTestHelper = new LoanProductTestHelper(selenium);
         loanTestHelper = new LoanTestHelper(selenium);
@@ -74,30 +73,6 @@ public class CreateMultipleLoanAccountsWithFeesTest extends UiTestCaseBase {
     @AfterMethod
     public void logOut() {
         (new MifosPage(selenium)).logout();
-    }
-
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    private void defaultAdminUserCreatesMultipleLoanAccountsWithFees() throws Exception {
-
-        // FIMXE - keithw - test manually and rewrite test to pass.
-
-        CreateMultipleLoanAccountSelectParameters formParameters = new CreateMultipleLoanAccountSelectParameters();
-        formParameters.setBranch("Office1");
-        formParameters.setLoanOfficer("Bagonza Wilson");
-        formParameters.setCenter("Center1");
-        formParameters.setLoanProduct("Flat Interest Loan Product With Fee");
-
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml", dataSource, selenium);
-        CreateLoanAccountsSearchPage createLoanAccountsSearchPage = navigateToCreateLoanAccountsSearchPage();
-        createLoanAccountsSearchPage.verifyPage();
-        CreateLoanAccountsEntryPage createLoanAccountsEntryPage = createLoanAccountsSearchPage.searchAndNavigateToCreateMultipleLoanAccountsEntryPage(formParameters);
-        createLoanAccountsEntryPage.verifyPage();
-        createLoanAccountsEntryPage.selectClients(0, "Client - Veronica Abisya");
-        createLoanAccountsEntryPage.selectClients(2, "Client - Polly Gikonyo");
-        CreateLoanAccountsSuccessPage createLoanAccountsSuccessPage = createLoanAccountsEntryPage.submitAndNavigateToCreateMultipleLoanAccountsSuccessPage();
-        createLoanAccountsSuccessPage.verifyPage();
-        LoanAccountPage loanAccountPage = createLoanAccountsSuccessPage.selectLoansAndNavigateToLoanAccountPage(0);
-        loanAccountPage.verifyFeeExists("2.7");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -145,14 +120,5 @@ public class CreateMultipleLoanAccountsWithFeesTest extends UiTestCaseBase {
         //Then
         loanTestHelper.createMultipleLoanAccountsAndVerify(multipleAccParameters, clients, "0000-Animal Husbandry", loanTestHelper.METHOD_SAVE_FOR_LATER);
     }
-
-
-    private CreateLoanAccountsSearchPage navigateToCreateLoanAccountsSearchPage() {
-        LoginPage loginPage = appLauncher.launchMifos();
-        HomePage homePage = loginPage.loginSuccessfullyUsingDefaultCredentials();
-        ClientsAndAccountsHomepage clientsAndAccountsPage = homePage.navigateToClientsAndAccountsUsingHeaderTab();
-        return clientsAndAccountsPage.navigateToCreateMultipleLoanAccountsUsingLeftMenu();
-    }
-
 }
 
