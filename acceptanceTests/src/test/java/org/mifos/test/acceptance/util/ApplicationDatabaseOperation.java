@@ -17,7 +17,7 @@ public class ApplicationDatabaseOperation {
     private Connection connection;
 
     public void updateCustomerState(String statusID, String inUse) throws SQLException {
-        getStatement().executeUpdate("UPDATE CUSTOMER_STATE l SET CURRENTLY_IN_USE= " + inUse + " WHERE l.STATUS_ID=" + statusID);
+        getStatement().executeUpdate("UPDATE customer_state l SET currently_in_use= " + inUse + " WHERE l.status_id=" + statusID);
         closeConnection();
     }
 

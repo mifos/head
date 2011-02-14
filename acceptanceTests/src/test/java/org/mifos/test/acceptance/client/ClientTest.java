@@ -638,7 +638,7 @@ public class ClientTest extends UiTestCaseBase {
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled=false) // TODO js - temporarily disabled broken test
+    @Test(enabled=true) // TODO js - temporarily disabled broken test
     public void verifyClientCreatedWithActiveStatus() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
         applicationDatabaseOperation.updateCustomerState("2", "0");

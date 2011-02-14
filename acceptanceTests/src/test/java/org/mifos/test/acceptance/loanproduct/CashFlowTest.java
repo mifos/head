@@ -179,7 +179,7 @@ public class CashFlowTest extends UiTestCaseBase {
         productParams.setDefInstallments("12");
         productParams.setDefaultLoanAmount("2000");
         CreateLoanAccountSearchParameters loanSearchParams = new CreateLoanAccountSearchParameters();
-        loanSearchParams.setSearchString(clientName); //"Client - Reyna Tabilin"
+        loanSearchParams.setSearchString(clientName);
         loanSearchParams.setLoanProduct("productCF1");
         DateTime disbursalDate = systemDateTime.plusDays(1);
 
