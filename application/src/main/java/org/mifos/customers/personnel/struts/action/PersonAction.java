@@ -37,6 +37,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.joda.time.DateTime;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.SupportedLocalesEntity;
@@ -53,7 +54,6 @@ import org.mifos.customers.personnel.business.PersonnelLevelEntity;
 import org.mifos.customers.personnel.business.PersonnelRoleEntity;
 import org.mifos.customers.personnel.business.PersonnelStatusEntity;
 import org.mifos.customers.personnel.exceptions.PersonnelException;
-import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.personnel.struts.actionforms.PersonActionForm;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
@@ -81,7 +81,6 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.rolesandpermission.business.RoleBO;
-import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsDao;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 
@@ -317,6 +316,10 @@ public class PersonAction extends SearchAction {
 
         List<RoleBO> roles = legacyRolesPermissionsDao.getRoles();
         List<PersonnelLevelEntity> personnelLevels = this.customerDao.retrievePersonnelLevels();
+        for (PersonnelLevelEntity personnelLevelEntity : personnelLevels) {
+            String messageTextLookup = MessageLookup.getInstance().lookup(personnelLevelEntity.getLookUpValue().getPropertiesKey());
+            personnelLevelEntity.setName(messageTextLookup);
+        }
 
         SessionUtils.setCollectionAttribute(PersonnelConstants.TITLE_LIST, titles, request);
         SessionUtils.setCollectionAttribute(PersonnelConstants.PERSONNEL_LEVEL_LIST, personnelLevels, request);
@@ -331,6 +334,11 @@ public class PersonAction extends SearchAction {
 
         UserContext userContext = getUserContext(request);
         List<PersonnelStatusEntity> statuses = legacyMasterDao.findMasterDataEntitiesWithLocale(PersonnelStatusEntity.class, getUserContext(request).getLocaleId());
+        for (PersonnelStatusEntity personnelStatusEntity : statuses) {
+            String messageTextLookup = MessageLookup.getInstance().lookup(personnelStatusEntity.getLookUpValue().getPropertiesKey());
+            personnelStatusEntity.setName(messageTextLookup);
+        }
+
         SessionUtils.setCollectionAttribute(PersonnelConstants.STATUS_LIST, statuses, request);
 
         OfficeBO loggedInOffice = this.officeDao.findOfficeById(userContext.getBranchId());
@@ -441,8 +449,6 @@ public class PersonAction extends SearchAction {
             request.setAttribute("displayName", name.getDisplayName());
             request.setAttribute("globalPersonnelNum", globalPersonnelNum);
 
-            this.authenticationAuthorizationServiceFacade.reloadUserDetailsForSecurityContext(perosonnelInfo.getUserName());
-
             return mapping.findForward(ActionForwards.update_success.toString());
         } catch (BusinessRuleException e) {
             throw new PersonnelException(e.getMessageKey(), e);
@@ -503,6 +509,10 @@ public class PersonAction extends SearchAction {
 
         List<RoleBO> roles = legacyRolesPermissionsDao.getRoles();
         List<PersonnelLevelEntity> personnelLevels = this.customerDao.retrievePersonnelLevels();
+        for (PersonnelLevelEntity personnelLevelEntity : personnelLevels) {
+            String messageTextLookup = MessageLookup.getInstance().lookup(personnelLevelEntity.getLookUpValue().getPropertiesKey());
+            personnelLevelEntity.setName(messageTextLookup);
+        }
 
         SessionUtils.setCollectionAttribute(PersonnelConstants.TITLE_LIST, titles, request);
         SessionUtils.setCollectionAttribute(PersonnelConstants.PERSONNEL_LEVEL_LIST, personnelLevels, request);
