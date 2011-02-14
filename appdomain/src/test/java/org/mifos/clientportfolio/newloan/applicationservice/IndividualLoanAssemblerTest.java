@@ -68,13 +68,13 @@ public class IndividualLoanAssemblerTest {
         IndividualLoanRequest individualLoanRequest = new IndividualLoanRequestBuilder().with(loanProductId).build();
 
         // stubbing
-        when(loanProductDao.findBySystemId(loanProductId.globalId())).thenReturn(loanProduct);
+        when(loanProductDao.findBySystemId(loanProductId.globalIdentity())).thenReturn(loanProduct);
 
         // exercise test
         IndividualLoan individualLoan = loanAssembler.assembleFrom(individualLoanRequest);
 
         // verification
-        verify(loanProductDao).findBySystemId(loanProductId.globalId());
+        verify(loanProductDao).findBySystemId(loanProductId.globalIdentity());
         assertThat(individualLoan, is(notNullValue()));
     }
 
@@ -87,13 +87,13 @@ public class IndividualLoanAssemblerTest {
                                                                                         .build();
 
         // stubbing
-        when(loanProductDao.findBySystemId(loanProductId.globalId())).thenReturn(loanProduct);
+        when(loanProductDao.findBySystemId(loanProductId.globalIdentity())).thenReturn(loanProduct);
 
         // exercise test
         loanAssembler.assembleFrom(individualLoanRequest);
 
         // verification
-        verify(customerDao).findClientBySystemId(clientId.globalId());
+        verify(customerDao).findClientBySystemId(clientId.globalIdentity());
     }
 
 }

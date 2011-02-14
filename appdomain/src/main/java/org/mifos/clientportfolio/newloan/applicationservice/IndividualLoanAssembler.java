@@ -56,8 +56,8 @@ public class IndividualLoanAssembler implements LoanAssembler {
     @Override
     public IndividualLoan assembleFrom(IndividualLoanRequest individualLoan) {
 
-        LoanOfferingBO loanProduct = this.loanProductDao.findBySystemId(individualLoan.getLoanProductId().globalId());
-        ClientBO client = this.customerDao.findClientBySystemId(individualLoan.getClientId().globalId());
+        LoanOfferingBO loanProduct = this.loanProductDao.findBySystemId(individualLoan.getLoanProductId().globalIdentity());
+        ClientBO client = this.customerDao.findClientBySystemId(individualLoan.getClientId().globalIdentity());
 
         int occurences = 12;
         DateTime lastScheduledDate = new DateTime();

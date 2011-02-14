@@ -36,12 +36,12 @@ public class IndividualLoanRequestBuilder {
     }
 
     public IndividualLoanRequestBuilder with(LoanProductId loanProductId) {
-        this.loanProductGlobalId = loanProductId.globalId();
+        this.loanProductGlobalId = loanProductId.globalIdentity();
         return this;
     }
 
     public IndividualLoanRequestBuilder with(ClientId clientId) {
-        this.clientGlobalId = clientId.globalId();
+        this.clientGlobalId = clientId.globalIdentity();
         return this;
     }
 

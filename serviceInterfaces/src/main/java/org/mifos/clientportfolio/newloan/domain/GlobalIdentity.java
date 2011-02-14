@@ -22,5 +22,5 @@ package org.mifos.clientportfolio.newloan.domain;
 
 public interface GlobalIdentity {
 
-    String globalId();
+    String globalIdentity();
 }
