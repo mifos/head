@@ -39,8 +39,8 @@
     </div>
     </fieldset>
     <div class="row">
-        [@form.submitButton "createSavingsAccount.customerSearch.searchButton" "searchTermEntered" /]
-        [@form.cancelButton "createSavingsAccount.customerSearch.cancelButton" "cancel" /]
+        [@form.submitButton "widget.form.buttonLabel.search" "searchTermEntered" /]
+        [@form.cancelButton "cancel" /]
     </div>
 </form>
 <br/>

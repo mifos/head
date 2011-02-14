@@ -42,8 +42,8 @@
     </div>
     </fieldset>
     <div class="row webflow-controls">
-        [@form.submitButton "createSavingsAccount.selectProduct.continueButton" "productSelected" /]
-        [@form.cancelButton "createSavingsAccount.selectProduct.cancelButton" "cancel" /]
+        [@form.submitButton "widget.form.buttonLabel.continue" "productSelected" /]
+        [@form.cancelButton "cancel" /]
     </div>
 </form>
 

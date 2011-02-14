@@ -40,7 +40,7 @@
     <div class="row">
         <label for="searchString">[@spring.message "createSavingsAccount.selectCustomer.searchTerm" /]:</label>
         [@spring.formInput "savingsAccountFormBean.searchString" /]
-        [@form.submitButton "createSavingsAccount.selectCustomer.searchButton" "searchTermEntered" /]
+        [@form.submitButton "widget.form.buttonLabel.search" "searchTermEntered" /]
     </div>
 </form>
 
@@ -75,7 +75,7 @@
 <!-- Cancel. Yeah, just one button. -->
 <form action="${flowExecutionUrl}" method="post" class="webflow-controls">
     <div class="row centered">
-        [@form.cancelButton "createSavingsAccount.selectCustomer.cancelButton" "cancel" /]
+        [@form.cancelButton "cancel" /]
     </div>
 </form>
 
