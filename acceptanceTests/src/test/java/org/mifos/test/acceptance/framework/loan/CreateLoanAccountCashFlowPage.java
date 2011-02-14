@@ -94,6 +94,7 @@ public class CreateLoanAccountCashFlowPage extends AbstractPage{
 
         selenium.typeKeys("monthlyCashFlows[0].expense", lengthMaxDigits);
         selenium.focus("monthlyCashFlows[0].expense");
+        UiTestUtils.sleep(50);
         selenium.focus("monthlyCashFlows[1].expense");
         UiTestUtils.sleep(500);
         Assert.assertFalse(selenium.isTextPresent(error));
@@ -101,6 +102,7 @@ public class CreateLoanAccountCashFlowPage extends AbstractPage{
 
         selenium.type("monthlyCashFlows[0].expense", lengthMaxDecimal);
         selenium.focus("monthlyCashFlows[0].expense");
+        UiTestUtils.sleep(50);
         selenium.focus("monthlyCashFlows[1].expense");
         UiTestUtils.sleep(500);
         Assert.assertFalse(selenium.isTextPresent(error));
@@ -108,6 +110,7 @@ public class CreateLoanAccountCashFlowPage extends AbstractPage{
 
         selenium.type("monthlyCashFlows[0].expense", lengthWrongDecimal);
         selenium.focus("monthlyCashFlows[0].expense");
+        UiTestUtils.sleep(50);
         selenium.focus("monthlyCashFlows[1].expense");
         UiTestUtils.sleep(500);
         Assert.assertTrue(selenium.isTextPresent(error));
@@ -115,6 +118,7 @@ public class CreateLoanAccountCashFlowPage extends AbstractPage{
 
         selenium.typeKeys("monthlyCashFlows[0].expense", lengthWrongDigits);
         selenium.focus("monthlyCashFlows[0].expense");
+        UiTestUtils.sleep(50);
         selenium.focus("monthlyCashFlows[1].expense");
         UiTestUtils.sleep(500);
         Assert.assertTrue(selenium.isTextPresent(error));
