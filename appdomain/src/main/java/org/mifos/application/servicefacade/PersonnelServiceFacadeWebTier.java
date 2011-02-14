@@ -132,13 +132,10 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
         List<PersonnelLevelEntity> personnelLevels = customerDao.retrievePersonnelLevels();
         List<ListElement> personnelLevelList = new ArrayList<ListElement>();
         for (PersonnelLevelEntity level : personnelLevels) {
-            // if (officeDto.getLevelId().equals(OfficeLevel.BRANCHOFFICE.getValue()) &&
-            // !level.getId().equals(PersonnelLevel.LOAN_OFFICER.getValue())) {
             String name = level.getLookUpValue().getLookUpName();
             String localisedName = MessageLookup.getInstance().lookup(name);
             ListElement listElement = new ListElement(new Integer(level.getId()), localisedName);
             personnelLevelList.add(listElement);
-            // }
         }
 
         List<ValueListElement> genders = customerDao.retrieveGenders();
