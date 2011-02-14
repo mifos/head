@@ -96,6 +96,8 @@ public class LoanTestHelper {
     private final Selenium selenium;
     private final NavigationHelper navigationHelper;
     private final LoanProductTestHelper loanProductTestHelper;
+    public final static Boolean METHOD_SUBMIT_FOR_APPROVAL = true;
+    public final static Boolean METHOD_SAVE_FOR_LATER = false;
 
     public LoanTestHelper(Selenium selenium) {
         this.selenium = selenium;
@@ -668,7 +670,7 @@ public class LoanTestHelper {
         return createLoanAccountsEntryPage.submitAndNavigateToCreateMultipleLoanAccountsSuccessPage();
     }
 
-    public void createMultipleLoanAccountsAndVerify(CreateMultipleLoanAccountSelectParameters multipleAccParameters, String[] clients, String loanPurpose) {
+    public void createMultipleLoanAccountsAndVerify(CreateMultipleLoanAccountSelectParameters multipleAccParameters, String[] clients, String loanPurpose, Boolean saveMethod) {
 
         String [] clientsInstallments = loanProductTestHelper.getDefaultNoOfInstallmentsForClients(clients, multipleAccParameters.getLoanProduct());
         CreateLoanAccountsEntryPage createLoanAccountsEntryPage = navigationHelper.navigateToClientsAndAccountsPage()
@@ -681,13 +683,25 @@ public class LoanTestHelper {
             createLoanAccountsEntryPage.verifyNoOfInstallments(i+1, clientsInstallments[i]);
         }
         LoanAccountPage loanAccountPage;
-        List<String> accountNumbers = createLoanAccountsEntryPage.submitAndNavigateToCreateMultipleLoanAccountsSuccessPage().verifyAndGetLoanAccountNumbers(clients.length);
+        CreateLoanAccountsSuccessPage createLoanAccountsSuccessPage;
+        if(saveMethod){
+            createLoanAccountsSuccessPage = createLoanAccountsEntryPage.submitAndNavigateToCreateMultipleLoanAccountsSuccessPage();
+        }
+        else{
+            createLoanAccountsSuccessPage = createLoanAccountsEntryPage.saveAndNavigateToCreateMultipleLoanAccountsSuccessPage();
+        }
+        List<String> accountNumbers = createLoanAccountsSuccessPage.verifyAndGetLoanAccountNumbers(clients.length);
         for(int i = 0; i < accountNumbers.size(); i++) {
             if(i > 0) {
                 loanAccountPage = navigationHelper.navigateToClientsAndAccountsPage()
                     .searchForClient(accountNumbers.get(i))
                     .navigateToLoanAccountSearchResult("Account # "+accountNumbers.get(i));
-                loanAccountPage.verifyLoanStatus(AccountStatus.LOAN_PENDING_APPROVAL.getStatusText());
+                if(saveMethod){
+                    loanAccountPage.verifyLoanStatus(AccountStatus.LOAN_PENDING_APPROVAL.getStatusText());
+                }
+                else{
+                    loanAccountPage.verifyLoanStatus(AccountStatus.LOAN_PARTIAL.getStatusText());
+                }
                 loanAccountPage.verifyNumberOfInstallments(clientsInstallments[i]);
             }
         }

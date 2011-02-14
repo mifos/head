@@ -120,10 +120,31 @@ public class CreateMultipleLoanAccountsWithFeesTest extends UiTestCaseBase {
         loanProductTestHelper.defineNewLoanProduct(formParameters);
 
         //Then
-        loanTestHelper.createMultipleLoanAccountsAndVerify(multipleAccParameters, clients, "0000-Animal Husbandry");
+        loanTestHelper.createMultipleLoanAccountsAndVerify(multipleAccParameters, clients, "0000-Animal Husbandry", loanTestHelper.METHOD_SUBMIT_FOR_APPROVAL);
     }
 
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // http://mifosforge.jira.com/browse/MIFOSTEST-55
+    public void createBulkLoanAccountsInPartialApllicationStatus() throws Exception{
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
+        DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParametersWithInstallmentsSetsByLastLoanAmount();
+        CreateMultipleLoanAccountSelectParameters multipleAccParameters = new CreateMultipleLoanAccountSelectParameters();
+        multipleAccParameters.setLoanProduct(formParameters.getOfferingName());
+        multipleAccParameters.setBranch("MyOffice1233265929385");
+        multipleAccParameters.setCenter("MyCenter1233265933427");
+        multipleAccParameters.setLoanOfficer("Joe1233265931256 Guy1233265931256");
+        String[] clients = new String[3];
+        clients[0] = "Stu1233265941610 Client1233265941610";
+        clients[1] = "Stu1233265958456 Client1233265958456";
+        clients[2] = "Stu1233265968663 Client1233265968663";
 
+        //When
+        loanProductTestHelper.defineNewLoanProduct(formParameters);
+
+        //Then
+        loanTestHelper.createMultipleLoanAccountsAndVerify(multipleAccParameters, clients, "0000-Animal Husbandry", loanTestHelper.METHOD_SAVE_FOR_LATER);
+    }
 
 
     private CreateLoanAccountsSearchPage navigateToCreateLoanAccountsSearchPage() {
