@@ -55,9 +55,12 @@ public class DecliningBalanceLoanInterestCalculator implements LoanInterestCalcu
     private Money getDecliningInterestAmount_v2(GraceType graceType, Integer gracePeriodDuration, Integer numOfInstallments,
             Money loanAmount, Double interestRate, Double interestFractionalRatePerInstallment) {
 
-        Money nonGraceInterestPayments = getDecliningInterestAmountNonGrace_v2(numOfInstallments - gracePeriodDuration, loanAmount, interestRate, interestFractionalRatePerInstallment);
+        Money nonGraceInterestPayments = getDecliningInterestAmountNonGrace_v2(numOfInstallments, loanAmount, interestRate, interestFractionalRatePerInstallment);
         Money interest = nonGraceInterestPayments;
         if (graceType.equals(GraceType.PRINCIPALONLYGRACE)) {
+
+            nonGraceInterestPayments = getDecliningInterestAmountNonGrace_v2(numOfInstallments-gracePeriodDuration, loanAmount, interestRate, interestFractionalRatePerInstallment);
+
             Money graceInterestPayments = getDecliningInterestAmountGrace_v2(loanAmount, gracePeriodDuration, interestFractionalRatePerInstallment);
             interest = graceInterestPayments.add(nonGraceInterestPayments);
         }

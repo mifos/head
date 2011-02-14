@@ -23,6 +23,7 @@ package org.mifos.accounts.struts.action;
 import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
@@ -181,6 +182,7 @@ public class ApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward("previewAdjustment_failure");
     }
 
+    @Ignore
     @Test
     public void testApplyAdjustment() throws Exception {
         PersonnelBO personnel = legacyPersonnelDao.getPersonnel(PersonnelConstants.SYSTEM_USER);

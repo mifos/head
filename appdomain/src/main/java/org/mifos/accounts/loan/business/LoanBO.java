@@ -105,9 +105,14 @@ import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
-import org.mifos.clientportfolio.newloan.domain.IndividualLoanSchedule;
-import org.mifos.clientportfolio.newloan.domain.IndividualLoanScheduleFactory;
-import org.mifos.clientportfolio.newloan.domain.LoanScheduleDetail;
+import org.mifos.clientportfolio.newloan.domain.LoanDecliningInterestAnnualPeriodCalculator;
+import org.mifos.clientportfolio.newloan.domain.LoanDecliningInterestAnnualPeriodCalculatorFactory;
+import org.mifos.clientportfolio.newloan.domain.LoanDurationInAccountingYearsCalculator;
+import org.mifos.clientportfolio.newloan.domain.LoanDurationInAccountingYearsCalculatorFactory;
+import org.mifos.clientportfolio.newloan.domain.LoanInterestCalculationDetails;
+import org.mifos.clientportfolio.newloan.domain.LoanInterestCalculator;
+import org.mifos.clientportfolio.newloan.domain.LoanInterestCalculatorFactory;
+import org.mifos.clientportfolio.newloan.domain.LoanInterestCalculatorFactoryImpl;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.business.Configuration;
@@ -3089,19 +3094,34 @@ public class LoanBO extends AccountBO {
 
         logger.debug("Obtained intallments dates");
 
-        // ok, installment dates are known and loan product information
-        // details required for creating loan schedule (using product definition and those details that are overriden from definition in loan
-        LoanScheduleDetail loanScheduleDetails = new LoanScheduleDetail();
-
         List<DateTime> loanScheduleDates = new ArrayList<DateTime>();
         for (InstallmentDate installmentDate : installmentDates) {
             loanScheduleDates.add(new DateTime(installmentDate.getInstallmentDueDate()));
         }
-        IndividualLoanSchedule individualLoanSchedule = new IndividualLoanScheduleFactory().create(loanScheduleDates, this.loanOffering, this.loanAmount);
 
+        Integer numberOfInstallments = loanScheduleDates.size();
+        GraceType graceType = GraceType.fromInt(this.gracePeriodType.getId());
+        InterestType interestType = InterestType.fromInt(this.interestType.getId());
+        Integer interestDays = AccountingRules.getNumberOfInterestDays().intValue();
+
+        LoanDecliningInterestAnnualPeriodCalculator decliningInterestAnnualPeriodCalculator = new LoanDecliningInterestAnnualPeriodCalculatorFactory().create(loanMeeting.getRecurrenceType());
+        Double decliningInterestAnnualPeriod = decliningInterestAnnualPeriodCalculator.calculate(loanMeeting.getRecurAfter().intValue(), interestDays);
+        Double interestFractionalRatePerInstallment = interestRate / decliningInterestAnnualPeriod / 100;
+
+        LoanDurationInAccountingYearsCalculator loanDurationInAccountingYearsCalculator = new LoanDurationInAccountingYearsCalculatorFactory().create(loanMeeting.getRecurrenceType());
+
+
+        Double durationInYears = loanDurationInAccountingYearsCalculator.calculate(loanMeeting.getRecurAfter().intValue(), numberOfInstallments, interestDays);
+
+        LoanInterestCalculationDetails loanInterestCalculationDetails = new LoanInterestCalculationDetails(loanAmount, interestRate, graceType, gracePeriodDuration.intValue(),
+                numberOfInstallments, durationInYears, interestFractionalRatePerInstallment);
+
+        LoanInterestCalculatorFactory loanInterestCalculatorFactory = new LoanInterestCalculatorFactoryImpl();
+        LoanInterestCalculator loanInterestCalculator = loanInterestCalculatorFactory.create(interestType, graceType);
+
+        Money loanInterest = loanInterestCalculator.calculate(loanInterestCalculationDetails);
         // FIXME - keithw - replace all of below with factory usage
-        Money loanInterest = getLoanInterest_v2();
-
+//        Money old_loanInterest = getLoanInterest_v2();
 
         List<EMIInstallment> EMIInstallments = generateEMI_v2(loanInterest);
 

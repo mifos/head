@@ -42,6 +42,7 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -49,13 +50,13 @@ public class LoanArrearsHelperIntegrationTest extends MifosIntegrationTestCase {
 
     private LoanArrearsHelper loanArrearHelper;
 
-    CustomerBO center = null;
+    private CustomerBO center = null;
 
-    CustomerBO group = null;
+    private CustomerBO group = null;
 
-    MeetingBO meeting = null;
+    private MeetingBO meeting = null;
 
-    AccountBO loanAccount = null;
+    private AccountBO loanAccount = null;
 
     @Autowired
     private LegacyAccountDao legacyAccountDao;
@@ -67,7 +68,7 @@ public class LoanArrearsHelperIntegrationTest extends MifosIntegrationTestCase {
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-        loanAccount = getLoanAccount(group, meeting);
+        loanAccount = createLoanAccount(group, meeting);
     }
 
     @After
@@ -88,15 +89,15 @@ public class LoanArrearsHelperIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(statusChangeHistorySize + 1, loanAccount.getAccountStatusChangeHistory().size());
     }
 
-    private AccountBO getLoanAccount(CustomerBO customer, MeetingBO meeting) throws AccountException {
+    private LoanBO createLoanAccount(CustomerBO customer, MeetingBO meeting) throws AccountException {
         Date currentdate = new Date(System.currentTimeMillis());
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(currentdate, meeting);
         loanAccount = TestObjectFactory.createLoanAccount("42423142341", customer,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, currentdate, loanOffering);
         setDisbursementDateAsOldDate(loanAccount);
         loanAccount.update();
-        StaticHibernateUtil.flushSession();
-        return loanAccount;
+        IntegrationTestObjectMother.saveLoanAccount((LoanBO)loanAccount);
+        return (LoanBO)loanAccount;
     }
 
     private void setDisbursementDateAsOldDate(AccountBO account) {

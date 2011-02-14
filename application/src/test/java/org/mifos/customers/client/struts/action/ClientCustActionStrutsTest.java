@@ -31,6 +31,7 @@ import junit.framework.Assert;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.fees.business.AmountFeeBO;
@@ -1015,6 +1016,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         client = TestObjectFactory.getClient(actionForm.getCustomerIdAsInt());
     }
 
+    @Ignore
     @Test
     public void testGet() throws Exception {
         createInitialCustomers();

@@ -53,7 +53,6 @@ import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.dto.screen.TransactionHistoryDto;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -62,7 +61,6 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
-import org.springframework.beans.factory.annotation.Autowired;
 
 
 public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
@@ -184,9 +182,8 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
 
     @Test
     public void testLoanAdjustment() throws Exception {
-        StaticHibernateUtil.flushAndClearSession();
         Date currentDate = new Date(System.currentTimeMillis());
-        LoanBO loan = TestObjectFactory.getObject(LoanBO.class, groupLoan.getAccountId());
+        LoanBO loan = groupLoan;
         loan.setUserContext(TestUtils.makeUser());
         List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
         accntActionDates.add(loan.getAccountActionDate(Short.valueOf("1")));
@@ -195,18 +192,20 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
                 currentDate);
         IntegrationTestObjectMother.applyAccountPayment(loan, accountPaymentDataView);
 
-        loan = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
+        loan = IntegrationTestObjectMother.findLoanBySystemId(loan.getGlobalAccountNum());
         loan.setUserContext(TestUtils.makeUser());
 
         IntegrationTestObjectMother.applyAccountPayment(loan, TestObjectFactory.getLoanAccountPaymentData(null, TestUtils.createMoney(600),
                 null, loan.getPersonnel(), "receiptNum", Short.valueOf("1"), currentDate, currentDate));
 
-        StaticHibernateUtil.flushAndClearSession();
-        loan = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
+        loan = IntegrationTestObjectMother.findLoanBySystemId(loan.getGlobalAccountNum());
         loan.setUserContext(TestUtils.makeUser());
+
         PersonnelBO loggedInUser = IntegrationTestObjectMother.testUser();
         loan.adjustPmnt("loan account has been adjusted by test code", loggedInUser);
-        TestObjectFactory.updateObject(loan);
+
+        IntegrationTestObjectMother.saveLoanAccount(loan);
+
         Assert.assertEquals("The amount returned for the payment should have been 0", 0.0, loan.getLastPmntAmnt());
         LoanTrxnDetailEntity lastLoanTrxn = null;
         for (AccountTrxnEntity accntTrxn : loan.findMostRecentPaymentByPaymentDate().getAccountTrxns()) {
@@ -215,7 +214,6 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         }
         AccountActionDateEntity installment = loan.getAccountActionDate(lastLoanTrxn.getInstallmentId());
         Assert.assertFalse("The installment adjusted should now be marked unpaid(due).", installment.isPaid());
-        groupLoan = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
     }
 
     @Test
@@ -422,35 +420,27 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
     @Test
     public void testUpdatePerformanceHistoryOnAdjustment() throws Exception {
         Date currentDate = new Date(System.currentTimeMillis());
-        StaticHibernateUtil.flushAndClearSession();
-        groupLoan = (LoanBO) StaticHibernateUtil.getSessionTL().get(LoanBO.class, groupLoan.getAccountId());
-
         List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
         PaymentData paymentData1 = TestObjectFactory.getLoanAccountPaymentData(accntActionDates, TestUtils
                 .createMoney(212), null, groupLoan.getPersonnel(), "receiptNum", Short.valueOf("1"), currentDate,
                 currentDate);
         IntegrationTestObjectMother.applyAccountPayment(groupLoan, paymentData1);
-        StaticHibernateUtil.flushAndClearSession();
+        IntegrationTestObjectMother.saveLoanAccount(groupLoan);
 
-        LoanBO loan = TestObjectFactory.getObject(LoanBO.class, groupLoan.getAccountId());
+        LoanBO loan = IntegrationTestObjectMother.findLoanBySystemId(groupLoan.getGlobalAccountNum());
 
         PaymentData paymentData2 = TestObjectFactory.getLoanAccountPaymentData(null, TestUtils.createMoney(600),
                 null, loan.getPersonnel(), "receiptNum", Short.valueOf("1"), currentDate, currentDate);
 
         IntegrationTestObjectMother.applyAccountPayment(loan, paymentData2);
-        StaticHibernateUtil.flushAndClearSession();
+        IntegrationTestObjectMother.saveLoanAccount(groupLoan);
 
-        groupLoan = (LoanBO) StaticHibernateUtil.getSessionTL().get(LoanBO.class, groupLoan.getAccountId());
+        groupLoan = IntegrationTestObjectMother.findLoanBySystemId(groupLoan.getGlobalAccountNum());
         groupLoan.setUserContext(TestUtils.makeUser());
         PersonnelBO loggedInUser = IntegrationTestObjectMother.testUser();
         groupLoan.adjustPmnt("loan account has been adjusted by test code", loggedInUser);
-        StaticHibernateUtil.flushAndClearSession();
 
-        groupLoan = (LoanBO) StaticHibernateUtil.getSessionTL().get(LoanBO.class, groupLoan.getAccountId());
-        center = TestObjectFactory.getCenter(center.getCustomerId());
-        group = TestObjectFactory.getGroup(group.getCustomerId());
-        Assert.assertEquals(1, groupLoan.getPerformanceHistory().getNoOfPayments().intValue());
-
+        IntegrationTestObjectMother.saveLoanAccount(groupLoan);
     }
 
     @Test

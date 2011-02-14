@@ -36,6 +36,7 @@ import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
+import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.persistence.GenericDao;
@@ -100,6 +101,7 @@ public class IntegrationTestObjectMother {
     private static final HolidayDao holidayDao = ApplicationContextProvider.getBean(HolidayDao.class);
     private static final FundDao fundDao = ApplicationContextProvider.getBean(FundDao.class);
     private static final SavingsDao savingsDao = ApplicationContextProvider.getBean(SavingsDao.class);
+    private static final LoanProductDao loanProductDao = ApplicationContextProvider.getBean(LoanProductDao.class);
     private static final SavingsProductDao savingsProductDao = ApplicationContextProvider.getBean(SavingsProductDao.class);
     private static final CustomerDao customerDao = ApplicationContextProvider.getBean(CustomerDao.class);
     private static final LoanDao loanDao = ApplicationContextProvider.getBean(LoanDao.class);
@@ -555,5 +557,10 @@ public class IntegrationTestObjectMother {
             StaticHibernateUtil.closeSession();
         }
 
+    }
+
+    public static LoanOfferingBO findLoanProductBySystemId(String globalPrdOfferingNum) {
+
+        return loanProductDao.findBySystemId(globalPrdOfferingNum);
     }
 }

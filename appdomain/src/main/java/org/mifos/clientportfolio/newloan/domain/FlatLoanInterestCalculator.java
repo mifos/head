@@ -30,7 +30,7 @@ public class FlatLoanInterestCalculator implements LoanInterestCalculator {
     public Money calculate(LoanInterestCalculationDetails loanInterestCalculationDetails) {
         Money loanAmount = loanInterestCalculationDetails.getLoanAmount();
         Double interestRate = loanInterestCalculationDetails.getInterestRate();
-        Double durationInYears = loanInterestCalculationDetails.getInterestRate();
+        Double durationInYears = loanInterestCalculationDetails.getDurationInYears();
 
         // FIXME - keithw - the calls to Money.multiply() and Money.divide() round prematurely
         return loanAmount.multiply(interestRate).multiply(durationInYears).divide(new BigDecimal("100"));

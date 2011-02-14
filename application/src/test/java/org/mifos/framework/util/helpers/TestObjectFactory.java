@@ -739,7 +739,9 @@ public class TestObjectFactory {
             loanOffering.setVariableInstallmentsAllowed(true);
             loanOffering.setVariableInstallmentDetails(variableInstallmentDetails);
         }
-        return (LoanOfferingBO)testObjectPersistence.persist(loanOffering);
+        IntegrationTestObjectMother.saveLoanProducts(loanOffering);
+
+        return IntegrationTestObjectMother.findLoanProductBySystemId(loanOffering.getGlobalPrdOfferingNum());
     }
 
     public static LoanOfferingBO createLoanOfferingFromLastLoan(final String name, final String shortName,
@@ -807,37 +809,26 @@ public class TestObjectFactory {
 
     public static LoanBO createLoanAccount(final String globalNum, final CustomerBO customer, final AccountState state,
                                            final Date startDate, final LoanOfferingBO offering) {
-        LoanBO loan = LoanBOTestUtils.createLoanAccount(globalNum, customer, state, startDate, offering);
-        try {
-            loan.save();
-        } catch (AccountException e) {
-            throw new RuntimeException(e);
-        }
-        StaticHibernateUtil.flushSession();
+
+        LoanOfferingBO loanProduct = IntegrationTestObjectMother.findLoanProductBySystemId(offering.getGlobalPrdOfferingNum());
+
+        LoanBO loan = LoanBOTestUtils.createLoanAccount(globalNum, customer, state, startDate, loanProduct);
+
+        IntegrationTestObjectMother.saveLoanAccount(loan);
         return loan;
     }
 
     public static LoanBO createBasicLoanAccount(final CustomerBO customer, final AccountState state,
                                                 final Date startDate, final LoanOfferingBO offering) {
         LoanBO loan = LoanBOTestUtils.createBasicLoanAccount(customer, state, startDate, offering);
-        try {
-            loan.save();
-        } catch (AccountException e) {
-            throw new RuntimeException(e);
-        }
-        StaticHibernateUtil.flushSession();
+        IntegrationTestObjectMother.saveLoanAccount(loan);
         return loan;
     }
 
     public static LoanBO createIndividualLoanAccount(final String globalNum, final CustomerBO customer,
                                                      final AccountState state, final Date startDate, final LoanOfferingBO offering) {
         LoanBO loan = LoanBOTestUtils.createIndividualLoanAccount(globalNum, customer, state, startDate, offering);
-        try {
-            loan.save();
-        } catch (AccountException e) {
-            throw new RuntimeException(e);
-        }
-        StaticHibernateUtil.flushSession();
+        IntegrationTestObjectMother.saveLoanAccount(loan);
         return loan;
     }
 

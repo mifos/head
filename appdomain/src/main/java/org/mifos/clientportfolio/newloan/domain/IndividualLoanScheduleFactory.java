@@ -82,14 +82,6 @@ public class IndividualLoanScheduleFactory implements LoanScheduleFactory {
         }
 
         // loan interest calculation for various interest calculation algorithms
-        Money loanInterestPrevious = null;
-        Double durationInYearsPrevious = null;
-        loanInterestPrevious = getLoanInterest_v2(loanMeeting, graceType, gracePeriodDuration, loanAmount,
-                numberOfInstallments, interestRate, interestDays, interestType);
-        durationInYearsPrevious = getTotalDurationInYears_v2(numberOfInstallments, loanMeeting.getRecurrenceType(),
-                loanMeeting.getRecurAfter().intValue(), interestDays);
-        // end of old code for deletion
-
         LoanDecliningInterestAnnualPeriodCalculator decliningInterestAnnualPeriodCalculator = new LoanDecliningInterestAnnualPeriodCalculatorFactory().create(loanMeeting.getRecurrenceType());
         Double decliningInterestAnnualPeriod = decliningInterestAnnualPeriodCalculator.calculate(loanMeeting.getRecurAfter().intValue(), interestDays);
         Double interestFractionalRatePerInstallment = interestRate / decliningInterestAnnualPeriod / 100;
@@ -135,92 +127,6 @@ public class IndividualLoanScheduleFactory implements LoanScheduleFactory {
         }
 
         return new IndividualLoanScheduleImpl(loanScheduleItems);
-    }
-
-    private Money getLoanInterest_v2(MeetingBO loanMeeting, GraceType graceType, Integer gracePeriodDuration, Money loanAmount, Integer numberOfInstallments, Double interestRate, Integer interestDays, InterestType interestType) {
-
-        Double durationInYears = getTotalDurationInYears_v2(numberOfInstallments, loanMeeting.getRecurrenceType(), loanMeeting.getRecurAfter().intValue(), interestDays);
-
-        Money interest = null;
-
-        switch (interestType) {
-        case FLAT:
-            // FIXME - keithw - the calls to Money.multiply() and Money.divide() round prematurely!
-            interest = loanAmount.multiply(interestRate).multiply(durationInYears).divide(new BigDecimal("100"));
-            break;
-        case DECLINING:
-            interest = getDecliningInterestAmount_v2(loanMeeting.getRecurrenceType(), loanMeeting.getRecurAfter().intValue(), graceType, gracePeriodDuration, numberOfInstallments, loanAmount, interestRate, interestDays);
-            break;
-        case DECLINING_EPI:
-            interest = getDecliningEPIAmount_v2(loanMeeting.getRecurrenceType(), loanMeeting.getRecurAfter().intValue(), graceType, gracePeriodDuration, numberOfInstallments, loanAmount, interestRate, interestDays);
-            break;
-        default:
-            break;
-        }
-
-        return interest;
-    }
-
-    private Double getTotalDurationInYears_v2(Integer numOfInstallments, RecurrenceType recurrenceType, Integer recurringEvery, Integer interestDays) {
-        int daysInWeek = 7;
-        int daysInMonth = 30;
-        int duration = numOfInstallments * recurringEvery;
-
-        Double durationInYears = Double.valueOf("0");
-        switch (recurrenceType) {
-        case MONTHLY:
-            double totalMonthDays = duration * daysInMonth;
-            durationInYears = totalMonthDays / AccountConstants.INTEREST_DAYS_360;
-            break;
-        case WEEKLY:
-
-            if (interestDays != AccountConstants.INTEREST_DAYS_360 && interestDays != AccountConstants.INTEREST_DAYS_365) {
-                throw new BusinessRuleException(AccountConstants.NOT_SUPPORTED_INTEREST_DAYS);
-            }
-
-            double totalWeekDays = duration * daysInWeek;
-            durationInYears = totalWeekDays / interestDays;
-
-            break;
-        case DAILY:
-            throw new BusinessRuleException(AccountConstants.NOT_SUPPORTED_DURATION_TYPE);
-        default:
-            throw new BusinessRuleException(AccountConstants.NOT_SUPPORTED_DURATION_TYPE);
-        }
-        return durationInYears;
-    }
-
-    /**
-     * Compute the total interest due on a declining-interest loan. Interest during a principal-only grace period is
-     * calculated differently from non-grace-periods.
-     * <p>
-     * The formula is as follows:
-     * <p>
-     * The total interest paid is I = Ig + In where Ig = interest paid during any principal-only grace periods In =
-     * interest paid during regular payment periods In = A - P A = total amount paid across regular payment periods The
-     * formula for computing A is A = p * n where A = total amount paid p = payment per installment n = number of
-     * regular (non-grace) installments P = principal i = interest per period
-     */
-    private Money getDecliningInterestAmount_v2(RecurrenceType recurrenceType, Integer recurAfter, GraceType graceType, Integer gracePeriodDuration, Integer numOfInstallments, Money loanAmount, Double interestRate, Integer interestDays) {
-
-        Money nonGraceInterestPayments = getDecliningInterestAmountNonGrace_v2(numOfInstallments - gracePeriodDuration, loanAmount, interestRate, interestDays, recurrenceType, recurAfter);
-        Money interest = nonGraceInterestPayments;
-        if (graceType.equals(GraceType.PRINCIPALONLYGRACE)) {
-            Money graceInterestPayments = getDecliningInterestAmountGrace_v2(recurrenceType, recurAfter, loanAmount, gracePeriodDuration, interestRate, interestDays);
-            interest = graceInterestPayments.add(nonGraceInterestPayments);
-        }
-        return interest;
-    }
-
-    private Money getDecliningInterestAmountNonGrace_v2(final int numNonGraceInstallments, Money loanAmount, Double interestRate, Integer interestDays, RecurrenceType meetingFrequency, Integer recurAfter) {
-        Money paymentPerPeriod = getPaymentPerPeriodForDecliningInterest_v2(numNonGraceInstallments, interestRate, interestDays, loanAmount, meetingFrequency, recurAfter);
-        Money totalPayments = paymentPerPeriod.multiply((double) numNonGraceInstallments);
-        return totalPayments.subtract(loanAmount);
-    }
-
-    private Money getDecliningInterestAmountGrace_v2(RecurrenceType meetingFrequency, Integer recurAfter, Money loanAmount, Integer gracePeriodDuration, Double interestRate, Integer interestDays) {
-        Double interest = getInterestFractionalRatePerInstallment_v2(meetingFrequency, recurAfter, interestRate, interestDays);
-        return loanAmount.multiply(interest).multiply(Double.valueOf(gracePeriodDuration.toString()));
     }
 
     /*
@@ -285,40 +191,6 @@ public class IndividualLoanScheduleFactory implements LoanScheduleFactory {
         }
 
         return period;
-    }
-
-    private Money getDecliningEPIAmount_v2(RecurrenceType meetingFrequency, Integer recurAfter, GraceType graceType, Integer gracePeriodDuration, Integer numberOfInstallments, Money loanAmount, Double interestRate, Integer interestDays) {
-
-        Money interest = new Money(loanAmount.getCurrency(), "0");
-        if (graceType.equals(GraceType.PRINCIPALONLYGRACE)) {
-            Money graceInterestPayments = getDecliningEPIAmountGrace_v2(meetingFrequency, recurAfter, loanAmount, gracePeriodDuration, interestRate, interestDays);
-            Money nonGraceInterestPayments = getDecliningEPIAmountNonGrace_v2(numberOfInstallments - gracePeriodDuration, loanAmount, meetingFrequency, recurAfter, interestRate, interestDays);
-            interest = graceInterestPayments.add(nonGraceInterestPayments);
-        } else {
-            interest = getDecliningEPIAmountNonGrace_v2(numberOfInstallments, loanAmount, meetingFrequency, recurAfter, interestRate, interestDays);
-        }
-        return interest;
-    }
-
-    // the business rules for DecliningEPI for grace periods are the same as
-    // Declining's
-    private Money getDecliningEPIAmountGrace_v2(RecurrenceType meetingFrequency, Integer recurAfter, Money loanAmount, Integer gracePeriodDuration, Double interestRate, Integer interestDays) {
-        return getDecliningInterestAmountGrace_v2(meetingFrequency, recurAfter, loanAmount, gracePeriodDuration, interestRate, interestDays);
-    }
-
-    // the decliningEPI amount = sum of interests for all installments
-    private Money getDecliningEPIAmountNonGrace_v2(final int numNonGraceInstallments, Money loanAmount, RecurrenceType meetingFrequency, Integer recurAfter, Double productInterestRate, Integer interestDays) {
-        Money principalBalance = loanAmount;
-        Money principalPerPeriod = principalBalance.divide(new BigDecimal(numNonGraceInstallments));
-        Double interestRate = getInterestFractionalRatePerInstallment_v2(meetingFrequency, recurAfter, productInterestRate, interestDays);
-        Money totalInterest = new Money(loanAmount.getCurrency(), "0");
-        for (int i = 0; i < numNonGraceInstallments; i++) {
-            Money interestThisPeriod = principalBalance.multiply(interestRate);
-            totalInterest = totalInterest.add(interestThisPeriod);
-            principalBalance = principalBalance.subtract(principalPerPeriod);
-        }
-
-        return totalInterest;
     }
 
     private List<EMIInstallment> generateEMI_v2(Money loanInterest, MeetingBO loanMeeting, GraceType graceType,
