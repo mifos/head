@@ -150,12 +150,15 @@ public class CreateSavingsAccountController {
 
     public CustomerSearchResultsDto searchCustomers(
             CreateSavingsAccountFormBean formBean) {
-    	
+        
+        // Search result cap. This is needed until ajax search is implemented.
+        final Integer searchCap = 1000;
+        
     	// FIXME - keithw - selected pageNumber and pageSize info should be passed in on bean.
-    	CustomerSearchDto customerSearchDto = new CustomerSearchDto(formBean.getSearchString(), Integer.valueOf(1), Integer.valueOf(10));
+    	CustomerSearchDto customerSearchDto = new CustomerSearchDto(formBean.getSearchString(), Integer.valueOf(1), searchCap);
     	List<CustomerSearchResultDto> pagedDetails = this.savingsServiceFacade.retrieveCustomerThatQualifyForSavings(customerSearchDto);
     	
-    	SearchDetailsDto searchDetails = new SearchDetailsDto(pagedDetails.size(), 1, 1, 10);
+    	SearchDetailsDto searchDetails = new SearchDetailsDto(pagedDetails.size(), 1, 1, searchCap);
         return new CustomerSearchResultsDto(searchDetails, pagedDetails);
     }
 

@@ -29,6 +29,11 @@
 <br/>
 
 <!-- Client search form -->
+[#if customerSearchResultsDto.pagedDetails?size == customerSearchResultsDto.searchDetails.pageSize]
+    [#assign args=[customerSearchResultsDto.searchDetails.pageSize, customerSearchResultsDto.searchDetails.pageSize] /]
+    <div class="notice">[@spring.messageArgs "createSavingsAccount.selectCustomer.searchLimitReached" args /]</div>
+    <br/>
+[/#if]
 [@form.errors "savingsAccountFormBean.*"/]
 <form action="${flowExecutionUrl}" method="post">
     <div class="row">
@@ -40,6 +45,7 @@
 
 <!-- Search results -->
 <br/>
+
 <div class="search-results">
 <table id="customerSearchResults" class="datatable">
     <thead>
