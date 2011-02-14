@@ -20,7 +20,8 @@
 --]
 [#import "/widgets/questionnaire.ftl" as questionnaire /]
 
-[@layout.webflow currentState="createSavingsAccount.flowState.reviewAndSubmit" 
+[@layout.webflow currentTab="ClientsAndAccounts"
+                 currentState="createSavingsAccount.flowState.reviewAndSubmit" 
                  states=["createSavingsAccount.flowState.selectCustomer", 
                          "createSavingsAccount.flowState.enterAccountInfo", 
                          "createSavingsAccount.flowState.reviewAndSubmit"]] 

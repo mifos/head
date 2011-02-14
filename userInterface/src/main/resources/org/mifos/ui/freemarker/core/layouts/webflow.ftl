@@ -19,9 +19,9 @@
 *  explanation of the license and how it is applied.
 --]
 
-[#macro webflow states currentState]
+[#macro webflow currentTab states currentState]
 [@layout.header "title" /]
-[@widget.topNavigationNoSecurity currentTab="ClientsAndAccounts" /]
+[@widget.topNavigationNoSecurity currentTab /]
 
 <div class="container webflow">
     <br/>

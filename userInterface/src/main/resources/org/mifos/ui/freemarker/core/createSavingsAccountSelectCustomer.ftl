@@ -19,7 +19,8 @@
 *  explanation of the license and how it is applied.
 --]
 
-[@layout.webflow currentState="createSavingsAccount.flowState.selectCustomer" 
+[@layout.webflow currentTab="ClientsAndAccounts"
+                 currentState="createSavingsAccount.flowState.selectCustomer" 
                  states=["createSavingsAccount.flowState.selectCustomer", 
                          "createSavingsAccount.flowState.enterAccountInfo", 
                          "createSavingsAccount.flowState.reviewAndSubmit"]] 
