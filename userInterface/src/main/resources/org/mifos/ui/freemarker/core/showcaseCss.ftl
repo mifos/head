@@ -34,6 +34,9 @@
     font-family: courier;
     font-weight: bold;
 }
+hr {
+    margin-top: 3em;
+}
 </style>
 
 <script type="text/javascript">
@@ -71,7 +74,6 @@ Each label-input pair should be wrapped in a <span class="code">div</span> tag w
         [@form.cancelButton /]
     </div>
 </form>
-<br/>
 <hr/>
 
 <p><span class="css-classname">product-summary</span><br/>
@@ -128,7 +130,9 @@ Each label-input pair should be wrapped in a <span class="code">div</span> tag w
 <div class="notice">You may want to refine your search.</div>
 <hr/>
 
-<p><span class="css-classname">validationErrors</span>:</p><br/>
+<p><span class="css-classname">validationErrors</span>:</p>
+<span class="remark">Remarks: this class will is used by the <span class="code">@form.errors</span> widget. 
+You can also use it directly by adding the class to a <span class="code">div</span> to achieve the same result.</span><br/>
 <div class="validationErrors">Input value is out of range.</div>
 <hr/>
 
@@ -144,7 +148,8 @@ Each label-input pair should be wrapped in a <span class="code">div</span> tag w
 <p>Make text <span class="standout">standout</span>.</p>
 <hr/>
 
-<p><span class="css-classname">standout</span> (in <span class="code">&lt;h1&gt;</span>):</p><br/>
+<p><span class="css-classname">standout</span> (in <span class="code">&lt;h1&gt;</span>):</p>
+<span class="remark">Remarks: make text standout in page title.</span><br/><br/>
 <h1>Create Savings Account - <span class="standout">Select a customer</span></h1>
 <hr/>
 
