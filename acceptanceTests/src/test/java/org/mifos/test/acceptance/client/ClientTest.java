@@ -40,6 +40,7 @@ import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.account.AccountStatus;
 import org.mifos.test.acceptance.framework.account.EditAccountStatusParameters;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
+import org.mifos.test.acceptance.framework.admin.DefineAcceptedPaymentTypesPage;
 import org.mifos.test.acceptance.framework.center.MeetingParameters;
 import org.mifos.test.acceptance.framework.client.ClientEditMFIPage;
 import org.mifos.test.acceptance.framework.client.ClientEditMFIParameters;
@@ -60,6 +61,7 @@ import org.mifos.test.acceptance.framework.group.CreateGroupEntryPage.CreateGrou
 import org.mifos.test.acceptance.framework.group.EditCustomerStatusParameters;
 import org.mifos.test.acceptance.framework.group.GroupCloseReason;
 import org.mifos.test.acceptance.framework.group.GroupStatus;
+import org.mifos.test.acceptance.framework.loan.ApplyPaymentPage;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionGroupPage;
 import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionGroupParameters;
@@ -139,6 +141,44 @@ public class ClientTest extends UiTestCaseBase {
     @AfterMethod(alwaysRun = true)
     public void logOut() {
         (new MifosPage(selenium)).logout();
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // http://mifosforge.jira.com/browse/MIFOSTEST-248
+    public void verifyAcceptedPaymentTypes() throws Exception{
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
+        //When
+        String groupName = "MyGroup1232993846342";
+        CreateClientEnterPersonalDataPage.SubmitFormParameters clientParams = new CreateClientEnterPersonalDataPage.SubmitFormParameters();
+        clientParams.setSalutation(CreateClientEnterPersonalDataPage.SubmitFormParameters.MRS);
+        clientParams.setFirstName("John");
+        clientParams.setLastName("Doe");
+        clientParams.setDateOfBirthDD("22");
+        clientParams.setDateOfBirthMM("05");
+        clientParams.setDateOfBirthYYYY("1987");
+        clientParams.setGender(CreateClientEnterPersonalDataPage.SubmitFormParameters.MALE);
+        clientParams.setPovertyStatus(CreateClientEnterPersonalDataPage.SubmitFormParameters.NOT_POOR);
+        clientParams.setSpouseNameType(CreateClientEnterPersonalDataPage.SubmitFormParameters.FATHER);
+        clientParams.setSpouseFirstName("fatherName");
+        clientParams.setSpouseLastName("fatherLastName");
+
+        ClientViewDetailsPage clientViewDetailsPage = clientTestHelper.createNewClient(groupName, clientParams);
+        clientViewDetailsPage.verifyHeading("John Doe");
+
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        DefineAcceptedPaymentTypesPage defineAcceptedPaymentTypesPage = adminPage.navigateToDefineAcceptedPaymentType();
+        defineAcceptedPaymentTypesPage.addLoanFeesPaymentType(defineAcceptedPaymentTypesPage.CHEQUE);
+
+        adminPage = navigationHelper.navigateToAdminPage();
+        defineAcceptedPaymentTypesPage = adminPage.navigateToDefineAcceptedPaymentType();
+        defineAcceptedPaymentTypesPage.addLoanFeesPaymentType(defineAcceptedPaymentTypesPage.VOUCHER);
+
+        ApplyPaymentPage applyPaymentPage = navigationHelper.navigateToClientViewDetailsPage("John Doe")
+                                            .navigateToViewClientChargesDetail().navigateToApplyPayments();
+        //Then
+        applyPaymentPage.verifyModeOfPayments();
+
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
