@@ -35,13 +35,10 @@ public interface IAccountingService {
     List<AccountingDto> getExportDetails(LocalDate startDate, LocalDate endDate);
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_USE_ACCOUNTING_INTEGRATION')")
-    List<ExportFileInfo> getAllExports(Integer size);
+    List<ExportFileInfo> getLastTenExports(Integer listStartDay);
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_USE_ACCOUNTING_INTEGRATION')")
-    List<ExportFileInfo> getGeneratedExports(Integer size);
-
-    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_USE_ACCOUNTING_INTEGRATION')")
-    List<ExportFileInfo> getNotGeneratedExports(Integer size);
+    Integer getNumberDaysFromStartOfFinancialTransactions();
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_USE_ACCOUNTING_INTEGRATION')")
     String getExportOutputFileName(LocalDate startDate, LocalDate endDate);

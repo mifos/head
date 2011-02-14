@@ -34,7 +34,7 @@ import org.mifos.platform.accounting.tally.message.TallyMessageBuilderException;
 
 public class TallyMessageGenerator {
 
-    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMdd");
 
     public final List<TallyMessage> generateTallyMessages(List<AccountingDto> accountingData)
             throws TallyMessageBuilderException, ParseException {

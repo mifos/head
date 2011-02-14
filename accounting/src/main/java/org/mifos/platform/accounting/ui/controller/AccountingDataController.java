@@ -48,8 +48,7 @@ public class AccountingDataController {
 
     private static final String FROM_DATE = "fromDate";
     private static final String TO_DATE = "toDate";
-    private static final String LIST_SIZE = "listSize";
-    private static final String LIST_TYPE = "listType";
+    private static final String LIST_START_DAY = "listStartDay";
 
     @Autowired
     public AccountingDataController(IAccountingService accountingService) {
@@ -105,24 +104,12 @@ public class AccountingDataController {
     }
 
     @RequestMapping("generateExportsList.ftl")
-    public final ModelAndView generateList(@RequestParam(value = LIST_SIZE, required=false) Integer paramListSize, @RequestParam(value = LIST_TYPE, required=false) String listType) {
+    public final ModelAndView generateList(@RequestParam(value = LIST_START_DAY) Integer listStartDay, @RequestParam(value = "type") String type) {
         ModelAndView mav = new ModelAndView("generateExportsList");
-        List<ExportFileInfo> exports = getExports(paramListSize, listType);
+        List<ExportFileInfo> exports = accountingService.getLastTenExports(listStartDay);
         mav.addObject("exports", exports);
-        mav.addObject("size", paramListSize);
+        mav.addObject("size", listStartDay);
         return mav;
-    }
-
-    private List<ExportFileInfo> getExports(Integer size, String listType) {
-        List<ExportFileInfo> exports;
-        if(listType != null && listType.equals("notgenerated")) {
-            exports = accountingService.getNotGeneratedExports(size);
-        } else if (listType != null && listType.equals("generated")) {
-            exports = accountingService.getGeneratedExports(size);
-        } else {
-            exports = accountingService.getAllExports(size);
-        }
-        return exports;
     }
 
     @RequestMapping("renderAccountingDataCacheInfo.ftl")
@@ -131,6 +118,7 @@ public class AccountingDataController {
                 "renderAccountingDataCacheInfo.ftl").build();
         ModelAndView mav = new ModelAndView("renderAccountingDataCacheInfo");
         mav.addObject("breadcrumbs", breadcrumbs);
+        mav.addObject("numberDaysFromStartOfFinancialTransactions",accountingService.getNumberDaysFromStartOfFinancialTransactions());
         return mav;
     }
 

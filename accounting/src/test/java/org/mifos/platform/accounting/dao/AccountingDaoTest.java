@@ -58,7 +58,7 @@ public class AccountingDaoTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void testDataSourcMockWithNull() throws SQLException {
+    public void testDataSourcMockWithNull() {
         accountingDao = new AccountingDaoImpl();
         ((AccountingDaoImpl) accountingDao).setTestingJdbcTemplate(jdbcTemplate);
         when(jdbcTemplate.query(any(String.class), any(Object[].class), any(ParameterizedRowMapper.class))).thenReturn(
