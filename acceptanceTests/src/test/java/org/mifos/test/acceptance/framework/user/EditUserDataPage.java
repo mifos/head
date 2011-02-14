@@ -28,8 +28,8 @@ public class EditUserDataPage extends MifosPage {
 
     private static final String LOCATOR_FORM_STATUS = "name=status";
 
-    public static final String STATUS_ACTIVE = "1";
-    public static final String STATUS_INACTIVE = "2";
+    public static final String STATUS_ACTIVE = "Active";
+    public static final String STATUS_INACTIVE = "Inactive";
 
     public EditUserDataPage() {
         super();

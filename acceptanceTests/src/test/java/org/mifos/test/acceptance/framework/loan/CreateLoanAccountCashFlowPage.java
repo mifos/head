@@ -6,7 +6,6 @@ import org.joda.time.format.DateTimeFormat;
 import org.mifos.test.acceptance.framework.AbstractPage;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
-import org.mifos.test.acceptance.framework.util.UiTestUtils;
 import org.testng.Assert;
 
 import java.util.Locale;
@@ -86,41 +85,33 @@ public class CreateLoanAccountCashFlowPage extends AbstractPage{
     }
 
     public void verifyErrorsOnFields() {
-        String error = "Invalid amount. Maximum of 10 digits and 3 decimal places are supported.";
+        String error = "Invalid amount. Maximum of "+FIELD_MAX_DIGITS+" digits and "+FIELD_MAX_DECIMAL_PLACES+" decimal places are supported.";
         String lengthMaxDigits = getNumbers(FIELD_MAX_DIGITS);
         String lengthMaxDecimal = "0."+getNumbers(FIELD_MAX_DECIMAL_PLACES);
         String lengthWrongDigits = getNumbers(FIELD_MAX_DIGITS+1);
         String lengthWrongDecimal = "0."+getNumbers(FIELD_MAX_DECIMAL_PLACES+1);
 
         selenium.typeKeys("monthlyCashFlows[0].expense", lengthMaxDigits);
-        selenium.focus("monthlyCashFlows[0].expense");
-        UiTestUtils.sleep(50);
-        selenium.focus("monthlyCashFlows[1].expense");
-        UiTestUtils.sleep(500);
+        selenium.fireEvent("monthlyCashFlows[0].expense", "blur");
+        selenium.fireEvent("monthlyCashFlows[1].expense", "blur");
         Assert.assertFalse(selenium.isTextPresent(error));
         selenium.type("monthlyCashFlows[0].expense", "");
 
         selenium.type("monthlyCashFlows[0].expense", lengthMaxDecimal);
-        selenium.focus("monthlyCashFlows[0].expense");
-        UiTestUtils.sleep(50);
-        selenium.focus("monthlyCashFlows[1].expense");
-        UiTestUtils.sleep(500);
+        selenium.fireEvent("monthlyCashFlows[0].expense", "blur");
+        selenium.fireEvent("monthlyCashFlows[1].expense", "blur");
         Assert.assertFalse(selenium.isTextPresent(error));
         selenium.type("monthlyCashFlows[0].expense", "");
 
         selenium.type("monthlyCashFlows[0].expense", lengthWrongDecimal);
-        selenium.focus("monthlyCashFlows[0].expense");
-        UiTestUtils.sleep(50);
-        selenium.focus("monthlyCashFlows[1].expense");
-        UiTestUtils.sleep(500);
+        selenium.fireEvent("monthlyCashFlows[0].expense", "blur");
+        selenium.fireEvent("monthlyCashFlows[1].expense", "blur");
         Assert.assertTrue(selenium.isTextPresent(error));
         selenium.type("monthlyCashFlows[0].expense", "");
 
         selenium.typeKeys("monthlyCashFlows[0].expense", lengthWrongDigits);
-        selenium.focus("monthlyCashFlows[0].expense");
-        UiTestUtils.sleep(50);
-        selenium.focus("monthlyCashFlows[1].expense");
-        UiTestUtils.sleep(500);
+        selenium.fireEvent("monthlyCashFlows[0].expense", "blur");
+        selenium.fireEvent("monthlyCashFlows[1].expense", "blur");
         Assert.assertTrue(selenium.isTextPresent(error));
         selenium.type("monthlyCashFlows[0].expense", "");
         selenium.fireEvent("monthlyCashFlows[0].expense", "focus");
