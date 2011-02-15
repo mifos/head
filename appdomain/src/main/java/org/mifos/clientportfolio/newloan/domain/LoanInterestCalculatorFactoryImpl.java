@@ -32,11 +32,10 @@ public class LoanInterestCalculatorFactoryImpl implements LoanInterestCalculator
         case FLAT:
             return new FlatLoanInterestCalculator();
         case DECLINING:
+
             return new DecliningBalanceLoanInterestCalculator();
         case DECLINING_EPI:
             return new DecliningBalanceWithEqualPrincipalInstallmentsLoanInterestCalculator();
-        case DECLINING_PB:
-            return new NullLoanInterestCalculator();
         default:
             throw new MifosRuntimeException("interestType not supported: " + interestType);
         }
