@@ -51,10 +51,12 @@ public class AccountingDataCacheManager {
     // hardcoded FIXME there should be a common way of sharing application wide constants across modules
     private static final int DIGITS_BEFORE_DECIMAL = 14;
 
+    private static final String EXPORT_FILENAME_PREFIX = "Mifos Accounting Export ";
+
     private String accountingDataPath;
     private Integer digitsAfterDecimal;
 
-    public final List<AccountingDto> getAccoutingDataFromCache(String fileName) {
+    public final List<AccountingDto> getExportDetails(String fileName) {
 
         String accountingDataLocation = getAccoutingDataCachePath();
         File file = new File(accountingDataLocation + fileName);
@@ -195,30 +197,41 @@ public class AccountingDataCacheManager {
     }
 
     public final String getCacheFileName(LocalDate startDate, LocalDate endDate) {
-        return startDate + " to " + endDate;
+        return new StringBuffer().append(startDate).append(" to ").append(endDate).toString();
     }
 
     public final String getTallyOutputFileName(LocalDate startDate, LocalDate endDate) {
-        return getFilePrefixDefinedByMFI() + getCacheFileName(startDate, endDate) + ".xml";
+        return new StringBuffer().append(getExportFileName(startDate, endDate)).append(".xml").toString();
     }
 
-    public final String getFilePrefixDefinedByMFI() {
-        return "Mifos Accounting Export ";
+    public final String getExportFileName(LocalDate startDate, LocalDate endDate) {
+        return new StringBuffer().append(EXPORT_FILENAME_PREFIX).append(getCacheFileName(startDate, endDate)).toString();
     }
 
-    public final List<ExportFileInfo> getAccountingDataCacheInfo() {
+    public final ExportFileInfo getExportFileInfoFromCache(LocalDate startDate, LocalDate endDate) {
+        String fileName = getCacheFileName(startDate, endDate);
+        File export = new File(getAccoutingDataCachePath() + "/" + fileName);
+        return getExportFileInfo(export);
+    }
+
+    public final List<ExportFileInfo> getGeneratedExports() {
         List<ExportFileInfo> info = new ArrayList<ExportFileInfo>();
         File directory = new File(getAccoutingDataCachePath());
 
         for (File file : directory.listFiles()) {
-            String startDate = file.getName().split(" to ")[0];
-            String endDate = file.getName().split(" to ")[1];
-            String fileName = getFilePrefixDefinedByMFI() + file.getName();
-            String lastModified = new DateTime(file.lastModified()).toString("yyyy-MMM-dd HH:mm:sss z");
-            Boolean existInCache = true;
-            info.add(new ExportFileInfo(lastModified, fileName,  startDate, endDate, existInCache));
+            info.add(getExportFileInfo(file));
         }
         return info;
+    }
+
+    protected ExportFileInfo getExportFileInfo(File file) {
+        String startDate = file.getName().split(" to ")[0];
+        String endDate = file.getName().split(" to ")[1];
+        String fileName = new StringBuffer().append(EXPORT_FILENAME_PREFIX).append(file.getName()).toString();
+        String lastModified = new DateTime(file.lastModified()).toString("yyyy-MMM-dd HH:mm z");
+        Boolean existInCache = true;
+        ExportFileInfo export= new ExportFileInfo(lastModified, fileName,  startDate, endDate, existInCache);
+        return export;
     }
 
 }

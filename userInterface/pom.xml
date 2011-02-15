@@ -5,7 +5,7 @@
     <groupId>org.mifos</groupId>
     <artifactId>mifos-userInterface</artifactId>
     <packaging>jar</packaging>
-    <version>1.8-SNAPSHOT</version>
+    <version>1.9-SNAPSHOT</version>
     <name>Mifos - User Interface</name>
     <url>http://www.mifos.org</url>
 
@@ -16,7 +16,7 @@
     <parent>
         <groupId>org.mifos</groupId>
         <artifactId>mifos-parent</artifactId>
-        <version>1.8-SNAPSHOT</version>
+        <version>1.9-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -124,10 +124,6 @@
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
-                <includes>
-                    <include>**/*.ftl</include>
-                    <include>**/*.properties</include>
-                </includes>
             </resource>
         </resources>
 
@@ -177,6 +173,7 @@
                 <artifactId>maven-pmd-plugin</artifactId>
                 <version>2.4</version>
                 <configuration>
+                   <targetJdk>1.6</targetJdk>
                     <rulesets>
                         <ruleset>${modules.root.dir}/.ruleset</ruleset>
                     </rulesets>

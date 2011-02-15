@@ -148,6 +148,9 @@ public class LabelTagUtils {
             } else if (ConfigurationConstants.BULKENTRY.equalsIgnoreCase(key)) {
                 ConfigurableLookupLabelDto lookupLabels = populateConfigurableLookupLabels();
                 message = lookupLabels.getBulkEntry();
+            } else if (ConfigurationConstants.CITY.equalsIgnoreCase(key)) {
+                ConfigurableLookupLabelDto lookupLabels = populateConfigurableLookupLabels();
+                message = lookupLabels.getCity();
             }
         }
 
@@ -215,6 +218,8 @@ public class LabelTagUtils {
                 lookupLabels.setAddress2(labelText);
             } else if (entity.getEntityType().equals(ConfigurationConstants.ADDRESS3)) {
                 lookupLabels.setAddress3(labelText);
+            } else if (entity.getEntityType().equals(ConfigurationConstants.CITY)) {
+                lookupLabels.setCity(labelText);
             } else if ((entity.getEntityType().equals(ConfigurationConstants.INTEREST))
                 || (entity.getEntityType().equals(ConfigurationConstants.SERVICE_CHARGE))) {
                 lookupLabels.setInterest(labelText);

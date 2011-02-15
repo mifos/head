@@ -20,6 +20,9 @@
 
 package org.mifos.accounts.financial.business.service.activity.accountingentry;
 
+import java.util.Set;
+
+import org.mifos.accounts.financial.business.COABO;
 import org.mifos.accounts.financial.business.FinancialActionTypeEntity;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.financial.exceptions.FinancialException;
@@ -39,8 +42,9 @@ public class DisbursementAccountingEntry extends BaseAccountingEntry {
         GLCodeEntity glcodeDebit = ((LoanBO) loanTrxn.getAccount()).getLoanOffering().getPrincipalGLcode();
         addAccountEntryDetails(loanTrxn.getAmount(), finloanDibursal, glcodeDebit, FinancialConstants.DEBIT);
 
-        addAccountEntryDetails(loanTrxn.getAmount(), finloanDibursal, getGLcode(finloanDibursal
-                .getApplicableCreditCharts()), FinancialConstants.CREDIT);
+        Set<COABO> creditCharts = finloanDibursal.getApplicableCreditCharts();
+        GLCodeEntity glcodeCredit = getGLcode(creditCharts);
+        addAccountEntryDetails(loanTrxn.getAmount(), finloanDibursal, glcodeCredit, FinancialConstants.CREDIT);
     }
 
 }

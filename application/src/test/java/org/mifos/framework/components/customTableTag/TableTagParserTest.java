@@ -32,7 +32,6 @@ import junit.framework.Assert;
 import junitx.framework.ObjectAssert;
 
 import org.junit.Test;
-import org.mifos.core.ClasspathResource;
 import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.framework.exceptions.TableTagParseException;
 
@@ -53,8 +52,7 @@ public class TableTagParserTest {
 
     @Test
     public void testParser() throws Exception {
-        Table table = TableTagParser.getInstance().parser(
-                ClasspathResource.getURI("org/mifos/framework/util/resources/customTableTag/example.xml").toString());
+        Table table = TableTagParser.getInstance().parser("org/mifos/framework/util/resources/customTableTag/example.xml");
         Assert.assertNotNull(table);
         HeaderDetails details = table.getHeaderDetails();
        Assert.assertEquals("drawtablerowbold", details.getHeaderStyle());

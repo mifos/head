@@ -36,7 +36,6 @@ import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.persistence.SavingsDao;
-import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.accounts.util.helpers.AccountStates;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -60,6 +59,9 @@ public class SavingsPrdPersistenceIntegrationTest extends MifosIntegrationTestCa
     private SavingsOfferingBO savingsOffering;
 
     @Autowired
+    private SavingsProductDao savingsProductDao;
+
+    @Autowired
     private SavingsDao savingsDao;
 
 
@@ -81,7 +83,7 @@ public class SavingsPrdPersistenceIntegrationTest extends MifosIntegrationTestCa
         savings = helper.createSavingsAccount("000100000000017", savingsOffering, group,
                 AccountStates.SAVINGS_ACC_APPROVED, userContext);
         StaticHibernateUtil.flushSession();
-        List<SavingsBO> savingsList = new SavingsPrdPersistence().retrieveSavingsAccountsForPrd(savingsOffering
+        List<SavingsBO> savingsList = savingsProductDao.retrieveSavingsAccountsForPrd(savingsOffering
                 .getPrdOfferingId());
        Assert.assertEquals(Integer.valueOf("1").intValue(), savingsList.size());
         savings = savingsDao.findById(savings.getAccountId());
@@ -90,7 +92,7 @@ public class SavingsPrdPersistenceIntegrationTest extends MifosIntegrationTestCa
     @Test
     public void testGetTimePerForIntCalcAndFreqPost() throws Exception {
         savingsOffering = createSavingsOfferingBO();
-        savingsOffering = new SavingsPrdPersistence().getSavingsProduct(savingsOffering.getPrdOfferingId());
+        savingsOffering = savingsProductDao.findById(savingsOffering.getPrdOfferingId().intValue());
         Assert.assertNotNull("The time period for Int calc should not be null", savingsOffering.getTimePerForInstcalc());
         Assert.assertNotNull("The freq for Int post should not be null", savingsOffering.getFreqOfPostIntcalc());
         savingsOffering = null;
@@ -98,32 +100,32 @@ public class SavingsPrdPersistenceIntegrationTest extends MifosIntegrationTestCa
 
     @Test
     public void testDormancyDays() throws Exception {
-       Assert.assertEquals(Short.valueOf("30"), new SavingsPrdPersistence().retrieveDormancyDays());
+       Assert.assertEquals(Short.valueOf("30"), savingsProductDao.findSavingsProductConfiguration().getDormancyDays());
     }
 
     @Test
     public void testGetSavingsOfferingsNotMixed() throws Exception {
         savingsOffering = createSavingsOfferingBO();
-       Assert.assertEquals(1, new SavingsPrdPersistence().getSavingsOfferingsNotMixed(Short.valueOf("1")).size());
+       Assert.assertEquals(1, savingsProductDao.getSavingsOfferingsNotMixed(Short.valueOf("1")).size());
         savingsOffering = null;
     }
 
     @Test
     public void testGetAllActiveSavingsProducts() throws Exception {
         savingsOffering = createSavingsOfferingBO();
-       Assert.assertEquals(1, new SavingsPrdPersistence().getAllActiveSavingsProducts().size());
+       Assert.assertEquals(1, savingsProductDao.getAllActiveSavingsProducts().size());
         savingsOffering = null;
     }
 
     @Test
     public void testGetSavingsApplicableRecurrenceTypes() throws Exception {
-       Assert.assertEquals(2, new SavingsPrdPersistence().getSavingsApplicableRecurrenceTypes().size());
+       Assert.assertEquals(2, savingsProductDao.getSavingsApplicableRecurrenceTypes().size());
     }
 
     @Test
     public void testGetAllSavingsProducts() throws Exception {
         savingsOffering = createSavingsOfferingBO();
-       Assert.assertEquals(1, new SavingsPrdPersistence().getAllSavingsProducts().size());
+       Assert.assertEquals(1, savingsProductDao.findAllSavingsProducts().size());
         savingsOffering = null;
     }
 

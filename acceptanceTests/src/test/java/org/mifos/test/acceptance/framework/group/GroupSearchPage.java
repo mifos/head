@@ -22,6 +22,7 @@ package org.mifos.test.acceptance.framework.group;
 
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.client.ChooseOfficePage;
+import org.mifos.test.acceptance.framework.client.CreateClientEnterPersonalDataPage;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -40,6 +41,19 @@ public class GroupSearchPage extends MifosPage {
         selenium.click("group_search.link.membershipNotRequired");
         waitForPageToLoad();
         return new ChooseOfficePage(selenium);
+    }
+
+    public void setGroup(String group){
+        selenium.type("group_search.input.search", group);
+    }
+
+    public CreateClientEnterPersonalDataPage selectGroup(String group)  {
+        setGroup(group);
+        selenium.click("group_search.button.proceed");
+        waitForPageToLoad();
+        selenium.click("link=" + group + "*");
+        waitForPageToLoad();
+        return new CreateClientEnterPersonalDataPage(selenium);
     }
 
 }

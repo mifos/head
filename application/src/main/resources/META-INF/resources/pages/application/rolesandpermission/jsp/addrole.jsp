@@ -27,7 +27,7 @@ explanation of the license and how it is applied.
 <%@taglib uri="/activity" prefix="activity"%>
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-	<span id="page.id" title="addrole" />
+	<span id="page.id" title="addrole"></span>
 
 <script language="javascript" src="pages/application/rolesandpermission/js/checkBoxLogic.js">
 </script>	

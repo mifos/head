@@ -34,7 +34,7 @@ explanation of the license and how it is applied.
 //-->
 </script>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link href="pages/framework/css/cssstyle.css" rel="stylesheet" type="text/css">
+<link href="pages/css/cssstyle.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>

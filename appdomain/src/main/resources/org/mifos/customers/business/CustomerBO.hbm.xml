@@ -527,19 +527,6 @@
                 order by comment_id desc
         ]]>
     </sql-query>
-    <sql-query name="Customer.getCustomerSurveyDto">
-        <return-scalar column="instanceId" type="integer" />
-        <return-scalar column="surveyName" type="string" />
-        <return-scalar column="dateConducted" type="date" />
-        <![CDATA[SELECT si.instance_id as instanceId,
-                s.survey_name as surveyName,
-                si.date_conducted as dateConducted
-                from survey_instance si
-                join survey s on s.survey_id = si.survey_id
-                where si.customer_id = :CUSTOMER_ID
-                order by s.survey_name
-        ]]>
-    </sql-query>
     <sql-query name="Customer.getLoanDetailDto">
         <return-scalar column="globalAccountNum" type="string" />
         <return-scalar column="prdOfferingName" type="string" />
@@ -609,24 +596,6 @@
                     where cs2.account_id = cs.account_id
                     and cs2.action_date >= date(:TODAY)))
                 group by globalAccountNum, currency
-        ]]>
-    </sql-query>
-    <sql-query name="Customer.getCustomFieldViewForCustomers">
-        <return-scalar column="fieldId" type="short" />
-        <return-scalar column="fieldValue" type="string" />
-        <return-scalar column="fieldType" type="short" />
-        <return-scalar column="mandatoryFlag" type="short" />
-        <return-scalar column="entityName" type="string" />
-        <![CDATA[select cfd.field_id as fieldId,
-                ccf.field_value as fieldValue,
-                cfd.field_type as fieldType,
-                cfd.mandatory_flag as mandatoryFlag,
-                le.entity_name as entityName
-                from custom_field_definition cfd
-                join lookup_entity le on le.entity_id = cfd.entity_id
-                left join customer_custom_field ccf on ccf.field_id = cfd.field_id
-                        and ccf.customer_id = :CUSTOMER_ID
-                where cfd.entity_type = :ENTITY_TYPE
         ]]>
     </sql-query>
     <query name="Customer.getActiveLoanAccounts">

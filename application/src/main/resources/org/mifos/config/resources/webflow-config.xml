@@ -14,6 +14,7 @@
         </webflow:flow-execution-listeners>
     </webflow:flow-executor>
     <webflow:flow-registry id="flowRegistry" flow-builder-services="flowBuilderServices">
+       <webflow:flow-location-pattern value="classpath*:org/mifos/platform/**/ui/flows/**.xml"/>
        <webflow:flow-location-pattern value="/WEB-INF/flows/**.xml"/>
     </webflow:flow-registry>
 

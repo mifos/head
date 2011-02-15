@@ -20,10 +20,7 @@
 
 package org.mifos.framework.components.mifosmenu;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -34,7 +31,7 @@ import javax.xml.validation.SchemaFactory;
 
 import org.apache.commons.lang.StringUtils;
 import org.mifos.config.business.MifosConfigurationManager;
-import org.mifos.core.ClasspathResource;
+import org.mifos.core.MifosResourceUtil;
 import org.mifos.framework.exceptions.MenuParseException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.FilePaths;
@@ -60,13 +57,12 @@ public class MenuParser {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             SchemaFactory schfactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
             schfactory.setErrorHandler(null);
-            Schema schema = schfactory.newSchema(new StreamSource(new File(ClasspathResource
-                    .getURI(FilePaths.MENUSCHEMA))));
+            Schema schema = schfactory.newSchema(new StreamSource(MifosResourceUtil.getClassPathResourceAsStream(FilePaths.MENUSCHEMA)));
             factory.setNamespaceAware(false);
             factory.setValidating(false);
             factory.setSchema(schema);
             DocumentBuilder builder = factory.newDocumentBuilder();
-            Document document = builder.parse(new File(ClasspathResource.getURI(FilePaths.MENUPATH)));
+            Document document = builder.parse(MifosResourceUtil.getClassPathResourceAsStream(FilePaths.MENUPATH));
             NodeList tabNodeList = document.getElementsByTagName(MenuConstants.TOPMENUTAB);
             Menu leftMenus[] = new Menu[tabNodeList.getLength()];
             for (int i = 0; i < tabNodeList.getLength(); i++) {
@@ -86,9 +82,6 @@ public class MenuParser {
             throw new MenuParseException(pce);
         } catch (IOException ioe) {
             throw new MenuParseException(ioe);
-
-        } catch (URISyntaxException urise) {
-            throw new MenuParseException(urise);
         }
     }
 

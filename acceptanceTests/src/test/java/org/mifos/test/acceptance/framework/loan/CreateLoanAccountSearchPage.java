@@ -28,6 +28,7 @@ public class CreateLoanAccountSearchPage extends AbstractPage {
 
     public CreateLoanAccountSearchPage(Selenium selenium) {
         super(selenium);
+        verifyPage("CustSearchAccount");
     }
 
     public void verifyPage() {

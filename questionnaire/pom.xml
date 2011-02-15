@@ -6,7 +6,7 @@
     <groupId>org.mifos</groupId>
     <artifactId>mifos-questionnaire</artifactId>
     <packaging>jar</packaging>
-    <version>1.8-SNAPSHOT</version>
+    <version>1.9-SNAPSHOT</version>
     <name>Mifos - Questionnaire</name>
     <url>http://www.mifos.org</url>
 
@@ -24,11 +24,15 @@
     <parent>
         <artifactId>mifos-parent</artifactId>
         <groupId>org.mifos</groupId>
-        <version>1.8-SNAPSHOT</version>
+        <version>1.9-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <dependencies>
+        <dependency>
+            <groupId>org.mifos</groupId>
+            <artifactId>mifos-db</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.mifos</groupId>
             <artifactId>mifos-serviceInterfaces</artifactId>
@@ -143,66 +147,6 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>sql-maven-plugin</artifactId>
-                <version>1.2</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>mysql</groupId>
-                        <artifactId>mysql-connector-java</artifactId>
-                        <version>5.1.13</version>
-                    </dependency>
-                </dependencies>
-                <configuration>
-                    <driver>com.mysql.jdbc.Driver</driver>
-                    <url>jdbc:mysql://${integration.database.host}:${integration.database.port}/?${integration.database.params}</url>
-                    <username>${integration.database.user}</username>
-                    <password>${integration.database.password}</password>
-                    <autocommit>true</autocommit>
-                    <skip>${maven.test.skip}</skip>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>drop_db</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>execute</goal>
-                        </goals>
-                        <configuration>
-                            <sqlCommand>DROP DATABASE IF EXISTS
-                                ${integration.database}</sqlCommand>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>create_db</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>execute</goal>
-                        </goals>
-                        <configuration>
-                            <sqlCommand>CREATE DATABASE
-                                ${integration.database}</sqlCommand>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>populate_db</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>execute</goal>
-                        </goals>
-                        <configuration>
-                            <sqlCommand>USE ${integration.database}</sqlCommand>
-                            <srcFiles>
-                                <srcFile>${sql.resources.target.directory}/latest-schema.sql</srcFile>
-                                <srcFile>${sql.resources.target.directory}/latest-data.sql</srcFile>
-                                <srcFile>${sql.resources.target.directory}/custom_data.sql</srcFile>
-                                <srcFile>${sql.resources.target.directory}/testdbinsertionscript.sql</srcFile>
-                            </srcFiles>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
@@ -279,6 +223,7 @@
                 <artifactId>maven-pmd-plugin</artifactId>
                 <version>2.4</version>
                 <configuration>
+                    <targetJdk>1.6</targetJdk>
                     <rulesets>
                         <ruleset>${modules.root.dir}/.ruleset</ruleset>
                     </rulesets>

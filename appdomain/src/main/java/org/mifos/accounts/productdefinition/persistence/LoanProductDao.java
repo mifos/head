@@ -44,6 +44,8 @@ public interface LoanProductDao {
 
     LoanOfferingBO findById(Integer productId);
 
+    LoanOfferingBO findBySystemId(String globalPrdOfferingNum);
+
     List<LoanOfferingBO> findActiveLoanProductsApplicableToCustomerLevel(CustomerLevelEntity customerLevel);
 
     List<ValueListElement> findAllLoanPurposes();

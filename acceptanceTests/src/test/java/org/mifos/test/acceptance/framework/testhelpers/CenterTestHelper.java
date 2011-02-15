@@ -23,18 +23,19 @@ package org.mifos.test.acceptance.framework.testhelpers;
 import org.mifos.test.acceptance.framework.center.CenterViewDetailsPage;
 import org.mifos.test.acceptance.framework.center.CreateCenterConfirmationPage;
 import org.mifos.test.acceptance.framework.center.CreateCenterEnterDataPage;
+import org.mifos.test.acceptance.framework.center.CreateCenterPreviewDataPage;
+import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 
 import com.thoughtworks.selenium.Selenium;
 
 public class CenterTestHelper {
     private final NavigationHelper navigationHelper;
+    private final Selenium selenium;
 
     public CenterTestHelper(Selenium selenium) {
         this.navigationHelper = new NavigationHelper(selenium);
-    }
-
-    public CenterTestHelper(NavigationHelper navigationHelper) {
-        this.navigationHelper = navigationHelper;
+        this.selenium = selenium;
     }
 
     public CenterViewDetailsPage createCenter(CreateCenterEnterDataPage.SubmitFormParameters formParameters, String officeName) {
@@ -47,5 +48,33 @@ public class CenterTestHelper {
         confirmationPage.verifyPage();
 
         return confirmationPage.navigateToCenterViewDetailsPage();
+    }
+
+    public CenterViewDetailsPage createCenterWithQuestionGroupsEdited(CreateCenterEnterDataPage.SubmitFormParameters formParameters, String officeName, QuestionResponseParameters responseParams, QuestionResponseParameters responseParams2) {
+        QuestionResponsePage responsePage = navigationHelper
+            .navigateToClientsAndAccountsPage()
+            .navigateToCreateNewCenterPage()
+            .selectOffice(officeName)
+            .submitAndNavigateToQuestionResponsePage(formParameters);
+        responsePage.populateAnswers(responseParams);
+        responsePage.navigateToNextPage();
+        new CreateCenterPreviewDataPage(selenium).navigateToEditQuestionResponsePage();
+        responsePage.populateAnswers(responseParams2);
+        responsePage.navigateToNextPage();
+
+        return new CreateCenterPreviewDataPage(selenium).submit().navigateToCenterViewDetailsPage();
+    }
+
+    public QuestionResponsePage navigateToQuestionResponsePageWhenCreatingCenter(CreateCenterEnterDataPage.SubmitFormParameters formParameters, String officeName) {
+        QuestionResponsePage responsePage = navigationHelper
+            .navigateToClientsAndAccountsPage()
+            .navigateToCreateNewCenterPage()
+            .selectOffice(officeName)
+            .submitAndNavigateToQuestionResponsePage(formParameters);
+        return responsePage;
+    }
+
+    public CenterViewDetailsPage navigateToCenterViewDetailsPage(String centerName) {
+        return navigationHelper.navigateToCenterViewDetailsPage(centerName);
     }
 }

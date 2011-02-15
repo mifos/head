@@ -37,6 +37,7 @@ import org.mifos.test.acceptance.framework.savings.SavingsDepositWithdrawalConfi
 import org.mifos.test.acceptance.framework.savings.SavingsDepositWithdrawalPage;
 
 import com.thoughtworks.selenium.Selenium;
+import org.mifos.test.acceptance.framework.savings.SavingsCloseAccountPage;
 
 /**
  * Holds methods common to most savings account tests.
@@ -62,6 +63,19 @@ public class SavingsAccountHelper {
         CreateSavingsAccountEntryPage createSavingsAccountEntryPage = createSavingsAccountSearchPage.searchAndNavigateToCreateSavingsAccountPage(searchParameters);
         createSavingsAccountEntryPage.verifyPage();
         CreateSavingsAccountConfirmationPage createSavingsAccountConfirmationPage = createSavingsAccountEntryPage.submitAndNavigateToSavingsAccountConfirmationPage(submitAccountParameters);
+        createSavingsAccountConfirmationPage.verifyPage();
+        SavingsAccountDetailPage savingsAccountDetailPage = createSavingsAccountConfirmationPage.navigateToSavingsAccountDetailsPage();
+        savingsAccountDetailPage.verifyPage();
+        return savingsAccountDetailPage;
+    }
+    public SavingsAccountDetailPage createSavingsAccountWithoutPendingApprovalState(CreateSavingsAccountSearchParameters searchParameters,
+            CreateSavingsAccountSubmitParameters submitAccountParameters){
+        CreateSavingsAccountSearchPage createSavingsAccountSearchPage = navigateToCreateSavingsAccountSearchPage();
+        createSavingsAccountSearchPage.verifyPage();
+        CreateSavingsAccountEntryPage createSavingsAccountEntryPage = createSavingsAccountSearchPage.searchAndNavigateToCreateSavingsAccountPage(searchParameters);
+        createSavingsAccountEntryPage.verifyPage();
+        CreateSavingsAccountConfirmationPage createSavingsAccountConfirmationPage =
+            createSavingsAccountEntryPage.submitAndNavigateToSavingsAccountConfirmationPageWithoutPendingApprovalState(submitAccountParameters);
         createSavingsAccountConfirmationPage.verifyPage();
         SavingsAccountDetailPage savingsAccountDetailPage = createSavingsAccountConfirmationPage.navigateToSavingsAccountDetailsPage();
         savingsAccountDetailPage.verifyPage();
@@ -119,6 +133,17 @@ public class SavingsAccountHelper {
         CreateSavingsAccountConfirmationPage createSavingsAccountConfirmationPage = createSavingsAccountEntryPage.submitWithQGAndNavigateToSavingsAccountConfirmationPage(submitAccountParameters);
         createSavingsAccountConfirmationPage.verifyPage();
         SavingsAccountDetailPage savingsAccountDetailPage = createSavingsAccountConfirmationPage.navigateToSavingsAccountDetailsPage();
+        savingsAccountDetailPage.verifyPage();
+        return savingsAccountDetailPage;
+    }
+
+    public SavingsAccountDetailPage closeSavingsAccount(String savingsAccountID, String notes) {
+        NavigationHelper helper = new NavigationHelper(selenium);
+        SavingsAccountDetailPage savingsAccountDetailPage = helper.navigateToSavingsAccountDetailPage(savingsAccountID);
+        savingsAccountDetailPage.verifyPage();
+        SavingsCloseAccountPage savingsCloseAccountPage = savingsAccountDetailPage.navigateToCloseAccount();
+        savingsCloseAccountPage.verifyPage();
+        savingsAccountDetailPage = savingsCloseAccountPage.closeSavingsAccount(notes);
         savingsAccountDetailPage.verifyPage();
         return savingsAccountDetailPage;
     }

@@ -28,8 +28,8 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -59,17 +59,15 @@ public class ConfigurationLocatorTest {
     public void testGetFileHandle() throws IOException {
 
         // exercise test
-        File returnedFile = configurationLocator.getFile("mock.mifosChartOfAccounts.xml");
+        InputStream returnedFile = configurationLocator.getFileInputStream("mock.mifosChartOfAccounts.xml");
 
         // verification
         Assert.assertNotNull(returnedFile);
     }
 
-    @Test(expected = FileNotFoundException.class)
     public void testGetFileHandleFailure() throws IOException {
-
         // exercise test
-        configurationLocator.getFile("x.xml");
+        configurationLocator.getFileInputStream("x.xml");
     }
 
     @Test

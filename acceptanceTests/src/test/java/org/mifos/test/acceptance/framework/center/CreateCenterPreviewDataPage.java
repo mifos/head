@@ -21,6 +21,7 @@
 package org.mifos.test.acceptance.framework.center;
 
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -32,11 +33,18 @@ public class CreateCenterPreviewDataPage extends MifosPage {
 
     public CreateCenterPreviewDataPage(Selenium selenium) {
         super(selenium);
+        verifyPage("previewcenter");
     }
 
     public CreateCenterConfirmationPage submit() {
         selenium.click("previewcenter.button.submit");
         waitForPageToLoad();
         return new CreateCenterConfirmationPage(selenium);
+    }
+
+    public QuestionResponsePage navigateToEditQuestionResponsePage() {
+        selenium.click("editQuestionResponses_button");
+        waitForPageToLoad();
+        return new QuestionResponsePage(selenium);
     }
 }

@@ -6,7 +6,7 @@
            http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
            http://www.springframework.org/schema/security
            http://www.springframework.org/schema/security/spring-security-3.0.xsd">
-
+           
     <beans:bean id="loginFormAuthentication" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
         <beans:property name="loginFormUrl" value="/login.ftl" />
     </beans:bean>
@@ -43,7 +43,6 @@
         <intercept-url pattern="/viewAndEditQuestionGroup.ftl*" access="isFullyAuthenticated() and hasRole('ROLE_CAN_MANAGE_QUESTION_GROUPS')"/>
         <intercept-url pattern="/uploadQuestionGroup.ftl*" access="isFullyAuthenticated() and hasRole('ROLE_CAN_MANAGE_QUESTION_GROUPS')"/>
 
-        <intercept-url pattern="/accountingDataForm.ftl*" access="isFullyAuthenticated() and hasRole('ROLE_CAN_USE_ACCOUNTING_INTEGRATION')"/>
         <intercept-url pattern="/confirmExportsDelete.ftl*" access="isFullyAuthenticated() and hasRole('ROLE_CAN_USE_ACCOUNTING_INTEGRATION')"/>
         <intercept-url pattern="/deleteCacheDir.ftl*" access="isFullyAuthenticated() and hasRole('ROLE_CAN_USE_ACCOUNTING_INTEGRATION')"/>
         <intercept-url pattern="/generateExportsList.ftl*" access="isFullyAuthenticated() and hasRole('ROLE_CAN_USE_ACCOUNTING_INTEGRATION')"/>

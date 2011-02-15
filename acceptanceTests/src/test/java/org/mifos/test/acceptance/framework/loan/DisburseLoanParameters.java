@@ -102,4 +102,12 @@ public class DisburseLoanParameters {
         return 0;
     }
 
+    static public DisburseLoanParameters getDisbursalParameters(String dd, String mm, String yyyy) {
+        DisburseLoanParameters disburseParams = new DisburseLoanParameters();
+        disburseParams.setPaymentType(DisburseLoanParameters.CASH);
+        disburseParams.setDisbursalDateDD(dd);
+        disburseParams.setDisbursalDateMM(mm);
+        disburseParams.setDisbursalDateYYYY(yyyy);
+        return disburseParams;
+    }
 }

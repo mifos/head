@@ -25,7 +25,7 @@
     <title>[@spring.message "dateTimeUpdate"/]</title>
   </head>
   <body>
-      <span id="page.id" title="DateTimeUpdate" />
+      <span id="page.id" title="DateTimeUpdate"></span>
       [@spring.message "updatingToTime"/]&nbsp;: <div id="DateTimeUpdate.text.result">${model.updateResult}</div>
   [@mifos.footer /]
 

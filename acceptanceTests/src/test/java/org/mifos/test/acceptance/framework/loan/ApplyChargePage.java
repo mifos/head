@@ -29,9 +29,6 @@ import org.testng.Assert;
 public class ApplyChargePage extends MifosPage {
     public ApplyChargePage(Selenium selenium) {
         super(selenium);
-    }
-
-    public void verifyPage() {
         this.verifyPage("ApplyCharges");
     }
 
@@ -45,9 +42,19 @@ public class ApplyChargePage extends MifosPage {
         return new LoanAccountPage(selenium);
     }
 
+    public LoanAccountPage submitUsingLabelAndNavigateToApplyChargeConfirmationPage(ChargeParameters params)
+    {
+        selenium.select("applyCharges.input.type", params.getType());
+        this.typeTextIfNotEmpty("applyCharges.input.amount", params.getAmount());
+        selenium.click("applyCharges.button.submit");
+        waitForPageToLoad();
+
+        return new LoanAccountPage(selenium);
+    }
+
     public void verifyBlockedFee(String[] blockedInterest) {
-        for (int index = 0; index < blockedInterest.length; index++) {
-            String fee = blockedInterest[index];
+        for (String element : blockedInterest) {
+            String fee = element;
             Assert.assertTrue(!selenium.isElementPresent("//select[@name='chargeType']/option[text()='" + fee + "']"));
         }
     }

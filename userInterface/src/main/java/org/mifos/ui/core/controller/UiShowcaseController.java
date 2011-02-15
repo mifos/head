@@ -32,5 +32,6 @@ public class UiShowcaseController {
 
     @RequestMapping(value = "/showcaseCss.ftl")
     public void showcaseCss() {
+    	// empty body. go directly to FTL
     }
 }

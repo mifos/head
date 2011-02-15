@@ -1,1 +1,0 @@
-alter table variable_installment_details add min_loan_amount_currency_id smallint;

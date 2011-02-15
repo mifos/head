@@ -152,7 +152,7 @@ public class CreateSavingsAccountController {
             CreateSavingsAccountFormBean formBean) {
         
         // Search result cap. This is needed until ajax search is implemented.
-        final Integer searchCap = 1000;
+        Integer searchCap = 1000;
         
     	// FIXME - keithw - selected pageNumber and pageSize info should be passed in on bean.
     	CustomerSearchDto customerSearchDto = new CustomerSearchDto(formBean.getSearchString(), Integer.valueOf(1), searchCap);

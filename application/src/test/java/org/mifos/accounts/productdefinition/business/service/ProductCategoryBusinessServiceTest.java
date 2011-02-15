@@ -4,17 +4,17 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import org.junit.Test;
-import org.mifos.accounts.productdefinition.persistence.ProductCategoryPersistence;
+import org.mifos.accounts.productdefinition.persistence.LegacyProductCategoryDao;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.springframework.test.annotation.ExpectedException;
 
 public class ProductCategoryBusinessServiceTest {
-    final ProductCategoryPersistence productCategoryPersistence = mock(ProductCategoryPersistence.class);
+    final LegacyProductCategoryDao productCategoryPersistence = mock(LegacyProductCategoryDao.class);
 
     ProductCategoryBusinessService service = new ProductCategoryBusinessService() {
         @Override
-        protected ProductCategoryPersistence getProductCategoryPersistence() {
+        protected LegacyProductCategoryDao getProductCategoryPersistence() {
             return productCategoryPersistence;
         }
     };

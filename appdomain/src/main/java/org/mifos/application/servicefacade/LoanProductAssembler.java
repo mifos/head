@@ -26,7 +26,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.mifos.accounts.fees.business.FeeBO;
-import org.mifos.accounts.fees.persistence.FeePersistence;
+import org.mifos.accounts.fees.persistence.FeeDao;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.financial.business.service.GeneralLedgerDao;
 import org.mifos.accounts.fund.business.FundBO;
@@ -130,7 +130,7 @@ public class LoanProductAssembler {
             List<FeeBO> applicableFees = new ArrayList<FeeBO>();
             List<Integer> applicableFeeIds = loanProductRequest.getApplicableFees();
             for (Integer feeId : applicableFeeIds) {
-                FeeBO fee = new FeePersistence().findFeeById(feeId.shortValue());
+                FeeBO fee = ApplicationContextProvider.getBean(FeeDao.class).findById(feeId.shortValue());
                 applicableFees.add(fee);
             }
 

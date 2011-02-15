@@ -82,7 +82,7 @@ public class LoanAccountAddNoteTest extends UiTestCaseBase {
         assertTextFoundOnPage(TEST_ACCOUNT_NOTE);
     }
 
-    @Test(enabled=false)
+    @Test(enabled=true)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void addNoteToLoanAccountAndVerifyAllNotes() throws Exception {
         initData();

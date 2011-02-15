@@ -26,26 +26,15 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import org.hibernate.cfg.Configuration;
-import org.mifos.core.ClasspathResource;
+import org.mifos.core.MifosResourceUtil;
 import org.mifos.framework.exceptions.HibernateStartUpException;
 import org.mifos.framework.hibernate.helper.HibernateConstants;
 import org.mifos.framework.persistence.SqlExecutor;
-import org.mifos.framework.persistence.SqlResource;
 
 public class DatabaseSetup {
 
-    public static Configuration getHibernateConfiguration() {
-        Configuration configuration = new Configuration();
-        try {
-            configuration.configure(ClasspathResource.getURI(FilePaths.HIBERNATECFGFILE).toURL());
-        } catch (Exception e) {
-            throw new HibernateStartUpException(HibernateConstants.CFGFILENOTFOUND, e);
-        }
-        return configuration;
-    }
-
     public static void executeScript(String name, Connection connection) throws SQLException, IOException {
-        InputStream sql = SqlResource.getInstance().getAsStream(name);
+        InputStream sql = MifosResourceUtil.getSQLFileAsStream(name);
         SqlExecutor.execute(sql, connection);
     }
 

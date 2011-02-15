@@ -32,7 +32,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
 	<tiles:put name="body" type="string">
-	<span id="page.id" title="ApplyPayment" />
+	<span id="page.id" title="ApplyPayment"></span>
 <SCRIPT>
 	function ViewDetails(){
 		customerAccountActionForm.action="customerAccountAction.do?method=load";

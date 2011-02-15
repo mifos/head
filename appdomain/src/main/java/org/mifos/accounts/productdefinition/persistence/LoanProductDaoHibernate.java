@@ -271,4 +271,13 @@ public class LoanProductDaoHibernate implements LoanProductDao {
 
         return (LoanOfferingBO) this.genericDao.executeUniqueResultNamedQuery("loanProduct.byid", queryParameters);
     }
+
+    @Override
+    public LoanOfferingBO findBySystemId(final String globalPrdOfferingNum) {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("globalPrdOfferingNum", globalPrdOfferingNum);
+
+        return (LoanOfferingBO) this.genericDao.executeUniqueResultNamedQuery("loanProduct.byglobalid", queryParameters);
+
+    }
 }

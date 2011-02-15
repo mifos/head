@@ -33,7 +33,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".create">
 	<tiles:put name="body" type="string">
-	<span id="page.id" title="CreateSavingsProduct" />
+	<span id="page.id" title="CreateSavingsProduct"></span>
 		<script>
 		<!--
 			function fnCancel(form) {

@@ -45,6 +45,17 @@ public class CreateSavingsAccountEntryPage extends AbstractPage {
 
     }
 
+    public CreateSavingsAccountConfirmationPage submitAndNavigateToSavingsAccountConfirmationPageWithoutPendingApprovalState(CreateSavingsAccountSubmitParameters formParameters) {
+        selenium.type("continuecreatesavingsaccount.input.recommendedAmount",formParameters.getAmount());
+        selenium.click("continuecreatesavingsaccount.button.preview");
+        waitForPageToLoad();
+        selenium.isVisible("approvedButton");
+        selenium.click("approvedButton");
+        waitForPageToLoad();
+        return new CreateSavingsAccountConfirmationPage(selenium);
+
+    }
+
     public CreateSavingsAccountConfirmationPage submitWithQGAndNavigateToSavingsAccountConfirmationPage(CreateSavingsAccountSubmitParameters formParameters) {
         selenium.type("continuecreatesavingsaccount.input.recommendedAmount",formParameters.getAmount());
         selenium.click("continuecreatesavingsaccount.button.preview");

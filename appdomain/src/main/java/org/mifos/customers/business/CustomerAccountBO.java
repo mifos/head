@@ -45,9 +45,9 @@ import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
-import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.accounts.fees.util.helpers.FeeChangeType;
 import org.mifos.accounts.fees.util.helpers.FeeStatus;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountExceptionConstants;
@@ -95,20 +95,7 @@ public class CustomerAccountBO extends AccountBO {
 
     private List<CustomerActivityEntity> customerActivitDetails = new ArrayList<CustomerActivityEntity>();
 
-    private FeePersistence feePersistence;
-
     private static int numberOfMeetingDatesToGenerate = 10;
-
-    public FeePersistence getFeePersistence() {
-        if (feePersistence == null) {
-            feePersistence = new FeePersistence();
-        }
-        return feePersistence;
-    }
-
-    public void setFeePersistence(final FeePersistence feePersistence) {
-        this.feePersistence = feePersistence;
-    }
 
     public static CustomerAccountBO createNew(CustomerBO customer, List<AccountFeesEntity> accountFees,
             MeetingBO customerMeeting, CalendarEvent applicableCalendarEvents) {
@@ -276,7 +263,7 @@ public class CustomerAccountBO extends AccountBO {
         super(userContext, customer, AccountTypes.CUSTOMER_ACCOUNT, AccountState.CUSTOMER_ACCOUNT_ACTIVE);
         if (fees != null) {
             for (FeeDto feeDto : fees) {
-                FeeBO fee = getFeePersistence().getFee(feeDto.getFeeIdValue());
+                FeeBO fee = getFeeDao().findById(feeDto.getFeeIdValue());
 
                 this.addAccountFees(new AccountFeesEntity(this, fee, new LocalizationConverter()
                         .getDoubleValueForCurrentLocale(feeDto.getAmount())));
@@ -708,7 +695,7 @@ public class CustomerAccountBO extends AccountBO {
                 throw new AccountException(AccountConstants.MISC_CHARGE_NOT_APPLICABLE);
             }
             addFeeToAccountFee(feeId, charge);
-            FeeBO fee = getFeePersistence().getFee(feeId);
+            FeeBO fee = getFeeDao().findById(feeId);
             updateCustomerActivity(feeId,
                     new Money(((AmountFeeBO) fee).getFeeAmount().getCurrency(), charge.toString()), fee.getFeeName()
                             + AccountConstants.APPLIED);
@@ -727,7 +714,7 @@ public class CustomerAccountBO extends AccountBO {
                 if (dueInstallments.isEmpty()) {
                     throw new AccountException(AccountConstants.NOMOREINSTALLMENTS);
                 }
-                FeeBO fee = getFeePersistence().getFee(feeId);
+                FeeBO fee = getFeeDao().findById(feeId);
                 if (fee.getFeeFrequency().getFeePayment() != null) {
                     applyOneTimeFee(fee, chargeAmount);
                 } else {
@@ -771,7 +758,7 @@ public class CustomerAccountBO extends AccountBO {
     }
 
     private void addFeeToAccountFee(final Short feeId, final Double charge) {
-        FeeBO fee = getFeePersistence().getFee(feeId);
+        FeeBO fee = getFeeDao().findById(feeId);
         AccountFeesEntity accountFee = null;
         if (fee.isPeriodic() && !isFeeAlreadyApplied(fee) || !fee.isPeriodic()) {
             accountFee = new AccountFeesEntity(this, fee, charge, FeeStatus.ACTIVE.getValue(), new DateTimeService()
@@ -1137,7 +1124,7 @@ public class CustomerAccountBO extends AccountBO {
      * PaymentTypeEntity.
      */
     private PaymentTypeEntity getPaymentTypeEntity(final short paymentTypeId) {
-        return getFeePersistence().loadPersistentObject(PaymentTypeEntity.class, paymentTypeId);
+        return ApplicationContextProvider.getBean(LegacyAccountDao.class).loadPersistentObject(PaymentTypeEntity.class, paymentTypeId);
     }
 
     @Override

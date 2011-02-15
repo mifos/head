@@ -27,7 +27,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".clientsacclayoutmenu">
 	<tiles:put name="body" type="string">
-	<span id="page.id" title="LoanConfirmation" />
+	<span id="page.id" title="LoanConfirmation"></span>
 	
 	
 		<table width="95%" border="0" cellpadding="0" cellspacing="0">

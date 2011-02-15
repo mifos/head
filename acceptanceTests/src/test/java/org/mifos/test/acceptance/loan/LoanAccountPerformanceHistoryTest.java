@@ -20,18 +20,21 @@
 
 package org.mifos.test.acceptance.loan;
 
-import org.dbunit.dataset.IDataSet;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 import org.joda.time.DateTime;
 import org.mifos.framework.util.DbUnitUtilities;
-import org.mifos.test.acceptance.framework.AppLauncher;
-import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
-import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
-import org.mifos.test.acceptance.framework.loan.RepayLoanConfirmationPage;
-import org.mifos.test.acceptance.framework.loan.RepayLoanPage;
-import org.mifos.test.acceptance.framework.loan.RepayLoanParameters;
-import org.mifos.test.acceptance.framework.search.SearchResultsPage;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameters;
+import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
+import org.mifos.test.acceptance.framework.loan.EditLoanAccountStatusParameters;
+import org.mifos.test.acceptance.framework.loan.PaymentParameters;
+import org.mifos.test.acceptance.framework.loan.PerformanceHistoryAtributes;
+import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,11 +45,12 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"loan","acceptance","ui","smoke"})
+@Test(sequential=true, groups={"loan","acceptance","ui"})
 public class LoanAccountPerformanceHistoryTest extends UiTestCaseBase {
 
-    private static final String CLIENT_PERFORMANCE_HISTORY = "CLIENT_PERF_HISTORY";
-    private AppLauncher appLauncher;
+    //private static final String CLIENT_PERFORMANCE_HISTORY = "CLIENT_PERF_HISTORY";
+    //private AppLauncher appLauncher;
+    private LoanTestHelper loanTestHelper;
 
     @Autowired
     private DriverManagerDataSource dataSource;
@@ -61,11 +65,13 @@ public class LoanAccountPerformanceHistoryTest extends UiTestCaseBase {
     public void setUp() throws Exception {
         super.setUp();
 
-        appLauncher = new AppLauncher(selenium);
+        //appLauncher = new AppLauncher(selenium);
 
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = new DateTime(2009,6,25,8,0,0,0);
+        DateTime targetTime = new DateTime(2009,2,7,12,0,0,0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+
+        loanTestHelper = new LoanTestHelper(selenium);
     }
 
     @AfterMethod
@@ -73,29 +79,59 @@ public class LoanAccountPerformanceHistoryTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
+    // http://mifosforge.jira.com/browse/MIFOSTEST-359
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    public void repayLoanAndVerifyPerformanceHistory() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
+    public void repayMultipleLoansAndVerifyPerformanceHistory() throws Exception {
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
+        CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
+        CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
+        searchParameters.setLoanProduct("WeeklyFlatLoanWithOneTimeFees");
+        searchParameters.setSearchString("Stu1233171716380");
+        submitAccountParameters.setInterestRate("3.0");
+        submitAccountParameters.setNumberOfInstallments("11");
+        DisburseLoanParameters disburseParameters = new DisburseLoanParameters();
+        disburseParameters.setDisbursalDateDD("07");
+        disburseParameters.setDisbursalDateMM("02");
+        disburseParameters.setDisbursalDateYYYY("2009");
+        disburseParameters.setPaymentType(PaymentParameters.CASH);
+        PerformanceHistoryAtributes performanceHistoryAtributes = new PerformanceHistoryAtributes();
+        performanceHistoryAtributes.setDelinquentPortfolio(0.0);
+        loanTestHelper.editLoanProductIncludeInLoanCounter("WeeklyFlatLoanWithOneTimeFees", true);
+        loanTestHelper.editLoanProductIncludeInLoanCounter("MyLoanProduct1232993826860", true);
 
-        // find the loan w/ id 000100000000048
-        HomePage homePage = appLauncher.launchMifos().loginSuccessfullyUsingDefaultCredentials();
-        homePage.verifyPage();
-        SearchResultsPage searchResults = homePage.search("000100000000048");
-        searchResults.verifyPage();
-        LoanAccountPage loanAccountPage = searchResults.navigateToLoanAccountDetailPage("000100000000048");
+        //When
+        Map<String,String> loanIds = new HashMap<String,String>();
+        submitAccountParameters.setAmount("2000.0");
+        loanIds.put(submitAccountParameters.getAmount(), loanTestHelper.createLoanAccount(searchParameters, submitAccountParameters).getAccountId());
+        performanceHistoryAtributes.incrementLoanCycle();
+        performanceHistoryAtributes.incrementLoanCycleForProduct(searchParameters.getLoanProduct());
+        submitAccountParameters.setAmount("3000.0");
+        loanIds.put(submitAccountParameters.getAmount(), loanTestHelper.createLoanAccount(searchParameters, submitAccountParameters).getAccountId());
+        performanceHistoryAtributes.incrementLoanCycle();
+        performanceHistoryAtributes.incrementLoanCycleForProduct(searchParameters.getLoanProduct());
+        submitAccountParameters.setAmount("5000.0");
+        searchParameters.setLoanProduct("MyLoanProduct1232993826860");
+        loanIds.put(submitAccountParameters.getAmount(), loanTestHelper.createLoanAccount(searchParameters, submitAccountParameters).getAccountId());
+        performanceHistoryAtributes.incrementLoanCycle();
+        performanceHistoryAtributes.incrementLoanCycleForProduct(searchParameters.getLoanProduct());
+        EditLoanAccountStatusParameters params = new EditLoanAccountStatusParameters();
+        params.setStatus(EditLoanAccountStatusParameters.APPROVED);
+        params.setNote("Approved.");
+        Set<String>amounts = loanIds.keySet();
+        for (String accountid : loanIds.values()) {
+            loanTestHelper.changeLoanAccountStatus(accountid, params);
+            loanTestHelper.disburseLoan(accountid, disburseParameters);
+            performanceHistoryAtributes.incrementNoOfActiveLoan();
+        }
 
-        // this loan is already disbursed. We repay it and make sure that the performance history is correct.
-        RepayLoanParameters params = new RepayLoanParameters();
-        params.setModeOfRepayment(RepayLoanParameters.CASH);
+        //Then
+        for (String amount : amounts) {
+            loanTestHelper.repayLoan(loanIds.get(amount));
+            performanceHistoryAtributes.setAmountOfLastLoan(amount);
+            performanceHistoryAtributes.decrementNoOfActiveLoan();
+            loanTestHelper.verifyPerformenceHistory(searchParameters.getSearchString(), performanceHistoryAtributes);
+        }
 
-        RepayLoanPage repayLoanPage = loanAccountPage.navigateToRepayLoan();
-        RepayLoanConfirmationPage repayLoanConfirmationPage = repayLoanPage.submitAndNavigateToRepayLoanConfirmationPage(params);
-        repayLoanConfirmationPage.submitAndNavigateToLoanAccountDetailsPage();
-
-        // validate
-        IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromDataSetDirectoryFile("LoanAccountPerformanceHistoryTest_001_result_dbunit.xml");
-        IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTables(dataSource, new String[] { CLIENT_PERFORMANCE_HISTORY });
-
-        dbUnitUtilities.verifyTable(CLIENT_PERFORMANCE_HISTORY, databaseDataSet, expectedDataSet);
     }
 }

@@ -78,27 +78,52 @@ public class DefineNewLoanProductPage extends AbstractPage {
         // grace period type
         public static final int NONE = 1;
 
+        // Calculate # of Installments as
+        public static final int SAME_FOR_ALL_LOANS = 1;
+        public static final int BY_LAST_LOAN_AMOUNT = 2;
+        public static final int BY_LOAN_CYCLE = 3;
+        public static final int MAX_CYCLES = 6;
+
+        // product category
+        public static final String CATEGORY_OTHER = "Other";
+
         private String branch;
         private String offeringName;
         private String offeringShortName;
         private String description;
         private String category;
         private int applicableFor;
+        private int calculateLoanAmount = SAME_FOR_ALL_LOANS;
         private String minLoanAmount;
         private String maxLoanAmount;
         private String defaultLoanAmount;
+        private String[][] cycleLoanAmount = new String[MAX_CYCLES][3];
+        private String[][] amountsByLastLoanAmount = new String[MAX_CYCLES][4];
         private int interestTypes;
         private String minInterestRate;
         private String maxInterestRate;
         private String defaultInterestRate;
         private int freqOfInstallments;
+        private int calculateInstallments = SAME_FOR_ALL_LOANS;
+        private String minInstallemnts = "1";
         private String defInstallments;
         private String maxInstallments;
+        private String[][] cycleInstallments = new String[MAX_CYCLES][3];
+        private String[][] installmentsByLastLoanAmount = new String[MAX_CYCLES][4];
         private int gracePeriodType;
         private String interestGLCode;
         private String principalGLCode;
         private boolean interestWaiver;
+        private boolean includeInLoanCounter;
         private List<String> questionGroups;
+
+        public String getMinInstallemnts() {
+            return this.minInstallemnts;
+        }
+
+        public void setMinInstallemnts(String minInstallemnts) {
+            this.minInstallemnts = minInstallemnts;
+        }
 
         public String getBranch() {
             return this.branch;
@@ -260,12 +285,180 @@ public class DefineNewLoanProductPage extends AbstractPage {
             return interestWaiver;
         }
 
+        public boolean isIncludeInLoanCounter() {
+            return includeInLoanCounter;
+        }
+
+        public void setIncludeInLoanCounter(boolean includeInLoanCounter) {
+            this.includeInLoanCounter = includeInLoanCounter;
+        }
+
         public List<String> getQuestionGroups() {
             return questionGroups;
         }
 
         public void setQuestionGroups(List<String> questionGroups) {
             this.questionGroups = questionGroups;
+        }
+
+        public void setCalculateInstallments(int calculateInstallments) {
+            this.calculateInstallments = calculateInstallments;
+        }
+
+        public int getCalculateInstallments() {
+            return calculateInstallments;
+        }
+
+        public void setCycleInstallments(String[][] cycleInstallments) {
+            this.cycleInstallments = cycleInstallments.clone();
+        }
+
+        public String[][] getCycleInstallments() {
+            return cycleInstallments.clone();
+        }
+
+        public String getMinCycleInstallment(int row) {
+            return cycleInstallments[row][0];
+        }
+
+        public void setMinCycleInstallment(int row, String value) {
+            this.cycleInstallments[row][0] = value;
+        }
+
+        public String getMaxCycleInstallment(int row) {
+            return cycleInstallments[row][1];
+        }
+
+        public void setMaxCycleInstallment(int row, String value) {
+            this.cycleInstallments[row][1] = value;
+        }
+
+        public String getDefCycleInstallment(int row) {
+            return cycleInstallments[row][2];
+        }
+
+        public void setDefCycleInstallment(int row, String value) {
+            this.cycleInstallments[row][2] = value;
+        }
+
+        public void setCalculateLoanAmount(int calculateLoanAmount) {
+            this.calculateLoanAmount = calculateLoanAmount;
+        }
+
+        public int getCalculateLoanAmount() {
+            return calculateLoanAmount;
+        }
+
+        public void setCycleLoanAmount(String[][] cycleLoanAmount) {
+            this.cycleLoanAmount = cycleLoanAmount.clone();
+        }
+
+        public String[][] getCycleLoanAmount() {
+            return cycleLoanAmount.clone();
+        }
+
+        public String getMinCycleLoanAmount(int row) {
+            return cycleLoanAmount[row][0];
+        }
+
+        public void setMinCycleLoanAmount(int row, String value) {
+            this.cycleLoanAmount[row][0] = value;
+        }
+
+        public String getMaxCycleLoanAmount(int row) {
+            return cycleLoanAmount[row][1];
+        }
+
+        public void setMaxCycleLoanAmount(int row, String value) {
+            this.cycleLoanAmount[row][1] = value;
+        }
+
+        public String getDefCycleLoanAmount(int row) {
+            return cycleLoanAmount[row][2];
+        }
+
+        public void setDefCycleLoanAmount(int row, String value) {
+            this.cycleLoanAmount[row][2] = value;
+        }
+
+        public void setInstallmentsByLastLoanAmount(String[][] installmentsByLastLoanAmount) {
+            this.installmentsByLastLoanAmount = installmentsByLastLoanAmount.clone();
+        }
+
+        public String[][] getInstallmentsByLastLoanAmount() {
+            return installmentsByLastLoanAmount.clone();
+        }
+
+        public String getLastInstallmentByLastLoanAmount(int row) {
+            return installmentsByLastLoanAmount[row][0];
+        }
+
+        public void setLastInstallmentByLastLoanAmount(int row, String value) {
+            this.installmentsByLastLoanAmount[row][0] = value;
+        }
+
+        public String getMinInstallmentByLastLoanAmount(int row) {
+            return installmentsByLastLoanAmount[row][1];
+        }
+
+        public void setMinInstallmentByLastLoanAmount(int row, String value) {
+            this.installmentsByLastLoanAmount[row][1] = value;
+        }
+
+        public String getMaxInstallmentByLastLoanAmount(int row) {
+            return installmentsByLastLoanAmount[row][2];
+        }
+
+        public void setMaxInstallmentByLastLoanAmount(int row, String value) {
+            this.installmentsByLastLoanAmount[row][2] = value;
+        }
+
+        public String getDefInstallmentByLastLoanAmount(int row) {
+            return installmentsByLastLoanAmount[row][3];
+        }
+
+        public void setDefInstallmentByLastLoanAmount(int row, String value) {
+            this.installmentsByLastLoanAmount[row][3] = value;
+        }
+
+        public void setAmountsByLastLoanAmount(String[][] amountsByLastLoanAmount) {
+            this.amountsByLastLoanAmount = amountsByLastLoanAmount.clone();
+        }
+
+        public String[][] getAmountsByLastLoanAmount() {
+            return amountsByLastLoanAmount.clone();
+        }
+
+        public String getLastAmountByLastLoanAmount(int row) {
+            return amountsByLastLoanAmount[row][0];
+        }
+
+        public void setLastAmountByLastLoanAmount(int row, String value) {
+            this.amountsByLastLoanAmount[row][0] = value;
+        }
+
+        public String getMinAmountByLastLoanAmount(int row) {
+            return amountsByLastLoanAmount[row][1];
+        }
+
+        public void setMinAmountByLastLoanAmount(int row, String value) {
+            this.amountsByLastLoanAmount[row][1] = value;
+        }
+
+        public String getMaxAmountByLastLoanAmount(int row) {
+            return amountsByLastLoanAmount[row][2];
+        }
+
+        public void setMaxAmountByLastLoanAmount(int row, String value) {
+            this.amountsByLastLoanAmount[row][2] = value;
+        }
+
+        public String getDefAmountByLastLoanAmount(int row) {
+            return amountsByLastLoanAmount[row][3];
+        }
+
+        public void setDefAmountByLastLoanAmount(int row, String value) {
+            this.amountsByLastLoanAmount[row][3] = value;
         }
     }
 
@@ -275,16 +468,55 @@ public class DefineNewLoanProductPage extends AbstractPage {
         selenium.type("createLoanProduct.input.description", parameters.getDescription());
         selenium.select("prdCategory", "label=" + parameters.getCategory());
         selenium.select("prdApplicableMaster", "value=" + parameters.getApplicableFor());
-        selenium.type("minLoanAmount", parameters.getMinLoanAmount());
-        selenium.type("maxLoanAmount", parameters.getMaxLoanAmount());
-        selenium.type("defaultLoanAmount", parameters.getDefaultLoanAmount());
+        selenium.click("name=loanAmtCalcType value=" + parameters.getCalculateLoanAmount());
+        if(parameters.getCalculateLoanAmount() == SubmitFormParameters.SAME_FOR_ALL_LOANS) {
+            selenium.type("minLoanAmount", parameters.getMinLoanAmount());
+            selenium.type("maxLoanAmount", parameters.getMaxLoanAmount());
+            selenium.type("defaultLoanAmount", parameters.getDefaultLoanAmount());
+        }
+        else if(parameters.getCalculateLoanAmount() == SubmitFormParameters.BY_LAST_LOAN_AMOUNT) {
+            for(int i = 1; i <= SubmitFormParameters.MAX_CYCLES; i++) {
+                selenium.typeKeys("endRangeLoanAmt"+i, parameters.getLastAmountByLastLoanAmount(i-1));
+                selenium.fireEvent("endRangeLoanAmt"+i, "blur");
+                selenium.type("lastLoanMinLoanAmt"+i, parameters.getMinAmountByLastLoanAmount(i-1));
+                selenium.type("lastLoanMaxLoanAmt"+i, parameters.getMaxAmountByLastLoanAmount(i-1));
+                selenium.type("lastLoanDefaultLoanAmt"+i, parameters.getDefAmountByLastLoanAmount(i-1));
+            }
+        }
+        else {
+            for(int i = 1; i <= SubmitFormParameters.MAX_CYCLES; i++) {
+                selenium.type("cycleLoanMinLoanAmt"+i, parameters.getMinCycleLoanAmount(i-1));
+                selenium.type("cycleLoanMaxLoanAmt"+i, parameters.getMaxCycleLoanAmount(i-1));
+                selenium.type("cycleLoanDefaultLoanAmt"+i, parameters.getDefCycleLoanAmount(i-1));
+            }
+        }
         selenium.select("interestTypes", "value=" + parameters.getInterestTypes());
         selenium.type("createLoanProduct.input.maxInterestRate", parameters.getMaxInterestRate());
         selenium.type("createLoanProduct.input.minInterestRate", parameters.getMinInterestRate());
         selenium.type("createLoanProduct.input.defInterestRate", parameters.getDefaultInterestRate());
         selenium.click("name=freqOfInstallments value=" + parameters.getFreqOfInstallments());
-        selenium.type("maxNoInstallments", parameters.getMaxInstallments());
-        selenium.type("defNoInstallments", parameters.getDefInstallments());
+        selenium.click("name=calcInstallmentType value=" + parameters.getCalculateInstallments());
+        if(parameters.getCalculateInstallments() == SubmitFormParameters.SAME_FOR_ALL_LOANS) {
+            selenium.type("minNoInstallments", parameters.getMinInstallemnts());
+            selenium.type("maxNoInstallments", parameters.getMaxInstallments());
+            selenium.type("defNoInstallments", parameters.getDefInstallments());
+        }
+        else if(parameters.getCalculateInstallments() == SubmitFormParameters.BY_LAST_LOAN_AMOUNT) {
+            for(int i = 1; i <= SubmitFormParameters.MAX_CYCLES; i++) {
+                selenium.typeKeys("endInstallmentRange"+i, parameters.getLastInstallmentByLastLoanAmount(i-1));
+                selenium.fireEvent("endInstallmentRange"+i, "blur");
+                selenium.type("minLoanInstallment"+i, parameters.getMinInstallmentByLastLoanAmount(i-1));
+                selenium.type("maxLoanInstallment"+i, parameters.getMaxInstallmentByLastLoanAmount(i-1));
+                selenium.type("defLoanInstallment"+i, parameters.getDefInstallmentByLastLoanAmount(i-1));
+            }
+        }
+        else {
+            for(int i = 1; i <= SubmitFormParameters.MAX_CYCLES; i++) {
+                selenium.type("minCycleInstallment"+i, parameters.getMinCycleInstallment(i-1));
+                selenium.type("maxCycleInstallment"+i, parameters.getMaxCycleInstallment(i-1));
+                selenium.type("defCycleInstallment"+i, parameters.getDefCycleInstallment(i-1));
+            }
+        }
         selenium.select("gracePeriodType", "value=" + parameters.getGracePeriodType());
         selenium.select("interestGLCode", "label=" + parameters.getInterestGLCode());
         selenium.select("principalGLCode", "label=" + parameters.getPrincipalGLCode());
@@ -329,7 +561,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
 
     public DefineNewLoanProductPage verifyVariableInstalmentOptionsFields() {
         fillInstalmentOptionsAndSubmit("text,", "text,", "text,");
-        isTextPresentInPage("The min installment amount for variable installments is invalid because only positive numbers or decimal separator are allowed");
+        isTextPresentInPage("The min installment amount for variable installments is invalid because only positive numbers and decimal separator are allowed");
         Assert.assertTrue(!selenium.getValue(maxInstalmentGapTextBox).contains("text") & !selenium.getValue(maxInstalmentGapTextBox).contains(","));
         Assert.assertTrue(!selenium.getValue(minInstalmentGapTextBox).contains("text") & !selenium.getValue(minInstalmentGapTextBox).contains(","));
 
@@ -340,7 +572,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
         fillInstalmentOptionsAndSubmit("-1", "-1", "-1");
         isTextPresentInPage("Minimum gap must not be zero or negative for loans with variable installments");
         isTextPresentInPage("Minimum gap must not be zero or negative for loans with variable installments");
-        isTextPresentInPage("The min installment amount for variable installments is invalid because only positive numbers or decimal separator are allowed");
+        isTextPresentInPage("The min installment amount for variable installments is invalid because only positive numbers and decimal separator are allowed");
 
         fillInstalmentOptionsAndSubmit("0", "0", "0");
         isTextPresentInPage("Minimum gap must not be zero or negative for loans with variable installments");
@@ -420,17 +652,17 @@ public class DefineNewLoanProductPage extends AbstractPage {
     private void verifyMinimumLimitForCashFlow() {
         fillCashFlow("-1", "-1", "149.9");
         submitAndGotoNewLoanProductPreviewPage();
-        isTextPresentInPage("The Indebtedness Ratio is invalid because only positive numbers or decimal separator are allowed");
+        isTextPresentInPage("The Indebtedness Ratio is invalid because only positive numbers and decimal separator are allowed");
         isTextPresentInPage("The Repayment Capacity is invalid because it is not in between 150.0 and 1000.0");
-        isTextPresentInPage("The Warning Threshold is invalid because only positive numbers or decimal separator are allowed");
+        isTextPresentInPage("The Warning Threshold is invalid because only positive numbers and decimal separator are allowed");
     }
 
     private void verifyNonNumericForCashFlow() {
         fillCashFlow("abc", "abc", "abc");
         submitAndGotoNewLoanProductPreviewPage();
-        isTextPresentInPage("The Warning Threshold is invalid because only positive numbers or decimal separator are allowed");
-        isTextPresentInPage("The Indebtedness Ratio is invalid because only positive numbers or decimal separator are allowed");
-        isTextPresentInPage("The Indebtedness Ratio is invalid because only positive numbers or decimal separator are allowed");
+        isTextPresentInPage("The Warning Threshold is invalid because only positive numbers and decimal separator are allowed");
+        isTextPresentInPage("The Indebtedness Ratio is invalid because only positive numbers and decimal separator are allowed");
+        isTextPresentInPage("The Indebtedness Ratio is invalid because only positive numbers and decimal separator are allowed");
     }
 
     private void verifyMaximumLimitForCashFlow() {
@@ -465,14 +697,12 @@ public class DefineNewLoanProductPage extends AbstractPage {
     }
 
     public void verifyFeeTypesBlocked(String[] feeNames) {
-        for (int index = 0; index < feeNames.length; index++) {
-            String feeName = feeNames[index];
+        for (String feeName : feeNames) {
             selenium.addSelection("feeId", "label=" + feeName);
         }
         selenium.click("LoanFeesList.button.add");
         submit();
-        for (int index = 0; index < feeNames.length; index++) {
-            String feeName = feeNames[index];
+        for (String feeName : feeNames) {
             isTextPresentInPage(feeName + " fee cannot be applied to variable installment loan product");
         }
     }

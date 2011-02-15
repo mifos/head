@@ -35,17 +35,19 @@ import org.mifos.reports.cashconfirmationreport.BranchCashConfirmationCenterReco
 import org.mifos.reports.cashconfirmationreport.BranchCashConfirmationDisbursementBO;
 import org.mifos.reports.cashconfirmationreport.BranchCashConfirmationInfoBO;
 import org.mifos.reports.cashconfirmationreport.BranchCashConfirmationReportHeader;
-import org.mifos.reports.cashconfirmationreport.persistence.BranchCashConfirmationReportPersistence;
+import org.mifos.reports.cashconfirmationreport.persistence.LegacyBranchCashConfirmationReportDao;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class BranchCashConfirmationReportService implements IBranchCashConfirmationReportService {
 
-    private BranchCashConfirmationReportPersistence branchCashConfirmationReportPersistence;
+    private LegacyBranchCashConfirmationReportDao legacyBranchCashConfirmationReportDao;
     private OfficeBusinessService officeBusinessService;
 
+    @Autowired
     public BranchCashConfirmationReportService(
-            BranchCashConfirmationReportPersistence branchCashConfirmationReportPersistence,
+            LegacyBranchCashConfirmationReportDao legacyBranchCashConfirmationReportDao,
             OfficeBusinessService officeBusinessService) {
-        this.branchCashConfirmationReportPersistence = branchCashConfirmationReportPersistence;
+        this.legacyBranchCashConfirmationReportDao = legacyBranchCashConfirmationReportDao;
         this.officeBusinessService = officeBusinessService;
     }
 
@@ -60,10 +62,11 @@ public class BranchCashConfirmationReportService implements IBranchCashConfirmat
     }
 
     // is called from CashConfirmationReport.rptdesign
+    @Override
     public List<BranchCashConfirmationCenterRecoveryBO> getCenterRecoveries(Integer branchId, String runDate)
             throws ServiceException {
         try {
-            return branchCashConfirmationReportPersistence.getCenterRecoveries(convertIntegerToShort(branchId),
+            return legacyBranchCashConfirmationReportDao.getCenterRecoveries(convertIntegerToShort(branchId),
                     parseReportDate(runDate));
         } catch (PersistenceException e) {
             throw new ServiceException(e);
@@ -73,9 +76,10 @@ public class BranchCashConfirmationReportService implements IBranchCashConfirmat
     }
 
     // is called from CashConfirmationReport.rptdesign
+    @Override
     public List<BranchCashConfirmationInfoBO> getCenterIssues(Integer branchId, String runDate) throws ServiceException {
         try {
-            return branchCashConfirmationReportPersistence.getCenterIssues(convertIntegerToShort(branchId),
+            return legacyBranchCashConfirmationReportDao.getCenterIssues(convertIntegerToShort(branchId),
                     parseReportDate(runDate));
         } catch (PersistenceException e) {
             throw new ServiceException(e);
@@ -85,10 +89,11 @@ public class BranchCashConfirmationReportService implements IBranchCashConfirmat
     }
 
     // is called from CashConfirmationReport.rptdesign
+    @Override
     public List<BranchCashConfirmationDisbursementBO> getDisbursements(Integer branchId, String runDate)
             throws ServiceException {
         try {
-            return branchCashConfirmationReportPersistence.getDisbursements(convertIntegerToShort(branchId),
+            return legacyBranchCashConfirmationReportDao.getDisbursements(convertIntegerToShort(branchId),
                     parseReportDate(runDate));
         } catch (PersistenceException e) {
             throw new ServiceException(e);
@@ -101,7 +106,7 @@ public class BranchCashConfirmationReportService implements IBranchCashConfirmat
     public boolean isReportDataPresentForRundateAndBranchId(String branchId, String runDate) {
         try {
             return CollectionUtils
-                    .first(branchCashConfirmationReportPersistence.getBranchCashConfirmationReportsForDateAndBranch(
+                    .first(legacyBranchCashConfirmationReportDao.getBranchCashConfirmationReportsForDateAndBranch(
                             Short.valueOf(branchId), parseReportDate(runDate))) != null;
         } catch (PersistenceException e) {
             return false;

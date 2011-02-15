@@ -34,7 +34,7 @@ import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.persistence.FeeDao;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
-import org.mifos.accounts.productdefinition.persistence.SavingsPrdPersistence;
+import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -54,15 +54,13 @@ import org.mifos.customers.client.business.ClientFamilyDetailEntity;
 import org.mifos.customers.client.business.ClientInitialSavingsOfferingEntity;
 import org.mifos.customers.client.business.ClientNameDetailEntity;
 import org.mifos.customers.client.business.ClientPerformanceHistoryEntity;
-import org.mifos.customers.client.persistence.ClientPersistence;
+import org.mifos.customers.client.persistence.LegacyClientDao;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
-import org.mifos.customers.surveys.helpers.SurveyType;
-import org.mifos.customers.surveys.persistence.SurveysPersistence;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.AddressDto;
 import org.mifos.dto.domain.ApplicableAccountFeeDto;
@@ -120,6 +118,9 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
     private final CustomerDao customerDao;
     private final CustomerService customerService;
     private final FeeDao feeDao;
+
+    @Autowired
+    private SavingsProductDao savingsProductDao;
 
     @Autowired
     public ClientServiceFacadeWebTier(CustomerService customerService, OfficeDao officeDao,
@@ -315,7 +316,7 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
                     for (SavingsDetailDto savingsOffering : allowedSavingProducts) {
                         if (productId.equals(savingsOffering.getPrdOfferingId())) {
 
-                            SavingsOfferingBO savingsProduct = new SavingsPrdPersistence().getSavingsProduct(productId);
+                            SavingsOfferingBO savingsProduct = savingsProductDao.findById(productId.intValue());
                             selectedOfferings.add(savingsProduct);
                         }
                     }
@@ -361,7 +362,7 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
 
             Blob pictureAsBlob = null;
             if (clientCreationDetail.getPicture() != null) {
-                pictureAsBlob = new ClientPersistence().createBlob(clientCreationDetail.getPicture());
+                pictureAsBlob = ApplicationContextProvider.getBean(LegacyClientDao.class).createBlob(clientCreationDetail.getPicture());
             }
 
             CustomerStatus clientStatus = CustomerStatus.fromInt(clientCreationDetail.getClientStatus());
@@ -478,9 +479,10 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
 
         CustomerMeetingDto customerMeeting = customerDao.getCustomerMeetingDto(client.getCustomerMeeting(), userContext);
 
-        Boolean activeSurveys = new SurveysPersistence().isActiveSurveysForSurveyType(SurveyType.CLIENT);
+        Boolean activeSurveys = Boolean.FALSE;
+//        Boolean activeSurveys = new SurveysPersistence().isActiveSurveysForSurveyType(SurveyType.CLIENT);
 
-        List<SurveyDto> customerSurveys = customerDao.getCustomerSurveyDto(clientId);
+        List<SurveyDto> customerSurveys = new ArrayList<SurveyDto>();
 
         return new ClientInformationDto(clientDisplay, customerAccountSummary, clientPerformanceHistory, clientAddress,
                 recentCustomerNotes, customerFlags, loanDetail, savingsDetail, customerMeeting, activeSurveys, customerSurveys);

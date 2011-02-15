@@ -58,7 +58,6 @@ import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.business.FeeFormulaEntity;
 import org.mifos.accounts.fees.business.RateFeeBO;
-import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.accounts.fees.util.helpers.FeeFormula;
 import org.mifos.accounts.fees.util.helpers.FeePayment;
 import org.mifos.accounts.fees.util.helpers.FeeStatus;
@@ -75,6 +74,7 @@ import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.accounts.productdefinition.business.NoOfInstallSameForAllLoanBO;
 import org.mifos.accounts.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
@@ -93,6 +93,7 @@ import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.holiday.business.Holiday;
+import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
@@ -105,6 +106,7 @@ import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.AccountingRules;
+import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.business.Configuration;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.business.CustomerBO;
@@ -270,6 +272,33 @@ public class LoanBO extends AccountBO {
         this.maxMinLoanAmount = new MaxMinLoanAmount(maxLoanAmount, minLoanAmount, this);
         this.maxMinInterestRate = new MaxMinInterestRate(maxInterestRate, minInterestRate, this);
         this.maxMinNoOfInstall = new MaxMinNoOfInstall(maxNoOfInstall, minNoOfInstall, this);
+    }
+
+    // opening balance loan constructor
+    public LoanBO(LoanOfferingBO loanProduct, CustomerBO customer, AccountState loanState, Money loanAmountDisbursed, Integer numberOfInstallments, List<LoanScheduleEntity> scheduledRepayments, LocalDate createdDate, Short createdBy) {
+        super(AccountTypes.LOAN_ACCOUNT, loanState, customer, scheduledRepayments, createdDate.toDateMidnight().toDate(), createdBy);
+        this.performanceHistory = new LoanPerformanceHistoryEntity(this);
+
+        this.loanOffering = loanProduct;
+        this.customer = customer;
+        this.loanAmount = loanAmountDisbursed;
+        this.noOfInstallments = numberOfInstallments.shortValue();
+
+        // inherit properties from loan product
+        this.interestType = new InterestTypesEntity(loanProduct.getInterestType());
+        this.intrestAtDisbursement = Short.valueOf("0"); // false
+        this.gracePeriodType = new GracePeriodTypeEntity(loanProduct.getGraceType());
+        this.gracePeriodDuration = loanProduct.getGracePeriodDuration();
+
+        this.loanActivityDetails = new ArrayList<LoanActivityEntity>();
+        this.loanSummary = buildLoanSummary();
+        // FIXME - keithw - for some reason maxMinNumber of installments is used from loan (and not loan product definition) when retrieving Loan Information
+        if (!loanProduct.getNoOfInstallSameForAllLoan().isEmpty()) {
+            NoOfInstallSameForAllLoanBO maxMinInstall = new ArrayList<NoOfInstallSameForAllLoanBO>(loanProduct.getNoOfInstallSameForAllLoan()).get(0);
+            this.maxMinNoOfInstall = new MaxMinNoOfInstall(maxMinInstall.getMaxNoOfInstall(), maxMinInstall.getMinNoOfInstall(), this);
+        } else {
+            this.maxMinNoOfInstall = new MaxMinNoOfInstall(numberOfInstallments.shortValue(), numberOfInstallments.shortValue(), this);
+        }
     }
 
     private LoanBO(final UserContext userContext, final LoanOfferingBO loanOffering, final CustomerBO customer,
@@ -465,6 +494,21 @@ public class LoanBO extends AccountBO {
 
     private static boolean isAnyLoanParamsNull(final Object... args) {
         return Arrays.asList(args).contains(null);
+    }
+
+    public static LoanBO createOpeningBalanceLoan(UserContext userContext, LoanOfferingBO loanProduct,
+            CustomerBO customer, AccountState loanState, Money loanAmountDisbursed, LocalDate disbursementDate,
+            Integer numberOfInstallments, LocalDate firstInstallmentDate, LocalDate currentInstallmentDate,
+            Money amountPaidToDate, Integer loanCycle, List<LoanScheduleEntity> scheduledLoanRepayments) {
+        // validation
+        // all values must be non null
+
+        LocalDate createdDate = new LocalDate();
+        Short createdBy = userContext.getId();
+        LoanBO openingBalanceLoan = new LoanBO(loanProduct, customer, loanState, loanAmountDisbursed, numberOfInstallments, scheduledLoanRepayments, createdDate, createdBy);
+        openingBalanceLoan.setDisbursementDate(disbursementDate.toDateMidnight().toDate());
+
+        return openingBalanceLoan;
     }
 
     public static LoanBO createLoan(final UserContext userContext, final LoanOfferingBO loanOffering,
@@ -1002,7 +1046,7 @@ public class LoanBO extends AccountBO {
             if (dueInstallments.isEmpty()) {
                 throw new AccountException(AccountConstants.NOMOREINSTALLMENTS);
             }
-            FeeBO fee = new FeePersistence().getFee(feeId);
+            FeeBO fee = getFeeDao().findById(feeId);
 
             if (havePaymentsBeenMade()
                     && (fee.doesFeeInvolveFractionalAmounts() || !MoneyUtils.isRoundedAmount(charge))) {
@@ -1364,6 +1408,25 @@ public class LoanBO extends AccountBO {
         } catch (PersistenceException e) {
             throw new AccountException(e);
         }
+    }
+
+    @Override
+    public AccountPaymentEntity getLastPmntToBeAdjusted() {
+        AccountPaymentEntity accntPmnt = null;
+        // MIFOS-4238: we don't want to show disbursal amount as an adjustment amount
+        int i = 0;
+        for (AccountPaymentEntity accntPayment : accountPayments) {
+            i = i + 1;
+            if (i == accountPayments.size()) {
+                break;
+            }
+            if (accntPayment.getAmount().isNonZero()) {
+                accntPmnt = accntPayment;
+                break;
+            }
+
+        }
+        return accntPmnt;
     }
 
     private void waiveFeeAmountDue() throws AccountException {
@@ -1951,7 +2014,7 @@ public class LoanBO extends AccountBO {
             logger.debug(
                     "AccountFeeAmount for amount fee.." + feeAmount);
         } else if (accountFees.getFees().getFeeType()== RateAmountFlag.RATE) {
-            RateFeeBO rateFeeBO = new FeePersistence().getRateFee(accountFees.getFees().getFeeId());
+            RateFeeBO rateFeeBO = (RateFeeBO) getFeeDao().findById(accountFees.getFees().getFeeId());
             accountFeeAmount = new Money(getCurrency(), getRateBasedOnFormula(feeAmount, rateFeeBO.getFeeFormula(),
                     loanInterest));
             logger.debug(
@@ -2060,16 +2123,21 @@ public class LoanBO extends AccountBO {
                         .getOriginalPenalty().subtract(loanSummary.getPenaltyPaid()), trxnDate);
     }
 
-    private Short getInstallmentSkipToStartRepayment() {
-
-        Short installmentsToSkip = Short.valueOf("0");
+    private Short getInstallmentSkipToStartRepayment(final boolean isRepaymentIndepOfMeetingEnabled) {
+        // in the default case of loan schedules tied to meeting schedules,
+        // the loan is disbursed at the first meeting (#0) and the first
+        // payment is made at the following meeting (#1)
+        short firstRepaymentInstallment = 1;
+        // if LoanScheduleIndependentofMeeting is on, then repayments start on
+        // the first meeting in the schedule (#0)
+        if (isRepaymentIndepOfMeetingEnabled) {
+            firstRepaymentInstallment = 0;
+        }
 
         if (getGraceType() == GraceType.PRINCIPALONLYGRACE || getGraceType() == GraceType.NONE) {
-            installmentsToSkip = Short.valueOf("0");
-        } else {
-            installmentsToSkip = getGracePeriodDuration();
+            return firstRepaymentInstallment;
         }
-        return installmentsToSkip;
+        return (short) (getGracePeriodDuration() + firstRepaymentInstallment);
     }
 
     private String getRateBasedOnFormula(final Double rate, final FeeFormulaEntity formula, final Money loanInterest) {
@@ -2494,7 +2562,7 @@ public class LoanBO extends AccountBO {
     private void buildAccountFee(final List<FeeDto> feeDtos) {
         if (feeDtos != null && feeDtos.size() > 0) {
             for (FeeDto feeDto : feeDtos) {
-                FeeBO fee = new FeePersistence().getFee(feeDto.getFeeIdValue());
+                FeeBO fee = getFeeDao().findById(feeDto.getFeeIdValue());
                 this.addAccountFees(new AccountFeesEntity(this, fee, feeDto.getAmountMoney()));
             }
         }
@@ -2967,6 +3035,10 @@ public class LoanBO extends AccountBO {
      * Financial Calculation Refactoring
      ***********************************/
 
+    /**
+     * @deprecated - pull this capability out of loan and into something more isolated and resuseable
+     */
+    @Deprecated
     private void generateMeetingSchedule(final boolean isRepaymentIndepOfMeetingEnabled,
             final MeetingBO newMeetingForRepaymentDay) throws AccountException {
 
@@ -2976,13 +3048,41 @@ public class LoanBO extends AccountBO {
         if (isRepaymentIndepOfMeetingEnabled && newMeetingForRepaymentDay != null) {
             setLoanMeeting(newMeetingForRepaymentDay);
         }
-        List<InstallmentDate> installmentDates = getInstallmentDates(getLoanMeeting(), noOfInstallments,
-                getInstallmentSkipToStartRepayment(), isRepaymentIndepOfMeetingEnabled);
 
-        // installment dates that have not been adjusted for holidays
-//        List<InstallmentDate> nonAdjustedInstallmentDates = getInstallmentDates(getLoanMeeting(), noOfInstallments,
-//                getInstallmentSkipToStartRepayment(isRepaymentIndepOfMeetingEnabled), isRepaymentIndepOfMeetingEnabled,
-//                false);
+        List<InstallmentDate> installmentDates = new ArrayList<InstallmentDate>();
+        if (isRepaymentIndepOfMeetingEnabled) {
+
+            // for now only go through this code if LSIM is ON
+            installmentDates = getInstallmentDates(getLoanMeeting(), noOfInstallments,
+                    getInstallmentSkipToStartRepayment(isRepaymentIndepOfMeetingEnabled),
+                    isRepaymentIndepOfMeetingEnabled);
+
+        } else {
+            Short gracePeriodOf = getGracePeriodDuration();
+
+            if (noOfInstallments > 0) {
+                List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
+                List<Holiday> holidays = new ArrayList<Holiday>();
+
+                DateTime startFromMeetingDate = new DateTime(this.disbursementDate).plusDays(1);
+
+                HolidayDao holidayDao = ApplicationContextProvider.getBean(HolidayDao.class);
+                holidays = holidayDao.findAllHolidaysFromDateAndNext(getOffice().getOfficeId(), startFromMeetingDate.toLocalDate().toString());
+
+                final int occurrences = noOfInstallments + gracePeriodOf;
+
+                ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(getLoanMeeting());
+                ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, holidays);
+
+                List<Date> dueDates = new ArrayList<Date>();
+                List<DateTime> installmentDateTimes = dateGeneration.generateScheduledDates(occurrences, startFromMeetingDate, scheduledEvent);
+                for (DateTime installmentDate : installmentDateTimes) {
+                    dueDates.add(installmentDate.toDate());
+                }
+
+                installmentDates = createInstallmentDates(gracePeriodOf, dueDates);
+            }
+        }
 
         logger.debug("Obtained intallments dates");
 
@@ -3023,10 +3123,10 @@ public class LoanBO extends AccountBO {
         if (isInterestDeductedAtDisbursement() || getGraceType() == GraceType.PRINCIPALONLYGRACE
                 || getGraceType() == GraceType.NONE) {
             return (short) 0;
-        } else {
-            // getGraceType() == GraceType.ALL
-            return (short) getGracePeriodDuration();
         }
+
+        // getGraceType() == GraceType.ALL
+        return (short) getGracePeriodDuration();
     }
 
     // the decliningEPI amount = sum of interests for all installments
@@ -3044,7 +3144,7 @@ public class LoanBO extends AccountBO {
         return totalInterest;
     }
 
-    private Money getDecliningEPIAmount_v2() throws AccountException {
+    private Money getDecliningEPIAmount_v2() {
 
         Money interest = new Money(getCurrency(), "0");
         if (getGraceType().equals(GraceType.PRINCIPALONLYGRACE)) {
@@ -3099,7 +3199,7 @@ public class LoanBO extends AccountBO {
      * formula for computing A is A = p * n where A = total amount paid p = payment per installment n = number of
      * regular (non-grace) installments P = principal i = interest per period
      */
-    private Money getDecliningInterestAmount_v2() throws AccountException {
+    private Money getDecliningInterestAmount_v2() {
 
         Money interest = new Money(getCurrency(), "0");
         if (getGraceType().equals(GraceType.PRINCIPALONLYGRACE)) {
@@ -3303,7 +3403,7 @@ public class LoanBO extends AccountBO {
     /**
      * Divide principal and interest evenly among all installments, no grace period
      */
-    private List<EMIInstallment> generateFlatInstallmentsNoGrace_v2(final Money loanInterest) throws AccountException {
+    private List<EMIInstallment> generateFlatInstallmentsNoGrace_v2(final Money loanInterest) {
         List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
         Money principalPerInstallment = getLoanAmount().divide(getNoOfInstallments());
         Money interestPerInstallment = loanInterest.divide(getNoOfInstallments());
@@ -3321,8 +3421,7 @@ public class LoanBO extends AccountBO {
      * Divide interest evenly among all installments, but divide principle evenly among installments after the grace
      * period.
      */
-    private List<EMIInstallment> generateFlatInstallmentsAfterInterestOnlyGraceInstallments_v2(final Money loanInterest)
-            throws AccountException {
+    private List<EMIInstallment> generateFlatInstallmentsAfterInterestOnlyGraceInstallments_v2(final Money loanInterest) {
         List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
         Money principalPerInstallment = getLoanAmount().divide(getNoOfInstallments() - getGracePeriodDuration());
         Money interestPerInstallment = loanInterest.divide(getNoOfInstallments());
@@ -3613,7 +3712,7 @@ public class LoanBO extends AccountBO {
             logger.debug(
                     "AccountFeeAmount for amount fee.." + feeAmount);
         } else if (accountFees.getFees().getFeeType().equals(RateAmountFlag.RATE)) {
-            RateFeeBO rateFeeBO = new FeePersistence().getRateFee(accountFees.getFees().getFeeId());
+            RateFeeBO rateFeeBO = (RateFeeBO) getFeeDao().findById(accountFees.getFees().getFeeId());
             accountFeeAmount = new Money(getCurrency(), getRateBasedOnFormula(feeAmount, rateFeeBO.getFeeFormula(),
                     loanInterest));
             logger.debug(

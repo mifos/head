@@ -32,7 +32,6 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionException;
-import org.mifos.accounts.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
@@ -42,9 +41,11 @@ import org.mifos.accounts.savings.interest.CalendarPeriod;
 import org.mifos.accounts.savings.interest.SavingsProductHistoricalInterestDetail;
 import org.mifos.accounts.savings.interest.schedule.InterestScheduledEvent;
 import org.mifos.accounts.savings.interest.schedule.SavingsInterestScheduledEventFactory;
+import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.dto.domain.ProductDetailsDto;
 import org.mifos.dto.domain.SavingsProductDto;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -303,17 +304,8 @@ public class SavingsOfferingBO extends PrdOfferingBO {
     @Deprecated
     public void save() throws ProductDefinitionException {
         logger.debug("creating the saving offering ");
-        try {
-            getSavingsPrdPersistence().createOrUpdate(this);
-
-        } catch (PersistenceException e) {
-            throw new ProductDefinitionException(e);
-        }
+        ApplicationContextProvider.getBean(GenericDao.class).createOrUpdate(this);
         logger.debug("creating the saving offering Done : " + getPrdOfferingName());
-    }
-
-    protected SavingsPrdPersistence getSavingsPrdPersistence() {
-        return new SavingsPrdPersistence();
     }
 
     @Override
@@ -347,12 +339,7 @@ public class SavingsOfferingBO extends PrdOfferingBO {
         this.interestRate = interestRate;
         this.maxAmntWithdrawl = maxAmntWithdrawl;
         this.minAmntForInt = minAmntForInt;
-        try {
-            getSavingsPrdPersistence().createOrUpdate(this);
-
-        } catch (PersistenceException e) {
-            throw new ProductDefinitionException(e);
-        }
+        ApplicationContextProvider.getBean(GenericDao.class).createOrUpdate(this);
         logger.debug("updated savings product offering done :" + getGlobalPrdOfferingNum());
     }
 

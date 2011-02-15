@@ -23,9 +23,6 @@ package org.mifos.accounts.productdefinition.business.service;
 import java.util.Iterator;
 import java.util.List;
 
-import org.mifos.accounts.fees.business.FeeBO;
-import org.mifos.accounts.fees.persistence.FeePersistence;
-import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdApplicableMasterEntity;
 import org.mifos.accounts.productdefinition.business.PrdStatusEntity;
@@ -118,15 +115,5 @@ public class LoanPrdBusinessService implements BusinessService {
 
     protected LoanPrdPersistence getLoanPrdPersistence() {
         return new LoanPrdPersistence();
-    }
-
-    public FeeBO getfee(final Short feeId, final RateAmountFlag rateflag) throws ServiceException {
-
-        try {
-            return new FeePersistence().getFee(feeId, rateflag);
-        } catch (PersistenceException e) {
-            throw new ServiceException(e);
-        }
-
     }
 }

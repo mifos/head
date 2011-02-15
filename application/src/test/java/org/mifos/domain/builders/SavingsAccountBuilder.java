@@ -97,7 +97,8 @@ public class SavingsAccountBuilder {
     public SavingsBO build() {
 
         CalendarEvent calendarEvents = new CalendarEvent(workingDays, holidays);
-        SavingsAccountActivationDetail derivedActivationDetails = SavingsBO.determineAccountActivationDetails(customer, savingsProduct, recommendedAmount, accountState, calendarEvents);
+        LocalDate activationDate = new LocalDate(createdDate);
+        SavingsAccountActivationDetail derivedActivationDetails = SavingsBO.determineAccountActivationDetails(customer, savingsProduct, recommendedAmount, accountState, calendarEvents, activationDate);
         return buildAccount(derivedActivationDetails);
     }
 

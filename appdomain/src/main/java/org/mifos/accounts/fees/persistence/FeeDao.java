@@ -46,6 +46,10 @@ public interface FeeDao {
 
     List<FeeDto> retrieveAllCustomerFees();
 
+    List<Short> getUpdatedFeesForCustomer();
+
+    List<FeeBO> getAllAppllicableFeeForLoanCreation();
+
     List<CategoryTypeEntity> doRetrieveFeeCategories();
 
     List<FeeFormulaEntity> retrieveFeeFormulae();

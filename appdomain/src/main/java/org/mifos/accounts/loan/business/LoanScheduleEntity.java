@@ -20,6 +20,16 @@
 
 package org.mifos.accounts.loan.business;
 
+import static org.mifos.framework.util.helpers.NumberUtils.min;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
@@ -28,18 +38,16 @@ import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.loan.schedule.domain.Installment;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
-import org.mifos.accounts.util.helpers.*;
+import org.mifos.accounts.util.helpers.AccountActionTypes;
+import org.mifos.accounts.util.helpers.AccountConstants;
+import org.mifos.accounts.util.helpers.OverDueAmounts;
+import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.platform.util.CollectionUtils;
-
-import java.util.*;
-import java.util.Date;
-
-import static org.mifos.framework.util.helpers.NumberUtils.min;
 
 public class LoanScheduleEntity extends AccountActionDateEntity {
     private Money principal;
@@ -83,10 +91,10 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         super(account, customer, installmentId, actionDate, paymentStatus);
         this.principal = principal;
         this.interest = interest;
-        reset(account.getCurrency());
+        zeroRemainingFields(principal.getCurrency());
     }
 
-    private void reset(MifosCurrency currency) {
+    private void zeroRemainingFields(MifosCurrency currency) {
         this.penalty = new Money(currency);
         this.extraInterest = new Money(currency);
         this.miscFee = new Money(currency);
@@ -97,6 +105,17 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         this.extraInterestPaid = new Money(currency);
         this.miscFeePaid = new Money(currency);
         this.miscPenaltyPaid = new Money(currency);
+    }
+
+    @Override
+    public MifosCurrency getCurrency() {
+        MifosCurrency currency = null;
+        if (this.account != null) {
+            currency = super.getCurrency();
+        } else {
+            currency = this.principal.getCurrency();
+        }
+        return currency;
     }
 
     public Money getInterest() {

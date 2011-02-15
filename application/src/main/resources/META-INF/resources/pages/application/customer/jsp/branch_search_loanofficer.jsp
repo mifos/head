@@ -28,7 +28,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".clientsacclayoutmenu">
 	<tiles:put name="body" type="string">
-	<span id="page.id" title="BranchSearchLoanofficer" />
+	<span id="page.id" title="BranchSearchLoanofficer"></span>
 		<html-el:form action="custSearchAction.do">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<c:set var="Office"
@@ -113,7 +113,7 @@ explanation of the license and how it is applied.
 										<tr class="fontnormal">
 											<td width="100%" colspan="2" class="bglightblue"><span
 												class="heading"><mifos:mifoslabel
-												name="CustomerSearch.select" />&nbsp; <c:choose>
+												name="CustomerSearch.select" /><c:choose>
 												<c:when test='${isCenterHierarchyExists eq true}'>
 													<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
 												</c:when>
@@ -224,7 +224,7 @@ explanation of the license and how it is applied.
 										<tr class="fontnormal">
 											<td width="100%" colspan="2" class="bglightblue"><span
 												class="heading"><mifos:mifoslabel
-												name="CustomerSearch.select" />&nbsp; <c:choose>
+												name="CustomerSearch.select" /> <c:choose>
 												<c:when test='${isCenterHierarchyExists eq true}'>
 													<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
 												</c:when>

@@ -14,13 +14,16 @@ import org.mifos.accounts.productdefinition.util.helpers.ProductType;
 import org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity;
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
+import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.application.meeting.business.RecurrenceTypeEntity;
 import org.mifos.customers.business.CustomerLevelEntity;
 import org.mifos.dto.domain.PrdOfferingDto;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.service.BusinessRuleException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +36,6 @@ public class SavingsProductDaoHibernate implements SavingsProductDao {
     public SavingsProductDaoHibernate(final GenericDao genericDao) {
         this.genericDao = genericDao;
     }
-
 
     @Override
     @SuppressWarnings("unchecked")
@@ -66,6 +68,45 @@ public class SavingsProductDaoHibernate implements SavingsProductDao {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
+    public List<SavingsBO> retrieveSavingsAccountsForPrd(Short prdOfferingId) {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put(ProductDefinitionConstants.PRDOFFERINGID, prdOfferingId);
+        return (List<SavingsBO>) genericDao.executeNamedQuery(NamedQueryConstants.RETRIEVE_SAVINGS_ACCCOUNT, queryParameters);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<RecurrenceTypeEntity> getSavingsApplicableRecurrenceTypes() {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        return (List<RecurrenceTypeEntity>) genericDao.executeNamedQuery(NamedQueryConstants.SAVINGS_APPL_RECURRENCETYPES, queryParameters);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<SavingsOfferingBO> getAllActiveSavingsProducts() {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put(AccountConstants.PRDSTATUS, PrdStatus.SAVINGS_ACTIVE.getValue());
+        return (List<SavingsOfferingBO>) genericDao.executeNamedQuery(NamedQueryConstants.GET_ALL_ACTIVE_SAVINGS_PRODUCTS, queryParameters);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<SavingsOfferingBO> getSavingsOfferingsNotMixed(Short localeId) {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put(AccountConstants.PRDSTATUS, PrdStatus.SAVINGS_ACTIVE.getValue());
+
+        List<SavingsOfferingBO> savingsOfferings = (List<SavingsOfferingBO>) genericDao.executeNamedQuery(
+                NamedQueryConstants.PRODUCT_NOTMIXED_SAVING_PRODUCTS, queryParameters);
+        if (null != savingsOfferings && savingsOfferings.size() > 0) {
+            for (SavingsOfferingBO savingOffering : savingsOfferings) {
+                savingOffering.getPrdStatus().getPrdState().setLocaleId(localeId);
+            }
+        }
+        return savingsOfferings;
+    }
+
+    @Override
     public void save(SavingsOfferingBO product) {
         this.genericDao.createOrUpdate(product);
     }
@@ -77,6 +118,15 @@ public class SavingsProductDaoHibernate implements SavingsProductDao {
         queryParameters.put("prdOfferingId", productId.shortValue());
 
         return (SavingsOfferingBO) this.genericDao.executeUniqueResultNamedQuery("savingsProduct.byid", queryParameters);
+    }
+
+    @Override
+    public SavingsOfferingBO findBySystemId(String globalPrdOfferingNum) {
+
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("globalPrdOfferingNum", globalPrdOfferingNum);
+
+        return (SavingsOfferingBO) this.genericDao.executeUniqueResultNamedQuery("savingsProduct.byglobalid", queryParameters);
     }
 
     @Override

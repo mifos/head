@@ -47,6 +47,7 @@ import org.mifos.reports.branchreport.LoanArrearsAgingPeriod;
 import org.mifos.reports.branchreport.persistence.BranchReportPersistence;
 import org.mifos.reports.business.dto.BranchReportHeaderDTO;
 import org.mifos.reports.util.helpers.ReportUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class BranchReportService implements IBranchReportService {
 
@@ -54,6 +55,7 @@ public class BranchReportService implements IBranchReportService {
     private PersonnelBusinessService personnelBusinessService;
     private BranchReportPersistence branchReportPersistence;
 
+    @Autowired
     public BranchReportService(OfficeBusinessService officeBusinessService,
             PersonnelBusinessService personnelBusinessService, BranchReportPersistence branchReportPersistence) {
         this.officeBusinessService = officeBusinessService;

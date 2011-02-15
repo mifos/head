@@ -37,7 +37,6 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
-import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.financial.business.service.FinancialBusinessService;
 import org.mifos.accounts.financial.util.helpers.FinancialActionConstants;
@@ -304,11 +303,11 @@ public class LoanPrdAction extends BaseAction {
         }
     }
 
-    private List<FeeDto> getFeesSelected(HttpServletRequest request, LoanOfferingBO loanOffering) throws ServiceException {
+    private List<FeeDto> getFeesSelected(HttpServletRequest request, LoanOfferingBO loanOffering) {
         List<FeeDto> feeSelected = new ArrayList<FeeDto>();
         for (LoanOfferingFeesEntity prdOfferingFees : loanOffering.getLoanOfferingFees()) {
             FeeBO fee = prdOfferingFees.getFees();
-            fee = new LoanPrdBusinessService().getfee(fee.getFeeId(), fee.getFeeType());
+            fee = feeDao.findById(fee.getFeeId());
             feeSelected.add(new FeeDto(getUserContext(request), fee));
         }
         return feeSelected;
@@ -434,7 +433,7 @@ public class LoanPrdAction extends BaseAction {
         logger.debug("start Load master data method of Loan Product Action ");
         LoanPrdBusinessService service = new LoanPrdBusinessService();
 
-        List<FeeBO> fees = new FeePersistence().getAllAppllicableFeeForLoanCreation();
+        List<FeeBO> fees = feeDao.getAllAppllicableFeeForLoanCreation();
         Short localeId = getUserContext(request).getLocaleId();
 
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANPRODUCTCATEGORYLIST, service

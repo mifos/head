@@ -30,7 +30,7 @@ explanation of the license and how it is applied.
 <!-- Inserting tile definition for header and menu -->
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-	<span id="page.id" title="ClientCreationConfirmation" />	
+	<span id="page.id" title="ClientCreationConfirmation"></span>	
 		<!-- Body Begins -->
 		<table width="95%" border="0" cellpadding="0" cellspacing="0">
 			<tr>

@@ -29,6 +29,7 @@ import org.junit.After;
 import org.junit.Test;
 import org.mifos.accounts.productdefinition.business.PrdStatusEntity;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
+import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
@@ -39,8 +40,12 @@ import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class SavingsPrdBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
+
+    @Autowired
+    SavingsProductDao savingsProductDao;
 
     @After
     public void tearDown() throws Exception {
@@ -54,13 +59,13 @@ public class SavingsPrdBusinessServiceIntegrationTest extends MifosIntegrationTe
 
     @Test
     public void testGetSavingsApplicableRecurrenceTypes() throws Exception {
-       Assert.assertEquals(2, new SavingsPrdBusinessService().getSavingsApplicableRecurrenceTypes().size());
+       Assert.assertEquals(2, savingsProductDao.getSavingsApplicableRecurrenceTypes().size());
     }
 
     @Test
     public void testGetAllSavingsProducts() throws Exception {
         SavingsOfferingBO savingsOffering = createSavingsOfferingBO();
-       Assert.assertEquals(1, new SavingsPrdBusinessService().getAllSavingsProducts().size());
+       Assert.assertEquals(1, savingsProductDao.findAllSavingsProducts().size());
         savingsOffering = null;
     }
 

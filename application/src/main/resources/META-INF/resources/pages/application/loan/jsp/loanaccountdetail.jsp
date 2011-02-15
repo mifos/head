@@ -88,8 +88,8 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 					<table width="96%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
 							<td width="62%" class="headingorange"><c:out
-								value="${loanInformationDto.prdOfferingName}" />&nbsp;# <c:out
-								value="${loanInformationDto.globalAccountNum}" /> <br>
+								value="${loanInformationDto.prdOfferingName}" />&nbsp;# <span id="loanaccountdetail.text.loanid"><c:out
+								value="${loanInformationDto.globalAccountNum}" /></span> <br>
 							</td>
 							<td width="38%" rowspan="2" align="right" valign="top"
 								class="fontnormal"><c:if
@@ -412,7 +412,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							<mifos:mifoslabel name="loan.collateral_notes"
 								keyhm="Loan.CollateralNotes" isColonRequired="yes"
 								isManadatoryIndicationNotRequired="yes" />&nbsp;<br>
-							<span id="loanaccountdetail.text.collateralname"><c:out value="${loanInformationDto.collateralNote}" /></span>
+							<span id="loanaccountdetail.text.collateralnote"><c:out value="${loanInformationDto.collateralNote}" /></span>
                             <br /></td>
 						</tr>
 						<script>
@@ -509,6 +509,24 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 									</span>
 								</c:if>
 							</c:forEach><br>
+							<span class="fontnormalbold"> <mifos:mifoslabel	name="loan.one_time_acc_fees" /><br>
+							</span> <c:forEach items="${loanInformationDto.accountFees}" var="feesSet" varStatus="status">
+								<c:if
+	 								test="${feesSet.feeFrequencyTypeId == '2' && feesSet.feeStatus != '2'}">
+									<span id="loanAccountDetail.text.oneTimeFeeName_<c:out value="${status.count}"/>">
+										<c:out value="${feesSet.feeName}"/></span>:
+										<span class="fontnormal"> <c:out
+										value="${feesSet.accountFeeAmount}" />&nbsp;
+										<!-- if account state is LOAN_PARTIAL_APPLICATION or LOAN_PENDING_APPROVAL then enable removal -->
+									<c:if test="${loanInformationDto.accountStateId == '1' || loanInformationDto.accountStateId == '2'}">					
+											<html-el:link styleId="loanAccountDetail.link.removeOneTimeFee_${status.count}"
+											href="accountAppAction.do?method=removeFees&feeId=${feesSet.feeId}&globalAccountNum=${loanInformationDto.globalAccountNum}&accountId=${loanInformationDto.accountId}&recordOfficeId=${loanInformationDto.officeId}&recordLoanOfficerId=${loanInformationDto.personnelId}&createdDate=${loanInformationDto.createdDate}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}&input=Loan">
+											<mifos:mifoslabel name="loan.remove" />
+										</html-el:link> 
+									</c:if> <br>
+									</span>
+								</c:if>
+							</c:forEach><br>							
 							<%--	<span class="fontnormal"><a id="loanaccountdetail.link.partial" href="loan_account_detail_partial.htm">Detail
 										- partial/pending/cancelled</a><br>
 										<a id="loanaccountdetail.link.closed" href="loan_account_detail_closed.htm">Detail - closed</a></span>

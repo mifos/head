@@ -29,6 +29,7 @@ public class CreateLoanAccountsEntryPage extends AbstractPage {
 
     public CreateLoanAccountsEntryPage(Selenium selenium) {
         super(selenium);
+        verifyPage("CreateMultipleLoanAccountsSearchResults");
     }
 
     public void selectClients(int clientNumber, String expectedClientName) {

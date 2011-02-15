@@ -29,7 +29,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-        <span id="page.id" title="create_officeHoliday" />
+        <span id="page.id" title="create_officeHoliday"></span>
 		<SCRIPT>
             function fun_cancel()
             {
