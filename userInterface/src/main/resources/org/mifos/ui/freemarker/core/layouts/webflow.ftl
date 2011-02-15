@@ -19,6 +19,15 @@
 *  explanation of the license and how it is applied.
 --]
 
+[#-- 
+Layout to be used with Spring Web Flow. At the top of the page is a progress
+tracker by way of states and currentState (see below).
+
+    currentTab   : the top navigation tab to highlight. See navigation.ftl for supported values.
+    states       : An array of valid states (as keys in message bundles) in the flow. Order of 
+                   array is the order of flow. It is an array of message keys.
+    currentState : The current web flow state. It must match one of the values in "states" array. 
+--]
 [#macro webflow currentTab states currentState]
 [@layout.header "title" /]
 [@widget.topNavigationNoSecurity currentTab /]

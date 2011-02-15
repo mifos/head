@@ -19,6 +19,12 @@
 *  explanation of the license and how it is applied.
 --]
 
+[#-- 
+Basic, no thrill layout.
+
+    currentTab   : the top navigation tab to highlight. See navigation.ftl for supported values.
+--]
+
 [#macro basic currentTab]
 [@layout.header "title" /]
 [@widget.topNavigationNoSecurity currentTab /]
