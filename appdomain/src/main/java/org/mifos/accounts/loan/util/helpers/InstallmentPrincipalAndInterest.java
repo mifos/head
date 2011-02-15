@@ -20,34 +20,15 @@
 
 package org.mifos.accounts.loan.util.helpers;
 
-import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.util.helpers.Money;
 
-/*
- * What does EMI stand for?  Equal Monthly Installment,
- * Estimated Monthly Installment?  In any case this seems
- * like a poor name since this class is used for both
- * weekly and monthly installments.
- */
-public class EMIInstallment {
+public class InstallmentPrincipalAndInterest {
 
-    private Money principal;
-    private Money interest;
+    private final Money principal;
+    private final Money interest;
 
-    public EMIInstallment(MifosCurrency currency) {
-        this(new Money(currency), new Money(currency));
-    }
-
-    public EMIInstallment(Money principal, Money interest) {
+    public InstallmentPrincipalAndInterest(Money principal, Money interest) {
         this.principal = principal;
-        this.interest = interest;
-    }
-
-    public void setPrincipal(Money principal) {
-        this.principal = principal;
-    }
-
-    public void setInterest(Money interest) {
         this.interest = interest;
     }
 
@@ -57,5 +38,20 @@ public class EMIInstallment {
 
     public Money getPrincipal() {
         return principal;
+    }
+
+//    @Override
+//    public boolean equals(Object obj) {
+//        return principal.equals(obj) && interest.equals(obj);
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        return 33 * principal.hashCode() + 33 * interest.hashCode();
+//    }
+
+    @Override
+    public String toString() {
+        return principal.toString() + " : " +  interest.toString();
     }
 }

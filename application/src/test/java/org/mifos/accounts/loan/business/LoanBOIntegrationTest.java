@@ -20,7 +20,37 @@
 
 package org.mifos.accounts.loan.business;
 
+import static org.apache.commons.lang.math.NumberUtils.DOUBLE_ZERO;
+import static org.apache.commons.lang.math.NumberUtils.SHORT_ZERO;
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
+import static org.mifos.framework.util.helpers.DateUtils.currentDate;
+import static org.mifos.framework.util.helpers.DateUtils.getCurrentDateWithoutTimeStamp;
+import static org.mifos.framework.util.helpers.DateUtils.getDateFromToday;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_SECOND_MONTH;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_SECOND_WEEK;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import junit.framework.Assert;
+
 import org.hibernate.Session;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
@@ -121,36 +151,6 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Currency;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import static org.apache.commons.lang.math.NumberUtils.DOUBLE_ZERO;
-import static org.apache.commons.lang.math.NumberUtils.SHORT_ZERO;
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
-import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
-import static org.mifos.framework.util.helpers.DateUtils.currentDate;
-import static org.mifos.framework.util.helpers.DateUtils.getCurrentDateWithoutTimeStamp;
-import static org.mifos.framework.util.helpers.DateUtils.getDateFromToday;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_SECOND_MONTH;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_SECOND_WEEK;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
@@ -2976,66 +2976,6 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         LoanPerformanceHistoryEntity loanPerfHistory = loan.getPerformanceHistory();
         Assert.assertEquals(getLastInstallmentAccountAction(loan).getActionDate(), loanPerfHistory
                 .getLoanMaturityDate());
-    }
-
-    /**
-     * TODO: Re-enable this test when rounding code correctly handles mid-stream
-     * changes to the loan schedule. Note the use of method getLoanAccount(),
-     * which radically alters the terms of the loan, unbeknownst to the reader
-     * of this code. Here's a trace of this bizarre code:
-     * <ul>
-     * <li>getLoanAccount() calls
-     * <li>TestObjectFactory.createLoanAccount(), which calls
-     * <li>LoanBOIntegrationTest.createLoanAccount(). This method initiall
-     * creates the loan with terms:
-     * <ul>
-     * <li>Loan amount 0
-     * <li>Interest rate 0.0
-     * <li>6 weekly installments
-     * <li>no fees
-     * </ul>
-     * <li>The method then goes on to alter the loan by directly manipulating
-     * instance variables:
-     * <ul>
-     * <li>Add a periodic amount fee of 100 to each installment
-     * <li>Change each installment's principal to 100 and interest to 12.0 (but
-     * the loan amount is still 300, although the principal due is now 600!)
-     * </ul>
-     * </ul>
-     * This leaves the loan in a badly inconsistent state, causing the (second)
-     * call to applyRounding() to break. This test code needs to be refactored!
-     * <p>
-     * This test now breaks. However, rounding with miscellaneous fees is fully
-     * covered by tests in TestLoanRedoDisbursal.java, so it is disabled.
-     */
-    public void xtestRoundInstallments() throws AccountException, SystemException {
-        accountBO = createAndRetrieveLoanAccount();
-        StaticHibernateUtil.flushSession();
-        accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
-        ((LoanBO) accountBO).getLoanOffering().setPrinDueLastInst(false);
-        List<Short> installmentIdList = new ArrayList<Short>();
-        for (AccountActionDateEntity accountAction : accountBO.getAccountActionDates()) {
-            LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountAction;
-            installmentIdList.add(accountActionDateEntity.getInstallmentId());
-            if (accountActionDateEntity.getInstallmentId().equals(Short.valueOf("1"))) {
-                accountActionDateEntity.setMiscFee(new Money(getCurrency(), "20.3"));
-            }
-        }
-        ((LoanBO) accountBO).applyRounding_v2();
-        TestObjectFactory.updateObject(accountBO);
-        StaticHibernateUtil.flushSession();
-
-        accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
-
-        Set<AccountActionDateEntity> actionDateEntities = accountBO.getAccountActionDates();
-        LoanScheduleEntity[] paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(actionDateEntities);
-
-        checkTotalDueWithFees("233.0", paymentsArray[0]);
-        checkTotalDueWithFees("212.0", paymentsArray[1]);
-        checkTotalDueWithFees("212.0", paymentsArray[2]);
-        checkTotalDueWithFees("212.0", paymentsArray[3]);
-        checkTotalDueWithFees("212.0", paymentsArray[4]);
-        checkTotalDueWithFees("212.0", paymentsArray[5]);
     }
 
     @Test

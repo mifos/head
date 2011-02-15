@@ -5,6 +5,6 @@ import org.mifos.framework.util.helpers.Money;
 
 public interface EqualInstallmentGeneratorFactory {
 
-    EqualInstallmentGenerator create(InterestType interestType, LoanUsuageDetail loanUsageDetail, Money loanInterest);
+    PrincipalWithInterestGenerator create(InterestType interestType, Money loanInterest);
 
 }
