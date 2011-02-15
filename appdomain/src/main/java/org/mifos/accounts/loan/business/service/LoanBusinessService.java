@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2010 Grameen Foundation USA
+ * Copyright (c) 2005-2011 Grameen Foundation USA
  * All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,6 +20,12 @@
 
 package org.mifos.accounts.loan.business.service;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountPaymentEntity;
@@ -38,7 +44,6 @@ import org.mifos.application.holiday.business.service.HolidayService;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.business.service.ConfigurationBusinessService;
-import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.business.AbstractBusinessObject;
@@ -50,8 +55,6 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.platform.validations.Errors;
 import org.mifos.security.util.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.*;
 
 public class LoanBusinessService implements BusinessService {
 
@@ -213,14 +216,9 @@ public class LoanBusinessService implements BusinessService {
     }
 
     public List<RepaymentScheduleInstallment> applyDailyInterestRatesWhereApplicable(LoanScheduleGenerationDto loanScheduleGenerationDto, Locale locale) {
-//        try {
-//            LoanBO loanBO = this.legacyLoanDao.findBySystemId(loanScheduleGenerationDto.getLoanBO().getGlobalAccountNum());
             LoanBO loanBO = loanScheduleGenerationDto.getLoanBO();
             List<RepaymentScheduleInstallment> installments = loanBO.toRepaymentScheduleDto(locale);
             return applyDailyInterestRatesWhereApplicable(loanScheduleGenerationDto, installments);
-//        } catch (PersistenceException e) {
-//            throw new MifosRuntimeException(e);
-//        }
     }
 
     private boolean dailyInterestRatesApplicable(LoanScheduleGenerationDto loanScheduleGenerationDto, LoanBO loanBO) {

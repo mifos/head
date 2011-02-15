@@ -1,5 +1,5 @@
 <%--
-Copyright (c) 2005-2010 Grameen Foundation USA
+Copyright (c) 2005-2011 Grameen Foundation USA
 All rights reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -187,7 +187,7 @@ explanation of the license and how it is applied.
                                                     </c:otherwise>
                                                     </c:choose>
                                                     <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
-                                                    <mifos:mifoslabel name="accounts.account" />&nbsp;-&nbsp;
+                                                    <mifos:mifoslabel name="accounts.accountLower" />&nbsp;-&nbsp;
                                                 </span>
 												<mifos:mifoslabel name="loan.preview" />
 												<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
