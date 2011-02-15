@@ -330,8 +330,18 @@ public class AccountBO extends AbstractBusinessObject {
     /**
      * Returns the set of {@link AccountFeesEntity}s -- links to the fees that apply to this loan.
      */
-    public Set<AccountFeesEntity> getAccountFees() {
+    public Set<AccountFeesEntity> getAccountFeesIncludingInactiveFees() {
         return accountFees;
+    }
+
+    public Set<AccountFeesEntity> getAccountFees() {
+        Set<AccountFeesEntity> activeAccountFees = new HashSet<AccountFeesEntity>();
+        for (AccountFeesEntity accountFeesEntity : getAccountFeesIncludingInactiveFees()) {
+            if (accountFeesEntity.getFeeStatus() == null || accountFeesEntity.getFeeStatus().equals(FeeStatus.ACTIVE.getValue())) {
+                activeAccountFees.add(accountFeesEntity);
+            }
+        }
+        return activeAccountFees;
     }
 
     public Set<AccountActionDateEntity> getAccountActionDates() {
@@ -396,6 +406,10 @@ public class AccountBO extends AbstractBusinessObject {
 
     public void addAccountFees(final AccountFeesEntity fees) {
         accountFees.add(fees);
+    }
+
+    public void removeAccountFee(final AccountFeesEntity fee) {
+        boolean success = accountFees.remove(fee);
     }
 
     public void addAccountActionDate(final AccountActionDateEntity accountAction) {

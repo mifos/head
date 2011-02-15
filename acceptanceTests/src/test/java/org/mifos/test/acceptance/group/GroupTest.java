@@ -33,6 +33,7 @@ import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
+import org.mifos.test.acceptance.framework.admin.DefineAcceptedPaymentTypesPage;
 import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPage;
 import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPreviewPage;
 import org.mifos.test.acceptance.framework.group.CenterSearchTransferGroupPage;
@@ -44,6 +45,7 @@ import org.mifos.test.acceptance.framework.group.CreateGroupSearchPage;
 import org.mifos.test.acceptance.framework.group.EditCustomerStatusParameters;
 import org.mifos.test.acceptance.framework.group.GroupStatus;
 import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
+import org.mifos.test.acceptance.framework.loan.ApplyPaymentPage;
 import org.mifos.test.acceptance.framework.login.LoginPage;
 import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionGroupParameters;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
@@ -96,6 +98,33 @@ public class GroupTest extends UiTestCaseBase {
     @AfterMethod(groups = {"smoke","group","acceptance","ui"})
     public void logOut() {
         (new MifosPage(selenium)).logout();
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // http://mifosforge.jira.com/browse/MIFOSTEST-247
+    @Test(sequential = true, groups = {"smoke","group","acceptance","ui"})
+    public void verifyAcceptedPaymentTypesForGroup() throws Exception{
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
+        //When
+        GroupTestHelper groupTestHelper = new GroupTestHelper(selenium);
+        CreateGroupSubmitParameters groupParams = new CreateGroupSubmitParameters();
+        groupParams.setGroupName("TestGroup123456");
+        groupTestHelper.createNewGroup("MyCenter1232993841778", groupParams);
+
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        DefineAcceptedPaymentTypesPage defineAcceptedPaymentTypesPage = adminPage.navigateToDefineAcceptedPaymentType();
+        defineAcceptedPaymentTypesPage.addLoanFeesPaymentType(defineAcceptedPaymentTypesPage.CHEQUE);
+
+        adminPage = navigationHelper.navigateToAdminPage();
+        defineAcceptedPaymentTypesPage = adminPage.navigateToDefineAcceptedPaymentType();
+        defineAcceptedPaymentTypesPage.addLoanFeesPaymentType(defineAcceptedPaymentTypesPage.VOUCHER);
+
+        ApplyPaymentPage applyPaymentPage = navigationHelper.navigateToGroupViewDetailsPage("TestGroup123456")
+                                            .navigateToViewGroupChargesDetailPage().navigateToApplyPayments();
+        //Then
+        applyPaymentPage.verifyModeOfPayments();
+
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception

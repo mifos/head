@@ -40,7 +40,7 @@
             <div class="span-18 width90prc" style="margin-bottom:7px;">
                 <span class="orangeheading">${savingsProductDetails.productDetails.name}</span>
                 <div style="position:relative;top:-17px; text-align:right;">
-                    <a href="editSavingsProduct.ftl?productId=${savingsProductDetails.productDetails.id}">
+                    <a id="SavingsProductDetails.link.editSavingsProduct" href="editSavingsProduct.ftl?productId=${savingsProductDetails.productDetails.id}">
                         [@spring.messageArgs "ftlDefinedLabels.manageSavngsProducts.editsavingsproduct.editSavingsproductinformation" , [savings]  /]
                     </a>
                 </div>

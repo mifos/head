@@ -20,14 +20,6 @@
 
 package org.mifos.accounts.productdefinition.struts.actionforms;
 
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
@@ -52,17 +44,19 @@ import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.LocalizationConverter;
-import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.ConversionError;
-import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.DoubleConversionResult;
-import org.mifos.framework.util.helpers.FilePaths;
-import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.*;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.UserContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.servlet.http.HttpServletRequest;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class LoanPrdActionForm extends BaseActionForm {
     private static final Logger logger = LoggerFactory.getLogger(LoanPrdActionForm.class);
@@ -1886,13 +1880,23 @@ public class LoanPrdActionForm extends BaseActionForm {
         validateCashFlow(errors, locale);
         validateInterestTypeForVariableInstallment(errors, locale);
         validateSelectedFeeForVariableInstallment(request, errors);
+        validateInterestTypeForGracePeriods(errors, locale);
         logger.debug("validateForPreview method of Loan Product Action form method called :" + prdOfferingName);
     }
 
-
+    // Intentionally made public to aid testing !!!
+    void validateInterestTypeForGracePeriods(ActionErrors actionErrors, Locale locale) {
+        Short gracePeriodTypeValue = getGracePeriodTypeValue();
+        if (!GraceType.isGraceTypeNONE(gracePeriodTypeValue)) {
+            int interestTypeNum = Integer.parseInt(interestTypes);
+            if (canConfigureVariableInstallments() || InterestType.isDecliningInterestPrincipalBalanceType(interestTypeNum)) {
+                addError(actionErrors, interestTypes, ProductDefinitionConstants.INVALID_INTEREST_TYPE_FOR_GRACE_PERIODS);
+            }
+        }
+    }
 
     // Intentionally made public to aid testing !!!
-    public void setSelectedQuestionGroups(HttpServletRequest request) {
+    void setSelectedQuestionGroups(HttpServletRequest request) {
         try {
             List<QuestionGroupDetail> questionGroups = new ArrayList<QuestionGroupDetail>();
             if (loanOfferingQGs != null && loanOfferingQGs.length > 0) {
@@ -1945,6 +1949,7 @@ public class LoanPrdActionForm extends BaseActionForm {
         validateCashFlow(errors, locale);
         validateInterestTypeForVariableInstallment(errors, locale);
         validateSelectedFeeForVariableInstallment(request, errors);
+        validateInterestTypeForGracePeriods(errors, locale);
         logger.debug("validateForEditPreview method of Loan Product Action form method called :" + prdOfferingName);
     }
 
@@ -2512,16 +2517,15 @@ public class LoanPrdActionForm extends BaseActionForm {
 
     void validateInterestTypeForVariableInstallment(ActionErrors errors, Locale locale) {
         if(canConfigureVariableInstallments()) {
-            if(interestTypes != null) {
-                try {
-                    if(InterestType.fromInt(Integer.parseInt(interestTypes)).equals(InterestType.DECLINING)) {
-                        return;
-                    }
-                }catch(NumberFormatException nfe) {
-                    addError(errors,interestTypes,ProductDefinitionConstants.INVALID_INTEREST_TYPE);
+            try {
+                if (!InterestType.isDecliningInterestType(Integer.parseInt(interestTypes))) {
+                    addError(errors,interestTypes,ProductDefinitionConstants.INVALID_INTEREST_TYPE_FOR_VARIABLE_INSTALLMENT);
                 }
+            } catch(NumberFormatException e) {
+                addError(errors,interestTypes,ProductDefinitionConstants.INVALID_INTEREST_TYPE_FOR_VARIABLE_INSTALLMENT);
+            } catch(MifosRuntimeException e) {
+                addError(errors,interestTypes,ProductDefinitionConstants.INVALID_INTEREST_TYPE_FOR_VARIABLE_INSTALLMENT);
             }
-            addError(errors,interestTypes,ProductDefinitionConstants.INVALID_INTEREST_TYPE);
         }
     }
 

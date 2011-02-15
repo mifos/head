@@ -83,8 +83,9 @@ public class GroupCustActionForm extends CustomerActionForm  implements Question
                 validateTrained(request, errors);
                 validateConfigurableMandatoryFields(request, errors, EntityType.GROUP);
                 validateCustomFieldsForCustomers(request, errors);
-            } else if (method.equals(Methods.preview.toString())) {
+            } else if (method.equals(Methods.preview.toString()) || method.equals(Methods.previewOnly.toString())) {
                 validateName(errors);
+                validateLO(errors);
                 validateFormedByPersonnel(errors);
                 validateTrained(request, errors);
                 validateConfigurableMandatoryFields(request, errors, EntityType.GROUP);

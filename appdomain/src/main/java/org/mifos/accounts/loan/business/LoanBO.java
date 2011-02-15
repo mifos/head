@@ -20,39 +20,10 @@
 
 package org.mifos.accounts.loan.business;
 
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
-import static org.mifos.platform.util.CollectionUtils.isNotEmpty;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
-import org.mifos.accounts.business.AccountActionDateEntity;
-import org.mifos.accounts.business.AccountBO;
-import org.mifos.accounts.business.AccountFeesActionDetailEntity;
-import org.mifos.accounts.business.AccountFeesEntity;
-import org.mifos.accounts.business.AccountPaymentEntity;
-import org.mifos.accounts.business.AccountStateEntity;
-import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
-import org.mifos.accounts.business.AccountTrxnEntity;
-import org.mifos.accounts.business.FeesTrxnDetailEntity;
+import org.mifos.accounts.business.*;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
@@ -66,11 +37,7 @@ import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.loan.struts.action.validate.ProductMixValidator;
-import org.mifos.accounts.loan.util.helpers.EMIInstallment;
-import org.mifos.accounts.loan.util.helpers.LoanConstants;
-import org.mifos.accounts.loan.util.helpers.LoanExceptionConstants;
-import org.mifos.accounts.loan.util.helpers.LoanPaymentTypes;
-import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
+import org.mifos.accounts.loan.util.helpers.*;
 import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -78,19 +45,7 @@ import org.mifos.accounts.productdefinition.business.NoOfInstallSameForAllLoanBO
 import org.mifos.accounts.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
-import org.mifos.accounts.util.helpers.AccountActionTypes;
-import org.mifos.accounts.util.helpers.AccountConstants;
-import org.mifos.accounts.util.helpers.AccountExceptionConstants;
-import org.mifos.accounts.util.helpers.AccountState;
-import org.mifos.accounts.util.helpers.AccountStateFlag;
-import org.mifos.accounts.util.helpers.AccountStates;
-import org.mifos.accounts.util.helpers.AccountTypes;
-import org.mifos.accounts.util.helpers.FeeInstallment;
-import org.mifos.accounts.util.helpers.InstallmentDate;
-import org.mifos.accounts.util.helpers.OverDueAmounts;
-import org.mifos.accounts.util.helpers.PaymentData;
-import org.mifos.accounts.util.helpers.PaymentStatus;
-import org.mifos.accounts.util.helpers.WaiveEnum;
+import org.mifos.accounts.util.helpers.*;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.persistence.HolidayDao;
@@ -136,11 +91,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.CollectionUtils;
 import org.mifos.framework.util.DateTimeService;
-import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.MoneyUtils;
-import org.mifos.framework.util.helpers.Transformer;
+import org.mifos.framework.util.helpers.*;
 import org.mifos.schedule.ScheduledDateGeneration;
 import org.mifos.schedule.ScheduledEvent;
 import org.mifos.schedule.ScheduledEventFactory;
@@ -148,6 +99,12 @@ import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDat
 import org.mifos.security.util.UserContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.math.BigDecimal;
+import java.util.*;
+
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
+import static org.mifos.platform.util.CollectionUtils.isNotEmpty;
 
 public class LoanBO extends AccountBO {
 
@@ -977,11 +934,19 @@ public class LoanBO extends AccountBO {
                 throw new AccountException(AccountExceptionConstants.CANT_APPLY_FEE_EXCEPTION);
             }
 
-            totalFeeAmount = updateAccountActionDateEntity(installmentIds, feeId);
-            updateAccountFeesEntity(feeId);
+            AccountFeesEntity accountFee = getAccountFees(feeId);
+            if (accountFee.isTimeOfDisbursement()) {
+                totalFeeAmount = accountFee.getAccountFeeAmount();
+                removeAccountFee(accountFee);
+                this.delete(accountFee);
+            } else {
+                totalFeeAmount = updateAccountActionDateEntity(installmentIds, feeId);
+                updateAccountFeesEntity(feeId);
+            }
+
             updateTotalFeeAmount(totalFeeAmount);
-            FeeBO feesBO = getAccountFeesObject(feeId);
-            String description = feesBO.getFeeName() + " " + AccountConstants.FEES_REMOVED;
+
+            String description = fee.getFeeName() + " " + AccountConstants.FEES_REMOVED;
             updateAccountActivity(null, null, totalFeeAmount, null, personnelId, description);
 
             if (!havePaymentsBeenMade()) {
@@ -1324,8 +1289,12 @@ public class LoanBO extends AccountBO {
                         AccountActionTypes.LOAN_REPAYMENT, currentUser);
             }else{
                 LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) nextInstallment;
+                Money originalInterestDue = loanScheduleEntity.getInterestDue();
                 repayInstallment(loanScheduleEntity, accountPaymentEntity, AccountActionTypes.LOAN_REPAYMENT, currentUser,
                         AccountConstants.PAYMENT_RCVD, interestDue);
+                if (isDecliningBalanceInterestRecalculation()) {
+                    loanSummary.decreaseBy(null, originalInterestDue.subtract(interestDue), null, null);
+                }
             }
         }
     }
@@ -1833,9 +1802,13 @@ public class LoanBO extends AccountBO {
                          * The amount due is not necessarily zero for this case.
                          */
                         if (installment.isPaid()) {
-                            increaseInterest = increaseInterest.add(installment.getInterestDue());
-                            increaseFees = increaseFees.add(installment.getTotalFeeDueWithMiscFeeDue());
-                            increasePenalty = increasePenalty.add(installment.getPenaltyDue());
+                            increaseInterest = increaseInterest.add(installment.getInterestDue()).
+                                    add(loanReverseTrxn.getInterestAmount());
+                            increaseFees = increaseFees.add(installment.getMiscFeeDue()).
+                                    add(loanReverseTrxn.getMiscFeeAmount());
+                            increaseFees = increaseFees.add(installment.getTotalFeesDue());
+                            increasePenalty = increasePenalty.add(installment.getPenaltyDue()).
+                                    add(loanReverseTrxn.getPenaltyAmount());
                         }
 
                         installment.recordForAdjustment();
@@ -2806,7 +2779,7 @@ public class LoanBO extends AccountBO {
 
     private LoanPaymentTypes getLoanPaymentType(final Money amount) {
         Money totalPaymentDue = getTotalPaymentDue();
-        if (amount.equals(totalPaymentDue)) {
+        if (amount.equals(totalPaymentDue) || totalPaymentDue.subtract(amount).isTinyAmount()) {
             return LoanPaymentTypes.FULL_PAYMENT;
         } else if (amount.isLessThan(totalPaymentDue)) {
             return LoanPaymentTypes.PARTIAL_PAYMENT;

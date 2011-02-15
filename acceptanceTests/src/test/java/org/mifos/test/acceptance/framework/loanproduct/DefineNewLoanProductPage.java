@@ -78,6 +78,10 @@ public class DefineNewLoanProductPage extends AbstractPage {
         // grace period type
         public static final int NONE = 1;
 
+        // Status
+        public static final int ACTIVE = 1;
+        public static final int INACTIVE = 4;
+
         // Calculate # of Installments as
         public static final int SAME_FOR_ALL_LOANS = 1;
         public static final int BY_LAST_LOAN_AMOUNT = 2;
@@ -86,6 +90,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
 
         // product category
         public static final String CATEGORY_OTHER = "Other";
+        public static final int OTHER = 1;
 
         private String branch;
         private String offeringName;
@@ -116,6 +121,11 @@ public class DefineNewLoanProductPage extends AbstractPage {
         private boolean interestWaiver;
         private boolean includeInLoanCounter;
         private List<String> questionGroups;
+        private String startDateDd;
+        private String startDateMm;
+        private String startDateYy;
+        private int status;
+        private int productCategory;
 
         public String getMinInstallemnts() {
             return this.minInstallemnts;
@@ -460,6 +470,46 @@ public class DefineNewLoanProductPage extends AbstractPage {
         public void setDefAmountByLastLoanAmount(int row, String value) {
             this.amountsByLastLoanAmount[row][3] = value;
         }
+
+        public String getStartDateDd() {
+            return this.startDateDd;
+        }
+
+        public void setStartDateDd(String startDateDd) {
+            this.startDateDd = startDateDd;
+        }
+
+        public String getStartDateMm() {
+            return this.startDateMm;
+        }
+
+        public void setStartDateMm(String startDateMm) {
+            this.startDateMm = startDateMm;
+        }
+
+        public String getStartDateYy() {
+            return this.startDateYy;
+        }
+
+        public void setStartDateYy(String startDateYy) {
+            this.startDateYy = startDateYy;
+        }
+
+        public int getStatus() {
+            return this.status;
+        }
+
+        public void setStatus(int status) {
+            this.status = status;
+        }
+
+        public int getProductCategory() {
+            return this.productCategory;
+        }
+
+        public void setProductCategory(int productCategory) {
+            this.productCategory = productCategory;
+        }
     }
 
     public DefineNewLoanProductPage fillLoanParameters(SubmitFormParameters parameters) {
@@ -490,6 +540,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
                 selenium.type("cycleLoanDefaultLoanAmt"+i, parameters.getDefCycleLoanAmount(i-1));
             }
         }
+        selectWaiverInterest(parameters);
         selenium.select("interestTypes", "value=" + parameters.getInterestTypes());
         selenium.type("createLoanProduct.input.maxInterestRate", parameters.getMaxInterestRate());
         selenium.type("createLoanProduct.input.minInterestRate", parameters.getMinInterestRate());
@@ -522,6 +573,14 @@ public class DefineNewLoanProductPage extends AbstractPage {
         selenium.select("principalGLCode", "label=" + parameters.getPrincipalGLCode());
         selectQuestionGroups(parameters.getQuestionGroups());
         return this;
+    }
+
+    private void selectWaiverInterest(SubmitFormParameters parameters){
+        if(parameters.isInterestWaiver()){
+            selenium.check("createLoanProduct.checkbox.waiverInterest");
+        }else{
+            selenium.uncheck("createLoanProduct.checkbox.waiverInterest");
+        }
     }
 
     private void selectQuestionGroups(List<String> questionGroups) {

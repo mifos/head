@@ -58,4 +58,13 @@ public class OfficeHelper {
 
         return detailsPage.navigateToAdminPage();
     }
+
+    public OfficeViewDetailsPage changeOfficeStatus(String officeName, String status) {
+        return navigationHelper
+                .navigateToAdminPage()
+                .navigateToViewOfficesPage()
+                .navigateToOfficeViewDetailsPage(officeName)
+                .navigateToOfficeEditInformationPage()
+                .changeStatusAndSubmit(status);
+    }
 }

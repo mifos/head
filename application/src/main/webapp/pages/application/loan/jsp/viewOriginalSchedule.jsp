@@ -86,7 +86,7 @@ explanation of the license and how it is applied.
                     </span>
                     <br/>
                     <mifoscustom:mifostabletag source="originalInstallments" scope="session"
-                        xmlFileName="ProposedRepaymentSchedule.xml"
+                        xmlFileName="OriginalSchedule.xml"
                         moduleName="org/mifos/accounts/loan/util/resources" passLocale="true"/>
                     <br>
                     					                    

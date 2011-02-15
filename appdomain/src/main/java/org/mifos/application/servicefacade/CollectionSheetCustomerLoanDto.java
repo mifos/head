@@ -192,14 +192,9 @@ public class CollectionSheetCustomerLoanDto {
     }
 
     public Double getTotalRepaymentDue() {
-
-        return principalDue.doubleValue()
-                + interestDue.doubleValue()
-                + penaltyDue.doubleValue()
-                + miscFeesDue.doubleValue()
-                + miscPenaltyDue.doubleValue()
-                - (principalPaid.doubleValue() + interestPaid.doubleValue() + penaltyPaid.doubleValue()
-                        + miscFeesPaid.doubleValue() + miscPenaltyPaid.doubleValue()) + this.totalAccountFees;
+        return principalDue.add(interestDue).add(penaltyDue).add(miscFeesDue).add(miscPenaltyDue).subtract(
+                principalPaid.add(interestPaid).add(penaltyPaid).add(miscFeesPaid).add(miscPenaltyPaid)
+        ).add(new BigDecimal(this.totalAccountFees)).doubleValue();
     }
 
     public Double getTotalDisbursement() {

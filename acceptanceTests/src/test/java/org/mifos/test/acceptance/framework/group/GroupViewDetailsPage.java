@@ -45,8 +45,61 @@ public class GroupViewDetailsPage extends MifosPage {
         verifyPage("ViewGroupDetails");
     }
 
+    @Deprecated
     public void verifyStatus(String status) {
         Assert.assertTrue(selenium.isTextPresent(status), "Expected string: " + status);
+    }
+
+    public String getGroupStatus(){
+        return selenium.getText("viewgroupdetails.text.status");
+    }
+
+    public String getMeetingSchedule(){
+        return selenium.getText("viewgroupdetails.text.meetingSchedule");
+    }
+
+    public String getCancelCloseReason(){
+        return selenium.getText("viewgroupdetails.text.closeCancelReason");
+    }
+
+    public String getNumberOfClientsInGroup(){
+        return selenium.getText("viewgroupdetails.text.numberOfClientsInGroup");
+    }
+
+    public String getAvgIndyvidualLoanSize(){
+        return selenium.getText("viewgroupdetails.text.avgIndyvidualLoanSize");
+    }
+
+    public String getTotalLoanPortfolio(){
+        return selenium.getText("viewgroupdetails.text.totalLoanPortfolio");
+    }
+
+    public void verifyNumberOfClientsInGroup(String numberOfClientsInGroup){
+        Assert.assertEquals(getNumberOfClientsInGroup(),numberOfClientsInGroup);
+    }
+
+    public void verifyAvgIndyvidualLoanSize(String avgIndyvidualLoanSize){
+        Assert.assertEquals(getAvgIndyvidualLoanSize(),avgIndyvidualLoanSize);
+    }
+
+    public void verifyTotalLoanPortfolio(String totalLoanPortfolio){
+        Assert.assertEquals(getTotalLoanPortfolio(), totalLoanPortfolio);
+    }
+
+    public void verifyMeetingSchedule(String meetingShedule){
+        Assert.assertEquals(getMeetingSchedule(),meetingShedule);
+    }
+
+    public void verifyStatus(EditCustomerStatusParameters editCustomerStatusParameters) {
+        Assert.assertEquals(getGroupStatus(), editCustomerStatusParameters.getGroupStatus().getStatusText());
+        if(editCustomerStatusParameters.getGroupStatus().equals(GroupStatus.CANCELLED)){
+            Assert.assertEquals(getCancelCloseReason(), editCustomerStatusParameters.getCancelReason().getPurposeText());
+        }
+        else{
+            if(editCustomerStatusParameters.getGroupStatus().equals(GroupStatus.CLOSED)){
+                Assert.assertEquals(getCancelCloseReason(), editCustomerStatusParameters.getCloseReason().getPurposeText());
+            }
+        }
     }
 
     public CenterSearchTransferGroupPage editCenterMembership() {
@@ -110,5 +163,11 @@ public class GroupViewDetailsPage extends MifosPage {
         selenium.click("link="+centerName);
         waitForPageToLoad();
         return new CenterViewDetailsPage(selenium);
+    }
+
+    public ViewGroupChargesDetailPage navigateToViewGroupChargesDetailPage(){
+        selenium.click("viewgroupdetails.link.viewDetails");
+        waitForPageToLoad();
+        return new ViewGroupChargesDetailPage(selenium);
     }
 }

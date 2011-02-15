@@ -21,6 +21,7 @@
 package org.mifos.test.acceptance.framework.loan;
 
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -34,6 +35,16 @@ public class ApplyPaymentPage extends MifosPage {
 
     public ApplyPaymentConfirmationPage submitAndNavigateToApplyPaymentConfirmationPage(PaymentParameters params)
     {
+        enterPaymentData(params);
+        return new ApplyPaymentConfirmationPage(selenium);
+    }
+
+    public void verifyPaymentPriorLastPaymentDate(PaymentParameters params) {
+        enterPaymentData(params);
+        selenium.isTextPresent("Date of transaction cannot be less than the last payment date");
+    }
+
+    private void enterPaymentData(PaymentParameters params) {
         selenium.type("transactionDateDD", params.getTransactionDateDD());
         selenium.type("transactionDateMM", params.getTransactionDateMM());
         selenium.type("transactionDateYY", params.getTransactionDateYYYY());
@@ -50,7 +61,14 @@ public class ApplyPaymentPage extends MifosPage {
 
         selenium.click("applypayment.button.reviewTransaction");
         waitForPageToLoad();
+    }
 
-        return new ApplyPaymentConfirmationPage(selenium);
+    public void verifyModeOfPayments(){
+        String[] modesOfPayment=selenium.getSelectOptions("applypayment.input.paymentType");
+
+        //Then
+        Assert.assertEquals(RepayLoanParameters.CASH,modesOfPayment[1]);
+        Assert.assertEquals(RepayLoanParameters.CHEQUE,modesOfPayment[2]);
+        Assert.assertEquals(RepayLoanParameters.VOUCHER,modesOfPayment[3]);
     }
 }

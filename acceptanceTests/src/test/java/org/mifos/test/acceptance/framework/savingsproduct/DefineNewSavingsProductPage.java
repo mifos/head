@@ -30,6 +30,148 @@ public class DefineNewSavingsProductPage extends MifosPage {
         verifyPage("CreateSavingsProduct");
     }
 
+    @SuppressWarnings("PMD.TooManyFields")
+    // lots of fields ok for form input case
+    public static class SubmitSavingsFormParameters {
+
+        // applicable for
+        public static final int CLIENTS = 1;
+        public static final int GROUPS = 2;
+
+        // Status
+        public static final int ACTIVE = 2;
+        public static final int INACTIVE = 5;
+
+        // product category
+        public static final int OTHER = 2;
+
+        //type of deposits
+        public static final int MANDATORY = 1;
+        public static final int VOLUNTARY = 2;
+
+        //Balance used for Interest calculation
+        public static final int MINIMUM_BALANCE = 1;
+        public static final int AVERAGE_BALANCE = 2;
+
+        //Time period for Interest calculation
+        public static final int MONTHS = 2;
+        public static final int DAYS = 3;
+
+        private String offeringName;
+        private String offeringShortName;
+        private String description;
+        private int productCategory;
+        private String startDateDd;
+        private String startDateMm;
+        private String startDateYy;
+        private int applicableFor;
+        private int depositType;
+        private String depositAmount;
+        private int status;
+        private String InterestRate;
+        private int balanceInterest;
+        private int timePeriodInterestType;
+        private String timePeriodInterest;
+        private String FrequencyInterest;
+        public String getOfferingName() {
+            return this.offeringName;
+        }
+        public void setOfferingName(String offeringName) {
+            this.offeringName = offeringName;
+        }
+        public String getOfferingShortName() {
+            return this.offeringShortName;
+        }
+        public void setOfferingShortName(String offeringShortName) {
+            this.offeringShortName = offeringShortName;
+        }
+        public String getDescription() {
+            return this.description;
+        }
+        public void setDescription(String description) {
+            this.description = description;
+        }
+        public int getProductCategory() {
+            return this.productCategory;
+        }
+        public void setProductCategory(int productCategory) {
+            this.productCategory = productCategory;
+        }
+        public String getStartDateDd() {
+            return this.startDateDd;
+        }
+        public void setStartDateDd(String startDateDd) {
+            this.startDateDd = startDateDd;
+        }
+        public String getStartDateMm() {
+            return this.startDateMm;
+        }
+        public void setStartDateMm(String startDateMm) {
+            this.startDateMm = startDateMm;
+        }
+        public String getStartDateYy() {
+            return this.startDateYy;
+        }
+        public void setStartDateYy(String startDateYy) {
+            this.startDateYy = startDateYy;
+        }
+        public int getApplicableFor() {
+            return this.applicableFor;
+        }
+        public void setApplicableFor(int applicableFor) {
+            this.applicableFor = applicableFor;
+        }
+        public int getDepositType() {
+            return this.depositType;
+        }
+        public void setDepositType(int depositType) {
+            this.depositType = depositType;
+        }
+        public String getDepositAmount() {
+            return this.depositAmount;
+        }
+        public void setDepositAmount(String mandatoryAmount) {
+            this.depositAmount = mandatoryAmount;
+        }
+        public int getStatus() {
+            return this.status;
+        }
+        public void setStatus(int status) {
+            this.status = status;
+        }
+        public String getInterestRate() {
+            return this.InterestRate;
+        }
+        public void setInterestRate(String interestRate) {
+            this.InterestRate = interestRate;
+        }
+        public int getBalanceInterest() {
+            return this.balanceInterest;
+        }
+        public void setBalanceInterest(int balanceInterest) {
+            this.balanceInterest = balanceInterest;
+        }
+        public int getTimePeriodInterestType() {
+            return this.timePeriodInterestType;
+        }
+        public void setTimePeriodInterestType(int timePeriodInterestType) {
+            this.timePeriodInterestType = timePeriodInterestType;
+        }
+        public String getTimePeriodInterest() {
+            return this.timePeriodInterest;
+        }
+        public void setTimePeriodInterest(String timePeriodInterest) {
+            this.timePeriodInterest = timePeriodInterest;
+        }
+        public String getFrequencyInterest() {
+            return this.FrequencyInterest;
+        }
+        public void setFrequencyInterest(String frequencyInterest) {
+            this.FrequencyInterest = frequencyInterest;
+        }
+
+
+    }
     public DefineNewSavingsProductPreviewPage submitAndNavigateToDefineNewSavingsProductPreviewPage(SavingsProductParameters productParameters) {
         selenium.type("CreateSavingsProduct.input.prdOfferingName", productParameters.getProductInstanceName());
         selenium.type("CreateSavingsProduct.input.prdOfferingShortName", productParameters.getShortName());

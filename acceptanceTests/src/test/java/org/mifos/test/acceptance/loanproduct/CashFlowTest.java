@@ -25,6 +25,8 @@ import org.joda.time.DateTime;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountCashFlowPage;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountReviewInstallmentPage;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
 import org.mifos.test.acceptance.framework.office.OfficeParameters;
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
@@ -74,7 +76,6 @@ public class CashFlowTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
-    @Test(enabled=true)
     public void verifyCashFlowFields() throws Exception {
         DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getMonthlyLoanProductParameters();
         loanProductTestHelper.navigateToDefineNewLoanPangAndFillMandatoryFields(formParameters).
@@ -83,13 +84,11 @@ public class CashFlowTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
-    @Test(enabled=true)
     public void verifyCashFlowWithNullValue() throws Exception {
         DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
         createAndValidateLoanProductWithCashFlow("", formParameters, "", "", false);
     }
 
-    @Test(enabled=true)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyCashFlowUnChecked() throws Exception {
         applicationDatabaseOperation.updateLSIM(1);
@@ -108,7 +107,6 @@ public class CashFlowTest extends UiTestCaseBase {
                 verifyPage("SchedulePreview");
     }
 
-    @Test(enabled=true)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyCashFlowForNonVariableInstallmentLoan() throws Exception {
         applicationDatabaseOperation.updateLSIM(0);
@@ -118,7 +116,7 @@ public class CashFlowTest extends UiTestCaseBase {
         createAndValidateLoanProductWithCashFlow(warningThreshold,formParameters, "49.99", minRc, false);
         validateCashFlowForLoanAccount(formParameters, minRc, "900.79");
     }
-    @Test(enabled=true)
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyWarningsForNonVariableInstallmentLoan() throws Exception {
         applicationDatabaseOperation.updateLSIM(0);
@@ -137,7 +135,6 @@ public class CashFlowTest extends UiTestCaseBase {
 
     }
 
-    @Test(enabled=true)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyWarningsForVariableInstallmentLoan() throws Exception {
         applicationDatabaseOperation.updateLSIM(1);
@@ -151,7 +148,6 @@ public class CashFlowTest extends UiTestCaseBase {
         verifyNegativeAndZeroCashFlow(formParameters, warningThreshold, disbursalDate, installment);
     }
 
-    @Test(enabled=true)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyCashFlowForVariableInstallmentLoan() throws Exception {
         String minRC = "999.99";
@@ -160,6 +156,42 @@ public class CashFlowTest extends UiTestCaseBase {
         createAndValidateLoanProductWithCashFlow("89.99",formParameters, "49.99", minRC, true);
         validateCashFlowForLoanAccount(formParameters, minRC, "901.0");
         verifyRepaymentCapacityOnValidate(formParameters, minRC, "901.0");
+    }
+
+    /**
+     * Verify Cash Flow Page in Loan Account creation flow
+     * http://mifosforge.jira.com/browse/MIFOSTEST-672
+     * @throws Exception
+     */
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void verifyCashFlowPageInLoanAccountCreationFlow() throws Exception {
+     //   initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml", dataSource, selenium);
+        DefineNewLoanProductPage.SubmitFormParameters productParams = FormParametersHelper.getWeeklyLoanProductParameters();
+        productParams.setOfferingName("productCF1");
+        productParams.setOfferingShortName("PCF1");
+        productParams.setDefInstallments("12");
+        productParams.setDefaultLoanAmount("2000");
+        CreateLoanAccountSearchParameters loanSearchParams = new CreateLoanAccountSearchParameters();
+        loanSearchParams.setSearchString(clientName);
+        loanSearchParams.setLoanProduct("productCF1");
+        DateTime disbursalDate = systemDateTime.plusDays(1);
+
+        loanProductTestHelper.navigateToDefineNewLoanPangAndFillMandatoryFields(productParams).
+                fillCashFlow("", "", "")
+                .submitAndGotoNewLoanProductPreviewPage()
+                .submit();
+        CreateLoanAccountCashFlowPage cashFlowPage = loanTestHelper.navigateToCreateLoanAccountCashFlowPage(loanSearchParams);
+        cashFlowPage.verifyTableExist();
+        cashFlowPage.validateCashFlowMonths(disbursalDate, 12, DefineNewLoanProductPage.SubmitFormParameters.WEEKS);
+        cashFlowPage.cancel();
+        loanTestHelper.navigateToCreateLoanAccountCashFlowPage(loanSearchParams);
+        cashFlowPage.submitWithErrors();
+        cashFlowPage.verifyInvalidTextTyped();
+        cashFlowPage.verifyErrorsOnPage();
+        cashFlowPage.verifyErrorsOnFields();
+        cashFlowPage.enterValidData("1000", 500, 400, null, null);
+        CreateLoanAccountReviewInstallmentPage reviewPage = cashFlowPage.clickContinue();
+        reviewPage.verifyCashFlow(-100.0, 2000.0);
     }
 
     private void verifyNegativeAndZeroCashFlow(DefineNewLoanProductPage.SubmitFormParameters formParameters, String warningThreshold, DateTime disbursalDate, int installment) {

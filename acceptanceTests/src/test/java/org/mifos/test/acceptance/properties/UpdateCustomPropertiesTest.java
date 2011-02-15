@@ -93,6 +93,60 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    //http://mifosforge.jira.com/browse/MIFOSTEST-228
+    public void verifyPropertyBackDatedTransactionsAllowedFalse() throws Exception{
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
+        propertiesHelper.setBackDatedTransactionsAllowed("false");
+        //When
+        navigationHelper.navigateToLoanAccountPage("000100000000004").navigateToDisburseLoan().verifyDisbursalDateIsDisabled();
+        //Then
+        propertiesHelper.setBackDatedTransactionsAllowed("true");
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    //http://mifosforge.jira.com/browse/MIFOSTEST-235
+    public void verifyPropertyClientRulesClientCanExistOutsideGroupFalse() throws Exception{
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
+        propertiesHelper.setClientCanExistOutsideGroup("false");
+        //When
+        navigationHelper.navigateToClientsAndAccountsPage().navigateToCreateNewClientPage();
+        //Then
+        Assert.assertFalse(selenium.isElementPresent("group_search.link.membershipNotRequired"));
+        propertiesHelper.setClientCanExistOutsideGroup("true");
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    //http://mifosforge.jira.com/browse/MIFOSTEST-234
+    public void verifyPropertyGroupCanApplyLoansTrue() throws Exception{
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
+        propertiesHelper.setGroupCanApplyLoans("true");
+        LoanTestHelper helper = new LoanTestHelper(selenium);
+        CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
+        searchParameters.setLoanProduct("WeeklyGroupDeclineLoanWithPeriodicFee");
+        searchParameters.setSearchString("MyGroup1232993846342");
+        CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
+        submitAccountParameters.setAmount("2000.0");
+        //When Then
+        helper.createLoanAccount(searchParameters, submitAccountParameters);
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    //http://mifosforge.jira.com/browse/MIFOSTEST-233
+    public void verifyPropertyGroupCanApplyLoansFalse() throws Exception{
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
+        propertiesHelper.setGroupCanApplyLoans("false");
+        //When
+        navigationHelper.navigateToGroupViewDetailsPage("MyGroup1232993846342");
+        //Then
+        Assert.assertFalse(selenium.isElementPresent("viewgroupdetails.link.newLoanAccount"));
+        propertiesHelper.setGroupCanApplyLoans("true");
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     //http://mifosforge.jira.com/browse/MIFOSTEST-232
     public void verifyPropertyClientRulesCenterHierarchyExistsFalse() throws Exception{
         //Given

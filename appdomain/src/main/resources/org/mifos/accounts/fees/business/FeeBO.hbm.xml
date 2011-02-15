@@ -69,7 +69,7 @@
     <query name="getAllApplicableFeesForLoan">
         <![CDATA[from FeeBO as fees where fees.feeStatus.id=:active and fees.categoryType.id in (:category)
         and fees.feeId not in ( select af.fees.feeId from org.mifos.accounts.business.AccountFeesEntity af
-        where af.account.accountId=:accountId and af.fees.feeFrequency.feeFrequencyType.id=:feeFrequencyTypeId and (af.feeStatus=null or af.feeStatus=:active))
+        where af.account.accountId=:accountId and (af.feeStatus=null or af.feeStatus=:active))
         ]]>
     </query>
     <query name="getAllApplicableFeesForLoanCreation">

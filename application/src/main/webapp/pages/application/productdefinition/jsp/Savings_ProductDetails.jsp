@@ -78,7 +78,7 @@ explanation of the license and how it is applied.
 									<c:out value="${BusinessKey.prdOfferingName}" />
 								</td>
 								<td width="32%" align="right">
-									<a	href="savingsproductaction.do?method=manage&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
+									<a href="savingsproductaction.do?method=manage&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 
 										<fmt:message key="product.editSavingsInfo">
 										<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" /></fmt:param>

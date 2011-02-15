@@ -193,6 +193,18 @@ public class StandardTestingService implements TestingService {
     }
 
     @Override
+    public void setGroupCanApplyLoans(boolean flag) {
+        ClientRules.setGroupCanApplyLoans(flag);
+        MifosConfigurationManager.getInstance().setProperty(ClientRules.ClientRulesGroupCanApplyLoans, flag);
+    }
+
+    @Override
+    public void setClientCanExistOutsideGroup(boolean flag){
+        ClientRules.setClientCanExistOutsideGroup(flag);
+        MifosConfigurationManager.getInstance().setProperty(ClientRules.ClientRulesClientCanExistOutsideGroup, flag);
+    }
+
+    @Override
     public void runAllBatchJobs(final ServletContext ctx) {
         logger.info("running all batch jobs");
         MifosScheduler mifosScheduler = (MifosScheduler) ctx.getAttribute(MifosScheduler.class.getName());
@@ -246,5 +258,15 @@ public class StandardTestingService implements TestingService {
         }
         configMgr.setProperty(processFlowParamName, processFlowParamValue);
 
+    }
+
+    @Override
+    public void setBackDatedTransactionsAllowed(boolean flag) {
+        MifosConfigurationManager.getInstance().setProperty("BackDatedTransactionsAllowed", flag);
+    }
+
+    @Override
+    public void setClientNameSequence(String[] nameSequence) {
+        ClientRules.setNameSequence(nameSequence);
     }
 }

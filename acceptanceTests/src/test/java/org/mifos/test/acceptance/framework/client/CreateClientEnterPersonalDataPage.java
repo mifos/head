@@ -64,7 +64,9 @@ public class CreateClientEnterPersonalDataPage extends MifosPage {
 
         int salutation;
         String firstName;
+        String middleName;
         String lastName;
+        String secondLastName;
         String dateOfBirthDD;
         String dateOfBirthMM;
         String dateOfBirthYYYY;
@@ -171,12 +173,29 @@ public class CreateClientEnterPersonalDataPage extends MifosPage {
             this.spouseLastName = spouseLastName;
         }
 
+        public String getMiddleName() {
+            return this.middleName;
+        }
+
+        public void setMiddleName(String middleName) {
+            this.middleName = middleName;
+        }
+
+        public String getSecondLastName() {
+            return this.secondLastName;
+        }
+
+        public void setSecondLastName(String secondLastName) {
+            this.secondLastName = secondLastName;
+        }
     }
 
     public CreateClientEnterPersonalDataPage create(SubmitFormParameters parameters) {
         selectValueIfNotZero("clientName.salutation", parameters.getSalutation());
         typeTextIfNotEmpty("create_ClientPersonalInfo.input.firstName", parameters.getFirstName());
+        typeTextIfNotEmpty("create_ClientPersonalInfo.input.middleName", parameters.getMiddleName());
         typeTextIfNotEmpty("create_ClientPersonalInfo.input.lastName", parameters.getLastName());
+        typeTextIfNotEmpty("create_ClientPersonalInfo.input.secondLastName", parameters.getSecondLastName());
 
         typeTextIfNotEmpty("dateOfBirthDD", parameters.getDateOfBirthDD());
         typeTextIfNotEmpty("dateOfBirthMM", parameters.getDateOfBirthMM());

@@ -178,8 +178,7 @@ public class MpesaImportTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.SystemPrintln"})
-    // TODO temporarily disabled this test unless hudson configuration will be fixed
-    @Test(enabled=false)
+    @Test(enabled=true)
     public void importMpesaTransactions() throws Exception {
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         ViewOrganizationSettingsPage viewOrganizationSettingsPage = adminPage.navigateToViewOrganizationSettingsPage();

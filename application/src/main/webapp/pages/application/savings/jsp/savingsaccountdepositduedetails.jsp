@@ -73,7 +73,7 @@ explanation of the license and how it is applied.
 							</tr>
 						</table>
 						<br>
-						<table width="60%" border="0" cellpadding="3" cellspacing="0">
+						<table id="DepositDueDetailsTable" width="60%" border="0" cellpadding="3" cellspacing="0">
 							<tr class="drawtablerowboldnoline">
 								<td width="60%">
 									&nbsp;

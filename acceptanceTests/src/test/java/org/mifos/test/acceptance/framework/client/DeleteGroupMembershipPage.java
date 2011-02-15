@@ -36,7 +36,17 @@ public class DeleteGroupMembershipPage extends MifosPage{
         waitForPageToLoad();
     }
 
+    private void setNote(String note){
+        selenium.type("deletegroupmembership.input.note", note);
+    }
+
     public ClientViewDetailsPage confirmDeleteGroupMembership(){
+        submit();
+        return new ClientViewDetailsPage(selenium);
+    }
+
+    public ClientViewDetailsPage confirmDeleteGroupMembership(String note){
+        setNote(note);
         submit();
         return new ClientViewDetailsPage(selenium);
     }

@@ -768,7 +768,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     @Test
     public void test999AccountForLastPaymentReversal() throws Exception {
         String dataFileName = "account999-test3.csv";
-        int expected999AccountTransactions = 2;
+        int expected999AccountTransactions = 4;
         int paymentToReverse = 3;
         boolean payLastPayment = false;
         runOne999AccountTestCaseWithDataFromSpreadSheetForLastPaymentReversal(rootPath + dataFileName,

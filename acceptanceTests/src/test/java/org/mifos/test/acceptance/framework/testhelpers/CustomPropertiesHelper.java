@@ -72,6 +72,27 @@ public class CustomPropertiesHelper {
         selenium.open(UPDATE_PAGE + "?ClientRules.CenterHierarchyExists=" + exists);
     }
 
+    public void setGroupCanApplyLoans(String flag){
+        selenium.open(UPDATE_PAGE + "?ClientRules.GroupCanApplyLoans=" + flag);
+    }
+
+    public void setClientCanExistOutsideGroup(String flag){
+        selenium.open(UPDATE_PAGE + "?ClientRules.ClientCanExistOutsideGroup=" + flag);
+    }
+
+    public void setBackDatedTransactionsAllowed(String flag){
+        selenium.open(UPDATE_PAGE + "?BackDatedTransactionsAllowed=" + flag);
+    }
+
+    /**
+     * Determines ordering of displayed client name.
+     * @param sequence Name sequence, comma-separated values.
+     * ex. "first_name,middle_name,last_name,second_last_name"
+     */
+    public void setClientsNameSequence(String sequence) {
+        selenium.open(UPDATE_PAGE + "?ClientRules.NameSequence=" + sequence);
+    }
+
     /**
      * This is to decide whether the user requires to store the client family information
      * See application\src\main\resources\org\mifos\config\resources\applicationConfiguration.default.properties
@@ -149,5 +170,9 @@ public class CustomPropertiesHelper {
 
     public void setLoanPendingApprovalStateEnabled(String enabled){
         selenium.open(UPDATE_PAGE + "?ProcessFlow.LoanPendingApprovalStateEnabled=" + enabled);
+    }
+
+    public void setClientPendingApprovalStateEnabled(String enabled){
+        selenium.open(UPDATE_PAGE + "?ProcessFlow.ClientPendingApprovalStateEnabled=" + enabled);
     }
 }

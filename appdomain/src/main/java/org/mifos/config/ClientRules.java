@@ -148,6 +148,14 @@ public class ClientRules {
         centerHierarchyExists = exists;
     }
 
+    public static void setGroupCanApplyLoans(boolean flag) {
+        groupCanApplyLoans = flag;
+    }
+
+    public static void setClientCanExistOutsideGroup(boolean flag){
+        clientCanExistOutsideGroup = flag;
+    }
+
 
     /** Can group loans exist? */
     public static Boolean getGroupCanApplyLoans() {
@@ -229,6 +237,10 @@ public class ClientRules {
         }
 
         return cfgValue;
+    }
+
+    public static void setNameSequence(String[] nameSequence) {
+        ClientRules.nameSequence = nameSequence;
     }
 
     /*

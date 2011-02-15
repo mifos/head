@@ -39,6 +39,7 @@ public class CollectionSheetEntryEnterDataPage extends AbstractPage {
 
     public CollectionSheetEntryEnterDataPage(Selenium selenium) {
         super(selenium);
+        this.verifyPage("BulkEntryData");
     }
 
     public CollectionSheetEntryEnterDataPage verifyPage() {
@@ -81,6 +82,10 @@ public class CollectionSheetEntryEnterDataPage extends AbstractPage {
     public CollectionSheetEntryEnterDataPage enterAttendance(int row, int attendance) {
         selenium.select("attendanceSelected[" + row + "]", "value=" + attendance);
         return this;
+    }
+
+    public void verifyAttendance(int row, int attendance) {
+        Assert.assertEquals(selenium.getSelectedValue("attendanceSelected[" + row + "]"), String.valueOf(attendance));
     }
 
     public void verifyAccountValue(int row, int col, double fee) {

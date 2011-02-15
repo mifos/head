@@ -92,6 +92,13 @@ public class QuestionGroupTestHelper {
         return questionDetailPage.navigateToEditQuestionPage();
     }
 
+    public ViewAllQuestionGroupsPage navigateToViewQuestionGroups(List<String> questions) {
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        ViewAllQuestionGroupsPage viewAllQuestionGroupsPage = adminPage.navigateToViewAllQuestionGroups();
+        viewAllQuestionGroupsPage.verifyQuestionGroup(questions);
+        return viewAllQuestionGroupsPage;
+    }
+
     public void markQuestionAsInactive(String question) {
         EditQuestionPage editQuestionPage = naviagateToEditQuestion(question);
         editQuestionPage.deactivate();

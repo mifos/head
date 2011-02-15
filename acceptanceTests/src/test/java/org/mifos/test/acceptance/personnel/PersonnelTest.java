@@ -80,13 +80,22 @@ public class PersonnelTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
+    //http://mifosforge.jira.com/browse/MIFOSTEST-296
     @Test(enabled=true, groups = {"acceptance"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createUserTest() throws Exception {
+        //Given
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
 
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
-        userHelper.createUser(adminPage.getAdminUserParameters(), "MyOffice1233171674227");
+        CreateUserParameters formParameters = adminPage.getAdminUserParameters();
+        //When
+        userHelper.createUser(formParameters, "MyOffice1233171674227");
+        LoginPage loginPage = new AppLauncher(selenium).launchMifos();
+        loginPage.verifyPage();
+        //Then
+        HomePage homePage = loginPage.loginSuccessfulAsWithChnagePasw(formParameters.getUserName(), formParameters.getPassword());
+        homePage.verifyPage();
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -110,13 +119,26 @@ public class PersonnelTest extends UiTestCaseBase {
         userDetailsPage2.verifyModifiedNameAndEmail(formParameters);
     }
 
+    //http://mifosforge.jira.com/browse/MIFOSTEST-298
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(enabled=true, groups = {"acceptance"})
     public void createUserWithNonAdminRoleTest() throws Exception {
+        //Given
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
 
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
-        userHelper.createUser(adminPage.getNonAdminUserParameters(), "MyOffice1233171674227");
+        CreateUserParameters formParameters = adminPage.getNonAdminUserParameters();
+        //When
+        userHelper.createUser(formParameters, "MyOffice1233171674227");
+        LoginPage loginPage = new AppLauncher(selenium).launchMifos();
+        loginPage.verifyPage();
+        //Then
+        HomePage homePage = loginPage.loginSuccessfulAsWithChnagePasw(formParameters.getUserName(), formParameters.getPassword());
+        homePage.verifyPage();
+        adminPage=navigationHelper.navigateToAdminPageAsLogedUser(formParameters.getUserName(), "newPasw");
+        adminPage.navigateToCreateUserPage();
+        String error = selenium.getText("admin.error.message");
+        Assert.assertEquals(error.contains("You do not have permissions to perform this activity. Contact your system administrator to grant you the required permissions and try again."), true);
     }
 
     @Test(enabled=true, groups = {"acceptance"})

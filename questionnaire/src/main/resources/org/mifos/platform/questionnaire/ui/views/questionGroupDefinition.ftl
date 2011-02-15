@@ -37,12 +37,17 @@
             <li class="long_t_box">
                 <label for="title"><span class="red">*</span>[@spring.message
                     "questionnaire.questionGroupTitle"/]:</label>
-
-                    [@spring.formInput "questionGroupForm.title",
-                    'maxlength="50"
-                    onkeypress="return FnCheckNumCharsOnPress(event,this);"
-                    onblur="return FnCheckNumChars(event,this);return FnEscape(event,this)"'/]
-
+                    [#if questionGroupForm.questionGroupDetail.ppi]
+                        [@spring.formInput "questionGroupForm.title",
+                        'maxlength="50" disabled="true"
+                        onkeypress="return FnCheckNumCharsOnPress(event,this);"
+                        onblur="return FnCheckNumChars(event,this);return FnEscape(event,this)"'/]
+                    [#else]
+                        [@spring.formInput "questionGroupForm.title",
+                        'maxlength="50"
+                        onkeypress="return FnCheckNumCharsOnPress(event,this);"
+                        onblur="return FnCheckNumChars(event,this);return FnEscape(event,this)"'/]
+                    [/#if]
             </li>
             <li>
                 <label for="eventSourceId"><span class="red">*</span>[@spring.message
@@ -106,10 +111,10 @@
                 <a href="javascript:CreateQuestionGroup.removeSection('${section.name}')" style="visibility:hidden">[@spring.message "questionnaire.remove.link"/]</a>
             [/#if]
             <span class="move orderCenter">
-                <a href="javascript:CreateQuestionGroup.moveSectionUp('${section.name}')">
+                <a href="javascript:CreateQuestionGroup.moveSectionUp('${section.name}')" id="moveSectionUp_${section.name?replace(" ","")}">
                     <img src="pages/framework/images/smallarrowtop.gif" width="11" height="11">
                 </a>&nbsp
-                <a href="javascript:CreateQuestionGroup.moveSectionDown('${section.name}')">
+                <a href="javascript:CreateQuestionGroup.moveSectionDown('${section.name}')" id="moveSectionDown_${section.name?replace(" ","")}">
                     <img src="pages/framework/images/smallarrowdown.gif" width="11" height="11">
                 </a>
             </span>
@@ -131,13 +136,17 @@
                     [@mifosmacros.formCheckbox "questionGroupForm.sections[${section_index}].sectionQuestions[${sectionQuestion_index}].mandatory", ""/]
                 </td>
                 <td class="remove orderCenter">
+                [#if sectionQuestion_index gte section.initialCountOfQuestions]
                     <a href="javascript:CreateQuestionGroup.removeQuestion('${section.name}','${sectionQuestion.questionId}')">[@spring.message "questionnaire.remove.link"/]</a>
+                [#else]
+                    <a href="javascript:CreateQuestionGroup.removeQuestion('${section.name}','${sectionQuestion.questionId}')" style="visibility:hidden">[@spring.message "questionnaire.remove.link"/]</a>
+                [/#if]
                 </td>
                 <td class="order orderCenter">
-                    <a href="javascript:CreateQuestionGroup.moveQuestionUp('${section.name}','${sectionQuestion.questionId}')">
+                    <a href="javascript:CreateQuestionGroup.moveQuestionUp('${section.name}','${sectionQuestion.questionId}')" id="moveQuestionUp_${sectionQuestion.questionId}">
                         <img src="pages/framework/images/smallarrowtop.gif" width="11" height="11">
                     </a>&nbsp
-                    <a href="javascript:CreateQuestionGroup.moveQuestionDown('${section.name}','${sectionQuestion.questionId}')">
+                    <a href="javascript:CreateQuestionGroup.moveQuestionDown('${section.name}','${sectionQuestion.questionId}')" id="moveQuestionDown_${sectionQuestion.questionId}">
                         <img src="pages/framework/images/smallarrowdown.gif" width="11" height="11">
                     </a>
                 </td>

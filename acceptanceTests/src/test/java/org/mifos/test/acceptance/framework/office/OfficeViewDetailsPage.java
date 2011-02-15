@@ -53,4 +53,10 @@ public class OfficeViewDetailsPage extends MifosPage {
         return new AdminPage(selenium);
     }
 
+    public OfficeEditInformationPage navigateToOfficeEditInformationPage() {
+        selenium.click("viewOfficeDetails.link.editOfficeInformation");
+        waitForPageToLoad();
+        return new OfficeEditInformationPage(selenium);
+    }
+
 }

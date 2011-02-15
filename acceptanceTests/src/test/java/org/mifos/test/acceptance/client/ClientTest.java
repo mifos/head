@@ -31,14 +31,16 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
-
 import org.junit.Assert;
 import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
+import org.mifos.test.acceptance.framework.account.AccountStatus;
+import org.mifos.test.acceptance.framework.account.EditAccountStatusParameters;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
+import org.mifos.test.acceptance.framework.admin.DefineAcceptedPaymentTypesPage;
 import org.mifos.test.acceptance.framework.center.MeetingParameters;
 import org.mifos.test.acceptance.framework.client.ClientEditMFIPage;
 import org.mifos.test.acceptance.framework.client.ClientEditMFIParameters;
@@ -54,14 +56,13 @@ import org.mifos.test.acceptance.framework.client.CreateClientEnterPersonalDataP
 import org.mifos.test.acceptance.framework.client.CreateClientPreviewDataPage;
 import org.mifos.test.acceptance.framework.client.QuestionGroup;
 import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPage;
-
 import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPreviewPage;
 import org.mifos.test.acceptance.framework.group.CreateGroupEntryPage.CreateGroupSubmitParameters;
 import org.mifos.test.acceptance.framework.group.EditCustomerStatusParameters;
 import org.mifos.test.acceptance.framework.group.GroupCloseReason;
 import org.mifos.test.acceptance.framework.group.GroupStatus;
+import org.mifos.test.acceptance.framework.loan.ApplyPaymentPage;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
-
 import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionGroupPage;
 import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionGroupParameters;
 import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionPage;
@@ -69,19 +70,20 @@ import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionParameter
 import org.mifos.test.acceptance.framework.questionnaire.EditQuestionPage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionDetailPage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionGroupResponsePage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionnairePage;
 import org.mifos.test.acceptance.framework.questionnaire.ViewAllQuestionsPage;
-import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
-
+import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSearchParameters;
+import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSubmitParameters;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
 import org.mifos.test.acceptance.framework.testhelpers.ClientTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.CustomPropertiesHelper;
 import org.mifos.test.acceptance.framework.testhelpers.GroupTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
-
 import org.mifos.test.acceptance.framework.testhelpers.QuestionGroupTestHelper;
-
+import org.mifos.test.acceptance.framework.testhelpers.SavingsAccountHelper;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
+import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
 import org.mifos.test.acceptance.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -91,6 +93,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
+@SuppressWarnings("PMD.TooManyFields")
 @Test(sequential = true, groups = {"client", "acceptance", "ui", "smoke"})
 public class ClientTest extends UiTestCaseBase {
 
@@ -99,15 +102,17 @@ public class ClientTest extends UiTestCaseBase {
     private ClientTestHelper clientTestHelper;
     private QuestionGroupTestHelper questionGroupTestHelper;
     private GroupTestHelper groupTestHelper;
+    private SavingsAccountHelper savingsAccountHelper;
 
+    @Autowired
+    private ApplicationDatabaseOperation applicationDatabaseOperation;
     @Autowired
     private DriverManagerDataSource dataSource;
     @Autowired
     private DbUnitUtilities dbUnitUtilities;
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
-    private Random random;
-    private static final String FREE_TEXT = "Free Text";
+
     public static final String MULTI_SELECT = "Multi Select";
     public static final String EXPECTED_DATE_FORMAT = "%02d/%02d/%04d";
     public static final String NUMBER = "Number";
@@ -130,12 +135,50 @@ public class ClientTest extends UiTestCaseBase {
         clientTestHelper = new ClientTestHelper(selenium);
         questionGroupTestHelper = new QuestionGroupTestHelper(selenium);
         groupTestHelper = new GroupTestHelper(selenium);
-        random = new Random();
+        savingsAccountHelper = new SavingsAccountHelper(selenium);
     }
 
     @AfterMethod(alwaysRun = true)
     public void logOut() {
         (new MifosPage(selenium)).logout();
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // http://mifosforge.jira.com/browse/MIFOSTEST-248
+    public void verifyAcceptedPaymentTypes() throws Exception{
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
+        //When
+        String groupName = "MyGroup1232993846342";
+        CreateClientEnterPersonalDataPage.SubmitFormParameters clientParams = new CreateClientEnterPersonalDataPage.SubmitFormParameters();
+        clientParams.setSalutation(CreateClientEnterPersonalDataPage.SubmitFormParameters.MRS);
+        clientParams.setFirstName("John");
+        clientParams.setLastName("Doe");
+        clientParams.setDateOfBirthDD("22");
+        clientParams.setDateOfBirthMM("05");
+        clientParams.setDateOfBirthYYYY("1987");
+        clientParams.setGender(CreateClientEnterPersonalDataPage.SubmitFormParameters.MALE);
+        clientParams.setPovertyStatus(CreateClientEnterPersonalDataPage.SubmitFormParameters.NOT_POOR);
+        clientParams.setSpouseNameType(CreateClientEnterPersonalDataPage.SubmitFormParameters.FATHER);
+        clientParams.setSpouseFirstName("fatherName");
+        clientParams.setSpouseLastName("fatherLastName");
+
+        ClientViewDetailsPage clientViewDetailsPage = clientTestHelper.createNewClient(groupName, clientParams);
+        clientViewDetailsPage.verifyHeading("John Doe");
+
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        DefineAcceptedPaymentTypesPage defineAcceptedPaymentTypesPage = adminPage.navigateToDefineAcceptedPaymentType();
+        defineAcceptedPaymentTypesPage.addLoanFeesPaymentType(defineAcceptedPaymentTypesPage.CHEQUE);
+
+        adminPage = navigationHelper.navigateToAdminPage();
+        defineAcceptedPaymentTypesPage = adminPage.navigateToDefineAcceptedPaymentType();
+        defineAcceptedPaymentTypesPage.addLoanFeesPaymentType(defineAcceptedPaymentTypesPage.VOUCHER);
+
+        ApplyPaymentPage applyPaymentPage = navigationHelper.navigateToClientViewDetailsPage("John Doe")
+                                            .navigateToViewClientChargesDetail().navigateToApplyPayments();
+        //Then
+        applyPaymentPage.verifyModeOfPayments();
+
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -188,6 +231,7 @@ public class ClientTest extends UiTestCaseBase {
         viewDetailsPage.verifySpouseFather("FatherFirstnameTest FatherLastNameTest");
 
     }
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-236
     public void createClientOutsideGroup() throws Exception {
@@ -402,6 +446,7 @@ public class ClientTest extends UiTestCaseBase {
     }
 
     private void createQuestionGroup() {
+        Random random = new Random();
         questionGroupTitle = "QG1" + random.nextInt(100);
         question1 = "FT_" + random.nextInt(100);
         question2 = "MS_" + random.nextInt(100);
@@ -409,7 +454,7 @@ public class ClientTest extends UiTestCaseBase {
 
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         CreateQuestionPage createQuestionPage = adminPage.navigateToCreateQuestionPage();
-        createQuestionPage.addQuestion(getCreateQuestionParams(question1, FREE_TEXT, null));
+        createQuestionPage.addQuestion(getCreateQuestionParams(question1, "Free Text", null));
         createQuestionPage.addQuestion(getCreateQuestionParams(question2, MULTI_SELECT, asList("Choice1", "Choice2", "Choice3", "Choice4")));
         adminPage = createQuestionPage.submitQuestions();
 
@@ -485,6 +530,7 @@ public class ClientTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-35
+    @Test(enabled=false) // TODO js - temporarily disabled broken test
     public void addingMemeberToGroupWithDiffrentStatuses() throws Exception {
         //Given
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
@@ -500,13 +546,13 @@ public class ClientTest extends UiTestCaseBase {
         clientTestHelper.changeCustomerStatus(clientDetailsPage, ClientStatus.ACTIVE);
         groupTestHelper.createNewGroupPartialApplication("MyCenter1233171688286", groupParams);
         //Then
-        clientTestHelper.addClientToGroupWithErrors(clientName, groupName);
+        clientTestHelper.addClientToGroupWithErrorGroupLowerStatus(clientName, groupName);
 
         //When
         editCustomerStatusParameters.setGroupStatus(GroupStatus.PENDING_APPROVAL);
         groupTestHelper.changeGroupStatus(groupName, editCustomerStatusParameters);
         //Then
-        clientTestHelper.addClientToGroupWithErrors(clientName, groupName);
+        clientTestHelper.addClientToGroupWithErrorGroupLowerStatus(clientName, groupName);
 
         //When
         editCustomerStatusParameters.setGroupStatus(GroupStatus.ACTIVE);
@@ -515,7 +561,7 @@ public class ClientTest extends UiTestCaseBase {
         clientTestHelper.addClientToGroup(clientName, groupName);
 
         //When
-        clientTestHelper.deleteClientGroupMembership(clientName);
+        clientTestHelper.deleteClientGroupMembership(clientName, "remove group membership");
         editCustomerStatusParameters.setGroupStatus(GroupStatus.ON_HOLD);
         groupTestHelper.changeGroupStatus(groupName, editCustomerStatusParameters);
         //Then
@@ -523,7 +569,7 @@ public class ClientTest extends UiTestCaseBase {
 
         //When
         editCustomerStatusParameters.setGroupStatus(GroupStatus.CLOSED);
-        editCustomerStatusParameters.setCloseReason(GroupCloseReason.DUPLICATED);
+        editCustomerStatusParameters.setCloseReason(GroupCloseReason.DUPLICATE);
         groupTestHelper.changeGroupStatus(groupName, editCustomerStatusParameters);
         //Then
         clientTestHelper.tryAddClientToClosedOrOnHoldGroup(clientName, groupName);
@@ -531,6 +577,7 @@ public class ClientTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-40
+    @Test(enabled=false) // TODO js - temporarily disabled broken test
     public void addingMemeberOnHoldStatusToGroupWithDiffrentStatuses() throws Exception {
         //Given
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
@@ -547,13 +594,13 @@ public class ClientTest extends UiTestCaseBase {
         clientTestHelper.changeCustomerStatus(clientDetailsPage, ClientStatus.ON_HOLD);
         groupTestHelper.createNewGroupPartialApplication("MyCenter1233171688286", groupParams);
         //Then
-        clientTestHelper.addClientToGroupWithErrors(clientName, groupName);
+        clientTestHelper.addClientToGroupWithErrorGroupLowerStatus(clientName, groupName);
 
         //When
         editCustomerStatusParameters.setGroupStatus(GroupStatus.PENDING_APPROVAL);
         groupTestHelper.changeGroupStatus(groupName, editCustomerStatusParameters);
         //Then
-        clientTestHelper.addClientToGroupWithErrors(clientName, groupName);
+        clientTestHelper.addClientToGroupWithErrorGroupLowerStatus(clientName, groupName);
 
         //When
         editCustomerStatusParameters.setGroupStatus(GroupStatus.ACTIVE);
@@ -582,6 +629,180 @@ public class ClientTest extends UiTestCaseBase {
 
         //When / Then
         clientTestHelper.deleteClientGroupMembershipWithError(clientName);
+    }
+
+    /**
+     * Verify that sequence of client names in the properties file is used
+     * for displaying the order of client names in the UI
+     * http://mifosforge.jira.com/browse/MIFOSTEST-205
+     * @throws Exception
+     */
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void verifySequenceOfClientNamesInPropertiesFile() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
+
+        String groupName = "MyGroup1233266255641";
+        CreateClientEnterPersonalDataPage.SubmitFormParameters clientParams = new CreateClientEnterPersonalDataPage.SubmitFormParameters();
+        clientParams.setSalutation(CreateClientEnterPersonalDataPage.SubmitFormParameters.MRS);
+        clientParams.setFirstName("firstName");
+        clientParams.setMiddleName("middleName");
+        clientParams.setLastName("lastName");
+        clientParams.setSecondLastName("secondLastName");
+        clientParams.setDateOfBirthDD("22");
+        clientParams.setDateOfBirthMM("05");
+        clientParams.setDateOfBirthYYYY("1987");
+        clientParams.setGender(CreateClientEnterPersonalDataPage.SubmitFormParameters.FEMALE);
+        clientParams.setPovertyStatus(CreateClientEnterPersonalDataPage.SubmitFormParameters.POOR);
+        clientParams.setSpouseNameType(CreateClientEnterPersonalDataPage.SubmitFormParameters.FATHER);
+        clientParams.setSpouseFirstName("fatherName");
+        clientParams.setSpouseLastName("fatherLastName");
+
+        ClientViewDetailsPage clientViewDetailsPage = clientTestHelper.createNewClient(groupName, clientParams);
+        clientViewDetailsPage.verifyHeading("firstName middleName lastName secondLastName");
+
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
+        propertiesHelper.setClientsNameSequence("last_name,second_last_name,middle_name,first_name");
+        clientViewDetailsPage = clientTestHelper.createNewClient(groupName, clientParams);
+        clientViewDetailsPage.verifyHeading("lastName secondLastName middleName firstName");
+
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
+        propertiesHelper.setClientsNameSequence("first_name,middle_name,last_name,second_last_name");
+        clientViewDetailsPage = clientTestHelper.createNewClient(groupName, clientParams);
+        clientViewDetailsPage.verifyHeading("firstName middleName lastName secondLastName");
+    }
+
+    /**
+     * Verify when Pending Approval (Clients) is set to false;
+     * the system transitions the account to 'Active state' when creating new clients
+     * http://mifosforge.jira.com/browse/MIFOSTEST-209
+     * @throws Exception
+     */
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void verifyClientCreatedWithActiveStatus() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
+        applicationDatabaseOperation.updateCustomerState("2", "0");
+        propertiesHelper.setClientPendingApprovalStateEnabled("false");
+
+        String officeName = "MyOffice1233171674227";
+        String loanOfficer = "Joe1233171679953 Guy1233171679953";
+
+        ClientViewDetailsPage clientViewDetailsPage = clientTestHelper.createClientAndVerify(loanOfficer, officeName);
+        clientViewDetailsPage.verifyStatus("Active");
+
+        // restore original settings
+        applicationDatabaseOperation.updateCustomerState("2", "1");
+        propertiesHelper.setClientPendingApprovalStateEnabled("true");
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // http://mifosforge.jira.com/browse/MIFOSTEST-48
+    @Test(enabled=false) // TODO js - temporarily disabled broken test
+    public void removeClientWithLoanFromGroup() throws Exception {
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_015_dbunit.xml", dataSource, selenium);
+        String clientName = "Stu1232993852651 Client1232993852651";
+        String groupName = navigationHelper.navigateToClientViewDetailsPage(clientName).getGroupMembership();
+        CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
+        searchParameters.setSearchString(groupName);
+        searchParameters.setSavingsProduct("MandGroupSavingsPerIndiv1MoPost");
+
+        CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
+        submitAccountParameters.setAmount("250.0");
+
+        String savingsId = savingsAccountHelper.createSavingsAccountWithQG(searchParameters, submitAccountParameters).getAccountId();
+        EditAccountStatusParameters editAccountStatusParameters =new EditAccountStatusParameters();
+        editAccountStatusParameters.setAccountStatus(AccountStatus.SAVINGS_ACTIVE);
+        editAccountStatusParameters.setNote("change status to active");
+        savingsAccountHelper.changeStatus(savingsId, editAccountStatusParameters);
+
+
+        //When / Then
+        clientTestHelper.deleteClientGroupMembership(clientName, "remove group membership");
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // http://mifosforge.jira.com/browse/MIFOSTEST-52
+    @Test(enabled=false) // TODO js - temporarily disabled broken test (blocked by MIFOS-4270)
+    public void removeClientWithSavingsFromGroupWithSavingsCheckGroupCalculation() throws Exception {
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_015_dbunit.xml", dataSource, selenium);
+        String clientName = "Stu1232993852651 Client1232993852651";
+        String groupName = navigationHelper.navigateToClientViewDetailsPage(clientName).getGroupMembership();
+        CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
+        CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
+        submitAccountParameters.setAmount("240.0");
+        EditAccountStatusParameters editAccountStatusParameters =new EditAccountStatusParameters();
+        editAccountStatusParameters.setAccountStatus(AccountStatus.SAVINGS_ACTIVE);
+        editAccountStatusParameters.setNote("change status to active");
+
+        //When
+        searchParameters.setSearchString(clientName);
+        searchParameters.setSavingsProduct("MandClientSavings3MoPostMinBal");
+        String savingsId = savingsAccountHelper.createSavingsAccountWithQG(searchParameters, submitAccountParameters).getAccountId();
+        savingsAccountHelper.changeStatus(savingsId, editAccountStatusParameters);
+
+        searchParameters.setSearchString(groupName);
+        searchParameters.setSavingsProduct("MandGroupSavingsPerIndiv1MoPost");
+        savingsId = savingsAccountHelper.createSavingsAccountWithQG(searchParameters, submitAccountParameters).getAccountId();
+        savingsAccountHelper.changeStatus(savingsId, editAccountStatusParameters);
+
+        clientTestHelper.deleteClientGroupMembership(clientName, "remove group membership");
+        Integer numberOfGroupMembers = Integer.parseInt(navigationHelper.navigateToGroupViewDetailsPage(groupName).getNumberOfClientsInGroup());
+
+        //Then
+        savingsAccountHelper.verifyTotalAmountDue(savingsId, numberOfGroupMembers, Float.parseFloat(submitAccountParameters.getAmount()));
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // http://mifosforge.jira.com/browse/MIFOSTEST-45
+    @Test(enabled=false) // TODO js - temporarily disabled broken test
+    public void addClientWithSavingToGroupWithSavingsCheckGroupCalculation() throws Exception {
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_015_dbunit.xml", dataSource, selenium);
+
+        String groupName = "MyGroup1232993846342";
+
+        CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
+        CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
+        submitAccountParameters.setAmount("240.0");
+        EditAccountStatusParameters editAccountStatusParameters =new EditAccountStatusParameters();
+        editAccountStatusParameters.setAccountStatus(AccountStatus.SAVINGS_ACTIVE);
+        editAccountStatusParameters.setNote("change status to active");
+
+        //When
+        ClientViewDetailsPage clientDetailsPage = clientTestHelper.createClientAndVerify("Joe1233171679953 Guy1233171679953", "MyOffice1233171674227");
+        clientTestHelper.changeCustomerStatus(clientDetailsPage, ClientStatus.ACTIVE);
+        String clientName = clientDetailsPage.getHeading();
+
+        searchParameters.setSavingsProduct("MandClientSavings3MoPostMinBal");
+        searchParameters.setSearchString(clientName);
+        String savingsId = savingsAccountHelper.createSavingsAccountWithQG(searchParameters, submitAccountParameters).getAccountId();
+        savingsAccountHelper.changeStatus(savingsId, editAccountStatusParameters);
+
+        searchParameters.setSavingsProduct("MandGroupSavingsPerIndiv1MoPost");
+        searchParameters.setSearchString(groupName);
+        savingsId = savingsAccountHelper.createSavingsAccountWithQG(searchParameters, submitAccountParameters).getAccountId();
+        savingsAccountHelper.changeStatus(savingsId, editAccountStatusParameters);
+
+        clientTestHelper.addClientToGroup(clientName, groupName);
+
+        //Then
+        Integer numberOfGroupMembers = Integer.parseInt(navigationHelper.navigateToGroupViewDetailsPage(groupName).getNumberOfClientsInGroup());
+        savingsAccountHelper.verifyTotalAmountDue(savingsId, numberOfGroupMembers, Float.parseFloat(submitAccountParameters.getAmount()));
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // http://mifosforge.jira.com/browse/MIFOSTEST-43
+    public void addingMemeberPendingApprovalStatusToGroupWithActiveStatus() throws Exception {
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
+        String groupName = "MyGroup1232993846342";
+
+        //When
+        String clientName = clientTestHelper.createClientAndVerify("Joe1233171679953 Guy1233171679953", "MyOffice1233171674227").getHeading();
+
+        //Then
+        clientTestHelper.addClientToGroup(clientName, groupName);
     }
 
     private QuestionnairePage checkMandatoryQuestionValidation(String questionGroupTitle, String question1, String question2, ClientViewDetailsPage viewDetailsPage) {

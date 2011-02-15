@@ -145,8 +145,8 @@ explanation of the license and how it is applied.
 																	<c:otherwise>
 																		<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />
 																	</c:otherwise>
-																</c:choose>: <c:out value="${BulkEntry.bulkEntryParent.customerDetail.displayName}" /><br> <mifos:mifoslabel name="bulkEntry.dateoftrxn" isColonRequired="Yes"/> <c:out
-																	value='${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BulkEntry.transactionDate)}' /> </span>
+																</c:choose>: <span id="bulkEntryPreview.text.centerOrGroupName"><c:out value="${BulkEntry.bulkEntryParent.customerDetail.displayName}" /></span><br> <mifos:mifoslabel name="bulkEntry.dateoftrxn" isColonRequired="Yes"/> <span id="bulkEntryPreview.text.transactionDate"><c:out
+																	value='${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BulkEntry.transactionDate)}' /></span> </span>
 														</td>
 													</tr>
 												</table>
@@ -159,27 +159,27 @@ explanation of the license and how it is applied.
 														<td width="207" class="fontnormal">
 															<mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}" isColonRequired="Yes"/>
 															
-															<c:out value="${BulkEntry.office.officeName}" />
+															<span id="bulkEntryPreview.text.officeName"><c:out value="${BulkEntry.office.officeName}" /></span>
 															<br>
 															<mifos:mifoslabel name="bulkEntry.loanofficer" isColonRequired="Yes"/>
 															
-															<c:out value="${BulkEntry.loanOfficer.displayName}" />
+															<span id="bulkEntryPreview.text.loanOfficer"><c:out value="${BulkEntry.loanOfficer.displayName}" /></span>
 														</td>
 														<td width="533" class="fontnormal">
 															<mifos:mifoslabel name="bulkEntry.pmnttype" isColonRequired="Yes"/>
 															
-															<c:out value="${BulkEntry.paymentType.displayValue}" />
+															<span id="bulkEntryPreview.text.paymentType"><c:out value="${BulkEntry.paymentType.displayValue}" /></span>
 															<table>
 																<tr id="BulkEntry.ReceiptId">
 																	<td class="fontnormal">
 																		<mifos:mifoslabel name="bulkEntry.rcptid" keyhm="BulkEntry.ReceiptId" isColonRequired="yes" isManadatoryIndicationNotRequired="yes" />
-																		<c:out value="${BulkEntry.receiptId}" />
+																		<span id="bulkEntryPreview.text.receiptID"><c:out value="${BulkEntry.receiptId}" /></span>
 																	</td>
 																</tr>
 																<tr id="BulkEntry.ReceiptDate">
 																	<td class="fontnormal">
 																		<mifos:mifoslabel name="bulkEntry.rcptdate" keyhm="BulkEntry.ReceiptDate" isColonRequired="yes" isManadatoryIndicationNotRequired="yes" />
-																		<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BulkEntry.receiptDate)}" />
+																		<span id="bulkEntryPreview.text.receiptDate"><c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BulkEntry.receiptDate)}" /></span>
 																	</td>
 																</tr>
 															</table>

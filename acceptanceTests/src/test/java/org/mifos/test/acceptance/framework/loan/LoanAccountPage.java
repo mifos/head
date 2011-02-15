@@ -249,10 +249,10 @@ public class LoanAccountPage extends AbstractPage {
         return new RepayLoanPage(selenium);
     }
 
-    public EditLoanAccountStatusPage navigateToEditAccountStatus() {
+    public AccountChangeStatusPage navigateToEditAccountStatus() {
         selenium.click("loanaccountdetail.link.editAccountStatus");
         waitForPageToLoad();
-        return new EditLoanAccountStatusPage(selenium);
+        return new AccountChangeStatusPage(selenium);
     }
 
     public EditLoanAccountInformationPage navigateToEditAccountInformation() {

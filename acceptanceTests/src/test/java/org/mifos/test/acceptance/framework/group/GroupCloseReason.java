@@ -23,7 +23,7 @@ package org.mifos.test.acceptance.framework.group;
 public enum GroupCloseReason {
 
     TRANSFERRED("Transferred", 16),
-    DUPLICATED("Duplicated", 17),
+    DUPLICATE("Duplicate", 17),
     BLACKLISTED("Blacklisted", 18),
     LEFT_PROGRAM("Left Program", 19),
     OTHER("Other", 20);

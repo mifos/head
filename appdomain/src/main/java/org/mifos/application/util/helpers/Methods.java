@@ -28,6 +28,6 @@ public enum Methods {
     updateStatus, chooseOffice, loadChangePassword, login, logout, updatePassword, loadUnLockUser, unLockUserAccount,
     viewAllFunds, previousStatus, cancelStatus, previewHistoricalData, updateMfiInfo, getLoanOfficers, getCenters,
     removeGroupMemberShip, loadGrpMemberShip, updateParent, addEditLookupOption, addEditLookupOption_cancel, editField,
-    familyInfoNext, prevFamilyInfoNext, addFamilyRow, editAddFamilyRow, previewEditFamilyInfo, shutdown, cancelShutdown
-
+    familyInfoNext, prevFamilyInfoNext, addFamilyRow, editAddFamilyRow, previewEditFamilyInfo, shutdown, cancelShutdown,
+    previewOnly
 }

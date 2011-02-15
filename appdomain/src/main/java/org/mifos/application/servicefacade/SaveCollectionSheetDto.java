@@ -197,16 +197,11 @@ public class SaveCollectionSheetDto {
     }
 
     private boolean validPaymentType(Short paymentType) {
-        // Emily Tucker/ Adam F -
-        // Although the mifos model supports allocating different
-        // payment types against different transaction types it is okay for
-        // collection sheet to just validate against payment type enum
-        for (PaymentTypes pt : PaymentTypes.values()) {
-            if (pt.getValue().compareTo(paymentType) == 0) {
-                return true;
-            }
+        // allow any valid (positive id number) payment type for now (MIFOS-4486)
+        if (paymentType < 1) {
+            return false;
         }
-        return false;
+        return true;
     }
 
     private void analyze() {

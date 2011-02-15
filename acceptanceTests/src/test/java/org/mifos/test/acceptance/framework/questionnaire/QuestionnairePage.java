@@ -50,6 +50,10 @@ public class QuestionnairePage extends MifosPage {
         selenium.type("id=" + selenium.getEval(String.format(SELECT_QUESTION_JS, question)), answer);
     }
 
+    public void checkResponse(String question, String answer) {
+        selenium.check("name=" + selenium.getEval(String.format(SELECT_QUESTION_JS, question)) + " value=" + answer);
+    }
+
     public MifosPage submit() {
         selenium.click("id=_eventId_saveQuestionnaire");
         waitForPageToLoad();

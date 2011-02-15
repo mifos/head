@@ -279,7 +279,7 @@ explanation of the license and how it is applied.
 										<c:if test="${CenterHierarchyExist == false}">
 											<tr class="fontnormal">
 												<td align="right" class="fontnormal">
-													<mifos:mifoslabel name="Group.loanofficer" bundle="GroupUIResources"></mifos:mifoslabel>
+													<mifos:mifoslabel name="Group.loanofficer" mandatory="yes" bundle="GroupUIResources"></mifos:mifoslabel>
 												</td>
 												<td>
 													<mifos:select name="groupCustActionForm" property="loanOfficerId" size="1" onchange="populateDefaultFormedBy(this)">
@@ -604,9 +604,8 @@ explanation of the license and how it is applied.
 											<td align="center">
                                                 <c:choose>
                                                     <c:when
-                                                        test="${param.method eq 'previous' or sessionScope.groupCustActionForm.nextOrPreview eq 'preview'}">
+                                                        test="${param.method eq 'previous' or sessionScope.groupCustActionForm.nextOrPreview eq 'preview' or session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'PreviewCreateNewGroup_failure')}">
                                                         <html:hidden property="nextOrPreview" value="preview" />
-
                                                         <html-el:button styleId="creategroup.button.preview" onclick="goToPreviewPage()"
                                                             property="submitButton" styleClass="buttn">
                                                             <mifos:mifoslabel name="button.preview"

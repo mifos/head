@@ -374,8 +374,8 @@ explanation of the license and how it is applied.
 										</c:otherwise></c:choose><br>
 									<span class="fontnormalRed"> <mifos:mifoslabel
 										name="client.MeetingsHeading" bundle="ClientUIResources" isColonRequired="yes"/>&nbsp;
-									<c:out value="${clientInformationDto.customerMeeting.meetingSchedule}" /></span>									
-									<span class="fontnormal"><br></span>
+										<span id="viewClientDetails.text.meetingSchedule"><c:out value="${clientInformationDto.customerMeeting.meetingSchedule}" /></span></span>
+										<span class="fontnormal"><br></span>
 									<span class="fontnormal"> <c:if
 										test="${clientInformationDto.customerMeeting.meetingPlace!=null && !empty clientInformationDto.customerMeeting.meetingPlace}">
 										<c:out
@@ -383,7 +383,7 @@ explanation of the license and how it is applied.
 										<br>
 									</c:if> <c:choose>
 										<c:when test="${clientInformationDto.clientDisplay.clientUnderGroup}">
-									<c:out value="${clientInformationDto.clientDisplay.parentCustomerDisplayName}" /><br></c:when>
+									<span id="viewClientDetails.text.groupMembership"><c:out value="${clientInformationDto.clientDisplay.parentCustomerDisplayName}" /></span><br></c:when>
 										<c:otherwise><c:out value="${clientInformationDto.clientDisplay.branchName}" /><br></c:otherwise></c:choose></span></td>
 									<td width="39%" align="right" valign="top"><!-- Editing group or branch membership based on whether client belongs to group or not -->
 									<c:choose>

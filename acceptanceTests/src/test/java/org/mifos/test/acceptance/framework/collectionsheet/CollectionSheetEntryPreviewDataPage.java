@@ -20,11 +20,13 @@
 
 package org.mifos.test.acceptance.framework.collectionsheet;
 
-import org.mifos.test.acceptance.framework.AbstractPage;
+
+
+import org.mifos.test.acceptance.framework.MifosPage;
 
 import com.thoughtworks.selenium.Selenium;
 
-public class CollectionSheetEntryPreviewDataPage extends AbstractPage {
+public class CollectionSheetEntryPreviewDataPage extends MifosPage {
 
     public CollectionSheetEntryPreviewDataPage() {
         super();
@@ -35,7 +37,17 @@ public class CollectionSheetEntryPreviewDataPage extends AbstractPage {
     }
 
 
-    public CollectionSheetEntryPreviewDataPage verifyPage(CollectionSheetEntrySelectPage.SubmitFormParameters parameters) {
+    public CollectionSheetEntryPreviewDataPage verifyPage(CollectionSheetEntrySelectPage.SubmitFormParameters params) {
+        verifyEqualsIfNotNull(getCenterOrGroupName(), params.getCenter());
+        verifyEqualsIfNotNull(getOfficeName(), params.getBranch());
+        if(params.getTransactionDay() != null) {
+            verifyEqualsIfNotNull(getTransactionDate(), params.getTransactionDay()+"/"+params.getTransactionMonth()+"/"+params.getTransactionYear());
+        }
+        verifyEqualsIfNotNull(getPaymentType(), params.getPaymentMode());
+        verifyEqualsIfNotNull(getReceiptID(), params.getReceiptId());
+        if(params.getReceiptDay() != null) {
+            verifyEqualsIfNotNull(getReceiptDate(), params.getReceiptDay()+"/"+params.getReceiptMonth()+"/"+params.getReceiptYear());
+        }
         this.verifyPage("BulkEntryPreview");
         return this;
     }
@@ -52,5 +64,31 @@ public class CollectionSheetEntryPreviewDataPage extends AbstractPage {
         return new CollectionSheetEntryConfirmationPage(selenium);
     }
 
+    public String getCenterOrGroupName() {
+        return getTextIfNotEmpty("bulkEntryPreview.text.centerOrGroupName");
+    }
 
+    public String getTransactionDate() {
+        return getTextIfNotEmpty("bulkEntryPreview.text.transactionDate");
+    }
+
+    public String getOfficeName() {
+        return getTextIfNotEmpty("bulkEntryPreview.text.officeName");
+    }
+
+    public String getLoanOfficerName() {
+        return getTextIfNotEmpty("bulkEntryPreview.text.loanOfficer");
+    }
+
+    public String getPaymentType() {
+        return getTextIfNotEmpty("bulkEntryPreview.text.paymentType");
+    }
+
+    public String getReceiptID() {
+        return getTextIfNotEmpty("bulkEntryPreview.text.receiptID");
+    }
+
+    public String getReceiptDate() {
+        return getTextIfNotEmpty("bulkEntryPreview.text.receiptDate");
+    }
 }

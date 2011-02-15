@@ -20,21 +20,7 @@
 
 package org.mifos.accounts.productdefinition.struts.actionforms;
 
-import static java.util.Arrays.asList;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import junit.framework.Assert;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
@@ -43,14 +29,12 @@ import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.accounts.fees.business.FeeBO;
-import org.mifos.accounts.fees.business.FeeDto;
-import org.mifos.accounts.fees.business.FeeFormulaEntity;
-import org.mifos.accounts.fees.business.FeeFrequencyEntity;
-import org.mifos.accounts.fees.business.RateFeeBO;
+import org.mifos.accounts.fees.business.*;
 import org.mifos.accounts.fees.util.helpers.FeeFormula;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
+import org.mifos.accounts.productdefinition.util.helpers.GraceType;
+import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.MeetingDetailsEntity;
@@ -62,6 +46,18 @@ import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
+import static java.util.Arrays.asList;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.when;
 
 @SuppressWarnings("unchecked")
 @RunWith(MockitoJUnitRunner.class)
@@ -161,41 +157,69 @@ public class LoanPrdActionFormTest {
 
     @Test
     public void onlyDecliningInterestTypeShouldBeSelectedForVariableInstallmentLoanProduct() {
-        ActionMessageMatcher actionMessageMatcher = new ActionMessageMatcher(ProductDefinitionConstants.INVALID_INTEREST_TYPE);
-        String FLAT = "1";
-        String DECLINING = "2";
-        String COMPOUND = "3";
-        String DECLINING_EPI = "4";
-        String DECLINING_PB = "5";
+        ActionMessageMatcher actionMessageMatcher = new ActionMessageMatcher(ProductDefinitionConstants.INVALID_INTEREST_TYPE_FOR_VARIABLE_INSTALLMENT);
 
         loanPrdActionForm.setCanConfigureVariableInstallments(true);
         loanPrdActionForm.validateInterestTypeForVariableInstallment(errors, Locale.getDefault());
         Mockito.verify(errors).add(Mockito.anyString(), Mockito.argThat(actionMessageMatcher));
         Mockito.reset(errors);
 
-        loanPrdActionForm.setInterestTypes(FLAT);
+        loanPrdActionForm.setInterestTypes(InterestType.FLAT.getValueAsString());
         loanPrdActionForm.validateInterestTypeForVariableInstallment(errors, Locale.getDefault());
         Mockito.verify(errors).add(Mockito.anyString(), Mockito.argThat(actionMessageMatcher));
         Mockito.reset(errors);
 
-        loanPrdActionForm.setInterestTypes(DECLINING);
+        loanPrdActionForm.setInterestTypes(InterestType.DECLINING.getValueAsString());
         loanPrdActionForm.validateInterestTypeForVariableInstallment(errors, Locale.getDefault());
         Mockito.verifyZeroInteractions(errors);
         Mockito.reset(errors);
 
-        loanPrdActionForm.setInterestTypes(COMPOUND);
+        loanPrdActionForm.setInterestTypes(InterestType.COMPOUND.getValueAsString());
         loanPrdActionForm.validateInterestTypeForVariableInstallment(errors, Locale.getDefault());
         Mockito.verify(errors).add(Mockito.anyString(), Mockito.argThat(actionMessageMatcher));
         Mockito.reset(errors);
 
-        loanPrdActionForm.setInterestTypes(DECLINING_EPI);
+        loanPrdActionForm.setInterestTypes(InterestType.DECLINING_EPI.getValueAsString());
         loanPrdActionForm.validateInterestTypeForVariableInstallment(errors, Locale.getDefault());
         Mockito.verify(errors).add(Mockito.anyString(), Mockito.argThat(actionMessageMatcher));
         Mockito.reset(errors);
 
-        loanPrdActionForm.setInterestTypes(DECLINING_PB);
+        loanPrdActionForm.setInterestTypes(InterestType.DECLINING_PB.getValueAsString());
         loanPrdActionForm.validateInterestTypeForVariableInstallment(errors, Locale.getDefault());
         Mockito.verify(errors).add(Mockito.anyString(), Mockito.argThat(actionMessageMatcher));
+        Mockito.reset(errors);
+    }
+
+    @Test
+    public void shouldValidateForGracePeriodWithDIPBInterestTypeAndVariableInstallments() {
+        ActionMessageMatcher actionMessageMatcher = new ActionMessageMatcher(ProductDefinitionConstants.INVALID_INTEREST_TYPE_FOR_GRACE_PERIODS);
+
+        loanPrdActionForm.setGracePeriodType(GraceType.PRINCIPALONLYGRACE.getValueAsString());
+        loanPrdActionForm.setCanConfigureVariableInstallments(true);
+        loanPrdActionForm.setInterestTypes(InterestType.FLAT.getValueAsString());
+        loanPrdActionForm.validateInterestTypeForGracePeriods(errors, Locale.getDefault());
+        Mockito.verify(errors).add(Mockito.anyString(), Mockito.argThat(actionMessageMatcher));
+        Mockito.reset(errors);
+
+        loanPrdActionForm.setGracePeriodType(GraceType.PRINCIPALONLYGRACE.getValueAsString());
+        loanPrdActionForm.setCanConfigureVariableInstallments(false);
+        loanPrdActionForm.setInterestTypes(InterestType.DECLINING_PB.getValueAsString());
+        loanPrdActionForm.validateInterestTypeForGracePeriods(errors, Locale.getDefault());
+        Mockito.verify(errors).add(Mockito.anyString(), Mockito.argThat(actionMessageMatcher));
+        Mockito.reset(errors);
+
+        loanPrdActionForm.setGracePeriodType(GraceType.GRACEONALLREPAYMENTS.getValueAsString());
+        loanPrdActionForm.setCanConfigureVariableInstallments(true);
+        loanPrdActionForm.setInterestTypes(InterestType.COMPOUND.getValueAsString());
+        loanPrdActionForm.validateInterestTypeForGracePeriods(errors, Locale.getDefault());
+        Mockito.verify(errors).add(Mockito.anyString(), Mockito.argThat(actionMessageMatcher));
+        Mockito.reset(errors);
+
+        loanPrdActionForm.setGracePeriodType(GraceType.NONE.getValueAsString());
+        loanPrdActionForm.setCanConfigureVariableInstallments(false);
+        loanPrdActionForm.setInterestTypes(InterestType.DECLINING_EPI.getValueAsString());
+        loanPrdActionForm.validateInterestTypeForGracePeriods(errors, Locale.getDefault());
+        Mockito.verifyZeroInteractions(errors);
         Mockito.reset(errors);
     }
 

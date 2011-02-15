@@ -20,6 +20,8 @@
 
 package org.mifos.test.acceptance.framework;
 
+import junit.framework.Assert;
+
 import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.login.LoginPage;
 
@@ -43,6 +45,21 @@ public class MifosPage extends AbstractPage {
         selenium.open("j_spring_security_logout");
         waitForPageToLoad();
         return new LoginPage(selenium);
+    }
+
+    protected void verifyEqualsIfNotNull(String value1, String value2) {
+        if(value1 != null && value2 != null) {
+            Assert.assertEquals(value1, value2);
+        }
+    }
+
+    protected String getTextIfNotEmpty(String locator) {
+        String ret = null;
+        String text = selenium.getText(locator);
+        if(!text.isEmpty()) {
+            ret = text;
+        }
+        return ret;
     }
 
     protected void typeTextIfNotEmpty(String locator, String value) {
