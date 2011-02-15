@@ -1,5 +1,5 @@
 /*
- * Copyright Grameen Foundation USA
+ * Copyright (c) 2005-2011 Grameen Foundation USA
  * All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -327,8 +327,18 @@ public class AccountBO extends AbstractBusinessObject {
     /**
      * Returns the set of {@link AccountFeesEntity}s -- links to the fees that apply to this loan.
      */
-    public Set<AccountFeesEntity> getAccountFees() {
+    public Set<AccountFeesEntity> getAccountFeesIncludingInactiveFees() {
         return accountFees;
+    }
+
+    public Set<AccountFeesEntity> getAccountFees() {
+        Set<AccountFeesEntity> activeAccountFees = new HashSet<AccountFeesEntity>();
+        for (AccountFeesEntity accountFeesEntity : getAccountFeesIncludingInactiveFees()) {
+            if (accountFeesEntity.getFeeStatus() == null || accountFeesEntity.getFeeStatus().equals(FeeStatus.ACTIVE.getValue())) {
+                activeAccountFees.add(accountFeesEntity);
+            }
+        }
+        return activeAccountFees;
     }
 
     public Set<AccountActionDateEntity> getAccountActionDates() {
@@ -396,7 +406,7 @@ public class AccountBO extends AbstractBusinessObject {
     }
 
     public void removeAccountFee(final AccountFeesEntity fee) {
-        accountFees.remove(fee);
+        boolean success = accountFees.remove(fee);
     }
 
     public void addAccountActionDate(final AccountActionDateEntity accountAction) {

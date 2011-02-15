@@ -1,7 +1,7 @@
 [#ftl]
 [#--[#ftl]
 
-* Copyright Grameen Foundation USA
+* Copyright (c) 2005-2011 Grameen Foundation USA
 *  All rights reserved.
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");

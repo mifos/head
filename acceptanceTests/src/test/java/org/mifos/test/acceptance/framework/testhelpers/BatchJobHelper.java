@@ -1,5 +1,5 @@
 /*
- * Copyright Grameen Foundation USA
+ * Copyright (c) 2005-2011 Grameen Foundation USA
  * All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -67,8 +67,8 @@ public class BatchJobHelper {
             batchJobsPage.selectBatchJob(name);
         }
         batchJobsPage.runSelectedBatchJobs();
-        // TODO we should check if the batch job is finished on the batch jobs page. For now we give 2 seconds fot the batch job to finish
-        UiTestUtils.sleep(3000);
+        // TODO we should check if the batch job is finished on the batch jobs page. For now we give 6 seconds fot the batch job to finish
+        UiTestUtils.sleep(6000);
     }
 
 }

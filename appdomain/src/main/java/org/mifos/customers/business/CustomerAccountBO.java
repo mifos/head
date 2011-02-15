@@ -1,5 +1,5 @@
 /*
- * Copyright Grameen Foundation USA
+ * Copyright (c) 2005-2011 Grameen Foundation USA
  * All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -562,8 +562,8 @@ public class CustomerAccountBO extends AccountBO {
         if (installmentIds != null && installmentIds.size() != 0 && isFeeActive(feeId)) {
             updateAccountActionDateEntity(installmentIds, feeId);
         }
-        updateAccountFeesEntity(feeId);
         FeeBO feesBO = getAccountFeesObject(feeId);
+        updateAccountFeesEntity(feeId);
         String description = feesBO.getFeeName() + " " + AccountConstants.FEES_REMOVED;
         updateAccountActivity(null, null, null, null, personnelId, description);
     }

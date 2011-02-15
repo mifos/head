@@ -1,5 +1,5 @@
 /*
- * Copyright Grameen Foundation USA
+ * Copyright (c) 2005-2011 Grameen Foundation USA
  * All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -294,6 +294,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         return chargeWaived;
     }
 
+    // watch out, this relies on passing in the same reference as the object held in the collection
     void removeAccountFeesActionDetailEntity(AccountFeesActionDetailEntity accountFeesActionDetailEntity) {
         accountFeesActionDetails.remove(accountFeesActionDetailEntity);
     }

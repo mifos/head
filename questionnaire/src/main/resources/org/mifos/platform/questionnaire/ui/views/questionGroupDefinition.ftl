@@ -1,6 +1,6 @@
 [#ftl]
 [#--
-* Copyright Grameen Foundation USA
+* Copyright (c) 2005-2011 Grameen Foundation USA
 *  All rights reserved.
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -136,7 +136,11 @@
                     [@mifosmacros.formCheckbox "questionGroupForm.sections[${section_index}].sectionQuestions[${sectionQuestion_index}].mandatory", ""/]
                 </td>
                 <td class="remove orderCenter">
+                [#if sectionQuestion_index gte section.initialCountOfQuestions]
                     <a href="javascript:CreateQuestionGroup.removeQuestion('${section.name}','${sectionQuestion.questionId}')">[@spring.message "questionnaire.remove.link"/]</a>
+                [#else]
+                    <a href="javascript:CreateQuestionGroup.removeQuestion('${section.name}','${sectionQuestion.questionId}')" style="visibility:hidden">[@spring.message "questionnaire.remove.link"/]</a>
+                [/#if]
                 </td>
                 <td class="order orderCenter">
                     <a href="javascript:CreateQuestionGroup.moveQuestionUp('${section.name}','${sectionQuestion.questionId}')" id="moveQuestionUp_${sectionQuestion.questionId}">

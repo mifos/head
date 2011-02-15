@@ -1,5 +1,5 @@
 /*
- * Copyright Grameen Foundation USA
+ * Copyright (c) 2005-2011 Grameen Foundation USA
  * All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -951,7 +951,8 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
 
         CustomerAccountBO customerAccount = center.getCustomerAccount();
         AccountFeesEntity extraAccountFeesEntity = new AccountFeesEntity(customerAccount, extraFee, 11.66);
-        customerAccount.getAccountFees().add(extraAccountFeesEntity);
+        // FIXME: a fee is being added by exposing an internal data structure and adding it directly to it
+        customerAccount.getAccountFeesIncludingInactiveFees().add(extraAccountFeesEntity);
 
         final Money eightAmount = new Money(getCurrency(), "8.0");
         final Money fiftyAmount = new Money(getCurrency(), "50.0");

@@ -1,5 +1,5 @@
 /*
- * Copyright Grameen Foundation USA
+ * Copyright (c) 2005-2011 Grameen Foundation USA
  * All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -4558,7 +4558,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         }
 
         accountBO.setUserContext(TestUtils.makeUser());
-        for (AccountFeesEntity accountFeesEntity : accountBO.getAccountFees()) {
+        for (AccountFeesEntity accountFeesEntity : accountBO.getAccountFeesIncludingInactiveFees()) {
             accountBO.applyCharge(accountFeesEntity.getFees().getFeeId(), Double.valueOf("200"));
         }
         StaticHibernateUtil.flushAndClearSession();
