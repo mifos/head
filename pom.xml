@@ -151,10 +151,6 @@
     </repositories>
     <pluginRepositories>
         <pluginRepository>
-            <id>oss.sonatype.org</id>
-            <url>http://oss.sonatype.org/content/groups/public/</url>
-        </pluginRepository>
-        <pluginRepository>
             <id>maven-repository.mifos.org</id>
             <url>http://maven.mifos.org/nexus/content/groups/public/</url>
         </pluginRepository>
