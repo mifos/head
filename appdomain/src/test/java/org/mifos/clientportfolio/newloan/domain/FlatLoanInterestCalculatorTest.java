@@ -26,7 +26,6 @@ import static org.junit.Assert.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -53,6 +52,6 @@ public class FlatLoanInterestCalculatorTest {
         Money calculatedInterest = flatLoanInterestCalculator.calculate(loanInterestCalculationDetails);
 
         // verification
-        assertThat(calculatedInterest, is(TestUtils.createMoney("10.0")));
+        assertThat(calculatedInterest, is(TestMoneyUtil.createMoney("10.0")));
     }
 }

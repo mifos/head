@@ -21,7 +21,6 @@
 package org.mifos.clientportfolio.newloan.domain;
 
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
-import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.Money;
 
 public class LoanInterestCalculationDetailsBuilder {
@@ -39,7 +38,7 @@ public class LoanInterestCalculationDetailsBuilder {
     }
 
     public LoanInterestCalculationDetailsBuilder withLoanAmount(String loanAmount) {
-        this.loanAmount = TestUtils.createMoney(loanAmount);
+        this.loanAmount = TestMoneyUtil.createMoney(loanAmount);
         return this;
     }
 

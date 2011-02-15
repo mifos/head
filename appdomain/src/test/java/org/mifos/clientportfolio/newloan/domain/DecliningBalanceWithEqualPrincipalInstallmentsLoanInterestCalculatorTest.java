@@ -27,7 +27,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
-import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -58,7 +57,7 @@ public class DecliningBalanceWithEqualPrincipalInstallmentsLoanInterestCalculato
         Money calculatedInterest = decliningBalanceWithEqualPrincipalInstallmentsLoanInterestCalculator.calculate(loanInterestCalculationDetails);
 
         // verification
-        assertThat(moneyOf(calculatedInterest), is(moneyOf(TestUtils.createMoney("56.0"))));
+        assertThat(moneyOf(calculatedInterest), is(moneyOf(TestMoneyUtil.createMoney("56.0"))));
     }
 
     @Test
@@ -78,7 +77,7 @@ public class DecliningBalanceWithEqualPrincipalInstallmentsLoanInterestCalculato
         Money calculatedInterest = decliningBalanceWithEqualPrincipalInstallmentsLoanInterestCalculator.calculate(loanInterestCalculationDetails);
 
         // verification
-        assertThat(moneyOf(calculatedInterest), is(moneyOf(TestUtils.createMoney("56.0"))));
+        assertThat(moneyOf(calculatedInterest), is(moneyOf(TestMoneyUtil.createMoney("56.0"))));
     }
 
     @Test
@@ -98,7 +97,7 @@ public class DecliningBalanceWithEqualPrincipalInstallmentsLoanInterestCalculato
         Money calculatedInterest = decliningBalanceWithEqualPrincipalInstallmentsLoanInterestCalculator.calculate(loanInterestCalculationDetails);
 
         // verification
-        assertThat(moneyOf(calculatedInterest), is(moneyOf(TestUtils.createMoney("80.0"))));
+        assertThat(moneyOf(calculatedInterest), is(moneyOf(TestMoneyUtil.createMoney("80.0"))));
     }
 
     private String moneyOf(Money money) {

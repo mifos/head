@@ -27,7 +27,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
-import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -58,7 +57,7 @@ public class DecliningBalanceLoanInterestCalculatorTest {
         Money calculatedInterest = decliningBalanceLoanInterestCalculator.calculate(loanInterestCalculationDetails);
 
         // verification
-        assertThat(moneyOf(calculatedInterest), is(moneyOf(TestUtils.createMoney("62.8"))));
+        assertThat(moneyOf(calculatedInterest), is(moneyOf(TestMoneyUtil.createMoney("62.8"))));
     }
 
     @Test
@@ -78,7 +77,7 @@ public class DecliningBalanceLoanInterestCalculatorTest {
         Money calculatedInterest = decliningBalanceLoanInterestCalculator.calculate(loanInterestCalculationDetails);
 
         // verification
-        assertThat(moneyOf(calculatedInterest), is(moneyOf(TestUtils.createMoney("62.8"))));
+        assertThat(moneyOf(calculatedInterest), is(moneyOf(TestMoneyUtil.createMoney("62.8"))));
     }
 
     @Test
@@ -98,7 +97,7 @@ public class DecliningBalanceLoanInterestCalculatorTest {
         Money calculatedInterest = decliningBalanceLoanInterestCalculator.calculate(loanInterestCalculationDetails);
 
         // verification
-        assertThat(moneyOf(calculatedInterest), is(moneyOf(TestUtils.createMoney("81.6"))));
+        assertThat(moneyOf(calculatedInterest), is(moneyOf(TestMoneyUtil.createMoney("81.6"))));
     }
 
     @Test
@@ -118,7 +117,7 @@ public class DecliningBalanceLoanInterestCalculatorTest {
         Money calculatedInterest = decliningBalanceLoanInterestCalculator.calculate(loanInterestCalculationDetails);
 
         // verification
-        assertThat(moneyOf(calculatedInterest), is(moneyOf(TestUtils.createMoney("48.0"))));
+        assertThat(moneyOf(calculatedInterest), is(moneyOf(TestMoneyUtil.createMoney("48.0"))));
     }
 
     private String moneyOf(Money money) {
