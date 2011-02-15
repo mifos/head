@@ -85,4 +85,10 @@ public class CenterViewDetailsPage extends MifosPage {
         waitForPageToLoad();
         return new CustomerChangeStatusPage(selenium);
     }
+
+    public ViewCenterChargesDetailPage navigateToViewCenterChargesDetailPage(){
+        selenium.click("viewCenterDetails.link.viewDetails");
+        waitForPageToLoad();
+        return new ViewCenterChargesDetailPage(selenium);
+    }
 }
