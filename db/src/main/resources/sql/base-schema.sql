@@ -1,20 +1,5 @@
 -- This script represents the latest schema.
 
--- Applying it should be the same as
--- Start with the latest-schema.sql from version foo of mifos
--- apply all upgrade_to_*.sql upgrades between foo and now
-
--- Applying this file also should also be the same as
--- upgrading from the start:
--- Start with mifosdbcreationscript.sql
--- merge rmpdbcreationscript.sql
--- merge Iteration13-DBScripts25092006.sql
--- merge Iteration14-DDL-DBScripts10102006.sql
--- merge Iteration15-DDL-DBScripts24102006.sql
--- merge add-version.sql
--- merge Index.sql
--- merge all upgrade_to_*.sql files to date
-
 create table currency (
   currency_id smallint auto_increment not null,
   currency_name varchar(50),

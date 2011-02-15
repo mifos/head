@@ -147,8 +147,8 @@ if [ -n "$mysql_result" ]; then
 fi
 
 echo -n .
-echo "Running sql/latest-schema.sql ... " >> $logfile
-mysql_result=`mysql --host=$MYSQL_HOST --port=$MYSQL_PORT --user=$MYSQL_MIFOS_USERNAME --password="$MYSQL_MIFOS_PASSWORD" --database=$MYSQL_MIFOS_DATABASE_NAME < sql/latest-schema.sql 2>&1`
+echo "Running db/sql/base-schema.sql ... " >> $logfile
+mysql_result=`mysql --host=$MYSQL_HOST --port=$MYSQL_PORT --user=$MYSQL_MIFOS_USERNAME --password="$MYSQL_MIFOS_PASSWORD" --database=$MYSQL_MIFOS_DATABASE_NAME < db/sql/base-schema.sql 2>&1`
 
 if [ -n "$mysql_result" ]; then
     echo Creating schema failed. $mysql_result | tee -a $logfile
@@ -156,8 +156,8 @@ if [ -n "$mysql_result" ]; then
 fi
 
 echo -n .
-echo "Running sql/latest-data.sql ... " >> $logfile
-mysql_result=`mysql --host=$MYSQL_HOST --port=$MYSQL_PORT --user=$MYSQL_MIFOS_USERNAME --password="$MYSQL_MIFOS_PASSWORD" --database=$MYSQL_MIFOS_DATABASE_NAME < sql/latest-data.sql 2>&1`
+echo "Running db/sql/base-data.sql ... " >> $logfile
+mysql_result=`mysql --host=$MYSQL_HOST --port=$MYSQL_PORT --user=$MYSQL_MIFOS_USERNAME --password="$MYSQL_MIFOS_PASSWORD" --database=$MYSQL_MIFOS_DATABASE_NAME < db/sql/base-data.sql 2>&1`
 
 if [ -n "$mysql_result" ]; then
     echo Loading initial data failed. $mysql_result | tee -a $logfile
@@ -165,8 +165,8 @@ if [ -n "$mysql_result" ]; then
 fi
 
 echo -n ". "
-echo "Running sql/init_mifos_password.sql ... " >> $logfile
-mysql_result=`mysql --host=$MYSQL_HOST --port=$MYSQL_PORT --user=$MYSQL_MIFOS_USERNAME --password="$MYSQL_MIFOS_PASSWORD" --database=$MYSQL_MIFOS_DATABASE_NAME < sql/init_mifos_password.sql 2>&1`
+echo "Running db/sql/init_mifos_password.sql ... " >> $logfile
+mysql_result=`mysql --host=$MYSQL_HOST --port=$MYSQL_PORT --user=$MYSQL_MIFOS_USERNAME --password="$MYSQL_MIFOS_PASSWORD" --database=$MYSQL_MIFOS_DATABASE_NAME < db/sql/init_mifos_password.sql 2>&1`
 
 if [ -n "$mysql_result" ]; then
     echo Initializing password failed. $mysql_result | tee -a $logfile
