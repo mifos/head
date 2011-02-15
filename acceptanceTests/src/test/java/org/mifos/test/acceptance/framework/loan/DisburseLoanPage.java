@@ -82,6 +82,13 @@ public class DisburseLoanPage extends MifosPage {
         waitForPageToLoad();
     }
 
+    public void verifyModeOfPayments(){
+        String[] modesOfPayment=selenium.getSelectOptions("DisburseLoan.input.paymentType");
+        Assert.assertEquals(RepayLoanParameters.CASH,modesOfPayment[1]);
+        Assert.assertEquals(RepayLoanParameters.CHEQUE,modesOfPayment[2]);
+        Assert.assertEquals(RepayLoanParameters.VOUCHER,modesOfPayment[3]);
+    }
+
     public HomePage navigateToHomePage() {
         selenium.click("id=clientsAndAccountsHeader.link.home");
         waitForPageToLoad();

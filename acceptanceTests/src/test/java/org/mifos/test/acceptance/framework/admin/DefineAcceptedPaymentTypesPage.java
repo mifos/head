@@ -41,7 +41,7 @@ public class DefineAcceptedPaymentTypesPage extends MifosPage {
 
     public void addLoanDisbursementsPaymentType(int payment) {
         selenium.select("chosenNonAcceptedLoanDisbursements", "value=" + payment);
-        selenium.click("defineAcceptedPaymentTypes.button.Disbursements");
+        selenium.click("defineAcceptedPaymentTypes.button.addLoans");
         selenium.click("defineAcceptedPaymentTypes.button.submit");
         waitForPageToLoad();
     }
