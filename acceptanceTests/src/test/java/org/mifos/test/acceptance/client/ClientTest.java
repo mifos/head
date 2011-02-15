@@ -688,7 +688,10 @@ public class ClientTest extends UiTestCaseBase {
 
         ClientViewDetailsPage clientViewDetailsPage = clientTestHelper.createClientAndVerify(loanOfficer, officeName);
         clientViewDetailsPage.verifyStatus("Active");
+
+        // restore original settings
         applicationDatabaseOperation.updateCustomerState("2", "1");
+        propertiesHelper.setClientPendingApprovalStateEnabled("true");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
