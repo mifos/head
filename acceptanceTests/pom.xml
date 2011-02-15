@@ -102,7 +102,7 @@
             </build>
         </profile>
         <profile>
-            <id>jetty7x</id>
+            <id>tomcat6x</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
