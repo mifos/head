@@ -12,10 +12,6 @@
         <constructor-arg value="local.properties"/>
     </bean>
 
-    <bean id="i18nProperties" factory-bean="configurationLocator" factory-method="getCustomFilePath">
-        <constructor-arg value="i18n.properties"/>
-    </bean>
-
     <bean id="mainPropertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
         <property name="ignoreResourceNotFound" value="true"/>
@@ -24,7 +20,7 @@
                 <value>classpath:org/mifos/config/resources/mainDatabase.properties</value>
                 <value>classpath:org/mifos/config/resources/integrationDatabase.properties</value>
                 <value>classpath:org/mifos/config/resources/acceptanceDatabase.properties</value>
-                <ref bean="i18nProperties"/>
+                <value>classpath:org/mifos/config/resources/i18n.properties</value>
                 <ref bean="customProperties"/>
                 <value>classpath:org/mifos/config/resources/applicationConfiguration.default.properties</value>
                 <ref bean="applicationCustomProperties"/>
