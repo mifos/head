@@ -20,14 +20,13 @@
 
 package org.mifos.clientportfolio.newloan.domain;
 
-import org.mifos.accounts.productdefinition.util.helpers.GraceType;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.core.MifosRuntimeException;
 
 public class LoanInterestCalculatorFactoryImpl implements LoanInterestCalculatorFactory {
 
     @Override
-    public LoanInterestCalculator create(InterestType interestType, GraceType graceType) {
+    public LoanInterestCalculator create(InterestType interestType) {
 
         switch (interestType) {
         case FLAT:
@@ -41,5 +40,4 @@ public class LoanInterestCalculatorFactoryImpl implements LoanInterestCalculator
             throw new MifosRuntimeException("interestType not supported: " + interestType);
         }
     }
-
 }

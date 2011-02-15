@@ -3117,7 +3117,7 @@ public class LoanBO extends AccountBO {
                 numberOfInstallments, durationInYears, interestFractionalRatePerInstallment);
 
         LoanInterestCalculatorFactory loanInterestCalculatorFactory = new LoanInterestCalculatorFactoryImpl();
-        LoanInterestCalculator loanInterestCalculator = loanInterestCalculatorFactory.create(interestType, graceType);
+        LoanInterestCalculator loanInterestCalculator = loanInterestCalculatorFactory.create(interestType);
 
         Money loanInterest = loanInterestCalculator.calculate(loanInterestCalculationDetails);
         // FIXME - keithw - replace all of below with factory usage

@@ -20,11 +20,10 @@
 
 package org.mifos.clientportfolio.newloan.domain;
 
-import org.mifos.accounts.productdefinition.util.helpers.GraceType;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 
 public interface LoanInterestCalculatorFactory {
 
-    LoanInterestCalculator create(InterestType interestType, GraceType graceType);
+    LoanInterestCalculator create(InterestType interestType);
 
 }

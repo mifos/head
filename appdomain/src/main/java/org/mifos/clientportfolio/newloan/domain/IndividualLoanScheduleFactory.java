@@ -94,7 +94,7 @@ public class IndividualLoanScheduleFactory implements LoanScheduleFactory {
                 numberOfInstallments, durationInYears, interestFractionalRatePerInstallment);
 
         LoanInterestCalculatorFactory loanInterestCalculatorFactory = new LoanInterestCalculatorFactoryImpl();
-        LoanInterestCalculator loanInterestCalculator = loanInterestCalculatorFactory.create(interestType, graceType);
+        LoanInterestCalculator loanInterestCalculator = loanInterestCalculatorFactory.create(interestType);
         Money loanInterest = loanInterestCalculator.calculate(loanInterestCalculationDetails);
         // end of loan Interest creation
 
