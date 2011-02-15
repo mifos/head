@@ -21,6 +21,8 @@
 package org.mifos.test.acceptance.framework.savings;
 
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.mifos.test.acceptance.framework.loan.RepayLoanParameters;
+import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -57,6 +59,13 @@ public class SavingsDepositWithdrawalPage  extends MifosPage{
         waitForPageToLoad();
 
         return new SavingsDepositWithdrawalConfirmationPage(selenium);
+    }
+
+    public void verifyModeOfPayments(){
+        String[] modesOfPayment=selenium.getSelectOptions("applypayment_savingsaccount.input.paymentType");
+        Assert.assertEquals(RepayLoanParameters.CASH,modesOfPayment[1]);
+        Assert.assertEquals(RepayLoanParameters.CHEQUE,modesOfPayment[2]);
+        Assert.assertEquals(RepayLoanParameters.VOUCHER,modesOfPayment[3]);
     }
 
 

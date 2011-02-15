@@ -54,14 +54,14 @@ public class DefineAcceptedPaymentTypesPage extends MifosPage {
         waitForPageToLoad();
     }
 
-    public void addLoanDisbursementsWithdrawalsType(int payment)
+    public void addSavingsWithdrawalsType(int payment)
     {
         selenium.select("chosenNonAcceptedSavingWithdrawals", "value=" + payment);
         selenium.click("defineAcceptedPaymentTypes.button.addWithdrawals");
         selenium.click("defineAcceptedPaymentTypes.button.submit");
         waitForPageToLoad();
     }
-    public void addLoanDepositsPaymentType(int payment)
+    public void addSavingsDepositsPaymentType(int payment)
     {
         selenium.select("chosenNonAcceptedSavingDeposits", "value=" + payment);
         selenium.click("defineAcceptedPaymentTypes.button.addDeposits");
