@@ -105,6 +105,9 @@ import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
+import org.mifos.clientportfolio.newloan.domain.EqualInstallmentGenerator;
+import org.mifos.clientportfolio.newloan.domain.EqualInstallmentGeneratorFactory;
+import org.mifos.clientportfolio.newloan.domain.EqualInstallmentGeneratorFactoryImpl;
 import org.mifos.clientportfolio.newloan.domain.LoanDecliningInterestAnnualPeriodCalculator;
 import org.mifos.clientportfolio.newloan.domain.LoanDecliningInterestAnnualPeriodCalculatorFactory;
 import org.mifos.clientportfolio.newloan.domain.LoanDurationInAccountingYearsCalculator;
@@ -113,6 +116,8 @@ import org.mifos.clientportfolio.newloan.domain.LoanInterestCalculationDetails;
 import org.mifos.clientportfolio.newloan.domain.LoanInterestCalculator;
 import org.mifos.clientportfolio.newloan.domain.LoanInterestCalculatorFactory;
 import org.mifos.clientportfolio.newloan.domain.LoanInterestCalculatorFactoryImpl;
+import org.mifos.clientportfolio.newloan.domain.LoanUseageDetailImpl;
+import org.mifos.clientportfolio.newloan.domain.LoanUsuageDetail;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.business.Configuration;
@@ -3120,8 +3125,14 @@ public class LoanBO extends AccountBO {
         LoanInterestCalculator loanInterestCalculator = loanInterestCalculatorFactory.create(interestType);
 
         Money loanInterest = loanInterestCalculator.calculate(loanInterestCalculationDetails);
+        LoanUsuageDetail loanUsageDetail = new LoanUseageDetailImpl(isInterestDeductedAtDisbursement(), this.loanOffering.isPrinDueLastInst());
 
-        List<EMIInstallment> EMIInstallments = generateEMI_v2(loanInterest);
+        EqualInstallmentGeneratorFactory equalInstallmentGeneratorFactory = new EqualInstallmentGeneratorFactoryImpl();
+        EqualInstallmentGenerator equalInstallmentGenerator = equalInstallmentGeneratorFactory.create(interestType, loanUsageDetail, loanInterest);
+
+        List<EMIInstallment> EMIInstallments = equalInstallmentGenerator.generateEqualInstallments(loanInterestCalculationDetails);
+
+        List<EMIInstallment> previous_EMIInstallments = generateEMI_v2(loanInterest);
 
         logger.debug("Emi installment  obtained ");
 
@@ -3147,6 +3158,10 @@ public class LoanBO extends AccountBO {
         applyRounding_v2();
     }
 
+    /**
+     * remove this
+     */
+    @Deprecated
     private List<EMIInstallment> generateEMI_v2(final Money loanInterest) throws AccountException {
         if (isInterestDeductedAtDisbursement()) {
             // Interest deducted at disbursement has been cut from r1.1 so throw an exception if we reach this code.

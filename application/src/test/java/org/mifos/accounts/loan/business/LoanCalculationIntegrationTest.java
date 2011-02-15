@@ -21,6 +21,8 @@
 package org.mifos.accounts.loan.business;
 
 import junit.framework.Assert;
+import junit.framework.AssertionFailedError;
+
 import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -1477,7 +1479,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         printResults(expectedResult, calculatedResult, testName);
 
         Assert.assertEquals(testName, expectedResult.getTotalInterest(), calculatedResult.getTotalInterest());
-        Assert.assertEquals(testName, expectedResult.getTotalPayments(), calculatedResult.getTotalPayments());
+            Assert.assertEquals(testName, expectedResult.getTotalPayments(), calculatedResult.getTotalPayments());
         Assert.assertEquals(testName, expectedResult.getTotalPrincipal(), calculatedResult.getTotalPrincipal());
         List<PaymentDetail> expectedPayments = expectedResult.getPayments();
         List<PaymentDetail> calculatedPayments = calculatedResult.getPayments();
@@ -2051,7 +2053,9 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     public void testDecliningInterestTestCases() throws Exception {
         String rootPath = "org/mifos/accounts/loan/business/testCaseData/decliningInterest/";
         String[] dataFileNames = getCSVFiles(rootPath);
+
         for (String dataFileName : dataFileNames) {
+
             if (fileNameContains(dataFileName, decliningGraceFeeTestCases)
                     || fileNameContains(dataFileName, decliningNegativeLastPaymentTestCases)) {
                 runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileName);

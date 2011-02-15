@@ -488,6 +488,10 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         return new LoanCreationPreviewDto(isGlimEnabled, isGroup, loanAccountDetailsView);
     }
 
+    /**
+     * @deprecated - not fully implemented yet.
+     */
+    @Deprecated
     @Override
     public String createLoan(OpeningBalanceLoanAccount openingBalanceLoan) {
 
