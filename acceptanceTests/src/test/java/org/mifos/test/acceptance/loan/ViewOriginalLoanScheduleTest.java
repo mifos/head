@@ -94,7 +94,7 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
     /**
      * FIXME - keithw
      */
-    @Test(enabled=false, groups={"smoke"})
+    @Test(enabled=true, groups={"smoke"})
     public void verifyForFlatLoanEarlyDisbursal() throws Exception {
         int interestType = DefineNewLoanProductPage.SubmitFormParameters.FLAT;
         applicationDatabaseOperation.updateLSIM(0);
@@ -156,7 +156,7 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
     /**
      * FIXME - keithw
      */
-    @Test(enabled=false, groups={"smoke"})
+    @Test(enabled=true, groups={"smoke"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyForDecBalIntReCalcLoanEarlyDisbursalLSIMOff() throws Exception {
         int interestType = DefineNewLoanProductPage.SubmitFormParameters.DECLINING_BALANCE_INTEREST_RECALCULATION;
@@ -169,7 +169,7 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
     /**
      * FIXME - keithw
      */
-    @Test(enabled=false, groups={"smoke"})
+    @Test(enabled=true, groups={"smoke"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyForDecBalIntReCalcLoanLateDisbursalLSIMOff() throws Exception {
         int interestType = DefineNewLoanProductPage.SubmitFormParameters.DECLINING_BALANCE_INTEREST_RECALCULATION;
