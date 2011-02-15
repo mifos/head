@@ -24,6 +24,7 @@ import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
 
 import com.thoughtworks.selenium.Selenium;
+import org.mifos.test.acceptance.framework.questionnaire.ViewQuestionResponseDetailPage;
 
 public class OfficeViewDetailsPage extends MifosPage {
 
@@ -57,6 +58,12 @@ public class OfficeViewDetailsPage extends MifosPage {
         selenium.click("viewOfficeDetails.link.editOfficeInformation");
         waitForPageToLoad();
         return new OfficeEditInformationPage(selenium);
+    }
+
+    public ViewQuestionResponseDetailPage navigateToViewAdditionalInformation() {
+        selenium.click("officeDetail.link.questionGroups");
+        waitForPageToLoad();
+        return new ViewQuestionResponseDetailPage(selenium);
     }
 
 }

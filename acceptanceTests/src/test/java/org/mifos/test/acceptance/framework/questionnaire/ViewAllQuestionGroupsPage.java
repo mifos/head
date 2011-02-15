@@ -40,6 +40,12 @@ public class ViewAllQuestionGroupsPage extends MifosPage {
         return new QuestionGroupDetailPage(selenium);
     }
 
+    public QuestionGroupDetailPage navigateToQuestionGroupDetailPage(int id) {
+        selenium.click("id=questionGroupId_"+id);
+        waitForPageToLoad();
+        return new QuestionGroupDetailPage(selenium);
+    }
+
     public String[] getAllQuestionGroups() {
         int rows = Integer.valueOf(selenium.getEval("window.document.getElementById('questionGroupList').getElementsByTagName('a').length"));
         String[] questions = new String[rows];
