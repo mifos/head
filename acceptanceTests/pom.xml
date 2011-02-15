@@ -15,12 +15,14 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-
     <properties>
         <modules.root.dir>${basedir}/..</modules.root.dir>
+        <cargo.install.directory>${basedir}/target/installs</cargo.install.directory>
         <selenium.background>true</selenium.background>
         <selenium.log.output>true</selenium.log.output>
-        <t7mp.wait>false</t7mp.wait>
+        <jetty.version>7.3.0.v20110203</jetty.version>
+        <jetty.container.url>http://download.eclipse.org/jetty/stable-7/dist/jetty-distribution-${jetty.version}.zip</jetty.container.url>
+        <cargo.wait>false</cargo.wait>
         <jdk.version>1.6</jdk.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -41,6 +43,100 @@
     </properties>
 
     <profiles>
+        <profile>
+            <id>download-container</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <jetty.home.directory>${cargo.install.directory}/${container.name}/jetty-${jetty.version}/</jetty.home.directory>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.cargo</groupId>
+                        <artifactId>cargo-maven2-plugin</artifactId>
+                        <version>1.0.5</version>
+                        <configuration>
+                            <container>
+                                <zipUrlInstaller>
+                                    <url>${container.url}</url>
+                                    <installDir>${cargo.install.directory}/${container.name}</installDir>
+                                </zipUrlInstaller>
+                                <output>${java.io.tmpdir}/${user.name}-cargo/conf/logs/server-console.log</output>
+                            </container>
+                            <configuration>
+                                <home>${java.io.tmpdir}/${user.name}-cargo/conf</home>
+                                <properties>
+                                    <cargo.jvmargs>-Xms1024m -Xmx1024m -XX:MaxPermSize=128m</cargo.jvmargs>
+                                    <cargo.maven.skip>${maven.test.skip}</cargo.maven.skip>
+                                </properties>
+                            </configuration>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>local-container</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.cargo</groupId>
+                        <artifactId>cargo-maven2-plugin</artifactId>
+                        <version>1.0.5</version>
+                        <configuration>
+                            <container>
+                                <home>${jetty.home.directory}</home>
+                            </container>
+                            <configuration>
+                                <type>standalone</type>
+                                <home>${jetty.deploy.directory}</home>
+                            </configuration>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>jetty7x</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <container.name>jetty7x</container.name>
+                <container.url>${jetty.container.url}</container.url>
+                <war.target>${jetty.home.directory}/webapps</war.target>
+            </properties>
+            <build>
+                <plugins>
+                    <!-- copy customized configuration files to the application server -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>process-resources</phase>
+                                <configuration>
+                                    <skip>${maven.test.skip}</skip>
+                                    <tasks>
+                                        <copy todir="${jetty.home.directory}/conf" overwrite="true">
+                                            <fileset dir="${basedir}/src/test/containers/${container.name}" />
+                                        </copy>
+                                    </tasks>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
         <profile>
             <id>firefox</id>
             <activation>
@@ -77,9 +173,23 @@
                 <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
+                <jetty.container.url>file:///home/hudson/arc/jetty-distribution-7.3.0.v20110203.zip</jetty.container.url>
                 <!-- leaving <acceptanceTest.groups.to.run> empty means to run everything -->
                 <acceptanceTest.groups.to.run></acceptanceTest.groups.to.run>
             </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>properties-maven-plugin</artifactId>
+                        <version>1.0-alpha-1</version>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>sql-maven-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
     <dependencies>
@@ -238,6 +348,7 @@
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-pmd-plugin</artifactId>
@@ -277,7 +388,9 @@
                 <configuration>
                     <groups>${acceptanceTest.groups.to.run}</groups>
                     <excludedGroups>workInProgress</excludedGroups>
-                    <!-- Skip the normal tests, we'll run them in the integration-test phase -->
+                    <!--
+                        Skip the normal tests, we'll run them in the integration-test phase
+                    -->
                     <redirectTestOutputToFile>true</redirectTestOutputToFile>
                     <skip>true</skip>
                     <systemProperties>
@@ -308,37 +421,62 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>com.googlecode.t7mp</groupId>
-                <artifactId>maven-t7-plugin</artifactId>
-                <version>0.9.7-SNAPSHOT</version>
+                <groupId>org.codehaus.cargo</groupId>
+                <artifactId>cargo-maven2-plugin</artifactId>
+                <version>1.0.5</version>
                 <executions>
+                    <execution>
+                        <id>install</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>install</goal>
+                        </goals>
+                    </execution>
                     <execution>
                         <id>start-container</id>
                         <phase>pre-integration-test</phase>
                         <goals>
-                            <goal>run</goal>
+                            <goal>start</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>stop-container</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>stop</goal>
                         </goals>
                     </execution>
                 </executions>
                 <configuration>
-                    <tomcatHttpPort>${servlet.port}</tomcatHttpPort>
-                    <tomcatVersion>7.0.6</tomcatVersion>
-                    <tomcatSetAwait>${t7mp.wait}</tomcatSetAwait>
-                    <lookInside>false</lookInside>
-                    <systemProperties>
-                        <systemProperty>
-                            <key>mifos.mode</key>
-                            <value>acceptance</value>
-                        </systemProperty>
-                    </systemProperties>
-                    <webapps>
-                        <webappArtifact>
-                            <groupId>org.mifos</groupId>
-                            <artifactId>mifos-war</artifactId>
-                            <version>1.9-SNAPSHOT</version>
-                            <contextPath>mifos</contextPath>
-                        </webappArtifact>
-                    </webapps>
+                    <skip>${maven.test.skip}</skip>
+                    <wait>${cargo.wait}</wait>
+                    <container>
+                        <containerId>${container.name}</containerId>
+                        <log>${basedir}/target/logs/${container.name}.log</log>
+                        <output>${basedir}/target/logs/${container.name}.out</output>
+                        <timeout>600000</timeout>
+                        <systemProperties>
+                            <mifos.mode>acceptance</mifos.mode>
+                        </systemProperties>
+                    </container>
+                    <configuration>
+                        <properties>
+                            <cargo.servlet.port>${servlet.port}</cargo.servlet.port>
+                            <cargo.jboss.configuration>default</cargo.jboss.configuration>
+                            <cargo.rmi.port>1099</cargo.rmi.port>
+                        </properties>
+                        <deployables>
+                            <deployable>
+                                <groupId>org.mifos</groupId>
+                                <artifactId>mifos-war</artifactId>
+                                <type>war</type>
+                                <properties>
+                                    <context>mifos</context>
+                                </properties>
+                                <pingURL>http://localhost:${servlet.port}/mifos/ping.ftl</pingURL>
+                            </deployable>
+                        </deployables>
+                    </configuration>
                 </configuration>
             </plugin>
             <plugin>
