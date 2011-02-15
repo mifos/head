@@ -107,8 +107,46 @@ Renders a cancel button.
     <input type="submit" class="cancel" value="[@spring.message buttonLabel /]" name="${name}" />
 [/#macro]
 
-[#-- TODO add documentation. copied from macros.ftl --]
-[#macro checkboxes path options separator="" attributes=""]
+[#-- 
+Render a group of checkboxes, using the given separator to separate them. 
+(Copied from macros.ftl)
+
+    path       : spring bind path
+    options    : checkbox values. values can be given as a hash (value => label) or a simple sequence
+    separator  : HTML fragment that gets inserted between each checkbox 
+    attributes : extra HTML attributes to be added to each checkbox
+--]
+[#macro formCheckboxes path options separator attributes=""]
+    [@spring.bind path /]
+    [#if options?is_hash]
+        [#list options?keys as value]
+        [#assign id="${spring.status.expression}${value_index}"]
+        [#assign isSelected = spring.contains(spring.status.value?default([""]), value)]
+        <input type="checkbox" id="${id}" name="${spring.status.expression}" value="${value?html}"[#if isSelected] checked="checked"[/#if] ${attributes}[@spring.closeTag/]
+        <label for="${id}" style="float:none;">${options[value]?html}</label>${separator}
+        [/#list]
+    [#else]
+        [#list options as value]
+        [#assign id="${spring.status.expression}${value_index}"]
+        [#assign isSelected = spring.contains(spring.status.value?default([""]), value)]
+        <input type="checkbox" id="${id}" name="${spring.status.expression}" value="${value?html}"[#if isSelected] checked="checked"[/#if] ${attributes}[@spring.closeTag/]
+        <label for="${id}" style="float:none;">${value?html}</label>${separator}
+        [/#list]
+    [/#if]
+    <input type="hidden" name="_${spring.status.expression}" value="on"/>
+[/#macro]
+
+[#-- 
+Render a group of checkboxes, using the given separator to separate them. Used by questionnaire widget. For general purpose,
+use "checkboxes" macro.
+(Copied from macros.ftl)
+
+    path       : spring bind path
+    options    : checkbox values. values can be given as a hash (value => label) or a simple sequence
+    separator  : HTML fragment that gets inserted between each checkbox 
+    attributes : extra HTML attributes to be added to each checkbox
+--]
+[#macro checkboxesWithTags path options separator="" attributes=""]
     [@spring.bind path /]
     [#list options as option]
         [#if option.tags?exists && option.tags?size > 0]
@@ -128,7 +166,14 @@ Renders a cancel button.
     <input type="hidden" name="_${spring.status.expression}" value="on"/>
 [/#macro]
 
-[#-- TODO add documentation. copied from macros.ftl --]
+[#--
+Renders a group of radio buttons.
+
+    path: spring bind path
+    options: an array of values. TODO add support for hashes.
+    separator  : HTML fragment that gets inserted between each radio button 
+    attributes : extra HTML attributes to be added to each radio button
+--]
 [#macro radioButtons path options separator attributes=""]
     [@spring.bind path /]
     [#list options as value]

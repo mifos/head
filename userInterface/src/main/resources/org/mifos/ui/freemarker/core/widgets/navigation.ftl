@@ -45,7 +45,7 @@
 </div>
 [/#macro]
 
-[#-- TODO: add documentation --]
+[#-- See "topNavigation" macro above. The difference between the two is this version always shows the "admin" tab. --]
 [#macro topNavigationNoSecurity currentTab]
 <div id="header">
     <div class="site_logo">
