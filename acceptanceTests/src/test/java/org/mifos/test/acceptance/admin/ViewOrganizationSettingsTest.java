@@ -33,7 +33,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"acceptance","ui","smoke"})
+@Test(sequential = true, groups = {"acceptance","ui"})
 
 public class ViewOrganizationSettingsTest extends UiTestCaseBase {
 

@@ -32,7 +32,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
-		<span id="page.id" title="CreateMultipleLoanAccountsSearchResults" />
+		<span id="page.id" title="CreateMultipleLoanAccountsSearchResults"></span>
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 		<script>
 			function selectAll(x) {

@@ -26,6 +26,7 @@
             <list>
                 <value>/WEB-INF/freemarker/</value>
                 <value>classpath:org/mifos/ui/freemarker/core</value>
+                <value>classpath:org/mifos/ui/freemarker/core/lookups</value>
                 <value>classpath:org/mifos/ui/freemarker/css</value>
                 <value>classpath:org/mifos/platform/questionnaire/ui/views</value>
                 <value>classpath:org/mifos/platform/cashflow/ui/views</value>
@@ -46,7 +47,7 @@
 		       		widgets/form.ftl as form,
 		       		widgets/i18n.ftl as i18n,
 		        	layouts/layouts.ftl as layout,
-		        	lookups/lookups.ftl as lookup,
+		        	/lookups/lookups.ftl as lookup,
 		        	/spring.ftl as spring
 		        </prop>
         	</props>

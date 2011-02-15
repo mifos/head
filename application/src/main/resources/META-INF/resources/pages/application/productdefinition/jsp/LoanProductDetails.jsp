@@ -33,7 +33,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-		<span id="page.id" title="LoanProductDetails" />
+		<span id="page.id" title="LoanProductDetails"></span>
 		<table width="95%" border="0" cellpadding="0" cellspacing="0">
 			<c:set var="loanPrd" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" />
 			<c:set var="loanAmountType" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanAmountType')}" />
@@ -139,7 +139,7 @@ explanation of the license and how it is applied.
 												<c:if test="${loanAmountType==1}">
 												<mifos:mifoslabel name="product.calcloanamount" bundle="ProductDefUIResources" isColonRequired="yes"/> <mifos:mifoslabel name="product.sameforallloans" bundle="ProductDefUIResources" />
 													<br>
-													<table width="40%" border="0" cellspacing="0" cellpadding="3">
+													<table id="loanAmountSameTable" width="40%" border="0" cellspacing="0" cellpadding="3">
 														<tr>
 															<td width="20%" class="drawtablehd"> <mifos:mifoslabel name="product.minloanamt" bundle="ProductDefUIResources" /></td>
 															<td width="20%" class="drawtablehd" align="right"> <mifos:mifoslabel name="product.maxloanamt" bundle="ProductDefUIResources" /></td>
@@ -156,7 +156,7 @@ explanation of the license and how it is applied.
 												</c:if>
 												<c:if test="${loanAmountType=='2'}">
 													<br>
-													<table width="40%" border="0" cellpadding="3" cellspacing="0">
+													<table id="loanAmountFromLastTable" width="40%" border="0" cellpadding="3" cellspacing="0">
 													<mifos:mifoslabel name="product.calcloanamount" bundle="ProductDefUIResources" isColonRequired="yes"/> <mifos:mifoslabel name="product.bylastloanamount" bundle="ProductDefUIResources" />
 													<tr>
 															<td width="25%" class="drawtablehd" > <mifos:mifoslabel name="product.lastloanamount" bundle="ProductDefUIResources" /> </td>
@@ -182,7 +182,7 @@ explanation of the license and how it is applied.
 													<mifos:mifoslabel name="product.calcloanamount" bundle="ProductDefUIResources" isColonRequired="yes"/> <mifos:mifoslabel name="product.byloancycle" bundle="ProductDefUIResources" />
 													<br/>
 													
-													<table width="40%" border="0" cellspacing="0" cellpadding="3">
+													<table id="loanAmountFromCycleTable" width="40%" border="0" cellspacing="0" cellpadding="3">
 														<tr>
 															<td width="15%" class="drawtablehd"> <mifos:mifoslabel name="product.loancycleno" bundle="ProductDefUIResources" /> </td>
 															<td width="30%" class="drawtablehd" align="right"> <mifos:mifoslabel name="product.minloanamt" bundle="ProductDefUIResources" /></td>
@@ -382,7 +382,7 @@ explanation of the license and how it is applied.
 													<c:if test="${installType=='1'}">
 													<mifos:mifoslabel name="product.calcInstallment" bundle="ProductDefUIResources" isColonRequired="yes"/> <mifos:mifoslabel name="product.sameforallinstallment" bundle="ProductDefUIResources"/>
 														<br>
-														<table width="41.5%" border="0" cellspacing="0" cellpadding="3">
+														<table id="noOfInstallSameTable" width="41.5%" border="0" cellspacing="0" cellpadding="3">
 																<tr>
 																	<td width="20%" class="drawtablehd"> <mifos:mifoslabel name="product.mininst" bundle="ProductDefUIResources" /></td>
 																	<td width="20%" class="drawtablehd" > <mifos:mifoslabel name="product.maxinst" bundle="ProductDefUIResources" /></td>
@@ -401,7 +401,7 @@ explanation of the license and how it is applied.
 													<c:if test="${installType=='2'}">
 													<mifos:mifoslabel name="product.calcInstallment" bundle="ProductDefUIResources" isColonRequired="yes"/> <mifos:mifoslabel name="product.installbylastloanamount" bundle="ProductDefUIResources"/>
 														<br>
-														<table width="41.5%" border="0" cellpadding="3" cellspacing="0">
+														<table id="noOfInstallFromLastTable" width="41.5%" border="0" cellpadding="3" cellspacing="0">
 													<tr>
 																	<td width="25%" class="drawtablehd"> <mifos:mifoslabel name="product.lastloanamount" bundle="ProductDefUIResources" /> </td>
 																	<td width="15%" class="drawtablehd" > <mifos:mifoslabel name="product.mininst" bundle="ProductDefUIResources" /></td>
@@ -423,7 +423,7 @@ explanation of the license and how it is applied.
 													<c:if test="${installType=='3'}">
 													<mifos:mifoslabel name="product.calcInstallment" bundle="ProductDefUIResources" isColonRequired="yes"/> <mifos:mifoslabel name="product.installbyloancycle" bundle="ProductDefUIResources"/>
 														<br>
-															<table width="41.5%" border="0" cellspacing="0" cellpadding="3">
+															<table id="noOfInstallFromCycleTable" width="41.5%" border="0" cellspacing="0" cellpadding="3">
 																<tr>
 																	<td width="15%" class="drawtablehd"> <mifos:mifoslabel name="product.loancycleno" bundle="ProductDefUIResources" /> </td>
 																	<td width="30%" class="drawtablehd" > <mifos:mifoslabel name="product.mininst" bundle="ProductDefUIResources" /></td>

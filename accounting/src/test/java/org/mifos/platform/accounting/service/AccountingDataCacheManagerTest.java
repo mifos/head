@@ -22,7 +22,6 @@ package org.mifos.platform.accounting.service;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -59,7 +58,7 @@ public class AccountingDataCacheManagerTest {
         LocalDate date = new LocalDate(2010, 10, 12);
         String cacheFileName = cacheManager.getCacheFileName(date, date);
         cacheManager.writeAccountingDataToCache(data, cacheFileName);
-        List<AccountingDto> accountingData = cacheManager.getAccoutingDataFromCache(cacheFileName);
+        List<AccountingDto> accountingData = cacheManager.getExportDetails(cacheFileName);
         Assert.assertEquals(2, accountingData.size());
         DecimalFormat df = new DecimalFormat("#.0", new DecimalFormatSymbols(Locale.ENGLISH));
         for (AccountingDto dto : accountingData) {

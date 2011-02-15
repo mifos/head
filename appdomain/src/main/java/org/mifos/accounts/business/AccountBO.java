@@ -20,19 +20,36 @@
 
 package org.mifos.accounts.business;
 
+import static org.mifos.accounts.util.helpers.AccountTypes.LOAN_ACCOUNT;
+import static org.mifos.accounts.util.helpers.AccountTypes.SAVINGS_ACCOUNT;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeBO;
+import org.mifos.accounts.fees.persistence.FeeDao;
 import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
 import org.mifos.accounts.fees.util.helpers.FeeStatus;
 import org.mifos.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.accounts.financial.business.service.FinancialBusinessService;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.persistence.LegacyAccountDao;
-import org.mifos.accounts.savings.business.SavingsAccountActivationDetail;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountConstants;
@@ -75,23 +92,6 @@ import org.mifos.service.BusinessRuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-
-import static org.mifos.accounts.util.helpers.AccountTypes.LOAN_ACCOUNT;
-import static org.mifos.accounts.util.helpers.AccountTypes.SAVINGS_ACCOUNT;
-
 public class AccountBO extends AbstractBusinessObject {
 
     private static final Logger logger = LoggerFactory.getLogger(AccountBO.class);
@@ -117,7 +117,7 @@ public class AccountBO extends AbstractBusinessObject {
      */
     private final Set<AccountFeesEntity> accountFees;
     private final Set<AccountActionDateEntity> accountActionDates;
-    private List<AccountPaymentEntity> accountPayments;
+    protected List<AccountPaymentEntity> accountPayments;
     private Set<AccountCustomFieldEntity> accountCustomFields;
 
     private LegacyAccountDao legacyAccountDao = null;
@@ -141,6 +141,10 @@ public class AccountBO extends AbstractBusinessObject {
             dateTimeService = new DateTimeService();
         }
         return dateTimeService;
+    }
+
+    protected FeeDao getFeeDao() {
+        return ApplicationContextProvider.getBean(FeeDao.class);
     }
 
     public void setDateTimeService(final DateTimeService dateTimeService) {
@@ -199,8 +203,7 @@ public class AccountBO extends AbstractBusinessObject {
     /**
      * minimal legal constructor for savings accounts
      */
-    public AccountBO(AccountTypes accountType, AccountState accountState, CustomerBO customer,
-                     SavingsAccountActivationDetail savingsAccountActivationDetail, Date createdDate, Short createdByUserId) {
+    public AccountBO(AccountTypes accountType, AccountState accountState, CustomerBO customer, List<? extends AccountActionDateEntity> scheduledRepaymentsOrDeposits, Date createdDate, Short createdByUserId) {
         this.accountId = null;
         this.accountType = new AccountTypeEntity(accountType.getValue());
         this.accountState = new AccountStateEntity(accountState);
@@ -209,11 +212,11 @@ public class AccountBO extends AbstractBusinessObject {
         this.createdBy = createdByUserId;
 
         // ensure scheduled payments are linked to this account.
-        for (AccountActionDateEntity scheduledPayment : savingsAccountActivationDetail.getScheduledPayments()) {
+        for (AccountActionDateEntity scheduledPayment : scheduledRepaymentsOrDeposits) {
             scheduledPayment.setAccount(this);
         }
 
-        this.accountActionDates = new LinkedHashSet<AccountActionDateEntity>(savingsAccountActivationDetail.getScheduledPayments());
+        this.accountActionDates = new LinkedHashSet<AccountActionDateEntity>(scheduledRepaymentsOrDeposits);
         if (customer != null) {
             this.office = customer.getOffice();
             this.personnel = customer.getPersonnel();
@@ -1145,18 +1148,26 @@ public class AccountBO extends AbstractBusinessObject {
         return accountFee;
     }
 
-    protected final List<InstallmentDate> getInstallmentDates(final MeetingBO meeting, final Short noOfInstallments,
+    @Deprecated
+    public final List<InstallmentDate> getInstallmentDates(final MeetingBO meeting, final Short noOfInstallments,
             final Short installmentToSkip) {
         return getInstallmentDates(meeting, noOfInstallments, installmentToSkip, false);
     }
 
-    protected final List<InstallmentDate> getInstallmentDates(final MeetingBO meeting, final Short noOfInstallments,
+    // used from loanBO
+    public final List<InstallmentDate> getInstallmentDates(final MeetingBO meeting, final Short noOfInstallments,
             final Short installmentToSkip, final boolean isRepaymentIndepOfMeetingEnabled) {
 
-        return getInstallmentDates(meeting, noOfInstallments, installmentToSkip, isRepaymentIndepOfMeetingEnabled, true);
+        return getInstallmentDates(meeting, noOfInstallments, installmentToSkip, false, true);
     }
 
-    protected final List<InstallmentDate> getInstallmentDates(final MeetingBO meeting, final Short noOfInstallments,
+    /**
+     * @deprecated - used to create installment dates based on 'loan meeting' and working das, holidays, moratoria etc
+     *
+     * better to pull capability of creating 'installments' out of loan into something more reuseable and isolated
+     */
+    @Deprecated
+    public final List<InstallmentDate> getInstallmentDates(final MeetingBO meeting, final Short noOfInstallments,
             final Short installmentToSkip, final boolean isRepaymentIndepOfMeetingEnabled,
             final boolean adjustForHolidays) {
 
@@ -1164,8 +1175,6 @@ public class AccountBO extends AbstractBusinessObject {
 
         List<InstallmentDate> dueInstallmentDates = new ArrayList<InstallmentDate>();
         if (noOfInstallments > 0) {
-            List<Date> dueDates;
-
             List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
             List<Holiday> holidays = new ArrayList<Holiday>();
 
@@ -1179,9 +1188,9 @@ public class AccountBO extends AbstractBusinessObject {
             final int occurrences = noOfInstallments + installmentToSkip;
 
             ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
-            ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(
-                    workingDays, holidays);
+            ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, holidays);
 
+            List<Date> dueDates = new ArrayList<Date>();
             // FIXME - keithw - this whole area of installment creation should be pulled out of domain
             DateTime startFromDayAfterAssignedMeetingDateRatherThanSkippingInstallments = startFromMeetingDate;
             if (this.isLoanAccount()) {
@@ -1190,7 +1199,6 @@ public class AccountBO extends AbstractBusinessObject {
                 startFromDayAfterAssignedMeetingDateRatherThanSkippingInstallments = startFromMeetingDate.plusDays(1);
             }
             List<DateTime> installmentDates = dateGeneration.generateScheduledDates(occurrences, startFromDayAfterAssignedMeetingDateRatherThanSkippingInstallments, scheduledEvent);
-            dueDates = new ArrayList<Date>();
             for (DateTime installmentDate : installmentDates) {
                 dueDates.add(installmentDate.toDate());
             }
@@ -1200,7 +1208,7 @@ public class AccountBO extends AbstractBusinessObject {
         return dueInstallmentDates;
     }
 
-    private List<InstallmentDate> createInstallmentDates(final Short installmentToSkip, final List<Date> dueDates) {
+    protected List<InstallmentDate> createInstallmentDates(final Short installmentToSkip, final List<Date> dueDates) {
         List<InstallmentDate> installmentDates = new ArrayList<InstallmentDate>();
         int installmentId = 1;
         for (Date date : dueDates) {

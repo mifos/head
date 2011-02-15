@@ -26,7 +26,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".create">
 	<tiles:put name="body" type="string">
-		<span id="page.id" title="feescreate" /> <script
+		<span id="page.id" title="feescreate"></span> <script
 			src="pages/application/fees/js/Fees.js"></script> <html-el:form
 			action="/feeaction.do?method=preview" focus="feeName">
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">

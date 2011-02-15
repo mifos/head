@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+    
+    <bean id="configurationLocator" class="org.mifos.framework.util.ConfigurationLocator" />
+
+    <bean id="customIntegrationTestProperties" factory-bean="configurationLocator" factory-method="getCustomFilePath">
+        <constructor-arg value="local.properties"/>
+    </bean>
+
+    <bean id="integrationPropertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="locations">
+            <list>
+                <value>classpath:integrationDatabase.properties</value>
+                <ref bean="customIntegrationTestProperties"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="${integration.database.driver}"/>
+        <property name="jdbcUrl"
+                  value="jdbc:mysql://${integration.database.host}:${integration.database.port}/${integration.database}"/>
+        <property name="user" value="${integration.database.user}"/>
+        <property name="password" value="${integration.database.password}"/>
+        <property name="initialPoolSize" value="5"></property>
+        <property name="minPoolSize" value="${integration.database.hibernate.c3p0.min_size}"/>
+        <property name="maxPoolSize" value="${integration.database.hibernate.c3p0.max_size}"/>
+        <property name="checkoutTimeout" value="${integration.database.hibernate.c3p0.timeout}"/>
+        <property name="maxStatements" value="${integration.database.hibernate.c3p0.max_statements}"></property>
+        <property name="testConnectionOnCheckout" value="false"/>
+        <property name="idleConnectionTestPeriod"
+                  value="${integration.database.hibernate.c3p0.idle_test_period}"></property>
+    </bean>
+</beans>

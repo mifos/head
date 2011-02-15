@@ -32,11 +32,13 @@ import org.mifos.customers.personnel.util.helpers.PersonnelStatus;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.reports.ui.SelectionItem;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class SelectionItemDaoHibernate implements SelectionItemDao {
 
     private final GenericDao genericDao;
 
+    @Autowired
     public SelectionItemDaoHibernate(final GenericDao genericDao) {
         this.genericDao = genericDao;
     }

@@ -64,13 +64,13 @@ public class EditLoanAccountInformationPage extends MifosPage {
             selenium.type("editLoanAccount.textbox.collateralnotes", editAccountParameters.getCollateralNotes());
         }
         if (editAccountParameters.getCollateralType() != null) {
-            selenium.type("editLoanAccount.select.collateraltype", editAccountParameters.getCollateralType());
+            selenium.select("editLoanAccount.select.collateraltype", "label=" + editAccountParameters.getCollateralType());
         }
         if (editAccountParameters.getExternalID() != null) {
             selenium.type("editLoanAccount.input.externalid", editAccountParameters.getExternalID());
         }
         if (editAccountParameters.getPurposeOfLoan() != null) {
-            selenium.type("editLoanAccount.input.purposeofloan", editAccountParameters.getPurposeOfLoan());
+            selenium.select("editLoanAccount.input.purposeofloan", "label=" + editAccountParameters.getPurposeOfLoan());
         }
         return this;
     }

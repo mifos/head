@@ -577,7 +577,7 @@ explanation of the license and how it is applied.
 									var="phoneNumber"
 									value="${clientInformationDto.address.phoneNumber}" />
 								<c:if test="${!empty phoneNumber}">
-									<br>
+			ViewClientDetails						<br>
 									<mifos:mifoslabel name="client.Telephone"
 										bundle="ClientUIResources" keyhm="Client.PhoneNumber"
 										isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel>
@@ -694,27 +694,27 @@ explanation of the license and how it is applied.
 								<fmt:message key="client.CycleNo" > 
 									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
 								</fmt:message>
-								<c:out value="${clientInformationDto.clientPerformanceHistory.loanCycleNumber}" /></span></td>
+								<span id="viewClientDetails.text.loancycle"><c:out value="${clientInformationDto.clientPerformanceHistory.loanCycleNumber}" /></span></span></td>
 						</tr>
 						<tr>
 							<td class="paddingL10"><span class="fontnormal8pt"> <fmt:message
 								key="client.LastLoanAmount"> <fmt:param><mifos:mifoslabel
 								name="${ConfigurationConstants.LOAN}"/></fmt:param></fmt:message>:
-							<c:out
-								value="${clientInformationDto.clientPerformanceHistory.lastLoanAmount}" /></span></td>
+							<span id="viewClientDetails.text.lastloanamount"><c:out
+								value="${clientInformationDto.clientPerformanceHistory.lastLoanAmount}" /></span></span></td>
 						</tr>
 						<tr>
 							<td class="paddingL10"><span class="fontnormal8pt"><fmt:message
 								key="client.NoOfActive"> <fmt:param><mifos:mifoslabel
 								name="${ConfigurationConstants.LOAN}"/></fmt:param></fmt:message>:
-							<c:out
-								value="${clientInformationDto.clientPerformanceHistory.noOfActiveLoans}" /></span></td>
+							<span id="viewClientDetails.text.noactiveloans"><c:out
+								value="${clientInformationDto.clientPerformanceHistory.noOfActiveLoans}" /></span></span></td>
 						</tr>
 						<tr>
 							<td class="paddingL10"><span class="fontnormal8pt"><mifos:mifoslabel
 								name="client.DeliquentPortfolio" bundle="ClientUIResources" />
-							<c:out
-								value="${clientInformationDto.clientPerformanceHistory.delinquentPortfolioAmount}" /></span></td>
+							<span id="viewClientDetails.text.delinquentportfolio"><c:out
+								value="${clientInformationDto.clientPerformanceHistory.delinquentPortfolioAmount}" /></span></span></td>
 						</tr>
 						<tr>
 							<td class="paddingL10"><span class="fontnormal8pt"> <fmt:message
@@ -747,8 +747,8 @@ explanation of the license and how it is applied.
 							var="loanCycle">
 							<tr>
 								<td class="paddingL10"><span class="fontnormal8pt">&nbsp;&nbsp;&nbsp;<c:out
-									value="${loanCycle.offeringName}" />: <c:out
-									value="${loanCycle.counter}" /></span></td>
+									value="${loanCycle.offeringName}" />: <span id="viewClientDetails.text.${loanCycle.offeringName}"><c:out
+									value="${loanCycle.counter}" /></span></span></td>
 							</tr>
 						</c:forEach>
 					</table>

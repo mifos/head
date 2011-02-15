@@ -20,37 +20,23 @@
 
 package org.mifos.security.login.struts.action;
 
-import java.util.Locale;
-import java.util.ResourceBundle;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.struts.Globals;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
-import org.mifos.config.Localization;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.dto.domain.LoginDto;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.FilePaths;
-import org.mifos.framework.util.helpers.FlowManager;
-import org.mifos.framework.util.helpers.ServletUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.login.struts.actionforms.LoginActionForm;
 import org.mifos.security.login.util.helpers.LoginConstants;
-import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,101 +48,101 @@ public class LoginAction extends BaseAction {
 
     private static final Logger logger = LoggerFactory.getLogger(LoginAction.class);
 
-    public ActionForward load(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
-        logger.debug("Inside load of LoginAction");
-        SessionUtils.setAttribute(LoginConstants.LOGINACTIONFORM, null, request.getSession());
-        request.getSession(false).setAttribute(Constants.FLOWMANAGER, new FlowManager());
-        return mapping.findForward(ActionForwards.load_success.toString());
-    }
+//    public ActionForward load(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+//            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+//        logger.debug("Inside load of LoginAction");
+//        SessionUtils.setAttribute(LoginConstants.LOGINACTIONFORM, null, request.getSession());
+//        request.getSession(false).setAttribute(Constants.FLOWMANAGER, new FlowManager());
+//        return mapping.findForward(ActionForwards.load_success.toString());
+//    }
 
-    @TransactionDemarcate(saveToken = true)
-    public ActionForward login(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
-        logger.debug("Inside login of LoginAction");
-        logger.debug("Using Thread: " + Thread.currentThread().getName());
-        logger.debug("Using hibernate session: " + StaticHibernateUtil.getSessionTL().hashCode());
+//    @TransactionDemarcate(saveToken = true)
+//    public ActionForward login(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+//            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+//        logger.debug("Inside login of LoginAction");
+//        logger.debug("Using Thread: " + Thread.currentThread().getName());
+//        logger.debug("Using hibernate session: " + StaticHibernateUtil.getSessionTL().hashCode());
+//
+//        ShutdownManager shutdownManager = (ShutdownManager) ServletUtils.getGlobal(request, ShutdownManager.class
+//                .getName());
+//        if (shutdownManager.isInShutdownCountdownNotificationThreshold()) {
+//            request.getSession(false).invalidate();
+//            ActionErrors error = new ActionErrors();
+//            error.add(LoginConstants.SHUTDOWN, new ActionMessage(LoginConstants.SHUTDOWN));
+//            request.setAttribute(Globals.ERROR_KEY, error);
+//            return mapping.findForward(ActionForwards.load_main_page.toString());
+//        }
+//
+//        LoginActionForm loginActionForm = (LoginActionForm) form;
+//        String userName = loginActionForm.getUserName();
+//        String password = loginActionForm.getPassword();
+//
+//        LoginDto loginDto = loginServiceFacade.login(userName, password);
+//
+//        PersonnelBO user = this.personnelDao.findPersonnelById(loginDto.getUserId());
+//        ActivityContext activityContext = new ActivityContext(Short.valueOf("0"), user.getOffice().getOfficeId(), user.getPersonnelId());
+//        request.getSession(false).setAttribute(Constants.ACTIVITYCONTEXT, activityContext);
+//
+//        Locale preferredLocale = Localization.getInstance().getConfiguredLocale();
+//        Short localeId = Localization.getInstance().getLocaleId();
+//        UserContext userContext = new UserContext(preferredLocale, localeId);
+//        userContext.setId(user.getPersonnelId());
+//        userContext.setName(user.getDisplayName());
+//        userContext.setLevel(user.getLevelEnum());
+//        userContext.setRoles(user.getRoles());
+//        userContext.setLastLogin(user.getLastLogin());
+//        userContext.setPasswordChanged(user.getPasswordChanged());
+//        userContext.setBranchId(user.getOffice().getOfficeId());
+//        userContext.setBranchGlobalNum(user.getOffice().getGlobalOfficeNum());
+//        userContext.setOfficeLevelId(user.getOffice().getLevel().getId());
+//
+//        if (loginDto.isPasswordChanged()) {
+//            setUserContextInSession(userContext, request);
+//        } else {
+//            SessionUtils.setAttribute(Constants.TEMPUSERCONTEXT, userContext, request);
+//        }
+//
+//        //  set flow
+//        Short passwordChanged = user.getPasswordChanged();
+//        if (null != passwordChanged && LoginConstants.PASSWORDCHANGEDFLAG.equals(passwordChanged)) {
+//            FlowManager flowManager = (FlowManager) request.getSession().getAttribute(Constants.FLOWMANAGER);
+//            flowManager.removeFlow((String) request.getAttribute(Constants.CURRENTFLOWKEY));
+//            request.setAttribute(Constants.CURRENTFLOWKEY, null);
+//        }
+//
+//        final String loginForward = getLoginForward(user.getPasswordChanged());
+//
+//        return mapping.findForward(loginForward);
+//    }
 
-        ShutdownManager shutdownManager = (ShutdownManager) ServletUtils.getGlobal(request, ShutdownManager.class
-                .getName());
-        if (shutdownManager.isInShutdownCountdownNotificationThreshold()) {
-            request.getSession(false).invalidate();
-            ActionErrors error = new ActionErrors();
-            error.add(LoginConstants.SHUTDOWN, new ActionMessage(LoginConstants.SHUTDOWN));
-            request.setAttribute(Globals.ERROR_KEY, error);
-            return mapping.findForward(ActionForwards.load_main_page.toString());
-        }
-
-        LoginActionForm loginActionForm = (LoginActionForm) form;
-        String userName = loginActionForm.getUserName();
-        String password = loginActionForm.getPassword();
-
-        LoginDto loginDto = loginServiceFacade.login(userName, password);
-
-        PersonnelBO user = this.personnelDao.findPersonnelById(loginDto.getUserId());
-        ActivityContext activityContext = new ActivityContext(Short.valueOf("0"), user.getOffice().getOfficeId(), user.getPersonnelId());
-        request.getSession(false).setAttribute(Constants.ACTIVITYCONTEXT, activityContext);
-
-        Locale preferredLocale = Localization.getInstance().getConfiguredLocale();
-        Short localeId = Localization.getInstance().getLocaleId();
-        UserContext userContext = new UserContext(preferredLocale, localeId);
-        userContext.setId(user.getPersonnelId());
-        userContext.setName(user.getDisplayName());
-        userContext.setLevel(user.getLevelEnum());
-        userContext.setRoles(user.getRoles());
-        userContext.setLastLogin(user.getLastLogin());
-        userContext.setPasswordChanged(user.getPasswordChanged());
-        userContext.setBranchId(user.getOffice().getOfficeId());
-        userContext.setBranchGlobalNum(user.getOffice().getGlobalOfficeNum());
-        userContext.setOfficeLevelId(user.getOffice().getLevel().getId());
-
-        if (loginDto.isPasswordChanged()) {
-            setUserContextInSession(userContext, request);
-        } else {
-            SessionUtils.setAttribute(Constants.TEMPUSERCONTEXT, userContext, request);
-        }
-
-        //  set flow
-        Short passwordChanged = user.getPasswordChanged();
-        if (null != passwordChanged && LoginConstants.PASSWORDCHANGEDFLAG.equals(passwordChanged)) {
-            FlowManager flowManager = (FlowManager) request.getSession().getAttribute(Constants.FLOWMANAGER);
-            flowManager.removeFlow((String) request.getAttribute(Constants.CURRENTFLOWKEY));
-            request.setAttribute(Constants.CURRENTFLOWKEY, null);
-        }
-
-        final String loginForward = getLoginForward(user.getPasswordChanged());
-
-        return mapping.findForward(loginForward);
-    }
-
-    public ActionForward logout(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
-
-        logger.debug("Inside logout of LoginAction");
-
-        ResourceBundle resources;
-        UserContext userContext = getUserContext(request);
-        if (null == userContext) {
-            // user might have just been given an empty session, so we
-            // can't assume that their session has a preferred locale
-            resources = ResourceBundle.getBundle(FilePaths.LOGIN_UI_PROPERTY_FILE);
-        } else {
-            // get locale first
-            Locale locale = userContext.getPreferredLocale();
-            resources = ResourceBundle.getBundle(FilePaths.LOGIN_UI_PROPERTY_FILE, locale);
-        }
-
-        request.getSession(false).invalidate();
-        ActionErrors error = new ActionErrors();
-
-        String errorMessage = resources.getString(LoginConstants.LOGOUTOUT);
-
-        // ActionMessage: take errorMessage as literal
-        error.add(LoginConstants.LOGOUTOUT, new ActionMessage(errorMessage, false));
-
-        request.setAttribute(Globals.ERROR_KEY, error);
-        return mapping.findForward(ActionForwards.logout_success.toString());
-    }
+//    public ActionForward logout(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+//            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+//
+//        logger.debug("Inside logout of LoginAction");
+//
+//        ResourceBundle resources;
+//        UserContext userContext = getUserContext(request);
+//        if (null == userContext) {
+//            // user might have just been given an empty session, so we
+//            // can't assume that their session has a preferred locale
+//            resources = ResourceBundle.getBundle(FilePaths.LOGIN_UI_PROPERTY_FILE);
+//        } else {
+//            // get locale first
+//            Locale locale = userContext.getPreferredLocale();
+//            resources = ResourceBundle.getBundle(FilePaths.LOGIN_UI_PROPERTY_FILE, locale);
+//        }
+//
+//        request.getSession(false).invalidate();
+//        ActionErrors error = new ActionErrors();
+//
+//        String errorMessage = resources.getString(LoginConstants.LOGOUTOUT);
+//
+//        // ActionMessage: take errorMessage as literal
+//        error.add(LoginConstants.LOGOUTOUT, new ActionMessage(errorMessage, false));
+//
+//        request.setAttribute(Globals.ERROR_KEY, error);
+//        return mapping.findForward(ActionForwards.logout_success.toString());
+//    }
 
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward updatePassword(ActionMapping mapping, ActionForm form, HttpServletRequest request,
@@ -212,11 +198,11 @@ public class LoginAction extends BaseAction {
         hs.setAttribute("org.apache.struts.action.LOCALE", userContext.getCurrentLocale());
     }
 
-    private String getLoginForward(Short passwordChanged) {
-        return (null == passwordChanged || LoginConstants.FIRSTTIMEUSER.equals(passwordChanged)) ? ActionForwards.loadChangePassword_success
-                .toString()
-                : ActionForwards.login_success.toString();
-    }
+//    private String getLoginForward(Short passwordChanged) {
+//        return (null == passwordChanged || LoginConstants.FIRSTTIMEUSER.equals(passwordChanged)) ? ActionForwards.loadChangePassword_success
+//                .toString()
+//                : ActionForwards.login_success.toString();
+//    }
 
     private String getCancelForward(Short passwordChanged) {
         return (null == passwordChanged || LoginConstants.FIRSTTIMEUSER.equals(passwordChanged)) ? ActionForwards.cancel_success

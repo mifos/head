@@ -42,7 +42,6 @@ import junit.framework.Assert;
 
 import org.apache.commons.collections.PredicateUtils;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.junit.Before;
 import org.junit.Test;
 import org.mifos.customers.office.business.OfficeBO;
@@ -69,7 +68,6 @@ public class BranchReportServiceIntegrationTest extends BranchReportIntegrationT
     private BranchReportClientSummaryBO activeBorrowersCountSummary;
 
     private Session session;
-    private Transaction transaction;
     private OfficeBusinessService officeBusinessServiceMock;
     private IBranchReportService branchReportService;
     private BranchReportBO branchReport;

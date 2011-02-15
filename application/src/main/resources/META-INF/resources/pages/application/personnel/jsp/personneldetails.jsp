@@ -29,7 +29,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-	<span id="page.id" title="personneldetails" />
+	<span id="page.id" title="personneldetails"></span>
 		<script language="javascript">
 
   function goToCancelPage(){
@@ -106,21 +106,17 @@ explanation of the license and how it is applied.
 							name="Personnel.Email" bundle="PersonnelUIResources"></mifos:mifoslabel>
 						<span id="personneldetails.text.email"><c:out value="${personnelInformationDto.emailId}" /></span> <br>
 
-						<mifos:mifoslabel name="Personnel.DOB"
-							bundle="PersonnelUIResources"></mifos:mifoslabel> <c:out
-							value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,personnelInformationDto.personnelDetails.dob)}" />;
-						<c:out value="${personnelInformationDto.age}" /> <mifos:mifoslabel
-							name="Personnel.YearsOld" bundle="PersonnelUIResources"></mifos:mifoslabel>
+						<mifos:mifoslabel name="Personnel.DOB" bundle="PersonnelUIResources" /> 
+						<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,personnelInformationDto.personnelDetails.dob)}" />;
+						<c:out value="${personnelInformationDto.age}" />
+						<mifos:mifoslabel name="Personnel.YearsOld" bundle="PersonnelUIResources" />
 						<br>
 
 						<c:forEach
-							items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'genderList')}"
-							var="item">
-							<c:if test="${personnelInformationDto.personnelDetails.gender == item.id}">
-											${item.name}
-								</c:if>
-						</c:forEach> <c:if
-							test="${!empty personnelInformationDto.personnelDetails.maritalStatus}">
+							items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'genderList')}" var="item">
+							<c:if test="${personnelInformationDto.personnelDetails.gender == item.id}">${item.name}</c:if>
+						</c:forEach> 
+						<c:if test="${!empty personnelInformationDto.personnelDetails.maritalStatus}">
 							<c:out value=";" />
 							<c:forEach
 								items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'maritalStatusList')}"
@@ -130,20 +126,8 @@ explanation of the license and how it is applied.
 											${item.name}
 								</c:if>
 							</c:forEach>
-						</c:if> <br>
-						<mifos:mifoslabel name="Personnel.LanguagePreferred"
-							bundle="PersonnelUIResources"></mifos:mifoslabel> <c:if
-							test="${!empty personnelInformationDto.preferredLocaleLanguageName}">
-							<%--<c:forEach
-								items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'languageList')}"
-								var="item">
-
-								<c:if test="${personnelInformationDto.preferredLocale.localeId == item.id}">
-											${item.name}
-								</c:if>
-							</c:forEach> --%>
-							${personnelInformationDto.preferredLocaleLanguageName}
-						</c:if> <br>
+						</c:if>
+						<br>
 						<mifos:mifoslabel name="Personnel.DOJMFI"
 							bundle="PersonnelUIResources"></mifos:mifoslabel> <c:out
 							value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,personnelInformationDto.personnelDetails.dateOfJoiningMFI)}" />

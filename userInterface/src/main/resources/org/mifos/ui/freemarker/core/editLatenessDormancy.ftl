@@ -21,7 +21,7 @@
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
 <!--  Main Content Begins-->
-<span id="page.id" title="view_lateness_and_dormancy_definition"/>
+<span id="page.id" title="view_lateness_and_dormancy_definition"></span>
 <div class=" content">
     <style type="text/css">
         .error {

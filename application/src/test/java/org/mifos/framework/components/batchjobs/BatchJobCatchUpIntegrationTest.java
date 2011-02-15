@@ -36,6 +36,7 @@ import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mifos.core.MifosResourceUtil;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.components.batchjobs.exceptions.TaskSystemException;
 import org.mifos.framework.components.batchjobs.helpers.ProductStatus;
@@ -54,7 +55,6 @@ import org.springframework.batch.core.JobInstance;
 import org.springframework.batch.core.configuration.JobLocator;
 import org.springframework.batch.core.explore.JobExplorer;
 import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.core.io.ClassPathResource;
 
 public class BatchJobCatchUpIntegrationTest extends MifosIntegrationTestCase {
 
@@ -68,7 +68,6 @@ public class BatchJobCatchUpIntegrationTest extends MifosIntegrationTestCase {
 
     @Before
     public void setUp() throws Exception {
-
         jobName = "ProductStatusJob";
     }
 
@@ -201,8 +200,8 @@ public class BatchJobCatchUpIntegrationTest extends MifosIntegrationTestCase {
 
     private MifosScheduler getMifosScheduler(String taskConfigurationPath) throws TaskSystemException, IOException, FileNotFoundException {
         ConfigurationLocator mockConfigurationLocator = createMock(ConfigurationLocator.class);
-        expect(mockConfigurationLocator.getFile(SchedulerConstants.CONFIGURATION_FILE_NAME)).andReturn(
-                new ClassPathResource(taskConfigurationPath).getFile());
+        expect(mockConfigurationLocator.getFileInputStream(SchedulerConstants.CONFIGURATION_FILE_NAME)).andReturn(
+                MifosResourceUtil.getClassPathResourceAsStream(taskConfigurationPath));
         expectLastCall().times(2);
         replay(mockConfigurationLocator);
         MifosScheduler mifosScheduler = new MifosScheduler();

@@ -30,6 +30,7 @@ import org.mifos.customers.personnel.business.service.PersonnelService;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.dto.domain.ChangePasswordRequest;
 import org.mifos.dto.domain.LoginDto;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
 import org.mifos.security.MifosUser;
@@ -38,6 +39,7 @@ import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 /**
  *
@@ -59,7 +61,7 @@ public class LoginServiceFacadeWebTier implements NewLoginServiceFacade {
 
         PersonnelBO user = this.personnelDao.findPersonnelByUsername(username);
         if (user == null) {
-            throw new BusinessRuleException(LoginConstants.KEYINVALIDUSER);
+            throw new UsernameNotFoundException(LoginConstants.KEYINVALIDUSER);
         }
 
         Locale preferredLocale = Localization.getInstance().getConfiguredLocale();
@@ -85,6 +87,9 @@ public class LoginServiceFacadeWebTier implements NewLoginServiceFacade {
             this.transactionHelper.commitTransaction();
 
             return new LoginDto(user.getPersonnelId(), user.getOffice().getOfficeId(), user.isPasswordChanged());
+        } catch (ApplicationException e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new BusinessRuleException(e.getKey(), e);
         } catch (Exception e) {
             this.transactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(e);

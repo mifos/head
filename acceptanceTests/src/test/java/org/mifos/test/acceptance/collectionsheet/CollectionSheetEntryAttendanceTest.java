@@ -73,7 +73,6 @@ public class CollectionSheetEntryAttendanceTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    @Test(sequential = true, groups = {"smoke"})
     public void defaultAdminUserEntersAttendanceData() throws Exception {
         enterAndVerifyBasicAttendanceData();
     }

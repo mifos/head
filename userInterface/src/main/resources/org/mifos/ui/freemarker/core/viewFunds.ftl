@@ -22,7 +22,7 @@
 [@adminLeftPaneLayout]
 <!--  Main Content Begins-->
 <div class=" content">
-    <span id="page.id" title="viewFunds"/>
+    <span id="page.id" title="viewFunds"></span>
 [@mifos.crumb "organizationPreferences.viewfunds"/]
     <div class="margin20lefttop">
         <p class="font15 orangeheading margin5top10bottom">[@spring.message "organizationPreferences.viewfunds"/]</p>

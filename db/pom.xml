@@ -2,33 +2,74 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <artifactId>mifos-db</artifactId>
-    <name>Mifos - DB Management</name>
     <modelVersion>4.0.0</modelVersion>
+    <groupId>org.mifos</groupId>
+    <artifactId>mifos-db</artifactId>
+    <packaging>jar</packaging>
+    <version>1.9-SNAPSHOT</version>
+    <name>Mifos - DB Management</name>
 
     <parent>
         <artifactId>mifos-parent</artifactId>
         <groupId>org.mifos</groupId>
-        <version>1.8-SNAPSHOT</version>
+        <version>1.9-SNAPSHOT</version>
     </parent>
 
     <properties>
         <modules.root.dir>${basedir}/..</modules.root.dir>
-        <integration.database.properties.file>${modules.root.dir}/application/src/test/resources/org/mifos/config/resources/integrationDatabase.properties</integration.database.properties.file>
+        <integration.database.properties.file>
+            ${modules.root.dir}/application/src/test/resources/org/mifos/config/resources/integrationDatabase.properties
+        </integration.database.properties.file>
         <mifos.overrides.home>${user.home}/.mifos/local.properties</mifos.overrides.home>
-        <sql.resources.target.directory>${basedir}/src/main/sql</sql.resources.target.directory>
-        <!--A very large number for rollback count-->
+        <sql.resources.main.directory>${basedir}/src/main/resources/sql</sql.resources.main.directory>
+        <sql.resources.test.directory>${basedir}/src/test/resources/sql</sql.resources.test.directory>
+        <!--A large number for rollback count-->
         <liquibase.rollbackCount>1000</liquibase.rollbackCount>
-        <liquibase.migrationSqlOutputFile>target/classes/update-master.sql</liquibase.migrationSqlOutputFile>
+        <liquibase.jar.path>${settings.localRepository}/org/liquibase/liquibase-core/${liquibase.version}</liquibase.jar.path>
+        <mysql.connector.jar.path>${settings.localRepository}/mysql/mysql-connector-java/${mysql.connector.version}</mysql.connector.jar.path>
     </properties>
 
     <dependencies>
         <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mifos</groupId>
+            <artifactId>mifos-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-c3p0</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+        </dependency>
+        <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
+    <!--TODO: DB updates/rollbacks must not happen if tests are skipped-->
     <build>
         <resources>
             <resource>
@@ -37,6 +78,119 @@
             </resource>
         </resources>
         <plugins>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-properties</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/release/db</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${basedir}/../db/bin/</directory>
+                                    <includes>
+                                        <include>mifos-db-template.properties</include>
+                                    </includes>
+                                    <filtering>false</filtering>
+                                </resource>
+                            </resources>
+                            <encoding>UTF-8</encoding>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-changesets</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                        <outputDirectory>${basedir}/target/release/db/changesets</outputDirectory>
+                        <resources>
+                                <resource>
+                                    <directory>${basedir}/../db/src/main/resources/changesets</directory>
+                                    <includes>
+                                        <include>*.xml</include>
+                                    </includes>
+                                    <filtering>false</filtering>
+                                </resource>
+                            </resources>
+                            <encoding>UTF-8</encoding>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-bin</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/release/db/bin</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${basedir}/../db/bin</directory>
+                                    <includes>
+                                        <include>*.sh</include>
+                                        <include>*.bat</include>
+                                    </includes>
+                                    <filtering>false</filtering>
+                                </resource>
+                            </resources>
+                            <encoding>UTF-8</encoding>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-sql</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/release/db/sql</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${basedir}/../db/src/main/resources/sql</directory>
+                                    <includes>
+                                        <include>*.sql</include>
+                                    </includes>
+                                    <filtering>false</filtering>
+                                </resource>
+                            </resources>
+                            <encoding>UTF-8</encoding>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/release/db/lib</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${liquibase.jar.path}</directory>
+                                    <includes>
+                                        <include>liquibase-core-${liquibase.version}.jar</include>
+                                    </includes>
+                                    <filtering>false</filtering>
+                                </resource>
+                                <resource>
+                                    <directory>${mysql.connector.jar.path}</directory>
+                                    <includes>
+                                        <include>mysql-connector-java-${mysql.connector.version}.jar</include>
+                                    </includes>
+                                    <filtering>false</filtering>
+                                </resource>
+                            </resources>
+                            <encoding>UTF-8</encoding>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>properties-maven-plugin</artifactId>
@@ -58,29 +212,14 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.liquibase</groupId>
-                <artifactId>liquibase-maven-plugin</artifactId>
-                <version>2.0.0</version>
-                <configuration>
-                    <propertyFile>target/classes/liquibase.properties</propertyFile>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>update-sql</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>updateSQL</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>sql-maven-plugin</artifactId>
                 <version>1.2</version>
                 <configuration>
                     <driver>com.mysql.jdbc.Driver</driver>
-                    <url>jdbc:mysql://${integration.database.host}:${integration.database.port}/?${integration.database.params}</url>
+                    <url>
+                        jdbc:mysql://${integration.database.host}:${integration.database.port}/?${integration.database.params}
+                    </url>
                     <username>${integration.database.user}</username>
                     <password>${integration.database.password}</password>
                     <autocommit>true</autocommit>
@@ -122,8 +261,9 @@
                         <configuration>
                             <sqlCommand>USE ${integration.database}</sqlCommand>
                             <srcFiles>
-                                <srcFile>${sql.resources.target.directory}/base-schema.sql</srcFile>
-                                <srcFile>${sql.resources.target.directory}/base-data.sql</srcFile>
+                                <srcFile>${sql.resources.main.directory}/base-schema.sql</srcFile>
+                                <srcFile>${sql.resources.main.directory}/base-data.sql</srcFile>
+                                <srcFile>${sql.resources.test.directory}/integration_test_data.sql</srcFile>
                             </srcFiles>
                         </configuration>
                     </execution>

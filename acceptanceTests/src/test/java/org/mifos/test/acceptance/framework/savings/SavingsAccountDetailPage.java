@@ -42,9 +42,15 @@ public class SavingsAccountDetailPage extends AbstractPage {
         Assert.assertTrue(selenium.isTextPresent(amount));
     }
 
+    public void verifyDate(String date){
+        Assert.assertTrue(selenium.isTextPresent(date));
+    }
+
     public void verifySavingsProduct(String savingsProduct) {
         Assert.assertTrue(selenium.isTextPresent(savingsProduct));
-
+    }
+    public void verifyStatus(String status){
+        Assert.assertEquals(selenium.getText("savingsaccountdetail.status.text"),status);
     }
     public AccountAddNotesPage navigateToAddNotesPage() {
         selenium.click("savingsaccountdetail.link.addANotes");
@@ -64,4 +70,9 @@ public class SavingsAccountDetailPage extends AbstractPage {
         return new SavingsDepositWithdrawalPage(selenium);
     }
 
+    public SavingsCloseAccountPage navigateToCloseAccount() {
+        selenium.click("savingsaccountdetail.link.closeAccount");
+        waitForPageToLoad();
+        return new SavingsCloseAccountPage(selenium);
+    }
 }

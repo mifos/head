@@ -236,7 +236,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
                 } else {
                     html.startTag("tr");
                     html.startTag("td", "width", "100%");
-                    html.startTag("table", "width", "95%", "border", "0", "cellspacing", "0", "cellpadding", "5");
+                    html.startTag("table", "id", "installments", "width", "95%", "border", "0", "cellspacing", "0", "cellpadding", "5");
                     html.append(html1);
                     html.endTag("table");
                     html.endTag("td");

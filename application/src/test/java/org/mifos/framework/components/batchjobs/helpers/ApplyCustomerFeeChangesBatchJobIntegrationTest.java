@@ -37,7 +37,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.fees.business.AmountFeeBO;
-import org.mifos.accounts.fees.persistence.FeePersistence;
+import org.mifos.accounts.fees.persistence.FeeDao;
 import org.mifos.accounts.fees.util.helpers.FeeChangeType;
 import org.mifos.accounts.fees.util.helpers.FeeStatus;
 import org.mifos.application.master.business.MifosCurrency;
@@ -68,6 +68,9 @@ public class ApplyCustomerFeeChangesBatchJobIntegrationTest extends MifosIntegra
 
     @Autowired
     private CustomerDao customerDao;
+
+    @Autowired
+    private FeeDao feeDao;
 
     @Autowired
     private DatabaseCleaner databaseCleaner;
@@ -171,7 +174,7 @@ public class ApplyCustomerFeeChangesBatchJobIntegrationTest extends MifosIntegra
         // setup fee and customer_fee_schedule state when fee is inactive
         applyCustomerFeeChanges.execute(timeInMillis);
 
-        weeklyPeriodicFeeForCenterOnly = (AmountFeeBO) new FeePersistence().findFeeById(weeklyPeriodicFeeForCenterOnly.getFeeId());
+        weeklyPeriodicFeeForCenterOnly = (AmountFeeBO) feeDao.findById(weeklyPeriodicFeeForCenterOnly.getFeeId());
         weeklyPeriodicFeeForCenterOnly.updateDetails(TestUtils.makeUser());
         weeklyPeriodicFeeForCenterOnly.updateFeeChangeType(FeeChangeType.STATUS_UPDATED);
         weeklyPeriodicFeeForCenterOnly.updateStatus(FeeStatus.ACTIVE);

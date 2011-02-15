@@ -21,7 +21,7 @@
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
   <!--  Main Content Begins-->
-  <span id="page.id" title="CreateSavingsProductConfirmation" />
+  <span id="page.id" title="CreateSavingsProductConfirmation"></span>
   <div class=" content">
     <p class="orangeheading marginBottom" style="font-size:15px;">[@spring.message "manageSavingsProduct.youhavesuccessfullyaddedanewSavingsproduct"/]</p>
     <p class="marginBottom"><span class="fontBold">[@spring.message "manageLoanProduct.pleaseNote"/]&nbsp;:</span><span>[@spring.message "manageSavingsProduct.SavingsProducthasbeenassignedthesystemIDnumber"/]</span>&nbsp;:<span class="fontBold">${product.globalPrdOfferingNum}</span></p>

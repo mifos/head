@@ -115,10 +115,6 @@ public class TestDatabase implements FactoryBean<TestDatabase> {
             } else {
                 if (!readingConstraints) {
                     tableStart += line + "\n";
-                } else {
-                    // FIXME To see why it's disabled, enable it and run LatestTestAfterCheckpointIntegrationTest
-                    // http://mifosforge.jira.com/browse/MIFOS-2875
-                    // tableEnd += line +"\n";
                 }
             }
         }

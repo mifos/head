@@ -11,11 +11,11 @@
 	IAccountingService accountingService = new AccountingServiceImpl(new AccountingDataCacheManager(), new AccountingDaoImpl());
 	String tallyXML = "FAILED " + (new Date()).toString();
 	try {
-		tallyXML = accountingService.getTallyOutputFor(fromDate, toDate);
+		tallyXML = accountingService.getExportOutput(fromDate, toDate);
 	} catch (Exception e) {
 		e.printStackTrace();
 	}
-	String fileName = accountingService.getTallyOutputFileName(fromDate, toDate);
+	String fileName = accountingService.getExportOutputFileName(fromDate, toDate);
 	response.setHeader("Content-Disposition","attachment;filename=\"" + fileName);
 	response.setContentType("application/octet-stream");
     out.print(tallyXML);

@@ -30,14 +30,13 @@ import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
-import org.mifos.accounts.fees.persistence.FeePersistence;
+import org.mifos.accounts.fees.persistence.FeeDao;
 import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.MeetingFactory;
-import org.mifos.application.util.helpers.EntityType;
 import org.mifos.config.ClientRules;
 import org.mifos.core.CurrencyMismatchException;
 import org.mifos.core.MifosRuntimeException;
@@ -57,8 +56,6 @@ import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
-import org.mifos.customers.surveys.helpers.SurveyType;
-import org.mifos.customers.surveys.persistence.SurveysPersistence;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.AddressDto;
 import org.mifos.dto.domain.ApplicableAccountFeeDto;
@@ -119,6 +116,9 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
 
     @Autowired
     private LegacyMasterDao legacyMasterDao;
+
+    @Autowired
+    private FeeDao feeDao;
 
     @Autowired
     public GroupServiceFacadeWebTier(CustomerService customerService, OfficeDao officeDao,
@@ -194,7 +194,7 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
     }
 
     @Override
-    public CustomerDetailsDto createNewGroup(GroupCreationDetail actionForm, MeetingDto meetingDto) {
+    public CustomerDetailsDto createNewGroup(GroupCreationDetail groupCreationDetail, MeetingDto meetingDto) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = toUserContext(user);
@@ -205,21 +205,21 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
         GroupBO group;
 
         try {
-            List<AccountFeesEntity> feesForCustomerAccount = convertFeeViewsToAccountFeeEntities(actionForm.getFeesToApply());
+            List<AccountFeesEntity> feesForCustomerAccount = convertFeeViewsToAccountFeeEntities(groupCreationDetail.getFeesToApply());
 
-            PersonnelBO formedBy = this.personnelDao.findPersonnelById(actionForm.getLoanOfficerId());
+            PersonnelBO formedBy = this.personnelDao.findPersonnelById(groupCreationDetail.getLoanOfficerId());
 
             Short officeId;
 
-            String groupName = actionForm.getDisplayName();
-            CustomerStatus customerStatus = CustomerStatus.fromInt(actionForm.getCustomerStatus());
-            String externalId = actionForm.getExternalId();
-            boolean trained = actionForm.isTrained();
-            DateTime trainedOn = actionForm.getTrainedOn();
-            DateTime mfiJoiningDate = actionForm.getMfiJoiningDate();
-            DateTime activationDate = actionForm.getActivationDate();
+            String groupName = groupCreationDetail.getDisplayName();
+            CustomerStatus customerStatus = CustomerStatus.fromInt(groupCreationDetail.getCustomerStatus());
+            String externalId = groupCreationDetail.getExternalId();
+            boolean trained = groupCreationDetail.isTrained();
+            DateTime trainedOn = groupCreationDetail.getTrainedOn();
+            DateTime mfiJoiningDate = groupCreationDetail.getMfiJoiningDate();
+            DateTime activationDate = groupCreationDetail.getActivationDate();
 
-            AddressDto dto = actionForm.getAddressDto();
+            AddressDto dto = groupCreationDetail.getAddressDto();
             Address address = null;
             if (dto != null) {
                 address = new Address(dto.getLine1(), dto.getLine2(), dto.getLine3(), dto.getCity(), dto.getState(), dto.getCountry(), dto.getZip(), dto.getPhoneNumber());
@@ -233,7 +233,7 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
 
             if (ClientRules.getCenterHierarchyExists()) {
 
-                CenterBO parentCustomer = this.customerDao.findCenterBySystemId(actionForm.getParentSystemId());
+                CenterBO parentCustomer = this.customerDao.findCenterBySystemId(groupCreationDetail.getParentSystemId());
 //                loanOfficerId = parentCustomer.getPersonnel().getPersonnelId();
                 officeId = parentCustomer.getOffice().getOfficeId();
 
@@ -244,10 +244,10 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
             } else {
 
                 // create group without center as parent
-                Short loanOfficerId = actionForm.getLoanOfficerId() != null ? actionForm.getLoanOfficerId() : userContext.getId();
-                officeId = actionForm.getOfficeId();
+                Short loanOfficerId = groupCreationDetail.getLoanOfficerId() != null ? groupCreationDetail.getLoanOfficerId() : userContext.getId();
+                officeId = groupCreationDetail.getOfficeId();
 
-                OfficeBO office = this.officeDao.findOfficeById(actionForm.getOfficeId());
+                OfficeBO office = this.officeDao.findOfficeById(groupCreationDetail.getOfficeId());
                 PersonnelBO loanOfficer = this.personnelDao.findPersonnelById(loanOfficerId);
 
                 int numberOfCustomersInOfficeAlready = customerDao.retrieveLastSearchIdValueForNonParentCustomersInOffice(officeId);
@@ -268,7 +268,7 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
     private List<AccountFeesEntity> convertFeeViewsToAccountFeeEntities(List<ApplicableAccountFeeDto> feesToApply) {
         List<AccountFeesEntity> feesForCustomerAccount = new ArrayList<AccountFeesEntity>();
         for (ApplicableAccountFeeDto feeDto : feesToApply) {
-            FeeBO fee = new FeePersistence().getFee(feeDto.getFeeId().shortValue());
+            FeeBO fee = feeDao.findById(feeDto.getFeeId().shortValue());
             Double feeAmount = new LocalizationConverter().getDoubleValueForCurrentLocale(feeDto.getAmount());
 
             AccountBO nullReferenceForNow = null;
@@ -325,12 +325,11 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
 
         CustomerMeetingDto customerMeeting = this.customerDao.getCustomerMeetingDto(group.getCustomerMeeting(), userContext);
 
-        boolean activeSurveys = new SurveysPersistence().isActiveSurveysForSurveyType(SurveyType.GROUP);
+        boolean activeSurveys = false;
+//        boolean activeSurveys = new SurveysPersistence().isActiveSurveysForSurveyType(SurveyType.GROUP);
 
-        List<SurveyDto> customerSurveys = this.customerDao.getCustomerSurveyDto(groupId);
-
-        List<CustomFieldDto> customFields = this.customerDao.getCustomFieldViewForCustomers(groupId, EntityType.GROUP
-                .getValue(), userContext);
+        List<SurveyDto> customerSurveys = new ArrayList<SurveyDto>();
+        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
 
         return new GroupInformationDto(groupDisplay, customerAccountSummary, groupPerformanceHistory, groupAddress,
                 clients, recentCustomerNotes, customerPositions, customerFlags, loanDetail, savingsDetail,
@@ -660,5 +659,13 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
             Short recordLoanOfficerId) {
         return ActivityMapper.getInstance().isAddingHistoricaldataPermittedForCustomers(customerLevel, userContext,
                 recordOfficeId, recordLoanOfficerId);
+    }
+
+    public void setLegacyMasterDao(LegacyMasterDao legacyMasterDao) {
+        this.legacyMasterDao = legacyMasterDao;
+    }
+
+    public void setTransactionHelper(HibernateTransactionHelper transactionHelper) {
+        this.transactionHelper = transactionHelper;
     }
 }

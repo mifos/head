@@ -28,9 +28,6 @@ public class ApplyPaymentConfirmationPage extends AbstractPage {
 
     public ApplyPaymentConfirmationPage(Selenium selenium) {
         super(selenium);
-    }
-
-    public void verifyPage() {
         this.verifyPage("ReviewApplyPayment");
     }
 

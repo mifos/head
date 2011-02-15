@@ -39,9 +39,7 @@ import org.mifos.customers.util.helpers.CustomerSearchConstants;
 import org.mifos.framework.exceptions.TableTagException;
 import org.mifos.framework.exceptions.TableTagTypeParserException;
 import org.mifos.framework.util.helpers.SearchObject;
-import org.testng.annotations.Test;
 
-@Test(groups = { "unit", "fastTestsSuite" }, dependsOnGroups = { "productMixTestSuite" })
 public class TableTagTest extends TestCase {
 
     public void testNoResults() throws Exception {

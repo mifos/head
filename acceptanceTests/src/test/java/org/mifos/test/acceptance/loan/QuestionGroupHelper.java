@@ -1,11 +1,11 @@
 package org.mifos.test.acceptance.loan;
 
 import org.mifos.test.acceptance.framework.admin.AdminPage;
+import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionGroupPage;
+import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionGroupParameters;
+import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionPage;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
-import org.mifos.test.acceptance.questionnaire.CreateQuestionGroupPage;
-import org.mifos.test.acceptance.questionnaire.CreateQuestionGroupParameters;
-import org.mifos.test.acceptance.questionnaire.CreateQuestionPage;
-import org.mifos.test.acceptance.questionnaire.CreateQuestionParameters;
+import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionParameters;
 
 import java.util.List;
 
@@ -21,14 +21,16 @@ public class QuestionGroupHelper {
 
     public void createQuestionGroup(String questionGroupTitle, String question1, String question2, String appliesTo) {
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
-        CreateQuestionPage createQuestionPage = adminPage.navigateToCreateQuestionPage().verifyPage();
+        CreateQuestionPage createQuestionPage = adminPage.navigateToCreateQuestionPage();
         createQuestionPage.addQuestion(getCreateQuestionParams(question1, CreateClientLoanAccountTest.DATE, null));
         createQuestionPage.addQuestion(getCreateQuestionParams(question2, CreateClientLoanAccountTest.SINGLE_SELECT, asList("Choice1", "Choice2")));
         adminPage = createQuestionPage.submitQuestions();
 
-        CreateQuestionGroupPage createQuestionGroupPage = adminPage.navigateToCreateQuestionGroupPage().verifyPage();
+        CreateQuestionGroupPage createQuestionGroupPage = adminPage.navigateToCreateQuestionGroupPage();
         CreateQuestionGroupParameters parameters = getCreateQuestionGroupParameters(questionGroupTitle, question1, question2, appliesTo);
-        createQuestionGroupPage.addSection(parameters);
+        for(String section : parameters.getExistingQuestions().keySet()){
+            createQuestionGroupPage.addExistingQuestion(section, parameters.getExistingQuestions().get(section));
+        }
         createQuestionGroupPage.markEveryOtherQuestionsMandatory(asList(question1));
         createQuestionGroupPage.submit(parameters);
     }
@@ -46,8 +48,8 @@ public class QuestionGroupHelper {
         parameters.setTitle(questionGroupTitle);
         parameters.setAppliesTo(appliesTo);
         parameters.setAnswerEditable(true);
-        parameters.setSectionName("Default Section");
-        parameters.setQuestions(asList(question1, question2));
+        parameters.addExistingQuestion("Default Section", question1);
+        parameters.addExistingQuestion("Default Section", question2);
         return parameters;
     }
 }

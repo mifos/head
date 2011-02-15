@@ -21,6 +21,7 @@
 package org.mifos.test.acceptance.framework.center;
 
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -72,7 +73,8 @@ public class CreateCenterEnterDataPage extends MifosPage {
         meetingPage.verifyPage("createmeeting");
         return meetingPage;
     }
-    public CreateCenterPreviewDataPage submitAndGotoCreateCenterPreviewDataPage(SubmitFormParameters parameters) {
+
+    private void submit(SubmitFormParameters parameters) {
         typeTextIfNotEmpty("createnewcenter.input.name", parameters.getCenterName());
         selectIfNotEmpty("loanOfficerId", parameters.getLoanOfficer());
         selenium.click("createnewcenter.link.meetingSchedule");
@@ -81,6 +83,15 @@ public class CreateCenterEnterDataPage extends MifosPage {
         meetingPage.submitAndGotoCreateCenterEnterDataPage(parameters.getMeeting());
         selenium.click("createnewcenter.button.preview");
         waitForPageToLoad();
+    }
+
+    public CreateCenterPreviewDataPage submitAndGotoCreateCenterPreviewDataPage(SubmitFormParameters parameters) {
+        submit(parameters);
         return new CreateCenterPreviewDataPage(selenium);
+    }
+
+    public QuestionResponsePage submitAndNavigateToQuestionResponsePage(SubmitFormParameters parameters) {
+        submit(parameters);
+        return new QuestionResponsePage(selenium);
     }
 }

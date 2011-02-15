@@ -24,6 +24,7 @@ import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.center.CreateCenterEnterDataPage.SubmitFormParameters;
 import org.mifos.test.acceptance.framework.loan.AttachSurveyPage;
 import org.mifos.test.acceptance.framework.loan.ClosedAccountsPage;
+import org.mifos.test.acceptance.framework.questionnaire.ViewQuestionResponseDetailPage;
 import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
@@ -70,5 +71,11 @@ public class CenterViewDetailsPage extends MifosPage {
         selenium.click("viewCenterDetails.link.attachSurvey");
         waitForPageToLoad();
         return new AttachSurveyPage(selenium);
+    }
+
+    public ViewQuestionResponseDetailPage navigateToViewAdditionalInformation() {
+        selenium.click("groupdetail.link.questionGroups");
+        waitForPageToLoad();
+        return new ViewQuestionResponseDetailPage(selenium);
     }
 }

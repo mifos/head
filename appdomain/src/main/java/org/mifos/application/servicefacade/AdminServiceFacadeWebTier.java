@@ -35,7 +35,7 @@ import org.mifos.accounts.acceptedpaymenttype.business.TransactionTypeEntity;
 import org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentTypeDao;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.fees.business.FeeBO;
-import org.mifos.accounts.fees.persistence.FeePersistence;
+import org.mifos.accounts.fees.persistence.FeeDao;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.financial.business.service.FinancialBusinessService;
 import org.mifos.accounts.financial.business.service.GeneralLedgerDao;
@@ -62,7 +62,7 @@ import org.mifos.accounts.productdefinition.business.service.SavingsPrdBusinessS
 import org.mifos.accounts.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.productdefinition.persistence.PrdOfferingPersistence;
-import org.mifos.accounts.productdefinition.persistence.ProductCategoryPersistence;
+import org.mifos.accounts.productdefinition.persistence.LegacyProductCategoryDao;
 import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
 import org.mifos.accounts.productdefinition.util.helpers.PrdCategoryStatus;
@@ -70,7 +70,7 @@ import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConsta
 import org.mifos.accounts.productdefinition.util.helpers.ProductType;
 import org.mifos.accounts.productsmix.business.ProductMixBO;
 import org.mifos.accounts.productsmix.business.service.ProductMixBusinessService;
-import org.mifos.accounts.productsmix.persistence.ProductMixPersistence;
+import org.mifos.accounts.productsmix.persistence.LegacyProductMixDao;
 import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
@@ -165,10 +165,19 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     private LoanProductAssembler loanProductAssembler;
 
     @Autowired
+    private FeeDao feeDao;
+
+    @Autowired
     private LegacyAcceptedPaymentTypeDao legacyAcceptedPaymentTypeDao;
 
     @Autowired
+    private LegacyProductCategoryDao legacyProductCategoryDao;
+
+    @Autowired
     LegacyMasterDao legacyMasterDao;
+
+    @Autowired
+    LegacyProductMixDao legacyProductMixDao;
 
     @Autowired
     LegacyFieldConfigurationDao legacyFieldConfigurationDao;
@@ -1291,7 +1300,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
             StringBuilder globalPrdOfferingNum = new StringBuilder();
             globalPrdOfferingNum.append(userContext.getBranchId());
             globalPrdOfferingNum.append("-");
-            Short maxPrdID = new ProductCategoryPersistence().getMaxPrdCategoryId();
+            Short maxPrdID = legacyProductCategoryDao.getMaxPrdCategoryId();
             globalPrdOfferingNum.append(StringUtils.leftPad(String.valueOf(maxPrdID != null ? maxPrdID + 1
                     : ProductDefinitionConstants.DEFAULTMAX), 3, '0'));
             String globalNumber = globalPrdOfferingNum.toString();
@@ -1436,14 +1445,14 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
 
             for (ProductMixBO oldNotAllowedProduct : product.getCollectionProductMix() ) {
 
-                ProductMixBO productMix = new ProductMixPersistence().getPrdOfferingMixByPrdOfferingID(productId
+                ProductMixBO productMix = legacyProductMixDao.getPrdOfferingMixByPrdOfferingID(productId
                         .shortValue(), oldNotAllowedProduct.getPrdOfferingNotAllowedId().getPrdOfferingId());
 
                 if (null != productMix) {
                     applicationConfigurationDao.delete(productMix);
                     StaticHibernateUtil.flushSession();
                 }
-                ProductMixBO alternateproductmix = new ProductMixPersistence().getPrdOfferingMixByPrdOfferingID(
+                ProductMixBO alternateproductmix = legacyProductMixDao.getPrdOfferingMixByPrdOfferingID(
                         oldNotAllowedProduct.getPrdOfferingNotAllowedId().getPrdOfferingId(), productId.shortValue());
 
                 if (null != alternateproductmix) {
@@ -1515,7 +1524,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
             }
 
             List<ListElement> timePeriodOptions = new ArrayList<ListElement>();
-            List<RecurrenceTypeEntity> applicableRecurrences = service.getSavingsApplicableRecurrenceTypes();
+            List<RecurrenceTypeEntity> applicableRecurrences = savingsProductDao.getSavingsApplicableRecurrenceTypes();
             for (RecurrenceTypeEntity entity : applicableRecurrences) {
                 timePeriodOptions.add(new ListElement(entity.getRecurrenceId().intValue(), entity.getRecurrenceName()));
             }
@@ -1582,7 +1591,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
             }
 
             List<ListElement> loanFee = new ArrayList<ListElement>();
-            List<FeeBO> fees = new FeePersistence().getAllAppllicableFeeForLoanCreation();
+            List<FeeBO> fees = feeDao.getAllAppllicableFeeForLoanCreation();
             for (FeeBO fee : fees) {
                 loanFee.add(new ListElement(fee.getFeeId().intValue(), fee.getFeeName()));
             }

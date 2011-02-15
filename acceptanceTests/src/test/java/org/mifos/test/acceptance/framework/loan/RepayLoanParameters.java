@@ -22,6 +22,8 @@ package org.mifos.test.acceptance.framework.loan;
 
 public class RepayLoanParameters {
     public static final String CASH = "Cash";
+    public static final String VOUCHER = "Voucher";
+    public static final String CHEQUE = "Cheque";
 
     private String modeOfRepayment;
     private String receiptId;
@@ -66,7 +68,8 @@ public class RepayLoanParameters {
     @SuppressWarnings("PMD.OnlyOneReturn")
     public int getModeOfRepaymentValue() {
         if (CASH.equals(modeOfRepayment)) { return 1; }
-
+        if (VOUCHER.equals(modeOfRepayment)) { return 2; }
+        if (CHEQUE.equals(modeOfRepayment)) { return 3; }
         return 0;
     }
 }

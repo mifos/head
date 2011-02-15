@@ -20,9 +20,8 @@
 
 package org.mifos.config;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
+import java.io.InputStream;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -44,9 +43,10 @@ import org.mifos.accounts.financial.business.COABO;
 import org.mifos.accounts.financial.business.GLCategoryType;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.config.exceptions.ConfigurationException;
-import org.mifos.core.ClasspathResource;
+import org.mifos.core.MifosResourceUtil;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.ConfigurationLocator;
+import org.springframework.core.io.ClassPathResource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -89,17 +89,26 @@ public class ChartOfAccountsConfig {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder parser = dbf.newDocumentBuilder();
             if (FilePaths.CHART_OF_ACCOUNTS_DEFAULT.equals(chartOfAccountsXml)) { // default chart of accounts
-                document = parser.parse(new File(ClasspathResource.getURI(chartOfAccountsXml)));
+                document = parser.parse(MifosResourceUtil.getClassPathResourceAsStream(chartOfAccountsXml));
             }
             else { // custom chart of accounts
-                document = parser.parse(new File(chartOfAccountsXml));
+                document = parser.parse(MifosResourceUtil.getFile(chartOfAccountsXml));
             }
 
             // create a SchemaFactory capable of understanding XML schemas
             SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 
             // load an XML schema
-            Source schemaFile = new StreamSource(new File(ClasspathResource.getURI(FilePaths.CHART_OF_ACCOUNTS_SCHEMA)));
+            ClassPathResource schemaFileResource = new ClassPathResource(FilePaths.CHART_OF_ACCOUNTS_SCHEMA);
+
+            Source schemaFile = null;
+            if (schemaFileResource.exists()) {
+                InputStream in = ChartOfAccountsConfig.class.getClassLoader().getResourceAsStream(FilePaths.CHART_OF_ACCOUNTS_SCHEMA);
+                schemaFile = new StreamSource(in);
+            } else {
+                schemaFile = new StreamSource(MifosResourceUtil.getFile(FilePaths.CHART_OF_ACCOUNTS_SCHEMA));
+            }
+
             Schema schema = factory.newSchema(schemaFile);
 
             // create a Validator instance and validate document
@@ -108,8 +117,6 @@ public class ChartOfAccountsConfig {
         } catch (IOException e) {
             throw new ConfigurationException(e);
         } catch (SAXException e) {
-            throw new ConfigurationException(e);
-        } catch (URISyntaxException e) {
             throw new ConfigurationException(e);
         } catch (ParserConfigurationException e) {
             throw new ConfigurationException(e);
@@ -131,13 +138,13 @@ public class ChartOfAccountsConfig {
      *
      * @param session Session
      * @return relative path to Chart of Accounts config file that the
-     *         {@link ClasspathResource} can use to derive the actual on-disk
+     *         {@link MifosResourceUtil} can use to derive the actual on-disk
      *         location.
      */
     public static String getCoaUri(Session session) {
-        String customCoaPath;
+        InputStream customCoaPath;
         try {
-            customCoaPath = new ConfigurationLocator().getFilePath(FilePaths.CHART_OF_ACCOUNTS_CUSTOM);
+            customCoaPath = new ConfigurationLocator().getFileInputStream(FilePaths.CHART_OF_ACCOUNTS_CUSTOM);
         } catch (IOException e) {
             customCoaPath = null;
         }
@@ -145,7 +152,7 @@ public class ChartOfAccountsConfig {
         final boolean customCoaExists = customCoaPath != null;
 
         if (customCoaExists) {
-            return customCoaPath;
+            return FilePaths.CHART_OF_ACCOUNTS_CUSTOM;
         }
 
         // if data exists in the database, the only way to add GL accounts is

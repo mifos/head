@@ -22,7 +22,7 @@
 [@adminLeftPaneLayout]
   <!--  Main Content Begins-->
   <div class=" content">
-      <span id="page.id" title="viewProductsMix" />
+      <span id="page.id" title="viewProductsMix"></span>
           [@mifos.crumbs breadcrumbs/]
         <div class="margin20lefttop">
             <form method="" action="" name="formname">

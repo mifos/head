@@ -4,7 +4,7 @@
 
 	<groupId>org.mifos</groupId>
 	<artifactId>mifos-war</artifactId>
-	<version>1.8-SNAPSHOT</version>
+	<version>1.9-SNAPSHOT</version>
 	<packaging>war</packaging>
 
 	<name>Mifos - WAR</name>
@@ -13,7 +13,7 @@
 	<parent>
 		<groupId>org.mifos</groupId>
 		<artifactId>mifos-parent</artifactId>
-		<version>1.8-SNAPSHOT</version>
+		<version>1.9-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -21,7 +21,7 @@
 		<dependency>
 			<groupId>org.mifos</groupId>
 			<artifactId>mifos-webapp</artifactId>
-			<version>1.8-SNAPSHOT</version>
+			<version>1.9-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 
@@ -30,6 +30,14 @@
 		<defaultGoal>war:war</defaultGoal>
 
 		<plugins>
+		    <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.1.1</version>
+                <configuration>
+                <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
+            </plugin>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>2.2-beta-3</version>

@@ -31,7 +31,7 @@ explanation of the license and how it is applied.
 <!-- Tile  definitions -->
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
-	<span id="page.id" title="createnewcenter" />
+	<span id="page.id" title="createnewcenter"></span>
 	
 	
 	<fmt:setLocale value='${sessionScope["LOCALE"]}'/>

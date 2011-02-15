@@ -27,10 +27,10 @@ explanation of the license and how it is applied.
 <head>
 <title>Mifos</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link href="pages/framework/css/cssstyle.css" rel="stylesheet" type="text/css">
+<link href="pages/css/cssstyle.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-<span id="page.id" title="Login"/>	
+<span id="page.id" title="Login"></span>	
 <html-el:form action="/loginAction.do" focus="userName">
 
 	<table width="100%" border="0" cellspacing="0" cellpadding="0">

@@ -55,7 +55,7 @@
 [@mifos.topNavigationNoSecurity currentTab="Admin" /]
 [#assign savings][@mifostag.mifoslabel name="Savings" /][/#assign]
   <!--  Main Content Begins-->
-  <span id="page.id" title="Edit_SavingsProduct" />
+  <span id="page.id" title="Edit_SavingsProduct"></span>
 <div class="content definePageMargin">
     <div class="borders margin20lefttop width90prc">
         <div class="borderbtm width100prc height25px">

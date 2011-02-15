@@ -14,11 +14,11 @@ import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mifos.core.MifosResourceUtil;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.components.batchjobs.exceptions.TaskSystemException;
 import org.mifos.framework.util.ConfigurationLocator;
 import org.springframework.batch.core.explore.JobExplorer;
-import org.springframework.core.io.ClassPathResource;
 public class TaskRunningIntegrationTest extends MifosIntegrationTestCase {
 
     MifosScheduler mifosScheduler;
@@ -87,7 +87,7 @@ public class TaskRunningIntegrationTest extends MifosIntegrationTestCase {
     private MifosScheduler getMifosScheduler(String taskConfigurationPath) throws TaskSystemException, IOException, FileNotFoundException {
         ConfigurationLocator mockConfigurationLocator = createMock(ConfigurationLocator.class);
         expect(mockConfigurationLocator.getFile(SchedulerConstants.CONFIGURATION_FILE_NAME)).andReturn(
-                new ClassPathResource(taskConfigurationPath).getFile());
+                MifosResourceUtil.getClassPathResource(taskConfigurationPath));
         expectLastCall().times(2);
         replay(mockConfigurationLocator);
         MifosScheduler mifosScheduler = new MifosScheduler();
@@ -99,9 +99,9 @@ public class TaskRunningIntegrationTest extends MifosIntegrationTestCase {
     private MifosScheduler getMifosSchedulerOldConfigurationFile(String taskFilePath, String quartzFilePath) throws IOException, TaskSystemException {
         ConfigurationLocator mockConfigurationLocator = createMock(ConfigurationLocator.class);
         expect(mockConfigurationLocator.getFile(SchedulerConstants.CONFIGURATION_FILE_NAME)).andReturn(
-                new ClassPathResource(taskFilePath).getFile());
+                MifosResourceUtil.getClassPathResource(taskFilePath));
         expect(mockConfigurationLocator.getFile(SchedulerConstants.SCHEDULER_CONFIGURATION_FILE_NAME)).andReturn(
-                new ClassPathResource(quartzFilePath).getFile());
+                MifosResourceUtil.getClassPathResource(quartzFilePath));
         replay(mockConfigurationLocator);
         MifosScheduler mifosScheduler = new MifosScheduler();
         mifosScheduler.setConfigurationLocator(mockConfigurationLocator);

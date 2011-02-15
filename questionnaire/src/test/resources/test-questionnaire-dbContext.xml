@@ -16,23 +16,19 @@
     <bean id="configurationLocator" class="org.mifos.framework.util.ConfigurationLocator">
        <property name="defaultConfigPath" value="/"/>
     </bean>
-    <bean id="defaultIntegrationTestProperties" factory-bean="configurationLocator" factory-method="getSpringFilePath">
-        <constructor-arg value="integrationDatabase.properties"/>
-    </bean>
-    <bean id="customIntegrationTestProperties" factory-bean="configurationLocator" factory-method="getSpringFilePath">
+
+    <bean id="customIntegrationTestProperties" factory-bean="configurationLocator" factory-method="getCustomFilePath">
         <constructor-arg value="local.properties"/>
     </bean>
-    <bean id="questionnaireProperties" factory-bean="configurationLocator" factory-method="getSpringFilePath">
-        <constructor-arg value="questionnaire.properties"/>
-    </bean>
+
     <bean id="integrationPropertyConfigurer"
           class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="ignoreResourceNotFound" value="true"/>
         <property name="locations">
             <list>
-                <ref bean="defaultIntegrationTestProperties"/>
+                <value>classpath:integrationDatabase.properties</value>
                 <ref bean="customIntegrationTestProperties"/>
-                <ref bean="questionnaireProperties"/>
+                <value>classpath:questionnaire.properties</value>
             </list>
         </property>
     </bean>

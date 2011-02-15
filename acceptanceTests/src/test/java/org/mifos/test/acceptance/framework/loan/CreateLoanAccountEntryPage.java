@@ -26,7 +26,7 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.mifos.test.acceptance.framework.AbstractPage;
 import org.mifos.test.acceptance.framework.HomePage;
-import org.mifos.test.acceptance.questionnaire.QuestionResponsePage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 import org.testng.Assert;
 
 public class CreateLoanAccountEntryPage extends AbstractPage {
@@ -50,6 +50,7 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
 
     public CreateLoanAccountEntryPage(Selenium selenium) {
         super(selenium);
+        verifyPage("LoanCreationDetail");
     }
 
     public CreateLoanAccountConfirmationPage submitAndNavigateToLoanAccountConfirmationPage(CreateLoanAccountSubmitParameters formParameters) {
@@ -117,7 +118,15 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
             selenium.select("monthRank", formParameters.getLsimMonthRank());
             selenium.select("monthWeek", formParameters.getLsimWeekDay());
         }
-
+        if (formParameters.getDd() != null){
+            selenium.type("disbursementDateDD", formParameters.getDd());
+        }
+        if (formParameters.getMm() != null){
+            selenium.type("disbursementDateDD", formParameters.getMm());
+        }
+        if (formParameters.getYy() != null){
+            selenium.type("disbursementDateDD", formParameters.getYy());
+        }
         submit();
     }
 
@@ -136,6 +145,17 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
     private void submit() {
         selenium.click(continueButton);
         waitForPageToLoad();
+    }
+
+    public LoanAccountPage continuePreviewSubmitAndNavigateToDetailsPage() {
+        submit();
+        selenium.click("schedulePreview.button.preview");
+        waitForPageToLoad();
+        selenium.click("createloanpreview.button.submitForApproval");
+        waitForPageToLoad();
+        selenium.click("CreateLoanAccountConfirmation.link.viewLoanDetails");
+        waitForPageToLoad();
+        return new LoanAccountPage(selenium);
     }
 
     public HomePage navigateToHomePage(){
@@ -275,5 +295,20 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
             selenium.select("selectedFee[" + index + "].feeId","--Select--");
         }
         return this;
+    }
+
+    public void verifyAllowedAmounts(String min, String max, String def) {
+        Assert.assertTrue(selenium.isTextPresent("(Allowed Amount:   "+min+"   -   "+max+" )"));
+        Assert.assertEquals(selenium.getValue("loancreationdetails.input.sumLoanAmount"), def);
+    }
+
+    public void verifyAllowedInterestRate(String min, String max, String def) {
+        Assert.assertTrue(selenium.isTextPresent("(Allowed Interest rate amount   "+min+"   -   "+max+" %)"));
+        Assert.assertEquals(selenium.getValue("loancreationdetails.input.interestRate"), def);
+    }
+
+    public void verifyAllowedInstallments(String min, String max, String def) {
+        Assert.assertTrue(selenium.isTextPresent("(Allowed Number of Installments:   "+min+"   -   "+max+" )"));
+        Assert.assertEquals(selenium.getValue("loancreationdetails.input.numberOfInstallments"), def);
     }
 }

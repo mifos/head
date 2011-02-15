@@ -5,7 +5,7 @@ import static org.mockito.Mockito.when;
 
 import org.junit.Test;
 import org.mifos.accounts.productdefinition.persistence.PrdOfferingPersistence;
-import org.mifos.accounts.productdefinition.persistence.SavingsPrdPersistence;
+import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.accounts.productdefinition.util.helpers.PrdCategoryStatus;
 import org.mifos.accounts.productdefinition.util.helpers.ProductType;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -14,7 +14,7 @@ import org.springframework.test.annotation.ExpectedException;
 
 public class SavingsPrdBusinessServiceTest {
     final PrdOfferingPersistence prdOfferingPersistence = mock(PrdOfferingPersistence.class);
-    final SavingsPrdPersistence savingsPrdPersistence = mock(SavingsPrdPersistence.class);
+    final SavingsProductDao savingsProductDao = mock(SavingsProductDao.class);
 
     SavingsPrdBusinessService service = new SavingsPrdBusinessService() {
         @Override
@@ -23,8 +23,8 @@ public class SavingsPrdBusinessServiceTest {
         }
 
         @Override
-        protected SavingsPrdPersistence getSavingsPersistence() {
-            return savingsPrdPersistence;
+        protected SavingsProductDao getSavingsProductDao() {
+            return savingsProductDao;
         }
     };
 
@@ -48,30 +48,6 @@ public class SavingsPrdBusinessServiceTest {
             when(prdOfferingPersistence.getApplicablePrdStatus(ProductType.SAVINGS, localeId)).
                     thenThrow(new PersistenceException("some exception"));
             service.getApplicablePrdStatus(localeId);
-            junit.framework.Assert.fail("should fail because of invalid session");
-        } catch (ServiceException e) {
-        }
-    }
-
-    @Test
-    @ExpectedException(value = ServiceException.class)
-    public void testInvalidConnectionForGetAllSavingsProducts() throws PersistenceException {
-        try {
-            when(savingsPrdPersistence.getAllSavingsProducts()).
-                    thenThrow(new PersistenceException("some exception"));
-            service.getAllSavingsProducts();
-            junit.framework.Assert.fail("should fail because of invalid session");
-        } catch (ServiceException e) {
-        }
-    }
-
-    @Test
-    @ExpectedException(value = ServiceException.class)
-    public void testInvalidConnectionForGetSavingsApplicableRecurrenceTypes() throws PersistenceException {
-        try {
-            when(savingsPrdPersistence.getSavingsApplicableRecurrenceTypes()).
-                    thenThrow(new PersistenceException("some exception"));
-            service.getSavingsApplicableRecurrenceTypes();
             junit.framework.Assert.fail("should fail because of invalid session");
         } catch (ServiceException e) {
         }

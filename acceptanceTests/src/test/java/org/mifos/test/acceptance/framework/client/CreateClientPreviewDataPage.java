@@ -26,19 +26,9 @@ import com.thoughtworks.selenium.Selenium;
 
 public class CreateClientPreviewDataPage extends MifosPage {
 
-    public CreateClientPreviewDataPage() {
-        super();
-    }
-
-    /**
-     * @param selenium
-     */
     public CreateClientPreviewDataPage(Selenium selenium) {
         super(selenium);
-    }
-
-    public void verifyPage() {
-        this.verifyPage("preview_ClientDetails");
+        this.verifyPage("PreviewClientPersonalInfo");
     }
 
     public CreateClientConfirmationPage submit() {

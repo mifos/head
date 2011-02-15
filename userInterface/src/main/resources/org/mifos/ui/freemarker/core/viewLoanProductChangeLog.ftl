@@ -21,7 +21,7 @@
 [#include "layout.ftl"]
 [@adminClientLeftPane]
     <!--  Main Content Begins-->
-    <span id="page.id" title="viewLoanPrdChangeLog" />
+    <span id="page.id" title="viewLoanPrdChangeLog"></span>
       <div class=" content">
       [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "admin.viewLoanProducts":"viewLoanProducts.ftl",auditLog.name:"viewEditLoanProduct.ftl?productId=${auditLog.id}"}/]
         [@mifos.editPageBreadcrumbs breadcrumb/]

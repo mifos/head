@@ -23,7 +23,7 @@
 [@mifos.header "title" /]
 [@mifos.topNavigationNoSecurity currentTab="Admin" /]
 <!--  Main Content Begins-->
-<span id="page.id" title="SavingsProductPreview"/>
+<span id="page.id" title="SavingsProductPreview"></span>
 
 <div class="content definePageMargin">
     <div class="borders margin20lefttop width90prc">

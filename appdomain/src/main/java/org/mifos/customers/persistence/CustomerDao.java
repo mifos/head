@@ -44,7 +44,6 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelLevelEntity;
 import org.mifos.dto.domain.CenterDisplayDto;
 import org.mifos.dto.domain.CenterPerformanceHistoryDto;
-import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerAccountSummaryDto;
 import org.mifos.dto.domain.CustomerAddressDto;
 import org.mifos.dto.domain.CustomerDetailDto;
@@ -56,7 +55,6 @@ import org.mifos.dto.domain.CustomerPositionOtherDto;
 import org.mifos.dto.domain.LoanDetailDto;
 import org.mifos.dto.domain.PersonnelDto;
 import org.mifos.dto.domain.SavingsDetailDto;
-import org.mifos.dto.domain.SurveyDto;
 import org.mifos.dto.domain.ValueListElement;
 import org.mifos.dto.screen.ClientDisplayDto;
 import org.mifos.dto.screen.GroupDisplayDto;
@@ -147,10 +145,6 @@ public interface CustomerDao {
     List<CustomerPositionOtherDto> getCustomerPositionDto(Integer centerId, UserContext userContext);
 
     CustomerMeetingDto getCustomerMeetingDto(CustomerMeetingEntity customerMeeting, UserContext userContext);
-
-    List<SurveyDto> getCustomerSurveyDto(Integer centerId);
-
-    List<CustomFieldDto> getCustomFieldViewForCustomers(Integer centerId, Short value, UserContext userContext);
 
     CenterPerformanceHistoryDto getCenterPerformanceHistory(String searchId, Short branchId);
 

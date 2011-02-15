@@ -39,7 +39,7 @@ import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
-import org.mifos.accounts.productdefinition.persistence.SavingsPrdPersistence;
+import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.util.helpers.AccountState;
@@ -47,6 +47,7 @@ import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.ClientRules;
 import org.mifos.config.FiscalCalendarRules;
@@ -56,7 +57,6 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerHierarchyEntity;
 import org.mifos.customers.business.CustomerMeetingEntity;
 import org.mifos.customers.business.CustomerStatusEntity;
-import org.mifos.customers.client.persistence.ClientPersistence;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
@@ -64,7 +64,6 @@ import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.surveys.business.SurveyInstance;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.ClientFamilyInfoUpdate;
@@ -104,10 +103,7 @@ public class ClientBO extends CustomerBO {
     private Set<ClientFamilyDetailEntity> familyDetailSet;
     private final Set<ClientAttendanceBO> clientAttendances;
     private Set<ClientInitialSavingsOfferingEntity> offeringsAssociatedInCreate;
-
-    private ClientPersistence clientPersistence = null;
     private SavingsPersistence savingsPersistence = null;
-    private SavingsPrdPersistence savingsPrdPersistence = null;
     private OfficePersistence officePersistence = null;
 
     public static ClientBO createNewInGroupHierarchy(UserContext userContext, String clientName,
@@ -944,15 +940,13 @@ public class ClientBO extends CustomerBO {
         if (offeringsAssociatedInCreate != null) {
             for (ClientInitialSavingsOfferingEntity clientOffering : offeringsAssociatedInCreate) {
                 try {
-                    SavingsOfferingBO savingsOffering = getSavingsPrdPersistence().getSavingsProduct(
-                            clientOffering.getSavingsOffering().getPrdOfferingId());
+                    SavingsOfferingBO savingsOffering = ApplicationContextProvider.getBean(SavingsProductDao.class).findById(
+                            clientOffering.getSavingsOffering().getPrdOfferingId().intValue());
                     if (savingsOffering.isActive()) {
                         addAccount(new SavingsBO(getUserContext(), savingsOffering, this, AccountState.SAVINGS_ACTIVE,
                                 savingsOffering.getRecommendedAmount(),
                                 new ArrayList<CustomFieldDto>()));
                     }
-                } catch (PersistenceException pe) {
-                    throw new CustomerException(pe);
                 } catch (AccountException pe) {
                     throw new CustomerException(pe);
                 }
@@ -1019,10 +1013,6 @@ public class ClientBO extends CustomerBO {
                 : false;
     }
 
-    public void attachPpiSurveyInstance(final SurveyInstance ppiSurvey) {
-        /* TODO not implemented yet */
-    }
-
     @Override
     public void updatePerformanceHistoryOnDisbursement(final LoanBO loan, final Money disburseAmount) {
         ClientPerformanceHistoryEntity performanceHistory = (ClientPerformanceHistoryEntity) getPerformanceHistory();
@@ -1052,39 +1042,6 @@ public class ClientBO extends CustomerBO {
     public void updatePerformanceHistoryOnLastInstlPayment(final LoanBO loan, final Money totalAmount)
             throws CustomerException {
         updatePerformanceHistoryOnRepayment(loan, totalAmount);
-    }
-
-    public void setSavingsPersistence(final SavingsPersistence savingsPersistence) {
-        this.savingsPersistence = savingsPersistence;
-    }
-
-    public SavingsPersistence getSavingsPersistence() {
-        if (null == savingsPersistence) {
-            savingsPersistence = new SavingsPersistence();
-        }
-        return savingsPersistence;
-    }
-
-    public void setSavingsPrdPersistence(final SavingsPrdPersistence savingsPrdPersistence) {
-        this.savingsPrdPersistence = savingsPrdPersistence;
-    }
-
-    public SavingsPrdPersistence getSavingsPrdPersistence() {
-        if (null == savingsPrdPersistence) {
-            savingsPrdPersistence = new SavingsPrdPersistence();
-        }
-        return savingsPrdPersistence;
-    }
-
-    public ClientPersistence getClientPersistence() {
-        if (null == clientPersistence) {
-            clientPersistence = new ClientPersistence();
-        }
-        return clientPersistence;
-    }
-
-    public void setClientPersistence(final ClientPersistence clientPersistence) {
-        this.clientPersistence = clientPersistence;
     }
 
     public boolean isClosedOrCancelled() {

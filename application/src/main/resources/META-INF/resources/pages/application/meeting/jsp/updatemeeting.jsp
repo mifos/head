@@ -31,7 +31,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-	<span id="page.id" title="updatemeeting" />
+	<span id="page.id" title="updatemeeting"></span>
 	
 
 
@@ -237,9 +237,12 @@ function goToCancelPage(){
 							</tr>
 							<tr>
 								<td align="right"></td>
-								<td align="left" class="fontnormalbold"><span class="fontnormal">
-									<a href="addGroupMembershipAction.do?method=loadSearch&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
-										<mifos:mifoslabel name="client.AddGroupMemberShip" bundle="ClientUIResources" /> </a> </span>
+								<td align="left" class="fontnormalbold">
+									<span class="fontnormal">
+										<html-el:link styleId = "updatemeeting.link.addGroupMembership" action ="addGroupMembershipAction.do?method=loadSearch&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
+											<mifos:mifoslabel name="client.AddGroupMemberShip" bundle="ClientUIResources" />
+										</html-el:link>
+									</span>
 								</td>
 							</tr>
 						</c:if>

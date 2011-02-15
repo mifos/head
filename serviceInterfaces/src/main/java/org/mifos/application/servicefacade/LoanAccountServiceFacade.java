@@ -30,6 +30,7 @@ import org.mifos.dto.domain.LoanAccountDetailsDto;
 import org.mifos.dto.domain.LoanActivityDto;
 import org.mifos.dto.domain.LoanInstallmentDetailsDto;
 import org.mifos.dto.domain.LoanPaymentDto;
+import org.mifos.dto.domain.OpeningBalanceLoanAccount;
 import org.mifos.dto.screen.ChangeAccountStatusDto;
 import org.mifos.dto.screen.LoanAccountDetailDto;
 import org.mifos.dto.screen.LoanAccountInfoDto;
@@ -74,6 +75,9 @@ public interface LoanAccountServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     LoanCreationResultDto createLoan(LoanAccountMeetingDto loanAccountMeetingDto, LoanAccountInfoDto loanAccountInfoDto, List<LoanScheduledInstallmentDto> loanRepayments);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    String createLoan(OpeningBalanceLoanAccount openingBalanceLoan);
 
     @PreAuthorize("isFullyAuthenticated()")
     LoanCreationResultDto redoLoan(LoanAccountMeetingDto loanAccountMeetingDto, LoanAccountInfoDto loanAccountInfoDto, List<LoanPaymentDto> existingLoanPayments, List<LoanScheduledInstallmentDto> installmentDtos);

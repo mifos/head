@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-fragment xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<web-fragment id="mifos-reporting" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-fragment_3_0.xsd"
 	version="3.0">
 	
-	<name>Mifos BIRT Reporting</name>
+	<name>MifosBIRTReporting</name>
     <description>Microfinance portfolio management BIRT Reporting Web frontend.</description>
-    <display-name>Mifos BIRT Reporting Web Application Fragment</display-name>
 
     <!-- Birt Reports Validation Flow Servlet -->
     <servlet>
@@ -66,9 +65,11 @@
     </context-param>
 
     <!-- Report engine log level -->
+    <!--  Sets the report engine log level Valid values are:
+          OFF, SEVERE, WARNING, INFO, CONFIG, FINE, FINER,FINEST -->
     <context-param>
         <param-name>BIRT_VIEWER_LOG_LEVEL</param-name>
-        <param-value>OFF</param-value>
+        <param-value>WARNING</param-value>
     </context-param>
 
     <!-- Absolute directory to store all birt report script libraries (JARs). Default to ${birt home}/scriptlib -->

@@ -39,12 +39,14 @@ import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.framework.util.CollectionUtils;
 import org.mifos.reports.business.dao.SelectionItemDao;
 import org.mifos.reports.ui.SelectionItem;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class CascadingReportParameterService {
 
     private final SelectionItemDao selectionItemDao;
     private final PersonnelDao personnelDao;
 
+    @Autowired
     public CascadingReportParameterService(SelectionItemDao selectionItemDao, PersonnelDao personnelDao) {
         this.selectionItemDao = selectionItemDao;
         this.personnelDao = personnelDao;

@@ -59,7 +59,7 @@ import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.ClientInitialSavingsOfferingEntity;
 import org.mifos.customers.client.business.ClientTestUtils;
 import org.mifos.customers.client.business.NameType;
-import org.mifos.customers.client.persistence.ClientPersistence;
+import org.mifos.customers.client.persistence.LegacyClientDao;
 import org.mifos.customers.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.group.business.GroupBO;
@@ -94,6 +94,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.MifosUser;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -115,6 +116,9 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
     private MeetingBO meeting;
 
     private AccountBO accountBO;
+
+    @Autowired
+    LegacyClientDao legacyClientDao;
 
     private String flowKey;
     private SavingsOfferingBO savingsOffering1;
@@ -1353,7 +1357,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
                 .fromInt(new Short("1")), null, null, new Address(), getCustomFields(), null, null, personnel, office,
                 meeting, personnel, new java.util.Date(), null, null, null, YesNoFlag.NO.getValue(),
                 clientNameDetailDto, spouseNameDetailView, clientPersonalDetailDto, null);
-        new ClientPersistence().saveClient(client);
+        legacyClientDao.saveClient(client);
         StaticHibernateUtil.flushAndClearSession();
         client = TestObjectFactory.getClient(new Integer(client.getCustomerId()).intValue());
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
@@ -1585,7 +1589,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
                 .fromInt(new Short("1")), null, null, new Address(), getCustomFields(), null, null, personnel, office,
                 meeting, personnel, new java.util.Date(), null, null, null, YesNoFlag.NO.getValue(),
                 clientNameDetailDto, spouseNameDetailView, clientPersonalDetailDto, null);
-        new ClientPersistence().saveClient(client);
+        legacyClientDao.saveClient(client);
         StaticHibernateUtil.flushAndClearSession();
         client = TestObjectFactory.getClient(Integer.valueOf(client.getCustomerId()).intValue());
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);

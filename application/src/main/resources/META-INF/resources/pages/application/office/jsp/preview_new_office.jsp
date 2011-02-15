@@ -31,7 +31,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".create">
 	<tiles:put name="body" type="string">
-	<span id="page.id" title="preview_new_office" />
+	<span id="page.id" title="preview_new_office"></span>
 	
 		<!-- Next is code for setting the hidden veriable to cancel -->
 		<script language="javascript" type="text/javascript">
@@ -146,11 +146,9 @@ function goToCancelPage(){
 								</tr>
 								<tr>
 									<td class="fontnormalbold">
-									<mifos:mifoslabel name="${ConfigurationConstants.CITY}"
-										bundle="OfficeResources"></mifos:mifoslabel>:<span
-										class="fontnormal"> <c:out
-										value="${offActionForm.address.city}"></c:out>
-									</span>
+										<mifos:mifoslabel name="${ConfigurationConstants.CITY}" bundle="OfficeUIResources" isColonRequired="yes"/>
+										<span class="fontnormal"> <c:out value="${offActionForm.address.city}"></c:out></span>
+									</td>
 								</tr>
 								<tr id="Office.State">
 									<td class="fontnormalbold"><mifos:mifoslabel

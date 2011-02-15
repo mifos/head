@@ -35,7 +35,7 @@ import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
-import org.mifos.accounts.fees.persistence.FeePersistence;
+import org.mifos.accounts.fees.persistence.FeeDao;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.servicefacade.UserContextFactory;
@@ -66,8 +66,6 @@ import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelNotesEntity;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
-import org.mifos.customers.surveys.helpers.SurveyType;
-import org.mifos.customers.surveys.persistence.SurveysPersistence;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.dto.domain.AddressDto;
@@ -130,6 +128,10 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
     private final PersonnelDao personnelDao;
     private final CustomerDao customerDao;
     private final CustomerService customerService;
+
+    @Autowired
+    private FeeDao feeDao;
+
     private HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
 
     @Autowired
@@ -212,7 +214,7 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
     private List<AccountFeesEntity> createAccountFeeEntities(List<CreateAccountFeeDto> feesToApply) {
         List<AccountFeesEntity> feesForCustomerAccount = new ArrayList<AccountFeesEntity>();
         for (CreateAccountFeeDto feeDto : feesToApply) {
-            FeeBO fee = new FeePersistence().getFee(feeDto.getFeeId().shortValue());
+            FeeBO fee = feeDao.findById(feeDto.getFeeId().shortValue());
             Double feeAmount = new LocalizationConverter().getDoubleValueForCurrentLocale(feeDto.getAmount());
 
             AccountBO nullReferenceForNow = null;
@@ -377,11 +379,11 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
 
         CustomerMeetingDto customerMeeting = customerDao.getCustomerMeetingDto(center.getCustomerMeeting(), userContext);
 
-        Boolean activeSurveys = new SurveysPersistence().isActiveSurveysForSurveyType(SurveyType.CENTER);
+        Boolean activeSurveys = Boolean.FALSE;//new SurveysPersistence().isActiveSurveysForSurveyType(SurveyType.CENTER);
 
-        List<SurveyDto> customerSurveys = customerDao.getCustomerSurveyDto(centerId);
+        List<SurveyDto> customerSurveys = new ArrayList<SurveyDto>();
 
-        List<CustomFieldDto> customFields = customerDao.getCustomFieldViewForCustomers(centerId, EntityType.CENTER.getValue(), userContext);
+        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
 
         return new CenterInformationDto(centerDisplay, customerAccountSummary, centerPerformanceHistory, centerAddress,
                 groups, recentCustomerNotes, customerPositions, savingsDetail, customerMeeting, activeSurveys,

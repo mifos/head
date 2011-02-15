@@ -50,7 +50,7 @@ public class DatabaseInitFilterTest extends TestCase {
                 new SQLException("bletch ick sputter die"));
         String output = printError(66);
 
-        StringAssert.assertContains("Unable to apply database upgrades", output);
+        StringAssert.assertContains("Please apply upgrade DB and restart the server", output);
         StringAssert.assertContains("Correct the error and restart the application", output);
         StringAssert.assertContains("bletch ick sputter die", output);
     }

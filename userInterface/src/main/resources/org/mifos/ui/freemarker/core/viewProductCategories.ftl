@@ -21,7 +21,7 @@
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
 <!--  Main Content Begins-->
-<span id="page.id" title="viewProductCategories"/>
+<span id="page.id" title="viewProductCategories"></span>
 <div class="content">
 [@mifos.crumbs breadcrumbs/]
     <div style="margin-left:15px; margin-top:15px;">

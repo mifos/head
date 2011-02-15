@@ -21,7 +21,7 @@
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
 <!--  Main Content Begins-->
-<span id="page.id" title="View_AllSavingsProduct"/>
+<span id="page.id" title="View_AllSavingsProduct"></span>
 <div class=" content">
 [@mifos.crumb url="admin.viewSavingsproducts" /]
     <p>&nbsp;&nbsp;</p>

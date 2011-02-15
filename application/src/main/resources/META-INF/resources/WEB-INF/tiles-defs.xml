@@ -21,7 +21,7 @@
         <put name="title" value="Mifos" />
         <put name="header" value="/pages/framework/jsp/header.jsp" />
         <put name="menutitle" value="" />
-        <put name="mifoscss" type="string" value="pages/framework/css/cssstyle.css"/>
+        <put name="mifoscss" type="string" value="pages/css/cssstyle.css"/>
         <put name="body" value="" />
     </definition>
     <definition name=".searchmenu" path="/pages/framework/jsp/searchlayout.jsp">

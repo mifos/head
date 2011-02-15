@@ -31,7 +31,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-	<span id="page.id" title="viewOfficeDetails" />
+	<span id="page.id" title="viewOfficeDetails"></span>
 		<html-el:form action="/offAction.do">
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'officeDto')}"
 			   var="officeDto" />

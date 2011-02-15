@@ -26,10 +26,10 @@ import org.mifos.accounts.productdefinition.business.PrdStatusEntity;
 import org.mifos.accounts.productdefinition.business.ProductCategoryBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.persistence.PrdOfferingPersistence;
-import org.mifos.accounts.productdefinition.persistence.SavingsPrdPersistence;
+import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.accounts.productdefinition.util.helpers.PrdCategoryStatus;
 import org.mifos.accounts.productdefinition.util.helpers.ProductType;
-import org.mifos.application.meeting.business.RecurrenceTypeEntity;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -43,12 +43,8 @@ public class SavingsPrdBusinessService implements BusinessService {
         return null;
     }
 
-    public SavingsOfferingBO getSavingsProduct(Short prdOfferingId) throws ServiceException {
-        try {
-            return getSavingsPersistence().getSavingsProduct(prdOfferingId);
-        } catch (PersistenceException e) {
-            throw new ServiceException(e);
-        }
+    public SavingsOfferingBO getSavingsProduct(Short prdOfferingId) {
+        return getSavingsProductDao().findById(prdOfferingId.intValue());
     }
 
     public List<ProductCategoryBO> getActiveSavingsProductCategories() throws ServiceException {
@@ -60,33 +56,12 @@ public class SavingsPrdBusinessService implements BusinessService {
         }
     }
 
-    private List<ProductCategoryBO> x() throws PersistenceException {
-        return getPrdOfferingPersistence().getApplicableProductCategories(ProductType.SAVINGS,
-                PrdCategoryStatus.ACTIVE);
-    }
-
     protected PrdOfferingPersistence getPrdOfferingPersistence() {
         return new PrdOfferingPersistence();
     }
 
-    public List<RecurrenceTypeEntity> getSavingsApplicableRecurrenceTypes() throws ServiceException {
-        try {
-            return getSavingsPersistence().getSavingsApplicableRecurrenceTypes();
-        } catch (PersistenceException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    public List<SavingsOfferingBO> getAllSavingsProducts() throws ServiceException {
-        try {
-            return getSavingsPersistence().getAllSavingsProducts();
-        } catch (PersistenceException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    protected SavingsPrdPersistence getSavingsPersistence() {
-        return new SavingsPrdPersistence();
+    protected SavingsProductDao getSavingsProductDao() {
+        return ApplicationContextProvider.getBean(SavingsProductDao.class);
     }
 
     public List<PrdStatusEntity> getApplicablePrdStatus(Short localeId) throws ServiceException {

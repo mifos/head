@@ -28,7 +28,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".clientsacclayoutmenu">
 	<tiles:put name="body" type="string">
-    <span id="page.id" title="ClientsAccounts"/>	
+    <span id="page.id" title="ClientsAccounts"></span>	
 		<html-el:form action="custSearchAction.do">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
@@ -39,23 +39,25 @@ explanation of the license and how it is applied.
 								var="Office"
 								value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'Office')}" />
 							<c:set var="isCenterHierarchyExists"
-								value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'GrpHierExists')}" />
+								value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHierarchyExists')}" />
 
 								<c:set var="OfficesList"
 								value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'OfficesList')}" />
 							<c:out value='${Office}' /> <br>
 							</span><span class="fontnormalbold"> <mifos:mifoslabel
 								name="CustomerSearch.revieweditinstruction1" /> <mifos:mifoslabel
-								name="${ConfigurationConstants.CLIENT}" />, <c:choose>
-								<c:when test="${isCenterHierarchyExists==Constants.YES}">
-									<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />,&nbsp;
-	                  		<mifos:mifoslabel
-										name="${ConfigurationConstants.CENTER}" />,
-	                  	</c:when>
-								<c:otherwise>
-									<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />,
-	                  		</c:otherwise>
-							</c:choose> <mifos:mifoslabel name="CustomerSearch.revieweditinstruction2" /> </span></td>
+								name="${ConfigurationConstants.CLIENT}" />,
+                                <c:choose>
+                                    <c:when test="${isCenterHierarchyExists eq true}">
+                                        <mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />,
+                                        <mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
+                                    </c:when>
+
+                                    <c:otherwise>
+                                        <mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />
+                                    </c:otherwise>
+                                </c:choose>
+                                <mifos:mifoslabel name="CustomerSearch.revieweditinstruction2" /> </span></td>
 						</tr>
 
 					</table>
@@ -107,7 +109,7 @@ explanation of the license and how it is applied.
 								<tr class="fontnormal">
 									<td width="100%" colspan="2" class="bglightblue"><span
 										class="heading"> <mifos:mifoslabel
-										name="CustomerSearch.select" />&nbsp; <mifos:mifoslabel
+										name="CustomerSearch.select" />&nbsp;<mifos:mifoslabel
 										name="${ConfigurationConstants.BRANCHOFFICE}" /> </span></td>
 								</tr>
 							</table>

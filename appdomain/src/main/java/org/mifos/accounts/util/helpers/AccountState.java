@@ -86,6 +86,9 @@ public enum AccountState implements LocalizedTextLookup {
     }
 
     public static boolean isDisbursed(Short accountStateId) {
-        return !(LOAN_APPROVED.value.equals(accountStateId) || LOAN_DISBURSED_TO_LOAN_OFFICER.value.equals(accountStateId));
+        return !(LOAN_PARTIAL_APPLICATION.value.equals(accountStateId) ||
+                LOAN_PENDING_APPROVAL.value.equals(accountStateId) ||
+                LOAN_APPROVED.value.equals(accountStateId) ||
+                LOAN_DISBURSED_TO_LOAN_OFFICER.value.equals(accountStateId));
     }
 }

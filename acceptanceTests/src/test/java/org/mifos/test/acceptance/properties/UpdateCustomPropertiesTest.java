@@ -21,19 +21,34 @@
 package org.mifos.test.acceptance.properties;
 
 import org.mifos.framework.util.DbUnitUtilities;
+import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
+import org.mifos.test.acceptance.framework.center.CenterViewDetailsPage;
 import org.mifos.test.acceptance.framework.center.CreateCenterEnterDataPage;
 import org.mifos.test.acceptance.framework.center.CreateMeetingPage;
+import org.mifos.test.acceptance.framework.center.MeetingParameters;
 import org.mifos.test.acceptance.framework.client.CreateClientEnterMfiDataPage;
+import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
+import org.mifos.test.acceptance.framework.group.CreateGroupEntryPage.CreateGroupSubmitParameters;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchPage;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPreviewPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.SubmitFormParameters;
+import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSearchParameters;
+import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSubmitParameters;
+import org.mifos.test.acceptance.framework.savings.SavingsAccountDetailPage;
+import org.mifos.test.acceptance.framework.testhelpers.CenterTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.CustomPropertiesHelper;
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
+import org.mifos.test.acceptance.framework.testhelpers.GroupTestHelper;
+import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
+import org.mifos.test.acceptance.framework.testhelpers.SavingsAccountHelper;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -48,7 +63,8 @@ import org.testng.annotations.Test;
 public class UpdateCustomPropertiesTest extends UiTestCaseBase {
     NavigationHelper navigationHelper;
     CustomPropertiesHelper propertiesHelper;
-
+    SavingsAccountHelper savingsAccountHelper;
+    CenterTestHelper centerTestHelper;
     @Autowired
     private DriverManagerDataSource dataSource;
     @Autowired
@@ -62,16 +78,140 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
-    @BeforeMethod
+    @BeforeMethod(alwaysRun=true)
     public void setUp() throws Exception {
         navigationHelper = new NavigationHelper(selenium);
         propertiesHelper = new CustomPropertiesHelper(selenium);
+        savingsAccountHelper = new SavingsAccountHelper(selenium);
+        centerTestHelper = new CenterTestHelper(selenium);
         super.setUp();
     }
 
     @AfterMethod
     public void logOut() {
         (new MifosPage(selenium)).logout();
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    //http://mifosforge.jira.com/browse/MIFOSTEST-232
+    public void verifyPropertyClientRulesCenterHierarchyExistsFalse() throws Exception{
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
+        propertiesHelper.setCenterHierarchyExists("false");
+
+        //When
+        navigationHelper.navigateToClientsAndAccountsPage();
+
+        //Then
+        Assert.assertFalse(selenium.isElementPresent("menu.link.label.createnew.center"));
+        Assert.assertTrue(selenium.isTextPresent("To review or edit a Client, Group or account"));
+
+        //Given
+        propertiesHelper.setCenterHierarchyExists("true");
+
+        //When
+        navigationHelper.navigateToClientsAndAccountsPage();
+
+        //Then
+        Assert.assertTrue(selenium.isElementPresent("menu.link.label.createnew.center"));
+        Assert.assertTrue(selenium.isTextPresent("To review or edit a Client, Group, Center or account"));
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    //http://mifosforge.jira.com/browse/MIFOSTEST-231
+    public void verifyPropertyClientRulesCenterHierarchyExistsTrue() throws Exception{
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
+        propertiesHelper.setCenterHierarchyExists("true");
+
+        //When
+        CreateCenterEnterDataPage.SubmitFormParameters formParameters = new CreateCenterEnterDataPage.SubmitFormParameters();
+        formParameters.setCenterName("testCenterName12123");
+        formParameters.setLoanOfficer("Joe1232993835093 Guy1232993835093");
+        MeetingParameters meeting = new MeetingParameters();
+        meeting.setMeetingPlace("Bangalore");
+        meeting.setWeekDay(MeetingParameters.WEDNESDAY);
+        meeting.setWeekFrequency("1");
+        formParameters.setMeeting(meeting);
+        CenterViewDetailsPage centerViewDetailsPage = centerTestHelper.createCenter(formParameters, "MyOffice1232993831593");
+
+        //Then
+        centerViewDetailsPage.verifyActiveCenter(formParameters);
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    //http://mifosforge.jira.com/browse/MIFOSTEST-216
+    public void verifyPropertySavingsPendingApprovalStateEnabled() throws Exception{
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
+        propertiesHelper.setSavingsPendingApprovalStateEnabled("false");
+        //When
+        CreateSavingsAccountSearchParameters searchParameters = getCreateSavingsAccountSearchParameters();
+        CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
+        submitAccountParameters.setAmount("248.0");
+        SavingsAccountDetailPage savingsAccountPage = savingsAccountHelper.createSavingsAccountWithoutPendingApprovalState(searchParameters, submitAccountParameters);
+        savingsAccountPage.verifyPage();
+        //Then
+        savingsAccountPage.verifySavingsAmount(submitAccountParameters.getAmount());
+        savingsAccountPage.verifySavingsProduct(searchParameters.getSavingsProduct());
+        savingsAccountPage.verifyStatus("Active");
+
+        propertiesHelper.setSavingsPendingApprovalStateEnabled("true");
+    }
+
+    private CreateSavingsAccountSearchParameters getCreateSavingsAccountSearchParameters(){
+        CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
+        searchParameters.setSearchString("Stu1233266079799 Client1233266079799");
+        searchParameters.setSavingsProduct("MandClientSavings3MoPostMinBal");
+        return searchParameters;
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    //http://mifosforge.jira.com/browse/MIFOSTEST-215
+    public void verifyPropertyPendingApprovalStateEnabledForSavingsAndLoanAccounts() throws Exception{
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
+        propertiesHelper.setSavingsPendingApprovalStateEnabled("true");
+        propertiesHelper.setLoanPendingApprovalStateEnabled("true");
+        propertiesHelper.setGroupPendingApprovalStateEnabled("true");
+        //When
+        CreateSavingsAccountSearchParameters searchParameters = getCreateSavingsAccountSearchParameters();
+
+        CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
+        submitAccountParameters.setAmount("248.0");
+
+        SavingsAccountDetailPage savingsAccountPage = savingsAccountHelper.createSavingsAccount(searchParameters, submitAccountParameters);
+        savingsAccountPage.verifyPage();
+        //Then
+        savingsAccountPage.verifySavingsAmount(submitAccountParameters.getAmount());
+        savingsAccountPage.verifySavingsProduct(searchParameters.getSavingsProduct());
+        savingsAccountPage.verifyStatus("Application Pending Approval");
+        //when
+        CreateLoanAccountSearchParameters searchParameters2 = new CreateLoanAccountSearchParameters();
+        searchParameters2.setSearchString("Stu1233266079799 Client1233266079799");
+        searchParameters2.setLoanProduct("MonthlyClientFlatLoanWithFees");
+        CreateLoanAccountSubmitParameters submitAccountParameters2 = new CreateLoanAccountSubmitParameters();
+        submitAccountParameters2.setAmount("2765.0");
+        submitAccountParameters2.setGracePeriodTypeNone(true);
+        LoanTestHelper loanTestHelper = new LoanTestHelper(selenium);
+        LoanAccountPage loanAccountPage = loanTestHelper.createLoanAccount(searchParameters2, submitAccountParameters2);
+        loanAccountPage.verifyStatus("Application Pending Approval");
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    //http://mifosforge.jira.com/browse/MIFOSTEST-211
+    public void verifyPropertyGroupPendingApprovalStateEnabled() throws Exception{
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
+        propertiesHelper.setGroupPendingApprovalStateEnabled("false");
+        //When
+        GroupTestHelper groupTestHelper = new GroupTestHelper(selenium);
+        CreateGroupSubmitParameters groupParams = new CreateGroupSubmitParameters();
+        groupParams.setGroupName("testGroup123123123123");
+        GroupViewDetailsPage groupViewDetailsPage = groupTestHelper.createNewGroupWithoutPendingForApproval("MyCenter1232993841778" , groupParams);
+        //Then
+        groupViewDetailsPage.verifyStatus("Active");
+
     }
 
     public void changeLocale() {
@@ -87,7 +227,8 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void changeDecimalsToThree() throws Exception {
+    //http://mifosforge.jira.com/browse/MIFOSTEST-200
+    public void changeDigitsAfterDecimal() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml", dataSource, selenium);
 
         propertiesHelper.setDigitsAfterDecimal(3);
@@ -95,7 +236,57 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
         LoanAccountPage loanAccountPage  = navigationHelper.navigateToLoanAccountPage("000100000000004");
         loanAccountPage.verifyExactLoanAmount("1000.000");
 
+        propertiesHelper.setDigitsAfterDecimal(2);
+
+        loanAccountPage  = navigationHelper.navigateToLoanAccountPage("000100000000004");
+        loanAccountPage.verifyExactLoanAmount("1000.00");
+
+        propertiesHelper.setDigitsAfterDecimal(0);
+
+        loanAccountPage  = navigationHelper.navigateToLoanAccountPage("000100000000004");
+        loanAccountPage.verifyExactLoanAmount("1000");
+
         propertiesHelper.setDigitsAfterDecimal(1);
+
+        loanAccountPage  = navigationHelper.navigateToLoanAccountPage("000100000000004");
+        loanAccountPage.verifyExactLoanAmount("1000.0");
+
+    }
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    //http://mifosforge.jira.com/browse/MIFOSTEST-195
+    public void checkNumberDigitsBeforeDecimalForAmountAndAfterDecimalForInterest() throws Exception{
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
+        //When
+        ClientsAndAccountsHomepage accountsHomepage = navigationHelper.navigateToClientsAndAccountsPage();
+        CreateLoanAccountSearchPage accountSearchPage = accountsHomepage.navigateToCreateLoanAccountUsingLeftMenu();
+
+        CreateLoanAccountSearchParameters formParameters = new CreateLoanAccountSearchParameters();
+        formParameters.setLoanProduct("MonthlyClientFlatLoanWithFees");
+        formParameters.setSearchString("Stu1232993852651 Client1232993852651");
+        accountSearchPage.searchAndNavigateToCreateLoanAccountPage(formParameters);
+
+        selenium.type("loancreationdetails.input.sumLoanAmount", "123456789012345");
+        selenium.type("loancreationdetails.input.interestRate", "12.000001");
+        selenium.click("loancreationdetails.button.continue");
+        selenium.waitForPageToLoad("30000");
+        //Then
+        String error = selenium.getText("loancreationdetails.error.message");
+        boolean interestError = error.contains("The Interest ratethe number of digits after the decimal separator exceeds the allowed number 5 is invalid because");
+        boolean amountError = error.contains("The Amount is invalid because the number of digits before the decimal separator exceeds the allowed number 14");
+        Assert.assertEquals(interestError, true);
+        Assert.assertEquals(amountError, true);
+        //When
+        selenium.type("loancreationdetails.input.sumLoanAmount", "12345678901234");
+        selenium.type("loancreationdetails.input.interestRate", "12.00001");
+        selenium.click("loancreationdetails.button.continue");
+        selenium.waitForPageToLoad("30000");
+        //Then
+        error = selenium.getText("loancreationdetails.error.message");
+        interestError = error.contains("The Interest ratethe number of digits after the decimal separator exceeds the allowed number 5 is invalid because");
+        amountError = error.contains("The Amount is invalid because the number of digits before the decimal separator exceeds the allowed number 14");
+        Assert.assertEquals(interestError, false);
+        Assert.assertEquals(amountError, false);
 
     }
 
@@ -161,4 +352,5 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
             previewPage.verifyErrorInForm(errorInterestDigitsAfterDecimal);
         }
     }
+
 }

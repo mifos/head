@@ -6,7 +6,7 @@
     <groupId>org.mifos</groupId>
     <artifactId>mifos-appdomain</artifactId>
     <packaging>jar</packaging>
-    <version>1.8-SNAPSHOT</version>
+    <version>1.9-SNAPSHOT</version>
     <name>Mifos - Application Domain</name>
     <url>http://www.mifos.org</url>
 
@@ -22,7 +22,7 @@
     <parent>
         <artifactId>mifos-parent</artifactId>
         <groupId>org.mifos</groupId>
-        <version>1.8-SNAPSHOT</version>
+        <version>1.9-SNAPSHOT</version>
     </parent>
 
     <dependencies>
@@ -170,14 +170,6 @@
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springmodules</groupId>
-            <artifactId>spring-modules-cache</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.sf.ehcache</groupId>
-            <artifactId>ehcache</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.dbunit</groupId>
             <artifactId>dbunit</artifactId>
             <scope>test</scope>
@@ -314,33 +306,6 @@
                     </execution>
                 </executions>
             </plugin>
-
-            <!--
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.1.1-mifos-mexec-68-patch</version>
-                <executions>
-                    <execution>
-                        <id>create_props</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>${basedir}/src/main/resources/org/mifos/config/localizedResources/create_props.sh</executable>
-                            <workingDirectory>${java.io.tmpdir}</workingDirectory>
-                            <outputFile>${basedir}/target/create_props.out</outputFile>
-                            <arguments>
-                                <argument>${basedir}/src/main/resources/org/mifos/config/localizedResources</argument>
-                                <argument>${basedir}/target/mifos-webapp/WEB-INF/classes/org/mifos/config/localizedResources</argument>
-                            </arguments>
-                            <skip>${create.props.skip}</skip>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            -->
             <plugin>
                 <groupId>org.mifos.maven</groupId>
                 <artifactId>mifos-settings-sanitizer</artifactId>

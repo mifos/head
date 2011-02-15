@@ -20,6 +20,11 @@
 
 package org.mifos.accounts.fees.persistence;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.Hibernate;
@@ -36,15 +41,12 @@ import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeeFormula;
 import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
 import org.mifos.accounts.fees.util.helpers.FeePayment;
+import org.mifos.accounts.fees.util.helpers.FeeStatus;
 import org.mifos.accounts.savings.persistence.GenericDao;
+import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class FeeDaoHibernate implements FeeDao {
 
@@ -94,11 +96,23 @@ public class FeeDaoHibernate implements FeeDao {
     }
 
     @SuppressWarnings("unchecked")
+    public List<Short> getUpdatedFeesForCustomer() {
+        return (List<Short>) genericDao.executeNamedQuery("retrieveUpdatedFeesApplicableToCustomers", null);
+    }
+
+    @SuppressWarnings("unchecked")
     @Override
     public List<FeeDto> retrieveAllCustomerFees() {
         List<FeeBO> allCustomerFees = (List<FeeBO>) this.genericDao.executeNamedQuery("retrieveCustomerFees", null);
-
         return assembleFeeDto(allCustomerFees);
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<FeeBO> getAllAppllicableFeeForLoanCreation() {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("active", FeeStatus.ACTIVE.getValue());
+        queryParameters.put("category", FeeCategory.LOAN.getValue());
+        return (List<FeeBO>) genericDao.executeNamedQuery(NamedQueryConstants.GET_ALL_APPLICABLE_FEE_FOR_LOAN_CREATION, queryParameters);
     }
 
     private List<FeeDto> assembleFeeDto(List<FeeBO> allProductFees) {

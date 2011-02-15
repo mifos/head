@@ -33,7 +33,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".create">
     <tiles:put name="body" type="string">
-        <span id="page.id" title="import.transactions.results" /> <html-el:form
+        <span id="page.id" title="import.transactions.results" ></span> <html-el:form
             action="/manageImportAction.do?method=confirm" enctype="multipart/form-data">
             <table width="100%" border="0" cellspacing="0" cellpadding="0">
                 <tr>

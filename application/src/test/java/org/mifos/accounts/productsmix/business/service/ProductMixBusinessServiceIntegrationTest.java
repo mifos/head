@@ -41,7 +41,7 @@ import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ProductType;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.productsmix.business.ProductMixBO;
-import org.mifos.accounts.productsmix.persistence.ProductMixPersistence;
+import org.mifos.accounts.productsmix.persistence.LegacyProductMixDao;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.center.business.CenterBO;
@@ -247,7 +247,7 @@ public class ProductMixBusinessServiceIntegrationTest extends MifosIntegrationTe
 
     @Test
     public void testCanProductsExist() throws Exception {
-        ProductMixPersistence productMixPersistenceMock = createMock(ProductMixPersistence.class);
+        LegacyProductMixDao productMixPersistenceMock = createMock(LegacyProductMixDao.class);
         short PRD_OFFERING_ID_ONE = (short) 1;
         short PRD_OFFERING_ID_TWO = (short) 2;
         LoanOfferingBO loanOfferingMock1 = createMock(LoanOfferingBO.class);

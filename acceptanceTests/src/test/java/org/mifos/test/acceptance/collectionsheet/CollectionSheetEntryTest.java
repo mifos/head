@@ -32,6 +32,7 @@ import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntryE
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntryPreviewDataPage;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntrySelectPage;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntrySelectPage.SubmitFormParameters;
+import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.testhelpers.CollectionSheetEntryTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
@@ -66,6 +67,8 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
 
+    private CollectionSheetEntryTestHelper sheetTestHelper;
+
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
@@ -75,6 +78,7 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         DateTime targetTime = new DateTime(2009,2,23,2,0,0,0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        sheetTestHelper = new CollectionSheetEntryTestHelper(selenium);
     }
 
     @AfterMethod
@@ -124,21 +128,26 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void defaultAmountsForMediumCenterSavedToDatabase() throws Exception {
-        try {
-            SubmitFormParameters formParameters = new SubmitFormParameters();
-            formParameters.setBranch("MyOffice1233266931234");
-            formParameters.setLoanOfficer("Joe1233266933656 Guy1233266933656");
-            formParameters.setCenter("MyCenter1233266935468");
-            formParameters.setPaymentMode("Cash");
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_medium_005_dbunit.xml", dataSource, selenium);
+        SubmitFormParameters formParameters = new SubmitFormParameters();
+        String office = "MyOffice1233171674227";
+        String officer = "Joe1233171679953 Guy1233171679953";
+        String center = "MyCenter1233171688286";
+        String client = "Stu1233171716380 Client1233171716380";
+        formParameters.setBranch(office);
+        formParameters.setLoanOfficer(officer);
+        formParameters.setCenter(center);
+        formParameters.setPaymentMode(SubmitFormParameters.CASH);
 
-            initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_medium_005_dbunit.xml", dataSource, selenium);
-            CollectionSheetEntryConfirmationPage confirmPage = new CollectionSheetEntryTestHelper(selenium).submitDefaultCollectionSheetEntryData(formParameters);
-            confirmPage.verifyPage();
-            verifyCollectionSheetData("ColSheetLoanTest_001_result_dbunit.xml");
-        } catch (Exception e) {
-            dbUnitUtilities.dumpDatabaseToTimestampedFileInConfigurationDirectory(dataSource);
-            throw e;
-        }
+        LoanAccountPage loanAccountPage = sheetTestHelper
+            .submitDefaultCollectionSheetEntryData(formParameters)
+            .navigateToClientsAndAccountsPageUsingHeaderTab()
+            .searchForClient(client)
+            .navigateToSearchResult(client+": ID 0003-000000006")
+            .navigateToOnlyLoanAccount();
+
+        loanAccountPage.verifyPrincipalOriginal("2000.0");
+        loanAccountPage.verifyPrincipalBalance("2000.0");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception

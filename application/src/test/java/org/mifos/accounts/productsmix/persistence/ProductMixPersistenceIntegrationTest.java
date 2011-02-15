@@ -32,6 +32,7 @@ import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 public class ProductMixPersistenceIntegrationTest extends MifosIntegrationTestCase {
@@ -41,7 +42,9 @@ public class ProductMixPersistenceIntegrationTest extends MifosIntegrationTestCa
     SavingsOfferingBO saving1;
     SavingsOfferingBO saving2;
     ProductMixBO prdmix;
-    ProductMixPersistence productMixPersistence = new ProductMixPersistence();
+
+    @Autowired
+    LegacyProductMixDao legacyProductMixDao;
 
     @After
     public void tearDown() throws Exception {
@@ -58,7 +61,7 @@ public class ProductMixPersistenceIntegrationTest extends MifosIntegrationTestCa
         saving1 = ProductMixTestHelper.createSavingOffering("Savings Product1", "S1", meeting, meeting);
         saving2 = ProductMixTestHelper.createSavingOffering("Savings Product2", "S2", meeting1, meeting1);
         prdmix = TestObjectFactory.createAllowedProductsMix(saving1, saving2);
-       Assert.assertEquals(1, (productMixPersistence.getAllProductMix()).size());
+       Assert.assertEquals(1, (legacyProductMixDao.getAllProductMix()).size());
 
     }
 
@@ -69,7 +72,7 @@ public class ProductMixPersistenceIntegrationTest extends MifosIntegrationTestCa
         saving1 = ProductMixTestHelper.createSavingOffering("Savings Product1", "S1", meeting, meeting);
         saving2 = ProductMixTestHelper.createSavingOffering("Savings Product2", "S2", meeting1, meeting1);
         prdmix = TestObjectFactory.createAllowedProductsMix(saving1, saving2);
-       Assert.assertEquals(1, (productMixPersistence.getNotAllowedProducts(saving1.getPrdOfferingId())).size());
+       Assert.assertEquals(1, (legacyProductMixDao.getNotAllowedProducts(saving1.getPrdOfferingId())).size());
 
     }
 }

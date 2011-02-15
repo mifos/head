@@ -39,7 +39,7 @@ import org.mifos.customers.office.business.OfficeStatusEntity;
 import org.mifos.customers.personnel.business.PersonnelLevelEntity;
 import org.mifos.customers.personnel.business.PersonnelStatusEntity;
 import org.mifos.dto.domain.ValueListElement;
-import org.mifos.framework.components.audit.persistence.AuditConfigurationPersistence;
+import org.mifos.framework.components.audit.persistence.LegacyAuditLookupValuesDao;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.FilePaths;
 
@@ -253,14 +253,15 @@ public class AuditConfiguration {
         return propertyMap;
     }
 
+    //FIXME I use reflect for invoking methods of Dao (Not type safe)
     private Map<String, String> callMethodToCreateValueMap(String methodName, Short localeId) throws SystemException {
         valueMap = new HashMap<String, String>();
-        Method[] methods = AuditConfigurationPersistence.class.getMethods();
+        Method[] methods = LegacyAuditLookupValuesDao.class.getMethods();
         for (Method method : methods) {
             if (method.getName().equalsIgnoreCase(methodName)) {
                 try {
-                    valueMap = (Map<String, String>) method.invoke(new AuditConfigurationPersistence(),
-                            new Object[] { localeId });
+                    LegacyAuditLookupValuesDao legacyAuditLookupValuesDao = ApplicationContextProvider.getBean(LegacyAuditLookupValuesDao.class);
+                    valueMap = (Map<String, String>) method.invoke(legacyAuditLookupValuesDao, new Object[] { localeId });
                 } catch (Exception e) {
                     throw new SystemException(e);
                 }
