@@ -3100,7 +3100,7 @@ public class LoanBO extends AccountBO {
         }
 
         Integer numberOfInstallments = loanScheduleDates.size();
-        GraceType graceType = GraceType.fromInt(this.gracePeriodType.getId());
+        GraceType graceType = this.gracePeriodType.asEnum();
         InterestType interestType = InterestType.fromInt(this.interestType.getId());
         Integer interestDays = AccountingRules.getNumberOfInterestDays().intValue();
 
@@ -3120,8 +3120,6 @@ public class LoanBO extends AccountBO {
         LoanInterestCalculator loanInterestCalculator = loanInterestCalculatorFactory.create(interestType);
 
         Money loanInterest = loanInterestCalculator.calculate(loanInterestCalculationDetails);
-        // FIXME - keithw - replace all of below with factory usage
-//        Money old_loanInterest = getLoanInterest_v2();
 
         List<EMIInstallment> EMIInstallments = generateEMI_v2(loanInterest);
 
@@ -3149,172 +3147,6 @@ public class LoanBO extends AccountBO {
         applyRounding_v2();
     }
 
-    // FIXME to be removed
-    private Money getLoanInterest_v2() throws AccountException {
-
-        Double durationInYears = getTotalDurationInYears_v2();
-
-        Money interest = null;
-
-        InterestType interestType = InterestType.fromInt(this.interestType.getId());
-        switch (interestType) {
-        case FLAT:
-            // FIXME - keithw - the calls to Money.multiply() and Money.divide() round prematurely!
-            interest = loanAmount.multiply(interestRate).multiply(durationInYears).divide(new BigDecimal("100"));
-            break;
-        case DECLINING:
-            interest = getDecliningInterestAmount_v2();
-            break;
-        case DECLINING_EPI:
-            interest = getDecliningEPIAmount_v2();
-            break;
-        default:
-            break;
-        }
-
-        return interest;
-    }
-
-    /**
-     * refactored to eliminate dependency on isRepaymentIndepOfMeetingEnabled.
-     */
-    private Short getInstallmentSkipToStartRepayment_v2() {
-        if (isInterestDeductedAtDisbursement() || getGraceType() == GraceType.PRINCIPALONLYGRACE
-                || getGraceType() == GraceType.NONE) {
-            return (short) 0;
-        }
-
-        // getGraceType() == GraceType.ALL
-        return (short) getGracePeriodDuration();
-    }
-
-    // the decliningEPI amount = sum of interests for all installments
-    private Money getDecliningEPIAmountNonGrace_v2(final int numNonGraceInstallments) {
-        Money principalBalance = getLoanAmount();
-        Money principalPerPeriod = principalBalance.divide(new BigDecimal(numNonGraceInstallments));
-        double interestRate = getInterestFractionalRatePerInstallment_v2();
-        Money totalInterest = new Money(getCurrency(), "0");
-        for (int i = 0; i < numNonGraceInstallments; i++) {
-            Money interestThisPeriod = principalBalance.multiply(interestRate);
-            totalInterest = totalInterest.add(interestThisPeriod);
-            principalBalance = principalBalance.subtract(principalPerPeriod);
-        }
-
-        return totalInterest;
-    }
-
-    private Money getDecliningEPIAmount_v2() {
-
-        Money interest = new Money(getCurrency(), "0");
-        if (getGraceType().equals(GraceType.PRINCIPALONLYGRACE)) {
-            Money graceInterestPayments = getDecliningEPIAmountGrace_v2();
-            Money nonGraceInterestPayments = getDecliningEPIAmountNonGrace_v2(getNoOfInstallments()
-                    - getGracePeriodDuration());
-            interest = graceInterestPayments.add(nonGraceInterestPayments);
-        } else {
-            interest = getDecliningEPIAmountNonGrace_v2(getNoOfInstallments());
-        }
-        return interest;
-    }
-
-    /**
-     * remove dependence on installmentEndDate
-     */
-    @Deprecated
-    private Money getFlatInterestAmount_v2() throws AccountException {
-        // TODO: interest rate should be a BigDecimal ?
-        Double interestRate = getInterestRate();
-        // TODO: durationInYears should be a BigDeciaml ?
-        Double durationInYears = getTotalDurationInYears_v2();
-        logger.debug(
-                "Get interest duration in years..." + durationInYears);
-        // the calls to Money.multiply() and Money.divide() round prematurely!
-        Money interest = getLoanAmount().multiply(interestRate).multiply(durationInYears).divide(new BigDecimal("100"));
-        logger.debug("Get interest accumulated..." + interest);
-        return interest;
-    }
-
-    /**
-     * Compute the total interest due on a declining-interest loan. Interest during a principal-only grace period is
-     * calculated differently from non-grace-periods.
-     * <p>
-     * The formula is as follows:
-     * <p>
-     * The total interest paid is I = Ig + In where Ig = interest paid during any principal-only grace periods In =
-     * interest paid during regular payment periods In = A - P A = total amount paid across regular payment periods The
-     * formula for computing A is A = p * n where A = total amount paid p = payment per installment n = number of
-     * regular (non-grace) installments P = principal i = interest per period
-     */
-    private Money getDecliningInterestAmount_v2() {
-
-        Money interest = new Money(getCurrency(), "0");
-        if (getGraceType().equals(GraceType.PRINCIPALONLYGRACE)) {
-            Money graceInterestPayments = getDecliningInterestAmountGrace_v2();
-            Money nonGraceInterestPayments = getDecliningInterestAmountNonGrace_v2(getNoOfInstallments()
-                    - getGracePeriodDuration());
-            interest = graceInterestPayments.add(nonGraceInterestPayments);
-        } else {
-            interest = getDecliningInterestAmountNonGrace_v2(getNoOfInstallments());
-        }
-        return interest;
-    }
-
-    // the business rules for DecliningEPI for grace periods are the same as
-    // Declining's
-    private Money getDecliningEPIAmountGrace_v2() {
-        return getDecliningInterestAmountGrace_v2();
-    }
-
-    private Money getDecliningInterestAmountGrace_v2() {
-        return getLoanAmount().multiply(getInterestFractionalRatePerInstallment_v2()).multiply(
-                (double) getGracePeriodDuration());
-    }
-
-    private Money getDecliningInterestAmountNonGrace_v2(final int numNonGraceInstallments) {
-        Money totalPayments = getPaymentPerPeriodForDecliningInterest_v2(numNonGraceInstallments).multiply(
-                (double) numNonGraceInstallments);
-        return totalPayments.subtract(getLoanAmount());
-    }
-
-    /*
-     * double --> BigDecimal
-     */
-    private double getTotalDurationInYears_v2() throws AccountException {
-        int interestDays = getInterestDays();
-        int daysInWeek = getDaysInWeek();
-        int daysInMonth = getDaysInMonth();
-
-        Short recurrenceType = this.getLoanMeeting().getMeetingDetails().getRecurrenceType().getRecurrenceId();
-
-        int duration = getNoOfInstallments() * this.getLoanMeeting().getMeetingDetails().getRecurAfter();
-
-        if (recurrenceType.equals(RecurrenceType.MONTHLY.getValue())) {
-            double totalMonthDays = duration * daysInMonth;
-            double durationInYears = totalMonthDays / AccountConstants.INTEREST_DAYS_360;
-            logger.debug("Get total month days.." + totalMonthDays);
-            return durationInYears;
-        } else if (interestDays == AccountConstants.INTEREST_DAYS_360) {
-            if (recurrenceType.equals(RecurrenceType.WEEKLY.getValue())) {
-                double totalWeekDays = duration * daysInWeek;
-                double durationInYears = totalWeekDays / AccountConstants.INTEREST_DAYS_360;
-                logger
-                        .debug("Get total week days.." + totalWeekDays);
-                return durationInYears;
-            }
-            throw new AccountException(AccountConstants.NOT_SUPPORTED_DURATION_TYPE);
-        } else if (interestDays == AccountConstants.INTEREST_DAYS_365) {
-            if (recurrenceType.equals(RecurrenceType.WEEKLY.getValue())) {
-                logger.debug("Get interest week 365 days");
-                double totalWeekDays = duration * daysInWeek;
-                double durationInYears = totalWeekDays / AccountConstants.INTEREST_DAYS_365;
-                return durationInYears;
-            }
-            throw new AccountException(AccountConstants.NOT_SUPPORTED_DURATION_TYPE);
-        } else {
-            throw new AccountException(AccountConstants.NOT_SUPPORTED_INTEREST_DAYS);
-        }
-    }
-
     private List<EMIInstallment> generateEMI_v2(final Money loanInterest) throws AccountException {
         if (isInterestDeductedAtDisbursement()) {
             // Interest deducted at disbursement has been cut from r1.1 so throw an exception if we reach this code.
@@ -3338,88 +3170,6 @@ public class LoanBO extends AccountBO {
         throw new AccountException(AccountConstants.NOT_SUPPORTED_EMI_GENERATION);
     }
 
-    private List<EMIInstallment> interestDeductedAtDisbursement_v2(final Money loanInterest) throws AccountException {
-        List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
-        // grace can only be none
-        if (getGraceType() == GraceType.GRACEONALLREPAYMENTS || getGraceType() == GraceType.PRINCIPALONLYGRACE) {
-            throw new AccountException(AccountConstants.INTERESTDEDUCTED_INVALIDGRACETYPE);
-        }
-
-        if (getGraceType() == GraceType.NONE) {
-            Money interestFirstInstallment = loanInterest;
-            // principal starts only from the second installment
-            Money principalPerInstallment = getLoanAmount().divide(getNoOfInstallments() - 1);
-            EMIInstallment installment = new EMIInstallment(getCurrency());
-            installment.setPrincipal(new Money(getCurrency()));
-            installment.setInterest(interestFirstInstallment);
-            emiInstallments.add(installment);
-            for (int i = 1; i < getNoOfInstallments(); i++) {
-                installment = new EMIInstallment(getCurrency());
-                installment.setPrincipal(principalPerInstallment);
-                installment.setInterest(new Money(getCurrency()));
-
-                emiInstallments.add(installment);
-            }
-        }
-        return emiInstallments;
-    }
-
-    private List<EMIInstallment> principalInLastPayment_v2(final Money loanInterest) throws AccountException {
-        List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
-        // grace can only be none
-        if (getGraceType() == GraceType.PRINCIPALONLYGRACE) {
-            throw new AccountException(AccountConstants.PRINCIPALLASTPAYMENT_INVALIDGRACETYPE);
-        }
-        if (getGraceType() == GraceType.NONE || getGraceType() == GraceType.GRACEONALLREPAYMENTS) {
-            Money principalLastInstallment = getLoanAmount();
-            // principal starts only from the second installment
-            Money interestPerInstallment = loanInterest.divide(getNoOfInstallments());
-            EMIInstallment installment = null;
-            for (int i = 0; i < getNoOfInstallments() - 1; i++) {
-                installment = new EMIInstallment(getCurrency());
-                installment.setPrincipal(new Money(getCurrency()));
-                installment.setInterest(interestPerInstallment);
-                emiInstallments.add(installment);
-            }
-            // principal set in the last installment
-            installment = new EMIInstallment(getCurrency());
-            installment.setPrincipal(principalLastInstallment);
-            installment.setInterest(interestPerInstallment);
-            emiInstallments.add(installment);
-            return emiInstallments;
-        }
-        throw new AccountException(AccountConstants.NOT_SUPPORTED_GRACE_TYPE);
-    }
-
-    private List<EMIInstallment> principalInLastPaymentDecliningInterest_v2(final Money loanInterest)
-            throws AccountException {
-        List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
-        // grace can only be none
-        if (getGraceType() == GraceType.PRINCIPALONLYGRACE) {
-            throw new AccountException(AccountConstants.PRINCIPALLASTPAYMENT_INVALIDGRACETYPE);
-        }
-        if (getGraceType() == GraceType.NONE || getGraceType() == GraceType.GRACEONALLREPAYMENTS) {
-            Money principalLastInstallment = getLoanAmount();
-
-            Money interestPerInstallment = getLoanAmount().multiply(getInterestRate()).divide(100).divide(
-                    getDecliningInterestAnnualPeriods());
-            EMIInstallment installment = null;
-            for (int i = 0; i < getNoOfInstallments() - 1; i++) {
-                installment = new EMIInstallment(getCurrency());
-                installment.setPrincipal(new Money(getCurrency()));
-                installment.setInterest(interestPerInstallment);
-                emiInstallments.add(installment);
-            }
-            // principal set in the last installment
-            installment = new EMIInstallment(getCurrency());
-            installment.setPrincipal(principalLastInstallment);
-            installment.setInterest(interestPerInstallment);
-            emiInstallments.add(installment);
-            return emiInstallments;
-        }
-        throw new AccountException(AccountConstants.NOT_SUPPORTED_GRACE_TYPE);
-    }
-
     /****************
      * Loan calculation refactoring -- Flat-installment calculations, including grace-period calculations.
      ****************/
@@ -3433,7 +3183,7 @@ public class LoanBO extends AccountBO {
      * should be disable for release 1.1.
      * </ul>
      */
-    private List<EMIInstallment> allFlatInstallments_v2(final Money loanInterest) throws AccountException {
+    private List<EMIInstallment> allFlatInstallments_v2(final Money loanInterest) {
         List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
 
         if (getGraceType() == GraceType.NONE || getGraceType() == GraceType.GRACEONALLREPAYMENTS) {
@@ -3477,25 +3227,6 @@ public class LoanBO extends AccountBO {
             installment.setInterest(interestPerInstallment);
             emiInstallments.add(installment);
         }
-        return emiInstallments;
-    }
-
-    /**
-     * Generate zero-payment installments for the duration of the grace period. NOTE: Not used, since zero-payment
-     * installments are not added to the list of all installments.
-     */
-    private List<EMIInstallment> generateSkippedGraceInstallments_v2() {
-
-        List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
-        Money zero = MoneyUtils.zero(getCurrency());
-
-        for (int i = 0; i < getGracePeriodDuration(); i++) {
-            EMIInstallment installment = new EMIInstallment(getCurrency());
-            installment.setInterest(zero);
-            installment.setPrincipal(zero);
-            emiInstallments.add(installment);
-        }
-
         return emiInstallments;
     }
 
@@ -3577,13 +3308,12 @@ public class LoanBO extends AccountBO {
         return emiInstallments;
     }
 
-    private List<EMIInstallment> generateDecliningEPIInstallmentsAfterInterestOnlyGraceInstallments_v2()
-            throws AccountException {
+    private List<EMIInstallment> generateDecliningEPIInstallmentsAfterInterestOnlyGraceInstallments_v2() {
 
         return generateDecliningEPIInstallmentsNoGrace_v2(getNoOfInstallments() - getGracePeriodDuration());
     }
 
-    private List<EMIInstallment> allDecliningEPIInstallments_v2() throws AccountException {
+    private List<EMIInstallment> allDecliningEPIInstallments_v2() {
 
         List<EMIInstallment> emiInstallments;
         if (getGraceType() == GraceType.NONE || getGraceType() == GraceType.GRACEONALLREPAYMENTS) {
@@ -3598,8 +3328,7 @@ public class LoanBO extends AccountBO {
     /**
      * Return the list if payment installments for declining interest method, for the number of installments specified.
      */
-    private List<EMIInstallment> generateDecliningInstallmentsNoGrace_v2(final int numInstallments)
-            throws AccountException {
+    private List<EMIInstallment> generateDecliningInstallmentsNoGrace_v2(final int numInstallments) {
 
         List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
 
@@ -3628,8 +3357,7 @@ public class LoanBO extends AccountBO {
         return emiInstallments;
     }
 
-    private List<EMIInstallment> generateDecliningEPIInstallmentsNoGrace_v2(final int numInstallments)
-            throws AccountException {
+    private List<EMIInstallment> generateDecliningEPIInstallmentsNoGrace_v2(final int numInstallments) {
 
         List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
         Money principalBalance = getLoanAmount();
@@ -3683,36 +3411,6 @@ public class LoanBO extends AccountBO {
         return generateDecliningInstallmentsNoGrace_v2(getNoOfInstallments() - getGracePeriodDuration());
     }
 
-    private List<EMIInstallment> interestDeductedFirstPrincipalLast_v2(final Money loanInterest)
-            throws AccountException {
-        List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
-        if (getGraceType() == GraceType.GRACEONALLREPAYMENTS || getGraceType() == GraceType.PRINCIPALONLYGRACE) {
-            throw new AccountException(AccountConstants.INTERESTDEDUCTED_PRINCIPALLAST);
-        }
-        if (getGraceType() == GraceType.NONE) {
-            Money principalLastInstallment = getLoanAmount();
-            Money interestFirstInstallment = loanInterest;
-
-            EMIInstallment installment = null;
-            installment = new EMIInstallment(getCurrency());
-            installment.setPrincipal(new Money(getCurrency()));
-            installment.setInterest(interestFirstInstallment);
-            emiInstallments.add(installment);
-            for (int i = 1; i < getNoOfInstallments() - 1; i++) {
-                installment = new EMIInstallment(getCurrency());
-                installment.setPrincipal(new Money(getCurrency()));
-                installment.setInterest(new Money(getCurrency()));
-                emiInstallments.add(installment);
-            }
-            installment = new EMIInstallment(getCurrency());
-            installment.setPrincipal(principalLastInstallment);
-            installment.setInterest(new Money(getCurrency()));
-            emiInstallments.add(installment);
-            return emiInstallments;
-        }
-        throw new AccountException(AccountConstants.NOT_SUPPORTED_GRACE_TYPE);
-    }
-
     /**
      * Corrects two defects:
      * <ul>
@@ -3741,30 +3439,6 @@ public class LoanBO extends AccountBO {
         }
 
         return period;
-    }
-
-    /***********************************
-     * Revised fee calculations
-     ***********************************/
-
-    private Money getAccountFeeAmount_v2(final AccountFeesEntity accountFees, final Money loanInterest) {
-        Money accountFeeAmount = new Money(getCurrency());
-        Double feeAmount = accountFees.getFeeAmount();
-
-        logger.debug("Fee amount..." + feeAmount);
-
-        if (accountFees.getFees().getFeeType().equals(RateAmountFlag.AMOUNT)) {
-            accountFeeAmount = new Money(getCurrency(), feeAmount.toString());
-            logger.debug(
-                    "AccountFeeAmount for amount fee.." + feeAmount);
-        } else if (accountFees.getFees().getFeeType().equals(RateAmountFlag.RATE)) {
-            RateFeeBO rateFeeBO = (RateFeeBO) getFeeDao().findById(accountFees.getFees().getFeeId());
-            accountFeeAmount = new Money(getCurrency(), getRateBasedOnFormula(feeAmount, rateFeeBO.getFeeFormula(),
-                    loanInterest));
-            logger.debug(
-                    "AccountFeeAmount for Formula fee.." + feeAmount);
-        }
-        return accountFeeAmount;
     }
 
     /**
@@ -3919,14 +3593,6 @@ public class LoanBO extends AccountBO {
         totals.runningPenalties = totals.runningPenalties.add(currentInstallment.getPenaltyDue());
     }
 
-    private Money getExactTotalPaymentDue_v2(final List<AccountActionDateEntity> unpaidInstallments) {
-        Money sum = new Money(getCurrency(), "0");
-        for (Object element : unpaidInstallments) {
-            sum = sum.add(((LoanScheduleEntity) element).getTotalPaymentDue());
-        }
-        return sum;
-    }
-
     /**
      * A grace-period installment can appear in the loan schedule only if the loan is setup with principal-only grace.
      */
@@ -4058,16 +3724,6 @@ public class LoanBO extends AccountBO {
             e.roundFeeAmount(MoneyUtils.currencyRound(e.getFeeDue().add(e.getFeeAmountPaid())));
         }
 
-    }
-
-    private Money getExactTotalFeesDue_v2(final List<AccountActionDateEntity> installments) {
-
-        Money totalFees = new Money(getCurrency(), "0");
-        for (Object element : installments) {
-            LoanScheduleEntity currentInstallment = (LoanScheduleEntity) element;
-            totalFees = totalFees.add(currentInstallment.getTotalFeesDue());
-        }
-        return totalFees;
     }
 
     public boolean isInterestWaived() {
