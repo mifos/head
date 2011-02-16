@@ -3077,8 +3077,11 @@ public class LoanBO extends AccountBO {
                     loanScheduleEntity.addAccountFeesAction(loanFeeScheduleEntity);
 
                 } else if (feeInstallment.getInstallmentId().equals(installmentDate1.getInstallmentId())
-//                        && isInterestDeductedAtDisbursement()
+                        && isInterestDeductedAtDisbursement()
                         && feeInstallment.getAccountFeesEntity().getFees().isTimeOfDisbursement()) {
+
+                    // FIXME - keithw - isInterestDeductedAtDisbursement is not relevant but one integration test fails
+                    // when this is removed. leaving in but test is most likely wrong. LoanBOIntegrationTest.testRemoveLoanDisbursalFee
 
                     LoanFeeScheduleEntity loanFeeScheduleEntity = new LoanFeeScheduleEntity(loanScheduleEntity,
                             feeInstallment.getAccountFeesEntity().getFees(), feeInstallment.getAccountFeesEntity(),
