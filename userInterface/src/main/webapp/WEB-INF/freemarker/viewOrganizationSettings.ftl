@@ -47,16 +47,22 @@
         <p class="span-24">
             <div class="fontBold marginTop10">[@spring.message "organizationSettings.viewOrganizationSettings.accountingrules"/] </div>
             <div id="accountingrules">
-	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.maximumInterest"/]</span>:&nbsp;<span class="fontnormal">${properties.maxInterest}</span></div>
-	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.minimumInterest"/]</span>:&nbsp;<span class="fontnormal">${properties.minInterest}</span></div>
-	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.numberofdigitsbeforedecimal"/]</span>:&nbsp;<span class="fontnormal">${properties.digitsBeforeDecimal}</span></div>
-	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.numberofdigitsafterdecimalforinterest"/]</span>:&nbsp;<span class="fontnormal">${properties.intDigitsAfterDecimal}</span></div>
-	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.numberofdigitsbeforedecimalforinterest"/]</span>:&nbsp;<span class="fontnormal">${properties.intDigitsBeforeDecimal}</span></div>
-	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.numberofinterestdays"/]</span>:&nbsp;<span class="fontnormal">${properties.interestDays}</span></div>
-	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.currencyRoundingMode"/]</span>:&nbsp;<span class="fontnormal">${properties.currencyRoundingMode}</span></div>
-	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.initialRoundingMode"/]</span>:&nbsp;<span class="fontnormal">${properties.initialRoundingMode}</span></div>
-	            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.finalRoundingMode"/]</span>:&nbsp;<span class="fontnormal">${properties.finalRoundingMode}</span></div>
-	       </div>
+                <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.maximumInterest"/]</span>:&nbsp;<span class="fontnormal">${properties.maxInterest}</span></div>
+                <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.minimumInterest"/]</span>:&nbsp;<span class="fontnormal">${properties.minInterest}</span></div>
+                <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.numberofdigitsbeforedecimal"/]</span>:&nbsp;<span class="fontnormal">${properties.digitsBeforeDecimal}</span></div>
+                <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.numberofdigitsafterdecimalforinterest"/]</span>:&nbsp;<span class="fontnormal">${properties.intDigitsAfterDecimal}</span></div>
+                <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.numberofdigitsbeforedecimalforinterest"/]</span>:&nbsp;<span class="fontnormal">${properties.intDigitsBeforeDecimal}</span></div>
+                <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.numberofinterestdays"/]</span>:&nbsp;<span class="fontnormal">${properties.interestDays}</span></div>
+                <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.currencyRoundingMode"/]</span>:&nbsp;<span class="fontnormal">${properties.currencyRoundingMode}</span></div>
+                <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.initialRoundingMode"/]</span>:&nbsp;<span class="fontnormal">${properties.initialRoundingMode}</span></div>
+                <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.finalRoundingMode"/]</span>:&nbsp;<span class="fontnormal">${properties.finalRoundingMode}</span></div>
+                <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.minCashFlowThreshold"/]</span>:&nbsp;<span class="fontnormal">${properties.minCashFlowThreshold}</span></div>
+                <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.maxCashFlowThreshold"/]</span>:&nbsp;<span class="fontnormal">${properties.maxCashFlowThreshold}</span></div>
+                <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.minRepaymentCapacity"/]</span>:&nbsp;<span class="fontnormal">${properties.minRepaymentCapacity}</span></div>
+                <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.maxRepaymentCapacity"/]</span>:&nbsp;<span class="fontnormal">${properties.maxRepaymentCapacity}</span></div>
+                <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.minIndebtednessRatio"/]</span>:&nbsp;<span class="fontnormal">${properties.minIndebtednessRatio}</span></div>
+                <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.maxIndebtednessRatio"/]</span>:&nbsp;<span class="fontnormal">${properties.maxIndebtednessRatio}</span></div>
+            </div>
        </p>
 
         <p class="span-24">

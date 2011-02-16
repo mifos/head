@@ -8,28 +8,16 @@ import org.mifos.service.BusinessRuleException;
 public class EqualInstallmentGeneratorFactoryImpl implements EqualInstallmentGeneratorFactory {
 
     @Override
-    public EqualInstallmentGenerator create(InterestType interestType, LoanUsuageDetail loanUsageDetail, Money loanInterest) {
-
-        // FIXME - KEITHW - we should really just remove these checks.
-        if (loanUsageDetail.isInterestDeductedAtDisbursement()) {
-            throw new BusinessRuleException(AccountConstants.NOT_SUPPORTED_EMI_GENERATION);
-        }
-
-        if (loanUsageDetail.isPrincipalDueOnLastInstallment()) {
-            throw new BusinessRuleException(AccountConstants.NOT_SUPPORTED_EMI_GENERATION);
-        }
+    public PrincipalWithInterestGenerator create(InterestType interestType, Money loanInterest) {
 
         switch (interestType) {
         case FLAT:
-//            return allFlatInstallments_v2(loanInterest);
-            return new FlatLoanInterestEqualInstallmentGenerator(loanInterest);
+            return new FlatLoanPrincipalWithInterestGenerator(loanInterest);
         case DECLINING:
         case DECLINING_PB:
-            return new DecliningBalanceEqualInstallmentGenerator();
-//            return allDecliningInstallments_v2();
+            return new DecliningBalancePrincipalWithInterestGenerator();
         case DECLINING_EPI:
-            return new DecliningBalanceEqualPrincipalEqualInstallmentGenerator();
-//            return allDecliningEPIInstallments_v2();
+            return new DecliningBalanceEqualPrincipalWithInterestGenerator();
         default:
             throw new BusinessRuleException(AccountConstants.NOT_SUPPORTED_EMI_GENERATION);
         }

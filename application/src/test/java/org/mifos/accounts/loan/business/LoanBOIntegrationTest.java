@@ -153,6 +153,7 @@ import org.mifos.security.util.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
+
 public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
     private static final double DELTA = 0.00000001;
@@ -3023,66 +3024,6 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         LoanPerformanceHistoryEntity loanPerfHistory = loan.getPerformanceHistory();
         Assert.assertEquals(getLastInstallmentAccountAction(loan).getActionDate(), loanPerfHistory
                 .getLoanMaturityDate());
-    }
-
-    /**
-     * TODO: Re-enable this test when rounding code correctly handles mid-stream
-     * changes to the loan schedule. Note the use of method getLoanAccount(),
-     * which radically alters the terms of the loan, unbeknownst to the reader
-     * of this code. Here's a trace of this bizarre code:
-     * <ul>
-     * <li>getLoanAccount() calls
-     * <li>TestObjectFactory.createLoanAccount(), which calls
-     * <li>LoanBOIntegrationTest.createLoanAccount(). This method initiall
-     * creates the loan with terms:
-     * <ul>
-     * <li>Loan amount 0
-     * <li>Interest rate 0.0
-     * <li>6 weekly installments
-     * <li>no fees
-     * </ul>
-     * <li>The method then goes on to alter the loan by directly manipulating
-     * instance variables:
-     * <ul>
-     * <li>Add a periodic amount fee of 100 to each installment
-     * <li>Change each installment's principal to 100 and interest to 12.0 (but
-     * the loan amount is still 300, although the principal due is now 600!)
-     * </ul>
-     * </ul>
-     * This leaves the loan in a badly inconsistent state, causing the (second)
-     * call to applyRounding() to break. This test code needs to be refactored!
-     * <p>
-     * This test now breaks. However, rounding with miscellaneous fees is fully
-     * covered by tests in TestLoanRedoDisbursal.java, so it is disabled.
-     */
-    public void xtestRoundInstallments() throws AccountException, SystemException {
-        accountBO = createAndRetrieveLoanAccount();
-        StaticHibernateUtil.flushSession();
-        accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
-        ((LoanBO) accountBO).getLoanOffering().setPrinDueLastInst(false);
-        List<Short> installmentIdList = new ArrayList<Short>();
-        for (AccountActionDateEntity accountAction : accountBO.getAccountActionDates()) {
-            LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountAction;
-            installmentIdList.add(accountActionDateEntity.getInstallmentId());
-            if (accountActionDateEntity.getInstallmentId().equals(Short.valueOf("1"))) {
-                accountActionDateEntity.setMiscFee(new Money(getCurrency(), "20.3"));
-            }
-        }
-        ((LoanBO) accountBO).applyRounding_v2();
-        TestObjectFactory.updateObject(accountBO);
-        StaticHibernateUtil.flushSession();
-
-        accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
-
-        Set<AccountActionDateEntity> actionDateEntities = accountBO.getAccountActionDates();
-        LoanScheduleEntity[] paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(actionDateEntities);
-
-        checkTotalDueWithFees("233.0", paymentsArray[0]);
-        checkTotalDueWithFees("212.0", paymentsArray[1]);
-        checkTotalDueWithFees("212.0", paymentsArray[2]);
-        checkTotalDueWithFees("212.0", paymentsArray[3]);
-        checkTotalDueWithFees("212.0", paymentsArray[4]);
-        checkTotalDueWithFees("212.0", paymentsArray[5]);
     }
 
     @Test

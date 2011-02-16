@@ -20,7 +20,6 @@
 
 package org.mifos.clientportfolio.newloan.domain;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -30,9 +29,8 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
-import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
-import org.mifos.accounts.loan.util.helpers.EMIInstallment;
+import org.mifos.accounts.loan.util.helpers.InstallmentPrincipalAndInterest;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
@@ -41,7 +39,6 @@ import org.mifos.accounts.util.helpers.InstallmentDate;
 import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.config.AccountingRules;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.framework.util.helpers.Money;
@@ -98,14 +95,15 @@ public class IndividualLoanScheduleFactory implements LoanScheduleFactory {
         Money loanInterest = loanInterestCalculator.calculate(loanInterestCalculationDetails);
         // end of loan Interest creation
 
-        List<EMIInstallment> EMIInstallments = generateEMI_v2(loanInterest, loanMeeting, graceType,
-                gracePeriodDuration, loanAmount, numberOfInstallments, interestRate, interestDays,
-                interestType);
+        EqualInstallmentGeneratorFactory equalInstallmentGeneratorFactory = new EqualInstallmentGeneratorFactoryImpl();
+        PrincipalWithInterestGenerator equalInstallmentGenerator = equalInstallmentGeneratorFactory.create(interestType, loanInterest);
+
+        List<InstallmentPrincipalAndInterest> EMIInstallments = equalInstallmentGenerator.generateEqualInstallments(loanInterestCalculationDetails);
 
         // create loanSchedules
         int installmentIndex = 0;
         for (InstallmentDate installmentDate : dueInstallmentDates) {
-            EMIInstallment em = EMIInstallments.get(installmentIndex);
+            InstallmentPrincipalAndInterest em = EMIInstallments.get(installmentIndex);
             LoanScheduleEntity loanScheduleEntity = new LoanScheduleEntity(null, customer, installmentDate
                     .getInstallmentId(), new java.sql.Date(installmentDate.getInstallmentDueDate().getTime()),
                     PaymentStatus.UNPAID, em.getPrincipal(), em.getInterest());
@@ -127,297 +125,6 @@ public class IndividualLoanScheduleFactory implements LoanScheduleFactory {
         }
 
         return new IndividualLoanScheduleImpl(loanScheduleItems);
-    }
-
-    /*
-     * Calculates equal payments per period for fixed payment, declining-interest loan type. Uses formula from
-     * http://confluence.mifos.org :9090/display/Main/Declining+Balance+Example+Calcs The formula is copied here: EMI =
-     * P * i / [1- (1+i)^-n] where p = principal (amount of loan) i = rate of interest per installment period as a
-     * decimal (not percent) n = no. of installments
-     *
-     * Translated into program variables and method calls:
-     *
-     * paymentPerPeriod = interestFractionalRatePerPeriod * getLoanAmount() / ( 1 - (1 +
-     * interestFractionalRatePerPeriod) ^ (-getNoOfInstallments()))
-     *
-     * NOTE: Use double here, not BigDecimal, to calculate the factor that getLoanAmount() is multiplied by. Since
-     * calculations all involve small quantities, 64-bit precision is sufficient. It is is more accurate to use
-     * floating-point, for quantities of small magnitude (say for very small interest rates)
-     *
-     * NOTE: These calculations do not take into account EPI or grace period adjustments.
-     */
-    private Money getPaymentPerPeriodForDecliningInterest_v2(final int numInstallments, Double interestRate,
-            Integer interestDays, Money loanAmount, RecurrenceType meetingFrequency, Integer recurAfter) {
-        double factor = 0.0;
-        if (interestRate == 0.0) {
-            Money paymentPerPeriod = loanAmount.divide(numInstallments);
-            return paymentPerPeriod;
-        }
-
-        Double interestFractionalRatePerInstallment = getInterestFractionalRatePerInstallment_v2(meetingFrequency, recurAfter,
-                interestRate, interestDays);
-
-        factor = interestFractionalRatePerInstallment
-                / (1.0 - Math.pow(1.0 + interestFractionalRatePerInstallment, -numInstallments));
-
-        Money paymentPerPeriod = loanAmount.multiply(factor);
-        return paymentPerPeriod;
-    }
-
-    private double getInterestFractionalRatePerInstallment_v2(RecurrenceType meetingFrequency, Integer recurAfter, Double interestRate, Integer interestDays) {
-        return interestRate / getDecliningInterestAnnualPeriods_v2(meetingFrequency, recurAfter, interestDays) / 100;
-    }
-
-    /**
-     * Corrects two defects:
-     * <ul>
-     * <li>period was being rounded to the closest integer because all of the factors involved in the calculation are
-     * integers. First, convert the factors to double values.
-     * <li>calculation uses the wrong formula for monthly installments. Whether fiscal year is 360 or 365, just consider
-     * a month to be 1/12 of a year.
-     */
-    private double getDecliningInterestAnnualPeriods_v2(RecurrenceType meetingFrequency, Integer recurAfter, Integer interestDays) {
-        double period = 0;
-
-        if (meetingFrequency.equals(RecurrenceType.WEEKLY)) {
-            period = Double.valueOf(interestDays.toString()) / (7 * recurAfter);
-        }
-        /*
-         * The use of monthly interest here does not distinguish between the 360 (with equal 30 day months) and the 365
-         * day year cases. Should it?
-         */
-        else if (meetingFrequency.equals(RecurrenceType.MONTHLY)) {
-            period = recurAfter * 12;
-        }
-
-        return period;
-    }
-
-    private List<EMIInstallment> generateEMI_v2(Money loanInterest, MeetingBO loanMeeting, GraceType graceType,
-            Integer gracePeriodDuration, Money loanAmount, Integer numberOfInstallments, Double interestRate,
-            Integer interestDays, InterestType interestType) {
-
-
-        switch (interestType) {
-        case FLAT:
-            return allFlatInstallments_v2(loanInterest, graceType, gracePeriodDuration, loanAmount, numberOfInstallments);
-        case DECLINING:
-        case DECLINING_PB:
-            return allDecliningInstallments_v2(graceType, gracePeriodDuration, loanAmount, numberOfInstallments, loanMeeting.getRecurrenceType(), loanMeeting.getRecurAfter().intValue(), interestRate, interestDays);
-        case DECLINING_EPI:
-            return allDecliningEPIInstallments_v2(graceType, gracePeriodDuration, loanAmount, numberOfInstallments,
-                    loanMeeting.getRecurrenceType(), loanMeeting.getRecurAfter().intValue(), interestRate, interestDays);
-        default:
-            try {
-                throw new AccountException(AccountConstants.NOT_SUPPORTED_EMI_GENERATION);
-            } catch (AccountException e) {
-                throw new BusinessRuleException(e.getKey(), e);
-            }
-        }
-    }
-
-    /**
-     * Generate flat-interest installment variants based on the type of grace period.
-     * <ul>
-     * <li>If grace period is none, or applies to both principal and interest, the loan calculations are the same.
-     * <li>If grace period is for principal only, don't add new installments. The first grace installments are
-     * interest-only, and principal is paid off with the remaining installments. NOTE: Principal-only grace period
-     * should be disable for release 1.1.
-     * </ul>
-     */
-    private List<EMIInstallment> allFlatInstallments_v2(final Money loanInterest, GraceType graceType, Integer gracePeriodDuration, Money loanAmount, Integer numOfInstallments) {
-        List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
-
-        if (graceType == GraceType.NONE || graceType == GraceType.GRACEONALLREPAYMENTS) {
-            emiInstallments = generateFlatInstallmentsNoGrace_v2(loanInterest, loanAmount, numOfInstallments);
-        } else {
-            // getGraceType() == GraceType.PRINCIPALONLYGRACE which is disabled.
-            emiInstallments = generateFlatInstallmentsInterestOnly_v2(loanInterest, numOfInstallments, gracePeriodDuration);
-            emiInstallments.addAll(generateFlatInstallmentsAfterInterestOnlyGraceInstallments_v2(loanInterest, gracePeriodDuration, loanAmount, numOfInstallments));
-        }
-        return emiInstallments;
-    }
-
-    /**
-     * Calculate the installments after grace period, in the case of principal-only grace type for a flat-interest loan.
-     * Divide interest evenly among all installments, but divide principle evenly among installments after the grace
-     * period.
-     */
-    private List<EMIInstallment> generateFlatInstallmentsAfterInterestOnlyGraceInstallments_v2(final Money loanInterest, Integer gracePeriodDuration, Money loanAmount, Integer numOfInstallments) {
-        List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
-        Money principalPerInstallment = loanAmount.divide(numOfInstallments - gracePeriodDuration);
-        Money interestPerInstallment = loanInterest.divide(numOfInstallments);
-        for (int i = gracePeriodDuration; i < numOfInstallments; i++) {
-            EMIInstallment installment = new EMIInstallment(loanAmount.getCurrency());
-            installment.setPrincipal(principalPerInstallment);
-            installment.setInterest(interestPerInstallment);
-            emiInstallments.add(installment);
-        }
-        return emiInstallments;
-    }
-
-    /**
-     * Generate declining-interest installment variants based on the type of grace period.
-     * <ul>
-     * <li>If grace period is none, or applies to both principal and interest, the loan calculations are the same.
-     * <li>If grace period is for principal only, don't add new installments. The first grace installments are
-     * interest-only, and principal is paid off with the remaining installments.
-     * </ul>
-     */
-    private List<EMIInstallment> allDecliningInstallments_v2(GraceType graceType, Integer gracePeriodDuration, Money loanAmount, Integer numberOfInstallments, RecurrenceType recurrenceType, Integer recurAfter, Double interestRate, Integer interestDays) {
-        List<EMIInstallment> emiInstallments;
-
-        if (graceType == GraceType.NONE || graceType == GraceType.GRACEONALLREPAYMENTS) {
-            emiInstallments = generateDecliningInstallmentsNoGrace_v2(numberOfInstallments, interestRate, interestDays, loanAmount, recurrenceType, recurAfter);
-        } else {
-
-            // getGraceType() == GraceType.PRINCIPALONLYGRACE which is disabled.
-
-            emiInstallments = generateDecliningInstallmentsInterestOnly_v2(gracePeriodDuration, interestRate, interestDays, loanAmount, recurrenceType, recurAfter);
-            emiInstallments.addAll(generateDecliningInstallmentsAfterInterestOnlyGraceInstallments_v2(gracePeriodDuration, numberOfInstallments, interestRate, interestDays, loanAmount, recurrenceType, recurAfter));
-        }
-        return emiInstallments;
-    }
-
-    /**
-     * Return the list if payment installments for declining interest method, for the number of installments specified.
-     */
-    private List<EMIInstallment> generateDecliningInstallmentsNoGrace_v2(final int numInstallments, Double interestRate, Integer interestDays, Money loanAmount, RecurrenceType recurrenceType, Integer recurAfter) {
-
-        List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
-
-        Money paymentPerPeriod = getPaymentPerPeriodForDecliningInterest_v2(numInstallments, interestRate, interestDays, loanAmount, recurrenceType, recurAfter);
-
-        // Now calculate the details of each installment. These are the exact
-        // values, and have not been
-        // adjusted for rounding and precision factors.
-
-        Money principalBalance = loanAmount;
-
-        double interestRateFractional = getInterestFractionalRatePerInstallment_v2(recurrenceType, recurAfter, interestRate, interestDays);
-        for (int i = 0; i < numInstallments; i++) {
-
-            EMIInstallment installment = new EMIInstallment(loanAmount.getCurrency());
-
-            Money interestThisPeriod = principalBalance.multiply(interestRateFractional);
-            Money principalThisPeriod = paymentPerPeriod.subtract(interestThisPeriod);
-
-            installment.setInterest(interestThisPeriod);
-            installment.setPrincipal(principalThisPeriod);
-            principalBalance = principalBalance.subtract(principalThisPeriod);
-
-            emiInstallments.add(installment);
-        }
-
-        return emiInstallments;
-    }
-
-    /**
-     * Generate interest-only payments for the duration of the grace period. Interest paid is on the outstanding
-     * balance, which during the grace period is the entire principal amount.
-     */
-    private List<EMIInstallment> generateDecliningInstallmentsInterestOnly_v2(Integer gracePeriodDuration, Double interestRate, Integer interestDays, Money loanAmount, RecurrenceType recurrenceType, Integer recurAfter) {
-
-        List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
-        Money zero = MoneyUtils.zero(loanAmount.getCurrency());
-        double interestRateFractional = getInterestFractionalRatePerInstallment_v2(recurrenceType, recurAfter, interestRate, interestDays);
-        for (int i = 0; i < gracePeriodDuration; i++) {
-            EMIInstallment installment = new EMIInstallment(loanAmount.getCurrency());
-            installment.setInterest(loanAmount.multiply(interestRateFractional));
-            installment.setPrincipal(zero);
-            emiInstallments.add(installment);
-        }
-
-        return emiInstallments;
-    }
-
-    private List<EMIInstallment> allDecliningEPIInstallments_v2(GraceType graceType, Integer gracePeriodDuration, Money loanAmount, Integer numberOfInstallments, RecurrenceType recurrenceType, Integer recurAfter, Double interestRate, Integer interestDays) {
-
-        List<EMIInstallment> emiInstallments;
-        if (graceType == GraceType.NONE || graceType == GraceType.GRACEONALLREPAYMENTS) {
-            emiInstallments = generateDecliningEPIInstallmentsNoGrace_v2(numberOfInstallments, loanAmount, recurrenceType, recurAfter, interestRate, interestDays);
-        } else {
-            emiInstallments = generateDecliningEPIInstallmentsInterestOnly_v2(gracePeriodDuration, loanAmount, recurrenceType, recurAfter, interestRate, interestDays);
-            emiInstallments.addAll(generateDecliningEPIInstallmentsAfterInterestOnlyGraceInstallments_v2(gracePeriodDuration, loanAmount, numberOfInstallments, recurrenceType, recurAfter, interestRate, interestDays));
-        }
-        return emiInstallments;
-    }
-
-    private List<EMIInstallment> generateDecliningEPIInstallmentsNoGrace_v2(final int numInstallments, Money loanAmount, RecurrenceType recurrenceType, Integer recurAfter, Double interestRate, Integer interestDays){
-
-        List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
-        Money principalBalance = loanAmount;
-        Money principalPerPeriod = principalBalance.divide(new BigDecimal(numInstallments));
-        double interestRateFractional = getInterestFractionalRatePerInstallment_v2(recurrenceType, recurAfter, interestRate, interestDays);
-
-        for (int i = 0; i < numInstallments; i++) {
-            EMIInstallment installment = new EMIInstallment(loanAmount.getCurrency());
-            Money interestThisPeriod = principalBalance.multiply(interestRateFractional);
-            installment.setInterest(interestThisPeriod);
-            installment.setPrincipal(principalPerPeriod);
-            principalBalance = principalBalance.subtract(principalPerPeriod);
-            emiInstallments.add(installment);
-        }
-
-        return emiInstallments;
-    }
-
-    // same as Declining
-    private List<EMIInstallment> generateDecliningEPIInstallmentsInterestOnly_v2(Integer gracePeriodDuration, Money loanAmount, RecurrenceType recurrenceType, Integer recurAfter, Double interestRate, Integer interestDays) {
-
-        return generateDecliningInstallmentsInterestOnly_v2(gracePeriodDuration, interestRate, interestDays, loanAmount, recurrenceType, recurAfter);
-    }
-
-    private List<EMIInstallment> generateDecliningEPIInstallmentsAfterInterestOnlyGraceInstallments_v2(Integer gracePeriodDuration, Money loanAmount, Integer numberOfInstallments, RecurrenceType recurrenceType, Integer recurAfter, Double interestRate, Integer interestDays) {
-
-        return generateDecliningEPIInstallmentsNoGrace_v2(numberOfInstallments - gracePeriodDuration, loanAmount, recurrenceType, recurAfter, interestRate, interestDays);
-    }
-
-    /**
-     * Divide principal and interest evenly among all installments, no grace period
-     */
-    private List<EMIInstallment> generateFlatInstallmentsNoGrace_v2(final Money loanInterest, Money loanAmount, Integer numOfInstallments) {
-        List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
-        Money principalPerInstallment = loanAmount.divide(numOfInstallments);
-        Money interestPerInstallment = loanInterest.divide(numOfInstallments);
-        for (int i = 0; i < numOfInstallments; i++) {
-            EMIInstallment installment = new EMIInstallment(loanAmount.getCurrency());
-            installment.setPrincipal(principalPerInstallment);
-            installment.setInterest(interestPerInstallment);
-            emiInstallments.add(installment);
-        }
-        return emiInstallments;
-    }
-
-    /**
-     * Generate interest-only payments for the duration of the grace period. Interest is divided evenly among all
-     * installments, but only interest is paid during the grace period.
-     */
-    private List<EMIInstallment> generateFlatInstallmentsInterestOnly_v2(final Money loanInterest, Integer numOfInstallments, Integer gracePeriodDuration) {
-
-        List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
-        Money zero = MoneyUtils.zero(loanInterest.getCurrency());
-
-        Money interestPerInstallment = loanInterest.divide(numOfInstallments);
-
-        for (int i = 0; i < gracePeriodDuration; i++) {
-            EMIInstallment installment = new EMIInstallment(loanInterest.getCurrency());
-            installment.setInterest(interestPerInstallment);
-            installment.setPrincipal(zero);
-            emiInstallments.add(installment);
-        }
-
-        return emiInstallments;
-    }
-
-    /**
-     * Calculate the installments after grace period, in the case of principal-only grace type for a declining-interest
-     * loan. Calculation is identical to the no-grace scenario except that the number of installments is reduced by the
-     * grace period.
-     */
-    private List<EMIInstallment> generateDecliningInstallmentsAfterInterestOnlyGraceInstallments_v2(Integer gracePeriodDuration, Integer numberOfInstallments, Double interestRate, Integer interestDays, Money loanAmount, RecurrenceType recurrenceType, Integer recurAfter) {
-
-        return generateDecliningInstallmentsNoGrace_v2(numberOfInstallments - gracePeriodDuration, interestRate, interestDays, loanAmount, recurrenceType, recurAfter);
     }
 
     private void applyRounding_v2(List<? extends AccountActionDateEntity> installments, GraceType graceType, Integer gracePeriodDuration, Money loanAmount, Integer numberOfInstallments, InterestType interestType) {

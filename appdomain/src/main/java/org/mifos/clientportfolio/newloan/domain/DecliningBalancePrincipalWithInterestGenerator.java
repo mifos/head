@@ -3,15 +3,15 @@ package org.mifos.clientportfolio.newloan.domain;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mifos.accounts.loan.util.helpers.EMIInstallment;
+import org.mifos.accounts.loan.util.helpers.InstallmentPrincipalAndInterest;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.MoneyUtils;
 
-public class DecliningBalanceEqualInstallmentGenerator implements EqualInstallmentGenerator {
+public class DecliningBalancePrincipalWithInterestGenerator implements PrincipalWithInterestGenerator {
 
     @Override
-    public List<EMIInstallment> generateEqualInstallments(LoanInterestCalculationDetails loanInterestCalculationDetails) {
+    public List<InstallmentPrincipalAndInterest> generateEqualInstallments(LoanInterestCalculationDetails loanInterestCalculationDetails) {
 
         GraceType graceType = loanInterestCalculationDetails.getGraceType();
         Integer gracePeriodDuration = loanInterestCalculationDetails.getGracePeriodDuration();
@@ -31,10 +31,10 @@ public class DecliningBalanceEqualInstallmentGenerator implements EqualInstallme
      * interest-only, and principal is paid off with the remaining installments.
      * </ul>
      */
-    private List<EMIInstallment> allDecliningInstallments_v2(Money loanAmount, Integer numberOfInstallments,
+    private List<InstallmentPrincipalAndInterest> allDecliningInstallments_v2(Money loanAmount, Integer numberOfInstallments,
             GraceType graceType, Integer gracePeriodDuration, Double interestFractionalRatePerInstallment, Double interestRate) {
 
-        List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
+        List<InstallmentPrincipalAndInterest> emiInstallments = new ArrayList<InstallmentPrincipalAndInterest>();
 
         if (graceType == GraceType.NONE || graceType == GraceType.GRACEONALLREPAYMENTS) {
             Money paymentPerPeriod = getPaymentPerPeriodForDecliningInterest_v2(numberOfInstallments, interestRate, loanAmount, interestFractionalRatePerInstallment);
@@ -86,14 +86,13 @@ public class DecliningBalanceEqualInstallmentGenerator implements EqualInstallme
      * Generate interest-only payments for the duration of the grace period. Interest paid is on the outstanding
      * balance, which during the grace period is the entire principal amount.
      */
-    private List<EMIInstallment> generateDecliningInstallmentsInterestOnly_v2(Money loanAmount, Integer gracePeriodDuration, Double interestFractionalRatePerInstallment) {
+    private List<InstallmentPrincipalAndInterest> generateDecliningInstallmentsInterestOnly_v2(Money loanAmount, Integer gracePeriodDuration, Double interestFractionalRatePerInstallment) {
 
-        List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
+        List<InstallmentPrincipalAndInterest> emiInstallments = new ArrayList<InstallmentPrincipalAndInterest>();
         Money zero = MoneyUtils.zero(loanAmount.getCurrency());
         for (int i = 0; i < gracePeriodDuration; i++) {
-            EMIInstallment installment = new EMIInstallment(loanAmount.getCurrency());
-            installment.setInterest(loanAmount.multiply(interestFractionalRatePerInstallment));
-            installment.setPrincipal(zero);
+
+            InstallmentPrincipalAndInterest installment = new InstallmentPrincipalAndInterest(zero, loanAmount.multiply(interestFractionalRatePerInstallment));
             emiInstallments.add(installment);
         }
 
@@ -103,29 +102,22 @@ public class DecliningBalanceEqualInstallmentGenerator implements EqualInstallme
     /**
      * Return the list if payment installments for declining interest method, for the number of installments specified.
      */
-    private List<EMIInstallment> generateDecliningInstallmentsNoGrace_v2(final int numberOfInstallments, Money loanAmount, Double interestFractionalRatePerInstallment, Money paymentPerPeriod) {
+    private List<InstallmentPrincipalAndInterest> generateDecliningInstallmentsNoGrace_v2(final int numberOfInstallments, Money loanAmount, Double interestFractionalRatePerInstallment, Money paymentPerPeriod) {
 
-        List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
+        List<InstallmentPrincipalAndInterest> emiInstallments = new ArrayList<InstallmentPrincipalAndInterest>();
 
-        // Now calculate the details of each installment. These are the exact
-        // values, and have not been
-        // adjusted for rounding and precision factors.
         Money decliningPrincipalBalance = loanAmount;
         for (int i = 0; i < numberOfInstallments; i++) {
-
-            EMIInstallment installment = new EMIInstallment(decliningPrincipalBalance.getCurrency());
 
             Money interestThisPeriod = decliningPrincipalBalance.multiply(interestFractionalRatePerInstallment);
             Money principalThisPeriod = paymentPerPeriod.subtract(interestThisPeriod);
 
-            installment.setInterest(interestThisPeriod);
-            installment.setPrincipal(principalThisPeriod);
-            decliningPrincipalBalance = decliningPrincipalBalance.subtract(principalThisPeriod);
-
+            InstallmentPrincipalAndInterest installment = new InstallmentPrincipalAndInterest(principalThisPeriod, interestThisPeriod);
             emiInstallments.add(installment);
+
+            decliningPrincipalBalance = decliningPrincipalBalance.subtract(principalThisPeriod);
         }
 
         return emiInstallments;
     }
-
 }

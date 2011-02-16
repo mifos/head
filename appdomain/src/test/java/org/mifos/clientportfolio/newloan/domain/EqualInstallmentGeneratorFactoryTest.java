@@ -30,7 +30,6 @@ import org.junit.runner.RunWith;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.service.BusinessRuleException;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -40,7 +39,6 @@ public class EqualInstallmentGeneratorFactoryTest {
     private EqualInstallmentGeneratorFactory equalInstallmentGeneratorFactory;
 
     // test doubles
-    @Mock private LoanUsuageDetail loanUsageDetail;
     private Money loanInterest = TestMoneyUtil.createMoney("100.0");
 
     @Before
@@ -54,10 +52,10 @@ public class EqualInstallmentGeneratorFactoryTest {
         InterestType interestType = InterestType.FLAT;
 
         // exercise test
-        EqualInstallmentGenerator equalInstallmentGenerator = equalInstallmentGeneratorFactory.create(interestType, loanUsageDetail, loanInterest);
+        PrincipalWithInterestGenerator equalInstallmentGenerator = equalInstallmentGeneratorFactory.create(interestType, loanInterest);
 
         // verification
-        assertThat(equalInstallmentGenerator, is(instanceOf(FlatLoanInterestEqualInstallmentGenerator.class)));
+        assertThat(equalInstallmentGenerator, is(instanceOf(FlatLoanPrincipalWithInterestGenerator.class)));
     }
 
     @Test
@@ -66,10 +64,10 @@ public class EqualInstallmentGeneratorFactoryTest {
         InterestType interestType = InterestType.DECLINING;
 
         // exercise test
-        EqualInstallmentGenerator equalInstallmentGenerator = equalInstallmentGeneratorFactory.create(interestType, loanUsageDetail, loanInterest);
+        PrincipalWithInterestGenerator equalInstallmentGenerator = equalInstallmentGeneratorFactory.create(interestType, loanInterest);
 
         // verification
-        assertThat(equalInstallmentGenerator, is(instanceOf(DecliningBalanceEqualInstallmentGenerator.class)));
+        assertThat(equalInstallmentGenerator, is(instanceOf(DecliningBalancePrincipalWithInterestGenerator.class)));
     }
 
     @Test
@@ -78,10 +76,10 @@ public class EqualInstallmentGeneratorFactoryTest {
         InterestType interestType = InterestType.DECLINING_PB;
 
         // exercise test
-        EqualInstallmentGenerator equalInstallmentGenerator = equalInstallmentGeneratorFactory.create(interestType, loanUsageDetail, loanInterest);
+        PrincipalWithInterestGenerator equalInstallmentGenerator = equalInstallmentGeneratorFactory.create(interestType, loanInterest);
 
         // verification
-        assertThat(equalInstallmentGenerator, is(instanceOf(DecliningBalanceEqualInstallmentGenerator.class)));
+        assertThat(equalInstallmentGenerator, is(instanceOf(DecliningBalancePrincipalWithInterestGenerator.class)));
     }
 
     @Test
@@ -90,10 +88,10 @@ public class EqualInstallmentGeneratorFactoryTest {
         InterestType interestType = InterestType.DECLINING_EPI;
 
         // exercise test
-        EqualInstallmentGenerator equalInstallmentGenerator = equalInstallmentGeneratorFactory.create(interestType, loanUsageDetail, loanInterest);
+        PrincipalWithInterestGenerator equalInstallmentGenerator = equalInstallmentGeneratorFactory.create(interestType, loanInterest);
 
         // verification
-        assertThat(equalInstallmentGenerator, is(instanceOf(DecliningBalanceEqualPrincipalEqualInstallmentGenerator.class)));
+        assertThat(equalInstallmentGenerator, is(instanceOf(DecliningBalanceEqualPrincipalWithInterestGenerator.class)));
     }
 
     @Test(expected=BusinessRuleException.class)
@@ -102,7 +100,7 @@ public class EqualInstallmentGeneratorFactoryTest {
         InterestType interestType = InterestType.COMPOUND;
 
         // exercise test
-        equalInstallmentGeneratorFactory.create(interestType, loanUsageDetail, loanInterest);
+        equalInstallmentGeneratorFactory.create(interestType, loanInterest);
     }
 
 }
