@@ -420,6 +420,9 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
         groupTestHelper.createNewGroupPartialApplication("CenterNameTest123456", groupParams);
 
         clientTestHelper.createClientAndVerify("Horace Engdahl", "Test Branch Office");
+
+        // restore original configuration
+        propertiesHelper.setWorkingDays("Monday,Tuesday,Wednesday,Thursday,Friday,Saturday");
     }
 
     private CreateCenterEnterDataPage.SubmitFormParameters setCenterParameters() {
