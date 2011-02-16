@@ -27,21 +27,12 @@ import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.util.helpers.YesNoFlag;
-import org.mifos.config.AccountingRules;
-import org.mifos.config.ClientRules;
-import org.mifos.config.ConfigLocale;
-import org.mifos.config.FiscalCalendarRules;
-import org.mifos.config.ProcessFlowRules;
+import org.mifos.config.*;
 import org.mifos.config.business.service.ConfigurationBusinessService;
+import org.mifos.framework.plugin.PluginManager;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import org.mifos.framework.plugin.PluginManager;
+import java.util.*;
 
 public class ViewOrganizationSettingsServiceFacadeWebTier implements ViewOrganizationSettingsServiceFacade {
     private static final String DELIMITER = ", ";
@@ -103,6 +94,14 @@ public class ViewOrganizationSettingsServiceFacadeWebTier implements ViewOrganiz
         accountingRules.setProperty("currencyRoundingMode", AccountingRules.getCurrencyRoundingMode().toString());
         accountingRules.setProperty("initialRoundingMode", AccountingRules.getInitialRoundingMode().toString());
         accountingRules.setProperty("finalRoundingMode", AccountingRules.getFinalRoundingMode().toString());
+
+        accountingRules.setProperty("minCashFlowThreshold", AccountingRules.getMinCashFlowThreshold().toString());
+        accountingRules.setProperty("maxCashFlowThreshold", AccountingRules.getMaxCashFlowThreshold().toString());
+        accountingRules.setProperty("minRepaymentCapacity", AccountingRules.getMinRepaymentCapacity().toString());
+        accountingRules.setProperty("maxRepaymentCapacity", AccountingRules.getMaxRepaymentCapacity().toString());
+        accountingRules.setProperty("minIndebtednessRatio", AccountingRules.getMinIndebtednessRatio().toString());
+        accountingRules.setProperty("maxIndebtednessRatio", AccountingRules.getMaxIndebtednessRatio().toString());
+
         return accountingRules;
     }
 
