@@ -25,6 +25,8 @@
                          "createSavingsAccount.flowState.enterAccountInfo", 
                          "createSavingsAccount.flowState.reviewAndSubmit"]] 
 
+<span id="page.id" title="CustSearchAccount"></span>
+
 <h1>[@spring.message "createSavingsAccount.customerSearch.pageTitle" /] - <span class="standout">[@spring.message "createSavingsAccount.customerSearch.pageSubtitle" /]</span></h1>
 
 <p>[@spring.message "createSavingsAccount.customerSearch.instructions" /]</p>
@@ -35,11 +37,11 @@
     <fieldset>
     <div class="row">
         <label for="searchString">[@spring.message "createSavingsAccount.customerSearch.searchTerm" /]:</label>
-        [@spring.formInput "savingsAccountFormBean.searchString" /]
+        [@form.input path="savingsAccountFormBean.searchString" id="cust_search_account.input.searchString" attributes="" /]
     </div>
     </fieldset>
     <div class="row">
-        [@form.submitButton "widget.form.buttonLabel.search" "searchTermEntered" /]
+        [@form.submitButton label="widget.form.buttonLabel.search" id="cust_search_account.button.search" webflowEvent="searchTermEntered" /]
         [@form.cancelButton "cancel" /]
     </div>
 </form>

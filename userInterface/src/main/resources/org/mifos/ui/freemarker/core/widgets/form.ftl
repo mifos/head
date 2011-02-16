@@ -24,6 +24,19 @@
 [#-- FIXME: these macros are copied from newblueprintmacros.ftl. They've been moved here for better organization. Delete from newblueprintmacros.ftl. --]
 
 [#-- 
+Renders an HTML input element.
+
+    path       : spring bind path
+    id         : ID of the element
+    attributes : any additional attributes for the element (such as class, size, etc)
+    fieldType  : Field type: text, hidden 
+--]
+[#macro input path id="" attributes="" fieldType="text"]
+[@spring.bind path /]
+    <input id="${id}" type="${fieldType}" name="${spring.status.expression}" value="${spring.status.value?default("")}" ${attributes} />
+[/#macro]
+
+[#-- 
 Renders an HTML select element.
 
     path        : spring bind path 
@@ -31,9 +44,9 @@ Renders an HTML select element.
     selectPrompt: A value to display when the select input is first rendered. For example, "--Select--".
     attributes  : Extra HTML attributes that should be added to the select element. For example, "class=blah" and "id=blah".
 --]
-[#macro singleSelectWithPrompt path options selectPrompt attributes=""]
+[#macro singleSelectWithPrompt path options id="" selectPrompt="" attributes=""]
     [@spring.bind path/]
-    <select id="${spring.status.expression}" name="${spring.status.expression}" ${attributes}>
+    <select id="${id}" name="${spring.status.expression}" ${attributes}>
         <option value="" [@spring.checkSelected ""/]>[@spring.message "${selectPrompt}"/]</option>
         [#if options?is_hash]
             [#list options?keys as value]
@@ -83,13 +96,13 @@ Renders a submit button.
     buttonLabel : The value shown on the button.
     webflowEvent: If this button is part of a form that drives webflow, you may specify the event Id here.
 --]
-[#macro submitButton buttonLabel="widget.form.buttonLabel.submit" webflowEvent=""]
+[#macro submitButton label="widget.form.buttonLabel.submit" id="" webflowEvent=""]
     [#if webflowEvent?length == 0]
         [#assign name="" /]
     [#else]
         [#assign name="_eventId_${webflowEvent}" /]
     [/#if]
-    <input type="submit" class="submit" value="[@spring.message buttonLabel /]" name="${name}" />
+    <input id="${id}" type="submit" class="submit" value="[@spring.message label /]" name="${name}" />
 [/#macro]
 
 [#-- 
@@ -98,13 +111,13 @@ Renders a cancel button.
     buttonLabel : The value shown on the button.
     webflowEvent: If this button is part of a form that drives webflow, you may specify the event Id here.
 --]
-[#macro cancelButton buttonLabel="widget.form.buttonLabel.cancel" webflowEvent=""]
+[#macro cancelButton label="widget.form.buttonLabel.cancel" webflowEvent=""]
     [#if webflowEvent?length == 0]
         [#assign name="" /]
     [#else]
         [#assign name="_eventId_${webflowEvent}" /]
     [/#if]
-    <input type="submit" class="cancel" value="[@spring.message buttonLabel /]" name="${name}" />
+    <input type="submit" class="cancel" value="[@spring.message label /]" name="${name}" />
 [/#macro]
 
 [#-- 
