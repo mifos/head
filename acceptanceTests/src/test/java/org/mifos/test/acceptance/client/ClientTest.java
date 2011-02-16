@@ -151,17 +151,7 @@ public class ClientTest extends UiTestCaseBase {
         //When
         String groupName = "MyGroup1232993846342";
         CreateClientEnterPersonalDataPage.SubmitFormParameters clientParams = new CreateClientEnterPersonalDataPage.SubmitFormParameters();
-        clientParams.setSalutation(CreateClientEnterPersonalDataPage.SubmitFormParameters.MRS);
-        clientParams.setFirstName("John");
-        clientParams.setLastName("Doe");
-        clientParams.setDateOfBirthDD("22");
-        clientParams.setDateOfBirthMM("05");
-        clientParams.setDateOfBirthYYYY("1987");
-        clientParams.setGender(CreateClientEnterPersonalDataPage.SubmitFormParameters.MALE);
-        clientParams.setPovertyStatus(CreateClientEnterPersonalDataPage.SubmitFormParameters.NOT_POOR);
-        clientParams.setSpouseNameType(CreateClientEnterPersonalDataPage.SubmitFormParameters.FATHER);
-        clientParams.setSpouseFirstName("fatherName");
-        clientParams.setSpouseLastName("fatherLastName");
+        clientParams=clientParams();
 
         ClientViewDetailsPage clientViewDetailsPage = clientTestHelper.createNewClient(groupName, clientParams);
         clientViewDetailsPage.verifyHeading("John Doe");
@@ -841,5 +831,48 @@ public class ClientTest extends UiTestCaseBase {
         parameters.setType(type);
         parameters.setChoicesFromStrings(choices);
         return parameters;
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // http://mifosforge.jira.com/browse/MIFOSTEST-305
+    public void createClientWithSaveForLaterAndChangeStatusTest() throws Exception {
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
+        ClientViewDetailsPage clientDetailsPage = clientTestHelper.createClientAndVerify("Joe1233171679953 Guy1233171679953", "MyOffice1233171674227");
+
+        //When
+        String groupName = "MyGroup1232993846342";
+        CreateClientEnterPersonalDataPage.SubmitFormParameters clientParams = new CreateClientEnterPersonalDataPage.SubmitFormParameters();
+        clientParams=clientParams();
+
+        ClientViewDetailsPage clientViewDetailsPage =navigationHelper
+        .navigateToClientsAndAccountsPage()
+        .navigateToCreateNewClientPage()
+        .selectGroup(groupName)
+        .create(clientParams)
+        .submitAndGotoCreateClientEnterMfiDataPage()
+        .navigateToPreview()
+        .saveForLater()
+        .navigateToClientViewDetailsPage();
+        clientViewDetailsPage.verifyStatus(ClientTestHelper.PARTIAL_APPLICATION);
+        // Then
+        clientTestHelper.changeCustomerStatus(clientDetailsPage,ClientStatus.PENDING_APPROVAL);
+    }
+
+    private CreateClientEnterPersonalDataPage.SubmitFormParameters clientParams()
+    {
+        CreateClientEnterPersonalDataPage.SubmitFormParameters clientParams = new CreateClientEnterPersonalDataPage.SubmitFormParameters();
+        clientParams.setSalutation(CreateClientEnterPersonalDataPage.SubmitFormParameters.MRS);
+        clientParams.setFirstName("John");
+        clientParams.setLastName("Doe");
+        clientParams.setDateOfBirthDD("22");
+        clientParams.setDateOfBirthMM("05");
+        clientParams.setDateOfBirthYYYY("1987");
+        clientParams.setGender(CreateClientEnterPersonalDataPage.SubmitFormParameters.MALE);
+        clientParams.setPovertyStatus(CreateClientEnterPersonalDataPage.SubmitFormParameters.NOT_POOR);
+        clientParams.setSpouseNameType(CreateClientEnterPersonalDataPage.SubmitFormParameters.FATHER);
+        clientParams.setSpouseFirstName("fatherName");
+        clientParams.setSpouseLastName("fatherLastName");
+        return clientParams;
     }
 }
