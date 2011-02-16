@@ -244,15 +244,6 @@
             <artifactId>commons-validator</artifactId>
         </dependency>
         <dependency>
-            <!--
-                This dependency overrides the earlier version of Rhino included by spring modules (?). The earlier
-                version of Rhino is incompatible with BIRT. - keithr@alum.mit.edu
-            -->
-            <groupId>rhino</groupId>
-            <artifactId>js</artifactId>
-            <version>1.7R2</version>
-        </dependency>
-        <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
         </dependency>
