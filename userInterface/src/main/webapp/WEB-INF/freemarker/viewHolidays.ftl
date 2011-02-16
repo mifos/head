@@ -40,7 +40,7 @@
 
             [#list holidaysMap?keys as key]
             <p class="fontBold padding10topbottom">Holidays for year ${key}</p>
-            <table style="line-height:1.2;margin-bottom:5px; border-bottom:1px solid #D7DEEE;" cellspacing="0" cellpadding="3" border="0" width="98%">
+            <table id="organizational_holidays_${key}" style="line-height:1.2;margin-bottom:5px; border-bottom:1px solid #D7DEEE;" cellspacing="0" cellpadding="3" border="0" width="98%">
                 <tbody>
                 <tr>
                     <td width="11%" class="drawtablehd">[@spring.message "organizationPreferences.definenewholiday.fromDat"/]</td>

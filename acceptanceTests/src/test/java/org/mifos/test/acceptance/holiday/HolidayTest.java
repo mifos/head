@@ -32,7 +32,6 @@ import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.holiday.CreateHolidayConfirmationPage;
 import org.mifos.test.acceptance.framework.holiday.CreateHolidayEntryPage;
-import org.mifos.test.acceptance.framework.holiday.ViewHolidaysPage;
 import org.mifos.test.acceptance.framework.holiday.CreateHolidayEntryPage.CreateHolidaySubmitParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameters;
@@ -95,21 +94,17 @@ public class HolidayTest extends UiTestCaseBase {
         AdminPage adminPage = loginAndNavigateToAdminPage();
         adminPage.verifyPage();
         CreateHolidayEntryPage createHolidayEntryPage = adminPage.navigateToDefineHolidayPage();
-        createHolidayEntryPage.verifyPage();
 
         CreateHolidaySubmitParameters params = this.getHolidayParameters();
         CreateHolidayConfirmationPage confirmationPage = createHolidayEntryPage.submitAndNavigateToHolidayConfirmationPage(params);
-        confirmationPage.verifyPage();
         confirmationPage.submitAndNavigateToViewHolidaysPage();
 
         verifyHolidayData(HOLIDAY_RESULT_DATA_SET);
 
         // try to create second holiday with the same date
         createHolidayEntryPage = adminPage.navigateToDefineHolidayPage();
-        createHolidayEntryPage.verifyPage();
         params.setName("Test Holiday 2");
         confirmationPage = createHolidayEntryPage.submitAndNavigateToHolidayConfirmationPage(params);
-        confirmationPage.verifyPage();
         assertTextFoundOnPage("Holiday with the same date already exists: Test Holiday",
                 "Text about duplicated holidays was not found.");
     }
@@ -117,8 +112,7 @@ public class HolidayTest extends UiTestCaseBase {
     public void viewHolidays() {
         AdminPage adminPage = loginAndNavigateToAdminPage();
         adminPage.verifyPage();
-        ViewHolidaysPage viewHolidays = adminPage.navigateToViewHolidays();
-        viewHolidays.verifyPage();
+        adminPage.navigateToViewHolidays();
     }
 
     //http://mifosforge.jira.com/browse/MIFOSTEST-79
@@ -289,9 +283,7 @@ public class HolidayTest extends UiTestCaseBase {
         adminPage.verifyPage();
 
         CreateHolidayEntryPage createHolidayEntryPage = adminPage.navigateToDefineHolidayPage();
-        createHolidayEntryPage.verifyPage();
         CreateHolidayConfirmationPage confirmationPage = createHolidayEntryPage.submitAndNavigateToHolidayConfirmationPage(params);
-        confirmationPage.verifyPage();
         confirmationPage.submitAndNavigateToViewHolidaysPage();
     }
 

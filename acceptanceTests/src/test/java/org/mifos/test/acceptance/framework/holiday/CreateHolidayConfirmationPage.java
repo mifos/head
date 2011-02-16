@@ -21,21 +21,19 @@
 package org.mifos.test.acceptance.framework.holiday;
 
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.mifos.test.acceptance.framework.admin.AdminPage;
 
 import com.thoughtworks.selenium.Selenium;
 
 public class CreateHolidayConfirmationPage extends MifosPage {
     public CreateHolidayConfirmationPage(Selenium selenium) {
         super(selenium);
-    }
-
-    public void verifyPage() {
         this.verifyPage("Review_holidayCreation");
     }
 
-    public ViewHolidaysPage submitAndNavigateToViewHolidaysPage() {
+    public AdminPage submitAndNavigateToViewHolidaysPage() {
         selenium.click("holiday.button.submit");
         waitForPageToLoad();
-        return new ViewHolidaysPage(selenium);
+        return new AdminPage(selenium);
     }
 }

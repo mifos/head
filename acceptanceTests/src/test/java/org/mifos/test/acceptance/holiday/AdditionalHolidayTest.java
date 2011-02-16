@@ -50,6 +50,7 @@ import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameter
 import org.mifos.test.acceptance.framework.login.LoginPage;
 import org.mifos.test.acceptance.framework.testhelpers.BatchJobHelper;
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
+import org.mifos.test.acceptance.framework.testhelpers.HolidayTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +66,7 @@ import org.testng.annotations.Test;
 public class AdditionalHolidayTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;
+    private HolidayTestHelper holidayTestHelper;
 
     @Autowired
     private DriverManagerDataSource dataSource;
@@ -78,7 +80,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
-    @BeforeMethod
+    @BeforeMethod(alwaysRun=true)
     public void setUp() throws Exception {
         super.setUp();
 
@@ -88,6 +90,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
 
         appLauncher = new AppLauncher(selenium);
+        holidayTestHelper = new HolidayTestHelper(selenium);
     }
 
     @AfterMethod
@@ -106,10 +109,8 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         AdminPage adminPage = loginAndNavigateToAdminPage();
         adminPage.verifyPage();
         ViewHolidaysPage viewHolidayPage = adminPage.navigateToViewHolidaysPage();
-        viewHolidayPage.verifyPage();
 
         CreateHolidayEntryPage createHolidayPage = viewHolidayPage.navigateToDefineHolidayPage();
-        createHolidayPage.verifyPage();
 
         CreateHolidaySubmitParameters params = new CreateHolidayEntryPage.CreateHolidaySubmitParameters();
 
@@ -122,7 +123,6 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
 
         CreateHolidayConfirmationPage confirmHolidayPage = createHolidayPage
                 .submitAndNavigateToHolidayConfirmationPage(params);
-        confirmHolidayPage.verifyPage();
         confirmHolidayPage.submitAndNavigateToViewHolidaysPage();
 
         logOut();
@@ -454,18 +454,13 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test
-    // MIFOSTEST-280
+    //http://mifosforge.jira.com/browse/MIFOSTEST-280
     public void testBranchSpecificMoratorium() throws Exception {
-        initRemote
-                .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
-        // create two weeks of moratorium in MyOffice1232993831593
-        createMoratoriumForMay("2");
-
-        AdminPage adminPage = loginAndNavigateToAdminPage();
-        adminPage.verifyPage();
-        adminPage.navigateToViewHolidaysPage();
-        selenium.isTextPresent("MyOffice1232993831593");
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
+            CreateHolidaySubmitParameters param = FormParametersHelper.getCreateHolidaySubmitParameters();
+        //When / Then
+        holidayTestHelper.createHoliday(param);
     }
 
 
@@ -657,11 +652,9 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         AdminPage adminPage = loginAndNavigateToAdminPage();
         adminPage.verifyPage();
         CreateHolidayEntryPage createHolidayEntryPage = adminPage.navigateToDefineHolidayPage();
-        createHolidayEntryPage.verifyPage();
 
         CreateHolidayConfirmationPage confirmationPage = createHolidayEntryPage
                 .submitAndNavigateToHolidayConfirmationPage(params);
-        confirmationPage.verifyPage();
         confirmationPage.submitAndNavigateToViewHolidaysPage();
     }
 

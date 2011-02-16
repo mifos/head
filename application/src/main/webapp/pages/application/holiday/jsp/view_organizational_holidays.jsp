@@ -64,7 +64,7 @@ explanation of the license and how it is applied.
 					</html-el:link>
 	             </span>
             	 <br><br>
-                 
+            	 
               </td>
             </tr>    
           </table>
