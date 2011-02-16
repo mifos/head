@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>mifos-parent</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.maven.ide.eclipse.maven2Builder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.maven.ide.eclipse.maven2Nature</nature>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>pom.xml</name>
+			<type>1</type>
+			<locationURI>ROOT_LOC/pom.xml</locationURI>
+		</link>
+		<link>
+			<name>pom.xml.readme.txt</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/pom.xml.readme.txt</locationURI>
+		</link>
+	</linkedResources>
+	<variableList>
+		<variable>
+			<name>ROOT_LOC</name>
+			<value>$%7BPARENT-1-PROJECT_LOC%7D</value>
+		</variable>
+	</variableList>
+</projectDescription>

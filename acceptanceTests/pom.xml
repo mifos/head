@@ -12,6 +12,7 @@
         <groupId>org.mifos</groupId>
         <artifactId>mifos-parent</artifactId>
         <version>1.9-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <properties>
@@ -19,7 +20,8 @@
         <cargo.install.directory>${basedir}/target/installs</cargo.install.directory>
         <selenium.background>true</selenium.background>
         <selenium.log.output>true</selenium.log.output>
-        <tomcat.container.url>http://www.apache.org/dist/tomcat/tomcat-6/v${tomcat.version}/bin/apache-tomcat-${tomcat.version}.zip</tomcat.container.url>
+        <jetty.version>7.3.0.v20110203</jetty.version>
+        <jetty.container.url>http://download.eclipse.org/jetty/stable-7/dist/jetty-distribution-${jetty.version}.zip</jetty.container.url>
         <cargo.wait>false</cargo.wait>
         <jdk.version>1.6</jdk.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -47,14 +49,14 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <tomcat.home.directory>${cargo.install.directory}/${container.name}/apache-tomcat-${tomcat.version}/apache-tomcat-${tomcat.version}/</tomcat.home.directory>
+                <jetty.home.directory>${cargo.install.directory}/${container.name}/jetty-${jetty.version}/</jetty.home.directory>
             </properties>
             <build>
                 <plugins>
                     <plugin>
                         <groupId>org.codehaus.cargo</groupId>
                         <artifactId>cargo-maven2-plugin</artifactId>
-                        <version>1.0.3</version>
+                        <version>1.0.5</version>
                         <configuration>
                             <container>
                                 <zipUrlInstaller>
@@ -85,14 +87,14 @@
                     <plugin>
                         <groupId>org.codehaus.cargo</groupId>
                         <artifactId>cargo-maven2-plugin</artifactId>
-                        <version>1.0</version>
+                        <version>1.0.5</version>
                         <configuration>
                             <container>
-                                <home>${tomcat.home.directory}</home>
+                                <home>${jetty.home.directory}</home>
                             </container>
                             <configuration>
                                 <type>standalone</type>
-                                <home>${tomcat.deploy.directory}</home>
+                                <home>${jetty.deploy.directory}</home>
                             </configuration>
                         </configuration>
                     </plugin>
@@ -105,10 +107,9 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <container.name>tomcat6x</container.name>
-                <container.url>${tomcat.container.url}</container.url>
-                <tomcat.version>6.0.29</tomcat.version>
-                <war.target>${tomcat.home.directory}/webapps</war.target>
+                <container.name>jetty7x</container.name>
+                <container.url>${jetty.container.url}</container.url>
+                <war.target>${jetty.home.directory}/webapps</war.target>
             </properties>
             <build>
                 <plugins>
@@ -122,7 +123,7 @@
                                 <configuration>
                                     <skip>${maven.test.skip}</skip>
                                     <tasks>
-                                        <copy todir="${tomcat.home.directory}/conf" overwrite="true">
+                                        <copy todir="${jetty.home.directory}/conf" overwrite="true">
                                             <fileset dir="${basedir}/src/test/containers/${container.name}" />
                                         </copy>
                                     </tasks>
@@ -172,7 +173,7 @@
                 <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
-                <tomcat.container.url>file:///home/hudson/arc/apache-tomcat-${tomcat.version}.zip</tomcat.container.url>
+                <jetty.container.url>file:///home/hudson/arc/jetty-distribution-${jetty.version}.zip</jetty.container.url>
                 <!-- leaving <acceptanceTest.groups.to.run> empty means to run everything -->
                 <acceptanceTest.groups.to.run></acceptanceTest.groups.to.run>
             </properties>
@@ -194,7 +195,7 @@
     <dependencies>
         <dependency>
             <groupId>org.mifos</groupId>
-            <artifactId>mifos-webapp</artifactId>
+            <artifactId>mifos-war</artifactId>
             <version>1.9-SNAPSHOT</version>
             <type>war</type>
         </dependency>
@@ -264,11 +265,6 @@
 
     <build>
         <defaultGoal>integration-test</defaultGoal>
-        <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
-        <scriptSourceDirectory>${basedir}/src/main/scripts</scriptSourceDirectory>
-        <testSourceDirectory>${basedir}/src/test/java</testSourceDirectory>
-        <outputDirectory>target/classes</outputDirectory>
-        <testOutputDirectory>target/test-classes</testOutputDirectory>
 
         <plugins>
             <plugin>
@@ -352,6 +348,7 @@
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-pmd-plugin</artifactId>
@@ -426,7 +423,7 @@
             <plugin>
                 <groupId>org.codehaus.cargo</groupId>
                 <artifactId>cargo-maven2-plugin</artifactId>
-                <version>1.0</version>
+                <version>1.0.5</version>
                 <executions>
                     <execution>
                         <id>install</id>
@@ -471,7 +468,7 @@
                         <deployables>
                             <deployable>
                                 <groupId>org.mifos</groupId>
-                                <artifactId>mifos-webapp</artifactId>
+                                <artifactId>mifos-war</artifactId>
                                 <type>war</type>
                                 <properties>
                                     <context>mifos</context>

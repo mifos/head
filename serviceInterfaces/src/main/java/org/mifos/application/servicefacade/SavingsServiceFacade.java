@@ -28,6 +28,9 @@ import org.mifos.dto.domain.AccountUpdateStatus;
 import org.mifos.dto.domain.AuditLogDto;
 import org.mifos.dto.domain.CreateAccountNote;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.domain.CustomerDto;
+import org.mifos.dto.domain.CustomerSearchDto;
+import org.mifos.dto.domain.CustomerSearchResultDto;
 import org.mifos.dto.domain.NoteSearchDto;
 import org.mifos.dto.domain.OpeningBalanceSavingsAccount;
 import org.mifos.dto.domain.PrdOfferingDto;
@@ -45,6 +48,7 @@ import org.mifos.dto.screen.SavingsAdjustmentReferenceDto;
 import org.mifos.dto.screen.SavingsProductReferenceDto;
 import org.mifos.dto.screen.SavingsRecentActivityDto;
 import org.mifos.dto.screen.SavingsTransactionHistoryDto;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface SavingsServiceFacade {
@@ -81,6 +85,9 @@ public interface SavingsServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     Long createSavingsAccount(SavingsAccountCreationDto savingsAccountCreation);
+    
+    @PreAuthorize("isFullyAuthenticated()")
+	Long createSavingsAccount(SavingsAccountCreationDto savingsAccountCreation, List<QuestionGroupDetail> questionGroups);
 
     @PreAuthorize("isFullyAuthenticated()")
     String createSavingsAccount(OpeningBalanceSavingsAccount openingBalanceSavingsAccount);
@@ -126,4 +133,10 @@ public interface SavingsServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     void addNote(CreateAccountNote accountNote);
+    
+    @PreAuthorize("isFullyAuthenticated()")
+	List<CustomerSearchResultDto> retrieveCustomerThatQualifyForSavings(CustomerSearchDto customerSearchDto);
+
+	@PreAuthorize("isFullyAuthenticated()")
+	CustomerDto retreieveCustomerDetails(Integer customerId);
 }

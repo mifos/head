@@ -20,23 +20,19 @@
 
 package org.mifos.dto.domain;
 
-import java.util.List;
-
 public class SavingsAccountCreationDto {
 
     private final Integer productId;
     private final Integer customerId;
     private final Short accountState;
     private final String recommendedOrMandatoryAmount;
-    private final List<CustomFieldDto> customFields;
 
     public SavingsAccountCreationDto(Integer productId, Integer customerId, Short accountState,
-            String recommendedOrMandatoryAmount, List<CustomFieldDto> customFields) {
+            String recommendedOrMandatoryAmount) {
         this.productId = productId;
         this.customerId = customerId;
         this.accountState = accountState;
         this.recommendedOrMandatoryAmount = recommendedOrMandatoryAmount;
-        this.customFields = customFields;
     }
 
     public Integer getProductId() {
@@ -54,9 +50,4 @@ public class SavingsAccountCreationDto {
     public String getRecommendedOrMandatoryAmount() {
         return this.recommendedOrMandatoryAmount;
     }
-
-    public List<CustomFieldDto> getCustomFields() {
-        return this.customFields;
-    }
-
 }

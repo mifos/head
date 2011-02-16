@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+    <var name="savingsAccountFormBean" class="org.mifos.ui.core.controller.CreateSavingsAccountFormBean" />
+
+    <!-- If customerId is not-empty, the search step will be by-passed and 
+         jumped straight to select product offering step. -->
+    <decision-state id="start">
+        <if test="requestParameters.customerId == null" then="customerSearchStep" else="doCustomerSelected" />
+    </decision-state>
+    
+    <view-state id="customerSearchStep" view="createSavingsAccountCustomerSearch" model="savingsAccountFormBean">
+        <transition on="searchTermEntered" to="selectCustomerStep" validate="true">
+            <evaluate expression="createSavingsAccountController.searchCustomers(savingsAccountFormBean)" result="flowScope.customerSearchResultsDto" />
+        </transition>
+    </view-state>
+
+    <view-state id="selectCustomerStep" view="createSavingsAccountSelectCustomer" model="savingsAccountFormBean">
+        <transition on="customerSelected" to="doCustomerSelected"/>
+        <transition on="searchTermEntered" to="selectCustomerStep" validate="true">
+            <evaluate expression="createSavingsAccountController.searchCustomers(savingsAccountFormBean)" result="flowScope.customerSearchResultsDto" />
+        </transition>
+    </view-state>
+
+    <action-state id="doCustomerSelected">
+        <set name="requestScope.customerId" value="requestParameters.customerId" type="int" />
+        <evaluate expression="createSavingsAccountController.customerSelected(customerId, savingsAccountFormBean)">
+            <attribute name="name" value="outcome"/>
+        </evaluate>
+        <transition on="outcome.success" to="selectProductOfferingStep"/>
+    </action-state>
+    
+    <view-state id="selectProductOfferingStep" view="createSavingsAccountSelectProduct" model="savingsAccountFormBean">
+        <on-entry>
+            <evaluate expression="createSavingsAccountController.getProductOfferings(savingsAccountFormBean)" />
+        </on-entry>
+        <transition on="productSelected" to="enterAccountDetailsStep">
+            <set name="requestScope.productId" value="requestParameters.productId" type="int"/>
+            <evaluate expression="createSavingsAccountController.loadProduct(productId, savingsAccountFormBean)" />
+        </transition>
+    </view-state>
+
+    <view-state id="enterAccountDetailsStep" view="createSavingsAccountEnterDetails" model="savingsAccountFormBean">
+        <transition on="newProductSelected" to="enterAccountDetailsStep">
+            <set name="requestScope.productId" value="requestParameters.productId" type="int"/>
+            <evaluate expression="createSavingsAccountController.loadProduct(productId, savingsAccountFormBean)" />
+        </transition>
+        <transition on="detailsEntered" to="questionGroupStep" />
+    </view-state>
+
+    <view-state id="editAccountDetailsStep" view="createSavingsAccountEnterDetails" model="savingsAccountFormBean">
+        <transition on="newProductSelected" to="reviseAccountDetailsStep">
+            <set name="requestScope.productId" value="requestParameters.productId" type="int"/>
+            <evaluate expression="createSavingsAccountController.loadProduct(productId, savingsAccountFormBean)" />
+        </transition>
+        <transition on="detailsEntered" to="previewStep" />
+    </view-state>
+
+    <view-state id="previewStep" view="createSavingsAccountPreview">
+        <transition on="editAccountDetails" to="editAccountDetailsStep" />
+        <transition on="editQuestionGroup" to="editQuestionGroupStep" />
+        <transition on="approve" to="complete">
+            <evaluate expression="createSavingsAccountController.createAccountInActiveState(savingsAccountFormBean)" result="flowScope.account" />
+        </transition>
+        <transition on="saveForLater" to="complete">
+            <evaluate expression="createSavingsAccountController.createAccountInPartialApplicationState(savingsAccountFormBean)" result="flowScope.account" />
+        </transition>
+        <transition on="saveForApproval" to="complete" >
+            <evaluate expression="createSavingsAccountController.createAccountInPendingApprovalState(savingsAccountFormBean)" result="flowScope.account" />
+        </transition>
+    </view-state>
+
+    <decision-state id="questionGroupStep">
+        <on-entry>
+            <evaluate expression="createSavingsAccountController.loadQuestionGroups(savingsAccountFormBean)" />
+        </on-entry>
+        <if test="savingsAccountFormBean.questionGroups.size() > 0" then="answerQuestionGroupStep" else="previewStep"/>
+    </decision-state>
+
+    <view-state id="answerQuestionGroupStep" view="createSavingsAccountQuestionnaire" model="savingsAccountFormBean">
+        <transition on="questionsAnswered" to="previewStep" />
+    </view-state>
+
+    <view-state id="editQuestionGroupStep" view="createSavingsAccountQuestionnaire" model="savingsAccountFormBean">
+        <transition on="questionsAnswered" to="previewStep" />
+    </view-state>
+    
+    <end-state id="complete" view="createSavingsAccountComplete" />
+    <end-state id="cancel" view="externalRedirect:contextRelative:/createSavingsAccount.ftl"/>
+    
+    <global-transitions>
+        <transition on="cancel" to="cancel" validate="false" history="invalidate"/>
+    </global-transitions>
+</flow>

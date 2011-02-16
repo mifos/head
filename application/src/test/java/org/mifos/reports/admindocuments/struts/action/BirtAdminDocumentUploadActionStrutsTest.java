@@ -20,6 +20,8 @@
 
 package org.mifos.reports.admindocuments.struts.action;
 
+import java.io.IOException;
+
 import junit.framework.Assert;
 
 import org.junit.Before;
@@ -52,7 +54,7 @@ public class BirtAdminDocumentUploadActionStrutsTest extends MifosMockStrutsTest
     LegacyRolesPermissionsDao legacyRolesPermissionsDao;
 
     @Override
-    protected void setStrutsConfig() {
+    protected void setStrutsConfig() throws IOException {
         super.setStrutsConfig();
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/admindocument-struts-config.xml");
     }

@@ -47,6 +47,7 @@ import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.core.MifosResourceUtil;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.components.batchjobs.MifosScheduler;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
@@ -60,7 +61,6 @@ import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobInstance;
 import org.springframework.batch.core.explore.JobExplorer;
-import org.springframework.core.io.ClassPathResource;
 public class ProductStatusHelperIntegrationTest extends MifosIntegrationTestCase {
 
     MifosScheduler mifosScheduler;
@@ -163,8 +163,8 @@ public class ProductStatusHelperIntegrationTest extends MifosIntegrationTestCase
 
     private MifosScheduler getMifosScheduler(String taskConfigurationPath) throws TaskSystemException, IOException, FileNotFoundException {
         ConfigurationLocator mockConfigurationLocator = createMock(ConfigurationLocator.class);
-        expect(mockConfigurationLocator.getFile(SchedulerConstants.CONFIGURATION_FILE_NAME)).andReturn(
-                new ClassPathResource(taskConfigurationPath).getFile());
+        expect(mockConfigurationLocator.getFileInputStream(SchedulerConstants.CONFIGURATION_FILE_NAME)).andReturn(
+                MifosResourceUtil.getClassPathResourceAsStream(taskConfigurationPath));
         expectLastCall().times(2);
         replay(mockConfigurationLocator);
         MifosScheduler mifosScheduler = new MifosScheduler();

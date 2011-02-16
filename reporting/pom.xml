@@ -1,0 +1,53 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.mifos</groupId>
+	<artifactId>mifos-reporting</artifactId>
+	<version>1.9-SNAPSHOT</version>
+
+	<name>Mifos - Reporting</name>
+	<description>BIRT Viewer - Web Module embedded in Mifos</description>
+
+	<parent>
+		<groupId>org.mifos</groupId>
+		<artifactId>mifos-parent</artifactId>
+		<version>1.9-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.mifos</groupId>
+			<artifactId>mifos-serviceInterfaces</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.mifos</groupId>
+			<artifactId>mifos-appdomain</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.mifos</groupId>
+			<artifactId>mifos-reporting-libs</artifactId>
+			<type>pom</type>
+		</dependency>
+		
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>struts</groupId>
+			<artifactId>struts</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-collections</groupId>
+			<artifactId>commons-collections</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+		</dependency>
+	</dependencies>
+</project>

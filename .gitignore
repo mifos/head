@@ -1,8 +1,9 @@
 target
 *.log
 *.log.*
+/test-output
 test-output
-application/src/main/sql/latest-schema_last.sql
+application/src/main/resources/sql/latest-schema_last.sql
 .idea/*
 */.idea/*
 *.iml
@@ -11,3 +12,5 @@ docs/
 .resources
 *.ipr
 *.iws
+.DS_Store
+!.gitignore

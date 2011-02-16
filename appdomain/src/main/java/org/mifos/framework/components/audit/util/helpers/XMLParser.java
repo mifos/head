@@ -21,13 +21,11 @@
 package org.mifos.framework.components.audit.util.helpers;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.mifos.core.ClasspathResource;
+import org.mifos.core.MifosResourceUtil;
 import org.mifos.framework.exceptions.SystemException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -50,11 +48,8 @@ public class XMLParser {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
-            document = builder.parse(ClasspathResource.getURI(
-                    "org/mifos/framework/util/resources/audit/ColumnMapping.xml").toString());
+            document = builder.parse(MifosResourceUtil.getClassPathResourceAsStream("org/mifos/framework/util/resources/audit/ColumnMapping.xml"));
             getColumnPropertyMapping(document);
-        } catch (URISyntaxException e) {
-            throw new SystemException(e);
         } catch (ParserConfigurationException e) {
             throw new SystemException(e);
         } catch (IOException e) {

@@ -1,0 +1,46 @@
+README explaining two particular things about the pom.xml here:
+
+
+0) The two profiles are auto-activated by using the m2e.version property.
+   This property is always automatically set by m2e when running under m2e.
+   It avoid the need to set something via for Project Properties > Maven > Active Maven Profiles.
+   The normal (CLI) build is not affected by these profiles.
+   
+
+1) It uses M2E Lifecycle Mapping, to (try to) tell m2e NOT to run any plugins inside Eclipse,
+as one typically really only wants the Maven Dependencies Classpath Container:
+
+	@see https://docs.sonatype.org/pages/viewpage.action?pageId=2949459 
+	Simulating "java-only" lifecycle mapping with m2e 0.9.9.200909092308 Also 
+	https://docs.sonatype.org/display/M2ECLIPSE/Customizable+build+lifecycle+mapping+for+m2e+extensions+developers 
+	Also https://issues.sonatype.org/browse/MNGECLIPSE-2209 Also https://docs.sonatype.org/display/M2ECLIPSE/Maven+build+lifecycle 
+	Also http://svn.apache.org/repos/asf/maven/maven-3/trunk/pom.xml as an example 
+	Also https://issues.sonatype.org/browse/MNGECLIPSE-2252 -->
+
+This, combined with using Eclipse Class Folders (see Project Properties > Java
+Build Path > Libraries), leads to better build performance, and less problems.
+
+One theoretical drawback is that e.g. Resource Filter is then not available within Eclipse, but a) that
+(constrasted with the build speed gain) is rarely really an issue, and b) doesn't seem to really
+work as intended (by m2e) anyway (m2e version at the time of writing).
+
+
+2) It has some magic which keeps the build output folder separate for  Eclipse and the Maven.
+This is required because the CLI Maven build puts files into the target which when running
+inside Eclipse we already have on the classpath via Class Folders (see Project Properties > 
+Java Build Path > Libraries).
+ 
+	@see https://docs.sonatype.org/display/M2ECLIPSE/Project+FAQ#ProjectFAQ-HowtoconfigureMavenprojecttouseseparateoutputfoldersinEclipse
+	@see http://m2eclipse.sonatype.org/m2eclipse-faq.html#8
+ 
+Re. "many Maven plugins have assumptions about location of compiled classes and resources
+and in many cases, changing output folders would simply break those Maven plugins", this should
+not be an issue, because of the lifecycle-mapping explaining above.
+
+By default, build dir is CLI Maven's 'target' directory.  A m2e-activated maven profiled
+override that with 'targetEclipse'.  That directory HAS TO MATCH what is in an Eclipse project's .classpath.
+
+
+@author Michael Vorburger
+@since 2010/11/07
+

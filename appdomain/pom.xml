@@ -252,18 +252,6 @@
     </dependencies>
 
     <build>
-        <defaultGoal>jar</defaultGoal>
-        <sourceDirectory>${modules.root.dir}/appdomain/src/main/java</sourceDirectory>
-        <scriptSourceDirectory>${modules.root.dir}/appdomain/src/main/scripts</scriptSourceDirectory>
-        <testSourceDirectory>${modules.root.dir}/appdomain/src/test/java</testSourceDirectory>
-        <outputDirectory>target/classes</outputDirectory>
-        <testOutputDirectory>target/test-classes</testOutputDirectory>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-            </resource>
-        </resources>
-
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
