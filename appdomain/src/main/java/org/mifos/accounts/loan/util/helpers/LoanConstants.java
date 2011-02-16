@@ -119,6 +119,10 @@ public interface LoanConstants {
     Short PAYMENT_RECIEVED = 1; // check
     Short PAYMENT_NOT_RECIEVED = 0;
 
+    /**
+     * @deprecated interest deducted at disbursement not supported since version 1.1!!
+     */
+    @Deprecated
     Short INTEREST_DEDUCTED_AT_DISBURSEMENT = 1;
 
     String TOTAL_REPAYMENT_AMOUNT = "totalRepaymentAmount";
