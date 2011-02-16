@@ -29,6 +29,7 @@ import java.util.List;
 
 import org.joda.time.LocalDate;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -118,5 +119,25 @@ public class SavingsServiceFacadeWebTierTest {
 
         // verification
         verify(savingsDao, never()).findById(anyLong());
+    }
+    
+    /**
+     * Tests result set offset calculation used in the limit clause (limit 0, 10).
+     * For this test, we are on page 1 and each page has 10 items. The offset should be 0.
+     */
+    @Test
+    public void testResultsetStartingPositionStartingAtPageOne() {
+        int position = ((SavingsServiceFacadeWebTier) savingsServiceFacade).resultsetOffset(1, 10);
+        Assert.assertEquals(0, position);
+    }
+
+    /**
+     * Tests result set offset calculation used in the limit clause (limit 0, 10).
+     * For this test, we are on page 2 and each page has 10 items. The offset should be 10.
+     */
+    @Test
+    public void testResultsetStartingPositionStartingAtPageTwo() {
+        int position = ((SavingsServiceFacadeWebTier) savingsServiceFacade).resultsetOffset(2, 10);
+        Assert.assertEquals(10, position);
     }
 }

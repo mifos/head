@@ -1174,7 +1174,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 			
 			QueryResult customerForSavings = new CustomerPersistence().searchCustForSavings(customerSearchDto.getSearchTerm(), userContext.getId());
 			
-			int position = (customerSearchDto.getPage() * customerSearchDto.getPageSize()) - (customerSearchDto.getPageSize()-1);
+			int position = this.resultsetOffset(customerSearchDto.getPage(), customerSearchDto.getPageSize());
 			List<AccountSearchResultsDto> pagedResults = customerForSavings.get(position, customerSearchDto.getPageSize());
 			int i=1;
 			for (AccountSearchResultsDto customerBO : pagedResults) {
@@ -1199,6 +1199,19 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 
 	}
 
+	/**
+	 * Calculate the correct offset in SQL "limit" clause.
+	 * 
+	 * This method has protected visibility so that it can be tested.
+	 * 
+	 * @param currentPage Current page number. Page number starts at 1.
+	 * @param itemsPerPage Number of entries per page.
+	 * @return
+	 */
+	protected int resultsetOffset(int currentPage, int itemsPerPage) {
+	    return (currentPage - 1) * itemsPerPage;
+	}
+	
 	@Override
 	public CustomerDto retreieveCustomerDetails(Integer customerId) {
 		CustomerBO customer = this.customerDao.findCustomerById(customerId);
