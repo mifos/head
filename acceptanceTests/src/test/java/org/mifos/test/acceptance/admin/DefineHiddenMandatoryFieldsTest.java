@@ -84,9 +84,10 @@ public class DefineHiddenMandatoryFieldsTest  extends UiTestCaseBase{
         Assert.assertTrue(selenium.isTextPresent("*Ethnicity:"));
         Assert.assertFalse(selenium.isElementPresent("create_ClientPersonalInfo.input.spouseSecondLastName"));
 
+        // restore original configuration
         defineHiddenMandatoryFieldsPage = navigationHelper.navigateToAdminPage().navigateToDefineHiddenMandatoryFields();
         defineHiddenMandatoryFieldsPage.uncheckHideRelativeSecondLastName();
         defineHiddenMandatoryFieldsPage.uncheckMandatoryEthnicity();
-
+        defineHiddenMandatoryFieldsPage.submit();
     }
 }
