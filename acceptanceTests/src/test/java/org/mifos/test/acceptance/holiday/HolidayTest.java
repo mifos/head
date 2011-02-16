@@ -37,6 +37,8 @@ import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameter
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.testhelpers.BatchJobHelper;
+import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
+import org.mifos.test.acceptance.framework.testhelpers.HolidayTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
@@ -55,6 +57,7 @@ public class HolidayTest extends UiTestCaseBase {
 
     private LoanTestHelper loanTestHelper;
     private NavigationHelper navigationHelper;
+    private HolidayTestHelper holidayTestHelper;
 
     @Autowired
     private DriverManagerDataSource dataSource;
@@ -75,6 +78,7 @@ public class HolidayTest extends UiTestCaseBase {
         super.setUp();
         navigationHelper = new NavigationHelper(selenium);
         loanTestHelper = new LoanTestHelper(selenium);
+        holidayTestHelper = new HolidayTestHelper(selenium);
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         DateTime targetTime = new DateTime(2009,2,23,2,0,0,0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
@@ -247,6 +251,17 @@ public class HolidayTest extends UiTestCaseBase {
         navigationHelper.navigateToLoanAccountPage(lid).navigateToRepaymentSchedulePage();
         loanTestHelper.verifyRepaymentScheduleForHolidays("15-Feb-2011","15-Feb-2011","21-Feb-2011","28-Feb-2011" ,"15-Mar-2011","15-Mar-2011","21-Mar-2011");
     }
+
+    //http://mifosforge.jira.com/browse/MIFOSTEST-72
+    public void definedAndViewHoliday() throws Exception {
+        //Given
+        setDate();
+        selenium.setSpeed("1500");
+        //When / Then
+        CreateHolidaySubmitParameters params = FormParametersHelper.getCreateHolidaySubmitParameters();
+        params.setRepaymentRule(CreateHolidaySubmitParameters.SAME_DAY);
+        holidayTestHelper.createHoliday(params);
+        }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     private void verifyHolidayData(String resultDataSetFile) throws Exception {
