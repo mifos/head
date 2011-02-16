@@ -1,4 +1,15 @@
 #!/bin/sh
+
+#### DISABLED on Thu Feb 10 21:03:02 UTC 2011 by Adam Monsen
+#### see http://thread.gmane.org/gmane.comp.finance.mifos.devel/11001/focus=11015
+#### RE-ENABLED on Wed Feb 16 16:33:05 UTC 2011 by Adam Monsen
+#### https://sourceforge.net/apps/trac/sourceforge/ticket/17370 was fixed
+#### and (with the exception of the list of changed files, which I updated) I
+#### like this email format better than github's.
+#### email example from this script: http://article.gmane.org/gmane.comp.finance.mifos.scm/11096
+#### email example from this github: http://article.gmane.org/gmane.comp.finance.mifos.scm/11097
+#exit 0
+
 #
 # Copyright (c) 2007 Andy Parkins
 #
@@ -408,8 +419,8 @@ generate_update_branch_email()
 	# - including the undoing of previous revisions in the case of
 	# non-fast-forward updates.
 	echo ""
-	echo "Summary of changes:"
-	git diff-tree --stat --summary --find-copies-harder $oldrev..$newrev
+	echo "Changed paths:"
+	git diff-tree --name-status --find-copies-harder $oldrev..$newrev
 }
 
 #
