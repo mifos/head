@@ -2117,6 +2117,10 @@ public class LoanBO extends AccountBO {
         return (short) (getGracePeriodDuration() + firstRepaymentInstallment);
     }
 
+    /**
+     * @deprecated - see {@link InstallmentFeeCalculator}.
+     */
+    @Deprecated
     private void populateAccountFeeAmount(final Set<AccountFeesEntity> accountFees, final Money loanInterest) {
         for (AccountFeesEntity accountFeesEntity : accountFees) {
             Money accountFeeAmount1 = new Money(getCurrency());
@@ -2985,91 +2989,15 @@ public class LoanBO extends AccountBO {
 
         List<InstallmentPrincipalAndInterest> principalWithInterestInstallments = equalInstallmentGenerator.generateEqualInstallments(loanInterestCalculationDetails);
 
+        ScheduledEvent meetingScheduledEvent = ScheduledEventFactory.createScheduledEventFrom(this.loanMeeting);
+        List<LoanScheduleEntity> unroundedLoanSchedules = createUnroundedLoanSchedulesFromInstallments(installmentDates, loanInterest, this.loanAmount, meetingScheduledEvent, principalWithInterestInstallments, this.getAccountFees());
 
-
-        List<FeeInstallment> feeInstallments = new ArrayList<FeeInstallment>();
-        if (!getAccountFees().isEmpty()) {
-
-            InstallmentFeeCalculatorFactory installmentFeeCalculatorFactory = new InstallmentFeeCalculatorFactoryImpl();
-
-            for (AccountFeesEntity accountFeesEntity : getAccountFees()) {
-
-                RateAmountFlag feeType = accountFeesEntity.getFees().getFeeType();
-                InstallmentFeeCalculator installmentFeeCalculator = installmentFeeCalculatorFactory.create(getFeeDao(), feeType);
-
-                Double feeAmount = accountFeesEntity.getFeeAmount();
-                Money accountFeeAmount = installmentFeeCalculator.calculate(feeAmount, this.loanAmount, loanInterest, accountFeesEntity.getFees());
-                accountFeesEntity.setAccountFeeAmount(accountFeeAmount);
-            }
-            ScheduledEvent meetingScheduledEvent = ScheduledEventFactory.createScheduledEventFrom(this.loanMeeting);
-            feeInstallments = FeeInstallment.createMergedFeeInstallments(meetingScheduledEvent, getAccountFees(),installmentDates.size());
+        for (LoanScheduleEntity unroundedLoanSchedule : unroundedLoanSchedules) {
+            addAccountActionDate(unroundedLoanSchedule);
         }
 
+        Money rawAmount = calculateTotalFeesAndInterestForLoanSchedules(unroundedLoanSchedules);
 
-        List<FeeInstallment> feeInstallment = new ArrayList<FeeInstallment>();
-        if (getAccountFees().size() != 0) {
-            populateAccountFeeAmount(getAccountFees(), loanInterest);
-            ScheduledEvent meetingScheduledEvent = ScheduledEventFactory
-                    .createScheduledEventFrom(this.getLoanMeeting());
-            feeInstallment = FeeInstallment.createMergedFeeInstallments(meetingScheduledEvent, getAccountFees(),
-                    installmentDates.size());
-        }
-
-        logger.debug("Fee installment obtained ");
-
-        generateRepaymentSchedule(installmentDates, principalWithInterestInstallments, feeInstallments);
-
-        logger.debug("Meeting schedule generated  ");
-
-        applyRounding_v2();
-    }
-
-    private void generateRepaymentSchedule(final List<InstallmentDate> installmentDates,
-            final List<InstallmentPrincipalAndInterest> EMIInstallments, final List<FeeInstallment> feeInstallmentList) {
-        int count = installmentDates.size();
-        for (int i = 0; i < count; i++) {
-            InstallmentDate installmentDate = installmentDates.get(i);
-            InstallmentPrincipalAndInterest em = EMIInstallments.get(i);
-            LoanScheduleEntity loanScheduleEntity = new LoanScheduleEntity(this, getCustomer(), installmentDate
-                    .getInstallmentId(), new java.sql.Date(installmentDate.getInstallmentDueDate().getTime()),
-                    PaymentStatus.UNPAID, em.getPrincipal(), em.getInterest());
-            addAccountActionDate(loanScheduleEntity);
-            for (FeeInstallment feeInstallment : feeInstallmentList) {
-                if (feeInstallment.getInstallmentId().equals(installmentDate.getInstallmentId())
-                        && !feeInstallment.getAccountFeesEntity().getFees().isTimeOfDisbursement()) {
-                    LoanFeeScheduleEntity loanFeeScheduleEntity = new LoanFeeScheduleEntity(loanScheduleEntity,
-                            feeInstallment.getAccountFeesEntity().getFees(), feeInstallment.getAccountFeesEntity(),
-                            feeInstallment.getAccountFee());
-                    loanScheduleEntity.addAccountFeesAction(loanFeeScheduleEntity);
-                } else if (feeInstallment.getInstallmentId().equals(installmentDate.getInstallmentId())
-                        && isInterestDeductedAtDisbursement()
-                        && feeInstallment.getAccountFeesEntity().getFees().isTimeOfDisbursement()) {
-                    LoanFeeScheduleEntity loanFeeScheduleEntity = new LoanFeeScheduleEntity(loanScheduleEntity,
-                            feeInstallment.getAccountFeesEntity().getFees(), feeInstallment.getAccountFeesEntity(),
-                            feeInstallment.getAccountFee());
-                    loanScheduleEntity.addAccountFeesAction(loanFeeScheduleEntity);
-                }
-            }
-        }
-        buildRawAmountTotal();
-    }
-
-    private void buildRawAmountTotal() {
-        Money interest = new Money(getCurrency());
-        Money fees = new Money(getCurrency());
-        Set<AccountActionDateEntity> actionDates = getAccountActionDates();
-        if (actionDates != null && actionDates.size() > 0) {
-            for (AccountActionDateEntity accountActionDate : actionDates) {
-                LoanScheduleEntity loanSchedule = (LoanScheduleEntity) accountActionDate;
-                interest = interest.add(loanSchedule.getInterest());
-                fees = fees.add(loanSchedule.getTotalFeesDueWithMiscFee());
-            }
-        }
-        fees = fees.add(getDisbursementFeeAmount());
-        Money rawAmount = new Money(getCurrency());
-        fees = MoneyUtils.currencyRound(fees);
-        interest = MoneyUtils.currencyRound(interest);
-        rawAmount = rawAmount.add(interest).add(fees);
         if (loanSummary == null) {
             // save it to LoanBO first and when loan summary is created it will
             // be retrieved and save to loan summary
@@ -3077,6 +3005,94 @@ public class LoanBO extends AccountBO {
         } else {
             loanSummary.setRawAmountTotal(rawAmount);
         }
+
+        applyRounding_v2();
+    }
+
+    private Money calculateTotalFeesAndInterestForLoanSchedules(List<LoanScheduleEntity> unroundedLoanSchedules) {
+        // buildRawTotal - is total fees plus total interest.
+        Money zero = new Money(getCurrency());
+        Money interest = zero;
+        Money fees = zero;
+
+        for (LoanScheduleEntity unroundedLoanSchedule : unroundedLoanSchedules) {
+            interest = interest.add(unroundedLoanSchedule.getInterest());
+            fees = fees.add(unroundedLoanSchedule.getTotalFeesDueWithMiscFee());
+        }
+
+        Money feeDisbursementAmount = zero;
+        for (AccountFeesEntity accountFeesEntity : this.getAccountFees()) {
+            if (accountFeesEntity.getFees().isTimeOfDisbursement()) {
+                feeDisbursementAmount = fees.add(accountFeesEntity.getAccountFeeAmount());
+            }
+        }
+
+        fees = fees.add(feeDisbursementAmount);
+        fees = MoneyUtils.currencyRound(fees);
+        interest = MoneyUtils.currencyRound(interest);
+
+        Money rawAmount = interest.add(fees);
+        return rawAmount;
+    }
+
+    private List<LoanScheduleEntity> createUnroundedLoanSchedulesFromInstallments(List<InstallmentDate> installmentDates,
+            Money loanInterest, Money loanAmount, ScheduledEvent meetingScheduledEvent,
+            List<InstallmentPrincipalAndInterest> principalWithInterestInstallments, Set<AccountFeesEntity> accountFees) {
+
+        List<LoanScheduleEntity> unroundedLoanSchedules = new ArrayList<LoanScheduleEntity>();
+
+        List<FeeInstallment> feeInstallments = new ArrayList<FeeInstallment>();
+        if (!getAccountFees().isEmpty()) {
+
+            InstallmentFeeCalculatorFactory installmentFeeCalculatorFactory = new InstallmentFeeCalculatorFactoryImpl();
+
+            for (AccountFeesEntity accountFeesEntity : accountFees) {
+
+                RateAmountFlag feeType = accountFeesEntity.getFees().getFeeType();
+                InstallmentFeeCalculator installmentFeeCalculator = installmentFeeCalculatorFactory.create(getFeeDao(), feeType);
+
+                Double feeAmount = accountFeesEntity.getFeeAmount();
+                Money accountFeeAmount = installmentFeeCalculator.calculate(feeAmount, loanAmount, loanInterest, accountFeesEntity.getFees());
+                accountFeesEntity.setAccountFeeAmount(accountFeeAmount);
+            }
+            feeInstallments = FeeInstallment.createMergedFeeInstallments(meetingScheduledEvent, getAccountFees(),installmentDates.size());
+        }
+
+        int installmentIndex = 0;
+        for (InstallmentDate installmentDate1 : installmentDates) {
+
+            InstallmentPrincipalAndInterest em = principalWithInterestInstallments.get(installmentIndex);
+
+            LoanScheduleEntity loanScheduleEntity = new LoanScheduleEntity(this, getCustomer(), installmentDate1
+                    .getInstallmentId(), new java.sql.Date(installmentDate1.getInstallmentDueDate().getTime()),
+                    PaymentStatus.UNPAID, em.getPrincipal(), em.getInterest());
+
+            for (FeeInstallment feeInstallment : feeInstallments) {
+                if (feeInstallment.getInstallmentId().equals(installmentDate1.getInstallmentId())
+                        && !feeInstallment.getAccountFeesEntity().getFees().isTimeOfDisbursement()) {
+
+                    LoanFeeScheduleEntity loanFeeScheduleEntity = new LoanFeeScheduleEntity(loanScheduleEntity,
+                            feeInstallment.getAccountFeesEntity().getFees(), feeInstallment.getAccountFeesEntity(),
+                            feeInstallment.getAccountFee());
+                    loanScheduleEntity.addAccountFeesAction(loanFeeScheduleEntity);
+
+                } else if (feeInstallment.getInstallmentId().equals(installmentDate1.getInstallmentId())
+//                        && isInterestDeductedAtDisbursement()
+                        && feeInstallment.getAccountFeesEntity().getFees().isTimeOfDisbursement()) {
+
+                    LoanFeeScheduleEntity loanFeeScheduleEntity = new LoanFeeScheduleEntity(loanScheduleEntity,
+                            feeInstallment.getAccountFeesEntity().getFees(), feeInstallment.getAccountFeesEntity(),
+                            feeInstallment.getAccountFee());
+                    loanScheduleEntity.addAccountFeesAction(loanFeeScheduleEntity);
+
+                }
+            }
+
+            unroundedLoanSchedules.add(loanScheduleEntity);
+            installmentIndex++;
+        }
+
+        return unroundedLoanSchedules;
     }
 
     /**
