@@ -256,7 +256,6 @@ public class HolidayTest extends UiTestCaseBase {
     public void definedAndViewHoliday() throws Exception {
         //Given
         setDate();
-        selenium.setSpeed("1500");
         //When / Then
         CreateHolidaySubmitParameters params = FormParametersHelper.getCreateHolidaySubmitParameters();
         params.setRepaymentRule(CreateHolidaySubmitParameters.SAME_DAY);
