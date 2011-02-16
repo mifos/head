@@ -956,8 +956,8 @@ public class LoanBO extends AccountBO {
                 throw new AccountException(AccountExceptionConstants.CANT_APPLY_FEE_EXCEPTION);
             }
 
-            AccountFeesEntity accountFee = getAccountFees(feeId);
-            if (accountFee.isTimeOfDisbursement()) {
+            if (fee.isTimeOfDisbursement()) {
+                AccountFeesEntity accountFee = getAccountFees(feeId);
                 totalFeeAmount = accountFee.getAccountFeeAmount();
                 removeAccountFee(accountFee);
                 this.delete(accountFee);

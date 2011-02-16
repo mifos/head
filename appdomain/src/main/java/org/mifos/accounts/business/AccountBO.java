@@ -409,7 +409,7 @@ public class AccountBO extends AbstractBusinessObject {
     }
 
     public void removeAccountFee(final AccountFeesEntity fee) {
-        boolean success = accountFees.remove(fee);
+        accountFees.remove(fee);
     }
 
     public void addAccountActionDate(final AccountActionDateEntity accountAction) {

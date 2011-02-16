@@ -153,7 +153,6 @@ import org.mifos.security.util.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
-
 public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
     private static final double DELTA = 0.00000001;
