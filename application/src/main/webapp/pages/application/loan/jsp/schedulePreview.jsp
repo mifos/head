@@ -192,7 +192,7 @@ explanation of the license and how it is applied.
 											<td width="100%" height="23" class="fontnormalbold">
 												<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
 												<mifos:mifoslabel name="loan.amt" /> :&nbsp;
-												<span class="fontnormal"> <c:out value="${loanAmount}" /> <br> </span>
+												<span class="fontnormal"> <span id="schedulepreview.text.loanamount"><c:out value="${loanAmount}" /></span> <br> </span>
 												<mifos:mifoslabel name="loan.proposed_date" /> :&nbsp;
 												<span class="fontnormal">
 												    <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,disbursementDate)}" /> <br>
