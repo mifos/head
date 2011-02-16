@@ -69,7 +69,7 @@ public class CreateSavingsAccountTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(sequential = true, groups = { "savings", "acceptance", "ui" })
+    @Test(sequential = true, groups = {"savings", "acceptance", "ui" })
     public void verifyPaymentTypesForWithdrawalsAndDeposits() throws Exception {
         //Given
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
@@ -105,16 +105,19 @@ public class CreateSavingsAccountTest extends UiTestCaseBase {
         editAccountStatusParameters.setNote("test");
         savingsAccountDetailPage = savingsAccountHelper.changeStatus(savingsAccountDetailPage.getAccountId(), editAccountStatusParameters);
         SavingsDepositWithdrawalPage savingsDepositWithdrawalPage = savingsAccountDetailPage.navigateToDepositWithdrawalPage();
+        selenium.waitForCondition("selenium.isElementPresent(\"" + "applypayment_savingsaccount.input.trxnType" + "\")","30000");
         selenium.select("applypayment_savingsaccount.input.trxnType", "value=6");
         //Then
         savingsDepositWithdrawalPage.verifyModeOfPayments();
         //When
+        selenium.waitForCondition("selenium.isElementPresent(\"" + "applypayment_savingsaccount.input.trxnType" + "\")","30000");
         selenium.select("applypayment_savingsaccount.input.trxnType", "value=7");
         //Then
         savingsDepositWithdrawalPage.verifyModeOfPayments();
         //When
         savingsAccountDetailPage = navigationHelper.navigateToSavingsAccountDetailPage("000100000000015");
         savingsDepositWithdrawalPage = savingsAccountDetailPage.navigateToDepositWithdrawalPage();
+        selenium.waitForCondition("selenium.isElementPresent(\"" + "applypayment_savingsaccount.input.trxnType" + "\")","30000");
         selenium.select("applypayment_savingsaccount.input.trxnType", "value=6");
         //Then
         savingsDepositWithdrawalPage.verifyModeOfPayments();

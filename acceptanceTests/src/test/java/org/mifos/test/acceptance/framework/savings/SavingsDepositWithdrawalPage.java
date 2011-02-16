@@ -54,7 +54,6 @@ public class SavingsDepositWithdrawalPage  extends MifosPage{
         this.typeTextIfNotEmpty("receiptDateDD", params.getReceiptDateDD());
         this.typeTextIfNotEmpty("receiptDateMM", params.getReceiptDateMM());
         this.typeTextIfNotEmpty("receiptDateYY", params.getReceiptDateYYYY());
-
         selenium.click("applypayment_savingsaccount.button.submit");
         waitForPageToLoad();
 
