@@ -86,7 +86,10 @@ public class LoanAccountAddNoteTest extends UiTestCaseBase {
         assertTextFoundOnPage(TEST_ACCOUNT_NOTE);
     }
 
-    @Test(enabled=true)
+	/**
+     * FIXME - KEITHW - see http://mifosforge.jira.com/browse/MIFOS-4734
+     */
+    @Test(enabled=false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void addNoteToLoanAccountAndVerifyAllNotes() throws Exception {
         initData();
