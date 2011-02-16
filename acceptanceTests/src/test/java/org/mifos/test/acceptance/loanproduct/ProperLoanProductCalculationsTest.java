@@ -72,7 +72,7 @@ public class ProperLoanProductCalculationsTest extends UiTestCaseBase {
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void verifyProperInterestAndPaymentWeeklyProduct() throws Exception {
+    public void verifyProperInterestAndPaymentWeeklyFlatProduct() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
 
         DefineNewLoanProductPage.SubmitFormParameters productParams = FormParametersHelper.getWeeklyLoanProductParameters();
@@ -95,5 +95,37 @@ public class ProperLoanProductCalculationsTest extends UiTestCaseBase {
         loanAccountPage.verifyFeesOriginal("0.0");
         loanAccountPage.verifyPenaltyOriginal("0.0");
         loanAccountPage.verifyTotalOriginalLoan("2690.0");
+    }
+
+    /**
+     * Declining balance, fixed payment type weekly loan calculates and
+     * displays proper interest and payment information.
+     * http://mifosforge.jira.com/browse/MIFOSTEST-66
+     * @throws Exception
+     */
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void verifyProperInterestAndPaymentWeeklyDecliningBalanceProduct() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
+
+        DefineNewLoanProductPage.SubmitFormParameters productParams = FormParametersHelper.getWeeklyLoanProductParameters();
+        productParams.setOfferingName("product66");
+        productParams.setOfferingShortName("p66");
+        productParams.setDefaultInterestRate("15.3");
+        productParams.setMaxInterestRate("50");
+        productParams.setInterestTypes(SubmitFormParameters.DECLINING_BALANCE);
+        productParams.setDefaultLoanAmount("13333");
+        productParams.setDefInstallments("13");
+        CreateLoanAccountSearchParameters searchParams = new CreateLoanAccountSearchParameters();
+        searchParams.setSearchString("Stu1233266063395 Client1233266063395");
+        searchParams.setLoanProduct("product66");
+
+        loanProductTestHelper.defineNewLoanProduct(productParams);
+        LoanAccountPage loanAccountPage = loanTestHelper.createAndActivateDefaultLoanAccount(searchParams);
+
+        loanAccountPage.verifyPrincipalOriginal("13333.0");
+        loanAccountPage.verifyInterestOriginal("276.0");
+        loanAccountPage.verifyFeesOriginal("0.0");
+        loanAccountPage.verifyPenaltyOriginal("0.0");
+        loanAccountPage.verifyTotalOriginalLoan("13609.0");
     }
 }
