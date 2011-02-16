@@ -1,5 +1,9 @@
 #!/bin/bash
 
+#### DISABLED on Thu Feb 10 21:03:02 UTC 2011 by Adam Monsen
+#### see http://thread.gmane.org/gmane.comp.finance.mifos.devel/11001/focus=11015
+exit 0
+
 declare -r null_rev=0000000000000000000000000000000000000000
 
 declare -r refname=$1
@@ -10,5 +14,15 @@ declare -r newrev=$3
 [ $newrev == $null_rev ] || [ $oldrev == $null_rev ] && exit 0
 
 for merged in $(git rev-list ${oldrev}..${newrev} | tac) ; do
-    /gitrepo/m/mi/mifos/head/hooks/ciabot.bash ${refname} ${merged}
+
+    # uncomment the following line once ticket #17370 is resolved
+    #/gitrepo/m/mi/mifos/head/hooks/ciabot.bash ${refname} ${merged}
+
+    # remove blank lines & comments in this "for" loop and the
+    # following 2 lines once ticket #17370 is resolved
+    #echo INFO: Not executing ciabot.bash
+    #echo See https://sourceforge.net/apps/trac/sourceforge/ticket/17370
+
+    ## NEVERMIND, see http://thread.gmane.org/gmane.comp.finance.mifos.devel/11001/focus=11015
+
 done
