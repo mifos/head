@@ -69,7 +69,7 @@ public class CreateSavingsAccountTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(sequential = true, groups = {"savings", "acceptance", "ui" })
+    @Test(sequential = true, groups = {"smoke","savings", "acceptance", "ui" })
     public void verifyPaymentTypesForWithdrawalsAndDeposits() throws Exception {
         //Given
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);

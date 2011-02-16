@@ -39,6 +39,14 @@ public class DefineHiddenMandatoryFieldsPage extends MifosPage {
         selenium.check("hideClientSpouseFatherSecondLastName");
     }
 
+    public void uncheckMandatoryEthnicity(){
+        selenium.uncheck("mandatorySystemEthnicity");
+    }
+
+    public void uncheckHideRelativeSecondLastName(){
+        selenium.uncheck("hideClientSpouseFatherSecondLastName");
+    }
+
     public void verifyPage(){
         verifyPage("defineMandatoryHiddenFields");
     }

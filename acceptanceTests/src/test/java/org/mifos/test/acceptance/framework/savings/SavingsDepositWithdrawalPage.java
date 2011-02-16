@@ -61,6 +61,7 @@ public class SavingsDepositWithdrawalPage  extends MifosPage{
     }
 
     public void verifyModeOfPayments(){
+        waitForElementToPresent("applypayment_savingsaccount.input.paymentType");
         String[] modesOfPayment=selenium.getSelectOptions("applypayment_savingsaccount.input.paymentType");
         Assert.assertEquals(RepayLoanParameters.CASH,modesOfPayment[1]);
         Assert.assertEquals(RepayLoanParameters.CHEQUE,modesOfPayment[2]);
