@@ -20,10 +20,38 @@
 
 package org.mifos.accounts.loan.business;
 
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
+import static org.mifos.platform.util.CollectionUtils.isNotEmpty;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
-import org.mifos.accounts.business.*;
+import org.mifos.accounts.business.AccountActionDateEntity;
+import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.business.AccountFeesActionDetailEntity;
+import org.mifos.accounts.business.AccountFeesEntity;
+import org.mifos.accounts.business.AccountPaymentEntity;
+import org.mifos.accounts.business.AccountStateEntity;
+import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
+import org.mifos.accounts.business.AccountTrxnEntity;
+import org.mifos.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
@@ -49,7 +77,19 @@ import org.mifos.accounts.productdefinition.business.NoOfInstallSameForAllLoanBO
 import org.mifos.accounts.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
-import org.mifos.accounts.util.helpers.*;
+import org.mifos.accounts.util.helpers.AccountActionTypes;
+import org.mifos.accounts.util.helpers.AccountConstants;
+import org.mifos.accounts.util.helpers.AccountExceptionConstants;
+import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.accounts.util.helpers.AccountStateFlag;
+import org.mifos.accounts.util.helpers.AccountStates;
+import org.mifos.accounts.util.helpers.AccountTypes;
+import org.mifos.accounts.util.helpers.FeeInstallment;
+import org.mifos.accounts.util.helpers.InstallmentDate;
+import org.mifos.accounts.util.helpers.OverDueAmounts;
+import org.mifos.accounts.util.helpers.PaymentData;
+import org.mifos.accounts.util.helpers.PaymentStatus;
+import org.mifos.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.persistence.HolidayDao;
@@ -98,7 +138,11 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.CollectionUtils;
 import org.mifos.framework.util.DateTimeService;
-import org.mifos.framework.util.helpers.*;
+import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.MoneyUtils;
+import org.mifos.framework.util.helpers.Transformer;
 import org.mifos.schedule.ScheduledDateGeneration;
 import org.mifos.schedule.ScheduledEvent;
 import org.mifos.schedule.ScheduledEventFactory;
@@ -107,11 +151,7 @@ import org.mifos.security.util.UserContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.math.BigDecimal;
-import java.util.*;
-
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
-import static org.mifos.platform.util.CollectionUtils.isNotEmpty;
+import edu.emory.mathcs.backport.java.util.Collections;
 
 public class LoanBO extends AccountBO {
 
@@ -2578,7 +2618,7 @@ public class LoanBO extends AccountBO {
         Set<AccountActionDateEntity> accountActionDateEntitySet = getAccountActionDates();
         AccountActionDateEntity nextAccountAction = null;
         if (isNotEmpty(accountActionDateEntitySet)) {
-            nextAccountAction = Collections.max(accountActionDateEntitySet);
+            nextAccountAction = java.util.Collections.max(accountActionDateEntitySet);
         }
         return nextAccountAction;
     }
@@ -2992,10 +3032,6 @@ public class LoanBO extends AccountBO {
         ScheduledEvent meetingScheduledEvent = ScheduledEventFactory.createScheduledEventFrom(this.loanMeeting);
         List<LoanScheduleEntity> unroundedLoanSchedules = createUnroundedLoanSchedulesFromInstallments(installmentDates, loanInterest, this.loanAmount, meetingScheduledEvent, principalWithInterestInstallments, this.getAccountFees());
 
-        for (LoanScheduleEntity unroundedLoanSchedule : unroundedLoanSchedules) {
-            addAccountActionDate(unroundedLoanSchedule);
-        }
-
         Money rawAmount = calculateTotalFeesAndInterestForLoanSchedules(unroundedLoanSchedules);
 
         if (loanSummary == null) {
@@ -3006,7 +3042,38 @@ public class LoanBO extends AccountBO {
             loanSummary.setRawAmountTotal(rawAmount);
         }
 
-        applyRounding_v2();
+        LoanScheduleRounder loanScheduleInstallmentRounder = new DefaultLoanScheduleRounder();
+
+        List<LoanScheduleEntity> allExistingLoanSchedules = new ArrayList<LoanScheduleEntity>();
+//        List<LoanScheduleEntity> old_roundedLoanSchedules = loanScheduleInstallmentRounder.round(unroundedLoanSchedules, allExistingLoanSchedules, graceType, this.gracePeriodDuration.intValue(), loanInterest, interestType);
+
+        Collections.sort(unroundedLoanSchedules);
+        List<LoanScheduleEntity> roundedLoanSchedules = new ArrayList<LoanScheduleEntity>();
+        RepaymentTotals totals = calculateInitialTotals_v2(unroundedLoanSchedules, loanAmount, allExistingLoanSchedules);
+        int installmentNum = 0;
+        for (Iterator<LoanScheduleEntity> it = unroundedLoanSchedules.iterator(); it.hasNext();) {
+            LoanScheduleEntity currentInstallment = it.next();
+            LoanScheduleEntity roundedInstallment = currentInstallment;
+            installmentNum++;
+            if (it.hasNext()) { // handle all but the last installment
+                if (isGraceInstallment_v2(installmentNum, graceType, gracePeriodDuration)) {
+                    roundedInstallment = roundAndAdjustGraceInstallment_v2(roundedInstallment);
+                } else if (interestType.equals(InterestType.DECLINING_EPI)) {
+                    roundAndAdjustNonGraceInstallmentForDecliningEPI_v2(roundedInstallment);
+                } else {
+                    roundAndAdjustButLastNonGraceInstallment_v2(roundedInstallment);
+                }
+                updateRunningTotals_v2(totals, roundedInstallment);
+            } else {
+                roundAndAdjustLastInstallment_v2(roundedInstallment, totals);
+            }
+            roundedLoanSchedules.add(roundedInstallment);
+        } // for
+
+
+        for (LoanScheduleEntity roundedLoanSchedule : roundedLoanSchedules) {
+            addAccountActionDate(roundedLoanSchedule);
+        }
     }
 
     private Money calculateTotalFeesAndInterestForLoanSchedules(List<LoanScheduleEntity> unroundedLoanSchedules) {
@@ -3055,7 +3122,7 @@ public class LoanBO extends AccountBO {
                 Money accountFeeAmount = installmentFeeCalculator.calculate(feeAmount, loanAmount, loanInterest, accountFeesEntity.getFees());
                 accountFeesEntity.setAccountFeeAmount(accountFeeAmount);
             }
-            feeInstallments = FeeInstallment.createMergedFeeInstallments(meetingScheduledEvent, getAccountFees(),installmentDates.size());
+            feeInstallments = FeeInstallment.createMergedFeeInstallments(meetingScheduledEvent, accountFees, installmentDates.size());
         }
 
         int installmentIndex = 0;
@@ -3218,13 +3285,13 @@ public class LoanBO extends AccountBO {
 
         List<AccountActionDateEntity> installments = getInstallmentsToRound();
 
-        RepaymentTotals totals = calculateInitialTotals_v2(installments);
+        RepaymentTotals totals = calculateInitialTotals_v2(installments, this.loanAmount, this.getAllInstallments());
         int installmentNum = 0;
         for (Iterator it = installments.iterator(); it.hasNext();) {
             LoanScheduleEntity currentInstallment = (LoanScheduleEntity) it.next();
             installmentNum++;
             if (it.hasNext()) { // handle all but the last installment
-                if (isGraceInstallment_v2(installmentNum)) {
+                if (isGraceInstallment_v2(installmentNum, this.gracePeriodType.asEnum(), this.gracePeriodDuration.intValue())) {
                     roundAndAdjustGraceInstallment_v2(currentInstallment);
                 } else if (getLoanOffering().getInterestTypes().getId().equals(InterestType.DECLINING_EPI.getValue())) {
                     roundAndAdjustNonGraceInstallmentForDecliningEPI_v2(currentInstallment);
@@ -3252,8 +3319,8 @@ public class LoanBO extends AccountBO {
     /**
      * A grace-period installment can appear in the loan schedule only if the loan is setup with principal-only grace.
      */
-    private boolean isGraceInstallment_v2(final int installmentNum) {
-        return getGraceType().equals(GraceType.PRINCIPALONLYGRACE) && installmentNum <= getGracePeriodDuration();
+    private boolean isGraceInstallment_v2(final int installmentNum, GraceType graceType, int gracePeriodDuration) {
+        return graceType.equals(GraceType.PRINCIPALONLYGRACE) && installmentNum <= gracePeriodDuration;
     }
 
     /**
@@ -3327,25 +3394,29 @@ public class LoanBO extends AccountBO {
     /**
      * For principal-only grace installments, adjust the interest to account for rounding discrepancies.
      */
-    private void roundAndAdjustGraceInstallment_v2(final LoanScheduleEntity installment) {
+    private LoanScheduleEntity roundAndAdjustGraceInstallment_v2(final LoanScheduleEntity installment) {
         Money roundedInstallmentTotalPaymentDue = MoneyUtils.initialRound(installment.getTotalPaymentDue());
-        roundInstallmentAccountFeesDue_v2(installment);
-        installment.setInterest(roundedInstallmentTotalPaymentDue.subtract(installment.getTotalFeeDueWithMiscFeeDue())
-                .subtract(installment.getPenaltyDue()));
+
+        LoanScheduleEntity roundedInstallment = roundInstallmentAccountFeesDue_v2(installment);
+
+        roundedInstallment.setInterest(roundedInstallmentTotalPaymentDue.subtract(roundedInstallment.getTotalFeeDueWithMiscFeeDue())
+                .subtract(roundedInstallment.getPenaltyDue()));
+
+        return roundedInstallment;
     }
 
-    private RepaymentTotals calculateInitialTotals_v2(final List<AccountActionDateEntity> installmentsToBeRounded) {
+    private RepaymentTotals calculateInitialTotals_v2(final List<? extends AccountActionDateEntity> installmentsToBeRounded, Money loanAmount, final List<? extends AccountActionDateEntity> allInstallments) {
 
         RepaymentTotals totals = new RepaymentTotals();
 
-        Money exactTotalInterestDue = new Money(getCurrency(), "0");
-        Money exactTotalAccountFeesDue = new Money(getCurrency(), "0");
-        Money exactTotalMiscFeesDue = new Money(getCurrency(), "0");
-        Money exactTotalMiscPenaltiesDue = new Money(getCurrency(), "0");
+        Money exactTotalInterestDue = new Money(loanAmount.getCurrency(), "0");
+        Money exactTotalAccountFeesDue = new Money(loanAmount.getCurrency(), "0");
+        Money exactTotalMiscFeesDue = new Money(loanAmount.getCurrency(), "0");
+        Money exactTotalMiscPenaltiesDue = new Money(loanAmount.getCurrency(), "0");
 
         // principal due = loan amount less any payments on principal
-        Money exactTotalPrincipalDue = getLoanAmount();
-        for (AccountActionDateEntity e : this.getAllInstallments()) {
+        Money exactTotalPrincipalDue = loanAmount;
+        for (AccountActionDateEntity e : allInstallments) {
             LoanScheduleEntity installment = (LoanScheduleEntity) e;
             exactTotalPrincipalDue = exactTotalPrincipalDue.subtract(installment.getPrincipalPaid());
         }
@@ -3373,13 +3444,13 @@ public class LoanBO extends AccountBO {
         return totals;
     }
 
-    private void roundInstallmentAccountFeesDue_v2(final LoanScheduleEntity installment) {
+    private LoanScheduleEntity roundInstallmentAccountFeesDue_v2(final LoanScheduleEntity installment) {
 
         for (Object element : installment.getAccountFeesActionDetails()) {
             AccountFeesActionDetailEntity e = (AccountFeesActionDetailEntity) element;
             e.roundFeeAmount(MoneyUtils.currencyRound(e.getFeeDue().add(e.getFeeAmountPaid())));
         }
-
+        return installment;
     }
 
     public boolean isInterestWaived() {

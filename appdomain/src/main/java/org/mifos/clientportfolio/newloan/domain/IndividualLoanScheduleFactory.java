@@ -106,7 +106,7 @@ public class IndividualLoanScheduleFactory implements LoanScheduleFactory {
         }
 
         LoanScheduleRounder loanScheduleInstallmentRounder = new DefaultLoanScheduleRounder();
-        List<LoanScheduleEntity> roundedLoanSchedules = loanScheduleInstallmentRounder.round(scheduledLoanRepayments,
+        List<LoanScheduleEntity> roundedLoanSchedules = loanScheduleInstallmentRounder.round(scheduledLoanRepayments, new ArrayList<LoanScheduleEntity>(),
                 graceType, gracePeriodDuration, loanAmount, interestType);
 
         List<LoanScheduleRepaymentItem> loanScheduleItems = new ArrayList<LoanScheduleRepaymentItem>();
