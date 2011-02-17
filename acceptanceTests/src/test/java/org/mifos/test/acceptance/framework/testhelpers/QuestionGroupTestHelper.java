@@ -36,6 +36,10 @@ import org.mifos.test.acceptance.framework.questionnaire.EditQuestionPage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionGroupDetailPage;
 
 import com.thoughtworks.selenium.Selenium;
+import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
+import org.mifos.test.acceptance.framework.office.CreateOfficePreviewDataPage;
+import org.mifos.test.acceptance.framework.office.OfficeViewDetailsPage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 
 public class QuestionGroupTestHelper {
 
@@ -78,10 +82,25 @@ public class QuestionGroupTestHelper {
         editQuestionGroupPage.submit();
     }
 
-    private EditQuestionGroupPage naviagateToEditQuestionGroup(String questionGroup){
+    public void addQuestionsToQuestionGroup(int questionGroupId, Map<String, List<String>> existingQuestions){
+        EditQuestionGroupPage editQuestionGroupPage = naviagateToEditQuestionGroup(questionGroupId);
+        for (String section : existingQuestions.keySet()) {
+            editQuestionGroupPage.addExistingQuestion(section, existingQuestions.get(section));
+        }
+        editQuestionGroupPage.submit();
+    }
+
+    public EditQuestionGroupPage naviagateToEditQuestionGroup(String questionGroup){
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         ViewAllQuestionGroupsPage allQuestionGroupsPage = adminPage.navigateToViewAllQuestionGroups();
         QuestionGroupDetailPage questionGroupDetailPage = allQuestionGroupsPage.navigateToQuestionGroupDetailPage(questionGroup);
+        return questionGroupDetailPage.navigateToEditPage();
+    }
+
+    public EditQuestionGroupPage naviagateToEditQuestionGroup(int questionGroupId){
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        ViewAllQuestionGroupsPage allQuestionGroupsPage = adminPage.navigateToViewAllQuestionGroups();
+        QuestionGroupDetailPage questionGroupDetailPage = allQuestionGroupsPage.navigateToQuestionGroupDetailPage(questionGroupId);
         return questionGroupDetailPage.navigateToEditPage();
     }
 
@@ -142,4 +161,13 @@ public class QuestionGroupTestHelper {
         return viewAllQuestionsPage;
     }
 
+    public OfficeViewDetailsPage createOfficeWithQuestionGroup(QuestionResponsePage questionResponsePage,
+            QuestionResponseParameters responseParameters, QuestionResponseParameters responseParameters2) {
+        questionResponsePage.populateAnswers(responseParameters);
+        CreateOfficePreviewDataPage createOfficePreviewDataPage = questionResponsePage.navigateToNextPageAndReturnPage();
+        QuestionResponsePage questionResponsePage2 = createOfficePreviewDataPage.editAdditionalInformation();
+        questionResponsePage2.populateAnswers(responseParameters2);
+        createOfficePreviewDataPage = questionResponsePage2.navigateToNextPageAndReturnPage();
+        return createOfficePreviewDataPage.submit().navigateToOfficeViewDetailsPage();
+    }
 }

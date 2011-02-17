@@ -43,6 +43,7 @@ import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSearchPar
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSubmitParameters;
 import org.mifos.test.acceptance.framework.savings.SavingsAccountDetailPage;
 import org.mifos.test.acceptance.framework.testhelpers.CenterTestHelper;
+import org.mifos.test.acceptance.framework.testhelpers.ClientTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.CustomPropertiesHelper;
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.framework.testhelpers.GroupTestHelper;
@@ -65,6 +66,7 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
     CustomPropertiesHelper propertiesHelper;
     SavingsAccountHelper savingsAccountHelper;
     CenterTestHelper centerTestHelper;
+    ClientTestHelper clientTestHelper;
     @Autowired
     private DriverManagerDataSource dataSource;
     @Autowired
@@ -84,6 +86,7 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
         propertiesHelper = new CustomPropertiesHelper(selenium);
         savingsAccountHelper = new SavingsAccountHelper(selenium);
         centerTestHelper = new CenterTestHelper(selenium);
+        clientTestHelper = new ClientTestHelper(selenium);
         super.setUp();
     }
 
@@ -377,11 +380,14 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
         propertiesHelper.setDigitsAfterDecimalForInterest(5);
     }
 
+    //http://mifosforge.jira.com/browse/MIFOSTEST-204
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void removeThursdayFromWorkingDays() throws Exception {
+        //Given
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml", dataSource, selenium);
-        String workingDays ="Monday,Tuesday,Wednesday,Friday,Saturday";
-        propertiesHelper.setWorkingDays(workingDays);
+        String workingDays ="Monday,Tuesday,Wednesday,Thursday,Friday,Saturday";
+
+        //When
         CreateCenterEnterDataPage createCenterEnterDataPage = navigationHelper.navigateToCreateCenterEnterDataPage("Test Branch Office");
         CreateMeetingPage createMeetingPage = createCenterEnterDataPage.navigateToCreateMeetingPage();
         createMeetingPage.verifyWorkingDays(workingDays);
@@ -389,7 +395,46 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
         CreateClientEnterMfiDataPage createClientEnterMfiDataPage = navigationHelper.navigateToCreateClientEnterMfiDataPage("Test Branch Office");
         createMeetingPage = createClientEnterMfiDataPage.navigateToCreateMeetingPage();
         createMeetingPage.verifyWorkingDays(workingDays);
+
+        workingDays ="Monday,Tuesday,Wednesday,Friday,Saturday";
+        propertiesHelper.setWorkingDays(workingDays);
+
+        //Then
+        createCenterEnterDataPage = navigationHelper.navigateToCreateCenterEnterDataPage("Test Branch Office");
+        createMeetingPage = createCenterEnterDataPage.navigateToCreateMeetingPage();
+        createMeetingPage.verifyWorkingDays(workingDays);
+
+        createClientEnterMfiDataPage = navigationHelper.navigateToCreateClientEnterMfiDataPage("Test Branch Office");
+        createMeetingPage = createClientEnterMfiDataPage.navigateToCreateMeetingPage();
+        createMeetingPage.verifyWorkingDays(workingDays);
+
+        String groupName = "testGroup";
+
+        CreateCenterEnterDataPage.SubmitFormParameters formParameters = new CreateCenterEnterDataPage.SubmitFormParameters();
+        formParameters = setCenterParameters();
+        centerTestHelper.createCenter(formParameters, "Test Branch Office");
+
+        CreateGroupSubmitParameters groupParams = new CreateGroupSubmitParameters();
+        groupParams.setGroupName(groupName);
+        GroupTestHelper groupTestHelper = new GroupTestHelper(selenium);
+        groupTestHelper.createNewGroupPartialApplication("CenterNameTest123456", groupParams);
+
+        clientTestHelper.createClientAndVerify("Horace Engdahl", "Test Branch Office");
+
+        // restore original configuration
         propertiesHelper.setWorkingDays("Monday,Tuesday,Wednesday,Thursday,Friday,Saturday");
+    }
+
+    private CreateCenterEnterDataPage.SubmitFormParameters setCenterParameters() {
+        CreateCenterEnterDataPage.SubmitFormParameters formParameters = new CreateCenterEnterDataPage.SubmitFormParameters();
+        formParameters.setCenterName("CenterNameTest123456");
+        formParameters.setLoanOfficer("Horace Engdahl");
+        MeetingParameters meeting = new MeetingParameters();
+        meeting.setMeetingPlace("testMeetingPlace");
+        meeting.setWeekFrequency("1");
+        meeting.setWeekDay(MeetingParameters.MONDAY);
+        formParameters.setMeeting(meeting);
+        return  formParameters;
     }
 
     private void verifyInvalidInterestInLoanProduct(SubmitFormParameters formParameters,boolean checkInterestExceedsLimit)

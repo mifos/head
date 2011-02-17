@@ -278,7 +278,7 @@ explanation of the license and how it is applied.
 										<tr>
 											<td class="fontnormalbold">
 												<mifos:mifoslabel name="loan.amount" />
-												:&nbsp; <span class="fontnormal"> <c:out value="${loanAmount}" /> <mifos:mifoslabel name="loan.allowed_amount"></mifos:mifoslabel>&nbsp; <c:out value="${loanAccountActionForm.minLoanAmount}" /> &nbsp; - &nbsp; <c:out
+												:&nbsp; <span class="fontnormal"> <span id="createloanpreview.text.loanamount"><c:out value="${loanAmount}" /></span> <mifos:mifoslabel name="loan.allowed_amount"></mifos:mifoslabel>&nbsp; <c:out value="${loanAccountActionForm.minLoanAmount}" /> &nbsp; - &nbsp; <c:out
 														value="${loanAccountActionForm.maxLoanAmount}" />) </span>
 											</td>
 										</tr>

@@ -47,7 +47,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
+import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
+import org.mifos.test.acceptance.framework.office.OfficeParameters;
+import org.mifos.test.acceptance.framework.office.OfficeViewDetailsPage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
+import org.mifos.test.acceptance.framework.questionnaire.ViewQuestionResponseDetailPage;
 import org.mifos.test.acceptance.framework.testhelpers.ClientTestHelper;
+import org.mifos.test.acceptance.framework.testhelpers.OfficeHelper;
 import org.mifos.test.acceptance.framework.testhelpers.QuestionGroupTestHelper;
 
 import static java.util.Arrays.asList;
@@ -69,6 +75,7 @@ public class QuestionGroupTest extends UiTestCaseBase {
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
 
+    private OfficeHelper officeHelper;
     private QuestionGroupTestHelper questionGroupTestHelper;
     private ClientTestHelper clientTestHelper;
     private static final String START_DATA_SET = "acceptance_small_003_dbunit.xml";
@@ -82,6 +89,8 @@ public class QuestionGroupTest extends UiTestCaseBase {
     public static final String SECTION_DEFAULT = "Default";
     private static final String SECTION_MISC = "Misc";
     private static final String VIEW_CLIENT_QUESTION_GROUP = "ViewClientQG";
+    private static final String CREATE_CLIENT_QUESTION_GROUP = "CreateClientQG2";
+    private static final int CREATE_OFFICE_QUESTION_GROUP_ID = 27;
     private static final String CLIENT = "Stu1232993852651 Client1232993852651";
     private static final List<String> EMPTY_LIST = new ArrayList<String>();
     private static final List<String> QUESTIONS_LIST = new ArrayList<String>(Arrays.asList("CreateClientQG",
@@ -95,6 +104,7 @@ public class QuestionGroupTest extends UiTestCaseBase {
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
+        officeHelper = new OfficeHelper(selenium);
         appLauncher = new AppLauncher(selenium);
         questionGroupTestHelper = new QuestionGroupTestHelper(selenium);
         clientTestHelper = new ClientTestHelper(selenium);
@@ -188,6 +198,89 @@ public class QuestionGroupTest extends UiTestCaseBase {
         ClientViewChangeLogPage clientViewChangeLogPage = clientViewDetailsPage.navigateToClientViewChangeLog();
         clientViewChangeLogPage.verifyChangeLog(asList("CreateClientQG/Sec 2/Number","CreateClientQG/Sec 2/NumberQuestion2"),
                 asList("-","-"), asList("123","9"), asList("mifos","mifos"),3);
+    }
+
+    /**
+     * Capturing responses during the Office creation
+     * http://mifosforge.jira.com/browse/MIFOSTEST-671
+     * @throws Exception
+     */
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void createOfficeWithQuestionGroupTest() throws Exception{
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_016_dbunit.xml", dataSource, selenium);
+        EditQuestionGroupPage editQuestionGroupPage = questionGroupTestHelper.naviagateToEditQuestionGroup(CREATE_OFFICE_QUESTION_GROUP_ID);
+        editQuestionGroupPage.editQuestionGroup("Create Office");
+
+        //When
+        OfficeParameters officeParameters = new OfficeParameters();
+        officeParameters.setOfficeName("TestOffice");
+        officeParameters.setOfficeType(OfficeParameters.REGIONAL_OFFICE);
+        officeParameters.setParentOffice("Head Office(Mifos HO )");
+        officeParameters.setShortName("TO");
+        QuestionResponsePage questionResponsePage = officeHelper.navigateToQuestionResponsePage(officeParameters);
+
+        QuestionResponseParameters responseParameters = new QuestionResponseParameters();
+        responseParameters.addSingleSelectAnswer("questionGroups[0].sectionDetails[0].questions[0].valuesAsArray", "Nothing");
+        responseParameters.addSingleSelectAnswer("questionGroups[0].sectionDetails[0].questions[1].valuesAsArray", "Yes");
+        responseParameters.addTextAnswer("questionGroups[0].sectionDetails[0].questions[2].value", "123");
+        
+        QuestionResponseParameters responseParameters2 = new QuestionResponseParameters();
+        responseParameters2.addSingleSelectAnswer("questionGroups[0].sectionDetails[0].questions[1].valuesAsArray", "Maybe");
+        responseParameters2.addTextAnswer("questionGroups[0].sectionDetails[0].questions[2].value", "1234");
+        
+        OfficeViewDetailsPage officeViewDetailsPage = questionGroupTestHelper.createOfficeWithQuestionGroup(questionResponsePage, responseParameters, responseParameters2);
+        ViewQuestionResponseDetailPage viewQuestionResponseDetailPage = officeViewDetailsPage.navigateToViewAdditionalInformation();
+        viewQuestionResponseDetailPage.verifyQuestionPresent("question 7", "Nothing");
+        viewQuestionResponseDetailPage.verifyQuestionPresent("question 5", "Yes", "Maybe");
+        viewQuestionResponseDetailPage.verifyQuestionPresent("question 2", "1234");
+        officeViewDetailsPage = viewQuestionResponseDetailPage.navigateToDetailsPage();
+
+        List<String> questionToAdd= new ArrayList<String>();
+        questionToAdd.add("question 4");
+        questionToAdd.add("question 3");
+
+        List<String> questionToDesactivate = new ArrayList<String>();
+        questionToDesactivate.add("question 5");
+        questionToDesactivate.add("question 7");
+        questionToDesactivate.add("MultiSelect");
+        questionToDesactivate.add("NumberQuestion");
+        questionToDesactivate.add("question 1");
+
+        CreateQuestionGroupParameters createQuestionGroupParameters = new CreateQuestionGroupParameters();
+        for (String question : questionToAdd) {
+            createQuestionGroupParameters.addExistingQuestion("Sec 1", question);
+        }
+        questionGroupTestHelper.addQuestionsToQuestionGroup(CREATE_OFFICE_QUESTION_GROUP_ID, createQuestionGroupParameters.getExistingQuestions());
+
+        for (String question : questionToDesactivate) {
+            questionGroupTestHelper.markQuestionAsInactive(question);
+        }
+
+        editQuestionGroupPage = questionGroupTestHelper.naviagateToEditQuestionGroup(VIEW_CLIENT_QUESTION_GROUP);
+        editQuestionGroupPage.editQuestionGroup("Create Office");
+
+        editQuestionGroupPage = questionGroupTestHelper.naviagateToEditQuestionGroup(CREATE_CLIENT_QUESTION_GROUP);
+        editQuestionGroupPage.editQuestionGroup("Create Office");
+
+        questionGroupTestHelper.markQuestionGroupAsInactive(VIEW_CLIENT_QUESTION_GROUP);
+
+        officeParameters = new OfficeParameters();
+        officeParameters.setOfficeName("TestOffice2");
+        officeParameters.setOfficeType(OfficeParameters.REGIONAL_OFFICE);
+        officeParameters.setParentOffice("Head Office(Mifos HO )");
+        officeParameters.setShortName("TO2");
+        questionResponsePage = officeHelper.navigateToQuestionResponsePage(officeParameters);
+
+        //Then
+        questionResponsePage.verifyQuestionsDoesnotappear(questionToDesactivate.toArray(new String[questionToDesactivate.size()]));
+        questionResponsePage.verifyQuestionsExists(questionToAdd.toArray(new String[questionToAdd.size()]));
+        questionResponsePage.verifySectionDoesnotappear("Sec 2");
+        officeHelper.verifyQuestionPresent("TestOffice", "question 3", "");
+        officeHelper.verifyQuestionPresent("TestOffice", "question 4", "");
+        officeHelper.verifyQuestionPresent("TestOffice", "Date", "");
+        officeHelper.verifyQuestionPresent("TestOffice", "Number", "");
+        officeHelper.verifyQuestionPresent("TestOffice", "SingleSelect", "");
     }
 
     private void testViewQuestionGroups() {

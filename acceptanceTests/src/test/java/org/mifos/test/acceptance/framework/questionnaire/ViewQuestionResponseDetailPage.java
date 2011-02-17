@@ -24,6 +24,7 @@ import com.thoughtworks.selenium.Selenium;
 
 import org.junit.Assert;
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.mifos.test.acceptance.framework.office.OfficeViewDetailsPage;
 
 import static org.junit.Assert.assertTrue;
 
@@ -59,8 +60,10 @@ public class ViewQuestionResponseDetailPage extends MifosPage {
         return new QuestionnairePage(selenium);
     }
 
-    public void navigateToDetailsPage() {
+    public OfficeViewDetailsPage navigateToDetailsPage() {
         selenium.click("_eventId_cancel");
         waitForPageToLoad();
+
+        return new OfficeViewDetailsPage(selenium);
     }
 }

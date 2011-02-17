@@ -316,4 +316,8 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
         Assert.assertTrue(selenium.isTextPresent("(Allowed Number of Installments:   "+min+"   -   "+max+" )"));
         Assert.assertEquals(selenium.getValue("loancreationdetails.input.numberOfInstallments"), def);
     }
+
+    public String getLoanAmount() {
+        return selenium.getValue("loancreationdetails.input.sumLoanAmount");
+    }
 }

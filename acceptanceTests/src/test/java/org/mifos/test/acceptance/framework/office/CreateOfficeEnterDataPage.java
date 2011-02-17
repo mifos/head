@@ -23,6 +23,7 @@ package org.mifos.test.acceptance.framework.office;
 import org.mifos.test.acceptance.framework.MifosPage;
 
 import com.thoughtworks.selenium.Selenium;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 
 public class CreateOfficeEnterDataPage extends MifosPage {
 
@@ -57,5 +58,17 @@ public class CreateOfficeEnterDataPage extends MifosPage {
         selenium.click("CreateNewOffice.button.preview");
         waitForPageToLoad();
         return new CreateOfficePreviewDataPage(selenium);
+    }
+
+    public QuestionResponsePage submitAndGotoQuestionResponsePage(OfficeParameters parameters) {
+        typeTextIfNotEmpty("CreateNewOffice.input.officeName", parameters.getOfficeName());
+        typeTextIfNotEmpty("CreateNewOffice.input.shortName", parameters.getShortName());
+        selectValueIfNotZero("officeLevel", parameters.getOfficeTypeValue());
+        waitForPageToLoad(); // loading the possible parent offices
+        selectIfNotEmpty("parentOfficeId", parameters.getParentOffice());
+        selenium.click("CreateNewOffice.button.preview");
+        waitForPageToLoad();
+
+        return new QuestionResponsePage(selenium);
     }
 }

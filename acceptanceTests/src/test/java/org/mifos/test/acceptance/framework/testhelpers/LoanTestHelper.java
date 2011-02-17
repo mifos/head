@@ -46,6 +46,8 @@ import org.mifos.test.acceptance.framework.loan.ClosedAccountsPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountCashFlowPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountEntryPage;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountPreviewPage;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountReviewInstallmentPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameters;
@@ -784,11 +786,18 @@ public class LoanTestHelper {
      * Must be logged in.
      */
     public LoanAccountPage createAndActivateDefaultLoanAccount(CreateLoanAccountSearchParameters searchParams) {
-        MifosPage mifosPage = new MifosPage(selenium);
-        return mifosPage.navigateToClientsAndAccountsPageUsingHeaderTab()
+        CreateLoanAccountEntryPage createLoanAccountEntryPage = new MifosPage(selenium)
+            .navigateToClientsAndAccountsPageUsingHeaderTab()
             .navigateToCreateLoanAccountUsingLeftMenu()
-            .searchAndNavigateToCreateLoanAccountPage(searchParams)
-            .continuePreviewSubmitAndNavigateToDetailsPage()
+            .searchAndNavigateToCreateLoanAccountPage(searchParams);
+        String loanAmount = createLoanAccountEntryPage.getLoanAmount();
+        CreateLoanAccountReviewInstallmentPage createLoanAccountReviewInstallmentPage = createLoanAccountEntryPage.clickContinue();
+        createLoanAccountReviewInstallmentPage.verifyLoanAmount(loanAmount);
+        CreateLoanAccountPreviewPage createLoanAccountPreviewPage = createLoanAccountReviewInstallmentPage.clickPreviewAndGoToReviewLoanAccountPage();
+        createLoanAccountPreviewPage.verifyLoanAmount(loanAmount);
+        return createLoanAccountPreviewPage
+            .submit()
+            .navigateToLoanAccountDetailsPage()
             .changeAccountStatusToAccepted();
     }
 

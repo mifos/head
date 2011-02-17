@@ -47,6 +47,7 @@
     }
 </script>
 <!--  Main Content Begins-->
+<span id="page.id" title="defineMandatoryHiddenFields" />
 <div class="content">
 [@mifos.crumbs breadcrumbs /]
 <p>&nbsp;&nbsp;</p>
