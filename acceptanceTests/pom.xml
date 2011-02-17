@@ -413,6 +413,7 @@
                 </configuration>
                 <executions>
                     <execution>
+                        <id>run_db_unit_independent</id>
                         <phase>integration-test</phase>
                         <goals>
                             <goal>test</goal>
@@ -425,6 +426,7 @@
                         </configuration>
                     </execution>
                     <execution>
+                        <id>run_db_unit_dependent</id>
                         <phase>integration-test</phase>
                         <goals>
                             <goal>test</goal>
