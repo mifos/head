@@ -1,3 +1,0 @@
-Description:
-Expected result data set for the test loanWithWeeklyRepayment in ClientLoanRepaymentPeriod.
-Consists of a loan for Veronica Abisya, loan id 000100000000029.

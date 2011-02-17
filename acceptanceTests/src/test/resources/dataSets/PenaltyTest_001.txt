@@ -1,3 +1,0 @@
-Description:
-Expected result data set for the test 
-applyPenalty in PenaltyTest.
