@@ -22,7 +22,6 @@ package org.mifos.test.acceptance.admin;
 
 
 import org.joda.time.DateTime;
-import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
@@ -34,28 +33,20 @@ import org.mifos.test.acceptance.framework.office.OfficeParameters;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.loanproduct.LoanProductTestHelper;
-import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
 import org.mifos.test.acceptance.util.TestDataSetup;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"admin", "acceptance","ui"})
+@Test(sequential = true, groups = {"admin", "acceptance","ui","no_db_unit"})
 public class RolesAndPermissionTest extends UiTestCaseBase {
 
     private NavigationHelper navigationHelper;
 
-    @Autowired
-    private DriverManagerDataSource dataSource;
-    @Autowired
-    private DbUnitUtilities dbUnitUtilities;
-    @Autowired
-    private InitializeApplicationRemoteTestingService initRemote;
     private LoanTestHelper loanTestHelper;
     private LoanProductTestHelper loanProductTestHelper;
     private DateTime systemDateTime;
@@ -112,7 +103,6 @@ public class RolesAndPermissionTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void disableSystemInfoPermission() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml", dataSource, selenium);
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         ViewRolesPage viewRolesPage = adminPage.navigateToViewRolesPage();
         ManageRolePage manageRolePage = viewRolesPage.navigateToManageRolePage("Admin");
