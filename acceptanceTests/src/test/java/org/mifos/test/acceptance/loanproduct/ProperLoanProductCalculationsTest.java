@@ -36,6 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -54,6 +55,12 @@ public class ProperLoanProductCalculationsTest extends UiTestCaseBase {
     private LoanTestHelper loanTestHelper;
     private CustomPropertiesHelper  customPropertiesHelper;
 
+    @BeforeClass
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void setUpClass() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_004_dbunit.xml", dataSource, selenium);
+    }
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @BeforeMethod
     @Override
@@ -66,7 +73,17 @@ public class ProperLoanProductCalculationsTest extends UiTestCaseBase {
 
     @AfterMethod
     public void logOut() {
+        setDefaultProperties();
         (new MifosPage(selenium)).logout();
+    }
+
+    private void setDefaultProperties() {
+        customPropertiesHelper.setDigitsAfterDecimal(1);
+        customPropertiesHelper.setCurrencyRoundingMode(CustomPropertiesHelper.ROUNDING_MODE_HALF_UP);
+        customPropertiesHelper.setInitialRoundingMode(CustomPropertiesHelper.ROUNDING_MODE_HALF_UP);
+        customPropertiesHelper.setFinalRoundingMode(CustomPropertiesHelper.ROUNDING_MODE_CEILING);
+        customPropertiesHelper.setInitialRoundOffMultiple("1");
+        customPropertiesHelper.setFinalRoundOffMultiple("1");
     }
 
     /**
@@ -76,8 +93,6 @@ public class ProperLoanProductCalculationsTest extends UiTestCaseBase {
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyProperInterestAndPaymentWeeklyFlatProduct() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
-
         DefineNewLoanProductPage.SubmitFormParameters productParams = FormParametersHelper.getWeeklyLoanProductParameters();
         productParams.setOfferingName("product63");
         productParams.setOfferingShortName("p63");
@@ -107,8 +122,6 @@ public class ProperLoanProductCalculationsTest extends UiTestCaseBase {
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyProperInterestAndPaymentMonthlyFlatProduct() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_004_dbunit.xml", dataSource, selenium);
-
         DefineNewLoanProductPage.SubmitFormParameters productParams = FormParametersHelper.getMonthlyLoanProductParameters();
         productParams.setOfferingName("product64");
         productParams.setOfferingShortName("p64");
@@ -139,8 +152,6 @@ public class ProperLoanProductCalculationsTest extends UiTestCaseBase {
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyProperInterestAndPaymentWeeklyDecliningBalanceProduct() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
-
         DefineNewLoanProductPage.SubmitFormParameters productParams = FormParametersHelper.getWeeklyLoanProductParameters();
         productParams.setOfferingName("product66");
         productParams.setOfferingShortName("p66");
@@ -171,8 +182,6 @@ public class ProperLoanProductCalculationsTest extends UiTestCaseBase {
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyProperInterestAndPaymentMonthlyDecliningFixedProduct() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_004_dbunit.xml", dataSource, selenium);
-
         DefineNewLoanProductPage.SubmitFormParameters productParams = FormParametersHelper.getMonthlyLoanProductParameters();
         productParams.setOfferingName("product67");
         productParams.setOfferingShortName("p67");
@@ -204,7 +213,6 @@ public class ProperLoanProductCalculationsTest extends UiTestCaseBase {
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyProperCalculationsFlatProductNonDefaultProperties() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
         customPropertiesHelper.setDigitsAfterDecimal(3);
         customPropertiesHelper.setCurrencyRoundingMode(CustomPropertiesHelper.ROUNDING_MODE_CEILING);
         customPropertiesHelper.setInitialRoundingMode(CustomPropertiesHelper.ROUNDING_MODE_FLOOR);
@@ -233,5 +241,44 @@ public class ProperLoanProductCalculationsTest extends UiTestCaseBase {
         loanAccountPage.verifyFeesOriginal("0.000");
         loanAccountPage.verifyPenaltyOriginal("0.000");
         loanAccountPage.verifyTotalOriginalLoan("15617.750");
+    }
+
+    /**
+     * Verify declining balance, fixed payment interest loan with non-default
+     * accounting rules for digits after decimals and rounding mode properties are
+     * used to generate and present calculations accurately and are reflected in Admin System Information.
+     * http://mifosforge.jira.com/browse/MIFOSTEST-70
+     * @throws Exception
+     */
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void verifyProperCalculationsFixedProductNonDefaultProperties() throws Exception {
+        customPropertiesHelper.setDigitsAfterDecimal(2);
+        customPropertiesHelper.setCurrencyRoundingMode(CustomPropertiesHelper.ROUNDING_MODE_FLOOR);
+        customPropertiesHelper.setInitialRoundingMode(CustomPropertiesHelper.ROUNDING_MODE_HALF_UP);
+        customPropertiesHelper.setFinalRoundingMode(CustomPropertiesHelper.ROUNDING_MODE_HALF_UP);
+        customPropertiesHelper.setInitialRoundOffMultiple("0.5");
+        customPropertiesHelper.setFinalRoundOffMultiple("0.1");
+
+        DefineNewLoanProductPage.SubmitFormParameters productParams = FormParametersHelper.getWeeklyLoanProductParameters();
+        productParams.setOfferingName("product70");
+        productParams.setOfferingShortName("p70");
+        productParams.setDefaultInterestRate("9.5");
+        productParams.setMinInterestRate("5");
+        productParams.setInterestTypes(SubmitFormParameters.DECLINING_BALANCE_EPI);
+        productParams.setDefaultLoanAmount("19999.9");
+        productParams.setDefInstallments("79");
+        productParams.setMaxInstallments("79");
+        CreateLoanAccountSearchParameters searchParams = new CreateLoanAccountSearchParameters();
+        searchParams.setSearchString("Stu1233266063395 Client1233266063395");
+        searchParams.setLoanProduct("product70");
+
+        loanProductTestHelper.defineNewLoanProduct(productParams);
+        LoanAccountPage loanAccountPage = loanTestHelper.createAndActivateDefaultLoanAccount(searchParams);
+
+        loanAccountPage.verifyPrincipalOriginal("19999.90");
+        loanAccountPage.verifyInterestOriginal("1457.50");
+        loanAccountPage.verifyFeesOriginal("0.00");
+        loanAccountPage.verifyPenaltyOriginal("0.00");
+        loanAccountPage.verifyTotalOriginalLoan("21457.40");
     }
 }

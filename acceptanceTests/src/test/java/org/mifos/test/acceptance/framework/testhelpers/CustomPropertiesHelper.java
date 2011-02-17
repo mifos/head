@@ -27,6 +27,7 @@ public class CustomPropertiesHelper {
 
     public static final String ROUNDING_MODE_FLOOR = "FLOOR";
     public static final String ROUNDING_MODE_CEILING = "CEILING";
+    public static final String ROUNDING_MODE_HALF_UP = "HALF_UP";
 
     private final Selenium selenium;
 
