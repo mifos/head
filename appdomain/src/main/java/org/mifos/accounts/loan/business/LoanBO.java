@@ -105,6 +105,7 @@ import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.clientportfolio.newloan.domain.DefaultLoanScheduleRounder;
+import org.mifos.clientportfolio.newloan.domain.DefaultLoanScheduleRounderHelper;
 import org.mifos.clientportfolio.newloan.domain.EqualInstallmentGeneratorFactory;
 import org.mifos.clientportfolio.newloan.domain.EqualInstallmentGeneratorFactoryImpl;
 import org.mifos.clientportfolio.newloan.domain.InstallmentFeeCalculator;
@@ -119,6 +120,7 @@ import org.mifos.clientportfolio.newloan.domain.LoanInterestCalculator;
 import org.mifos.clientportfolio.newloan.domain.LoanInterestCalculatorFactory;
 import org.mifos.clientportfolio.newloan.domain.LoanInterestCalculatorFactoryImpl;
 import org.mifos.clientportfolio.newloan.domain.LoanScheduleRounder;
+import org.mifos.clientportfolio.newloan.domain.LoanScheduleRounderHelper;
 import org.mifos.clientportfolio.newloan.domain.PrincipalWithInterestGenerator;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.FiscalCalendarRules;
@@ -3042,34 +3044,13 @@ public class LoanBO extends AccountBO {
             loanSummary.setRawAmountTotal(rawAmount);
         }
 
-        LoanScheduleRounder loanScheduleInstallmentRounder = new DefaultLoanScheduleRounder();
-
         List<LoanScheduleEntity> allExistingLoanSchedules = new ArrayList<LoanScheduleEntity>();
-//        List<LoanScheduleEntity> old_roundedLoanSchedules = loanScheduleInstallmentRounder.round(unroundedLoanSchedules, allExistingLoanSchedules, graceType, this.gracePeriodDuration.intValue(), loanInterest, interestType);
+        
+        LoanScheduleRounderHelper loanScheduleRounderHelper = new DefaultLoanScheduleRounderHelper();
+        LoanScheduleRounder loanScheduleInstallmentRounder = new DefaultLoanScheduleRounder(loanScheduleRounderHelper);
 
-        Collections.sort(unroundedLoanSchedules);
-        List<LoanScheduleEntity> roundedLoanSchedules = new ArrayList<LoanScheduleEntity>();
-        RepaymentTotals totals = calculateInitialTotals_v2(unroundedLoanSchedules, loanAmount, allExistingLoanSchedules);
-        int installmentNum = 0;
-        for (Iterator<LoanScheduleEntity> it = unroundedLoanSchedules.iterator(); it.hasNext();) {
-            LoanScheduleEntity currentInstallment = it.next();
-            LoanScheduleEntity roundedInstallment = currentInstallment;
-            installmentNum++;
-            if (it.hasNext()) { // handle all but the last installment
-                if (isGraceInstallment_v2(installmentNum, graceType, gracePeriodDuration)) {
-                    roundedInstallment = roundAndAdjustGraceInstallment_v2(roundedInstallment);
-                } else if (interestType.equals(InterestType.DECLINING_EPI)) {
-                    roundAndAdjustNonGraceInstallmentForDecliningEPI_v2(roundedInstallment);
-                } else {
-                    roundAndAdjustButLastNonGraceInstallment_v2(roundedInstallment);
-                }
-                updateRunningTotals_v2(totals, roundedInstallment);
-            } else {
-                roundAndAdjustLastInstallment_v2(roundedInstallment, totals);
-            }
-            roundedLoanSchedules.add(roundedInstallment);
-        } // for
-
+        List<LoanScheduleEntity> roundedLoanSchedules = loanScheduleInstallmentRounder.round(graceType, gracePeriodDuration, loanAmount,
+        		interestType, unroundedLoanSchedules, allExistingLoanSchedules);
 
         for (LoanScheduleEntity roundedLoanSchedule : roundedLoanSchedules) {
             addAccountActionDate(roundedLoanSchedule);
@@ -3077,8 +3058,8 @@ public class LoanBO extends AccountBO {
     }
 
     private Money calculateTotalFeesAndInterestForLoanSchedules(List<LoanScheduleEntity> unroundedLoanSchedules) {
-        // buildRawTotal - is total fees plus total interest.
-        Money zero = new Money(getCurrency());
+
+    	Money zero = new Money(getCurrency());
         Money interest = zero;
         Money fees = zero;
 
@@ -3308,12 +3289,12 @@ public class LoanBO extends AccountBO {
 
     private void updateRunningTotals_v2(final RepaymentTotals totals, final LoanScheduleEntity currentInstallment) {
 
-        totals.runningPayments = totals.runningPayments.add(currentInstallment.getTotalPaymentDue());
+        totals.setRunningPayments(totals.getRunningPayments().add(currentInstallment.getTotalPaymentDue()));
 
-        totals.runningPrincipal = totals.runningPrincipal.add(currentInstallment.getPrincipalDue());
-        totals.runningAccountFees = totals.runningAccountFees.add(currentInstallment.getTotalFeesDue());
-        totals.runningMiscFees = totals.runningMiscFees.add(currentInstallment.getMiscFeeDue());
-        totals.runningPenalties = totals.runningPenalties.add(currentInstallment.getPenaltyDue());
+        totals.setRunningPrincipal(totals.getRunningPrincipal().add(currentInstallment.getPrincipalDue()));
+        totals.setRunningAccountFees(totals.getRunningAccountFees().add(currentInstallment.getTotalFeesDue()));
+        totals.setRunningMiscFees(totals.getRunningMiscFees().add(currentInstallment.getMiscFeeDue()));
+        totals.setRunningPenalties(totals.getRunningPenalties().add(currentInstallment.getPenaltyDue()));
     }
 
     /**
@@ -3362,10 +3343,10 @@ public class LoanBO extends AccountBO {
     private void roundAndAdjustLastInstallment_v2(final LoanScheduleEntity lastInstallment, final RepaymentTotals totals) {
 
         roundInstallmentAccountFeesDue_v2(lastInstallment);
-        Money installmentPayment = MoneyUtils.finalRound(totals.roundedPaymentsDue.subtract(totals.runningPayments));
-        lastInstallment.setPrincipal(MoneyUtils.currencyRound(totals.getRoundedPrincipalDue().subtract(
-                totals.runningPrincipal)));
+        Money installmentPayment = MoneyUtils.finalRound(totals.getRoundedPaymentsDue().subtract(totals.getRunningPayments()));
+        lastInstallment.setPrincipal(MoneyUtils.currencyRound(totals.getRoundedPrincipalDue().subtract(totals.getRunningPrincipal())));
         adjustLastInstallmentFees_v2(lastInstallment, totals);
+        
         lastInstallment.setInterest(MoneyUtils.currencyRound(installmentPayment.subtract(
                 lastInstallment.getPrincipalDue()).subtract(lastInstallment.getTotalFeeDueWithMiscFeeDue()).subtract(
                 lastInstallment.getPenaltyDue())));
@@ -3383,7 +3364,7 @@ public class LoanBO extends AccountBO {
             }
             for (Object element : feeDetails) {
                 AccountFeesActionDetailEntity e = (AccountFeesActionDetailEntity) element;
-                e.adjustFeeAmount(totals.roundedAccountFeesDue.subtract(totals.runningAccountFees).subtract(
+                e.adjustFeeAmount(totals.getRoundedAccountFeesDue().subtract(totals.getRunningAccountFees()).subtract(
                         lastInstallmentFeeSum));
                 // just adjust the first fee
                 return;
@@ -3407,7 +3388,7 @@ public class LoanBO extends AccountBO {
 
     private RepaymentTotals calculateInitialTotals_v2(final List<? extends AccountActionDateEntity> installmentsToBeRounded, Money loanAmount, final List<? extends AccountActionDateEntity> allInstallments) {
 
-        RepaymentTotals totals = new RepaymentTotals();
+        RepaymentTotals totals = new RepaymentTotals(loanAmount.getCurrency());
 
         Money exactTotalInterestDue = new Money(loanAmount.getCurrency(), "0");
         Money exactTotalAccountFeesDue = new Money(loanAmount.getCurrency(), "0");
@@ -3489,132 +3470,6 @@ public class LoanBO extends AccountBO {
         loanSummary.updatePaymentDetails(paymentAllocation);
         if (paid) {
             performanceHistory.incrementPayments();
-        }
-    }
-
-    /**
-     * A struct to hold totals that can be passed around during rounding computations.
-     */
-    private class RepaymentTotals {
-        // rounded or adjusted totals prior to rounding installments
-        Money roundedPaymentsDue;
-        Money roundedInterestDue;
-        Money roundedAccountFeesDue;
-        Money roundedMiscFeesDue;
-        Money roundedPenaltiesDue;
-        Money roundedMiscPenaltiesDue;
-        Money roundedPrincipalDue;
-
-        // running totals as installments are rounded
-        Money runningPayments = new Money(getCurrency(), "0");
-        Money runningAccountFees = new Money(getCurrency(), "0");
-        Money runningPrincipal = new Money(getCurrency(), "0");
-        Money runningMiscFees = new Money(getCurrency(), "0");
-        Money runningPenalties = new Money(getCurrency(), "0");
-        Money runningMiscPenalties = new Money(getCurrency(), "0");
-
-        Money getRoundedPaymentsDue() {
-            return roundedPaymentsDue;
-        }
-
-        void setRoundedPaymentsDue(final Money roundedPaymentsDue) {
-            this.roundedPaymentsDue = roundedPaymentsDue;
-        }
-
-        Money getRoundedInterestDue() {
-            return roundedInterestDue;
-        }
-
-        void setRoundedInterestDue(final Money roundedInterestDue) {
-            this.roundedInterestDue = roundedInterestDue;
-        }
-
-        Money getRoundedAccountFeesDue() {
-            return roundedAccountFeesDue;
-        }
-
-        void setRoundedAccountFeesDue(final Money roundedAccountFeesDue) {
-            this.roundedAccountFeesDue = roundedAccountFeesDue;
-        }
-
-        Money getRoundedMiscFeesDue() {
-            return roundedMiscFeesDue;
-        }
-
-        void setRoundedMiscFeesDue(final Money roundedMiscFeesDue) {
-            this.roundedMiscFeesDue = roundedMiscFeesDue;
-        }
-
-        Money getRoundedPenaltiesDue() {
-            return roundedPenaltiesDue;
-        }
-
-        void setRoundedPenaltiesDue(final Money roundedPenaltiesDue) {
-            this.roundedPenaltiesDue = roundedPenaltiesDue;
-        }
-
-        Money getRoundedMiscPenaltiesDue() {
-            return roundedMiscPenaltiesDue;
-        }
-
-        void setRoundedMiscPenaltiesDue(final Money roundedMiscPenaltiesDue) {
-            this.roundedMiscPenaltiesDue = roundedMiscPenaltiesDue;
-        }
-
-        Money getRunningPayments() {
-            return runningPayments;
-        }
-
-        void setRunningPayments(final Money runningPayments) {
-            this.runningPayments = runningPayments;
-        }
-
-        Money getRunningAccountFees() {
-            return runningAccountFees;
-        }
-
-        void setRunningAccountFees(final Money runningAccountFees) {
-            this.runningAccountFees = runningAccountFees;
-        }
-
-        Money getRunningPrincipal() {
-            return runningPrincipal;
-        }
-
-        void setRunningPrincipal(final Money runningPrincipal) {
-            this.runningPrincipal = runningPrincipal;
-        }
-
-        Money getRunningMiscFees() {
-            return runningMiscFees;
-        }
-
-        void setRunningMiscFees(final Money runningMiscFees) {
-            this.runningMiscFees = runningMiscFees;
-        }
-
-        Money getRunningPenalties() {
-            return runningPenalties;
-        }
-
-        void setRunningPenalties(final Money runningPenalties) {
-            this.runningPenalties = runningPenalties;
-        }
-
-        Money getRunningMiscPenalties() {
-            return runningMiscPenalties;
-        }
-
-        void setRunningMiscPenalties(final Money runningMiscPenalties) {
-            this.runningMiscPenalties = runningMiscPenalties;
-        }
-
-        Money getRoundedPrincipalDue() {
-            return roundedPrincipalDue;
-        }
-
-        void setRoundedPrincipalDue(final Money roundedPrincipalDue) {
-            this.roundedPrincipalDue = roundedPrincipalDue;
         }
     }
 
