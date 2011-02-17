@@ -1,8 +1,10 @@
 package org.mifos.test.acceptance.framework.questionnaire;
 
 import com.thoughtworks.selenium.Selenium;
+import java.util.Set;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
+import org.testng.Assert;
 
 public class ViewAllQuestionsPage extends MifosPage {
     public ViewAllQuestionsPage(Selenium selenium) {
@@ -24,5 +26,11 @@ public class ViewAllQuestionsPage extends MifosPage {
         selenium.click("link="+"Admin");
         waitForPageToLoad();
         return new AdminPage(selenium);
+    }
+
+    public void verifyQuestions(Set<String> questions) {
+        for(String question : questions) {
+            Assert.assertTrue(selenium.isTextPresent(question));
+        }
     }
 }

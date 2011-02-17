@@ -25,6 +25,10 @@ import com.thoughtworks.selenium.Selenium;
 public class CustomPropertiesHelper {
     private static final String UPDATE_PAGE = "customPropertiesUpdate.ftl";
 
+    public static final String ROUNDING_MODE_FLOOR = "FLOOR";
+    public static final String ROUNDING_MODE_CEILING = "CEILING";
+    public static final String ROUNDING_MODE_HALF_UP = "HALF_UP";
+
     private final Selenium selenium;
 
     public CustomPropertiesHelper(Selenium selenium) {
@@ -150,6 +154,26 @@ public class CustomPropertiesHelper {
      */
     public void setAdditionalCurrenciesCode(String additionalCurrencies) {
         selenium.open(UPDATE_PAGE + "?AccountingRules.AdditionalCurrencyCodes=" + additionalCurrencies);
+    }
+
+    public void setCurrencyRoundingMode(String currencyRoundingMode) {
+        selenium.open(UPDATE_PAGE + "?AccountingRules.CurrencyRoundingMode=" + currencyRoundingMode);
+    }
+
+    public void setInitialRoundingMode(String initialRoundingMode) {
+        selenium.open(UPDATE_PAGE + "?AccountingRules.InitialRoundingMode=" + initialRoundingMode);
+    }
+
+    public void setFinalRoundingMode(String finalRoundingMode) {
+        selenium.open(UPDATE_PAGE + "?AccountingRules.FinalRoundingMode=" + finalRoundingMode);
+    }
+
+    public void setFinalRoundOffMultiple(String finalRoundOffMultiple) {
+        selenium.open(UPDATE_PAGE + "?AccountingRules.FinalRoundOffMultiple=" + finalRoundOffMultiple);
+    }
+
+    public void setInitialRoundOffMultiple(String initialRoundOffMultiple) {
+        selenium.open(UPDATE_PAGE + "?AccountingRules.InitialRoundOffMultiple=" + initialRoundOffMultiple);
     }
 
     /**
