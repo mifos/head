@@ -95,7 +95,7 @@ explanation of the license and how it is applied.
 								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
 								</fmt:message>
                          <span class="fontnormal"><br>
-                            <html-el:link styleId="creategroupconfirmation.link.newSavingsAccount" href="savingsAction.do?method=getPrdOfferings&customerId=${sessionScope.groupCustActionForm.customerId}&recordOfficeId=${branchId}&recordLoanOfficerId=${userId}&randomNUm=${sessionScope.randomNUm}">
+                            <html-el:link styleId="creategroupconfirmation.link.newSavingsAccount" href="createSavingsAccount.ftl?customerId=${sessionScope.groupCustActionForm.customerId}&recordOfficeId=${branchId}&recordLoanOfficerId=${userId}&randomNUm=${sessionScope.randomNUm}">
                             	
                             	<fmt:message key="Group.createAnAccount">
 								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" /></fmt:param>
