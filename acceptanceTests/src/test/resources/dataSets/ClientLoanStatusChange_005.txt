@@ -1,3 +1,0 @@
-Description:
-The expected data set for test partialApplicationToPendingApproval
-in ClientLoanStatusChangeTest.
