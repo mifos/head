@@ -409,8 +409,8 @@ generate_update_branch_email()
 	# - including the undoing of previous revisions in the case of
 	# non-fast-forward updates.
 	echo ""
-	echo "Changed paths:"
-	git diff-tree --name-status --find-copies-harder $oldrev..$newrev
+	echo "Summary of changes:"
+	git diff-tree --stat --summary --find-copies-harder $oldrev..$newrev
 }
 
 #
