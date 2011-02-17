@@ -29,6 +29,7 @@ import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.admin.DefineAcceptedPaymentTypesPage;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSearchParameters;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSubmitParameters;
+import org.mifos.test.acceptance.framework.savings.DepositWithdrawalSavingsParameters;
 import org.mifos.test.acceptance.framework.savings.SavingsAccountDetailPage;
 import org.mifos.test.acceptance.framework.savings.SavingsDepositWithdrawalPage;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
@@ -69,8 +70,8 @@ public class CreateSavingsAccountTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    //@Test(sequential = true, groups = {"smoke","savings", "acceptance", "ui" })
-    @Test(enabled=false) // TODO js - temporarily disabled broken test
+    @Test(sequential = true, groups = {"smoke","savings", "acceptance", "ui" })
+    //http://mifosforge.jira.com/browse/MIFOSTEST-255
     public void verifyPaymentTypesForWithdrawalsAndDeposits() throws Exception {
         //Given
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
@@ -106,23 +107,20 @@ public class CreateSavingsAccountTest extends UiTestCaseBase {
         editAccountStatusParameters.setNote("test");
         savingsAccountDetailPage = savingsAccountHelper.changeStatus(savingsAccountDetailPage.getAccountId(), editAccountStatusParameters);
         SavingsDepositWithdrawalPage savingsDepositWithdrawalPage = savingsAccountDetailPage.navigateToDepositWithdrawalPage();
-        selenium.waitForCondition("selenium.isElementPresent(\"" + "applypayment_savingsaccount.input.trxnType" + "\")","30000");
-        selenium.select("applypayment_savingsaccount.input.trxnType", "value=6");
+        savingsDepositWithdrawalPage.selectPaymentType(DepositWithdrawalSavingsParameters.DEPOSIT);
+
         //Then
         savingsDepositWithdrawalPage.verifyModeOfPayments();
         //When
-        selenium.waitForCondition("selenium.isElementPresent(\"" + "applypayment_savingsaccount.input.trxnType" + "\")","30000");
-        selenium.select("applypayment_savingsaccount.input.trxnType", "value=7");
+        savingsDepositWithdrawalPage.selectPaymentType(DepositWithdrawalSavingsParameters.WITHDRAWAL);
         //Then
         savingsDepositWithdrawalPage.verifyModeOfPayments();
         //When
         savingsAccountDetailPage = navigationHelper.navigateToSavingsAccountDetailPage("000100000000015");
         savingsDepositWithdrawalPage = savingsAccountDetailPage.navigateToDepositWithdrawalPage();
-        selenium.waitForCondition("selenium.isElementPresent(\"" + "applypayment_savingsaccount.input.trxnType" + "\")","30000");
-        selenium.select("applypayment_savingsaccount.input.trxnType", "value=6");
+        savingsDepositWithdrawalPage.selectPaymentType(DepositWithdrawalSavingsParameters.DEPOSIT);
         //Then
         savingsDepositWithdrawalPage.verifyModeOfPayments();
-
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
