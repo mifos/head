@@ -43,7 +43,6 @@ function updateDbProperties {
 function deployMifos {
     rm -f $deployRoot/jetty7x/logs/*
     rm -rf $deployRoot/jetty7x/webapps/mifos
-    rm -rf $deployRoot/jetty7x/work
     cp $lastStableWAR $targetWARlocation
 }
 
