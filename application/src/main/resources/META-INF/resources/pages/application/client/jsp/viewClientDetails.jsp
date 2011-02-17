@@ -130,7 +130,7 @@ explanation of the license and how it is applied.
 									href="loanAccountAction.do?method=getPrdOfferings&customerId=${clientInformationDto.clientDisplay.customerId}&randomNUm=${sessionScope.randomNUm}">
 									<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
 								</html-el:link> &nbsp;|&nbsp; <html-el:link styleId="viewClientDetails.link.newSavingsAccount"
-									href="createSavingsAccount.ftl?customerId=${clientInformationDto.clientDisplay.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
+									href="savingsAction.do?method=getPrdOfferings&customerId=${clientInformationDto.clientDisplay.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
 									<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" />
 								</html-el:link> </span></td>
 							</tr>

@@ -88,7 +88,7 @@ explanation of the license and how it is applied.
 						</c:if> <span class="fontnormal"> <!-- Link to create a new savings  account link -->
 						<c:if test="${requestScope.clientVO.statusId == 3}">
 							<html-el:link styleId="client_creationConfirmation.link.createNewSavingsAccount"
-								href="createSavingsAccount.ftl?customerId=${sessionScope.clientCustActionForm.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
+								href="savingsAction.do?method=getPrdOfferings&customerId=${sessionScope.clientCustActionForm.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
 								<fmt:message key="client.CreateNewClientLink">
 									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" /></fmt:param>
 								</fmt:message>

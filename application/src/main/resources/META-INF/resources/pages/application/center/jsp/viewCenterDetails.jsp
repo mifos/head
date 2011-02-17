@@ -169,7 +169,7 @@ explanation of the license and how it is applied.
 								<mifos:mifoslabel name="Center.AccountsLink"
 									/>&nbsp;
 		               <html-el:link styleId="viewCenterDetails.link.newSavingsAccount"
-									href="createSavingsAccount.ftl?customerId=${centerInformationDto.centerDisplay.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
+									href="savingsAction.do?method=getPrdOfferings&customerId=${centerInformationDto.centerDisplay.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
 									<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" />
 								</html-el:link></span> </c:if></td>
 						</tr>

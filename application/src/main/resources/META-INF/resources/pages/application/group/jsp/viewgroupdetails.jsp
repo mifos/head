@@ -175,7 +175,7 @@ explanation of the license and how it is applied.
 										<mifos:mifoslabel name="${ConfigurationConstants.LOAN}"></mifos:mifoslabel>
 									</html-el:link> &nbsp;|&nbsp;
 		              </c:if> <html-el:link styleId="viewgroupdetails.link.newSavingsAccount"
-									href="createSavingsAccount.ftl?customerId=${groupInformationDto.groupDisplay.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
+									href="savingsAction.do?method=getPrdOfferings&customerId=${groupInformationDto.groupDisplay.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
 									<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}"></mifos:mifoslabel>
 								</html-el:link> </span></td>
 							</tr>
