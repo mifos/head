@@ -56,7 +56,7 @@
                 [@spring.message "ClientLeftPane.createnewAccounts" /]
         </li>
         <li>
-            <a href="createSavingsAccount.ftl">[@spring.message "ClientLeftPane.createSavingsaccount" /]</a>
+            <a href="custSearchAction.do?method=loadSearch&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=savings">[@spring.message "ClientLeftPane.createSavingsaccount" /]</a>
         </li>
         <li>
             <a href="custSearchAction.do?method=loadSearch&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=loan">[@spring.message "ClientLeftPane.createLoanaccount" /]</a>

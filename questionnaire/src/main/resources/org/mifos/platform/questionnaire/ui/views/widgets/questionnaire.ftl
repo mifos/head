@@ -114,8 +114,8 @@ A widget to render the UI for collecting questionnaire responses.
             [/#list][#-- groups --]
             
             <div class="row">
-                [@form.submitButton label="questionnaire.continue" id="captureQuestionResponses.button.continue" webflowEvent="questionsAnswered" /]
-                [@form.cancelButton label="questionnaire.cancel" webflowEvent="cancel" /]
+                [@form.submitButton "questionnaire.continue" "questionsAnswered" /]
+                [@form.cancelButton "questionnaire.cancel" "cancel" /]
             </div>
         </form>
     </div>

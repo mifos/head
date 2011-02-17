@@ -111,13 +111,13 @@
 
 <form action="${flowExecutionUrl}" method="post" class="webflow-controls centered">
     <div class="row">
-        [@form.submitButton id="createsavingsaccountpreview.button.submitForLater" label="widget.form.buttonLabel.saveForLater" webflowEvent="saveForLater" /]
+        [@form.submitButton "widget.form.buttonLabel.saveForLater" "saveForLater" /]
         [#if savingsAccountFormBean.product.savingsPendingApprovalEnabled ]
-            [@form.submitButton id="createsavingsaccountpreview.button.submitForApproval" label="widget.form.buttonLabel.saveForApproval" webflowEvent="saveForApproval" /]
+            [@form.submitButton "widget.form.buttonLabel.saveForApproval" "saveForApproval" /]
         [#else]
-            [@form.submitButton id="createsavingsaccountpreview.button.approve" label="widget.form.buttonLabel.approve" webflowEvent="approve" /]
+            [@form.submitButton "widget.form.buttonLabel.approve" "approve" /]
         [/#if]
-        [@form.cancelButton webflowEvent="cancel" /]
+        [@form.cancelButton "cancel" /]
     </div>
 </form>
 

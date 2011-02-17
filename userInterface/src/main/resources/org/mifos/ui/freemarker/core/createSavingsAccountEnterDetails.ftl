@@ -25,8 +25,6 @@
                          "createSavingsAccount.flowState.enterAccountInfo", 
                          "createSavingsAccount.flowState.reviewAndSubmit"]] 
 
-<span id="page.id" title="continuecreatesavingsaccount"></span>
-
 <h1>[@spring.message "createSavingsAccount.enterAccountInfo.pageTitle" /] - <span class="standout">[@spring.message "createSavingsAccount.enterAccountInfo.pageSubtitle" /]</span></h1>
 <p>[@spring.message "createSavingsAccount.enterAccountInfo.instructions" /]</p>
 <p>[@spring.message "createSavingsAccount.enterAccountInfo.requiredFieldsInstructions" /]</p>
@@ -40,7 +38,7 @@
     <fieldset>
     <div class="row">
         [@form.label "productId" true][@spring.message "createSavingsAccount.enterAccountInfo.selectSavingsProduct" /][/@form.label]
-        [@form.singleSelectWithPrompt path="savingsAccountFormBean.productId" options=savingsAccountFormBean.productOfferingOptions selectPrompt="createSavingsAccount.selectProduct.selectPrompt" /]
+        [@form.singleSelectWithPrompt "savingsAccountFormBean.productId" savingsAccountFormBean.productOfferingOptions "createSavingsAccount.selectProduct.selectPrompt" /]
     </div>
     </fieldset>
 </form>
@@ -102,11 +100,11 @@
         [#elseif savingsAccountFormBean.product.savingsProductDetails.depositType?string == "2"]
             [@form.label "mandatoryDepositAmount" false][@spring.message "createSavingsAccount.enterAccountInfo.savingAccountDetail.depositAmount.voluntary" /][/@form.label]
         [/#if]
-        [@form.input path="savingsAccountFormBean.mandatoryDepositAmount" id="continuecreatesavingsaccount.input.recommendedAmount" /]
+        [@spring.formInput "savingsAccountFormBean.mandatoryDepositAmount" /]
     </div>
     </fieldset>
     <div class="row webflow-controls">
-        [@form.submitButton label="widget.form.buttonLabel.continue" id="continuecreatesavingsaccount.button.preview" webflowEvent="detailsEntered" /]
+        [@form.submitButton "widget.form.buttonLabel.continue" "detailsEntered" /]
         [@form.cancelButton "cancel" /]
     </div>
 </form>

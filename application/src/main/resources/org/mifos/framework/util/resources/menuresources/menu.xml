@@ -43,7 +43,7 @@
                         <namefragment>Savings</namefragment>
                         <namefragment>label.openNewSavingsAccountSuffix</namefragment>
                     </displayname>
-                    <linkvalue>createSavingsAccount.ftl</linkvalue>
+                    <linkvalue>custSearchAction.do?method=loadSearch&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=savings</linkvalue>
                 </menuitem>
                 <menuitem>
                     <displayname>
@@ -114,7 +114,7 @@
                         <namefragment>Savings</namefragment>
                         <namefragment>label.createSavingsAccountSuffix</namefragment>
                     </displayname>
-                    <linkvalue>createSavingsAccount.ftl</linkvalue>
+                    <linkvalue>custSearchAction.do?method=loadSearch&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=savings</linkvalue>
                 </menuitem>
 
                 <menuitem>
