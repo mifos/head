@@ -20,7 +20,6 @@
 
 package org.mifos.test.acceptance.framework.loan;
 
-import com.thoughtworks.selenium.Selenium;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -28,6 +27,8 @@ import org.mifos.test.acceptance.framework.AbstractPage;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 import org.testng.Assert;
+
+import com.thoughtworks.selenium.Selenium;
 
 public class CreateLoanAccountEntryPage extends AbstractPage {
 
@@ -97,7 +98,9 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
     }
 
     private void submitLoanAccount(CreateLoanAccountSubmitParameters formParameters) {
-        selenium.type("loancreationdetails.input.sumLoanAmount",formParameters.getAmount());
+        if(formParameters.getAmount() != null){
+            selenium.type("loancreationdetails.input.sumLoanAmount",formParameters.getAmount());
+        }
         if (formParameters.isGracePeriodTypeNone()) {
             Assert.assertFalse(selenium.isEditable("loancreationdetails.input.gracePeriod"));
         }
@@ -118,14 +121,10 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
             selenium.select("monthRank", formParameters.getLsimMonthRank());
             selenium.select("monthWeek", formParameters.getLsimWeekDay());
         }
-        if (formParameters.getDd() != null){
+        if (formParameters.getDd() != null && formParameters.getMm() != null && formParameters.getYy() != null){
             selenium.type("disbursementDateDD", formParameters.getDd());
-        }
-        if (formParameters.getMm() != null){
-            selenium.type("disbursementDateDD", formParameters.getMm());
-        }
-        if (formParameters.getYy() != null){
-            selenium.type("disbursementDateDD", formParameters.getYy());
+            selenium.type("disbursementDateMM", formParameters.getMm());
+            selenium.type("disbursementDateYY", formParameters.getYy());
         }
         submit();
     }
