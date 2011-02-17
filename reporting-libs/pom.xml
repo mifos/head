@@ -47,6 +47,7 @@
 							<artifactId>viewservlets</artifactId>
 							<version>${birt.version}</version>
 							<packaging>jar</packaging>
+							<generatePom>true</generatePom>
 						</configuration>
 					</execution>
 
@@ -62,6 +63,7 @@
 							<artifactId>chartengineapi</artifactId>
 							<version>${birt.version}</version>
 							<packaging>jar</packaging>
+							<generatePom>true</generatePom>
 						</configuration>
 					</execution>
 
@@ -77,6 +79,7 @@
 							<artifactId>coreapi</artifactId>
 							<version>${birt.version}</version>
 							<packaging>jar</packaging>
+							<generatePom>true</generatePom>
 						</configuration>
 					</execution>
 
@@ -92,6 +95,7 @@
 							<artifactId>crosstabcoreapi</artifactId>
 							<version>${birt.version}</version>
 							<packaging>jar</packaging>
+							<generatePom>true</generatePom>
 						</configuration>
 					</execution>
 
@@ -107,6 +111,7 @@
 							<artifactId>dataadapterapi</artifactId>
 							<version>${birt.version}</version>
 							<packaging>jar</packaging>
+							<generatePom>true</generatePom>
 						</configuration>
 					</execution>
 
@@ -122,6 +127,7 @@
 							<artifactId>dataaggregationapi</artifactId>
 							<version>${birt.version}</version>
 							<packaging>jar</packaging>
+							<generatePom>true</generatePom>
 						</configuration>
 					</execution>
 
@@ -137,6 +143,7 @@
 							<artifactId>dataextraction</artifactId>
 							<version>${birt.version}</version>
 							<packaging>jar</packaging>
+							<generatePom>true</generatePom>
 						</configuration>
 					</execution>
 
@@ -152,6 +159,7 @@
 							<artifactId>dteapi</artifactId>
 							<version>${birt.version}</version>
 							<packaging>jar</packaging>
+							<generatePom>true</generatePom>
 						</configuration>
 					</execution>
 
@@ -167,6 +175,7 @@
 							<artifactId>emitterconfig</artifactId>
 							<version>${birt.version}</version>
 							<packaging>jar</packaging>
+							<generatePom>true</generatePom>
 						</configuration>
 					</execution>
 
@@ -182,6 +191,7 @@
 							<artifactId>engineapi</artifactId>
 							<version>${birt.version}</version>
 							<packaging>jar</packaging>
+							<generatePom>true</generatePom>
 						</configuration>
 					</execution>
 
@@ -197,6 +207,7 @@
 							<artifactId>flute</artifactId>
 							<version>${birt.version}</version>
 							<packaging>jar</packaging>
+							<generatePom>true</generatePom>
 						</configuration>
 					</execution>
 
@@ -212,6 +223,7 @@
 							<artifactId>modelapi</artifactId>
 							<version>${birt.version}</version>
 							<packaging>jar</packaging>
+							<generatePom>true</generatePom>
 						</configuration>
 					</execution>
 
@@ -227,6 +239,7 @@
 							<artifactId>modelodaapi</artifactId>
 							<version>${birt.version}</version>
 							<packaging>jar</packaging>
+							<generatePom>true</generatePom>
 						</configuration>
 					</execution>
 
@@ -242,6 +255,7 @@
 							<artifactId>odadesignapi</artifactId>
 							<version>${birt.version}</version>
 							<packaging>jar</packaging>
+							<generatePom>true</generatePom>
 						</configuration>
 					</execution>
 
@@ -257,6 +271,7 @@
 							<artifactId>scriptapi</artifactId>
 							<version>${birt.version}</version>
 							<packaging>jar</packaging>
+							<generatePom>true</generatePom>
 						</configuration>
 					</execution>
 
@@ -272,6 +287,7 @@
 							<artifactId>org.eclipse.emf.common</artifactId>
 							<version>2.5.0</version>
 							<packaging>jar</packaging>
+							<generatePom>true</generatePom>
 						</configuration>
 					</execution>
 
@@ -287,6 +303,7 @@
 							<artifactId>org.eclipse.emf.ecore</artifactId>
 							<version>2.5.0</version>
 							<packaging>jar</packaging>
+							<generatePom>true</generatePom>
 						</configuration>
 					</execution>
 
@@ -302,6 +319,7 @@
 							<artifactId>org.eclipse.emf.ecore.xmi</artifactId>
 							<version>2.5.0</version>
 							<packaging>jar</packaging>
+							<generatePom>true</generatePom>
 						</configuration>
 					</execution>
 
@@ -317,6 +335,7 @@
 							<artifactId>org.w3c.css.sac</artifactId>
 							<version>1.3.0</version>
 							<packaging>jar</packaging>
+							<generatePom>true</generatePom>
 						</configuration>
 					</execution>
 
