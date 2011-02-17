@@ -20,15 +20,15 @@
 
 package org.mifos.accounts.loan.util.helpers;
 
-import java.io.Serializable;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-
 import org.joda.time.LocalDate;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
+
+import java.io.Serializable;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class RepaymentScheduleInstallment implements Serializable {
 
@@ -54,8 +54,6 @@ public class RepaymentScheduleInstallment implements Serializable {
 
     private String dueDate;
 
-    private String dateFormat;
-
     public static RepaymentScheduleInstallment createForScheduleCopy(Integer installmentNumber, String principal, String interest, LocalDate dueDate, Locale locale, MifosCurrency currency) {
         Money feess = null;
         Money miscFeess = null;
@@ -73,15 +71,13 @@ public class RepaymentScheduleInstallment implements Serializable {
         this.miscPenalty = miscPenalty;
         setTotalAndTotalValue(this.principal.add(this.interest).add(this.fees).add(this.miscFees).add(this.miscPenalty));
         this.locale = locale;
-        this.dateFormat = DateUtils.getShortDateFormat(this.locale);
         this.dueDateValue = dueDateValue;
-        this.dueDate = DateUtils.getDBtoUserFormatString(dueDateValue, locale);
+        this.dueDate = DateUtils.formatDate(dueDateValue, locale);
     }
 
     @Deprecated
     public RepaymentScheduleInstallment(Locale locale) {
         this.locale = locale;
-        this.dateFormat = DateUtils.getShortDateFormat(locale);
     }
 
     public void setInstallment(Integer installment) {
@@ -174,10 +170,6 @@ public class RepaymentScheduleInstallment implements Serializable {
 
     public void setTotal(String total) {
         this.total = total;
-    }
-
-    public String getDateFormat() {
-        return dateFormat;
     }
 
     public String getInstallmentNumberAsString() {

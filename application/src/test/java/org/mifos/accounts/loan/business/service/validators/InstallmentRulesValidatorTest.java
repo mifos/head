@@ -1,18 +1,5 @@
 package org.mifos.accounts.loan.business.service.validators;
 
-import static java.util.Arrays.asList;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,6 +14,18 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.platform.validations.ErrorEntry;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
+import static java.util.Arrays.asList;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class InstallmentRulesValidatorTest {
@@ -207,8 +206,13 @@ public class InstallmentRulesValidatorTest {
 
     private Date getDate(RepaymentScheduleInstallment installment, String dateValue) {
         Locale dateLocale = installment.getLocale();
-        String dateFormat = installment.getDateFormat();
-        return DateUtils.getDate(dateValue, dateLocale, dateFormat);
+        Date date;
+        try {
+            date = DateUtils.parseDate(dateValue, dateLocale);
+        } catch (ParseException e) {
+            date = null;
+        }
+        return date;
     }
 
     private VariableInstallmentDetailsBO getVariableInstallmentDetails(Integer minGapInDays, Integer maxGapInDays, Integer minInstAmount, MifosCurrency currency) {

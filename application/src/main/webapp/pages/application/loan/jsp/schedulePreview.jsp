@@ -57,13 +57,25 @@ explanation of the license and how it is applied.
         <STYLE TYPE="text/css"><!-- @import url(pages/css/jquery/jquery-ui.css); --></STYLE>
         <script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
         <script type="text/javascript" src="pages/js/jquery/jquery-ui.min.js"></script>
-        <script type="text/javascript" src="pages/js/jquery/jquery.datePicker.min-2.1.2.js"></script>
         <script type="text/javascript" src="pages/js/jquery/jquery.datePicker.configuration.js"></script>
+        <script type="text/javascript" src="pages/js/jquery/jquery.ui.datepicker.min.js"></script>
+        <script type="text/javascript" src="pages/js/jquery/jquery-ui-i18n.js"></script>
         <STYLE TYPE="text/css"><!-- @import url(pages/css/datepicker/datepicker.css); --></STYLE>
         <script type="text/javascript" src="pages/framework/js/CommonUtilities.js"></script>
 		<!--[if IE]><script type="text/javascript" src="pages/js/jquery/jquery.bgiframe.js"></script><![endif]-->
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 		<script type="text/javascript" src="pages/application/loan/js/schedulePreview.js"></script>
+		<script>
+            $(function() {
+                var locale = document.all.h_user_locale.value;
+                if (locale != null) {
+                    var country = locale.substring(locale.indexOf('_') + 1).toLowerCase();
+                    $.datepicker.setDefaults($.datepicker.regional[country]);
+                } else {
+                    $.datepicker.setDefaults($.datepicker.regional[""]);
+                }
+            });
+		</script>
         <html-el:form action="/loanAccountAction.do">
 		<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanAccountOwner')}" var="customer" />
