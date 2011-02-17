@@ -25,7 +25,6 @@ import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
-import org.mifos.test.acceptance.framework.holiday.ViewHolidaysPage;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -52,9 +51,7 @@ public class ViewHolidaysTest extends UiTestCaseBase {
     }
 
     public void verifyViewHolidaysTest() {
-        AdminPage adminPage = loginAndGoToAdminPage();
-        ViewHolidaysPage viewHolidaysPage = adminPage.navigateToViewHolidaysPage();
-        viewHolidaysPage.verifyPage();
+        loginAndGoToAdminPage().navigateToViewHolidaysPage();
     }
 
     private AdminPage loginAndGoToAdminPage() {

@@ -30,6 +30,7 @@ import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 
 import java.util.Map;
+import org.mifos.test.acceptance.framework.office.CreateOfficePreviewDataPage;
 
 import static org.junit.Assert.assertTrue;
 
@@ -92,6 +93,13 @@ public class QuestionResponsePage extends MifosPage {
     public void navigateToNextPage() {
         selenium.click("captureQuestionResponses.button.continue");
         waitForPageToLoad();
+    }
+
+    public CreateOfficePreviewDataPage navigateToNextPageAndReturnPage() {
+        selenium.click("captureQuestionResponses.button.continue");
+        waitForPageToLoad();
+
+        return new CreateOfficePreviewDataPage(selenium);
     }
 
     public CreateClientEnterMfiDataPage navigateToNextPageClientCreation() {

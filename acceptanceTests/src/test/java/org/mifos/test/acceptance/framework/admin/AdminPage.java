@@ -390,4 +390,10 @@ public class AdminPage extends MifosPage {
         waitForPageToLoad();
         return new DefineAcceptedPaymentTypesPage(selenium);
     }
+
+    public DefineHiddenMandatoryFieldsPage navigateToDefineHiddenMandatoryFields(){
+        selenium.click("admin.link.defineHiddenMandatoryFields");
+        waitForPageToLoad();
+        return new DefineHiddenMandatoryFieldsPage(selenium);
+    }
 }

@@ -84,4 +84,12 @@ public class CreateLoanAccountPreviewPage extends AbstractPage {
         isTextPresentInPage("Installment amount for September 2010 as % of warning threshold exceeds the allowed warning threshold of " + warningThreshold+ "%");
         return this;
     }
+
+    public void verifyLoanAmount(String amount) {
+        Assert.assertEquals(getLoanAmount(), amount);
+    }
+
+    public String getLoanAmount() {
+        return selenium.getText("createloanpreview.text.loanamount");
+    }
 }

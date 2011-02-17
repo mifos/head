@@ -28,6 +28,7 @@ import org.mifos.test.acceptance.framework.office.OfficeParameters;
 import org.mifos.test.acceptance.framework.office.OfficeViewDetailsPage;
 
 import com.thoughtworks.selenium.Selenium;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 
 public class OfficeHelper {
     private final NavigationHelper navigationHelper;
@@ -59,6 +60,18 @@ public class OfficeHelper {
         return detailsPage.navigateToAdminPage();
     }
 
+    public QuestionResponsePage navigateToQuestionResponsePage(OfficeParameters officeParameters) {
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+
+        CreateOfficeEnterDataPage officeEnterDataPage = adminPage.navigateToCreateOfficeEnterDataPage();
+        officeEnterDataPage.verifyPage();
+
+        QuestionResponsePage questionResponsePage = officeEnterDataPage.submitAndGotoQuestionResponsePage(officeParameters);
+        questionResponsePage.verifyPage();
+
+        return questionResponsePage;
+    }
+
     public OfficeViewDetailsPage changeOfficeStatus(String officeName, String status) {
         return navigationHelper
                 .navigateToAdminPage()
@@ -66,5 +79,14 @@ public class OfficeHelper {
                 .navigateToOfficeViewDetailsPage(officeName)
                 .navigateToOfficeEditInformationPage()
                 .changeStatusAndSubmit(status);
+    }
+
+    public void verifyQuestionPresent(String officeName,String question,String... answers) {
+        navigationHelper
+            .navigateToAdminPage()
+            .navigateToViewOfficesPage()
+            .navigateToOfficeViewDetailsPage(officeName).
+            navigateToViewAdditionalInformation().
+            verifyQuestionPresent(question, answers);
     }
 }

@@ -510,4 +510,12 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
         return this;
     }
 
+    public void verifyLoanAmount(String amount) {
+        Assert.assertEquals(getLoanAmount(), amount);
+    }
+
+    public String getLoanAmount() {
+        return selenium.getText("schedulepreview.text.loanamount");
+    }
+
 }
