@@ -118,6 +118,12 @@ public class QuestionGroupTestHelper {
         return viewAllQuestionGroupsPage;
     }
 
+    public CreateQuestionPage navigateToCreateQuestionPage() {
+        return navigationHelper
+                .navigateToAdminPage()
+                .navigateToCreateQuestionPage();
+    }
+
     public void markQuestionAsInactive(String question) {
         EditQuestionPage editQuestionPage = naviagateToEditQuestion(question);
         editQuestionPage.deactivate();

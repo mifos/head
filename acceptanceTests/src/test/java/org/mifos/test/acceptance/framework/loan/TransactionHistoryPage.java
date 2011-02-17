@@ -92,7 +92,7 @@ public class TransactionHistoryPage extends AbstractPage {
                 }
             }
         }
-    //    Assert.assertEquals(amountPaid, debitSum, amountPaid / 1000.0); // TODO from some reasons debit in transaction history differs minimally from amountPaid
+        Assert.assertEquals(amountPaid, debitSum, amountPaid / 1000.0);
         Assert.assertEquals(transactionCount, paymentCount);
     }
 

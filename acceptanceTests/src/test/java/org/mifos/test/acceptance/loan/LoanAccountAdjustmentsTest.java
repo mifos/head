@@ -34,6 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -48,6 +49,12 @@ public class LoanAccountAdjustmentsTest extends UiTestCaseBase {
     private DbUnitUtilities dbUnitUtilities;
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @BeforeClass
+    public void setUpClass() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
+    }
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -75,8 +82,6 @@ public class LoanAccountAdjustmentsTest extends UiTestCaseBase {
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyAccountStatusAfterMultipleAdjustments() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
-
         String client = "Stu1233266134755 Client1233266134755";
         RedoLoanDisbursalParameters redoParams = new RedoLoanDisbursalParameters();
         redoParams.setDisbursalDateDD("06");
@@ -99,8 +104,6 @@ public class LoanAccountAdjustmentsTest extends UiTestCaseBase {
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyChangesInTransactionHistory() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
-
         RedoLoanDisbursalParameters redoParams = new RedoLoanDisbursalParameters();
         redoParams.setDisbursalDateDD("07");
         redoParams.setDisbursalDateMM("01");
@@ -112,7 +115,7 @@ public class LoanAccountAdjustmentsTest extends UiTestCaseBase {
         loanAccountPage = loanTestHelper.applyMultipleAdjustments(loanID, 5);
 
         loanAccountPage.verifyStatus(LoanAccountPage.ACTIVE_BAD);
-   //     loanAccountPage.verifyTotalOriginalLoan("4294.2");
+        loanAccountPage.verifyTotalOriginalLoan("4290.0");
         loanAccountPage.verifyTotalAmountPaid("3951.0");
         loanAccountPage.verifyAccountSummary("339.0", "03/02/2011", "339.0");
         TransactionHistoryPage transactionHistoryPage = loanAccountPage.navigateToTransactionHistory();

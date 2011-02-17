@@ -140,7 +140,13 @@ public class ClientTest extends UiTestCaseBase {
 
     @AfterMethod(alwaysRun = true)
     public void logOut() {
+        setDefaultProperties();
         (new MifosPage(selenium)).logout();
+    }
+
+    private void setDefaultProperties() {
+        propertiesHelper.setClientPendingApprovalStateEnabled("true");
+        propertiesHelper.setClientsNameSequence("first_name,middle_name,last_name,second_last_name");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")

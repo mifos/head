@@ -19,6 +19,10 @@
  */
 package org.mifos.test.acceptance.questionnaire;
 
+import org.mifos.test.acceptance.framework.questionnaire.EditQuestionPage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionDetailPage;
+import org.mifos.test.acceptance.framework.questionnaire.ViewAllQuestionsPage;
+import org.mifos.test.acceptance.framework.questionnaire.Choice;
 import org.mifos.test.acceptance.framework.client.ClientViewChangeLogPage;
 import java.util.Arrays;
 import org.mifos.framework.util.DbUnitUtilities;
@@ -61,6 +65,7 @@ import static org.junit.Assert.assertTrue;
 import static org.testng.Assert.assertEquals;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
+@SuppressWarnings("PMD.CyclomaticComplexity")
 @Test(sequential = true, groups = {"client", "acceptance", "ui", "smoke"})
 public class QuestionGroupTest extends UiTestCaseBase {
 
@@ -92,6 +97,8 @@ public class QuestionGroupTest extends UiTestCaseBase {
     private static final String CREATE_CLIENT_QUESTION_GROUP = "CreateClientQG2";
     private static final int CREATE_OFFICE_QUESTION_GROUP_ID = 27;
     private static final String CLIENT = "Stu1232993852651 Client1232993852651";
+    private static final List<String> charactersList = new ArrayList<String>(Arrays.asList("عربية","有","òèßñ"));
+    private static final String noNumber = "qwerty";
     private static final List<String> EMPTY_LIST = new ArrayList<String>();
     private static final List<String> QUESTIONS_LIST = new ArrayList<String>(Arrays.asList("CreateClientQG",
         "CreateClientQG2", "ViewClientQG", "ViewClientQG2", "Survey 1", "CloseClientQG", "CloseClientQG2",
@@ -99,6 +106,9 @@ public class QuestionGroupTest extends UiTestCaseBase {
         "CreateCenterQG2", "ViewCenterQG", "ViewCenterQG2", "CreateSavingsQG",
         "CreateSavingsQG2","ViewSavingsQG", "ViewSavingsQG2", "CreateLoanQG",
         "CreateLoanQG2", "ViewLoanQG", "ViewLoanQG2", "DisburseLoanQG", "DisburseLoanQG2"));
+    private static final Map<String,String> QUESTIONS = new HashMap<String, String>();
+            
+
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @BeforeMethod
@@ -116,6 +126,12 @@ public class QuestionGroupTest extends UiTestCaseBase {
         qTitle3 = "Question3 " + System.currentTimeMillis();
         qTitle4 = "Question4 " + System.currentTimeMillis();
         qTitle5 = "Question5 " + System.currentTimeMillis();
+        QUESTIONS.put("TextQuestionTest", CreateQuestionParameters.TYPE_FREE_TEXT);
+        QUESTIONS.put("DateQuestionTest", CreateQuestionParameters.TYPE_DATE);
+        QUESTIONS.put("NumberQuestionTest", CreateQuestionParameters.TYPE_NUMBER);
+        QUESTIONS.put("MultiSelectQuestionTest", CreateQuestionParameters.TYPE_MULTI_SELECT);
+        QUESTIONS.put("SingleSelectQuestionTest", CreateQuestionParameters.TYPE_SINGLE_SELECT);
+        QUESTIONS.put("SmartSelectQuestionTest", CreateQuestionParameters.TYPE_SMART_SELECT);
     }
 
     @AfterMethod
@@ -281,6 +297,122 @@ public class QuestionGroupTest extends UiTestCaseBase {
         officeHelper.verifyQuestionPresent("TestOffice", "Date", "");
         officeHelper.verifyQuestionPresent("TestOffice", "Number", "");
         officeHelper.verifyQuestionPresent("TestOffice", "SingleSelect", "");
+    }
+
+    /**
+     * Creating and editing Questions
+     * http://mifosforge.jira.com/browse/MIFOSTEST-700
+     * @throws Exception
+     */
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void createAndEditQuestionsTest() throws Exception{
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_016_dbunit.xml", dataSource, selenium);
+
+        //When
+        testValidationAddQuestion();
+        CreateQuestionPage createQuestionPage = questionGroupTestHelper.navigateToCreateQuestionPage();
+        CreateQuestionParameters createQuestionParameters = new CreateQuestionParameters();
+        createQuestionParameters.setText("TextQuestionTest");
+        createQuestionParameters.setType(CreateQuestionParameters.TYPE_FREE_TEXT);
+        createQuestionPage.addQuestion(createQuestionParameters);
+
+        createQuestionParameters.setText("DateQuestionTest");
+        createQuestionParameters.setType(CreateQuestionParameters.TYPE_DATE);
+        createQuestionPage.addQuestion(createQuestionParameters);
+
+        createQuestionParameters.setText("NumberQuestionTest");
+        createQuestionParameters.setType(CreateQuestionParameters.TYPE_NUMBER);
+        createQuestionParameters.setNumericMin(1);
+        createQuestionParameters.setNumericMax(10);
+        createQuestionPage.addQuestion(createQuestionParameters);
+
+        createQuestionParameters.setText("MultiSelectQuestionTest");
+        createQuestionParameters.setType(CreateQuestionParameters.TYPE_MULTI_SELECT);
+        List<Choice> choices = new ArrayList<Choice>();
+        Choice c = new Choice("choice 1", EMPTY_LIST);
+        choices.add(c);
+        c = new Choice("choice 2", EMPTY_LIST);
+        choices.add(c);
+        c = new Choice("choice 3", EMPTY_LIST);
+        choices.add(c);
+        createQuestionParameters.setChoices(choices);
+        createQuestionPage.addQuestion(createQuestionParameters);
+        createQuestionParameters.setText("SingleSelectQuestionTest");
+        createQuestionParameters.setType(CreateQuestionParameters.TYPE_SINGLE_SELECT);
+        createQuestionParameters.setChoices(choices);
+        createQuestionPage.addQuestion(createQuestionParameters);
+        createQuestionParameters.setText("SmartSelectQuestionTest");
+        createQuestionParameters.setChoices(choices);
+        createQuestionParameters.setType(CreateQuestionParameters.TYPE_SMART_SELECT);
+        createQuestionPage.addQuestion(createQuestionParameters);
+        AdminPage adminPage = createQuestionPage.submitQuestions();
+        ViewAllQuestionsPage viewAllQuestionsPage = adminPage.navigateToViewAllQuestions();
+
+        //Then
+        viewAllQuestionsPage.verifyQuestions(QUESTIONS.keySet());
+    
+        //When
+        c = new Choice("answerChoice1", EMPTY_LIST);
+        choices.add(c);
+        c = new Choice("answerChoice3", EMPTY_LIST);
+        choices.add(c);
+        for(String question : QUESTIONS.keySet()) {
+            QuestionDetailPage questionDetailPage = viewAllQuestionsPage.navigateToQuestionDetail(question);
+            EditQuestionPage editQuestionPage = questionDetailPage.navigateToEditQuestionPage();
+            createQuestionParameters.setText("");
+            editQuestionPage.tryUpdate(createQuestionParameters);
+            //Then
+            editQuestionPage.verifyTextPresent("Please specify the question", "No text <Please specify the question> present on the page");
+            questionDetailPage = editQuestionPage.cancelEdit();
+            //When
+            editQuestionPage = questionDetailPage.navigateToEditQuestionPage();
+            for(String characters: charactersList) {
+                editQuestionPage.setQuestionName(characters);
+                editQuestionPage.verifyQuestionName(characters);
+            }
+            if("NumberQuestionTest".equals(question)) {
+                editQuestionPage.setNumberQuestion(noNumber, noNumber);
+                editQuestionPage.verifyNumberQuestion("", "");
+                editQuestionPage.setNumberQuestion("","");
+            }
+            else if("MultiSelectQuestionTest".equals(question) || "SingleSelectQuestionTest".equals(question)) {
+                editQuestionPage.addAnswerChoices(asList("answerChoice1","answerChoice2","answerChoice3"));
+                editQuestionPage.removeAnswerChoice("4");
+            }
+            else if("SmartSelectQuestionTest".equals(question)) {
+                editQuestionPage.addSmartAnswerChoices(asList("answerChoice1","answerChoice2","answerChoice3"));
+                editQuestionPage.removeAnswerChoice("4");
+            }
+            editQuestionPage.setQuestionName(question + "Edit");
+            questionDetailPage = editQuestionPage.deactivate();
+            //Then
+            questionDetailPage.verifyQuestionTitle(question + "Edit");
+            if("MultiSelectQuestionTest".equals(question) || "SingleSelectQuestionTest".equals(question) || "SmartSelectQuestionTest".equals(question)) {
+                questionDetailPage.assertForChoices(QUESTIONS.get(question),choices);
+            }
+            viewAllQuestionsPage = questionDetailPage.navigateToViewAllQuestionsPage();
+        }
+    }
+
+    private void testValidationAddQuestion() {
+        CreateQuestionPage createQuestionPage = questionGroupTestHelper.navigateToCreateQuestionPage();
+        CreateQuestionParameters createQuestionParameters = new CreateQuestionParameters();
+        createQuestionParameters.setText("");
+        createQuestionParameters.setType(CreateQuestionParameters.TYPE_FREE_TEXT);
+        createQuestionPage.addQuestion(createQuestionParameters);
+        createQuestionPage.verifyTextPresent("Please specify the question", "No text <Please specify the question> present on the page");
+        createQuestionPage.verifySubmitButtonStatus("true");
+        createQuestionPage.cancelQuestion();
+        createQuestionPage = questionGroupTestHelper.navigateToCreateQuestionPage();
+        createQuestionPage.setNumberQuestion("NumberQuestion",noNumber,noNumber);
+        createQuestionPage.verifyNumberQuestion("", "");
+        createQuestionPage.setNumberQuestion("NumberQuestion","","");
+        for(int i=0;i<charactersList.size();i++) {
+            createQuestionParameters.setText(charactersList.get(i));
+            createQuestionPage.addQuestion(createQuestionParameters);
+            createQuestionPage.verifyQuestionPresent(createQuestionParameters, i+1);
+        }
     }
 
     private void testViewQuestionGroups() {
