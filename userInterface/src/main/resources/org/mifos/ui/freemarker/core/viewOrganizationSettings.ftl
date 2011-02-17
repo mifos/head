@@ -62,6 +62,7 @@
                 <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.maxRepaymentCapacity"/]</span>:&nbsp;<span class="fontnormal">${properties.maxRepaymentCapacity}</span></div>
                 <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.minIndebtednessRatio"/]</span>:&nbsp;<span class="fontnormal">${properties.minIndebtednessRatio}</span></div>
                 <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.maxIndebtednessRatio"/]</span>:&nbsp;<span class="fontnormal">${properties.maxIndebtednessRatio}</span></div>
+                <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.digitsAfterDecimalForCashFlow"/]</span>:&nbsp;<span class="fontnormal">${properties.digitsAfterDecimalForCashFlow}</span></div>
             </div>
        </p>
 

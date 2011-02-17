@@ -101,6 +101,7 @@ public class ViewOrganizationSettingsServiceFacadeWebTier implements ViewOrganiz
         accountingRules.setProperty("maxRepaymentCapacity", AccountingRules.getMaxRepaymentCapacity().toString());
         accountingRules.setProperty("minIndebtednessRatio", AccountingRules.getMinIndebtednessRatio().toString());
         accountingRules.setProperty("maxIndebtednessRatio", AccountingRules.getMaxIndebtednessRatio().toString());
+        accountingRules.setProperty("digitsAfterDecimalForCashFlow", AccountingRules.getDigitsAfterDecimalForCashFlowValidations().toString());
 
         return accountingRules;
     }
