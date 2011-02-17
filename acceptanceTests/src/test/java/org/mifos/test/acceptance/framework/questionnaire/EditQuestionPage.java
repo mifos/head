@@ -20,6 +20,8 @@
 package org.mifos.test.acceptance.framework.questionnaire;
 
 import com.thoughtworks.selenium.Selenium;
+import java.util.List;
+import org.testng.Assert;
 
 public class EditQuestionPage extends CreateQuestionRootPage {
 
@@ -47,5 +49,63 @@ public class EditQuestionPage extends CreateQuestionRootPage {
         selenium.click("id=_eventId_update");
         waitForPageToLoad();
         return new QuestionDetailPage(selenium);
+    }
+
+    public EditQuestionPage tryUpdate(CreateQuestionParameters createQuestionParameters) {
+        enterDetails(createQuestionParameters);
+        selenium.click("id=_eventId_update");
+        waitForPageToLoad();
+        return new EditQuestionPage(selenium);
+    }
+
+    public void verifyTextPresent(String expectedText, String errorMessage) {
+        Assert.assertTrue(selenium.isTextPresent(expectedText), errorMessage);
+    }
+
+    public QuestionDetailPage cancelEdit() {
+        selenium.click("id=_eventId_cancel");
+        waitForPageToLoad();
+        return new QuestionDetailPage(selenium);
+    }
+
+    public void setQuestionName(String name) {
+        selenium.type("currentQuestion.text", name);
+    }
+
+    public void verifyQuestionName(String name) {
+        Assert.assertEquals(selenium.getValue("currentQuestion.text"), name);
+    }
+
+    public void setNumberQuestion(String min, String max) {
+        selenium.type("currentQuestion.numericMin", min);
+        selenium.type("currentQuestion.numericMax", max);
+    }
+
+    public void verifyNumberQuestion(String min, String max) {
+        Assert.assertEquals(selenium.getText("currentQuestion.numericMin"), min);
+        Assert.assertEquals(selenium.getText("currentQuestion.numericMax"), max);
+    }
+
+    public void addSmartAnswerChoices(List<String> answerChoices) {
+        for(String answerChoice : answerChoices) {
+            selenium.type("currentQuestion.currentSmartChoice", answerChoice);
+            selenium.keyUp("id=currentQuestion.currentSmartChoice", " ");
+            selenium.click("_eventId_addSmartChoice");
+            waitForPageToLoad();
+        }
+    }
+
+    public void addAnswerChoices(List<String> answerChoices) {
+        for(String answerChoice : answerChoices) {
+            selenium.type("currentQuestion.currentChoice", answerChoice);
+            selenium.keyUp("id=currentQuestion.currentChoice"," ");
+            selenium.click("_eventId_addChoice");
+            waitForPageToLoad();
+        }
+    }
+
+    public void removeAnswerChoice(String index) {
+        selenium.click("xpath=//a[@choiceindex='"+index+"']");
+        waitForPageToLoad();
     }
 }

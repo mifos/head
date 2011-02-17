@@ -25,8 +25,21 @@ public class CreateQuestionPage extends CreateQuestionRootPage {
         return new CreateQuestionPage(selenium);
     }
 
+    public void setNumberQuestion(String name, String min, String max) {
+        selenium.type("currentQuestion.text", name);
+        selenium.select("id=currentQuestion.type", "value=number");
+        selenium.type("currentQuestion.numericMin", min);
+        selenium.type("currentQuestion.numericMax", max);
+    }
+
     public AdminPage submitQuestions() {
         selenium.click("_eventId_createQuestions");
+        waitForPageToLoad();
+        return new AdminPage(selenium);
+    }
+
+    public AdminPage cancelQuestion() {
+        selenium.click("_eventId_cancel");
         waitForPageToLoad();
         return new AdminPage(selenium);
     }
@@ -88,5 +101,19 @@ public class CreateQuestionPage extends CreateQuestionRootPage {
 
     public void verifyNotTextPresent(String expectedText, String errorMessage) {
         Assert.assertFalse(selenium.isTextPresent(expectedText), errorMessage);
+    }
+
+    public void verifySubmitButtonStatus(String status) {
+        Assert.assertEquals(submitButtonStatus(), status);
+    }
+
+    public void verifyNumberQuestion(String min, String max) {
+        Assert.assertEquals(selenium.getText("currentQuestion.numericMin"), min);
+        Assert.assertEquals(selenium.getText("currentQuestion.numericMax"), max);
+    }
+
+    public void verifyQuestionPresent(CreateQuestionParameters createQuestionParameters, int row) {
+        assertEquals(selenium.getTable("questions.table." + row + ".0"), createQuestionParameters.getText());
+        assertEquals(selenium.getTable("questions.table." + row + ".1"), createQuestionParameters.getType());
     }
 }

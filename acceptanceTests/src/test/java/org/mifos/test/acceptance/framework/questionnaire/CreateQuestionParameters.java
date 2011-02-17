@@ -6,6 +6,11 @@ import java.util.List;
 public class CreateQuestionParameters {
 
     public static final String TYPE_FREE_TEXT = "Free Text";
+    public static final String TYPE_DATE = "Date";
+    public static final String TYPE_NUMBER = "Number";
+    public static final String TYPE_MULTI_SELECT = "Multi Select";
+    public static final String TYPE_SINGLE_SELECT = "Single Select";
+    public static final String TYPE_SMART_SELECT = "Smart Select";
 
     private String text;
 
