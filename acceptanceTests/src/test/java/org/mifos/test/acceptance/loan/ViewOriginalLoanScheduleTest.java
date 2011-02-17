@@ -30,7 +30,7 @@ import static org.mifos.test.acceptance.framework.holiday.CreateHolidayEntryPage
 
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(sequential = true, groups = {"loanproduct", "acceptance", "ui", "smoke"})
+@Test(sequential = true, groups = {"loanproduct", "acceptance", "ui"})
 public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
 
     @Autowired
@@ -98,7 +98,7 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
     /**
      * FIXME - keithw
      */
-    @Test(enabled=false, groups={"smoke"})
+    @Test(enabled=false, groups={"loanproduct"})
     public void verifyForFlatLoanEarlyDisbursal() throws Exception {
         int interestType = DefineNewLoanProductPage.SubmitFormParameters.FLAT;
         applicationDatabaseOperation.updateLSIM(0);
@@ -158,7 +158,7 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
     /**
      * FIXME - keithw
      */
-    @Test(enabled=false, groups={"smoke"})
+    @Test(enabled=false, groups={"loanproduct"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyForDecBalIntReCalcLoanEarlyDisbursalLSIMOff() throws Exception {
         int interestType = DefineNewLoanProductPage.SubmitFormParameters.DECLINING_BALANCE_INTEREST_RECALCULATION;
@@ -171,7 +171,7 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
     /**
      * FIXME - keithw
      */
-    @Test(enabled=false, groups={"smoke"})
+    @Test(enabled=false, groups={"loanproduct"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyForDecBalIntReCalcLoanLateDisbursalLSIMOff() throws Exception {
         int interestType = DefineNewLoanProductPage.SubmitFormParameters.DECLINING_BALANCE_INTEREST_RECALCULATION;

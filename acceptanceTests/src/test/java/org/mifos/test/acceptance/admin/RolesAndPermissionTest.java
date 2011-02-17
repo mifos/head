@@ -92,7 +92,7 @@ public class RolesAndPermissionTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-//    @Test(enabled=false, groups={"smoke"})
+//    @Test(enabled=false, groups={"admin"})
     public void adjustmentOfPostDatedTransactions() throws Exception {
         navigationHelper.navigateToAdminPage().navigateToViewRolesPage().navigateToManageRolePage("Admin").disablePermission("5_1_9").
                 verifyPermissionText("5_1_9", "Can adjust back dated transactions").submitAndGotoViewRolesPage();

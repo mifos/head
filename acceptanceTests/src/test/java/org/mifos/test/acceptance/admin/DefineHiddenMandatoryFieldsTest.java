@@ -36,7 +36,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"smoke", "acceptance","ui","admin"})
+@Test(sequential=true, groups={"acceptance","ui","admin"})
 public class DefineHiddenMandatoryFieldsTest  extends UiTestCaseBase{
     private NavigationHelper navigationHelper;
 

@@ -58,7 +58,7 @@ import java.util.Random;
 
 @SuppressWarnings("PMD")
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"loan","acceptance","ui", "smoke"})
+@Test(sequential = true, groups = {"loan","acceptance","ui"})
 public class CreateClientLoanAccountTest extends UiTestCaseBase {
 
     private LoanTestHelper loanTestHelper;
@@ -92,7 +92,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
-    @Test(sequential = true, groups = {"smoke"})
+    @Test(sequential = true, groups = {"loan","acceptance","ui", "smoke"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
     public void newWeeklyClientLoanAccountWithQuestionGroups() throws Exception {

@@ -94,7 +94,7 @@ import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
 @SuppressWarnings("PMD.TooManyFields")
-@Test(sequential = true, groups = {"client", "acceptance", "ui", "smoke"})
+@Test(sequential = true, groups = {"client", "acceptance", "ui"})
 public class ClientTest extends UiTestCaseBase {
 
     private NavigationHelper navigationHelper;
@@ -177,6 +177,7 @@ public class ClientTest extends UiTestCaseBase {
 
     }
 
+    @Test(sequential = true, groups = {"smoke","client","acceptance","ui"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-208
     public void createClientAndChangeStatusTest() throws Exception {
