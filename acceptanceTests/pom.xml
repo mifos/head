@@ -250,9 +250,7 @@
                         <configuration>
                             <sqlCommand>USE ${acceptance.database}</sqlCommand>
                             <srcFiles>
-                                <srcFile>${sql.resources.main.directory}/base-schema.sql</srcFile>
-                                <srcFile>${sql.resources.main.directory}/base-data.sql</srcFile>
-                                <srcFile>${sql.resources.test.directory}/acceptance_test_data.sql</srcFile>
+                                <srcFile>${sql.resources.test.directory}/acceptance_test_dump.sql</srcFile>
                                 <srcFile>${sql.resources.main.directory}/init_mifos_password.sql</srcFile>
                             </srcFiles>
                         </configuration>
