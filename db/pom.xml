@@ -29,6 +29,18 @@
         <mysql.connector.jar.path>${settings.localRepository}/mysql/mysql-connector-java/${mysql.connector.version}</mysql.connector.jar.path>
     </properties>
 
+    <profiles>
+        <profile>
+            <id>continuous-integration</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <mifos.overrides.home>${env.MIFOS_CONF}/local.properties</mifos.overrides.home>
+            </properties>
+        </profile>
+    </profiles>
+
     <dependencies>
         <dependency>
             <groupId>org.mockito</groupId>
