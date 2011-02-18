@@ -39,8 +39,8 @@
 <form action="${flowExecutionUrl}" method="post">
     <div class="row">
         <label for="searchString">[@spring.message "createSavingsAccount.selectCustomer.searchTerm" /]:</label>
-        [@spring.formInput "savingsAccountFormBean.searchString" /]
-        [@form.submitButton "widget.form.buttonLabel.search" "searchTermEntered" /]
+        [@form.input path="savingsAccountFormBean.searchString" id="cust_search_account.input.searchString" attributes="" /]
+        [@form.submitButton label="widget.form.buttonLabel.search" webflowEvent="searchTermEntered" /]
     </div>
 </form>
 

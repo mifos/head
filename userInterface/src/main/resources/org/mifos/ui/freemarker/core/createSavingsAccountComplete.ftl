@@ -25,13 +25,15 @@
                          "createSavingsAccount.flowState.enterAccountInfo", 
                          "createSavingsAccount.flowState.reviewAndSubmit"]] 
 
+<span id="page.id" title="createsavingsaccountconfirmation"></span>
+
 <h1 class="success">[@spring.message "createSavingsAccount.accountCreated.successMessage" /]</h1>
 
 [#assign args=[savingsAccountFormBean.customer.displayName, account.globalAccountNum] /]
 <p>[@spring.messageArgs "createSavingsAccount.accountCreated.accountDetails" args /]</p>
 <br/>
 
-<p><a href="savingsAction.do?method=get&globalAccountNum=${account.globalAccountNum}" class="standout">[@spring.message "createSavingsAccount.accountCreated.action.viewSavingsAccount" /]</a></p>
+<p><a id="createsavingsaccountconfirmation.link.viewSavingsAccount" href="savingsAction.do?method=get&globalAccountNum=${account.globalAccountNum}" class="standout">[@spring.message "createSavingsAccount.accountCreated.action.viewSavingsAccount" /]</a></p>
 <br/>
 
 <div class="suggestion">[@spring.message "createSavingsAccount.accountCreated.nextSteps" /]</div>

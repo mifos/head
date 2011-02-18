@@ -38,11 +38,11 @@
     <fieldset>
     <div class="row">
         [@form.label "productId" true][@spring.message "createSavingsAccount.selectProduct.selectSavingsProduct" /][/@form.label]
-        [@form.singleSelectWithPrompt "savingsAccountFormBean.productId" savingsAccountFormBean.productOfferingOptions "createSavingsAccount.selectProduct.selectPrompt" /]
+        [@form.singleSelectWithPrompt path="savingsAccountFormBean.productId" options=savingsAccountFormBean.productOfferingOptions id="createsavingsaccount.select.savingsProduct" selectPrompt="createSavingsAccount.selectProduct.selectPrompt" /]
     </div>
     </fieldset>
     <div class="row webflow-controls">
-        [@form.submitButton "widget.form.buttonLabel.continue" "productSelected" /]
+        [@form.submitButton label="widget.form.buttonLabel.continue" id="createsavingsaccount.button.continue" webflowEvent="productSelected" /]
         [@form.cancelButton "cancel" /]
     </div>
 </form>
