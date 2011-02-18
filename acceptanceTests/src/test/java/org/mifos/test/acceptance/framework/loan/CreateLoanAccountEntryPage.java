@@ -131,10 +131,17 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
     }
 
     public void fillAdditionalFee(CreateLoanAccountSubmitParameters formParameters){
-        if(formParameters.getAdditionalFees()!=null) {
-            //selenium.select("selectedFee[0].feeId", "label=" + formParameters.getAdditionalFees());//USDfeeAdditional
-            selenium.select("selectedFee[0].feeId", "label=USDfeeAdditional");
+        if(formParameters.getAdditionalFee1()!=null) {
+            selenium.select("selectedFee[0].feeId", "label=" + formParameters.getAdditionalFee1());
         }
+        if(formParameters.getAdditionalFee2()!=null) {
+            selenium.select("selectedFee[1].feeId", "label=" + formParameters.getAdditionalFee2());
+        }
+        if(formParameters.getAdditionalFee3()!=null) {
+            selenium.select("selectedFee[2].feeId", "label=" + formParameters.getAdditionalFee3());
+        }
+
+        //selenium.select("selectedFee[0].feeId", "label=USDfeeAdditional");
     }
 
     public CreateLoanAccountConfirmationPage submitAndNavigateToGLIMLoanAccountConfirmationPage() {

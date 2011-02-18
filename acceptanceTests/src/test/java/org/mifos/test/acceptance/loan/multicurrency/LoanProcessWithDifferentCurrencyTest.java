@@ -157,8 +157,8 @@ public class LoanProcessWithDifferentCurrencyTest extends UiTestCaseBase {
 
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
         submitAccountParameters.setAmount("1012.0");
-        String[] fee = {"USDfeeAdditional"};
-        submitAccountParameters.setAdditionalFees(fee);
+        String fee = "USDfeeAdditional";
+        submitAccountParameters.setAdditionalFee1(fee);
         createLoanAndCheckAmount(searchParameters, submitAccountParameters);
     }
 

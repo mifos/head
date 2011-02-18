@@ -37,7 +37,9 @@ public class CreateLoanAccountSubmitParameters {
     private String dd;
     private String mm;
     private String yy;
-    private String[] additionalFees;
+    private String additionalFee1;
+    private String additionalFee2;
+    private String additionalFee3;
 
 
     public String getInterestRate() {
@@ -159,15 +161,28 @@ public class CreateLoanAccountSubmitParameters {
         this.yy = yy;
     }
 
-    public String[] getAdditionalFees() {
-        String[] a=new String[3];
-        if(this.additionalFees != null) {
-            a=this.additionalFees.clone();
-        }
-            return a;
+    public String getAdditionalFee1() {
+        return this.additionalFee1;
     }
 
-    public void setAdditionalFees(String[] additionalFees) {
-        this.additionalFees = additionalFees.clone();
+    public void setAdditionalFee1(String additionalFee1) {
+        this.additionalFee1 = additionalFee1;
     }
+
+    public String getAdditionalFee2() {
+        return this.additionalFee2;
+    }
+
+    public void setAdditionalFee2(String additionalFee2) {
+        this.additionalFee2 = additionalFee2;
+    }
+
+    public String getAdditionalFee3() {
+        return this.additionalFee3;
+    }
+
+    public void setAdditionalFee3(String additionalFee3) {
+        this.additionalFee3 = additionalFee3;
+    }
+
 }
