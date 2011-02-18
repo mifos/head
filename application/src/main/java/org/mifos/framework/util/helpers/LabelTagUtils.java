@@ -43,6 +43,7 @@ import org.mifos.config.persistence.ApplicationConfigurationDaoHibernate;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.dto.domain.ConfigurableLookupLabelDto;
 import org.mifos.framework.struts.tags.MifosPropertyMessageResources;
+import org.mifos.framework.util.MessageFilterReloadableResourceBundleMessageSource;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.UserContext;
 
@@ -165,21 +166,7 @@ public class LabelTagUtils {
             message = "";
         }
 
-        return replaceSubstitutions(message);
-    }
-    
-    static public String replaceSubstitutions(String message) {
-    	String newMessage = message;
-    	LinkedHashMap<String,String> map = new LinkedHashMap<String,String>();
-    	map.put("Center", "Kendra");
-    	map.put("center", "kendra");
-    	map.put("Client", "Borrower");
-    	map.put("Loan", "Obligation");
-    	
-        for (Map.Entry<String, String> entry : map.entrySet()) { 
-        	newMessage = newMessage.replace(entry.getKey(), entry.getValue());
-        }
-    	return newMessage;
+        return MessageFilterReloadableResourceBundleMessageSource.replaceSubstitutions(message);
     }
 
     private ConfigurableLookupLabelDto populateConfigurableLookupLabels() {

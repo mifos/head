@@ -6,7 +6,10 @@
     <!-- Since MessageLookup is MessageSourceAware, the messageSource will be injected -->
     <bean id="messageLookup" class="org.mifos.application.master.MessageLookup" abstract="false" lazy-init="default" autowire="default" factory-method="getInstance" />
 
+	<!-- 
     <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+     -->
+    <bean id="messageSource" class="org.mifos.framework.util.MessageFilterReloadableResourceBundleMessageSource">
         <property name="basenames">
             <list>
                 <value>classpath:org/mifos/ui/localizedProperties/messages</value>

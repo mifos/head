@@ -39,6 +39,7 @@ import org.mifos.config.persistence.ApplicationConfigurationDao;
 import org.mifos.customers.office.business.OfficeLevelEntity;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.util.MessageFilterReloadableResourceBundleMessageSource;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.security.util.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,7 +98,7 @@ public class MessageLookup implements MessageSourceAware {
     }
 
     public String lookup(LocalizedTextLookup namedObject, Locale locale) {
-        return lookup(namedObject.getPropertiesKey(), locale);
+        return MessageFilterReloadableResourceBundleMessageSource.replaceSubstitutions(lookup(namedObject.getPropertiesKey(), locale));
     }
 
     /*
@@ -105,7 +106,7 @@ public class MessageLookup implements MessageSourceAware {
      * selection
      */
     public String lookup(LocalizedTextLookup namedObject) {
-        return lookup(namedObject.getPropertiesKey());
+        return MessageFilterReloadableResourceBundleMessageSource.replaceSubstitutions(lookup(namedObject.getPropertiesKey()));
     }
 
     public String lookup(String lookupKey) {
@@ -115,7 +116,8 @@ public class MessageLookup implements MessageSourceAware {
 
     public String lookup(LocalizedTextLookup namedObject, Object[] params) {
         Locale locale = Localization.getInstance().getMainLocale();
-        return messageSource.getMessage(namedObject.getPropertiesKey(), params, namedObject.getPropertiesKey(), locale);
+        return MessageFilterReloadableResourceBundleMessageSource.replaceSubstitutions(
+        		messageSource.getMessage(namedObject.getPropertiesKey(), params, namedObject.getPropertiesKey(), locale));
     }
 
     public String lookup(LocalizedTextLookup namedObject, UserContext user) {
@@ -128,8 +130,9 @@ public class MessageLookup implements MessageSourceAware {
             // if we don't find a message above, then it means that it has not
             // been customized and
             // we should return the default message from the properties file
-            return StringUtils.isEmpty(textMessage) ? messageSource.getMessage(lookupKey, null, lookupKey, locale)
-                    : textMessage;
+            return StringUtils.isEmpty(textMessage) ? 
+            		MessageFilterReloadableResourceBundleMessageSource.replaceSubstitutions(messageSource.getMessage(lookupKey, null, lookupKey, locale))
+                    : MessageFilterReloadableResourceBundleMessageSource.replaceSubstitutions(textMessage);
         } catch (ConfigurationException e) {
             throw new RuntimeException(e);
         }
