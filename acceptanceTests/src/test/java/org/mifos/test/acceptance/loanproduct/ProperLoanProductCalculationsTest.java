@@ -281,4 +281,23 @@ public class ProperLoanProductCalculationsTest extends UiTestCaseBase {
         loanAccountPage.verifyPenaltyOriginal("0.00");
         loanAccountPage.verifyTotalOriginalLoan("21457.40");
     }
+
+    /**
+     * Verify the interest should be calculated with 365 days as the base.
+     * http://mifosforge.jira.com/browse/MIFOSTEST-199
+     * @throws Exception
+     */
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void verifyInterestCalculatedWith365Days() throws Exception {
+        CreateLoanAccountSearchParameters searchParams = new CreateLoanAccountSearchParameters();
+        searchParams.setSearchString("000100000000060");
+
+        LoanAccountPage loanAccountPage = loanTestHelper.navigateToLoanAccountPage(searchParams);
+
+        loanAccountPage.verifyPrincipalOriginal("2000.0");
+        loanAccountPage.verifyInterestOriginal("13.0");
+        loanAccountPage.verifyFeesOriginal("0.0");
+        loanAccountPage.verifyPenaltyOriginal("0.0");
+        loanAccountPage.verifyTotalOriginalLoan("2013.0");
+    }
 }
