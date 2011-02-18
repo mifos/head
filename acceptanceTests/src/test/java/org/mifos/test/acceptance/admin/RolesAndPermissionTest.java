@@ -66,8 +66,6 @@ public class RolesAndPermissionTest extends UiTestCaseBase {
         loanTestHelper = new LoanTestHelper(selenium);
         loanProductTestHelper = new LoanProductTestHelper(selenium);
         systemDateTime = new DateTime(2010, 10, 11, 10, 0, 0, 0);
-        // TODO - some databases do not have customer status with Id = 3
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
         TestDataSetup dataSetup = new TestDataSetup(selenium, applicationDatabaseOperation);
         loanTestHelper.setApplicationTime(systemDateTime);
         dataSetup.createBranch(OfficeParameters.BRANCH_OFFICE, officeName, "Off");
