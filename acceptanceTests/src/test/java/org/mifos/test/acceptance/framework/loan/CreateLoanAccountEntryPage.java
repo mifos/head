@@ -126,7 +126,15 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
             selenium.type("disbursementDateMM", formParameters.getMm());
             selenium.type("disbursementDateYY", formParameters.getYy());
         }
+        fillAdditionalFee(formParameters);
         submit();
+    }
+
+    public void fillAdditionalFee(CreateLoanAccountSubmitParameters formParameters){
+        if(formParameters.getAdditionalFees()!=null) {
+            //selenium.select("selectedFee[0].feeId", "label=" + formParameters.getAdditionalFees());//USDfeeAdditional
+            selenium.select("selectedFee[0].feeId", "label=USDfeeAdditional");
+        }
     }
 
     public CreateLoanAccountConfirmationPage submitAndNavigateToGLIMLoanAccountConfirmationPage() {

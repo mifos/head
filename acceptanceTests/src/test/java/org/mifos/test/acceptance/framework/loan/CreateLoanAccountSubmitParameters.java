@@ -20,6 +20,7 @@
 
 package org.mifos.test.acceptance.framework.loan;
 
+@SuppressWarnings("PMD.TooManyFields")
 public class CreateLoanAccountSubmitParameters {
     private String amount;
     private String lsimFrequencyWeeks;
@@ -36,6 +37,7 @@ public class CreateLoanAccountSubmitParameters {
     private String dd;
     private String mm;
     private String yy;
+    private String[] additionalFees;
 
 
     public String getInterestRate() {
@@ -155,5 +157,17 @@ public class CreateLoanAccountSubmitParameters {
 
     public void setYy(String yy) {
         this.yy = yy;
+    }
+
+    public String[] getAdditionalFees() {
+        String[] a=new String[3];
+        if(this.additionalFees != null) {
+            a=this.additionalFees.clone();
+        }
+            return a;
+    }
+
+    public void setAdditionalFees(String[] additionalFees) {
+        this.additionalFees = additionalFees.clone();
     }
 }

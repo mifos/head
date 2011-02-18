@@ -22,10 +22,11 @@ package org.mifos.test.acceptance.loan.multicurrency;
 
 import org.joda.time.DateTime;
 import org.mifos.framework.util.DbUnitUtilities;
-import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
+import org.mifos.test.acceptance.framework.admin.FeesCreatePage;
+import org.mifos.test.acceptance.framework.admin.ViewOrganizationSettingsPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameters;
 import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
@@ -35,7 +36,10 @@ import org.mifos.test.acceptance.framework.loan.PaymentParameters;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.SubmitFormParameters;
 import org.mifos.test.acceptance.framework.loanproduct.multicurrrency.DefineNewDifferentCurrencyLoanProductPage.SubmitMultiCurrencyFormParameters;
 import org.mifos.test.acceptance.framework.testhelpers.CustomPropertiesHelper;
+import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
+import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
+import org.mifos.test.acceptance.framework.util.UiTestUtils;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.mifos.test.acceptance.util.StringUtil;
@@ -45,16 +49,19 @@ import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import org.testng.Assert;
+
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
 @Test(sequential = true, groups = { "loanproduct", "acceptance"})
 public class LoanProcessWithDifferentCurrencyTest extends UiTestCaseBase {
 
-    private AppLauncher appLauncher;
+    //private AppLauncher appLauncher;
 
     private LoanTestHelper loanTestHelper;
 
     private CustomPropertiesHelper propertiesHelper;
+    private NavigationHelper navigationHelper;
 
     @Autowired
     private DriverManagerDataSource dataSource;
@@ -66,18 +73,13 @@ public class LoanProcessWithDifferentCurrencyTest extends UiTestCaseBase {
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
-    @BeforeMethod
+    @BeforeMethod(alwaysRun = true)
     public void setUp() throws Exception {
         super.setUp();
-        appLauncher = new AppLauncher(selenium);
 
+        navigationHelper = new NavigationHelper(selenium);
         propertiesHelper = new CustomPropertiesHelper(selenium);
-        propertiesHelper.setAdditionalCurrenciesCode("USD");
 
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(
-                selenium);
-        DateTime targetTime = new DateTime(2010, 2, 15, 13, 0, 0, 0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
     }
 
     @AfterMethod
@@ -88,29 +90,61 @@ public class LoanProcessWithDifferentCurrencyTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    // one of the dependent methods throws Exception
+    @Test(groups={"smoke"})
+    // http://mifosforge.jira.com/browse/MIFOSTEST-657
     public void createLoanProductThenAccount() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, //
-                "LoanProcessWithDifferentCurrencyTest_001_dbunit.xml", dataSource, selenium);
+        //Given
+        propertiesHelper.setAdditionalCurrenciesCode("EUR,USD");
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTime targetTime = new DateTime(2011,2,17,13,0,0,0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "LoanProcessWithDifferentCurrencyTest_001_dbunit.xml", dataSource, selenium);
+
+        //When
+        propertiesHelper.setDigitsAfterDecimal(2);
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        ViewOrganizationSettingsPage viewOrganizationSettingsPage = adminPage.navigateToViewOrganizationSettingsPage();
+
+        viewOrganizationSettingsPage.verifyCurrencies(new String[]{"Currency: USD"});
+        viewOrganizationSettingsPage.verifyCurrencies(new String[]{"Currency: EUR"});
+        viewOrganizationSettingsPage.verifyCurrencies(new String[]{"Number of digits after decimal: 2"});
+        viewOrganizationSettingsPage.verifyCurrencies(new String[]{"Final Round Off Multiple: 1"});
+        viewOrganizationSettingsPage.verifyCurrencies(new String[]{"Initial Round Off Multiple: 1"});
+
+        //Then
+        FeesCreatePage.SubmitFormParameters formParameters = FormParametersHelper.getOneTimeLoanMultiCurrencyFeesParameters();
+        adminPage = navigationHelper.navigateToAdminPage();
+        formParameters.setFeeName("USDfee");
+        adminPage.defineNewFees(formParameters);
+
+        formParameters = FormParametersHelper.getOneTimeLoanMultiCurrencyFeesParameters();
+        adminPage = navigationHelper.navigateToAdminPage();
+        formParameters.setFeeName("USDfeeAdditional");
+        formParameters.setAmount(20.0);
+        adminPage.defineNewFees(formParameters);
 
         createWeeklyLoanProduct();
+
+        String loanAccountId = "000100000000010";
         createLoanAccountOfDifferentCurrency("Client-1-USD");
+        pendingApprovalToApplicationApproved(loanAccountId);
+        disburseLoan(loanAccountId);
+        applyPayment(loanAccountId);
 
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, //
-                "LoanProcessWithDifferentCurrencyTest_002_dbunit.xml", dataSource, selenium);
-
-        pendingApprovalToApplicationApproved("000100000000010");
-        disburseLoan("000100000000010");
-        applyPayment("000100000000010");
+        navigationHelper.navigateToLoanAccountPage(loanAccountId);
+        //veryfy "USDfee"(10) and "USDfeeAdditional"(20)
+        Assert.assertEquals(selenium.getTable("loanSummaryTable.3.1"),"30.00");
+        //restore parameters
+        propertiesHelper.setDigitsAfterDecimal(1);
     }
 
      @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
     private void createWeeklyLoanProduct() throws Exception {
         SubmitMultiCurrencyFormParameters formParameters = getWeeklyLoanProductParameters();
-        AdminPage adminPage = loginAndNavigateToAdminPage();
-        adminPage.verifyPage();
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
         adminPage.defineMultiCurrencyLoanProduct(formParameters);
     }
 
@@ -124,7 +158,8 @@ public class LoanProcessWithDifferentCurrencyTest extends UiTestCaseBase {
 
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
         submitAccountParameters.setAmount("1012.0");
-
+        String[] fee = {"USDfeeAdditional"};
+        submitAccountParameters.setAdditionalFees(fee);
         createLoanAndCheckAmount(searchParameters, submitAccountParameters);
     }
 
@@ -145,9 +180,9 @@ public class LoanProcessWithDifferentCurrencyTest extends UiTestCaseBase {
 
         DisburseLoanParameters params = new DisburseLoanParameters();
 
-        params.setDisbursalDateDD("11");
+        params.setDisbursalDateDD("17");
         params.setDisbursalDateMM("02");
-        params.setDisbursalDateYYYY("2010");
+        params.setDisbursalDateYYYY("2011");
         params.setPaymentType(DisburseLoanParameters.CASH);
 
         loanTestHelper.disburseLoan(loanAccountId, params);
@@ -180,22 +215,19 @@ public class LoanProcessWithDifferentCurrencyTest extends UiTestCaseBase {
         formParameters.setInterestGLCode("31102");
         formParameters.setPrincipalGLCode("1506");
         formParameters.setCurrencyId(Short.valueOf("1"));
+        String fee="USDfee";
+        formParameters.setAdditionalFee1(fee);
         return formParameters;
     }
 
     private void applyPayment(String loanAccountId) {
         PaymentParameters paymentParameters = new PaymentParameters();
         paymentParameters.setAmount("1018"); // interest + principal
-        paymentParameters.setTransactionDateDD("12");
+        paymentParameters.setTransactionDateDD("17");
         paymentParameters.setTransactionDateMM("02");
-        paymentParameters.setTransactionDateYYYY("2010");
+        paymentParameters.setTransactionDateYYYY("2011");
         paymentParameters.setPaymentType(PaymentParameters.CASH);
 
         loanTestHelper.applyPayment(loanAccountId, paymentParameters);
     }
-
-    private AdminPage loginAndNavigateToAdminPage() {
-        return appLauncher.launchMifos().loginSuccessfullyUsingDefaultCredentials().navigateToAdminPage();
-    }
-
 }
