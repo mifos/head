@@ -107,6 +107,7 @@ public class RolesAndPermissionTest extends UiTestCaseBase {
         changePermission(adminPage, "10_0", false);
         //try to reach System Info page, should fail
         adminPage = adminPage.failNavigationToSystemInfoPage();
+        adminPage = navigationHelper.navigateToAdminPage();
         // reverting for other tests to pass
         changePermission(adminPage, "10_0", true);
     }

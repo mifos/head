@@ -62,7 +62,6 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
     NavigationHelper navigationHelper;
     String interestTypeName = "Declining Balance-Interest Recalculation";
     int interestType = DefineNewLoanProductPage.SubmitFormParameters.DECLINING_BALANCE_INTEREST_RECALCULATION;
-    DateTime disbursalDate;
     boolean isLoanProductCreatedAndVerified = false;
     private TestDataSetup dataSetup;
     String feeName = "loanWeeklyFee";
