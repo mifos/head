@@ -316,6 +316,7 @@ public interface ProductDefinitionConstants {
     String REPAYMENT_CAPACITY_INVALID = "errors.repaymentCapacityInvalid";
     String INVALID_INTEREST_TYPE_FOR_VARIABLE_INSTALLMENT = "errors.interestTypeInvalidForVariableInstallment";
     String PERIODIC_FEE_NOT_APPLICABLE = "errors.periodicFeeNotApplicableForVariableInstallment";
+    String MULTIPLE_ONE_TIME_FEES_NOT_ALLOWED = "errors.multipleInstancesOfTheSameOneTimeFeeNotAllowed";    
     String FEE_WITH_PERCENT_INTEREST_NOT_APPLICABLE = "errors.feeCaliculatedAsPercentOfInterestCannotBeAppliedToVariableInstallmentLoan";
     String INVALID_INTEREST_TYPE_FOR_GRACE_PERIODS = "errors.interestTypeInvalidForGracePeriods";
 }

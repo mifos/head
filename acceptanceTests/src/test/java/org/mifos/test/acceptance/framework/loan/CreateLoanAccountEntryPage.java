@@ -147,7 +147,7 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
         return new CreateLoanAccountCashFlowPage(selenium);
     }
 
-    private void submit() {
+    public void submit() {
         selenium.click(continueButton);
         waitForPageToLoad();
     }
@@ -175,6 +175,10 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
 
         selenium.select("selectedFee[1].feeId", "label=One Time Upfront Fee");
         selenium.type("selectedFee[1].amount", "3.3");
+    }
+
+    public void unselectAdditionalFee() {
+        selenium.select("selectedFee[1].feeId", "label=--Select--");
     }
 
     public void selectTwoClientsForGlim() {
@@ -319,5 +323,9 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
 
     public String getLoanAmount() {
         return selenium.getValue("loancreationdetails.input.sumLoanAmount");
+    }
+
+    public void verifyError(String error) {
+        Assert.assertTrue(selenium.isElementPresent("//span[@id='loancreationdetails.error.message']/li[text()='"+error+"']"));
     }
 }
