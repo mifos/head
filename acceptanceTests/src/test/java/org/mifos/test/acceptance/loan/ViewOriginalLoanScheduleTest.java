@@ -30,7 +30,7 @@ import static org.mifos.test.acceptance.framework.holiday.CreateHolidayEntryPage
 
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(sequential = true, groups = {"loanproduct", "acceptance", "ui"})
+@Test(sequential = true, groups = {"loanproduct", "acceptance", "ui", "smoke","no_db_unit"})
 public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
 
     @Autowired
@@ -66,9 +66,6 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
             loanTestHelper.setApplicationTime(systemDateTime);
             return;
         }
-//        // TODO: please ensure that the database contains Mrs Salutation!
-//        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
-//        // ---
         loanProductTestHelper = new LoanProductTestHelper(selenium);
         navigationHelper = new NavigationHelper(selenium);
         systemDateTime = new DateTime(2010, 10, 11, 10, 0, 0, 0);

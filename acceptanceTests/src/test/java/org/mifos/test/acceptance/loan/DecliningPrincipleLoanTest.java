@@ -47,7 +47,7 @@ import java.sql.SQLException;
 
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(sequential = true, groups = {"loanproduct", "acceptance", "ui"})
+@Test(sequential = true, groups = {"loanproduct", "acceptance", "ui","no_db_unit"})
 public class DecliningPrincipleLoanTest extends UiTestCaseBase {
 
     @Autowired
@@ -62,7 +62,6 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
     NavigationHelper navigationHelper;
     String interestTypeName = "Declining Balance-Interest Recalculation";
     int interestType = DefineNewLoanProductPage.SubmitFormParameters.DECLINING_BALANCE_INTEREST_RECALCULATION;
-    DateTime disbursalDate;
     boolean isLoanProductCreatedAndVerified = false;
     private TestDataSetup dataSetup;
     String feeName = "loanWeeklyFee";
