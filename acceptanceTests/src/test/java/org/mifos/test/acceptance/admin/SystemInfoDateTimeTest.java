@@ -20,8 +20,6 @@
 
 package org.mifos.test.acceptance.admin;
 
-import java.io.UnsupportedEncodingException;
-
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.mifos.test.acceptance.framework.AppLauncher;
@@ -37,9 +35,11 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.io.UnsupportedEncodingException;
+
 @SuppressWarnings("PMD")
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"admin", "acceptance","ui"})
+@Test(sequential = true, groups = {"admin", "acceptance","ui","no_db_unit"})
 public class SystemInfoDateTimeTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;

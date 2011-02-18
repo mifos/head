@@ -21,6 +21,7 @@
 package org.mifos.test.acceptance.loanproduct;
 
 
+import org.joda.time.DateTime;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
@@ -28,11 +29,20 @@ import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.
 import org.mifos.test.acceptance.framework.loanproduct.EditLoanProductPage;
 import org.mifos.test.acceptance.framework.loanproduct.EditLoanProductPreviewPage;
 import org.mifos.test.acceptance.framework.loanproduct.LoanProductDetailsPage;
+import org.mifos.test.acceptance.framework.savingsproduct.DefineNewSavingsProductConfirmationPage;
+import org.mifos.test.acceptance.framework.savingsproduct.DefineNewSavingsProductPage;
+import org.mifos.test.acceptance.framework.savingsproduct.EditSavingsProductPage;
+import org.mifos.test.acceptance.framework.savingsproduct.EditSavingsProductPreviewPage;
+import org.mifos.test.acceptance.framework.savingsproduct.SavingsProductDetailsPage;
+import org.mifos.test.acceptance.framework.savingsproduct.SavingsProductParameters;
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
+import org.mifos.test.acceptance.framework.testhelpers.SavingsProductHelper;
+import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
 import org.mifos.test.acceptance.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -94,8 +104,8 @@ public class EditLoanProductTest extends UiTestCaseBase {
 
     private SubmitFormParameters setFormParameters(SubmitFormParameters formParameters)
     {
-        formParameters.setOfferingName("name");
-        formParameters.setOfferingShortName("qwe");
+        formParameters.setOfferingName("name"+ StringUtil.getRandomString(5));
+        formParameters.setOfferingShortName("s"+StringUtil.getRandomString(2));
         formParameters.setProductCategory(formParameters.OTHER);
         formParameters.setStartDateDd("07");
         formParameters.setStartDateMm("02");
@@ -110,9 +120,9 @@ public class EditLoanProductTest extends UiTestCaseBase {
     }
 
     private SubmitFormParameters setCorrectFormParameters(SubmitFormParameters formParameters) {
-        formParameters.setStartDateDd("16");
-        formParameters.setStartDateMm("03");
-        formParameters.setStartDateYy("2009");
+        formParameters.setStartDateDd("02");
+        formParameters.setStartDateMm("02");
+        formParameters.setStartDateYy("2011");
         formParameters.setMaxInterestRate("25");
         formParameters.setMinInterestRate("15");
         formParameters.setDefaultInterestRate("20");
@@ -125,11 +135,8 @@ public class EditLoanProductTest extends UiTestCaseBase {
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         DateTime targetTime = new DateTime(2011,2,02,13,0,0,0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
 
-        ViewLoanProductsPage viewLoanProducts = loginAndNavigateToViewLoanProductsPage();
-        LoanProductDetailsPage loanProductDetailsPage = viewLoanProducts.viewLoanProductDetails("MonthlyClientFlatLoan1stOfMonth");
-        EditLoanProductPage editLoanProductPage = loanProductDetailsPage.editLoanProduct();
+        EditLoanProductPage editLoanProductPage = createNewLoanProductAndNavigateToEditLoanPage();
         editLoanProductPage.verifyPage();
         SubmitFormParameters formParameters = new SubmitFormParameters();
         formParameters=cleanFormParameters(formParameters);
@@ -155,17 +162,20 @@ public class EditLoanProductTest extends UiTestCaseBase {
 
         editLoanProductPreviewPage = editLoanProductPage.submitRequiredDescriptionAndInterestChanges(formParameters);
 
-        loanProductDetailsPage = editLoanProductPreviewPage.submit();
+        LoanProductDetailsPage loanProductDetailsPage = editLoanProductPreviewPage.submit();
         loanProductDetailsPage.verifyPage();
         loanProductDetailsPage.editLoanProduct();
         editLoanProductPage.verifyPage();
         editLoanProductPage.verifyModifiedLoanProduct(formParameters);
 
         ///////////////////////SAVINGS////////////////////
-        ViewSavingsProductsPage viewSavingsProducts = loginAndNavigateToViewSavingsProductsPage();
-        SavingsProductDetailsPage savingsProductDetailsPage = viewSavingsProducts.viewSavingsProductDetails("MandCenterSavings3MoPost");
-        EditSavingsProductPage editSavingsProductPage = savingsProductDetailsPage.editSavingsProduct();
-        SubmitSavingsFormParameters formSavingsParameters = new SubmitSavingsFormParameters();
+        SavingsProductHelper savingsProductHelper = new SavingsProductHelper(selenium);
+        SavingsProductParameters params = savingsProductHelper.getGenericSavingsProductParameters(SavingsProductParameters.VOLUNTARY,SavingsProductParameters.CENTERS);
+        DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
+        EditSavingsProductPage editSavingsProductPage = confirmationPage.navigateToSavingsProductDetails().editSavingsProduct();
+
+
+        DefineNewSavingsProductPage.SubmitSavingsFormParameters formSavingsParameters = new DefineNewSavingsProductPage.SubmitSavingsFormParameters();
 
         formSavingsParameters=cleanFormSavingsParameters(formSavingsParameters);
 
@@ -179,7 +189,7 @@ public class EditLoanProductTest extends UiTestCaseBase {
 
         editSavingsProductPreviewPage = editSavingsProductPage.submitRequiredDescriptionAndInterestChanges(formSavingsParameters);
 
-        savingsProductDetailsPage = editSavingsProductPreviewPage.submit();
+        SavingsProductDetailsPage savingsProductDetailsPage = editSavingsProductPreviewPage.submit();
         savingsProductDetailsPage.editSavingsProduct();
         editSavingsProductPage.verifyModifiedSavingsProduct(formSavingsParameters);
     }
@@ -189,7 +199,7 @@ public class EditLoanProductTest extends UiTestCaseBase {
             Assert.assertEquals(error.contains(msg), true);
         }
     }
-    private SubmitSavingsFormParameters cleanFormSavingsParameters(SubmitSavingsFormParameters formSavingsParameters){
+    private DefineNewSavingsProductPage.SubmitSavingsFormParameters cleanFormSavingsParameters(DefineNewSavingsProductPage.SubmitSavingsFormParameters formSavingsParameters){
         formSavingsParameters.setOfferingName("");
         formSavingsParameters.setOfferingShortName("");
         formSavingsParameters.setProductCategory(0);
@@ -207,13 +217,13 @@ public class EditLoanProductTest extends UiTestCaseBase {
         return formSavingsParameters;
     }
 
-    private SubmitSavingsFormParameters setFormSavingsParameters(SubmitSavingsFormParameters formSavingsParameters){
-        formSavingsParameters.setOfferingName("savingname");
-        formSavingsParameters.setOfferingShortName("aaa");
+    private DefineNewSavingsProductPage.SubmitSavingsFormParameters setFormSavingsParameters(DefineNewSavingsProductPage.SubmitSavingsFormParameters formSavingsParameters){
+        formSavingsParameters.setOfferingName("savingname"+StringUtil.getRandomString(5));
+        formSavingsParameters.setOfferingShortName("a"+StringUtil.getRandomString(2));
         formSavingsParameters.setProductCategory(formSavingsParameters.OTHER);
-        formSavingsParameters.setStartDateDd("8");
-        formSavingsParameters.setStartDateMm("9");
-        formSavingsParameters.setStartDateYy("2009");
+        formSavingsParameters.setStartDateDd("2");
+        formSavingsParameters.setStartDateMm("2");
+        formSavingsParameters.setStartDateYy("2011");
         formSavingsParameters.setApplicableFor(formSavingsParameters.CLIENTS);
         formSavingsParameters.setStatus(formSavingsParameters.ACTIVE);
         formSavingsParameters.setInterestRate("3");
@@ -291,22 +301,6 @@ public class EditLoanProductTest extends UiTestCaseBase {
                 editSubmit().
                 verifyCashflowThresholdInEditPreview(warningThreshold,indebetedValue,repaymentCapacityValue).
                 submit().verifyCashFlowOfEditedLoan(warningThreshold,indebetedValue,repaymentCapacityValue);
-    }
-
-    private ViewLoanProductsPage loginAndNavigateToViewLoanProductsPage() {
-        AdminPage adminPage = loginAndNavigateToAdminPage();
-        adminPage.verifyPage();
-        ViewLoanProductsPage viewLoanProducts = adminPage.navigateToViewLoanProducts();
-        viewLoanProducts.verifyPage();
-        return viewLoanProducts;
-    }
-
-    private ViewSavingsProductsPage loginAndNavigateToViewSavingsProductsPage() {
-        AdminPage adminPage = loginAndNavigateToAdminPage();
-        adminPage.verifyPage();
-        ViewSavingsProductsPage viewSavingsProducts = adminPage.navigateToViewSavingsProducts();
-        viewSavingsProducts.verifyPage();
-        return viewSavingsProducts;
     }
 
 
