@@ -100,8 +100,7 @@ public abstract class BranchCashConfirmationInfoBO extends BranchCashConfirmatio
     public static List<BranchCashConfirmationInfoBO> createIssuesBO(List<String> productOfferingNames,
             final MifosCurrency currency) {
         return (List<BranchCashConfirmationInfoBO>) CollectionUtils.collect(productOfferingNames, new Transformer() {
-            @Override
-			public Object transform(Object input) {
+            public Object transform(Object input) {
                 return new BranchCashConfirmationIssueBO((String) input, MoneyUtils.zero(currency));
             }
         });

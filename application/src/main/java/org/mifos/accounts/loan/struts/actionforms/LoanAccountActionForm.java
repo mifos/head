@@ -928,8 +928,7 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
     List<String> getSelectedClientIdsFromRequest(HttpServletRequest request) {
         Collection<?> paramsStartingWithClients = CollectionUtils.select(convertEnumerationToList(request
                 .getParameterNames()), new Predicate() {
-            @Override
-			public boolean evaluate(Object object) {
+            public boolean evaluate(Object object) {
                 return ((String) object).startsWith("clients");
             }
         });
@@ -1658,8 +1657,7 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
             clients2 = clients;
         }
 
-        @Override
-		public boolean evaluate(Object object) {
+        public boolean evaluate(Object object) {
             LoanAccountDetailsDto loanDetail = ((LoanAccountDetailsDto) object);
             return !(!clients2.contains(loanDetail.getClientId()) && (loanDetail.isEmpty()));
         }
@@ -1725,13 +1723,11 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
         this.minInstallmentAmount = minInstallmentAmount;
     }
 
-    @Override
-	public CashFlowForm getCashFlowForm() {
+    public CashFlowForm getCashFlowForm() {
         return cashFlowForm;
     }
 
-    @Override
-	public void setCashFlowForm(CashFlowForm cashFlowForm) {
+    public void setCashFlowForm(CashFlowForm cashFlowForm) {
         this.cashFlowForm = cashFlowForm;
     }
 

@@ -56,8 +56,7 @@ public class BranchReportSqlDataAggregator implements BranchReportDataAggregator
         persistence = new BranchReportSqlPersistence();
     }
 
-    @Override
-	public List<BranchReportClientSummaryBO> fetchClientSummaries(OfficeBO branchOffice) throws ServiceException {
+    public List<BranchReportClientSummaryBO> fetchClientSummaries(OfficeBO branchOffice) throws ServiceException {
         List<BranchReportClientSummaryBO> clientSummaries = new ArrayList<BranchReportClientSummaryBO>();
         try {
             clientSummaries.add(new BranchReportClientSummaryBO(BranchReportClientSummaryBO.CENTER_COUNT, persistence

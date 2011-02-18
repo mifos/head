@@ -39,8 +39,7 @@ public class ActivityChangeEvent implements SecurityEvent {
      *
      * @return Returns the object.
      */
-    @Override
-	public Object getObject() {
+    public Object getObject() {
         return object;
     }
 
@@ -49,8 +48,7 @@ public class ActivityChangeEvent implements SecurityEvent {
      *
      * @see org.mifos.security.Util.SecurityEvent#getEventType()
      */
-    @Override
-	public String getEventType() {
+    public String getEventType() {
         return eventType;
     }
 

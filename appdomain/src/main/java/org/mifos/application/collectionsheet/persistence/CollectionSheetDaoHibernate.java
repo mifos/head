@@ -61,8 +61,7 @@ public class CollectionSheetDaoHibernate extends LegacyGenericDao implements Col
         this.savingsDao = savingsDao;
     }
 
-    @Override
-	@SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     public List<CollectionSheetCustomerDto> findCustomerHierarchy(final Integer customerId,
             final LocalDate transactionDate) {
 
@@ -95,8 +94,7 @@ public class CollectionSheetDaoHibernate extends LegacyGenericDao implements Col
     /*
      *
      */
-    @Override
-	@SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     public Map<Integer, List<CollectionSheetCustomerLoanDto>> findAllLoanRepaymentsForCustomerHierarchy(
             final Short branchId, final String searchId, final LocalDate transactionDate,
             final Integer customerAtTopOfHierarchyId) {
@@ -176,8 +174,7 @@ public class CollectionSheetDaoHibernate extends LegacyGenericDao implements Col
         }
     }
 
-    @Override
-	@SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     public Map<Integer, Map<Integer, List<CollectionSheetLoanFeeDto>>> findOutstandingFeesForLoansOnCustomerHierarchy(
             final Short branchId, final String searchId, final LocalDate transactionDate,
             final Integer customerAtTopOfHierarchyId) {
@@ -215,8 +212,7 @@ public class CollectionSheetDaoHibernate extends LegacyGenericDao implements Col
         return outstandingLoanFeesGroupedByCustomerId;
     }
 
-    @Override
-	@SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     public Map<Integer, List<CollectionSheetCustomerAccountCollectionDto>> findAccountCollectionsOnCustomerAccount(
             final Short branchId, final String searchId, final LocalDate transactionDate,
             final Integer customerAtTopOfHierarchyId) {
@@ -265,8 +261,7 @@ public class CollectionSheetDaoHibernate extends LegacyGenericDao implements Col
         return accountCollectionsOnCustomerAccountGroupedByCustomerId;
     }
 
-    @Override
-	@SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     public Map<Integer, List<CollectionSheetCustomerAccountCollectionDto>> findOutstandingFeesForCustomerAccountOnCustomerHierarchy(
             final Short branchId, final String searchId, final LocalDate transactionDate,
             final Integer customerAtTopOfHierarchyId) {
@@ -318,8 +313,7 @@ public class CollectionSheetDaoHibernate extends LegacyGenericDao implements Col
         return accountCollectionsOnCustomerAccountGroupedByCustomerId;
     }
 
-    @Override
-	@SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     public Map<Integer, List<CollectionSheetCustomerLoanDto>> findLoanDisbursementsForCustomerHierarchy(
             final Short branchId, final String searchId, final LocalDate transactionDate,
             final Integer customerAtTopOfHierarchyId) {
@@ -355,8 +349,7 @@ public class CollectionSheetDaoHibernate extends LegacyGenericDao implements Col
         return loanDisbursementsGroupedByCustomerId;
     }
 
-    @Override
-	public Map<Integer, List<CollectionSheetCustomerSavingDto>> findSavingsDepositsforCustomerHierarchy(
+    public Map<Integer, List<CollectionSheetCustomerSavingDto>> findSavingsDepositsforCustomerHierarchy(
             final CustomerHierarchyParams customerHierarchyParams) {
 
         final List<CollectionSheetCustomerSavingDto> mandatorySavingAccount = savingsDao
@@ -372,8 +365,7 @@ public class CollectionSheetDaoHibernate extends LegacyGenericDao implements Col
         return convertListToMapGroupedByCustomerId(allSavingsAccounts);
     }
 
-    @Override
-	public Map<Integer, List<CollectionSheetCustomerSavingDto>> findAllSavingsAccountsPayableByIndividualClientsForCustomerHierarchy(
+    public Map<Integer, List<CollectionSheetCustomerSavingDto>> findAllSavingsAccountsPayableByIndividualClientsForCustomerHierarchy(
             final CustomerHierarchyParams customerHierarchyParams) {
 
         final List<CollectionSheetCustomerSavingDto> mandatorySavings = savingsDao
@@ -539,8 +531,7 @@ public class CollectionSheetDaoHibernate extends LegacyGenericDao implements Col
                         + miscFeesPaid.doubleValue() + miscPenaltyPaid.doubleValue());
     }
 
-    @Override
-	public List<CollectionSheetCustomerSavingsAccountDto> findAllSavingAccountsForCustomerHierarchy(
+    public List<CollectionSheetCustomerSavingsAccountDto> findAllSavingAccountsForCustomerHierarchy(
             CustomerHierarchyParams customerHierarchyParams) {
         return savingsDao.findAllSavingAccountsForCustomerHierarchy(customerHierarchyParams);
     }

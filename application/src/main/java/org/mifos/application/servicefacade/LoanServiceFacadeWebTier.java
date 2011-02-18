@@ -138,8 +138,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         return newMeetingForRepaymentDay;
     }
 
-    @Override
-	public Errors validateInputInstallments(Date disbursementDate, VariableInstallmentDetailsBO variableInstallmentDetails,
+    public Errors validateInputInstallments(Date disbursementDate, VariableInstallmentDetailsBO variableInstallmentDetails,
                                             List<RepaymentScheduleInstallment> installments, Integer customerId) {
         Short officeId = loadCustomer(customerId).getOfficeId();
         InstallmentValidationContext context = new InstallmentValidationContext(disbursementDate, variableInstallmentDetails, holidayServiceFacade, officeId);

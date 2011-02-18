@@ -56,8 +56,7 @@ public class QueryResultDTOImpl implements QueryResult {
      * Set the query which will be used for query execution
      *
      */
-    @Override
-	public void executeQuery(Query query) throws HibernateSearchException {
+    public void executeQuery(Query query) throws HibernateSearchException {
         if (query == null) {
             throw new HibernateSearchException(HibernateConstants.SEARCH_INPUTNULL);
         }
@@ -73,8 +72,7 @@ public class QueryResultDTOImpl implements QueryResult {
      * Set the query inputs which will be used for query execution
      *
      */
-    @Override
-	public void setQueryInputs(QueryInputs queryInputs) throws HibernateSearchException {
+    public void setQueryInputs(QueryInputs queryInputs) throws HibernateSearchException {
         if (queryInputs == null) {
             throw new HibernateSearchException(HibernateConstants.SEARCH_INPUTNULL);
         }
@@ -92,8 +90,7 @@ public class QueryResultDTOImpl implements QueryResult {
      * pagination at the front end.
      *
      */
-    @Override
-	public List get(int position, int noOfObjects) throws HibernateSearchException {
+    public List get(int position, int noOfObjects) throws HibernateSearchException {
         List returnList = new ArrayList();
         try {
             scrollResult.setRowNumber(position);
@@ -126,8 +123,7 @@ public class QueryResultDTOImpl implements QueryResult {
      * Returns the records valid for the query
      *
      */
-    @Override
-	public int getSize() throws HibernateSearchException {
+    public int getSize() throws HibernateSearchException {
         int lastRowNumber = 0;
         try {
             scrollResult.last();

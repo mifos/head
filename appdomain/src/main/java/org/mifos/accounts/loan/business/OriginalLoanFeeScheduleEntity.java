@@ -132,8 +132,7 @@ public class OriginalLoanFeeScheduleEntity implements Comparable<OriginalLoanFee
         return this.installmentId;
     }
 
-    @Override
-	public int compareTo(OriginalLoanFeeScheduleEntity obj) {
+    public int compareTo(OriginalLoanFeeScheduleEntity obj) {
         return this.getFee().getFeeId().compareTo(obj.getFee().getFeeId());
     }
 

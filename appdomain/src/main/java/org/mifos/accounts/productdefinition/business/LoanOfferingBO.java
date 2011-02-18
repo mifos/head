@@ -919,8 +919,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
             try {
                 requiredLoanAmountFromCycle = find(getLoanAmountFromLoanCycle(),
                         new Predicate<LoanAmountFromLoanCycleBO>() {
-                            @Override
-							public boolean evaluate(final LoanAmountFromLoanCycleBO loanAmountFromLoanCycle) {
+                            public boolean evaluate(final LoanAmountFromLoanCycleBO loanAmountFromLoanCycle) {
                                 return loanAmountFromLoanCycle.sameRangeIndex(customerLastLoanCycleCount);
                             }
                         });
@@ -944,8 +943,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
             try {
                 requiredLoanAmountRangeFromLastLoanAmount = find(getLoanAmountFromLastLoan(),
                         new Predicate<LoanAmountFromLastLoanAmountBO>() {
-                            @Override
-							public boolean evaluate(final LoanAmountFromLastLoanAmountBO lastLoanAmount) {
+                            public boolean evaluate(final LoanAmountFromLastLoanAmountBO lastLoanAmount) {
                                 return lastLoanAmount.isLoanAmountBetweenRange(maxLoanAmount.getAmountDoubleValue());
                             }
                         });
@@ -994,8 +992,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
             try {
                 requiredInstallmentRange = find(getNoOfInstallFromLoanCycle(),
                         new Predicate<NoOfInstallFromLoanCycleBO>() {
-                            @Override
-							public boolean evaluate(final NoOfInstallFromLoanCycleBO noOfInstallFromLoanCycle) {
+                            public boolean evaluate(final NoOfInstallFromLoanCycleBO noOfInstallFromLoanCycle) {
                                 return noOfInstallFromLoanCycle.isSameRange(customerLastLoanCycleCount);
                             }
                         });
@@ -1018,8 +1015,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
             try {
                 requiredInstallmentRange = find(getNoOfInstallFromLastLoan(),
                         new Predicate<NoOfInstallFromLastLoanAmountBO>() {
-                            @Override
-							public boolean evaluate(
+                            public boolean evaluate(
                                     final NoOfInstallFromLastLoanAmountBO noOfInstallmentFromLastLoanAmount) {
                                 return noOfInstallmentFromLastLoanAmount.loanAmountInRange(lastLoanAmount
                                         .getAmountDoubleValue());

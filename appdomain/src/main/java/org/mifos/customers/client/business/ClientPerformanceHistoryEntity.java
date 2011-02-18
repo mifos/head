@@ -161,8 +161,7 @@ public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory {
 
     public LoanCounter findLoanCounterForProduct(final LoanOfferingBO loanOffering) throws Exception {
         return find(loanCounters, new Predicate<LoanCounter>() {
-            @Override
-			public boolean evaluate(LoanCounter loanCounter) {
+            public boolean evaluate(LoanCounter loanCounter) {
                 return loanOffering.isOfSameOffering(loanCounter.getLoanOffering());
             }
         });
@@ -222,8 +221,7 @@ public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory {
             Set<LoanCounter> clientLoanCounters = getLoanCounters();
             try {
                 Collection<Short> loanCyclesForProduct = select(clientLoanCounters, new Predicate<LoanCounter>() {
-                    @Override
-					public boolean evaluate(LoanCounter counter) {
+                    public boolean evaluate(LoanCounter counter) {
                         return counter.isOfSameProduct(prdOffering);
                     }
                 }, TRANSFORM_LOAN_COUNTER_TO_LOAN_CYCLE);

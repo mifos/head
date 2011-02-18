@@ -45,8 +45,7 @@ public class EnumPlugin implements PlugIn {
         this.enumFileNames = constantFileNames;
     }
 
-    @Override
-	public void init(ActionServlet actionServlet, ModuleConfig config) throws ServletException {
+    public void init(ActionServlet actionServlet, ModuleConfig config) throws ServletException {
         try {
             ServletContext servletContext = actionServlet.getServletContext();
             List<String> enumFileNameList = getEnumFileNames();
@@ -68,8 +67,7 @@ public class EnumPlugin implements PlugIn {
         return constantKeyName;
     }
 
-    @Override
-	public void destroy() {
+    public void destroy() {
     }
 
     private List<String> getEnumFileNames() {

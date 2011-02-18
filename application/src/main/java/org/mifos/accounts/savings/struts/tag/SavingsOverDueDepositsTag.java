@@ -74,8 +74,7 @@ public class SavingsOverDueDepositsTag extends BodyTagSupport {
         Date actionDate = null;
 
         Collections.sort(installmentsInArrears, new Comparator<AccountActionDateEntity>() {
-            @Override
-			public int compare(AccountActionDateEntity actionDate1, AccountActionDateEntity actionDate2) {
+            public int compare(AccountActionDateEntity actionDate1, AccountActionDateEntity actionDate2) {
                 return actionDate1.getActionDate().compareTo(actionDate2.getActionDate());
             }
         });

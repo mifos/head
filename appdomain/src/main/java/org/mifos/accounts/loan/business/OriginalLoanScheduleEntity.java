@@ -459,8 +459,7 @@ public class OriginalLoanScheduleEntity implements Comparable<OriginalLoanSchedu
         return this.getPaymentStatusAsEnum() == PaymentStatus.PAID;
     }
 
-    @Override
-	public int compareTo(OriginalLoanScheduleEntity obj) {
+    public int compareTo(OriginalLoanScheduleEntity obj) {
         return this.getInstallmentId().compareTo(obj.getInstallmentId());
     }
 

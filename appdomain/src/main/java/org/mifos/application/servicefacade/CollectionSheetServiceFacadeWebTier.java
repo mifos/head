@@ -89,8 +89,7 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
         this.collectionSheetTranslator = collectionSheetTranslator;
     }
 
-    @Override
-	public CollectionSheetEntryFormDto loadAllActiveBranchesAndSubsequentDataIfApplicable(final UserContext userContext) {
+    public CollectionSheetEntryFormDto loadAllActiveBranchesAndSubsequentDataIfApplicable(final UserContext userContext) {
 
         final Short branchId = userContext.getBranchId();
         final Short centerHierarchyExists = ClientRules.getCenterHierarchyExists() ? Constants.YES : Constants.NO;
@@ -139,8 +138,7 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
                 reloadFormAutomatically, centerHierarchyExists, backDatedTransactionAllowed);
     }
 
-    @Override
-	public CollectionSheetEntryFormDto loadLoanOfficersForBranch(final Short branchId, final UserContext userContext,
+    public CollectionSheetEntryFormDto loadLoanOfficersForBranch(final Short branchId, final UserContext userContext,
             final CollectionSheetEntryFormDto formDto) {
 
         List<PersonnelDto> loanOfficerList = new ArrayList<PersonnelDto>();
@@ -156,8 +154,7 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
                         .getCenterHierarchyExists(), formDto.getBackDatedTransactionAllowed());
     }
 
-    @Override
-	public CollectionSheetEntryFormDto loadCustomersForBranchAndLoanOfficer(final Short personnelId,
+    public CollectionSheetEntryFormDto loadCustomersForBranchAndLoanOfficer(final Short personnelId,
             final Short officeId, final CollectionSheetEntryFormDto formDto) {
 
         Short customerLevel;
@@ -178,8 +175,7 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
                 .getCenterHierarchyExists(), formDto.getBackDatedTransactionAllowed());
     }
 
-    @Override
-	public CollectionSheetEntryFormDto loadMeetingDateForCustomer(final Integer customerId,
+    public CollectionSheetEntryFormDto loadMeetingDateForCustomer(final Integer customerId,
             final CollectionSheetEntryFormDto formDto) {
 
         Short backDatedTransactionAllowed = Constants.NO;
@@ -201,8 +197,7 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
                 .getCenterHierarchyExists(), backDatedTransactionAllowed, meetingDate);
     }
 
-    @Override
-	public CollectionSheetEntryGridDto generateCollectionSheetEntryGridView(
+    public CollectionSheetEntryGridDto generateCollectionSheetEntryGridView(
             final CollectionSheetFormEnteredDataDto formEnteredDataDto, final MifosCurrency currency) {
 
         final CollectionSheetDto collectionSheet = collectionSheetService.retrieveCollectionSheet(formEnteredDataDto
@@ -222,8 +217,7 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
         }
     }
 
-    @Override
-	public CollectionSheetEntryGridDto previewCollectionSheetEntry(
+    public CollectionSheetEntryGridDto previewCollectionSheetEntry(
             final CollectionSheetEntryGridDto previousCollectionSheetEntryDto, final CollectionSheetDataDto dataView) {
 
         CollectionSheetEntryGridDto newCollectionSheetEntryGridDto = null;
@@ -244,8 +238,7 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
         return newCollectionSheetEntryGridDto;
     }
 
-    @Override
-	public CollectionSheetErrorsDto saveCollectionSheet(
+    public CollectionSheetErrorsDto saveCollectionSheet(
             final CollectionSheetEntryGridDto previousCollectionSheetEntryDto, final Short userId) {
 
         final SaveCollectionSheetDto saveCollectionSheet = new SaveCollectionSheetFromLegacyAssembler()

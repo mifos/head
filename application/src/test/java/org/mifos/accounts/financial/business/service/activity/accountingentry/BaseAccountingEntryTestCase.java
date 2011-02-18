@@ -102,8 +102,7 @@ public class BaseAccountingEntryTestCase {
      *
      */
     protected class GLCodeComparator implements Comparator<FinancialTransactionBO> {
-        @Override
-		public int compare(final FinancialTransactionBO tran1, final FinancialTransactionBO tran2) {
+        public int compare(final FinancialTransactionBO tran1, final FinancialTransactionBO tran2) {
             return tran1.getGlcode().getGlcode().compareTo(tran2.getGlcode().getGlcode());
         }
     }

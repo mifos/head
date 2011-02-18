@@ -661,6 +661,11 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         String[] dataFileNames = getCSVFiles(rootPath);
         for (String dataFileName : dataFileNames) {
 
+            // FIXME - keithw - remove
+            if ("testcase-2008-06-27-decliningEPI-grace-fee-set1.02.csv".equals(dataFileName)) {
+                System.out.println("break");
+            }
+
             if (fileNameContains(dataFileName, decliningEPIGraceFeeTestCases)) {
                 runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileName);
                 StaticHibernateUtil.clearSession();

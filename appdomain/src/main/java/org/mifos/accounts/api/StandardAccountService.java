@@ -337,8 +337,7 @@ public class StandardAccountService implements AccountService {
         return getPaymentTypes(TrxnTypes.savings_deposit.getValue());
     }
 
-    @Override
-	public List<PaymentTypeDto> getFeePaymentTypes() throws PersistenceException {
+    public List<PaymentTypeDto> getFeePaymentTypes() throws PersistenceException {
         return getPaymentTypes(TrxnTypes.fee.getValue());
     }
 

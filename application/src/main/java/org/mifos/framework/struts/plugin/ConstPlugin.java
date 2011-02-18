@@ -46,8 +46,7 @@ public class ConstPlugin implements PlugIn {
         this.constantFileNames = constantFileNames;
     }
 
-    @Override
-	public void init(ActionServlet actionServlet, ModuleConfig config) throws ServletException {
+    public void init(ActionServlet actionServlet, ModuleConfig config) throws ServletException {
         try {
             ServletContext servletContext = actionServlet.getServletContext();
             List<String> constantFileNameList = getConstantFileNames();
@@ -69,8 +68,7 @@ public class ConstPlugin implements PlugIn {
         return constantKeyName;
     }
 
-    @Override
-	public void destroy() {
+    public void destroy() {
     }
 
     /*

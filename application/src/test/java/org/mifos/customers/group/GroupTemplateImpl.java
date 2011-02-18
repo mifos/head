@@ -39,18 +39,15 @@ public class GroupTemplateImpl extends CustomerTemplateImpl implements GroupTemp
         this.parentCustomerId = parentCenterId;
     }
 
-    @Override
-	public boolean isTrained() {
+    public boolean isTrained() {
         return this.isTrained;
     }
 
-    @Override
-	public Date getTrainedDate() {
+    public Date getTrainedDate() {
         return this.trainedDate;
     }
 
-    @Override
-	public Integer getParentCenterId() {
+    public Integer getParentCenterId() {
         return this.parentCustomerId;
     }
 

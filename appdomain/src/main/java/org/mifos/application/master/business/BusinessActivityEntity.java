@@ -44,18 +44,15 @@ public class BusinessActivityEntity implements ValueListElement, LocalizedTextLo
         this.valueKey = valueKey;
     }
 
-    @Override
-	public Integer getId() {
+    public Integer getId() {
         return id;
     }
 
-    @Override
-	public void setId(final Integer id) {
+    public void setId(final Integer id) {
         this.id = id;
     }
 
-    @Override
-	public String getName() {
+    public String getName() {
         String lookupName = MessageLookup.getInstance().lookup(this);
 
         /*
@@ -68,23 +65,19 @@ public class BusinessActivityEntity implements ValueListElement, LocalizedTextLo
         return lookupName;
     }
 
-    @Override
-	public void setName(final String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
-    @Override
-	public String getValueKey() {
+    public String getValueKey() {
         return valueKey;
     }
 
-    @Override
-	public void setValueKey(final String valueKey) {
+    public void setValueKey(final String valueKey) {
         this.valueKey = valueKey;
     }
 
-    @Override
-	public String getPropertiesKey() {
+    public String getPropertiesKey() {
         return getValueKey();
     }
 

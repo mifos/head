@@ -25,8 +25,7 @@ import org.apache.commons.collections.Transformer;
 public class TransformerUtils {
 
     public static final Transformer TRANSFORM_STRING_TO_SHORT = new Transformer() {
-        @Override
-		public Object transform(Object input) {
+        public Object transform(Object input) {
             return Short.valueOf((String) input);
         }
     };

@@ -108,10 +108,6 @@ public class CashFlowTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
-    /**
-     * FIXME - keithw - see http://mifosforge.jira.com/browse/MIFOS-4754
-     */
-    @Test(enabled = false)
     public void verifyCashFlowForNonVariableInstallmentLoan() throws Exception {
         applicationDatabaseOperation.updateLSIM(0);
         DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
@@ -153,10 +149,6 @@ public class CashFlowTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
-    /**
-     * FIXME - keithw - see http://mifosforge.jira.com/browse/MIFOS-4754
-     */
-    @Test(enabled = false)
     public void verifyCashFlowForVariableInstallmentLoan() throws Exception {
         String minRC = "999.99";
         applicationDatabaseOperation.updateLSIM(1);

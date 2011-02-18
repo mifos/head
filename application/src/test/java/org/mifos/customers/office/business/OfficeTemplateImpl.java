@@ -56,18 +56,15 @@ public class OfficeTemplateImpl implements OfficeTemplate {
         customFieldDtos.add(customFieldDto);
     }
 
-    @Override
-	public OfficeLevel getOfficeLevel() {
+    public OfficeLevel getOfficeLevel() {
         return this.officeLevel;
     }
 
-    @Override
-	public String getOfficeName() {
+    public String getOfficeName() {
         return officeName;
     }
 
-    @Override
-	public Short getParentOfficeId() {
+    public Short getParentOfficeId() {
         return parentOfficeId;
     }
 
@@ -75,23 +72,19 @@ public class OfficeTemplateImpl implements OfficeTemplate {
         this.parentOfficeId = id;
     }
 
-    @Override
-	public String getShortName() {
+    public String getShortName() {
         return shortName;
     }
 
-    @Override
-	public Address getOfficeAddress() {
+    public Address getOfficeAddress() {
         return address;
     }
 
-    @Override
-	public List<CustomFieldDto> getCustomFieldViews() {
+    public List<CustomFieldDto> getCustomFieldViews() {
         return customFieldDtos;
     }
 
-    @Override
-	public OperationMode getOperationMode() {
+    public OperationMode getOperationMode() {
         return OperationMode.REMOTE_SERVER;
     }
 

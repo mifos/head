@@ -39,23 +39,19 @@ public class CenterTemplateImpl extends CustomerTemplateImpl implements CenterTe
         this.officeId = officeId;
     }
 
-    @Override
-	public CustomerLevel getCustomerLevel() {
+    public CustomerLevel getCustomerLevel() {
         return this.customerLevel;
     }
 
-    @Override
-	public Date getMfiJoiningDate() {
+    public Date getMfiJoiningDate() {
         return this.mfiJoiningDate;
     }
 
-    @Override
-	public Short getOfficeId() {
+    public Short getOfficeId() {
         return this.officeId;
     }
 
-    @Override
-	public MeetingBO getMeeting() {
+    public MeetingBO getMeeting() {
         return this.meeting;
     }
 }

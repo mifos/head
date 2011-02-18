@@ -116,7 +116,6 @@ public class HolidayDaoHibernate implements HolidayDao {
     }
 
     @SuppressWarnings("unchecked")
-    @Override
     public List<Holiday> getUnAppliedHolidays() {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         return (List<Holiday>) genericDao.executeNamedQuery("holiday.getUnappliedHolidaysEarliestFirst", queryParameters);

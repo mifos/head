@@ -46,18 +46,15 @@ public class JdbcBranchCashConfirmationReportParameterForm extends AbstractRepor
         return ReportValidationConstants.JDBC_CASH_CONFIRMATION_REPORT_PARAMS_ARRAY;
     }
 
-    @Override
-	public boolean isFormEmpty() {
+    public boolean isFormEmpty() {
         return branchId == null && runDate == null;
     }
 
-    @Override
-	public void removeRequestParameters(ModifiableParameterServletRequest modifiedRequest, Errors errors) {
+    public void removeRequestParameters(ModifiableParameterServletRequest modifiedRequest, Errors errors) {
         removeRequestParams(modifiedRequest, errors);
     }
 
-    @Override
-	public void validate(Errors errors) {
+    public void validate(Errors errors) {
         addErrorIfInvalid(errors, branchId, SELECT_BRANCH_OFFICE_SELECTION_ITEM.getId(), BRANCH_ID_PARAM,
                 BRANCH_ID_INVALID_MSG);
         addErrorIfInvalidRunDate(errors, runDate, ReportValidationConstants.RUN_DATE_PARAM_FOR_CASH_CONF_REPORT,

@@ -167,8 +167,7 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
             List<ClientBO> clients) {
         return collect(clients,
                 new Transformer<ClientBO, MultipleLoanCreationDto>() {
-                    @Override
-					public MultipleLoanCreationDto transform(ClientBO client) {
+                    public MultipleLoanCreationDto transform(ClientBO client) {
                         return new MultipleLoanCreationDto(client, loanOffering.eligibleLoanAmount(client
                                 .getMaxLoanAmount(loanOffering), client.getMaxLoanCycleForProduct(loanOffering)),
                                 loanOffering.eligibleNoOfInstall(client.getMaxLoanAmount(loanOffering), client

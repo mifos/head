@@ -81,8 +81,7 @@ public enum AccountState implements LocalizedTextLookup {
         return equals(SAVINGS_ACTIVE);
     }
 
-    @Override
-	public String getPropertiesKey() {
+    public String getPropertiesKey() {
         return messageKey;
     }
 

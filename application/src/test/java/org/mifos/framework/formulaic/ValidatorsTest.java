@@ -210,8 +210,7 @@ public class ValidatorsTest extends TestCase {
     // so that instance methods to access hibernate persistence
     // will work
     private class TestItemSource implements OneOfValidatorSource {
-        @Override
-		public Collection getItems() {
+        public Collection getItems() {
             LinkedList<String> items = new LinkedList<String>();
             items.add("one");
             items.add("two");

@@ -222,8 +222,7 @@ public class SavingsDaoHibernate implements SavingsDao {
         return savings;
     }
 
-    @Override
-	public void save(List<SavingsBO> savingsAccounts) {
+    public void save(List<SavingsBO> savingsAccounts) {
         final Session session = baseDao.getSession();
         for (SavingsBO savingsBO : savingsAccounts) {
             session.saveOrUpdate(savingsBO);

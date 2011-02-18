@@ -53,8 +53,7 @@ public class BranchReportStaffingLevelSummaryHelperIntegrationTest extends Mifos
         Set<BranchReportStaffingLevelSummaryBO> staffingLevelSummaries = branchReport.getStaffingLevelSummaries();
        Assert.assertEquals(1, staffingLevelSummaries.size());
         Collection retrievedRolenames = CollectionUtils.collect(staffingLevelSummaries, new Transformer() {
-            @Override
-			public Object transform(Object input) {
+            public Object transform(Object input) {
                 return ((BranchReportStaffingLevelSummaryBO) input).getTitleName();
             }
         });

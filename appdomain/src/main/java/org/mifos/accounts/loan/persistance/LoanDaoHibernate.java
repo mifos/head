@@ -70,8 +70,7 @@ public class LoanDaoHibernate implements LoanDao {
         this.genericDao.createOrUpdate(loanAccount);
     }
 
-    @Override
-	@SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     public List<LoanBO> findIndividualLoans(final Integer accountId) {
 
         List<LoanBO> individualLoans = new ArrayList<LoanBO>();

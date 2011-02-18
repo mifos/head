@@ -95,8 +95,7 @@ public class FeeDaoHibernate implements FeeDao {
         return assembleFeeDto(allProductFees);
     }
 
-    @Override
-	@SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     public List<Short> getUpdatedFeesForCustomer() {
         return (List<Short>) genericDao.executeNamedQuery("retrieveUpdatedFeesApplicableToCustomers", null);
     }
@@ -108,8 +107,7 @@ public class FeeDaoHibernate implements FeeDao {
         return assembleFeeDto(allCustomerFees);
     }
 
-    @Override
-	@SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     public List<FeeBO> getAllAppllicableFeeForLoanCreation() {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("active", FeeStatus.ACTIVE.getValue());

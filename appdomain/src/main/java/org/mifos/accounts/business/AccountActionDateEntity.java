@@ -110,8 +110,7 @@ public abstract class AccountActionDateEntity extends AbstractEntity implements 
         return getPaymentStatusAsEnum() == PaymentStatus.PAID;
     }
 
-    @Override
-	public int compareTo(final AccountActionDateEntity obj) {
+    public int compareTo(final AccountActionDateEntity obj) {
         return this.getInstallmentId().compareTo(obj.getInstallmentId());
     }
 

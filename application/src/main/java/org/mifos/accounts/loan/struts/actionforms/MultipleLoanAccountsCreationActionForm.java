@@ -90,8 +90,7 @@ public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
         try {
             return (List<MultipleLoanCreationDto>) select(clientDetails,
                     new Predicate<MultipleLoanCreationDto>() {
-                        @Override
-						public boolean evaluate(MultipleLoanCreationDto clientDetail) {
+                        public boolean evaluate(MultipleLoanCreationDto clientDetail) {
                             return clientDetail.isApplicable();
                         }
                     });
@@ -273,8 +272,7 @@ public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
     public void reset(ActionMapping mapping, HttpServletRequest request) {
         super.reset(mapping, request);
         CollectionUtils.forAllDo(clientDetails, new Closure() {
-            @Override
-			public void execute(Object arg0) {
+            public void execute(Object arg0) {
                 ((MultipleLoanCreationDto) arg0).resetSelected();
             }
         });

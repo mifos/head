@@ -103,8 +103,7 @@ public class LookUpValueEntity extends AbstractEntity implements LocalizedTextLo
     /*
      * The key used to lookup localized properties text.
      */
-    @Override
-	public String getPropertiesKey() {
+    public String getPropertiesKey() {
         return getLookUpName();
     }
 

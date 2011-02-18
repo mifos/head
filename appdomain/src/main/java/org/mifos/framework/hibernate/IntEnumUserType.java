@@ -61,13 +61,11 @@ public class IntEnumUserType<E extends Enum<E>> implements UserType {
     /**
      * simple mapping to a SMALLINT.
      */
-    @Override
-	public int[] sqlTypes() {
+    public int[] sqlTypes() {
         return SQL_TYPES;
     }
 
-    @Override
-	public Class returnedClass() {
+    public Class returnedClass() {
         return clazz;
     }
 
@@ -76,8 +74,7 @@ public class IntEnumUserType<E extends Enum<E>> implements UserType {
      * Enum.valueOf(class,int) method, we have to iterate through the given
      * enum.values() in order to find the correct "int".
      */
-    @Override
-	public Object nullSafeGet(ResultSet resultSet, String[] names, Object owner) throws HibernateException,
+    public Object nullSafeGet(ResultSet resultSet, String[] names, Object owner) throws HibernateException,
             SQLException {
         final int val = resultSet.getShort(names[0]);
         E result = null;
@@ -101,8 +98,7 @@ public class IntEnumUserType<E extends Enum<E>> implements UserType {
      * set the SMALLINT in the DB based on enum.ordinal() value, BEWARE this
      * could change.
      */
-    @Override
-	public void nullSafeSet(PreparedStatement preparedStatement, Object value, int index) throws HibernateException,
+    public void nullSafeSet(PreparedStatement preparedStatement, Object value, int index) throws HibernateException,
             SQLException {
         if (null == value) {
             preparedStatement.setNull(index, Types.SMALLINT);
@@ -111,38 +107,31 @@ public class IntEnumUserType<E extends Enum<E>> implements UserType {
         }
     }
 
-    @Override
-	public Object deepCopy(Object value) throws HibernateException {
+    public Object deepCopy(Object value) throws HibernateException {
         return value;
     }
 
-    @Override
-	public boolean isMutable() {
+    public boolean isMutable() {
         return false;
     }
 
-    @Override
-	public Object assemble(Serializable cached, Object owner) throws HibernateException {
+    public Object assemble(Serializable cached, Object owner) throws HibernateException {
         return cached;
     }
 
-    @Override
-	public Serializable disassemble(Object value) throws HibernateException {
+    public Serializable disassemble(Object value) throws HibernateException {
         return (Serializable) value;
     }
 
-    @Override
-	public Object replace(Object original, Object target, Object owner) throws HibernateException {
+    public Object replace(Object original, Object target, Object owner) throws HibernateException {
         return original;
     }
 
-    @Override
-	public int hashCode(Object x) throws HibernateException {
+    public int hashCode(Object x) throws HibernateException {
         return x.hashCode();
     }
 
-    @Override
-	public boolean equals(Object x, Object y) throws HibernateException {
+    public boolean equals(Object x, Object y) throws HibernateException {
         if (x == y) {
             return true;
         }

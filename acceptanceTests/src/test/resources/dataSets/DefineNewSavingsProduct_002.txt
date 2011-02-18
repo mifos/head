@@ -1,3 +1,0 @@
-Description:
-Expected result data set for a test
-in the DefineNewSavingsProduct class.

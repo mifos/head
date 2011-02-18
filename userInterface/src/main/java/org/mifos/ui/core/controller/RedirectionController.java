@@ -37,8 +37,7 @@ public class RedirectionController implements Controller {
     private static final Log LOG = LogFactory.getLog(RedirectionController.class);
     private String viewToRedirectTo = "";
 
-    @Override
-	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response)
+    public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         LOG.info("In RedirectionController.");

@@ -1129,8 +1129,7 @@ public abstract class CustomerBO extends AbstractBusinessObject {
      */
     public static Comparator<CustomerBO> searchIdComparator() {
         return new Comparator<CustomerBO>() {
-            @Override
-			public int compare(final CustomerBO o1, final CustomerBO o2) {
+            public int compare(final CustomerBO o1, final CustomerBO o2) {
                 return ChapterNum.compare(o1.getSearchId(), o2.getSearchId());
             }
         };

@@ -56,43 +56,35 @@ public class MeetingTemplateImpl implements MeetingTemplate {
         this.meetingPlace = "SomeTestMeetingPlaceLocation";
     }
 
-    @Override
-	public RecurrenceType getReccurenceType() {
+    public RecurrenceType getReccurenceType() {
         return this.recurrenceType;
     }
 
-    @Override
-	public Short getDateNumber() {
+    public Short getDateNumber() {
         return this.dateNumber;
     }
 
-    @Override
-	public WeekDay getWeekDay() {
+    public WeekDay getWeekDay() {
         return this.weekDay;
     }
 
-    @Override
-	public RankOfDay getRankType() {
+    public RankOfDay getRankType() {
         return this.rankType;
     }
 
-    @Override
-	public Short getRecurAfter() {
+    public Short getRecurAfter() {
         return this.recurAfter;
     }
 
-    @Override
-	public Date getStartDate() {
+    public Date getStartDate() {
         return this.startDate;
     }
 
-    @Override
-	public MeetingType getMeetingType() {
+    public MeetingType getMeetingType() {
         return this.meetingType;
     }
 
-    @Override
-	public String getMeetingPlace() {
+    public String getMeetingPlace() {
         return this.meetingPlace;
     }
 

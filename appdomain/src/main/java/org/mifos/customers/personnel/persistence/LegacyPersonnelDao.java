@@ -272,12 +272,10 @@ public class LegacyPersonnelDao extends LegacyGenericDao {
         List activeBranchManagers = executeNamedQuery(NamedQueryConstants.GET_ACTIVE_BRANCH_MANAGER_UNDER_OFFICE,
                 params);
         return (List<PersonnelBO>) CollectionUtils.select(activeBranchManagers, new Predicate() {
-            @Override
-			public boolean evaluate(Object object) {
+            public boolean evaluate(Object object) {
                 Set<PersonnelRoleEntity> applicableRoles = ((PersonnelBO) object).getPersonnelRoles();
                 return CollectionUtils.exists(applicableRoles, new Predicate() {
-                    @Override
-					public boolean evaluate(Object object) {
+                    public boolean evaluate(Object object) {
                         return ((PersonnelRoleEntity) object).getRole().equals(role);
                     }
                 });

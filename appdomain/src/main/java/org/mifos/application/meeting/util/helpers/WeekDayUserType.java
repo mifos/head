@@ -39,28 +39,23 @@ import org.hibernate.usertype.UserType;
 public class WeekDayUserType implements UserType {
     private int sqlType = Types.SMALLINT;
 
-    @Override
-	public int[] sqlTypes() {
+    public int[] sqlTypes() {
         return new int[] { sqlType };
     }
 
-    @Override
-	public Class<WeekDay> returnedClass() {
+    public Class<WeekDay> returnedClass() {
         return WeekDay.class;
     }
 
-    @Override
-	public boolean equals(Object x, Object y) throws HibernateException {
+    public boolean equals(Object x, Object y) throws HibernateException {
         return x == y;
     }
 
-    @Override
-	public int hashCode(Object x) throws HibernateException {
+    public int hashCode(Object x) throws HibernateException {
         return x == null ? 0 : x.hashCode();
     }
 
-    @Override
-	public Object nullSafeGet(ResultSet rs, String[] names, @SuppressWarnings("unused") Object owner) throws HibernateException, SQLException {
+    public Object nullSafeGet(ResultSet rs, String[] names, @SuppressWarnings("unused") Object owner) throws HibernateException, SQLException {
         Object object = rs.getObject(names[0]);
         if (rs.wasNull()) {
             return null;
@@ -76,8 +71,7 @@ public class WeekDayUserType implements UserType {
         return null;
     }
 
-    @Override
-	public void nullSafeSet(PreparedStatement st, Object obj, int index) throws HibernateException, SQLException {
+    public void nullSafeSet(PreparedStatement st, Object obj, int index) throws HibernateException, SQLException {
         if (obj == null) {
             st.setNull(index, sqlType);
         } else {
@@ -85,28 +79,23 @@ public class WeekDayUserType implements UserType {
         }
     }
 
-    @Override
-	public Object deepCopy(Object value) throws HibernateException {
+    public Object deepCopy(Object value) throws HibernateException {
         return value;
     }
 
-    @Override
-	public boolean isMutable() {
+    public boolean isMutable() {
         return false;
     }
 
-    @Override
-	public Serializable disassemble(Object value) throws HibernateException {
+    public Serializable disassemble(Object value) throws HibernateException {
         return (Serializable) value;
     }
 
-    @Override
-	public Object assemble(Serializable cached, @SuppressWarnings("unused") Object owner) throws HibernateException {
+    public Object assemble(Serializable cached, @SuppressWarnings("unused") Object owner) throws HibernateException {
         return cached;
     }
 
-    @Override
-	public Object replace(Object original, @SuppressWarnings("unused") Object target,
+    public Object replace(Object original, @SuppressWarnings("unused") Object target,
             @SuppressWarnings("unused") Object owner) throws HibernateException {
         return original;
     }

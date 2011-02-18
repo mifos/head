@@ -68,8 +68,7 @@ public class BranchCashConfirmationReportBO extends AbstractBusinessObject {
 
     public void addCenterIssues(List<BranchCashConfirmationInfoBO> centerIssues) {
         CollectionUtils.forAllDo(centerIssues, new Closure() {
-            @Override
-			public void execute(Object input) {
+            public void execute(Object input) {
                 addCenterIssue((BranchCashConfirmationInfoBO) input);
             }
         });

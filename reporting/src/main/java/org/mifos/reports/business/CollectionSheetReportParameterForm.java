@@ -56,8 +56,7 @@ public class CollectionSheetReportParameterForm extends AbstractReportParameterF
         this.meetingDate = meetingDate;
     }
 
-    @Override
-	public void validate(Errors errors) {
+    public void validate(Errors errors) {
         validateCascadingParameters(errors);
         addErrorIfInvalid(errors, meetingDate, DateSelectionItem.NA_MEETING_DATE.getDate(), MEETING_DATE_PARAM,
                 MEETING_DATE_INVALID_MSG);
@@ -80,8 +79,7 @@ public class CollectionSheetReportParameterForm extends AbstractReportParameterF
                 extractCenterId(request), extractMeetingDate(request));
     }
 
-    @Override
-	public void removeRequestParameters(ModifiableParameterServletRequest modifiedRequest, Errors errors) {
+    public void removeRequestParameters(ModifiableParameterServletRequest modifiedRequest, Errors errors) {
         removeRequestParams(modifiedRequest, errors);
     }
 
@@ -97,8 +95,7 @@ public class CollectionSheetReportParameterForm extends AbstractReportParameterF
         return ServletUtils.getParameter(request, LOAN_OFFICER_ID_PARAM);
     }
 
-    @Override
-	public boolean isFormEmpty() {
+    public boolean isFormEmpty() {
         return branchId == null && loanOfficerId == null && centerId == null && meetingDate == null;
     }
 

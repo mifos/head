@@ -1,2 +1,0 @@
-Based on acceptance_small_005.
-Added more questions and question groups.

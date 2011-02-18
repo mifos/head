@@ -36,8 +36,7 @@ public class ServiceProxy implements InvocationHandler {
         this.logger = logger;
     }
 
-    @Override
-	public Object invoke(Object proxy, Method method, Object[] args) {
+    public Object invoke(Object proxy, Method method, Object[] args) {
         Object result = null;
         try {
             logger.startOfServiceCall(method, args);

@@ -47,38 +47,31 @@ public class CustomerTemplateImpl implements CustomerTemplate {
         this.customerStatus = status;
     }
 
-    @Override
-	public CustomerStatus getCustomerStatus() {
+    public CustomerStatus getCustomerStatus() {
         return this.customerStatus;
     }
 
-    @Override
-	public String getDisplayName() {
+    public String getDisplayName() {
         return this.displayName;
     }
 
-    @Override
-	public Address getAddress() {
+    public Address getAddress() {
         return this.address;
     }
 
-    @Override
-	public List<CustomFieldDto> getCustomFieldViews() {
+    public List<CustomFieldDto> getCustomFieldViews() {
         return this.customFieldDtos;
     }
 
-    @Override
-	public List<FeeDto> getFees() {
+    public List<FeeDto> getFees() {
         return this.feeDtos;
     }
 
-    @Override
-	public String getExternalId() {
+    public String getExternalId() {
         return this.externalId;
     }
 
-    @Override
-	public Short getLoanOfficerId() {
+    public Short getLoanOfficerId() {
         return this.loanOfficerId;
     }
 }

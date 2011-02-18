@@ -118,8 +118,7 @@ public class Installment implements Comparable<Installment> {
                 add(getExtraInterestDue()).add(getInterestDue()).add(getPrincipalDue());
     }
 
-    @Override
-	public int compareTo(Installment installment) {
+    public int compareTo(Installment installment) {
         return this.getId().compareTo(installment.getId());
     }
 

@@ -37,8 +37,7 @@ public class MifosStringToJavaUtilDateConverter implements Converter {
     public MifosStringToJavaUtilDateConverter() {
     }
 
-    @Override
-	public Object convert(Class type, Object value) {
+    public Object convert(Class type, Object value) {
         java.util.Date date = null;
 
         if (locale != null && value != null && type != null && !value.equals("")) {

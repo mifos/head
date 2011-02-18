@@ -67,8 +67,7 @@ public class BranchReportService implements IBranchReportService {
         this(new OfficeBusinessService(), new PersonnelBusinessService(), new BranchReportPersistence());
     }
 
-    @Override
-	public BranchReportHeaderDTO getBranchReportHeaderDTO(Integer branchId, String runDate) throws ServiceException {
+    public BranchReportHeaderDTO getBranchReportHeaderDTO(Integer branchId, String runDate) throws ServiceException {
         Short officeId = convertIntegerToShort(branchId);
         PersonnelBO branchManager = CollectionUtils.first(personnelBusinessService
                 .getActiveBranchManagersUnderOffice(officeId));
@@ -80,8 +79,7 @@ public class BranchReportService implements IBranchReportService {
         }
     }
 
-    @Override
-	public boolean isReportDataPresentForRundateAndBranchId(String branchId, String runDate) {
+    public boolean isReportDataPresentForRundateAndBranchId(String branchId, String runDate) {
         try {
             return getBranchReport(Short.valueOf(branchId), ReportUtils.parseReportDate(runDate)) != null;
         } catch (ServiceException e) {
@@ -91,8 +89,7 @@ public class BranchReportService implements IBranchReportService {
         }
     }
 
-    @Override
-	public boolean isReportDataPresentForRundate(Date runDate) throws ServiceException {
+    public boolean isReportDataPresentForRundate(Date runDate) throws ServiceException {
         try {
             List<BranchReportBO> branchReports = branchReportPersistence.getBranchReport(runDate);
             return branchReports != null && !branchReports.isEmpty();
@@ -101,8 +98,7 @@ public class BranchReportService implements IBranchReportService {
         }
     }
 
-    @Override
-	public List<BranchReportLoanArrearsAgingBO> getLoanArrearsAgingInfo(Integer branchId, String runDate)
+    public List<BranchReportLoanArrearsAgingBO> getLoanArrearsAgingInfo(Integer branchId, String runDate)
             throws ServiceException {
         try {
             return branchReportPersistence.getLoanArrearsAgingReport(convertIntegerToShort(branchId), ReportUtils
@@ -114,8 +110,7 @@ public class BranchReportService implements IBranchReportService {
         }
     }
 
-    @Override
-	public List<BranchReportClientSummaryBO> getClientSummaryInfo(Integer branchId, String runDate)
+    public List<BranchReportClientSummaryBO> getClientSummaryInfo(Integer branchId, String runDate)
             throws ServiceException {
         try {
             return branchReportPersistence.getBranchReportClientSummary(convertIntegerToShort(branchId), ReportUtils
@@ -127,8 +122,7 @@ public class BranchReportService implements IBranchReportService {
         }
     }
 
-    @Override
-	public List<BranchReportStaffingLevelSummaryBO> getStaffingLevelSummary(Integer branchId, String runDate)
+    public List<BranchReportStaffingLevelSummaryBO> getStaffingLevelSummary(Integer branchId, String runDate)
             throws ServiceException {
         try {
             List<BranchReportStaffingLevelSummaryBO> staffingLevelSummary = branchReportPersistence
@@ -143,8 +137,7 @@ public class BranchReportService implements IBranchReportService {
         }
     }
 
-    @Override
-	public List<BranchReportStaffSummaryBO> getStaffSummary(Integer branchId, String runDate) throws ServiceException {
+    public List<BranchReportStaffSummaryBO> getStaffSummary(Integer branchId, String runDate) throws ServiceException {
         try {
             return branchReportPersistence.getBranchReportStaffSummary(convertIntegerToShort(branchId), ReportUtils
                     .parseReportDate(runDate));
@@ -155,8 +148,7 @@ public class BranchReportService implements IBranchReportService {
         }
     }
 
-    @Override
-	public List<BranchReportLoanDetailsBO> getLoanDetails(Integer branchId, String runDate) throws ServiceException {
+    public List<BranchReportLoanDetailsBO> getLoanDetails(Integer branchId, String runDate) throws ServiceException {
         try {
             return branchReportPersistence.getLoanDetails(convertIntegerToShort(branchId), ReportUtils
                     .parseReportDate(runDate));
@@ -167,8 +159,7 @@ public class BranchReportService implements IBranchReportService {
         }
     }
 
-    @Override
-	public List<BranchReportLoanArrearsProfileBO> getLoanArrearsProfile(Integer branchId, String runDate)
+    public List<BranchReportLoanArrearsProfileBO> getLoanArrearsProfile(Integer branchId, String runDate)
             throws ServiceException {
         try {
             return branchReportPersistence.getLoanArrearsProfile(convertIntegerToShort(branchId), ReportUtils
@@ -181,8 +172,7 @@ public class BranchReportService implements IBranchReportService {
 
     }
 
-    @Override
-	public void removeBranchReport(BranchReportBO branchReport) throws ServiceException {
+    public void removeBranchReport(BranchReportBO branchReport) throws ServiceException {
         try {
             branchReportPersistence.delete(branchReport);
         } catch (PersistenceException e) {
@@ -190,8 +180,7 @@ public class BranchReportService implements IBranchReportService {
         }
     }
 
-    @Override
-	public List<BranchReportBO> getBranchReports(Date runDate) throws ServiceException {
+    public List<BranchReportBO> getBranchReports(Date runDate) throws ServiceException {
         try {
             return branchReportPersistence.getBranchReport(runDate);
         } catch (PersistenceException e) {
@@ -199,8 +188,7 @@ public class BranchReportService implements IBranchReportService {
         }
     }
 
-    @Override
-	public BranchReportBO getBranchReport(Short branchId, Date runDate) throws ServiceException {
+    public BranchReportBO getBranchReport(Short branchId, Date runDate) throws ServiceException {
         try {
             return CollectionUtils.first(branchReportPersistence.getBranchReport(branchId, runDate));
         } catch (PersistenceException e) {
@@ -208,15 +196,13 @@ public class BranchReportService implements IBranchReportService {
         }
     }
 
-    @Override
-	public void removeBranchReports(List<BranchReportBO> branchReports) throws ServiceException {
+    public void removeBranchReports(List<BranchReportBO> branchReports) throws ServiceException {
         for (BranchReportBO branchReport : branchReports) {
             removeBranchReport(branchReport);
         }
     }
 
-    @Override
-	public BranchReportLoanArrearsAgingBO extractLoanArrearsAgingInfoInPeriod(Short officeId,
+    public BranchReportLoanArrearsAgingBO extractLoanArrearsAgingInfoInPeriod(Short officeId,
             LoanArrearsAgingPeriod loanArrearsAgingPeriod, MifosCurrency currency) throws ServiceException {
         try {
             return branchReportPersistence.extractLoanArrearsAgingInfoInPeriod(loanArrearsAgingPeriod, officeId,
@@ -226,8 +212,7 @@ public class BranchReportService implements IBranchReportService {
         }
     }
 
-    @Override
-	public List<BranchReportStaffSummaryBO> extractBranchReportStaffSummary(Short officeId, Integer daysInArrears,
+    public List<BranchReportStaffSummaryBO> extractBranchReportStaffSummary(Short officeId, Integer daysInArrears,
             MifosCurrency currency) throws ServiceException {
         try {
             return branchReportPersistence.extractBranchReportStaffSummary(officeId, daysInArrears, currency);
@@ -236,8 +221,7 @@ public class BranchReportService implements IBranchReportService {
         }
     }
 
-    @Override
-	public BigDecimal extractPortfolioAtRiskForOffice(OfficeBO office, Integer daysInArrears) throws ServiceException {
+    public BigDecimal extractPortfolioAtRiskForOffice(OfficeBO office, Integer daysInArrears) throws ServiceException {
         try {
             return branchReportPersistence.extractPortfolioAtRiskForOffice(office, daysInArrears);
         } catch (PersistenceException e) {
@@ -245,8 +229,7 @@ public class BranchReportService implements IBranchReportService {
         }
     }
 
-    @Override
-	public List<BranchReportStaffingLevelSummaryBO> extractBranchReportStaffingLevelSummaries(Short branchId)
+    public List<BranchReportStaffingLevelSummaryBO> extractBranchReportStaffingLevelSummaries(Short branchId)
             throws ServiceException {
         try {
             return branchReportPersistence.extractBranchReportStaffingLevelSummary(branchId);
@@ -256,8 +239,7 @@ public class BranchReportService implements IBranchReportService {
 
     }
 
-    @Override
-	public List<BranchReportLoanDetailsBO> extractLoanDetails(Short branchId, MifosCurrency currency)
+    public List<BranchReportLoanDetailsBO> extractLoanDetails(Short branchId, MifosCurrency currency)
             throws ServiceException {
         try {
             return branchReportPersistence.extractLoanDetails(branchId, currency);
@@ -266,8 +248,7 @@ public class BranchReportService implements IBranchReportService {
         }
     }
 
-    @Override
-	public BranchReportLoanArrearsProfileBO extractLoansInArrearsCount(Short branchId, MifosCurrency currency,
+    public BranchReportLoanArrearsProfileBO extractLoansInArrearsCount(Short branchId, MifosCurrency currency,
             Integer daysInArrearsForRisk) throws ServiceException {
         try {
             return branchReportPersistence

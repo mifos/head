@@ -115,8 +115,7 @@ public class BranchReportStaffingLevelSummaryBO extends AbstractBusinessObject i
         return true;
     }
 
-    @Override
-	public int compareTo(BranchReportStaffingLevelSummaryBO o) {
+    public int compareTo(BranchReportStaffingLevelSummaryBO o) {
         if (isTotal.equals(IS_TOTAL)) {
             if (o.isTotal.equals(IS_TOTAL)) {
                 return 0;

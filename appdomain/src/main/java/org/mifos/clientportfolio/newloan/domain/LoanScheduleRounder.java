@@ -9,9 +9,6 @@ import org.mifos.framework.util.helpers.Money;
 
 public interface LoanScheduleRounder {
 
-	List<LoanScheduleEntity> round(GraceType graceType, Short gracePeriodDuration, Money loanAmount,
-			InterestType interestType,
-			List<LoanScheduleEntity> unroundedLoanSchedules,
-			List<LoanScheduleEntity> allExistingLoanSchedules);
+    List<LoanScheduleEntity> round(List<LoanScheduleEntity> loanSchedules, GraceType graceType, Integer gracePeriodDuration, Money loanAmount, InterestType interestType);
 
 }

@@ -55,8 +55,7 @@ public abstract class BaseValidator implements Validator {
     // thrown when an item is missing, which generally means it was null
     public static final String MISSING_ERROR = "errors.formulaic.BaseValidator.missing";
 
-    @Override
-	public abstract Object validate(Object value) throws ValidationError;
+    public abstract Object validate(Object value) throws ValidationError;
 
     public boolean isValid(Object value) {
         try {

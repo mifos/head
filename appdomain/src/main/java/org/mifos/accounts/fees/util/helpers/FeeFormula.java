@@ -48,8 +48,7 @@ public enum FeeFormula implements LocalizedTextLookup {
         throw new PropertyNotFoundException("FeeFormula");
     }
 
-    @Override
-	public String getPropertiesKey() {
+    public String getPropertiesKey() {
         return messageKey;
     }
 }

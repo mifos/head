@@ -28,8 +28,7 @@ public class LoanProductId implements GlobalIdentity {
         this.globalId = globalId;
     }
 
-    @Override
-	public String globalIdentity() {
+    public String globalIdentity() {
         return this.globalId;
     }
 }

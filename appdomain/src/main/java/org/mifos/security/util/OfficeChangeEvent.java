@@ -48,8 +48,7 @@ public class OfficeChangeEvent implements SecurityEvent {
      *
      * @see org.mifos.security.util.SecurityEvent#getEventType()
      */
-    @Override
-	public String getEventType() {
+    public String getEventType() {
         return this.eventType;
     }
 
@@ -58,8 +57,7 @@ public class OfficeChangeEvent implements SecurityEvent {
      *
      * @see org.mifos.security.util.SecurityEvent#getObject()
      */
-    @Override
-	public Object getObject() {
+    public Object getObject() {
         return this.object;
     }
 

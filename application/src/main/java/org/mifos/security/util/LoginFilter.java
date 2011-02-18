@@ -52,8 +52,7 @@ public class LoginFilter implements Filter {
      * This function implements the login filter it checks if user is not login
      * it forces the user to login by redirecting him to login page
      */
-    @Override
-	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException,
+    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException,
             ServletException {
         HttpServletRequest request = (HttpServletRequest) req;
         request.setCharacterEncoding("UTF-8");
@@ -97,12 +96,10 @@ public class LoginFilter implements Filter {
         }
     }
 
-    @Override
-	public void init(FilterConfig config) throws ServletException {
+    public void init(FilterConfig config) throws ServletException {
     }
 
-    @Override
-	public void destroy() {
+    public void destroy() {
     }
 
 }
