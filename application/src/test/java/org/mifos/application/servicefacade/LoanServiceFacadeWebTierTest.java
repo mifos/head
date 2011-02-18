@@ -19,22 +19,6 @@
  */
 package org.mifos.application.servicefacade;
 
-import static java.util.Arrays.asList;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyListOf;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -68,6 +52,16 @@ import org.mifos.platform.cashflow.ui.model.CashFlowForm;
 import org.mifos.platform.validations.Errors;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import java.math.BigDecimal;
+import java.util.*;
+
+import static java.util.Arrays.asList;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyListOf;
+import static org.mockito.Mockito.*;
 
 @SuppressWarnings("unchecked")
 @RunWith(MockitoJUnitRunner.class)
@@ -194,12 +188,12 @@ public class LoanServiceFacadeWebTierTest {
         RepaymentScheduleInstallment installment3 = installmentBuilder.reset(locale).withPrincipal(new Money(rupee, "4.9")).withTotalValue("30").build();
         List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3);
 
-        // calcuated repayment capacity is 1631.67
+        // calcuated repayment capacity is 3298.33
         Errors errors;
         errors = loanServiceFacade.validateCashFlowForInstallments(installments, cashFlowForm, 1600d);
         assertThat(errors.hasErrorEntryWithCode(AccountConstants.REPAYMENT_CAPACITY_LESS_THAN_ALLOWED), is(false));
 
-        errors = loanServiceFacade.validateCashFlowForInstallments(installments, cashFlowForm, 1700d);
+        errors = loanServiceFacade.validateCashFlowForInstallments(installments, cashFlowForm, 3300d);
         assertThat(errors.hasErrorEntryWithCode(AccountConstants.REPAYMENT_CAPACITY_LESS_THAN_ALLOWED), is(true));
     }
 
