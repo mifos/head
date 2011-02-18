@@ -58,11 +58,10 @@ public class CreateLoanAccountsEntryPage extends AbstractPage {
     }
 
     public String getNoOfInstallments(Integer row){
-        return selenium.getTable("SearchClients."+row+".4");
+        return selenium.getText("CreateMultipleLoanAccountsSearchResults.NoOfInstall."+row);
     }
 
     public void verifyNoOfInstallments(Integer row, String noOfInstallments){
         Assert.assertEquals(getNoOfInstallments(row), noOfInstallments);
     }
-
 }

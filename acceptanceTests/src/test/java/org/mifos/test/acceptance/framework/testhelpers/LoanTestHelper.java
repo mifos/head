@@ -682,7 +682,7 @@ public class LoanTestHelper {
         for(int i = 0; i < clients.length; i++) {
             createLoanAccountsEntryPage.selectClients(i, clients[i]);
             createLoanAccountsEntryPage.updateLoanPurposeForClient(i, loanPurpose);
-            createLoanAccountsEntryPage.verifyNoOfInstallments(i+1, clientsInstallments[i]);
+            createLoanAccountsEntryPage.verifyNoOfInstallments(i, clientsInstallments[i]);
         }
         LoanAccountPage loanAccountPage;
         CreateLoanAccountsSuccessPage createLoanAccountsSuccessPage;
