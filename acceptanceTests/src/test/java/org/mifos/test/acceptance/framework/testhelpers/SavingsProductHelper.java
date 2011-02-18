@@ -20,10 +20,12 @@
 
 package org.mifos.test.acceptance.framework.testhelpers;
 
+import org.joda.time.DateTime;
 import org.mifos.test.acceptance.framework.savingsproduct.DefineNewSavingsProductConfirmationPage;
 import org.mifos.test.acceptance.framework.savingsproduct.SavingsProductParameters;
 
 import com.thoughtworks.selenium.Selenium;
+import org.mifos.test.acceptance.util.StringUtil;
 
 public class SavingsProductHelper {
     private final NavigationHelper navigationHelper;
@@ -42,4 +44,68 @@ public class SavingsProductHelper {
         return confirmationPage;
     }
 
+    /**
+     * This method return a fully useable parameter object for the type of deposit (mandatory/voluntary)
+     * and applicable for (clients/groups/centers).
+     * @return Parameters like noted above.
+     * @param typeOfDeposits
+     * @param applicableFor
+     */
+    public SavingsProductParameters getGenericSavingsProductParameters(int typeOfDeposits, int applicableFor) {
+        SavingsProductParameters params = new SavingsProductParameters();
+
+        params.setProductInstanceName("Savings product test" + StringUtil.getRandomString(3));
+        params.setShortName("SV" + StringUtil.getRandomString(2));
+        params.setProductCategory(SavingsProductParameters.OTHER);
+        DateTime today = new DateTime();
+        params.setStartDateDD(Integer.valueOf(today.getDayOfMonth()).toString());
+        params.setStartDateMM(Integer.valueOf(today.getMonthOfYear()).toString());
+        params.setStartDateYYYY(Integer.valueOf(today.getYearOfEra()).toString());
+
+        params.setApplicableFor(applicableFor);
+        params.setTypeOfDeposits(typeOfDeposits);
+
+        // these two settings are not required in all configurations
+        // but they're good to have anyway
+        params.setMandatoryAmount("10");
+        params.setAmountAppliesTo(SavingsProductParameters.WHOLE_GROUP);
+
+        params.setInterestRate("4");
+        params.setBalanceUsedForInterestCalculation(SavingsProductParameters.AVERAGE_BALANCE);
+        params.setDaysOrMonthsForInterestCalculation(SavingsProductParameters.MONTHS);
+        params.setNumberOfDaysOrMonthsForInterestCalculation("3");
+        params.setFrequencyOfInterestPostings("6");
+
+        params.setGlCodeForDeposit("24101");
+        params.setGlCodeForInterest("41102");
+
+        return params;
+    }
+
+    public SavingsProductParameters getMandatoryClientsMinimumBalanceSavingsProductParameters()
+    {
+        SavingsProductParameters params = getGenericSavingsProductParameters(SavingsProductParameters.MANDATORY, SavingsProductParameters.CLIENTS);
+        params.setDaysOrMonthsForInterestCalculation(params.DAYS);
+        params.setInterestRate("1");
+        params.setFrequencyOfInterestPostings("1");
+        params.setNumberOfDaysOrMonthsForInterestCalculation("1");
+        params.setBalanceUsedForInterestCalculation(SavingsProductParameters.MINIMUM_BALANCE);
+        params.setMandatoryAmount("100000");
+        return params;
+    }
+
+    public SavingsProductParameters getVoluntaryClients3MonthCalculactionPostingProductParameters()
+    {
+        SavingsProductParameters params = getGenericSavingsProductParameters(SavingsProductParameters.VOLUNTARY, SavingsProductParameters.CLIENTS);
+        params.setDaysOrMonthsForInterestCalculation(params.MONTHS);
+        params.setInterestRate("5");
+        params.setFrequencyOfInterestPostings("3");
+        params.setNumberOfDaysOrMonthsForInterestCalculation("3");
+        params.setBalanceUsedForInterestCalculation(SavingsProductParameters.MINIMUM_BALANCE);
+        params.setMandatoryAmount("100000");
+        params.setStartDateDD("15");
+        params.setStartDateMM("2");
+        params.setStartDateYYYY("2011");
+        return params;
+    }
 }
