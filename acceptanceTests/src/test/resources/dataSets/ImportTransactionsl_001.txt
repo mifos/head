@@ -1,0 +1,3 @@
+Description:
+Based on acceptance_small_009.  
+The data set represents the expected data after importing a single transaction for loan with id 000100000000004.

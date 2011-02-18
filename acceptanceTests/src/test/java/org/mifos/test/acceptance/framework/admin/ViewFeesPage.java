@@ -36,6 +36,7 @@ public class ViewFeesPage extends MifosPage {
     }
 
     public void verifyProductFees(String[] expectedData) {
+
         for (int i = 0; i < expectedData.length; i++) {
             String expectedCellData = expectedData[i];
             String actualCellData = selenium.getTable("productFeeTable."+i+".1");
@@ -44,6 +45,7 @@ public class ViewFeesPage extends MifosPage {
     }
 
     public void verifyClientFees(String[] expectedData) {
+
         for (int i = 0; i < expectedData.length; i++) {
             String expectedCellData = expectedData[i];
             String actualCellData = selenium.getTable("clientFeeTable."+i+".1");

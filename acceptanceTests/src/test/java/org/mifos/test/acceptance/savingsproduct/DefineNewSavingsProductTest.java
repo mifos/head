@@ -20,6 +20,9 @@
 
 package org.mifos.test.acceptance.savingsproduct;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.joda.time.DateTime;
 import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -39,6 +42,7 @@ import org.mifos.test.acceptance.framework.testhelpers.SavingsProductHelper;
 import org.mifos.test.acceptance.framework.util.UiTestUtils;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
+import org.mifos.test.acceptance.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
@@ -46,9 +50,6 @@ import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
 @Test(sequential=true, groups={"savingsproduct","acceptance", "ui"})
@@ -90,7 +91,7 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
     @Test(enabled=true)
     public void createVoluntarySavingsProductForCenters() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
-        SavingsProductParameters params = savingsProductHelper.getGenericSavingsProductParameters(SavingsProductParameters.VOLUNTARY,SavingsProductParameters.CENTERS);
+        SavingsProductParameters params = getGenericSavingsProductParameters(SavingsProductParameters.VOLUNTARY,SavingsProductParameters.CENTERS);
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
 
         confirmationPage.navigateToSavingsProductDetails();
@@ -102,7 +103,7 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
     public void createVoluntarySavingsProductForGroups() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
 
-        SavingsProductParameters params = savingsProductHelper.getGenericSavingsProductParameters(SavingsProductParameters.VOLUNTARY,SavingsProductParameters.GROUPS);
+        SavingsProductParameters params = getGenericSavingsProductParameters(SavingsProductParameters.VOLUNTARY,SavingsProductParameters.GROUPS);
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
 
         confirmationPage.navigateToSavingsProductDetails();
@@ -114,7 +115,7 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
     public void createVoluntarySavingsProductForClients() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
 
-        SavingsProductParameters params = savingsProductHelper.getGenericSavingsProductParameters(SavingsProductParameters.VOLUNTARY,SavingsProductParameters.CLIENTS);
+        SavingsProductParameters params = getGenericSavingsProductParameters(SavingsProductParameters.VOLUNTARY,SavingsProductParameters.CLIENTS);
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
 
         confirmationPage.navigateToSavingsProductDetails();
@@ -126,7 +127,7 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
     public void createMandatorySavingsProductForGroups() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
 
-        SavingsProductParameters params = savingsProductHelper.getGenericSavingsProductParameters(SavingsProductParameters.MANDATORY,SavingsProductParameters.GROUPS);
+        SavingsProductParameters params = getGenericSavingsProductParameters(SavingsProductParameters.MANDATORY,SavingsProductParameters.GROUPS);
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
 
         confirmationPage.navigateToSavingsProductDetails();
@@ -138,7 +139,7 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
     public void createMandatorySavingsProductForClients() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
 
-        SavingsProductParameters params = savingsProductHelper.getGenericSavingsProductParameters(SavingsProductParameters.MANDATORY,SavingsProductParameters.CLIENTS);
+        SavingsProductParameters params = getGenericSavingsProductParameters(SavingsProductParameters.MANDATORY,SavingsProductParameters.CLIENTS);
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
 
         confirmationPage.navigateToSavingsProductDetails();
@@ -150,7 +151,7 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
     public void createMandatorySavingsProductForCenters() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
 
-        SavingsProductParameters params = savingsProductHelper.getGenericSavingsProductParameters(SavingsProductParameters.MANDATORY,SavingsProductParameters.CENTERS);
+        SavingsProductParameters params = getGenericSavingsProductParameters(SavingsProductParameters.MANDATORY,SavingsProductParameters.CENTERS);
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
 
         confirmationPage.navigateToSavingsProductDetails();
@@ -169,7 +170,7 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
 
         //When
-        SavingsProductParameters params = savingsProductHelper.getMandatoryClientsMinimumBalanceSavingsProductParameters();
+        SavingsProductParameters params = getMandatoryClientsMinimumBalanceSavingsProductParameters();
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
         confirmationPage.navigateToSavingsProductDetails();     //"Stu1233266079799 Client1233266079799"
         SavingsAccountDetailPage savingsAccountDetailPage = createSavingAccountWithCreatedProduct("Stu1233266079799 Client1233266079799", params.getProductInstanceName(), "100000.0");
@@ -245,7 +246,7 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
 
         //When
-        SavingsProductParameters params = savingsProductHelper.getVoluntaryClients3MonthCalculactionPostingProductParameters();
+        SavingsProductParameters params = getVoluntaryClients3MonthCalculactionPostingProductParameters();
 
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
         confirmationPage.navigateToSavingsProductDetails();
@@ -289,6 +290,21 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         Assert.assertEquals(selenium.getTable("recentActivityForDetailPage.1.2"),"1254.1");
     }
 
+    private SavingsProductParameters getVoluntaryClients3MonthCalculactionPostingProductParameters()
+    {
+        SavingsProductParameters params = getGenericSavingsProductParameters(SavingsProductParameters.VOLUNTARY,SavingsProductParameters.CLIENTS);
+        params.setDaysOrMonthsForInterestCalculation(params.MONTHS);
+        params.setInterestRate("5");
+        params.setFrequencyOfInterestPostings("3");
+        params.setNumberOfDaysOrMonthsForInterestCalculation("3");
+        params.setBalanceUsedForInterestCalculation(SavingsProductParameters.MINIMUM_BALANCE);
+        params.setMandatoryAmount("100000");
+        params.setStartDateDD("15");
+        params.setStartDateMM("2");
+        params.setStartDateYYYY("2011");
+        return params;
+    }
+
 
     private DepositWithdrawalSavingsParameters makeDefaultDeposit(DateTime date, DepositWithdrawalSavingsParameters depositParams, String savingsId) throws Exception {
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
@@ -309,10 +325,58 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         return depositParams;
     }
 
+    private SavingsProductParameters getMandatoryClientsMinimumBalanceSavingsProductParameters()
+    {
+        SavingsProductParameters params = getGenericSavingsProductParameters(SavingsProductParameters.MANDATORY,SavingsProductParameters.CLIENTS);
+        params.setDaysOrMonthsForInterestCalculation(params.DAYS);
+        params.setInterestRate("1");
+        params.setFrequencyOfInterestPostings("1");
+        params.setNumberOfDaysOrMonthsForInterestCalculation("1");
+        params.setBalanceUsedForInterestCalculation(SavingsProductParameters.MINIMUM_BALANCE);
+        params.setMandatoryAmount("100000");
+        return params;
+    }
+
     private void runBatchJobsForSavingsIntPosting() {
         List<String> jobsToRun = new ArrayList<String>();
         jobsToRun.add("SavingsIntPostingTaskJob");
         new BatchJobHelper(selenium).runSomeBatchJobs(jobsToRun);
+    }
+
+    /**
+     * This method return a fully useable parameter object for the type of deposit (mandatory/voluntary)
+     * and applicable for (clients/groups/centers).
+     * @return Parameters like noted above.
+     */
+    private SavingsProductParameters getGenericSavingsProductParameters(int typeOfDeposits,int applicableFor) {
+        SavingsProductParameters params = new SavingsProductParameters();
+
+        params.setProductInstanceName("Savings product test" + StringUtil.getRandomString(3));
+        params.setShortName("SV" + StringUtil.getRandomString(2));
+        params.setProductCategory(SavingsProductParameters.OTHER);
+        DateTime today = new DateTime();
+        params.setStartDateDD(Integer.valueOf(today.getDayOfMonth()).toString());
+        params.setStartDateMM(Integer.valueOf(today.getMonthOfYear()).toString());
+        params.setStartDateYYYY(Integer.valueOf(today.getYearOfEra()).toString());
+
+        params.setApplicableFor(applicableFor);
+        params.setTypeOfDeposits(typeOfDeposits);
+
+        // these two settings are not required in all configurations
+        // but they're good to have anyway
+        params.setMandatoryAmount("10");
+        params.setAmountAppliesTo(SavingsProductParameters.WHOLE_GROUP);
+
+        params.setInterestRate("4");
+        params.setBalanceUsedForInterestCalculation(SavingsProductParameters.AVERAGE_BALANCE);
+        params.setDaysOrMonthsForInterestCalculation(SavingsProductParameters.MONTHS);
+        params.setNumberOfDaysOrMonthsForInterestCalculation("3");
+        params.setFrequencyOfInterestPostings("6");
+
+        params.setGlCodeForDeposit("24101");
+        params.setGlCodeForInterest("41102");
+
+        return params;
     }
 
     private SavingsAccountDetailPage createSavingAccountWithCreatedProduct(String client, String productName, String amount){

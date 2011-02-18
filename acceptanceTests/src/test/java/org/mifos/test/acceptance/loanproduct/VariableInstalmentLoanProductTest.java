@@ -33,6 +33,8 @@ import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
 import org.mifos.test.acceptance.util.TestDataSetup;
+import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
+import org.mifos.framework.util.DbUnitUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
@@ -41,7 +43,7 @@ import org.testng.annotations.Test;
 
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(sequential = true, groups = {"loanproduct", "acceptance", "ui","no_db_unit"})
+@Test(sequential = true, groups = {"loanproduct", "acceptance", "ui"})
 public class VariableInstalmentLoanProductTest extends UiTestCaseBase {
 
     @Autowired
@@ -54,6 +56,11 @@ public class VariableInstalmentLoanProductTest extends UiTestCaseBase {
     LoanProductTestHelper loanProductTestHelper;
     LoanTestHelper loanTestHelper;
     DateTime systemDateTime;
+    // TODO: please ensure that the database contains Mrs Salutation!
+    @Autowired
+    private InitializeApplicationRemoteTestingService initRemote;
+    @Autowired
+    private DbUnitUtilities dbUnitUtilities;
     private FeeTestHelper feeTestHelper;
     // ---
 
@@ -62,6 +69,9 @@ public class VariableInstalmentLoanProductTest extends UiTestCaseBase {
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
+        // TODO: please ensure that the database contains Mrs Salutation!
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
+        // ---
         loanProductTestHelper = new LoanProductTestHelper(selenium);
         loanTestHelper = new LoanTestHelper(selenium);
         systemDateTime = new DateTime(2010, 10, 11, 10, 0, 0, 0);

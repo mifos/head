@@ -1,0 +1,4 @@
+Description:
+Fresh dataset for testing MIFOS-2689.
+* one flat, one percentage fee, both applicable to loans at time of disbursal
+* one client
