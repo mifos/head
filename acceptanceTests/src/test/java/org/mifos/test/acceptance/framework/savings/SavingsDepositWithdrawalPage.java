@@ -21,6 +21,8 @@
 package org.mifos.test.acceptance.framework.savings;
 
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.mifos.test.acceptance.framework.loan.RepayLoanParameters;
+import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -52,11 +54,28 @@ public class SavingsDepositWithdrawalPage  extends MifosPage{
         this.typeTextIfNotEmpty("receiptDateDD", params.getReceiptDateDD());
         this.typeTextIfNotEmpty("receiptDateMM", params.getReceiptDateMM());
         this.typeTextIfNotEmpty("receiptDateYY", params.getReceiptDateYYYY());
-
         selenium.click("applypayment_savingsaccount.button.submit");
         waitForPageToLoad();
 
         return new SavingsDepositWithdrawalConfirmationPage(selenium);
+    }
+
+    public void verifyModeOfPayments(){
+        waitForPageToLoad();
+        waitForElementToPresent("applypayment_savingsaccount.input.paymentType");
+        String[] modesOfPayment=selenium.getSelectOptions("applypayment_savingsaccount.input.paymentType");
+        Assert.assertEquals(RepayLoanParameters.CASH,modesOfPayment[1]);
+        Assert.assertEquals(RepayLoanParameters.CHEQUE,modesOfPayment[2]);
+        Assert.assertEquals(RepayLoanParameters.VOUCHER,modesOfPayment[3]);
+    }
+
+    public void selectPaymentType(String paymentType) {
+        selenium.waitForCondition("selenium.isElementPresent(\"" + "applypayment_savingsaccount.input.trxnType" + "\")","30000");
+        if ("Deposit".equals(paymentType)) {
+            selenium.select("applypayment_savingsaccount.input.trxnType", "value=6");
+        }else if ("Withdrawal".equals(paymentType)) {
+            selenium.select("applypayment_savingsaccount.input.trxnType", "value=7");
+        }
     }
 
 

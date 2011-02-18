@@ -19,6 +19,7 @@
  */
 package org.mifos.test.acceptance.framework.questionnaire;
 
+import org.testng.Assert;
 import com.thoughtworks.selenium.Selenium;
 import org.mifos.test.acceptance.framework.MifosPage;
 
@@ -87,5 +88,26 @@ public class QuestionGroupDetailPage extends MifosPage {
         selenium.click("link=View Question Groups");
         waitForPageToLoad();
         return new ViewAllQuestionGroupsPage(selenium);
+    }
+
+    public void verifyOrderQuestions(List<String> questions, int maxRowCount) {
+        for(int i=1;i<maxRowCount;i++) {
+            Assert.assertEquals(selenium.getTable("sections.table.Sec 1."+i+".0"),questions.get(i-1));
+        }
+    }
+
+    public void verifyOrderSections(List<String> sections) {
+        List<String> sectionsOnPage = getSections();
+        for(int i=0;i<sections.size();i++) {
+            Assert.assertEquals(sectionsOnPage.get(i), sections.get(i));
+        }
+    }
+
+    public void verifyMandatoryQuestions(List<String> mandatoryQuestions, String sectionName) {
+        Assert.assertEquals(mandatoryQuestions, getMandatoryQuestions(sectionName));
+    }
+
+    public void verifyTitle(String title) {
+        Assert.assertEquals(getTitle(), title);
     }
 }

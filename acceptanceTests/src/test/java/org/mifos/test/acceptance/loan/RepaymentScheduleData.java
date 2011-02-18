@@ -177,26 +177,26 @@ public class RepaymentScheduleData {
             {"5", "16-Nov-2010", "-", "201.7", "2.8", "100.0", "304.5"}};
     public static final String[][] ACCOUNT_SUMMARY_REPAYMENT_ONE = {{"", "Original Loan", "Amount paid", "Loan balance"},
             {"Principal", "1000.0", "1000.0", "0.0"},
-            {"Interest", "4.8", "0.0", "4.8"}, //0.0
+            {"Interest", "-0.5", "0.0", "-0.5"}, //0.0
             {"Fees", "100.0", "100.0", "0.0"},
             {"Penalty", "0.0", "0.0", "0.0"},
-            {"Total", "1104.8", "1100.0", "4.8"}}; //0.0
+            {"Total", "1099.5", "1100.0", "-0.5"}}; //0.0
     public static final String[][] ACCOUNT_SUMMARY_ADJUSTMENT_ONE = {{"", "Original Loan", "Amount paid", "Loan balance"},
             {"Principal", "1000.0","0.0", "1000.0"},
-            {"Interest",  "15.0",  "0.0", "15.0"}, //0.0
+            {"Interest",  "14.5",  "0.0", "14.5"}, //0.0
             {"Fees",     "500.0",  "0.0", "500.0"},
             {"Penalty",    "0.0",  "0.0", "0.0"},
-            {"Total",  "1515.0",   "0.0", "1515.0"}};
+            {"Total",  "1514.5",   "0.0", "1514.5"}};
     public static final String[][] ACCOUNT_SUMMARY_REPAYMENT_TWO = {{"", "Original Loan", "Amount paid", "Loan balance"},
             {"Principal", "1000.0", "1000.0", "0.0"},
-            {"Interest", "13.7", "15.8", "-2.1"}, //14.5
+            {"Interest", "11.8", "15.8", "-4.0"}, //14.5
             {"Fees", "400.0", "400.0", "0.0"},
             {"Penalty", "0.0", "0.0", "0.0"},
-            {"Total", "1413.7", "1415.8", "-2.1"}}; //14.5
+            {"Total", "1411.8", "1415.8", "-4.0"}}; //14.5
     public static final String[][] ACCOUNT_SUMMARY_ADJUSTMENT_TWO = {{"", "Original Loan", "Amount paid", "Loan balance"},
             {"Principal", "1000.0", "197.7", "802.3"},
-            {"Interest", "9.7", "5.3", "4.4"}, //14.5
+            {"Interest", "11.0", "5.3", "5.7"}, //14.5
             {"Fees", "500.0", "200.0", "300.0"},
             {"Penalty", "0.0", "0.0", "0.0"},
-            {"Total", "1509.7", "403.0", "1106.7"}}; //less total balance
+            {"Total", "1511.0", "403.0", "1108.0"}}; //less total balance
 }

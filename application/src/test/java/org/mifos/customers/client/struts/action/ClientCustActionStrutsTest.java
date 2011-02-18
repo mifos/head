@@ -20,6 +20,7 @@
 
 package org.mifos.customers.client.struts.action;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -124,7 +125,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
     private SavingsOfferingBO savingsOffering1;
 
     @Override
-    protected void setStrutsConfig() {
+    protected void setStrutsConfig() throws IOException {
         super.setStrutsConfig();
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/customer-struts-config.xml");
     }

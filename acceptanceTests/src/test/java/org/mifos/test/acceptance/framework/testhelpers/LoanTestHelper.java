@@ -33,6 +33,7 @@ import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.mifos.test.acceptance.framework.account.AccountStatus;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.client.ClientSearchResultsPage;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
@@ -42,8 +43,11 @@ import org.mifos.test.acceptance.framework.loan.ApplyPaymentConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.ApplyPaymentPage;
 import org.mifos.test.acceptance.framework.loan.ChargeParameters;
 import org.mifos.test.acceptance.framework.loan.ClosedAccountsPage;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountCashFlowPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountEntryPage;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountPreviewPage;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountReviewInstallmentPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameters;
@@ -56,7 +60,7 @@ import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
 import org.mifos.test.acceptance.framework.loan.EditAccountStatusConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountInformationPage;
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountInformationParameters;
-import org.mifos.test.acceptance.framework.loan.EditLoanAccountStatusPage;
+import org.mifos.test.acceptance.framework.loan.AccountChangeStatusPage;
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountStatusParameters;
 import org.mifos.test.acceptance.framework.loan.EditPreviewLoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.GLIMClient;
@@ -80,6 +84,7 @@ import org.mifos.test.acceptance.framework.loanproduct.ViewLoanProductsPage;
 import org.mifos.test.acceptance.framework.login.LoginPage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
+import org.mifos.test.acceptance.loanproduct.LoanProductTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.testng.Assert;
 
@@ -92,15 +97,14 @@ import com.thoughtworks.selenium.Selenium;
 public class LoanTestHelper {
     private final Selenium selenium;
     private final NavigationHelper navigationHelper;
+    private final LoanProductTestHelper loanProductTestHelper;
+    public final static Boolean METHOD_SUBMIT_FOR_APPROVAL = true;
+    public final static Boolean METHOD_SAVE_FOR_LATER = false;
 
     public LoanTestHelper(Selenium selenium) {
         this.selenium = selenium;
         this.navigationHelper = new NavigationHelper(selenium);
-    }
-
-    public LoanTestHelper(Selenium selenium, NavigationHelper helper) {
-        this.selenium = selenium;
-        this.navigationHelper = helper;
+        this.loanProductTestHelper = new LoanProductTestHelper(selenium);
     }
 
     /**
@@ -236,9 +240,9 @@ public class LoanTestHelper {
     public void changeLoanAccountStatusProvidingQuestionGroupResponses(String loanId, EditLoanAccountStatusParameters params, QuestionResponseParameters responseParameters) {
         LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
 
-        EditLoanAccountStatusPage editAccountStatusPage = loanAccountPage.navigateToEditAccountStatus();
+        AccountChangeStatusPage accountChangeStatusPage = loanAccountPage.navigateToEditAccountStatus();
 
-        EditAccountStatusConfirmationPage editAccountStatusConfirmationPage = editAccountStatusPage.submitAndNavigateToNextPage(params);
+        EditAccountStatusConfirmationPage editAccountStatusConfirmationPage = accountChangeStatusPage.submitAndNavigateToNextPage(params);
 
         if (responseParameters != null) {
             populateQuestionGroupResponses(responseParameters);
@@ -611,6 +615,13 @@ public class LoanTestHelper {
                 submitAndNavigateToLoanAccountPage();
     }
 
+    public LoanAccountPage applyCharge(String feeName, String amount) {
+        ChargeParameters chargeParameters = new ChargeParameters();
+        chargeParameters.setType(feeName);
+        chargeParameters.setAmount(amount);
+        return new LoanAccountPage(selenium).navigateToApplyCharge().submitAndNavigateToApplyChargeConfirmationPage(chargeParameters);
+    }
+
     public void verifyTransactionHistory(String loanId, Double paymentAmount){
         LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
         TransactionHistoryPage transactionHistoryPage = loanAccountPage.navigateToTransactionHistory();
@@ -649,8 +660,7 @@ public class LoanTestHelper {
      * @return
      */
     public CreateLoanAccountsSuccessPage createMultipleLoanAccounts(CreateMultipleLoanAccountSelectParameters multipleAccParameters, String[] clients, String loanPurpose) {
-        ClientsAndAccountsHomepage clientsAndAccountsHomepage = new ClientsAndAccountsHomepage(selenium);
-        CreateLoanAccountsEntryPage createLoanAccountsEntryPage = clientsAndAccountsHomepage
+        CreateLoanAccountsEntryPage createLoanAccountsEntryPage = navigationHelper.navigateToClientsAndAccountsPage()
             .navigateToCreateMultipleLoanAccountsUsingLeftMenu()
             .searchAndNavigateToCreateMultipleLoanAccountsEntryPage(multipleAccParameters);
 
@@ -661,6 +671,55 @@ public class LoanTestHelper {
 
         return createLoanAccountsEntryPage.submitAndNavigateToCreateMultipleLoanAccountsSuccessPage();
     }
+
+    public void createMultipleLoanAccountsAndVerify(CreateMultipleLoanAccountSelectParameters multipleAccParameters, String[] clients, String loanPurpose, Boolean saveMethod) {
+
+        String [] clientsInstallments = loanProductTestHelper.getDefaultNoOfInstallmentsForClients(clients, multipleAccParameters.getLoanProduct());
+        CreateLoanAccountsEntryPage createLoanAccountsEntryPage = navigationHelper.navigateToClientsAndAccountsPage()
+            .navigateToCreateMultipleLoanAccountsUsingLeftMenu()
+            .searchAndNavigateToCreateMultipleLoanAccountsEntryPage(multipleAccParameters);
+
+        for(int i = 0; i < clients.length; i++) {
+            createLoanAccountsEntryPage.selectClients(i, clients[i]);
+            createLoanAccountsEntryPage.updateLoanPurposeForClient(i, loanPurpose);
+            createLoanAccountsEntryPage.verifyNoOfInstallments(i+1, clientsInstallments[i]);
+        }
+        LoanAccountPage loanAccountPage;
+        CreateLoanAccountsSuccessPage createLoanAccountsSuccessPage;
+        if(saveMethod){
+            createLoanAccountsSuccessPage = createLoanAccountsEntryPage.submitAndNavigateToCreateMultipleLoanAccountsSuccessPage();
+        }
+        else{
+            createLoanAccountsSuccessPage = createLoanAccountsEntryPage.saveAndNavigateToCreateMultipleLoanAccountsSuccessPage();
+        }
+        List<String> accountNumbers = createLoanAccountsSuccessPage.verifyAndGetLoanAccountNumbers(clients.length);
+        for(int i = 0; i < accountNumbers.size(); i++) {
+            if(i > 0) {
+                loanAccountPage = navigationHelper.navigateToClientsAndAccountsPage()
+                    .searchForClient(accountNumbers.get(i))
+                    .navigateToLoanAccountSearchResult("Account # "+accountNumbers.get(i));
+                if(saveMethod){
+                    loanAccountPage.verifyLoanStatus(AccountStatus.LOAN_PENDING_APPROVAL.getStatusText());
+                }
+                else{
+                    loanAccountPage.verifyLoanStatus(AccountStatus.LOAN_PARTIAL.getStatusText());
+                }
+                loanAccountPage.verifyNumberOfInstallments(clientsInstallments[i]);
+            }
+        }
+    }
+
+    public void verifyLoansAreNotOnClientsLoanLists(String[] clients, String productName) {
+        ClientsAndAccountsHomepage clientsAndAccountsHomepage = navigationHelper.navigateToClientsAndAccountsPage();
+        for(String client : clients) {
+            ClientViewDetailsPage clientViewDetailsPage = clientsAndAccountsHomepage
+                .searchForClient(client)
+                .navigateToSearchResult(client);
+            clientViewDetailsPage.verifyLoanDoesntExist(productName);
+            clientsAndAccountsHomepage = clientViewDetailsPage.navigateToClientsAndAccountsPageUsingHeaderTab();
+        }
+    }
+
 
     public CreateLoanAccountsSuccessPage createMultipleLoanAccountsWithMixedRestricedPoducts(CreateMultipleLoanAccountSelectParameters multipleAccParameters1, CreateMultipleLoanAccountSelectParameters multipleAccParameters2, DisburseLoanParameters disburseParams, String[] clients) {
         navigationHelper.navigateToAdminPage()
@@ -727,11 +786,18 @@ public class LoanTestHelper {
      * Must be logged in.
      */
     public LoanAccountPage createAndActivateDefaultLoanAccount(CreateLoanAccountSearchParameters searchParams) {
-        MifosPage mifosPage = new MifosPage(selenium);
-        return mifosPage.navigateToClientsAndAccountsPageUsingHeaderTab()
+        CreateLoanAccountEntryPage createLoanAccountEntryPage = new MifosPage(selenium)
+            .navigateToClientsAndAccountsPageUsingHeaderTab()
             .navigateToCreateLoanAccountUsingLeftMenu()
-            .searchAndNavigateToCreateLoanAccountPage(searchParams)
-            .continuePreviewSubmitAndNavigateToDetailsPage()
+            .searchAndNavigateToCreateLoanAccountPage(searchParams);
+        String loanAmount = createLoanAccountEntryPage.getLoanAmount();
+        CreateLoanAccountReviewInstallmentPage createLoanAccountReviewInstallmentPage = createLoanAccountEntryPage.clickContinue();
+        createLoanAccountReviewInstallmentPage.verifyLoanAmount(loanAmount);
+        CreateLoanAccountPreviewPage createLoanAccountPreviewPage = createLoanAccountReviewInstallmentPage.clickPreviewAndGoToReviewLoanAccountPage();
+        createLoanAccountPreviewPage.verifyLoanAmount(loanAmount);
+        return createLoanAccountPreviewPage
+            .submit()
+            .navigateToLoanAccountDetailsPage()
             .changeAccountStatusToAccepted();
     }
 
@@ -791,7 +857,7 @@ public class LoanTestHelper {
                 submitAndNavigateToLoanAccountDetailsPage();
     }
 
-    public LoanAccountPage makePayment(DateTime paymentDate, String paymentAmount) throws UnsupportedEncodingException {
+    public LoanAccountPage  makePayment(DateTime paymentDate, String paymentAmount) throws UnsupportedEncodingException {
         PaymentParameters paymentParameters =setPaymentParams(paymentAmount, paymentDate);
         setApplicationTime(paymentDate).navigateBack();
         LoanAccountPage loanAccountPage = new LoanAccountPage(selenium).navigateToApplyPayment().
@@ -864,4 +930,7 @@ public class LoanTestHelper {
         loanAccountPage.verifyNoOneTimeFeeRemovalLinkExists(feeIndex);
     }
 
+    public CreateLoanAccountCashFlowPage navigateToCreateLoanAccountCashFlowPage(CreateLoanAccountSearchParameters searchParams) {
+        return navigateToCreateLoanAccountEntryPage(searchParams).submitAndNavigateToCreateLoanAccountCashFlowPage();
+    }
 }

@@ -22,6 +22,8 @@ package org.mifos.test.acceptance.framework.testhelpers;
 
 import org.mifos.test.acceptance.framework.admin.FeesCreatePage;
 import org.mifos.test.acceptance.framework.client.CreateClientEnterPersonalDataPage;
+import org.mifos.test.acceptance.framework.holiday.CreateHolidayEntryPage;
+import org.mifos.test.acceptance.framework.holiday.CreateHolidayEntryPage.CreateHolidaySubmitParameters;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
 import org.mifos.test.acceptance.util.StringUtil;
 
@@ -49,6 +51,21 @@ public class FormParametersHelper {
         formParameters.setGracePeriodType(DefineNewLoanProductPage.SubmitFormParameters.NONE);
         formParameters.setInterestGLCode("31102");
         formParameters.setPrincipalGLCode("1506");
+        return formParameters;
+    }
+    public static  DefineNewLoanProductPage.SubmitFormParameters getWeeklyLoanProductParametersWithInstallmentsSetsByLastLoanAmount() {
+        DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
+        formParameters.setCalculateInstallments(DefineNewLoanProductPage.SubmitFormParameters.BY_LAST_LOAN_AMOUNT);
+        String[][] installmentsByLastLoanAmount = {
+                {"1000", "5", "10", "5"},
+                {"2000", "10", "20", "15"},
+                {"3000", "10", "30", "25"},
+                {"4000", "20", "50", "30"},
+                {"5000", "20", "50", "35"},
+                {"6000", "30", "60", "40"}
+
+        };
+        formParameters.setInstallmentsByLastLoanAmount(installmentsByLastLoanAmount);
         return formParameters;
     }
 
@@ -122,5 +139,19 @@ public class FormParametersHelper {
         DefineNewLoanProductPage.SubmitFormParameters weeklyLoanProductParameters = getWeeklyLoanProductParameters();
         weeklyLoanProductParameters.setQuestionGroups(Arrays.asList(questionGroupTitle));
         return weeklyLoanProductParameters;
+    }
+    
+    public static CreateHolidaySubmitParameters getCreateHolidaySubmitParameters() {
+        CreateHolidaySubmitParameters params = new CreateHolidayEntryPage.CreateHolidaySubmitParameters();
+        params.setName("Holiday" + StringUtil.getRandomString(8));
+        params.setFromDateDD("01");
+        params.setFromDateMM("02");
+        params.setFromDateYYYY("2011");
+        params.setThruDateDD("14");
+        params.setThruDateMM("02");
+        params.setThruDateYYYY("2011");
+        params.setRepaymentRule(CreateHolidaySubmitParameters.MORATORIUM);
+        params.addOffice("MyOffice1233266206574");
+        return params;
     }
 }

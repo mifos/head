@@ -20,26 +20,27 @@
 
 package org.mifos.test.acceptance.framework.holiday;
 
-import com.thoughtworks.selenium.Wait;
+import java.util.ArrayList;
+import java.util.List;
+
 import junit.framework.Assert;
 
 import org.mifos.test.acceptance.framework.MifosPage;
 
 import com.thoughtworks.selenium.Selenium;
-
+import com.thoughtworks.selenium.Wait;
 
 public class CreateHolidayEntryPage extends MifosPage {
-    public void verifyPage() {
+
+    public CreateHolidayEntryPage(Selenium selenium) {
+        super(selenium);
         this.verifyPage("create_officeHoliday");
         // TODO KRP: uncomment this when acceptance tests are running locally
         this.verifyRepaymentRuleOptions();
     }
 
-    public CreateHolidayEntryPage(Selenium selenium) {
-        super(selenium);
-    }
-
-    @SuppressWarnings("PMD.TooManyFields") // lots of fields ok for form input case
+    @SuppressWarnings("PMD.TooManyFields")
+    // lots of fields ok for form input case
     public static class CreateHolidaySubmitParameters {
         public static final String NEXT_WORKING_DAY = "Next Working Day";
         public static final String SAME_DAY = "Same Day";
@@ -54,7 +55,14 @@ public class CreateHolidayEntryPage extends MifosPage {
         private String thruDateMM;
         private String thruDateYYYY;
         private String repaymentRule;
+        @Deprecated
         private String selectedOfficeIds;
+        private final List<String> selectedOfficeNames;
+
+        public CreateHolidaySubmitParameters() {
+            super();
+            this.selectedOfficeNames = new ArrayList<String>();
+        }
 
         public String getName() {
             return this.name;
@@ -122,35 +130,67 @@ public class CreateHolidayEntryPage extends MifosPage {
 
         @SuppressWarnings("PMD.OnlyOneReturn")
         public int getRepaymentRuleValue() {
-            if (SAME_DAY.equals(repaymentRule)) { return 1; }
-            if (NEXT_MEETING_OR_REPAYMENT.equals(repaymentRule)) { return 2; }
-            if (NEXT_WORKING_DAY.equals(repaymentRule)) { return 3; }
-            if (MORATORIUM.equals(repaymentRule)) { return 4; }
+            if (SAME_DAY.equals(repaymentRule)) {
+                return 1;
+            }
+            if (NEXT_MEETING_OR_REPAYMENT.equals(repaymentRule)) {
+                return 2;
+            }
+            if (NEXT_WORKING_DAY.equals(repaymentRule)) {
+                return 3;
+            }
+            if (MORATORIUM.equals(repaymentRule)) {
+                return 4;
+            }
 
             return -1;
         }
 
+        @Deprecated
         public void setSelectedOfficeIds(String selectedOfficeIds) {
             this.selectedOfficeIds = selectedOfficeIds;
         }
 
+        @Deprecated
         public String getSelectedOfficeIds() {
             return selectedOfficeIds;
         }
 
+        public List<String> getSelectedOfficeNames() {
+            return selectedOfficeNames;
+        }
+
+        public void addOffice(String officeName) {
+            selectedOfficeNames.add(officeName);
+        }
+
+        public String getFromDate() {
+            return this.fromDateYYYY + "-" + this.fromDateMM + "-" + this.fromDateDD;
+        }
+
+        public String getThruDate() {
+            String resault = "";
+            if (this.thruDateYYYY == null) {
+                resault = getFromDate();
+            } else {
+                resault = this.thruDateYYYY + "-" + this.thruDateMM + "-" + this.thruDateDD;
+            }
+            return resault;
+        }
+
     }
 
-    public CreateHolidayConfirmationPage submitAndNavigateToHolidayConfirmationPage(CreateHolidaySubmitParameters formParameters) {
-        selenium.type("holiday.input.name",formParameters.getName());
+    public CreateHolidayConfirmationPage submitAndNavigateToHolidayConfirmationPage(
+            CreateHolidaySubmitParameters formParameters) {
+        selenium.type("holiday.input.name", formParameters.getName());
         selenium.type("holidayFromDateDD", formParameters.getFromDateDD());
         selenium.type("holidayFromDateMM", formParameters.getFromDateMM());
         selenium.type("holidayFromDateYY", formParameters.getFromDateYYYY());
-        selenium.type("selectedOfficeIds", formParameters.getSelectedOfficeIds());
-        selenium.getEval("window.CreateHoliday.setState();");
         this.typeTextIfNotEmpty("holidayThruDateDD", formParameters.getThruDateDD());
         this.typeTextIfNotEmpty("holidayThruDateMM", formParameters.getThruDateMM());
         this.typeTextIfNotEmpty("holidayThruDateYY", formParameters.getThruDateYYYY());
         selenium.select("holiday.input.repaymentrule", "value=" + formParameters.getRepaymentRuleValue());
+
 
         selenium.fireEvent("holidayFromDateYY", "blur");
         selenium.fireEvent("holidayThruDateYY", "blur");
@@ -158,14 +198,20 @@ public class CreateHolidayEntryPage extends MifosPage {
         new Wait("Wait for ajax component, jsTree has timed out") {
             @Override
             public boolean until() {
-                //id 1 is the for the root/head office of the jsTree
+                // id 1 is the for the root/head office of the jsTree
                 return selenium.isElementPresent("id=1");
             }
         };
-
+        if (formParameters.getSelectedOfficeNames().size() > 0) {
+            for (String officeName : formParameters.getSelectedOfficeNames()) {
+                selenium.click("link=*" + officeName);
+            }
+        } else {
+            selenium.type("selectedOfficeIds", formParameters.getSelectedOfficeIds());
+            selenium.getEval("window.CreateHoliday.setState();");
+        }
         selenium.click("holiday.button.preview");
         waitForPageToLoad();
-
 
         return new CreateHolidayConfirmationPage(selenium);
 

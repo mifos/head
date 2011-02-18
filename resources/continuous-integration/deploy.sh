@@ -3,9 +3,9 @@ set -ex
 # JOB_NAME environment variable must be set. We count on Hudson for this.
 
 controlScript=$WORKSPACE/resources/continuous-integration/deploy/tomcat/control.sh
-lastStableWAR=$WORKSPACE/../lastStable/org.mifos\$mifos-webapp/archive/org.mifos/mifos-webapp/*/*.war
+lastStableWAR=$WORKSPACE/../lastStable/org.mifos\$mifos-war/archive/org.mifos/mifos-war/*/*.war
 deployRoot=$HOME/deploys/mifos-$JOB_NAME-deploy
-targetWARlocation=$deployRoot/tomcat6/webapps/mifos.war
+targetWARlocation=$deployRoot/jetty7x/webapps/mifos.war
 dbProperties=$WORKSPACE/db/target/release/db/mifos-db.properties
 dbPropertiesTemplate=$WORKSPACE/db/target/release/db/mifos-db-template.properties
 expandScript=$WORKSPACE/db/target/release/db/bin/expand_db.sh
@@ -41,17 +41,16 @@ function updateDbProperties {
 }
 
 function deployMifos {
-    rm -f $deployRoot/tomcat6/logs/*
-    rm -rf $deployRoot/tomcat6/webapps/mifos
-    rm -rf $deployRoot/tomcat6/work
+    rm -f $deployRoot/jetty7x/logs/*
+    rm -rf $deployRoot/jetty7x/webapps/mifos
     cp $lastStableWAR $targetWARlocation
 }
 
-function startTomcat {
+function startJetty {
     $controlScript start
 }
 
-function stopTomcat {
+function stopJetty {
     $controlScript stop
 }
 
@@ -68,21 +67,21 @@ function doContraction {
 }
 
 # Test the previous version of application against new db
-stopTomcat
+stopJetty
 updateDbProperties
 doExpansion
-startTomcat
+startJetty
 cUrl
 
 # Test new version of application against new db
-stopTomcat
+stopJetty
 deployMifos
-startTomcat
+startJetty
 cUrl
 
 # Test new version of application after contraction
-stopTomcat
+stopJetty
 updateDbProperties
 doContraction
-startTomcat
+startJetty
 cUrl

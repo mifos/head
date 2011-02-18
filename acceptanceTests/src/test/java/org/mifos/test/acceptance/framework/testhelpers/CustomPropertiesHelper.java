@@ -25,6 +25,10 @@ import com.thoughtworks.selenium.Selenium;
 public class CustomPropertiesHelper {
     private static final String UPDATE_PAGE = "customPropertiesUpdate.ftl";
 
+    public static final String ROUNDING_MODE_FLOOR = "FLOOR";
+    public static final String ROUNDING_MODE_CEILING = "CEILING";
+    public static final String ROUNDING_MODE_HALF_UP = "HALF_UP";
+
     private final Selenium selenium;
 
     public CustomPropertiesHelper(Selenium selenium) {
@@ -70,6 +74,27 @@ public class CustomPropertiesHelper {
 
     public void setCenterHierarchyExists(String exists){
         selenium.open(UPDATE_PAGE + "?ClientRules.CenterHierarchyExists=" + exists);
+    }
+
+    public void setGroupCanApplyLoans(String flag){
+        selenium.open(UPDATE_PAGE + "?ClientRules.GroupCanApplyLoans=" + flag);
+    }
+
+    public void setClientCanExistOutsideGroup(String flag){
+        selenium.open(UPDATE_PAGE + "?ClientRules.ClientCanExistOutsideGroup=" + flag);
+    }
+
+    public void setBackDatedTransactionsAllowed(String flag){
+        selenium.open(UPDATE_PAGE + "?BackDatedTransactionsAllowed=" + flag);
+    }
+
+    /**
+     * Determines ordering of displayed client name.
+     * @param sequence Name sequence, comma-separated values.
+     * ex. "first_name,middle_name,last_name,second_last_name"
+     */
+    public void setClientsNameSequence(String sequence) {
+        selenium.open(UPDATE_PAGE + "?ClientRules.NameSequence=" + sequence);
     }
 
     /**
@@ -131,6 +156,26 @@ public class CustomPropertiesHelper {
         selenium.open(UPDATE_PAGE + "?AccountingRules.AdditionalCurrencyCodes=" + additionalCurrencies);
     }
 
+    public void setCurrencyRoundingMode(String currencyRoundingMode) {
+        selenium.open(UPDATE_PAGE + "?AccountingRules.CurrencyRoundingMode=" + currencyRoundingMode);
+    }
+
+    public void setInitialRoundingMode(String initialRoundingMode) {
+        selenium.open(UPDATE_PAGE + "?AccountingRules.InitialRoundingMode=" + initialRoundingMode);
+    }
+
+    public void setFinalRoundingMode(String finalRoundingMode) {
+        selenium.open(UPDATE_PAGE + "?AccountingRules.FinalRoundingMode=" + finalRoundingMode);
+    }
+
+    public void setFinalRoundOffMultiple(String finalRoundOffMultiple) {
+        selenium.open(UPDATE_PAGE + "?AccountingRules.FinalRoundOffMultiple=" + finalRoundOffMultiple);
+    }
+
+    public void setInitialRoundOffMultiple(String initialRoundOffMultiple) {
+        selenium.open(UPDATE_PAGE + "?AccountingRules.InitialRoundOffMultiple=" + initialRoundOffMultiple);
+    }
+
     /**
      * Set order of products a transaction import
      * @param order
@@ -149,5 +194,9 @@ public class CustomPropertiesHelper {
 
     public void setLoanPendingApprovalStateEnabled(String enabled){
         selenium.open(UPDATE_PAGE + "?ProcessFlow.LoanPendingApprovalStateEnabled=" + enabled);
+    }
+
+    public void setClientPendingApprovalStateEnabled(String enabled){
+        selenium.open(UPDATE_PAGE + "?ProcessFlow.ClientPendingApprovalStateEnabled=" + enabled);
     }
 }

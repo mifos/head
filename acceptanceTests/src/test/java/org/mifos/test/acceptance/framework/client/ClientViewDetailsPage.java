@@ -77,6 +77,30 @@ public class ClientViewDetailsPage extends MifosPage {
         return selenium.getText("viewClientDetails.text.notes");
     }
 
+    public String getLastLoanAmount() {
+        return selenium.getText("viewClientDetails.text.lastloanamount");
+    }
+
+    public void verifyHeading(String heading) {
+        Assert.assertEquals(getHeading(), heading);
+    }
+
+    public String getMeetingSchedule(){
+        return selenium.getText("viewClientDetails.text.meetingSchedule");
+    }
+
+    public String getGroupMembership(){
+        return selenium.getText("viewClientDetails.text.groupMembership");
+    }
+
+    public void verifyMeetingSchedule(String meetingShedule){
+        Assert.assertEquals(getMeetingSchedule(),meetingShedule);
+    }
+
+    public void verifyGroupMembership(String groupName){
+        Assert.assertEquals(getGroupMembership(), groupName);
+    }
+
     public void verifyName(String fullName) {
         Assert.assertTrue(getHeading().contains(fullName));
     }
@@ -138,6 +162,12 @@ public class ClientViewDetailsPage extends MifosPage {
 
     public void verifyLoanDoesntExist(String loanID) {
         Assert.assertFalse(selenium.isTextPresent(loanID));
+    }
+
+    public ClientViewChangeLogPage navigateToClientViewChangeLog() {
+        selenium.click("viewClientDetails.link.viewChangeLog");
+        waitForPageToLoad();
+        return new ClientViewChangeLogPage(selenium);
     }
 
     public ClientNotesPage navigateToAllNotesPage() {
@@ -225,12 +255,20 @@ public class ClientViewDetailsPage extends MifosPage {
         return new LoanAccountPage(selenium);
     }
 
+    public void verifyMeetingsAttended(int meetings) {
+        Assert.assertTrue(selenium.isTextPresent("Meetings Attended: "+meetings));
+    }
+
+    public void verifyMeetingsMissed(int meetings) {
+        Assert.assertTrue(selenium.isTextPresent("Meetings Missed: "+meetings));
+    }
+
     public void verifyLoanCycle(Integer loanCycle) {
         Assert.assertEquals(selenium.getText("viewClientDetails.text.loancycle"), loanCycle.toString());
     }
 
     public void verifyLastLoanAmount(String lastLoanAmount) {
-        Assert.assertEquals(selenium.getText("viewClientDetails.text.lastloanamount"), lastLoanAmount);
+        Assert.assertEquals(getLastLoanAmount(), lastLoanAmount);
     }
 
     public void verifynoOfActiveLoan(Integer count) {

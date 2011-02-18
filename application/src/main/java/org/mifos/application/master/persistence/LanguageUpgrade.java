@@ -31,7 +31,6 @@ import java.util.List;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.persistence.SqlUpgrade;
 import org.mifos.framework.persistence.Upgrade;
-import org.mifos.framework.util.SqlUpgradeScriptFinder;
 
 public abstract class LanguageUpgrade extends Upgrade {
 
@@ -88,8 +87,7 @@ public abstract class LanguageUpgrade extends Upgrade {
 
     private void upgradePart(Connection connection,
             String sqlUpgradeScriptFilename) throws IOException, SQLException {
-        SqlUpgrade upgradePart = SqlUpgradeScriptFinder.findUpgradeScript(
-                sqlUpgradeScriptFilename);
+        SqlUpgrade upgradePart = new SqlUpgrade(sqlUpgradeScriptFilename);
         upgradePart.runScript(connection);
     }
 

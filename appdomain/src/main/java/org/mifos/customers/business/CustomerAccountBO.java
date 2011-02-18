@@ -549,8 +549,8 @@ public class CustomerAccountBO extends AccountBO {
         if (installmentIds != null && installmentIds.size() != 0 && isFeeActive(feeId)) {
             updateAccountActionDateEntity(installmentIds, feeId);
         }
-        updateAccountFeesEntity(feeId);
         FeeBO feesBO = getAccountFeesObject(feeId);
+        updateAccountFeesEntity(feeId);
         String description = feesBO.getFeeName() + " " + AccountConstants.FEES_REMOVED;
         updateAccountActivity(null, null, null, null, personnelId, description);
     }

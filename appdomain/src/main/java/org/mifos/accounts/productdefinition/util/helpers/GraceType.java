@@ -29,6 +29,10 @@ public enum GraceType {
         this.value = value;
     }
 
+    public static boolean isGraceTypeNONE(Short graceTypeValue) {
+        return graceTypeValue == null || graceTypeValue.equals(NONE.getValue());
+    }
+
     public Short getValue() {
         return value;
     }
@@ -40,5 +44,9 @@ public enum GraceType {
             }
         }
         throw new RuntimeException("no grace type " + value);
+    }
+
+    public String getValueAsString() {
+        return value.toString();
     }
 }

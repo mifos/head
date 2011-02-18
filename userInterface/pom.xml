@@ -1,6 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    
     <groupId>org.mifos</groupId>
     <artifactId>mifos-userInterface</artifactId>
     <packaging>jar</packaging>
@@ -16,6 +17,7 @@
         <groupId>org.mifos</groupId>
         <artifactId>mifos-parent</artifactId>
         <version>1.9-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <dependencies>
@@ -119,18 +121,9 @@
     </dependencies>
     <build>
         <defaultGoal>jar</defaultGoal>
-        <sourceDirectory>${modules.root.dir}/userInterface/src/main/java</sourceDirectory>
-        <scriptSourceDirectory>${modules.root.dir}/userInterface/src/main/scripts</scriptSourceDirectory>
-        <testSourceDirectory>${modules.root.dir}/userInterface/src/test/java</testSourceDirectory>
-        <outputDirectory>target/classes</outputDirectory>
-        <testOutputDirectory>target/test-classes</testOutputDirectory>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
-                <includes>
-                    <include>**/*.ftl</include>
-                    <include>**/*.properties</include>
-                </includes>
             </resource>
         </resources>
 
@@ -180,6 +173,7 @@
                 <artifactId>maven-pmd-plugin</artifactId>
                 <version>2.4</version>
                 <configuration>
+                   <targetJdk>1.6</targetJdk>
                     <rulesets>
                         <ruleset>${modules.root.dir}/.ruleset</ruleset>
                     </rulesets>

@@ -57,4 +57,54 @@ public class EditQuestionGroupPage extends CreateQuestionGroupRootPage {
             waitForPageToLoad();
         }
     }
+
+    public QuestionGroupDetailPage editQuestionGroup(boolean active, String title,
+        String appliesTo, List<String> questionsId) {
+
+        if(active) {
+            selenium.click("id=active0");
+        }
+        else {
+            selenium.click("id=active1");
+        }
+        selenium.getEval("window.document.getElementsByName('title')[0].value='"+title+"'");
+        selenium.select("eventSourceIds", appliesTo);
+
+        for(String questionId: questionsId) {
+            selenium.check("selectedQuestionIds value=" + questionId);
+        }
+
+        selenium.click("_eventId_defineQuestionGroup");
+        waitForPageToLoad();
+
+        return new QuestionGroupDetailPage(selenium);
+    }
+
+    public QuestionGroupDetailPage editQuestionGroup(String appliesTo) {
+        selenium.select("eventSourceIds", appliesTo);
+        selenium.click("_eventId_defineQuestionGroup");
+        waitForPageToLoad();
+
+        return new QuestionGroupDetailPage(selenium);
+    }
+    public EditQuestionGroupPage moveSectionUp(String nameSection) {
+        selenium.click("moveSectionUp_"+nameSection.replace(" ", ""));
+        waitForPageToLoad();
+
+        return new EditQuestionGroupPage(selenium);
+    }
+
+    public EditQuestionGroupPage moveQuestionUp(String nameSection, int questionId) {
+        selenium.click("moveQuestionUp_"+questionId);
+        waitForPageToLoad();
+        
+        return new EditQuestionGroupPage(selenium);
+    }
+
+    public EditQuestionGroupPage moveQuestionDown(String nameSection, int questionId) {
+        selenium.click("moveQuestionDown_"+questionId);
+        waitForPageToLoad();
+
+        return new EditQuestionGroupPage(selenium);
+    }
 }

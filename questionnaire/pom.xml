@@ -13,7 +13,7 @@
     <properties>
         <modules.root.dir>${basedir}/..</modules.root.dir>
         <test.database.properties.file>${modules.root.dir}/application/src/test/resources/org/mifos/config/resources/integrationDatabase.properties</test.database.properties.file>
-        <sql.resources.target.directory>${modules.root.dir}/application/src/main/sql</sql.resources.target.directory>
+        <sql.resources.target.directory>${modules.root.dir}/application/src/main/resources/sql</sql.resources.target.directory>
         <!-- mimics ConfigurationLocator directory search behavior -->
         <mifos.overrides.conf>${mifos.conf}/local.properties</mifos.overrides.conf>
         <mifos.overrides.env>${env.MIFOS_CONF}/local.properties</mifos.overrides.env>
@@ -25,6 +25,7 @@
         <artifactId>mifos-parent</artifactId>
         <groupId>org.mifos</groupId>
         <version>1.9-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <dependencies>
@@ -116,11 +117,6 @@
 
     <build>
         <defaultGoal>jar</defaultGoal>
-        <sourceDirectory>${modules.root.dir}/questionnaire/src/main/java</sourceDirectory>
-        <scriptSourceDirectory>${modules.root.dir}/questionnaire/src/main/scripts</scriptSourceDirectory>
-        <testSourceDirectory>${modules.root.dir}/questionnaire/src/test/java</testSourceDirectory>
-        <outputDirectory>target/classes</outputDirectory>
-        <testOutputDirectory>target/test-classes</testOutputDirectory>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -227,6 +223,7 @@
                 <artifactId>maven-pmd-plugin</artifactId>
                 <version>2.4</version>
                 <configuration>
+                    <targetJdk>1.6</targetJdk>
                     <rulesets>
                         <ruleset>${modules.root.dir}/.ruleset</ruleset>
                     </rulesets>

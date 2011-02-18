@@ -32,12 +32,13 @@ import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.holiday.CreateHolidayConfirmationPage;
 import org.mifos.test.acceptance.framework.holiday.CreateHolidayEntryPage;
-import org.mifos.test.acceptance.framework.holiday.ViewHolidaysPage;
 import org.mifos.test.acceptance.framework.holiday.CreateHolidayEntryPage.CreateHolidaySubmitParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.testhelpers.BatchJobHelper;
+import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
+import org.mifos.test.acceptance.framework.testhelpers.HolidayTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
@@ -51,11 +52,12 @@ import org.testng.annotations.Test;
 
 @SuppressWarnings("PMD")
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"smoke","holiday","acceptance","ui"})
+@Test(sequential=true, groups={"holiday","acceptance","ui"})
 public class HolidayTest extends UiTestCaseBase {
 
     private LoanTestHelper loanTestHelper;
     private NavigationHelper navigationHelper;
+    private HolidayTestHelper holidayTestHelper;
 
     @Autowired
     private DriverManagerDataSource dataSource;
@@ -76,6 +78,7 @@ public class HolidayTest extends UiTestCaseBase {
         super.setUp();
         navigationHelper = new NavigationHelper(selenium);
         loanTestHelper = new LoanTestHelper(selenium);
+        holidayTestHelper = new HolidayTestHelper(selenium);
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         DateTime targetTime = new DateTime(2009,2,23,2,0,0,0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
@@ -95,21 +98,17 @@ public class HolidayTest extends UiTestCaseBase {
         AdminPage adminPage = loginAndNavigateToAdminPage();
         adminPage.verifyPage();
         CreateHolidayEntryPage createHolidayEntryPage = adminPage.navigateToDefineHolidayPage();
-        createHolidayEntryPage.verifyPage();
 
         CreateHolidaySubmitParameters params = this.getHolidayParameters();
         CreateHolidayConfirmationPage confirmationPage = createHolidayEntryPage.submitAndNavigateToHolidayConfirmationPage(params);
-        confirmationPage.verifyPage();
         confirmationPage.submitAndNavigateToViewHolidaysPage();
 
         verifyHolidayData(HOLIDAY_RESULT_DATA_SET);
 
         // try to create second holiday with the same date
         createHolidayEntryPage = adminPage.navigateToDefineHolidayPage();
-        createHolidayEntryPage.verifyPage();
         params.setName("Test Holiday 2");
         confirmationPage = createHolidayEntryPage.submitAndNavigateToHolidayConfirmationPage(params);
-        confirmationPage.verifyPage();
         assertTextFoundOnPage("Holiday with the same date already exists: Test Holiday",
                 "Text about duplicated holidays was not found.");
     }
@@ -117,8 +116,7 @@ public class HolidayTest extends UiTestCaseBase {
     public void viewHolidays() {
         AdminPage adminPage = loginAndNavigateToAdminPage();
         adminPage.verifyPage();
-        ViewHolidaysPage viewHolidays = adminPage.navigateToViewHolidays();
-        viewHolidays.verifyPage();
+        adminPage.navigateToViewHolidays();
     }
 
     //http://mifosforge.jira.com/browse/MIFOSTEST-79
@@ -254,6 +252,16 @@ public class HolidayTest extends UiTestCaseBase {
         loanTestHelper.verifyRepaymentScheduleForHolidays("15-Feb-2011","15-Feb-2011","21-Feb-2011","28-Feb-2011" ,"15-Mar-2011","15-Mar-2011","21-Mar-2011");
     }
 
+    //http://mifosforge.jira.com/browse/MIFOSTEST-72
+    public void definedAndViewHoliday() throws Exception {
+        //Given
+        setDate();
+        //When / Then
+        CreateHolidaySubmitParameters params = FormParametersHelper.getCreateHolidaySubmitParameters();
+        params.setRepaymentRule(CreateHolidaySubmitParameters.SAME_DAY);
+        holidayTestHelper.createHoliday(params);
+        }
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     private void verifyHolidayData(String resultDataSetFile) throws Exception {
         IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromDataSetDirectoryFile(resultDataSetFile);
@@ -289,9 +297,7 @@ public class HolidayTest extends UiTestCaseBase {
         adminPage.verifyPage();
 
         CreateHolidayEntryPage createHolidayEntryPage = adminPage.navigateToDefineHolidayPage();
-        createHolidayEntryPage.verifyPage();
         CreateHolidayConfirmationPage confirmationPage = createHolidayEntryPage.submitAndNavigateToHolidayConfirmationPage(params);
-        confirmationPage.verifyPage();
         confirmationPage.submitAndNavigateToViewHolidaysPage();
     }
 

@@ -71,11 +71,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
-import org.apache.struts.action.ActionErrors;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.*;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountFeesEntity;
@@ -96,11 +92,7 @@ import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
-import org.mifos.accounts.productdefinition.business.LoanAmountOption;
-import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
-import org.mifos.accounts.productdefinition.business.LoanOfferingFundEntity;
-import org.mifos.accounts.productdefinition.business.LoanOfferingInstallmentRange;
-import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
+import org.mifos.accounts.productdefinition.business.*;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.accounts.productdefinition.business.service.LoanProductService;
 import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
@@ -123,11 +115,7 @@ import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.MeetingDetailsEntity;
 import org.mifos.application.meeting.exceptions.MeetingException;
-import org.mifos.application.meeting.util.helpers.MeetingConstants;
-import org.mifos.application.meeting.util.helpers.MeetingType;
-import org.mifos.application.meeting.util.helpers.RankOfDay;
-import org.mifos.application.meeting.util.helpers.RecurrenceType;
-import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.application.meeting.util.helpers.*;
 import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireAction;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
@@ -148,36 +136,15 @@ import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.dto.domain.CreateAccountFeeDto;
-import org.mifos.dto.domain.CustomFieldDto;
-import org.mifos.dto.domain.CustomerDetailDto;
-import org.mifos.dto.domain.LoanAccountDetailsDto;
-import org.mifos.dto.domain.LoanActivityDto;
-import org.mifos.dto.domain.LoanInstallmentDetailsDto;
-import org.mifos.dto.domain.LoanPaymentDto;
-import org.mifos.dto.domain.MeetingDto;
-import org.mifos.dto.domain.ValueListElement;
-import org.mifos.dto.screen.LoanAccountInfoDto;
-import org.mifos.dto.screen.LoanAccountMeetingDto;
-import org.mifos.dto.screen.LoanCreationGlimDto;
-import org.mifos.dto.screen.LoanCreationLoanDetailsDto;
-import org.mifos.dto.screen.LoanCreationPreviewDto;
-import org.mifos.dto.screen.LoanCreationProductDetailsDto;
-import org.mifos.dto.screen.LoanCreationResultDto;
-import org.mifos.dto.screen.LoanInformationDto;
-import org.mifos.dto.screen.LoanScheduledInstallmentDto;
+import org.mifos.dto.domain.*;
+import org.mifos.dto.screen.*;
 import org.mifos.framework.business.util.helpers.MethodNameConstants;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.LocalizationConverter;
-import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.framework.util.helpers.Transformer;
+import org.mifos.framework.util.helpers.*;
 import org.mifos.platform.cashflow.ui.model.CashFlowForm;
 import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
@@ -877,7 +844,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                 }
             }
         }
-        SessionUtils.setCollectionAttribute(CustomerConstants.ACCOUNT_FEES, loanActionForm.getAdditionalFees(), request);
+        SessionUtils.setCollectionAttribute(CustomerConstants.ACCOUNT_FEES, loanActionForm.getApplicableFees(), request);
         // TODO need to figure out a way to avoid putting 'installments' onto session - required for mifostabletag in schedulePreview.jsp
         setInstallmentsOnSession(request, loanActionForm);
     }
@@ -1496,7 +1463,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     }
 
     private LoanCreationResultDto getLoanCreationResultForRedo(LoanAccountActionForm loanActionForm, LoanAccountMeetingDto loanAccountMeetingDto, LoanAccountInfoDto loanAccountInfo) throws InvalidDateException {
-        LoanCreationResultDto loanCreationResultDto;List<LoanPaymentDto> loanRepayments = new ArrayList<LoanPaymentDto>();
+        List<LoanPaymentDto> loanRepayments = new ArrayList<LoanPaymentDto>();
         List<PaymentDataHtmlBean> paymentBeans = loanActionForm.getPaymentDataBeans();
         for (PaymentDataHtmlBean existingPayment : paymentBeans) {
             LoanPaymentDto loanPaymentDto = new LoanPaymentDto(existingPayment.getAmount(),
@@ -1506,8 +1473,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             loanRepayments.add(loanPaymentDto);
         }
         List<LoanScheduledInstallmentDto> installmentDtos = getLoanScheduleInstallmentDtos(getInstallmentFromPaymentDataBeans(paymentBeans));
-        loanCreationResultDto = loanAccountServiceFacade.redoLoan(loanAccountMeetingDto, loanAccountInfo, loanRepayments, installmentDtos);
-        return loanCreationResultDto;
+        return loanAccountServiceFacade.redoLoan(loanAccountMeetingDto, loanAccountInfo, loanRepayments, installmentDtos);
     }
 
     private LoanAccountMeetingDto getAccountMeetingDto(LoanAccountActionForm loanActionForm) {

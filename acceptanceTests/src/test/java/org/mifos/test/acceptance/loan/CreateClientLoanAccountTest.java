@@ -58,7 +58,7 @@ import java.util.Random;
 
 @SuppressWarnings("PMD")
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"loan","acceptance","ui", "smoke"})
+@Test(sequential = true, groups = {"loan","acceptance","ui"})
 public class CreateClientLoanAccountTest extends UiTestCaseBase {
 
     private LoanTestHelper loanTestHelper;
@@ -92,7 +92,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
-    @Test(sequential = true, groups = {"smoke"})
+    @Test(sequential = true, groups = {"loan","acceptance","ui", "smoke"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
     public void newWeeklyClientLoanAccountWithQuestionGroups() throws Exception {
@@ -367,10 +367,13 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
             .verifyInstallmentAmount(4, 1, "599.0");
     }
 
+    /**
+     * Verify the loan product created with default number of installments
+     * by loan cycle can be used to create new loans accounts.
+     * http://mifosforge.jira.com/browse/MIFOSTEST-99
+     * @throws Exception
+     */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    // http://mifosforge.jira.com/browse/MIFOSTEST-99
-    // TODO JS there are open bugs which cause that this test fails (MIFOS-2243, MIFOS-4553)
-    @Test(enabled=false)
     public void verifyCreatingLoanAccountsOnProductWithLoanCycles() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
@@ -408,13 +411,13 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         LoanAccountPage loanAccountPage = loanTestHelper.createActivateAndDisburseDefaultLoanAccount(searchParams, disburseParams);
         loanAccountPage.verifyNumberOfInstallments("26", "52", "52");
         String loan1ID = loanAccountPage.getAccountId();
-        loanTestHelper.createActivateAndDisburseDefaultLoanAccount(searchParams, disburseParams);
-        loanAccountPage.verifyNumberOfInstallments("26", "52", "52");
-     //   String loan2ID = loanAccountPage.getAccountId();
         loanTestHelper.repayLoan(loan1ID);
-     //   loanTestHelper.repayLoan(loan2ID);
         loanTestHelper.createActivateAndDisburseDefaultLoanAccount(searchParams, disburseParams);
         loanAccountPage.verifyNumberOfInstallments("20", "30", "30");
+        String loan2ID = loanAccountPage.getAccountId();
+        loanTestHelper.repayLoan(loan2ID);
+        loanTestHelper.createActivateAndDisburseDefaultLoanAccount(searchParams, disburseParams);
+        loanAccountPage.verifyNumberOfInstallments("15", "25", "25");
     }
 
     private String createLoanAndCheckAmount(CreateLoanAccountSearchParameters searchParameters,

@@ -19,7 +19,7 @@
     <column label="Fees" value="feesWithMiscFee" valueType="method" columnType="text">
          <columnDetails  rowStyle="drawtablerow" colWidth="17"/>
     </column>
-    <column label="Total (with Penalty)" value="total" valueType="method" columnType="text">
+    <column label="Total" value="total" valueType="method" columnType="text">
          <columnDetails  rowStyle="drawtablerow" colWidth="17"/>
     </column>
   </row>

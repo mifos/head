@@ -142,6 +142,11 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
 
     }
 
+    public CreateLoanAccountCashFlowPage submitAndNavigateToCreateLoanAccountCashFlowPage() {
+        submit();
+        return new CreateLoanAccountCashFlowPage(selenium);
+    }
+
     private void submit() {
         selenium.click(continueButton);
         waitForPageToLoad();
@@ -310,5 +315,9 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
     public void verifyAllowedInstallments(String min, String max, String def) {
         Assert.assertTrue(selenium.isTextPresent("(Allowed Number of Installments:   "+min+"   -   "+max+" )"));
         Assert.assertEquals(selenium.getValue("loancreationdetails.input.numberOfInstallments"), def);
+    }
+
+    public String getLoanAmount() {
+        return selenium.getValue("loancreationdetails.input.sumLoanAmount");
     }
 }

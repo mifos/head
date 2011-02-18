@@ -226,7 +226,7 @@ public class LoanSummaryEntity extends AbstractEntity {
         originalPrincipal = originalPrincipal.add(principal);
         originalFees = originalFees.add(fees);
         originalPenalty = originalPenalty.add(penalty);
-        originalInterest = interest;
+        originalInterest = originalInterest.add(interest);
         rawAmountTotal = rawAmountTotal.add(interest.add(fees));
     }
 

@@ -43,6 +43,7 @@ import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSearchPar
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSubmitParameters;
 import org.mifos.test.acceptance.framework.savings.SavingsAccountDetailPage;
 import org.mifos.test.acceptance.framework.testhelpers.CenterTestHelper;
+import org.mifos.test.acceptance.framework.testhelpers.ClientTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.CustomPropertiesHelper;
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.framework.testhelpers.GroupTestHelper;
@@ -65,6 +66,7 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
     CustomPropertiesHelper propertiesHelper;
     SavingsAccountHelper savingsAccountHelper;
     CenterTestHelper centerTestHelper;
+    ClientTestHelper clientTestHelper;
     @Autowired
     private DriverManagerDataSource dataSource;
     @Autowired
@@ -84,12 +86,67 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
         propertiesHelper = new CustomPropertiesHelper(selenium);
         savingsAccountHelper = new SavingsAccountHelper(selenium);
         centerTestHelper = new CenterTestHelper(selenium);
+        clientTestHelper = new ClientTestHelper(selenium);
         super.setUp();
     }
 
     @AfterMethod
     public void logOut() {
         (new MifosPage(selenium)).logout();
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    //http://mifosforge.jira.com/browse/MIFOSTEST-228
+    public void verifyPropertyBackDatedTransactionsAllowedFalse() throws Exception{
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
+        propertiesHelper.setBackDatedTransactionsAllowed("false");
+        //When
+        navigationHelper.navigateToLoanAccountPage("000100000000004").navigateToDisburseLoan().verifyDisbursalDateIsDisabled();
+        //Then
+        propertiesHelper.setBackDatedTransactionsAllowed("true");
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    //http://mifosforge.jira.com/browse/MIFOSTEST-235
+    public void verifyPropertyClientRulesClientCanExistOutsideGroupFalse() throws Exception{
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
+        propertiesHelper.setClientCanExistOutsideGroup("false");
+        //When
+        navigationHelper.navigateToClientsAndAccountsPage().navigateToCreateNewClientPage();
+        //Then
+        Assert.assertFalse(selenium.isElementPresent("group_search.link.membershipNotRequired"));
+        propertiesHelper.setClientCanExistOutsideGroup("true");
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    //http://mifosforge.jira.com/browse/MIFOSTEST-234
+    public void verifyPropertyGroupCanApplyLoansTrue() throws Exception{
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
+        propertiesHelper.setGroupCanApplyLoans("true");
+        LoanTestHelper helper = new LoanTestHelper(selenium);
+        CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
+        searchParameters.setLoanProduct("WeeklyGroupDeclineLoanWithPeriodicFee");
+        searchParameters.setSearchString("MyGroup1232993846342");
+        CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
+        submitAccountParameters.setAmount("2000.0");
+        //When Then
+        helper.createLoanAccount(searchParameters, submitAccountParameters);
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    //http://mifosforge.jira.com/browse/MIFOSTEST-233
+    public void verifyPropertyGroupCanApplyLoansFalse() throws Exception{
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
+        propertiesHelper.setGroupCanApplyLoans("false");
+        //When
+        navigationHelper.navigateToGroupViewDetailsPage("MyGroup1232993846342");
+        //Then
+        Assert.assertFalse(selenium.isElementPresent("viewgroupdetails.link.newLoanAccount"));
+        propertiesHelper.setGroupCanApplyLoans("true");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -323,11 +380,14 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
         propertiesHelper.setDigitsAfterDecimalForInterest(5);
     }
 
+    //http://mifosforge.jira.com/browse/MIFOSTEST-204
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void removeThursdayFromWorkingDays() throws Exception {
+        //Given
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml", dataSource, selenium);
-        String workingDays ="Monday,Tuesday,Wednesday,Friday,Saturday";
-        propertiesHelper.setWorkingDays(workingDays);
+        String workingDays ="Monday,Tuesday,Wednesday,Thursday,Friday,Saturday";
+
+        //When
         CreateCenterEnterDataPage createCenterEnterDataPage = navigationHelper.navigateToCreateCenterEnterDataPage("Test Branch Office");
         CreateMeetingPage createMeetingPage = createCenterEnterDataPage.navigateToCreateMeetingPage();
         createMeetingPage.verifyWorkingDays(workingDays);
@@ -335,7 +395,46 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
         CreateClientEnterMfiDataPage createClientEnterMfiDataPage = navigationHelper.navigateToCreateClientEnterMfiDataPage("Test Branch Office");
         createMeetingPage = createClientEnterMfiDataPage.navigateToCreateMeetingPage();
         createMeetingPage.verifyWorkingDays(workingDays);
+
+        workingDays ="Monday,Tuesday,Wednesday,Friday,Saturday";
+        propertiesHelper.setWorkingDays(workingDays);
+
+        //Then
+        createCenterEnterDataPage = navigationHelper.navigateToCreateCenterEnterDataPage("Test Branch Office");
+        createMeetingPage = createCenterEnterDataPage.navigateToCreateMeetingPage();
+        createMeetingPage.verifyWorkingDays(workingDays);
+
+        createClientEnterMfiDataPage = navigationHelper.navigateToCreateClientEnterMfiDataPage("Test Branch Office");
+        createMeetingPage = createClientEnterMfiDataPage.navigateToCreateMeetingPage();
+        createMeetingPage.verifyWorkingDays(workingDays);
+
+        String groupName = "testGroup";
+
+        CreateCenterEnterDataPage.SubmitFormParameters formParameters = new CreateCenterEnterDataPage.SubmitFormParameters();
+        formParameters = setCenterParameters();
+        centerTestHelper.createCenter(formParameters, "Test Branch Office");
+
+        CreateGroupSubmitParameters groupParams = new CreateGroupSubmitParameters();
+        groupParams.setGroupName(groupName);
+        GroupTestHelper groupTestHelper = new GroupTestHelper(selenium);
+        groupTestHelper.createNewGroupPartialApplication("CenterNameTest123456", groupParams);
+
+        clientTestHelper.createClientAndVerify("Horace Engdahl", "Test Branch Office");
+
+        // restore original configuration
         propertiesHelper.setWorkingDays("Monday,Tuesday,Wednesday,Thursday,Friday,Saturday");
+    }
+
+    private CreateCenterEnterDataPage.SubmitFormParameters setCenterParameters() {
+        CreateCenterEnterDataPage.SubmitFormParameters formParameters = new CreateCenterEnterDataPage.SubmitFormParameters();
+        formParameters.setCenterName("CenterNameTest123456");
+        formParameters.setLoanOfficer("Horace Engdahl");
+        MeetingParameters meeting = new MeetingParameters();
+        meeting.setMeetingPlace("testMeetingPlace");
+        meeting.setWeekFrequency("1");
+        meeting.setWeekDay(MeetingParameters.MONDAY);
+        formParameters.setMeeting(meeting);
+        return  formParameters;
     }
 
     private void verifyInvalidInterestInLoanProduct(SubmitFormParameters formParameters,boolean checkInterestExceedsLimit)

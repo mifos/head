@@ -42,7 +42,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"acceptance", "ui", "loan", "smoke"})
+@Test(sequential=true, groups={"acceptance", "ui", "loan"})
 public class LoanAccountCycleTest extends UiTestCaseBase {
     private LoanTestHelper loanTestHelper;
 
@@ -103,8 +103,6 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
      * http://mifosforge.jira.com/browse/MIFOSTEST-105
      * @throws Exception
      */
-    // TODO JS there are open bugs which cause that this test fails (MIFOS-2243)
-    @Test(enabled=false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyNumberOfInstallmentsSameForAllLoans() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
@@ -127,12 +125,15 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
         loanProductDetailsPage.verifyLoanAmountTableTypeFromCycle(cycleLoanAmount);
         loanProductDetailsPage.verifyInstallments("10", "100", "50");
         LoanAccountPage loanAccountPage = loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"1000.0", "5000.0", "3000.0"}, null, new String[]{"10", "100", "50"});
-        String loanFirstID = loanAccountPage.getAccountId();
+        String loan1ID = loanAccountPage.getAccountId();
         loanAccountPage.disburseLoan(disburseParams);
-        loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"1000.0", "5000.0", "3000.0"}, null, new String[]{"10", "100", "50"});
-        loanTestHelper.repayLoan(loanFirstID);
 
-        loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"2000.0", "6000.0", "4000.0"}, null, new String[]{"10", "100", "50"});
+        loanAccountPage = loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"2000.0", "6000.0", "4000.0"}, null, new String[]{"10", "100", "50"});
+        String loan2ID = loanAccountPage.getAccountId();
+        loanTestHelper.repayLoan(loan1ID);
+        loanTestHelper.disburseLoan(loan2ID, disburseParams);
+
+        loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"3000.0", "7000.0", "5000.0"}, null, new String[]{"10", "100", "50"});
     }
 
     /**
@@ -140,8 +141,6 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
      * http://mifosforge.jira.com/browse/MIFOSTEST-107
      * @throws Exception
      */
-    // TODO JS there are open bugs which cause that this test fails (MIFOS-2243)
-    @Test(enabled=false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyAmounttAndInstallmentsByCycles() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
@@ -166,7 +165,7 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
         LoanAccountPage loanAccountPage = loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"1000.0", "5000.0", "3000.0"}, null, new String[]{"26", "52", "52"});
         loanAccountPage.disburseLoan(disburseParams);
 
-        loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"1000.0", "5000.0", "3000.0"}, null, new String[]{"26", "52", "52"});
+        loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"2000.0", "6000.0", "4000.0"}, null, new String[]{"20", "30", "30"});
     }
 
     /**
@@ -174,8 +173,6 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
      * http://mifosforge.jira.com/browse/MIFOSTEST-110
      * @throws Exception
      */
-    // TODO JS there are open bugs which cause that this test fails (MIFOS-2243)
-    @Test(enabled=false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyAmountByCycleAndInstallmentsByLastAmount() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
@@ -200,7 +197,7 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
         LoanAccountPage loanAccountPage = loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"1000.0", "5000.0", "3000.0"}, null, new String[]{"5", "10", "5"});
         String loanFirstID = loanAccountPage.getAccountId();
         loanAccountPage.disburseLoan(disburseParams);
-        loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"1000.0", "5000.0", "3000.0"}, null, new String[]{"5", "10", "5"});
+        loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"2000.0", "6000.0", "4000.0"}, null, new String[]{"5", "10", "5"});
         loanTestHelper.repayLoan(loanFirstID);
 
         loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"2000.0", "6000.0", "4000.0"}, null, new String[]{"10", "30", "25"});
@@ -246,8 +243,6 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
      * http://mifosforge.jira.com/browse/MIFOSTEST-114
      * @throws Exception
      */
-    // TODO JS there are open bugs which cause that this test fails (MIFOS-2243)
-    @Test(enabled=false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyAmountsByLastAmountAndInstallmentsByCycle() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
@@ -272,7 +267,7 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
         LoanAccountPage loanAccountPage = loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"500.0", "1500.0", "1200.0"}, null, new String[]{"26", "52", "52"});
         String loanFirstID = loanAccountPage.getAccountId();
         loanAccountPage.disburseLoan(disburseParams);
-        loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"500.0", "1500.0", "1200.0"}, null, new String[]{"26", "52", "52"});
+        loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"500.0", "1500.0", "1200.0"}, null, new String[]{"20", "30", "30"});
         loanTestHelper.repayLoan(loanFirstID);
 
         loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"1500.0", "2500.0", "2200.0"}, null, new String[]{"20", "30", "30"});

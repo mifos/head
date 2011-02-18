@@ -28,7 +28,13 @@ public class SavingsProductDetailsPage extends MifosPage {
 
     public SavingsProductDetailsPage(Selenium selenium) {
         super(selenium);
+        waitForPageToLoad();
         verifyPage("SavingsProductDetails");
     }
 
+    public EditSavingsProductPage editSavingsProduct() {
+        selenium.click("SavingsProductDetails.link.editSavingsProduct");
+        waitForPageToLoad();
+        return new EditSavingsProductPage(selenium);
+    }
 }

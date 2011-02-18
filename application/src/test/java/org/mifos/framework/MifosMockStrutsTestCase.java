@@ -20,7 +20,10 @@
 
 package org.mifos.framework;
 
+import static org.junit.Assert.fail;
+
 import java.io.File;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.GregorianCalendar;
@@ -41,11 +44,14 @@ import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.domain.builders.MifosUserBuilder;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
+import org.mifos.framework.struts.ActionServlet30;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Flow;
 import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.security.MifosUser;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -59,13 +65,12 @@ import servletunit.struts.MockStrutsTestCase;
 
 /**
  * All classes extending this class must be names as <b>*StrutsTest.java</b> to support maven-surefire-plugin autofind
- * feature.
- * <br />
+ * feature. <br />
  * <br />
  */
 public class MifosMockStrutsTestCase extends MifosIntegrationTestCase {
 
-    protected MockStruts mockSturts = new MockStruts();
+    protected MockStruts mockStruts = new MockStruts();
 
     protected HttpServletRequest request;
 
@@ -73,28 +78,44 @@ public class MifosMockStrutsTestCase extends MifosIntegrationTestCase {
 
     private boolean strutsConfigSet = false;
 
-    protected void setStrutsConfig() {
+    protected void setStrutsConfig() throws IOException {
         /*
-         * Add a pointer to the context directory so that the web.xml file can
-         * be located when running test cases using the junit plugin inside
-         * eclipse.
+         * Add a pointer to the context directory so that the web.xml file can be located when running test cases using
+         * the junit plugin inside Eclipse.
+         * 
+         * Find the Web Resources dir (where WEB-INF lives) via Classpath, not hard-coded filenames.
          */
-        mockSturts.setContextDirectory(new File("application/src/main/webapp"));
+        Resource r = new ClassPathResource("META-INF/resources/WEB-INF/struts-config.xml");
+        if (!r.exists() || !r.isReadable()) {
+            fail(r.getDescription() + " does not exist or is not readable");
+        }
+        File webResourcesDirectory = r.getFile().getParentFile().getParentFile();
+        mockStruts.setContextDirectory(webResourcesDirectory);
 
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/other-struts-config.xml");
 
-        request = mockSturts.getMockRequest();
-        context = mockSturts.getMockContext();
+        /*
+         * Because there is no more old-style web.xml as strutstest expects, we simply hard-code our ActionServlet
+         * (actually our new ActionServlet30).
+         * 
+         * Because web.xml (now web-fragment.xml) isn't actually read, the ActionServlet is not initialized with servlet
+         * init-params config for all /WEB-INF/*-struts-config.xml listed in web(-fragment).xml, nor are the
+         * context-param read into config initParameter from web.xml by the MockStrutsTestCase. All Mifos *StrutsTest
+         * don't seem to need that though, and pass with this.
+         */
+        mockStruts.setActionServlet(new ActionServlet30());
+
+        request = mockStruts.getMockRequest();
+        context = mockStruts.getMockContext();
     }
 
     protected void setConfigFile(String pathname) {
-        mockSturts.setConfigFile(pathname);
+        mockStruts.setConfigFile(pathname);
     }
-
 
     @Before
     public void beforeStrutsTest() throws Exception {
-        mockSturts.setUp();
+        mockStruts.setUp();
         if (!strutsConfigSet) {
             setStrutsConfig();
             strutsConfigSet = true;
@@ -113,7 +134,7 @@ public class MifosMockStrutsTestCase extends MifosIntegrationTestCase {
         getActionServlet().getServletContext().removeAttribute(ShutdownManager.class.getName());
         doCleanUp(request);
         doCleanUp(request.getSession());
-        mockSturts.tearDown();
+        mockStruts.tearDown();
         TestUtils.dereferenceObjects(this);
     }
 
@@ -204,75 +225,75 @@ public class MifosMockStrutsTestCase extends MifosIntegrationTestCase {
     }
 
     protected void verifyNoActionMessages() {
-        mockSturts.verifyNoActionMessages();
+        mockStruts.verifyNoActionMessages();
     }
 
     protected void verifyNoActionErrors() {
-        mockSturts.verifyNoActionErrors();
+        mockStruts.verifyNoActionErrors();
     }
 
     protected void actionPerform() {
-        mockSturts.actionPerform();
+        mockStruts.actionPerform();
     }
 
     protected void setRequestPathInfo(String pathInfo) {
-        mockSturts.setRequestPathInfo(pathInfo);
+        mockStruts.setRequestPathInfo(pathInfo);
     }
 
     protected void verifyForward(String forwardName) {
-        mockSturts.verifyForward(forwardName);
+        mockStruts.verifyForward(forwardName);
     }
 
     protected void verifyInputForward() {
-        mockSturts.verifyInputForward();
+        mockStruts.verifyInputForward();
     }
 
     protected void verifyActionErrors(String[] errorNames) {
-        mockSturts.verifyActionErrors(errorNames);
+        mockStruts.verifyActionErrors(errorNames);
     }
 
     protected HttpSession getSession() {
-        return mockSturts.getSession();
+        return mockStruts.getSession();
     }
 
     protected void setActionForm(ActionForm form) {
-        mockSturts.setActionForm(form);
+        mockStruts.setActionForm(form);
     }
 
     protected HttpServletRequest getRequest() {
-        return mockSturts.getRequest();
+        return mockStruts.getRequest();
     }
 
     protected ActionServlet getActionServlet() {
-        return mockSturts.getActionServlet();
+        return mockStruts.getActionServlet();
     }
 
     protected void verifyForwardPath(String forwardPath) {
-        mockSturts.verifyForwardPath(forwardPath);
+        mockStruts.verifyForwardPath(forwardPath);
     }
 
     protected ActionForm getActionForm() {
-        return mockSturts.getActionForm();
+        return mockStruts.getActionForm();
     }
 
     protected HttpServletResponseSimulator getMockResponse() {
-        return mockSturts.getMockResponse();
+        return mockStruts.getMockResponse();
     }
 
     protected HttpServletRequestSimulator getMockRequest() {
-        return mockSturts.getMockRequest();
+        return mockStruts.getMockRequest();
     }
 
     protected void addRequestParameter(String parameterName, String parameterValue) {
-        mockSturts.addRequestParameter(parameterName, parameterValue);
+        mockStruts.addRequestParameter(parameterName, parameterValue);
     }
 
     protected void addRequestParameter(String parameterName, String[] parameterValues) {
-        mockSturts.addRequestParameter(parameterName, parameterValues);
+        mockStruts.addRequestParameter(parameterName, parameterValues);
     }
 
     protected void clearRequestParameters() {
-        mockSturts.clearRequestParameters();
+        mockStruts.clearRequestParameters();
     }
 
     class MockStruts extends MockStrutsTestCase {

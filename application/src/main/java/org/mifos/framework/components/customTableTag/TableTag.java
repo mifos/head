@@ -21,7 +21,6 @@
 package org.mifos.framework.components.customTableTag;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Locale;
 
@@ -29,7 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
-import org.mifos.core.ClasspathResource;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.TableTagParseException;
 import org.mifos.framework.util.helpers.Constants;
@@ -114,8 +112,7 @@ public class TableTag extends BodyTagSupport {
     public int doStartTag() throws JspException {
         try {
 
-            table = TableTagParser.getInstance().parser(
-                    ClasspathResource.getURI(moduleName + "/" + xmlFileName).toString());
+            table = TableTagParser.getInstance().parser(moduleName + "/" + xmlFileName);
 
             tableInfo = new StringBuilder();
             if (source == null || scope == null) {
@@ -149,8 +146,6 @@ public class TableTag extends BodyTagSupport {
             table.getTable(source, tableInfo, obj, locale, mfiLocale, pageContext,
                     getResourcebundleName());
 
-        } catch (URISyntaxException e) {
-            throw new JspException(e);
         } catch (TableTagParseException ex) {
             throw new JspException(ex);
         }

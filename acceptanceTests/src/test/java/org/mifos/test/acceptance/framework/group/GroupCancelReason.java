@@ -25,7 +25,7 @@ public enum GroupCancelReason {
     WITHDRAW ("Withdraw", 11),
     REJECTED("Rejected", 12),
     BLACKLISTED("Blacklisted", 13),
-    DUPLICATED("Duplicated", 14),
+    DUPLICATE("Duplicate", 14),
     OTHER("Other", 15);
 
     private final String purposeText;

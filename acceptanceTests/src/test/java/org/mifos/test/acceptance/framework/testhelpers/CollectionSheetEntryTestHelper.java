@@ -20,15 +20,11 @@
 
 package org.mifos.test.acceptance.framework.testhelpers;
 
-import org.mifos.test.acceptance.framework.AppLauncher;
-import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
-import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntryConfirmationPage;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntryEnterDataPage;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntryPreviewDataPage;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntrySelectPage;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntrySelectPage.SubmitFormParameters;
-import org.mifos.test.acceptance.framework.login.LoginPage;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -38,37 +34,36 @@ import com.thoughtworks.selenium.Selenium;
  */
 public class CollectionSheetEntryTestHelper {
 
-     private final Selenium selenium;
+     private final NavigationHelper navigationHelper;
 
     public CollectionSheetEntryTestHelper(Selenium selenium) {
-        this.selenium = selenium;
+        this.navigationHelper = new NavigationHelper(selenium);
     }
 
     public CollectionSheetEntrySelectPage loginAndNavigateToCollectionSheetEntrySelectPage() {
-        LoginPage loginPage = new AppLauncher(selenium).launchMifos();
-        HomePage homePage = loginPage.loginSuccessfullyUsingDefaultCredentials();
-        ClientsAndAccountsHomepage clientsAndAccountsPage = homePage.navigateToClientsAndAccountsUsingHeaderTab();
-        return clientsAndAccountsPage.navigateToEnterCollectionSheetDataUsingLeftMenu();
+        return navigationHelper
+                .navigateToClientsAndAccountsPage()
+                .navigateToEnterCollectionSheetDataUsingLeftMenu();
     }
 
     public CollectionSheetEntryConfirmationPage submitDefaultCollectionSheetEntryData(SubmitFormParameters formParameters) {
-        CollectionSheetEntrySelectPage selectPage =
-            new CollectionSheetEntryTestHelper(selenium).loginAndNavigateToCollectionSheetEntrySelectPage();
-        selectPage.verifyPage();
-        CollectionSheetEntryEnterDataPage enterDataPage = selectCenterAndContinue(formParameters, selectPage);
-        CollectionSheetEntryPreviewDataPage previewPage = enterDataPage.submitAndGotoCollectionSheetEntryPreviewDataPage();
+        CollectionSheetEntryPreviewDataPage previewPage = loginAndNavigateToCollectionSheetEntrySelectPage()
+           .submitAndGotoCollectionSheetEntryEnterDataPage(formParameters)
+           .submitAndGotoCollectionSheetEntryPreviewDataPage();
         previewPage.verifyPage(formParameters);
-        CollectionSheetEntryConfirmationPage confirmationPage = previewPage.submitAndGotoCollectionSheetEntryConfirmationPage();
-        confirmationPage.verifyPage();
-        return confirmationPage;
+        return previewPage.submitAndGotoCollectionSheetEntryConfirmationPage();
     }
 
-    public CollectionSheetEntryEnterDataPage selectCenterAndContinue(SubmitFormParameters formParameters,
-            CollectionSheetEntrySelectPage selectPage) {
-        CollectionSheetEntryEnterDataPage enterDataPage =
-            selectPage.submitAndGotoCollectionSheetEntryEnterDataPage(formParameters);
-        enterDataPage.verifyPage();
-        return enterDataPage;
+    public CollectionSheetEntryConfirmationPage submitCollectionSheetWithChangedAttendance(SubmitFormParameters collectionSheetParams, int[] prevAttendanceValues, int[] attendanceValues) {
+        CollectionSheetEntryEnterDataPage enterDataPage = loginAndNavigateToCollectionSheetEntrySelectPage()
+            .submitAndGotoCollectionSheetEntryEnterDataPage(collectionSheetParams);
+        for(int i = 0; i < attendanceValues.length; i++) {
+            enterDataPage.verifyAttendance(i, prevAttendanceValues[i]);
+            enterDataPage.enterAttendance(i, attendanceValues[i]);
+        }
+        return enterDataPage
+                .submitAndGotoCollectionSheetEntryPreviewDataPage()
+                .submitAndGotoCollectionSheetEntryConfirmationPage();
     }
 
 }

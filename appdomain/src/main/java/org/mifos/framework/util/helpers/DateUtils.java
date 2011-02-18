@@ -20,15 +20,6 @@
 
 package org.mifos.framework.util.helpers;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Locale;
-import java.util.StringTokenizer;
-
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -37,6 +28,11 @@ import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.framework.exceptions.FrameworkRuntimeException;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.LocalizationConverter;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class DateUtils {
 
@@ -754,4 +750,15 @@ public class DateUtils {
         return firstCalendarDate.compareTo(secondCalendarDate) <= 0;
     }
 
+    public static Date parseDate(String dateStr, Locale locale) throws ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy", locale);
+        dateFormat.setLenient(false);
+        return dateFormat.parse(dateStr);
+    }
+
+    public static String formatDate(Date date, Locale locale) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy", locale);
+        dateFormat.setLenient(false);
+        return dateFormat.format(date);
+    }
 }

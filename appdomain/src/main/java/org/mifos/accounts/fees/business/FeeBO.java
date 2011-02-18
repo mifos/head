@@ -354,17 +354,26 @@ public abstract class FeeBO extends AbstractBusinessObject {
         return feeDto;
     }
 
+
+
     @Override
     public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof FeeBO)) {
+            return false;
+        }
+
         FeeBO rhs = (FeeBO) obj;
-        return new EqualsBuilder().append(this.feeId, rhs.feeId).append(this.feeName, rhs.feeName).isEquals();
+        return new EqualsBuilder().append(this.getFeeId(), rhs.getFeeId()).append(this.getFeeName(), rhs.getFeeName()).isEquals();
     }
 
     @Override
     public int hashCode() {
         int initialNonZeroOddNumber = 7;
         int multiplierNonZeroOddNumber = 7;
-        return new HashCodeBuilder(initialNonZeroOddNumber, multiplierNonZeroOddNumber).append(this.feeId).append(this.feeName).toHashCode();
+        return new HashCodeBuilder(initialNonZeroOddNumber, multiplierNonZeroOddNumber).append(this.getFeeId()).append(this.getFeeName()).toHashCode();
     }
 
     @Override

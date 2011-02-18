@@ -21,6 +21,7 @@
 package org.mifos.test.acceptance.framework.admin;
 
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.mifos.test.acceptance.framework.office.OfficeViewDetailsPage;
 import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
@@ -40,5 +41,11 @@ public class ViewOfficesPage extends MifosPage {
             Assert.assertTrue(selenium.isTextPresent(expectedOfficeLink), "Expected link: " + expectedOfficeLink);
         }
 
+    }
+
+    public OfficeViewDetailsPage navigateToOfficeViewDetailsPage(String officeName) {
+        selenium.click("link=*"+officeName+"*");
+        waitForPageToLoad();
+        return new OfficeViewDetailsPage(selenium);
     }
 }

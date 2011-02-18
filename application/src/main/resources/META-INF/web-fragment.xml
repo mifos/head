@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-fragment xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-fragment_3_0.xsd"
+	version="3.0">
+	
+	<name>Mifos Application Core</name>
+	
+
+    <description>Microfinance portfolio management Web frontend and batch processor.</description>
+    <display-name>Mifos Web Application</display-name>
+
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>
+            /WEB-INF/web-app-config.xml
+            /WEB-INF/applicationContextSecurity.xml
+        </param-value>
+    </context-param>
+
+    <servlet>
+        <servlet-name>reportTemplateDownload</servlet-name>
+        <servlet-class>org.mifos.reports.servlet.ReportTemplateDownloadServlet</servlet-class>
+    </servlet>
+    <filter>
+        <filter-name>DatabaseVersionFilter</filter-name>
+        <filter-class>org.mifos.framework.persistence.DatabaseInitFilter</filter-class>
+    </filter>
+
+<!--
+    <filter>
+        <filter-name>loginfilter</filter-name>
+        <filter-class>org.mifos.security.util.LoginFilter</filter-class>
+    </filter>
+-->
+    <filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <servlet-mapping>
+        <servlet-name>reportTemplateDownload</servlet-name>
+        <url-pattern>/reportTemplateDownload</url-pattern>
+    </servlet-mapping>
+
+    <!-- DatabaseVersionFilter should always be on top -->
+    <filter-mapping>
+        <filter-name>DatabaseVersionFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <display-name>MifosAccessLogFilter</display-name>
+        <filter-name>MifosAccessLogFilter</filter-name>
+        <filter-class>org.mifos.servlet.filters.MifosAccessLogFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>MifosAccessLogFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <display-name>MifosResponseHeaderFilter</display-name>
+        <filter-name>MifosResponseHeaderFilter</filter-name>
+        <filter-class>org.mifos.servlet.filters.MifosResponseHeaderFilter</filter-class>
+        <init-param>
+            <param-name>Cache-Control</param-name>
+            <param-value>max-age=172800, public</param-value>
+        </init-param>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>MifosResponseHeaderFilter</filter-name>
+        <url-pattern>*.jpg</url-pattern>
+        <url-pattern>*.gif</url-pattern>
+        <url-pattern>*.js</url-pattern>
+        <url-pattern>*.css</url-pattern>
+    </filter-mapping>
+
+<!--
+    <filter-mapping>
+        <filter-name>loginfilter</filter-name>
+        <url-pattern>/developer/*</url-pattern>
+        <url-pattern>*.do</url-pattern>
+        <url-pattern>/reportTemplateDownload</url-pattern>
+    </filter-mapping>
+-->
+    <session-config>
+        <session-timeout>30</session-timeout>
+    </session-config>
+
+    <!-- Struts -->
+    <servlet>
+        <servlet-name>Controller</servlet-name>
+        <!-- See JavaDoc of ActionServlet30 why this instead of org.apache.struts.action.ActionServlet is used -->
+        <servlet-class>org.mifos.framework.struts.ActionServlet30</servlet-class>
+        <init-param>
+            <param-name>config</param-name>
+            <param-value>/WEB-INF/struts-config.xml,
+                /WEB-INF/other-struts-config.xml,
+                /WEB-INF/customer-struts-config.xml,
+                /WEB-INF/reports-struts-config.xml,
+                /WEB-INF/accounts-struts-config.xml,
+                /WEB-INF/productdefinition-struts-config.xml,
+                /WEB-INF/admindocument-struts-config.xml,
+                /WEB-INF/import-export-struts-config.xml
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>convertNull</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Controller</servlet-name>
+        <!-- If this url-pattern ever changes, adapt the ActionServlet30 (see its JavaDoc) -->
+        <url-pattern>*.do</url-pattern>
+    </servlet-mapping>
+
+    <!-- Bootstrap listener for custom log4j initialization in a web environment. -->
+    <listener>
+        <listener-class>org.mifos.web.listener.Log4jConfigListener</listener-class>
+    </listener>
+
+    <!--
+        - Loads the root application context of this web app at startup. - The application context is then available via
+        - WebApplicationContextUtils.getWebApplicationContext(servletContext).
+    -->
+    <listener>
+        <listener-class>org.mifos.web.listener.MifosSpringContextListener</listener-class>
+    </listener>
+
+    <listener>
+        <listener-class>org.mifos.framework.ApplicationInitializer</listener-class>
+    </listener>
+
+    <welcome-file-list>
+        <welcome-file>
+            /pages/application/login/jsp/index.jsp
+        </welcome-file>
+    </welcome-file-list>
+    <!-- Struts Tag Library Descriptors -->
+
+    <jsp-config>
+        <taglib>
+            <taglib-uri>/tags/struts-bean</taglib-uri>
+            <taglib-location>/WEB-INF/tlds/struts-bean.tld</taglib-location>
+        </taglib>
+
+        <taglib>
+            <taglib-uri>/tags/struts-html</taglib-uri>
+            <taglib-location>/WEB-INF/tlds/struts-html.tld</taglib-location>
+        </taglib>
+
+        <taglib>
+            <taglib-uri>/tags/struts-logic</taglib-uri>
+            <taglib-location>/WEB-INF/tlds/struts-logic.tld</taglib-location>
+        </taglib>
+
+        <taglib>
+            <taglib-uri>/tags/struts-nested</taglib-uri>
+            <taglib-location>/WEB-INF/tlds/struts-nested.tld</taglib-location>
+        </taglib>
+
+        <taglib>
+            <taglib-uri>/tags/struts-tiles</taglib-uri>
+            <taglib-location>/WEB-INF/tlds/struts-tiles.tld</taglib-location>
+        </taglib>
+
+        <taglib>
+            <taglib-uri>/tags/struts-html-el</taglib-uri>
+            <taglib-location>/WEB-INF/tlds/struts-html-el.tld</taglib-location>
+        </taglib>
+
+        <taglib>
+            <taglib-uri>/tags/custom-menu</taglib-uri>
+            <taglib-location>/WEB-INF/tlds/custom-menu.tld</taglib-location>
+        </taglib>
+
+        <taglib>
+            <taglib-uri>/tags/mifos-html</taglib-uri>
+            <taglib-location>/WEB-INF/tlds/mifos-html.tld</taglib-location>
+        </taglib>
+
+        <taglib>
+            <taglib-uri>/tags/struts-bean-el</taglib-uri>
+            <taglib-location>/WEB-INF/tlds/struts-bean-el.tld</taglib-location>
+        </taglib>
+        <taglib>
+            <taglib-uri>/tags/c</taglib-uri>
+            <taglib-location>/WEB-INF/tlds/c.tld</taglib-location>
+        </taglib>
+        <taglib>
+            <taglib-uri>/tags/date</taglib-uri>
+            <taglib-location>/WEB-INF/tlds/my-customtags.tld</taglib-location>
+        </taglib>
+        <taglib>
+            <taglib-uri>/mifos/customtags</taglib-uri>
+            <taglib-location>/WEB-INF/tlds/mifos-customtags.tld</taglib-location>
+        </taglib>
+        <taglib>
+            <taglib-uri>/mifos/officetags</taglib-uri>
+            <taglib-location>/WEB-INF/tlds/application/office/officetags.tld</taglib-location>
+        </taglib>
+
+        <!-- For M2 -->
+        <taglib>
+            <taglib-uri>/mifos/custom-tags</taglib-uri>
+            <taglib-location>/WEB-INF/tlds/customtags.tld</taglib-location>
+        </taglib>
+    </jsp-config>
+
+    <!-- Cheetah integration -->
+    <servlet>
+        <servlet-name>cheetah</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>cheetah</servlet-name>
+        <url-pattern>*.ftl</url-pattern>
+    </servlet-mapping>
+
+    <error-page>
+        <error-code>404</error-code>
+        <location>/pageNotFound.ftl</location>
+    </error-page>
+
+    <error-page>
+        <error-code>403</error-code>
+        <location>/accessDenied.ftl</location>
+    </error-page>
+
+    <error-page>
+        <exception-type>java.lang.Exception</exception-type>
+        <location>/uncaughtException.ftl</location>
+    </error-page>
+
+</web-fragment>

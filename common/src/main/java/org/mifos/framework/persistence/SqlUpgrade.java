@@ -22,27 +22,24 @@ package org.mifos.framework.persistence;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
+
+import org.mifos.core.MifosResourceUtil;
 
 @SuppressWarnings("PMD.CyclomaticComplexity")
 // Rationale: readFile() has a lot of if's and that's OK.
 public class SqlUpgrade extends Upgrade {
 
-    private final URL script;
+    private final String script;
 
-    public SqlUpgrade(URL sqlScript) {
+    public SqlUpgrade(String sqlScript) {
         super();
         this.script = sqlScript;
     }
 
-    public URL sql() {
-        return script;
-    }
-
     public void runScript(Connection connection) throws IOException, SQLException {
-        InputStream in = sql().openStream();
+        InputStream in = MifosResourceUtil.getSQLFileAsStream(script);
         SqlExecutor.execute(in, connection);
         in.close();
     }

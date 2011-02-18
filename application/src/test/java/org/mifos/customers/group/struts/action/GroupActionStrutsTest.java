@@ -22,6 +22,7 @@ package org.mifos.customers.group.struts.action;
 
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -111,7 +112,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
     private final Short officeId = 3;
 
     @Override
-    protected void setStrutsConfig() {
+    protected void setStrutsConfig() throws IOException {
         super.setStrutsConfig();
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/customer-struts-config.xml");
     }
@@ -322,6 +323,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("displayName", "group");
         addRequestParameter("status", CustomerStatus.GROUP_PENDING.getValue().toString());
         addRequestParameter("formedByPersonnel", center.getPersonnel().getPersonnelId().toString());
+        addRequestParameter("loanOfficerId", center.getLoanOfficerId().toString());
         int i = 0;
         for (CustomFieldDto customFieldDef : customFieldDefs) {
             addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
@@ -412,6 +414,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("displayName", "group");
         addRequestParameter("status", CustomerStatus.GROUP_PENDING.getValue().toString());
         addRequestParameter("formedByPersonnel", center.getPersonnel().getPersonnelId().toString());
+        addRequestParameter("loanOfficerId", center.getLoanOfficerId().toString());
         int i = 0;
         for (CustomFieldDto customFieldDef : customFieldDefs) {
             addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());

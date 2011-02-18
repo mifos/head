@@ -109,6 +109,18 @@ public class LoanAccountPage extends AbstractPage {
         Assert.assertEquals(getPrincipleBalance(), value);
     }
 
+    public void verifyInterestOriginal(String value) {
+        Assert.assertEquals(getOriginalInterestAmount(), value);
+    }
+
+    public void verifyFeesOriginal(String value) {
+        Assert.assertEquals(getOriginalFeesAmount(), value);
+    }
+
+    public void verifyPenaltyOriginal(String value) {
+        Assert.assertEquals(getOriginalPenaltyAmount(), value);
+    }
+
     public void verifyPerformanceHistory(String payments, String missedPayments) {
         Assert.assertTrue(selenium.isTextPresent("of payments: "+payments));
         Assert.assertTrue(selenium.isTextPresent("of missed payments: "+missedPayments));
@@ -249,10 +261,10 @@ public class LoanAccountPage extends AbstractPage {
         return new RepayLoanPage(selenium);
     }
 
-    public EditLoanAccountStatusPage navigateToEditAccountStatus() {
+    public AccountChangeStatusPage navigateToEditAccountStatus() {
         selenium.click("loanaccountdetail.link.editAccountStatus");
         waitForPageToLoad();
-        return new EditLoanAccountStatusPage(selenium);
+        return new AccountChangeStatusPage(selenium);
     }
 
     public EditLoanAccountInformationPage navigateToEditAccountInformation() {

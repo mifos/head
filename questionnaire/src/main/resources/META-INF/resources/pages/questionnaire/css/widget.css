@@ -1,0 +1,48 @@
+/* reset styles defined in app.css */
+form.two-columns fieldset {
+    margin: 0em;
+    padding: 0em;
+}
+
+form.two-columns label {
+    width: auto;
+}
+
+/* CSS for widget */
+.questionnaire-widget .question {
+}
+
+.questionnaire-widget .odd {
+    background-color: #F2F2F2;
+    padding: 5px;
+}
+
+.questionnaire-widget .even {
+    background-color: #FFFFFF;
+    padding: 5px;
+}
+
+.question {
+    float: left;
+}
+
+div.question {
+    float: left;
+    width: 25em;
+}
+
+div.question > label {
+    float: right;
+    text-align: inherit;
+}
+
+.answer {
+    float: left;
+}
+
+div.answer > label {
+    width: auto;
+    text-align: left;
+    float: none;
+    display: inline;
+}

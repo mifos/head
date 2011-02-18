@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" >
+
+	<!-- This is intentionally here, and named log4j.xml, and not loggerconfiguration.xml 
+		as per http://www.mifos.org/developers/wiki/LoggerConfiguration, because 
+		for TESTS IMHO it's good to have a standard & by-default logging, also available 
+		on integration servers. -->
+
+	<appender name="MifosAppender" class="org.apache.log4j.ConsoleAppender">
+		<layout class="org.mifos.framework.components.logger.MifosPatternLayout">
+			<param name="ConversionPattern"
+				value="%d{yyyy-MM-dd/HH:mm:ss.SSS/zzz} %-3p, %c, %C{1}, %M, %L, %m%n" />
+		</layout>
+	</appender>
+
+	<appender name="MifosRollingFileAppender" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="Mifos.log" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd" />
+		<layout class="org.mifos.framework.components.logger.MifosPatternLayout">
+			<param name="ConversionPattern"
+				value="%d{yyyy-MM-dd/HH:mm:ss.SSS/zzz} %-3p, %c, %C{1}, %M, %L, %m%n" />
+		</layout>
+	</appender>
+	
+	<root>
+		<!-- Any log statement of level less than this priority will not be logged -->
+		<priority value="INFO" />
+		<appender-ref ref="MifosAppender" />
+		<appender-ref ref="MifosRollingFileAppender" />
+	</root>
+</log4j:configuration>

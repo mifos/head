@@ -152,6 +152,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
+
 public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
     private static final double DELTA = 0.00000001;
@@ -369,6 +370,52 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         actionDateEntities = accountBO.getAccountActionDates();
         paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(actionDateEntities);
         Assert.assertEquals(newRepaymentDate, new LocalDate(paymentsArray[0].getActionDate().getTime()));
+    }
+
+
+    @Test
+    public void testRemoveLoanDisbursalFee() throws Exception {
+        Date startDate = new Date(System.currentTimeMillis());
+        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY,
+                EVERY_SECOND_WEEK, CUSTOMER_MEETING));
+        center = TestObjectFactory.createWeeklyFeeCenter(this.getClass().getSimpleName() + " Center", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter(this.getClass().getSimpleName() + " Group",
+                CustomerStatus.GROUP_ACTIVE, center);
+        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan", ApplicableTo.GROUPS, startDate,
+                PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, InterestType.FLAT, center.getCustomerMeeting().getMeeting());
+        UserContext userContext = TestUtils.makeUser();
+        userContext.setLocaleId(null);
+        List<FeeDto> feeViewList = new ArrayList<FeeDto>();
+        FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee("Periodic Fee", FeeCategory.LOAN, "100",
+                RecurrenceType.WEEKLY, Short.valueOf("3"));
+        feeViewList.add(new FeeDto(userContext, periodicFee));
+        FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee("Upfront Fee", FeeCategory.LOAN,
+                Double.valueOf("20"), FeeFormula.AMOUNT, FeePayment.UPFRONT, null);
+        feeViewList.add(new FeeDto(userContext, upfrontFee));
+        FeeBO disbursementFee = TestObjectFactory.createOneTimeAmountFee("Disbursement Fee", FeeCategory.LOAN, "30",
+                FeePayment.TIME_OF_DISBURSEMENT);
+        feeViewList.add(new FeeDto(userContext, disbursementFee));
+
+        accountBO = legacyLoanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
+                AccountState.LOAN_PENDING_APPROVAL, new Money(getCurrency(), "300.0"), Short.valueOf("6"),
+                startDate, false, 1.2, (short) 0, null, feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO,
+                SHORT_ZERO, SHORT_ZERO, false);
+        new TestObjectPersistence().persist(accountBO);
+
+        Assert.assertEquals(3, accountBO.getAccountFees().size());
+
+        LoanSummaryEntity loanSummaryEntity = ((LoanBO) accountBO).getLoanSummary();
+        Assert.assertEquals(new Money(getCurrency(), "300.0"), loanSummaryEntity.getOriginalPrincipal());
+        Assert.assertEquals(new Money(getCurrency(), "1.0"), loanSummaryEntity.getOriginalInterest());
+        Assert.assertEquals(new Money(getCurrency(), "490.0"), loanSummaryEntity.getOriginalFees());
+        Assert.assertEquals(new Money(getCurrency(), "0.0"), loanSummaryEntity.getOriginalPenalty());
+
+        accountBO.removeFeesAssociatedWithUpcomingAndAllKnownFutureInstallments(disbursementFee.getFeeId(),
+                accountBO.getPersonnel().getPersonnelId());
+        Assert.assertEquals(new Money(getCurrency(), "460.0"), loanSummaryEntity.getOriginalFees());
+
+        Assert.assertEquals(2, accountBO.getAccountFees().size());
+
     }
 
     @Test
@@ -4432,7 +4479,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         }
 
         accountBO.setUserContext(TestUtils.makeUser());
-        for (AccountFeesEntity accountFeesEntity : accountBO.getAccountFees()) {
+        for (AccountFeesEntity accountFeesEntity : accountBO.getAccountFeesIncludingInactiveFees()) {
             accountBO.applyCharge(accountFeesEntity.getFees().getFeeId(), Double.valueOf("200"));
         }
         StaticHibernateUtil.flushAndClearSession();

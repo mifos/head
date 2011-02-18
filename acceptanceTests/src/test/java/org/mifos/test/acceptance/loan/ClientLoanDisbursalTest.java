@@ -25,8 +25,13 @@ import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
+import org.mifos.test.acceptance.framework.admin.AdminPage;
+import org.mifos.test.acceptance.framework.admin.DefineAcceptedPaymentTypesPage;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
 import org.mifos.test.acceptance.framework.loan.DisburseLoanPage;
+import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
+import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +67,35 @@ public class ClientLoanDisbursalTest extends UiTestCaseBase {
     @AfterMethod(alwaysRun = true)
     public void logOut() {
         (new MifosPage(selenium)).logout();
+    }
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // http://mifosforge.jira.com/browse/MIFOSTEST-249
+    public void verifyAcceptedPaymentTypesForDisbursementsOfLoan() throws Exception {
+        // Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
+        // When
+        NavigationHelper navigationHelper = new NavigationHelper(selenium);
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        DefineAcceptedPaymentTypesPage defineAcceptedPaymentTypesPage = adminPage.navigateToDefineAcceptedPaymentType();
+        defineAcceptedPaymentTypesPage.addLoanDisbursementsPaymentType(defineAcceptedPaymentTypesPage.CHEQUE);
+
+        adminPage = navigationHelper.navigateToAdminPage();
+        defineAcceptedPaymentTypesPage = adminPage.navigateToDefineAcceptedPaymentType();
+        defineAcceptedPaymentTypesPage.addLoanDisbursementsPaymentType(defineAcceptedPaymentTypesPage.VOUCHER);
+
+        LoanTestHelper loanTestHelper = new LoanTestHelper(selenium);
+        CreateLoanAccountSearchParameters searchParams = new CreateLoanAccountSearchParameters();
+        searchParams.setLoanProduct("MonthlyClientFlatLoanWithFees");
+        searchParams.setSearchString("Stu1232993852651 Client1232993852651");
+        LoanAccountPage loanAccountPage = loanTestHelper.createAndActivateDefaultLoanAccount(searchParams);
+        DisburseLoanPage disburseLoanPage = loanAccountPage.navigateToDisburseLoan();
+        //Then
+        disburseLoanPage.verifyModeOfPayments();
+        //When
+        disburseLoanPage = navigationHelper.navigateToLoanAccountPage("000100000000004").navigateToDisburseLoan();
+        //Then
+        disburseLoanPage.verifyModeOfPayments();
+
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")

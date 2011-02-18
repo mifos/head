@@ -24,6 +24,7 @@ import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_ME
 import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
+import java.io.IOException;
 import java.util.Date;
 
 import junit.framework.Assert;
@@ -65,7 +66,7 @@ public class ApplyPaymentActionStrutsTest extends MifosMockStrutsTestCase {
     private String flowKey;
 
     @Override
-    protected void setStrutsConfig() {
+    protected void setStrutsConfig() throws IOException {
         super.setStrutsConfig();
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/accounts-struts-config.xml");
     }

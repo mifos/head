@@ -20,39 +20,10 @@
 
 package org.mifos.accounts.loan.business;
 
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
-import static org.mifos.platform.util.CollectionUtils.isNotEmpty;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
-import org.mifos.accounts.business.AccountActionDateEntity;
-import org.mifos.accounts.business.AccountBO;
-import org.mifos.accounts.business.AccountFeesActionDetailEntity;
-import org.mifos.accounts.business.AccountFeesEntity;
-import org.mifos.accounts.business.AccountPaymentEntity;
-import org.mifos.accounts.business.AccountStateEntity;
-import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
-import org.mifos.accounts.business.AccountTrxnEntity;
-import org.mifos.accounts.business.FeesTrxnDetailEntity;
+import org.mifos.accounts.business.*;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
@@ -78,19 +49,7 @@ import org.mifos.accounts.productdefinition.business.NoOfInstallSameForAllLoanBO
 import org.mifos.accounts.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
-import org.mifos.accounts.util.helpers.AccountActionTypes;
-import org.mifos.accounts.util.helpers.AccountConstants;
-import org.mifos.accounts.util.helpers.AccountExceptionConstants;
-import org.mifos.accounts.util.helpers.AccountState;
-import org.mifos.accounts.util.helpers.AccountStateFlag;
-import org.mifos.accounts.util.helpers.AccountStates;
-import org.mifos.accounts.util.helpers.AccountTypes;
-import org.mifos.accounts.util.helpers.FeeInstallment;
-import org.mifos.accounts.util.helpers.InstallmentDate;
-import org.mifos.accounts.util.helpers.OverDueAmounts;
-import org.mifos.accounts.util.helpers.PaymentData;
-import org.mifos.accounts.util.helpers.PaymentStatus;
-import org.mifos.accounts.util.helpers.WaiveEnum;
+import org.mifos.accounts.util.helpers.*;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.persistence.HolidayDao;
@@ -105,9 +64,12 @@ import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
-import org.mifos.clientportfolio.newloan.domain.PrincipalWithInterestGenerator;
+import org.mifos.clientportfolio.newloan.domain.DefaultLoanScheduleRounder;
 import org.mifos.clientportfolio.newloan.domain.EqualInstallmentGeneratorFactory;
 import org.mifos.clientportfolio.newloan.domain.EqualInstallmentGeneratorFactoryImpl;
+import org.mifos.clientportfolio.newloan.domain.InstallmentFeeCalculator;
+import org.mifos.clientportfolio.newloan.domain.InstallmentFeeCalculatorFactory;
+import org.mifos.clientportfolio.newloan.domain.InstallmentFeeCalculatorFactoryImpl;
 import org.mifos.clientportfolio.newloan.domain.LoanDecliningInterestAnnualPeriodCalculator;
 import org.mifos.clientportfolio.newloan.domain.LoanDecliningInterestAnnualPeriodCalculatorFactory;
 import org.mifos.clientportfolio.newloan.domain.LoanDurationInAccountingYearsCalculator;
@@ -116,6 +78,8 @@ import org.mifos.clientportfolio.newloan.domain.LoanInterestCalculationDetails;
 import org.mifos.clientportfolio.newloan.domain.LoanInterestCalculator;
 import org.mifos.clientportfolio.newloan.domain.LoanInterestCalculatorFactory;
 import org.mifos.clientportfolio.newloan.domain.LoanInterestCalculatorFactoryImpl;
+import org.mifos.clientportfolio.newloan.domain.LoanScheduleRounder;
+import org.mifos.clientportfolio.newloan.domain.PrincipalWithInterestGenerator;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.business.Configuration;
@@ -134,11 +98,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.CollectionUtils;
 import org.mifos.framework.util.DateTimeService;
-import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.MoneyUtils;
-import org.mifos.framework.util.helpers.Transformer;
+import org.mifos.framework.util.helpers.*;
 import org.mifos.schedule.ScheduledDateGeneration;
 import org.mifos.schedule.ScheduledEvent;
 import org.mifos.schedule.ScheduledEventFactory;
@@ -146,6 +106,12 @@ import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDat
 import org.mifos.security.util.UserContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.math.BigDecimal;
+import java.util.*;
+
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
+import static org.mifos.platform.util.CollectionUtils.isNotEmpty;
 
 public class LoanBO extends AccountBO {
 
@@ -158,7 +124,13 @@ public class LoanBO extends AccountBO {
     private Money loanBalance;
     private Short noOfInstallments;
     private Date disbursementDate;
+
+    /**
+     * @deprecated interest deducted at disbursement not supported since version 1.1!!
+     */
+    @Deprecated
     private Short intrestAtDisbursement;
+
     private Short gracePeriodDuration;
     private Short gracePeriodPenalty;
     private Double interestRate;
@@ -429,9 +401,10 @@ public class LoanBO extends AccountBO {
             }
         }
 
+        boolean isRedone = true;
         return new LoanBO(userContext, loanOffering, customer, accountState, loanAmount, noOfinstallments,
                 disbursementDate, interestDeductedAtDisbursement, interestRate, gracePeriodDuration, fund, accountFees,
-                true, maxLoanAmount, minLoanAmount, loanOffering.getMaxInterestRate(), loanOffering
+                isRedone, maxLoanAmount, minLoanAmount, loanOffering.getMaxInterestRate(), loanOffering
                         .getMinInterestRate(), maxNoOfInstall, minNoOfInstall, isRepaymentIndepOfMeetingEnabled,
                 newMeetingForRepaymentDay);
     }
@@ -727,10 +700,18 @@ public class LoanBO extends AccountBO {
         this.interestType = interestType;
     }
 
+    /**
+     * @deprecated interest deducted at disbursement not supported since version 1.1!!
+     */
+    @Deprecated
     public boolean isInterestDeductedAtDisbursement() {
         return LoanConstants.INTEREST_DEDUCTED_AT_DISBURSEMENT.equals(intrestAtDisbursement);
     }
 
+    /**
+     * @deprecated interest deducted at disbursement not supported since version 1.1!!
+     */
+    @Deprecated
     void setInterestDeductedAtDisbursement(final boolean interestDedAtDisb) {
         this.intrestAtDisbursement = interestDedAtDisb ? Constants.YES : Constants.NO;
     }
@@ -975,11 +956,19 @@ public class LoanBO extends AccountBO {
                 throw new AccountException(AccountExceptionConstants.CANT_APPLY_FEE_EXCEPTION);
             }
 
-            totalFeeAmount = updateAccountActionDateEntity(installmentIds, feeId);
-            updateAccountFeesEntity(feeId);
+            if (fee.isTimeOfDisbursement()) {
+                AccountFeesEntity accountFee = getAccountFees(feeId);
+                totalFeeAmount = accountFee.getAccountFeeAmount();
+                removeAccountFee(accountFee);
+                this.delete(accountFee);
+            } else {
+                totalFeeAmount = updateAccountActionDateEntity(installmentIds, feeId);
+                updateAccountFeesEntity(feeId);
+            }
+
             updateTotalFeeAmount(totalFeeAmount);
-            FeeBO feesBO = getAccountFeesObject(feeId);
-            String description = feesBO.getFeeName() + " " + AccountConstants.FEES_REMOVED;
+
+            String description = fee.getFeeName() + " " + AccountConstants.FEES_REMOVED;
             updateAccountActivity(null, null, totalFeeAmount, null, personnelId, description);
 
             if (!havePaymentsBeenMade()) {
@@ -1322,8 +1311,12 @@ public class LoanBO extends AccountBO {
                         AccountActionTypes.LOAN_REPAYMENT, currentUser);
             }else{
                 LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) nextInstallment;
+                Money originalInterestDue = loanScheduleEntity.getInterestDue();
                 repayInstallment(loanScheduleEntity, accountPaymentEntity, AccountActionTypes.LOAN_REPAYMENT, currentUser,
                         AccountConstants.PAYMENT_RCVD, interestDue);
+                if (isDecliningBalanceInterestRecalculation()) {
+                    loanSummary.decreaseBy(null, originalInterestDue.subtract(interestDue), null, null);
+                }
             }
         }
     }
@@ -1823,9 +1816,13 @@ public class LoanBO extends AccountBO {
                          * The amount due is not necessarily zero for this case.
                          */
                         if (installment.isPaid()) {
-                            increaseInterest = increaseInterest.add(installment.getInterestDue());
-                            increaseFees = increaseFees.add(installment.getTotalFeeDueWithMiscFeeDue());
-                            increasePenalty = increasePenalty.add(installment.getPenaltyDue());
+                            increaseInterest = increaseInterest.add(installment.getInterestDue()).
+                                    add(loanReverseTrxn.getInterestAmount());
+                            increaseFees = increaseFees.add(installment.getMiscFeeDue()).
+                                    add(loanReverseTrxn.getMiscFeeAmount());
+                            increaseFees = increaseFees.add(installment.getTotalFeesDue());
+                            increasePenalty = increasePenalty.add(installment.getPenaltyDue()).
+                                    add(loanReverseTrxn.getPenaltyAmount());
                         }
 
                         installment.recordForAdjustment();
@@ -2120,39 +2117,31 @@ public class LoanBO extends AccountBO {
         return (short) (getGracePeriodDuration() + firstRepaymentInstallment);
     }
 
-    private String getRateBasedOnFormula(final Double rate, final FeeFormulaEntity formula, final Money loanInterest) {
-        Money amountToCalculateOn = new Money(getCurrency(), "1.0");
-        if (formula.getId().equals(FeeFormula.AMOUNT.getValue())) {
-            amountToCalculateOn = loanAmount;
-        } else if (formula.getId().equals(FeeFormula.AMOUNT_AND_INTEREST.getValue())) {
-            amountToCalculateOn = loanAmount.add(loanInterest);
-        } else if (formula.getId().equals(FeeFormula.INTEREST.getValue())) {
-            amountToCalculateOn = loanInterest;
-        }
-        Double rateAmount = amountToCalculateOn.multiply(rate).divide(100).getAmountDoubleValue();
-        return rateAmount.toString();
-    }
-
+    /**
+     * @deprecated - see {@link InstallmentFeeCalculator}.
+     */
+    @Deprecated
     private void populateAccountFeeAmount(final Set<AccountFeesEntity> accountFees, final Money loanInterest) {
         for (AccountFeesEntity accountFeesEntity : accountFees) {
-
-            // OK. No-arg constructor uses new calc methods
             Money accountFeeAmount1 = new Money(getCurrency());
-
             Double feeAmount = accountFeesEntity.getFeeAmount();
-
-            logger.debug("Fee amount..." + feeAmount);
-
             if (accountFeesEntity.getFees().getFeeType() == RateAmountFlag.AMOUNT) {
                 accountFeeAmount1 = new Money(getCurrency(), feeAmount.toString());
-                logger.debug(
-                        "AccountFeeAmount for amount fee.." + feeAmount);
             } else if (accountFeesEntity.getFees().getFeeType()== RateAmountFlag.RATE) {
                 RateFeeBO rateFeeBO = (RateFeeBO) getFeeDao().findById(accountFeesEntity.getFees().getFeeId());
-                accountFeeAmount1 = new Money(getCurrency(), getRateBasedOnFormula(feeAmount, rateFeeBO.getFeeFormula(),
-                        loanInterest));
-                logger.debug(
-                        "AccountFeeAmount for Formula fee.." + feeAmount);
+                FeeFormulaEntity formula = rateFeeBO.getFeeFormula();
+                Money amountToCalculateOn = new Money(getCurrency(), "1.0");
+                if (formula.getId().equals(FeeFormula.AMOUNT.getValue())) {
+                    amountToCalculateOn = loanAmount;
+                } else if (formula.getId().equals(FeeFormula.AMOUNT_AND_INTEREST.getValue())) {
+                    amountToCalculateOn = loanAmount.add(loanInterest);
+                } else if (formula.getId().equals(FeeFormula.INTEREST.getValue())) {
+                    amountToCalculateOn = loanInterest;
+                }
+                Double rateAmount = amountToCalculateOn.multiply(feeAmount).divide(100).getAmountDoubleValue();
+
+                String rateBasedOnFormula = rateAmount.toString();
+                accountFeeAmount1 = new Money(getCurrency(), rateBasedOnFormula);
             }
             Money accountFeeAmount = accountFeeAmount1;
             accountFeesEntity.setAccountFeeAmount(accountFeeAmount);
@@ -2675,7 +2664,7 @@ public class LoanBO extends AccountBO {
 
     private LoanPaymentTypes getLoanPaymentType(final Money amount) {
         Money totalPaymentDue = getTotalPaymentDue();
-        if (amount.equals(totalPaymentDue)) {
+        if (amount.equals(totalPaymentDue) || totalPaymentDue.subtract(amount).isTinyAmount()) {
             return LoanPaymentTypes.FULL_PAYMENT;
         } else if (amount.isLessThan(totalPaymentDue)) {
             return LoanPaymentTypes.PARTIAL_PAYMENT;
@@ -2922,7 +2911,7 @@ public class LoanBO extends AccountBO {
      */
     @Deprecated
     private void generateMeetingSchedule(final boolean isRepaymentIndepOfMeetingEnabled,
-            final MeetingBO newMeetingForRepaymentDay) throws AccountException {
+            final MeetingBO newMeetingForRepaymentDay) {
 
         logger.debug("Generating meeting schedule... ");
 
@@ -2998,82 +2987,17 @@ public class LoanBO extends AccountBO {
         EqualInstallmentGeneratorFactory equalInstallmentGeneratorFactory = new EqualInstallmentGeneratorFactoryImpl();
         PrincipalWithInterestGenerator equalInstallmentGenerator = equalInstallmentGeneratorFactory.create(interestType, loanInterest);
 
-        List<InstallmentPrincipalAndInterest> EMIInstallments = equalInstallmentGenerator.generateEqualInstallments(loanInterestCalculationDetails);
+        List<InstallmentPrincipalAndInterest> principalWithInterestInstallments = equalInstallmentGenerator.generateEqualInstallments(loanInterestCalculationDetails);
 
-        logger.debug("Emi installment  obtained ");
-        logger.debug("Validating installment size  " + installmentDates.size());
-        logger.debug("Validating emi installment size  " + EMIInstallments.size());
-        if (installmentDates.size() != EMIInstallments.size()) {
-            // FIXME - KEITHW - remove this as this kind of thing can only happen due to programmer error.
-            throw new AccountException(AccountConstants.DATES_MISMATCH);
+        ScheduledEvent meetingScheduledEvent = ScheduledEventFactory.createScheduledEventFrom(this.loanMeeting);
+        List<LoanScheduleEntity> unroundedLoanSchedules = createUnroundedLoanSchedulesFromInstallments(installmentDates, loanInterest, this.loanAmount, meetingScheduledEvent, principalWithInterestInstallments, this.getAccountFees());
+
+        for (LoanScheduleEntity unroundedLoanSchedule : unroundedLoanSchedules) {
+            addAccountActionDate(unroundedLoanSchedule);
         }
 
-        List<FeeInstallment> feeInstallments = new ArrayList<FeeInstallment>();
-        if (!getAccountFees().isEmpty()) {
-            for (AccountFeesEntity accountFeesEntity : getAccountFees()) {
+        Money rawAmount = calculateTotalFeesAndInterestForLoanSchedules(unroundedLoanSchedules);
 
-                Money accountFeeAmount1 = new Money(getCurrency());
-
-                Double feeAmount = accountFeesEntity.getFeeAmount();
-
-                if (accountFeesEntity.getFees().getFeeType() == RateAmountFlag.AMOUNT) {
-                    accountFeeAmount1 = new Money(getCurrency(), feeAmount.toString());
-                } else if (accountFeesEntity.getFees().getFeeType()== RateAmountFlag.RATE) {
-                    RateFeeBO rateFeeBO = (RateFeeBO) getFeeDao().findById(accountFeesEntity.getFees().getFeeId());
-                    accountFeeAmount1 = new Money(getCurrency(), getRateBasedOnFormula(feeAmount, rateFeeBO.getFeeFormula(),
-                            loanInterest));
-                }
-                Money accountFeeAmount = accountFeeAmount1;
-                accountFeesEntity.setAccountFeeAmount(accountFeeAmount);
-            }
-            ScheduledEvent meetingScheduledEvent = ScheduledEventFactory.createScheduledEventFrom(this.getLoanMeeting());
-            feeInstallments = FeeInstallment.createMergedFeeInstallments(meetingScheduledEvent, getAccountFees(),installmentDates.size());
-        }
-
-        logger.debug("Fee installment obtained ");
-
-        int count = installmentDates.size();
-        for (int i = 0; i < count; i++) {
-            InstallmentDate installmentDate1 = installmentDates.get(i);
-            InstallmentPrincipalAndInterest em = EMIInstallments.get(i);
-            LoanScheduleEntity loanScheduleEntity = new LoanScheduleEntity(this, getCustomer(), installmentDate1
-                    .getInstallmentId(), new java.sql.Date(installmentDate1.getInstallmentDueDate().getTime()),
-                    PaymentStatus.UNPAID, em.getPrincipal(), em.getInterest());
-            addAccountActionDate(loanScheduleEntity);
-            for (FeeInstallment feeInstallment : feeInstallments) {
-                if (feeInstallment.getInstallmentId().equals(installmentDate1.getInstallmentId())
-                        && !feeInstallment.getAccountFeesEntity().getFees().isTimeOfDisbursement()) {
-                    LoanFeeScheduleEntity loanFeeScheduleEntity = new LoanFeeScheduleEntity(loanScheduleEntity,
-                            feeInstallment.getAccountFeesEntity().getFees(), feeInstallment.getAccountFeesEntity(),
-                            feeInstallment.getAccountFee());
-                    loanScheduleEntity.addAccountFeesAction(loanFeeScheduleEntity);
-                } else if (feeInstallment.getInstallmentId().equals(installmentDate1.getInstallmentId())
-                        && isInterestDeductedAtDisbursement()
-                        && feeInstallment.getAccountFeesEntity().getFees().isTimeOfDisbursement()) {
-                    LoanFeeScheduleEntity loanFeeScheduleEntity = new LoanFeeScheduleEntity(loanScheduleEntity,
-                            feeInstallment.getAccountFeesEntity().getFees(), feeInstallment.getAccountFeesEntity(),
-                            feeInstallment.getAccountFee());
-                    loanScheduleEntity.addAccountFeesAction(loanFeeScheduleEntity);
-                }
-            }
-        }
-
-        // buildRawTotal????
-        Money interest = new Money(getCurrency());
-        Money fees = new Money(getCurrency());
-        Set<AccountActionDateEntity> actionDates = getAccountActionDates();
-        if (actionDates != null && actionDates.size() > 0) {
-            for (AccountActionDateEntity accountActionDate : actionDates) {
-                LoanScheduleEntity loanSchedule = (LoanScheduleEntity) accountActionDate;
-                interest = interest.add(loanSchedule.getInterest());
-                fees = fees.add(loanSchedule.getTotalFeesDueWithMiscFee());
-            }
-        }
-        fees = fees.add(getDisbursementFeeAmount());
-        Money rawAmount = new Money(getCurrency());
-        fees = MoneyUtils.currencyRound(fees);
-        interest = MoneyUtils.currencyRound(interest);
-        rawAmount = rawAmount.add(interest).add(fees);
         if (loanSummary == null) {
             // save it to LoanBO first and when loan summary is created it will
             // be retrieved and save to loan summary
@@ -3081,10 +3005,97 @@ public class LoanBO extends AccountBO {
         } else {
             loanSummary.setRawAmountTotal(rawAmount);
         }
-        logger.debug("Meeting schedule generated  ");
 
-        // FIXME - keithw - rounding rules?
         applyRounding_v2();
+    }
+
+    private Money calculateTotalFeesAndInterestForLoanSchedules(List<LoanScheduleEntity> unroundedLoanSchedules) {
+        // buildRawTotal - is total fees plus total interest.
+        Money zero = new Money(getCurrency());
+        Money interest = zero;
+        Money fees = zero;
+
+        for (LoanScheduleEntity unroundedLoanSchedule : unroundedLoanSchedules) {
+            interest = interest.add(unroundedLoanSchedule.getInterest());
+            fees = fees.add(unroundedLoanSchedule.getTotalFeesDueWithMiscFee());
+        }
+
+        Money feeDisbursementAmount = zero;
+        for (AccountFeesEntity accountFeesEntity : this.getAccountFees()) {
+            if (accountFeesEntity.getFees().isTimeOfDisbursement()) {
+                feeDisbursementAmount = fees.add(accountFeesEntity.getAccountFeeAmount());
+            }
+        }
+
+        fees = fees.add(feeDisbursementAmount);
+        fees = MoneyUtils.currencyRound(fees);
+        interest = MoneyUtils.currencyRound(interest);
+
+        Money rawAmount = interest.add(fees);
+        return rawAmount;
+    }
+
+    private List<LoanScheduleEntity> createUnroundedLoanSchedulesFromInstallments(List<InstallmentDate> installmentDates,
+            Money loanInterest, Money loanAmount, ScheduledEvent meetingScheduledEvent,
+            List<InstallmentPrincipalAndInterest> principalWithInterestInstallments, Set<AccountFeesEntity> accountFees) {
+
+        List<LoanScheduleEntity> unroundedLoanSchedules = new ArrayList<LoanScheduleEntity>();
+
+        List<FeeInstallment> feeInstallments = new ArrayList<FeeInstallment>();
+        if (!getAccountFees().isEmpty()) {
+
+            InstallmentFeeCalculatorFactory installmentFeeCalculatorFactory = new InstallmentFeeCalculatorFactoryImpl();
+
+            for (AccountFeesEntity accountFeesEntity : accountFees) {
+
+                RateAmountFlag feeType = accountFeesEntity.getFees().getFeeType();
+                InstallmentFeeCalculator installmentFeeCalculator = installmentFeeCalculatorFactory.create(getFeeDao(), feeType);
+
+                Double feeAmount = accountFeesEntity.getFeeAmount();
+                Money accountFeeAmount = installmentFeeCalculator.calculate(feeAmount, loanAmount, loanInterest, accountFeesEntity.getFees());
+                accountFeesEntity.setAccountFeeAmount(accountFeeAmount);
+            }
+            feeInstallments = FeeInstallment.createMergedFeeInstallments(meetingScheduledEvent, getAccountFees(),installmentDates.size());
+        }
+
+        int installmentIndex = 0;
+        for (InstallmentDate installmentDate1 : installmentDates) {
+
+            InstallmentPrincipalAndInterest em = principalWithInterestInstallments.get(installmentIndex);
+
+            LoanScheduleEntity loanScheduleEntity = new LoanScheduleEntity(this, getCustomer(), installmentDate1
+                    .getInstallmentId(), new java.sql.Date(installmentDate1.getInstallmentDueDate().getTime()),
+                    PaymentStatus.UNPAID, em.getPrincipal(), em.getInterest());
+
+            for (FeeInstallment feeInstallment : feeInstallments) {
+                if (feeInstallment.getInstallmentId().equals(installmentDate1.getInstallmentId())
+                        && !feeInstallment.getAccountFeesEntity().getFees().isTimeOfDisbursement()) {
+
+                    LoanFeeScheduleEntity loanFeeScheduleEntity = new LoanFeeScheduleEntity(loanScheduleEntity,
+                            feeInstallment.getAccountFeesEntity().getFees(), feeInstallment.getAccountFeesEntity(),
+                            feeInstallment.getAccountFee());
+                    loanScheduleEntity.addAccountFeesAction(loanFeeScheduleEntity);
+
+                } else if (feeInstallment.getInstallmentId().equals(installmentDate1.getInstallmentId())
+                        && isInterestDeductedAtDisbursement()
+                        && feeInstallment.getAccountFeesEntity().getFees().isTimeOfDisbursement()) {
+
+                    // FIXME - keithw - isInterestDeductedAtDisbursement is not relevant but one integration test fails
+                    // when this is removed. leaving in but test is most likely wrong. LoanBOIntegrationTest.testRemoveLoanDisbursalFee
+
+                    LoanFeeScheduleEntity loanFeeScheduleEntity = new LoanFeeScheduleEntity(loanScheduleEntity,
+                            feeInstallment.getAccountFeesEntity().getFees(), feeInstallment.getAccountFeesEntity(),
+                            feeInstallment.getAccountFee());
+                    loanScheduleEntity.addAccountFeesAction(loanFeeScheduleEntity);
+
+                }
+            }
+
+            unroundedLoanSchedules.add(loanScheduleEntity);
+            installmentIndex++;
+        }
+
+        return unroundedLoanSchedules;
     }
 
     /**

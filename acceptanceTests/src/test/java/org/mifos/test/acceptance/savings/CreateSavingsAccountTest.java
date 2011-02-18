@@ -23,9 +23,16 @@ package org.mifos.test.acceptance.savings;
 import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
+import org.mifos.test.acceptance.framework.account.AccountStatus;
+import org.mifos.test.acceptance.framework.account.EditAccountStatusParameters;
+import org.mifos.test.acceptance.framework.admin.AdminPage;
+import org.mifos.test.acceptance.framework.admin.DefineAcceptedPaymentTypesPage;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSearchParameters;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSubmitParameters;
+import org.mifos.test.acceptance.framework.savings.DepositWithdrawalSavingsParameters;
 import org.mifos.test.acceptance.framework.savings.SavingsAccountDetailPage;
+import org.mifos.test.acceptance.framework.savings.SavingsDepositWithdrawalPage;
+import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.framework.testhelpers.SavingsAccountHelper;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,19 +58,73 @@ public class CreateSavingsAccountTest extends UiTestCaseBase {
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
-    @BeforeMethod(groups = { "smoke", "savings", "acceptance", "ui" })
+    @BeforeMethod(alwaysRun = true)
     public void setUp() throws Exception {
         super.setUp();
         savingsAccountHelper = new SavingsAccountHelper(selenium);
     }
 
-    @AfterMethod(groups = { "smoke", "savings", "acceptance", "ui" })
+    @AfterMethod(alwaysRun = true)
     public void logOut() {
         (new MifosPage(selenium)).logout();
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(sequential = true, groups = { "savings", "acceptance", "ui" })
+    //@Test(sequential = true, groups = {"savings", "acceptance", "ui" })
+    @Test(enabled=false) // TODO js - temporarily disabled broken test
+    public void verifyPaymentTypesForWithdrawalsAndDeposits() throws Exception {
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
+        //When
+        NavigationHelper navigationHelper = new NavigationHelper(selenium);
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        DefineAcceptedPaymentTypesPage defineAcceptedPaymentTypesPage = adminPage.navigateToDefineAcceptedPaymentType();
+        defineAcceptedPaymentTypesPage.addSavingsWithdrawalsType(defineAcceptedPaymentTypesPage.CHEQUE);
+
+        adminPage = navigationHelper.navigateToAdminPage();
+        defineAcceptedPaymentTypesPage = adminPage.navigateToDefineAcceptedPaymentType();
+        defineAcceptedPaymentTypesPage.addSavingsWithdrawalsType(defineAcceptedPaymentTypesPage.VOUCHER);
+
+        adminPage = navigationHelper.navigateToAdminPage();
+        defineAcceptedPaymentTypesPage = adminPage.navigateToDefineAcceptedPaymentType();
+        defineAcceptedPaymentTypesPage.addSavingsDepositsPaymentType(defineAcceptedPaymentTypesPage.CHEQUE);
+
+        adminPage = navigationHelper.navigateToAdminPage();
+        defineAcceptedPaymentTypesPage = adminPage.navigateToDefineAcceptedPaymentType();
+        defineAcceptedPaymentTypesPage.addSavingsDepositsPaymentType(defineAcceptedPaymentTypesPage.VOUCHER);
+
+        CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
+        searchParameters.setSearchString("Stu1233266079799 Client1233266079799");
+        searchParameters.setSavingsProduct("MandClientSavings3MoPostMinBal");
+
+        CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
+        submitAccountParameters.setAmount("248.0");
+
+        SavingsAccountDetailPage savingsAccountDetailPage = savingsAccountHelper.createSavingsAccount(searchParameters, submitAccountParameters);
+
+        EditAccountStatusParameters editAccountStatusParameters = new EditAccountStatusParameters();
+        editAccountStatusParameters.setAccountStatus(AccountStatus.SAVINGS_ACTIVE);
+        editAccountStatusParameters.setNote("test");
+        savingsAccountDetailPage = savingsAccountHelper.changeStatus(savingsAccountDetailPage.getAccountId(), editAccountStatusParameters);
+        SavingsDepositWithdrawalPage savingsDepositWithdrawalPage = savingsAccountDetailPage.navigateToDepositWithdrawalPage();
+        savingsDepositWithdrawalPage.selectPaymentType(DepositWithdrawalSavingsParameters.DEPOSIT);
+
+        //Then
+        savingsDepositWithdrawalPage.verifyModeOfPayments();
+        //When
+        savingsDepositWithdrawalPage.selectPaymentType(DepositWithdrawalSavingsParameters.WITHDRAWAL);
+        //Then
+        savingsDepositWithdrawalPage.verifyModeOfPayments();
+        //When
+        savingsAccountDetailPage = navigationHelper.navigateToSavingsAccountDetailPage("000100000000015");
+        savingsDepositWithdrawalPage = savingsAccountDetailPage.navigateToDepositWithdrawalPage();
+        savingsDepositWithdrawalPage.selectPaymentType(DepositWithdrawalSavingsParameters.DEPOSIT);
+        //Then
+        savingsDepositWithdrawalPage.verifyModeOfPayments();
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(sequential = true, groups = { "smoke", "savings", "acceptance", "ui" })
     public void newMandatoryClientSavingsAccountWithDateTypeCustomField() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_015_dbunit.xml", dataSource, selenium);
 

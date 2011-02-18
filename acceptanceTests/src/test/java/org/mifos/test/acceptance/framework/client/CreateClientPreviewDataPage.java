@@ -32,7 +32,18 @@ public class CreateClientPreviewDataPage extends MifosPage {
     }
 
     public CreateClientConfirmationPage submit() {
-        selenium.click("preview_ClientDetails.button.submitForApproval");
+        if(selenium.isElementPresent("preview_ClientDetails.button.submitForApproval")) {
+            selenium.click("preview_ClientDetails.button.submitForApproval");
+        }
+        else {
+            selenium.click("preview_ClientDetails.button.approve");
+        }
+        waitForPageToLoad();
+        return new CreateClientConfirmationPage(selenium);
+    }
+
+    public CreateClientConfirmationPage saveForLater() {
+        selenium.click("preview_ClientDetails.button.saveForLater");
         waitForPageToLoad();
         return new CreateClientConfirmationPage(selenium);
     }

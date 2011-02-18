@@ -63,6 +63,14 @@ public class CustomPropertiesUpdateController extends AbstractController {
 
             handleCenterHierarchy(request, model);
 
+            handleClientNameSequence(request, model);
+
+            handleGroupCanApplyLoans(request, model);
+
+            handleClientCanExistOutsideGroup(request, model);
+
+            handleBackDatedTransactionsAllowed(request, model);
+
             model.put("request", request);
             Map<String, Object> status = new HashMap<String, Object>();
             status.put("errorMessages", errorMessages);
@@ -73,12 +81,48 @@ public class CustomPropertiesUpdateController extends AbstractController {
         return returnValue;
     }
 
+    private void handleClientNameSequence(HttpServletRequest request, Map<String, Object> model) {
+        String nameSequenceString = request.getParameter("ClientRules.NameSequence");
+        if (StringUtils.isNotBlank(nameSequenceString)) {
+            String[] nameSequence = nameSequenceString.split(",");
+            testingService.setClientNameSequence(nameSequence);
+            model.put("clientRulesResult", "NameSequence: " + nameSequenceString);
+        }
+    }
+
     private void handleCenterHierarchy(HttpServletRequest request, Map<String, Object> model) {
         String centerHierarchyExists = request.getParameter("ClientRules.CenterHierarchyExists");
         if (StringUtils.isNotBlank(centerHierarchyExists)) {
             boolean required=Boolean.valueOf(centerHierarchyExists);
             testingService.setCenterHierarchyExists(required);
             model.put("clientRulesResult", "centerHierarchyExists: " + centerHierarchyExists);
+        }
+    }
+
+    private void handleClientCanExistOutsideGroup(HttpServletRequest request, Map<String, Object> model) {
+        String clientCanExistOutsideGroup = request.getParameter("ClientRules.ClientCanExistOutsideGroup");
+        if (StringUtils.isNotBlank(clientCanExistOutsideGroup)) {
+            boolean required=Boolean.valueOf(clientCanExistOutsideGroup);
+            testingService.setClientCanExistOutsideGroup(required);
+            model.put("clientRulesResult", "clientCanExistOutsideGroup: " + clientCanExistOutsideGroup);
+        }
+    }
+
+    private void handleGroupCanApplyLoans(HttpServletRequest request, Map<String, Object> model) {
+        String groupCanApplyLoans = request.getParameter("ClientRules.GroupCanApplyLoans");
+        if (StringUtils.isNotBlank(groupCanApplyLoans)) {
+            boolean required=Boolean.valueOf(groupCanApplyLoans);
+            testingService.setGroupCanApplyLoans(required);
+            model.put("clientRulesResult", "groupCanApplyLoans: " + groupCanApplyLoans);
+        }
+    }
+
+    private void handleBackDatedTransactionsAllowed(HttpServletRequest request, Map<String, Object> model) {
+        String backDatedTransactionsAllowed = request.getParameter("BackDatedTransactionsAllowed");
+        if (StringUtils.isNotBlank(backDatedTransactionsAllowed)) {
+            boolean allowed=Boolean.valueOf(backDatedTransactionsAllowed);
+            testingService.setBackDatedTransactionsAllowed(allowed);
+            model.put("clientRulesResult", "backDatedTransactionsAllowed: " + backDatedTransactionsAllowed);
         }
     }
 

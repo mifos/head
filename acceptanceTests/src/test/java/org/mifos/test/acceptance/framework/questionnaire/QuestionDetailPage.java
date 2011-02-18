@@ -68,7 +68,7 @@ public class QuestionDetailPage extends MifosPage {
         return commaSeparatedChoices.toString();
     }
 
-    void assertForChoices(String type, List<Choice> choices) {
+    public void assertForChoices(String type, List<Choice> choices) {
         if ("Multi Select".equals(type) || "Single Select".equals(type)) {
             Assert.assertTrue(selenium.isTextPresent("Answer Choices: " + getCommaSeparatedChoices(choices)));
         } else {
@@ -92,5 +92,9 @@ public class QuestionDetailPage extends MifosPage {
     void verifyQuestionTitle(String type, String title) {
         Assert.assertTrue(selenium.isTextPresent("Question: " + title + type), "Title is missing");
         Assert.assertTrue(selenium.isTextPresent("Answer Type: " + type), "Answer type is missing");
+    }
+
+    public void verifyQuestionTitle(String title) {
+        Assert.assertTrue(selenium.isTextPresent("Question: " + title), "Title is missing");
     }
 }

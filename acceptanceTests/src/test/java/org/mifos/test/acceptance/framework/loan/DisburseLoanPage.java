@@ -67,6 +67,12 @@ public class DisburseLoanPage extends MifosPage {
         Assert.assertEquals(selenium.getSelectedValue("paymentModeOfPayment"), "");
     }
 
+    public void verifyDisbursalDateIsDisabled(){
+        Assert.assertFalse(selenium.isEditable("transactionDateDD"));
+        Assert.assertFalse(selenium.isEditable("transactionDateMM"));
+        Assert.assertFalse(selenium.isEditable("transactionDateYY"));
+    }
+
     public void setModesOfPaymentAndReviewTransaction() {
         selenium.select("DisburseLoan.input.paymentType", "label=" + DisburseLoanParameters.CASH);
         selenium.select("paymentModeOfPayment", "label=" + DisburseLoanParameters.CASH);
@@ -74,6 +80,13 @@ public class DisburseLoanPage extends MifosPage {
         selenium.click("DisburseLoan.button.reviewTransaction");
 
         waitForPageToLoad();
+    }
+
+    public void verifyModeOfPayments(){
+        String[] modesOfPayment=selenium.getSelectOptions("DisburseLoan.input.paymentType");
+        Assert.assertEquals(RepayLoanParameters.CASH,modesOfPayment[1]);
+        Assert.assertEquals(RepayLoanParameters.CHEQUE,modesOfPayment[2]);
+        Assert.assertEquals(RepayLoanParameters.VOUCHER,modesOfPayment[3]);
     }
 
     public HomePage navigateToHomePage() {

@@ -24,6 +24,7 @@ import org.mifos.test.acceptance.framework.center.CenterViewDetailsPage;
 import org.mifos.test.acceptance.framework.center.CreateCenterConfirmationPage;
 import org.mifos.test.acceptance.framework.center.CreateCenterEnterDataPage;
 import org.mifos.test.acceptance.framework.center.CreateCenterPreviewDataPage;
+import org.mifos.test.acceptance.framework.group.EditCustomerStatusParameters;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 
@@ -76,5 +77,14 @@ public class CenterTestHelper {
 
     public CenterViewDetailsPage navigateToCenterViewDetailsPage(String centerName) {
         return navigationHelper.navigateToCenterViewDetailsPage(centerName);
+    }
+
+    public CenterViewDetailsPage changeCenterStatus(String centerName, EditCustomerStatusParameters customerStatusParams) {
+        return navigationHelper
+                .navigateToCenterViewDetailsPage(centerName)
+                .navigateToCustomerChangeStatusPage()
+                .setChangeStatusParametersAndSubmit(customerStatusParams)
+                .submitAndNavigateToCenterViewDetailsPage();
+
     }
 }

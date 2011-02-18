@@ -20,15 +20,13 @@
 
 package org.mifos.framework.components.tabletag;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.mifos.core.ClasspathResource;
+import org.mifos.core.MifosResourceUtil;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.TableTagTypeParserException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -65,7 +63,7 @@ public class TypeParser {
 
             DocumentBuilder builder = factory.newDocumentBuilder();
             builder.setErrorHandler(null);
-            Document document = builder.parse(new File(ClasspathResource.getURI(filename)));
+            Document document = builder.parse(MifosResourceUtil.getClassPathResourceAsStream(filename));
             Node fileNode = document.getFirstChild();
             file = new Files();
             file.setFileName(createFileName(fileNode));
@@ -77,8 +75,8 @@ public class TypeParser {
             throw new TableTagTypeParserException(saxpe);
         } catch (SAXException saxe) {
             throw new TableTagTypeParserException(saxe);
-        } catch (URISyntaxException urise) {
-            throw new TableTagTypeParserException(urise);
+        } catch (MifosRuntimeException saxe) {
+            throw new TableTagTypeParserException(saxe);
         }
         return file;
     }

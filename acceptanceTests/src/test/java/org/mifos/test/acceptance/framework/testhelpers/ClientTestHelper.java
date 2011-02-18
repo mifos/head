@@ -38,10 +38,12 @@ import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPage;
 import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPreviewPage;
 import org.mifos.test.acceptance.framework.group.EditCustomerStatusParameters;
 import org.mifos.test.acceptance.framework.group.GroupSearchPage;
+import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 import org.mifos.test.acceptance.util.StringUtil;
-
 import com.thoughtworks.selenium.Selenium;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionnairePage;
+import org.mifos.test.acceptance.framework.questionnaire.ViewQuestionResponseDetailPage;
 
 public class ClientTestHelper {
 
@@ -146,10 +148,10 @@ public class ClientTestHelper {
             .verifyNoResult();
     }
 
-    public void addClientToGroupWithErrors(String clientName, String groupName){
+    public void addClientToGroupWithErrorGroupLowerStatus(String clientName, String groupName){
         navigateToGroupSearchAddClientResult(clientName, groupName)
             .selectGroupToAdd(groupName)
-            .submitAddGroupWithError();
+            .submitAddGroupWithErrorGroupLowerStatus();
     }
 
     public void transferClientToGroupWithErrors(String clientName, String groupName){
@@ -162,17 +164,38 @@ public class ClientTestHelper {
     }
 
     public void addClientToGroup(String clientName, String groupName){
-        navigateToGroupSearchAddClientResult(clientName, groupName)
+        ClientViewDetailsPage clientViewDetailsPage = navigateToGroupSearchAddClientResult(clientName, groupName)
             .selectGroupToAdd(groupName)
             .submitAddGroup();
+        clientViewDetailsPage.verifyGroupMembership(groupName);
+        String clientMeetingschedule = clientViewDetailsPage.getMeetingSchedule();
+        navigationHelper.navigateToGroupViewDetailsPage(groupName).verifyMeetingSchedule(clientMeetingschedule);
     }
 
-    public void deleteClientGroupMembership(String clientName){
-        navigationHelper
-            .navigateToClientViewDetailsPage(clientName)
-            .navigateToEditRemoveGroupMembership()
+    public void deleteClientGroupMembership(String clientName, String note){
+        ClientViewDetailsPage clientViewDetailsPage = navigationHelper.navigateToClientViewDetailsPage(clientName);
+        String oldMeetingshedule = clientViewDetailsPage.getMeetingSchedule();
+        String groupName = clientViewDetailsPage.getGroupMembership();
+
+        GroupViewDetailsPage groupViewDetailsPage = navigationHelper.navigateToGroupViewDetailsPage(groupName);
+        Integer activeClients = Integer.parseInt(groupViewDetailsPage.getNumberOfClientsInGroup());
+        String avgIndyvidualLoanSize = groupViewDetailsPage.getAvgIndyvidualLoanSize();
+        String totalLoanPortfolio = groupViewDetailsPage.getTotalLoanPortfolio();
+
+        clientViewDetailsPage = navigationHelper.navigateToClientViewDetailsPage(clientName);
+        clientViewDetailsPage = clientViewDetailsPage.navigateToEditRemoveGroupMembership()
             .deleteGroupMembership()
-            .confirmDeleteGroupMembership();
+            .confirmDeleteGroupMembership(note);
+
+        clientViewDetailsPage.verifyMeetingSchedule(oldMeetingshedule);
+        clientViewDetailsPage.verifyNotes(note);
+        clientViewDetailsPage.navigateToClientViewChangeLog()
+            .verifyLastEntryOnChangeLog("Name", groupName, "-", "mifos");
+
+        groupViewDetailsPage = navigationHelper.navigateToGroupViewDetailsPage(groupName);
+        groupViewDetailsPage.verifyNumberOfClientsInGroup(Integer.toString(activeClients-1));
+        groupViewDetailsPage.verifyAvgIndyvidualLoanSize(avgIndyvidualLoanSize);
+        groupViewDetailsPage.verifyTotalLoanPortfolio(totalLoanPortfolio);
     }
 
     public void deleteClientGroupMembershipWithError(String clientName){
@@ -314,5 +337,42 @@ public class ClientTestHelper {
 
        mfiFormParameters.setMeeting(meetingFormParameters);
        return clientMfiDataPage.submitAndGotoCreateClientPreviewDataPage(mfiFormParameters);
+   }
+
+   public ClientViewDetailsPage createNewClient(String groupName, CreateClientEnterPersonalDataPage.SubmitFormParameters clientParams) {
+        return navigationHelper
+           .navigateToClientsAndAccountsPage()
+           .navigateToCreateNewClientPage()
+           .selectGroup(groupName)
+           .create(clientParams)
+           .submitAndGotoCreateClientEnterMfiDataPage()
+           .navigateToPreview()
+           .submit()
+           .navigateToClientViewDetailsPage();
+   }
+
+   public ClientViewDetailsPage navigateToClientViewDetailsPage(String clientName) {
+        ClientViewDetailsPage clientViewDetailsPage =  navigationHelper.navigateToClientViewDetailsPage(clientName);
+        clientViewDetailsPage.verifyPage("ViewClientDetails");
+
+        return clientViewDetailsPage;
+   }
+
+   public ClientViewDetailsPage editQuestionGroupResponses(ClientViewDetailsPage clientViewDetailsPage, String numberSection, Map<String, Integer> questions) {
+        ViewQuestionResponseDetailPage viewQuestionResponseDetailPage = clientViewDetailsPage.navigateToViewAdditionalInformationPage();
+        viewQuestionResponseDetailPage.verifyPage();
+        QuestionnairePage questionnairePage = viewQuestionResponseDetailPage.navigateToEditSection(numberSection);
+        questionnairePage.verifyPage();
+        for(String key : questions.keySet()) {
+            if(Integer.valueOf(questions.get(key)) == 0) {
+                questionnairePage.checkResponse(key.split(":")[0],key.split(":")[1]);
+            } else {
+                questionnairePage.setResponse(key.split(":")[0],key.split(":")[1]);
+            }
+        }
+        
+        ClientViewDetailsPage clientViewDetailsPage2 = (ClientViewDetailsPage)questionnairePage.submit();
+        clientViewDetailsPage2.verifyPage("ViewClientDetails");
+        return clientViewDetailsPage2;
    }
 }

@@ -94,7 +94,7 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
         dataSetup.addDecliningPrincipalBalance();
     }
 
-//    @Test(enabled=false, groups={"smoke"})
+//    @Test(enabled=false, groups={"loan"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyDecliningPrincipleLoan() throws Exception {
         applicationDatabaseOperation.updateLSIM(1);
@@ -108,7 +108,7 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
         verifyDecliningPrincipalLoanAccount(3, interestTypeName, systemDateTime.plusDays(1), formParameters.getOfferingName());
     }
 
-//    @Test(enabled=false, groups={"smoke"})
+//    @Test(enabled=false, groups={"loan"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyLoanPaymentAndAdjustment() throws Exception {
         applicationDatabaseOperation.updateLSIM(1);
@@ -204,6 +204,7 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
         makePaymentAndVerifyPayment(accountId, paymentDate, "100", RepaymentScheduleData.LATE_LESS_FIRST_PAYMENT);//verify first the due fee is knocked
         makePaymentAndVerifyPayment(accountId, paymentDate, "5.3", RepaymentScheduleData.LATE_LESS_SECOND_PAYMENT);//verify due interest is knocked next
         makePaymentAndVerifyPayment(accountId, paymentDate, "100", RepaymentScheduleData.LATE_LESS_THIRD_PAYMENT);//verify the due principle is knocked next
+        new LoanAccountPage(selenium).navigateToApplyPayment().verifyPaymentPriorLastPaymentDate(loanTestHelper.setPaymentParams("10",paymentDate));
     }
 
     private void verifyLateExcessPayment(int noOfInstallments, String loanProductName) throws UnsupportedEncodingException {

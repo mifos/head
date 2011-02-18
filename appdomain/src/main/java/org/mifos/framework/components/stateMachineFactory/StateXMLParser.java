@@ -34,7 +34,8 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.master.business.StateEntity;
-import org.mifos.core.ClasspathResource;
+import org.mifos.core.MifosResourceUtil;
+import org.springframework.core.io.ClassPathResource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -79,7 +80,7 @@ public class StateXMLParser {
 
             DocumentBuilder builder = factory.newDocumentBuilder();
             builder.setErrorHandler(null);
-            Document document = builder.parse(new File(ClasspathResource.getURI(filename)));
+            Document document = builder.parse(MifosResourceUtil.getClassPathResourceAsStream(filename));
             Node mapToprocess = null;
             /*
              * String configurationName = ""; if
@@ -153,8 +154,6 @@ public class StateXMLParser {
         } catch (SAXParseException e) {
             throw new RuntimeException(e);
         } catch (SAXException e) {
-            throw new RuntimeException(e);
-        } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
         return transitionMap;

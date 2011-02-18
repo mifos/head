@@ -30,7 +30,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "/org/mifos/config/resources/messageSourceBean.xml"})
+@ContextConfiguration(locations = { "/org/mifos/config/resources/messageSourceBean.xml", "/org/mifos/config/resources/propertyConfigurer.xml" })
 public class CustomFieldDefinitionEntityTest {
 
     @Test

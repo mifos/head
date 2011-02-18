@@ -21,6 +21,7 @@
 package org.mifos.test.acceptance.framework.loan;
 
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.mifos.test.acceptance.framework.savings.SavingsAccountDetailPage;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -39,5 +40,11 @@ public class EditAccountStatusConfirmationPage extends MifosPage {
         selenium.click("change_status_preview.button.submit");
         waitForPageToLoad();
         return new LoanAccountPage(selenium);
+    }
+
+    public SavingsAccountDetailPage submitAndNavigateToSavingAccountPage() {
+        selenium.click("change_status_preview.button.submit");
+        waitForPageToLoad();
+        return new SavingsAccountDetailPage(selenium);
     }
 }

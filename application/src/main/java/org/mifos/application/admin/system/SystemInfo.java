@@ -25,7 +25,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 import org.mifos.application.master.MessageLookup;
-import org.mifos.core.ClasspathResource;
+import org.mifos.core.MifosResourceUtil;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.persistence.DatabaseMigrator;
 import org.mifos.framework.util.DateTimeService;
@@ -128,7 +128,7 @@ public class SystemInfo implements Serializable {
         Reader reader;
         BufferedReader bufferedReader;
         try {
-            reader = ClasspathResource.getInstance("/sql/").getAsReader("release-upgrades.txt");
+            reader = MifosResourceUtil.getSQLFileAsReader("release-upgrades.txt");
             bufferedReader = new BufferedReader(reader);
 
             while (true) {
@@ -330,7 +330,7 @@ public class SystemInfo implements Serializable {
         Integer upgradeId;
         List<Integer> releaseUpgrades = new ArrayList<Integer>();
         try {
-            reader = ClasspathResource.getInstance("/sql/").getAsReader("release-upgrades.txt");
+            reader = MifosResourceUtil.getSQLFileAsReader("release-upgrades.txt");
             bufferedReader = new BufferedReader(reader);
 
             while (true) {

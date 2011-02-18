@@ -42,7 +42,7 @@ public class InstallmentFormatValidatorImpl implements InstallmentFormatValidato
 
     private void setDueDateValue(RepaymentScheduleInstallment installment, String identifier, List<ErrorEntry> errorEntries) {
         try {
-            Date dateValue = DateUtils.getDate(installment.getDueDate(), installment.getLocale(), installment.getDateFormat());
+            Date dateValue = DateUtils.parseDate(installment.getDueDate(), installment.getLocale());
             installment.setDueDateValue(dateValue);
         } catch (Exception e) {
             addError(errorEntries, identifier, AccountConstants.INSTALLMENT_DUEDATE_INVALID);

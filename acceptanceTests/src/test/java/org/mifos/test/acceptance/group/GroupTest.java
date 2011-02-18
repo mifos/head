@@ -33,6 +33,7 @@ import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
+import org.mifos.test.acceptance.framework.admin.DefineAcceptedPaymentTypesPage;
 import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPage;
 import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPreviewPage;
 import org.mifos.test.acceptance.framework.group.CenterSearchTransferGroupPage;
@@ -44,6 +45,7 @@ import org.mifos.test.acceptance.framework.group.CreateGroupSearchPage;
 import org.mifos.test.acceptance.framework.group.EditCustomerStatusParameters;
 import org.mifos.test.acceptance.framework.group.GroupStatus;
 import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
+import org.mifos.test.acceptance.framework.loan.ApplyPaymentPage;
 import org.mifos.test.acceptance.framework.login.LoginPage;
 import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionGroupParameters;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
@@ -84,7 +86,7 @@ public class GroupTest extends UiTestCaseBase {
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    @BeforeMethod(groups = {"smoke","group","acceptance","ui"})
+    @BeforeMethod(alwaysRun = true)
     public void setUp() throws Exception {
         super.setUp();
         appLauncher = new AppLauncher(selenium);
@@ -93,9 +95,36 @@ public class GroupTest extends UiTestCaseBase {
         groupTestHelper = new GroupTestHelper(selenium);
     }
 
-    @AfterMethod(groups = {"smoke","group","acceptance","ui"})
+    @AfterMethod(alwaysRun = true)
     public void logOut() {
         (new MifosPage(selenium)).logout();
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // http://mifosforge.jira.com/browse/MIFOSTEST-247
+    @Test(sequential = true, groups = {"group","acceptance","ui"})
+    public void verifyAcceptedPaymentTypesForGroup() throws Exception{
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
+        //When
+        GroupTestHelper groupTestHelper = new GroupTestHelper(selenium);
+        CreateGroupSubmitParameters groupParams = new CreateGroupSubmitParameters();
+        groupParams.setGroupName("TestGroup123456");
+        groupTestHelper.createNewGroup("MyCenter1232993841778", groupParams);
+
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        DefineAcceptedPaymentTypesPage defineAcceptedPaymentTypesPage = adminPage.navigateToDefineAcceptedPaymentType();
+        defineAcceptedPaymentTypesPage.addLoanFeesPaymentType(defineAcceptedPaymentTypesPage.CHEQUE);
+
+        adminPage = navigationHelper.navigateToAdminPage();
+        defineAcceptedPaymentTypesPage = adminPage.navigateToDefineAcceptedPaymentType();
+        defineAcceptedPaymentTypesPage.addLoanFeesPaymentType(defineAcceptedPaymentTypesPage.VOUCHER);
+
+        ApplyPaymentPage applyPaymentPage = navigationHelper.navigateToGroupViewDetailsPage("TestGroup123456")
+                                            .navigateToViewGroupChargesDetailPage().navigateToApplyPayments();
+        //Then
+        applyPaymentPage.verifyModeOfPayments();
+
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
@@ -225,7 +254,7 @@ public class GroupTest extends UiTestCaseBase {
      * http://mifosforge.jira.com/browse/MIFOSTEST-655
      * @throws Exception
      */
-    @Test(groups = {"smoke","group","acceptance","ui"})
+    @Test(groups = {"group","acceptance","ui"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyChangeCenterMembership() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);

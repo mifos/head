@@ -1,0 +1,9 @@
+/*
+ * Override Datatable CSS here.
+ */
+
+@CHARSET "UTF-8";
+.datatable 
+{
+    width: 100%;
+}
