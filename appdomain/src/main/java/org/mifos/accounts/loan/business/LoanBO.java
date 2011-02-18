@@ -115,6 +115,9 @@ import org.mifos.clientportfolio.newloan.domain.LoanDecliningInterestAnnualPerio
 import org.mifos.clientportfolio.newloan.domain.LoanDecliningInterestAnnualPeriodCalculatorFactory;
 import org.mifos.clientportfolio.newloan.domain.LoanDurationInAccountingYearsCalculator;
 import org.mifos.clientportfolio.newloan.domain.LoanDurationInAccountingYearsCalculatorFactory;
+import org.mifos.clientportfolio.newloan.domain.LoanInstallmentFactory;
+import org.mifos.clientportfolio.newloan.domain.LoanInstallmentFactoryImpl;
+import org.mifos.clientportfolio.newloan.domain.LoanInstallmentGenerator;
 import org.mifos.clientportfolio.newloan.domain.LoanInterestCalculationDetails;
 import org.mifos.clientportfolio.newloan.domain.LoanInterestCalculator;
 import org.mifos.clientportfolio.newloan.domain.LoanInterestCalculatorFactory;
@@ -122,6 +125,8 @@ import org.mifos.clientportfolio.newloan.domain.LoanInterestCalculatorFactoryImp
 import org.mifos.clientportfolio.newloan.domain.LoanScheduleRounder;
 import org.mifos.clientportfolio.newloan.domain.LoanScheduleRounderHelper;
 import org.mifos.clientportfolio.newloan.domain.PrincipalWithInterestGenerator;
+import org.mifos.clientportfolio.newloan.domain.RecurringScheduledEventFactory;
+import org.mifos.clientportfolio.newloan.domain.RecurringScheduledEventFactoryImpl;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.business.Configuration;
@@ -3026,6 +3031,14 @@ public class LoanBO extends AccountBO {
         }
 
         List<InstallmentDate> installmentDates = new ArrayList<InstallmentDate>();
+        
+        RecurringScheduledEventFactory scheduledEventFactory = new RecurringScheduledEventFactoryImpl();
+        LoanInstallmentFactory loanInstallmentFactory = new LoanInstallmentFactoryImpl(scheduledEventFactory);
+        LoanInstallmentGenerator loanInstallmentGenerator = loanInstallmentFactory.create(this.getLoanMeeting(), isRepaymentIndepOfMeetingEnabled);
+        
+        LocalDate actualDisbursementDate = new LocalDate(this.disbursementDate);
+//        installmentDates = loanInstallmentGenerator.generate(actualDisbursementDate, this.noOfInstallments, this.gracePeriodType.asEnum(), this.gracePeriodDuration);
+        
         if (isRepaymentIndepOfMeetingEnabled) {
 
             // for now only go through this code if LSIM is ON

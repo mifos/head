@@ -25,6 +25,6 @@ import org.mifos.schedule.ScheduledEvent;
 
 public interface RecurringScheduledEventFactory {
 
-    ScheduledEvent createScheduledEventFrom(MeetingBO loanProductMeeting);
+    ScheduledEvent createScheduledEventFrom(MeetingBO meeting);
 
 }
