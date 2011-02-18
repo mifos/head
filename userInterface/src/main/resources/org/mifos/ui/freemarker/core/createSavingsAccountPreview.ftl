@@ -115,7 +115,7 @@
         [#if savingsAccountFormBean.product.savingsPendingApprovalEnabled ]
             [@form.submitButton "widget.form.buttonLabel.saveForApproval" "saveForApproval" /]
         [#else]
-            [@form.submitButton "widget.form.buttonLabel.approve" "approve" /]
+            [@form.submitButton id="approvedButton" label="widget.form.buttonLabel.approve" webflowEvent="approve" /]
         [/#if]
         [@form.cancelButton "cancel" /]
     </div>
