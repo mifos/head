@@ -1,6 +1,9 @@
 package org.mifos.clientportfolio.newloan.domain;
 
+import org.joda.time.LocalDate;
+import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.schedule.ScheduledEvent;
 
 public class LoanInstallmentFactoryImpl implements LoanInstallmentFactory {
@@ -12,13 +15,16 @@ public class LoanInstallmentFactoryImpl implements LoanInstallmentFactory {
 	}
 
 	@Override
-	public LoanInstallmentGenerator create(MeetingBO meeting, boolean repaymentsShouldMatchCustomerMeetingSchedule) {
+	public LoanInstallmentGenerator create(MeetingBO meeting, boolean repaymentsShouldNotHaveToMatchCustomerMeetingSchedule) {
 		
-		if (repaymentsShouldMatchCustomerMeetingSchedule) {
-			return new CustomerMeetingScheduleLoanInstallmentGenerator(meeting);
+		HolidayDao holidayDao = ApplicationContextProvider.getBean(HolidayDao.class);
+		ScheduledEvent scheduledEvent = scheduledEventFactory.createScheduledEventFrom(meeting);
+		
+		if (repaymentsShouldNotHaveToMatchCustomerMeetingSchedule) {
+			LocalDate meetingStartDate = new LocalDate(meeting.getMeetingStartDate());
+			return new IndependentOfCustomerMeetingScheduleLoanInstallmentGenerator(scheduledEvent, holidayDao, meetingStartDate);
 		} 
 		
-		ScheduledEvent scheduledEvent = scheduledEventFactory.createScheduledEventFrom(meeting);
-		return new AnyScheduledEventLoanInstallmentGenerator(scheduledEvent);
+		return new AnyScheduledEventLoanInstallmentGenerator(scheduledEvent, holidayDao);
 	}
 }

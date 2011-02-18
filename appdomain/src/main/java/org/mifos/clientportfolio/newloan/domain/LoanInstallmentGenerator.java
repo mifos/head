@@ -8,6 +8,6 @@ import org.mifos.accounts.util.helpers.InstallmentDate;
 
 public interface LoanInstallmentGenerator {
 
-	List<InstallmentDate> generate(LocalDate actualDisbursementDate, int numberOfInstallments, GraceType graceType, int graceDuration);
+	List<InstallmentDate> generate(LocalDate actualDisbursementDate, int numberOfInstallments, GraceType graceType, int graceDuration, Short officeId);
 
 }

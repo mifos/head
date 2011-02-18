@@ -3025,11 +3025,12 @@ public class LoanBO extends AccountBO {
 
         logger.debug("Generating meeting schedule... ");
 
-        // WHY?
+        // FIXME - keithw - newMeetingForRepaymentDay is only populated when updating loan see LoanAccountAction.update
         if (isRepaymentIndepOfMeetingEnabled && newMeetingForRepaymentDay != null) {
             setLoanMeeting(newMeetingForRepaymentDay);
         }
 
+        List<InstallmentDate> oldInstallmentDates = new ArrayList<InstallmentDate>();
         List<InstallmentDate> installmentDates = new ArrayList<InstallmentDate>();
         
         RecurringScheduledEventFactory scheduledEventFactory = new RecurringScheduledEventFactoryImpl();
@@ -3037,7 +3038,7 @@ public class LoanBO extends AccountBO {
         LoanInstallmentGenerator loanInstallmentGenerator = loanInstallmentFactory.create(this.getLoanMeeting(), isRepaymentIndepOfMeetingEnabled);
         
         LocalDate actualDisbursementDate = new LocalDate(this.disbursementDate);
-//        installmentDates = loanInstallmentGenerator.generate(actualDisbursementDate, this.noOfInstallments, this.gracePeriodType.asEnum(), this.gracePeriodDuration);
+        oldInstallmentDates = loanInstallmentGenerator.generate(actualDisbursementDate, this.noOfInstallments, this.gracePeriodType.asEnum(), this.gracePeriodDuration, this.office.getOfficeId());
         
         if (isRepaymentIndepOfMeetingEnabled) {
 

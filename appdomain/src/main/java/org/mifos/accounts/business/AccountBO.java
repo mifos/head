@@ -1206,7 +1206,7 @@ public class AccountBO extends AbstractBusinessObject {
             DateTime startFromDayAfterAssignedMeetingDateRatherThanSkippingInstallments = startFromMeetingDate;
             if (this.isLoanAccount()) {
                 // ensure loans that are created or disbursed on a meeting date start on next valid meeting date and not todays meeting
-                // ensure loans that are created or disbrsed before a meeting date start on next valid meeting date
+                // ensure loans that are created or disbursed before a meeting date start on next valid meeting date
                 startFromDayAfterAssignedMeetingDateRatherThanSkippingInstallments = startFromMeetingDate.plusDays(1);
             }
             List<DateTime> installmentDates = dateGeneration.generateScheduledDates(occurrences, startFromDayAfterAssignedMeetingDateRatherThanSkippingInstallments, scheduledEvent);
@@ -1219,6 +1219,10 @@ public class AccountBO extends AbstractBusinessObject {
         return dueInstallmentDates;
     }
 
+    /**
+     * @deprecated - remove when loan schedules or 'installment' creation responsibility is moved out of account/loan
+     */
+    @Deprecated
     protected List<InstallmentDate> createInstallmentDates(final Short installmentToSkip, final List<Date> dueDates) {
         List<InstallmentDate> installmentDates = new ArrayList<InstallmentDate>();
         int installmentId = 1;
