@@ -324,7 +324,8 @@ public class SystemInfo implements Serializable {
      * Since NSDU is currently de-commissioned, use the getReleaseUpgrades()
      * @return the list of release upgrade IDs applied in the current database
      */
-    private List<Integer> getReleaseUpgrades() {
+    @Deprecated
+	private List<Integer> getReleaseUpgrades() {
         Reader reader = null;
         BufferedReader bufferedReader = null;
         Integer upgradeId;

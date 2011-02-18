@@ -351,7 +351,8 @@ public class AccountBO extends AbstractBusinessObject {
     public List<AccountActionDateEntity> getAccountActionDatesSortedByInstallmentId() {
         List<AccountActionDateEntity> sortedList = new ArrayList<AccountActionDateEntity>(getAccountActionDates());
         Collections.sort(sortedList, new Comparator<AccountActionDateEntity>() {
-            public int compare(AccountActionDateEntity entity1, AccountActionDateEntity entity2) {
+            @Override
+			public int compare(AccountActionDateEntity entity1, AccountActionDateEntity entity2) {
                 return new Integer(entity1.getInstallmentId()).compareTo(new Integer(entity2.getInstallmentId()));
             }
         });
@@ -1165,7 +1166,10 @@ public class AccountBO extends AbstractBusinessObject {
         return getInstallmentDates(meeting, noOfInstallments, installmentToSkip, false);
     }
 
-    // used from loanBO
+    /**
+     * @deprecated - logic for generating installments is pulled out of loan/account.
+     */
+    @Deprecated
     public final List<InstallmentDate> getInstallmentDates(final MeetingBO meeting, final Short noOfInstallments,
             final Short installmentToSkip, final boolean isRepaymentIndepOfMeetingEnabled) {
 

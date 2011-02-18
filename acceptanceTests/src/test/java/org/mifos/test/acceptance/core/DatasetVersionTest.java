@@ -60,7 +60,8 @@ public class DatasetVersionTest extends UiTestCaseBase {
                 this.ext = ext;
             }
 
-            public boolean accept(@SuppressWarnings("unused") File dir, String name){
+            @Override
+			public boolean accept(@SuppressWarnings("unused") File dir, String name){
                 boolean validFile = false;
                 if (name.startsWith(prefix) && name.endsWith(ext) ){
                     validFile = true;

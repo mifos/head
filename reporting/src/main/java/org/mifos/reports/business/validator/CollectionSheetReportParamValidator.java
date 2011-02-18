@@ -33,7 +33,8 @@ public class CollectionSheetReportParamValidator extends
         super(applicableReportFilePaths);
     }
 
-    public CollectionSheetReportParameterForm buildReportParameterForm(HttpServletRequest request) {
+    @Override
+	public CollectionSheetReportParameterForm buildReportParameterForm(HttpServletRequest request) {
         return CollectionSheetReportParameterForm.build(request);
     }
 

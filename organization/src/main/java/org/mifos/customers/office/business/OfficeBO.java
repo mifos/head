@@ -496,7 +496,8 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
         return officeId.equals(((OfficeBO) o).getOfficeId());
     }
 
-    public int compareTo(final OfficeBO o) {
+    @Override
+	public int compareTo(final OfficeBO o) {
         return officeId.compareTo(o.getOfficeId());
     }
 

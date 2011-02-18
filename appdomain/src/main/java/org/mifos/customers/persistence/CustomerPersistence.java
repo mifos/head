@@ -103,10 +103,12 @@ public class CustomerPersistence extends LegacyGenericDao {
     private final LegacyPersonnelDao legacyPersonnelDao = ApplicationContextProvider.getBean(LegacyPersonnelDao.class);
 
     private static final Predicate CLIENTS_WITH_ACTIVE_LOAN_ACCOUNTS = new Predicate() {
-        public boolean evaluate(final Object object) {
+        @Override
+		public boolean evaluate(final Object object) {
             Set<AccountBO> accounts = ((ClientBO) object).getAccounts();
             return CollectionUtils.exists(accounts, new Predicate() {
-                public boolean evaluate(final Object object) {
+                @Override
+				public boolean evaluate(final Object object) {
                     AccountStateEntity accountState = ((AccountBO) object).getAccountState();
                     return new AccountStateEntity(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING).sameId(accountState);
                 }
@@ -115,10 +117,12 @@ public class CustomerPersistence extends LegacyGenericDao {
     };
 
     private static final Predicate CLIENTS_WITH_ACTIVE_SAVINGS_ACCOUNT = new Predicate() {
-        public boolean evaluate(final Object arg0) {
+        @Override
+		public boolean evaluate(final Object arg0) {
             Set<AccountBO> accounts = ((ClientBO) arg0).getAccounts();
             return CollectionUtils.exists(accounts, new Predicate() {
-                public boolean evaluate(final Object arg0) {
+                @Override
+				public boolean evaluate(final Object arg0) {
                     AccountBO account = (AccountBO) arg0;
                     return AccountTypes.SAVINGS_ACCOUNT.getValue().equals(account.getAccountType().getAccountTypeId())
                             && new AccountStateEntity(AccountState.SAVINGS_ACTIVE).sameId(account.getAccountState());
@@ -1086,10 +1090,12 @@ public class CustomerPersistence extends LegacyGenericDao {
             this.fieldValue = fieldValue;
         }
 
-        public boolean evaluate(final Object object) {
+        @Override
+		public boolean evaluate(final Object object) {
             Set<CustomerCustomFieldEntity> customFields = ((ClientBO) object).getCustomFields();
             return CollectionUtils.exists(customFields, new Predicate() {
-                public boolean evaluate(final Object object) {
+                @Override
+				public boolean evaluate(final Object object) {
                     CustomerCustomFieldEntity field = (CustomerCustomFieldEntity) object;
                     return fieldValue.equals(field.getFieldValue()) && fieldId.equals(field.getFieldId());
                 }

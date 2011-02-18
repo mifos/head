@@ -104,73 +104,85 @@ public class BranchReportClientSummaryBatchBOExtractor {
     private static enum ClientSummaryPredicates implements Predicate {
 
         DROP_OUT_RATE_MATCHER("DROP_OUT_RATE_MATCHER", new Predicate() {
-            public boolean evaluate(Object object) {
+            @Override
+			public boolean evaluate(Object object) {
                 return ((BranchReportClientSummaryBO) object).isOfTypeDropoutRate();
             }
         }),
 
         PORTFLIO_AT_RISK_MATCHER("PORTFLIO_AT_RISK_MATCHER", new Predicate() {
-            public boolean evaluate(Object object) {
+            @Override
+			public boolean evaluate(Object object) {
                 return ((BranchReportClientSummaryBO) object).isOfTypePortfolioAtRisk();
             }
         }),
 
         CENTER_COUNT_MATCHER("CENTER_COUNT_MATCHER", new Predicate() {
-            public boolean evaluate(Object arg0) {
+            @Override
+			public boolean evaluate(Object arg0) {
                 return ((BranchReportClientSummaryBO) arg0).isOfTypeCenterCount();
             }
         }),
 
         GROUP_COUNT_MATCHER("GROUP_COUNT_MATCHER", new Predicate() {
-            public boolean evaluate(Object arg0) {
+            @Override
+			public boolean evaluate(Object arg0) {
                 return ((BranchReportClientSummaryBO) arg0).isOfTypeGroupCount();
             }
         }),
 
         ACTIVE_MEMBER_MATCHER("ACTIVE_MEMBER_MATCHER", new Predicate() {
-            public boolean evaluate(Object arg0) {
+            @Override
+			public boolean evaluate(Object arg0) {
                 return ((BranchReportClientSummaryBO) arg0).isOfTypeActiveMembers();
             }
         }),
 
         ACTIVE_BORROWERS_MATCHER("ACTIVE_BORROWERS_MATCHER", new Predicate() {
-            public boolean evaluate(Object arg0) {
+            @Override
+			public boolean evaluate(Object arg0) {
                 return ((BranchReportClientSummaryBO) arg0).isOfTypeActiveBorrowers();
             }
         }),
 
         REPLACEMENTS_MATCHER("REPLACEMENTS_MATCHER", new Predicate() {
-            public boolean evaluate(Object arg0) {
+            @Override
+			public boolean evaluate(Object arg0) {
                 return ((BranchReportClientSummaryBO) arg0).isOfTypeReplacements();
             }
         }),
 
         SAVING_ACCOUNT_DORMANT_COUNT_MATCHER("SAVING_ACCOUNT_DORMANT_COUNT_MATCHER", new Predicate() {
-            public boolean evaluate(Object arg0) {
+            @Override
+			public boolean evaluate(Object arg0) {
                 return ((BranchReportClientSummaryBO) arg0).isOfTypeSavingAccountDormantCount();
             }
         }),
 
         LOAN_ACCOUNT_DORMANT_COUNT_MATCHER("LOAN_ACCOUNT_DORMANT_COUNT_MATCHER", new Predicate() {
-            public boolean evaluate(Object arg0) {
+            @Override
+			public boolean evaluate(Object arg0) {
                 return ((BranchReportClientSummaryBO) arg0).isOfTypeLoanAccountDormantCount();
             }
         }),
 
         DROP_OUT_MATCHER("DROP_OUT_MATCHER", new Predicate() {
-            public boolean evaluate(Object arg0) {
+            @Override
+			public boolean evaluate(Object arg0) {
                 return ((BranchReportClientSummaryBO) arg0).isOfTypeDropOuts();
             }
         }),
 
         ON_HOLD_MATCHER("ON_HOLD_MATCHER", new Predicate() {
-            public boolean evaluate(Object arg0) {
+            @Override
+			public boolean evaluate(Object arg0) {
                 return ((BranchReportClientSummaryBO) arg0).isOfTypeOnHolds();
             }
         }),
 
         ACTIVE_SAVER_MATCHER("ACTIVE_SAVER_MATCHER", new Predicate() {
-            public boolean evaluate(Object arg0) {
+            @Override
+			public boolean evaluate(Object arg0) {
                 return ((BranchReportClientSummaryBO) arg0).isOfTypeActiveSavers();
             }
         });
@@ -188,7 +200,8 @@ public class BranchReportClientSummaryBatchBOExtractor {
             return predicateName;
         }
 
-        public boolean evaluate(Object arg0) {
+        @Override
+		public boolean evaluate(Object arg0) {
             return predicate.evaluate(arg0);
         }
     }

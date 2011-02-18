@@ -40,7 +40,8 @@ public class MifosSqlDateConverter implements Converter {
     public MifosSqlDateConverter() {
     }
 
-    public Object convert(Class type, Object value) {
+    @Override
+	public Object convert(Class type, Object value) {
         java.sql.Date date = null;
         /*
          * TODO: Get rid of this comment

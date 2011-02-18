@@ -42,7 +42,8 @@ public class DatabaseInitFilter implements Filter {
     public DatabaseInitFilter() {
     }
 
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
+    @Override
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
             ServletException {
 
         if (!databaseVerified) {
@@ -96,7 +97,8 @@ public class DatabaseInitFilter implements Filter {
         out.println(xml.getOutput());
     }
 
-    public void init(FilterConfig filterConfig) {
+    @Override
+	public void init(FilterConfig filterConfig) {
         try {
             DatabaseUpgradeSupport databaseUpgradeSupport = ServletUtils.getBean(filterConfig.getServletContext(), BEAN_NAME);
             DbUpgradeValidationResult validationResult = databaseUpgradeSupport.validate();
@@ -110,7 +112,8 @@ public class DatabaseInitFilter implements Filter {
         }
     }
 
-    public void destroy() {
+    @Override
+	public void destroy() {
     }
 
 }

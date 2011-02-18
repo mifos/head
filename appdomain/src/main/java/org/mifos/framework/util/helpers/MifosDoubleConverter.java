@@ -28,7 +28,8 @@ public class MifosDoubleConverter implements Converter {
     public MifosDoubleConverter() {
     }
 
-    public Object convert(Class type, Object value) {
+    @Override
+	public Object convert(Class type, Object value) {
         Double returnValue = null;
         if (value != null && type != null && !"".equals(value)) {
             try {

@@ -134,7 +134,8 @@ public class AccountFeesActionDetailEntity extends AbstractEntity implements Com
         setFeeAmount(getFeeAmount().add(difference));
     }
 
-    public int compareTo(final AccountFeesActionDetailEntity obj) {
+    @Override
+	public int compareTo(final AccountFeesActionDetailEntity obj) {
         return this.getFee().getFeeId().compareTo(obj.getFee().getFeeId());
     }
 

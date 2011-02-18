@@ -29,7 +29,8 @@ import org.mifos.framework.util.helpers.Transformer;
 
 public class GroupLoanCounter {
     public static Transformer<GroupLoanCounter, Short> TRANSFORM_GROUP_LOAN_COUNTER_TO_LOAN_CYCLE = new Transformer<GroupLoanCounter, Short>() {
-        public Short transform(GroupLoanCounter input) {
+        @Override
+		public Short transform(GroupLoanCounter input) {
             return input.getLoanCycleCounter();
         }
     };

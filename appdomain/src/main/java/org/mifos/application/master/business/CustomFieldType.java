@@ -45,7 +45,8 @@ public enum CustomFieldType implements LocalizedTextLookup {
         return CustomFieldType.NONE;
     }
 
-    public String getPropertiesKey() {
+    @Override
+	public String getPropertiesKey() {
         return "CustomFieldType." + toString();
     }
 

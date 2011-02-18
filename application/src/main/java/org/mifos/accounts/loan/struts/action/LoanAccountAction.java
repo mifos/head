@@ -71,7 +71,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
-import org.apache.struts.action.*;
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountFeesEntity;
@@ -92,7 +96,11 @@ import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
-import org.mifos.accounts.productdefinition.business.*;
+import org.mifos.accounts.productdefinition.business.LoanAmountOption;
+import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.accounts.productdefinition.business.LoanOfferingFundEntity;
+import org.mifos.accounts.productdefinition.business.LoanOfferingInstallmentRange;
+import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.accounts.productdefinition.business.service.LoanProductService;
 import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
@@ -115,7 +123,11 @@ import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.MeetingDetailsEntity;
 import org.mifos.application.meeting.exceptions.MeetingException;
-import org.mifos.application.meeting.util.helpers.*;
+import org.mifos.application.meeting.util.helpers.MeetingConstants;
+import org.mifos.application.meeting.util.helpers.MeetingType;
+import org.mifos.application.meeting.util.helpers.RankOfDay;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireAction;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
@@ -136,15 +148,36 @@ import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.dto.domain.*;
-import org.mifos.dto.screen.*;
+import org.mifos.dto.domain.CreateAccountFeeDto;
+import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.domain.CustomerDetailDto;
+import org.mifos.dto.domain.LoanAccountDetailsDto;
+import org.mifos.dto.domain.LoanActivityDto;
+import org.mifos.dto.domain.LoanInstallmentDetailsDto;
+import org.mifos.dto.domain.LoanPaymentDto;
+import org.mifos.dto.domain.MeetingDto;
+import org.mifos.dto.domain.ValueListElement;
+import org.mifos.dto.screen.LoanAccountInfoDto;
+import org.mifos.dto.screen.LoanAccountMeetingDto;
+import org.mifos.dto.screen.LoanCreationGlimDto;
+import org.mifos.dto.screen.LoanCreationLoanDetailsDto;
+import org.mifos.dto.screen.LoanCreationPreviewDto;
+import org.mifos.dto.screen.LoanCreationProductDetailsDto;
+import org.mifos.dto.screen.LoanCreationResultDto;
+import org.mifos.dto.screen.LoanInformationDto;
+import org.mifos.dto.screen.LoanScheduledInstallmentDto;
 import org.mifos.framework.business.util.helpers.MethodNameConstants;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.LocalizationConverter;
-import org.mifos.framework.util.helpers.*;
+import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.framework.util.helpers.Transformer;
 import org.mifos.platform.cashflow.ui.model.CashFlowForm;
 import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
@@ -1401,7 +1434,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward previous(final ActionMapping mapping, @SuppressWarnings("unused") final ActionForm form,
-                                  @SuppressWarnings("unused") final HttpServletRequest request,
+                                  final HttpServletRequest request,
                                   @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
         setPerspective(request, request.getParameter(PERSPECTIVE));
         return mapping.findForward(ActionForwards.load_success.toString());
@@ -1415,16 +1448,21 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         setPerspectiveOnRequest(request);
         Integer customerId = (getCustomer(request)).getCustomerId();
         UserContext userContext = getUserContext(request);
-        LoanAccountInfoDto loanAccountInfo = getLoanAccountInfo(loanActionForm, getDisbursementDate(loanActionForm,
+        
+        LoanAccountInfoDto loanAccountInfo = createLoanAccountInfo(loanActionForm, getDisbursementDate(loanActionForm,
                 userContext.getPreferredLocale()),
                 customerId, loanActionForm.getLoanOfferingFundValue());
-        LoanAccountMeetingDto loanAccountMeetingDto = getAccountMeetingDto(loanActionForm);
+        
+        LoanAccountMeetingDto loanAccountMeetingDto = createAccountMeetingDto(loanActionForm);
+        
         LoanCreationResultDto loanCreationResultDto;
         String perspective = loanActionForm.getPerspective();
         if (isRedoOperation(perspective)) {
             loanCreationResultDto = getLoanCreationResultForRedo(loanActionForm, loanAccountMeetingDto, loanAccountInfo);
         } else {
-            loanCreationResultDto = getCreateLoanResult(loanActionForm, loanAccountMeetingDto, loanAccountInfo);
+            List<RepaymentScheduleInstallment> installments = loanActionForm.getInstallments();
+            List<LoanScheduledInstallmentDto> loanScheduleDtos = getLoanScheduleInstallmentDtos(installments);
+			loanCreationResultDto = loanAccountServiceFacade.createLoan(loanAccountMeetingDto, loanAccountInfo, loanScheduleDtos);
         }
 
         createLoanQuestionnaire.saveResponses(request, loanActionForm, loanCreationResultDto.getAccountId());
@@ -1448,11 +1486,6 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         return mapping.findForward(ActionForwards.create_success.toString());
     }
 
-    private LoanCreationResultDto getCreateLoanResult(LoanAccountActionForm loanActionForm, LoanAccountMeetingDto loanAccountMeetingDto, LoanAccountInfoDto loanAccountInfo) {
-        List<RepaymentScheduleInstallment> installments = loanActionForm.getInstallments();
-        return loanAccountServiceFacade.createLoan(loanAccountMeetingDto, loanAccountInfo, getLoanScheduleInstallmentDtos(installments));
-    }
-
     private List<LoanScheduledInstallmentDto> getLoanScheduleInstallmentDtos(List<RepaymentScheduleInstallment> installments) {
         List<LoanScheduledInstallmentDto> loanRepayments = new ArrayList<LoanScheduledInstallmentDto>();
         for (RepaymentScheduleInstallment installment : installments) {
@@ -1462,7 +1495,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         return loanRepayments;
     }
 
-    private LoanCreationResultDto getLoanCreationResultForRedo(LoanAccountActionForm loanActionForm, LoanAccountMeetingDto loanAccountMeetingDto, LoanAccountInfoDto loanAccountInfo) throws InvalidDateException {
+    private LoanCreationResultDto getLoanCreationResultForRedo(LoanAccountActionForm loanActionForm, LoanAccountMeetingDto loanAccountMeetingDto, LoanAccountInfoDto loanAccountInfo) {
         List<LoanPaymentDto> loanRepayments = new ArrayList<LoanPaymentDto>();
         List<PaymentDataHtmlBean> paymentBeans = loanActionForm.getPaymentDataBeans();
         for (PaymentDataHtmlBean existingPayment : paymentBeans) {
@@ -1476,14 +1509,14 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         return loanAccountServiceFacade.redoLoan(loanAccountMeetingDto, loanAccountInfo, loanRepayments, installmentDtos);
     }
 
-    private LoanAccountMeetingDto getAccountMeetingDto(LoanAccountActionForm loanActionForm) {
+    private LoanAccountMeetingDto createAccountMeetingDto(LoanAccountActionForm loanActionForm) {
         return new LoanAccountMeetingDto(loanActionForm.getRecurrenceId(),
                 loanActionForm.getWeekDay(), loanActionForm.getRecurWeek(),
                 loanActionForm.getMonthType(), loanActionForm.getMonthDay(),
                 loanActionForm.getDayRecurMonth(), loanActionForm.getMonthWeek(), loanActionForm.getRecurMonth(), loanActionForm.getMonthRank());
     }
 
-    private LoanAccountInfoDto getLoanAccountInfo(LoanAccountActionForm loanActionForm, DateTime disbursementDate, Integer customerId, Short fundId) {
+    private LoanAccountInfoDto createLoanAccountInfo(LoanAccountActionForm loanActionForm, DateTime disbursementDate, Integer customerId, Short fundId) {
         LoanAccountInfoDto loanAccountInfo = new LoanAccountInfoDto();
         loanAccountInfo.setCustomerId(customerId);
         loanAccountInfo.setFundId(fundId);
@@ -1632,8 +1665,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         return loanBusinessService.getAccount(loanBOInSession.getAccountId());
     }
 
-    private void setRequestAttributesForEditPage(final HttpServletRequest request, final LoanBO loanBO)
-            throws ApplicationException {
+    private void setRequestAttributesForEditPage(final HttpServletRequest request, final LoanBO loanBO) {
         request.setAttribute("accountState", loanBO.getState());
         request.setAttribute(MasterConstants.COLLATERAL_TYPES, legacyMasterDao.getLookUpEntity(
                 MasterConstants.COLLATERAL_TYPES).getCustomValueListElements());
@@ -1677,7 +1709,8 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         List<String> clientIds = new ArrayList<String>();
         for (final LoanAccountDetailsDto clientDetail : clientDetails) {
             LoanBO loanMatchingClientDetail = (LoanBO) CollectionUtils.find(individualLoans, new Predicate() {
-                public boolean evaluate(final Object object) {
+                @Override
+				public boolean evaluate(final Object object) {
                     return ((LoanBO) object).getCustomer().getCustomerId().toString()
                             .equals(clientDetail.getClientId());
                 }
@@ -1699,7 +1732,8 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             clientDetail.setClientId(getStringValue(client.getCustomerId()));
             clientDetail.setClientName(client.getDisplayName());
             LoanBO loanAccount = (LoanBO) CollectionUtils.find(individualLoans, new Predicate() {
-                public boolean evaluate(final Object object) {
+                @Override
+				public boolean evaluate(final Object object) {
                     return client.getCustomerId().equals(((LoanBO) object).getCustomer().getCustomerId());
                 }
 
@@ -1712,7 +1746,8 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                     ValueListElement businessActivityElement = (ValueListElement) CollectionUtils.find(
                             businessActivities, new Predicate() {
 
-                                public boolean evaluate(final Object object) {
+                                @Override
+								public boolean evaluate(final Object object) {
                                     return ((ValueListElement) object).getId().equals(businessActivityId);
                                 }
 
@@ -1786,7 +1821,8 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             if (StringUtils.isNotEmpty(clientId)) {
                 LoanAccountDetailsDto matchingClientDetail = (LoanAccountDetailsDto) CollectionUtils.find(
                         clientDetails, new Predicate() {
-                            public boolean evaluate(final Object object) {
+                            @Override
+							public boolean evaluate(final Object object) {
                                 return ((LoanAccountDetailsDto) object).getClientId().equals(clientId);
                             }
                         });
@@ -1893,7 +1929,8 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         for (final LoanAccountDetailsDto loanAccountDetail : loanAccountDetailsList) {
             Predicate predicate = new Predicate() {
 
-                public boolean evaluate(final Object object) {
+                @Override
+				public boolean evaluate(final Object object) {
                     return ((LoanBO) object).getCustomer().getCustomerId().toString().equals(
                             loanAccountDetail.getClientId());
                 }

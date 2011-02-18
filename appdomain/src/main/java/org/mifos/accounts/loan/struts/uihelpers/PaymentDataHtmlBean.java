@@ -56,11 +56,13 @@ public class PaymentDataHtmlBean implements PaymentDataTemplate {
         this.installment = installment;
     }
 
-    public boolean hasValidAmount() {
+    @Override
+	public boolean hasValidAmount() {
         return isNotEmpty(this.amount);
     }
 
-    public Money getTotalAmount() {
+    @Override
+	public Money getTotalAmount() {
         if (getAmount() == null || getAmount().equals("")) {
             return null;
         } else {
@@ -93,15 +95,18 @@ public class PaymentDataHtmlBean implements PaymentDataTemplate {
         return result;
     }
 
-    public PersonnelBO getPersonnel() {
+    @Override
+	public PersonnelBO getPersonnel() {
         return personnel;
     }
 
-    public Short getPaymentTypeId() {
+    @Override
+	public Short getPaymentTypeId() {
         return this.paymentTypeId;
     }
 
-    public Date getTransactionDate() {
+    @Override
+	public Date getTransactionDate() {
         String date = getDate();
         if (date != null && !date.equals("")) {
             return DateUtils.getDate(date, locale, DateUtils.getShortDateFormat(locale));

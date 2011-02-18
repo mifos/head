@@ -42,29 +42,34 @@ public class FundDaoHibernate implements FundDao {
         this.genericDao = genericDao;
     }
 
-    public int countOfFundByName(String fundName) {
+    @Override
+	public int countOfFundByName(String fundName) {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put(FundConstants.FUND_NAME, fundName);
         return ((Long) this.genericDao.executeUniqueResultNamedQuery(NamedQueryConstants.CHECK_FUND_NAME_EXIST, queryParameters)).intValue();
     }
 
-    @SuppressWarnings("unchecked")
+    @Override
+	@SuppressWarnings("unchecked")
     public List<FundCodeEntity> findAllFundCodes() {
         return (List<FundCodeEntity>) this.genericDao.executeNamedQuery(NamedQueryConstants.GET_FUND_CODES, null);
     }
 
-    @SuppressWarnings("unchecked")
+    @Override
+	@SuppressWarnings("unchecked")
     public List<FundBO> findAllFunds() {
         return (List<FundBO>) this.genericDao.executeNamedQuery(NamedQueryConstants.PRDSRCFUNDS, null);
     }
 
-    public FundBO findByName(String fundName) {
+    @Override
+	public FundBO findByName(String fundName) {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put(FundConstants.FUND_NAME, fundName);
         return (FundBO) this.genericDao.executeUniqueResultNamedQuery(NamedQueryConstants.GET_FUND_FOR_GIVEN_NAME, queryParameters);
     }
 
-    public FundBO findById(Short fundId) {
+    @Override
+	public FundBO findById(Short fundId) {
         Assert.notNull(fundId, "fundId cannot be null.");
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("FUND_ID", fundId);

@@ -27,11 +27,13 @@ public class MockObjectHelpers {
 
     public static java.sql.Date eqAnySqlDate() {
         EasyMock.reportMatcher(new IArgumentMatcher() {
-            public void appendTo(StringBuffer message) {
+            @Override
+			public void appendTo(StringBuffer message) {
                 return;
             }
 
-            public boolean matches(Object other) {
+            @Override
+			public boolean matches(Object other) {
                 return true;
             }
         });

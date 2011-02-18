@@ -33,7 +33,8 @@ public class JdbcBranchCashConfirmationReportParamValidator extends
         super(applicableReportFilePaths);
     }
 
-    public JdbcBranchCashConfirmationReportParameterForm buildReportParameterForm(HttpServletRequest request) {
+    @Override
+	public JdbcBranchCashConfirmationReportParameterForm buildReportParameterForm(HttpServletRequest request) {
         return JdbcBranchCashConfirmationReportParameterForm.build(request);
     }
 

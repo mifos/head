@@ -44,7 +44,8 @@ public class BranchReportPersistenceDataAggregator implements BranchReportDataAg
         this.configService = configService;
     }
 
-    public List<BranchReportClientSummaryBO> fetchClientSummaries(OfficeBO branchOffice) throws ServiceException {
+    @Override
+	public List<BranchReportClientSummaryBO> fetchClientSummaries(OfficeBO branchOffice) throws ServiceException {
         ArrayList<BranchReportClientSummaryBO> clientSummaries = new ArrayList<BranchReportClientSummaryBO>();
         clientSummaries.add(createCenterSummary(branchOffice));
         clientSummaries.add(createGroupSummary(branchOffice));

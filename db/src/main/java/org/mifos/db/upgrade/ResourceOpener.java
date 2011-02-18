@@ -39,7 +39,8 @@ public class ResourceOpener implements ResourceAccessor, ResourceLoaderAware {
         this.changeLog = changeLog;
     }
 
-    public InputStream getResourceAsStream(String file) throws IOException {
+    @Override
+	public InputStream getResourceAsStream(String file) throws IOException {
         try {
             Resource resource = getResource(file);
             return resource.getInputStream();
@@ -48,7 +49,8 @@ public class ResourceOpener implements ResourceAccessor, ResourceLoaderAware {
         }
     }
 
-    public Enumeration<URL> getResources(String packageName) throws IOException {
+    @Override
+	public Enumeration<URL> getResources(String packageName) throws IOException {
         Vector<URL> tmp = new Vector<URL>();
 
         tmp.add(getResource(packageName).getURL());
@@ -70,7 +72,8 @@ public class ResourceOpener implements ResourceAccessor, ResourceLoaderAware {
         return file.startsWith(ResourceLoader.CLASSPATH_URL_PREFIX);
     }
 
-    public ClassLoader toClassLoader() {
+    @Override
+	public ClassLoader toClassLoader() {
         return resourceLoader.getClassLoader();
     }
 

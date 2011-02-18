@@ -63,7 +63,8 @@ public class AccountStateIntegrationTest extends MifosIntegrationTestCase {
 
         // order by id
         Collections.sort(accountStateEntityList, new Comparator<AccountStateEntity>() {
-            public int compare(AccountStateEntity state1, AccountStateEntity state2) {
+            @Override
+			public int compare(AccountStateEntity state1, AccountStateEntity state2) {
                 return state1.getId().compareTo(state2.getId());
             }
         });

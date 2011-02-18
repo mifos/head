@@ -205,7 +205,8 @@ public class InterestPostingAccountingEntryTest extends BaseAccountingEntryTestC
      *
      */
     protected class GLCodeComparator implements Comparator<FinancialTransactionBO> {
-        public int compare(final FinancialTransactionBO tran1, final FinancialTransactionBO tran2) {
+        @Override
+		public int compare(final FinancialTransactionBO tran1, final FinancialTransactionBO tran2) {
             return tran1.getGlcode().getGlcode().compareTo(tran2.getGlcode().getGlcode());
         }
     }

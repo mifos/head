@@ -40,14 +40,16 @@ public class MifosResponseHeaderFilter implements Filter {
     /**
      * @see Filter#destroy()
      */
-    public void destroy() {
+    @Override
+	public void destroy() {
         this.fc = null;
     }
 
     /**
      * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
      */
-    @SuppressWarnings("unchecked")
+    @Override
+	@SuppressWarnings("unchecked")
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 
         HttpServletResponse response =
@@ -66,7 +68,8 @@ public class MifosResponseHeaderFilter implements Filter {
     /**
      * @see Filter#init(FilterConfig)
      */
-    public void init(FilterConfig fConfig) throws ServletException {
+    @Override
+	public void init(FilterConfig fConfig) throws ServletException {
         this.fc = fConfig;
     }
 

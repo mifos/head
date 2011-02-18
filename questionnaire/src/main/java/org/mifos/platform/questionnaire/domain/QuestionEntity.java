@@ -171,7 +171,8 @@ public class QuestionEntity implements Serializable, Comparable<QuestionEntity> 
         return Integer.valueOf(getQuestionId()).hashCode();
     }
 
-    public int compareTo(QuestionEntity other) {
+    @Override
+	public int compareTo(QuestionEntity other) {
         return getQuestionText().compareTo(other.getQuestionText());
     }
 

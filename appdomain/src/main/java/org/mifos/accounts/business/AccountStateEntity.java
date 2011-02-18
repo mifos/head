@@ -98,7 +98,8 @@ public class AccountStateEntity extends StateEntity implements LocalizedTextLook
         }
     }
 
-    public String getPropertiesKey() {
+    @Override
+	public String getPropertiesKey() {
         return getLookUpValue().getLookUpName();
     }
 

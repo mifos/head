@@ -424,7 +424,8 @@ public class BranchReportPersistence extends LegacyGenericDao {
             super(staffSummaries);
         }
 
-        public void execute(Object arg) {
+        @Override
+		public void execute(Object arg) {
             Object[] result = (Object[]) arg;
             staffSummaries.get(result[0]).setTotalClientsEnrolled((Integer) result[1]);
         }
@@ -436,7 +437,8 @@ public class BranchReportPersistence extends LegacyGenericDao {
             super(staffSummaries);
         }
 
-        public void execute(Object arg) {
+        @Override
+		public void execute(Object arg) {
             Object[] result = (Object[]) arg;
             staffSummaries.get(result[0]).setClientsEnrolledThisMonth((Integer) result[1]);
         }
@@ -451,7 +453,8 @@ public class BranchReportPersistence extends LegacyGenericDao {
             this.currency = currency;
         }
 
-        public void execute(Object arg) {
+        @Override
+		public void execute(Object arg) {
             Object[] result = (Object[]) arg;
             staffSummaries.get(result[0]).setLoanArrearsAmount(createMoney(currency, (BigDecimal) result[1]));
         }
