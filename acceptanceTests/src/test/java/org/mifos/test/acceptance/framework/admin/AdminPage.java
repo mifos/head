@@ -68,6 +68,12 @@ public class AdminPage extends MifosPage {
         verifyPage(PAGE_ID);
     }
 
+    public DefineLookupOptionsPage navigateDefineLookupOptionsPage() {
+        selenium.click("admin.link.defineLookupOption");
+        waitForPageToLoad();
+        return new DefineLookupOptionsPage(selenium);
+    }
+
     public ViewHolidaysPage navigateToViewHolidaysPage() {
         selenium.click("admin.link.viewHolidays");
         waitForPageToLoad();

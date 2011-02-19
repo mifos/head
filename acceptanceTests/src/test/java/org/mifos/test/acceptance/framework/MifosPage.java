@@ -53,6 +53,10 @@ public class MifosPage extends AbstractPage {
         }
     }
 
+    protected void verifySelectHasOption(String selectName, String option) {
+        Assert.assertTrue(selenium.isElementPresent("//select[@name='"+selectName+"']/option[.='"+option+"']"));
+    }
+
     protected String getTextIfNotEmpty(String locator) {
         String ret = null;
         String text = selenium.getText(locator);

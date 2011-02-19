@@ -56,7 +56,7 @@ import java.sql.SQLException;
 
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"loan","acceptance","ui", "smoke"})
+@Test(sequential = true, groups = {"loan","acceptance","ui"})
 public class RedoLoanDisbursalTest extends UiTestCaseBase {
     private LoanTestHelper loanTestHelper;
     private NavigationHelper navigationHelper;
