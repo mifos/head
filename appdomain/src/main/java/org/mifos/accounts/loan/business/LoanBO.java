@@ -2629,7 +2629,68 @@ public class LoanBO extends AccountBO {
         }
         this.resetAccountActionDates();
         loanMeeting.setMeetingStartDate(disbursementDate);
-        generateMeetingSchedule(isRepaymentIndepOfMeetingEnabled, newMeetingForRepaymentDay);
+        
+        // FIXME - keithw - newMeetingForRepaymentDay is only populated when updating loan see LoanAccountAction.update
+		if (isRepaymentIndepOfMeetingEnabled && newMeetingForRepaymentDay != null) {
+		    setLoanMeeting(newMeetingForRepaymentDay);
+		}
+		
+		RecurringScheduledEventFactory scheduledEventFactory = new RecurringScheduledEventFactoryImpl();
+		ScheduledEvent meetingScheduledEvent = scheduledEventFactory.createScheduledEventFrom(this.loanMeeting);
+		
+		LoanInstallmentFactory loanInstallmentFactory = new LoanInstallmentFactoryImpl(scheduledEventFactory);
+		LoanInstallmentGenerator loanInstallmentGenerator = loanInstallmentFactory.create(this.getLoanMeeting(), isRepaymentIndepOfMeetingEnabled);
+		
+		LocalDate actualDisbursementDate = new LocalDate(this.disbursementDate);
+		List<InstallmentDate> installmentDates = loanInstallmentGenerator.generate(actualDisbursementDate, this.noOfInstallments, this.gracePeriodType.asEnum(), this.gracePeriodDuration, this.office.getOfficeId());
+		
+		Integer numberOfInstallments = installmentDates.size();
+		GraceType graceType = this.gracePeriodType.asEnum();
+		InterestType interestType = InterestType.fromInt(this.interestType.getId());
+		Integer interestDays = AccountingRules.getNumberOfInterestDays().intValue();
+		
+		LoanDecliningInterestAnnualPeriodCalculator decliningInterestAnnualPeriodCalculator = new LoanDecliningInterestAnnualPeriodCalculatorFactory().create(loanMeeting.getRecurrenceType());
+		Double decliningInterestAnnualPeriod = decliningInterestAnnualPeriodCalculator.calculate(loanMeeting.getRecurAfter().intValue(), interestDays);
+		Double interestFractionalRatePerInstallment = interestRate / decliningInterestAnnualPeriod / 100;
+		
+		LoanDurationInAccountingYearsCalculator loanDurationInAccountingYearsCalculator = new LoanDurationInAccountingYearsCalculatorFactory().create(loanMeeting.getRecurrenceType());
+		Double durationInYears = loanDurationInAccountingYearsCalculator.calculate(loanMeeting.getRecurAfter().intValue(), numberOfInstallments, interestDays);
+		
+		LoanInterestCalculationDetails loanInterestCalculationDetails = new LoanInterestCalculationDetails(loanAmount, interestRate, graceType, gracePeriodDuration.intValue(),
+		        numberOfInstallments, durationInYears, interestFractionalRatePerInstallment);
+		
+		LoanInterestCalculatorFactory loanInterestCalculatorFactory = new LoanInterestCalculatorFactoryImpl();
+		LoanInterestCalculator loanInterestCalculator = loanInterestCalculatorFactory.create(interestType);
+		
+		Money loanInterest = loanInterestCalculator.calculate(loanInterestCalculationDetails);
+		
+		EqualInstallmentGeneratorFactory equalInstallmentGeneratorFactory = new EqualInstallmentGeneratorFactoryImpl();
+		PrincipalWithInterestGenerator equalInstallmentGenerator = equalInstallmentGeneratorFactory.create(interestType, loanInterest);
+		
+		List<InstallmentPrincipalAndInterest> principalWithInterestInstallments = equalInstallmentGenerator.generateEqualInstallments(loanInterestCalculationDetails);
+		List<LoanScheduleEntity> unroundedLoanSchedules = createUnroundedLoanSchedulesFromInstallments(installmentDates, loanInterest, this.loanAmount, meetingScheduledEvent, principalWithInterestInstallments, this.getAccountFees());
+		
+		Money rawAmount = calculateTotalFeesAndInterestForLoanSchedules(unroundedLoanSchedules);
+		
+		if (loanSummary == null) {
+		    // save it to LoanBO first and when loan summary is created it will
+		    // be retrieved and save to loan summary
+		    setRawAmountTotal(rawAmount);
+		} else {
+		    loanSummary.setRawAmountTotal(rawAmount);
+		}
+		
+		List<LoanScheduleEntity> allExistingLoanSchedules = new ArrayList<LoanScheduleEntity>();
+		
+		LoanScheduleRounderHelper loanScheduleRounderHelper = new DefaultLoanScheduleRounderHelper();
+		LoanScheduleRounder loanScheduleInstallmentRounder = new DefaultLoanScheduleRounder(loanScheduleRounderHelper);
+		
+		List<LoanScheduleEntity> roundedLoanSchedules = loanScheduleInstallmentRounder.round(graceType, gracePeriodDuration, loanAmount,
+				interestType, unroundedLoanSchedules, allExistingLoanSchedules);
+		
+		for (LoanScheduleEntity roundedLoanSchedule : roundedLoanSchedules) {
+		    addAccountActionDate(roundedLoanSchedule);
+		}
         LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) getAccountActionDate((short) 1);
         loanScheduleEntity.setMiscFee(miscFee);
         loanScheduleEntity.setMiscPenalty(miscPenalty);

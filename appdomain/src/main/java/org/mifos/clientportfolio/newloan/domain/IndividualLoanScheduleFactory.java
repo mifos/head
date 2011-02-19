@@ -50,6 +50,7 @@ public class IndividualLoanScheduleFactory implements LoanScheduleFactory {
             gracePeriodDuration = loanProduct.getGracePeriodDuration().intValue();
         }
         MeetingBO loanMeeting = loanProduct.getLoanOfferingMeetingValue();
+        // FIXME - keithw - fixed interest rate. pass in.
         Double interestRate = Double.valueOf("10.0");
         Integer interestDays = Integer.valueOf(AccountingRules.getNumberOfInterestDays().intValue());
         InterestType interestType = loanProduct.getInterestType();

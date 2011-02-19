@@ -20,6 +20,17 @@
 
 package org.mifos.application.servicefacade;
 
+import static org.apache.commons.lang.StringUtils.EMPTY;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
+import static org.mifos.framework.util.CollectionUtils.collect;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -41,20 +52,30 @@ import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.persistence.FeeDao;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.fund.persistence.FundDao;
-import org.mifos.accounts.loan.business.*;
+import org.mifos.accounts.loan.business.LoanActivityEntity;
+import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.business.LoanPerformanceHistoryEntity;
+import org.mifos.accounts.loan.business.LoanScheduleEntity;
+import org.mifos.accounts.loan.business.RepaymentResultsHolder;
+import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.struts.action.validate.ProductMixValidator;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.MultipleLoanCreationDto;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
-import org.mifos.accounts.productdefinition.business.*;
+import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
+import org.mifos.accounts.productdefinition.business.LoanAmountOption;
+import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.accounts.productdefinition.business.LoanOfferingFundEntity;
+import org.mifos.accounts.productdefinition.business.LoanOfferingInstallmentRange;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.accounts.productdefinition.business.service.LoanProductService;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.accounts.util.helpers.InstallmentDate;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.holiday.persistence.HolidayDao;
@@ -73,12 +94,16 @@ import org.mifos.application.meeting.util.helpers.MeetingHelper;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
-import org.mifos.calendar.CalendarEvent;
 import org.mifos.clientportfolio.newloan.domain.IndividualLoanSchedule;
 import org.mifos.clientportfolio.newloan.domain.IndividualLoanScheduleFactory;
 import org.mifos.clientportfolio.newloan.domain.IndividualLoanScheduleImpl;
+import org.mifos.clientportfolio.newloan.domain.LoanInstallmentFactory;
+import org.mifos.clientportfolio.newloan.domain.LoanInstallmentFactoryImpl;
+import org.mifos.clientportfolio.newloan.domain.LoanInstallmentGenerator;
 import org.mifos.clientportfolio.newloan.domain.LoanScheduleRepaymentItem;
 import org.mifos.clientportfolio.newloan.domain.LoanScheduleRepaymentItemImpl;
+import org.mifos.clientportfolio.newloan.domain.RecurringScheduledEventFactory;
+import org.mifos.clientportfolio.newloan.domain.RecurringScheduledEventFactoryImpl;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
 import org.mifos.config.ProcessFlowRules;
@@ -116,11 +141,29 @@ import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.dto.domain.OpeningBalanceLoanAccount;
 import org.mifos.dto.domain.PaymentTypeDto;
-import org.mifos.dto.domain.PrdOfferingDto;
-import org.mifos.dto.domain.ValueListElement;
 import org.mifos.dto.domain.PersonnelDto;
+import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.domain.SurveyDto;
-import org.mifos.dto.screen.*;
+import org.mifos.dto.domain.ValueListElement;
+import org.mifos.dto.screen.AccountFeesDto;
+import org.mifos.dto.screen.ChangeAccountStatusDto;
+import org.mifos.dto.screen.ListElement;
+import org.mifos.dto.screen.LoanAccountDetailDto;
+import org.mifos.dto.screen.LoanAccountInfoDto;
+import org.mifos.dto.screen.LoanAccountMeetingDto;
+import org.mifos.dto.screen.LoanCreationGlimDto;
+import org.mifos.dto.screen.LoanCreationLoanDetailsDto;
+import org.mifos.dto.screen.LoanCreationPreviewDto;
+import org.mifos.dto.screen.LoanCreationProductDetailsDto;
+import org.mifos.dto.screen.LoanCreationResultDto;
+import org.mifos.dto.screen.LoanDisbursalDto;
+import org.mifos.dto.screen.LoanInformationDto;
+import org.mifos.dto.screen.LoanPerformanceHistoryDto;
+import org.mifos.dto.screen.LoanScheduledInstallmentDto;
+import org.mifos.dto.screen.LoanSummaryDto;
+import org.mifos.dto.screen.MultipleLoanAccountDetailsDto;
+import org.mifos.dto.screen.RepayLoanDto;
+import org.mifos.dto.screen.RepayLoanInfoDto;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.StatesInitializationException;
@@ -133,10 +176,6 @@ import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.Transformer;
-import org.mifos.schedule.ScheduledDateGeneration;
-import org.mifos.schedule.ScheduledEvent;
-import org.mifos.schedule.ScheduledEventFactory;
-import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration;
 import org.mifos.security.MifosUser;
 import org.mifos.security.authorization.AuthorizationManager;
 import org.mifos.security.util.ActivityContext;
@@ -146,13 +185,6 @@ import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-
-import java.math.BigDecimal;
-import java.util.*;
-
-import static org.apache.commons.lang.StringUtils.EMPTY;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
-import static org.mifos.framework.util.CollectionUtils.collect;
 
 public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade {
 
@@ -481,21 +513,21 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         Money amountPaidToDate = new Money(loanProduct.getCurrency(), openingBalanceLoan.getAmountPaidToDate());
         Integer numberOfInstallments = openingBalanceLoan.getNumberOfInstallments();
         LocalDate firstInstallmentDate = openingBalanceLoan.getFirstInstallmentDate();
-        LocalDate activationDate = openingBalanceLoan.getDisbursementDate();
-
-        CalendarEvent calendarEvents = holidayDao.findCalendarEventsForThisYearAndNext(customer.getOfficeId());
-
-        List<DateTime> loanScheduleDates = new ArrayList<DateTime>();
-        if (openingBalanceLoan.getNumberOfInstallments() > 0) {
-
-            ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(loanProduct.getLoanOfferingMeetingValue());
-            ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(
-                    calendarEvents.getWorkingDays(), calendarEvents.getHolidays());
-
-            loanScheduleDates = dateGeneration.generateScheduledDates(numberOfInstallments, firstInstallmentDate
-                    .toDateMidnight().toDateTime(), scheduledEvent);
-        }
-
+        LocalDate actualDisbursementDate = openingBalanceLoan.getDisbursementDate();
+        
+        boolean isRepaymentIndepOfMeetingEnabled = false;
+        
+        RecurringScheduledEventFactory scheduledEventFactory = new RecurringScheduledEventFactoryImpl();
+        
+        LoanInstallmentFactory loanInstallmentFactory = new LoanInstallmentFactoryImpl(scheduledEventFactory);
+		LoanInstallmentGenerator loanInstallmentGenerator = loanInstallmentFactory.create(loanProduct.getLoanOfferingMeetingValue(), isRepaymentIndepOfMeetingEnabled);
+        
+		List<InstallmentDate> installmentDates = loanInstallmentGenerator.generate(actualDisbursementDate, numberOfInstallments, loanProduct.getGracePeriodType().asEnum(), loanProduct.getGracePeriodDuration(), userOffice.getOfficeId());
+		List<DateTime> loanScheduleDates = new ArrayList<DateTime>();
+        for (InstallmentDate installmentDate : installmentDates) {
+        	loanScheduleDates.add(new DateTime(installmentDate));
+		}
+        
         IndividualLoanSchedule loanSchedule = new IndividualLoanScheduleFactory().create(loanScheduleDates, loanProduct, loanAmountDisbursed);
         List<LoanScheduleEntity> scheduledLoanRepayments = translateToLoanScheduleEntity(loanSchedule, customer);
 
