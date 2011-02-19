@@ -126,8 +126,7 @@ public class LoanProcessWithDifferentCurrencyTest extends UiTestCaseBase {
 
         createWeeklyLoanProduct();
 
-        String loanAccountId = "000100000000010";
-        createLoanAccountOfDifferentCurrency("Client-1-USD");
+        String loanAccountId = createLoanAccountOfDifferentCurrency("Client-1-USD");
         pendingApprovalToApplicationApproved(loanAccountId);
         disburseLoan(loanAccountId);
         applyPayment(loanAccountId);
@@ -149,7 +148,7 @@ public class LoanProcessWithDifferentCurrencyTest extends UiTestCaseBase {
 
      @SuppressWarnings({ "PMD.SignatureDeclareThrowsException" })
     // one of the dependent methods throws Exception
-    private void createLoanAccountOfDifferentCurrency(String clientName) throws Exception {
+    private String createLoanAccountOfDifferentCurrency(String clientName) throws Exception {
         loanTestHelper = new LoanTestHelper(selenium);
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString(clientName);
@@ -159,7 +158,7 @@ public class LoanProcessWithDifferentCurrencyTest extends UiTestCaseBase {
         submitAccountParameters.setAmount("1012.0");
         String fee = "USDfeeAdditional";
         submitAccountParameters.setAdditionalFee1(fee);
-        createLoanAndCheckAmount(searchParameters, submitAccountParameters);
+        return createLoanAndCheckAmount(searchParameters, submitAccountParameters);
     }
 
      @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -187,10 +186,11 @@ public class LoanProcessWithDifferentCurrencyTest extends UiTestCaseBase {
         loanTestHelper.disburseLoan(loanAccountId, params);
     }
 
-    private void createLoanAndCheckAmount(CreateLoanAccountSearchParameters searchParameters,
+    private String createLoanAndCheckAmount(CreateLoanAccountSearchParameters searchParameters,
             CreateLoanAccountSubmitParameters submitAccountParameters) {
         LoanAccountPage loanAccountPage = loanTestHelper.createLoanAccount(searchParameters, submitAccountParameters);
         loanAccountPage.verifyLoanAmount(submitAccountParameters.getAmount());
+        return loanAccountPage.getAccountId();
     }
 
     private SubmitMultiCurrencyFormParameters getWeeklyLoanProductParameters() {
