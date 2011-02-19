@@ -17,11 +17,9 @@
 
     <properties>
         <modules.root.dir>${basedir}/..</modules.root.dir>
-        <cargo.install.directory>${basedir}/target/installs</cargo.install.directory>
         <selenium.background>true</selenium.background>
         <selenium.log.output>true</selenium.log.output>
         <jetty.version>7.3.0.v20110203</jetty.version>
-        <jetty.container.url>http://download.eclipse.org/jetty/stable-7/dist/jetty-distribution-${jetty.version}.zip</jetty.container.url>
         <jdk.version>1.6</jdk.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -332,7 +330,7 @@
             <plugin>
                 <groupId>org.mortbay.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
-                <version>7.3.0.v20110203</version>
+                <version>${jetty.version}</version>
                 <executions>
                     <execution>
                         <id>start-container</id>
@@ -353,9 +351,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <!--
                     <skip>${maven.test.skip}</skip>
-                    -->
                     <connectors>
                         <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
                             <port>${servlet.port}</port>
