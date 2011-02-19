@@ -65,6 +65,9 @@
         </profile>
         <profile>
             <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
             <properties>
                 <selenium.background>false</selenium.background>
                 <selenium.log.output>false</selenium.log.output>
@@ -354,6 +357,9 @@
                         <goals>
                             <goal>run-war</goal>
                         </goals>
+                        <configuration>
+                            <daemon>true</daemon>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>stop-container</id>
@@ -375,9 +381,9 @@
                     <webAppConfig>
                         <contextPath>/mifos</contextPath>
                     </webAppConfig>
+                    <stopKey>secret</stopKey>
                     <stopPort>${stop.port}</stopPort>
                     <webApp>${basedir}/../war/target/mifos.war</webApp>
-                    <daemon>true</daemon>
                     <systemProperties>
                         <systemProperty>
                             <name>mifos.mode</name>
