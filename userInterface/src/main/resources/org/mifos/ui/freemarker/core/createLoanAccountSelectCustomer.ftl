@@ -20,26 +20,27 @@
 --]
 
 [@layout.webflow currentTab="ClientsAndAccounts"
-                 currentState="createSavingsAccount.flowState.selectCustomer" 
-                 states=["createSavingsAccount.flowState.selectCustomer", 
-                         "createSavingsAccount.flowState.enterAccountInfo", 
-                         "createSavingsAccount.flowState.reviewAndSubmit"]] 
+                 currentState="createLoanAccount.flowState.selectCustomer" 
+                 states=["createLoanAccount.flowState.selectCustomer", 
+                         "createLoanAccount.flowState.enterAccountInfo",
+                         "createLoanAccount.flowState.reviewInstallments", 
+                         "createLoanAccount.flowState.reviewAndSubmit"]] 
 
-<h1>[@spring.message "createSavingsAccount.selectCustomer.pageTitle" /] - <span class="standout">[@spring.message "createSavingsAccount.selectCustomer.pageSubtitle" /]</span></h1>
-<p>[@spring.message "createSavingsAccount.selectCustomer.instructions" /]</p>
+<h1>[@spring.message "createLoanAccount.wizard.title" /] - <span class="standout">[@spring.message "customerSearch.pageSubtitle" /]</span></h1>
+<p>[@spring.message "customerSearch.instructions" /]</p>
 <br/>
 
-<!-- Client search form -->
 [#if customerSearchResultsDto.pagedDetails?size == customerSearchResultsDto.searchDetails.pageSize]
     [#assign args=[customerSearchResultsDto.searchDetails.pageSize, customerSearchResultsDto.searchDetails.pageSize] /]
-    <div class="notice">[@spring.messageArgs "createSavingsAccount.selectCustomer.searchLimitReached" args /]</div>
+    <div class="notice">[@spring.messageArgs "customerSearch.searchLimitReached" args /]</div>
     <br/>
 [/#if]
-[@form.errors "savingsAccountFormBean.*"/]
+
+[@form.errors "customerSearchFormBean.*"/]
 <form action="${flowExecutionUrl}" method="post">
     <div class="row">
-        <label for="searchString">[@spring.message "createSavingsAccount.selectCustomer.searchTerm" /]:</label>
-        [@form.input path="savingsAccountFormBean.searchString" id="cust_search_account.input.searchString" attributes="" /]
+        <label for="searchString">[@spring.message "customerSearch.searchTerm" /]:</label>
+        [@form.input path="customerSearchFormBean.searchString" id="cust_search_account.input.searchString" attributes="" /]
         [@form.submitButton label="widget.form.buttonLabel.search" webflowEvent="searchTermEntered" /]
     </div>
 </form>

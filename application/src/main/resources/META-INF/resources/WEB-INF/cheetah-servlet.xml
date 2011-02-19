@@ -85,6 +85,9 @@
     <bean name="testingService" class="org.mifos.framework.util.StandardTestingService"/>
 
     <context:component-scan base-package="org.mifos.ui.core.controller"/>
+    <context:component-scan base-package="org.mifos.clientportfolio">
+        <context:include-filter type="regex" expression="org.mifos.clientportfolio.[^\.]*.ui.*" />
+    </context:component-scan>
     <context:component-scan base-package="org.mifos.platform">
         <context:include-filter type="regex" expression="org.mifos.platform.[^\.]*.ui.*" />
     </context:component-scan>

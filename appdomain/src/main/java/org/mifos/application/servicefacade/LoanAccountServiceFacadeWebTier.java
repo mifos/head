@@ -74,6 +74,7 @@ import org.mifos.accounts.productdefinition.business.service.LoanProductService;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
+import org.mifos.accounts.util.helpers.AccountSearchResultsDto;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.InstallmentDate;
 import org.mifos.accounts.util.helpers.PaymentData;
@@ -108,6 +109,7 @@ import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
 import org.mifos.config.ProcessFlowRules;
 import org.mifos.config.business.service.ConfigurationBusinessService;
+import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.api.CustomerLevel;
@@ -132,6 +134,8 @@ import org.mifos.dto.domain.CreateLoanRequest;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.CustomerDto;
+import org.mifos.dto.domain.CustomerSearchDto;
+import org.mifos.dto.domain.CustomerSearchResultDto;
 import org.mifos.dto.domain.InstallmentDetailsDto;
 import org.mifos.dto.domain.LoanAccountDetailsDto;
 import org.mifos.dto.domain.LoanActivityDto;
@@ -164,12 +168,14 @@ import org.mifos.dto.screen.LoanSummaryDto;
 import org.mifos.dto.screen.MultipleLoanAccountDetailsDto;
 import org.mifos.dto.screen.RepayLoanDto;
 import org.mifos.dto.screen.RepayLoanInfoDto;
+import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.StatesInitializationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
+import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.LocalizationConverter;
@@ -1605,4 +1611,41 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                 userContext,
                 new ActivityContext(ActivityMapper.getInstance().getActivityIdForState(newSate), officeId, loanOfficerId));
     }
+
+	@Override
+	public List<CustomerSearchResultDto> retrieveCustomersThatQualifyForLoans(CustomerSearchDto customerSearchDto) {
+		
+		MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+        
+		try {
+			List<CustomerSearchResultDto> pagedDetails = new ArrayList<CustomerSearchResultDto>();
+			
+			QueryResult customerForSavings = new CustomerPersistence().searchGroupClient(customerSearchDto.getSearchTerm(), userContext.getId());
+			
+			int position = (customerSearchDto.getPage()-1) * customerSearchDto.getPageSize();
+			List<AccountSearchResultsDto> pagedResults = customerForSavings.get(position, customerSearchDto.getPageSize());
+			int i=1;
+			for (AccountSearchResultsDto customerBO : pagedResults) {
+		          CustomerSearchResultDto customer = new CustomerSearchResultDto();
+		          customer.setCustomerId(customerBO.getClientId());
+		          customer.setBranchName(customerBO.getOfficeName());
+		          customer.setGlobalId(customerBO.getGlobelNo());
+		          
+	        	  customer.setCenterName(StringUtils.defaultIfEmpty(customerBO.getCenterName(), "no center"));
+	        	  customer.setGroupName(StringUtils.defaultIfEmpty(customerBO.getGroupName(), "no group"));
+	        	  customer.setClientName(customerBO.getClientName());
+		          
+		          pagedDetails.add(customer);
+		          i++;
+			}
+			return pagedDetails;
+		} catch (PersistenceException e) {
+			throw new MifosRuntimeException(e);
+		} catch (HibernateSearchException e) {
+			throw new MifosRuntimeException(e);
+		} catch (ConfigurationException e) {
+			throw new MifosRuntimeException(e);
+		}
+	}
 }

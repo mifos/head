@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+    <var name="customerSearchFormBean" class="org.mifos.clientportfolio.loan.ui.CustomerSearchFormBean" />
+
+    <decision-state id="isCustomerSearchRequiredStep">
+        <if test="requestParameters.customerId == null" then="customerSearchStep" else="customerSearchStep" />
+    </decision-state>
+
+    <view-state id="customerSearchStep" view="createLoanAccountCustomerSearch" model="customerSearchFormBean">
+    	<transition on="searchTermEntered" to="selectCustomerStep" validate="true">
+            <evaluate expression="loanAccountController.searchCustomers(customerSearchFormBean)" result="flowScope.customerSearchResultsDto" />
+        </transition>
+    	<transition on="cancel" to="cancel" validate="false"/>
+    </view-state>
+    
+    <view-state id="selectCustomerStep" view="createLoanAccountSelectCustomer" model="customerSearchFormBean">
+        <transition on="searchTermEntered" to="selectCustomerStep" validate="true">
+            <evaluate expression="loanAccountController.searchCustomers(customerSearchFormBean)" result="flowScope.customerSearchResultsDto" />
+        </transition>
+        <transition on="cancel" to="cancel" validate="false"/>
+    </view-state>
+    
+    <end-state id="cancel" view="externalRedirect:contextRelative:/custSearchAction.do?method=loadMainSearch"/>
+</flow>

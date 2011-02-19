@@ -20,24 +20,24 @@
 --]
 
 [@layout.webflow currentTab="ClientsAndAccounts"
-                 currentState="createSavingsAccount.flowState.selectCustomer" 
-                 states=["createSavingsAccount.flowState.selectCustomer", 
-                         "createSavingsAccount.flowState.enterAccountInfo", 
-                         "createSavingsAccount.flowState.reviewAndSubmit"]] 
+                 currentState="createLoanAccount.flowState.selectCustomer" 
+                 states=["createLoanAccount.flowState.selectCustomer", 
+                         "createLoanAccount.flowState.enterAccountInfo",
+                         "createLoanAccount.flowState.reviewInstallments", 
+                         "createLoanAccount.flowState.reviewAndSubmit"]] 
 
 <span id="page.id" title="CustSearchAccount"></span>
 
-<h1>[@spring.message "createSavingsAccount.customerSearch.pageTitle" /] - <span class="standout">[@spring.message "customerSearch.pageSubtitle" /]</span></h1>
-
+<h1>[@spring.message "createLoanAccount.wizard.title" /] - <span class="standout">[@spring.message "customerSearch.pageSubtitle" /]</span></h1>
 <p>[@spring.message "customerSearch.instructions" /]</p>
 <br/>
 
-[@form.errors "savingsAccountFormBean.*"/]
+[@form.errors "customerSearchFormBean.*"/]
 <form action="${flowExecutionUrl}" method="post" class="two-columns">
     <fieldset>
     <div class="row">
         <label for="searchString">[@spring.message "customerSearch.searchTerm" /]:</label>
-        [@form.input path="savingsAccountFormBean.searchString" id="cust_search_account.input.searchString" attributes="" /]
+        [@form.input path="customerSearchFormBean.searchString" id="cust_search_account.input.searchString" attributes="" /]
     </div>
     </fieldset>
     <div class="row">
