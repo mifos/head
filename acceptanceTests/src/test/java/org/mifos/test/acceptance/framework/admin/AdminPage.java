@@ -198,7 +198,9 @@ public class AdminPage extends MifosPage {
     public void defineMultiCurrencyLoanProduct(SubmitMultiCurrencyFormParameters formParameters) {
         DefineNewDifferentCurrencyLoanProductPage newLoanPage =  navigateToDefineDifferentCurrencyLoanProduct();
         newLoanPage.verifyPage();
+        newLoanPage.addFee(formParameters.getAdditionalFee1());
         newLoanPage.fillLoanParameters(formParameters);
+        //
         DefineNewLoanProductPreviewPage previewPage = newLoanPage.submitAndGotoNewLoanProductPreviewPage();
         previewPage.verifyPage();
         DefineNewLoanProductConfirmationPage confirmationPage = previewPage.submit();

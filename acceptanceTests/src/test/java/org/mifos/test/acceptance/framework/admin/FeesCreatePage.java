@@ -26,6 +26,9 @@ public class FeesCreatePage extends AbstractPage {
         public static final int WEEKLY_FEE_RECURRENCE = 1;
         public static final int ONETIME_FEE_FREQUENCY = 2;
         public static final int PERIODIC_FEE_FREQUENCY = 1;
+        public static final int USD = 1;
+        public static final int INR = 2;
+        public static final int EUR = 3;
         public static final String ALL_CUSTOMERS = "All Customers";
         private String feeName;
         private String categoryType;
@@ -39,6 +42,9 @@ public class FeesCreatePage extends AbstractPage {
         private double amount;
         private int glCode;
         private String feeFormula;
+        private int currency;
+        private String calcuateFeeAs;
+        private int calculateType;
         public static final String LOAN = "Loans";
 
         public String getFeeFormula() {
@@ -137,6 +143,29 @@ public class FeesCreatePage extends AbstractPage {
             this.monthRecurAfter = monthRecurAfter;
         }
 
+        public int getCurrency() {
+            return this.currency;
+        }
+
+        public void setCurrency(int currency) {
+            this.currency = currency;
+        }
+
+        public String getCalcuateFeeAs() {
+            return this.calcuateFeeAs;
+        }
+
+        public void setCalcuateFeeAs(String calcuateFeeAs) {
+            this.calcuateFeeAs = calcuateFeeAs;
+        }
+
+        public int getCalculateType() {
+            return this.calculateType;
+        }
+
+        public void setCalculateType(int calculateType) {
+            this.calculateType = calculateType;
+        }
     }
 
     public FeesCreatePage fillFeesParameters(SubmitFormParameters parameters) {
@@ -170,10 +199,25 @@ public class FeesCreatePage extends AbstractPage {
             selenium.select("feescreate.label.feeFormula", parameters.getFeeFormula());
             selenium.type("feescreate.input.rate", Double.toString(parameters.getRate()));
         }
+        if(parameters.getCategoryType().equals("Loans")) {
+            fillLoanParameters(parameters);
+        }
+
         selenium.select("feescreate.label.glCode", "label=" + parameters.getGlCode());
         return this;
     }
 
+    private void fillLoanParameters(SubmitFormParameters parameters){
+        if (parameters.getCurrency() != 0) {
+            selenium.select("currencyId", "value=" + Integer.toString(parameters.getCurrency()));
+        }
+        if(parameters.getCalcuateFeeAs() != null){
+            selenium.type("feescreate.input.rate", "label=" + parameters.getCalcuateFeeAs());
+        }
+        if(parameters.getCalcuateFeeAs() != null){
+            selenium.select("feescreate.label.feeFormula", "label=" + Integer.toString(parameters.getCalculateType()));
+        }
+    }
     public PreviewFeesCreatePage submitPageAndGotoPreviewFeesCreatePage() {
         selenium.click("feescreate.button.preview");
         waitForPageToLoad();

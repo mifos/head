@@ -140,7 +140,7 @@ public class FormParametersHelper {
         weeklyLoanProductParameters.setQuestionGroups(Arrays.asList(questionGroupTitle));
         return weeklyLoanProductParameters;
     }
-    
+
     public static CreateHolidaySubmitParameters getCreateHolidaySubmitParameters() {
         CreateHolidaySubmitParameters params = new CreateHolidayEntryPage.CreateHolidaySubmitParameters();
         params.setName("Holiday" + StringUtil.getRandomString(8));
@@ -154,4 +154,17 @@ public class FormParametersHelper {
         params.addOffice("MyOffice1233266206574");
         return params;
     }
+
+    public static FeesCreatePage.SubmitFormParameters getOneTimeLoanMultiCurrencyFeesParameters(){
+        FeesCreatePage.SubmitFormParameters formParameters =  new FeesCreatePage.SubmitFormParameters();
+        formParameters.setFeeName(StringUtil.getRandomString(5));
+        formParameters.setCategoryType("Loans");
+        formParameters.setDefaultFees(false);
+        formParameters.setFeeFrequencyType(formParameters.ONETIME_FEE_FREQUENCY);
+        formParameters.setCustomerCharge("Upfront");
+        formParameters.setAmount(10);
+        formParameters.setCurrency(FeesCreatePage.SubmitFormParameters.USD);
+        formParameters.setGlCode(31301);
+        return formParameters;
+        }
 }

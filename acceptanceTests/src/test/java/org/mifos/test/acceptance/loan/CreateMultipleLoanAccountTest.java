@@ -27,9 +27,15 @@ import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.center.CreateCenterEnterDataPage;
 import org.mifos.test.acceptance.framework.center.MeetingParameters;
 import org.mifos.test.acceptance.framework.group.EditCustomerStatusParameters;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountsEntryPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountsSearchPage;
+import org.mifos.test.acceptance.framework.loan.CreateMultipleLoanAccountSelectParameters;
+import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
+import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.SubmitFormParameters;
 import org.mifos.test.acceptance.framework.office.OfficeEditInformationPage;
 import org.mifos.test.acceptance.framework.testhelpers.CenterTestHelper;
+import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
+import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.framework.testhelpers.OfficeHelper;
 import org.mifos.test.acceptance.framework.testhelpers.UserHelper;
@@ -44,7 +50,7 @@ import org.testng.annotations.Test;
 
 @SuppressWarnings("PMD")
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"smoke","loan","acceptance","ui"})
+@Test(sequential=true, groups={"loan","acceptance","ui"})
 public class CreateMultipleLoanAccountTest extends UiTestCaseBase {
     @Autowired
     private DriverManagerDataSource dataSource;
@@ -55,6 +61,7 @@ public class CreateMultipleLoanAccountTest extends UiTestCaseBase {
 
     private OfficeHelper officeHelper;
     private UserHelper userHelper;
+    private LoanTestHelper loanTestHelper;
     private CenterTestHelper centerTestHelper;
     private NavigationHelper navigationHelper;
 
@@ -66,6 +73,7 @@ public class CreateMultipleLoanAccountTest extends UiTestCaseBase {
         dbUnitUtilities.loadDataFromFile("acceptance_small_004_dbunit.xml", dataSource);
         officeHelper = new OfficeHelper(selenium);
         userHelper = new UserHelper(selenium);
+        loanTestHelper = new LoanTestHelper(selenium);
         centerTestHelper = new CenterTestHelper(selenium);
         navigationHelper = new NavigationHelper(selenium);
     }
@@ -116,9 +124,56 @@ public class CreateMultipleLoanAccountTest extends UiTestCaseBase {
         multipleAccPage.verifyOfficerNotInSelectOptions("Office3", "Jenna Barth");
     }
 
+    /**
+     * Verify multiple loan accounts can be created for
+     * clients with loans having installments by loan cycle.
+     * http://mifosforge.jira.com/browse/MIFOSTEST-117
+     * @throws Exception
+     */
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void verifyCreatingWithProductInstallmentsByLoanCycle() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml", dataSource, selenium);
+
+        DefineNewLoanProductPage.SubmitFormParameters productParams = FormParametersHelper.getWeeklyLoanProductParameters();
+        productParams.setOfferingName("prod117");
+        productParams.setOfferingShortName("p117");
+        productParams.setCalculateLoanAmount(SubmitFormParameters.SAME_FOR_ALL_LOANS);
+        productParams.setMinLoanAmount("5000");
+        productParams.setMaxLoanAmount("10000");
+        productParams.setDefaultLoanAmount("7500");
+        productParams.setCalculateInstallments(SubmitFormParameters.BY_LOAN_CYCLE);
+        String[][] calculateInstallments = new String[][] {
+                {"26", "52", "52"},
+                {"20", "30", "30"},
+                {"15", "25", "25"},
+                {"10", "15", "15"},
+                {"5", "10", "10"},
+                {"1", "5", "5"}
+            };
+        productParams.setCycleInstallments(calculateInstallments);
+        CreateMultipleLoanAccountSelectParameters multipleSelectParams = new CreateMultipleLoanAccountSelectParameters();
+        multipleSelectParams.setBranch("Office2");
+        multipleSelectParams.setLoanOfficer("John Okoth");
+        multipleSelectParams.setCenter("Center2");
+        multipleSelectParams.setLoanProduct("prod117");
+
+        loanTestHelper.defineNewLoanProduct(productParams);
+        CreateLoanAccountsEntryPage createLoanAccountsEntryPage = navigateToCreateMultipleLoanAccountsEntryPage(multipleSelectParams);
+        for(int i = 0; i < 4; i++) {
+            createLoanAccountsEntryPage.verifyNoOfInstallments(i, calculateInstallments[0][2]);
+        }
+    }
+
     private CreateLoanAccountsSearchPage navigateToCreateMultipleLoanAccountsSearchPage() {
         return navigationHelper
                 .navigateToClientsAndAccountsPage()
                 .navigateToCreateMultipleLoanAccountsUsingLeftMenu();
+    }
+
+    private CreateLoanAccountsEntryPage navigateToCreateMultipleLoanAccountsEntryPage(CreateMultipleLoanAccountSelectParameters multipleSelectParams) {
+        return navigationHelper
+            .navigateToClientsAndAccountsPage()
+            .navigateToCreateMultipleLoanAccountsUsingLeftMenu()
+            .searchAndNavigateToCreateMultipleLoanAccountsEntryPage(multipleSelectParams);
     }
 }

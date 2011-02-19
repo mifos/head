@@ -56,7 +56,7 @@ import java.sql.SQLException;
 
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"loan","acceptance","ui"})
+@Test(sequential = true, groups = {"loan","acceptance","ui", "smoke"})
 public class RedoLoanDisbursalTest extends UiTestCaseBase {
     private LoanTestHelper loanTestHelper;
     private NavigationHelper navigationHelper;
@@ -139,9 +139,9 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
 
     private void verifyRedoLoanDisbursalWithPastDate(LoanAccountPage loanAccountPage) {
         loanAccountPage.verifyStatus("Closed- Obligation met");
-     //   loanAccountPage.verifyTotalOriginalLoan("4290.0");
-    //    loanAccountPage.verifyTotalAmountPaid("4290.0");
-     //   loanAccountPage.verifyLoanTotalBalance("0.0");
+        loanAccountPage.verifyTotalOriginalLoan("4290.0");
+        loanAccountPage.verifyTotalAmountPaid("4290.0");
+        loanAccountPage.verifyLoanTotalBalance("0.0");
 
         TransactionHistoryPage transactionHistoryPage = loanAccountPage.navigateToTransactionHistory();
         transactionHistoryPage.verifyTransactionHistory(4290, 3, 217);
@@ -302,7 +302,7 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void dataSetUpForVariableInstallmentLoan() throws Exception {
+    private void dataSetUpForVariableInstallmentLoan() throws Exception {
         navigationHelper = new NavigationHelper(selenium);
         loanTestHelper = new LoanTestHelper(selenium);
         loanProductTestHelper = new LoanProductTestHelper(selenium);
