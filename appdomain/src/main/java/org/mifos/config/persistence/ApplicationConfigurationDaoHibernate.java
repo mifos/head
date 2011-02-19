@@ -118,7 +118,8 @@ public class ApplicationConfigurationDaoHibernate implements ApplicationConfigur
 
     // this method is used by Localization class to load all the supported
     // locales to its cache
-    @SuppressWarnings("unchecked")
+    @Override
+	@SuppressWarnings("unchecked")
     public List<SupportedLocalesEntity> findSupportedLocale() {
         List<SupportedLocalesEntity> locales = null;
 

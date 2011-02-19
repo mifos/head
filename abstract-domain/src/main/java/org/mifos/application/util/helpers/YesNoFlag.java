@@ -44,7 +44,8 @@ public enum YesNoFlag implements LocalizedTextLookup {
         throw new RuntimeException("no field type " + value);
     }
 
-    public String getPropertiesKey() {
+    @Override
+	public String getPropertiesKey() {
         return "YesNoFlag." + toString();
     }
 

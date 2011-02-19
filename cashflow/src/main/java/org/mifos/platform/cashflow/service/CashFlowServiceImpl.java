@@ -66,7 +66,8 @@ public class CashFlowServiceImpl implements CashFlowService {
         return new MonthlyCashFlowDetail(startMonthYear, null, null, null);
     }
 
-    public CashFlowBoundary getCashFlowBoundary(DateTime firstInstallmentDueDate, DateTime lastInstallmentDueDate) {
+    @Override
+	public CashFlowBoundary getCashFlowBoundary(DateTime firstInstallmentDueDate, DateTime lastInstallmentDueDate) {
         DateTime monthAfterLastInstallment = lastInstallmentDueDate.plusMonths(EXTRA_DURATION_FOR_CASH_FLOW_SCHEDULE)
                 .withDayOfMonth(FIRST_DAY);
         DateTime monthBeforeFirstInstallment = firstInstallmentDueDate.minusMonths(EXTRA_DURATION_FOR_CASH_FLOW_SCHEDULE)

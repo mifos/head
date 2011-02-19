@@ -1016,7 +1016,8 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         return result;
     }
 
-    public LoanInformationDto retrieveLoanInformation(String globalAccountNum) {
+    @Override
+	public LoanInformationDto retrieveLoanInformation(String globalAccountNum) {
 
         MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = new UserContextFactory().create(mifosUser);
@@ -1468,7 +1469,8 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             List<ClientBO> clients) {
         return collect(clients,
                 new Transformer<ClientBO, MultipleLoanCreationDto>() {
-                    public MultipleLoanCreationDto transform(ClientBO client) {
+                    @Override
+					public MultipleLoanCreationDto transform(ClientBO client) {
                         return new MultipleLoanCreationDto(client, loanOffering.eligibleLoanAmount(client
                                 .getMaxLoanAmount(loanOffering), client.getMaxLoanCycleForProduct(loanOffering)),
                                 loanOffering.eligibleNoOfInstall(client.getMaxLoanAmount(loanOffering), client

@@ -1,0 +1,20 @@
+
+Based on Acceptance_small_004 data set.  Added one new office that has a single Center:
+MyOffice1233266931234 / MyCenter1233266935468 /
+
+
+This center has 6 Groups.  Each Group has 10 Clients.
+
+
+Client with approved loan waiting to be disbursed:
+Stu1233266943781 Client1233266943781
+
+Loan account:
+WeeklyClientDeclinetLoanWithPeriodicFee # 000100000000460 
+
+
+This Group:
+MyGroup1233266937781
+
+has one group loan:
+WeeklyGroupDeclineLoanWithPeriodicFee # 000100000000459 

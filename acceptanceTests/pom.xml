@@ -172,11 +172,6 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>r08</version>
-        </dependency>
     </dependencies>
 
     <build>
@@ -255,7 +250,9 @@
                         <configuration>
                             <sqlCommand>USE ${acceptance.database}</sqlCommand>
                             <srcFiles>
-                                <srcFile>${sql.resources.test.directory}/acceptance_test_dump.sql</srcFile>
+                                <srcFile>${sql.resources.main.directory}/base-schema.sql</srcFile>
+                                <srcFile>${sql.resources.main.directory}/base-data.sql</srcFile>
+                                <srcFile>${sql.resources.test.directory}/acceptance_test_data.sql</srcFile>
                                 <srcFile>${sql.resources.main.directory}/init_mifos_password.sql</srcFile>
                             </srcFiles>
                         </configuration>
@@ -300,6 +297,11 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.4.3</version>
                 <configuration>
+                    <groups>${acceptanceTest.groups.to.run}</groups>
+                    <excludedGroups>workInProgress</excludedGroups>
+                    <!--
+                        Skip the normal tests, we'll run them in the integration-test phase
+                    -->
                     <redirectTestOutputToFile>true</redirectTestOutputToFile>
                     <skip>true</skip>
                     <systemProperties>
@@ -319,29 +321,12 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <id>run_db_unit_independent</id>
                         <phase>integration-test</phase>
                         <goals>
                             <goal>test</goal>
                         </goals>
                         <configuration>
-                            <groups>no_db_unit</groups>
-                            <excludedGroups>workInProgress</excludedGroups>
                             <skip>${maven.test.skip}</skip>
-                            <failIfNoTests>false</failIfNoTests>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>run_db_unit_dependent</id>
-                        <phase>integration-test</phase>
-                        <goals>
-                            <goal>test</goal>
-                        </goals>
-                        <configuration>
-                            <groups>${acceptanceTest.groups.to.run}</groups>
-                            <excludedGroups>no_db_unit,workInProgress</excludedGroups>
-                            <skip>${maven.test.skip}</skip>
-                            <failIfNoTests>false</failIfNoTests>
                         </configuration>
                     </execution>
                 </executions>

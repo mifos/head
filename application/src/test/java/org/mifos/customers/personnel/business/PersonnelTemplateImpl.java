@@ -71,71 +71,88 @@ public class PersonnelTemplateImpl implements PersonnelTemplate {
         this.address = new Address();
     }
 
-    public PersonnelLevel getPersonnelLevel() {
+    @Override
+	public PersonnelLevel getPersonnelLevel() {
         return this.personnelLevel;
     }
 
-    public Short getOfficeId() {
+    @Override
+	public Short getOfficeId() {
         return this.officeId;
     }
 
-    public Integer getTitleId() {
+    @Override
+	public Integer getTitleId() {
         return this.titleId;
     }
 
-    public Short getPreferredLocale() {
+    @Override
+	public Short getPreferredLocale() {
         return this.preferredLocale;
     }
 
-    public String getPassword() {
+    @Override
+	public String getPassword() {
         return this.password;
     }
 
-    public String getUserName() {
+    @Override
+	public String getUserName() {
         return this.userName;
     }
 
-    public String getEmailId() {
+    @Override
+	public String getEmailId() {
         return this.emailId;
     }
 
-    public List<Short> getRoleIds() {
+    @Override
+	public List<Short> getRoleIds() {
         return this.roleIds;
     }
 
-    public List<CustomFieldDto> getCustomFields() {
+    @Override
+	public List<CustomFieldDto> getCustomFields() {
         return this.customFields;
     }
 
-    public Name getName() {
+    @Override
+	public Name getName() {
         return this.name;
     }
 
-    public String getGovernmentIdNumber() {
+    @Override
+	public String getGovernmentIdNumber() {
         return this.governmentIdNumber;
     }
 
-    public Date getDateOfBirth() {
+    @Override
+	public Date getDateOfBirth() {
         return this.dateOfBirth;
     }
 
-    public Integer getMaritalStatusId() {
+    @Override
+	public Integer getMaritalStatusId() {
         return this.maritalStatusId;
     }
 
-    public Integer getGenderId() {
+    @Override
+	public Integer getGenderId() {
         return this.genderId;
     }
 
-    public Date getDateOfJoiningMFI() {
+    @Override
+	public Date getDateOfJoiningMFI() {
         return this.dateOfJoiningMFI;
     }
 
-    public Date getDateOfJoiningBranch() {
+    @Override
+	public Date getDateOfJoiningBranch() {
         return this.dateOfJoiningBranch;
     }
 
-    public Address getAddress() {
+    @Override
+	public Address getAddress() {
         return this.address;
     }
 

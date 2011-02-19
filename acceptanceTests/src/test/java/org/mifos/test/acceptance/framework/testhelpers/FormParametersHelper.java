@@ -110,7 +110,19 @@ public class FormParametersHelper {
         return formParameters;
     }
 
-    public static FeesCreatePage.SubmitFormParameters getCreatePeriodicFeesParameters(){
+    public static FeesCreatePage.SubmitFormParameters getCreateOneTimeFeesParameters(){
+        FeesCreatePage.SubmitFormParameters formParameters =  new FeesCreatePage.SubmitFormParameters();
+        formParameters.setFeeName(StringUtil.getRandomString(5));
+        formParameters.setCategoryType("All Customers");
+        formParameters.setDefaultFees(false);
+        formParameters.setFeeFrequencyType(formParameters.ONETIME_FEE_FREQUENCY);
+        formParameters.setCustomerCharge("Upfront");
+        formParameters.setAmount(20);
+        formParameters.setGlCode(31301);
+        return formParameters;
+        }
+
+        public static FeesCreatePage.SubmitFormParameters getCreatePeriodicFeesParameters(){
         FeesCreatePage.SubmitFormParameters formParameters =  new FeesCreatePage.SubmitFormParameters();
         formParameters.setFeeName(StringUtil.getRandomString(5));
         formParameters.setCategoryType("Group");

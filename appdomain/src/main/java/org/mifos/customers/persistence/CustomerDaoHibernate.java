@@ -289,7 +289,8 @@ public class CustomerDaoHibernate implements CustomerDao {
 
     public static Comparator<CustomerDetailDto> searchIdComparator() {
         return new Comparator<CustomerDetailDto>() {
-            public int compare(final CustomerDetailDto o1, final CustomerDetailDto o2) {
+            @Override
+			public int compare(final CustomerDetailDto o1, final CustomerDetailDto o2) {
                 return ChapterNum.compare(o1.getSearchId(), o2.getSearchId());
             }
         };

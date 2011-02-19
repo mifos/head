@@ -31,11 +31,13 @@ public class DailyScheduledEvent extends AbstractScheduledEvent {
         this.every = every;
     }
 
-    public DateTime nextEventDateAfter(final DateTime startDate) {
+    @Override
+	public DateTime nextEventDateAfter(final DateTime startDate) {
         return CalendarUtils.getNextDateForDay(startDate, every);
     }
 
-    public DateTime nearestMatchingDateBeginningAt(final DateTime startDate) {
+    @Override
+	public DateTime nearestMatchingDateBeginningAt(final DateTime startDate) {
 
         return CalendarUtils.getNextDateForDay(startDate, every);
     }

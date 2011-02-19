@@ -86,7 +86,8 @@ public class HolidayBO extends AbstractBusinessObject implements Holiday {
         this.validationEnabled = validationEnabled;
     }
 
-    public RepaymentRuleTypes getRepaymentRuleType() {
+    @Override
+	public RepaymentRuleTypes getRepaymentRuleType() {
         return repaymentRuleType;
     }
 
@@ -99,7 +100,8 @@ public class HolidayBO extends AbstractBusinessObject implements Holiday {
         return holidayFromDate;
     }
 
-    public DateTime getThruDate() {
+    @Override
+	public DateTime getThruDate() {
         return new DateTime(getHolidayThruDate());
     }
 
@@ -160,7 +162,8 @@ public class HolidayBO extends AbstractBusinessObject implements Holiday {
         (dateToCheck.isBefore(thruDate) || dateToCheck.isEqual(thruDate)));
     }
 
-    public boolean encloses(final DateTime dateTime) {
+    @Override
+	public boolean encloses(final DateTime dateTime) {
         return encloses(dateTime.toDate());
     }
 
@@ -203,7 +206,8 @@ public class HolidayBO extends AbstractBusinessObject implements Holiday {
                 .getHolidayThruDate())));
     }
 
-    public void markAsApplied() {
+    @Override
+	public void markAsApplied() {
         this.setHolidayChangesAppliedFlag(YesNoFlag.YES.getValue());
     }
 
@@ -236,7 +240,8 @@ public class HolidayBO extends AbstractBusinessObject implements Holiday {
         validateFromDateAgainstThruDate(this.holidayFromDate, this.holidayThruDate);
     }
 
-    public boolean isFutureRepayment() {
+    @Override
+	public boolean isFutureRepayment() {
         return repaymentRuleType != RepaymentRuleTypes.SAME_DAY;
     }
 

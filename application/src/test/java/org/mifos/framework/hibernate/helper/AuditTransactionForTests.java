@@ -25,30 +25,38 @@ import org.hibernate.HibernateException;
 import org.hibernate.Transaction;
 
 public class AuditTransactionForTests implements Transaction {
-    public void begin() throws HibernateException {
+    @Override
+	public void begin() throws HibernateException {
     }
 
-    public void commit() throws HibernateException {
+    @Override
+	public void commit() throws HibernateException {
     }
 
-    public void rollback() throws HibernateException {
+    @Override
+	public void rollback() throws HibernateException {
     }
 
-    public boolean wasRolledBack() throws HibernateException {
+    @Override
+	public boolean wasRolledBack() throws HibernateException {
         return false;
     }
 
-    public boolean wasCommitted() throws HibernateException {
+    @Override
+	public boolean wasCommitted() throws HibernateException {
         return true;
     }
 
-    public boolean isActive() throws HibernateException {
+    @Override
+	public boolean isActive() throws HibernateException {
         return true;
     }
 
-    public void registerSynchronization(Synchronization synchronization) throws HibernateException {
+    @Override
+	public void registerSynchronization(Synchronization synchronization) throws HibernateException {
     }
 
-    public void setTimeout(int i) {
+    @Override
+	public void setTimeout(int i) {
     }
 }

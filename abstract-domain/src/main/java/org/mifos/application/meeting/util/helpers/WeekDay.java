@@ -88,7 +88,8 @@ public enum WeekDay implements LocalizedTextLookup {
         return getWeekdayName();
     }
 
-    public String getPropertiesKey() {
+    @Override
+	public String getPropertiesKey() {
         return WeekDay.class.getSimpleName()+ "." + toString();
     }
 

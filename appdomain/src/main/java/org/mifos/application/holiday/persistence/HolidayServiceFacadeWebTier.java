@@ -170,7 +170,8 @@ public class HolidayServiceFacadeWebTier implements HolidayServiceFacade {
         }
     }
 
-    public boolean isFutureRepaymentHoliday(Short officeId, Calendar date) {
+    @Override
+	public boolean isFutureRepaymentHoliday(Short officeId, Calendar date) {
         return holidayService.isFutureRepaymentHoliday(date, officeId);
     }
 

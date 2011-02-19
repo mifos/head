@@ -27,7 +27,6 @@ import static org.easymock.classextension.EasyMock.verify;
 import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
 import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
 import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
-import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
@@ -74,7 +73,6 @@ import org.mifos.accounts.productdefinition.business.LoanAmountSameForAllLoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingFeesEntity;
 import org.mifos.accounts.productdefinition.business.LoanOfferingInstallmentRange;
-import org.mifos.accounts.productdefinition.business.LoanOfferingTestUtils;
 import org.mifos.accounts.productdefinition.business.PrdApplicableMasterEntity;
 import org.mifos.accounts.productdefinition.business.ProductCategoryBO;
 import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
@@ -83,7 +81,6 @@ import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
-import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountState;
@@ -120,9 +117,7 @@ import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.components.audit.persistence.LegacyAuditDao;
 import org.mifos.framework.components.audit.util.helpers.AuditConstants;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.util.DateTimeService;
@@ -144,7 +139,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
 
     @Autowired
@@ -741,8 +736,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         group = TestObjectFactory.getGroup(group.getCustomerId());
     }
 
-
-    public void xtestLoadWithFeeForLoanOffering() throws Exception {
+	public void xtestLoadWithFeeForLoanOffering() throws Exception {
         request.getSession().setAttribute(Constants.BUSINESS_KEY, group);
         loanOffering.addPrdOfferingFee(new LoanOfferingFeesEntity(loanOffering, fees.get(0)));
         TestObjectFactory.updateObject(loanOffering);
@@ -813,7 +807,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
     private void verifyInstallmentsOnSessionAndForm(LoanAccountActionForm loanAccountActionForm) throws PageExpiredException {
         List<RepaymentScheduleInstallment> repaymentSchedules = loanAccountActionForm.getInstallments();
         Assert.assertEquals(3, repaymentSchedules.size());
-        List<RepaymentScheduleInstallment> installmentsFromSession = (List) SessionUtils.getAttribute(LoanConstants.INSTALLMENTS, request);
+        List<RepaymentScheduleInstallment> installmentsFromSession = (List<RepaymentScheduleInstallment>) SessionUtils.getAttribute(LoanConstants.INSTALLMENTS, request);
         Assert.assertEquals(3, installmentsFromSession.size());
     }
 
@@ -1295,49 +1289,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         TestObjectFactory.updateObject(accountBO);
         return accountBO;
     }
-
-    private LoanOfferingBO getLoanOfferingFromLastLoan(String name, String shortName, ApplicableTo applicableTo,
-            RecurrenceType meetingFrequency, short recurAfter) throws SystemException, ApplicationException {
-        LoanPrdActionForm loanPrdActionForm = new LoanPrdActionForm();
-        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeeting(meetingFrequency,
-                recurAfter, CUSTOMER_MEETING, MONDAY));
-        Date currentDate = new Date(System.currentTimeMillis());
-        loanPrdActionForm = LoanOfferingTestUtils.populateNoOfInstallFromLastLoanAmount("2", new Integer("0"),
-                new Integer("100"), new Integer("101"), new Integer("200"), new Integer("201"), new Integer("300"),
-                new Integer("301"), new Integer("400"), new Integer("401"), new Integer("500"), new Integer("501"),
-                new Integer("600"), "10", "30", "20", "20", "40", "30", "30", "50", "40", "40", "60", "50", "50", "70",
-                "60", "60", "80", "70", LoanOfferingTestUtils.populateLoanAmountFromLastLoanAmount("2",
-                        new Integer("0"), new Integer("100"), new Integer("101"), new Integer("200"),
-                        new Integer("201"), new Integer("300"), new Integer("301"), new Integer("400"), new Integer(
-                                "401"), new Integer("500"), new Integer("501"), new Integer("600"), new Double("100"),
-                        new Double("300"), new Double("200"), new Double("200"), new Double("400"), new Double("300"),
-                        new Double("300"), new Double("500"), new Double("400"), new Double("400"), new Double("600"),
-                        new Double("500"), new Double("500"), new Double("700"), new Double("600"), new Double("600"),
-                        new Double("800"), new Double("700"), loanPrdActionForm));
-        return TestObjectFactory.createLoanOfferingFromLastLoan(name, shortName, applicableTo, currentDate,
-                PrdStatus.LOAN_ACTIVE, 1.2, InterestType.FLAT, false, false, meeting, GraceType.GRACEONALLREPAYMENTS,
-                loanPrdActionForm);
-    }
-
-    private LoanOfferingBO getLoanOfferingFromLoanCycle(String name, String shortName, ApplicableTo applicableTo,
-            RecurrenceType meetingFrequency, short recurAfter) throws SystemException, ApplicationException {
-        LoanPrdActionForm loanPrdActionForm = new LoanPrdActionForm();
-        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeeting(meetingFrequency,
-                recurAfter, CUSTOMER_MEETING, MONDAY));
-        Date currentDate = new Date(System.currentTimeMillis());
-        loanPrdActionForm = LoanOfferingTestUtils.populateNoOfInstallFromLoanCycle("3", "10", "30", "20", "20", "40",
-                "30", "30", "50", "40", "40", "60", "50", "50", "70", "60", "60", "80", "70", LoanOfferingTestUtils
-                        .populateLoanAmountFromLoanCycle("3", new Double("1000"), new Double("3000"),
-                                new Double("2000"), new Double("2000"), new Double("4000"), new Double("3000"),
-                                new Double("3000"), new Double("5000"), new Double("4000"), new Double("4000"),
-                                new Double("6000"), new Double("5000"), new Double("5000"), new Double("7000"),
-                                new Double("6000"), new Double("6000"), new Double("8000"), new Double("7000"),
-                                loanPrdActionForm));
-        return TestObjectFactory.createLoanOfferingFromLastLoan(name, shortName, applicableTo, currentDate,
-                PrdStatus.LOAN_ACTIVE, 1.2, InterestType.FLAT, false, false, meeting, GraceType.GRACEONALLREPAYMENTS,
-                loanPrdActionForm);
-    }
-
+  
     private String offSetCurrentDate(int noOfDays, Locale locale) throws InvalidDateException {
         Calendar currentDateCalendar = new GregorianCalendar();
         int year = currentDateCalendar.get(Calendar.YEAR);

@@ -19,11 +19,14 @@
  */
 package org.mifos.test.acceptance.admin;
 
+import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.admin.ViewProductCategoriesPage;
+import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -31,10 +34,15 @@ import org.testng.annotations.Test;
 
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"acceptance","ui", "smoke","no_db_unit"})
+@Test(sequential = true, groups = {"acceptance","ui", "admin"})
 public class ViewProductCategoriesTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;
+
+    @Autowired
+    private DbUnitUtilities dbUnitUtilities;
+    @Autowired
+    private InitializeApplicationRemoteTestingService initRemote;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -56,6 +64,7 @@ public class ViewProductCategoriesTest extends UiTestCaseBase {
     // http://mifosforge.jira.com/browse/MIFOSTEST-649
     public void verifyViewProductCategoriesTest()throws Exception {
         //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml", dataSource, selenium);
 
         //When
         AdminPage adminPage = loginAndGoToAdminPage();

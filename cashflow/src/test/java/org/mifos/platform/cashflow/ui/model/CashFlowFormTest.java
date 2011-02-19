@@ -61,7 +61,7 @@ public class CashFlowFormTest {
         CashFlowDetail cashFlowDetail = new CashFlowDetail(Collections.EMPTY_LIST);
         CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail, false, new BigDecimal(1000), 10d, Locale.US);
         cashFlowForm.setTotalExpenses(BigDecimal.valueOf(76));
-        cashFlowForm.setTotalRevenues(BigDecimal.valueOf(55).add(BigDecimal.valueOf(1000)));
+        cashFlowForm.setTotalRevenues(BigDecimal.valueOf(55));
         BigDecimal repaymentCapacity = cashFlowForm.computeRepaymentCapacity(BigDecimal.valueOf(60));
         assertThat(repaymentCapacity, is(notNullValue()));
         assertThat(repaymentCapacity.doubleValue(), is(1631.67));

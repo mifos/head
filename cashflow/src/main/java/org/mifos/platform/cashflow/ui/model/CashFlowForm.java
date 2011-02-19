@@ -19,15 +19,15 @@
  */
 package org.mifos.platform.cashflow.ui.model;
 
+import org.mifos.platform.cashflow.CashFlowConstants;
+import org.mifos.platform.cashflow.service.CashFlowDetail;
+import org.mifos.platform.cashflow.service.MonthlyCashFlowDetail;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
-import org.mifos.platform.cashflow.CashFlowConstants;
-import org.mifos.platform.cashflow.service.CashFlowDetail;
-import org.mifos.platform.cashflow.service.MonthlyCashFlowDetail;
 
 public class CashFlowForm implements Serializable {
     private static final long serialVersionUID = -3806820293757764245L;
@@ -117,7 +117,7 @@ public class CashFlowForm implements Serializable {
     }
 
     public BigDecimal computeRepaymentCapacity(BigDecimal totalInstallmentAmount) {
-        return getTotalBalance().multiply(CashFlowConstants.HUNDRED).
+        return getTotalBalance().add(loanAmount).multiply(CashFlowConstants.HUNDRED).
                 divide(totalInstallmentAmount, 2, BigDecimal.ROUND_HALF_UP);
     }
 }

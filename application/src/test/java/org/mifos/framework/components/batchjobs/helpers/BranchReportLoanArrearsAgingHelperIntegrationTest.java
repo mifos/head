@@ -85,7 +85,8 @@ public class BranchReportLoanArrearsAgingHelperIntegrationTest extends BranchRep
     private void assertLoanArrearsAgingPopulated(Set<BranchReportLoanArrearsAgingBO> loanArrearsAgingSummaries) {
         Assert.assertNotNull(loanArrearsAgingSummaries);
         Collection foundPeriods = CollectionUtils.collect(loanArrearsAgingSummaries, new Transformer() {
-            public Object transform(Object input) {
+            @Override
+			public Object transform(Object input) {
                 return ((BranchReportLoanArrearsAgingBO) input).getAgingPeriod();
             }
         });

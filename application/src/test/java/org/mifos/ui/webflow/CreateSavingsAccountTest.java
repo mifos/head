@@ -64,7 +64,8 @@ public class CreateSavingsAccountTest extends AbstractXmlFlowExecutionTests {
     private CreateSavingsAccountFormBean formBean;
     private QuestionnaireServiceFacade questionnaireServiceFacade;
 
-    @Before
+    @Override
+	@Before
     public void setUp() {
         controller = mock(CreateSavingsAccountController.class);
         formBean = mock(CreateSavingsAccountFormBean.class);

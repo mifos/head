@@ -184,7 +184,8 @@ public class TransactionHistoryDto implements Serializable, Comparable<Transacti
      * one exists. The tests that rely on this ordering include:
      * <b>SavingsActionStrutsTest#testSuccessfullGetTransactionHistory()</b>
      */
-    public int compareTo(TransactionHistoryDto o) {
+    @Override
+	public int compareTo(TransactionHistoryDto o) {
         int dateCompare = this.getPostedDate().compareTo(o.getPostedDate());
         if (dateCompare != 0) {
             return dateCompare;
