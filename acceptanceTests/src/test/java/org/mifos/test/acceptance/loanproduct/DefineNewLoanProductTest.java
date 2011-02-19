@@ -22,7 +22,6 @@ package org.mifos.test.acceptance.loanproduct;
 
 
 import java.util.Random;
-
 import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.mifos.framework.util.DbUnitUtilities;
@@ -55,7 +54,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(sequential = true, groups = {"loanproduct", "acceptance", "ui"})
+@Test(sequential = true, groups = { "loanproduct", "acceptance","no_db_unit"})
 public class DefineNewLoanProductTest extends UiTestCaseBase {
 
     private Random random;

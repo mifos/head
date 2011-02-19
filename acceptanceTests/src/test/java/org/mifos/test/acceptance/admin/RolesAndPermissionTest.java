@@ -41,8 +41,8 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-@ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"admin", "acceptance","ui","no_db_unit"})
+@ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
+@Test(sequential = true, groups = {"admin", "acceptance", "ui", "no_db_unit"})
 public class RolesAndPermissionTest extends UiTestCaseBase {
 
     private NavigationHelper navigationHelper;
@@ -55,7 +55,7 @@ public class RolesAndPermissionTest extends UiTestCaseBase {
     private final static String userLoginName = "test_user";
     private final static String officeName = "test_office";
     private final static String clientName = "test client";
-    private final static String userName="test user";
+    private final static String userName = "test user";
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
@@ -66,8 +66,6 @@ public class RolesAndPermissionTest extends UiTestCaseBase {
         loanTestHelper = new LoanTestHelper(selenium);
         loanProductTestHelper = new LoanProductTestHelper(selenium);
         systemDateTime = new DateTime(2010, 10, 11, 10, 0, 0, 0);
-        // TODO - some databases do not have customer status with Id = 3
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
         TestDataSetup dataSetup = new TestDataSetup(selenium, applicationDatabaseOperation);
         loanTestHelper.setApplicationTime(systemDateTime);
         dataSetup.createBranch(OfficeParameters.BRANCH_OFFICE, officeName, "Off");
@@ -87,14 +85,14 @@ public class RolesAndPermissionTest extends UiTestCaseBase {
     public void adjustmentOfPostDatedTransactions() throws Exception {
         navigationHelper.navigateToAdminPage().navigateToViewRolesPage().navigateToManageRolePage("Admin").disablePermission("5_1_9").
                 verifyPermissionText("5_1_9", "Can adjust back dated transactions").submitAndGotoViewRolesPage();
-        DefineNewLoanProductPage.SubmitFormParameters formParameters = loanProductTestHelper.defineLoanProductParameters(5,1000,20,DefineNewLoanProductPage.SubmitFormParameters.DECLINING_BALANCE_INTEREST_RECALCULATION);
+        DefineNewLoanProductPage.SubmitFormParameters formParameters = loanProductTestHelper.defineLoanProductParameters(5, 1000, 20, DefineNewLoanProductPage.SubmitFormParameters.DECLINING_BALANCE_INTEREST_RECALCULATION);
         loanProductTestHelper.
                 navigateToDefineNewLoanPangAndFillMandatoryFields(formParameters).
                 submitAndGotoNewLoanProductPreviewPage().submit();
         loanTestHelper.createLoanAccount(clientName, formParameters.getOfferingName());
         loanTestHelper.approveLoan();
         loanTestHelper.disburseLoan(systemDateTime.plusDays(1));
-        loanTestHelper.makePayment(systemDateTime.plusDays(10),"10");
+        loanTestHelper.makePayment(systemDateTime.plusDays(10), "10");
         loanTestHelper.setApplicationTime(systemDateTime.plusDays(11)).navigateBack();
         new LoanAccountPage(selenium).navigateToApplyAdjustment().verifyAdjustBackdatedPermission().cancelAdjustment();
         loanTestHelper.repayLoan(systemDateTime.plusDays(11));
@@ -106,13 +104,25 @@ public class RolesAndPermissionTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void disableSystemInfoPermission() throws Exception {
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
-        ViewRolesPage viewRolesPage = adminPage.navigateToViewRolesPage();
-        ManageRolePage manageRolePage = viewRolesPage.navigateToManageRolePage("Admin");
-        manageRolePage.verifyPage();
-        manageRolePage.disablePermission("10_0");
-        viewRolesPage = manageRolePage.submitAndGotoViewRolesPage();
-        viewRolesPage.navigateToAdminPage();
+        changePermission(adminPage, "10_0", false);
         //try to reach System Info page, should fail
         adminPage = adminPage.failNavigationToSystemInfoPage();
-     }
+        // reverting for other tests to pass
+        changePermission(adminPage, "10_0", true);
+    }
+
+    private void changePermission(AdminPage adminPage, String permissionValue, boolean enablePermission) {
+        ViewRolesPage viewRolesPage;
+        ManageRolePage manageRolePage;
+        viewRolesPage = adminPage.navigateToViewRolesPage();
+        manageRolePage = viewRolesPage.navigateToManageRolePage("Admin");
+        manageRolePage.verifyPage();
+        if (enablePermission) {
+            manageRolePage.enablePermission(permissionValue);
+        } else {
+            manageRolePage.disablePermission(permissionValue);
+        }
+        viewRolesPage = manageRolePage.submitAndGotoViewRolesPage();
+        viewRolesPage.navigateToAdminPage();
+    }
 }
