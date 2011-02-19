@@ -27,22 +27,22 @@ import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.mifos.platform.accounting.AccountingDto;
-import org.mifos.platform.accounting.dao.IAccountingDao;
+import org.mifos.platform.accounting.dao.AccountingDao;
 import org.mifos.platform.accounting.tally.TallyXMLGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AccountingServiceImpl implements IAccountingService {
+public class AccountingServiceImpl implements AccountingService {
 
     private final AccountingDataCacheManager cacheManager;
 
-    private final IAccountingDao accountingDao;
+    private final AccountingDao accountingDao;
 
     private static final int LIST_SIZE = 10;
 
     @Autowired
-    public AccountingServiceImpl(AccountingDataCacheManager cacheManager, IAccountingDao accountingDao) {
+    public AccountingServiceImpl(AccountingDataCacheManager cacheManager, AccountingDao accountingDao) {
         this.cacheManager = cacheManager;
         this.accountingDao = accountingDao;
     }

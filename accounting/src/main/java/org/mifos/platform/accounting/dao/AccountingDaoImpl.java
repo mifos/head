@@ -38,7 +38,7 @@ import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class AccountingDaoImpl implements IAccountingDao {
+public class AccountingDaoImpl implements AccountingDao {
 
     private static final int BRANCH_NAME = 1;
     private static final int VOUCHER_DATE = 2;

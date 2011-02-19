@@ -26,7 +26,7 @@ import java.util.List;
 import org.joda.time.LocalDate;
 import org.mifos.platform.accounting.AccountingDto;
 
-public interface IAccountingDao {
+public interface AccountingDao {
 
     List<AccountingDto> getAccountingDataByDate(LocalDate startDate, LocalDate endDate);
 

@@ -26,7 +26,7 @@ import org.joda.time.LocalDate;
 import org.mifos.platform.accounting.AccountingDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
-public interface IAccountingService {
+public interface AccountingService {
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_USE_ACCOUNTING_INTEGRATION')")
     String getExportOutput(LocalDate startDate, LocalDate endDate);
