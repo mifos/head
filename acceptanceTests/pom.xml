@@ -22,7 +22,6 @@
         <selenium.log.output>true</selenium.log.output>
         <jetty.version>7.3.0.v20110203</jetty.version>
         <jetty.container.url>http://download.eclipse.org/jetty/stable-7/dist/jetty-distribution-${jetty.version}.zip</jetty.container.url>
-        <cargo.wait>false</cargo.wait>
         <jdk.version>1.6</jdk.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -43,100 +42,6 @@
     </properties>
 
     <profiles>
-        <profile>
-            <id>download-container</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <jetty.home.directory>${cargo.install.directory}/${container.name}/jetty-${jetty.version}/</jetty.home.directory>
-            </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.cargo</groupId>
-                        <artifactId>cargo-maven2-plugin</artifactId>
-                        <version>1.0.5</version>
-                        <configuration>
-                            <container>
-                                <zipUrlInstaller>
-                                    <url>${container.url}</url>
-                                    <installDir>${cargo.install.directory}/${container.name}</installDir>
-                                </zipUrlInstaller>
-                                <output>${java.io.tmpdir}/${user.name}-cargo/conf/logs/server-console.log</output>
-                            </container>
-                            <configuration>
-                                <home>${java.io.tmpdir}/${user.name}-cargo/conf</home>
-                                <properties>
-                                    <cargo.jvmargs>-Xms1024m -Xmx1024m -XX:MaxPermSize=128m</cargo.jvmargs>
-                                    <cargo.maven.skip>${maven.test.skip}</cargo.maven.skip>
-                                </properties>
-                            </configuration>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>local-container</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.cargo</groupId>
-                        <artifactId>cargo-maven2-plugin</artifactId>
-                        <version>1.0.5</version>
-                        <configuration>
-                            <container>
-                                <home>${jetty.home.directory}</home>
-                            </container>
-                            <configuration>
-                                <type>standalone</type>
-                                <home>${jetty.deploy.directory}</home>
-                            </configuration>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>tomcat6x</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <container.name>jetty7x</container.name>
-                <container.url>${jetty.container.url}</container.url>
-                <war.target>${jetty.home.directory}/webapps</war.target>
-            </properties>
-            <build>
-                <plugins>
-                    <!-- copy customized configuration files to the application server -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <phase>process-resources</phase>
-                                <configuration>
-                                    <skip>${maven.test.skip}</skip>
-                                    <tasks>
-                                        <copy todir="${jetty.home.directory}/conf" overwrite="true">
-                                            <fileset dir="${basedir}/src/test/containers/${container.name}" />
-                                        </copy>
-                                    </tasks>
-                                </configuration>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
         <profile>
             <id>firefox</id>
             <activation>
@@ -161,10 +66,11 @@
         <profile>
             <id>dev</id>
             <properties>
-                <cargo.wait>true</cargo.wait>
                 <selenium.background>false</selenium.background>
                 <selenium.log.output>false</selenium.log.output>
                 <selenium.port>4445</selenium.port>
+                <servlet.port>8083</servlet.port>
+                <stop.port>8005</stop.port>
             </properties>
         </profile>
         <profile>
@@ -173,9 +79,11 @@
                 <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
-                <jetty.container.url>file:///home/hudson/arc/jetty-distribution-${jetty.version}.zip</jetty.container.url>
                 <!-- leaving <acceptanceTest.groups.to.run> empty means to run everything -->
                 <acceptanceTest.groups.to.run></acceptanceTest.groups.to.run>
+                <selenium.port>${env.CI_SELENIUM_PORT}</selenium.port>
+                <servlet.port>${env.CI_HTTP_PORT}</servlet.port>
+                <stop.port>${env.CI_JETTY_STOP_PORT}</stop.port>
             </properties>
             <build>
                 <plugins>
@@ -287,9 +195,9 @@
                             <files>
                                 <file>${database.properties.file}</file>
                                 <file>${acceptanceTest.settings}</file>
+                                <file>${mifos.overrides.home}</file>
                                 <file>${mifos.overrides.conf}</file>
                                 <file>${mifos.overrides.env}</file>
-                                <file>${mifos.overrides.home}</file>
                             </files>
                         </configuration>
                     </execution>
@@ -436,22 +344,15 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.codehaus.cargo</groupId>
-                <artifactId>cargo-maven2-plugin</artifactId>
-                <version>1.0.5</version>
+                <groupId>org.mortbay.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>7.3.0.v20110203</version>
                 <executions>
-                    <execution>
-                        <id>install</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>install</goal>
-                        </goals>
-                    </execution>
                     <execution>
                         <id>start-container</id>
                         <phase>pre-integration-test</phase>
                         <goals>
-                            <goal>start</goal>
+                            <goal>run-war</goal>
                         </goals>
                     </execution>
                     <execution>
@@ -463,35 +364,26 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <!--
                     <skip>${maven.test.skip}</skip>
-                    <wait>${cargo.wait}</wait>
-                    <container>
-                        <containerId>${container.name}</containerId>
-                        <log>${basedir}/target/logs/${container.name}.log</log>
-                        <output>${basedir}/target/logs/${container.name}.out</output>
-                        <timeout>600000</timeout>
-                        <systemProperties>
-                            <mifos.mode>acceptance</mifos.mode>
-                        </systemProperties>
-                    </container>
-                    <configuration>
-                        <properties>
-                            <cargo.servlet.port>${servlet.port}</cargo.servlet.port>
-                            <cargo.jboss.configuration>default</cargo.jboss.configuration>
-                            <cargo.rmi.port>1099</cargo.rmi.port>
-                        </properties>
-                        <deployables>
-                            <deployable>
-                                <groupId>org.mifos</groupId>
-                                <artifactId>mifos-war</artifactId>
-                                <type>war</type>
-                                <properties>
-                                    <context>mifos</context>
-                                </properties>
-                                <pingURL>http://localhost:${servlet.port}/mifos/ping.ftl</pingURL>
-                            </deployable>
-                        </deployables>
-                    </configuration>
+                    -->
+                    <connectors>
+                        <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
+                            <port>${servlet.port}</port>
+                        </connector>
+                    </connectors>
+                    <webAppConfig>
+                        <contextPath>/mifos</contextPath>
+                    </webAppConfig>
+                    <stopPort>${stop.port}</stopPort>
+                    <webApp>${basedir}/../war/target/mifos.war</webApp>
+                    <daemon>true</daemon>
+                    <systemProperties>
+                        <systemProperty>
+                            <name>mifos.mode</name>
+                            <value>acceptance</value>
+                        </systemProperty>
+                    </systemProperties>
                 </configuration>
             </plugin>
             <plugin>
