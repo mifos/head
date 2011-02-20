@@ -41,14 +41,24 @@ public class MifosPackagedWARBasicTest {
 	// acceptanceTest (and the entire war-test module would no longer needed -
 	// be the same thing?)
 	
-	@Test
-	public void testPackagedWARStartup() throws Exception {
+	private static WARServerLauncher mifosLauncher(int port) {
 	    File testWARFile = new File("../war/target/mifos.war");
 	    assertTrue(testWARFile.toString() + " doesn't exist?!", testWARFile.exists());
 	    
-        WARServerLauncher serverLauncher = new WARServerLauncher(7077, "mifos", testWARFile );
+	    return new WARServerLauncher(port, "mifos", testWARFile );
+	}
+	
+	@Test
+	public void testPackagedWARStartup() throws Exception {
+		WARServerLauncher serverLauncher = mifosLauncher(7077);
 		serverLauncher.startServer();
 		serverLauncher.stopServer();
 		serverLauncher = null;
 	}
+	
+    public static void main(String[] args) throws Exception {
+        final int port = Integer.parseInt(args[0]);
+    	WARServerLauncher serverLauncher = mifosLauncher(port);
+		serverLauncher.startServer();
+    }
 }
