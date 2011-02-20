@@ -57,20 +57,25 @@ public class LoginPage extends MifosPage {
         return loginSuccessfulAs(DEFAULT_USERNAME, DEFAULT_PASSWORD);
     }
 
+    public void tryLoginUsingDefaultCredentials() {
+        tryToLoginAs(DEFAULT_USERNAME, DEFAULT_PASSWORD);
+    }
+
     public HomePage loginSuccessfulAs(String userName, String password) {
-        selenium.type(USERNAME_INPUT_ID, userName);
-        selenium.type(PASSWORD_INPUT_ID, password);
-        selenium.click(LOGIN_BUTTON_ID);
-        waitForPageToLoad();
+        tryToLoginAs(userName, password);
 
         return new HomePage(selenium);
     }
 
-    public HomePage loginSuccessfulAsWithChnagePasw(String userName, String password) {
+    public void tryToLoginAs(String userName, String password) {
         selenium.type(USERNAME_INPUT_ID, userName);
         selenium.type(PASSWORD_INPUT_ID, password);
         selenium.click(LOGIN_BUTTON_ID);
         waitForPageToLoad();
+    }
+
+    public HomePage loginSuccessfulAsWithChnagePasw(String userName, String password) {
+        tryToLoginAs(userName, password);
         selenium.type("changePassword.input.oldPassword", password);
         selenium.type("changePassword.input.newPassword", "newPasw");
         selenium.type("changePassword.input.confirmPassword", "newPasw");
@@ -82,19 +87,13 @@ public class LoginPage extends MifosPage {
     public ChangePasswordPage loginAndGoToChangePasswordPageAs(String userName, String password) {
         selenium.open("login.ftl");
         waitForPageToLoad();
-        selenium.type(USERNAME_INPUT_ID, userName);
-        selenium.type(PASSWORD_INPUT_ID, password);
-        selenium.click(LOGIN_BUTTON_ID);
-        waitForPageToLoad();
+        tryToLoginAs(userName, password);
         return new ChangePasswordPage(selenium);
     }
 
     public LoginPage loginFailedAs(String userName, String password) {
         selenium.open("login.ftl");
-        selenium.type(USERNAME_INPUT_ID, userName);
-        selenium.type(PASSWORD_INPUT_ID, password);
-        selenium.click(LOGIN_BUTTON_ID);
-        waitForPageToLoad();
+        tryToLoginAs(userName, password);
         return new LoginPage(selenium);
     }
 

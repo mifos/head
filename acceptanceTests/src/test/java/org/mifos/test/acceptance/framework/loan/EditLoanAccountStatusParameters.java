@@ -22,6 +22,7 @@ package org.mifos.test.acceptance.framework.loan;
 
 public class EditLoanAccountStatusParameters {
     // Status constants
+    public final static String NEW = "-";
     public final static String APPROVED = "Application Approved";
     public final static String PARTIAL_APPLICATION = "Partial Application";
     public final static String PENDING_APPROVAL = "Application Pending Approval";

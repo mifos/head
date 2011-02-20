@@ -6,9 +6,11 @@ import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.testhelpers.BatchJobHelper;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import org.springframework.test.context.ContextConfiguration;
 
+@ContextConfiguration(locations={"classpath:ui-test-context.xml"})
+@Test(sequential=true, groups={"acceptance","ui", "batchjobs"})
 public class BatchJobTest extends UiTestCaseBase{
-
 
     private AppLauncher appLauncher;
 
@@ -22,7 +24,7 @@ public class BatchJobTest extends UiTestCaseBase{
         appLauncher = new AppLauncher(selenium);
     }
 
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void testRunAllBatchJobs(){
         loginAndNavigateToAdminPage();
 
