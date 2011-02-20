@@ -158,9 +158,8 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
     }
 
     //http://mifosforge.jira.com/browse/MIFOSTEST-712
-    //TODO batch job SavingsIntPostingTaskJob not calculate interests in automated Tests
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")// one of the dependent methods throws Exception
-    @Test(enabled=false)
+    @Test(enabled=true)
     public void savingsAccountWithDailyInterestMandatoryDeposits() throws Exception {
         //Given
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
@@ -232,9 +231,8 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         Assert.assertEquals(selenium.getTable("recentActivityForDetailPage.1.2"),"402.7");
     }
     //http://mifosforge.jira.com/browse/MIFOSTEST-141
-    //TODO batch job SavingsIntPostingTaskJob not calculate interests in automated Tests
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")// one of the dependent methods throws Exception
-    @Test(enabled=false)
+    @Test(enabled=true)
     public void savingsAccountWith3monthInterestVoluntaryDeposits() throws Exception {
         //Given
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);

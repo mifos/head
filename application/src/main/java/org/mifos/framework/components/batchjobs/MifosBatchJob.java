@@ -26,6 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
+import org.mifos.framework.util.DateTimeService;
 import org.quartz.CronTrigger;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -148,6 +149,7 @@ public abstract class MifosBatchJob extends QuartzJobBean implements StatefulJob
             boolean onDemandRun = false;
             if (Scheduler.DEFAULT_MANUAL_TRIGGERS.equals(trigger.getGroup())) { // this is a manual run
                 trigger = context.getScheduler().getTrigger(job.getName(), Scheduler.DEFAULT_GROUP);
+                scheduledFireTime = new DateTimeService().getCurrentDateTime().toDate();
                 onDemandRun = true;
             }
             List<Date> missedLaunches = computeMissedJobLaunches(previousFireTime, scheduledFireTime, trigger, onDemandRun);
@@ -196,7 +198,12 @@ public abstract class MifosBatchJob extends QuartzJobBean implements StatefulJob
 
     public static JobParameters getJobParametersFromContext(JobExecutionContext context) {
         JobParametersBuilder builder = new JobParametersBuilder();
-        builder.addLong(JOB_EXECUTION_TIME_KEY, context.getScheduledFireTime().getTime());
+        if (Scheduler.DEFAULT_MANUAL_TRIGGERS.equals(context.getTrigger().getGroup())) { // this is a manual run
+            builder.addLong(JOB_EXECUTION_TIME_KEY, new DateTimeService().getCurrentDateTime().getMillis());
+        }
+        else {
+            builder.addLong(JOB_EXECUTION_TIME_KEY, context.getScheduledFireTime().getTime());
+        }
         return builder.toJobParameters();
     }
 
