@@ -69,8 +69,8 @@
             <properties>
                 <selenium.background>false</selenium.background>
                 <selenium.log.output>false</selenium.log.output>
-                <selenium.port>4445</selenium.port>
-                <servlet.port>8083</servlet.port>
+                <selenium.port>${selenium.port}</selenium.port>
+                <servlet.port>${servlet.port}</servlet.port>
                 <stop.port>8005</stop.port>
             </properties>
         </profile>

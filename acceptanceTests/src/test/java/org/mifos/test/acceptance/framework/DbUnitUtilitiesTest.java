@@ -39,7 +39,7 @@ public class DbUnitUtilitiesTest {
     @Test(enabled=false)
     public void testGetDataSetFromFile() throws DataSetException, IOException, URISyntaxException {
         DbUnitUtilities utilities = new DbUnitUtilities();
-        utilities.getDataSetFromDataSetDirectoryFile("test directory/acceptance_small_001_dbunit.xml");
+        utilities.getDataSetFromDataSetDirectoryFile("acceptance_small_001_dbunit.xml");
     }
 }
 
