@@ -62,19 +62,6 @@
             </properties>
         </profile>
         <profile>
-            <id>dev</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <selenium.background>false</selenium.background>
-                <selenium.log.output>false</selenium.log.output>
-                <selenium.port>4445</selenium.port>
-                <servlet.port>8083</servlet.port>
-                <stop.port>8005</stop.port>
-            </properties>
-        </profile>
-        <profile>
             <id>continuous-integration</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
