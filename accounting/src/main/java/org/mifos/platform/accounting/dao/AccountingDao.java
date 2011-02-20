@@ -20,7 +20,6 @@
 
 package org.mifos.platform.accounting.dao;
 
-import java.sql.Date;
 import java.util.List;
 
 import org.joda.time.LocalDate;

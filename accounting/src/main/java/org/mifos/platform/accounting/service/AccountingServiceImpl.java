@@ -30,9 +30,7 @@ import org.mifos.platform.accounting.AccountingDto;
 import org.mifos.platform.accounting.dao.AccountingDao;
 import org.mifos.platform.accounting.tally.TallyXMLGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-@Service
 public class AccountingServiceImpl implements AccountingService {
 
     private final AccountingDataCacheManager cacheManager;
