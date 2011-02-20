@@ -370,10 +370,14 @@ public class AdminPage extends MifosPage {
     }
 
     public BatchJobsPage navigateToBatchJobsPage() {
-        selenium.click("admin.link.batchjobs");
-        waitForPageToLoad();
+        tryNavigateToBatchJobsPage();
 
         return new BatchJobsPage(selenium);
+    }
+
+    public void tryNavigateToBatchJobsPage() {
+        selenium.click("admin.link.batchjobs");
+        waitForPageToLoad();
     }
 
     public DefineNewOfficePage navigateToDefineANewOfficePage() {

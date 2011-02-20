@@ -39,7 +39,6 @@ import org.mifos.test.acceptance.framework.testhelpers.BatchJobHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.framework.testhelpers.SavingsAccountHelper;
 import org.mifos.test.acceptance.framework.testhelpers.SavingsProductHelper;
-import org.mifos.test.acceptance.framework.util.UiTestUtils;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.mifos.test.acceptance.util.StringUtil;
@@ -203,7 +202,6 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
 
         navigationHelper.navigateToAdminPage();
         runBatchJobsForSavingsIntPosting();
-        UiTestUtils.sleep(10000);
 
         navigationHelper.navigateToSavingsAccountDetailPage(savingsId);
         Assert.assertEquals(selenium.getTable("recentActivityForDetailPage.1.2"),"57.4");
@@ -229,7 +227,6 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
 
         navigationHelper.navigateToAdminPage();
         runBatchJobsForSavingsIntPosting();
-        UiTestUtils.sleep(10000);
 
         navigationHelper.navigateToSavingsAccountDetailPage(savingsId);
         Assert.assertEquals(selenium.getTable("recentActivityForDetailPage.1.2"),"402.7");
@@ -269,10 +266,7 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         navigationHelper.navigateToSavingsAccountDetailPage(savingsId);
         navigationHelper.navigateToAdminPage();
         runBatchJobsForSavingsIntPosting();
-        selenium.click("logout_link");
-        UiTestUtils.sleep(10000);
 
-        //selenium.setSpeed("1500");
         navigationHelper.navigateToSavingsAccountDetailPage(savingsId);
         Assert.assertEquals(selenium.getTable("recentActivityForDetailPage.1.2"),"602.7");
 
@@ -282,11 +276,8 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         navigationHelper.navigateToSavingsAccountDetailPage(savingsId);
         navigationHelper.navigateToAdminPage();
         runBatchJobsForSavingsIntPosting();
-        selenium.click("logout_link");
-        UiTestUtils.sleep(10000);
 
         navigationHelper.navigateToSavingsAccountDetailPage(savingsId);
-        UiTestUtils.sleep(5000);
         Assert.assertEquals(selenium.getTable("recentActivityForDetailPage.1.2"),"1254.1");
     }
 

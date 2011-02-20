@@ -56,9 +56,13 @@ public class HomePage extends MifosPage {
     }
 
     public AdminPage navigateToAdminPage() {
+        tryNavigateToAdminPage();
+        return new AdminPage(selenium);
+    }
+
+    public void tryNavigateToAdminPage() {
         selenium.click("homeheader.link.admin");
         waitForPageToLoad();
-        return new AdminPage(selenium);
     }
 
     public String getWelcome() {
