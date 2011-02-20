@@ -665,8 +665,20 @@ explanation of the license and how it is applied.
 								<tr class="fontnormal">
 									<td align="right" class="fontnormal"><span id="create_ClientPersonalInfo.label.telephone"><mifos:mifoslabel keyhm="Client.PhoneNumber"
 										name="client.Telephone" bundle="ClientUIResources"></mifos:mifoslabel></span></td>
-									<td><mifos:mifosalphanumtext styleId="create_ClientPersonalInfo.input.telephone" keyhm="Client.PhoneNumber" name="clientCustActionForm"
-										property="address.phoneNumber" maxlength="20" /></td>
+									<td>
+                                        <c:choose>
+                                            <c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'CanEditPhoneNumber')}">
+                                                <mifos:mifosalphanumtext styleId="create_ClientPersonalInfo.input.telephone" keyhm="Client.PhoneNumber" name="clientCustActionForm"
+                                                                         property="address.phoneNumber"
+                                                                         maxlength="20" />
+                                            </c:when>
+                                            <c:otherwise>
+                                                <mifos:mifosalphanumtext styleId="create_ClientPersonalInfo.input.telephone" keyhm="Client.PhoneNumber" name="clientCustActionForm"
+                                                                         property="address.phoneNumber"
+                                                                         maxlength="20" disabled="true" />
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
 
 								</tr>
 
