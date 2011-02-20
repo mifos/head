@@ -7,8 +7,5 @@
            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
     <import resource="classpath:org/mifos/config/resources/applicationContext.xml"/>
     <import resource="classpath:org/mifos/config/resources/apponly-services.xml"/>
-    <import resource="classpath:META-INF/spring/QuestionnaireContext.xml"/>
-    <import resource="classpath:META-INF/spring/CashFlowContext.xml"/>
-    <import resource="classpath:META-INF/spring/accountingIntegrationPluginContext.xml"/>
-    <import resource="classpath:META-INF/spring/DbUpgradeContext.xml"/>
+    <import resource="classpath*:META-INF/spring/*Context.xml"/>
 </beans>
