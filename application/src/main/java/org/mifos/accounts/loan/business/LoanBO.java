@@ -1518,15 +1518,16 @@ public class LoanBO extends AccountBO {
     @Override
     protected AccountPaymentEntity makePayment(final PaymentData paymentData) throws AccountException {
         AccountPaymentEntity accountPaymentEntity = prePayment(paymentData);
+        LoanPaymentTypes loanPaymentType = getLoanPaymentType(paymentData.getTotalAmount());
         DependencyInjectedServiceLocator.locateLoanBusinessService().applyPayment(paymentData, this, accountPaymentEntity);
-        postPayment(paymentData, accountPaymentEntity);
+        postPayment(paymentData, accountPaymentEntity, loanPaymentType);
         return accountPaymentEntity;
     }
 
-    private void postPayment(PaymentData paymentData, AccountPaymentEntity accountPaymentEntity) throws AccountException {
+    private void postPayment(PaymentData paymentData, AccountPaymentEntity accountPaymentEntity, LoanPaymentTypes loanPaymentType) throws AccountException {
         closeLoanIfRequired(paymentData);
-        updateLoanStatus(paymentData, getLoanPaymentType(paymentData.getTotalAmount()));
-        handleLoanArrearsAging(getLoanPaymentType(paymentData.getTotalAmount()));
+        updateLoanStatus(paymentData, loanPaymentType);
+        handleLoanArrearsAging(loanPaymentType);
         addLoanActivity(buildLoanActivity(accountPaymentEntity.getAccountTrxns(), paymentData.getPersonnel(),
                 AccountConstants.PAYMENT_RCVD, paymentData.getTransactionDate()));
     }
