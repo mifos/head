@@ -22,6 +22,7 @@ package org.mifos.clientportfolio.loan.ui;
 
 import java.util.List;
 
+import org.joda.time.LocalDate;
 import org.mifos.application.servicefacade.LoanAccountServiceFacade;
 import org.mifos.dto.domain.CustomerSearchDto;
 import org.mifos.dto.domain.CustomerSearchResultDto;
@@ -64,6 +65,11 @@ public class LoanAccountController {
     	formBean.setAmount(Double.valueOf("7000.0"));
     	formBean.setInterestRate(Double.valueOf("10.0"));
     	formBean.setNumberOfInstallments(Integer.valueOf(12));
+    	
+    	LocalDate today = new LocalDate();
+    	formBean.setDisbursalDateDay(today.getDayOfMonth());
+    	formBean.setDisbursalDateMonth(today.getMonthOfYear());
+    	formBean.setDisbursalDateYear(today.getYearOfEra());
     	
     	return dto;
     }

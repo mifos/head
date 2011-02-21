@@ -43,7 +43,19 @@ public class LoanAccountFormBean implements Serializable {
     private Number disbursalDateMonth;
     private Number disbursalDateYear;
     
-    public Integer getProductId() {
+    private Number graceDuration = Integer.valueOf(0);
+    
+    private Integer fundId;
+    
+    public Number getGraceDuration() {
+		return graceDuration;
+	}
+
+	public void setGraceDuration(Number graceDuration) {
+		this.graceDuration = graceDuration;
+	}
+
+	public Integer getProductId() {
 		return productId;
 	}
 

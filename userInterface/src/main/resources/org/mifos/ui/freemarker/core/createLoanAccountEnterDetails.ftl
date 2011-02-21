@@ -78,19 +78,34 @@
 <form action="${flowExecutionUrl}" method="post" class="two-columns">
     <fieldset>
     <div class="row">
-        [@form.label "loanAccountFormBean.amount" true /][@spring.message "createLoanAccount.amount"/]
-        [@form.input path="loanAccountFormBean.amount" /]
+        [@form.label "amount" true /][@spring.message "createLoanAccount.amount"/]
+        [@form.input path="loanAccountFormBean.amount"  id="amount" /]
         <span>([@spring.message "createLoanAccount.allowedAmount"/])</span>
     </div>
     <div class="row">
-        [@form.label "loanAccountFormBean.interestRate" true /][@spring.message "createLoanAccount.interestRate"/]
-        [@form.input path="loanAccountFormBean.interestRate" /]
+        [@form.label "interestRate" true /][@spring.message "createLoanAccount.interestRate"/]
+        [@form.input path="loanAccountFormBean.interestRate" id="interestRate" /]
         <span>([@spring.message "createLoanAccount.allowedInterestRate"/])</span>
     </div>
     <div class="row">
-        [@form.label "loanAccountFormBean.numberOfInstallments" true /][@spring.message "createLoanAccount.numberOfInstallments"/]
-        [@form.input path="loanAccountFormBean.numberOfInstallments" /]
+        [@form.label "numberOfInstallments" true /][@spring.message "createLoanAccount.numberOfInstallments"/]
+        [@form.input path="loanAccountFormBean.numberOfInstallments" id="numberOfInstallments" /]
         <span>([@spring.message "createLoanAccount.allowedNumberOfInstallments"/])</span>
+    </div>
+    <div class="row">
+        [@form.label "disbursaldatedd" true /][@spring.message "createLoanAccount.disbursalDate"/]
+        [@form.input path="loanAccountFormBean.disbursalDateDay" id="disbursaldatedd" attributes="size=1 maxlength=2" /]<span>[@spring.message "datefield.dd"/]</span>
+        [@form.input path="loanAccountFormBean.disbursalDateMonth" id="disbursaldatemm" attributes="size=1 maxlength=2" /]<span>[@spring.message "datefield.mm"/]</span>
+        [@form.input path="loanAccountFormBean.disbursalDateYear" id="disbursaldateyyyy" attributes="size=3 maxlength=4" /]<span>[@spring.message "datefield.yyyy"/]</span>
+    </div>
+    <div class="row">
+        [@form.label "graceduration" true /][@spring.message "createLoanAccount.graceDuration"/]
+        [@form.input path="loanAccountFormBean.graceDuration" id="graceduration" /]
+        <span>[@spring.message "createLoanAccount.allowedGraceInInstallments"/]</span>
+    </div>
+    <div class="row">
+        [@form.label "fundId" false][@spring.message "createSavingsAccount.enterAccountInfo.selectSavingsProduct" /][/@form.label]
+        [@form.singleSelectWithPrompt path="loanAccountFormBean.fundId" options=savingsAccountFormBean.productOfferingOptions selectPrompt="createSavingsAccount.selectProduct.selectPrompt" /]
     </div>
     </fieldset>
     <div class="row webflow-controls">
