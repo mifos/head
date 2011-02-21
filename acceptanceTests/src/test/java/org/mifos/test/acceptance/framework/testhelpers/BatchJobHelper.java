@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Collections;
 
 import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.admin.BatchJobsPage;
@@ -84,7 +85,7 @@ public class BatchJobHelper {
         }
 
         if (counter > NUMBER_OF_TRIES) {
-            Assert.assertTrue(false, "Not all batch jobs were completed: " + previousRuns.size());
+            Assert.assertEquals(previousRuns.keySet(), Collections.EMPTY_SET, "Not all batch jobs were completed: " + previousRuns.size());
         }
     }
 
@@ -95,7 +96,7 @@ public class BatchJobHelper {
 
         LoginPage loginPage = appLauncher.launchMifos();
         loginPage.tryLoginUsingDefaultCredentials();
-        if ("Login".equals(selenium.getAttribute("page.id@title"))) {
+        if (!selenium.isElementPresent("//span[@id='page.id']") || "Login".equals(selenium.getAttribute("page.id@title"))) {
             return false;
         } else {
             Assert.assertEquals(selenium.getAttribute("page.id@title"), "Home");
@@ -110,7 +111,7 @@ public class BatchJobHelper {
         }
 
         adminPage.tryNavigateToBatchJobsPage();
-        if (selenium.isElementPresent("page.id@title")) { // TODO Batch Jobs page do not have page.id!
+        if (selenium.isElementPresent("//span[@id='page.id']")) { // TODO Batch Jobs page do not have page.id!
             if ("Login".equals(selenium.getAttribute("page.id@title"))) {
                 return false;
             } else {
