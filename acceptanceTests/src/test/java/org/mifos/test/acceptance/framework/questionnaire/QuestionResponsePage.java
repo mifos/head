@@ -30,6 +30,7 @@ import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 
 import java.util.Map;
+import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import org.mifos.test.acceptance.framework.office.CreateOfficePreviewDataPage;
 
 import static org.junit.Assert.assertTrue;
@@ -131,5 +132,12 @@ public class QuestionResponsePage extends MifosPage {
     private void populateSingleSelectAnswer(String questionInputId, String answer) {
         selenium.check(questionInputId + " value=" + answer);
         // TODO for more than 6 answers: selenium.select(questionInputId, answer);
+    }
+
+    public ClientViewDetailsPage cancel() {
+        selenium.click("captureQuestionResponses_button_cancel");
+        waitForPageToLoad();
+
+        return new ClientViewDetailsPage(selenium);
     }
 }

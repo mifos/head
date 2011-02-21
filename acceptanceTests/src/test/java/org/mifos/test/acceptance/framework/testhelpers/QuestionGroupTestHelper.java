@@ -36,18 +36,26 @@ import org.mifos.test.acceptance.framework.questionnaire.EditQuestionPage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionGroupDetailPage;
 
 import com.thoughtworks.selenium.Selenium;
+import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
+import org.mifos.test.acceptance.framework.client.QuestionGroup;
+import org.mifos.test.acceptance.framework.loan.AttachSurveyPage;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 import org.mifos.test.acceptance.framework.office.CreateOfficePreviewDataPage;
 import org.mifos.test.acceptance.framework.office.OfficeViewDetailsPage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionGroupResponsePage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionnairePage;
+import org.testng.Assert;
 
 public class QuestionGroupTestHelper {
 
     private final NavigationHelper navigationHelper;
+    private final Selenium selenium;
 
     public QuestionGroupTestHelper(Selenium selenium) {
         super();
         this.navigationHelper = new NavigationHelper(selenium);
+        this.selenium = selenium;
     }
 
     public void createQuestionGroup(CreateQuestionGroupParameters createQuestionGroupParameters) {
@@ -63,6 +71,39 @@ public class QuestionGroupTestHelper {
             }
         }
         createQuestionGroupPage.submit(createQuestionGroupParameters);
+    }
+
+    public void validatePageBlankMandatoryField() {
+        CreateQuestionGroupPage createQuestionGroupPage = navigateToCreateQuestionGroupPage();
+        createQuestionGroupPage.submit();
+        String error = "Please specify Question Group title";
+        createQuestionGroupPage.verifyTextPresent(error, "No text <"+ error +"> present on the page");
+        error = "Please add at least one section";
+        createQuestionGroupPage.verifyTextPresent(error, "No text <"+ error +"> present on the page");
+        error = "Please choose a valid 'Applies To' value";
+        createQuestionGroupPage.verifyTextPresent(error, "No text <"+ error +"> present on the page");
+        createQuestionGroupPage.cancel();
+        Assert.assertEquals(selenium.getAttribute("page.id@title"), AdminPage.PAGE_ID);
+    }
+
+    public void validateQuestionGroupTitle(List<String> titles) {
+        navigationHelper.navigateToAdminPage().navigateToCreateQuestionGroupPage();
+        for(String title : titles) {
+            selenium.type("title", title);
+            Assert.assertEquals(selenium.getValue("title"), title);
+        }
+    }
+
+    public ClientViewDetailsPage attachQuestionGroup(String clientName, String questionGroupTitle, List<String> sections, Map<String,String> answers) {
+        AttachSurveyPage attachSurveyPage = navigationHelper.navigateToClientViewDetailsPage(clientName).navigateToAttachSurveyPage();
+        QuestionnairePage questionnairePage = attachSurveyPage.selectSurvey(questionGroupTitle);
+        for(String section: sections) {
+            questionnairePage.verifyTextPresent(section, clientName);
+        }
+        for(String question: answers.keySet()) {
+            questionnairePage.setResponse(question, answers.get(question));
+        }
+        return (ClientViewDetailsPage)questionnairePage.submit();
     }
 
     public void createQuestions(List<CreateQuestionParameters> questions){
@@ -124,6 +165,12 @@ public class QuestionGroupTestHelper {
                 .navigateToCreateQuestionPage();
     }
 
+    public CreateQuestionGroupPage navigateToCreateQuestionGroupPage() {
+        return navigationHelper
+                .navigateToAdminPage()
+                .navigateToCreateQuestionGroupPage();
+    }
+
     public void markQuestionAsInactive(String question) {
         EditQuestionPage editQuestionPage = naviagateToEditQuestion(question);
         editQuestionPage.deactivate();
@@ -175,5 +222,15 @@ public class QuestionGroupTestHelper {
         questionResponsePage2.populateAnswers(responseParameters2);
         createOfficePreviewDataPage = questionResponsePage2.navigateToNextPageAndReturnPage();
         return createOfficePreviewDataPage.submit().navigateToOfficeViewDetailsPage();
+    }
+
+    public void editResponses(ClientViewDetailsPage clientViewDetailsPage, int id, Map<String,String> answers) {
+        QuestionGroupResponsePage questionGroupResponsePage = clientViewDetailsPage.navigateToQuestionGroupResponsePage(id);
+        QuestionnairePage questionnairePage = questionGroupResponsePage.navigateToEditResponses();
+        for(String question: answers.keySet()) {
+            questionnairePage.setResponse(question, answers.get(question));
+        }
+        ClientViewDetailsPage clientViewDetailsPage2 = (ClientViewDetailsPage)questionnairePage.submit();
+        Assert.assertEquals(((QuestionGroup)clientViewDetailsPage2.getQuestionGroupInstances().get(2)).getName(),"TestQuestionGroup");
     }
 }
