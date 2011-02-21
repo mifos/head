@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.mifos.accounts.fund.servicefacade.FundDto;
 import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.domain.PrdOfferingDto;
@@ -42,14 +43,19 @@ public class LoanCreationLoanDetailsDto implements Serializable {
 	private final ProductDetailsDto productDto;
 	private final CustomerDetailDto customerDetailDto;
 	private final List<PrdOfferingDto> loanProductDtos;
-	private final Map<String, String> productOptions = new HashMap<String, String>();
 	private final String interestRateType;
 	private final boolean principalDueOnLastInstallment;
+	
+	private final Map<String, String> productOptions = new HashMap<String, String>();
+	private final Map<String, String> fundOptions = new HashMap<String, String>();
+	private final Map<String, String> purposeOfLoanOptions = new HashMap<String, String>();
+	private final Map<String, String> collateralOptions = new HashMap<String, String>();
+	private final List<FundDto> fundDtos;
 
 	public LoanCreationLoanDetailsDto(boolean isRepaymentIndependentOfMeetingEnabled,
             MeetingDto loanOfferingMeetingDetail, MeetingDto customerMeetingDetail,
             List<ValueListElement> loanPurposes, ProductDetailsDto productDto, CustomerDetailDto customerDetailDto, List<PrdOfferingDto> loanProductDtos, 
-            String interestRateType, boolean principalDueOnLastInstallment) {
+            String interestRateType, boolean principalDueOnLastInstallment, List<FundDto> fundDtos) {
         this.isRepaymentIndependentOfMeetingEnabled = isRepaymentIndependentOfMeetingEnabled;
         this.loanOfferingMeetingDetail = loanOfferingMeetingDetail;
         this.customerMeetingDetail = customerMeetingDetail;
@@ -59,21 +65,29 @@ public class LoanCreationLoanDetailsDto implements Serializable {
 		this.loanProductDtos = loanProductDtos;
 		this.interestRateType = interestRateType;
 		this.principalDueOnLastInstallment = principalDueOnLastInstallment;
+		this.fundDtos = fundDtos;
 		populateProductOptions(loanProductDtos);
+		populateFundOptions(fundDtos);
     }
 	
-    public String getInterestRateType() {
+    private void populateFundOptions(List<FundDto> funds) {
+    	for (FundDto fund : funds) {
+			this.fundOptions.put(fund.getId(), fund.getName());
+		}
+	}
+    
+    private void populateProductOptions(List<PrdOfferingDto> loanProducts) {
+    	for (PrdOfferingDto product : loanProducts) {
+    		this.productOptions.put(product.getPrdOfferingId().toString(), product.getPrdOfferingName());			
+		}
+	}
+
+	public String getInterestRateType() {
 		return interestRateType;
 	}
 
 	public boolean isPrincipalDueOnLastInstallment() {
 		return principalDueOnLastInstallment;
-	}
-
-	private void populateProductOptions(List<PrdOfferingDto> loanProducts) {
-    	for (PrdOfferingDto product : loanProducts) {
-    		this.productOptions.put(product.getPrdOfferingId().toString(), product.getPrdOfferingName());			
-		}
 	}
 
     public boolean isRepaymentIndependentOfMeetingEnabled() {
@@ -106,5 +120,21 @@ public class LoanCreationLoanDetailsDto implements Serializable {
     
 	public Map<String, String> getProductOptions() {
 		return productOptions;
+	}
+	
+	public Map<String, String> getFundOptions() {
+		return fundOptions;
+	}
+
+	public Map<String, String> getPurposeOfLoanOptions() {
+		return purposeOfLoanOptions;
+	}
+
+	public Map<String, String> getCollateralOptions() {
+		return collateralOptions;
+	}
+
+	public List<FundDto> getFundDtos() {
+		return fundDtos;
 	}
 }

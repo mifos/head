@@ -52,6 +52,8 @@ import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.persistence.FeeDao;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.fund.persistence.FundDao;
+import org.mifos.accounts.fund.servicefacade.FundCodeDto;
+import org.mifos.accounts.fund.servicefacade.FundDto;
 import org.mifos.accounts.loan.business.LoanActivityEntity;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanPerformanceHistoryEntity;
@@ -82,6 +84,7 @@ import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.master.business.CustomValueDto;
 import org.mifos.application.master.business.CustomValueListElementDto;
+import org.mifos.application.master.business.FundCodeEntity;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
@@ -418,7 +421,16 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
             MeetingDto loanOfferingMeetingDto = loanProduct.getLoanOfferingMeetingValue().toDto();
 
+            List<FundDto> fundDtos = new ArrayList<FundDto>();
             List<FundBO> funds = getFunds(loanProduct);
+            for (FundBO fund : funds) {
+            	FundDto fundDto = new FundDto();
+                fundDto.setId(Short.toString(fund.getFundId()));
+                fundDto.setCode(translateFundCodeToDto(fund.getFundCode()));
+                fundDto.setName(fund.getFundName());
+                
+                fundDtos.add(fundDto);
+			}
 
             boolean isRepaymentIndependentOfMeetingEnabled = new ConfigurationBusinessService()
                     .isRepaymentIndepOfMeetingEnabled();
@@ -430,7 +442,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             
             return new LoanCreationLoanDetailsDto(isRepaymentIndependentOfMeetingEnabled, loanOfferingMeetingDto,
                     customer.getCustomerMeetingValue().toDto(), loanPurposes, productDto, customerDetailDto, loanProductDtos, 
-                    loanProduct.getInterestTypes().getName(), loanProduct.isPrinDueLastInst());
+                    loanProduct.getInterestTypes().getName(), loanProduct.isPrinDueLastInst(), fundDtos);
 
         } catch (ServiceException e) {
             throw new MifosRuntimeException(e);
@@ -439,6 +451,13 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         } catch (SystemException e) {
             throw new MifosRuntimeException(e);
         }
+    }
+    
+    private FundCodeDto translateFundCodeToDto(FundCodeEntity fundCode) {
+        FundCodeDto fundCodeDto = new FundCodeDto();
+        fundCodeDto.setId(Short.toString(fundCode.getFundCodeId()));
+        fundCodeDto.setValue(fundCode.getFundCodeValue());
+        return fundCodeDto;
     }
 
     private List<FundBO> getFunds(final LoanOfferingBO loanOffering) {

@@ -47,7 +47,15 @@ public class LoanAccountFormBean implements Serializable {
     
     private Integer fundId;
     
-    public Number getGraceDuration() {
+    public Integer getFundId() {
+		return fundId;
+	}
+
+	public void setFundId(Integer fundId) {
+		this.fundId = fundId;
+	}
+
+	public Number getGraceDuration() {
 		return graceDuration;
 	}
 

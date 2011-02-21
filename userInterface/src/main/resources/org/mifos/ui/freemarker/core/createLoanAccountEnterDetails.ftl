@@ -104,9 +104,14 @@
         <span>[@spring.message "createLoanAccount.allowedGraceInInstallments"/]</span>
     </div>
     <div class="row">
-        [@form.label "fundId" false][@spring.message "createSavingsAccount.enterAccountInfo.selectSavingsProduct" /][/@form.label]
-        [@form.singleSelectWithPrompt path="loanAccountFormBean.fundId" options=savingsAccountFormBean.productOfferingOptions selectPrompt="createSavingsAccount.selectProduct.selectPrompt" /]
+        [@form.label "fundId" false][@spring.message "createLoanAccount.sourceOfFund" /][/@form.label]
+        [@form.singleSelectWithPrompt path="loanAccountFormBean.fundId" options=loanProductReferenceData.fundOptions selectPrompt="selectPrompt" /]
     </div>
+    
+    <p><span class="standout">[@spring.message "createLoanAccount.enterAccountInfo.defaultfees.header" /]</span></p>
+    
+    <p><span class="standout">[@spring.message "createLoanAccount.enterAccountInfo.additionalfees.header" /]</span></p>
+    
     </fieldset>
     <div class="row webflow-controls">
         [@form.submitButton label="widget.form.buttonLabel.continue" id="continuecreateloanaccount.button.preview" webflowEvent="detailsEntered" /]
