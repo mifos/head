@@ -29,7 +29,7 @@ import org.mifos.dto.domain.LoanActivityDto;
 import org.mifos.dto.domain.SurveyDto;
 
 @SuppressWarnings("PMD")
-@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID", "EI_EXPOSE_REP", "EI_EXPOSE_REP2"}, justification="should disable at filter level and also for pmd - not important for us")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID", "EI_EXPOSE_REP", "EI_EXPOSE_REP2", "SE_BAD_FIELD"}, justification="should disable at filter level and also for pmd - not important for us")
 public class LoanInformationDto implements Serializable {
 
     private final Integer accountId;
