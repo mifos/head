@@ -704,7 +704,7 @@ CREATE TABLE `account` (
   CONSTRAINT `account_ibfk_3` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `account_ibfk_4` FOREIGN KEY (`personnel_id`) REFERENCES `personnel` (`personnel_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `account_ibfk_5` FOREIGN KEY (`office_id`) REFERENCES `office` (`office_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -713,7 +713,7 @@ CREATE TABLE `account` (
 
 LOCK TABLES `account` WRITE;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
-INSERT INTO `account` VALUES (1,'000100000000001',1,11,3,2,2,1,'2011-02-18',NULL,NULL,NULL,1,1,NULL),(2,'000100000000002',1,16,2,2,2,1,'2011-02-18',1,'2011-02-18',NULL,3,1,NULL);
+INSERT INTO `account` VALUES (1,'000100000000001',1,11,3,2,2,1,'2011-02-18',NULL,NULL,NULL,1,1,NULL),(2,'000100000000002',1,16,2,2,2,1,'2011-02-18',1,'2011-02-18',NULL,3,1,NULL),(3,'000100000000003',2,11,3,2,2,1,'2011-02-21',NULL,NULL,NULL,2,1,NULL),(4,'000100000000004',3,11,3,2,2,1,'2011-02-21',NULL,NULL,NULL,2,1,NULL);
 /*!40000 ALTER TABLE `account` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1787,7 +1787,7 @@ CREATE TABLE `change_log` (
   KEY `changed_by` (`changed_by`),
   KEY `change_log_idx` (`entity_type`,`entity_id`,`changed_date`),
   CONSTRAINT `change_log_ibfk_1` FOREIGN KEY (`changed_by`) REFERENCES `personnel` (`personnel_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1796,7 +1796,7 @@ CREATE TABLE `change_log` (
 
 LOCK TABLES `change_log` WRITE;
 /*!40000 ALTER TABLE `change_log` DISABLE KEYS */;
-INSERT INTO `change_log` VALUES (1,1,'mifos',1,17,'2011-02-18',NULL),(2,1,'mifos',2,21,'2011-02-18',NULL),(3,1,'mifos',2,21,'2011-02-18',NULL);
+INSERT INTO `change_log` VALUES (1,1,'mifos',1,17,'2011-02-18',NULL),(2,1,'mifos',2,21,'2011-02-18',NULL),(3,1,'mifos',2,21,'2011-02-18',NULL),(4,1,'mifos',1,17,'2011-02-21',NULL),(5,1,'mifos',2,1,'2011-02-21',NULL),(6,1,'mifos',3,1,'2011-02-21',NULL);
 /*!40000 ALTER TABLE `change_log` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1816,7 +1816,7 @@ CREATE TABLE `change_log_detail` (
   PRIMARY KEY (`sequence_num`),
   KEY `change_log_id` (`change_log_id`),
   CONSTRAINT `change_log_detail_ibfk_1` FOREIGN KEY (`change_log_id`) REFERENCES `change_log` (`change_log_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1825,7 +1825,7 @@ CREATE TABLE `change_log_detail` (
 
 LOCK TABLES `change_log_detail` WRITE;
 /*!40000 ALTER TABLE `change_log_detail` DISABLE KEYS */;
-INSERT INTO `change_log_detail` VALUES (1,1,'lastLogin','-','18/02/2011'),(2,2,'activationDate','-','18/02/2011'),(3,2,'Status','Application Pending Approval','Active'),(4,3,'savingsBalance','-','1000.0');
+INSERT INTO `change_log_detail` VALUES (1,1,'lastLogin','-','18/02/2011'),(2,2,'activationDate','-','18/02/2011'),(3,2,'Status','Application Pending Approval','Active'),(4,3,'savingsBalance','-','1000.0'),(5,4,'lastLogin','18/02/2011','21/02/2011'),(6,5,'Status','Application Pending Approval','Active'),(7,6,'Status','Application Pending Approval','Active');
 /*!40000 ALTER TABLE `change_log_detail` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1942,7 +1942,7 @@ CREATE TABLE `client_perf_history` (
   PRIMARY KEY (`id`),
   KEY `customer_id` (`customer_id`),
   CONSTRAINT `client_perf_history_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1951,6 +1951,7 @@ CREATE TABLE `client_perf_history` (
 
 LOCK TABLES `client_perf_history` WRITE;
 /*!40000 ALTER TABLE `client_perf_history` DISABLE KEYS */;
+INSERT INTO `client_perf_history` VALUES (1,2,'0.0000',2,0,'0.0000',2,'0.0000',2),(2,3,'0.0000',2,0,'0.0000',2,'0.0000',2);
 /*!40000 ALTER TABLE `client_perf_history` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2232,7 +2233,7 @@ CREATE TABLE `customer` (
   CONSTRAINT `customer_ibfk_4` FOREIGN KEY (`loan_officer_id`) REFERENCES `personnel` (`personnel_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `customer_ibfk_5` FOREIGN KEY (`customer_formedby_id`) REFERENCES `personnel` (`personnel_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `customer_ibfk_6` FOREIGN KEY (`parent_customer_id`) REFERENCES `customer` (`customer_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2241,7 +2242,7 @@ CREATE TABLE `customer` (
 
 LOCK TABLES `customer` WRITE;
 /*!40000 ALTER TABLE `customer` DISABLE KEYS */;
-INSERT INTO `customer` VALUES (1,3,'0002-000000001',2,NULL,13,2,'c1',NULL,NULL,NULL,NULL,'',NULL,NULL,0,NULL,NULL,'2011-02-18',NULL,'1.1',0,NULL,NULL,'2011-02-18',NULL,'2011-02-18',1,NULL,0,'CENTER',2);
+INSERT INTO `customer` VALUES (1,3,'0002-000000001',2,NULL,13,2,'c1',NULL,NULL,NULL,NULL,'',NULL,NULL,0,NULL,NULL,'2011-02-18',NULL,'1.1',0,NULL,NULL,'2011-02-18',NULL,'2011-02-18',1,NULL,0,'CENTER',2),(2,1,'0002-000000002',2,2,3,2,'Client - Mary Monthly','Client - Mary','Monthly','',NULL,'','2000-01-01',0,0,NULL,NULL,'2011-02-21','2011-02-21','1.2',0,NULL,NULL,'2011-02-21','','2011-02-21',1,1,0,'CLIENT',3),(3,1,'0002-000000003',2,2,3,2,'Stu1233266063395 Client1233266063395','Stu1233266063395','Client1233266063395','',NULL,'','2000-01-01',0,0,NULL,NULL,'2011-02-21','2011-02-21','1.3',0,NULL,NULL,'2011-02-21','','2011-02-21',1,1,0,'CLIENT',3);
 /*!40000 ALTER TABLE `customer` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2265,7 +2266,7 @@ CREATE TABLE `customer_account` (
 
 LOCK TABLES `customer_account` WRITE;
 /*!40000 ALTER TABLE `customer_account` DISABLE KEYS */;
-INSERT INTO `customer_account` VALUES (1);
+INSERT INTO `customer_account` VALUES (1),(3),(4);
 /*!40000 ALTER TABLE `customer_account` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2331,7 +2332,7 @@ CREATE TABLE `customer_address_detail` (
   KEY `customer_address_detail_phone_number_stripped_idx` (`phone_number_stripped`),
   CONSTRAINT `customer_address_detail_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `customer_address_detail_ibfk_2` FOREIGN KEY (`locale_id`) REFERENCES `supported_locale` (`locale_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2340,7 +2341,7 @@ CREATE TABLE `customer_address_detail` (
 
 LOCK TABLES `customer_address_detail` WRITE;
 /*!40000 ALTER TABLE `customer_address_detail` DISABLE KEYS */;
-INSERT INTO `customer_address_detail` VALUES (1,1,NULL,NULL,'','','','','','','',NULL,'','');
+INSERT INTO `customer_address_detail` VALUES (1,1,NULL,NULL,'','','','','','','',NULL,'',''),(2,2,NULL,NULL,'','','','','','','',NULL,'',''),(3,3,NULL,NULL,'','','','','','','',NULL,'','');
 /*!40000 ALTER TABLE `customer_address_detail` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2501,6 +2502,7 @@ CREATE TABLE `customer_detail` (
 
 LOCK TABLES `customer_detail` WRITE;
 /*!40000 ALTER TABLE `customer_detail` DISABLE KEYS */;
+INSERT INTO `customer_detail` VALUES (2,NULL,NULL,NULL,NULL,66,NULL,NULL,50,NULL,NULL,41,NULL),(3,NULL,NULL,NULL,NULL,66,NULL,NULL,49,NULL,NULL,41,NULL);
 /*!40000 ALTER TABLE `customer_detail` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2777,7 +2779,7 @@ CREATE TABLE `customer_meeting` (
   KEY `customer_meeting_idx` (`customer_id`),
   CONSTRAINT `customer_meeting_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `customer_meeting_ibfk_2` FOREIGN KEY (`meeting_id`) REFERENCES `meeting` (`meeting_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2786,7 +2788,7 @@ CREATE TABLE `customer_meeting` (
 
 LOCK TABLES `customer_meeting` WRITE;
 /*!40000 ALTER TABLE `customer_meeting` DISABLE KEYS */;
-INSERT INTO `customer_meeting` VALUES (1,1,1);
+INSERT INTO `customer_meeting` VALUES (1,1,1),(2,4,2),(3,5,3);
 /*!40000 ALTER TABLE `customer_meeting` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2880,7 +2882,7 @@ CREATE TABLE `customer_name_detail` (
   CONSTRAINT `customer_name_detail_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `customer_name_detail_ibfk_2` FOREIGN KEY (`salutation`) REFERENCES `lookup_value` (`lookup_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `customer_name_detail_ibfk_3` FOREIGN KEY (`locale_id`) REFERENCES `supported_locale` (`locale_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2889,6 +2891,7 @@ CREATE TABLE `customer_name_detail` (
 
 LOCK TABLES `customer_name_detail` WRITE;
 /*!40000 ALTER TABLE `customer_name_detail` DISABLE KEYS */;
+INSERT INTO `customer_name_detail` VALUES (1,2,1,NULL,NULL,'Client1233266063395','','Client1233266063395','',NULL,'Client1233266063395 Client1233266063395'),(2,2,3,NULL,228,'Client - Mary','','Monthly','',NULL,'Client - Mary Monthly'),(3,3,1,NULL,NULL,'Client1233266063395','','Client1233266063395','',NULL,'Client1233266063395 Client1233266063395'),(4,3,3,NULL,47,'Stu1233266063395','','Client1233266063395','',NULL,'Stu1233266063395 Client1233266063395');
 /*!40000 ALTER TABLE `customer_name_detail` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2910,7 +2913,7 @@ CREATE TABLE `customer_note` (
   KEY `cust_note_idx` (`customer_id`),
   CONSTRAINT `customer_note_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `customer_note_ibfk_2` FOREIGN KEY (`field_officer_id`) REFERENCES `personnel` (`personnel_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2919,6 +2922,7 @@ CREATE TABLE `customer_note` (
 
 LOCK TABLES `customer_note` WRITE;
 /*!40000 ALTER TABLE `customer_note` DISABLE KEYS */;
+INSERT INTO `customer_note` VALUES (1,2,1,'2011-02-21','Active'),(2,3,1,'2011-02-21','Active\r\n	');
 /*!40000 ALTER TABLE `customer_note` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2936,7 +2940,7 @@ CREATE TABLE `customer_picture` (
   PRIMARY KEY (`picture_id`),
   KEY `customer_id` (`customer_id`),
   CONSTRAINT `customer_picture_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2945,6 +2949,7 @@ CREATE TABLE `customer_picture` (
 
 LOCK TABLES `customer_picture` WRITE;
 /*!40000 ALTER TABLE `customer_picture` DISABLE KEYS */;
+INSERT INTO `customer_picture` VALUES (1,2,NULL),(2,3,NULL);
 /*!40000 ALTER TABLE `customer_picture` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -3038,7 +3043,7 @@ CREATE TABLE `customer_schedule` (
   CONSTRAINT `customer_schedule_ibfk_1` FOREIGN KEY (`account_id`) REFERENCES `account` (`account_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `customer_schedule_ibfk_2` FOREIGN KEY (`currency_id`) REFERENCES `currency` (`currency_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `customer_schedule_ibfk_3` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3047,7 +3052,7 @@ CREATE TABLE `customer_schedule` (
 
 LOCK TABLES `customer_schedule` WRITE;
 /*!40000 ALTER TABLE `customer_schedule` DISABLE KEYS */;
-INSERT INTO `customer_schedule` VALUES (1,1,1,NULL,'2011-02-18','0.0000',2,'0.0000',2,'0.0000',2,'0.0000',2,0,1,NULL,NULL,1),(2,1,1,NULL,'2011-02-25','0.0000',2,'0.0000',2,'0.0000',2,'0.0000',2,0,2,NULL,NULL,1),(3,1,1,NULL,'2011-03-04','0.0000',2,'0.0000',2,'0.0000',2,'0.0000',2,0,3,NULL,NULL,1),(4,1,1,NULL,'2011-03-11','0.0000',2,'0.0000',2,'0.0000',2,'0.0000',2,0,4,NULL,NULL,1),(5,1,1,NULL,'2011-03-18','0.0000',2,'0.0000',2,'0.0000',2,'0.0000',2,0,5,NULL,NULL,1),(6,1,1,NULL,'2011-03-25','0.0000',2,'0.0000',2,'0.0000',2,'0.0000',2,0,6,NULL,NULL,1),(7,1,1,NULL,'2011-04-01','0.0000',2,'0.0000',2,'0.0000',2,'0.0000',2,0,7,NULL,NULL,1),(8,1,1,NULL,'2011-04-08','0.0000',2,'0.0000',2,'0.0000',2,'0.0000',2,0,8,NULL,NULL,1),(9,1,1,NULL,'2011-04-15','0.0000',2,'0.0000',2,'0.0000',2,'0.0000',2,0,9,NULL,NULL,1),(10,1,1,NULL,'2011-04-22','0.0000',2,'0.0000',2,'0.0000',2,'0.0000',2,0,10,NULL,NULL,1);
+INSERT INTO `customer_schedule` VALUES (1,1,1,NULL,'2011-02-18','0.0000',2,'0.0000',2,'0.0000',2,'0.0000',2,0,1,NULL,NULL,1),(2,1,1,NULL,'2011-02-25','0.0000',2,'0.0000',2,'0.0000',2,'0.0000',2,0,2,NULL,NULL,1),(3,1,1,NULL,'2011-03-04','0.0000',2,'0.0000',2,'0.0000',2,'0.0000',2,0,3,NULL,NULL,1),(4,1,1,NULL,'2011-03-11','0.0000',2,'0.0000',2,'0.0000',2,'0.0000',2,0,4,NULL,NULL,1),(5,1,1,NULL,'2011-03-18','0.0000',2,'0.0000',2,'0.0000',2,'0.0000',2,0,5,NULL,NULL,1),(6,1,1,NULL,'2011-03-25','0.0000',2,'0.0000',2,'0.0000',2,'0.0000',2,0,6,NULL,NULL,1),(7,1,1,NULL,'2011-04-01','0.0000',2,'0.0000',2,'0.0000',2,'0.0000',2,0,7,NULL,NULL,1),(8,1,1,NULL,'2011-04-08','0.0000',2,'0.0000',2,'0.0000',2,'0.0000',2,0,8,NULL,NULL,1),(9,1,1,NULL,'2011-04-15','0.0000',2,'0.0000',2,'0.0000',2,'0.0000',2,0,9,NULL,NULL,1),(10,1,1,NULL,'2011-04-22','0.0000',2,'0.0000',2,'0.0000',2,'0.0000',2,0,10,NULL,NULL,1),(11,3,2,NULL,'2011-03-01','0.0000',2,'0.0000',2,'0.0000',2,'0.0000',2,0,1,NULL,NULL,0),(12,3,2,NULL,'2011-04-01','0.0000',2,'0.0000',2,'0.0000',2,'0.0000',2,0,2,NULL,NULL,0),(13,3,2,NULL,'2011-05-02','0.0000',2,'0.0000',2,'0.0000',2,'0.0000',2,0,3,NULL,NULL,0),(14,3,2,NULL,'2011-06-01','0.0000',2,'0.0000',2,'0.0000',2,'0.0000',2,0,4,NULL,NULL,0),(15,3,2,NULL,'2011-07-01','0.0000',2,'0.0000',2,'0.0000',2,'0.0000',2,0,5,NULL,NULL,0),(16,3,2,NULL,'2011-08-01','0.0000',2,'0.0000',2,'0.0000',2,'0.0000',2,0,6,NULL,NULL,0),(17,3,2,NULL,'2011-09-01','0.0000',2,'0.0000',2,'0.0000',2,'0.0000',2,0,7,NULL,NULL,0),(18,3,2,NULL,'2011-10-01','0.0000',2,'0.0000',2,'0.0000',2,'0.0000',2,0,8,NULL,NULL,0),(19,3,2,NULL,'2011-11-01','0.0000',2,'0.0000',2,'0.0000',2,'0.0000',2,0,9,NULL,NULL,0),(20,3,2,NULL,'2011-12-01','0.0000',2,'0.0000',2,'0.0000',2,'0.0000',2,0,10,NULL,NULL,0),(21,4,3,NULL,'2011-02-21','0.0000',2,'0.0000',2,'0.0000',2,'0.0000',2,0,1,NULL,NULL,0),(22,4,3,NULL,'2011-02-28','0.0000',2,'0.0000',2,'0.0000',2,'0.0000',2,0,2,NULL,NULL,0),(23,4,3,NULL,'2011-03-07','0.0000',2,'0.0000',2,'0.0000',2,'0.0000',2,0,3,NULL,NULL,0),(24,4,3,NULL,'2011-03-14','0.0000',2,'0.0000',2,'0.0000',2,'0.0000',2,0,4,NULL,NULL,0),(25,4,3,NULL,'2011-03-21','0.0000',2,'0.0000',2,'0.0000',2,'0.0000',2,0,5,NULL,NULL,0),(26,4,3,NULL,'2011-03-28','0.0000',2,'0.0000',2,'0.0000',2,'0.0000',2,0,6,NULL,NULL,0),(27,4,3,NULL,'2011-04-04','0.0000',2,'0.0000',2,'0.0000',2,'0.0000',2,0,7,NULL,NULL,0),(28,4,3,NULL,'2011-04-11','0.0000',2,'0.0000',2,'0.0000',2,'0.0000',2,0,8,NULL,NULL,0),(29,4,3,NULL,'2011-04-18','0.0000',2,'0.0000',2,'0.0000',2,'0.0000',2,0,9,NULL,NULL,0),(30,4,3,NULL,'2011-04-25','0.0000',2,'0.0000',2,'0.0000',2,'0.0000',2,0,10,NULL,NULL,0);
 /*!40000 ALTER TABLE `customer_schedule` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -5026,7 +5031,7 @@ CREATE TABLE `meeting` (
   PRIMARY KEY (`meeting_id`),
   KEY `meeting_type_id` (`meeting_type_id`),
   CONSTRAINT `meeting_ibfk_1` FOREIGN KEY (`meeting_type_id`) REFERENCES `meeting_type` (`meeting_type_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5035,7 +5040,7 @@ CREATE TABLE `meeting` (
 
 LOCK TABLES `meeting` WRITE;
 /*!40000 ALTER TABLE `meeting` DISABLE KEYS */;
-INSERT INTO `meeting` VALUES (1,4,'test','2011-02-18',NULL,NULL,NULL,1),(2,3,'meetingPlace','2011-02-18',NULL,NULL,NULL,0),(3,2,'meetingPlace','2011-02-18',NULL,NULL,NULL,0);
+INSERT INTO `meeting` VALUES (1,4,'test','2011-02-18',NULL,NULL,NULL,1),(2,3,'meetingPlace','2011-02-18',NULL,NULL,NULL,0),(3,2,'meetingPlace','2011-02-18',NULL,NULL,NULL,0),(4,4,'test','2011-02-21',NULL,NULL,NULL,1),(5,4,'test','2011-02-21',NULL,NULL,NULL,1);
 /*!40000 ALTER TABLE `meeting` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -5766,7 +5771,7 @@ CREATE TABLE `personnel` (
 
 LOCK TABLES `personnel` WRITE;
 /*!40000 ALTER TABLE `personnel` DISABLE KEYS */;
-INSERT INTO `personnel` VALUES (1,2,'1',1,1,1,1,NULL,1,'\"då§#0•añMæ2ıNj§ùÚ d≤QS8Ÿ','mifos',NULL,1,'mifos',1,NULL,1,'2011-02-18','2011-02-18',0,0,1),(2,1,'0002-00002',2,NULL,1,1,NULL,NULL,'Ê;}ƒ¡ù«î±1d&∑D¯Ù∞ˆ1sIÉ@}˘','loanofficer','',0,'loan officer',1,'2011-02-18',NULL,NULL,NULL,0,0,1);
+INSERT INTO `personnel` VALUES (1,2,'1',1,1,1,1,NULL,1,'\"då§#0•añMæ2ıNj§ùÚ d≤QS8Ÿ','mifos',NULL,1,'mifos',1,NULL,1,'2011-02-21','2011-02-21',0,0,2),(2,1,'0002-00002',2,NULL,1,1,NULL,NULL,'Ê;}ƒ¡ù«î±1d&∑D¯Ù∞ˆ1sIÉ@}˘','loanofficer','',0,'loan officer',1,'2011-02-18',NULL,NULL,NULL,0,0,1);
 /*!40000 ALTER TABLE `personnel` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -6888,7 +6893,7 @@ CREATE TABLE `recur_on_day` (
   PRIMARY KEY (`recur_on_day_id`),
   KEY `details_id` (`details_id`),
   CONSTRAINT `recur_on_day_ibfk_1` FOREIGN KEY (`details_id`) REFERENCES `recurrence_detail` (`details_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6897,7 +6902,7 @@ CREATE TABLE `recur_on_day` (
 
 LOCK TABLES `recur_on_day` WRITE;
 /*!40000 ALTER TABLE `recur_on_day` DISABLE KEYS */;
-INSERT INTO `recur_on_day` VALUES (1,1,6,NULL,NULL,1),(2,2,NULL,NULL,1,0),(3,3,NULL,NULL,NULL,0);
+INSERT INTO `recur_on_day` VALUES (1,1,6,NULL,NULL,1),(2,2,NULL,NULL,1,0),(3,3,NULL,NULL,NULL,0),(4,4,NULL,NULL,1,1),(5,5,2,NULL,NULL,1);
 /*!40000 ALTER TABLE `recur_on_day` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -6919,7 +6924,7 @@ CREATE TABLE `recurrence_detail` (
   KEY `meeting_id` (`meeting_id`),
   CONSTRAINT `recurrence_detail_ibfk_1` FOREIGN KEY (`recurrence_id`) REFERENCES `recurrence_type` (`recurrence_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `recurrence_detail_ibfk_2` FOREIGN KEY (`meeting_id`) REFERENCES `meeting` (`meeting_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6928,7 +6933,7 @@ CREATE TABLE `recurrence_detail` (
 
 LOCK TABLES `recurrence_detail` WRITE;
 /*!40000 ALTER TABLE `recurrence_detail` DISABLE KEYS */;
-INSERT INTO `recurrence_detail` VALUES (1,1,1,1,1),(2,2,2,1,0),(3,3,3,7,0);
+INSERT INTO `recurrence_detail` VALUES (1,1,1,1,1),(2,2,2,1,0),(3,3,3,7,0),(4,4,2,1,1),(5,5,1,1,1);
 /*!40000 ALTER TABLE `recurrence_detail` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -7939,4 +7944,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2011-02-18 16:35:23
+-- Dump completed on 2011-02-21 11:10:53
