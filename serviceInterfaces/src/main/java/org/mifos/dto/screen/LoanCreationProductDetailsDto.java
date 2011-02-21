@@ -20,19 +20,23 @@
 
 package org.mifos.dto.screen;
 
+import java.io.Serializable;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.LoanAccountDetailsDto;
 import org.mifos.dto.domain.PrdOfferingDto;
 
 @SuppressWarnings("PMD")
-@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"EI_EXPOSE_REP", "EI_EXPOSE_REP2"}, justification="")
-public class LoanCreationProductDetailsDto {
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID", "EI_EXPOSE_REP", "EI_EXPOSE_REP2"}, justification="")
+public class LoanCreationProductDetailsDto implements Serializable {
 
     private final List<PrdOfferingDto> loanProductDtos;
-    private final CustomerDetailDto customerDetailDto;
+    private Map<String, String> productOptions = new HashMap<String, String>();
+	private final CustomerDetailDto customerDetailDto;
     private final Date nextMeetingDate;
     private final boolean isGroup;
     private final boolean isGlimEnabled;
@@ -50,9 +54,16 @@ public class LoanCreationProductDetailsDto {
         this.isGlimEnabled = isGlimEnabled;
         this.loanCreationGlimDto = loanCreationGlimDto;
         this.clientDetails = clientDetails;
+        populateProductOptions(loanProductDtos);
     }
 
-    public List<PrdOfferingDto> getLoanProductDtos() {
+    private void populateProductOptions(List<PrdOfferingDto> loanProducts) {
+    	for (PrdOfferingDto product : loanProducts) {
+    		this.productOptions.put(product.getPrdOfferingId().toString(), product.getPrdOfferingName());			
+		}
+	}
+    
+	public List<PrdOfferingDto> getLoanProductDtos() {
         return this.loanProductDtos;
     }
 
@@ -83,4 +94,8 @@ public class LoanCreationProductDetailsDto {
     public String getRecurMonth() {
         return this.recurMonth;
     }
+    
+    public Map<String, String> getProductOptions() {
+		return productOptions;
+	}
 }

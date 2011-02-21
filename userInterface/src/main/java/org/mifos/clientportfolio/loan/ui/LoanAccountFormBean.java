@@ -22,7 +22,6 @@ package org.mifos.clientportfolio.loan.ui;
 
 import java.io.Serializable;
 
-import org.hibernate.validator.constraints.NotEmpty;
 import org.mifos.platform.validation.MifosBeanValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.binding.message.MessageContext;
@@ -34,23 +33,73 @@ public class LoanAccountFormBean implements Serializable {
 
     @Autowired
     private transient MifosBeanValidator validator;
+
+    private Integer productId;
     
-	@NotEmpty
-	private String searchString;
-	
-
-	public String getSearchString() {
-		return searchString;
+    private Number amount;
+    private Number interestRate;
+    private Number numberOfInstallments;
+    private Number disbursalDateDay;
+    private Number disbursalDateMonth;
+    private Number disbursalDateYear;
+    
+    public Integer getProductId() {
+		return productId;
 	}
 
-	public void setSearchString(String searchString) {
-		this.searchString = searchString;
+	public void setProductId(Integer productId) {
+		this.productId = productId;
 	}
-	
-	/**
-     * invoked on state transition out of customerSearchStep
-     */
-    public void validateCustomerSearchStep(ValidationContext context) {
+
+	public Number getAmount() {
+		return amount;
+	}
+
+	public void setAmount(Number amount) {
+		this.amount = amount;
+	}
+
+	public Number getInterestRate() {
+		return interestRate;
+	}
+
+	public void setInterestRate(Number interestRate) {
+		this.interestRate = interestRate;
+	}
+
+	public Number getNumberOfInstallments() {
+		return numberOfInstallments;
+	}
+
+	public void setNumberOfInstallments(Number numberOfInstallments) {
+		this.numberOfInstallments = numberOfInstallments;
+	}
+
+	public Number getDisbursalDateDay() {
+		return disbursalDateDay;
+	}
+
+	public void setDisbursalDateDay(Number disbursalDateDay) {
+		this.disbursalDateDay = disbursalDateDay;
+	}
+
+	public Number getDisbursalDateMonth() {
+		return disbursalDateMonth;
+	}
+
+	public void setDisbursalDateMonth(Number disbursalDateMonth) {
+		this.disbursalDateMonth = disbursalDateMonth;
+	}
+
+	public Number getDisbursalDateYear() {
+		return disbursalDateYear;
+	}
+
+	public void setDisbursalDateYear(Number disbursalDateYear) {
+		this.disbursalDateYear = disbursalDateYear;
+	}
+
+	public void validateEnterAccountDetailsStep(ValidationContext context) {
         MessageContext messages = context.getMessageContext();
         validator.validate(this, messages);
     }
