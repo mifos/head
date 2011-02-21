@@ -20,6 +20,9 @@
         <integration.database.properties.file>
             ${modules.root.dir}/application/src/test/resources/org/mifos/config/resources/integrationDatabase.properties
         </integration.database.properties.file>
+                <!-- mimics ConfigurationLocator directory search behavior -->
+        <mifos.overrides.conf>${mifos.conf}/local.properties</mifos.overrides.conf>
+        <mifos.overrides.env>${env.MIFOS_CONF}/local.properties</mifos.overrides.env>
         <mifos.overrides.home>${user.home}/.mifos/local.properties</mifos.overrides.home>
         <sql.resources.main.directory>${basedir}/src/main/resources/sql</sql.resources.main.directory>
         <sql.resources.test.directory>${basedir}/src/test/resources/sql</sql.resources.test.directory>
@@ -28,18 +31,6 @@
         <liquibase.jar.path>${settings.localRepository}/org/liquibase/liquibase-core/${liquibase.version}</liquibase.jar.path>
         <mysql.connector.jar.path>${settings.localRepository}/mysql/mysql-connector-java/${mysql.connector.version}</mysql.connector.jar.path>
     </properties>
-
-    <profiles>
-        <profile>
-            <id>continuous-integration</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <properties>
-                <mifos.overrides.home>${env.MIFOS_CONF}/local.properties</mifos.overrides.home>
-            </properties>
-        </profile>
-    </profiles>
 
     <dependencies>
         <dependency>
