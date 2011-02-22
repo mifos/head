@@ -18,15 +18,9 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.test.acceptance.loan.lsim;
+package org.mifos.test.acceptance.loan;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.sql.SQLException;
-
-import org.dbunit.DatabaseUnitException;
 import org.joda.time.DateTime;
-import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountInformationPage;
@@ -35,35 +29,22 @@ import org.mifos.test.acceptance.framework.loan.EditPreviewLoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
-import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-@ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"loan","acceptance","ui"})
-public class EditLSIMLoanAccountTest extends UiTestCaseBase {
-
-    @Autowired
-    private DriverManagerDataSource dataSource;
-    @Autowired
-    private DbUnitUtilities dbUnitUtilities;
-    @Autowired
-    private InitializeApplicationRemoteTestingService initRemote;
-
-    private static final String START_DATA_SET = "acceptance_small_011_dbunit.xml";
+@ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
+@Test(sequential = true, groups = {"loan", "acceptance", "ui", "no_db_unit"})
+public class EditLoanAccountTest extends UiTestCaseBase {
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
-
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = new DateTime(2010,1,19,17,0,0,0);
+        DateTime targetTime = new DateTime(2011, 2, 21, 17, 0, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
     }
 
@@ -72,35 +53,11 @@ public class EditLSIMLoanAccountTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
-    private void initData() throws DatabaseUnitException, SQLException, IOException, URISyntaxException {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, START_DATA_SET, dataSource, selenium);
-    }
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    public void editLSIMLoanWithMonthlySecondTuesdayPayment() throws Exception {
-        initData();
-        String testAccount = "000100000000221";
+    public void editExternalIdOfLSIMLoan() throws Exception {
+        String testAccount = "000100000000012";
         EditLoanAccountInformationParameters params = new EditLoanAccountInformationParameters();
         params.setExternalID("ID83328");
-        editLoanAccount(testAccount, params);
-        assertTextFoundOnPage(params.getExternalID());
-    }
-
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    public void editLSIMLoanWithMonthlyTenthDayOfMonthPayment() throws Exception {
-        initData();
-        String testAccount = "000100000000222";
-        EditLoanAccountInformationParameters params = new EditLoanAccountInformationParameters();
-        params.setExternalID("ID98765");
-        editLoanAccount(testAccount, params);
-        assertTextFoundOnPage(params.getExternalID());
-    }
-
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    public void editLSIMLoanWithWeeklyPayment() throws Exception {
-        initData();
-        String testAccount = "000100000000223";
-        EditLoanAccountInformationParameters params = new EditLoanAccountInformationParameters();
-        params.setExternalID("ID2323ID");
         editLoanAccount(testAccount, params);
         assertTextFoundOnPage(params.getExternalID());
     }
