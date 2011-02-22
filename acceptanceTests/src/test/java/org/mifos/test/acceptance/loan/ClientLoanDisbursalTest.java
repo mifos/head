@@ -20,9 +20,6 @@
 
 package org.mifos.test.acceptance.loan;
 
-import org.joda.time.DateTime;
-import org.mifos.framework.util.DbUnitUtilities;
-import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
@@ -32,10 +29,6 @@ import org.mifos.test.acceptance.framework.loan.DisburseLoanPage;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
-import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
-import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -46,13 +39,6 @@ import org.testng.annotations.Test;
 @Test(sequential = true, groups = {"acceptance", "ui", "loan", "no_db_unit"})
 public class ClientLoanDisbursalTest extends UiTestCaseBase {
     private LoanTestHelper loanTestHelper;
-
-    @Autowired
-    private DriverManagerDataSource dataSource;
-    @Autowired
-    private DbUnitUtilities dbUnitUtilities;
-    @Autowired
-    private InitializeApplicationRemoteTestingService initRemote;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -72,8 +58,6 @@ public class ClientLoanDisbursalTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-249
     public void verifyAcceptedPaymentTypesForDisbursementsOfLoan() throws Exception {
-        // Given
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
         // When
         NavigationHelper navigationHelper = new NavigationHelper(selenium);
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
@@ -86,50 +70,19 @@ public class ClientLoanDisbursalTest extends UiTestCaseBase {
 
         LoanTestHelper loanTestHelper = new LoanTestHelper(selenium);
         CreateLoanAccountSearchParameters searchParams = new CreateLoanAccountSearchParameters();
-        searchParams.setLoanProduct("MonthlyClientFlatLoanWithFees");
-        searchParams.setSearchString("Stu1232993852651 Client1232993852651");
+        searchParams.setLoanProduct("WeeklyFlatLoanWithOneTimeFees");
+        searchParams.setSearchString("Stu1233266063395 Client1233266063395");
         LoanAccountPage loanAccountPage = loanTestHelper.createAndActivateDefaultLoanAccount(searchParams);
         DisburseLoanPage disburseLoanPage = loanAccountPage.navigateToDisburseLoan();
         //Then
         disburseLoanPage.verifyModeOfPayments();
         //When
-        disburseLoanPage = navigationHelper.navigateToLoanAccountPage("000100000000004").navigateToDisburseLoan();
+        disburseLoanPage = navigationHelper.navigateToLoanAccountPage("000100000000020").navigateToDisburseLoan();
         //Then
         disburseLoanPage.verifyModeOfPayments();
-
-    }
-
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void ensurePaymentModeOfPaymentTypeIsEditable() throws Exception {
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService =
-                new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = new DateTime(2010, 2, 12, 1, 0, 0, 0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
-
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_013_dbunit.xml",
-                dataSource, selenium);
-
-        DisburseLoanPage loanAccountPage = loanTestHelper.prepareToDisburseLoan("000100000000004");
-        loanAccountPage.verifyPaymentModeOfPaymentIsEditable(
+        disburseLoanPage.verifyPaymentModesOfPaymentAreEmpty();
+        disburseLoanPage.verifyPaymentModeOfPaymentIsEditable(
                 "payment mode of payment must be editable when a disbursal fee exists.");
-    }
 
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void ensurePaymentModeOfPaymentTypeIsCleared() throws Exception {
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService =
-                new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = new DateTime(2010, 2, 12, 1, 0, 0, 0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
-
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_013_dbunit.xml",
-                dataSource, selenium);
-
-        DisburseLoanPage loanAccountPage = loanTestHelper.prepareToDisburseLoan("000100000000004");
-        loanAccountPage.setModesOfPaymentAndReviewTransaction();
-
-        HomePage homePage = loanAccountPage.navigateToHomePage();
-        homePage.verifyPage();
-        loanAccountPage = loanTestHelper.prepareToDisburseLoanWithoutLogout(homePage, "000100000000004");
-        loanAccountPage.verifyPaymentModesOfPaymentAreEmpty();
     }
 }
