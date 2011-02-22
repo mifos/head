@@ -26,6 +26,11 @@ public class ApplicationDatabaseOperation {
         closeConnection();
     }
 
+    public void  updateGLIM(int glimValue) throws SQLException {
+        getStatement().executeUpdate("update config_key_value_integer set configuration_value=" + glimValue + " where configuration_key='loanIndividualMonitoringIsEnabled'");
+        closeConnection();
+    }
+
     public void updateGapBetweenDisbursementAndFirstMeetingDate(int gap) throws SQLException {
         getStatement().executeUpdate("update config_key_value_integer set configuration_value=" + gap + " where configuration_key='minDaysBetweenDisbursalAndFirstRepaymentDay'");
         closeConnection();

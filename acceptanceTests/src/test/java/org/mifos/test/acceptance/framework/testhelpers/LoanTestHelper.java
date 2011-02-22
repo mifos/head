@@ -20,11 +20,7 @@
 
 package org.mifos.test.acceptance.framework.testhelpers;
 
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+import com.thoughtworks.selenium.Selenium;
 import org.joda.time.DateTime;
 import org.joda.time.ReadableInstant;
 import org.joda.time.format.DateTimeFormat;
@@ -38,6 +34,7 @@ import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.client.ClientSearchResultsPage;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import org.mifos.test.acceptance.framework.loan.AccountActivityPage;
+import org.mifos.test.acceptance.framework.loan.AccountChangeStatusPage;
 import org.mifos.test.acceptance.framework.loan.ApplyChargePage;
 import org.mifos.test.acceptance.framework.loan.ApplyPaymentConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.ApplyPaymentPage;
@@ -60,7 +57,6 @@ import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
 import org.mifos.test.acceptance.framework.loan.EditAccountStatusConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountInformationPage;
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountInformationParameters;
-import org.mifos.test.acceptance.framework.loan.AccountChangeStatusPage;
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountStatusParameters;
 import org.mifos.test.acceptance.framework.loan.EditPreviewLoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.GLIMClient;
@@ -88,7 +84,10 @@ import org.mifos.test.acceptance.loanproduct.LoanProductTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.testng.Assert;
 
-import com.thoughtworks.selenium.Selenium;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Holds methods common to most loan tests.
@@ -146,9 +145,9 @@ public class LoanTestHelper {
         CreateLoanAccountEntryPage loanAccountEntryPage = this.navigateToCreateLoanAccountEntryPage(searchParameters);
 
         List<GLIMClient> clients= new ArrayList<GLIMClient>();
-        clients.add(new GLIMClient(0,"Stu1233266299995 Client1233266299995 \n Client Id: 0006-000000051", "9999.9", "0700-Marriage"));
-        clients.add(new GLIMClient(1, "Stu1233266309851 Client1233266309851 \n Client Id: 0006-000000052", "99999.9", "1008-Hospital"));
-        clients.add(new GLIMClient(2, "Stu1233266319760 Client1233266319760 \n Client Id: 0006-000000053", "99999.9", "1010-Education"));
+        clients.add(new GLIMClient(0,"Stu1233266299995 Client1233266299995 \n Client Id: 0002-000000012", "9999.9", "0009-Horse"));
+        clients.add(new GLIMClient(1, "Stu1233266309851 Client1233266309851 \n Client Id: 0002-000000013", "99999.9", "0001-Cow Purchase"));
+        clients.add(new GLIMClient(2, "Stu1233266319760 Client1233266319760 \n Client Id: 0002-000000014", "99999.9", "0003-Goat Purchase"));
 
         for (GLIMClient glimClient : clients) {
             loanAccountEntryPage.selectGLIMClients(glimClient.getClientNumber(), glimClient.getClientName(), glimClient.getLoanAmount(), glimClient.getLoanPurpose());
