@@ -24,6 +24,7 @@ package org.mifos.test.acceptance.client;
 import static java.util.Arrays.asList;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
@@ -32,7 +33,6 @@ import java.util.Random;
 import java.util.Set;
 
 import org.junit.Assert;
-import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -82,11 +82,9 @@ import org.mifos.test.acceptance.framework.testhelpers.GroupTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.framework.testhelpers.QuestionGroupTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.SavingsAccountHelper;
-import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
 import org.mifos.test.acceptance.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -106,12 +104,6 @@ public class ClientTest extends UiTestCaseBase {
 
     @Autowired
     private ApplicationDatabaseOperation applicationDatabaseOperation;
-    @Autowired
-    private DriverManagerDataSource dataSource;
-    @Autowired
-    private DbUnitUtilities dbUnitUtilities;
-    @Autowired
-    private InitializeApplicationRemoteTestingService initRemote;
 
     public static final String MULTI_SELECT = "Multi Select";
     public static final String EXPECTED_DATE_FORMAT = "%02d/%02d/%04d";
@@ -152,25 +144,25 @@ public class ClientTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-248
     public void verifyAcceptedPaymentTypes() throws Exception{
-        //Given
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
         //When
-        String groupName = "MyGroup1232993846342";
+        String groupName = "group1";
         CreateClientEnterPersonalDataPage.SubmitFormParameters clientParams = new CreateClientEnterPersonalDataPage.SubmitFormParameters();
         clientParams=clientParams();
+        clientParams.setFirstName("John");
+        clientParams.setLastName("Doe123");
 
         ClientViewDetailsPage clientViewDetailsPage = clientTestHelper.createNewClient(groupName, clientParams);
-        clientViewDetailsPage.verifyHeading("John Doe");
+        clientViewDetailsPage.verifyHeading("John Doe123");
 
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         DefineAcceptedPaymentTypesPage defineAcceptedPaymentTypesPage = adminPage.navigateToDefineAcceptedPaymentType();
-        defineAcceptedPaymentTypesPage.addLoanFeesPaymentType(defineAcceptedPaymentTypesPage.CHEQUE);
+        defineAcceptedPaymentTypesPage.addLoanFeesPaymentType(DefineAcceptedPaymentTypesPage.CHEQUE);
 
         adminPage = navigationHelper.navigateToAdminPage();
         defineAcceptedPaymentTypesPage = adminPage.navigateToDefineAcceptedPaymentType();
-        defineAcceptedPaymentTypesPage.addLoanFeesPaymentType(defineAcceptedPaymentTypesPage.VOUCHER);
+        defineAcceptedPaymentTypesPage.addLoanFeesPaymentType(DefineAcceptedPaymentTypesPage.VOUCHER);
 
-        ApplyPaymentPage applyPaymentPage = navigationHelper.navigateToClientViewDetailsPage("John Doe")
+        ApplyPaymentPage applyPaymentPage = navigationHelper.navigateToClientViewDetailsPage("John Doe123")
                                             .navigateToViewClientChargesDetail().navigateToApplyPayments();
         //Then
         applyPaymentPage.verifyModeOfPayments();
@@ -181,9 +173,8 @@ public class ClientTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-208
     public void createClientAndChangeStatusTest() throws Exception {
-        //Given
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
-        ClientViewDetailsPage clientDetailsPage = clientTestHelper.createClientAndVerify("Joe1233171679953 Guy1233171679953", "MyOffice1233171674227");
+
+    	ClientViewDetailsPage clientDetailsPage = clientTestHelper.createClientAndVerify("loan officer", "MyOfficeDHMFT");
 
         //When / Then
         clientTestHelper.changeCustomerStatus(clientDetailsPage);
@@ -192,18 +183,16 @@ public class ClientTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     //http://mifosforge.jira.com/browse/MIFOSTEST-310
     public void searchClientAndEditExistingClientDetails() throws Exception{
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
-
         HomePage homePage = navigationHelper.navigateToHomePage();
-        homePage = searchForClient("Stu123",homePage,38);
+        homePage = searchForClient("client1 lastname",homePage,1);
         homePage = searchForClient("zzz",homePage, 0);
 
-        SearchResultsPage searchResultsPage = homePage.search("Stu1232993852651 Client1232993852651");
+        SearchResultsPage searchResultsPage = homePage.search("client1 lastname");
         searchResultsPage.verifyPage();
         int numResults = searchResultsPage.countSearchResults();
         Assert.assertEquals( numResults, 1 );
 
-        ClientViewDetailsPage viewDetailsPage = searchResultsPage.navigateToClientViewDetailsPage("link=Stu1232993852651 Client1232993852651*");
+        ClientViewDetailsPage viewDetailsPage = searchResultsPage.navigateToClientViewDetailsPage("link=client1 lastname*");
         ClientNotesPage notesPage = viewDetailsPage.navigateToNotesPage();
         notesPage.addNotePreviewAndSubmit("test note");
         viewDetailsPage.verifyNotes("test note");
@@ -232,13 +221,11 @@ public class ClientTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-236
     public void createClientOutsideGroup() throws Exception {
-        //Given
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
         //When
-        CreateClientEnterMfiDataPage clientEnterMfiDataPage = navigationHelper.navigateToCreateClientEnterMfiDataPage("MyOffice1232993831593");
+        CreateClientEnterMfiDataPage clientEnterMfiDataPage = navigationHelper.navigateToCreateClientEnterMfiDataPage("MyOfficeDHMFT");
 
         CreateClientEnterMfiDataPage.SubmitFormParameters parameters = new CreateClientEnterMfiDataPage.SubmitFormParameters();
-        parameters.setLoanOfficerId("Joe1232993835093 Guy1232993835093");
+        parameters.setLoanOfficerId("loan officer");
 
         MeetingParameters meeting = new MeetingParameters();
         meeting.setMeetingPlace("testMeetingPlace");
@@ -258,7 +245,7 @@ public class ClientTest extends UiTestCaseBase {
         SearchResultsPage searchResultsPage = homePage.search(clientName);
         searchResultsPage.verifyPage();
         int numResults = searchResultsPage.countSearchResults();
-        Assert.assertEquals( numResults, expectedNumberOfClients );
+        Assert.assertEquals( expectedNumberOfClients, numResults );
 
         selenium.click("clientsAndAccountsHeader.link.home");
         selenium.waitForPageToLoad("30000");
@@ -269,14 +256,11 @@ public class ClientTest extends UiTestCaseBase {
     // implementation of test described in issue 2454
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void searchForClientAndEditDetailsTest() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities,
-                "acceptance_small_003_dbunit.xml",
-                dataSource, selenium);
-
+        
         ClientsAndAccountsHomepage clientsPage = navigationHelper.navigateToClientsAndAccountsPage();
-        ClientSearchResultsPage searchResultsPage = clientsPage.searchForClient("Stu1232993852651");
+        ClientSearchResultsPage searchResultsPage = clientsPage.searchForClient("client1");
         searchResultsPage.verifyPage();
-        ClientViewDetailsPage clientDetailsPage = searchResultsPage.navigateToSearchResult("Stu1232993852651 Client1232993852651: ID 0002-000000003");
+        ClientViewDetailsPage clientDetailsPage = searchResultsPage.navigateToSearchResult("client1 lastname: ID 0002-000000005");
 
         ClientEditMFIPage editMFIPage = clientDetailsPage.navigateToEditMFIPage();
         editMFIPage.verifyPage();
@@ -297,44 +281,34 @@ public class ClientTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createClientWithCorrectAgeTest() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities,
-                "acceptance_small_003_dbunit.xml",
-                dataSource, selenium);
         propertiesHelper.setMinimumAgeForClients(18);
         propertiesHelper.setMaximumAgeForClients(60);
-        CreateClientEnterPersonalDataPage clientPersonalDataPage = clientTestHelper.createClient("MyOffice1233171674227", "11", "12", "1987");
+        CreateClientEnterPersonalDataPage clientPersonalDataPage = clientTestHelper.createClient("MyOfficeDHMFT", "11", "12", "1987");
         CreateClientEnterMfiDataPage nextPage = clientPersonalDataPage.submitAndGotoCreateClientEnterMfiDataPage();
         nextPage.verifyPage("CreateClientMfiInfo");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createClientWithMoreThanMaximumAgeTest() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities,
-                "acceptance_small_003_dbunit.xml",
-                dataSource, selenium);
         propertiesHelper.setMinimumAgeForClients(18);
         propertiesHelper.setMaximumAgeForClients(60);
-        CreateClientEnterPersonalDataPage clientPersonalDataPage = clientTestHelper.createClient("MyOffice1233171674227", "11", "12", "1940");
+        CreateClientEnterPersonalDataPage clientPersonalDataPage = clientTestHelper.createClient("MyOfficeDHMFT", "11", "12", "1940");
         CreateClientEnterPersonalDataPage nextPage = clientPersonalDataPage.dontLoadNext();
         nextPage.verifyPage("CreateClientPersonalInfo");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createClientWithLessThanMinimumAgeTest() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities,
-                "acceptance_small_003_dbunit.xml",
-                dataSource, selenium);
         propertiesHelper.setMinimumAgeForClients(18);
         propertiesHelper.setMaximumAgeForClients(60);
-        CreateClientEnterPersonalDataPage clientPersonalDataPage = clientTestHelper.createClient("MyOffice1233171674227", "11", "12", "1995");
+        CreateClientEnterPersonalDataPage clientPersonalDataPage = clientTestHelper.createClient("MyOfficeDHMFT", "11", "12", "1995");
         CreateClientEnterPersonalDataPage nextPage = clientPersonalDataPage.dontLoadNext();
         nextPage.verifyPage("CreateClientPersonalInfo");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void searchForClientAndAddSurveysTest() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
-
+        
         createQuestionGroup();
         navigateToClientDetailsPage();
 
@@ -351,6 +325,33 @@ public class ClientTest extends UiTestCaseBase {
         verifyQuestionGroupResponse(response +2);
 
         testSectionShouldNotAppearInQuestionnaireWhenAllQuestionsAreInactive();
+    }
+
+    private void createQuestionGroup() {
+        Random random = new Random();
+        questionGroupTitle = "QG1" + random.nextInt(100);
+        question1 = "FT_" + random.nextInt(100);
+        question2 = "MS_" + random.nextInt(100);
+        response = "Hello World";
+
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        CreateQuestionPage createQuestionPage = adminPage.navigateToCreateQuestionPage();
+        createQuestionPage.addQuestion(getCreateQuestionParams(question1, "Free Text", null));
+        createQuestionPage.addQuestion(getCreateQuestionParams(question2, MULTI_SELECT, asList("Choice1", "Choice2", "Choice3", "Choice4")));
+        adminPage = createQuestionPage.submitQuestions();
+
+        CreateQuestionGroupPage createQuestionGroupPage = adminPage.navigateToCreateQuestionGroupPage();
+        CreateQuestionGroupParameters parameters;
+        parameters = getCreateQuestionGroupParameters(questionGroupTitle, asList(question1), "View Client", "Section1");
+        for(String section : parameters.getExistingQuestions().keySet()){
+            createQuestionGroupPage.addExistingQuestion(section, parameters.getExistingQuestions().get(section));
+        }
+        createQuestionGroupPage.markEveryOtherQuestionsMandatory(asList(question1));
+        parameters = getCreateQuestionGroupParameters(questionGroupTitle, asList(question2), "View Client", "Section2");
+        for(String section : parameters.getExistingQuestions().keySet()){
+            createQuestionGroupPage.addExistingQuestion(section, parameters.getExistingQuestions().get(section));
+        }
+        createQuestionGroupPage.submit(parameters);
     }
 
     private void testSectionShouldNotAppearInQuestionnaireWhenAllQuestionsAreInactive() {
@@ -437,43 +438,51 @@ public class ClientTest extends UiTestCaseBase {
 
     private void navigateToClientDetailsPage() {
         ClientsAndAccountsHomepage clientsPage = navigationHelper.navigateToClientsAndAccountsPage();
-        ClientSearchResultsPage searchResultsPage = clientsPage.searchForClient("Stu1232993852651");
+        ClientSearchResultsPage searchResultsPage = clientsPage.searchForClient("client1 lastname");
         searchResultsPage.verifyPage();
-        viewClientDetailsPage = searchResultsPage.navigateToSearchResult("Stu1232993852651 Client1232993852651: ID 0002-000000003");
-    }
-
-    private void createQuestionGroup() {
-        Random random = new Random();
-        questionGroupTitle = "QG1" + random.nextInt(100);
-        question1 = "FT_" + random.nextInt(100);
-        question2 = "MS_" + random.nextInt(100);
-        response = "Hello World";
-
-        AdminPage adminPage = navigationHelper.navigateToAdminPage();
-        CreateQuestionPage createQuestionPage = adminPage.navigateToCreateQuestionPage();
-        createQuestionPage.addQuestion(getCreateQuestionParams(question1, "Free Text", null));
-        createQuestionPage.addQuestion(getCreateQuestionParams(question2, MULTI_SELECT, asList("Choice1", "Choice2", "Choice3", "Choice4")));
-        adminPage = createQuestionPage.submitQuestions();
-
-        CreateQuestionGroupPage createQuestionGroupPage = adminPage.navigateToCreateQuestionGroupPage();
-        CreateQuestionGroupParameters parameters;
-        parameters = getCreateQuestionGroupParameters(questionGroupTitle, asList(question1), "View Client", "Section1");
-        for(String section : parameters.getExistingQuestions().keySet()){
-            createQuestionGroupPage.addExistingQuestion(section, parameters.getExistingQuestions().get(section));
-        }
-        createQuestionGroupPage.markEveryOtherQuestionsMandatory(asList(question1));
-        parameters = getCreateQuestionGroupParameters(questionGroupTitle, asList(question2), "View Client", "Section2");
-        for(String section : parameters.getExistingQuestions().keySet()){
-            createQuestionGroupPage.addExistingQuestion(section, parameters.getExistingQuestions().get(section));
-        }
-        createQuestionGroupPage.submit(parameters);
+        viewClientDetailsPage = searchResultsPage.navigateToSearchResult("client1 lastname: ID 0002-000000005");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-681
     public void createClientWithQuestionGroups() throws Exception {
-        //Given
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_016_dbunit.xml", dataSource, selenium);
+    	List<CreateQuestionParameters> questions = new ArrayList<CreateQuestionParameters>();
+    	CreateQuestionParameters q1 = new CreateQuestionParameters();
+    	q1.setType(CreateQuestionParameters.TYPE_SINGLE_SELECT);
+    	q1.setText("question 1");
+    	q1.setChoicesFromStrings(Arrays.asList(new String[]{"yes","no"}));
+    	questions.add(q1);
+    	CreateQuestionParameters q2 = new CreateQuestionParameters();
+    	q2.setType(CreateQuestionParameters.TYPE_SINGLE_SELECT);
+    	q2.setText("question 2");
+    	q2.setChoicesFromStrings(Arrays.asList(new String[]{"good","bad","average"}));
+    	questions.add(q2);
+    	CreateQuestionParameters q3 = new CreateQuestionParameters();
+    	q3.setType(CreateQuestionParameters.TYPE_FREE_TEXT);
+    	q3.setText("question 3");
+    	questions.add(q3);
+    	CreateQuestionParameters q4 = new CreateQuestionParameters();
+    	q4.setType(CreateQuestionParameters.TYPE_DATE);
+    	q4.setText("question 4");
+    	questions.add(q4);
+    	CreateQuestionParameters q5 = new CreateQuestionParameters();
+    	q5.setType(CreateQuestionParameters.TYPE_FREE_TEXT);
+    	q5.setText("question 5");
+    	questions.add(q5);
+    	CreateQuestionParameters q6 = new CreateQuestionParameters();
+    	q6.setType(CreateQuestionParameters.TYPE_NUMBER);
+    	q6.setText("question 6");
+    	q6.setNumericMax(10);
+    	q6.setNumericMin(0);
+    	questions.add(q6);
+    	questionGroupTestHelper.createQuestions(questions);
+
+    	CreateQuestionGroupParameters qg = getCreateQuestionGroupParameters("CreateClientQG", asList("question 1","question 2", "question 3") , "Create Client", "Sec 1");
+    	questionGroupTestHelper.createQuestionGroup(qg);
+
+    	CreateQuestionGroupParameters qg2 = getCreateQuestionGroupParameters("CreateClientQG2", asList("question 6") , "Create Client", "Sec 2");
+    	questionGroupTestHelper.createQuestionGroup(qg2);
+
         CreateClientEnterPersonalDataPage.SubmitFormParameters formParameters = new CreateClientEnterPersonalDataPage.SubmitFormParameters();
         formParameters.setSalutation(CreateClientEnterPersonalDataPage.SubmitFormParameters.MRS);
         formParameters.setFirstName("test");
@@ -489,23 +498,19 @@ public class ClientTest extends UiTestCaseBase {
         formParameters.setSpouseLastName("lastname" + StringUtil.getRandomString(8));
 
         QuestionResponseParameters responseParams = new QuestionResponseParameters();
-        responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[0].questions[1].value", "yes");
-        responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[0].questions[2].value", "good");
-        responseParams.addTextAnswer("questionGroups[1].sectionDetails[1].questions[2].value", "qwer");
-
-        List<String> questionToAdd= new ArrayList<String>();
-        questionToAdd.add("question 2");
-        questionToAdd.add("question 5");
-
-        List<String> questionToDesactivate = new ArrayList<String>();
-        questionToDesactivate.add("question 6");
-        questionToDesactivate.add("SingleSelectQuestion");
-        questionToDesactivate.add("DateQuestion");
-        questionToDesactivate.add("Number");
-        questionToDesactivate.add("NumberQuestion2");
+        responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[0].questions[0].value", "yes");
+        responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[0].questions[1].value", "good");
+        responseParams.addTextAnswer("questionGroups[0].sectionDetails[0].questions[2].value", "qwer");
 
         //When
-        clientTestHelper.createClientWithQuestionGroups(formParameters,"MyGroup1233266031669", responseParams);
+        clientTestHelper.createClientWithQuestionGroups(formParameters,"group1", responseParams);
+        
+        List<String> questionToAdd= new ArrayList<String>();
+        questionToAdd.add("question 4");
+        questionToAdd.add("question 5");
+
+        List<String> questionToDeactivate = new ArrayList<String>();
+        questionToDeactivate.add("question 6");
 
         CreateQuestionGroupParameters createQuestionGroupParameters = new CreateQuestionGroupParameters();
         for (String question : questionToAdd) {
@@ -513,24 +518,23 @@ public class ClientTest extends UiTestCaseBase {
         }
         questionGroupTestHelper.addQuestionsToQuestionGroup("CreateClientQG", createQuestionGroupParameters.getExistingQuestions());
 
-        for (String question : questionToDesactivate) {
+        for (String question : questionToDeactivate) {
             questionGroupTestHelper.markQuestionAsInactive(question);
         }
         questionGroupTestHelper.markQuestionGroupAsInactive("CreateClientQG2");
 
-        QuestionResponsePage questionResponsePage = clientTestHelper.navigateToQuestionResponsePage(formParameters,"MyGroup1233266031669");
+        QuestionResponsePage questionResponsePage = clientTestHelper.navigateToQuestionResponsePage(formParameters,"group1");
         //Then
-        questionResponsePage.verifyQuestionsDoesnotappear(questionToDesactivate.toArray(new String[questionToDesactivate.size()]));
+        questionResponsePage.verifyQuestionsDoesnotappear(questionToDeactivate.toArray(new String[questionToDeactivate.size()]));
         questionResponsePage.verifyQuestionsExists(questionToAdd.toArray(new String[questionToAdd.size()]));
         questionResponsePage.verifySectionDoesnotappear("Sec 2");
+        questionGroupTestHelper.markQuestionGroupAsInactive("CreateClientQG");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-35
     @Test(enabled=false) // TODO js - temporarily disabled broken test
     public void addingMemeberToGroupWithDiffrentStatuses() throws Exception {
-        //Given
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
         String groupName = "testGroup";
         String clientName = "test";
         CreateGroupSubmitParameters groupParams = new CreateGroupSubmitParameters();
@@ -539,7 +543,7 @@ public class ClientTest extends UiTestCaseBase {
         editCustomerStatusParameters.setNote("change status");
 
         //When
-        ClientViewDetailsPage clientDetailsPage = clientTestHelper.createClientAndVerify("Joe1233171679953 Guy1233171679953", "MyOffice1233171674227");
+        ClientViewDetailsPage clientDetailsPage = clientTestHelper.createClientAndVerify("loan officer", "MyOfficeDHMFT");
         clientTestHelper.changeCustomerStatus(clientDetailsPage, ClientStatus.ACTIVE);
         groupTestHelper.createNewGroupPartialApplication("MyCenter1233171688286", groupParams);
         //Then
@@ -576,8 +580,6 @@ public class ClientTest extends UiTestCaseBase {
     // http://mifosforge.jira.com/browse/MIFOSTEST-40
     @Test(enabled=false) // TODO js - temporarily disabled broken test
     public void addingMemeberOnHoldStatusToGroupWithDiffrentStatuses() throws Exception {
-        //Given
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
         String groupName = "testGroup";
         String clientName = "test";
         CreateGroupSubmitParameters groupParams = new CreateGroupSubmitParameters();
@@ -586,7 +588,7 @@ public class ClientTest extends UiTestCaseBase {
         editCustomerStatusParameters.setNote("change status");
 
         //When
-        ClientViewDetailsPage clientDetailsPage = clientTestHelper.createClientAndVerify("Joe1233171679953 Guy1233171679953", "MyOffice1233171674227");
+        ClientViewDetailsPage clientDetailsPage = clientTestHelper.createClientAndVerify("loan officer", "MyOfficeDHMFT");
         clientTestHelper.changeCustomerStatus(clientDetailsPage, ClientStatus.ACTIVE);
         clientTestHelper.changeCustomerStatus(clientDetailsPage, ClientStatus.ON_HOLD);
         groupTestHelper.createNewGroupPartialApplication("MyCenter1233171688286", groupParams);
@@ -609,9 +611,7 @@ public class ClientTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-51
     public void tryRemoveClientWithLoanFromGroup() throws Exception {
-        //Given
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
-        String clientName = "Stu1233266021748 Client1233266021748";
+        String clientName = "ClientWithLoan 20110221";
 
         //When / Then
         clientTestHelper.deleteClientGroupMembershipWithError(clientName);
@@ -620,9 +620,7 @@ public class ClientTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-50
     public void tryRemoveClientWithLoanFromGroupWithLoan() throws Exception {
-        //Given
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
-        String clientName = "Stu1233266257960 Client1233266257960";
+        String clientName = "client1 lastname";
 
         //When / Then
         clientTestHelper.deleteClientGroupMembershipWithError(clientName);
@@ -636,9 +634,7 @@ public class ClientTest extends UiTestCaseBase {
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifySequenceOfClientNamesInPropertiesFile() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
-
-        String groupName = "MyGroup1233266255641";
+        String groupName = "group";
         CreateClientEnterPersonalDataPage.SubmitFormParameters clientParams = new CreateClientEnterPersonalDataPage.SubmitFormParameters();
         clientParams.setSalutation(CreateClientEnterPersonalDataPage.SubmitFormParameters.MRS);
         clientParams.setFirstName("firstName");
@@ -657,15 +653,15 @@ public class ClientTest extends UiTestCaseBase {
         ClientViewDetailsPage clientViewDetailsPage = clientTestHelper.createNewClient(groupName, clientParams);
         clientViewDetailsPage.verifyHeading("firstName middleName lastName secondLastName");
 
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
         propertiesHelper.setClientsNameSequence("last_name,second_last_name,middle_name,first_name");
+        clientParams.setFirstName("firstName2");
         clientViewDetailsPage = clientTestHelper.createNewClient(groupName, clientParams);
-        clientViewDetailsPage.verifyHeading("lastName secondLastName middleName firstName");
+        clientViewDetailsPage.verifyHeading("lastName secondLastName middleName firstName2");
 
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
         propertiesHelper.setClientsNameSequence("first_name,middle_name,last_name,second_last_name");
+        clientParams.setFirstName("firstName3");
         clientViewDetailsPage = clientTestHelper.createNewClient(groupName, clientParams);
-        clientViewDetailsPage.verifyHeading("firstName middleName lastName secondLastName");
+        clientViewDetailsPage.verifyHeading("firstName3 middleName lastName secondLastName");
     }
 
     /**
@@ -676,12 +672,11 @@ public class ClientTest extends UiTestCaseBase {
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyClientCreatedWithActiveStatus() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
         applicationDatabaseOperation.updateCustomerState("2", "0");
         propertiesHelper.setClientPendingApprovalStateEnabled("false");
 
-        String officeName = "MyOffice1233171674227";
-        String loanOfficer = "Joe1233171679953 Guy1233171679953";
+        String officeName = "MyOfficeDHMFT";
+        String loanOfficer = "loan officer";
 
         ClientViewDetailsPage clientViewDetailsPage = clientTestHelper.createClientAndVerify(loanOfficer, officeName);
         clientViewDetailsPage.verifyStatus("Active");
@@ -695,9 +690,7 @@ public class ClientTest extends UiTestCaseBase {
     // http://mifosforge.jira.com/browse/MIFOSTEST-48
     @Test(enabled=false) // TODO js - temporarily disabled broken test
     public void removeClientWithLoanFromGroup() throws Exception {
-        //Given
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_015_dbunit.xml", dataSource, selenium);
-        String clientName = "Stu1232993852651 Client1232993852651";
+        String clientName = "client1 lastname";
         String groupName = navigationHelper.navigateToClientViewDetailsPage(clientName).getGroupMembership();
         CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
         searchParameters.setSearchString(groupName);
@@ -721,9 +714,7 @@ public class ClientTest extends UiTestCaseBase {
     // http://mifosforge.jira.com/browse/MIFOSTEST-52
     @Test(enabled=false) // TODO js - temporarily disabled broken test (blocked by MIFOS-4270)
     public void removeClientWithSavingsFromGroupWithSavingsCheckGroupCalculation() throws Exception {
-        //Given
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_015_dbunit.xml", dataSource, selenium);
-        String clientName = "Stu1232993852651 Client1232993852651";
+        String clientName = "client1 lastname";
         String groupName = navigationHelper.navigateToClientViewDetailsPage(clientName).getGroupMembership();
         CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
         CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
@@ -754,10 +745,8 @@ public class ClientTest extends UiTestCaseBase {
     // http://mifosforge.jira.com/browse/MIFOSTEST-45
     @Test(enabled=false) // TODO js - temporarily disabled broken test
     public void addClientWithSavingToGroupWithSavingsCheckGroupCalculation() throws Exception {
-        //Given
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_015_dbunit.xml", dataSource, selenium);
-
-        String groupName = "MyGroup1232993846342";
+        
+        String groupName = "group1";
 
         CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
         CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
@@ -767,7 +756,7 @@ public class ClientTest extends UiTestCaseBase {
         editAccountStatusParameters.setNote("change status to active");
 
         //When
-        ClientViewDetailsPage clientDetailsPage = clientTestHelper.createClientAndVerify("Joe1233171679953 Guy1233171679953", "MyOffice1233171674227");
+        ClientViewDetailsPage clientDetailsPage = clientTestHelper.createClientAndVerify("loan officer", "MyOfficeDHMFT");
         clientTestHelper.changeCustomerStatus(clientDetailsPage, ClientStatus.ACTIVE);
         String clientName = clientDetailsPage.getHeading();
 
@@ -791,12 +780,10 @@ public class ClientTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-43
     public void addingMemeberPendingApprovalStatusToGroupWithActiveStatus() throws Exception {
-        //Given
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
-        String groupName = "MyGroup1232993846342";
+        String groupName = "group1";
 
         //When
-        String clientName = clientTestHelper.createClientAndVerify("Joe1233171679953 Guy1233171679953", "MyOffice1233171674227").getHeading();
+        String clientName = clientTestHelper.createClientAndVerify("loan officer", "MyOfficeDHMFT").getHeading();
 
         //Then
         clientTestHelper.addClientToGroup(clientName, groupName);
@@ -843,12 +830,10 @@ public class ClientTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-305
     public void createClientWithSaveForLaterAndChangeStatusTest() throws Exception {
-        //Given
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
-        ClientViewDetailsPage clientDetailsPage = clientTestHelper.createClientAndVerify("Joe1233171679953 Guy1233171679953", "MyOffice1233171674227");
+        ClientViewDetailsPage clientDetailsPage = clientTestHelper.createClientAndVerify("loan officer", "MyOfficeDHMFT");
 
         //When
-        String groupName = "MyGroup1232993846342";
+        String groupName = "group1";
         CreateClientEnterPersonalDataPage.SubmitFormParameters clientParams = new CreateClientEnterPersonalDataPage.SubmitFormParameters();
         clientParams=clientParams();
 
