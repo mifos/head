@@ -21,7 +21,6 @@
 package org.mifos.test.acceptance.loan.lsim;
 
 import org.joda.time.DateTime;
-import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
@@ -30,44 +29,40 @@ import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.ViewRepaymentSchedulePage;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
-import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
+import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.sql.SQLException;
+
 @SuppressWarnings("PMD")
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"loan","acceptance","ui"})
+@Test(sequential = true, groups = {"loan","acceptance","ui","no_db_unit"})
 public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
 
     private LoanTestHelper loanTestHelper;
     private String expectedDate;
-
     @Autowired
-    private DriverManagerDataSource dataSource;
-    @Autowired
-    private DbUnitUtilities dbUnitUtilities;
-    @Autowired
-    private InitializeApplicationRemoteTestingService initRemote;
-
+    private ApplicationDatabaseOperation applicationDatabaseOperation;
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
     @BeforeMethod(alwaysRun = true)
     public void setUp() throws Exception {
         super.setUp();
+        applicationDatabaseOperation.updateLSIM(1);
         loanTestHelper = new LoanTestHelper(selenium);
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         DateTime targetTime = new DateTime(2010,1,22,10,55,0,0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
-
     }
 
     @AfterMethod(alwaysRun = true)
-    public void logOut() {
+    public void logOut() throws SQLException {
+        applicationDatabaseOperation.updateLSIM(0);
         (new MifosPage(selenium)).logout();
     }
 
@@ -84,9 +79,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
         submitAccountParameters.setAmount("9012.0");
         submitAccountParameters.setLsimFrequencyWeeks("on");
         submitAccountParameters.setLsimWeekFrequency("1");
-        submitAccountParameters.setLsimWeekDay("Friday");
-
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
+        submitAccountParameters.setLsimWeekDay("6");
 
         createLSIMLoanAndCheckAmountAndInstallmentDate(searchParameters, submitAccountParameters, expectedDate);
     }
@@ -95,7 +88,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
     // one of the dependent methods throws Exception
     public void newMonthlyClientLoanAccountWithMeetingOnSpecificDayOfMonth() throws Exception {
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
-        searchParameters.setSearchString("Client - Mary Monthly");
+        searchParameters.setSearchString("Client - Mary Monthly1");
         searchParameters.setLoanProduct("MonthlyClientFlatLoan1stOfMonth");
         expectedDate = "05-Feb-2010";
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
@@ -104,8 +97,6 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
         submitAccountParameters.setLsimFrequencyMonths("on");
         submitAccountParameters.setLsimMonthTypeDayOfMonth("on");
         submitAccountParameters.setLsimDayOfMonth("5");
-
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
 
         createLSIMLoanAndCheckAmountAndInstallmentDate(searchParameters, submitAccountParameters, expectedDate);
     }
@@ -124,8 +115,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
         submitAccountParameters.setLsimFrequencyMonths("on");
         submitAccountParameters.setLsimMonthTypeNthWeekdayOfMonth("on");
         submitAccountParameters.setLsimMonthRank("Second");
-        submitAccountParameters.setLsimWeekDay("Thursday");
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
+        submitAccountParameters.setLsimWeekDay("5");
 
         createLSIMLoanAndCheckAmountAndInstallmentDate(searchParameters, submitAccountParameters, expectedDate);
     }

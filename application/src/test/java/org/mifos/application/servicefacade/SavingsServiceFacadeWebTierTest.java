@@ -40,7 +40,7 @@ import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
-import org.mifos.domain.builders.MifosUserBuilder;
+import org.mifos.builders.MifosUserBuilder;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.util.helpers.Money;

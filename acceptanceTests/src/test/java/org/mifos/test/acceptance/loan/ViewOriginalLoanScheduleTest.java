@@ -46,10 +46,6 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
     private NavigationHelper navigationHelper;
     String feeName = "loanWeeklyFee";
     boolean isSetUpDone = false;
-//    @Autowired
-//    private InitializeApplicationRemoteTestingService initRemote;
-//    @Autowired
-//    private DbUnitUtilities dbUnitUtilities;
 
     @AfterMethod
     public void logOut() {

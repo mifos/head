@@ -18,6 +18,8 @@
 
     <tx:annotation-driven transaction-manager="platformTransactionManager" order="200"/>
 
+    <import resource="queryInterceptorContext.xml" />
+
     <bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean" destroy-method="destroy">
         <property name="dataSource" ref="dataSource"/>
         <property name="configLocations">
@@ -36,9 +38,9 @@
     </bean>
 
 
-    <bean id="hibernateUtil" class="org.mifos.framework.hibernate.helper.HibernateUtil">
-        <property name="sessionFactory" ref="sessionFactory" />
-    </bean>
+    <!--<bean id="hibernateUtil" class="org.mifos.framework.hibernate.helper.HibernateUtil">-->
+        <!--<property name="sessionFactory" ref="sessionFactory" />-->
+    <!--</bean>-->
 
     <bean id="hibenateUtilTx" class="org.mifos.framework.hibernate.helper.HibernateUtilAspect"/>
 
@@ -66,21 +68,4 @@
         <aop:pointcut id="mifosServiceOperation" expression="execution(* org.mifos.platform..*ServiceFacade.*(..))"/>
         <aop:advisor advice-ref="txAdvice" pointcut-ref="mifosServiceOperation"/>
     </aop:config>
-
-    <bean id="queryInterceptor" class="org.mifos.platform.persistence.QueryIntroductionInterceptor"/>
-    <bean id="queryIntroductionAdvisor" class="org.mifos.platform.persistence.QueryIntroductionAdvisor">
-        <constructor-arg ref="queryInterceptor"/>
-    </bean>
-
-    <bean id="abstractDaoTarget" class="org.mifos.platform.persistence.support.GenericDaoHibernateImpl" abstract="true">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-
-    <bean id="abstractDao" class="org.springframework.aop.framework.ProxyFactoryBean" abstract="true">
-        <property name="interceptorNames">
-            <list>
-                <value>queryIntroductionAdvisor</value>
-            </list>
-        </property>
-    </bean>
 </beans>

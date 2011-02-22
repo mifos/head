@@ -138,6 +138,7 @@ import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
+import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
@@ -151,6 +152,7 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.hibernate3.support.ScopedBeanInterceptor;
 
 
 public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
@@ -1268,7 +1270,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         Date newDate = incrementCurrentDate(14);
         accountBO = createAndRetrieveLoanAccount();
         accountBO.setUserContext(TestUtils.makeUser());
-        StaticHibernateUtil.getInterceptor().createInitialValueMap(accountBO);
+        ((AuditInterceptor) StaticHibernateUtil.getInterceptor()).createInitialValueMap(accountBO);
 
         LoanBO loanBO = (LoanBO) accountBO;
         ((LoanBO) accountBO).updateLoan(true, loanBO.getLoanAmount(), loanBO.getInterestRate(), loanBO

@@ -20,7 +20,6 @@
 
 package org.mifos.test.acceptance.loan;
 
-import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -29,25 +28,16 @@ import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.ViewNextInstallmentDetailsPage;
 import org.mifos.test.acceptance.framework.login.LoginPage;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
-import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-@ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"loan","acceptance","ui"})
+@ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
+@Test(sequential = true, groups = {"loan", "acceptance", "ui", "no_db_unit"})
 public class WaiveLoanFeeTest extends UiTestCaseBase {
 
-    @Autowired
-    private DriverManagerDataSource dataSource;
-    @Autowired
-    private DbUnitUtilities dbUnitUtilities;
     private AppLauncher appLauncher;
-    @Autowired
-    private InitializeApplicationRemoteTestingService initRemote;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
@@ -64,14 +54,13 @@ public class WaiveLoanFeeTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void waiveFeeOnLastInstallment() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_006_dbunit.xml", dataSource, selenium);
         LoginPage loginPage = appLauncher.launchMifos();
         HomePage homePage = loginPage.loginSuccessfullyUsingDefaultCredentials();
-        SearchResultsPage searchResultsPage = homePage.search("000100000000215");
+        SearchResultsPage searchResultsPage = homePage.search("000100000000012");
         searchResultsPage.verifyPage();
-        LoanAccountPage loanAccountPage = searchResultsPage.navigateToLoanAccountDetailPage("000100000000215");
+        LoanAccountPage loanAccountPage = searchResultsPage.navigateToLoanAccountDetailPage("000100000000012");
         ViewNextInstallmentDetailsPage viewInstallmentDetailsPage = loanAccountPage.navigateToViewNextInstallmentDetails();
-        viewInstallmentDetailsPage.verifyInstallmentAmount(11, 2, "16.0");
+        viewInstallmentDetailsPage.verifyInstallmentAmount(11, 2, "10.0");
         viewInstallmentDetailsPage.waiveOverdueInstallmentFee();
         viewInstallmentDetailsPage.verifyInstallmentAmount(11, 2, "0.0");
     }

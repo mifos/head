@@ -20,10 +20,10 @@
 
 package org.mifos.dto.screen;
 
-import java.util.List;
-
 import org.joda.time.LocalDate;
 import org.mifos.dto.domain.CreateAccountFeeDto;
+
+import java.util.List;
 
 @SuppressWarnings("PMD")
 public class LoanAccountInfoDto {
@@ -201,5 +201,117 @@ public class LoanAccountInfoDto {
 
     public List<CreateAccountFeeDto> getFees() {
         return this.fees;
+    }
+
+    public static class LoanAccountInfoDtoBuilder {
+        private LoanAccountInfoDto instance;
+
+        public LoanAccountInfoDtoBuilder() {
+            instance = new LoanAccountInfoDto();
+        }
+
+        public LoanAccountInfoDto.LoanAccountInfoDtoBuilder accountState(Short accountState) {
+            instance.accountState = accountState;
+            return this;
+        }
+
+        public LoanAccountInfoDto.LoanAccountInfoDtoBuilder collateralNote(String collateralNote) {
+            instance.collateralNote = collateralNote;
+            return this;
+        }
+
+        public LoanAccountInfoDto.LoanAccountInfoDtoBuilder customerId(Integer customerId) {
+            instance.customerId = customerId;
+            return this;
+        }
+
+        public LoanAccountInfoDto.LoanAccountInfoDtoBuilder disbursementDate(LocalDate disbursementDate) {
+            instance.disbursementDate = disbursementDate;
+            return this;
+        }
+
+        public LoanAccountInfoDto.LoanAccountInfoDtoBuilder externalId(String externalId) {
+            instance.externalId = externalId;
+            return this;
+        }
+
+        public LoanAccountInfoDto.LoanAccountInfoDtoBuilder fees(List<CreateAccountFeeDto> fees) {
+            instance.fees = fees;
+            return this;
+        }
+
+        public LoanAccountInfoDto.LoanAccountInfoDtoBuilder fundId(Short fundId) {
+            instance.fundId = fundId;
+            return this;
+        }
+
+        public LoanAccountInfoDto.LoanAccountInfoDtoBuilder gracePeriod(Short gracePeriod) {
+            instance.gracePeriod = gracePeriod;
+            return this;
+        }
+
+        public LoanAccountInfoDto.LoanAccountInfoDtoBuilder interest(Double interest) {
+            instance.interest = interest;
+            return this;
+        }
+
+        public LoanAccountInfoDto.LoanAccountInfoDtoBuilder interestDeductedAtDisbursement(boolean interestDeductedAtDisbursement) {
+            instance.interestDeductedAtDisbursement = interestDeductedAtDisbursement;
+            return this;
+        }
+
+        public LoanAccountInfoDto.LoanAccountInfoDtoBuilder loanAmount(String loanAmount) {
+            instance.loanAmount = loanAmount;
+            return this;
+        }
+
+        public LoanAccountInfoDto.LoanAccountInfoDtoBuilder maxLoanAmount(String maxLoanAmount) {
+            instance.maxLoanAmount = maxLoanAmount;
+            return this;
+        }
+
+        public LoanAccountInfoDto.LoanAccountInfoDtoBuilder maxNumOfInstallments(Short maxNumOfInstallments) {
+            instance.maxNumOfInstallments = maxNumOfInstallments;
+            return this;
+        }
+
+        public LoanAccountInfoDto.LoanAccountInfoDtoBuilder minLoanAmount(String minLoanAmount) {
+            instance.minLoanAmount = minLoanAmount;
+            return this;
+        }
+
+        public LoanAccountInfoDto.LoanAccountInfoDtoBuilder minNumOfInstallments(Short minNumOfInstallments) {
+            instance.minNumOfInstallments = minNumOfInstallments;
+            return this;
+        }
+
+        public LoanAccountInfoDto.LoanAccountInfoDtoBuilder numOfInstallments(Short numOfInstallments) {
+            instance.numOfInstallments = numOfInstallments;
+            return this;
+        }
+
+        public LoanAccountInfoDto.LoanAccountInfoDtoBuilder productId(Short productId) {
+            instance.productId = productId;
+            return this;
+        }
+
+        public LoanAccountInfoDto.LoanAccountInfoDtoBuilder selectedCollateralType(Integer selectedCollateralType) {
+            instance.selectedCollateralType = selectedCollateralType;
+            return this;
+        }
+
+        public LoanAccountInfoDto.LoanAccountInfoDtoBuilder selectedLoanPurpose(Integer selectedLoanPurpose) {
+            instance.selectedLoanPurpose = selectedLoanPurpose;
+            return this;
+        }
+
+        public LoanAccountInfoDto build() {
+            return instance;
+        }
+
+        public LoanAccountInfoDto.LoanAccountInfoDtoBuilder forCustomer(int customerId) {
+            instance.customerId = customerId;
+            return this;
+        }
     }
 }

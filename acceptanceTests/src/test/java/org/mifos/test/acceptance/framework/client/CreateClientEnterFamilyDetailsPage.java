@@ -56,8 +56,8 @@ public class CreateClientEnterFamilyDetailsPage extends MifosPage {
         public static final int FEMALE = 50;
 
         //Living Status
-        public static final int TOGETHER= 622;
-        public static final int NOT_TOGETHER= 623;
+        public static final int TOGETHER= 620;
+        public static final int NOT_TOGETHER= 621;
 
         //relationship
         public static final int SPOUSE = 1;

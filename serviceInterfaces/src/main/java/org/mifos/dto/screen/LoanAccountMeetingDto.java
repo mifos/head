@@ -23,7 +23,6 @@ package org.mifos.dto.screen;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
 
 public class LoanAccountMeetingDto {
-
     private Short recurrenceId;
     private Short weekDay;
     private Short everyWeek;
@@ -66,75 +65,73 @@ public class LoanAccountMeetingDto {
         }
     }
 
-    public Short getRecurrenceId() {
-        return this.recurrenceId;
+    private LoanAccountMeetingDto() {
     }
 
-    public void setRecurrenceId(Short recurrenceId) {
-        this.recurrenceId = recurrenceId;
+    public Short getRecurrenceId() {
+        return this.recurrenceId;
     }
 
     public Short getWeekDay() {
         return this.weekDay;
     }
 
-    public void setWeekDay(Short weekDay) {
-        this.weekDay = weekDay;
-    }
 
     public Short getEveryWeek() {
         return this.everyWeek;
     }
 
-    public void setEveryWeek(Short everyWeek) {
-        this.everyWeek = everyWeek;
-    }
 
     public String getMonthType() {
         return this.monthType;
-    }
-
-    public void setMonthType(String monthType) {
-        this.monthType = monthType;
     }
 
     public Short getDayOfMonth() {
         return this.dayOfMonth;
     }
 
-    public void setDayOfMonth(Short dayOfMonth) {
-        this.dayOfMonth = dayOfMonth;
-    }
 
     public Short getDayRecurMonth() {
         return this.dayRecurMonth;
-    }
-
-    public void setDayRecurMonth(Short dayRecurMonth) {
-        this.dayRecurMonth = dayRecurMonth;
     }
 
     public Short getWeekOfMonth() {
         return this.weekOfMonth;
     }
 
-    public void setWeekOfMonth(Short weekOfMonth) {
-        this.weekOfMonth = weekOfMonth;
-    }
-
     public Short getEveryMonth() {
         return this.everyMonth;
-    }
-
-    public void setEveryMonth(Short everyMonth) {
-        this.everyMonth = everyMonth;
     }
 
     public Short getMonthRank() {
         return this.monthRank;
     }
 
-    public void setMonthRank(Short monthRank) {
-        this.monthRank = monthRank;
+    @SuppressWarnings("PMD")
+    public static class Builder {
+        private final LoanAccountMeetingDto instance;
+
+        public Builder() {
+            instance = new LoanAccountMeetingDto();
+        }
+
+        public Builder weekly() {
+            instance.recurrenceId = 1;
+            return this;
+        }
+
+        public Builder on(int day) {
+            instance.weekDay = (short)day;
+            return this;
+        }
+
+        public Builder recurring(int everyWeek) {
+            instance.everyWeek = (short)everyWeek;
+            return this;
+        }
+
+        public LoanAccountMeetingDto build() {
+            return instance;
+        }
     }
 }

@@ -18,6 +18,8 @@ import java.sql.Struct;
 import java.util.Map;
 import java.util.Properties;
 
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SQL", justification="This is a wrapper class so the bugs found are wrong")
+@SuppressWarnings("PMD")
 public class TestDbConnection implements Connection {
     private Connection connection;
 
@@ -31,7 +33,7 @@ public class TestDbConnection implements Connection {
     }
 
     @Override
-    public PreparedStatement prepareStatement(String s) throws SQLException {
+    public PreparedStatement prepareStatement(final String s) throws SQLException {
         return connection.prepareStatement(s);
     }
 
@@ -125,7 +127,7 @@ public class TestDbConnection implements Connection {
     }
 
     @Override
-    public PreparedStatement prepareStatement(String s, int i, int i1) throws SQLException {
+    public PreparedStatement prepareStatement(final String s, int i, int i1) throws SQLException {
         return connection.prepareStatement(s, i, i1);
     }
 
@@ -180,7 +182,7 @@ public class TestDbConnection implements Connection {
     }
 
     @Override
-    public PreparedStatement prepareStatement(String s, int i, int i1, int i2) throws SQLException {
+    public PreparedStatement prepareStatement(final String s, int i, int i1, int i2) throws SQLException {
         return connection.prepareStatement(s, i, i1, i2);
     }
 
@@ -190,17 +192,17 @@ public class TestDbConnection implements Connection {
     }
 
     @Override
-    public PreparedStatement prepareStatement(String s, int i) throws SQLException {
+    public PreparedStatement prepareStatement(final String s, int i) throws SQLException {
         return connection.prepareStatement(s, i);
     }
 
     @Override
-    public PreparedStatement prepareStatement(String s, int[] ints) throws SQLException {
+    public PreparedStatement prepareStatement(final String s, int[] ints) throws SQLException {
         return connection.prepareStatement(s, ints);
     }
 
     @Override
-    public PreparedStatement prepareStatement(String s, String[] strings) throws SQLException {
+    public PreparedStatement prepareStatement(final String s, String[] strings) throws SQLException {
         return connection.prepareStatement(s, strings);
     }
 

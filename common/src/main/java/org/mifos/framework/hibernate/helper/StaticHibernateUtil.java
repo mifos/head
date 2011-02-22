@@ -17,31 +17,33 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-
 package org.mifos.framework.hibernate.helper;
 
+import org.hibernate.EmptyInterceptor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
 import org.mifos.framework.exceptions.HibernateStartUpException;
 
 import java.sql.Connection;
 
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value="DC", justification="Legacy code to be removed")
 public class StaticHibernateUtil {
 
     private static HibernateUtil hibernateUtil;
+    private static final Object lockObject = new Object();
 
     public static void setHibernateUtil(HibernateUtil hibernateUtil) {
         StaticHibernateUtil.hibernateUtil = hibernateUtil;
     }
 
-    /**
-     * This method must be called before using Hibernate!
-     */
-    public static void initialize() throws HibernateStartUpException {
+    public static void initialize(InterceptorFactory interceptorFactory, SessionFactory sessionFactory) throws HibernateStartUpException {
         if(hibernateUtil == null){
-            hibernateUtil = HibernateUtil.getInstance();
+            synchronized (lockObject) {
+                if (hibernateUtil == null)
+                    hibernateUtil = new HibernateUtil(interceptorFactory, sessionFactory);
+            }
         }
     }
 
@@ -57,8 +59,8 @@ public class StaticHibernateUtil {
         return hibernateUtil.getSessionTL();
     }
 
-    public static AuditInterceptor getInterceptor() {
-        return hibernateUtil.getInterceptor();
+    public static EmptyInterceptor getInterceptor() {
+        return (EmptyInterceptor) hibernateUtil.getInterceptor();
     }
 
     public static Transaction startTransaction() {

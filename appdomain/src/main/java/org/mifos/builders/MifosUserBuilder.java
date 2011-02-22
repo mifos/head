@@ -18,15 +18,15 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.domain.builders;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+package org.mifos.builders;
 
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.security.MifosUser;
 import org.springframework.security.core.GrantedAuthority;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class MifosUserBuilder {
 

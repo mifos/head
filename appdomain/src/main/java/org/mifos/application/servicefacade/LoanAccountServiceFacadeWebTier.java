@@ -639,10 +639,8 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     public LoanCreationResultDto createLoan(LoanAccountMeetingDto loanAccountMeetingDto,
                                             LoanAccountInfoDto loanAccountInfo,
                                             List<LoanScheduledInstallmentDto> loanRepayments) {
-
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = toUserContext(user);
-
         OfficeBO userOffice = this.officeDao.findOfficeById(userContext.getBranchId());
 
         CustomerBO customer = this.customerDao.findCustomerById(loanAccountInfo.getCustomerId());

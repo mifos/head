@@ -21,7 +21,6 @@
 package org.mifos.test.acceptance.loanproduct;
 
 
-import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
@@ -31,35 +30,18 @@ import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.
 import org.mifos.test.acceptance.framework.testhelpers.CustomPropertiesHelper;
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
-import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(sequential = true, groups = {"loanproduct", "acceptance"})
+@Test(sequential = true, groups = {"loanproduct", "acceptance","no_db_unit"})
 public class ProperLoanProductCalculationsTest extends UiTestCaseBase {
-
-    @Autowired
-    private DriverManagerDataSource dataSource;
-    @Autowired
-    private DbUnitUtilities dbUnitUtilities;
-    @Autowired
-    private InitializeApplicationRemoteTestingService initRemote;
 
     private LoanProductTestHelper loanProductTestHelper;
     private LoanTestHelper loanTestHelper;
     private CustomPropertiesHelper  customPropertiesHelper;
-
-    @BeforeClass
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void setUpClass() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_004_dbunit.xml", dataSource, selenium);
-    }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @BeforeMethod
@@ -101,11 +83,12 @@ public class ProperLoanProductCalculationsTest extends UiTestCaseBase {
         productParams.setInterestTypes(SubmitFormParameters.FLAT);
         productParams.setDefaultLoanAmount("2500");
         productParams.setDefInstallments("11");
+        loanProductTestHelper.defineNewLoanProduct(productParams);
+
+
         CreateLoanAccountSearchParameters searchParams = new CreateLoanAccountSearchParameters();
         searchParams.setSearchString("Stu1233266063395 Client1233266063395");
         searchParams.setLoanProduct("product63");
-
-        loanProductTestHelper.defineNewLoanProduct(productParams);
         LoanAccountPage loanAccountPage = loanTestHelper.createAndActivateDefaultLoanAccount(searchParams);
 
         loanAccountPage.verifyPrincipalOriginal("2500.0");

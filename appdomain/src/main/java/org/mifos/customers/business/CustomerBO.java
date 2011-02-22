@@ -20,18 +20,6 @@
 
 package org.mifos.customers.business;
 
-import static org.apache.commons.lang.math.NumberUtils.SHORT_ZERO;
-import static org.mifos.framework.util.helpers.MoneyUtils.zero;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountBO;
@@ -79,61 +67,66 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.ChapterNum;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.math.BigDecimal;
+import java.util.*;
+
+import static org.apache.commons.lang.math.NumberUtils.SHORT_ZERO;
+import static org.mifos.framework.util.helpers.MoneyUtils.zero;
 
 /**
  * A class that represents a customer entity after being created.
  */
 public abstract class CustomerBO extends AbstractBusinessObject {
-
-    private static final Logger logger = LoggerFactory.getLogger(CustomerBO.class);
-
     private Integer customerId;
+
     private String globalCustNum;
+    private String externalId;
+    private String searchId;
+
+    //business meta data
+    private final Set<ClientNameDetailEntity> nameDetailSet;
     private String displayName;
     private String displayAddress;
-    private String externalId;
-    private Short trained = Short.valueOf("0");
+    private Short trained = 0;
     private Date trainedDate;
     private Date mfiJoiningDate;
-    private String searchId;
-    private Integer maxChildCount = Integer.valueOf(0);
+    private Set<CustomerCustomFieldEntity> customFields;
+    private Set<CustomerFlagDetailEntity> customerFlags;
+    private Integer maxChildCount = 0;
     private Date customerActivationDate;
     private CustomerStatusEntity customerStatus;
-    private Set<CustomerCustomFieldEntity> customFields;
     private Set<CustomerPositionEntity> customerPositions;
-    private Set<CustomerFlagDetailEntity> customerFlags;
+    private CustomerAddressDetailEntity customerAddressDetail;
+    private Set<CustomerNoteEntity> customerNotes;
+
+    //business attributes
     private CustomerBO parentCustomer;
     private Set<AccountBO> accounts;
-    private CustomerAccountBO customerAccount;
     private final CustomerLevelEntity customerLevel;
-    private PersonnelBO personnel;
-    private final PersonnelBO formedByPersonnel;
-    private OfficeBO office;
-    private CustomerAddressDetailEntity customerAddressDetail;
     private CustomerMeetingEntity customerMeeting;
     private Set<CustomerHierarchyEntity> customerHierarchies;
     private Set<CustomerMovementEntity> customerMovements;
     private CustomerHistoricalDataEntity historicalData;
     public Short blackListed = YesNoFlag.NO.getValue();
-    private Set<CustomerNoteEntity> customerNotes;
     private Set<CustomerBO> children;
-    private final Set<ClientNameDetailEntity> nameDetailSet;
+    private CustomerAccountBO customerAccount;
 
+    private CustomerPersistence customerPersistence;
+    private LegacyPersonnelDao personnelPersistence;
 
-    private CustomerPersistence customerPersistence = null;
-    private LegacyPersonnelDao personnelPersistence = null;
+    //associations
+    private PersonnelBO personnel;
+    private final PersonnelBO formedByPersonnel;
+    private OfficeBO office;
 
     /**
      * default constructor for hibernate
      */
     protected CustomerBO() {
         this(null, null, null, null, null);
-        this.globalCustNum = null;
     }
 
     /**
@@ -904,7 +897,6 @@ public abstract class CustomerBO extends AbstractBusinessObject {
      */
     @Deprecated
     protected void deleteCustomerMeeting() {
-        logger.debug("In CustomerBO::deleteCustomerMeeting(), customerId: " + getCustomerId());
         try {
             getCustomerPersistence().deleteCustomerMeeting(this);
             setCustomerMeeting(null);

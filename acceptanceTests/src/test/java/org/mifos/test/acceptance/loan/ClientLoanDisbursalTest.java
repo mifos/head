@@ -42,8 +42,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @SuppressWarnings("PMD")
-@ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"acceptance","ui", "loan"})
+@ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
+@Test(sequential = true, groups = {"acceptance", "ui", "loan", "no_db_unit"})
 public class ClientLoanDisbursalTest extends UiTestCaseBase {
     private LoanTestHelper loanTestHelper;
 
@@ -68,6 +68,7 @@ public class ClientLoanDisbursalTest extends UiTestCaseBase {
     public void logOut() {
         (new MifosPage(selenium)).logout();
     }
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-249
     public void verifyAcceptedPaymentTypesForDisbursementsOfLoan() throws Exception {
@@ -101,8 +102,8 @@ public class ClientLoanDisbursalTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void ensurePaymentModeOfPaymentTypeIsEditable() throws Exception {
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService =
-            new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = new DateTime(2010,2,12,1,0,0,0);
+                new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTime targetTime = new DateTime(2010, 2, 12, 1, 0, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
 
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_013_dbunit.xml",
@@ -116,8 +117,8 @@ public class ClientLoanDisbursalTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void ensurePaymentModeOfPaymentTypeIsCleared() throws Exception {
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService =
-            new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = new DateTime(2010,2,12,1,0,0,0);
+                new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTime targetTime = new DateTime(2010, 2, 12, 1, 0, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
 
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_013_dbunit.xml",

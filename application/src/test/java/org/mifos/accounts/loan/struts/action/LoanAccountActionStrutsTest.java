@@ -105,7 +105,7 @@ import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.domain.builders.MeetingBuilder;
-import org.mifos.domain.builders.MifosUserBuilder;
+import org.mifos.builders.MifosUserBuilder;
 import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.InstallmentDetailsDto;
 import org.mifos.dto.domain.LoanAccountDetailsDto;

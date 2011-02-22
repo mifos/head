@@ -72,6 +72,13 @@
             </properties>
         </profile>
         <profile>
+            <id>allTests</id>
+            <properties>
+                <!-- leaving <acceptanceTest.groups.to.run> empty means to run everything -->
+                <acceptanceTest.groups.to.run></acceptanceTest.groups.to.run>
+            </properties>
+        </profile>
+        <profile>
             <id>continuous-integration</id>
             <properties>
                 <!-- leaving <acceptanceTest.groups.to.run> empty means to run everything -->
