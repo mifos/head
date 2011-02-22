@@ -20,12 +20,7 @@
 
 package org.mifos.test.acceptance.loan;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
 import org.joda.time.DateTime;
-import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
@@ -36,31 +31,24 @@ import org.mifos.test.acceptance.framework.loan.PaymentParameters;
 import org.mifos.test.acceptance.framework.loan.PerformanceHistoryAtributes;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
-import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-@ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"loan","acceptance","ui"})
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+@ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
+@Test(sequential = true, groups = {"loan", "acceptance", "ui", "no_db_unit"})
 public class LoanAccountPerformanceHistoryTest extends UiTestCaseBase {
 
-    //private static final String CLIENT_PERFORMANCE_HISTORY = "CLIENT_PERF_HISTORY";
-    //private AppLauncher appLauncher;
     private LoanTestHelper loanTestHelper;
 
-    @Autowired
-    private DriverManagerDataSource dataSource;
-    @Autowired
-    private DbUnitUtilities dbUnitUtilities;
-    @Autowired
-    private InitializeApplicationRemoteTestingService initRemote;
-
     @Override
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // one of the dependent methods throws Exception
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
@@ -68,7 +56,7 @@ public class LoanAccountPerformanceHistoryTest extends UiTestCaseBase {
         //appLauncher = new AppLauncher(selenium);
 
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = new DateTime(2009,2,7,12,0,0,0);
+        DateTime targetTime = new DateTime(2011, 03, 04, 1, 0, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
 
         loanTestHelper = new LoanTestHelper(selenium);
@@ -83,22 +71,19 @@ public class LoanAccountPerformanceHistoryTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void repayMultipleLoansAndVerifyPerformanceHistory() throws Exception {
         //Given
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
-        searchParameters.setLoanProduct("WeeklyFlatLoanWithOneTimeFees");
-        searchParameters.setSearchString("Stu1233171716380");
-        submitAccountParameters.setInterestRate("3.0");
-        submitAccountParameters.setNumberOfInstallments("11");
+        searchParameters.setLoanProduct("WeeklyClientFlatLoanWithNoFee");
+        searchParameters.setSearchString("Stu1233266319760");
+        submitAccountParameters.setInterestRate("24.0");
+        submitAccountParameters.setNumberOfInstallments("10");
         DisburseLoanParameters disburseParameters = new DisburseLoanParameters();
-        disburseParameters.setDisbursalDateDD("07");
-        disburseParameters.setDisbursalDateMM("02");
-        disburseParameters.setDisbursalDateYYYY("2009");
+        disburseParameters.setDisbursalDateDD("04");
+        disburseParameters.setDisbursalDateMM("03");
+        disburseParameters.setDisbursalDateYYYY("2011");
         disburseParameters.setPaymentType(PaymentParameters.CASH);
         PerformanceHistoryAtributes performanceHistoryAtributes = new PerformanceHistoryAtributes();
         performanceHistoryAtributes.setDelinquentPortfolio(0.0);
-        loanTestHelper.editLoanProductIncludeInLoanCounter("WeeklyFlatLoanWithOneTimeFees", true);
-        loanTestHelper.editLoanProductIncludeInLoanCounter("MyLoanProduct1232993826860", true);
 
         //When
         Map<String,String> loanIds = new HashMap<String,String>();
@@ -111,7 +96,7 @@ public class LoanAccountPerformanceHistoryTest extends UiTestCaseBase {
         performanceHistoryAtributes.incrementLoanCycle();
         performanceHistoryAtributes.incrementLoanCycleForProduct(searchParameters.getLoanProduct());
         submitAccountParameters.setAmount("5000.0");
-        searchParameters.setLoanProduct("MyLoanProduct1232993826860");
+        searchParameters.setLoanProduct("AnotherWeeklyClientFlatLoanWithNoFee");
         loanIds.put(submitAccountParameters.getAmount(), loanTestHelper.createLoanAccount(searchParameters, submitAccountParameters).getAccountId());
         performanceHistoryAtributes.incrementLoanCycle();
         performanceHistoryAtributes.incrementLoanCycleForProduct(searchParameters.getLoanProduct());
