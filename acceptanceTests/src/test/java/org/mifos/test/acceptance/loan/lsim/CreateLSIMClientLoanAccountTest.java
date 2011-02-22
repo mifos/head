@@ -63,6 +63,8 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
 
+    private DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService;
+
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
@@ -71,7 +73,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
         super.setUp();
         loanTestHelper = new LoanTestHelper(selenium);
         loanProductTestHelper = new LoanProductTestHelper(selenium);
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         systemTime = new DateTime(2010,1,22,10,55,0,0);
         dateTimeUpdaterRemoteTestingService.setDateTime(systemTime);
 
@@ -82,26 +84,54 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
-    @Test( groups = {"smoke"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // http://mifosforge.jira.com/browse/MIFOSTEST-127
     // one of the dependent methods throws Exception
     public void newWeeklyLSIMClientLoanAccount() throws Exception {
+        //Given
+        systemTime = new DateTime(2010,1,15,10,55,0,0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(systemTime);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
+        //When
         CustomPropertiesHelper customPropertiesHelper = new CustomPropertiesHelper(selenium);
         customPropertiesHelper.setBackDatedTransactionsAllowed("true");
 
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("Stu1233171716380 Client1233171716380");
         searchParameters.setLoanProduct("WeeklyFlatLoanWithOneTimeFees");
-        expectedDate = "29-Jan-2010";
+        expectedDate = "22-Jan-2010";
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
         submitAccountParameters.setAmount("9012.0");
         submitAccountParameters.setLsimFrequencyWeeks("on");
         submitAccountParameters.setLsimWeekFrequency("1");
         submitAccountParameters.setLsimWeekDay("Friday");
+        //Then
+        String loanId = createLSIMLoanAndCheckAmountAndInstallmentDate(searchParameters, submitAccountParameters, expectedDate);
+        //When
+        systemTime = new DateTime(2010,1,18,10,55,0,0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(systemTime);
+        //Then
+        loanTestHelper.activateLoanAccount(loanId);
+        //When
+        systemTime = new DateTime(2010,1,29,10,55,0,0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(systemTime);
 
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
-
-        createLSIMLoanAndCheckAmountAndInstallmentDate(searchParameters, submitAccountParameters, expectedDate);
+        DisburseLoanParameters disburseParameters = new DisburseLoanParameters();
+        disburseParameters.setDisbursalDateDD("22");
+        disburseParameters.setDisbursalDateMM("01");
+        disburseParameters.setDisbursalDateYYYY("2010");
+        disburseParameters.setPaymentType(PaymentParameters.CASH);
+        //Then
+        loanTestHelper.disburseLoan(loanId, disburseParameters);
+        //When
+        PaymentParameters paymentParameters = new PaymentParameters();
+        paymentParameters.setAmount("200.0");
+        paymentParameters.setTransactionDateDD("23");
+        paymentParameters.setTransactionDateMM("01");
+        paymentParameters.setTransactionDateYYYY("2010");
+        paymentParameters.setPaymentType(PaymentParameters.CASH);
+        //Then
+        loanTestHelper.applyPayment(loanId, paymentParameters);
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -176,13 +206,14 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
         loanTestHelper.repayLoan(loanId);
     }
 
-    private void createLSIMLoanAndCheckAmountAndInstallmentDate(CreateLoanAccountSearchParameters searchParameters,
+    private String createLSIMLoanAndCheckAmountAndInstallmentDate(CreateLoanAccountSearchParameters searchParameters,
             CreateLoanAccountSubmitParameters submitAccountParameters, String expectedDate) {
 
         LoanAccountPage loanAccountPage = loanTestHelper.createLoanAccount(searchParameters, submitAccountParameters);
         loanAccountPage.verifyLoanAmount(submitAccountParameters.getAmount());
+        String loanId = loanAccountPage.getAccountId();
         ViewRepaymentSchedulePage viewRepaymentSchedulePage =loanAccountPage.navigateToViewRepaymentSchedule();
         viewRepaymentSchedulePage.verifyFirstInstallmentDate(4, 2, expectedDate);
-
+        return loanId;
     }
 }
