@@ -19,6 +19,9 @@
         <modules.root.dir>${basedir}/..</modules.root.dir>
         <selenium.background>true</selenium.background>
         <selenium.log.output>true</selenium.log.output>
+        <SELENIUM_PORT>4445</SELENIUM_PORT>
+        <SERVLET_PORT>8083</SERVLET_PORT>
+        <stop.port>8005</stop.port>
         <jetty.version>7.3.0.v20110203</jetty.version>
         <jdk.version>1.6</jdk.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -66,21 +69,15 @@
             <properties>
                 <selenium.background>false</selenium.background>
                 <selenium.log.output>false</selenium.log.output>
-                <selenium.port>4445</selenium.port>
-                <servlet.port>8083</servlet.port>
-                <stop.port>8005</stop.port>
             </properties>
         </profile>
         <profile>
             <id>continuous-integration</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
             <properties>
                 <!-- leaving <acceptanceTest.groups.to.run> empty means to run everything -->
                 <acceptanceTest.groups.to.run></acceptanceTest.groups.to.run>
-                <selenium.port>${env.CI_SELENIUM_PORT}</selenium.port>
-                <servlet.port>${env.CI_HTTP_PORT}</servlet.port>
+                <SELENIUM_PORT>${env.SELENIUM_PORT}</SELENIUM_PORT>
+                <SERVLET_PORT>${env.SERVLET_PORT}</SERVLET_PORT>
                 <stop.port>${env.CI_JETTY_STOP_PORT}</stop.port>
             </properties>
             <build>
@@ -89,6 +86,17 @@
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>properties-maven-plugin</artifactId>
                         <version>1.0-alpha-1</version>
+                        <executions>
+                            <execution>
+                                <phase>initialize</phase>
+                                <goals>
+                                    <goal>write-project-properties</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <outputFile>${project.build.directory}/maven.properties</outputFile>
+                        </configuration>
                     </plugin>
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
@@ -187,7 +195,6 @@
                             <quiet>true</quiet>
                             <files>
                                 <file>${database.properties.file}</file>
-                                <file>${acceptanceTest.settings}</file>
                                 <file>${mifos.overrides.home}</file>
                                 <file>${mifos.overrides.conf}</file>
                                 <file>${mifos.overrides.env}</file>
@@ -303,12 +310,12 @@
                             <value>${browser}</value>
                         </property>
                         <property>
-                            <name>servlet.port</name>
-                            <value>${servlet.port}</value>
+                            <name>SERVLET_PORT</name>
+                            <value>${SERVLET_PORT}</value>
                         </property>
                         <property>
-                            <name>selenium.port</name>
-                            <value>${selenium.port}</value>
+                            <name>SELENIUM_PORT</name>
+                            <value>${SELENIUM_PORT}</value>
                         </property>
                     </systemProperties>
                 </configuration>
@@ -351,7 +358,7 @@
                     <skip>${maven.test.skip}</skip>
                     <connectors>
                         <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
-                            <port>${servlet.port}</port>
+                            <port>${SERVLET_PORT}</port>
                         </connector>
                     </connectors>
                     <webAppConfig>
@@ -384,7 +391,7 @@
                 <configuration>
                     <skip>${maven.test.skip}</skip>
                     <background>${selenium.background}</background>
-                    <port>${selenium.port}</port>
+                    <port>${SELENIUM_PORT}</port>
                     <logOutput>${selenium.log.output}</logOutput>
                     <browserSideLog>true</browserSideLog>
                 </configuration>

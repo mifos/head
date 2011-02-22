@@ -24,6 +24,7 @@
                 <value>classpath:org/mifos/config/resources/acceptanceDatabase.properties</value>
                 <value>classpath:org/mifos/config/resources/acceptanceTest.properties</value>
                 <ref bean="customAcceptanceTestProperties"/>
+                <value>file:target/maven.properties</value>
             </list>
         </property>
     </bean>

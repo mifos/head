@@ -117,7 +117,6 @@
 $(document).ready(function() {
     $('select').change(function(e) {
         $(this).closest('form').submit();
-                
     });
 });
 </script>

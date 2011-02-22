@@ -89,7 +89,6 @@ import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.business.MeetingDetailsEntity;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingHelper;
 import org.mifos.application.meeting.util.helpers.MeetingType;
@@ -147,6 +146,7 @@ import org.mifos.dto.domain.OpeningBalanceLoanAccount;
 import org.mifos.dto.domain.PaymentTypeDto;
 import org.mifos.dto.domain.PersonnelDto;
 import org.mifos.dto.domain.PrdOfferingDto;
+import org.mifos.dto.domain.ProductDetailsDto;
 import org.mifos.dto.domain.SurveyDto;
 import org.mifos.dto.domain.ValueListElement;
 import org.mifos.dto.screen.AccountFeesDto;
@@ -396,20 +396,19 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             new LoanProductService(new LoanPrdBusinessService()).getDefaultAndAdditionalFees(productId, userContext,
                     defaultFees, additionalFees);
 
-            LoanOfferingBO loanOffering = new LoanPrdBusinessService().getLoanOffering(productId, userContext
-                    .getLocaleId());
+            LoanOfferingBO loanProduct = this.loanProductDao.findById(productId.intValue());
 
             if (AccountingRules.isMultiCurrencyEnabled()) {
-                defaultFees = getFilteredFeesByCurrency(defaultFees, loanOffering.getCurrency().getCurrencyId());
-                additionalFees = getFilteredFeesByCurrency(additionalFees, loanOffering.getCurrency().getCurrencyId());
+                defaultFees = getFilteredFeesByCurrency(defaultFees, loanProduct.getCurrency().getCurrencyId());
+                additionalFees = getFilteredFeesByCurrency(additionalFees, loanProduct.getCurrency().getCurrencyId());
             }
 
             // setDateIntoForm
             CustomerBO customer = this.customerDao.findCustomerById(customerId);
-            LoanAmountOption eligibleLoanAmount = loanOffering.eligibleLoanAmount(customer
-                    .getMaxLoanAmount(loanOffering), customer.getMaxLoanCycleForProduct(loanOffering));
-            LoanOfferingInstallmentRange eligibleNoOfInstall = loanOffering.eligibleNoOfInstall(customer
-                    .getMaxLoanAmount(loanOffering), customer.getMaxLoanCycleForProduct(loanOffering));
+            LoanAmountOption eligibleLoanAmount = loanProduct.eligibleLoanAmount(customer
+                    .getMaxLoanAmount(loanProduct), customer.getMaxLoanCycleForProduct(loanProduct));
+            LoanOfferingInstallmentRange eligibleNoOfInstall = loanProduct.eligibleNoOfInstall(customer
+                    .getMaxLoanAmount(loanProduct), customer.getMaxLoanCycleForProduct(loanProduct));
 
             CustomValueDto customValueDto = legacyMasterDao.getLookUpEntity(MasterConstants.COLLATERAL_TYPES);
             List<CustomValueListElementDto> collateralTypes = customValueDto.getCustomValueListElements();
@@ -417,18 +416,21 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             // Business activities got in getPrdOfferings also but only for glim.
             List<ValueListElement> loanPurposes = legacyMasterDao.findValueListElements(MasterConstants.LOAN_PURPOSES);
 
-            MeetingDetailsEntity loanOfferingMeetingDetail = loanOffering.getLoanOfferingMeeting().getMeeting()
-                    .getMeetingDetails();
+            MeetingDto loanOfferingMeetingDto = loanProduct.getLoanOfferingMeetingValue().toDto();
 
-            MeetingDto loanOfferingMeetingDto = loanOffering.getLoanOfferingMeetingValue().toDto();
-
-            List<FundBO> funds = getFunds(loanOffering);
+            List<FundBO> funds = getFunds(loanProduct);
 
             boolean isRepaymentIndependentOfMeetingEnabled = new ConfigurationBusinessService()
                     .isRepaymentIndepOfMeetingEnabled();
 
+            ProductDetailsDto productDto = loanProduct.toDetailsDto();
+            CustomerDetailDto customerDetailDto = customer.toCustomerDetailDto();
+            
+            final List<PrdOfferingDto> loanProductDtos = retrieveActiveLoanProductsApplicableForCustomer(customer);
+            
             return new LoanCreationLoanDetailsDto(isRepaymentIndependentOfMeetingEnabled, loanOfferingMeetingDto,
-                    customer.getCustomerMeetingValue().toDto(), loanPurposes);
+                    customer.getCustomerMeetingValue().toDto(), loanPurposes, productDto, customerDetailDto, loanProductDtos, 
+                    loanProduct.getInterestTypes().getName(), loanProduct.isPrinDueLastInst());
 
         } catch (ServiceException e) {
             throw new MifosRuntimeException(e);

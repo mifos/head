@@ -4,6 +4,8 @@
     xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
 
     <var name="customerSearchFormBean" class="org.mifos.clientportfolio.loan.ui.CustomerSearchFormBean" />
+    <var name="selectProductFormBean" class="org.mifos.clientportfolio.loan.ui.SelectProductFormBean" />
+    <var name="loanAccountFormBean" class="org.mifos.clientportfolio.loan.ui.LoanAccountFormBean" />
 
     <decision-state id="isCustomerSearchRequiredStep">
         <if test="requestParameters.customerId == null" then="customerSearchStep" else="customerSearchStep" />
@@ -19,6 +21,32 @@
     <view-state id="selectCustomerStep" view="createLoanAccountSelectCustomer" model="customerSearchFormBean">
         <transition on="searchTermEntered" to="selectCustomerStep" validate="true">
             <evaluate expression="loanAccountController.searchCustomers(customerSearchFormBean)" result="flowScope.customerSearchResultsDto" />
+        </transition>
+        <transition on="cancel" to="cancel" validate="false"/>
+        <transition on="customerSelected" to="handleSelectedCustomer"/>
+    </view-state>
+    
+    <action-state id="handleSelectedCustomer">
+        <set name="flowScope.customerId" value="requestParameters.customerId" type="int" />
+        <transition to="selectLoanProductStep"/>
+    </action-state>
+
+    <view-state id="selectLoanProductStep" view="createLoanAccountSelectProduct" model="selectProductFormBean">
+        <on-entry>
+            <evaluate expression="loanAccountController.retrieveLoanProducts(flowScope.customerId)" result="flowScope.loanCreationProductDetailsDto" />
+        </on-entry>
+        <transition on="cancel" to="cancel" validate="false"/>
+        <transition on="productSelected" to="enterAccountDetailsStep">
+            <set name="flowScope.productId" value="requestParameters.productId" type="int"/>
+        </transition>
+    </view-state>
+    
+     <view-state id="enterAccountDetailsStep" view="createLoanAccountEnterDetails" model="loanAccountFormBean">
+        <on-entry>
+			<evaluate expression="loanAccountController.retrieveLoanCreationDetails(flowScope.customerId, flowScope.productId, loanAccountFormBean)" result="flowScope.loanProductReferenceData" />
+        </on-entry>
+        <transition on="newProductSelected" to="enterAccountDetailsStep">
+            <set name="flowScope.productId" value="requestParameters.productId" type="int"/>
         </transition>
         <transition on="cancel" to="cancel" validate="false"/>
     </view-state>

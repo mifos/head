@@ -22,10 +22,13 @@ package org.mifos.clientportfolio.loan.ui;
 
 import java.util.List;
 
+import org.joda.time.LocalDate;
 import org.mifos.application.servicefacade.LoanAccountServiceFacade;
 import org.mifos.dto.domain.CustomerSearchDto;
 import org.mifos.dto.domain.CustomerSearchResultDto;
 import org.mifos.dto.screen.CustomerSearchResultsDto;
+import org.mifos.dto.screen.LoanCreationLoanDetailsDto;
+import org.mifos.dto.screen.LoanCreationProductDetailsDto;
 import org.mifos.dto.screen.SearchDetailsDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -48,5 +51,26 @@ public class LoanAccountController {
     	int firstResult = formBean.getPage() * formBean.getPageSize() - (formBean.getPageSize()-1);
 		SearchDetailsDto searchDetails = new SearchDetailsDto(pagedDetails.size(), firstResult, formBean.getPage(), formBean.getPageSize());
         return new CustomerSearchResultsDto(searchDetails, pagedDetails);
-    }	
+    }
+	
+    public LoanCreationProductDetailsDto retrieveLoanProducts(int customerId) {
+    	return this.loanAccountServiceFacade.retrieveGetProductDetailsForLoanAccountCreation(customerId);
+    }
+    
+    @SuppressWarnings("PMD")
+    public LoanCreationLoanDetailsDto retrieveLoanCreationDetails(int customerId, int productId, LoanAccountFormBean formBean) {
+    	LoanCreationLoanDetailsDto dto = this.loanAccountServiceFacade.retrieveLoanDetailsForLoanAccountCreation(customerId, Integer.valueOf(productId).shortValue());
+    	
+    	formBean.setProductId(productId);
+    	formBean.setAmount(Double.valueOf("7000.0"));
+    	formBean.setInterestRate(Double.valueOf("10.0"));
+    	formBean.setNumberOfInstallments(Integer.valueOf(12));
+    	
+    	LocalDate today = new LocalDate();
+    	formBean.setDisbursalDateDay(today.getDayOfMonth());
+    	formBean.setDisbursalDateMonth(today.getMonthOfYear());
+    	formBean.setDisbursalDateYear(today.getYearOfEra());
+    	
+    	return dto;
+    }
 }

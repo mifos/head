@@ -27,7 +27,7 @@
                          "createLoanAccount.flowState.reviewAndSubmit"]] 
 
 <h1>[@spring.message "createLoanAccount.wizard.title" /] - <span class="standout">[@spring.message "customerSearch.pageSubtitle" /]</span></h1>
-<p>[@spring.message "customerSearch.instructions" /]</p>
+<p>[@spring.message "selectCustomer.instructions" /]</p>
 <br/>
 
 [#if customerSearchResultsDto.pagedDetails?size == customerSearchResultsDto.searchDetails.pageSize]

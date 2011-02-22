@@ -20,14 +20,14 @@
 
 package org.mifos.dto.screen;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.mifos.dto.domain.ValueListElement;
 
-/**
- *
- */
-public class LoanCreationGlimDto {
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID", "EI_EXPOSE_REP", "EI_EXPOSE_REP2"}, justification="")
+public class LoanCreationGlimDto implements Serializable {
 
     private final List<ValueListElement> loanPurposes;
 
