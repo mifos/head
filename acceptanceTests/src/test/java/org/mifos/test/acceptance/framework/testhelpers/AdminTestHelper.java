@@ -20,6 +20,9 @@
 
 package org.mifos.test.acceptance.framework.testhelpers;
 
+import org.mifos.test.acceptance.framework.admin.AdminPage;
+import org.mifos.test.acceptance.framework.admin.DefineLabelsPage;
+import org.mifos.test.acceptance.framework.admin.DefineLabelsParameters;
 import org.mifos.test.acceptance.framework.admin.DefineLookupOptionParameters;
 import org.mifos.test.acceptance.framework.admin.DefineLookupOptionsPage;
 
@@ -53,5 +56,25 @@ public class AdminTestHelper {
             .navigateToCreateClientWithoutGroupPage()
             .chooseOffice(officeName)
             .verifyLookupOption(lookupOptionParams);
+    }
+
+    public AdminPage defineLabels(DefineLabelsParameters defineLabelsParams) {
+        DefineLabelsPage defineLabelsPage = navigationHelper
+            .navigateToAdminPage()
+            .navigateToDefineLabelsPage();
+        for(String label : defineLabelsParams.getKeys()) {
+            defineLabelsPage.setLabelValue(label, defineLabelsParams.getLabelText(label));
+        }
+        return defineLabelsPage.submit();
+    }
+
+    public AdminPage verifyLabels(DefineLabelsParameters defineLabelsParams) {
+        DefineLabelsPage defineLabelsPage = navigationHelper
+            .navigateToAdminPage()
+            .navigateToDefineLabelsPage();
+        for(String label : defineLabelsParams.getKeys()) {
+            defineLabelsPage.verifyLabelValue(label, defineLabelsParams.getLabelText(label));
+        }
+        return defineLabelsPage.cancel();
     }
 }
