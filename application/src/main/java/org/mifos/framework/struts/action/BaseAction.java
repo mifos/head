@@ -82,6 +82,7 @@ import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.util.helpers.MethodNameConstants;
 import org.mifos.framework.components.audit.business.service.AuditBusinessService;
 import org.mifos.framework.components.audit.util.helpers.AuditConstants;
+import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
 import org.mifos.framework.components.batchjobs.MifosBatchJob;
 import org.mifos.framework.components.fieldConfiguration.persistence.LegacyFieldConfigurationDao;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -479,7 +480,7 @@ public abstract class BaseAction extends DispatchAction {
 
     protected void setInitialObjectForAuditLogging(Object object) {
         StaticHibernateUtil.getSessionTL();
-        StaticHibernateUtil.getInterceptor().createInitialValueMap(object);
+        ((AuditInterceptor)StaticHibernateUtil.getInterceptor()).createInitialValueMap(object);
     }
 
     private ActionForward logout(ActionMapping mapping, HttpServletRequest request) {

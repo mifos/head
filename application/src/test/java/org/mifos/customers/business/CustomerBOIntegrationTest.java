@@ -20,13 +20,7 @@
 
 package org.mifos.customers.business;
 
-import java.sql.Date;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
-
 import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -57,10 +51,16 @@ import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+
+import java.sql.Date;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
 
@@ -99,7 +99,7 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
     public void testHasActiveLoanAccounts() throws Exception {
         createInitialObjects();
         client.setUserContext(TestUtils.makeUser());
-        StaticHibernateUtil.getInterceptor().createInitialValueMap(client);
+        ((AuditInterceptor) StaticHibernateUtil.getInterceptor()).createInitialValueMap(client);
         boolean res = client.hasActiveLoanAccounts();
         StaticHibernateUtil.flushAndClearSession();
         Assert.assertEquals(res, false);
@@ -110,7 +110,7 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
     public void testCheckIfClientIsATitleHolder() throws Exception {
         createInitialObjects();
         client.setUserContext(TestUtils.makeUser());
-        StaticHibernateUtil.getInterceptor().createInitialValueMap(client);
+        ((AuditInterceptor) StaticHibernateUtil.getInterceptor()).createInitialValueMap(client);
 
         try {
             client.checkIfClientIsATitleHolder();

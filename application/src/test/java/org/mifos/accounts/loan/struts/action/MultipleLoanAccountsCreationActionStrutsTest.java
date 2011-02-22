@@ -56,7 +56,7 @@ import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
-import org.mifos.domain.builders.MifosUserBuilder;
+import org.mifos.builders.MifosUserBuilder;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;

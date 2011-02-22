@@ -20,38 +20,32 @@
 
 package org.mifos.accounts.productdefinition.business;
 
-import java.sql.Date;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Set;
-
 import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionException;
-import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
-import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
-import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
-import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants;
-import org.mifos.accounts.productdefinition.util.helpers.ProductType;
-import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
-import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
+import org.mifos.accounts.productdefinition.util.helpers.*;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
+import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.AuditTransactionForTests;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+
+import java.sql.Date;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Set;
 
 public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
 
@@ -90,7 +84,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         savingsProduct = createSavingsOfferingBO(name, shortName, ApplicableTo.CLIENTS, startDate,
                 PrdStatus.SAVINGS_ACTIVE, SavingsType.VOLUNTARY, InterestCalcType.MINIMUM_BALANCE);
         savingsProduct.setUserContext(TestUtils.makeUserWithLocales());
-        StaticHibernateUtil.getInterceptor().createInitialValueMap(savingsProduct);
+        ((AuditInterceptor) StaticHibernateUtil.getInterceptor()).createInitialValueMap(savingsProduct);
         savingsProduct.update(Short.valueOf("1"), newName, newShortName, productCategory, prdApplicableMaster,
                 startDate, endDate, "Desc", PrdStatus.SAVINGS_INACTIVE, null, savingsType, intCalType, intCalcMeeting,
                 intPostMeeting, new Money(getCurrency(), "10"), new Money(getCurrency(), "100"), new Money(getCurrency(), "1"), 10.0);

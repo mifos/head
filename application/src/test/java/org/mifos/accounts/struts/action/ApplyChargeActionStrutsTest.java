@@ -39,7 +39,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
-import org.mifos.domain.builders.MifosUserBuilder;
+import org.mifos.builders.MifosUserBuilder;
 import org.mifos.dto.domain.ApplicableCharge;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.util.helpers.Constants;

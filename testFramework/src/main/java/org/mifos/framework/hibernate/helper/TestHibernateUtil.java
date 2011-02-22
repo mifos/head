@@ -1,18 +1,18 @@
 package org.mifos.framework.hibernate.helper;
 
-import java.sql.Connection;
-import java.util.Properties;
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.mifos.core.MifosRuntimeException;
-import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
 
+import java.sql.Connection;
+import java.util.Properties;
+
+@SuppressWarnings("PMD")
 public class TestHibernateUtil extends HibernateUtil {
     private HibernateUtil hibernateUtil;
 
     public TestHibernateUtil(HibernateUtil hibernateUtil) {
+        super(null, null);
         this.hibernateUtil = hibernateUtil;
     }
 
@@ -23,11 +23,6 @@ public class TestHibernateUtil extends HibernateUtil {
 
     @Override
     public void closeSession() {
-    }
-
-    @Override
-    public void setSessionFactory(SessionFactory sessionFactory) {
-        throw new MifosRuntimeException("Cannot set session factory");
     }
 
     @Override
@@ -46,7 +41,7 @@ public class TestHibernateUtil extends HibernateUtil {
     }
 
     @Override
-    public AuditInterceptor getInterceptor() {
+    public Object getInterceptor() {
         return hibernateUtil.getInterceptor();
     }
 

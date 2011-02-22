@@ -67,12 +67,14 @@ import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
+import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.AuditTransactionForTests;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.springframework.orm.hibernate3.support.ScopedBeanInterceptor;
 
 public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
 
@@ -121,7 +123,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         List<FeeBO> fees = new ArrayList<FeeBO>();
         fees.add(periodicFee);
         product = createLoanOfferingBO("Loan Product", "LOAP");
-        StaticHibernateUtil.getInterceptor().createInitialValueMap(product);
+        ((AuditInterceptor) StaticHibernateUtil.getInterceptor()).createInitialValueMap(product);
         product.update((short) 1, "Loan Product", "LOAN", productCategory, prdApplicableMaster, startDate, endDate,
                 "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes, (short) 0, 12.0, 2.0, 12.0, false,
                 false, true, null, fees, (short) 2, RecurrenceType.MONTHLY, populateLoanPrdActionForm("1", "1",
@@ -134,7 +136,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                 FeePayment.UPFRONT);
         fees.add(oneTimeFee);
         product.setUserContext(TestUtils.makeUser());
-        StaticHibernateUtil.getInterceptor().createInitialValueMap(product);
+        ((AuditInterceptor) StaticHibernateUtil.getInterceptor()).createInitialValueMap(product);
         product.update((short) 1, "Loan Product", "LOAN", productCategory, prdApplicableMaster, startDate, endDate,
                 "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes, (short) 0, 12.0, 2.0, 12.0, false,
                 true, false, null, fees, (short) 2, RecurrenceType.MONTHLY, populateLoanPrdActionForm("1", "1",
@@ -177,7 +179,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         fees.add(periodicFee);
         fees.add(oneTimeFee);
         product = createLoanOfferingBO("Loan Product", "LOAP");
-        StaticHibernateUtil.getInterceptor().createInitialValueMap(product);
+        ((AuditInterceptor) StaticHibernateUtil.getInterceptor()).createInitialValueMap(product);
         product.update((short) 1, "Loan Product", "LOAN", productCategory, prdApplicableMaster, startDate, endDate,
                 "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes, (short) 0, 12.0, 2.0, 12.0, false,
                 true, true, null, fees, (short) 2, RecurrenceType.MONTHLY, populateLoanPrdActionForm("1", "1",

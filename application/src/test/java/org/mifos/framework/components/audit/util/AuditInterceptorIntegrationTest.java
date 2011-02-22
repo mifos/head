@@ -20,13 +20,7 @@
 
 package org.mifos.framework.components.audit.util;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
-
 import junit.framework.Assert;
-
 import org.junit.Test;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.loan.business.LoanBO;
@@ -40,11 +34,17 @@ import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
+import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
 import org.mifos.framework.components.audit.util.helpers.AuditLogView;
 import org.mifos.framework.hibernate.helper.AuditTransactionForTests;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 public class AuditInterceptorIntegrationTest extends MifosIntegrationTestCase {
 
@@ -63,7 +63,7 @@ public class AuditInterceptorIntegrationTest extends MifosIntegrationTestCase {
         Date newDate = incrementCurrentDate(14);
         accountBO = getLoanAccount();
         accountBO.setUserContext(TestUtils.makeUser());
-        StaticHibernateUtil.getInterceptor().createInitialValueMap(accountBO);
+        ((AuditInterceptor) StaticHibernateUtil.getInterceptor()).createInitialValueMap(accountBO);
         LoanBO loanBO = ((LoanBO) accountBO);
         ((LoanBO) accountBO).updateLoan(true, loanBO.getLoanAmount(), loanBO.getInterestRate(), loanBO
                 .getNoOfInstallments(), newDate, (short) 2, TestObjectFactory.SAMPLE_BUSINESS_ACTIVITY_2, "Added note",

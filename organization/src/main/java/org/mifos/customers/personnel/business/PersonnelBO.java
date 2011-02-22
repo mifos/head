@@ -59,28 +59,36 @@ public class PersonnelBO extends AbstractBusinessObject {
     }
 
     private Short personnelId;
-    private PersonnelLevelEntity level;
+
     private String globalPersonnelNum;
+    private String searchId;
+
+    //business attributes
+    private PersonnelLevelEntity level;
+    private PersonnelStatusEntity status;
+    private Set<PersonnelMovementEntity> personnelMovements;
+    private Integer maxChildCount;
+
+    //associations
     private OfficeBO office;
+
+    //business meta data
     private Integer title;
     private String displayName;
-    private String searchId;
-    private Integer maxChildCount;
-    private byte[] encryptedPassword;
+    private Set<PersonnelNotesEntity> personnelNotes;
+    private Set<PersonnelCustomFieldEntity> customFields;
+    private PersonnelDetailsEntity personnelDetails;
+
+    //system attributes
     private String userName;
     private String emailId;
-    private Short passwordChanged = Short.valueOf("0");
+    private Short passwordChanged = 0;
     private Date lastLogin;
-    private Short locked = Short.valueOf("0");
-    private Short noOfTries = Short.valueOf("0");
-
-    private PersonnelStatusEntity status;
-    private SupportedLocalesEntity preferredLocale;
-    private PersonnelDetailsEntity personnelDetails;
+    private Short locked = 0;
+    private Short noOfTries = 0;
     private Set<PersonnelRoleEntity> personnelRoles;
-    private Set<PersonnelCustomFieldEntity> customFields;
-    private Set<PersonnelMovementEntity> personnelMovements;
-    private Set<PersonnelNotesEntity> personnelNotes;
+    private SupportedLocalesEntity preferredLocale;
+    private byte[] encryptedPassword;
 
     public PersonnelBO(final PersonnelLevel level, final OfficeBO office, final Integer title, final Short preferredLocale, final String password,
             final String userName, final String emailId, final List<RoleBO> roles, final List<CustomFieldDto> customFields, final Name name,
@@ -129,10 +137,15 @@ public class PersonnelBO extends AbstractBusinessObject {
     }
 
     public PersonnelBO(final Short personnelId, final String userName, final String displayName, final PersonnelLevelEntity level) {
+        this(userName, displayName, level, 0);
         this.personnelId = personnelId;
+    }
+
+    public PersonnelBO(final String userName, final String displayName, final PersonnelLevelEntity level, int createdBy) {
         this.userName = userName;
         this.displayName = displayName;
         this.level = level;
+        setCreateDetails(createdBy);
     }
 
     public String getAge() {

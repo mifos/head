@@ -17,14 +17,13 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-
 package org.mifos.framework.hibernate.helper;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
+import org.hibernate.Interceptor;
 import org.mifos.framework.exceptions.ConnectionNotFoundException;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean;
@@ -32,23 +31,20 @@ import org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBea
 import java.sql.Connection;
 import java.util.Properties;
 
-class HibernateUtil implements FactoryBean<HibernateUtil> {
+@SuppressWarnings("PMD")
+public class HibernateUtil implements FactoryBean<HibernateUtil> {
 
-    private static SessionFactory sessionFactory;
-    private static final ThreadLocal<AuditInterceptor> interceptorTL = new ThreadLocal<AuditInterceptor>();
+    private SessionFactory sessionFactory;
+    private static final ThreadLocal<Object> interceptorTL = new ThreadLocal<Object>();
     private static final ThreadLocal<Session> sessionTL = new ThreadLocal<Session>();
 
-    private static HibernateUtil hibernateUtil;
+    private final InterceptorFactory interceptorFactory;
 
-    protected HibernateUtil() {
+    public HibernateUtil(InterceptorFactory interceptorFactory, SessionFactory sessionFactory) {
+        this.interceptorFactory = interceptorFactory;
+        this.sessionFactory = sessionFactory;
     }
 
-    public static HibernateUtil getInstance() {
-        if(hibernateUtil == null) {
-            hibernateUtil = new HibernateUtil();
-        }
-        return hibernateUtil;
-    }
 
     public void shutdown() {
         try {
@@ -59,13 +55,6 @@ class HibernateUtil implements FactoryBean<HibernateUtil> {
            e.printStackTrace(System.out);
         }
         sessionFactory = null;
-    }
-
-    /**
-     * @param sessionFactory the sessionFactory to set
-     */
-    public void setSessionFactory(SessionFactory sessionFactory) {
-        HibernateUtil.sessionFactory = sessionFactory;
     }
 
     public Properties getHibernateProperties() {
@@ -93,7 +82,7 @@ class HibernateUtil implements FactoryBean<HibernateUtil> {
 
     }
 
-    public AuditInterceptor getInterceptor() {
+    public Object getInterceptor() {
         return interceptorTL.get();
     }
 
@@ -148,8 +137,8 @@ class HibernateUtil implements FactoryBean<HibernateUtil> {
 
     private Session getOrCreateSession() throws HibernateException {
         if (sessionTL.get() == null) {
-            interceptorTL.set(new AuditInterceptor());
-            Session session = sessionFactory.openSession(interceptorTL.get());
+            interceptorTL.set(interceptorFactory.create());
+            Session session = sessionFactory.openSession((Interceptor) interceptorTL.get());
             sessionTL.set(session);
         }
         return sessionTL.get();
@@ -169,7 +158,7 @@ class HibernateUtil implements FactoryBean<HibernateUtil> {
 
     @Override
     public HibernateUtil getObject() throws Exception {
-        return getInstance();
+        return this;
     }
 
     @Override

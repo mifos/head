@@ -184,8 +184,10 @@ import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.validations.ErrorEntry;
 import org.mifos.platform.validations.Errors;
 import org.mifos.reports.admindocuments.util.helpers.AdminDocumentsContants;
+import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
  * Creation and management of loan accounts.
@@ -615,8 +617,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward schedulePreview(final ActionMapping mapping, final ActionForm form,
-                                         final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response)
+    public ActionForward schedulePreview(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request)
             throws Exception {
 
         LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;

@@ -19,11 +19,11 @@
  */
 package org.mifos.accounts.savings.persistence;
 
-import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
 import org.mifos.core.MifosRuntimeException;
+import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 import java.util.Iterator;
@@ -121,8 +121,9 @@ public class GenericDaoHibernate implements GenericDao {
         try {
             Session session = getSession();
             session.saveOrUpdate(entity);
-            if (StaticHibernateUtil.getInterceptor().isAuditLogRequired()) {
-                StaticHibernateUtil.getInterceptor().createChangeValueMap(entity);
+            AuditInterceptor interceptor = (AuditInterceptor) StaticHibernateUtil.getInterceptor();
+            if (interceptor.isAuditLogRequired()) {
+                interceptor.createChangeValueMap(entity);
             }
         } catch (Exception e) {
             throw new MifosRuntimeException(e);

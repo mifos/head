@@ -19,17 +19,6 @@
  */
 package org.mifos.application.servicefacade;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.matchers.JUnitMatchers.hasItem;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -55,6 +44,13 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import java.util.*;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.junit.matchers.JUnitMatchers.hasItem;
+import static org.mockito.Mockito.when;
 
 /**
  * I test {@link CollectionSheetServiceFacadeWebTier}.
@@ -151,8 +147,8 @@ public class CollectionSheetServiceFacadeWebTierTest {
 
         // we typcially don't try to mock/stub value objects (DTO) as they have
         // no behaviour so just use as you would in production code.
-        OfficeDetailsDto officeStub1 = new OfficeDetailsDto(branchId, "branchName1", levelId, Integer.valueOf(1));
-        OfficeDetailsDto officeStub2 = new OfficeDetailsDto(branchId2, "branchName2", levelId, Integer.valueOf(1));
+        OfficeDetailsDto officeStub1 = new OfficeDetailsDto(branchId, "branchName1", levelId, 1);
+        OfficeDetailsDto officeStub2 = new OfficeDetailsDto(branchId2, "branchName2", levelId, 1);
         List<OfficeDetailsDto> activeOffices = Arrays.asList(officeStub1, officeStub2);
 
         // stub interaction with DAO/Persistence layer.

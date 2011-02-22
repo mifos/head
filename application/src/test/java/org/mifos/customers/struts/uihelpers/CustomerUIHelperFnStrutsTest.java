@@ -41,7 +41,7 @@ import org.mifos.customers.business.PositionEntity;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.struts.action.EditCustomerStatusAction;
 import org.mifos.customers.util.helpers.CustomerStatus;
-import org.mifos.domain.builders.MifosUserBuilder;
+import org.mifos.builders.MifosUserBuilder;
 import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.CustomerPositionOtherDto;
 import org.mifos.framework.MifosMockStrutsTestCase;
