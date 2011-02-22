@@ -278,10 +278,6 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
 
     }
 
-    /**
-     * FIXME - keithw - failing for null pointer when looking up interest type name 
-     */
-    @Ignore
     @Test
     public void testSchedulePreviewFailureWhenLoanProductFrequencyChanges() throws Exception {
         request.getSession().setAttribute(Constants.BUSINESS_KEY, group);
@@ -368,10 +364,6 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
-    /**
-     * FIXME - keithw - failing for null pointer when looking up interest type name 
-     */
-    @Ignore
     @Test
     public void testPreview() throws PageExpiredException, InvalidDateException {
         MeetingBO meeting = new MeetingBuilder().weekly().every(1).occuringOnA(WeekDay.MONDAY).build();
@@ -681,10 +673,6 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         verifyInputForward();
     }
 
-    /**
-     * FIXME - keithw - failing for null pointer when looking up interest type name 
-     */
-    @Ignore
     @Test
     public void testLoad() throws Exception {
         goToPrdOfferingPage();
@@ -698,13 +686,8 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         verifyForward(ActionForwards.load_success.toString());
         Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.LOANOFFERING, request));
         Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.LOANFUNDS, request));
-//        Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.CUSTOM_FIELDS, request));
     }
 
-    /**
-     * FIXME - keithw - failing for null pointer when looking up interest type name 
-     */
-    @Ignore
     @Test
     public void testLoadForMasterData() throws Exception {
         request.getSession().setAttribute(Constants.BUSINESS_KEY, group);
@@ -745,11 +728,6 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         LoanAccountActionForm loanActionForm = (LoanAccountActionForm) request.getSession().getAttribute(
                 "loanAccountActionForm");
         Assert.assertEquals(2, ((List) SessionUtils.getAttribute(LoanConstants.ADDITIONAL_FEES_LIST, request)).size());
-        // Assert.assertEquals(loanOffering.getEligibleLoanAmountSameForAllLoan().getDefaultLoanAmount().toString(),
-        // loanActionForm.getLoanAmount());
-
-        // Assert.assertEquals(loanOffering.getEligibleInstallmentSameForAllLoan().getDefaultNoOfInstall().toString(),
-        // loanActionForm.getNoOfInstallments());
         Assert.assertEquals(loanOffering.getDefInterestRate().toString(), loanActionForm.getInterestRate());
         Assert.assertEquals(loanOffering.isIntDedDisbursement(), loanActionForm.isInterestDedAtDisbValue());
         Assert.assertEquals(loanOffering.getGracePeriodDuration().toString(), loanActionForm.getGracePeriodDuration());
@@ -795,10 +773,6 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         group = TestObjectFactory.getGroup(group.getCustomerId());
     }
 
-    /**
-     * FIXME - keithw - failing for null pointer when looking up interest type name 
-     */
-    @Ignore
     @Test
     public void testSchedulePreview() throws Exception {
 
@@ -838,10 +812,6 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         Assert.assertEquals(3, installmentsFromSession.size());
     }
 
-    /**
-     * FIXME - keithw - failing for null pointer when looking up interest type name 
-     */
-    @Ignore
     @Test
     public void testValidateInstallmentsForInstallmentAmountValidation() throws Exception {
         LoanOfferingBO loanOfferingWithVariableInstallments = getLoanOffering("VarInstLoanPrd", "VILP", ApplicableTo.GROUPS, WEEKLY,
@@ -899,10 +869,6 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         return ((UserContext) request.getSession().getAttribute("UserContext")).getPreferredLocale();
     }
 
-    /**
-     * FIXME - keithw - failing for null pointer when looking up interest type name 
-     */
-    @Ignore
     @Test
     public void testValidateInstallments() throws Exception {
         LoanOfferingBO loanOfferingWithVariableInstallments = getLoanOffering("VarInstLoanPrd", "VILP", ApplicableTo.GROUPS, WEEKLY,
@@ -959,10 +925,6 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         }
     }
 
-    /**
-     * FIXME - keithw - failing for null pointer when looking up interest type name 
-     */
-    @Ignore
     @Test
     public void testSchedulePreviewForVariableInstallments() throws Exception {
         LoanOfferingBO loanOfferingWithVariableInstallments = getLoanOffering("VarInstLoanPrd", "VILP", ApplicableTo.GROUPS, WEEKLY,
@@ -1010,10 +972,6 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         return variableInstallmentDetailsBO;
     }
 
-    /**
-     * FIXME - keithw - failing for null pointer when looking up interest type name 
-     */
-    @Ignore
     @Test
     public void testSchedulePreviewWithoutData() throws Exception {
         // make sure that everything needed to resolve hidden/mandatory fields is loaded
@@ -1037,21 +995,10 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         verifyInputForward();
     }
     
-    /**
-     * FIXME - keithw - failing for null pointer when looking up interest type name 
-     */
-    @Ignore
     @Test
     public void testSchedulePreviewWithDataWithNoGracePer() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 
-        // request.getSession().setAttribute(Constants.BUSINESS_KEY, group);
-        // SessionUtils.setAttribute(LoanConstants.LOANOFFERING, loanOffering,
-        // request);
-        // SessionUtils.setAttribute(LoanConstants.LOANFUNDS,
-        // new ArrayList<FundBO>(), request);
-        // SessionUtils.setAttribute(LoanConstants.LOANACCOUNTOWNER, group,
-        // request);
         schedulePreviewPageParams.put("gracePeriodDuration", "");
         jumpToSchedulePreview();
         actionPerform();
@@ -1069,10 +1016,6 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         goToSchedulePreviewPage();
     }
 
-    /**
-     * FIXME - keithw - failing for null pointer when looking up interest type name 
-     */
-    @Ignore
     @Test
     public void testSchedulePreviewWithData() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
@@ -1082,10 +1025,6 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         verifyForward(ActionForwards.schedulePreview_success.toString());
     }
 
-    /**
-     * FIXME - keithw - failing for null pointer when looking up interest type name 
-     */
-    @Ignore
     @Test
     public void testSchedulePreviewWithLoanOfferingFundsData() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
@@ -1099,10 +1038,6 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
                 .getPrdOfferingId()));
     }
 
-    /**
-     * FIXME - keithw - failing for null pointer when looking up interest type name 
-     */
-    @Ignore
     @Test
     public void testCreate() throws Exception {
 
@@ -1558,10 +1493,6 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         verify(clientMock1, clientMock2, loanMock);
     }
 
-    /**
-     * FIXME - keithw - failing for null pointer when looking up interest type name 
-     */
-    @Ignore
     @Test
     public void testSchedulePreviewWithDataWithGracePerTooLong() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);

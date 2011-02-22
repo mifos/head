@@ -74,6 +74,7 @@ import org.mifos.accounts.productdefinition.business.LoanOfferingInstallmentRang
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.accounts.productdefinition.business.service.LoanProductService;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
+import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountSearchResultsDto;
@@ -82,6 +83,7 @@ import org.mifos.accounts.util.helpers.InstallmentDate;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.holiday.persistence.HolidayDao;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomValueDto;
 import org.mifos.application.master.business.CustomValueListElementDto;
 import org.mifos.application.master.business.FundCodeEntity;
@@ -440,9 +442,13 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             
             final List<PrdOfferingDto> loanProductDtos = retrieveActiveLoanProductsApplicableForCustomer(customer);
             
+            InterestType interestType = InterestType.fromInt(loanProduct.getInterestTypes().getId().intValue());
+            InterestTypesEntity productInterestType = this.loanProductDao.findInterestType(interestType); 
+            String interestTypeName = MessageLookup.getInstance().lookup(productInterestType.getLookUpValue());
+            
             return new LoanCreationLoanDetailsDto(isRepaymentIndependentOfMeetingEnabled, loanOfferingMeetingDto,
                     customer.getCustomerMeetingValue().toDto(), loanPurposes, productDto, customerDetailDto, loanProductDtos, 
-                    loanProduct.getInterestTypes().getName(), loanProduct.isPrinDueLastInst(), fundDtos);
+                    interestTypeName, loanProduct.isPrinDueLastInst(), fundDtos);
 
         } catch (ServiceException e) {
             throw new MifosRuntimeException(e);
