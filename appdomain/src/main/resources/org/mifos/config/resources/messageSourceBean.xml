@@ -31,5 +31,6 @@
         <property name="fileEncodings" value="UTF-8" />
         <property name="defaultEncoding" value="UTF-8" />
         <property name="cacheSeconds" value="${i18n.messages.cacheSeconds}" />
+        <property name="adminServiceFacade" ref="adminServiceFacade" />        
     </bean>
 </beans>

@@ -22,9 +22,11 @@ package org.mifos.application.servicefacade;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
@@ -164,6 +166,8 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     private final GeneralLedgerDao generalLedgerDao;
     private LoanProductAssembler loanProductAssembler;
 
+    private LinkedHashMap<String,String> messageFilterMap = new LinkedHashMap<String,String>();
+    
     @Autowired
     private FeeDao feeDao;
 
@@ -197,6 +201,17 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         this.fundDao = fundDao;
         this.generalLedgerDao = generalLedgerDao;
         this.loanProductAssembler = new LoanProductAssembler(this.loanProductDao, this.generalLedgerDao, this.fundDao);
+        
+        /*
+    	messageFilterMap.put("Center", "Kendra");
+    	messageFilterMap.put("center", "kendra");
+    	messageFilterMap.put("Client", "Borrower");
+    	messageFilterMap.put("client", "borrower");
+    	messageFilterMap.put("a Loan", "an Obligation");
+    	messageFilterMap.put("Loan", "Obligation");
+    	messageFilterMap.put("Database", "DB");
+    	messageFilterMap.put("Application Pending Approval", "Pending Approval (almost done)");
+    	*/        
     }
 
     @Override
@@ -323,23 +338,21 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     }
 
     @Override
-    public void updateApplicationLabels(ConfigureApplicationLabelsDto updatedLabels) {
-
-        ConfigureApplicationLabelsDto currentLabels = retrieveConfigurableLabels();
-
-        List<OfficeLevelEntity> changedOfficeLabels = findDifferentOfficeLevelEntitys(currentLabels.getOfficeLevels(),
-                updatedLabels.getOfficeLevels());
-        List<LookUpEntity> lookupEntities = findDifferentLookupEntities(currentLabels.getLookupLabels(), updatedLabels
-                .getLookupLabels());
-        List<GracePeriodTypeEntity> gracePeriods = findDifferentGracePeriodTypes(currentLabels.getGracePeriodDto(),
-                updatedLabels.getGracePeriodDto());
-
-        List<LookUpValueEntity> accountStatuses = findAccountStates(updatedLabels.getAccountStatusLabels());
-
-        officeHierarchyService.updateApplicationLabels(changedOfficeLabels, lookupEntities, gracePeriods,
-                accountStatuses);
-    }
-
+    public String replaceSubstitutions(String message) {
+    	if (message == null) return message;
+    	
+    	if (message.startsWith("|||")) {
+    		return message.substring(3);
+    	}
+    	
+    	String newMessage = message;
+    	
+        for (Map.Entry<String, String> entry : messageFilterMap.entrySet()) { 
+        	newMessage = newMessage.replace(entry.getKey(), entry.getValue());
+        }
+    	return newMessage;
+    }	    
+    
     private List<LookUpValueEntity> findAccountStates(AccountStatusesLabelDto updatedDetails) {
         List<LookUpValueEntity> entitiesForUpdate = new ArrayList<LookUpValueEntity>();
 
@@ -739,7 +752,41 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     }
 
     @Override
+    public void updateApplicationLabels(ConfigureApplicationLabelsDto updatedLabels) {
+
+        ConfigureApplicationLabelsDto currentLabels = retrieveConfigurableLabels();
+/*
+        List<OfficeLevelEntity> changedOfficeLabels = findDifferentOfficeLevelEntitys(currentLabels.getOfficeLevels(),
+                updatedLabels.getOfficeLevels());
+        List<LookUpEntity> lookupEntities = findDifferentLookupEntities(currentLabels.getLookupLabels(), updatedLabels
+                .getLookupLabels());
+        List<GracePeriodTypeEntity> gracePeriods = findDifferentGracePeriodTypes(currentLabels.getGracePeriodDto(),
+                updatedLabels.getGracePeriodDto());
+
+        List<LookUpValueEntity> accountStatuses = findAccountStates(updatedLabels.getAccountStatusLabels());
+
+        officeHierarchyService.updateApplicationLabels(changedOfficeLabels, lookupEntities, gracePeriods,
+                accountStatuses);
+*/
+        if (!currentLabels.getLookupLabels().getCenter().equals(updatedLabels.getLookupLabels().getCenter())) {
+        	messageFilterMap.put(currentLabels.getLookupLabels().getCenter(), updatedLabels.getLookupLabels().getCenter());
+        }
+    }
+    
+    @Override
     public ConfigureApplicationLabelsDto retrieveConfigurableLabels() {
+    	ConfigureApplicationLabelsDto baseDto = retrieveBaseLabels();    	
+    	ConfigurableLookupLabelDto lookupLabels = baseDto.getLookupLabels();
+    	if (messageFilterMap.containsKey(lookupLabels.getCenter())) {
+    		lookupLabels.setCenter(messageFilterMap.get(lookupLabels.getCenter()));
+    	}
+    	ConfigureApplicationLabelsDto newDto = new ConfigureApplicationLabelsDto(baseDto.getOfficeLevels(), 
+    			baseDto.getGracePeriodDto(), lookupLabels, baseDto.getAccountStatusLabels());    	
+
+        return newDto;
+    }
+
+    private ConfigureApplicationLabelsDto retrieveBaseLabels() {
         OfficeLevelDto officeLevels = officeDao.findOfficeLevelsWithConfiguration();
 
         List<GracePeriodTypeEntity> gracePeriodTypes = applicationConfigurationDao.findGracePeriodTypes();
@@ -760,7 +807,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
 
         return new ConfigureApplicationLabelsDto(officeLevels, gracePeriodDtos, lookupLabels, accountStatusLabels);
     }
-
+    
     private AccountStatusesLabelDto assembleAccountStateEntities(List<AccountStateEntity> accountStateEntities) {
 
         AccountStatusesLabelDto loanAccountLabel = new AccountStatusesLabelDto();
