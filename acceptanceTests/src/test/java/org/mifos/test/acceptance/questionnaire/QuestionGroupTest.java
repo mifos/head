@@ -19,6 +19,9 @@
  */
 package org.mifos.test.acceptance.questionnaire;
 
+import java.util.Collections;
+import java.util.Set;
+import org.mifos.test.acceptance.framework.client.QuestionGroup;
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountStatusParameters;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPage;
@@ -104,6 +107,7 @@ public class QuestionGroupTest extends UiTestCaseBase {
     private static final String CREATE_CLIENT_QUESTION_GROUP = "CreateClientQG2";
     private static final int CREATE_OFFICE_QUESTION_GROUP_ID = 27;
     private static final String CLIENT = "Stu1232993852651 Client1232993852651";
+    private Map<Integer, QuestionGroup> questionGroupInstancesOfClient;
     private static final List<String> charactersList = new ArrayList<String>(Arrays.asList("عربية","有","òèßñ"));
     private static final String noNumber = "qwerty";
     private static final List<String> EMPTY_LIST = new ArrayList<String>();
@@ -126,6 +130,7 @@ public class QuestionGroupTest extends UiTestCaseBase {
         questionGroupTestHelper = new QuestionGroupTestHelper(selenium);
         clientTestHelper = new ClientTestHelper(selenium);
         loanTestHelper = new LoanTestHelper(selenium);
+        questionGroupInstancesOfClient = new HashMap<Integer, QuestionGroup>();
         qgTitle1 = "QuestionGroup1 " + System.currentTimeMillis();
         qgTitle2 = "QuestionGroup2 " + System.currentTimeMillis();
         qgTitle3 = "QuestionGroup3 " + System.currentTimeMillis();
@@ -457,7 +462,8 @@ public class QuestionGroupTest extends UiTestCaseBase {
         answers = new HashMap<String, String>();
         answers.put("Text", "Test - Text - Edit");
         answers.put("question 2", "22");
-        questionGroupTestHelper.editResponses(clientViewDetailsPage, 1, answers);
+        questionGroupInstancesOfClient = clientViewDetailsPage.getQuestionGroupInstances();
+        questionGroupTestHelper.editResponses(clientViewDetailsPage, latestInstanceId(questionGroupInstancesOfClient), answers);
     }
 
     private void testValidationAddQuestionGroup() {
@@ -617,5 +623,9 @@ public class QuestionGroupTest extends UiTestCaseBase {
         assertPage(AdminPage.PAGE_ID);
     }
 
+    public Integer latestInstanceId(Map<Integer, QuestionGroup> questionGroups) {
+        Set<Integer> keys = questionGroups.keySet();
+        return Collections.max(keys);
+    }
 }
 
