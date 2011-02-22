@@ -24,13 +24,11 @@ import java.io.UnsupportedEncodingException;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
-import org.mifos.test.acceptance.framework.AppLauncher;
-import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.TimeMachinePage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
-import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.admin.SystemInfoPage;
+import org.mifos.test.acceptance.framework.testhelpers.AdminTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
@@ -42,7 +40,7 @@ import org.testng.annotations.Test;
 @Test(sequential = true, groups = {"admin", "acceptance","ui"})
 public class SystemInfoDateTimeTest extends UiTestCaseBase {
 
-    private AppLauncher appLauncher;
+    private AdminTestHelper adminTestHelper;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -50,7 +48,7 @@ public class SystemInfoDateTimeTest extends UiTestCaseBase {
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
-        appLauncher = new AppLauncher(selenium);
+        adminTestHelper = new AdminTestHelper(selenium);
         new DateTimeUpdaterRemoteTestingService(selenium).resetDateTime();
     }
 
@@ -60,50 +58,35 @@ public class SystemInfoDateTimeTest extends UiTestCaseBase {
         new DateTimeUpdaterRemoteTestingService(selenium).resetDateTime();
     }
 
-    public void verifyCurrentDateTimeTest() {
-        AdminPage adminPage = loginAndGoToAdminPage();
-        SystemInfoPage systemInfoPage = adminPage.navigateToSystemInfoPage();
-        systemInfoPage.verifyPage();
+    /**
+     * Verify current date and time display and that current
+     * date and time can be modified using "time machine"
+     * http://mifosforge.jira.com/browse/MIFOSTEST-639
+     * @throws Exception
+     */
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void verifyDateTimeWithTimeMachineModification() throws Exception {
+        DateTime targetTime = new DateTime(2008,1,1,0,0,0,0);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+
+        SystemInfoPage systemInfoPage = adminTestHelper.navigateToSystemInfoPage();
         systemInfoPage.verifyDateTime(new DateTime());
-    }
 
-    public void verifyUpdatedDateTimeTest() throws UnsupportedEncodingException {
-        DateTime targetTime = new DateTime(2008,1,1,0,0,0,0);
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         TimeMachinePage timeMachinePage = dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
-        timeMachinePage.verifyPage();
         timeMachinePage.verifySuccess(targetTime);
-    }
 
-    public void verifyDateTimeTest() throws UnsupportedEncodingException {
-        DateTime targetTime = new DateTime(2008,1,1,0,0,0,0);
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
-
-        AdminPage adminPage = loginAndGoToAdminPage();
-        SystemInfoPage systemInfoPage = adminPage.navigateToSystemInfoPage();
-        systemInfoPage.verifyPage();
+        systemInfoPage = adminTestHelper.navigateToSystemInfoPage();
         systemInfoPage.verifyDateTime(targetTime);
     }
 
+    @Test(enabled=false)
     public void verifyDateTimeAndTimeZone() throws UnsupportedEncodingException {
         DateTimeZone dateTimeZone = DateTimeZone.forOffsetHours(1);
         DateTime targetTime = new DateTime(2008,1,1,0,0,0,0);
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime, dateTimeZone);
 
-        AdminPage adminPage = loginAndGoToAdminPage();
-        SystemInfoPage systemInfoPage = adminPage.navigateToSystemInfoPage();
-        systemInfoPage.verifyPage();
+        SystemInfoPage systemInfoPage = adminTestHelper.navigateToSystemInfoPage();
         systemInfoPage.verifyDateTime(targetTime);
     }
-
-    private AdminPage loginAndGoToAdminPage() {
-        HomePage homePage = appLauncher.launchMifos().logout().loginSuccessfullyUsingDefaultCredentials();
-        homePage.verifyPage();
-        AdminPage adminPage = homePage.navigateToAdminPage();
-        adminPage.verifyPage();
-        return adminPage;
-    }
-
 }

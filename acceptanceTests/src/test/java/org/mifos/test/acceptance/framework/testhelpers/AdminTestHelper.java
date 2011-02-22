@@ -25,6 +25,7 @@ import org.mifos.test.acceptance.framework.admin.DefineLabelsPage;
 import org.mifos.test.acceptance.framework.admin.DefineLabelsParameters;
 import org.mifos.test.acceptance.framework.admin.DefineLookupOptionParameters;
 import org.mifos.test.acceptance.framework.admin.DefineLookupOptionsPage;
+import org.mifos.test.acceptance.framework.admin.SystemInfoPage;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -76,5 +77,11 @@ public class AdminTestHelper {
             defineLabelsPage.verifyLabelValue(label, defineLabelsParams.getLabelText(label));
         }
         return defineLabelsPage.cancel();
+    }
+
+    public SystemInfoPage navigateToSystemInfoPage() {
+        return navigationHelper
+            .navigateToAdminPage()
+            .navigateToSystemInfoPage();
     }
 }
