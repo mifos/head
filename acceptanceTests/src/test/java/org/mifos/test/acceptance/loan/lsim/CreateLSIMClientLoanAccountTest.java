@@ -33,6 +33,7 @@ import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.PaymentParameters;
 import org.mifos.test.acceptance.framework.loan.ViewRepaymentSchedulePage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
+import org.mifos.test.acceptance.framework.testhelpers.CustomPropertiesHelper;
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.loanproduct.LoanProductTestHelper;
@@ -85,6 +86,8 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
     public void newWeeklyLSIMClientLoanAccount() throws Exception {
+        CustomPropertiesHelper customPropertiesHelper = new CustomPropertiesHelper(selenium);
+        customPropertiesHelper.setBackDatedTransactionsAllowed("true");
 
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("Stu1233171716380 Client1233171716380");
