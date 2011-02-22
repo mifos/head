@@ -167,6 +167,17 @@ public class QuestionGroupTestHelper {
         return viewAllQuestionsPage;
     }
 
+    public CreateQuestionGroupParameters getCreateQuestionGroupParameters(String questionGroupTitle, List<String> questions, String appliesTo, String sectionName) {
+        CreateQuestionGroupParameters parameters = new CreateQuestionGroupParameters();
+        parameters.setTitle(questionGroupTitle);
+        parameters.setAppliesTo(appliesTo);
+        parameters.setAnswerEditable(true);
+        for (String question : questions) {
+            parameters.addExistingQuestion(sectionName, question);
+        }
+        return parameters;
+    }
+
     public OfficeViewDetailsPage createOfficeWithQuestionGroup(QuestionResponsePage questionResponsePage,
             QuestionResponseParameters responseParameters, QuestionResponseParameters responseParameters2) {
         questionResponsePage.populateAnswers(responseParameters);

@@ -20,7 +20,6 @@
 
 package org.mifos.test.acceptance.client;
 
-
 import static java.util.Arrays.asList;
 
 import java.util.ArrayList;
@@ -90,9 +89,9 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-@ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
+@ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
 @SuppressWarnings("PMD.TooManyFields")
-@Test(sequential = true, groups = {"client", "acceptance", "ui"})
+@Test(sequential = true, groups = { "client", "acceptance", "ui", "no_db_unit" })
 public class ClientTest extends UiTestCaseBase {
 
     private NavigationHelper navigationHelper;
@@ -143,11 +142,11 @@ public class ClientTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-248
-    public void verifyAcceptedPaymentTypes() throws Exception{
-        //When
+    public void verifyAcceptedPaymentTypes() throws Exception {
+        // When
         String groupName = "group1";
         CreateClientEnterPersonalDataPage.SubmitFormParameters clientParams = new CreateClientEnterPersonalDataPage.SubmitFormParameters();
-        clientParams=clientParams();
+        clientParams = clientParams();
         clientParams.setFirstName("John");
         clientParams.setLastName("Doe123");
 
@@ -163,36 +162,38 @@ public class ClientTest extends UiTestCaseBase {
         defineAcceptedPaymentTypesPage.addLoanFeesPaymentType(DefineAcceptedPaymentTypesPage.VOUCHER);
 
         ApplyPaymentPage applyPaymentPage = navigationHelper.navigateToClientViewDetailsPage("John Doe123")
-                                            .navigateToViewClientChargesDetail().navigateToApplyPayments();
-        //Then
+                .navigateToViewClientChargesDetail().navigateToApplyPayments();
+        // Then
         applyPaymentPage.verifyModeOfPayments();
 
     }
 
-    @Test(sequential = true, groups = {"smoke","client","acceptance","ui"})
+    @Test(sequential = true, groups = { "smoke", "client", "acceptance", "ui" })
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-208
     public void createClientAndChangeStatusTest() throws Exception {
 
-    	ClientViewDetailsPage clientDetailsPage = clientTestHelper.createClientAndVerify("loan officer", "MyOfficeDHMFT");
+        ClientViewDetailsPage clientDetailsPage = clientTestHelper.createClientAndVerify("loan officer",
+                "MyOfficeDHMFT");
 
-        //When / Then
+        // When / Then
         clientTestHelper.changeCustomerStatus(clientDetailsPage);
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    //http://mifosforge.jira.com/browse/MIFOSTEST-310
-    public void searchClientAndEditExistingClientDetails() throws Exception{
+    // http://mifosforge.jira.com/browse/MIFOSTEST-310
+    public void searchClientAndEditExistingClientDetails() throws Exception {
         HomePage homePage = navigationHelper.navigateToHomePage();
-        homePage = searchForClient("client1 lastname",homePage,1);
-        homePage = searchForClient("zzz",homePage, 0);
+        homePage = searchForClient("client1 lastname", homePage, 1);
+        homePage = searchForClient("zzz", homePage, 0);
 
         SearchResultsPage searchResultsPage = homePage.search("client1 lastname");
         searchResultsPage.verifyPage();
         int numResults = searchResultsPage.countSearchResults();
-        Assert.assertEquals( numResults, 1 );
+        Assert.assertEquals(numResults, 1);
 
-        ClientViewDetailsPage viewDetailsPage = searchResultsPage.navigateToClientViewDetailsPage("link=client1 lastname*");
+        ClientViewDetailsPage viewDetailsPage = searchResultsPage
+                .navigateToClientViewDetailsPage("link=client1 lastname*");
         ClientNotesPage notesPage = viewDetailsPage.navigateToNotesPage();
         notesPage.addNotePreviewAndSubmit("test note");
         viewDetailsPage.verifyNotes("test note");
@@ -201,7 +202,8 @@ public class ClientTest extends UiTestCaseBase {
         EditCustomerStatusParameters parameters = new EditCustomerStatusParameters();
         parameters.setClientStatus(ClientStatus.ON_HOLD);
         parameters.setNote("test");
-        CustomerChangeStatusPreviewPage changeStatusPreviewPage = changeStatusPage.setChangeStatusParametersAndSubmit(parameters);
+        CustomerChangeStatusPreviewPage changeStatusPreviewPage = changeStatusPage
+                .setChangeStatusParametersAndSubmit(parameters);
         viewDetailsPage = changeStatusPreviewPage.submitAndGotoClientViewDetailsPage();
         viewDetailsPage.verifyStatus("On Hold");
 
@@ -221,8 +223,9 @@ public class ClientTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-236
     public void createClientOutsideGroup() throws Exception {
-        //When
-        CreateClientEnterMfiDataPage clientEnterMfiDataPage = navigationHelper.navigateToCreateClientEnterMfiDataPage("MyOfficeDHMFT");
+        // When
+        CreateClientEnterMfiDataPage clientEnterMfiDataPage = navigationHelper
+                .navigateToCreateClientEnterMfiDataPage("MyOfficeDHMFT");
 
         CreateClientEnterMfiDataPage.SubmitFormParameters parameters = new CreateClientEnterMfiDataPage.SubmitFormParameters();
         parameters.setLoanOfficerId("loan officer");
@@ -233,34 +236,36 @@ public class ClientTest extends UiTestCaseBase {
         meeting.setWeekDay(MeetingParameters.MONDAY);
         parameters.setMeeting(meeting);
 
-        CreateClientPreviewDataPage createClientPreviewDataPage = clientEnterMfiDataPage.submitAndGotoCreateClientPreviewDataPage(parameters);
+        CreateClientPreviewDataPage createClientPreviewDataPage = clientEnterMfiDataPage
+                .submitAndGotoCreateClientPreviewDataPage(parameters);
         CreateClientConfirmationPage clientConfirmationPage = createClientPreviewDataPage.submit();
-        //Then
+        // Then
         clientConfirmationPage.navigateToClientViewDetailsPage();
     }
 
-
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    private HomePage searchForClient(String clientName, HomePage homePage, int expectedNumberOfClients) throws Exception {
+    private HomePage searchForClient(String clientName, HomePage homePage, int expectedNumberOfClients)
+            throws Exception {
         SearchResultsPage searchResultsPage = homePage.search(clientName);
         searchResultsPage.verifyPage();
         int numResults = searchResultsPage.countSearchResults();
-        Assert.assertEquals( expectedNumberOfClients, numResults );
+        Assert.assertEquals(expectedNumberOfClients, numResults);
 
         selenium.click("clientsAndAccountsHeader.link.home");
         selenium.waitForPageToLoad("30000");
 
         return new HomePage(selenium);
-     }
+    }
 
     // implementation of test described in issue 2454
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void searchForClientAndEditDetailsTest() throws Exception {
-        
+
         ClientsAndAccountsHomepage clientsPage = navigationHelper.navigateToClientsAndAccountsPage();
         ClientSearchResultsPage searchResultsPage = clientsPage.searchForClient("client1");
         searchResultsPage.verifyPage();
-        ClientViewDetailsPage clientDetailsPage = searchResultsPage.navigateToSearchResult("client1 lastname: ID 0002-000000005");
+        ClientViewDetailsPage clientDetailsPage = searchResultsPage
+                .navigateToSearchResult("client1 lastname: ID 0002-000000005");
 
         ClientEditMFIPage editMFIPage = clientDetailsPage.navigateToEditMFIPage();
         editMFIPage.verifyPage();
@@ -270,7 +275,6 @@ public class ClientTest extends UiTestCaseBase {
         params.setTrainedDateDD("15");
         params.setTrainedDateMM("12");
         params.setTrainedDateYYYY("2008");
-
 
         ClientEditMFIPreviewPage mfiPreviewPage = editMFIPage.submitAndNavigateToClientEditMFIPreviewPage(params);
         mfiPreviewPage.verifyPage();
@@ -283,7 +287,8 @@ public class ClientTest extends UiTestCaseBase {
     public void createClientWithCorrectAgeTest() throws Exception {
         propertiesHelper.setMinimumAgeForClients(18);
         propertiesHelper.setMaximumAgeForClients(60);
-        CreateClientEnterPersonalDataPage clientPersonalDataPage = clientTestHelper.createClient("MyOfficeDHMFT", "11", "12", "1987");
+        CreateClientEnterPersonalDataPage clientPersonalDataPage = clientTestHelper.createClient("MyOfficeDHMFT", "11",
+                "12", "1987");
         CreateClientEnterMfiDataPage nextPage = clientPersonalDataPage.submitAndGotoCreateClientEnterMfiDataPage();
         nextPage.verifyPage("CreateClientMfiInfo");
     }
@@ -292,7 +297,8 @@ public class ClientTest extends UiTestCaseBase {
     public void createClientWithMoreThanMaximumAgeTest() throws Exception {
         propertiesHelper.setMinimumAgeForClients(18);
         propertiesHelper.setMaximumAgeForClients(60);
-        CreateClientEnterPersonalDataPage clientPersonalDataPage = clientTestHelper.createClient("MyOfficeDHMFT", "11", "12", "1940");
+        CreateClientEnterPersonalDataPage clientPersonalDataPage = clientTestHelper.createClient("MyOfficeDHMFT", "11",
+                "12", "1940");
         CreateClientEnterPersonalDataPage nextPage = clientPersonalDataPage.dontLoadNext();
         nextPage.verifyPage("CreateClientPersonalInfo");
     }
@@ -301,14 +307,15 @@ public class ClientTest extends UiTestCaseBase {
     public void createClientWithLessThanMinimumAgeTest() throws Exception {
         propertiesHelper.setMinimumAgeForClients(18);
         propertiesHelper.setMaximumAgeForClients(60);
-        CreateClientEnterPersonalDataPage clientPersonalDataPage = clientTestHelper.createClient("MyOfficeDHMFT", "11", "12", "1995");
+        CreateClientEnterPersonalDataPage clientPersonalDataPage = clientTestHelper.createClient("MyOfficeDHMFT", "11",
+                "12", "1995");
         CreateClientEnterPersonalDataPage nextPage = clientPersonalDataPage.dontLoadNext();
         nextPage.verifyPage("CreateClientPersonalInfo");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void searchForClientAndAddSurveysTest() throws Exception {
-        
+
         createQuestionGroup();
         navigateToClientDetailsPage();
 
@@ -318,11 +325,11 @@ public class ClientTest extends UiTestCaseBase {
 
         testEditQuestionGroup(response + 1);
         verifyQuestionGroupInstanceListing(2);
-        verifyQuestionGroupResponse(response +1);
+        verifyQuestionGroupResponse(response + 1);
 
         testShouldEditInactiveQuestion(response + 2);
         verifyQuestionGroupInstanceListing(3);
-        verifyQuestionGroupResponse(response +2);
+        verifyQuestionGroupResponse(response + 2);
 
         testSectionShouldNotAppearInQuestionnaireWhenAllQuestionsAreInactive();
     }
@@ -337,18 +344,21 @@ public class ClientTest extends UiTestCaseBase {
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         CreateQuestionPage createQuestionPage = adminPage.navigateToCreateQuestionPage();
         createQuestionPage.addQuestion(getCreateQuestionParams(question1, "Free Text", null));
-        createQuestionPage.addQuestion(getCreateQuestionParams(question2, MULTI_SELECT, asList("Choice1", "Choice2", "Choice3", "Choice4")));
+        createQuestionPage.addQuestion(getCreateQuestionParams(question2, MULTI_SELECT,
+                asList("Choice1", "Choice2", "Choice3", "Choice4")));
         adminPage = createQuestionPage.submitQuestions();
 
         CreateQuestionGroupPage createQuestionGroupPage = adminPage.navigateToCreateQuestionGroupPage();
         CreateQuestionGroupParameters parameters;
-        parameters = getCreateQuestionGroupParameters(questionGroupTitle, asList(question1), "View Client", "Section1");
-        for(String section : parameters.getExistingQuestions().keySet()){
+        parameters = questionGroupTestHelper.getCreateQuestionGroupParameters(questionGroupTitle, asList(question1),
+                "View Client", "Section1");
+        for (String section : parameters.getExistingQuestions().keySet()) {
             createQuestionGroupPage.addExistingQuestion(section, parameters.getExistingQuestions().get(section));
         }
         createQuestionGroupPage.markEveryOtherQuestionsMandatory(asList(question1));
-        parameters = getCreateQuestionGroupParameters(questionGroupTitle, asList(question2), "View Client", "Section2");
-        for(String section : parameters.getExistingQuestions().keySet()){
+        parameters = questionGroupTestHelper.getCreateQuestionGroupParameters(questionGroupTitle, asList(question2),
+                "View Client", "Section2");
+        for (String section : parameters.getExistingQuestions().keySet()) {
             createQuestionGroupPage.addExistingQuestion(section, parameters.getExistingQuestions().get(section));
         }
         createQuestionGroupPage.submit(parameters);
@@ -385,10 +395,10 @@ public class ClientTest extends UiTestCaseBase {
         questionDetailPage = editQuestionPage.activate();
     }
 
-
     private void testEditQuestionGroup(String answer) {
         int instanceId = latestInstanceId(questionGroupInstancesOfClient);
-        QuestionGroupResponsePage questionGroupResponsePage = viewClientDetailsPage.navigateToQuestionGroupResponsePage(instanceId);
+        QuestionGroupResponsePage questionGroupResponsePage = viewClientDetailsPage
+                .navigateToQuestionGroupResponsePage(instanceId);
         QuestionnairePage questionnairePage = questionGroupResponsePage.navigateToEditResponses();
         verifyCancel(questionnairePage);
         questionGroupResponsePage = viewClientDetailsPage.navigateToQuestionGroupResponsePage(instanceId);
@@ -401,9 +411,11 @@ public class ClientTest extends UiTestCaseBase {
     }
 
     private void verifyQuestionGroupResponse(String response) {
-        QuestionGroupResponsePage questionGroupResponsePage = viewClientDetailsPage.navigateToQuestionGroupResponsePage(latestInstanceId(questionGroupInstancesOfClient));
+        QuestionGroupResponsePage questionGroupResponsePage = viewClientDetailsPage
+                .navigateToQuestionGroupResponsePage(latestInstanceId(questionGroupInstancesOfClient));
         questionGroupResponsePage.verifyPage();
-        String msg = response + " not found for question " + question1 + ". Instead found " + questionGroupResponsePage.getAnswerHtml(question1);
+        String msg = response + " not found for question " + question1 + ". Instead found "
+                + questionGroupResponsePage.getAnswerHtml(question1);
         Assert.assertTrue(msg, questionGroupResponsePage.getAnswerHtml(question1).contains(response));
         Assert.assertTrue(questionGroupResponsePage.getAnswerHtml(question2).contains("Choice1"));
         Assert.assertTrue(questionGroupResponsePage.getAnswerHtml(question2).contains("Choice3"));
@@ -416,7 +428,8 @@ public class ClientTest extends UiTestCaseBase {
         QuestionGroup latestInstance = getLatestQuestionGroupInstance();
         Assert.assertEquals(expectedSize, questionGroupInstancesOfClient.size());
         Calendar calendar = Calendar.getInstance();
-        String expectedDate = String.format(EXPECTED_DATE_FORMAT, calendar.get(Calendar.DATE), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR));
+        String expectedDate = String.format(EXPECTED_DATE_FORMAT, calendar.get(Calendar.DATE),
+                calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR));
         Assert.assertEquals(questionGroupTitle, latestInstance.getName());
         Assert.assertEquals(expectedDate, latestInstance.getDate());
     }
@@ -428,7 +441,8 @@ public class ClientTest extends UiTestCaseBase {
     private void testAttachQuestionGroup(String response) {
         QuestionnairePage questionnairePage = viewClientDetailsPage.getQuestionnairePage(questionGroupTitle);
         verifyCancel(questionnairePage);
-        questionnairePage = checkMandatoryQuestionValidation(questionGroupTitle, question1, question2, viewClientDetailsPage);
+        questionnairePage = checkMandatoryQuestionValidation(questionGroupTitle, question1, question2,
+                viewClientDetailsPage);
         questionnairePage.setResponse(question1, response);
         MifosPage mifosPage = questionnairePage.submit();
         Assert.assertTrue(mifosPage instanceof ClientViewDetailsPage);
@@ -446,43 +460,56 @@ public class ClientTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-681
     public void createClientWithQuestionGroups() throws Exception {
-    	List<CreateQuestionParameters> questions = new ArrayList<CreateQuestionParameters>();
-    	CreateQuestionParameters q1 = new CreateQuestionParameters();
-    	q1.setType(CreateQuestionParameters.TYPE_SINGLE_SELECT);
-    	q1.setText("question 1");
-    	q1.setChoicesFromStrings(Arrays.asList(new String[]{"yes","no"}));
-    	questions.add(q1);
-    	CreateQuestionParameters q2 = new CreateQuestionParameters();
-    	q2.setType(CreateQuestionParameters.TYPE_SINGLE_SELECT);
-    	q2.setText("question 2");
-    	q2.setChoicesFromStrings(Arrays.asList(new String[]{"good","bad","average"}));
-    	questions.add(q2);
-    	CreateQuestionParameters q3 = new CreateQuestionParameters();
-    	q3.setType(CreateQuestionParameters.TYPE_FREE_TEXT);
-    	q3.setText("question 3");
-    	questions.add(q3);
-    	CreateQuestionParameters q4 = new CreateQuestionParameters();
-    	q4.setType(CreateQuestionParameters.TYPE_DATE);
-    	q4.setText("question 4");
-    	questions.add(q4);
-    	CreateQuestionParameters q5 = new CreateQuestionParameters();
-    	q5.setType(CreateQuestionParameters.TYPE_FREE_TEXT);
-    	q5.setText("question 5");
-    	questions.add(q5);
-    	CreateQuestionParameters q6 = new CreateQuestionParameters();
-    	q6.setType(CreateQuestionParameters.TYPE_NUMBER);
-    	q6.setText("question 6");
-    	q6.setNumericMax(10);
-    	q6.setNumericMin(0);
-    	questions.add(q6);
-    	questionGroupTestHelper.createQuestions(questions);
+        createQuestions();
 
-    	CreateQuestionGroupParameters qg = getCreateQuestionGroupParameters("CreateClientQG", asList("question 1","question 2", "question 3") , "Create Client", "Sec 1");
-    	questionGroupTestHelper.createQuestionGroup(qg);
+        CreateQuestionGroupParameters qg = questionGroupTestHelper.getCreateQuestionGroupParameters("CreateClientQG",
+                asList("question 1", "question 2", "question 3"), "Create Client", "Sec 1");
+        questionGroupTestHelper.createQuestionGroup(qg);
 
-    	CreateQuestionGroupParameters qg2 = getCreateQuestionGroupParameters("CreateClientQG2", asList("question 6") , "Create Client", "Sec 2");
-    	questionGroupTestHelper.createQuestionGroup(qg2);
+        CreateQuestionGroupParameters qg2 = questionGroupTestHelper.getCreateQuestionGroupParameters("CreateClientQG2",
+                asList("question 6"), "Create Client", "Sec 2");
+        questionGroupTestHelper.createQuestionGroup(qg2);
 
+        CreateClientEnterPersonalDataPage.SubmitFormParameters formParameters = createFormParameters();
+
+        QuestionResponseParameters responseParams = new QuestionResponseParameters();
+        responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[0].questions[0].value", "yes");
+        responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[0].questions[1].value", "good");
+        responseParams.addTextAnswer("questionGroups[0].sectionDetails[0].questions[2].value", "qwer");
+
+        // When
+        clientTestHelper.createClientWithQuestionGroups(formParameters, "group1", responseParams);
+
+        List<String> questionToAdd = new ArrayList<String>();
+        questionToAdd.add("question 4");
+        questionToAdd.add("question 5");
+
+        List<String> questionToDeactivate = new ArrayList<String>();
+        questionToDeactivate.add("question 6");
+
+        CreateQuestionGroupParameters createQuestionGroupParameters = new CreateQuestionGroupParameters();
+        for (String question : questionToAdd) {
+            createQuestionGroupParameters.addExistingQuestion("Sec 1", question);
+        }
+        questionGroupTestHelper.addQuestionsToQuestionGroup("CreateClientQG",
+                createQuestionGroupParameters.getExistingQuestions());
+
+        for (String question : questionToDeactivate) {
+            questionGroupTestHelper.markQuestionAsInactive(question);
+        }
+        questionGroupTestHelper.markQuestionGroupAsInactive("CreateClientQG2");
+
+        QuestionResponsePage questionResponsePage = clientTestHelper.navigateToQuestionResponsePage(formParameters,
+                "group1");
+        // Then
+        questionResponsePage.verifyQuestionsDoesnotappear(questionToDeactivate.toArray(new String[questionToDeactivate
+                .size()]));
+        questionResponsePage.verifyQuestionsExists(questionToAdd.toArray(new String[questionToAdd.size()]));
+        questionResponsePage.verifySectionDoesnotappear("Sec 2");
+        questionGroupTestHelper.markQuestionGroupAsInactive("CreateClientQG");
+    }
+
+    private CreateClientEnterPersonalDataPage.SubmitFormParameters createFormParameters() {
         CreateClientEnterPersonalDataPage.SubmitFormParameters formParameters = new CreateClientEnterPersonalDataPage.SubmitFormParameters();
         formParameters.setSalutation(CreateClientEnterPersonalDataPage.SubmitFormParameters.MRS);
         formParameters.setFirstName("test");
@@ -496,44 +523,46 @@ public class ClientTest extends UiTestCaseBase {
         formParameters.setSpouseNameType(CreateClientEnterPersonalDataPage.SubmitFormParameters.FATHER);
         formParameters.setSpouseFirstName("father");
         formParameters.setSpouseLastName("lastname" + StringUtil.getRandomString(8));
+        return formParameters;
+    }
 
-        QuestionResponseParameters responseParams = new QuestionResponseParameters();
-        responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[0].questions[0].value", "yes");
-        responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[0].questions[1].value", "good");
-        responseParams.addTextAnswer("questionGroups[0].sectionDetails[0].questions[2].value", "qwer");
-
-        //When
-        clientTestHelper.createClientWithQuestionGroups(formParameters,"group1", responseParams);
-        
-        List<String> questionToAdd= new ArrayList<String>();
-        questionToAdd.add("question 4");
-        questionToAdd.add("question 5");
-
-        List<String> questionToDeactivate = new ArrayList<String>();
-        questionToDeactivate.add("question 6");
-
-        CreateQuestionGroupParameters createQuestionGroupParameters = new CreateQuestionGroupParameters();
-        for (String question : questionToAdd) {
-            createQuestionGroupParameters.addExistingQuestion("Sec 1", question);
-        }
-        questionGroupTestHelper.addQuestionsToQuestionGroup("CreateClientQG", createQuestionGroupParameters.getExistingQuestions());
-
-        for (String question : questionToDeactivate) {
-            questionGroupTestHelper.markQuestionAsInactive(question);
-        }
-        questionGroupTestHelper.markQuestionGroupAsInactive("CreateClientQG2");
-
-        QuestionResponsePage questionResponsePage = clientTestHelper.navigateToQuestionResponsePage(formParameters,"group1");
-        //Then
-        questionResponsePage.verifyQuestionsDoesnotappear(questionToDeactivate.toArray(new String[questionToDeactivate.size()]));
-        questionResponsePage.verifyQuestionsExists(questionToAdd.toArray(new String[questionToAdd.size()]));
-        questionResponsePage.verifySectionDoesnotappear("Sec 2");
-        questionGroupTestHelper.markQuestionGroupAsInactive("CreateClientQG");
+    private void createQuestions() {
+        List<CreateQuestionParameters> questions = new ArrayList<CreateQuestionParameters>();
+        CreateQuestionParameters q1 = new CreateQuestionParameters();
+        q1.setType(CreateQuestionParameters.TYPE_SINGLE_SELECT);
+        q1.setText("question 1");
+        q1.setChoicesFromStrings(Arrays.asList(new String[] { "yes", "no" }));
+        questions.add(q1);
+        CreateQuestionParameters q2 = new CreateQuestionParameters();
+        q2.setType(CreateQuestionParameters.TYPE_SINGLE_SELECT);
+        q2.setText("question 2");
+        q2.setChoicesFromStrings(Arrays.asList(new String[] { "good", "bad", "average" }));
+        questions.add(q2);
+        CreateQuestionParameters q3 = new CreateQuestionParameters();
+        q3.setType(CreateQuestionParameters.TYPE_FREE_TEXT);
+        q3.setText("question 3");
+        questions.add(q3);
+        CreateQuestionParameters q4 = new CreateQuestionParameters();
+        q4.setType(CreateQuestionParameters.TYPE_DATE);
+        q4.setText("question 4");
+        questions.add(q4);
+        CreateQuestionParameters q5 = new CreateQuestionParameters();
+        q5.setType(CreateQuestionParameters.TYPE_FREE_TEXT);
+        q5.setText("question 5");
+        questions.add(q5);
+        CreateQuestionParameters q6 = new CreateQuestionParameters();
+        q6.setType(CreateQuestionParameters.TYPE_NUMBER);
+        q6.setText("question 6");
+        q6.setNumericMax(10);
+        q6.setNumericMin(0);
+        questions.add(q6);
+        questionGroupTestHelper.createQuestions(questions);
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-35
-    @Test(enabled=false) // TODO js - temporarily disabled broken test
+    @Test(enabled = false)
+    // TODO js - temporarily disabled broken test
     public void addingMemeberToGroupWithDiffrentStatuses() throws Exception {
         String groupName = "testGroup";
         String clientName = "test";
@@ -542,43 +571,45 @@ public class ClientTest extends UiTestCaseBase {
         EditCustomerStatusParameters editCustomerStatusParameters = new EditCustomerStatusParameters();
         editCustomerStatusParameters.setNote("change status");
 
-        //When
-        ClientViewDetailsPage clientDetailsPage = clientTestHelper.createClientAndVerify("loan officer", "MyOfficeDHMFT");
+        // When
+        ClientViewDetailsPage clientDetailsPage = clientTestHelper.createClientAndVerify("loan officer",
+                "MyOfficeDHMFT");
         clientTestHelper.changeCustomerStatus(clientDetailsPage, ClientStatus.ACTIVE);
         groupTestHelper.createNewGroupPartialApplication("MyCenter1233171688286", groupParams);
-        //Then
+        // Then
         clientTestHelper.addClientToGroupWithErrorGroupLowerStatus(clientName, groupName);
 
-        //When
+        // When
         editCustomerStatusParameters.setGroupStatus(GroupStatus.PENDING_APPROVAL);
         groupTestHelper.changeGroupStatus(groupName, editCustomerStatusParameters);
-        //Then
+        // Then
         clientTestHelper.addClientToGroupWithErrorGroupLowerStatus(clientName, groupName);
 
-        //When
+        // When
         editCustomerStatusParameters.setGroupStatus(GroupStatus.ACTIVE);
         groupTestHelper.changeGroupStatus(groupName, editCustomerStatusParameters);
-        //Then
+        // Then
         clientTestHelper.addClientToGroup(clientName, groupName);
 
-        //When
+        // When
         clientTestHelper.deleteClientGroupMembership(clientName, "remove group membership");
         editCustomerStatusParameters.setGroupStatus(GroupStatus.ON_HOLD);
         groupTestHelper.changeGroupStatus(groupName, editCustomerStatusParameters);
-        //Then
+        // Then
         clientTestHelper.tryAddClientToClosedOrOnHoldGroup(clientName, groupName);
 
-        //When
+        // When
         editCustomerStatusParameters.setGroupStatus(GroupStatus.CLOSED);
         editCustomerStatusParameters.setCloseReason(GroupCloseReason.DUPLICATE);
         groupTestHelper.changeGroupStatus(groupName, editCustomerStatusParameters);
-        //Then
+        // Then
         clientTestHelper.tryAddClientToClosedOrOnHoldGroup(clientName, groupName);
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-40
-    @Test(enabled=false) // TODO js - temporarily disabled broken test
+    @Test(enabled = false)
+    // TODO js - temporarily disabled broken test
     public void addingMemeberOnHoldStatusToGroupWithDiffrentStatuses() throws Exception {
         String groupName = "testGroup";
         String clientName = "test";
@@ -587,24 +618,25 @@ public class ClientTest extends UiTestCaseBase {
         EditCustomerStatusParameters editCustomerStatusParameters = new EditCustomerStatusParameters();
         editCustomerStatusParameters.setNote("change status");
 
-        //When
-        ClientViewDetailsPage clientDetailsPage = clientTestHelper.createClientAndVerify("loan officer", "MyOfficeDHMFT");
+        // When
+        ClientViewDetailsPage clientDetailsPage = clientTestHelper.createClientAndVerify("loan officer",
+                "MyOfficeDHMFT");
         clientTestHelper.changeCustomerStatus(clientDetailsPage, ClientStatus.ACTIVE);
         clientTestHelper.changeCustomerStatus(clientDetailsPage, ClientStatus.ON_HOLD);
         groupTestHelper.createNewGroupPartialApplication("MyCenter1233171688286", groupParams);
-        //Then
+        // Then
         clientTestHelper.addClientToGroupWithErrorGroupLowerStatus(clientName, groupName);
 
-        //When
+        // When
         editCustomerStatusParameters.setGroupStatus(GroupStatus.PENDING_APPROVAL);
         groupTestHelper.changeGroupStatus(groupName, editCustomerStatusParameters);
-        //Then
+        // Then
         clientTestHelper.addClientToGroupWithErrorGroupLowerStatus(clientName, groupName);
 
-        //When
+        // When
         editCustomerStatusParameters.setGroupStatus(GroupStatus.ACTIVE);
         groupTestHelper.changeGroupStatus(groupName, editCustomerStatusParameters);
-        //Then
+        // Then
         clientTestHelper.addClientToGroup(clientName, groupName);
     }
 
@@ -613,7 +645,7 @@ public class ClientTest extends UiTestCaseBase {
     public void tryRemoveClientWithLoanFromGroup() throws Exception {
         String clientName = "ClientWithLoan 20110221";
 
-        //When / Then
+        // When / Then
         clientTestHelper.deleteClientGroupMembershipWithError(clientName);
     }
 
@@ -622,14 +654,14 @@ public class ClientTest extends UiTestCaseBase {
     public void tryRemoveClientWithLoanFromGroupWithLoan() throws Exception {
         String clientName = "client1 lastname";
 
-        //When / Then
+        // When / Then
         clientTestHelper.deleteClientGroupMembershipWithError(clientName);
     }
 
     /**
-     * Verify that sequence of client names in the properties file is used
-     * for displaying the order of client names in the UI
-     * http://mifosforge.jira.com/browse/MIFOSTEST-205
+     * Verify that sequence of client names in the properties file is used for displaying the order of client names in
+     * the UI http://mifosforge.jira.com/browse/MIFOSTEST-205
+     *
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -665,9 +697,9 @@ public class ClientTest extends UiTestCaseBase {
     }
 
     /**
-     * Verify when Pending Approval (Clients) is set to false;
-     * the system transitions the account to 'Active state' when creating new clients
-     * http://mifosforge.jira.com/browse/MIFOSTEST-209
+     * Verify when Pending Approval (Clients) is set to false; the system transitions the account to 'Active state' when
+     * creating new clients http://mifosforge.jira.com/browse/MIFOSTEST-209
+     *
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -688,7 +720,8 @@ public class ClientTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-48
-    @Test(enabled=false) // TODO js - temporarily disabled broken test
+    @Test(enabled = false)
+    // TODO js - temporarily disabled broken test
     public void removeClientWithLoanFromGroup() throws Exception {
         String clientName = "client1 lastname";
         String groupName = navigationHelper.navigateToClientViewDetailsPage(clientName).getGroupMembership();
@@ -699,82 +732,93 @@ public class ClientTest extends UiTestCaseBase {
         CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
         submitAccountParameters.setAmount("250.0");
 
-        String savingsId = savingsAccountHelper.createSavingsAccountWithQG(searchParameters, submitAccountParameters).getAccountId();
-        EditAccountStatusParameters editAccountStatusParameters =new EditAccountStatusParameters();
+        String savingsId = savingsAccountHelper.createSavingsAccountWithQG(searchParameters, submitAccountParameters)
+                .getAccountId();
+        EditAccountStatusParameters editAccountStatusParameters = new EditAccountStatusParameters();
         editAccountStatusParameters.setAccountStatus(AccountStatus.SAVINGS_ACTIVE);
         editAccountStatusParameters.setNote("change status to active");
         savingsAccountHelper.changeStatus(savingsId, editAccountStatusParameters);
 
-
-        //When / Then
+        // When / Then
         clientTestHelper.deleteClientGroupMembership(clientName, "remove group membership");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-52
-    @Test(enabled=false) // TODO js - temporarily disabled broken test (blocked by MIFOS-4270)
+    @Test(enabled = false)
+    // TODO js - temporarily disabled broken test (blocked by MIFOS-4270)
     public void removeClientWithSavingsFromGroupWithSavingsCheckGroupCalculation() throws Exception {
         String clientName = "client1 lastname";
         String groupName = navigationHelper.navigateToClientViewDetailsPage(clientName).getGroupMembership();
         CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
         CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
         submitAccountParameters.setAmount("240.0");
-        EditAccountStatusParameters editAccountStatusParameters =new EditAccountStatusParameters();
+        EditAccountStatusParameters editAccountStatusParameters = new EditAccountStatusParameters();
         editAccountStatusParameters.setAccountStatus(AccountStatus.SAVINGS_ACTIVE);
         editAccountStatusParameters.setNote("change status to active");
 
-        //When
+        // When
         searchParameters.setSearchString(clientName);
         searchParameters.setSavingsProduct("MandClientSavings3MoPostMinBal");
-        String savingsId = savingsAccountHelper.createSavingsAccountWithQG(searchParameters, submitAccountParameters).getAccountId();
+        String savingsId = savingsAccountHelper.createSavingsAccountWithQG(searchParameters, submitAccountParameters)
+                .getAccountId();
         savingsAccountHelper.changeStatus(savingsId, editAccountStatusParameters);
 
         searchParameters.setSearchString(groupName);
         searchParameters.setSavingsProduct("MandGroupSavingsPerIndiv1MoPost");
-        savingsId = savingsAccountHelper.createSavingsAccountWithQG(searchParameters, submitAccountParameters).getAccountId();
+        savingsId = savingsAccountHelper.createSavingsAccountWithQG(searchParameters, submitAccountParameters)
+                .getAccountId();
         savingsAccountHelper.changeStatus(savingsId, editAccountStatusParameters);
 
         clientTestHelper.deleteClientGroupMembership(clientName, "remove group membership");
-        Integer numberOfGroupMembers = Integer.parseInt(navigationHelper.navigateToGroupViewDetailsPage(groupName).getNumberOfClientsInGroup());
+        Integer numberOfGroupMembers = Integer.parseInt(navigationHelper.navigateToGroupViewDetailsPage(groupName)
+                .getNumberOfClientsInGroup());
 
-        //Then
-        savingsAccountHelper.verifyTotalAmountDue(savingsId, numberOfGroupMembers, Float.parseFloat(submitAccountParameters.getAmount()));
+        // Then
+        savingsAccountHelper.verifyTotalAmountDue(savingsId, numberOfGroupMembers,
+                Float.parseFloat(submitAccountParameters.getAmount()));
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-45
-    @Test(enabled=false) // TODO js - temporarily disabled broken test
+    @Test(enabled = false)
+    // TODO js - temporarily disabled broken test
     public void addClientWithSavingToGroupWithSavingsCheckGroupCalculation() throws Exception {
-        
+
         String groupName = "group1";
 
         CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
         CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
         submitAccountParameters.setAmount("240.0");
-        EditAccountStatusParameters editAccountStatusParameters =new EditAccountStatusParameters();
+        EditAccountStatusParameters editAccountStatusParameters = new EditAccountStatusParameters();
         editAccountStatusParameters.setAccountStatus(AccountStatus.SAVINGS_ACTIVE);
         editAccountStatusParameters.setNote("change status to active");
 
-        //When
-        ClientViewDetailsPage clientDetailsPage = clientTestHelper.createClientAndVerify("loan officer", "MyOfficeDHMFT");
+        // When
+        ClientViewDetailsPage clientDetailsPage = clientTestHelper.createClientAndVerify("loan officer",
+                "MyOfficeDHMFT");
         clientTestHelper.changeCustomerStatus(clientDetailsPage, ClientStatus.ACTIVE);
         String clientName = clientDetailsPage.getHeading();
 
         searchParameters.setSavingsProduct("MandClientSavings3MoPostMinBal");
         searchParameters.setSearchString(clientName);
-        String savingsId = savingsAccountHelper.createSavingsAccountWithQG(searchParameters, submitAccountParameters).getAccountId();
+        String savingsId = savingsAccountHelper.createSavingsAccountWithQG(searchParameters, submitAccountParameters)
+                .getAccountId();
         savingsAccountHelper.changeStatus(savingsId, editAccountStatusParameters);
 
         searchParameters.setSavingsProduct("MandGroupSavingsPerIndiv1MoPost");
         searchParameters.setSearchString(groupName);
-        savingsId = savingsAccountHelper.createSavingsAccountWithQG(searchParameters, submitAccountParameters).getAccountId();
+        savingsId = savingsAccountHelper.createSavingsAccountWithQG(searchParameters, submitAccountParameters)
+                .getAccountId();
         savingsAccountHelper.changeStatus(savingsId, editAccountStatusParameters);
 
         clientTestHelper.addClientToGroup(clientName, groupName);
 
-        //Then
-        Integer numberOfGroupMembers = Integer.parseInt(navigationHelper.navigateToGroupViewDetailsPage(groupName).getNumberOfClientsInGroup());
-        savingsAccountHelper.verifyTotalAmountDue(savingsId, numberOfGroupMembers, Float.parseFloat(submitAccountParameters.getAmount()));
+        // Then
+        Integer numberOfGroupMembers = Integer.parseInt(navigationHelper.navigateToGroupViewDetailsPage(groupName)
+                .getNumberOfClientsInGroup());
+        savingsAccountHelper.verifyTotalAmountDue(savingsId, numberOfGroupMembers,
+                Float.parseFloat(submitAccountParameters.getAmount()));
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -782,14 +826,15 @@ public class ClientTest extends UiTestCaseBase {
     public void addingMemeberPendingApprovalStatusToGroupWithActiveStatus() throws Exception {
         String groupName = "group1";
 
-        //When
+        // When
         String clientName = clientTestHelper.createClientAndVerify("loan officer", "MyOfficeDHMFT").getHeading();
 
-        //Then
+        // Then
         clientTestHelper.addClientToGroup(clientName, groupName);
     }
 
-    private QuestionnairePage checkMandatoryQuestionValidation(String questionGroupTitle, String question1, String question2, ClientViewDetailsPage viewDetailsPage) {
+    private QuestionnairePage checkMandatoryQuestionValidation(String questionGroupTitle, String question1,
+            String question2, ClientViewDetailsPage viewDetailsPage) {
         QuestionnairePage questionnairePage = viewDetailsPage.getQuestionnairePage(questionGroupTitle);
         questionnairePage.setResponsesForMultiSelect(question2, 4, "Choice1", "Choice3", "Choice4");
         MifosPage mifosPage = questionnairePage.submit();
@@ -808,17 +853,6 @@ public class ClientTest extends UiTestCaseBase {
         return Collections.max(keys);
     }
 
-    private CreateQuestionGroupParameters getCreateQuestionGroupParameters(String questionGroupTitle, List<String> questions, String appliesTo, String sectionName) {
-        CreateQuestionGroupParameters parameters = new CreateQuestionGroupParameters();
-        parameters.setTitle(questionGroupTitle);
-        parameters.setAppliesTo(appliesTo);
-        parameters.setAnswerEditable(true);
-        for (String question : questions) {
-            parameters.addExistingQuestion(sectionName, question);
-        }
-        return parameters;
-    }
-
     private CreateQuestionParameters getCreateQuestionParams(String title, String type, List<String> choices) {
         CreateQuestionParameters parameters = new CreateQuestionParameters();
         parameters.setText(title);
@@ -830,29 +864,24 @@ public class ClientTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-305
     public void createClientWithSaveForLaterAndChangeStatusTest() throws Exception {
-        ClientViewDetailsPage clientDetailsPage = clientTestHelper.createClientAndVerify("loan officer", "MyOfficeDHMFT");
+        ClientViewDetailsPage clientDetailsPage = clientTestHelper.createClientAndVerify("loan officer",
+                "MyOfficeDHMFT");
 
-        //When
+        // When
         String groupName = "group1";
         CreateClientEnterPersonalDataPage.SubmitFormParameters clientParams = new CreateClientEnterPersonalDataPage.SubmitFormParameters();
-        clientParams=clientParams();
+        clientParams = clientParams();
 
-        ClientViewDetailsPage clientViewDetailsPage =navigationHelper
-        .navigateToClientsAndAccountsPage()
-        .navigateToCreateNewClientPage()
-        .selectGroup(groupName)
-        .create(clientParams)
-        .submitAndGotoCreateClientEnterMfiDataPage()
-        .navigateToPreview()
-        .saveForLater()
-        .navigateToClientViewDetailsPage();
+        ClientViewDetailsPage clientViewDetailsPage = navigationHelper.navigateToClientsAndAccountsPage()
+                .navigateToCreateNewClientPage().selectGroup(groupName).create(clientParams)
+                .submitAndGotoCreateClientEnterMfiDataPage().navigateToPreview().saveForLater()
+                .navigateToClientViewDetailsPage();
         clientViewDetailsPage.verifyStatus(ClientTestHelper.PARTIAL_APPLICATION);
         // Then
-        clientTestHelper.changeCustomerStatus(clientDetailsPage,ClientStatus.PENDING_APPROVAL);
+        clientTestHelper.changeCustomerStatus(clientDetailsPage, ClientStatus.PENDING_APPROVAL);
     }
 
-    private CreateClientEnterPersonalDataPage.SubmitFormParameters clientParams()
-    {
+    private CreateClientEnterPersonalDataPage.SubmitFormParameters clientParams() {
         CreateClientEnterPersonalDataPage.SubmitFormParameters clientParams = new CreateClientEnterPersonalDataPage.SubmitFormParameters();
         clientParams.setSalutation(CreateClientEnterPersonalDataPage.SubmitFormParameters.MRS);
         clientParams.setFirstName("John");
