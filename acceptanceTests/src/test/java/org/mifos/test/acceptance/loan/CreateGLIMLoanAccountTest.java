@@ -22,7 +22,6 @@ package org.mifos.test.acceptance.loan;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
-import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountEntryPage;
@@ -34,29 +33,23 @@ import org.mifos.test.acceptance.framework.loan.EditLoanAccountStatusParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
-import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
+import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.sql.SQLException;
+
 @SuppressWarnings("PMD")
-@ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"loan","acceptance","ui"})
+@ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
+@Test(sequential = true, groups = {"loan", "acceptance", "ui", "no_db_unit"})
 public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
 
     private LoanTestHelper loanTestHelper;
-
     @Autowired
-    private DriverManagerDataSource dataSource;
-
-    @Autowired
-    private DbUnitUtilities dbUnitUtilities;
-
-    @Autowired
-    private InitializeApplicationRemoteTestingService initRemote;
+    private ApplicationDatabaseOperation applicationDatabaseOperation;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -64,11 +57,13 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
+        applicationDatabaseOperation.updateGLIM(1);
         loanTestHelper = new LoanTestHelper(selenium);
     }
 
     @AfterMethod
-    public void logOut() {
+    public void logOut() throws SQLException {
+        applicationDatabaseOperation.updateGLIM(0);
         (new MifosPage(selenium)).logout();
     }
 
@@ -76,105 +71,77 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
      * This test is to verify that you can edit a GLIM loan account after it has been
      * dibursed without getting an invalid disbursal date error. See MIFOS-2597.
      */
-    @Test(enabled=true)
+    @Test(enabled = true)
     // http://mifosforge.jira.com/browse/MIFOSTEST-132
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void checkGLIMLoanCreatedBySubmitForApproval() throws Exception {
         //Given
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = new DateTime(2009,7,11,13,0,0,0);
+        DateTime targetTime = new DateTime(2011, 03, 1, 13, 0, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
-
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
         //When
         LoanAccountPage loanAccountPage = loanTestHelper.createLoanAccountForMultipleClientsInGroup(true);
-
         String accountId = loanAccountPage.getAccountId();
-
+        dateTimeUpdaterRemoteTestingService.setDateTime(new LocalDate(2011, 3, 8).toDateTimeAtStartOfDay());
         EditLoanAccountStatusParameters statusParameters = new EditLoanAccountStatusParameters();
         statusParameters.setStatus(EditLoanAccountStatusParameters.APPROVED);
         statusParameters.setNote("Test");
-
         loanTestHelper.changeLoanAccountStatus(accountId, statusParameters);
         DisburseLoanParameters params = new DisburseLoanParameters();
-
-        params.setDisbursalDateDD("11");
-        params.setDisbursalDateMM("07");
-        params.setDisbursalDateYYYY("2009");
+        params.setDisbursalDateDD("8");
+        params.setDisbursalDateMM("3");
+        params.setDisbursalDateYYYY("2011");
         params.setPaymentType(DisburseLoanParameters.CASH);
-
         loanTestHelper.disburseLoan(accountId, params);
-        dateTimeUpdaterRemoteTestingService.setDateTime(new LocalDate(2009,7,20).toDateTimeAtStartOfDay());
-
+        dateTimeUpdaterRemoteTestingService.setDateTime(new LocalDate(2011, 3, 15).toDateTimeAtStartOfDay());
         EditLoanAccountInformationParameters editLoanAccountInformationParameters = new EditLoanAccountInformationParameters();
         editLoanAccountInformationParameters.setExternalID("ID2323ID");
-
         loanTestHelper.changeLoanAccountInformation(accountId, new CreateLoanAccountSubmitParameters(), editLoanAccountInformationParameters);
-   }
+    }
 
-    @Test(enabled=true)
+    @Test(enabled = true)
     // http://mifosforge.jira.com/browse/MIFOSTEST-133
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void checkGLIMLoanCreatedBySaveForLater() throws Exception {
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = new DateTime(2009,7,11,13,0,0,0);
+        DateTime targetTime = new DateTime(2011, 03, 1, 13, 0, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
-
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
-
         loanTestHelper.createLoanAccountForMultipleClientsInGroup(false);
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void newWeeklyGLIMAccount() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
-
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("MyGroup1233266297718");
         searchParameters.setLoanProduct("WeeklyGroupFlatLoanWithOnetimeFee");
-
         CreateLoanAccountEntryPage loanAccountEntryPage = loanTestHelper.navigateToCreateLoanAccountEntryPage(searchParameters);
-
-        loanAccountEntryPage.selectGLIMClients(0, "Stu1233266299995 Client1233266299995 \n Client Id: 0006-000000051", "301");
-        loanAccountEntryPage.selectGLIMClients(2, "Stu1233266319760 Client1233266319760 \n Client Id: 0006-000000053", "401");
-
+        loanAccountEntryPage.selectGLIMClients(0, "Stu1233266299995 Client1233266299995 \n Client Id: 0002-000000012", "301");
+        loanAccountEntryPage.selectGLIMClients(2, "Stu1233266319760 Client1233266319760 \n Client Id: 0002-000000014", "401");
         loanAccountEntryPage.submitAndNavigateToGLIMLoanAccountConfirmationPage();
-   }
+    }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void checkGLIMAccountTotalCalculationWithDecimal() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
-
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("MyGroup1233266297718");
         searchParameters.setLoanProduct("WeeklyGroupFlatLoanWithOnetimeFee");
-
         CreateLoanAccountEntryPage loanAccountEntryPage = loanTestHelper.navigateToCreateLoanAccountEntryPage(searchParameters);
-
-        loanAccountEntryPage.selectGLIMClients(0, "Stu1233266299995 Client1233266299995 \n Client Id: 0006-000000051", "9999.9");
-        loanAccountEntryPage.selectGLIMClients(1, "Stu1233266309851 Client1233266309851 \n Client Id: 0006-000000052", "99999.9");
-        loanAccountEntryPage.selectGLIMClients(2, "Stu1233266319760 Client1233266319760 \n Client Id: 0006-000000053", "99999.9");
-
+        loanAccountEntryPage.selectGLIMClients(0, "Stu1233266299995 Client1233266299995 \n Client Id: 0002-000000012", "9999.9");
+        loanAccountEntryPage.selectGLIMClients(1, "Stu1233266309851 Client1233266309851 \n Client Id: 0002-000000013", "99999.9");
+        loanAccountEntryPage.selectGLIMClients(2, "Stu1233266319760 Client1233266319760 \n Client Id: 0002-000000014", "99999.9");
         loanAccountEntryPage.checkTotalAmount("209999.7");
-
-   }
+    }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void checkGLIMAccountTotalCalculationWholeNumber() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
-
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("MyGroup1233266297718");
         searchParameters.setLoanProduct("WeeklyGroupFlatLoanWithOnetimeFee");
-
         CreateLoanAccountEntryPage loanAccountEntryPage = loanTestHelper.navigateToCreateLoanAccountEntryPage(searchParameters);
-
-        loanAccountEntryPage.selectGLIMClients(0, "Stu1233266299995 Client1233266299995 \n Client Id: 0006-000000051", "9999");
-        loanAccountEntryPage.selectGLIMClients(1, "Stu1233266309851 Client1233266309851 \n Client Id: 0006-000000052", "99999");
-        loanAccountEntryPage.selectGLIMClients(2, "Stu1233266319760 Client1233266319760 \n Client Id: 0006-000000053", "99999");
-
+        loanAccountEntryPage.selectGLIMClients(0, "Stu1233266299995 Client1233266299995 \n Client Id: 0002-000000012", "9999");
+        loanAccountEntryPage.selectGLIMClients(1, "Stu1233266309851 Client1233266309851 \n Client Id: 0002-000000013", "99999");
+        loanAccountEntryPage.selectGLIMClients(2, "Stu1233266319760 Client1233266319760 \n Client Id: 0002-000000014", "99999");
         loanAccountEntryPage.checkTotalAmount("209997");
-
-   }
+    }
 
 }
