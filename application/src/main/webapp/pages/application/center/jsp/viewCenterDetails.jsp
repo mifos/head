@@ -254,8 +254,8 @@ explanation of the license and how it is applied.
 									</a> </span></td>
 										</tr>
 									</table>
-									<span class="fontnormal"><mifos:mifoslabel name="Center.AmountDueColon" bundle="CenterUIResources" /> <c:out
-										value='${centerInformationDto.customerAccountSummary.nextDueAmount}' />
+									<span class="fontnormal"><mifos:mifoslabel name="Center.AmountDueColon" bundle="CenterUIResources" />
+										<span id="viewCenterDetails.text.amountDue"><c:out value='${centerInformationDto.customerAccountSummary.nextDueAmount}' /></span>
 									</span></td>
 								</tr>
 								<tr>

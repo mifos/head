@@ -20,6 +20,7 @@
 
 package org.mifos.test.acceptance.framework.questionnaire;
 
+import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import com.thoughtworks.selenium.Selenium;
 
 import org.junit.Assert;
@@ -65,5 +66,12 @@ public class ViewQuestionResponseDetailPage extends MifosPage {
         waitForPageToLoad();
 
         return new OfficeViewDetailsPage(selenium);
+    }
+
+    public ClientViewDetailsPage navigateToClientViewDetailsPage() {
+        selenium.click("_eventId_cancel");
+        waitForPageToLoad();
+
+        return new ClientViewDetailsPage(selenium);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2010 Grameen Foundation USA
+ * Copyright (c) 2005-2011 Grameen Foundation USA
  * All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,27 +18,22 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.test.acceptance.center;
+package org.mifos.test.acceptance.framework.user;
 
-public enum CenterStatus {
+import org.mifos.test.acceptance.framework.MifosPage;
+import org.mifos.test.acceptance.framework.login.ChangePasswordPage;
 
-    ACTIVE ("Active", 13),
-    INACTIVE ("Inactive", 14);
+import com.thoughtworks.selenium.Selenium;
 
-    private final String statusText;
-    private final Integer id;
+public class YourSettingsPage extends MifosPage {
 
-    private CenterStatus(String statusText, Integer id) {
-        this.statusText = statusText;
-        this.id = id;
+    public YourSettingsPage(Selenium selenium) {
+        super(selenium);
     }
 
-    public String getStatusText() {
-        return this.statusText;
+    public ChangePasswordPage navigateToChangePasswordPage(){
+        selenium.click("yoursettings.link.changePassword");
+        waitForPageToLoad();
+        return new ChangePasswordPage(selenium);
     }
-
-    public Integer getId() {
-        return this.id;
-    }
-
 }

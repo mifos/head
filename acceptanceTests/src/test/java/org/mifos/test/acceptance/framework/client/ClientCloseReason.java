@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2010 Grameen Foundation USA
+ * Copyright (c) 2005-2011 Grameen Foundation USA
  * All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,23 +18,26 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.test.acceptance.center;
+package org.mifos.test.acceptance.framework.client;
 
-public enum CenterStatus {
+public enum ClientCloseReason {
 
-    ACTIVE ("Active", 13),
-    INACTIVE ("Inactive", 14);
+    TRANSFERRED ("Transferred", 8),
+    DUPLIACATE("Duplicate", 9),
+    BLACKLISTED("Blacklisted", 10),
+    LEFT_PROGRAM("Left Program", 11),
+    OTHER("Other", 12);
 
-    private final String statusText;
+    private final String purposeText;
     private final Integer id;
 
-    private CenterStatus(String statusText, Integer id) {
-        this.statusText = statusText;
+    private ClientCloseReason(String purposeText, Integer id) {
+        this.purposeText = purposeText;
         this.id = id;
     }
 
-    public String getStatusText() {
-        return this.statusText;
+    public String getPurposeText() {
+        return this.purposeText;
     }
 
     public Integer getId() {

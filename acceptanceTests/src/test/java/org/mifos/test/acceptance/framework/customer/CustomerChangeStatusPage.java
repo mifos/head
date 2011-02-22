@@ -26,6 +26,8 @@ import org.mifos.test.acceptance.framework.group.EditCustomerStatusParameters;
 import org.mifos.test.acceptance.framework.group.GroupStatus;
 
 import com.thoughtworks.selenium.Selenium;
+import org.mifos.test.acceptance.framework.client.ClientStatus;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 
 public class CustomerChangeStatusPage extends MifosPage {
 
@@ -34,7 +36,7 @@ public class CustomerChangeStatusPage extends MifosPage {
         this.verifyPage("CustomerChangeStatus");
     }
 
-    public CustomerChangeStatusPreviewPage setChangeStatusParametersAndSubmit(EditCustomerStatusParameters customerStatusParameters){
+    private void setChangeStatusParameters(EditCustomerStatusParameters customerStatusParameters) {
         if(customerStatusParameters.getGroupStatus()!=null)
         {
             selenium.check("name=newStatusId value=" + customerStatusParameters.getGroupStatus().getId());
@@ -48,6 +50,10 @@ public class CustomerChangeStatusPage extends MifosPage {
         }
         if(customerStatusParameters.getClientStatus()!=null){
             selenium.check("name=newStatusId value=" + customerStatusParameters.getClientStatus().getId());
+            selenium.fireEvent("name=newStatusId value=" + customerStatusParameters.getClientStatus().getId(), "click");
+            if(customerStatusParameters.getClientStatus().equals(ClientStatus.CLOSED) && customerStatusParameters.getClientCloseReason()!=null) {
+                selenium.select("customerchangeStatus.input.cancel_reason", "value="+customerStatusParameters.getClientCloseReason().getId());
+            }
         }
         if(customerStatusParameters.getCenterStatus() != null) {
             selenium.check("name=newStatusId value=" + customerStatusParameters.getCenterStatus().getId());
@@ -55,7 +61,16 @@ public class CustomerChangeStatusPage extends MifosPage {
         selenium.type("customerchangeStatus.input.notes", customerStatusParameters.getNote());
         selenium.click("customerchangeStatus.button.preview");
         waitForPageToLoad();
+    }
+
+    public CustomerChangeStatusPreviewPage setChangeStatusParametersAndSubmit(EditCustomerStatusParameters customerStatusParameters){
+        setChangeStatusParameters(customerStatusParameters);
         return new CustomerChangeStatusPreviewPage(selenium);
+    }
+
+    public QuestionResponsePage changeStatusAndNavigateToQuestionResponsePage(EditCustomerStatusParameters customerStatusParameters){
+        setChangeStatusParameters(customerStatusParameters);
+        return new QuestionResponsePage(selenium);
     }
 
     public ClientViewDetailsPage cancelAndGotoClientViewDetailsPage() {
