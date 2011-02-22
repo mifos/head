@@ -2,7 +2,7 @@
 set -ex
 # JOB_NAME environment variable must be set. We count on Hudson for this.
 
-controlScript=$WORKSPACE/resources/continuous-integration/deploy/tomcat/control.sh
+controlScript=$WORKSPACE/resources/continuous-integration/deploy/jetty7x/control.sh
 lastStableWAR=$WORKSPACE/../lastStable/org.mifos\$mifos-war/archive/org.mifos/mifos-war/*/*.war
 deployRoot=$HOME/deploys/mifos-$JOB_NAME-deploy
 targetWARlocation=$deployRoot/jetty7x/webapps/mifos.war
