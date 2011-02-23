@@ -20,6 +20,7 @@
 
 package org.mifos.framework;
 
+import org.hibernate.SessionFactory;
 import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.application.admin.system.ShutdownManager;
@@ -44,6 +45,7 @@ import org.mifos.framework.exceptions.HibernateStartUpException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.XMLReaderException;
+import org.mifos.framework.hibernate.helper.AuditInterceptorFactory;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.DatabaseMigrator;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
@@ -149,7 +151,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
     public void dbUpgrade(ApplicationContext applicationContext) throws ConfigurationException, PersistenceException, FinancialException, TaskSystemException {
         logger.info("Logger has been initialised");
 
-        initializeHibernate();
+        initializeHibernate(applicationContext);
 
         logger.info(getDatabaseConnectionInfo());
 
@@ -319,9 +321,9 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
      * Initializes Hibernate by making it read the hibernate.cfg file and also setting the same with hibernate session
      * factory.
      */
-    public static void initializeHibernate() throws AppNotConfiguredException {
+    public static void initializeHibernate(ApplicationContext applicationContext) throws AppNotConfiguredException {
         try {
-            StaticHibernateUtil.initialize();
+            StaticHibernateUtil.initialize(new AuditInterceptorFactory(), (SessionFactory) applicationContext.getBean("sessionFactory"));
         } catch (HibernateStartUpException e) {
             throw new AppNotConfiguredException(e);
         }

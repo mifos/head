@@ -28,7 +28,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.mifos.platform.accounting.AccountingDto;
 import org.mifos.platform.accounting.service.ExportFileInfo;
-import org.mifos.platform.accounting.service.IAccountingService;
+import org.mifos.platform.accounting.service.AccountingService;
 import org.mifos.ui.core.controller.AdminBreadcrumbBuilder;
 import org.mifos.ui.core.controller.BreadCrumbsLinks;
 import org.slf4j.Logger;
@@ -44,14 +44,14 @@ public class AccountingDataController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AccountingDataController.class);
 
-    private final IAccountingService accountingService;
+    private final AccountingService accountingService;
 
     private static final String FROM_DATE = "fromDate";
     private static final String TO_DATE = "toDate";
     private static final String LIST_START_DAY = "listStartDay";
 
     @Autowired
-    public AccountingDataController(IAccountingService accountingService) {
+    public AccountingDataController(AccountingService accountingService) {
         this.accountingService = accountingService;
     }
 

@@ -77,6 +77,10 @@ public class WorkspaceServerLauncherTest {
 		wd.quit();
 	}
 
+	/**
+	 * Application base URL.
+	 * @return String of App's URL, including a trailing slash after the context.
+	 */
 	protected String getAppURL() {
 		return "http://localhost:" + serverLauncher.getPort() + "/" + serverLauncher.getContext() + "/";
 	}

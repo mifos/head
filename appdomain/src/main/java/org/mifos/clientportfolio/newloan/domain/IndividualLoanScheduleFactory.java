@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2010 Grameen Foundation USA
+ * Copyright (c) 2005-2011 Grameen Foundation USA
  * All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -50,6 +50,7 @@ public class IndividualLoanScheduleFactory implements LoanScheduleFactory {
             gracePeriodDuration = loanProduct.getGracePeriodDuration().intValue();
         }
         MeetingBO loanMeeting = loanProduct.getLoanOfferingMeetingValue();
+        // FIXME - keithw - fixed interest rate. pass in.
         Double interestRate = Double.valueOf("10.0");
         Integer interestDays = Integer.valueOf(AccountingRules.getNumberOfInterestDays().intValue());
         InterestType interestType = loanProduct.getInterestType();
@@ -105,10 +106,14 @@ public class IndividualLoanScheduleFactory implements LoanScheduleFactory {
             installmentIndex++;
         }
 
-        LoanScheduleRounder loanScheduleInstallmentRounder = new DefaultLoanScheduleRounder();
-        List<LoanScheduleEntity> roundedLoanSchedules = loanScheduleInstallmentRounder.round(scheduledLoanRepayments,
-                graceType, gracePeriodDuration, loanAmount, interestType);
+        List<LoanScheduleEntity> allExistingLoanSchedules = new ArrayList<LoanScheduleEntity>();
+        
+        LoanScheduleRounderHelper loanScheduleRounderHelper = new DefaultLoanScheduleRounderHelper();
+        LoanScheduleRounder loanScheduleInstallmentRounder = new DefaultLoanScheduleRounder(loanScheduleRounderHelper);
 
+        List<LoanScheduleEntity> roundedLoanSchedules = loanScheduleInstallmentRounder.round(graceType, gracePeriodDuration.shortValue(), loanAmount,
+        		interestType, scheduledLoanRepayments, allExistingLoanSchedules);
+        
         List<LoanScheduleRepaymentItem> loanScheduleItems = new ArrayList<LoanScheduleRepaymentItem>();
         for (LoanScheduleEntity loanScheduleEntity : roundedLoanSchedules) {
 

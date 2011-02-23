@@ -13,15 +13,18 @@
         <property name="basenames">
             <list>
                 <value>classpath:org/mifos/ui/localizedProperties/messages</value>
+                <value>classpath:org/mifos/ui/localizedProperties/savings_messages</value>
+                <value>classpath:org/mifos/ui/localizedProperties/loan_messages</value>
+                <value>classpath:org/mifos/ui/localizedProperties/widget_messages</value>
                 <value>classpath:org/mifos/ui/localizedProperties/LookupValueMessages</value>
                 <value>classpath:org/mifos/platform/cashflow/ui/localizedProperties/cashflow_messages</value>
                 <value>classpath:org/mifos/platform/questionnaire/ui/localizedProperties/questionnaire_messages</value>
+                <value>classpath:org/mifos/platform/accounting/ui/localizedProperties/accounting_messages</value>
                 <value>classpath:org/mifos/ui/localizedProperties/FtlDefinedLabelsMessages</value>
                 <value>classpath:org/mifos/config/localizedResources/MessageLookupMessages</value>
                 <value>classpath:org/mifos/config/localizedResources/reporterrors</value>
                 <value>classpath:org/mifos/config/localizedResources/SharedMessages</value>
                 <value>classpath:org/mifos/config/localizedResources/LoginUIResources</value>
-                <value>classpath:accounting_i18n</value>
             </list>
         </property>
         <property name="fileEncodings" value="UTF-8" />

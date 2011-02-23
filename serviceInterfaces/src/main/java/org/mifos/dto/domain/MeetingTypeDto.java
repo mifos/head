@@ -20,7 +20,11 @@
 
 package org.mifos.dto.domain;
 
-public class MeetingTypeDto {
+import java.io.Serializable;
+
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_NO_SERIALVERSIONID", justification="should disable at filter level and also for pmd - not important for us")
+public class MeetingTypeDto implements Serializable {
 
     private final Integer meetingTypeId;
     private final String meetingPurpose;

@@ -36,7 +36,6 @@ import org.mifos.accounts.fees.business.FeeFormulaEntity;
 import org.mifos.accounts.fees.business.FeeFrequencyTypeEntity;
 import org.mifos.accounts.fees.business.FeePaymentEntity;
 import org.mifos.accounts.fees.business.FeeStatusEntity;
-import org.mifos.accounts.fees.servicefacade.FeeDto;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeeFormula;
 import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
@@ -45,6 +44,7 @@ import org.mifos.accounts.fees.util.helpers.FeeStatus;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.dto.domain.FeeDto;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -95,7 +95,8 @@ public class FeeDaoHibernate implements FeeDao {
         return assembleFeeDto(allProductFees);
     }
 
-    @SuppressWarnings("unchecked")
+    @Override
+	@SuppressWarnings("unchecked")
     public List<Short> getUpdatedFeesForCustomer() {
         return (List<Short>) genericDao.executeNamedQuery("retrieveUpdatedFeesApplicableToCustomers", null);
     }
@@ -107,7 +108,8 @@ public class FeeDaoHibernate implements FeeDao {
         return assembleFeeDto(allCustomerFees);
     }
 
-    @SuppressWarnings("unchecked")
+    @Override
+	@SuppressWarnings("unchecked")
     public List<FeeBO> getAllAppllicableFeeForLoanCreation() {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("active", FeeStatus.ACTIVE.getValue());

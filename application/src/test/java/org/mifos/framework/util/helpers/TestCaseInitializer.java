@@ -20,8 +20,7 @@
 
 package org.mifos.framework.util.helpers;
 
-import java.util.List;
-
+import org.hibernate.SessionFactory;
 import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
@@ -31,10 +30,13 @@ import org.mifos.config.business.MifosConfiguration;
 import org.mifos.config.persistence.ApplicationConfigurationDao;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.framework.components.audit.util.helpers.AuditConfiguration;
+import org.mifos.framework.hibernate.helper.AuditInterceptorFactory;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.security.authorization.AuthorizationManager;
 import org.mifos.security.authorization.HierarchyManager;
 import org.mifos.security.util.ActivityMapper;
+
+import java.util.List;
 
 /**
  * Many tests initialize themselves via this class.
@@ -50,15 +52,15 @@ public class TestCaseInitializer {
 
     private ApplicationConfigurationDao applicationConfigurationDao = ApplicationContextProvider.getBean(ApplicationConfigurationDao.class);
 
-    public void initialize() throws Exception {
+    public void initialize(SessionFactory sessionFactory) throws Exception {
         if (!initialized) {
-            initializeDB();
+            initializeDB(sessionFactory);
             initialized = true;
         }
     }
 
-    private void initializeDB() throws Exception{
-        StaticHibernateUtil.initialize();
+    private void initializeDB(SessionFactory sessionFactory) throws Exception{
+        StaticHibernateUtil.initialize(new AuditInterceptorFactory(), sessionFactory);
         List<SupportedLocalesEntity> supportedLocales = applicationConfigurationDao.findSupportedLocale();
         Localization.getInstance().init(supportedLocales);
 

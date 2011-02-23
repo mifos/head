@@ -20,11 +20,6 @@
 
 package org.mifos.framework.persistence;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
-
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -32,11 +27,17 @@ import org.hibernate.exception.GenericJDBCException;
 import org.hibernate.transform.Transformers;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.util.helpers.Param;
+import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
 import org.mifos.framework.exceptions.ConnectionNotFoundException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This class is intended to be replaced by <b>SessionPersistence</b> which
@@ -55,8 +56,9 @@ public abstract class LegacyGenericDao {
         try {
             StaticHibernateUtil.startTransaction();
             getSession().saveOrUpdate(object);
-            if (StaticHibernateUtil.getInterceptor().isAuditLogRequired()) {
-                StaticHibernateUtil.getInterceptor().createChangeValueMap(object);
+            AuditInterceptor interceptor = (AuditInterceptor) StaticHibernateUtil.getInterceptor();
+            if (interceptor.isAuditLogRequired()) {
+                interceptor.createChangeValueMap(object);
             }
         } catch (HibernateException e) {
             throw new PersistenceException(e);
@@ -67,8 +69,9 @@ public abstract class LegacyGenericDao {
     public Object save(final Object object) throws PersistenceException {
         try {
             getSession().saveOrUpdate(object);
-            if (StaticHibernateUtil.getInterceptor().isAuditLogRequired()) {
-                StaticHibernateUtil.getInterceptor().createChangeValueMap(object);
+            AuditInterceptor interceptor = (AuditInterceptor) StaticHibernateUtil.getInterceptor();
+            if (interceptor.isAuditLogRequired()) {
+                interceptor.createChangeValueMap(object);
             }
         } catch (HibernateException e) {
             throw new PersistenceException(e);

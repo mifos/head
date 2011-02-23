@@ -99,7 +99,8 @@ public class ProductMixValidator {
 
     boolean isCustomerACoSigningClient(final CustomerBO customer, LoanBO loan) throws ServiceException {
         return CollectionUtils.find(getCosigningClientsForLoan(loan), new Predicate() {
-            public boolean evaluate(Object arg0) {
+            @Override
+			public boolean evaluate(Object arg0) {
                 return customer.getCustomerId().equals(((CustomerBO) arg0).getCustomerId());
             }
         }) != null;

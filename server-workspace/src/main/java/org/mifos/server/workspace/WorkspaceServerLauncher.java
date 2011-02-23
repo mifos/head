@@ -29,6 +29,7 @@ import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.jetty.util.IO;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.resource.ResourceCollection;
 import org.eclipse.jetty.webapp.FragmentConfiguration;
@@ -63,10 +64,10 @@ public class WorkspaceServerLauncher extends AbstractServerLauncher {
             webAppContext.setBaseResource(baseResources);
         } else {
             // This is if there is no web.xml, only META-INF/resources & web-fragment.xml
-            String tmpName = "jetty-empty-context-for-" + getContext() + "__";
-            final File tempFileDir = File.createTempFile(tmpName , Long.toString(System.nanoTime()));
-            tempFileDir.delete();
-            tempFileDir.mkdir();
+            final File tempFileDir = File.createTempFile("jetty-empty-context" , Long.toString(System.nanoTime()));
+            IO.delete(tempFileDir);
+            tempFileDir.mkdirs();
+            tempFileDir.deleteOnExit();
             webAppContext.setBaseResource(Resource.newResource(tempFileDir.toURI()));
         }
         webAppContext.replaceConfiguration(MetaInfConfiguration.class, new MetaInfFolderConfiguration());

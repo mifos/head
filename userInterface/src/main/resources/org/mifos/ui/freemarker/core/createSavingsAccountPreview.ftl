@@ -1,6 +1,6 @@
 [#ftl]
 [#--
-* Copyright (c) 2005-2010 Grameen Foundation USA
+* Copyright (c) 2005-2011 Grameen Foundation USA
 *  All rights reserved.
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -115,7 +115,7 @@
         [#if savingsAccountFormBean.product.savingsPendingApprovalEnabled ]
             [@form.submitButton id="createsavingsaccountpreview.button.submitForApproval" label="widget.form.buttonLabel.saveForApproval" webflowEvent="saveForApproval" /]
         [#else]
-            [@form.submitButton id="createsavingsaccountpreview.button.approve" label="widget.form.buttonLabel.approve" webflowEvent="approve" /]
+            [@form.submitButton id="approvedButton" label="widget.form.buttonLabel.approve" webflowEvent="approve" /]
         [/#if]
         [@form.cancelButton webflowEvent="cancel" /]
     </div>

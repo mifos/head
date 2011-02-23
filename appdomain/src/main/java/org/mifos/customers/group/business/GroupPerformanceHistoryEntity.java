@@ -332,7 +332,8 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 
     GroupLoanCounter findLoanCounterForProduct(final LoanOfferingBO loanOffering) throws Exception {
         return find(loanCounters, new Predicate<GroupLoanCounter>() {
-            public boolean evaluate(GroupLoanCounter loanCounter) {
+            @Override
+			public boolean evaluate(GroupLoanCounter loanCounter) {
                 return loanOffering.isOfSameOffering(loanCounter.getLoanOffering());
             }
         });
@@ -343,7 +344,8 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
             Set<GroupLoanCounter> loanCounters = getLoanCounters();
             try {
                 Collection<Short> loanCyclesForProduct = select(loanCounters, new Predicate<GroupLoanCounter>() {
-                    public boolean evaluate(GroupLoanCounter counter) {
+                    @Override
+					public boolean evaluate(GroupLoanCounter counter) {
                         return counter.isOfSameProduct(prdOffering);
                     }
                 }, TRANSFORM_GROUP_LOAN_COUNTER_TO_LOAN_CYCLE);

@@ -40,7 +40,8 @@ public class BranchCashConfirmationReportParamValidator extends
         this.service = service;
     }
 
-    public BranchReportParameterForm buildReportParameterForm(HttpServletRequest request) {
+    @Override
+	public BranchReportParameterForm buildReportParameterForm(HttpServletRequest request) {
         return BranchReportParameterForm.build(request);
     }
 

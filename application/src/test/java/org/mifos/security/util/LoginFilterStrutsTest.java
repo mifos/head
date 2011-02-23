@@ -132,7 +132,8 @@ public class LoginFilterStrutsTest extends MifosMockStrutsTestCase {
             throws Exception {
         req.setAttribute(TEST_ATTRIBUTE, new Boolean(false));
         FilterChain chain = new FilterChain() {
-            public void doFilter(ServletRequest theRequest, ServletResponse theResponse) throws IOException,
+            @Override
+			public void doFilter(ServletRequest theRequest, ServletResponse theResponse) throws IOException,
                     ServletException {
                 theRequest.setAttribute(TEST_ATTRIBUTE, new Boolean(true));
             }

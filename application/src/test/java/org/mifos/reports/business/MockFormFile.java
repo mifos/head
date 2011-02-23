@@ -35,39 +35,48 @@ public class MockFormFile implements FormFile {
         setFileName(name);
     }
 
-    public void destroy() {
+    @Override
+	public void destroy() {
 
     }
 
-    public String getContentType() {
+    @Override
+	public String getContentType() {
         throw new RuntimeException("not implemented");
     }
 
-    public byte[] getFileData() throws FileNotFoundException, IOException {
+    @Override
+	public byte[] getFileData() throws FileNotFoundException, IOException {
         throw new RuntimeException("not implemented");
     }
 
-    public String getFileName() {
+    @Override
+	public String getFileName() {
         return fileName;
     }
 
-    public int getFileSize() {
+    @Override
+	public int getFileSize() {
         throw new RuntimeException("not implemented");
     }
 
-    public InputStream getInputStream() throws FileNotFoundException, IOException {
+    @Override
+	public InputStream getInputStream() throws FileNotFoundException, IOException {
         return new ByteArrayInputStream(new byte[0]);
     }
 
-    public void setContentType(String arg0) {
+    @Override
+	public void setContentType(String arg0) {
         throw new RuntimeException("not implemented");
     }
 
-    public void setFileName(String name) {
+    @Override
+	public void setFileName(String name) {
         this.fileName = name;
     }
 
-    public void setFileSize(int arg0) {
+    @Override
+	public void setFileSize(int arg0) {
         throw new RuntimeException("not implemented");
     }
 

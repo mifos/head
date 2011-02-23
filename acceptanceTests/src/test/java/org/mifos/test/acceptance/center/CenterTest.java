@@ -20,11 +20,12 @@
 
 package org.mifos.test.acceptance.center;
 
+import static java.util.Arrays.asList;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
@@ -34,6 +35,7 @@ import org.mifos.test.acceptance.framework.center.CreateCenterEnterDataPage;
 import org.mifos.test.acceptance.framework.center.MeetingParameters;
 import org.mifos.test.acceptance.framework.loan.ApplyPaymentPage;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
+import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionGroupParameters;
 import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionParameters;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionnairePage;
@@ -42,32 +44,28 @@ import org.mifos.test.acceptance.framework.testhelpers.CenterTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.framework.testhelpers.QuestionGroupTestHelper;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.mifos.test.acceptance.util.StringUtil;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = { "smoke", "center", "acceptance", "ui" })
+@Test(sequential = true, groups = { "center", "acceptance", "ui", "no_db_unit" })
 public class CenterTest extends UiTestCaseBase {
-    @Autowired
-    private DriverManagerDataSource dataSource;
-    @Autowired
-    private DbUnitUtilities dbUnitUtilities;
-    @Autowired
-    private InitializeApplicationRemoteTestingService initRemote;
 
     private CenterTestHelper centerTestHelper;
+
+    private QuestionGroupTestHelper questionTestHelper;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
-    @BeforeMethod(alwaysRun=true)
+    @BeforeMethod(alwaysRun = true)
     public void setUp() throws Exception {
         super.setUp();
         centerTestHelper = new CenterTestHelper(selenium);
+        questionTestHelper = new QuestionGroupTestHelper(selenium);
         new InitializeApplicationRemoteTestingService().reinitializeApplication(selenium);
     }
 
@@ -79,29 +77,28 @@ public class CenterTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-246
     public void verifyAcceptedPaymentTypesForCenter() throws Exception {
-        // Given
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
         // When
         CreateCenterEnterDataPage.SubmitFormParameters formParameters = new CreateCenterEnterDataPage.SubmitFormParameters();
-        formParameters.setCenterName("CenterNameTest123456");
-        formParameters.setLoanOfficer("Joe1232993835093 Guy1232993835093");
+        String testCenterName = "Center" + StringUtil.getRandomString(6);
+        formParameters.setCenterName(testCenterName);
+        formParameters.setLoanOfficer("loan officer");
         MeetingParameters meeting = new MeetingParameters();
-        meeting.setMeetingPlace("testMeetingPlace");
+        meeting.setMeetingPlace("centerTestMeetingPlace" + StringUtil.getRandomString(2));
         meeting.setWeekFrequency("1");
         meeting.setWeekDay(MeetingParameters.MONDAY);
         formParameters.setMeeting(meeting);
-        centerTestHelper.createCenter(formParameters, "MyOffice1232993831593");
+        centerTestHelper.createCenter(formParameters, "MyOfficeDHMFT");
 
         NavigationHelper navigationHelper = new NavigationHelper(selenium);
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         DefineAcceptedPaymentTypesPage defineAcceptedPaymentTypesPage = adminPage.navigateToDefineAcceptedPaymentType();
-        defineAcceptedPaymentTypesPage.addLoanFeesPaymentType(defineAcceptedPaymentTypesPage.CHEQUE);
+        defineAcceptedPaymentTypesPage.addLoanFeesPaymentType(DefineAcceptedPaymentTypesPage.CHEQUE);
 
         adminPage = navigationHelper.navigateToAdminPage();
         defineAcceptedPaymentTypesPage = adminPage.navigateToDefineAcceptedPaymentType();
-        defineAcceptedPaymentTypesPage.addLoanFeesPaymentType(defineAcceptedPaymentTypesPage.VOUCHER);
+        defineAcceptedPaymentTypesPage.addLoanFeesPaymentType(DefineAcceptedPaymentTypesPage.VOUCHER);
 
-        ApplyPaymentPage applyPaymentPage = navigationHelper.navigateToCenterViewDetailsPage("CenterNameTest123456")
+        ApplyPaymentPage applyPaymentPage = navigationHelper.navigateToCenterViewDetailsPage(testCenterName)
                 .navigateToViewCenterChargesDetailPage().navigateToApplyPayments();
         // Then
         applyPaymentPage.verifyModeOfPayments();
@@ -115,38 +112,46 @@ public class CenterTest extends UiTestCaseBase {
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createCenterTest() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_016_dbunit.xml", dataSource, selenium);
+        String officeName = "MyOfficeDHMFT";
+        String qG1Name = "CreateCenterQG";
+        String qG2Name = "CreateCenterQG2";
 
-        CreateCenterEnterDataPage.SubmitFormParameters centerParams = getCenterParameters("Fantastico",
-                "Joe1233171679953 Guy1233171679953");
-        String officeName = "MyOffice1233171674227";
-        String qG_1 = "CreateCenterQG";
-        String qG_2 = "CreateCenterQG2";
+        createQuestions();
+
+        CreateQuestionGroupParameters qG1 = questionTestHelper.getCreateQuestionGroupParameters(qG1Name,
+                asList("center question 1", "center question 2", "center question 3"), "Create Center", "Sec 1");
+        questionTestHelper.createQuestionGroup(qG1);
+
+        CreateQuestionGroupParameters qG2 = questionTestHelper.getCreateQuestionGroupParameters(qG2Name,
+                asList("center question 4", "center question 5", "center question 6"), "Create Center", "Sec 2");
+        questionTestHelper.createQuestionGroup(qG2);
+
+        String testCenterName = "Center" + StringUtil.getRandomString(6);
+        CreateCenterEnterDataPage.SubmitFormParameters centerParams = getCenterParameters(testCenterName,
+                "loan officer");
+
         QuestionResponseParameters responseParams = getQuestionResponseParameters("answer1");
         QuestionResponseParameters responseParams2 = getQuestionResponseParameters("answer2");
+
         List<CreateQuestionParameters> questionsList = new ArrayList<CreateQuestionParameters>();
-        questionsList.add(newFreeTextQuestionParameters("new question 1"));
-        questionsList.add(newFreeTextQuestionParameters("new question 2"));
-        questionsList.add(newFreeTextQuestionParameters("new question 3"));
-        String[] newActiveQuestions = { "new question 1", "new question 2" };
-        String[] deactivateArray = { "new question 3", "SingleSelect", "SmartSelect", "Text", "TextQuestion" };
-        String[] deactivatedGroupArray = { "question 7", "question 6" };
+        questionsList.add(newFreeTextQuestionParameters("new center question 1"));
+        questionsList.add(newFreeTextQuestionParameters("new center question 2"));
+        String[] newActiveQuestions = { "new center question 1", "center question 2" };
+        String[] deactivateArray = { "center question 3", "center question 4", };
         List<String> deactivateList = Arrays.asList(deactivateArray);
 
         CenterViewDetailsPage centerViewDetailsPage = centerTestHelper.createCenterWithQuestionGroupsEdited(
                 centerParams, officeName, responseParams, responseParams2);
         centerViewDetailsPage.navigateToViewAdditionalInformation().navigateBack();
-        QuestionGroupTestHelper questionTestHelper = new QuestionGroupTestHelper(selenium);
-        questionTestHelper.addNewQuestionsToQuestionGroup(qG_1, questionsList);
+        questionTestHelper.addNewQuestionsToQuestionGroup(qG1Name, questionsList);
         questionTestHelper.markQuestionsAsInactive(deactivateList);
-        questionTestHelper.markQuestionGroupAsInactive(qG_2);
+        questionTestHelper.markQuestionGroupAsInactive(qG2Name);
         QuestionResponsePage responsePage = centerTestHelper.navigateToQuestionResponsePageWhenCreatingCenter(
                 centerParams, officeName);
 
         responsePage.verifyQuestionsDoesnotappear(deactivateArray);
-        responsePage.verifyQuestionsDoesnotappear(deactivatedGroupArray);
         responsePage.verifyQuestionsExists(newActiveQuestions);
-        centerViewDetailsPage = centerTestHelper.navigateToCenterViewDetailsPage("Fantastico");
+        centerViewDetailsPage = centerTestHelper.navigateToCenterViewDetailsPage(testCenterName);
         centerViewDetailsPage.verifyActiveCenter(centerParams);
         ViewQuestionResponseDetailPage responseDetailsPage = centerViewDetailsPage
                 .navigateToViewAdditionalInformation();
@@ -155,35 +160,48 @@ public class CenterTest extends UiTestCaseBase {
         QuestionnairePage questionnairePage = responseDetailsPage.navigateToEditSection("0");
         questionnairePage.verifyField("details[0].sectionDetails[0].questions[0].value", "");
         questionnairePage.verifyField("details[0].sectionDetails[0].questions[1].value", "");
+        questionTestHelper.markQuestionGroupAsInactive(qG1Name);
     }
 
     private QuestionResponseParameters getQuestionResponseParameters(String answer) {
         QuestionResponseParameters responseParams = new QuestionResponseParameters();
-        responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[0].questions[0].value", "good");
-        responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[0].questions[1].valuesAsArray",
-                "february:feb");
+        responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[0].questions[0].value", "yes");
+        responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[0].questions[1].value", "good");
         responseParams.addTextAnswer("questionGroups[0].sectionDetails[0].questions[2].value", answer);
-        responseParams.addTextAnswer("questionGroups[0].sectionDetails[0].questions[3].value", answer);
-
-        responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[0].value", "24/01/2011");
-        responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[1].valuesAsArray", "green");
-        responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[2].value", "10");
-        responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[3].value", "10");
-
-        responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[0].questions[0].valuesAsArray", "red");
-        responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[0].questions[1].valuesAsArray",
-                "Everything");
-        responseParams.addTextAnswer("questionGroups[1].sectionDetails[0].questions[2].value", answer);
-        responseParams.addTextAnswer("questionGroups[1].sectionDetails[0].questions[3].value", answer);
-
-        responseParams.addTextAnswer("questionGroups[1].sectionDetails[1].questions[0].value", "24/01/2011");
-        responseParams.addTextAnswer("questionGroups[1].sectionDetails[1].questions[1].value", "10");
-        responseParams.addTextAnswer("questionGroups[1].sectionDetails[1].questions[2].value", "10");
-        responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[3].value", "yes");
-        responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[4].valuesAsArray",
-                "answer2:2");
-
         return responseParams;
+    }
+
+    private void createQuestions() {
+        List<CreateQuestionParameters> questions = new ArrayList<CreateQuestionParameters>();
+        CreateQuestionParameters q1 = new CreateQuestionParameters();
+        q1.setType(CreateQuestionParameters.TYPE_SINGLE_SELECT);
+        q1.setText("center question 1");
+        q1.setChoicesFromStrings(Arrays.asList(new String[] { "yes", "no" }));
+        questions.add(q1);
+        CreateQuestionParameters q2 = new CreateQuestionParameters();
+        q2.setType(CreateQuestionParameters.TYPE_SINGLE_SELECT);
+        q2.setText("center question 2");
+        q2.setChoicesFromStrings(Arrays.asList(new String[] { "good", "bad", "average" }));
+        questions.add(q2);
+        CreateQuestionParameters q3 = new CreateQuestionParameters();
+        q3.setType(CreateQuestionParameters.TYPE_FREE_TEXT);
+        q3.setText("center question 3");
+        questions.add(q3);
+        CreateQuestionParameters q4 = new CreateQuestionParameters();
+        q4.setType(CreateQuestionParameters.TYPE_DATE);
+        q4.setText("center question 4");
+        questions.add(q4);
+        CreateQuestionParameters q5 = new CreateQuestionParameters();
+        q5.setType(CreateQuestionParameters.TYPE_FREE_TEXT);
+        q5.setText("center question 5");
+        questions.add(q5);
+        CreateQuestionParameters q6 = new CreateQuestionParameters();
+        q6.setType(CreateQuestionParameters.TYPE_NUMBER);
+        q6.setText("center question 6");
+        q6.setNumericMax(10);
+        q6.setNumericMin(0);
+        questions.add(q6);
+        questionTestHelper.createQuestions(questions);
     }
 
     private CreateQuestionParameters newFreeTextQuestionParameters(String text) {

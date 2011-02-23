@@ -21,8 +21,6 @@
 package org.mifos.test.acceptance.loanproduct;
 
 
-import java.util.Random;
-
 import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.mifos.framework.util.DbUnitUtilities;
@@ -36,11 +34,11 @@ import org.mifos.test.acceptance.framework.loan.PaymentParameters;
 import org.mifos.test.acceptance.framework.loan.RepayLoanPage;
 import org.mifos.test.acceptance.framework.loan.RepayLoanParameters;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
+import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.SubmitFormParameters;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPreviewPage;
 import org.mifos.test.acceptance.framework.loanproduct.EditLoanProductPage;
 import org.mifos.test.acceptance.framework.loanproduct.EditLoanProductPreviewPage;
 import org.mifos.test.acceptance.framework.loanproduct.LoanProductDetailsPage;
-import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.SubmitFormParameters;
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
@@ -54,8 +52,10 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.Random;
+
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(sequential = true, groups = { "smoke", "loanproduct", "acceptance"})
+@Test(sequential = true, groups = { "loanproduct", "acceptance"})
 public class DefineNewLoanProductTest extends UiTestCaseBase {
 
     private Random random;

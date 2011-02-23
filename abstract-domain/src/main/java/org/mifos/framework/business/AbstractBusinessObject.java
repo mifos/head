@@ -130,4 +130,9 @@ public abstract class AbstractBusinessObject extends AbstractEntity {
         setUpdatedDate(new DateTime().toDate());
         setUpdatedBy(userId);
     }
+
+    protected void setCreateDetails(int createdBy) {
+        this.createdBy = (short) createdBy;
+        this.createdDate = new DateTime().toDate();
+    }
 }

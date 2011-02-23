@@ -31,7 +31,7 @@ import org.joda.time.DateMidnight;
 import org.mifos.dto.domain.CustomFieldDto;
 
 @SuppressWarnings("PMD")
-@edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_NO_SERIALVERSIONID", justification="should disable at filter level and also for pmd - not important for us")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID", "SE_BAD_FIELD"}, justification="should disable at filter level and also for pmd - not important for us")
 public class PersonnelInformationDto implements Serializable {
 
     private final Integer id;

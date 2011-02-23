@@ -40,7 +40,8 @@ import java.util.List;
 public class ChapterNum extends ArrayList<Integer> implements Comparable<List<Integer>> {
     private static final long serialVersionUID = 1L;
 
-    public int compareTo(List<Integer> o) {
+    @Override
+	public int compareTo(List<Integer> o) {
         int i = 0, z = 1;
 
         // lists are equal length, and all elements are equal.

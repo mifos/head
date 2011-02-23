@@ -37,7 +37,8 @@ public class GroupPerformanceHistoryUpdater {
             super(loan);
         }
 
-        public void execute(Object arg0) {
+        @Override
+		public void execute(Object arg0) {
             CustomerBO client = (CustomerBO) arg0;
             LoanBO matchingIndividualAccount = (LoanBO) CollectionUtils.find(client.getAccounts(),
                     new ClientAccountWithParentAccountMatcher(loan));
@@ -51,7 +52,8 @@ public class GroupPerformanceHistoryUpdater {
             super(loan);
         }
 
-        public void execute(Object arg0) {
+        @Override
+		public void execute(Object arg0) {
             getPerformanceHistory(arg0).updateCommonHistoryOnReversal(loan.getLoanOffering());
         }
     }
@@ -62,7 +64,8 @@ public class GroupPerformanceHistoryUpdater {
             super(loan);
         }
 
-        public void execute(Object arg0) {
+        @Override
+		public void execute(Object arg0) {
             getPerformanceHistory(arg0).updateOnDisbursement(loan.getLoanOffering());
         }
     }
@@ -73,7 +76,8 @@ public class GroupPerformanceHistoryUpdater {
             super(loan);
         }
 
-        public void execute(Object arg0) {
+        @Override
+		public void execute(Object arg0) {
             getPerformanceHistory(arg0).updateOnWriteOff(loan.getLoanOffering());
         }
     }
@@ -99,7 +103,8 @@ public class GroupPerformanceHistoryUpdater {
             this.loan = loan;
         }
 
-        public boolean evaluate(Object arg0) {
+        @Override
+		public boolean evaluate(Object arg0) {
             AccountBO account = (AccountBO) arg0;
             return account.isOfType(AccountTypes.INDIVIDUAL_LOAN_ACCOUNT)
                     && loan.getAccountId().equals(((LoanBO) account).getParentAccount().getAccountId());

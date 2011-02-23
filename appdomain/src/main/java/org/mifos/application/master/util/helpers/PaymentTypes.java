@@ -62,7 +62,8 @@ public enum PaymentTypes implements LocalizedTextLookup {
         return getPaymentType(value + 1);
     }
 
-    public String getPropertiesKey() {
+    @Override
+	public String getPropertiesKey() {
         return "PaymentTypes." + toString();
     }
 

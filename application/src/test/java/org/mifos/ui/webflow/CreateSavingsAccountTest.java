@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2010 Grameen Foundation USA
+ * Copyright (c) 2005-2011 Grameen Foundation USA
  * All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -64,7 +64,8 @@ public class CreateSavingsAccountTest extends AbstractXmlFlowExecutionTests {
     private CreateSavingsAccountFormBean formBean;
     private QuestionnaireServiceFacade questionnaireServiceFacade;
 
-    @Before
+    @Override
+	@Before
     public void setUp() {
         controller = mock(CreateSavingsAccountController.class);
         formBean = mock(CreateSavingsAccountFormBean.class);

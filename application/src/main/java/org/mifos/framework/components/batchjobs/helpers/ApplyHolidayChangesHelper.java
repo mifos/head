@@ -318,16 +318,19 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
 
     private abstract class AbstractAccountBatch implements AccountBatch {
 
-        public List<Object[]> getAccountIdsWithDatesIn(Holiday holiday) throws PersistenceException {
+        @Override
+		public List<Object[]> getAccountIdsWithDatesIn(Holiday holiday) throws PersistenceException {
             return getAccountIdsHavingSchedulesWithinHoliday(holiday);
         }
 
-        public List<AccountActionDateEntity> getAffectedInstallments(Integer accountId, DateTime fromDate,
+        @Override
+		public List<AccountActionDateEntity> getAffectedInstallments(Integer accountId, DateTime fromDate,
                 DateTime thruDate) throws PersistenceException {
             return getAffectedInstallmentsForAccountType(accountId, fromDate, thruDate);
         }
 
-        public String getAccountTypeName() {
+        @Override
+		public String getAccountTypeName() {
             return "Abstract Account Type";
         }
 

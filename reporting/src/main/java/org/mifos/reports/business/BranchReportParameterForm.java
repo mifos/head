@@ -41,11 +41,13 @@ public class BranchReportParameterForm extends AbstractReportParameterForm {
         this.runDate = runDate;
     }
 
-    public void removeRequestParameters(ModifiableParameterServletRequest modifiedRequest, Errors errors) {
+    @Override
+	public void removeRequestParameters(ModifiableParameterServletRequest modifiedRequest, Errors errors) {
         removeRequestParams(modifiedRequest, errors);
     }
 
-    public void validate(Errors errors) {
+    @Override
+	public void validate(Errors errors) {
         addErrorIfInvalid(errors, branchId, SELECT_BRANCH_OFFICE_SELECTION_ITEM.getId(), BRANCH_ID_PARAM,
                 BRANCH_ID_INVALID_MSG);
         addErrorIfInvalidRunDate(errors, runDate, ReportValidationConstants.RUN_DATE_PARAM,
@@ -60,7 +62,8 @@ public class BranchReportParameterForm extends AbstractReportParameterForm {
         return ServletUtils.getParameter(request, ReportValidationConstants.RUN_DATE_PARAM);
     }
 
-    public boolean isFormEmpty() {
+    @Override
+	public boolean isFormEmpty() {
         return branchId == null && runDate == null;
     }
 

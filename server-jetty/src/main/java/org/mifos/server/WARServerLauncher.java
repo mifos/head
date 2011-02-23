@@ -22,6 +22,7 @@ package org.mifos.server;
 
 import java.io.File;
 
+import org.eclipse.jetty.util.IO;
 import org.eclipse.jetty.webapp.WebAppContext;
 
 /**
@@ -42,7 +43,16 @@ public class WARServerLauncher extends AbstractServerLauncher {
 
     @Override
     protected WebAppContext createWebAppContext() throws Exception {
-        WebAppContext warCtx = new WebAppContext(warFile.toURI().toString(), getContext());
+        WebAppContext warCtx = new WebAppContext(warFile.toURI().toString(), "/" + getContext());
+
+        // http://mifosforge.jira.com/browse/MIFOS-4765
+        File warCtxTmpDir = new File(warFile.getParentFile(), warFile.getName() + "_tmp");
+        IO.delete(warCtxTmpDir);
+        warCtx.setTempDirectory(warCtxTmpDir);
+        warCtxTmpDir.deleteOnExit();
+        
+        warCtx.setExtractWAR(true);
+        
         return warCtx;
     }
 

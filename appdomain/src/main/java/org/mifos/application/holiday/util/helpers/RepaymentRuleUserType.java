@@ -36,23 +36,28 @@ import org.hibernate.usertype.UserType;
 public class RepaymentRuleUserType implements UserType {
     private int sqlType = Types.SMALLINT;
 
-    public int[] sqlTypes() {
+    @Override
+	public int[] sqlTypes() {
         return new int[] { sqlType };
     }
 
-    public Class<RepaymentRuleTypes> returnedClass() {
+    @Override
+	public Class<RepaymentRuleTypes> returnedClass() {
         return RepaymentRuleTypes.class;
     }
 
-    public boolean equals(Object x, Object y) throws HibernateException {
+    @Override
+	public boolean equals(Object x, Object y) throws HibernateException {
         return x == y;
     }
 
-    public int hashCode(Object x) throws HibernateException {
+    @Override
+	public int hashCode(Object x) throws HibernateException {
         return x == null ? 0 : x.hashCode();
     }
 
-    public Object nullSafeGet(ResultSet rs, String[] names, @SuppressWarnings("unused") Object owner) throws HibernateException, SQLException {
+    @Override
+	public Object nullSafeGet(ResultSet rs, String[] names, @SuppressWarnings("unused") Object owner) throws HibernateException, SQLException {
         Object object = rs.getObject(names[0]);
         if (rs.wasNull()) {
             return null;
@@ -68,7 +73,8 @@ public class RepaymentRuleUserType implements UserType {
         return null;
     }
 
-    public void nullSafeSet(PreparedStatement st, Object obj, int index) throws HibernateException, SQLException {
+    @Override
+	public void nullSafeSet(PreparedStatement st, Object obj, int index) throws HibernateException, SQLException {
         if (obj == null) {
             st.setNull(index, sqlType);
         } else {
@@ -76,23 +82,28 @@ public class RepaymentRuleUserType implements UserType {
         }
     }
 
-    public Object deepCopy(Object value) throws HibernateException {
+    @Override
+	public Object deepCopy(Object value) throws HibernateException {
         return value;
     }
 
-    public boolean isMutable() {
+    @Override
+	public boolean isMutable() {
         return false;
     }
 
-    public Serializable disassemble(Object value) throws HibernateException {
+    @Override
+	public Serializable disassemble(Object value) throws HibernateException {
         return (Serializable) value;
     }
 
-    public Object assemble(Serializable cached, @SuppressWarnings("unused") Object owner) throws HibernateException {
+    @Override
+	public Object assemble(Serializable cached, @SuppressWarnings("unused") Object owner) throws HibernateException {
         return cached;
     }
 
-    public Object replace(Object original, @SuppressWarnings("unused") Object target,
+    @Override
+	public Object replace(Object original, @SuppressWarnings("unused") Object target,
             @SuppressWarnings("unused") Object owner) throws HibernateException {
         return original;
     }

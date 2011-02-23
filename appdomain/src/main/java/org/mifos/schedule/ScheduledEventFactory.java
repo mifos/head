@@ -28,6 +28,10 @@ import org.mifos.schedule.internal.MonthlyOnDateScheduledEvent;
 import org.mifos.schedule.internal.MonthlyOnWeekAndWeekDayScheduledEvent;
 import org.mifos.schedule.internal.WeeklyScheduledEvent;
 
+/**
+ * @deprecated - use non static implementation of factory. see RecurringSecheduledEventFactory
+ */
+@Deprecated
 public class ScheduledEventFactory {
 
     public static ScheduledEvent createScheduledEvent(final RecurrenceType period, final int every,
@@ -59,16 +63,6 @@ public class ScheduledEventFactory {
     }
 
     public static ScheduledEvent createScheduledEventFrom(final MeetingBO meeting) {
-
-//        switch (meeting.getMeetingTypeEnum()) {
-//            case SAVINGS_INTEREST_CALCULATION_TIME_PERIOD:
-//                return createSavingsInterestCalculationScheduledEvent(meeting);
-//            case SAVINGS_INTEREST_POSTING:
-//
-//                break;
-//            default:
-//                break;
-//        }
 
         RecurrenceType period = meeting.getRecurrenceType();
         int every = meeting.getRecurAfter();

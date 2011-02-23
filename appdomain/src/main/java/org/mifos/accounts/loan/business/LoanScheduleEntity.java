@@ -50,30 +50,23 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.platform.util.CollectionUtils;
 
 public class LoanScheduleEntity extends AccountActionDateEntity {
+
     private Money principal;
-
-    private Money interest;
-
-    // TODO: Instance variable "penalty" appears to be unused. Verify and
-    // remove.
-    private Money penalty;
-
-    private Money extraInterest;
-
-    private Money miscFee;
-
-    private Money miscPenalty;
-
     private Money principalPaid;
-
+    private Money interest;
     private Money interestPaid;
 
+    // TODO: Instance variable "penalty" appears to be unused. Verify and remove.
+    private Money penalty;
     private Money penaltyPaid;
 
+    private Money extraInterest;
     private Money extraInterestPaid;
 
+    private Money miscFee;
     private Money miscFeePaid;
 
+    private Money miscPenalty;
     private Money miscPenaltyPaid;
 
     private Set<AccountFeesActionDetailEntity> accountFeesActionDetails = new HashSet<AccountFeesActionDetailEntity>();

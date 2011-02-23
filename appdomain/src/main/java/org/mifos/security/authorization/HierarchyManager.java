@@ -61,7 +61,8 @@ public class HierarchyManager implements Observer {
         return hierarchyManager;
     }
 
-    public void handleEvent(SecurityEvent e) {
+    @Override
+	public void handleEvent(SecurityEvent e) {
         logger.info("Map before" + hierarchyMap);
         List<OfficeCacheDto> officeList = convertToOfficeCacheList((List<OfficeSearch>) e.getObject());
         if (e.getEventType().equals(Constants.CREATE)) {

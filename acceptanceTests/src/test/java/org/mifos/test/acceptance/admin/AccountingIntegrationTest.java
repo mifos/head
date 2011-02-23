@@ -20,16 +20,14 @@
 
 package org.mifos.test.acceptance.admin;
 
-import org.mifos.framework.util.DbUnitUtilities;
+import org.joda.time.DateTime;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.admin.ViewAccountingExportsPage;
-import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -41,13 +39,6 @@ public class AccountingIntegrationTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;
 
-    @Autowired
-    private DriverManagerDataSource dataSource;
-    @Autowired
-    private DbUnitUtilities dbUnitUtilities;
-    @Autowired
-    private InitializeApplicationRemoteTestingService initRemote;
-
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
@@ -55,6 +46,9 @@ public class AccountingIntegrationTest extends UiTestCaseBase {
     public void setUp() throws Exception {
         super.setUp();
         appLauncher = new AppLauncher(selenium);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTime targetTime = new DateTime(2011,2,19,13,0,0,0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
     }
 
     @AfterMethod
@@ -64,7 +58,6 @@ public class AccountingIntegrationTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyAccountingExportsWorkFlow() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_014_dbunit.xml", dataSource, selenium);
         AdminPage adminPage = loginAndGoToAdminPage();
         ViewAccountingExportsPage viewAccountingExportsPage = adminPage.navigateToViewAccountingExports();
         viewAccountingExportsPage.verifyPage();

@@ -294,7 +294,8 @@ public class COABO extends AbstractBusinessObject {
      * comparison since GL codes may have numbers <em>and</em> letters.
      */
     public class GLCodeComparator implements Comparator<COABO> {
-        public int compare(final COABO coa1, final COABO coa2) {
+        @Override
+		public int compare(final COABO coa1, final COABO coa2) {
             return coa1.getAssociatedGlcode().getGlcode().compareTo(coa2.getAssociatedGlcode().getGlcode());
         }
     }

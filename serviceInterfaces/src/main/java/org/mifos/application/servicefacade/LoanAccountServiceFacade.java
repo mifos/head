@@ -26,6 +26,8 @@ import org.mifos.dto.domain.AccountUpdateStatus;
 import org.mifos.dto.domain.CreateAccountNote;
 import org.mifos.dto.domain.CreateLoanRequest;
 import org.mifos.dto.domain.CustomerDto;
+import org.mifos.dto.domain.CustomerSearchDto;
+import org.mifos.dto.domain.CustomerSearchResultDto;
 import org.mifos.dto.domain.LoanAccountDetailsDto;
 import org.mifos.dto.domain.LoanActivityDto;
 import org.mifos.dto.domain.LoanInstallmentDetailsDto;
@@ -132,4 +134,7 @@ public interface LoanAccountServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_CREATE_MULTIPLE_LOAN_ACCOUNTS')")
     List<String> createMultipleLoans(List<CreateLoanRequest> createMultipleLoans);
+
+    @PreAuthorize("isFullyAuthenticated()")
+	List<CustomerSearchResultDto> retrieveCustomersThatQualifyForLoans(CustomerSearchDto customerSearchDto);
 }

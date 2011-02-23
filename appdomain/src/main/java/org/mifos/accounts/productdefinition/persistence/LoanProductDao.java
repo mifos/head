@@ -21,6 +21,10 @@ package org.mifos.accounts.productdefinition.persistence;
 
 import java.util.List;
 
+import org.mifos.accounts.fees.business.FeeFrequencyTypeEntity;
+import org.mifos.accounts.fees.business.FeePaymentEntity;
+import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
+import org.mifos.accounts.fees.util.helpers.FeePayment;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdApplicableMasterEntity;
@@ -91,4 +95,8 @@ public interface LoanProductDao {
     List<RecommendedAmntUnitEntity> retrieveRecommendedAmountTypes();
 
     RecommendedAmntUnitEntity retrieveRecommendedAmountType(RecommendedAmountUnit recommendedAmountType);
+
+    FeeFrequencyTypeEntity retrieveFeeFrequencyType(FeeFrequencyType feeFrequencyType);
+
+    FeePaymentEntity retrieveFeePaymentType(FeePayment feeFrequencyType);
 }

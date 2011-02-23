@@ -59,7 +59,7 @@ public final class Money implements Serializable, Comparable<Money> {
      */
     private static RoundingMode internalRoundingMode = RoundingMode.HALF_UP;
 
-    private static MifosCurrency defaultCurrency = null;
+    private static MifosCurrency defaultCurrency;
 
     private final MifosCurrency currency;
 

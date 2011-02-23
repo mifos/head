@@ -1,38 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
+    <context:annotation-config/>
 
-    <bean id="genericDao" class="org.mifos.accounts.savings.persistence.GenericDaoHibernate" />
+    <bean id="genericDao" class="org.mifos.accounts.savings.persistence.GenericDaoHibernate"/>
 
-    <bean id="importedFilesDao" class="org.mifos.application.importexport.persistence.ImportedFilesDaoHibernate" />
+    <bean id="importedFilesDao" class="org.mifos.application.importexport.persistence.ImportedFilesDaoHibernate"/>
 
-    <bean id="applicationConfigurationDao" class="org.mifos.config.persistence.ApplicationConfigurationDaoHibernate" />
+    <bean id="applicationConfigurationDao" class="org.mifos.config.persistence.ApplicationConfigurationDaoHibernate"/>
 
-    <bean id="fundDao" class="org.mifos.accounts.fund.persistence.FundDaoHibernate" />
+    <bean id="fundDao" class="org.mifos.accounts.fund.persistence.FundDaoHibernate"/>
 
-    <bean id="feeDao" class="org.mifos.accounts.fees.persistence.FeeDaoHibernate" />
+    <bean id="feeDao" class="org.mifos.accounts.fees.persistence.FeeDaoHibernate"/>
 
-    <bean id="customerDao" class="org.mifos.customers.persistence.CustomerDaoHibernate" />
+    <bean id="customerDao" class="org.mifos.customers.persistence.CustomerDaoHibernate"/>
 
-    <bean id="personnelDao" class="org.mifos.customers.personnel.persistence.PersonnelDaoHibernate" />
+    <bean id="personnelDao" class="org.mifos.customers.personnel.persistence.PersonnelDaoHibernate"/>
 
-    <bean id="officeDao" class="org.mifos.customers.office.persistence.OfficeDaoHibernate" />
+    <bean id="officeDao" class="org.mifos.customers.office.persistence.OfficeDaoHibernate"/>
 
-    <bean id="holidayDao" class="org.mifos.application.holiday.persistence.HolidayDaoHibernate" />
+    <bean id="holidayDao" class="org.mifos.application.holiday.persistence.HolidayDaoHibernate"/>
 
-    <bean id="loanDao" class="org.mifos.accounts.loan.persistance.LoanDaoHibernate" />
+    <bean id="loanDao" class="org.mifos.accounts.loan.persistance.LoanDaoHibernate"/>
 
-    <bean id="savingsDao" class="org.mifos.accounts.savings.persistence.SavingsDaoHibernate" />
+    <bean id="savingsDao" class="org.mifos.accounts.savings.persistence.SavingsDaoHibernate"/>
 
-    <bean id="loanProductDao" class="org.mifos.accounts.productdefinition.persistence.LoanProductDaoHibernate" />
+    <bean id="loanProductDao" class="org.mifos.accounts.productdefinition.persistence.LoanProductDaoHibernate"/>
 
-    <bean id="savingsProductDao" class="org.mifos.accounts.productdefinition.persistence.SavingsProductDaoHibernate" />
+    <bean id="savingsProductDao" class="org.mifos.accounts.productdefinition.persistence.SavingsProductDaoHibernate"/>
 
-    <bean id="generalLedgerDao" class="org.mifos.accounts.financial.business.service.GeneralLedgerDaoHibernate" />
+    <bean id="generalLedgerDao" class="org.mifos.accounts.financial.business.service.GeneralLedgerDaoHibernate"/>
 
     <bean id="collectionSheetDao" class="org.mifos.application.collectionsheet.persistence.CollectionSheetDaoHibernate" />
 
     <bean id="clientAttendanceDao" class="org.mifos.accounts.loan.persistance.StandardClientAttendanceDao" />
-
 </beans>

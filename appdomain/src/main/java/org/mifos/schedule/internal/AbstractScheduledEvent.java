@@ -68,7 +68,8 @@ public abstract class AbstractScheduledEvent implements ScheduledEvent {
      * @throws IllegalArgumentException if occurrence or startingOccurrence is not positive
      * @throws IllegalArgumentException if the two events' recurrences do not match
      */
-    public int numberOfDependentOccurrencesRollingUpToThisOccurrenceStartingWith
+    @Override
+	public int numberOfDependentOccurrencesRollingUpToThisOccurrenceStartingWith
                     (ScheduledEvent dependentEvent, int occurrence, int startingOccurrence) {
 
         if ((occurrence <=0) || (startingOccurrence <= 0)) {
@@ -95,7 +96,8 @@ public abstract class AbstractScheduledEvent implements ScheduledEvent {
      * this event's occurrence but after this event's previous occurrence.
      */
 
-    public int numberOfEventsRollingUpToThis(ScheduledEvent dependentEvent, int occurrence) {
+    @Override
+	public int numberOfEventsRollingUpToThis(ScheduledEvent dependentEvent, int occurrence) {
         return numberOfDependentOccurrencesRollingUpToThisOccurrenceStartingWith(dependentEvent, occurrence, 1);
     }
 

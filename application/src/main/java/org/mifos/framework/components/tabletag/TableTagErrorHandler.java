@@ -28,15 +28,18 @@ public class TableTagErrorHandler implements ErrorHandler {
     // MifosLogger logger =
     // MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER);
 
-    public void error(SAXParseException exception) {
+    @Override
+	public void error(SAXParseException exception) {
         // logger.debug(exception.getMessage());
     }
 
-    public void fatalError(SAXParseException exception) {
+    @Override
+	public void fatalError(SAXParseException exception) {
         // logger.debug(exception.getMessage());
     }
 
-    public void warning(SAXParseException exception) {
+    @Override
+	public void warning(SAXParseException exception) {
         // logger.debug(exception.getMessage());
     }
 }

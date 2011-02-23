@@ -28,11 +28,11 @@ import org.mifos.accounts.fees.business.FeeFormulaEntity;
 import org.mifos.accounts.fees.business.FeeFrequencyTypeEntity;
 import org.mifos.accounts.fees.business.FeePaymentEntity;
 import org.mifos.accounts.fees.business.FeeStatusEntity;
-import org.mifos.accounts.fees.servicefacade.FeeDto;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeeFormula;
 import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
 import org.mifos.accounts.fees.util.helpers.FeePayment;
+import org.mifos.dto.domain.FeeDto;
 
 public interface FeeDao {
 

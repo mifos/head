@@ -43,7 +43,7 @@ import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 @RunWith(MockitoJUnitRunner.class)
 public class AccountingDaoTest {
 
-    private IAccountingDao accountingDao;
+    private AccountingDao accountingDao;
 
     @Mock
     private JdbcTemplate jdbcTemplate;

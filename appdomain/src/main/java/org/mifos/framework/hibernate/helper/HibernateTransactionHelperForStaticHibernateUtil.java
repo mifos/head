@@ -21,6 +21,7 @@
 package org.mifos.framework.hibernate.helper;
 
 import org.mifos.framework.business.AbstractBusinessObject;
+import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
 
 /**
  * Implementation of {@link HibernateTransactionHelper} for {@link StaticHibernateUtil}.
@@ -30,7 +31,7 @@ public class HibernateTransactionHelperForStaticHibernateUtil implements Hiberna
     @Override
     public void beginAuditLoggingFor(AbstractBusinessObject domainEntity) {
         StaticHibernateUtil.getSessionTL();
-        StaticHibernateUtil.getInterceptor().createInitialValueMap(domainEntity);
+        ((AuditInterceptor) StaticHibernateUtil.getInterceptor()).createInitialValueMap(domainEntity);
     }
 
     @Override

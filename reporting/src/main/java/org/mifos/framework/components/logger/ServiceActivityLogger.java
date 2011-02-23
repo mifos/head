@@ -43,12 +43,14 @@ public class ServiceActivityLogger implements ServiceLogger {
         stopWatch = new StopWatch();
     }
 
-    public void startOfServiceCall(Method method, Object[] args) {
+    @Override
+	public void startOfServiceCall(Method method, Object[] args) {
         startTiming();
         logStartActivity(method);
     }
 
-    public void endOfServiceCall(Method method, Object[] args) {
+    @Override
+	public void endOfServiceCall(Method method, Object[] args) {
         stopTiming();
         logEndActivity(method);
         stopWatch.reset();

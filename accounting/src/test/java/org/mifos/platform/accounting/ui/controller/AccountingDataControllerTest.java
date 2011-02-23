@@ -7,17 +7,17 @@ import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.platform.accounting.service.IAccountingService;
+import org.mifos.platform.accounting.service.AccountingService;
 import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(IAccountingService.class)
+@PrepareForTest(AccountingService.class)
 public class AccountingDataControllerTest {
 
     @Mock
-    private IAccountingService accountingService;
+    private AccountingService accountingService;
 
     private AccountingDataController accountingDataController;
 

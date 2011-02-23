@@ -3,24 +3,18 @@ package org.mifos.accounts.loan.business.service.validators;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
 import org.mifos.platform.validations.Errors;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 public class InstallmentsValidatorImpl implements InstallmentsValidator {
-
-    @Autowired
     private InstallmentFormatValidator installmentFormatValidator;
 
-    @Autowired
     private ListOfInstallmentsValidator listOfInstallmentsValidator;
 
-    @Autowired
     private InstallmentRulesValidator installmentRulesValidator;
 
-    @SuppressWarnings({"UnusedDeclaration"})
-    private InstallmentsValidatorImpl() {
-        // Used for Spring wiring
+    public InstallmentsValidatorImpl() {
+        this(new InstallmentFormatValidatorImpl(), new ListOfInstallmentsValidatorImpl(), new InstallmentRulesValidatorImpl());
     }
 
     public InstallmentsValidatorImpl(InstallmentFormatValidator installmentFormatValidator,

@@ -20,14 +20,6 @@
 
 package org.mifos.customers.office.business;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.Set;
-
 import org.apache.commons.lang.StringUtils;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.customers.office.exceptions.OfficeException;
@@ -45,13 +37,15 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.security.util.UserContext;
 
+import java.util.*;
+
 public class OfficeBO extends AbstractBusinessObject implements Comparable<OfficeBO> {
 
     private Short officeId;
     private final Short operationMode;
     @SuppressWarnings("unused")
     // see .hbm.xml file
-    private Integer maxChildCount = Integer.valueOf(0);
+    private Integer maxChildCount = 0;
     private String officeName;
     private String shortName;
     private String globalOfficeNum;
@@ -64,8 +58,7 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
     private Set<OfficeBO> children;
     private Set<HolidayBO> holidays = new HashSet<HolidayBO>();
 
-    public static List<OfficeHierarchyDto> convertToBranchOnlyHierarchyWithParentsOfficeHierarchy(
-            List<OfficeBO> branchParents) {
+    public static List<OfficeHierarchyDto> convertToBranchOnlyHierarchyWithParentsOfficeHierarchy(List<OfficeBO> branchParents) {
 
         List<OfficeHierarchyDto> hierarchy = new ArrayList<OfficeHierarchyDto>();
 
@@ -75,11 +68,10 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
 
             Set<OfficeBO> branchOnlyChildren = officeBO.getBranchOnlyChildren();
             if (branchOnlyChildren != null && !branchOnlyChildren.isEmpty()) {
-                children = convertToBranchOnlyHierarchyWithParentsOfficeHierarchy(new ArrayList<OfficeBO>(
-                        branchOnlyChildren));
+                children = convertToBranchOnlyHierarchyWithParentsOfficeHierarchy(new ArrayList<OfficeBO>(branchOnlyChildren));
             }
-            OfficeHierarchyDto officeHierarchy = new OfficeHierarchyDto(officeBO.getOfficeId(), officeBO
-                    .getOfficeName(), officeBO.getSearchId(), officeBO.isActive(), children);
+            OfficeHierarchyDto officeHierarchy = new OfficeHierarchyDto(officeBO.getOfficeId(), officeBO.getOfficeName(), officeBO.getSearchId(),
+                    officeBO.isActive(), children);
 
             hierarchy.add(officeHierarchy);
         }
@@ -101,9 +93,17 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
      *
      * @param officeId
      */
-    public OfficeBO(Short officeId, final String name, final String shortName, String globalOfficeNum,
-            OfficeBO parentOffice, OfficeLevel officeLevel, String searchId, OfficeStatus status) {
+    public OfficeBO(Short officeId, final String name, final String shortName, String globalOfficeNum, OfficeBO parentOffice, OfficeLevel officeLevel,
+                    String searchId, OfficeStatus status) {
+        this(name, shortName, globalOfficeNum, parentOffice, officeLevel, searchId, status, 0);
         this.officeId = officeId;
+    }
+
+    /**
+     * minimal legal constructor
+     */
+    public OfficeBO(final String name, final String shortName, String globalOfficeNum, OfficeBO parentOffice, OfficeLevel officeLevel, String searchId,
+                    OfficeStatus status, int createdBy) {
         this.officeName = name;
         this.shortName = shortName;
         this.globalOfficeNum = globalOfficeNum;
@@ -112,39 +112,35 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
         this.level = new OfficeLevelEntity(officeLevel);
         this.operationMode = OperationMode.REMOTE_SERVER.getValue();
         this.status = new OfficeStatusEntity(status);
-        this.address = null;
+        setCreateDetails(createdBy);
     }
 
     /**
      * For tests. Does not require that the names in question actually exist in the database.
      */
-    public static OfficeBO makeForTest(final UserContext userContext, final OfficeLevel level,
-            final OfficeBO parentOffice, final String searchId, final List<CustomFieldDto> customFields,
-            final String officeName, final String shortName, final Address address, final OperationMode operationMode,
-            final OfficeStatus status) throws OfficeException {
-        return new OfficeBO(userContext, null, level, parentOffice, searchId, customFields, officeName, shortName,
-                address, operationMode, status);
+    public static OfficeBO makeForTest(final UserContext userContext, final OfficeLevel level, final OfficeBO parentOffice, final String searchId,
+                                       final List<CustomFieldDto> customFields, final String officeName, final String shortName, final Address address,
+                                       final OperationMode operationMode, final OfficeStatus status) throws OfficeException {
+        return new OfficeBO(userContext, null, level, parentOffice, searchId, customFields, officeName, shortName, address, operationMode, status);
     }
 
     public static OfficeBO makeForTest(final UserContext userContext, final Short officeId, final String officeName,
-            final String shortName) throws OfficeException {
-        return new OfficeBO(userContext, officeId, OfficeLevel.AREAOFFICE, null, null, null, officeName, shortName,
-                null, OperationMode.LOCAL_SERVER, OfficeStatus.ACTIVE);
+                                       final String shortName) throws OfficeException {
+        return new OfficeBO(userContext, officeId, OfficeLevel.AREAOFFICE, null, null, null, officeName, shortName, null, OperationMode.LOCAL_SERVER,
+                OfficeStatus.ACTIVE);
     }
 
     /**
      * Construct an object without validating it against the database.
      */
-    private OfficeBO(final UserContext userContext, final Short officeId, final OfficeLevel level,
-            final OfficeBO parentOffice, final String searchId, final List<CustomFieldDto> customFields,
-            final String officeName, final String shortName, final Address address, final OperationMode operationMode,
-            final OfficeStatus status) throws OfficeValidationException {
+    private OfficeBO(final UserContext userContext, final Short officeId, final OfficeLevel level, final OfficeBO parentOffice, final String searchId,
+                     final List<CustomFieldDto> customFields, final String officeName, final String shortName, final Address address,
+                     final OperationMode operationMode, final OfficeStatus status) throws OfficeValidationException {
         super(userContext);
         verifyFieldsNoDatabase(level, operationMode);
 
         setCreateDetails();
 
-        this.globalOfficeNum = null;
         this.operationMode = operationMode.getValue();
         this.searchId = searchId;
         this.officeId = officeId;
@@ -165,18 +161,16 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
 
 
     /**
-     * @throws OfficeValidationException
-     *             Thrown when there's a validation error
+     * @throws OfficeValidationException Thrown when there's a validation error
      */
-    public OfficeBO(final UserContext userContext, final OfficeLevel level, final OfficeBO parentOffice,
-            final List<CustomFieldDto> customFields, final String officeName, final String shortName,
-            final Address address, final OperationMode operationMode) throws OfficeValidationException {
+    public OfficeBO(final UserContext userContext, final OfficeLevel level, final OfficeBO parentOffice, final List<CustomFieldDto> customFields,
+                    final String officeName, final String shortName, final Address address, final OperationMode operationMode) throws
+            OfficeValidationException {
         this(userContext, null, level, parentOffice, null, customFields, officeName, shortName, address, operationMode, OfficeStatus.ACTIVE);
         verifyFields(officeName, shortName, parentOffice);
     }
 
-    public OfficeBO(final Short officeId, final String officeName, final Integer maxChildCount,
-            final Short operationMode) {
+    public OfficeBO(final Short officeId, final String officeName, final Integer maxChildCount, final Short operationMode) {
         super();
         this.officeId = officeId;
         this.officeName = officeName;
@@ -325,34 +319,27 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
     // ultimately be runtime errors because they occurr, most likely, from
     // configuration/binding problems which are exceptions that we shouldn't
     // be catching.
-    private void verifyFields(final String officeName, final String shortName, final OfficeBO parentOffice)
-            throws OfficeValidationException {
+    private void verifyFields(final String officeName, final String shortName, final OfficeBO parentOffice) throws OfficeValidationException {
 
         if (StringUtils.isBlank(officeName)) {
-            throw new OfficeValidationException(OfficeConstants.ERRORMANDATORYFIELD,
-                    new Object[] { getLocaleString(OfficeConstants.OFFICE_NAME) });
+            throw new OfficeValidationException(OfficeConstants.ERRORMANDATORYFIELD, new Object[]{getLocaleString(OfficeConstants.OFFICE_NAME)});
         }
 
         if (StringUtils.isBlank(shortName)) {
-            throw new OfficeValidationException(OfficeConstants.ERRORMANDATORYFIELD,
-                    new Object[] { getLocaleString(OfficeConstants.OFFICESHORTNAME) });
+            throw new OfficeValidationException(OfficeConstants.ERRORMANDATORYFIELD, new Object[]{getLocaleString(OfficeConstants.OFFICESHORTNAME)});
         }
 
         if (parentOffice == null) {
-            throw new OfficeValidationException(OfficeConstants.ERRORMANDATORYFIELD,
-                    new Object[] { getLocaleString(OfficeConstants.PARENTOFFICE) });
+            throw new OfficeValidationException(OfficeConstants.ERRORMANDATORYFIELD, new Object[]{getLocaleString(OfficeConstants.PARENTOFFICE)});
         }
     }
 
-    private void verifyFieldsNoDatabase(final OfficeLevel level, final OperationMode operationMode)
-            throws OfficeValidationException {
+    private void verifyFieldsNoDatabase(final OfficeLevel level, final OperationMode operationMode) throws OfficeValidationException {
         if (level == null) {
-            throw new OfficeValidationException(OfficeConstants.ERRORMANDATORYFIELD,
-                    new Object[] { getLocaleString(OfficeConstants.OFFICELEVEL) });
+            throw new OfficeValidationException(OfficeConstants.ERRORMANDATORYFIELD, new Object[]{getLocaleString(OfficeConstants.OFFICELEVEL)});
         }
         if (operationMode == null) {
-            throw new OfficeValidationException(OfficeConstants.ERRORMANDATORYFIELD,
-                    new Object[] { getLocaleString(OfficeConstants.OFFICEOPERATIONMODE) });
+            throw new OfficeValidationException(OfficeConstants.ERRORMANDATORYFIELD, new Object[]{getLocaleString(OfficeConstants.OFFICEOPERATIONMODE)});
         }
     }
 
@@ -379,14 +366,15 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
         Address address = null;
         AddressDto dto = officeUpdateRequest.getAddress();
         if (dto != null) {
-            address = new Address(dto.getLine1(), dto.getLine2(), dto.getLine3(), dto.getCity(), dto.getState(), dto.getCountry(), dto.getZip(), dto.getPhoneNumber());
+            address = new Address(dto.getLine1(), dto.getLine2(), dto.getLine3(), dto.getCity(), dto.getState(), dto.getCountry(), dto.getZip(),
+                    dto.getPhoneNumber());
         }
-        update(officeUpdateRequest.getOfficeName(), officeUpdateRequest.getShortName(), officeStatus, officeLevel, newParentOffice, address, new ArrayList<CustomFieldDto>());
+        update(officeUpdateRequest.getOfficeName(), officeUpdateRequest.getShortName(), officeStatus, officeLevel, newParentOffice, address,
+                new ArrayList<CustomFieldDto>());
     }
 
-    public void update(final String newName, final String newShortName, final OfficeStatus newStatus,
-            final OfficeLevel newLevel, final OfficeBO newParent, final Address address,
-            final List<CustomFieldDto> customFileds) throws OfficeException {
+    public void update(final String newName, final String newShortName, final OfficeStatus newStatus, final OfficeLevel newLevel, final OfficeBO newParent,
+                       final Address address, final List<CustomFieldDto> customFileds) throws OfficeException {
 
         this.officeName = newName;
         this.shortName = newShortName;
@@ -422,8 +410,7 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
                 if (!this.getParentOffice().getOfficeId().equals(newParent.getOfficeId())) {
                     OfficeBO oldParent = this.getParentOffice();
 
-                    if (this.getOfficeLevel().getValue().shortValue() < newParent.getOfficeLevel().getValue()
-                            .shortValue()) {
+                    if (this.getOfficeLevel().getValue().shortValue() < newParent.getOfficeLevel().getValue().shortValue()) {
                         throw new OfficeException(OfficeConstants.ERROR_INVALID_PARENT);
                     }
                     OfficeBO oldParent1 = getIfChildPresent(newParent, oldParent);
@@ -496,7 +483,8 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
         return officeId.equals(((OfficeBO) o).getOfficeId());
     }
 
-    public int compareTo(final OfficeBO o) {
+    @Override
+	public int compareTo(final OfficeBO o) {
         return officeId.compareTo(o.getOfficeId());
     }
 

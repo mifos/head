@@ -22,12 +22,12 @@ package org.mifos.accounts.fees.business;
 
 import java.util.Set;
 
-import org.mifos.accounts.fees.servicefacade.FeeStatusDto;
 import org.mifos.accounts.fees.util.helpers.FeeStatus;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.dto.domain.FeeStatusDto;
 
 public class FeeStatusEntity extends MasterDataEntity {
 

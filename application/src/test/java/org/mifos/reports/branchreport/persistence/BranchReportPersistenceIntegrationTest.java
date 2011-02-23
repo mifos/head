@@ -188,7 +188,8 @@ public class BranchReportPersistenceIntegrationTest extends BranchReportIntegrat
         Map<Short, BranchReportStaffSummaryBO> staffSummaries = createStaffSummariesMap();
         branchReportPersistence.populateTotalClientsEnrolledByPersonnel(staffSummaries);
         Assert.assertNull(org.apache.commons.collections.CollectionUtils.find(staffSummaries.values(), new Predicate() {
-            public boolean evaluate(Object object) {
+            @Override
+			public boolean evaluate(Object object) {
                 return !Integer.valueOf(0).equals(((BranchReportStaffSummaryBO) object).getTotalClientsEnrolled());
             }
         }));
@@ -241,7 +242,8 @@ public class BranchReportPersistenceIntegrationTest extends BranchReportIntegrat
         Map<Short, BranchReportStaffSummaryBO> staffSummaries = createStaffSummariesMap();
         branchReportPersistence.populateLoanArrearsAmountForPersonnel(staffSummaries, DEFAULT_CURRENCY);
         Assert.assertNull(org.apache.commons.collections.CollectionUtils.find(staffSummaries.values(), new Predicate() {
-            public boolean evaluate(Object object) {
+            @Override
+			public boolean evaluate(Object object) {
                 return !BigDecimal.ZERO.setScale(AccountingRules.getDigitsAfterDecimal()).equals(
                         ((BranchReportStaffSummaryBO) object).getLoanArrearsAmount());
             }
@@ -289,7 +291,8 @@ public class BranchReportPersistenceIntegrationTest extends BranchReportIntegrat
         Assert.assertEquals(2, staffingLevels.size());
         Assert.assertNull("Should not extract roles with zero personnel count",
                 org.apache.commons.collections.CollectionUtils.find(staffingLevels, new Predicate() {
-                    public boolean evaluate(Object arg0) {
+                    @Override
+					public boolean evaluate(Object arg0) {
                         BranchReportStaffingLevelSummaryBO summary = (BranchReportStaffingLevelSummaryBO) arg0;
                         return !TOTAL_STAFF_ROLENAME_STR.equals(summary.getTitleName())
                                 && Integer.valueOf(0).equals((summary).getPersonnelCount());

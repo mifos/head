@@ -42,7 +42,7 @@ import org.mifos.domain.builders.CenterBuilder;
 import org.mifos.domain.builders.ClientBuilder;
 import org.mifos.domain.builders.GroupBuilder;
 import org.mifos.domain.builders.MeetingBuilder;
-import org.mifos.domain.builders.MifosUserBuilder;
+import org.mifos.builders.MifosUserBuilder;
 import org.mifos.domain.builders.SavingsAccountBuilder;
 import org.mifos.domain.builders.SavingsProductBuilder;
 import org.mifos.dto.domain.SavingsAdjustmentDto;

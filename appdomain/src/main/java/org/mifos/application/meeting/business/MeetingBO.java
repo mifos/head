@@ -55,7 +55,7 @@ import org.mifos.schedule.ScheduledEventFactory;
  */
 public class MeetingBO extends AbstractBusinessObject {
 
-    private final Integer meetingId;
+    private Integer meetingId;
     private MeetingDetailsEntity meetingDetails;
     private MeetingTypeEntity meetingType;
     private Date meetingStartDate;
@@ -78,18 +78,12 @@ public class MeetingBO extends AbstractBusinessObject {
      * default constructor for hibernate
      */
     protected MeetingBO() {
-        this.meetingId = null;
-        this.meetingDetails = null;
-        this.meetingType = null;
-        this.meetingStartDate = null;
     }
 
     /**
      * minimal legal constructor
      */
     public MeetingBO(final MeetingType meetingType, final Date startDate, final String meetingLocation) {
-        this.meetingId = null;
-        this.meetingDetails = null;
         this.meetingType = new MeetingTypeEntity(meetingType);
         this.meetingStartDate = startDate;
         this.meetingPlace = meetingLocation;

@@ -28,17 +28,23 @@ import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.admin.ViewOrganizationSettingsPage;
 import org.mifos.test.acceptance.framework.testhelpers.CustomPropertiesHelper;
+import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.sql.SQLException;
+
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"acceptance","ui"})
+@Test(sequential = true, groups = {"acceptance","ui","no_db_unit"})
 
 public class ViewOrganizationSettingsTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;
+    @Autowired
+    private ApplicationDatabaseOperation applicationDatabaseOperation;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -46,10 +52,12 @@ public class ViewOrganizationSettingsTest extends UiTestCaseBase {
     public void setUp() throws Exception {
         super.setUp();
         appLauncher = new AppLauncher(selenium);
+        applicationDatabaseOperation.updateGLIM(0);
+        applicationDatabaseOperation.updateLSIM(0);
     }
 
     @AfterMethod
-    public void tearDown() {
+    public void tearDown() throws SQLException {
         (new MifosPage(selenium)).logout();
     }
 

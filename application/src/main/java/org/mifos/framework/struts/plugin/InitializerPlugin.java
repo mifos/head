@@ -49,7 +49,8 @@ public class InitializerPlugin implements PlugIn {
      * the class.
      *
      */
-    public void init(ActionServlet servlet, ModuleConfig config) throws ServletException {
+    @Override
+	public void init(ActionServlet servlet, ModuleConfig config) throws ServletException {
 
         try {
             initializeConfiguration(servlet);
@@ -64,7 +65,8 @@ public class InitializerPlugin implements PlugIn {
 
     }
 
-    public void destroy() {
+    @Override
+	public void destroy() {
     }
 
     void initializeConfiguration(ActionServlet servlet) throws AppNotConfiguredException {

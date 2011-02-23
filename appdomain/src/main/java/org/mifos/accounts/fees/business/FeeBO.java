@@ -29,8 +29,6 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.mifos.accounts.fees.exceptions.FeeException;
-import org.mifos.accounts.fees.servicefacade.FeeDto;
-import org.mifos.accounts.fees.servicefacade.FeeFrequencyDto;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeeChangeType;
 import org.mifos.accounts.fees.util.helpers.FeeConstants;
@@ -39,16 +37,20 @@ import org.mifos.accounts.fees.util.helpers.FeeLevel;
 import org.mifos.accounts.fees.util.helpers.FeeStatus;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.financial.business.GLCodeEntity;
-import org.mifos.accounts.financial.servicefacade.GLCodeDto;
 import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
+import org.mifos.config.AccountingRules;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
+import org.mifos.dto.domain.FeeDto;
+import org.mifos.dto.domain.FeeFrequencyDto;
+import org.mifos.dto.domain.GLCodeDto;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
 
 public abstract class FeeBO extends AbstractBusinessObject {
@@ -317,22 +319,22 @@ public abstract class FeeBO extends AbstractBusinessObject {
     public boolean isWeekly() {
         return this.feeFrequency.getFeeMeetingFrequency().isWeekly();
     }
-
+	
     public FeeDto toDto() {
         FeeDto feeDto = new FeeDto();
         feeDto.setId(Short.toString(this.feeId));
         feeDto.setName(this.feeName);
         feeDto.setCategoryType(this.categoryType.getName());
         feeDto.setFeeStatus(this.feeStatus.toDto());
-
-        FeeFrequencyDto feeFrequencyDto = this.feeFrequency.toDto();
-        feeDto.setFeeFrequency(this.feeFrequency.toDto());
         feeDto.setActive(isActive());
         feeDto.setCustomerDefaultFee(this.isCustomerDefaultFee());
         feeDto.setRateBasedFee(this instanceof RateFeeBO);
 
         feeDto.setChangeType(this.changeType);
-        feeDto.setFeeFrequencyType(feeFrequencyDto.getType());
+        
+        FeeFrequencyDto feeFrequencyDto = this.feeFrequency.toDto();
+        feeDto.setFeeFrequency(feeFrequencyDto);
+//        feeDto.setFeeFrequencyType(feeFrequencyDto.getType());
 
         GLCodeDto glCodeDto = this.glCode.toDto();
         feeDto.setGlCodeDto(glCodeDto);
@@ -343,7 +345,9 @@ public abstract class FeeBO extends AbstractBusinessObject {
         feeDto.setTimeOfDisbursement(isTimeOfDisbursement());
 
         if (this instanceof AmountFeeBO) {
-            feeDto.setAmount(((AmountFeeBO) this).getFeeAmount());
+            Money amount = ((AmountFeeBO) this).getFeeAmount();
+            feeDto.setCurrencyId(amount.getCurrency().getCurrencyId().intValue());
+            feeDto.setAmount(amount.toString(AccountingRules.getDigitsAfterDecimal()));
             feeDto.setRateBasedFee(false);
         } else {
             RateFeeBO rateFeeBo = (RateFeeBO) this;
@@ -353,8 +357,6 @@ public abstract class FeeBO extends AbstractBusinessObject {
         }
         return feeDto;
     }
-
-
 
     @Override
     public boolean equals(Object obj) {

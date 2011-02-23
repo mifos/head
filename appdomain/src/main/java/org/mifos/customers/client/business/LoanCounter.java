@@ -30,7 +30,8 @@ import org.mifos.framework.util.helpers.Transformer;
 
 public class LoanCounter extends AbstractEntity {
     public static Transformer<LoanCounter, Short> TRANSFORM_LOAN_COUNTER_TO_LOAN_CYCLE = new Transformer<LoanCounter, Short>() {
-        public Short transform(LoanCounter input) {
+        @Override
+		public Short transform(LoanCounter input) {
             return input.getLoanCycleCounter();
         }
     };

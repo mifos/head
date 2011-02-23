@@ -86,7 +86,7 @@ public class GroupTest extends UiTestCaseBase {
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    @BeforeMethod(groups = {"smoke","group","acceptance","ui"})
+    @BeforeMethod(alwaysRun = true)
     public void setUp() throws Exception {
         super.setUp();
         appLauncher = new AppLauncher(selenium);
@@ -95,14 +95,14 @@ public class GroupTest extends UiTestCaseBase {
         groupTestHelper = new GroupTestHelper(selenium);
     }
 
-    @AfterMethod(groups = {"smoke","group","acceptance","ui"})
+    @AfterMethod(alwaysRun = true)
     public void logOut() {
         (new MifosPage(selenium)).logout();
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-247
-    @Test(sequential = true, groups = {"smoke","group","acceptance","ui"})
+    @Test(sequential = true, groups = {"group","acceptance","ui"})
     public void verifyAcceptedPaymentTypesForGroup() throws Exception{
         //Given
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
@@ -254,7 +254,7 @@ public class GroupTest extends UiTestCaseBase {
      * http://mifosforge.jira.com/browse/MIFOSTEST-655
      * @throws Exception
      */
-    @Test(groups = {"smoke","group","acceptance","ui"})
+    @Test(groups = {"group","acceptance","ui"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyChangeCenterMembership() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);

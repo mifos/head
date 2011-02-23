@@ -1,6 +1,6 @@
 [#ftl]
 [#--
-* Copyright (c) 2005-2010 Grameen Foundation USA
+* Copyright (c) 2005-2011 Grameen Foundation USA
 *  All rights reserved.
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,22 +27,22 @@
 
 <span id="page.id" title="CustSearchAccount"></span>
 
-<h1>[@spring.message "createSavingsAccount.customerSearch.pageTitle" /] - <span class="standout">[@spring.message "createSavingsAccount.customerSearch.pageSubtitle" /]</span></h1>
+<h1>[@spring.message "createSavingsAccount.customerSearch.pageTitle" /] - <span class="standout">[@spring.message "customerSearch.pageSubtitle" /]</span></h1>
 
-<p>[@spring.message "createSavingsAccount.customerSearch.instructions" /]</p>
+<p>[@spring.message "customerSearch.instructions" /]</p>
 <br/>
 
 [@form.errors "savingsAccountFormBean.*"/]
 <form action="${flowExecutionUrl}" method="post" class="two-columns">
     <fieldset>
     <div class="row">
-        <label for="searchString">[@spring.message "createSavingsAccount.customerSearch.searchTerm" /]:</label>
+        <label for="searchString">[@spring.message "customerSearch.searchTerm" /]:</label>
         [@form.input path="savingsAccountFormBean.searchString" id="cust_search_account.input.searchString" attributes="" /]
     </div>
     </fieldset>
     <div class="row">
         [@form.submitButton label="widget.form.buttonLabel.search" id="cust_search_account.button.search" webflowEvent="searchTermEntered" /]
-        [@form.cancelButton "cancel" /]
+        [@form.cancelButton label="widget.form.buttonLabel.cancel" webflowEvent="cancel" /]
     </div>
 </form>
 <br/>

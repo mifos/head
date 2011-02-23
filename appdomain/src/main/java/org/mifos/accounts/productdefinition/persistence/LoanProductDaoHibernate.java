@@ -27,6 +27,10 @@ import java.util.Map;
 
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
+import org.mifos.accounts.fees.business.FeeFrequencyTypeEntity;
+import org.mifos.accounts.fees.business.FeePaymentEntity;
+import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
+import org.mifos.accounts.fees.util.helpers.FeePayment;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdApplicableMasterEntity;
@@ -164,6 +168,31 @@ public class LoanProductDaoHibernate implements LoanProductDao {
     @Override
     public List<InterestTypesEntity> retrieveInterestTypes() {
         return doFetchListOfMasterDataFor(InterestTypesEntity.class);
+    }
+    
+    @Override
+    public FeeFrequencyTypeEntity retrieveFeeFrequencyType(FeeFrequencyType enumType) {
+        FeeFrequencyTypeEntity selected = null;
+        List<FeeFrequencyTypeEntity> masterTypes = doFetchListOfMasterDataFor(FeeFrequencyTypeEntity.class);
+        for (FeeFrequencyTypeEntity entity : masterTypes) {
+            if (entity.getId().equals(enumType.getValue())) {
+                selected = entity;
+            }
+        }
+        return selected;
+    }
+    
+
+    @Override
+    public FeePaymentEntity retrieveFeePaymentType(FeePayment enumType) {
+        FeePaymentEntity selected = null;
+        List<FeePaymentEntity> masterTypes = doFetchListOfMasterDataFor(FeePaymentEntity.class);
+        for (FeePaymentEntity entity : masterTypes) {
+            if (entity.getId().equals(enumType.getValue())) {
+                selected = entity;
+            }
+        }
+        return selected;
     }
 
     @Override

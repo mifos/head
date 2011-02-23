@@ -33,7 +33,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import junit.framework.Assert;
-
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
@@ -42,7 +41,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.admin.system.ShutdownManager;
-import org.mifos.domain.builders.MifosUserBuilder;
+import org.mifos.builders.MifosUserBuilder;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.struts.ActionServlet30;
 import org.mifos.framework.util.helpers.Constants;
@@ -57,11 +56,18 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
-
 import servletunit.HttpServletRequestSimulator;
 import servletunit.HttpServletResponseSimulator;
 import servletunit.ServletContextSimulator;
 import servletunit.struts.MockStrutsTestCase;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.util.Calendar;
+import java.util.Enumeration;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 /**
  * All classes extending this class must be names as <b>*StrutsTest.java</b> to support maven-surefire-plugin autofind

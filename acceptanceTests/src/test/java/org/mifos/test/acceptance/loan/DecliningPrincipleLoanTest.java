@@ -47,7 +47,7 @@ import java.sql.SQLException;
 
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(sequential = true, groups = {"loanproduct", "acceptance", "ui"})
+@Test(sequential = true, groups = {"loanproduct", "acceptance", "ui","no_db_unit"})
 public class DecliningPrincipleLoanTest extends UiTestCaseBase {
 
     @Autowired
@@ -62,7 +62,6 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
     NavigationHelper navigationHelper;
     String interestTypeName = "Declining Balance-Interest Recalculation";
     int interestType = DefineNewLoanProductPage.SubmitFormParameters.DECLINING_BALANCE_INTEREST_RECALCULATION;
-    DateTime disbursalDate;
     boolean isLoanProductCreatedAndVerified = false;
     private TestDataSetup dataSetup;
     String feeName = "loanWeeklyFee";
@@ -94,7 +93,7 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
         dataSetup.addDecliningPrincipalBalance();
     }
 
-//    @Test(enabled=false, groups={"smoke"})
+//    @Test(enabled=false, groups={"loan"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyDecliningPrincipleLoan() throws Exception {
         applicationDatabaseOperation.updateLSIM(1);
@@ -108,7 +107,7 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
         verifyDecliningPrincipalLoanAccount(3, interestTypeName, systemDateTime.plusDays(1), formParameters.getOfferingName());
     }
 
-//    @Test(enabled=false, groups={"smoke"})
+//    @Test(enabled=false, groups={"loan"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyLoanPaymentAndAdjustment() throws Exception {
         applicationDatabaseOperation.updateLSIM(1);

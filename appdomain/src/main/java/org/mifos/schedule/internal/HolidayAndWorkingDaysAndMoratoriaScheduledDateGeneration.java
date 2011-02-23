@@ -45,7 +45,8 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration implements
         this.upcomingHolidays = upcomingHolidays;
     }
 
-    public List<DateTime> generateScheduledDates
+    @Override
+	public List<DateTime> generateScheduledDates
                                 (int occurences, DateTime lastScheduledDate, ScheduledEvent scheduledEvent) {
 
         HolidayAndWorkingDaysScheduledDateGeneration generatorForHolidaysAndWorkingDays

@@ -47,7 +47,8 @@ import edu.emory.mathcs.backport.java.util.Collections;
 
 public class CollectionSheetDtoTranslatorImpl implements CollectionSheetDtoTranslator {
 
-    public CollectionSheetEntryGridDto toLegacyDto(final CollectionSheetDto collectionSheet,
+    @Override
+	public CollectionSheetEntryGridDto toLegacyDto(final CollectionSheetDto collectionSheet,
             final CollectionSheetFormEnteredDataDto formEnteredDataDto, final List<CustomValueListElementDto> attendanceTypesList,
             final MifosCurrency currency) {
 

@@ -20,7 +20,6 @@
 
 package org.mifos.platform.accounting.dao;
 
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -35,10 +34,8 @@ import org.mifos.platform.accounting.AccountingDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
-import org.springframework.stereotype.Repository;
 
-@Repository
-public class AccountingDaoImpl implements IAccountingDao {
+public class AccountingDaoImpl implements AccountingDao {
 
     private static final int BRANCH_NAME = 1;
     private static final int VOUCHER_DATE = 2;

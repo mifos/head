@@ -20,9 +20,7 @@
 
 package org.mifos.test.acceptance.loan;
 
-import org.dbunit.DatabaseUnitException;
 import org.joda.time.DateTime;
-import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.loan.AccountAddNotesPage;
@@ -31,32 +29,16 @@ import org.mifos.test.acceptance.framework.loan.AccountPreviewNotesPage;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
-import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.sql.SQLException;
-
-@ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"loan","acceptance","ui"})
+@ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
+@Test(sequential = true, groups = {"loan", "acceptance", "ui", "no_db_unit"})
 public class LoanAccountAddNoteTest extends UiTestCaseBase {
 
-    @Autowired
-    private DriverManagerDataSource dataSource;
-    @Autowired
-    private DbUnitUtilities dbUnitUtilities;
-    @Autowired
-    private InitializeApplicationRemoteTestingService initRemote;
-
-    private static final String START_DATA_SET = "acceptance_small_003_dbunit.xml";
-
-    private static final String TEST_ACCOUNT = "000100000000004";
+    private static final String TEST_ACCOUNT = "000100000000012";
     private static final String TEST_ACCOUNT_NOTE = "Acceptance Test note for Issue 2456";
 
     @Override
@@ -64,9 +46,8 @@ public class LoanAccountAddNoteTest extends UiTestCaseBase {
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
-
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = new DateTime(2009,6,25,8,0,0,0);
+        DateTime targetTime = new DateTime(2009, 6, 25, 8, 0, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
     }
 
@@ -75,47 +56,23 @@ public class LoanAccountAddNoteTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
-    /**
-     * FIXME - KEITHW - see http://mifosforge.jira.com/browse/MIFOS-4734
-     */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    @Test(enabled=false)
     public void addNoteToLoanAccountAndVerifyRecentNotes() throws Exception {
-        initData();
-        addNoteToAccount();
-        assertTextFoundOnPage(TEST_ACCOUNT_NOTE);
-    }
-
-	/**
-     * FIXME - KEITHW - see http://mifosforge.jira.com/browse/MIFOS-4734
-     */
-    @Test(enabled=false)
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    public void addNoteToLoanAccountAndVerifyAllNotes() throws Exception {
-        initData();
-
         LoanAccountPage loanAccountPage = addNoteToAccount();
+        assertTextFoundOnPage(TEST_ACCOUNT_NOTE);
         AccountNotesPage accountNotesPage = loanAccountPage.navigateToAccountNotesPage();
         accountNotesPage.verifyPage();
         assertTextFoundOnPage(TEST_ACCOUNT_NOTE);
     }
 
-    private void initData() throws DatabaseUnitException, SQLException, IOException, URISyntaxException {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, START_DATA_SET, dataSource, selenium);
-    }
-
     private LoanAccountPage addNoteToAccount() {
-        // find the loan w/ id TEST_ACCOUNT
         NavigationHelper helper = new NavigationHelper(selenium);
-
         LoanAccountPage loanAccountPage = helper.navigateToLoanAccountPage(TEST_ACCOUNT);
-
         AccountAddNotesPage addNotesPage = loanAccountPage.navigateToAddNotesPage();
         addNotesPage.verifyPage();
         AccountPreviewNotesPage previewPage = addNotesPage.submitAndNavigateToAccountAddNotesPreviewPage(TEST_ACCOUNT_NOTE);
         previewPage.verifyPage();
         loanAccountPage = previewPage.submitAndNavigateToLoanAccountPage();
-
         return loanAccountPage;
     }
 

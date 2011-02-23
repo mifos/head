@@ -36,7 +36,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.platform.accounting.AccountingDto;
-import org.mifos.platform.accounting.dao.IAccountingDao;
+import org.mifos.platform.accounting.dao.AccountingDao;
 import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -46,12 +46,12 @@ import org.powermock.modules.junit4.PowerMockRunner;
 public class AccountingServiceTest {
 
     @Mock
-    private IAccountingDao accountingDao;
+    private AccountingDao accountingDao;
 
     @Mock
     private AccountingDataCacheManager cacheManager;
 
-    IAccountingService accountingService;
+    AccountingService accountingService;
 
     @Before
     public void setUp() {
