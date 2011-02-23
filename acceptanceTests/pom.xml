@@ -323,6 +323,19 @@
                 </configuration>
                 <executions>
                     <execution>
+                        <id>default-cli</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <groups>no_db_unit</groups>
+                            <excludedGroups>workInProgress</excludedGroups>
+                            <skip>${maven.test.skip}</skip>
+                            <failIfNoTests>false</failIfNoTests>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>run_db_unit_independent</id>
                         <phase>integration-test</phase>
                         <goals>
