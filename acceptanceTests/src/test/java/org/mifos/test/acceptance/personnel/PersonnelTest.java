@@ -21,7 +21,6 @@
 package org.mifos.test.acceptance.personnel;
 
 
-import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -39,10 +38,7 @@ import org.mifos.test.acceptance.framework.user.CreateUserPreviewDataPage;
 import org.mifos.test.acceptance.framework.user.EditUserDataPage;
 import org.mifos.test.acceptance.framework.user.EditUserPreviewDataPage;
 import org.mifos.test.acceptance.framework.user.UserViewDetailsPage;
-import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.mifos.test.acceptance.util.StringUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
@@ -51,20 +47,11 @@ import org.testng.annotations.Test;
 
 @SuppressWarnings("PMD")
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"personnel","acceptance","ui"})
+@Test(sequential = true, groups = {"personnel","acceptance","ui", "no_db_unit"})
 public class PersonnelTest extends UiTestCaseBase {
 
     private NavigationHelper navigationHelper;
     private UserHelper userHelper;
-
-    @Autowired
-    private DriverManagerDataSource dataSource;
-
-    @Autowired
-    private DbUnitUtilities dbUnitUtilities;
-
-    @Autowired
-    private InitializeApplicationRemoteTestingService initRemote;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -84,13 +71,10 @@ public class PersonnelTest extends UiTestCaseBase {
     @Test(enabled=true, groups = {"acceptance"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createUserTest() throws Exception {
-        //Given
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
-
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         CreateUserParameters formParameters = adminPage.getAdminUserParameters();
         //When
-        userHelper.createUser(formParameters, "MyOffice1233171674227");
+        userHelper.createUser(formParameters, "MyOfficeDHMFT");
         LoginPage loginPage = new AppLauncher(selenium).launchMifos();
         loginPage.verifyPage();
         //Then
@@ -101,11 +85,9 @@ public class PersonnelTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(enabled=true, groups = {"acceptance"})
     public void editUserTest() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
-
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
 
-        UserViewDetailsPage userDetailsPage = userHelper.createUser(adminPage.getAdminUserParameters(), "MyOffice1233171674227");
+        UserViewDetailsPage userDetailsPage = userHelper.createUser(adminPage.getAdminUserParameters(), "MyOfficeDHMFT");
 
         EditUserDataPage editUserPage = userDetailsPage.navigateToEditUserDataPage();
 
@@ -123,13 +105,10 @@ public class PersonnelTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(enabled=true, groups = {"acceptance"})
     public void createUserWithNonAdminRoleTest() throws Exception {
-        //Given
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
-
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         CreateUserParameters formParameters = adminPage.getNonAdminUserParameters();
         //When
-        userHelper.createUser(formParameters, "MyOffice1233171674227");
+        userHelper.createUser(formParameters, "MyOfficeDHMFT");
         LoginPage loginPage = new AppLauncher(selenium).launchMifos();
         loginPage.verifyPage();
         //Then
@@ -144,8 +123,6 @@ public class PersonnelTest extends UiTestCaseBase {
     @Test(enabled=true, groups = {"acceptance"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void changePasswordTest() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
-
         HomePage homePage = loginSuccessfully();
         AdminPage adminPage = homePage.navigateToAdminPage();
 
@@ -153,7 +130,7 @@ public class PersonnelTest extends UiTestCaseBase {
         ChooseOfficePage createUserPage = adminPage.navigateToCreateUserPage();
         createUserPage.verifyPage();
 
-        CreateUserEnterDataPage userEnterDataPage = createUserPage.selectOffice("MyOffice1233171674227");
+        CreateUserEnterDataPage userEnterDataPage = createUserPage.selectOffice("MyOfficeDHMFT");
 
         CreateUserPreviewDataPage userPreviewDataPage = userEnterDataPage.submitAndGotoCreateUserPreviewDataPage(userParameters);
         CreateUserConfirmationPage userConfirmationPage = userPreviewDataPage.submit();
