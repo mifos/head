@@ -39,14 +39,15 @@ import org.testng.annotations.Test;
 import java.sql.SQLException;
 
 @SuppressWarnings("PMD")
-@ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"loan","acceptance","ui","no_db_unit"}, enabled = false)
+@ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
+@Test(sequential = true, groups = {"loan", "acceptance", "ui", "no_db_unit"})
 public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
 
     private LoanTestHelper loanTestHelper;
     private String expectedDate;
     @Autowired
     private ApplicationDatabaseOperation applicationDatabaseOperation;
+
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
@@ -56,7 +57,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
         applicationDatabaseOperation.updateLSIM(1);
         loanTestHelper = new LoanTestHelper(selenium);
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = new DateTime(2010,1,22,10,55,0,0);
+        DateTime targetTime = new DateTime(2010, 1, 22, 10, 55, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
     }
 
@@ -66,6 +67,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
+    @Test( groups = {"loan", "acceptance", "ui"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
     public void newWeeklyLSIMClientLoanAccount() throws Exception {
@@ -114,17 +116,17 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
         submitAccountParameters.setLsimFrequencyMonths("on");
         submitAccountParameters.setLsimMonthTypeNthWeekdayOfMonth("on");
         submitAccountParameters.setLsimMonthRank("Second");
-        submitAccountParameters.setLsimWeekDay("5");
+        submitAccountParameters.setLsimWeekDay("Thursday");
 
         createLSIMLoanAndCheckAmountAndInstallmentDate(searchParameters, submitAccountParameters, expectedDate);
     }
 
     private void createLSIMLoanAndCheckAmountAndInstallmentDate(CreateLoanAccountSearchParameters searchParameters,
-            CreateLoanAccountSubmitParameters submitAccountParameters, String expectedDate) {
+                                                                CreateLoanAccountSubmitParameters submitAccountParameters, String expectedDate) {
 
         LoanAccountPage loanAccountPage = loanTestHelper.createLoanAccount(searchParameters, submitAccountParameters);
         loanAccountPage.verifyLoanAmount(submitAccountParameters.getAmount());
-        ViewRepaymentSchedulePage viewRepaymentSchedulePage =loanAccountPage.navigateToViewRepaymentSchedule();
+        ViewRepaymentSchedulePage viewRepaymentSchedulePage = loanAccountPage.navigateToViewRepaymentSchedule();
         viewRepaymentSchedulePage.verifyFirstInstallmentDate(4, 2, expectedDate);
 
     }

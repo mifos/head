@@ -105,7 +105,7 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
         {
             selenium.click("loancreationdetails.input.frequencyWeeks");
             selenium.type("loancreationdetails.input.weekFrequency",formParameters.getLsimWeekFrequency());
-            selenium.select("weekDay", "label=6");
+            selenium.select("weekDay", "label=Friday");
         }
         if (formParameters.getLsimMonthTypeDayOfMonth() != null)
         {
