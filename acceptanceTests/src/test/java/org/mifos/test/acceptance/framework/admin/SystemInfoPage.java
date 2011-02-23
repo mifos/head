@@ -20,10 +20,6 @@
 
 package org.mifos.test.acceptance.framework.admin;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
 
 import org.joda.time.DateTime;
@@ -31,7 +27,6 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.testng.Assert;
-import org.testng.log4testng.Logger;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -46,29 +41,11 @@ public class SystemInfoPage extends MifosPage {
         return selenium.getText("sysinfo.text.dateTime");
     }
 
-    public long getDateTimeInMilis() {
-        DateFormat dateFormat = new SimpleDateFormat("yy-MM-dd HH:mm", Locale.getDefault());
-        Date date = null;
-        try {
-            date = dateFormat.parse(getDateTime());
-        } catch (ParseException e) {
-            Logger.getLogger(getClass()).error("Error while parsing date format yy-MM-dd HH:mm" + getDateTime() + "trying other way.");
-            dateFormat = new SimpleDateFormat("dd-MM-yy HH:mm", Locale.getDefault());
-            try {
-                date = dateFormat.parse(getDateTime());
-            } catch (ParseException e1) {
-                Logger.getLogger(getClass()).error("Second Error while parsing date format  dd-MM-yy HH:mm" + getDateTime());
-            }
-        }
-        return date.getTime();
-    }
-
     public void verifyDateTime(DateTime dateTime) {
         DateTimeFormatter formatter = DateTimeFormat.shortDateTime().withLocale(Locale.getDefault());
         String expectedDateTime =  formatter.print(dateTime.getMillis());
-        String currentDateTime = formatter.print(getDateTimeInMilis());
 
-        Assert.assertEquals(currentDateTime, expectedDateTime, "System date time and Mifos date time should be the same.");
+        Assert.assertEquals(getDateTime(), expectedDateTime, "System date time and Mifos date time should be the same.");
     }
 
 }
