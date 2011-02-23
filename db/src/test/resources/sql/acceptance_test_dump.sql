@@ -662,7 +662,7 @@ CREATE TABLE `accepted_payment_type` (
   KEY `payment_type_id` (`payment_type_id`),
   CONSTRAINT `accepted_payment_type_ibfk_1` FOREIGN KEY (`transaction_id`) REFERENCES `transaction_type` (`transaction_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `accepted_payment_type_ibfk_2` FOREIGN KEY (`payment_type_id`) REFERENCES `payment_type` (`payment_type_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -671,7 +671,7 @@ CREATE TABLE `accepted_payment_type` (
 
 LOCK TABLES `accepted_payment_type` WRITE;
 /*!40000 ALTER TABLE `accepted_payment_type` DISABLE KEYS */;
-INSERT INTO `accepted_payment_type` VALUES (1,1,1),(2,2,1),(3,3,1),(4,4,1),(5,5,1),(6,1,2),(7,1,3),(8,2,2),(9,2,3),(10,3,2),(11,3,3),(12,4,2),(13,4,3),(14,5,2),(15,5,3);
+INSERT INTO `accepted_payment_type` VALUES (1,1,1),(2,2,1),(3,3,1),(4,4,1),(5,5,1),(7,1,3),(9,2,3),(11,3,3),(13,4,3),(15,5,3),(16,1,2),(17,2,2),(18,3,2),(19,4,2),(20,5,2);
 /*!40000 ALTER TABLE `accepted_payment_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1801,7 +1801,7 @@ CREATE TABLE `change_log` (
   KEY `changed_by` (`changed_by`),
   KEY `change_log_idx` (`entity_type`,`entity_id`,`changed_date`),
   CONSTRAINT `change_log_ibfk_1` FOREIGN KEY (`changed_by`) REFERENCES `personnel` (`personnel_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1810,7 +1810,7 @@ CREATE TABLE `change_log` (
 
 LOCK TABLES `change_log` WRITE;
 /*!40000 ALTER TABLE `change_log` DISABLE KEYS */;
-INSERT INTO `change_log` VALUES (1,1,'mifos',1,17,'2011-02-18',NULL),(2,1,'mifos',2,21,'2011-02-18',NULL),(3,1,'mifos',2,21,'2011-02-18',NULL),(4,1,'mifos',1,17,'2011-02-21',NULL),(5,1,'mifos',2,1,'2011-02-21',NULL),(6,1,'mifos',3,1,'2011-02-21',NULL),(7,1,'mifos',1,17,'2010-01-22',NULL),(8,1,'mifos',4,12,'2010-01-22',NULL),(9,1,'mifos',5,1,'2010-01-22',NULL),(10,1,'mifos',6,1,'2010-01-22',NULL),(11,1,'mifos',7,1,'2010-01-22',NULL),(12,1,'mifos',4,2,'2010-01-22',NULL),(13,1,'mifos',8,1,'2010-01-22',NULL),(14,1,'mifos',5,2,'2011-02-21',NULL),(15,1,'mifos',10,22,'2011-02-21',NULL),(16,1,'mifos',11,22,'2011-02-21',NULL),(17,1,'mifos',1,17,'2011-02-21',NULL),(18,1,'mifos',12,22,'2011-02-21',NULL),(19,1,'mifos',9,12,'2011-02-18',NULL),(20,1,'mifos',10,1,'2011-02-18',NULL),(21,1,'mifos',15,22,'2011-02-18',NULL),(22,1,'mifos',1,17,'2010-02-22',NULL),(23,1,'mifos',1,17,'2011-02-22',NULL),(24,1,'mifos',7,2,'2011-02-22',NULL),(25,1,'mifos',12,1,'2011-02-22',NULL),(26,1,'mifos',13,1,'2011-02-22',NULL),(27,1,'mifos',14,1,'2011-02-22',NULL),(28,1,'mifos',11,12,'2011-02-22',NULL),(29,1,'mifos',12,1,'2011-02-22',NULL),(30,1,'mifos',13,1,'2011-02-22',NULL),(31,1,'mifos',14,1,'2011-02-22',NULL),(32,1,'mifos',2,2,'2011-02-22',NULL),(33,1,'mifos',20,22,'2011-02-22',NULL);
+INSERT INTO `change_log` VALUES (1,1,'mifos',1,17,'2011-02-18',NULL),(2,1,'mifos',2,21,'2011-02-18',NULL),(3,1,'mifos',2,21,'2011-02-18',NULL),(4,1,'mifos',1,17,'2011-02-21',NULL),(5,1,'mifos',2,1,'2011-02-21',NULL),(6,1,'mifos',3,1,'2011-02-21',NULL),(7,1,'mifos',1,17,'2010-01-22',NULL),(8,1,'mifos',4,12,'2010-01-22',NULL),(9,1,'mifos',5,1,'2010-01-22',NULL),(10,1,'mifos',6,1,'2010-01-22',NULL),(11,1,'mifos',7,1,'2010-01-22',NULL),(12,1,'mifos',4,2,'2010-01-22',NULL),(13,1,'mifos',8,1,'2010-01-22',NULL),(14,1,'mifos',5,2,'2011-02-21',NULL),(15,1,'mifos',10,22,'2011-02-21',NULL),(16,1,'mifos',11,22,'2011-02-21',NULL),(17,1,'mifos',1,17,'2011-02-21',NULL),(18,1,'mifos',12,22,'2011-02-21',NULL),(19,1,'mifos',9,12,'2011-02-18',NULL),(20,1,'mifos',10,1,'2011-02-18',NULL),(21,1,'mifos',15,22,'2011-02-18',NULL),(22,1,'mifos',1,17,'2010-02-22',NULL),(23,1,'mifos',1,17,'2011-02-22',NULL),(24,1,'mifos',7,2,'2011-02-22',NULL),(25,1,'mifos',12,1,'2011-02-22',NULL),(26,1,'mifos',13,1,'2011-02-22',NULL),(27,1,'mifos',14,1,'2011-02-22',NULL),(28,1,'mifos',11,12,'2011-02-22',NULL),(29,1,'mifos',12,1,'2011-02-22',NULL),(30,1,'mifos',13,1,'2011-02-22',NULL),(31,1,'mifos',14,1,'2011-02-22',NULL),(32,1,'mifos',2,2,'2011-02-22',NULL),(33,1,'mifos',20,22,'2011-02-22',NULL),(34,1,'mifos',1,17,'2011-02-23',NULL);
 /*!40000 ALTER TABLE `change_log` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1830,7 +1830,7 @@ CREATE TABLE `change_log_detail` (
   PRIMARY KEY (`sequence_num`),
   KEY `change_log_id` (`change_log_id`),
   CONSTRAINT `change_log_detail_ibfk_1` FOREIGN KEY (`change_log_id`) REFERENCES `change_log` (`change_log_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1839,7 +1839,7 @@ CREATE TABLE `change_log_detail` (
 
 LOCK TABLES `change_log_detail` WRITE;
 /*!40000 ALTER TABLE `change_log_detail` DISABLE KEYS */;
-INSERT INTO `change_log_detail` VALUES (1,1,'lastLogin','-','18/02/2011'),(2,2,'activationDate','-','18/02/2011'),(3,2,'Status','Application Pending Approval','Active'),(4,3,'savingsBalance','-','1000.0'),(5,4,'lastLogin','18/02/2011','21/02/2011'),(6,5,'Status','Application Pending Approval','Active'),(7,6,'Status','Application Pending Approval','Active'),(8,7,'lastLogin','21/02/2011','22/01/2010'),(9,8,'Status','Application Pending Approval','Active'),(10,9,'Status','Application Pending Approval','Active'),(11,10,'Status','Application Pending Approval','Active'),(12,11,'Status','Application Pending Approval','Active'),(13,12,'Frequency Of Installments','Week(s)','Month(s)'),(14,13,'Status','Application Pending Approval','Active'),(15,14,'Product Instance Name','EmergencyLoan','ClientEmergencyLoan'),(16,15,'Status','Application Pending Approval','Application Approved'),(17,16,'Status','Application Pending Approval','Application Approved'),(18,17,'lastLogin','22/01/2010','21/02/2011'),(19,18,'Status','Application Pending Approval','Application Approved'),(20,19,'Status','Application Pending Approval','Active'),(21,20,'Status','Application Pending Approval','Active'),(22,21,'Status','Application Pending Approval','Application Approved'),(23,22,'lastLogin','21/02/2011','22/02/2010'),(24,23,'lastLogin','22/02/2010','22/02/2011'),(25,24,'Fee Types','-','oneTimeFee'),(26,25,'Status','Application Pending Approval','Active'),(27,26,'Status','Application Pending Approval','Active'),(28,27,'Status','Application Pending Approval','Active'),(29,28,'Status','Application Pending Approval','Active'),(30,29,'Name','-','MyGroup1233266297718'),(31,29,'groupFlag','0','1'),(32,30,'groupFlag','0','1'),(33,30,'Name','-','MyGroup1233266297718'),(34,31,'Name','-','MyGroup1233266297718'),(35,31,'groupFlag','0','1'),(36,32,'Fee Types','-','disbursementFee'),(37,33,'Status','Application Pending Approval','Application Approved');
+INSERT INTO `change_log_detail` VALUES (1,1,'lastLogin','-','18/02/2011'),(2,2,'activationDate','-','18/02/2011'),(3,2,'Status','Application Pending Approval','Active'),(4,3,'savingsBalance','-','1000.0'),(5,4,'lastLogin','18/02/2011','21/02/2011'),(6,5,'Status','Application Pending Approval','Active'),(7,6,'Status','Application Pending Approval','Active'),(8,7,'lastLogin','21/02/2011','22/01/2010'),(9,8,'Status','Application Pending Approval','Active'),(10,9,'Status','Application Pending Approval','Active'),(11,10,'Status','Application Pending Approval','Active'),(12,11,'Status','Application Pending Approval','Active'),(13,12,'Frequency Of Installments','Week(s)','Month(s)'),(14,13,'Status','Application Pending Approval','Active'),(15,14,'Product Instance Name','EmergencyLoan','ClientEmergencyLoan'),(16,15,'Status','Application Pending Approval','Application Approved'),(17,16,'Status','Application Pending Approval','Application Approved'),(18,17,'lastLogin','22/01/2010','21/02/2011'),(19,18,'Status','Application Pending Approval','Application Approved'),(20,19,'Status','Application Pending Approval','Active'),(21,20,'Status','Application Pending Approval','Active'),(22,21,'Status','Application Pending Approval','Application Approved'),(23,22,'lastLogin','21/02/2011','22/02/2010'),(24,23,'lastLogin','22/02/2010','22/02/2011'),(25,24,'Fee Types','-','oneTimeFee'),(26,25,'Status','Application Pending Approval','Active'),(27,26,'Status','Application Pending Approval','Active'),(28,27,'Status','Application Pending Approval','Active'),(29,28,'Status','Application Pending Approval','Active'),(30,29,'Name','-','MyGroup1233266297718'),(31,29,'groupFlag','0','1'),(32,30,'groupFlag','0','1'),(33,30,'Name','-','MyGroup1233266297718'),(34,31,'Name','-','MyGroup1233266297718'),(35,31,'groupFlag','0','1'),(36,32,'Fee Types','-','disbursementFee'),(37,33,'Status','Application Pending Approval','Application Approved'),(38,34,'lastLogin','22/02/2011','23/02/2011');
 /*!40000 ALTER TABLE `change_log_detail` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -5803,7 +5803,7 @@ CREATE TABLE `personnel` (
 
 LOCK TABLES `personnel` WRITE;
 /*!40000 ALTER TABLE `personnel` DISABLE KEYS */;
-INSERT INTO `personnel` VALUES (1,2,'1',1,1,1,1,NULL,1,'\"då§#0•añMæ2ıNj§ùÚ d≤QS8Ÿ','mifos',NULL,1,'mifos',1,NULL,1,'2011-02-22','2011-02-22',0,0,6),(2,1,'0002-00002',2,NULL,1,1,NULL,NULL,'Ê;}ƒ¡ù«î±1d&∑D¯Ù∞ˆ1sIÉ@}˘','loanofficer','',0,'loan officer',1,'2011-02-18',NULL,NULL,NULL,0,0,1);
+INSERT INTO `personnel` VALUES (1,2,'1',1,1,1,1,NULL,1,'\"då§#0•añMæ2ıNj§ùÚ d≤QS8Ÿ','mifos',NULL,1,'mifos',1,NULL,1,'2011-02-23','2011-02-23',0,0,7),(2,1,'0002-00002',2,NULL,1,1,NULL,NULL,'Ê;}ƒ¡ù«î±1d&∑D¯Ù∞ˆ1sIÉ@}˘','loanofficer','',0,'loan officer',1,'2011-02-18',NULL,NULL,NULL,0,0,1);
 /*!40000 ALTER TABLE `personnel` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -7978,4 +7978,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2011-02-23  8:36:26
+-- Dump completed on 2011-02-23 12:01:44
