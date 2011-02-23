@@ -48,14 +48,14 @@ public class FeesHelper {
         return formParameters;
     }
 
-    public void viewClientFees(String expectedClientFees, int row, int column) {
+    public void viewClientFees(String expectedClientFees) {
         ViewFeesPage viewFeesPage = navigateToViewFeesPage();
-        viewFeesPage.verifyClientFees(expectedClientFees, row, column);
+        viewFeesPage.verifyClientFees(expectedClientFees);
     }
 
-    public void viewProductFees(String expectedProductFees, int row, int column) {
+    public void viewProductFees(String expectedProductFees) {
         ViewFeesPage viewFeesPage = navigateToViewFeesPage();
-        viewFeesPage.verifyProductFees(expectedProductFees, row, column);
+        viewFeesPage.verifyProductFees(expectedProductFees);
     }
 
     private ViewFeesPage navigateToViewFeesPage() {

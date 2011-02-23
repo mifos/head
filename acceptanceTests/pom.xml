@@ -304,11 +304,6 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.4.3</version>
                 <configuration>
-                    <groups>${acceptanceTest.groups.to.run}</groups>
-                    <excludedGroups>workInProgress</excludedGroups>
-                    <!--
-                        Skip the normal tests, we'll run them in the integration-test phase
-                    -->
                     <redirectTestOutputToFile>true</redirectTestOutputToFile>
                     <skip>true</skip>
                     <systemProperties>
@@ -328,12 +323,29 @@
                 </configuration>
                 <executions>
                     <execution>
+                        <id>run_db_unit_independent</id>
                         <phase>integration-test</phase>
                         <goals>
                             <goal>test</goal>
                         </goals>
                         <configuration>
+                            <groups>no_db_unit</groups>
+                            <excludedGroups>workInProgress</excludedGroups>
                             <skip>${maven.test.skip}</skip>
+                            <failIfNoTests>false</failIfNoTests>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>run_db_unit_dependent</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <groups>${acceptanceTest.groups.to.run}</groups>
+                            <excludedGroups>no_db_unit,workInProgress</excludedGroups>
+                            <skip>${maven.test.skip}</skip>
+                            <failIfNoTests>false</failIfNoTests>
                         </configuration>
                     </execution>
                 </executions>

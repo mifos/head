@@ -33,39 +33,53 @@ public class DefineAcceptedPaymentTypesPage extends MifosPage {
     public static final int CHEQUE = 3;
 
     public void addLoanFeesPaymentType(int payment) {
-        selenium.select("chosenNonAcceptedFees", "value=" + payment);
-        selenium.click("defineAcceptedPaymentTypes.button.addFees");
+        if (isElementAvailable(payment, "chosenNonAcceptedFees")) {
+            selenium.select("chosenNonAcceptedFees", "value=" + payment);
+            selenium.click("defineAcceptedPaymentTypes.button.addFees");
+        }
         selenium.click("defineAcceptedPaymentTypes.button.submit");
         waitForPageToLoad();
     }
 
     public void addLoanDisbursementsPaymentType(int payment) {
-        selenium.select("chosenNonAcceptedLoanDisbursements", "value=" + payment);
-        selenium.click("defineAcceptedPaymentTypes.button.addLoans");
+        if (isElementAvailable(payment, "chosenNonAcceptedLoanDisbursements")) {
+            selenium.select("chosenNonAcceptedLoanDisbursements", "value=" + payment);
+            selenium.click("defineAcceptedPaymentTypes.button.addLoans");
+        }
         selenium.click("defineAcceptedPaymentTypes.button.submit");
         waitForPageToLoad();
     }
 
-    public void addLoanRepaymentsPaymentType(int payment)
-    {
-        selenium.select("chosenNonAcceptedLoanRepayments", "value=" + payment);
-        selenium.click("defineAcceptedPaymentTypes.button.addRepayments");
+    public void addLoanRepaymentsPaymentType(int payment) {
+        if (isElementAvailable(payment, "chosenNonAcceptedLoanRepayments")) {
+            selenium.select("chosenNonAcceptedLoanRepayments", "value=" + payment);
+            selenium.click("defineAcceptedPaymentTypes.button.addRepayments");
+        }
         selenium.click("defineAcceptedPaymentTypes.button.submit");
         waitForPageToLoad();
     }
 
-    public void addSavingsWithdrawalsType(int payment)
-    {
-        selenium.select("chosenNonAcceptedSavingWithdrawals", "value=" + payment);
-        selenium.click("defineAcceptedPaymentTypes.button.addWithdrawals");
+    public void addSavingsWithdrawalsType(int payment) {
+        if (isElementAvailable(payment, "chosenNonAcceptedSavingWithdrawals")) {
+            selenium.select("chosenNonAcceptedSavingWithdrawals", "value=" + payment);
+            selenium.click("defineAcceptedPaymentTypes.button.addWithdrawals");
+        }
         selenium.click("defineAcceptedPaymentTypes.button.submit");
         waitForPageToLoad();
     }
-    public void addSavingsDepositsPaymentType(int payment)
-    {
-        selenium.select("chosenNonAcceptedSavingDeposits", "value=" + payment);
-        selenium.click("defineAcceptedPaymentTypes.button.addDeposits");
+
+    public void addSavingsDepositsPaymentType(int payment) {
+        if (isElementAvailable(payment, "chosenNonAcceptedSavingDeposits")) {
+            selenium.select("chosenNonAcceptedSavingDeposits", "value=" + payment);
+            selenium.click("defineAcceptedPaymentTypes.button.addDeposits");
+        }
         selenium.click("defineAcceptedPaymentTypes.button.submit");
         waitForPageToLoad();
+    }
+
+    private boolean isElementAvailable(int payment, String name) {
+        String element = "window.document.getElementById('" + name + "').options";
+        return Integer.parseInt(selenium.getEval(element + ".length")) > payment &&
+                Boolean.parseBoolean(selenium.getEval(element + "[\"" + payment + "\"] != null"));
     }
 }

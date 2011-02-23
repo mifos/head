@@ -36,7 +36,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(sequential = true, groups = {"loanproduct", "acceptance","no_db_unit"})
+@Test(sequential = true, groups = {"loanproduct", "acceptance","no_db_unit"}, enabled = false)
 public class ProperLoanProductCalculationsTest extends UiTestCaseBase {
 
     private LoanProductTestHelper loanProductTestHelper;

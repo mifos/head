@@ -173,7 +173,6 @@ public class CashFlowTest extends UiTestCaseBase {
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyCashFlowPageInLoanAccountCreationFlow() throws Exception {
-     //   initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml", dataSource, selenium);
         DefineNewLoanProductPage.SubmitFormParameters productParams = FormParametersHelper.getWeeklyLoanProductParameters();
         productParams.setOfferingName("productCF1");
         productParams.setOfferingShortName("PCF1");

@@ -662,7 +662,7 @@ CREATE TABLE `accepted_payment_type` (
   KEY `payment_type_id` (`payment_type_id`),
   CONSTRAINT `accepted_payment_type_ibfk_1` FOREIGN KEY (`transaction_id`) REFERENCES `transaction_type` (`transaction_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `accepted_payment_type_ibfk_2` FOREIGN KEY (`payment_type_id`) REFERENCES `payment_type` (`payment_type_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -671,7 +671,7 @@ CREATE TABLE `accepted_payment_type` (
 
 LOCK TABLES `accepted_payment_type` WRITE;
 /*!40000 ALTER TABLE `accepted_payment_type` DISABLE KEYS */;
-INSERT INTO `accepted_payment_type` VALUES (1,1,1),(2,2,1),(3,3,1),(4,4,1),(5,5,1);
+INSERT INTO `accepted_payment_type` VALUES (1,1,1),(2,2,1),(3,3,1),(4,4,1),(5,5,1),(6,1,2),(7,1,3),(8,2,2),(9,2,3),(10,3,2),(11,3,3),(12,4,2),(13,4,3),(14,5,2),(15,5,3);
 /*!40000 ALTER TABLE `accepted_payment_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -7978,4 +7978,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2011-02-22 15:09:03
+-- Dump completed on 2011-02-23  8:36:26
