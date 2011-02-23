@@ -186,17 +186,12 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
         searchParameters.setSearchString("Client - Mary Monthly");
         searchParameters.setLoanProduct(defineNewLoanProductformParameters.getOfferingName());
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
-        submitAccountParameters.setDd("24");
-        submitAccountParameters.setMm("02");
-        submitAccountParameters.setYy("2011");
+        submitAccountParameters = createSearchParameters("24","02","2011");
         EditLoanAccountStatusParameters editLoanAccountStatusParameters = new EditLoanAccountStatusParameters();
         editLoanAccountStatusParameters.setStatus(AccountStatus.LOAN_APPROVED.getStatusText());
         editLoanAccountStatusParameters.setNote("activate account");
         DisburseLoanParameters disburseLoanParameters = new DisburseLoanParameters();
-        disburseLoanParameters.setDisbursalDateDD("24");
-        disburseLoanParameters.setDisbursalDateMM("02");
-        disburseLoanParameters.setDisbursalDateYYYY("2011");
-        disburseLoanParameters.setPaymentType(PaymentParameters.CASH);
+        disburseLoanParameters=createDisubreseLoanParameters("23","02","2011");
         //When
         loanProductTestHelper.defineNewLoanProduct(defineNewLoanProductformParameters);
         //Then
@@ -206,6 +201,60 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
         loanTestHelper.repayLoan(loanId);
     }
 
+    // http://mifosforge.jira.com/browse/MIFOSTEST-121
+    public void createWeeklyLoanAccountWithNonMeetingDatesForDisburseAndRepay() throws Exception {
+        //Given
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        systemTime = new DateTime(2011,02,23,12,0,0,0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(systemTime);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
+
+        //When
+        DefineNewLoanProductPage.SubmitFormParameters defineNewLoanProductformParameters = FormParametersHelper.getWeeklyLoanProductParameters();
+        defineNewLoanProductformParameters.setOfferingName("ProdTest123");
+
+        CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
+        searchParameters.setSearchString("Stu1232993852651 Client1232993852651");
+        searchParameters.setLoanProduct(defineNewLoanProductformParameters.getOfferingName());
+
+        CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
+        submitAccountParameters = createSearchParameters("23","02","2011");
+
+        EditLoanAccountStatusParameters editLoanAccountStatusParameters = new EditLoanAccountStatusParameters();
+        editLoanAccountStatusParameters.setStatus(AccountStatus.LOAN_APPROVED.getStatusText());
+        editLoanAccountStatusParameters.setNote("activate account");
+
+        DisburseLoanParameters disburseLoanParameters = new DisburseLoanParameters();
+        disburseLoanParameters=createDisubreseLoanParameters("24","02","2011");
+
+        loanProductTestHelper.defineNewLoanProduct(defineNewLoanProductformParameters);
+        String loanId = loanTestHelper.createLoanAccount(searchParameters, submitAccountParameters).getAccountId();
+        loanTestHelper.changeLoanAccountStatus(loanId, editLoanAccountStatusParameters);
+
+        //Then
+        loanTestHelper.disburseLoanWithWrongParams(loanId, disburseLoanParameters,"Date of transaction can not be a future date.");
+        disburseLoanParameters.setDisbursalDateDD("23");
+        loanTestHelper.disburseLoan(loanId, disburseLoanParameters);
+        //loanTestHelper.disburseLoan(loanId, disburseLoanParameters);
+        loanTestHelper.repayLoan(loanId);
+    }
+
+    private CreateLoanAccountSubmitParameters createSearchParameters(String d, String m, String y){
+        CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
+        submitAccountParameters.setDd(d);
+        submitAccountParameters.setMm(m);
+        submitAccountParameters.setYy(y);
+        return submitAccountParameters;
+    }
+
+    private DisburseLoanParameters createDisubreseLoanParameters(String d, String m, String y){
+        DisburseLoanParameters disburseLoanParameters = new DisburseLoanParameters();
+        disburseLoanParameters.setDisbursalDateDD(d);
+        disburseLoanParameters.setDisbursalDateMM(m);
+        disburseLoanParameters.setDisbursalDateYYYY(y);
+        disburseLoanParameters.setPaymentType(PaymentParameters.CASH);
+        return disburseLoanParameters;
+    }
     private String createLSIMLoanAndCheckAmountAndInstallmentDate(CreateLoanAccountSearchParameters searchParameters,
             CreateLoanAccountSubmitParameters submitAccountParameters, String expectedDate) {
 
