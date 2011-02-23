@@ -40,7 +40,7 @@ import java.sql.SQLException;
 
 @SuppressWarnings("PMD")
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"loan","acceptance","ui","no_db_unit"})
+@Test(sequential = true, groups = {"loan","acceptance","ui","no_db_unit"}, enabled = false)
 public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
 
     private LoanTestHelper loanTestHelper;
