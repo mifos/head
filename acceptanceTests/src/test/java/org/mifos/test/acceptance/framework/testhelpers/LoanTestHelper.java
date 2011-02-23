@@ -139,7 +139,7 @@ public class LoanTestHelper {
     public LoanAccountPage createLoanAccountForMultipleClientsInGroup(boolean loanSaveType){
 
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
-        searchParameters.setSearchString("MyGroup1233266297718");
+        searchParameters.setSearchString("Default Group");
         searchParameters.setLoanProduct("WeeklyGroupFlatLoanWithOnetimeFee");
 
         CreateLoanAccountEntryPage loanAccountEntryPage = this.navigateToCreateLoanAccountEntryPage(searchParameters);

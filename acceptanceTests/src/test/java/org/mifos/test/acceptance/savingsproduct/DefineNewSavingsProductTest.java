@@ -51,7 +51,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"savingsproduct","acceptance", "ui", "smoke"})
+@Test(sequential=true, groups={"savingsproduct","acceptance", "ui", "no_db_unit"})
 @SuppressWarnings("PMD.SignatureDeclareThrowsException")
 public class DefineNewSavingsProductTest extends UiTestCaseBase {
 
