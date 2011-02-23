@@ -18,31 +18,30 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.accounts.fees.util.helpers;
+package org.mifos.dto.domain;
 
-import org.mifos.service.BusinessRuleException;
+import java.io.Serializable;
 
-public enum FeePayment {
-    UPFRONT((short) 1),
-    TIME_OF_DISBURSEMENT((short) 2),
-    TIME_OF_FIRSTLOANREPAYMENT((short) 3);
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID", "EI_EXPOSE_REP", "EI_EXPOSE_REP2"}, justification="should disable at filter level and also for pmd - not important for us")
+public class FeeStatusDto implements Serializable {
 
-    private Short value;
+    private String id;
+    private String name;
 
-    private FeePayment(Short value) {
-        this.value = value;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Short getValue() {
-        return value;
+    public String getName() {
+        return name;
     }
 
-    public static FeePayment getFeePayment(Short value) {
-        for (FeePayment feePayment : FeePayment.values()) {
-            if (feePayment.getValue().equals(value)) {
-                return feePayment;
-            }
-        }
-        throw new BusinessRuleException("FeePayment");
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
     }
 }

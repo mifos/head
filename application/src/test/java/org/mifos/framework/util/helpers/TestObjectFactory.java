@@ -55,8 +55,6 @@ import org.mifos.accounts.fees.business.FeeFormulaEntity;
 import org.mifos.accounts.fees.business.FeeFrequencyTypeEntity;
 import org.mifos.accounts.fees.business.FeePaymentEntity;
 import org.mifos.accounts.fees.business.RateFeeBO;
-import org.mifos.accounts.fees.servicefacade.FeeFormulaDto;
-import org.mifos.accounts.fees.servicefacade.FeeStatusDto;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeeFormula;
 import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
@@ -161,6 +159,8 @@ import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.util.helpers.CustomerAccountDto;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.domain.FeeFormulaDto;
+import org.mifos.dto.domain.FeeStatusDto;
 import org.mifos.dto.screen.ClientNameDetailDto;
 import org.mifos.dto.screen.ClientPersonalDetailDto;
 import org.mifos.framework.TestUtils;
@@ -1940,9 +1940,9 @@ public class TestObjectFactory {
         return getPersonnel(PersonnelConstants.TEST_USER);
     }
 
-    public static org.mifos.accounts.fees.servicefacade.FeeDto getAmountBasedFee(String feeId, String statusId,
+    public static org.mifos.dto.domain.FeeDto getAmountBasedFee(String feeId, String statusId,
                                                                                  String amount) {
-        org.mifos.accounts.fees.servicefacade.FeeDto fee = new org.mifos.accounts.fees.servicefacade.FeeDto();
+        org.mifos.dto.domain.FeeDto fee = new org.mifos.dto.domain.FeeDto();
         FeeStatusDto feeStatus = new FeeStatusDto();
         feeStatus.setId(statusId);
         fee.setFeeStatus(feeStatus);
@@ -1952,9 +1952,9 @@ public class TestObjectFactory {
         return fee;
     }
 
-    public static org.mifos.accounts.fees.servicefacade.FeeDto getRateBasedFee(String feeId, String statusId,
+    public static org.mifos.dto.domain.FeeDto getRateBasedFee(String feeId, String statusId,
                                                                                double rate, String formulaId) {
-        org.mifos.accounts.fees.servicefacade.FeeDto fee = new org.mifos.accounts.fees.servicefacade.FeeDto();
+        org.mifos.dto.domain.FeeDto fee = new org.mifos.dto.domain.FeeDto();
         FeeStatusDto feeStatus = new FeeStatusDto();
         feeStatus.setId(statusId);
         fee.setFeeStatus(feeStatus);

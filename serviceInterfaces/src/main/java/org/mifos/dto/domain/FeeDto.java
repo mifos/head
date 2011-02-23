@@ -18,13 +18,12 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.accounts.fees.servicefacade;
+package org.mifos.dto.domain;
 
 import java.io.Serializable;
 
-import org.mifos.accounts.financial.servicefacade.GLCodeDto;
-import org.mifos.framework.util.helpers.Money;
-
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID", "EI_EXPOSE_REP", "EI_EXPOSE_REP2", "NM_CONFUSING"}, justification="should disable at filter level and also for pmd - not important for us")
 public class FeeDto implements Serializable {
 
     private String id;
@@ -32,6 +31,7 @@ public class FeeDto implements Serializable {
     private String status;
     private String categoryType;
     private String glCode;
+    private Integer currencyId;
     private String amount;
     private FeeFrequencyDto feeFrequency;
     private FeeStatusDto feeStatus;
@@ -51,6 +51,14 @@ public class FeeDto implements Serializable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public Integer getCurrencyId() {
+        return currencyId;
+    }
+
+    public void setCurrencyId(Integer currencyId) {
+        this.currencyId = currencyId;
     }
 
     public String getId() {
@@ -220,7 +228,7 @@ public class FeeDto implements Serializable {
         return feeFormula;
     }
 
-	public boolean isValidForCurrency(Short currencyId) {
-		return false;
+	public boolean isValidForCurrency(Integer currencyId) {
+		return currencyId.equals(this.currencyId);
 	}
 }

@@ -32,7 +32,7 @@ import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.security.util.UserContext;
 
 /**
- * @deprecated - use {@link org.mifos.accounts.fees.servicefacade.FeeDto}
+ * @deprecated - use {@link org.mifos.dto.domain.FeeDto}
  */
 @Deprecated
 public class FeeDto implements DataTransferObject {

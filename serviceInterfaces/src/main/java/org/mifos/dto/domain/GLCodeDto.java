@@ -18,14 +18,14 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.accounts.financial.servicefacade;
+package org.mifos.dto.domain;
 
+import java.io.Serializable;
 
-/**
- * @author angshus
- *
- */
-public class GLCodeDto {
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID", "EI_EXPOSE_REP", "EI_EXPOSE_REP2"}, justification="should disable at filter level and also for pmd - not important for us")
+public class GLCodeDto implements Serializable {
+
     private Short glcodeId;
     private String glcode;
 

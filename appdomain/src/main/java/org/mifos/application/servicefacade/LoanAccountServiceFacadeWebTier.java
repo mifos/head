@@ -52,7 +52,11 @@ import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
+import org.mifos.accounts.fees.business.FeeFrequencyTypeEntity;
+import org.mifos.accounts.fees.business.FeePaymentEntity;
 import org.mifos.accounts.fees.persistence.FeeDao;
+import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
+import org.mifos.accounts.fees.util.helpers.FeePayment;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.fund.servicefacade.FundCodeDto;
@@ -394,23 +398,35 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     @Override
     public LoanCreationLoanDetailsDto retrieveLoanDetailsForLoanAccountCreation(Integer customerId, Short productId) {
 
-        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserContext userContext = toUserContext(user);
-
         try {
-            List<org.mifos.accounts.fees.servicefacade.FeeDto> additionalFees = new ArrayList<org.mifos.accounts.fees.servicefacade.FeeDto>();
-            List<org.mifos.accounts.fees.servicefacade.FeeDto> defaultFees = new ArrayList<org.mifos.accounts.fees.servicefacade.FeeDto>();
+            List<org.mifos.dto.domain.FeeDto> additionalFees = new ArrayList<org.mifos.dto.domain.FeeDto>();
+            List<org.mifos.dto.domain.FeeDto> defaultFees = new ArrayList<org.mifos.dto.domain.FeeDto>();
 
             LoanOfferingBO loanProduct = this.loanProductDao.findById(productId.intValue());
             
             MeetingBO loanProductMeeting = loanProduct.getLoanOfferingMeetingValue();
+            MeetingDto loanOfferingMeetingDto = loanProductMeeting.toDto();
             
             List<FeeBO> fees = this.feeDao.getAllAppllicableFeeForLoanCreation();
             
             for (FeeBO fee : fees) {
                 if (!fee.isPeriodic() || (MeetingBO.isMeetingMatched(fee.getFeeFrequency().getFeeMeetingFrequency(), loanProductMeeting))) {
 
-                	org.mifos.accounts.fees.servicefacade.FeeDto feeDto = fee.toDto();
+                	org.mifos.dto.domain.FeeDto feeDto = fee.toDto();
+                	
+                	FeeFrequencyType feeFrequencyType = FeeFrequencyType.getFeeFrequencyType(fee.getFeeFrequency().getFeeFrequencyType().getId());
+                	
+                	FeeFrequencyTypeEntity feeFrequencyEntity = this.loanProductDao.retrieveFeeFrequencyType(feeFrequencyType); 
+                    String feeFrequencyTypeName = MessageLookup.getInstance().lookup(feeFrequencyEntity.getLookUpValue());
+                    feeDto.setFeeFrequencyType(feeFrequencyTypeName);
+                    
+                    if (feeDto.getFeeFrequency().isOneTime()) {
+                        FeePayment feePayment = FeePayment.getFeePayment(fee.getFeeFrequency().getFeePayment().getId());
+                        FeePaymentEntity feePaymentEntity = this.loanProductDao.retrieveFeePaymentType(feePayment); 
+                        String feePaymentName = MessageLookup.getInstance().lookup(feePaymentEntity.getLookUpValue());
+                        feeDto.setFeeFrequencyType(feePaymentName);
+                    }
+                    
                     if (loanProduct.isFeePresent(fee)) {
                         defaultFees.add(feeDto);
                     } else {
@@ -425,12 +441,12 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             }
             
             Map<String, String> defaultFeeOptions = new LinkedHashMap<String, String>();
-            for (org.mifos.accounts.fees.servicefacade.FeeDto feeDto : defaultFees) {
+            for (org.mifos.dto.domain.FeeDto feeDto : defaultFees) {
             	defaultFeeOptions.put(feeDto.getId(), feeDto.getName());
 			}
             
             Map<String, String> additionalFeeOptions = new LinkedHashMap<String, String>();
-            for (org.mifos.accounts.fees.servicefacade.FeeDto feeDto : additionalFees) {
+            for (org.mifos.dto.domain.FeeDto feeDto : additionalFees) {
             	additionalFeeOptions.put(feeDto.getId(), feeDto.getName());
 			}
 
@@ -457,8 +473,6 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             	purposeOfLoanOptions.put(element.getId().toString(), element.getName());
 			}
             
-            MeetingDto loanOfferingMeetingDto = loanProduct.getLoanOfferingMeetingValue().toDto();
-
             List<FundDto> fundDtos = new ArrayList<FundDto>();
             List<FundBO> funds = getFunds(loanProduct);
             for (FundBO fund : funds) {
@@ -484,7 +498,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             
             return new LoanCreationLoanDetailsDto(isRepaymentIndependentOfMeetingEnabled, loanOfferingMeetingDto,
                     customer.getCustomerMeetingValue().toDto(), loanPurposes, productDto, customerDetailDto, loanProductDtos, 
-                    interestTypeName, loanProduct.isPrinDueLastInst(), fundDtos, collateralOptions, purposeOfLoanOptions, defaultFeeOptions, additionalFeeOptions);
+                    interestTypeName, loanProduct.isPrinDueLastInst(), fundDtos, collateralOptions, purposeOfLoanOptions, defaultFeeOptions, additionalFeeOptions, defaultFees);
 
         } catch (SystemException e) {
             throw new MifosRuntimeException(e);
@@ -508,10 +522,10 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         return funds;
     }
 
-    private List<org.mifos.accounts.fees.servicefacade.FeeDto> getFilteredFeesByCurrency(List<org.mifos.accounts.fees.servicefacade.FeeDto> defaultFees, Short currencyId) {
-        List<org.mifos.accounts.fees.servicefacade.FeeDto> filteredFees = new ArrayList<org.mifos.accounts.fees.servicefacade.FeeDto>();
-        for (org.mifos.accounts.fees.servicefacade.FeeDto feeDto : defaultFees) {
-            if (feeDto.isValidForCurrency(currencyId)) {
+    private List<org.mifos.dto.domain.FeeDto> getFilteredFeesByCurrency(List<org.mifos.dto.domain.FeeDto> defaultFees, Short currencyId) {
+        List<org.mifos.dto.domain.FeeDto> filteredFees = new ArrayList<org.mifos.dto.domain.FeeDto>();
+        for (org.mifos.dto.domain.FeeDto feeDto : defaultFees) {
+            if (feeDto.isValidForCurrency(currencyId.intValue())) {
                 filteredFees.add(feeDto);
             }
         }
