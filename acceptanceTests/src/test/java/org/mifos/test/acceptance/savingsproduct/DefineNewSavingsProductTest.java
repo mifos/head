@@ -51,7 +51,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"savingsproduct","acceptance", "ui"})
+@Test(sequential=true, groups={"savingsproduct","acceptance", "ui", "smoke"})
 @SuppressWarnings("PMD.SignatureDeclareThrowsException")
 public class DefineNewSavingsProductTest extends UiTestCaseBase {
 
@@ -89,72 +89,66 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
     // http://mifosforge.jira.com/browse/MIFOSTEST-139
     @Test(enabled=true)
     public void createVoluntarySavingsProductForCenters() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
         SavingsProductParameters params = savingsProductHelper.getGenericSavingsProductParameters(SavingsProductParameters.VOLUNTARY,SavingsProductParameters.CENTERS);
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
 
         confirmationPage.navigateToSavingsProductDetails();
-        createSavingAccountWithCreatedProduct("MyCenter1233266075715",params.getProductInstanceName(),"7777.8");
+        createSavingAccountWithCreatedProduct("Default Center", params.getProductInstanceName(), "7777.8");
     }
 
     // http://mifosforge.jira.com/browse/MIFOSTEST-137
     @Test(enabled=true)
     public void createVoluntarySavingsProductForGroups() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
 
         SavingsProductParameters params = savingsProductHelper.getGenericSavingsProductParameters(SavingsProductParameters.VOLUNTARY,SavingsProductParameters.GROUPS);
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
 
         confirmationPage.navigateToSavingsProductDetails();
-        createSavingAccountWithCreatedProduct("MyGroup1232993846342", params.getProductInstanceName(), "234.0");
+        createSavingAccountWithCreatedProduct("Default Group", params.getProductInstanceName(), "234.0");
     }
 
     // http://mifosforge.jira.com/browse/MIFOSTEST-1093
     @Test(enabled=true)
     public void createVoluntarySavingsProductForClients() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
 
         SavingsProductParameters params = savingsProductHelper.getGenericSavingsProductParameters(SavingsProductParameters.VOLUNTARY,SavingsProductParameters.CLIENTS);
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
 
         confirmationPage.navigateToSavingsProductDetails();
-        createSavingAccountWithCreatedProduct("Stu1233266079799 Client1233266079799",params.getProductInstanceName(),"200.0");
+        createSavingAccountWithCreatedProduct("Client - Mary Monthly",params.getProductInstanceName(),"200.0");
     }
 
     // http://mifosforge.jira.com/browse/MIFOSTEST-1094
     @Test(enabled=true)
     public void createMandatorySavingsProductForGroups() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
 
         SavingsProductParameters params = savingsProductHelper.getGenericSavingsProductParameters(SavingsProductParameters.MANDATORY,SavingsProductParameters.GROUPS);
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
 
         confirmationPage.navigateToSavingsProductDetails();
-        createSavingAccountWithCreatedProduct("MyGroup1232993846342",params.getProductInstanceName(),"534.0");
+        createSavingAccountWithCreatedProduct("Default Group",params.getProductInstanceName(),"534.0");
     }
 
     // http://mifosforge.jira.com/browse/MIFOSTEST-138
     @Test(enabled=true)
     public void createMandatorySavingsProductForClients() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
 
         SavingsProductParameters params = savingsProductHelper.getGenericSavingsProductParameters(SavingsProductParameters.MANDATORY,SavingsProductParameters.CLIENTS);
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
 
         confirmationPage.navigateToSavingsProductDetails();
-        createSavingAccountWithCreatedProduct("Stu1233266079799 Client1233266079799",params.getProductInstanceName(),"248.0");
+        createSavingAccountWithCreatedProduct("Client - Mary Monthly",params.getProductInstanceName(),"248.0");
     }
 
     // http://mifosforge.jira.com/browse/MIFOSTEST-1095
     @Test(enabled=true)
     public void createMandatorySavingsProductForCenters() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
 
         SavingsProductParameters params = savingsProductHelper.getGenericSavingsProductParameters(SavingsProductParameters.MANDATORY,SavingsProductParameters.CENTERS);
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
 
         confirmationPage.navigateToSavingsProductDetails();
-        createSavingAccountWithCreatedProduct("MyCenter1233266075715",params.getProductInstanceName(),"7777.8");
+        createSavingAccountWithCreatedProduct("Default Center",params.getProductInstanceName(),"7777.8");
     }
 
     //http://mifosforge.jira.com/browse/MIFOSTEST-712
@@ -292,11 +286,10 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
 
     private DepositWithdrawalSavingsParameters makeDefaultDeposit(DateTime date, DepositWithdrawalSavingsParameters depositParams, String savingsId) throws Exception {
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = date;
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
-        DepositWithdrawalSavingsParameters depositParamsreturn = setDepositParams(depositParams, Integer.toString(date.getDayOfMonth()), Integer.toString(date.getMonthOfYear()), Integer.toString(date.getYear()));
+        dateTimeUpdaterRemoteTestingService.setDateTime(date);
+        DepositWithdrawalSavingsParameters depositParamsReturn = setDepositParams(depositParams, String.valueOf(date.getDayOfMonth()), String.valueOf(date.getMonthOfYear()), String.valueOf(date.getYear()));
         savingsAccountHelper.makeDepositOrWithdrawalOnSavingsAccount(savingsId, depositParams);
-        return depositParamsreturn;
+        return depositParamsReturn;
     }
 
     private DepositWithdrawalSavingsParameters setDepositParams(DepositWithdrawalSavingsParameters depositParams,String dd, String mm, String yy){
