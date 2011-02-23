@@ -66,7 +66,6 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
-    @Test( groups = {"loan", "acceptance", "ui"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
     public void newWeeklyLSIMClientLoanAccount() throws Exception {
