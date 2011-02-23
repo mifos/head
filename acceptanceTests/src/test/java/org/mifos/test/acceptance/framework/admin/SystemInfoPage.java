@@ -52,7 +52,13 @@ public class SystemInfoPage extends MifosPage {
         try {
             date = dateFormat.parse(getDateTime());
         } catch (ParseException e) {
-            Logger.getLogger(getClass()).error("Error while parsing date format");
+            Logger.getLogger(getClass()).error("Error while parsing date format yy-MM-dd HH:mm" + getDateTime() + "trying other way.");
+            dateFormat = new SimpleDateFormat("dd-MM-yy HH:mm", Locale.getDefault());
+            try {
+                date = dateFormat.parse(getDateTime());
+            } catch (ParseException e1) {
+                Logger.getLogger(getClass()).error("Second Error while parsing date format  dd-MM-yy HH:mm" + getDateTime());
+            }
         }
         return date.getTime();
     }
