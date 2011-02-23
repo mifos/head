@@ -21,6 +21,7 @@
 package org.mifos.accounts.loan.struts.action;
 
 import static org.apache.commons.lang.StringUtils.isNotBlank;
+import static org.apache.commons.lang.StringUtils.isBlank;
 import static org.apache.commons.lang.StringUtils.isNotEmpty;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.ADDITIONAL_FEES_LIST;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.ADMINISTRATIVE_DOCUMENT_IS_ENABLED;
@@ -1448,13 +1449,13 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         setPerspectiveOnRequest(request);
         Integer customerId = (getCustomer(request)).getCustomerId();
         UserContext userContext = getUserContext(request);
-        
+
         LoanAccountInfoDto loanAccountInfo = createLoanAccountInfo(loanActionForm, getDisbursementDate(loanActionForm,
                 userContext.getPreferredLocale()),
                 customerId, loanActionForm.getLoanOfferingFundValue());
-        
+
         LoanAccountMeetingDto loanAccountMeetingDto = createAccountMeetingDto(loanActionForm);
-        
+
         LoanCreationResultDto loanCreationResultDto;
         String perspective = loanActionForm.getPerspective();
         if (isRedoOperation(perspective)) {
@@ -2137,11 +2138,24 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             storeObjectOnSessionForUseInJspPage(request, LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED, Integer.valueOf(1));
             storeObjectOnSessionForUseInJspPage(request, LoanConstants.LOANACCOUNTOWNERISACLIENT, LoanConstants.LOAN_ACCOUNT_OWNER_IS_GROUP_YES);
 
-            storeCollectionOnSessionForUseInJspPage(request, MeetingConstants.WEEKDAYSLIST, new FiscalCalendarRules().getWorkingDays());
+            storeCollectionOnSessionForUseInJspPage(request, MeetingConstants.WEEKDAYSLIST, fillWeekDaysWithLocalizedName(new FiscalCalendarRules().getWorkingDays()));
             storeCollectionOnSessionForUseInJspPage(request, MeetingConstants.WEEKRANKLIST, RankOfDay.getRankOfDayList());
 
             loanActionForm.setRecurMonth(recurMonth);
         }
+    }
+
+    private List<WeekDay> fillWeekDaysWithLocalizedName(List<WeekDay> weekDays) {
+        //FIXME localization from properties is being used
+        // When Application is started and LSIM is enabled then WeekDay.getName() remains empty causing the list of the weekdays on loan creation page to be 1,2,3..7 instead of names
+        // We have done localization of Months using Joda type in http://mifosforge.jira.com/browse/MIFOS-3970
+        // see the usage of WeekDay#setName and it initializes with empty name.
+        for(WeekDay weekDay : weekDays) {
+            if(isBlank(weekDay.getName())) {
+                weekDay.setWeekdayName(MessageLookup.getInstance().lookup(weekDay.getPropertiesKey()));
+            }
+        }
+        return weekDays;
     }
 
     @TransactionDemarcate(joinToken = true)
