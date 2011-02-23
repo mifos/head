@@ -79,7 +79,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
         submitAccountParameters.setAmount("9012.0");
         submitAccountParameters.setLsimFrequencyWeeks("on");
         submitAccountParameters.setLsimWeekFrequency("1");
-        submitAccountParameters.setLsimWeekDay("6");
+        submitAccountParameters.setLsimWeekDay("Friday");
 
         createLSIMLoanAndCheckAmountAndInstallmentDate(searchParameters, submitAccountParameters, expectedDate);
     }

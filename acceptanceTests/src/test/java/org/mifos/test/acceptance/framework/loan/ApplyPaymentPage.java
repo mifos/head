@@ -65,8 +65,8 @@ public class ApplyPaymentPage extends MifosPage {
 
     public void verifyModeOfPayments(){
         String[] modesOfPayment=selenium.getSelectOptions("applypayment.input.paymentType");
-        Assert.assertEquals(RepayLoanParameters.CASH,modesOfPayment[1]);
-        Assert.assertEquals(RepayLoanParameters.CHEQUE,modesOfPayment[2]);
-        Assert.assertEquals(RepayLoanParameters.VOUCHER,modesOfPayment[3]);
+        Assert.assertEquals(modesOfPayment[1], RepayLoanParameters.CASH);
+        Assert.assertEquals(modesOfPayment[2], RepayLoanParameters.CHEQUE);
+        Assert.assertEquals(modesOfPayment[3], RepayLoanParameters.VOUCHER);
     }
 }

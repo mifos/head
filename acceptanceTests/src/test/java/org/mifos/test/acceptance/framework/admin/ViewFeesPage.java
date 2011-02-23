@@ -35,14 +35,14 @@ public class ViewFeesPage extends MifosPage {
         return this;
     }
 
-    public void verifyProductFees(String expectedCellData, int row, int column) {
-        String actualCellData = selenium.getTable("productFeeTable." + row + "."+column);
-        Assert.assertTrue(actualCellData.contains(expectedCellData), "The client cell did not contain the expected data!");
+    public void verifyProductFees(String expectedCellData) {
+        String eval = selenium.getEval("window.document.getElementById('productFeeTable').innerHTML.indexOf(\"" + expectedCellData + "\")!=-1");
+        Assert.assertTrue(Boolean.parseBoolean(eval), "The client cell did not contain the expected data!");
     }
 
-    public void verifyClientFees(String expectedCellData, int row, int column) {
-        String actualCellData = selenium.getTable("clientFeeTable." + row + "."+column);
-        Assert.assertTrue(actualCellData.contains(expectedCellData), "The client cell did not contain the expected data!");
+    public void verifyClientFees(String expectedCellData) {
+        String eval = selenium.getEval("window.document.getElementById('clientFeeTable').innerHTML.indexOf(\"" + expectedCellData + "\")!=-1");
+        Assert.assertTrue(Boolean.parseBoolean(eval), "The client cell did not contain the expected data!");
     }
 
 }

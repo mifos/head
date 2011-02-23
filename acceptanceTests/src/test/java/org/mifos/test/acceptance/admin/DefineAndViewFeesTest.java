@@ -33,8 +33,8 @@ public class DefineAndViewFeesTest extends UiTestCaseBase {
     public void verifyViewFeesTableContentsTest() throws Exception {
         defineFee("ClientFee", "All Customers");
         defineFee("ProductFee", "Loans");
-        feesHelper.viewClientFees("ClientFee", 2, 1);
-        feesHelper.viewProductFees("ProductFee", 0, 1);
+        feesHelper.viewClientFees("ClientFee");
+        feesHelper.viewProductFees("ProductFee");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
