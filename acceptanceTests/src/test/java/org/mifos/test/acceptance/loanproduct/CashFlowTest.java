@@ -108,14 +108,14 @@ public class CashFlowTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void verifyCashFlowForNonVariableInstallmentLoan() throws Exception {
         applicationDatabaseOperation.updateLSIM(0);
         DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
         String minRc = "999.0";
         String warningThreshold = "89.99";
         createAndValidateLoanProductWithCashFlow(warningThreshold,formParameters, "49.99", minRc, false);
-        validateCashFlowForLoanAccount(formParameters, minRc, "900.79");
+        validateCashFlowForLoanAccount(formParameters, minRc, "998.1");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
@@ -150,14 +150,14 @@ public class CashFlowTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void verifyCashFlowForVariableInstallmentLoan() throws Exception {
         String minRC = "999.99";
         applicationDatabaseOperation.updateLSIM(1);
         DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
         createAndValidateLoanProductWithCashFlow("89.99",formParameters, "49.99", minRC, true);
-        validateCashFlowForLoanAccount(formParameters, minRC, "901.0");
-        verifyRepaymentCapacityOnValidate(formParameters, minRC, "901.0");
+        validateCashFlowForLoanAccount(formParameters, minRC, "998.34");
+        verifyRepaymentCapacityOnValidate(formParameters, minRC, "998.34");
     }
 
     /**
@@ -217,7 +217,7 @@ public class CashFlowTest extends UiTestCaseBase {
     private void validateCashFlowForLoanAccount(DefineNewLoanProductPage.SubmitFormParameters formParameters, String minRc, String expectedRc) {
         DateTime disbursalDate = systemDateTime.plusDays(1); //next week tuesday
         int installment = 5;
-        double cashFlowIncremental = 5695.0;
+        double cashFlowIncremental = 5685.0;
         String loanProductName = formParameters.getOfferingName();
         int frequency = formParameters.getFreqOfInstallments();
         verifyCashFlowForLoanAccount(disbursalDate, installment, cashFlowIncremental, loanProductName, frequency);
@@ -227,7 +227,7 @@ public class CashFlowTest extends UiTestCaseBase {
     private void verifyRepaymentCapacityOnValidate(DefineNewLoanProductPage.SubmitFormParameters formParameters, String minRc, String expectedRc) {
         DateTime disbursalDate = systemDateTime.plusDays(1); //next week tuesday
         int installment = 5;
-        int cashFlowIncremental = 5695;
+        int cashFlowIncremental = 5685;
         new NavigationHelper(selenium).navigateToHomePage();
         loanTestHelper.
                 navigateToCreateLoanAccountEntryPageWithoutLogout(clientName,formParameters.getOfferingName()).
@@ -267,7 +267,6 @@ public class CashFlowTest extends UiTestCaseBase {
                 enterValidData("100", cashFlowIncremental, 100, "7003", "1000").
                 clickContinue().
                 verifyCashFlow(cashFlowIncremental, loanAmount).
-                // TODO - there is something wrong with pages here
                 clickPreview().
                 verifyPage("SchedulePreview");
 
