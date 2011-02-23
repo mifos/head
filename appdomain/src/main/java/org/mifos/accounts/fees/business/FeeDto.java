@@ -31,23 +31,30 @@ import org.mifos.customers.api.DataTransferObject;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.security.util.UserContext;
 
-/**
- * @deprecated - use {@link org.mifos.accounts.fees.servicefacade.FeeDto}
- */
-@Deprecated
+/** FIXME: resolve/collapse with {@link org.mifos.accounts.fees.servicefacade.FeeDto}. */
 public class FeeDto implements DataTransferObject {
-    
-	private String feeId;
+    private String feeId;
+
     private String feeName;
+
     private String amount;
+
     private Short currencyId;
+
     private boolean periodic;
+
     private String feeSchedule;
+
     private Short feeRemoved;
+
     private String feeFormula;
+
     private Short localeId;
+
     private RateAmountFlag feeType;
+
     private RecurrenceType frequencyType;
+
     private FeeFormula feeFormulaValue;
 
     public FeeDto() {

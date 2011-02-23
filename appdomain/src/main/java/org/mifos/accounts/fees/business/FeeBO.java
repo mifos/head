@@ -44,7 +44,6 @@ import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
-import org.mifos.config.AccountingRules;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.framework.business.AbstractBusinessObject;
@@ -318,7 +317,7 @@ public abstract class FeeBO extends AbstractBusinessObject {
     public boolean isWeekly() {
         return this.feeFrequency.getFeeMeetingFrequency().isWeekly();
     }
-	
+
     public FeeDto toDto() {
         FeeDto feeDto = new FeeDto();
         feeDto.setId(Short.toString(this.feeId));
@@ -344,7 +343,7 @@ public abstract class FeeBO extends AbstractBusinessObject {
         feeDto.setTimeOfDisbursement(isTimeOfDisbursement());
 
         if (this instanceof AmountFeeBO) {
-            feeDto.setAmount(((AmountFeeBO) this).getFeeAmount().toString(AccountingRules.getDigitsAfterDecimal()));
+            feeDto.setAmount(((AmountFeeBO) this).getFeeAmount());
             feeDto.setRateBasedFee(false);
         } else {
             RateFeeBO rateFeeBo = (RateFeeBO) this;
@@ -354,6 +353,8 @@ public abstract class FeeBO extends AbstractBusinessObject {
         }
         return feeDto;
     }
+
+
 
     @Override
     public boolean equals(Object obj) {

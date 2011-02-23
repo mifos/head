@@ -22,7 +22,6 @@ package org.mifos.dto.screen;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -47,20 +46,16 @@ public class LoanCreationLoanDetailsDto implements Serializable {
 	private final String interestRateType;
 	private final boolean principalDueOnLastInstallment;
 	
-	private final Map<String, String> productOptions = new LinkedHashMap<String, String>();
-	private final Map<String, String> fundOptions = new LinkedHashMap<String, String>();
-	private final Map<String, String> purposeOfLoanOptions;
-	private final Map<String, String> collateralOptions;
-	private final Map<String, String> defaultFeeOptions;
-	private final Map<String, String> additionalFeeOptions;
-	
+	private final Map<String, String> productOptions = new HashMap<String, String>();
+	private final Map<String, String> fundOptions = new HashMap<String, String>();
+	private final Map<String, String> purposeOfLoanOptions = new HashMap<String, String>();
+	private final Map<String, String> collateralOptions = new HashMap<String, String>();
 	private final List<FundDto> fundDtos;
 
 	public LoanCreationLoanDetailsDto(boolean isRepaymentIndependentOfMeetingEnabled,
             MeetingDto loanOfferingMeetingDetail, MeetingDto customerMeetingDetail,
             List<ValueListElement> loanPurposes, ProductDetailsDto productDto, CustomerDetailDto customerDetailDto, List<PrdOfferingDto> loanProductDtos, 
-            String interestRateType, boolean principalDueOnLastInstallment, List<FundDto> fundDtos, HashMap<String, String> collateralOptions, 
-            HashMap<String, String> purposeOfLoanOptions, Map<String, String> defaultFeeOptions, Map<String, String> additionalFeeOptions) {
+            String interestRateType, boolean principalDueOnLastInstallment, List<FundDto> fundDtos) {
         this.isRepaymentIndependentOfMeetingEnabled = isRepaymentIndependentOfMeetingEnabled;
         this.loanOfferingMeetingDetail = loanOfferingMeetingDetail;
         this.customerMeetingDetail = customerMeetingDetail;
@@ -73,10 +68,6 @@ public class LoanCreationLoanDetailsDto implements Serializable {
 		this.fundDtos = fundDtos;
 		populateProductOptions(loanProductDtos);
 		populateFundOptions(fundDtos);
-		this.collateralOptions = collateralOptions;
-		this.purposeOfLoanOptions = purposeOfLoanOptions;
-		this.defaultFeeOptions = defaultFeeOptions;
-		this.additionalFeeOptions = additionalFeeOptions;
     }
 	
     private void populateFundOptions(List<FundDto> funds) {
@@ -145,13 +136,5 @@ public class LoanCreationLoanDetailsDto implements Serializable {
 
 	public List<FundDto> getFundDtos() {
 		return fundDtos;
-	}
-	
-	public Map<String, String> getDefaultFeeOptions() {
-		return defaultFeeOptions;
-	}
-
-	public Map<String, String> getAdditionalFeeOptions() {
-		return additionalFeeOptions;
 	}
 }

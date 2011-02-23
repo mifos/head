@@ -124,7 +124,6 @@ import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
-import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.Localization;
@@ -1947,7 +1946,7 @@ public class TestObjectFactory {
         feeStatus.setId(statusId);
         fee.setFeeStatus(feeStatus);
         fee.setRateBasedFee(false);
-        fee.setAmount(TestUtils.createMoney(amount).toString(AccountingRules.getDigitsAfterDecimal()));
+        fee.setAmount(TestUtils.createMoney(amount));
         fee.setId(feeId);
         return fee;
     }
