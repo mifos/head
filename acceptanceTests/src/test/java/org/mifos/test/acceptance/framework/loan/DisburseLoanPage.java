@@ -58,6 +58,19 @@ public class DisburseLoanPage extends MifosPage {
         return new DisburseLoanConfirmationPage(selenium);
     }
 
+    public void submitWithWrongParams(DisburseLoanParameters params, String msg) {
+        this.typeTextIfNotEmpty("transactionDateDD", params.getDisbursalDateDD());
+        this.typeTextIfNotEmpty("transactionDateMM", params.getDisbursalDateMM());
+        this.typeTextIfNotEmpty("transactionDateYY", params.getDisbursalDateYYYY());
+
+        selenium.select("DisburseLoan.input.paymentType", "value=" + params.getPaymentTypeValue());
+
+        selenium.click("DisburseLoan.button.reviewTransaction");
+
+        waitForPageToLoad();
+        Assert.assertTrue(selenium.isElementPresent("//span[@id='DisburseLoan.error.message']/li[text()='"+msg+"']"));
+    }
+
     public void verifyPaymentModeOfPaymentIsEditable(String message) {
         Assert.assertTrue(selenium.isEditable("paymentModeOfPayment"), message);
     }
