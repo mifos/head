@@ -107,11 +107,53 @@
         [@form.label "fundId" false][@spring.message "createLoanAccount.sourceOfFund" /][/@form.label]
         [@form.singleSelectWithPrompt path="loanAccountFormBean.fundId" options=loanProductReferenceData.fundOptions selectPrompt="selectPrompt" /]
     </div>
+
+    <div class="row">
+        [@form.label "loanPurposeId" false][@spring.message "createLoanAccount.purposeOfLoan" /][/@form.label]
+        [@form.singleSelectWithPrompt path="loanAccountFormBean.loanPurposeId" options=loanProductReferenceData.purposeOfLoanOptions selectPrompt="selectPrompt" /]
+    </div>
+    
+    <div class="row">
+        [@form.label "collateralTypeId" false][@spring.message "createLoanAccount.collateralType" /][/@form.label]
+        [@form.singleSelectWithPrompt path="loanAccountFormBean.collateralTypeId" options=loanProductReferenceData.collateralOptions selectPrompt="selectPrompt" /]
+    </div>
+    
+    <div class="row">
+        [@form.label "collateralNotes" false][@spring.message "createLoanAccount.collateralNotes" /][/@form.label]
+        [@spring.bind "loanAccountFormBean.collateralNotes" /]
+        <textarea name="${spring.status.expression}" rows="4" cols="50" maxlength="200">${spring.status.value?if_exists}</textarea>
+    </div>
+    
+    <div class="row">
+        [@form.label "externalId" false /][@spring.message "createLoanAccount.externalId"/]
+        [@form.input path="loanAccountFormBean.externalId" id="externalId" /]
+    </div>
     
     <p><span class="standout">[@spring.message "createLoanAccount.enterAccountInfo.defaultfees.header" /]</span></p>
     
+    <br />
     <p><span class="standout">[@spring.message "createLoanAccount.enterAccountInfo.additionalfees.header" /]</span></p>
     
+
+<!-- additional fees -->    
+    [@form.label "selectedFeeId[1]" false][@spring.message "createLoanAccount.feeType" /][/@form.label]
+    [@form.singleSelectWithPrompt path="loanAccountFormBean.selectedFeeId[0]" options=loanProductReferenceData.additionalFeeOptions selectPrompt="selectPrompt" /]
+    
+    [@form.label "selectedFeeId0Amount" false][@spring.message "createLoanAccount.feeAmount" /][/@form.label]
+    [@form.input path="loanAccountFormBean.selectedFeeAmount[0]" id="selectedFeeId0Amount" /]
+
+	[@form.label "selectedFeeId[1]" false][@spring.message "createLoanAccount.feeType" /][/@form.label]
+    [@form.singleSelectWithPrompt path="loanAccountFormBean.selectedFeeId[1]" options=loanProductReferenceData.additionalFeeOptions selectPrompt="selectPrompt" /]
+    
+    [@form.label "selectedFeeId1Amount" false][@spring.message "createLoanAccount.feeAmount" /][/@form.label]
+    [@form.input path="loanAccountFormBean.selectedFeeAmount[1]" id="selectedFeeId1Amount" /]
+    
+    [@form.label "selectedFeeId[2]" false][@spring.message "createLoanAccount.feeType" /][/@form.label]
+    [@form.singleSelectWithPrompt path="loanAccountFormBean.selectedFeeId[2]" options=loanProductReferenceData.additionalFeeOptions selectPrompt="selectPrompt" /]
+    
+    [@form.label "selectedFeeId2Amount" false][@spring.message "createLoanAccount.feeAmount" /][/@form.label]
+    [@form.input path="loanAccountFormBean.selectedFeeAmount[2]" id="selectedFeeId2Amount" /]
+
     </fieldset>
     <div class="row webflow-controls">
         [@form.submitButton label="widget.form.buttonLabel.continue" id="continuecreateloanaccount.button.preview" webflowEvent="detailsEntered" /]
@@ -121,7 +163,7 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
-    $('select').change(function(e) {
+    $('#productId').change(function(e) {
         $(this).closest('form').submit();
     });
 });

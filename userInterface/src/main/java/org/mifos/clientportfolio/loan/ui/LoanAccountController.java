@@ -71,6 +71,21 @@ public class LoanAccountController {
     	formBean.setDisbursalDateMonth(today.getMonthOfYear());
     	formBean.setDisbursalDateYear(today.getYearOfEra());
     	
+    	formBean.setCollateralNotes("");
+    	
+    	String[] selectedFeeId = new String[3];
+    	selectedFeeId[0] = "";
+    	selectedFeeId[1] = "";
+    	selectedFeeId[2] = "";
+    	
+		formBean.setSelectedFeeId(selectedFeeId);
+		
+		String[] selectedFeeAmount = new String[3];
+		selectedFeeAmount[0] = "";
+		selectedFeeAmount[1] = "";
+		selectedFeeAmount[2] = "";
+		formBean.setSelectedFeeAmount(selectedFeeAmount);
+    	
     	return dto;
     }
 }
