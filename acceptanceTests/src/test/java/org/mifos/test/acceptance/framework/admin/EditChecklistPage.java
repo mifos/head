@@ -20,35 +20,29 @@
 
 package org.mifos.test.acceptance.framework.admin;
 
-import java.util.HashMap;
-import java.util.Map;
 
-public class DefineLabelsParameters {
+import org.mifos.test.acceptance.framework.MifosPage;
 
-    public static final String CITIZENSHIP = "citizenship";
-    public static final String GOVERNMENT_ID = "govtId";
-    public static final String STATE = "state";
-    public static final String POSTAL_CODE = "postalCode";
+import com.thoughtworks.selenium.Selenium;
 
-    private Map<String, String> labelMap = new HashMap<String, String>();
+public class EditChecklistPage extends MifosPage {
 
-    public void setLabelMap(Map<String, String> labelMap) {
-        this.labelMap = labelMap;
+    public EditChecklistPage(Selenium selenium) {
+        super(selenium);
+        verifyPage("manage_checkList");
     }
 
-    public Map<String, String> getLabelMap() {
-        return labelMap;
+    private void submit() {
+        selenium.click("manageCheckList.button.preview");
+        waitForPageToLoad();
     }
 
-    public void setLabel(String label, String text) {
-        this.labelMap.put(label, text);
-    }
+    public EditChecklistPreviewPage fillFormAndNavigateToPreviewPage(DefineChecklistParameters checklistParams) {
+        typeTextIfNotEmpty("checklistName", checklistParams.getName());
+        selectIfNotEmpty("stateId", checklistParams.getDisplayedWhenMovingIntoStatus());
+        selectIfNotEmpty("checklistStatus", checklistParams.getStatus());
 
-    public String[] getKeys() {
-        return this.labelMap.keySet().toArray(new String[0]);
-    }
-
-    public String getLabelText(String label) {
-        return this.labelMap.get(label);
+        submit();
+        return new EditChecklistPreviewPage(selenium);
     }
 }

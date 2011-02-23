@@ -79,7 +79,6 @@ public class SystemInfoDateTimeTest extends UiTestCaseBase {
         systemInfoPage.verifyDateTime(targetTime);
     }
 
-    @Test(enabled=false)
     public void verifyDateTimeAndTimeZone() throws UnsupportedEncodingException {
         DateTimeZone dateTimeZone = DateTimeZone.forOffsetHours(1);
         DateTime targetTime = new DateTime(2008,1,1,0,0,0,0);

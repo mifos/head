@@ -20,35 +20,29 @@
 
 package org.mifos.test.acceptance.framework.admin;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.junit.Assert;
+import org.mifos.test.acceptance.framework.MifosPage;
 
-public class DefineLabelsParameters {
+import com.thoughtworks.selenium.Selenium;
 
-    public static final String CITIZENSHIP = "citizenship";
-    public static final String GOVERNMENT_ID = "govtId";
-    public static final String STATE = "state";
-    public static final String POSTAL_CODE = "postalCode";
+public class ChecklistDetailsPage extends MifosPage {
 
-    private Map<String, String> labelMap = new HashMap<String, String>();
-
-    public void setLabelMap(Map<String, String> labelMap) {
-        this.labelMap = labelMap;
+    public ChecklistDetailsPage(Selenium selenium) {
+        super(selenium);
+        verifyPage("checklistDetails");
     }
 
-    public Map<String, String> getLabelMap() {
-        return labelMap;
+    public EditChecklistPage navigateToEditChecklistPage() {
+        selenium.click("checklistDetails.link.edit");
+        waitForPageToLoad();
+        return new EditChecklistPage(selenium);
     }
 
-    public void setLabel(String label, String text) {
-        this.labelMap.put(label, text);
+    public void verifyName(String checklistName) {
+        Assert.assertEquals(getName(), checklistName);
     }
 
-    public String[] getKeys() {
-        return this.labelMap.keySet().toArray(new String[0]);
-    }
-
-    public String getLabelText(String label) {
-        return this.labelMap.get(label);
+    private String getName() {
+        return selenium.getText("checklistDetails.text.name");
     }
 }

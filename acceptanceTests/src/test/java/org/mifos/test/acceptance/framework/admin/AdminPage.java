@@ -74,6 +74,18 @@ public class AdminPage extends MifosPage {
         return new DefineLookupOptionsPage(selenium);
     }
 
+    public ViewChecklistsPage navigateToViewChecklistsPage() {
+        selenium.click("admin.link.viewChecklists");
+        waitForPageToLoad();
+        return new ViewChecklistsPage(selenium);
+    }
+
+    public DefineNewChecklistPage navigateToDefineNewChecklistPage() {
+        selenium.click("admin.link.defineNewChecklist");
+        waitForPageToLoad();
+        return new DefineNewChecklistPage(selenium);
+    }
+
     public ViewHolidaysPage navigateToViewHolidaysPage() {
         selenium.click("admin.link.viewHolidays");
         waitForPageToLoad();
