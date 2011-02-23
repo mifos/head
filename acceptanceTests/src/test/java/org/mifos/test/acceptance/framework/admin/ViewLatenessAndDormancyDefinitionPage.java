@@ -29,18 +29,37 @@ import com.thoughtworks.selenium.Selenium;
 public class ViewLatenessAndDormancyDefinitionPage extends MifosPage {
     public ViewLatenessAndDormancyDefinitionPage(Selenium selenium) {
         super(selenium);
-    }
-
-    public ViewLatenessAndDormancyDefinitionPage verifyPage() {
         verifyPage("view_lateness_and_dormancy_definition");
-        return this;
-
     }
 
-    public void verifyText(String[] expectedData) {
-        for (String expectedText : expectedData) {
-            Assert.assertTrue(selenium.isTextPresent(expectedText), "Expected text: " + expectedText);
-        }
+    public AdminPage submitAndNavigateToAdminPage(String lateness, String dormancy){
+        fillFromAndSubmit(lateness,dormancy);
+        return new AdminPage(selenium);
+    }
+
+    public ViewLatenessAndDormancyDefinitionPage submitWithInvalidData(String lateness, String dormancy){
+        fillFromAndSubmit(lateness,dormancy);
+        return new ViewLatenessAndDormancyDefinitionPage(selenium);
+    }
+
+    public void verifyLatenessAndDormancy(String lateness, String dormancy){
+        Assert.assertEquals(selenium.getValue("lateness"),lateness);
+        Assert.assertEquals(selenium.getValue("dormancy"),dormancy);
+    }
+
+    public void verifyIsLatenessErrorDisplayed(boolean flag){
+        Assert.assertEquals(selenium.getText("class=error").contains("Please specify valid lateness days."), flag);
+    }
+
+    public void verifyIsDormancyErrorDisplayed(boolean flag){
+        Assert.assertEquals(selenium.getText("class=error").contains("Please specify valid dormancy days."), flag);
+    }
+
+    private void fillFromAndSubmit(String lateness, String dormancy){
+        selenium.type("lateness", lateness);
+        selenium.type("dormancy", dormancy);
+        selenium.click("name=submit");
+        waitForPageToLoad();
     }
 }
 
