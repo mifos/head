@@ -47,7 +47,7 @@ import java.sql.SQLException;
 
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(sequential = true, groups = {"loanproduct", "acceptance", "ui", "smoke"})
+@Test(sequential = true, groups = {"loanproduct", "acceptance", "ui"})
 public class DecliningPrincipleLoanTest extends UiTestCaseBase {
 
     @Autowired

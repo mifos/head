@@ -38,7 +38,7 @@ import org.testng.annotations.Test;
 
 @SuppressWarnings("PMD")
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"smoke","loan","acceptance","ui"})
+@Test(sequential=true, groups={"loan","acceptance","ui"})
 public class CreateMultipleLoanAccountsWithFeesTest extends UiTestCaseBase {
 
     private LoanProductTestHelper loanProductTestHelper;

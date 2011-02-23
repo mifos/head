@@ -52,7 +52,7 @@ import org.testng.annotations.Test;
 
 @SuppressWarnings("PMD")
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"smoke","holiday","acceptance","ui"})
+@Test(sequential=true, groups={"holiday","acceptance","ui"})
 public class HolidayTest extends UiTestCaseBase {
 
     private LoanTestHelper loanTestHelper;

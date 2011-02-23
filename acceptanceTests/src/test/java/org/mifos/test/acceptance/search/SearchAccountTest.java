@@ -33,7 +33,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"smoke","search","acceptance"})
+@Test(sequential = true, groups = {"search","acceptance"})
 public class SearchAccountTest extends SearchTestBase {
     /**
      * Account number to use in search
@@ -55,13 +55,13 @@ public class SearchAccountTest extends SearchTestBase {
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
-    @BeforeMethod
+    @BeforeMethod(alwaysRun = true)
     public void setUp() throws Exception {
         super.setUp();
         appLauncher = new AppLauncher(selenium);
     }
 
-    @AfterMethod
+    @AfterMethod(alwaysRun = true)
     public void tearDown() {
         (new MifosPage(selenium)).logout();
     }
@@ -72,6 +72,7 @@ public class SearchAccountTest extends SearchTestBase {
      * is present on the results page
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(sequential = true, groups = { "smoke", "search", "acceptance" })
     public void searchAccountTest()  throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities,
                 dataFileName,

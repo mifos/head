@@ -36,7 +36,7 @@ import org.mifos.framework.util.DbUnitUtilities;
 
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"admin","acceptance","ui", "smoke"})
+@Test(sequential = true, groups = {"admin","acceptance","ui"})
 public class DefineNewOfficeTest extends UiTestCaseBase {
 
     private NavigationHelper navigationHelper;
