@@ -46,8 +46,64 @@ public class LoanAccountFormBean implements Serializable {
     private Number graceDuration = Integer.valueOf(0);
     
     private Integer fundId;
+    private Integer loanPurposeId;
+    private Integer collateralTypeId;
+    private String collateralNotes;
+    private String externalId;
     
-    public Integer getFundId() {
+    private String[] selectedFeeId;
+    private String[] selectedFeeAmount;
+    
+    
+    public String[] getSelectedFeeId() {
+		return selectedFeeId;
+	}
+
+	public void setSelectedFeeId(String[] selectedFeeId) {
+		this.selectedFeeId = selectedFeeId;
+	}
+
+	public String[] getSelectedFeeAmount() {
+		return selectedFeeAmount;
+	}
+
+	public void setSelectedFeeAmount(String[] selectedFeeAmount) {
+		this.selectedFeeAmount = selectedFeeAmount;
+	}
+
+	public String getExternalId() {
+		return externalId;
+	}
+
+	public void setExternalId(String externalId) {
+		this.externalId = externalId;
+	}
+
+	public String getCollateralNotes() {
+		return collateralNotes;
+	}
+
+	public void setCollateralNotes(String collateralNotes) {
+		this.collateralNotes = collateralNotes;
+	}
+
+	public Integer getLoanPurposeId() {
+		return loanPurposeId;
+	}
+
+	public void setLoanPurposeId(Integer loanPurposeId) {
+		this.loanPurposeId = loanPurposeId;
+	}
+
+	public Integer getCollateralTypeId() {
+		return collateralTypeId;
+	}
+
+	public void setCollateralTypeId(Integer collateralTypeId) {
+		this.collateralTypeId = collateralTypeId;
+	}
+
+	public Integer getFundId() {
 		return fundId;
 	}
 

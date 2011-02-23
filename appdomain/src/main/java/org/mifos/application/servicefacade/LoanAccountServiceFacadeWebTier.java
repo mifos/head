@@ -27,8 +27,11 @@ import static org.mifos.framework.util.CollectionUtils.collect;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
@@ -395,18 +398,41 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         UserContext userContext = toUserContext(user);
 
         try {
-            List<FeeDto> additionalFees = new ArrayList<FeeDto>();
-            List<FeeDto> defaultFees = new ArrayList<FeeDto>();
-
-            new LoanProductService(new LoanPrdBusinessService()).getDefaultAndAdditionalFees(productId, userContext,
-                    defaultFees, additionalFees);
+            List<org.mifos.accounts.fees.servicefacade.FeeDto> additionalFees = new ArrayList<org.mifos.accounts.fees.servicefacade.FeeDto>();
+            List<org.mifos.accounts.fees.servicefacade.FeeDto> defaultFees = new ArrayList<org.mifos.accounts.fees.servicefacade.FeeDto>();
 
             LoanOfferingBO loanProduct = this.loanProductDao.findById(productId.intValue());
+            
+            MeetingBO loanProductMeeting = loanProduct.getLoanOfferingMeetingValue();
+            
+            List<FeeBO> fees = this.feeDao.getAllAppllicableFeeForLoanCreation();
+            
+            for (FeeBO fee : fees) {
+                if (!fee.isPeriodic() || (MeetingBO.isMeetingMatched(fee.getFeeFrequency().getFeeMeetingFrequency(), loanProductMeeting))) {
+
+                	org.mifos.accounts.fees.servicefacade.FeeDto feeDto = fee.toDto();
+                    if (loanProduct.isFeePresent(fee)) {
+                        defaultFees.add(feeDto);
+                    } else {
+                        additionalFees.add(feeDto);
+                    }
+                }
+            }
 
             if (AccountingRules.isMultiCurrencyEnabled()) {
                 defaultFees = getFilteredFeesByCurrency(defaultFees, loanProduct.getCurrency().getCurrencyId());
                 additionalFees = getFilteredFeesByCurrency(additionalFees, loanProduct.getCurrency().getCurrencyId());
             }
+            
+            Map<String, String> defaultFeeOptions = new LinkedHashMap<String, String>();
+            for (org.mifos.accounts.fees.servicefacade.FeeDto feeDto : defaultFees) {
+            	defaultFeeOptions.put(feeDto.getId(), feeDto.getName());
+			}
+            
+            Map<String, String> additionalFeeOptions = new LinkedHashMap<String, String>();
+            for (org.mifos.accounts.fees.servicefacade.FeeDto feeDto : additionalFees) {
+            	additionalFeeOptions.put(feeDto.getId(), feeDto.getName());
+			}
 
             // setDateIntoForm
             CustomerBO customer = this.customerDao.findCustomerById(customerId);
@@ -415,12 +441,22 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             LoanOfferingInstallmentRange eligibleNoOfInstall = loanProduct.eligibleNoOfInstall(customer
                     .getMaxLoanAmount(loanProduct), customer.getMaxLoanCycleForProduct(loanProduct));
 
+            
+            HashMap<String, String> collateralOptions = new LinkedHashMap<String, String>();
+            HashMap<String, String> purposeOfLoanOptions = new LinkedHashMap<String, String>();
+            
             CustomValueDto customValueDto = legacyMasterDao.getLookUpEntity(MasterConstants.COLLATERAL_TYPES);
             List<CustomValueListElementDto> collateralTypes = customValueDto.getCustomValueListElements();
+            for (CustomValueListElementDto element : collateralTypes) {
+            	collateralOptions.put(element.getId().toString(), element.getName());
+			}
 
             // Business activities got in getPrdOfferings also but only for glim.
             List<ValueListElement> loanPurposes = legacyMasterDao.findValueListElements(MasterConstants.LOAN_PURPOSES);
-
+            for (ValueListElement element : loanPurposes) {
+            	purposeOfLoanOptions.put(element.getId().toString(), element.getName());
+			}
+            
             MeetingDto loanOfferingMeetingDto = loanProduct.getLoanOfferingMeetingValue().toDto();
 
             List<FundDto> fundDtos = new ArrayList<FundDto>();
@@ -448,12 +484,8 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             
             return new LoanCreationLoanDetailsDto(isRepaymentIndependentOfMeetingEnabled, loanOfferingMeetingDto,
                     customer.getCustomerMeetingValue().toDto(), loanPurposes, productDto, customerDetailDto, loanProductDtos, 
-                    interestTypeName, loanProduct.isPrinDueLastInst(), fundDtos);
+                    interestTypeName, loanProduct.isPrinDueLastInst(), fundDtos, collateralOptions, purposeOfLoanOptions, defaultFeeOptions, additionalFeeOptions);
 
-        } catch (ServiceException e) {
-            throw new MifosRuntimeException(e);
-        } catch (PersistenceException e) {
-            throw new MifosRuntimeException(e);
         } catch (SystemException e) {
             throw new MifosRuntimeException(e);
         }
@@ -476,9 +508,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         return funds;
     }
 
-    private List<FeeDto> getFilteredFeesByCurrency(List<FeeDto> defaultFees, Short currencyId) {
-        List<FeeDto> filteredFees = new ArrayList<FeeDto>();
-        for (FeeDto feeDto : defaultFees) {
+    private List<org.mifos.accounts.fees.servicefacade.FeeDto> getFilteredFeesByCurrency(List<org.mifos.accounts.fees.servicefacade.FeeDto> defaultFees, Short currencyId) {
+        List<org.mifos.accounts.fees.servicefacade.FeeDto> filteredFees = new ArrayList<org.mifos.accounts.fees.servicefacade.FeeDto>();
+        for (org.mifos.accounts.fees.servicefacade.FeeDto feeDto : defaultFees) {
             if (feeDto.isValidForCurrency(currencyId)) {
                 filteredFees.add(feeDto);
             }

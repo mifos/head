@@ -25,49 +25,28 @@ import java.io.Serializable;
 import org.mifos.accounts.financial.servicefacade.GLCodeDto;
 import org.mifos.framework.util.helpers.Money;
 
-/** FIXME: resolve/collapse with {@link org.mifos.accounts.fees.business.FeeDto}. */
 public class FeeDto implements Serializable {
 
     private String id;
-
     private String name;
-
     private String status;
-
     private String categoryType;
-
     private String glCode;
-
-    private Money amount;
-
+    private String amount;
     private FeeFrequencyDto feeFrequency;
-
     private FeeStatusDto feeStatus;
-
     private Short changeType;
-
     private String feeFrequencyType;
-
     private GLCodeDto glCodeDto;
-
     private Double rate;
-
-    private Money feeAmount;
-
+    private String feeAmount;
     private boolean rateBasedFee;
-
     private boolean active;
-
     private boolean loanCategoryType;
-
     private boolean customerDefaultFee;
-
     private boolean oneTime;
-
     private boolean periodic;
-
     private boolean timeOfDisbursement;
-
     private FeeFormulaDto feeFormula;
 
     public void setId(String id) {
@@ -134,11 +113,11 @@ public class FeeDto implements Serializable {
         this.glCodeDto = glCodeDto;
     }
 
-    public Money getFeeAmount() {
+    public String getFeeAmount() {
         return this.feeAmount;
     }
 
-    public void setFeeAmount(Money feeAmount) {
+    public void setFeeAmount(String feeAmount) {
         this.feeAmount = feeAmount;
     }
 
@@ -182,11 +161,11 @@ public class FeeDto implements Serializable {
         return rate;
     }
 
-    public void setAmount(Money amount) {
+    public void setAmount(String amount) {
         this.amount = amount;
     }
 
-    public Money getAmount() {
+    public String getAmount() {
         return amount;
     }
 
@@ -240,4 +219,8 @@ public class FeeDto implements Serializable {
     public FeeFormulaDto getFeeFormula() {
         return feeFormula;
     }
+
+	public boolean isValidForCurrency(Short currencyId) {
+		return false;
+	}
 }
