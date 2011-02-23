@@ -25,9 +25,14 @@ public class LoanProductTestHelper {
     }
 
     public DefineNewLoanProductConfirmationPage defineNewLoanProduct(
-            DefineNewLoanProductPage.SubmitFormParameters formParameters) {
-        return navigateToDefineNewLoanProductPage().fillLoanParameters(formParameters)
-                .submitAndGotoNewLoanProductPreviewPage().submit();
+            DefineNewLoanProductPage.SubmitFormParameters formParameters, String... fees) {
+        DefineNewLoanProductPage productPage = navigateToDefineNewLoanProductPage().fillLoanParameters(formParameters);
+        if (fees != null) {
+            for (String feeName : fees) {
+                productPage.addFee(feeName);
+            }
+        }
+        return productPage.submitAndGotoNewLoanProductPreviewPage().submit();
     }
 
     public DefineNewLoanProductPage navigateToDefineNewLoanProductPage() {

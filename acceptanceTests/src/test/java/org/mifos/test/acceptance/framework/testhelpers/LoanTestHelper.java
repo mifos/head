@@ -686,7 +686,7 @@ public class LoanTestHelper {
         return createLoanAccountsEntryPage.submitAndNavigateToCreateMultipleLoanAccountsSuccessPage();
     }
 
-    public void createMultipleLoanAccountsAndVerify(CreateMultipleLoanAccountSelectParameters multipleAccParameters, String[] clients, String loanPurpose, Boolean saveMethod) {
+    public void createMultipleLoanAccountsAndVerify(CreateMultipleLoanAccountSelectParameters multipleAccParameters, String[] clients, String loanPurpose, String feeAmount, Boolean saveMethod) {
 
         String [] clientsInstallments = loanProductTestHelper.getDefaultNoOfInstallmentsForClients(clients, multipleAccParameters.getLoanProduct());
         CreateLoanAccountsEntryPage createLoanAccountsEntryPage = navigationHelper.navigateToClientsAndAccountsPage()
@@ -718,6 +718,7 @@ public class LoanTestHelper {
                 else{
                     loanAccountPage.verifyLoanStatus(AccountStatus.LOAN_PARTIAL.getStatusText());
                 }
+                Assert.assertEquals(loanAccountPage.getOriginalFeesAmount(), feeAmount, "Bulk loan creation ignores default fees");
                 loanAccountPage.verifyNumberOfInstallments(clientsInstallments[i]);
             }
         }
