@@ -24,11 +24,13 @@ import java.util.List;
 
 import org.joda.time.LocalDate;
 import org.mifos.application.servicefacade.LoanAccountServiceFacade;
+import org.mifos.clientportfolio.loan.service.CreateLoanSchedule;
 import org.mifos.dto.domain.CustomerSearchDto;
 import org.mifos.dto.domain.CustomerSearchResultDto;
 import org.mifos.dto.screen.CustomerSearchResultsDto;
 import org.mifos.dto.screen.LoanCreationLoanDetailsDto;
 import org.mifos.dto.screen.LoanCreationProductDetailsDto;
+import org.mifos.dto.screen.LoanScheduleDto;
 import org.mifos.dto.screen.SearchDetailsDto;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,5 +104,16 @@ public class LoanAccountController {
     
     public void loadQuestionGroups(LoanAccountQuestionGroupFormBean loanAccountQuestionGroupFormBean) {
         loanAccountQuestionGroupFormBean.setQuestionGroups(questionnaireServiceFacade.getQuestionGroups("Create", "Loan"));
+    }
+    
+    public LoanScheduleDto retrieveLoanSchedule(int customerId, int productId, LoanAccountFormBean formBean) {
+        
+        LocalDate disbursementDate = new LocalDate().withDayOfMonth(formBean.getDisbursalDateDay().intValue())
+                                                    .withMonthOfYear(formBean.getDisbursalDateMonth().intValue())
+                                                    .withYearOfEra(formBean.getDisbursalDateYear().intValue());
+        
+        CreateLoanSchedule createLoanAccount = new CreateLoanSchedule(customerId, productId, formBean.getAmount().toString(), formBean.getInterestRate().doubleValue(), disbursementDate, formBean.getNumberOfInstallments().intValue());
+        
+        return loanAccountServiceFacade.createLoanSchedule(createLoanAccount);
     }
 }

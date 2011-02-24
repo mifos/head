@@ -53,6 +53,15 @@
         <transition on="detailsEntered" to="checkIfQuestionGroupsExistForLoanCreation" />
     </view-state>
     
+    <!-- when editing, dont go through question groups step and just use data already in form bean -->
+    <view-state id="editAccountDetailsStep" view="createLoanAccountEnterDetails" model="loanAccountFormBean">
+        <transition on="newProductSelected" to="enterAccountDetailsStep" validate="false">
+            <set name="flowScope.productId" value="requestParameters.productId" type="int"/>
+        </transition>
+        <transition on="cancel" to="cancel" validate="false"/>
+        <transition on="detailsEntered" to="calculateAndReviewLoanSchedule" />
+    </view-state>
+    
     <decision-state id="checkIfQuestionGroupsExistForLoanCreation">
         <on-entry>
             <evaluate expression="loanAccountController.loadQuestionGroups(loanAccountQuestionGroupFormBean)"/>
@@ -61,7 +70,22 @@
     </decision-state>
     
     <view-state id="answerQuestionGroupStep" view="createLoanAccountQuestionnaire" model="loanAccountQuestionGroupFormBean">
-        <transition on="questionsAnswered" to="previewStep" validate="true" />
+        <transition on="questionsAnswered" to="calculateAndReviewLoanSchedule" validate="true" />
+        <transition on="cancel" to="cancel" validate="false"/>
+    </view-state>
+    
+    <view-state id="calculateAndReviewLoanSchedule" view="createloanAccountReviewLoanSchedule">
+    	<on-entry>
+            <evaluate expression="loanAccountController.retrieveLoanSchedule(flowScope.customerId, flowScope.productId, loanAccountFormBean)" result="flowScope.loanScheduleReferenceData"/>
+        </on-entry>
+        <transition on="preview" to="previewStep" validate="false" />
+        <transition on="cancel" to="cancel" validate="false"/>
+    </view-state>
+    
+    <view-state id="previewStep" view="createLoanAccountPreview">
+        <transition on="editAccountDetails" to="editAccountDetailsStep" validate="false"/>
+        <transition on="editQuestionGroups" to="answerQuestionGroupStep" validate="false"/>
+        
         <transition on="cancel" to="cancel" validate="false"/>
     </view-state>
     
