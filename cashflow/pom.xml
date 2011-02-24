@@ -294,6 +294,24 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.mifos.maven</groupId>
+                <artifactId>mifos-pseudoloc-gen</artifactId>
+                <version>0.0.1</version>
+                <configuration>
+                    <inputFilenamePattern>^cashflow_messages\.properties$</inputFilenamePattern>
+                    <inputDirectory>src/main/resources/org/mifos/platform/cashflow/ui/localizedProperties</inputDirectory>
+                    <outputDirectory>target/classes/org/mifos/platform/cashflow/ui/localizedProperties</outputDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>pseudolocalize</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
     <reporting>
