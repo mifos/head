@@ -26,6 +26,7 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
+import org.mifos.application.admin.servicefacade.MessageCustomizerServiceFacade;
 import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.LookUpLabelEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
@@ -86,7 +87,7 @@ public class MessageLookup implements MessageSourceAware {
     LegacyMasterDao legacyMasterDao;
 
     @Autowired(required=false)    
-	AdminServiceFacade adminServiceFacade;	
+	MessageCustomizerServiceFacade adminServiceFacade;	
     
     private MessageSource messageSource;
 
