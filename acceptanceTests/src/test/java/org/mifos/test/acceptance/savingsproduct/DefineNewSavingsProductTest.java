@@ -169,27 +169,11 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
 
         //When
         SavingsProductParameters params = getMandatoryClientsMinimumBalanceSavingsProductParameters();
-        DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
-        confirmationPage.navigateToSavingsProductDetails();     //"Stu1233266079799 Client1233266079799"
-        SavingsAccountDetailPage savingsAccountDetailPage = createSavingAccountWithCreatedProduct("Stu1233266079799 Client1233266079799", params.getProductInstanceName(), "100000.0");
-        String savingsId = savingsAccountDetailPage.getAccountId();
-
-        EditAccountStatusParameters editAccountStatusParameters =new EditAccountStatusParameters();
-        editAccountStatusParameters.setAccountStatus(AccountStatus.SAVINGS_ACTIVE);
-        editAccountStatusParameters.setNote("change status to active");
-        savingsAccountHelper.changeStatus(savingsId, editAccountStatusParameters);
+        String savingsId = createSavingsAccount(params);
 
         DepositWithdrawalSavingsParameters depositParams = new DepositWithdrawalSavingsParameters();
 
-        targetTime = new DateTime(2011,2,14,13,0,0,0);
-        depositParams=makeDefaultDepositWithdrawal(targetTime,depositParams,savingsId, DepositWithdrawalSavingsParameters.DEPOSIT);
-
-        targetTime = new DateTime(2011,2,21,13,0,0,0);
-        depositParams=makeDefaultDepositWithdrawal(targetTime,depositParams,savingsId, DepositWithdrawalSavingsParameters.DEPOSIT);
-
-        targetTime = new DateTime(2011,2,28,13,0,0,0);
-        depositParams=makeDefaultDepositWithdrawal(targetTime,depositParams,savingsId, DepositWithdrawalSavingsParameters.DEPOSIT);
-
+        make3StraightDeposit(savingsId);
 
         depositParams = setDepositParams(depositParams, "01", "03", "2011");
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
@@ -280,7 +264,6 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         Assert.assertEquals(selenium.getTable("recentActivityForDetailPage.1.2"),"1254.1");
     }
 
-
     //http://mifosforge.jira.com/browse/MIFOSTEST-721
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")// one of the dependent methods throws Exception
     @Test(enabled=true)
@@ -347,6 +330,64 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         Assert.assertEquals(selenium.getTable("recentActivityForDetailPage.1.2"),"48.6");
     }
 
+
+    //http://mifosforge.jira.com/browse/MIFOSTEST-624
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")// one of the dependent methods throws Exception
+    @Test(enabled=true)
+    public void savingsMonthlyAccountsAverageBalance() throws Exception {
+        //Given
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTime targetTime = new DateTime(2011,2,10,13,0,0,0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
+
+        //When
+        SavingsProductParameters params = getMandatoryClientsMinimumBalanceSavingsProductParameters();
+        params.setBalanceUsedForInterestCalculation(SavingsProductParameters.AVERAGE_BALANCE);
+
+        String savingsId = createSavingsAccount(params);
+        make3StraightDeposit(savingsId);
+
+        //Then
+        targetTime = new DateTime(2011,3,1,13,0,0,0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+
+        navigationHelper.navigateToSavingsAccountDetailPage(savingsId);
+
+        navigationHelper.navigateToAdminPage();
+        runBatchJobsForSavingsIntPosting();
+
+        navigationHelper.navigateToSavingsAccountDetailPage(savingsId);
+        Assert.assertEquals(selenium.getTable("recentActivityForDetailPage.1.2"),"57.4");
+
+    }
+    private String createSavingsAccount(SavingsProductParameters params){
+        DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
+        confirmationPage.navigateToSavingsProductDetails();
+        SavingsAccountDetailPage savingsAccountDetailPage = createSavingAccountWithCreatedProduct("Stu1233266079799 Client1233266079799", params.getProductInstanceName(), "100000.0");
+        String savingsId = savingsAccountDetailPage.getAccountId();
+
+        EditAccountStatusParameters editAccountStatusParameters =new EditAccountStatusParameters();
+        editAccountStatusParameters.setAccountStatus(AccountStatus.SAVINGS_ACTIVE);
+        editAccountStatusParameters.setNote("change status to active");
+        savingsAccountHelper.changeStatus(savingsId, editAccountStatusParameters);
+        return savingsId;
+    }
+
+    private void make3StraightDeposit(String savingsId) throws Exception{
+        DateTime targetTime = new DateTime(2011,2,10,13,0,0,0);
+        DepositWithdrawalSavingsParameters depositParams = new DepositWithdrawalSavingsParameters();
+
+        targetTime = new DateTime(2011,2,14,13,0,0,0);
+        depositParams=makeDefaultDepositWithdrawal(targetTime,depositParams,savingsId, DepositWithdrawalSavingsParameters.DEPOSIT);
+
+        targetTime = new DateTime(2011,2,21,13,0,0,0);
+        depositParams=makeDefaultDepositWithdrawal(targetTime,depositParams,savingsId, DepositWithdrawalSavingsParameters.DEPOSIT);
+
+        targetTime = new DateTime(2011,2,28,13,0,0,0);
+        depositParams=makeDefaultDepositWithdrawal(targetTime,depositParams,savingsId, DepositWithdrawalSavingsParameters.DEPOSIT);
+    }
+
     private SavingsProductParameters getVoluntaryClients3MonthCalculactionPostingProductParameters()
     {
         SavingsProductParameters params = getGenericSavingsProductParameters(SavingsProductParameters.VOLUNTARY,SavingsProductParameters.CLIENTS);
@@ -373,8 +414,8 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
     }
 
     private DepositWithdrawalSavingsParameters setDepositParams(DepositWithdrawalSavingsParameters depositParams,String dd, String mm, String yy){
-        depositParams.setTrxnDateMM(dd);
-        depositParams.setTrxnDateDD(mm);
+        depositParams.setTrxnDateMM(mm);
+        depositParams.setTrxnDateDD(dd);
         depositParams.setTrxnDateYYYY(yy);
         depositParams.setAmount("100000.0");
         depositParams.setPaymentType(DepositWithdrawalSavingsParameters.CASH);
