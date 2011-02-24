@@ -18,4 +18,13 @@ public class BatchJobsPage extends AbstractPage{
         selenium.click("RUN");
     }
 
+    public String getPreviousRunStart(String name) {
+        return selenium.getText( "//form/div/div/div/div/span[3]/strong[text()='" + name + "']/" +
+                "parent::span/parent::div/following-sibling::div/following-sibling::div/span[2]");
+    }
+
+    public String getPreviousRunStatus(String name) {
+        return selenium.getText( "//form/div/div/div/div/span[3]/strong[text()='" + name + "']/" +
+                "parent::span/parent::div/following-sibling::div/following-sibling::div/span[4]");
+    }
 }

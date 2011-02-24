@@ -27,7 +27,7 @@ import java.util.Map;
 
 public class CreateQuestionGroupParameters {
     private String title;
-    private String appliesTo;
+    private List<String> appliesTo;
     private Map<String, List<CreateQuestionParameters>> newQuestions;
     private Map<String, List<String>> existingQuestions;
     private boolean answerEditable = false;
@@ -36,6 +36,7 @@ public class CreateQuestionGroupParameters {
         super();
         newQuestions = new HashMap<String, List<CreateQuestionParameters>>();
         existingQuestions = new HashMap<String, List<String>>();
+        appliesTo = new ArrayList<String>();
     }
 
     public String getTitle() {
@@ -47,10 +48,14 @@ public class CreateQuestionGroupParameters {
     }
 
     public void setAppliesTo(String appliesTo) {
+        this.appliesTo.add(appliesTo);
+    }
+
+    public void setAppliesTo(List<String> appliesTo) {
         this.appliesTo = appliesTo;
     }
 
-    public String getAppliesTo() {
+    public List<String> getAppliesTo() {
         return appliesTo;
     }
 

@@ -1624,7 +1624,6 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                 new LoanProductService().getDefaultAndAdditionalFees(loanProductId, userContext, defaultFees, additionalFees);
 
                 FundBO fund = null;
-                List<FeeDto> feeDtos = new ArrayList<FeeDto>();
                 List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
                 boolean isRedone = false;
 
@@ -1634,11 +1633,10 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                 Short maxNoOfInstall  =loanDetail.getMaxNoOfInstall();
                 Short minNoOfInstall = loanDetail.getMinNoOfInstall();
                 LoanBO loan = new LoanBO(userContext, loanProduct, client, accountState, loanAmount, defaultNumOfInstallments,
-                        disbursementDate, interestDeductedAtDisbursement, interestRate, gracePeriodDuration, fund, feeDtos,
+                        disbursementDate, interestDeductedAtDisbursement, interestRate, gracePeriodDuration, fund, defaultFees,
                         customFields, isRedone, maxLoanAmount, minLoanAmount,
                         loanProduct.getMaxInterestRate(), loanProduct.getMinInterestRate(),
                         maxNoOfInstall, minNoOfInstall, isRepaymentIndepOfMeetingEnabled, null);
-                loan.setBusinessActivityId(loanDetail.getLoanPurpose());
                 loan.setBusinessActivityId(loanDetail.getLoanPurpose());
 
                 PersonnelBO loggedInUser = this.personnelDao.findPersonnelById(userContext.getId());

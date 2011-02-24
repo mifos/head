@@ -22,12 +22,12 @@ package org.mifos.test.acceptance.framework.questionnaire;
 
 import com.thoughtworks.selenium.Selenium;
 
-import org.junit.Assert;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 
 import java.util.Arrays;
 import java.util.List;
+import org.testng.Assert;
 
 @SuppressWarnings("PMD")
 public class QuestionnairePage extends MifosPage {
@@ -81,5 +81,9 @@ public class QuestionnairePage extends MifosPage {
         selenium.click("id=_eventId_cancel");
         waitForPageToLoad();
         return new ClientViewDetailsPage(selenium);
+    }
+
+    public void verifyTextPresent(String expectedText, String errorMessage) {
+        Assert.assertTrue(selenium.isTextPresent(expectedText), errorMessage);
     }
 }

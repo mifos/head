@@ -23,6 +23,7 @@ package org.mifos.test.acceptance.framework.testhelpers;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
+import org.mifos.test.acceptance.framework.account.AccountStatus;
 import org.mifos.test.acceptance.framework.account.EditAccountStatusParameters;
 import org.mifos.test.acceptance.framework.loan.AccountAddNotesPage;
 import org.mifos.test.acceptance.framework.loan.AccountChangeStatusPage;
@@ -165,6 +166,13 @@ public class SavingsAccountHelper {
         savingsAccountDetailPage.verifyStatus(editAccountStatusParameters.getAccountStatus().getStatusText());
 
         return savingsAccountDetailPage;
+    }
+
+    public SavingsAccountDetailPage activateSavingsAccount(String savingsId){
+        EditAccountStatusParameters editAccountStatusParameters =new EditAccountStatusParameters();
+        editAccountStatusParameters.setAccountStatus(AccountStatus.SAVINGS_ACTIVE);
+        editAccountStatusParameters.setNote("change status to active");
+        return changeStatus(savingsId, editAccountStatusParameters);
     }
 
     public void verifyTotalAmountDue(String savingsId, Integer numberOfGroupMembers, Float amountPerMember){

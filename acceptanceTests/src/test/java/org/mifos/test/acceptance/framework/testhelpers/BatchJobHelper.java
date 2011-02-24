@@ -22,53 +22,117 @@ package org.mifos.test.acceptance.framework.testhelpers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Collections;
 
 import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.admin.BatchJobsPage;
 import org.mifos.test.acceptance.framework.util.UiTestUtils;
+import org.mifos.test.acceptance.framework.MifosPage;
+import org.mifos.test.acceptance.framework.AppLauncher;
+import org.mifos.test.acceptance.framework.HomePage;
+import org.mifos.test.acceptance.framework.login.LoginPage;
+import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
 
 public class BatchJobHelper {
 
+    private static final int WAITING_TIME = 5000; // 5 seconds
+    private static final int NUMBER_OF_TRIES = 60; // 60 * 5 seconds = 5 minutes
+
     private final BatchJobsPage batchJobsPage;
+    private final AdminPage adminPage;
+    private final AppLauncher appLauncher;
+    private final Selenium selenium;
 
     public BatchJobHelper(Selenium selenium) {
-        AdminPage adminPage = new AdminPage(selenium);
+        this.selenium = selenium;
+        appLauncher = new AppLauncher(selenium);
+        adminPage = new AdminPage(selenium);
         batchJobsPage = adminPage.navigateToBatchJobsPage();
     }
 
     public void runAllBatchJobs() {
-       //TODO Use more elegant means to select all jobs in the batch job page
+        List<String> jobs = new ArrayList<String>();
+        int rowCount = selenium.getXpathCount("//form/div/div/div/div/span[3]/strong").intValue();
 
-       List<String> jobs = new ArrayList<String>();
-       jobs.add("ApplyHolidayChangesTaskJob");
-       jobs.add("SavingsIntPostingTaskJob");
-       jobs.add("LoanArrearsAgingTaskJob");
-       jobs.add("ApplyCustomerFeeChangesTaskJob");
-       jobs.add("BranchReportTaskJob");
-       jobs.add("LoanArrearsAndPortfolioAtRiskTaskJob");
-       jobs.add("ProductStatusJob");
-       jobs.add("GenerateMeetingsForCustomerAndSavingsTaskJob");
+        int idx = 1;
+        for (int i = 0; i < rowCount; ++i) {
+            jobs.add(selenium.getText( "//form/div/div/div/div[" + idx + "]/span[3]/strong" ));
+            idx += 4;
+        }
 
-//       String[] fields = selenium.getAllFields();
-//       for (String field: fields){
-//           if (field.endsWith("TaskJob")){
-//               jobs.add(field);
-//           }
-//       }
-
-       runSomeBatchJobs(jobs);
-
+        runSomeBatchJobs(jobs);
     }
 
     public void runSomeBatchJobs(List<String> jobsToRun) {
+        Map<String, String> previousRuns = new HashMap<String, String>();
+
         for (String name : jobsToRun) {
+            previousRuns.put(name, batchJobsPage.getPreviousRunStart(name));
             batchJobsPage.selectBatchJob(name);
         }
+
         batchJobsPage.runSelectedBatchJobs();
-        // TODO we should check if the batch job is finished on the batch jobs page. For now we give 6 seconds fot the batch job to finish
-        UiTestUtils.sleep(6000);
+
+        int counter = 0;
+        while (++counter <= NUMBER_OF_TRIES) {
+            if (checkBatchJobsHaveFinished(previousRuns)) {
+                break;
+            }
+        }
+
+        if (counter > NUMBER_OF_TRIES) {
+            Assert.assertEquals(previousRuns.keySet(), Collections.EMPTY_SET, "Not all batch jobs were completed: " + previousRuns.size());
+        }
+    }
+
+    @SuppressWarnings("PMD")
+    private boolean checkBatchJobsHaveFinished(Map<String, String> previousRuns) {
+        (new MifosPage(selenium)).logout();
+        UiTestUtils.sleep(WAITING_TIME);
+
+        LoginPage loginPage = appLauncher.launchMifos();
+        loginPage.tryLoginUsingDefaultCredentials();
+        if (!selenium.isElementPresent("//span[@id='page.id']") || "Login".equals(selenium.getAttribute("page.id@title"))) {
+            return false;
+        } else {
+            Assert.assertEquals(selenium.getAttribute("page.id@title"), "Home");
+        }
+
+        HomePage homePage = new HomePage(selenium);
+        homePage.tryNavigateToAdminPage();
+        if ("Login".equals(selenium.getAttribute("page.id@title"))) {
+            return false;
+        } else {
+            Assert.assertEquals(selenium.getAttribute("page.id@title"), AdminPage.PAGE_ID);
+        }
+
+        adminPage.tryNavigateToBatchJobsPage();
+        if (selenium.isElementPresent("//span[@id='page.id']")) { // TODO Batch Jobs page do not have page.id!
+            if ("Login".equals(selenium.getAttribute("page.id@title"))) {
+                return false;
+            } else {
+                Assert.assertTrue(false, "Expected Batch Jobs page, but was: " + selenium.getAttribute("page.id@title"));
+            }
+        }
+
+        List<String> completedJobs = new ArrayList<String>();
+
+        for (Map.Entry<String, String> entry : previousRuns.entrySet()) {
+            if (entry.getValue().equals(batchJobsPage.getPreviousRunStart(entry.getKey()))) {
+                for (String job : completedJobs) {
+                    previousRuns.remove(job);
+                }
+                return false;
+            }
+            Assert.assertEquals(batchJobsPage.getPreviousRunStatus(entry.getKey()), "Previous run status:  Completed");
+            completedJobs.add(entry.getKey());
+        }
+
+        return true;
     }
 
 }

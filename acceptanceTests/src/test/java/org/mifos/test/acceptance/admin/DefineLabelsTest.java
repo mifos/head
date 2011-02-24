@@ -22,10 +22,10 @@ package org.mifos.test.acceptance.admin;
 
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
-import org.mifos.test.acceptance.framework.admin.AdminPage;
-import org.mifos.test.acceptance.framework.admin.DefineLabelsPage;
-import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
-import org.mifos.test.acceptance.util.StringUtil;
+import org.mifos.test.acceptance.framework.admin.DefineLabelsParameters;
+import org.mifos.test.acceptance.framework.testhelpers.AdminTestHelper;
+import org.mifos.test.acceptance.framework.testhelpers.UserHelper;
+import org.mifos.test.acceptance.framework.user.EditUserDataPage;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -35,41 +35,49 @@ import org.testng.annotations.Test;
 @Test(sequential = true, groups = {"admin","acceptance","ui", "no_db_unit"})
 public class DefineLabelsTest  extends UiTestCaseBase {
 
-    private NavigationHelper navigationHelper;
+    private AdminTestHelper adminTestHelper;
+    private UserHelper userHelper;
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @BeforeMethod
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        navigationHelper = new NavigationHelper(selenium);
+        adminTestHelper = new AdminTestHelper(selenium);
+        userHelper = new UserHelper(selenium);
     }
 
-    @AfterMethod
-    public void tearDown() {
+    @AfterMethod(alwaysRun = true)
+    public void logOut() {
+        restoreDefaultENLabels();
         (new MifosPage(selenium)).logout();
     }
 
-    @Test(enabled=true)
-    public void defineLabelsTest() {
-        AdminPage adminPage = navigationHelper.navigateToAdminPage();
-        DefineLabelsPage defineLabelsPage = adminPage.navigateToDefineLabelsPage();
+    private void restoreDefaultENLabels() {
+        DefineLabelsParameters defineLabelsParams = new DefineLabelsParameters();
+        defineLabelsParams.setLabel(DefineLabelsParameters.CITIZENSHIP, "Citizenship");
+        defineLabelsParams.setLabel(DefineLabelsParameters.GOVERNMENT_ID, "Government ID");
 
-        String citizenshipVal = "citizenship.testval." + StringUtil.getRandomString(6);
-        String govtIdVal = "govtId.testval." + StringUtil.getRandomString(6);
+        adminTestHelper.defineLabels(defineLabelsParams);
+    }
 
-        defineLabelsPage.setLabelValue( "citizenship", citizenshipVal );
-        defineLabelsPage.setLabelValue( "govtId", govtIdVal );
+    /**
+     * Verify that new labels can be defined by Admin
+     * http://mifosforge.jira.com/browse/MIFOSTEST-631
+     * @throws Exception
+     */
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void defineLabelsTest() throws Exception {
+        String chineese = "有";
+        String arabic = "عربية";
+        DefineLabelsParameters defineLabelsParams = new DefineLabelsParameters();
+        defineLabelsParams.setLabel(DefineLabelsParameters.STATE, new String(arabic.getBytes(), "UTF-8"));
+        defineLabelsParams.setLabel(DefineLabelsParameters.POSTAL_CODE, new String(chineese.getBytes(), "UTF-8"));
 
-        adminPage = defineLabelsPage.submit();
-        defineLabelsPage = adminPage.navigateToDefineLabelsPage();
+        adminTestHelper.defineLabels(defineLabelsParams);
 
-        defineLabelsPage.verifyLabelValue( "citizenship", citizenshipVal );
-        defineLabelsPage.verifyLabelValue( "govtId", govtIdVal );
-
-        //Restore to previous values (presumes EN)
-        defineLabelsPage.setLabelValue( "citizenship", "Citizenship" );
-        defineLabelsPage.setLabelValue( "govtId", "Government ID" );
-        adminPage = defineLabelsPage.submit();
+        adminTestHelper.verifyLabels(defineLabelsParams);
+        EditUserDataPage editUserDataPage = userHelper.navigateToEditUserDataPage("mifos");
+        editUserDataPage.verifyLabels(defineLabelsParams);
     }
 }

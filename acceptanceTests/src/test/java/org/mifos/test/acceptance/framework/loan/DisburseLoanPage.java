@@ -20,8 +20,8 @@
 
 package org.mifos.test.acceptance.framework.loan;
 
-import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.HomePage;
+import org.mifos.test.acceptance.framework.MifosPage;
 import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
@@ -56,6 +56,19 @@ public class DisburseLoanPage extends MifosPage {
 
         waitForPageToLoad();
         return new DisburseLoanConfirmationPage(selenium);
+    }
+
+    public void submitWithWrongParams(DisburseLoanParameters params, String msg) {
+        this.typeTextIfNotEmpty("transactionDateDD", params.getDisbursalDateDD());
+        this.typeTextIfNotEmpty("transactionDateMM", params.getDisbursalDateMM());
+        this.typeTextIfNotEmpty("transactionDateYY", params.getDisbursalDateYYYY());
+
+        selenium.select("DisburseLoan.input.paymentType", "value=" + params.getPaymentTypeValue());
+
+        selenium.click("DisburseLoan.button.reviewTransaction");
+
+        waitForPageToLoad();
+        Assert.assertTrue(selenium.isElementPresent("//span[@id='DisburseLoan.error.message']/li[text()='"+msg+"']"));
     }
 
     public void verifyPaymentModeOfPaymentIsEditable(String message) {

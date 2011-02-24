@@ -39,6 +39,14 @@ public class SavingsAccountDetailPage extends AbstractPage {
         this.verifyPage("savingsaccountdetail");
     }
 
+    public String getTotalAmountDue(){
+        return selenium.getText("savingsaccountdetail.text.totalAmountDue");
+    }
+
+    public void verifyTotalAmountDue(String totalAmountDue){
+        Assert.assertEquals(getTotalAmountDue(), totalAmountDue);
+    }
+
     public void verifySavingsAmount(String amount) {
         Assert.assertTrue(selenium.isTextPresent(amount));
     }

@@ -20,20 +20,35 @@
 
 package org.mifos.test.acceptance.framework.admin;
 
-public class DefineLabelsParameters {
-    private String citizenship;
-    private String govtId;
+import java.util.HashMap;
+import java.util.Map;
 
-    public String getCitizenship() {
-        return this.citizenship;
+public class DefineLabelsParameters {
+
+    public static final String CITIZENSHIP = "citizenship";
+    public static final String GOVERNMENT_ID = "govtId";
+    public static final String STATE = "state";
+    public static final String POSTAL_CODE = "postalCode";
+
+    private Map<String, String> labelMap = new HashMap<String, String>();
+
+    public void setLabelMap(Map<String, String> labelMap) {
+        this.labelMap = labelMap;
     }
-    public void setCitizenship(String citizenship) {
-        this.citizenship = citizenship;
+
+    public Map<String, String> getLabelMap() {
+        return labelMap;
     }
-    public String getGovtId() {
-        return this.govtId;
+
+    public void setLabel(String label, String text) {
+        this.labelMap.put(label, text);
     }
-    public void setGovtId(String govtId) {
-        this.govtId = govtId;
+
+    public String[] getKeys() {
+        return this.labelMap.keySet().toArray(new String[0]);
+    }
+
+    public String getLabelText(String label) {
+        return this.labelMap.get(label);
     }
 }
