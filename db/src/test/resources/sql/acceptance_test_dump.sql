@@ -1,6 +1,6 @@
--- MySQL dump 10.13  Distrib 5.1.49, for debian-linux-gnu (x86_64)
+-- MySQL dump 10.13  Distrib 5.1.49, for debian-linux-gnu (i686)
 --
--- Host: localhost    Database: mifos_gazelle_acceptance
+-- Host: localhost    Database: mifos
 -- ------------------------------------------------------
 -- Server version	5.1.49-1ubuntu8.1
 
@@ -6382,7 +6382,7 @@ CREATE TABLE `prd_offering` (
 
 LOCK TABLES `prd_offering` WRITE;
 /*!40000 ALTER TABLE `prd_offering` DISABLE KEYS */;
-INSERT INTO `prd_offering` VALUES (1,3,'1-001',2,2,NULL,'2011-02-18',NULL,NULL,'center_savings1','s1',2,'','2011-02-18',1,NULL,NULL,0,NULL,2),(2,1,'1-002',1,1,1,'2010-01-22',NULL,NULL,'WeeklyFlatLoanWithOneTimeFees','flwf',1,'','2010-01-22',1,'2011-02-22',1,1,NULL,2),(3,1,'1-003',1,1,1,'2010-01-22',NULL,NULL,'MonthlyClientFlatLoan1stOfMonth','mcf1',1,'','2010-01-22',1,NULL,NULL,0,NULL,2),(4,1,'1-004',1,1,1,'2010-01-22',NULL,NULL,'MonthlyClientFlatLoanThirdFridayOfMonth','mcf3',1,'','2010-01-22',1,'2010-01-22',1,1,NULL,2),(5,1,'1-005',1,1,1,'2011-02-21',NULL,NULL,'ClientEmergencyLoan','EL',1,'','2011-02-21',1,'2011-02-21',1,1,NULL,2),(6,2,'1-006',1,1,1,'2011-02-21',NULL,NULL,'GroupEmergencyLoan','GEL',1,'','2011-02-21',1,NULL,NULL,0,NULL,2),(7,2,'1-007',1,1,1,'2011-02-22',NULL,NULL,'WeeklyGroupFlatLoanWithOnetimeFee','wgff',1,'','2011-02-22',1,'2011-03-04',1,4,NULL,2);
+INSERT INTO `prd_offering` VALUES (1,1,'1-001',2,2,NULL,'2011-02-18',NULL,NULL,'MonthlyClientSavingsAccount','s1',2,'','2011-02-18',1,NULL,NULL,0,NULL,2),(2,1,'1-002',1,1,1,'2010-01-22',NULL,NULL,'WeeklyFlatLoanWithOneTimeFees','flwf',1,'','2010-01-22',1,'2011-02-22',1,1,NULL,2),(3,1,'1-003',1,1,1,'2010-01-22',NULL,NULL,'MonthlyClientFlatLoan1stOfMonth','mcf1',1,'','2010-01-22',1,NULL,NULL,0,NULL,2),(4,1,'1-004',1,1,1,'2010-01-22',NULL,NULL,'MonthlyClientFlatLoanThirdFridayOfMonth','mcf3',1,'','2010-01-22',1,'2010-01-22',1,1,NULL,2),(5,1,'1-005',1,1,1,'2011-02-21',NULL,NULL,'ClientEmergencyLoan','EL',1,'','2011-02-21',1,'2011-02-21',1,1,NULL,2),(6,2,'1-006',1,1,1,'2011-02-21',NULL,NULL,'GroupEmergencyLoan','GEL',1,'','2011-02-21',1,NULL,NULL,0,NULL,2),(7,2,'1-007',1,1,1,'2011-02-22',NULL,NULL,'WeeklyGroupFlatLoanWithOnetimeFee','wgff',1,'','2011-02-22',1,'2011-02-22',1,3,NULL,2);
 /*!40000 ALTER TABLE `prd_offering` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -6753,7 +6753,7 @@ CREATE TABLE `question_group` (
   `is_editable` tinyint(4) NOT NULL DEFAULT '0',
   `is_ppi` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6762,6 +6762,7 @@ CREATE TABLE `question_group` (
 
 LOCK TABLES `question_group` WRITE;
 /*!40000 ALTER TABLE `question_group` DISABLE KEYS */;
+INSERT INTO `question_group` VALUES (1,'QGForCreateSavingsAccount','2011-02-24',1,0,0);
 /*!40000 ALTER TABLE `question_group` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -6781,7 +6782,7 @@ CREATE TABLE `question_group_event_sources` (
   KEY `event_source_id` (`event_source_id`),
   CONSTRAINT `question_group_event_sources_ibfk_1` FOREIGN KEY (`question_group_id`) REFERENCES `question_group` (`id`),
   CONSTRAINT `question_group_event_sources_ibfk_2` FOREIGN KEY (`event_source_id`) REFERENCES `event_sources` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6790,6 +6791,7 @@ CREATE TABLE `question_group_event_sources` (
 
 LOCK TABLES `question_group_event_sources` WRITE;
 /*!40000 ALTER TABLE `question_group_event_sources` DISABLE KEYS */;
+INSERT INTO `question_group_event_sources` VALUES (1,1,12);
 /*!40000 ALTER TABLE `question_group_event_sources` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -6871,7 +6873,7 @@ CREATE TABLE `questions` (
   `nickname` varchar(64) NOT NULL,
   PRIMARY KEY (`question_id`),
   UNIQUE KEY `nickname` (`nickname`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6880,6 +6882,7 @@ CREATE TABLE `questions` (
 
 LOCK TABLES `questions` WRITE;
 /*!40000 ALTER TABLE `questions` DISABLE KEYS */;
+INSERT INTO `questions` VALUES (1,2,1,'Question1',NULL,NULL,'e5c1d1ea399a2e46aca161ed737cfee3');
 /*!40000 ALTER TABLE `questions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -7614,7 +7617,7 @@ CREATE TABLE `sections` (
   PRIMARY KEY (`id`),
   KEY `question_group_id` (`question_group_id`),
   CONSTRAINT `sections_ibfk_1` FOREIGN KEY (`question_group_id`) REFERENCES `question_group` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -7623,6 +7626,7 @@ CREATE TABLE `sections` (
 
 LOCK TABLES `sections` WRITE;
 /*!40000 ALTER TABLE `sections` DISABLE KEYS */;
+INSERT INTO `sections` VALUES (1,1,'Misc',0);
 /*!40000 ALTER TABLE `sections` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -7644,7 +7648,7 @@ CREATE TABLE `sections_questions` (
   KEY `question_id` (`question_id`),
   CONSTRAINT `sections_questions_ibfk_1` FOREIGN KEY (`section_id`) REFERENCES `sections` (`id`),
   CONSTRAINT `sections_questions_ibfk_2` FOREIGN KEY (`question_id`) REFERENCES `questions` (`question_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -7653,6 +7657,7 @@ CREATE TABLE `sections_questions` (
 
 LOCK TABLES `sections_questions` WRITE;
 /*!40000 ALTER TABLE `sections_questions` DISABLE KEYS */;
+INSERT INTO `sections_questions` VALUES (1,1,1,0,0);
 /*!40000 ALTER TABLE `sections_questions` ENABLE KEYS */;
 UNLOCK TABLES;
 

@@ -759,7 +759,7 @@ public class ClientTest extends UiTestCaseBase {
 
         // When
         searchParameters.setSearchString(clientName);
-        searchParameters.setSavingsProduct("MandClientSavings3MoPostMinBal");
+        searchParameters.setSavingsProduct("MonthlyClientSavingsAccount");
         String savingsId = savingsAccountHelper.createSavingsAccountWithQG(searchParameters, submitAccountParameters)
                 .getAccountId();
         savingsAccountHelper.changeStatus(savingsId, editAccountStatusParameters);
@@ -800,7 +800,7 @@ public class ClientTest extends UiTestCaseBase {
         clientTestHelper.changeCustomerStatus(clientDetailsPage, ClientStatus.ACTIVE);
         String clientName = clientDetailsPage.getHeading();
 
-        searchParameters.setSavingsProduct("MandClientSavings3MoPostMinBal");
+        searchParameters.setSavingsProduct("MonthlyClientSavingsAccount");
         searchParameters.setSearchString(clientName);
         String savingsId = savingsAccountHelper.createSavingsAccountWithQG(searchParameters, submitAccountParameters)
                 .getAccountId();

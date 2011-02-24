@@ -70,11 +70,8 @@ public class CreateSavingsAccountTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    //@Test(sequential = true, groups = {"savings", "acceptance", "ui" })
-    @Test(enabled=false) // TODO js - temporarily disabled broken test
+    @Test(sequential = true, groups = {"savings", "acceptance", "ui", "no_db_unit" })
     public void verifyPaymentTypesForWithdrawalsAndDeposits() throws Exception {
-        //Given
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
         //When
         NavigationHelper navigationHelper = new NavigationHelper(selenium);
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
@@ -94,8 +91,8 @@ public class CreateSavingsAccountTest extends UiTestCaseBase {
         defineAcceptedPaymentTypesPage.addSavingsDepositsPaymentType(defineAcceptedPaymentTypesPage.VOUCHER);
 
         CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
-        searchParameters.setSearchString("Stu1233266079799 Client1233266079799");
-        searchParameters.setSavingsProduct("MandClientSavings3MoPostMinBal");
+        searchParameters.setSearchString("Client - Mary Monthly");
+        searchParameters.setSavingsProduct("MonthlyClientSavingsAccount");
 
         CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
         submitAccountParameters.setAmount("248.0");
@@ -116,7 +113,7 @@ public class CreateSavingsAccountTest extends UiTestCaseBase {
         //Then
         savingsDepositWithdrawalPage.verifyModeOfPayments();
         //When
-        savingsAccountDetailPage = navigationHelper.navigateToSavingsAccountDetailPage("000100000000015");
+        savingsAccountDetailPage = navigationHelper.navigateToSavingsAccountDetailPage("000100000000002");
         savingsDepositWithdrawalPage = savingsAccountDetailPage.navigateToDepositWithdrawalPage();
         savingsDepositWithdrawalPage.selectPaymentType(DepositWithdrawalSavingsParameters.DEPOSIT);
         //Then
@@ -124,13 +121,12 @@ public class CreateSavingsAccountTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(sequential = true, groups = { "smoke", "savings", "acceptance", "ui" })
+    @Test(sequential = true, groups = { "smoke", "savings", "acceptance", "ui", "no_db_unit" })
     public void newMandatoryClientSavingsAccountWithDateTypeCustomField() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_015_dbunit.xml", dataSource, selenium);
 
         CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
-        searchParameters.setSearchString("Stu1233266079799 Client1233266079799");
-        searchParameters.setSavingsProduct("MandClientSavings3MoPostMinBal");
+        searchParameters.setSearchString("Client - Mary Monthly");
+        searchParameters.setSavingsProduct("MonthlyClientSavingsAccount");
 
         CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
         submitAccountParameters.setAmount("248.0");
