@@ -1106,7 +1106,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
             accountService.disburseLoans(loanDisbursements, userContext.getPreferredLocale());
         } catch (Exception e) {
-            throw new MifosRuntimeException(e);
+            throw new MifosRuntimeException(e.getMessage(), e);
         }
     }
 

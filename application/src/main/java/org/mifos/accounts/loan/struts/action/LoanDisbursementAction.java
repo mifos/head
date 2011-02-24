@@ -62,6 +62,7 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.util.UserContext;
+import org.mifos.core.MifosRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -147,6 +148,9 @@ public class LoanDisbursementAction extends BaseAction {
             this.loanAccountServiceFacade.disburseLoan(loanDisbursement, paymentTypeId);
         } catch (Exception e) {
             if (e.getMessage().startsWith("errors.")) {
+                if (e instanceof MifosRuntimeException) { // UI do not like these exceptions
+                    throw new AccountException(e.getMessage());
+                }
                 throw e;
             }
             String msg = "errors.cannotDisburseLoan.because.disburseFailed";
