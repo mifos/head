@@ -24,6 +24,7 @@ import org.mifos.test.acceptance.framework.MifosPage;
 
 import com.thoughtworks.selenium.Selenium;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionnairePage;
+import org.testng.Assert;
 
 public class AttachSurveyPage extends MifosPage {
     public AttachSurveyPage(Selenium selenium) {
@@ -35,5 +36,10 @@ public class AttachSurveyPage extends MifosPage {
         selenium.click("_eventId_selectQuestionnaire");
         waitForPageToLoad();
         return new QuestionnairePage(selenium);
+    }
+
+    public AttachSurveyPage verifyNoneSelected() {
+        Assert.assertEquals(selenium.getSelectedValue("questionGroupId"), "selectOne");
+        return this;
     }
 }
