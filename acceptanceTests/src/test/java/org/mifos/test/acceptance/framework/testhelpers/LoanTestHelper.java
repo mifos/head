@@ -288,6 +288,13 @@ public class LoanTestHelper {
         return loanAccountPage;
     }
 
+    public void disburseLoanWithWrongParams(String loanId, DisburseLoanParameters params,  String msg)
+    {
+        DisburseLoanPage disburseLoanPage = prepareToDisburseLoan(loanId);
+        disburseLoanPage.submitWithWrongParams(params,msg);
+        prepareToDisburseLoan(loanId);
+    }
+
     public void editLoanProduct(String loanProduct, boolean interestWaiver) {
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         ViewLoanProductsPage viewLoanProducts = adminPage.navigateToViewLoanProducts();

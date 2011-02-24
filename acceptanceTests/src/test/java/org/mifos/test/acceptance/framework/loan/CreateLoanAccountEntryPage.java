@@ -23,15 +23,14 @@ package org.mifos.test.acceptance.framework.loan;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
-import org.mifos.test.acceptance.framework.AbstractPage;
 import org.mifos.test.acceptance.framework.HomePage;
+import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
-import org.mifos.test.acceptance.framework.util.UiTestUtils;
 import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
 
-public class CreateLoanAccountEntryPage extends AbstractPage {
+public class CreateLoanAccountEntryPage extends MifosPage {
 
     String continueButton = "loancreationdetails.button.continue";
 
@@ -109,7 +108,6 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
         {
             selenium.click("loancreationdetails.input.frequencyWeeks");
             selenium.type("loancreationdetails.input.weekFrequency",formParameters.getLsimWeekFrequency());
-            UiTestUtils.sleep(1000000);
             selenium.select("weekDay", "label=Friday");
         }
         if (formParameters.getLsimMonthTypeDayOfMonth() != null)

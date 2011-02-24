@@ -169,4 +169,10 @@ public class MifosPage extends AbstractPage {
         waitForPageToLoad();
         return new AdminPage(selenium);
     }
+
+    public void verifyAllElementsArePresent(String[] locators){
+        for (String locator : locators) {
+            selenium.isElementPresent(locator);
+        }
+    }
 }

@@ -20,30 +20,29 @@
 
 package org.mifos.test.acceptance.admin;
 
-import org.mifos.test.acceptance.framework.AppLauncher;
-import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.admin.ViewLatenessAndDormancyDefinitionPage;
+import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"acceptance","ui","smoke"})
+@Test(sequential = true, groups = {"acceptance","ui"})
 
 public class ViewLatenessAndDormancyDefinitionTest extends UiTestCaseBase {
 
-    private AppLauncher appLauncher;
+    private NavigationHelper navigationHelper;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
-        appLauncher = new AppLauncher(selenium);
+        navigationHelper = new NavigationHelper(selenium);
     }
 
     @AfterMethod
@@ -52,31 +51,23 @@ public class ViewLatenessAndDormancyDefinitionTest extends UiTestCaseBase {
     }
 
     @Test(enabled=true)
+    //http://mifosforge.jira.com/browse/MIFOSTEST-705
     public void verifyViewLatenessAndDormancyDefinitionPage() {
-        AdminPage adminPage = loginAndGoToAdminPage();
-        ViewLatenessAndDormancyDefinitionPage viewLatenessAndDormancyDefinitionPage = adminPage.navigateToViewLatenessAndDormancyDefinitionPage();
-        viewLatenessAndDormancyDefinitionPage.verifyPage();
-
-        String[] expectedText = new String[]{
-                "Set Lateness Definition",
-                "Loan",
-                "Specify the number of days of non-payment after which status of Loan account is changed to \"In Arrears\" by the system:  days",
-                "Set Dormancy Definition",
-                "Savings",
-                "Specify the number of days to define \"Dormancy\" in Savings Accounts. The account status will be changed to \"On Hold\" by the system:  days"
-        };
-
-        viewLatenessAndDormancyDefinitionPage.verifyText( expectedText );
-
+        //When
+        ViewLatenessAndDormancyDefinitionPage viewLatenessAndDormancyDefinitionPage =
+            navigationHelper.navigateToAdminPage().navigateToViewLatenessAndDormancyDefinitionPage();
+        viewLatenessAndDormancyDefinitionPage.submitWithInvalidData("aa", "bb");
+        //Then
+        viewLatenessAndDormancyDefinitionPage.verifyIsDormancyErrorDisplayed(true);
+        viewLatenessAndDormancyDefinitionPage.verifyIsLatenessErrorDisplayed(true);
+        //When
+        AdminPage adminPage = viewLatenessAndDormancyDefinitionPage.submitAndNavigateToAdminPage("20", "10");
+        viewLatenessAndDormancyDefinitionPage = adminPage.navigateToViewLatenessAndDormancyDefinitionPage();
+        //Then
+        viewLatenessAndDormancyDefinitionPage.verifyLatenessAndDormancy("20", "10");
+        //When
+        viewLatenessAndDormancyDefinitionPage.submitAndNavigateToAdminPage("10", "30");
 
     }
-    private AdminPage loginAndGoToAdminPage() {
-        HomePage homePage = appLauncher.launchMifos().loginSuccessfullyUsingDefaultCredentials();
-        homePage.verifyPage();
-        AdminPage adminPage = homePage.navigateToAdminPage();
-        adminPage.verifyPage();
-        return adminPage;
-    }
-
 }
 

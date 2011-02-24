@@ -21,46 +21,19 @@
 package org.mifos.test.acceptance.framework.admin;
 
 import org.mifos.test.acceptance.framework.MifosPage;
-import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
 
-public class DefineLabelsPage extends MifosPage {
+public class EditChecklistPreviewPage extends MifosPage {
 
-    public DefineLabelsPage(Selenium selenium) {
+    public EditChecklistPreviewPage(Selenium selenium) {
         super(selenium);
+        verifyPage("editPreview_checkList");
     }
 
-    public void verifyPage() {
-        verifyPage("definelabels");
-    }
-
-    public void setLabelValue(String label, String value) {
-        selenium.type(label, value);
-    }
-
-    public String getCitizenshipLabel() {
-        return selenium.getText("defineLabels.input.citizenship");
-    }
-
-    public String getGovtIdLabel() {
-        return selenium.getText("defineLabels.input.govtId");
-    }
-
-    public void verifyLabelValue(String label, String value) {
-        Assert.assertEquals(selenium.getValue(label), value);
-    }
-
-    public AdminPage submit() {
-        selenium.click("definelabels.button.submit");
+    public ChecklistDetailsPage submit() {
+        selenium.click("submitbutton");
         waitForPageToLoad();
-        return new AdminPage(selenium);
+        return new ChecklistDetailsPage(selenium);
     }
-
-    public AdminPage cancel() {
-        selenium.click("CANCEL");
-        waitForPageToLoad();
-        return new AdminPage(selenium);
-    }
-
 }

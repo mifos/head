@@ -94,7 +94,7 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    @Test(enabled=true, sequential = true, groups = {"smoke"})
+    @Test(enabled=true, sequential = true)
     public void clientAccountFeesSavedToDatabase() throws Exception {
         try {
             SubmitFormParameters formParameters = getFormParametersForTestOffice();

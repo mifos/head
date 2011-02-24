@@ -91,7 +91,7 @@ public class LoanProcessWithDifferentCurrencyTest extends UiTestCaseBase {
 
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(groups={"smoke"})
+    @Test
     // http://mifosforge.jira.com/browse/MIFOSTEST-657
     public void createLoanProductThenAccount() throws Exception {
         //Given

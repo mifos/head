@@ -20,8 +20,14 @@
 
 package org.mifos.test.acceptance.framework.testhelpers;
 
+import org.mifos.test.acceptance.framework.admin.AdminPage;
+import org.mifos.test.acceptance.framework.admin.ChecklistDetailsPage;
+import org.mifos.test.acceptance.framework.admin.DefineChecklistParameters;
+import org.mifos.test.acceptance.framework.admin.DefineLabelsPage;
+import org.mifos.test.acceptance.framework.admin.DefineLabelsParameters;
 import org.mifos.test.acceptance.framework.admin.DefineLookupOptionParameters;
 import org.mifos.test.acceptance.framework.admin.DefineLookupOptionsPage;
+import org.mifos.test.acceptance.framework.admin.SystemInfoPage;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -53,5 +59,53 @@ public class AdminTestHelper {
             .navigateToCreateClientWithoutGroupPage()
             .chooseOffice(officeName)
             .verifyLookupOption(lookupOptionParams);
+    }
+
+    public AdminPage defineLabels(DefineLabelsParameters defineLabelsParams) {
+        DefineLabelsPage defineLabelsPage = navigationHelper
+            .navigateToAdminPage()
+            .navigateToDefineLabelsPage();
+        for(String label : defineLabelsParams.getKeys()) {
+            defineLabelsPage.setLabelValue(label, defineLabelsParams.getLabelText(label));
+        }
+        return defineLabelsPage.submit();
+    }
+
+    public AdminPage verifyLabels(DefineLabelsParameters defineLabelsParams) {
+        DefineLabelsPage defineLabelsPage = navigationHelper
+            .navigateToAdminPage()
+            .navigateToDefineLabelsPage();
+        for(String label : defineLabelsParams.getKeys()) {
+            defineLabelsPage.verifyLabelValue(label, defineLabelsParams.getLabelText(label));
+        }
+        return defineLabelsPage.cancel();
+    }
+
+    public SystemInfoPage navigateToSystemInfoPage() {
+        return navigationHelper
+            .navigateToAdminPage()
+            .navigateToSystemInfoPage();
+    }
+
+    public AdminPage defineNewChecklist(DefineChecklistParameters checklistParams) {
+        return navigationHelper
+            .navigateToAdminPage()
+            .navigateToDefineNewChecklistPage()
+            .fillFormAndNavigateToPreviewPage(checklistParams)
+            .submit();
+    }
+
+    public ChecklistDetailsPage editChecklist(String currentChecklistName, DefineChecklistParameters checklistParams) {
+        return navigateToChecklistDetailsPage(currentChecklistName)
+            .navigateToEditChecklistPage()
+            .fillFormAndNavigateToPreviewPage(checklistParams)
+            .submit();
+    }
+
+    public ChecklistDetailsPage navigateToChecklistDetailsPage(String checklistName) {
+        return navigationHelper
+            .navigateToAdminPage()
+            .navigateToViewChecklistsPage()
+            .navigateToChecklistDetailsPage(checklistName);
     }
 }

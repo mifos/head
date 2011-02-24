@@ -50,7 +50,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = { "smoke", "center", "acceptance", "ui" })
+@Test(sequential = true, groups = { "center", "acceptance", "ui" })
 public class CenterTest extends UiTestCaseBase {
     @Autowired
     private DriverManagerDataSource dataSource;

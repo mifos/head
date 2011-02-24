@@ -22,10 +22,9 @@ package org.mifos.test.acceptance.admin;
 
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
-import org.mifos.test.acceptance.framework.admin.DefineLabelsParameters;
+import org.mifos.test.acceptance.framework.admin.ChecklistDetailsPage;
+import org.mifos.test.acceptance.framework.admin.DefineChecklistParameters;
 import org.mifos.test.acceptance.framework.testhelpers.AdminTestHelper;
-import org.mifos.test.acceptance.framework.testhelpers.UserHelper;
-import org.mifos.test.acceptance.framework.user.EditUserDataPage;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -33,10 +32,9 @@ import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
 @Test(sequential = true, groups = {"admin","acceptance","ui"})
-public class DefineLabelsTest  extends UiTestCaseBase {
+public class DefineChecklistTest extends UiTestCaseBase {
 
     private AdminTestHelper adminTestHelper;
-    private UserHelper userHelper;
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @BeforeMethod
@@ -44,40 +42,33 @@ public class DefineLabelsTest  extends UiTestCaseBase {
     public void setUp() throws Exception {
         super.setUp();
         adminTestHelper = new AdminTestHelper(selenium);
-        userHelper = new UserHelper(selenium);
     }
 
     @AfterMethod(alwaysRun = true)
     public void logOut() {
-        restoreDefaultENLabels();
         (new MifosPage(selenium)).logout();
     }
 
-    private void restoreDefaultENLabels() {
-        DefineLabelsParameters defineLabelsParams = new DefineLabelsParameters();
-        defineLabelsParams.setLabel(DefineLabelsParameters.CITIZENSHIP, "Citizenship");
-        defineLabelsParams.setLabel(DefineLabelsParameters.GOVERNMENT_ID, "Government ID");
-
-        adminTestHelper.defineLabels(defineLabelsParams);
-    }
-
     /**
-     * Verify that new labels can be defined by Admin
-     * http://mifosforge.jira.com/browse/MIFOSTEST-631
+     * Define and Edit checklist
+     * http://mifosforge.jira.com/browse/MIFOSTEST-1096
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void defineLabelsTest() throws Exception {
-        String chineese = "有";
-        String arabic = "عربية";
-        DefineLabelsParameters defineLabelsParams = new DefineLabelsParameters();
-        defineLabelsParams.setLabel(DefineLabelsParameters.STATE, new String(arabic.getBytes(), "UTF-8"));
-        defineLabelsParams.setLabel(DefineLabelsParameters.POSTAL_CODE, new String(chineese.getBytes(), "UTF-8"));
+    public void verifyCreatingAndEditingChecklist() throws Exception {
+        DefineChecklistParameters checklistParams = new DefineChecklistParameters();
+        checklistParams.setName("newCenterChecklist");
+        checklistParams.setType(DefineChecklistParameters.TYPE_CENTER);
+        checklistParams.setDisplayedWhenMovingIntoStatus(DefineChecklistParameters.STATUS_ACTIVE);
+        checklistParams.addItem("center item 1");
+        checklistParams.addItem("center item 2");
+        DefineChecklistParameters editParams = new DefineChecklistParameters();
+        editParams.setName("editedCenterChecklist");
 
-        adminTestHelper.defineLabels(defineLabelsParams);
+        adminTestHelper.defineNewChecklist(checklistParams);
+        adminTestHelper.editChecklist(checklistParams.getName(), editParams);
+        ChecklistDetailsPage checklistDetailsPage = adminTestHelper.navigateToChecklistDetailsPage(editParams.getName());
 
-        adminTestHelper.verifyLabels(defineLabelsParams);
-        EditUserDataPage editUserDataPage = userHelper.navigateToEditUserDataPage("mifos");
-        editUserDataPage.verifyLabels(defineLabelsParams);
+        checklistDetailsPage.verifyName(editParams.getName());
     }
 }

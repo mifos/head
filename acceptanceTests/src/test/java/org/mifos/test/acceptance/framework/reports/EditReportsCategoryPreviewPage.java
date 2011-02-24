@@ -18,25 +18,22 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.test.acceptance.framework;
-
-import junit.framework.Assert;
-
-import org.joda.time.DateTime;
+package org.mifos.test.acceptance.framework.reports;
 
 import com.thoughtworks.selenium.Selenium;
+import org.mifos.test.acceptance.framework.MifosPage;
+import org.mifos.test.acceptance.framework.admin.ViewReportCategoriesPage;
 
+public class EditReportsCategoryPreviewPage extends MifosPage {
 
-public class TimeMachinePage extends MifosPage {
-
-
-    public TimeMachinePage(Selenium selenium) {
+    public EditReportsCategoryPreviewPage(Selenium selenium) {
         super(selenium);
-        verifyPage("DateTimeUpdate");
+        this.verifyPage("edit_preview_reports_category");
     }
 
-    public void verifySuccess(DateTime dateTime) {
-        Assert.assertEquals(dateTime.toString(), selenium.getText("DateTimeUpdate.text.result"));
+    public ViewReportCategoriesPage submit() {
+        selenium.click("//input[@value='Submit']");
+        waitForPageToLoad();
+        return new ViewReportCategoriesPage(selenium);
     }
-
 }

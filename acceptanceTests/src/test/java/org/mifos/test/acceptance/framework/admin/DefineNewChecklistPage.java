@@ -21,46 +21,33 @@
 package org.mifos.test.acceptance.framework.admin;
 
 import org.mifos.test.acceptance.framework.MifosPage;
-import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
 
-public class DefineLabelsPage extends MifosPage {
+public class DefineNewChecklistPage extends MifosPage {
 
-    public DefineLabelsPage(Selenium selenium) {
+    public DefineNewChecklistPage(Selenium selenium) {
         super(selenium);
+        verifyPage("create_checkList");
     }
 
-    public void verifyPage() {
-        verifyPage("definelabels");
-    }
-
-    public void setLabelValue(String label, String value) {
-        selenium.type(label, value);
-    }
-
-    public String getCitizenshipLabel() {
-        return selenium.getText("defineLabels.input.citizenship");
-    }
-
-    public String getGovtIdLabel() {
-        return selenium.getText("defineLabels.input.govtId");
-    }
-
-    public void verifyLabelValue(String label, String value) {
-        Assert.assertEquals(selenium.getValue(label), value);
-    }
-
-    public AdminPage submit() {
-        selenium.click("definelabels.button.submit");
+    private void submit() {
+        selenium.click("createChecklist.button.preview");
         waitForPageToLoad();
-        return new AdminPage(selenium);
     }
 
-    public AdminPage cancel() {
-        selenium.click("CANCEL");
+    public DefineNewChecklistPreviewPage fillFormAndNavigateToPreviewPage(DefineChecklistParameters checklistParams) {
+
+        selenium.type("checklistName", checklistParams.getName());
+        selenium.select("type", checklistParams.getType());
         waitForPageToLoad();
-        return new AdminPage(selenium);
-    }
+        selenium.select("stateId", checklistParams.getDisplayedWhenMovingIntoStatus());
+        for(String item : checklistParams.getItemsArray()) {
+            selenium.type("createChecklist.input.items", item);
+            selenium.click("createChecklist.button.addItem");
+        }
 
+        submit();
+        return new DefineNewChecklistPreviewPage(selenium);
+    }
 }

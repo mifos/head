@@ -257,7 +257,7 @@ explanation of the license and how it is applied.
 					<table width="93%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td align="center">
-								<html-el:submit	styleClass="buttn">
+								<html-el:submit	styleClass="buttn" styleId="manageCheckList.button.preview" >
 								<mifos:mifoslabel name="checklist.button_preview" />
 								</html-el:submit> &nbsp;
 

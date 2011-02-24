@@ -44,7 +44,7 @@ import org.testng.annotations.Test;
 
 @SuppressWarnings("PMD")
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"smoke","loan","acceptance","ui"})
+@Test(sequential = true, groups = {"loan","acceptance","ui"})
 public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
 
     private LoanTestHelper loanTestHelper;
@@ -61,7 +61,7 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
-    @BeforeMethod
+    @BeforeMethod(alwaysRun=true)
     public void setUp() throws Exception {
         super.setUp();
         loanTestHelper = new LoanTestHelper(selenium);
@@ -125,6 +125,43 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
         loanTestHelper.createLoanAccountForMultipleClientsInGroup(false);
     }
 
+    // http://mifosforge.jira.com/browse/MIFOSTEST-134
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void verifyLoanAccountCreationPipelineWhenGlimIsEnabled() throws Exception {
+        //Given
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTime targetTime = new DateTime(2009,7,11,13,0,0,0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
+
+        CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
+        searchParameters.setSearchString("Stu1232993852651 Client1232993852651");
+        searchParameters.setLoanProduct("WeeklyClientDeclinetLoanWithPeriodicFee");
+        String[] locators = {   "name=prdOfferingId",
+                                "loancreationdetails.input.sumLoanAmount",
+                                "loancreationdetails.input.interestRate",
+                                "loancreationdetails.input.numberOfInstallments",
+                                "disbursementDateDD",
+                                "disbursementDateMM",
+                                "disbursementDateYY",
+                                "name=loanOfferingFund",
+                                "name=businessActivityId",
+                                "name=collateralTypeId",
+                                "name=collateralNote",
+                                "name=externalId",
+                                "name=selectedFee[0].feeId",
+                                "name=selectedFee[0].amount",
+                                "name=selectedFee[1].feeId",
+                                "name=selectedFee[1].amount",
+                                "name=selectedFee[2].feeId",
+                                "name=selectedFee[2].amount",
+                                "loancreationdetails.button.continue",
+                                "loancreationdetails.button.cancel"
+                            };
+        //When / Then
+        loanTestHelper.navigateToCreateLoanAccountEntryPage(searchParameters).verifyAllElementsArePresent(locators);
+   }
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void newWeeklyGLIMAccount() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
@@ -176,5 +213,4 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
         loanAccountEntryPage.checkTotalAmount("209997");
 
    }
-
 }

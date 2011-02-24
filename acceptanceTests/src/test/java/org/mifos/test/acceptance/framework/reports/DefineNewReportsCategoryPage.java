@@ -17,35 +17,26 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-
-package org.mifos.test.acceptance.framework.admin;
-
-import java.util.Locale;
-
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-import org.mifos.test.acceptance.framework.MifosPage;
-import org.testng.Assert;
+package org.mifos.test.acceptance.framework.reports;
 
 import com.thoughtworks.selenium.Selenium;
+import org.mifos.test.acceptance.framework.MifosPage;
 
-public class SystemInfoPage extends MifosPage {
+public class DefineNewReportsCategoryPage extends MifosPage{
 
-    public SystemInfoPage(Selenium selenium) {
+    public DefineNewReportsCategoryPage(Selenium selenium) {
         super(selenium);
-        verifyPage("SysInfo");
+        this.verifyPage("defineNewReportsCategory");
     }
 
-    public String getDateTime() {
-        return selenium.getText("sysinfo.text.dateTime");
+    public DefineNewReportsCategoryPage setCategoryName(String categoryName) {
+        selenium.type("categoryName", categoryName);
+        return this;
     }
 
-    public void verifyDateTime(DateTime dateTime) {
-        DateTimeFormatter formatter = DateTimeFormat.shortDateTime().withLocale(Locale.getDefault());
-        String expectedDateTime =  formatter.print(dateTime.getMillis());
-
-        Assert.assertEquals(getDateTime(), expectedDateTime, "System date time and Mifos date time should be the same.");
+    public DefineNewReportsCategoryPreviewPage preview() {
+        selenium.click("//input[@value='Preview']");
+        waitForPageToLoad();
+        return new DefineNewReportsCategoryPreviewPage(selenium);
     }
-
 }

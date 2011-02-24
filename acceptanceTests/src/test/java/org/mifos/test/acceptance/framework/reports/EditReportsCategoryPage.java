@@ -18,34 +18,26 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.test.acceptance.framework.admin;
+package org.mifos.test.acceptance.framework.reports;
 
-import java.util.Locale;
-
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.mifos.test.acceptance.framework.MifosPage;
-import org.testng.Assert;
-
 import com.thoughtworks.selenium.Selenium;
 
-public class SystemInfoPage extends MifosPage {
+public class EditReportsCategoryPage extends MifosPage {
 
-    public SystemInfoPage(Selenium selenium) {
+    public EditReportsCategoryPage(Selenium selenium) {
         super(selenium);
-        verifyPage("SysInfo");
+        this.verifyPage("editReportsCategory");
     }
 
-    public String getDateTime() {
-        return selenium.getText("sysinfo.text.dateTime");
+    public EditReportsCategoryPage setCategoryName(String categoryName) {
+        selenium.type("categoryName", categoryName);
+        return this;
     }
 
-    public void verifyDateTime(DateTime dateTime) {
-        DateTimeFormatter formatter = DateTimeFormat.shortDateTime().withLocale(Locale.getDefault());
-        String expectedDateTime =  formatter.print(dateTime.getMillis());
-
-        Assert.assertEquals(getDateTime(), expectedDateTime, "System date time and Mifos date time should be the same.");
+    public EditReportsCategoryPreviewPage preview() {
+        selenium.click("//input[@value='Preview']");
+        waitForPageToLoad();
+        return new EditReportsCategoryPreviewPage(selenium);
     }
-
 }

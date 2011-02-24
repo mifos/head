@@ -80,7 +80,6 @@ public class FeeTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
-    @Test(groups = {"smoke"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void applyFee() throws Exception {
 

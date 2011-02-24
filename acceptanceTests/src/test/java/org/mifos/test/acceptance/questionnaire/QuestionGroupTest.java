@@ -75,7 +75,7 @@ import static org.testng.Assert.assertEquals;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
 @SuppressWarnings("PMD.CyclomaticComplexity")
-@Test(sequential = true, groups = {"client", "acceptance", "ui", "smoke"})
+@Test(sequential = true, groups = {"client", "acceptance", "ui"})
 public class QuestionGroupTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;

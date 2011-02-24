@@ -30,7 +30,7 @@ import static org.mifos.test.acceptance.framework.holiday.CreateHolidayEntryPage
 
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(sequential = true, groups = {"loanproduct", "acceptance", "ui","smoke"})
+@Test(sequential = true, groups = {"loanproduct", "acceptance", "ui"})
 public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
 
     @Autowired
