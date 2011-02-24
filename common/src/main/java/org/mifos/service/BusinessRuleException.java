@@ -28,13 +28,13 @@ public class BusinessRuleException extends RuntimeException {
     private final Object[] messageValues;
 
     public BusinessRuleException(String messageKey) {
-        super();
+        super(messageKey);
         this.messageKey = messageKey;
         this.messageValues = null;
     }
 
     public BusinessRuleException(String messageKey, Object[] messageValues) {
-        super();
+        super(messageKey);
         this.messageKey = messageKey;
         this.messageValues = messageValues;
     }
