@@ -63,6 +63,11 @@ public class QuestionGroupCenterTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
+    /**
+     * Attaching a Question Group to View Center and capturing responses
+     * http://mifosforge.jira.com/browse/MIFOSTEST-661
+     * @throws Exception
+     */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyAttachingQuestionGroupToCenter() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_016_dbunit.xml", dataSource, selenium);
