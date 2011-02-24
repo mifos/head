@@ -30,6 +30,8 @@ import org.mifos.dto.screen.CustomerSearchResultsDto;
 import org.mifos.dto.screen.LoanCreationLoanDetailsDto;
 import org.mifos.dto.screen.LoanCreationProductDetailsDto;
 import org.mifos.dto.screen.SearchDetailsDto;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
+import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -37,10 +39,12 @@ import org.springframework.stereotype.Controller;
 public class LoanAccountController {
 
 	private final LoanAccountServiceFacade loanAccountServiceFacade;
+    private final QuestionnaireServiceFacade questionnaireServiceFacade;
 
 	@Autowired
-    public LoanAccountController(LoanAccountServiceFacade loanAccountServiceFacade) {
+    public LoanAccountController(LoanAccountServiceFacade loanAccountServiceFacade, QuestionnaireServiceFacade questionnaireServiceFacade) {
 		this.loanAccountServiceFacade = loanAccountServiceFacade;
+        this.questionnaireServiceFacade = questionnaireServiceFacade;
     }
 	
 	public CustomerSearchResultsDto searchCustomers(CustomerSearchFormBean formBean) {
@@ -62,9 +66,17 @@ public class LoanAccountController {
     	LoanCreationLoanDetailsDto dto = this.loanAccountServiceFacade.retrieveLoanDetailsForLoanAccountCreation(customerId, Integer.valueOf(productId).shortValue());
     	
     	formBean.setProductId(productId);
-    	formBean.setAmount(Double.valueOf("7000.0"));
-    	formBean.setInterestRate(Double.valueOf("10.0"));
-    	formBean.setNumberOfInstallments(Integer.valueOf(12));
+    	formBean.setAmount(Double.valueOf(dto.getDefaultLoanAmount()));
+    	formBean.setMinAllowedAmount(Double.valueOf(dto.getMinLoanAmount()));
+    	formBean.setMaxAllowedAmount(Double.valueOf(dto.getMaxLoanAmount()));
+    	
+    	formBean.setInterestRate(dto.getDefaultInterestRate());
+    	formBean.setMinAllowedInterestRate(dto.getMinInterestRate());
+    	formBean.setMaxAllowedInterestRate(dto.getMaxInterestRate());
+    	
+    	formBean.setNumberOfInstallments(dto.getDefaultNumberOfInstallments());
+    	formBean.setMinNumberOfInstallments(dto.getMinNumberOfInstallments());
+    	formBean.setMaxNumberOfInstallments(dto.getMaxNumberOfInstallments());
     	
     	LocalDate today = new LocalDate();
     	formBean.setDisbursalDateDay(today.getDayOfMonth());
@@ -87,5 +99,9 @@ public class LoanAccountController {
 		formBean.setSelectedFeeAmount(selectedFeeAmount);
     	
     	return dto;
+    }
+    
+    public void loadQuestionGroups(LoanAccountQuestionGroupFormBean loanAccountQuestionGroupFormBean) {
+        loanAccountQuestionGroupFormBean.setQuestionGroups(questionnaireServiceFacade.getQuestionGroups("Create", "Loan"));
     }
 }

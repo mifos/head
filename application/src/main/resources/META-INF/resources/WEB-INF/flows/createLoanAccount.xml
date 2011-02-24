@@ -6,6 +6,7 @@
     <var name="customerSearchFormBean" class="org.mifos.clientportfolio.loan.ui.CustomerSearchFormBean" />
     <var name="selectProductFormBean" class="org.mifos.clientportfolio.loan.ui.SelectProductFormBean" />
     <var name="loanAccountFormBean" class="org.mifos.clientportfolio.loan.ui.LoanAccountFormBean" />
+    <var name="loanAccountQuestionGroupFormBean" class="org.mifos.clientportfolio.loan.ui.LoanAccountQuestionGroupFormBean" />
 
     <decision-state id="isCustomerSearchRequiredStep">
         <if test="requestParameters.customerId == null" then="customerSearchStep" else="customerSearchStep" />
@@ -22,8 +23,8 @@
         <transition on="searchTermEntered" to="selectCustomerStep" validate="true">
             <evaluate expression="loanAccountController.searchCustomers(customerSearchFormBean)" result="flowScope.customerSearchResultsDto" />
         </transition>
-        <transition on="cancel" to="cancel" validate="false"/>
         <transition on="customerSelected" to="handleSelectedCustomer"/>
+        <transition on="cancel" to="cancel" validate="false"/>
     </view-state>
     
     <action-state id="handleSelectedCustomer">
@@ -35,19 +36,32 @@
         <on-entry>
             <evaluate expression="loanAccountController.retrieveLoanProducts(flowScope.customerId)" result="flowScope.loanCreationProductDetailsDto" />
         </on-entry>
-        <transition on="cancel" to="cancel" validate="false"/>
         <transition on="productSelected" to="enterAccountDetailsStep">
             <set name="flowScope.productId" value="requestParameters.productId" type="int"/>
         </transition>
+        <transition on="cancel" to="cancel" validate="false"/>
     </view-state>
     
      <view-state id="enterAccountDetailsStep" view="createLoanAccountEnterDetails" model="loanAccountFormBean">
         <on-entry>
 			<evaluate expression="loanAccountController.retrieveLoanCreationDetails(flowScope.customerId, flowScope.productId, loanAccountFormBean)" result="flowScope.loanProductReferenceData" />
         </on-entry>
-        <transition on="newProductSelected" to="enterAccountDetailsStep">
+        <transition on="newProductSelected" to="enterAccountDetailsStep" validate="false">
             <set name="flowScope.productId" value="requestParameters.productId" type="int"/>
         </transition>
+        <transition on="cancel" to="cancel" validate="false"/>
+        <transition on="detailsEntered" to="checkIfQuestionGroupsExistForLoanCreation" />
+    </view-state>
+    
+    <decision-state id="checkIfQuestionGroupsExistForLoanCreation">
+        <on-entry>
+            <evaluate expression="loanAccountController.loadQuestionGroups(loanAccountQuestionGroupFormBean)"/>
+        </on-entry>
+        <if test="loanAccountQuestionGroupFormBean.questionGroups.size() > 0" then="answerQuestionGroupStep" else="previewStep"/>
+    </decision-state>
+    
+    <view-state id="answerQuestionGroupStep" view="createLoanAccountQuestionnaire" model="loanAccountQuestionGroupFormBean">
+        <transition on="questionsAnswered" to="previewStep" validate="true" />
         <transition on="cancel" to="cancel" validate="false"/>
     </view-state>
     

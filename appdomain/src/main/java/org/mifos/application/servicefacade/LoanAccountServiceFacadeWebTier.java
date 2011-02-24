@@ -424,7 +424,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                         FeePayment feePayment = FeePayment.getFeePayment(fee.getFeeFrequency().getFeePayment().getId());
                         FeePaymentEntity feePaymentEntity = this.loanProductDao.retrieveFeePaymentType(feePayment); 
                         String feePaymentName = MessageLookup.getInstance().lookup(feePaymentEntity.getLookUpValue());
-                        feeDto.setFeeFrequencyType(feePaymentName);
+                        feeDto.getFeeFrequency().setPayment(feePaymentName);
                     }
                     
                     if (loanProduct.isFeePresent(fee)) {
@@ -452,10 +452,12 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
             // setDateIntoForm
             CustomerBO customer = this.customerDao.findCustomerById(customerId);
-            LoanAmountOption eligibleLoanAmount = loanProduct.eligibleLoanAmount(customer
-                    .getMaxLoanAmount(loanProduct), customer.getMaxLoanCycleForProduct(loanProduct));
-            LoanOfferingInstallmentRange eligibleNoOfInstall = loanProduct.eligibleNoOfInstall(customer
-                    .getMaxLoanAmount(loanProduct), customer.getMaxLoanCycleForProduct(loanProduct));
+            LoanAmountOption eligibleLoanAmount = loanProduct.eligibleLoanAmount(customer.getMaxLoanAmount(loanProduct), customer.getMaxLoanCycleForProduct(loanProduct));
+            LoanOfferingInstallmentRange eligibleNoOfInstall = loanProduct.eligibleNoOfInstall(customer.getMaxLoanAmount(loanProduct), customer.getMaxLoanCycleForProduct(loanProduct));
+            
+            Double defaultInterestRate = loanProduct.getDefInterestRate();
+            Double maxInterestRate = loanProduct.getMaxInterestRate();
+            Double minInterestRate = loanProduct.getMinInterestRate();
 
             
             HashMap<String, String> collateralOptions = new LinkedHashMap<String, String>();
@@ -498,7 +500,10 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             
             return new LoanCreationLoanDetailsDto(isRepaymentIndependentOfMeetingEnabled, loanOfferingMeetingDto,
                     customer.getCustomerMeetingValue().toDto(), loanPurposes, productDto, customerDetailDto, loanProductDtos, 
-                    interestTypeName, loanProduct.isPrinDueLastInst(), fundDtos, collateralOptions, purposeOfLoanOptions, defaultFeeOptions, additionalFeeOptions, defaultFees);
+                    interestTypeName, loanProduct.isPrinDueLastInst(), fundDtos, collateralOptions, purposeOfLoanOptions, 
+                    defaultFeeOptions, additionalFeeOptions, defaultFees, eligibleLoanAmount.getDefaultLoanAmountString(), 
+                    eligibleLoanAmount.getMaxLoanAmountString(), eligibleLoanAmount.getMinLoanAmountString(), defaultInterestRate, maxInterestRate, minInterestRate,
+                    eligibleNoOfInstall.getDefaultNoOfInstall().intValue(), eligibleNoOfInstall.getMaxNoOfInstall().intValue(), eligibleNoOfInstall.getMinNoOfInstall().intValue());
 
         } catch (SystemException e) {
             throw new MifosRuntimeException(e);

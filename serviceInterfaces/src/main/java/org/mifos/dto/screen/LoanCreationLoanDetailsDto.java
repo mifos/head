@@ -57,12 +57,24 @@ public class LoanCreationLoanDetailsDto implements Serializable {
 	
 	private final List<FundDto> fundDtos;
     private final List<FeeDto> defaultFees;
+    private final String defaultLoanAmount;
+    private final String maxLoanAmount;
+    private final String minLoanAmount;
+    private final Double defaultInterestRate;
+    private final Double maxInterestRate;
+    private final Double minInterestRate;
+    private final Integer defaultNumberOfInstallments;
+    private final Integer maxNumberOfInstallments;
+    private final Integer minNumberOfInstallments;
 
     public LoanCreationLoanDetailsDto(boolean isRepaymentIndependentOfMeetingEnabled,
             MeetingDto loanOfferingMeetingDetail, MeetingDto customerMeetingDetail,
             List<ValueListElement> loanPurposes, ProductDetailsDto productDto, CustomerDetailDto customerDetailDto, List<PrdOfferingDto> loanProductDtos, 
             String interestRateType, boolean principalDueOnLastInstallment, List<FundDto> fundDtos, HashMap<String, String> collateralOptions, 
-            HashMap<String, String> purposeOfLoanOptions, Map<String, String> defaultFeeOptions, Map<String, String> additionalFeeOptions, List<FeeDto> defaultFees) {
+            HashMap<String, String> purposeOfLoanOptions, Map<String, String> defaultFeeOptions, Map<String, String> additionalFeeOptions, List<FeeDto> defaultFees, 
+            String defaultLoanAmount, String maxLoanAmount, String minLoanAmount, 
+            Double defaultInterestRate, Double maxInterestRate, Double minInterestRate, 
+            Integer defaultNumberOfInstallments, Integer maxNumberOfInstallments, Integer minNumberOfInstallments) {
         this.isRepaymentIndependentOfMeetingEnabled = isRepaymentIndependentOfMeetingEnabled;
         this.loanOfferingMeetingDetail = loanOfferingMeetingDetail;
         this.customerMeetingDetail = customerMeetingDetail;
@@ -74,6 +86,15 @@ public class LoanCreationLoanDetailsDto implements Serializable {
 		this.principalDueOnLastInstallment = principalDueOnLastInstallment;
 		this.fundDtos = fundDtos;
         this.defaultFees = defaultFees;
+        this.defaultLoanAmount = defaultLoanAmount;
+        this.maxLoanAmount = maxLoanAmount;
+        this.minLoanAmount = minLoanAmount;
+        this.defaultInterestRate = defaultInterestRate;
+        this.maxInterestRate = maxInterestRate;
+        this.minInterestRate = minInterestRate;
+        this.defaultNumberOfInstallments = defaultNumberOfInstallments;
+        this.maxNumberOfInstallments = maxNumberOfInstallments;
+        this.minNumberOfInstallments = minNumberOfInstallments;
 		populateProductOptions(loanProductDtos);
 		populateFundOptions(fundDtos);
 		this.collateralOptions = collateralOptions;
@@ -160,5 +181,41 @@ public class LoanCreationLoanDetailsDto implements Serializable {
 	
     public List<FeeDto> getDefaultFees() {
         return defaultFees;
+    }
+    
+    public String getDefaultLoanAmount() {
+        return defaultLoanAmount;
+    }
+
+    public String getMaxLoanAmount() {
+        return maxLoanAmount;
+    }
+
+    public String getMinLoanAmount() {
+        return minLoanAmount;
+    }
+    
+    public Double getDefaultInterestRate() {
+        return defaultInterestRate;
+    }
+
+    public Double getMaxInterestRate() {
+        return maxInterestRate;
+    }
+
+    public Double getMinInterestRate() {
+        return minInterestRate;
+    }
+
+    public Integer getDefaultNumberOfInstallments() {
+        return defaultNumberOfInstallments;
+    }
+
+    public Integer getMaxNumberOfInstallments() {
+        return maxNumberOfInstallments;
+    }
+
+    public Integer getMinNumberOfInstallments() {
+        return minNumberOfInstallments;
     }
 }
