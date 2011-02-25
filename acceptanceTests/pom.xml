@@ -129,18 +129,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.seleniumhq.selenium.client-drivers</groupId>
-            <artifactId>selenium-java-client-driver</artifactId>
-            <version>1.0.1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.ant</groupId>
-                    <artifactId>ant</artifactId>
-                </exclusion>
-            </exclusions>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <scope>test</scope>
@@ -180,6 +168,16 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium</artifactId>
+            <version>2.0b1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-htmlunit-driver</artifactId>
+            <version>2.0b1</version>
         </dependency>
     </dependencies>
 
@@ -391,27 +389,6 @@
                             <value>acceptance</value>
                         </systemProperty>
                     </systemProperties>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>selenium-maven-plugin</artifactId>
-                <version>1.1</version>
-                <executions>
-                    <execution>
-                        <id>start-selenium</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>start-server</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <skip>${maven.test.skip}</skip>
-                    <background>${selenium.background}</background>
-                    <port>${SELENIUM_PORT}</port>
-                    <logOutput>${selenium.log.output}</logOutput>
-                    <browserSideLog>true</browserSideLog>
                 </configuration>
             </plugin>
         </plugins>

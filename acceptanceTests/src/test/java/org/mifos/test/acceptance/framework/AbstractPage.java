@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2011 Grameen Foundation USA
+ * Copyright (c) 2005-2010 Grameen Foundation USA
  * All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,6 +21,15 @@
 package org.mifos.test.acceptance.framework;
 
 import com.thoughtworks.selenium.Selenium;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverBackedSelenium;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.Wait;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.JavascriptExecutor;
+
 import org.testng.Assert;
 
 /**
@@ -34,6 +43,7 @@ public class AbstractPage {
 
     private static final String MAX_WAIT_FOR_PAGE_TO_LOAD_IN_MILLISECONDS = "30000";
     protected Selenium selenium;
+    protected WebDriver driver;
 
     public AbstractPage() {
         // do nothing
@@ -41,6 +51,7 @@ public class AbstractPage {
 
     public AbstractPage(Selenium selenium) {
         this.selenium = selenium;
+        driver = ((WebDriverBackedSelenium) selenium).getUnderlyingWebDriver();
     }
 
     protected void waitForPageToLoad() {
@@ -78,12 +89,29 @@ public class AbstractPage {
 //        selenium.keyUp(locator, tabKey);
         selenium.keyPressNative("9");
     }
-    public void waitForElementToPresent(String locator){
-        selenium.waitForCondition("selenium.isElementPresent(\"" + locator + "\")",MAX_WAIT_FOR_PAGE_TO_LOAD_IN_MILLISECONDS);
+
+    public void waitForElementToPresent(final String name) {
+        ExpectedCondition<Boolean> e = new ExpectedCondition<Boolean>() {
+            public Boolean apply(WebDriver d) {
+                WebElement element = d.findElement(By.name(name));
+                return Boolean.TRUE;
+            }
+        };
+        Wait<WebDriver> w = new WebDriverWait(driver,Long.valueOf(MAX_WAIT_FOR_PAGE_TO_LOAD_IN_MILLISECONDS));
+        w.until(e);
     }
 
     public void navigateBack(){
         selenium.goBack();
     }
+
+    public boolean isTextPresentInPage(String expectedText) {
+        return driver.findElement(By.tagName("body")).getText().contains(expectedText);
+    }
+
+    public String getEval(String script) {
+        return (String) ((JavascriptExecutor)driver).executeScript(script);
+    }
+
 
 }

@@ -23,4 +23,7 @@
     <bean id="initRemote" class="org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService" />
     <bean id="applicationDatabaseOperation" class="org.mifos.test.acceptance.util.ApplicationDatabaseOperation" />
 
+    <bean id="serverPort" class="java.lang.String">
+        <constructor-arg value="${servlet.port}" />
+    </bean>
 </beans>

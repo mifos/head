@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2011 Grameen Foundation USA
+ * Copyright (c) 2005-2010 Grameen Foundation USA
  * All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,6 +23,10 @@ package org.mifos.test.acceptance.framework;
 import com.thoughtworks.selenium.Selenium;
 import org.dbunit.DatabaseUnitException;
 import org.mifos.test.framework.util.DatabaseTestUtils;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverBackedSelenium;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
@@ -52,6 +56,7 @@ public class UiTestCaseBase extends AbstractTestNGSpringContextTests {
     private final DatabaseTestUtils dbUtils = new DatabaseTestUtils();
 
     protected Selenium selenium;
+    protected WebDriver driver;
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // allow for overriding methods to throw Exception
     @BeforeMethod
@@ -70,14 +75,10 @@ public class UiTestCaseBase extends AbstractTestNGSpringContextTests {
 
     @Autowired
     @Test(enabled=false)
-    public void setSelenium(Selenium selenium) {
-        this.selenium = selenium;
-        synchronized(UiTestCaseBase.class) {
-            if (!seleniumServerIsRunning.booleanValue()) {
-                selenium.start();
-                seleniumServerIsRunning = Boolean.TRUE;
-            }
-        }
+    public void setServerPort(String serverPort) {
+        selenium = new WebDriverBackedSelenium(new FirefoxDriver(), "http://localhost:" + serverPort + "/mifos");
+        driver = ((WebDriverBackedSelenium) selenium).getUnderlyingWebDriver();
+
     }
 
     @Test(enabled=false)
@@ -88,7 +89,7 @@ public class UiTestCaseBase extends AbstractTestNGSpringContextTests {
     }
 
     protected void assertTextFoundOnPage (String text, String message) {
-        assertTrue(selenium.isTextPresent(text), message);
+        assertTrue(isTextPresentInPage(text), message);
     }
 
     protected void assertTextFoundOnPage (String text) {
@@ -136,5 +137,9 @@ public class UiTestCaseBase extends AbstractTestNGSpringContextTests {
 
     protected void assertPage(String pageName) {
         assertEquals(selenium.getAttribute("page.id@title"), pageName);
+    }
+
+    public boolean isTextPresentInPage(String expectedText) {
+        return driver.findElement(By.tagName("body")).getText().contains(expectedText);
     }
 }

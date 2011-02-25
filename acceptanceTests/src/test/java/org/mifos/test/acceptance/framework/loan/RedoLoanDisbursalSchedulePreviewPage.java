@@ -103,10 +103,10 @@ public class RedoLoanDisbursalSchedulePreviewPage extends MifosPage {
             stringBuffer = stringBuffer.append(", ").append(index+1);
         }
         clickPreviewButtonAndWaitForPageToLoad();
-        isTextPresentInPage("Installments [" + stringBuffer.toString() .trim() +"] have the same due date");
+        verifyIsTextPresentInPage("Installments [" + stringBuffer.toString() .trim() +"] have the same due date");
     }
 
-    private void isTextPresentInPage(String validationMessage) {
+    private void verifyIsTextPresentInPage(String validationMessage) {
         assertTrue(selenium.isTextPresent(validationMessage), validationMessage);
         assertTrue(!selenium.isElementPresent("//span[@id='schedulePreview.error.message']/li[text()='']"), "Blank Error message is thrown");
         assertTrue(!selenium.isElementPresent("//span[@id='schedulePreview.error.message']/li[text()=' ']"), "Blank Error message is thrown");
@@ -120,7 +120,7 @@ public class RedoLoanDisbursalSchedulePreviewPage extends MifosPage {
         }
         clickPreviewButtonAndWaitForPageToLoad();
         for (int installment = 1; installment < noOfInstallments-1; installment++) {
-            isTextPresentInPage("Gap between the due dates of installment "+(installment+1)+" and the previous installment is more than allowed");
+            verifyIsTextPresentInPage("Gap between the due dates of installment "+(installment+1)+" and the previous installment is more than allowed");
         }
     }
 
@@ -133,7 +133,7 @@ public class RedoLoanDisbursalSchedulePreviewPage extends MifosPage {
             setInstallmentDate(String.valueOf(index), dateFormatter.print(nextInstallmentDate));
             setInstallmentDate(String.valueOf(index+1), dateFormatter.print(currentInstallmentDate));
             clickPreviewButtonAndWaitForPageToLoad();
-            isTextPresentInPage("Installment " + (index+2) + " has an invalid due date. Installment due dates should be in ascending order");
+            verifyIsTextPresentInPage("Installment " + (index+2) + " has an invalid due date. Installment due dates should be in ascending order");
         }
     }
 
@@ -151,7 +151,7 @@ public class RedoLoanDisbursalSchedulePreviewPage extends MifosPage {
         }
         clickPreviewButtonAndWaitForPageToLoad();
         for (int installment = 0; installment < noOfInstallment ; installment++) {
-            isTextPresentInPage("Installment " + (installment+1) +" has an invalid due date. An example due date is 23-Apr-2010");
+            verifyIsTextPresentInPage("Installment " + (installment+1) +" has an invalid due date. An example due date is 23-Apr-2010");
         }
     }
 
@@ -175,7 +175,7 @@ public class RedoLoanDisbursalSchedulePreviewPage extends MifosPage {
             }
         clickPreviewButtonAndWaitForPageToLoad();
         for (int installment = 1; installment < noOfInstallments-1; installment++) {
-            isTextPresentInPage("Gap between the due dates of installment "+ (installment+1)+" and the previous installment is less than allowed");
+            verifyIsTextPresentInPage("Gap between the due dates of installment "+ (installment+1)+" and the previous installment is less than allowed");
         }
     }
 
@@ -194,11 +194,11 @@ public class RedoLoanDisbursalSchedulePreviewPage extends MifosPage {
     private void validateGapForFirstDateAndDisbursalDate(DateTime disbursalDate) {
         setInstallmentDate("0", dateFormatter.print(disbursalDate));
         clickPreviewButtonAndWaitForPageToLoad();
-        isTextPresentInPage("Installment 1 has due date which falls on the disbursal date");
+        verifyIsTextPresentInPage("Installment 1 has due date which falls on the disbursal date");
 
         setInstallmentDate("0", dateFormatter.print(disbursalDate.minusDays(1)));
         clickPreviewButtonAndWaitForPageToLoad();
-        isTextPresentInPage("Installment 1 has due date which falls before the disbursal date");
+        verifyIsTextPresentInPage("Installment 1 has due date which falls before the disbursal date");
     }
 
     private void clickPreviewButtonAndWaitForPageToLoad() {
@@ -217,7 +217,7 @@ public class RedoLoanDisbursalSchedulePreviewPage extends MifosPage {
         fillAllFields(noOfInstallments, totalField, "abcd123");
         clickPreviewButtonAndWaitForPageToLoad();
         for (int installment = 0; installment < noOfInstallments-1; installment++) {
-            isTextPresentInPage("Installment "+(installment+1)+" has invalid total amount");
+            verifyIsTextPresentInPage("Installment "+(installment+1)+" has invalid total amount");
         }
     }
 
@@ -226,7 +226,7 @@ public class RedoLoanDisbursalSchedulePreviewPage extends MifosPage {
         fillAllFields(noOfInstallments, totalField, String.valueOf(minInstalmentAmount - 1));
         clickPreviewButtonAndWaitForPageToLoad();
         for (int installment = 0; installment < noOfInstallments-1; installment++) {
-            isTextPresentInPage("Installment "+(installment+1)+" has total amount less than the allowed value");
+            verifyIsTextPresentInPage("Installment "+(installment+1)+" has total amount less than the allowed value");
         }
     }
 
@@ -235,7 +235,7 @@ public class RedoLoanDisbursalSchedulePreviewPage extends MifosPage {
         fillAllFields(noOfInstallments, paidAmountField, "");
         clickPreviewButtonAndWaitForPageToLoad();
         for (int installment = 0; installment < noOfInstallments-1; installment++) {
-            isTextPresentInPage("Installment "+(installment+1)+" has invalid total amount");
+            verifyIsTextPresentInPage("Installment "+(installment+1)+" has invalid total amount");
         }
 
     }
