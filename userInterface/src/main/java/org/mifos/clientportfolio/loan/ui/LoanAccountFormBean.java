@@ -22,10 +22,15 @@ package org.mifos.clientportfolio.loan.ui;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotNull;
+
 import org.mifos.platform.validation.MifosBeanValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.binding.message.MessageBuilder;
 import org.springframework.binding.message.MessageContext;
 import org.springframework.binding.validation.ValidationContext;
+import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
 
 @SuppressWarnings("PMD")
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID", "EI_EXPOSE_REP", "EI_EXPOSE_REP2"}, justification="should disable at filter level and also for pmd - not important for us")
@@ -33,12 +38,21 @@ public class LoanAccountFormBean implements Serializable {
 
     @Autowired
     private transient MifosBeanValidator validator;
+    private transient DateValidator dateValidator;
 
+    @NotNull
     private Integer productId;
-    
+
+    // custom validation
     private Number amount;
+    private Number minAllowedAmount;
+    private Number maxAllowedAmount;
     private Number interestRate;
+    private Number minAllowedInterestRate;
+    private Number maxAllowedInterestRate;
     private Number numberOfInstallments;
+    private Number minNumberOfInstallments;
+    private Number maxNumberOfInstallments;
     private Number disbursalDateDay;
     private Number disbursalDateMonth;
     private Number disbursalDateYear;
@@ -54,7 +68,42 @@ public class LoanAccountFormBean implements Serializable {
     private String[] selectedFeeId;
     private String[] selectedFeeAmount;
     
-    
+    public void validateEnterAccountDetailsStep(ValidationContext context) {
+        MessageContext messages = context.getMessageContext();
+        Errors errors = validator.checkConstraints(this);
+        
+        if (this.amount == null || exceedsMinOrMax(this.amount, this.minAllowedAmount, this.maxAllowedAmount)) {
+            errors.rejectValue("amount", "loanAccountFormBean.Amount.invalid", new Object[] {this.minAllowedAmount, this.maxAllowedAmount}, "Please specify valid Amount.");
+        }
+        
+        if (this.interestRate == null || exceedsMinOrMax(this.interestRate, this.minAllowedInterestRate, this.maxAllowedInterestRate)) {
+            errors.rejectValue("interestRate", "loanAccountFormBean.InterestRate.invalid", new Object[] {this.minAllowedInterestRate, this.maxAllowedInterestRate}, "Please specify valid Interest rate.");
+        }
+        
+        if (this.numberOfInstallments == null || exceedsMinOrMax(this.numberOfInstallments, this.minNumberOfInstallments, this.maxNumberOfInstallments)) {
+            errors.rejectValue("numberOfInstallments", "loanAccountFormBean.NumberOfInstallments.invalid", new Object[] {this.minNumberOfInstallments, this.maxNumberOfInstallments}, "Please specify valid number of installments.");
+        }
+
+        dateValidator = new DateValidator();
+        if (!dateValidator.formsValidDate(this.disbursalDateDay, this.disbursalDateMonth, this.disbursalDateYear)) {
+            errors.rejectValue("disbursalDateDay", "loanAccountFormBean.DisbursalDate.invalid", "Please specify valid disbursal date.");
+        }
+        
+        if (errors.hasErrors()) {
+            for (FieldError fieldError : errors.getFieldErrors()) {
+                MessageBuilder builder = new MessageBuilder().error().source(fieldError.getField())
+                                                      .codes(fieldError.getCodes())
+                                                      .defaultText(fieldError.getDefaultMessage()).args(fieldError.getArguments());
+                
+                messages.addMessage(builder.build());
+            }
+        }
+    }
+
+    private boolean exceedsMinOrMax(Number defaultValue, Number minValue, Number maxValue) {
+        return defaultValue.doubleValue() > maxValue.doubleValue() || defaultValue.doubleValue() < minValue.doubleValue();
+    }
+
     public String[] getSelectedFeeId() {
 		return selectedFeeId;
 	}
@@ -174,9 +223,52 @@ public class LoanAccountFormBean implements Serializable {
 	public void setDisbursalDateYear(Number disbursalDateYear) {
 		this.disbursalDateYear = disbursalDateYear;
 	}
+	
+    public Number getMinAllowedAmount() {
+        return minAllowedAmount;
+    }
 
-	public void validateEnterAccountDetailsStep(ValidationContext context) {
-        MessageContext messages = context.getMessageContext();
-        validator.validate(this, messages);
+    public void setMinAllowedAmount(Number minAllowedAmount) {
+        this.minAllowedAmount = minAllowedAmount;
+    }
+
+    public Number getMaxAllowedAmount() {
+        return maxAllowedAmount;
+    }
+
+    public void setMaxAllowedAmount(Number maxAllowedAmount) {
+        this.maxAllowedAmount = maxAllowedAmount;
+    }
+    
+    public Number getMinAllowedInterestRate() {
+        return minAllowedInterestRate;
+    }
+
+    public void setMinAllowedInterestRate(Number minAllowedInterestRate) {
+        this.minAllowedInterestRate = minAllowedInterestRate;
+    }
+
+    public Number getMaxAllowedInterestRate() {
+        return maxAllowedInterestRate;
+    }
+
+    public void setMaxAllowedInterestRate(Number maxAllowedInterestRate) {
+        this.maxAllowedInterestRate = maxAllowedInterestRate;
+    }
+
+    public Number getMinNumberOfInstallments() {
+        return minNumberOfInstallments;
+    }
+
+    public void setMinNumberOfInstallments(Number minNumberOfInstallments) {
+        this.minNumberOfInstallments = minNumberOfInstallments;
+    }
+
+    public Number getMaxNumberOfInstallments() {
+        return maxNumberOfInstallments;
+    }
+
+    public void setMaxNumberOfInstallments(Number maxNumberOfInstallments) {
+        this.maxNumberOfInstallments = maxNumberOfInstallments;
     }
 }

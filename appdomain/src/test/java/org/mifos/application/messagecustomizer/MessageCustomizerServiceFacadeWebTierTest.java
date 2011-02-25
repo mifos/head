@@ -1,5 +1,10 @@
 package org.mifos.application.messagecustomizer;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+
 import java.util.Locale;
 
 import org.junit.Before;
@@ -21,8 +26,6 @@ public class MessageCustomizerServiceFacadeWebTierTest {
 	private MessageCustomizerServiceFacadeWebTier messageCustomizerServiceFacadeWebTier;
 
 	@Mock
-	private MessageCustomizerDao messageCustomizerDao;
-	@Mock
 	private MessageSource messageSource;	
 	
 	@Before
@@ -33,6 +36,7 @@ public class MessageCustomizerServiceFacadeWebTierTest {
 	
 	@Test
 	public void shouldRetrieveConfigurableLabels() {
+		when(messageSource.getMessage(any(String.class), any(Object[].class), any(Locale.class))).thenReturn("test:");
 		ConfigureApplicationLabelsDto labelsDto =
 			messageCustomizerServiceFacadeWebTier.retrieveConfigurableLabels(new Locale("en"));
 		
@@ -41,6 +45,6 @@ public class MessageCustomizerServiceFacadeWebTierTest {
 		GracePeriodDto gracePeriodDto = labelsDto.getGracePeriodDto();
 		OfficeLevelDto officeLevelDto = labelsDto.getOfficeLevels();
 		
-		//assertThat(accountStatusesLabelDto.getActive(),is())
+		assertThat(accountStatusesLabelDto.getActive(),is("test"));
 	}
 }

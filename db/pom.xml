@@ -209,6 +209,7 @@
                             <files>
                                 <file>${integration.database.properties.file}</file>
                                 <file>${mifos.overrides.home}</file>
+                                <file>${mifos.overrides.env}</file>
                             </files>
                         </configuration>
                     </execution>

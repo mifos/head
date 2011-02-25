@@ -2,7 +2,7 @@
 set -ex
 # JOB_NAME environment variable must be set. We count on Hudson for this.
 
-controlScript=$WORKSPACE/resources/continuous-integration/deploy/tomcat/control.sh
+controlScript=$WORKSPACE/resources/continuous-integration/deploy/jetty7x/control.sh
 lastStableWAR=$WORKSPACE/../lastStable/org.mifos\$mifos-war/archive/org.mifos/mifos-war/*/*.war
 deployRoot=$HOME/deploys/mifos-$JOB_NAME-deploy
 targetWARlocation=$deployRoot/jetty7x/webapps/mifos.war
@@ -11,6 +11,11 @@ dbPropertiesTemplate=$WORKSPACE/db/target/release/db/mifos-db-template.propertie
 expandScript=$WORKSPACE/db/target/release/db/bin/expand_db.sh
 contractScript=$WORKSPACE/db/target/release/db/bin/contract_db.sh
 liquibaseScript=$WORKSPACE/db/target/release/db/bin/liquibase.sh
+
+chmod +x $controlScript
+chmod +x $expandScript
+chmod +x $contractScript
+chmod +x $liquibaseScript
 
 function cUrl {
     # If TEST_SERVER_PORT is set by Hudson, we can test if the deployed test server
@@ -55,14 +60,10 @@ function stopJetty {
 }
 
 function doExpansion {
-    chmod +x $expandScript
-    chmod +x $liquibaseScript
     $expandScript
 }
 
 function doContraction {
-    chmod +x $contractScript
-    chmod +x $liquibaseScript
     $contractScript
 }
 

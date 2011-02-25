@@ -112,7 +112,7 @@ public class MessageCustomizerServiceFacadeWebTier implements MessageCustomizerS
 	}
 
 	@Override
-	public void updateApplicationLabels(LinkedHashMap<String,String> map) {
+	public void updateApplicationLabels(Map<String,String> map) {
         for (Map.Entry<String, String> entry : map.entrySet()) { 
         	messageFilterMap.put(entry.getKey(), entry.getValue());
         }

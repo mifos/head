@@ -77,7 +77,7 @@
  </div>
 [/#macro]
 
-+[#macro crumbpairs breadcrumbs lastEntryIsText="true"]
+[#macro crumbpairs breadcrumbs lastEntryIsText="true"]
 <div class="breadcrumb">
         [#list breadcrumbs?keys as text]
               [#if text_has_next || lastEntryIsText=="false"]

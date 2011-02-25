@@ -117,7 +117,7 @@
         [#else]
             [@form.submitButton id="approvedButton" label="widget.form.buttonLabel.approve" webflowEvent="approve" /]
         [/#if]
-        [@form.cancelButton webflowEvent="cancel" /]
+        [@form.cancelButton label="widget.form.buttonLabel.cancel" webflowEvent="cancel"  /]
     </div>
 </form>
 
