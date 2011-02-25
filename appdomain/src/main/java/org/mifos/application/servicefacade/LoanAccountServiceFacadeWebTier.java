@@ -505,7 +505,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             
             return new LoanCreationLoanDetailsDto(isRepaymentIndependentOfMeetingEnabled, loanOfferingMeetingDto,
                     customer.getCustomerMeetingValue().toDto(), loanPurposes, productDto, customerDetailDto, loanProductDtos, 
-                    interestTypeName, loanProduct.isPrinDueLastInst(), fundDtos, collateralOptions, purposeOfLoanOptions, 
+                    interestTypeName, fundDtos, collateralOptions, purposeOfLoanOptions, 
                     defaultFeeOptions, additionalFeeOptions, defaultFees, eligibleLoanAmount.getDefaultLoanAmountString(), 
                     eligibleLoanAmount.getMaxLoanAmountString(), eligibleLoanAmount.getMinLoanAmountString(), defaultInterestRate, maxInterestRate, minInterestRate,
                     eligibleNoOfInstall.getDefaultNoOfInstall().intValue(), eligibleNoOfInstall.getMaxNoOfInstall().intValue(), eligibleNoOfInstall.getMinNoOfInstall().intValue());

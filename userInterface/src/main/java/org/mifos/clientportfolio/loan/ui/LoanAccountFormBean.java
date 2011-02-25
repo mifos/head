@@ -26,8 +26,10 @@ import javax.validation.constraints.NotNull;
 
 import org.mifos.platform.validation.MifosBeanValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.binding.message.Message;
 import org.springframework.binding.message.MessageBuilder;
 import org.springframework.binding.message.MessageContext;
+import org.springframework.binding.message.MessageCriteria;
 import org.springframework.binding.validation.ValidationContext;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
@@ -38,7 +40,7 @@ public class LoanAccountFormBean implements Serializable {
 
     @Autowired
     private transient MifosBeanValidator validator;
-    private transient DateValidator dateValidator;
+    private transient DateValidator dateValidator = new DateValidator();
 
     @NotNull
     private Integer productId;
@@ -73,24 +75,44 @@ public class LoanAccountFormBean implements Serializable {
     private String[] selectedFeeAmount;
     
     public void validateEnterAccountDetailsStep(ValidationContext context) {
-        MessageContext messages = context.getMessageContext();
+        MessageContext messageContext = context.getMessageContext();
+        
         Errors errors = validator.checkConstraints(this);
         
+        // handle data binding errors that may of occurred
+        if (messageContext.hasErrorMessages()) {
+            Message[] errorMessages = messageContext.getMessagesByCriteria(new MessageCriteria() {
+                
+                @Override
+                public boolean test(Message message) {
+                    return true;
+                }
+            });
+            messageContext.clearMessages();
+            
+            for (Message message : errorMessages) {
+                handleDataMappingError(errors, message);
+            }
+        }
+        
         if (this.amount == null || exceedsMinOrMax(this.amount, this.minAllowedAmount, this.maxAllowedAmount)) {
-            errors.rejectValue("amount", "loanAccountFormBean.Amount.invalid", new Object[] {this.minAllowedAmount, this.maxAllowedAmount}, "Please specify valid Amount.");
+            String defaultErrorMessage = "Please specify valid Amount.";
+            rejectAmountField(errors, defaultErrorMessage);
         }
         
         if (this.interestRate == null || exceedsMinOrMax(this.interestRate, this.minAllowedInterestRate, this.maxAllowedInterestRate)) {
-            errors.rejectValue("interestRate", "loanAccountFormBean.InterestRate.invalid", new Object[] {this.minAllowedInterestRate, this.maxAllowedInterestRate}, "Please specify valid Interest rate.");
+            String defaultErrorMessage = "Please specify valid Interest rate.";
+            rejectInterestRateField(errors, defaultErrorMessage);
         }
         
         if (this.numberOfInstallments == null || exceedsMinOrMax(this.numberOfInstallments, this.minNumberOfInstallments, this.maxNumberOfInstallments)) {
-            errors.rejectValue("numberOfInstallments", "loanAccountFormBean.NumberOfInstallments.invalid", new Object[] {this.minNumberOfInstallments, this.maxNumberOfInstallments}, "Please specify valid number of installments.");
+            String defaultErrorMessage = "Please specify valid number of installments.";
+            rejectNumberOfInstallmentsField(errors, defaultErrorMessage);
         }
 
-        dateValidator = new DateValidator();
         if (!dateValidator.formsValidDate(this.disbursalDateDay, this.disbursalDateMonth, this.disbursalDateYear)) {
-            errors.rejectValue("disbursalDateDay", "loanAccountFormBean.DisbursalDate.invalid", "Please specify valid disbursal date.");
+            String defaultErrorMessage = "Please specify valid disbursal date.";
+            rejectDisbursementDateField(errors, defaultErrorMessage);
         }
         
         if (this.sourceOfFundsMandatory && isInvalidSelection(this.fundId)) {
@@ -98,7 +120,7 @@ public class LoanAccountFormBean implements Serializable {
         }
         
         if (this.purposeOfLoanMandatory && isInvalidSelection(this.loanPurposeId)) {
-            errors.rejectValue("fundId", "loanAccountFormBean.PurposeOfLoan.invalid", "Please specify loan purpose.");
+            errors.rejectValue("loanPurposeId", "loanAccountFormBean.PurposeOfLoan.invalid", "Please specify loan purpose.");
         }
         
         if (errors.hasErrors()) {
@@ -107,9 +129,47 @@ public class LoanAccountFormBean implements Serializable {
                                                       .codes(fieldError.getCodes())
                                                       .defaultText(fieldError.getDefaultMessage()).args(fieldError.getArguments());
                 
-                messages.addMessage(builder.build());
+                messageContext.addMessage(builder.build());
             }
         }
+    }
+
+    private void rejectDisbursementDateField(Errors errors, String defaultErrorMessage) {
+        errors.rejectValue("disbursalDateDay", "loanAccountFormBean.DisbursalDate.invalid", defaultErrorMessage);
+    }
+
+    private void rejectNumberOfInstallmentsField(Errors errors, String defaultErrorMessage) {
+        errors.rejectValue("numberOfInstallments", "loanAccountFormBean.NumberOfInstallments.invalid", new Object[] {this.minNumberOfInstallments, this.maxNumberOfInstallments}, defaultErrorMessage);
+    }
+
+    private void rejectAmountField(Errors errors, String defaultErrorMessage) {
+        errors.rejectValue("amount", "loanAccountFormBean.Amount.invalid", new Object[] {this.minAllowedAmount, this.maxAllowedAmount}, defaultErrorMessage);
+    }
+    
+    private void rejectInterestRateField(Errors errors, String defaultErrorMessage) {
+        errors.rejectValue("interestRate", "loanAccountFormBean.InterestRate.invalid", new Object[] {this.minAllowedInterestRate, this.maxAllowedInterestRate}, defaultErrorMessage);
+    }
+
+    private void handleDataMappingError(Errors errors, Message message) {
+        if ("amount".equals(message.getSource())) {
+            rejectAmountField(errors, message.getText());
+        }
+        
+        if ("interestRate".equals(message.getSource())) {
+            rejectInterestRateField(errors, message.getText());
+        }
+        
+        if ("numberOfInstallments".equals(message.getSource())) {
+            rejectNumberOfInstallmentsField(errors, message.getText());
+        }
+        
+        if (isAnyOf("disbursalDateDay", "disbursalDateMonth", "disbursalDateYear", message.getSource())) {
+            rejectDisbursementDateField(errors, message.getText());
+        }
+    }
+
+    private boolean isAnyOf(String field1, String field2, String field3, Object sourceField) {
+        return (field1.equals(sourceField) || field2.equals(sourceField) || field3.equals(sourceField));
     }
 
     private boolean isInvalidSelection(Integer selectionId) {
@@ -302,5 +362,13 @@ public class LoanAccountFormBean implements Serializable {
 
     public void setPurposeOfLoanMandatory(boolean purposeOfLoanMandatory) {
         this.purposeOfLoanMandatory = purposeOfLoanMandatory;
+    }
+    
+    public void setValidator(MifosBeanValidator validator) {
+        this.validator = validator;
+    }
+
+    public void setDateValidator(DateValidator dateValidator) {
+        this.dateValidator = dateValidator;
     }
 }

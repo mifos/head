@@ -54,16 +54,6 @@
         <div class="attribute">[@spring.message "productSummary.freqOfInstallments"/]</div>
         <div class="value">${loanProductReferenceData.loanOfferingMeetingDetail.meetingDetailsDto.every}&nbsp;${loanProductReferenceData.loanOfferingMeetingDetail.meetingDetailsDto.recurrenceName}</div>
     </div>
-    <div class="row">
-        <div class="attribute">[@spring.message "productSummary.principalDueOnLastInstallment"/]</div>
-        <div class="value">
-        [#if loanProductReferenceData.principalDueOnLastInstallment]
-        	[@spring.message "boolean.yes"/]
-        [#else]
-        	[@spring.message "boolean.no"/]
-        [/#if]
-        </div>
-    </div>
 </div>
 <br/>
 <div class="product-summary">

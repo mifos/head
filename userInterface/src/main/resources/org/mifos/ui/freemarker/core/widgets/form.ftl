@@ -72,7 +72,7 @@ Display form validation errors in one place.
         <div class="validationErrors">
             <ul>
             [#list spring.status.errorMessages as error]
-              <li><b>${error}</b></li>
+              <li><span class="standout">${error}</span></li>
             [/#list]
             </ul>
         </div>
