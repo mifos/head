@@ -40,7 +40,7 @@ public class LoanAccountFormBean implements Serializable {
 
     @Autowired
     private transient MifosBeanValidator validator;
-    private transient DateValidator dateValidator = new DateValidator();
+    private transient DateValidator dateValidator;
 
     @NotNull
     private Integer productId;
@@ -74,6 +74,7 @@ public class LoanAccountFormBean implements Serializable {
     private String[] selectedFeeId;
     private String[] selectedFeeAmount;
     
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SIC_INNER_SHOULD_BE_STATIC_ANON"}, justification="")
     public void validateEnterAccountDetailsStep(ValidationContext context) {
         MessageContext messageContext = context.getMessageContext();
         
@@ -110,6 +111,9 @@ public class LoanAccountFormBean implements Serializable {
             rejectNumberOfInstallmentsField(errors, defaultErrorMessage);
         }
 
+        if (dateValidator == null) {
+            dateValidator = new DateValidator();
+        }
         if (!dateValidator.formsValidDate(this.disbursalDateDay, this.disbursalDateMonth, this.disbursalDateYear)) {
             String defaultErrorMessage = "Please specify valid disbursal date.";
             rejectDisbursementDateField(errors, defaultErrorMessage);
