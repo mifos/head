@@ -361,6 +361,47 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         Assert.assertEquals(selenium.getTable("recentActivityForDetailPage.1.2"),"57.4");
 
     }
+
+    //http://mifosforge.jira.com/browse/MIFOSTEST-1070
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")// one of the dependent methods throws Exception
+    @Test(enabled=true)
+    public void savingsAccountsWithAdjustments() throws Exception {
+        //Given
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTime targetTime = new DateTime(2011,2,25,13,0,0,0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
+
+        //When
+        SavingsAccountDetailPage savingsAccountDetailPage = createSavingAccountWithCreatedProduct("Stu1232993852651 Client1232993852651", "MySavingsProduct1233265923516", "100000.0");
+        String savingsId = savingsAccountDetailPage.getAccountId();
+
+        EditAccountStatusParameters editAccountStatusParameters =new EditAccountStatusParameters();
+        editAccountStatusParameters.setAccountStatus(AccountStatus.SAVINGS_ACTIVE);
+        editAccountStatusParameters.setNote("change status to active");
+        savingsAccountHelper.changeStatus(savingsId, editAccountStatusParameters);
+
+        make3StraightDeposit(savingsId);
+
+        targetTime = new DateTime(2012,1,1,13,0,0,0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+
+        navigationHelper.navigateToAdminPage();
+        runBatchJobsForSavingsIntPosting();
+
+        navigationHelper.navigateToSavingsAccountDetailPage(savingsId);
+        Assert.assertEquals(selenium.getTable("recentActivityForDetailPage.1.2"),"20594.9");
+
+        //Then
+        DepositWithdrawalSavingsParameters depositParams = new DepositWithdrawalSavingsParameters();
+        DateTime badDate = new DateTime(2011,5,5,13,0,0,0);
+
+        selenium.setSpeed("1777");
+        makeDefaultDepositWithdrawal(badDate,depositParams,savingsId, DepositWithdrawalSavingsParameters.DEPOSIT);
+
+        Assert.assertTrue(selenium.isTextPresent("Date of transaction is invalid. It can not be prior to the last meeting date of the customer or prior to activation date of the savings account."));
+    }
+
     private String createSavingsAccount(SavingsProductParameters params){
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
         confirmationPage.navigateToSavingsProductDetails();
