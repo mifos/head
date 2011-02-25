@@ -736,7 +736,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
         } catch (AccountException e) {
-            throw new BusinessRuleException(e.getKey(), e);
+            throw new BusinessRuleException(e.getKey(), e.getValues());
         } catch (ServiceException e) {
             throw new MifosRuntimeException(e);
         }
