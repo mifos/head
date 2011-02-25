@@ -25,6 +25,7 @@ import com.thoughtworks.selenium.Selenium;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.center.CenterViewDetailsPage;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
+import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -92,6 +93,11 @@ public class QuestionnairePage extends MifosPage {
         return selenium.isElementPresent("id=allErrors") ? new QuestionnairePage(selenium) : new CenterViewDetailsPage(selenium);
     }
 
+    public MifosPage submitAndNavigateToGroupViewDetailsPage() {
+        clickSubmit();
+        return selenium.isElementPresent("id=allErrors") ? new QuestionnairePage(selenium) : new GroupViewDetailsPage(selenium);
+    }
+
     public void setResponsesForMultiSelect(String question, int totalChoices, String... choices) {
         String questionId = selenium.getEval(String.format(SELECT_QUESTION_JS, question));
         String choiceIdFormat = questionId + "s%d";
@@ -144,6 +150,11 @@ public class QuestionnairePage extends MifosPage {
     public CenterViewDetailsPage cancelAndNavigateToCenterViewDetailsPage() {
         clickCancel();
         return new CenterViewDetailsPage(selenium);
+    }
+
+    public GroupViewDetailsPage cancelAndNavigateToGroupViewDetailsPage() {
+        clickCancel();
+        return new GroupViewDetailsPage(selenium);
     }
 
     public void verifyTextPresent(String expectedText, String errorMessage) {

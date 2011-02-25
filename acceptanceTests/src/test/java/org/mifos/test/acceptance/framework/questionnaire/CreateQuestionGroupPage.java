@@ -19,9 +19,11 @@
  */
 package org.mifos.test.acceptance.framework.questionnaire;
 
-import com.thoughtworks.selenium.Selenium;
 import java.util.List;
+
 import org.testng.Assert;
+
+import com.thoughtworks.selenium.Selenium;
 
 public class CreateQuestionGroupPage extends CreateQuestionGroupRootPage {
 
