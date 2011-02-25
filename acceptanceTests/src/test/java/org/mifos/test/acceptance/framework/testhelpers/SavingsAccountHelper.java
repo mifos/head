@@ -68,7 +68,7 @@ public class SavingsAccountHelper {
         createSavingsAccountSearchPage.verifyPage();
         CreateSavingsAccountEntryPage createSavingsAccountEntryPage = createSavingsAccountSearchPage.searchAndNavigateToCreateSavingsAccountPage(searchParameters);
         createSavingsAccountEntryPage.verifyPage();
-        CreateSavingsAccountConfirmationPage createSavingsAccountConfirmationPage = createSavingsAccountEntryPage.submitWithQGAndNavigateToSavingsAccountConfirmationPage(submitAccountParameters);
+        CreateSavingsAccountConfirmationPage createSavingsAccountConfirmationPage = createSavingsAccountEntryPage.submitAndNavigateToSavingsAccountConfirmationPage(submitAccountParameters);
         createSavingsAccountConfirmationPage.verifyPage();
         SavingsAccountDetailPage savingsAccountDetailPage = createSavingsAccountConfirmationPage.navigateToSavingsAccountDetailsPage();
         savingsAccountDetailPage.verifyPage();
