@@ -2124,7 +2124,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         // We have done localization of Months using Joda type in http://mifosforge.jira.com/browse/MIFOS-3970
         // see the usage of WeekDay#setName and it initializes with empty name.
         for(WeekDay weekDay : weekDays) {
-            if(isBlank(weekDay.getName())) {
+            if(StringUtils.isBlank(weekDay.getName())) {
                 weekDay.setWeekdayName(MessageLookup.getInstance().lookup(weekDay.getPropertiesKey()));
             }
         }
