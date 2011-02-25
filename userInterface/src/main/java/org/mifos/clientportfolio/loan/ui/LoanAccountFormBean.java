@@ -74,6 +74,10 @@ public class LoanAccountFormBean implements Serializable {
     private String[] selectedFeeId;
     private String[] selectedFeeAmount;
     
+    public void validateEditAccountDetailsStep(ValidationContext context) {
+        validateEnterAccountDetailsStep(context);
+    }
+    
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SIC_INNER_SHOULD_BE_STATIC_ANON"}, justification="")
     public void validateEnterAccountDetailsStep(ValidationContext context) {
         MessageContext messageContext = context.getMessageContext();
