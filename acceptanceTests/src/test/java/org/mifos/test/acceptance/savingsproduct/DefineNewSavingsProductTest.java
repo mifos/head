@@ -365,7 +365,7 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
     //http://mifosforge.jira.com/browse/MIFOSTEST-1070
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")// one of the dependent methods throws Exception
     @Test(enabled=true)
-    public void savingsAccountsWithAdjustments() throws Exception {
+    public void restrictionsSavingsTransactions() throws Exception {
         //Given
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         DateTime targetTime = new DateTime(2011,2,25,13,0,0,0);
@@ -396,7 +396,6 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         DepositWithdrawalSavingsParameters depositParams = new DepositWithdrawalSavingsParameters();
         DateTime badDate = new DateTime(2011,5,5,13,0,0,0);
 
-        selenium.setSpeed("1777");
         makeDefaultDepositWithdrawal(badDate,depositParams,savingsId, DepositWithdrawalSavingsParameters.DEPOSIT);
 
         Assert.assertTrue(selenium.isTextPresent("Date of transaction is invalid. It can not be prior to the last meeting date of the customer or prior to activation date of the savings account."));
