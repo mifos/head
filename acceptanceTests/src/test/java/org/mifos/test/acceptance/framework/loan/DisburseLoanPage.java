@@ -22,6 +22,7 @@ package org.mifos.test.acceptance.framework.loan;
 
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
@@ -35,6 +36,18 @@ public class DisburseLoanPage extends MifosPage {
     }
 
     public DisburseLoanConfirmationPage submitAndNavigateToDisburseLoanConfirmationPage(DisburseLoanParameters params) {
+        fillForm(params);
+        submit();
+        return new DisburseLoanConfirmationPage(selenium);
+    }
+
+    public QuestionResponsePage submitAndNavigateToQuestionResponsePage(DisburseLoanParameters params) {
+        fillForm(params);
+        submit();
+        return new QuestionResponsePage(selenium);
+    }
+
+    private void fillForm(DisburseLoanParameters params) {
         this.typeTextIfNotEmpty("transactionDateDD", params.getDisbursalDateDD());
         this.typeTextIfNotEmpty("transactionDateMM", params.getDisbursalDateMM());
         this.typeTextIfNotEmpty("transactionDateYY", params.getDisbursalDateYYYY());
@@ -48,14 +61,11 @@ public class DisburseLoanPage extends MifosPage {
         this.typeTextIfNotEmpty("DisburseLoan.input.disbursementAmount", params.getAmount());
 
         selenium.select("DisburseLoan.input.paymentType", "value=" + params.getPaymentTypeValue());
+    }
 
+    private void submit() {
         selenium.click("DisburseLoan.button.reviewTransaction");
-
-        // there are some options for Payment but they're always
-        // disabled.
-
         waitForPageToLoad();
-        return new DisburseLoanConfirmationPage(selenium);
     }
 
     public void submitWithWrongParams(DisburseLoanParameters params, String msg) {

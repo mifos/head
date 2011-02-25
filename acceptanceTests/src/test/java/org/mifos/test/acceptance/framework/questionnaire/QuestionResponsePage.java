@@ -27,6 +27,7 @@ import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.client.CreateClientEnterMfiDataPage;
 import org.mifos.test.acceptance.framework.group.CreateGroupConfirmationPage;
 import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
+import org.mifos.test.acceptance.framework.loan.DisburseLoanConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 
 import java.util.Map;
@@ -97,10 +98,13 @@ public class QuestionResponsePage extends MifosPage {
     }
 
     public CreateOfficePreviewDataPage navigateToNextPageAndReturnPage() {
-        selenium.click("captureQuestionResponses.button.continue");
-        waitForPageToLoad();
-
+        navigateToNextPage();
         return new CreateOfficePreviewDataPage(selenium);
+    }
+
+    public DisburseLoanConfirmationPage continueAndNavigateToDisburseLoanConfirmationPage() {
+        navigateToNextPage();
+        return new DisburseLoanConfirmationPage(selenium);
     }
 
     public CreateClientEnterMfiDataPage navigateToNextPageClientCreation() {
