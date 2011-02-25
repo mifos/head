@@ -34,7 +34,6 @@ import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.InstallmentDate;
 import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.config.AccountingRules;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.service.BusinessRuleException;
@@ -42,7 +41,7 @@ import org.mifos.service.BusinessRuleException;
 public class IndividualLoanScheduleFactory implements LoanScheduleFactory {
 
     @Override
-    public IndividualLoanSchedule create(List<DateTime> loanScheduleDates, LoanOfferingBO loanProduct, Money loanAmount) {
+    public IndividualLoanSchedule create(List<DateTime> loanScheduleDates, LoanOfferingBO loanProduct, Money loanAmount, Double interestRate, Integer interestDays) {
 
         GraceType graceType = loanProduct.getGraceType();
         Integer gracePeriodDuration = Integer.valueOf(0);
@@ -50,9 +49,6 @@ public class IndividualLoanScheduleFactory implements LoanScheduleFactory {
             gracePeriodDuration = loanProduct.getGracePeriodDuration().intValue();
         }
         MeetingBO loanMeeting = loanProduct.getLoanOfferingMeetingValue();
-        // FIXME - keithw - fixed interest rate. pass in.
-        Double interestRate = Double.valueOf("10.0");
-        Integer interestDays = Integer.valueOf(AccountingRules.getNumberOfInterestDays().intValue());
         InterestType interestType = loanProduct.getInterestType();
 
         CustomerBO customer = null;

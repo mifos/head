@@ -20,7 +20,7 @@
 
 package org.mifos.accounts.financial.business;
 
-import org.mifos.accounts.financial.servicefacade.GLCodeDto;
+import org.mifos.dto.domain.GLCodeDto;
 import org.mifos.framework.business.AbstractEntity;
 
 import javax.persistence.Column;

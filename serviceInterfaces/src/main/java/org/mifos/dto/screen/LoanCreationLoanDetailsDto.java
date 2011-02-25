@@ -22,10 +22,13 @@ package org.mifos.dto.screen;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.mifos.accounts.fund.servicefacade.FundDto;
 import org.mifos.dto.domain.CustomerDetailDto;
+import org.mifos.dto.domain.FeeDto;
 import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.domain.ProductDetailsDto;
@@ -42,14 +45,36 @@ public class LoanCreationLoanDetailsDto implements Serializable {
 	private final ProductDetailsDto productDto;
 	private final CustomerDetailDto customerDetailDto;
 	private final List<PrdOfferingDto> loanProductDtos;
-	private final Map<String, String> productOptions = new HashMap<String, String>();
 	private final String interestRateType;
 	private final boolean principalDueOnLastInstallment;
+	
+	private final Map<String, String> productOptions = new LinkedHashMap<String, String>();
+	private final Map<String, String> fundOptions = new LinkedHashMap<String, String>();
+	private final Map<String, String> purposeOfLoanOptions;
+	private final Map<String, String> collateralOptions;
+	private final Map<String, String> defaultFeeOptions;
+	private final Map<String, String> additionalFeeOptions;
+	
+	private final List<FundDto> fundDtos;
+    private final List<FeeDto> defaultFees;
+    private final String defaultLoanAmount;
+    private final String maxLoanAmount;
+    private final String minLoanAmount;
+    private final Double defaultInterestRate;
+    private final Double maxInterestRate;
+    private final Double minInterestRate;
+    private final Integer defaultNumberOfInstallments;
+    private final Integer maxNumberOfInstallments;
+    private final Integer minNumberOfInstallments;
 
-	public LoanCreationLoanDetailsDto(boolean isRepaymentIndependentOfMeetingEnabled,
+    public LoanCreationLoanDetailsDto(boolean isRepaymentIndependentOfMeetingEnabled,
             MeetingDto loanOfferingMeetingDetail, MeetingDto customerMeetingDetail,
             List<ValueListElement> loanPurposes, ProductDetailsDto productDto, CustomerDetailDto customerDetailDto, List<PrdOfferingDto> loanProductDtos, 
-            String interestRateType, boolean principalDueOnLastInstallment) {
+            String interestRateType, boolean principalDueOnLastInstallment, List<FundDto> fundDtos, HashMap<String, String> collateralOptions, 
+            HashMap<String, String> purposeOfLoanOptions, Map<String, String> defaultFeeOptions, Map<String, String> additionalFeeOptions, List<FeeDto> defaultFees, 
+            String defaultLoanAmount, String maxLoanAmount, String minLoanAmount, 
+            Double defaultInterestRate, Double maxInterestRate, Double minInterestRate, 
+            Integer defaultNumberOfInstallments, Integer maxNumberOfInstallments, Integer minNumberOfInstallments) {
         this.isRepaymentIndependentOfMeetingEnabled = isRepaymentIndependentOfMeetingEnabled;
         this.loanOfferingMeetingDetail = loanOfferingMeetingDetail;
         this.customerMeetingDetail = customerMeetingDetail;
@@ -59,21 +84,43 @@ public class LoanCreationLoanDetailsDto implements Serializable {
 		this.loanProductDtos = loanProductDtos;
 		this.interestRateType = interestRateType;
 		this.principalDueOnLastInstallment = principalDueOnLastInstallment;
+		this.fundDtos = fundDtos;
+        this.defaultFees = defaultFees;
+        this.defaultLoanAmount = defaultLoanAmount;
+        this.maxLoanAmount = maxLoanAmount;
+        this.minLoanAmount = minLoanAmount;
+        this.defaultInterestRate = defaultInterestRate;
+        this.maxInterestRate = maxInterestRate;
+        this.minInterestRate = minInterestRate;
+        this.defaultNumberOfInstallments = defaultNumberOfInstallments;
+        this.maxNumberOfInstallments = maxNumberOfInstallments;
+        this.minNumberOfInstallments = minNumberOfInstallments;
 		populateProductOptions(loanProductDtos);
+		populateFundOptions(fundDtos);
+		this.collateralOptions = collateralOptions;
+		this.purposeOfLoanOptions = purposeOfLoanOptions;
+		this.defaultFeeOptions = defaultFeeOptions;
+		this.additionalFeeOptions = additionalFeeOptions;
     }
 	
-    public String getInterestRateType() {
+    private void populateFundOptions(List<FundDto> funds) {
+    	for (FundDto fund : funds) {
+			this.fundOptions.put(fund.getId(), fund.getName());
+		}
+	}
+    
+    private void populateProductOptions(List<PrdOfferingDto> loanProducts) {
+    	for (PrdOfferingDto product : loanProducts) {
+    		this.productOptions.put(product.getPrdOfferingId().toString(), product.getPrdOfferingName());			
+		}
+	}
+
+	public String getInterestRateType() {
 		return interestRateType;
 	}
 
 	public boolean isPrincipalDueOnLastInstallment() {
 		return principalDueOnLastInstallment;
-	}
-
-	private void populateProductOptions(List<PrdOfferingDto> loanProducts) {
-    	for (PrdOfferingDto product : loanProducts) {
-    		this.productOptions.put(product.getPrdOfferingId().toString(), product.getPrdOfferingName());			
-		}
 	}
 
     public boolean isRepaymentIndependentOfMeetingEnabled() {
@@ -107,4 +154,68 @@ public class LoanCreationLoanDetailsDto implements Serializable {
 	public Map<String, String> getProductOptions() {
 		return productOptions;
 	}
+	
+	public Map<String, String> getFundOptions() {
+		return fundOptions;
+	}
+
+	public Map<String, String> getPurposeOfLoanOptions() {
+		return purposeOfLoanOptions;
+	}
+
+	public Map<String, String> getCollateralOptions() {
+		return collateralOptions;
+	}
+
+	public List<FundDto> getFundDtos() {
+		return fundDtos;
+	}
+	
+	public Map<String, String> getDefaultFeeOptions() {
+		return defaultFeeOptions;
+	}
+
+	public Map<String, String> getAdditionalFeeOptions() {
+		return additionalFeeOptions;
+	}
+	
+    public List<FeeDto> getDefaultFees() {
+        return defaultFees;
+    }
+    
+    public String getDefaultLoanAmount() {
+        return defaultLoanAmount;
+    }
+
+    public String getMaxLoanAmount() {
+        return maxLoanAmount;
+    }
+
+    public String getMinLoanAmount() {
+        return minLoanAmount;
+    }
+    
+    public Double getDefaultInterestRate() {
+        return defaultInterestRate;
+    }
+
+    public Double getMaxInterestRate() {
+        return maxInterestRate;
+    }
+
+    public Double getMinInterestRate() {
+        return minInterestRate;
+    }
+
+    public Integer getDefaultNumberOfInstallments() {
+        return defaultNumberOfInstallments;
+    }
+
+    public Integer getMaxNumberOfInstallments() {
+        return maxNumberOfInstallments;
+    }
+
+    public Integer getMinNumberOfInstallments() {
+        return minNumberOfInstallments;
+    }
 }

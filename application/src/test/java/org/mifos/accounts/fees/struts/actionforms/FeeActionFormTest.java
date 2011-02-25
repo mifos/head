@@ -29,7 +29,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.mifos.accounts.fees.servicefacade.FeeDto;
+import org.mifos.dto.domain.FeeDto;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 

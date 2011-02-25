@@ -20,17 +20,7 @@
 
 package org.mifos.framework;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.net.MalformedURLException;
-import java.sql.Connection;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import junit.framework.ComparisonFailure;
-
 import org.dbunit.Assertion;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.dataset.FilteredDataSet;
@@ -38,6 +28,7 @@ import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.filter.ExcludeTableFilter;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
+import org.hibernate.SessionFactory;
 import org.hibernate.stat.Statistics;
 import org.junit.After;
 import org.junit.Before;
@@ -51,6 +42,7 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.hibernate.helper.AuditInterceptorFactory;
 import org.mifos.framework.hibernate.helper.DatabaseDependentTest;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.ConfigurationLocator;
@@ -64,6 +56,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Log4jConfigurer;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.net.MalformedURLException;
+import java.sql.Connection;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  *  All classes extending this class must be names as <b>*IntegrationTest.java</b> to support maven-surefire-plugin autofind
@@ -84,6 +85,9 @@ public class MifosIntegrationTestCase {
 
     @Autowired
     protected LegacyPersonnelDao legacyPersonnelDao;
+
+    @Autowired
+    protected SessionFactory sessionFactory;
 
     /**
      * This is a switch to enable verification of database (cleanup) at the end of an integration tests. i.e. if a test
@@ -108,17 +112,17 @@ public class MifosIntegrationTestCase {
 
     @Before
     public void before() throws Exception {
-        new TestCaseInitializer().initialize();
+        new TestCaseInitializer().initialize(sessionFactory);
         dbVerificationSetUp();
+        DatabaseDependentTest.before(new AuditInterceptorFactory(), sessionFactory);
         Money.setDefaultCurrency(TestUtils.RUPEE);
-        DatabaseDependentTest.before();
     }
 
     @After
     public void after() throws Exception {
         diableCustomWorkingDays();
         TestUtils.dereferenceObjects(this);
-        DatabaseDependentTest.after();
+        DatabaseDependentTest.after(new AuditInterceptorFactory(), sessionFactory);
         dbVerificationTearDown();
     }
 

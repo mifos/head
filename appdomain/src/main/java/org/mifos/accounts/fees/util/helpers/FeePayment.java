@@ -20,7 +20,7 @@
 
 package org.mifos.accounts.fees.util.helpers;
 
-import org.mifos.framework.exceptions.PropertyNotFoundException;
+import org.mifos.service.BusinessRuleException;
 
 public enum FeePayment {
     UPFRONT((short) 1),
@@ -37,12 +37,12 @@ public enum FeePayment {
         return value;
     }
 
-    public static FeePayment getFeePayment(Short value) throws PropertyNotFoundException {
+    public static FeePayment getFeePayment(Short value) {
         for (FeePayment feePayment : FeePayment.values()) {
             if (feePayment.getValue().equals(value)) {
                 return feePayment;
             }
         }
-        throw new PropertyNotFoundException("FeePayment");
+        throw new BusinessRuleException("FeePayment");
     }
 }

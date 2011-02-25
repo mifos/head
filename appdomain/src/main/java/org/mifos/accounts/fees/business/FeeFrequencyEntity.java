@@ -21,21 +21,19 @@
 package org.mifos.accounts.fees.business;
 
 import org.mifos.accounts.fees.exceptions.FeeException;
-import org.mifos.accounts.fees.servicefacade.FeeFrequencyDto;
 import org.mifos.accounts.fees.util.helpers.FeeConstants;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.dto.domain.FeeFrequencyDto;
 import org.mifos.framework.business.AbstractEntity;
 
 public class FeeFrequencyEntity extends AbstractEntity {
 
+    @SuppressWarnings("unused")
     private final Short feeFrequencyId;
-
     private final FeeFrequencyTypeEntity feeFrequencyType;
-
     private final FeePaymentEntity feePayment;
-
+    @SuppressWarnings("unused")
     private final FeeBO fee;
-
     private final MeetingBO feeMeetingFrequency;
 
     protected FeeFrequencyEntity() {
@@ -98,9 +96,10 @@ public class FeeFrequencyEntity extends AbstractEntity {
 
     public FeeFrequencyDto toDto() {
         FeeFrequencyDto feeFrequencyDto = new FeeFrequencyDto();
-        feeFrequencyDto.setType(this.feeFrequencyType.getName());
+//        feeFrequencyDto.setType(this.feeFrequencyType.getName());
         if (this.feeFrequencyType.isOneTime()) {
-            feeFrequencyDto.setPayment(this.feePayment.getName());
+//            feeFrequencyDto.setPayment(this.feePayment.getName());
+            feeFrequencyDto.setOneTime(true);
         } else {
             feeFrequencyDto.setMonthly(this.feeMeetingFrequency.isMonthly());
             feeFrequencyDto.setWeekly(this.feeMeetingFrequency.isWeekly());

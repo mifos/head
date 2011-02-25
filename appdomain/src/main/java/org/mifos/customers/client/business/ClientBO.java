@@ -20,16 +20,6 @@
 
 package org.mifos.customers.client.business;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.sql.Blob;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
 import org.hibernate.Hibernate;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -83,6 +73,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Blob;
+import java.util.*;
+
 /**
  * FIXME - keithw - move all usage of deprecated constructors in tests and TestObjectFactory towards newer builder + IntegrationTestObjectMother pattern
  */
@@ -90,21 +85,25 @@ public class ClientBO extends CustomerBO {
 
     private static final Logger logger = LoggerFactory.getLogger(ClientBO.class);
 
+    //business meta data
     private CustomerPictureEntity customerPicture;
     private Date dateOfBirth;
     private String governmentId;
-    private ClientPerformanceHistoryEntity clientPerformanceHistory;
-    private Short groupFlag;
+    private ClientDetailEntity customerDetail;
     private String firstName;
     private String lastName;
     private String secondLastName;
-    private ClientDetailEntity customerDetail;
-
     private Set<ClientFamilyDetailEntity> familyDetailSet;
-    private final Set<ClientAttendanceBO> clientAttendances;
+
+    //encapsulated business attributes
+    private Short groupFlag;
+    private Set<ClientAttendanceBO> clientAttendances;
     private Set<ClientInitialSavingsOfferingEntity> offeringsAssociatedInCreate;
-    private SavingsPersistence savingsPersistence = null;
-    private OfficePersistence officePersistence = null;
+    private OfficePersistence officePersistence;
+
+    //internal business attributes
+    private ClientPerformanceHistoryEntity clientPerformanceHistory;
+
 
     public static ClientBO createNewInGroupHierarchy(UserContext userContext, String clientName,
             CustomerStatus clientStatus, DateTime mfiJoiningDate, CustomerBO group, PersonnelBO formedBy,
@@ -187,11 +186,7 @@ public class ClientBO extends CustomerBO {
      */
     protected ClientBO() {
         super();
-
         this.clientAttendances = new HashSet<ClientAttendanceBO>();
-        this.clientPerformanceHistory = null;
-        this.offeringsAssociatedInCreate = null;
-        this.familyDetailSet = null;
     }
 
     /**
@@ -1197,4 +1192,6 @@ public class ClientBO extends CustomerBO {
     public void removeGroupMembership() {
         this.groupFlag = YesNoFlag.NO.getValue();
     }
+
+
 }

@@ -43,7 +43,7 @@
     </fieldset>
     <div class="row webflow-controls">
         [@form.submitButton label="widget.form.buttonLabel.continue" id="createsavingsaccount.button.continue" webflowEvent="productSelected" /]
-        [@form.cancelButton "cancel" /]
+        [@form.cancelButton label="widget.form.buttonLabel.cancel" webflowEvent="cancel"  /]
     </div>
 </form>
 

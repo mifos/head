@@ -28,7 +28,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
-import org.mifos.accounts.fees.servicefacade.FeeDto;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeeConstants;
 import org.mifos.accounts.fees.util.helpers.FeeFormula;
@@ -37,6 +36,7 @@ import org.mifos.accounts.fees.util.helpers.FeePayment;
 import org.mifos.accounts.fees.util.helpers.FeeStatus;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.util.helpers.Methods;
+import org.mifos.dto.domain.FeeDto;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.DoubleConversionResult;
@@ -151,7 +151,7 @@ public class FeeActionForm extends BaseActionForm {
         this.feeFrequencyType = feeFrequencyType;
     }
 
-    public FeeFrequencyType getFeeFrequencyTypeValue() throws PropertyNotFoundException {
+    public FeeFrequencyType getFeeFrequencyTypeValue() {
         return StringUtils.isNotBlank(feeFrequencyType) ? FeeFrequencyType.getFeeFrequencyType(Short
                 .valueOf(feeFrequencyType)) : null;
     }
