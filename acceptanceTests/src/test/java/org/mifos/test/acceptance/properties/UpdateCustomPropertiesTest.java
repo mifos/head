@@ -20,7 +20,6 @@
 
 package org.mifos.test.acceptance.properties;
 
-import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -50,9 +49,6 @@ import org.mifos.test.acceptance.framework.testhelpers.GroupTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.framework.testhelpers.SavingsAccountHelper;
-import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
@@ -60,19 +56,13 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"acceptance","ui", "properties"})
+@Test(sequential=true, groups={"acceptance","ui", "properties", "no_db_unit"})
 public class UpdateCustomPropertiesTest extends UiTestCaseBase {
     NavigationHelper navigationHelper;
     CustomPropertiesHelper propertiesHelper;
     SavingsAccountHelper savingsAccountHelper;
     CenterTestHelper centerTestHelper;
     ClientTestHelper clientTestHelper;
-    @Autowired
-    private DriverManagerDataSource dataSource;
-    @Autowired
-    private DbUnitUtilities dbUnitUtilities;
-    @Autowired
-    private InitializeApplicationRemoteTestingService initRemote;
 
     String errorInterestExceedsLimit = "The max interest is invalid because it is not in between";
     String errorInterestDigitsAfterDecimal ="The max interest is invalid because the number of digits after the decimal separator";
@@ -99,10 +89,9 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
     //http://mifosforge.jira.com/browse/MIFOSTEST-228
     public void verifyPropertyBackDatedTransactionsAllowedFalse() throws Exception{
         //Given
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
         propertiesHelper.setBackDatedTransactionsAllowed("false");
         //When
-        navigationHelper.navigateToLoanAccountPage("000100000000004").navigateToDisburseLoan().verifyDisbursalDateIsDisabled();
+        navigationHelper.navigateToLoanAccountPage("000100000000020").navigateToDisburseLoan().verifyDisbursalDateIsDisabled();
         //Then
         propertiesHelper.setBackDatedTransactionsAllowed("true");
     }
@@ -111,7 +100,6 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
     //http://mifosforge.jira.com/browse/MIFOSTEST-235
     public void verifyPropertyClientRulesClientCanExistOutsideGroupFalse() throws Exception{
         //Given
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
         propertiesHelper.setClientCanExistOutsideGroup("false");
         //When
         navigationHelper.navigateToClientsAndAccountsPage().navigateToCreateNewClientPage();
@@ -124,12 +112,11 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
     //http://mifosforge.jira.com/browse/MIFOSTEST-234
     public void verifyPropertyGroupCanApplyLoansTrue() throws Exception{
         //Given
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
         propertiesHelper.setGroupCanApplyLoans("true");
         LoanTestHelper helper = new LoanTestHelper(selenium);
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
-        searchParameters.setLoanProduct("WeeklyGroupDeclineLoanWithPeriodicFee");
-        searchParameters.setSearchString("MyGroup1232993846342");
+        searchParameters.setSearchString("UpdateCustomPropertiesTestGroup");
+        searchParameters.setLoanProduct("GroupEmergencyLoan");
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
         submitAccountParameters.setAmount("2000.0");
         //When Then
@@ -140,10 +127,9 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
     //http://mifosforge.jira.com/browse/MIFOSTEST-233
     public void verifyPropertyGroupCanApplyLoansFalse() throws Exception{
         //Given
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
         propertiesHelper.setGroupCanApplyLoans("false");
         //When
-        navigationHelper.navigateToGroupViewDetailsPage("MyGroup1232993846342");
+        navigationHelper.navigateToGroupViewDetailsPage("Default Group");
         //Then
         Assert.assertFalse(selenium.isElementPresent("viewgroupdetails.link.newLoanAccount"));
         propertiesHelper.setGroupCanApplyLoans("true");
@@ -153,7 +139,6 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
     //http://mifosforge.jira.com/browse/MIFOSTEST-232
     public void verifyPropertyClientRulesCenterHierarchyExistsFalse() throws Exception{
         //Given
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
         propertiesHelper.setCenterHierarchyExists("false");
 
         //When
@@ -178,19 +163,18 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
     //http://mifosforge.jira.com/browse/MIFOSTEST-231
     public void verifyPropertyClientRulesCenterHierarchyExistsTrue() throws Exception{
         //Given
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
         propertiesHelper.setCenterHierarchyExists("true");
 
         //When
         CreateCenterEnterDataPage.SubmitFormParameters formParameters = new CreateCenterEnterDataPage.SubmitFormParameters();
         formParameters.setCenterName("testCenterName12123");
-        formParameters.setLoanOfficer("Joe1232993835093 Guy1232993835093");
+        formParameters.setLoanOfficer("loan officer");
         MeetingParameters meeting = new MeetingParameters();
         meeting.setMeetingPlace("Bangalore");
         meeting.setWeekDay(MeetingParameters.WEDNESDAY);
         meeting.setWeekFrequency("1");
         formParameters.setMeeting(meeting);
-        CenterViewDetailsPage centerViewDetailsPage = centerTestHelper.createCenter(formParameters, "MyOffice1232993831593");
+        CenterViewDetailsPage centerViewDetailsPage = centerTestHelper.createCenter(formParameters, "MyOfficeDHMFT");
 
         //Then
         centerViewDetailsPage.verifyActiveCenter(formParameters);
@@ -200,10 +184,11 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
     //http://mifosforge.jira.com/browse/MIFOSTEST-216
     public void verifyPropertySavingsPendingApprovalStateEnabled() throws Exception{
         //Given
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
         propertiesHelper.setSavingsPendingApprovalStateEnabled("false");
         //When
-        CreateSavingsAccountSearchParameters searchParameters = getCreateSavingsAccountSearchParameters();
+        CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
+        searchParameters.setSearchString("UpdateCustomProperties TestClient");
+        searchParameters.setSavingsProduct("MandatorySavingsAccount");
         CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
         submitAccountParameters.setAmount("248.0");
         SavingsAccountDetailPage savingsAccountPage = savingsAccountHelper.createSavingsAccountWithoutPendingApprovalState(searchParameters, submitAccountParameters);
@@ -216,23 +201,17 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
         propertiesHelper.setSavingsPendingApprovalStateEnabled("true");
     }
 
-    private CreateSavingsAccountSearchParameters getCreateSavingsAccountSearchParameters(){
-        CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
-        searchParameters.setSearchString("Stu1233266079799 Client1233266079799");
-        searchParameters.setSavingsProduct("MandClientSavings3MoPostMinBal");
-        return searchParameters;
-    }
-
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     //http://mifosforge.jira.com/browse/MIFOSTEST-215
     public void verifyPropertyPendingApprovalStateEnabledForSavingsAndLoanAccounts() throws Exception{
         //Given
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
         propertiesHelper.setSavingsPendingApprovalStateEnabled("true");
         propertiesHelper.setLoanPendingApprovalStateEnabled("true");
         propertiesHelper.setGroupPendingApprovalStateEnabled("true");
         //When
-        CreateSavingsAccountSearchParameters searchParameters = getCreateSavingsAccountSearchParameters();
+        CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
+        searchParameters.setSearchString("UpdateCustomProperties TestClient");
+        searchParameters.setSavingsProduct("MonthlyClientSavingsAccount");
 
         CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
         submitAccountParameters.setAmount("248.0");
@@ -245,8 +224,8 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
         savingsAccountPage.verifyStatus("Application Pending Approval");
         //when
         CreateLoanAccountSearchParameters searchParameters2 = new CreateLoanAccountSearchParameters();
-        searchParameters2.setSearchString("Stu1233266079799 Client1233266079799");
-        searchParameters2.setLoanProduct("MonthlyClientFlatLoanWithFees");
+        searchParameters2.setSearchString("UpdateCustomProperties TestClient");
+        searchParameters2.setLoanProduct("ClientEmergencyLoan");
         CreateLoanAccountSubmitParameters submitAccountParameters2 = new CreateLoanAccountSubmitParameters();
         submitAccountParameters2.setAmount("2765.0");
         submitAccountParameters2.setGracePeriodTypeNone(true);
@@ -259,13 +238,12 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
     //http://mifosforge.jira.com/browse/MIFOSTEST-211
     public void verifyPropertyGroupPendingApprovalStateEnabled() throws Exception{
         //Given
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
         propertiesHelper.setGroupPendingApprovalStateEnabled("false");
         //When
         GroupTestHelper groupTestHelper = new GroupTestHelper(selenium);
         CreateGroupSubmitParameters groupParams = new CreateGroupSubmitParameters();
         groupParams.setGroupName("testGroup123123123123");
-        GroupViewDetailsPage groupViewDetailsPage = groupTestHelper.createNewGroupWithoutPendingForApproval("MyCenter1232993841778" , groupParams);
+        GroupViewDetailsPage groupViewDetailsPage = groupTestHelper.createNewGroupWithoutPendingForApproval("Default Center" , groupParams);
         //Then
         groupViewDetailsPage.verifyStatus("Active");
 
@@ -286,41 +264,38 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     //http://mifosforge.jira.com/browse/MIFOSTEST-200
     public void changeDigitsAfterDecimal() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml", dataSource, selenium);
 
         propertiesHelper.setDigitsAfterDecimal(3);
 
-        LoanAccountPage loanAccountPage  = navigationHelper.navigateToLoanAccountPage("000100000000004");
+        LoanAccountPage loanAccountPage  = navigationHelper.navigateToLoanAccountPage("000100000000015");
         loanAccountPage.verifyExactLoanAmount("1000.000");
 
         propertiesHelper.setDigitsAfterDecimal(2);
 
-        loanAccountPage  = navigationHelper.navigateToLoanAccountPage("000100000000004");
+        loanAccountPage  = navigationHelper.navigateToLoanAccountPage("000100000000015");
         loanAccountPage.verifyExactLoanAmount("1000.00");
 
         propertiesHelper.setDigitsAfterDecimal(0);
 
-        loanAccountPage  = navigationHelper.navigateToLoanAccountPage("000100000000004");
+        loanAccountPage  = navigationHelper.navigateToLoanAccountPage("000100000000015");
         loanAccountPage.verifyExactLoanAmount("1000");
 
         propertiesHelper.setDigitsAfterDecimal(1);
 
-        loanAccountPage  = navigationHelper.navigateToLoanAccountPage("000100000000004");
+        loanAccountPage  = navigationHelper.navigateToLoanAccountPage("000100000000015");
         loanAccountPage.verifyExactLoanAmount("1000.0");
 
     }
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     //http://mifosforge.jira.com/browse/MIFOSTEST-195
     public void checkNumberDigitsBeforeDecimalForAmountAndAfterDecimalForInterest() throws Exception{
-        //Given
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
         //When
         ClientsAndAccountsHomepage accountsHomepage = navigationHelper.navigateToClientsAndAccountsPage();
         CreateLoanAccountSearchPage accountSearchPage = accountsHomepage.navigateToCreateLoanAccountUsingLeftMenu();
 
         CreateLoanAccountSearchParameters formParameters = new CreateLoanAccountSearchParameters();
-        formParameters.setLoanProduct("MonthlyClientFlatLoanWithFees");
-        formParameters.setSearchString("Stu1232993852651 Client1232993852651");
+        formParameters.setLoanProduct("ClientEmergencyLoan");
+        formParameters.setSearchString("UpdateCustomProperties TestClient");
         accountSearchPage.searchAndNavigateToCreateLoanAccountPage(formParameters);
 
         selenium.type("loancreationdetails.input.sumLoanAmount", "123456789012345");
@@ -344,7 +319,6 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
         amountError = error.contains("The Amount is invalid because the number of digits before the decimal separator exceeds the allowed number 14");
         Assert.assertEquals(interestError, false);
         Assert.assertEquals(amountError, false);
-
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -383,16 +357,15 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
     //http://mifosforge.jira.com/browse/MIFOSTEST-204
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void removeThursdayFromWorkingDays() throws Exception {
-        //Given
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml", dataSource, selenium);
-        String workingDays ="Monday,Tuesday,Wednesday,Thursday,Friday,Saturday";
 
+        String workingDays ="Monday,Tuesday,Wednesday,Thursday,Friday,Saturday";
+        propertiesHelper.setWorkingDays(workingDays);
         //When
-        CreateCenterEnterDataPage createCenterEnterDataPage = navigationHelper.navigateToCreateCenterEnterDataPage("Test Branch Office");
+        CreateCenterEnterDataPage createCenterEnterDataPage = navigationHelper.navigateToCreateCenterEnterDataPage("MyOfficeDHMFT");
         CreateMeetingPage createMeetingPage = createCenterEnterDataPage.navigateToCreateMeetingPage();
         createMeetingPage.verifyWorkingDays(workingDays);
 
-        CreateClientEnterMfiDataPage createClientEnterMfiDataPage = navigationHelper.navigateToCreateClientEnterMfiDataPage("Test Branch Office");
+        CreateClientEnterMfiDataPage createClientEnterMfiDataPage = navigationHelper.navigateToCreateClientEnterMfiDataPage("MyOfficeDHMFT");
         createMeetingPage = createClientEnterMfiDataPage.navigateToCreateMeetingPage();
         createMeetingPage.verifyWorkingDays(workingDays);
 
@@ -400,11 +373,11 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
         propertiesHelper.setWorkingDays(workingDays);
 
         //Then
-        createCenterEnterDataPage = navigationHelper.navigateToCreateCenterEnterDataPage("Test Branch Office");
+        createCenterEnterDataPage = navigationHelper.navigateToCreateCenterEnterDataPage("MyOfficeDHMFT");
         createMeetingPage = createCenterEnterDataPage.navigateToCreateMeetingPage();
         createMeetingPage.verifyWorkingDays(workingDays);
 
-        createClientEnterMfiDataPage = navigationHelper.navigateToCreateClientEnterMfiDataPage("Test Branch Office");
+        createClientEnterMfiDataPage = navigationHelper.navigateToCreateClientEnterMfiDataPage("MyOfficeDHMFT");
         createMeetingPage = createClientEnterMfiDataPage.navigateToCreateMeetingPage();
         createMeetingPage.verifyWorkingDays(workingDays);
 
@@ -412,14 +385,14 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
 
         CreateCenterEnterDataPage.SubmitFormParameters formParameters = new CreateCenterEnterDataPage.SubmitFormParameters();
         formParameters = setCenterParameters();
-        centerTestHelper.createCenter(formParameters, "Test Branch Office");
+        centerTestHelper.createCenter(formParameters, "MyOfficeDHMFT");
 
         CreateGroupSubmitParameters groupParams = new CreateGroupSubmitParameters();
         groupParams.setGroupName(groupName);
         GroupTestHelper groupTestHelper = new GroupTestHelper(selenium);
-        groupTestHelper.createNewGroupPartialApplication("CenterNameTest123456", groupParams);
+        groupTestHelper.createNewGroupPartialApplication("Default Center", groupParams);
 
-        clientTestHelper.createClientAndVerify("Horace Engdahl", "Test Branch Office");
+        clientTestHelper.createClientAndVerify("loan officer", "MyOfficeDHMFT");
 
         // restore original configuration
         propertiesHelper.setWorkingDays("Monday,Tuesday,Wednesday,Thursday,Friday,Saturday");
@@ -428,7 +401,7 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
     private CreateCenterEnterDataPage.SubmitFormParameters setCenterParameters() {
         CreateCenterEnterDataPage.SubmitFormParameters formParameters = new CreateCenterEnterDataPage.SubmitFormParameters();
         formParameters.setCenterName("CenterNameTest123456");
-        formParameters.setLoanOfficer("Horace Engdahl");
+        formParameters.setLoanOfficer("loan officer");
         MeetingParameters meeting = new MeetingParameters();
         meeting.setMeetingPlace("testMeetingPlace");
         meeting.setWeekFrequency("1");
