@@ -4471,7 +4471,7 @@ CREATE TABLE question_group (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 /*!40000 ALTER TABLE question_group DISABLE KEYS */;
-INSERT INTO question_group (id, title, date_of_creation, state, is_editable, is_ppi) VALUES (1,'QGForCreateSavingsAccount','2011-02-24',1,0,0);
+INSERT INTO question_group (id, title, date_of_creation, state, is_editable, is_ppi) VALUES (1,'QGForCreateSavingsAccount','2011-02-24',0,0,0);
 /*!40000 ALTER TABLE question_group ENABLE KEYS */;
 DROP TABLE IF EXISTS question_group_event_sources;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;

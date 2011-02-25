@@ -33,6 +33,7 @@ import org.mifos.test.acceptance.framework.savings.DepositWithdrawalSavingsParam
 import org.mifos.test.acceptance.framework.savings.SavingsAccountDetailPage;
 import org.mifos.test.acceptance.framework.savings.SavingsDepositWithdrawalPage;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
+import org.mifos.test.acceptance.framework.testhelpers.QuestionGroupTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.SavingsAccountHelper;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +55,7 @@ public class CreateSavingsAccountTest extends UiTestCaseBase {
     private DbUnitUtilities dbUnitUtilities;
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
+    private QuestionGroupTestHelper questionGroupTestHelper;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -62,10 +64,13 @@ public class CreateSavingsAccountTest extends UiTestCaseBase {
     public void setUp() throws Exception {
         super.setUp();
         savingsAccountHelper = new SavingsAccountHelper(selenium);
+        questionGroupTestHelper = new QuestionGroupTestHelper(selenium);
+        questionGroupTestHelper.markQuestionGroupAsActive("QGForCreateSavingsAccount");
     }
 
     @AfterMethod(alwaysRun = true)
     public void logOut() {
+        questionGroupTestHelper.markQuestionGroupAsInactive("QGForCreateSavingsAccount");
         (new MifosPage(selenium)).logout();
     }
 
