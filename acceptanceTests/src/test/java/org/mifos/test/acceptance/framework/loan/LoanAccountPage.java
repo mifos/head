@@ -333,6 +333,12 @@ public class LoanAccountPage extends MifosPage {
         return new ViewQuestionResponseDetailPage(selenium);
     }
 
+    public ViewQuestionResponseDetailPage navigateToViewQuestionResponseDetailPage(String questionGroupName) {
+        selenium.click("link="+questionGroupName);
+        waitForPageToLoad();
+        return new ViewQuestionResponseDetailPage(selenium);
+    }
+
     public ViewLoanStatusHistoryPage navigateToViewLoanStatusHistoryPage() {
         selenium.click("id=loanaccountdetail.link.viewStatusHistory");
         waitForPageToLoad();
