@@ -41,7 +41,18 @@ Generic lookup macro. Lookup values are stored in "map". Map keys and lookupKey 
 		[#if key == lookupKey ]
 			[@spring.message map[key] /]
 		[/#if]
-	[/#list]		
+	[/#list]
+[/#macro]
+
+[#-- 
+Non localised lookup macro. Lookup values are stored in "map". Map keys and lookupKey should be of type String. 
+--]
+[#macro fromNonLocalisedMap map lookupKey]
+	[#list map?keys as key]
+		[#if key == lookupKey ]
+			${map[key]}
+		[/#if]
+	[/#list]
 [/#macro]
 
 [#-- 

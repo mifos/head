@@ -12,6 +12,11 @@ expandScript=$WORKSPACE/db/target/release/db/bin/expand_db.sh
 contractScript=$WORKSPACE/db/target/release/db/bin/contract_db.sh
 liquibaseScript=$WORKSPACE/db/target/release/db/bin/liquibase.sh
 
+chmod +x $controlScript
+chmod +x $expandScript
+chmod +x $contractScript
+chmod +x $liquibaseScript
+
 function cUrl {
     # If TEST_SERVER_PORT is set by Hudson, we can test if the deployed test server
     # is online. Using parameterized builds the the preferred means for setting
@@ -55,14 +60,10 @@ function stopJetty {
 }
 
 function doExpansion {
-    chmod +x $expandScript
-    chmod +x $liquibaseScript
     $expandScript
 }
 
 function doContraction {
-    chmod +x $contractScript
-    chmod +x $liquibaseScript
     $contractScript
 }
 

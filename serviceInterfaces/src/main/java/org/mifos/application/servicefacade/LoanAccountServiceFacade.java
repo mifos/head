@@ -20,6 +20,10 @@
 
 package org.mifos.application.servicefacade;
 
+import java.util.Date;
+import java.util.List;
+
+import org.mifos.clientportfolio.loan.service.CreateLoanSchedule;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AccountStatusDto;
 import org.mifos.dto.domain.AccountUpdateStatus;
@@ -43,14 +47,12 @@ import org.mifos.dto.screen.LoanCreationProductDetailsDto;
 import org.mifos.dto.screen.LoanCreationResultDto;
 import org.mifos.dto.screen.LoanDisbursalDto;
 import org.mifos.dto.screen.LoanInformationDto;
+import org.mifos.dto.screen.LoanScheduleDto;
 import org.mifos.dto.screen.LoanScheduledInstallmentDto;
 import org.mifos.dto.screen.MultipleLoanAccountDetailsDto;
 import org.mifos.dto.screen.RepayLoanDto;
 import org.mifos.dto.screen.RepayLoanInfoDto;
 import org.springframework.security.access.prepost.PreAuthorize;
-
-import java.util.Date;
-import java.util.List;
 
 public interface LoanAccountServiceFacade {
 
@@ -80,6 +82,8 @@ public interface LoanAccountServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     String createLoan(OpeningBalanceLoanAccount openingBalanceLoan);
+    
+    LoanScheduleDto createLoanSchedule(CreateLoanSchedule createLoanAccount);
 
     @PreAuthorize("isFullyAuthenticated()")
     LoanCreationResultDto redoLoan(LoanAccountMeetingDto loanAccountMeetingDto, LoanAccountInfoDto loanAccountInfoDto, List<LoanPaymentDto> existingLoanPayments, List<LoanScheduledInstallmentDto> installmentDtos);

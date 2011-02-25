@@ -30,6 +30,7 @@ import org.mifos.clientportfolio.newloan.domain.IndividualLoanImpl;
 import org.mifos.clientportfolio.newloan.domain.IndividualLoanSchedule;
 import org.mifos.clientportfolio.newloan.domain.LoanScheduleFactory;
 import org.mifos.clientportfolio.newloan.domain.RecurringScheduledEventFactory;
+import org.mifos.config.AccountingRules;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.framework.util.helpers.Money;
@@ -67,7 +68,9 @@ public class IndividualLoanAssembler implements LoanAssembler {
 
         // FIXME - assemble loanAmount from dto
         Money loanAmount = null;
-        IndividualLoanSchedule loanSchedule = loanScheduleFactory.create(loanScheduleDates, loanProduct, loanAmount);
+        Double interestRate = Double.valueOf("10.0");
+        Integer interestDays = Integer.valueOf(AccountingRules.getNumberOfInterestDays());
+        IndividualLoanSchedule loanSchedule = loanScheduleFactory.create(loanScheduleDates, loanProduct, loanAmount, interestRate, interestDays);
 
         return new IndividualLoanImpl();
     }

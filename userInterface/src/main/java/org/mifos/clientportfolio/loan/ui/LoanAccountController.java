@@ -23,13 +23,18 @@ package org.mifos.clientportfolio.loan.ui;
 import java.util.List;
 
 import org.joda.time.LocalDate;
+import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.application.servicefacade.LoanAccountServiceFacade;
+import org.mifos.clientportfolio.loan.service.CreateLoanSchedule;
 import org.mifos.dto.domain.CustomerSearchDto;
 import org.mifos.dto.domain.CustomerSearchResultDto;
+import org.mifos.dto.domain.MandatoryHiddenFieldsDto;
 import org.mifos.dto.screen.CustomerSearchResultsDto;
 import org.mifos.dto.screen.LoanCreationLoanDetailsDto;
 import org.mifos.dto.screen.LoanCreationProductDetailsDto;
+import org.mifos.dto.screen.LoanScheduleDto;
 import org.mifos.dto.screen.SearchDetailsDto;
+import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -37,10 +42,14 @@ import org.springframework.stereotype.Controller;
 public class LoanAccountController {
 
 	private final LoanAccountServiceFacade loanAccountServiceFacade;
+    private final QuestionnaireServiceFacade questionnaireServiceFacade;
+    private final AdminServiceFacade adminServiceFacade;
 
 	@Autowired
-    public LoanAccountController(LoanAccountServiceFacade loanAccountServiceFacade) {
+    public LoanAccountController(LoanAccountServiceFacade loanAccountServiceFacade, QuestionnaireServiceFacade questionnaireServiceFacade, AdminServiceFacade adminServiceFacade) {
 		this.loanAccountServiceFacade = loanAccountServiceFacade;
+        this.questionnaireServiceFacade = questionnaireServiceFacade;
+        this.adminServiceFacade = adminServiceFacade;
     }
 	
 	public CustomerSearchResultsDto searchCustomers(CustomerSearchFormBean formBean) {
@@ -59,12 +68,25 @@ public class LoanAccountController {
     
     @SuppressWarnings("PMD")
     public LoanCreationLoanDetailsDto retrieveLoanCreationDetails(int customerId, int productId, LoanAccountFormBean formBean) {
+        
+        MandatoryHiddenFieldsDto mandatoryHidden = this.adminServiceFacade.retrieveHiddenMandatoryFields();
     	LoanCreationLoanDetailsDto dto = this.loanAccountServiceFacade.retrieveLoanDetailsForLoanAccountCreation(customerId, Integer.valueOf(productId).shortValue());
     	
     	formBean.setProductId(productId);
-    	formBean.setAmount(Double.valueOf("7000.0"));
-    	formBean.setInterestRate(Double.valueOf("10.0"));
-    	formBean.setNumberOfInstallments(Integer.valueOf(12));
+    	formBean.setAmount(Double.valueOf(dto.getDefaultLoanAmount()));
+    	formBean.setMinAllowedAmount(Double.valueOf(dto.getMinLoanAmount()));
+    	formBean.setMaxAllowedAmount(Double.valueOf(dto.getMaxLoanAmount()));
+    	
+    	formBean.setInterestRate(dto.getDefaultInterestRate());
+    	formBean.setMinAllowedInterestRate(dto.getMinInterestRate());
+    	formBean.setMaxAllowedInterestRate(dto.getMaxInterestRate());
+    	
+    	formBean.setNumberOfInstallments(dto.getDefaultNumberOfInstallments());
+    	formBean.setMinNumberOfInstallments(dto.getMinNumberOfInstallments());
+    	formBean.setMaxNumberOfInstallments(dto.getMaxNumberOfInstallments());
+    	
+    	formBean.setSourceOfFundsMandatory(mandatoryHidden.isMandatoryLoanSourceOfFund());
+    	formBean.setPurposeOfLoanMandatory(mandatoryHidden.isMandatoryLoanAccountPurpose());
     	
     	LocalDate today = new LocalDate();
     	formBean.setDisbursalDateDay(today.getDayOfMonth());
@@ -87,5 +109,20 @@ public class LoanAccountController {
 		formBean.setSelectedFeeAmount(selectedFeeAmount);
     	
     	return dto;
+    }
+    
+    public void loadQuestionGroups(LoanAccountQuestionGroupFormBean loanAccountQuestionGroupFormBean) {
+        loanAccountQuestionGroupFormBean.setQuestionGroups(questionnaireServiceFacade.getQuestionGroups("Create", "Loan"));
+    }
+    
+    public LoanScheduleDto retrieveLoanSchedule(int customerId, int productId, LoanAccountFormBean formBean) {
+        
+        LocalDate disbursementDate = new LocalDate().withDayOfMonth(formBean.getDisbursalDateDay().intValue())
+                                                    .withMonthOfYear(formBean.getDisbursalDateMonth().intValue())
+                                                    .withYearOfEra(formBean.getDisbursalDateYear().intValue());
+        
+        CreateLoanSchedule createLoanAccount = new CreateLoanSchedule(customerId, productId, formBean.getAmount().toString(), formBean.getInterestRate().doubleValue(), disbursementDate, formBean.getNumberOfInstallments().intValue());
+        
+        return loanAccountServiceFacade.createLoanSchedule(createLoanAccount);
     }
 }
