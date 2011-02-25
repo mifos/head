@@ -252,8 +252,10 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
     /**
      * Verify a user is prevented to create loan accounts of loan products restricted by the mix.
      * http://mifosforge.jira.com/browse/MIFOSTEST-94
+     *
      * @throws Exception
      */
+    @Test(enabled=false) // TODO js - temporarily disabled broken test (blocked by MIFOS-4792)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createLoanAccountsWithRestrictedProductsMix() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
@@ -272,7 +274,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         disburseParams.setDisbursalDateDD("24");
         disburseParams.setDisbursalDateMM("01");
         disburseParams.setDisbursalDateYYYY("2011");
-        String error = "The loan could not be disbursed as {0} and {1} are not allowed to co-exist";
+        String error = "The loan could not be disbursed as "+searchParams1.getLoanProduct()+" and "+searchParams2.getLoanProduct()+" are not allowed to co-exist";
 
         LoanAccountPage loanAccountPage = loanTestHelper.createTwoLoanAccountsWithMixedRestricedPoducts(searchParams1, searchParams2, disburseParams);
 
@@ -285,8 +287,10 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
      * (for two or more clients using the bulk loan creation pipeline)
      * with a loan product restricted with the first loan.
      * http://mifosforge.jira.com/browse/MIFOSTEST-95
+     *
      * @throws Exception
      */
+    @Test(enabled=false) // TODO js - temporarily disabled broken test (blocked by MIFOS-4792)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createMultipleLoanAccountsWithRestrictedProductsMix() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
@@ -309,7 +313,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         disburseParams.setDisbursalDateDD("24");
         disburseParams.setDisbursalDateMM("01");
         disburseParams.setDisbursalDateYYYY("2011");
-        String error = "The loan could not be disbursed as {0} and {1} are not allowed to co-exist";
+        String error = "The loan could not be disbursed as "+multipleAccParameters1.getLoanProduct()+" and "+multipleAccParameters2.getLoanProduct()+" are not allowed to co-exist";
         String[] clients = new String[3];
         clients[0] = "Stu1233265941610 Client1233265941610";
         clients[1] = "Stu1233265958456 Client1233265958456";

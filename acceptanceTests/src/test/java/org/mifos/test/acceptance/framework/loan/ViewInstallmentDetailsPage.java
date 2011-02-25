@@ -31,13 +31,6 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
         verifyPage("SchedulePreview", "NextPaymentLoanAccount");
     }
 
-    private void verifyPage(String page1, String page2) {
-        String pageID = selenium.getAttribute("page.id@title");
-        if(!(page1.equals(pageID) || page2.equals(pageID))) {
-            Assert.assertTrue(false);
-        }
-    }
-
     public void verifyInstallmentAmount(int row, int column, String amount) {
         Assert.assertEquals(selenium.getTable("loanInstallmentTable." + row + "." + column), amount);
     }
