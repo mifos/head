@@ -59,8 +59,12 @@ public class LoanAccountFormBean implements Serializable {
     
     private Number graceDuration = Integer.valueOf(0);
     
+    private boolean sourceOfFundsMandatory;
     private Integer fundId;
+    
+    private boolean purposeOfLoanMandatory;
     private Integer loanPurposeId;
+    
     private Integer collateralTypeId;
     private String collateralNotes;
     private String externalId;
@@ -89,6 +93,14 @@ public class LoanAccountFormBean implements Serializable {
             errors.rejectValue("disbursalDateDay", "loanAccountFormBean.DisbursalDate.invalid", "Please specify valid disbursal date.");
         }
         
+        if (this.sourceOfFundsMandatory && isInvalidSelection(this.fundId)) {
+            errors.rejectValue("fundId", "loanAccountFormBean.SourceOfFunds.invalid", "Please specify source of funds.");
+        }
+        
+        if (this.purposeOfLoanMandatory && isInvalidSelection(this.loanPurposeId)) {
+            errors.rejectValue("fundId", "loanAccountFormBean.PurposeOfLoan.invalid", "Please specify loan purpose.");
+        }
+        
         if (errors.hasErrors()) {
             for (FieldError fieldError : errors.getFieldErrors()) {
                 MessageBuilder builder = new MessageBuilder().error().source(fieldError.getField())
@@ -98,6 +110,10 @@ public class LoanAccountFormBean implements Serializable {
                 messages.addMessage(builder.build());
             }
         }
+    }
+
+    private boolean isInvalidSelection(Integer selectionId) {
+        return selectionId == null;
     }
 
     private boolean exceedsMinOrMax(Number defaultValue, Number minValue, Number maxValue) {
@@ -270,5 +286,21 @@ public class LoanAccountFormBean implements Serializable {
 
     public void setMaxNumberOfInstallments(Number maxNumberOfInstallments) {
         this.maxNumberOfInstallments = maxNumberOfInstallments;
+    }
+    
+    public boolean isSourceOfFundsMandatory() {
+        return sourceOfFundsMandatory;
+    }
+
+    public void setSourceOfFundsMandatory(boolean sourceOfFundsMandatory) {
+        this.sourceOfFundsMandatory = sourceOfFundsMandatory;
+    }
+
+    public boolean isPurposeOfLoanMandatory() {
+        return purposeOfLoanMandatory;
+    }
+
+    public void setPurposeOfLoanMandatory(boolean purposeOfLoanMandatory) {
+        this.purposeOfLoanMandatory = purposeOfLoanMandatory;
     }
 }

@@ -30,7 +30,7 @@
 
 <h1>[@spring.message "createLoanAccount.wizard.title" /] - <span class="standout">[@spring.message "createLoanAccount.selectProduct.pageSubtitle" /]</span></h1>
 <p>[@spring.message "createLoanAccount.selectProduct.instructions" /]</p>
-<p><span>*</span>[@spring.message "requiredFieldsInstructions" /]</p>
+<p><span class="mandatory">*</span>[@spring.message "requiredFieldsInstructions" /]</p>
 <br/>
 
 <p><span class="standout">[@spring.message "selectProduct.accountOwnerName" /]</span> ${loanProductReferenceData.customerDetailDto.displayName}</p>
@@ -59,16 +59,6 @@
     <div class="row">
         <div class="attribute">[@spring.message "productSummary.freqOfInstallments"/]</div>
         <div class="value">${loanProductReferenceData.loanOfferingMeetingDetail.meetingDetailsDto.every}&nbsp;${loanProductReferenceData.loanOfferingMeetingDetail.meetingDetailsDto.recurrenceName}</div>
-    </div>
-    <div class="row">
-        <div class="attribute">[@spring.message "productSummary.principalDueOnLastInstallment"/]</div>
-        <div class="value">
-        [#if loanProductReferenceData.principalDueOnLastInstallment]
-        	[@spring.message "boolean.yes"/]
-        [#else]
-        	[@spring.message "boolean.no"/]
-        [/#if]
-        </div>
     </div>
 </div>
 <br/>
@@ -104,12 +94,12 @@
         <span>[@spring.message "createLoanAccount.allowedGraceInInstallments"/]</span>
     </div>
     <div class="row">
-        [@form.label "fundId" false][@spring.message "createLoanAccount.sourceOfFund" /][/@form.label]
+        [@form.label "fundId" loanAccountFormBean.sourceOfFundsMandatory][@spring.message "createLoanAccount.sourceOfFund" /][/@form.label]
         [@form.singleSelectWithPrompt path="loanAccountFormBean.fundId" options=loanProductReferenceData.fundOptions selectPrompt="selectPrompt" /]
     </div>
 
     <div class="row">
-        [@form.label "loanPurposeId" false][@spring.message "createLoanAccount.purposeOfLoan" /][/@form.label]
+        [@form.label "loanPurposeId" loanAccountFormBean.purposeOfLoanMandatory][@spring.message "createLoanAccount.purposeOfLoan" /][/@form.label]
         [@form.singleSelectWithPrompt path="loanAccountFormBean.loanPurposeId" options=loanProductReferenceData.purposeOfLoanOptions selectPrompt="selectPrompt" /]
     </div>
     

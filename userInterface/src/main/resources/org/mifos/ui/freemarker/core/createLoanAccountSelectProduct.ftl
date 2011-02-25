@@ -28,7 +28,7 @@
 
 <h1>[@spring.message "createLoanAccount.wizard.title" /] - <span class="standout">[@spring.message "createLoanAccount.selectProduct.pageSubtitle" /]</span></h1>
 <p>[@spring.message "createLoanAccount.selectProduct.instructions" /]</p>
-<p><span>*</span>[@spring.message "requiredFieldsInstructions" /]</p>
+<p><span class="mandatory">*</span>[@spring.message "requiredFieldsInstructions" /]</p>
 <br/>
 
 <p><span class="standout">[@spring.message "selectProduct.accountOwnerName" /]</span> ${loanCreationProductDetailsDto.customerDetailDto.displayName}</p>

@@ -28,8 +28,8 @@
 
 <span id="page.id" title="CustSearchAccount"></span>
 
-<h1>[@spring.message "createLoanAccount.wizard.title" /] - <span class="standout">[@spring.message "customerSearch.pageSubtitle" /]</span></h1>
-<p>[@spring.message "customerSearch.instructions" /]</p>
+<h1>[@spring.message "createLoanAccount.wizard.title" /] - <span class="standout">[@spring.message "createLoanAccount.customerSearch.pageSubtitle" /]</span></h1>
+<p>[@spring.message "createLoanAccount.customerSearch.instructions" /]</p>
 <br/>
 
 [@form.errors "customerSearchFormBean.*"/]

@@ -23,10 +23,12 @@ package org.mifos.clientportfolio.loan.ui;
 import java.util.List;
 
 import org.joda.time.LocalDate;
+import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.application.servicefacade.LoanAccountServiceFacade;
 import org.mifos.clientportfolio.loan.service.CreateLoanSchedule;
 import org.mifos.dto.domain.CustomerSearchDto;
 import org.mifos.dto.domain.CustomerSearchResultDto;
+import org.mifos.dto.domain.MandatoryHiddenFieldsDto;
 import org.mifos.dto.screen.CustomerSearchResultsDto;
 import org.mifos.dto.screen.LoanCreationLoanDetailsDto;
 import org.mifos.dto.screen.LoanCreationProductDetailsDto;
@@ -41,11 +43,13 @@ public class LoanAccountController {
 
 	private final LoanAccountServiceFacade loanAccountServiceFacade;
     private final QuestionnaireServiceFacade questionnaireServiceFacade;
+    private final AdminServiceFacade adminServiceFacade;
 
 	@Autowired
-    public LoanAccountController(LoanAccountServiceFacade loanAccountServiceFacade, QuestionnaireServiceFacade questionnaireServiceFacade) {
+    public LoanAccountController(LoanAccountServiceFacade loanAccountServiceFacade, QuestionnaireServiceFacade questionnaireServiceFacade, AdminServiceFacade adminServiceFacade) {
 		this.loanAccountServiceFacade = loanAccountServiceFacade;
         this.questionnaireServiceFacade = questionnaireServiceFacade;
+        this.adminServiceFacade = adminServiceFacade;
     }
 	
 	public CustomerSearchResultsDto searchCustomers(CustomerSearchFormBean formBean) {
@@ -64,6 +68,8 @@ public class LoanAccountController {
     
     @SuppressWarnings("PMD")
     public LoanCreationLoanDetailsDto retrieveLoanCreationDetails(int customerId, int productId, LoanAccountFormBean formBean) {
+        
+        MandatoryHiddenFieldsDto mandatoryHidden = this.adminServiceFacade.retrieveHiddenMandatoryFields();
     	LoanCreationLoanDetailsDto dto = this.loanAccountServiceFacade.retrieveLoanDetailsForLoanAccountCreation(customerId, Integer.valueOf(productId).shortValue());
     	
     	formBean.setProductId(productId);
@@ -78,6 +84,9 @@ public class LoanAccountController {
     	formBean.setNumberOfInstallments(dto.getDefaultNumberOfInstallments());
     	formBean.setMinNumberOfInstallments(dto.getMinNumberOfInstallments());
     	formBean.setMaxNumberOfInstallments(dto.getMaxNumberOfInstallments());
+    	
+    	formBean.setSourceOfFundsMandatory(mandatoryHidden.isMandatoryLoanSourceOfFund());
+    	formBean.setPurposeOfLoanMandatory(mandatoryHidden.isMandatoryLoanAccountPurpose());
     	
     	LocalDate today = new LocalDate();
     	formBean.setDisbursalDateDay(today.getDayOfMonth());
