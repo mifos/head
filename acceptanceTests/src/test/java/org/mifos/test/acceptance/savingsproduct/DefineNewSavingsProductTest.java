@@ -34,6 +34,7 @@ import org.mifos.test.acceptance.framework.savingsproduct.DefineNewSavingsProduc
 import org.mifos.test.acceptance.framework.savingsproduct.SavingsProductParameters;
 import org.mifos.test.acceptance.framework.testhelpers.BatchJobHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
+import org.mifos.test.acceptance.framework.testhelpers.QuestionGroupTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.SavingsAccountHelper;
 import org.mifos.test.acceptance.framework.testhelpers.SavingsProductHelper;
 import org.mifos.test.acceptance.framework.util.UiTestUtils;
@@ -66,6 +67,7 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
 
     private SavingsAccountHelper savingsAccountHelper;
     private NavigationHelper navigationHelper;
+    private QuestionGroupTestHelper questionGroupTestHelper;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
@@ -79,10 +81,13 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         savingsProductHelper = new SavingsProductHelper(selenium);
         savingsAccountHelper = new SavingsAccountHelper(selenium);
         navigationHelper = new NavigationHelper(selenium);
+        questionGroupTestHelper = new QuestionGroupTestHelper(selenium);
+        questionGroupTestHelper.markQuestionGroupAsActive("QGForCreateSavingsAccount");
     }
 
     @AfterMethod
     public void logOut() {
+        questionGroupTestHelper.markQuestionGroupAsInactive("QGForCreateSavingsAccount");
         (new MifosPage(selenium)).logout();
     }
 

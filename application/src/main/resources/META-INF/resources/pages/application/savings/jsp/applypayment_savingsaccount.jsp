@@ -90,7 +90,7 @@ explanation of the license and how it is applied.
 								<mifos:mifoslabel name="Savings.clientName" isColonRequired="yes"/>
 							</td>
 			                <td>				  				
-					  			<mifos:select name="savingsDepositWithdrawalForm" property="customerId" onchange="javascript:reLoad(this.form)">
+					  			<mifos:select name="savingsDepositWithdrawalForm" styleId="applypayment_savingsaccount.input.customerId" property="customerId" onchange="javascript:reLoad(this.form)">
 									<c:forEach var="client" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'clientList')}">
 										<html-el:option value="${client.customerId}">
 											<c:out value="${client.displayName}" />

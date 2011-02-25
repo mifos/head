@@ -38,6 +38,7 @@ public class SavingsDepositWithdrawalPage  extends MifosPage{
 
     public SavingsDepositWithdrawalConfirmationPage submitAndNavigateToDepositWithdrawalConfirmationPage(DepositWithdrawalSavingsParameters params)
     {
+        selenium.select("applypayment_savingsaccount.input.customerId", "value=" + params.getClientId());
         this.typeTextIfNotEmpty("trxnDateDD", params.getTrxnDateDD());
         this.typeTextIfNotEmpty("trxnDateMM", params.getTrxnDateMM());
         this.typeTextIfNotEmpty("trxnDateYY", params.getTrxnDateYYYY());

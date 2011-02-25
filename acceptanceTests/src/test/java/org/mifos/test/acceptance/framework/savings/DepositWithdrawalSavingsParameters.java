@@ -36,6 +36,7 @@ public class DepositWithdrawalSavingsParameters {
     private String amount;
     private String paymentType;
     private String trxnType;
+    private String clientId;
 
     public String getTrxnDateDD() {
         return this.trxnDateDD;
@@ -146,4 +147,11 @@ public class DepositWithdrawalSavingsParameters {
         return 0;
     }
 
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
+
+    public String getClientId() {
+        return clientId;
+    }
 }
