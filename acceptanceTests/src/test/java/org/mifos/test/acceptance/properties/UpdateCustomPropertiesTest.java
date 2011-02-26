@@ -271,15 +271,18 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
 
     }
 
+    //http://mifosforge.jira.com/browse/MIFOSTEST-86
     public void changeLocale() {
-        // update the language to French
+        // Given
         propertiesHelper.setLocale("FR", "FR");
 
-        // make sure that the welcome text does not contain "Welcome"
+        // When
         HomePage homePage = navigationHelper.navigateToHomePage();
-        String welcomeText = homePage.getWelcome();
-        Assert.assertFalse(welcomeText.contains("Welcome"), "The welcome text contained \"Welcome\" even though the language is supposed to have changed!");
 
+        // Then
+        Assert.assertEquals(homePage.getWelcome(), "Bienvenue,  mifos");
+
+        // cleanup
         propertiesHelper.setLocale("EN", "GB");
     }
 
