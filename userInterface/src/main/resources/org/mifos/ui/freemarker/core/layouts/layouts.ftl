@@ -28,6 +28,7 @@ Add all layouts here. Spring is configured to auto load this file, and by extens
 [#include "common.ftl" /]
 [#include "webflow.ftl" /]
 [#include "basic.ftl" /]
+[#include "legacy.ftl" /]
 
 [#--
 [#include "admin.ftl" /]
