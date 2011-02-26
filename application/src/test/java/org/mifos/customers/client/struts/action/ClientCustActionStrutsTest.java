@@ -322,55 +322,6 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     @Test
-    public void testFailureWithoutPermissionToEditPhoneNumber() throws Exception {
-        SessionUtils.setAttribute(Constants.USERCONTEXT, createUser(), request.getSession());
-        setRequestPathInfo("/clientCustAction.do");
-        addRequestParameter("method", "load");
-        addRequestParameter("officeId", "3");
-        addRequestParameter("groupFlag", "0");
-        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-        actionPerform();
-        flowKey = (String) request.getAttribute(Constants.CURRENTFLOWKEY);
-
-        setRequestPathInfo("/clientCustAction.do");
-        addRequestParameter("method", "next");
-        addRequestParameter("officeId", "3");
-        addRequestParameter("clientName.salutation", "1");
-        addRequestParameter("clientName.firstName", "Client");
-        addRequestParameter("clientName.lastName", "LastName");
-        addRequestParameter("spouseName.firstName", "Spouse");
-        addRequestParameter("spouseName.lastName", "LastName");
-        addRequestParameter("spouseName.nameType", "1");
-        addRequestDateParameter("dateOfBirth", "20/3/1987");
-        addRequestParameter("clientDetailView.gender", "1");
-        addRequestParameter("address.phoneNumber", "123");
-        addRequestParameter("input", "personalInfo");
-        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-        actionPerform();
-
-        setRequestPathInfo("/clientCustAction.do");
-        addRequestParameter("method", "preview");
-        addRequestParameter("input", "mfiInfo");
-        addRequestParameter("loanOfficerId", "1");
-        addRequestParameter("formedByPersonnel", "1");
-        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-        actionPerform();
-        verifyNoActionErrors();
-        verifyNoActionMessages();
-        verifyForward(ActionForwards.preview_success.toString());
-
-        MeetingBO weeklyMeeting = new MeetingBuilder().weekly().every(1).occuringOnA(WeekDay.WEDNESDAY).build();
-        SessionUtils.setAttribute(CustomerConstants.CUSTOMER_MEETING, weeklyMeeting, request);
-        setRequestPathInfo("/clientCustAction.do");
-        addRequestParameter("method", "create");
-        addRequestParameter("input", "create");
-        addRequestParameter("status", "1");
-        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-        actionPerform();
-        verifyActionErrors(new String[] { SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED });
-    }
-
-    @Test
     public void testFailureNext_WithoutMandatoryCustomField_IfAny() throws Exception {
         setRequestPathInfo("/clientCustAction.do");
         addRequestParameter("method", "load");

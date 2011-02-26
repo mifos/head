@@ -26,6 +26,7 @@ import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.center.CenterViewDetailsPage;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
+import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -98,6 +99,11 @@ public class QuestionnairePage extends MifosPage {
         return selenium.isElementPresent("id=allErrors") ? new QuestionnairePage(selenium) : new GroupViewDetailsPage(selenium);
     }
 
+    public MifosPage submitAndNavigateToLoanViewDetailsPage() {
+        clickSubmit();
+        return selenium.isElementPresent("id=allErrors") ? new QuestionnairePage(selenium) : new LoanAccountPage(selenium);
+    }
+
     public void setResponsesForMultiSelect(String question, int totalChoices, String... choices) {
         String questionId = selenium.getEval(String.format(SELECT_QUESTION_JS, question));
         String choiceIdFormat = questionId + "s%d";
@@ -155,6 +161,11 @@ public class QuestionnairePage extends MifosPage {
     public GroupViewDetailsPage cancelAndNavigateToGroupViewDetailsPage() {
         clickCancel();
         return new GroupViewDetailsPage(selenium);
+    }
+
+    public LoanAccountPage cancelAndNavigateToLoanViewDetailsPage() {
+        clickCancel();
+        return new LoanAccountPage(selenium);
     }
 
     public void verifyTextPresent(String expectedText, String errorMessage) {

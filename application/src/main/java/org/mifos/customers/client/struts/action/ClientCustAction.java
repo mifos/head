@@ -175,9 +175,6 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         SessionUtils.setCollectionAttribute(ClientConstants.SAVINGS_OFFERING_LIST, clientFormCreationDto.getSavingsOfferings(), request);
         SessionUtils.setAttribute(GroupConstants.CENTER_HIERARCHY_EXIST, ClientRules.getCenterHierarchyExists(), request);
         SessionUtils.setAttribute(ClientConstants.MAXIMUM_NUMBER_OF_FAMILY_MEMBERS, ClientRules.getMaximumNumberOfFamilyMembers(), request);
-
-        SessionUtils.setAttribute("CanEditPhoneNumber", ActivityMapper.getInstance().isEditPhoneNumberPermitted(userContext, userContext.getBranchId()), request);
-
         boolean isFamilyDetailsRequired = ClientRules.isFamilyDetailsRequired();
         SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_REQUIRED, isFamilyDetailsRequired, request);
         if (isFamilyDetailsRequired) {
@@ -458,14 +455,6 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         if (actionForm.getAddress() != null) {
             address = Address.toDto(actionForm.getAddress());
         }
-
-        if(address != null && address.getPhoneNumber()!= null && !address.getPhoneNumber().equals("")) {
-            UserContext userContext = getUserContext(request);
-            if(!ActivityMapper.getInstance().isEditPhoneNumberPermitted(userContext, userContext.getBranchId())) {
-                throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
-            }
-        }
-
         Short formedBy = actionForm.getFormedByPersonnelValue();
         java.sql.Date dateOfBirth = DateUtils.getDateAsSentFromBrowser(actionForm.getDateOfBirth());
         String governmentId = actionForm.getGovernmentId();

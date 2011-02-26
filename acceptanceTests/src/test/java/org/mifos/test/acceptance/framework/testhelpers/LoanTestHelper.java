@@ -794,14 +794,9 @@ public class LoanTestHelper {
             .submitAndNavigateToLoanAccountPage();
     }
 
-    /**
-     * Method for creating default loan account.
-     * Doesn't matter on which page you currently are.
-     * Must be logged in.
-     */
     public LoanAccountPage createAndActivateDefaultLoanAccount(CreateLoanAccountSearchParameters searchParams) {
-        CreateLoanAccountEntryPage createLoanAccountEntryPage = new MifosPage(selenium)
-            .navigateToClientsAndAccountsPageUsingHeaderTab()
+        CreateLoanAccountEntryPage createLoanAccountEntryPage = navigationHelper
+            .navigateToClientsAndAccountsPage()
             .navigateToCreateLoanAccountUsingLeftMenu()
             .searchAndNavigateToCreateLoanAccountPage(searchParams);
         String loanAmount = createLoanAccountEntryPage.getLoanAmount();

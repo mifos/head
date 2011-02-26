@@ -21,6 +21,7 @@
 package org.mifos.test.acceptance.framework.loan;
 
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -31,9 +32,14 @@ public class DisburseLoanConfirmationPage extends MifosPage {
     }
 
     public LoanAccountPage submitAndNavigateToLoanAccountPage() {
-
         selenium.click("Review_loanDisbursement.button.submit");
         waitForPageToLoad();
         return new LoanAccountPage(selenium);
+    }
+
+    public QuestionResponsePage navigateToEditAdditionalInformation() {
+        selenium.click("editQuestionResponses_button");
+        waitForPageToLoad();
+        return new QuestionResponsePage(selenium);
     }
 }

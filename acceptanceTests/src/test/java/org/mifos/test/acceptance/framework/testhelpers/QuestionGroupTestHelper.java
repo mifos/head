@@ -28,6 +28,7 @@ import org.mifos.test.acceptance.framework.center.CenterViewDetailsPage;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
 import org.mifos.test.acceptance.framework.loan.AttachSurveyPage;
+import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 import org.mifos.test.acceptance.framework.office.CreateOfficePreviewDataPage;
 import org.mifos.test.acceptance.framework.office.OfficeViewDetailsPage;
@@ -40,15 +41,17 @@ import org.mifos.test.acceptance.framework.questionnaire.EditQuestionGroupPage;
 import org.mifos.test.acceptance.framework.questionnaire.EditQuestionPage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionDetailPage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionGroupDetailPage;
+import org.mifos.test.acceptance.framework.questionnaire.ViewQuestionResponseDetailPage;
+
+import com.thoughtworks.selenium.Selenium;
+
+import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionGroupResponsePage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionnairePage;
 import org.mifos.test.acceptance.framework.questionnaire.ViewAllQuestionGroupsPage;
 import org.mifos.test.acceptance.framework.questionnaire.ViewAllQuestionsPage;
-import org.mifos.test.acceptance.framework.questionnaire.ViewQuestionResponseDetailPage;
 import org.testng.Assert;
-
-import com.thoughtworks.selenium.Selenium;
 
 public class QuestionGroupTestHelper {
 
@@ -181,6 +184,41 @@ public class QuestionGroupTestHelper {
             .submitAndNavigateToGroupViewDetailsPage();
         questionnairePage.verifyErrorsOnPage(attachParams.getErrors());
         return questionnairePage.cancelAndNavigateToGroupViewDetailsPage();
+    }
+
+    public LoanAccountPage attachQuestionGroupToLoan(AttachQuestionGroupParameters attachParams) {
+        return (LoanAccountPage) navigationHelper
+            .navigateToLoanAccountPage(attachParams.getTarget())
+            .navigateToAttachSurveyPage()
+            .verifyNoneSelected()
+            .selectSurvey(attachParams.getQuestionGroupName())
+            .verifyEmptyTextQuestionResponses(attachParams.getTextResponses())
+            .verifyEmptyCheckQuestionResponses(attachParams.getCheckResponses())
+            .setResponses(attachParams.getTextResponses())
+            .checkResponses(attachParams.getCheckResponses())
+            .submitAndNavigateToLoanViewDetailsPage();
+    }
+
+    public LoanAccountPage editQuestionGroupResponsesInLoan(AttachQuestionGroupParameters attachParams) {
+        return (LoanAccountPage) navigationHelper
+            .navigateToLoanAccountPage(attachParams.getTarget())
+            .navigateToViewQuestionResponseDetailPage(attachParams.getQuestionGroupName())
+            .navigateToEditSection("0")
+            .setResponses(attachParams.getTextResponses())
+            .checkResponses(attachParams.getCheckResponses())
+            .submitAndNavigateToLoanViewDetailsPage();
+    }
+
+    public LoanAccountPage verifyErrorsWhileAttachingQuestionGroupToLoan(AttachQuestionGroupParameters attachParams) {
+        QuestionnairePage questionnairePage = (QuestionnairePage) navigationHelper
+            .navigateToLoanAccountPage(attachParams.getTarget())
+            .navigateToAttachSurveyPage()
+            .selectSurvey(attachParams.getQuestionGroupName())
+            .setResponses(attachParams.getTextResponses())
+            .checkResponses(attachParams.getCheckResponses())
+            .submitAndNavigateToLoanViewDetailsPage();
+        questionnairePage.verifyErrorsOnPage(attachParams.getErrors());
+        return questionnairePage.cancelAndNavigateToLoanViewDetailsPage();
     }
 
     public void createQuestions(List<CreateQuestionParameters> questions){
@@ -320,5 +358,12 @@ public class QuestionGroupTestHelper {
         }
         ClientViewDetailsPage clientViewDetailsPage2 = (ClientViewDetailsPage)questionnairePage.submit();
         Assert.assertEquals(clientViewDetailsPage2.getQuestionGroupInstances().get(2).getName(),"TestQuestionGroup");
+    }
+
+    public QuestionResponsePage navigateToQuestionResponsePageDuringLoanDisbursal(String loanAccountID, DisburseLoanParameters disburseParams) {
+        return navigationHelper
+            .navigateToLoanAccountPage(loanAccountID)
+            .navigateToDisburseLoan()
+            .submitAndNavigateToQuestionResponsePage(disburseParams);
     }
 }
