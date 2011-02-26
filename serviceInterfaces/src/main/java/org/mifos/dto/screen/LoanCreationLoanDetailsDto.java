@@ -21,6 +21,7 @@
 package org.mifos.dto.screen;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -57,9 +58,9 @@ public class LoanCreationLoanDetailsDto implements Serializable {
 	
 	private final List<FundDto> fundDtos;
     private final List<FeeDto> defaultFees;
-    private final String defaultLoanAmount;
-    private final String maxLoanAmount;
-    private final String minLoanAmount;
+    private final BigDecimal defaultLoanAmount;
+    private final BigDecimal maxLoanAmount;
+    private final BigDecimal minLoanAmount;
     private final Double defaultInterestRate;
     private final Double maxInterestRate;
     private final Double minInterestRate;
@@ -73,7 +74,7 @@ public class LoanCreationLoanDetailsDto implements Serializable {
             List<ValueListElement> loanPurposes, ProductDetailsDto productDto, CustomerDetailDto customerDetailDto, List<PrdOfferingDto> loanProductDtos, 
             String interestRateType, List<FundDto> fundDtos, HashMap<String, String> collateralOptions, 
             HashMap<String, String> purposeOfLoanOptions, Map<String, String> defaultFeeOptions, Map<String, String> additionalFeeOptions, List<FeeDto> defaultFees, 
-            String defaultLoanAmount, String maxLoanAmount, String minLoanAmount, 
+            BigDecimal defaultLoanAmount, BigDecimal maxLoanAmount, BigDecimal minLoanAmount, 
             Double defaultInterestRate, Double maxInterestRate, Double minInterestRate, 
             Integer defaultNumberOfInstallments, Integer maxNumberOfInstallments, Integer minNumberOfInstallments, LocalDate nextPossibleDisbursementDate) {
         this.isRepaymentIndependentOfMeetingEnabled = isRepaymentIndependentOfMeetingEnabled;
@@ -180,15 +181,15 @@ public class LoanCreationLoanDetailsDto implements Serializable {
         return defaultFees;
     }
     
-    public String getDefaultLoanAmount() {
+    public BigDecimal getDefaultLoanAmount() {
         return defaultLoanAmount;
     }
 
-    public String getMaxLoanAmount() {
+    public BigDecimal getMaxLoanAmount() {
         return maxLoanAmount;
     }
 
-    public String getMinLoanAmount() {
+    public BigDecimal getMinLoanAmount() {
         return minLoanAmount;
     }
     

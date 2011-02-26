@@ -70,17 +70,17 @@
     <div class="row">
         [@form.label "amount" true /][@spring.message "createLoanAccount.amount"/]
         [@form.input path="loanAccountFormBean.amount"  id="amount" /]
-        <span>([@spring.message "createLoanAccount.allowedAmount"/] ${loanProductReferenceData.minLoanAmount} - ${loanProductReferenceData.maxLoanAmount})</span>
+        <span>([@spring.message "createLoanAccount.allowedAmount"/] ${loanProductReferenceData.minLoanAmount?string.number} - ${loanProductReferenceData.maxLoanAmount?string.number})</span>
     </div>
     <div class="row">
         [@form.label "interestRate" true /][@spring.message "createLoanAccount.interestRate"/]
         [@form.input path="loanAccountFormBean.interestRate" id="interestRate" /]
-        <span>([@spring.message "createLoanAccount.allowedInterestRate"/] ${loanProductReferenceData.minInterestRate} - ${loanProductReferenceData.maxInterestRate} %)</span>
+        <span>([@spring.message "createLoanAccount.allowedInterestRate"/] ${loanProductReferenceData.minInterestRate?string.number} - ${loanProductReferenceData.maxInterestRate?string.number} %)</span>
     </div>
     <div class="row">
         [@form.label "numberOfInstallments" true /][@spring.message "createLoanAccount.numberOfInstallments"/]
         [@form.input path="loanAccountFormBean.numberOfInstallments" id="numberOfInstallments" /]
-        <span>([@spring.message "createLoanAccount.allowedNumberOfInstallments"/] ${loanProductReferenceData.minNumberOfInstallments} - ${loanProductReferenceData.maxNumberOfInstallments})</span>
+        <span>([@spring.message "createLoanAccount.allowedNumberOfInstallments"/] ${loanProductReferenceData.minNumberOfInstallments?string.number} - ${loanProductReferenceData.maxNumberOfInstallments?string.number})</span>
     </div>
     <div class="row">
         [@form.label "disbursaldatedd" true /][@spring.message "createLoanAccount.disbursalDate"/]

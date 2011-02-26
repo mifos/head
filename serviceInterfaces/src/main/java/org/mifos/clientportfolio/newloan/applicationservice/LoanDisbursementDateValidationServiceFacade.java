@@ -18,8 +18,12 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.clientportfolio.newloan.domain;
+package org.mifos.clientportfolio.newloan.applicationservice;
 
-public interface LoanDisbursementStrategy extends LoanDisbursementDateFinder, LoanDisbursementDateValidator {
+import org.joda.time.LocalDate;
+
+public interface LoanDisbursementDateValidationServiceFacade {
+
+    void validateLoanDisbursementDate(LocalDate loanDisbursementDate, Integer customerId, Integer productId);
 
 }

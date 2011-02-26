@@ -113,6 +113,7 @@ import org.mifos.clientportfolio.newloan.domain.IndividualLoanScheduleFactory;
 import org.mifos.clientportfolio.newloan.domain.IndividualLoanScheduleImpl;
 import org.mifos.clientportfolio.newloan.domain.LoanDisbursementDateFactory;
 import org.mifos.clientportfolio.newloan.domain.LoanDisbursementDateFinder;
+import org.mifos.clientportfolio.newloan.domain.LoanDisbursementDateValidator;
 import org.mifos.clientportfolio.newloan.domain.LoanDisbursmentDateFactoryImpl;
 import org.mifos.clientportfolio.newloan.domain.LoanInstallmentFactory;
 import org.mifos.clientportfolio.newloan.domain.LoanInstallmentFactoryImpl;
@@ -460,13 +461,11 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             	additionalFeeOptions.put(feeDto.getId(), feeDto.getName());
 			}
 
-            // setDateIntoForm
             CustomerBO customer = this.customerDao.findCustomerById(customerId);
-            
             boolean isRepaymentIndependentOfMeetingEnabled = new ConfigurationBusinessService().isRepaymentIndepOfMeetingEnabled();
             RecurringScheduledEventFactory recurringScheduledEventFactory = new RecurringScheduledEventFactoryImpl(); 
             ScheduledEvent customerMeetingSchedule = recurringScheduledEventFactory.createScheduledEventFrom(customer.getCustomerMeetingValue());
-            ScheduledEvent loanProductMeetingSchedule = recurringScheduledEventFactory.createScheduledEventFrom(customer.getCustomerMeetingValue());
+            ScheduledEvent loanProductMeetingSchedule = recurringScheduledEventFactory.createScheduledEventFrom(loanProductMeeting);
             
             LoanDisbursementDateFactory loanDisbursementDateFactory = new LoanDisbursmentDateFactoryImpl();
             LoanDisbursementDateFinder loanDisbursementDateFinder = loanDisbursementDateFactory.create(customerMeetingSchedule, loanProductMeetingSchedule, isRepaymentIndependentOfMeetingEnabled);
@@ -518,8 +517,8 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             return new LoanCreationLoanDetailsDto(isRepaymentIndependentOfMeetingEnabled, loanOfferingMeetingDto,
                     customer.getCustomerMeetingValue().toDto(), loanPurposes, productDto, customerDetailDto, loanProductDtos, 
                     interestTypeName, fundDtos, collateralOptions, purposeOfLoanOptions, 
-                    defaultFeeOptions, additionalFeeOptions, defaultFees, eligibleLoanAmount.getDefaultLoanAmountString(), 
-                    eligibleLoanAmount.getMaxLoanAmountString(), eligibleLoanAmount.getMinLoanAmountString(), defaultInterestRate, maxInterestRate, minInterestRate,
+                    defaultFeeOptions, additionalFeeOptions, defaultFees, BigDecimal.valueOf(eligibleLoanAmount.getDefaultLoanAmount()), 
+                    BigDecimal.valueOf(eligibleLoanAmount.getMaxLoanAmount()), BigDecimal.valueOf(eligibleLoanAmount.getMinLoanAmount()), defaultInterestRate, maxInterestRate, minInterestRate,
                     eligibleNoOfInstall.getDefaultNoOfInstall().intValue(), eligibleNoOfInstall.getMaxNoOfInstall().intValue(), eligibleNoOfInstall.getMinNoOfInstall().intValue(), nextPossibleDisbursementDate);
 
         } catch (SystemException e) {
@@ -630,11 +629,11 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             String fees = "0.0";
             String penalty = "0.0";
             String total = ((LoanScheduleRepaymentItemImpl)item).getPrincipal().add(((LoanScheduleRepaymentItemImpl)item).getInterest()).toString(digitsAfterDecimal);
-            LoanCreationInstallmentDto installment = new LoanCreationInstallmentDto(installmentNumber, dueDate, principal, interest, fees, penalty, total, locale);
+            LoanCreationInstallmentDto installment = new LoanCreationInstallmentDto(installmentNumber, dueDate, Double.valueOf(principal), Double.valueOf(interest), Double.valueOf(fees), Double.valueOf(penalty), Double.valueOf(total));
             installments.add(installment);
         }
         
-        return new LoanScheduleDto(customer.getDisplayName(), createLoanSchedule.getLoanAmount(), createLoanSchedule.getDisbursementDate(), installments, locale);
+        return new LoanScheduleDto(customer.getDisplayName(), Double.valueOf(createLoanSchedule.getLoanAmount().doubleValue()), createLoanSchedule.getDisbursementDate(), installments);
     }
     /**
      * @deprecated - not fully implemented yet.
@@ -1788,4 +1787,23 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 			throw new MifosRuntimeException(e);
 		}
 	}
+
+    @Override
+    public void validateLoanDisbursementDate(LocalDate disbursementDate, Integer customerId, Integer productId) {
+        
+        CustomerBO customer = this.customerDao.findCustomerById(customerId);
+        LoanOfferingBO loanProduct = this.loanProductDao.findById(productId);
+        
+        boolean isRepaymentIndependentOfMeetingEnabled = new ConfigurationBusinessService().isRepaymentIndepOfMeetingEnabled();
+        RecurringScheduledEventFactory recurringScheduledEventFactory = new RecurringScheduledEventFactoryImpl(); 
+        ScheduledEvent customerMeetingSchedule = recurringScheduledEventFactory.createScheduledEventFrom(customer.getCustomerMeetingValue());
+        ScheduledEvent loanProductMeetingSchedule = recurringScheduledEventFactory.createScheduledEventFrom(loanProduct.getLoanOfferingMeetingValue());
+        
+        LoanDisbursementDateFactory loanDisbursementDateFactory = new LoanDisbursmentDateFactoryImpl();
+        LoanDisbursementDateValidator loanDisbursementDateFinder = loanDisbursementDateFactory.create(customerMeetingSchedule, loanProductMeetingSchedule, isRepaymentIndependentOfMeetingEnabled);
+        boolean isValid = loanDisbursementDateFinder.isDisbursementDateValid(disbursementDate);
+        if (!isValid) {
+            throw new BusinessRuleException("Invalid disbursement date");
+        }
+    }
 }

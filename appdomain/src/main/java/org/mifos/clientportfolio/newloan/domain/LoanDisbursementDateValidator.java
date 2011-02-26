@@ -20,6 +20,10 @@
 
 package org.mifos.clientportfolio.newloan.domain;
 
-public interface LoanDisbursementStrategy extends LoanDisbursementDateFinder, LoanDisbursementDateValidator {
+import org.joda.time.LocalDate;
+
+public interface LoanDisbursementDateValidator {
+
+    boolean isDisbursementDateValid(LocalDate disbursementDate);
 
 }

@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.mifos.clientportfolio.loan.service.CreateLoanSchedule;
+import org.mifos.clientportfolio.newloan.applicationservice.LoanDisbursementDateValidationServiceFacade;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AccountStatusDto;
 import org.mifos.dto.domain.AccountUpdateStatus;
@@ -54,7 +55,7 @@ import org.mifos.dto.screen.RepayLoanDto;
 import org.mifos.dto.screen.RepayLoanInfoDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
-public interface LoanAccountServiceFacade {
+public interface LoanAccountServiceFacade extends LoanDisbursementDateValidationServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     AccountStatusDto retrieveAccountStatuses(Long loanAccountId);

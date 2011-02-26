@@ -20,6 +20,7 @@
 
 package org.mifos.clientportfolio.loan.ui;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.joda.time.LocalDate;
@@ -73,9 +74,10 @@ public class LoanAccountController {
     	LoanCreationLoanDetailsDto dto = this.loanAccountServiceFacade.retrieveLoanDetailsForLoanAccountCreation(customerId, Integer.valueOf(productId).shortValue());
     	
     	formBean.setProductId(productId);
-    	formBean.setAmount(Double.valueOf(dto.getDefaultLoanAmount()));
-    	formBean.setMinAllowedAmount(Double.valueOf(dto.getMinLoanAmount()));
-    	formBean.setMaxAllowedAmount(Double.valueOf(dto.getMaxLoanAmount()));
+    	formBean.setCustomerId(dto.getCustomerDetailDto().getCustomerId());
+    	formBean.setAmount(dto.getDefaultLoanAmount());
+    	formBean.setMinAllowedAmount(dto.getMinLoanAmount());
+    	formBean.setMaxAllowedAmount(dto.getMaxLoanAmount());
     	
     	formBean.setInterestRate(dto.getDefaultInterestRate());
     	formBean.setMinAllowedInterestRate(dto.getMinInterestRate());
@@ -121,7 +123,7 @@ public class LoanAccountController {
                                                     .withMonthOfYear(formBean.getDisbursalDateMonth().intValue())
                                                     .withYearOfEra(formBean.getDisbursalDateYear().intValue());
         
-        CreateLoanSchedule createLoanAccount = new CreateLoanSchedule(customerId, productId, formBean.getAmount().toString(), formBean.getInterestRate().doubleValue(), disbursementDate, formBean.getNumberOfInstallments().intValue());
+        CreateLoanSchedule createLoanAccount = new CreateLoanSchedule(customerId, productId, BigDecimal.valueOf(formBean.getAmount().doubleValue()), formBean.getInterestRate().doubleValue(), disbursementDate, formBean.getNumberOfInstallments().intValue());
         
         return loanAccountServiceFacade.createLoanSchedule(createLoanAccount);
     }
