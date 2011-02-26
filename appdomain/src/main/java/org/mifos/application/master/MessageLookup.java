@@ -87,7 +87,7 @@ public class MessageLookup implements MessageSourceAware {
     LegacyMasterDao legacyMasterDao;
 
     @Autowired(required=false)    
-	MessageCustomizerServiceFacade adminServiceFacade;	
+	MessageCustomizerServiceFacade messageCustomizerServiceFacade;	
     
     private MessageSource messageSource;
 
@@ -102,11 +102,11 @@ public class MessageLookup implements MessageSourceAware {
     }
 
 	public String replaceSubstitutions(String message) {
-		return adminServiceFacade.replaceSubstitutions(message);
+		return messageCustomizerServiceFacade.replaceSubstitutions(message);
 	}
 	
     public String lookup(LocalizedTextLookup namedObject, Locale locale) {
-        return adminServiceFacade.replaceSubstitutions(lookup(namedObject.getPropertiesKey(), locale));
+        return messageCustomizerServiceFacade.replaceSubstitutions(lookup(namedObject.getPropertiesKey(), locale));
     }
 
     /*
@@ -114,7 +114,7 @@ public class MessageLookup implements MessageSourceAware {
      * selection
      */
     public String lookup(LocalizedTextLookup namedObject) {
-        return adminServiceFacade.replaceSubstitutions(lookup(namedObject.getPropertiesKey()));
+        return messageCustomizerServiceFacade.replaceSubstitutions(lookup(namedObject.getPropertiesKey()));
     }
 
     public String lookup(String lookupKey) {
@@ -124,7 +124,7 @@ public class MessageLookup implements MessageSourceAware {
 
     public String lookup(LocalizedTextLookup namedObject, Object[] params) {
         Locale locale = Localization.getInstance().getMainLocale();
-        return adminServiceFacade.replaceSubstitutions(
+        return messageCustomizerServiceFacade.replaceSubstitutions(
         		messageSource.getMessage(namedObject.getPropertiesKey(), params, namedObject.getPropertiesKey(), locale));
     }
 
@@ -139,8 +139,8 @@ public class MessageLookup implements MessageSourceAware {
             // been customized and
             // we should return the default message from the properties file
             return StringUtils.isEmpty(textMessage) ? 
-            		adminServiceFacade.replaceSubstitutions(messageSource.getMessage(lookupKey, null, lookupKey, locale))
-                    : adminServiceFacade.replaceSubstitutions(textMessage);
+            		messageCustomizerServiceFacade.replaceSubstitutions(messageSource.getMessage(lookupKey, null, lookupKey, locale))
+                    : messageCustomizerServiceFacade.replaceSubstitutions(textMessage);
         } catch (ConfigurationException e) {
             throw new RuntimeException(e);
         }
