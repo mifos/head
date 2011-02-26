@@ -29,12 +29,17 @@ import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.account.AccountStatus;
 import org.mifos.test.acceptance.framework.account.EditAccountStatusParameters;
+import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSearchParameters;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSubmitParameters;
 import org.mifos.test.acceptance.framework.savings.DepositWithdrawalSavingsParameters;
 import org.mifos.test.acceptance.framework.savings.SavingsAccountDetailPage;
 import org.mifos.test.acceptance.framework.savingsproduct.DefineNewSavingsProductConfirmationPage;
+import org.mifos.test.acceptance.framework.savingsproduct.EditSavingsProductPage;
+import org.mifos.test.acceptance.framework.savingsproduct.EditSavingsProductPreviewPage;
+import org.mifos.test.acceptance.framework.savingsproduct.SavingsProductDetailsPage;
 import org.mifos.test.acceptance.framework.savingsproduct.SavingsProductParameters;
+import org.mifos.test.acceptance.framework.savingsproduct.ViewSavingsProductsPage;
 import org.mifos.test.acceptance.framework.testhelpers.BatchJobHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.framework.testhelpers.SavingsAccountHelper;
@@ -471,7 +476,67 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
 
     }
 
+    //http://mifosforge.jira.com/browse/MIFOSTEST-725
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")// one of the dependent methods throws Exception
+    @Test(enabled=true, groups="smoke")
+    public void savingsProductUpdateableFields() throws Exception {
+        //Given
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTime targetTime = new DateTime(2011,2,1,13,0,0,0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
 
+        //When
+        SavingsProductParameters params = getMandatoryClientsMinimumBalanceSavingsProductParameters();
+        params.setBalanceUsedForInterestCalculation(SavingsProductParameters.AVERAGE_BALANCE);
+        params.setTypeOfDeposits(SavingsProductParameters.VOLUNTARY);
+        params.setBalanceUsedForInterestCalculation(SavingsProductParameters.AVERAGE_BALANCE);
+
+        String productName = params.getProductInstanceName();
+        String savingsId = createSavingsAccount(params);
+
+        DepositWithdrawalSavingsParameters depositParams = new DepositWithdrawalSavingsParameters();
+
+        depositParams=makeDefaultDepositWithdrawal(targetTime,depositParams,savingsId, DepositWithdrawalSavingsParameters.DEPOSIT, "2000.0");
+
+        //Then
+        targetTime = new DateTime(2011,3,1,13,0,0,0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+
+        navigationHelper.navigateToSavingsAccountDetailPage(savingsId);
+
+        navigationHelper.navigateToAdminPage();
+        runBatchJobsForSavingsIntPosting();
+
+        navigationHelper.navigateToSavingsAccountDetailPage(savingsId);
+        Assert.assertEquals(selenium.getTable("recentActivityForDetailPage.1.2"),"2.7");
+
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        ViewSavingsProductsPage viewSavingsProducts = adminPage.navigateToViewSavingsProducts();
+        viewSavingsProducts.verifyPage();
+
+        SavingsProductDetailsPage savingsProductDetailsPage = viewSavingsProducts.viewSavingsProductDetails(productName);
+        EditSavingsProductPage editSavingsProductPage = savingsProductDetailsPage.editSavingsProduct();
+
+        selenium.type("interestRate", "10.0");
+        selenium.type("minBalanceRequiredForInterestCalculation", "100.0");
+
+        EditSavingsProductPreviewPage editSavingsProductPreviewPage = editSavingsProductPage.editSubmit();
+        savingsProductDetailsPage = editSavingsProductPreviewPage.submit();
+
+        makeDefaultDepositWithdrawal(targetTime,depositParams,savingsId, DepositWithdrawalSavingsParameters.DEPOSIT, "2000.0");
+
+        targetTime = new DateTime(2011,4,1,13,0,0,0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+
+        navigationHelper.navigateToSavingsAccountDetailPage(savingsId);
+
+        navigationHelper.navigateToAdminPage();
+        runBatchJobsForSavingsIntPosting();
+
+        navigationHelper.navigateToSavingsAccountDetailPage(savingsId);
+        Assert.assertEquals(selenium.getTable("recentActivityForDetailPage.1.2"),"33.1");
+    }
     private String createSavingsAccount(SavingsProductParameters params){
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
         confirmationPage.navigateToSavingsProductDetails();
