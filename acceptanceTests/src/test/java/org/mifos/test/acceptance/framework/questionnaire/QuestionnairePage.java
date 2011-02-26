@@ -27,6 +27,7 @@ import org.mifos.test.acceptance.framework.center.CenterViewDetailsPage;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
+import org.mifos.test.acceptance.framework.user.UserViewDetailsPage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -49,6 +50,10 @@ public class QuestionnairePage extends MifosPage {
 
     public void verifyField(String locator, String text) {
         Assert.assertEquals(selenium.getText(locator), text);
+    }
+
+    public void verifyRadioGroup(String locator, String value, boolean checked){
+        Assert.assertEquals(selenium.isChecked(locator + " value="+ value),checked);
     }
 
     private String getQuestionLocator(String question) {
@@ -87,6 +92,11 @@ public class QuestionnairePage extends MifosPage {
     public MifosPage submit() {
         clickSubmit();
         return selenium.isElementPresent("id=allErrors") ? new QuestionnairePage(selenium) : new ClientViewDetailsPage(selenium);
+    }
+
+    public MifosPage submitAndNavigateToPersonnalDetailsPage(){
+        clickSubmit();
+        return selenium.isElementPresent("id=allErrors") ? new QuestionnairePage(selenium) : new UserViewDetailsPage(selenium);
     }
 
     public MifosPage submitAndNavigateToCenterViewDetailsPage() {

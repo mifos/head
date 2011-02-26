@@ -33,6 +33,7 @@ import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 import java.util.Map;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import org.mifos.test.acceptance.framework.office.CreateOfficePreviewDataPage;
+import org.mifos.test.acceptance.framework.user.CreateUserPreviewDataPage;
 
 import static org.junit.Assert.assertTrue;
 
@@ -118,6 +119,11 @@ public class QuestionResponsePage extends MifosPage {
         GroupViewDetailsPage groupDetailsPage = confirmationPage.navigateToGroupDetailsPage();
         groupDetailsPage.verifyStatus(status);
         return groupDetailsPage;
+    }
+
+    public CreateUserPreviewDataPage continueAndNavigateToCreateUserPreviewPage(){
+        navigateToNextPage();
+        return new CreateUserPreviewDataPage(selenium);
     }
 
     public void populateAnswers(QuestionResponseParameters responseParameters) {
