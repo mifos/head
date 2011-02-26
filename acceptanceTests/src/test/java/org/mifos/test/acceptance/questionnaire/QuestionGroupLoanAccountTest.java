@@ -62,9 +62,11 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
 
+    @Autowired
+    private ApplicationDatabaseOperation applicationDatabaseOperation;
+
     private QuestionGroupTestHelper questionGroupTestHelper;
     private LoanTestHelper loanTestHelper;
-    private ApplicationDatabaseOperation applicationDatabaseOperation;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -154,7 +156,7 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
         questionResponsePage.verifyQuestionsExists(questionsExist);
         questionResponsePage.verifyQuestionsDoesnotappear(questionsInactive);
 
-//        verifyQuestionResponsesExistInDatabase(loan1ID, "Disburse Loan", questionsAndAnswers);
+        verifyQuestionResponsesExistInDatabase(loan1ID, "Disburse Loan", questionsAndAnswers);
     }
 
     public void verifyQuestionResponsesExistInDatabase(String loanID, String event, Map<String, String> questions) throws SQLException {
