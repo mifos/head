@@ -126,6 +126,9 @@ public class DefineNewLoanProductPage extends AbstractPage {
         private String startDateYy;
         private int status;
         private int productCategory;
+        private String additionalFee1;
+        private String additionalFee2;
+        private String additionalFee3;
 
         public String getMinInstallemnts() {
             return this.minInstallemnts;
@@ -510,6 +513,30 @@ public class DefineNewLoanProductPage extends AbstractPage {
         public void setProductCategory(int productCategory) {
             this.productCategory = productCategory;
         }
+
+        public String getAdditionalFee1() {
+            return this.additionalFee1;
+        }
+
+        public void setAdditionalFee1(String additionalFee1) {
+            this.additionalFee1 = additionalFee1;
+        }
+
+        public String getAdditionalFee2() {
+            return this.additionalFee2;
+        }
+
+        public void setAdditionalFee2(String additionalFee2) {
+            this.additionalFee2 = additionalFee2;
+        }
+
+        public String getAdditionalFee3() {
+            return this.additionalFee3;
+        }
+
+        public void setAdditionalFee3(String additionalFee3) {
+            this.additionalFee3 = additionalFee3;
+        }
     }
 
     public DefineNewLoanProductPage fillLoanParameters(SubmitFormParameters parameters) {
@@ -765,6 +792,9 @@ public class DefineNewLoanProductPage extends AbstractPage {
             isTextPresentInPage(feeName + " fee cannot be applied to variable installment loan product");
         }
     }
-
+    public void addFee(String feeName){
+        selenium.addSelection("feeId", "label=" + feeName);
+        selenium.click("LoanFeesList.button.add");
+    }
 
 }

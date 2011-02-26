@@ -20,16 +20,17 @@
 
 package org.mifos.test.acceptance.framework.loan;
 
-import com.thoughtworks.selenium.Selenium;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
-import org.mifos.test.acceptance.framework.AbstractPage;
 import org.mifos.test.acceptance.framework.HomePage;
+import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 import org.testng.Assert;
 
-public class CreateLoanAccountEntryPage extends AbstractPage {
+import com.thoughtworks.selenium.Selenium;
+
+public class CreateLoanAccountEntryPage extends MifosPage {
 
     String continueButton = "loancreationdetails.button.continue";
 
@@ -97,7 +98,9 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
     }
 
     private void submitLoanAccount(CreateLoanAccountSubmitParameters formParameters) {
-        selenium.type("loancreationdetails.input.sumLoanAmount",formParameters.getAmount());
+        if(formParameters.getAmount() != null){
+            selenium.type("loancreationdetails.input.sumLoanAmount",formParameters.getAmount());
+        }
         if (formParameters.isGracePeriodTypeNone()) {
             Assert.assertFalse(selenium.isEditable("loancreationdetails.input.gracePeriod"));
         }
@@ -118,16 +121,27 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
             selenium.select("monthRank", formParameters.getLsimMonthRank());
             selenium.select("monthWeek", formParameters.getLsimWeekDay());
         }
-        if (formParameters.getDd() != null){
+        if (formParameters.getDd() != null && formParameters.getMm() != null && formParameters.getYy() != null){
             selenium.type("disbursementDateDD", formParameters.getDd());
+            selenium.type("disbursementDateMM", formParameters.getMm());
+            selenium.type("disbursementDateYY", formParameters.getYy());
         }
-        if (formParameters.getMm() != null){
-            selenium.type("disbursementDateDD", formParameters.getMm());
-        }
-        if (formParameters.getYy() != null){
-            selenium.type("disbursementDateDD", formParameters.getYy());
-        }
+        fillAdditionalFee(formParameters);
         submit();
+    }
+
+    public void fillAdditionalFee(CreateLoanAccountSubmitParameters formParameters){
+        if(formParameters.getAdditionalFee1()!=null) {
+            selenium.select("selectedFee[0].feeId", "label=" + formParameters.getAdditionalFee1());
+        }
+        if(formParameters.getAdditionalFee2()!=null) {
+            selenium.select("selectedFee[1].feeId", "label=" + formParameters.getAdditionalFee2());
+        }
+        if(formParameters.getAdditionalFee3()!=null) {
+            selenium.select("selectedFee[2].feeId", "label=" + formParameters.getAdditionalFee3());
+        }
+
+        //selenium.select("selectedFee[0].feeId", "label=USDfeeAdditional");
     }
 
     public CreateLoanAccountConfirmationPage submitAndNavigateToGLIMLoanAccountConfirmationPage() {
@@ -147,7 +161,7 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
         return new CreateLoanAccountCashFlowPage(selenium);
     }
 
-    private void submit() {
+    public void submit() {
         selenium.click(continueButton);
         waitForPageToLoad();
     }
@@ -175,6 +189,10 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
 
         selenium.select("selectedFee[1].feeId", "label=One Time Upfront Fee");
         selenium.type("selectedFee[1].amount", "3.3");
+    }
+
+    public void unselectAdditionalFee() {
+        selenium.select("selectedFee[1].feeId", "label=--Select--");
     }
 
     public void selectTwoClientsForGlim() {
@@ -319,5 +337,9 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
 
     public String getLoanAmount() {
         return selenium.getValue("loancreationdetails.input.sumLoanAmount");
+    }
+
+    public void verifyError(String error) {
+        Assert.assertTrue(selenium.isElementPresent("//span[@id='loancreationdetails.error.message']/li[text()='"+error+"']"));
     }
 }

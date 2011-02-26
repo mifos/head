@@ -190,11 +190,13 @@ explanation of the license and how it is applied.
 
 									<table width="86%" border="0" cellspacing="0" cellpadding="0">
 										<tr>
-											<td width="34%" valign="top"><html-el:textarea
+											<td width="34%" valign="top"><html-el:textarea 
+												styleId="createChecklist.input.items"
 												property="text" cols="50" rows="5" onkeypress="return restrictScript(event);">
 											</html-el:textarea></td>
 
 											<td width="66%" valign="top" class="paddingleft05notop"><html-el:button
+												styleId="createChecklist.button.addItem"
 												property="button" styleClass="insidebuttn"
 												onclick="createCheckList();isButtonRequired()">
 												<mifos:mifoslabel name="checklist.button_add" />
@@ -231,6 +233,7 @@ explanation of the license and how it is applied.
 													value='${loop.index}' />
 											</c:forEach>
 											<div id="removeButton" style="display:none"><html-el:button
+												styleId="createChecklist.button.removeItems"
 												property="removeSelected" styleClass="insidebuttn"
 												
 												onclick="RemoveSelected();isButtonRequired() ">
@@ -255,9 +258,11 @@ explanation of the license and how it is applied.
 							<table width="93%" border="0" cellpadding="0" cellspacing="0">
 								<tr>
 									<td align="center"><html-el:submit
+										styleId="createChecklist.button.preview"
 										property="button" styleClass="buttn">
 										<mifos:mifoslabel name="checklist.button_preview" />
 									</html-el:submit> &nbsp; <html-el:button 
+										styleId="createChecklist.button.cancel"
 										property="cancelBttn" styleClass="cancelbuttn"
 										onclick="javascript:fnCancel(this.form)">
 										<mifos:mifoslabel name="checklist.button_cancel" />

@@ -68,13 +68,21 @@ public class ChangePasswordPage extends MifosPage {
 
     }
 
-    public HomePage submitAndGotoHomePage(SubmitFormParameters parameters) {
+    private void fillFormAndSubmit(SubmitFormParameters parameters ){
         typeTextIfNotEmpty("changePassword.input.oldPassword", parameters.getOldPassword());
         typeTextIfNotEmpty("changePassword.input.newPassword", parameters.getNewPassword());
         typeTextIfNotEmpty("changePassword.input.confirmPassword", parameters.getConfirmPassword());
-
         selenium.click("changePassword.button.submit");
         waitForPageToLoad();
+    }
+
+    public ChangePasswordPage submitWithInvalidData(SubmitFormParameters parameters){
+        fillFormAndSubmit(parameters);
+        return new ChangePasswordPage(selenium);
+    }
+
+    public HomePage submitAndGotoHomePage(SubmitFormParameters parameters) {
+        fillFormAndSubmit(parameters);
         return new HomePage(selenium);
     }
 }

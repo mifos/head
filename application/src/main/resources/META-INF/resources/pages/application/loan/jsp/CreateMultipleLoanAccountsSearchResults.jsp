@@ -200,11 +200,11 @@ explanation of the license and how it is applied.
 												property="clientDetails[${loopStatus.index}].loanAmount"/>
 											</td>
 											<td width="15%" valign="top" class="drawtablerow">
-												<c:out value="${clientDetail.minLoanAmount}" /> &nbsp; - &nbsp; 
-												<c:out value="${clientDetail.maxLoanAmount}" />
+												<span id="CreateMultipleLoanAccountsSearchResults.minLoanAmount.${loopStatus.index}"><c:out value="${clientDetail.minLoanAmount}" /></span> &nbsp; - &nbsp; 
+												<span id="CreateMultipleLoanAccountsSearchResults.maxLoanAmount.${loopStatus.index}"><c:out value="${clientDetail.maxLoanAmount}" /></span>
 											</td>
 											<td width="15%" valign="top" class="drawtablerow">
-												<c:out value="${clientDetail.defaultNoOfInstall}" /> 
+												<span id="CreateMultipleLoanAccountsSearchResults.NoOfInstall.${loopStatus.index}"><c:out value="${clientDetail.defaultNoOfInstall}" /></span> 
 											</td>
 											<td width="20%" valign="top" class="drawtablerow">
 												<mifos:select property="clientDetails[${loopStatus.index}].businessActivity" style="width:136px;">

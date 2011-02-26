@@ -23,7 +23,6 @@ package org.mifos.test.acceptance.framework.testhelpers;
 import java.util.Map;
 
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
-import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 import org.mifos.test.acceptance.framework.center.MeetingParameters;
 import org.mifos.test.acceptance.framework.client.ChooseOfficePage;
 import org.mifos.test.acceptance.framework.client.ClientStatus;
@@ -39,11 +38,14 @@ import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPreviewP
 import org.mifos.test.acceptance.framework.group.EditCustomerStatusParameters;
 import org.mifos.test.acceptance.framework.group.GroupSearchPage;
 import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
+import org.mifos.test.acceptance.framework.loan.ChargeParameters;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
-import org.mifos.test.acceptance.util.StringUtil;
-import com.thoughtworks.selenium.Selenium;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionnairePage;
 import org.mifos.test.acceptance.framework.questionnaire.ViewQuestionResponseDetailPage;
+import org.mifos.test.acceptance.util.StringUtil;
+
+import com.thoughtworks.selenium.Selenium;
 
 public class ClientTestHelper {
 
@@ -115,6 +117,23 @@ public class ClientTestHelper {
         newClientDetailsPage.verifyNotes(editCustomerStatusParameters.getNote());
 
         return newClientDetailsPage;
+    }
+
+    public ClientViewDetailsPage changeCustomerStatus(String clientName, EditCustomerStatusParameters editCustomerStatusParameters) {
+        ClientViewDetailsPage clientDetailsPage = navigationHelper.navigateToClientViewDetailsPage(clientName);
+        CustomerChangeStatusPage statusChangePage = clientDetailsPage.navigateToCustomerChangeStatusPage();
+        CustomerChangeStatusPreviewPage statusPreviewPage = statusChangePage.setChangeStatusParametersAndSubmit(editCustomerStatusParameters);
+        ClientViewDetailsPage newClientDetailsPage = statusPreviewPage.submitAndGotoClientViewDetailsPage();
+        newClientDetailsPage.verifyStatus(editCustomerStatusParameters.getClientStatus().getStatusText());
+        newClientDetailsPage.verifyNotes(editCustomerStatusParameters.getNote());
+        return newClientDetailsPage;
+    }
+
+    public ClientViewDetailsPage activateClient(String clientName){
+        EditCustomerStatusParameters editCustomerStatusParameters = new EditCustomerStatusParameters();
+        editCustomerStatusParameters.setClientStatus(ClientStatus.ACTIVE);
+        editCustomerStatusParameters.setNote("Activate Client");
+        return changeCustomerStatus(clientName, editCustomerStatusParameters);
     }
 
 
@@ -370,9 +389,16 @@ public class ClientTestHelper {
                 questionnairePage.setResponse(key.split(":")[0],key.split(":")[1]);
             }
         }
-        
+
         ClientViewDetailsPage clientViewDetailsPage2 = (ClientViewDetailsPage)questionnairePage.submit();
         clientViewDetailsPage2.verifyPage("ViewClientDetails");
         return clientViewDetailsPage2;
+   }
+
+   public void applyCharge(String clientSearchString, ChargeParameters chargeParameters) {
+       navigationHelper.navigateToClientViewDetailsPage(clientSearchString)
+           .navigateToViewClientChargesDetail()
+           .navigateToApplyCharges()
+           .applyChargeAndNaviagteToViewClientChargesDetail(chargeParameters);
    }
 }

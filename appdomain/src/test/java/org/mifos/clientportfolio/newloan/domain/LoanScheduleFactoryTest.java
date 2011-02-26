@@ -66,7 +66,7 @@ public class LoanScheduleFactoryTest {
         when(loanProduct.getInterestType()).thenReturn(InterestType.FLAT);
 
         // exercise test
-        IndividualLoanSchedule loanSchedule = loanScheduleFactory.create(loanScheduleDates, loanProduct, null);
+        IndividualLoanSchedule loanSchedule = loanScheduleFactory.create(loanScheduleDates, loanProduct, null, null, null);
 
         // verification
 //        verify(loanProductDao).findBySystemId(loanProductId.globalId());

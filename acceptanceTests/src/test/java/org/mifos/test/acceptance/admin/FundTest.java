@@ -37,7 +37,7 @@ import org.testng.annotations.Test;
 
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"smoke","fund","acceptance","ui","no_db_unit"})
+@Test(sequential=true, groups={"fund","acceptance","ui","no_db_unit"})
 public class FundTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;

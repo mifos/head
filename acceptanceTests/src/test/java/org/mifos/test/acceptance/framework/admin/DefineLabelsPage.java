@@ -36,7 +36,7 @@ public class DefineLabelsPage extends MifosPage {
     }
 
     public void setLabelValue(String label, String value) {
-        selenium.type("definelabels.input." + label, value);
+        selenium.type(label, value);
     }
 
     public String getCitizenshipLabel() {
@@ -51,16 +51,14 @@ public class DefineLabelsPage extends MifosPage {
         Assert.assertEquals(selenium.getValue(label), value);
     }
 
-    public void verifyCitizenshipLabel(DefineLabelsParameters labelParameters) {
-        Assert.assertEquals(getCitizenshipLabel(), labelParameters.getCitizenship());
-    }
-
-    public void verifyGovtIdLabel(DefineLabelsParameters labelParameters) {
-        Assert.assertEquals(getGovtIdLabel(), labelParameters.getGovtId());
-    }
-
     public AdminPage submit() {
         selenium.click("definelabels.button.submit");
+        waitForPageToLoad();
+        return new AdminPage(selenium);
+    }
+
+    public AdminPage cancel() {
+        selenium.click("CANCEL");
         waitForPageToLoad();
         return new AdminPage(selenium);
     }

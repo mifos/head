@@ -41,16 +41,20 @@ import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallmentBuilder;
 import org.mifos.accounts.productdefinition.business.AmountRange;
 import org.mifos.accounts.productdefinition.business.LoanAmountSameForAllLoanBO;
 import org.mifos.accounts.productdefinition.business.NoOfInstallSameForAllLoanBO;
+import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.config.AccountingRules;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.security.util.UserContext;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -312,6 +316,27 @@ public class LoanAccountActionFormTest {
         ActionErrors errors = new ActionErrors();
         form.validateLoanAmount(errors, Locale.ENGLISH, TestUtils.RUPEE);
         Assert.assertEquals("No Error was expected",0, errors.size());
+    }
+
+    public void testValidateAdditionalFeesWithMultipleInstancesOfTheSameOneTimeFee() throws Exception {
+        List<FeeDto> additionalFeeList = createDefaultFees();
+        List<FeeDto> additionalFeeList2 = createDefaultFees();
+        additionalFeeList2.add(additionalFeeList.get(0));
+        FlowManager flowMgrMock = createMock(FlowManager.class);
+        HttpSession sessionMock = createMock(HttpSession.class);
+        HttpServletRequest requestMock = createMock(HttpServletRequest.class);
+        expect(requestMock.getSession()).andReturn(sessionMock);
+        expect(requestMock.getAttribute(Constants.CURRENTFLOWKEY)).andReturn("currentFlowKey");
+        expect(sessionMock.getAttribute(Constants.FLOWMANAGER)).andReturn(flowMgrMock);
+        expect(flowMgrMock.getFromFlow("currentFlowKey", LoanConstants.ADDITIONAL_FEES_LIST)).andReturn(additionalFeeList);
+        ActionErrors errors = new ActionErrors();
+        form.validateAdditionalFee(errors, Locale.ENGLISH, TestUtils.RUPEE, requestMock);
+        Assert.assertEquals("There should be a 'Multiple instances of the same one-time fee are not allowed' error",
+                1, errors.size());
+        ActionMessage actionMessage = (ActionMessage)errors.get().next();
+        Assert.assertEquals("There should be a 'Multiple instances of the same one-time fee are not allowed' error",
+                ProductDefinitionConstants.MULTIPLE_ONE_TIME_FEES_NOT_ALLOWED, actionMessage.getKey());
+
     }
 
     /**

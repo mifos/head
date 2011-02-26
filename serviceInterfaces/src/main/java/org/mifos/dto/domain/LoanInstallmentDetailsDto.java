@@ -55,5 +55,4 @@ public class LoanInstallmentDetailsDto {
     public Date getNextMeetingDate() {
         return this.nextMeetingDate;
     }
-
 }

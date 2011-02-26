@@ -26,6 +26,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.joda.time.LocalDate;
 import org.mifos.accounts.fund.servicefacade.FundDto;
 import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.FeeDto;
@@ -46,7 +47,6 @@ public class LoanCreationLoanDetailsDto implements Serializable {
 	private final CustomerDetailDto customerDetailDto;
 	private final List<PrdOfferingDto> loanProductDtos;
 	private final String interestRateType;
-	private final boolean principalDueOnLastInstallment;
 	
 	private final Map<String, String> productOptions = new LinkedHashMap<String, String>();
 	private final Map<String, String> fundOptions = new LinkedHashMap<String, String>();
@@ -66,15 +66,16 @@ public class LoanCreationLoanDetailsDto implements Serializable {
     private final Integer defaultNumberOfInstallments;
     private final Integer maxNumberOfInstallments;
     private final Integer minNumberOfInstallments;
+    private final LocalDate nextPossibleDisbursementDate;
 
     public LoanCreationLoanDetailsDto(boolean isRepaymentIndependentOfMeetingEnabled,
             MeetingDto loanOfferingMeetingDetail, MeetingDto customerMeetingDetail,
             List<ValueListElement> loanPurposes, ProductDetailsDto productDto, CustomerDetailDto customerDetailDto, List<PrdOfferingDto> loanProductDtos, 
-            String interestRateType, boolean principalDueOnLastInstallment, List<FundDto> fundDtos, HashMap<String, String> collateralOptions, 
+            String interestRateType, List<FundDto> fundDtos, HashMap<String, String> collateralOptions, 
             HashMap<String, String> purposeOfLoanOptions, Map<String, String> defaultFeeOptions, Map<String, String> additionalFeeOptions, List<FeeDto> defaultFees, 
             String defaultLoanAmount, String maxLoanAmount, String minLoanAmount, 
             Double defaultInterestRate, Double maxInterestRate, Double minInterestRate, 
-            Integer defaultNumberOfInstallments, Integer maxNumberOfInstallments, Integer minNumberOfInstallments) {
+            Integer defaultNumberOfInstallments, Integer maxNumberOfInstallments, Integer minNumberOfInstallments, LocalDate nextPossibleDisbursementDate) {
         this.isRepaymentIndependentOfMeetingEnabled = isRepaymentIndependentOfMeetingEnabled;
         this.loanOfferingMeetingDetail = loanOfferingMeetingDetail;
         this.customerMeetingDetail = customerMeetingDetail;
@@ -83,7 +84,6 @@ public class LoanCreationLoanDetailsDto implements Serializable {
 		this.customerDetailDto = customerDetailDto;
 		this.loanProductDtos = loanProductDtos;
 		this.interestRateType = interestRateType;
-		this.principalDueOnLastInstallment = principalDueOnLastInstallment;
 		this.fundDtos = fundDtos;
         this.defaultFees = defaultFees;
         this.defaultLoanAmount = defaultLoanAmount;
@@ -95,6 +95,7 @@ public class LoanCreationLoanDetailsDto implements Serializable {
         this.defaultNumberOfInstallments = defaultNumberOfInstallments;
         this.maxNumberOfInstallments = maxNumberOfInstallments;
         this.minNumberOfInstallments = minNumberOfInstallments;
+        this.nextPossibleDisbursementDate = nextPossibleDisbursementDate;
 		populateProductOptions(loanProductDtos);
 		populateFundOptions(fundDtos);
 		this.collateralOptions = collateralOptions;
@@ -117,10 +118,6 @@ public class LoanCreationLoanDetailsDto implements Serializable {
 
 	public String getInterestRateType() {
 		return interestRateType;
-	}
-
-	public boolean isPrincipalDueOnLastInstallment() {
-		return principalDueOnLastInstallment;
 	}
 
     public boolean isRepaymentIndependentOfMeetingEnabled() {
@@ -217,5 +214,9 @@ public class LoanCreationLoanDetailsDto implements Serializable {
 
     public Integer getMinNumberOfInstallments() {
         return minNumberOfInstallments;
+    }
+    
+    public LocalDate getNextPossibleDisbursementDate() {
+        return nextPossibleDisbursementDate;
     }
 }

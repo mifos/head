@@ -34,6 +34,7 @@ public class CenterViewDetailsPage extends MifosPage {
 
     public CenterViewDetailsPage(Selenium selenium) {
         super(selenium);
+        verifyPage("CenterDetails");
     }
 
     public String getCenterName() {
@@ -80,6 +81,12 @@ public class CenterViewDetailsPage extends MifosPage {
         return new ViewQuestionResponseDetailPage(selenium);
     }
 
+    public ViewQuestionResponseDetailPage navigateToViewQuestionResponseDetailPage(String questionGroupName) {
+        selenium.click("link="+questionGroupName);
+        waitForPageToLoad();
+        return new ViewQuestionResponseDetailPage(selenium);
+    }
+
     public CustomerChangeStatusPage navigateToCustomerChangeStatusPage() {
         selenium.click("viewCenterDetails.link.edit");
         waitForPageToLoad();
@@ -90,5 +97,13 @@ public class CenterViewDetailsPage extends MifosPage {
         selenium.click("viewCenterDetails.link.viewDetails");
         waitForPageToLoad();
         return new ViewCenterChargesDetailPage(selenium);
+    }
+
+    public String getAmountDue(){
+        return selenium.getText("viewCenterDetails.text.amountDue");
+    }
+
+    public void verifyAmountDue(String amountDue){
+        Assert.assertEquals(getAmountDue(), amountDue);
     }
 }

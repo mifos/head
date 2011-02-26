@@ -20,9 +20,9 @@
 
 package org.mifos.test.acceptance.framework.loan;
 
-import org.mifos.test.acceptance.framework.AbstractPage;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
+import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.questionnaire.ViewQuestionResponseDetailPage;
 import org.testng.Assert;
@@ -30,7 +30,7 @@ import org.testng.Assert;
 import com.thoughtworks.selenium.Selenium;
 
 @SuppressWarnings("PMD.SystemPrintln")
-public class LoanAccountPage extends AbstractPage {
+public class LoanAccountPage extends MifosPage {
 
     public final static String ACTIVE = "Active in Good Standing";
     public final static String ACTIVE_BAD = "Active in Bad Standing";
@@ -145,7 +145,7 @@ public class LoanAccountPage extends AbstractPage {
     }
 
     public void verifyError(String error) {
-        Assert.assertTrue(!selenium.isElementPresent("//span[@id='schedulePreview.error.message']/li[text()='"+error+"']"));
+        Assert.assertTrue(selenium.isElementPresent("//span[@id='loanaccountdetail.error.message']/li[text()='"+error+"']"));
     }
 
     public void verifyNumberOfInstallments(String numberOfInstallments) {

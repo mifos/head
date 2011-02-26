@@ -20,6 +20,7 @@
 
 package org.mifos.test.acceptance.framework.user;
 
+import org.junit.Assert;
 import org.mifos.test.acceptance.framework.MifosPage;
 
 import com.thoughtworks.selenium.Selenium;
@@ -37,7 +38,7 @@ public class CreateUserEnterDataPage extends MifosPage {
         super(selenium);
     }
 
-    public CreateUserPreviewDataPage submitAndGotoCreateUserPreviewDataPage(CreateUserParameters parameters) {
+    private void fillForm(CreateUserParameters parameters){
         typeTextIfNotEmpty("create_user.input.firstName", parameters.getFirstName());
         typeTextIfNotEmpty("create_user.input.lastName", parameters.getLastName());
         typeTextIfNotEmpty("create_user.input.email", parameters.getEmail());
@@ -46,7 +47,6 @@ public class CreateUserEnterDataPage extends MifosPage {
         typeTextIfNotEmpty("dobMM", parameters.getDateOfBirthMM());
         typeTextIfNotEmpty("dobYY", parameters.getDateOfBirthYYYY());
         selectValueIfNotZero("gender", parameters.getGender());
-//        selectValueIfNotZero("preferredLocale", parameters.getPreferredLanguage());
         selectValueIfNotZero("level", parameters.getUserLevel());
         if (parameters.getRole() != null && parameters.getRole().equals("Admin")) {
           selenium.click("MoveRight");
@@ -57,6 +57,26 @@ public class CreateUserEnterDataPage extends MifosPage {
 
         selenium.click("create_user.button.preview");
         waitForPageToLoad();
+    }
+
+    public CreateUserEnterDataPage submitAndReturnToThisPage(CreateUserParameters parameters) {
+        fillForm(parameters);
+        return new CreateUserEnterDataPage(selenium);
+    }
+
+    public CreateUserPreviewDataPage submitAndGotoCreateUserPreviewDataPage(CreateUserParameters parameters) {
+        fillForm(parameters);
+        waitForPageToLoad();
         return new CreateUserPreviewDataPage(selenium);
+    }
+
+    public void verifyPasswordChangeError(){
+        String errorMsg = selenium.getText("create_user.error.message");
+        Assert.assertTrue(errorMsg.contains("Please ensure that password and confirm password entries are made and they are identical."));
+    }
+
+    public void verifyDateError() {
+        String errorMsg = selenium.getText("create_user.error.message");
+        Assert.assertTrue(errorMsg.contains("Date of Birth is incorrect."));
     }
 }

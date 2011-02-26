@@ -19,6 +19,10 @@
  */
 package org.mifos.test.acceptance.framework.questionnaire;
 
+import java.util.List;
+
+import org.testng.Assert;
+
 import com.thoughtworks.selenium.Selenium;
 
 public class CreateQuestionGroupPage extends CreateQuestionGroupRootPage {
@@ -35,7 +39,15 @@ public class CreateQuestionGroupPage extends CreateQuestionGroupRootPage {
         if (createQuestionGroupParameters.isAnswerEditable()) {
            selenium.click("id=editable");
         }
-        selectAppliesTo(createQuestionGroupParameters.getAppliesTo());
+        List<String> appliesToList = createQuestionGroupParameters.getAppliesTo();
+        for(String appliesTo: appliesToList) {
+            selectAppliesTo(appliesTo);
+        }
+        selenium.click("id=_eventId_defineQuestionGroup");
+        waitForPageToLoad();
+    }
+
+    public void submit() {
         selenium.click("id=_eventId_defineQuestionGroup");
         waitForPageToLoad();
     }
@@ -56,5 +68,9 @@ public class CreateQuestionGroupPage extends CreateQuestionGroupRootPage {
         selenium.type("id=sectionName", sectionName);
         selenium.click("id=_eventId_addSection");
         waitForPageToLoad();
+    }
+
+    public void verifyTextPresent(String expectedText, String errorMessage) {
+        Assert.assertTrue(selenium.isTextPresent(expectedText), errorMessage);
     }
 }

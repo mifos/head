@@ -236,6 +236,13 @@ public class LoanTestHelper {
         changeLoanAccountStatusProvidingQuestionGroupResponses(loanId, params, null);
     }
 
+    public void activateLoanAccount(String loanId){
+        EditLoanAccountStatusParameters editLoanAccountStatusParameters = new EditLoanAccountStatusParameters();
+        editLoanAccountStatusParameters.setStatus(AccountStatus.LOAN_APPROVED.getStatusText());
+        editLoanAccountStatusParameters.setNote("Activate account");
+        changeLoanAccountStatus(loanId, editLoanAccountStatusParameters);
+    }
+
     public void changeLoanAccountStatusProvidingQuestionGroupResponses(String loanId, EditLoanAccountStatusParameters params, QuestionResponseParameters responseParameters) {
         LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
 
@@ -278,6 +285,13 @@ public class LoanTestHelper {
         LoanAccountPage loanAccountPage = disburseLoanConfirmationPage.submitAndNavigateToLoanAccountPage();
         loanAccountPage.verifyStatus(LoanAccountPage.ACTIVE);
         return loanAccountPage;
+    }
+
+    public void disburseLoanWithWrongParams(String loanId, DisburseLoanParameters params,  String msg)
+    {
+        DisburseLoanPage disburseLoanPage = prepareToDisburseLoan(loanId);
+        disburseLoanPage.submitWithWrongParams(params,msg);
+        prepareToDisburseLoan(loanId);
     }
 
     public void editLoanProduct(String loanProduct, boolean interestWaiver) {
@@ -671,7 +685,7 @@ public class LoanTestHelper {
         return createLoanAccountsEntryPage.submitAndNavigateToCreateMultipleLoanAccountsSuccessPage();
     }
 
-    public void createMultipleLoanAccountsAndVerify(CreateMultipleLoanAccountSelectParameters multipleAccParameters, String[] clients, String loanPurpose, Boolean saveMethod) {
+    public void createMultipleLoanAccountsAndVerify(CreateMultipleLoanAccountSelectParameters multipleAccParameters, String[] clients, String loanPurpose, String feeAmount, Boolean saveMethod) {
 
         String [] clientsInstallments = loanProductTestHelper.getDefaultNoOfInstallmentsForClients(clients, multipleAccParameters.getLoanProduct());
         CreateLoanAccountsEntryPage createLoanAccountsEntryPage = navigationHelper.navigateToClientsAndAccountsPage()
@@ -681,7 +695,7 @@ public class LoanTestHelper {
         for(int i = 0; i < clients.length; i++) {
             createLoanAccountsEntryPage.selectClients(i, clients[i]);
             createLoanAccountsEntryPage.updateLoanPurposeForClient(i, loanPurpose);
-            createLoanAccountsEntryPage.verifyNoOfInstallments(i+1, clientsInstallments[i]);
+            createLoanAccountsEntryPage.verifyNoOfInstallments(i, clientsInstallments[i]);
         }
         LoanAccountPage loanAccountPage;
         CreateLoanAccountsSuccessPage createLoanAccountsSuccessPage;
@@ -703,6 +717,7 @@ public class LoanTestHelper {
                 else{
                     loanAccountPage.verifyLoanStatus(AccountStatus.LOAN_PARTIAL.getStatusText());
                 }
+                Assert.assertEquals(loanAccountPage.getOriginalFeesAmount(), feeAmount, "Bulk loan creation ignores default fees");
                 loanAccountPage.verifyNumberOfInstallments(clientsInstallments[i]);
             }
         }

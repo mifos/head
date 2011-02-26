@@ -32,11 +32,7 @@ public class TimeMachinePage extends MifosPage {
 
     public TimeMachinePage(Selenium selenium) {
         super(selenium);
-    }
-
-    public TimeMachinePage verifyPage() {
         verifyPage("DateTimeUpdate");
-        return this;
     }
 
     public void verifySuccess(DateTime dateTime) {

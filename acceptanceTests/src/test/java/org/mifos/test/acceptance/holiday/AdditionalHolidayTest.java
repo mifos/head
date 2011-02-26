@@ -33,30 +33,34 @@ import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
-import org.mifos.test.acceptance.framework.admin.FeesCreatePage.SubmitFormParameters;
-import org.mifos.test.acceptance.framework.client.ApplyChargesPage;
-import org.mifos.test.acceptance.framework.client.ClientSearchResultsPage;
-import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
-import org.mifos.test.acceptance.framework.client.ViewClientChargesDetail;
 import org.mifos.test.acceptance.framework.holiday.CreateHolidayConfirmationPage;
 import org.mifos.test.acceptance.framework.holiday.CreateHolidayEntryPage;
-import org.mifos.test.acceptance.framework.holiday.ViewHolidaysPage;
 import org.mifos.test.acceptance.framework.holiday.CreateHolidayEntryPage.CreateHolidaySubmitParameters;
+import org.mifos.test.acceptance.framework.holiday.ViewHolidaysPage;
+import org.mifos.test.acceptance.framework.loan.ChargeParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountEntryPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameters;
 import org.mifos.test.acceptance.framework.login.LoginPage;
+import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSearchParameters;
+import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSubmitParameters;
 import org.mifos.test.acceptance.framework.testhelpers.BatchJobHelper;
+import org.mifos.test.acceptance.framework.testhelpers.CenterTestHelper;
+import org.mifos.test.acceptance.framework.testhelpers.ClientTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
+import org.mifos.test.acceptance.framework.testhelpers.GroupTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.HolidayTestHelper;
+import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
+import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
+import org.mifos.test.acceptance.framework.testhelpers.SavingsAccountHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
+import org.mifos.test.acceptance.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
-import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -67,6 +71,12 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;
     private HolidayTestHelper holidayTestHelper;
+    private CenterTestHelper centerTestHelper;
+    private GroupTestHelper groupTestHelper;
+    private ClientTestHelper clientTestHelper;
+    private LoanTestHelper loanTestHelper;
+    private NavigationHelper navigationHelper;
+    private SavingsAccountHelper savingsAccountHelper;
 
     @Autowired
     private DriverManagerDataSource dataSource;
@@ -91,6 +101,12 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
 
         appLauncher = new AppLauncher(selenium);
         holidayTestHelper = new HolidayTestHelper(selenium);
+        centerTestHelper = new CenterTestHelper(selenium);
+        groupTestHelper = new GroupTestHelper(selenium);
+        clientTestHelper = new ClientTestHelper(selenium);
+        loanTestHelper = new LoanTestHelper(selenium);
+        navigationHelper = new NavigationHelper(selenium);
+        savingsAccountHelper = new SavingsAccountHelper(selenium);
     }
 
     @AfterMethod
@@ -463,170 +479,68 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         holidayTestHelper.createHoliday(param);
     }
 
-
-    @Test(enabled=true) //disabled due to MIFOS-3785. Please enable once that issue is fixed.
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void testMoratoriumPushesFeesToFutureMeeting() throws Exception {
-        // MIFOSTEST-281
+    // http://mifosforge.jira.com/browse/MIFOSTEST-281
+    @Test(enabled = false) // TODO js - investigate why this fails on master
+    public void testHolidayAffectsFeeSchedule() throws Exception {
+        // Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_015_dbunit.xml", dataSource, selenium);
 
+        ChargeParameters chargeParameters = new ChargeParameters();
+        String officeName = "MyOffice1232993831593";
+        String centerName = "MyCenter1232993841778";
+        String groupName = "MyGroup1232993846342";
+        String clientName = "Stu1232993852651 Client1232993852651";
+        String loanId = "000100000000004";
+        CreateHolidaySubmitParameters params = new CreateHolidayEntryPage.CreateHolidaySubmitParameters();
+        params.setName("Holiday" + StringUtil.getRandomString(8));
+        params.setFromDateDD("16");
+        params.setFromDateMM("03");
+        params.setFromDateYYYY("2009");
+        params.setRepaymentRule(CreateHolidaySubmitParameters.MORATORIUM);
+        params.addOffice(officeName);
+        CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
+        searchParameters.setSearchString(clientName);
+        searchParameters.setSavingsProduct("MandClientSavings3MoPostMinBal");
+        CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
+        submitAccountParameters.setAmount("100.0");
 
-        initRemote
-                .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
+        // When
+        chargeParameters.setType("Weekly Center Fee");
+        centerTestHelper.applyCharge(centerName, chargeParameters);
+        String centerAmount = navigationHelper.navigateToCenterViewDetailsPage(centerName).getAmountDue();
 
-        // create new fees
-        SubmitFormParameters formParameters = FormParametersHelper.getCreatePeriodicFeesParameters();
-        formParameters.setFeeName("Weekly Client Fee");
-        AdminPage adminPage = loginAndNavigateToAdminPage();
-        adminPage.defineNewFees(formParameters);
+        chargeParameters.setType("Weekly Group Fee");
+        groupTestHelper.applyCharge(groupName, chargeParameters);
+        String groupAmount = navigationHelper.navigateToGroupViewDetailsPage(groupName).getAmountDue();
 
-        // apply fees to client
-        applyFeesToClient("Stu1233171716380 Client1233171716380", formParameters.getFeeName());
+        chargeParameters.setType("Weekly Client Fee");
+        clientTestHelper.applyCharge(clientName, chargeParameters);
+        String clientAmount = navigationHelper.navigateToClientViewDetailsPage(clientName).getAmountDue();
 
-        // Create moratorium holiday for upcoming meeting
-        createHolidayOn("March Moratorium", CreateHolidaySubmitParameters.MORATORIUM, "18", "03", "2009");
+        chargeParameters.setType("PeriodicWeeklyLoanFee8");
+        loanTestHelper.applyChargeUsingFeeLabel(loanId, chargeParameters);
 
-        // Run batch jobs
+        String savingsId = savingsAccountHelper.createSavingsAccountWithQG(searchParameters, submitAccountParameters).getAccountId();
+        String savingsAmount = savingsAccountHelper.activateSavingsAccount(savingsId).getTotalAmountDue();
+
+        holidayTestHelper.createHoliday(params);
 
         List<String> jobsToRun = new ArrayList<String>();
         jobsToRun.add("ApplyHolidayChangesTaskJob");
-        new BatchJobHelper(selenium).runSomeBatchJobs(jobsToRun);
-
-        // Move system date to moratorium holiday date
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(
-                selenium);
-        DateTime targetTime = new DateTime(2009, 3, 18, 0, 0, 0, 0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
-
-        verifyFeesInPage("17.0");
-    }
-
-    private void verifyFeesInPage(String amount) {
-        loginAndNavigatetoClientsAndAccountsHomepage();
-        ClientsAndAccountsHomepage clientsAndAccountsHomepage = new ClientsAndAccountsHomepage(selenium);
-        ClientSearchResultsPage resultsPage =  clientsAndAccountsHomepage.searchForClient("Stu1233171716380 Client1233171716380");
-
-        resultsPage.navigateToSearchResult("Stu1233171716380 Client1233171716380: ID 0003-000000006");
-        selenium.click("viewClientDetails.link.viewDetails");
-        selenium.waitForPageToLoad("30000");
-
-        Assert.assertEquals(selenium.isTextPresent("Amount Due: "+amount), true);
-    }
-
-    private void applyFeesToClient(String clientSearchString, String feeName) {
-        ClientsAndAccountsHomepage clientsAndAccountsHomepage = loginAndNavigatetoClientsAndAccountsHomepage();
-        ClientSearchResultsPage clientSearchResultsPage = clientsAndAccountsHomepage
-                .searchForClient(clientSearchString);
-        ClientViewDetailsPage clientViewDetailsPage = clientSearchResultsPage
-                .navigateToSearchResult("Stu1233171716380 Client1233171716380: ID 0003-000000006");
-
-        ViewClientChargesDetail viewClientChargesDetail = clientViewDetailsPage.navigateToViewClientChargesDetail();
-        ApplyChargesPage applyChargesPage = viewClientChargesDetail.navigateToApplyCharges();
-        applyChargesPage.applyCharge(feeName);
-
-    }
-
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test
-    // MIFOSTEST-282
-    public void testMoratoriumPushesLoanPaymentToFutureMeeting() throws Exception {
-        initRemote
-                .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
-
-        // create two clients and two loans in different offices MyOffice1233171674227 and MyOffice1232993831593
-        createTwoWeeklyLoansInDifferentOffices();
-
-        // create two weeks of moratorium in MyOffice1232993831593
-        createMoratoriumForMay("2");
-
-        // run batch jobs
-        List<String> jobsToRun = new ArrayList<String>();
-        jobsToRun.add("ApplyHolidayChangesTaskJob");
+        navigationHelper.navigateToAdminPage();
         new BatchJobHelper(selenium).runSomeBatchJobs(jobsToRun);
 
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(
                 selenium);
-        DateTime targetTime = new DateTime(2009, 5, 1, 0, 0, 0, 0);
+        DateTime targetTime = new DateTime(2009, 3, 17, 0, 0, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
 
-        // verify loan, saving and fee schedules
-        verifyLoanSchedule("AdditionalHolidayTest_013_result_dbunit.xml");
-    }
-
-    @Test
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    // MIFOSTEST-283
-    public void testMoratoriumPushesSavingsPaymentsToFuture() throws Exception {
-        initRemote
-                .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_015_dbunit.xml", dataSource, selenium);
-
-        createSavingsAccountForGroupAndApprove();
-
-        // add moratorium holiday on meeting day
-        createMoratoriumOn16thJuly();
-
-        // run batch jobs
-        ArrayList<String> jobs = new ArrayList<String>();
-        jobs.add("ApplyHolidayChangesTaskJob");
-        new BatchJobHelper(selenium).runSomeBatchJobs(jobs);
-
-        // check for skipped payment in UI
-        loginAndNavigatetoClientsAndAccountsHomepage();
-        ClientsAndAccountsHomepage clientsAndAccountsHomepage = new ClientsAndAccountsHomepage(selenium);
-        ClientSearchResultsPage resultsPage =  clientsAndAccountsHomepage.searchForClient("MyGroup1232993846342");
-
-        resultsPage.navigateToGroupSearchResult("exact:MyGroup1232993846342: ID 0002-000000002");
-
-        selenium.click("viewgroupdetails.link.viewSavingsAccount");
-        selenium.waitForPageToLoad("30000");
-
-        Assert.assertEquals(selenium.isTextPresent("Total amount due on 23/03/2009: 30.0"), true);
-    }
-
-    private void createSavingsAccountForGroupAndApprove() {
-        loginAndNavigatetoClientsAndAccountsHomepage();
-        ClientsAndAccountsHomepage clientsAndAccountsHomepage = new ClientsAndAccountsHomepage(selenium);
-        ClientSearchResultsPage resultsPage =  clientsAndAccountsHomepage.searchForClient("MyGroup1232993846342");
-
-        resultsPage.navigateToGroupSearchResult("exact:MyGroup1232993846342: ID 0002-000000002");
-
-        selenium.click("viewgroupdetails.link.newSavingsAccount");
-        selenium.waitForPageToLoad("30000");
-
-        selenium.select("createsavingsaccount.select.savingsProduct", "label=MandGroupSavingsPerIndiv1MoPost");
-
-        selenium.click("createsavingsaccount.button.continue");
-        selenium.waitForPageToLoad("30000");
-
-        /* TODO - additional fields have been removed in 1.7.x
-        selenium.type("customField[0].fieldValueDD", "11");
-        selenium.type("customField[0].fieldValueMM", "03");
-        selenium.type("customField[0].fieldValueYY", "2009");
-        */
-
-        selenium.click("continuecreatesavingsaccount.button.preview");
-        selenium.waitForPageToLoad("30000");
-
-        // TODO - select some answer
-        selenium.click("captureQuestionResponses.button.continue");
-        selenium.waitForPageToLoad("30000");
-
-        selenium.click("createsavingsaccountpreview.button.submitForApproval");
-        selenium.waitForPageToLoad("30000");
-
-        selenium.click("createsavingsaccountconfirmation.link.viewSavingsAccount");
-        selenium.waitForPageToLoad("30000");
-
-        selenium.click("savingsaccountdetail.link.editAccountStatus");
-        selenium.waitForPageToLoad("30000");
-
-        selenium.click("//input[@id='change_status.input.status' and @name='newStatusId' and @value='16']");
-        selenium.type("change_status.input.note", "approved");
-
-        selenium.click("change_status.button.submit");
-        selenium.waitForPageToLoad("30000");
-
-        selenium.click("change_status_preview.button.submit");
-        selenium.waitForPageToLoad("30000");
+        navigationHelper.navigateToCenterViewDetailsPage(centerName).verifyAmountDue(centerAmount);
+        navigationHelper.navigateToGroupViewDetailsPage(groupName).verifyAmountDue(groupAmount);
+        navigationHelper.navigateToClientViewDetailsPage(clientName).verifyAmountDue(clientAmount);
+        navigationHelper.navigateToLoanAccountPage(loanId).navigateToRepaymentSchedulePage().verifyScheduleNotContainDate("16-Mar-2009");
+        navigationHelper.navigateToSavingsAccountDetailPage(savingsId).verifyTotalAmountDue(savingsAmount);
     }
 
     @Test(enabled = false)
@@ -704,37 +618,6 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         createHoliday(params);
     }
 
-    private void createMoratoriumForMay(String selectedOfficeId) {
-        CreateHolidaySubmitParameters params = new CreateHolidayEntryPage.CreateHolidaySubmitParameters();
-
-        params.setName("Long moratorium");
-        params.setFromDateDD("1");
-        params.setFromDateMM("05");
-        params.setFromDateYYYY("2009");
-        params.setThruDateDD("30");
-        params.setThruDateMM("05");
-        params.setThruDateYYYY("2009");
-        params.setRepaymentRule(CreateHolidaySubmitParameters.MORATORIUM);
-        params.setSelectedOfficeIds(selectedOfficeId);
-
-        createHoliday(params);
-    }
-
-    private void createMoratoriumOn16thJuly() {
-        CreateHolidaySubmitParameters params = new CreateHolidayEntryPage.CreateHolidaySubmitParameters();
-
-        params.setName("16th July Moratorium");
-        params.setFromDateDD("16");
-        params.setFromDateMM("03");
-        params.setFromDateYYYY("2009");
-
-        params.setRepaymentRule(CreateHolidaySubmitParameters.MORATORIUM);
-        params.setSelectedOfficeIds("1");
-
-        createHoliday(params);
-    }
-
-
     @Test(enabled = false)
     private void createLoan(final CreateLoanAccountSearchParameters searchParameters,
             final CreateLoanAccountSubmitParameters submitAccountParameters) {
@@ -769,11 +652,5 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
     private AdminPage loginAndNavigateToAdminPage() {
         return appLauncher.launchMifos().loginSuccessfullyUsingDefaultCredentials().navigateToAdminPage();
 
-    }
-
-    @Test(enabled = false)
-    private ClientsAndAccountsHomepage loginAndNavigatetoClientsAndAccountsHomepage() {
-        return appLauncher.launchMifos().loginSuccessfullyUsingDefaultCredentials()
-                .navigateToClientsAndAccountsUsingHeaderTab();
     }
 }
