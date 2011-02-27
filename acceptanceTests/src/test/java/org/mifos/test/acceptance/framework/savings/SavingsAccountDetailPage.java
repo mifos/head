@@ -100,4 +100,10 @@ public class SavingsAccountDetailPage extends AbstractPage {
     public String getAccountId() {
             return selenium.getText("savingsaccountdetail.text.savingsId");
     }
+
+    public SavingsApplyAdjustmentPage navigateToApplyAdjustmentPage() {
+        selenium.click("savingsaccountdetail.link.applyAdjustment");
+        waitForPageToLoad();
+        return new SavingsApplyAdjustmentPage(selenium);
+    }
 }

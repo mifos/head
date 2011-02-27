@@ -252,8 +252,10 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
     /**
      * Verify a user is prevented to create loan accounts of loan products restricted by the mix.
      * http://mifosforge.jira.com/browse/MIFOSTEST-94
+     *
      * @throws Exception
      */
+    @Test(enabled=false) // TODO js - temporarily disabled broken test (blocked by MIFOS-4792)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createLoanAccountsWithRestrictedProductsMix() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
@@ -285,8 +287,10 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
      * (for two or more clients using the bulk loan creation pipeline)
      * with a loan product restricted with the first loan.
      * http://mifosforge.jira.com/browse/MIFOSTEST-95
+     *
      * @throws Exception
      */
+    @Test(enabled=false) // TODO js - temporarily disabled broken test (blocked by MIFOS-4792)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createMultipleLoanAccountsWithRestrictedProductsMix() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);

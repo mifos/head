@@ -21,6 +21,7 @@
 package org.mifos.test.acceptance.framework.user;
 
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -35,6 +36,12 @@ public class CreateUserPreviewDataPage extends MifosPage {
      */
     public CreateUserPreviewDataPage(Selenium selenium) {
         super(selenium);
+    }
+
+    public QuestionResponsePage navigateToEditAdditionalInformation(){
+        selenium.click("editQuestionResponses_button");
+        waitForPageToLoad();
+        return new QuestionResponsePage(selenium);
     }
 
     public CreateUserConfirmationPage submit() {

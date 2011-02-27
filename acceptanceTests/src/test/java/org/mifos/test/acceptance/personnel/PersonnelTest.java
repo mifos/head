@@ -20,6 +20,10 @@
 
 package org.mifos.test.acceptance.personnel;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.AppLauncher;
@@ -27,9 +31,13 @@ import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
+import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 import org.mifos.test.acceptance.framework.login.ChangePasswordPage;
 import org.mifos.test.acceptance.framework.login.LoginPage;
 import org.mifos.test.acceptance.framework.office.ChooseOfficePage;
+import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionGroupParameters;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionnairePage;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.framework.testhelpers.UserHelper;
 import org.mifos.test.acceptance.framework.user.CreateUserConfirmationPage;
@@ -39,6 +47,7 @@ import org.mifos.test.acceptance.framework.user.CreateUserPreviewDataPage;
 import org.mifos.test.acceptance.framework.user.EditUserDataPage;
 import org.mifos.test.acceptance.framework.user.EditUserPreviewDataPage;
 import org.mifos.test.acceptance.framework.user.UserViewDetailsPage;
+import org.mifos.test.acceptance.framework.testhelpers.QuestionGroupTestHelper;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.mifos.test.acceptance.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +65,7 @@ public class PersonnelTest extends UiTestCaseBase {
 
     private NavigationHelper navigationHelper;
     private UserHelper userHelper;
+    private QuestionGroupTestHelper questionGroupTestHelper;
 
     @Autowired
     private DriverManagerDataSource dataSource;
@@ -73,6 +83,7 @@ public class PersonnelTest extends UiTestCaseBase {
         super.setUp();
         navigationHelper = new NavigationHelper(selenium);
         userHelper = new UserHelper(selenium);
+        questionGroupTestHelper = new QuestionGroupTestHelper(selenium);
     }
 
     @AfterMethod
@@ -121,6 +132,126 @@ public class PersonnelTest extends UiTestCaseBase {
         adminPage.navigateToCreateUserPage();
         String error = selenium.getText("admin.error.message");
         Assert.assertEquals(error.contains("You do not have permissions to perform this activity. Contact your system administrator to grant you the required permissions and try again."), true);
+    }
+
+    //http://mifosforge.jira.com/browse/MIFOSTEST-670
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void createUserWithQuestionGroup()  throws Exception {
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_016_dbunit.xml", dataSource, selenium);
+        //When
+        Map<String, List<String>> sectionQuestions = new HashMap<String, List<String>>();
+
+        List<String> questions = new ArrayList<String>();
+
+        questions.add("question 4");
+        questions.add("question 3");
+        questions.add("Date");
+
+        sectionQuestions.put("Sec 1", questions);
+
+        questions = new ArrayList<String>();
+        questions.add("Number");
+        questions.add("question 1");
+        questions.add("DateQuestion");
+        questions.add("Text");
+
+        sectionQuestions.put("Sec 2", questions);
+
+        CreateQuestionGroupParameters createQuestionGroupParameters = new CreateQuestionGroupParameters();
+        createQuestionGroupParameters.setAnswerEditable(true);
+        createQuestionGroupParameters.setAppliesTo("Create Personnel");
+        createQuestionGroupParameters.setTitle("Create Personnel QG1");
+        createQuestionGroupParameters.setExistingQuestions(sectionQuestions);
+
+        questionGroupTestHelper.createQuestionGroup(createQuestionGroupParameters);
+
+        sectionQuestions = new HashMap<String, List<String>>();
+        questions = new ArrayList<String>();
+        questions.add("question 4");
+        sectionQuestions.put("Sec 3", questions);
+
+        createQuestionGroupParameters = new CreateQuestionGroupParameters();
+        createQuestionGroupParameters.setAnswerEditable(true);
+        createQuestionGroupParameters.setAppliesTo("Create Personnel");
+        createQuestionGroupParameters.setTitle("Create Personnel QG2");
+        createQuestionGroupParameters.setExistingQuestions(sectionQuestions);
+
+        questionGroupTestHelper.createQuestionGroup(createQuestionGroupParameters);
+
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+
+        CreateUserParameters userParameters = adminPage.getAdminUserParameters();
+
+        ChooseOfficePage createUserPage = adminPage.navigateToCreateUserPage();
+        createUserPage.verifyPage();
+
+        CreateUserEnterDataPage userEnterDataPage = createUserPage.selectOffice("MyOffice1233171674227");
+
+        QuestionResponsePage questionResponsePage = userEnterDataPage.submitAndNavigateToQuestionResponsePage(userParameters);
+        questionResponsePage.verifyPage();
+
+        QuestionResponseParameters responseParameters = new QuestionResponseParameters();
+        responseParameters.addSingleSelectAnswer("questionGroups[0].sectionDetails[0].questions[2].value", "yes");
+        responseParameters.addTextAnswer("questionGroups[0].sectionDetails[1].questions[3].value", "text1");
+
+        questionResponsePage.populateAnswers(responseParameters);
+
+        CreateUserPreviewDataPage createUserPreviewDataPage = questionResponsePage.continueAndNavigateToCreateUserPreviewPage();
+
+        questionResponsePage = createUserPreviewDataPage.navigateToEditAdditionalInformation();
+
+        questionResponsePage.populateTextAnswer("questionGroups[0].sectionDetails[1].questions[3].value", "text2");
+
+        createUserPreviewDataPage = questionResponsePage.continueAndNavigateToCreateUserPreviewPage();
+
+        CreateUserConfirmationPage userConfirmationPage = createUserPreviewDataPage.submit();
+
+        QuestionnairePage questionnairePage = userConfirmationPage.navigateToUserViewDetailsPage().navigateToQuestionnairePage();
+        //Then
+        questionnairePage.verifyField("details[0].sectionDetails[1].questions[3].value", "text2");
+        questionnairePage.verifyRadioGroup("details[0].sectionDetails[0].questions[2].value", "yes", true);
+        //When
+        questionnairePage.typeText("details[0].sectionDetails[1].questions[3].value", "text3");
+
+        questionnairePage.submitAndNavigateToPersonnalDetailsPage();
+
+        List<String> questionToAdd= new ArrayList<String>();
+        questionToAdd.add("question 2");
+        questionToAdd.add("question 5");
+
+        List<String> questionToDesactivate = new ArrayList<String>();
+        questionToDesactivate.add("DateQuestion");
+        questionToDesactivate.add("Number");
+        questionToDesactivate.add("question 1");
+        questionToDesactivate.add("Text");
+
+        createQuestionGroupParameters = new CreateQuestionGroupParameters();
+        for (String question : questionToAdd) {
+            createQuestionGroupParameters.addExistingQuestion("Sec 1", question);
+        }
+        questionGroupTestHelper.addQuestionsToQuestionGroup("Create Personnel QG1", createQuestionGroupParameters.getExistingQuestions());
+
+        for (String question : questionToDesactivate) {
+            questionGroupTestHelper.markQuestionAsInactive(question);
+        }
+        questionGroupTestHelper.markQuestionGroupAsInactive("Create Personnel QG2");
+
+        adminPage = navigationHelper.navigateToAdminPage();
+
+        userParameters = adminPage.getAdminUserParameters();
+
+        createUserPage = adminPage.navigateToCreateUserPage();
+        createUserPage.verifyPage();
+
+        userEnterDataPage = createUserPage.selectOffice("MyOffice1233171674227");
+
+        questionResponsePage = userEnterDataPage.submitAndNavigateToQuestionResponsePage(userParameters);
+        questionResponsePage.verifyPage();
+        //Then
+        questionResponsePage.verifyQuestionsDoesnotappear(questionToDesactivate.toArray(new String[questionToDesactivate.size()]));
+        questionResponsePage.verifyQuestionsExists(questionToAdd.toArray(new String[questionToAdd.size()]));
+        questionResponsePage.verifySectionDoesnotappear("Sec 2");
     }
 
     @Test(enabled=false) // http://mifosforge.jira.com/browse/MIFOS-4755

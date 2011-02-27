@@ -18,28 +18,31 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.test.acceptance.framework.loan;
+package org.mifos.test.acceptance.framework.savings;
 
-import org.mifos.test.acceptance.framework.MifosPage;
+import org.mifos.test.acceptance.framework.AbstractPage;
+import org.mifos.test.acceptance.framework.util.UiTestUtils;
 
 import com.thoughtworks.selenium.Selenium;
-import org.mifos.test.acceptance.framework.questionnaire.QuestionnairePage;
-import org.testng.Assert;
 
-public class AttachSurveyPage extends MifosPage {
-    public AttachSurveyPage(Selenium selenium) {
+//not tested due to MIFOS-4810
+public class SavingsApplyAdjustmentPage extends AbstractPage {
+
+    public SavingsApplyAdjustmentPage(Selenium selenium) {
         super(selenium);
     }
 
-    public QuestionnairePage selectSurvey(String questionGroupTitle) {
-        selenium.select("id=questionGroupId", "label=" + questionGroupTitle);
-        selenium.click("_eventId_selectQuestionnaire");
+    public void verifyPage() {
         waitForPageToLoad();
-        return new QuestionnairePage(selenium);
+        this.verifyPage("applyadjustment");
     }
 
-    public AttachSurveyPage verifyNoneSelected() {
-        Assert.assertEquals(selenium.getSelectedValue("questionGroupId"), "selectOne");
-        return this;
+    public void applyAdjustment(String adjustmentAmount, String notes) {
+        selenium.type("applyadjustment.input.amount",adjustmentAmount);
+        selenium.type("applyadjustment.input.notes", notes);
+        selenium.click("applyadjustment.button.submit");
+        waitForPageToLoad();
+        //unhandled exception
+        UiTestUtils.sleep();
     }
 }

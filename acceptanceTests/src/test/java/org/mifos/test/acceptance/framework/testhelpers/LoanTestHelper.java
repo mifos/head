@@ -795,14 +795,9 @@ public class LoanTestHelper {
             .submitAndNavigateToLoanAccountPage();
     }
 
-    /**
-     * Method for creating default loan account.
-     * Doesn't matter on which page you currently are.
-     * Must be logged in.
-     */
     public LoanAccountPage createAndActivateDefaultLoanAccount(CreateLoanAccountSearchParameters searchParams) {
-        CreateLoanAccountEntryPage createLoanAccountEntryPage = new MifosPage(selenium)
-            .navigateToClientsAndAccountsPageUsingHeaderTab()
+        CreateLoanAccountEntryPage createLoanAccountEntryPage = navigationHelper
+            .navigateToClientsAndAccountsPage()
             .navigateToCreateLoanAccountUsingLeftMenu()
             .searchAndNavigateToCreateLoanAccountPage(searchParams);
         String loanAmount = createLoanAccountEntryPage.getLoanAmount();
@@ -947,5 +942,15 @@ public class LoanTestHelper {
 
     public CreateLoanAccountCashFlowPage navigateToCreateLoanAccountCashFlowPage(CreateLoanAccountSearchParameters searchParams) {
         return navigateToCreateLoanAccountEntryPage(searchParams).submitAndNavigateToCreateLoanAccountCashFlowPage();
+    }
+
+    public void verifyOriginalValues(CreateLoanAccountSearchParameters searchParams,
+                                      String principal, String interest, String fees, String penalty, String total) {
+        LoanAccountPage loanAccountPage = navigateToLoanAccountPage(searchParams);
+        loanAccountPage.verifyPrincipalOriginal(principal);
+        loanAccountPage.verifyInterestOriginal(interest);
+        loanAccountPage.verifyFeesOriginal(fees);
+        loanAccountPage.verifyPenaltyOriginal(penalty);
+        loanAccountPage.verifyTotalOriginalLoan(total);
     }
 }

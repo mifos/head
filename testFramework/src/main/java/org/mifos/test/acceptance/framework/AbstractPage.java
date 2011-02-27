@@ -64,6 +64,13 @@ public class AbstractPage {
         Assert.assertEquals(selenium.getAttribute("page.id@title"), pageName);
     }
 
+    public void verifyPage(String pageName, String secondName) {
+        String pageID = selenium.getAttribute("page.id@title");
+        if(!pageID.equals(pageName)) {
+            Assert.assertEquals(pageID, secondName);
+        }
+    }
+
     public void typeText(String locator, String text) {
         selenium.focus(locator);
         selenium.type(locator,text);

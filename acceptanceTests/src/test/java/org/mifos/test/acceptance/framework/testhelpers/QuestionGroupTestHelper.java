@@ -24,27 +24,33 @@ import java.util.List;
 import java.util.Map;
 
 import org.mifos.test.acceptance.framework.admin.AdminPage;
+import org.mifos.test.acceptance.framework.center.CenterViewDetailsPage;
+import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
+import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
+import org.mifos.test.acceptance.framework.loan.AttachSurveyPage;
+import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
+import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
+import org.mifos.test.acceptance.framework.office.CreateOfficePreviewDataPage;
+import org.mifos.test.acceptance.framework.office.OfficeViewDetailsPage;
+import org.mifos.test.acceptance.framework.questionnaire.AttachQuestionGroupParameters;
 import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionGroupPage;
 import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionGroupParameters;
 import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionPage;
 import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionParameters;
 import org.mifos.test.acceptance.framework.questionnaire.EditQuestionGroupPage;
-import org.mifos.test.acceptance.framework.questionnaire.ViewAllQuestionGroupsPage;
-import org.mifos.test.acceptance.framework.questionnaire.QuestionDetailPage;
-import org.mifos.test.acceptance.framework.questionnaire.ViewAllQuestionsPage;
 import org.mifos.test.acceptance.framework.questionnaire.EditQuestionPage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionDetailPage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionGroupDetailPage;
+import org.mifos.test.acceptance.framework.questionnaire.ViewQuestionResponseDetailPage;
 
 import com.thoughtworks.selenium.Selenium;
-import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
-import org.mifos.test.acceptance.framework.client.QuestionGroup;
-import org.mifos.test.acceptance.framework.loan.AttachSurveyPage;
-import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
-import org.mifos.test.acceptance.framework.office.CreateOfficePreviewDataPage;
-import org.mifos.test.acceptance.framework.office.OfficeViewDetailsPage;
+
+import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionGroupResponsePage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionnairePage;
+import org.mifos.test.acceptance.framework.questionnaire.ViewAllQuestionGroupsPage;
+import org.mifos.test.acceptance.framework.questionnaire.ViewAllQuestionsPage;
 import org.testng.Assert;
 
 public class QuestionGroupTestHelper {
@@ -104,6 +110,115 @@ public class QuestionGroupTestHelper {
             questionnairePage.setResponse(question, answers.get(question));
         }
         return (ClientViewDetailsPage)questionnairePage.submit();
+    }
+
+    public CenterViewDetailsPage attachQuestionGroupToCenter(AttachQuestionGroupParameters attachParams) {
+        return (CenterViewDetailsPage) navigationHelper
+            .navigateToCenterViewDetailsPage(attachParams.getTarget())
+            .navigateToAttachSurveyPage()
+            .verifyNoneSelected()
+            .selectSurvey(attachParams.getQuestionGroupName())
+            .verifyEmptyTextQuestionResponses(attachParams.getTextResponses())
+            .verifyEmptyCheckQuestionResponses(attachParams.getCheckResponses())
+            .setResponses(attachParams.getTextResponses())
+            .checkResponses(attachParams.getCheckResponses())
+            .submitAndNavigateToCenterViewDetailsPage();
+    }
+
+    public CenterViewDetailsPage editQuestionGroupResponsesInCenter(AttachQuestionGroupParameters attachParams) {
+        CenterViewDetailsPage centerViewDetailsPage = (CenterViewDetailsPage) navigationHelper
+            .navigateToCenterViewDetailsPage(attachParams.getTarget())
+            .navigateToViewQuestionResponseDetailPage(attachParams.getQuestionGroupName())
+            .navigateToEditSection("0")
+            .setResponses(attachParams.getTextResponses())
+            .checkResponses(attachParams.getCheckResponses())
+            .submitAndNavigateToCenterViewDetailsPage();
+        ViewQuestionResponseDetailPage viewQuestionResponseDetailPage = centerViewDetailsPage.navigateToViewQuestionResponseDetailPage(attachParams.getQuestionGroupName());
+        viewQuestionResponseDetailPage.verifyQuestionsAndAnswers(attachParams);
+        viewQuestionResponseDetailPage.navigateBack();
+        return new CenterViewDetailsPage(selenium);
+    }
+
+    public CenterViewDetailsPage verifyErrorsWhileAttachingQuestionGroupToCenter(AttachQuestionGroupParameters attachParams) {
+        QuestionnairePage questionnairePage = (QuestionnairePage) navigationHelper
+            .navigateToCenterViewDetailsPage(attachParams.getTarget())
+            .navigateToAttachSurveyPage()
+            .selectSurvey(attachParams.getQuestionGroupName())
+            .setResponses(attachParams.getTextResponses())
+            .checkResponses(attachParams.getCheckResponses())
+            .submitAndNavigateToCenterViewDetailsPage();
+        questionnairePage.verifyErrorsOnPage(attachParams.getErrors());
+        return questionnairePage.cancelAndNavigateToCenterViewDetailsPage();
+    }
+
+    public GroupViewDetailsPage attachQuestionGroupToGroup(AttachQuestionGroupParameters attachParams) {
+        return (GroupViewDetailsPage) navigationHelper
+            .navigateToGroupViewDetailsPage(attachParams.getTarget())
+            .navigateToAttachSurveyPage()
+            .verifyNoneSelected()
+            .selectSurvey(attachParams.getQuestionGroupName())
+            .verifyEmptyTextQuestionResponses(attachParams.getTextResponses())
+            .verifyEmptyCheckQuestionResponses(attachParams.getCheckResponses())
+            .setResponses(attachParams.getTextResponses())
+            .checkResponses(attachParams.getCheckResponses())
+            .submitAndNavigateToGroupViewDetailsPage();
+    }
+
+    public GroupViewDetailsPage editQuestionGroupResponsesInGroup(AttachQuestionGroupParameters attachParams) {
+        return (GroupViewDetailsPage) navigationHelper
+            .navigateToGroupViewDetailsPage(attachParams.getTarget())
+            .navigateToViewQuestionResponseDetailPage(attachParams.getQuestionGroupName())
+            .navigateToEditSection("0")
+            .setResponses(attachParams.getTextResponses())
+            .checkResponses(attachParams.getCheckResponses())
+            .submitAndNavigateToGroupViewDetailsPage();
+    }
+
+    public GroupViewDetailsPage verifyErrorsWhileAttachingQuestionGroupToGroup(AttachQuestionGroupParameters attachParams) {
+        QuestionnairePage questionnairePage = (QuestionnairePage) navigationHelper
+            .navigateToGroupViewDetailsPage(attachParams.getTarget())
+            .navigateToAttachSurveyPage()
+            .selectSurvey(attachParams.getQuestionGroupName())
+            .setResponses(attachParams.getTextResponses())
+            .checkResponses(attachParams.getCheckResponses())
+            .submitAndNavigateToGroupViewDetailsPage();
+        questionnairePage.verifyErrorsOnPage(attachParams.getErrors());
+        return questionnairePage.cancelAndNavigateToGroupViewDetailsPage();
+    }
+
+    public LoanAccountPage attachQuestionGroupToLoan(AttachQuestionGroupParameters attachParams) {
+        return (LoanAccountPage) navigationHelper
+            .navigateToLoanAccountPage(attachParams.getTarget())
+            .navigateToAttachSurveyPage()
+            .verifyNoneSelected()
+            .selectSurvey(attachParams.getQuestionGroupName())
+            .verifyEmptyTextQuestionResponses(attachParams.getTextResponses())
+            .verifyEmptyCheckQuestionResponses(attachParams.getCheckResponses())
+            .setResponses(attachParams.getTextResponses())
+            .checkResponses(attachParams.getCheckResponses())
+            .submitAndNavigateToLoanViewDetailsPage();
+    }
+
+    public LoanAccountPage editQuestionGroupResponsesInLoan(AttachQuestionGroupParameters attachParams) {
+        return (LoanAccountPage) navigationHelper
+            .navigateToLoanAccountPage(attachParams.getTarget())
+            .navigateToViewQuestionResponseDetailPage(attachParams.getQuestionGroupName())
+            .navigateToEditSection("0")
+            .setResponses(attachParams.getTextResponses())
+            .checkResponses(attachParams.getCheckResponses())
+            .submitAndNavigateToLoanViewDetailsPage();
+    }
+
+    public LoanAccountPage verifyErrorsWhileAttachingQuestionGroupToLoan(AttachQuestionGroupParameters attachParams) {
+        QuestionnairePage questionnairePage = (QuestionnairePage) navigationHelper
+            .navigateToLoanAccountPage(attachParams.getTarget())
+            .navigateToAttachSurveyPage()
+            .selectSurvey(attachParams.getQuestionGroupName())
+            .setResponses(attachParams.getTextResponses())
+            .checkResponses(attachParams.getCheckResponses())
+            .submitAndNavigateToLoanViewDetailsPage();
+        questionnairePage.verifyErrorsOnPage(attachParams.getErrors());
+        return questionnairePage.cancelAndNavigateToLoanViewDetailsPage();
     }
 
     public void createQuestions(List<CreateQuestionParameters> questions){
@@ -231,6 +346,13 @@ public class QuestionGroupTestHelper {
             questionnairePage.setResponse(question, answers.get(question));
         }
         ClientViewDetailsPage clientViewDetailsPage2 = (ClientViewDetailsPage)questionnairePage.submit();
-        Assert.assertEquals(((QuestionGroup)clientViewDetailsPage2.getQuestionGroupInstances().get(2)).getName(),"TestQuestionGroup");
+        Assert.assertEquals(clientViewDetailsPage2.getQuestionGroupInstances().get(2).getName(),"TestQuestionGroup");
+    }
+
+    public QuestionResponsePage navigateToQuestionResponsePageDuringLoanDisbursal(String loanAccountID, DisburseLoanParameters disburseParams) {
+        return navigationHelper
+            .navigateToLoanAccountPage(loanAccountID)
+            .navigateToDisburseLoan()
+            .submitAndNavigateToQuestionResponsePage(disburseParams);
     }
 }
