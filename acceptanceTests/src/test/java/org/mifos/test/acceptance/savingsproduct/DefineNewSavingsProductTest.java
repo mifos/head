@@ -542,7 +542,7 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
     //http://mifosforge.jira.com/browse/MIFOSTEST-144
     //disabled due to MIFOS-4810
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")// one of the dependent methods throws Exception
-    @Test(enabled=true, groups="smoke")
+    @Test(enabled=false)
     public void savingsAdjustmentsForDepositsWithdrawals() throws Exception {
         //Given
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
