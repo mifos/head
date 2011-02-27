@@ -151,4 +151,6 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
 
     @PreAuthorize("isFullyAuthenticated()")
     LoanApplicationStateDto retrieveLoanApplicationState();
+
+    List<QuestionGroupDetail> retrieveApplicableQuestionGroups(Integer productId);
 }

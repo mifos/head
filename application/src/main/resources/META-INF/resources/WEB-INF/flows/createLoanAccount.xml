@@ -64,9 +64,9 @@
     
     <decision-state id="checkIfQuestionGroupsExistForLoanCreation">
         <on-entry>
-            <evaluate expression="loanAccountController.loadQuestionGroups(loanAccountQuestionGroupFormBean)"/>
+            <evaluate expression="loanAccountController.loadQuestionGroups(flowScope.productId, loanAccountQuestionGroupFormBean)"/>
         </on-entry>
-        <if test="loanAccountQuestionGroupFormBean.questionGroups.size() > 0" then="answerQuestionGroupStep" else="previewStep"/>
+        <if test="loanAccountQuestionGroupFormBean.questionGroups.size() > 0" then="answerQuestionGroupStep" else="calculateAndReviewLoanSchedule"/>
     </decision-state>
     
     <view-state id="answerQuestionGroupStep" view="createLoanAccountQuestionnaire" model="loanAccountQuestionGroupFormBean">

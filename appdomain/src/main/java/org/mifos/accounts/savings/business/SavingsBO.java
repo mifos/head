@@ -199,7 +199,7 @@ public class SavingsBO extends AccountBO {
 
         Money startingBalance = Money.zero(savingsProduct.getCurrency());
         RecommendedAmountUnit recommendedAmountUnit = RecommendedAmountUnit.COMPLETE_GROUP;
-        CreationDetail creationDetail = new CreationDetail(new DateTime(createdDate), createdById);
+        CreationDetail creationDetail = new CreationDetail(createdDate.toDateMidnight().toDateTime(), createdById);
         SavingsBO savingsAccount = new SavingsBO(savingsAccountState, customer, activationDetails, creationDetail, savingsProduct, recommendedAmountUnit, recommendedOrMandatoryAmount, createdBy, startingBalance);
 
         return savingsAccount;

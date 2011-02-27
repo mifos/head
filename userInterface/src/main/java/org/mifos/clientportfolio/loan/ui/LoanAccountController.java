@@ -38,7 +38,7 @@ import org.mifos.dto.screen.LoanCreationProductDetailsDto;
 import org.mifos.dto.screen.LoanCreationResultDto;
 import org.mifos.dto.screen.LoanScheduleDto;
 import org.mifos.dto.screen.SearchDetailsDto;
-import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -46,13 +46,11 @@ import org.springframework.stereotype.Controller;
 public class LoanAccountController {
 
 	private final LoanAccountServiceFacade loanAccountServiceFacade;
-    private final QuestionnaireServiceFacade questionnaireServiceFacade;
     private final AdminServiceFacade adminServiceFacade;
 
 	@Autowired
-    public LoanAccountController(LoanAccountServiceFacade loanAccountServiceFacade, QuestionnaireServiceFacade questionnaireServiceFacade, AdminServiceFacade adminServiceFacade) {
+    public LoanAccountController(LoanAccountServiceFacade loanAccountServiceFacade, AdminServiceFacade adminServiceFacade) {
 		this.loanAccountServiceFacade = loanAccountServiceFacade;
-        this.questionnaireServiceFacade = questionnaireServiceFacade;
         this.adminServiceFacade = adminServiceFacade;
     }
 	
@@ -116,8 +114,10 @@ public class LoanAccountController {
     	return dto;
     }
     
-    public void loadQuestionGroups(LoanAccountQuestionGroupFormBean loanAccountQuestionGroupFormBean) {
-        loanAccountQuestionGroupFormBean.setQuestionGroups(questionnaireServiceFacade.getQuestionGroups("Create", "Loan"));
+    public void loadQuestionGroups(Integer productId, LoanAccountQuestionGroupFormBean loanAccountQuestionGroupFormBean) {
+        
+        List<QuestionGroupDetail> questionGroups = loanAccountServiceFacade.retrieveApplicableQuestionGroups(productId);
+        loanAccountQuestionGroupFormBean.setQuestionGroups(questionGroups);
     }
     
     public LoanScheduleDto retrieveLoanSchedule(int customerId, int productId, LoanAccountFormBean formBean) {

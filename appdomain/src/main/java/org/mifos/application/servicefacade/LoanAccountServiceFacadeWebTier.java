@@ -1853,4 +1853,15 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         
         return new LoanApplicationStateDto(AccountState.LOAN_PARTIAL_APPLICATION.getValue().intValue(), applicationState.getValue().intValue());
     }
+
+    @Override
+    public List<QuestionGroupDetail> retrieveApplicableQuestionGroups(Integer productId) {
+        
+        List<QuestionGroupDetail> questionGroupDetails = new ArrayList<QuestionGroupDetail>();
+        LoanOfferingBO loanProduct = this.loanProductDao.findById(productId);
+        if (!loanProduct.getQuestionGroups().isEmpty()) {
+            questionGroupDetails = questionnaireServiceFacade.getQuestionGroups("Create", "Loan");
+        }
+        return questionGroupDetails;
+    }
 }
