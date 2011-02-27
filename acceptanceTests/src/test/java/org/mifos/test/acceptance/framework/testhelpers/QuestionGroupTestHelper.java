@@ -222,6 +222,41 @@ public class QuestionGroupTestHelper {
         return questionnairePage.cancelAndNavigateToLoanViewDetailsPage();
     }
 
+    public ClientViewDetailsPage attachQuestionGroupToClient(AttachQuestionGroupParameters attachParams) {
+        return (ClientViewDetailsPage) navigationHelper
+            .navigateToClientViewDetailsPage(attachParams.getTarget())
+            .navigateToAttachSurveyPage()
+            .verifyNoneSelected()
+            .selectSurvey(attachParams.getQuestionGroupName())
+            .verifyEmptyTextQuestionResponses(attachParams.getTextResponses())
+            .verifyEmptyCheckQuestionResponses(attachParams.getCheckResponses())
+            .setResponses(attachParams.getTextResponses())
+            .checkResponses(attachParams.getCheckResponses())
+            .submitAndNavigateToClientViewDetailsPage();
+    }
+
+    public ClientViewDetailsPage editQuestionGroupResponsesInClient(AttachQuestionGroupParameters attachParams) {
+        return (ClientViewDetailsPage) navigationHelper
+        .navigateToClientViewDetailsPage(attachParams.getTarget())
+            .navigateToViewQuestionResponseDetailPage(attachParams.getQuestionGroupName())
+            .navigateToEditSection("0")
+            .setResponses(attachParams.getTextResponses())
+            .checkResponses(attachParams.getCheckResponses())
+            .submitAndNavigateToClientViewDetailsPage();
+    }
+
+    public ClientViewDetailsPage verifyErrorsWhileAttachingQuestionGroupToClient(AttachQuestionGroupParameters attachParams) {
+        QuestionnairePage questionnairePage = (QuestionnairePage) navigationHelper
+            .navigateToClientViewDetailsPage(attachParams.getTarget())
+            .navigateToAttachSurveyPage()
+            .selectSurvey(attachParams.getQuestionGroupName())
+            .setResponses(attachParams.getTextResponses())
+            .checkResponses(attachParams.getCheckResponses())
+            .submitAndNavigateToClientViewDetailsPage();
+        questionnairePage.verifyErrorsOnPage(attachParams.getErrors());
+        return questionnairePage.cancel();
+    }
+
     public void createQuestions(List<CreateQuestionParameters> questions){
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         CreateQuestionPage createQuestionPage = adminPage.navigateToCreateQuestionPage();
@@ -356,7 +391,7 @@ public class QuestionGroupTestHelper {
             .navigateToDisburseLoan()
             .submitAndNavigateToQuestionResponsePage(disburseParams);
     }
-    
+
     public SavingsAccountDetailPage editQuestionGroupResponsesInSavingsAccount(AttachQuestionGroupParameters attachParams) {
         SavingsAccountDetailPage savingsAccountDetailPage = navigationHelper
             .navigateToSavingsAccountDetailPage(attachParams.getTarget())

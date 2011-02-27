@@ -120,6 +120,11 @@ public class QuestionnairePage extends MifosPage {
         return selenium.isElementPresent("id=allErrors") ? new QuestionnairePage(selenium) : new LoanAccountPage(selenium);
     }
 
+    public MifosPage submitAndNavigateToClientViewDetailsPage() {
+        clickSubmit();
+        return selenium.isElementPresent("id=allErrors") ? new QuestionnairePage(selenium) : new ClientViewDetailsPage(selenium);
+    }
+
     public void setResponsesForMultiSelect(String question, int totalChoices, String... choices) {
         String questionId = selenium.getEval(String.format(SELECT_QUESTION_JS, question));
         String choiceIdFormat = questionId + "s%d";
