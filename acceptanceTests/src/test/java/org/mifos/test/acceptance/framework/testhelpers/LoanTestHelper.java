@@ -943,4 +943,14 @@ public class LoanTestHelper {
     public CreateLoanAccountCashFlowPage navigateToCreateLoanAccountCashFlowPage(CreateLoanAccountSearchParameters searchParams) {
         return navigateToCreateLoanAccountEntryPage(searchParams).submitAndNavigateToCreateLoanAccountCashFlowPage();
     }
+
+    public void verifyOriginalValues(CreateLoanAccountSearchParameters searchParams,
+                                      String principal, String interest, String fees, String penalty, String total) {
+        LoanAccountPage loanAccountPage = navigateToLoanAccountPage(searchParams);
+        loanAccountPage.verifyPrincipalOriginal(principal);
+        loanAccountPage.verifyInterestOriginal(interest);
+        loanAccountPage.verifyFeesOriginal(fees);
+        loanAccountPage.verifyPenaltyOriginal(penalty);
+        loanAccountPage.verifyTotalOriginalLoan(total);
+    }
 }
