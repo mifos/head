@@ -300,7 +300,7 @@ public class ClientTest extends UiTestCaseBase {
 
     // http://mifosforge.jira.com/browse/MIFOSTEST-663
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void createGroupWithQuestionGroup() throws Exception {
+    public void closeClientAccountWithQG() throws Exception {
         //Given
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_016_dbunit.xml", dataSource, selenium);
 
