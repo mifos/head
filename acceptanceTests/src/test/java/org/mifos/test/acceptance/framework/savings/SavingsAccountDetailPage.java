@@ -27,6 +27,8 @@ import org.mifos.test.acceptance.framework.loan.AccountChangeStatusPage;
 import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
+import org.mifos.test.acceptance.framework.loan.AttachSurveyPage;
+import org.mifos.test.acceptance.framework.questionnaire.ViewQuestionResponseDetailPage;
 
 @SuppressWarnings("PMD.SystemPrintln")
 public class SavingsAccountDetailPage extends AbstractPage {
@@ -105,5 +107,17 @@ public class SavingsAccountDetailPage extends AbstractPage {
         selenium.click("savingsaccountdetail.link.applyAdjustment");
         waitForPageToLoad();
         return new SavingsApplyAdjustmentPage(selenium);
+    }
+
+    public AttachSurveyPage navigateToAttachSurveyPage() {
+        selenium.click("link=Attach a Question Group");
+        waitForPageToLoad();
+        return new AttachSurveyPage(selenium);
+    }
+
+    public ViewQuestionResponseDetailPage navigateToViewQuestionResponseDetailPage(String questionGroupName) {
+        selenium.click("link="+questionGroupName);
+        waitForPageToLoad();
+        return new ViewQuestionResponseDetailPage(selenium);
     }
 }

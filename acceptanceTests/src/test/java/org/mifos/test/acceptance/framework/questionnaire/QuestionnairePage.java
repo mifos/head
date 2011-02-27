@@ -32,6 +32,7 @@ import org.mifos.test.acceptance.framework.user.UserViewDetailsPage;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import org.mifos.test.acceptance.framework.savings.SavingsAccountDetailPage;
 
 import org.testng.Assert;
 
@@ -92,6 +93,11 @@ public class QuestionnairePage extends MifosPage {
     public MifosPage submit() {
         clickSubmit();
         return selenium.isElementPresent("id=allErrors") ? new QuestionnairePage(selenium) : new ClientViewDetailsPage(selenium);
+    }
+
+    public SavingsAccountDetailPage submitAndNavigateToSavingsAccountDetailPage() {
+        clickSubmit();
+        return new SavingsAccountDetailPage(selenium);
     }
 
     public MifosPage submitAndNavigateToPersonnalDetailsPage(){
@@ -176,6 +182,11 @@ public class QuestionnairePage extends MifosPage {
     public LoanAccountPage cancelAndNavigateToLoanViewDetailsPage() {
         clickCancel();
         return new LoanAccountPage(selenium);
+    }
+
+    public SavingsAccountDetailPage cancelAndNavigateToSavingsAccountDetailPage() {
+        clickCancel();
+        return new SavingsAccountDetailPage(selenium);
     }
 
     public void verifyTextPresent(String expectedText, String errorMessage) {
