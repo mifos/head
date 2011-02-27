@@ -25,6 +25,9 @@
     <bean id="fundServiceFacade" class="org.mifos.accounts.fund.servicefacade.WebTierFundServiceFacade" />
 
     <bean id="loanBusinessService" class="org.mifos.accounts.loan.business.service.LoanBusinessService" />
+    
+    <bean id="loanService" class="org.mifos.clientportfolio.newloan.domain.LoanServiceImpl" />
+    <bean id="loanScheduleService" class="org.mifos.clientportfolio.newloan.domain.service.LoanScheduleServiceDomain" />
 
     <bean id="loanPrdBusinessService" class="org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService" />
 

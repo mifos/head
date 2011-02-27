@@ -45,6 +45,7 @@ import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.calendar.CalendarEvent;
+import org.mifos.clientportfolio.newloan.domain.CreationDetail;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
@@ -121,8 +122,9 @@ public class SavingsAccountBuilder {
         }
         activationDetails = new SavingsAccountActivationDetail(new LocalDate(activationDate), nextInterestPostingDate, listOfScheduledPayments);
 
-        SavingsBO savingsAccount = new SavingsBO(accountState, customer, activationDetails,
-                new LocalDate(createdDate), createdByUserId.intValue(), savingsProduct, recommendedAmountUnit,
+        CreationDetail creationDetail = new CreationDetail(new DateTime(createdDate), createdByUserId.intValue());
+        SavingsBO savingsAccount = new SavingsBO(accountState, customer, activationDetails, creationDetail
+                ,savingsProduct, recommendedAmountUnit,
                 recommendedAmount, createdBy, savingsBalanceAmount);
         savingsAccount.setCustomerPersistence(customerDao);
         savingsAccount.setSavingsPaymentStrategy(savingsPaymentStrategy);

@@ -18,20 +18,26 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.clientportfolio.newloan.domain;
+package org.mifos.clientportfolio.newloan.domain.service;
 
 import java.util.List;
 
-import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountFeesEntity;
+import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.clientportfolio.newloan.domain.LoanProductOverridenDetail;
+import org.mifos.clientportfolio.newloan.domain.LoanSchedule;
+import org.mifos.clientportfolio.newloan.domain.LoanScheduleConfiguration;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.framework.util.helpers.Money;
 
-public interface LoanScheduleFactory {
+/**
+ * A domain only service for generating {@link LoanScheduleEntity}'s
+ */
+public interface LoanScheduleService {
 
-    LoanSchedule create(List<DateTime> loanScheduleDates, LoanOfferingBO loanProduct, CustomerBO customer,
-            Money loanAmountDisbursed, Double interestRate, Integer interestDays, Integer graceDuration,
-            List<AccountFeesEntity> accountFees);
+    // FIXME - keithw - when struts/jsp is gone, will be able to refactor away use of userBranchOfficeId
+    LoanSchedule generate(LoanOfferingBO loanProduct, CustomerBO customer,
+            LoanProductOverridenDetail overridenDetail, LoanScheduleConfiguration configuration, 
+            Short userBranchOfficeId, List<AccountFeesEntity> accountFees);
 
 }

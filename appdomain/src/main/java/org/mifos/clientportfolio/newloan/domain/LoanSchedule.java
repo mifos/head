@@ -18,16 +18,28 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.clientportfolio.newloan.applicationservice;
+package org.mifos.clientportfolio.newloan.domain;
 
-import org.mifos.clientportfolio.newloan.domain.IndividualLoan;
+import java.util.List;
 
-/**
- * @deprecated work in progress Release G - do not use
- */
-@Deprecated
-public interface LoanAssembler {
+import org.mifos.accounts.loan.business.LoanScheduleEntity;
+import org.mifos.framework.util.helpers.Money;
 
-    IndividualLoan assembleFrom(IndividualLoanRequest individualLoan);
+public class LoanSchedule {
 
+    private final List<LoanScheduleEntity> roundedLoanSchedules;
+    private final Money rawAmount;
+
+    public LoanSchedule(List<LoanScheduleEntity> roundedLoanSchedules, Money rawAmount) {
+        this.roundedLoanSchedules = roundedLoanSchedules;
+        this.rawAmount = rawAmount;
+    }
+
+    public List<LoanScheduleEntity> getRoundedLoanSchedules() {
+        return roundedLoanSchedules;
+    }
+
+    public Money getRawAmount() {
+        return rawAmount;
+    }
 }

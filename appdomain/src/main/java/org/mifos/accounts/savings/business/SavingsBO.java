@@ -72,6 +72,7 @@ import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.calendar.CalendarEvent;
+import org.mifos.clientportfolio.newloan.domain.CreationDetail;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ProcessFlowRules;
 import org.mifos.core.MifosRuntimeException;
@@ -180,7 +181,8 @@ public class SavingsBO extends AccountBO {
             SavingsAccountActivationDetail activationDetails, PersonnelBO createdBy, Money openingBalance) {
 
         RecommendedAmountUnit recommendedAmountUnit = RecommendedAmountUnit.COMPLETE_GROUP;
-        SavingsBO savingsAccount = new SavingsBO(savingsAccountState, customer, activationDetails, createdDate, createdById, savingsProduct, recommendedAmountUnit, recommendedOrMandatoryAmount, createdBy, openingBalance);
+        CreationDetail creationDetail = new CreationDetail(new DateTime(createdDate), createdById);
+        SavingsBO savingsAccount = new SavingsBO(savingsAccountState, customer, activationDetails, creationDetail, savingsProduct, recommendedAmountUnit, recommendedOrMandatoryAmount, createdBy, openingBalance);
 
         return savingsAccount;
     }
@@ -197,7 +199,8 @@ public class SavingsBO extends AccountBO {
 
         Money startingBalance = Money.zero(savingsProduct.getCurrency());
         RecommendedAmountUnit recommendedAmountUnit = RecommendedAmountUnit.COMPLETE_GROUP;
-        SavingsBO savingsAccount = new SavingsBO(savingsAccountState, customer, activationDetails, createdDate, createdById, savingsProduct, recommendedAmountUnit, recommendedOrMandatoryAmount, createdBy, startingBalance);
+        CreationDetail creationDetail = new CreationDetail(new DateTime(createdDate), createdById);
+        SavingsBO savingsAccount = new SavingsBO(savingsAccountState, customer, activationDetails, creationDetail, savingsProduct, recommendedAmountUnit, recommendedOrMandatoryAmount, createdBy, startingBalance);
 
         return savingsAccount;
     }
@@ -210,7 +213,8 @@ public class SavingsBO extends AccountBO {
 
         Money startingBalance = Money.zero(savingsProduct.getCurrency());
         RecommendedAmountUnit recommendedAmountUnit = RecommendedAmountUnit.PER_INDIVIDUAL;
-        SavingsBO savingsAccount = new SavingsBO(savingsAccountState, customer, activationDetails, createdDate, createdById, savingsProduct, recommendedAmountUnit, recommendedOrMandatoryAmount, createdBy, startingBalance);
+        CreationDetail creationDetail = new CreationDetail(new DateTime(createdDate), createdById);
+        SavingsBO savingsAccount = new SavingsBO(savingsAccountState, customer, activationDetails, creationDetail, savingsProduct, recommendedAmountUnit, recommendedOrMandatoryAmount, createdBy, startingBalance);
 
         return savingsAccount;
     }
@@ -218,9 +222,9 @@ public class SavingsBO extends AccountBO {
     /**
      * valid minimal legal constructor
      */
-    public SavingsBO(AccountState savingsAccountState, CustomerBO customer, SavingsAccountActivationDetail activationDetails, LocalDate createdDate, Integer createdById, SavingsOfferingBO savingsProduct,
+    public SavingsBO(AccountState savingsAccountState, CustomerBO customer, SavingsAccountActivationDetail activationDetails, CreationDetail creationDetail, SavingsOfferingBO savingsProduct,
             RecommendedAmountUnit recommendedAmountUnit, Money recommendedOrMandatoryAmount, PersonnelBO createdBy, Money startingBalance) {
-        super(AccountTypes.SAVINGS_ACCOUNT, savingsAccountState, customer, activationDetails.getScheduledPayments(), createdDate.toDateMidnight().toDate(), createdById.shortValue());
+        super(AccountTypes.SAVINGS_ACCOUNT, savingsAccountState, customer, activationDetails.getScheduledPayments(), creationDetail);
         this.savingsOffering = savingsProduct;
         this.recommendedAmntUnit = new RecommendedAmntUnitEntity(recommendedAmountUnit);
         this.recommendedAmount = recommendedOrMandatoryAmount;

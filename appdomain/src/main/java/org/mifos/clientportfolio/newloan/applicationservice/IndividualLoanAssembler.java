@@ -37,6 +37,10 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.schedule.ScheduledDateGeneration;
 import org.mifos.schedule.ScheduledEvent;
 
+/**
+ * @deprecated work in progress Release G - do not use
+ */
+@Deprecated
 public class IndividualLoanAssembler implements LoanAssembler {
 
     private final LoanProductDao loanProductDao;
@@ -70,7 +74,7 @@ public class IndividualLoanAssembler implements LoanAssembler {
         Money loanAmount = null;
         Double interestRate = Double.valueOf("10.0");
         Integer interestDays = Integer.valueOf(AccountingRules.getNumberOfInterestDays());
-        IndividualLoanSchedule loanSchedule = loanScheduleFactory.create(loanScheduleDates, loanProduct, loanAmount, interestRate, interestDays);
+//        IndividualLoanSchedule loanSchedule = loanScheduleFactory.create(loanScheduleDates, loanProduct, loanAmount, interestRate, interestDays);
 
         return new IndividualLoanImpl();
     }

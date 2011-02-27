@@ -18,16 +18,23 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.clientportfolio.newloan.applicationservice;
+package org.mifos.clientportfolio.newloan.domain;
 
-import org.mifos.clientportfolio.newloan.domain.IndividualLoan;
+public class LoanScheduleConfiguration {
 
-/**
- * @deprecated work in progress Release G - do not use
- */
-@Deprecated
-public interface LoanAssembler {
+    private final boolean loanScheduleIndependentOfCustomerMeetingEnabled;
+    private final Integer numberOfInterestDays;
 
-    IndividualLoan assembleFrom(IndividualLoanRequest individualLoan);
+    public LoanScheduleConfiguration(boolean loanScheduleIndependentOfCustomerMeetingEnabled, Integer numberOfInterestDays) {
+        this.loanScheduleIndependentOfCustomerMeetingEnabled = loanScheduleIndependentOfCustomerMeetingEnabled;
+        this.numberOfInterestDays = numberOfInterestDays;
+    }
 
+    public boolean isLoanScheduleIndependentOfCustomerMeetingEnabled() {
+        return loanScheduleIndependentOfCustomerMeetingEnabled;
+    }
+
+    public Integer getNumberOfInterestDays() {
+        return numberOfInterestDays;
+    }
 }

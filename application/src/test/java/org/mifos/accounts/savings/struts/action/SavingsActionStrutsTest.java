@@ -297,39 +297,6 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     @Test
-    public void testSuccessfulCreateWithCustomFields() throws Exception {
-        createAndAddObjectsForCreate();
-        setRequestPathInfo("/savingsAction.do");
-        addRequestParameter("method", "load");
-        addRequestParameter("selectedPrdOfferingId", savingsOffering.getPrdOfferingId().toString());
-
-        actionPerform();
-        verifyForward("load_success");
-        addRequestParameter("selectedPrdOfferingId", savingsOffering.getPrdOfferingId().toString());
-        savingsOffering = null;
-        List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
-                .getAttribute(SavingsConstants.CUSTOM_FIELDS, request);
-        setRequestPathInfo("/savingsAction.do");
-        addRequestParameter("method", "preview");
-        int i = 0;
-        for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
-            addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
-            addRequestParameter("customField[" + i + "].fieldValue", "11");
-            i++;
-        }
-        actionPerform();
-        verifyForward("preview_success");
-        setRequestPathInfo("/savingsAction.do");
-        addRequestParameter("stateSelected", Short.toString(AccountStates.SAVINGS_ACC_PARTIALAPPLICATION));
-        addRequestParameter("method", "create");
-        performNoErrors();
-        verifyForward("create_success");
-        String globalAccountNum = (String) request.getAttribute(SavingsConstants.GLOBALACCOUNTNUM);
-        Assert.assertNotNull(globalAccountNum);
-        savings = savingsDao.findBySystemId(globalAccountNum);
-    }
-
-    @Test
     public void testSuccessfulGetBySystemId() throws Exception {
 
         createAndAddObjects(AccountState.SAVINGS_PARTIAL_APPLICATION);

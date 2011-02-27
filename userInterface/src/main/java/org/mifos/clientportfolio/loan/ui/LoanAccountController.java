@@ -27,12 +27,15 @@ import org.joda.time.LocalDate;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.application.servicefacade.LoanAccountServiceFacade;
 import org.mifos.clientportfolio.loan.service.CreateLoanSchedule;
+import org.mifos.clientportfolio.newloan.applicationservice.CreateLoanAccount;
+import org.mifos.clientportfolio.newloan.applicationservice.LoanApplicationStateDto;
 import org.mifos.dto.domain.CustomerSearchDto;
 import org.mifos.dto.domain.CustomerSearchResultDto;
 import org.mifos.dto.domain.MandatoryHiddenFieldsDto;
 import org.mifos.dto.screen.CustomerSearchResultsDto;
 import org.mifos.dto.screen.LoanCreationLoanDetailsDto;
 import org.mifos.dto.screen.LoanCreationProductDetailsDto;
+import org.mifos.dto.screen.LoanCreationResultDto;
 import org.mifos.dto.screen.LoanScheduleDto;
 import org.mifos.dto.screen.SearchDetailsDto;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
@@ -123,8 +126,43 @@ public class LoanAccountController {
                                                     .withMonthOfYear(formBean.getDisbursalDateMonth().intValue())
                                                     .withYearOfEra(formBean.getDisbursalDateYear().intValue());
         
-        CreateLoanSchedule createLoanAccount = new CreateLoanSchedule(customerId, productId, BigDecimal.valueOf(formBean.getAmount().doubleValue()), formBean.getInterestRate().doubleValue(), disbursementDate, formBean.getNumberOfInstallments().intValue());
+        CreateLoanSchedule createLoanAccount = new CreateLoanSchedule(customerId, productId, BigDecimal.valueOf(formBean.getAmount().doubleValue()), formBean.getInterestRate().doubleValue(), disbursementDate, formBean.getNumberOfInstallments().intValue(), formBean.getGraceDuration().intValue());
         
         return loanAccountServiceFacade.createLoanSchedule(createLoanAccount);
+    }
+    
+    public LoanCreationResultDto saveLoanApplicationForLater(LoanAccountFormBean formBean, LoanAccountQuestionGroupFormBean loanAccountQuestionGroupFormBean) {
+        
+        LoanApplicationStateDto applicationState = loanAccountServiceFacade.retrieveLoanApplicationState();
+        
+        return submitLoanApplication(applicationState.getPartialApplicationId(), formBean, loanAccountQuestionGroupFormBean);
+    }
+
+    public LoanCreationResultDto submitLoanApplication(LoanAccountFormBean formBean, LoanAccountQuestionGroupFormBean loanAccountQuestionGroupFormBean) {
+        
+        LoanApplicationStateDto applicationState = loanAccountServiceFacade.retrieveLoanApplicationState();
+        
+        return submitLoanApplication(applicationState.getConfiguredApplicationId(), formBean, loanAccountQuestionGroupFormBean);
+    }
+
+    private LoanCreationResultDto submitLoanApplication(Integer accountState, LoanAccountFormBean formBean, LoanAccountQuestionGroupFormBean loanAccountQuestionGroupFormBean) {
+
+        LocalDate disbursementDate = new LocalDate().withDayOfMonth(formBean.getDisbursalDateDay().intValue())
+                                                    .withMonthOfYear(formBean.getDisbursalDateMonth().intValue())
+                                                     .withYearOfEra(formBean.getDisbursalDateYear().intValue());
+        
+        CreateLoanAccount createLoanAccount = new CreateLoanAccount(formBean.getCustomerId(), formBean.getProductId(), accountState, 
+                                                                                    BigDecimal.valueOf(formBean.getAmount().doubleValue()), 
+                                                                                    formBean.getInterestRate().doubleValue(), 
+                                                                                    disbursementDate, 
+                                                                                    formBean.getNumberOfInstallments().intValue(),
+                                                                                    formBean.getGraceDuration().intValue(),
+                                                                                    formBean.getFundId(),
+                                                                                    formBean.getLoanPurposeId(),
+                                                                                    formBean.getCollateralTypeId(),
+                                                                                    formBean.getCollateralNotes(),
+                                                                                    formBean.getExternalId());
+
+        return loanAccountServiceFacade.createLoan(createLoanAccount, loanAccountQuestionGroupFormBean.getQuestionGroups());
     }
 }

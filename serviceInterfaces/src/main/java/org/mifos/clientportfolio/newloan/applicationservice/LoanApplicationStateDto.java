@@ -20,14 +20,25 @@
 
 package org.mifos.clientportfolio.newloan.applicationservice;
 
-import org.mifos.clientportfolio.newloan.domain.IndividualLoan;
+import java.io.Serializable;
 
-/**
- * @deprecated work in progress Release G - do not use
- */
-@Deprecated
-public interface LoanAssembler {
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID"}, justification="should disable at filter level and also for pmd - not important for us")
+public class LoanApplicationStateDto implements Serializable {
 
-    IndividualLoan assembleFrom(IndividualLoanRequest individualLoan);
+    private final Integer partialApplicationId;
+    private final Integer configuredApplicationId;
 
+    public LoanApplicationStateDto(Integer partialApplicationId, Integer configuredApplicationId) {
+        this.partialApplicationId = partialApplicationId;
+        this.configuredApplicationId = configuredApplicationId;
+    }
+
+    public Integer getPartialApplicationId() {
+        return partialApplicationId;
+    }
+
+    public Integer getConfiguredApplicationId() {
+        return configuredApplicationId;
+    }
 }

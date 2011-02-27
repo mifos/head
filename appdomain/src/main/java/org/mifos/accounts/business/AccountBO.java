@@ -69,6 +69,7 @@ import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
+import org.mifos.clientportfolio.newloan.domain.CreationDetail;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.customers.business.CustomerAccountBO;
@@ -203,13 +204,13 @@ public class AccountBO extends AbstractBusinessObject {
     /**
      * minimal legal constructor for savings accounts
      */
-    public AccountBO(AccountTypes accountType, AccountState accountState, CustomerBO customer, List<? extends AccountActionDateEntity> scheduledRepaymentsOrDeposits, Date createdDate, Short createdByUserId) {
+    public AccountBO(AccountTypes accountType, AccountState accountState, CustomerBO customer, List<? extends AccountActionDateEntity> scheduledRepaymentsOrDeposits, CreationDetail creationDetail) {
         this.accountId = null;
         this.accountType = new AccountTypeEntity(accountType.getValue());
         this.accountState = new AccountStateEntity(accountState);
         this.customer = customer;
-        this.createdDate = createdDate;
-        this.createdBy = createdByUserId;
+        this.createdDate = creationDetail.getCreatedDate().toDate();
+        this.createdBy = creationDetail.getCreatedBy().shortValue();
 
         // ensure scheduled payments are linked to this account.
         for (AccountActionDateEntity scheduledPayment : scheduledRepaymentsOrDeposits) {

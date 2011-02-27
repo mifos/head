@@ -20,8 +20,9 @@
 
 package org.mifos.clientportfolio.newloan.domain;
 
+
 public interface LoanService {
 
-    void create(Loan loan);
+    void create(Loan loan, String userOfficeGlobalOfficeNum);
 
 }
