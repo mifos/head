@@ -528,14 +528,14 @@ public class QuestionGroupTest extends UiTestCaseBase {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_016_dbunit.xml", dataSource, selenium);
         Map<String, List<String>> sectionQuestions = new HashMap<String, List<String>>();
         List<String> questions = new ArrayList<String>();
-        questions.add("Date");
         questions.add("question 4");
         questions.add("question 3");
+        questions.add("Date");
         sectionQuestions.put("Sec 1", questions);
         questions = new ArrayList<String>();
+        questions.add("question 1");
         questions.add("Number");
         questions.add("DateQuestion");
-        questions.add("question 1");
         questions.add("Text");
         sectionQuestions.put("Sec 2", questions);
         CreateQuestionGroupParameters createQuestionGroupParameters = new CreateQuestionGroupParameters();
@@ -571,6 +571,58 @@ public class QuestionGroupTest extends UiTestCaseBase {
         attachParams.addTextResponse("question 3", "21/02/2011");
         //Then
         questionGroupTestHelper.editQuestionGroupResponsesInLoan(attachParams);
+    }
+
+    //http://mifosforge.jira.com/browse/MIFOSTEST-680
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void verifyAttachingQuestionGroupToViewClient() throws Exception {
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_016_dbunit.xml", dataSource, selenium);
+        Map<String, List<String>> sectionQuestions = new HashMap<String, List<String>>();
+        List<String> questions = new ArrayList<String>();
+        questions.add("Date");
+        questions.add("question 4");
+        questions.add("question 3");
+        sectionQuestions.put("Sec 1", questions);
+        questions = new ArrayList<String>();
+        questions.add("Number");
+        questions.add("DateQuestion");
+        questions.add("question 1");
+        questions.add("Text");
+        sectionQuestions.put("Sec 2", questions);
+        CreateQuestionGroupParameters createQuestionGroupParameters = new CreateQuestionGroupParameters();
+        createQuestionGroupParameters.setExistingQuestions(sectionQuestions);
+        createQuestionGroupParameters.setAnswerEditable(true);
+        createQuestionGroupParameters.setAppliesTo("View Client");
+        createQuestionGroupParameters.setTitle("TestQuestionGroup"+StringUtil.getRandomString(6));
+        AttachQuestionGroupParameters attachParams = new AttachQuestionGroupParameters();
+        attachParams.setTarget("0002-000000003");
+        attachParams.setQuestionGroupName(createQuestionGroupParameters.getTitle());
+        attachParams.addTextResponse("Number", "60");
+        attachParams.addTextResponse("question 1", "tekst tekst");
+        attachParams.addCheckResponse("question 4", "yes");
+        attachParams.addTextResponse("question 3", "25/02/2011");
+        attachParams.addTextResponse("Date", "09/02/2011");
+        attachParams.addTextResponse("DateQuestion", "19/02/2011");
+        attachParams.addTextResponse("Text", "ale alo olu");
+        AttachQuestionGroupParameters attachErrorParams = new AttachQuestionGroupParameters();
+        attachErrorParams.setTarget("0002-000000003");
+        attachErrorParams.addError("Please specify a number for Number.");
+        attachErrorParams.setQuestionGroupName(createQuestionGroupParameters.getTitle());
+        attachErrorParams.addTextResponse("Number", "sdfsdf");
+        attachErrorParams.addCheckResponse("question 4", "yes");
+        attachErrorParams.addTextResponse("question 3", "25/02/2011");
+
+        //When
+        questionGroupTestHelper.createQuestionGroup(createQuestionGroupParameters);
+
+        questionGroupTestHelper.verifyErrorsWhileAttachingQuestionGroupToClient(attachErrorParams);
+        questionGroupTestHelper.attachQuestionGroupToClient(attachParams);
+
+        attachParams.addTextResponse("Number", "20");
+        attachParams.addTextResponse("question 3", "21/02/2011");
+        //Then
+        questionGroupTestHelper.editQuestionGroupResponsesInClient(attachParams);
     }
 
     private void testValidationAddQuestionGroup() {

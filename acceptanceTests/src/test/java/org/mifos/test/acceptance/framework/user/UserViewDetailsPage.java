@@ -22,6 +22,7 @@ package org.mifos.test.acceptance.framework.user;
 
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionnairePage;
 import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
@@ -46,6 +47,14 @@ public class UserViewDetailsPage extends MifosPage {
         selenium.click("header.link.clientsAndAccounts");
         waitForPageToLoad();
         return new ClientsAndAccountsHomepage(selenium);
+    }
+
+    public QuestionnairePage navigateToQuestionnairePage(){
+        selenium.click("personnelDetail.link.questionGroups");
+        waitForPageToLoad();
+        selenium.click("link=Edit");
+        waitForPageToLoad();
+        return new QuestionnairePage(selenium);
     }
 
     public String getFullName() {

@@ -18,35 +18,29 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.test.acceptance.framework.user;
+package org.mifos.test.acceptance.framework.group;
 
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 
 import com.thoughtworks.selenium.Selenium;
 
-public class CreateUserPreviewDataPage extends MifosPage {
+public class CreateGroupPreviewDataPage extends MifosPage {
 
-    public CreateUserPreviewDataPage() {
-        super();
-    }
-
-    /**
-     * @param selenium
-     */
-    public CreateUserPreviewDataPage(Selenium selenium) {
+    public CreateGroupPreviewDataPage(Selenium selenium) {
         super(selenium);
+        verifyPage("PreviewGroup");
     }
 
-    public QuestionResponsePage navigateToEditAdditionalInformation(){
+    public CreateGroupConfirmationPage submitForApproval() {
+        selenium.click("previewgroup.button.submitForApproval");
+        waitForPageToLoad();
+        return new CreateGroupConfirmationPage(selenium);
+    }
+
+    public QuestionResponsePage navigateToEditQuestionResponsePage() {
         selenium.click("editQuestionResponses_button");
         waitForPageToLoad();
         return new QuestionResponsePage(selenium);
-    }
-
-    public CreateUserConfirmationPage submit() {
-        selenium.click("createuser_preview.button.submit");
-        waitForPageToLoad();
-        return new CreateUserConfirmationPage(selenium);
     }
 }

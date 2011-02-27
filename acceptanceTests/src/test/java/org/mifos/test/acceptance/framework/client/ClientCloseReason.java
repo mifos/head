@@ -22,11 +22,11 @@ package org.mifos.test.acceptance.framework.client;
 
 public enum ClientCloseReason {
 
-    TRANSFERRED ("Transferred", 8),
-    DUPLIACATE("Duplicate", 9),
-    BLACKLISTED("Blacklisted", 10),
-    LEFT_PROGRAM("Left Program", 11),
-    OTHER("Other", 12);
+    TRANSFERRED ("Transferred", 6),
+    DUPLIACATE("Duplicate", 7),
+    BLACKLISTED("Blacklisted", 8),
+    LEFT_PROGRAM("Left Program", 9),
+    OTHER("Other", 10);
 
     private final String purposeText;
     private final Integer id;

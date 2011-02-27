@@ -25,6 +25,7 @@ import java.util.Map;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.center.MeetingParameters;
 import org.mifos.test.acceptance.framework.client.ChooseOfficePage;
+import org.mifos.test.acceptance.framework.client.ClientCloseReason;
 import org.mifos.test.acceptance.framework.client.ClientStatus;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import org.mifos.test.acceptance.framework.client.CreateClientConfirmationPage;
@@ -134,6 +135,16 @@ public class ClientTestHelper {
         editCustomerStatusParameters.setClientStatus(ClientStatus.ACTIVE);
         editCustomerStatusParameters.setNote("Activate Client");
         return changeCustomerStatus(clientName, editCustomerStatusParameters);
+    }
+
+    public QuestionResponsePage navigateToQuestionResponsePageWhenCloseClientAccount(String clientName){
+        EditCustomerStatusParameters editCustomerStatusParameters = new EditCustomerStatusParameters();
+        editCustomerStatusParameters.setClientStatus(ClientStatus.CLOSED);
+        editCustomerStatusParameters.setClientCloseReason(ClientCloseReason.LEFT_PROGRAM);
+        editCustomerStatusParameters.setNote("Close client account");
+        ClientViewDetailsPage clientDetailsPage = navigationHelper.navigateToClientViewDetailsPage(clientName);
+        CustomerChangeStatusPage statusChangePage = clientDetailsPage.navigateToCustomerChangeStatusPage();
+        return statusChangePage.changeStatusAndNavigateToQuestionResponsePage(editCustomerStatusParameters);
     }
 
 

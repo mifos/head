@@ -24,6 +24,7 @@ import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.center.CenterViewDetailsPage;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -50,5 +51,17 @@ public class CustomerChangeStatusPreviewPage extends MifosPage {
         selenium.click("customerchangeStatusPreview.button.submit");
         waitForPageToLoad();
         return new GroupViewDetailsPage(selenium);
+    }
+
+    public QuestionResponsePage navigateToEditAdditionalInformation() {
+        selenium.click("editQuestionResponses_button");
+        waitForPageToLoad();
+        return new QuestionResponsePage(selenium);
+    }
+
+    public ClientViewDetailsPage cancelAndGotoClientViewDetailsPage() {
+        selenium.click("customerchangeStatusPreview.button.cancel");
+        waitForPageToLoad();
+        return new ClientViewDetailsPage(selenium);
     }
 }

@@ -18,35 +18,31 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.test.acceptance.framework.user;
+package org.mifos.test.acceptance.framework.savings;
 
-import org.mifos.test.acceptance.framework.MifosPage;
-import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
+import org.mifos.test.acceptance.framework.AbstractPage;
+import org.mifos.test.acceptance.framework.util.UiTestUtils;
 
 import com.thoughtworks.selenium.Selenium;
 
-public class CreateUserPreviewDataPage extends MifosPage {
+//not tested due to MIFOS-4810
+public class SavingsApplyAdjustmentPage extends AbstractPage {
 
-    public CreateUserPreviewDataPage() {
-        super();
-    }
-
-    /**
-     * @param selenium
-     */
-    public CreateUserPreviewDataPage(Selenium selenium) {
+    public SavingsApplyAdjustmentPage(Selenium selenium) {
         super(selenium);
     }
 
-    public QuestionResponsePage navigateToEditAdditionalInformation(){
-        selenium.click("editQuestionResponses_button");
+    public void verifyPage() {
         waitForPageToLoad();
-        return new QuestionResponsePage(selenium);
+        this.verifyPage("applyadjustment");
     }
 
-    public CreateUserConfirmationPage submit() {
-        selenium.click("createuser_preview.button.submit");
+    public void applyAdjustment(String adjustmentAmount, String notes) {
+        selenium.type("applyadjustment.input.amount",adjustmentAmount);
+        selenium.type("applyadjustment.input.notes", notes);
+        selenium.click("applyadjustment.button.submit");
         waitForPageToLoad();
-        return new CreateUserConfirmationPage(selenium);
+        //unhandled exception
+        UiTestUtils.sleep();
     }
 }

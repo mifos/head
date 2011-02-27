@@ -22,19 +22,24 @@ package org.mifos.test.acceptance.framework.testhelpers;
 
 import org.mifos.test.acceptance.framework.group.CreateGroupEntryPage;
 import org.mifos.test.acceptance.framework.group.CreateGroupEntryPage.CreateGroupSubmitParameters;
+import org.mifos.test.acceptance.framework.group.CreateGroupPreviewDataPage;
 import org.mifos.test.acceptance.framework.group.EditCustomerStatusParameters;
 import org.mifos.test.acceptance.framework.group.GroupStatus;
 import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
 import org.mifos.test.acceptance.framework.group.ViewGroupChargesDetailPage;
 import org.mifos.test.acceptance.framework.loan.ChargeParameters;
+import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 
 import com.thoughtworks.selenium.Selenium;
 
 public class GroupTestHelper {
 
     private final NavigationHelper navigationHelper;
+    private final Selenium selenium;
 
     public GroupTestHelper(Selenium selenium) {
+        this.selenium = selenium;
         this.navigationHelper = new  NavigationHelper(selenium);
     }
 
@@ -93,5 +98,22 @@ public class GroupTestHelper {
         editCustomerStatusParameters.setGroupStatus(GroupStatus.ACTIVE);
         editCustomerStatusParameters.setNote("Activate group");
         return changeGroupStatus(groupName, editCustomerStatusParameters);
+    }
+
+    public GroupViewDetailsPage createGroupWithQuestionGroupsEdited(CreateGroupSubmitParameters groupParams, String centerName, QuestionResponseParameters responseParams, QuestionResponseParameters responseParams2) {
+        QuestionResponsePage responsePage = navigateToCreateGroupEntryPage(centerName)
+            .submitAndNavigateToQuestionResponsePage(groupParams);
+        responsePage.populateAnswers(responseParams);
+        responsePage.navigateToNextPage();
+        new CreateGroupPreviewDataPage(selenium).navigateToEditQuestionResponsePage();
+        responsePage.populateAnswers(responseParams2);
+        responsePage.navigateToNextPage();
+
+        return new CreateGroupPreviewDataPage(selenium).submitForApproval().navigateToGroupDetailsPage();
+    }
+
+    public QuestionResponsePage navigateToQuestionResponsePageWhenCreatingGroup(CreateGroupSubmitParameters groupParams, String centerName) {
+        return navigateToCreateGroupEntryPage(centerName)
+            .submitAndNavigateToQuestionResponsePage(groupParams);
     }
 }

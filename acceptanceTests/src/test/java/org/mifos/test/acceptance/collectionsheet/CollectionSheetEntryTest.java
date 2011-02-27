@@ -127,7 +127,9 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
+    //http://mifosforge.jira.com/browse/MIFOSTEST-3
     public void defaultAmountsForMediumCenterSavedToDatabase() throws Exception {
+        // Given
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_medium_005_dbunit.xml", dataSource, selenium);
         SubmitFormParameters formParameters = new SubmitFormParameters();
         String office = "MyOffice1233171674227";
@@ -139,6 +141,7 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
         formParameters.setCenter(center);
         formParameters.setPaymentMode(SubmitFormParameters.CASH);
 
+        // When
         LoanAccountPage loanAccountPage = sheetTestHelper
             .submitDefaultCollectionSheetEntryData(formParameters)
             .navigateToClientsAndAccountsPageUsingHeaderTab()
@@ -146,6 +149,7 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
             .navigateToSearchResult(client+": ID 0003-000000006")
             .navigateToOnlyLoanAccount();
 
+        // Then
         loanAccountPage.verifyPrincipalOriginal("2000.0");
         loanAccountPage.verifyPrincipalBalance("2000.0");
     }
