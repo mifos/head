@@ -320,7 +320,7 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
 
         CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
         submitAccountParameters.setAmount(amount);
-        SavingsAccountDetailPage savingsAccountPage = savingsAccountHelper.createSavingsAccount(searchParameters, submitAccountParameters);
+        SavingsAccountDetailPage savingsAccountPage = savingsAccountHelper.createSavingsAccountWithQG(searchParameters, submitAccountParameters);
         savingsAccountPage.verifyPage();
         savingsAccountPage.verifySavingsAmount(submitAccountParameters.getAmount());
         savingsAccountPage.verifySavingsProduct(searchParameters.getSavingsProduct());

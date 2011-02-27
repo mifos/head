@@ -102,7 +102,7 @@ public class CreateSavingsAccountTest extends UiTestCaseBase {
         CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
         submitAccountParameters.setAmount("248.0");
 
-        SavingsAccountDetailPage savingsAccountDetailPage = savingsAccountHelper.createSavingsAccount(searchParameters, submitAccountParameters);
+        SavingsAccountDetailPage savingsAccountDetailPage = savingsAccountHelper.createSavingsAccountWithQG(searchParameters, submitAccountParameters);
 
         EditAccountStatusParameters editAccountStatusParameters = new EditAccountStatusParameters();
         editAccountStatusParameters.setAccountStatus(AccountStatus.SAVINGS_ACTIVE);
