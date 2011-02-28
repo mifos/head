@@ -20,15 +20,15 @@
 
 package org.mifos.test.acceptance.framework.loanproduct;
 
+import java.util.List;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.mifos.test.acceptance.framework.AbstractPage;
+import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
 
-import java.util.List;
-
-import org.testng.Assert;
-
+@SuppressWarnings("PMD.CyclomaticComplexity")
 public class DefineNewLoanProductPage extends AbstractPage {
 
     String configureVariableInstalmentsCheckbox = "canConfigureVariableInstallments";
@@ -47,11 +47,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
 
     public DefineNewLoanProductPage(Selenium selenium) {
         super(selenium);
-    }
-
-    public void verifyPage() {
         this.verifyPage("CreateLoanProduct");
-
     }
 
     public DefineNewLoanProductPage submitPage() {
@@ -77,6 +73,8 @@ public class DefineNewLoanProductPage extends AbstractPage {
 
         // grace period type
         public static final int NONE = 1;
+        public static final int GRACE_ON_ALL_REPAYMENTS = 2;
+        public static final int PRINCIPAL_ONLY_GRACE = 3;
 
         // Status
         public static final int ACTIVE = 1;
@@ -116,6 +114,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
         private String[][] cycleInstallments = new String[MAX_CYCLES][3];
         private String[][] installmentsByLastLoanAmount = new String[MAX_CYCLES][4];
         private int gracePeriodType;
+        private String gracePeriodDuration;
         private String interestGLCode;
         private String principalGLCode;
         private boolean interestWaiver;
@@ -272,6 +271,14 @@ public class DefineNewLoanProductPage extends AbstractPage {
 
         public void setGracePeriodType(int gracePeriodType) {
             this.gracePeriodType = gracePeriodType;
+        }
+
+        public String getGracePeriodDuration() {
+            return this.gracePeriodDuration;
+        }
+
+        public void setGracePeriodDuration(String gracePeriodDuration) {
+            this.gracePeriodDuration = gracePeriodDuration;
         }
 
         public String getInterestGLCode() {
@@ -596,6 +603,10 @@ public class DefineNewLoanProductPage extends AbstractPage {
             }
         }
         selenium.select("gracePeriodType", "value=" + parameters.getGracePeriodType());
+        selenium.fireEvent("gracePeriodType", "change");
+        if(parameters.getGracePeriodType()>1){
+            selenium.type("gracePeriodDuration", parameters.getGracePeriodDuration());
+        }
         selenium.select("interestGLCode", "label=" + parameters.getInterestGLCode());
         selenium.select("principalGLCode", "label=" + parameters.getPrincipalGLCode());
         selectQuestionGroups(parameters.getQuestionGroups());
@@ -687,8 +698,13 @@ public class DefineNewLoanProductPage extends AbstractPage {
         return this;
     }
 
-    private DefineNewLoanProductPage selectVariableInstalmentAndWaitForLoad() {
+    public DefineNewLoanProductPage checkConfigureVariableInstalmentsCheckbox(){
         selenium.click(configureVariableInstalmentsCheckbox);
+        return this;
+    }
+
+    private DefineNewLoanProductPage selectVariableInstalmentAndWaitForLoad() {
+        checkConfigureVariableInstalmentsCheckbox();
         waitForElementToPresent(minInstalmentAmountTextBox);
         return this;
     }

@@ -39,6 +39,7 @@ import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.loanproduct.LoanProductTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
+import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
@@ -51,6 +52,8 @@ import org.testng.annotations.Test;
 @Test(sequential = true, groups = {"loan","acceptance","ui"})
 public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
 
+    @Autowired
+    private ApplicationDatabaseOperation applicationDatabaseOperation;
     private LoanTestHelper loanTestHelper;
     private LoanProductTestHelper loanProductTestHelper;
     private String expectedDate;
@@ -237,6 +240,32 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
         loanTestHelper.disburseLoan(loanId, disburseLoanParameters);
         //loanTestHelper.disburseLoan(loanId, disburseLoanParameters);
         loanTestHelper.repayLoan(loanId);
+    }
+
+    // http://mifosforge.jira.com/browse/MIFOSTEST-124
+    public void VerifyGracePeriodEffectOnLoanSchedule() throws Exception{
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
+        applicationDatabaseOperation.updateLSIM(1);
+        DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
+        formParameters.setGracePeriodType(DefineNewLoanProductPage.SubmitFormParameters.PRINCIPAL_ONLY_GRACE);
+        formParameters.setGracePeriodDuration("3");
+        CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
+        searchParameters.setSearchString("Client1232993852651");
+        searchParameters.setLoanProduct(formParameters.getOfferingName());
+
+        //When / Then
+        loanProductTestHelper
+            .navigateToDefineNewLoanPangAndFillMandatoryFields(formParameters)
+            .verifyVariableInstalmentOptionsDefaults()
+            .checkConfigureVariableInstalmentsCheckbox()
+            .submitAndGotoNewLoanProductPreviewPage()
+            .submit();
+
+        //Then
+        loanTestHelper.createLoanAccount(searchParameters, new CreateLoanAccountSubmitParameters())
+            .navigateToRepaymentSchedulePage()
+            .verifySchedulePrincipalWithGrace(Integer.parseInt(formParameters.getGracePeriodDuration()));
     }
 
     private CreateLoanAccountSubmitParameters createSearchParameters(String d, String m, String y){

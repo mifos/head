@@ -205,10 +205,8 @@ public class AdminPage extends MifosPage {
 
     public void defineLoanProduct(SubmitFormParameters formParameters) {
         DefineNewLoanProductPage newLoanPage = navigateToDefineLoanProduct();
-        newLoanPage.verifyPage();
         newLoanPage.fillLoanParameters(formParameters);
         DefineNewLoanProductPreviewPage previewPage = newLoanPage.submitAndGotoNewLoanProductPreviewPage();
-        previewPage.verifyPage();
         DefineNewLoanProductConfirmationPage confirmationPage = previewPage.submit();
         confirmationPage.verifyPage();
     }
@@ -220,7 +218,6 @@ public class AdminPage extends MifosPage {
         newLoanPage.fillLoanParameters(formParameters);
         //
         DefineNewLoanProductPreviewPage previewPage = newLoanPage.submitAndGotoNewLoanProductPreviewPage();
-        previewPage.verifyPage();
         DefineNewLoanProductConfirmationPage confirmationPage = previewPage.submit();
         confirmationPage.verifyPage();
     }
