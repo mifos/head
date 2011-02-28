@@ -37,6 +37,6 @@ public class InitializeApplicationPage  extends AbstractPage  {
 
     public void verifyPage() {
         Assert.assertEquals(this.selenium.getTitle(), "Initializer Application");
-        Assert.assertTrue(this.selenium.isTextPresent("Application has been re-initialized."), "String 'Application has been re-initialized.' not found on page.");
+        Assert.assertTrue(this.isTextPresentInPage("Application has been re-initialized."), "String 'Application has been re-initialized.' not found on page.");
     }
 }

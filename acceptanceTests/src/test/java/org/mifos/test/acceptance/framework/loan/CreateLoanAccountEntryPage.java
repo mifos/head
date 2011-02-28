@@ -251,25 +251,25 @@ public class CreateLoanAccountEntryPage extends MifosPage {
 
     public CreateLoanAccountEntryPage verifyVariableInstalmentsInLoanProductSummery(String maxGap, String minGap, String minInstalmentAmount) {
         if ("".equals(maxGap)) {
-            Assert.assertTrue(selenium.isTextPresent("Maximum gap between installments: N/A"));
+            Assert.assertTrue(isTextPresentInPage("Maximum gap between installments: N/A"));
         } else {
-            Assert.assertTrue(selenium.isTextPresent("Maximum gap between installments: " + maxGap  + " days"));
+            Assert.assertTrue(isTextPresentInPage("Maximum gap between installments: " + maxGap  + " days"));
         }
         if ("".equals(minInstalmentAmount)) {
-            Assert.assertTrue(selenium.isTextPresent("Minimum installment amount: N/A")) ;
+            Assert.assertTrue(isTextPresentInPage("Minimum installment amount: N/A")) ;
         } else {
-            Assert.assertTrue(selenium.isTextPresent("Minimum installment amount: " + minInstalmentAmount)) ;
+            Assert.assertTrue(isTextPresentInPage("Minimum installment amount: " + minInstalmentAmount)) ;
         }
-        Assert.assertTrue(selenium.isTextPresent("Minimum gap between installments: " + minGap));
-        Assert.assertTrue(selenium.isTextPresent("Can configure variable installments: Yes"));
+        Assert.assertTrue(isTextPresentInPage("Minimum gap between installments: " + minGap));
+        Assert.assertTrue(isTextPresentInPage("Can configure variable installments: Yes"));
         return this;
     }
 
     public CreateLoanAccountEntryPage verifyUncheckedVariableInstalmentsInLoanProductSummery() {
-        Assert.assertTrue(!selenium.isTextPresent("Minimum gap between installments:"));
-        Assert.assertTrue(!selenium.isTextPresent("Maximum gap between installments:"));
-        Assert.assertTrue(!selenium.isTextPresent("Minimum installment amount:" )) ;
-        Assert.assertTrue(!selenium.isTextPresent("Can configure variable installments: No"));
+        Assert.assertTrue(!isTextPresentInPage("Minimum gap between installments:"));
+        Assert.assertTrue(!isTextPresentInPage("Maximum gap between installments:"));
+        Assert.assertTrue(!isTextPresentInPage("Minimum installment amount:" )) ;
+        Assert.assertTrue(!isTextPresentInPage("Can configure variable installments: No"));
         return this;
 
     }
@@ -305,8 +305,8 @@ public class CreateLoanAccountEntryPage extends MifosPage {
     }
 
     public CreateLoanAccountEntryPage verifyInterestTypeInLoanCreation(String interestTypeName) {
-        Assert.assertTrue(selenium.isTextPresent("Interest Rate Type:"));
-        Assert.assertTrue(selenium.isTextPresent(interestTypeName));
+        Assert.assertTrue(isTextPresentInPage("Interest Rate Type:"));
+        Assert.assertTrue(isTextPresentInPage(interestTypeName));
         return this;
     }
 
@@ -317,7 +317,7 @@ public class CreateLoanAccountEntryPage extends MifosPage {
         }
         submit();
         for (String fee : fees) {
-            Assert.assertTrue(selenium.isTextPresent(fee + " fee cannot be applied to loan with variable installments"));
+            Assert.assertTrue(isTextPresentInPage(fee + " fee cannot be applied to loan with variable installments"));
         }
         for (int index = 0; index < fees.length; index++) {
             selenium.select("selectedFee[" + index + "].feeId","--Select--");
@@ -326,17 +326,17 @@ public class CreateLoanAccountEntryPage extends MifosPage {
     }
 
     public void verifyAllowedAmounts(String min, String max, String def) {
-        Assert.assertTrue(selenium.isTextPresent("(Allowed Amount:   "+min+"   -   "+max+" )"));
+        Assert.assertTrue(isTextPresentInPage("(Allowed Amount:   "+min+"   -   "+max+" )"));
         Assert.assertEquals(selenium.getValue("loancreationdetails.input.sumLoanAmount"), def);
     }
 
     public void verifyAllowedInterestRate(String min, String max, String def) {
-        Assert.assertTrue(selenium.isTextPresent("(Allowed Interest rate amount   "+min+"   -   "+max+" %)"));
+        Assert.assertTrue(isTextPresentInPage("(Allowed Interest rate amount   "+min+"   -   "+max+" %)"));
         Assert.assertEquals(selenium.getValue("loancreationdetails.input.interestRate"), def);
     }
 
     public void verifyAllowedInstallments(String min, String max, String def) {
-        Assert.assertTrue(selenium.isTextPresent("(Allowed Number of Installments:   "+min+"   -   "+max+" )"));
+        Assert.assertTrue(isTextPresentInPage("(Allowed Number of Installments:   "+min+"   -   "+max+" )"));
         Assert.assertEquals(selenium.getValue("loancreationdetails.input.numberOfInstallments"), def);
     }
 

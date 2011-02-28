@@ -93,9 +93,9 @@ public class ViewQuestionResponseDetailPage extends MifosPage {
     }
 
     public void verifyQuestionPresent(String question, String... answers) {
-        assertTrue(selenium.isTextPresent(question));
+        assertTrue(isTextPresentInPage(question));
         for (String answer : answers) {
-            assertTrue(selenium.isTextPresent(answer));
+            assertTrue(isTextPresentInPage(answer));
         }
     }
 
@@ -132,12 +132,12 @@ public class ViewQuestionResponseDetailPage extends MifosPage {
 
     public void verifyQuestionsDoesnotappear(String[] questions) {
         for (String question : questions) {
-            Assert.assertFalse(selenium.isTextPresent(question));
+            Assert.assertFalse(isTextPresentInPage(question));
         }
     }
 
     public void verifyEditButtonDisabled(String number) {
-        Assert.assertFalse(selenium.isTextPresent("xpath=//a[@questiongroupinstancedetailindex='"+number+"']"));
+        Assert.assertFalse(isTextPresentInPage("xpath=//a[@questiongroupinstancedetailindex='"+number+"']"));
     }
 
     public QuestionnairePage navigateToEditSection(String number) {

@@ -102,7 +102,7 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
     }
 
     private void verifyIsTextPresentInPage(String validationMessage) {
-        Assert.assertTrue(selenium.isTextPresent(validationMessage), validationMessage);
+        Assert.assertTrue(isTextPresentInPage(validationMessage), validationMessage);
         Assert.assertTrue(!selenium.isElementPresent("//span[@id='schedulePreview.error.message']/li[text()='']"), "Blank Error message is thrown");
         Assert.assertTrue(!selenium.isElementPresent("//span[@id='schedulePreview.error.message']/li[text()=' ']"), "Blank Error message is thrown");
     }
@@ -167,7 +167,7 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
         }
         clickValidateAndWaitForPageToLoad();
         for (int installment = 0; installment < noOfInstallments; installment++) {
-           // Assert.Assert.assertTrue(selenium.isTextPresent("Installment " + (installment+1) +" has an invalid due date. An example due date is 23-Apr-2010"));
+           // Assert.Assert.assertTrue(isTextPresentInPage("Installment " + (installment+1) +" has an invalid due date. An example due date is 23-Apr-2010"));
         }
     }
 
@@ -181,7 +181,7 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
         for (int installment = 1; installment < noOfInstallments-1; installment++) {
             verifyIsTextPresentInPage("Gap between the due dates of installment "+ (installment+1)+" and the previous installment is less than allowed");
         }
-//        Assert.Assert.assertTrue(selenium.isTextPresent("Gap between disbursal date and due date of first installment is less than the allowable minimum gap"));
+//        Assert.Assert.assertTrue(isTextPresentInPage("Gap between disbursal date and due date of first installment is less than the allowable minimum gap"));
     }
 
     private DateTime getValidDate(DateTime disbursalDate, int minGap, boolean isGapIsMinimumGap) {
@@ -367,7 +367,7 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
         setFirstAndSecondInstallmentTotal("336.0");
         selenium.click(button);
         selenium.waitForPageToLoad("3000");
-//        Assert.Assert.assertTrue(selenium.isTextPresent("Installment amount for September 2010 as % of warning threshold exceeds the allowed warning threshold of " + warningThreshold+ "%"));
+//        Assert.Assert.assertTrue(isTextPresentInPage("Installment amount for September 2010 as % of warning threshold exceeds the allowed warning threshold of " + warningThreshold+ "%"));
         verifyIsTextPresentInPage("Installment amount for October 2010 as % of warning threshold exceeds the allowed warning threshold of " + warningThreshold+ "%");
         verifyIsTextPresentInPage("Installment amount for November 2010 as % of warning threshold exceeds the allowed warning threshold of " + warningThreshold+ "%");
     }

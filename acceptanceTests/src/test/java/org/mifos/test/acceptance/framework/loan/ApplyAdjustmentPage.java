@@ -37,7 +37,7 @@ public class ApplyAdjustmentPage extends AbstractPage {
 
 
     public LoanAccountPage verifyAdjustment(String adjustmentAmount) {
-        Assert.assertTrue(selenium.isTextPresent("Last payment made: " + adjustmentAmount + " "));
+        Assert.assertTrue(isTextPresentInPage("Last payment made: " + adjustmentAmount + " "));
         return fillAdjustmentFieldsAndSubmit(adjustmentAmount);
     }
 
@@ -59,7 +59,7 @@ public class ApplyAdjustmentPage extends AbstractPage {
 
     public ApplyAdjustmentPage verifyAdjustBackdatedPermission() {
         applyAdjustment("10");
-        Assert.assertTrue(selenium.isTextPresent("You do not have permissions to perform this activity. Contact your system administrator to grant you required permissions and try again."));
+        Assert.assertTrue(isTextPresentInPage("You do not have permissions to perform this activity. Contact your system administrator to grant you required permissions and try again."));
         return this;
     }
 
@@ -70,7 +70,7 @@ public class ApplyAdjustmentPage extends AbstractPage {
     }
 
     public LoanAccountPage verifyAdjustment(String adjustmentAmount, String note) {
-        Assert.assertTrue(selenium.isTextPresent("Last payment made: " + adjustmentAmount + " "));
+        Assert.assertTrue(isTextPresentInPage("Last payment made: " + adjustmentAmount + " "));
         selenium.click("applyadjustment.input.revertLastPayment");
         selenium.type("applyadjustment.input.note", note);
         selenium.click("applyadjustment.button.submit");
@@ -80,7 +80,7 @@ public class ApplyAdjustmentPage extends AbstractPage {
         return new LoanAccountPage(selenium);
     }
     public LoanAccountPage verifyRepayAdjustment(String loanAmount) {
-        Assert.assertTrue(selenium.isTextPresent(loanAmount));
+        Assert.assertTrue(isTextPresentInPage(loanAmount));
         selenium.click("applyadjustment.button.submit");
         waitForPageToLoad();
         return new LoanAccountPage(selenium);
@@ -89,7 +89,7 @@ public class ApplyAdjustmentPage extends AbstractPage {
     public ApplyAdjustmentPage verifyAdjustBackdatedPermissionOnRepay() {
         selenium.click("applyadjustment.button.submit");
         waitForPageToLoad();
-        Assert.assertTrue(selenium.isTextPresent("You do not have permissions to perform this activity. Contact your system administrator to grant you required permissions and try again."));
+        Assert.assertTrue(isTextPresentInPage("You do not have permissions to perform this activity. Contact your system administrator to grant you required permissions and try again."));
         return this;
     }
 }

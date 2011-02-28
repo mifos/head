@@ -47,7 +47,7 @@ public class GroupViewDetailsPage extends MifosPage {
 
     @Deprecated
     public void verifyStatus(String status) {
-        Assert.assertTrue(selenium.isTextPresent(status), "Expected string: " + status);
+        Assert.assertTrue(isTextPresentInPage(status), "Expected string: " + status);
     }
 
     public String getGroupStatus(){
@@ -109,7 +109,7 @@ public class GroupViewDetailsPage extends MifosPage {
     }
 
     public void verifyLoanOfficer(String loanOfficer) {
-        Assert.assertTrue(selenium.isTextPresent(loanOfficer), "Expected string: " + loanOfficer);
+        Assert.assertTrue(isTextPresentInPage(loanOfficer), "Expected string: " + loanOfficer);
 
     }
 
@@ -156,7 +156,7 @@ public class GroupViewDetailsPage extends MifosPage {
     }
 
     public void verifyLoanDoesntExist(String loanID) {
-        Assert.assertFalse(selenium.isTextPresent(loanID));
+        Assert.assertFalse(isTextPresentInPage(loanID));
     }
 
     public CenterViewDetailsPage navigateToGroupsCenter(String centerName) {

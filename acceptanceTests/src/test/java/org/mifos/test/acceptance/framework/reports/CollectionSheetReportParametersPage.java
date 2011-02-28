@@ -49,7 +49,7 @@ public class CollectionSheetReportParametersPage extends MifosPage {
     }
 
     public CollectionSheetReportParametersPage verifyPage() {
-        Assert.assertTrue(selenium.isTextPresent("Select"));
+        Assert.assertTrue(isTextPresentInPage("Select"));
         return this;
     }
 }

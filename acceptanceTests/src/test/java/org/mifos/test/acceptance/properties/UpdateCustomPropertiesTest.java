@@ -146,6 +146,7 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
         //Then
         clientsAndAccountsHomePage.verifyMenuWithCenterHierarchyOff();
 
+
         //Given
         propertiesHelper.setCenterHierarchyExists("true");
 

@@ -36,7 +36,7 @@ public class ViewOfficeHierarchyPage extends MifosPage {
 
     public void verifyText(String[] expectedData) {
         for (String expectedText : expectedData) {
-            Assert.assertTrue(selenium.isTextPresent(expectedText), "Expected text: " + expectedText);
+            Assert.assertTrue(isTextPresentInPage(expectedText), "Expected text: " + expectedText);
         }
     }
 

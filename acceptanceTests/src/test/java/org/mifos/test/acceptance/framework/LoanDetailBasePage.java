@@ -14,7 +14,7 @@ public class LoanDetailBasePage extends AbstractPage {
     }
 
     public LoanDetailBasePage verifyInterestType(String interestType) {
-        Assert.assertTrue(selenium.isTextPresent("Interest rate type: " + interestType));
+        Assert.assertTrue(isTextPresentInPage("Interest rate type: " + interestType));
         return this;
     }
 

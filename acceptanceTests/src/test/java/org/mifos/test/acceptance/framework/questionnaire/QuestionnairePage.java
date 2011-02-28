@@ -58,7 +58,7 @@ public class QuestionnairePage extends MifosPage {
     }
 
     private String getQuestionLocator(String question) {
-        return selenium.getEval(String.format(SELECT_QUESTION_JS, question));
+        return getEval(String.format(SELECT_QUESTION_JS, question));
     }
 
     public void setResponse(String question, String answer) {
@@ -126,12 +126,12 @@ public class QuestionnairePage extends MifosPage {
     }
 
     public void setResponsesForMultiSelect(String question, int totalChoices, String... choices) {
-        String questionId = selenium.getEval(String.format(SELECT_QUESTION_JS, question));
+        String questionId = getEval(String.format(SELECT_QUESTION_JS, question));
         String choiceIdFormat = questionId + "s%d";
         List<String> choiceList = Arrays.asList(choices);
         for (int i=0; i<totalChoices; i++) {
             String choiceId = String.format(choiceIdFormat, i);
-            String choice = selenium.getEval("window.document.getElementById(\"" + choiceId + "\").value");
+            String choice = getEval("window.document.getElementById(\"" + choiceId + "\").value");
             if (choiceList.contains(choice)) {
                 selenium.check("id=" + choiceId);
             }
@@ -139,7 +139,7 @@ public class QuestionnairePage extends MifosPage {
     }
 
     public boolean isErrorPresent(String errorMsg) {
-        return selenium.isTextPresent(errorMsg);
+        return isTextPresentInPage(errorMsg);
     }
 
     public void verifyErrorsOnPage(String[] errors) {
@@ -195,6 +195,6 @@ public class QuestionnairePage extends MifosPage {
     }
 
     public void verifyTextPresent(String expectedText, String errorMessage) {
-        Assert.assertTrue(selenium.isTextPresent(expectedText), errorMessage);
+        Assert.assertTrue(isTextPresentInPage(expectedText), errorMessage);
     }
 }

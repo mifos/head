@@ -51,16 +51,16 @@ public class CreateQuestionPage extends CreateQuestionRootPage {
     }
 
     public String submitButtonClass() {
-        return selenium.getEval("window.document.getElementById('_eventId_createQuestions').className");
+        return getEval("window.document.getElementById('_eventId_createQuestions').className");
     }
 
     public String submitButtonStatus() {
-        return selenium.getEval("window.document.getElementById('_eventId_createQuestions').disabled");
+        return getEval("window.document.getElementById('_eventId_createQuestions').disabled");
     }
 
     public CreateQuestionParameters getLastAddedQuestion() {
         CreateQuestionParameters questionParameters = new CreateQuestionParameters();
-        String noOfRows = selenium.getEval("window.document.getElementById(\"questions.table\").getElementsByTagName(\"tr\").length;");
+        String noOfRows = getEval("window.document.getElementById(\"questions.table\").getElementsByTagName(\"tr\").length;");
         int indexOfLastQuestion = Integer.parseInt(noOfRows) - 1;
         questionParameters.setText(selenium.getTable("questions.table." + indexOfLastQuestion + ".0"));
         questionParameters.setType(selenium.getTable("questions.table." + indexOfLastQuestion + ".1"));
@@ -89,18 +89,18 @@ public class CreateQuestionPage extends CreateQuestionRootPage {
     public void assertRecentQuestion(CreateQuestionParameters createQuestionParameters, String atLeast2Choices) {
         List<String> choices = createQuestionParameters.getChoicesAsStrings();
         if ((createQuestionParameters.questionHasAnswerChoices() || createQuestionParameters.questionHasSmartAnswerChoices()) && choices.size() < 2) {
-            Assert.assertTrue(selenium.isTextPresent(atLeast2Choices), "Missing warning for giving at least 2 choices");
+            Assert.assertTrue(isTextPresentInPage(atLeast2Choices), "Missing warning for giving at least 2 choices");
         } else {
             assertLastAddedQuestion(createQuestionParameters);
         }
     }
 
     public void verifyTextPresent(String expectedText, String errorMessage) {
-        Assert.assertTrue(selenium.isTextPresent(expectedText), errorMessage);
+        Assert.assertTrue(isTextPresentInPage(expectedText), errorMessage);
     }
 
     public void verifyNotTextPresent(String expectedText, String errorMessage) {
-        Assert.assertFalse(selenium.isTextPresent(expectedText), errorMessage);
+        Assert.assertFalse(isTextPresentInPage(expectedText), errorMessage);
     }
 
     public void verifySubmitButtonStatus(String status) {

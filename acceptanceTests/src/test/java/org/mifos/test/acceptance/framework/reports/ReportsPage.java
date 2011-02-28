@@ -47,7 +47,7 @@ public class ReportsPage extends MifosPage {
     }
 
     public ReportsPage verifyPage() {
-        Assert.assertTrue(selenium.isTextPresent("Welcome to mifos reports area. Click on a report name below to view the report ."));
+        Assert.assertTrue(isTextPresentInPage("Welcome to mifos reports area. Click on a report name below to view the report ."));
         return this;
     }
 }

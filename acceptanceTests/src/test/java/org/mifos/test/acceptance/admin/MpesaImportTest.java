@@ -282,7 +282,7 @@ public class MpesaImportTest extends UiTestCaseBase {
             if (line == null) {
                 break;
             }
-            if (!selenium.isTextPresent(line.trim())) {
+            if (!isTextPresentInPage(line.trim())) {
                 Assert.fail("No text <" + line.trim() + "> present on the page");
             }
         }

@@ -65,7 +65,7 @@ public class ClosedAccountsPage extends MifosPage {
     }
 
     public LoanAccountPage verifyAndNavigateToOneClosedLoan(String loanID) {
-        Assert.assertTrue(selenium.isTextPresent(loanID));
+        Assert.assertTrue(isTextPresentInPage(loanID));
         return navigateToLoanAccountPage();
     }
 }

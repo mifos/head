@@ -41,6 +41,6 @@ public class EditPreviewLoanAccountPage extends MifosPage {
     }
 
     public void verifyErrorInForm(String error) {
-        Assert.assertTrue(selenium.isTextPresent(error));
+        Assert.assertTrue(isTextPresentInPage(error));
     }
 }

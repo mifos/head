@@ -163,7 +163,7 @@ public class AddFamilyDetailsTest extends UiTestCaseBase {
         ClientFamilyEditPreviewPage previewEdit=editFamilyPage.submitAndNavigateToClientEditFamilyPreviewPage(editParameters);
         previewEdit.verifyPage();
         clientDetailsPage=previewEdit.submit();
-        //Assert.assertTrue(selenium.isTextPresent("newName newLastName"));
+        //Assert.assertTrue(isTextPresentInPage("newName newLastName"));
         Assert.assertEquals(selenium.getText("displayName"), "newName newLastName");
     }
 }

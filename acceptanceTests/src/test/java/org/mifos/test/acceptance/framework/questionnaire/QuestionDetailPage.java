@@ -50,9 +50,9 @@ public class QuestionDetailPage extends MifosPage {
 
     void assertForSmartChoices(List<Choice> choices) {
         for (Choice choice : choices) {
-            Assert.assertTrue(selenium.isTextPresent(choice.getChoiceText()));
+            Assert.assertTrue(isTextPresentInPage(choice.getChoiceText()));
             for (String tag : choice.getTags()) {
-                Assert.assertTrue(selenium.isTextPresent(tag));
+                Assert.assertTrue(isTextPresentInPage(tag));
             }
         }
     }
@@ -70,9 +70,9 @@ public class QuestionDetailPage extends MifosPage {
 
     public void assertForChoices(String type, List<Choice> choices) {
         if ("Multi Select".equals(type) || "Single Select".equals(type)) {
-            Assert.assertTrue(selenium.isTextPresent("Answer Choices: " + getCommaSeparatedChoices(choices)));
+            Assert.assertTrue(isTextPresentInPage("Answer Choices: " + getCommaSeparatedChoices(choices)));
         } else {
-            Assert.assertFalse(selenium.isTextPresent("Answer Choices: "), "Answer choices should not be present");
+            Assert.assertFalse(isTextPresentInPage("Answer Choices: "), "Answer choices should not be present");
         }
         if ("Smart Select".equals(type)) {
             assertForSmartChoices(choices);
@@ -81,20 +81,20 @@ public class QuestionDetailPage extends MifosPage {
 
     void assertForNumericDetails(String type, int numericMin, int numericMax) {
         if ("Number".equals(type)) {
-            Assert.assertTrue(selenium.isTextPresent("Minimum value: " + numericMin));
-            Assert.assertTrue(selenium.isTextPresent("Maximum value: " + numericMax));
+            Assert.assertTrue(isTextPresentInPage("Minimum value: " + numericMin));
+            Assert.assertTrue(isTextPresentInPage("Maximum value: " + numericMax));
         } else {
-            Assert.assertFalse(selenium.isTextPresent("Minimum value: "));
-            Assert.assertFalse(selenium.isTextPresent("Maximum value: "));
+            Assert.assertFalse(isTextPresentInPage("Minimum value: "));
+            Assert.assertFalse(isTextPresentInPage("Maximum value: "));
         }
     }
 
     void verifyQuestionTitle(String type, String title) {
-        Assert.assertTrue(selenium.isTextPresent("Question: " + title + type), "Title is missing");
-        Assert.assertTrue(selenium.isTextPresent("Answer Type: " + type), "Answer type is missing");
+        Assert.assertTrue(isTextPresentInPage("Question: " + title + type), "Title is missing");
+        Assert.assertTrue(isTextPresentInPage("Answer Type: " + type), "Answer type is missing");
     }
 
     public void verifyQuestionTitle(String title) {
-        Assert.assertTrue(selenium.isTextPresent("Question: " + title), "Title is missing");
+        Assert.assertTrue(isTextPresentInPage("Question: " + title), "Title is missing");
     }
 }

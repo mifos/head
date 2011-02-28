@@ -43,7 +43,7 @@ public class ConfirmAddClientToGroupPage extends MifosPage{
     }
 
     public void verifyGroupLowerStatusError(){
-        Assert.assertTrue(selenium.isTextPresent("Group status should be higher than that of Client"));
+        Assert.assertTrue(isTextPresentInPage("Group status should be higher than that of Client"));
     }
 
     public ConfirmAddClientToGroupPage submitAddGroupWithErrorGroupLowerStatus(){

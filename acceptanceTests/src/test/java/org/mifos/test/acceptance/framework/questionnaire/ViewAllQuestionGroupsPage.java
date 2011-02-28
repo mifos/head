@@ -47,10 +47,10 @@ public class ViewAllQuestionGroupsPage extends MifosPage {
     }
 
     public String[] getAllQuestionGroups() {
-        int rows = Integer.valueOf(selenium.getEval("window.document.getElementById('questionGroupList').getElementsByTagName('a').length"));
+        int rows = Integer.valueOf(getEval("window.document.getElementById('questionGroupList').getElementsByTagName('a').length"));
         String[] questions = new String[rows];
         for (int i=0; i<rows; i++) {
-            questions[i] = selenium.getEval("window.document.getElementById('questionGroupList').getElementsByTagName('a')[" + i + "].innerHTML");
+            questions[i] = getEval("window.document.getElementById('questionGroupList').getElementsByTagName('a')[" + i + "].innerHTML");
         }
         return questions;
     }
@@ -62,14 +62,14 @@ public class ViewAllQuestionGroupsPage extends MifosPage {
 
     public void verifyQuestionGroup(List<String> questions) {
         for(String question : questions) {
-             if (!selenium.isTextPresent(question)) {
+             if (!isTextPresentInPage(question)) {
                  Assert.fail("No question <" + question + "> present on the page");
              }
         }
     }
 
     public void verifyInactiveQuestions(int indexCategoryQuestionGroup,int indexQuestionGroup) {
-        String text = selenium.getEval("window.document.getElementsByClassName('questions')["
+        String text = getEval("window.document.getElementsByClassName('questions')["
                 + indexCategoryQuestionGroup + "].getElementsByTagName('li')["+ indexQuestionGroup +"].innerHTML");
 
         Assert.assertTrue(text.contains("inactive"),text);

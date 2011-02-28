@@ -84,6 +84,6 @@ public class SearchAccountTest extends SearchTestBase {
         Assert.assertEquals( count, 1 );
 
         //Check the displayed text
-        Assert.assertTrue(selenium.isTextPresent(ACCT_SEARCH_STRING));
+        Assert.assertTrue(isTextPresentInPage(ACCT_SEARCH_STRING));
     }
 }

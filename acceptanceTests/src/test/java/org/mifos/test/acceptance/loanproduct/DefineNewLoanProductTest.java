@@ -126,11 +126,11 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
         newLoanProductPage.fillLoanParameters(formParameters);
         DefineNewLoanProductPreviewPage previewPage = newLoanProductPage.submitAndGotoNewLoanProductPreviewPage();
         //Then
-        Assert.assertTrue(selenium.isTextPresent("Can waive interest on repay loan: Yes"));
+        Assert.assertTrue(isTextPresentInPage("Can waive interest on repay loan: Yes"));
         //When
         LoanProductDetailsPage loanProductDetailsPage = previewPage.submit().navigateToViewLoanDetailsPage();
         //Then
-        Assert.assertTrue(selenium.isTextPresent("Can waive interest on repay loan: Yes"));
+        Assert.assertTrue(isTextPresentInPage("Can waive interest on repay loan: Yes"));
         //When
         EditLoanProductPage editLoanProductPage = loanProductDetailsPage.editLoanProduct();
         //Then
@@ -138,11 +138,11 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
         //When
         EditLoanProductPreviewPage editLoanProductPreviewPage = editLoanProductPage.editSubmit();
         //Then
-        Assert.assertTrue(selenium.isTextPresent("Can waive interest on repay loan: Yes"));
+        Assert.assertTrue(isTextPresentInPage("Can waive interest on repay loan: Yes"));
         //When
         loanProductDetailsPage = editLoanProductPreviewPage.submit();
         //Then
-        Assert.assertTrue(selenium.isTextPresent("Can waive interest on repay loan: Yes"));
+        Assert.assertTrue(isTextPresentInPage("Can waive interest on repay loan: Yes"));
 
         //When
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
@@ -174,7 +174,7 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
         //Then
         Assert.assertTrue(repayLoanPage.isTotalRepaymentAmountVisible());
         Assert.assertFalse(repayLoanPage.isWaivedRepaymentAmoutVisible());
-        Assert.assertFalse(selenium.isTextPresent("Note: Interest due will be waived off."));
+        Assert.assertFalse(isTextPresentInPage("Note: Interest due will be waived off."));
         Assert.assertEquals(repayLoanPage.totalRepaymentAmount(), "2509.1");
         //When
         RepayLoanParameters params = new RepayLoanParameters();

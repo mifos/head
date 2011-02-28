@@ -43,7 +43,7 @@ public class ViewAccountingExportsPage extends MifosPage {
     }
 
     public ViewAccountingExportsPage verifyNoExportPresent() {
-        selenium.isTextPresent("NO DATA");
+        isTextPresentInPage("NO DATA");
         return this;
     }
 

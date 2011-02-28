@@ -53,21 +53,21 @@ public class QuestionResponsePage extends MifosPage {
     public void verifyNumericBoundsValidation(String questionInputId, String answer, int minimum, int maximum, String questionTitle) {
         populateTextAnswer(questionInputId, answer);
         navigateToNextPage();
-        assertTrue(selenium.isTextPresent("Please specify a number between " + minimum + " and " + maximum + " for " + questionTitle));
+        assertTrue(isTextPresentInPage("Please specify a number between " + minimum + " and " + maximum + " for " + questionTitle));
     }
 
     public void verifyQuestionsDoesnotappear(String[] questions) {
         for (String question : questions) {
-            Assert.assertFalse(selenium.isTextPresent(question));
+            Assert.assertFalse(isTextPresentInPage(question));
         }
     }
     public void verifyQuestionsExists(String[] questions) {
         for(String question: questions) {
-            Assert.assertTrue(selenium.isTextPresent(question));
+            Assert.assertTrue(isTextPresentInPage(question));
         }
     }
     public void verifySectionDoesnotappear(String section ) {
-            Assert.assertFalse(selenium.isTextPresent(section));
+            Assert.assertFalse(isTextPresentInPage(section));
     }
 
 

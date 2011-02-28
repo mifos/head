@@ -41,7 +41,7 @@ public class ApplyPaymentPage extends MifosPage {
 
     public void verifyPaymentPriorLastPaymentDate(PaymentParameters params) {
         enterPaymentData(params);
-        selenium.isTextPresent("Date of transaction cannot be less than the last payment date");
+        isTextPresentInPage("Date of transaction cannot be less than the last payment date");
     }
 
     private void enterPaymentData(PaymentParameters params) {

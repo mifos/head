@@ -39,15 +39,15 @@ public class RedoLoanDisbursalEntryPage extends MifosPage {
 
     public void verifyFutureDateInputError() {
         verifyPage();
-        Assert.assertTrue(selenium.isTextPresent("You have entered an invalid disbursal date. Enter a disbursal date less than today's date"));
+        Assert.assertTrue(isTextPresentInPage("You have entered an invalid disbursal date. Enter a disbursal date less than today's date"));
     }
 
     public void verifyAllFormErrors() {
         verifyPage();
-        Assert.assertTrue(selenium.isTextPresent("Please specify valid Amount. Amount should be a value between 100 and 1,000,000, inclusive."));
-        Assert.assertTrue(selenium.isTextPresent("Please specify valid Interest rate. Interest rate should be a value between 1 and 99, inclusive."));
-        Assert.assertTrue(selenium.isTextPresent("Please specify valid No. of installments. No. of installments should be a value between 1 and 100, inclusive."));
-        Assert.assertTrue(selenium.isTextPresent("Please specify a valid disbursal date."));
+        Assert.assertTrue(isTextPresentInPage("Please specify valid Amount. Amount should be a value between 100 and 1,000,000, inclusive."));
+        Assert.assertTrue(isTextPresentInPage("Please specify valid Interest rate. Interest rate should be a value between 1 and 99, inclusive."));
+        Assert.assertTrue(isTextPresentInPage("Please specify valid No. of installments. No. of installments should be a value between 1 and 100, inclusive."));
+        Assert.assertTrue(isTextPresentInPage("Please specify a valid disbursal date."));
     }
 
     public RedoLoanDisbursalSchedulePreviewPage submitWithGLIMandLSIPAndNavigateToPreviewPage(RedoLoanDisbursalParameters params) {
@@ -97,7 +97,7 @@ public class RedoLoanDisbursalEntryPage extends MifosPage {
         selectFee(fees);
         submit();
         for (String fee : fees) {
-            Assert.assertTrue(selenium.isTextPresent(fee + " fee cannot be applied to loan with variable installments"));
+            Assert.assertTrue(isTextPresentInPage(fee + " fee cannot be applied to loan with variable installments"));
         }
         for (int index = 0; index < fees.length; index++) {
             selenium.select("selectedFee[" + index + "].feeId","--Select--");

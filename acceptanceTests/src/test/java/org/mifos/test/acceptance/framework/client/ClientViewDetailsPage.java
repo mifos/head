@@ -157,11 +157,11 @@ public class ClientViewDetailsPage extends MifosPage {
     }
 
     public void verifyTextOnPage(String text) {
-        Assert.assertTrue(selenium.isTextPresent(text));
+        Assert.assertTrue(isTextPresentInPage(text));
     }
 
     public void verifyLoanDoesntExist(String loanID) {
-        Assert.assertFalse(selenium.isTextPresent(loanID));
+        Assert.assertFalse(isTextPresentInPage(loanID));
     }
 
     public ClientViewChangeLogPage navigateToClientViewChangeLog() {
@@ -208,12 +208,12 @@ public class ClientViewDetailsPage extends MifosPage {
 
 
     public Map<Integer, QuestionGroup> getQuestionGroupInstances() {
-        int rows = Integer.valueOf(selenium.getEval("window.document.getElementById('questionGroupInstances').getElementsByTagName('a').length"));
+        int rows = Integer.valueOf(getEval("window.document.getElementById('questionGroupInstances').getElementsByTagName('a').length"));
         Map<Integer, QuestionGroup> instances = new LinkedHashMap<Integer, QuestionGroup>();
         for (int i = 0; i < rows - 1; i++) {
-            String instanceId = selenium.getEval(format(QUESTION_GROUP_ID_JS, i));
-            instances.put(new Integer(instanceId), new QuestionGroup(selenium.getEval(format(QUESTION_GROUP_NAME_JS, i)), //NOPMD
-                    selenium.getEval(format(QUESTION_GROUP_DATE_JS, instanceId))));
+            String instanceId = getEval(format(QUESTION_GROUP_ID_JS, i));
+            instances.put(new Integer(instanceId), new QuestionGroup(getEval(format(QUESTION_GROUP_NAME_JS, i)), //NOPMD
+                    getEval(format(QUESTION_GROUP_DATE_JS, instanceId))));
         }
         return instances;
     }
@@ -256,11 +256,11 @@ public class ClientViewDetailsPage extends MifosPage {
     }
 
     public void verifyMeetingsAttended(int meetings) {
-        Assert.assertTrue(selenium.isTextPresent("Meetings Attended: "+meetings));
+        Assert.assertTrue(isTextPresentInPage("Meetings Attended: "+meetings));
     }
 
     public void verifyMeetingsMissed(int meetings) {
-        Assert.assertTrue(selenium.isTextPresent("Meetings Missed: "+meetings));
+        Assert.assertTrue(isTextPresentInPage("Meetings Missed: "+meetings));
     }
 
     public void verifyLoanCycle(Integer loanCycle) {

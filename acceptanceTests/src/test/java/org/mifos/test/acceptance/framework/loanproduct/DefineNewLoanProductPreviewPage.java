@@ -46,64 +46,64 @@ public class DefineNewLoanProductPreviewPage extends AbstractPage {
 
     public void verifyErrorInForm(String error)
     {
-        Assert.assertTrue(selenium.isTextPresent(error));
+        Assert.assertTrue(isTextPresentInPage(error));
     }
 
     public DefineNewLoanProductPreviewPage verifyVariableInstalmentOption(String maxGap, String minGap, String minInstalmentAmount) {
-        Assert.assertTrue(selenium.isTextPresent("Minimum gap between installments: " + minGap));
+        Assert.assertTrue(isTextPresentInPage("Minimum gap between installments: " + minGap));
         if ("".equals(maxGap)) {
-            Assert.assertTrue(selenium.isTextPresent("Maximum gap between installments: N/A"));
+            Assert.assertTrue(isTextPresentInPage("Maximum gap between installments: N/A"));
         } else {
-            Assert.assertTrue(selenium.isTextPresent("Maximum gap between installments: " + maxGap  + " days"));
+            Assert.assertTrue(isTextPresentInPage("Maximum gap between installments: " + maxGap  + " days"));
         }
         if ("".equals(minInstalmentAmount)) {
-            Assert.assertTrue(selenium.isTextPresent("Minimum installment amount: N/A")) ;
+            Assert.assertTrue(isTextPresentInPage("Minimum installment amount: N/A")) ;
         } else {
-            Assert.assertTrue(selenium.isTextPresent("Minimum installment amount: " + minInstalmentAmount)) ;
+            Assert.assertTrue(isTextPresentInPage("Minimum installment amount: " + minInstalmentAmount)) ;
         }
-        Assert.assertTrue(selenium.isTextPresent("Can configure variable installments: Yes"));
+        Assert.assertTrue(isTextPresentInPage("Can configure variable installments: Yes"));
         return new DefineNewLoanProductPreviewPage(selenium);
     }
 
     public DefineNewLoanProductPreviewPage verifyVariableInstalmentUnChecked() {
-        Assert.assertTrue(!selenium.isTextPresent("Minimum gap between installments:"));
-        Assert.assertTrue(!selenium.isTextPresent("Maximum gap between installments:"));
-        Assert.assertTrue(!selenium.isTextPresent("Minimum installment amount:" )) ;
-        Assert.assertTrue(selenium.isTextPresent("Can configure variable installments: No"));
+        Assert.assertTrue(!isTextPresentInPage("Minimum gap between installments:"));
+        Assert.assertTrue(!isTextPresentInPage("Maximum gap between installments:"));
+        Assert.assertTrue(!isTextPresentInPage("Minimum installment amount:" )) ;
+        Assert.assertTrue(isTextPresentInPage("Can configure variable installments: No"));
         return this;
     }
 
     public DefineNewLoanProductPreviewPage verifyCashFlowInPreview(String warningThreshold, String indebtentValue, String repaymentValue) {
-        Assert.assertTrue(selenium.isTextPresent("Compare with Cash Flow: Yes"));
+        Assert.assertTrue(isTextPresentInPage("Compare with Cash Flow: Yes"));
         if ("".equals(warningThreshold)) {
-            Assert.assertTrue(selenium.isTextPresent("Warning Threshold: N/A"));
+            Assert.assertTrue(isTextPresentInPage("Warning Threshold: N/A"));
         } else {
-            Assert.assertTrue(selenium.isTextPresent("Warning Threshold: " + warningThreshold + " %"));
+            Assert.assertTrue(isTextPresentInPage("Warning Threshold: " + warningThreshold + " %"));
         }
         if ("".equals(indebtentValue)) {
-            Assert.assertTrue(selenium.isTextPresent("Indebtedness Rate: N/A"));
+            Assert.assertTrue(isTextPresentInPage("Indebtedness Rate: N/A"));
         } else {
-            Assert.assertTrue(selenium.isTextPresent("Indebtedness Rate: " + indebtentValue + " %"));
+            Assert.assertTrue(isTextPresentInPage("Indebtedness Rate: " + indebtentValue + " %"));
         }
         if ("".equals(repaymentValue)) {
-            Assert.assertTrue(selenium.isTextPresent("Repayment Capacity: N/A"));
+            Assert.assertTrue(isTextPresentInPage("Repayment Capacity: N/A"));
         } else {
-            Assert.assertTrue(selenium.isTextPresent("Repayment Capacity: " + repaymentValue + " %"));
+            Assert.assertTrue(isTextPresentInPage("Repayment Capacity: " + repaymentValue + " %"));
         }
         return this;
     }
 
     public DefineNewLoanProductPreviewPage verifyCashFlowUnCheckedInPreview() {
-        Assert.assertTrue(selenium.isTextPresent("Compare with Cash Flow: No"));
-        Assert.assertTrue(!selenium.isTextPresent("Warning Threshold:"));
-        Assert.assertTrue(!selenium.isTextPresent("Indebtedness Rate:"));
-        Assert.assertTrue(!selenium.isTextPresent("Repayment Capacity:"));
+        Assert.assertTrue(isTextPresentInPage("Compare with Cash Flow: No"));
+        Assert.assertTrue(!isTextPresentInPage("Warning Threshold:"));
+        Assert.assertTrue(!isTextPresentInPage("Indebtedness Rate:"));
+        Assert.assertTrue(!isTextPresentInPage("Repayment Capacity:"));
         return this;
     }
 
     public DefineNewLoanProductPreviewPage verifyInterestTypeInPreview(String interestType) {
         String expectedText = "Interest rate type: " + interestType;
-        Assert.assertTrue(selenium.isTextPresent(expectedText), expectedText + " does not exist on page.");
+        Assert.assertTrue(isTextPresentInPage(expectedText), expectedText + " does not exist on page.");
         return this;
     }
 }

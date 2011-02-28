@@ -38,7 +38,7 @@ public class CreateLoanAccountPreviewPage extends AbstractPage {
     }
 
     public CreateLoanAccountPreviewPage verifyInterestTypeInLoanPreview(String interestType) {
-        Assert.assertTrue(selenium.isTextPresent("Interest Rate Type :  " + interestType));
+        Assert.assertTrue(isTextPresentInPage("Interest Rate Type :  " + interestType));
         return this;
     }
 
@@ -67,7 +67,7 @@ public class CreateLoanAccountPreviewPage extends AbstractPage {
 
     private void verifyIsTextPresentInPage(String validationMessage) {
         Assert.assertTrue(!selenium.isElementPresent("//span[@id='schedulePreview.error.message']/li[text()=' ']"),"Blank Error message is thrown");
-        Assert.assertTrue(selenium.isTextPresent(validationMessage),validationMessage);
+        Assert.assertTrue(isTextPresentInPage(validationMessage),validationMessage);
         Assert.assertTrue(!selenium.isElementPresent("//span[@id='schedulePreview.error.message']/li[text()='']"),"Blank Error message is thrown");
     }
 

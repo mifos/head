@@ -403,7 +403,7 @@ public class AdminPage extends MifosPage {
     }
 
     public void verifyError(String error){
-        Assert.assertTrue(selenium.isTextPresent(error));
+        Assert.assertTrue(isTextPresentInPage(error));
     }
 
     public DefineAcceptedPaymentTypesPage navigateToDefineAcceptedPaymentType() {

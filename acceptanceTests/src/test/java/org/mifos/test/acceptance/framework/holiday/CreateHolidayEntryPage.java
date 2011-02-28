@@ -208,7 +208,7 @@ public class CreateHolidayEntryPage extends MifosPage {
             }
         } else {
             selenium.type("selectedOfficeIds", formParameters.getSelectedOfficeIds());
-            selenium.getEval("window.CreateHoliday.setState();");
+            getEval("window.CreateHoliday.setState();");
         }
         selenium.click("holiday.button.preview");
         waitForPageToLoad();

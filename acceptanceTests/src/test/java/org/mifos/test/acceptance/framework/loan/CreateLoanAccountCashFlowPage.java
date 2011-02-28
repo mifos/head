@@ -72,8 +72,8 @@ public class CreateLoanAccountCashFlowPage extends AbstractPage{
     }
 
     public void verifyErrorsOnPage() {
-        Assert.assertTrue(selenium.isTextPresent("Please specify expense for "));
-        Assert.assertTrue(selenium.isTextPresent("Please specify revenue for "));
+        Assert.assertTrue(isTextPresentInPage("Please specify expense for "));
+        Assert.assertTrue(isTextPresentInPage("Please specify revenue for "));
     }
 
     private String getNumbers(int length) {
@@ -94,25 +94,25 @@ public class CreateLoanAccountCashFlowPage extends AbstractPage{
         selenium.typeKeys("monthlyCashFlows[0].expense", lengthMaxDigits);
         selenium.fireEvent("monthlyCashFlows[0].expense", "blur");
         selenium.fireEvent("monthlyCashFlows[1].expense", "blur");
-        Assert.assertFalse(selenium.isTextPresent(error));
+        Assert.assertFalse(isTextPresentInPage(error));
         selenium.type("monthlyCashFlows[0].expense", "");
 
         selenium.type("monthlyCashFlows[0].expense", lengthMaxDecimal);
         selenium.fireEvent("monthlyCashFlows[0].expense", "blur");
         selenium.fireEvent("monthlyCashFlows[1].expense", "blur");
-        Assert.assertFalse(selenium.isTextPresent(error));
+        Assert.assertFalse(isTextPresentInPage(error));
         selenium.type("monthlyCashFlows[0].expense", "");
 
         selenium.type("monthlyCashFlows[0].expense", lengthWrongDecimal);
         selenium.fireEvent("monthlyCashFlows[0].expense", "blur");
         selenium.fireEvent("monthlyCashFlows[1].expense", "blur");
-        Assert.assertTrue(selenium.isTextPresent(error));
+        Assert.assertTrue(isTextPresentInPage(error));
         selenium.type("monthlyCashFlows[0].expense", "");
 
         selenium.typeKeys("monthlyCashFlows[0].expense", lengthWrongDigits);
         selenium.fireEvent("monthlyCashFlows[0].expense", "blur");
         selenium.fireEvent("monthlyCashFlows[1].expense", "blur");
-        Assert.assertTrue(selenium.isTextPresent(error));
+        Assert.assertTrue(isTextPresentInPage(error));
         selenium.type("monthlyCashFlows[0].expense", "");
         selenium.fireEvent("monthlyCashFlows[0].expense", "focus");
     }
@@ -152,8 +152,8 @@ public class CreateLoanAccountCashFlowPage extends AbstractPage{
         Assert.assertTrue(selenium.getValue(totalCapital).equals(""));
         Assert.assertTrue(selenium.getValue(totalLiability).equals(""));
         clickContinue();
-        Assert.assertTrue(selenium.isTextPresent("Please specify the total capital"));
-        Assert.assertTrue(selenium.isTextPresent("Please specify the total liability"));
+        Assert.assertTrue(isTextPresentInPage("Please specify the total capital"));
+        Assert.assertTrue(isTextPresentInPage("Please specify the total liability"));
 //        selenium.type(totalCapital,"abc");
 //        selenium.type(totalLiability,"abc");
 //        Assert.assertTrue(selenium.getValue(totalCapital).equals(""));
@@ -165,7 +165,7 @@ public class CreateLoanAccountCashFlowPage extends AbstractPage{
         selenium.type(totalCapital, capital);
         selenium.type(totalLiability, liability);
         clickContinue();
-        Assert.assertTrue(selenium.isTextPresent("Indebtedness rate of the client is 49.99 % which should be lesser than the allowable value of " + maxValue + " %"));
+        Assert.assertTrue(isTextPresentInPage("Indebtedness rate of the client is 49.99 % which should be lesser than the allowable value of " + maxValue + " %"));
         return this;
     }
 

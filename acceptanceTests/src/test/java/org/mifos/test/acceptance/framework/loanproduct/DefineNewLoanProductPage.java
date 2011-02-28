@@ -693,7 +693,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
         verifyIsTextPresentInPage("Minimum gap must be less than the maximum gap for loans with variable installments");
 
         fillVariableInstalmentOption("", "", "");
-//        Assert.assertTrue(selenium.isTextPresent("Minimum gap must be less than the maximum gap for loans with variable installments"));
+//        Assert.assertTrue(isTextPresentInPage("Minimum gap must be less than the maximum gap for loans with variable installments"));
         return this;
     }
 
@@ -795,7 +795,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
     }
 
     private void verifyIsTextPresentInPage(String expectedText) {
-        Assert.assertTrue(selenium.isTextPresent(expectedText),expectedText + " not found in the page");
+        Assert.assertTrue(isTextPresentInPage(expectedText),expectedText + " not found in the page");
     }
 
     public DefineNewLoanProductPage verifyBlockedInterestTypes() {

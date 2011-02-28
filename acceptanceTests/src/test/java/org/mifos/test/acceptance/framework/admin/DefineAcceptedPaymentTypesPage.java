@@ -78,6 +78,6 @@ public class DefineAcceptedPaymentTypesPage extends MifosPage {
     }
 
     private boolean isElementAvailable(String payment, String name) {
-        return Boolean.parseBoolean(selenium.getEval("window.$(\"#" + name + " option:contains('" + payment + "')\").length>0"));
+        return Boolean.parseBoolean(getEval("window.$(\"#" + name + " option:contains('" + payment + "')\").length>0"));
     }
 }

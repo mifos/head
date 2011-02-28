@@ -41,7 +41,7 @@ public class ClientNotesPage extends MifosPage {
     }
 
     public void verifyTextOnPage(String testNote) {
-        Assert.assertTrue(selenium.isTextPresent(testNote));
+        Assert.assertTrue(isTextPresentInPage(testNote));
 
     }
 }

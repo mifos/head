@@ -67,7 +67,7 @@ public class ImportTransactionsPage extends MifosPage {
 
     public void checkErrors(String[] errors) {
         for(String error : errors) {
-            if (!selenium.isTextPresent(error)) {
+            if (!isTextPresentInPage(error)) {
                 Assert.fail("No text <" + error + "> present on the page");
             }
         }

@@ -479,7 +479,7 @@ public class ClientTest extends UiTestCaseBase {
         navigateToClientDetailsPage();
         viewClientDetailsPage.getQuestionnairePage(questionGroupTitle);
         Assert.assertFalse("Section2 should not be present on questionnaire when all questions are inactive",
-                selenium.isTextPresent("Section2"));
+                isTextPresentInPage("Section2"));
     }
 
     private void testShouldEditInactiveQuestion(String response) {

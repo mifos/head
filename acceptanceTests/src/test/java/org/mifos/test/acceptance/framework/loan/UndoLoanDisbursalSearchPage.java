@@ -44,6 +44,6 @@ public class UndoLoanDisbursalSearchPage extends MifosPage {
         selenium.click("undoloandisbursalsearch.button.search");
         waitForPageToLoad();
         this.verifyPage("UndoLoanDisbursalSearch");
-        Assert.assertTrue(selenium.isTextPresent("No search results found."));
+        Assert.assertTrue(isTextPresentInPage("No search results found."));
     }
 }

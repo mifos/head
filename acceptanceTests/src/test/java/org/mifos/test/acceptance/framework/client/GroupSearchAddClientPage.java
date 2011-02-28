@@ -38,6 +38,6 @@ public class GroupSearchAddClientPage extends MifosPage{
     }
 
     public void verifyNoResult(){
-        selenium.isTextPresent("No results found for");
+        isTextPresentInPage("No results found for");
     }
 }

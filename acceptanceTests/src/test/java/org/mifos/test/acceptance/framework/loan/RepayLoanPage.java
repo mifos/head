@@ -53,27 +53,27 @@ public class RepayLoanPage extends MifosPage {
     }
 
     public boolean isWaiverInterestWarningVisible() {
-        return !StringUtils.equals("hidden", selenium.getEval("window.$(\"#waiverInterestWarning\").css(\"visibility\")"));
+        return !StringUtils.equals("hidden", getEval("window.$(\"#waiverInterestWarning\").css(\"visibility\")"));
     }
 
     public boolean isWaivedRepaymentAmoutVisible() {
-        return StringUtils.equals("true", selenium.getEval("window.$(\"#waivedRepaymentAmount\").is(\":visible\")"));
+        return StringUtils.equals("true", getEval("window.$(\"#waivedRepaymentAmount\").is(\":visible\")"));
     }
 
     public String waivedRepaymentAmount() {
-        return selenium.getEval("window.$(\"#waivedRepaymentAmount\").html()").trim();
+        return getEval("window.$(\"#waivedRepaymentAmount\").html()").trim();
     }
 
     public boolean isTotalRepaymentAmountVisible() {
-        return StringUtils.equals("true", selenium.getEval("window.$(\"#totalRepaymentAmount\").is(\":visible\")"));
+        return StringUtils.equals("true", getEval("window.$(\"#totalRepaymentAmount\").is(\":visible\")"));
     }
 
     public String totalRepaymentAmount() {
-        return selenium.getEval("window.$(\"#totalRepaymentAmount\").html()").trim();
+        return getEval("window.$(\"#totalRepaymentAmount\").html()").trim();
     }
 
     public boolean isWaiveInterestSelected() {
-        return StringUtils.equals("true", selenium.getEval("window.$(\"input:checkbox[name=waiverInterestChckBox]:checked\").val()"));
+        return StringUtils.equals("true", getEval("window.$(\"input:checkbox[name=waiverInterestChckBox]:checked\").val()"));
     }
 
     public void interestWaiver(boolean value) {

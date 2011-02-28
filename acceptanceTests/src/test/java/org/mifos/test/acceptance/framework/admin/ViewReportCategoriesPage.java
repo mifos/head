@@ -54,7 +54,7 @@ public class ViewReportCategoriesPage extends MifosPage {
     }
 
     public void verifyReportCategoriesExist(String category) {
-        Assert.assertTrue(selenium.isTextPresent(category));
+        Assert.assertTrue(isTextPresentInPage(category));
     }
 
     public DefineNewReportsCategoryPage navigateToDefineNewReportsCategoryPage() {

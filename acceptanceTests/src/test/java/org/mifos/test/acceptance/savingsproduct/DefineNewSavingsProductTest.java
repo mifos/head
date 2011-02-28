@@ -410,7 +410,7 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
 
         makeDefaultDepositWithdrawal(badDate, depositParams, savingsId);
 
-        Assert.assertTrue(selenium.isTextPresent("Date of transaction is invalid. It can not be prior to the last meeting date of the customer or prior to activation date of the savings account."));
+        Assert.assertTrue(isTextPresentInPage("Date of transaction is invalid. It can not be prior to the last meeting date of the customer or prior to activation date of the savings account."));
     }
 
     //http://mifosforge.jira.com/browse/MIFOSTEST-722

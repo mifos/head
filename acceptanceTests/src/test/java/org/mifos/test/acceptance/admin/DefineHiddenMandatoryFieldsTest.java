@@ -69,7 +69,7 @@ public class DefineHiddenMandatoryFieldsTest  extends UiTestCaseBase{
         adminPage.navigateToClientsAndAccountsPageUsingHeaderTab().navigateToCreateNewClientPage()
             .navigateToCreateClientWithoutGroupPage().chooseOffice("MyOfficeDHMFT");
         //Then
-        Assert.assertTrue(selenium.isTextPresent("*Ethnicity:"));
+        Assert.assertTrue(isTextPresentInPage("*Ethnicity:"));
         Assert.assertFalse(selenium.isElementPresent("create_ClientPersonalInfo.input.spouseSecondLastName"));
 
         // restore original configuration

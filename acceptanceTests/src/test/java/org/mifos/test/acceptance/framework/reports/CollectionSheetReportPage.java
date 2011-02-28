@@ -37,7 +37,7 @@ public class CollectionSheetReportPage extends MifosPage {
 
 
     public CollectionSheetReportPage verifyPage() {
-        Assert.assertTrue(selenium.isTextPresent("Collection Sheet Report"));
+        Assert.assertTrue(isTextPresentInPage("Collection Sheet Report"));
         return this;
     }
 }

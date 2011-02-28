@@ -68,25 +68,25 @@ public class LoanAccountPage extends MifosPage {
     }
 
     public void verifyLoanIsForClient(String clientName){
-        Assert.assertTrue(selenium.isTextPresent(clientName));
+        Assert.assertTrue(isTextPresentInPage(clientName));
     }
 
     public void verifyPurpose (String purpose){
-        Assert.assertTrue(selenium.isTextPresent(purpose));
+        Assert.assertTrue(isTextPresentInPage(purpose));
     }
 
     public void verifyLoanIsPendingApproval(){
-        Assert.assertTrue(selenium.isTextPresent("Application Pending Approval"));
+        Assert.assertTrue(isTextPresentInPage("Application Pending Approval"));
     }
 
     public void verifyLoanIsInPartialApplication(){
-        Assert.assertTrue(selenium.isTextPresent("Partial Application "));
+        Assert.assertTrue(isTextPresentInPage("Partial Application "));
     }
 
     public void verifyClosedLoanPerformanceHistory() {
-        Assert.assertTrue(selenium.isTextPresent("# of payments: 0"));
-        Assert.assertTrue(selenium.isTextPresent("# of missed payments: 0"));
-        Assert.assertTrue(selenium.isTextPresent("Days in arrears:0"));
+        Assert.assertTrue(isTextPresentInPage("# of payments: 0"));
+        Assert.assertTrue(isTextPresentInPage("# of missed payments: 0"));
+        Assert.assertTrue(isTextPresentInPage("Days in arrears:0"));
     }
 
     public void verifyLoanTotalBalance(String amount) {
@@ -122,13 +122,13 @@ public class LoanAccountPage extends MifosPage {
     }
 
     public void verifyPerformanceHistory(String payments, String missedPayments) {
-        Assert.assertTrue(selenium.isTextPresent("of payments: "+payments));
-        Assert.assertTrue(selenium.isTextPresent("of missed payments: "+missedPayments));
+        Assert.assertTrue(isTextPresentInPage("of payments: "+payments));
+        Assert.assertTrue(isTextPresentInPage("of missed payments: "+missedPayments));
     }
 
     public void verifyAccountSummary(String totalAmount, String date, String amountInArrears) {
-        Assert.assertTrue(selenium.isTextPresent("Total amount due on "+date+": "+totalAmount));
-        Assert.assertTrue(selenium.isTextPresent("Amount in arrears: "+amountInArrears));
+        Assert.assertTrue(isTextPresentInPage("Total amount due on "+date+": "+totalAmount));
+        Assert.assertTrue(isTextPresentInPage("Amount in arrears: "+amountInArrears));
     }
 
     public void verifyStatus(String status) {
@@ -197,7 +197,7 @@ public class LoanAccountPage extends MifosPage {
     }
 
     public void verifyNumberOfInstallments(String min, String max, String expected) {
-        Assert.assertTrue(selenium.isTextPresent("No. of installments: "+expected+" (Allowed Number of Installments: "+min+" - "+max+")"));
+        Assert.assertTrue(isTextPresentInPage("No. of installments: "+expected+" (Allowed Number of Installments: "+min+" - "+max+")"));
     }
 
     /**
@@ -424,7 +424,7 @@ public class LoanAccountPage extends MifosPage {
     }
 
     public LoanAccountPage verifyInterestTypeInLoanAccountDetails(String interestType) {
-        Assert.assertTrue(selenium.isTextPresent("Interest Rate Type:  " + interestType));
+        Assert.assertTrue(isTextPresentInPage("Interest Rate Type:  " + interestType));
         return this;
 
     }
@@ -464,7 +464,7 @@ public class LoanAccountPage extends MifosPage {
     }
 
     public LoanAccountPage verifyLoanStatus(String status) {
-        Assert.assertTrue(selenium.isTextPresent(status));
+        Assert.assertTrue(isTextPresentInPage(status));
         return this;
     }
 

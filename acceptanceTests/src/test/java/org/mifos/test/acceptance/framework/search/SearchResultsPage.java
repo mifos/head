@@ -57,7 +57,7 @@ public class SearchResultsPage extends MifosPage {
         int count = countSearchResults();
         Assert.assertEquals(count, searchCount);
         if(!"".equals(searchResultID)) {
-            Assert.assertTrue(selenium.isTextPresent(searchResultID));
+            Assert.assertTrue(isTextPresentInPage(searchResultID));
         }
     }
 

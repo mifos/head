@@ -38,7 +38,7 @@ public class ViewOfficesPage extends MifosPage {
 
     public void verifyOfficeList(String[] expectedData) {
         for (String expectedOfficeLink : expectedData) {
-            Assert.assertTrue(selenium.isTextPresent(expectedOfficeLink), "Expected link: " + expectedOfficeLink);
+            Assert.assertTrue(isTextPresentInPage(expectedOfficeLink), "Expected link: " + expectedOfficeLink);
         }
 
     }

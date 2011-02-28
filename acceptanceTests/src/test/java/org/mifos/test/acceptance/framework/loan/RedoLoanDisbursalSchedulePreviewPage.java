@@ -107,7 +107,7 @@ public class RedoLoanDisbursalSchedulePreviewPage extends MifosPage {
     }
 
     private void verifyIsTextPresentInPage(String validationMessage) {
-        assertTrue(selenium.isTextPresent(validationMessage), validationMessage);
+        assertTrue(isTextPresentInPage(validationMessage), validationMessage);
         assertTrue(!selenium.isElementPresent("//span[@id='schedulePreview.error.message']/li[text()='']"), "Blank Error message is thrown");
         assertTrue(!selenium.isElementPresent("//span[@id='schedulePreview.error.message']/li[text()=' ']"), "Blank Error message is thrown");
     }
@@ -163,7 +163,7 @@ public class RedoLoanDisbursalSchedulePreviewPage extends MifosPage {
         }
         clickPreviewButtonAndWaitForPageToLoad();
         for (int installment = 0; installment < noOfInstallments; installment++) {
-           // Assert.assertTrue(selenium.isTextPresent("Installment " + (installment+1) +" has an invalid due date. An example due date is 23-Apr-2010"));
+           // Assert.assertTrue(isTextPresentInPage("Installment " + (installment+1) +" has an invalid due date. An example due date is 23-Apr-2010"));
         }
     }
 

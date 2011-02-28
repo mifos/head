@@ -74,6 +74,6 @@ public class CreateQuestionGroupPage extends CreateQuestionGroupRootPage {
     }
 
     public void verifyTextPresent(String expectedText, String errorMessage) {
-        Assert.assertTrue(selenium.isTextPresent(expectedText), errorMessage);
+        Assert.assertTrue(isTextPresentInPage(expectedText), errorMessage);
     }
 }

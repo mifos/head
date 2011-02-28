@@ -36,7 +36,7 @@ public class QuestionGroupResponsePage extends MifosPage {
     }
 
     public String getAnswerHtml(String question) {
-        return selenium.getEval(String.format(ANSWER_JS, question));
+        return getEval(String.format(ANSWER_JS, question));
     }
 
     public ClientViewDetailsPage navigateToViewClientDetailsPage() {

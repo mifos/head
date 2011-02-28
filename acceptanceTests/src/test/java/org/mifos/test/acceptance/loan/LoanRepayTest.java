@@ -107,7 +107,7 @@ public class LoanRepayTest extends UiTestCaseBase {
 
     private void verifyLoanStateAndAccountSummary() {
         LoanAccountPage accountPage = navigationHelper.navigateToLoanAccountPage(loanId);
-        Assert.assertTrue(selenium.isTextPresent("Closed- Obligation met"));
+        Assert.assertTrue(isTextPresentInPage("Closed- Obligation met"));
         Assert.assertEquals(accountPage.getOriginalLoanAmount(), "1000.0");
         Assert.assertEquals(accountPage.getPrinciplePaid(), "1000.0");
         Assert.assertEquals(accountPage.getPrincipleBalance(), "0.0");

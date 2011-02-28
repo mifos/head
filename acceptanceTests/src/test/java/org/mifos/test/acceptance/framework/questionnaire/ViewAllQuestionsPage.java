@@ -30,7 +30,7 @@ public class ViewAllQuestionsPage extends MifosPage {
 
     public void verifyQuestions(Set<String> questions) {
         for(String question : questions) {
-            Assert.assertTrue(selenium.isTextPresent(question));
+            Assert.assertTrue(isTextPresentInPage(question));
         }
     }
 }

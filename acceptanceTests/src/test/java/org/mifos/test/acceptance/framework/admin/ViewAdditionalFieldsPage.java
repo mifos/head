@@ -37,7 +37,7 @@ public class ViewAdditionalFieldsPage extends MifosPage {
     }
 
     public void verifyFieldLabelIsDisplayed(String label) {
-        Assert.assertTrue(selenium.isTextPresent(label), "Label defined in this test case not found on View Additional Fields page: " + label);
+        Assert.assertTrue(isTextPresentInPage(label), "Label defined in this test case not found on View Additional Fields page: " + label);
     }
 
 

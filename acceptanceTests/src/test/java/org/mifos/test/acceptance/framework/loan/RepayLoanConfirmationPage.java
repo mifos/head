@@ -42,8 +42,8 @@ public class RepayLoanConfirmationPage extends MifosPage {
 
     public String getSelectedValueForInterestWaiver() {
         String result = null;
-        if (!StringUtils.equals("null", selenium.getEval("window.document.getElementById('waiverInterest')"))) {
-            result = selenium.getEval("window.document.getElementById('waiverInterest').innerHTML").trim();
+        if (!StringUtils.equals("null", getEval("window.document.getElementById('waiverInterest')"))) {
+            result = getEval("window.document.getElementById('waiverInterest').innerHTML").trim();
         }
         return result;
     }

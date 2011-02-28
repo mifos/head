@@ -67,7 +67,7 @@ public class EditQuestionGroupPage extends CreateQuestionGroupRootPage {
         else {
             selenium.click("id=active1");
         }
-        selenium.getEval("window.document.getElementsByName('title')[0].value='"+title+"'");
+        getEval("window.document.getElementsByName('title')[0].value='"+title+"'");
         selenium.select("eventSourceIds", appliesTo);
 
         for(String questionId: questionsId) {

@@ -22,7 +22,7 @@ public class ClientViewChangeLogPage extends MifosPage{
 
     public void verifyChangeLog(List<String> fields, List<String> oldvalues, List<String> newValues, List<String> users, int maxRows) {
         for(int i=0;i<fields.size();i++) {
-            Assert.assertTrue(selenium.isTextPresent(fields.get(i)));
+            Assert.assertTrue(isTextPresentInPage(fields.get(i)));
             for(int j=0;j<maxRows;j++) {
                 if(selenium.getTable("auditLogRecords."+j+".1").equals(fields.get(i))) {
                     Assert.assertEquals(selenium.getTable("auditLogRecords."+j+".2"),oldvalues.get(i));

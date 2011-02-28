@@ -40,19 +40,19 @@ public class QuestionGroupDetailPage extends MifosPage {
     }
 
     public String getTitle() {
-        return selenium.getEval("window.document.getElementById('questionGroup.title').innerHTML").trim();
+        return getEval("window.document.getElementById('questionGroup.title').innerHTML").trim();
     }
 
     public String getAppliesTo() {
-        String appliesToStr = selenium.getEval("window.document.getElementById('questionGroup.appliesTo').innerHTML");
+        String appliesToStr = getEval("window.document.getElementById('questionGroup.appliesTo').innerHTML");
         return appliesToStr.substring(appliesToStr.indexOf(':') + 1).trim();
     }
 
     public List<String> getSections() {
-        int numSections = Integer.valueOf(selenium.getEval("window.document.getElementById('questionGroup.sections').getElementsByTagName('table').length"));
+        int numSections = Integer.valueOf(getEval("window.document.getElementById('questionGroup.sections').getElementsByTagName('table').length"));
         List<String> sections = new ArrayList<String>();
         for (int i=0; i<numSections; i++) {
-            String tableId = selenium.getEval("window.document.getElementById('questionGroup.sections').getElementsByTagName('table')[" + i + "].id");
+            String tableId = getEval("window.document.getElementById('questionGroup.sections').getElementsByTagName('table')[" + i + "].id");
             sections.add(tableId.substring(tableId.lastIndexOf('.') + 1).trim());
         }
         return sections;
@@ -60,7 +60,7 @@ public class QuestionGroupDetailPage extends MifosPage {
 
     public List<String> getSectionsQuestions(String sectionName) {
         List<String> questions = new ArrayList<String>();
-        int numQuestions = Integer.valueOf(selenium.getEval("window.document.getElementById('sections.table." + sectionName + "').rows.length"));
+        int numQuestions = Integer.valueOf(getEval("window.document.getElementById('sections.table." + sectionName + "').rows.length"));
         for (int i=1; i<numQuestions; i++) {
             questions.add(selenium.getTable(format("sections.table.%s.%d.0", sectionName, i)).trim());
         }
@@ -69,7 +69,7 @@ public class QuestionGroupDetailPage extends MifosPage {
 
     public List<String> getMandatoryQuestions(String sectionName) {
         List<String> questions = new ArrayList<String>();
-        int numQuestions = Integer.valueOf(selenium.getEval("window.document.getElementById('sections.table." + sectionName + "').rows.length"));
+        int numQuestions = Integer.valueOf(getEval("window.document.getElementById('sections.table." + sectionName + "').rows.length"));
         for (int i = 1; i < numQuestions; i++) {
             if("Yes".equals(selenium.getTable(format("sections.table.%s.%d.1", sectionName, i)).trim())){
                 questions.add(selenium.getTable(format("sections.table.%s.%d.0", sectionName, i)).trim());
