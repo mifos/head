@@ -21,7 +21,6 @@
 package org.mifos.test.acceptance.framework.savings;
 
 import org.mifos.test.acceptance.framework.AbstractPage;
-import org.mifos.test.acceptance.framework.util.UiTestUtils;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -42,7 +41,5 @@ public class SavingsApplyAdjustmentPage extends AbstractPage {
         selenium.type("applyadjustment.input.notes", notes);
         selenium.click("applyadjustment.button.submit");
         waitForPageToLoad();
-        //unhandled exception
-        UiTestUtils.sleep();
     }
 }
