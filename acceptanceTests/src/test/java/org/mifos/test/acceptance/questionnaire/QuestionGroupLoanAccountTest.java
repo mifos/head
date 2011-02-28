@@ -28,7 +28,7 @@ import java.util.Map;
 
 import org.joda.time.DateTime;
 import org.mifos.framework.util.DbUnitUtilities;
-//import org.mifos.test.acceptance.framework.MifosPage;
+import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
 import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
@@ -84,7 +84,7 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
     @AfterMethod
     public void logOut() {
         loanTestHelper = new LoanTestHelper(selenium);
-      //  (new MifosPage(selenium)).logout();
+        (new MifosPage(selenium)).logout();
     }
 
     /**

@@ -129,12 +129,12 @@ public class QuestionGroupTestHelper {
     public CenterViewDetailsPage editQuestionGroupResponsesInCenter(AttachQuestionGroupParameters attachParams) {
         CenterViewDetailsPage centerViewDetailsPage = (CenterViewDetailsPage) navigationHelper
             .navigateToCenterViewDetailsPage(attachParams.getTarget())
-            .navigateToViewQuestionResponseDetailPage(attachParams.getQuestionGroupName())
+            .navigateToLatestViewQuestionResponseDetailPage(attachParams.getQuestionGroupName())
             .navigateToEditSection("0")
             .setResponses(attachParams.getTextResponses())
             .checkResponses(attachParams.getCheckResponses())
             .submitAndNavigateToCenterViewDetailsPage();
-        ViewQuestionResponseDetailPage viewQuestionResponseDetailPage = centerViewDetailsPage.navigateToViewQuestionResponseDetailPage(attachParams.getQuestionGroupName());
+        ViewQuestionResponseDetailPage viewQuestionResponseDetailPage = centerViewDetailsPage.navigateToLatestViewQuestionResponseDetailPage(attachParams.getQuestionGroupName());
         viewQuestionResponseDetailPage.verifyQuestionsAndAnswers(attachParams);
         viewQuestionResponseDetailPage.navigateBack();
         return new CenterViewDetailsPage(selenium);
@@ -332,6 +332,11 @@ public class QuestionGroupTestHelper {
         editQuestionPage.activate();
     }
 
+    public void changeQuestionName(String question, String newName) {
+        EditQuestionPage editQuestionPage = naviagateToEditQuestion(question);
+        editQuestionPage.changeName(newName);
+    }
+
     public void markQuestionGroupAsActive(String questionGroup) {
         EditQuestionGroupPage editQuestionGroupPage = naviagateToEditQuestionGroup(questionGroup);
         editQuestionGroupPage.activate();
@@ -395,12 +400,12 @@ public class QuestionGroupTestHelper {
     public SavingsAccountDetailPage editQuestionGroupResponsesInSavingsAccount(AttachQuestionGroupParameters attachParams) {
         SavingsAccountDetailPage savingsAccountDetailPage = navigationHelper
             .navigateToSavingsAccountDetailPage(attachParams.getTarget())
-            .navigateToViewQuestionResponseDetailPage(attachParams.getQuestionGroupName())
+            .navigateToLatestViewQuestionResponseDetailPage(attachParams.getQuestionGroupName())
             .navigateToEditSection("0")
             .setResponses(attachParams.getTextResponses())
             .checkResponses(attachParams.getCheckResponses())
             .submitAndNavigateToSavingsAccountDetailPage();
-        ViewQuestionResponseDetailPage viewQuestionResponseDetailPage = savingsAccountDetailPage.navigateToViewQuestionResponseDetailPage(attachParams.getQuestionGroupName());
+        ViewQuestionResponseDetailPage viewQuestionResponseDetailPage = savingsAccountDetailPage.navigateToLatestViewQuestionResponseDetailPage(attachParams.getQuestionGroupName());
         viewQuestionResponseDetailPage.verifyQuestionsAndAnswers(attachParams);
         viewQuestionResponseDetailPage.navigateBack();
         return new SavingsAccountDetailPage(selenium);

@@ -81,8 +81,13 @@ public class CenterViewDetailsPage extends MifosPage {
         return new ViewQuestionResponseDetailPage(selenium);
     }
 
-    public ViewQuestionResponseDetailPage navigateToViewQuestionResponseDetailPage(String questionGroupName) {
-        selenium.click("link="+questionGroupName);
+    public ViewQuestionResponseDetailPage navigateToLatestViewQuestionResponseDetailPage(String questionGroupName) {
+        int linkID = Integer.parseInt(selenium.getAttribute("link="+questionGroupName+"@id"));
+        linkID++;
+        if(!selenium.isElementPresent("id="+linkID)) {
+            linkID--;
+        }
+        selenium.click("id="+linkID);
         waitForPageToLoad();
         return new ViewQuestionResponseDetailPage(selenium);
     }

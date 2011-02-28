@@ -66,7 +66,6 @@ public class QuestionGroupSavingsAccountTest extends UiTestCaseBase {
      * http://mifosforge.jira.com/browse/MIFOSTEST-659
      * @throws Exception
      */
-    @Test(enabled = false) // TODO js - investigate why this fails
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyAttachingQuestionGroupToSavingsAccount() throws Exception {
         //Given
@@ -94,8 +93,8 @@ public class QuestionGroupSavingsAccountTest extends UiTestCaseBase {
         //When
         questionGroupTestHelper.verifyErrorsWhileAttachingQuestionGroupToSavingsAccount(attachErrorParams);
         questionGroupTestHelper.attachQuestionGroupToSavingsAccount(attachParams);
-        attachParams.addTextResponse("NumberQuestion", "13");
-        attachParams.addTextResponse("NumberQuestion2", "10");
+        attachParams.addTextResponse("NumberQuestion", "14");
+        attachParams.addTextResponse("NumberQuestion2", "11");
         //Then
         questionGroupTestHelper.editQuestionGroupResponsesInSavingsAccount(attachParams);
     }
