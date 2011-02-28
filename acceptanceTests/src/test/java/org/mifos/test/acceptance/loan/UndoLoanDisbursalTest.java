@@ -20,43 +20,32 @@
 
 package org.mifos.test.acceptance.loan;
 
-import org.mifos.framework.util.DbUnitUtilities;
+import org.joda.time.DateTime;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
-import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
-import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.UndoLoanDisbursalSearchPage;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
-import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
+import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-@ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"loan","acceptance", "ui"})
+import java.io.UnsupportedEncodingException;
+
+@ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
+@Test(sequential = true, groups = {"loan", "acceptance", "ui", "no_db_unit"})
 public class UndoLoanDisbursalTest extends UiTestCaseBase {
     private LoanTestHelper loanTestHelper;
-
-    @Autowired
-    private DriverManagerDataSource dataSource;
-    @Autowired
-    private DbUnitUtilities dbUnitUtilities;
-    @Autowired
-    private InitializeApplicationRemoteTestingService initRemote;
-
-    private static final String START_DATA_SET = "acceptance_small_006_dbunit.xml";
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
-
         loanTestHelper = new LoanTestHelper(selenium);
     }
 
@@ -70,20 +59,24 @@ public class UndoLoanDisbursalTest extends UiTestCaseBase {
      * is of a loan which is "active in bad standing".
      * Client loan.
      * http://mifosforge.jira.com/browse/MIFOSTEST-22
+     *
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void undoClientLoanActiveInBadStanding() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, START_DATA_SET, dataSource, selenium);
-
-        String clientID = "0005-000000028";
-        String clientLoanID = "000100000000215";
-        String resultClickLink = "Stu1233266109404 Client1233266109404: ID 0005-000000028";
-
+        setTime(2011, 2, 28);
+        String clientID = "0002-000000024";
+        String clientLoanID = "000100000000040";
+        String resultClickLink = "WeeklyClient Monday: ID 0002-000000024";
         ClientViewDetailsPage clientViewDetailsPage = (ClientViewDetailsPage) loanTestHelper.reverseLoanDisbursal(clientLoanID, clientID, false, resultClickLink);
-
-        clientViewDetailsPage.verifyLoanDoesntExist("Acct #"+clientLoanID);
+        clientViewDetailsPage.verifyLoanDoesntExist("Acct #" + clientLoanID);
         loanTestHelper.verifyHistoryAndSummaryReversedLoan(clientViewDetailsPage.navigateToClosedAccountsPage(), clientLoanID);
+    }
+
+    private void setTime(int year, int monthOfYear, int dayOfMonth) throws UnsupportedEncodingException {
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTime targetTime = new DateTime(year, monthOfYear, dayOfMonth, 14, 0, 0, 0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
     }
 
     /**
@@ -91,51 +84,38 @@ public class UndoLoanDisbursalTest extends UiTestCaseBase {
      * is of a loan which is "active in good standing".
      * Client loan.
      * http://mifosforge.jira.com/browse/MIFOSTEST-20
+     *
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void undoClientLoanActiveInGoodStanding() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, START_DATA_SET, dataSource, selenium);
-
-        String clientID = "0005-000000028";
-        String clientLoanID = "000100000000182";
-        String resultClickLink = "Stu1233266109404 Client1233266109404: ID 0005-000000028";
-
+        setTime(2011, 3, 28);
+        String clientID = "0002-000000024";
+        String clientLoanID = "000100000000041";
+        String resultClickLink = "WeeklyClient Monday: ID 0002-000000024";
         ClientViewDetailsPage clientViewDetailsPage = (ClientViewDetailsPage) loanTestHelper.reverseLoanDisbursal(clientLoanID, clientID, false, resultClickLink);
-
-        clientViewDetailsPage.verifyLoanDoesntExist("Acct #"+clientLoanID);
-        loanTestHelper.verifyHistoryAndSummaryReversedLoan(clientViewDetailsPage.navigateToClosedAccountsPage(), clientLoanID, "3003.0", "0.0", "3003.0");
+        clientViewDetailsPage.verifyLoanDoesntExist("Acct #" + clientLoanID);
+        loanTestHelper.verifyHistoryAndSummaryReversedLoan(clientViewDetailsPage.navigateToClosedAccountsPage(), clientLoanID, "104613.0", "0.0", "104613.0", 1);
     }
 
     /**
-     * Verify whether the user can reverse a Group loan when the Account is in different statuses
+     * Verify whether the user can reverse a Group loan when the Account is in different status
      * Group loan.
      * http://mifosforge.jira.com/browse/MIFOSTEST-26
+     *
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void reverseGroupLoanWhenAccInDiffStatuses() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, START_DATA_SET, dataSource, selenium);
-
-        String groupName = "MyGroup1233266255641";
-        String groupID = "0006-000000045";
-        String groupLoanID = "000100000000206";
-        String resultClickLink = "MyGroup1233266255641: ID 0006-000000045";
-
-        CreateLoanAccountSearchParameters searchParams = new CreateLoanAccountSearchParameters();
-        searchParams.setSearchString(groupName);
-        searchParams.setLoanProduct("WeeklyGroupFlatLoanWithOnetimeFee");
-
-
-        LoanAccountPage loanAccountPage = loanTestHelper.createDefaultLoanAccount(searchParams);
-        String loanID = loanAccountPage.getAccountId();
-        UndoLoanDisbursalSearchPage undoSearchPage = loanAccountPage
-            .navigateToAdminPageUsingHeaderTab()
-            .navigateToUndoLoanDisbursal();
-        undoSearchPage.verifyLoanCantBeReversed(loanID);
-
+    public void reverseGroupLoanWhenAccInDiffStatus() throws Exception {
+        String groupID = "0002-000000004";
+        String groupLoanID = "000100000000042";
+        String resultClickLink = "group1: ID 0002-000000004";
         GroupViewDetailsPage groupViewDetailsPage = (GroupViewDetailsPage) loanTestHelper.reverseLoanDisbursal(groupLoanID, groupID, true, resultClickLink);
-
-        groupViewDetailsPage.verifyLoanDoesntExist("Acct #"+groupLoanID);
+        groupViewDetailsPage.verifyLoanDoesntExist("Acct #" + groupLoanID);
+        String loanID = "000100000000011";
+        UndoLoanDisbursalSearchPage undoSearchPage = new NavigationHelper(selenium)
+                .navigateToAdminPage()
+                .navigateToUndoLoanDisbursal();
+        undoSearchPage.verifyLoanCantBeReversed(loanID);
     }
 }

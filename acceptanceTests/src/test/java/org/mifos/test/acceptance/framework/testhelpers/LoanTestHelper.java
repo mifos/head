@@ -488,7 +488,7 @@ public class LoanTestHelper {
      * @param loanID
      */
     public void verifyHistoryAndSummaryReversedLoan(ClosedAccountsPage closedAccountPage, String loanID) {
-        verifyHistoryAndSummaryReversedLoan(closedAccountPage, loanID, null, null, null);
+        verifyHistoryAndSummaryReversedLoan(closedAccountPage, loanID, null, null, null, 0);
     }
 
     /**
@@ -498,8 +498,9 @@ public class LoanTestHelper {
      * @param totalOriginalLoan
      * @param totalAmountPaid
      * @param totalLoanBalance
+     * @param transactionCount
      */
-    public void verifyHistoryAndSummaryReversedLoan(ClosedAccountsPage closedAccountPage, String loanID, String totalOriginalLoan, String totalAmountPaid, String totalLoanBalance) {
+    public void verifyHistoryAndSummaryReversedLoan(ClosedAccountsPage closedAccountPage, String loanID, String totalOriginalLoan, String totalAmountPaid, String totalLoanBalance, int transactionCount) {
         LoanAccountPage loanAccountPage = closedAccountPage.verifyAndNavigateToOneClosedLoan(loanID);
         loanAccountPage.verifyStatus(EditLoanAccountStatusParameters.CANCEL, EditLoanAccountStatusParameters.CANCEL_REASON_LOAN_REVERSAL);
         if(totalOriginalLoan != null) {
@@ -508,7 +509,7 @@ public class LoanTestHelper {
             loanAccountPage.verifyLoanTotalBalance(totalLoanBalance);
             loanAccountPage.verifyClosedLoanPerformanceHistory();
             TransactionHistoryPage transactionHistoryPage = loanAccountPage.navigateToTransactionHistory();
-            transactionHistoryPage.verifyTransactionHistory(0, 0, 4);
+            transactionHistoryPage.verifyTransactionHistory(0, transactionCount, 4);
         }
     }
 
