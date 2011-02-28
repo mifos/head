@@ -30,6 +30,8 @@ import org.joda.time.DateTime;
 import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
+import org.mifos.test.acceptance.framework.account.AccountStatus;
+import org.mifos.test.acceptance.framework.account.EditAccountStatusParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
 import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
@@ -169,29 +171,9 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
     public void verifyResponsesDuringCreationOfLoanAccount() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_016_dbunit.xml", dataSource, selenium);
 
-        List<String> group1sec1 = new ArrayList<String>();
-        group1sec1.add("DateQuestion");
-        group1sec1.add("MultiSelect");
-        List<String> group1sec2 = new ArrayList<String>();
-        group1sec2.add("question 4");
-        Map<String, List<String>> existingQuestions1 = new HashMap<String, List<String>>();
-        existingQuestions1.put("sec 1", group1sec1);
-        existingQuestions1.put("sec 2", group1sec2);
-        Map<String, List<String>> existingQuestions2 = new HashMap<String, List<String>>();
-        List<String> group2sec1 = new ArrayList<String>();
-        group2sec1.add("question 2");
-        existingQuestions2.put("section 1", group2sec1);
-        CreateQuestionGroupParameters createQuestionGroupParameters = new CreateQuestionGroupParameters();
-        createQuestionGroupParameters.setTitle("createCenter");
-        createQuestionGroupParameters.setAnswerEditable(true);
-        createQuestionGroupParameters.setExistingQuestions(existingQuestions1);
-        createQuestionGroupParameters.setAppliesTo("Create Loan");
+        CreateQuestionGroupParameters createQuestionGroupParameters = getCreateQuestionGroupParameters1("createCenter", "Create Loan");
         createQuestionGroupParameters.setApplyToAllLoanProducts(true);
-        CreateQuestionGroupParameters createQuestionGroupParameters2 = new CreateQuestionGroupParameters();
-        createQuestionGroupParameters2.setTitle("crcenter2");
-        createQuestionGroupParameters2.setAnswerEditable(true);
-        createQuestionGroupParameters2.setExistingQuestions(existingQuestions2);
-        createQuestionGroupParameters2.setAppliesTo("Create Loan");
+        CreateQuestionGroupParameters createQuestionGroupParameters2 = getCreateQuestionGroupParameters2("crcenter2", "Create Loan");
         createQuestionGroupParameters2.setApplyToAllLoanProducts(true);
 
         CreateLoanAccountSearchParameters createLoanAccountSearchParameters = new CreateLoanAccountSearchParameters();
@@ -242,9 +224,109 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
         viewQuestionResponseDetailPage.verifyQuestionPresent("DateQuestion", "11/02/2011");
     }
 
+    /**
+     * Capturing responses while approving Loan account
+     * http://mifosforge.jira.com/browse/MIFOSTEST-684
+     * @throws Exception
+     */
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void verifyResponsesDuringLoanAccountApproval() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_016_dbunit.xml", dataSource, selenium);
+
+        CreateQuestionGroupParameters createQuestionGroupParameters = getCreateQuestionGroupParameters1("approveloan", "Approve Loan");
+        CreateQuestionGroupParameters createQuestionGroupParameters2 = getCreateQuestionGroupParameters2("aploan2", "Approve Loan");
+
+        CreateLoanAccountSearchParameters createLoanAccountSearchParameters = new CreateLoanAccountSearchParameters();
+        createLoanAccountSearchParameters.setLoanProduct("WeeklyFlatLoanWithOneTimeFees");
+        createLoanAccountSearchParameters.setSearchString("Stu1232993852651 Client1232993852651");
+
+        EditAccountStatusParameters editAccountStatusParameters = new EditAccountStatusParameters();
+        editAccountStatusParameters.setAccountStatus(AccountStatus.LOAN_APPROVED);
+        editAccountStatusParameters.setNote("note note");
+
+        QuestionResponseParameters questionResponseParameters = new QuestionResponseParameters();
+        questionResponseParameters.addSingleSelectAnswer("questionGroups[0].sectionDetails[0].questions[0].value", "no");
+        questionResponseParameters.addTextAnswer("questionGroups[0].sectionDetails[1].questions[0].value", "18/02/2011");
+        questionResponseParameters.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[1].valuesAsArray", "second");
+        questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[0].questions[0].value", "222");
+        CreateQuestionParameters createQuestionParameters = new CreateQuestionParameters();
+        createQuestionParameters.setType(createQuestionParameters.TYPE_FREE_TEXT);
+        createQuestionParameters.setText("newQuestion232");
+        List<CreateQuestionParameters> newQuestionList = new ArrayList<CreateQuestionParameters>();
+        newQuestionList.add(createQuestionParameters);
+        String[] questionsExist = {"newQuestion232", "DateQuestion"};
+        String[] questionsInactive = {"question 2", "MultiSelect", "question 4"};
+        Map<String, String> questionsAndAnswers = new HashMap<String, String>();
+        questionsAndAnswers.put("MultiSelect", "second");
+        questionsAndAnswers.put("DateQuestion", "11/02/2011");
+        questionsAndAnswers.put("question 2", "222");
+        questionsAndAnswers.put("question 4", "no");
+
+        questionGroupTestHelper.createQuestionGroup(createQuestionGroupParameters);
+        questionGroupTestHelper.createQuestionGroup(createQuestionGroupParameters2);
+
+        LoanAccountPage loanAccountPage = loanTestHelper.createDefaultLoanAccount(createLoanAccountSearchParameters);
+        String loanID = loanAccountPage.getAccountId();
+        loanAccountPage = loanTestHelper.createDefaultLoanAccount(createLoanAccountSearchParameters);
+        String loanID2 = loanAccountPage.getAccountId();
+
+        QuestionResponsePage questionResponsePage = questionGroupTestHelper.navigateToQuestionResponsePageDuringLoanApproval(loanID, editAccountStatusParameters);
+        questionResponsePage.populateAnswers(questionResponseParameters);
+        questionResponsePage = questionResponsePage
+            .continueAndNavigateToEditAccountStatusConfirmationPage()
+            .navigateToEditStatus()
+            .submitAndNavigateToQuestionResponsePage(editAccountStatusParameters);
+        questionResponseParameters.addTextAnswer("questionGroups[0].sectionDetails[1].questions[0].value", "11/02/2011");
+        questionResponsePage.populateAnswers(questionResponseParameters);
+        questionResponsePage
+            .continueAndNavigateToEditAccountStatusConfirmationPage()
+            .submitAndNavigateToLoanAccountPage();
+
+        questionGroupTestHelper.markQuestionAsInactive("question 4");
+        questionGroupTestHelper.markQuestionAsInactive("MultiSelect");
+        questionGroupTestHelper.markQuestionGroupAsInactive("aploan2");
+        questionGroupTestHelper.addNewQuestionsToQuestionGroup("approveloan", newQuestionList);
+
+        questionResponsePage = questionGroupTestHelper.navigateToQuestionResponsePageDuringLoanApproval(loanID2, editAccountStatusParameters);
+        questionResponsePage.verifyQuestionsExists(questionsExist);
+        questionResponsePage.verifyQuestionsDoesnotappear(questionsInactive);
+
+        verifyQuestionResponsesExistInDatabase(loanID, "Approve Loan", questionsAndAnswers);
+    }
+
     private void verifyQuestionResponsesExistInDatabase(String loanID, String event, Map<String, String> questions) throws SQLException {
         for(String question : questions.keySet()) {
-            Assert.assertTrue(applicationDatabaseOperation.deosQuestionResponseForLoanExist(loanID, event, question, questions.get(question)));
+            Assert.assertTrue(applicationDatabaseOperation.deosQuestionResponseForLoanExist(loanID, event, question, questions.get(question)), "Can't find question '"+question+"' and answer '"+questions.get(question)+"' in database");
         }
+    }
+
+    private CreateQuestionGroupParameters getCreateQuestionGroupParameters1(String name, String applied) {
+        List<String> group1sec1 = new ArrayList<String>();
+        group1sec1.add("DateQuestion");
+        group1sec1.add("MultiSelect");
+        List<String> group1sec2 = new ArrayList<String>();
+        group1sec2.add("question 4");
+        Map<String, List<String>> existingQuestions1 = new HashMap<String, List<String>>();
+        existingQuestions1.put("sec 1", group1sec1);
+        existingQuestions1.put("sec 2", group1sec2);
+        CreateQuestionGroupParameters createQuestionGroupParameters = new CreateQuestionGroupParameters();
+        createQuestionGroupParameters.setTitle(name);
+        createQuestionGroupParameters.setAnswerEditable(true);
+        createQuestionGroupParameters.setExistingQuestions(existingQuestions1);
+        createQuestionGroupParameters.setAppliesTo(applied);
+        return createQuestionGroupParameters;
+    }
+
+    private CreateQuestionGroupParameters getCreateQuestionGroupParameters2(String name, String applied) {
+        Map<String, List<String>> existingQuestions2 = new HashMap<String, List<String>>();
+        List<String> group2sec1 = new ArrayList<String>();
+        group2sec1.add("question 2");
+        existingQuestions2.put("section 1", group2sec1);
+        CreateQuestionGroupParameters createQuestionGroupParameters2 = new CreateQuestionGroupParameters();
+        createQuestionGroupParameters2.setTitle(name);
+        createQuestionGroupParameters2.setAnswerEditable(true);
+        createQuestionGroupParameters2.setExistingQuestions(existingQuestions2);
+        createQuestionGroupParameters2.setAppliesTo(applied);
+        return createQuestionGroupParameters2;
     }
 }

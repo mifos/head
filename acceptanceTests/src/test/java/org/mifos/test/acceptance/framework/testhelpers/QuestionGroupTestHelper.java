@@ -23,6 +23,7 @@ package org.mifos.test.acceptance.framework.testhelpers;
 import java.util.List;
 import java.util.Map;
 
+import org.mifos.test.acceptance.framework.account.EditAccountStatusParameters;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.center.CenterViewDetailsPage;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
@@ -404,6 +405,13 @@ public class QuestionGroupTestHelper {
         .navigateToCreateLoanAccountUsingLeftMenu()
         .searchAndNavigateToCreateLoanAccountPage(createLoanAccountSearchParameters)
         .submitAndNavigateToQuestionResponsePage();
+    }
+
+    public QuestionResponsePage navigateToQuestionResponsePageDuringLoanApproval(String loanID, EditAccountStatusParameters editAccountStatusParameters) {
+        return navigationHelper
+        .navigateToLoanAccountPage(loanID)
+        .navigateToEditAccountStatus()
+        .submitAndNavigateToQuestionResponsePage(editAccountStatusParameters);
     }
 
     public ViewQuestionResponseDetailPage navigateToLoanViewQuestionResponseDetailPage(String loanID) {

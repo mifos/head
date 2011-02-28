@@ -29,6 +29,7 @@ import org.mifos.test.acceptance.framework.group.CreateGroupConfirmationPage;
 import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountReviewInstallmentPage;
 import org.mifos.test.acceptance.framework.loan.DisburseLoanConfirmationPage;
+import org.mifos.test.acceptance.framework.loan.EditAccountStatusConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 
 import java.util.Map;
@@ -125,6 +126,11 @@ public class QuestionResponsePage extends MifosPage {
     public CreateLoanAccountReviewInstallmentPage continueAndNavigateToCreateLoanAccountReviewInstallmentPage() {
         navigateToNextPage();
         return new CreateLoanAccountReviewInstallmentPage(selenium);
+    }
+
+    public EditAccountStatusConfirmationPage continueAndNavigateToEditAccountStatusConfirmationPage() {
+        navigateToNextPage();
+        return new EditAccountStatusConfirmationPage(selenium);
     }
 
     public CreateUserPreviewDataPage continueAndNavigateToCreateUserPreviewPage(){
