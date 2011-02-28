@@ -280,7 +280,7 @@ public class LoanTestHelper {
         return loanAccountPage;
     }
 
-    public void editLoanProduct(String loanProduct, boolean interestWaiver) {
+    public void enableInterestWaiver(String loanProduct, boolean interestWaiver) {
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         ViewLoanProductsPage viewLoanProducts = adminPage.navigateToViewLoanProducts();
         LoanProductDetailsPage loanProductDetailsPage = viewLoanProducts.viewLoanProductDetails(loanProduct);
