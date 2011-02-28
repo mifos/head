@@ -286,10 +286,11 @@ public class ClientTest extends UiTestCaseBase {
     }
 
     // http://mifosforge.jira.com/browse/MIFOSTEST-663
+    @Test(enabled = false) // TODO js - make it no_db_unit
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void closeClientAccountWithQG() throws Exception {
         //Given
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_016_dbunit.xml", dataSource, selenium);
+        //initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_016_dbunit.xml", dataSource, selenium);
 
         CreateGroupSubmitParameters groupParams = new CreateGroupSubmitParameters();
         groupParams.setGroupName("GroupTest");
