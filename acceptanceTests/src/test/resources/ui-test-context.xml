@@ -24,6 +24,6 @@
     <bean id="applicationDatabaseOperation" class="org.mifos.test.acceptance.util.ApplicationDatabaseOperation" />
 
     <bean id="serverPort" class="java.lang.String">
-        <constructor-arg value="${servlet.port}" />
+        <constructor-arg value="${SERVLET_PORT}" />
     </bean>
 </beans>
