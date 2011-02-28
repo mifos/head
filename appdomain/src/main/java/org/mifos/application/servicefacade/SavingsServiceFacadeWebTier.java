@@ -643,7 +643,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             amount = lastPayment.getAmount().toString();
             depositOrWithdrawal = lastPayment.isSavingsDepositOrWithdrawal();
         }
-        if (!savings.getCustomer().isClient()) {
+        if (!savings.getCustomer().isClient() && lastPayment != null) {
             CustomerBO customer = null;
             for (AccountTrxnEntity accountTrxn : lastPayment.getAccountTrxns()) {
                 customer = accountTrxn.getCustomer();
