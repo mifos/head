@@ -31,6 +31,7 @@ public class CreateQuestionGroupParameters {
     private Map<String, List<CreateQuestionParameters>> newQuestions;
     private Map<String, List<String>> existingQuestions;
     private boolean answerEditable = false;
+    private boolean applyToAllLoanProducts = false;
 
     public CreateQuestionGroupParameters() {
         super();
@@ -96,5 +97,13 @@ public class CreateQuestionGroupParameters {
             this.newQuestions.put(section, new ArrayList<CreateQuestionParameters>());
         }
         this.newQuestions.get(section).add(question);
+    }
+
+    public void setApplyToAllLoanProducts(boolean applyToAllLoanProducts) {
+        this.applyToAllLoanProducts = applyToAllLoanProducts;
+    }
+
+    public boolean isApplyToAllLoanProducts() {
+        return applyToAllLoanProducts;
     }
 }

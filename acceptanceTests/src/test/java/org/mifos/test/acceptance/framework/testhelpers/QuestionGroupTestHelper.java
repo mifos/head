@@ -28,6 +28,7 @@ import org.mifos.test.acceptance.framework.center.CenterViewDetailsPage;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
 import org.mifos.test.acceptance.framework.loan.AttachSurveyPage;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 import org.mifos.test.acceptance.framework.office.CreateOfficePreviewDataPage;
@@ -395,6 +396,20 @@ public class QuestionGroupTestHelper {
             .navigateToLoanAccountPage(loanAccountID)
             .navigateToDisburseLoan()
             .submitAndNavigateToQuestionResponsePage(disburseParams);
+    }
+
+    public QuestionResponsePage navigateToQuestionResponsePageDuringLoanCreation(CreateLoanAccountSearchParameters createLoanAccountSearchParameters) {
+        return navigationHelper
+        .navigateToClientsAndAccountsPage()
+        .navigateToCreateLoanAccountUsingLeftMenu()
+        .searchAndNavigateToCreateLoanAccountPage(createLoanAccountSearchParameters)
+        .submitAndNavigateToQuestionResponsePage();
+    }
+
+    public ViewQuestionResponseDetailPage navigateToLoanViewQuestionResponseDetailPage(String loanID) {
+        return navigationHelper
+            .navigateToLoanAccountPage(loanID)
+            .navigateToAdditionalInformationPage();
     }
 
     public SavingsAccountDetailPage editQuestionGroupResponsesInSavingsAccount(AttachQuestionGroupParameters attachParams) {
