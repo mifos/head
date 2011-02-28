@@ -88,15 +88,15 @@ public class LoanRepayTest extends UiTestCaseBase {
     private void verifyAccountActivity() {
         LoanAccountPage accountPage = navigationHelper.navigateToLoanAccountPage(loanId);
         AccountActivityPage accountActivityPage = accountPage.navigateToAccountActivityPage();
-        Assert.assertEquals(accountActivityPage.getLastPrinciplePaid(), "1000.0");
-        Assert.assertEquals(accountActivityPage.getLastInterestPaid(), "4.6");
-        Assert.assertEquals(accountActivityPage.getLastFeePaid().trim(), "10.0");
-        Assert.assertEquals(accountActivityPage.getLastPenaltyPaid(), "5.0");
-        Assert.assertEquals(accountActivityPage.getLastTotalPaid(), "1019.6");
-        Assert.assertEquals(accountActivityPage.getRunningPrinciple(), "0.0");
-        Assert.assertEquals(accountActivityPage.getRunningInterest(), "0.0");
-        Assert.assertEquals(accountActivityPage.getRunningFees(), "0.0");
-        Assert.assertEquals(accountActivityPage.getRunningTotal(), "0.0");
+        Assert.assertEquals(accountActivityPage.getLastPrinciplePaid(2), "1000.0");
+        Assert.assertEquals(accountActivityPage.getLastInterestPaid(2), "4.6");
+        Assert.assertEquals(accountActivityPage.getLastFeePaid(2).trim(), "10.0");
+        Assert.assertEquals(accountActivityPage.getLastPenalty(2), "5.0");
+        Assert.assertEquals(accountActivityPage.getLastTotalPaid(2), "1019.6");
+        Assert.assertEquals(accountActivityPage.getRunningPrinciple(2), "0.0");
+        Assert.assertEquals(accountActivityPage.getRunningInterest(2), "0.0");
+        Assert.assertEquals(accountActivityPage.getRunningFees(2), "0.0");
+        Assert.assertEquals(accountActivityPage.getRunningTotal(2), "0.0");
     }
 
     private void verifyRepaymentSchedule() {

@@ -380,7 +380,7 @@ public class LoanTestHelper {
         loanAccountPage = applyPaymentConfirmationPage.submitAndNavigateToLoanAccountDetailsPage();
 
         AccountActivityPage accountActivityPage = loanAccountPage.navigateToAccountActivityPage();
-        accountActivityPage.verifyLastTotalPaid(paymentParams.getAmount());
+        accountActivityPage.verifyLastTotalPaid(paymentParams.getAmount(), 2);
         accountActivityPage.navigateBack();
 
         return loanAccountPage;
@@ -863,7 +863,7 @@ public class LoanTestHelper {
                 submitAndNavigateToApplyPaymentConfirmationPage(paymentParameters).
                 submitAndNavigateToLoanAccountDetailsPage();
         AccountActivityPage accountActivityPage = loanAccountPage.navigateToAccountActivityPage();
-        accountActivityPage.verifyLastTotalPaid(paymentAmount);
+        accountActivityPage.verifyLastTotalPaid(paymentAmount, 2);
         accountActivityPage.navigateBack();
         return loanAccountPage;
     }

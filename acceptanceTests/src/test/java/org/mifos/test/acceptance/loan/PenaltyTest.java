@@ -20,35 +20,26 @@
 
 package org.mifos.test.acceptance.loan;
 
-import org.dbunit.dataset.IDataSet;
 import org.joda.time.DateTime;
-import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
+import org.mifos.test.acceptance.framework.loan.AccountActivityPage;
 import org.mifos.test.acceptance.framework.loan.ChargeParameters;
-import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
+import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
+import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
-import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
+import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-@ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"loan","acceptance","ui"})
+@ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
+@Test(sequential = true, groups = {"loan", "acceptance", "ui", "no_db_unit"})
 public class PenaltyTest extends UiTestCaseBase {
 
     private LoanTestHelper loanTestHelper;
-
-    @Autowired
-    private DriverManagerDataSource dataSource;
-    @Autowired
-    private DbUnitUtilities dbUnitUtilities;
-    @Autowired
-    private InitializeApplicationRemoteTestingService initRemote;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -56,11 +47,9 @@ public class PenaltyTest extends UiTestCaseBase {
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
-
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = new DateTime(2009,7,11,14,0,0,0);
+        DateTime targetTime = new DateTime(2011, 2, 28, 14, 0, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
-
         loanTestHelper = new LoanTestHelper(selenium);
     }
 
@@ -70,56 +59,33 @@ public class PenaltyTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void applyPenalty() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml", dataSource, selenium);
-
-        // the data set contains an approved loan w/ id 000100000000005
-        // we use this loan for our test
+    public void applyPenaltyOnApprovedLoan() throws Exception {
         ChargeParameters params = new ChargeParameters();
-
         params.setType(ChargeParameters.MISC_PENALTY);
         params.setAmount("10");
+        LoanAccountPage loanAccountPage = loanTestHelper.applyCharge("000100000000038", params);
+        verifySummaryAndActivity(loanAccountPage, "10.0", "10.0", "Misc penalty applied", 2);
+    }
 
-        loanTestHelper.applyCharge("000100000000005", params);
-
-        verifyPenalties("PenaltyTest_001_result_dbunit.xml");
+    private void verifySummaryAndActivity(LoanAccountPage loanAccountPage, String penalty, String penaltyBalance, String activity, int row) {
+        Assert.assertEquals(loanAccountPage.getPenaltyPaid(), "0.0");
+        Assert.assertEquals(loanAccountPage.getPenaltyBalance(), penaltyBalance);
+        AccountActivityPage accountActivityPage = loanAccountPage.navigateToAccountActivityPage();
+        Assert.assertEquals(accountActivityPage.getLastPenalty(row), penalty);
+        Assert.assertEquals(accountActivityPage.getActivity(row), activity);
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void applyAndWaivePenalty() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml", dataSource, selenium);
-
-        // this account has an approved but not disbursed loan.
-        String accountId = "000100000000005";
-
-        DisburseLoanParameters disbursalParameters = new DisburseLoanParameters();
-
-        disbursalParameters.setDisbursalDateDD("08");
-        disbursalParameters.setDisbursalDateMM("07");
-        disbursalParameters.setDisbursalDateYYYY("2009");
-        disbursalParameters.setPaymentType(DisburseLoanParameters.CASH);
-
-        // we disburse the loan so that we can waive the penalty.
-        loanTestHelper.disburseLoan(accountId, disbursalParameters);
-
+    public void applyAndWaivePenaltyOnDisbursedLoan() throws Exception {
+        String accountId = "000100000000039";
         ChargeParameters feeParameters = new ChargeParameters();
         feeParameters.setAmount("15");
         feeParameters.setType(ChargeParameters.MISC_PENALTY);
-
-        loanTestHelper.applyCharge(accountId, feeParameters);
-
+        LoanAccountPage loanAccountPage = loanTestHelper.applyCharge(accountId, feeParameters);
+        verifySummaryAndActivity(loanAccountPage, "15.0", "15.0", "Misc penalty applied", 2);
         loanTestHelper.waivePenalty(accountId);
+        loanAccountPage = new NavigationHelper(selenium).navigateToLoanAccountPage(accountId);
+        verifySummaryAndActivity(loanAccountPage, "15.0", "0.0", "Penalty waived", 2);
 
-        verifyPenalties("PenaltyTest_002_result_dbunit.xml");
-    }
-
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    private void verifyPenalties(String resultDataSetFile) throws Exception {
-        String[] tablesToValidate = { "LOAN_ACTIVITY_DETAILS",  "LOAN_SUMMARY" };
-
-        IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromDataSetDirectoryFile(resultDataSetFile);
-        IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTables(dataSource, tablesToValidate);
-
-        dbUnitUtilities.verifyTables(tablesToValidate, databaseDataSet, expectedDataSet);
     }
 }
