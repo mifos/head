@@ -111,6 +111,9 @@ import org.mifos.clientportfolio.loan.service.CreateLoanSchedule;
 import org.mifos.clientportfolio.newloan.domain.IndividualLoanSchedule;
 import org.mifos.clientportfolio.newloan.domain.IndividualLoanScheduleFactory;
 import org.mifos.clientportfolio.newloan.domain.IndividualLoanScheduleImpl;
+import org.mifos.clientportfolio.newloan.domain.LoanDisbursementDateFactory;
+import org.mifos.clientportfolio.newloan.domain.LoanDisbursementDateFinder;
+import org.mifos.clientportfolio.newloan.domain.LoanDisbursmentDateFactoryImpl;
 import org.mifos.clientportfolio.newloan.domain.LoanInstallmentFactory;
 import org.mifos.clientportfolio.newloan.domain.LoanInstallmentFactoryImpl;
 import org.mifos.clientportfolio.newloan.domain.LoanInstallmentGenerator;
@@ -199,6 +202,7 @@ import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.Transformer;
+import org.mifos.schedule.ScheduledEvent;
 import org.mifos.security.MifosUser;
 import org.mifos.security.authorization.AuthorizationManager;
 import org.mifos.security.util.ActivityContext;
@@ -346,9 +350,10 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         final CustomerBO customer = this.customerDao.findCustomerById(customerId);
 
         final CustomerDetailDto customerDetailDto = customer.toCustomerDetailDto();
+        
+        // FIXME - keithw - below code is not needed when jsp/struts is removed as this is worked out for enter loan account details step.
         final Date nextMeetingDate = customer.getCustomerAccount().getNextMeetingDate();
-        final String recurMonth = customer.getCustomerMeeting().getMeeting().getMeetingDetails().getRecurAfter()
-                .toString();
+        final String recurMonth = customer.getCustomerMeeting().getMeeting().getMeetingDetails().getRecurAfter().toString();
         final boolean isGroup = customer.isGroup();
         final boolean isGlimEnabled = new ConfigurationPersistence().isGlimEnabled();
 
@@ -457,6 +462,16 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
             // setDateIntoForm
             CustomerBO customer = this.customerDao.findCustomerById(customerId);
+            
+            boolean isRepaymentIndependentOfMeetingEnabled = new ConfigurationBusinessService().isRepaymentIndepOfMeetingEnabled();
+            RecurringScheduledEventFactory recurringScheduledEventFactory = new RecurringScheduledEventFactoryImpl(); 
+            ScheduledEvent customerMeetingSchedule = recurringScheduledEventFactory.createScheduledEventFrom(customer.getCustomerMeetingValue());
+            ScheduledEvent loanProductMeetingSchedule = recurringScheduledEventFactory.createScheduledEventFrom(customer.getCustomerMeetingValue());
+            
+            LoanDisbursementDateFactory loanDisbursementDateFactory = new LoanDisbursmentDateFactoryImpl();
+            LoanDisbursementDateFinder loanDisbursementDateFinder = loanDisbursementDateFactory.create(customerMeetingSchedule, loanProductMeetingSchedule, isRepaymentIndependentOfMeetingEnabled);
+            LocalDate nextPossibleDisbursementDate = loanDisbursementDateFinder.findClosestMatchingDateFromAndInclusiveOf(new LocalDate());
+            
             LoanAmountOption eligibleLoanAmount = loanProduct.eligibleLoanAmount(customer.getMaxLoanAmount(loanProduct), customer.getMaxLoanCycleForProduct(loanProduct));
             LoanOfferingInstallmentRange eligibleNoOfInstall = loanProduct.eligibleNoOfInstall(customer.getMaxLoanAmount(loanProduct), customer.getMaxLoanCycleForProduct(loanProduct));
             
@@ -491,9 +506,6 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                 fundDtos.add(fundDto);
 			}
 
-            boolean isRepaymentIndependentOfMeetingEnabled = new ConfigurationBusinessService()
-                    .isRepaymentIndepOfMeetingEnabled();
-
             ProductDetailsDto productDto = loanProduct.toDetailsDto();
             CustomerDetailDto customerDetailDto = customer.toCustomerDetailDto();
             
@@ -508,7 +520,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                     interestTypeName, fundDtos, collateralOptions, purposeOfLoanOptions, 
                     defaultFeeOptions, additionalFeeOptions, defaultFees, eligibleLoanAmount.getDefaultLoanAmountString(), 
                     eligibleLoanAmount.getMaxLoanAmountString(), eligibleLoanAmount.getMinLoanAmountString(), defaultInterestRate, maxInterestRate, minInterestRate,
-                    eligibleNoOfInstall.getDefaultNoOfInstall().intValue(), eligibleNoOfInstall.getMaxNoOfInstall().intValue(), eligibleNoOfInstall.getMinNoOfInstall().intValue());
+                    eligibleNoOfInstall.getDefaultNoOfInstall().intValue(), eligibleNoOfInstall.getMaxNoOfInstall().intValue(), eligibleNoOfInstall.getMinNoOfInstall().intValue(), nextPossibleDisbursementDate);
 
         } catch (SystemException e) {
             throw new MifosRuntimeException(e);

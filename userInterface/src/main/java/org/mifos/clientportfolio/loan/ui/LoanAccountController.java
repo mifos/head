@@ -88,10 +88,10 @@ public class LoanAccountController {
     	formBean.setSourceOfFundsMandatory(mandatoryHidden.isMandatoryLoanSourceOfFund());
     	formBean.setPurposeOfLoanMandatory(mandatoryHidden.isMandatoryLoanAccountPurpose());
     	
-    	LocalDate today = new LocalDate();
-    	formBean.setDisbursalDateDay(today.getDayOfMonth());
-    	formBean.setDisbursalDateMonth(today.getMonthOfYear());
-    	formBean.setDisbursalDateYear(today.getYearOfEra());
+    	LocalDate possibleDisbursementDate = dto.getNextPossibleDisbursementDate();
+    	formBean.setDisbursalDateDay(possibleDisbursementDate.getDayOfMonth());
+    	formBean.setDisbursalDateMonth(possibleDisbursementDate.getMonthOfYear());
+    	formBean.setDisbursalDateYear(possibleDisbursementDate.getYearOfEra());
     	
     	formBean.setCollateralNotes("");
     	
