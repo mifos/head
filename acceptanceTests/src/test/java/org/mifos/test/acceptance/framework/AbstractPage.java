@@ -82,14 +82,6 @@ public class AbstractPage {
         }
     }
 
-    public void typeText(String locator, String text) {
-        selenium.focus(locator);
-        selenium.type(locator,text);
-//        selenium.keyDown(locator, tabKey);
-//        selenium.keyUp(locator, tabKey);
-        selenium.keyPressNative("9");
-    }
-
     public void waitForElementToPresent(final String name) {
         ExpectedCondition<Boolean> e = new ExpectedCondition<Boolean>() {
             public Boolean apply(WebDriver d) {

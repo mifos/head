@@ -36,13 +36,13 @@ public class ManageRolePage  extends MifosPage {
         return this;
     }
     public ManageRolePage disablePermission(String permissionValue) {
-        Assert.assertEquals("on", selenium.getValue(permissionValue));
+        Assert.assertTrue(selenium.isChecked(permissionValue));
         selenium.click(permissionValue);
         return this;
     }
 
     public ManageRolePage enablePermission(String permissionValue) {
-        Assert.assertEquals("off", selenium.getValue(permissionValue));
+        Assert.assertTrue(!selenium.isChecked(permissionValue));
         selenium.click(permissionValue);
         return this;
     }

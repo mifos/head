@@ -300,7 +300,8 @@ public class CreateLoanAccountEntryPage extends MifosPage {
     }
 
     public CreateLoanAccountEntryPage setInstallments(int noOfInstallment) {
-        typeText("noOfInstallments",String.valueOf(noOfInstallment));
+        selenium.type("noOfInstallments",String.valueOf(noOfInstallment));
+        selenium.fireEvent("noOfInstallments","blur");
         return this;
     }
 
