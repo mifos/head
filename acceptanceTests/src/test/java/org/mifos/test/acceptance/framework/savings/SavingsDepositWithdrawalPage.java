@@ -65,6 +65,7 @@ public class SavingsDepositWithdrawalPage  extends MifosPage{
         String clientId = params.getClientId();
         if (clientId != null) {
             selenium.select("applypayment_savingsaccount.input.customerId", "value=" + clientId);
+            waitForPageToLoad();
         }
     }
 

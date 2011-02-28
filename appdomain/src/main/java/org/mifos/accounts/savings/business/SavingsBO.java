@@ -1642,6 +1642,7 @@ public class SavingsBO extends AccountBO {
             LocalDate currentPostingPeriodStartDate = postingEvent
                     .findFirstDateOfPeriodForMatchingDate(nextPostingDate);
 
+            // FIXME throw an exception with the correct reason instead of returning false
             if (transactionLocalDate.isBefore(currentPostingPeriodStartDate)) {
                 return false;
             }
