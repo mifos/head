@@ -47,6 +47,9 @@ public class DefineNewLoanProductPage extends AbstractPage {
 
     public DefineNewLoanProductPage(Selenium selenium) {
         super(selenium);
+    }
+
+    public void verifyPage() {
         this.verifyPage("CreateLoanProduct");
     }
 
