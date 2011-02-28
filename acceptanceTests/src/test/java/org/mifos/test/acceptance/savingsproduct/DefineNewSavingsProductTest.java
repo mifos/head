@@ -489,10 +489,8 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
 
         //When
         SavingsProductParameters params = getMandatoryClientsMinimumBalanceSavingsProductParameters();
-        params.setInterestRate("10");
         params.setBalanceUsedForInterestCalculation(SavingsProductParameters.AVERAGE_BALANCE);
         params.setTypeOfDeposits(SavingsProductParameters.VOLUNTARY);
-        params.setBalanceUsedForInterestCalculation(SavingsProductParameters.AVERAGE_BALANCE);
 
         String productName = params.getProductInstanceName();
         String savingsId = createSavingsAccount(params);
@@ -541,7 +539,6 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
     }
 
     //http://mifosforge.jira.com/browse/MIFOSTEST-144
-    //disabled due to MIFOS-4810
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")// one of the dependent methods throws Exception
     @Test(enabled=true)
     public void savingsAdjustmentsForDepositsWithdrawals() throws Exception {
