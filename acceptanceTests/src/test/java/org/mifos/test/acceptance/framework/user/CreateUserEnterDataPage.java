@@ -22,6 +22,7 @@ package org.mifos.test.acceptance.framework.user;
 
 import org.junit.Assert;
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -68,6 +69,12 @@ public class CreateUserEnterDataPage extends MifosPage {
         fillForm(parameters);
         waitForPageToLoad();
         return new CreateUserPreviewDataPage(selenium);
+    }
+
+    public QuestionResponsePage submitAndNavigateToQuestionResponsePage(CreateUserParameters parameters) {
+        fillForm(parameters);
+        waitForPageToLoad();
+        return new QuestionResponsePage(selenium);
     }
 
     public void verifyPasswordChangeError(){

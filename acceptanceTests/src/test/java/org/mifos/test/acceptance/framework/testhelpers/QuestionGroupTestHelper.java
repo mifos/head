@@ -51,6 +51,7 @@ import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionnairePage;
 import org.mifos.test.acceptance.framework.questionnaire.ViewAllQuestionGroupsPage;
 import org.mifos.test.acceptance.framework.questionnaire.ViewAllQuestionsPage;
+import org.mifos.test.acceptance.framework.savings.SavingsAccountDetailPage;
 import org.testng.Assert;
 
 public class QuestionGroupTestHelper {
@@ -221,6 +222,41 @@ public class QuestionGroupTestHelper {
         return questionnairePage.cancelAndNavigateToLoanViewDetailsPage();
     }
 
+    public ClientViewDetailsPage attachQuestionGroupToClient(AttachQuestionGroupParameters attachParams) {
+        return (ClientViewDetailsPage) navigationHelper
+            .navigateToClientViewDetailsPage(attachParams.getTarget())
+            .navigateToAttachSurveyPage()
+            .verifyNoneSelected()
+            .selectSurvey(attachParams.getQuestionGroupName())
+            .verifyEmptyTextQuestionResponses(attachParams.getTextResponses())
+            .verifyEmptyCheckQuestionResponses(attachParams.getCheckResponses())
+            .setResponses(attachParams.getTextResponses())
+            .checkResponses(attachParams.getCheckResponses())
+            .submitAndNavigateToClientViewDetailsPage();
+    }
+
+    public ClientViewDetailsPage editQuestionGroupResponsesInClient(AttachQuestionGroupParameters attachParams) {
+        return (ClientViewDetailsPage) navigationHelper
+        .navigateToClientViewDetailsPage(attachParams.getTarget())
+            .navigateToViewQuestionResponseDetailPage(attachParams.getQuestionGroupName())
+            .navigateToEditSection("0")
+            .setResponses(attachParams.getTextResponses())
+            .checkResponses(attachParams.getCheckResponses())
+            .submitAndNavigateToClientViewDetailsPage();
+    }
+
+    public ClientViewDetailsPage verifyErrorsWhileAttachingQuestionGroupToClient(AttachQuestionGroupParameters attachParams) {
+        QuestionnairePage questionnairePage = (QuestionnairePage) navigationHelper
+            .navigateToClientViewDetailsPage(attachParams.getTarget())
+            .navigateToAttachSurveyPage()
+            .selectSurvey(attachParams.getQuestionGroupName())
+            .setResponses(attachParams.getTextResponses())
+            .checkResponses(attachParams.getCheckResponses())
+            .submitAndNavigateToClientViewDetailsPage();
+        questionnairePage.verifyErrorsOnPage(attachParams.getErrors());
+        return questionnairePage.cancel();
+    }
+
     public void createQuestions(List<CreateQuestionParameters> questions){
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         CreateQuestionPage createQuestionPage = adminPage.navigateToCreateQuestionPage();
@@ -365,5 +401,48 @@ public class QuestionGroupTestHelper {
             .navigateToLoanAccountPage(loanAccountID)
             .navigateToDisburseLoan()
             .submitAndNavigateToQuestionResponsePage(disburseParams);
+    }
+
+    public SavingsAccountDetailPage editQuestionGroupResponsesInSavingsAccount(AttachQuestionGroupParameters attachParams) {
+        SavingsAccountDetailPage savingsAccountDetailPage = navigationHelper
+            .navigateToSavingsAccountDetailPage(attachParams.getTarget())
+            .navigateToViewQuestionResponseDetailPage(attachParams.getQuestionGroupName())
+            .navigateToEditSection("0")
+            .setResponses(attachParams.getTextResponses())
+            .checkResponses(attachParams.getCheckResponses())
+            .submitAndNavigateToSavingsAccountDetailPage();
+        ViewQuestionResponseDetailPage viewQuestionResponseDetailPage = savingsAccountDetailPage.navigateToViewQuestionResponseDetailPage(attachParams.getQuestionGroupName());
+        viewQuestionResponseDetailPage.verifyQuestionsAndAnswers(attachParams);
+        viewQuestionResponseDetailPage.navigateBack();
+        return new SavingsAccountDetailPage(selenium);
+    }
+
+    public SavingsAccountDetailPage attachQuestionGroupToSavingsAccount(AttachQuestionGroupParameters attachParams) {
+        return navigationHelper
+            .navigateToSavingsAccountDetailPage(attachParams.getTarget())
+            .navigateToAttachSurveyPage()
+            .selectSurvey(attachParams.getQuestionGroupName())
+            .setResponses(attachParams.getTextResponses())
+            .checkResponses(attachParams.getCheckResponses())
+           .submitAndNavigateToSavingsAccountDetailPage();
+    }
+
+    public SavingsAccountDetailPage verifyErrorsWhileAttachingQuestionGroupToSavingsAccount(AttachQuestionGroupParameters attachParams) {
+        QuestionnairePage questionnairePage = (QuestionnairePage) navigationHelper
+            .navigateToSavingsAccountDetailPage(attachParams.getTarget())
+            .navigateToAttachSurveyPage()
+            .cancelAttachQuestionGroup(attachParams.getQuestionGroupName())
+            .navigateToAttachSurveyPage()
+            .selectSurvey(attachParams.getQuestionGroupName())
+            .setResponses(attachParams.getTextResponses())
+            .checkResponses(attachParams.getCheckResponses())
+            .cancelAndNavigateToSavingsAccountDetailPage()
+            .navigateToAttachSurveyPage()
+            .selectSurvey(attachParams.getQuestionGroupName())
+            .setResponses(attachParams.getTextResponses())
+            .checkResponses(attachParams.getCheckResponses())
+            .submit();
+        questionnairePage.verifyErrorsOnPage(attachParams.getErrors());
+        return questionnairePage.cancelAndNavigateToSavingsAccountDetailPage();
     }
 }

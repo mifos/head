@@ -303,5 +303,11 @@ public class ClientViewDetailsPage extends MifosPage {
     public void verifyAmountDue(String amountDue){
         Assert.assertEquals(getAmountDue(), amountDue);
     }
+
+    public ViewQuestionResponseDetailPage navigateToViewQuestionResponseDetailPage(String questionGroupName) {
+        selenium.click("link="+questionGroupName);
+        waitForPageToLoad();
+        return new ViewQuestionResponseDetailPage(selenium);
+    }
 }
 

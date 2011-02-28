@@ -27,10 +27,12 @@ import org.mifos.test.acceptance.framework.center.CenterViewDetailsPage;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
+import org.mifos.test.acceptance.framework.user.UserViewDetailsPage;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import org.mifos.test.acceptance.framework.savings.SavingsAccountDetailPage;
 
 import org.testng.Assert;
 
@@ -49,6 +51,10 @@ public class QuestionnairePage extends MifosPage {
 
     public void verifyField(String locator, String text) {
         Assert.assertEquals(selenium.getText(locator), text);
+    }
+
+    public void verifyRadioGroup(String locator, String value, boolean checked){
+        Assert.assertEquals(selenium.isChecked(locator + " value="+ value),checked);
     }
 
     private String getQuestionLocator(String question) {
@@ -89,6 +95,16 @@ public class QuestionnairePage extends MifosPage {
         return selenium.isElementPresent("id=allErrors") ? new QuestionnairePage(selenium) : new ClientViewDetailsPage(selenium);
     }
 
+    public SavingsAccountDetailPage submitAndNavigateToSavingsAccountDetailPage() {
+        clickSubmit();
+        return new SavingsAccountDetailPage(selenium);
+    }
+
+    public MifosPage submitAndNavigateToPersonnalDetailsPage(){
+        clickSubmit();
+        return selenium.isElementPresent("id=allErrors") ? new QuestionnairePage(selenium) : new UserViewDetailsPage(selenium);
+    }
+
     public MifosPage submitAndNavigateToCenterViewDetailsPage() {
         clickSubmit();
         return selenium.isElementPresent("id=allErrors") ? new QuestionnairePage(selenium) : new CenterViewDetailsPage(selenium);
@@ -102,6 +118,11 @@ public class QuestionnairePage extends MifosPage {
     public MifosPage submitAndNavigateToLoanViewDetailsPage() {
         clickSubmit();
         return selenium.isElementPresent("id=allErrors") ? new QuestionnairePage(selenium) : new LoanAccountPage(selenium);
+    }
+
+    public MifosPage submitAndNavigateToClientViewDetailsPage() {
+        clickSubmit();
+        return selenium.isElementPresent("id=allErrors") ? new QuestionnairePage(selenium) : new ClientViewDetailsPage(selenium);
     }
 
     public void setResponsesForMultiSelect(String question, int totalChoices, String... choices) {
@@ -166,6 +187,11 @@ public class QuestionnairePage extends MifosPage {
     public LoanAccountPage cancelAndNavigateToLoanViewDetailsPage() {
         clickCancel();
         return new LoanAccountPage(selenium);
+    }
+
+    public SavingsAccountDetailPage cancelAndNavigateToSavingsAccountDetailPage() {
+        clickCancel();
+        return new SavingsAccountDetailPage(selenium);
     }
 
     public void verifyTextPresent(String expectedText, String errorMessage) {
