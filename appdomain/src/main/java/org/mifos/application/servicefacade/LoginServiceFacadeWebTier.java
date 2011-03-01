@@ -121,6 +121,9 @@ public class LoginServiceFacadeWebTier implements NewLoginServiceFacade {
             user.updatePassword(oldPassword, newPassword);
             this.personnelDao.save(user);
             this.transactionHelper.commitTransaction();
+        } catch (ApplicationException e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new BusinessRuleException(e.getKey(), e);
         } catch (Exception e) {
             this.transactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(e);
