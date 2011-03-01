@@ -756,12 +756,12 @@ public class DefineNewLoanProductPage extends AbstractPage {
         isTextPresentInPage("The Warning Threshold is invalid because the number of digits after the decimal separator exceeds the allowed number 2");
         isTextPresentInPage("The Indebtedness Ratio is invalid because the number of digits after the decimal separator exceeds the allowed number 2");
         isTextPresentInPage("The Repayment Capacity is invalid because the number of digits after the decimal separator exceeds the allowed number 2");
-        submitAndGotoNewLoanProductPreviewPage();
+        submitWithErrors();
     }
 
     private void verifyMinimumLimitForCashFlow() {
         fillCashFlow("-1", "-1", "149.9");
-        submitAndGotoNewLoanProductPreviewPage();
+        submitWithErrors();
         isTextPresentInPage("The Indebtedness Ratio is invalid because only positive numbers or decimal separator are allowed");
         isTextPresentInPage("The Repayment Capacity is invalid because it is not in between 150.0 and 1000.0");
         isTextPresentInPage("The Warning Threshold is invalid because only positive numbers or decimal separator are allowed");
@@ -769,7 +769,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
 
     private void verifyNonNumericForCashFlow() {
         fillCashFlow("abc", "abc", "abc");
-        submitAndGotoNewLoanProductPreviewPage();
+        submitWithErrors();
         isTextPresentInPage("The Warning Threshold is invalid because only positive numbers or decimal separator are allowed");
         isTextPresentInPage("The Indebtedness Ratio is invalid because only positive numbers or decimal separator are allowed");
         isTextPresentInPage("The Indebtedness Ratio is invalid because only positive numbers or decimal separator are allowed");
@@ -777,12 +777,12 @@ public class DefineNewLoanProductPage extends AbstractPage {
 
     private void verifyMaximumLimitForCashFlow() {
         fillCashFlow("99.1", "50", "1000");
-        submitAndGotoNewLoanProductPreviewPage();
+        submitWithErrors();
         isTextPresentInPage("The Warning Threshold is invalid because it is not in between 0.0 and 99.0");
         isTextPresentInPage("Inebtedness Ratio should be a value less than 50.0");
         isTextPresentInPage("Repayment Capacity should be a value less than 1000.0");
         fillCashFlow("100", "55", "1001");
-        submitAndGotoNewLoanProductPreviewPage();
+        submitWithErrors();
         isTextPresentInPage("The Warning Threshold is invalid because it is not in between 0.0 and 99.0");
         isTextPresentInPage("The Indebtedness Ratio is invalid because it is not in between 0.0 and 50.0");
         isTextPresentInPage("The Repayment Capacity is invalid because it is not in between 150.0 and 1000.0");
