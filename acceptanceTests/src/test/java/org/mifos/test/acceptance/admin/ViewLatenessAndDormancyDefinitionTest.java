@@ -66,8 +66,14 @@ public class ViewLatenessAndDormancyDefinitionTest extends UiTestCaseBase {
         //Then
         viewLatenessAndDormancyDefinitionPage.verifyLatenessAndDormancy("20", "10");
         //When
-        viewLatenessAndDormancyDefinitionPage.submitAndNavigateToAdminPage("10", "30");
+        adminPage = viewLatenessAndDormancyDefinitionPage.submitAndNavigateToAdminPage("10", "30");
 
+        // MIFOS-4774
+        adminPage.
+                navigateToViewLatenessAndDormancyDefinitionPage().
+                submitAndNavigateToAdminPage("1234", "4321").
+                navigateToViewLatenessAndDormancyDefinitionPage().
+                submitAndNavigateToAdminPage();
     }
 }
 

@@ -53,7 +53,7 @@
                     <span class="span-8">
                         [@spring.bind "formBean.latenessDays" /]
                             <input size="4" maxlength="4" type="text" id="lateness" name="${spring.status.expression}"
-                                   value="${spring.status.value?default("")}">&nbsp;[@spring.message "manageProducts.editLatenessDormancy.days" /]
+                                   value="${formBean.latenessDays?c}">&nbsp;[@spring.message "manageProducts.editLatenessDormancy.days" /]
                     </span>
                     </div>
                     <div class="clear">&nbsp;</div>
@@ -73,7 +73,7 @@
                 <span class="span-8">
                     [@spring.bind "formBean.dormancyDays" /]
                         <input size="4" maxlength="4" type="text" id="dormancy" name="${spring.status.expression}"
-                               value="${spring.status.value?default("")}">&nbsp;[@spring.message "manageProducts.editLatenessDormancy.days"/]
+                               value="${formBean.dormancyDays?c}">&nbsp;[@spring.message "manageProducts.editLatenessDormancy.days"/]
                 </span>
                     </div>
                     <div class="clear">&nbsp;</div>
