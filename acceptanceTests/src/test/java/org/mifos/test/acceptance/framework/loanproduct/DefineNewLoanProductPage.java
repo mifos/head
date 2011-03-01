@@ -638,6 +638,11 @@ public class DefineNewLoanProductPage extends AbstractPage {
         return new DefineNewLoanProductPreviewPage(selenium);
     }
 
+    public DefineNewLoanProductPage submitWithErrors() {
+        submit();
+        return this;
+    }
+
     private void submit() {
         selenium.click(previewButton);
         waitForPageToLoad();
@@ -816,4 +821,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
         selenium.click("LoanFeesList.button.add");
     }
 
+    public void verifyErrorInForm(String error) {
+        Assert.assertTrue(selenium.isTextPresent(error));
+    }
 }
