@@ -158,9 +158,7 @@ public class NavigationHelper {
 
     public DefineNewLoanProductPage navigateToDefineNewLoanProductPage() {
         AdminPage adminPage = navigateToAdminPage();
-        DefineNewLoanProductPage newLoanPage = adminPage.navigateToDefineLoanProduct();
-        newLoanPage.verifyPage();
-        return newLoanPage;
+        return adminPage.navigateToDefineLoanProduct();
     }
 
     public CreateCenterEnterDataPage navigateToCreateCenterEnterDataPage(String officeName){

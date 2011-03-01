@@ -23,6 +23,7 @@ package org.mifos.test.acceptance.framework.loan;
 import org.apache.commons.lang.StringUtils;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.account.EditAccountStatusParameters;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -47,20 +48,32 @@ public class AccountChangeStatusPage extends MifosPage {
         }
         selenium.type("change_status.input.note", params.getNote());
 
-        selenium.click("change_status.button.submit");
-
-        waitForPageToLoad();
+        submit();
         return new EditAccountStatusConfirmationPage(selenium);
     }
 
     public EditAccountStatusConfirmationPage setChangeStatusParametersAndSubmit(EditAccountStatusParameters editAccountStatusParameters){
-            selenium.check("name=newStatusId value=" + editAccountStatusParameters.getAccountStatus().getId());
-            selenium.fireEvent("name=newStatusId value=" + editAccountStatusParameters.getAccountStatus().getId(), "click");
+        populateFields(editAccountStatusParameters);
+        submit();
+        return new EditAccountStatusConfirmationPage(selenium);
+    }
+
+    public QuestionResponsePage submitAndNavigateToQuestionResponsePage(EditAccountStatusParameters editAccountStatusParameters) {
+        populateFields(editAccountStatusParameters);
+        submit();
+        return new QuestionResponsePage(selenium);
+    }
+
+    private void populateFields(EditAccountStatusParameters editAccountStatusParameters) {
+        selenium.check("name=newStatusId value=" + editAccountStatusParameters.getAccountStatus().getId());
+        selenium.fireEvent("name=newStatusId value=" + editAccountStatusParameters.getAccountStatus().getId(), "click");
 
         selenium.type("change_status.input.note", editAccountStatusParameters.getNote());
+    }
+
+    private void submit() {
         selenium.click("change_status.button.submit");
         waitForPageToLoad();
-        return new EditAccountStatusConfirmationPage(selenium);
     }
 
 }

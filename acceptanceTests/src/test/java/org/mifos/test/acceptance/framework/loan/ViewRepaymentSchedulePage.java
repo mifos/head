@@ -62,6 +62,10 @@ public class ViewRepaymentSchedulePage extends AbstractPage {
         return getCellOfScheduleTable(row, 1);
     }
 
+    private String getPrincipalOfInstallmentFromSchedule(int row) {
+        return getCellOfScheduleTable(row, 3);
+    }
+
     public LoanAccountPage navigateToLoanAccountPage() {
         selenium.click("id=loanRepayment.button.return");
         waitForPageToLoad();
@@ -196,6 +200,22 @@ public class ViewRepaymentSchedulePage extends AbstractPage {
             }
         }
         Assert.assertTrue(resault);
+    }
+
+    public void verifySchedulePrincipalWithGrace(Integer gracePeriodDuration) {
+        int rowCount = selenium.getXpathCount("//table[@id='installments']/tbody/tr").intValue();
+        Integer zeroPrincipalCount = 0;
+        for (int i = 1; i < rowCount; i++) {
+            if (getNoOfInstallmentFromSchedule(i).matches("^[0-9]+$")){
+                    if(getPrincipalOfInstallmentFromSchedule(i).equals("0.0")) {
+                        zeroPrincipalCount++;
+                    }
+                    else{
+                        break;
+                    }
+            }
+        }
+        Assert.assertEquals(gracePeriodDuration, zeroPrincipalCount);
     }
 
 }

@@ -59,6 +59,11 @@ public class CreateLoanAccountEntryPage extends MifosPage {
         return navigateToConfirmationPage();
     }
 
+    public QuestionResponsePage submitAndNavigateToQuestionResponsePage() {
+        submit();
+        return new QuestionResponsePage(selenium);
+    }
+
     public CreateLoanAccountConfirmationPage submitAndNavigateToLoanAccountConfirmationPage(CreateLoanAccountSubmitParameters formParameters,
                                                                                             QuestionResponseParameters responseParameters) {
         submitLoanAccount(formParameters);
