@@ -263,6 +263,9 @@ public class StandardAccountService implements AccountService {
         if (!loanAccount.paymentAmountIsValid(new Money(loanAccount.getCurrency(), payment.getPaymentAmount()))) {
             errors.add(InvalidPaymentReason.INVALID_PAYMENT_AMOUNT);
         }
+        if (loanAccount.getCustomer().isDisbursalPreventedDueToAnyExistingActiveLoansForTheSameProduct(loanAccount.getLoanOffering())) {
+            errors.add(InvalidPaymentReason.OTHER_ACTIVE_LOANS_FOR_THE_SAME_PRODUCT);
+        }
         return errors;
     }
 
