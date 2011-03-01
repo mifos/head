@@ -40,7 +40,7 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class CashFlowController {
     
-    private CashFlowService cashFlowService;
+    private final CashFlowService cashFlowService;
 
     @Autowired
     public CashFlowController(CashFlowService cashFlowService) {
@@ -55,6 +55,7 @@ public class CashFlowController {
         return new CashFlowForm(cashFlowDetail, cashFlowSettings.isCaptureCapitalLiabilityInfo(), cashFlowSettings.getLoanAmount(), cashFlowSettings.getIndebtednessRatio(), Locale.getDefault());
     }
     
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public List<MonthlyCashFlowDto> retrieveMonthlyCashflowDetails(CashFlowForm cashFlowForm, Date disbursementDate, Double loanAmount) {
         
         List<MonthlyCashFlowDto> cashflowDtos = new ArrayList<MonthlyCashFlowDto>();

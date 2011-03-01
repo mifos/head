@@ -36,7 +36,7 @@ import static org.mifos.platform.cashflow.CashFlowConstants.FIRST_DAY;
 
 public class CashFlowServiceImpl implements CashFlowService {
     
-    private CashFlowDao cashFlowDao;
+    private final CashFlowDao cashFlowDao;
 
     @Autowired
     public CashFlowServiceImpl(CashFlowDao cashFlowDao) {

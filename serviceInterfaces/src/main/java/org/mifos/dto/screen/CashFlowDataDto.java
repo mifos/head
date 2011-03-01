@@ -27,12 +27,12 @@ import java.util.Date;
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID", "EI_EXPOSE_REP", "EI_EXPOSE_REP2"}, justification="should disable at filter level and also for pmd - not important for us")
 public class CashFlowDataDto implements Serializable {
     
-    private String month = new String();
-    private String year = new String();
-    private String cumulativeCashflow = new String();
-    private String diffCumulativeCashflowAndInstallment = new String();
-    private String diffCumulativeCashflowAndInstallmentPercent = new String();
-    private String notes = new String();
+    private String month = "";
+    private String year = "";
+    private String cumulativeCashflow = "";
+    private String diffCumulativeCashflowAndInstallment = "";
+    private String diffCumulativeCashflowAndInstallmentPercent = "";
+    private String notes = "";
     private Date monthYear;
 
     public String getMonth() {
