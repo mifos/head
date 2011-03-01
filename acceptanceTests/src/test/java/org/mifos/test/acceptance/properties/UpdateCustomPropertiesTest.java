@@ -37,7 +37,6 @@ import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameter
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
-import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPreviewPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.SubmitFormParameters;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSearchParameters;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSubmitParameters;
@@ -444,7 +443,7 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
     {
         DefineNewLoanProductPage newLoanPage = navigationHelper.navigateToDefineNewLoanProductPage();
         newLoanPage.fillLoanParameters(formParameters);
-        DefineNewLoanProductPreviewPage previewPage = newLoanPage.submitAndGotoNewLoanProductPreviewPage();
+        DefineNewLoanProductPage previewPage = newLoanPage.submitWithErrors();
         if(checkInterestExceedsLimit)
         {
             previewPage.verifyErrorInForm(errorInterestExceedsLimit);

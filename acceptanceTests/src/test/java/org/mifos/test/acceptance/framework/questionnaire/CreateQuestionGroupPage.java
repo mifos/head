@@ -43,6 +43,9 @@ public class CreateQuestionGroupPage extends CreateQuestionGroupRootPage {
         for(String appliesTo: appliesToList) {
             selectAppliesTo(appliesTo);
         }
+        if(createQuestionGroupParameters.isApplyToAllLoanProducts()) {
+            selenium.check("applyToAllLoanProducts");
+        }
         selenium.click("id=_eventId_defineQuestionGroup");
         waitForPageToLoad();
     }

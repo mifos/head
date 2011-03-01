@@ -47,4 +47,10 @@ public class EditAccountStatusConfirmationPage extends MifosPage {
         waitForPageToLoad();
         return new SavingsAccountDetailPage(selenium);
     }
+
+    public AccountChangeStatusPage navigateToEditStatus() {
+        selenium.click("change_status_preview.button.edit");
+        waitForPageToLoad();
+        return new AccountChangeStatusPage(selenium);
+    }
 }

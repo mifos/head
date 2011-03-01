@@ -22,6 +22,7 @@ package org.mifos.test.acceptance.framework.loan;
 
 import com.thoughtworks.selenium.Selenium;
 import org.mifos.test.acceptance.framework.AbstractPage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 import org.testng.Assert;
 
 public class CreateLoanAccountPreviewPage extends AbstractPage {
@@ -91,5 +92,11 @@ public class CreateLoanAccountPreviewPage extends AbstractPage {
 
     public String getLoanAmount() {
         return selenium.getText("createloanpreview.text.loanamount");
+    }
+
+    public QuestionResponsePage navigateToQuestionResponsePage() {
+        selenium.click("editQuestionResponses_button");
+        waitForPageToLoad();
+        return new QuestionResponsePage(selenium);
     }
 }

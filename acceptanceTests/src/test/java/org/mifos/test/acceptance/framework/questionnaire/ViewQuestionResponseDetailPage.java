@@ -119,13 +119,15 @@ public class ViewQuestionResponseDetailPage extends MifosPage {
         List<String> answers = questionMap.get(question);
         Assert.assertNotNull(answers);
         boolean exist = false;
+        String answersFound = "";
         for(String listAnswer : answers) {
+            answersFound = answersFound.concat(" "+listAnswer);
             if(listAnswer.equals(answer)) {
                 exist = true;
                 break;
             }
         }
-        Assert.assertTrue(exist);
+        Assert.assertTrue("Failed to find response for question: '"+question+"' answer '"+answer+"' \n FOUND: "+answersFound, exist);
     }
 
     public void verifyQuestionsDoesnotappear(String[] questions) {

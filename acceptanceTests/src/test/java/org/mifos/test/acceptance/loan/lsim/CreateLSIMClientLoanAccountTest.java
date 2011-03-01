@@ -239,6 +239,32 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
         loanTestHelper.repayLoan(loanId);
     }
 
+    // http://mifosforge.jira.com/browse/MIFOSTEST-124
+    public void VerifyGracePeriodEffectOnLoanSchedule() throws Exception{
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
+        applicationDatabaseOperation.updateLSIM(1);
+        DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
+        formParameters.setGracePeriodType(DefineNewLoanProductPage.SubmitFormParameters.PRINCIPAL_ONLY_GRACE);
+        formParameters.setGracePeriodDuration("3");
+        CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
+        searchParameters.setSearchString("Client1232993852651");
+        searchParameters.setLoanProduct(formParameters.getOfferingName());
+
+        //When / Then
+        loanProductTestHelper
+            .navigateToDefineNewLoanPangAndFillMandatoryFields(formParameters)
+            .verifyVariableInstalmentOptionsDefaults()
+            .checkConfigureVariableInstalmentsCheckbox()
+            .submitAndGotoNewLoanProductPreviewPage()
+            .submit();
+
+        //Then
+        loanTestHelper.createLoanAccount(searchParameters, new CreateLoanAccountSubmitParameters())
+            .navigateToRepaymentSchedulePage()
+            .verifySchedulePrincipalWithGrace(Integer.parseInt(formParameters.getGracePeriodDuration()));
+    }
+
     private CreateLoanAccountSubmitParameters createSearchParameters(String d, String m, String y){
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
         submitAccountParameters.setDd(d);
