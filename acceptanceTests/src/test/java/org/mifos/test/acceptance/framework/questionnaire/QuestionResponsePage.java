@@ -35,6 +35,7 @@ import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 import java.util.Map;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import org.mifos.test.acceptance.framework.office.CreateOfficePreviewDataPage;
+import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountPreviewPage;
 import org.mifos.test.acceptance.framework.user.CreateUserPreviewDataPage;
 
 import static org.junit.Assert.assertTrue;
@@ -115,6 +116,10 @@ public class QuestionResponsePage extends MifosPage {
         return new CreateClientEnterMfiDataPage(selenium);
     }
 
+    public CreateSavingsAccountPreviewPage navigateToNextPageSavingsAccountCreation() {
+        navigateToNextPage();
+        return new CreateSavingsAccountPreviewPage(selenium);
+    }
     public GroupViewDetailsPage navigateToCreateGroupDetailsPage(String status) {
         CreateGroupConfirmationPage confirmationPage = submitNewGroupForApproval();
         confirmationPage.verifyPage();
