@@ -20,6 +20,6 @@
 
 package org.mifos.clientportfolio.newloan.domain;
 
-public interface LoanDisbursementStrategy extends LoanDisbursementDateFinder {
+public interface LoanDisbursementStrategy extends LoanDisbursementDateFinder, LoanDisbursementDateValidator {
 
 }

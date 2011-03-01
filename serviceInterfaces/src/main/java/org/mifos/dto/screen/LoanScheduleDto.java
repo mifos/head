@@ -21,12 +21,10 @@
 package org.mifos.dto.screen;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.mifos.dto.domain.LoanCreationInstallmentDto;
 
 @SuppressWarnings("PMD")
@@ -34,36 +32,29 @@ import org.mifos.dto.domain.LoanCreationInstallmentDto;
 public class LoanScheduleDto implements Serializable {
 
     private final String accountOwner;
-    private final String loanAmount;
+    private final Double loanAmount;
     
     private final LocalDate disbursementDate;
     private final List<LoanCreationInstallmentDto> installments;
-    private final Locale locale;
 
-    public LoanScheduleDto(String accountOwner, String loanAmount, LocalDate disbursementDate,
-            List<LoanCreationInstallmentDto> installments, Locale locale) {
+    public LoanScheduleDto(String accountOwner, Double loanAmount, LocalDate disbursementDate,
+            List<LoanCreationInstallmentDto> installments) {
         this.accountOwner = accountOwner;
         this.loanAmount = loanAmount;
         this.disbursementDate = disbursementDate;
         this.installments = installments;
-        this.locale = locale;
     }
 
     public String getAccountOwner() {
         return accountOwner;
     }
 
-    public String getLoanAmount() {
+    public Double getLoanAmount() {
         return loanAmount;
     }
 
-    public LocalDate getDisbursementDate() {
-        return this.disbursementDate;
-    }
-    
-    public String getLocalisedDisbursementDate() {
-        DateTimeFormatter formatter = DateTimeFormat.forStyle("M-").withLocale(locale);
-        return formatter.print(this.disbursementDate);
+    public Date getDisbursementDate() {
+        return this.disbursementDate.toDateMidnight().toDate();
     }
 
     public List<LoanCreationInstallmentDto> getInstallments() {

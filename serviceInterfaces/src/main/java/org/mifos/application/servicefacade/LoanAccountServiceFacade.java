@@ -24,6 +24,9 @@ import java.util.Date;
 import java.util.List;
 
 import org.mifos.clientportfolio.loan.service.CreateLoanSchedule;
+import org.mifos.clientportfolio.newloan.applicationservice.CreateLoanAccount;
+import org.mifos.clientportfolio.newloan.applicationservice.LoanApplicationStateDto;
+import org.mifos.clientportfolio.newloan.applicationservice.LoanDisbursementDateValidationServiceFacade;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AccountStatusDto;
 import org.mifos.dto.domain.AccountUpdateStatus;
@@ -52,9 +55,10 @@ import org.mifos.dto.screen.LoanScheduledInstallmentDto;
 import org.mifos.dto.screen.MultipleLoanAccountDetailsDto;
 import org.mifos.dto.screen.RepayLoanDto;
 import org.mifos.dto.screen.RepayLoanInfoDto;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.springframework.security.access.prepost.PreAuthorize;
 
-public interface LoanAccountServiceFacade {
+public interface LoanAccountServiceFacade extends LoanDisbursementDateValidationServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     AccountStatusDto retrieveAccountStatuses(Long loanAccountId);
@@ -82,6 +86,9 @@ public interface LoanAccountServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     String createLoan(OpeningBalanceLoanAccount openingBalanceLoan);
+    
+    @PreAuthorize("isFullyAuthenticated()")
+    LoanCreationResultDto createLoan(CreateLoanAccount createLoanAccount, List<QuestionGroupDetail> questionGroups);
     
     LoanScheduleDto createLoanSchedule(CreateLoanSchedule createLoanAccount);
 
@@ -141,4 +148,9 @@ public interface LoanAccountServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
 	List<CustomerSearchResultDto> retrieveCustomersThatQualifyForLoans(CustomerSearchDto customerSearchDto);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    LoanApplicationStateDto retrieveLoanApplicationState();
+
+    List<QuestionGroupDetail> retrieveApplicableQuestionGroups(Integer productId);
 }

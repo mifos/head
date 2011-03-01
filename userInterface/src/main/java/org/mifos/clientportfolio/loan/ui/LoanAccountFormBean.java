@@ -24,7 +24,11 @@ import java.io.Serializable;
 
 import javax.validation.constraints.NotNull;
 
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+import org.mifos.clientportfolio.newloan.applicationservice.LoanDisbursementDateValidationServiceFacade;
 import org.mifos.platform.validation.MifosBeanValidator;
+import org.mifos.service.BusinessRuleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.binding.message.Message;
 import org.springframework.binding.message.MessageBuilder;
@@ -40,7 +44,14 @@ public class LoanAccountFormBean implements Serializable {
 
     @Autowired
     private transient MifosBeanValidator validator;
+    
+    @Autowired
+    private transient LoanDisbursementDateValidationServiceFacade loanDisbursementDateValidationServiceFacade;
+    
     private transient DateValidator dateValidator;
+
+    // only used for validating business rule on disbursement
+    private Integer customerId;
 
     @NotNull
     private Integer productId;
@@ -73,7 +84,7 @@ public class LoanAccountFormBean implements Serializable {
     
     private String[] selectedFeeId;
     private String[] selectedFeeAmount;
-    
+
     public void validateEditAccountDetailsStep(ValidationContext context) {
         validateEnterAccountDetailsStep(context);
     }
@@ -89,7 +100,7 @@ public class LoanAccountFormBean implements Serializable {
             Message[] errorMessages = messageContext.getMessagesByCriteria(new MessageCriteria() {
                 
                 @Override
-                public boolean test(Message message) {
+                public boolean test(@SuppressWarnings("unused") Message message) {
                     return true;
                 }
             });
@@ -120,7 +131,15 @@ public class LoanAccountFormBean implements Serializable {
         }
         if (!dateValidator.formsValidDate(this.disbursalDateDay, this.disbursalDateMonth, this.disbursalDateYear)) {
             String defaultErrorMessage = "Please specify valid disbursal date.";
-            rejectDisbursementDateField(errors, defaultErrorMessage);
+            rejectDisbursementDateField(errors, defaultErrorMessage, "loanAccountFormBean.DisbursalDate.invalid");
+        } else {
+            LocalDate validDate = new DateTime().withDate(disbursalDateYear.intValue(), disbursalDateMonth.intValue(), disbursalDateDay.intValue()).toLocalDate();
+            try {
+                loanDisbursementDateValidationServiceFacade.validateLoanDisbursementDate(validDate, customerId, productId);
+            } catch (BusinessRuleException e) {
+                String defaultErrorMessage = "The disbursal date is invalid.";
+                rejectDisbursementDateField(errors, defaultErrorMessage, "loanAccountFormBean.DisbursalDate.validButNotAllowed");
+            }
         }
         
         if (this.sourceOfFundsMandatory && isInvalidSelection(this.fundId)) {
@@ -142,8 +161,8 @@ public class LoanAccountFormBean implements Serializable {
         }
     }
 
-    private void rejectDisbursementDateField(Errors errors, String defaultErrorMessage) {
-        errors.rejectValue("disbursalDateDay", "loanAccountFormBean.DisbursalDate.invalid", defaultErrorMessage);
+    private void rejectDisbursementDateField(Errors errors, String defaultErrorMessage, String errorCode) {
+        errors.rejectValue("disbursalDateDay", errorCode, defaultErrorMessage);
     }
 
     private void rejectNumberOfInstallmentsField(Errors errors, String defaultErrorMessage) {
@@ -172,7 +191,7 @@ public class LoanAccountFormBean implements Serializable {
         }
         
         if (isAnyOf("disbursalDateDay", "disbursalDateMonth", "disbursalDateYear", message.getSource())) {
-            rejectDisbursementDateField(errors, message.getText());
+            rejectDisbursementDateField(errors, message.getText(), "loanAccountFormBean.DisbursalDate.invalid");
         }
     }
 
@@ -372,11 +391,24 @@ public class LoanAccountFormBean implements Serializable {
         this.purposeOfLoanMandatory = purposeOfLoanMandatory;
     }
     
+    public Integer getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(Integer customerId) {
+        this.customerId = customerId;
+    }
+    
     public void setValidator(MifosBeanValidator validator) {
         this.validator = validator;
     }
 
     public void setDateValidator(DateValidator dateValidator) {
         this.dateValidator = dateValidator;
+    }
+    
+    public void setLoanDisbursementDateValidationServiceFacade(
+            LoanDisbursementDateValidationServiceFacade loanDisbursementDateValidationServiceFacade) {
+        this.loanDisbursementDateValidationServiceFacade = loanDisbursementDateValidationServiceFacade;
     }
 }

@@ -22,6 +22,10 @@ package org.mifos.clientportfolio.newloan.applicationservice;
 
 import org.mifos.clientportfolio.newloan.domain.IndividualLoan;
 
+/**
+ * @deprecated work in progress Release G - do not use
+ */
+@Deprecated
 public interface LoanAssembler {
 
     IndividualLoan assembleFrom(IndividualLoanRequest individualLoan);

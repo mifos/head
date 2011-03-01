@@ -103,6 +103,7 @@ import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
+import org.mifos.clientportfolio.newloan.domain.CreationDetail;
 import org.mifos.clientportfolio.newloan.domain.DefaultLoanScheduleRounder;
 import org.mifos.clientportfolio.newloan.domain.DefaultLoanScheduleRounderHelper;
 import org.mifos.clientportfolio.newloan.domain.EqualInstallmentGeneratorFactory;
@@ -110,6 +111,7 @@ import org.mifos.clientportfolio.newloan.domain.EqualInstallmentGeneratorFactory
 import org.mifos.clientportfolio.newloan.domain.InstallmentFeeCalculator;
 import org.mifos.clientportfolio.newloan.domain.InstallmentFeeCalculatorFactory;
 import org.mifos.clientportfolio.newloan.domain.InstallmentFeeCalculatorFactoryImpl;
+import org.mifos.clientportfolio.newloan.domain.Loan;
 import org.mifos.clientportfolio.newloan.domain.LoanDecliningInterestAnnualPeriodCalculator;
 import org.mifos.clientportfolio.newloan.domain.LoanDecliningInterestAnnualPeriodCalculatorFactory;
 import org.mifos.clientportfolio.newloan.domain.LoanDurationInAccountingYearsCalculator;
@@ -121,6 +123,8 @@ import org.mifos.clientportfolio.newloan.domain.LoanInterestCalculationDetails;
 import org.mifos.clientportfolio.newloan.domain.LoanInterestCalculator;
 import org.mifos.clientportfolio.newloan.domain.LoanInterestCalculatorFactory;
 import org.mifos.clientportfolio.newloan.domain.LoanInterestCalculatorFactoryImpl;
+import org.mifos.clientportfolio.newloan.domain.LoanProductOverridenDetail;
+import org.mifos.clientportfolio.newloan.domain.LoanSchedule;
 import org.mifos.clientportfolio.newloan.domain.LoanScheduleRounder;
 import org.mifos.clientportfolio.newloan.domain.LoanScheduleRounderHelper;
 import org.mifos.clientportfolio.newloan.domain.PrincipalWithInterestGenerator;
@@ -153,12 +157,13 @@ import org.mifos.schedule.ScheduledEvent;
 import org.mifos.schedule.ScheduledEventFactory;
 import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration;
 import org.mifos.security.util.UserContext;
+import org.mifos.service.BusinessRuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.emory.mathcs.backport.java.util.Collections;
 
-public class LoanBO extends AccountBO {
+public class LoanBO extends AccountBO implements Loan {
 
     private static final Logger logger = LoggerFactory.getLogger(LoanBO.class);
 
@@ -227,7 +232,7 @@ public class LoanBO extends AccountBO {
      * default constructor for hibernate usage
      */
     protected LoanBO() {
-        this(null, null, null, null, null, null);
+        this(null, null, null, null, null, null, false);
         this.loanPrdPersistence = null;
         this.loanActivityDetails = new ArrayList<LoanActivityEntity>();
         this.redone = false;
@@ -256,7 +261,7 @@ public class LoanBO extends AccountBO {
     // methods
     private LoanBO(final LoanOfferingBO loanOffering, final LoanSummaryEntity loanSummary,
             final MaxMinLoanAmount maxMinLoanAmount, final MaxMinInterestRate maxMinInterestRate,
-            final MaxMinNoOfInstall maxMinNoOfInstall, final LoanPerformanceHistoryEntity performanceHistory) {
+            final MaxMinNoOfInstall maxMinNoOfInstall, final LoanPerformanceHistoryEntity performanceHistory, boolean notused) {
         this.loanOffering = loanOffering;
         this.loanSummary = loanSummary;
         this.maxMinLoanAmount = maxMinLoanAmount;
@@ -303,29 +308,42 @@ public class LoanBO extends AccountBO {
     }
 
     // opening balance loan constructor
-    public LoanBO(LoanOfferingBO loanProduct, CustomerBO customer, AccountState loanState, Money loanAmountDisbursed, Integer numberOfInstallments, List<LoanScheduleEntity> scheduledRepayments, LocalDate createdDate, Short createdBy) {
-        super(AccountTypes.LOAN_ACCOUNT, loanState, customer, scheduledRepayments, createdDate.toDateMidnight().toDate(), createdBy);
+    public LoanBO(LoanOfferingBO loanProduct, CustomerBO customer, AccountState loanState, LoanProductOverridenDetail overridenDetail, 
+            LoanSchedule loanSchedule, CreationDetail creationDetail) {
+        super(AccountTypes.LOAN_ACCOUNT, loanState, customer, loanSchedule.getRoundedLoanSchedules(), creationDetail);
         this.performanceHistory = new LoanPerformanceHistoryEntity(this);
 
         this.loanOffering = loanProduct;
         this.customer = customer;
-        this.loanAmount = loanAmountDisbursed;
-        this.noOfInstallments = numberOfInstallments.shortValue();
-
+        this.loanAmount = overridenDetail.getLoanAmount();
+        this.noOfInstallments = Integer.valueOf(overridenDetail.getNumberOfInstallments()).shortValue();
+        this.gracePeriodDuration = Integer.valueOf(overridenDetail.getGraceDuration()).shortValue();
+        this.disbursementDate = overridenDetail.getDisbursementDate().toDateMidnight().toDate();
+        
         // inherit properties from loan product
         this.interestType = new InterestTypesEntity(loanProduct.getInterestType());
-        this.intrestAtDisbursement = Short.valueOf("0"); // false
+        this.interestRate = overridenDetail.getInterestRate();
         this.gracePeriodType = new GracePeriodTypeEntity(loanProduct.getGraceType());
-        this.gracePeriodDuration = loanProduct.getGracePeriodDuration();
 
         this.loanActivityDetails = new ArrayList<LoanActivityEntity>();
+        this.rawAmountTotal = loanSchedule.getRawAmount();
         this.loanSummary = buildLoanSummary();
         // FIXME - keithw - for some reason maxMinNumber of installments is used from loan (and not loan product definition) when retrieving Loan Information
         if (!loanProduct.getNoOfInstallSameForAllLoan().isEmpty()) {
             NoOfInstallSameForAllLoanBO maxMinInstall = new ArrayList<NoOfInstallSameForAllLoanBO>(loanProduct.getNoOfInstallSameForAllLoan()).get(0);
             this.maxMinNoOfInstall = new MaxMinNoOfInstall(maxMinInstall.getMaxNoOfInstall(), maxMinInstall.getMinNoOfInstall(), this);
         } else {
-            this.maxMinNoOfInstall = new MaxMinNoOfInstall(numberOfInstallments.shortValue(), numberOfInstallments.shortValue(), this);
+            this.maxMinNoOfInstall = new MaxMinNoOfInstall(this.noOfInstallments, this.noOfInstallments, this);
+        }
+        
+        // legacy
+        this.intrestAtDisbursement = Short.valueOf("0"); // false
+        this.gracePeriodPenalty = Short.valueOf("0"); // is this used
+        this.loanBalance = overridenDetail.getLoanAmount(); // whats this used for? remaining balance?
+        try {
+            this.loanMeeting = buildLoanMeeting(customer.getCustomerMeetingValue(), loanProduct.getLoanOfferingMeetingValue(), disbursementDate);
+        } catch (AccountException e) {
+            throw new BusinessRuleException(e.getKey());
         }
     }
 
@@ -524,18 +542,26 @@ public class LoanBO extends AccountBO {
     private static boolean isAnyLoanParamsNull(final Object... args) {
         return Arrays.asList(args).contains(null);
     }
+    
+    public static LoanBO openStandardLoanAccount(LoanOfferingBO loanProduct, CustomerBO customer,
+            LoanSchedule loanSchedule, AccountState loanState, FundBO fund, 
+            LoanProductOverridenDetail overridenDetail, CreationDetail creationDetail) {
+        
+        LoanBO standardLoan = new LoanBO(loanProduct, customer, loanState, overridenDetail, loanSchedule, creationDetail);
+        standardLoan.setFund(fund);
+        return standardLoan;
+    }
 
+    /**
+     * @deprecated - opening balance functionality incomplete.
+     */
+    @Deprecated
     public static LoanBO createOpeningBalanceLoan(UserContext userContext, LoanOfferingBO loanProduct,
-            CustomerBO customer, AccountState loanState, Money loanAmountDisbursed, LocalDate disbursementDate,
-            Integer numberOfInstallments, LocalDate firstInstallmentDate, LocalDate currentInstallmentDate,
-            Money amountPaidToDate, Integer loanCycle, List<LoanScheduleEntity> scheduledLoanRepayments) {
-        // validation
-        // all values must be non null
-
-        LocalDate createdDate = new LocalDate();
-        Short createdBy = userContext.getId();
-        LoanBO openingBalanceLoan = new LoanBO(loanProduct, customer, loanState, loanAmountDisbursed, numberOfInstallments, scheduledLoanRepayments, createdDate, createdBy);
-        openingBalanceLoan.setDisbursementDate(disbursementDate.toDateMidnight().toDate());
+            CustomerBO customer, AccountState loanState, LocalDate firstInstallmentDate, LocalDate currentInstallmentDate,
+            Money amountPaidToDate, Integer loanCycle, LoanSchedule loanSchedule, LoanProductOverridenDetail overridenDetail) {
+        CreationDetail creationDetail = new CreationDetail(new DateTime(), Integer.valueOf(userContext.getId()));
+        LoanBO openingBalanceLoan = new LoanBO(loanProduct, customer, loanState, overridenDetail, loanSchedule, creationDetail);
+        openingBalanceLoan.setDisbursementDate(overridenDetail.getDisbursementDate().toDateMidnight().toDate());
 
         return openingBalanceLoan;
     }
@@ -2473,9 +2499,9 @@ public class LoanBO extends AccountBO {
             } catch (MeetingException me) {
                 throw new AccountException(me);
             }
-        } else {
-            throw new AccountException(AccountExceptionConstants.CHANGEINLOANMEETING);
-        }
+        } 
+
+        throw new AccountException(AccountExceptionConstants.CHANGEINLOANMEETING);
     }
 
     private boolean isMultiple(final Short valueToBeChecked, final Short valueToBeCheckedWith) {

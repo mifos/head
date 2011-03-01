@@ -20,7 +20,6 @@
 
 package org.mifos.test.acceptance.admin;
 
-import org.dbunit.dataset.IDataSet;
 import org.joda.time.DateTime;
 import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -44,7 +43,6 @@ public class ImportTransactionsTest extends UiTestCaseBase {
 
     private NavigationHelper navigationHelper;
     private static final String EXCEL_IMPORT_TYPE = "Audi Bank (Excel 2007)";
-    private static final String TSV_IMPORT_TYPE = "Audi Bank (tab-delimited)";
 
     @Autowired
     private DriverManagerDataSource dataSource;
@@ -81,29 +79,13 @@ public class ImportTransactionsTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(enabled=false)
-    public void importTabDelimitedAudiBankTransactions() throws Exception {
-        String importFile = this.getClass().getResource("/AudiUSD-OneTransactionEA00002.txt").toString();
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_009_dbunit.xml", dataSource, selenium);
-
-        importTransaction(importFile, TSV_IMPORT_TYPE);
-
-        String expectedDataSetFile = "ImportTransactions_001_result_dbunit.xml";
-
-        verifyImportTransactions(expectedDataSetFile);
-     }
-
-
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled=false)
     public void importExcelFormatAudiBankTransactions() throws Exception {
         String importFile = this.getClass().getResource("/AudiUSD-SevenTransactions.xls").toString();
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_009_dbunit.xml", dataSource, selenium);
 
         importTransaction(importFile, EXCEL_IMPORT_TYPE);
 
-        String expectedDataSetFile = "ImportTransactions_002_result_dbunit.xml";
-
-        verifyImportTransactions(expectedDataSetFile);
+        // TODO - add proper UI verifications and enable this test after MIFOS-4651 is fixed
      }
 
 
@@ -122,29 +104,4 @@ public class ImportTransactionsTest extends UiTestCaseBase {
         ImportTransactionsPage importTransactionsPage = adminPage.navigateToImportTransactionsPage();
         importTransactionsPage.verifyPage();
     }
-
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    private void verifyImportTransactions(String expectedDataSetFile) throws Exception {
-        IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromDataSetDirectoryFile(expectedDataSetFile);
-        IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTables(dataSource, new String[] { ACCOUNT_PAYMENT,
-                                    ACCOUNT_TRXN,
-                                    FINANCIAL_TRXN,
-                                    LOAN_ACTIVITY_DETAILS,
-                                    LOAN_SCHEDULE,
-                                    LOAN_SUMMARY,
-                                    LOAN_TRXN_DETAIL  });
-
-        dbUnitUtilities.verifyTable(ACCOUNT_TRXN, databaseDataSet, expectedDataSet);
-        dbUnitUtilities.verifyTable(LOAN_ACTIVITY_DETAILS, databaseDataSet, expectedDataSet);
-        dbUnitUtilities.verifyTable(LOAN_SCHEDULE, databaseDataSet, expectedDataSet);
-        dbUnitUtilities.verifyTable(LOAN_SUMMARY, databaseDataSet, expectedDataSet);
-        dbUnitUtilities.verifyTable(LOAN_TRXN_DETAIL, databaseDataSet, expectedDataSet);
-
-        String[] orderAccountPaymentByColumns = new String[] {"amount","account_id"};
-        dbUnitUtilities.verifyTableWithSort(orderAccountPaymentByColumns,ACCOUNT_PAYMENT, expectedDataSet, databaseDataSet);
-        String[] orderFinTrxnByColumns =  new String[]{"posted_amount", "glcode_id"};
-        dbUnitUtilities.verifyTableWithSort(orderFinTrxnByColumns,FINANCIAL_TRXN, expectedDataSet, databaseDataSet );
-
-    }
-
 }

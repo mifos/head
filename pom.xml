@@ -56,8 +56,10 @@
         <varying.target.dir>target</varying.target.dir>
         <liquibase.version>2.0.0</liquibase.version>
         <mysql.connector.version>5.1.13</mysql.connector.version>
+        <jetty.version>7.3.0.v20110203</jetty.version>
         <targetJdk>1.6</targetJdk>
     </properties>
+
     <modules>
         <module>common</module>
         <module>db</module>

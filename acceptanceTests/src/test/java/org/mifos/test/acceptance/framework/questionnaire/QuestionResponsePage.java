@@ -27,11 +27,13 @@ import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.client.CreateClientEnterMfiDataPage;
 import org.mifos.test.acceptance.framework.group.CreateGroupConfirmationPage;
 import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
+import org.mifos.test.acceptance.framework.loan.DisburseLoanConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 
 import java.util.Map;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import org.mifos.test.acceptance.framework.office.CreateOfficePreviewDataPage;
+import org.mifos.test.acceptance.framework.user.CreateUserPreviewDataPage;
 
 import static org.junit.Assert.assertTrue;
 
@@ -97,10 +99,13 @@ public class QuestionResponsePage extends MifosPage {
     }
 
     public CreateOfficePreviewDataPage navigateToNextPageAndReturnPage() {
-        selenium.click("captureQuestionResponses.button.continue");
-        waitForPageToLoad();
-
+        navigateToNextPage();
         return new CreateOfficePreviewDataPage(selenium);
+    }
+
+    public DisburseLoanConfirmationPage continueAndNavigateToDisburseLoanConfirmationPage() {
+        navigateToNextPage();
+        return new DisburseLoanConfirmationPage(selenium);
     }
 
     public CreateClientEnterMfiDataPage navigateToNextPageClientCreation() {
@@ -114,6 +119,11 @@ public class QuestionResponsePage extends MifosPage {
         GroupViewDetailsPage groupDetailsPage = confirmationPage.navigateToGroupDetailsPage();
         groupDetailsPage.verifyStatus(status);
         return groupDetailsPage;
+    }
+
+    public CreateUserPreviewDataPage continueAndNavigateToCreateUserPreviewPage(){
+        navigateToNextPage();
+        return new CreateUserPreviewDataPage(selenium);
     }
 
     public void populateAnswers(QuestionResponseParameters responseParameters) {

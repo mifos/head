@@ -20,6 +20,7 @@
 
 package org.mifos.clientportfolio.newloan.domain;
 
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.schedule.ScheduledEvent;
 
@@ -36,4 +37,10 @@ public class ScheduledEventLoanDisbursementStrategyImpl implements LoanDisbursem
         return new LocalDate(scheduledEvent.nextEventDateAfter(fromAndInclusiveOf.minusDays(1).toDateMidnight().toDateTime()));
     }
 
+    @Override
+    public boolean isDisbursementDateValid(LocalDate disbursementDate) {
+        DateTime providedDisbursementDate = disbursementDate.toDateMidnight().toDateTime();
+        DateTime closestMatchingDisbursementDateStartingFromProvidedDisbursementDate = scheduledEvent.nearestMatchingDateBeginningAt(providedDisbursementDate);
+        return providedDisbursementDate.isEqual(closestMatchingDisbursementDateStartingFromProvidedDisbursementDate);
+    }
 }
