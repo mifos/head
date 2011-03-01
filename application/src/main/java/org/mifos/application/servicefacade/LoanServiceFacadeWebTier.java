@@ -153,24 +153,24 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
     }
 
     @Override
-    public Errors validateCashFlowForInstallments(List<RepaymentScheduleInstallment> installments, CashFlowForm cashFlowForm, Double repaymentCapacity) {
+    public Errors validateCashFlowForInstallments(Date firstInstallmentDate, Date lastInstallmentDate, CashFlowForm cashFlowForm, Double repaymentCapacity) {
         Errors errors = new Errors();
         if (cashFlowForm == null) {
             return errors;
         }
         List<MonthlyCashFlowForm> monthlyCashFlows = cashFlowForm.getMonthlyCashFlows();
         if (CollectionUtils.isNotEmpty(installments) && CollectionUtils.isNotEmpty(monthlyCashFlows)) {
-            boolean lowerBound = DateUtils.firstLessOrEqualSecond(monthlyCashFlows.get(0).getDate(), installments.get(0).getDueDateValue());
-            boolean upperBound = DateUtils.firstLessOrEqualSecond(installments.get(installments.size() - 1).getDueDateValue(), monthlyCashFlows.get(monthlyCashFlows.size() - 1).getDate());
+            boolean lowerBound = DateUtils.firstLessOrEqualSecond(monthlyCashFlows.get(0).getDate(), firstInstallmentDate);
+            boolean upperBound = DateUtils.firstLessOrEqualSecond(lastInstallmentDate, monthlyCashFlows.get(monthlyCashFlows.size() - 1).getDate());
 
             SimpleDateFormat df = new SimpleDateFormat("MMMM yyyy", installments.get(0).getLocale());
 
             if (!lowerBound) {
-                errors.addError(AccountConstants.INSTALLMENT_BEYOND_CASHFLOW_DATE, new String[]{df.format(installments.get(0).getDueDateValue())});
+                errors.addError(AccountConstants.INSTALLMENT_BEYOND_CASHFLOW_DATE, new String[]{df.format(firstInstallmentDate)});
             }
 
             if (!upperBound) {
-                errors.addError(AccountConstants.INSTALLMENT_BEYOND_CASHFLOW_DATE, new String[]{df.format(installments.get(installments.size() - 1).getDueDateValue())});
+                errors.addError(AccountConstants.INSTALLMENT_BEYOND_CASHFLOW_DATE, new String[]{df.format(lastInstallmentDate)});
             }
 
         }
