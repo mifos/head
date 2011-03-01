@@ -693,7 +693,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
 
     private void fillInstalmentOptionsAndSubmit(String maxGap, String minGap, String minInstalmentAmount) {
         fillVariableInstalmentOption(maxGap, minGap, minInstalmentAmount);
-        submitAndGotoNewLoanProductPreviewPage();
+        submitWithErrors();
     }
 
     public DefineNewLoanProductPage fillVariableInstalmentOption(String maxGap, String minGap, String minInstalmentAmount) {
