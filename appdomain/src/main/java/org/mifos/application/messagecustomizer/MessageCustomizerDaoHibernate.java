@@ -80,7 +80,7 @@ public class MessageCustomizerDaoHibernate implements MessageCustomizerDao {
     private List<CustomMessage> getAllMessages() {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         List<CustomMessage> queryResult = (List<CustomMessage>) this.genericDao.executeNamedQuery(
-                "allMessages", queryParameters);
+                "allMessagesNative", queryParameters);
 
         List<CustomMessage> messages = new ArrayList<CustomMessage>();
 
@@ -91,7 +91,7 @@ public class MessageCustomizerDaoHibernate implements MessageCustomizerDao {
         return messages;
     }	
 	
-    private CustomMessage findCustomMessageByOldMessage(final String oldMessage) {
+    public CustomMessage findCustomMessageByOldMessage(final String oldMessage) {
 
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("oldMessage", oldMessage);

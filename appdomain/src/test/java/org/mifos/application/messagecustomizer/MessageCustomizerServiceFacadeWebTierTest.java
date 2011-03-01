@@ -48,10 +48,13 @@ public class MessageCustomizerServiceFacadeWebTierTest {
 	@Mock
 	private MessageSource messageSource;	
 	
+	@Mock
+	private MessageCustomizerDao messageCustomizerDao;
+	
 	@Before
     public void setup() {
 		messageCustomizerServiceFacadeWebTier = new MessageCustomizerServiceFacadeWebTier(
-				messageSource);
+				messageCustomizerDao, messageSource);
 	}
 	
 	@Test

@@ -6,27 +6,31 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.Table;
 
 @NamedQueries( {
 	  @NamedQuery(
-	    name="allMessages",
-	    query="from CustomMessage "
-	  ),
+			    name="allMessages",
+			    query="from CustomMessage"
+			  ),
 	  @NamedQuery(
 	          name = "findCustomMessageByOldMessage",
 	          query = "from CustomMessage message where message.oldMessage=:oldMessage"
 	  )	  
 })
 
+	  @NamedNativeQuery(
+	    name="allMessagesNative",
+	    query="select * from custom_message order by char_length(old_message) desc",
+	    resultClass = CustomMessage.class
+	  )
+
 @Entity
 @Table(name = "custom_message")
 public class CustomMessage {
 
     @Id
-    @GeneratedValue
-    @Column(name="id")
-    private Short id;	
 	private String oldMessage;
 	private String newMessage;
 	
@@ -34,6 +38,8 @@ public class CustomMessage {
 		this.oldMessage = oldMessage;
 		this.newMessage = newMessage;
 	}
+	
+	protected CustomMessage() {}
 
 	public String getOldMessage() {
 		return oldMessage;
