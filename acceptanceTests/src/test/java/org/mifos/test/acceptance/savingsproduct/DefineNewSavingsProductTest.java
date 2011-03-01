@@ -159,8 +159,9 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
     }
 
     //http://mifosforge.jira.com/browse/MIFOSTEST-712
+    //TODO batch job SavingsIntPostingTaskJob not calculate interests in automated Tests
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")// one of the dependent methods throws Exception
-    @Test(enabled=true)
+    @Test(enabled=false)
     public void savingsAccountWithDailyInterestMandatoryDeposits() throws Exception {
         //Given
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
@@ -233,6 +234,77 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         navigationHelper.navigateToSavingsAccountDetailPage(savingsId);
         Assert.assertEquals(selenium.getTable("recentActivityForDetailPage.1.2"),"402.7");
     }
+    //http://mifosforge.jira.com/browse/MIFOSTEST-141
+    //TODO batch job SavingsIntPostingTaskJob not calculate interests in automated Tests
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")// one of the dependent methods throws Exception
+    @Test(enabled=false)
+    public void savingsAccountWith3monthInterestVoluntaryDeposits() throws Exception {
+        //Given
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTime targetTime = new DateTime(2011,2,15,13,0,0,0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
+
+        //When
+        SavingsProductParameters params = getVoluntaryClients3MonthCalculactionPostingProductParameters();
+
+        DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
+        confirmationPage.navigateToSavingsProductDetails();
+        SavingsAccountDetailPage savingsAccountDetailPage = createSavingAccountWithCreatedProduct("Stu1233266079799 Client1233266079799",params.getProductInstanceName(),"100000.0");
+        String savingsId = savingsAccountDetailPage.getAccountId();
+
+        EditAccountStatusParameters editAccountStatusParameters =new EditAccountStatusParameters();
+        editAccountStatusParameters.setAccountStatus(AccountStatus.SAVINGS_ACTIVE);
+        editAccountStatusParameters.setNote("change status to active");
+        savingsAccountHelper.changeStatus(savingsId, editAccountStatusParameters);
+
+        DepositWithdrawalSavingsParameters depositParams = new DepositWithdrawalSavingsParameters();
+
+        depositParams=makeDefaultDeposit(targetTime,depositParams,savingsId);
+
+        //Then
+        targetTime = new DateTime(2011,5,15,22,0,0,0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+
+        navigationHelper.navigateToSavingsAccountDetailPage(savingsId);
+        navigationHelper.navigateToAdminPage();
+        runBatchJobsForSavingsIntPosting();
+        selenium.click("logout_link");
+        UiTestUtils.sleep(10000);
+
+        //selenium.setSpeed("1500");
+        navigationHelper.navigateToSavingsAccountDetailPage(savingsId);
+        Assert.assertEquals(selenium.getTable("recentActivityForDetailPage.1.2"),"602.7");
+
+        targetTime = new DateTime(2011,9,1,22,0,0,0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+
+        navigationHelper.navigateToSavingsAccountDetailPage(savingsId);
+        navigationHelper.navigateToAdminPage();
+        runBatchJobsForSavingsIntPosting();
+        selenium.click("logout_link");
+        UiTestUtils.sleep(10000);
+
+        navigationHelper.navigateToSavingsAccountDetailPage(savingsId);
+        UiTestUtils.sleep(5000);
+        Assert.assertEquals(selenium.getTable("recentActivityForDetailPage.1.2"),"1254.1");
+    }
+
+    private SavingsProductParameters getVoluntaryClients3MonthCalculactionPostingProductParameters()
+    {
+        SavingsProductParameters params = getGenericSavingsProductParameters(SavingsProductParameters.VOLUNTARY,SavingsProductParameters.CLIENTS);
+        params.setDaysOrMonthsForInterestCalculation(params.MONTHS);
+        params.setInterestRate("5");
+        params.setFrequencyOfInterestPostings("3");
+        params.setNumberOfDaysOrMonthsForInterestCalculation("3");
+        params.setBalanceUsedForInterestCalculation(SavingsProductParameters.MINIMUM_BALANCE);
+        params.setMandatoryAmount("100000");
+        params.setStartDateDD("15");
+        params.setStartDateMM("2");
+        params.setStartDateYYYY("2011");
+        return params;
+    }
+
 
     private DepositWithdrawalSavingsParameters makeDefaultDeposit(DateTime date, DepositWithdrawalSavingsParameters depositParams, String savingsId) throws Exception {
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
