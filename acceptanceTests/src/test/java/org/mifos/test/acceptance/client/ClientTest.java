@@ -945,7 +945,7 @@ public class ClientTest extends UiTestCaseBase {
     private QuestionnairePage checkMandatoryQuestionValidation(String questionGroupTitle, String question1,
                                                                String question2, ClientViewDetailsPage viewDetailsPage) {
         QuestionnairePage questionnairePage = viewDetailsPage.getQuestionnairePage(questionGroupTitle);
-        questionnairePage.setResponsesForMultiSelect(question2, 4, "Choice1", "Choice3", "Choice4");
+        questionnairePage.setResponsesForMultiSelect(question2, "Choice1", "Choice3", "Choice4");
         MifosPage mifosPage = questionnairePage.submit();
         Assert.assertTrue(mifosPage instanceof QuestionnairePage);
         questionnairePage = (QuestionnairePage) mifosPage;

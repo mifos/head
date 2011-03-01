@@ -20,8 +20,6 @@
 
 package org.mifos.test.acceptance.framework.client;
 
-import static java.lang.String.format;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -40,9 +38,6 @@ import org.testng.Assert;
 import com.thoughtworks.selenium.Selenium;
 
 public class ClientViewDetailsPage extends MifosPage {
-    public static final String QUESTION_GROUP_DATE_JS = "window.document.getElementById('label.%s').innerHTML.trim()";
-    public static final String QUESTION_GROUP_NAME_JS = "window.document.getElementById('questionGroupInstances').getElementsByTagName('a')[%d].innerHTML.trim()";
-    public static final String QUESTION_GROUP_ID_JS = "window.document.getElementById('questionGroupInstances').getElementsByTagName('a')[%d].id";
 
     public ClientViewDetailsPage(Selenium selenium) {
         super(selenium);
@@ -208,12 +203,12 @@ public class ClientViewDetailsPage extends MifosPage {
 
 
     public Map<Integer, QuestionGroup> getQuestionGroupInstances() {
-        int rows = Integer.valueOf(getEval("window.document.getElementById('questionGroupInstances').getElementsByTagName('a').length"));
+        int rows = (Integer)selenium.getXpathCount("//table[@id='questionGroupInstances']//a");
         Map<Integer, QuestionGroup> instances = new LinkedHashMap<Integer, QuestionGroup>();
         for (int i = 0; i < rows - 1; i++) {
-            String instanceId = getEval(format(QUESTION_GROUP_ID_JS, i));
-            instances.put(new Integer(instanceId), new QuestionGroup(getEval(format(QUESTION_GROUP_NAME_JS, i)), //NOPMD
-                    getEval(format(QUESTION_GROUP_DATE_JS, instanceId))));
+            String instanceId = selenium.getAttribute("//table[@id='questionGroupInstances'][1]//tr[" + (3 + i) + "]//a@id");
+            instances.put(new Integer(instanceId), new QuestionGroup(selenium.getText("//table[@id='questionGroupInstances'][1]//tr[" + (3 + i) + "]//a"), //NOPMD
+                    selenium.getText("//table[@id='questionGroupInstances'][1]//tr[" + (3 + i) + "]//label")));
         }
         return instances;
     }

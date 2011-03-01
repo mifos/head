@@ -29,7 +29,6 @@ import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.user.UserViewDetailsPage;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import org.mifos.test.acceptance.framework.savings.SavingsAccountDetailPage;
@@ -62,7 +61,12 @@ public class QuestionnairePage extends MifosPage {
     }
 
     public void setResponse(String question, String answer) {
-        selenium.type("id=" + getQuestionLocator(question), answer);
+        Number questionCount = selenium.getXpathCount("//label/following-sibling::textarea");
+        if ((Integer) questionCount == 1) {
+            selenium.type("//label/following-sibling::textarea", answer);
+        } else {
+            selenium.type("id=" + getQuestionLocator(question), answer);
+        }
     }
 
     public QuestionnairePage setResponses(Map<String, String> responses) {
@@ -125,18 +129,23 @@ public class QuestionnairePage extends MifosPage {
         return selenium.isElementPresent("id=allErrors") ? new QuestionnairePage(selenium) : new ClientViewDetailsPage(selenium);
     }
 
-    public void setResponsesForMultiSelect(String question, int totalChoices, String... choices) {
-        String questionId = getEval(String.format(SELECT_QUESTION_JS, question));
-        String choiceIdFormat = questionId + "s%d";
-        List<String> choiceList = Arrays.asList(choices);
-        for (int i=0; i<totalChoices; i++) {
-            String choiceId = String.format(choiceIdFormat, i);
-            String choice = getEval("window.document.getElementById(\"" + choiceId + "\").value");
-            if (choiceList.contains(choice)) {
-                selenium.check("id=" + choiceId);
-            }
+    public void setResponsesForMultiSelect(String question, String... choices) {
+        for (String choice : choices) {
+            selenium.check("//label[contains(text(),'" + question + "')]/following-sibling::fieldset//label[contains(text(),'" + choice + "')]/preceding-sibling::input");
         }
     }
+//    public void setResponsesForMultiSelect(String question, int totalChoices, String... choices) {
+//        String questionId = getEval(String.format(SELECT_QUESTION_JS, question));
+//        String choiceIdFormat = questionId + "s%d";
+//        List<String> choiceList = Arrays.asList(choices);
+//        for (int i=0; i<totalChoices; i++) {
+//            String choiceId = String.format(choiceIdFormat, i);
+//            String choice = getEval("window.document.getElementById(\"" + choiceId + "\").value");
+//            if (choiceList.contains(choice)) {
+//                selenium.check("id=" + choiceId);
+//            }
+//        }
+//    }
 
     public boolean isErrorPresent(String errorMsg) {
         return isTextPresentInPage(errorMsg);
