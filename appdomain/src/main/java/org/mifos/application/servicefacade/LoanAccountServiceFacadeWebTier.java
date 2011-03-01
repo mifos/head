@@ -25,12 +25,14 @@ import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_DAYS_BETWEE
 import static org.mifos.framework.util.CollectionUtils.collect;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -72,6 +74,7 @@ import org.mifos.accounts.loan.struts.action.validate.ProductMixValidator;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.MultipleLoanCreationDto;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
+import org.mifos.accounts.productdefinition.business.CashFlowDetail;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.accounts.productdefinition.business.LoanAmountOption;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -83,6 +86,7 @@ import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
+import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountSearchResultsDto;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.PaymentData;
@@ -120,6 +124,7 @@ import org.mifos.clientportfolio.newloan.domain.RecurringScheduledEventFactoryIm
 import org.mifos.clientportfolio.newloan.domain.service.LoanScheduleService;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
+import org.mifos.config.Localization;
 import org.mifos.config.ProcessFlowRules;
 import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.config.exceptions.ConfigurationException;
@@ -140,6 +145,7 @@ import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AccountStatusDto;
 import org.mifos.dto.domain.AccountUpdateStatus;
+import org.mifos.dto.domain.CashFlowDto;
 import org.mifos.dto.domain.CenterCreation;
 import org.mifos.dto.domain.CreateAccountFeeDto;
 import org.mifos.dto.domain.CreateAccountNote;
@@ -156,6 +162,7 @@ import org.mifos.dto.domain.LoanCreationInstallmentDto;
 import org.mifos.dto.domain.LoanInstallmentDetailsDto;
 import org.mifos.dto.domain.LoanPaymentDto;
 import org.mifos.dto.domain.MeetingDto;
+import org.mifos.dto.domain.MonthlyCashFlowDto;
 import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.dto.domain.OpeningBalanceLoanAccount;
 import org.mifos.dto.domain.PaymentTypeDto;
@@ -165,6 +172,7 @@ import org.mifos.dto.domain.ProductDetailsDto;
 import org.mifos.dto.domain.SurveyDto;
 import org.mifos.dto.domain.ValueListElement;
 import org.mifos.dto.screen.AccountFeesDto;
+import org.mifos.dto.screen.CashFlowDataDto;
 import org.mifos.dto.screen.ChangeAccountStatusDto;
 import org.mifos.dto.screen.ListElement;
 import org.mifos.dto.screen.LoanAccountDetailDto;
@@ -201,6 +209,8 @@ import org.mifos.framework.util.helpers.Transformer;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
+import org.mifos.platform.util.CollectionUtils;
+import org.mifos.platform.validations.Errors;
 import org.mifos.schedule.ScheduledEvent;
 import org.mifos.security.MifosUser;
 import org.mifos.security.authorization.AuthorizationManager;
@@ -1863,5 +1873,103 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             questionGroupDetails = questionnaireServiceFacade.getQuestionGroups("Create", "Loan");
         }
         return questionGroupDetails;
+    }
+
+    @Override
+    public CashFlowDto retrieveCashFlowSettings(DateTime firstInstallment, DateTime lastInstallment, Integer productId, BigDecimal loanAmount) {
+        LoanOfferingBO loanProduct = this.loanProductDao.findById(productId);
+        return new CashFlowDto(firstInstallment, lastInstallment, loanProduct.shouldCaptureCapitalAndLiabilityInformation(), loanAmount, loanProduct.getIndebtednessRatio());
+    }
+
+    @Override
+    public List<CashFlowDataDto> retrieveCashFlowSummary(List<MonthlyCashFlowDto> monthlyCashFlow, LoanScheduleDto loanScheduleDto) {
+        
+        Locale locale = Localization.getInstance().getConfiguredLocale();
+        
+        List<CashFlowDataDto> cashflowdetails = new ArrayList<CashFlowDataDto>();
+        
+        for (MonthlyCashFlowDto monthlyCashflowform : monthlyCashFlow) {
+            
+            CashFlowDataDto cashflowDataDto = new CashFlowDataDto();
+            cashflowDataDto.setMonth(monthlyCashflowform.getMonthDate().monthOfYear().getAsText(locale));
+            cashflowDataDto.setYear(String.valueOf(monthlyCashflowform.getMonthDate().getYear()));
+            
+            cashflowDataDto.setCumulativeCashFlow(String.valueOf(monthlyCashflowform.getCumulativeCashFlow().setScale(
+                    AccountingRules.getDigitsAfterDecimal(), BigDecimal.ROUND_HALF_UP)));
+            cashflowDataDto.setMonthYear(monthlyCashflowform.getMonthDate().toDate());
+            cashflowDataDto.setNotes(monthlyCashflowform.getNotes());
+
+            String cumulativeCashflowAndInstallment = computeDiffBetweenCumulativeAndInstallment(monthlyCashflowform.getMonthDate(), monthlyCashflowform.getCumulativeCashFlow(), loanScheduleDto);
+            cashflowDataDto.setDiffCumulativeCashflowAndInstallment(cumulativeCashflowAndInstallment);
+            String cashflowAndInstallmentPercent = computeDiffBetweenCumulativeAndInstallmentPercent(monthlyCashflowform.getMonthDate(), monthlyCashflowform.getCumulativeCashFlow(), loanScheduleDto);
+            cashflowDataDto.setDiffCumulativeCashflowAndInstallmentPercent(cashflowAndInstallmentPercent);
+            
+            cashflowdetails.add(cashflowDataDto);
+        }
+        
+        return cashflowdetails;
+    }
+    
+    private String computeDiffBetweenCumulativeAndInstallment(DateTime dateOfCashFlow, BigDecimal cashflow, LoanScheduleDto loanScheduleDto) {
+        BigDecimal totalInstallmentForMonth = cumulativeTotalForMonth(dateOfCashFlow, loanScheduleDto);
+        return String.valueOf(cashflow.subtract(totalInstallmentForMonth).setScale(
+                AccountingRules.getDigitsAfterDecimal(), RoundingMode.HALF_UP));
+    }
+    
+    private BigDecimal cumulativeTotalForMonth(DateTime dateOfCashFlow, LoanScheduleDto loanScheduleDto) {
+        BigDecimal value = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
+        for (LoanCreationInstallmentDto repaymentScheduleInstallment : loanScheduleDto.getInstallments()) {
+            
+            DateTime dueDate = new DateTime(repaymentScheduleInstallment.getDueDate());
+
+            if (dueDate.getMonthOfYear() == dateOfCashFlow.getMonthOfYear() && (dueDate.getYear() == dateOfCashFlow.getYear())) {
+                value = value.add(BigDecimal.valueOf(repaymentScheduleInstallment.getTotal()));
+            }
+        }
+        return value;
+    }
+    
+    private String computeDiffBetweenCumulativeAndInstallmentPercent(DateTime dateOfCashFlow, BigDecimal cashflow, LoanScheduleDto loanScheduleDto) {
+        BigDecimal totalInstallmentForMonth = cumulativeTotalForMonth(dateOfCashFlow, loanScheduleDto);
+        String value;
+        if (cashflow.doubleValue() != 0) {
+            value = String.valueOf(totalInstallmentForMonth.multiply(BigDecimal.valueOf(100)).divide(cashflow,
+                    AccountingRules.getDigitsAfterDecimal(), RoundingMode.HALF_UP));
+        } else {
+            value = "Infinity";
+        }
+        return value;
+    }
+    
+    @Override
+    public Errors validateCashFlowForInstallmentsForWarnings(List<CashFlowDataDto> cashFlowDataDtos, Integer productId) {
+        Errors errors = new Errors();
+        LoanOfferingBO loanOfferingBO = this.loanProductDao.findById(productId);
+        if (loanOfferingBO.shouldValidateCashFlowForInstallments()) {
+            CashFlowDetail cashFlowDetail = loanOfferingBO.getCashFlowDetail();
+            if (CollectionUtils.isNotEmpty(cashFlowDataDtos)) {
+                for (CashFlowDataDto cashflowDataDto : cashFlowDataDtos) {
+                    validateCashFlow(errors, cashFlowDetail.getCashFlowThreshold(), cashflowDataDto);
+                }
+            }
+        }
+        return errors;
+    }
+    
+    private void validateCashFlow(Errors errors, Double cashFlowThreshold, CashFlowDataDto cashflowDataDto) {
+        String cashFlowAndInstallmentDiffPercent = cashflowDataDto.getDiffCumulativeCashflowAndInstallmentPercent();
+        String monthYearAsString = cashflowDataDto.getMonthYearAsString();
+        String cumulativeCashFlow = cashflowDataDto.getCumulativeCashFlow();
+        if (StringUtils.isNotEmpty(cashFlowAndInstallmentDiffPercent) && Double.valueOf(cashFlowAndInstallmentDiffPercent) > cashFlowThreshold) {
+            errors.addError(AccountConstants.BEYOND_CASHFLOW_THRESHOLD, new String[]{monthYearAsString, cashFlowThreshold.toString()});
+        }
+        if (StringUtils.isNotEmpty(cumulativeCashFlow)) {
+            Double cumulativeCashFlowValue = Double.valueOf(cumulativeCashFlow);
+            if (cumulativeCashFlowValue < 0) {
+                errors.addError(AccountConstants.CUMULATIVE_CASHFLOW_NEGATIVE, new String[]{monthYearAsString});
+            } else if (cumulativeCashFlowValue == 0) {
+                errors.addError(AccountConstants.CUMULATIVE_CASHFLOW_ZERO, new String[]{monthYearAsString});
+            }
+        }
     }
 }

@@ -17,6 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
+
 package org.mifos.platform.cashflow;
 
 import org.joda.time.DateTime;
@@ -24,6 +25,7 @@ import org.mifos.platform.cashflow.service.CashFlowBoundary;
 import org.mifos.platform.cashflow.service.CashFlowDetail;
 
 public interface CashFlowService {
+    
     CashFlowBoundary getCashFlowBoundary(DateTime firstInstallmentDueDate, DateTime lastInstallmentDueDate);
 
     Integer save(CashFlowDetail cashFlowDetail);

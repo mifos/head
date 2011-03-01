@@ -24,6 +24,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.dto.domain.LoanCreationInstallmentDto;
 
@@ -59,5 +60,13 @@ public class LoanScheduleDto implements Serializable {
 
     public List<LoanCreationInstallmentDto> getInstallments() {
         return installments;
+    }
+
+    public DateTime firstInstallment() {
+        return new DateTime(installments.get(0).getDueDate());
+    }
+
+    public DateTime lastInstallment() {
+        return new DateTime(installments.get(installments.size()-1).getDueDate());
     }
 }

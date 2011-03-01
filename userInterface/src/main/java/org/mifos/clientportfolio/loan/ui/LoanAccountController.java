@@ -23,15 +23,19 @@ package org.mifos.clientportfolio.loan.ui;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.application.servicefacade.LoanAccountServiceFacade;
 import org.mifos.clientportfolio.loan.service.CreateLoanSchedule;
 import org.mifos.clientportfolio.newloan.applicationservice.CreateLoanAccount;
 import org.mifos.clientportfolio.newloan.applicationservice.LoanApplicationStateDto;
+import org.mifos.dto.domain.CashFlowDto;
 import org.mifos.dto.domain.CustomerSearchDto;
 import org.mifos.dto.domain.CustomerSearchResultDto;
 import org.mifos.dto.domain.MandatoryHiddenFieldsDto;
+import org.mifos.dto.domain.MonthlyCashFlowDto;
+import org.mifos.dto.screen.CashFlowDataDto;
 import org.mifos.dto.screen.CustomerSearchResultsDto;
 import org.mifos.dto.screen.LoanCreationLoanDetailsDto;
 import org.mifos.dto.screen.LoanCreationProductDetailsDto;
@@ -120,6 +124,10 @@ public class LoanAccountController {
         loanAccountQuestionGroupFormBean.setQuestionGroups(questionGroups);
     }
     
+    public boolean isCompareForCashFlowEnabled() {
+        return true;
+    }
+    
     public LoanScheduleDto retrieveLoanSchedule(int customerId, int productId, LoanAccountFormBean formBean) {
         
         LocalDate disbursementDate = new LocalDate().withDayOfMonth(formBean.getDisbursalDateDay().intValue())
@@ -129,6 +137,21 @@ public class LoanAccountController {
         CreateLoanSchedule createLoanAccount = new CreateLoanSchedule(customerId, productId, BigDecimal.valueOf(formBean.getAmount().doubleValue()), formBean.getInterestRate().doubleValue(), disbursementDate, formBean.getNumberOfInstallments().intValue(), formBean.getGraceDuration().intValue());
         
         return loanAccountServiceFacade.createLoanSchedule(createLoanAccount);
+    }
+    
+    public CashFlowDto retrieveCashFlowSettings(LoanScheduleDto loanScheduleDto, int productId) {
+        DateTime firstInstallment = loanScheduleDto.firstInstallment();
+        DateTime lastInstallment = loanScheduleDto.lastInstallment();
+        return loanAccountServiceFacade.retrieveCashFlowSettings(firstInstallment, lastInstallment, productId, BigDecimal.valueOf(loanScheduleDto.getLoanAmount()));
+    }
+    
+    public List<CashFlowDataDto> retrieveCashflowSummaryDetails(CashFlowSummaryFormBean formBean, List<MonthlyCashFlowDto> monthlyCashFlow, LoanScheduleDto loanScheduleDto, int productId) {
+        
+        List<CashFlowDataDto> cashFlowDataDtos = this.loanAccountServiceFacade.retrieveCashFlowSummary(monthlyCashFlow, loanScheduleDto);
+        formBean.setCashFlowDataDtos(cashFlowDataDtos);
+        formBean.setProductId(productId);
+        
+        return cashFlowDataDtos;
     }
     
     public LoanCreationResultDto saveLoanApplicationForLater(LoanAccountFormBean formBean, LoanAccountQuestionGroupFormBean loanAccountQuestionGroupFormBean) {

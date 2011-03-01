@@ -1,4 +1,3 @@
-
 [#ftl]
 [#--
 * Copyright (c) 2005-2011 Grameen Foundation USA
@@ -25,9 +24,11 @@
 <script type="text/javascript" src="pages/js/jquery/jquery.validate.min.js"></script>
 <script type="text/javascript" src="pages/framework/js/CommonUtilities.js"></script>
 <script type="text/javascript" src="pages/cashflow/js/captureCashFlow.js"></script>
+
 <span id="page.id" title="captureCashFlow"></span>
+
 <div class="content_panel">
-    <form name="captureCashFlowForm" action="captureCashFlow.ftl?execution=${flowExecutionKey}" method="POST" id="captureCashFlowForm">
+    <form name="captureCashFlowForm" action="${flowExecutionUrl}" method="POST" id="captureCashFlowForm">
         <center>
             <fieldset id="cashFlows" style="width:80%;">
               <legend style="font-size:1em;">[@spring.message "cashflow.heading"/]</legend>
@@ -78,9 +79,6 @@
                             <input type="submit" id="_eventId_cancel" name="_eventId_cancel" value="[@spring.message "cashflow.cancel"/]"  class="cancel cancelbuttn"/>
                         </div>
                     </div>
-                    [#if flowKey??]
-                    <input type="hidden" id="currentFlowKey" name="currentFlowKey" value="${flowKey}"/>
-                    [/#if]
                 </center>
             </fieldset>
         </center>

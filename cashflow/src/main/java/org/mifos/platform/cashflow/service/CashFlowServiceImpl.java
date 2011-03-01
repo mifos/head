@@ -17,6 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
+
 package org.mifos.platform.cashflow.service;
 
 import org.joda.time.DateTime;
@@ -34,13 +35,10 @@ import static org.mifos.platform.cashflow.CashFlowConstants.EXTRA_DURATION_FOR_C
 import static org.mifos.platform.cashflow.CashFlowConstants.FIRST_DAY;
 
 public class CashFlowServiceImpl implements CashFlowService {
+    
+    private CashFlowDao cashFlowDao;
+
     @Autowired
-    CashFlowDao cashFlowDao;
-
-    @SuppressWarnings({"UnusedDeclaration", "PMD.UnnecessaryConstructor", "PMD.UncommentedEmptyConstructor"})
-    public CashFlowServiceImpl() {
-    }
-
     public CashFlowServiceImpl(CashFlowDao cashFlowDao) {
         this.cashFlowDao = cashFlowDao;
     }
