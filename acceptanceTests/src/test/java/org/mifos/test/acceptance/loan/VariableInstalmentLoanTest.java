@@ -27,12 +27,8 @@ import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.FeesCreatePage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
-import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
-import org.mifos.test.acceptance.framework.office.OfficeParameters;
-import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
-import org.mifos.test.acceptance.loanproduct.LoanProductTestHelper;
 import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
 import org.mifos.test.acceptance.util.TestDataSetup;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,17 +39,13 @@ import org.testng.annotations.Test;
 
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(sequential = true, groups = {"loanproduct", "acceptance", "ui","no_db_unit"})
+@Test(sequential = true, groups = {"loanproduct", "acceptance", "ui", "no_db_unit"})
 public class VariableInstalmentLoanTest extends UiTestCaseBase {
 
     @Autowired
     private ApplicationDatabaseOperation applicationDatabaseOperation;
-    private static final String officeName = "test_office";
-    private static final String userLoginName = "test_user";
-    private static final String userName="test user";
-    private static final String clientName = "test client";
-    private LoanProductTestHelper loanProductTestHelper;
-    private String loanProductName;
+    private static final String clientName = "Client WeeklyTue";
+    private static final String loanProductName = "WeeklyClientVariableInstallmentsLoan";
     private LoanTestHelper loanTestHelper;
     private DateTime systemDateTime;
     private NavigationHelper navigationHelper;
@@ -65,64 +57,52 @@ public class VariableInstalmentLoanTest extends UiTestCaseBase {
     }
 
     @Override
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // one of the dependent methods throws Exception
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
-        loanProductTestHelper = new LoanProductTestHelper(selenium);
         navigationHelper = new NavigationHelper(selenium);
         systemDateTime = new DateTime(2010, 10, 11, 10, 0, 0, 0);
         loanTestHelper = new LoanTestHelper(selenium);
         loanTestHelper.setApplicationTime(systemDateTime);
         TestDataSetup dataSetup = new TestDataSetup(selenium, applicationDatabaseOperation);
-        dataSetup.createBranch(OfficeParameters.BRANCH_OFFICE, officeName, "Off");
-        dataSetup.createUser(userLoginName, userName, officeName);
-        dataSetup.createClient(clientName, officeName, userName);
         feeTestHelper = new FeeTestHelper(dataSetup);
     }
 
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
-    @Test(enabled=true)
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // one of the dependent methods throws Exception
+    @Test(enabled = true)
     public void verifyRepaymentScheduleField() throws Exception {
         int noOfInstallments = 5;
-        int loanAmount = 1000;
-        int interestRate = 20;
-        DefineNewLoanProductPage.SubmitFormParameters formParameters = defineLoanProductParameters(noOfInstallments, loanAmount, interestRate);
-        applicationDatabaseOperation.updateLSIM(1);
-
         int maxGap = 10;
         int minGap = 1;
         int minInstalmentAmount = 100;
         DateTime disbursalDate = systemDateTime.plusDays(1);
-
-        createLoanProductWithVariableInstalment(maxGap, minGap, minInstalmentAmount, formParameters);
         navigationHelper.navigateToHomePage();
         loanTestHelper.
                 navigateToCreateLoanAccountEntryPageWithoutLogout(setLoanSearchParameters()).
                 setDisbursalDate(disbursalDate).
                 clickContinue().
                 validateRepaymentScheduleFieldDefault(noOfInstallments).
-                validateDateFieldValidations(disbursalDate,minGap,maxGap,noOfInstallments).
-                verifyInstallmentTotalValidations(noOfInstallments,minInstalmentAmount, disbursalDate, minGap).
-                verifyValidData(noOfInstallments,minGap,minInstalmentAmount,disbursalDate, maxGap).
+                validateDateFieldValidations(disbursalDate, minGap, maxGap, noOfInstallments).
+                verifyInstallmentTotalValidations(noOfInstallments, minInstalmentAmount, disbursalDate, minGap).
+                verifyValidData(noOfInstallments, minGap, minInstalmentAmount, disbursalDate, maxGap).
                 clickPreviewAndGoToReviewLoanAccountPage().
                 verifyEditSchedule().
-                verifySchedulePersistOnEdit(noOfInstallments,minGap,minInstalmentAmount,disbursalDate, maxGap);
+                verifySchedulePersistOnEdit(noOfInstallments, minGap, minInstalmentAmount, disbursalDate, maxGap);
 
     }
 
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
-    @Test(enabled=true)
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // one of the dependent methods throws Exception
+    @Test(enabled = true)
     public void verifyInvalidFees() throws Exception {
-        DefineNewLoanProductPage.SubmitFormParameters formParameters = defineLoanProductParameters(5, 1000, 20);
-        applicationDatabaseOperation.updateLSIM(1);
         DateTime disbursalDate = systemDateTime.plusDays(1);
         String periodicFees = feeTestHelper.createPeriodicFee("loanWeeklyFee", FeesCreatePage.SubmitFormParameters.LOAN, FeesCreatePage.SubmitFormParameters.WEEKLY_FEE_RECURRENCE, 1, 100);
         String fixedFeePerAmountAndInterest = feeTestHelper.createFixedFee("fixedFeePerAmountAndInterest", FeesCreatePage.SubmitFormParameters.LOAN, "Upfront", 100, "Loan Amount+Interest");
         String fixedFeePerInterest = feeTestHelper.createFixedFee("fixedFeePerInterest", FeesCreatePage.SubmitFormParameters.LOAN, "Upfront", 20, "Interest");
         String[] blockedInterest = {periodicFees, fixedFeePerAmountAndInterest, fixedFeePerInterest};
-
-        createLoanProductWithVariableInstalment(100, 5, 100, formParameters);
         navigationHelper.navigateToHomePage();
         loanTestHelper.
                 navigateToCreateLoanAccountEntryPageWithoutLogout(setLoanSearchParameters()).
@@ -132,24 +112,6 @@ public class VariableInstalmentLoanTest extends UiTestCaseBase {
                 clickPreviewAndGoToReviewLoanAccountPage().
                 submit().navigateToLoanAccountDetailsPage().
                 navigateToApplyCharge().verifyBlockedFee(blockedInterest);
-    }
-
-    private DefineNewLoanProductPage.SubmitFormParameters defineLoanProductParameters(int defInstallments, int defaultLoanAmount, int defaultInterestRate) {
-        DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
-        formParameters.setDefInstallments(String.valueOf(defInstallments));
-        formParameters.setDefaultLoanAmount(String.valueOf(defaultLoanAmount));
-        formParameters.setInterestTypes(DefineNewLoanProductPage.SubmitFormParameters.DECLINING_BALANCE);
-        formParameters.setDefaultInterestRate(String.valueOf(defaultInterestRate));
-        return formParameters;
-    }
-
-    private void createLoanProductWithVariableInstalment(int maxGap, int minGap, int minInstalmentAmount, DefineNewLoanProductPage.SubmitFormParameters formParameters) {
-        loanProductName = formParameters.getOfferingName();
-        loanProductTestHelper.
-                navigateToDefineNewLoanPangAndFillMandatoryFields(formParameters).
-                fillVariableInstalmentOption(String.valueOf(maxGap),String.valueOf(minGap), String.valueOf(minInstalmentAmount)).
-                submitAndGotoNewLoanProductPreviewPage().
-                submit();
     }
 
     private CreateLoanAccountSearchParameters setLoanSearchParameters() {
