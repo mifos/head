@@ -206,4 +206,9 @@ public class QuestionnairePage extends MifosPage {
     public void verifyTextPresent(String expectedText, String errorMessage) {
         Assert.assertTrue(isTextPresentInPage(expectedText), errorMessage);
     }
+
+
+    public void typeText(String locator, String value) {
+        selenium.type(locator,value);
+    }
 }
