@@ -18,58 +18,44 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.clientportfolio.loan.service;
-
-import java.math.BigDecimal;
+package org.mifos.clientportfolio.newloan.domain;
 
 import org.joda.time.LocalDate;
+import org.mifos.framework.util.helpers.Money;
 
-public class CreateLoanSchedule {
+public class LoanProductOverridenDetail {
 
-    private final Integer customerId;
-    private final Integer productId;
-    private final BigDecimal loanAmount;
-    private final Double interestRate;
+    private final Money loanAmount;
     private final LocalDate disbursementDate;
+    private final Double interestRate;
     private final int numberOfInstallments;
     private final int graceDuration;
 
-    public CreateLoanSchedule(Integer customerId, Integer productId, BigDecimal loanAmount, Double interestRate,
-            LocalDate disbursementDate, int numberOfInstallments, int graceDuration) {
-        this.customerId = customerId;
-        this.productId = productId;
+    public LoanProductOverridenDetail(Money loanAmount, LocalDate disbursementDate, Double interestRate, int numberOfInstallments, int graceDuration) {
         this.loanAmount = loanAmount;
-        this.interestRate = interestRate;
         this.disbursementDate = disbursementDate;
+        this.interestRate = interestRate;
         this.numberOfInstallments = numberOfInstallments;
         this.graceDuration = graceDuration;
     }
 
-    public int getGraceDuration() {
-        return graceDuration;
-    }
-
-    public Integer getCustomerId() {
-        return customerId;
-    }
-
-    public Integer getProductId() {
-        return productId;
-    }
-
-    public BigDecimal getLoanAmount() {
+    public Money getLoanAmount() {
         return loanAmount;
-    }
-
-    public Double getInterestRate() {
-        return interestRate;
     }
 
     public LocalDate getDisbursementDate() {
         return disbursementDate;
     }
 
+    public Double getInterestRate() {
+        return interestRate;
+    }
+
     public int getNumberOfInstallments() {
         return numberOfInstallments;
+    }
+
+    public int getGraceDuration() {
+        return graceDuration;
     }
 }

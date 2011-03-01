@@ -20,6 +20,10 @@
 
 package org.mifos.clientportfolio.newloan.domain;
 
+/**
+ * @deprecated work in progress Release G - do not use
+ */
+@Deprecated
 public interface IndividualLoan extends Loan {
 
 }

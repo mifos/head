@@ -40,6 +40,6 @@ public class IndividualLoanServiceFacadeWebTier implements IndividualLoanService
 
         IndividualLoan loan = loanAssembler.assembleFrom(individualLoan);
 
-        loanService.create(loan);
+//        loanService.create(loan);
     }
 }

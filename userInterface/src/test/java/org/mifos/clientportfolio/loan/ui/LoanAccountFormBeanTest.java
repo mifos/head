@@ -27,8 +27,10 @@ import static org.junit.matchers.JUnitMatchers.containsString;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mifos.clientportfolio.newloan.applicationservice.LoanDisbursementDateValidationServiceFacade;
 import org.mifos.platform.validation.MifosBeanValidator;
 import org.mifos.ui.validation.StubValidationContext;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.binding.message.Message;
 import org.springframework.binding.message.MessageContext;
@@ -41,6 +43,8 @@ public class LoanAccountFormBeanTest {
     private LoanAccountFormBean loanAccountFormBean;
     
     private ValidationContext context;
+    
+    @Mock private LoanDisbursementDateValidationServiceFacade loanDisbursementDateValidationServiceFacade; 
     
     @Before
     public void setUp() {
@@ -71,6 +75,7 @@ public class LoanAccountFormBeanTest {
         loanAccountFormBean.setMaxNumberOfInstallments(12);
         
         loanAccountFormBean.setValidator(validator);
+        loanAccountFormBean.setLoanDisbursementDateValidationServiceFacade(loanDisbursementDateValidationServiceFacade);
         
         context = new StubValidationContext();
     }

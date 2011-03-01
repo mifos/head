@@ -20,14 +20,10 @@
 
 package org.mifos.clientportfolio.newloan.applicationservice;
 
-import org.mifos.clientportfolio.newloan.domain.IndividualLoan;
+import org.joda.time.LocalDate;
 
-/**
- * @deprecated work in progress Release G - do not use
- */
-@Deprecated
-public interface LoanAssembler {
+public interface LoanDisbursementDateValidationServiceFacade {
 
-    IndividualLoan assembleFrom(IndividualLoanRequest individualLoan);
+    void validateLoanDisbursementDate(LocalDate loanDisbursementDate, Integer customerId, Integer productId);
 
 }

@@ -24,37 +24,50 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
+import org.mifos.accounts.business.AccountFeesEntity;
+import org.mifos.accounts.fees.persistence.FeeDao;
+import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
+import org.mifos.accounts.loan.business.LoanFeeScheduleEntity;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.util.helpers.InstallmentPrincipalAndInterest;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.accounts.util.helpers.AccountConstants;
+import org.mifos.accounts.util.helpers.FeeInstallment;
 import org.mifos.accounts.util.helpers.InstallmentDate;
 import org.mifos.accounts.util.helpers.PaymentStatus;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.MoneyUtils;
+import org.mifos.schedule.ScheduledEvent;
 import org.mifos.service.BusinessRuleException;
 
 public class IndividualLoanScheduleFactory implements LoanScheduleFactory {
 
+    private FeeDao feeDao;
+    
+    public IndividualLoanScheduleFactory(FeeDao feeDao) {
+        this.feeDao = feeDao;
+    }
+
     @Override
-    public IndividualLoanSchedule create(List<DateTime> loanScheduleDates, LoanOfferingBO loanProduct, Money loanAmount, Double interestRate, Integer interestDays) {
+    public LoanSchedule create(List<DateTime> loanScheduleDates, LoanOfferingBO loanProduct, 
+            CustomerBO customer, Money loanAmount, Double interestRate, Integer interestDays, Integer gracePeriodDuration, 
+            List<AccountFeesEntity> accountFees) {
 
         GraceType graceType = loanProduct.getGraceType();
-        Integer gracePeriodDuration = Integer.valueOf(0);
-        if (loanProduct.getGracePeriodDuration() != null) {
-            gracePeriodDuration = loanProduct.getGracePeriodDuration().intValue();
-        }
-        MeetingBO loanMeeting = loanProduct.getLoanOfferingMeetingValue();
         InterestType interestType = loanProduct.getInterestType();
-
-        CustomerBO customer = null;
         Integer numberOfInstallments = loanScheduleDates.size();
 
-        List<LoanScheduleEntity> scheduledLoanRepayments = new ArrayList<LoanScheduleEntity>();
+        MeetingBO loanMeeting = loanProduct.getLoanOfferingMeetingValue();
+        MeetingBO customerMeeting = customer.getCustomerMeetingValue();
+        
+        // FIXME - keithw - which meeting schedule should be used ?
+        RecurringScheduledEventFactory scheduledEventFactory = new RecurringScheduledEventFactoryImpl();
+        ScheduledEvent meetingScheduledEvent = scheduledEventFactory.createScheduledEventFrom(customerMeeting);
 
         Integer installmentNumber = 1;
         List<InstallmentDate> dueInstallmentDates = new ArrayList<InstallmentDate>();
@@ -90,36 +103,126 @@ public class IndividualLoanScheduleFactory implements LoanScheduleFactory {
         PrincipalWithInterestGenerator equalInstallmentGenerator = equalInstallmentGeneratorFactory.create(interestType, loanInterest);
 
         List<InstallmentPrincipalAndInterest> EMIInstallments = equalInstallmentGenerator.generateEqualInstallments(loanInterestCalculationDetails);
+        List<LoanScheduleEntity> unroundedLoanSchedules = createUnroundedLoanSchedulesFromInstallments(dueInstallmentDates, loanInterest, loanAmount, 
+                meetingScheduledEvent, EMIInstallments, accountFees, customer);
 
-        // create loanSchedules
-        int installmentIndex = 0;
-        for (InstallmentDate installmentDate : dueInstallmentDates) {
-            InstallmentPrincipalAndInterest em = EMIInstallments.get(installmentIndex);
-            LoanScheduleEntity loanScheduleEntity = new LoanScheduleEntity(null, customer, installmentDate
-                    .getInstallmentId(), new java.sql.Date(installmentDate.getInstallmentDueDate().getTime()),
-                    PaymentStatus.UNPAID, em.getPrincipal(), em.getInterest());
-            scheduledLoanRepayments.add(loanScheduleEntity);
-            installmentIndex++;
-        }
-
+//        List<LoanScheduleEntity> scheduledLoanRepayments = new ArrayList<LoanScheduleEntity>();
+//        // create loanSchedules
+//        int installmentIndex = 0;
+//        for (InstallmentDate installmentDate : dueInstallmentDates) {
+//            InstallmentPrincipalAndInterest em = EMIInstallments.get(installmentIndex);
+//            LoanScheduleEntity loanScheduleEntity = new LoanScheduleEntity(null, customer, installmentDate
+//                    .getInstallmentId(), new java.sql.Date(installmentDate.getInstallmentDueDate().getTime()),
+//                    PaymentStatus.UNPAID, em.getPrincipal(), em.getInterest());
+//            scheduledLoanRepayments.add(loanScheduleEntity);
+//            installmentIndex++;
+//        }
+        
+        Money rawAmount = calculateTotalFeesAndInterestForLoanSchedules(unroundedLoanSchedules, loanAmount.getCurrency(), accountFees);
+        
         List<LoanScheduleEntity> allExistingLoanSchedules = new ArrayList<LoanScheduleEntity>();
         
         LoanScheduleRounderHelper loanScheduleRounderHelper = new DefaultLoanScheduleRounderHelper();
         LoanScheduleRounder loanScheduleInstallmentRounder = new DefaultLoanScheduleRounder(loanScheduleRounderHelper);
 
         List<LoanScheduleEntity> roundedLoanSchedules = loanScheduleInstallmentRounder.round(graceType, gracePeriodDuration.shortValue(), loanAmount,
-        		interestType, scheduledLoanRepayments, allExistingLoanSchedules);
+        		interestType, unroundedLoanSchedules, allExistingLoanSchedules);
         
-        List<LoanScheduleRepaymentItem> loanScheduleItems = new ArrayList<LoanScheduleRepaymentItem>();
-        for (LoanScheduleEntity loanScheduleEntity : roundedLoanSchedules) {
+//        List<LoanScheduleRepaymentItem> loanScheduleItems = new ArrayList<LoanScheduleRepaymentItem>();
+//        for (LoanScheduleEntity loanScheduleEntity : roundedLoanSchedules) {
+//
+//            LoanScheduleRepaymentItemImpl loanScheduleItem = new LoanScheduleRepaymentItemImpl(loanScheduleEntity
+//                    .getInstallmentId().intValue(), new LocalDate(loanScheduleEntity.getActionDate()),
+//                    loanScheduleEntity.getPrincipal(), loanScheduleEntity.getInterest());
+//
+//            loanScheduleItems.add(loanScheduleItem);
+//        }
 
-            LoanScheduleRepaymentItemImpl loanScheduleItem = new LoanScheduleRepaymentItemImpl(loanScheduleEntity
-                    .getInstallmentId().intValue(), new LocalDate(loanScheduleEntity.getActionDate()),
-                    loanScheduleEntity.getPrincipal(), loanScheduleEntity.getInterest());
+        return new LoanSchedule(roundedLoanSchedules, rawAmount);
+    }
+    
+    private List<LoanScheduleEntity> createUnroundedLoanSchedulesFromInstallments(List<InstallmentDate> installmentDates,
+            Money loanInterest, Money loanAmount, ScheduledEvent meetingScheduledEvent,
+            List<InstallmentPrincipalAndInterest> principalWithInterestInstallments, List<AccountFeesEntity> accountFees, CustomerBO customer) {
 
-            loanScheduleItems.add(loanScheduleItem);
+        List<LoanScheduleEntity> unroundedLoanSchedules = new ArrayList<LoanScheduleEntity>();
+
+        List<FeeInstallment> feeInstallments = new ArrayList<FeeInstallment>();
+        if (!accountFees.isEmpty()) {
+            InstallmentFeeCalculatorFactory installmentFeeCalculatorFactory = new InstallmentFeeCalculatorFactoryImpl();
+
+            for (AccountFeesEntity accountFeesEntity : accountFees) {
+
+                RateAmountFlag feeType = accountFeesEntity.getFees().getFeeType();
+                InstallmentFeeCalculator installmentFeeCalculator = installmentFeeCalculatorFactory.create(this.feeDao, feeType);
+
+                Double feeAmount = accountFeesEntity.getFeeAmount();
+                Money accountFeeAmount = installmentFeeCalculator.calculate(feeAmount, loanAmount, loanInterest, accountFeesEntity.getFees());
+                accountFeesEntity.setAccountFeeAmount(accountFeeAmount);
+            }
+            feeInstallments = FeeInstallment.createMergedFeeInstallments(meetingScheduledEvent, accountFees, installmentDates.size());
         }
 
-        return new IndividualLoanScheduleImpl(loanScheduleItems);
+        int installmentIndex = 0;
+        for (InstallmentDate installmentDate1 : installmentDates) {
+
+            InstallmentPrincipalAndInterest em = principalWithInterestInstallments.get(installmentIndex);
+
+            LoanScheduleEntity loanScheduleEntity = new LoanScheduleEntity(null, customer, installmentDate1
+                    .getInstallmentId(), new java.sql.Date(installmentDate1.getInstallmentDueDate().getTime()),
+                    PaymentStatus.UNPAID, em.getPrincipal(), em.getInterest());
+
+            for (FeeInstallment feeInstallment : feeInstallments) {
+                if (feeInstallment.getInstallmentId().equals(installmentDate1.getInstallmentId())) {
+                    
+                    if (!feeInstallment.getAccountFeesEntity().getFees().isTimeOfDisbursement()) {
+                        
+                        LoanFeeScheduleEntity loanFeeScheduleEntity = new LoanFeeScheduleEntity(loanScheduleEntity,
+                                feeInstallment.getAccountFeesEntity().getFees(), feeInstallment.getAccountFeesEntity(),
+                                feeInstallment.getAccountFee());
+                        loanScheduleEntity.addAccountFeesAction(loanFeeScheduleEntity);
+                        
+                    } else if (feeInstallment.getAccountFeesEntity().getFees().isTimeOfDisbursement()) {
+                        
+                        LoanFeeScheduleEntity loanFeeScheduleEntity = new LoanFeeScheduleEntity(loanScheduleEntity,
+                                feeInstallment.getAccountFeesEntity().getFees(), feeInstallment.getAccountFeesEntity(),
+                                feeInstallment.getAccountFee());
+                        loanScheduleEntity.addAccountFeesAction(loanFeeScheduleEntity);
+                    }
+                }
+            }
+
+            unroundedLoanSchedules.add(loanScheduleEntity);
+            installmentIndex++;
+        }
+
+        return unroundedLoanSchedules;
+    }
+
+    
+    private Money calculateTotalFeesAndInterestForLoanSchedules(List<LoanScheduleEntity> unroundedLoanSchedules, MifosCurrency currencyInUse, List<AccountFeesEntity> accountFees) {
+
+        Money zero = new Money(currencyInUse);
+        Money interest = zero;
+        Money fees = zero;
+
+        for (LoanScheduleEntity unroundedLoanSchedule : unroundedLoanSchedules) {
+            interest = interest.add(unroundedLoanSchedule.getInterest());
+            fees = fees.add(unroundedLoanSchedule.getTotalFeesDueWithMiscFee());
+        }
+
+        Money feeDisbursementAmount = zero;
+        for (AccountFeesEntity accountFeesEntity : accountFees) {
+            if (accountFeesEntity.getFees().isTimeOfDisbursement()) {
+                feeDisbursementAmount = fees.add(accountFeesEntity.getAccountFeeAmount());
+            }
+        }
+
+        fees = fees.add(feeDisbursementAmount);
+        fees = MoneyUtils.currencyRound(fees);
+        interest = MoneyUtils.currencyRound(interest);
+
+        Money rawAmount = interest.add(fees);
+        return rawAmount;
     }
 }

@@ -22,7 +22,6 @@
         <SELENIUM_PORT>4445</SELENIUM_PORT>
         <SERVLET_PORT>8083</SERVLET_PORT>
         <stop.port>8005</stop.port>
-        <jetty.version>7.3.0.v20110203</jetty.version>
         <jdk.version>1.6</jdk.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 

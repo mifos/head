@@ -18,16 +18,25 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.clientportfolio.newloan.applicationservice;
+package org.mifos.clientportfolio.newloan.domain;
 
-import org.mifos.clientportfolio.newloan.domain.IndividualLoan;
+import org.joda.time.DateTime;
 
-/**
- * @deprecated work in progress Release G - do not use
- */
-@Deprecated
-public interface LoanAssembler {
+public class CreationDetail {
 
-    IndividualLoan assembleFrom(IndividualLoanRequest individualLoan);
+    private final DateTime createdDate;
+    private final Integer createdBy;
 
+    public CreationDetail(DateTime createdDate, Integer createdBy) {
+        this.createdDate = createdDate;
+        this.createdBy = createdBy;
+    }
+
+    public DateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public Integer getCreatedBy() {
+        return createdBy;
+    }
 }

@@ -18,16 +18,12 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.clientportfolio.newloan.applicationservice;
+package org.mifos.clientportfolio.newloan.domain;
 
-import org.mifos.clientportfolio.newloan.domain.IndividualLoan;
+import org.joda.time.LocalDate;
 
-/**
- * @deprecated work in progress Release G - do not use
- */
-@Deprecated
-public interface LoanAssembler {
+public interface LoanDisbursementDateValidator {
 
-    IndividualLoan assembleFrom(IndividualLoanRequest individualLoan);
+    boolean isDisbursementDateValid(LocalDate disbursementDate);
 
 }

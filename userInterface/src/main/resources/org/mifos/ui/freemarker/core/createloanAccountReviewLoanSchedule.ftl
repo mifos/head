@@ -31,8 +31,8 @@
 <br/>
 
 <p><span class="standout">[@spring.message "selectProduct.accountOwnerName" /]</span> ${loanScheduleReferenceData.accountOwner}</p>
-<p><span class="standout">[@spring.message "reviewInstallments.loanAmount" /]</span> ${loanScheduleReferenceData.loanAmount}</p>
-<p><span class="standout">[@spring.message "reviewInstallments.disbursmentDate" /]</span> ${loanScheduleReferenceData.localisedDisbursementDate}</p>
+<p><span class="standout">[@spring.message "reviewInstallments.loanAmount" /]</span> ${loanScheduleReferenceData.loanAmount?string.currency}</p>
+<p><span class="standout">[@spring.message "reviewInstallments.disbursmentDate" /]</span> ${loanScheduleReferenceData.disbursementDate?date?string.medium}</p>
 <br/>
 
 <table border="0">
@@ -50,12 +50,12 @@
 		</tr>
 		[#list loanScheduleReferenceData.installments as row]
 		<tr>
-			<td>${row.installmentNumber}</td>
-			<td>${row.localisedDueDate}</td>
-			<td>${row.principal}</td>
-			<td>${row.interest}</td>
-			<td>${row.fees}</td>
-			<td>${row.total}</td>
+			<td>${row.installmentNumber?string.number}</td>
+			<td>${row.dueDate?date?string.medium}</td>
+			<td>${row.principal?string.currency}</td>
+			<td>${row.interest?string.currency}</td>
+			<td>${row.fees?string.currency}</td>
+			<td>${row.total?string.currency}</td>
 		</tr>
 		[/#list]
 	</tbody>

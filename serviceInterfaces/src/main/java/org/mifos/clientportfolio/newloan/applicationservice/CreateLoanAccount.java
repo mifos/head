@@ -18,35 +18,45 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.clientportfolio.loan.service;
+package org.mifos.clientportfolio.newloan.applicationservice;
 
 import java.math.BigDecimal;
 
 import org.joda.time.LocalDate;
 
-public class CreateLoanSchedule {
+public class CreateLoanAccount {
 
     private final Integer customerId;
     private final Integer productId;
+    private final Integer accountState;
     private final BigDecimal loanAmount;
     private final Double interestRate;
     private final LocalDate disbursementDate;
     private final int numberOfInstallments;
     private final int graceDuration;
+    private final Integer sourceOfFundId;
+    private final Integer loanPurposeId;
+    private final Integer collateralTypeId;
+    private final String collateralNotes;
+    private final String externalId;
 
-    public CreateLoanSchedule(Integer customerId, Integer productId, BigDecimal loanAmount, Double interestRate,
-            LocalDate disbursementDate, int numberOfInstallments, int graceDuration) {
+    @SuppressWarnings("PMD")
+    public CreateLoanAccount(Integer customerId, Integer productId, Integer accountState, BigDecimal loanAmount, Double interestRate,
+            LocalDate disbursementDate, int numberOfInstallments, int graceDuration, Integer sourceOfFundId,
+            Integer loanPurposeId, Integer collateralTypeId, String collateralNotes, String externalId) {
         this.customerId = customerId;
         this.productId = productId;
+        this.accountState = accountState;
         this.loanAmount = loanAmount;
         this.interestRate = interestRate;
         this.disbursementDate = disbursementDate;
         this.numberOfInstallments = numberOfInstallments;
         this.graceDuration = graceDuration;
-    }
-
-    public int getGraceDuration() {
-        return graceDuration;
+        this.sourceOfFundId = sourceOfFundId;
+        this.loanPurposeId = loanPurposeId;
+        this.collateralTypeId = collateralTypeId;
+        this.collateralNotes = collateralNotes;
+        this.externalId = externalId;
     }
 
     public Integer getCustomerId() {
@@ -55,6 +65,10 @@ public class CreateLoanSchedule {
 
     public Integer getProductId() {
         return productId;
+    }
+    
+    public Integer getAccountState() {
+        return accountState;
     }
 
     public BigDecimal getLoanAmount() {
@@ -71,5 +85,29 @@ public class CreateLoanSchedule {
 
     public int getNumberOfInstallments() {
         return numberOfInstallments;
+    }
+
+    public int getGraceDuration() {
+        return graceDuration;
+    }
+
+    public Integer getSourceOfFundId() {
+        return sourceOfFundId;
+    }
+
+    public Integer getLoanPurposeId() {
+        return loanPurposeId;
+    }
+
+    public Integer getCollateralTypeId() {
+        return collateralTypeId;
+    }
+
+    public String getCollateralNotes() {
+        return collateralNotes;
+    }
+    
+    public String getExternalId() {
+        return externalId;
     }
 }
