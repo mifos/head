@@ -23,9 +23,12 @@ package org.mifos.test.acceptance.client;
 
 import static java.util.Arrays.asList;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -293,6 +296,114 @@ public class ClientTest extends UiTestCaseBase {
         clientDetailsPage = mfiPreviewPage.submit();
         assertTextFoundOnPage("extID123");
         assertTextFoundOnPage("15/12/2008");
+    }
+
+    // http://mifosforge.jira.com/browse/MIFOSTEST-663
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void closeClientAccountWithQG() throws Exception {
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_016_dbunit.xml", dataSource, selenium);
+
+        CreateGroupSubmitParameters groupParams = new CreateGroupSubmitParameters();
+        groupParams.setGroupName("GroupTest");
+        String clientName = "0004-000000057";
+        String qG_1 = "CloseClientQG";
+        String qG_2 = "CloseClientQG2";
+        QuestionResponseParameters responseParams = getQuestionResponseParametersForClientAccountClose("answer1");
+        QuestionResponseParameters responseParams2 = getQuestionResponseParametersForClientAccountClose("answer2");
+        QuestionResponseParameters responseParamsAfterModyfication = getQuestionResponseParametersForClientAccountCloseAfterModyfication("answer2");
+        List<CreateQuestionParameters> questionsList = new ArrayList<CreateQuestionParameters>();
+        questionsList.add(newFreeTextQuestionParameters("new question 1"));
+        questionsList.add(newFreeTextQuestionParameters("new question 2"));
+        questionsList.add(newFreeTextQuestionParameters("new question 3"));
+        String[] newActiveQuestions = { "new question 1", "new question 2" };
+        String[] deactivateArray = { "new question 3", "question 3", "SingleSelect", "SmartSelect", "TextQuestion"};
+        String[] deactivatedGroupArray = { "SingleSelectQuestion", "SmartSelectQuestion" };
+        List<String> deactivateList = Arrays.asList(deactivateArray);
+        Map<String, String> questionsAndAnswers = new HashMap<String, String>();
+        questionsAndAnswers.put("new question 1", "answer2");
+        questionsAndAnswers.put("new question 2", "answer2");
+        questionsAndAnswers.put("DateQuestion", "24/01/2011");
+        questionsAndAnswers.put("MultiSelect", "first");
+        questionsAndAnswers.put("Number", "10");
+        questionsAndAnswers.put("NumberQuestion", "10");
+        questionsAndAnswers.put("question 1", "answer2");
+        //When / Then
+        QuestionResponsePage responsePage = clientTestHelper.navigateToQuestionResponsePageWhenCloseClientAccount(clientName);
+        responsePage.populateAnswers(responseParams);
+        responsePage.navigateToNextPage();
+        responsePage = new CustomerChangeStatusPreviewPage(selenium).navigateToEditAdditionalInformation();
+        responsePage.populateAnswers(responseParams2);
+        responsePage.navigateToNextPage();
+        new CustomerChangeStatusPreviewPage(selenium).cancelAndGotoClientViewDetailsPage();
+
+        QuestionGroupTestHelper questionTestHelper = new QuestionGroupTestHelper(selenium);
+        questionTestHelper.addNewQuestionsToQuestionGroup(qG_1, questionsList);
+        questionTestHelper.markQuestionsAsInactive(deactivateList);
+        questionTestHelper.markQuestionGroupAsInactive(qG_2);
+        responsePage = clientTestHelper.navigateToQuestionResponsePageWhenCloseClientAccount(clientName);
+
+        responsePage.verifyQuestionsDoesnotappear(deactivateArray);
+        responsePage.verifyQuestionsDoesnotappear(deactivatedGroupArray);
+        responsePage.verifyQuestionsExists(newActiveQuestions);
+        responsePage.populateAnswers(responseParamsAfterModyfication);
+        responsePage.navigateToNextPage();
+        new CustomerChangeStatusPreviewPage(selenium).submitAndGotoClientViewDetailsPage();
+
+        verifyQuestionResponsesExistInDatabase(clientName, "Close Client", questionsAndAnswers);
+    }
+
+    public void verifyQuestionResponsesExistInDatabase(String clientID, String event, Map<String, String> questions) throws SQLException {
+        for(String question : questions.keySet()) {
+            Assert.assertTrue(applicationDatabaseOperation.deosQuestionResponseForClientExist(clientID, event, question, questions.get(question)));
+        }
+    }
+    private QuestionResponseParameters getQuestionResponseParametersForClientAccountClose(String answer) {
+            QuestionResponseParameters responseParams = new QuestionResponseParameters();
+            responseParams.addTextAnswer("questionGroups[0].sectionDetails[0].questions[0].value", "24/01/2011");
+            responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[0].questions[1].valuesAsArray", "first");
+            responseParams.addTextAnswer("questionGroups[0].sectionDetails[0].questions[2].value", "10");
+            responseParams.addTextAnswer("questionGroups[0].sectionDetails[0].questions[3].value", "10");
+            responseParams.addTextAnswer("questionGroups[0].sectionDetails[0].questions[4].value", answer);
+
+            responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[0].value", "24/01/2011");
+            responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[1].value", "good");
+            responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[2].valuesAsArray", "february:feb");
+            responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[3].value", answer);
+
+            responseParams.addTextAnswer("questionGroups[1].sectionDetails[0].questions[0].value", "24/01/2011");
+            responseParams.addTextAnswer("questionGroups[1].sectionDetails[0].questions[1].value", "10");
+            responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[0].questions[2].value", "good");
+            responseParams.addTextAnswer("questionGroups[1].sectionDetails[0].questions[3].value", answer);
+
+            responseParams.addTextAnswer("questionGroups[1].sectionDetails[1].questions[0].value", answer);
+            responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[1].value", "1");
+            responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[2].valuesAsArray", "one:a");
+            responseParams.addTextAnswer("questionGroups[1].sectionDetails[1].questions[3].value", answer);
+
+            return responseParams;
+        }
+
+    private QuestionResponseParameters getQuestionResponseParametersForClientAccountCloseAfterModyfication(String answer) {
+        QuestionResponseParameters responseParams = new QuestionResponseParameters();
+        responseParams.addTextAnswer("questionGroups[0].sectionDetails[0].questions[0].value", answer);
+        responseParams.addTextAnswer("questionGroups[0].sectionDetails[0].questions[1].value", answer);
+
+        responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[0].value", "24/01/2011");
+        responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[1].valuesAsArray", "first");
+        responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[2].value", "10");
+        responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[3].value", "10");
+        responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[4].value", answer);
+        return responseParams;
+    }
+
+    private CreateQuestionParameters newFreeTextQuestionParameters(String text) {
+        CreateQuestionParameters questionParams = new CreateQuestionParameters();
+
+        questionParams.setText(text);
+        questionParams.setType(CreateQuestionParameters.TYPE_FREE_TEXT);
+
+        return questionParams;
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")

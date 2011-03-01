@@ -24,7 +24,6 @@ import org.mifos.test.acceptance.framework.AbstractPage;
 
 import com.thoughtworks.selenium.Selenium;
 
-//not tested due to MIFOS-4810
 public class SavingsApplyAdjustmentPage extends AbstractPage {
 
     public SavingsApplyAdjustmentPage(Selenium selenium) {
@@ -41,5 +40,8 @@ public class SavingsApplyAdjustmentPage extends AbstractPage {
         selenium.type("applyadjustment.input.notes", notes);
         selenium.click("applyadjustment.button.submit");
         waitForPageToLoad();
+        selenium.click("//input[@value='Submit']");
+        waitForPageToLoad();
+
     }
 }

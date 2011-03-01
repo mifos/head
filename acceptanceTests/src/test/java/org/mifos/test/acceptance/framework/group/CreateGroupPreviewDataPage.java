@@ -18,39 +18,29 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.test.acceptance.framework.loan;
+package org.mifos.test.acceptance.framework.group;
 
 import org.mifos.test.acceptance.framework.MifosPage;
-import org.mifos.test.acceptance.framework.savings.SavingsAccountDetailPage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 
 import com.thoughtworks.selenium.Selenium;
 
+public class CreateGroupPreviewDataPage extends MifosPage {
 
-public class EditAccountStatusConfirmationPage extends MifosPage {
-
-    public EditAccountStatusConfirmationPage(Selenium selenium) {
+    public CreateGroupPreviewDataPage(Selenium selenium) {
         super(selenium);
+        verifyPage("PreviewGroup");
     }
 
-    public void verifyPage() {
-        this.verifyPage("ChangeStatusPreview");
-    }
-
-    public LoanAccountPage submitAndNavigateToLoanAccountPage() {
-        selenium.click("change_status_preview.button.submit");
+    public CreateGroupConfirmationPage submitForApproval() {
+        selenium.click("previewgroup.button.submitForApproval");
         waitForPageToLoad();
-        return new LoanAccountPage(selenium);
+        return new CreateGroupConfirmationPage(selenium);
     }
 
-    public SavingsAccountDetailPage submitAndNavigateToSavingAccountPage() {
-        selenium.click("change_status_preview.button.submit");
+    public QuestionResponsePage navigateToEditQuestionResponsePage() {
+        selenium.click("editQuestionResponses_button");
         waitForPageToLoad();
-        return new SavingsAccountDetailPage(selenium);
-    }
-
-    public AccountChangeStatusPage navigateToEditStatus() {
-        selenium.click("change_status_preview.button.edit");
-        waitForPageToLoad();
-        return new AccountChangeStatusPage(selenium);
+        return new QuestionResponsePage(selenium);
     }
 }

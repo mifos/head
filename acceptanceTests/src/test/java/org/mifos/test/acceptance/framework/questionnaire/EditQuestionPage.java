@@ -30,31 +30,38 @@ public class EditQuestionPage extends CreateQuestionRootPage {
         verifyPage("editQuestion");
     }
 
-    public QuestionDetailPage activate() {
-        selenium.click("id=currentQuestion.active0");
+    private void submit() {
         selenium.click("id=_eventId_update");
         waitForPageToLoad();
+    }
+
+    public QuestionDetailPage changeName(String newName) {
+        setQuestionName(newName);
+        submit();
+        return new QuestionDetailPage(selenium);
+    }
+
+    public QuestionDetailPage activate() {
+        selenium.click("id=currentQuestion.active0");
+        submit();
         return new QuestionDetailPage(selenium);
     }
 
     public QuestionDetailPage deactivate() {
         selenium.click("id=currentQuestion.active1");
-        selenium.click("id=_eventId_update");
-        waitForPageToLoad();
+        submit();
         return new QuestionDetailPage(selenium);
     }
 
     public QuestionDetailPage update(CreateQuestionParameters createQuestionParameters) {
         enterDetails(createQuestionParameters);
-        selenium.click("id=_eventId_update");
-        waitForPageToLoad();
+        submit();
         return new QuestionDetailPage(selenium);
     }
 
     public EditQuestionPage tryUpdate(CreateQuestionParameters createQuestionParameters) {
         enterDetails(createQuestionParameters);
-        selenium.click("id=_eventId_update");
-        waitForPageToLoad();
+        submit();
         return new EditQuestionPage(selenium);
     }
 
