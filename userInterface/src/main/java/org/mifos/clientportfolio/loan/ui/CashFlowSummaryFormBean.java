@@ -45,7 +45,7 @@ public class CashFlowSummaryFormBean implements Serializable {
     
     
     public CashFlowSummaryFormBean() {
-        // bean constructor
+        System.out.println("cashflowbean constructed");
     }
 
     /**
