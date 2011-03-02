@@ -68,7 +68,6 @@ public class QuestionGroupCenterTest extends UiTestCaseBase {
      * http://mifosforge.jira.com/browse/MIFOSTEST-661
      * @throws Exception
      */
-    @Test(enabled = false) // TODO js - investigate why this fails on master
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyAttachingQuestionGroupToCenter() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_016_dbunit.xml", dataSource, selenium);
