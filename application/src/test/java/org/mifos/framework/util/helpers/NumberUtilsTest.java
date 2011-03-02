@@ -20,18 +20,25 @@
 
 package org.mifos.framework.util.helpers;
 
-import java.math.BigDecimal;
-
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+import java.math.BigDecimal;
+
 public class NumberUtilsTest extends TestCase {
     public void testPercentageReturnsZeroIfFullValueIsZero() throws Exception {
-        BigDecimal percentage = NumberUtils.getPercentage(null, Integer.valueOf(0));
+        BigDecimal percentage = NumberUtils.getPercentage(null, 0);
        Assert.assertEquals(0d, percentage.doubleValue());
     }
 
     public void testPercentage() throws Exception {
-       Assert.assertEquals(25d, NumberUtils.getPercentage(Integer.valueOf(1), Integer.valueOf(4)).doubleValue());
+       Assert.assertEquals(25d, NumberUtils.getPercentage(1, 4).doubleValue());
+    }
+
+    public void testIsValueGreaterThanGivenValue() {
+        Assert.assertTrue(NumberUtils.isSecondValueGreaterThanFirstValue(-1, 1));
+        Assert.assertFalse(NumberUtils.isSecondValueGreaterThanFirstValue(-1, null));
+        Assert.assertTrue(NumberUtils.isSecondValueGreaterThanFirstValue(null, 1));
+        Assert.assertTrue(NumberUtils.isSecondValueGreaterThanFirstValue((Integer) null, (Integer) null));
     }
 }

@@ -71,7 +71,6 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.ConversionError;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.DoubleConversionResult;
 import org.mifos.framework.util.helpers.ExceptionConstants;
@@ -80,6 +79,7 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.platform.cashflow.ui.model.CashFlowForm;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
+import org.mifos.platform.util.Transformer;
 import org.mifos.security.util.UserContext;
 
 import javax.servlet.http.HttpServletRequest;
@@ -95,6 +95,9 @@ import java.util.ResourceBundle;
 
 import static org.apache.commons.lang.StringUtils.isBlank;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.PERSPECTIVE_VALUE_REDO_LOAN;
+import static org.mifos.framework.util.CollectionUtils.select;
+import static org.mifos.platform.util.CollectionUtils.collect;
+import static org.mifos.platform.util.CollectionUtils.itemIndexOutOfAscendingOrder;
 
 public class LoanAccountActionForm extends BaseActionForm implements QuestionResponseCapturer, CashFlowCaptor {
     public LoanAccountActionForm() {
@@ -1346,24 +1349,11 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
         Locale locale = getUserContext(request).getPreferredLocale();
         try {
             CustomerBO customer = getCustomer(request);
-            for (PaymentDataHtmlBean bean : paymentDataBeans) {
-                // No data for amount and transaction date, validation not
-                // applicable
-                if (!bean.hasValidAmount() || !bean.hasTransactionDate()) {
-                    continue;
-                }
-                // Meeting date is invalid
-                if (!customer.getCustomerMeeting().getMeeting().isValidMeetingDate(bean.getTransactionDate(),
-                        DateUtils.getLastDayOfNextYear())) {
-                    errors.add(LoanExceptionConstants.INVALIDTRANSACTIONDATE, new ActionMessage(
-                            LoanExceptionConstants.INVALIDTRANSACTIONDATE));
-                    continue;
-                }
-                String installmentNo = bean.getInstallment().getInstallmentNumberAsString();
-                validateTotalAmount(errors, bean.getAmount(), locale, currency, installmentNo);
-                // User has enter a payment for future date
-                validateTransactionDate(errors, bean, getDisbursementDateValue(locale));
+            List<PaymentDataHtmlBean> validPaymentBeans = getValidatablePaymentBeans();
+            for (PaymentDataHtmlBean bean : validPaymentBeans) {
+                validatePaymentDataHtmlBean(errors, currency, locale, customer, bean);
             }
+            validatePaymentDatesOrdering(validPaymentBeans, errors);
         } catch (InvalidDateException invalidDate) {
             errors.add(LoanExceptionConstants.INVALIDTRANSACTIONDATE, new ActionMessage(
                     LoanExceptionConstants.INVALIDTRANSACTIONDATE));
@@ -1382,9 +1372,46 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
         }
     }
 
-    protected void validateTotalAmount(ActionErrors errors, String amount, Locale locale, MifosCurrency currency, String installmentNo) {
-        DoubleConversionResult conversionResult = validateAmount(amount, currency, LoanConstants.LOAN_AMOUNT_KEY, errors, locale,
-                FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE," "+installmentNo);
+    private List<PaymentDataHtmlBean> getValidatablePaymentBeans() {
+        return select(paymentDataBeans, new org.mifos.framework.util.helpers.Predicate<PaymentDataHtmlBean>() {
+            @Override
+            public boolean evaluate(PaymentDataHtmlBean bean) {
+                return bean.hasValidAmount() && bean.hasTransactionDate();
+            }
+        });
+    }
+
+    private void validatePaymentDatesOrdering(List<PaymentDataHtmlBean> validPaymentBeans, ActionErrors errors) {
+        List<java.util.Date> transactionDates = collect(validPaymentBeans, new Transformer<PaymentDataHtmlBean, java.util.Date>() {
+            @Override
+            public java.util.Date transform(PaymentDataHtmlBean input) {
+                return input.getTransactionDate();
+            }
+        });
+        int indexOutOfOrder = itemIndexOutOfAscendingOrder(transactionDates);
+        if (indexOutOfOrder >= 0) {
+            errors.add(LoanExceptionConstants.INVALIDTRANSACTIONDATE, new ActionMessage(
+                    LoanExceptionConstants.INVALIDTRANSACTIONDATE));
+        }
+    }
+
+    private void validatePaymentDataHtmlBean(ActionErrors errors, MifosCurrency currency, Locale locale, CustomerBO customer,
+                                             PaymentDataHtmlBean bean) throws MeetingException, InvalidDateException {
+        if (bean.hasValidAmount() && bean.hasTransactionDate()) {
+            if (customer.isValidMeetingDate(bean.getTransactionDate())) {
+                validateTotalAmount(errors, locale, currency, bean);
+                validateTransactionDate(errors, bean, getDisbursementDateValue(locale));
+            } else {
+                errors.add(LoanExceptionConstants.INVALIDTRANSACTIONDATE, new ActionMessage(
+                        LoanExceptionConstants.INVALIDTRANSACTIONDATE));
+            }
+        }
+    }
+
+    protected void validateTotalAmount(ActionErrors errors, Locale locale, MifosCurrency currency, PaymentDataHtmlBean bean) {
+        String installmentNo = bean.getInstallment().getInstallmentNumberAsString();
+        DoubleConversionResult conversionResult = validateAmount(bean.getAmount(), currency, LoanConstants.LOAN_AMOUNT_KEY, errors, locale,
+                FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE," "+ installmentNo);
         if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
             addError(errors, LoanConstants.LOAN_AMOUNT_KEY, LoanConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
                     lookupLocalizedPropertyValue(LoanConstants.LOAN_AMOUNT_KEY, locale,

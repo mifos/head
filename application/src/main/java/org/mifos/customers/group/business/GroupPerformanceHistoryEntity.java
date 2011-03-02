@@ -20,18 +20,6 @@
 
 package org.mifos.customers.group.business;
 
-import static org.apache.commons.lang.math.NumberUtils.SHORT_ZERO;
-import static org.mifos.customers.group.business.GroupLoanCounter.TRANSFORM_GROUP_LOAN_COUNTER_TO_LOAN_CYCLE;
-import static org.mifos.framework.util.CollectionUtils.find;
-import static org.mifos.framework.util.CollectionUtils.select;
-
-import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.service.AccountBusinessService;
@@ -43,6 +31,7 @@ import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.business.service.ConfigurationBusinessService;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerPerformanceHistory;
 import org.mifos.customers.exceptions.CustomerException;
@@ -51,10 +40,21 @@ import org.mifos.customers.group.business.GroupPerformanceHistoryUpdater.UpdateC
 import org.mifos.customers.group.business.GroupPerformanceHistoryUpdater.UpdateClientPerfHistoryForGroupLoanOnReversal;
 import org.mifos.customers.group.business.GroupPerformanceHistoryUpdater.UpdateClientPerfHistoryForGroupLoanOnWriteOff;
 import org.mifos.customers.util.helpers.ChildrenStateType;
-import org.mifos.customers.api.CustomerLevel;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.Predicate;
+
+import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static org.apache.commons.lang.math.NumberUtils.SHORT_ZERO;
+import static org.mifos.customers.group.business.GroupLoanCounter.TRANSFORM_GROUP_LOAN_COUNTER_TO_LOAN_CYCLE;
+import static org.mifos.framework.util.CollectionUtils.find;
+import static org.mifos.framework.util.CollectionUtils.select;
 
 public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 
@@ -332,7 +332,7 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 
     GroupLoanCounter findLoanCounterForProduct(final LoanOfferingBO loanOffering) throws Exception {
         return find(loanCounters, new Predicate<GroupLoanCounter>() {
-            public boolean evaluate(GroupLoanCounter loanCounter) throws Exception {
+            public boolean evaluate(GroupLoanCounter loanCounter) {
                 return loanOffering.isOfSameOffering(loanCounter.getLoanOffering());
             }
         });
@@ -343,7 +343,7 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
             Set<GroupLoanCounter> loanCounters = getLoanCounters();
             try {
                 Collection<Short> loanCyclesForProduct = select(loanCounters, new Predicate<GroupLoanCounter>() {
-                    public boolean evaluate(GroupLoanCounter counter) throws Exception {
+                    public boolean evaluate(GroupLoanCounter counter) {
                         return counter.isOfSameProduct(prdOffering);
                     }
                 }, TRANSFORM_GROUP_LOAN_COUNTER_TO_LOAN_CYCLE);

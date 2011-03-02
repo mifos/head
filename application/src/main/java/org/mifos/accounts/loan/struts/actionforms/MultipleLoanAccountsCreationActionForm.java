@@ -90,7 +90,7 @@ public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
         try {
             return (List<MultipleLoanCreationDto>) select(clientDetails,
                     new Predicate<MultipleLoanCreationDto>() {
-                        public boolean evaluate(MultipleLoanCreationDto clientDetail) throws Exception {
+                        public boolean evaluate(MultipleLoanCreationDto clientDetail) {
                             return clientDetail.isApplicable();
                         }
                     });

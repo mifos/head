@@ -76,4 +76,30 @@ public class CollectionUtils {
             values.add(value);
         }
     }
+
+    public static <T, O> List<O> collect(List<T> listOfItems, Transformer<T, O> transformer) {
+        List<O> outputCollection = new ArrayList<O>();
+        for (T item : listOfItems) {
+            outputCollection.add(transformer.transform(item));
+        }
+        return outputCollection;
+    }
+
+    public static <T extends Comparable<T>> int itemIndexOutOfAscendingOrder(List<T> listOfItems) {
+        int resultIndex = -1;
+        for (int i = 1, collectionSize = listOfItems.size(); i < collectionSize; i++) {
+            T previousItem = listOfItems.get(i - 1);
+            T currentItem = listOfItems.get(i);
+            if (!isSecondValueGreaterThanFirstValue(previousItem, currentItem)) {
+                resultIndex = i;
+                break;
+            }
+        }
+        return resultIndex;
+    }
+    
+    public static <T extends Comparable<T>> boolean isSecondValueGreaterThanFirstValue(T first, T second) {
+        return first == null || second != null && second.compareTo(first) > 0;
+    }
 }
+

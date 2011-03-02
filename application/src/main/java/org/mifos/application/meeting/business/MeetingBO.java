@@ -20,10 +20,6 @@
 
 package org.mifos.application.meeting.business;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -45,6 +41,10 @@ import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.schedule.ScheduledEvent;
 import org.mifos.schedule.ScheduledEventFactory;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * A better name for MeetingBO would be along the lines of "ScheduledEvent". To
@@ -254,6 +254,10 @@ public class MeetingBO extends AbstractBusinessObject {
         if (StringUtils.isBlank(meetingPlace)) {
             throw new MeetingException(MeetingConstants.INVALID_MEETINGPLACE);
         }
+    }
+
+    public boolean isValidMeetingDateUntilNextYear(final Date meetingDate) throws MeetingException {
+        return isValidMeetingDate(meetingDate, DateUtils.getLastDayOfNextYear());
     }
 
     public boolean isValidMeetingDate(final Date meetingDate, final Date endDate) throws MeetingException {

@@ -917,8 +917,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
             try {
                 requiredLoanAmountFromCycle = find(getLoanAmountFromLoanCycle(),
                         new Predicate<LoanAmountFromLoanCycleBO>() {
-                            public boolean evaluate(final LoanAmountFromLoanCycleBO loanAmountFromLoanCycle)
-                                    throws Exception {
+                            public boolean evaluate(final LoanAmountFromLoanCycleBO loanAmountFromLoanCycle) {
                                 return loanAmountFromLoanCycle.sameRangeIndex(customerLastLoanCycleCount);
                             }
                         });
@@ -942,8 +941,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
             try {
                 requiredLoanAmountRangeFromLastLoanAmount = find(getLoanAmountFromLastLoan(),
                         new Predicate<LoanAmountFromLastLoanAmountBO>() {
-                            public boolean evaluate(final LoanAmountFromLastLoanAmountBO lastLoanAmount)
-                                    throws Exception {
+                            public boolean evaluate(final LoanAmountFromLastLoanAmountBO lastLoanAmount) {
                                 return lastLoanAmount.isLoanAmountBetweenRange(maxLoanAmount.getAmountDoubleValue());
                             }
                         });
@@ -992,8 +990,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
             try {
                 requiredInstallmentRange = find(getNoOfInstallFromLoanCycle(),
                         new Predicate<NoOfInstallFromLoanCycleBO>() {
-                            public boolean evaluate(final NoOfInstallFromLoanCycleBO noOfInstallFromLoanCycle)
-                                    throws Exception {
+                            public boolean evaluate(final NoOfInstallFromLoanCycleBO noOfInstallFromLoanCycle) {
                                 return noOfInstallFromLoanCycle.isSameRange(customerLastLoanCycleCount);
                             }
                         });
@@ -1017,8 +1014,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
                 requiredInstallmentRange = find(getNoOfInstallFromLastLoan(),
                         new Predicate<NoOfInstallFromLastLoanAmountBO>() {
                             public boolean evaluate(
-                                    final NoOfInstallFromLastLoanAmountBO noOfInstallmentFromLastLoanAmount)
-                                    throws Exception {
+                                    final NoOfInstallFromLastLoanAmountBO noOfInstallmentFromLastLoanAmount) {
                                 return noOfInstallmentFromLastLoanAmount.loanAmountInRange(lastLoanAmount
                                         .getAmountDoubleValue());
                             }

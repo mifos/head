@@ -73,11 +73,15 @@ public class NumberUtils {
         return nullSafeValue(value, org.apache.commons.lang.math.NumberUtils.INTEGER_ZERO);
     }
 
-    public static <T extends Comparable> T min(T comparable1, T comparable2) {
+    public static <T extends Comparable<T>> T min(T comparable1, T comparable2) {
         return (T) ObjectUtils.min(comparable1, comparable2);
     }
 
-    public static <T extends Comparable> T max(T comparable1, T comparable2) {
+    public static <T extends Comparable<T>> T max(T comparable1, T comparable2) {
         return (T) ObjectUtils.max(comparable1, comparable2);
+    }
+
+    public static <T extends Comparable<T>> boolean isSecondValueGreaterThanFirstValue(T first, T second) {
+        return first == null || second != null && second.compareTo(first) > 0;
     }
 }

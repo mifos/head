@@ -50,8 +50,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.not;
@@ -102,7 +104,8 @@ public class ScheduleMapperTest {
     public void shouldMapScheduleToLoanScheduleEntity() throws PersistenceException {
         AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(loanBO, null, null, null, null, null);
         LoanScheduleEntity scheduleEntityForPopulateTestInput = getLoanScheduleEntityForPopulateTestInput();
-        Collection<LoanScheduleEntity> loanScheduleEntities = Arrays.asList(scheduleEntityForPopulateTestInput);
+        Set<LoanScheduleEntity> loanScheduleEntities = new LinkedHashSet<LoanScheduleEntity>();
+        loanScheduleEntities.add(scheduleEntityForPopulateTestInput);
         when(loanBO.getLoanScheduleEntities()).thenReturn(loanScheduleEntities);
         when(loanBO.getLoanPersistence()).thenReturn(loanPersistence);
         when(loanPersistence.getPersistentObject(Mockito.eq(AccountActionEntity.class), Mockito.<Serializable>any())).thenReturn(accountActionEntity);

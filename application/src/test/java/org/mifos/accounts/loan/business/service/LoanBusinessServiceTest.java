@@ -21,7 +21,6 @@ package org.mifos.accounts.loan.business.service;
  */
 
 import junit.framework.Assert;
-import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,7 +31,6 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.business.OriginalLoanScheduleEntity;
 import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
-import org.mifos.accounts.loan.business.matchers.LoanScheduleEntityMatcher;
 import org.mifos.accounts.loan.business.matchers.OriginalLoanScheduleEntitiesMatcher;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
@@ -56,15 +54,23 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
-import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LoanBusinessServiceTest {
@@ -375,7 +381,7 @@ public class LoanBusinessServiceTest {
 
     @Test
     public void persistOriginalSchedule() throws PersistenceException {
-        List<LoanScheduleEntity> installments = new ArrayList<LoanScheduleEntity>();
+        Set<LoanScheduleEntity> installments = new LinkedHashSet<LoanScheduleEntity>();
         MifosCurrency mifosCurrency = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
         Money money = new Money(mifosCurrency,"123");
         AccountBO accountBO = mock(AccountBO.class);
@@ -395,7 +401,7 @@ public class LoanBusinessServiceTest {
 
     @Test
     public void shouldRetrieveOriginalLoanSchedule() throws PersistenceException {
-        Integer accountId = new Integer(1);
+        Integer accountId = 1;
 
         ArrayList<OriginalLoanScheduleEntity> expected = new ArrayList<OriginalLoanScheduleEntity>();
         when(loanPersistence.getOriginalLoanScheduleEntity(accountId)).thenReturn(expected);

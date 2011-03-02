@@ -99,7 +99,7 @@ public class ScheduleCalculatorAdaptorTest {
 
     @Test
     public void shouldApplyPaymentZeroPayment() throws PersistenceException {
-        List<LoanScheduleEntity> loanScheduleEntities = getLoanScheduleEntities();
+        Set<LoanScheduleEntity> loanScheduleEntities = getLoanScheduleEntities();
         when(loanBO.getLoanScheduleEntities()).thenReturn(loanScheduleEntities);
         when(loanBO.getDisbursementDate()).thenReturn(DISBURSEMENT_DATE);
         when(loanBO.getLoanAmount()).thenReturn(new Money(rupee, LOAN_AMOUNT));
@@ -126,7 +126,7 @@ public class ScheduleCalculatorAdaptorTest {
 
     @Test
     public void shouldApplyPayment() throws PersistenceException {
-        List<LoanScheduleEntity> loanScheduleEntities = getLoanScheduleEntities();
+        Set<LoanScheduleEntity> loanScheduleEntities = getLoanScheduleEntities();
         when(loanBO.getLoanScheduleEntities()).thenReturn(loanScheduleEntities);
         when(loanBO.getDisbursementDate()).thenReturn(DISBURSEMENT_DATE);
         when(loanBO.getLoanAmount()).thenReturn(new Money(rupee, LOAN_AMOUNT));
@@ -148,7 +148,7 @@ public class ScheduleCalculatorAdaptorTest {
 
     @Test
     public void shouldComputeExtraInterestForDecliningPrincipalBalance() {
-        List<LoanScheduleEntity> loanScheduleEntities = getLoanScheduleEntities();
+        Set<LoanScheduleEntity> loanScheduleEntities = getLoanScheduleEntities();
         when(loanBO.isDecliningBalanceInterestRecalculation()).thenReturn(true);
         when(loanBO.getLoanScheduleEntities()).thenReturn(loanScheduleEntities);
         when(loanBO.getDisbursementDate()).thenReturn(DISBURSEMENT_DATE);
@@ -175,7 +175,7 @@ public class ScheduleCalculatorAdaptorTest {
 
     @Test
     public void shouldNotComputeExtraInterestForNonPrincipalBalanceInterestTypes() {
-        List<LoanScheduleEntity> loanScheduleEntities = getLoanScheduleEntities();
+        Set<LoanScheduleEntity> loanScheduleEntities = getLoanScheduleEntities();
         when(loanBO.isDecliningBalanceInterestRecalculation()).thenReturn(false);
         when(loanBO.getLoanScheduleEntities()).thenReturn(loanScheduleEntities);
         when(loanBO.getDisbursementDate()).thenReturn(DISBURSEMENT_DATE);
@@ -204,7 +204,7 @@ public class ScheduleCalculatorAdaptorTest {
         List<Installment> installments = getInstallments(0, 0, 0);
         Schedule schedule = new Schedule(DISBURSEMENT_DATE, DAILY_INTEREST_RATE, LOAN_AMOUNT, installments);
         new ScheduleCalculator().computeExtraInterest(schedule, getDate(30, 10, 2010));
-        List<LoanScheduleEntity> loanScheduleEntities = getLoanScheduleEntities();
+        Set<LoanScheduleEntity> loanScheduleEntities = getLoanScheduleEntities();
         Map<Integer, LoanScheduleEntity> loanScheduleEntityMap = getLoanScheduleEntityMap(loanScheduleEntities);
         assertThat(schedule.getInstallments().get(2).getExtraInterest().doubleValue(), is(0.46));
         scheduleCalculatorAdaptor.populateExtraInterestInLoanScheduleEntities(schedule, loanScheduleEntityMap);
@@ -222,7 +222,7 @@ public class ScheduleCalculatorAdaptorTest {
         assertThat(loanScheduleEntity.getExtraInterest().getAmount().doubleValue(), is(extraInterest));
     }
 
-    private Map<Integer, LoanScheduleEntity> getLoanScheduleEntityMap(List<LoanScheduleEntity> loanScheduleEntities) {
+    private Map<Integer, LoanScheduleEntity> getLoanScheduleEntityMap(Collection<LoanScheduleEntity> loanScheduleEntities) {
         return CollectionUtils.asValueMap(loanScheduleEntities, new Transformer<LoanScheduleEntity, Integer>() {
             @Override
             public Integer transform(LoanScheduleEntity input) {
@@ -253,14 +253,15 @@ public class ScheduleCalculatorAdaptorTest {
                 build();
     }
 
-    private List<LoanScheduleEntity> getLoanScheduleEntities() {
-        LoanScheduleEntity loanScheduleEntity1 = new LoanScheduleBuilder("1", loanBO).withDueDate(getDate(23, 10, 2010)).
-                withPaymentStatus(PaymentStatus.UNPAID).withPrincipal(100).withInterest(10).build();
-        LoanScheduleEntity loanScheduleEntity2 = new LoanScheduleBuilder("2", loanBO).withDueDate(getDate(23, 11, 2010)).
-                withPaymentStatus(PaymentStatus.UNPAID).withPrincipal(100).withInterest(10).build();
-        LoanScheduleEntity loanScheduleEntity3 = new LoanScheduleBuilder("3", loanBO).withDueDate(getDate(23, 12, 2010)).
-                withPaymentStatus(PaymentStatus.UNPAID).withPrincipal(100).withInterest(10).build();
-        return Arrays.asList(loanScheduleEntity1, loanScheduleEntity2, loanScheduleEntity3);
+    private Set<LoanScheduleEntity> getLoanScheduleEntities() {
+        LinkedHashSet<LoanScheduleEntity> loanScheduleEntities = new LinkedHashSet<LoanScheduleEntity>();
+        loanScheduleEntities.add(new LoanScheduleBuilder("1", loanBO).withDueDate(getDate(23, 10, 2010)).
+                withPaymentStatus(PaymentStatus.UNPAID).withPrincipal(100).withInterest(10).build());
+        loanScheduleEntities.add(new LoanScheduleBuilder("2", loanBO).withDueDate(getDate(23, 11, 2010)).
+                withPaymentStatus(PaymentStatus.UNPAID).withPrincipal(100).withInterest(10).build());
+        loanScheduleEntities.add(new LoanScheduleBuilder("3", loanBO).withDueDate(getDate(23, 12, 2010)).
+                withPaymentStatus(PaymentStatus.UNPAID).withPrincipal(100).withInterest(10).build());
+        return loanScheduleEntities;
     }
 
 }

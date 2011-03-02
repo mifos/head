@@ -23,12 +23,20 @@ package org.mifos.framework.util;
 import org.mifos.framework.util.helpers.Predicate;
 import org.mifos.framework.util.helpers.Transformer;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class CollectionUtils {
 
     // Same as commons-collections but with generics
-    public static <T> T find(Collection<T> collections, Predicate<T> predicate) throws Exception {
+    public static <T> T find(Collection<T> collections, Predicate<T> predicate) {
         if (collections != null && predicate != null) {
             for (T item : collections) {
                 if (predicate.evaluate(item)) {
@@ -83,35 +91,46 @@ public class CollectionUtils {
         return list.get(list.size() - 1);
     }
 
-    public static <T> Collection<T> select(Collection<T> collection, Predicate<T> predicate) throws Exception {
-        Collection<T> outputCollection = new ArrayList<T>();
-        select(collection, predicate, outputCollection);
-        return outputCollection;
+    public static <T> List<T> select(List<T> listOfItems, Predicate<T> predicate) {
+        List<T> outputList = new ArrayList<T>();
+        if (listOfItems != null && predicate != null) {
+            for (T item : listOfItems) {
+                if (predicate.evaluate(item)) {
+                    outputList.add(item);
+                }
+            }
+        }
+        return outputList;
     }
 
-    public static <T, O> Collection<O> select(Collection<T> collection, Predicate<T> predicate,
-            Transformer<T, O> transformer) throws Exception {
-        Collection<T> selectedCollection = select(collection, predicate);
+    public static <T> Set<T> select(Set<T> setOfItems, Predicate<T> predicate) {
+        Set<T> outputSet = new LinkedHashSet<T>();
+        if (setOfItems != null && predicate != null) {
+            for (T item : setOfItems) {
+                if (predicate.evaluate(item)) {
+                    outputSet.add(item);
+                }
+            }
+        }
+        return outputSet;
+    }
+
+    public static <T, O> List<O> select(List<T> collection, Predicate<T> predicate, Transformer<T, O> transformer) {
+        List<T> selectedCollection = select(collection, predicate);
         return collect(selectedCollection, transformer);
     }
 
-    public static <T, O> Collection<O> collect(Collection<T> collection, Transformer<T, O> transformer) {
-        Collection<O> outputCollection = new ArrayList<O>();
+    public static <T, O> Set<O> select(Set<T> collection, Predicate<T> predicate, Transformer<T, O> transformer) {
+        Set<T> selectedSet = select(collection, predicate);
+        return collect(selectedSet, transformer);
+    }
+
+    public static <T, O> List<O> collect(List<T> collection, Transformer<T, O> transformer) {
+        List<O> outputCollection = new ArrayList<O>();
         for (T item : collection) {
             outputCollection.add(transformer.transform(item));
         }
         return outputCollection;
-    }
-
-    public static <T> void select(Collection<T> collection, Predicate<T> predicate, Collection<T> outputCollection)
-            throws Exception {
-        if (collection != null && predicate != null) {
-            for (T item : collection) {
-                if (predicate.evaluate(item)) {
-                    outputCollection.add(item);
-                }
-            }
-        }
     }
 
     public static List<List> splitListIntoParts(List list, int sizeOfEachPart) {
@@ -136,5 +155,13 @@ public class CollectionUtils {
             map.put(keyTransformer.transform(value), value);
         }
         return map;
+    }
+
+    public static <T, O> Set<O> collect(Set<T> set, Transformer<T,O> transformer) {
+        Set<O> resultSet = new LinkedHashSet<O>();
+        for (T item : set) {
+            resultSet.add(transformer.transform(item));
+        }
+        return resultSet;
     }
 }

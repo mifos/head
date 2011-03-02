@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import static org.mifos.framework.TestUtils.getDate;
 import static org.mockito.Mockito.mock;
@@ -122,10 +123,11 @@ public class LoanBOTest {
         installments.add(getRepaymentScheduleInstallment("24-Nov-2010", 2, "231", "23"));
         installments.add(getRepaymentScheduleInstallment("24-Dec-2010", 3, "312", "31"));
         loanBO.copyInstallmentSchedule(installments);
-        List<LoanScheduleEntity> loanScheduleEntities = (List<LoanScheduleEntity>) loanBO.getLoanScheduleEntities();
-        assertLoanScheduleEntity(loanScheduleEntities.get(0), "123.0", "12.0", "2010-10-24");
-        assertLoanScheduleEntity(loanScheduleEntities.get(1), "231.0", "23.0", "2010-11-24");
-        assertLoanScheduleEntity(loanScheduleEntities.get(2), "312.0", "31.0", "2010-12-24");
+        Set<LoanScheduleEntity> loanScheduleEntities = loanBO.getLoanScheduleEntities();
+        LoanScheduleEntity[] loanScheduleEntitiesArr = loanScheduleEntities.toArray(new LoanScheduleEntity[loanScheduleEntities.size()]);
+        assertLoanScheduleEntity(loanScheduleEntitiesArr[0], "123.0", "12.0", "2010-10-24");
+        assertLoanScheduleEntity(loanScheduleEntitiesArr[1], "231.0", "23.0", "2010-11-24");
+        assertLoanScheduleEntity(loanScheduleEntitiesArr[2], "312.0", "31.0", "2010-12-24");
     }
 
     private void assertLoanScheduleEntity(LoanScheduleEntity loanScheduleEntity, String pricipal, String interest, String dueDate) {

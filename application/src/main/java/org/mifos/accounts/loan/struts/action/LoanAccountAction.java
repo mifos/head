@@ -1094,8 +1094,8 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         }
     }
 
-    private List<RepaymentScheduleInstallment> getInstallmentFromPaymentDataBeans(Collection<PaymentDataHtmlBean> paymentDataBeans) {
-        return (List<RepaymentScheduleInstallment>) org.mifos.framework.util.CollectionUtils.collect(paymentDataBeans,
+    private List<RepaymentScheduleInstallment> getInstallmentFromPaymentDataBeans(List<PaymentDataHtmlBean> paymentDataBeans) {
+        return org.mifos.framework.util.CollectionUtils.collect(paymentDataBeans,
                 new Transformer<PaymentDataHtmlBean, RepaymentScheduleInstallment>() {
                     @Override
                     public RepaymentScheduleInstallment transform(PaymentDataHtmlBean input) {

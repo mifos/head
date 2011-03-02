@@ -2,6 +2,7 @@ package org.mifos.accounts.loan.business.service.validators;
 
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.platform.util.CollectionUtils;
+import org.mifos.platform.util.Transformer;
 import org.mifos.platform.validations.ErrorEntry;
 
 import java.util.ArrayList;
@@ -44,21 +45,23 @@ public class ListOfInstallmentsValidatorImpl implements ListOfInstallmentsValida
     public List<ErrorEntry> validateOrderingOfDueDates(List<RepaymentScheduleInstallment> installments) {
         List<ErrorEntry> errorEntries = new ArrayList<ErrorEntry>();
         if (CollectionUtils.isNotEmpty(installments)) {
-            for (int i = 1; i < installments.size(); i++) {
-                Date previousDate = installments.get(i - 1).getDueDateValue();
-                RepaymentScheduleInstallment installment = installments.get(i);
-                Date currentDate = installment.getDueDateValue();
-                if (!isCurrentDateGreaterThanPreviousDate(previousDate, currentDate)) {
-                    String fieldName = installment.getInstallmentNumberAsString();
-                    errorEntries.add(new ErrorEntry(INSTALLMENT_DUEDATE_INVALID_ORDER, fieldName));
-                    break;
-                }
+            List<Date> dueDates = CollectionUtils.collect(installments, getDueDateTransformer());
+            int index = CollectionUtils.itemIndexOutOfAscendingOrder(dueDates);
+            if (index >= 0) {
+                String fieldName = installments.get(index).getInstallmentNumberAsString();
+                errorEntries.add(new ErrorEntry(INSTALLMENT_DUEDATE_INVALID_ORDER, fieldName));
             }
         }
         return errorEntries;
     }
 
-    private boolean isCurrentDateGreaterThanPreviousDate(Date previousDate, Date currentDate) {
-        return previousDate == null || currentDate != null && currentDate.compareTo(previousDate) > 0;
+    private Transformer<RepaymentScheduleInstallment, Date> getDueDateTransformer() {
+        return new Transformer<RepaymentScheduleInstallment, Date>() {
+            @Override
+            public Date transform(RepaymentScheduleInstallment input) {
+                return input.getDueDateValue();
+            }
+        };
     }
+
 }

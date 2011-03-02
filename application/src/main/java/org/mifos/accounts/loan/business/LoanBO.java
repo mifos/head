@@ -454,7 +454,7 @@ public class LoanBO extends AccountBO {
         });
     }
 
-    public Collection<LoanScheduleEntity> getLoanScheduleEntities() {
+    public Set<LoanScheduleEntity> getLoanScheduleEntities() {
         return CollectionUtils.collect(this.getAccountActionDates(), new Transformer<AccountActionDateEntity, LoanScheduleEntity>() {
             @Override
             public LoanScheduleEntity transform(AccountActionDateEntity input) {

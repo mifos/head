@@ -20,17 +20,6 @@
 
 package org.mifos.application.servicefacade;
 
-import static org.apache.commons.lang.StringUtils.EMPTY;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
-import static org.mifos.framework.util.CollectionUtils.collect;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.api.AccountService;
@@ -57,7 +46,6 @@ import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.struts.action.validate.ProductMixValidator;
-import org.mifos.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.MultipleLoanCreationDto;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
@@ -168,6 +156,16 @@ import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 import org.springframework.security.core.context.SecurityContextHolder;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static org.apache.commons.lang.StringUtils.EMPTY;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
+import static org.mifos.framework.util.CollectionUtils.collect;
 
 public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade {
 
@@ -750,16 +748,6 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         } catch (AccountException e) {
             throw new BusinessRuleException(e.getKey(), e);
         }
-    }
-
-    private List<RepaymentScheduleInstallment> getInstallmentFromPaymentDataBeans(Collection<PaymentDataHtmlBean> paymentDataBeans) {
-        return (List<RepaymentScheduleInstallment>) org.mifos.framework.util.CollectionUtils.collect(paymentDataBeans,
-                new Transformer<PaymentDataHtmlBean, RepaymentScheduleInstallment>() {
-                    @Override
-                    public RepaymentScheduleInstallment transform(PaymentDataHtmlBean input) {
-                        return input.getInstallment();
-                    }
-                });
     }
 
     @Override

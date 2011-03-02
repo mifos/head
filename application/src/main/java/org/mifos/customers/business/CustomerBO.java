@@ -46,6 +46,7 @@ import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.calendar.CalendarUtils;
@@ -78,6 +79,7 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.ChapterNum;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
 import org.slf4j.Logger;
@@ -1315,5 +1317,9 @@ public abstract class CustomerBO extends AbstractBusinessObject {
     @Deprecated
     public void setCustomerId(Integer customerId) {
         this.customerId = customerId;
+    }
+
+    public boolean isValidMeetingDate(Date transactionDate) throws MeetingException {
+        return customerMeeting.getMeeting().isValidMeetingDateUntilNextYear(transactionDate);
     }
 }
