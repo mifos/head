@@ -34,6 +34,7 @@ import org.apache.commons.configuration.ConfigurationConverter;
 import org.mifos.core.MifosResourceUtil;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.util.ConfigurationLocator;
+import org.springframework.core.io.Resource;
 
 /**
  * This is a quick initial sketch of a class for managing configuration values
@@ -94,9 +95,11 @@ public class MifosConfigurationManager implements Configuration {
             props.load(applicationConfig);
 
             ConfigurationLocator configurationLocator = new ConfigurationLocator();
-            InputStream customApplicationConfig = configurationLocator.getFileInputStream(CUSTOM_CONFIG_PROPS_FILENAME);
-            if(customApplicationConfig != null) {
-                props.load(customApplicationConfig);
+            Resource customApplicationConfig = configurationLocator.getResource(CUSTOM_CONFIG_PROPS_FILENAME);
+            if(customApplicationConfig.exists()) {
+                InputStream is = customApplicationConfig.getInputStream();
+                props.load(is);
+                is.close();
             }
             logger.info(props.toString());
         } catch (IOException e) {

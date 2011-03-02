@@ -141,15 +141,8 @@ public class ChartOfAccountsConfig {
      *         {@link MifosResourceUtil} can use to derive the actual on-disk
      *         location.
      */
-    public static String getCoaUri(Session session) {
-        InputStream customCoaPath;
-        try {
-            customCoaPath = new ConfigurationLocator().getFileInputStream(FilePaths.CHART_OF_ACCOUNTS_CUSTOM);
-        } catch (IOException e) {
-            customCoaPath = null;
-        }
-
-        final boolean customCoaExists = customCoaPath != null;
+    public static String getCoaUri(Session session) throws IOException {
+        final boolean customCoaExists = new ConfigurationLocator().getResource(FilePaths.CHART_OF_ACCOUNTS_CUSTOM).exists();
 
         if (customCoaExists) {
             return FilePaths.CHART_OF_ACCOUNTS_CUSTOM;
@@ -170,7 +163,7 @@ public class ChartOfAccountsConfig {
      * has existing chart of accounts data, but a custom chart of accounts
      * configuration file is not found on the classpath.
      */
-    public static boolean canLoadCoa(Session session) {
+    public static boolean canLoadCoa(Session session) throws IOException {
         return null != getCoaUri(session);
     }
 

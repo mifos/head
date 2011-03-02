@@ -38,6 +38,7 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.List;
 
 public class FinancialInitializer {
@@ -78,14 +79,19 @@ public class FinancialInitializer {
     public static void loadCOA() throws FinancialException {
         Session session = StaticHibernateUtil.getSessionTL();
 
-        if (!ChartOfAccountsConfig.canLoadCoa(session)) {
-            logger.info("Chart of accounts data will not be modified since "
-                    + "the custom chart of accounts configuration file was " + "not found on the classpath.");
-            return;
-        }
+        final String coaLocation;
+        try {
+            if (!ChartOfAccountsConfig.canLoadCoa(session)) {
+                logger.info("Chart of accounts data will not be modified since "
+                        + "the custom chart of accounts configuration file was " + "not found on the classpath.");
+                return;
+            }
 
-        final String coaLocation = ChartOfAccountsConfig.getCoaUri(session);
-        logger.info("going to load or modify chart of accounts " + "configuration from " + coaLocation);
+            coaLocation = ChartOfAccountsConfig.getCoaUri(session);
+            logger.info("going to load or modify chart of accounts " + "configuration from " + coaLocation);
+        } catch (IOException e) {
+            throw new FinancialException("Charts of accounts loading failed", e);
+        }
 
         ChartOfAccountsConfig coa;
         try {

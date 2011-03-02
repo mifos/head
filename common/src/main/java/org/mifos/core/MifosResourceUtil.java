@@ -33,6 +33,7 @@ import java.net.URL;
 import java.util.logging.Logger;
 
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.util.ResourceUtils;
 
 /**
@@ -70,10 +71,10 @@ public class MifosResourceUtil {
     @Deprecated
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"OS_OPEN_STREAM_EXCEPTION_PATH","OBL_UNSATISFIED_OBLIGATION"}, justification="this is a bug")
     public static File getClassPathResource(String fileName) throws IOException {
-        URL url = new ClassPathResource(fileName).getURL();
+        URL url = getClassPathResourceAsResource(fileName).getURL();
         File file = null;
         if (url.getProtocol().equals(ResourceUtils.URL_PROTOCOL_FILE)) {
-            file = new ClassPathResource(fileName).getFile();
+            file = getClassPathResourceAsResource(fileName).getFile();
         } else if (url.getProtocol().equals(ResourceUtils.URL_PROTOCOL_JAR)) {
             LOGGER.warning("Creating tmp file from InputSteam, use InputStream instead of file " + url);
             LOGGER.warning("Can not extract file from a jar in a container " + url);
@@ -94,14 +95,18 @@ public class MifosResourceUtil {
         return file;
     }
 
+    /**
+     * Should be avoided, because an InputStream needs to be closed by somebody, more clear if caller creates the IS from a Resource.
+     * Use {@link #getClassPathResourceAsResource(String)} instead.
+     */
     public static InputStream getClassPathResourceAsStream(String fileName) {
         return Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName);
     }
-    
-    public static String getURI(String fileName) throws IOException {
-        return new ClassPathResource(fileName).getURI().toString();
-    }
 
+    public static Resource getClassPathResourceAsResource(String fileName) throws IOException {
+        return new ClassPathResource(fileName);
+    }
+    
     /**
      * Find a Resource on the Classpath and return it's URI (as a String).
      * 
@@ -112,12 +117,20 @@ public class MifosResourceUtil {
      * If calling code can deal directly with a org.springframework.core.io.Resource, that's always preferable over a
      * raw URI; simply use new ClassPathResource(path) in that case.
      * 
-     * @param path
-     *            Path on the classpath, e.g. "org/mifos/something.xml"
+     * @param path Path on the classpath, e.g. "org/mifos/something.xml"
      * @return a Stringified Classpath URI
      */
     public static String getClassPathResourceAsURI(String path) throws IOException {
         return new ClassPathResource(path).getURI().toString();
     }
 
+    /**
+     * @deprecated Please replace usages of this method by {@link #getClassPathResourceAsURI(String)}, and remove this method.
+     */
+    @Deprecated
+    public static String getURI(String fileName) throws IOException {
+        return getClassPathResourceAsURI(fileName);
+    }
+
+    
 }
