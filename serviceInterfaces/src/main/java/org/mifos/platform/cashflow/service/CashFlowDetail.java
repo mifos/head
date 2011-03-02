@@ -17,6 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
+
 package org.mifos.platform.cashflow.service;
 
 import org.joda.time.DateTime;
@@ -27,8 +28,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CashFlowDetail implements Serializable {
+    
     private static final long serialVersionUID = -6731316163493318834L;
-    List<MonthlyCashFlowDetail> monthlyCashFlowDetails;
+    
+    private List<MonthlyCashFlowDetail> monthlyCashFlowDetails;
     private BigDecimal totalCapital;
     private BigDecimal totalLiability;
 

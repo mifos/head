@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Locale;
 
 import org.joda.time.DateTime;
-import org.mifos.accounts.loan.util.helpers.CashFlowDataDto;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.config.AccountingRules;
+import org.mifos.dto.screen.CashFlowDataDto;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.platform.cashflow.ui.model.MonthlyCashFlowForm;
 import org.mifos.platform.util.CollectionUtils;
@@ -120,5 +120,4 @@ public class CashFlowDataAdaptor {
         }
         return value;
     }
-
 }

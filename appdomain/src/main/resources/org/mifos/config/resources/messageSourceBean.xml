@@ -21,6 +21,7 @@
                 <value>classpath:org/mifos/platform/questionnaire/ui/localizedProperties/questionnaire_messages</value>
                 <value>classpath:org/mifos/platform/accounting/ui/localizedProperties/accounting_messages</value>
                 <value>classpath:org/mifos/ui/localizedProperties/FtlDefinedLabelsMessages</value>
+                <value>classpath:org/mifos/config/localizedResources/LoanUIResources</value> <!-- added for cashflow messages -->
                 <value>classpath:org/mifos/config/localizedResources/MessageLookupMessages</value>
                 <value>classpath:org/mifos/config/localizedResources/reporterrors</value>
                 <value>classpath:org/mifos/config/localizedResources/SharedMessages</value>

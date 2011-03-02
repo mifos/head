@@ -116,6 +116,17 @@ public class ApplicationDatabaseOperation {
         );
     }
 
+    public boolean deosQuestionResponseForSavingsExist(String savingsID, String event, String question, String response) throws SQLException {
+        return doesEntityExist("SELECT count(*) FROM question_group_response as qqr, sections_questions as sq, questions as q WHERE qqr.response = \""+response+"\" AND qqr.sections_questions_id = sq.id AND sq.question_id = q.question_id AND q.question_text = \""+question+"\""
+                +" AND qqr.question_group_instance_id in ("
+                    +"SELECT qqi.id FROM question_group_instance as qqi, account as a WHERE qqi.entity_id = a.account_id AND a.global_account_num = \""+savingsID+"\""
+                    +" AND qqi.event_source_id = ("
+                        +"SELECT es.id FROM event_sources as es WHERE es.description = \""+event+"\""
+                    +")"
+                +");"
+        );
+    }
+
     public boolean deosQuestionResponseForClientExist(String clientID, String event, String question, String response) throws SQLException {
         return doesEntityExist("SELECT count(*) FROM question_group_response as qqr, sections_questions as sq, questions as q WHERE qqr.response = \""+response+"\" AND qqr.sections_questions_id = sq.id AND sq.question_id = q.question_id AND q.question_text = \""+question+"\""
                 +" AND qqr.question_group_instance_id in ("
