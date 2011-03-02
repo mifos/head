@@ -26,6 +26,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.core.io.Resource;
 
 import java.io.File;
 import java.io.IOException;
@@ -56,18 +57,19 @@ public class ConfigurationLocatorTest {
     }
 
     @Test
-    public void testGetFileHandle() throws IOException {
+    public void testGetResource() throws IOException {
 
         // exercise test
-        InputStream returnedFile = configurationLocator.getFileInputStream("mock.mifosChartOfAccounts.xml");
+        Resource resource = configurationLocator.getResource("mock.mifosChartOfAccounts.xml");
 
         // verification
-        Assert.assertNotNull(returnedFile);
+        Assert.assertNotNull(resource);
+        Assert.assertTrue(resource.exists());
     }
 
     public void testGetFileHandleFailure() throws IOException {
         // exercise test
-        configurationLocator.getFileInputStream("x.xml");
+        configurationLocator.getResource("x.xml");
     }
 
     @Test
