@@ -116,9 +116,9 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
 
     private void verifyRedoLoanDisbursalWithPastDate(LoanAccountPage loanAccountPage) {
         loanAccountPage.verifyStatus("Closed- Obligation met");
-        //   loanAccountPage.verifyTotalOriginalLoan("4290.0");
-        //    loanAccountPage.verifyTotalAmountPaid("4290.0");
-        //   loanAccountPage.verifyLoanTotalBalance("0.0");
+        loanAccountPage.verifyTotalOriginalLoan("1029.0");
+        loanAccountPage.verifyTotalAmountPaid("1029.0");
+        loanAccountPage.verifyLoanTotalBalance("0.0");
         TransactionHistoryPage transactionHistoryPage = loanAccountPage.navigateToTransactionHistory();
         transactionHistoryPage.verifyTransactionHistory(1028.6, 4, 217);
     }
@@ -261,7 +261,7 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void dataSetUpForVariableInstallmentLoan() throws Exception {
+    private void dataSetUpForVariableInstallmentLoan() throws Exception {
         navigationHelper = new NavigationHelper(selenium);
         loanTestHelper = new LoanTestHelper(selenium);
         loanProductTestHelper = new LoanProductTestHelper(selenium);

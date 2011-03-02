@@ -43,7 +43,6 @@ import org.mifos.accounts.loan.business.service.validators.InstallmentValidation
 import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
-import org.mifos.accounts.loan.util.helpers.CashFlowDataDto;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.productdefinition.business.CashFlowDetail;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -58,9 +57,11 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.config.persistence.ConfigurationPersistence;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
+import org.mifos.dto.screen.CashFlowDataDto;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -149,39 +150,6 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
     @Override
     public Errors validateInstallmentSchedule(List<RepaymentScheduleInstallment> installments, VariableInstallmentDetailsBO variableInstallmentDetailsBO) {
         return installmentsValidator.validateInstallmentSchedule(installments, variableInstallmentDetailsBO);
-    }
-
-    @Override
-    public Errors validateCashFlowForInstallmentsForWarnings(LoanAccountActionForm loanActionForm, Short localeId) throws ServiceException {
-        Errors errors = new Errors();
-        LoanOfferingBO loanOfferingBO = loanPrdBusinessService.getLoanOffering(loanActionForm.getPrdOfferingIdValue(), localeId);
-        if (loanOfferingBO.shouldValidateCashFlowForInstallments()) {
-            CashFlowDetail cashFlowDetail = loanOfferingBO.getCashFlowDetail();
-            List<CashFlowDataDto> cashFlowDataDtos = loanActionForm.getCashflowDataDtos();
-            if (CollectionUtils.isNotEmpty(cashFlowDataDtos)) {
-                for (CashFlowDataDto cashflowDataDto : cashFlowDataDtos) {
-                    validateCashFlow(errors, cashFlowDetail.getCashFlowThreshold(), cashflowDataDto);
-                }
-            }
-        }
-        return errors;
-    }
-
-    private void validateCashFlow(Errors errors, Double cashFlowThreshold, CashFlowDataDto cashflowDataDto) {
-        String cashFlowAndInstallmentDiffPercent = cashflowDataDto.getDiffCumulativeCashflowAndInstallmentPercent();
-        String monthYearAsString = cashflowDataDto.getMonthYearAsString();
-        String cumulativeCashFlow = cashflowDataDto.getCumulativeCashFlow();
-        if (StringUtils.isNotEmpty(cashFlowAndInstallmentDiffPercent) && Double.valueOf(cashFlowAndInstallmentDiffPercent) > cashFlowThreshold) {
-            errors.addError(AccountConstants.BEYOND_CASHFLOW_THRESHOLD, new String[]{monthYearAsString, cashFlowThreshold.toString()});
-        }
-        if (StringUtils.isNotEmpty(cumulativeCashFlow)) {
-            Double cumulativeCashFlowValue = Double.valueOf(cumulativeCashFlow);
-            if (cumulativeCashFlowValue < 0) {
-                errors.addError(AccountConstants.CUMULATIVE_CASHFLOW_NEGATIVE, new String[]{monthYearAsString});
-            } else if (cumulativeCashFlowValue == 0) {
-                errors.addError(AccountConstants.CUMULATIVE_CASHFLOW_ZERO, new String[]{monthYearAsString});
-            }
-        }
     }
 
     @Override

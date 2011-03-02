@@ -23,6 +23,8 @@ package org.mifos.test.acceptance.framework.client;
 import org.mifos.test.acceptance.framework.MifosPage;
 
 import com.thoughtworks.selenium.Selenium;
+
+import org.mifos.test.acceptance.framework.admin.DefineLookupOptionParameters;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 
 public class CreateClientEnterPersonalDataPage extends MifosPage {
@@ -249,4 +251,31 @@ public class CreateClientEnterPersonalDataPage extends MifosPage {
         waitForPageToLoad();
         return new CreateClientEnterPersonalDataPage(selenium);
     }
+
+    public void verifyLookupOption(DefineLookupOptionParameters lookupOptionParams) {
+        switch (lookupOptionParams.getType()) {
+        case DefineLookupOptionParameters.TYPE_SALUTATION:
+            verifySelectHasOption("clientName.salutation", lookupOptionParams.getName());
+            break;
+        case DefineLookupOptionParameters.TYPE_MARITAL_STATUS:
+            verifySelectHasOption("clientDetailView.maritalStatus", lookupOptionParams.getName());
+            break;
+        case DefineLookupOptionParameters.TYPE_CITIZENSHIP:
+            verifySelectHasOption("clientDetailView.citizenship", lookupOptionParams.getName());
+            break;
+        case DefineLookupOptionParameters.TYPE_ETHNICITY:
+            verifySelectHasOption("clientDetailView.ethinicity", lookupOptionParams.getName());
+            break;
+        case DefineLookupOptionParameters.TYPE_EDUCATION_LEVEL:
+            verifySelectHasOption("clientDetailView.educationLevel", lookupOptionParams.getName());
+            break;
+        case DefineLookupOptionParameters.TYPE_HANDICAPPED:
+            verifySelectHasOption("clientDetailView.handicapped", lookupOptionParams.getName());
+            break;
+        default:
+            break;
+        }
+    }
+
+
 }

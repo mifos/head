@@ -20,7 +20,6 @@
 
 package org.mifos.test.acceptance.personnel;
 
-
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -30,6 +29,7 @@ import org.mifos.test.acceptance.framework.login.ChangePasswordPage;
 import org.mifos.test.acceptance.framework.login.LoginPage;
 import org.mifos.test.acceptance.framework.office.ChooseOfficePage;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
+import org.mifos.test.acceptance.framework.testhelpers.QuestionGroupTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.UserHelper;
 import org.mifos.test.acceptance.framework.user.CreateUserConfirmationPage;
 import org.mifos.test.acceptance.framework.user.CreateUserEnterDataPage;
@@ -46,12 +46,13 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @SuppressWarnings("PMD")
-@ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"personnel","acceptance","ui", "no_db_unit"})
+@ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
+@Test(sequential = true, groups = {"personnel", "acceptance", "ui", "no_db_unit"})
 public class PersonnelTest extends UiTestCaseBase {
 
     private NavigationHelper navigationHelper;
     private UserHelper userHelper;
+    private QuestionGroupTestHelper questionGroupTestHelper;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -60,6 +61,7 @@ public class PersonnelTest extends UiTestCaseBase {
         super.setUp();
         navigationHelper = new NavigationHelper(selenium);
         userHelper = new UserHelper(selenium);
+        questionGroupTestHelper = new QuestionGroupTestHelper(selenium);
     }
 
     @AfterMethod
@@ -67,9 +69,8 @@ public class PersonnelTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
-    //http://mifosforge.jira.com/browse/MIFOSTEST-296
-    @Test(enabled=true, groups = {"acceptance"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+
     public void createUserTest() throws Exception {
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         CreateUserParameters formParameters = adminPage.getAdminUserParameters();
@@ -83,7 +84,8 @@ public class PersonnelTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled=true, groups = {"acceptance"})
+    @Test(enabled = true, groups = {"acceptance"})
+
     public void editUserTest() throws Exception {
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
 
@@ -103,7 +105,7 @@ public class PersonnelTest extends UiTestCaseBase {
 
     //http://mifosforge.jira.com/browse/MIFOSTEST-298
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled=true, groups = {"acceptance"})
+    @Test(enabled = true, groups = {"acceptance"})
     public void createUserWithNonAdminRoleTest() throws Exception {
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         CreateUserParameters formParameters = adminPage.getNonAdminUserParameters();
@@ -114,15 +116,17 @@ public class PersonnelTest extends UiTestCaseBase {
         //Then
         HomePage homePage = loginPage.loginSuccessfulAsWithChnagePasw(formParameters.getUserName(), formParameters.getPassword());
         homePage.verifyPage();
-        adminPage=navigationHelper.navigateToAdminPageAsLogedUser(formParameters.getUserName(), "newPasw");
+        adminPage = navigationHelper.navigateToAdminPageAsLogedUser(formParameters.getUserName(), "newPasw");
         adminPage.navigateToCreateUserPage();
         String error = selenium.getText("admin.error.message");
         Assert.assertEquals(error.contains("You do not have permissions to perform this activity. Contact your system administrator to grant you the required permissions and try again."), true);
     }
 
-    @Test(enabled=true, groups = {"acceptance"})
+    //http://mifosforge.jira.com/browse/MIFOSTEST-670
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+
     public void changePasswordTest() throws Exception {
+
         HomePage homePage = loginSuccessfully();
         AdminPage adminPage = homePage.navigateToAdminPage();
 
@@ -134,32 +138,73 @@ public class PersonnelTest extends UiTestCaseBase {
 
         CreateUserPreviewDataPage userPreviewDataPage = userEnterDataPage.submitAndGotoCreateUserPreviewDataPage(userParameters);
         CreateUserConfirmationPage userConfirmationPage = userPreviewDataPage.submit();
+        //Then
         userConfirmationPage.verifyPage();
-
         UserViewDetailsPage userDetailsPage = userConfirmationPage.navigateToUserViewDetailsPage();
         userDetailsPage.verifyPage();
-        Assert.assertTrue(userDetailsPage.getFullName().contains(userParameters.getFirstName() + " " + userParameters.getLastName()));
 
+        Assert.assertTrue(userDetailsPage.getFullName().contains(userParameters.getFirstName() + " " + userParameters.getLastName()));
+        //When
         EditUserDataPage editUserPage = userDetailsPage.navigateToEditUserDataPage();
 
         CreateUserParameters passwordParameters = new CreateUserParameters();
         passwordParameters.setPassword("tester1");
+        passwordParameters.setPasswordRepeat("tester");
+        //Then
+        editUserPage = editUserPage.submitWithInvalidData(passwordParameters);
+        editUserPage.verifyPasswordChangeError();
+        //When
         passwordParameters.setPasswordRepeat("tester1");
-
+        //Then
         EditUserPreviewDataPage editPreviewDataPage = editUserPage.submitAndGotoEditUserPreviewDataPage(passwordParameters);
         UserViewDetailsPage submitUserpage = editPreviewDataPage.submit();
         submitUserpage.verifyPage();
-
+        //When
         LoginPage loginPage = (new MifosPage(selenium)).logout();
 
-        ChangePasswordPage changePasswordPage = loginPage.loginAndGoToChangePasswordPageAs(userParameters.getUserName(), passwordParameters.getPassword());
+        ChangePasswordPage changePasswordPage = loginPage.loginAndGoToChangePasswordPageAs(userParameters.getUserName(), passwordParameters.getPassword()); // tester1
+
         ChangePasswordPage.SubmitFormParameters changePasswordParameters = new ChangePasswordPage.SubmitFormParameters();
-        changePasswordParameters.setOldPassword("tester1");
+        changePasswordParameters.setOldPassword("tester"); // wrong old password
+        changePasswordParameters.setNewPassword(""); // empty new password
+        changePasswordParameters.setConfirmPassword("");
+
+        //Then
+        changePasswordPage = changePasswordPage.submitWithInvalidData(changePasswordParameters);
+        //When
+        changePasswordParameters.setNewPassword("tester2"); //wrong old password with good new
+        changePasswordParameters.setConfirmPassword("tester2");
+        //Then
+        changePasswordPage = changePasswordPage.submitWithInvalidData(changePasswordParameters);
+        //When
+        changePasswordParameters.setOldPassword("tester1"); // good old password and good new
         changePasswordParameters.setNewPassword("tester2");
         changePasswordParameters.setConfirmPassword("tester2");
+        //Then
         HomePage homePage2 = changePasswordPage.submitAndGotoHomePage(changePasswordParameters);
-
         Assert.assertTrue(homePage2.getWelcome().contains(userParameters.getFirstName()));
+
+        loginPage = (new MifosPage(selenium)).logout();
+        homePage = loginPage.loginSuccessfulAs(userParameters.getUserName(), "tester2");
+
+        changePasswordPage = homePage.navigateToYourSettingsPage().navigateToChangePasswordPage();
+
+        changePasswordPage = changePasswordPage.submitWithInvalidData(changePasswordParameters);
+        //When
+        changePasswordParameters.setNewPassword("tester2"); //wrong old password with good new
+        changePasswordParameters.setConfirmPassword("tester2");
+        //Then
+        changePasswordPage = changePasswordPage.submitWithInvalidData(changePasswordParameters);
+        //When
+        changePasswordParameters.setOldPassword("tester2"); // good old password and good new
+        changePasswordParameters.setNewPassword("tester3");
+        changePasswordParameters.setConfirmPassword("tester3");
+        changePasswordPage.submitAndGotoHomePage(changePasswordParameters);
+
+        loginPage = (new MifosPage(selenium)).logout();
+        homePage = loginPage.loginSuccessfulAs(userParameters.getUserName(), changePasswordParameters.getNewPassword());
+
+        Assert.assertTrue(homePage.getWelcome().contains(userParameters.getFirstName()));
     }
 
     private HomePage loginSuccessfully() {

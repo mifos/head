@@ -236,6 +236,13 @@ public class LoanTestHelper {
         changeLoanAccountStatusProvidingQuestionGroupResponses(loanId, params, null);
     }
 
+    public void activateLoanAccount(String loanId){
+        EditLoanAccountStatusParameters editLoanAccountStatusParameters = new EditLoanAccountStatusParameters();
+        editLoanAccountStatusParameters.setStatus(AccountStatus.LOAN_APPROVED.getStatusText());
+        editLoanAccountStatusParameters.setNote("Activate account");
+        changeLoanAccountStatus(loanId, editLoanAccountStatusParameters);
+    }
+
     public void changeLoanAccountStatusProvidingQuestionGroupResponses(String loanId, EditLoanAccountStatusParameters params, QuestionResponseParameters responseParameters) {
         LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
 
@@ -672,7 +679,7 @@ public class LoanTestHelper {
         return createLoanAccountsEntryPage.submitAndNavigateToCreateMultipleLoanAccountsSuccessPage();
     }
 
-    public void createMultipleLoanAccountsAndVerify(CreateMultipleLoanAccountSelectParameters multipleAccParameters, String[] clients, String loanPurpose, Boolean saveMethod) {
+    public void createMultipleLoanAccountsAndVerify(CreateMultipleLoanAccountSelectParameters multipleAccParameters, String[] clients, String loanPurpose, String feeAmount, Boolean saveMethod) {
 
         String [] clientsInstallments = loanProductTestHelper.getDefaultNoOfInstallmentsForClients(clients, multipleAccParameters.getLoanProduct());
         CreateLoanAccountsEntryPage createLoanAccountsEntryPage = navigationHelper.navigateToClientsAndAccountsPage()
@@ -705,6 +712,7 @@ public class LoanTestHelper {
                     loanAccountPage.verifyLoanStatus(AccountStatus.LOAN_PARTIAL.getStatusText());
                 }
                 loanAccountPage.verifyNumberOfInstallments("10");
+                Assert.assertEquals(loanAccountPage.getOriginalFeesAmount(), feeAmount, "Bulk loan creation ignores default fees");
             }
         }
     }
@@ -780,14 +788,9 @@ public class LoanTestHelper {
             .submitAndNavigateToLoanAccountPage();
     }
 
-    /**
-     * Method for creating default loan account.
-     * Doesn't matter on which page you currently are.
-     * Must be logged in.
-     */
     public LoanAccountPage createAndActivateDefaultLoanAccount(CreateLoanAccountSearchParameters searchParams) {
-        CreateLoanAccountEntryPage createLoanAccountEntryPage = new MifosPage(selenium)
-            .navigateToClientsAndAccountsPageUsingHeaderTab()
+        CreateLoanAccountEntryPage createLoanAccountEntryPage = navigationHelper
+            .navigateToClientsAndAccountsPage()
             .navigateToCreateLoanAccountUsingLeftMenu()
             .searchAndNavigateToCreateLoanAccountPage(searchParams);
         String loanAmount = createLoanAccountEntryPage.getLoanAmount();
@@ -932,5 +935,15 @@ public class LoanTestHelper {
 
     public CreateLoanAccountCashFlowPage navigateToCreateLoanAccountCashFlowPage(CreateLoanAccountSearchParameters searchParams) {
         return navigateToCreateLoanAccountEntryPage(searchParams).submitAndNavigateToCreateLoanAccountCashFlowPage();
+    }
+
+    public void verifyOriginalValues(CreateLoanAccountSearchParameters searchParams,
+                                      String principal, String interest, String fees, String penalty, String total) {
+        LoanAccountPage loanAccountPage = navigateToLoanAccountPage(searchParams);
+        loanAccountPage.verifyPrincipalOriginal(principal);
+        loanAccountPage.verifyInterestOriginal(interest);
+        loanAccountPage.verifyFeesOriginal(fees);
+        loanAccountPage.verifyPenaltyOriginal(penalty);
+        loanAccountPage.verifyTotalOriginalLoan(total);
     }
 }

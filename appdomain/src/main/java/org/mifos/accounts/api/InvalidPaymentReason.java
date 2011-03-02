@@ -34,5 +34,7 @@ public enum InvalidPaymentReason {
     /** The payment amount indicates an amount disbursed, but this amount is invalid. */
     INVALID_LOAN_DISBURSAL_AMOUNT,
     /** Loans may only be disbursed if they are in a particular state. */
-    INVALID_LOAN_STATE;
+    INVALID_LOAN_STATE,
+    /** This loan cannot be disbursed because the customer has other active loans for the same product. */
+    OTHER_ACTIVE_LOANS_FOR_THE_SAME_PRODUCT;
 }

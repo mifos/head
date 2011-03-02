@@ -25,6 +25,7 @@ import org.mifos.test.acceptance.framework.user.CreateUserConfirmationPage;
 import org.mifos.test.acceptance.framework.user.CreateUserEnterDataPage;
 import org.mifos.test.acceptance.framework.user.CreateUserParameters;
 import org.mifos.test.acceptance.framework.user.CreateUserPreviewDataPage;
+import org.mifos.test.acceptance.framework.user.EditUserDataPage;
 import org.mifos.test.acceptance.framework.user.UserViewDetailsPage;
 import org.testng.Assert;
 
@@ -59,11 +60,15 @@ public class UserHelper {
     }
 
     public UserViewDetailsPage changeUserStatus(String userName, String status) {
+        return navigateToEditUserDataPage(userName)
+            .changeStatusAndSubmit(status);
+    }
+
+    public EditUserDataPage navigateToEditUserDataPage(String userName) {
         return navigationHelper
             .navigateToAdminPage()
             .navigateToViewSystemUsersPage()
             .searchAndNavigateToUserViewDetailsPage(userName)
-            .navigateToEditUserDataPage()
-            .changeStatusAndSubmit(status);
+            .navigateToEditUserDataPage();
     }
 }

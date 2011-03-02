@@ -59,6 +59,7 @@ public class PenaltyTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+
     public void applyPenaltyOnApprovedLoan() throws Exception {
         ChargeParameters params = new ChargeParameters();
         params.setType(ChargeParameters.MISC_PENALTY);
@@ -67,7 +68,12 @@ public class PenaltyTest extends UiTestCaseBase {
         verifySummaryAndActivity(loanAccountPage, "10.0", "10.0", "Misc penalty applied", 2);
     }
 
-    private void verifySummaryAndActivity(LoanAccountPage loanAccountPage, String penalty, String penaltyBalance, String activity, int row) {
+    private void verifySummaryAndActivity
+            (LoanAccountPage
+                     loanAccountPage, String
+                    penalty, String
+                    penaltyBalance, String
+                    activity, int row) {
         Assert.assertEquals(loanAccountPage.getPenaltyPaid(), "0.0");
         Assert.assertEquals(loanAccountPage.getPenaltyBalance(), penaltyBalance);
         AccountActivityPage accountActivityPage = loanAccountPage.navigateToAccountActivityPage();
@@ -76,7 +82,8 @@ public class PenaltyTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void applyAndWaivePenaltyOnDisbursedLoan() throws Exception {
+    public void applyAndWaivePenaltyOnDisbursedLoan
+            () throws Exception {
         String accountId = "000100000000039";
         ChargeParameters feeParameters = new ChargeParameters();
         feeParameters.setAmount("15");

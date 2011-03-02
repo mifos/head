@@ -27,6 +27,8 @@ import org.mifos.test.acceptance.framework.loan.AccountChangeStatusPage;
 import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
+import org.mifos.test.acceptance.framework.loan.AttachSurveyPage;
+import org.mifos.test.acceptance.framework.questionnaire.ViewQuestionResponseDetailPage;
 
 @SuppressWarnings("PMD.SystemPrintln")
 public class SavingsAccountDetailPage extends AbstractPage {
@@ -37,6 +39,14 @@ public class SavingsAccountDetailPage extends AbstractPage {
 
     public void verifyPage() {
         this.verifyPage("savingsaccountdetail");
+    }
+
+    public String getTotalAmountDue(){
+        return selenium.getText("savingsaccountdetail.text.totalAmountDue");
+    }
+
+    public void verifyTotalAmountDue(String totalAmountDue){
+        Assert.assertEquals(getTotalAmountDue(), totalAmountDue);
     }
 
     public void verifySavingsAmount(String amount) {
@@ -91,5 +101,28 @@ public class SavingsAccountDetailPage extends AbstractPage {
 
     public String getAccountId() {
             return selenium.getText("savingsaccountdetail.text.savingsId");
+    }
+
+    public SavingsApplyAdjustmentPage navigateToApplyAdjustmentPage() {
+        selenium.click("savingsaccountdetail.link.applyAdjustment");
+        waitForPageToLoad();
+        return new SavingsApplyAdjustmentPage(selenium);
+    }
+
+    public AttachSurveyPage navigateToAttachSurveyPage() {
+        selenium.click("link=Attach a Question Group");
+        waitForPageToLoad();
+        return new AttachSurveyPage(selenium);
+    }
+
+    public ViewQuestionResponseDetailPage navigateToLatestViewQuestionResponseDetailPage(String questionGroupName) {
+        int linkID = Integer.parseInt(selenium.getAttribute("link="+questionGroupName+"@id"));
+        linkID++;
+        if(!selenium.isElementPresent("id="+linkID)) {
+            linkID--;
+        }
+        selenium.click("id="+linkID);
+        waitForPageToLoad();
+        return new ViewQuestionResponseDetailPage(selenium);
     }
 }

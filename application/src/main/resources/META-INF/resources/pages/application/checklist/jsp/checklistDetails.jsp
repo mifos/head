@@ -56,10 +56,10 @@ explanation of the license and how it is applied.
 					<table width="96%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
 							<td width="50%" height="23" class="headingorange">
-								${checkList.checklistName}
+								<span id="checklistDetails.text.name">${checkList.checklistName}</span>
 							</td>
 							<td width="50%" align="right">
-								<html-el:link href="chkListAction.do?method=manage&checkListId=${checkList.checklistId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+								<html-el:link styleId="checklistDetails.link.edit" href="chkListAction.do?method=manage&checkListId=${checkList.checklistId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 									<mifos:mifoslabel name="checklist.edit_checklist" />
 								</html-el:link>
 							</td>

@@ -109,6 +109,7 @@ import org.mifos.dto.domain.LoanInstallmentDetailsDto;
 import org.mifos.dto.domain.LoanPaymentDto;
 import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.domain.ValueListElement;
+import org.mifos.dto.screen.CashFlowDataDto;
 import org.mifos.dto.screen.LoanAccountInfoDto;
 import org.mifos.dto.screen.LoanAccountMeetingDto;
 import org.mifos.dto.screen.LoanCreationGlimDto;
@@ -490,10 +491,10 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     }
 
 
-    private ActionErrors validateCashFlowForInstallmentsForWarnings(HttpServletRequest request, LoanAccountActionForm loanActionForm) throws Exception {
-        return getActionErrors(loanServiceFacade.validateCashFlowForInstallmentsForWarnings(loanActionForm, getUserContext(request).getLocaleId()));
+    private ActionErrors validateCashFlowForInstallmentsForWarnings(LoanAccountActionForm loanActionForm) throws Exception {
+        List<CashFlowDataDto> cashFlowDataDtos = loanActionForm.getCashflowDataDtos();
+        return getActionErrors(loanAccountServiceFacade.validateCashFlowForInstallmentsForWarnings(cashFlowDataDtos, loanActionForm.getPrdOfferingIdValue().intValue()));
     }
-
 
     private ActionErrors validateCashflowAndInstallmentDates(List<RepaymentScheduleInstallment> installments, CashFlowForm cashFlowForm, Double repaymentCapacity) {
         return getActionErrors(loanServiceFacade.validateCashFlowForInstallments(installments, cashFlowForm, repaymentCapacity));
@@ -1095,7 +1096,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     }
 
     private boolean validateCashFlowForWarning(ActionForm form, HttpServletRequest request) throws Exception {
-        return addErrorAndReturnResult(request, validateCashFlowForInstallmentsForWarnings(request, (LoanAccountActionForm) form));
+        return addErrorAndReturnResult(request, validateCashFlowForInstallmentsForWarnings((LoanAccountActionForm) form));
     }
 
     private boolean addErrorAndReturnResult(HttpServletRequest request, ActionErrors actionErrors) {

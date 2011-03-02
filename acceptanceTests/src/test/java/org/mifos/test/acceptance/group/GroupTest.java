@@ -20,13 +20,6 @@
 
 package org.mifos.test.acceptance.group;
 
-import static java.util.Arrays.asList;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -45,26 +38,37 @@ import org.mifos.test.acceptance.framework.group.EditCustomerStatusParameters;
 import org.mifos.test.acceptance.framework.group.GroupStatus;
 import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
 import org.mifos.test.acceptance.framework.loan.ApplyPaymentPage;
+import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 import org.mifos.test.acceptance.framework.login.LoginPage;
+import org.mifos.test.acceptance.framework.questionnaire.Choice;
+import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionGroupPage;
 import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionGroupParameters;
+import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionPage;
+import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionParameters;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionnairePage;
+import org.mifos.test.acceptance.framework.questionnaire.ViewQuestionResponseDetailPage;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
 import org.mifos.test.acceptance.framework.testhelpers.GroupTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.framework.testhelpers.QuestionGroupTestHelper;
-import org.mifos.test.acceptance.framework.questionnaire.Choice;
-import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionGroupPage;
-import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionPage;
-import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionParameters;
-import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
-import org.mifos.test.acceptance.framework.questionnaire.ViewQuestionResponseDetailPage;
 import org.mifos.test.acceptance.util.StringUtil;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
+import static java.util.Arrays.asList;
+
 @SuppressWarnings("PMD")
-@ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
+@ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
 public class GroupTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;
@@ -93,8 +97,8 @@ public class GroupTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-247
-    @Test(sequential = true, groups = {"group","acceptance","ui", "no_db_unit" })
-    public void verifyAcceptedPaymentTypesForGroup() throws Exception{
+    @Test(sequential = true, groups = {"group", "acceptance", "ui", "no_db_unit"})
+    public void verifyAcceptedPaymentTypesForGroup() throws Exception {
         //When
         GroupTestHelper groupTestHelper = new GroupTestHelper(selenium);
         CreateGroupSubmitParameters groupParams = new CreateGroupSubmitParameters();
@@ -110,14 +114,14 @@ public class GroupTest extends UiTestCaseBase {
         defineAcceptedPaymentTypesPage.addLoanFeesPaymentType(DefineAcceptedPaymentTypesPage.VOUCHER);
 
         ApplyPaymentPage applyPaymentPage = navigationHelper.navigateToGroupViewDetailsPage("TestGroup123456")
-                                            .navigateToViewGroupChargesDetailPage().navigateToApplyPayments();
+                .navigateToViewGroupChargesDetailPage().navigateToApplyPayments();
         //Then
         applyPaymentPage.verifyModeOfPayments();
 
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    @Test(sequential = true, groups = {"group","acceptance","ui", "no_db_unit" })
+    @Test(sequential = true, groups = {"group", "acceptance", "ui", "no_db_unit"})
     public void testHitGroupDashboard() throws Exception {
         LoginPage loginPage = appLauncher.launchMifos();
         HomePage homePage = loginPage.loginSuccessfullyUsingDefaultCredentials();
@@ -127,7 +131,7 @@ public class GroupTest extends UiTestCaseBase {
         searchResultsPage.navigateToGroupViewDetailsPage("link=Default Group*");
     }
 
-    @Test(sequential = true, groups = {"group","acceptance","ui", "no_db_unit" })
+    @Test(sequential = true, groups = {"group", "acceptance", "ui", "no_db_unit"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     // http://mifosforge.jira.com/browse/MIFOSTEST-301
     public void createGroupInPendingApprovalStateTest() throws Exception {
@@ -150,7 +154,7 @@ public class GroupTest extends UiTestCaseBase {
         detailsPage.verifyStatus("Active*");
     }
 
-    @Test(sequential = true, groups = {"group","acceptance","ui", "no_db_unit" })
+    @Test(sequential = true, groups = {"group", "acceptance", "ui", "no_db_unit"})
     // http://mifosforge.jira.com/browse/MIFOSTEST-300
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void createGroupInPartialApplicationStateTest() throws Exception {
@@ -173,7 +177,7 @@ public class GroupTest extends UiTestCaseBase {
         detailsPage.verifyStatus("Application Pending Approval*");
     }
 
-    @Test(sequential = true, groups = {"group","acceptance","ui", "no_db_unit" })
+    @Test(sequential = true, groups = {"group", "acceptance", "ui", "no_db_unit"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void changeCenterMembership() throws Exception {
         CreateGroupEntryPage groupEntryPage = loginAndNavigateToNewGroupPage();
@@ -189,7 +193,7 @@ public class GroupTest extends UiTestCaseBase {
         groupDetailsPage.verifyLoanOfficer(" Loan officer: loan officer");
     }
 
-    @Test(sequential = true, groups = {"smoke","group","acceptance","ui", "no_db_unit" })
+    @Test(sequential = true, groups = {"smoke", "group", "acceptance", "ui", "no_db_unit"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void createGroupInPendingApprovalStateTestWithSurveys() throws Exception {
         QuestionGroupTestHelper questionGroupTestHelper = new QuestionGroupTestHelper(selenium);
@@ -218,9 +222,10 @@ public class GroupTest extends UiTestCaseBase {
      * Verify when Pending Approval (Groups) is set to default(true);
      * the system transitions the account to this state when creating new groups
      * http://mifosforge.jira.com/browse/MIFOSTEST-210
+     *
      * @throws Exception
      */
-    @Test(groups = {"group","acceptance","ui", "no_db_unit" })
+    @Test(groups = {"group", "acceptance", "ui", "no_db_unit"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void verifyPendingApprovalSetToDefault() throws Exception {
         CreateGroupSubmitParameters groupParams = getGenericGroupFormParameters();
@@ -234,9 +239,10 @@ public class GroupTest extends UiTestCaseBase {
     /**
      * Create group and change center membership for group
      * http://mifosforge.jira.com/browse/MIFOSTEST-655
+     *
      * @throws Exception
      */
-    @Test(groups = {"group","acceptance","ui", "no_db_unit" })
+    @Test(groups = {"group", "acceptance", "ui", "no_db_unit"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyChangeCenterMembership() throws Exception {
         String centerName = "Default Center";
@@ -259,8 +265,82 @@ public class GroupTest extends UiTestCaseBase {
         groupViewDetailsPage.navigateToGroupsCenter(newCenterName);
     }
 
+    @Test(sequential = true, groups = {"group", "acceptance", "ui"}, enabled = false)
+    // http://mifosforge.jira.com/browse/MIFOSTEST-682
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void createGroupWithQuestionGroup() throws Exception {
+        //Given
+
+        CreateGroupSubmitParameters groupParams = new CreateGroupSubmitParameters();
+        groupParams.setGroupName("GroupTest");
+        String centerName = "MyCenter1232993841778";
+        String qG_1 = "CreateGroupQG";
+        String qG_2 = "CreateGroupQG2";
+        QuestionResponseParameters responseParams = getQuestionResponseParametersForGroupCreation("answer1");
+        QuestionResponseParameters responseParams2 = getQuestionResponseParametersForGroupCreation("answer2");
+        List<CreateQuestionParameters> questionsList = new ArrayList<CreateQuestionParameters>();
+        questionsList.add(newFreeTextQuestionParameters("new question 1"));
+        questionsList.add(newFreeTextQuestionParameters("new question 2"));
+        questionsList.add(newFreeTextQuestionParameters("new question 3"));
+        String[] newActiveQuestions = {"new question 1", "new question 2"};
+        String[] deactivateArray = {"new question 3", "MultiSelect", "question 3", "question 3", "SmartSelect"};
+        String[] deactivatedGroupArray = {"SingleSelect", "question 6"};
+        List<String> deactivateList = Arrays.asList(deactivateArray);
+        //When / Then
+        GroupViewDetailsPage groupViewDetailsPage = groupTestHelper.createGroupWithQuestionGroupsEdited(
+                groupParams, centerName, responseParams, responseParams2);
+        groupViewDetailsPage.navigateToViewAdditionalInformationPage().navigateBack();
+        QuestionGroupTestHelper questionTestHelper = new QuestionGroupTestHelper(selenium);
+        questionTestHelper.addNewQuestionsToQuestionGroup(qG_1, questionsList);
+        questionTestHelper.markQuestionsAsInactive(deactivateList);
+        questionTestHelper.markQuestionGroupAsInactive(qG_2);
+        QuestionResponsePage responsePage = groupTestHelper.navigateToQuestionResponsePageWhenCreatingGroup(
+                groupParams, centerName);
+
+        responsePage.verifyQuestionsDoesnotappear(deactivateArray);
+        responsePage.verifyQuestionsDoesnotappear(deactivatedGroupArray);
+        responsePage.verifyQuestionsExists(newActiveQuestions);
+        groupViewDetailsPage = navigationHelper.navigateToGroupViewDetailsPage(groupParams.getGroupName());
+        ViewQuestionResponseDetailPage responseDetailsPage = groupViewDetailsPage
+                .navigateToViewAdditionalInformationPage();
+        responseDetailsPage.verifyQuestionsDoesnotappear(deactivateArray);
+        QuestionnairePage questionnairePage = responseDetailsPage.navigateToEditSection("0");
+        questionnairePage.verifyField("details[0].sectionDetails[0].questions[0].value", "");
+        questionnairePage.verifyField("details[0].sectionDetails[0].questions[1].value", "");
+    }
+
+    private QuestionResponseParameters getQuestionResponseParametersForGroupCreation(String answer) {
+        QuestionResponseParameters responseParams = new QuestionResponseParameters();
+        responseParams.addTextAnswer("questionGroups[0].sectionDetails[0].questions[0].value", "24/01/2011");
+        responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[0].questions[1].valuesAsArray", "first");
+        responseParams.addTextAnswer("questionGroups[0].sectionDetails[0].questions[2].value", "10");
+
+        responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[0].value", "24/01/2011");
+        responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[1].value", "yes");
+        responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[2].valuesAsArray", "february:feb");
+
+        responseParams.addTextAnswer("questionGroups[1].sectionDetails[0].questions[0].value", "24/01/2011");
+        responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[0].questions[1].valuesAsArray", "first");
+        responseParams.addTextAnswer("questionGroups[1].sectionDetails[0].questions[2].value", "10");
+
+        responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[0].valuesAsArray", "february:feb");
+        responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[1].value", "good");
+        responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[2].valuesAsArray", "answer2:2");
+
+        return responseParams;
+    }
+
+    private CreateQuestionParameters newFreeTextQuestionParameters(String text) {
+        CreateQuestionParameters questionParams = new CreateQuestionParameters();
+
+        questionParams.setText(text);
+        questionParams.setType(CreateQuestionParameters.TYPE_FREE_TEXT);
+
+        return questionParams;
+    }
+
     private Map<String, String> getChoiceTags() {
-        Map<String,String> tags = new HashMap<String, String>();
+        Map<String, String> tags = new HashMap<String, String>();
         tags.put("Tag1", "Choice1");
         tags.put("Tag3", "Choice2");
         return tags;
@@ -275,7 +355,7 @@ public class GroupTest extends UiTestCaseBase {
 
         CreateQuestionGroupPage createQuestionGroupPage = adminPage.navigateToCreateQuestionGroupPage();
         CreateQuestionGroupParameters parameters = getCreateQuestionGroupParameters(questionGroupTitle, asList(question1, question2));
-        for(String section : parameters.getExistingQuestions().keySet()){
+        for (String section : parameters.getExistingQuestions().keySet()) {
             createQuestionGroupPage.addExistingQuestion(section, parameters.getExistingQuestions().get(section));
         }
         createQuestionGroupPage.markEveryOtherQuestionsMandatory(asList(question1));
@@ -309,7 +389,7 @@ public class GroupTest extends UiTestCaseBase {
         String centerName = "Default Center";
         CreateGroupSearchPage groupSearchPage = homePage.navigateToCreateNewGroupSearchPage();
         groupSearchPage.verifyPage();
-        return  groupSearchPage.searchAndNavigateToCreateGroupPage(centerName);
+        return groupSearchPage.searchAndNavigateToCreateGroupPage(centerName);
     }
 
     private CreateGroupSubmitParameters getGenericGroupFormParameters() {

@@ -36,7 +36,6 @@ import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameter
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
-import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPreviewPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.SubmitFormParameters;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSearchParameters;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSubmitParameters;
@@ -249,15 +248,18 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
 
     }
 
+    //http://mifosforge.jira.com/browse/MIFOSTEST-86
     public void changeLocale() {
-        // update the language to French
+        // Given
         propertiesHelper.setLocale("FR", "FR");
 
-        // make sure that the welcome text does not contain "Welcome"
+        // When
         HomePage homePage = navigationHelper.navigateToHomePage();
-        String welcomeText = homePage.getWelcome();
-        Assert.assertFalse(welcomeText.contains("Welcome"), "The welcome text contained \"Welcome\" even though the language is supposed to have changed!");
 
+        // Then
+        Assert.assertEquals(homePage.getWelcome(), "Bienvenue,  mifos");
+
+        // cleanup
         propertiesHelper.setLocale("EN", "GB");
     }
 
@@ -414,7 +416,7 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
     {
         DefineNewLoanProductPage newLoanPage = navigationHelper.navigateToDefineNewLoanProductPage();
         newLoanPage.fillLoanParameters(formParameters);
-        DefineNewLoanProductPreviewPage previewPage = newLoanPage.submitAndGotoNewLoanProductPreviewPage();
+        DefineNewLoanProductPage previewPage = newLoanPage.submitWithErrors();
         if(checkInterestExceedsLimit)
         {
             previewPage.verifyErrorInForm(errorInterestExceedsLimit);

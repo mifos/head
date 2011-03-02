@@ -68,6 +68,24 @@ public class AdminPage extends MifosPage {
         verifyPage(PAGE_ID);
     }
 
+    public DefineLookupOptionsPage navigateDefineLookupOptionsPage() {
+        selenium.click("admin.link.defineLookupOption");
+        waitForPageToLoad();
+        return new DefineLookupOptionsPage(selenium);
+    }
+
+    public ViewChecklistsPage navigateToViewChecklistsPage() {
+        selenium.click("admin.link.viewChecklists");
+        waitForPageToLoad();
+        return new ViewChecklistsPage(selenium);
+    }
+
+    public DefineNewChecklistPage navigateToDefineNewChecklistPage() {
+        selenium.click("admin.link.defineNewChecklist");
+        waitForPageToLoad();
+        return new DefineNewChecklistPage(selenium);
+    }
+
     public ViewHolidaysPage navigateToViewHolidaysPage() {
         selenium.click("admin.link.viewHolidays");
         waitForPageToLoad();
@@ -187,10 +205,8 @@ public class AdminPage extends MifosPage {
 
     public void defineLoanProduct(SubmitFormParameters formParameters) {
         DefineNewLoanProductPage newLoanPage = navigateToDefineLoanProduct();
-        newLoanPage.verifyPage();
         newLoanPage.fillLoanParameters(formParameters);
         DefineNewLoanProductPreviewPage previewPage = newLoanPage.submitAndGotoNewLoanProductPreviewPage();
-        previewPage.verifyPage();
         DefineNewLoanProductConfirmationPage confirmationPage = previewPage.submit();
         confirmationPage.verifyPage();
     }
@@ -198,9 +214,10 @@ public class AdminPage extends MifosPage {
     public void defineMultiCurrencyLoanProduct(SubmitMultiCurrencyFormParameters formParameters) {
         DefineNewDifferentCurrencyLoanProductPage newLoanPage =  navigateToDefineDifferentCurrencyLoanProduct();
         newLoanPage.verifyPage();
+        newLoanPage.addFee(formParameters.getAdditionalFee1());
         newLoanPage.fillLoanParameters(formParameters);
+        //
         DefineNewLoanProductPreviewPage previewPage = newLoanPage.submitAndGotoNewLoanProductPreviewPage();
-        previewPage.verifyPage();
         DefineNewLoanProductConfirmationPage confirmationPage = previewPage.submit();
         confirmationPage.verifyPage();
     }
@@ -362,10 +379,14 @@ public class AdminPage extends MifosPage {
     }
 
     public BatchJobsPage navigateToBatchJobsPage() {
-        selenium.click("admin.link.batchjobs");
-        waitForPageToLoad();
+        tryNavigateToBatchJobsPage();
 
         return new BatchJobsPage(selenium);
+    }
+
+    public void tryNavigateToBatchJobsPage() {
+        selenium.click("admin.link.batchjobs");
+        waitForPageToLoad();
     }
 
     public DefineNewOfficePage navigateToDefineANewOfficePage() {

@@ -193,7 +193,7 @@ public class StandardAccountServiceTest {
                 new AccountReferenceDto(1), new BigDecimal("299"), new LocalDate(), new PaymentTypeDto(
                         (short) 1, "CASH"), "");
         List<InvalidPaymentReason> errors = new ArrayList<InvalidPaymentReason>();
-        standardAccountService.disbursalAmountMatchesFullLoanAmount(disbursal, errors, mockLoanAccount);
+        standardAccountService.disbursalAmountMatchesFullLoanAmount(disbursal.getPaymentAmount(), errors, mockLoanAccount);
         assertThat(errors.get(0), is(InvalidPaymentReason.INVALID_LOAN_DISBURSAL_AMOUNT));
     }
 
@@ -204,7 +204,7 @@ public class StandardAccountServiceTest {
                 new AccountReferenceDto(1), new BigDecimal("300.0000000000000"), new LocalDate(), new PaymentTypeDto(
                         (short) 1, "CASH"), "");
         List<InvalidPaymentReason> errors = new ArrayList<InvalidPaymentReason>();
-        standardAccountService.disbursalAmountMatchesFullLoanAmount(disbursal, errors, mockLoanAccount);
+        standardAccountService.disbursalAmountMatchesFullLoanAmount(disbursal.getPaymentAmount(), errors, mockLoanAccount);
         assertThat(errors.isEmpty(), is(true));
     }
 

@@ -20,7 +20,11 @@
 
 package org.mifos.dto.screen;
 
-public class LoanCreationResultDto {
+import java.io.Serializable;
+
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID"}, justification="should disable at filter level and also for pmd - not important for us")
+public class LoanCreationResultDto implements Serializable {
 
     private final boolean glimApplicable;
     private final Integer accountId;

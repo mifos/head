@@ -19,6 +19,12 @@
  */
 package org.mifos.test.acceptance.questionnaire;
 
+import java.util.Collections;
+import java.util.Set;
+import org.mifos.test.acceptance.framework.client.QuestionGroup;
+import org.mifos.test.acceptance.framework.loan.EditLoanAccountStatusParameters;
+import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
+import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPage;
 import org.mifos.test.acceptance.framework.questionnaire.EditQuestionPage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionDetailPage;
 import org.mifos.test.acceptance.framework.questionnaire.ViewAllQuestionsPage;
@@ -31,6 +37,7 @@ import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
+import org.mifos.test.acceptance.framework.questionnaire.AttachQuestionGroupParameters;
 import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionGroupPage;
 import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionGroupParameters;
 import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionPage;
@@ -39,6 +46,7 @@ import org.mifos.test.acceptance.framework.questionnaire.EditQuestionGroupPage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionGroupDetailPage;
 import org.mifos.test.acceptance.framework.questionnaire.ViewAllQuestionGroupsPage;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
+import org.mifos.test.acceptance.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
@@ -50,7 +58,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.mifos.test.acceptance.framework.client.ClientCloseReason;
+import org.mifos.test.acceptance.framework.client.ClientStatus;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
+import org.mifos.test.acceptance.framework.group.EditCustomerStatusParameters;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 import org.mifos.test.acceptance.framework.office.OfficeParameters;
 import org.mifos.test.acceptance.framework.office.OfficeViewDetailsPage;
@@ -83,6 +94,7 @@ public class QuestionGroupTest extends UiTestCaseBase {
     private OfficeHelper officeHelper;
     private QuestionGroupTestHelper questionGroupTestHelper;
     private ClientTestHelper clientTestHelper;
+    private LoanTestHelper loanTestHelper;
     private static final String START_DATA_SET = "acceptance_small_003_dbunit.xml";
     private String qgTitle1, qgTitle2, qgTitle3;
     private String qTitle1, qTitle2, qTitle3, qTitle4, qTitle5;
@@ -97,6 +109,7 @@ public class QuestionGroupTest extends UiTestCaseBase {
     private static final String CREATE_CLIENT_QUESTION_GROUP = "CreateClientQG2";
     private static final int CREATE_OFFICE_QUESTION_GROUP_ID = 27;
     private static final String CLIENT = "Stu1232993852651 Client1232993852651";
+    private Map<Integer, QuestionGroup> questionGroupInstancesOfClient;
     private static final List<String> charactersList = new ArrayList<String>(Arrays.asList("عربية","有","òèßñ"));
     private static final String noNumber = "qwerty";
     private static final List<String> EMPTY_LIST = new ArrayList<String>();
@@ -107,17 +120,19 @@ public class QuestionGroupTest extends UiTestCaseBase {
         "CreateSavingsQG2","ViewSavingsQG", "ViewSavingsQG2", "CreateLoanQG",
         "CreateLoanQG2", "ViewLoanQG", "ViewLoanQG2", "DisburseLoanQG", "DisburseLoanQG2"));
     private static final Map<String,String> QUESTIONS = new HashMap<String, String>();
-            
+
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @BeforeMethod
+    @BeforeMethod(alwaysRun=true)
     public void setUp() throws Exception {
         super.setUp();
         officeHelper = new OfficeHelper(selenium);
         appLauncher = new AppLauncher(selenium);
         questionGroupTestHelper = new QuestionGroupTestHelper(selenium);
         clientTestHelper = new ClientTestHelper(selenium);
+        loanTestHelper = new LoanTestHelper(selenium);
+        questionGroupInstancesOfClient = new HashMap<Integer, QuestionGroup>();
         qgTitle1 = "QuestionGroup1 " + System.currentTimeMillis();
         qgTitle2 = "QuestionGroup2 " + System.currentTimeMillis();
         qgTitle3 = "QuestionGroup3 " + System.currentTimeMillis();
@@ -138,7 +153,7 @@ public class QuestionGroupTest extends UiTestCaseBase {
     public void logOut() {
         (new MifosPage(selenium)).logout();
     }
-    
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createQuestionGroup() throws Exception{
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, START_DATA_SET, dataSource, selenium);
@@ -150,7 +165,7 @@ public class QuestionGroupTest extends UiTestCaseBase {
         testCancelCreateQuestionGroup(getCreateQuestionGroupPage(new AdminPage(selenium)));
         testViewQuestionGroups();
     }
-    
+
     /**
      * Verify that user is able to edit the defined Question Groups and
      * change the order of questions and sections
@@ -209,7 +224,7 @@ public class QuestionGroupTest extends UiTestCaseBase {
         clientViewDetailsPage = clientTestHelper.editQuestionGroupResponses(
                 clientViewDetailsPage, "0",
                 questions);
-        
+
         //Then
         ClientViewChangeLogPage clientViewChangeLogPage = clientViewDetailsPage.navigateToClientViewChangeLog();
         clientViewChangeLogPage.verifyChangeLog(asList("CreateClientQG/Sec 2/Number","CreateClientQG/Sec 2/NumberQuestion2"),
@@ -240,11 +255,11 @@ public class QuestionGroupTest extends UiTestCaseBase {
         responseParameters.addSingleSelectAnswer("questionGroups[0].sectionDetails[0].questions[0].valuesAsArray", "Nothing");
         responseParameters.addSingleSelectAnswer("questionGroups[0].sectionDetails[0].questions[1].valuesAsArray", "Yes");
         responseParameters.addTextAnswer("questionGroups[0].sectionDetails[0].questions[2].value", "123");
-        
+
         QuestionResponseParameters responseParameters2 = new QuestionResponseParameters();
         responseParameters2.addSingleSelectAnswer("questionGroups[0].sectionDetails[0].questions[1].valuesAsArray", "Maybe");
         responseParameters2.addTextAnswer("questionGroups[0].sectionDetails[0].questions[2].value", "1234");
-        
+
         OfficeViewDetailsPage officeViewDetailsPage = questionGroupTestHelper.createOfficeWithQuestionGroup(questionResponsePage, responseParameters, responseParameters2);
         ViewQuestionResponseDetailPage viewQuestionResponseDetailPage = officeViewDetailsPage.navigateToViewAdditionalInformation();
         viewQuestionResponseDetailPage.verifyQuestionPresent("question 7", "Nothing");
@@ -351,7 +366,7 @@ public class QuestionGroupTest extends UiTestCaseBase {
 
         //Then
         viewAllQuestionsPage.verifyQuestions(QUESTIONS.keySet());
-    
+
         //When
         c = new Choice("answerChoice1", EMPTY_LIST);
         choices.add(c);
@@ -393,6 +408,226 @@ public class QuestionGroupTest extends UiTestCaseBase {
             }
             viewAllQuestionsPage = questionDetailPage.navigateToViewAllQuestionsPage();
         }
+    }
+
+    /**
+     * Attaching a Question Group to Multiple flows
+     * http://mifosforge.jira.com/browse/MIFOSTEST-701
+     * @throws Exception
+     */
+    @Test(enabled = false) // TODO js - investigate why this fails on master
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void attachingQuestionGroupToMultipleFlowsTest() throws Exception{
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_016_dbunit.xml", dataSource, selenium);
+        questionGroupTestHelper.markQuestionGroupAsInactive("CloseClientQG");
+        questionGroupTestHelper.markQuestionGroupAsInactive("CloseClientQG2");
+        EditLoanAccountStatusParameters params = new EditLoanAccountStatusParameters();
+        params.setCancelReason(EditLoanAccountStatusParameters.CANCEL_REASON_OTHER);
+        params.setNote("TEST");
+        params.setStatus(EditLoanAccountStatusParameters.CANCEL);
+        loanTestHelper.changeLoanAccountStatus("000100000000004", params);
+        loanTestHelper.changeLoanAccountStatus("000100000000005", params);
+        //When
+        testValidationAddQuestionGroup();
+        Map<String, List<String>> sectionQuestions = new HashMap<String, List<String>>();
+        List<String> questions = new ArrayList<String>();
+        questions.add("Text");
+        questions.add("question 2");
+        questions.add("question 3");
+        sectionQuestions.put("Sec Test", questions);
+        CreateQuestionGroupParameters createQuestionGroupParameters = new CreateQuestionGroupParameters();
+        createQuestionGroupParameters.setAnswerEditable(true);
+        createQuestionGroupParameters.setTitle("TestQuestionGroup");
+        createQuestionGroupParameters.setAppliesTo("View Client");
+        createQuestionGroupParameters.setAppliesTo("Close Client");
+        createQuestionGroupParameters.setExistingQuestions(sectionQuestions);
+        questionGroupTestHelper.createQuestionGroup(createQuestionGroupParameters);
+        Map<String, String> answers = new HashMap<String, String>();
+        answers.put("Text", "Test - Text");
+        answers.put("question 2", "2");
+        answers.put("question 3", "11/11/2009");
+        ClientViewDetailsPage clientViewDetailsPage = questionGroupTestHelper.attachQuestionGroup(CLIENT, "TestQuestionGroup", asList("Sec Test"), answers);
+        CustomerChangeStatusPage customerChangeStatusPage = clientViewDetailsPage.navigateToCustomerChangeStatusPage();
+        EditCustomerStatusParameters customerStatusParameters = new EditCustomerStatusParameters();
+        customerStatusParameters.setNote("TEST");
+        customerStatusParameters.setClientStatus(ClientStatus.CLOSED);
+        customerStatusParameters.setClientCloseReason(ClientCloseReason.TRANSFERRED);
+        QuestionResponsePage questionResponsePage = customerChangeStatusPage.changeStatusAndNavigateToQuestionResponsePage(customerStatusParameters);
+        //Then
+        questionResponsePage.verifyQuestionsExists(questions.toArray(new String[questions.size()]));
+        //When
+        clientViewDetailsPage = questionResponsePage.cancel();
+        ViewQuestionResponseDetailPage viewQuestionResponseDetailPage = clientViewDetailsPage.navigateToViewAdditionalInformationPage();
+        //Then
+        viewQuestionResponseDetailPage.verifyQuestionsDoesnotappear(questions.toArray(new String[questions.size()]));
+        clientViewDetailsPage = viewQuestionResponseDetailPage.navigateToClientViewDetailsPage();
+        answers = new HashMap<String, String>();
+        answers.put("Text", "Test - Text - Edit");
+        answers.put("question 2", "22");
+        questionGroupInstancesOfClient = clientViewDetailsPage.getQuestionGroupInstances();
+        questionGroupTestHelper.editResponses(clientViewDetailsPage, latestInstanceId(questionGroupInstancesOfClient), answers);
+    }
+
+    //http://mifosforge.jira.com/browse/MIFOSTEST-660
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void verifyAttachingQuestionGroupToGroup() throws Exception {
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_016_dbunit.xml", dataSource, selenium);
+        Map<String, List<String>> sectionQuestions = new HashMap<String, List<String>>();
+        List<String> questions = new ArrayList<String>();
+        questions.add("Date");
+        questions.add("question 3");
+        questions.add("question 4");
+        sectionQuestions.put("Sec 1", questions);
+        questions = new ArrayList<String>();
+        questions.add("DateQuestion");
+        questions.add("Number");
+        questions.add("question 1");
+        questions.add("Text");
+        sectionQuestions.put("Sec 2", questions);
+        CreateQuestionGroupParameters createQuestionGroupParameters = new CreateQuestionGroupParameters();
+        createQuestionGroupParameters.setAnswerEditable(true);
+        createQuestionGroupParameters.setAppliesTo("View Group");
+        createQuestionGroupParameters.setTitle("TestQuestionGroup"+StringUtil.getRandomString(6));
+        createQuestionGroupParameters.setExistingQuestions(sectionQuestions);
+        AttachQuestionGroupParameters attachParams = new AttachQuestionGroupParameters();
+        attachParams.setTarget("MyGroup1232993846342");
+        attachParams.setQuestionGroupName(createQuestionGroupParameters.getTitle());
+        attachParams.addTextResponse("Date", "09/02/2011");
+        attachParams.addCheckResponse("question 4", "yes");
+        attachParams.addTextResponse("DateQuestion", "19/02/2011");
+        attachParams.addTextResponse("question 3", "25/02/2011");
+        attachParams.addTextResponse("Number", "60");
+        attachParams.addTextResponse("question 1", "tekst tekst");
+        attachParams.addTextResponse("Text", "ale alo olu");
+        AttachQuestionGroupParameters attachErrorParams = new AttachQuestionGroupParameters();
+        attachErrorParams.setTarget("MyGroup1232993846342");
+        attachErrorParams.setQuestionGroupName(createQuestionGroupParameters.getTitle());
+        attachErrorParams.addTextResponse("Number", "sdfsdf");
+        attachErrorParams.addTextResponse("question 3", "25/02/2011");
+        attachErrorParams.addCheckResponse("question 4", "yes");
+        attachErrorParams.addError("Please specify a number for Number.");
+
+        //When
+        questionGroupTestHelper.createQuestionGroup(createQuestionGroupParameters);
+
+        questionGroupTestHelper.verifyErrorsWhileAttachingQuestionGroupToGroup(attachErrorParams);
+        questionGroupTestHelper.attachQuestionGroupToGroup(attachParams);
+
+        attachParams.addTextResponse("Number", "20");
+        attachParams.addTextResponse("question 3", "21/02/2011");
+        //Then
+        questionGroupTestHelper.editQuestionGroupResponsesInGroup(attachParams);
+    }
+
+  //http://mifosforge.jira.com/browse/MIFOSTEST-662
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void verifyAttachingQuestionGroupToLoan() throws Exception {
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_016_dbunit.xml", dataSource, selenium);
+        Map<String, List<String>> sectionQuestions = new HashMap<String, List<String>>();
+        List<String> questions = new ArrayList<String>();
+        questions.add("question 4");
+        questions.add("question 3");
+        questions.add("Date");
+        sectionQuestions.put("Sec 1", questions);
+        questions = new ArrayList<String>();
+        questions.add("question 1");
+        questions.add("Number");
+        questions.add("DateQuestion");
+        questions.add("Text");
+        sectionQuestions.put("Sec 2", questions);
+        CreateQuestionGroupParameters createQuestionGroupParameters = new CreateQuestionGroupParameters();
+        createQuestionGroupParameters.setAppliesTo("View Loan");
+        createQuestionGroupParameters.setAnswerEditable(true);
+        createQuestionGroupParameters.setTitle("TestQuestionGroup"+StringUtil.getRandomString(6));
+        createQuestionGroupParameters.setExistingQuestions(sectionQuestions);
+        AttachQuestionGroupParameters attachParams = new AttachQuestionGroupParameters();
+        attachParams.setTarget("000100000000004");
+        attachParams.setQuestionGroupName(createQuestionGroupParameters.getTitle());
+        attachParams.addCheckResponse("question 4", "yes");
+        attachParams.addTextResponse("Date", "09/02/2011");
+        attachParams.addTextResponse("DateQuestion", "19/02/2011");
+        attachParams.addTextResponse("question 3", "25/02/2011");
+        attachParams.addTextResponse("question 1", "tekst tekst");
+        attachParams.addTextResponse("Text", "ale alo olu");
+        attachParams.addTextResponse("Number", "60");
+        AttachQuestionGroupParameters attachErrorParams = new AttachQuestionGroupParameters();
+        attachErrorParams.setTarget("000100000000004");
+        attachErrorParams.setQuestionGroupName(createQuestionGroupParameters.getTitle());
+        attachErrorParams.addError("Please specify a number for Number.");
+        attachErrorParams.addTextResponse("Number", "sdfsdf");
+        attachErrorParams.addTextResponse("question 3", "25/02/2011");
+        attachErrorParams.addCheckResponse("question 4", "yes");
+
+        //When
+        questionGroupTestHelper.createQuestionGroup(createQuestionGroupParameters);
+
+        questionGroupTestHelper.verifyErrorsWhileAttachingQuestionGroupToLoan(attachErrorParams);
+        questionGroupTestHelper.attachQuestionGroupToLoan(attachParams);
+
+        attachParams.addTextResponse("Number", "20");
+        attachParams.addTextResponse("question 3", "21/02/2011");
+        //Then
+        questionGroupTestHelper.editQuestionGroupResponsesInLoan(attachParams);
+    }
+
+    //http://mifosforge.jira.com/browse/MIFOSTEST-680
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void verifyAttachingQuestionGroupToViewClient() throws Exception {
+        //Given
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_016_dbunit.xml", dataSource, selenium);
+        Map<String, List<String>> sectionQuestions = new HashMap<String, List<String>>();
+        List<String> questions = new ArrayList<String>();
+        questions.add("Date");
+        questions.add("question 4");
+        questions.add("question 3");
+        sectionQuestions.put("Sec 1", questions);
+        questions = new ArrayList<String>();
+        questions.add("Number");
+        questions.add("DateQuestion");
+        questions.add("question 1");
+        questions.add("Text");
+        sectionQuestions.put("Sec 2", questions);
+        CreateQuestionGroupParameters createQuestionGroupParameters = new CreateQuestionGroupParameters();
+        createQuestionGroupParameters.setExistingQuestions(sectionQuestions);
+        createQuestionGroupParameters.setAnswerEditable(true);
+        createQuestionGroupParameters.setAppliesTo("View Client");
+        createQuestionGroupParameters.setTitle("TestQuestionGroup"+StringUtil.getRandomString(6));
+        AttachQuestionGroupParameters attachParams = new AttachQuestionGroupParameters();
+        attachParams.setTarget("0002-000000003");
+        attachParams.setQuestionGroupName(createQuestionGroupParameters.getTitle());
+        attachParams.addTextResponse("Number", "60");
+        attachParams.addTextResponse("question 1", "tekst tekst");
+        attachParams.addCheckResponse("question 4", "yes");
+        attachParams.addTextResponse("question 3", "25/02/2011");
+        attachParams.addTextResponse("Date", "09/02/2011");
+        attachParams.addTextResponse("DateQuestion", "19/02/2011");
+        attachParams.addTextResponse("Text", "ale alo olu");
+        AttachQuestionGroupParameters attachErrorParams = new AttachQuestionGroupParameters();
+        attachErrorParams.setTarget("0002-000000003");
+        attachErrorParams.addError("Please specify a number for Number.");
+        attachErrorParams.setQuestionGroupName(createQuestionGroupParameters.getTitle());
+        attachErrorParams.addTextResponse("Number", "sdfsdf");
+        attachErrorParams.addCheckResponse("question 4", "yes");
+        attachErrorParams.addTextResponse("question 3", "25/02/2011");
+
+        //When
+        questionGroupTestHelper.createQuestionGroup(createQuestionGroupParameters);
+
+        questionGroupTestHelper.verifyErrorsWhileAttachingQuestionGroupToClient(attachErrorParams);
+        questionGroupTestHelper.attachQuestionGroupToClient(attachParams);
+
+        attachParams.addTextResponse("Number", "20");
+        attachParams.addTextResponse("question 3", "21/02/2011");
+        //Then
+        questionGroupTestHelper.editQuestionGroupResponsesInClient(attachParams);
+    }
+
+    private void testValidationAddQuestionGroup() {
+        questionGroupTestHelper.validatePageBlankMandatoryField();
+        questionGroupTestHelper.validateQuestionGroupTitle(charactersList);
     }
 
     private void testValidationAddQuestion() {
@@ -547,5 +782,9 @@ public class QuestionGroupTest extends UiTestCaseBase {
         assertPage(AdminPage.PAGE_ID);
     }
 
+    public Integer latestInstanceId(Map<Integer, QuestionGroup> questionGroups) {
+        Set<Integer> keys = questionGroups.keySet();
+        return Collections.max(keys);
+    }
 }
 

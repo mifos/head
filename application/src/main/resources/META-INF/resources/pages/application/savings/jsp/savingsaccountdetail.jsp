@@ -121,13 +121,15 @@ explanation of the license and how it is applied.
 												<mifos:mifoslabel name="Savings.totalAmountDueOn"/>
 												<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.nextMeetingDate)}" />:
 											</c:otherwise>
-										</c:choose>										
-										<c:if test="${BusinessKey.savingsOffering.savingsType.id == SavingsConstants.SAVINGS_MANDATORY}">
-											<c:out value="${BusinessKey.totalAmountDue}" />
-										</c:if>
-										<c:if test="${BusinessKey.savingsOffering.savingsType.id == SavingsConstants.SAVINGS_VOLUNTARY}">
-											<c:out value="${BusinessKey.totalAmountDueForNextInstallment}" />
-										</c:if>										
+										</c:choose>
+										<span id="savingsaccountdetail.text.totalAmountDue">
+											<c:if test="${BusinessKey.savingsOffering.savingsType.id == SavingsConstants.SAVINGS_MANDATORY}">
+												<c:out value="${BusinessKey.totalAmountDue}" />
+											</c:if>
+											<c:if test="${BusinessKey.savingsOffering.savingsType.id == SavingsConstants.SAVINGS_VOLUNTARY}">
+												<c:out value="${BusinessKey.totalAmountDueForNextInstallment}" />
+											</c:if>
+										</span>										
 									</td>
 								</tr>
 							</c:if>

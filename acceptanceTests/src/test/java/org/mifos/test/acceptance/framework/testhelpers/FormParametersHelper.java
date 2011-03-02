@@ -51,7 +51,8 @@ public class FormParametersHelper {
         formParameters.setPrincipalGLCode("1506");
         return formParameters;
     }
-    public static  DefineNewLoanProductPage.SubmitFormParameters getWeeklyLoanProductParametersWithInstallmentsSetsByLastLoanAmount() {
+
+    public static DefineNewLoanProductPage.SubmitFormParameters getWeeklyLoanProductParametersWithInstallmentsSetsByLastLoanAmount() {
         DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
         formParameters.setCalculateInstallments(DefineNewLoanProductPage.SubmitFormParameters.BY_LAST_LOAN_AMOUNT);
         String[][] installmentsByLastLoanAmount = {
@@ -108,8 +109,8 @@ public class FormParametersHelper {
         return formParameters;
     }
 
-    public static FeesCreatePage.SubmitFormParameters getCreatePeriodicFeesParameters(){
-        FeesCreatePage.SubmitFormParameters formParameters =  new FeesCreatePage.SubmitFormParameters();
+    public static FeesCreatePage.SubmitFormParameters getCreatePeriodicFeesParameters() {
+        FeesCreatePage.SubmitFormParameters formParameters = new FeesCreatePage.SubmitFormParameters();
         formParameters.setFeeName(StringUtil.getRandomString(5));
         formParameters.setCategoryType("Group");
         formParameters.setDefaultFees(false);
@@ -119,7 +120,7 @@ public class FormParametersHelper {
         formParameters.setAmount(6);
         formParameters.setGlCode(6201);
         return formParameters;
-        }
+    }
 
     public static DefineNewLoanProductPage.SubmitFormParameters getWeeklyLoanProductParametersWithQuestionGroups(String... questionGroupTitle) {
         DefineNewLoanProductPage.SubmitFormParameters weeklyLoanProductParameters = getWeeklyLoanProductParameters();
@@ -127,5 +128,16 @@ public class FormParametersHelper {
         return weeklyLoanProductParameters;
     }
 
-
+    public static FeesCreatePage.SubmitFormParameters getOneTimeLoanMultiCurrencyFeesParameters() {
+        FeesCreatePage.SubmitFormParameters formParameters = new FeesCreatePage.SubmitFormParameters();
+        formParameters.setFeeName(StringUtil.getRandomString(5));
+        formParameters.setCategoryType("Loans");
+        formParameters.setDefaultFees(false);
+        formParameters.setFeeFrequencyType(formParameters.ONETIME_FEE_FREQUENCY);
+        formParameters.setCustomerCharge("Upfront");
+        formParameters.setAmount(10);
+        formParameters.setCurrency(FeesCreatePage.SubmitFormParameters.USD);
+        formParameters.setGlCode(31301);
+        return formParameters;
+    }
 }

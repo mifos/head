@@ -30,12 +30,14 @@
 <p>[@spring.message "createLoanAccount.reviewInstallments.instructions" /]</p>
 <br/>
 
+[@form.errors "cashFlowSummaryFormBean.*"/]
+
 <p><span class="standout">[@spring.message "selectProduct.accountOwnerName" /]</span> ${loanScheduleReferenceData.accountOwner}</p>
-<p><span class="standout">[@spring.message "reviewInstallments.loanAmount" /]</span> ${loanScheduleReferenceData.loanAmount}</p>
-<p><span class="standout">[@spring.message "reviewInstallments.disbursmentDate" /]</span> ${loanScheduleReferenceData.localisedDisbursementDate}</p>
+<p><span class="standout">[@spring.message "reviewInstallments.loanAmount" /]</span> ${loanScheduleReferenceData.loanAmount?string.currency}</p>
+<p><span class="standout">[@spring.message "reviewInstallments.disbursmentDate" /]</span> ${loanScheduleReferenceData.disbursementDate?date?string.medium}</p>
 <br/>
 
-<table border="0">
+<table>
 	<thead>
 		<tr><th>[@spring.message "reviewInstallments.tableHeading" /]</th></tr>
 	</thead>
@@ -50,16 +52,41 @@
 		</tr>
 		[#list loanScheduleReferenceData.installments as row]
 		<tr>
-			<td>${row.installmentNumber}</td>
-			<td>${row.localisedDueDate}</td>
-			<td>${row.principal}</td>
-			<td>${row.interest}</td>
-			<td>${row.fees}</td>
-			<td>${row.total}</td>
+			<td>${row.installmentNumber?string.number}</td>
+			<td>${row.dueDate?date?string.medium}</td>
+			<td>${row.principal?string.currency}</td>
+			<td>${row.interest?string.currency}</td>
+			<td>${row.fees?string.currency}</td>
+			<td>${row.total?string.currency}</td>
 		</tr>
 		[/#list]
 	</tbody>
 </table>
+
+[#if cashflowSummaryDetails??]
+<h1><span class="standout">[@spring.message "cashflow.summary.heading" /]</span></h1>
+
+<table>
+	<tbody>
+		<tr>
+			<th>[@spring.message "cashflow.summary.column.months" /]</th>
+			<th>[@spring.message "cashflow.summary.column.cumulative" /]</th>
+			<th>[@spring.message "cashflow.summary.column.installmentpermonth" /]</th>
+			<th>[@spring.message "cashflow.summary.column.installmentpermonthpercentage" /]</th>
+			<th>[@spring.message "cashflow.summary.column.notes" /]</th>
+		</tr>
+		[#list cashflowSummaryDetails as row]
+		<tr>
+			<td>${row.month} ${row.year}</td>
+			<td>${row.cumulativeCashFlow}</td>
+			<td>${row.diffCumulativeCashflowAndInstallment}</td>
+			<td>${row.diffCumulativeCashflowAndInstallmentPercent}</td>
+			<td>${row.notes}</td>
+		</tr>
+		[/#list]
+	</tbody>
+</table>
+[/#if]
 
 <form action="${flowExecutionUrl}" method="post" class="two-columns">
 	<div class="row webflow-controls">

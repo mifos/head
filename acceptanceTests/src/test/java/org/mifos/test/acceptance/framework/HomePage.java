@@ -24,6 +24,7 @@ import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.group.CreateGroupSearchPage;
 import org.mifos.test.acceptance.framework.reports.ReportsPage;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
+import org.mifos.test.acceptance.framework.user.YourSettingsPage;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -56,9 +57,13 @@ public class HomePage extends MifosPage {
     }
 
     public AdminPage navigateToAdminPage() {
+        tryNavigateToAdminPage();
+        return new AdminPage(selenium);
+    }
+
+    public void tryNavigateToAdminPage() {
         selenium.click("homeheader.link.admin");
         waitForPageToLoad();
-        return new AdminPage(selenium);
     }
 
     public String getWelcome() {
@@ -82,6 +87,12 @@ public class HomePage extends MifosPage {
         selenium.click("homeheader.link.reports");
         waitForPageToLoad();
         return new ReportsPage(selenium);
+    }
+
+    public YourSettingsPage navigateToYourSettingsPage() {
+        selenium.click("link=Your settings");
+        waitForPageToLoad();
+        return new YourSettingsPage(selenium);
     }
 
 }

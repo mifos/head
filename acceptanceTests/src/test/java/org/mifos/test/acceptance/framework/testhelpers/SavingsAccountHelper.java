@@ -23,14 +23,18 @@ package org.mifos.test.acceptance.framework.testhelpers;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
+import org.mifos.test.acceptance.framework.account.AccountStatus;
 import org.mifos.test.acceptance.framework.account.EditAccountStatusParameters;
 import org.mifos.test.acceptance.framework.loan.AccountAddNotesPage;
 import org.mifos.test.acceptance.framework.loan.AccountChangeStatusPage;
 import org.mifos.test.acceptance.framework.loan.AccountPreviewNotesPage;
 import org.mifos.test.acceptance.framework.loan.EditAccountStatusConfirmationPage;
+import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 import org.mifos.test.acceptance.framework.login.LoginPage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountConfirmationPage;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountEntryPage;
+import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountPreviewPage;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSearchPage;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSearchParameters;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSubmitParameters;
@@ -40,6 +44,7 @@ import org.mifos.test.acceptance.framework.savings.SavingsCloseAccountPage;
 import org.mifos.test.acceptance.framework.savings.SavingsDepositWithdrawalConfirmationPage;
 import org.mifos.test.acceptance.framework.savings.SavingsDepositWithdrawalPage;
 import org.mifos.test.acceptance.framework.savings.ViewDepositDueDetailsPage;
+import org.mifos.test.acceptance.framework.util.UiTestUtils;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -86,6 +91,15 @@ public class SavingsAccountHelper {
         SavingsAccountDetailPage savingsAccountDetailPage = createSavingsAccountConfirmationPage.navigateToSavingsAccountDetailsPage();
         savingsAccountDetailPage.verifyPage();
         return savingsAccountDetailPage;
+    }
+
+    public QuestionResponsePage navigateToQuestionResponseDuringCreateSavings(CreateSavingsAccountSearchParameters searchParameters,
+            CreateSavingsAccountSubmitParameters submitAccountParameters) {
+        CreateSavingsAccountSearchPage createSavingsAccountSearchPage = navigateToCreateSavingsAccountSearchPage();
+        createSavingsAccountSearchPage.verifyPage();
+        CreateSavingsAccountEntryPage createSavingsAccountEntryPage = createSavingsAccountSearchPage.searchAndNavigateToCreateSavingsAccountPage(searchParameters);
+        createSavingsAccountEntryPage.verifyPage();
+        return createSavingsAccountEntryPage.submitAndNavigateToQuestionResponsePage(submitAccountParameters);
     }
 
     private CreateSavingsAccountSearchPage navigateToCreateSavingsAccountSearchPage() {
@@ -143,6 +157,30 @@ public class SavingsAccountHelper {
         return savingsAccountDetailPage;
     }
 
+    public CreateSavingsAccountPreviewPage fillQuestionGroupsDurringCreationSavingsAccount(CreateSavingsAccountSearchParameters searchParameters,
+            CreateSavingsAccountSubmitParameters submitAccountParameters, QuestionResponseParameters responseParams) {
+        CreateSavingsAccountSearchPage createSavingsAccountSearchPage = navigateToCreateSavingsAccountSearchPage();
+        createSavingsAccountSearchPage.verifyPage();
+        CreateSavingsAccountEntryPage createSavingsAccountEntryPage = createSavingsAccountSearchPage.searchAndNavigateToCreateSavingsAccountPage(searchParameters);
+        createSavingsAccountEntryPage.verifyPage();
+        QuestionResponsePage questionResponsePage = createSavingsAccountEntryPage.submitAndNavigateToQuestionResponsePage(submitAccountParameters);
+        questionResponsePage.populateAnswers(responseParams);
+        return questionResponsePage.navigateToNextPageSavingsAccountCreation();
+    }
+    public SavingsAccountDetailPage editAdditionalInformationDurringCreationSavingsAccount(QuestionResponseParameters responseParams) {
+        CreateSavingsAccountPreviewPage createSavingsAccountPreviewPage = new CreateSavingsAccountPreviewPage(selenium);
+        QuestionResponsePage questionResponsePage = createSavingsAccountPreviewPage.editAdditionalInformation();
+        UiTestUtils.sleep(1500);
+        questionResponsePage.populateAnswers(responseParams);
+        createSavingsAccountPreviewPage = questionResponsePage.navigateToNextPageSavingsAccountCreation();
+        createSavingsAccountPreviewPage.verifyPage();
+        CreateSavingsAccountConfirmationPage createSavingsAccountConfirmationPage = createSavingsAccountPreviewPage.submitForApproval();
+
+        SavingsAccountDetailPage savingsAccountDetailPage = createSavingsAccountConfirmationPage.navigateToSavingsAccountDetailsPage();
+        savingsAccountDetailPage.verifyPage();
+        return savingsAccountDetailPage;
+    }
+
     public SavingsAccountDetailPage closeSavingsAccount(String savingsAccountID, String notes) {
         NavigationHelper helper = new NavigationHelper(selenium);
         SavingsAccountDetailPage savingsAccountDetailPage = helper.navigateToSavingsAccountDetailPage(savingsAccountID);
@@ -165,6 +203,13 @@ public class SavingsAccountHelper {
         savingsAccountDetailPage.verifyStatus(editAccountStatusParameters.getAccountStatus().getStatusText());
 
         return savingsAccountDetailPage;
+    }
+
+    public SavingsAccountDetailPage activateSavingsAccount(String savingsId){
+        EditAccountStatusParameters editAccountStatusParameters =new EditAccountStatusParameters();
+        editAccountStatusParameters.setAccountStatus(AccountStatus.SAVINGS_ACTIVE);
+        editAccountStatusParameters.setNote("change status to active");
+        return changeStatus(savingsId, editAccountStatusParameters);
     }
 
     public void verifyTotalAmountDue(String savingsId, Integer numberOfGroupMembers, Float amountPerMember){

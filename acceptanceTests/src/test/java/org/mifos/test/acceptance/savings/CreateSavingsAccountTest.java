@@ -44,7 +44,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @SuppressWarnings("PMD")
-@ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
+@ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
 public class CreateSavingsAccountTest extends UiTestCaseBase {
 
     private SavingsAccountHelper savingsAccountHelper;
@@ -75,7 +75,7 @@ public class CreateSavingsAccountTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(sequential = true, groups = {"savings", "acceptance", "ui", "no_db_unit" })
+    @Test(sequential = true, groups = {"savings", "acceptance", "ui", "no_db_unit"})
     public void verifyPaymentTypesForWithdrawalsAndDeposits() throws Exception {
         //When
         NavigationHelper navigationHelper = new NavigationHelper(selenium);
@@ -126,7 +126,7 @@ public class CreateSavingsAccountTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(sequential = true, groups = { "smoke", "savings", "acceptance", "ui", "no_db_unit" })
+    @Test(sequential = true, groups = {"smoke", "savings", "acceptance", "ui", "no_db_unit"})
     public void newMandatoryClientSavingsAccountWithDateTypeCustomField() throws Exception {
 
         CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();

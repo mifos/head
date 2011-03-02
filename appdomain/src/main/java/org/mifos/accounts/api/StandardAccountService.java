@@ -25,11 +25,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import org.joda.time.LocalDate;
 import org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentTypeDao;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountPaymentEntity;
+import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
@@ -43,7 +45,6 @@ import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.PaymentData;
-import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
@@ -169,9 +170,15 @@ public class StandardAccountService implements AccountService {
         for (AccountPaymentParametersDto accountPaymentParametersDto : accountPaymentParametersDtoList) {
             LoanBO loan = this.legacyLoanDao.getAccount(accountPaymentParametersDto.getAccountId());
 
+            BigDecimal paymentAmount = accountPaymentParametersDto.getPaymentAmount();
+
+            if ("MPESA".equals(accountPaymentParametersDto.getPaymentType().getName())) {
+                paymentAmount = computeWithdrawnForMPESA(paymentAmount, loan);
+            }
+
             PaymentTypeEntity paymentTypeEntity = legacyMasterDao.getPersistentObject(
                     PaymentTypeEntity.class, accountPaymentParametersDto.getPaymentType().getValue());
-            Money amount = new Money(loan.getCurrency(), accountPaymentParametersDto.getPaymentAmount());
+            Money amount = new Money(loan.getCurrency(), paymentAmount);
             Date receiptDate = null;
             if (null != accountPaymentParametersDto.getReceiptDate()) {
                 receiptDate = accountPaymentParametersDto.getReceiptDate().toDateMidnight().toDate();
@@ -236,7 +243,14 @@ public class StandardAccountService implements AccountService {
                 && (loanAccount.getState() != AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER)) {
             errors.add(InvalidPaymentReason.INVALID_LOAN_STATE);
         }
-        disbursalAmountMatchesFullLoanAmount(payment, errors, loanAccount);
+
+        BigDecimal paymentAmount = payment.getPaymentAmount();
+
+        if ("MPESA".equals(payment.getPaymentType().getName())) {
+            paymentAmount = computeWithdrawnForMPESA(paymentAmount, loanAccount);
+        }
+
+        disbursalAmountMatchesFullLoanAmount(paymentAmount, errors, loanAccount);
 
         Date meetingDate = new CustomerPersistence().getLastMeetingDateForCustomer(loanAccount.getCustomer().getCustomerId());
         boolean repaymentIndependentOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
@@ -249,13 +263,16 @@ public class StandardAccountService implements AccountService {
         if (!loanAccount.paymentAmountIsValid(new Money(loanAccount.getCurrency(), payment.getPaymentAmount()))) {
             errors.add(InvalidPaymentReason.INVALID_PAYMENT_AMOUNT);
         }
+        if (loanAccount.getCustomer().isDisbursalPreventedDueToAnyExistingActiveLoansForTheSameProduct(loanAccount.getLoanOffering())) {
+            errors.add(InvalidPaymentReason.OTHER_ACTIVE_LOANS_FOR_THE_SAME_PRODUCT);
+        }
         return errors;
     }
 
-    void disbursalAmountMatchesFullLoanAmount(AccountPaymentParametersDto payment, List<InvalidPaymentReason> errors,
+    void disbursalAmountMatchesFullLoanAmount(BigDecimal paymentAmount, List<InvalidPaymentReason> errors,
             LoanBO loanAccount) {
         /* BigDecimal.compareTo() ignores scale, .equals() was explicitly avoided */
-        if (loanAccount.getLoanAmount().getAmount().compareTo(payment.getPaymentAmount()) != 0) {
+        if (loanAccount.getLoanAmount().getAmount().compareTo(paymentAmount) != 0) {
             errors.add(InvalidPaymentReason.INVALID_LOAN_DISBURSAL_AMOUNT);
         }
     }
@@ -463,19 +480,31 @@ public class StandardAccountService implements AccountService {
         return existentPaymentsWIthGivenReceiptNumber != null && !existentPaymentsWIthGivenReceiptNumber.isEmpty();
     }
 
-
-     @Override
-     public List<AccountReferenceDto> lookupLoanAccountReferencesFromClientPhoneNumberAndWithdrawAmount(
-             String phoneNumber, BigDecimal withdrawAmount) throws Exception {
+    /**
+     * Warning - this should be only used from MPESA plugin!
+     */
+    @Override
+    public List<AccountReferenceDto> lookupLoanAccountReferencesFromClientPhoneNumberAndWithdrawAmount(
+            String phoneNumber, BigDecimal withdrawAmount) throws Exception {
         List<AccountBO> accounts = this.legacyAccountDao.findApprovedLoansForClientWithPhoneNumber(phoneNumber);
         List<AccountReferenceDto> result = new ArrayList<AccountReferenceDto>();
         for (AccountBO account : accounts) {
             LoanBO loanAccount = (LoanBO)account;
-            if (loanAccount.getLoanAmount().getAmount().compareTo(withdrawAmount) == 0) {
+            if (loanAccount.getLoanAmount().getAmount().compareTo(computeWithdrawnForMPESA(withdrawAmount, loanAccount)) == 0) {
                 result.add(new AccountReferenceDto(account.getAccountId()));
             }
         }
         return result;
-     }
+    }
+
+    private BigDecimal computeWithdrawnForMPESA(BigDecimal withdrawAmount, LoanBO loanAccount) {
+        Set<AccountFeesEntity> fees = loanAccount.getAccountFees();
+        for (AccountFeesEntity fee : fees) {
+            if (fee.isActive() && fee.isOneTime() && fee.isTimeOfDisbursement()) {
+                withdrawAmount = withdrawAmount.add(new BigDecimal(fee.getFeeAmount()));
+            }
+        }
+        return withdrawAmount;
+    }
 
 }

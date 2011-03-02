@@ -21,11 +21,9 @@
 package org.mifos.dto.domain;
 
 import java.io.Serializable;
-import java.util.Locale;
+import java.util.Date;
 
 import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 @SuppressWarnings("PMD")
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID", "EI_EXPOSE_REP", "EI_EXPOSE_REP2"}, justification="should disable at filter level and also for pmd - not important for us")
@@ -33,14 +31,13 @@ public class LoanCreationInstallmentDto implements Serializable {
 
     private final Integer installmentNumber;
     private final LocalDate dueDate;
-    private final String principal;
-    private final String interest;
-    private final String fees;
-    private final String penalty;
-    private final String total;
-    private final Locale locale;
+    private final Double principal;
+    private final Double interest;
+    private final Double fees;
+    private final Double penalty;
+    private final Double total;
 
-    public LoanCreationInstallmentDto(Integer installmentNumber, LocalDate dueDate, String principal, String interest, String fees, String penalty, String total, Locale locale) {
+    public LoanCreationInstallmentDto(Integer installmentNumber, LocalDate dueDate, Double principal, Double interest, Double fees, Double penalty, Double total) {
         this.installmentNumber = installmentNumber;
         this.dueDate = dueDate;
         this.principal = principal;
@@ -48,39 +45,33 @@ public class LoanCreationInstallmentDto implements Serializable {
         this.fees = fees;
         this.penalty = penalty;
         this.total = total;
-        this.locale = locale;
     }
 
     public Integer getInstallmentNumber() {
         return installmentNumber;
     }
     
-    public LocalDate getDueDate() {
-        return this.dueDate;
+    public Date getDueDate() {
+        return this.dueDate.toDateMidnight().toDate();
     }
     
-    public String getLocalisedDueDate() {
-        DateTimeFormatter formatter = DateTimeFormat.forStyle("M-").withLocale(locale);
-        return formatter.print(this.dueDate);
-    }
-    
-    public String getFees() {
+    public Double getFees() {
         return fees;
     }
 
-    public String getInterest() {
+    public Double getInterest() {
         return interest;
     }
 
-    public String getPenalty() {
+    public Double getPenalty() {
         return penalty;
     }
 
-    public String getPrincipal() {
+    public Double getPrincipal() {
         return principal;
     }
     
-    public String getTotal() {
+    public Double getTotal() {
         return total;
     }
 }

@@ -24,20 +24,29 @@ import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
+import org.mifos.test.acceptance.framework.admin.ViewReportCategoriesPage;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntrySelectPage.SubmitFormParameters;
 import org.mifos.test.acceptance.framework.login.LoginPage;
 import org.mifos.test.acceptance.framework.reports.CollectionSheetReportParametersPage;
 import org.mifos.test.acceptance.framework.reports.ReportsPage;
+import org.mifos.test.acceptance.framework.testhelpers.ReportTestHelper;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-@ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"reports","acceptance","ui", "no_db_unit"})
+@ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
+@Test(sequential = true, groups = {"reports", "acceptance", "ui", "no_db_unit"})
 public class StandardReportsTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;
+
+    private ReportTestHelper reportTestHelper;
+    private static final String NEWCAT = "newCat";
+    private static final String NEWCAT1 = "newCat1";
+    private static final String NEWCAT2 = "newCat2";
+    private static final String[] DEFAULT_CATEGORIES = new String[]{"Client Detail",
+            "Performance", "Center", "Loan Product Detail", "Status", "Analysis", "Miscellaneous"};
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
@@ -45,6 +54,7 @@ public class StandardReportsTest extends UiTestCaseBase {
     public void setUp() throws Exception {
         super.setUp();
         appLauncher = new AppLauncher(selenium);
+        reportTestHelper = new ReportTestHelper(selenium);
     }
 
     @AfterMethod
@@ -52,7 +62,7 @@ public class StandardReportsTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
-    @Test(enabled=false)
+    @Test(enabled = false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void generateCollectionSheetEntryReport() throws Exception {
         SubmitFormParameters formParameters = new SubmitFormParameters();
@@ -77,4 +87,48 @@ public class StandardReportsTest extends UiTestCaseBase {
 
     }
 
+    /**
+     * Report categories can be added, edited and deleted
+     * http://mifosforge.jira.com/browse/MIFOSTEST-181
+     *
+     * @throws Exception
+     */
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled = false)
+    public void reportCategoriesTest() throws Exception {
+
+        //Given
+
+        //When
+        ViewReportCategoriesPage viewReportCategoriesPage = reportTestHelper.navigateToViewReportCategories();
+
+        //Then
+        viewReportCategoriesPage.verifyReportCategoriesExist(DEFAULT_CATEGORIES);
+
+        //When
+        viewReportCategoriesPage = reportTestHelper.addNewCategory(viewReportCategoriesPage, NEWCAT);
+
+        //Then
+        viewReportCategoriesPage.verifyReportCategoriesExist(NEWCAT);
+
+        //When
+        viewReportCategoriesPage = reportTestHelper.addNewCategory(viewReportCategoriesPage, NEWCAT1);
+
+        //Then
+        viewReportCategoriesPage.verifyReportCategoriesExist(NEWCAT1);
+
+        //When
+        viewReportCategoriesPage = reportTestHelper.editCategory(viewReportCategoriesPage, NEWCAT2, "8");
+
+        //Then
+        viewReportCategoriesPage.verifyReportCategoriesExist(NEWCAT2);
+        viewReportCategoriesPage.verifyReportCategoriesNotExist(NEWCAT, 9);
+
+        //When
+        viewReportCategoriesPage = reportTestHelper.deleteCategory(viewReportCategoriesPage, "9");
+
+        //Then
+        viewReportCategoriesPage.verifyReportCategoriesNotExist(NEWCAT1, 8);
+
+    }
 }

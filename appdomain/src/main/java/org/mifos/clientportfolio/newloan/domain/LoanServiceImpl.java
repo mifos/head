@@ -20,10 +20,51 @@
 
 package org.mifos.clientportfolio.newloan.domain;
 
+import org.mifos.accounts.exceptions.AccountException;
+import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.persistance.LoanDao;
+import org.mifos.core.MifosRuntimeException;
+import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
+import org.mifos.service.BusinessRuleException;
+import org.springframework.beans.factory.annotation.Autowired;
+
 public class LoanServiceImpl implements LoanService {
 
-    @Override
-    public void create(Loan loan) {
+    private final LoanDao loanDao;
+    private final HibernateTransactionHelper transactionHelper;
+    
+    @Autowired
+    public LoanServiceImpl(LoanDao loanDao, HibernateTransactionHelper transactionHelper) {
+        this.loanDao = loanDao;
+        this.transactionHelper = transactionHelper;
     }
-
+    
+    @Override
+    public void create(Loan loan, String userOfficeGlobalOfficeNum) {
+        
+        // FIXME - keithw - should do all domain validation here
+        // 
+        try {
+            LoanBO loanAccount = (LoanBO)loan;
+            transactionHelper.startTransaction();
+            this.loanDao.save(loanAccount);
+            transactionHelper.flushSession();
+            try {
+                loanAccount.setGlobalAccountNum(loanAccount.generateId(userOfficeGlobalOfficeNum));
+            } catch (AccountException e) {
+                throw new BusinessRuleException(e.getMessage());
+            }
+            this.loanDao.save(loanAccount);
+            transactionHelper.commitTransaction();
+            
+        } catch (BusinessRuleException e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new BusinessRuleException(e.getMessageKey(), e);
+        } catch (Exception e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            this.transactionHelper.closeSession();
+        }
+    }
 }

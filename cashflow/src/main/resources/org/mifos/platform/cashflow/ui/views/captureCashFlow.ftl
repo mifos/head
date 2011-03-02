@@ -1,3 +1,4 @@
+
 [#ftl]
 [#--
 * Copyright (c) 2005-2011 Grameen Foundation USA
@@ -57,7 +58,7 @@
                     [/#list]
                 </tbody>
               </table>
-              [#if captureCapitalLiabilityInfo]
+              [#if cashFlow.captureCapitalLiabilityInfo]
                   <table>
                       <tr>
                           <td><span class="red">*</span>[@spring.message "cashFlow.totalCapital"/]</td>

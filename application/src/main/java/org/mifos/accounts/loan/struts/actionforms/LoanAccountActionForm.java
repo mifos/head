@@ -34,7 +34,6 @@ import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.struts.uihelpers.LoanUIHelperFn;
 import org.mifos.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
-import org.mifos.accounts.loan.util.helpers.CashFlowDataDto;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
@@ -62,6 +61,7 @@ import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.LoanAccountDetailsDto;
+import org.mifos.dto.screen.CashFlowDataDto;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.FrameworkRuntimeException;
@@ -94,6 +94,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.HashMap;
 
 import static org.apache.commons.lang.StringUtils.isBlank;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.PERSPECTIVE_VALUE_REDO_LOAN;
@@ -756,6 +757,7 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
 
     protected void validateAdditionalFee(ActionErrors errors, Locale locale, MifosCurrency currency, HttpServletRequest request)
             throws PageExpiredException {
+        Map<String, Boolean> addedFees = new HashMap<String, Boolean>();
         List<FeeDto> additionalFeeList = (List<FeeDto>) SessionUtils.getAttribute(LoanConstants.ADDITIONAL_FEES_LIST,request);
         for (FeeDto additionalFee : additionalFees) {
             if (additionalFee.getAmount() != null && !additionalFee.getAmount().equals("")) {
@@ -777,6 +779,10 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
                         validateFeeTypeIfVariableInstallmentLoanType(errors, additionalFeeDetails);
                     }
                 }
+                if (!additionalFeeDetails.isPeriodic() && addedFees.get(additionalFeeDetails.getFeeId()) != null) {
+                    addError(errors, "AdditionalFee", ProductDefinitionConstants.MULTIPLE_ONE_TIME_FEES_NOT_ALLOWED);
+                }
+                addedFees.put(additionalFeeDetails.getFeeId(), true);
             }
         }
     }

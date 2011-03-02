@@ -20,25 +20,33 @@
 
 package org.mifos.clientportfolio.loan.service;
 
+import java.math.BigDecimal;
+
 import org.joda.time.LocalDate;
 
 public class CreateLoanSchedule {
 
     private final Integer customerId;
     private final Integer productId;
-    private final String loanAmount;
+    private final BigDecimal loanAmount;
     private final Double interestRate;
     private final LocalDate disbursementDate;
     private final int numberOfInstallments;
+    private final int graceDuration;
 
-    public CreateLoanSchedule(Integer customerId, Integer productId, String loanAmount, Double interestRate,
-            LocalDate disbursementDate, int numberOfInstallments) {
+    public CreateLoanSchedule(Integer customerId, Integer productId, BigDecimal loanAmount, Double interestRate,
+            LocalDate disbursementDate, int numberOfInstallments, int graceDuration) {
         this.customerId = customerId;
         this.productId = productId;
         this.loanAmount = loanAmount;
         this.interestRate = interestRate;
         this.disbursementDate = disbursementDate;
         this.numberOfInstallments = numberOfInstallments;
+        this.graceDuration = graceDuration;
+    }
+
+    public int getGraceDuration() {
+        return graceDuration;
     }
 
     public Integer getCustomerId() {
@@ -49,7 +57,7 @@ public class CreateLoanSchedule {
         return productId;
     }
 
-    public String getLoanAmount() {
+    public BigDecimal getLoanAmount() {
         return loanAmount;
     }
 

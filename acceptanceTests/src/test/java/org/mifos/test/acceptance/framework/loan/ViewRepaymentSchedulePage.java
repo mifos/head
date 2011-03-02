@@ -47,7 +47,23 @@ public class ViewRepaymentSchedulePage extends AbstractPage {
     }
 
     public void verifyRepaymentScheduleTableRow(int row, int column, String value) {
-        Assert.assertEquals(selenium.getTable("repaymentScheduleTable."+row+"."+column), value);
+        Assert.assertEquals(selenium.getTable("repaymentScheduleTable." + row + "." + column), value);
+    }
+
+    private String getCellOfScheduleTable(int row, int column) {
+        return selenium.getTable("installments." + row + "." + column);
+    }
+
+    private String getNoOfInstallmentFromSchedule(int row) {
+        return getCellOfScheduleTable(row, 0);
+    }
+
+    private String getDateOfInstallmentFromSchedule(int row) {
+        return getCellOfScheduleTable(row, 1);
+    }
+
+    private String getPrincipalOfInstallmentFromSchedule(int row) {
+        return getCellOfScheduleTable(row, 3);
     }
 
     public LoanAccountPage navigateToLoanAccountPage() {
@@ -83,57 +99,51 @@ public class ViewRepaymentSchedulePage extends AbstractPage {
     }
 
     private void verifyAfterLastInstallment() {
-        String[][] tableAfterLastInstallment =
-                {{"Installments due", "", "", "", "", ""},
-                {"1", "19-Oct-2010", "-", "332.2", "3.8", "0.0", "336.0"},
-                {"2", "26-Oct-2010", "-", "333.4", "5.5", "0.0", "338.9"},
-                {"3", "02-Nov-2010", "-", "334.4", "3.3", "0.0", "337.7"}};
+        String[][] tableAfterLastInstallment = { { "Installments due", "", "", "", "", "" },
+                { "1", "19-Oct-2010", "-", "332.2", "3.8", "0.0", "336.0" },
+                { "2", "26-Oct-2010", "-", "333.4", "5.5", "0.0", "338.9" },
+                { "3", "02-Nov-2010", "-", "334.4", "3.3", "0.0", "337.7" } };
         verifyScheduleTable(tableAfterLastInstallment);
 
     }
-
 
     private String formatDate(DateTime systemDateTime) {
         return DateTimeFormat.forPattern("dd/MM/yyyy").print(systemDateTime);
     }
 
     private void verifyOnDayBetweenSecondAndThirdInstallment() {
-        String[][] tableOnDayBetweenSecondAndThirdInstallment =
-                {{"Installments due", "", "", "", "", ""},
-                {"1", "19-Oct-2010", "-", "332.2", "3.8", "0.0", "336.0"},
-                {"2", "26-Oct-2010", "-", "333.4", "4.2", "0.0", "337.6"},
-                {"Future Installments", "", "", "", "", ""},
-                {"3", "02-Nov-2010", "-", "334.4", "1.7", "0.0", "336.1"}};
+        String[][] tableOnDayBetweenSecondAndThirdInstallment = { { "Installments due", "", "", "", "", "" },
+                { "1", "19-Oct-2010", "-", "332.2", "3.8", "0.0", "336.0" },
+                { "2", "26-Oct-2010", "-", "333.4", "4.2", "0.0", "337.6" },
+                { "Future Installments", "", "", "", "", "" },
+                { "3", "02-Nov-2010", "-", "334.4", "1.7", "0.0", "336.1" } };
         verifyScheduleTable(tableOnDayBetweenSecondAndThirdInstallment);
     }
 
     private void verifyOnDayOfSecondInstallment() {
-        String[][] tableOnSecondInstallment =
-                {{"Installments due", "", "", "", "", ""},
-                {"1", "19-Oct-2010", "-", "332.2", "3.8", "0.0", "336.0"},
-                {"2", "26-Oct-2010", "-", "333.4", "3.9", "0.0", "337.3"},
-                {"Future Installments", "", "", "", "", ""},
-                {"3", "02-Nov-2010", "-", "334.4", "1.3", "0.0", "335.7"}};
+        String[][] tableOnSecondInstallment = { { "Installments due", "", "", "", "", "" },
+                { "1", "19-Oct-2010", "-", "332.2", "3.8", "0.0", "336.0" },
+                { "2", "26-Oct-2010", "-", "333.4", "3.9", "0.0", "337.3" },
+                { "Future Installments", "", "", "", "", "" },
+                { "3", "02-Nov-2010", "-", "334.4", "1.3", "0.0", "335.7" } };
         verifyScheduleTable(tableOnSecondInstallment);
     }
 
     private void verifyOnDayBetweenFirstAndSecondInstallment() {
-        String[][] tableOnBetweenFirstAndSecondInstallment =
-                {{"Installments due", "", "", "", "", ""},
-                {"1", "19-Oct-2010", "-", "332.2", "3.8", "0.0", "336.0"},
-                {"Future Installments", "", "", "", "", ""},
-                {"2", "26-Oct-2010", "-", "333.4", "3.5", "0.0", "336.9"},
-                {"3", "02-Nov-2010", "-", "334.4", "1.3", "0.0", "335.7"}};
+        String[][] tableOnBetweenFirstAndSecondInstallment = { { "Installments due", "", "", "", "", "" },
+                { "1", "19-Oct-2010", "-", "332.2", "3.8", "0.0", "336.0" },
+                { "Future Installments", "", "", "", "", "" },
+                { "2", "26-Oct-2010", "-", "333.4", "3.5", "0.0", "336.9" },
+                { "3", "02-Nov-2010", "-", "334.4", "1.3", "0.0", "335.7" } };
         verifyScheduleTable(tableOnBetweenFirstAndSecondInstallment);
     }
 
     private void verifyOnFirstInstallmentDate() {
-        String[][] tableOnFirstInstalment =
-                {{"Installments due", "", "", "", "", ""},
-                {"1", "19-Oct-2010", "-", "332.2", "3.8", "0.0", "336.0"},
-                {"Future Installments", "", "", "", "", ""},
-                {"2", "26-Oct-2010", "-", "333.4", "2.6", "0.0", "336.0"},
-                {"3", "02-Nov-2010", "-", "334.4", "1.3", "0.0", "335.7"}};
+        String[][] tableOnFirstInstalment = { { "Installments due", "", "", "", "", "" },
+                { "1", "19-Oct-2010", "-", "332.2", "3.8", "0.0", "336.0" },
+                { "Future Installments", "", "", "", "", "" },
+                { "2", "26-Oct-2010", "-", "333.4", "2.6", "0.0", "336.0" },
+                { "3", "02-Nov-2010", "-", "334.4", "1.3", "0.0", "335.7" } };
         verifyScheduleTable(tableOnFirstInstalment);
     }
 
@@ -146,7 +156,9 @@ public class ViewRepaymentSchedulePage extends AbstractPage {
                 int column = columnIndex + 1;
                 if (!"".equals(cellValue)) {
                     String actualCellValue = selenium.getText(scheduleTable + "//tr[" + row + "]/td[" + column + "]");
-                    Assert.assertEquals(actualCellValue, cellValue, "In Schedule Table for row " + row + " and column " + column + " expected value is " + cellValue + " but the actual value is " + actualCellValue);
+                    Assert.assertEquals(actualCellValue, cellValue, "In Schedule Table for row " + row + " and column "
+                            + column + " expected value is " + cellValue + " but the actual value is "
+                            + actualCellValue);
                 }
             }
         }
@@ -176,4 +188,34 @@ public class ViewRepaymentSchedulePage extends AbstractPage {
         return new ApplyAdjustmentPage(selenium);
 
     }
+
+    public void verifyScheduleNotContainDate(String date) {
+        int rowCount = selenium.getXpathCount("//table[@id='installments']/tbody/tr").intValue();
+        boolean resault = true;
+        for (int i = 1; i < rowCount; i++) {
+            if (getNoOfInstallmentFromSchedule(i).matches("^[0-9]+$")
+                    && getDateOfInstallmentFromSchedule(i).equals(date)) {
+                resault = false;
+                break;
+            }
+        }
+        Assert.assertTrue(resault);
+    }
+
+    public void verifySchedulePrincipalWithGrace(Integer gracePeriodDuration) {
+        int rowCount = selenium.getXpathCount("//table[@id='installments']/tbody/tr").intValue();
+        Integer zeroPrincipalCount = 0;
+        for (int i = 1; i < rowCount; i++) {
+            if (getNoOfInstallmentFromSchedule(i).matches("^[0-9]+$")){
+                    if(getPrincipalOfInstallmentFromSchedule(i).equals("0.0")) {
+                        zeroPrincipalCount++;
+                    }
+                    else{
+                        break;
+                    }
+            }
+        }
+        Assert.assertEquals(gracePeriodDuration, zeroPrincipalCount);
+    }
+
 }

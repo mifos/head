@@ -20,15 +20,15 @@
 
 package org.mifos.test.acceptance.framework.loanproduct;
 
+import java.util.List;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.mifos.test.acceptance.framework.AbstractPage;
+import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
 
-import java.util.List;
-
-import org.testng.Assert;
-
+@SuppressWarnings("PMD.CyclomaticComplexity")
 public class DefineNewLoanProductPage extends AbstractPage {
 
     String configureVariableInstalmentsCheckbox = "canConfigureVariableInstallments";
@@ -51,7 +51,6 @@ public class DefineNewLoanProductPage extends AbstractPage {
 
     public void verifyPage() {
         this.verifyPage("CreateLoanProduct");
-
     }
 
     public DefineNewLoanProductPage submitPage() {
@@ -77,6 +76,8 @@ public class DefineNewLoanProductPage extends AbstractPage {
 
         // grace period type
         public static final int NONE = 1;
+        public static final int GRACE_ON_ALL_REPAYMENTS = 2;
+        public static final int PRINCIPAL_ONLY_GRACE = 3;
 
         // Status
         public static final int ACTIVE = 1;
@@ -116,6 +117,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
         private String[][] cycleInstallments = new String[MAX_CYCLES][3];
         private String[][] installmentsByLastLoanAmount = new String[MAX_CYCLES][4];
         private int gracePeriodType;
+        private String gracePeriodDuration;
         private String interestGLCode;
         private String principalGLCode;
         private boolean interestWaiver;
@@ -126,6 +128,9 @@ public class DefineNewLoanProductPage extends AbstractPage {
         private String startDateYy;
         private int status;
         private int productCategory;
+        private String additionalFee1;
+        private String additionalFee2;
+        private String additionalFee3;
 
         public String getMinInstallemnts() {
             return this.minInstallemnts;
@@ -269,6 +274,14 @@ public class DefineNewLoanProductPage extends AbstractPage {
 
         public void setGracePeriodType(int gracePeriodType) {
             this.gracePeriodType = gracePeriodType;
+        }
+
+        public String getGracePeriodDuration() {
+            return this.gracePeriodDuration;
+        }
+
+        public void setGracePeriodDuration(String gracePeriodDuration) {
+            this.gracePeriodDuration = gracePeriodDuration;
         }
 
         public String getInterestGLCode() {
@@ -510,6 +523,30 @@ public class DefineNewLoanProductPage extends AbstractPage {
         public void setProductCategory(int productCategory) {
             this.productCategory = productCategory;
         }
+
+        public String getAdditionalFee1() {
+            return this.additionalFee1;
+        }
+
+        public void setAdditionalFee1(String additionalFee1) {
+            this.additionalFee1 = additionalFee1;
+        }
+
+        public String getAdditionalFee2() {
+            return this.additionalFee2;
+        }
+
+        public void setAdditionalFee2(String additionalFee2) {
+            this.additionalFee2 = additionalFee2;
+        }
+
+        public String getAdditionalFee3() {
+            return this.additionalFee3;
+        }
+
+        public void setAdditionalFee3(String additionalFee3) {
+            this.additionalFee3 = additionalFee3;
+        }
     }
 
     public DefineNewLoanProductPage fillLoanParameters(SubmitFormParameters parameters) {
@@ -569,6 +606,10 @@ public class DefineNewLoanProductPage extends AbstractPage {
             }
         }
         selenium.select("gracePeriodType", "value=" + parameters.getGracePeriodType());
+        selenium.fireEvent("gracePeriodType", "change");
+        if(parameters.getGracePeriodType()>1){
+            selenium.type("gracePeriodDuration", parameters.getGracePeriodDuration());
+        }
         selenium.select("interestGLCode", "label=" + parameters.getInterestGLCode());
         selenium.select("principalGLCode", "label=" + parameters.getPrincipalGLCode());
         selectQuestionGroups(parameters.getQuestionGroups());
@@ -595,6 +636,11 @@ public class DefineNewLoanProductPage extends AbstractPage {
     public DefineNewLoanProductPreviewPage submitAndGotoNewLoanProductPreviewPage() {
         submit();
         return new DefineNewLoanProductPreviewPage(selenium);
+    }
+
+    public DefineNewLoanProductPage submitWithErrors() {
+        submit();
+        return this;
     }
 
     private void submit() {
@@ -647,7 +693,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
 
     private void fillInstalmentOptionsAndSubmit(String maxGap, String minGap, String minInstalmentAmount) {
         fillVariableInstalmentOption(maxGap, minGap, minInstalmentAmount);
-        submitAndGotoNewLoanProductPreviewPage();
+        submitWithErrors();
     }
 
     public DefineNewLoanProductPage fillVariableInstalmentOption(String maxGap, String minGap, String minInstalmentAmount) {
@@ -660,8 +706,13 @@ public class DefineNewLoanProductPage extends AbstractPage {
         return this;
     }
 
-    private DefineNewLoanProductPage selectVariableInstalmentAndWaitForLoad() {
+    public DefineNewLoanProductPage checkConfigureVariableInstalmentsCheckbox(){
         selenium.click(configureVariableInstalmentsCheckbox);
+        return this;
+    }
+
+    private DefineNewLoanProductPage selectVariableInstalmentAndWaitForLoad() {
+        checkConfigureVariableInstalmentsCheckbox();
         waitForElementToPresent(minInstalmentAmountTextBox);
         return this;
     }
@@ -705,12 +756,12 @@ public class DefineNewLoanProductPage extends AbstractPage {
         isTextPresentInPage("The Warning Threshold is invalid because the number of digits after the decimal separator exceeds the allowed number 2");
         isTextPresentInPage("The Indebtedness Ratio is invalid because the number of digits after the decimal separator exceeds the allowed number 2");
         isTextPresentInPage("The Repayment Capacity is invalid because the number of digits after the decimal separator exceeds the allowed number 2");
-        submitAndGotoNewLoanProductPreviewPage();
+        submitWithErrors();
     }
 
     private void verifyMinimumLimitForCashFlow() {
         fillCashFlow("-1", "-1", "149.9");
-        submitAndGotoNewLoanProductPreviewPage();
+        submitWithErrors();
         isTextPresentInPage("The Indebtedness Ratio is invalid because only positive numbers and decimal separator are allowed");
         isTextPresentInPage("The Repayment Capacity is invalid because it is not in between 150.0 and 1000.0");
         isTextPresentInPage("The Warning Threshold is invalid because only positive numbers and decimal separator are allowed");
@@ -718,7 +769,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
 
     private void verifyNonNumericForCashFlow() {
         fillCashFlow("abc", "abc", "abc");
-        submitAndGotoNewLoanProductPreviewPage();
+        submitWithErrors();
         isTextPresentInPage("The Warning Threshold is invalid because only positive numbers and decimal separator are allowed");
         isTextPresentInPage("The Indebtedness Ratio is invalid because only positive numbers and decimal separator are allowed");
         isTextPresentInPage("The Indebtedness Ratio is invalid because only positive numbers and decimal separator are allowed");
@@ -726,12 +777,12 @@ public class DefineNewLoanProductPage extends AbstractPage {
 
     private void verifyMaximumLimitForCashFlow() {
         fillCashFlow("99.1", "50", "1000");
-        submitAndGotoNewLoanProductPreviewPage();
+        submitWithErrors();
         isTextPresentInPage("The Warning Threshold is invalid because it is not in between 0.0 and 99.0");
         isTextPresentInPage("Inebtedness Ratio should be a value less than 50.0");
         isTextPresentInPage("Repayment Capacity should be a value less than 1000.0");
         fillCashFlow("100", "55", "1001");
-        submitAndGotoNewLoanProductPreviewPage();
+        submitWithErrors();
         isTextPresentInPage("The Warning Threshold is invalid because it is not in between 0.0 and 99.0");
         isTextPresentInPage("The Indebtedness Ratio is invalid because it is not in between 0.0 and 50.0");
         isTextPresentInPage("The Repayment Capacity is invalid because it is not in between 150.0 and 1000.0");
@@ -765,6 +816,12 @@ public class DefineNewLoanProductPage extends AbstractPage {
             isTextPresentInPage(feeName + " fee cannot be applied to variable installment loan product");
         }
     }
+    public void addFee(String feeName){
+        selenium.addSelection("feeId", "label=" + feeName);
+        selenium.click("LoanFeesList.button.add");
+    }
 
-
+    public void verifyErrorInForm(String error) {
+        Assert.assertTrue(selenium.isTextPresent(error));
+    }
 }

@@ -295,5 +295,19 @@ public class ClientViewDetailsPage extends MifosPage {
             verifyLoanCyclePerProduct(product, loanCyclePerProduct.get(product));
         }
     }
+
+    public String getAmountDue(){
+        return selenium.getText("viewClientDetails.text.amountDue");
+    }
+
+    public void verifyAmountDue(String amountDue){
+        Assert.assertEquals(getAmountDue(), amountDue);
+    }
+
+    public ViewQuestionResponseDetailPage navigateToViewQuestionResponseDetailPage(String questionGroupName) {
+        selenium.click("link="+questionGroupName);
+        waitForPageToLoad();
+        return new ViewQuestionResponseDetailPage(selenium);
+    }
 }
 

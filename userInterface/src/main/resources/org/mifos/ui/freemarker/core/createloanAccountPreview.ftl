@@ -54,38 +54,28 @@
         <div class="attribute">[@spring.message "productSummary.freqOfInstallments"/]</div>
         <div class="value">${loanProductReferenceData.loanOfferingMeetingDetail.meetingDetailsDto.every}&nbsp;${loanProductReferenceData.loanOfferingMeetingDetail.meetingDetailsDto.recurrenceName}</div>
     </div>
-    <div class="row">
-        <div class="attribute">[@spring.message "productSummary.principalDueOnLastInstallment"/]</div>
-        <div class="value">
-        [#if loanProductReferenceData.principalDueOnLastInstallment]
-        	[@spring.message "boolean.yes"/]
-        [#else]
-        	[@spring.message "boolean.no"/]
-        [/#if]
-        </div>
-    </div>
 </div>
 <br/>
 <div class="product-summary">
     <div class="row">
         <div class="attribute">[@spring.message "createLoanAccount.amount"/]</div>
-        <div class="value">${loanScheduleReferenceData.loanAmount} <span>([@spring.message "createLoanAccount.allowedAmount"/] ${loanProductReferenceData.minLoanAmount} - ${loanProductReferenceData.maxLoanAmount})</span></div>
+        <div class="value">${loanScheduleReferenceData.loanAmount?string.currency} <span>([@spring.message "createLoanAccount.allowedAmount"/] ${loanProductReferenceData.minLoanAmount?string.currency} - ${loanProductReferenceData.maxLoanAmount?string.currency})</span></div>
     </div>
     <div class="row">
         <div class="attribute">[@spring.message "createLoanAccount.interestRate"/]</div>
-        <div class="value">${loanAccountFormBean.interestRate} <span>([@spring.message "createLoanAccount.allowedInterestRate"/] ${loanProductReferenceData.minInterestRate} - ${loanProductReferenceData.maxInterestRate} %)</span></div>
+        <div class="value">${loanAccountFormBean.interestRate?string.number} <span>([@spring.message "createLoanAccount.allowedInterestRate"/] ${loanProductReferenceData.minInterestRate?string.number} - ${loanProductReferenceData.maxInterestRate?string.number} %)</span></div>
     </div>
     <div class="row">
         <div class="attribute">[@spring.message "createLoanAccount.numberOfInstallments"/]</div>
-        <div class="value">${loanAccountFormBean.numberOfInstallments} <span>([@spring.message "createLoanAccount.allowedNumberOfInstallments"/] ${loanProductReferenceData.minNumberOfInstallments} - ${loanProductReferenceData.maxNumberOfInstallments})</span></div>
+        <div class="value">${loanAccountFormBean.numberOfInstallments?string.number} <span>([@spring.message "createLoanAccount.allowedNumberOfInstallments"/] ${loanProductReferenceData.minNumberOfInstallments?string.number} - ${loanProductReferenceData.maxNumberOfInstallments?string.number})</span></div>
     </div>
     <div class="row">
         <div class="attribute">[@spring.message "createLoanAccount.disbursalDate"/]</div>
-        <div class="value">${loanScheduleReferenceData.localisedDisbursementDate}</div>
+        <div class="value">${loanScheduleReferenceData.disbursementDate?date?string.medium}</div>
     </div>
     <div class="row">
         <div class="attribute">[@spring.message "createLoanAccount.graceDuration"/]</div>
-        <div class="value">${loanAccountFormBean.graceDuration} <span>[@spring.message "createLoanAccount.allowedGraceInInstallments"/]</span></div>
+        <div class="value">${loanAccountFormBean.graceDuration?string.number} <span>[@spring.message "createLoanAccount.allowedGraceInInstallments"/]</span></div>
     </div>
     <div class="row">
         <div class="attribute">[@spring.message "createLoanAccount.sourceOfFund"/]</div>
@@ -142,12 +132,12 @@
 		</tr>
 		[#list loanScheduleReferenceData.installments as row]
 		<tr>
-			<td>${row.installmentNumber}</td>
-			<td>${row.localisedDueDate}</td>
-			<td>${row.principal}</td>
-			<td>${row.interest}</td>
-			<td>${row.fees}</td>
-			<td>${row.total}</td>
+			<td>${row.installmentNumber?string.number}</td>
+			<td>${row.dueDate?date?string.medium}</td>
+			<td>${row.principal?string.currency}</td>
+			<td>${row.interest?string.currency}</td>
+			<td>${row.fees?string.currency}</td>
+			<td>${row.total?string.currency}</td>
 		</tr>
 		[/#list]
 	</tbody>

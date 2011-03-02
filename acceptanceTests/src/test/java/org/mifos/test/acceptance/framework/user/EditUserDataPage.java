@@ -20,7 +20,9 @@
 
 package org.mifos.test.acceptance.framework.user;
 
+import org.junit.Assert;
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.mifos.test.acceptance.framework.admin.DefineLabelsParameters;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -48,7 +50,7 @@ public class EditUserDataPage extends MifosPage {
         return new EditUserPreviewDataPage(selenium);
     }
 
-    public EditUserPreviewDataPage submitAndGotoEditUserPreviewDataPage(CreateUserParameters parameters) {
+    private void fillForm(CreateUserParameters parameters){
         typeTextIfNotEmpty("edit_user.input.firstName", parameters.getFirstName());
         typeTextIfNotEmpty("edit_user.input.lastName", parameters.getLastName());
         typeTextIfNotEmpty("edit_user.input.email", parameters.getEmail());
@@ -61,11 +63,38 @@ public class EditUserDataPage extends MifosPage {
         selectValueIfNotZero("level", parameters.getUserLevel());
         typeTextIfNotEmpty("edit_user.input.userPassword", parameters.getPassword());
         typeTextIfNotEmpty("edit_user.input.passwordRepeat", parameters.getPasswordRepeat());
+    }
+
+    public EditUserPreviewDataPage submitAndGotoEditUserPreviewDataPage(CreateUserParameters parameters) {
+        fillForm(parameters);
         return submit();
+    }
+
+    public EditUserDataPage submitWithInvalidData(CreateUserParameters parameters) {
+        fillForm(parameters);
+        selenium.click("edit_user.button.preview");
+        waitForPageToLoad();
+        return new EditUserDataPage(selenium);
     }
 
     public UserViewDetailsPage changeStatusAndSubmit(String status) {
         selenium.select(LOCATOR_FORM_STATUS, status);
         return submit().submit();
     }
+
+    public void verifyPasswordChangeError(){
+        String errorMsg = selenium.getText("edit_user.error.message");
+        Assert.assertTrue(errorMsg.contains("Please ensure that password and confirm password entries are made and they are identical."));
+    }
+
+    private String getLabel(String label) {
+        return selenium.getText("edit_user.label."+label);
+    }
+
+    public void verifyLabels(DefineLabelsParameters defineLabelsParams) {
+        for(String label : defineLabelsParams.getKeys()) {
+            Assert.assertEquals(getLabel(label), defineLabelsParams.getLabelText(label)+":");
+        }
+    }
+
 }

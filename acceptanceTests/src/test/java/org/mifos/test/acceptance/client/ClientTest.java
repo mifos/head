@@ -20,17 +20,6 @@
 
 package org.mifos.test.acceptance.client;
 
-import static java.util.Arrays.asList;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
-
 import org.junit.Assert;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
@@ -89,9 +78,22 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-@ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
+
+import static java.util.Arrays.asList;
+
+@ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
 @SuppressWarnings("PMD.TooManyFields")
-@Test(sequential = true, groups = { "client", "acceptance", "ui", "no_db_unit" })
+@Test(sequential = true, groups = {"client", "acceptance", "ui", "no_db_unit"})
 public class ClientTest extends UiTestCaseBase {
 
     private NavigationHelper navigationHelper;
@@ -168,7 +170,7 @@ public class ClientTest extends UiTestCaseBase {
 
     }
 
-    @Test(sequential = true, groups = { "smoke", "client", "acceptance", "ui" })
+    @Test(sequential = true, groups = {"smoke", "client", "acceptance", "ui"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-208
     public void createClientAndChangeStatusTest() throws Exception {
@@ -281,6 +283,113 @@ public class ClientTest extends UiTestCaseBase {
         clientDetailsPage = mfiPreviewPage.submit();
         assertTextFoundOnPage("extID123");
         assertTextFoundOnPage("15/12/2008");
+    }
+
+    // http://mifosforge.jira.com/browse/MIFOSTEST-663
+    @Test(enabled = false) // TODO js - make it no_db_unit
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void closeClientAccountWithQG() throws Exception {
+        CreateGroupSubmitParameters groupParams = new CreateGroupSubmitParameters();
+        groupParams.setGroupName("GroupTest");
+        String clientName = "0004-000000057";
+        String qG_1 = "CloseClientQG";
+        String qG_2 = "CloseClientQG2";
+        QuestionResponseParameters responseParams = getQuestionResponseParametersForClientAccountClose("answer1");
+        QuestionResponseParameters responseParams2 = getQuestionResponseParametersForClientAccountClose("answer2");
+        QuestionResponseParameters responseParamsAfterModyfication = getQuestionResponseParametersForClientAccountCloseAfterModyfication("answer2");
+        List<CreateQuestionParameters> questionsList = new ArrayList<CreateQuestionParameters>();
+        questionsList.add(newFreeTextQuestionParameters("new question 1"));
+        questionsList.add(newFreeTextQuestionParameters("new question 2"));
+        questionsList.add(newFreeTextQuestionParameters("new question 3"));
+        String[] newActiveQuestions = {"new question 1", "new question 2"};
+        String[] deactivateArray = {"new question 3", "question 3", "SingleSelect", "SmartSelect", "TextQuestion"};
+        String[] deactivatedGroupArray = {"SingleSelectQuestion", "SmartSelectQuestion"};
+        List<String> deactivateList = Arrays.asList(deactivateArray);
+        Map<String, String> questionsAndAnswers = new HashMap<String, String>();
+        questionsAndAnswers.put("new question 1", "answer2");
+        questionsAndAnswers.put("new question 2", "answer2");
+        questionsAndAnswers.put("DateQuestion", "24/01/2011");
+        questionsAndAnswers.put("MultiSelect", "first");
+        questionsAndAnswers.put("Number", "10");
+        questionsAndAnswers.put("NumberQuestion", "10");
+        questionsAndAnswers.put("question 1", "answer2");
+        //When / Then
+        QuestionResponsePage responsePage = clientTestHelper.navigateToQuestionResponsePageWhenCloseClientAccount(clientName);
+        responsePage.populateAnswers(responseParams);
+        responsePage.navigateToNextPage();
+        responsePage = new CustomerChangeStatusPreviewPage(selenium).navigateToEditAdditionalInformation();
+        responsePage.populateAnswers(responseParams2);
+        responsePage.navigateToNextPage();
+        new CustomerChangeStatusPreviewPage(selenium).cancelAndGotoClientViewDetailsPage();
+
+        QuestionGroupTestHelper questionTestHelper = new QuestionGroupTestHelper(selenium);
+        questionTestHelper.addNewQuestionsToQuestionGroup(qG_1, questionsList);
+        questionTestHelper.markQuestionsAsInactive(deactivateList);
+        questionTestHelper.markQuestionGroupAsInactive(qG_2);
+        responsePage = clientTestHelper.navigateToQuestionResponsePageWhenCloseClientAccount(clientName);
+
+        responsePage.verifyQuestionsDoesnotappear(deactivateArray);
+        responsePage.verifyQuestionsDoesnotappear(deactivatedGroupArray);
+        responsePage.verifyQuestionsExists(newActiveQuestions);
+        responsePage.populateAnswers(responseParamsAfterModyfication);
+        responsePage.navigateToNextPage();
+        new CustomerChangeStatusPreviewPage(selenium).submitAndGotoClientViewDetailsPage();
+
+        verifyQuestionResponsesExistInDatabase(clientName, "Close Client", questionsAndAnswers);
+    }
+
+    public void verifyQuestionResponsesExistInDatabase(String clientID, String event, Map<String, String> questions) throws SQLException {
+        for (String question : questions.keySet()) {
+            Assert.assertTrue(applicationDatabaseOperation.deosQuestionResponseForClientExist(clientID, event, question, questions.get(question)));
+        }
+    }
+
+    private QuestionResponseParameters getQuestionResponseParametersForClientAccountClose(String answer) {
+        QuestionResponseParameters responseParams = new QuestionResponseParameters();
+        responseParams.addTextAnswer("questionGroups[0].sectionDetails[0].questions[0].value", "24/01/2011");
+        responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[0].questions[1].valuesAsArray", "first");
+        responseParams.addTextAnswer("questionGroups[0].sectionDetails[0].questions[2].value", "10");
+        responseParams.addTextAnswer("questionGroups[0].sectionDetails[0].questions[3].value", "10");
+        responseParams.addTextAnswer("questionGroups[0].sectionDetails[0].questions[4].value", answer);
+
+        responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[0].value", "24/01/2011");
+        responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[1].value", "good");
+        responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[2].valuesAsArray", "february:feb");
+        responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[3].value", answer);
+
+        responseParams.addTextAnswer("questionGroups[1].sectionDetails[0].questions[0].value", "24/01/2011");
+        responseParams.addTextAnswer("questionGroups[1].sectionDetails[0].questions[1].value", "10");
+        responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[0].questions[2].value", "good");
+        responseParams.addTextAnswer("questionGroups[1].sectionDetails[0].questions[3].value", answer);
+
+        responseParams.addTextAnswer("questionGroups[1].sectionDetails[1].questions[0].value", answer);
+        responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[1].value", "1");
+        responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[2].valuesAsArray", "one:a");
+        responseParams.addTextAnswer("questionGroups[1].sectionDetails[1].questions[3].value", answer);
+
+        return responseParams;
+    }
+
+    private QuestionResponseParameters getQuestionResponseParametersForClientAccountCloseAfterModyfication(String answer) {
+        QuestionResponseParameters responseParams = new QuestionResponseParameters();
+        responseParams.addTextAnswer("questionGroups[0].sectionDetails[0].questions[0].value", answer);
+        responseParams.addTextAnswer("questionGroups[0].sectionDetails[0].questions[1].value", answer);
+
+        responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[0].value", "24/01/2011");
+        responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[1].valuesAsArray", "first");
+        responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[2].value", "10");
+        responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[3].value", "10");
+        responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[4].value", answer);
+        return responseParams;
+    }
+
+    private CreateQuestionParameters newFreeTextQuestionParameters(String text) {
+        CreateQuestionParameters questionParams = new CreateQuestionParameters();
+
+        questionParams.setText(text);
+        questionParams.setType(CreateQuestionParameters.TYPE_FREE_TEXT);
+
+        return questionParams;
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -531,12 +640,12 @@ public class ClientTest extends UiTestCaseBase {
         CreateQuestionParameters q1 = new CreateQuestionParameters();
         q1.setType(CreateQuestionParameters.TYPE_SINGLE_SELECT);
         q1.setText("question 1");
-        q1.setChoicesFromStrings(Arrays.asList(new String[] { "yes", "no" }));
+        q1.setChoicesFromStrings(Arrays.asList(new String[]{"yes", "no"}));
         questions.add(q1);
         CreateQuestionParameters q2 = new CreateQuestionParameters();
         q2.setType(CreateQuestionParameters.TYPE_SINGLE_SELECT);
         q2.setText("question 2");
-        q2.setChoicesFromStrings(Arrays.asList(new String[] { "good", "bad", "average" }));
+        q2.setChoicesFromStrings(Arrays.asList(new String[]{"good", "bad", "average"}));
         questions.add(q2);
         CreateQuestionParameters q3 = new CreateQuestionParameters();
         q3.setType(CreateQuestionParameters.TYPE_FREE_TEXT);
@@ -834,7 +943,7 @@ public class ClientTest extends UiTestCaseBase {
     }
 
     private QuestionnairePage checkMandatoryQuestionValidation(String questionGroupTitle, String question1,
-            String question2, ClientViewDetailsPage viewDetailsPage) {
+                                                               String question2, ClientViewDetailsPage viewDetailsPage) {
         QuestionnairePage questionnairePage = viewDetailsPage.getQuestionnairePage(questionGroupTitle);
         questionnairePage.setResponsesForMultiSelect(question2, 4, "Choice1", "Choice3", "Choice4");
         MifosPage mifosPage = questionnairePage.submit();

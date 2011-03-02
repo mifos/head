@@ -27,10 +27,16 @@ import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.client.CreateClientEnterMfiDataPage;
 import org.mifos.test.acceptance.framework.group.CreateGroupConfirmationPage;
 import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountReviewInstallmentPage;
+import org.mifos.test.acceptance.framework.loan.DisburseLoanConfirmationPage;
+import org.mifos.test.acceptance.framework.loan.EditAccountStatusConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 
 import java.util.Map;
+import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import org.mifos.test.acceptance.framework.office.CreateOfficePreviewDataPage;
+import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountPreviewPage;
+import org.mifos.test.acceptance.framework.user.CreateUserPreviewDataPage;
 
 import static org.junit.Assert.assertTrue;
 
@@ -96,10 +102,13 @@ public class QuestionResponsePage extends MifosPage {
     }
 
     public CreateOfficePreviewDataPage navigateToNextPageAndReturnPage() {
-        selenium.click("captureQuestionResponses.button.continue");
-        waitForPageToLoad();
-
+        navigateToNextPage();
         return new CreateOfficePreviewDataPage(selenium);
+    }
+
+    public DisburseLoanConfirmationPage continueAndNavigateToDisburseLoanConfirmationPage() {
+        navigateToNextPage();
+        return new DisburseLoanConfirmationPage(selenium);
     }
 
     public CreateClientEnterMfiDataPage navigateToNextPageClientCreation() {
@@ -107,12 +116,31 @@ public class QuestionResponsePage extends MifosPage {
         return new CreateClientEnterMfiDataPage(selenium);
     }
 
+    public CreateSavingsAccountPreviewPage navigateToNextPageSavingsAccountCreation() {
+        navigateToNextPage();
+        return new CreateSavingsAccountPreviewPage(selenium);
+    }
     public GroupViewDetailsPage navigateToCreateGroupDetailsPage(String status) {
         CreateGroupConfirmationPage confirmationPage = submitNewGroupForApproval();
         confirmationPage.verifyPage();
         GroupViewDetailsPage groupDetailsPage = confirmationPage.navigateToGroupDetailsPage();
         groupDetailsPage.verifyStatus(status);
         return groupDetailsPage;
+    }
+
+    public CreateLoanAccountReviewInstallmentPage continueAndNavigateToCreateLoanAccountReviewInstallmentPage() {
+        navigateToNextPage();
+        return new CreateLoanAccountReviewInstallmentPage(selenium);
+    }
+
+    public EditAccountStatusConfirmationPage continueAndNavigateToEditAccountStatusConfirmationPage() {
+        navigateToNextPage();
+        return new EditAccountStatusConfirmationPage(selenium);
+    }
+
+    public CreateUserPreviewDataPage continueAndNavigateToCreateUserPreviewPage(){
+        navigateToNextPage();
+        return new CreateUserPreviewDataPage(selenium);
     }
 
     public void populateAnswers(QuestionResponseParameters responseParameters) {
@@ -131,5 +159,12 @@ public class QuestionResponsePage extends MifosPage {
     private void populateSingleSelectAnswer(String questionInputId, String answer) {
         selenium.check(questionInputId + " value=" + answer);
         // TODO for more than 6 answers: selenium.select(questionInputId, answer);
+    }
+
+    public ClientViewDetailsPage cancel() {
+        selenium.click("captureQuestionResponses_button_cancel");
+        waitForPageToLoad();
+
+        return new ClientViewDetailsPage(selenium);
     }
 }
