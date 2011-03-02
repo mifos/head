@@ -22,7 +22,7 @@ public class BatchJobTest extends UiTestCaseBase{
         appLauncher = new AppLauncher(selenium);
     }
 
-    @Test(enabled = false)
+    @Test(enabled = false, groups={"no_db_unit"})
     public void testRunAllBatchJobs(){
         loginAndNavigateToAdminPage();
 

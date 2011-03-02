@@ -53,6 +53,7 @@ import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.framework.testhelpers.HolidayTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
+import org.mifos.test.acceptance.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
@@ -458,11 +459,24 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
     public void testBranchSpecificMoratorium() throws Exception {
         //Given
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
-            CreateHolidaySubmitParameters param = FormParametersHelper.getCreateHolidaySubmitParameters();
+            CreateHolidaySubmitParameters param = getCreateHolidaySubmitParameters();
         //When / Then
         holidayTestHelper.createHoliday(param);
     }
 
+    public CreateHolidaySubmitParameters getCreateHolidaySubmitParameters() {
+        CreateHolidaySubmitParameters params = new CreateHolidayEntryPage.CreateHolidaySubmitParameters();
+        params.setName("Holiday" + StringUtil.getRandomString(8));
+        params.setFromDateDD("01");
+        params.setFromDateMM("02");
+        params.setFromDateYYYY("2011");
+        params.setThruDateDD("14");
+        params.setThruDateMM("02");
+        params.setThruDateYYYY("2011");
+        params.setRepaymentRule(CreateHolidaySubmitParameters.MORATORIUM);
+        params.addOffice("MyOffice1233266206574");
+        return params;
+    }
 
     @Test(enabled=true) //disabled due to MIFOS-3785. Please enable once that issue is fixed.
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
