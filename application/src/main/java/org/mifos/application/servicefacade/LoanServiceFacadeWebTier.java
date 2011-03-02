@@ -24,28 +24,23 @@ import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_DAYS_BETWEE
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
-import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
-import org.mifos.accounts.exceptions.AccountException;
-import org.mifos.accounts.fees.business.FeeDto;
-import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.OriginalLoanScheduleEntity;
 import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
-import org.mifos.accounts.loan.business.service.LoanScheduleGenerationDto;
 import org.mifos.accounts.loan.business.service.OriginalScheduleInfoDto;
 import org.mifos.accounts.loan.business.service.validators.InstallmentValidationContext;
 import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
-import org.mifos.accounts.productdefinition.business.CashFlowDetail;
-import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
@@ -56,19 +51,18 @@ import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.config.Localization;
 import org.mifos.config.persistence.ConfigurationPersistence;
-import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
-import org.mifos.dto.screen.CashFlowDataDto;
+import org.mifos.dto.domain.LoanCreationInstallmentDto;
+import org.mifos.dto.domain.MonthlyCashFlowDto;
+import org.mifos.dto.screen.LoanInstallmentsDto;
+import org.mifos.dto.screen.LoanScheduleDto;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.Transformer;
-import org.mifos.platform.cashflow.ui.model.CashFlowForm;
-import org.mifos.platform.cashflow.ui.model.MonthlyCashFlowForm;
+import org.mifos.platform.cashflow.CashFlowConstants;
 import org.mifos.platform.util.CollectionUtils;
 import org.mifos.platform.validations.Errors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -153,29 +147,38 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
     }
 
     @Override
-    public Errors validateCashFlowForInstallments(List<RepaymentScheduleInstallment> installments, CashFlowForm cashFlowForm, Double repaymentCapacity) {
-        Errors errors = new Errors();
-        if (cashFlowForm == null) {
-            return errors;
-        }
-        List<MonthlyCashFlowForm> monthlyCashFlows = cashFlowForm.getMonthlyCashFlows();
-        if (CollectionUtils.isNotEmpty(installments) && CollectionUtils.isNotEmpty(monthlyCashFlows)) {
-            boolean lowerBound = DateUtils.firstLessOrEqualSecond(monthlyCashFlows.get(0).getDate(), installments.get(0).getDueDateValue());
-            boolean upperBound = DateUtils.firstLessOrEqualSecond(installments.get(installments.size() - 1).getDueDateValue(), monthlyCashFlows.get(monthlyCashFlows.size() - 1).getDate());
+    public Errors validateCashFlowForInstallments(LoanInstallmentsDto loanInstallmentsDto, 
+            List<MonthlyCashFlowDto> monthlyCashFlows, Double repaymentCapacity, BigDecimal cashFlowTotalBalance) {
 
-            SimpleDateFormat df = new SimpleDateFormat("MMMM yyyy", installments.get(0).getLocale());
+        Errors errors = new Errors();
+        if (CollectionUtils.isNotEmpty(monthlyCashFlows)) {
+            
+            boolean lowerBound = DateUtils.firstLessOrEqualSecond(monthlyCashFlows.get(0).getMonthDate().toDate(), loanInstallmentsDto.getFirstInstallmentDueDate());
+            boolean upperBound = DateUtils.firstLessOrEqualSecond(loanInstallmentsDto.getLastInstallmentDueDate(), monthlyCashFlows.get(monthlyCashFlows.size() - 1).getMonthDate().toDate());
+
+            Locale locale = Localization.getInstance().getConfiguredLocale();
+            SimpleDateFormat df = new SimpleDateFormat("MMMM yyyy", locale);
 
             if (!lowerBound) {
-                errors.addError(AccountConstants.INSTALLMENT_BEYOND_CASHFLOW_DATE, new String[]{df.format(installments.get(0).getDueDateValue())});
+                errors.addError(AccountConstants.INSTALLMENT_BEYOND_CASHFLOW_DATE, new String[]{df.format(loanInstallmentsDto.getFirstInstallmentDueDate())});
             }
 
             if (!upperBound) {
-                errors.addError(AccountConstants.INSTALLMENT_BEYOND_CASHFLOW_DATE, new String[]{df.format(installments.get(installments.size() - 1).getDueDateValue())});
+                errors.addError(AccountConstants.INSTALLMENT_BEYOND_CASHFLOW_DATE, new String[]{df.format(loanInstallmentsDto.getLastInstallmentDueDate())});
             }
-
         }
-        validateForRepaymentCapacity(installments, cashFlowForm, repaymentCapacity, errors);
+        validateForRepaymentCapacity(loanInstallmentsDto.getTotalInstallmentAmount(), loanInstallmentsDto.getLoanAmount(), repaymentCapacity, errors, cashFlowTotalBalance);
         return errors;
+    }
+    
+    private void validateForRepaymentCapacity(BigDecimal totalInstallmentAmount, BigDecimal loanAmount, Double repaymentCapacity, Errors errors, BigDecimal totalBalance) {
+        if (repaymentCapacity == null || repaymentCapacity == 0) {
+            return;
+        }
+        Double calculatedRepaymentCapacity = totalBalance.add(loanAmount).multiply(CashFlowConstants.HUNDRED).divide(totalInstallmentAmount, 2, BigDecimal.ROUND_HALF_UP).doubleValue();
+        if (calculatedRepaymentCapacity < repaymentCapacity) {
+            errors.addError(AccountConstants.REPAYMENT_CAPACITY_LESS_THAN_ALLOWED, new String[]{calculatedRepaymentCapacity.toString(), repaymentCapacity.toString()});
+        }
     }
 
     @Override
@@ -189,19 +192,4 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         LoanBO loan = this.loanDao.findById(accountId);
         return new OriginalScheduleInfoDto(loan.getLoanAmount().toString(),loan.getDisbursementDate(),repaymentScheduleInstallments);
     }
-
-    private void validateForRepaymentCapacity(List<RepaymentScheduleInstallment> installments, CashFlowForm cashFlowForm, Double repaymentCapacity, Errors errors) {
-        if (cashFlowForm == null || CollectionUtils.isEmpty(installments) || repaymentCapacity == null || repaymentCapacity == 0) {
-            return;
-        }
-        BigDecimal totalInstallmentAmount = BigDecimal.ZERO;
-        for (RepaymentScheduleInstallment installment : installments) {
-            totalInstallmentAmount = totalInstallmentAmount.add(installment.getTotalValue().getAmount());
-        }
-        Double calculatedRepaymentCapacity = cashFlowForm.computeRepaymentCapacity(totalInstallmentAmount).doubleValue();
-        if (calculatedRepaymentCapacity < repaymentCapacity) {
-            errors.addError(AccountConstants.REPAYMENT_CAPACITY_LESS_THAN_ALLOWED, new String[]{calculatedRepaymentCapacity.toString(), repaymentCapacity.toString()});
-        }
-    }
-
 }
