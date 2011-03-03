@@ -22,17 +22,11 @@
 [#import "blueprintmacros.ftl" as mifos]
 [#import "macros.ftl" as mifosmacros]
 
-[@mifos.header "title" /]
-  [@mifos.topNavigationNoSecurity currentTab="Admin" /]
-  <!--  Main Content Begins-->
-  <div class="content definePageMargin">
-    <div class="borders span-22">
-      <div class="borderbtm span-22">
-        <p class="span-8 completeIMG silverheading ">[@spring.message "systemUsers.preview.chooseOffice"/]</p>
-        <p class="span-8 completeIMG silverheading ">[@spring.message "systemUsers.preview.userInformation"/]</p>
-        <p class="span-3 arrowIMG orangeheading last">[@spring.message "reviewAndSubmit"/]</p>
-      </div>
-      <div class="subcontent ">
+[@layout.webflow currentTab="Admin"
+                 currentState="user.flowState.reviewAndSubmit" 
+                 states=["user.flowState.chooseUserOffice", 
+                         "user.flowState.enterAccountInfo", 
+                         "user.flowState.reviewAndSubmit"]]
         <p class="font15"><span class="fontBold">[@spring.message "systemUsers.preview.addanewuser"/]</span>&nbsp;-&nbsp;<span class="orangeheading">[@spring.message "reviewAndSubmit"/]</span></p>
         <div>[@spring.message "systemUsers.preview.reviewtheinformationbelow"/]</div>
         <p>&nbsp;</p>
@@ -46,47 +40,47 @@
         </div>
 
         <div class="prepend-1  span-21 last">
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.firstName"/]&nbsp;</span><span>${userFormBean.firstName?if_exists}</span>
+            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.firstName"/]:&nbsp;</span><span>${userFormBean.firstName?if_exists}</span>
               </div>
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.middleName"/]&nbsp;</span><span>${userFormBean.middleName?if_exists}</span>
+            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.middleName"/]:&nbsp;</span><span>${userFormBean.middleName?if_exists}</span>
               </div>
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.secondLastName"/]&nbsp;</span><span>${userFormBean.secondLastName?if_exists}</span>
+            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.secondLastName"/]:&nbsp;</span><span>${userFormBean.secondLastName?if_exists}</span>
             </div>
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.lastName"/]&nbsp;</span><span>${userFormBean.lastName?if_exists}</span>
+            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.lastName"/]:&nbsp;</span><span>${userFormBean.lastName?if_exists}</span>
               </div>
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.governmentID"/]&nbsp;</span><span>${userFormBean.governmentId?if_exists}</span>
+            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.governmentID"/]:&nbsp;</span><span>${userFormBean.governmentId?if_exists}</span>
               </div>
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.email"/]&nbsp;</span><span>${userFormBean.email?if_exists}</span>
+            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.email"/]:&nbsp;</span><span>${userFormBean.email?if_exists}</span>
             </div>
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.dateofBirth"/]&nbsp;</span><span>${userFormBean.dateOfBirth?if_exists}</span>
+            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.dateofBirth"/]:&nbsp;</span><span>${userFormBean.dateOfBirth?if_exists}</span>
             </div>
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.age"/]&nbsp;</span><span>${userFormBean.age?if_exists}</span>
+            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.age"/]:&nbsp;</span><span>${userFormBean.age?if_exists}</span>
             </div>
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.maritalStatus"/]&nbsp;</span><span>${userFormBean.maritalStatusName?if_exists}</span>
+            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.maritalStatus"/]:&nbsp;</span><span>${userFormBean.maritalStatusName?if_exists}</span>
               </div>
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.gender"/]&nbsp;</span><span>${userFormBean.genderName?if_exists}</span>
+            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.gender"/]:&nbsp;</span><span>${userFormBean.genderName?if_exists}</span>
               </div>
             <div class="clear">&nbsp;</div>
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.languagePreferred"/]&nbsp;</span><span>${userFormBean.preferredLanguageName?if_exists}</span>
+            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.languagePreferred"/]:&nbsp;</span><span>${userFormBean.preferredLanguageName?if_exists}</span>
               </div>
             <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.mFIJoiningDate"/]:&nbsp;</span><span>${userFormBean.mfiJoiningDate?if_exists}</span>
               </div>
             <div class="clear">&nbsp;</div>
             <div class="clear">&nbsp;</div>
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.address"/]&nbsp;</span><span>${userFormBean.address.displayAddress?if_exists}</span></div>
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.city"/]&nbsp;</span><span>${userFormBean.address.cityDistrict?if_exists}</span></div>
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.state"/]&nbsp;</span><span>${userFormBean.address.state?if_exists}</span></div>
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.country"/]&nbsp;</span><span>${userFormBean.address.country?if_exists}</span></div>
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.postalcode"/]&nbsp;</span><span>${userFormBean.address.postalCode?if_exists}</span></div>
+            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.address"/]:&nbsp;</span><span>${userFormBean.address.displayAddress?if_exists}</span></div>
+            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.city"/]:&nbsp;</span><span>${userFormBean.address.cityDistrict?if_exists}</span></div>
+            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.state"/]:&nbsp;</span><span>${userFormBean.address.state?if_exists}</span></div>
+            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.country"/]:&nbsp;</span><span>${userFormBean.address.country?if_exists}</span></div>
+            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.postalcode"/]:&nbsp;</span><span>${userFormBean.address.postalCode?if_exists}</span></div>
             <div class="clear">&nbsp;</div>
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.telephone"/]&nbsp;</span><span>${userFormBean.address.telephoneNumber?if_exists}</span>
+            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.telephone"/]:&nbsp;</span><span>${userFormBean.address.telephoneNumber?if_exists}</span>
             </div>
             <div class="clear">&nbsp;</div>
             <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.officeAndPermissions"/]</span></div>
 
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.userTitle"/]&nbsp;</span><span>${userFormBean.userTitleName?if_exists}</span>
+            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.userTitle"/]:&nbsp;</span><span>${userFormBean.userTitleName?if_exists}</span>
             </div>
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.userHierarchy"/]&nbsp;</span><span>${userFormBean.userHierarchyName?if_exists}</span>
+            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.userHierarchy"/]:&nbsp;</span><span>${userFormBean.userHierarchyName?if_exists}</span>
             </div>
             <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.roles"/]&nbsp;</span>
             <span>
@@ -100,7 +94,7 @@
             <div class="clear">&nbsp;</div>
             <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.loginInformation"/]</span>
             </div>
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.userName"/]&nbsp;</span><span>${userFormBean.username}</span>
+            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.userName"/]:&nbsp;</span><span>${userFormBean.username}</span>
             </div>
              <div class="clear">&nbsp;</div>
             <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.additionalInformation"/]</span></div>
@@ -119,13 +113,17 @@
             <div class="clear">&nbsp;</div>
             <hr />
             <div class="clear">&nbsp;</div>
-            <div class="prepend-9">
+            <div class="prepend-8">
+			<table align="93%" border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td align="center"> &nbsp;
+              <div class="row centered">
                   <input class="buttn" type="submit" name="_eventId_submit" value="[@spring.message "submit"/]" />
                   <input class="buttn2" type="submit" name="_eventId_cancel" value="[@spring.message "cancel"/]" />
             </div>
+			</td>
+		</tr>
+		</table>
+        </div>
         </form>
-      </div>
-    </div>
-  </div>
-  <!--Main Content Ends-->
-  [@mifos.footer/]
+        [/@layout.webflow]

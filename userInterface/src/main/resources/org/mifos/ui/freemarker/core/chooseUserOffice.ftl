@@ -21,18 +21,11 @@
 [#import "spring.ftl" as spring]
 [#import "blueprintmacros.ftl" as mifos]
 
-[@mifos.header "title" /]
-[@mifos.topNavigationNoSecurity currentTab="Admin" /]
-<!--  Main Content Begins-->
-  <div class="content definePageMargin">
-    <div class="borders span-22">
-      <div class="borderbtm span-22">
-        <p class="span-6 arrowIMG orangeheading ">[@spring.message "systemUsers.defineNewSystemUser.chooseOffice"/]</p>
-        <p class="span-6 arrowIMG1 orangeheading ">[@spring.message "systemUsers.defineNewSystemUser.userInformation"/]</p>
-        <p class="span-5 arrowIMG1 orangeheading last">[@spring.message "reviewAndSubmit"/]</p>
-      </div>
-
-      <div class="subcontent">
+[@layout.webflow currentTab="Admin"
+                 currentState="user.flowState.chooseUserOffice" 
+                 states=["user.flowState.chooseUserOffice", 
+                         "user.flowState.enterAccountInfo", 
+                         "user.flowState.reviewAndSubmit"]]
         <p class="font15"><span class="fontBold">[@spring.message "systemUsers.defineNewSystemUser.addanewuser"/]</span>&nbsp;-&nbsp;<span class="orangeheading">[@spring.message "systemUsers.defineNewSystemUser.chooseOffice"/]</span></p>
         <p>[@spring.message "systemUsers.defineNewSystemUser.toselect,clickonaofficefromthelistbelow.ClickCanceltoreturntoAdminpage"/]</p>
 
@@ -55,13 +48,16 @@
 
         <hr />
         <div class="prepend-8">
+		<table width="93%" border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td align="center"> &nbsp;
             <form method="post" action="user.ftl?execution=${flowExecutionKey}">
+			   <div class="row centered">
                 <input class="buttn2" type="submit" name="_eventId_cancel" value="[@spring.message "cancel"/]" />
+				</div>
             </form>
+			</td>
+			</tr>
+			</table>
         </div>
-      </div>
-
-    </div>
-  </div>
-  <!--Main Content Ends-->
-  [@mifos.footer/]
+       [/@layout.webflow]
