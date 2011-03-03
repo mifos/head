@@ -58,7 +58,9 @@
         <mysql.connector.version>5.1.13</mysql.connector.version>
         <jetty.version>7.3.0.v20110203</jetty.version>
         <targetJdk>1.6</targetJdk>
-    </properties>
+ 	<birt.version>2.5.0</birt.version>
+	<birt.libs.groupId>org.mifos.birtlibs</birt.libs.groupId>
+   </properties>
 
     <modules>
         <module>common</module>
