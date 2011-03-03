@@ -20,6 +20,7 @@
 
 package org.mifos.test.acceptance.holiday;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +40,9 @@ import org.mifos.test.acceptance.framework.testhelpers.HolidayTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
+import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
 import org.mifos.test.acceptance.util.StringUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -57,6 +60,9 @@ public class HolidayTest extends UiTestCaseBase {
     private AppLauncher appLauncher;
 
     DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService;
+
+    @Autowired
+    private ApplicationDatabaseOperation applicationDatabaseOperation;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
@@ -151,7 +157,6 @@ public class HolidayTest extends UiTestCaseBase {
     }
 
     //http://mifosforge.jira.com/browse/MIFOSTEST-75
-    @Test(enabled=false)
     public void holidaysRepaymentRuleWithBatchJobs() throws Exception {
         //Given
         dateTimeUpdaterRemoteTestingService.setDateTime(new DateTime(2034,1,1,13,0,0,0));
@@ -169,12 +174,12 @@ public class HolidayTest extends UiTestCaseBase {
         //Then
         runBatchJobsForHoliday();
 
+
         navigationHelper.navigateToLoanAccountPage(lid).navigateToRepaymentSchedulePage();
         loanTestHelper.verifyRepaymentScheduleForHolidays("13-Jan-2034","20-Jan-2034","27-Jan-2034","03-Feb-2034","10-Feb-2034","03-Mar-2034","03-Mar-2034","03-Mar-2034","10-Mar-2034","17-Mar-2034");
     }
 
     //http://mifosforge.jira.com/browse/MIFOSTEST-74
-    @Test(enabled=false)
     public void holidaysRepaymentRuleSameDayWithBatchJobs() throws Exception {
         //Given
         dateTimeUpdaterRemoteTestingService.setDateTime(new DateTime(2035,1,1,13,0,0,0));
@@ -199,7 +204,6 @@ public class HolidayTest extends UiTestCaseBase {
     }
 
     //http://mifosforge.jira.com/browse/MIFOSTEST-76
-    @Test(enabled=false)
     public void holidaysRepaymentRuleNextWorkingDayWithBatchJobs() throws Exception {
         //Given
         dateTimeUpdaterRemoteTestingService.setDateTime(new DateTime(2036,1,1,13,0,0,0));
@@ -264,7 +268,8 @@ public class HolidayTest extends UiTestCaseBase {
         return params;
     }
 
-    private void runBatchJobsForHoliday() {
+    private void runBatchJobsForHoliday() throws SQLException {
+        applicationDatabaseOperation.cleanBatchJobTables();
         List<String> jobsToRun = new ArrayList<String>();
         jobsToRun.add("ApplyHolidayChangesTaskJob");
         new BatchJobHelper(selenium).runSomeBatchJobs(jobsToRun);
