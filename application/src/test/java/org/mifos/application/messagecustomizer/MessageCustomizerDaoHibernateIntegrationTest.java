@@ -65,38 +65,5 @@ public class MessageCustomizerDaoHibernateIntegrationTest extends MifosIntegrati
 		
 		// check that we end up empty
 		assertThat(messageCustomizerDao.getCustomMessages().isEmpty(), is(true));		
-	}
-	
-	@Test
-	public void shouldUpdateCustomMessages() {
-		// we should start out empty
-		assertThat(messageCustomizerDao.getCustomMessages().isEmpty(), is(true));
-		
-		// add a message
-		Map<String,String> messageMap = new HashMap<String, String>();
-		messageMap.put("testold", "testnew");
-		messageCustomizerDao.setCustomMessages(messageMap);
-		
-		// check that the message we added comes back
-		messageMap.clear();
-		messageMap = messageCustomizerDao.getCustomMessages();
-		assertThat(messageMap.get("testold"),is("testnew"));
-		
-		// update the message
-		messageMap.put("testold", "anothertest");
-		messageCustomizerDao.setCustomMessages(messageMap);
-
-		// check that the message we added comes back
-		messageMap.clear();
-		messageMap = messageCustomizerDao.getCustomMessages();
-		assertThat(messageMap.get("testold"),is("anothertest"));
-				
-		// remove the message
-		messageMap.put("testold", "testold");
-		messageCustomizerDao.setCustomMessages(messageMap);
-		
-		// check that we end up empty
-		assertThat(messageCustomizerDao.getCustomMessages().isEmpty(), is(true));		
 	}	
-	
 }
