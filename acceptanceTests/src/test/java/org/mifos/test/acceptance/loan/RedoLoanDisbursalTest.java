@@ -120,7 +120,7 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
         loanAccountPage.verifyTotalAmountPaid("1029.0");
         loanAccountPage.verifyLoanTotalBalance("0.0");
         TransactionHistoryPage transactionHistoryPage = loanAccountPage.navigateToTransactionHistory();
-        transactionHistoryPage.verifyTransactionHistory(1028.6, 4, 217);
+        transactionHistoryPage.verifyTransactionHistory(1028.6, 4, 22);
     }
 
     /*

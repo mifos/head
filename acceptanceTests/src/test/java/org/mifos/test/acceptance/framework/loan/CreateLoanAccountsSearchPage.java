@@ -87,9 +87,9 @@ public class CreateLoanAccountsSearchPage extends AbstractPage {
         Assert.assertTrue(checkNotInOptions(officers, officer));
     }
 
-    public void verifyCenterIsNotInSelectOptions(String branch, String officer, String center) {
+    public void verifyCenterIsNotInSelectOptions(String branch, String center) {
         selectBranch(branch);
-        selectOfficer(officer);
+//        selectOfficer(officer);
         String[] centers = selenium.getSelectOptions("id=createMultipleLoanAccounts.select.center");
         Assert.assertTrue(checkNotInOptions(centers, center));
     }

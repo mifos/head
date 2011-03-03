@@ -633,7 +633,7 @@ public class LoanTestHelper {
         LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
         TransactionHistoryPage transactionHistoryPage = loanAccountPage.navigateToTransactionHistory();
 
-        transactionHistoryPage.verifyTransactionHistory(paymentAmount, 1, 217);
+        transactionHistoryPage.verifyTransactionHistory(paymentAmount, 1, 6);
     }
 
     public LoanAccountPage createTwoLoanAccountsWithMixedRestricedPoducts(CreateLoanAccountSearchParameters searchParams1, CreateLoanAccountSearchParameters searchParams2, DisburseLoanParameters disburseParams) {
@@ -689,7 +689,7 @@ public class LoanTestHelper {
         for(int i = 0; i < clients.length; i++) {
             createLoanAccountsEntryPage.selectClients(i, clients[i]);
             createLoanAccountsEntryPage.updateLoanPurposeForClient(i, loanPurpose);
-            createLoanAccountsEntryPage.verifyNoOfInstallments(i+1);
+            createLoanAccountsEntryPage.verifyNoOfInstallments(i+1, "10");
         }
         LoanAccountPage loanAccountPage;
         CreateLoanAccountsSuccessPage createLoanAccountsSuccessPage;
