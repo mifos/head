@@ -109,6 +109,7 @@ public class VariableInstalmentRecalculationTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
+    @Test(enabled=false)
     public void verifyPrincipalAndInterestRecalculation() throws Exception {
         int noOfInstallments = 4;
         int loanAmount = 1000;
