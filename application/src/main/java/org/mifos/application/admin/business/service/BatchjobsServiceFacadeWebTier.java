@@ -44,8 +44,6 @@ import org.quartz.Trigger;
 public class BatchjobsServiceFacadeWebTier implements BatchjobsServiceFacade{
     private final String CRON_TRIGGER = "CronTrigger";
     private final String SIMPLE_TRIGGER = "SimpleTrigger";
-//    private final String SCHEDULER_SUSPEND = MessageLookup.getInstance().lookup("systemAdministration.batchjobs.suspend");
-//    private final String SCHEDULER_ACTIVATE = MessageLookup.getInstance().lookup("systemAdministration.batchjobs.activate");
 
     @Override
     public List<BatchjobsDto> getBatchjobs(ServletContext context) throws TaskSystemException, FileNotFoundException, IOException, SchedulerException {
