@@ -504,13 +504,6 @@
                             <testNGArtifactName>null</testNGArtifactName>
                             <printSummary>true</printSummary>
                             <redirectTestOutputToFile>true</redirectTestOutputToFile>
-                            <!-- override exclude integration test classes    -->
-                            <excludes>
-                                <exclude>org/mifos/framework/components/batchjobs/helpers/LoanArrearsTaskIntegrationTest.java</exclude>
-                                <exclude>org/mifos/framework/components/batchjobs/TaskRunningIntegrationTest.java</exclude>
-                                <exclude>org/mifos/framework/components/batchjobs/helpers/ProductStatusHelperIntegrationTest.java</exclude>
-                                <exclude>org/mifos/framework/components/batchjobs/BatchJobCatchUpIntegrationTest.java</exclude>
-                            </excludes>
                             <includes>
                                 <include>**/*IntegrationTest.java</include>
                                 <include>**/*StrutsTest.java</include>
