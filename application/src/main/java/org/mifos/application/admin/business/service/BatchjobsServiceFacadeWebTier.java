@@ -31,6 +31,7 @@ import javax.servlet.ServletContext;
 import org.mifos.application.admin.servicefacade.BatchjobsDto;
 import org.mifos.application.admin.servicefacade.BatchjobsSchedulerDto;
 import org.mifos.application.admin.servicefacade.BatchjobsServiceFacade;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.framework.components.batchjobs.MifosScheduler;
 import org.mifos.framework.components.batchjobs.exceptions.TaskSystemException;
 import org.quartz.JobDetail;
@@ -43,8 +44,8 @@ import org.quartz.Trigger;
 public class BatchjobsServiceFacadeWebTier implements BatchjobsServiceFacade{
     private final String CRON_TRIGGER = "CronTrigger";
     private final String SIMPLE_TRIGGER = "SimpleTrigger";
-    private final String SCHEDULER_SUSPEND = "Suspend";
-    private final String SCHEDULER_ACTIVATE = "Activate";
+    private final String SCHEDULER_SUSPEND = MessageLookup.getInstance().lookup("systemAdministration.batchjobs.suspend");
+    private final String SCHEDULER_ACTIVATE = MessageLookup.getInstance().lookup("systemAdministration.batchjobs.activate");
 
     @Override
     public List<BatchjobsDto> getBatchjobs(ServletContext context) throws TaskSystemException, FileNotFoundException, IOException, SchedulerException {
