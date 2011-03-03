@@ -48,9 +48,7 @@ import org.testng.annotations.Test;
 public class CollectionSheetEntrySimpleTest extends UiTestCaseBase {
 
 
-    private static final String VALID_RECEIPT_DAY = "4";
-
-    private static final String VALID_TRANSACTION_DAY = "7";
+    private static final String VALID_RECEIPT_DAY = "04";
 
     @Autowired
     private DriverManagerDataSource dataSource;
@@ -105,31 +103,29 @@ public class CollectionSheetEntrySimpleTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    @Test(enabled=false) // TODO js - temporarily disabled broken test
     public void checkThatPreviewEditButtonWorks() throws Exception {
-        SubmitFormParameters formParameters = getFormParameters();
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml", dataSource, selenium);
+        SubmitFormParameters formParameters = getFormParameters(VALID_RECEIPT_DAY);
+
         CollectionSheetEntrySelectPage selectPage =
             new CollectionSheetEntryTestHelper(selenium).loginAndNavigateToCollectionSheetEntrySelectPage();
-        selectPage.verifyPage();
         CollectionSheetEntryEnterDataPage enterDataPage = selectPage.submitAndGotoCollectionSheetEntryEnterDataPage(formParameters);
-        enterDataPage.verifyPage();
         CollectionSheetEntryPreviewDataPage previewDataPage = enterDataPage.submitAndGotoCollectionSheetEntryPreviewDataPage();
+
         previewDataPage.verifyPage(formParameters);
-        CollectionSheetEntryEnterDataPage newEnterDataPage = previewDataPage.editAndGoToCollectionSheetEntryEnterDataPage();
-        newEnterDataPage.verifyPage();
+        previewDataPage.editAndGoToCollectionSheetEntryEnterDataPage();
     }
 
     private SubmitFormParameters getFormParametersWithInvalidReceiptDay() {
         String invalidReceiptDay = "4.";
-        return getFormParameters(invalidReceiptDay, VALID_TRANSACTION_DAY);
+        return getFormParameters(invalidReceiptDay);
     }
 
     private SubmitFormParameters getFormParameters() {
-        return getFormParameters(VALID_RECEIPT_DAY,VALID_TRANSACTION_DAY);
+        return getFormParameters(VALID_RECEIPT_DAY);
     }
 
-    private SubmitFormParameters getFormParameters(String receiptDay, String transactionDay) {
+    private SubmitFormParameters getFormParameters(String receiptDay) {
         SubmitFormParameters formParameters = new SubmitFormParameters();
         formParameters.setBranch("Office1");
         formParameters.setLoanOfficer("Bagonza Wilson");
@@ -138,9 +134,6 @@ public class CollectionSheetEntrySimpleTest extends UiTestCaseBase {
         formParameters.setReceiptDay(receiptDay);
         formParameters.setReceiptMonth("11");
         formParameters.setReceiptYear("2009");
-        formParameters.setTransactionDay(transactionDay);
-        formParameters.setTransactionMonth("2");
-        formParameters.setTransactionYear("2009");
         return formParameters;
     }
 
