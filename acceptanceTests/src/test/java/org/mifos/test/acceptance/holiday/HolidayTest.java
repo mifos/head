@@ -151,6 +151,7 @@ public class HolidayTest extends UiTestCaseBase {
     }
 
     //http://mifosforge.jira.com/browse/MIFOSTEST-75
+    @Test(enabled=false)
     public void holidaysRepaymentRuleWithBatchJobs() throws Exception {
         //Given
         dateTimeUpdaterRemoteTestingService.setDateTime(new DateTime(2034,1,1,13,0,0,0));
@@ -173,6 +174,7 @@ public class HolidayTest extends UiTestCaseBase {
     }
 
     //http://mifosforge.jira.com/browse/MIFOSTEST-74
+    @Test(enabled=false)
     public void holidaysRepaymentRuleSameDayWithBatchJobs() throws Exception {
         //Given
         dateTimeUpdaterRemoteTestingService.setDateTime(new DateTime(2035,1,1,13,0,0,0));
@@ -197,6 +199,7 @@ public class HolidayTest extends UiTestCaseBase {
     }
 
     //http://mifosforge.jira.com/browse/MIFOSTEST-76
+    @Test(enabled=false)
     public void holidaysRepaymentRuleNextWorkingDayWithBatchJobs() throws Exception {
         //Given
         dateTimeUpdaterRemoteTestingService.setDateTime(new DateTime(2036,1,1,13,0,0,0));
