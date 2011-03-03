@@ -141,7 +141,6 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         editPreviewLoanAccountPage.verifyErrorInForm("Please specify valid Grace period for repayments. Grace period for repayments should be a value less than 12");
     }
 
-    @Test(sequential = true, groups = {"loan","acceptance","ui"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void newWeeklyClientLoanAccountWithDateTypeCustomField() throws Exception {
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
@@ -182,7 +181,6 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         getLoanStatusActive(loanId);
     }
 
-    @Test(sequential = true, groups = {"loan","acceptance","ui"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
     //http://mifosforge.jira.com/browse/MIFOSTEST-308
@@ -208,7 +206,6 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
-    @Test(sequential = true, groups = {"loan","acceptance","ui"})
     public void newMonthlyClientLoanAccountWithZeroInterestRate() throws Exception {
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("Client - Tesa Mendez");
@@ -255,7 +252,6 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
      *
      * @throws Exception
      */
-    @Test(enabled=false) // TODO js - temporarily disabled broken test (blocked by MIFOS-4792)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createLoanAccountsWithRestrictedProductsMix() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
@@ -290,7 +286,6 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
      *
      * @throws Exception
      */
-    @Test(enabled=false) // TODO js - temporarily disabled broken test (blocked by MIFOS-4792)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createMultipleLoanAccountsWithRestrictedProductsMix() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
