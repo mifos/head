@@ -27,7 +27,6 @@ import javax.servlet.jsp.JspException;
 import org.apache.struts.taglib.TagUtils;
 import org.apache.struts.taglib.html.BaseHandlerTag;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.util.MessageFilterReloadableResourceBundleMessageSource;
 import org.mifos.framework.util.helpers.LabelTagUtils;
 
 /**
@@ -104,7 +103,7 @@ public class MenuTag extends BaseHandlerTag {
      */
     private void prepareMenu(StringBuilder output, MenuGroup menuGroup) {
         output.append("<span class=\"fontnormalbold\" >");
-        output.append(MessageFilterReloadableResourceBundleMessageSource.replaceSubstitutions(menuGroup.getDisplayName()[0].toString()) + "</span><br>");
+        output.append(menuGroup.getDisplayName()[0].toString() + "</span><br>");
         MenuItem menuItems[] = menuGroup.getMenuItems();
         for (MenuItem menuItem : menuItems) {
             output.append(getLink(menuItem));
@@ -114,7 +113,7 @@ public class MenuTag extends BaseHandlerTag {
 
     private String getLink(MenuItem menuItem) {
         String linkText = menuItem.getDisplayName()[0];
-        linkText = MessageFilterReloadableResourceBundleMessageSource.replaceSubstitutions(linkText);
+        linkText = LabelTagUtils.replaceSubstitutions(linkText);
         String linkId = "menu.link." + menuItem.getLinkId()/*replace(' ', '.').toLowerCase()*/;
         String linkHref = menuItem.getLinkValue();
         return "<a href=\"" + linkHref + "\" id=\"" + linkId + "\">" + linkText + "</a><br>\n";
