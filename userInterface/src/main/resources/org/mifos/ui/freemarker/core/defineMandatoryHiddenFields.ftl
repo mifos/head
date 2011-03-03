@@ -65,7 +65,8 @@
 
     <div class="span-22 borderbtm">
             <span class="span-8 paddingLeft">
-                [@spring.message "manadatoryHiddenFields.externalId" /]
+                [#assign externalId][@mifostag.mifoslabel name="OfficeLevels-BranchOffice" /][/#assign]
+                [@spring.messageArgs "ftlDefinedLabels.manadatoryHiddenFields.externalId" , [externalId]  /]
             </span>
             <span class="span-7 paddingLeft ">
                 [@spring.bind "fields.hideSystemExternalId" /]
@@ -85,7 +86,8 @@
 
     <div class="span-22 borderbtm">
             <span class="span-8 paddingLeft">
-            [@spring.message "manadatoryHiddenFields.ethnicity" /]
+            [#assign ethnicity][@mifostag.mifoslabel name="Ethinicity" /][/#assign]
+            [@spring.messageArgs "ftlDefinedLabels.manadatoryHiddenFields.ethnicity" , [ethnicity]  /]
             </span>
             <span class="span-7 paddingLeft ">
             [@spring.bind "fields.hideSystemEthnicity" /]
@@ -104,7 +106,8 @@
     </div>
     <div class="span-22 borderbtm">
         <span class="span-8 paddingLeft">
-            [@spring.message "manadatoryHiddenFields.citizenship" /]
+            [#assign citizenship][@mifostag.mifoslabel name="Citizenship" /][/#assign]
+            [@spring.messageArgs "ftlDefinedLabels.manadatoryHiddenFields.citizenship" , [citizenship]  /]
         </span>
         <span class="span-7 paddingLeft "><input type="checkbox"
                                                  name="hideSystemCitizenShip" [#if fields.hideSystemCitizenShip=true]
@@ -117,7 +120,8 @@
     </div>
     <div class="span-22 borderbtm">
         <span class="span-8 paddingLeft">
-            [@spring.message "manadatoryHiddenFields.handicapped" /]
+            [#assign handicapped][@mifostag.mifoslabel name="Handicapped" /][/#assign]
+            [@spring.messageArgs "ftlDefinedLabels.manadatoryHiddenFields.handicapped" , [handicapped]  /]
         </span>
         <span class="span-7 paddingLeft "><input type="checkbox"
                                                  name="hideSystemHandicapped" [#if fields.hideSystemHandicapped=true]
@@ -152,7 +156,8 @@
     </div>
     <div class="span-22 borderbtm">
         <span class="span-8 paddingLeft">
-            [@spring.message "manadatoryHiddenFields.assigningClienttopositions" /]
+            [#assign assigningClienttopositions][@mifostag.mifoslabel name="Client" /][/#assign]
+            [@spring.messageArgs "ftlDefinedLabels.manadatoryHiddenFields.assigningClienttopositions" , [assigningClienttopositions]  /]
         </span>
         <span class="span-7 paddingLeft "><input type="checkbox"
                                                  name="hideSystemAssignClientPostions" [#if fields.hideSystemAssignClientPostions=true]
@@ -161,7 +166,8 @@
     </div>
     <div class="span-22 borderbtm">
         <span class="span-8 paddingLeft">
-            [@spring.message "manadatoryHiddenFields.address1" /]
+            [#assign address1][@mifostag.mifoslabel name="Address1" /][/#assign]
+            [@spring.messageArgs "ftlDefinedLabels.manadatoryHiddenFields.address1" , [address1]  /]
         </span>
         <span class="span-7 paddingLeft ">&nbsp;</span>
         <span class="span-5 paddingLeft"><input type="checkbox"
@@ -170,7 +176,8 @@
     </div>
     <div class="span-22 borderbtm">
         <span class="span-8 paddingLeft">
-            [@spring.message "manadatoryHiddenFields.address2" /]
+            [#assign address2][@mifostag.mifoslabel name="Address2" /][/#assign]
+            [@spring.messageArgs "ftlDefinedLabels.manadatoryHiddenFields.address2" , [address2]  /]
         </span>
         <span class="span-7 paddingLeft "><input type="checkbox"
                                                  name="hideSystemAddress2" [#if fields.hideSystemAddress2=true]
@@ -179,7 +186,8 @@
     </div>
     <div class="span-22 borderbtm">
         <span class="span-8 paddingLeft">
-            [@spring.message "manadatoryHiddenFields.address3" /]
+            [#assign address3][@mifostag.mifoslabel name="Address3" /][/#assign]
+            [@spring.messageArgs "ftlDefinedLabels.manadatoryHiddenFields.address3" , [address3]  /]
         </span>
         <span class="span-7 paddingLeft "><input type="checkbox"
                                                  name="hideSystemAddress3" [#if fields.hideSystemAddress3=true]
@@ -194,7 +202,8 @@
     </div>
     <div class="span-22 borderbtm">
         <span class="span-8 paddingLeft">
-            [@spring.message "manadatoryHiddenFields.state" /]
+            [#assign state][@mifostag.mifoslabel name="State" /][/#assign]
+            [@spring.messageArgs "ftlDefinedLabels.manadatoryHiddenFields.state" , [state]  /]
         </span>
         <span class="span-7 paddingLeft "><input type="checkbox"
                                                  name="hideSystemState" [#if fields.hideSystemState=true]
@@ -210,7 +219,8 @@
     </div>
     <div class="span-22 borderbtm">
         <span class="span-8 paddingLeft">
-            [@spring.message "manadatoryHiddenFields.postalCode" /]
+            [#assign postalCode][@mifostag.mifoslabel name="PostalCode" /][/#assign]
+            [@spring.messageArgs "ftlDefinedLabels.manadatoryHiddenFields.postalCode" , [postalCode]  /]
         </span>
         <span class="span-7 paddingLeft "><input type="checkbox"
                                                  name="hideSystemPostalCode" [#if fields.hideSystemPostalCode=true]
@@ -236,7 +246,8 @@
 <div class="span-22 last">
     <div class="bluedivs span-22 fontBold">
         <span class="span-8 paddingLeft">
-            [@spring.message "manadatoryHiddenFields.client/systemusersfields" /]
+            [#assign clientSystemUserFields][@mifostag.mifoslabel name="Client" /][/#assign]
+            [@spring.messageArgs "ftlDefinedLabels.manadatoryHiddenFields.client/systemusersfields" , [clientSystemUserFields]  /]
         </span>
         <span class="span-7 paddingLeft">[@spring.message "manadatoryHiddenFields.hide"/]</span><span
             class="span-5 paddingLeft">[@spring.message "manadatoryHiddenFields.mandatory"/]</span>
@@ -265,7 +276,8 @@
     </div>
     <div class="span-22 borderbtm">
         <span class="span-8 paddingLeft">
-            [@spring.message "manadatoryHiddenFields.governmentID" /]
+            [#assign governmentID][@mifostag.mifoslabel name="GovernmentId" /][/#assign]
+            [@spring.messageArgs "ftlDefinedLabels.manadatoryHiddenFields.governmentID" , [governmentID]  /]
         </span>
         <span class="span-7 paddingLeft "><input type="checkbox"
                                                  name="hideClientGovtId" [#if fields.hideClientGovtId=true]
@@ -373,7 +385,8 @@
 <div class="span-22 last">
     <div class="bluedivs span-22 fontBold">
         <span class="span-8 paddingLeft">
-            [@spring.message "manadatoryHiddenFields.groupfields" /]
+            [#assign groupfields][@mifostag.mifoslabel name="Group" /][/#assign]
+            [@spring.messageArgs "ftlDefinedLabels.manadatoryHiddenFields.groupfields" , [groupfields]  /]
         </span>
         <span class="span-7 paddingLeft">[@spring.message "manadatoryHiddenFields.hide"/]</span>
         <span class="span-5 paddingLeft">[@spring.message "manadatoryHiddenFields.mandatory"/]</span>
