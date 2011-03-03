@@ -161,6 +161,4 @@ public interface AdminServiceFacade {
     ReportCategoryDto retrieveReportCategory(Integer reportCategoryId);
 
     Locale retreiveLocaleFromConfiguration();
-
-	String replaceSubstitutions(String message);
 }

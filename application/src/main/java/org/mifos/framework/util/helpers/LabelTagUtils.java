@@ -35,7 +35,6 @@ import org.apache.struts.taglib.TagUtils;
 import org.apache.struts.util.MessageResources;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
-import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.config.Localization;
@@ -47,7 +46,6 @@ import org.mifos.framework.struts.tags.MifosPropertyMessageResources;
 import org.mifos.framework.util.MessageFilterReloadableResourceBundleMessageSource;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.UserContext;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * This Util class is a singleton class used by the MifosLabelTag to obtain the
@@ -56,16 +54,17 @@ import org.springframework.beans.factory.annotation.Autowired;
  * Locale, if the element is of type currency.
  */
 public class LabelTagUtils {
-    /**
-     * The static instance of the class
-     */
-    private static LabelTagUtils instance = new LabelTagUtils();
 
     /**
      * private constructor to prevent multiple instance creation.
      */
     private LabelTagUtils() {
     }
+
+    /**
+     * The static instance of the class
+     */
+    private static LabelTagUtils instance = new LabelTagUtils();
 
     /**
      * static method to obatin the instance of the class.
@@ -167,7 +166,7 @@ public class LabelTagUtils {
             message = "";
         }
 
-        return MessageLookup.getInstance().replaceSubstitutions(message);
+        return MessageFilterReloadableResourceBundleMessageSource.replaceSubstitutions(message);
     }
 
     private ConfigurableLookupLabelDto populateConfigurableLookupLabels() {
