@@ -43,6 +43,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 
 @SuppressWarnings("PMD")
@@ -133,9 +134,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
     // http://mifosforge.jira.com/browse/MIFOSTEST-123
     public void createLoanAccountWithNonMeetingDatesForDisburseAndRepay() throws Exception {
         //Given
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime systemTime = new DateTime(2011, 02, 24, 12, 0, 0, 0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(systemTime);
+        setTime(2011, 02, 24);
         DefineNewLoanProductPage.SubmitFormParameters defineNewLoanProductformParameters = FormParametersHelper.getMonthlyLoanProductParameters();
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("Client - Mary Monthly");
@@ -157,8 +156,15 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
         //Then
         String loanId = loanTestHelper.createLoanAccount(searchParameters, submitAccountParameters).getAccountId();
         loanTestHelper.changeLoanAccountStatus(loanId, editLoanAccountStatusParameters);
+        setTime(2011, 03, 24);
         loanTestHelper.disburseLoan(loanId, disburseLoanParameters);
         loanTestHelper.repayLoan(loanId);
+    }
+
+    private void setTime(int year, int monthOfYear, int dayOfMonth) throws UnsupportedEncodingException {
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTime systemTime = new DateTime(year, monthOfYear, dayOfMonth, 12, 0, 0, 0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(systemTime);
     }
 
     private void createLSIMLoanAndCheckAmountAndInstallmentDate(CreateLoanAccountSearchParameters searchParameters,
