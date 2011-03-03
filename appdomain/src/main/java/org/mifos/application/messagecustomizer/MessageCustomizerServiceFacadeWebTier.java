@@ -25,15 +25,11 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.mifos.application.admin.servicefacade.MessageCustomizerServiceFacade;
-import org.mifos.core.MifosRuntimeException;
 import org.mifos.dto.domain.AccountStatusesLabelDto;
 import org.mifos.dto.domain.ConfigurableLookupLabelDto;
 import org.mifos.dto.domain.GracePeriodDto;
 import org.mifos.dto.domain.OfficeLevelDto;
 import org.mifos.dto.screen.ConfigureApplicationLabelsDto;
-import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
-import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.omg.PortableInterceptor.ACTIVE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -88,10 +84,8 @@ public class MessageCustomizerServiceFacadeWebTier implements MessageCustomizerS
     private static final String EXTERNAL_ID_KEY = "datadisplayandrules.defineLabels.externalID";
     private static final String BULK_ENTRY_KEY = "datadisplayandrules.defineLabels.bulkentry";
 
-    private final HibernateTransactionHelper transactionHelper;
-    
-	@Autowired
-	private MessageCustomizerDao messageCustomizerDao;
+//	@Autowired
+//	private MessageCustomizerDao messageCustomizerDao;
 	
 	@Autowired
 	private MessageSource messageSource;
@@ -100,13 +94,11 @@ public class MessageCustomizerServiceFacadeWebTier implements MessageCustomizerS
     	
     @Autowired
 	public MessageCustomizerServiceFacadeWebTier(
-			MessageCustomizerDao messageCustomizerDao,
+//			MessageCustomizerDao messageCustomizerDao,
 			MessageSource messageSource) {
 		super();
-		this.messageCustomizerDao = messageCustomizerDao;
+//		this.messageCustomizerDao = messageCustomizerDao;
 		this.messageSource = messageSource;
-        transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
-		
 	}
 
 	@Override
@@ -120,13 +112,10 @@ public class MessageCustomizerServiceFacadeWebTier implements MessageCustomizerS
 	}
 
 	@Override
-	public void updateApplicationLabels(Map<String,String> messageMap) {
-		messageCustomizerDao.setCustomMessages(messageMap);
-/*
-		for (Map.Entry<String, String> entry : messageMap.entrySet()) { 
+	public void updateApplicationLabels(LinkedHashMap<String,String> map) {
+        for (Map.Entry<String, String> entry : map.entrySet()) { 
         	messageFilterMap.put(entry.getKey(), entry.getValue());
         }
-*/       
 	}
 	
     @Override
@@ -138,8 +127,6 @@ public class MessageCustomizerServiceFacadeWebTier implements MessageCustomizerS
     	}
     	
     	String newMessage = message;
-    	
-    	Map<String,String> messageFilterMap = messageCustomizerDao.getCustomMessages();
     	
         for (Map.Entry<String, String> entry : messageFilterMap.entrySet()) { 
         	newMessage = newMessage.replace(entry.getKey(), entry.getValue());
@@ -264,7 +251,7 @@ public class MessageCustomizerServiceFacadeWebTier implements MessageCustomizerS
 		lookupLabels.setBulkEntry(getCustomMessageFor(message));
 		return lookupLabels;
 	}
-/*
+
 	private String getCustomMessageFor(String message) {
 		String customMessage = messageFilterMap.get(message);
 		if (customMessage == null) {
@@ -272,16 +259,7 @@ public class MessageCustomizerServiceFacadeWebTier implements MessageCustomizerS
 		}
 		return customMessage;
 	}
-*/
-	private String getCustomMessageFor(String message) {
-		CustomMessage customMessage = messageCustomizerDao.findCustomMessageByOldMessage(message);
 
-		if (customMessage == null) {
-			return message;
-		}
-		return customMessage.getNewMessage();
-	}
-	
 	@Override
 	public void updateApplicationLabels(
 			ConfigureApplicationLabelsDto applicationLabels, Locale locale) {
@@ -293,20 +271,8 @@ public class MessageCustomizerServiceFacadeWebTier implements MessageCustomizerS
 		updateAccountStatuses(applicationLabels.getAccountStatusLabels(), locale, originalLabelsDto.getAccountStatusLabels(), updateMap);	
 		updateOffices(applicationLabels.getOfficeLevels(), locale, originalLabelsDto.getOfficeLevels(), updateMap);	
 		updateGrace(applicationLabels.getGracePeriodDto(), locale, originalLabelsDto.getGracePeriodDto(), updateMap);
-						
-        try {
-            this.transactionHelper.startTransaction();
-
-    		updateApplicationLabels(updateMap);
-            
-            this.transactionHelper.commitTransaction();
-        } catch (Exception e) {
-            this.transactionHelper.rollbackTransaction();
-            throw new MifosRuntimeException(e);
-        } finally {
-            this.transactionHelper.closeSession();
-        }		
-
+		
+		updateApplicationLabels(updateMap);
 	}
 
 

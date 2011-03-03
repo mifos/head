@@ -27,6 +27,4 @@ public interface MessageCustomizerDao {
 	public Map<String,String> getCustomMessages();
 	
 	public void setCustomMessages(Map<String,String> messageMap);
-	
-	public CustomMessage findCustomMessageByOldMessage(final String oldMessage);	
 }
