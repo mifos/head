@@ -21,7 +21,6 @@
 package org.mifos.framework.util.helpers;
 
 import java.util.Collection;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -165,21 +164,7 @@ public class LabelTagUtils {
             message = "";
         }
 
-        return replaceSubstitutions(message);
-    }
-    
-    static public String replaceSubstitutions(String message) {
-    	String newMessage = message;
-    	LinkedHashMap<String,String> map = new LinkedHashMap<String,String>();
-    	map.put("Center", "Kendra");
-    	map.put("center", "kendra");
-    	map.put("Client", "Borrower");
-    	map.put("Loan", "Obligation");
-    	
-        for (Map.Entry<String, String> entry : map.entrySet()) { 
-        	newMessage = newMessage.replace(entry.getKey(), entry.getValue());
-        }
-    	return newMessage;
+        return message;
     }
 
     private ConfigurableLookupLabelDto populateConfigurableLookupLabels() {
