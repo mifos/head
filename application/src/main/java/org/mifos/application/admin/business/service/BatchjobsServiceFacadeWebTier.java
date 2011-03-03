@@ -44,8 +44,8 @@ import org.quartz.Trigger;
 public class BatchjobsServiceFacadeWebTier implements BatchjobsServiceFacade{
     private final String CRON_TRIGGER = "CronTrigger";
     private final String SIMPLE_TRIGGER = "SimpleTrigger";
-    private final String SCHEDULER_SUSPEND = MessageLookup.getInstance().lookup("systemAdministration.batchjobs.suspend");
-    private final String SCHEDULER_ACTIVATE = MessageLookup.getInstance().lookup("systemAdministration.batchjobs.activate");
+//    private final String SCHEDULER_SUSPEND = MessageLookup.getInstance().lookup("systemAdministration.batchjobs.suspend");
+//    private final String SCHEDULER_ACTIVATE = MessageLookup.getInstance().lookup("systemAdministration.batchjobs.activate");
 
     @Override
     public List<BatchjobsDto> getBatchjobs(ServletContext context) throws TaskSystemException, FileNotFoundException, IOException, SchedulerException {
@@ -95,10 +95,10 @@ public class BatchjobsServiceFacadeWebTier implements BatchjobsServiceFacade{
     public void suspend(ServletContext context, String doSuspend) throws SchedulerException {
         MifosScheduler mifosScheduler = (MifosScheduler) context.getAttribute(MifosScheduler.class.getName());
         Scheduler scheduler = mifosScheduler.getScheduler();
-        if (doSuspend.equals(SCHEDULER_SUSPEND) && !scheduler.isInStandbyMode()) {
+        if (doSuspend.equals(MessageLookup.getInstance().lookup("systemAdministration.batchjobs.suspend")) && !scheduler.isInStandbyMode()) {
             scheduler.standby();
         }
-        if (doSuspend.equals(SCHEDULER_ACTIVATE) && scheduler.isInStandbyMode()) {
+        if (doSuspend.equals(MessageLookup.getInstance().lookup("systemAdministration.batchjobs.activate")) && scheduler.isInStandbyMode()) {
             scheduler.start();
         }
     }
