@@ -20,31 +20,21 @@
 
 package org.mifos.application.master.business;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.when;
-
-import java.util.Locale;
-
 import junit.framework.Assert;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.application.master.MessageLookup;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "/org/mifos/config/resources/messageSourceBean.xml", "/org/mifos/config/resources/propertyConfigurer.xml" })
 public class CustomFieldDefinitionEntityTest {
 
-	@Mock
-	MessageLookup messageLookup;
-	
     @Test
     public void testMandatory() {
-
         LookUpEntity customFieldName = new LookUpEntity();
         customFieldName.setEntityId((short) 1);
         customFieldName.setEntityType("something");
@@ -53,11 +43,7 @@ public class CustomFieldDefinitionEntityTest {
                 (short) 0, CustomFieldType.ALPHA_NUMERIC, EntityType.CLIENT, "default value", YesNoFlag.NO);
         CustomFieldDefinitionEntity customFieldMandatory = new CustomFieldDefinitionEntity(customFieldName, (short) 0,
                 CustomFieldType.ALPHA_NUMERIC, EntityType.CLIENT, "default value", YesNoFlag.YES);
-        customFieldMandatory.setMessageLookup(messageLookup);
-        customFieldNotMandatory.setMessageLookup(messageLookup);
-        when(messageLookup.lookup(eq(YesNoFlag.fromInt(0)), any(Locale.class))).thenReturn("no");
-        when(messageLookup.lookup(eq(YesNoFlag.fromInt(1)), any(Locale.class))).thenReturn("yes");
-        
+
         Assert.assertFalse(customFieldNotMandatory.isMandatory());
         Assert.assertEquals(customFieldNotMandatory.getMandatoryStringValue(), "no");
 
