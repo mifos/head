@@ -68,6 +68,18 @@ public class CustomFieldDefinitionEntity extends AbstractEntity {
 
     private Short mandatoryFlag;
 
+    // allow injection of MessageLookup for mocking in tests
+    private MessageLookup messageLookup = null;    
+    private MessageLookup getMessageLookup() {
+    	if (messageLookup == null) {
+    		messageLookup = MessageLookup.getInstance();
+    	}
+    	return messageLookup;
+    }
+    
+    public void setMessageLookup(MessageLookup messageLookup) {
+    	this.messageLookup = messageLookup;
+    }    
     /*
      * Adding a default constructor is hibernate's requirement and should not be
      * used to create a valid Object.
@@ -204,15 +216,11 @@ public class CustomFieldDefinitionEntity extends AbstractEntity {
 
         return false;
     }
-
-    public static String getMandatoryStringValue(Locale locale, Short flag) {
-        return MessageLookup.getInstance().lookup(YesNoFlag.fromInt(flag), locale);
-    }
-
+    
     public String getMandatoryStringValue(Locale locale) {
-        return MessageLookup.getInstance().lookup(YesNoFlag.fromInt(mandatoryFlag), locale);
-    }
-
+        return getMessageLookup().lookup(YesNoFlag.fromInt(mandatoryFlag), locale);
+    }    
+    
     public void setLabel(String label) {
         for (LookUpLabelEntity entity : lookUpEntity.getLookUpLabels()) {
             if (entity.getLocaleId().equals(MasterDataEntity.CUSTOMIZATION_LOCALE_ID)) {
@@ -273,4 +281,5 @@ public class CustomFieldDefinitionEntity extends AbstractEntity {
     public void setFieldId(Short fieldId) {
         this.fieldId = fieldId;
     }
+
 }

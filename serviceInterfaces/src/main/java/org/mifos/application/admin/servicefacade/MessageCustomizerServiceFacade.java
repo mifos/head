@@ -20,7 +20,7 @@
 
 package org.mifos.application.admin.servicefacade;
 
-import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Locale;
 
 import org.mifos.dto.screen.ConfigureApplicationLabelsDto;
@@ -35,7 +35,7 @@ public interface MessageCustomizerServiceFacade {
     void updateApplicationLabels(ConfigureApplicationLabelsDto applicationLabels, Locale locale);
 	
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_LABELS')")
-	void updateApplicationLabels(LinkedHashMap<String, String> messageFilterMap);
+	void updateApplicationLabels(Map<String, String> messageFilterMap);
 
 	String replaceSubstitutions(String message);
 

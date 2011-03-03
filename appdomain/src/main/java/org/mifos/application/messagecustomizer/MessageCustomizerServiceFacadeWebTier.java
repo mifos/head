@@ -33,8 +33,6 @@ import org.mifos.dto.domain.OfficeLevelDto;
 import org.mifos.dto.screen.ConfigureApplicationLabelsDto;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.omg.PortableInterceptor.ACTIVE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 
