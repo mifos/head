@@ -148,8 +148,6 @@
         <mapping resource="org/mifos/application/master/business/SpouseFatherLookupEntity.hbm.xml" />
         <mapping resource="org/mifos/application/master/business/CustomFieldDefinitionEntity.hbm.xml" />
 
-        <mapping class="org.mifos.application.messagecustomizer.CustomMessage" />
-
         <mapping resource="org/mifos/accounts/savings/business/SavingsPerformanceEntity.hbm.xml" />
         <mapping resource="org/mifos/accounts/business/AccountActionEntity.hbm.xml" />
         <mapping resource="org/mifos/customers/business/CustomerActivityEntity.hbm.xml" />
