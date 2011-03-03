@@ -37,10 +37,8 @@
 <p><span class="standout">[@spring.message "reviewInstallments.disbursmentDate" /]</span> ${loanScheduleReferenceData.disbursementDate?date?string.medium}</p>
 <br/>
 
+<h1><span class="standout">[@spring.message "reviewInstallments.heading" /]</span></h1>
 <table>
-	<thead>
-		<tr><th>[@spring.message "reviewInstallments.tableHeading" /]</th></tr>
-	</thead>
 	<tbody>
 		<tr>
 			<th>[@spring.message "reviewInstallments.installmentHeading" /]</th>

@@ -20,7 +20,6 @@
 
 package org.mifos.application.servicefacade;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -28,8 +27,6 @@ import java.util.Locale;
 import org.mifos.accounts.loan.business.service.OriginalScheduleInfoDto;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
-import org.mifos.dto.domain.MonthlyCashFlowDto;
-import org.mifos.dto.screen.LoanInstallmentsDto;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.platform.validations.Errors;
 
@@ -42,9 +39,6 @@ public interface LoanServiceFacade {
     Errors validateInputInstallments(Date disbursementDate, VariableInstallmentDetailsBO variableInstallmentDetails, List<RepaymentScheduleInstallment> installments, Integer customerId);
 
     Errors validateInstallmentSchedule(List<RepaymentScheduleInstallment> installments, VariableInstallmentDetailsBO variableInstallmentDetailsBO);
-
-    public Errors validateCashFlowForInstallments(LoanInstallmentsDto loanInstallmentsDto, List<MonthlyCashFlowDto> monthlyCashFlows, 
-            Double repaymentCapacity, BigDecimal cashFlowTotalBalance);
 
     OriginalScheduleInfoDto retrieveOriginalLoanSchedule(Integer accountId, Locale locale) throws PersistenceException;
 }

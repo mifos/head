@@ -274,7 +274,7 @@ public class LoanAccountActionTest {
         List<CashFlowDataDto> cashflowDtos = new ArrayList<CashFlowDataDto>();
         when(form.getCashflowDataDtos()).thenReturn(cashflowDtos);
         when(loanAccountServiceFacade.validateCashFlowForInstallmentsForWarnings((List<CashFlowDataDto>)anyObject(), anyInt())).thenReturn(errors);
-        when(loanServiceFacade.validateCashFlowForInstallments((LoanInstallmentsDto)anyObject(), (List<MonthlyCashFlowDto>)anyObject(), (Double)anyObject(), (BigDecimal)anyObject())).thenReturn(errors);
+        when(loanAccountServiceFacade.validateCashFlowForInstallments((LoanInstallmentsDto)anyObject(), (List<MonthlyCashFlowDto>)anyObject(), (Double)anyObject(), (BigDecimal)anyObject())).thenReturn(errors);
         
         when(mapping.findForward("preview_failure")).thenReturn(previewFailure);
         ActionForward forward = loanAccountAction.preview(mapping, form, request, response);
@@ -304,7 +304,7 @@ public class LoanAccountActionTest {
         List<CashFlowDataDto> cashflowDtos = new ArrayList<CashFlowDataDto>();
         when(form.getCashflowDataDtos()).thenReturn(cashflowDtos);
         when(loanAccountServiceFacade.validateCashFlowForInstallmentsForWarnings((List<CashFlowDataDto>)anyObject(), anyInt())).thenReturn(warning);
-        when(loanServiceFacade.validateCashFlowForInstallments((LoanInstallmentsDto)anyObject(), (List<MonthlyCashFlowDto>)anyObject(), (Double)anyObject(), (BigDecimal)anyObject())).thenReturn(error);
+        when(loanAccountServiceFacade.validateCashFlowForInstallments((LoanInstallmentsDto)anyObject(), (List<MonthlyCashFlowDto>)anyObject(), (Double)anyObject(), (BigDecimal)anyObject())).thenReturn(error);
         
         when(mapping.findForward("preview_success")).thenReturn(previewSuccess);
         ActionForward forward = loanAccountAction.preview(mapping, form, request, response);
@@ -332,7 +332,7 @@ public class LoanAccountActionTest {
         List<CashFlowDataDto> cashflowDtos = new ArrayList<CashFlowDataDto>();
         when(form.getCashflowDataDtos()).thenReturn(cashflowDtos);
         when(loanAccountServiceFacade.validateCashFlowForInstallmentsForWarnings((List<CashFlowDataDto>)anyObject(), anyInt())).thenReturn(errors);
-        when(loanServiceFacade.validateCashFlowForInstallments((LoanInstallmentsDto)anyObject(), (List<MonthlyCashFlowDto>)anyObject(), (Double)anyObject(), (BigDecimal)anyObject())).thenReturn(errors);        
+        when(loanAccountServiceFacade.validateCashFlowForInstallments((LoanInstallmentsDto)anyObject(), (List<MonthlyCashFlowDto>)anyObject(), (Double)anyObject(), (BigDecimal)anyObject())).thenReturn(errors);        
 
         when(mapping.findForward("preview_success")).thenReturn(previewSuccess);
         ActionForward forward = loanAccountAction.preview(mapping, form, request, response);
