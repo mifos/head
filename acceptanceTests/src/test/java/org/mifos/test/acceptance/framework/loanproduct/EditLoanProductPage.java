@@ -162,7 +162,8 @@ public class EditLoanProductPage extends MifosPage {
         if (!selenium.isChecked(configureVariableInstalmentsCheckbox)){
             selenium.click(configureVariableInstalmentsCheckbox);
         }
-        selenium.waitForCondition("selenium.isVisible('minimumInstallmentAmount')","10000");
+        waitForElementToVisible("minimumInstallmentAmount");
+//        selenium.waitForCondition("selenium.isVisible('minimumInstallmentAmount')","10000");
         selenium.type(maxInstalmentGapTextBox, maxGap);
         selenium.type(minInstalmentGapTextBox, minGap);
         selenium.type(minInstalmentAmountTextBox, minInstalmentAmount);

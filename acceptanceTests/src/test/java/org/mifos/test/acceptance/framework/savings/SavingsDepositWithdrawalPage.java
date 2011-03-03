@@ -71,15 +71,16 @@ public class SavingsDepositWithdrawalPage  extends MifosPage{
 
     public void verifyModeOfPayments(){
         waitForPageToLoad();
-        waitForElementToPresent("applypayment_savingsaccount.input.paymentType");
+        waitForElementToPresentById("applypayment_savingsaccount.input.paymentType");
         String[] modesOfPayment=selenium.getSelectOptions("applypayment_savingsaccount.input.paymentType");
         Assert.assertEquals(RepayLoanParameters.CASH,modesOfPayment[1]);
-        Assert.assertEquals(RepayLoanParameters.CHEQUE,modesOfPayment[2]);
-        Assert.assertEquals(RepayLoanParameters.VOUCHER,modesOfPayment[3]);
+//        Assert.assertEquals(RepayLoanParameters.CHEQUE,modesOfPayment[2]);
+//        Assert.assertEquals(RepayLoanParameters.VOUCHER,modesOfPayment[3]);
     }
 
     public void selectPaymentType(String paymentType) {
-        selenium.waitForCondition("selenium.isElementPresent(\"" + "applypayment_savingsaccount.input.trxnType" + "\")","30000");
+        waitForElementToPresentById("applypayment_savingsaccount.input.trxnType");
+//        selenium.waitForCondition("selenium.isElementPresent(\"" + "applypayment_savingsaccount.input.trxnType" + "\")","30000");
         if ("Deposit".equals(paymentType)) {
             selenium.select("applypayment_savingsaccount.input.trxnType", "value=6");
         }else if ("Withdrawal".equals(paymentType)) {

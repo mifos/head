@@ -22,13 +22,14 @@ package org.mifos.test.acceptance.framework;
 
 import com.thoughtworks.selenium.Selenium;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.RenderedWebElement;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverBackedSelenium;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.openqa.selenium.JavascriptExecutor;
 
 import org.testng.Assert;
 
@@ -87,6 +88,26 @@ public class AbstractPage {
             public Boolean apply(WebDriver d) {
                 WebElement element = d.findElement(By.name(name));
                 return Boolean.TRUE;
+            }
+        };
+        Wait<WebDriver> w = new WebDriverWait(driver,Long.valueOf(MAX_WAIT_FOR_PAGE_TO_LOAD_IN_MILLISECONDS));
+        w.until(e);
+    }
+    public void waitForElementToPresentById(final String name) {
+        ExpectedCondition<Boolean> e = new ExpectedCondition<Boolean>() {
+            public Boolean apply(WebDriver d) {
+                WebElement element = d.findElement(By.id(name));
+                return Boolean.TRUE;
+            }
+        };
+        Wait<WebDriver> w = new WebDriverWait(driver,Long.valueOf(MAX_WAIT_FOR_PAGE_TO_LOAD_IN_MILLISECONDS));
+        w.until(e);
+    }
+
+    public void waitForElementToVisible(final String name) {
+        ExpectedCondition<Boolean> e = new ExpectedCondition<Boolean>() {
+            public Boolean apply(WebDriver d) {
+                return ((RenderedWebElement) driver.findElement(By.name(name))).isDisplayed();
             }
         };
         Wait<WebDriver> w = new WebDriverWait(driver,Long.valueOf(MAX_WAIT_FOR_PAGE_TO_LOAD_IN_MILLISECONDS));
