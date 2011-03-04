@@ -50,7 +50,7 @@ public class PPITest extends UiTestCaseBase {
     }
 
   //http://mifosforge.jira.com/browse/MIFOSTEST-147
-    public void importExcelFormatAudiBankTransactions() throws Exception {
+    public void verifyPPIQuestionGroup() throws Exception {
         //Given
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
         String configPath = new ConfigurationLocator().getConfigurationDirectory();
