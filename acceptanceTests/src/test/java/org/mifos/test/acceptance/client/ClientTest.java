@@ -182,7 +182,7 @@ public class ClientTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-208
-    @Test(enabled=true, sequential = true, groups = {"smoke"})
+    //@Test(enabled=true, sequential = true, groups = {"smoke"})
     public void createClientAndChangeStatusTest() throws Exception {
         //Given
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
@@ -804,7 +804,6 @@ public class ClientTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-48
-    @Test(enabled=false) // TODO js - temporarily disabled broken test
     public void removeClientWithLoanFromGroup() throws Exception {
         //Given
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_015_dbunit.xml", dataSource, selenium);

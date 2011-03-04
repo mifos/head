@@ -1,6 +1,7 @@
 package org.mifos.test.acceptance.framework.client;
 
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.mifos.test.acceptance.framework.util.UiTestUtils;
 import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
@@ -14,6 +15,7 @@ public class ClientViewChangeLogPage extends MifosPage{
     }
 
     public void verifyLastEntryOnChangeLog(String field, String oldvalue, String newValue, String user){
+        UiTestUtils.sleep(1000);
         Assert.assertEquals(selenium.getTable("auditLogRecords.1.1"),field);
         Assert.assertEquals(selenium.getTable("auditLogRecords.1.2"),oldvalue);
         Assert.assertEquals(selenium.getTable("auditLogRecords.1.3"),newValue);
