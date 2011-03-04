@@ -92,7 +92,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@SuppressWarnings("PMD.TooManyFields")
+@SuppressWarnings({"PMD.TooManyFields","PMD.ExcessiveClassLength"})
 @Test(sequential = true, groups = { "client", "acceptance", "ui", "no_db_unit" })
 public class ClientTest extends UiTestCaseBase {
 
@@ -111,8 +111,17 @@ public class ClientTest extends UiTestCaseBase {
     public static final String NUMBER = "Number";
     public static final String SMART_SELECT = "Smart Select";
     private String questionGroupTitle;
-    private String question1;
-    private String question2;
+    private String question1 = "q1";
+    private String question2 = "q2";
+    private static final String question3 = "q3";
+    private static final String question4 = "q4";
+    private static final String question5 = "q5";
+    private static final String question6 = "q6";
+    private static final String question7 = "q7";
+    private static final String question8 = "q8";
+    private static final String question9 = "q9";
+    private static final String question10 = "q10";
+    private static final String question11 = "q11";
     private String response;
     private ClientViewDetailsPage viewClientDetailsPage;
     private Map<Integer, QuestionGroup> questionGroupInstancesOfClient;
@@ -286,15 +295,16 @@ public class ClientTest extends UiTestCaseBase {
     }
 
     // http://mifosforge.jira.com/browse/MIFOSTEST-663
-    @Test(enabled = false) // TODO js - make it no_db_unit
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void closeClientAccountWithQG() throws Exception {
         //Given
-        //initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_016_dbunit.xml", dataSource, selenium);
-
         CreateGroupSubmitParameters groupParams = new CreateGroupSubmitParameters();
         groupParams.setGroupName("GroupTest");
-        String clientName = "0004-000000057";
+        
+        createQuestions2();
+        createQuestionGroup2();
+        
+        String clientName = "0002-000000008";
         String qG_1 = "CloseClientQG";
         String qG_2 = "CloseClientQG2";
         QuestionResponseParameters responseParams = getQuestionResponseParametersForClientAccountClose("answer1");
@@ -305,17 +315,17 @@ public class ClientTest extends UiTestCaseBase {
         questionsList.add(newFreeTextQuestionParameters("new question 2"));
         questionsList.add(newFreeTextQuestionParameters("new question 3"));
         String[] newActiveQuestions = { "new question 1", "new question 2" };
-        String[] deactivateArray = { "new question 3", "question 3", "SingleSelect", "SmartSelect", "TextQuestion"};
-        String[] deactivatedGroupArray = { "SingleSelectQuestion", "SmartSelectQuestion" };
+        String[] deactivateArray = { "new question 3", question3, question6, question2, question5};
+        String[] deactivatedGroupArray = {question10, question11};
         List<String> deactivateList = Arrays.asList(deactivateArray);
         Map<String, String> questionsAndAnswers = new HashMap<String, String>();
         questionsAndAnswers.put("new question 1", "answer2");
         questionsAndAnswers.put("new question 2", "answer2");
-        questionsAndAnswers.put("DateQuestion", "24/01/2011");
-        questionsAndAnswers.put("MultiSelect", "first");
-        questionsAndAnswers.put("Number", "10");
-        questionsAndAnswers.put("NumberQuestion", "10");
-        questionsAndAnswers.put("question 1", "answer2");
+        questionsAndAnswers.put(question1, "24/01/2011");
+        questionsAndAnswers.put(question4, "10");
+        questionsAndAnswers.put(question7, "24/01/2011");
+        questionsAndAnswers.put(question8, "jan");
+        questionsAndAnswers.put(question9, "answer2");
         //When / Then
         QuestionResponsePage responsePage = clientTestHelper.navigateToQuestionResponsePageWhenCloseClientAccount(clientName);
         responsePage.populateAnswers(responseParams);
@@ -339,8 +349,101 @@ public class ClientTest extends UiTestCaseBase {
         new CustomerChangeStatusPreviewPage(selenium).submitAndGotoClientViewDetailsPage();
 
         verifyQuestionResponsesExistInDatabase(clientName, "Close Client", questionsAndAnswers);
+        
+        questionTestHelper.markQuestionsAsInactive(asList("new question 1","new question 2", question1,
+                question2, question4, question7, question8, question9, question10, question11));
+        questionTestHelper.markQuestionGroupAsInactive(qG_1);
     }
+    
+    private void createQuestions2() {
+        List<CreateQuestionParameters> questions = new ArrayList<CreateQuestionParameters>();
+        CreateQuestionParameters q1 = new CreateQuestionParameters();
+        q1.setType(CreateQuestionParameters.TYPE_DATE);
+        q1.setText(question1);
+        questions.add(q1);
+        CreateQuestionParameters q2 = new CreateQuestionParameters();
+        q2.setType(CreateQuestionParameters.TYPE_MULTI_SELECT);
+        q2.setText(question2);
+        q2.setChoicesFromStrings(Arrays.asList(new String[] {"first", "second"}));
+        questions.add(q2);
+        CreateQuestionParameters q3 = new CreateQuestionParameters();
+        q3.setType(CreateQuestionParameters.TYPE_NUMBER);
+        q3.setText(question3);
+        q3.setNumericMax(10);
+        q3.setNumericMin(0);
+        questions.add(q3);
+        CreateQuestionParameters q4 = new CreateQuestionParameters();
+        q4.setType(CreateQuestionParameters.TYPE_NUMBER);
+        q4.setText(question4);
+        q4.setNumericMax(10);
+        q4.setNumericMin(0);
+        questions.add(q4);
+        CreateQuestionParameters q5 = new CreateQuestionParameters();
+        q5.setType(CreateQuestionParameters.TYPE_FREE_TEXT);
+        q5.setText(question5);
+        questions.add(q5);
+        CreateQuestionParameters q6 = new CreateQuestionParameters();
+        q6.setType(CreateQuestionParameters.TYPE_SINGLE_SELECT);
+        q6.setText(question6);
+        q6.setChoicesFromStrings(asList("good", "wrong"));
+        questions.add(q6);
+        CreateQuestionParameters q7 = new CreateQuestionParameters();
+        q7.setType(CreateQuestionParameters.TYPE_DATE);
+        q7.setText(question7);
+        questions.add(q7);
+        CreateQuestionParameters q8 = new CreateQuestionParameters();
+        q8.setType(CreateQuestionParameters.TYPE_MULTI_SELECT);
+        q8.setText(question8);
+        q8.setChoicesFromStrings(Arrays.asList(new String[] {"jan", "feb"}));
+        questions.add(q8);
+        CreateQuestionParameters q9 = new CreateQuestionParameters();
+        q9.setType(CreateQuestionParameters.TYPE_FREE_TEXT);
+        q9.setText(question9);
+        questions.add(q9);
+        CreateQuestionParameters q10 = new CreateQuestionParameters();
+        q10.setType(CreateQuestionParameters.TYPE_SINGLE_SELECT);
+        q10.setText(question10);
+        q10.setChoicesFromStrings(Arrays.asList(new String[] {"1", "2","3"}));
+        questions.add(q10);
+        CreateQuestionParameters q11 = new CreateQuestionParameters();
+        q11.setType(CreateQuestionParameters.TYPE_FREE_TEXT);
+        q11.setText(question11);
+        questions.add(q11);
+        questionGroupTestHelper.createQuestions(questions);
+    }
+    
+    private void createQuestionGroup2() {
+        String qG_1 = "CloseClientQG";
+        String qG_2 = "CloseClientQG2";
 
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        CreateQuestionGroupPage createQuestionGroupPage = adminPage.navigateToCreateQuestionGroupPage();
+        CreateQuestionGroupParameters parameters;
+        parameters = questionGroupTestHelper.getCreateQuestionGroupParameters(qG_1, asList(question1, question2, question3, question4, question5),
+                "Close Client", "Section1");
+        parameters.addExistingQuestion("Section2", question7);
+        parameters.addExistingQuestion("Section2", question6);
+        parameters.addExistingQuestion("Section2", question9);
+        parameters.addExistingQuestion("Section2", question8);
+        for (String section : parameters.getExistingQuestions().keySet()) {
+            createQuestionGroupPage.addExistingQuestion(section, parameters.getExistingQuestions().get(section));
+        }
+        createQuestionGroupPage.markEveryOtherQuestionsMandatory(asList(question1));
+        createQuestionGroupPage.submit(parameters);
+        adminPage = navigationHelper.navigateToAdminPage();
+        createQuestionGroupPage = adminPage.navigateToCreateQuestionGroupPage();
+        parameters = questionGroupTestHelper.getCreateQuestionGroupParameters(qG_2, asList(question1, question6, question3, question5),
+                "Close Client", "Section1");
+        parameters.addExistingQuestion("Section2", question9);
+        parameters.addExistingQuestion("Section2", question10);
+        parameters.addExistingQuestion("Section2", question8);
+        parameters.addExistingQuestion("Section2", question11);
+        for (String section : parameters.getExistingQuestions().keySet()) {
+            createQuestionGroupPage.addExistingQuestion(section, parameters.getExistingQuestions().get(section));
+        }
+        createQuestionGroupPage.submit(parameters);
+    }
+    
     public void verifyQuestionResponsesExistInDatabase(String clientID, String event, Map<String, String> questions) throws SQLException {
         for(String question : questions.keySet()) {
             Assert.assertTrue(applicationDatabaseOperation.deosQuestionResponseForClientExist(clientID, event, question, questions.get(question)));
@@ -354,21 +457,21 @@ public class ClientTest extends UiTestCaseBase {
             responseParams.addTextAnswer("questionGroups[0].sectionDetails[0].questions[3].value", "10");
             responseParams.addTextAnswer("questionGroups[0].sectionDetails[0].questions[4].value", answer);
 
-            responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[0].value", "24/01/2011");
-            responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[1].value", "good");
-            responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[2].valuesAsArray", "february:feb");
+            responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[0].value", "good");
+            responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[1].value", "24/01/2011");
+            responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[2].valuesAsArray", "feb");
             responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[3].value", answer);
 
             responseParams.addTextAnswer("questionGroups[1].sectionDetails[0].questions[0].value", "24/01/2011");
             responseParams.addTextAnswer("questionGroups[1].sectionDetails[0].questions[1].value", "10");
-            responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[0].questions[2].value", "good");
-            responseParams.addTextAnswer("questionGroups[1].sectionDetails[0].questions[3].value", answer);
+            responseParams.addTextAnswer("questionGroups[1].sectionDetails[0].questions[2].value", answer);
+            responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[0].questions[3].value", "good");
 
-            responseParams.addTextAnswer("questionGroups[1].sectionDetails[1].questions[0].value", answer);
-            responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[1].value", "1");
-            responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[2].valuesAsArray", "one:a");
+            responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[0].value", "1");
+            responseParams.addTextAnswer("questionGroups[1].sectionDetails[1].questions[1].value", answer);
+            responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[2].valuesAsArray", "jan");
             responseParams.addTextAnswer("questionGroups[1].sectionDetails[1].questions[3].value", answer);
-
+            
             return responseParams;
         }
 
@@ -378,10 +481,11 @@ public class ClientTest extends UiTestCaseBase {
         responseParams.addTextAnswer("questionGroups[0].sectionDetails[0].questions[1].value", answer);
 
         responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[0].value", "24/01/2011");
-        responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[1].valuesAsArray", "first");
-        responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[2].value", "10");
-        responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[3].value", "10");
-        responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[4].value", answer);
+        responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[1].value", "10");
+        
+        responseParams.addTextAnswer("questionGroups[0].sectionDetails[2].questions[0].value", "24/01/2011");
+        responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[2].questions[1].valuesAsArray", "jan");
+        responseParams.addTextAnswer("questionGroups[0].sectionDetails[2].questions[2].value", answer);
         return responseParams;
     }
 
