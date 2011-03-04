@@ -113,7 +113,7 @@ public class CreateLoanAccountEntryPage extends MifosPage {
         {
             selenium.click("loancreationdetails.input.frequencyWeeks");
             selenium.type("loancreationdetails.input.weekFrequency",formParameters.getLsimWeekFrequency());
-            selenium.select("weekDay", "label=Friday");
+            selenium.select("weekDay", "label=5");
         }
         if (formParameters.getLsimMonthTypeDayOfMonth() != null)
         {

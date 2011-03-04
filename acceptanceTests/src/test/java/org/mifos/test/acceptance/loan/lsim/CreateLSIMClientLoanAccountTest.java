@@ -88,12 +88,10 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-127
-    @Test(enabled=false) // TODO js - make it no_db_unit
     public void newWeeklyLSIMClientLoanAccount() throws Exception {
         //Given
         systemTime = new DateTime(2010,1,15,10,55,0,0);
         dateTimeUpdaterRemoteTestingService.setDateTime(systemTime);
-        //initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
         //When
         CustomPropertiesHelper customPropertiesHelper = new CustomPropertiesHelper(selenium);
         customPropertiesHelper.setBackDatedTransactionsAllowed("true");
@@ -101,7 +99,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("Stu1233171716380 Client1233171716380");
         searchParameters.setLoanProduct("WeeklyFlatLoanWithOneTimeFees");
-        expectedDate = "22-Jan-2010";
+        expectedDate = "28-Jan-2010";
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
         submitAccountParameters.setAmount("9012.0");
         submitAccountParameters.setLsimFrequencyWeeks("on");
