@@ -1801,7 +1801,7 @@ CREATE TABLE `change_log` (
   KEY `changed_by` (`changed_by`),
   KEY `change_log_idx` (`entity_type`,`entity_id`,`changed_date`),
   CONSTRAINT `change_log_ibfk_1` FOREIGN KEY (`changed_by`) REFERENCES `personnel` (`personnel_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1810,7 +1810,7 @@ CREATE TABLE `change_log` (
 
 LOCK TABLES `change_log` WRITE;
 /*!40000 ALTER TABLE `change_log` DISABLE KEYS */;
-INSERT INTO `change_log` VALUES (1,1,'mifos',1,17,'2011-02-18',NULL),(2,1,'mifos',2,21,'2011-02-18',NULL),(3,1,'mifos',2,21,'2011-02-18',NULL),(4,1,'mifos',1,17,'2011-02-21',NULL),(5,1,'mifos',2,1,'2011-02-21',NULL),(6,1,'mifos',3,1,'2011-02-21',NULL),(7,1,'mifos',1,17,'2010-01-22',NULL),(8,1,'mifos',4,12,'2010-01-22',NULL),(9,1,'mifos',5,1,'2010-01-22',NULL),(10,1,'mifos',6,1,'2010-01-22',NULL),(11,1,'mifos',7,1,'2010-01-22',NULL),(12,1,'mifos',4,2,'2010-01-22',NULL),(13,1,'mifos',8,1,'2010-01-22',NULL),(14,1,'mifos',5,2,'2011-02-21',NULL),(15,1,'mifos',10,22,'2011-02-21',NULL),(16,1,'mifos',11,22,'2011-02-21',NULL),(17,1,'mifos',1,17,'2011-02-21',NULL),(18,1,'mifos',12,22,'2011-02-21',NULL),(19,1,'mifos',9,12,'2011-02-18',NULL),(20,1,'mifos',10,1,'2011-02-18',NULL),(21,1,'mifos',15,22,'2011-02-18',NULL),(22,1,'mifos',1,17,'2010-02-22',NULL),(23,1,'mifos',1,17,'2011-02-22',NULL),(24,1,'mifos',7,2,'2011-02-22',NULL),(25,1,'mifos',12,1,'2011-02-22',NULL),(26,1,'mifos',13,1,'2011-02-22',NULL),(27,1,'mifos',14,1,'2011-02-22',NULL),(28,1,'mifos',11,12,'2011-02-22',NULL),(29,1,'mifos',12,1,'2011-02-22',NULL),(30,1,'mifos',13,1,'2011-02-22',NULL),(31,1,'mifos',14,1,'2011-02-22',NULL),(32,1,'mifos',2,2,'2011-02-22',NULL),(33,1,'mifos',20,22,'2011-02-22',NULL),(34,1,'mifos',1,17,'2011-02-23',NULL);
+INSERT INTO `change_log` VALUES (1,1,'mifos',1,17,'2011-02-18',NULL),(2,1,'mifos',2,21,'2011-02-18',NULL),(3,1,'mifos',2,21,'2011-02-18',NULL),(4,1,'mifos',1,17,'2011-02-21',NULL),(5,1,'mifos',2,1,'2011-02-21',NULL),(6,1,'mifos',3,1,'2011-02-21',NULL),(7,1,'mifos',1,17,'2010-01-22',NULL),(8,1,'mifos',4,12,'2010-01-22',NULL),(9,1,'mifos',5,1,'2010-01-22',NULL),(10,1,'mifos',6,1,'2010-01-22',NULL),(11,1,'mifos',7,1,'2010-01-22',NULL),(12,1,'mifos',4,2,'2010-01-22',NULL),(13,1,'mifos',8,1,'2010-01-22',NULL),(14,1,'mifos',5,2,'2011-02-21',NULL),(15,1,'mifos',10,22,'2011-02-21',NULL),(16,1,'mifos',11,22,'2011-02-21',NULL),(17,1,'mifos',1,17,'2011-02-21',NULL),(18,1,'mifos',12,22,'2011-02-21',NULL),(19,1,'mifos',9,12,'2011-02-18',NULL),(20,1,'mifos',10,1,'2011-02-18',NULL),(21,1,'mifos',15,22,'2011-02-18',NULL),(22,1,'mifos',1,17,'2010-02-22',NULL),(23,1,'mifos',1,17,'2011-02-22',NULL),(24,1,'mifos',7,2,'2011-02-22',NULL),(25,1,'mifos',12,1,'2011-02-22',NULL),(26,1,'mifos',13,1,'2011-02-22',NULL),(27,1,'mifos',14,1,'2011-02-22',NULL),(28,1,'mifos',11,12,'2011-02-22',NULL),(29,1,'mifos',12,1,'2011-02-22',NULL),(30,1,'mifos',13,1,'2011-02-22',NULL),(31,1,'mifos',14,1,'2011-02-22',NULL),(32,1,'mifos',2,2,'2011-02-22',NULL),(33,1,'mifos',20,22,'2011-02-22',NULL),(34,1,'mifos',1,17,'2011-02-23',NULL),(35,1,'mifos',1,17,'2011-03-04',NULL),(36,1,'mifos',7,2,'2011-03-04',NULL);
 /*!40000 ALTER TABLE `change_log` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1830,7 +1830,7 @@ CREATE TABLE `change_log_detail` (
   PRIMARY KEY (`sequence_num`),
   KEY `change_log_id` (`change_log_id`),
   CONSTRAINT `change_log_detail_ibfk_1` FOREIGN KEY (`change_log_id`) REFERENCES `change_log` (`change_log_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1839,7 +1839,7 @@ CREATE TABLE `change_log_detail` (
 
 LOCK TABLES `change_log_detail` WRITE;
 /*!40000 ALTER TABLE `change_log_detail` DISABLE KEYS */;
-INSERT INTO `change_log_detail` VALUES (1,1,'lastLogin','-','18/02/2011'),(2,2,'activationDate','-','18/02/2011'),(3,2,'Status','Application Pending Approval','Active'),(4,3,'savingsBalance','-','1000.0'),(5,4,'lastLogin','18/02/2011','21/02/2011'),(6,5,'Status','Application Pending Approval','Active'),(7,6,'Status','Application Pending Approval','Active'),(8,7,'lastLogin','21/02/2011','22/01/2010'),(9,8,'Status','Application Pending Approval','Active'),(10,9,'Status','Application Pending Approval','Active'),(11,10,'Status','Application Pending Approval','Active'),(12,11,'Status','Application Pending Approval','Active'),(13,12,'Frequency Of Installments','Week(s)','Month(s)'),(14,13,'Status','Application Pending Approval','Active'),(15,14,'Product Instance Name','EmergencyLoan','ClientEmergencyLoan'),(16,15,'Status','Application Pending Approval','Application Approved'),(17,16,'Status','Application Pending Approval','Application Approved'),(18,17,'lastLogin','22/01/2010','21/02/2011'),(19,18,'Status','Application Pending Approval','Application Approved'),(20,19,'Status','Application Pending Approval','Active'),(21,20,'Status','Application Pending Approval','Active'),(22,21,'Status','Application Pending Approval','Application Approved'),(23,22,'lastLogin','21/02/2011','22/02/2010'),(24,23,'lastLogin','22/02/2010','22/02/2011'),(25,24,'Fee Types','-','oneTimeFee'),(26,25,'Status','Application Pending Approval','Active'),(27,26,'Status','Application Pending Approval','Active'),(28,27,'Status','Application Pending Approval','Active'),(29,28,'Status','Application Pending Approval','Active'),(30,29,'Name','-','Default Group'),(31,29,'groupFlag','0','1'),(32,30,'groupFlag','0','1'),(33,30,'Name','-','Default Group'),(34,31,'Name','-','Default Group'),(35,31,'groupFlag','0','1'),(36,32,'Fee Types','-','disbursementFee'),(37,33,'Status','Application Pending Approval','Application Approved'),(38,34,'lastLogin','22/02/2011','23/02/2011');
+INSERT INTO `change_log_detail` VALUES (1,1,'lastLogin','-','18/02/2011'),(2,2,'activationDate','-','18/02/2011'),(3,2,'Status','Application Pending Approval','Active'),(4,3,'savingsBalance','-','1000.0'),(5,4,'lastLogin','18/02/2011','21/02/2011'),(6,5,'Status','Application Pending Approval','Active'),(7,6,'Status','Application Pending Approval','Active'),(8,7,'lastLogin','21/02/2011','22/01/2010'),(9,8,'Status','Application Pending Approval','Active'),(10,9,'Status','Application Pending Approval','Active'),(11,10,'Status','Application Pending Approval','Active'),(12,11,'Status','Application Pending Approval','Active'),(13,12,'Frequency Of Installments','Week(s)','Month(s)'),(14,13,'Status','Application Pending Approval','Active'),(15,14,'Product Instance Name','EmergencyLoan','ClientEmergencyLoan'),(16,15,'Status','Application Pending Approval','Application Approved'),(17,16,'Status','Application Pending Approval','Application Approved'),(18,17,'lastLogin','22/01/2010','21/02/2011'),(19,18,'Status','Application Pending Approval','Application Approved'),(20,19,'Status','Application Pending Approval','Active'),(21,20,'Status','Application Pending Approval','Active'),(22,21,'Status','Application Pending Approval','Application Approved'),(23,22,'lastLogin','21/02/2011','22/02/2010'),(24,23,'lastLogin','22/02/2010','22/02/2011'),(25,24,'Fee Types','-','oneTimeFee'),(26,25,'Status','Application Pending Approval','Active'),(27,26,'Status','Application Pending Approval','Active'),(28,27,'Status','Application Pending Approval','Active'),(29,28,'Status','Application Pending Approval','Active'),(30,29,'Name','-','Default Group'),(31,29,'groupFlag','0','1'),(32,30,'groupFlag','0','1'),(33,30,'Name','-','Default Group'),(34,31,'Name','-','Default Group'),(35,31,'groupFlag','0','1'),(36,32,'Fee Types','-','disbursementFee'),(37,33,'Status','Application Pending Approval','Application Approved'),(38,34,'lastLogin','22/02/2011','23/02/2011'),(39,35,'lastLogin','23/02/2011','04/03/2011'),(40,36,'Min  Rate','24.0','1.0'),(41,36,'Max  Rate','24.0','99.0');
 /*!40000 ALTER TABLE `change_log_detail` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2256,21 +2256,7 @@ CREATE TABLE `customer` (
 
 LOCK TABLES `customer` WRITE;
 /*!40000 ALTER TABLE `customer` DISABLE KEYS */;
-INSERT INTO `customer` VALUES
-    (1,3,'0002-000000001',2,NULL,13,2,'Default Center',NULL,NULL,NULL,NULL,'',NULL,NULL,0,NULL,NULL,'2011-02-18',NULL,'1.1',3,NULL,NULL,'2011-02-18',NULL,'2011-02-18',1,NULL,0,'CENTER',8),
-    (2,1,'0002-000000002',2,2,3,2,'Client - Mary Monthly','Client - Mary','Monthly','',NULL,'','2000-01-01',0,0,NULL,NULL,'2011-02-21','2011-02-21','1.2',0,NULL,NULL,'2011-02-21','','2011-02-21',1,1,0,'CLIENT',3),
-    (3,1,'0002-000000003',2,2,3,2,'Stu1233266063395 Client1233266063395','Stu1233266063395','Client1233266063395','',NULL,'','2000-01-01',0,0,NULL,NULL,'2011-02-21','2011-02-21','1.3',0,NULL,NULL,'2011-02-21','','2011-02-21',1,1,0,'CLIENT',3),
-    (4,2,'0002-000000004',2,2,9,2,'group1',NULL,NULL,NULL,NULL,'',NULL,NULL,0,NULL,1,'2010-01-22','2010-01-22','1.1.1',1,NULL,NULL,'2010-01-22',NULL,'2010-01-22',1,1,0,'GROUP',5),
-    (5,1,'0002-000000005',2,2,3,2,'client1 lastname','client1','lastname','',NULL,'','1990-01-01',1,0,NULL,4,'2010-01-22','2010-01-22','1.1.1.1',0,NULL,NULL,'2010-01-22','','2010-01-22',1,1,0,'CLIENT',4),
-    (6,1,'0002-000000006',2,2,3,2,'Stu1233171716380 Client1233171716380','Stu1233171716380','Client1233171716380','',NULL,'','1990-01-01',0,0,NULL,NULL,'2010-01-22','2010-01-22','1.4',0,NULL,NULL,'2010-01-22','','2010-01-22',1,1,0,'CLIENT',3),
-    (7,1,'0002-000000007',2,2,3,2,'Client - Mary Monthly1','Client - Mary','Monthly1','',NULL,'','1990-01-01',0,0,NULL,NULL,'2010-01-22','2010-01-22','1.5',0,NULL,NULL,'2010-01-22','','2010-01-22',1,1,0,'CLIENT',3),
-    (8,1,'0002-000000008',2,2,3,2,'Client - Mia Monthly3rdFriday','Client - Mia','Monthly3rdFriday','',NULL,'','1990-01-01',0,0,NULL,NULL,'2010-01-22','2010-01-22','1.6',0,NULL,NULL,'2010-01-22','','2010-01-22',1,1,0,'CLIENT',3),
-    (9,2,'0002-000000009',2,2,9,2,'groupWithoutLoan',NULL,NULL,NULL,NULL,'',NULL,NULL,0,NULL,1,'2011-02-18','2011-02-18','1.1.2',1,NULL,NULL,'2011-02-18',NULL,'2011-02-18',1,1,0,'GROUP',5),
-    (10,1,'0002-000000010',2,2,3,2,'ClientWithLoan 20110221','ClientWithLoan','20110221','',NULL,'','1985-04-04',1,0,NULL,9,'2011-02-18','2011-02-18','1.1.2.1',0,NULL,NULL,'2011-02-18','','2011-02-18',1,1,0,'CLIENT',4),
-    (11,2,'0002-000000011',2,2,9,2,'Default Group',NULL,NULL,NULL,NULL,'',NULL,NULL,0,NULL,1,'2011-02-22','2011-02-22','1.1.3',3,NULL,NULL,'2011-02-22',NULL,'2011-02-22',1,1,0,'GROUP',6),
-    (12,1,'0002-000000012',2,2,3,2,'Stu1233266299995 Client1233266299995','Stu1233266299995','Client1233266299995','',NULL,'','1990-01-01',1,0,NULL,11,'2011-02-22','2011-02-22','1.1.3.1',0,NULL,NULL,'2011-02-22','','2011-02-22',1,1,0,'CLIENT',4),
-    (13,1,'0002-000000013',2,2,3,2,'Stu1233266309851 Client1233266309851','Stu1233266309851','Client1233266309851','',NULL,'','1990-01-01',1,0,NULL,11,'2011-02-22','2011-02-22','1.1.3.2',0,NULL,NULL,'2011-02-22','','2011-02-22',1,1,0,'CLIENT',4),
-    (14,1,'0002-000000014',2,2,3,2,'Stu1233266319760 Client1233266319760','Stu1233266319760','Client1233266319760','',NULL,'','1990-01-01',1,0,NULL,11,'2011-02-22','2011-02-22','1.1.3.3',0,NULL,NULL,'2011-02-22','','2011-02-22',1,1,0,'CLIENT',4);
+INSERT INTO `customer` VALUES (1,3,'0002-000000001',2,NULL,13,2,'Default Center',NULL,NULL,NULL,NULL,'',NULL,NULL,0,NULL,NULL,'2011-02-18',NULL,'1.1',3,NULL,NULL,'2011-02-18',NULL,'2011-02-18',1,NULL,0,'CENTER',8),(2,1,'0002-000000002',2,2,3,2,'Client - Mary Monthly','Client - Mary','Monthly','',NULL,'','2000-01-01',0,0,NULL,NULL,'2011-02-21','2011-02-21','1.2',0,NULL,NULL,'2011-02-21','','2011-02-21',1,1,0,'CLIENT',3),(3,1,'0002-000000003',2,2,3,2,'Stu1233266063395 Client1233266063395','Stu1233266063395','Client1233266063395','',NULL,'','2000-01-01',0,0,NULL,NULL,'2011-02-21','2011-02-21','1.3',0,NULL,NULL,'2011-02-21','','2011-02-21',1,1,0,'CLIENT',3),(4,2,'0002-000000004',2,2,9,2,'group1',NULL,NULL,NULL,NULL,'',NULL,NULL,0,NULL,1,'2010-01-22','2010-01-22','1.1.1',1,NULL,NULL,'2010-01-22',NULL,'2010-01-22',1,1,0,'GROUP',5),(5,1,'0002-000000005',2,2,3,2,'client1 lastname','client1','lastname','',NULL,'','1990-01-01',1,0,NULL,4,'2010-01-22','2010-01-22','1.1.1.1',0,NULL,NULL,'2010-01-22','','2010-01-22',1,1,0,'CLIENT',4),(6,1,'0002-000000006',2,2,3,2,'Stu1233171716380 Client1233171716380','Stu1233171716380','Client1233171716380','',NULL,'','1990-01-01',0,0,NULL,NULL,'2010-01-22','2010-01-22','1.4',0,NULL,NULL,'2010-01-22','','2010-01-22',1,1,0,'CLIENT',3),(7,1,'0002-000000007',2,2,3,2,'Client - Mary Monthly1','Client - Mary','Monthly1','',NULL,'','1990-01-01',0,0,NULL,NULL,'2010-01-22','2010-01-22','1.5',0,NULL,NULL,'2010-01-22','','2010-01-22',1,1,0,'CLIENT',3),(8,1,'0002-000000008',2,2,3,2,'Client - Mia Monthly3rdFriday','Client - Mia','Monthly3rdFriday','',NULL,'','1990-01-01',0,0,NULL,NULL,'2010-01-22','2010-01-22','1.6',0,NULL,NULL,'2010-01-22','','2010-01-22',1,1,0,'CLIENT',3),(9,2,'0002-000000009',2,2,9,2,'groupWithoutLoan',NULL,NULL,NULL,NULL,'',NULL,NULL,0,NULL,1,'2011-02-18','2011-02-18','1.1.2',1,NULL,NULL,'2011-02-18',NULL,'2011-02-18',1,1,0,'GROUP',5),(10,1,'0002-000000010',2,2,3,2,'ClientWithLoan 20110221','ClientWithLoan','20110221','',NULL,'','1985-04-04',1,0,NULL,9,'2011-02-18','2011-02-18','1.1.2.1',0,NULL,NULL,'2011-02-18','','2011-02-18',1,1,0,'CLIENT',4),(11,2,'0002-000000011',2,2,9,2,'Default Group',NULL,NULL,NULL,NULL,'',NULL,NULL,0,NULL,1,'2011-02-22','2011-02-22','1.1.3',3,NULL,NULL,'2011-02-22',NULL,'2011-02-22',1,1,0,'GROUP',6),(12,1,'0002-000000012',2,2,3,2,'Stu1233266299995 Client1233266299995','Stu1233266299995','Client1233266299995','',NULL,'','1990-01-01',1,0,NULL,11,'2011-02-22','2011-02-22','1.1.3.1',0,NULL,NULL,'2011-02-22','','2011-02-22',1,1,0,'CLIENT',4),(13,1,'0002-000000013',2,2,3,2,'Stu1233266309851 Client1233266309851','Stu1233266309851','Client1233266309851','',NULL,'','1990-01-01',1,0,NULL,11,'2011-02-22','2011-02-22','1.1.3.2',0,NULL,NULL,'2011-02-22','','2011-02-22',1,1,0,'CLIENT',4),(14,1,'0002-000000014',2,2,3,2,'Stu1233266319760 Client1233266319760','Stu1233266319760','Client1233266319760','',NULL,'','1990-01-01',1,0,NULL,11,'2011-02-22','2011-02-22','1.1.3.3',0,NULL,NULL,'2011-02-22','','2011-02-22',1,1,0,'CLIENT',4);
 /*!40000 ALTER TABLE `customer` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -3308,7 +3294,7 @@ CREATE TABLE `fee_frequency` (
   CONSTRAINT `fee_frequency_ibfk_2` FOREIGN KEY (`fee_frequencytype_id`) REFERENCES `fee_frequency_type` (`fee_frequency_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fee_frequency_ibfk_3` FOREIGN KEY (`frequency_payment_id`) REFERENCES `fee_payment` (`fee_payment_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fee_frequency_ibfk_4` FOREIGN KEY (`frequency_meeting_id`) REFERENCES `meeting` (`meeting_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3317,7 +3303,7 @@ CREATE TABLE `fee_frequency` (
 
 LOCK TABLES `fee_frequency` WRITE;
 /*!40000 ALTER TABLE `fee_frequency` DISABLE KEYS */;
-INSERT INTO `fee_frequency` VALUES (1,1,2,1,NULL),(2,2,2,2,NULL);
+INSERT INTO `fee_frequency` VALUES (1,1,2,1,NULL),(2,2,2,2,NULL),(3,3,1,NULL,24),(4,4,2,1,NULL),(5,5,2,1,NULL);
 /*!40000 ALTER TABLE `fee_frequency` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -3595,7 +3581,7 @@ CREATE TABLE `fees` (
   CONSTRAINT `fees_ibfk_7` FOREIGN KEY (`formula_id`) REFERENCES `fee_formula_master` (`formulaid`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fees_ibfk_8` FOREIGN KEY (`rate_or_amount_currency_id`) REFERENCES `currency` (`currency_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fees_ibfk_9` FOREIGN KEY (`fee_amount_currency_id`) REFERENCES `currency` (`currency_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3604,7 +3590,7 @@ CREATE TABLE `fees` (
 
 LOCK TABLES `fees` WRITE;
 /*!40000 ALTER TABLE `fees` DISABLE KEYS */;
-INSERT INTO `fees` VALUES (1,NULL,'oneTimeFee',NULL,1,50,1,5,NULL,NULL,NULL,'2011-02-22',1,NULL,NULL,0,NULL,NULL,'10.0000',2,NULL,0,'AMOUNT'),(2,NULL,'disbursementFee',NULL,1,50,1,5,NULL,NULL,NULL,'2011-02-22',1,NULL,NULL,0,NULL,NULL,'10.0000',2,NULL,0,'AMOUNT');
+INSERT INTO `fees` VALUES (1,NULL,'oneTimeFee',NULL,1,50,1,5,NULL,NULL,NULL,'2011-02-22',1,NULL,NULL,0,NULL,NULL,'10.0000',2,NULL,0,'AMOUNT'),(2,NULL,'disbursementFee',NULL,1,50,1,5,NULL,NULL,NULL,'2011-02-22',1,NULL,NULL,0,NULL,NULL,'10.0000',2,NULL,0,'AMOUNT'),(3,NULL,'loanWeeklyFee',NULL,1,50,1,5,NULL,NULL,NULL,'2011-03-04',1,NULL,NULL,0,NULL,NULL,'100.0000',2,NULL,0,'AMOUNT'),(4,NULL,'fixedFeePerAmountAndInterest',NULL,1,50,1,5,NULL,NULL,NULL,'2011-03-04',1,NULL,NULL,0,2,NULL,NULL,NULL,'100.00000',0,'RATE'),(5,NULL,'fixedFeePerInterest',NULL,1,50,1,5,NULL,NULL,NULL,'2011-03-04',1,NULL,NULL,0,3,NULL,NULL,NULL,'20.00000',0,'RATE');
 /*!40000 ALTER TABLE `fees` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -4338,7 +4324,7 @@ CREATE TABLE `loan_amount_same_for_all_loan` (
   PRIMARY KEY (`loan_amount_same_for_all_loan_id`),
   KEY `prd_offering_id` (`prd_offering_id`),
   CONSTRAINT `loan_amount_same_for_all_loan_ibfk_1` FOREIGN KEY (`prd_offering_id`) REFERENCES `loan_offering` (`prd_offering_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4347,7 +4333,7 @@ CREATE TABLE `loan_amount_same_for_all_loan` (
 
 LOCK TABLES `loan_amount_same_for_all_loan` WRITE;
 /*!40000 ALTER TABLE `loan_amount_same_for_all_loan` DISABLE KEYS */;
-INSERT INTO `loan_amount_same_for_all_loan` VALUES (2,3,'1000.0000','100000.0000','100000.0000'),(4,4,'1000.0000','100000.0000','100000.0000'),(6,5,'1000.0000','10000.0000','1000.0000'),(7,6,'1000.0000','10000.0000','1000.0000'),(11,7,'100.0000','1000000.0000','1000.0000'),(12,2,'1000.0000','100000.0000','100000.0000');
+INSERT INTO `loan_amount_same_for_all_loan` VALUES (2,3,'1000.0000','100000.0000','100000.0000'),(4,4,'1000.0000','100000.0000','100000.0000'),(6,5,'1000.0000','10000.0000','1000.0000'),(7,6,'1000.0000','10000.0000','1000.0000'),(12,2,'1000.0000','100000.0000','100000.0000'),(13,7,'100.0000','1000000.0000','1000.0000');
 /*!40000 ALTER TABLE `loan_amount_same_for_all_loan` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -4579,7 +4565,7 @@ CREATE TABLE `loan_offering` (
 
 LOCK TABLES `loan_offering` WRITE;
 /*!40000 ALTER TABLE `loan_offering` DISABLE KEYS */;
-INSERT INTO `loan_offering` VALUES (2,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'24.0000000000','24.0000000000','24.0000000000',NULL,NULL,NULL,NULL,0,0,0,NULL,0,20,40,NULL,0,0,NULL,0,NULL),(3,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'24.0000000000','24.0000000000','24.0000000000',NULL,NULL,NULL,NULL,0,0,0,NULL,0,15,40,NULL,0,0,NULL,0,NULL),(4,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'24.0000000000','24.0000000000','24.0000000000',NULL,NULL,NULL,NULL,0,0,0,NULL,0,12,40,NULL,0,0,NULL,0,NULL),(5,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'0.0000000000','0.0000000000','0.0000000000',NULL,NULL,NULL,NULL,0,0,0,NULL,0,14,42,NULL,0,0,NULL,0,NULL),(6,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'0.0000000000','0.0000000000','0.0000000000',NULL,NULL,NULL,NULL,0,0,0,NULL,0,14,40,NULL,0,0,NULL,0,NULL),(7,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'24.0000000000','24.0000000000','24.0000000000',NULL,NULL,NULL,NULL,0,0,0,NULL,0,20,40,NULL,0,0,NULL,0,NULL);
+INSERT INTO `loan_offering` VALUES (2,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'24.0000000000','24.0000000000','24.0000000000',NULL,NULL,NULL,NULL,0,0,0,NULL,0,20,40,NULL,0,0,NULL,0,NULL),(3,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'24.0000000000','24.0000000000','24.0000000000',NULL,NULL,NULL,NULL,0,0,0,NULL,0,15,40,NULL,0,0,NULL,0,NULL),(4,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'24.0000000000','24.0000000000','24.0000000000',NULL,NULL,NULL,NULL,0,0,0,NULL,0,12,40,NULL,0,0,NULL,0,NULL),(5,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'0.0000000000','0.0000000000','0.0000000000',NULL,NULL,NULL,NULL,0,0,0,NULL,0,14,42,NULL,0,0,NULL,0,NULL),(6,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'0.0000000000','0.0000000000','0.0000000000',NULL,NULL,NULL,NULL,0,0,0,NULL,0,14,40,NULL,0,0,NULL,0,NULL),(7,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'99.0000000000','1.0000000000','24.0000000000',NULL,NULL,NULL,NULL,0,0,0,NULL,0,20,40,NULL,0,0,NULL,0,NULL);
 /*!40000 ALTER TABLE `loan_offering` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -5075,7 +5061,7 @@ CREATE TABLE `meeting` (
   PRIMARY KEY (`meeting_id`),
   KEY `meeting_type_id` (`meeting_type_id`),
   CONSTRAINT `meeting_ibfk_1` FOREIGN KEY (`meeting_type_id`) REFERENCES `meeting_type` (`meeting_type_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5084,7 +5070,7 @@ CREATE TABLE `meeting` (
 
 LOCK TABLES `meeting` WRITE;
 /*!40000 ALTER TABLE `meeting` DISABLE KEYS */;
-INSERT INTO `meeting` VALUES (1,4,'test','2011-02-18',NULL,NULL,NULL,6),(2,3,'meetingPlace','2011-02-18',NULL,NULL,NULL,0),(3,2,'meetingPlace','2011-02-18',NULL,NULL,NULL,0),(4,4,'test','2011-02-21',NULL,NULL,NULL,1),(5,4,'test','2011-02-21',NULL,NULL,NULL,1),(6,1,'meetingPlace','2010-01-22',NULL,NULL,NULL,0),(7,4,'test','2010-01-22',NULL,NULL,NULL,1),(8,1,'meetingPlace','2010-01-22',NULL,NULL,NULL,0),(9,4,'test','2010-01-22',NULL,NULL,NULL,1),(10,1,'meetingPlace','2010-01-22',NULL,NULL,NULL,0),(11,1,'meetingPlace','2010-01-22',NULL,NULL,NULL,0),(12,4,'test','2010-01-22',NULL,NULL,NULL,1),(13,1,'meetingPlace','2011-02-21',NULL,NULL,NULL,0),(14,1,'meetingPlace','2011-02-21',NULL,NULL,NULL,0),(15,4,'test','2011-02-21',NULL,NULL,NULL,1),(16,4,'test','2011-02-25',NULL,NULL,NULL,0),(17,4,'test','2010-02-22',NULL,NULL,NULL,1),(18,4,'test','2011-02-18',NULL,NULL,NULL,0),(19,1,'meetingPlace','2011-02-22',NULL,NULL,NULL,0),(20,4,'test','2011-02-22',NULL,NULL,NULL,1),(21,4,'test','2011-02-22',NULL,NULL,NULL,1),(22,4,'test','2011-02-22',NULL,NULL,NULL,1),(23,4,'test','2011-02-28',NULL,NULL,NULL,0);
+INSERT INTO `meeting` VALUES (1,4,'test','2011-02-18',NULL,NULL,NULL,6),(2,3,'meetingPlace','2011-02-18',NULL,NULL,NULL,0),(3,2,'meetingPlace','2011-02-18',NULL,NULL,NULL,0),(4,4,'test','2011-02-21',NULL,NULL,NULL,1),(5,4,'test','2011-02-21',NULL,NULL,NULL,1),(6,1,'meetingPlace','2010-01-22',NULL,NULL,NULL,0),(7,4,'test','2010-01-22',NULL,NULL,NULL,1),(8,1,'meetingPlace','2010-01-22',NULL,NULL,NULL,0),(9,4,'test','2010-01-22',NULL,NULL,NULL,1),(10,1,'meetingPlace','2010-01-22',NULL,NULL,NULL,0),(11,1,'meetingPlace','2010-01-22',NULL,NULL,NULL,0),(12,4,'test','2010-01-22',NULL,NULL,NULL,1),(13,1,'meetingPlace','2011-02-21',NULL,NULL,NULL,0),(14,1,'meetingPlace','2011-02-21',NULL,NULL,NULL,0),(15,4,'test','2011-02-21',NULL,NULL,NULL,1),(16,4,'test','2011-02-25',NULL,NULL,NULL,0),(17,4,'test','2010-02-22',NULL,NULL,NULL,1),(18,4,'test','2011-02-18',NULL,NULL,NULL,0),(19,1,'meetingPlace','2011-02-22',NULL,NULL,NULL,0),(20,4,'test','2011-02-22',NULL,NULL,NULL,1),(21,4,'test','2011-02-22',NULL,NULL,NULL,1),(22,4,'test','2011-02-22',NULL,NULL,NULL,1),(23,4,'test','2011-02-28',NULL,NULL,NULL,0),(24,5,'meetingPlace','2011-03-04',NULL,NULL,NULL,0);
 /*!40000 ALTER TABLE `meeting` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -5245,7 +5231,7 @@ CREATE TABLE `no_of_install_same_for_all_loan` (
   PRIMARY KEY (`no_of_install_same_for_all_loan_id`),
   KEY `prd_offering_id` (`prd_offering_id`),
   CONSTRAINT `no_of_install_same_for_all_loan_ibfk_1` FOREIGN KEY (`prd_offering_id`) REFERENCES `loan_offering` (`prd_offering_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5254,7 +5240,7 @@ CREATE TABLE `no_of_install_same_for_all_loan` (
 
 LOCK TABLES `no_of_install_same_for_all_loan` WRITE;
 /*!40000 ALTER TABLE `no_of_install_same_for_all_loan` DISABLE KEYS */;
-INSERT INTO `no_of_install_same_for_all_loan` VALUES (2,3,'1.0000','10.0000','10.0000'),(4,4,'1.0000','10.0000','10.0000'),(6,5,'1.0000','10.0000','10.0000'),(7,6,'1.0000','10.0000','10.0000'),(11,7,'2.0000','4.0000','4.0000'),(12,2,'1.0000','10.0000','10.0000');
+INSERT INTO `no_of_install_same_for_all_loan` VALUES (2,3,'1.0000','10.0000','10.0000'),(4,4,'1.0000','10.0000','10.0000'),(6,5,'1.0000','10.0000','10.0000'),(7,6,'1.0000','10.0000','10.0000'),(12,2,'1.0000','10.0000','10.0000'),(13,7,'1.0000','100.0000','4.0000');
 /*!40000 ALTER TABLE `no_of_install_same_for_all_loan` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -5817,7 +5803,7 @@ CREATE TABLE `personnel` (
 
 LOCK TABLES `personnel` WRITE;
 /*!40000 ALTER TABLE `personnel` DISABLE KEYS */;
-INSERT INTO `personnel` VALUES (1,2,'1',1,1,1,1,NULL,1,'\"dÔøΩÔøΩ#0ÔøΩaÔøΩMÔøΩ2ÔøΩNjÔøΩÔøΩÔøΩÔøΩdÔøΩQS8ÔøΩ','mifos',NULL,1,'mifos',1,NULL,1,'2011-02-23','2011-02-23',0,0,7),(2,1,'0002-00002',2,NULL,1,1,NULL,NULL,'ÔøΩ;}ÔøΩÔøΩÔøΩ«îÔøΩ1d&ÔøΩDÔøΩÔøΩÔøΩÔøΩ1sIÔøΩ@}ÔøΩ','loanofficer','',0,'loan officer',1,'2011-02-18',NULL,NULL,NULL,0,0,1);
+INSERT INTO `personnel` VALUES (1,2,'1',1,1,1,1,NULL,1,'\"då§#0•añMæ2ıNj§ùÚ d≤QS8Ÿ','mifos',NULL,1,'mifos',1,NULL,1,'2011-03-04','2011-03-04',0,0,8),(2,1,'0002-00002',2,NULL,1,1,NULL,NULL,'ÔøΩ;}ÔøΩÔøΩÔøΩ«îÔøΩ1d&ÔøΩDÔøΩÔøΩÔøΩÔøΩ1sIÔøΩ@}ÔøΩ','loanofficer','',0,'loan officer',1,'2011-02-18',NULL,NULL,NULL,0,0,1);
 /*!40000 ALTER TABLE `personnel` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -6396,7 +6382,7 @@ CREATE TABLE `prd_offering` (
 
 LOCK TABLES `prd_offering` WRITE;
 /*!40000 ALTER TABLE `prd_offering` DISABLE KEYS */;
-INSERT INTO `prd_offering` VALUES (1,3,'1-001',2,2,NULL,'2011-02-18',NULL,NULL,'center_savings1','s1',2,'','2011-02-18',1,NULL,NULL,0,NULL,2),(2,1,'1-002',1,1,1,'2010-01-22',NULL,NULL,'WeeklyFlatLoanWithOneTimeFees','flwf',1,'','2010-01-22',1,'2011-02-22',1,1,NULL,2),(3,1,'1-003',1,1,1,'2010-01-22',NULL,NULL,'MonthlyClientFlatLoan1stOfMonth','mcf1',1,'','2010-01-22',1,NULL,NULL,0,NULL,2),(4,1,'1-004',1,1,1,'2010-01-22',NULL,NULL,'MonthlyClientFlatLoanThirdFridayOfMonth','mcf3',1,'','2010-01-22',1,'2010-01-22',1,1,NULL,2),(5,1,'1-005',1,1,1,'2011-02-21',NULL,NULL,'ClientEmergencyLoan','EL',1,'','2011-02-21',1,'2011-02-21',1,1,NULL,2),(6,2,'1-006',1,1,1,'2011-02-21',NULL,NULL,'GroupEmergencyLoan','GEL',1,'','2011-02-21',1,NULL,NULL,0,NULL,2),(7,2,'1-007',1,1,1,'2011-02-22',NULL,NULL,'WeeklyGroupFlatLoanWithOnetimeFee','wgff',1,'','2011-02-22',1,'2011-02-22',1,3,NULL,2);
+INSERT INTO `prd_offering` VALUES (1,3,'1-001',2,2,NULL,'2011-02-18',NULL,NULL,'center_savings1','s1',2,'','2011-02-18',1,NULL,NULL,0,NULL,2),(2,1,'1-002',1,1,1,'2010-01-22',NULL,NULL,'WeeklyFlatLoanWithOneTimeFees','flwf',1,'','2010-01-22',1,'2011-02-22',1,1,NULL,2),(3,1,'1-003',1,1,1,'2010-01-22',NULL,NULL,'MonthlyClientFlatLoan1stOfMonth','mcf1',1,'','2010-01-22',1,NULL,NULL,0,NULL,2),(4,1,'1-004',1,1,1,'2010-01-22',NULL,NULL,'MonthlyClientFlatLoanThirdFridayOfMonth','mcf3',1,'','2010-01-22',1,'2010-01-22',1,1,NULL,2),(5,1,'1-005',1,1,1,'2011-02-21',NULL,NULL,'ClientEmergencyLoan','EL',1,'','2011-02-21',1,'2011-02-21',1,1,NULL,2),(6,2,'1-006',1,1,1,'2011-02-21',NULL,NULL,'GroupEmergencyLoan','GEL',1,'','2011-02-21',1,NULL,NULL,0,NULL,2),(7,2,'1-007',1,1,1,'2011-02-22',NULL,NULL,'WeeklyGroupFlatLoanWithOnetimeFee','wgff',1,'','2011-02-22',1,'2011-03-04',1,4,NULL,2);
 /*!40000 ALTER TABLE `prd_offering` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -6416,7 +6402,7 @@ CREATE TABLE `prd_offering_fees` (
   KEY `prd_offering_fee_idx` (`prd_offering_id`,`fee_id`),
   CONSTRAINT `prd_offering_fees_ibfk_1` FOREIGN KEY (`fee_id`) REFERENCES `fees` (`fee_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `prd_offering_fees_ibfk_2` FOREIGN KEY (`prd_offering_id`) REFERENCES `prd_offering` (`prd_offering_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6425,7 +6411,7 @@ CREATE TABLE `prd_offering_fees` (
 
 LOCK TABLES `prd_offering_fees` WRITE;
 /*!40000 ALTER TABLE `prd_offering_fees` DISABLE KEYS */;
-INSERT INTO `prd_offering_fees` VALUES (4,2,2),(3,1,7);
+INSERT INTO `prd_offering_fees` VALUES (4,2,2),(5,1,7);
 /*!40000 ALTER TABLE `prd_offering_fees` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -6940,7 +6926,7 @@ CREATE TABLE `recur_on_day` (
   PRIMARY KEY (`recur_on_day_id`),
   KEY `details_id` (`details_id`),
   CONSTRAINT `recur_on_day_ibfk_1` FOREIGN KEY (`details_id`) REFERENCES `recurrence_detail` (`details_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6949,7 +6935,7 @@ CREATE TABLE `recur_on_day` (
 
 LOCK TABLES `recur_on_day` WRITE;
 /*!40000 ALTER TABLE `recur_on_day` DISABLE KEYS */;
-INSERT INTO `recur_on_day` VALUES (1,1,6,NULL,NULL,6),(2,2,NULL,NULL,1,0),(3,3,NULL,NULL,NULL,0),(4,4,NULL,NULL,1,1),(5,5,2,NULL,NULL,1),(6,6,2,NULL,NULL,0),(7,7,6,NULL,NULL,1),(8,8,NULL,NULL,1,0),(9,9,NULL,NULL,1,1),(10,10,2,NULL,NULL,0),(11,11,NULL,NULL,1,0),(12,12,6,3,NULL,1),(13,13,2,NULL,NULL,0),(14,14,2,NULL,NULL,0),(15,15,6,NULL,NULL,0),(16,16,6,NULL,NULL,0),(17,17,6,NULL,NULL,0),(18,18,6,NULL,NULL,0),(19,19,2,NULL,NULL,0),(20,20,3,NULL,NULL,1),(21,21,3,NULL,NULL,1),(22,22,3,NULL,NULL,1),(23,23,2,NULL,NULL,0);
+INSERT INTO `recur_on_day` VALUES (1,1,6,NULL,NULL,6),(2,2,NULL,NULL,1,0),(3,3,NULL,NULL,NULL,0),(4,4,NULL,NULL,1,1),(5,5,2,NULL,NULL,1),(6,6,2,NULL,NULL,0),(7,7,6,NULL,NULL,1),(8,8,NULL,NULL,1,0),(9,9,NULL,NULL,1,1),(10,10,2,NULL,NULL,0),(11,11,NULL,NULL,1,0),(12,12,6,3,NULL,1),(13,13,2,NULL,NULL,0),(14,14,2,NULL,NULL,0),(15,15,6,NULL,NULL,0),(16,16,6,NULL,NULL,0),(17,17,6,NULL,NULL,0),(18,18,6,NULL,NULL,0),(19,19,2,NULL,NULL,0),(20,20,3,NULL,NULL,1),(21,21,3,NULL,NULL,1),(22,22,3,NULL,NULL,1),(23,23,2,NULL,NULL,0),(24,24,2,NULL,NULL,0);
 /*!40000 ALTER TABLE `recur_on_day` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -6971,7 +6957,7 @@ CREATE TABLE `recurrence_detail` (
   KEY `meeting_id` (`meeting_id`),
   CONSTRAINT `recurrence_detail_ibfk_1` FOREIGN KEY (`recurrence_id`) REFERENCES `recurrence_type` (`recurrence_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `recurrence_detail_ibfk_2` FOREIGN KEY (`meeting_id`) REFERENCES `meeting` (`meeting_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6980,7 +6966,7 @@ CREATE TABLE `recurrence_detail` (
 
 LOCK TABLES `recurrence_detail` WRITE;
 /*!40000 ALTER TABLE `recurrence_detail` DISABLE KEYS */;
-INSERT INTO `recurrence_detail` VALUES (1,1,1,1,6),(2,2,2,1,0),(3,3,3,7,0),(4,4,2,1,1),(5,5,1,1,1),(6,6,1,1,0),(7,7,1,1,1),(8,8,2,1,0),(9,9,2,1,1),(10,10,1,1,0),(11,11,2,1,0),(12,12,2,1,1),(13,13,1,1,0),(14,14,1,1,0),(15,15,1,1,0),(16,16,1,1,0),(17,17,1,1,0),(18,18,1,1,0),(19,19,1,1,0),(20,20,1,1,1),(21,21,1,1,1),(22,22,1,1,1),(23,23,1,1,0);
+INSERT INTO `recurrence_detail` VALUES (1,1,1,1,6),(2,2,2,1,0),(3,3,3,7,0),(4,4,2,1,1),(5,5,1,1,1),(6,6,1,1,0),(7,7,1,1,1),(8,8,2,1,0),(9,9,2,1,1),(10,10,1,1,0),(11,11,2,1,0),(12,12,2,1,1),(13,13,1,1,0),(14,14,1,1,0),(15,15,1,1,0),(16,16,1,1,0),(17,17,1,1,0),(18,18,1,1,0),(19,19,1,1,0),(20,20,1,1,1),(21,21,1,1,1),(22,22,1,1,1),(23,23,1,1,0),(24,24,1,1,0);
 /*!40000 ALTER TABLE `recurrence_detail` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -7992,4 +7978,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2011-02-23 12:01:44
+-- Dump completed on 2011-03-04 13:38:43

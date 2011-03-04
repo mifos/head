@@ -44,7 +44,7 @@ public class RedoLoanDisbursalEntryPage extends MifosPage {
 
     public void verifyAllFormErrors() {
         verifyPage();
-        Assert.assertTrue(selenium.isTextPresent("Please specify valid Amount. Amount should be a value between 100 and 300,000, inclusive."));
+        Assert.assertTrue(selenium.isTextPresent("Please specify valid Amount. Amount should be a value between 100 and 1,000,000, inclusive."));
         Assert.assertTrue(selenium.isTextPresent("Please specify valid Interest rate. Interest rate should be a value between 1 and 99, inclusive."));
         Assert.assertTrue(selenium.isTextPresent("Please specify valid No. of installments. No. of installments should be a value between 1 and 100, inclusive."));
         Assert.assertTrue(selenium.isTextPresent("Please specify a valid disbursal date."));
