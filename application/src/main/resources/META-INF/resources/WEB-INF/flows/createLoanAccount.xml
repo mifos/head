@@ -78,7 +78,7 @@
     
     <decision-state id="checkIfCompareForCashFlowIsEnabledForLoanCreation">
         <on-entry>
-            <evaluate expression="loanAccountController.isCompareForCashFlowEnabled()" result="flowScope.cashFlowEnabled" />
+            <evaluate expression="loanAccountController.isCompareForCashFlowEnabled(flowScope.productId)" result="flowScope.cashFlowEnabled" />
         </on-entry>
         <if test="flowScope.cashFlowEnabled" then="captureCashFlowDetails" else="calculateAndReviewLoanSchedule"/>
     </decision-state>
@@ -105,7 +105,7 @@
     	<on-entry>
 	    	<evaluate expression="loanAccountController.retrieveLoanSchedule(flowScope.customerId, flowScope.productId, loanAccountFormBean)" result="flowScope.loanScheduleReferenceData"/>
     	    <evaluate expression="cashFlowController.retrieveMonthlyCashflowDetails(flowScope.cashFlow, flowScope.loanScheduleReferenceData.disbursementDate, flowScope.loanScheduleReferenceData.loanAmount)" result="flowScope.monthlyCashFlowDetails"/>
-            <evaluate expression="loanAccountController.retrieveCashflowSummaryDetails(cashFlowSummaryFormBean, flowScope.monthlyCashFlowDetails, flowScope.loanScheduleReferenceData, flowScope.productId)" result="flowScope.cashflowSummaryDetails"/>
+            <evaluate expression="loanAccountController.retrieveCashflowSummaryDetails(cashFlowSummaryFormBean, flowScope.cashFlowSettings, flowScope.monthlyCashFlowDetails, flowScope.loanScheduleReferenceData, flowScope.productId)" result="flowScope.cashflowSummaryDetails"/>
         </on-entry>
         <transition on="preview" to="previewStep" validate="true" />
         <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/>
@@ -116,12 +116,14 @@
         <transition on="editQuestionGroups" to="answerQuestionGroupStep" validate="false" bind="false"/>
         
         <transition on="saveForLater" to="confirmation">
-        	<evaluate expression="loanAccountController.saveLoanApplicationForLater(loanAccountFormBean, loanAccountQuestionGroupFormBean)" result="flowScope.loanCreationResultDto" />
+        	<evaluate expression="cashFlowController.transformCashFlow(flowScope.cashFlow)" result="flowScope.loanAccountCashFlow" />
+        	<evaluate expression="loanAccountController.saveLoanApplicationForLater(loanAccountFormBean, loanAccountQuestionGroupFormBean, flowScope.loanAccountCashFlow)" result="flowScope.loanCreationResultDto" />
         </transition>
         
         <transition on="submit" to="confirmation">
         	<set name="flowScope.accountStateId" value="requestParameters.accountState" type="int"/>
-        	<evaluate expression="loanAccountController.submitLoanApplication(loanAccountFormBean, loanAccountQuestionGroupFormBean)" result="flowScope.loanCreationResultDto" />
+        	<evaluate expression="cashFlowController.transformCashFlow(flowScope.cashFlow)" result="flowScope.loanAccountCashFlow" />
+        	<evaluate expression="loanAccountController.submitLoanApplication(loanAccountFormBean, loanAccountQuestionGroupFormBean, flowScope.loanAccountCashFlow)" result="flowScope.loanCreationResultDto" />
         </transition>
         
         <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/>

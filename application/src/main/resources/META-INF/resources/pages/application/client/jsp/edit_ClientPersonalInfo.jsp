@@ -459,7 +459,7 @@ explanation of the license and how it is applied.
                                                                 <c:otherwise>
                                                                     <mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.telephone" keyhm="Client.PhoneNumber" name="clientCustActionForm"
                                                                     property="address.phoneNumber"
-                                                                    maxlength="20" disabled="true" />
+                                                                    maxlength="20" readonly="true" style="background:lightgrey; color:grey"/>
                                                                 </c:otherwise>
                                                             </c:choose>
                                                         </td>

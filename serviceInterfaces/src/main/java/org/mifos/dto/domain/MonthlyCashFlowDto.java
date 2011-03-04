@@ -32,13 +32,21 @@ public class MonthlyCashFlowDto implements Serializable{
     private final DateTime monthDate;
     private final BigDecimal cumulativeCashFlow;
     private final String notes;
+    private final BigDecimal revenue;
+    private final BigDecimal expenses;
 
-    public MonthlyCashFlowDto(DateTime monthDate, BigDecimal cumulativeCashFlow, String notes) {
+    public MonthlyCashFlowDto(DateTime monthDate, BigDecimal cumulativeCashFlow, String notes, BigDecimal revenue, BigDecimal expenses) {
         this.monthDate = monthDate;
         this.cumulativeCashFlow = cumulativeCashFlow;
         this.notes = notes;
+        this.revenue = revenue;
+        this.expenses = expenses;
     }
 
+    public BigDecimal calculateRevenueMinusExpenses() {
+        return this.revenue.subtract(this.expenses);
+    }
+    
     public DateTime getMonthDate() {
         return monthDate;
     }
@@ -49,5 +57,13 @@ public class MonthlyCashFlowDto implements Serializable{
 
     public String getNotes() {
         return notes;
+    }
+
+    public BigDecimal getRevenue() {
+        return revenue;
+    }
+
+    public BigDecimal getExpenses() {
+        return expenses;
     }
 }

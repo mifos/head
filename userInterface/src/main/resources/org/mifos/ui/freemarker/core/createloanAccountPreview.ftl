@@ -117,10 +117,8 @@
 </form>
 <br />
 
+<h1><span class="standout">[@spring.message "reviewInstallments.heading" /]</span></h1>
 <table border="0">
-	<thead>
-		<tr><th>[@spring.message "reviewInstallments.tableHeading" /]</th></tr>
-	</thead>
 	<tbody>
 		<tr>
 			<th>[@spring.message "reviewInstallments.installmentHeading" /]</th>

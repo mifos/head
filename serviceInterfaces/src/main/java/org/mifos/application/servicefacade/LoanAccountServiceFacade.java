@@ -27,6 +27,7 @@ import java.util.List;
 import org.joda.time.DateTime;
 import org.mifos.clientportfolio.loan.service.CreateLoanSchedule;
 import org.mifos.clientportfolio.newloan.applicationservice.CreateLoanAccount;
+import org.mifos.clientportfolio.newloan.applicationservice.LoanAccountCashFlow;
 import org.mifos.clientportfolio.newloan.applicationservice.LoanApplicationStateDto;
 import org.mifos.clientportfolio.newloan.applicationservice.LoanDisbursementDateValidationServiceFacade;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
@@ -55,6 +56,7 @@ import org.mifos.dto.screen.LoanCreationProductDetailsDto;
 import org.mifos.dto.screen.LoanCreationResultDto;
 import org.mifos.dto.screen.LoanDisbursalDto;
 import org.mifos.dto.screen.LoanInformationDto;
+import org.mifos.dto.screen.LoanInstallmentsDto;
 import org.mifos.dto.screen.LoanScheduleDto;
 import org.mifos.dto.screen.LoanScheduledInstallmentDto;
 import org.mifos.dto.screen.MultipleLoanAccountDetailsDto;
@@ -94,7 +96,7 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
     String createLoan(OpeningBalanceLoanAccount openingBalanceLoan);
     
     @PreAuthorize("isFullyAuthenticated()")
-    LoanCreationResultDto createLoan(CreateLoanAccount createLoanAccount, List<QuestionGroupDetail> questionGroups);
+    LoanCreationResultDto createLoan(CreateLoanAccount createLoanAccount, List<QuestionGroupDetail> questionGroups, LoanAccountCashFlow loanAccountCashFlow);
     
     LoanScheduleDto createLoanSchedule(CreateLoanSchedule createLoanAccount);
 
@@ -169,4 +171,11 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
     
     @PreAuthorize("isFullyAuthenticated()")
     Errors validateCashFlowForInstallmentsForWarnings(List<CashFlowDataDto> cashFlowDataDtos, Integer productId);
+    
+    @PreAuthorize("isFullyAuthenticated()")
+    Errors validateCashFlowForInstallments(LoanInstallmentsDto loanInstallmentsDto, List<MonthlyCashFlowDto> monthlyCashFlows, 
+            Double repaymentCapacity, BigDecimal cashFlowTotalBalance);
+    
+    @PreAuthorize("isFullyAuthenticated()")
+    boolean isCompareWithCashFlowEnabledOnProduct(Integer productId);
 }

@@ -34,14 +34,16 @@ public class CashFlowDto implements Serializable {
     private final boolean captureCapitalLiabilityInfo;
     private final BigDecimal loanAmount;
     private final Double indebtednessRatio;
+    private final Double repaymentCapacity;
 
     public CashFlowDto(DateTime firstInstallmentDueDate, DateTime lastInstallmentDueDate,
-            boolean captureCapitalLiabilityInfo, BigDecimal loanAmount, Double indebtednessRatio) {
+            boolean captureCapitalLiabilityInfo, BigDecimal loanAmount, Double indebtednessRatio, Double repaymentCapacity) {
         this.firstInstallmentDueDate = firstInstallmentDueDate;
         this.lastInstallmentDueDate = lastInstallmentDueDate;
         this.captureCapitalLiabilityInfo = captureCapitalLiabilityInfo;
         this.loanAmount = loanAmount;
         this.indebtednessRatio = indebtednessRatio;
+        this.repaymentCapacity = repaymentCapacity;
     }
 
     public DateTime getFirstInstallmentDueDate() {
@@ -62,5 +64,9 @@ public class CashFlowDto implements Serializable {
 
     public Double getIndebtednessRatio() {
         return indebtednessRatio;
+    }
+    
+    public Double getRepaymentCapacity() {
+        return repaymentCapacity;
     }
 }

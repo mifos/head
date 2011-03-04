@@ -548,11 +548,11 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                 for (MonthlyCashFlowForm monthlyCashflowform : cashFlowForm.getMonthlyCashFlows()) {
                     
                     MonthlyCashFlowDto monthlyCashFlow = new MonthlyCashFlowDto(monthlyCashflowform.getDateTime(), 
-                            monthlyCashflowform.getCumulativeCashFlow(), monthlyCashflowform.getNotes());
+                            monthlyCashflowform.getCumulativeCashFlow(), monthlyCashflowform.getNotes(), monthlyCashflowform.getRevenue(), monthlyCashflowform.getExpense());
                     cashflowDtos.add(monthlyCashFlow);
                 }
             }
-            Errors validationErrors = loanServiceFacade.validateCashFlowForInstallments(loanInstallmentsDto, cashflowDtos, loanOffering.getRepaymentCapacity(), totalBalance);
+            Errors validationErrors = loanAccountServiceFacade.validateCashFlowForInstallments(loanInstallmentsDto, cashflowDtos, loanOffering.getRepaymentCapacity(), totalBalance);
             
             ActionErrors cashFlowAndInstallmentDateErrors = getActionErrors(validationErrors); 
             actionErrors.add(cashFlowAndInstallmentDateErrors);
@@ -1159,11 +1159,11 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         for (MonthlyCashFlowForm monthlyCashflowform : cashFlowForm.getMonthlyCashFlows()) {
             
             MonthlyCashFlowDto monthlyCashFlow = new MonthlyCashFlowDto(monthlyCashflowform.getDateTime(), 
-                    monthlyCashflowform.getCumulativeCashFlow(), monthlyCashflowform.getNotes());
+                    monthlyCashflowform.getCumulativeCashFlow(), monthlyCashflowform.getNotes(), monthlyCashflowform.getRevenue(), monthlyCashflowform.getExpense());
             cashflowDtos.add(monthlyCashFlow);
         }
         
-        Errors validationErrors = loanServiceFacade.validateCashFlowForInstallments(loanInstallmentsDto, cashflowDtos, loanOffering.getRepaymentCapacity(), cashFlowForm.getTotalBalance());
+        Errors validationErrors = loanAccountServiceFacade.validateCashFlowForInstallments(loanInstallmentsDto, cashflowDtos, loanOffering.getRepaymentCapacity(), cashFlowForm.getTotalBalance());
         ActionErrors cashflowAndInstallmentDateErrors = getActionErrors(validationErrors); 
         
         return addErrorAndReturnResult(request, cashflowAndInstallmentDateErrors);

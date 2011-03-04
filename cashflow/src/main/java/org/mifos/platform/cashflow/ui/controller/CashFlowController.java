@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.joda.time.LocalDate;
+import org.mifos.clientportfolio.newloan.applicationservice.LoanAccountCashFlow;
 import org.mifos.dto.domain.CashFlowDto;
 import org.mifos.dto.domain.MonthlyCashFlowDto;
 import org.mifos.platform.cashflow.CashFlowService;
@@ -45,6 +46,22 @@ public class CashFlowController {
     @Autowired
     public CashFlowController(CashFlowService cashFlowService) {
         this.cashFlowService = cashFlowService;
+    }
+    
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+    public LoanAccountCashFlow transformCashFlow(CashFlowForm cashFlow) {
+        BigDecimal totalCapital = cashFlow.getTotalCapital();
+        BigDecimal totalLiability = cashFlow.getTotalLiability();
+        
+        List<MonthlyCashFlowDto> cashflowDtos = new ArrayList<MonthlyCashFlowDto>();
+        for (MonthlyCashFlowForm monthlyCashflowform : cashFlow.getMonthlyCashFlows()) {
+            
+            MonthlyCashFlowDto monthlyCashFlow = new MonthlyCashFlowDto(monthlyCashflowform.getDateTime(), 
+                    monthlyCashflowform.getCumulativeCashFlow(), monthlyCashflowform.getNotes(), monthlyCashflowform.getRevenue(), monthlyCashflowform.getExpense());
+            cashflowDtos.add(monthlyCashFlow);
+        }
+        
+        return new LoanAccountCashFlow(cashflowDtos, totalCapital, totalLiability);
     }
     
     public CashFlowForm retrieveCashFlowForm(CashFlowDto cashFlowSettings) {
@@ -71,7 +88,7 @@ public class CashFlowController {
         for (MonthlyCashFlowForm monthlyCashflowform : cashFlowForm.getMonthlyCashFlows()) {
             
             MonthlyCashFlowDto monthlyCashFlow = new MonthlyCashFlowDto(monthlyCashflowform.getDateTime(), 
-                    monthlyCashflowform.getCumulativeCashFlow(), monthlyCashflowform.getNotes());
+                    monthlyCashflowform.getCumulativeCashFlow(), monthlyCashflowform.getNotes(), monthlyCashflowform.getRevenue(), monthlyCashflowform.getExpense());
             cashflowDtos.add(monthlyCashFlow);
         }
         
