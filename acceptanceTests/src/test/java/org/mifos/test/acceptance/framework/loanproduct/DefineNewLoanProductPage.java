@@ -613,7 +613,13 @@ public class DefineNewLoanProductPage extends AbstractPage {
         selenium.select("interestGLCode", "label=" + parameters.getInterestGLCode());
         selenium.select("principalGLCode", "label=" + parameters.getPrincipalGLCode());
         selectQuestionGroups(parameters.getQuestionGroups());
+        selectSourceOfFund("Funding Org A");
         return this;
+    }
+
+    private void selectSourceOfFund(String sourceOfFund) {
+        selenium.addSelection("name=fundId", "label=" + sourceOfFund);
+        selenium.click("SrcFundsList.button.add");
     }
 
     private void selectWaiverInterest(SubmitFormParameters parameters){
