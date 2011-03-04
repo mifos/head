@@ -60,15 +60,12 @@ public class ClientLoanStatusHistoryTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void approvedToRejected() throws Exception {
-
         EditLoanAccountStatusParameters params = new EditLoanAccountStatusParameters();
         params.setStatus(EditLoanAccountStatusParameters.CANCEL);
         params.setCancelReason("Rejected");
         params.setNote("Test");
         loanTestHelper.changeLoanAccountStatus(ACCOUNT_APPROVED_ID, params);
-
         loanTestHelper.verifyLastEntryInStatusHistory(ACCOUNT_APPROVED_ID, EditLoanAccountStatusParameters.APPROVED, EditLoanAccountStatusParameters.CANCEL);
-
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -92,6 +89,5 @@ public class ClientLoanStatusHistoryTest extends UiTestCaseBase {
         params.setNote("Approved.");
         loanTestHelper.changeLoanAccountStatus(loanId, params);
         loanTestHelper.verifyLastEntryInStatusHistory(loanId, EditLoanAccountStatusParameters.PENDING_APPROVAL, EditLoanAccountStatusParameters.APPROVED);
-
     }
 }
