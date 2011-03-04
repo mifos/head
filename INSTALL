@@ -9,7 +9,7 @@ This file describes how to install Mifos for use in a production environment.
 
      * Sun Microsystems Java - JDK/JRE 1.6 (see Note)
      * MySQL - Community Edition 5.1.45
-     * Apache Tomcat - 6.0.29
+     * Jetty - 7.3
 
    Note: While most Mifos testing has been done using the JDK,
    only the JRE is needed to run Mifos.
@@ -49,21 +49,20 @@ This file describes how to install Mifos for use in a production environment.
          If your database instance already has a "mifos" database, then
          you will need to drop the database before running the above commands.
 
-4. Setting Java and Apache Tomcat Parameters
+4. Setting Java and Jetty Parameters
          Set the following environment variables:
 
-         JAVA_HOME     ... directory where the JDK is installed (if using the JDK)
-         JRE_HOME      ... directory where the JRE is installed (if using the JRE)
-         CATALINA_HOME ... directory where Tomcat is installed
-         CATALINA_OPTS ... -Xms1024M -Xmx1024M -XX:MaxPermSize=256m
+         JAVA_HOME     ... directory where the JDK or JRE is installed
+         JAVA          ... points directly to java binary
+         JETTY_HOME    ... directory where Jetty is installed
+         JAVA_OPTIONS  ... -Xms1024M -Xmx1024M -XX:MaxPermSize=256m
 
 5. Installing the Mifos WAR
-         Copy the mifos.war you downloaded to CATALINA_HOME/webapps. If the
+         Copy the mifos.war you downloaded to JETTY_HOME/webapps. If the
          following temporary directories exist, delete them:
 
-         CATALINA_HOME/webapps/mifos
-         CATALINA_HOME/work/Catalina/<hostname>/mifos
-            (Where <hostname> is the name of your server.)
+         JETTY_HOME/webapps/mifos
+         JETTY_HOME/work
 
 6. Configuring and Running Mifos
     6.1. Configuring Mifos
@@ -96,7 +95,7 @@ This file describes how to install Mifos for use in a production environment.
                 defined in 6.1.2.
 
     6.2. Running Mifos
-         Execute the Tomcat startup script in CATALINA_HOME/bin, or if Tomcat
+         Execute the Jetty startup script in JETTY_HOME/bin, or if Jetty
          was installed as a service on Windows, navigate to Control Panel >
          Administrative Tools > Services to verify that the service's status
          is "Started".
