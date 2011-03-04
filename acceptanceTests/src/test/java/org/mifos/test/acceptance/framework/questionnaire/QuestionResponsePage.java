@@ -20,10 +20,13 @@
 
 package org.mifos.test.acceptance.framework.questionnaire;
 
-import com.thoughtworks.selenium.Selenium;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Map;
 
 import org.junit.Assert;
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import org.mifos.test.acceptance.framework.client.CreateClientEnterMfiDataPage;
 import org.mifos.test.acceptance.framework.group.CreateGroupConfirmationPage;
 import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
@@ -31,14 +34,11 @@ import org.mifos.test.acceptance.framework.loan.CreateLoanAccountReviewInstallme
 import org.mifos.test.acceptance.framework.loan.DisburseLoanConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.EditAccountStatusConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
-
-import java.util.Map;
-import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import org.mifos.test.acceptance.framework.office.CreateOfficePreviewDataPage;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountPreviewPage;
 import org.mifos.test.acceptance.framework.user.CreateUserPreviewDataPage;
 
-import static org.junit.Assert.assertTrue;
+import com.thoughtworks.selenium.Selenium;
 
 public class QuestionResponsePage extends MifosPage {
     public QuestionResponsePage(Selenium selenium) {
@@ -157,7 +157,9 @@ public class QuestionResponsePage extends MifosPage {
     }
 
     private void populateSingleSelectAnswer(String questionInputId, String answer) {
-        selenium.check(questionInputId + " value=" + answer);
+        //selenium.check(questionInputId + " value=" + answer);
+            selenium.click("//input[@name='" + questionInputId + "' and @value='" + answer + "']");
+
         // TODO for more than 6 answers: selenium.select(questionInputId, answer);
     }
 
