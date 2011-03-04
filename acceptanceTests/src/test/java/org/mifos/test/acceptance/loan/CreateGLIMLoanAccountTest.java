@@ -109,7 +109,6 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
         loanTestHelper.createLoanAccountForMultipleClientsInGroup(false);
     }
 
-    @Test(enabled = false) // TODO js - make it no_db_unit
     // http://mifosforge.jira.com/browse/MIFOSTEST-134
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyLoanAccountCreationPipelineWhenGlimIsEnabled() throws Exception {
@@ -120,8 +119,8 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
         //initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
 
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
-        searchParameters.setSearchString("Stu1232993852651 Client1232993852651");
-        searchParameters.setLoanProduct("WeeklyClientDeclinetLoanWithPeriodicFee");
+        searchParameters.setSearchString("Stu1233266063395 Client1233266063395");
+        searchParameters.setLoanProduct("ClientEmergencyLoan");
         String[] locators = {   "name=prdOfferingId",
                                 "loancreationdetails.input.sumLoanAmount",
                                 "loancreationdetails.input.interestRate",
