@@ -141,10 +141,9 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
                     if (oldQuestionGroupDetail.getId() >= max) {
                         secondMax = max;
                         max = oldQuestionGroupDetail.getId();
+                    } else if (oldQuestionGroupDetail.getId() > secondMax) {
+                        secondMax = oldQuestionGroupDetail.getId();
                     }
-                    else if (oldQuestionGroupDetail.getId() > secondMax) {
-                            secondMax = oldQuestionGroupDetail.getId();
-                        }
                 }
                 if (secondMax != 0) {
                     secondLastQuestionGroupDetail = questionnaireService.getQuestionGroupInstance(secondMax).getQuestionGroupDetail();
