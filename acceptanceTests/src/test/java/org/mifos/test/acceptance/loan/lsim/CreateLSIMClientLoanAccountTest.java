@@ -99,7 +99,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("Stu1233171716380 Client1233171716380");
         searchParameters.setLoanProduct("WeeklyFlatLoanWithOneTimeFees");
-        expectedDate = "28-Jan-2010";
+        expectedDate = "29-Jan-2010";
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
         submitAccountParameters.setAmount("9012.0");
         submitAccountParameters.setLsimFrequencyWeeks("on");
