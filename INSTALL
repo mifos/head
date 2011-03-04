@@ -42,9 +42,9 @@ This file describes how to install Mifos for use in a production environment.
          Adjust them if your database login is different. See sections 6.1.4
          and 7.1 for more information.
 
-         mysql -D mifos -u mifos -pmifos < db/src/main/resources/sql/base-schema.sql
-         mysql -D mifos -u mifos -pmifos < db/src/main/resources/sql/base-data.sql
-         mysql -D mifos -u mifos -pmifos < db/src/main/resources/sql/init_mifos_password.sql
+         mysql -D mifos -u mifos -pmifos < db/sql/base-schema.sql
+         mysql -D mifos -u mifos -pmifos < db/sql/base-data.sql
+         mysql -D mifos -u mifos -pmifos < db/sql/init_mifos_password.sql
 
          If your database instance already has a "mifos" database, then
          you will need to drop the database before running the above commands.
