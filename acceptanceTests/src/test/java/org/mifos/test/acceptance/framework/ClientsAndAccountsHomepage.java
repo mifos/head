@@ -28,6 +28,7 @@ import org.mifos.test.acceptance.framework.group.GroupSearchPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountsSearchPage;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSearchPage;
+import org.testng.Assert;
 
 
 import com.thoughtworks.selenium.Selenium;
@@ -96,4 +97,14 @@ public class ClientsAndAccountsHomepage extends AbstractPage {
         waitForPageToLoad();
         return new ClientSearchResultsPage(selenium);
     }
+    
+    public void verifyMenuWithCenterHierarchyOn() {
+        Assert.assertTrue(selenium.isElementPresent("menu.link.label.createnewcenter"));
+        Assert.assertTrue(selenium.isTextPresent("To review or edit a Client, Group, Center or account"));
+    }
+    
+    public void verifyMenuWithCenterHierarchyOff() {
+        Assert.assertFalse(selenium.isElementPresent("menu.link.label.createnewcenter"));
+        Assert.assertTrue(selenium.isTextPresent("To review or edit a Client, Group or account"));    	
+    }    
 }

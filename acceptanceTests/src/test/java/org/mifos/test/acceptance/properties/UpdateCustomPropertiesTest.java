@@ -156,21 +156,19 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
         propertiesHelper.setCenterHierarchyExists("false");
 
         //When
-        navigationHelper.navigateToClientsAndAccountsPage();
+        ClientsAndAccountsHomepage clientsAndAccountsHomePage =  navigationHelper.navigateToClientsAndAccountsPage();
 
         //Then
-        Assert.assertFalse(selenium.isElementPresent("menu.link.label.createnew.center"));
-        Assert.assertTrue(selenium.isTextPresent("To review or edit a Client, Group or account"));
+        clientsAndAccountsHomePage.verifyMenuWithCenterHierarchyOff();
 
         //Given
         propertiesHelper.setCenterHierarchyExists("true");
 
         //When
-        navigationHelper.navigateToClientsAndAccountsPage();
+        clientsAndAccountsHomePage = navigationHelper.navigateToClientsAndAccountsPage();
 
         //Then
-        Assert.assertTrue(selenium.isElementPresent("menu.link.label.createnew.center"));
-        Assert.assertTrue(selenium.isTextPresent("To review or edit a Client, Group, Center or account"));
+        clientsAndAccountsHomePage.verifyMenuWithCenterHierarchyOn();
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
