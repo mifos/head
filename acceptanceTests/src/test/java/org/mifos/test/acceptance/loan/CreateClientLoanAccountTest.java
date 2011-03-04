@@ -111,7 +111,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         submitAccountParameters.setAmount("1012.0");
         QuestionResponseParameters parameters = new QuestionResponseParameters();
         parameters.addTextAnswer("create_ClientPersonalInfo.input.customField", answer);
-        parameters.addSingleSelectAnswer("name=questionGroups[0].sectionDetails[0].questions[1].value", choiceAnswer);
+        parameters.addSingleSelectAnswer("questionGroups[0].sectionDetails[0].questions[1].value", choiceAnswer);
 
         LoanAccountPage loanAccountPage = createLoanAccount(searchParameters, submitAccountParameters, parameters);
         ViewQuestionResponseDetailPage questionResponseDetailPage = loanAccountPage.navigateToAdditionalInformationPage();

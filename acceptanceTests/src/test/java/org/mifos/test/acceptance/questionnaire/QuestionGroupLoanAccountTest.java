@@ -74,7 +74,7 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @BeforeMethod
+    @BeforeMethod(alwaysRun=true)
     public void setUp() throws Exception {
         super.setUp();
         questionGroupTestHelper = new QuestionGroupTestHelper(selenium);

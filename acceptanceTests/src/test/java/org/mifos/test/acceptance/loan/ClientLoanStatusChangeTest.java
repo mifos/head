@@ -119,7 +119,7 @@ public class ClientLoanStatusChangeTest extends UiTestCaseBase {
 
         QuestionResponseParameters responseParameters = new QuestionResponseParameters();
         responseParameters.addTextAnswer("create_ClientPersonalInfo.input.customField", answer);
-        responseParameters.addSingleSelectAnswer("name=questionGroups[0].sectionDetails[0].questions[1].value", choiceAnswer);
+        responseParameters.addSingleSelectAnswer("questionGroups[0].sectionDetails[0].questions[1].value", choiceAnswer);
 
         loanTestHelper.changeLoanAccountStatusProvidingQuestionGroupResponses("000100000000003", statusParameters,responseParameters);
     }

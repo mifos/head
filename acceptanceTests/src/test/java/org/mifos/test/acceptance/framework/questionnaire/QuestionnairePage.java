@@ -74,7 +74,7 @@ public class QuestionnairePage extends MifosPage {
 
     public void checkResponse(String question, String answer) {
         //selenium.check("name=" + getQuestionLocator(question) + " value=" + answer);
-        selenium.click("//input[@name='" + getQuestionLocator(question) + "' and @value='" + answer + "']");
+            selenium.check("//input[@name='" + getQuestionLocator(question) + "' and @value='" + answer + "']");
     }
 
     public QuestionnairePage checkResponses(Map<String, List<String>> responses) {

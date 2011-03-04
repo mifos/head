@@ -78,7 +78,9 @@ public class PPITest extends UiTestCaseBase {
         attachParams.addCheckResponse("Does the household own a wristwatch?", "Yes");
         String[] eventList = {"View Client","Create Client", "Close Client"};
         //When
-        copyFile(sourceFile, destFile);
+        if(!destFile.exists()){
+            copyFile(sourceFile, destFile);
+        }
         questionGroupTestHelper.activatePPI("BANGLADESH2009");
         questionGroupTestHelper.changeAppliesTo("PPI Bangladesh 2009", eventList);
         questionGroupTestHelper.navigateToViewQuestionGroups(QGlist);
