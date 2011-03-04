@@ -70,63 +70,6 @@ public class MessageLookupIntegrationTest extends MifosIntegrationTestCase {
     }
 
     @Test
-    public void testLabelLookup() throws PersistenceException {
-        Localization localization = Localization.getInstance();
-        ConfigLocale originalConfig = localization.getConfigLocale();
-        UserContext userContext = TestUtils.makeUserWithLocales();
-
-        try {
-            // make sure that the GROUP label has not been set
-            // currently there is some test that is doing this and not cleaning
-            // up,
-            // so this test will fail unless the GROUP label is cleared
-            messageLookup.setCustomLabel(ConfigurationConstants.GROUP, "", userContext);
-
-            // Get the default label from the English resource bundle
-           Assert.assertEquals("Group", messageLookup.lookupLabel(ConfigurationConstants.GROUP, Locale.US));
-
-            // Get the label from the Spanish resource bundle
-            ChangeLocale(new ConfigLocale("es", "ES"));
-           Assert.assertEquals("Grupo", messageLookup.lookupLabel(ConfigurationConstants.GROUP, new Locale("es")));
-
-            // Get the label from the French resource bundle
-            ChangeLocale(new ConfigLocale("fr", "FR"));
-           Assert.assertEquals("Groupe", messageLookup.lookupLabel(ConfigurationConstants.GROUP, new Locale("fr")));
-
-            // Override the resource bundle text with a custom label
-            String TEST_GROUP_NAME = "TestGroup";
-            messageLookup.setCustomLabel(ConfigurationConstants.GROUP, TEST_GROUP_NAME, userContext);
-
-            // The custom label should come back for each locale
-           Assert.assertEquals(TEST_GROUP_NAME, messageLookup.lookupLabel(ConfigurationConstants.GROUP, new Locale("fr")));
-            ChangeLocale(new ConfigLocale("es", "ES"));
-           Assert.assertEquals(TEST_GROUP_NAME, messageLookup.lookupLabel(ConfigurationConstants.GROUP, new Locale("es")));
-
-            // Reset the custom label and then we should get the locale
-            // specific label again
-            messageLookup.setCustomLabel(ConfigurationConstants.GROUP, "", userContext);
-           Assert.assertEquals("Grupo", messageLookup.lookupLabel(ConfigurationConstants.GROUP, new Locale("es")));
-
-           Assert.assertEquals("Replacement Status", messageLookup.lookup("ReplacementStatus", new Locale("us")));
-
-           Assert.assertEquals("Number of Clients per Center", messageLookup.lookup("NoOfClientsPerCenter", new Locale("us")));
-           Assert.assertEquals("Number of Clients per Center", messageLookup.lookup("NoOfClientsPerCenter.Label", new Locale(
-                    "us")));
-           Assert.assertEquals("Number of Clients per Group", messageLookup.lookup("NoOfClientsPerGroup", new Locale("us")));
-           Assert.assertEquals("Number of Clients per Group", messageLookup.lookup("NoOfClientsPerGroup.Label", new Locale(
-                    "us")));
-           Assert.assertEquals("Distance from HO to BO for office", messageLookup.lookup("DistanceFromHoToBO", new Locale(
-                    "us")));
-           Assert.assertEquals("Distance from HO to BO for office", messageLookup.lookup("DistanceFromHoToBO.Label",
-                    new Locale("us")));
-
-        } finally {
-            messageLookup.setCustomLabel(ConfigurationConstants.GROUP, "", userContext);
-            ChangeLocale(originalConfig);
-        }
-    }
-
-    @Test
     public void shouldHaveDefaultLabelOfAddress1() {
 
      // Get the default label for ADDRESS1 from main locale

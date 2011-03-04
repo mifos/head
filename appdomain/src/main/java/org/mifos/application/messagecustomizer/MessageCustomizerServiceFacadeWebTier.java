@@ -31,6 +31,7 @@ import org.mifos.dto.domain.ConfigurableLookupLabelDto;
 import org.mifos.dto.domain.GracePeriodDto;
 import org.mifos.dto.domain.OfficeLevelDto;
 import org.mifos.dto.screen.ConfigureApplicationLabelsDto;
+import org.mifos.framework.components.mifosmenu.MenuRepository;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -122,11 +123,9 @@ public class MessageCustomizerServiceFacadeWebTier implements MessageCustomizerS
 	@Override
 	public void updateApplicationLabels(Map<String,String> messageMap) {
 		messageCustomizerDao.setCustomMessages(messageMap);
-/*
-		for (Map.Entry<String, String> entry : messageMap.entrySet()) { 
-        	messageFilterMap.put(entry.getKey(), entry.getValue());
-        }
-*/       
+		// legacy menu code caches strings, so force the menus to rebuild after a change
+		MenuRepository.getInstance().removeMenuForAllLocale();
+   
 	}
 	
     @Override
