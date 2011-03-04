@@ -587,7 +587,7 @@
                 <version>0.0.1</version>
                 <configuration>
                     <inputDirectory>src/main/resources/org/mifos/config/localizedResources</inputDirectory>
-                    <outputDirectory>target/mifos-webapp/WEB-INF/classes/org/mifos/config/localizedResources</outputDirectory>
+                    <outputDirectory>target/classes/org/mifos/config/localizedResources</outputDirectory>
                 </configuration>
                 <executions>
                     <execution>
