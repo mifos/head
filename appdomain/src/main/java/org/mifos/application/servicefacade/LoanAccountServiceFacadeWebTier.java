@@ -793,7 +793,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                 transactionHelper.flushSession();
             }
             
-            if (!loanAccountCashFlow.getMonthlyCashFlow().isEmpty()) {
+            if (loanAccountCashFlow != null && !loanAccountCashFlow.getMonthlyCashFlow().isEmpty()) {
                 
                 List<MonthlyCashFlowDetail> monthlyCashFlowDetails = new ArrayList<MonthlyCashFlowDetail>();
                 for (MonthlyCashFlowDto monthlyCashFlow : loanAccountCashFlow.getMonthlyCashFlow()) {

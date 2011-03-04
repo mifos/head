@@ -48,6 +48,7 @@ public class CashFlowController {
         this.cashFlowService = cashFlowService;
     }
     
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public LoanAccountCashFlow transformCashFlow(CashFlowForm cashFlow) {
         BigDecimal totalCapital = cashFlow.getTotalCapital();
         BigDecimal totalLiability = cashFlow.getTotalLiability();
