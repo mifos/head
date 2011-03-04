@@ -20,8 +20,14 @@
 
 package org.mifos.ui.core.controller;
 
+import java.util.List;
+import java.util.Locale;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
 import org.apache.commons.lang.StringUtils;
-import org.mifos.application.admin.servicefacade.AdminServiceFacade;
+import org.mifos.application.admin.servicefacade.MessageCustomizerServiceFacade;
 import org.mifos.dto.domain.AccountStatusesLabelDto;
 import org.mifos.dto.domain.ConfigurableLookupLabelDto;
 import org.mifos.dto.domain.GracePeriodDto;
@@ -36,9 +42,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
-
-import javax.validation.Valid;
-import java.util.List;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
 
 @Controller
@@ -51,30 +55,28 @@ public class ConfigureApplicationLabelsController {
     private static final String CANCEL_PARAM = "CANCEL";
 
     @Autowired
-    private AdminServiceFacade adminServiceFacade;
-
+    private MessageCustomizerServiceFacade messageCustomizerServiceFacade;
+    
     protected ConfigureApplicationLabelsController() {
         // default contructor for spring autowiring
     }
 
-    public ConfigureApplicationLabelsController(final AdminServiceFacade adminServiceFacade) {
-        this.adminServiceFacade = adminServiceFacade;
+    public ConfigureApplicationLabelsController(final MessageCustomizerServiceFacade messageCustomizerServiceFacade) {
+        this.messageCustomizerServiceFacade = messageCustomizerServiceFacade;
     }
-
-//    @InitBinder
-//    protected void initBinder(WebDataBinder binder) {
-//        binder.setValidator(validator);
-//    }
 
     @ModelAttribute("breadcrumbs")
     public List<BreadCrumbsLinks> showBreadCrumbs() {
         return new AdminBreadcrumbBuilder().withLink("admin.defineLabels", "defineLabels.ftl").build();
     }
 
+   
     @RequestMapping(method = RequestMethod.GET)
     @ModelAttribute("formBean")
-    public ConfigureApplicationLabelsFormBean showPopulatedForm() {
-        ConfigureApplicationLabelsDto appLabels = adminServiceFacade.retrieveConfigurableLabels();
+    public ConfigureApplicationLabelsFormBean showPopulatedForm(HttpServletRequest request) {
+    	Locale locale = RequestContextUtils.getLocale(request);
+    	
+        ConfigureApplicationLabelsDto appLabels = messageCustomizerServiceFacade.retrieveConfigurableLabels(locale);
         ConfigureApplicationLabelsFormBean formBean = new ConfigureApplicationLabelsFormBean();
 
         populateOfficeHierarchyLabels(formBean, appLabels.getOfficeLevels());
@@ -154,7 +156,8 @@ public class ConfigureApplicationLabelsController {
     public String processFormSubmit(@RequestParam(value = CANCEL_PARAM, required = false) String cancel,
                                     @ModelAttribute("formBean") @Valid ConfigureApplicationLabelsFormBean formBean,
                                     BindingResult result,
-                                    SessionStatus status) {
+                                    SessionStatus status,
+                                    HttpServletRequest request) {
 
         String viewName = REDIRECT_TO_ADMIN_SCREEN;
 
@@ -212,7 +215,8 @@ public class ConfigureApplicationLabelsController {
 
             ConfigureApplicationLabelsDto applicationLabels = new ConfigureApplicationLabelsDto(officeLevels, gracePeriodDto, lookupLabels, accountStatusLabels);
 
-            adminServiceFacade.updateApplicationLabels(applicationLabels);
+        	Locale locale = RequestContextUtils.getLocale(request);            
+            messageCustomizerServiceFacade.updateApplicationLabels(applicationLabels, locale);
             status.setComplete();
         }
         return viewName;

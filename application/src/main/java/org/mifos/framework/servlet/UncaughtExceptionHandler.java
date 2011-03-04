@@ -45,7 +45,7 @@ public class UncaughtExceptionHandler extends SimpleMappingExceptionResolver {
             modelAndView = super.doResolveException(request, response, handler, ex);
         }
 
-        if (modelAndView != null) {
+        if (modelAndView != null && !"HEAD".equals(request.getMethod())) {
             String requestUri = request.getRequestURI();
             logger.error("Uncaught exception while accessing '" + requestUri + "'", ex);
 

@@ -31,13 +31,47 @@ tracker by way of states and currentState (see below).
 [#macro webflow currentTab states currentState]
 [@layout.header "title" /]
 [@widget.topNavigationNoSecurity currentTab /]
+<style>
+td {
+	text-align:none;
+	padding:0px 0px 0px 0px;
+}
 
+.middle table {
+	width : auto;
+}
+
+table {
+	margin-bottom : 0em;
+	width : 100%;
+}
+
+.progress-tracker li {
+	float:right;
+	padding-right:10px;
+}
+
+.container {
+	width:90%;
+}
+</style>
 <div class="container webflow">
     <br/>
     <!-- flow progress indicator -->
     <div class="progress-tracker borders span-24">
-        <ul>
+        <table>
+		<tr>
         [#assign currentStateEncountered = false]
+		[#assign ind = 0]
+        [#assign no_of_states = 0]
+        [#list states as state]
+		[#if state_has_next]
+		[#assign no_of_states = no_of_states + 1]
+		[/#if]
+		[/#list]
+		[#assign no_of_states = no_of_states + 1]
+		[#assign div=(100/no_of_states)?int]
+		
         [#list states as state]
             [#assign cssClass = "incomplete"]
             [#if state == currentState]
@@ -46,9 +80,44 @@ tracker by way of states and currentState (see below).
             [#elseif currentStateEncountered == false]
                 [#assign cssClass = "completed"]
             [/#if]
-            <li class="${cssClass}">[@spring.message state /]</li>
+        	[#if ind == 0]
+	            <td width="${div}%">
+           <li style="float:left;" class="${cssClass}">[@spring.message state /] </span>
+			</td>
+	    
+	    [#elseif state_has_next]
+                  <td width="${div}%" align="center" >
+		<div class="middle" align="center">
+	    <table>
+	    <tr>
+	    <td>
+	    [#if cssClass == "incomplete"]
+	    <img src="pages/framework/images/timeline/orangearrow.gif" width="17" height="17">
+            [#elseif cssClass == "active"]
+	    <img src="pages/framework/images/timeline/bigarrow.gif" width="17" height="17">
+            [#elseif cssClass == "completed"]
+	    <img src="pages/framework/images/timeline/tick.gif" width="17" height="17">
+             [/#if]
+	    
+  	    </td>
+	    <td>
+            <li style="float:none; background-image:none; padding-left:3px;" class="${cssClass}">[@spring.message state /]</span>
+	    </td>
+	    </tr>
+	    </table>
+		</div>
+ 			</td>
+	    [#else]
+                  <td width="${div}%">
+            <li class="${cssClass}">[@spring.message state /]</span>
+			</td>
+	    
+	    [/#if]
+             
+	    [#assign ind=ind+1]
         [/#list]
-        </ul>
+		</tr>
+        </table>
     </div>
     
     <!-- flow content -->

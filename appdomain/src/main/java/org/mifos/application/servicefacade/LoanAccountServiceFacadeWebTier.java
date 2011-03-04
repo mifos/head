@@ -26,6 +26,7 @@ import static org.mifos.framework.util.CollectionUtils.collect;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -109,6 +110,7 @@ import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.clientportfolio.loan.service.CreateLoanSchedule;
 import org.mifos.clientportfolio.newloan.applicationservice.CreateLoanAccount;
+import org.mifos.clientportfolio.newloan.applicationservice.LoanAccountCashFlow;
 import org.mifos.clientportfolio.newloan.applicationservice.LoanApplicationStateDto;
 import org.mifos.clientportfolio.newloan.domain.CreationDetail;
 import org.mifos.clientportfolio.newloan.domain.LoanDisbursementDateFactory;
@@ -185,6 +187,7 @@ import org.mifos.dto.screen.LoanCreationProductDetailsDto;
 import org.mifos.dto.screen.LoanCreationResultDto;
 import org.mifos.dto.screen.LoanDisbursalDto;
 import org.mifos.dto.screen.LoanInformationDto;
+import org.mifos.dto.screen.LoanInstallmentsDto;
 import org.mifos.dto.screen.LoanPerformanceHistoryDto;
 import org.mifos.dto.screen.LoanScheduleDto;
 import org.mifos.dto.screen.LoanScheduledInstallmentDto;
@@ -206,6 +209,9 @@ import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.Transformer;
+import org.mifos.platform.cashflow.CashFlowConstants;
+import org.mifos.platform.cashflow.CashFlowService;
+import org.mifos.platform.cashflow.service.MonthlyCashFlowDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
@@ -246,6 +252,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     
     @Autowired
     private QuestionnaireServiceFacade questionnaireServiceFacade;
+    
+    @Autowired
+    private CashFlowService cashFlowService;
 
     @Autowired
     public LoanAccountServiceFacadeWebTier(OfficeDao officeDao, LoanProductDao loanProductDao, CustomerDao customerDao,
@@ -735,7 +744,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     }
     
     @Override
-    public LoanCreationResultDto createLoan(CreateLoanAccount loanAccountInfo, List<QuestionGroupDetail> questionGroups) {
+    public LoanCreationResultDto createLoan(CreateLoanAccount loanAccountInfo, List<QuestionGroupDetail> questionGroups, LoanAccountCashFlow loanAccountCashFlow) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = toUserContext(user);
@@ -781,6 +790,24 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                 QuestionGroupDetails questionGroupDetails = new QuestionGroupDetails(
                         Integer.valueOf(user.getUserId()).shortValue(), loan.getAccountId(), eventSourceId, questionGroups);
                 questionnaireServiceFacade.saveResponses(questionGroupDetails);
+                transactionHelper.flushSession();
+            }
+            
+            if (loanAccountCashFlow != null && !loanAccountCashFlow.getMonthlyCashFlow().isEmpty()) {
+                
+                List<MonthlyCashFlowDetail> monthlyCashFlowDetails = new ArrayList<MonthlyCashFlowDetail>();
+                for (MonthlyCashFlowDto monthlyCashFlow : loanAccountCashFlow.getMonthlyCashFlow()) {
+                    MonthlyCashFlowDetail monthlyCashFlowDetail = new MonthlyCashFlowDetail(monthlyCashFlow.getMonthDate(), 
+                            monthlyCashFlow.getRevenue(), monthlyCashFlow.getExpenses(), monthlyCashFlow.getNotes());
+                    
+                    monthlyCashFlowDetails.add(monthlyCashFlowDetail);
+                }
+                
+                org.mifos.platform.cashflow.service.CashFlowDetail cashFlowDetail = new org.mifos.platform.cashflow.service.CashFlowDetail(monthlyCashFlowDetails);
+                cashFlowDetail.setTotalCapital(loanAccountCashFlow.getTotalCapital());
+                cashFlowDetail.setTotalLiability(loanAccountCashFlow.getTotalLiability());
+                cashFlowService.save(cashFlowDetail);
+                transactionHelper.flushSession();
             }
             transactionHelper.commitTransaction();
             
@@ -1878,7 +1905,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     @Override
     public CashFlowDto retrieveCashFlowSettings(DateTime firstInstallment, DateTime lastInstallment, Integer productId, BigDecimal loanAmount) {
         LoanOfferingBO loanProduct = this.loanProductDao.findById(productId);
-        return new CashFlowDto(firstInstallment, lastInstallment, loanProduct.shouldCaptureCapitalAndLiabilityInformation(), loanAmount, loanProduct.getIndebtednessRatio());
+        return new CashFlowDto(firstInstallment, lastInstallment, loanProduct.shouldCaptureCapitalAndLiabilityInformation(), loanAmount, loanProduct.getIndebtednessRatio(), loanProduct.getRepaymentCapacity());
     }
 
     @Override
@@ -1971,5 +1998,46 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                 errors.addError(AccountConstants.CUMULATIVE_CASHFLOW_ZERO, new String[]{monthYearAsString});
             }
         }
+    }
+    
+    @Override
+    public Errors validateCashFlowForInstallments(LoanInstallmentsDto loanInstallmentsDto, 
+            List<MonthlyCashFlowDto> monthlyCashFlows, Double repaymentCapacity, BigDecimal cashFlowTotalBalance) {
+
+        Errors errors = new Errors();
+        if (CollectionUtils.isNotEmpty(monthlyCashFlows)) {
+            
+            boolean lowerBound = DateUtils.firstLessOrEqualSecond(monthlyCashFlows.get(0).getMonthDate().toDate(), loanInstallmentsDto.getFirstInstallmentDueDate());
+            boolean upperBound = DateUtils.firstLessOrEqualSecond(loanInstallmentsDto.getLastInstallmentDueDate(), monthlyCashFlows.get(monthlyCashFlows.size() - 1).getMonthDate().toDate());
+
+            Locale locale = Localization.getInstance().getConfiguredLocale();
+            SimpleDateFormat df = new SimpleDateFormat("MMMM yyyy", locale);
+
+            if (!lowerBound) {
+                errors.addError(AccountConstants.INSTALLMENT_BEYOND_CASHFLOW_DATE, new String[]{df.format(loanInstallmentsDto.getFirstInstallmentDueDate())});
+            }
+
+            if (!upperBound) {
+                errors.addError(AccountConstants.INSTALLMENT_BEYOND_CASHFLOW_DATE, new String[]{df.format(loanInstallmentsDto.getLastInstallmentDueDate())});
+            }
+        }
+        validateForRepaymentCapacity(loanInstallmentsDto.getTotalInstallmentAmount(), loanInstallmentsDto.getLoanAmount(), repaymentCapacity, errors, cashFlowTotalBalance);
+        return errors;
+    }
+    
+    private void validateForRepaymentCapacity(BigDecimal totalInstallmentAmount, BigDecimal loanAmount, Double repaymentCapacity, Errors errors, BigDecimal totalBalance) {
+        if (repaymentCapacity == null || repaymentCapacity == 0) {
+            return;
+        }
+        Double calculatedRepaymentCapacity = totalBalance.add(loanAmount).multiply(CashFlowConstants.HUNDRED).divide(totalInstallmentAmount, 2, BigDecimal.ROUND_HALF_UP).doubleValue();
+        if (calculatedRepaymentCapacity < repaymentCapacity) {
+            errors.addError(AccountConstants.REPAYMENT_CAPACITY_LESS_THAN_ALLOWED, new String[]{calculatedRepaymentCapacity.toString(), repaymentCapacity.toString()});
+        }
+    }
+
+    @Override
+    public boolean isCompareWithCashFlowEnabledOnProduct(Integer productId) {
+        LoanOfferingBO loanProduct = this.loanProductDao.findById(productId);
+        return loanProduct.isCashFlowCheckEnabled();
     }
 }
