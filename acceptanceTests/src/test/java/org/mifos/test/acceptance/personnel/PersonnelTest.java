@@ -20,14 +20,25 @@
 
 package org.mifos.test.acceptance.personnel;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
+import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 import org.mifos.test.acceptance.framework.login.ChangePasswordPage;
 import org.mifos.test.acceptance.framework.login.LoginPage;
 import org.mifos.test.acceptance.framework.office.ChooseOfficePage;
+import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionGroupParameters;
+import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionParameters;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionnairePage;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.framework.testhelpers.QuestionGroupTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.UserHelper;
@@ -70,7 +81,6 @@ public class PersonnelTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-
     public void createUserTest() throws Exception {
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         CreateUserParameters formParameters = adminPage.getAdminUserParameters();
@@ -85,7 +95,6 @@ public class PersonnelTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(enabled = true, groups = {"acceptance"})
-
     public void editUserTest() throws Exception {
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
 
@@ -124,7 +133,157 @@ public class PersonnelTest extends UiTestCaseBase {
 
     //http://mifosforge.jira.com/browse/MIFOSTEST-670
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void createUserWithQuestionGroup()  throws Exception {
+        //Given
+        createQuestions();
+        //When
+        Map<String, List<String>> sectionQuestions = new HashMap<String, List<String>>();
 
+        List<String> questions = new ArrayList<String>();
+
+        questions.add("user question 1");
+
+        sectionQuestions.put("Sec 1", questions);
+
+        questions = new ArrayList<String>();
+        questions.add("user question 2");
+        questions.add("user question 3");
+
+        sectionQuestions.put("Sec 2", questions);
+
+        CreateQuestionGroupParameters createQuestionGroupParameters = new CreateQuestionGroupParameters();
+        createQuestionGroupParameters.setAnswerEditable(true);
+        createQuestionGroupParameters.setAppliesTo("Create Personnel");
+        createQuestionGroupParameters.setTitle("Create Personnel QG1");
+        createQuestionGroupParameters.setExistingQuestions(sectionQuestions);
+
+        questionGroupTestHelper.createQuestionGroup(createQuestionGroupParameters);
+
+        sectionQuestions = new HashMap<String, List<String>>();
+        questions = new ArrayList<String>();
+        questions.add("user question 4");
+        sectionQuestions.put("Sec 3", questions);
+
+        createQuestionGroupParameters = new CreateQuestionGroupParameters();
+        createQuestionGroupParameters.setAnswerEditable(true);
+        createQuestionGroupParameters.setAppliesTo("Create Personnel");
+        createQuestionGroupParameters.setTitle("Create Personnel QG2");
+        createQuestionGroupParameters.setExistingQuestions(sectionQuestions);
+
+        questionGroupTestHelper.createQuestionGroup(createQuestionGroupParameters);
+
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+
+        CreateUserParameters userParameters = adminPage.getAdminUserParameters();
+
+        ChooseOfficePage createUserPage = adminPage.navigateToCreateUserPage();
+        createUserPage.verifyPage();
+
+        CreateUserEnterDataPage userEnterDataPage = createUserPage.selectOffice("MyOfficeDHMFT");
+
+        QuestionResponsePage questionResponsePage = userEnterDataPage.submitAndNavigateToQuestionResponsePage(userParameters);
+        questionResponsePage.verifyPage();
+
+        QuestionResponseParameters responseParameters = new QuestionResponseParameters();
+        responseParameters.addSingleSelectAnswer("questionGroups[0].sectionDetails[0].questions[0].value", "yes");
+        responseParameters.addTextAnswer("questionGroups[0].sectionDetails[1].questions[1].value", "text1");
+
+        questionResponsePage.populateAnswers(responseParameters);
+
+        CreateUserPreviewDataPage createUserPreviewDataPage = questionResponsePage.continueAndNavigateToCreateUserPreviewPage();
+
+        questionResponsePage = createUserPreviewDataPage.navigateToEditAdditionalInformation();
+
+        questionResponsePage.populateTextAnswer("questionGroups[0].sectionDetails[1].questions[1].value", "text2");
+
+        createUserPreviewDataPage = questionResponsePage.continueAndNavigateToCreateUserPreviewPage();
+
+        CreateUserConfirmationPage userConfirmationPage = createUserPreviewDataPage.submit();
+
+        QuestionnairePage questionnairePage = userConfirmationPage.navigateToUserViewDetailsPage().navigateToQuestionnairePage();
+        //Then
+        questionnairePage.verifyRadioGroup("details[0].sectionDetails[0].questions[0].value", "yes", true);
+        questionnairePage.verifyRadioGroup("details[0].sectionDetails[1].questions[0].value", "good", false);
+        questionnairePage.verifyField("details[0].sectionDetails[1].questions[1].value", "text2");
+        //When
+        questionnairePage.typeText("details[0].sectionDetails[1].questions[1].value", "text3");
+
+        questionnairePage.submitAndNavigateToPersonnalDetailsPage();
+
+        List<String> questionToAdd= new ArrayList<String>();
+        questionToAdd.add("user question 5");
+        questionToAdd.add("user question 6");
+
+        List<String> questionToDesactivate = new ArrayList<String>();
+        questionToDesactivate.add("user question 1");
+        questionToDesactivate.add("user question 2");
+        questionToDesactivate.add("user question 3");
+
+        createQuestionGroupParameters = new CreateQuestionGroupParameters();
+        for (String question : questionToAdd) {
+            createQuestionGroupParameters.addExistingQuestion("Sec 1", question);
+        }
+        questionGroupTestHelper.addQuestionsToQuestionGroup("Create Personnel QG1", createQuestionGroupParameters.getExistingQuestions());
+
+        for (String question : questionToDesactivate) {
+            questionGroupTestHelper.markQuestionAsInactive(question);
+        }
+        questionGroupTestHelper.markQuestionGroupAsInactive("Create Personnel QG2");
+
+        adminPage = navigationHelper.navigateToAdminPage();
+
+        userParameters = adminPage.getAdminUserParameters();
+
+        createUserPage = adminPage.navigateToCreateUserPage();
+        createUserPage.verifyPage();
+
+        userEnterDataPage = createUserPage.selectOffice("MyOfficeDHMFT");
+
+        questionResponsePage = userEnterDataPage.submitAndNavigateToQuestionResponsePage(userParameters);
+        questionResponsePage.verifyPage();
+        //Then
+        questionResponsePage.verifyQuestionsDoesnotappear(questionToDesactivate.toArray(new String[questionToDesactivate.size()]));
+        questionResponsePage.verifyQuestionsExists(questionToAdd.toArray(new String[questionToAdd.size()]));
+        questionResponsePage.verifySectionDoesnotappear("Sec 2");
+        questionGroupTestHelper.markQuestionGroupAsInactive("Create Personnel QG1");
+    }
+
+    private void createQuestions() {
+        List<CreateQuestionParameters> questions = new ArrayList<CreateQuestionParameters>();
+        CreateQuestionParameters q1 = new CreateQuestionParameters();
+        q1.setType(CreateQuestionParameters.TYPE_SINGLE_SELECT);
+        q1.setText("user question 1");
+        q1.setChoicesFromStrings(Arrays.asList(new String[] { "yes", "no" }));
+        questions.add(q1);
+        CreateQuestionParameters q2 = new CreateQuestionParameters();
+        q2.setType(CreateQuestionParameters.TYPE_SINGLE_SELECT);
+        q2.setText("user question 2");
+        q2.setChoicesFromStrings(Arrays.asList(new String[] { "good", "bad", "average" }));
+        questions.add(q2);
+        CreateQuestionParameters q3 = new CreateQuestionParameters();
+        q3.setType(CreateQuestionParameters.TYPE_FREE_TEXT);
+        q3.setText("user question 3");
+        questions.add(q3);
+        CreateQuestionParameters q4 = new CreateQuestionParameters();
+        q4.setType(CreateQuestionParameters.TYPE_DATE);
+        q4.setText("user question 4");
+        questions.add(q4);
+        CreateQuestionParameters q5 = new CreateQuestionParameters();
+        q5.setType(CreateQuestionParameters.TYPE_FREE_TEXT);
+        q5.setText("user question 5");
+        questions.add(q5);
+        CreateQuestionParameters q6 = new CreateQuestionParameters();
+        q6.setType(CreateQuestionParameters.TYPE_NUMBER);
+        q6.setText("user question 6");
+        q6.setNumericMax(10);
+        q6.setNumericMin(0);
+        questions.add(q6);
+        questionGroupTestHelper.createQuestions(questions);
+    }
+
+    //http://mifosforge.jira.com/browse/MIFOSTEST-296
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled=false) // http://mifosforge.jira.com/browse/MIFOS-4844
     public void changePasswordTest() throws Exception {
 
         HomePage homePage = loginSuccessfully();
