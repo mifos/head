@@ -165,7 +165,7 @@ public class HolidayTest extends UiTestCaseBase {
         CreateLoanAccountSubmitParameters submitAccountParameters = setSubmitParameters();
 
         LoanAccountPage page =  loanTestHelper.createLoanAccount(searchParameters, submitAccountParameters);
-        String lid = page.getAccountId();
+        String loanId = page.getAccountId();
         page.navigateToRepaymentSchedulePage();
         loanTestHelper.verifyRepaymentScheduleForHolidays("13-Jan-2034","20-Jan-2034","27-Jan-2034","03-Feb-2034","10-Feb-2034","17-Feb-2034","24-Feb-2034","03-Mar-2034","10-Mar-2034","17-Mar-2034");
 
@@ -175,7 +175,7 @@ public class HolidayTest extends UiTestCaseBase {
         runBatchJobsForHoliday();
 
 
-        navigationHelper.navigateToLoanAccountPage(lid).navigateToRepaymentSchedulePage();
+        navigationHelper.navigateToLoanAccountPage(loanId).navigateToRepaymentSchedulePage();
         loanTestHelper.verifyRepaymentScheduleForHolidays("13-Jan-2034","20-Jan-2034","27-Jan-2034","03-Feb-2034","10-Feb-2034","03-Mar-2034","03-Mar-2034","03-Mar-2034","10-Mar-2034","17-Mar-2034");
     }
 

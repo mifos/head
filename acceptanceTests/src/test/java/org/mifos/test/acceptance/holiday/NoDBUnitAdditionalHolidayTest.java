@@ -1,31 +1,27 @@
 package org.mifos.test.acceptance.holiday;
 
-import org.dbunit.dataset.IDataSet;
 import org.joda.time.DateTime;
-import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.AppLauncher;
-import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
-import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.holiday.CreateHolidayConfirmationPage;
 import org.mifos.test.acceptance.framework.holiday.CreateHolidayEntryPage;
-import org.mifos.test.acceptance.framework.loan.CreateLoanAccountConfirmationPage;
-import org.mifos.test.acceptance.framework.loan.CreateLoanAccountEntryPage;
-import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameters;
-import org.mifos.test.acceptance.framework.login.LoginPage;
+import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.testhelpers.BatchJobHelper;
+import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
+import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
+import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,11 +31,13 @@ public class NoDBUnitAdditionalHolidayTest extends UiTestCaseBase {
     private AppLauncher appLauncher;
 
     @Autowired
-    private DriverManagerDataSource dataSource;
-    @Autowired
-    private DbUnitUtilities dbUnitUtilities;
+    private ApplicationDatabaseOperation applicationDatabaseOperation;
 
-    private static final String LOAN_SCHEDULE = "LOAN_SCHEDULE";
+    private LoanTestHelper loanTestHelper;
+
+    private NavigationHelper navigationHelper;
+
+    private DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -48,11 +46,10 @@ public class NoDBUnitAdditionalHolidayTest extends UiTestCaseBase {
     public void setUp() throws Exception {
         super.setUp();
 
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(
+        dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(
                 selenium);
-        DateTime targetTime = new DateTime(2009, 3, 11, 0, 0, 0, 0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
-
+        loanTestHelper = new LoanTestHelper(selenium);
+        navigationHelper = new NavigationHelper(selenium);
         appLauncher = new AppLauncher(selenium);
     }
 
@@ -63,18 +60,31 @@ public class NoDBUnitAdditionalHolidayTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createHolidayOnAMeetingWithRepaymentSameDay() throws Exception {
-
+        //Given
+        dateTimeUpdaterRemoteTestingService.setDateTime(new DateTime(2041,1,1,13,0,0,0));
         // create loan paid on the 1st of every month and then create a holiday on 1st July
-        createMonthlyLoanScheduleAndAHoliday(CreateHolidayEntryPage.CreateHolidaySubmitParameters.SAME_DAY);
+        LoanAccountPage page = createMonthlyLoan("2041");
+        String loanId = page.getAccountId();
+        page.navigateToRepaymentSchedulePage();
+        loanTestHelper.verifyRepaymentScheduleForHolidays("01-Apr-2041","01-May-2041","01-Jun-2041","01-Jul-2041","01-Aug-2041","02-Sep-2041","01-Oct-2041","01-Nov-2041","02-Dec-2041","01-Jan-2042");
 
+        // create a holiday on 1st of july
+        createHolidayOn1stJuly(CreateHolidayEntryPage.CreateHolidaySubmitParameters.SAME_DAY, "2041");
+
+        runHolidayBatchJob();
+
+        navigationHelper.navigateToLoanAccountPage(loanId).navigateToRepaymentSchedulePage();
+        loanTestHelper.verifyRepaymentScheduleForHolidays("01-Apr-2041","01-May-2041","01-Jun-2041","01-Jul-2041","01-Aug-2041","02-Sep-2041","01-Oct-2041","01-Nov-2041","02-Dec-2041","01-Jan-2042");
+    }
+
+    private void runHolidayBatchJob() throws SQLException {
+        applicationDatabaseOperation.cleanBatchJobTables();
         List<String> jobsToRun = new ArrayList<String>();
         jobsToRun.add("ApplyHolidayChangesTaskJob");
         new BatchJobHelper(selenium).runSomeBatchJobs(jobsToRun);
-
-        verifyLoanSchedule("AdditionalHolidayTest_010_result_dbunit.xml");
     }
 
-    private void createMonthlyLoanScheduleAndAHoliday(final String repaymentRule) {
+    private LoanAccountPage createMonthlyLoan(final String year) {
 
         // create a loan that has its repayment on the 1st of every month
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
@@ -85,21 +95,20 @@ public class NoDBUnitAdditionalHolidayTest extends UiTestCaseBase {
         submitAccountParameters.setAmount("1234.0");
         submitAccountParameters.setDd("01");
         submitAccountParameters.setMm("03");
-        submitAccountParameters.setYy("2010");
+        submitAccountParameters.setYy(year);
 
-        createLoan(searchParameters, submitAccountParameters);
+        LoanAccountPage page =  loanTestHelper.createLoanAccount(searchParameters, submitAccountParameters);
 
-        // create a holiday on 1st of july
-        createHolidayOn1stJuly(repaymentRule);
+        return page;
     }
 
-    private void createHolidayOn1stJuly(final String repaymentRule) {
+    private void createHolidayOn1stJuly(final String repaymentRule, final String year) {
         CreateHolidayEntryPage.CreateHolidaySubmitParameters params = new CreateHolidayEntryPage.CreateHolidaySubmitParameters();
 
         params.setName("Canada Day");
         params.setFromDateDD("1");
         params.setFromDateMM("07");
-        params.setFromDateYYYY("2009");
+        params.setFromDateYYYY(year);
         params.setRepaymentRule(repaymentRule);
         params.setSelectedOfficeIds("1");
 
@@ -117,32 +126,7 @@ public class NoDBUnitAdditionalHolidayTest extends UiTestCaseBase {
         confirmationPage.submitAndNavigateToViewHolidaysPage();
     }
 
-    private void createLoan(final CreateLoanAccountSearchParameters searchParameters,
-            final CreateLoanAccountSubmitParameters submitAccountParameters) {
-        logOut();
-        CreateLoanAccountSearchPage createLoanAccountSearchPage = navigateToCreateLoanAccountSearchPage();
-        CreateLoanAccountEntryPage createLoanAccountEntryPage = createLoanAccountSearchPage
-                .searchAndNavigateToCreateLoanAccountPage(searchParameters);
-        CreateLoanAccountConfirmationPage createLoanAccountConfirmationPage = createLoanAccountEntryPage
-                .submitAndNavigateToLoanAccountConfirmationPage(submitAccountParameters);
-        createLoanAccountConfirmationPage.navigateToLoanAccountDetailsPage();
-    }
 
-    private CreateLoanAccountSearchPage navigateToCreateLoanAccountSearchPage() {
-        LoginPage loginPage = appLauncher.launchMifos();
-        loginPage.verifyPage();
-        HomePage homePage = loginPage.loginSuccessfullyUsingDefaultCredentials();
-        ClientsAndAccountsHomepage clientsAndAccountsPage = homePage.navigateToClientsAndAccountsUsingHeaderTab();
-        return clientsAndAccountsPage.navigateToCreateLoanAccountUsingLeftMenu();
-    }
-
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    private void verifyLoanSchedule(final String resultDataSet) throws Exception {
-        IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromDataSetDirectoryFile(resultDataSet);
-        IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTables(dataSource, new String[] { LOAN_SCHEDULE });
-
-        dbUnitUtilities.verifyTable(LOAN_SCHEDULE, databaseDataSet, expectedDataSet);
-    }
 
     private AdminPage loginAndNavigateToAdminPage() {
         return appLauncher.launchMifos().loginSuccessfullyUsingDefaultCredentials().navigateToAdminPage();
