@@ -26,7 +26,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 
-<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}'/>
 <fmt:setBundle basename="org.mifos.config.localizedResources.adminUIResources"/>
 
 <tiles:insert definition=".view">

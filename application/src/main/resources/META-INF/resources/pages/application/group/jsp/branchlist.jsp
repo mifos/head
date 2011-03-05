@@ -31,7 +31,7 @@ explanation of the license and how it is applied.
 	groupCustActionForm.submit();
   }
 </script>
-<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}'/>
 <fmt:setBundle basename="org.mifos.config.localizedResources.GroupUIResources"/>
 
 <tiles:insert definition=".withoutmenu">

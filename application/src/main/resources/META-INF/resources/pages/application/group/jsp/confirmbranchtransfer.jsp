@@ -38,7 +38,7 @@ explanation of the license and how it is applied.
   }
 </script>
  <SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
-<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}'/>
 <fmt:setBundle basename="org.mifos.config.localizedResources.GroupUIResources"/>
 <html-el:form action="/groupTransferAction.do?method=transferToBranch"  onsubmit="func_disableSubmitBtn('submitBtn')">
 <html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />

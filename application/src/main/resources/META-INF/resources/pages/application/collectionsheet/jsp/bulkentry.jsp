@@ -114,7 +114,7 @@ explanation of the license and how it is applied.
 		//-->
 		</script>
 		<script src="pages/framework/js/date.js"></script>
-		<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+		<fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}'/>
 		<fmt:setBundle basename="org.mifos.config.localizedResources.BulkEntryUIResources"/>
 		<html-el:form action="/collectionsheetaction" onsubmit="return (validateMyForm(receiptDate,receiptDateFormat,receiptDateYY) && validateMyForm(transactionDate,transactionDateFormat,transactionDateYY))">
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
