@@ -677,7 +677,7 @@
                                 <native2ascii
                                     encoding="UTF8"
                                     src="src/main/resources/org/mifos/config/localizedResources"
-                                    dest="target/mifos-webapp/WEB-INF/classes/org/mifos/config/localizedResources"
+                                    dest="target/classes/org/mifos/config/localizedResources"
                                     includes="*.properties" />
                             </tasks>
                         </configuration>
