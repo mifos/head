@@ -180,10 +180,7 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
         createLoanAccountSearchParameters.setLoanProduct("WeeklyFlatLoanWithOneTimeFees");
         createLoanAccountSearchParameters.setSearchString("Stu1232993852651 Client1232993852651");
         QuestionResponseParameters questionResponseParameters = new QuestionResponseParameters();
-        questionResponseParameters.addTextAnswer("questionGroups[0].sectionDetails[0].questions[0].value", "222");
-        questionResponseParameters.addSingleSelectAnswer("questionGroups[1].sectionDetails[0].questions[0].value", "no");
-        questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[1].questions[0].value", "18/02/2011");
-        questionResponseParameters.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[1].valuesAsArray", "second");
+
         CreateQuestionParameters createQuestionParameters = new CreateQuestionParameters();
         createQuestionParameters.setType(createQuestionParameters.TYPE_FREE_TEXT);
         createQuestionParameters.setText("newQuestion232");
@@ -196,6 +193,19 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
         questionGroupTestHelper.createQuestionGroup(createQuestionGroupParameters2);
 
         QuestionResponsePage questionResponsePage = questionGroupTestHelper.navigateToQuestionResponsePageDuringLoanCreation(createLoanAccountSearchParameters);
+        // TODO it seems that question group order is random in loans!
+        if (questionResponsePage.isQuestionPresent(1, 1, 0)) {
+            questionResponseParameters.addTextAnswer("questionGroups[0].sectionDetails[0].questions[0].value", "222");
+            questionResponseParameters.addSingleSelectAnswer("questionGroups[1].sectionDetails[0].questions[0].value", "no");
+            questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[1].questions[0].value", "18/02/2011");
+            questionResponseParameters.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[1].valuesAsArray", "second");
+        }
+        else {
+            questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[0].questions[0].value", "222");
+            questionResponseParameters.addSingleSelectAnswer("questionGroups[0].sectionDetails[0].questions[0].value", "no");
+            questionResponseParameters.addTextAnswer("questionGroups[0].sectionDetails[1].questions[0].value", "18/02/2011");
+            questionResponseParameters.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[1].valuesAsArray", "second");
+        }
         questionResponsePage.populateAnswers(questionResponseParameters);
         questionResponsePage = questionResponsePage
             .continueAndNavigateToCreateLoanAccountReviewInstallmentPage()

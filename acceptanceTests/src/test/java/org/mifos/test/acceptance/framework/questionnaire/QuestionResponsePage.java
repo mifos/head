@@ -70,7 +70,9 @@ public class QuestionResponsePage extends MifosPage {
             Assert.assertFalse(selenium.isTextPresent(section));
     }
 
-
+    public boolean isQuestionPresent(int qg, int s, int q) {
+        return selenium.isElementPresent("questionGroups[" + qg + "].sectionDetails[" + s + "].questions[" + q + "].value");
+    }
 
     public void populateSmartSelect(String smartSelectId, Map<String, String> tags) {
         for (String tag : tags.keySet()) {
