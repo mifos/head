@@ -85,6 +85,7 @@ public class MpesaImportTest extends UiTestCaseBase {
 
     @Autowired
     private DbUnitUtilities dbUnitUtilities;
+
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
 
