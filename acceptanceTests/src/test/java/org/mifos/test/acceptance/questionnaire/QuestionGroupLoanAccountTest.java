@@ -22,9 +22,9 @@ package org.mifos.test.acceptance.questionnaire;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.joda.time.DateTime;
 import org.mifos.framework.util.DbUnitUtilities;
@@ -127,7 +127,7 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
         newQuestionList.add(createQuestionParameters);
         String[] questionsExist = {"newQuestion232", "MultiSelect", "NumberQuestion2", "question 2"};
         String[] questionsInactive = {"SingleSelect", "TextQuestion", "MultiSelectQuestion", "SingleSelectQuestion", "DateQuestion"};
-        Map<String, String> questionsAndAnswers = new HashMap<String, String>();
+        Map<String, String> questionsAndAnswers = new TreeMap<String, String>();
         questionsAndAnswers.put("MultiSelect", "third");
         questionsAndAnswers.put("NumberQuestion2", "10");
         questionsAndAnswers.put("question 2", "35");
@@ -256,7 +256,7 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
         newQuestionList.add(createQuestionParameters);
         String[] questionsExist = {"newQuestion232", "DateQuestion"};
         String[] questionsInactive = {"question 2", "MultiSelect", "question 4"};
-        Map<String, String> questionsAndAnswers = new HashMap<String, String>();
+        Map<String, String> questionsAndAnswers = new TreeMap<String, String>();
         questionsAndAnswers.put("MultiSelect", "second");
         questionsAndAnswers.put("DateQuestion", "11/02/2011");
         questionsAndAnswers.put("question 2", "222");
@@ -306,7 +306,7 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
         group1sec1.add("MultiSelect");
         List<String> group1sec2 = new ArrayList<String>();
         group1sec2.add("question 4");
-        Map<String, List<String>> existingQuestions1 = new HashMap<String, List<String>>();
+        Map<String, List<String>> existingQuestions1 = new TreeMap<String, List<String>>();
         existingQuestions1.put("sec 1", group1sec1);
         existingQuestions1.put("sec 2", group1sec2);
         CreateQuestionGroupParameters createQuestionGroupParameters = new CreateQuestionGroupParameters();
@@ -318,7 +318,7 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
     }
 
     private CreateQuestionGroupParameters getCreateQuestionGroupParameters2(String name, String applied) {
-        Map<String, List<String>> existingQuestions2 = new HashMap<String, List<String>>();
+        Map<String, List<String>> existingQuestions2 = new TreeMap<String, List<String>>();
         List<String> group2sec1 = new ArrayList<String>();
         group2sec1.add("question 2");
         existingQuestions2.put("section 1", group2sec1);
