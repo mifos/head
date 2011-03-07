@@ -94,10 +94,7 @@ public class StandardReportsTest extends UiTestCaseBase {
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled = false)
     public void reportCategoriesTest() throws Exception {
-
-        //Given
 
         //When
         ViewReportCategoriesPage viewReportCategoriesPage = reportTestHelper.navigateToViewReportCategories();
