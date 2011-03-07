@@ -1888,7 +1888,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             applicationState = AccountState.LOAN_PENDING_APPROVAL;
         }
         
-        return new LoanApplicationStateDto(AccountState.LOAN_PARTIAL_APPLICATION.getValue().intValue(), applicationState.getValue().intValue());
+        return new LoanApplicationStateDto(AccountState.LOAN_PARTIAL_APPLICATION.getValue().intValue(), applicationState.getValue().intValue(), AccountState.LOAN_APPROVED.getValue().intValue());
     }
 
     @Override
