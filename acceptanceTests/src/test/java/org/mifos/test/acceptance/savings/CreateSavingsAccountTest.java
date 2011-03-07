@@ -65,7 +65,7 @@ public class CreateSavingsAccountTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(sequential = true, groups = {"savings", "acceptance", "ui", "no_db_unit"})
+    @Test(singleThreaded = true, groups = {"savings", "acceptance", "ui", "no_db_unit"})
     public void verifyPaymentTypesForWithdrawalsAndDeposits() throws Exception {
         //When
         NavigationHelper navigationHelper = new NavigationHelper(selenium);
@@ -116,7 +116,7 @@ public class CreateSavingsAccountTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(sequential = true, groups = {"smoke", "savings", "acceptance", "ui", "no_db_unit"})
+    @Test(singleThreaded = true, groups = {"smoke", "savings", "acceptance", "ui", "no_db_unit"})
     public void newMandatoryClientSavingsAccountWithDateTypeCustomField() throws Exception {
 
         CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();

@@ -93,7 +93,7 @@ import static java.util.Arrays.asList;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
 @SuppressWarnings("PMD.TooManyFields")
-@Test(sequential = true, groups = {"client", "acceptance", "ui", "no_db_unit"})
+@Test(singleThreaded = true, groups = {"client", "acceptance", "ui", "no_db_unit"})
 public class ClientTest extends UiTestCaseBase {
 
     private NavigationHelper navigationHelper;
@@ -170,7 +170,7 @@ public class ClientTest extends UiTestCaseBase {
 
     }
 
-    @Test(sequential = true, groups = {"smoke", "client", "acceptance", "ui"})
+    @Test(singleThreaded = true, groups = {"smoke", "client", "acceptance", "ui"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-208
     public void createClientAndChangeStatusTest() throws Exception {

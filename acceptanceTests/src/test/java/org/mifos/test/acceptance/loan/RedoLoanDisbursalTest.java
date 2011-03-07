@@ -48,7 +48,7 @@ import java.sql.SQLException;
 
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(sequential = true, groups = {"loan", "acceptance", "ui", "no_db_unit"})
+@Test(singleThreaded = true, groups = {"loan", "acceptance", "ui", "no_db_unit"})
 public class RedoLoanDisbursalTest extends UiTestCaseBase {
     private LoanTestHelper loanTestHelper;
     private NavigationHelper navigationHelper;

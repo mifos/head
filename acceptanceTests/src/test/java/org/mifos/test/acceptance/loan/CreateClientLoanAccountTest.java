@@ -58,7 +58,7 @@ import java.util.Random;
 
 @SuppressWarnings("PMD")
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"loan","acceptance","ui"})
+@Test(singleThreaded = true, groups = {"loan","acceptance","ui"})
 public class CreateClientLoanAccountTest extends UiTestCaseBase {
 
     private LoanTestHelper loanTestHelper;
@@ -92,7 +92,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
-    @Test(sequential = true, groups = {"loan","acceptance","ui", "smoke"})
+    @Test(singleThreaded = true, groups = {"loan","acceptance","ui", "smoke"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
     public void newWeeklyClientLoanAccountWithQuestionGroups() throws Exception {
@@ -141,7 +141,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         editPreviewLoanAccountPage.verifyErrorInForm("Please specify valid Grace period for repayments. Grace period for repayments should be a value less than 12");
     }
 
-    @Test(sequential = true, groups = {"loan","acceptance","ui"})
+    @Test(singleThreaded = true, groups = {"loan","acceptance","ui"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void newWeeklyClientLoanAccountWithDateTypeCustomField() throws Exception {
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
@@ -182,7 +182,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         getLoanStatusActive(loanId);
     }
 
-    @Test(sequential = true, groups = {"loan","acceptance","ui"})
+    @Test(singleThreaded = true, groups = {"loan","acceptance","ui"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
     //http://mifosforge.jira.com/browse/MIFOSTEST-308
@@ -208,7 +208,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
-    @Test(sequential = true, groups = {"loan","acceptance","ui"})
+    @Test(singleThreaded = true, groups = {"loan","acceptance","ui"})
     public void newMonthlyClientLoanAccountWithZeroInterestRate() throws Exception {
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("Client - Tesa Mendez");

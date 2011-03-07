@@ -29,7 +29,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"DbUnitUtilitiesTest","unit"})
+@Test(singleThreaded = true, groups={"DbUnitUtilitiesTest","unit"})
 public class DbUnitUtilitiesTest {
 
     /**

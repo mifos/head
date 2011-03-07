@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = { "holiday", "schedules", "acceptance", "ui", "no_db_unit" })
+@Test(singleThreaded = true, groups = { "holiday", "schedules", "acceptance", "ui", "no_db_unit" })
 public class NoDBUnitAdditionalHolidayTest extends UiTestCaseBase {
     private AppLauncher appLauncher;
 

@@ -41,7 +41,7 @@ import static java.util.Arrays.asList;
 import static org.testng.Assert.assertEquals;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(sequential = true, groups = {"client", "acceptance", "ui"})
+@Test(singleThreaded = true, groups = {"client", "acceptance", "ui"})
 public class QuestionTest extends UiTestCaseBase {
     private AppLauncher appLauncher;
     @Autowired

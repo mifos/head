@@ -66,7 +66,7 @@ import org.testng.annotations.Test;
  * acceptanceTests/src/test/resources/mpesa/*.xls.expected.txt
  */
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"import"})
+@Test(singleThreaded = true, groups = {"import"})
 public class MpesaImportTest extends UiTestCaseBase {
 
     private NavigationHelper navigationHelper;

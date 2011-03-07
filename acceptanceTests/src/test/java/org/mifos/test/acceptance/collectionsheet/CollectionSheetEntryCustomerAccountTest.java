@@ -46,7 +46,7 @@ import org.testng.annotations.Test;
 
 @SuppressWarnings("PMD")
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential = true, groups = {"collectionsheet","acceptance","ui"})
+@Test(singleThreaded = true, groups = {"collectionsheet","acceptance","ui"})
 public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
 
     public static final String FEE_TRXN_DETAIL = "FEE_TRXN_DETAIL";
@@ -94,7 +94,7 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    @Test(enabled=true, sequential = true, groups = {"collectionsheet", "acceptance", "ui"})
+    @Test(enabled=true, singleThreaded = true, groups = {"collectionsheet", "acceptance", "ui"})
     public void clientAccountFeesSavedToDatabase() throws Exception {
         try {
             SubmitFormParameters formParameters = getFormParametersForTestOffice();

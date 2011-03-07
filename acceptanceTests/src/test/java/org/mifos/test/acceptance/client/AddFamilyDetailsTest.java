@@ -39,7 +39,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"client","acceptance","ui","no_db_unit"})
+@Test(singleThreaded = true, groups = {"client","acceptance","ui","no_db_unit"})
 
 public class AddFamilyDetailsTest extends UiTestCaseBase {
 

@@ -55,7 +55,7 @@ import org.testng.annotations.Test;
 import java.util.Random;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(sequential = true, groups = { "loanproduct", "acceptance"})
+@Test(singleThreaded = true, groups = { "loanproduct", "acceptance"})
 public class DefineNewLoanProductTest extends UiTestCaseBase {
 
     private Random random;

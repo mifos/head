@@ -44,7 +44,7 @@ import org.testng.annotations.Test;
 
 @edu.umd.cs.findbugs.annotations.SuppressWarnings("CPD")
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"collectionsheet","acceptance","ui"})
+@Test(singleThreaded = true, groups={"collectionsheet","acceptance","ui"})
 public class CollectionSheetEntrySimpleTest extends UiTestCaseBase {
 
 

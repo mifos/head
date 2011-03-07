@@ -42,7 +42,7 @@ import java.net.URISyntaxException;
 import java.sql.SQLException;
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"savings","acceptance","ui"})
+@Test(singleThreaded = true, groups={"savings","acceptance","ui"})
 public class SavingsAccountAddNoteTest extends UiTestCaseBase {
 
     private SavingsAccountHelper savingsAccountHelper;

@@ -37,7 +37,7 @@ import java.io.UnsupportedEncodingException;
 
 @SuppressWarnings("PMD")
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"admin", "acceptance","ui","no_db_unit"})
+@Test(singleThreaded = true, groups = {"admin", "acceptance","ui","no_db_unit"})
 public class SystemInfoDateTimeTest extends UiTestCaseBase {
 
     private AdminTestHelper adminTestHelper;

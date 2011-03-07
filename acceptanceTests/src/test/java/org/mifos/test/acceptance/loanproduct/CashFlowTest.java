@@ -42,7 +42,7 @@ import org.testng.annotations.Test;
 
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(sequential = true, groups = { "loanproduct", "acceptance","no_db_unit"})
+@Test(singleThreaded = true, groups = { "loanproduct", "acceptance","no_db_unit"})
 public class CashFlowTest extends UiTestCaseBase {
 
     @Autowired

@@ -60,7 +60,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(sequential = true, groups = {"holiday", "schedules", "acceptance", "ui"})
+@Test(singleThreaded = true, groups = {"holiday", "schedules", "acceptance", "ui"})
 public class AdditionalHolidayTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;

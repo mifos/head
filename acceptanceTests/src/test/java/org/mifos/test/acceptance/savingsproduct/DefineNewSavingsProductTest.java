@@ -57,7 +57,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(sequential = true, groups = {"savingsproduct", "acceptance", "ui"})
+@Test(singleThreaded = true, groups = {"savingsproduct", "acceptance", "ui"})
 @SuppressWarnings("PMD.SignatureDeclareThrowsException")
 public class DefineNewSavingsProductTest extends UiTestCaseBase {
 

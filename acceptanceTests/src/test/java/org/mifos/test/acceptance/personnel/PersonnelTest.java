@@ -58,7 +58,7 @@ import org.testng.annotations.Test;
 
 @SuppressWarnings("PMD")
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(sequential = true, groups = {"personnel", "acceptance", "ui", "no_db_unit"})
+@Test(singleThreaded = true, groups = {"personnel", "acceptance", "ui", "no_db_unit"})
 public class PersonnelTest extends UiTestCaseBase {
 
     private NavigationHelper navigationHelper;

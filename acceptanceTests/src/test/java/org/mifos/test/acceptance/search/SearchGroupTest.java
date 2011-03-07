@@ -33,7 +33,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"search","acceptance","ui"})
+@Test(singleThreaded = true, groups = {"search","acceptance","ui"})
 public class SearchGroupTest extends SearchTestBase {
     private AppLauncher appLauncher;
 

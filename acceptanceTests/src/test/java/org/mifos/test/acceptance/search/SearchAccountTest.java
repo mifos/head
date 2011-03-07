@@ -33,7 +33,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"search","acceptance"})
+@Test(singleThreaded = true, groups = {"search","acceptance"})
 public class SearchAccountTest extends SearchTestBase {
     /**
      * Account number to use in search
@@ -72,7 +72,7 @@ public class SearchAccountTest extends SearchTestBase {
      * is present on the results page
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(sequential = true, groups = { "smoke", "search", "acceptance" })
+    @Test(singleThreaded = true, groups = { "smoke", "search", "acceptance" })
     public void searchAccountTest()  throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities,
                 dataFileName,

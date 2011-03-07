@@ -44,7 +44,7 @@ import java.sql.SQLException;
 
 @SuppressWarnings("PMD")
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(sequential = true, groups = {"acceptance", "ui", "loan", "no_db_unit"})
+@Test(singleThreaded = true, groups = {"acceptance", "ui", "loan", "no_db_unit"})
 public class LoanRepayTest extends UiTestCaseBase {
     private LoanTestHelper loanTestHelper;
     private String loanId = "000100000000037";
