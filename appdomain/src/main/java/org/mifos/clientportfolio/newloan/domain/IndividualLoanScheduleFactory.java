@@ -55,19 +55,15 @@ public class IndividualLoanScheduleFactory implements LoanScheduleFactory {
 
     @Override
     public LoanSchedule create(List<DateTime> loanScheduleDates, LoanOfferingBO loanProduct, 
-            CustomerBO customer, Money loanAmount, Double interestRate, Integer interestDays, Integer gracePeriodDuration, 
+            CustomerBO customer, MeetingBO loanMeeting, Money loanAmount, Double interestRate, Integer interestDays, Integer gracePeriodDuration, 
             List<AccountFeesEntity> accountFees) {
 
         GraceType graceType = loanProduct.getGraceType();
         InterestType interestType = loanProduct.getInterestType();
         Integer numberOfInstallments = loanScheduleDates.size();
 
-        MeetingBO loanMeeting = loanProduct.getLoanOfferingMeetingValue();
-        MeetingBO customerMeeting = customer.getCustomerMeetingValue();
-        
-        // FIXME - keithw - which meeting schedule should be used ?
         RecurringScheduledEventFactory scheduledEventFactory = new RecurringScheduledEventFactoryImpl();
-        ScheduledEvent meetingScheduledEvent = scheduledEventFactory.createScheduledEventFrom(customerMeeting);
+        ScheduledEvent meetingScheduledEvent = scheduledEventFactory.createScheduledEventFrom(loanMeeting);
 
         Integer installmentNumber = 1;
         List<InstallmentDate> dueInstallmentDates = new ArrayList<InstallmentDate>();
@@ -106,18 +102,6 @@ public class IndividualLoanScheduleFactory implements LoanScheduleFactory {
         List<LoanScheduleEntity> unroundedLoanSchedules = createUnroundedLoanSchedulesFromInstallments(dueInstallmentDates, loanInterest, loanAmount, 
                 meetingScheduledEvent, EMIInstallments, accountFees, customer);
 
-//        List<LoanScheduleEntity> scheduledLoanRepayments = new ArrayList<LoanScheduleEntity>();
-//        // create loanSchedules
-//        int installmentIndex = 0;
-//        for (InstallmentDate installmentDate : dueInstallmentDates) {
-//            InstallmentPrincipalAndInterest em = EMIInstallments.get(installmentIndex);
-//            LoanScheduleEntity loanScheduleEntity = new LoanScheduleEntity(null, customer, installmentDate
-//                    .getInstallmentId(), new java.sql.Date(installmentDate.getInstallmentDueDate().getTime()),
-//                    PaymentStatus.UNPAID, em.getPrincipal(), em.getInterest());
-//            scheduledLoanRepayments.add(loanScheduleEntity);
-//            installmentIndex++;
-//        }
-        
         Money rawAmount = calculateTotalFeesAndInterestForLoanSchedules(unroundedLoanSchedules, loanAmount.getCurrency(), accountFees);
         
         List<LoanScheduleEntity> allExistingLoanSchedules = new ArrayList<LoanScheduleEntity>();
@@ -128,16 +112,6 @@ public class IndividualLoanScheduleFactory implements LoanScheduleFactory {
         List<LoanScheduleEntity> roundedLoanSchedules = loanScheduleInstallmentRounder.round(graceType, gracePeriodDuration.shortValue(), loanAmount,
         		interestType, unroundedLoanSchedules, allExistingLoanSchedules);
         
-//        List<LoanScheduleRepaymentItem> loanScheduleItems = new ArrayList<LoanScheduleRepaymentItem>();
-//        for (LoanScheduleEntity loanScheduleEntity : roundedLoanSchedules) {
-//
-//            LoanScheduleRepaymentItemImpl loanScheduleItem = new LoanScheduleRepaymentItemImpl(loanScheduleEntity
-//                    .getInstallmentId().intValue(), new LocalDate(loanScheduleEntity.getActionDate()),
-//                    loanScheduleEntity.getPrincipal(), loanScheduleEntity.getInterest());
-//
-//            loanScheduleItems.add(loanScheduleItem);
-//        }
-
         return new LoanSchedule(roundedLoanSchedules, rawAmount);
     }
     
