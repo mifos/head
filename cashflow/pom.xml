@@ -238,7 +238,7 @@
             <plugin>
                 <groupId>org.mifos.maven</groupId>
                 <artifactId>mifos-pseudoloc-gen</artifactId>
-                <version>0.0.1</version>
+                <version>1.0</version>
                 <configuration>
                     <inputFilenamePattern>^cashflow_messages\.properties$</inputFilenamePattern>
                     <inputDirectory>src/main/resources/org/mifos/platform/cashflow/ui/localizedProperties</inputDirectory>
