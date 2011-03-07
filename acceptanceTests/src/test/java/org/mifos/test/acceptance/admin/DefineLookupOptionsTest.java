@@ -35,7 +35,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(groups = {"admin","acceptance","ui"})
+@Test(singleThreaded = true, groups = {"admin","acceptance","ui"})
 public class DefineLookupOptionsTest extends UiTestCaseBase {
 
     @Autowired

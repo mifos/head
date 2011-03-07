@@ -36,7 +36,7 @@ import org.testng.annotations.Test;
  */
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(groups={"reports", "ui", "workInProgress", "no_db_unit"})
+@Test(singleThreaded = true, groups={"reports", "ui", "workInProgress", "no_db_unit"})
 public class ViewReportCategoriesTest extends UiTestCaseBase {
     private AppLauncher appLauncher;
 
