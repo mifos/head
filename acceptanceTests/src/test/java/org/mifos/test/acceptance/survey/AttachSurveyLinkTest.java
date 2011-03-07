@@ -29,6 +29,7 @@ import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
 import org.mifos.test.acceptance.framework.loan.AttachSurveyPage;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
+import org.mifos.test.acceptance.framework.testhelpers.QuestionGroupTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
@@ -38,7 +39,9 @@ import org.testng.annotations.Test;
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
 @Test(singleThreaded = true, groups = {"acceptance", "ui", "survey", "no_db_unit"})
 public class AttachSurveyLinkTest extends UiTestCaseBase {
+    public static final String QG_FOR_VIEW_CLIENT_CENTRE_GROUP_LOAN = "QGForViewClientCentreGroupLoan";
     private NavigationHelper navigationHelper;
+    private QuestionGroupTestHelper questionGroupTestHelper;
 
 
     @Override
@@ -50,12 +53,14 @@ public class AttachSurveyLinkTest extends UiTestCaseBase {
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         DateTime targetTime = new DateTime(2009, 7, 11, 14, 01, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
-
         navigationHelper = new NavigationHelper(selenium);
+        questionGroupTestHelper = new QuestionGroupTestHelper(selenium);
+        questionGroupTestHelper.markQuestionGroupAsActive(QG_FOR_VIEW_CLIENT_CENTRE_GROUP_LOAN);
     }
 
     @AfterMethod
     public void logOut() {
+        questionGroupTestHelper.markQuestionGroupAsInactive(QG_FOR_VIEW_CLIENT_CENTRE_GROUP_LOAN);
         (new MifosPage(selenium)).logout();
     }
 
