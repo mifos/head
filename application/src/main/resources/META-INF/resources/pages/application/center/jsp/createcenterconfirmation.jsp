@@ -32,7 +32,7 @@ explanation of the license and how it is applied.
 <span id="page.id" title="createcenterconfirmation"></span>
 
 
-<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}'/>
 		<fmt:setBundle basename="org.mifos.config.localizedResources.CenterUIResources"/>
 
 

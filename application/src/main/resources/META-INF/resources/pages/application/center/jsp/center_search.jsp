@@ -27,7 +27,7 @@ explanation of the license and how it is applied.
 <%@taglib uri="http://struts.apache.org/tags-bean-el" prefix="bean-el"%>
 
 
-<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}'/>
 <fmt:setBundle basename="org.mifos.config.localizedResources.CenterUIResources"/>
 
 <tiles:insert definition=".withoutmenu">
@@ -35,7 +35,7 @@ explanation of the license and how it is applied.
  <span id="page.id" title="CenterSearch"></span>
  
  
- <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+ <fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}'/>
 		<fmt:setBundle basename="org.mifos.config.localizedResources.CenterUIResources"/>
  <script type="text/javascript">
  

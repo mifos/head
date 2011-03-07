@@ -87,7 +87,7 @@ explanation of the license and how it is applied.
         }
 		</STYLE>
         
-        <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+        <fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}'/>
 		<fmt:setBundle basename="org.mifos.config.localizedResources.SurveysUIResources"/>
 		<html-el:form action="${requestScope.origFlowRequestURI}">
             <c:if test="${!empty sessionScope.urlMap}">

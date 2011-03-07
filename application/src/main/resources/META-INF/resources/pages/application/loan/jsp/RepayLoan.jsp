@@ -46,7 +46,7 @@ explanation of the license and how it is applied.
         <script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
 		<SCRIPT SRC="pages/application/loan/js/repayLoan.js"></SCRIPT>
 
-		<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+		<fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}'/>
 		<fmt:setBundle basename="org.mifos.config.localizedResources.LoanUIResources"/>
 		
 		<html-el:form action="repayLoanAction.do?method=preview&globalAccountNum=${param.globalAccountNum}" onsubmit="return validateMyForm(receiptDate,receiptDateFormat,receiptDateYY)">

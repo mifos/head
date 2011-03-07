@@ -31,7 +31,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@ taglib uri="/customer/customerfunctions" prefix="customerfn"%>
 
-<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}'/>
 <fmt:setBundle basename="org.mifos.config.localizedResources.ClientUIResources"/>
 
 <!-- Tile  definitions -->

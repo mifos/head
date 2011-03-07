@@ -26,7 +26,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@ taglib uri="/mifos/officetags" prefix="office"%>
 
-<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}'/>
 <fmt:setBundle basename="org.mifos.config.localizedResources.ClientUIResources"/>
 
 <tiles:insert definition=".withoutmenu">

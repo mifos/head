@@ -28,7 +28,7 @@ explanation of the license and how it is applied.
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 <tiles:put name="body" type="string">
 <span id="page.id" title="center_search_results_transfer_group"></span>
-<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}'/>
 		<fmt:setBundle basename="org.mifos.config.localizedResources.CenterUIResources"/>
 <script language="javascript">
   function goToCancelPage(){

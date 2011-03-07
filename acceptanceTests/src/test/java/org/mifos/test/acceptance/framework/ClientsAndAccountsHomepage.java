@@ -28,6 +28,7 @@ import org.mifos.test.acceptance.framework.group.GroupSearchPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountsSearchPage;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSearchPage;
+import org.testng.Assert;
 
 
 import com.thoughtworks.selenium.Selenium;
@@ -45,43 +46,43 @@ public class ClientsAndAccountsHomepage extends AbstractPage {
 
     // TODO fix these 5 following methods. They all belong in a navigation helper.
     public CollectionSheetEntrySelectPage navigateToEnterCollectionSheetDataUsingLeftMenu() {
-        selenium.click("id=menu.link.label.enter.label.collectionsheet.label.data");
+        selenium.click("id=menu.link.label.entercollectionsheetdata");
         waitForPageToLoad();
         return new CollectionSheetEntrySelectPage(selenium);
     }
 
     public CreateLoanAccountsSearchPage navigateToCreateMultipleLoanAccountsUsingLeftMenu() {
-        selenium.click("menu.link.label.createmultipleloanaccountsprefix.loan.label.createmultipleloanaccountssuffix");
+        selenium.click("menu.link.label.createmultipleloanaccounts");
         waitForPageToLoad();
         return new CreateLoanAccountsSearchPage(selenium);
     }
 
     public CreateLoanAccountSearchPage navigateToCreateLoanAccountUsingLeftMenu() {
-        selenium.click("menu.link.label.createloanaccountprefix.loan.label.createloanaccountsuffix");
+        selenium.click("menu.link.label.createloanaccount");
         waitForPageToLoad();
         return new CreateLoanAccountSearchPage(selenium);
     }
 
     public CreateSavingsAccountSearchPage navigateToCreateSavingsAccountUsingLeftMenu() {
-        selenium.click("menu.link.label.createsavingsaccountprefix.savings.label.createsavingsaccountsuffix");
+        selenium.click("menu.link.label.createsavingsaccount");
         waitForPageToLoad();
         return new CreateSavingsAccountSearchPage(selenium);
     }
 
     public CreateCenterChooseOfficePage navigateToCreateNewCenterPage() {
-        selenium.click("menu.link.label.createnew.center");
+        selenium.click("menu.link.label.createnewcenter");
         waitForPageToLoad();
         return new CreateCenterChooseOfficePage(selenium);
     }
 
     public GroupSearchPage navigateToCreateNewClientPage() {
-        selenium.click("menu.link.label.createnew.client");
+        selenium.click("menu.link.label.createnewclient");
         waitForPageToLoad();
         return new GroupSearchPage(selenium);
     }
 
     public CreateGroupSearchPage navigateToCreateNewGroupPage() {
-        selenium.click("menu.link.label.createnew.group");
+        selenium.click("menu.link.label.createnewgroup");
         waitForPageToLoad();
         return new CreateGroupSearchPage(selenium);
     }
@@ -96,4 +97,14 @@ public class ClientsAndAccountsHomepage extends AbstractPage {
         waitForPageToLoad();
         return new ClientSearchResultsPage(selenium);
     }
+    
+    public void verifyMenuWithCenterHierarchyOn() {
+        Assert.assertTrue(selenium.isElementPresent("menu.link.label.createnewcenter"));
+        Assert.assertTrue(selenium.isTextPresent("To review or edit a Client, Group, Center or account"));
+    }
+    
+    public void verifyMenuWithCenterHierarchyOff() {
+        Assert.assertFalse(selenium.isElementPresent("menu.link.label.createnewcenter"));
+        Assert.assertTrue(selenium.isTextPresent("To review or edit a Client, Group or account"));    	
+    }    
 }

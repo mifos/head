@@ -375,6 +375,8 @@
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
+                <!-- these must be filtered by native2ascii, don't just copy them -->
+                <excludes><exclude>**/localizedResources/*.properties</exclude></excludes>
             </resource>
         </resources>
         <testResources>
@@ -587,7 +589,7 @@
                 <version>0.0.1</version>
                 <configuration>
                     <inputDirectory>src/main/resources/org/mifos/config/localizedResources</inputDirectory>
-                    <outputDirectory>target/mifos-webapp/WEB-INF/classes/org/mifos/config/localizedResources</outputDirectory>
+                    <outputDirectory>target/classes/org/mifos/config/localizedResources</outputDirectory>
                 </configuration>
                 <executions>
                     <execution>
@@ -641,6 +643,43 @@
                                 project.properties['ci.build.tag'] = env['BUILD_TAG'] ?: 'DEVELOPMENT'
                                 project.properties['ci.build.date'] = "" + new Date()
                             </source>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <!-- this goes away once we're completely off Struts -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <dependencies>
+                    <dependency>
+                        <groupId>ant</groupId>
+                        <artifactId>ant-nodeps</artifactId>
+                        <version>1.6.5</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.sun</groupId>
+                        <artifactId>tools</artifactId>
+                        <version>1.5.0</version>
+                        <scope>system</scope>
+                        <systemPath>${java.home}/../lib/tools.jar</systemPath>
+                   </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <id>native2ascii</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <native2ascii
+                                    encoding="UTF8"
+                                    src="src/main/resources/org/mifos/config/localizedResources"
+                                    dest="target/classes/org/mifos/config/localizedResources"
+                                    includes="*.properties" />
+                            </tasks>
                         </configuration>
                     </execution>
                 </executions>

@@ -95,15 +95,6 @@ public class MifosConfiguration {
 
             labelCache.put(new LabelKey(keyString, MasterDataEntity.CUSTOMIZATION_LOCALE_ID), messageText);
         }
-
-        List<LookUpEntity> entities = applicationConfigurationDao.findLookupEntities();
-        for (LookUpEntity entity : entities) {
-            Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
-            for (LookUpLabelEntity label : labels) {
-                labelCache.put(new LabelKey(entity.getEntityType(), label.getLocaleId()), label.getLabelText());
-            }
-        }
-
     }
 
     public void updateKey(LocalizedTextLookup keyContainer, String newValue) {

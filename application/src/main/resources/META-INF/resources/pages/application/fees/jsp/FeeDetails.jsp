@@ -26,7 +26,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
-<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}'/>
 <fmt:setBundle basename="org.mifos.config.localizedResources.FeesUIResources"/>
 
 <tiles:insert definition=".view">

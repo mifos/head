@@ -29,7 +29,7 @@ explanation of the license and how it is applied.
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
-<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}'/>
 <fmt:setBundle basename="org.mifos.config.localizedResources.ClientUIResources"/>
 
 <!-- Tile  definitions -->

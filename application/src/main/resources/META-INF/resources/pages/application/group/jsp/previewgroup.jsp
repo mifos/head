@@ -51,7 +51,7 @@ explanation of the license and how it is applied.
 	groupCustActionForm.submit();
   }
 </script>
-<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}'/>
 <fmt:setBundle basename="org.mifos.config.localizedResources.GroupUIResources"/>
 <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'CenterHierarchyExist')}" var="CenterHierarchyExist" />
 <html-el:form action="groupCustAction.do?method=create" > 

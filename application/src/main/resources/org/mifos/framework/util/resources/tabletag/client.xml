@@ -6,7 +6,7 @@
   <path key="" forwardkey="" action=""/>
   <pagerequirements numbersrequired="true" bluelinerequired="true" headingrequired="true"/>
   <row tdrequired="false">
-    <column label="Client" labeltype="key" boldlabel="false" type="link" action="/client">
+    <column label="client" labeltype="key" boldlabel="false" type="link" action="/client">
       <displayname bold="true">
         <fragment-name name="name" type="method"/>
         <fragment-name name=": ID " type="string"/>

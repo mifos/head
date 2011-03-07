@@ -184,10 +184,7 @@ public class LabelTagUtils {
 
         for (LookUpEntity entity : lookupEntities) {
 
-            String labelText = entity.findLabel();
-            if (StringUtils.isBlank(labelText)) {
-                labelText = MessageLookup.getInstance().lookupLabel(entity.findLabelKey());
-            }
+            String labelText = MessageLookup.getInstance().lookupLabel(entity.findLabelKey());           
 
             if (StringUtils.isBlank(labelText)) {
                 labelText = "test-blank";

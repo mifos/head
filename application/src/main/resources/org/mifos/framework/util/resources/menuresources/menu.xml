@@ -11,15 +11,13 @@
                 </displayname>
                 <menuitem>
                     <displayname>
-                        <namefragment>label.createnew</namefragment>
-                        <namefragment>Group</namefragment>
+                        <namefragment>label.createNewGroup</namefragment>
                     </displayname>
                     <linkvalue>groupCustAction.do?method=hierarchyCheck&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=createGroup</linkvalue>
                 </menuitem>
                 <menuitem>
                     <displayname>
-                        <namefragment>label.createnew</namefragment>
-                        <namefragment>Client</namefragment>
+                        <namefragment>label.createNewClient</namefragment>
                     </displayname>
                     <linkvalue>groupCustAction.do?method=loadSearch&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=createClient</linkvalue>
                 </menuitem>
@@ -31,17 +29,13 @@
                 </displayname>
                 <menuitem>
                     <displayname>
-                        <namefragment>label.openNewLoanAccountPrefix</namefragment>
-                        <namefragment>Loan</namefragment>
-                        <namefragment>label.openNewLoanAccountSuffix</namefragment>
+                        <namefragment>label.openNewLoanAccount</namefragment>
                     </displayname>
                     <linkvalue> custSearchAction.do?method=loadSearch&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=loan    </linkvalue>
                 </menuitem>
                 <menuitem>
                     <displayname>
-                        <namefragment>label.openNewSavingsAccountPrefix</namefragment>
-                        <namefragment>Savings</namefragment>
-                        <namefragment>label.openNewSavingsAccountSuffix</namefragment>
+                        <namefragment>label.openNewSavingsAccount</namefragment>
                     </displayname>
                     <linkvalue>createSavingsAccount.ftl</linkvalue>
                 </menuitem>
@@ -66,9 +60,7 @@
                 </displayname>
                 <menuitem>
                     <displayname>
-                        <namefragment>label.enter</namefragment>
-                        <namefragment>label.collectionsheet</namefragment>
-                        <namefragment>label.data</namefragment>
+                        <namefragment>label.enterCollectionSheetData</namefragment>
                     </displayname>
                     <linkvalue>collectionsheetaction.do?method=load&amp;recordOfficeId=0&amp;recordLoanOfficerId=0</linkvalue>
                 </menuitem>
@@ -81,23 +73,20 @@
                 </displayname>
                 <menuitem keyForHidden="ClientRules.CenterHierarchyExists">
                     <displayname>
-                        <namefragment>label.createnew</namefragment>
-                        <namefragment>Center</namefragment>
+                        <namefragment>label.createNewCenter</namefragment>
                     </displayname>
                     <linkvalue>centerCustAction.do?method=chooseOffice&amp;recordOfficeId=0&amp;recordLoanOfficerId=0</linkvalue>
                 </menuitem>
 
                 <menuitem>
                     <displayname>
-                        <namefragment>label.createnew</namefragment>
-                        <namefragment>Group</namefragment>
+                        <namefragment>label.createNewGroup</namefragment>
                     </displayname>
                     <linkvalue>groupCustAction.do?method=hierarchyCheck&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=createGroup</linkvalue>
                 </menuitem>
                 <menuitem>
                     <displayname>
-                        <namefragment>label.createnew</namefragment>
-                        <namefragment>Client</namefragment>
+                        <namefragment>label.createNewClient</namefragment>
                     </displayname>
                     <linkvalue>groupCustAction.do?method=loadSearch&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=createClient</linkvalue>
                 </menuitem>
@@ -110,27 +99,21 @@
                 </displayname>
                 <menuitem>
                     <displayname>
-                        <namefragment>label.createSavingsAccountPrefix</namefragment>
-                        <namefragment>Savings</namefragment>
-                        <namefragment>label.createSavingsAccountSuffix</namefragment>
+                        <namefragment>label.createSavingsAccount</namefragment>
                     </displayname>
                     <linkvalue>createSavingsAccount.ftl</linkvalue>
                 </menuitem>
 
                 <menuitem>
                     <displayname>
-                        <namefragment>label.createLoanAccountPrefix</namefragment>
-                        <namefragment>Loan</namefragment>
-                        <namefragment>label.createLoanAccountSuffix</namefragment>
+                        <namefragment>label.createLoanAccount</namefragment>
                     </displayname>
                     <linkvalue>custSearchAction.do?method=loadSearch&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=loan</linkvalue>
                 </menuitem>
 
                 <menuitem>
                     <displayname>
-                        <namefragment>label.createMultipleLoanAccountsPrefix</namefragment>
-                        <namefragment>Loan</namefragment>
-                        <namefragment>label.createMultipleLoanAccountsSuffix</namefragment>
+                        <namefragment>label.createMultipleLoanAccounts</namefragment>
                     </displayname>
                     <linkvalue>multipleloansaction.do?method=load&amp;recordOfficeId=0&amp;recordLoanOfficerId=0</linkvalue>
                 </menuitem>

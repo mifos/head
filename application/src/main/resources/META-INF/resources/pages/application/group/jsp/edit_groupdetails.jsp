@@ -50,7 +50,7 @@ explanation of the license and how it is applied.
 </script>
 		<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
 		<SCRIPT SRC="pages/application/group/js/groupcommon.js"></SCRIPT>
-		<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+		<fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}'/>
 		<fmt:setBundle basename="org.mifos.config.localizedResources.GroupUIResources"/>
 		<html-el:form action="groupCustAction.do?method=previewManage">
 		<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />

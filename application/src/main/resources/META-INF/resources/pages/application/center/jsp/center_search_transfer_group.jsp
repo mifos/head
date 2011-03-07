@@ -30,7 +30,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <tiles:put name="body" type="string">
 <span id="page.id" title="center_search_transfer_group"></span>
-<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}'/>
 		<fmt:setBundle basename="org.mifos.config.localizedResources.CenterUIResources"/>
 <script language="javascript">
   function goToCancelPage(){

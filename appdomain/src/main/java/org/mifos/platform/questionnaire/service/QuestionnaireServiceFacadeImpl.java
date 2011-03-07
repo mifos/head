@@ -138,13 +138,15 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
                 int secondMax = 0;
                 List<QuestionGroupInstanceDetail> oldQuestionGroupDetails = questionnaireService.getQuestionGroupInstances(entityId, eventSourceDto, false, false);
                 for (QuestionGroupInstanceDetail oldQuestionGroupDetail : oldQuestionGroupDetails) {
-                    if (oldQuestionGroupDetail.getId() >= max) {
-                        secondMax = max;
-                        max = oldQuestionGroupDetail.getId();
-                    }
-                    else if (oldQuestionGroupDetail.getId() > secondMax) {
+                    // find previously entered responses that belong to the same question group as one being saved
+                    if (oldQuestionGroupDetail.getQuestionGroupDetail().getId().equals(questionGroupDetail.getId())) {
+                        if (oldQuestionGroupDetail.getId() >= max) {
+                            secondMax = max;
+                            max = oldQuestionGroupDetail.getId();
+                        } else if (oldQuestionGroupDetail.getId() > secondMax) {
                             secondMax = oldQuestionGroupDetail.getId();
                         }
+                    }
                 }
                 if (secondMax != 0) {
                     secondLastQuestionGroupDetail = questionnaireService.getQuestionGroupInstance(secondMax).getQuestionGroupDetail();

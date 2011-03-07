@@ -45,7 +45,7 @@ function meetingpopup(){
   
 </script>
 <SCRIPT SRC="pages/application/group/js/groupcommon.js"></SCRIPT>
-<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}'/>
 <fmt:setBundle basename="org.mifos.config.localizedResources.GroupUIResources"/>
 <html-el:form action="groupCustAction.do?method=update"  onsubmit="func_disableSubmitBtn('submitBtn')"> 
  <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
