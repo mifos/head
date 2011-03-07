@@ -3,35 +3,38 @@
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
       
-    <!--<var name="formBean" class="org.mifos.ui.core.controller.EditLoanAccountStatusFormBean" />-->
-    
     <var name="loanAccountQuestionGroupFormBean" class="org.mifos.clientportfolio.loan.ui.LoanAccountQuestionGroupFormBean" />
     <var name="loanAccountStatusFormBean" class="org.mifos.clientportfolio.loan.ui.LoanAccountStatusFormBean" />
     
 	<view-state id="editStatusStep" view="editLoanAccountStatusEnterDetails" model="loanAccountStatusFormBean">
-		<transition on="detailsEntered" to="previewStep">
-			<evaluate expression="!loanAccountStatusFormBean.loanApproved()"/>
-		</transition>
-		<transition on="detailsEntered" to="checkIfQuestionGroupsExistForLoanApproval">
-			<evaluate expression="loanAccountStatusFormBean.loanApproved()"/>
-		</transition>
+		<on-entry>
+			<evaluate expression="loanAccountStatusController.prepareFormBean(loanAccountStatusFormBean)" />
+		</on-entry>
+		<transition on="detailsEntered" to="checkIfLoanApproved" />
 	</view-state>
-	
+
+	<decision-state id="checkIfLoanApproved">
+		<if test="loanAccountStatusFormBean.isLoanApproved()" then="checkIfQuestionGroupsExistForLoanApproval" else="previewStep" />
+	</decision-state>
+		
     <decision-state id="checkIfQuestionGroupsExistForLoanApproval">
         <on-entry>
             <evaluate expression="loanAccountController.loadQuestionGroups(flowScope.productId, loanAccountQuestionGroupFormBean)"/>
         </on-entry>
-        <if test="loanAccountQuestionGroupFormBean.questionGroups.size() > 0" then="answerQuestionGroupStep" else="checkIfCompareForCashFlowIsEnabledForLoanCreation"/>
+        <if test="loanAccountQuestionGroupFormBean.questionGroups.size() > 0" then="answerQuestionGroupStep" else="previewStep"/>
     </decision-state>
-    <!--
-	<decision-state id="questionGroupStep">
-        <on-entry>
-            <evaluate expression="loanAccountStatusController.loadQuestionGroups(formBean)" />
-        </on-entry>
-        <if test="formBean.questionGroups.size() > 0" then="answerQuestionGroupStep" else="previewStep"/>
-	</decision-state>
-	-->
+	
+    <view-state id="answerQuestionGroupStep" view="editLoanAccountStatusQuestionnaire" model="loanAccountQuestionGroupFormBean">
+        <transition on="questionsAnswered" to="previewStep" />
+    </view-state>
+	
 	<view-state id="previewStep" view="editLoanAccountStatusPreview">
+		<transition on="save" to="complete">
+            <evaluate expression="loanAccountStatusController.updateStatus(loanAccountStatusFormBean)" result="flowScope.account" />
+		</transition>
+		<transition on="edit" to="editStatusStep" />
 	</view-state>
+	
+    <end-state id="complete" view="editLoanAccountStatusComplete" />
 	
 </flow>

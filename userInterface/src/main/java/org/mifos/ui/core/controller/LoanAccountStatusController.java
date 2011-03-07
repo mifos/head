@@ -25,6 +25,8 @@ import java.util.List;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.application.servicefacade.LoanAccountServiceFacade;
 import org.mifos.clientportfolio.loan.ui.LoanAccountQuestionGroupFormBean;
+import org.mifos.clientportfolio.loan.ui.LoanAccountStatusFormBean;
+import org.mifos.clientportfolio.newloan.applicationservice.LoanApplicationStateDto;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,7 +36,7 @@ public class LoanAccountStatusController {
 
     private final LoanAccountServiceFacade loanAccountServiceFacade;
     private final AdminServiceFacade adminServiceFacade;
-
+    
     @Autowired
     public LoanAccountStatusController(LoanAccountServiceFacade loanAccountServiceFacade, AdminServiceFacade adminServiceFacade) {
         this.loanAccountServiceFacade = loanAccountServiceFacade;
@@ -44,5 +46,14 @@ public class LoanAccountStatusController {
     public void loadQuestionGroups(Integer productId, LoanAccountQuestionGroupFormBean loanAccountQuestionGroupFormBean) {
         List<QuestionGroupDetail> questionGroups = loanAccountServiceFacade.retrieveApplicableQuestionGroups(productId);
         loanAccountQuestionGroupFormBean.setQuestionGroups(questionGroups);
+    }
+    
+    public void prepareFormBean(LoanAccountStatusFormBean formBean) {
+        LoanApplicationStateDto loanApplicationState = loanAccountServiceFacade.retrieveLoanApplicationState();
+        formBean.setLoanApplicationState(loanApplicationState);
+    }
+    
+    public void updateStatus(LoanAccountStatusFormBean formBean) {
+        
     }
 }

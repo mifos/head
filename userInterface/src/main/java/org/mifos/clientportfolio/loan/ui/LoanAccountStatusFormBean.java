@@ -46,8 +46,8 @@ public class LoanAccountStatusFormBean implements Serializable {
         return cancelReason;
     }
     
-    public boolean loanApproved() {
-        return this.status == this.getLoanApplicationState().getApprovedApplicationId();
+    public boolean isLoanApproved() {
+        return this.status == this.loanApplicationState.getApprovedApplicationId();
     }
 
     public void setLoanApplicationState(LoanApplicationStateDto loanApplicationState) {

@@ -20,17 +20,22 @@
 
 package org.mifos.ui.webflow;
 
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.mock;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.application.servicefacade.LoanAccountServiceFacade;
-import org.mifos.application.servicefacade.LoanServiceFacade;
+import org.mifos.clientportfolio.loan.ui.LoanAccountController;
+import org.mifos.clientportfolio.loan.ui.LoanAccountQuestionGroupFormBean;
 import org.mifos.clientportfolio.loan.ui.LoanAccountStatusFormBean;
+import org.mifos.clientportfolio.newloan.applicationservice.LoanApplicationStateDto;
+import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.ui.core.controller.LoanAccountStatusController;
-import org.mifos.ui.core.controller.EditLoanAccountStatusFormBean;
 import org.springframework.webflow.config.FlowDefinitionResource;
 import org.springframework.webflow.config.FlowDefinitionResourceFactory;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
@@ -38,7 +43,6 @@ import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.test.MockExternalContext;
 import org.springframework.webflow.test.MockFlowBuilderContext;
 import org.springframework.webflow.test.execution.AbstractXmlFlowExecutionTests;
-import static org.mockito.Mockito.*;
 
 /**
  * Unit test for Spring Web Flow "editLoanAccountStatus"
@@ -46,20 +50,28 @@ import static org.mockito.Mockito.*;
 public class EditLoanAccountStatusTest extends AbstractXmlFlowExecutionTests {
 
     private LoanAccountStatusController controller;
-//    private EditLoanAccountStatusFormBean formBean;
+    private LoanAccountController loanAccountController;
     private LoanAccountServiceFacade loanAccountServiceFacade;
     private AdminServiceFacade adminServiceFacade;
     private QuestionnaireServiceFacade questionnaireServiceFacade;
     private LoanAccountStatusFormBean loanAccountStatusFormBean;
+    private LoanAccountQuestionGroupFormBean loanAccountQuestionGroupFormBean;
+    
+    // see AccountState enum
+    private static final int STATE_PENDING = 1;
+    private static final int STATE_PARTIAL = 2;
+    private static final int STATE_APPROVED = 3;
     
     @Before
     protected void setUp() {
         controller = mock(LoanAccountStatusController.class);
-//        formBean = new EditLoanAccountStatusFormBean();
+        loanAccountController = mock(LoanAccountController.class);
         loanAccountServiceFacade = mock(LoanAccountServiceFacade.class);
         adminServiceFacade = mock(AdminServiceFacade.class);
         questionnaireServiceFacade = mock(QuestionnaireServiceFacade.class);
+        loanAccountQuestionGroupFormBean = new LoanAccountQuestionGroupFormBean();
         loanAccountStatusFormBean = new LoanAccountStatusFormBean();
+        loanAccountStatusFormBean.setLoanApplicationState(new LoanApplicationStateDto(STATE_PENDING, STATE_PARTIAL, STATE_APPROVED));
     }
     
     @Test
@@ -70,9 +82,29 @@ public class EditLoanAccountStatusTest extends AbstractXmlFlowExecutionTests {
 
         assertCurrentStateEquals("editStatusStep");
     }
-    
+
     @Test
-    public void testEditStatusStep_DetailsEntered_NoQuestionGroup() {
+    public void testEditStatusStep_DetailsEntered_AccountApproved() {
+        loanAccountStatusFormBean.setStatus(STATE_APPROVED);
+        List<QuestionGroupDetail> questionGroups = new ArrayList<QuestionGroupDetail>();
+        questionGroups.add(new QuestionGroupDetail());
+        loanAccountQuestionGroupFormBean.setQuestionGroups(questionGroups);
+
+        setCurrentState("editStatusStep");
+        
+        MockExternalContext context = new MockExternalContext();
+        context.setEventId("detailsEntered");
+        resumeFlow(context);
+
+        assertCurrentStateEquals("answerQuestionGroupStep");
+    }
+
+    @Test
+    public void testEditStatusStep_DetailsEntered_AccountApproved_NoQuestionGroup() {
+        loanAccountStatusFormBean.setStatus(STATE_APPROVED);
+        List<QuestionGroupDetail> questionGroups = new ArrayList<QuestionGroupDetail>();
+        loanAccountQuestionGroupFormBean.setQuestionGroups(questionGroups);
+        
         setCurrentState("editStatusStep");
 
         MockExternalContext context = new MockExternalContext();
@@ -81,16 +113,17 @@ public class EditLoanAccountStatusTest extends AbstractXmlFlowExecutionTests {
 
         assertCurrentStateEquals("previewStep");
     }
-
+    
     @Test
-    public void testEditStatusStep_DetailsEntered_WithQuestionGroup() {
+    public void testEditStatusStep_DetailsEntered_PartialApplication() {
         setCurrentState("editStatusStep");
+        loanAccountStatusFormBean.setStatus(STATE_PARTIAL);
 
         MockExternalContext context = new MockExternalContext();
         context.setEventId("detailsEntered");
         resumeFlow(context);
 
-        assertCurrentStateEquals("answerQuestionStep");
+        assertCurrentStateEquals("previewStep");
     }
 
     @Test
@@ -110,7 +143,7 @@ public class EditLoanAccountStatusTest extends AbstractXmlFlowExecutionTests {
         setCurrentState("previewStep");
 
         MockExternalContext context = new MockExternalContext();
-        context.setEventId("save");
+        context.setEventId("edit");
         resumeFlow(context);
 
         assertCurrentStateEquals("editStatusStep");
@@ -120,12 +153,13 @@ public class EditLoanAccountStatusTest extends AbstractXmlFlowExecutionTests {
     protected void configureFlowBuilderContext(MockFlowBuilderContext builderContext) {
 
         // setup bean dependencies
-//        builderContext.registerBean("formBean", formBean);
         builderContext.registerBean("loanAccountServiceFacade", loanAccountServiceFacade);
         builderContext.registerBean("adminServiceFacade", adminServiceFacade);
         builderContext.registerBean("loanAccountStatusController", controller);
+        builderContext.registerBean("loanAccountController", loanAccountController);
         builderContext.registerBean("questionnaireServiceFacade", questionnaireServiceFacade);
         builderContext.registerBean("loanAccountStatusFormBean", loanAccountStatusFormBean);
+        builderContext.registerBean("loanAccountQuestionGroupFormBean", loanAccountQuestionGroupFormBean);
     }
 
     @Override
