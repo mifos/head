@@ -22,9 +22,9 @@ package org.mifos.test.acceptance.questionnaire;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.joda.time.DateTime;
 import org.mifos.framework.util.DbUnitUtilities;
@@ -74,7 +74,7 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @BeforeMethod
+    @BeforeMethod(alwaysRun=true)
     public void setUp() throws Exception {
         super.setUp();
         questionGroupTestHelper = new QuestionGroupTestHelper(selenium);
@@ -127,7 +127,7 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
         newQuestionList.add(createQuestionParameters);
         String[] questionsExist = {"newQuestion232", "MultiSelect", "NumberQuestion2", "question 2"};
         String[] questionsInactive = {"SingleSelect", "TextQuestion", "MultiSelectQuestion", "SingleSelectQuestion", "DateQuestion"};
-        Map<String, String> questionsAndAnswers = new HashMap<String, String>();
+        Map<String, String> questionsAndAnswers = new TreeMap<String, String>();
         questionsAndAnswers.put("MultiSelect", "third");
         questionsAndAnswers.put("NumberQuestion2", "10");
         questionsAndAnswers.put("question 2", "35");
@@ -167,7 +167,6 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
      * http://mifosforge.jira.com/browse/MIFOSTEST-683
      * @throws Exception
      */
-    @Test(enabled=false) // TODO js - temporarily disabled broken test
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyResponsesDuringCreationOfLoanAccount() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_016_dbunit.xml", dataSource, selenium);
@@ -181,10 +180,7 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
         createLoanAccountSearchParameters.setLoanProduct("WeeklyFlatLoanWithOneTimeFees");
         createLoanAccountSearchParameters.setSearchString("Stu1232993852651 Client1232993852651");
         QuestionResponseParameters questionResponseParameters = new QuestionResponseParameters();
-        questionResponseParameters.addTextAnswer("questionGroups[0].sectionDetails[0].questions[0].value", "222");
-        questionResponseParameters.addSingleSelectAnswer("questionGroups[1].sectionDetails[0].questions[0].value", "no");
-        questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[1].questions[0].value", "18/02/2011");
-        questionResponseParameters.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[1].valuesAsArray", "second");
+
         CreateQuestionParameters createQuestionParameters = new CreateQuestionParameters();
         createQuestionParameters.setType(createQuestionParameters.TYPE_FREE_TEXT);
         createQuestionParameters.setText("newQuestion232");
@@ -197,12 +193,30 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
         questionGroupTestHelper.createQuestionGroup(createQuestionGroupParameters2);
 
         QuestionResponsePage questionResponsePage = questionGroupTestHelper.navigateToQuestionResponsePageDuringLoanCreation(createLoanAccountSearchParameters);
+        // TODO it seems that question group order is random in loans!
+        if (questionResponsePage.isQuestionPresent(1, 1, 0)) {
+            questionResponseParameters.addTextAnswer("questionGroups[0].sectionDetails[0].questions[0].value", "222");
+            questionResponseParameters.addSingleSelectAnswer("questionGroups[1].sectionDetails[0].questions[0].value", "no");
+            questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[1].questions[0].value", "18/02/2011");
+            questionResponseParameters.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[1].valuesAsArray", "second");
+        }
+        else {
+            questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[0].questions[0].value", "222");
+            questionResponseParameters.addSingleSelectAnswer("questionGroups[0].sectionDetails[0].questions[0].value", "no");
+            questionResponseParameters.addTextAnswer("questionGroups[0].sectionDetails[1].questions[0].value", "18/02/2011");
+            questionResponseParameters.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[1].valuesAsArray", "second");
+        }
         questionResponsePage.populateAnswers(questionResponseParameters);
         questionResponsePage = questionResponsePage
             .continueAndNavigateToCreateLoanAccountReviewInstallmentPage()
             .clickPreviewAndGoToReviewLoanAccountPage()
             .navigateToQuestionResponsePage();
-        questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[1].questions[0].value", "11/02/2011");
+        if (questionResponsePage.isQuestionPresent(1, 1, 0)) {
+            questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[1].questions[0].value", "11/02/2011");
+        }
+        else {
+            questionResponseParameters.addTextAnswer("questionGroups[0].sectionDetails[1].questions[0].value", "11/02/2011");
+        }
         questionResponsePage.populateAnswers(questionResponseParameters);
         LoanAccountPage loanAccountPage = questionResponsePage
             .continueAndNavigateToCreateLoanAccountReviewInstallmentPage()
@@ -257,7 +271,7 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
         newQuestionList.add(createQuestionParameters);
         String[] questionsExist = {"newQuestion232", "DateQuestion"};
         String[] questionsInactive = {"question 2", "MultiSelect", "question 4"};
-        Map<String, String> questionsAndAnswers = new HashMap<String, String>();
+        Map<String, String> questionsAndAnswers = new TreeMap<String, String>();
         questionsAndAnswers.put("MultiSelect", "second");
         questionsAndAnswers.put("DateQuestion", "11/02/2011");
         questionsAndAnswers.put("question 2", "222");
@@ -307,7 +321,7 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
         group1sec1.add("MultiSelect");
         List<String> group1sec2 = new ArrayList<String>();
         group1sec2.add("question 4");
-        Map<String, List<String>> existingQuestions1 = new HashMap<String, List<String>>();
+        Map<String, List<String>> existingQuestions1 = new TreeMap<String, List<String>>();
         existingQuestions1.put("sec 1", group1sec1);
         existingQuestions1.put("sec 2", group1sec2);
         CreateQuestionGroupParameters createQuestionGroupParameters = new CreateQuestionGroupParameters();
@@ -319,7 +333,7 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
     }
 
     private CreateQuestionGroupParameters getCreateQuestionGroupParameters2(String name, String applied) {
-        Map<String, List<String>> existingQuestions2 = new HashMap<String, List<String>>();
+        Map<String, List<String>> existingQuestions2 = new TreeMap<String, List<String>>();
         List<String> group2sec1 = new ArrayList<String>();
         group2sec1.add("question 2");
         existingQuestions2.put("section 1", group2sec1);

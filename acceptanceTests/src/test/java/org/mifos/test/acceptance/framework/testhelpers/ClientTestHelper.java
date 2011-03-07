@@ -147,6 +147,19 @@ public class ClientTestHelper {
         return statusChangePage.changeStatusAndNavigateToQuestionResponsePage(editCustomerStatusParameters);
     }
 
+    public ClientViewDetailsPage closeClientWithQG(String clientName, QuestionResponseParameters responseParamsAfterModyfication){
+        EditCustomerStatusParameters editCustomerStatusParameters = new EditCustomerStatusParameters();
+        editCustomerStatusParameters.setClientStatus(ClientStatus.CLOSED);
+        editCustomerStatusParameters.setClientCloseReason(ClientCloseReason.LEFT_PROGRAM);
+        editCustomerStatusParameters.setNote("Close client account");
+        ClientViewDetailsPage clientDetailsPage = navigationHelper.navigateToClientViewDetailsPage(clientName);
+        CustomerChangeStatusPage statusChangePage = clientDetailsPage.navigateToCustomerChangeStatusPage();
+        QuestionResponsePage questionResponsePage = statusChangePage.changeStatusAndNavigateToQuestionResponsePage(editCustomerStatusParameters);
+        questionResponsePage.populateAnswers(responseParamsAfterModyfication);
+        questionResponsePage.navigateToNextPage();
+        new CustomerChangeStatusPreviewPage(selenium).submitAndGotoClientViewDetailsPage();
+        return new ClientViewDetailsPage(selenium);
+    }
 
     public ClientViewDetailsPage createClientWithQuestionGroups(CreateClientEnterPersonalDataPage.SubmitFormParameters parameters, String group, QuestionResponseParameters responseParams) {
         QuestionResponsePage questionResponsePage = navigateToQuestionResponsePage(parameters,group);

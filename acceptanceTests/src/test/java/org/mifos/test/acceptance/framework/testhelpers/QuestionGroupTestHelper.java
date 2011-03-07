@@ -82,6 +82,11 @@ public class QuestionGroupTestHelper {
         createQuestionGroupPage.submit(createQuestionGroupParameters);
     }
 
+    public QuestionGroupDetailPage changeAppliesTo(String questionGroup, String[] eventList){
+        EditQuestionGroupPage editQuestionGroupPage = naviagateToEditQuestionGroup(questionGroup);
+        return editQuestionGroupPage.changeAppliesTo(eventList);
+    }
+
     public void validatePageBlankMandatoryField() {
         CreateQuestionGroupPage createQuestionGroupPage = navigateToCreateQuestionGroupPage();
         createQuestionGroupPage.submit();
@@ -472,5 +477,12 @@ public class QuestionGroupTestHelper {
             .submit();
         questionnairePage.verifyErrorsOnPage(attachParams.getErrors());
         return questionnairePage.cancelAndNavigateToSavingsAccountDetailPage();
+    }
+
+    public AdminPage activatePPI(String countryName){
+        return navigationHelper
+            .navigateToAdminPage()
+            .navigateToActivatePPI()
+            .activateQuestionGroup(countryName);
     }
 }

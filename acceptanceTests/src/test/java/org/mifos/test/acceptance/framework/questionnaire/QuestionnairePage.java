@@ -73,7 +73,8 @@ public class QuestionnairePage extends MifosPage {
     }
 
     public void checkResponse(String question, String answer) {
-        selenium.check("name=" + getQuestionLocator(question) + " value=" + answer);
+        //selenium.check("name=" + getQuestionLocator(question) + " value=" + answer);
+            selenium.check("//input[@name='" + getQuestionLocator(question) + "' and @value='" + answer + "']");
     }
 
     public QuestionnairePage checkResponses(Map<String, List<String>> responses) {
@@ -158,7 +159,7 @@ public class QuestionnairePage extends MifosPage {
     public QuestionnairePage verifyEmptyCheckQuestionResponses(Map<String, List<String>> questions) {
         for(String question: questions.keySet()) {
             for(String answer : questions.get(question)) {
-                Assert.assertFalse(selenium.isChecked("name=" + getQuestionLocator(question) + " value=" + answer));
+                Assert.assertFalse(selenium.isChecked("//input[@name='" + getQuestionLocator(question) + "' and @value='" + answer + "']"));
             }
         }
         return this;
