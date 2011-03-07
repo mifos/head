@@ -211,7 +211,12 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
             .continueAndNavigateToCreateLoanAccountReviewInstallmentPage()
             .clickPreviewAndGoToReviewLoanAccountPage()
             .navigateToQuestionResponsePage();
-        questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[1].questions[0].value", "11/02/2011");
+        if (questionResponsePage.isQuestionPresent(1, 1, 0)) {
+            questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[1].questions[0].value", "11/02/2011");
+        }
+        else {
+            questionResponseParameters.addTextAnswer("questionGroups[0].sectionDetails[1].questions[0].value", "11/02/2011");
+        }
         questionResponsePage.populateAnswers(questionResponseParameters);
         LoanAccountPage loanAccountPage = questionResponsePage
             .continueAndNavigateToCreateLoanAccountReviewInstallmentPage()
