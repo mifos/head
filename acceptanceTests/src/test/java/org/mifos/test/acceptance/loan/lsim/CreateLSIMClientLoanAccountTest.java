@@ -155,7 +155,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
     // one of the dependent methods throws Exception
     public void newMonthlyClientLoanAccountWithMeetingOnSameWeekAndWeekday() throws Exception {
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
-        searchParameters.setSearchString("Client - Mia Monthly3rdFriday");
+        searchParameters.setSearchString("Monthly3rdFriday");
         searchParameters.setLoanProduct("MonthlyClientFlatLoanThirdFridayOfMonth");
         expectedDate = "11-Mar-2010";
 
@@ -199,20 +199,18 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
     }
 
     // http://mifosforge.jira.com/browse/MIFOSTEST-121
-    @Test(enabled=false) // TODO js - make it no_db_unit
     public void createWeeklyLoanAccountWithNonMeetingDatesForDisburseAndRepay() throws Exception {
         //Given
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         systemTime = new DateTime(2011,02,23,12,0,0,0);
         dateTimeUpdaterRemoteTestingService.setDateTime(systemTime);
-        //initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
 
         //When
         DefineNewLoanProductPage.SubmitFormParameters defineNewLoanProductformParameters = FormParametersHelper.getWeeklyLoanProductParameters();
         defineNewLoanProductformParameters.setOfferingName("ProdTest123");
 
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
-        searchParameters.setSearchString("Stu1232993852651 Client1232993852651");
+        searchParameters.setSearchString("Stu1233171716380 Client1233171716380");
         searchParameters.setLoanProduct(defineNewLoanProductformParameters.getOfferingName());
 
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
