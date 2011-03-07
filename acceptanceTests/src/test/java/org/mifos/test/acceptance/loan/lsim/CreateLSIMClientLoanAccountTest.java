@@ -238,16 +238,14 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
     }
 
     // http://mifosforge.jira.com/browse/MIFOSTEST-124
-    @Test(enabled=false) // TODO js - make it no_db_unit
     public void VerifyGracePeriodEffectOnLoanSchedule() throws Exception{
         //Given
-        //initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
         applicationDatabaseOperation.updateLSIM(1);
         DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
         formParameters.setGracePeriodType(DefineNewLoanProductPage.SubmitFormParameters.PRINCIPAL_ONLY_GRACE);
         formParameters.setGracePeriodDuration("3");
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
-        searchParameters.setSearchString("Client1232993852651");
+        searchParameters.setSearchString("Stu1233266063395 Client1233266063395");
         searchParameters.setLoanProduct(formParameters.getOfferingName());
 
         //When / Then
