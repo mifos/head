@@ -17,17 +17,19 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.test.acceptance.framework.questionnaire;
+package org.mifos.test.acceptance.questionnaire;
 
-import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
-import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.mifos.test.acceptance.framework.questionnaire.Choice;
+import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionPage;
+import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionParameters;
+import org.mifos.test.acceptance.framework.questionnaire.EditQuestionPage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionDetailPage;
+import org.mifos.test.acceptance.framework.questionnaire.ViewAllQuestionsPage;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -41,16 +43,9 @@ import static java.util.Arrays.asList;
 import static org.testng.Assert.assertEquals;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(singleThreaded = true, groups = {"client", "acceptance", "ui"})
+@Test(singleThreaded = true, groups = {"client", "acceptance", "ui", "no_db_unit"})
 public class QuestionTest extends UiTestCaseBase {
     private AppLauncher appLauncher;
-    @Autowired
-    private DriverManagerDataSource dataSource;
-    @Autowired
-    private DbUnitUtilities dbUnitUtilities;
-    @Autowired
-    private InitializeApplicationRemoteTestingService initRemote;
-    private static final String START_DATA_SET = "acceptance_small_003_dbunit.xml";
     private String title;
     private static final String TITLE_MISSING = "Please specify the question.";
     private static final String AT_LEAST_2_CHOICES = "Please specify at least 2 choices.";
@@ -76,7 +71,6 @@ public class QuestionTest extends UiTestCaseBase {
     public void setUp() throws Exception {
         super.setUp();
         appLauncher = new AppLauncher(selenium);
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, START_DATA_SET, dataSource, selenium);
         title = "Title " + System.currentTimeMillis();
         types = Arrays.asList(
                 FREE_TEXT,
