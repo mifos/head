@@ -20,32 +20,18 @@
 
 package org.mifos.test.acceptance.search;
 
-import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
-import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-@ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(singleThreaded = true, groups = {"search","acceptance","ui"})
+@ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
+@Test(singleThreaded = true, groups = {"search", "acceptance", "ui", "no_db_unit"})
 public class SearchGroupTest extends SearchTestBase {
     private AppLauncher appLauncher;
-
-    @Autowired
-    private DriverManagerDataSource dataSource;
-    @Autowired
-    private DbUnitUtilities dbUnitUtilities;
-    @Autowired
-    private InitializeApplicationRemoteTestingService initRemote;
-
-
-    private static String dataFileName = "acceptance_small_003_dbunit.xml";
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -63,26 +49,16 @@ public class SearchGroupTest extends SearchTestBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void searchGroupListTest() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities,
-                dataFileName,
-                dataSource, selenium);
-        String searchPhrase = "MyGroup";
-
-        SearchResultsPage page = searchFor( appLauncher, searchPhrase);
-
-        page.verifySearchResults(11);
+        String searchPhrase = "group";
+        SearchResultsPage page = searchFor(appLauncher, searchPhrase);
+        page.verifySearchResults(8);
     }
 
     // http://mifosforge.jira.com/browse/MIFOSTEST-475
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void searchGroupSpecificTest()  throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities,
-                dataFileName,
-                dataSource, selenium);
-        String searchPhrase = "MyGroup1233265937564";
-
-        SearchResultsPage page = searchFor( appLauncher, searchPhrase);
-
-        page.verifySearchResults(1, "0004-000000008");
+    public void searchGroupSpecificTest() throws Exception {
+        String searchPhrase = "MonthlyGroup";
+        SearchResultsPage page = searchFor(appLauncher, searchPhrase);
+        page.verifySearchResults(1, "0002-000000022");
     }
 }

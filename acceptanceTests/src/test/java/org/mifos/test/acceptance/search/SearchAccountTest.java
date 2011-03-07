@@ -19,38 +19,25 @@
  */
 package org.mifos.test.acceptance.search;
 
-import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
-import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-@ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(singleThreaded = true, groups = {"search","acceptance"})
+@ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
+@Test(singleThreaded = true, groups = {"search", "acceptance", "no_db_unit"})
 public class SearchAccountTest extends SearchTestBase {
     /**
      * Account number to use in search
      */
-    private static final String ACCT_SEARCH_STRING = "000100000000066";
+    private static final String ACCT_SEARCH_STRING = "000100000000012";
 
     private AppLauncher appLauncher;
 
-    @Autowired
-    private DriverManagerDataSource dataSource;
-    @Autowired
-    private DbUnitUtilities dbUnitUtilities;
-    @Autowired
-    private InitializeApplicationRemoteTestingService initRemote;
-
-
-    private static String dataFileName = "acceptance_small_003_dbunit.xml";
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -72,17 +59,12 @@ public class SearchAccountTest extends SearchTestBase {
      * is present on the results page
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(singleThreaded = true, groups = { "smoke", "search", "acceptance" })
-    public void searchAccountTest()  throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities,
-                dataFileName,
-                dataSource, selenium);
-
-        SearchResultsPage page = searchFor( appLauncher, ACCT_SEARCH_STRING);
+    @Test(singleThreaded = true, groups = {"smoke", "search", "acceptance", "no_db_unit"})
+    public void searchAccountTest() throws Exception {
+        SearchResultsPage page = searchFor(appLauncher, ACCT_SEARCH_STRING);
         int count = page.countSearchResults();
         //Check that only one row for this account number is returned
-        Assert.assertEquals( count, 1 );
-
+        Assert.assertEquals(count, 1);
         //Check the displayed text
         Assert.assertTrue(selenium.isTextPresent(ACCT_SEARCH_STRING));
     }

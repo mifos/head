@@ -21,7 +21,6 @@
 package org.mifos.test.acceptance.survey;
 
 import org.joda.time.DateTime;
-import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.center.CenterViewDetailsPage;
@@ -31,26 +30,16 @@ import org.mifos.test.acceptance.framework.loan.AttachSurveyPage;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
-import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-@ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(singleThreaded = true, groups={"acceptance", "ui", "survey"})
+@ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
+@Test(singleThreaded = true, groups = {"acceptance", "ui", "survey", "no_db_unit"})
 public class AttachSurveyLinkTest extends UiTestCaseBase {
     private NavigationHelper navigationHelper;
 
-
-    @Autowired
-    private DriverManagerDataSource dataSource;
-    @Autowired
-    private DbUnitUtilities dbUnitUtilities;
-    @Autowired
-    private InitializeApplicationRemoteTestingService initRemote;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -59,7 +48,7 @@ public class AttachSurveyLinkTest extends UiTestCaseBase {
     public void setUp() throws Exception {
         super.setUp();
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = new DateTime(2009,7,11,14,01,0,0);
+        DateTime targetTime = new DateTime(2009, 7, 11, 14, 01, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
 
         navigationHelper = new NavigationHelper(selenium);
@@ -71,52 +60,46 @@ public class AttachSurveyLinkTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void attachSurveyToClientLoan() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_005_dbunit.xml", dataSource, selenium);
+    public void attachQuestionnaireTest() throws Exception {
+        attachSurveyToCenter();
+        attachSurveyToClient();
+        attachSurveyToGroup();
+        attachSurveyToClientLoan();
+        attachSurveyToGroupLoan();
+    }
 
-        LoanAccountPage loanAccountDetailPage = navigationHelper.navigateToLoanAccountPage("000100000000004");
-
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    private void attachSurveyToClientLoan() throws Exception {
+        LoanAccountPage loanAccountDetailPage = navigationHelper.navigateToLoanAccountPage("000100000000012");
         AttachSurveyPage attachSurveyPage = loanAccountDetailPage.navigateToAttachSurveyPage();
         attachSurveyPage.verifyPage("selectQuestionnaire");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void attachSurveyToGroupLoan() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_005_dbunit.xml", dataSource, selenium);
-
+    private void attachSurveyToGroupLoan() throws Exception {
         // ...206 is a group loan account
-        LoanAccountPage loanAccountDetailPage = navigationHelper.navigateToLoanAccountPage("000100000000206");
-
+        LoanAccountPage loanAccountDetailPage = navigationHelper.navigateToLoanAccountPage("000100000000011");
         AttachSurveyPage attachSurveyPage = loanAccountDetailPage.navigateToAttachSurveyPage();
         attachSurveyPage.verifyPage("selectQuestionnaire");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void attachSurveyToClient() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_005_dbunit.xml", dataSource, selenium);
-
-        ClientViewDetailsPage clientViewDetailsPage = navigationHelper.navigateToClientViewDetailsPage("Stu1232993852651 Client1232993852651");
-
+    private void attachSurveyToClient() throws Exception {
+        ClientViewDetailsPage clientViewDetailsPage = navigationHelper.navigateToClientViewDetailsPage("WeeklyClient Monday");
         AttachSurveyPage attachSurveyPage = clientViewDetailsPage.navigateToAttachSurveyPage();
         attachSurveyPage.verifyPage("selectQuestionnaire");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void attachSurveyToGroup() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_005_dbunit.xml", dataSource, selenium);
-
-        GroupViewDetailsPage groupViewDetailsPage = navigationHelper.navigateToGroupViewDetailsPage("MyGroup1233266255641");
-
+    private void attachSurveyToGroup() throws Exception {
+        GroupViewDetailsPage groupViewDetailsPage = navigationHelper.navigateToGroupViewDetailsPage("Default Group");
         AttachSurveyPage attachSurveyPage = groupViewDetailsPage.navigateToAttachSurveyPage();
         attachSurveyPage.verifyPage("selectQuestionnaire");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void attachSurveyToCenter() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_005_dbunit.xml", dataSource, selenium);
-
-        CenterViewDetailsPage centerViewDetailsPage = navigationHelper.navigateToCenterViewDetailsPage("MyCenter1233266210775");
-
+    private void attachSurveyToCenter() throws Exception {
+        CenterViewDetailsPage centerViewDetailsPage = navigationHelper.navigateToCenterViewDetailsPage("Default Center");
         AttachSurveyPage attachSurveyPage = centerViewDetailsPage.navigateToAttachSurveyPage();
         attachSurveyPage.verifyPage("selectQuestionnaire");
     }

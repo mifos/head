@@ -19,32 +19,19 @@
  */
 package org.mifos.test.acceptance.search;
 
-import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
-import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-@ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(singleThreaded = true, groups = {"search","acceptance","ui"})
+@ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
+@Test(singleThreaded = true, groups = {"search", "acceptance", "ui", "no_db_unit"})
 public class SearchCenterTest extends SearchTestBase {
     private AppLauncher appLauncher;
 
-    @Autowired
-    private DriverManagerDataSource dataSource;
-    @Autowired
-    private DbUnitUtilities dbUnitUtilities;
-    @Autowired
-    private InitializeApplicationRemoteTestingService initRemote;
-
-
-    private static String dataFileName = "acceptance_small_003_dbunit.xml";
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -62,26 +49,16 @@ public class SearchCenterTest extends SearchTestBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void searchCentersTest() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities,
-                dataFileName,
-                dataSource, selenium);
-        String searchPhrase = "MyCenter";
-
-        SearchResultsPage page = searchFor( appLauncher, searchPhrase);
-
+        String searchPhrase = "center";
+        SearchResultsPage page = searchFor(appLauncher, searchPhrase);
         page.verifySearchResults(5);
     }
 
     // http://mifosforge.jira.com/browse/MIFOSTEST-473
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void searchCenterSpecificTest()  throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities,
-                dataFileName,
-                dataSource, selenium);
-        String searchPhrase = "MyCenter1232993841778";
-
-        SearchResultsPage page = searchFor( appLauncher, searchPhrase);
-
+    public void searchCenterSpecificTest() throws Exception {
+        String searchPhrase = "Default Center";
+        SearchResultsPage page = searchFor(appLauncher, searchPhrase);
         page.verifySearchResults(1, "0002-000000001");
     }
 }
