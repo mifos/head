@@ -4468,11 +4468,11 @@ CREATE TABLE question_choices (
   PRIMARY KEY (choice_id),
   KEY question_id (question_id),
   CONSTRAINT question_choices_ibfk_1 FOREIGN KEY (question_id) REFERENCES questions (question_id) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 /*!40000 ALTER TABLE question_choices DISABLE KEYS */;
-INSERT INTO question_choices (choice_id, question_id, choice_text, choice_order, ppi, ppi_points) VALUES (1,4,'yes',0,'N',NULL),(2,4,'no',1,'N',NULL);
+INSERT INTO question_choices (choice_id, question_id, choice_text, choice_order, ppi, ppi_points) VALUES (1,4,'yes',0,'N',NULL),(2,4,'no',1,'N',NULL),(3,9,'one',0,'N',NULL),(4,9,'two',1,'N',NULL),(5,9,'three',2,'N',NULL),(6,9,'four',3,'N',NULL),(7,10,'red',0,'N',NULL),(8,10,'blue',1,'N',NULL),(9,10,'green',2,'N',NULL),(10,10,'yellow',3,'N',NULL),(11,10,'red',0,'N',NULL),(12,10,'blue',1,'N',NULL),(13,10,'green',2,'N',NULL),(14,10,'yellow',3,'N',NULL),(15,9,'one',0,'N',NULL),(16,9,'two',1,'N',NULL),(17,9,'three',2,'N',NULL),(18,9,'four',3,'N',NULL);
 /*!40000 ALTER TABLE question_choices ENABLE KEYS */;
 DROP TABLE IF EXISTS question_group;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -4485,11 +4485,11 @@ CREATE TABLE question_group (
   is_editable tinyint(4) NOT NULL DEFAULT '0',
   is_ppi tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (id)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 /*!40000 ALTER TABLE question_group DISABLE KEYS */;
-INSERT INTO question_group (id, title, date_of_creation, state, is_editable, is_ppi) VALUES (1,'QGForCreateSavingsAccount','2011-02-24',0,0,0),(2,'QGForLoanApproval','2011-03-04',0,0,0),(3,'QGForViewClientCentreGroupLoan','2011-03-07',0,0,0),(4,'ViewCenterQG','2011-03-07',1,1,0);
+INSERT INTO question_group (id, title, date_of_creation, state, is_editable, is_ppi) VALUES (1,'QGForCreateSavingsAccount','2011-02-24',0,0,0),(2,'QGForLoanApproval','2011-03-04',0,0,0),(3,'QGForViewClientCentreGroupLoan','2011-03-07',0,0,0),(4,'ViewCenterQG','2011-03-07',1,1,0),(5,'QGForDisburseLoan','2011-03-07',0,1,0),(6,'QGForDisburseLoan2','2011-03-07',0,1,0);
 /*!40000 ALTER TABLE question_group ENABLE KEYS */;
 DROP TABLE IF EXISTS question_group_event_sources;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -4503,11 +4503,11 @@ CREATE TABLE question_group_event_sources (
   KEY event_source_id (event_source_id),
   CONSTRAINT question_group_event_sources_ibfk_1 FOREIGN KEY (question_group_id) REFERENCES question_group (id),
   CONSTRAINT question_group_event_sources_ibfk_2 FOREIGN KEY (event_source_id) REFERENCES event_sources (id)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 /*!40000 ALTER TABLE question_group_event_sources DISABLE KEYS */;
-INSERT INTO question_group_event_sources (id, question_group_id, event_source_id) VALUES (1,1,12),(3,2,5),(8,3,3),(9,3,7),(10,3,8),(11,3,10),(13,4,10);
+INSERT INTO question_group_event_sources (id, question_group_id, event_source_id) VALUES (1,1,12),(3,2,5),(8,3,3),(9,3,7),(10,3,8),(11,3,10),(13,4,10),(16,5,11),(17,6,11);
 /*!40000 ALTER TABLE question_group_event_sources ENABLE KEYS */;
 DROP TABLE IF EXISTS question_group_instance;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -4561,11 +4561,11 @@ CREATE TABLE questions (
   nickname varchar(64) NOT NULL,
   PRIMARY KEY (question_id),
   UNIQUE KEY nickname (nickname)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 /*!40000 ALTER TABLE questions DISABLE KEYS */;
-INSERT INTO questions (question_id, answer_type, question_state, question_text, numeric_min, numeric_max, nickname) VALUES (1,2,1,'Question1',NULL,NULL,'e5c1d1ea399a2e46aca161ed737cfee3'),(2,5,1,'Date',NULL,NULL,'44749712dbec183e983dcd78a7736c41'),(3,5,1,'question 3',NULL,NULL,'4527a3a6804e6f368aa32a73ca30da95'),(4,6,1,'question 4',NULL,NULL,'8b1921a8385c31f50aa2ee992b820f91'),(5,5,1,'DateQuestion',NULL,NULL,'d578923d0af9bbf6ec05ca0978a72aac'),(6,3,1,'Number',NULL,NULL,'b2ee912b91d69b435159c7c3f6df7f5f'),(7,2,1,'question 1',NULL,NULL,'4fdd288d632ab655534cee798129f2e3'),(8,2,1,'Text',NULL,NULL,'9dffbf69ffba8bc38bc4e01abf4b1675');
+INSERT INTO questions (question_id, answer_type, question_state, question_text, numeric_min, numeric_max, nickname) VALUES (1,2,1,'Question1',NULL,NULL,'e5c1d1ea399a2e46aca161ed737cfee3'),(2,5,1,'Date',NULL,NULL,'44749712dbec183e983dcd78a7736c41'),(3,5,1,'question 3',NULL,NULL,'4527a3a6804e6f368aa32a73ca30da95'),(4,6,1,'question 4',NULL,NULL,'8b1921a8385c31f50aa2ee992b820f91'),(5,5,1,'DateQuestion',NULL,NULL,'d578923d0af9bbf6ec05ca0978a72aac'),(6,3,1,'Number',NULL,NULL,'b2ee912b91d69b435159c7c3f6df7f5f'),(7,2,1,'question 1',NULL,NULL,'4fdd288d632ab655534cee798129f2e3'),(8,2,1,'Text',NULL,NULL,'9dffbf69ffba8bc38bc4e01abf4b1675'),(9,1,1,'MultiSelect',NULL,NULL,'0cba84730c2881b781171ae3640a6421'),(10,6,1,'SingleSelect',NULL,NULL,'46fb49833801b679f5da12e40a7e07a5'),(11,2,1,'FreeText',NULL,NULL,'19635fdd73f0ff31933414280bee07c6'),(12,2,1,'ToBeDisabled',NULL,NULL,'ea06497c775eff59ee969da7252bd761');
 /*!40000 ALTER TABLE questions ENABLE KEYS */;
 DROP TABLE IF EXISTS recommended_amnt_unit;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -5063,11 +5063,11 @@ CREATE TABLE sections (
   PRIMARY KEY (id),
   KEY question_group_id (question_group_id),
   CONSTRAINT sections_ibfk_1 FOREIGN KEY (question_group_id) REFERENCES question_group (id)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 /*!40000 ALTER TABLE sections DISABLE KEYS */;
-INSERT INTO sections (id, question_group_id, name, sequence_number) VALUES (1,1,'Misc',0),(2,2,'Misc',0),(3,3,'Misc',0),(4,4,'Sec 1',0),(5,4,'Sec 2',1);
+INSERT INTO sections (id, question_group_id, name, sequence_number) VALUES (1,1,'Misc',0),(2,2,'Misc',0),(3,3,'Misc',0),(4,4,'Sec 1',0),(5,4,'Sec 2',1),(6,5,'Sec 1',0),(7,5,'Sec 2',1),(8,6,'Sec 1',0),(9,6,'Sec 2',1);
 /*!40000 ALTER TABLE sections ENABLE KEYS */;
 DROP TABLE IF EXISTS sections_questions;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -5083,11 +5083,11 @@ CREATE TABLE sections_questions (
   KEY question_id (question_id),
   CONSTRAINT sections_questions_ibfk_1 FOREIGN KEY (section_id) REFERENCES sections (id),
   CONSTRAINT sections_questions_ibfk_2 FOREIGN KEY (question_id) REFERENCES questions (question_id)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 /*!40000 ALTER TABLE sections_questions DISABLE KEYS */;
-INSERT INTO sections_questions (id, section_id, question_id, is_required, sequence_number) VALUES (1,1,1,0,0),(2,2,1,0,0),(3,3,1,0,0),(4,4,2,1,0),(5,4,3,0,1),(6,4,4,0,2),(7,5,5,0,0),(8,5,6,0,1),(9,5,7,0,2),(10,5,8,1,3);
+INSERT INTO sections_questions (id, section_id, question_id, is_required, sequence_number) VALUES (1,1,1,0,0),(2,2,1,0,0),(3,3,1,0,0),(4,4,2,1,0),(5,4,3,0,1),(6,4,4,0,2),(7,5,5,0,0),(8,5,6,0,1),(9,5,7,0,2),(10,5,8,1,3),(11,6,2,0,0),(12,6,12,0,1),(13,7,11,0,0),(14,7,10,0,1),(15,8,5,0,0),(16,8,6,0,1),(17,9,9,0,0),(18,9,8,0,1);
 /*!40000 ALTER TABLE sections_questions ENABLE KEYS */;
 DROP TABLE IF EXISTS spouse_father_lookup;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
