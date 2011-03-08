@@ -35,6 +35,7 @@ import junit.framework.Assert;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.core.MifosResourceUtil;
 import org.mifos.framework.MifosIntegrationTestCase;
@@ -56,6 +57,7 @@ import org.springframework.batch.core.configuration.JobLocator;
 import org.springframework.batch.core.explore.JobExplorer;
 import org.springframework.batch.core.launch.JobLauncher;
 
+@Ignore
 public class BatchJobCatchUpIntegrationTest extends MifosIntegrationTestCase {
 
     MifosScheduler mifosScheduler;

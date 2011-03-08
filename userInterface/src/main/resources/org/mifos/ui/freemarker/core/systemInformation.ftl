@@ -20,7 +20,7 @@
 --]
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
-   <span id="page.id" title="SysInfo"></span>
+<span id="page.id" title="SysInfo"></span>
 <div class=" content">
 
 [@mifos.crumbs breadcrumbs /]
