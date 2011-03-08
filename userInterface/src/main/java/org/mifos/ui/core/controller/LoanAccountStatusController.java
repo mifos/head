@@ -22,7 +22,6 @@ package org.mifos.ui.core.controller;
 
 import java.util.List;
 
-import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.application.servicefacade.LoanAccountServiceFacade;
 import org.mifos.clientportfolio.loan.ui.LoanAccountQuestionGroupFormBean;
 import org.mifos.clientportfolio.loan.ui.LoanAccountStatusFormBean;
@@ -53,15 +52,9 @@ public class LoanAccountStatusController {
         
         LoanApplicationStateDto loanApplicationState = loanAccountServiceFacade.retrieveLoanApplicationState();
         formBean.setLoanApplicationState(loanApplicationState);
-// prepareFormBean(formBean);
     }
     
-//    public void prepareFormBean(LoanAccountStatusFormBean formBean) {
-//        LoanApplicationStateDto loanApplicationState = loanAccountServiceFacade.retrieveLoanApplicationState();
-//        formBean.setLoanApplicationState(loanApplicationState);
-//    }
-    
     public void updateStatus(LoanAccountStatusFormBean formBean) {
-        
+        // TODO
     }
 }
