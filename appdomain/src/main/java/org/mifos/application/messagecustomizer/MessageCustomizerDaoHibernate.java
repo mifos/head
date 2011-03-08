@@ -67,7 +67,8 @@ public class MessageCustomizerDaoHibernate implements MessageCustomizerDao {
 		
 	}
 
-    private void addCustomMessage(String oldMessage, String newMessage) {
+	@Override
+    public void addCustomMessage(String oldMessage, String newMessage) {
     	genericDao.createOrUpdate(new CustomMessage(oldMessage, newMessage));		
 	}
 

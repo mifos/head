@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+    <var name="customMessageFormBean" class="org.mifos.ui.core.controller.CustomMessageFormBean" />
+
+    <view-state id="selectCustomMessageStep" view="customizeMessages">
+        <on-entry>
+            <evaluate expression="customizeMessagesController.retrieveCustomMessages()" result="flowScope.customMessagesMap" />
+        </on-entry>    
+        <transition on="add" to="addCustomMessageStep" validate="false" bind="false"/>
+        <transition on="done" to="done" validate="false" bind="false" history="invalidate"/>
+    </view-state>
+
+    <view-state id="addCustomMessageStep" view="addCustomMessage">
+        <transition on="add" to="selectCustomMessageStep" >
+            <evaluate expression="customizeMessagesController.addCustomMessage(customMessageFormBean)" />
+        </transition>
+        
+        <transition on="cancel" to="selectCustomMessageStep" validate="false" bind="false"/>
+    </view-state>
+        
+    <end-state id="done" view="externalRedirect:contextRelative:/AdminAction.do?method=load"/>
+</flow>

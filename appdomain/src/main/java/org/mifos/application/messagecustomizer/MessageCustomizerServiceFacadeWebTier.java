@@ -97,8 +97,6 @@ public class MessageCustomizerServiceFacadeWebTier implements MessageCustomizerS
 	@Autowired
 	private MessageSource messageSource;
 		
-    private LinkedHashMap<String,String> messageFilterMap = new LinkedHashMap<String,String>();
-    	
     @Autowired
 	public MessageCustomizerServiceFacadeWebTier(
 			MessageCustomizerDao messageCustomizerDao,
@@ -124,8 +122,17 @@ public class MessageCustomizerServiceFacadeWebTier implements MessageCustomizerS
 	public void updateApplicationLabels(Map<String,String> messageMap) {
 		messageCustomizerDao.setCustomMessages(messageMap);
 		// legacy menu code caches strings, so force the menus to rebuild after a change
-		MenuRepository.getInstance().removeMenuForAllLocale();
-   
+		MenuRepository.getInstance().removeMenuForAllLocale();   
+	}
+	
+	@Override
+	public void addCustomMessage(String oldMessage, String newMessage) {
+		messageCustomizerDao.addCustomMessage(oldMessage, newMessage);
+	}
+
+	@Override
+	public Map<String, String> retrieveCustomMessages() {
+	    return messageCustomizerDao.getCustomMessages();    	
 	}
 	
     @Override
