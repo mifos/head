@@ -79,7 +79,7 @@ public class MifosPropertyMessageResources extends PropertyMessageResources {
         if (returnVal == null) {
             returnVal = dbMap_labels.get(new BundleKey(locale, key));
         }
-
+/*
         if (returnVal == null) {
             // try to get it from the database
             try {
@@ -95,7 +95,7 @@ public class MifosPropertyMessageResources extends PropertyMessageResources {
                 // logger.error(e.getMessage());
             }
         }
-
+*/
         // logger.debug("The final value is - " + (returnVal == null ? "null" :
         // returnVal) );
 

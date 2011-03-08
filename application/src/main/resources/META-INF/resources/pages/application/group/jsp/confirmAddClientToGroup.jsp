@@ -39,7 +39,7 @@ explanation of the license and how it is applied.
 	addGroupMembershipForm.submit();
   }
 </script>
-<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}'/>
 <fmt:setBundle basename="org.mifos.config.localizedResources.GroupUIResources"/>
 		<html-el:form action="addGroupMembershipAction.do?method=updateParent"
 			onsubmit="func_disableSubmitBtn('submitButton');">

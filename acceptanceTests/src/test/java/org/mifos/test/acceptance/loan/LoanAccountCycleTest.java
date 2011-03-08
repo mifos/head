@@ -21,48 +21,35 @@
 package org.mifos.test.acceptance.loan;
 
 import org.joda.time.DateTime;
-import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
 import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
-import org.mifos.test.acceptance.framework.loanproduct.LoanProductDetailsPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.SubmitFormParameters;
+import org.mifos.test.acceptance.framework.loanproduct.LoanProductDetailsPage;
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
-import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-@ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"acceptance", "ui", "loan"})
+@ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
+@Test(sequential = true, groups = {"acceptance", "ui", "loan", "no_db_unit"})
 public class LoanAccountCycleTest extends UiTestCaseBase {
     private LoanTestHelper loanTestHelper;
-
-    @Autowired
-    private DriverManagerDataSource dataSource;
-    @Autowired
-    private DbUnitUtilities dbUnitUtilities;
-    @Autowired
-    private InitializeApplicationRemoteTestingService initRemote;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
-
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = new DateTime(2011,2,2,15,0,0,0);
+        DateTime targetTime = new DateTime(2011, 2, 25, 15, 0, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
-
         loanTestHelper = new LoanTestHelper(selenium);
     }
 
@@ -76,14 +63,13 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
      * the "Calculate Loan Amount as:" " same for all loans." and
      * "Calculate # of Installments as:" "by last loan amount"
      * http://mifosforge.jira.com/browse/MIFOSTEST-101
+     *
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyProductCreationWhenInstallmentsByLastAmount() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
-
         DefineNewLoanProductPage.SubmitFormParameters productParams = FormParametersHelper.getWeeklyLoanProductParameters();
-        productParams.setOfferingName("product101");
+        productParams.setOfferingName("LastAmountBasedProduct");
         productParams.setOfferingShortName("p101");
         productParams.setMinLoanAmount("1000.0");
         productParams.setMaxLoanAmount("7000.0");
@@ -91,7 +77,6 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
         productParams.setCalculateInstallments(SubmitFormParameters.BY_LAST_LOAN_AMOUNT);
         String[][] calculateInstallments = getInstallmentsFromLastAmount();
         productParams.setInstallmentsByLastLoanAmount(calculateInstallments);
-
 
         LoanProductDetailsPage loanProductDetailsPage = loanTestHelper.defineNewLoanProduct(productParams);
         loanProductDetailsPage.verifyInstallmentTableTypeFromLastAmount(calculateInstallments);
@@ -101,14 +86,13 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
     /**
      * Verify loan amount with number of installments is same for all loan can be used to create new loans.
      * http://mifosforge.jira.com/browse/MIFOSTEST-105
+     *
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyNumberOfInstallmentsSameForAllLoans() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
-
         DefineNewLoanProductPage.SubmitFormParameters productParams = FormParametersHelper.getWeeklyLoanProductParameters();
-        productParams.setOfferingName("product105");
+        productParams.setOfferingName("LastCycleBasedProduct");
         productParams.setOfferingShortName("p105");
         productParams.setCalculateLoanAmount(SubmitFormParameters.BY_LOAN_CYCLE);
         String[][] cycleLoanAmount = getAmountsByCycle();
@@ -117,9 +101,9 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
         productParams.setMaxInstallments("100");
         productParams.setDefInstallments("50");
         CreateLoanAccountSearchParameters searchParams = new CreateLoanAccountSearchParameters();
-        searchParams.setSearchString("Stu1233266053368 Client1233266053368");
-        searchParams.setLoanProduct("product105");
-        DisburseLoanParameters disburseParams = DisburseLoanParameters.getDisbursalParameters("02", "02", "2011");
+        searchParams.setSearchString("Stu1233171716380 Client1233171716380");
+        searchParams.setLoanProduct("LastCycleBasedProduct");
+        DisburseLoanParameters disburseParams = DisburseLoanParameters.getDisbursalParameters("25", "02", "2011");
 
         LoanProductDetailsPage loanProductDetailsPage = loanTestHelper.defineNewLoanProduct(productParams);
         loanProductDetailsPage.verifyLoanAmountTableTypeFromCycle(cycleLoanAmount);
@@ -139,12 +123,11 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
     /**
      * Verify loan amount with number of installments by loan cycle can be used to create new loans.
      * http://mifosforge.jira.com/browse/MIFOSTEST-107
+     *
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void verifyAmounttAndInstallmentsByCycles() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
-
+    public void verifyAmountAndInstallmentsByCycles() throws Exception {
         DefineNewLoanProductPage.SubmitFormParameters productParams = FormParametersHelper.getWeeklyLoanProductParameters();
         productParams.setOfferingName("product107");
         productParams.setOfferingShortName("p107");
@@ -155,9 +138,9 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
         String[][] calculateInstallments = getInstallmentsByCycle();
         productParams.setCycleInstallments(calculateInstallments);
         CreateLoanAccountSearchParameters searchParams = new CreateLoanAccountSearchParameters();
-        searchParams.setSearchString("Stu1233266053368 Client1233266053368");
+        searchParams.setSearchString("Stu1233171716380 Client1233171716380");
         searchParams.setLoanProduct("product107");
-        DisburseLoanParameters disburseParams = DisburseLoanParameters.getDisbursalParameters("02", "02", "2011");
+        DisburseLoanParameters disburseParams = DisburseLoanParameters.getDisbursalParameters("25", "02", "2011");
 
         LoanProductDetailsPage loanProductDetailsPage = loanTestHelper.defineNewLoanProduct(productParams);
         loanProductDetailsPage.verifyLoanAmountTableTypeFromCycle(cycleLoanAmount);
@@ -171,12 +154,11 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
     /**
      * Verify loan amount with number of installments by last loan amount can be used to create new loans.
      * http://mifosforge.jira.com/browse/MIFOSTEST-110
+     *
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyAmountByCycleAndInstallmentsByLastAmount() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
-
         DefineNewLoanProductPage.SubmitFormParameters productParams = FormParametersHelper.getWeeklyLoanProductParameters();
         productParams.setOfferingName("product110");
         productParams.setOfferingShortName("p110");
@@ -187,9 +169,9 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
         String[][] calculateInstallments = getInstallmentsFromLastAmount();
         productParams.setInstallmentsByLastLoanAmount(calculateInstallments);
         CreateLoanAccountSearchParameters searchParams = new CreateLoanAccountSearchParameters();
-        searchParams.setSearchString("Stu1233266053368 Client1233266053368");
+        searchParams.setSearchString("Stu1233171716380 Client1233171716380");
         searchParams.setLoanProduct("product110");
-        DisburseLoanParameters disburseParams = DisburseLoanParameters.getDisbursalParameters("02", "02", "2011");
+        DisburseLoanParameters disburseParams = DisburseLoanParameters.getDisbursalParameters("25", "02", "2011");
 
         LoanProductDetailsPage loanProductDetailsPage = loanTestHelper.defineNewLoanProduct(productParams);
         loanProductDetailsPage.verifyLoanAmountTableTypeFromCycle(cycleLoanAmount);
@@ -206,12 +188,11 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
     /**
      * Verify loan amount with number of installments is same for all loan can be used to create new loans.
      * http://mifosforge.jira.com/browse/MIFOSTEST-112
+     *
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyAmountByLastAmountAndInstallmentsSameForAll() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
-
         DefineNewLoanProductPage.SubmitFormParameters productParams = FormParametersHelper.getWeeklyLoanProductParameters();
         productParams.setOfferingName("product112");
         productParams.setOfferingShortName("p112");
@@ -222,9 +203,9 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
         productParams.setMaxInstallments("100");
         productParams.setDefInstallments("50");
         CreateLoanAccountSearchParameters searchParams = new CreateLoanAccountSearchParameters();
-        searchParams.setSearchString("Stu1233266053368 Client1233266053368");
+        searchParams.setSearchString("Stu1233171716380 Client1233171716380");
         searchParams.setLoanProduct("product112");
-        DisburseLoanParameters disburseParams = DisburseLoanParameters.getDisbursalParameters("02", "02", "2011");
+        DisburseLoanParameters disburseParams = DisburseLoanParameters.getDisbursalParameters("25", "02", "2011");
 
         LoanProductDetailsPage loanProductDetailsPage = loanTestHelper.defineNewLoanProduct(productParams);
         loanProductDetailsPage.verifyAmountTableTypeFromLastAmount(lastLoanAmount);
@@ -241,12 +222,11 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
     /**
      * Verify loan amount with number of installments by loan cycle can be used to create new loans.
      * http://mifosforge.jira.com/browse/MIFOSTEST-114
+     *
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyAmountsByLastAmountAndInstallmentsByCycle() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
-
         DefineNewLoanProductPage.SubmitFormParameters productParams = FormParametersHelper.getWeeklyLoanProductParameters();
         productParams.setOfferingName("product114");
         productParams.setOfferingShortName("p114");
@@ -257,9 +237,9 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
         String[][] calculateInstallments = getInstallmentsByCycle();
         productParams.setCycleInstallments(calculateInstallments);
         CreateLoanAccountSearchParameters searchParams = new CreateLoanAccountSearchParameters();
-        searchParams.setSearchString("Stu1233266053368 Client1233266053368");
+        searchParams.setSearchString("Stu1233171716380 Client1233171716380");
         searchParams.setLoanProduct("product114");
-        DisburseLoanParameters disburseParams = DisburseLoanParameters.getDisbursalParameters("02", "02", "2011");
+        DisburseLoanParameters disburseParams = DisburseLoanParameters.getDisbursalParameters("25", "02", "2011");
 
         LoanProductDetailsPage loanProductDetailsPage = loanTestHelper.defineNewLoanProduct(productParams);
         loanProductDetailsPage.verifyAmountTableTypeFromLastAmount(lastLoanAmount);
@@ -276,12 +256,11 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
     /**
      * Verify loan amount with number of installments by last loan amount can be used to create new loans.
      * http://mifosforge.jira.com/browse/MIFOSTEST-116
+     *
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyAmountsAndInstallmentsByLastAmount() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
-
         DefineNewLoanProductPage.SubmitFormParameters productParams = FormParametersHelper.getWeeklyLoanProductParameters();
         productParams.setOfferingName("product116");
         productParams.setOfferingShortName("p116");
@@ -292,9 +271,9 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
         String[][] calculateInstallments = getInstallmentsFromLastAmount();
         productParams.setInstallmentsByLastLoanAmount(calculateInstallments);
         CreateLoanAccountSearchParameters searchParams = new CreateLoanAccountSearchParameters();
-        searchParams.setSearchString("Stu1233266053368 Client1233266053368");
+        searchParams.setSearchString("Stu1233171716380 Client1233171716380");
         searchParams.setLoanProduct("product116");
-        DisburseLoanParameters disburseParams = DisburseLoanParameters.getDisbursalParameters("02", "02", "2011");
+        DisburseLoanParameters disburseParams = DisburseLoanParameters.getDisbursalParameters("25", "02", "2011");
 
         LoanProductDetailsPage loanProductDetailsPage = loanTestHelper.defineNewLoanProduct(productParams);
         loanProductDetailsPage.verifyAmountTableTypeFromLastAmount(lastLoanAmount);
@@ -309,46 +288,46 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
     }
 
     private String[][] getInstallmentsFromLastAmount() {
-        return new String[][] {
+        return new String[][]{
                 {"1000", "5", "10", "5"},
                 {"2000", "10", "20", "15"},
                 {"3000", "10", "30", "25"},
                 {"4000", "20", "50", "30"},
                 {"5000", "20", "50", "35"},
                 {"6000", "30", "60", "40"}
-            };
+        };
     }
 
     private String[][] getAmountsFromLastAmount() {
-        return new String[][] {
+        return new String[][]{
                 {"1000", "500.0", "1500.0", "1200.0"},
                 {"2000", "1500.0", "2500.0", "2200.0"},
                 {"3000", "2500.0", "3500.0", "3200.0"},
                 {"4000", "3500.0", "4500.0", "4200.0"},
                 {"5000", "4500.0", "5500.0", "5200.0"},
                 {"6000", "5500.0", "6500.0", "6200.0"}
-            };
+        };
     }
 
     private String[][] getAmountsByCycle() {
-        return new String[][] {
+        return new String[][]{
                 {"1000.0", "5000.0", "3000.0"},
                 {"2000.0", "6000.0", "4000.0"},
                 {"3000.0", "7000.0", "5000.0"},
                 {"4000.0", "8000.0", "6000.0"},
                 {"5000.0", "9000.0", "7000.0"},
                 {"6000.0", "10000.0", "8000.0"}
-            };
+        };
     }
 
     private String[][] getInstallmentsByCycle() {
-        return new String[][] {
+        return new String[][]{
                 {"26", "52", "52"},
                 {"20", "30", "30"},
                 {"15", "25", "25"},
                 {"10", "15", "15"},
                 {"5", "10", "10"},
                 {"1", "5", "5"}
-            };
+        };
     }
 }

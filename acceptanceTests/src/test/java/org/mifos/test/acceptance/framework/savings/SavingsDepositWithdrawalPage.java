@@ -38,9 +38,10 @@ public class SavingsDepositWithdrawalPage  extends MifosPage{
 
     public SavingsDepositWithdrawalConfirmationPage submitAndNavigateToDepositWithdrawalConfirmationPage(DepositWithdrawalSavingsParameters params)
     {
-        this.typeTextIfNotEmpty("trxnDateDD", params.getTrxnDateDD());
-        this.typeTextIfNotEmpty("trxnDateMM", params.getTrxnDateMM());
-        this.typeTextIfNotEmpty("trxnDateYY", params.getTrxnDateYYYY());
+        selectClientId(params);
+        typeTextIfNotEmpty("trxnDateDD", params.getTrxnDateDD());
+        typeTextIfNotEmpty("trxnDateMM", params.getTrxnDateMM());
+        typeTextIfNotEmpty("trxnDateYY", params.getTrxnDateYYYY());
 
         selenium.select("applypayment_savingsaccount.input.trxnType", "value=" + params.getTrxnTypeValue() );
         waitForPageToLoad();
@@ -58,6 +59,14 @@ public class SavingsDepositWithdrawalPage  extends MifosPage{
         waitForPageToLoad();
 
         return new SavingsDepositWithdrawalConfirmationPage(selenium);
+    }
+
+    private void selectClientId(DepositWithdrawalSavingsParameters params) {
+        String clientId = params.getClientId();
+        if (clientId != null) {
+            selenium.select("applypayment_savingsaccount.input.customerId", "value=" + clientId);
+            waitForPageToLoad();
+        }
     }
 
     public void verifyModeOfPayments(){

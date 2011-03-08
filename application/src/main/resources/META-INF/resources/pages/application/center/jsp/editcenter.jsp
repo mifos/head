@@ -32,7 +32,7 @@ explanation of the license and how it is applied.
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="editcenter"></span>
 	
-	<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+	<fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}'/>
 		<fmt:setBundle basename="org.mifos.config.localizedResources.CenterUIResources"/>
 	
 		<script language="javascript" SRC="pages/framework/js/date.js"></script>

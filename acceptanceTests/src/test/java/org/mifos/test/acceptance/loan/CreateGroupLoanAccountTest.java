@@ -39,6 +39,7 @@ import org.mifos.test.acceptance.framework.login.LoginPage;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
+import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
@@ -47,8 +48,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @SuppressWarnings("PMD")
-@ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"loan","acceptance","ui"})
+@ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
+@Test(sequential = true, groups = {"loan", "acceptance", "ui", "no_db_unit"})
 public class CreateGroupLoanAccountTest extends UiTestCaseBase {
 
     private LoanTestHelper loanTestHelper;
@@ -61,6 +62,9 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
 
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
+
+    @Autowired
+    private ApplicationDatabaseOperation applicationDatabaseOperation;
 
     private HomePage homePage;
 
@@ -76,19 +80,19 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
     public void logOut() {
         (new MifosPage(selenium)).logout();
     }
+
     //http://mifosforge.jira.com/browse/MIFOSTEST-303
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void newWeeklyGroupLoanAccount() throws Exception {
         //Given
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = new DateTime(2010,8,13,1,0,0,0);
+        DateTime targetTime = new DateTime(2011, 2, 18, 1, 0, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
         //When
         homePage = loginSuccessfully();
 
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
-        searchParameters.setSearchString("MyGroup1232993846342");
+        searchParameters.setSearchString("groupWithoutLoan");
         searchParameters.setLoanProduct("WeeklyGroupFlatLoanWithOnetimeFee");
 
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
@@ -104,25 +108,24 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
 
         DisburseLoanParameters disburseParameters = new DisburseLoanParameters();
         disburseParameters.setPaymentType(DisburseLoanParameters.CASH);
-        disburseParameters.setDisbursalDateDD("13");
-        disburseParameters.setDisbursalDateMM("08");
-        disburseParameters.setDisbursalDateYYYY("2010");
+        disburseParameters.setDisbursalDateDD("18");
+        disburseParameters.setDisbursalDateMM("02");
+        disburseParameters.setDisbursalDateYYYY("2011");
         loanTestHelper.disburseLoan(loanId, disburseParameters);
     }
 
-    @SuppressWarnings({ "PMD.SignatureDeclareThrowsException"})
+    @SuppressWarnings({"PMD.SignatureDeclareThrowsException"})
     public void newMonthlyGroupLoanAccountWithMeetingOnSpecificDayOfMonth() throws Exception {
         //Given
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = new DateTime(2010,8,13,1,0,0,0);
+        DateTime targetTime = new DateTime(2010, 8, 13, 1, 0, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_005_dbunit.xml", dataSource, selenium);
         //When
         homePage = loginSuccessfully();
 
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
-        searchParameters.setSearchString("GroupfirstOfMonth");
-        searchParameters.setLoanProduct("FlatMonthlyGroupLoan");
+        searchParameters.setSearchString("MonthlyGroup");
+        searchParameters.setLoanProduct("MonthlyGroupFlatLoan1stOfMonth");
 
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
         submitAccountParameters.setAmount("1000.0");
@@ -137,17 +140,13 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
         createLoanAccountConfirmationPage.navigateToLoanAccountDetailsPage();
     }
 
-    @Test(enabled=false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void newMonthlyGroupLoanAccountWithMeetingOnSameWeekAndWeekdayOfMonth() throws Exception {
-
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_005_dbunit.xml", dataSource, selenium);
-
         homePage = loginSuccessfully();
 
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
-        searchParameters.setSearchString("Group3rdFriday");
-        searchParameters.setLoanProduct("FlatMonthlyGroupLoan");
+        searchParameters.setSearchString("GroupMeetsOn3rdFriday");
+        searchParameters.setLoanProduct("MonthlyGroupFlatLoan1stOfMonth");
 
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
         submitAccountParameters.setAmount("1000.0");
@@ -163,38 +162,43 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled=true, groups={"loan"})
     public void tryCreateGroupLoanWithoutMandatoryPurposeOfLoan() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
+        applicationDatabaseOperation.updateGLIM(1);
+        try {
+            CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
+            searchParameters.setSearchString("Default Group");
+            searchParameters.setLoanProduct("WeeklyGroupFlatLoanWithOnetimeFee");
 
-        CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
-        searchParameters.setSearchString("MyGroup1233266297718");
-        searchParameters.setLoanProduct("WeeklyGroupFlatLoanWithOnetimeFee");
+            CreateLoanAccountEntryPage loanAccountEntryPage = loanTestHelper.navigateToCreateLoanAccountEntryPage(searchParameters);
 
-        CreateLoanAccountEntryPage loanAccountEntryPage = loanTestHelper.navigateToCreateLoanAccountEntryPage(searchParameters);
+            loanAccountEntryPage.selectTwoClientsForGlim();
 
-        loanAccountEntryPage.selectTwoClientsForGlim();
+            CreateLoanAccountConfirmationPage confirmationPage = loanAccountEntryPage.clickContinueAndNavigateToLoanAccountConfirmationPage();
 
-        CreateLoanAccountConfirmationPage confirmationPage = loanAccountEntryPage.clickContinueAndNavigateToLoanAccountConfirmationPage();
+            LoanAccountPage loanAccountPage = confirmationPage.navigateToLoanAccountDetailsPage();
 
-        LoanAccountPage loanAccountPage = confirmationPage.navigateToLoanAccountDetailsPage();
-
-        loanAccountPage.navigateToEditAccountInformation();
+            loanAccountPage.navigateToEditAccountInformation();
+        } finally {
+            applicationDatabaseOperation.updateGLIM(0);
+        }
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void tryCreateGroupLoanWithMandatoryPurposeOfLoan() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_012_dbunit.xml", dataSource, selenium);
+        applicationDatabaseOperation.updateGLIM(1);
+        try {
+            CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
+            searchParameters.setSearchString("Default Group");
+            searchParameters.setLoanProduct("WeeklyGroupFlatLoanWithOnetimeFee");
 
-        CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
-        searchParameters.setSearchString("MyGroup1233266297718");
-        searchParameters.setLoanProduct("WeeklyGroupFlatLoanWithOnetimeFee");
+            CreateLoanAccountEntryPage loanAccountEntryPage = loanTestHelper.navigateToCreateLoanAccountEntryPage(searchParameters);
 
-        CreateLoanAccountEntryPage loanAccountEntryPage = loanTestHelper.navigateToCreateLoanAccountEntryPage(searchParameters);
-
-        loanAccountEntryPage.selectTwoClientsForGlim();
-        loanAccountEntryPage.selectPurposeForGlim();
-        loanAccountEntryPage.clickContinue();
+            loanAccountEntryPage.selectTwoClientsForGlim();
+            loanAccountEntryPage.selectPurposeForGlim();
+            loanAccountEntryPage.clickContinue();
+        } finally {
+            applicationDatabaseOperation.updateGLIM(0);
+        }
     }
 
     private HomePage loginSuccessfully() {

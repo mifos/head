@@ -32,7 +32,6 @@ import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.PaymentParameters;
 import org.mifos.test.acceptance.framework.loan.ViewRepaymentSchedulePage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
-import org.mifos.test.acceptance.framework.testhelpers.CustomPropertiesHelper;
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.loanproduct.LoanProductTestHelper;
@@ -44,6 +43,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 
 @SuppressWarnings("PMD")
@@ -54,17 +54,8 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
     private LoanTestHelper loanTestHelper;
     private LoanProductTestHelper loanProductTestHelper;
     private String expectedDate;
-
-    private DateTime systemTime;
-
-    //@Autowired
-    //private DriverManagerDataSource dataSource;
-    //@Autowired
-    //private DbUnitUtilities dbUnitUtilities;
     @Autowired
     private ApplicationDatabaseOperation applicationDatabaseOperation;
-
-    private DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -75,9 +66,9 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
         applicationDatabaseOperation.updateLSIM(1);
         loanTestHelper = new LoanTestHelper(selenium);
         loanProductTestHelper = new LoanProductTestHelper(selenium);
-        dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        systemTime = new DateTime(2010,1,22,10,55,0,0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(systemTime);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTime targetTime = new DateTime(2010, 1, 22, 10, 55, 0, 0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
     }
 
     @AfterMethod(alwaysRun = true)
@@ -86,15 +77,10 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
+    @Test(groups = {"loan", "acceptance", "ui"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-127
     public void newWeeklyLSIMClientLoanAccount() throws Exception {
-        //Given
-        systemTime = new DateTime(2010,1,15,10,55,0,0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(systemTime);
-        //When
-        CustomPropertiesHelper customPropertiesHelper = new CustomPropertiesHelper(selenium);
-        customPropertiesHelper.setBackDatedTransactionsAllowed("true");
 
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("Stu1233171716380 Client1233171716380");
@@ -105,33 +91,8 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
         submitAccountParameters.setLsimFrequencyWeeks("on");
         submitAccountParameters.setLsimWeekFrequency("1");
         submitAccountParameters.setLsimWeekDay("Friday");
-        //Then
-        String loanId = createLSIMLoanAndCheckAmountAndInstallmentDate(searchParameters, submitAccountParameters, expectedDate);
-        //When
-        systemTime = new DateTime(2010,1,18,10,55,0,0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(systemTime);
-        //Then
-        loanTestHelper.activateLoanAccount(loanId);
-        //When
-        systemTime = new DateTime(2010,1,29,10,55,0,0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(systemTime);
 
-        DisburseLoanParameters disburseParameters = new DisburseLoanParameters();
-        disburseParameters.setDisbursalDateDD("22");
-        disburseParameters.setDisbursalDateMM("01");
-        disburseParameters.setDisbursalDateYYYY("2010");
-        disburseParameters.setPaymentType(PaymentParameters.CASH);
-        //Then
-        loanTestHelper.disburseLoan(loanId, disburseParameters);
-        //When
-        PaymentParameters paymentParameters = new PaymentParameters();
-        paymentParameters.setAmount("200.0");
-        paymentParameters.setTransactionDateDD("23");
-        paymentParameters.setTransactionDateMM("01");
-        paymentParameters.setTransactionDateYYYY("2010");
-        paymentParameters.setPaymentType(PaymentParameters.CASH);
-        //Then
-        loanTestHelper.applyPayment(loanId, paymentParameters);
+        createLSIMLoanAndCheckAmountAndInstallmentDate(searchParameters, submitAccountParameters, expectedDate);
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -171,39 +132,46 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
     }
 
     // http://mifosforge.jira.com/browse/MIFOSTEST-123
-    @Test(enabled=false) // TODO js - make it no_db_unit
     public void createLoanAccountWithNonMeetingDatesForDisburseAndRepay() throws Exception {
         //Given
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        systemTime = new DateTime(2011,02,24,12,0,0,0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(systemTime);
-        //initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
+        setTime(2011, 02, 24);
         DefineNewLoanProductPage.SubmitFormParameters defineNewLoanProductformParameters = FormParametersHelper.getMonthlyLoanProductParameters();
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("Client - Mary Monthly");
         searchParameters.setLoanProduct(defineNewLoanProductformParameters.getOfferingName());
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
-        submitAccountParameters = createSearchParameters("24","02","2011");
+        submitAccountParameters.setDd("24");
+        submitAccountParameters.setMm("02");
+        submitAccountParameters.setYy("2011");
         EditLoanAccountStatusParameters editLoanAccountStatusParameters = new EditLoanAccountStatusParameters();
         editLoanAccountStatusParameters.setStatus(AccountStatus.LOAN_APPROVED.getStatusText());
         editLoanAccountStatusParameters.setNote("activate account");
         DisburseLoanParameters disburseLoanParameters = new DisburseLoanParameters();
-        disburseLoanParameters=createDisubreseLoanParameters("23","02","2011");
+        disburseLoanParameters.setDisbursalDateDD("24");
+        disburseLoanParameters.setDisbursalDateMM("02");
+        disburseLoanParameters.setDisbursalDateYYYY("2011");
+        disburseLoanParameters.setPaymentType(PaymentParameters.CASH);
         //When
         loanProductTestHelper.defineNewLoanProduct(defineNewLoanProductformParameters);
         //Then
         String loanId = loanTestHelper.createLoanAccount(searchParameters, submitAccountParameters).getAccountId();
         loanTestHelper.changeLoanAccountStatus(loanId, editLoanAccountStatusParameters);
+        setTime(2011, 03, 24);
         loanTestHelper.disburseLoan(loanId, disburseLoanParameters);
         loanTestHelper.repayLoan(loanId);
+    }
+
+    private void setTime(int year, int monthOfYear, int dayOfMonth) throws UnsupportedEncodingException {
+
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTime systemTime = new DateTime(year, monthOfYear, dayOfMonth, 12, 0, 0, 0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(systemTime);
     }
 
     // http://mifosforge.jira.com/browse/MIFOSTEST-121
     public void createWeeklyLoanAccountWithNonMeetingDatesForDisburseAndRepay() throws Exception {
         //Given
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        systemTime = new DateTime(2011,02,23,12,0,0,0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(systemTime);
+        setTime(2011, 02, 23);
 
         //When
         DefineNewLoanProductPage.SubmitFormParameters defineNewLoanProductformParameters = FormParametersHelper.getWeeklyLoanProductParameters();
@@ -276,13 +244,14 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
         disburseLoanParameters.setPaymentType(PaymentParameters.CASH);
         return disburseLoanParameters;
     }
+    
     private String createLSIMLoanAndCheckAmountAndInstallmentDate(CreateLoanAccountSearchParameters searchParameters,
-            CreateLoanAccountSubmitParameters submitAccountParameters, String expectedDate) {
+                                                                  CreateLoanAccountSubmitParameters submitAccountParameters, String expectedDate) {
 
         LoanAccountPage loanAccountPage = loanTestHelper.createLoanAccount(searchParameters, submitAccountParameters);
         loanAccountPage.verifyLoanAmount(submitAccountParameters.getAmount());
         String loanId = loanAccountPage.getAccountId();
-        ViewRepaymentSchedulePage viewRepaymentSchedulePage =loanAccountPage.navigateToViewRepaymentSchedule();
+        ViewRepaymentSchedulePage viewRepaymentSchedulePage = loanAccountPage.navigateToViewRepaymentSchedule();
         viewRepaymentSchedulePage.verifyFirstInstallmentDate(4, 2, expectedDate);
         return loanId;
     }

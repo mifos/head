@@ -560,6 +560,10 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
     }
 
     public boolean isNotBranch() {
+        return !isBranch();
+    }
+    
+    public boolean isBranch() {
         return OfficeLevel.BRANCHOFFICE.getValue().equals(this.level.getId());
     }
 

@@ -20,9 +20,6 @@
 
 package org.mifos.test.acceptance.holiday;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.joda.time.DateTime;
 import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.AppLauncher;
@@ -44,7 +41,6 @@ import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSubmitPar
 import org.mifos.test.acceptance.framework.testhelpers.BatchJobHelper;
 import org.mifos.test.acceptance.framework.testhelpers.CenterTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.ClientTestHelper;
-import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.framework.testhelpers.GroupTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.HolidayTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
@@ -60,8 +56,11 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-@ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = { "holiday", "schedules", "acceptance", "ui" })
+import java.util.ArrayList;
+import java.util.List;
+
+@ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
+@Test(sequential = true, groups = {"holiday", "schedules", "acceptance", "ui"})
 public class AdditionalHolidayTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;
@@ -83,7 +82,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
-    @BeforeMethod(alwaysRun=true)
+    @BeforeMethod(alwaysRun = true)
     public void setUp() throws Exception {
         super.setUp();
 
@@ -138,10 +137,23 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
     public void testBranchSpecificMoratorium() throws Exception {
         //Given
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
-        CreateHolidaySubmitParameters param = FormParametersHelper.getCreateHolidaySubmitParameters();
-
+        CreateHolidaySubmitParameters param = getCreateHolidaySubmitParameters();
         //When / Then
         holidayTestHelper.createHoliday(param);
+    }
+
+    public CreateHolidaySubmitParameters getCreateHolidaySubmitParameters() {
+        CreateHolidaySubmitParameters params = new CreateHolidayEntryPage.CreateHolidaySubmitParameters();
+        params.setName("Holiday" + StringUtil.getRandomString(8));
+        params.setFromDateDD("01");
+        params.setFromDateMM("02");
+        params.setFromDateYYYY("2011");
+        params.setThruDateDD("14");
+        params.setThruDateMM("02");
+        params.setThruDateYYYY("2011");
+        params.setRepaymentRule(CreateHolidaySubmitParameters.MORATORIUM);
+        params.addOffice("MyOffice1233266206574");
+        return params;
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -208,9 +220,8 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         navigationHelper.navigateToSavingsAccountDetailPage(savingsId).verifyTotalAmountDue(savingsAmount);
     }
 
-    @Test(enabled = false)
     private void createLoan(final CreateLoanAccountSearchParameters searchParameters,
-            final CreateLoanAccountSubmitParameters submitAccountParameters) {
+                            final CreateLoanAccountSubmitParameters submitAccountParameters) {
         logOut();
         CreateLoanAccountSearchPage createLoanAccountSearchPage = navigateToCreateLoanAccountSearchPage();
         CreateLoanAccountEntryPage createLoanAccountEntryPage = createLoanAccountSearchPage
@@ -220,7 +231,6 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         createLoanAccountConfirmationPage.navigateToLoanAccountDetailsPage();
     }
 
-    @Test(enabled = false)
     private CreateLoanAccountSearchPage navigateToCreateLoanAccountSearchPage() {
         LoginPage loginPage = appLauncher.launchMifos();
         loginPage.verifyPage();

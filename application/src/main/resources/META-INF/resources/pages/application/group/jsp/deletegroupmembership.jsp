@@ -43,7 +43,7 @@ explanation of the license and how it is applied.
 		groupTransferActionForm.submit();
 	    }
 	</script>
-	<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+	<fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}'/>
 	<fmt:setBundle basename="org.mifos.config.localizedResources.GroupUIResources"/>
 		<html-el:form action="groupTransferAction.do?method=removeGroupMemberShip">
 			<c:set

@@ -26,7 +26,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 
-<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}'/>
 <fmt:setBundle basename="org.mifos.config.localizedResources.adminUIResources"/>
 
 <tiles:insert definition=".view">
@@ -275,9 +275,7 @@ explanation of the license and how it is applied.
 					
 					<!--  -->
 					<span class="fontnormalbold">
-					<fmt:message key="admin.manageProducts">
-						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
-					</fmt:message>
+					<mifos:mifoslabel name="admin.manageloanprd" />
 					</span><br>
 					<table width="90%" border="0" cellspacing="0" cellpadding="0">
 						<tr class="fontnormal">
@@ -287,23 +285,16 @@ explanation of the license and how it is applied.
 							<!-- Bug id 28065  Added a  parameter input in the link of admin page.-->
 							<td width="97%"><html-el:link styleId="admin.link.viewLoanProducts"
 								href="loanproductaction.do?method=viewAllLoanProducts&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
-								<fmt:message key="admin.viewLoanProducts">
-									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
-								</fmt:message>
+								<mifos:mifoslabel name="admin.viewLoanProducts" />
 								</html-el:link> | <html-el:link styleId="admin.link.defineNewLoanProduct"
 								href="loanproductaction.do?method=load&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
-								<fmt:message key="admin.defineNewLoanProduct">
-									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
-								</fmt:message>
+								<mifos:mifoslabel name="admin.defineNewLoanProduct" />
 								</html-el:link></td>
 						</tr>
 					</table>
 					<br>
 					<span class="fontnormalbold">
-					<fmt:message key="admin.manageProducts">
-						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" /></fmt:param>
-					</fmt:message>
-
+					<mifos:mifoslabel name="admin.managesavprd" />
 					</span><br>
 					<table width="90%" border="0" cellspacing="0" cellpadding="0">
 						<tr class="fontnormal">
@@ -317,13 +308,9 @@ explanation of the license and how it is applied.
 								</html-el:link>
 								-->
 								<a id="admin.link.viewSavingsProducts" href="viewSavingsProducts.ftl">
-									<fmt:message key="admin.viewSavingsProducts">
-										<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" /></fmt:param>
-									</fmt:message>
+									<mifos:mifoslabel name="admin.viewSavingsProducts" />
 								</a> | <a id="admin.link.defineNewSavingsProduct" href="defineSavingsProduct.ftl">
-									<fmt:message key="admin.defineNewSavingsProduct">
-										<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" /></fmt:param>
-									</fmt:message>
+									<mifos:mifoslabel name="admin.defineNewSavingsProduct" />
 									</a>
 									<!--
 									<html-el:link styleId="admin.link.defineNewSavingsProduct" href="savingsproductaction.do?method=load&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
@@ -334,24 +321,22 @@ explanation of the license and how it is applied.
 					</table>
 					<br>
 					<span class="headingorange"><mifos:mifoslabel name="admin.manage.accounts" bundle="adminUIResources"/> </span><br>
-                <span class="fontnormalbold"><mifos:mifoslabel name="admin.Manage" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel name="admin.accounts" /></span><br>
+                <span class="fontnormalbold"><mifos:mifoslabel name="admin.manageLoanAccounts" /></span><br>
                 <table width="90%" border="0" cellspacing="0" cellpadding="0">
                   <tr class="fontnormal">
                     <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
                     <td width="97%"><html-el:link styleId="admin.link.reverseLoanDisbursal"
 								href="reverseloandisbaction.do?method=search&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
-								<fmt:message key="admin.reverseLoanDisbursal">
-								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
-								</fmt:message></html-el:link></td>
+								<mifos:mifoslabel name="admin.reverseLoanDisbursal" />
+								</html-el:link></td>
 
                   </tr>
                   <tr class="fontnormal">
                     <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
                     <td width="97%"><html-el:link styleId="admin.link.redoLoanDisbursal"
 								href="loanAccountAction.do?method=redoLoanBegin&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
-								<fmt:message key="admin.redoLoanDisbursal">
-								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
-								</fmt:message></html-el:link></td>
+								<mifos:mifoslabel name="admin.redoLoanDisbursal" />
+								</html-el:link></td>
 
                   </tr>
                 </table>

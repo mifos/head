@@ -29,7 +29,7 @@ explanation of the license and how it is applied.
     }
 </script>
 
-<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}'/>
 <div id="viewQuestionResponseDiv" class="${param.responseDivStyleClass}">
  	<c:set value="${requestScope.questionsHostForm.questionGroups}" var="questionGroups" />
 	<!-- Question Groups -->

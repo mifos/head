@@ -58,7 +58,9 @@
         <mysql.connector.version>5.1.13</mysql.connector.version>
         <jetty.version>7.3.0.v20110203</jetty.version>
         <targetJdk>1.6</targetJdk>
-    </properties>
+ 	<birt.version>2.5.0</birt.version>
+	<birt.libs.groupId>org.mifos.birtlibs</birt.libs.groupId>
+   </properties>
 
     <modules>
         <module>common</module>
@@ -245,16 +247,16 @@
             </dependency>
             <dependency>
                 <groupId>org.mifos</groupId>
-				<artifactId>mifos-server-jetty</artifactId>
+                <artifactId>mifos-server-jetty</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.mifos</groupId>
-				<artifactId>mifos-server-workspace</artifactId>
+                <artifactId>mifos-server-workspace</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
-            
+
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-core</artifactId>
@@ -750,6 +752,32 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>1.0</version>
+                <executions>
+                    <execution>
+                        <id>enforce-versions</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireMavenVersion>
+                                    <version>[3.0.2,)</version>
+                                </requireMavenVersion>
+                                <requireJavaVersion>
+                                    <version>1.6</version>
+                                </requireJavaVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 
     <reporting>

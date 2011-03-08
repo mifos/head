@@ -139,7 +139,7 @@ public class LoanTestHelper {
     public LoanAccountPage createLoanAccountForMultipleClientsInGroup(boolean loanSaveType){
 
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
-        searchParameters.setSearchString("MyGroup1233266297718");
+        searchParameters.setSearchString("Default Group");
         searchParameters.setLoanProduct("WeeklyGroupFlatLoanWithOnetimeFee");
 
         CreateLoanAccountEntryPage loanAccountEntryPage = this.navigateToCreateLoanAccountEntryPage(searchParameters);
@@ -287,14 +287,13 @@ public class LoanTestHelper {
         return loanAccountPage;
     }
 
-    public void disburseLoanWithWrongParams(String loanId, DisburseLoanParameters params,  String msg)
-    {
+    public void disburseLoanWithWrongParams(String loanId, DisburseLoanParameters params,  String msg) {
         DisburseLoanPage disburseLoanPage = prepareToDisburseLoan(loanId);
         disburseLoanPage.submitWithWrongParams(params,msg);
         prepareToDisburseLoan(loanId);
     }
 
-    public void editLoanProduct(String loanProduct, boolean interestWaiver) {
+    public void enableInterestWaiver(String loanProduct, boolean interestWaiver) {
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         ViewLoanProductsPage viewLoanProducts = adminPage.navigateToViewLoanProducts();
         LoanProductDetailsPage loanProductDetailsPage = viewLoanProducts.viewLoanProductDetails(loanProduct);
@@ -394,7 +393,7 @@ public class LoanTestHelper {
         loanAccountPage = applyPaymentConfirmationPage.submitAndNavigateToLoanAccountDetailsPage();
 
         AccountActivityPage accountActivityPage = loanAccountPage.navigateToAccountActivityPage();
-        accountActivityPage.verifyLastTotalPaid(paymentParams.getAmount());
+        accountActivityPage.verifyLastTotalPaid(paymentParams.getAmount(), 2);
         accountActivityPage.navigateBack();
 
         return loanAccountPage;
@@ -502,7 +501,7 @@ public class LoanTestHelper {
      * @param loanID
      */
     public void verifyHistoryAndSummaryReversedLoan(ClosedAccountsPage closedAccountPage, String loanID) {
-        verifyHistoryAndSummaryReversedLoan(closedAccountPage, loanID, null, null, null);
+        verifyHistoryAndSummaryReversedLoan(closedAccountPage, loanID, null, null, null, 0);
     }
 
     /**
@@ -512,8 +511,9 @@ public class LoanTestHelper {
      * @param totalOriginalLoan
      * @param totalAmountPaid
      * @param totalLoanBalance
+     * @param transactionCount
      */
-    public void verifyHistoryAndSummaryReversedLoan(ClosedAccountsPage closedAccountPage, String loanID, String totalOriginalLoan, String totalAmountPaid, String totalLoanBalance) {
+    public void verifyHistoryAndSummaryReversedLoan(ClosedAccountsPage closedAccountPage, String loanID, String totalOriginalLoan, String totalAmountPaid, String totalLoanBalance, int transactionCount) {
         LoanAccountPage loanAccountPage = closedAccountPage.verifyAndNavigateToOneClosedLoan(loanID);
         loanAccountPage.verifyStatus(EditLoanAccountStatusParameters.CANCEL, EditLoanAccountStatusParameters.CANCEL_REASON_LOAN_REVERSAL);
         if(totalOriginalLoan != null) {
@@ -522,7 +522,7 @@ public class LoanTestHelper {
             loanAccountPage.verifyLoanTotalBalance(totalLoanBalance);
             loanAccountPage.verifyClosedLoanPerformanceHistory();
             TransactionHistoryPage transactionHistoryPage = loanAccountPage.navigateToTransactionHistory();
-            transactionHistoryPage.verifyTransactionHistory(0, 0, 4);
+            transactionHistoryPage.verifyTransactionHistory(0, transactionCount, 4);
         }
     }
 
@@ -639,7 +639,7 @@ public class LoanTestHelper {
         LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
         TransactionHistoryPage transactionHistoryPage = loanAccountPage.navigateToTransactionHistory();
 
-        transactionHistoryPage.verifyTransactionHistory(paymentAmount, 1, 217);
+        transactionHistoryPage.verifyTransactionHistory(paymentAmount, 1, 6);
     }
 
     public LoanAccountPage createTwoLoanAccountsWithMixedRestricedPoducts(CreateLoanAccountSearchParameters searchParams1, CreateLoanAccountSearchParameters searchParams2, DisburseLoanParameters disburseParams) {
@@ -695,7 +695,7 @@ public class LoanTestHelper {
         for(int i = 0; i < clients.length; i++) {
             createLoanAccountsEntryPage.selectClients(i, clients[i]);
             createLoanAccountsEntryPage.updateLoanPurposeForClient(i, loanPurpose);
-            createLoanAccountsEntryPage.verifyNoOfInstallments(i, clientsInstallments[i]);
+            createLoanAccountsEntryPage.verifyNoOfInstallments(i+1, "10");
         }
         LoanAccountPage loanAccountPage;
         CreateLoanAccountsSuccessPage createLoanAccountsSuccessPage;
@@ -717,8 +717,8 @@ public class LoanTestHelper {
                 else{
                     loanAccountPage.verifyLoanStatus(AccountStatus.LOAN_PARTIAL.getStatusText());
                 }
+                loanAccountPage.verifyNumberOfInstallments("10");
                 Assert.assertEquals(loanAccountPage.getOriginalFeesAmount(), feeAmount, "Bulk loan creation ignores default fees");
-                loanAccountPage.verifyNumberOfInstallments(clientsInstallments[i]);
             }
         }
     }
@@ -873,7 +873,7 @@ public class LoanTestHelper {
                 submitAndNavigateToApplyPaymentConfirmationPage(paymentParameters).
                 submitAndNavigateToLoanAccountDetailsPage();
         AccountActivityPage accountActivityPage = loanAccountPage.navigateToAccountActivityPage();
-        accountActivityPage.verifyLastTotalPaid(paymentAmount);
+        accountActivityPage.verifyLastTotalPaid(paymentAmount, 2);
         accountActivityPage.navigateBack();
         return loanAccountPage;
     }

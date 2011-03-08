@@ -32,7 +32,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = { "reports", "acceptance","ui"})
+@Test(sequential = true, groups = { "reports", "acceptance","ui", "no_db_unit"})
 public class ViewReportsTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;
@@ -65,7 +65,7 @@ public class ViewReportsTest extends UiTestCaseBase {
                 "Analysis",
                 "Branch Cash Confirmation Report",
                 "Branch Progress Report",
-                "Detailed Aging Of Portfolio At Risk",
+                "Detailed Aging Of Portfolio At Risk Report",
                 "General Ledger Report",
                 "Miscellaneous"
         };

@@ -22,8 +22,6 @@ package org.mifos.test.acceptance.framework.testhelpers;
 
 import org.mifos.test.acceptance.framework.admin.FeesCreatePage;
 import org.mifos.test.acceptance.framework.client.CreateClientEnterPersonalDataPage;
-import org.mifos.test.acceptance.framework.holiday.CreateHolidayEntryPage;
-import org.mifos.test.acceptance.framework.holiday.CreateHolidayEntryPage.CreateHolidaySubmitParameters;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
 import org.mifos.test.acceptance.util.StringUtil;
 
@@ -53,7 +51,8 @@ public class FormParametersHelper {
         formParameters.setPrincipalGLCode("1506");
         return formParameters;
     }
-    public static  DefineNewLoanProductPage.SubmitFormParameters getWeeklyLoanProductParametersWithInstallmentsSetsByLastLoanAmount() {
+
+    public static DefineNewLoanProductPage.SubmitFormParameters getWeeklyLoanProductParametersWithInstallmentsSetsByLastLoanAmount() {
         DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
         formParameters.setCalculateInstallments(DefineNewLoanProductPage.SubmitFormParameters.BY_LAST_LOAN_AMOUNT);
         String[][] installmentsByLastLoanAmount = {
@@ -110,8 +109,8 @@ public class FormParametersHelper {
         return formParameters;
     }
 
-    public static FeesCreatePage.SubmitFormParameters getCreatePeriodicFeesParameters(){
-        FeesCreatePage.SubmitFormParameters formParameters =  new FeesCreatePage.SubmitFormParameters();
+    public static FeesCreatePage.SubmitFormParameters getCreatePeriodicFeesParameters() {
+        FeesCreatePage.SubmitFormParameters formParameters = new FeesCreatePage.SubmitFormParameters();
         formParameters.setFeeName(StringUtil.getRandomString(5));
         formParameters.setCategoryType("Group");
         formParameters.setDefaultFees(false);
@@ -121,7 +120,7 @@ public class FormParametersHelper {
         formParameters.setAmount(6);
         formParameters.setGlCode(6201);
         return formParameters;
-        }
+    }
 
     public static DefineNewLoanProductPage.SubmitFormParameters getWeeklyLoanProductParametersWithQuestionGroups(String... questionGroupTitle) {
         DefineNewLoanProductPage.SubmitFormParameters weeklyLoanProductParameters = getWeeklyLoanProductParameters();
@@ -129,22 +128,8 @@ public class FormParametersHelper {
         return weeklyLoanProductParameters;
     }
 
-    public static CreateHolidaySubmitParameters getCreateHolidaySubmitParameters() {
-        CreateHolidaySubmitParameters params = new CreateHolidayEntryPage.CreateHolidaySubmitParameters();
-        params.setName("Holiday" + StringUtil.getRandomString(8));
-        params.setFromDateDD("01");
-        params.setFromDateMM("02");
-        params.setFromDateYYYY("2011");
-        params.setThruDateDD("14");
-        params.setThruDateMM("02");
-        params.setThruDateYYYY("2011");
-        params.setRepaymentRule(CreateHolidaySubmitParameters.MORATORIUM);
-        params.addOffice("MyOffice1233266206574");
-        return params;
-    }
-
-    public static FeesCreatePage.SubmitFormParameters getOneTimeLoanMultiCurrencyFeesParameters(){
-        FeesCreatePage.SubmitFormParameters formParameters =  new FeesCreatePage.SubmitFormParameters();
+    public static FeesCreatePage.SubmitFormParameters getOneTimeLoanMultiCurrencyFeesParameters() {
+        FeesCreatePage.SubmitFormParameters formParameters = new FeesCreatePage.SubmitFormParameters();
         formParameters.setFeeName(StringUtil.getRandomString(5));
         formParameters.setCategoryType("Loans");
         formParameters.setDefaultFees(false);
@@ -154,5 +139,5 @@ public class FormParametersHelper {
         formParameters.setCurrency(FeesCreatePage.SubmitFormParameters.USD);
         formParameters.setGlCode(31301);
         return formParameters;
-        }
+    }
 }

@@ -93,7 +93,7 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
         paramsPastDate.setDisbursalDateYYYY("2012");
         paramsPastDate.addClient(1, "3000.0", "0009-Horse");
         paramsPastDate.addClient(2, "3000.0", "0001-Cow Purchase");
-        LoanAccountPage loanAccountPage = loanTestHelper.redoLoanDisbursalWithGLIMandLSIM("MyGroup1233266297718", "GroupEmergencyLoan", paramsPastDate);
+        LoanAccountPage loanAccountPage = loanTestHelper.redoLoanDisbursalWithGLIMandLSIM("Default Group", "GroupEmergencyLoan", paramsPastDate);
         loanAccountPage.verifyStatus(LoanAccountPage.ACTIVE);
         loanAccountPage.verifyPrincipalOriginal("6000.0");
     }
@@ -110,7 +110,7 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
         paramsPastDate.setDisbursalDateDD("25");
         paramsPastDate.setDisbursalDateMM("02");
         paramsPastDate.setDisbursalDateYYYY("2011");
-        LoanAccountPage loanAccountPage = loanTestHelper.redoLoanDisbursal("MyGroup1233266297718", "WeeklyGroupFlatLoanWithOnetimeFee", paramsPastDate, null, 0, false);
+        LoanAccountPage loanAccountPage = loanTestHelper.redoLoanDisbursal("Default Group", "WeeklyGroupFlatLoanWithOnetimeFee", paramsPastDate, null, 0, false);
         verifyRedoLoanDisbursalWithPastDate(loanAccountPage);
     }
 
@@ -120,7 +120,7 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
         loanAccountPage.verifyTotalAmountPaid("1029.0");
         loanAccountPage.verifyLoanTotalBalance("0.0");
         TransactionHistoryPage transactionHistoryPage = loanAccountPage.navigateToTransactionHistory();
-        transactionHistoryPage.verifyTransactionHistory(1028.6, 4, 217);
+        transactionHistoryPage.verifyTransactionHistory(1028.6, 4, 22);
     }
 
     /*
@@ -145,7 +145,7 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
         paramsCurrentDate.setDisbursalDateDD("22");
         paramsCurrentDate.setDisbursalDateMM("2");
         paramsCurrentDate.setDisbursalDateYYYY("2012");
-        LoanAccountPage loanAccountPage = loanTestHelper.redoLoanDisbursal("MyGroup1233266297718", "WeeklyGroupFlatLoanWithOnetimeFee", paramsPastDate, paramsCurrentDate, 0, true);
+        LoanAccountPage loanAccountPage = loanTestHelper.redoLoanDisbursal("Default Group", "WeeklyGroupFlatLoanWithOnetimeFee", paramsPastDate, paramsCurrentDate, 0, true);
         loanAccountPage.verifyStatus("Active in Good Standing");
         loanAccountPage.verifyPerformanceHistory("51", "0");
         // Testing multiple reverse payments

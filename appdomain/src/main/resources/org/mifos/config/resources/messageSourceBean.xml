@@ -6,7 +6,10 @@
     <!-- Since MessageLookup is MessageSourceAware, the messageSource will be injected -->
     <bean id="messageLookup" class="org.mifos.application.master.MessageLookup" abstract="false" lazy-init="default" autowire="default" factory-method="getInstance" />
 
+	<!-- 
     <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+     -->
+    <bean id="messageSource" class="org.mifos.framework.util.MessageFilterReloadableResourceBundleMessageSource">
         <property name="basenames">
             <list>
                 <value>classpath:org/mifos/ui/localizedProperties/messages</value>
@@ -18,6 +21,7 @@
                 <value>classpath:org/mifos/platform/questionnaire/ui/localizedProperties/questionnaire_messages</value>
                 <value>classpath:org/mifos/platform/accounting/ui/localizedProperties/accounting_messages</value>
                 <value>classpath:org/mifos/ui/localizedProperties/FtlDefinedLabelsMessages</value>
+                <value>classpath:org/mifos/config/localizedResources/LoanUIResources</value> <!-- added for cashflow messages -->
                 <value>classpath:org/mifos/config/localizedResources/MessageLookupMessages</value>
                 <value>classpath:org/mifos/config/localizedResources/reporterrors</value>
                 <value>classpath:org/mifos/config/localizedResources/SharedMessages</value>
@@ -27,5 +31,6 @@
         <property name="fileEncodings" value="UTF-8" />
         <property name="defaultEncoding" value="UTF-8" />
         <property name="cacheSeconds" value="${i18n.messages.cacheSeconds}" />
+        <property name="messageCustomizerServiceFacade" ref="messageCustomizerServiceFacade" />        
     </bean>
 </beans>

@@ -33,6 +33,7 @@ import org.mifos.test.acceptance.framework.savings.DepositWithdrawalSavingsParam
 import org.mifos.test.acceptance.framework.savings.SavingsAccountDetailPage;
 import org.mifos.test.acceptance.framework.savings.SavingsDepositWithdrawalPage;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
+import org.mifos.test.acceptance.framework.testhelpers.QuestionGroupTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.SavingsAccountHelper;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @SuppressWarnings("PMD")
-@ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
+@ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
 public class CreateSavingsAccountTest extends UiTestCaseBase {
 
     private SavingsAccountHelper savingsAccountHelper;
@@ -54,6 +55,7 @@ public class CreateSavingsAccountTest extends UiTestCaseBase {
     private DbUnitUtilities dbUnitUtilities;
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
+    private QuestionGroupTestHelper questionGroupTestHelper;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -62,19 +64,19 @@ public class CreateSavingsAccountTest extends UiTestCaseBase {
     public void setUp() throws Exception {
         super.setUp();
         savingsAccountHelper = new SavingsAccountHelper(selenium);
+        questionGroupTestHelper = new QuestionGroupTestHelper(selenium);
+        questionGroupTestHelper.markQuestionGroupAsActive("QGForCreateSavingsAccount");
     }
 
     @AfterMethod(alwaysRun = true)
     public void logOut() {
+        questionGroupTestHelper.markQuestionGroupAsInactive("QGForCreateSavingsAccount");
         (new MifosPage(selenium)).logout();
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(sequential = true, groups = {"savings", "acceptance", "ui" })
-    //http://mifosforge.jira.com/browse/MIFOSTEST-255
+    @Test(sequential = true, groups = {"savings", "acceptance", "ui", "no_db_unit"})
     public void verifyPaymentTypesForWithdrawalsAndDeposits() throws Exception {
-        //Given
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
         //When
         NavigationHelper navigationHelper = new NavigationHelper(selenium);
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
@@ -94,13 +96,13 @@ public class CreateSavingsAccountTest extends UiTestCaseBase {
         defineAcceptedPaymentTypesPage.addSavingsDepositsPaymentType(defineAcceptedPaymentTypesPage.VOUCHER);
 
         CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
-        searchParameters.setSearchString("Stu1233266079799 Client1233266079799");
-        searchParameters.setSavingsProduct("MandClientSavings3MoPostMinBal");
+        searchParameters.setSearchString("Client - Mary Monthly");
+        searchParameters.setSavingsProduct("MonthlyClientSavingsAccount");
 
         CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
         submitAccountParameters.setAmount("248.0");
 
-        SavingsAccountDetailPage savingsAccountDetailPage = savingsAccountHelper.createSavingsAccount(searchParameters, submitAccountParameters);
+        SavingsAccountDetailPage savingsAccountDetailPage = savingsAccountHelper.createSavingsAccountWithQG(searchParameters, submitAccountParameters);
 
         EditAccountStatusParameters editAccountStatusParameters = new EditAccountStatusParameters();
         editAccountStatusParameters.setAccountStatus(AccountStatus.SAVINGS_ACTIVE);
@@ -116,7 +118,7 @@ public class CreateSavingsAccountTest extends UiTestCaseBase {
         //Then
         savingsDepositWithdrawalPage.verifyModeOfPayments();
         //When
-        savingsAccountDetailPage = navigationHelper.navigateToSavingsAccountDetailPage("000100000000015");
+        savingsAccountDetailPage = navigationHelper.navigateToSavingsAccountDetailPage("000100000000002");
         savingsDepositWithdrawalPage = savingsAccountDetailPage.navigateToDepositWithdrawalPage();
         savingsDepositWithdrawalPage.selectPaymentType(DepositWithdrawalSavingsParameters.DEPOSIT);
         //Then
@@ -124,13 +126,12 @@ public class CreateSavingsAccountTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(sequential = true, groups = { "smoke", "savings", "acceptance", "ui" })
+    @Test(sequential = true, groups = {"smoke", "savings", "acceptance", "ui", "no_db_unit"})
     public void newMandatoryClientSavingsAccountWithDateTypeCustomField() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_015_dbunit.xml", dataSource, selenium);
 
         CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
-        searchParameters.setSearchString("Stu1233266079799 Client1233266079799");
-        searchParameters.setSavingsProduct("MandClientSavings3MoPostMinBal");
+        searchParameters.setSearchString("Client - Mary Monthly");
+        searchParameters.setSavingsProduct("MonthlyClientSavingsAccount");
 
         CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
         submitAccountParameters.setAmount("248.0");

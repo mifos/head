@@ -20,8 +20,10 @@
 --]
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
- <span id="page.id" title="AppliedUpgrades"></span>
- [@mifos.crumb "admin.viewSystemInformation.viewAppliedUpgrades"/]
+<span id="page.id" title="AppliedUpgrades"></span>
+<div class=" content">
+    [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "systemAdministration.viewsysteminformation.systeminformation":"systemInformation.ftl", "admin.viewSystemInformation.viewAppliedUpgrades":""}/]
+    [@mifos.crumbpairs breadcrumb/]
       <div id="content_panel" style="padding-left: 0px; margin-left: 20px; margin-top: 10px; font-size:12px">
           <div class="fontBold">[@spring.message "systemAdministration.viewsysteminformation.mifosDatabaseVersion.listOfAppliedDatabaseUpgrades"/]</div>
           <div>&nbsp;</div>
@@ -34,14 +36,20 @@
                       <th width="25%">[@spring.message "admin.viewSystemInformation.dateExecuted"/]</th>
                       <th width="25%">[@spring.message "admin.viewSystemInformation.executionType"/]</th>
                   </thead>
-                  [#list appliedChangeSets as appliedChangeSet]
-                  <tr>
-                      <td width="25%">${appliedChangeSet.id}</td>
-                      <td width="25%">${appliedChangeSet.author}</td>
-                      <td width="25%">${appliedChangeSet.dateExecuted?datetime}</td>
-                      <td width="25%">${appliedChangeSet.execType}</td>
-                  </tr>
-                  [/#list]
+                  [#if appliedChangeSets?size > 0]
+                      [#list appliedChangeSets as appliedChangeSet]
+                      <tr>
+                          <td width="25%">${appliedChangeSet.id}</td>
+                          <td width="25%">${appliedChangeSet.author}</td>
+                          <td width="25%">${appliedChangeSet.dateExecuted?datetime}</td>
+                          <td width="25%">${appliedChangeSet.execType}</td>
+                      </tr>
+                      [/#list]
+                  [#else]
+                      <tr>
+                          <td colspan="4"><center><i>[@spring.message "admin.viewSystemInformation.noRecords"/]</i></center></td>
+                      </tr>
+                  [/#if]
               </table>
           </ul>
 
@@ -55,15 +63,22 @@
                       <th width="25%">[@spring.message "admin.viewSystemInformation.author"/]</th>
                       <th width="25%">[@spring.message "admin.viewSystemInformation.contexts"/]</th>
                   </thead>
-                  [#list unRunChangeSets as unRunChangeSet]
-                  <tr>
-                      <td width="25%">${unRunChangeSet.id}</td>
-                      <td width="25%">${unRunChangeSet.author}</td>
-                      <td width="25%">${unRunChangeSet.contexts}</td>
-                  </tr>
-                  [/#list]
+                  [#if unRunChangeSets?size > 0]
+                      [#list unRunChangeSets as unRunChangeSet]
+                      <tr>
+                          <td width="25%">${unRunChangeSet.id}</td>
+                          <td width="25%">${unRunChangeSet.author}</td>
+                          <td width="25%">${unRunChangeSet.contexts}</td>
+                      </tr>
+                      [/#list]
+                  [#else]
+                      <tr>
+                          <td colspan="3"><center><i>[@spring.message "admin.viewSystemInformation.noRecords"/]</i></center></td>
+                      </tr>
+                  [/#if]
               </table>
           </ul>
 
       </div>
+</div>
 [/@adminLeftPaneLayout]

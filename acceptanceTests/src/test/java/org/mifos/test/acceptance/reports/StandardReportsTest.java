@@ -20,7 +20,6 @@
 
 package org.mifos.test.acceptance.reports;
 
-import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -31,32 +30,23 @@ import org.mifos.test.acceptance.framework.login.LoginPage;
 import org.mifos.test.acceptance.framework.reports.CollectionSheetReportParametersPage;
 import org.mifos.test.acceptance.framework.reports.ReportsPage;
 import org.mifos.test.acceptance.framework.testhelpers.ReportTestHelper;
-import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-@ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"reports","acceptance","ui"})
+@ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
+@Test(sequential = true, groups = {"reports", "acceptance", "ui", "no_db_unit"})
 public class StandardReportsTest extends UiTestCaseBase {
 
-    @Autowired
-    private DriverManagerDataSource dataSource;
-    @Autowired
-    private DbUnitUtilities dbUnitUtilities;
     private AppLauncher appLauncher;
-    @Autowired
-    private InitializeApplicationRemoteTestingService initRemote;
 
     private ReportTestHelper reportTestHelper;
     private static final String NEWCAT = "newCat";
     private static final String NEWCAT1 = "newCat1";
     private static final String NEWCAT2 = "newCat2";
     private static final String[] DEFAULT_CATEGORIES = new String[]{"Client Detail",
-        "Performance","Center","Loan Product Detail","Status","Analysis","Miscellaneous"};
+            "Performance", "Center", "Loan Product Detail", "Status", "Analysis", "Miscellaneous"};
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
@@ -72,14 +62,13 @@ public class StandardReportsTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
-    @Test(enabled=false)
+    @Test(enabled = false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void generateCollectionSheetEntryReport() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
         SubmitFormParameters formParameters = new SubmitFormParameters();
-        formParameters.setBranch("MyOffice1233265929385");
-        formParameters.setLoanOfficer("Joe1233265931256 Guy1233265931256");
-        formParameters.setCenter("MyCenter1233265933427");
+        formParameters.setBranch("MyOfficeDHMFT");
+        formParameters.setLoanOfficer("loan officer");
+        formParameters.setCenter("c1");
         formParameters.setTransactionDay("23");
         formParameters.setTransactionMonth("04");
         formParameters.setTransactionYear("2009");
@@ -101,20 +90,21 @@ public class StandardReportsTest extends UiTestCaseBase {
     /**
      * Report categories can be added, edited and deleted
      * http://mifosforge.jira.com/browse/MIFOSTEST-181
+     *
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled = false)
     public void reportCategoriesTest() throws Exception {
-        
+
         //Given
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
 
         //When
         ViewReportCategoriesPage viewReportCategoriesPage = reportTestHelper.navigateToViewReportCategories();
 
         //Then
         viewReportCategoriesPage.verifyReportCategoriesExist(DEFAULT_CATEGORIES);
-        
+
         //When
         viewReportCategoriesPage = reportTestHelper.addNewCategory(viewReportCategoriesPage, NEWCAT);
 
@@ -132,13 +122,13 @@ public class StandardReportsTest extends UiTestCaseBase {
 
         //Then
         viewReportCategoriesPage.verifyReportCategoriesExist(NEWCAT2);
-        viewReportCategoriesPage.verifyReportCategoriesNotExist(NEWCAT,9);
+        viewReportCategoriesPage.verifyReportCategoriesNotExist(NEWCAT, 9);
 
         //When
         viewReportCategoriesPage = reportTestHelper.deleteCategory(viewReportCategoriesPage, "9");
 
         //Then
-        viewReportCategoriesPage.verifyReportCategoriesNotExist(NEWCAT1,8);
+        viewReportCategoriesPage.verifyReportCategoriesNotExist(NEWCAT1, 8);
 
     }
 }

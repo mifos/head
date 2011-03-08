@@ -128,7 +128,7 @@ explanation of the license and how it is applied.
             }
  		</script>
 
-        <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+        <fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}'/>
 		<fmt:setBundle basename="org.mifos.config.localizedResources.LoanUIResources"/>
 		
 		<html-el:form action="/loanAccountAction.do?method=managePreview"

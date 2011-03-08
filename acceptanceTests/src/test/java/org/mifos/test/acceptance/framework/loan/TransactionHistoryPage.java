@@ -77,7 +77,7 @@ public class TransactionHistoryPage extends AbstractPage {
             if(!"-".equals(debitValue)) {
                 String glCode = getGLCode(i);
                 if(TYPE_LOAN_DISBURSEMENT.equals(getType(i))) {
-                    break;
+                    continue;
                 }
                 if("11201".equals(glCode)) {
                     debitSum += Double.valueOf(debitValue);

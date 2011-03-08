@@ -20,16 +20,20 @@
 
 package org.mifos.application.servicefacade;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import org.joda.time.DateTime;
 import org.mifos.clientportfolio.loan.service.CreateLoanSchedule;
 import org.mifos.clientportfolio.newloan.applicationservice.CreateLoanAccount;
+import org.mifos.clientportfolio.newloan.applicationservice.LoanAccountCashFlow;
 import org.mifos.clientportfolio.newloan.applicationservice.LoanApplicationStateDto;
 import org.mifos.clientportfolio.newloan.applicationservice.LoanDisbursementDateValidationServiceFacade;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AccountStatusDto;
 import org.mifos.dto.domain.AccountUpdateStatus;
+import org.mifos.dto.domain.CashFlowDto;
 import org.mifos.dto.domain.CreateAccountNote;
 import org.mifos.dto.domain.CreateLoanRequest;
 import org.mifos.dto.domain.CustomerDto;
@@ -39,7 +43,9 @@ import org.mifos.dto.domain.LoanAccountDetailsDto;
 import org.mifos.dto.domain.LoanActivityDto;
 import org.mifos.dto.domain.LoanInstallmentDetailsDto;
 import org.mifos.dto.domain.LoanPaymentDto;
+import org.mifos.dto.domain.MonthlyCashFlowDto;
 import org.mifos.dto.domain.OpeningBalanceLoanAccount;
+import org.mifos.dto.screen.CashFlowDataDto;
 import org.mifos.dto.screen.ChangeAccountStatusDto;
 import org.mifos.dto.screen.LoanAccountDetailDto;
 import org.mifos.dto.screen.LoanAccountInfoDto;
@@ -50,12 +56,14 @@ import org.mifos.dto.screen.LoanCreationProductDetailsDto;
 import org.mifos.dto.screen.LoanCreationResultDto;
 import org.mifos.dto.screen.LoanDisbursalDto;
 import org.mifos.dto.screen.LoanInformationDto;
+import org.mifos.dto.screen.LoanInstallmentsDto;
 import org.mifos.dto.screen.LoanScheduleDto;
 import org.mifos.dto.screen.LoanScheduledInstallmentDto;
 import org.mifos.dto.screen.MultipleLoanAccountDetailsDto;
 import org.mifos.dto.screen.RepayLoanDto;
 import org.mifos.dto.screen.RepayLoanInfoDto;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
+import org.mifos.platform.validations.Errors;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface LoanAccountServiceFacade extends LoanDisbursementDateValidationServiceFacade {
@@ -88,7 +96,7 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
     String createLoan(OpeningBalanceLoanAccount openingBalanceLoan);
     
     @PreAuthorize("isFullyAuthenticated()")
-    LoanCreationResultDto createLoan(CreateLoanAccount createLoanAccount, List<QuestionGroupDetail> questionGroups);
+    LoanCreationResultDto createLoan(CreateLoanAccount createLoanAccount, List<QuestionGroupDetail> questionGroups, LoanAccountCashFlow loanAccountCashFlow);
     
     LoanScheduleDto createLoanSchedule(CreateLoanSchedule createLoanAccount);
 
@@ -152,5 +160,22 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
     @PreAuthorize("isFullyAuthenticated()")
     LoanApplicationStateDto retrieveLoanApplicationState();
 
+    @PreAuthorize("isFullyAuthenticated()")
     List<QuestionGroupDetail> retrieveApplicableQuestionGroups(Integer productId);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    CashFlowDto retrieveCashFlowSettings(DateTime firstInstallment, DateTime lastInstallment, Integer productId, BigDecimal loanAmount);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    List<CashFlowDataDto> retrieveCashFlowSummary(List<MonthlyCashFlowDto> monthlyCashFlow, LoanScheduleDto loanScheduleDto);
+    
+    @PreAuthorize("isFullyAuthenticated()")
+    Errors validateCashFlowForInstallmentsForWarnings(List<CashFlowDataDto> cashFlowDataDtos, Integer productId);
+    
+    @PreAuthorize("isFullyAuthenticated()")
+    Errors validateCashFlowForInstallments(LoanInstallmentsDto loanInstallmentsDto, List<MonthlyCashFlowDto> monthlyCashFlows, 
+            Double repaymentCapacity, BigDecimal cashFlowTotalBalance);
+    
+    @PreAuthorize("isFullyAuthenticated()")
+    boolean isCompareWithCashFlowEnabledOnProduct(Integer productId);
 }

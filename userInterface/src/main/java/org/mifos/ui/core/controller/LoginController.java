@@ -36,4 +36,9 @@ public class LoginController {
     @RequestMapping(method = RequestMethod.GET)
     public void showForm() {
     }
+
+    @RequestMapping(method = RequestMethod.HEAD)
+    public void showFormHead() {
+        showForm();
+    }
 }

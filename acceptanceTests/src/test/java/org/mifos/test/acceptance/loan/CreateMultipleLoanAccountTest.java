@@ -20,12 +20,9 @@
 
 package org.mifos.test.acceptance.loan;
 
-import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.center.CenterStatus;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
-import org.mifos.test.acceptance.framework.center.CreateCenterEnterDataPage;
-import org.mifos.test.acceptance.framework.center.MeetingParameters;
 import org.mifos.test.acceptance.framework.group.EditCustomerStatusParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountsEntryPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountsSearchPage;
@@ -40,24 +37,15 @@ import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.framework.testhelpers.OfficeHelper;
 import org.mifos.test.acceptance.framework.testhelpers.UserHelper;
 import org.mifos.test.acceptance.framework.user.EditUserDataPage;
-import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @SuppressWarnings("PMD")
-@ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"loan","acceptance","ui"})
+@ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
+@Test(sequential = true, groups = {"loan", "acceptance", "ui", "no_db_unit"})
 public class CreateMultipleLoanAccountTest extends UiTestCaseBase {
-    @Autowired
-    private DriverManagerDataSource dataSource;
-    @Autowired
-    private DbUnitUtilities dbUnitUtilities;
-    @Autowired
-    private InitializeApplicationRemoteTestingService initRemote;
 
     private OfficeHelper officeHelper;
     private UserHelper userHelper;
@@ -70,7 +58,6 @@ public class CreateMultipleLoanAccountTest extends UiTestCaseBase {
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
-        dbUnitUtilities.loadDataFromFile("acceptance_small_004_dbunit.xml", dataSource);
         officeHelper = new OfficeHelper(selenium);
         userHelper = new UserHelper(selenium);
         loanTestHelper = new LoanTestHelper(selenium);
@@ -88,79 +75,68 @@ public class CreateMultipleLoanAccountTest extends UiTestCaseBase {
      * on the Search field and "Loan Instances" field populates with the names
      * of loan instances matching the frequency of the center selected.
      * http://mifosforge.jira.com/browse/MIFOSTEST-59
+     *
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyInactiveBranchesOfficersCentersDoesntAppearOnSearch() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml", dataSource, selenium);
         EditCustomerStatusParameters customerStatusParams = new EditCustomerStatusParameters();
         customerStatusParams.setCenterStatus(CenterStatus.INACTIVE);
         customerStatusParams.setNote("note");
-        MeetingParameters meetingParams = new MeetingParameters();
-        meetingParams.setMeetingPlace("Burkat");
-        meetingParams.setWeekFrequency("1");
-        meetingParams.setWeekDay(MeetingParameters.THURSDAY);
-        CreateCenterEnterDataPage.SubmitFormParameters centerParams = new CreateCenterEnterDataPage.SubmitFormParameters();
-        centerParams.setCenterName("newCenterro");
-        centerParams.setLoanOfficer("Bagonza Wilson");
-        centerParams.setMeeting(meetingParams);
-
-        centerTestHelper.createCenter(centerParams, "Office1");
         CreateLoanAccountsSearchPage multipleAccPage = navigateToCreateMultipleLoanAccountsSearchPage();
 
-        multipleAccPage.selectBranchOfficerAndCenter("Office1", "Bagonza Wilson", "Center1");
-        multipleAccPage.selectBranchOfficerAndCenter("Office1", "Bagonza Wilson", "newCenterro");
-        multipleAccPage.selectBranchOfficerAndCenter("Office2", "John Okoth", "Center2");
-        multipleAccPage.selectBranchOfficerAndCenter("Office3", "Jenna Barth", "Center3");
+        multipleAccPage.selectBranchOfficerAndCenter("branch1", "loanofficer branch1", "branch1 center");
 
-        centerTestHelper.changeCenterStatus("newCenterro", customerStatusParams);
-        officeHelper.changeOfficeStatus("Office2", OfficeEditInformationPage.STATUS_INACTIVE);
-        userHelper.changeUserStatus("Jenna Barth", EditUserDataPage.STATUS_INACTIVE);
+        userHelper.changeUserStatus("loanofficer branch1", EditUserDataPage.STATUS_INACTIVE);
+        centerTestHelper.changeCenterStatus("branch1 center", customerStatusParams);
+        officeHelper.changeOfficeStatus("branch1", OfficeEditInformationPage.STATUS_INACTIVE);
+
         multipleAccPage = navigateToCreateMultipleLoanAccountsSearchPage();
+        multipleAccPage.verifyBranchNotInSelectOptions("branch1");
 
-        multipleAccPage.selectBranchOfficerAndCenter("Office1", "Bagonza Wilson", "Center1");
-        multipleAccPage.verifyCenterIsNotInSelectOptions("Office1", "Bagonza Wilson", "newCenterro");
-        multipleAccPage.verifyBranchNotInSelectOptions("Office2");
-        multipleAccPage.verifyOfficerNotInSelectOptions("Office3", "Jenna Barth");
+        officeHelper.changeOfficeStatus("branch1", OfficeEditInformationPage.STATUS_ACTIVE);
+        multipleAccPage = navigateToCreateMultipleLoanAccountsSearchPage();
+        multipleAccPage.verifyOfficerNotInSelectOptions("branch1", "loanofficer branch1");
+        multipleAccPage.verifyCenterIsNotInSelectOptions("branch1", "branch1 center");
     }
 
     /**
      * Verify multiple loan accounts can be created for
      * clients with loans having installments by loan cycle.
      * http://mifosforge.jira.com/browse/MIFOSTEST-117
+     *
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyCreatingWithProductInstallmentsByLoanCycle() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml", dataSource, selenium);
 
         DefineNewLoanProductPage.SubmitFormParameters productParams = FormParametersHelper.getWeeklyLoanProductParameters();
-        productParams.setOfferingName("prod117");
+        productParams.setOfferingName("LoanCycleProduct");
         productParams.setOfferingShortName("p117");
         productParams.setCalculateLoanAmount(SubmitFormParameters.SAME_FOR_ALL_LOANS);
         productParams.setMinLoanAmount("5000");
         productParams.setMaxLoanAmount("10000");
         productParams.setDefaultLoanAmount("7500");
         productParams.setCalculateInstallments(SubmitFormParameters.BY_LOAN_CYCLE);
-        String[][] calculateInstallments = new String[][] {
+        String[][] calculateInstallments = new String[][]{
                 {"26", "52", "52"},
                 {"20", "30", "30"},
                 {"15", "25", "25"},
                 {"10", "15", "15"},
                 {"5", "10", "10"},
                 {"1", "5", "5"}
-            };
+        };
         productParams.setCycleInstallments(calculateInstallments);
         CreateMultipleLoanAccountSelectParameters multipleSelectParams = new CreateMultipleLoanAccountSelectParameters();
-        multipleSelectParams.setBranch("Office2");
-        multipleSelectParams.setLoanOfficer("John Okoth");
-        multipleSelectParams.setCenter("Center2");
-        multipleSelectParams.setLoanProduct("prod117");
+        multipleSelectParams.setBranch("MyOfficeDHMFT");
+        multipleSelectParams.setLoanOfficer("loan officer");
+        multipleSelectParams.setCenter("Default Center");
+        multipleSelectParams.setLoanProduct("LoanCycleProduct");
 
         loanTestHelper.defineNewLoanProduct(productParams);
         CreateLoanAccountsEntryPage createLoanAccountsEntryPage = navigateToCreateMultipleLoanAccountsEntryPage(multipleSelectParams);
-        for(int i = 0; i < 4; i++) {
-            createLoanAccountsEntryPage.verifyNoOfInstallments(i, calculateInstallments[0][2]);
+        for (int i = 0; i < 4; i++) {
+            createLoanAccountsEntryPage.verifyNoOfInstallments(i, "52");
         }
     }
 
@@ -172,8 +148,8 @@ public class CreateMultipleLoanAccountTest extends UiTestCaseBase {
 
     private CreateLoanAccountsEntryPage navigateToCreateMultipleLoanAccountsEntryPage(CreateMultipleLoanAccountSelectParameters multipleSelectParams) {
         return navigationHelper
-            .navigateToClientsAndAccountsPage()
-            .navigateToCreateMultipleLoanAccountsUsingLeftMenu()
-            .searchAndNavigateToCreateMultipleLoanAccountsEntryPage(multipleSelectParams);
+                .navigateToClientsAndAccountsPage()
+                .navigateToCreateMultipleLoanAccountsUsingLeftMenu()
+                .searchAndNavigateToCreateMultipleLoanAccountsEntryPage(multipleSelectParams);
     }
 }

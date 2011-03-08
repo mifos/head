@@ -54,12 +54,6 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
         return new HomePage(selenium);
     }
 
-    public CreateLoanAccountReviewInstallmentPage verifyVariableInstalmetDisabled() {
-        selenium.isEditable ("");
-        Assert.assertTrue(!selenium.isElementPresent("validateBtn"));
-        return this;
-    }
-
     public CreateLoanAccountReviewInstallmentPage validateRepaymentScheduleFieldDefault(int defInstallments) {
         for (int instalment = 0; instalment < defInstallments-1  ; instalment++) {
             Assert.assertTrue(selenium.isEditable("installment.dueDate." + instalment));

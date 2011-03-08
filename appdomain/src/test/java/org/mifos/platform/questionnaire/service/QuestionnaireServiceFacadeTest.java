@@ -41,6 +41,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.platform.questionnaire.AuditLogService;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.builders.QuestionDtoBuilder;
 import org.mifos.platform.questionnaire.domain.QuestionnaireService;
@@ -67,6 +68,9 @@ public class QuestionnaireServiceFacadeTest {
     @Mock
     private QuestionnaireService questionnaireService;
 
+    @Mock
+    private AuditLogService auditLogService;
+    
     private static final String TITLE = "Title";
 
     @Before
@@ -369,6 +373,51 @@ public class QuestionnaireServiceFacadeTest {
         verify(questionnaireService).defineQuestion(questionDto);
     }
 
+    @Test
+    public void testSaveResponsesTwoQuestionGroups() {
+
+        questionnaireServiceFacade = new QuestionnaireServiceFacadeImpl(questionnaireService, auditLogService, null);
+
+        // setup test data
+        Integer creatorId = new Integer(1);
+        Integer entityId = new Integer(2);
+        Integer eventSourceId = new Integer(3);
+        EventSourceDto eventSourceDto = new EventSourceDto("Create", "Savings", "Test");
+        
+        // new responses. these will be saved when saveResponses() is called
+        List<SectionDetail> sectionDetails = new ArrayList<SectionDetail>();
+        List<QuestionGroupDetail> questionGroups = new ArrayList<QuestionGroupDetail>();
+        questionGroups.add(new QuestionGroupDetail(1, "Title 1", sectionDetails));
+        questionGroups.add(new QuestionGroupDetail(2, "Title 2", sectionDetails));
+        QuestionGroupDetails newQuestionGroupDetails = new QuestionGroupDetails(creatorId, entityId, eventSourceId, questionGroups);
+
+        // persisted responses. when saveResponse() is called, it will store responses in the database. this is why
+        // question persistedQuestionGroupInstanceDetailsX uses responses from above.
+        QuestionGroupInstanceDetail persistedQuestionGroupInstanceDetail1 = new QuestionGroupInstanceDetail();
+        persistedQuestionGroupInstanceDetail1.setId(111);
+        persistedQuestionGroupInstanceDetail1.setQuestionGroupDetail(questionGroups.get(0));
+        
+        QuestionGroupInstanceDetail persistedQuestionGroupInstanceDetail2 = new QuestionGroupInstanceDetail();
+        persistedQuestionGroupInstanceDetail2.setId(222);
+        persistedQuestionGroupInstanceDetail2.setQuestionGroupDetail(questionGroups.get(1));
+        
+        List<QuestionGroupInstanceDetail> persistedQuestionGroupInstanceDetails = new ArrayList<QuestionGroupInstanceDetail>();
+        persistedQuestionGroupInstanceDetails.add(persistedQuestionGroupInstanceDetail1);
+        persistedQuestionGroupInstanceDetails.add(persistedQuestionGroupInstanceDetail2);
+        
+        when(questionnaireService.getEventSource(eventSourceId)).thenReturn(eventSourceDto);
+        when(questionnaireService.getQuestionGroupInstances(entityId, eventSourceDto, false, false)).thenReturn(persistedQuestionGroupInstanceDetails);
+        when(questionnaireService.getQuestionGroupInstance(111)).thenReturn(persistedQuestionGroupInstanceDetail1);
+        when(questionnaireService.getQuestionGroupInstance(222)).thenReturn(persistedQuestionGroupInstanceDetail2);
+        
+        // test
+        questionnaireServiceFacade.saveResponses(newQuestionGroupDetails);
+        
+        // verify expectations. the key thing to note is second parameter is expected to be NULL
+        verify(auditLogService).addAuditLogRegistry(questionGroups.get(0), null, creatorId, entityId, eventSourceDto.getSource(), eventSourceDto.getEvent());
+        verify(auditLogService).addAuditLogRegistry(questionGroups.get(1), null, creatorId, entityId, eventSourceDto.getSource(), eventSourceDto.getEvent());
+    }
+    
     private QuestionGroupInstanceDetail getQuestionGroupInstanceDetail() {
         QuestionGroupInstanceDetail groupInstanceDetail = new QuestionGroupInstanceDetail();
         groupInstanceDetail.setQuestionGroupDetail(new QuestionGroupDetail());

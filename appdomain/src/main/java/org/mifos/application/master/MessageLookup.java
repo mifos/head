@@ -25,6 +25,8 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.mifos.accounts.savings.persistence.GenericDao;
+import org.mifos.application.admin.servicefacade.AdminServiceFacade;
+import org.mifos.application.admin.servicefacade.MessageCustomizerServiceFacade;
 import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.LookUpLabelEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
@@ -84,6 +86,9 @@ public class MessageLookup implements MessageSourceAware {
     @Autowired(required=false)
     LegacyMasterDao legacyMasterDao;
 
+    @Autowired(required=false)    
+	MessageCustomizerServiceFacade messageCustomizerServiceFacade;	
+    
     private MessageSource messageSource;
 
     public static final MessageLookup getInstance() {
@@ -96,8 +101,12 @@ public class MessageLookup implements MessageSourceAware {
     private MessageLookup() {
     }
 
+	public String replaceSubstitutions(String message) {
+		return messageCustomizerServiceFacade.replaceSubstitutions(message);
+	}
+	
     public String lookup(LocalizedTextLookup namedObject, Locale locale) {
-        return lookup(namedObject.getPropertiesKey(), locale);
+        return messageCustomizerServiceFacade.replaceSubstitutions(lookup(namedObject.getPropertiesKey(), locale));
     }
 
     /*
@@ -105,7 +114,7 @@ public class MessageLookup implements MessageSourceAware {
      * selection
      */
     public String lookup(LocalizedTextLookup namedObject) {
-        return lookup(namedObject.getPropertiesKey());
+        return messageCustomizerServiceFacade.replaceSubstitutions(lookup(namedObject.getPropertiesKey()));
     }
 
     public String lookup(String lookupKey) {
@@ -115,7 +124,8 @@ public class MessageLookup implements MessageSourceAware {
 
     public String lookup(LocalizedTextLookup namedObject, Object[] params) {
         Locale locale = Localization.getInstance().getMainLocale();
-        return messageSource.getMessage(namedObject.getPropertiesKey(), params, namedObject.getPropertiesKey(), locale);
+        return messageCustomizerServiceFacade.replaceSubstitutions(
+        		messageSource.getMessage(namedObject.getPropertiesKey(), params, namedObject.getPropertiesKey(), locale));
     }
 
     public String lookup(LocalizedTextLookup namedObject, UserContext user) {
@@ -128,8 +138,9 @@ public class MessageLookup implements MessageSourceAware {
             // if we don't find a message above, then it means that it has not
             // been customized and
             // we should return the default message from the properties file
-            return StringUtils.isEmpty(textMessage) ? messageSource.getMessage(lookupKey, null, lookupKey, locale)
-                    : textMessage;
+            return StringUtils.isEmpty(textMessage) ? 
+            		messageCustomizerServiceFacade.replaceSubstitutions(messageSource.getMessage(lookupKey, null, lookupKey, locale))
+                    : messageCustomizerServiceFacade.replaceSubstitutions(textMessage);
         } catch (ConfigurationException e) {
             throw new RuntimeException(e);
         }

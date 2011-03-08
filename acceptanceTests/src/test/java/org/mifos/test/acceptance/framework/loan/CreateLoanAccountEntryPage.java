@@ -127,9 +127,7 @@ public class CreateLoanAccountEntryPage extends MifosPage {
             selenium.select("monthWeek", formParameters.getLsimWeekDay());
         }
         if (formParameters.getDd() != null && formParameters.getMm() != null && formParameters.getYy() != null){
-            selenium.type("disbursementDateDD", formParameters.getDd());
-            selenium.type("disbursementDateMM", formParameters.getMm());
-            selenium.type("disbursementDateYY", formParameters.getYy());
+            setDisbursalDate(formParameters.getDd(), formParameters.getMm(), formParameters.getYy());
         }
         fillAdditionalFee(formParameters);
         submit();
@@ -280,17 +278,19 @@ public class CreateLoanAccountEntryPage extends MifosPage {
         String dd = DateTimeFormat.forPattern("dd").print(validDisbursalDate);
         String mm = DateTimeFormat.forPattern("MM").print(validDisbursalDate);
         String yyyy = DateTimeFormat.forPattern("yyyy").print(validDisbursalDate);
+        setDisbursalDate(dd, mm, yyyy);
+        return this;
+    }
 
+    private void setDisbursalDate(String dd, String mm, String yy) {
         selenium.type("disbursementDateDD",dd);
         selenium.fireEvent("name=disbursementDateDD", "blur");
 
         selenium.type("disbursementDateMM",mm);
         selenium.fireEvent("name=disbursementDateMM", "blur");
 
-        selenium.type("disbursementDateYY",yyyy);
+        selenium.type("disbursementDateYY",yy);
         selenium.fireEvent("name=disbursementDateYY", "blur");
-
-        return this;
     }
 
     public CreateLoanAccountCashFlowPage clickContinueToNavigateToCashFlowPage() {

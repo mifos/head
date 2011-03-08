@@ -30,7 +30,6 @@ public class EditUserDataPage extends MifosPage {
 
     private static final String LOCATOR_FORM_STATUS = "name=status";
 
-    public static final String STATUS_ACTIVE = "Active";
     public static final String STATUS_INACTIVE = "Inactive";
 
     public EditUserDataPage() {
@@ -50,7 +49,7 @@ public class EditUserDataPage extends MifosPage {
         return new EditUserPreviewDataPage(selenium);
     }
 
-    private void fillForm(CreateUserParameters parameters){
+    private void fillForm(CreateUserParameters parameters) {
         typeTextIfNotEmpty("edit_user.input.firstName", parameters.getFirstName());
         typeTextIfNotEmpty("edit_user.input.lastName", parameters.getLastName());
         typeTextIfNotEmpty("edit_user.input.email", parameters.getEmail());
@@ -82,18 +81,18 @@ public class EditUserDataPage extends MifosPage {
         return submit().submit();
     }
 
-    public void verifyPasswordChangeError(){
+    public void verifyPasswordChangeError() {
         String errorMsg = selenium.getText("edit_user.error.message");
         Assert.assertTrue(errorMsg.contains("Please ensure that password and confirm password entries are made and they are identical."));
     }
 
     private String getLabel(String label) {
-        return selenium.getText("edit_user.label."+label);
+        return selenium.getText("edit_user.label." + label);
     }
 
     public void verifyLabels(DefineLabelsParameters defineLabelsParams) {
-        for(String label : defineLabelsParams.getKeys()) {
-            Assert.assertEquals(getLabel(label), defineLabelsParams.getLabelText(label)+":");
+        for (String label : defineLabelsParams.getKeys()) {
+            Assert.assertEquals(getLabel(label), defineLabelsParams.getLabelText(label) + ":");
         }
     }
 

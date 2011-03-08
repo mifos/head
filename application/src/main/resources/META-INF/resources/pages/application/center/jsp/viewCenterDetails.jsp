@@ -29,7 +29,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/customer/customerfunctions" prefix="customerfn"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
-<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}'/>
 <fmt:setBundle basename="org.mifos.config.localizedResources.CenterUIResources"/>
 
 <%-- Struts Tiles definition for the header and menu --%>

@@ -20,19 +20,6 @@
 
 package org.mifos.test.acceptance.client;
 
-import static java.util.Arrays.asList;
-
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
-
 import org.junit.Assert;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
@@ -93,9 +80,23 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-@ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
+
+import static java.util.Arrays.asList;
+
+@ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
 @SuppressWarnings({"PMD.TooManyFields","PMD.ExcessiveClassLength"})
-@Test(sequential = true, groups = { "client", "acceptance", "ui", "no_db_unit" })
+@Test(sequential = true, groups = {"client", "acceptance", "ui", "no_db_unit"})
 public class ClientTest extends UiTestCaseBase {
 
     private NavigationHelper navigationHelper;
@@ -183,7 +184,7 @@ public class ClientTest extends UiTestCaseBase {
 
     }
 
-    @Test(sequential = true, groups = { "smoke", "client", "acceptance", "ui" })
+    @Test(sequential = true, groups = {"smoke", "client", "acceptance", "ui"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-208
     public void createClientAndChangeStatusTest() throws Exception {
@@ -449,35 +450,36 @@ public class ClientTest extends UiTestCaseBase {
     }
     
     public void verifyQuestionResponsesExistInDatabase(String clientID, String event, Map<String, String> questions) throws SQLException {
-        for(String question : questions.keySet()) {
+        for (String question : questions.keySet()) {
             Assert.assertTrue(applicationDatabaseOperation.deosQuestionResponseForClientExist(clientID, event, question, questions.get(question)));
         }
     }
+
     private QuestionResponseParameters getQuestionResponseParametersForClientAccountClose(String answer) {
-            QuestionResponseParameters responseParams = new QuestionResponseParameters();
-            responseParams.addTextAnswer("questionGroups[0].sectionDetails[0].questions[0].value", "24/01/2011");
-            responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[0].questions[1].valuesAsArray", "first");
-            responseParams.addTextAnswer("questionGroups[0].sectionDetails[0].questions[2].value", "10");
-            responseParams.addTextAnswer("questionGroups[0].sectionDetails[0].questions[3].value", "10");
-            responseParams.addTextAnswer("questionGroups[0].sectionDetails[0].questions[4].value", answer);
+        QuestionResponseParameters responseParams = new QuestionResponseParameters();
+        responseParams.addTextAnswer("questionGroups[0].sectionDetails[0].questions[0].value", "24/01/2011");
+        responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[0].questions[1].valuesAsArray", "first");
+        responseParams.addTextAnswer("questionGroups[0].sectionDetails[0].questions[2].value", "10");
+        responseParams.addTextAnswer("questionGroups[0].sectionDetails[0].questions[3].value", "10");
+        responseParams.addTextAnswer("questionGroups[0].sectionDetails[0].questions[4].value", answer);
 
-            responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[0].value", "good");
-            responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[1].value", "24/01/2011");
-            responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[2].valuesAsArray", "feb");
-            responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[3].value", answer);
+        responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[0].value", "good");
+        responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[1].value", "24/01/2011");
+        responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[2].valuesAsArray", "feb");
+        responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[3].value", answer);
 
-            responseParams.addTextAnswer("questionGroups[1].sectionDetails[0].questions[0].value", "24/01/2011");
-            responseParams.addTextAnswer("questionGroups[1].sectionDetails[0].questions[1].value", "10");
-            responseParams.addTextAnswer("questionGroups[1].sectionDetails[0].questions[2].value", answer);
-            responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[0].questions[3].value", "good");
+        responseParams.addTextAnswer("questionGroups[1].sectionDetails[0].questions[0].value", "24/01/2011");
+        responseParams.addTextAnswer("questionGroups[1].sectionDetails[0].questions[1].value", "10");
+        responseParams.addTextAnswer("questionGroups[1].sectionDetails[0].questions[2].value", answer);
+        responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[0].questions[3].value", "good");
 
-            responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[0].value", "1");
-            responseParams.addTextAnswer("questionGroups[1].sectionDetails[1].questions[1].value", answer);
-            responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[2].valuesAsArray", "jan");
-            responseParams.addTextAnswer("questionGroups[1].sectionDetails[1].questions[3].value", answer);
-            
-            return responseParams;
-        }
+        responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[0].value", "1");
+        responseParams.addTextAnswer("questionGroups[1].sectionDetails[1].questions[1].value", answer);
+        responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[2].valuesAsArray", "jan");
+        responseParams.addTextAnswer("questionGroups[1].sectionDetails[1].questions[3].value", answer);
+
+        return responseParams;
+    }
 
     private QuestionResponseParameters getQuestionResponseParametersForClientAccountCloseAfterModyfication(String answer) {
         QuestionResponseParameters responseParams = new QuestionResponseParameters();
@@ -750,12 +752,12 @@ public class ClientTest extends UiTestCaseBase {
         CreateQuestionParameters q1 = new CreateQuestionParameters();
         q1.setType(CreateQuestionParameters.TYPE_SINGLE_SELECT);
         q1.setText("question 1");
-        q1.setChoicesFromStrings(Arrays.asList(new String[] { "yes", "no" }));
+        q1.setChoicesFromStrings(Arrays.asList(new String[]{"yes", "no"}));
         questions.add(q1);
         CreateQuestionParameters q2 = new CreateQuestionParameters();
         q2.setType(CreateQuestionParameters.TYPE_SINGLE_SELECT);
         q2.setText("question 2");
-        q2.setChoicesFromStrings(Arrays.asList(new String[] { "good", "bad", "average" }));
+        q2.setChoicesFromStrings(Arrays.asList(new String[]{"good", "bad", "average"}));
         questions.add(q2);
         CreateQuestionParameters q3 = new CreateQuestionParameters();
         q3.setType(CreateQuestionParameters.TYPE_FREE_TEXT);
@@ -980,7 +982,7 @@ public class ClientTest extends UiTestCaseBase {
 
         // When
         searchParameters.setSearchString(clientName);
-        searchParameters.setSavingsProduct("MandClientSavings3MoPostMinBal");
+        searchParameters.setSavingsProduct("MonthlyClientSavingsAccount");
         String savingsId = savingsAccountHelper.createSavingsAccountWithQG(searchParameters, submitAccountParameters)
                 .getAccountId();
         savingsAccountHelper.changeStatus(savingsId, editAccountStatusParameters);
@@ -1021,7 +1023,7 @@ public class ClientTest extends UiTestCaseBase {
         clientTestHelper.changeCustomerStatus(clientDetailsPage, ClientStatus.ACTIVE);
         String clientName = clientDetailsPage.getHeading();
 
-        searchParameters.setSavingsProduct("MandClientSavings3MoPostMinBal");
+        searchParameters.setSavingsProduct("MonthlyClientSavingsAccount");
         searchParameters.setSearchString(clientName);
         String savingsId = savingsAccountHelper.createSavingsAccountWithQG(searchParameters, submitAccountParameters)
                 .getAccountId();
@@ -1055,7 +1057,7 @@ public class ClientTest extends UiTestCaseBase {
     }
 
     private QuestionnairePage checkMandatoryQuestionValidation(String questionGroupTitle, String question1,
-            String question2, ClientViewDetailsPage viewDetailsPage) {
+                                                               String question2, ClientViewDetailsPage viewDetailsPage) {
         QuestionnairePage questionnairePage = viewDetailsPage.getQuestionnairePage(questionGroupTitle);
         questionnairePage.setResponsesForMultiSelect(question2, 4, "Choice1", "Choice3", "Choice4");
         MifosPage mifosPage = questionnairePage.submit();

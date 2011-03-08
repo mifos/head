@@ -40,7 +40,7 @@ function goToCancelPage()
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="GroupSearchResults"></span>
 	
-<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}'/>
 <fmt:setBundle basename="org.mifos.config.localizedResources.GroupUIResources"/>
 <html-el:form action="groupCustAction.do">
 	<table width="90%" border="0" align="center" cellpadding="0"

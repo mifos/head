@@ -30,43 +30,47 @@ public class AccountActivityPage extends MifosPage{
         this.verifyPage("ViewLoanAccountActivity");
     }
 
-    public String getRunningTotal() {
-        return selenium.getTable("accountActivityTable.2.11").trim();
+    public String getRunningTotal(int row) {
+        return selenium.getTable("accountActivityTable." + row + ".11").trim();
     }
 
-    public String getRunningFees() {
-        return selenium.getTable("accountActivityTable.2.10").trim();
+    public String getRunningFees(int row) {
+        return selenium.getTable("accountActivityTable." + row + ".10").trim();
     }
 
-    public String getRunningInterest() {
-        return selenium.getTable("accountActivityTable.2.9").trim();
+    public String getRunningInterest(int row) {
+        return selenium.getTable("accountActivityTable." + row + ".9").trim();
     }
 
-    public String getRunningPrinciple() {
-        return selenium.getTable("accountActivityTable.2.8").trim();
+    public String getRunningPrinciple(int row) {
+        return selenium.getTable("accountActivityTable." + row + ".8").trim();
     }
 
-    public String getLastTotalPaid() {
-        return selenium.getTable("accountActivityTable.2.6").trim();
+    public String getLastTotalPaid(int row) {
+        return selenium.getTable("accountActivityTable." + row + ".6").trim();
     }
 
-    public String getLastPenaltyPaid() {
-        return selenium.getTable("accountActivityTable.2.5").trim();
+    public String getLastPenalty(int row) {
+        return selenium.getTable("accountActivityTable." + row + ".5").trim();
     }
 
-    public String getLastFeePaid() {
-        return selenium.getTable("accountActivityTable.2.4");
+    public String getLastFeePaid(int row) {
+        return selenium.getTable("accountActivityTable." + row + ".4");
     }
 
-    public String getLastInterestPaid() {
-        return selenium.getTable("accountActivityTable.2.3").trim();
+    public String getLastInterestPaid(int row) {
+        return selenium.getTable("accountActivityTable." + row + ".3").trim();
     }
 
-    public String getLastPrinciplePaid() {
-        return selenium.getTable("accountActivityTable.2.2").trim();
+    public String getLastPrinciplePaid(int row) {
+        return selenium.getTable("accountActivityTable." + row + ".2").trim();
     }
 
-    public void verifyLastTotalPaid(String amount){
-        Assert.assertEquals(Double.parseDouble(getLastTotalPaid()), Double.parseDouble(amount));
+    public void verifyLastTotalPaid(String amount, int row){
+        Assert.assertEquals(Double.parseDouble(getLastTotalPaid(row)), Double.parseDouble(amount));
+    }
+
+    public String getActivity(int row) {
+        return selenium.getTable("accountActivityTable." + row + ".1").trim();
     }
 }

@@ -20,7 +20,6 @@
 
 package org.mifos.test.acceptance.loan;
 
-import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -32,25 +31,14 @@ import org.mifos.test.acceptance.framework.loan.ClosedAccountsPage;
 import org.mifos.test.acceptance.framework.login.LoginPage;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"loan","acceptance","ui"})
+@Test(sequential = true, groups = {"loan","acceptance","ui", "no_db_unit"})
 public class ViewClosedAccountsTest extends UiTestCaseBase {
-
-    @Autowired
-    private DriverManagerDataSource dataSource;
-
-    @Autowired
-    private DbUnitUtilities dbUnitUtilities;
-
-    @Autowired
-    private InitializeApplicationRemoteTestingService initRemote;
 
     private AppLauncher appLauncher;
 
@@ -62,8 +50,6 @@ public class ViewClosedAccountsTest extends UiTestCaseBase {
         super.setUp();
         appLauncher = new AppLauncher(selenium);
         new InitializeApplicationRemoteTestingService().reinitializeApplication(selenium);
-
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
     }
 
     @AfterMethod
@@ -77,10 +63,10 @@ public class ViewClosedAccountsTest extends UiTestCaseBase {
         HomePage homePage = loginPage.loginSuccessfullyUsingDefaultCredentials();
         homePage.verifyPage();
 
-        SearchResultsPage searchResultsPage = homePage.search("MyCenter1232993841778");
+        SearchResultsPage searchResultsPage = homePage.search("WeeklyMeetingCenter");
         searchResultsPage.verifyPage();
 
-        CenterViewDetailsPage centerViewDetailsPage = searchResultsPage.navigateToCenterViewDetailsPage("link=MyCenter*");
+        CenterViewDetailsPage centerViewDetailsPage = searchResultsPage.navigateToCenterViewDetailsPage("link=WeeklyMeetingCenter*");
         centerViewDetailsPage.verifyPage();
 
         ClosedAccountsPage closedAccountsPage = centerViewDetailsPage.navigateToClosedAccountsPage();
@@ -96,10 +82,10 @@ public class ViewClosedAccountsTest extends UiTestCaseBase {
         HomePage homePage = loginPage.loginSuccessfullyUsingDefaultCredentials();
         homePage.verifyPage();
 
-        SearchResultsPage searchResultsPage = homePage.search("MyGroup1232993846342 ");
+        SearchResultsPage searchResultsPage = homePage.search("groupWithoutLoan ");
         searchResultsPage.verifyPage();
 
-        GroupViewDetailsPage groupViewDetailsPage = searchResultsPage.navigateToGroupViewDetailsPage("link=MyGroup*");
+        GroupViewDetailsPage groupViewDetailsPage = searchResultsPage.navigateToGroupViewDetailsPage("link=groupWithoutLoan*");
 
         ClosedAccountsPage closedAccountsPage = groupViewDetailsPage.navigateToClosedAccountsPage();
         closedAccountsPage.verifyPage();
@@ -113,7 +99,7 @@ public class ViewClosedAccountsTest extends UiTestCaseBase {
         HomePage homePage = loginPage.loginSuccessfullyUsingDefaultCredentials();
         homePage.verifyPage();
 
-        SearchResultsPage searchResultsPage = homePage.search("Client1232993852651");
+        SearchResultsPage searchResultsPage = homePage.search("Client1233266063395");
         searchResultsPage.verifyPage();
 
         ClientViewDetailsPage clientViewDetailsPage = searchResultsPage.navigateToClientViewDetailsPage("link=Stu*");

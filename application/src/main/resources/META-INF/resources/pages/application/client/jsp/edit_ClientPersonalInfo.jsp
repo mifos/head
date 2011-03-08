@@ -31,7 +31,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
-<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}'/>
 <fmt:setBundle basename="org.mifos.config.localizedResources.ClientUIResources"/>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
@@ -459,7 +459,7 @@ explanation of the license and how it is applied.
                                                                 <c:otherwise>
                                                                     <mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.telephone" keyhm="Client.PhoneNumber" name="clientCustActionForm"
                                                                     property="address.phoneNumber"
-                                                                    maxlength="20" disabled="true" />
+                                                                    maxlength="20" readonly="true" style="background:lightgrey; color:grey"/>
                                                                 </c:otherwise>
                                                             </c:choose>
                                                         </td>

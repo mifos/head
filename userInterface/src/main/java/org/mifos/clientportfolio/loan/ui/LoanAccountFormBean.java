@@ -84,6 +84,11 @@ public class LoanAccountFormBean implements Serializable {
     
     private String[] selectedFeeId;
     private String[] selectedFeeAmount;
+    
+    // only when LSIM is turned on.
+    private boolean repaymentScheduleIndependentOfCustomerMeeting = false;
+    private Integer repaymentRecursEvery;
+    private Integer repaymentDayOfWeek;
 
     public void validateEditAccountDetailsStep(ValidationContext context) {
         validateEnterAccountDetailsStep(context);
@@ -410,5 +415,29 @@ public class LoanAccountFormBean implements Serializable {
     public void setLoanDisbursementDateValidationServiceFacade(
             LoanDisbursementDateValidationServiceFacade loanDisbursementDateValidationServiceFacade) {
         this.loanDisbursementDateValidationServiceFacade = loanDisbursementDateValidationServiceFacade;
+    }
+    
+    public boolean isRepaymentScheduleIndependentOfCustomerMeeting() {
+        return repaymentScheduleIndependentOfCustomerMeeting;
+    }
+
+    public void setRepaymentScheduleIndependentOfCustomerMeeting(boolean repaymentScheduleIndependentOfCustomerMeeting) {
+        this.repaymentScheduleIndependentOfCustomerMeeting = repaymentScheduleIndependentOfCustomerMeeting;
+    }
+
+    public Integer getRepaymentRecursEvery() {
+        return repaymentRecursEvery;
+    }
+
+    public void setRepaymentRecursEvery(Integer repaymentRecursEvery) {
+        this.repaymentRecursEvery = repaymentRecursEvery;
+    }
+
+    public Integer getRepaymentDayOfWeek() {
+        return repaymentDayOfWeek;
+    }
+
+    public void setRepaymentDayOfWeek(Integer repaymentDayOfWeek) {
+        this.repaymentDayOfWeek = repaymentDayOfWeek;
     }
 }

@@ -44,7 +44,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="LoanAccountDetail" ></span>
 	
-		<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+		<fmt:setLocale value='${sessionScope["org.apache.struts.action.LOCALE"]}'/>
 		<fmt:setBundle basename="org.mifos.config.localizedResources.LoanUIResources"/>
 		
 		<html-el:form method="post" action="/loanAccountAction.do">		

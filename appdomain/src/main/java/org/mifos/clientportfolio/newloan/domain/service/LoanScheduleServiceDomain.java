@@ -28,6 +28,7 @@ import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.fees.persistence.FeeDao;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.util.helpers.InstallmentDate;
+import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.clientportfolio.newloan.domain.IndividualLoanScheduleFactory;
 import org.mifos.clientportfolio.newloan.domain.LoanInstallmentFactory;
 import org.mifos.clientportfolio.newloan.domain.LoanInstallmentFactoryImpl;
@@ -53,10 +54,11 @@ public class LoanScheduleServiceDomain implements LoanScheduleService {
     }
     
     @Override
-    public LoanSchedule generate(LoanOfferingBO loanProduct, CustomerBO customer,
-            LoanProductOverridenDetail overridenDetail, LoanScheduleConfiguration configuration, Short userBranchOfficeId, List<AccountFeesEntity> accountFees) {
+    public LoanSchedule generate(LoanOfferingBO loanProduct, CustomerBO customer, MeetingBO loanMeeting,
+            LoanProductOverridenDetail overridenDetail, LoanScheduleConfiguration configuration, Short userBranchOfficeId, 
+            List<AccountFeesEntity> accountFees) {
         
-        LoanInstallmentGenerator loanInstallmentGenerator = loanInstallmentFactory.create(loanProduct.getLoanOfferingMeetingValue(), configuration.isLoanScheduleIndependentOfCustomerMeetingEnabled());
+        LoanInstallmentGenerator loanInstallmentGenerator = loanInstallmentFactory.create(loanMeeting, configuration.isLoanScheduleIndependentOfCustomerMeetingEnabled());
         
         List<InstallmentDate> installmentDates = loanInstallmentGenerator.generate(overridenDetail.getDisbursementDate(), overridenDetail.getNumberOfInstallments(), loanProduct.getGracePeriodType().asEnum(), overridenDetail.getGraceDuration(), userBranchOfficeId);
         List<DateTime> loanScheduleDates = new ArrayList<DateTime>();
@@ -64,7 +66,7 @@ public class LoanScheduleServiceDomain implements LoanScheduleService {
             loanScheduleDates.add(new DateTime(installmentDate.getInstallmentDueDate()));
         }
         
-        return loanScheduleFactory.create(loanScheduleDates, loanProduct, customer, overridenDetail.getLoanAmount(), 
+        return loanScheduleFactory.create(loanScheduleDates, loanProduct, customer, loanMeeting, overridenDetail.getLoanAmount(), 
                 overridenDetail.getInterestRate(), configuration.getNumberOfInterestDays(), overridenDetail.getGraceDuration(), accountFees);
     }
 }

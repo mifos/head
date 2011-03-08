@@ -19,6 +19,35 @@
  */
 
 package org.mifos.accounts.loan.struts.action;
+
+import static java.util.Arrays.asList;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.PERSPECTIVE_VALUE_REDO_LOAN;
+import static org.mifos.accounts.loan.util.helpers.RequestConstants.PERSPECTIVE;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyShort;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -36,13 +65,17 @@ import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.application.cashflow.struts.CashFlowAdaptor;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
+import org.mifos.application.servicefacade.LoanAccountServiceFacade;
 import org.mifos.application.servicefacade.LoanCreationLoanScheduleDetailsDto;
 import org.mifos.application.servicefacade.LoanServiceFacade;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.dto.domain.LoanAccountDetailsDto;
+import org.mifos.dto.domain.MonthlyCashFlowDto;
+import org.mifos.dto.screen.CashFlowDataDto;
 import org.mifos.dto.screen.LoanCreationPreviewDto;
+import org.mifos.dto.screen.LoanInstallmentsDto;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.util.helpers.Constants;
@@ -62,31 +95,6 @@ import org.mifos.security.util.UserContext;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
-import static java.util.Arrays.asList;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.PERSPECTIVE_VALUE_REDO_LOAN;
-import static org.mifos.accounts.loan.util.helpers.RequestConstants.PERSPECTIVE;
-import static org.mockito.Matchers.anyShort;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LoanAccountActionTest {
@@ -126,6 +134,9 @@ public class LoanAccountActionTest {
     private LoanPrdBusinessService loanPrdBusinessService;
     @Mock
     private LoanServiceFacade loanServiceFacade;
+    
+    @Mock
+    private LoanAccountServiceFacade loanAccountServiceFacade;
     @Mock
     private UserContext userContext;
     private Short localeId = new Short("1");
@@ -144,6 +155,8 @@ public class LoanAccountActionTest {
     @Before
     public void setUp() throws PageExpiredException {
         loanAccountAction = new LoanAccountAction(null, loanBusinessService, null, loanPrdBusinessService, null, null) {
+            
+            @SuppressWarnings("unused") 
             @Override
             LoanBO getLoan(Integer loanId) {
                 return loanBO;
@@ -159,21 +172,26 @@ public class LoanAccountActionTest {
                 return createLoanQuestionnaire;
             }
 
+            @SuppressWarnings("unused") 
             @Override
             boolean validateInstallments(HttpServletRequest request, LoanAccountActionForm loanActionForm) throws Exception {
               return true;
-            };
+            }
 
+            @SuppressWarnings("unused") 
             @Override
             LoanBO redoLoan(CustomerBO customer, LoanAccountActionForm loanAccountActionForm, DateTime disbursementDate, UserContext userContext) {
                 return loanBO;
-            };
+            }
+            
+            @SuppressWarnings("unused") 
             @Override
             LoanCreationPreviewDto getLoanCreatePreviewDto(Integer customerId, List<LoanAccountDetailsDto> accountDetails, List<String> selectedClientIds) {
                 return new LoanCreationPreviewDto(false, false, Collections.<LoanAccountDetailsDto>emptyList());
-            };
+            }
         };
         loanAccountAction.setLoanServiceFacade(loanServiceFacade);
+        loanAccountAction.setLoanAccountServiceFacade(loanAccountServiceFacade);
         loanAccountAction.setCustomerDao(customerDao);
 
         when(request.getAttribute(Constants.CURRENTFLOWKEY)).thenReturn(FLOW_KEY);
@@ -252,8 +270,12 @@ public class LoanAccountActionTest {
         when(loanPrdBusinessService.getLoanOffering(anyShort(), eq(localeId))).thenReturn(loanOffering);
         when(form.getCashFlowForm()).thenReturn(cashFlowForm);
         when(cashFlowForm.getMonthlyCashFlows()).thenReturn(Collections.EMPTY_LIST);
-        when(loanServiceFacade.validateCashFlowForInstallmentsForWarnings(form, localeId)).thenReturn(errors);
-        when(loanServiceFacade.validateCashFlowForInstallments(installments, cashFlowForm, repaymentCapacity)).thenReturn(errors);
+        
+        List<CashFlowDataDto> cashflowDtos = new ArrayList<CashFlowDataDto>();
+        when(form.getCashflowDataDtos()).thenReturn(cashflowDtos);
+        when(loanAccountServiceFacade.validateCashFlowForInstallmentsForWarnings((List<CashFlowDataDto>)anyObject(), anyInt())).thenReturn(errors);
+        when(loanAccountServiceFacade.validateCashFlowForInstallments((LoanInstallmentsDto)anyObject(), (List<MonthlyCashFlowDto>)anyObject(), (Double)anyObject(), (BigDecimal)anyObject())).thenReturn(errors);
+        
         when(mapping.findForward("preview_failure")).thenReturn(previewFailure);
         ActionForward forward = loanAccountAction.preview(mapping, form, request, response);
         assertThat(forward, is(previewFailure));
@@ -278,8 +300,12 @@ public class LoanAccountActionTest {
         when(loanPrdBusinessService.getLoanOffering(anyShort(), eq(localeId))).thenReturn(loanOffering);
         when(form.getCashFlowForm()).thenReturn(cashFlowForm);
         when(cashFlowForm.getMonthlyCashFlows()).thenReturn(Collections.EMPTY_LIST);
-        when(loanServiceFacade.validateCashFlowForInstallmentsForWarnings(form, localeId)).thenReturn(warning);
-        when(loanServiceFacade.validateCashFlowForInstallments(installments, cashFlowForm, repaymentCapacity)).thenReturn(error);
+        
+        List<CashFlowDataDto> cashflowDtos = new ArrayList<CashFlowDataDto>();
+        when(form.getCashflowDataDtos()).thenReturn(cashflowDtos);
+        when(loanAccountServiceFacade.validateCashFlowForInstallmentsForWarnings((List<CashFlowDataDto>)anyObject(), anyInt())).thenReturn(warning);
+        when(loanAccountServiceFacade.validateCashFlowForInstallments((LoanInstallmentsDto)anyObject(), (List<MonthlyCashFlowDto>)anyObject(), (Double)anyObject(), (BigDecimal)anyObject())).thenReturn(error);
+        
         when(mapping.findForward("preview_success")).thenReturn(previewSuccess);
         ActionForward forward = loanAccountAction.preview(mapping, form, request, response);
         assertThat(forward, is(previewSuccess));
@@ -302,8 +328,11 @@ public class LoanAccountActionTest {
         when(loanPrdBusinessService.getLoanOffering(anyShort(), eq(localeId))).thenReturn(loanOffering);
         when(form.getCashFlowForm()).thenReturn(cashFlowForm);
         when(cashFlowForm.getMonthlyCashFlows()).thenReturn(Collections.EMPTY_LIST);
-        when(loanServiceFacade.validateCashFlowForInstallmentsForWarnings(form, localeId)).thenReturn(errors);
-        when(loanServiceFacade.validateCashFlowForInstallments(installments, cashFlowForm, repaymentCapacity)).thenReturn(errors);
+        
+        List<CashFlowDataDto> cashflowDtos = new ArrayList<CashFlowDataDto>();
+        when(form.getCashflowDataDtos()).thenReturn(cashflowDtos);
+        when(loanAccountServiceFacade.validateCashFlowForInstallmentsForWarnings((List<CashFlowDataDto>)anyObject(), anyInt())).thenReturn(errors);
+        when(loanAccountServiceFacade.validateCashFlowForInstallments((LoanInstallmentsDto)anyObject(), (List<MonthlyCashFlowDto>)anyObject(), (Double)anyObject(), (BigDecimal)anyObject())).thenReturn(errors);        
 
         when(mapping.findForward("preview_success")).thenReturn(previewSuccess);
         ActionForward forward = loanAccountAction.preview(mapping, form, request, response);

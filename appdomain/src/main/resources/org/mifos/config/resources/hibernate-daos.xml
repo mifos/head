@@ -36,4 +36,6 @@
     <bean id="collectionSheetDao" class="org.mifos.application.collectionsheet.persistence.CollectionSheetDaoHibernate" />
 
     <bean id="clientAttendanceDao" class="org.mifos.accounts.loan.persistance.StandardClientAttendanceDao" />
+    
+    <bean id="messageCustomizerDao" class="org.mifos.application.messagecustomizer.MessageCustomizerDaoHibernate" />
 </beans>

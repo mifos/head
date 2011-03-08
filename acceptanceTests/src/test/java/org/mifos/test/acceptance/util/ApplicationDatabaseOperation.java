@@ -16,6 +16,18 @@ public class ApplicationDatabaseOperation {
     private DriverManagerDataSource dataSource;
     private Connection connection;
 
+    public void cleanBatchJobTables() throws SQLException {
+        getStatement().executeUpdate("truncate table BATCH_STEP_EXECUTION_CONTEXT");
+        getStatement().executeUpdate("truncate table BATCH_STEP_EXECUTION");
+        getStatement().executeUpdate("truncate table BATCH_STEP_EXECUTION_SEQ");
+        getStatement().executeUpdate("truncate table BATCH_JOB_EXECUTION_CONTEXT");
+        getStatement().executeUpdate("truncate table BATCH_JOB_EXECUTION");
+        getStatement().executeUpdate("truncate table BATCH_JOB_PARAMS");
+        getStatement().executeUpdate("truncate table BATCH_JOB_INSTANCE");
+        getStatement().executeUpdate("truncate table BATCH_JOB_SEQ");
+        closeConnection();
+    }
+
     public void updateCustomerState(String statusID, String inUse) throws SQLException {
         getStatement().executeUpdate("UPDATE customer_state l SET currently_in_use= " + inUse + " WHERE l.status_id=" + statusID);
         closeConnection();

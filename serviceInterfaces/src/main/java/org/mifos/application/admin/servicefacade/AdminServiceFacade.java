@@ -34,7 +34,6 @@ import org.mifos.dto.domain.ProductTypeDto;
 import org.mifos.dto.domain.ReportCategoryDto;
 import org.mifos.dto.domain.SavingsProductDto;
 import org.mifos.dto.domain.UpdateConfiguredOfficeLevelRequest;
-import org.mifos.dto.screen.ConfigureApplicationLabelsDto;
 import org.mifos.dto.screen.LoanProductFormDto;
 import org.mifos.dto.screen.ProductCategoryDetailsDto;
 import org.mifos.dto.screen.ProductCategoryDisplayDto;
@@ -83,12 +82,6 @@ public interface AdminServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated() and hasAnyRole('ROLE_CAN_DEFINE_PRODUCT_MIX', 'ROLE_CAN_EDIT_PRODUCT_MIX')")
     void createOrUpdateProductMix(Integer productId, List<Integer> notAllowedProductIds);
-
-    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_LABELS')")
-    ConfigureApplicationLabelsDto retrieveConfigurableLabels();
-
-    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_LABELS')")
-    void updateApplicationLabels(ConfigureApplicationLabelsDto applicationLabels);
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_HIDDEN_MANDATORY_FIELDS')")
     MandatoryHiddenFieldsDto retrieveHiddenMandatoryFields();
@@ -161,4 +154,6 @@ public interface AdminServiceFacade {
     ReportCategoryDto retrieveReportCategory(Integer reportCategoryId);
 
     Locale retreiveLocaleFromConfiguration();
+
+	String replaceSubstitutions(String message);
 }

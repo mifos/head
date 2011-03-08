@@ -22,7 +22,6 @@
 [#import "blueprintmacros.ftl" as mifos]
 [#import "macros.ftl" as mifosmacros]
 
-[@mifos.header "title" /]
 <script type="text/javascript">
 function addOption(root, text, value)
 {
@@ -77,17 +76,11 @@ function selectAllOptions(outSel)
 }
 </script>
 
-[@mifos.topNavigationNoSecurity currentTab="Admin" /]
- <!--  Main Content Begins-->
-  <div class="content marginAuto" style="margin-left:5em;">
-    <div class="borders span-22">
-      <div class="borderbtm span-22">
-        <p class="span-6 arrowIMG1 orangeheading ">[@spring.message "systemUsers.defineNewSystemUser.chooseOffice"/]</p>
-        <p class="span-6 arrowIMG orangeheading ">[@spring.message "systemUsers.defineNewSystemUser.userInformation"/]</p>
-        <p class="span-3 arrowIMG1 orangeheading last">[@spring.message "reviewAndSubmit"/]</p>
-      </div>
-
-      <div class="subcontent">
+[@layout.webflow currentTab="Admin"
+                 currentState="user.flowState.enterAccountInfo" 
+                 states=["user.flowState.chooseUserOffice", 
+                         "user.flowState.enterAccountInfo", 
+                         "user.flowState.reviewAndSubmit"]]
         <p class="font15"><span class="fontBold">[@spring.message "systemUsers.defineNewSystemUser.addanewuser"/]</span>&nbsp;-&nbsp;<span class="orangeheading">[@spring.message "systemUsers.defineNewSystemUser.enterUserInformation"/]</span></p>
         <p>[@spring.message "systemUsers.defineNewSystemUser.infomessage"/]</p>
          <p><span class="red">*</span><span>[@spring.message "manageProducts.defineProductmix.fieldsmarkedwithanasteriskarerequired"/]</span></p>
@@ -215,7 +208,7 @@ function selectAllOptions(outSel)
                             <span class="span-4 rightAlign">
                                 <label for="address.address1">
                                 [#if userFormBean.address.address1Mandatory]
-                                <span class="red">*</span>[/#if][@spring.message "systemUsers.preview.address1" /]&nbsp;:</label>
+                                <span class="red">*</span>[/#if][@spring.message "systemUsers.preview.address1" /]:</label>
                             </span>
                             <span>
                                 [@spring.formInput "userFormBean.address.address1" /]
@@ -327,7 +320,7 @@ function selectAllOptions(outSel)
                             </span>
                           </div>
                           <div class="span-21 prepend-2 ">
-                                  <span class="span-2">[@spring.message "systemUsers.preview.roles" /]</span>
+                                  <span class="span-4 rightAlign">[@spring.message "systemUsers.preview.roles" /]:</span>
                                 <span class="span-4">
                                     [@spring.formMultiSelect "userFormBean.availableRoles", userFormBean.availableRolesOptions, "class=listSize" /]
                                 </span>
@@ -417,13 +410,16 @@ function selectAllOptions(outSel)
             <div class="clear">&nbsp;</div>
 
             <div class="prepend-8">
+		<table align="93%" border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td align="center"> &nbsp;
+              <div class="row centered">
                 <input class="buttn" type="submit" id="preview" name="_eventId_preview" value="[@spring.message "preview"/]" onclick="selectAllOptions(this.form.selectedRoles);selectAllOptions(this.form.availableRoles);" />
                 <input class="buttn2" type="submit" id="cancel" name="_eventId_cancel" value="[@spring.message "cancel"/]" />
+				</div>
+				</td>
+				</tr>
+				</table>
             </div>
         </form>
-      </div>
-
-    </div>
-  </div>
-  <!--Main Content Ends-->
-  [@mifos.footer/]
+      [/@layout.webflow]

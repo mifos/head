@@ -322,7 +322,7 @@ explanation of the license and how it is applied.
 							</tr>
 						</table>
 
-						<table width="100%" border="0" cellpadding="2" cellspacing="0" class="bluetableborder">
+						<table id="performanceHistoryTable" name="performanceHistoryTable" width="100%" border="0" cellpadding="2" cellspacing="0" class="bluetableborder">
 							<tr>
 								<td class="bluetablehead05">
 									<span class="fontnormalbold"> <mifos:mifoslabel name="Savings.performanceHistory" /> </span>

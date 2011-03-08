@@ -375,6 +375,8 @@
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
+                <!-- these must be filtered by native2ascii, don't just copy them -->
+                <excludes><exclude>**/localizedResources/*.properties</exclude></excludes>
             </resource>
         </resources>
         <testResources>
@@ -502,13 +504,6 @@
                             <testNGArtifactName>null</testNGArtifactName>
                             <printSummary>true</printSummary>
                             <redirectTestOutputToFile>true</redirectTestOutputToFile>
-                            <!-- override exclude integration test classes    -->
-                            <excludes>
-                                <exclude>org/mifos/framework/components/batchjobs/helpers/LoanArrearsTaskIntegrationTest.java</exclude>
-                                <exclude>org/mifos/framework/components/batchjobs/TaskRunningIntegrationTest.java</exclude>
-                                <exclude>org/mifos/framework/components/batchjobs/helpers/ProductStatusHelperIntegrationTest.java</exclude>
-                                <exclude>org/mifos/framework/components/batchjobs/BatchJobCatchUpIntegrationTest.java</exclude>
-                            </excludes>
                             <includes>
                                 <include>**/*IntegrationTest.java</include>
                                 <include>**/*StrutsTest.java</include>
@@ -584,10 +579,10 @@
             <plugin>
                 <groupId>org.mifos.maven</groupId>
                 <artifactId>mifos-pseudoloc-gen</artifactId>
-                <version>0.0.1</version>
+                <version>1.0</version>
                 <configuration>
                     <inputDirectory>src/main/resources/org/mifos/config/localizedResources</inputDirectory>
-                    <outputDirectory>target/mifos-webapp/WEB-INF/classes/org/mifos/config/localizedResources</outputDirectory>
+                    <outputDirectory>target/classes/org/mifos/config/localizedResources</outputDirectory>
                 </configuration>
                 <executions>
                     <execution>
@@ -641,6 +636,26 @@
                                 project.properties['ci.build.tag'] = env['BUILD_TAG'] ?: 'DEVELOPMENT'
                                 project.properties['ci.build.date'] = "" + new Date()
                             </source>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <!-- this goes away once we're completely off Struts -->
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>native2ascii-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>native2ascii</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>native2ascii</goal>
+                        </goals>
+                        <configuration>
+                            <encoding>UTF8</encoding>
+                            <src>src/main/resources/org/mifos/config/localizedResources</src>
+                            <dest>target/classes/org/mifos/config/localizedResources</dest>
+                            <includes>*.properties</includes>
                         </configuration>
                     </execution>
                 </executions>

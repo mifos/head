@@ -89,7 +89,7 @@ public class LoanAccountAdjustmentsTest extends UiTestCaseBase {
         redoParams.setDisbursalDateMM("03");
         redoParams.setDisbursalDateYYYY("2011");
 
-        LoanAccountPage loanAccountPage = loanTestHelper.redoLoanDisbursal("MyGroup1233266297718", "WeeklyGroupFlatLoanWithOnetimeFee", redoParams, null, 0, false);
+        LoanAccountPage loanAccountPage = loanTestHelper.redoLoanDisbursal("Default Group", "WeeklyGroupFlatLoanWithOnetimeFee", redoParams, null, 0, false);
 
         String loanID = loanAccountPage.getAccountId();
         loanAccountPage = loanTestHelper.applyMultipleAdjustments(loanID, 2);
