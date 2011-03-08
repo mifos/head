@@ -96,7 +96,6 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
     @Test(singleThreaded = true, groups = {"loan","acceptance","ui", "smoke"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void newWeeklyClientLoanAccountWithQuestionGroups() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml", dataSource, selenium);
         String questionGroupTitle = "QG1" + random.nextInt(100);
         String question1 = "DT_" + random.nextInt(100);
         String question2 = "SS_" + random.nextInt(100);
@@ -105,7 +104,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         questionGroupHelper.createQuestionGroup(questionGroupTitle, question1, question2, "Create Loan");
         loanTestHelper.editLoanProduct("Flat Interest Loan Product With Fee", questionGroupTitle);
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
-        searchParameters.setSearchString("Client - Veronica Abisya");
+        searchParameters.setSearchString("client1 lastname");
         searchParameters.setLoanProduct("Flat Interest Loan Product With Fee");
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
         submitAccountParameters.setAmount("1012.0");
@@ -126,7 +125,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
     public void newWeeklyClientLoanAccountWithModifyErrors() throws Exception {
         setAppDate(new DateTime(2011,3,7,15,0,0,0));
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
-        searchParameters.setSearchString("Client - Veronica Abisya");
+        searchParameters.setSearchString("client1 lastname");
         searchParameters.setLoanProduct("Flat Interest Loan Product With Fee");
 
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
@@ -143,10 +142,9 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
 
     @Test(singleThreaded = true, groups = {"loan","acceptance","ui"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    // Add Funding Org A to "Flat Interest Loan Product With Fee"
     public void newWeeklyClientLoanAccountWithDateTypeCustomField() throws Exception {
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
-        searchParameters.setSearchString("Client - Veronica Abisya");
+        searchParameters.setSearchString("client1 lastname");
         searchParameters.setLoanProduct("Flat Interest Loan Product With Fee");
 
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
@@ -184,7 +182,6 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     //http://mifosforge.jira.com/browse/MIFOSTEST-308
     // (1,4,'test' to (1,4,'test','2011-02-01'
-    // Add Funding Org A to MonthlyClientFlatLoanThirdFridayOfMonth
     public void newMonthlyClientLoanAccountWithMeetingOnSameWeekAndWeekdayOfMonth() throws Exception {
         //Given
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
@@ -206,11 +203,10 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(singleThreaded = true, groups = {"loan","acceptance","ui"})
-    // Add Funding Org A to EmergencyLoanWithZeroInterest
     public void newMonthlyClientLoanAccountWithZeroInterestRate() throws Exception {
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
-        searchParameters.setSearchString("Client - Tesa Mendez");
-        searchParameters.setLoanProduct("MIFOS-2636-GKEmergencyLoanWithZeroInterest");
+        searchParameters.setSearchString("Client - Mary Monthly");
+        searchParameters.setLoanProduct("EmergencyLoanWithZeroInterest");
 
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
         submitAccountParameters.setAmount("1000.0");
@@ -225,8 +221,8 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
     public void tryClientLoanAccountWithAdditionalFees() throws Exception {
         setDateAsToday();
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
-        searchParameters.setSearchString("Client - Tesa Mendez");
-        searchParameters.setLoanProduct("MIFOS-2636-GKEmergencyLoanWithZeroInterest");
+        searchParameters.setSearchString("Client - Mary Monthly");
+        searchParameters.setLoanProduct("EmergencyLoanWithZeroInterest");
 
 
         CreateLoanAccountEntryPage loanAccountEntryPage = loanTestHelper.navigateToCreateLoanAccountEntryPage(searchParameters);
@@ -345,7 +341,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    //CreateClient: weekly, Stu1233265991241 Client1233265991241, monday
+    //CreateClient: weekly, Stu12332659912419 Client12332659912419, monday, activate
     public void verifyAccountFromProductInstallmentsSame() throws Exception {
         setAppDate(new DateTime(2011,1,24,15,0,0,0));
 
@@ -359,7 +355,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         productParams.setMaxInstallments("100");
         productParams.setDefInstallments("50");
         CreateLoanAccountSearchParameters searchParams = new CreateLoanAccountSearchParameters();
-        searchParams.setSearchString("Stu1233265991241 Client1233265991241");
+        searchParams.setSearchString("Stu12332659912419 Client12332659912419");
         searchParams.setLoanProduct("ProdTest97");
         DisburseLoanParameters disburseParams = new DisburseLoanParameters();
         disburseParams.setPaymentType(DisburseLoanParameters.CASH);
@@ -406,7 +402,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         };
         productParams.setCycleInstallments(cycleInstallments);
         CreateLoanAccountSearchParameters searchParams = new CreateLoanAccountSearchParameters();
-        searchParams.setSearchString("Stu1233265991241 Client1233265991241");
+        searchParams.setSearchString("Stu12332659912419 Client12332659912419");
         searchParams.setLoanProduct("ProdTest99");
         DisburseLoanParameters disburseParams = new DisburseLoanParameters();
         disburseParams.setPaymentType(DisburseLoanParameters.CASH);
