@@ -84,14 +84,12 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
         DateTime targetTime = new DateTime(2011, 2, 24, 15, 0, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
 
-        questionGroupTestHelper.markQuestionGroupAsActive("QGForDisburseLoan");
-        questionGroupTestHelper.markQuestionGroupAsActive("QGForDisburseLoan2");
+
     }
 
     @AfterMethod
     public void logOut() {
-        questionGroupTestHelper.markQuestionGroupAsInactive("QGForDisburseLoan");
-        questionGroupTestHelper.markQuestionGroupAsInactive("QGForDisburseLoan2");
+
         (new MifosPage(selenium)).logout();
     }
 
@@ -104,63 +102,71 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyCapturingResponsesDuringLoanDisburse() throws Exception {
 
-        CreateLoanAccountSearchParameters createLoanAccountSearchParameters = new CreateLoanAccountSearchParameters();
-        createLoanAccountSearchParameters.setLoanProduct("WeeklyClientFlatLoanWithNoFee");
-        createLoanAccountSearchParameters.setSearchString("ClientWithLoan 20110221");
-        DisburseLoanParameters disburseLoanParameters = new DisburseLoanParameters();
-        disburseLoanParameters.setPaymentType(DisburseLoanParameters.CASH);
-        disburseLoanParameters.setDisbursalDateDD("24");
-        disburseLoanParameters.setDisbursalDateMM("02");
-        disburseLoanParameters.setDisbursalDateYYYY("2011");
-        QuestionResponseParameters questionResponseParameters = new QuestionResponseParameters();
+        questionGroupTestHelper.markQuestionGroupAsActive("QGForDisburseLoan1");
+        questionGroupTestHelper.markQuestionGroupAsActive("QGForDisburseLoan2");
+        try {
+            CreateLoanAccountSearchParameters createLoanAccountSearchParameters = new CreateLoanAccountSearchParameters();
+            createLoanAccountSearchParameters.setLoanProduct("WeeklyClientFlatLoanWithNoFee");
+            createLoanAccountSearchParameters.setSearchString("ClientWithLoan 20110221");
+            DisburseLoanParameters disburseLoanParameters = new DisburseLoanParameters();
+            disburseLoanParameters.setPaymentType(DisburseLoanParameters.CASH);
+            disburseLoanParameters.setDisbursalDateDD("24");
+            disburseLoanParameters.setDisbursalDateMM("02");
+            disburseLoanParameters.setDisbursalDateYYYY("2011");
+            QuestionResponseParameters questionResponseParameters = new QuestionResponseParameters();
 
-        questionResponseParameters.addTextAnswer("questionGroups[0].sectionDetails[0].questions[0].value", "04/02/2011");
-        questionResponseParameters.addTextAnswer("questionGroups[0].sectionDetails[0].questions[1].value", "free text");
-        questionResponseParameters.addTextAnswer("questionGroups[0].sectionDetails[1].questions[0].value", "free text1");
+            questionResponseParameters.addTextAnswer("questionGroups[0].sectionDetails[0].questions[0].value", "04/02/2011");
+            questionResponseParameters.addTextAnswer("questionGroups[0].sectionDetails[0].questions[1].value", "free text");
+            questionResponseParameters.addTextAnswer("questionGroups[0].sectionDetails[1].questions[0].value", "free text1");
 
-        questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[0].questions[0].value", "07/02/2011");
-        questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[0].questions[1].value", "20");
-        questionResponseParameters.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[0].valuesAsArray", "three");
-        questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[1].questions[1].value", "free text2");
+            questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[0].questions[0].value", "07/02/2011");
+            questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[0].questions[1].value", "20");
+            questionResponseParameters.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[0].valuesAsArray", "three");
+            questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[1].questions[1].value", "free text2");
 
-        LoanAccountPage loanAccountPage = loanTestHelper.createAndActivateDefaultLoanAccount(createLoanAccountSearchParameters);
-        String loan1ID = loanAccountPage.getAccountId();
-        loanAccountPage = loanTestHelper.createAndActivateDefaultLoanAccount(createLoanAccountSearchParameters);
-        String loan2ID = loanAccountPage.getAccountId();
+            LoanAccountPage loanAccountPage = loanTestHelper.createAndActivateDefaultLoanAccount(createLoanAccountSearchParameters);
+            String loan1ID = loanAccountPage.getAccountId();
+            loanAccountPage = loanTestHelper.createAndActivateDefaultLoanAccount(createLoanAccountSearchParameters);
+            String loan2ID = loanAccountPage.getAccountId();
 
-        QuestionResponsePage questionResponsePage = questionGroupTestHelper.navigateToQuestionResponsePageDuringLoanDisbursal(loan1ID, disburseLoanParameters);
-        questionResponsePage.populateAnswers(questionResponseParameters);
-        questionResponsePage = questionResponsePage
-                .continueAndNavigateToDisburseLoanConfirmationPage()
-                .navigateToEditAdditionalInformation();
-        questionResponseParameters.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[1].value", "blue");
-        questionResponsePage.populateAnswers(questionResponseParameters);
-        questionResponsePage
-                .continueAndNavigateToDisburseLoanConfirmationPage()
-                .submitAndNavigateToLoanAccountPage();
+            QuestionResponsePage questionResponsePage = questionGroupTestHelper.navigateToQuestionResponsePageDuringLoanDisbursal(loan1ID, disburseLoanParameters);
+            questionResponsePage.populateAnswers(questionResponseParameters);
+            questionResponsePage = questionResponsePage
+                    .continueAndNavigateToDisburseLoanConfirmationPage()
+                    .navigateToEditAdditionalInformation();
+            questionResponseParameters.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[1].value", "blue");
+            questionResponsePage.populateAnswers(questionResponseParameters);
+            questionResponsePage
+                    .continueAndNavigateToDisburseLoanConfirmationPage()
+                    .submitAndNavigateToLoanAccountPage();
 
-        CreateQuestionParameters createQuestionParameters = new CreateQuestionParameters();
-        createQuestionParameters.setType(createQuestionParameters.TYPE_FREE_TEXT);
-        createQuestionParameters.setText("createdByverifyCapturingResponsesDuringLoanDisburse");
-        List<CreateQuestionParameters> newQuestionList = new ArrayList<CreateQuestionParameters>();
-        newQuestionList.add(createQuestionParameters);
-        String[] questionsExist = {"Date", "FreeText", "SingleSelect", "createdByverifyCapturingResponsesDuringLoanDisburse"};
-        String[] questionsInactive = {"ToBeDisabled"};
-        Map<String, String> questionsAndAnswers = new HashMap<String, String>();
+            CreateQuestionParameters createQuestionParameters = new CreateQuestionParameters();
+            createQuestionParameters.setType(createQuestionParameters.TYPE_FREE_TEXT);
+            createQuestionParameters.setText("createdByverifyCapturingResponsesDuringLoanDisburse");
+            List<CreateQuestionParameters> newQuestionList = new ArrayList<CreateQuestionParameters>();
+            newQuestionList.add(createQuestionParameters);
+            String[] questionsExist = {"Date", "FreeText", "SingleSelect", "createdByverifyCapturingResponsesDuringLoanDisburse"};
+            String[] questionsInactive = {"ToBeDisabled"};
+            Map<String, String> questionsAndAnswers = new HashMap<String, String>();
 
-        questionsAndAnswers.put("MultiSelect", "three");
-        questionsAndAnswers.put("Number", "20");
-        questionsAndAnswers.put("Date", "04/02/2011");
+            questionsAndAnswers.put("MultiSelect", "three");
+            questionsAndAnswers.put("Number", "20");
+            questionsAndAnswers.put("Date", "04/02/2011");
 
-        questionGroupTestHelper.markQuestionAsInactive("ToBeDisabled");
-        questionGroupTestHelper.markQuestionGroupAsInactive("QGForDisburseLoan2");
-        questionGroupTestHelper.addNewQuestionsToQuestionGroup("QGForDisburseLoan", newQuestionList);
+            questionGroupTestHelper.markQuestionAsInactive("ToBeDisabled");
+            questionGroupTestHelper.markQuestionGroupAsInactive("QGForDisburseLoan2");
+            questionGroupTestHelper.addNewQuestionsToQuestionGroup("QGForDisburseLoan1", newQuestionList);
 
-        questionResponsePage = questionGroupTestHelper.navigateToQuestionResponsePageDuringLoanDisbursal(loan2ID, disburseLoanParameters);
+            questionResponsePage = questionGroupTestHelper.navigateToQuestionResponsePageDuringLoanDisbursal(loan2ID, disburseLoanParameters);
 
-        questionResponsePage.verifyQuestionsExists(questionsExist);
-        questionResponsePage.verifyQuestionsDoesnotappear(questionsInactive);
-        verifyQuestionResponsesExistInDatabase(loan1ID, "Disburse Loan", questionsAndAnswers);
+            questionResponsePage.verifyQuestionsExists(questionsExist);
+            questionResponsePage.verifyQuestionsDoesnotappear(questionsInactive);
+            verifyQuestionResponsesExistInDatabase(loan1ID, "Disburse Loan", questionsAndAnswers);
+        } finally {
+            questionGroupTestHelper.markQuestionAsActive("ToBeDisabled");
+            questionGroupTestHelper.markQuestionGroupAsInactive("QGForDisburseLoan1");
+            questionGroupTestHelper.markQuestionGroupAsInactive("QGForDisburseLoan2");
+        }
     }
 
     /**
@@ -235,69 +241,73 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled = false)
     public void verifyResponsesDuringLoanAccountApproval() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_016_dbunit.xml", dataSource, selenium);
+        questionGroupTestHelper.markQuestionGroupAsActive("QGForApproveLoan1");
+        questionGroupTestHelper.markQuestionGroupAsActive("QGForApproveLoan2");
+        try {
 
-        CreateQuestionGroupParameters createQuestionGroupParameters = getCreateQuestionGroupParameters1("approveloan", "Approve Loan");
-        CreateQuestionGroupParameters createQuestionGroupParameters2 = getCreateQuestionGroupParameters2("aploan2", "Approve Loan");
+            CreateLoanAccountSearchParameters createLoanAccountSearchParameters = new CreateLoanAccountSearchParameters();
+            createLoanAccountSearchParameters.setLoanProduct("WeeklyClientFlatLoanWithNoFee");
+            createLoanAccountSearchParameters.setSearchString("ClientWithLoan 20110221");
 
-        CreateLoanAccountSearchParameters createLoanAccountSearchParameters = new CreateLoanAccountSearchParameters();
-        createLoanAccountSearchParameters.setLoanProduct("WeeklyFlatLoanWithOneTimeFees");
-        createLoanAccountSearchParameters.setSearchString("Stu1232993852651 Client1232993852651");
+            EditAccountStatusParameters editAccountStatusParameters = new EditAccountStatusParameters();
+            editAccountStatusParameters.setAccountStatus(AccountStatus.LOAN_APPROVED);
+            editAccountStatusParameters.setNote("note note");
 
-        EditAccountStatusParameters editAccountStatusParameters = new EditAccountStatusParameters();
-        editAccountStatusParameters.setAccountStatus(AccountStatus.LOAN_APPROVED);
-        editAccountStatusParameters.setNote("note note");
+            QuestionResponseParameters questionResponseParameters = new QuestionResponseParameters();
+            questionResponseParameters.addTextAnswer("questionGroups[0].sectionDetails[0].questions[0].value", "04/02/2011");
+            questionResponseParameters.addTextAnswer("questionGroups[0].sectionDetails[0].questions[1].value", "free text");
+            questionResponseParameters.addTextAnswer("questionGroups[0].sectionDetails[1].questions[0].value", "free text1");
 
-        QuestionResponseParameters questionResponseParameters = new QuestionResponseParameters();
-        questionResponseParameters.addSingleSelectAnswer("questionGroups[0].sectionDetails[0].questions[0].value", "no");
-        questionResponseParameters.addTextAnswer("questionGroups[0].sectionDetails[1].questions[0].value", "18/02/2011");
-        questionResponseParameters.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[1].valuesAsArray", "second");
-        questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[0].questions[0].value", "222");
-        CreateQuestionParameters createQuestionParameters = new CreateQuestionParameters();
-        createQuestionParameters.setType(createQuestionParameters.TYPE_FREE_TEXT);
-        createQuestionParameters.setText("newQuestion232");
-        List<CreateQuestionParameters> newQuestionList = new ArrayList<CreateQuestionParameters>();
-        newQuestionList.add(createQuestionParameters);
-        String[] questionsExist = {"newQuestion232", "DateQuestion"};
-        String[] questionsInactive = {"question 2", "MultiSelect", "question 4"};
-        Map<String, String> questionsAndAnswers = new HashMap<String, String>();
-        questionsAndAnswers.put("MultiSelect", "second");
-        questionsAndAnswers.put("DateQuestion", "11/02/2011");
-        questionsAndAnswers.put("question 2", "222");
-        questionsAndAnswers.put("question 4", "no");
+            questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[0].questions[0].value", "07/02/2011");
+            questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[0].questions[1].value", "20");
+            questionResponseParameters.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[0].valuesAsArray", "three");
+            questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[1].questions[1].value", "free text2");
 
-        questionGroupTestHelper.createQuestionGroup(createQuestionGroupParameters);
-        questionGroupTestHelper.createQuestionGroup(createQuestionGroupParameters2);
+            CreateQuestionParameters createQuestionParameters = new CreateQuestionParameters();
+            createQuestionParameters.setType(createQuestionParameters.TYPE_FREE_TEXT);
+            createQuestionParameters.setText("questionByVerifyResponsesDuringLoanAccountApproval");
+            List<CreateQuestionParameters> newQuestionList = new ArrayList<CreateQuestionParameters>();
+            newQuestionList.add(createQuestionParameters);
+            String[] questionsExist = {"Date", "FreeText", "SingleSelect", "questionByVerifyResponsesDuringLoanAccountApproval"};
+            String[] questionsInactive = {"ToBeDisabled"};
+            Map<String, String> questionsAndAnswers = new HashMap<String, String>();
 
-        LoanAccountPage loanAccountPage = loanTestHelper.createDefaultLoanAccount(createLoanAccountSearchParameters);
-        String loanID = loanAccountPage.getAccountId();
-        loanAccountPage = loanTestHelper.createDefaultLoanAccount(createLoanAccountSearchParameters);
-        String loanID2 = loanAccountPage.getAccountId();
+            questionsAndAnswers.put("MultiSelect", "three");
+            questionsAndAnswers.put("Number", "20");
+            questionsAndAnswers.put("Date", "04/02/2011");
 
-        QuestionResponsePage questionResponsePage = questionGroupTestHelper.navigateToQuestionResponsePageDuringLoanApproval(loanID, editAccountStatusParameters);
-        questionResponsePage.populateAnswers(questionResponseParameters);
-        questionResponsePage = questionResponsePage
-                .continueAndNavigateToEditAccountStatusConfirmationPage()
-                .navigateToEditStatus()
-                .submitAndNavigateToQuestionResponsePage(editAccountStatusParameters);
-        questionResponseParameters.addTextAnswer("questionGroups[0].sectionDetails[1].questions[0].value", "11/02/2011");
-        questionResponsePage.populateAnswers(questionResponseParameters);
-        questionResponsePage
-                .continueAndNavigateToEditAccountStatusConfirmationPage()
-                .submitAndNavigateToLoanAccountPage();
+            LoanAccountPage loanAccountPage = loanTestHelper.createDefaultLoanAccount(createLoanAccountSearchParameters);
+            String loanID1 = loanAccountPage.getAccountId();
+            loanAccountPage = loanTestHelper.createDefaultLoanAccount(createLoanAccountSearchParameters);
+            String loanID2 = loanAccountPage.getAccountId();
 
-        questionGroupTestHelper.markQuestionAsInactive("question 4");
-        questionGroupTestHelper.markQuestionAsInactive("MultiSelect");
-        questionGroupTestHelper.markQuestionGroupAsInactive("aploan2");
-        questionGroupTestHelper.addNewQuestionsToQuestionGroup("approveloan", newQuestionList);
+            QuestionResponsePage questionResponsePage = questionGroupTestHelper.navigateToQuestionResponsePageDuringLoanApproval(loanID1, editAccountStatusParameters);
+            questionResponsePage.populateAnswers(questionResponseParameters);
+            questionResponsePage = questionResponsePage
+                    .continueAndNavigateToEditAccountStatusConfirmationPage()
+                    .navigateToEditStatus()
+                    .submitAndNavigateToQuestionResponsePage(editAccountStatusParameters);
+            questionResponseParameters.addTextAnswer("questionGroups[0].sectionDetails[1].questions[1].value", "blue");
+            questionResponsePage.populateAnswers(questionResponseParameters);
+            questionResponsePage
+                    .continueAndNavigateToEditAccountStatusConfirmationPage()
+                    .submitAndNavigateToLoanAccountPage();
 
-        questionResponsePage = questionGroupTestHelper.navigateToQuestionResponsePageDuringLoanApproval(loanID2, editAccountStatusParameters);
-        questionResponsePage.verifyQuestionsExists(questionsExist);
-        questionResponsePage.verifyQuestionsDoesnotappear(questionsInactive);
+            questionGroupTestHelper.markQuestionAsInactive("ToBeDisabled");
+            questionGroupTestHelper.markQuestionGroupAsInactive("QGForApproveLoan2");
+            questionGroupTestHelper.addNewQuestionsToQuestionGroup("QGForApproveLoan1", newQuestionList);
 
-        verifyQuestionResponsesExistInDatabase(loanID, "Approve Loan", questionsAndAnswers);
+            questionResponsePage = questionGroupTestHelper.navigateToQuestionResponsePageDuringLoanApproval(loanID2, editAccountStatusParameters);
+            questionResponsePage.verifyQuestionsExists(questionsExist);
+            questionResponsePage.verifyQuestionsDoesnotappear(questionsInactive);
+
+            verifyQuestionResponsesExistInDatabase(loanID1, "Approve Loan", questionsAndAnswers);
+        } finally {
+            questionGroupTestHelper.markQuestionAsActive("ToBeDisabled");
+            questionGroupTestHelper.markQuestionGroupAsInactive("QGForApproveLoan1");
+            questionGroupTestHelper.markQuestionGroupAsInactive("QGForApproveLoan2");
+        }
     }
 
     private void verifyQuestionResponsesExistInDatabase(String loanID, String event, Map<String, String> questions) throws SQLException {
