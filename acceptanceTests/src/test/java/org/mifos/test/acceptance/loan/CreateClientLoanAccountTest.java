@@ -32,18 +32,18 @@ import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameter
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountsSuccessPage;
 import org.mifos.test.acceptance.framework.loan.CreateMultipleLoanAccountSelectParameters;
 import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
+import org.mifos.test.acceptance.framework.loan.EditLoanAccountInformationPage;
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountInformationParameters;
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountStatusParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
-import org.mifos.test.acceptance.framework.loan.EditLoanAccountInformationPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
-import org.mifos.test.acceptance.framework.loanproduct.LoanProductDetailsPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.SubmitFormParameters;
+import org.mifos.test.acceptance.framework.loanproduct.LoanProductDetailsPage;
+import org.mifos.test.acceptance.framework.questionnaire.ViewQuestionResponseDetailPage;
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
-import org.mifos.test.acceptance.framework.questionnaire.ViewQuestionResponseDetailPage;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +53,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Random;
 
@@ -94,7 +95,6 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
 
     @Test(singleThreaded = true, groups = {"loan","acceptance","ui", "smoke"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    // one of the dependent methods throws Exception
     public void newWeeklyClientLoanAccountWithQuestionGroups() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml", dataSource, selenium);
         String questionGroupTitle = "QG1" + random.nextInt(100);
@@ -122,15 +122,15 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    // one of the dependent methods throws Exception
+    // add grace period of 10 to "Flat Interest Loan Product With Fee"
     public void newWeeklyClientLoanAccountWithModifyErrors() throws Exception {
+        setAppDate(new DateTime(2011,3,7,15,0,0,0));
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("Client - Veronica Abisya");
         searchParameters.setLoanProduct("Flat Interest Loan Product With Fee");
 
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
         submitAccountParameters.setAmount("1012.0");
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml", dataSource, selenium);
 
         String loanId = createLoanAndCheckAmount(searchParameters, submitAccountParameters, null);
         submitAccountParameters.setAmount("10666.0");
@@ -143,6 +143,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
 
     @Test(singleThreaded = true, groups = {"loan","acceptance","ui"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // Add Funding Org A to "Flat Interest Loan Product With Fee"
     public void newWeeklyClientLoanAccountWithDateTypeCustomField() throws Exception {
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("Client - Veronica Abisya");
@@ -150,7 +151,6 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
 
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
         submitAccountParameters.setAmount("1012.0");
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_014_dbunit.xml", dataSource, selenium);
 
         String loanId = createLoanAndCheckAmount(searchParameters, submitAccountParameters, null);
 
@@ -161,14 +161,12 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    // one of the dependent methods throws Exception
     //http://mifosforge.jira.com/browse/MIFOSTEST-308
     public void newMonthlyClientLoanAccountWithMeetingOnSpecificDayOfMonth() throws Exception {
         //Given
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         DateTime targetTime = new DateTime(2011,2,1,13,0,0,0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
 
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("Client - Mary Monthly");
@@ -184,14 +182,14 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
 
     @Test(singleThreaded = true, groups = {"loan","acceptance","ui"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    // one of the dependent methods throws Exception
     //http://mifosforge.jira.com/browse/MIFOSTEST-308
+    // (1,4,'test' to (1,4,'test','2011-02-01'
+    // Add Funding Org A to MonthlyClientFlatLoanThirdFridayOfMonth
     public void newMonthlyClientLoanAccountWithMeetingOnSameWeekAndWeekdayOfMonth() throws Exception {
         //Given
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         DateTime targetTime = new DateTime(2011,2,1,13,0,0,0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
 
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("Client - Mia Monthly3rdFriday");
@@ -207,8 +205,8 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    // one of the dependent methods throws Exception
     @Test(singleThreaded = true, groups = {"loan","acceptance","ui"})
+    // Add Funding Org A to EmergencyLoanWithZeroInterest
     public void newMonthlyClientLoanAccountWithZeroInterestRate() throws Exception {
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("Client - Tesa Mendez");
@@ -217,19 +215,19 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
         submitAccountParameters.setAmount("1000.0");
         submitAccountParameters.setGracePeriodTypeNone(true);
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_010_dbunit.xml", dataSource, selenium);
 
         createLoanAndCheckAmount(searchParameters, submitAccountParameters, null);
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    // one of the dependent methods throws Exception
+    @Test(enabled=false)
+    //IGNORED BY VIVEK SINGH
     public void tryClientLoanAccountWithAdditionalFees() throws Exception {
+        setDateAsToday();
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("Client - Tesa Mendez");
         searchParameters.setLoanProduct("MIFOS-2636-GKEmergencyLoanWithZeroInterest");
 
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_010_dbunit.xml", dataSource, selenium);
 
         CreateLoanAccountEntryPage loanAccountEntryPage = loanTestHelper.navigateToCreateLoanAccountEntryPage(searchParameters);
 
@@ -258,7 +256,6 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
     @Test(enabled=false) // TODO js - temporarily disabled broken test (blocked by MIFOS-4792)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createLoanAccountsWithRestrictedProductsMix() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         DateTime targetTime = new DateTime(2011,1,24,15,0,0,0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
@@ -293,10 +290,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
     @Test(enabled=false) // TODO js - temporarily disabled broken test (blocked by MIFOS-4792)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createMultipleLoanAccountsWithRestrictedProductsMix() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = new DateTime(2011,1,24,15,0,0,0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        setDateAsToday();
 
         CreateMultipleLoanAccountSelectParameters multipleAccParameters1 = new CreateMultipleLoanAccountSelectParameters();
         multipleAccParameters1.setBranch("MyOffice1233265929385");
@@ -335,6 +329,15 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         }
     }
 
+    private void setDateAsToday() throws UnsupportedEncodingException {
+        setAppDate(new DateTime(System.currentTimeMillis()));
+    }
+
+    private void setAppDate(DateTime dateTime) throws UnsupportedEncodingException {
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        dateTimeUpdaterRemoteTestingService.setDateTime(dateTime);
+    }
+
     /**
      * Verify loan product created with default loan amount and number of installments
      * are "same for all loans" can be used to create new loan accounts with the correct default amounts.
@@ -342,11 +345,9 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    //CreateClient: weekly, Stu1233265991241 Client1233265991241, monday
     public void verifyAccountFromProductInstallmentsSame() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = new DateTime(2011,1,24,15,0,0,0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        setAppDate(new DateTime(2011,1,24,15,0,0,0));
 
         DefineNewLoanProductPage.SubmitFormParameters productParams = FormParametersHelper.getWeeklyLoanProductParameters();
         productParams.setOfferingName("ProdTest97");
@@ -386,10 +387,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyCreatingLoanAccountsOnProductWithLoanCycles() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = new DateTime(2011,1,24,15,0,0,0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        setAppDate(new DateTime(2011,1,24,15,0,0,0));
 
         DefineNewLoanProductPage.SubmitFormParameters productParams = FormParametersHelper.getWeeklyLoanProductParameters();
         productParams.setOfferingName("ProdTest99");
