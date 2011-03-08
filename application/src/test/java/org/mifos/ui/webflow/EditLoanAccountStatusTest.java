@@ -27,7 +27,6 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.application.servicefacade.LoanAccountServiceFacade;
 import org.mifos.clientportfolio.loan.ui.LoanAccountController;
 import org.mifos.clientportfolio.loan.ui.LoanAccountQuestionGroupFormBean;
@@ -52,7 +51,6 @@ public class EditLoanAccountStatusTest extends AbstractXmlFlowExecutionTests {
     private LoanAccountStatusController controller;
     private LoanAccountController loanAccountController;
     private LoanAccountServiceFacade loanAccountServiceFacade;
-    private AdminServiceFacade adminServiceFacade;
     private QuestionnaireServiceFacade questionnaireServiceFacade;
     private LoanAccountStatusFormBean loanAccountStatusFormBean;
     private LoanAccountQuestionGroupFormBean loanAccountQuestionGroupFormBean;
@@ -67,7 +65,6 @@ public class EditLoanAccountStatusTest extends AbstractXmlFlowExecutionTests {
         controller = mock(LoanAccountStatusController.class);
         loanAccountController = mock(LoanAccountController.class);
         loanAccountServiceFacade = mock(LoanAccountServiceFacade.class);
-        adminServiceFacade = mock(AdminServiceFacade.class);
         questionnaireServiceFacade = mock(QuestionnaireServiceFacade.class);
         loanAccountQuestionGroupFormBean = new LoanAccountQuestionGroupFormBean();
         loanAccountStatusFormBean = new LoanAccountStatusFormBean();
@@ -154,7 +151,6 @@ public class EditLoanAccountStatusTest extends AbstractXmlFlowExecutionTests {
 
         // setup bean dependencies
         builderContext.registerBean("loanAccountServiceFacade", loanAccountServiceFacade);
-        builderContext.registerBean("adminServiceFacade", adminServiceFacade);
         builderContext.registerBean("loanAccountStatusController", controller);
         builderContext.registerBean("loanAccountController", loanAccountController);
         builderContext.registerBean("questionnaireServiceFacade", questionnaireServiceFacade);

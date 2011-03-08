@@ -36,12 +36,10 @@ import org.springframework.stereotype.Controller;
 public class LoanAccountStatusController {
 
     private final LoanAccountServiceFacade loanAccountServiceFacade;
-    private final AdminServiceFacade adminServiceFacade;
     
     @Autowired
-    public LoanAccountStatusController(LoanAccountServiceFacade loanAccountServiceFacade, AdminServiceFacade adminServiceFacade) {
+    public LoanAccountStatusController(LoanAccountServiceFacade loanAccountServiceFacade) {
         this.loanAccountServiceFacade = loanAccountServiceFacade;
-        this.adminServiceFacade = adminServiceFacade;
     }
 
     public void loadQuestionGroups(Integer productId, LoanAccountQuestionGroupFormBean loanAccountQuestionGroupFormBean) {
