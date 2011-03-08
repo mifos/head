@@ -21,7 +21,6 @@
 package org.mifos.test.acceptance.holiday;
 
 import org.joda.time.DateTime;
-import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
@@ -47,10 +46,7 @@ import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.framework.testhelpers.SavingsAccountHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
-import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.mifos.test.acceptance.util.StringUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -60,7 +56,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(singleThreaded = true, groups = {"holiday", "schedules", "acceptance", "ui"})
+@Test(singleThreaded = true, groups = {"holiday", "schedules", "acceptance", "ui", "no_db_unit"})
 public class AdditionalHolidayTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;
@@ -71,13 +67,6 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
     private LoanTestHelper loanTestHelper;
     private NavigationHelper navigationHelper;
     private SavingsAccountHelper savingsAccountHelper;
-
-    @Autowired
-    private DriverManagerDataSource dataSource;
-    @Autowired
-    private DbUnitUtilities dbUnitUtilities;
-    @Autowired
-    private InitializeApplicationRemoteTestingService initRemote;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -108,7 +97,6 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createTwoWeeklyLoansInDifferentOffices() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
         CreateLoanAccountSearchParameters searchParameters1 = new CreateLoanAccountSearchParameters();
         // This client meets weekly on Wednesdays
         searchParameters1.setSearchString("Stu1233171716380 Client1233171716380");
@@ -136,7 +124,6 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
     //http://mifosforge.jira.com/browse/MIFOSTEST-280
     public void testBranchSpecificMoratorium() throws Exception {
         //Given
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
         CreateHolidaySubmitParameters param = getCreateHolidaySubmitParameters();
         //When / Then
         holidayTestHelper.createHoliday(param);
@@ -161,7 +148,6 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
     @Test(enabled = false) // TODO js - investigate why this fails on master
     public void testHolidayAffectsFeeSchedule() throws Exception {
         // Given
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_015_dbunit.xml", dataSource, selenium);
 
         ChargeParameters chargeParameters = new ChargeParameters();
         String officeName = "MyOffice1232993831593";
