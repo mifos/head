@@ -6,6 +6,7 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 import org.mifos.clientportfolio.newloan.applicationservice.LoanApplicationStateDto;
+import org.mifos.dto.screen.LoanInformationDto;
 
 @SuppressWarnings("PMD")
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID", "EI_EXPOSE_REP", "EI_EXPOSE_REP2"}, justification="should disable at filter level and also for pmd - not important for us")
@@ -18,6 +19,8 @@ public class LoanAccountStatusFormBean implements Serializable {
     private String note;
 
     private LoanApplicationStateDto loanApplicationState;
+    
+    private LoanInformationDto loanInformation;
     
     // custom validation
     private Integer cancelReason;
@@ -56,5 +59,13 @@ public class LoanAccountStatusFormBean implements Serializable {
 
     public LoanApplicationStateDto getLoanApplicationState() {
         return loanApplicationState;
+    }
+
+    public void setLoanInformation(LoanInformationDto loanInformation) {
+        this.loanInformation = loanInformation;
+    }
+    
+    public LoanInformationDto getLoanInformation() {
+        return loanInformation;
     }
 }

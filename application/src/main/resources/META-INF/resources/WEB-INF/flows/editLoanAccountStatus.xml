@@ -8,7 +8,7 @@
     
 	<view-state id="editStatusStep" view="editLoanAccountStatusEnterDetails" model="loanAccountStatusFormBean">
 		<on-entry>
-			<evaluate expression="loanAccountStatusController.prepareFormBean(loanAccountStatusFormBean)" />
+			<evaluate expression="loanAccountStatusController.loadAccount(requestParameters.globalAccountNumber, loanAccountStatusFormBean)" />
 		</on-entry>
 		<transition on="detailsEntered" to="checkIfLoanApproved" />
 	</view-state>

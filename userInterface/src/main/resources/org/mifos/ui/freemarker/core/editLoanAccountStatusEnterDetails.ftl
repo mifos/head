@@ -19,4 +19,6 @@
 *  explanation of the license and how it is applied.
 --]
 
-hello world
+[@layout.basic currentTab="ClientsAndAccounts"]
+<h1>test <span class="standout">holla</span></h1>
+[/@layout.basic]
