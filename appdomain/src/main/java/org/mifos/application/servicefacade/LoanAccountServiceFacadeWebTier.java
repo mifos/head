@@ -547,6 +547,8 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                 daysOfTheWeekOptions.put(workDay.getValue().toString(), weekdayName);
             }
             
+            boolean variableInstallmentsAllowed = loanProduct.isVariableInstallmentsAllowed();
+            
             return new LoanCreationLoanDetailsDto(isRepaymentIndependentOfMeetingEnabled, loanOfferingMeetingDto,
                     customer.getCustomerMeetingValue().toDto(), loanPurposes, productDto, customerDetailDto, loanProductDtos, 
                     interestTypeName, fundDtos, collateralOptions, purposeOfLoanOptions, 

@@ -72,6 +72,7 @@ import org.mifos.accounts.loan.util.helpers.LoanPaymentTypes;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
+import org.mifos.accounts.productdefinition.business.LoanAmountSameForAllLoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.NoOfInstallSameForAllLoanBO;
 import org.mifos.accounts.productdefinition.persistence.LoanPrdPersistence;
@@ -329,7 +330,7 @@ public class LoanBO extends AccountBO implements Loan {
         this.loanActivityDetails = new ArrayList<LoanActivityEntity>();
         this.rawAmountTotal = loanSchedule.getRawAmount();
         this.loanSummary = buildLoanSummary();
-        // FIXME - keithw - for some reason maxMinNumber of installments is used from loan (and not loan product definition) when retrieving Loan Information
+
         if (!loanProduct.getNoOfInstallSameForAllLoan().isEmpty()) {
             NoOfInstallSameForAllLoanBO maxMinInstall = new ArrayList<NoOfInstallSameForAllLoanBO>(loanProduct.getNoOfInstallSameForAllLoan()).get(0);
             this.maxMinNoOfInstall = new MaxMinNoOfInstall(maxMinInstall.getMaxNoOfInstall(), maxMinInstall.getMinNoOfInstall(), this);
@@ -337,6 +338,15 @@ public class LoanBO extends AccountBO implements Loan {
             this.maxMinNoOfInstall = new MaxMinNoOfInstall(this.noOfInstallments, this.noOfInstallments, this);
         }
         
+        this.maxMinInterestRate = new MaxMinInterestRate(loanProduct.getMaxInterestRate(), loanProduct.getMinInterestRate(), this);
+        
+        if (!loanProduct.getLoanAmountSameForAllLoan().isEmpty()) {
+            LoanAmountSameForAllLoanBO maxMinInstall = new ArrayList<LoanAmountSameForAllLoanBO>(loanProduct.getLoanAmountSameForAllLoan()).get(0);
+            this.maxMinLoanAmount = new MaxMinLoanAmount(maxMinInstall.getMaxLoanAmount(), maxMinInstall.getMinLoanAmount(), this);
+        } else {
+            this.maxMinLoanAmount = new MaxMinLoanAmount(overridenDetail.getLoanAmount().getAmount().doubleValue(), overridenDetail.getLoanAmount().getAmount().doubleValue(), this);
+        }
+
         // legacy
         this.intrestAtDisbursement = Short.valueOf("0"); // false
         this.gracePeriodPenalty = Short.valueOf("0"); // is this used
