@@ -24,6 +24,7 @@ import java.math.BigDecimal;
 
 import org.joda.time.LocalDate;
 
+@SuppressWarnings("PMD")
 public class CreateLoanSchedule {
 
     private final Integer customerId;

@@ -24,6 +24,7 @@ import java.math.BigDecimal;
 
 import org.joda.time.LocalDate;
 
+@SuppressWarnings("PMD")
 public class CreateLoanAccount {
 
     private final Integer customerId;
@@ -43,7 +44,6 @@ public class CreateLoanAccount {
     private final Integer every;
     private final Integer dayOfWeek;
 
-    @SuppressWarnings("PMD")
     public CreateLoanAccount(Integer customerId, Integer productId, Integer accountState, BigDecimal loanAmount, Double interestRate,
             LocalDate disbursementDate, int numberOfInstallments, int graceDuration, Integer sourceOfFundId,
             Integer loanPurposeId, Integer collateralTypeId, String collateralNotes, String externalId, 
