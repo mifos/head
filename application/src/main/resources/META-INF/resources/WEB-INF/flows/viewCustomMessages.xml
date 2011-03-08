@@ -5,7 +5,7 @@
 
     <var name="customMessageFormBean" class="org.mifos.ui.core.controller.CustomMessageFormBean" />
 
-    <view-state id="selectCustomMessageStep" view="customizeMessages">
+    <view-state id="selectCustomMessageStep" view="customMessagesView">
         <on-entry>
             <evaluate expression="customizeMessagesController.retrieveCustomMessages()" result="flowScope.customMessagesMap" />
         </on-entry>    
@@ -13,7 +13,7 @@
         <transition on="done" to="done" validate="false" bind="false" history="invalidate"/>
     </view-state>
 
-    <view-state id="addCustomMessageStep" view="addCustomMessage">
+    <view-state id="addCustomMessageStep" view="customMessagesAdd" model="customMessageFormBean">
         <transition on="add" to="selectCustomMessageStep" >
             <evaluate expression="customizeMessagesController.addCustomMessage(customMessageFormBean)" />
         </transition>

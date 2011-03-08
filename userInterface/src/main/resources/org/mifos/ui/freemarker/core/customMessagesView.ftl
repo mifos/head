@@ -24,16 +24,17 @@
   <div class=" content">
   <span id="page.id" title="customizeMessages"></span>
 
-
+	<select size=10>
+[#list customMessagesMap?keys as key]
+    <option value="${key}">${key} > ${customMessagesMap[key]}</option>
+[/#list]
+	</select>
 <form action="${flowExecutionUrl}" method="post" class="webflow-controls centered">
-        [@form.label "oldMessage" true][@spring.message "customizeMessages.addMessage.oldMessage" /][/@form.label]
-        [@form.input path="customMessageFormBean.oldMessage" id="addCustomMessage.input.oldMessage" /]
-        [@form.label "newMessage" true][@spring.message "customizeMessages.addMessage.newMessage" /][/@form.label]
-        [@form.input path="customMessageFormBean.newMessage" id="addCustomMessage.input.newMessage" /]
-
     <div class="row">
-        [@form.submitButton label="widget.form.buttonLabel.add" webflowEvent="add" /]              
-        [@form.cancelButton label="widget.form.buttonLabel.cancel" webflowEvent="cancel"  /]
+        [@form.submitButton label="widget.form.buttonLabel.add" webflowEvent="add" /]
+        [@form.submitButton label="widget.form.buttonLabel.remove" webflowEvent="remove" /]
+        [@form.submitButton label="widget.form.buttonLabel.edit" webflowEvent="edit" /]                
+        [@form.cancelButton label="widget.form.buttonLabel.done" webflowEvent="done"  /]
     </div>
 </form>
   </div>

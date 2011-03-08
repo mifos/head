@@ -127,7 +127,19 @@ public class MessageCustomizerServiceFacadeWebTier implements MessageCustomizerS
 	
 	@Override
 	public void addCustomMessage(String oldMessage, String newMessage) {
-		messageCustomizerDao.addCustomMessage(oldMessage, newMessage);
+        try {
+            this.transactionHelper.startTransaction();
+
+    		messageCustomizerDao.addCustomMessage(oldMessage, newMessage);
+            
+            this.transactionHelper.commitTransaction();
+        } catch (Exception e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            this.transactionHelper.closeSession();
+        }		
+	
 	}
 
 	@Override
