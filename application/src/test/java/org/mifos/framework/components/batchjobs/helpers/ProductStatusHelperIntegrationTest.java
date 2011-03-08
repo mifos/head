@@ -39,6 +39,7 @@ import junit.framework.Assert;
 import org.hibernate.SessionException;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingTestUtils;
@@ -61,6 +62,8 @@ import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobInstance;
 import org.springframework.batch.core.explore.JobExplorer;
+
+@Ignore
 public class ProductStatusHelperIntegrationTest extends MifosIntegrationTestCase {
 
     MifosScheduler mifosScheduler;
