@@ -382,7 +382,7 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
             userForUpdate.updateUserDetails(personnel.getFirstName(), personnel.getMiddleName(), personnel
                     .getSecondLastName(), personnel.getLastName(), personnel.getEmailId(), personnel.getGender(),
                     personnel.getMaritalStatus(), preferredLocaleId, personnelStatus, address, personnel.getTitle(),
-                    personnelLevel, selectedRoles, personnel.getPassword());
+                    personnelLevel, selectedRoles, personnel.getPassword(), newOffice);
 
             this.personnelDao.save(userForUpdate);
             transactionHelper.commitTransaction();
@@ -461,7 +461,7 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
                 }
             } else if (oldUserDetails.isNonLoanOfficer()
                     && newLevel.equals(PersonnelLevel.LOAN_OFFICER)
-                    && !newOffice.isNotBranch()) {
+                    && newOffice.isNotBranch()) {
 
                 Object values[] = new Object[1];
                 values[0] = oldUserDetails.getGlobalPersonnelNum();

@@ -542,7 +542,8 @@ public class PersonnelBO extends AbstractBusinessObject {
 
     public void updateUserDetails(String firstName, String middleName, String secondLastName, String lastName,
             String email, Integer gender, Integer maritalStatus,
-            Short preferredLocale, PersonnelStatusEntity personnelStatus, Address address, Integer title, PersonnelLevelEntity personnelLevel, List<RoleBO> roles, String password) {
+            Short preferredLocale, PersonnelStatusEntity personnelStatus, Address address, Integer title,
+            PersonnelLevelEntity personnelLevel, List<RoleBO> roles, String password, OfficeBO newOffice) {
 
         this.emailId = email;
         this.personnelDetails.updateNameDetails(firstName, middleName, secondLastName, lastName);
@@ -554,6 +555,10 @@ public class PersonnelBO extends AbstractBusinessObject {
             this.title = null;
         } else {
             this.title = title;
+        }
+
+        if (this.isOfficeDifferent(newOffice)) {
+            this.office = newOffice;
         }
 
         this.preferredLocale = new SupportedLocalesEntity(preferredLocale);
