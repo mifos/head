@@ -58,8 +58,8 @@ import java.util.List;
 import java.util.Random;
 
 @SuppressWarnings("PMD")
-@ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(singleThreaded = true, groups = {"loan","acceptance","ui"})
+@ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
+@Test(singleThreaded = true, groups = {"loan", "acceptance", "ui", "no_db_unit"})
 public class CreateClientLoanAccountTest extends UiTestCaseBase {
 
     private LoanTestHelper loanTestHelper;
@@ -93,7 +93,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
-    @Test(singleThreaded = true, groups = {"loan","acceptance","ui", "smoke"})
+    @Test(singleThreaded = true, groups = {"loan", "acceptance", "ui", "smoke"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void newWeeklyClientLoanAccountWithQuestionGroups() throws Exception {
         String questionGroupTitle = "QG1" + random.nextInt(100);
@@ -123,7 +123,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // add grace period of 10 to "Flat Interest Loan Product With Fee"
     public void newWeeklyClientLoanAccountWithModifyErrors() throws Exception {
-        setAppDate(new DateTime(2011,3,7,15,0,0,0));
+        setAppDate(new DateTime(2011, 3, 7, 15, 0, 0, 0));
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("client1 lastname");
         searchParameters.setLoanProduct("Flat Interest Loan Product With Fee");
@@ -140,7 +140,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         editPreviewLoanAccountPage.verifyErrorInForm("Please specify valid Grace period for repayments. Grace period for repayments should be a value less than 12");
     }
 
-    @Test(singleThreaded = true, groups = {"loan","acceptance","ui"})
+    @Test(singleThreaded = true, groups = {"loan", "acceptance", "ui"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void newWeeklyClientLoanAccountWithDateTypeCustomField() throws Exception {
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
@@ -163,7 +163,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
     public void newMonthlyClientLoanAccountWithMeetingOnSpecificDayOfMonth() throws Exception {
         //Given
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = new DateTime(2011,2,1,13,0,0,0);
+        DateTime targetTime = new DateTime(2011, 2, 1, 13, 0, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
 
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
@@ -178,14 +178,14 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         getLoanStatusActive(loanId);
     }
 
-    @Test(singleThreaded = true, groups = {"loan","acceptance","ui"})
+    @Test(singleThreaded = true, groups = {"loan", "acceptance", "ui"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     //http://mifosforge.jira.com/browse/MIFOSTEST-308
     // (1,4,'test' to (1,4,'test','2011-02-01'
     public void newMonthlyClientLoanAccountWithMeetingOnSameWeekAndWeekdayOfMonth() throws Exception {
         //Given
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = new DateTime(2011,2,1,13,0,0,0);
+        DateTime targetTime = new DateTime(2011, 2, 1, 13, 0, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
 
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
@@ -202,7 +202,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(singleThreaded = true, groups = {"loan","acceptance","ui"})
+    @Test(singleThreaded = true, groups = {"loan", "acceptance", "ui"})
     public void newMonthlyClientLoanAccountWithZeroInterestRate() throws Exception {
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("Client - Mary Monthly");
@@ -216,7 +216,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled=false)
+    @Test(enabled = false)
     //IGNORED BY VIVEK SINGH
     public void tryClientLoanAccountWithAdditionalFees() throws Exception {
         setDateAsToday();
@@ -249,11 +249,11 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
      *
      * @throws Exception
      */
-    @Test(enabled=false) // TODO js - temporarily disabled broken test (blocked by MIFOS-4792)
+    @Test(enabled = false) // TODO js - temporarily disabled broken test (blocked by MIFOS-4792)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createLoanAccountsWithRestrictedProductsMix() throws Exception {
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = new DateTime(2011,1,24,15,0,0,0);
+        DateTime targetTime = new DateTime(2011, 1, 24, 15, 0, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
 
         CreateLoanAccountSearchParameters searchParams1 = new CreateLoanAccountSearchParameters();
@@ -267,7 +267,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         disburseParams.setDisbursalDateDD("24");
         disburseParams.setDisbursalDateMM("01");
         disburseParams.setDisbursalDateYYYY("2011");
-        String error = "The loan could not be disbursed as "+searchParams1.getLoanProduct()+" and "+searchParams2.getLoanProduct()+" are not allowed to co-exist";
+        String error = "The loan could not be disbursed as " + searchParams1.getLoanProduct() + " and " + searchParams2.getLoanProduct() + " are not allowed to co-exist";
 
         LoanAccountPage loanAccountPage = loanTestHelper.createTwoLoanAccountsWithMixedRestricedPoducts(searchParams1, searchParams2, disburseParams);
 
@@ -283,7 +283,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
      *
      * @throws Exception
      */
-    @Test(enabled=false) // TODO js - temporarily disabled broken test (blocked by MIFOS-4792)
+    @Test(enabled = false) // TODO js - temporarily disabled broken test (blocked by MIFOS-4792)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createMultipleLoanAccountsWithRestrictedProductsMix() throws Exception {
         setDateAsToday();
@@ -303,7 +303,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         disburseParams.setDisbursalDateDD("24");
         disburseParams.setDisbursalDateMM("01");
         disburseParams.setDisbursalDateYYYY("2011");
-        String error = "The loan could not be disbursed as "+multipleAccParameters1.getLoanProduct()+" and "+multipleAccParameters2.getLoanProduct()+" are not allowed to co-exist";
+        String error = "The loan could not be disbursed as " + multipleAccParameters1.getLoanProduct() + " and " + multipleAccParameters2.getLoanProduct() + " are not allowed to co-exist";
         String[] clients = new String[3];
         clients[0] = "Stu1233265941610 Client1233265941610";
         clients[1] = "Stu1233265958456 Client1233265958456";
@@ -313,11 +313,11 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         List<String> accountNumbers = createLoanAccountsSuccessPage.verifyAndGetLoanAccountNumbers(clients.length);
         LoanAccountPage loanAccountPage = createLoanAccountsSuccessPage.selectLoansAndNavigateToLoanAccountPage(0);
 
-        for(int i = 0; i < accountNumbers.size(); i++) {
-            if(i > 0) {
+        for (int i = 0; i < accountNumbers.size(); i++) {
+            if (i > 0) {
                 loanAccountPage = loanAccountPage.navigateToClientsAndAccountsUsingHeaderTab()
-                    .searchForClient(accountNumbers.get(i))
-                    .navigateToLoanAccountSearchResult("Account # "+accountNumbers.get(i));
+                        .searchForClient(accountNumbers.get(i))
+                        .navigateToLoanAccountSearchResult("Account # " + accountNumbers.get(i));
             }
             loanAccountPage.changeAccountStatusToAccepted();
             loanAccountPage.tryNavigatingToDisburseLoanWithError();
@@ -338,12 +338,13 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
      * Verify loan product created with default loan amount and number of installments
      * are "same for all loans" can be used to create new loan accounts with the correct default amounts.
      * http://mifosforge.jira.com/browse/MIFOSTEST-97
+     *
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     //CreateClient: weekly, Stu12332659912419 Client12332659912419, monday, activate
     public void verifyAccountFromProductInstallmentsSame() throws Exception {
-        setAppDate(new DateTime(2011,1,24,15,0,0,0));
+        setAppDate(new DateTime(2011, 1, 24, 15, 0, 0, 0));
 
         DefineNewLoanProductPage.SubmitFormParameters productParams = FormParametersHelper.getWeeklyLoanProductParameters();
         productParams.setOfferingName("ProdTest97");
@@ -372,18 +373,19 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         loanAccountPage.verifyPrincipalBalance("5000.0");
         loanTestHelper.applyOneChargeOnLoanAccount(chargeParameters);
         loanAccountPage.navigateToViewInstallmentDetails()
-            .verifyInstallmentAmount(4, 1, "599.0");
+                .verifyInstallmentAmount(4, 1, "599.0");
     }
 
     /**
      * Verify the loan product created with default number of installments
      * by loan cycle can be used to create new loans accounts.
      * http://mifosforge.jira.com/browse/MIFOSTEST-99
+     *
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyCreatingLoanAccountsOnProductWithLoanCycles() throws Exception {
-        setAppDate(new DateTime(2011,1,24,15,0,0,0));
+        setAppDate(new DateTime(2011, 1, 24, 15, 0, 0, 0));
 
         DefineNewLoanProductPage.SubmitFormParameters productParams = FormParametersHelper.getWeeklyLoanProductParameters();
         productParams.setOfferingName("ProdTest99");
@@ -393,12 +395,12 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         productParams.setDefaultLoanAmount("5000");
         productParams.setCalculateInstallments(SubmitFormParameters.BY_LOAN_CYCLE);
         String[][] cycleInstallments = {
-            {"26", "52", "52"},
-            {"20", "30", "30"},
-            {"15", "25", "25"},
-            {"10", "15", "15"},
-            {"5", "10", "10"},
-            {"1", "5", "5"}
+                {"26", "52", "52"},
+                {"20", "30", "30"},
+                {"15", "25", "25"},
+                {"10", "15", "15"},
+                {"5", "10", "10"},
+                {"1", "5", "5"}
         };
         productParams.setCycleInstallments(cycleInstallments);
         CreateLoanAccountSearchParameters searchParams = new CreateLoanAccountSearchParameters();
@@ -445,7 +447,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         return loanAccountPage;
     }
 
-    private void getLoanStatusActive(String loanId){
+    private void getLoanStatusActive(String loanId) {
         EditLoanAccountStatusParameters editLoanAccountStatusParameters = new EditLoanAccountStatusParameters();
         editLoanAccountStatusParameters.setStatus(EditLoanAccountStatusParameters.APPROVED);
         editLoanAccountStatusParameters.setNote("test");

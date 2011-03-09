@@ -304,6 +304,7 @@
                 <version>2.4.3</version>
                 <configuration>
                     <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                    <runOrder>alphabetical</runOrder>
                     <skip>true</skip>
                     <systemProperties>
                         <property>
