@@ -14,16 +14,31 @@
         <transition on="remove" to="selectCustomMessageStep">
             <evaluate expression="customizeMessagesController.removeCustomMessage(customMessageSelectFormBean)" />        
         </transition>
+        <transition on="edit" to="editCustomMessageStep">
+            <evaluate expression="customizeMessagesController.getCustomMessage(customMessageSelectFormBean)" result="flowScope.customMessage"/>        
+        </transition>
         <transition on="done" to="done" validate="false" bind="false" history="invalidate"/>
     </view-state>
 
     <view-state id="addCustomMessageStep" view="customMessagesAdd" model="customMessageFormBean">
         <transition on="add" to="selectCustomMessageStep" >
-            <evaluate expression="customizeMessagesController.addCustomMessage(customMessageFormBean)" />
+            <evaluate expression="customizeMessagesController.addOrUpdateCustomMessage(customMessageFormBean)" />
         </transition>
         
         <transition on="cancel" to="selectCustomMessageStep" validate="false" bind="false"/>
     </view-state>
+
+    <view-state id="editCustomMessageStep" view="customMessagesEdit" model="customMessageFormBean">
+        <on-entry>
+            <evaluate expression="customMessageFormBean.setOldMessage(customMessage.getOldMessage())" />
+            <evaluate expression="customMessageFormBean.setNewMessage(customMessage.getNewMessage())" />
+        </on-entry>    
+
+        <transition on="submit" to="selectCustomMessageStep" >
+            <evaluate expression="customizeMessagesController.addOrUpdateCustomMessage(customMessageFormBean)" />
+        </transition>
         
+        <transition on="cancel" to="selectCustomMessageStep" validate="false" bind="false"/>
+    </view-state>        
     <end-state id="done" view="externalRedirect:contextRelative:/AdminAction.do?method=load"/>
 </flow>

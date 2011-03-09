@@ -18,19 +18,32 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.messagecustomizer;
+package org.mifos.application.admin.servicefacade;
 
-import java.util.Map;
 
-public interface MessageCustomizerDao {
-
-	public Map<String,String> getCustomMessages();
+public class CustomMessageDto {
+	private String oldMessage;
+	private String newMessage;
 	
-	public void setCustomMessages(Map<String,String> messageMap);
 	
-	public CustomMessage findCustomMessageByOldMessage(final String oldMessage);
-
-	void addOrUpdateCustomMessage(String oldMessage, String newMessage);
-
-	void removeCustomMessage(String oldMessage);	
+	public CustomMessageDto(String oldMessage, String newMessage) {
+		super();
+		this.oldMessage = oldMessage;
+		this.newMessage = newMessage;
+	}
+	
+	public String getOldMessage() {
+		return oldMessage;
+	}
+	public void setOldMessage(String oldMessage) {
+		this.oldMessage = oldMessage;
+	}
+	public String getNewMessage() {
+		return newMessage;
+	}
+	public void setNewMessage(String newMessage) {
+		this.newMessage = newMessage;
+	}
+	
+	
 }

@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.apache.commons.lang.StringUtils;
+import org.mifos.application.admin.servicefacade.CustomMessageDto;
 import org.mifos.application.admin.servicefacade.MessageCustomizerServiceFacade;
 import org.mifos.dto.domain.AccountStatusesLabelDto;
 import org.mifos.dto.domain.ConfigurableLookupLabelDto;
@@ -82,12 +83,19 @@ public class CustomizeMessagesController {
         return ftlMessageMap;
     }
 
+    public CustomMessageFormBean getCustomMessage(CustomMessageSelectFormBean customMessageSelectFormBean) {
+    	CustomMessageDto customMessageDto = messageCustomizerServiceFacade.getCustomMessageDto(customMessageSelectFormBean.getMessage());
+    	CustomMessageFormBean customMessageFormBean = new CustomMessageFormBean();
+    	customMessageFormBean.setOldMessage(customMessageDto.getOldMessage());
+    	customMessageFormBean.setNewMessage(customMessageDto.getNewMessage());
+    	return customMessageFormBean;
+    }
     
-    public void addCustomMessage(CustomMessageFormBean customMessageFormBean) {
-    	messageCustomizerServiceFacade.addCustomMessage(customMessageFormBean.getOldMessage(), 
+    public void addOrUpdateCustomMessage(CustomMessageFormBean customMessageFormBean) {
+    	messageCustomizerServiceFacade.addOrUpdateCustomMessage(customMessageFormBean.getOldMessage(), 
     			customMessageFormBean.getNewMessage());
     }
-
+    
     public void removeCustomMessage(CustomMessageSelectFormBean customMessageFormBean) {
     	messageCustomizerServiceFacade.removeCustomMessage(customMessageFormBean.getMessage());
     }    

@@ -24,6 +24,7 @@ import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import org.mifos.application.admin.servicefacade.CustomMessageDto;
 import org.mifos.application.admin.servicefacade.MessageCustomizerServiceFacade;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.dto.domain.AccountStatusesLabelDto;
@@ -34,8 +35,6 @@ import org.mifos.dto.screen.ConfigureApplicationLabelsDto;
 import org.mifos.framework.components.mifosmenu.MenuRepository;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.omg.PortableInterceptor.ACTIVE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 
@@ -126,11 +125,11 @@ public class MessageCustomizerServiceFacadeWebTier implements MessageCustomizerS
 	}
 	
 	@Override
-	public void addCustomMessage(String oldMessage, String newMessage) {
+	public void addOrUpdateCustomMessage(String oldMessage, String newMessage) {
         try {
             this.transactionHelper.startTransaction();
 
-    		messageCustomizerDao.addCustomMessage(oldMessage, newMessage);
+    		messageCustomizerDao.addOrUpdateCustomMessage(oldMessage, newMessage);
             
             this.transactionHelper.commitTransaction();
         } catch (Exception e) {
@@ -139,6 +138,8 @@ public class MessageCustomizerServiceFacadeWebTier implements MessageCustomizerS
         } finally {
             this.transactionHelper.closeSession();
         }		
+		// legacy menu code caches strings, so force the menus to rebuild after a change
+		MenuRepository.getInstance().removeMenuForAllLocale();   
 	
 	}
 
@@ -409,6 +410,13 @@ public class MessageCustomizerServiceFacadeWebTier implements MessageCustomizerS
 		if (!oldMessage.contentEquals(newMessage)) {
 			updateMap.put(stripColon(messageSource.getMessage(key, null, locale)), newMessage);
 		}		
+	}
+
+	@Override
+	public CustomMessageDto getCustomMessageDto(String oldMessage) {
+		CustomMessage customMessage = messageCustomizerDao.findCustomMessageByOldMessage(oldMessage);
+		
+		return new CustomMessageDto(customMessage.getOldMessage(), customMessage.getNewMessage());
 	}
 
 }
