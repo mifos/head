@@ -887,8 +887,8 @@ public class LoanTestHelper {
         loanAccountPage.verifyStatus(LoanAccountPage.ACTIVE);
     }
 
-    public void createLoanAccount(String clientName, String loanProductName) {
-        navigateToLoanAccountEntryPage(setLoanSearchParameters(clientName,loanProductName)).
+    public LoanAccountPage createLoanAccount(String clientName, String loanProductName) {
+        return navigateToLoanAccountEntryPage(setLoanSearchParameters(clientName,loanProductName)).
                 clickContinueAndNavigateToLoanAccountConfirmationPage().
                 navigateToLoanAccountDetailsPage();
     }

@@ -22,8 +22,6 @@ package org.mifos.test.acceptance.questionnaire;
 import java.util.Collections;
 import java.util.Set;
 import org.mifos.test.acceptance.framework.client.QuestionGroup;
-import org.mifos.test.acceptance.framework.loan.EditLoanAccountStatusParameters;
-import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPage;
 import org.mifos.test.acceptance.framework.questionnaire.EditQuestionPage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionDetailPage;
@@ -61,6 +59,7 @@ import java.util.Map;
 import org.mifos.test.acceptance.framework.client.ClientCloseReason;
 import org.mifos.test.acceptance.framework.client.ClientStatus;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
+import org.mifos.test.acceptance.framework.client.CreateClientEnterPersonalDataPage;
 import org.mifos.test.acceptance.framework.group.EditCustomerStatusParameters;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 import org.mifos.test.acceptance.framework.office.OfficeParameters;
@@ -94,10 +93,12 @@ public class QuestionGroupTest extends UiTestCaseBase {
     private OfficeHelper officeHelper;
     private QuestionGroupTestHelper questionGroupTestHelper;
     private ClientTestHelper clientTestHelper;
-    private LoanTestHelper loanTestHelper;
     private static final String START_DATA_SET = "acceptance_small_003_dbunit.xml";
     private String qgTitle1, qgTitle2, qgTitle3;
     private String qTitle1, qTitle2, qTitle3, qTitle4, qTitle5;
+    private static final String question1 = "question 1";
+    private static final String question2 = "question 2";
+    private static final String question3 = "question 3";
     private static final String TITLE_MISSING = "Please specify Question Group title.";
     private static final String APPLIES_TO_MISSING = "Please choose a valid 'Applies To' value.";
     private static final String SECTION_MISSING = "Please add at least one section.";
@@ -131,7 +132,6 @@ public class QuestionGroupTest extends UiTestCaseBase {
         appLauncher = new AppLauncher(selenium);
         questionGroupTestHelper = new QuestionGroupTestHelper(selenium);
         clientTestHelper = new ClientTestHelper(selenium);
-        loanTestHelper = new LoanTestHelper(selenium);
         questionGroupInstancesOfClient = new HashMap<Integer, QuestionGroup>();
         qgTitle1 = "QuestionGroup1 " + System.currentTimeMillis();
         qgTitle2 = "QuestionGroup2 " + System.currentTimeMillis();
@@ -206,6 +206,7 @@ public class QuestionGroupTest extends UiTestCaseBase {
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled=false)
     public void testChangeLog() throws Exception{
         //Given
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_016_dbunit.xml", dataSource, selenium);
@@ -415,39 +416,39 @@ public class QuestionGroupTest extends UiTestCaseBase {
      * http://mifosforge.jira.com/browse/MIFOSTEST-701
      * @throws Exception
      */
-    @Test(enabled = false) // TODO js - investigate why this fails on master
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void attachingQuestionGroupToMultipleFlowsTest() throws Exception{
         //Given
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_016_dbunit.xml", dataSource, selenium);
-        questionGroupTestHelper.markQuestionGroupAsInactive("CloseClientQG");
-        questionGroupTestHelper.markQuestionGroupAsInactive("CloseClientQG2");
-        EditLoanAccountStatusParameters params = new EditLoanAccountStatusParameters();
-        params.setCancelReason(EditLoanAccountStatusParameters.CANCEL_REASON_OTHER);
-        params.setNote("TEST");
-        params.setStatus(EditLoanAccountStatusParameters.CANCEL);
-        loanTestHelper.changeLoanAccountStatus("000100000000004", params);
-        loanTestHelper.changeLoanAccountStatus("000100000000005", params);
+        String groupName = "group1";
+        String testClientName = "John Doe701";
+        String questionGroup = "TestQuestionGroup";
+        CreateClientEnterPersonalDataPage.SubmitFormParameters clientParams = new CreateClientEnterPersonalDataPage.SubmitFormParameters();
+        clientParams = clientParams();
+        clientParams.setFirstName("John");
+        clientParams.setLastName("Doe701");
+        clientTestHelper.createNewClient(groupName, clientParams);
+        clientTestHelper.activateClient(testClientName);
+        createQuestions();
         //When
         testValidationAddQuestionGroup();
         Map<String, List<String>> sectionQuestions = new HashMap<String, List<String>>();
-        List<String> questions = new ArrayList<String>();
-        questions.add("Text");
-        questions.add("question 2");
-        questions.add("question 3");
-        sectionQuestions.put("Sec Test", questions);
+        List<String> testQuestions = new ArrayList<String>();
+        testQuestions.add(question1);
+        testQuestions.add(question2);
+        testQuestions.add(question3);
+        sectionQuestions.put("Sec Test", testQuestions);
         CreateQuestionGroupParameters createQuestionGroupParameters = new CreateQuestionGroupParameters();
         createQuestionGroupParameters.setAnswerEditable(true);
-        createQuestionGroupParameters.setTitle("TestQuestionGroup");
+        createQuestionGroupParameters.setTitle(questionGroup);
         createQuestionGroupParameters.setAppliesTo("View Client");
         createQuestionGroupParameters.setAppliesTo("Close Client");
         createQuestionGroupParameters.setExistingQuestions(sectionQuestions);
         questionGroupTestHelper.createQuestionGroup(createQuestionGroupParameters);
         Map<String, String> answers = new HashMap<String, String>();
-        answers.put("Text", "Test - Text");
-        answers.put("question 2", "2");
-        answers.put("question 3", "11/11/2009");
-        ClientViewDetailsPage clientViewDetailsPage = questionGroupTestHelper.attachQuestionGroup(CLIENT, "TestQuestionGroup", asList("Sec Test"), answers);
+        answers.put(question1, "Test - Text");
+        answers.put(question2, "2");
+        answers.put(question3, "11/11/2009");
+        ClientViewDetailsPage clientViewDetailsPage = questionGroupTestHelper.attachQuestionGroup(testClientName, questionGroup, asList("Sec Test"), answers);
         CustomerChangeStatusPage customerChangeStatusPage = clientViewDetailsPage.navigateToCustomerChangeStatusPage();
         EditCustomerStatusParameters customerStatusParameters = new EditCustomerStatusParameters();
         customerStatusParameters.setNote("TEST");
@@ -455,18 +456,19 @@ public class QuestionGroupTest extends UiTestCaseBase {
         customerStatusParameters.setClientCloseReason(ClientCloseReason.TRANSFERRED);
         QuestionResponsePage questionResponsePage = customerChangeStatusPage.changeStatusAndNavigateToQuestionResponsePage(customerStatusParameters);
         //Then
-        questionResponsePage.verifyQuestionsExists(questions.toArray(new String[questions.size()]));
+        questionResponsePage.verifyQuestionsExists(testQuestions.toArray(new String[testQuestions.size()]));
         //When
         clientViewDetailsPage = questionResponsePage.cancel();
         ViewQuestionResponseDetailPage viewQuestionResponseDetailPage = clientViewDetailsPage.navigateToViewAdditionalInformationPage();
         //Then
-        viewQuestionResponseDetailPage.verifyQuestionsDoesnotappear(questions.toArray(new String[questions.size()]));
+        viewQuestionResponseDetailPage.verifyQuestionsDoesnotappear(testQuestions.toArray(new String[testQuestions.size()]));
         clientViewDetailsPage = viewQuestionResponseDetailPage.navigateToClientViewDetailsPage();
         answers = new HashMap<String, String>();
-        answers.put("Text", "Test - Text - Edit");
-        answers.put("question 2", "22");
+        answers.put(question1, "Test - Text - Edit");
+        answers.put(question2, "22");
         questionGroupInstancesOfClient = clientViewDetailsPage.getQuestionGroupInstances();
         questionGroupTestHelper.editResponses(clientViewDetailsPage, latestInstanceId(questionGroupInstancesOfClient), answers);
+        questionGroupTestHelper.markQuestionGroupAsInactive(questionGroup);
     }
 
     //http://mifosforge.jira.com/browse/MIFOSTEST-660
@@ -785,6 +787,41 @@ public class QuestionGroupTest extends UiTestCaseBase {
     public Integer latestInstanceId(Map<Integer, QuestionGroup> questionGroups) {
         Set<Integer> keys = questionGroups.keySet();
         return Collections.max(keys);
+    }
+    
+    private CreateClientEnterPersonalDataPage.SubmitFormParameters clientParams() {
+        CreateClientEnterPersonalDataPage.SubmitFormParameters clientParams = new CreateClientEnterPersonalDataPage.SubmitFormParameters();
+        clientParams.setSalutation(CreateClientEnterPersonalDataPage.SubmitFormParameters.MRS);
+        clientParams.setFirstName("Test");
+        clientParams.setLastName("Test");
+        clientParams.setDateOfBirthDD("12");
+        clientParams.setDateOfBirthMM("03");
+        clientParams.setDateOfBirthYYYY("1956");
+        clientParams.setGender(CreateClientEnterPersonalDataPage.SubmitFormParameters.MALE);
+        clientParams.setPovertyStatus(CreateClientEnterPersonalDataPage.SubmitFormParameters.POOR);
+        clientParams.setSpouseNameType(CreateClientEnterPersonalDataPage.SubmitFormParameters.FATHER);
+        clientParams.setSpouseFirstName("TestFatherName");
+        clientParams.setSpouseLastName("TestFatherLastName");
+        return clientParams;
+    }
+    
+    private void createQuestions() {
+        List<CreateQuestionParameters> questions = new ArrayList<CreateQuestionParameters>();
+        CreateQuestionParameters q1 = new CreateQuestionParameters();
+        q1.setType(CreateQuestionParameters.TYPE_FREE_TEXT);
+        q1.setText(question1);
+        questions.add(q1);
+        CreateQuestionParameters q2 = new CreateQuestionParameters();
+        q2.setType(CreateQuestionParameters.TYPE_NUMBER);
+        q2.setText(question2);
+        q2.setNumericMin(1);
+        q2.setNumericMax(100);
+        questions.add(q2);
+        CreateQuestionParameters q3 = new CreateQuestionParameters();
+        q3.setType(CreateQuestionParameters.TYPE_DATE);
+        q3.setText(question3);
+        questions.add(q3);
+        questionGroupTestHelper.createQuestions(questions);
     }
 }
 
