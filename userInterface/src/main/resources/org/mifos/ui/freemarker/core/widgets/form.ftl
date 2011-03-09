@@ -47,7 +47,9 @@ Renders an HTML select element.
 [#macro singleSelectWithPrompt path options id="" selectPrompt="" attributes=""]
     [@spring.bind path/]
     <select id="${id}" name="${spring.status.expression}" ${attributes}>
-        <option value="" [@spring.checkSelected ""/]>[@spring.message "${selectPrompt}"/]</option>
+    	[#if selectPrompt?length > 0]
+        	<option value="" [@spring.checkSelected ""/]>[@spring.message "${selectPrompt}"/]</option>
+        [/#if]
         [#if options?is_hash]
             [#list options?keys as value]
             <option value="${value?html}"[@spring.checkSelected value/]>${options[value]?html}</option>

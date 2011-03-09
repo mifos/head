@@ -143,6 +143,22 @@ public class MessageCustomizerServiceFacadeWebTier implements MessageCustomizerS
 	}
 
 	@Override
+	public void removeCustomMessage(String oldMessage) {
+        try {
+            this.transactionHelper.startTransaction();
+
+    		messageCustomizerDao.removeCustomMessage(oldMessage);
+            
+            this.transactionHelper.commitTransaction();
+        } catch (Exception e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            this.transactionHelper.closeSession();
+        }		
+	
+	}	
+	@Override
 	public Map<String, String> retrieveCustomMessages() {
 	    return messageCustomizerDao.getCustomMessages();    	
 	}

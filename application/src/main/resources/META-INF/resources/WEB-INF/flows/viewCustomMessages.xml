@@ -4,12 +4,16 @@
     xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
 
     <var name="customMessageFormBean" class="org.mifos.ui.core.controller.CustomMessageFormBean" />
+    <var name="customMessageSelectFormBean" class="org.mifos.ui.core.controller.CustomMessageSelectFormBean" />
 
-    <view-state id="selectCustomMessageStep" view="customMessagesView">
+    <view-state id="selectCustomMessageStep" view="customMessagesView" model="customMessageSelectFormBean">
         <on-entry>
-            <evaluate expression="customizeMessagesController.retrieveCustomMessages()" result="flowScope.customMessagesMap" />
+            <evaluate expression="customizeMessagesController.retrieveCustomMessagesMap()" result="flowScope.customMessagesMap" />
         </on-entry>    
         <transition on="add" to="addCustomMessageStep" validate="false" bind="false"/>
+        <transition on="remove" to="selectCustomMessageStep">
+            <evaluate expression="customizeMessagesController.removeCustomMessage(customMessageSelectFormBean)" />        
+        </transition>
         <transition on="done" to="done" validate="false" bind="false" history="invalidate"/>
     </view-state>
 

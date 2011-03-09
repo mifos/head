@@ -72,7 +72,8 @@ public class MessageCustomizerDaoHibernate implements MessageCustomizerDao {
     	genericDao.createOrUpdate(new CustomMessage(oldMessage, newMessage));		
 	}
 
-	private void removeCustomMessage(String oldMessage) {
+	@Override
+	public void removeCustomMessage(String oldMessage) {
 		CustomMessage message = findCustomMessageByOldMessage(oldMessage);
 		
 		if (message != null) {

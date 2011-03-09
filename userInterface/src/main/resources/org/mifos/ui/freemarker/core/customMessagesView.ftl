@@ -24,12 +24,17 @@
   <div class=" content">
   <span id="page.id" title="customizeMessages"></span>
 
+<form action="${flowExecutionUrl}" method="post" class="one-column">
+    <fieldset>
+        [@form.singleSelectWithPrompt path="customMessageSelectFormBean.message" options=customMessagesMap selectPrompt="" attributes="size=10, style=width:200px;"/]
+    </fieldset>
+<!--
 	<select size=10>
 [#list customMessagesMap?keys as key]
     <option value="${key}">${key} > ${customMessagesMap[key]}</option>
 [/#list]
 	</select>
-<form action="${flowExecutionUrl}" method="post" class="webflow-controls centered">
+-->
     <div class="row">
         [@form.submitButton label="widget.form.buttonLabel.add" webflowEvent="add" /]
         [@form.submitButton label="widget.form.buttonLabel.remove" webflowEvent="remove" /]
