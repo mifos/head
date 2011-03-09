@@ -153,6 +153,7 @@ import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.LoanAccountDetailsDto;
 import org.mifos.dto.domain.LoanActivityDto;
+import org.mifos.dto.domain.LoanCreationInstallmentDto;
 import org.mifos.dto.domain.LoanInstallmentDetailsDto;
 import org.mifos.dto.domain.LoanPaymentDto;
 import org.mifos.dto.domain.MeetingDto;
@@ -532,10 +533,19 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         LoanOfferingBO loanOffering = this.loanProductDao.findById(productId);
 
         if (loanOffering.isVariableInstallmentsAllowed()) {
+            List<LoanCreationInstallmentDto> dtoInstallments = new ArrayList<LoanCreationInstallmentDto>();
             List<RepaymentScheduleInstallment> installments = getInstallments(loanActionForm,request);
+            for (RepaymentScheduleInstallment repaymentScheduleInstallment : installments) {
+                LoanCreationInstallmentDto installmentDto = new LoanCreationInstallmentDto(repaymentScheduleInstallment.getInstallment(), new LocalDate(repaymentScheduleInstallment.getDueDateValue()), 
+                        repaymentScheduleInstallment.getPrincipal().getAmount().doubleValue(), repaymentScheduleInstallment.getInterest().getAmount().doubleValue(), 
+                        repaymentScheduleInstallment.getFees().getAmount().doubleValue(), Double.valueOf("0.0"), repaymentScheduleInstallment.getTotalValue().getAmount().doubleValue());
+                dtoInstallments.add(installmentDto);
+            }
+            
             VariableInstallmentDetailsBO variableInstallmentDetails = loanOffering.getVariableInstallmentDetails();
             java.sql.Date disbursementDate = loanActionForm.getDisbursementDateValue(userContext.getPreferredLocale());
-            Errors errors = loanServiceFacade.validateInputInstallments(disbursementDate, variableInstallmentDetails, installments, loanActionForm.getCustomerIdValue());
+            
+            Errors errors = loanServiceFacade.validateInputInstallments(disbursementDate, variableInstallmentDetails.getMinGapInDays(), variableInstallmentDetails.getMaxGapInDays(), variableInstallmentDetails.getMinInstallmentAmount().getAmount(), dtoInstallments, loanActionForm.getCustomerIdValue());
             ActionErrors actionErrors = getActionErrors(errors);
             
             LoanInstallmentsDto loanInstallmentsDto = createLoanInstallmentDto(loanActionForm, installments);
@@ -563,7 +573,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                         new LoanScheduleGenerationDto(disbursementDate, loanAmount, loanActionForm.getInterestDoubleValue(), installments));
                 // TODO need to figure out a way to avoid putting 'installments' onto session - required for mifostabletag in schedulePreview.jsp
                 setInstallmentsOnSession(request, loanActionForm);
-                actionErrors = getActionErrors(loanServiceFacade.validateInstallmentSchedule(installments, variableInstallmentDetails));
+                actionErrors = getActionErrors(loanServiceFacade.validateInstallmentSchedule(dtoInstallments, variableInstallmentDetails.getMinInstallmentAmount().getAmount()));
                 if (!actionErrors.isEmpty()) {
                     addErrors(request, actionErrors);
                     result = false;

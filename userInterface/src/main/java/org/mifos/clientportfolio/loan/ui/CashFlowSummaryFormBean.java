@@ -23,6 +23,7 @@ package org.mifos.clientportfolio.loan.ui;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.mifos.application.servicefacade.LoanAccountServiceFacade;
@@ -51,6 +52,24 @@ public class CashFlowSummaryFormBean implements Serializable {
     private Double repaymentCapacity;
     private BigDecimal cashFlowTotalBalance;
     
+    // variable installments
+    private List<Date> installments = new ArrayList<Date>();
+    
+    public List<Date> getInstallments() {
+        if (installments.isEmpty()) {
+            installments.add(new Date());
+            installments.add(new Date());
+            installments.add(new Date());
+            installments.add(new Date());
+            installments.add(new Date());
+        }
+        return installments;
+    }
+
+    public void setInstallments(List<Date> installments) {
+        this.installments = installments;
+    }
+
     public CashFlowSummaryFormBean() {
         // constructor
     }

@@ -20,6 +20,7 @@
 
 package org.mifos.application.servicefacade;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -35,8 +36,12 @@ import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
 import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
+import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.config.Localization;
 import org.mifos.customers.persistence.CustomerDao;
+import org.mifos.dto.domain.LoanCreationInstallmentDto;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.platform.validations.Errors;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -62,16 +67,56 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
     }
 
     @Override
-	public Errors validateInputInstallments(Date disbursementDate, VariableInstallmentDetailsBO variableInstallmentDetails,
-                                            List<RepaymentScheduleInstallment> installments, Integer customerId) {
+	public Errors validateInputInstallments(Date disbursementDate, Integer minGapInDays, Integer maxGapInDays,
+            BigDecimal minInstallmentAmount, List<LoanCreationInstallmentDto> dtoInstallments, Integer customerId) {
         Short officeId = customerDao.findCustomerById(customerId).getOfficeId();
-        InstallmentValidationContext context = new InstallmentValidationContext(disbursementDate, variableInstallmentDetails, holidayServiceFacade, officeId);
+        VariableInstallmentDetailsBO variableInstallmentDetails = new VariableInstallmentDetailsBO();
+        variableInstallmentDetails.setMinGapInDays(minGapInDays);
+        variableInstallmentDetails.setMaxGapInDays(maxGapInDays);
+        InstallmentValidationContext context = new InstallmentValidationContext(disbursementDate, variableInstallmentDetails, minInstallmentAmount, holidayServiceFacade, officeId);
+
+        MifosCurrency currency = Money.getDefaultCurrency();
+        Locale locale = Localization.getInstance().getConfiguredLocale();
+        List<RepaymentScheduleInstallment> installments = new ArrayList<RepaymentScheduleInstallment>();
+        
+        for (LoanCreationInstallmentDto dto : dtoInstallments) {
+            Money principal = new Money(currency, dto.getPrincipal());
+            Money interest = new Money(currency, dto.getInterest());
+            Money fees = new Money(currency, dto.getFees());
+            Money miscFees = new Money(currency);
+            Money miscPenalty = new Money(currency);
+            RepaymentScheduleInstallment installment = new RepaymentScheduleInstallment(dto.getInstallmentNumber(), 
+                    dto.getDueDate(), principal, interest, fees, miscFees, miscPenalty, locale);
+            installment.setTotalAndTotalValue(new Money(currency, dto.getTotal()));
+            
+            installments.add(installment);
+        }
+        
         return installmentsValidator.validateInputInstallments(installments, context);
     }
 
     @Override
-    public Errors validateInstallmentSchedule(List<RepaymentScheduleInstallment> installments, VariableInstallmentDetailsBO variableInstallmentDetailsBO) {
-        return installmentsValidator.validateInstallmentSchedule(installments, variableInstallmentDetailsBO);
+    public Errors validateInstallmentSchedule(List<LoanCreationInstallmentDto> dtoInstallments, BigDecimal minInstallmentAmount) {
+        
+        
+        MifosCurrency currency = Money.getDefaultCurrency();
+        Locale locale = Localization.getInstance().getConfiguredLocale();
+        List<RepaymentScheduleInstallment> installments = new ArrayList<RepaymentScheduleInstallment>();
+        
+        for (LoanCreationInstallmentDto dto : dtoInstallments) {
+            Money principal = new Money(currency, dto.getPrincipal());
+            Money interest = new Money(currency, dto.getInterest());
+            Money fees = new Money(currency, dto.getFees());
+            Money miscFees = new Money(currency);
+            Money miscPenalty = new Money(currency);
+            RepaymentScheduleInstallment installment = new RepaymentScheduleInstallment(dto.getInstallmentNumber(), 
+                    dto.getDueDate(), principal, interest, fees, miscFees, miscPenalty, locale);
+            installment.setTotalAndTotalValue(new Money(currency, dto.getTotal()));
+            
+            installments.add(installment);
+        }
+        
+        return installmentsValidator.validateInstallmentSchedule(installments, minInstallmentAmount);
     }
     
     @Override

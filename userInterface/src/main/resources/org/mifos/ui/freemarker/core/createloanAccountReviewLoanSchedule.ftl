@@ -25,6 +25,28 @@
                          "createLoanAccount.flowState.enterAccountInfo",
                          "createLoanAccount.flowState.reviewInstallments", 
                          "createLoanAccount.flowState.reviewAndSubmit"]]
+
+<script type="text/javascript" src="pages/js/jquery/jquery-ui.min.js"></script>
+<script type="text/javascript" src="pages/js/jquery/jquery.datePicker.configuration.js"></script>
+<script type="text/javascript" src="pages/js/jquery/jquery.ui.datepicker.min.js"></script>
+<script type="text/javascript" src="pages/js/jquery/jquery-ui-i18n.js"></script>
+<script type="text/javascript" src="pages/framework/js/CommonUtilities.js"></script>
+<script>
+$(document).ready(function() {
+
+    $(":regex(id, .*\\.[0-9]+)").datepicker({
+        dateFormat: 'dd-M-yy',
+        showOn: "button",
+        buttonImage: "pages/framework/images/mainbox/calendaricon.gif",
+		buttonImageOnly: true
+    });
+  }
+);
+
+$(function() {
+	$.datepicker.setDefaults($.datepicker.regional[""]);
+});
+</script>
                          
 <h1>[@spring.message "createLoanAccount.wizard.title" /] - <span class="standout">[@spring.message "createLoanAccount.reviewInstallments.pageSubtitle" /]</span></h1>
 <p>[@spring.message "createLoanAccount.reviewInstallments.instructions" /]</p>
@@ -70,6 +92,9 @@
 </div>
 <br/>
 
+[#if loanProductReferenceData.variableInstallmentsAllowed]
+<form action="${flowExecutionUrl}" method="post" class="two-columns">
+[/#if]
 <h1><span class="standout">[@spring.message "reviewInstallments.heading" /]</span></h1>
 <table>
 	<tbody>
@@ -81,15 +106,23 @@
 			<th>[@spring.message "reviewInstallments.feesHeading" /]</th>
 			<th>[@spring.message "reviewInstallments.totalHeading" /]</th>
 		</tr>
+		[#assign ind = 0]
 		[#list loanScheduleReferenceData.installments as row]
 		<tr>
 			<td>${row.installmentNumber?string.number}</td>
-			<td>${row.dueDate?date?string.medium}</td>
+			[#if loanProductReferenceData.variableInstallmentsAllowed]
+			[@spring.bind "cashFlowSummaryFormBean.installments[${ind}]"/]
+			<td><input type="text" name="installments[${ind}]" size="10" value="${cashFlowSummaryFormBean.installments[ind]?date?string.medium}" id="installment.dueDate.${ind}" class="date-pick" /></td>
+			[#else]
+			[@spring.bind "cashFlowSummaryFormBean.installments[${ind}]"/]
+			<td><input type="text" name="installments[${ind}]" size="10" value="${cashFlowSummaryFormBean.installments[ind]?date?string.medium}" id="installment.dueDate.${ind}" readonly /></td>
+			[/#if]
 			<td>${row.principal?string.currency}</td>
 			<td>${row.interest?string.currency}</td>
 			<td>${row.fees?string.currency}</td>
 			<td>${row.total?string.currency}</td>
 		</tr>
+		[#assign ind = ind + 1]
 		[/#list]
 	</tbody>
 </table>
@@ -97,7 +130,6 @@
 [#if cashflowSummaryDetails??]
 <br />
 <h1><span class="standout">[@spring.message "cashflow.summary.heading" /]</span></h1>
-
 <table>
 	<tbody>
 		<tr>
@@ -120,11 +152,21 @@
 </table>
 [/#if]
 
-<form action="${flowExecutionUrl}" method="post" class="two-columns">
+[#if loanProductReferenceData.variableInstallmentsAllowed]
 	<div class="row webflow-controls">
+		<input type="submit" id="createloanaccount.validate" class="submit" name="_eventId_validate" value=[@spring.message "widget.form.buttonLabel.validate" /] />
+		<input type="submit" id="continuecreateloanaccount.button.preview" class="submit" style="margin-left: 1em;" name="_eventId_preview" value=[@spring.message "widget.form.buttonLabel.preview" /] />
+        [@form.cancelButton label="widget.form.buttonLabel.cancel" webflowEvent="cancel" /]
+    </div>
+</form>
+[#else]
+<form action="${flowExecutionUrl}" method="post" class="two-columns">
+<div class="row webflow-controls">
         [@form.submitButton label="widget.form.buttonLabel.preview" id="continuecreateloanaccount.button.preview" webflowEvent="preview" /]
         [@form.cancelButton label="widget.form.buttonLabel.cancel" webflowEvent="cancel" /]
     </div>
 </form>
+[/#if]
+	
 <br/>
 [/@layout.webflow]

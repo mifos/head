@@ -1,16 +1,15 @@
 package org.mifos.accounts.loan.business.service.validators;
 
-import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
-import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
-import org.mifos.platform.validations.Errors;
-
+import java.math.BigDecimal;
 import java.util.List;
 
+import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
+import org.mifos.platform.validations.Errors;
+
 public class InstallmentsValidatorImpl implements InstallmentsValidator {
+    
     private InstallmentFormatValidator installmentFormatValidator;
-
     private ListOfInstallmentsValidator listOfInstallmentsValidator;
-
     private InstallmentRulesValidator installmentRulesValidator;
 
     public InstallmentsValidatorImpl() {
@@ -35,9 +34,9 @@ public class InstallmentsValidatorImpl implements InstallmentsValidator {
     }
 
     @Override
-    public Errors validateInstallmentSchedule(List<RepaymentScheduleInstallment> installments, VariableInstallmentDetailsBO variableInstallmentDetailsBO) {
+    public Errors validateInstallmentSchedule(List<RepaymentScheduleInstallment> installments, BigDecimal minInstallmentAmountAllowed) {
         Errors errors = new Errors();
-        errors.addErrors(installmentRulesValidator.validateForMinimumInstallmentAmount(installments, variableInstallmentDetailsBO));
+        errors.addErrors(installmentRulesValidator.validateForMinimumInstallmentAmount(installments, minInstallmentAmountAllowed));
         return errors;
     }
 

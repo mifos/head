@@ -45,7 +45,7 @@ public class RepaymentScheduleInstallmentTest {
     @Test
     public void shouldTestWhetherTotalAmountLessThanSpecifiedAmount() {
         RepaymentScheduleInstallment installment = getRepaymentScheduleInstallment("25-Sep-2010", 1, "178.6", "20.4", "1", "10", "0");
-        assertThat(installment.isTotalAmountLessThan(null), is(false));
+        assertThat(installment.isTotalAmountLessThan(BigDecimal.ZERO), is(false));
         assertThat(installment.isTotalAmountLessThan(asMoney("100")), is(true));
         assertThat(installment.isTotalAmountLessThan(asMoney("5")), is(false));
         assertThat(installment.isTotalAmountLessThan(asMoney("10")), is(false));
@@ -54,7 +54,7 @@ public class RepaymentScheduleInstallmentTest {
     @Test
     public void shouldTestIfFeeWithMiscFeeIsComputedCorrectly(){
         RepaymentScheduleInstallment installment = getRepaymentScheduleInstallment("25-Sep-2010", 1, "178.6", "20.4", "1", "300", "100");
-        assertThat(installment.isTotalAmountLessThan(null), is(false));
+        assertThat(installment.isTotalAmountLessThan(BigDecimal.ZERO), is(false));
         assertThat(installment.getFeesWithMiscFee(),is(asMoney("101")));
         assertThat(installment.getFees(),is(asMoney("1")));
         assertThat(installment.getMiscFees(),is(asMoney("100")));

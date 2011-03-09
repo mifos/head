@@ -7,6 +7,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -87,12 +88,11 @@ public class InstallmentsValidatorTest {
         RepaymentScheduleInstallment installment3 = installmentBuilder.reset(locale).withInstallment(3).withDueDateValue("08-Nov-2010").build();
 
         List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3);
-        VariableInstallmentDetailsBO variableInstallmentDetailsBO = new VariableInstallmentDetailsBO();
-        installmentsValidator.validateInstallmentSchedule(installments, variableInstallmentDetailsBO);
-        verify(installmentRulesValidator).validateForMinimumInstallmentAmount(installments, variableInstallmentDetailsBO);
+        installmentsValidator.validateInstallmentSchedule(installments, BigDecimal.ZERO);
+        verify(installmentRulesValidator).validateForMinimumInstallmentAmount(installments, BigDecimal.ZERO);
     }
 
     private InstallmentValidationContext getValidationContext(Date disbursementDate) {
-        return new InstallmentValidationContext(disbursementDate, new VariableInstallmentDetailsBO(), holidayServiceFacade, officeId);
+        return new InstallmentValidationContext(disbursementDate, new VariableInstallmentDetailsBO(), BigDecimal.ZERO, holidayServiceFacade, officeId);
     }
 }
