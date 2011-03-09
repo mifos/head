@@ -72,6 +72,7 @@ import org.mifos.accounts.loan.util.helpers.LoanPaymentTypes;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
+import org.mifos.accounts.productdefinition.business.LoanAmountSameForAllLoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.NoOfInstallSameForAllLoanBO;
 import org.mifos.accounts.productdefinition.persistence.LoanPrdPersistence;
@@ -125,6 +126,7 @@ import org.mifos.clientportfolio.newloan.domain.LoanInterestCalculatorFactory;
 import org.mifos.clientportfolio.newloan.domain.LoanInterestCalculatorFactoryImpl;
 import org.mifos.clientportfolio.newloan.domain.LoanProductOverridenDetail;
 import org.mifos.clientportfolio.newloan.domain.LoanSchedule;
+import org.mifos.clientportfolio.newloan.domain.LoanScheduleConfiguration;
 import org.mifos.clientportfolio.newloan.domain.LoanScheduleRounder;
 import org.mifos.clientportfolio.newloan.domain.LoanScheduleRounderHelper;
 import org.mifos.clientportfolio.newloan.domain.PrincipalWithInterestGenerator;
@@ -309,7 +311,7 @@ public class LoanBO extends AccountBO implements Loan {
 
     // opening balance loan constructor
     public LoanBO(LoanOfferingBO loanProduct, CustomerBO customer, AccountState loanState, LoanProductOverridenDetail overridenDetail, 
-            LoanSchedule loanSchedule, CreationDetail creationDetail) {
+            MeetingBO repaymentDayMeeting, LoanSchedule loanSchedule, LoanScheduleConfiguration configuration, CreationDetail creationDetail) {
         super(AccountTypes.LOAN_ACCOUNT, loanState, customer, loanSchedule.getRoundedLoanSchedules(), creationDetail);
         this.performanceHistory = new LoanPerformanceHistoryEntity(this);
 
@@ -328,7 +330,7 @@ public class LoanBO extends AccountBO implements Loan {
         this.loanActivityDetails = new ArrayList<LoanActivityEntity>();
         this.rawAmountTotal = loanSchedule.getRawAmount();
         this.loanSummary = buildLoanSummary();
-        // FIXME - keithw - for some reason maxMinNumber of installments is used from loan (and not loan product definition) when retrieving Loan Information
+
         if (!loanProduct.getNoOfInstallSameForAllLoan().isEmpty()) {
             NoOfInstallSameForAllLoanBO maxMinInstall = new ArrayList<NoOfInstallSameForAllLoanBO>(loanProduct.getNoOfInstallSameForAllLoan()).get(0);
             this.maxMinNoOfInstall = new MaxMinNoOfInstall(maxMinInstall.getMaxNoOfInstall(), maxMinInstall.getMinNoOfInstall(), this);
@@ -336,12 +338,25 @@ public class LoanBO extends AccountBO implements Loan {
             this.maxMinNoOfInstall = new MaxMinNoOfInstall(this.noOfInstallments, this.noOfInstallments, this);
         }
         
+        this.maxMinInterestRate = new MaxMinInterestRate(loanProduct.getMaxInterestRate(), loanProduct.getMinInterestRate(), this);
+        
+        if (!loanProduct.getLoanAmountSameForAllLoan().isEmpty()) {
+            LoanAmountSameForAllLoanBO maxMinInstall = new ArrayList<LoanAmountSameForAllLoanBO>(loanProduct.getLoanAmountSameForAllLoan()).get(0);
+            this.maxMinLoanAmount = new MaxMinLoanAmount(maxMinInstall.getMaxLoanAmount(), maxMinInstall.getMinLoanAmount(), this);
+        } else {
+            this.maxMinLoanAmount = new MaxMinLoanAmount(overridenDetail.getLoanAmount().getAmount().doubleValue(), overridenDetail.getLoanAmount().getAmount().doubleValue(), this);
+        }
+
         // legacy
         this.intrestAtDisbursement = Short.valueOf("0"); // false
         this.gracePeriodPenalty = Short.valueOf("0"); // is this used
         this.loanBalance = overridenDetail.getLoanAmount(); // whats this used for? remaining balance?
         try {
-            this.loanMeeting = buildLoanMeeting(customer.getCustomerMeetingValue(), loanProduct.getLoanOfferingMeetingValue(), disbursementDate);
+            if (configuration.isLoanScheduleIndependentOfCustomerMeetingEnabled()) {
+                this.loanMeeting = repaymentDayMeeting;
+            } else {
+                this.loanMeeting = buildLoanMeeting(customer.getCustomerMeetingValue(), loanProduct.getLoanOfferingMeetingValue(), disbursementDate);                
+            }
         } catch (AccountException e) {
             throw new BusinessRuleException(e.getKey());
         }
@@ -544,10 +559,10 @@ public class LoanBO extends AccountBO implements Loan {
     }
     
     public static LoanBO openStandardLoanAccount(LoanOfferingBO loanProduct, CustomerBO customer,
-            LoanSchedule loanSchedule, AccountState loanState, FundBO fund, 
-            LoanProductOverridenDetail overridenDetail, CreationDetail creationDetail) {
+            MeetingBO repaymentDayMeeting, LoanSchedule loanSchedule, AccountState loanState, FundBO fund, 
+            LoanProductOverridenDetail overridenDetail, LoanScheduleConfiguration configuration, CreationDetail creationDetail) {
         
-        LoanBO standardLoan = new LoanBO(loanProduct, customer, loanState, overridenDetail, loanSchedule, creationDetail);
+        LoanBO standardLoan = new LoanBO(loanProduct, customer, loanState, overridenDetail, repaymentDayMeeting, loanSchedule, configuration, creationDetail);
         standardLoan.setFund(fund);
         return standardLoan;
     }
@@ -560,7 +575,7 @@ public class LoanBO extends AccountBO implements Loan {
             CustomerBO customer, AccountState loanState, LocalDate firstInstallmentDate, LocalDate currentInstallmentDate,
             Money amountPaidToDate, Integer loanCycle, LoanSchedule loanSchedule, LoanProductOverridenDetail overridenDetail) {
         CreationDetail creationDetail = new CreationDetail(new DateTime(), Integer.valueOf(userContext.getId()));
-        LoanBO openingBalanceLoan = new LoanBO(loanProduct, customer, loanState, overridenDetail, loanSchedule, creationDetail);
+        LoanBO openingBalanceLoan = new LoanBO(loanProduct, customer, loanState, overridenDetail, null, loanSchedule, null, creationDetail);
         openingBalanceLoan.setDisbursementDate(overridenDetail.getDisbursementDate().toDateMidnight().toDate());
 
         return openingBalanceLoan;
@@ -669,10 +684,6 @@ public class LoanBO extends AccountBO implements Loan {
                 return (LoanScheduleEntity) input;
             }
         });
-    }
-
-    public static LoanBO createInstanceForTest(final LoanOfferingBO loanOffering) {
-        return new LoanBO(loanOffering, null, null, null, null, null);
     }
 
     public Integer getBusinessActivityId() {

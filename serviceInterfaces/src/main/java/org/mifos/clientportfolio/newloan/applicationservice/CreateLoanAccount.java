@@ -24,6 +24,7 @@ import java.math.BigDecimal;
 
 import org.joda.time.LocalDate;
 
+@SuppressWarnings("PMD")
 public class CreateLoanAccount {
 
     private final Integer customerId;
@@ -39,11 +40,14 @@ public class CreateLoanAccount {
     private final Integer collateralTypeId;
     private final String collateralNotes;
     private final String externalId;
+    private final boolean repaymentScheduleIndependentOfCustomerMeeting;
+    private final Integer every;
+    private final Integer dayOfWeek;
 
-    @SuppressWarnings("PMD")
     public CreateLoanAccount(Integer customerId, Integer productId, Integer accountState, BigDecimal loanAmount, Double interestRate,
             LocalDate disbursementDate, int numberOfInstallments, int graceDuration, Integer sourceOfFundId,
-            Integer loanPurposeId, Integer collateralTypeId, String collateralNotes, String externalId) {
+            Integer loanPurposeId, Integer collateralTypeId, String collateralNotes, String externalId, 
+            boolean repaymentScheduleIndependentOfCustomerMeeting, Integer every, Integer dayOfWeek) {
         this.customerId = customerId;
         this.productId = productId;
         this.accountState = accountState;
@@ -57,6 +61,9 @@ public class CreateLoanAccount {
         this.collateralTypeId = collateralTypeId;
         this.collateralNotes = collateralNotes;
         this.externalId = externalId;
+        this.repaymentScheduleIndependentOfCustomerMeeting = repaymentScheduleIndependentOfCustomerMeeting;
+        this.every = every;
+        this.dayOfWeek = dayOfWeek;
     }
 
     public Integer getCustomerId() {
@@ -109,5 +116,17 @@ public class CreateLoanAccount {
     
     public String getExternalId() {
         return externalId;
+    }
+    
+    public boolean isRepaymentScheduleIndependentOfCustomerMeeting() {
+        return repaymentScheduleIndependentOfCustomerMeeting;
+    }
+
+    public Integer getEvery() {
+        return every;
+    }
+
+    public Integer getDayOfWeek() {
+        return dayOfWeek;
     }
 }

@@ -24,6 +24,7 @@ import java.math.BigDecimal;
 
 import org.joda.time.LocalDate;
 
+@SuppressWarnings("PMD")
 public class CreateLoanSchedule {
 
     private final Integer customerId;
@@ -33,9 +34,13 @@ public class CreateLoanSchedule {
     private final LocalDate disbursementDate;
     private final int numberOfInstallments;
     private final int graceDuration;
+    private final boolean repaymentIndependentOfCustomerMeetingSchedule;
+    private final Integer every;
+    private final Integer dayOfWeek;
 
     public CreateLoanSchedule(Integer customerId, Integer productId, BigDecimal loanAmount, Double interestRate,
-            LocalDate disbursementDate, int numberOfInstallments, int graceDuration) {
+            LocalDate disbursementDate, int numberOfInstallments, int graceDuration, 
+            boolean repaymentIndependentOfCustomerMeetingSchedule, Integer every, Integer dayOfWeek) {
         this.customerId = customerId;
         this.productId = productId;
         this.loanAmount = loanAmount;
@@ -43,6 +48,9 @@ public class CreateLoanSchedule {
         this.disbursementDate = disbursementDate;
         this.numberOfInstallments = numberOfInstallments;
         this.graceDuration = graceDuration;
+        this.repaymentIndependentOfCustomerMeetingSchedule = repaymentIndependentOfCustomerMeetingSchedule;
+        this.every = every;
+        this.dayOfWeek = dayOfWeek;
     }
 
     public int getGraceDuration() {
@@ -71,5 +79,17 @@ public class CreateLoanSchedule {
 
     public int getNumberOfInstallments() {
         return numberOfInstallments;
+    }
+    
+    public boolean isRepaymentIndependentOfCustomerMeetingSchedule() {
+        return repaymentIndependentOfCustomerMeetingSchedule;
+    }
+
+    public Integer getEvery() {
+        return every;
+    }
+
+    public Integer getDayOfWeek() {
+        return dayOfWeek;
     }
 }

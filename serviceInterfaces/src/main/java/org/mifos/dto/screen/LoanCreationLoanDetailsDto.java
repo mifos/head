@@ -40,7 +40,7 @@ import org.mifos.dto.domain.ValueListElement;
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_NO_SERIALVERSIONID", justification="should disable at filter level and also for pmd - not important for us")
 public class LoanCreationLoanDetailsDto implements Serializable {
 
-    private final boolean isRepaymentIndependentOfMeetingEnabled;
+    private final boolean repaymentIndependentOfMeetingEnabled;
     private final MeetingDto loanOfferingMeetingDetail;
     private final MeetingDto customerMeetingDetail;
     private final List<ValueListElement> loanPurposes;
@@ -55,6 +55,7 @@ public class LoanCreationLoanDetailsDto implements Serializable {
 	private final Map<String, String> collateralOptions;
 	private final Map<String, String> defaultFeeOptions;
 	private final Map<String, String> additionalFeeOptions;
+	private final Map<String, String> daysOfTheWeekOptions;
 	
 	private final List<FundDto> fundDtos;
     private final List<FeeDto> defaultFees;
@@ -76,8 +77,8 @@ public class LoanCreationLoanDetailsDto implements Serializable {
             HashMap<String, String> purposeOfLoanOptions, Map<String, String> defaultFeeOptions, Map<String, String> additionalFeeOptions, List<FeeDto> defaultFees, 
             BigDecimal defaultLoanAmount, BigDecimal maxLoanAmount, BigDecimal minLoanAmount, 
             Double defaultInterestRate, Double maxInterestRate, Double minInterestRate, 
-            Integer defaultNumberOfInstallments, Integer maxNumberOfInstallments, Integer minNumberOfInstallments, LocalDate nextPossibleDisbursementDate) {
-        this.isRepaymentIndependentOfMeetingEnabled = isRepaymentIndependentOfMeetingEnabled;
+            Integer defaultNumberOfInstallments, Integer maxNumberOfInstallments, Integer minNumberOfInstallments, LocalDate nextPossibleDisbursementDate, Map<String, String> daysOfTheWeekOptions) {
+        this.repaymentIndependentOfMeetingEnabled = isRepaymentIndependentOfMeetingEnabled;
         this.loanOfferingMeetingDetail = loanOfferingMeetingDetail;
         this.customerMeetingDetail = customerMeetingDetail;
         this.loanPurposes = loanPurposes;
@@ -97,6 +98,7 @@ public class LoanCreationLoanDetailsDto implements Serializable {
         this.maxNumberOfInstallments = maxNumberOfInstallments;
         this.minNumberOfInstallments = minNumberOfInstallments;
         this.nextPossibleDisbursementDate = nextPossibleDisbursementDate;
+        this.daysOfTheWeekOptions = daysOfTheWeekOptions;
 		populateProductOptions(loanProductDtos);
 		populateFundOptions(fundDtos);
 		this.collateralOptions = collateralOptions;
@@ -122,7 +124,7 @@ public class LoanCreationLoanDetailsDto implements Serializable {
 	}
 
     public boolean isRepaymentIndependentOfMeetingEnabled() {
-        return this.isRepaymentIndependentOfMeetingEnabled;
+        return this.repaymentIndependentOfMeetingEnabled;
     }
 
     public MeetingDto getLoanOfferingMeetingDetail() {
@@ -219,5 +221,9 @@ public class LoanCreationLoanDetailsDto implements Serializable {
     
     public LocalDate getNextPossibleDisbursementDate() {
         return nextPossibleDisbursementDate;
+    }
+    
+    public Map<String, String> getDaysOfTheWeekOptions() {
+        return daysOfTheWeekOptions;
     }
 }

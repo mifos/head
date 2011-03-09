@@ -241,7 +241,9 @@ explanation of the license and how it is applied.
 													</span>
 													<span class="fontnormal">
 														<c:out value="${sessionScope.clientCustActionForm.centerDisplayName}" />
-													</span></tr>
+												</span>
+											</td>
+										</tr>
 										<tr>
 											<td>
 													<span class="fontnormalbold">

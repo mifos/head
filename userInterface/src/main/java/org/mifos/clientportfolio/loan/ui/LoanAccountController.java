@@ -84,6 +84,13 @@ public class LoanAccountController {
     	
     	formBean.setProductId(productId);
     	formBean.setCustomerId(dto.getCustomerDetailDto().getCustomerId());
+    	formBean.setRepaymentScheduleIndependentOfCustomerMeeting(dto.isRepaymentIndependentOfMeetingEnabled());
+    	
+    	if (dto.isRepaymentIndependentOfMeetingEnabled()) {
+    	    formBean.setRepaymentRecursEvery(dto.getCustomerMeetingDetail().getMeetingDetailsDto().getEvery());
+    	    formBean.setRepaymentDayOfWeek(dto.getCustomerMeetingDetail().getMeetingDetailsDto().getRecurrenceDetails().getDayOfWeek());
+    	}
+    	
     	formBean.setAmount(dto.getDefaultLoanAmount());
     	formBean.setMinAllowedAmount(dto.getMinLoanAmount());
     	formBean.setMaxAllowedAmount(dto.getMaxLoanAmount());
@@ -138,7 +145,8 @@ public class LoanAccountController {
                                                     .withMonthOfYear(formBean.getDisbursalDateMonth().intValue())
                                                     .withYearOfEra(formBean.getDisbursalDateYear().intValue());
         
-        CreateLoanSchedule createLoanAccount = new CreateLoanSchedule(customerId, productId, BigDecimal.valueOf(formBean.getAmount().doubleValue()), formBean.getInterestRate().doubleValue(), disbursementDate, formBean.getNumberOfInstallments().intValue(), formBean.getGraceDuration().intValue());
+        CreateLoanSchedule createLoanAccount = new CreateLoanSchedule(customerId, productId, BigDecimal.valueOf(formBean.getAmount().doubleValue()), formBean.getInterestRate().doubleValue(), disbursementDate, 
+                formBean.getNumberOfInstallments().intValue(), formBean.getGraceDuration().intValue(), formBean.isRepaymentScheduleIndependentOfCustomerMeeting(), formBean.getRepaymentRecursEvery(), formBean.getRepaymentDayOfWeek());
         
         return loanAccountServiceFacade.createLoanSchedule(createLoanAccount);
     }
@@ -212,7 +220,10 @@ public class LoanAccountController {
                                                                                     formBean.getLoanPurposeId(),
                                                                                     formBean.getCollateralTypeId(),
                                                                                     formBean.getCollateralNotes(),
-                                                                                    formBean.getExternalId());
+                                                                                    formBean.getExternalId(),
+                                                                                    formBean.isRepaymentScheduleIndependentOfCustomerMeeting(),
+                                                                                    formBean.getRepaymentRecursEvery(),
+                                                                                    formBean.getRepaymentDayOfWeek());
 
         return loanAccountServiceFacade.createLoan(createLoanAccount, loanAccountQuestionGroupFormBean.getQuestionGroups(), loanAccountCashFlow);
     }

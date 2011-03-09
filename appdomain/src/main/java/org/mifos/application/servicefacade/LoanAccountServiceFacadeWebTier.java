@@ -126,6 +126,7 @@ import org.mifos.clientportfolio.newloan.domain.RecurringScheduledEventFactoryIm
 import org.mifos.clientportfolio.newloan.domain.service.LoanScheduleService;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
+import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.Localization;
 import org.mifos.config.ProcessFlowRules;
 import org.mifos.config.business.service.ConfigurationBusinessService;
@@ -537,13 +538,21 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             InterestType interestType = InterestType.fromInt(loanProduct.getInterestTypes().getId().intValue());
             InterestTypesEntity productInterestType = this.loanProductDao.findInterestType(interestType); 
             String interestTypeName = MessageLookup.getInstance().lookup(productInterestType.getLookUpValue());
+
+            Map<String, String> daysOfTheWeekOptions = new LinkedHashMap<String, String>();
+            List<WeekDay> workingDays = new FiscalCalendarRules().getWorkingDays();
+            for (WeekDay workDay : workingDays) {
+                String weekdayName = MessageLookup.getInstance().lookup(workDay.getPropertiesKey());
+                workDay.setWeekdayName(weekdayName);
+                daysOfTheWeekOptions.put(workDay.getValue().toString(), weekdayName);
+            }
             
             return new LoanCreationLoanDetailsDto(isRepaymentIndependentOfMeetingEnabled, loanOfferingMeetingDto,
                     customer.getCustomerMeetingValue().toDto(), loanPurposes, productDto, customerDetailDto, loanProductDtos, 
                     interestTypeName, fundDtos, collateralOptions, purposeOfLoanOptions, 
                     defaultFeeOptions, additionalFeeOptions, defaultFees, BigDecimal.valueOf(eligibleLoanAmount.getDefaultLoanAmount()), 
                     BigDecimal.valueOf(eligibleLoanAmount.getMaxLoanAmount()), BigDecimal.valueOf(eligibleLoanAmount.getMinLoanAmount()), defaultInterestRate, maxInterestRate, minInterestRate,
-                    eligibleNoOfInstall.getDefaultNoOfInstall().intValue(), eligibleNoOfInstall.getMaxNoOfInstall().intValue(), eligibleNoOfInstall.getMinNoOfInstall().intValue(), nextPossibleDisbursementDate);
+                    eligibleNoOfInstall.getDefaultNoOfInstall().intValue(), eligibleNoOfInstall.getMaxNoOfInstall().intValue(), eligibleNoOfInstall.getMinNoOfInstall().intValue(), nextPossibleDisbursementDate, daysOfTheWeekOptions);
 
         } catch (SystemException e) {
             throw new MifosRuntimeException(e);
@@ -629,12 +638,21 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                 createLoanSchedule.getInterestRate(), createLoanSchedule.getNumberOfInstallments(), createLoanSchedule.getGraceDuration());
         
         Integer interestDays = Integer.valueOf(AccountingRules.getNumberOfInterestDays().intValue());
-        boolean loanScheduleIndependentOfCustomerMeetingEnabled = false;
+        boolean loanScheduleIndependentOfCustomerMeetingEnabled = createLoanSchedule.isRepaymentIndependentOfCustomerMeetingSchedule();
+        MeetingBO loanMeeting = loanProduct.getLoanOfferingMeetingValue();
+        if (loanScheduleIndependentOfCustomerMeetingEnabled) {
+            loanMeeting = customer.getCustomerMeetingValue();
+            loanMeeting.getMeetingDetails().setRecurAfter(createLoanSchedule.getEvery().shortValue());
+            
+            WeekDay weekDay = WeekDay.getWeekDay(createLoanSchedule.getDayOfWeek());
+            loanMeeting.getMeetingDetails().getMeetingRecurrence().setWeekDay(weekDay);
+            loanMeeting.setMeetingStartDate(new Date());
+        }
         LoanScheduleConfiguration configuration = new LoanScheduleConfiguration(loanScheduleIndependentOfCustomerMeetingEnabled, interestDays);
         
         // FIXME - keitw - handle fees for loan schedule
         List<AccountFeesEntity> accountFees = new ArrayList<AccountFeesEntity>();
-        LoanSchedule loanSchedule = this.loanScheduleService.generate(loanProduct, customer, overridenDetail, configuration, userContext.getBranchId(), accountFees);
+        LoanSchedule loanSchedule = this.loanScheduleService.generate(loanProduct, customer, loanMeeting, overridenDetail, configuration, userContext.getBranchId(), accountFees);
         
         // translate to DTO form
         List<LoanCreationInstallmentDto> installments = new ArrayList<LoanCreationInstallmentDto>();
@@ -694,7 +712,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         
         // FIXME - keitw - handle fees for loan schedule
         List<AccountFeesEntity> accountFees = new ArrayList<AccountFeesEntity>();
-        LoanSchedule loanSchedule = this.loanScheduleService.generate(loanProduct, customer, overridenDetail, configuration, userContext.getBranchId(), accountFees);
+        LoanSchedule loanSchedule = this.loanScheduleService.generate(loanProduct, customer, loanProduct.getLoanOfferingMeetingValue(), overridenDetail, configuration, userContext.getBranchId(), accountFees);
         
         LoanBO loan = LoanBO.createOpeningBalanceLoan(userContext, loanProduct, customer, loanApprovedState,
                 firstInstallmentDate, openingBalanceLoan.getCurrentInstallmentDate(),
@@ -764,15 +782,27 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                 loanAccountInfo.getInterestRate(), loanAccountInfo.getNumberOfInstallments(), loanAccountInfo.getGraceDuration());
         
         Integer interestDays = Integer.valueOf(AccountingRules.getNumberOfInterestDays().intValue());
-        boolean loanScheduleIndependentOfCustomerMeetingEnabled = false;
+        boolean loanScheduleIndependentOfCustomerMeetingEnabled = loanAccountInfo.isRepaymentScheduleIndependentOfCustomerMeeting();
         LoanScheduleConfiguration configuration = new LoanScheduleConfiguration(loanScheduleIndependentOfCustomerMeetingEnabled, interestDays);
+        
+        MeetingBO repaymentDayMeeting = loanProduct.getLoanOfferingMeetingValue();
+        if (loanScheduleIndependentOfCustomerMeetingEnabled) {
+            repaymentDayMeeting = customer.getCustomerMeetingValue();
+            repaymentDayMeeting.getMeetingDetails().setRecurAfter(loanAccountInfo.getEvery().shortValue());
+            
+            WeekDay weekDay = WeekDay.getWeekDay(loanAccountInfo.getDayOfWeek());
+            repaymentDayMeeting.getMeetingDetails().getMeetingRecurrence().setWeekDay(weekDay);
+            repaymentDayMeeting.setMeetingStartDate(new Date());
+            
+            MeetingBO customerMeeting = customer.getCustomerMeetingValue();
+        }
 
         // FIXME - keitw - handle fees for loan schedule
         List<AccountFeesEntity> accountFees = new ArrayList<AccountFeesEntity>();
-        LoanSchedule loanSchedule = this.loanScheduleService.generate(loanProduct, customer, overridenDetail, configuration, userContext.getBranchId(), accountFees);
+        LoanSchedule loanSchedule = this.loanScheduleService.generate(loanProduct, customer, repaymentDayMeeting, overridenDetail, configuration, userContext.getBranchId(), accountFees);
         
         CreationDetail creationDetail = new CreationDetail(new DateTime(), Integer.valueOf(user.getUserId()));
-        LoanBO loan = LoanBO.openStandardLoanAccount(loanProduct, customer, loanSchedule, accountStateType, fund, overridenDetail, creationDetail);
+        LoanBO loan = LoanBO.openStandardLoanAccount(loanProduct, customer, repaymentDayMeeting, loanSchedule, accountStateType, fund, overridenDetail, configuration, creationDetail);
         loan.setBusinessActivityId(loanAccountInfo.getLoanPurposeId());
         loan.setExternalId(loanAccountInfo.getExternalId());
         loan.setCollateralNote(loanAccountInfo.getCollateralNotes());

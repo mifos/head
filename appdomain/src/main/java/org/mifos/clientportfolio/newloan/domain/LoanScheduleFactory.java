@@ -25,12 +25,13 @@ import java.util.List;
 import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.framework.util.helpers.Money;
 
 public interface LoanScheduleFactory {
 
-    LoanSchedule create(List<DateTime> loanScheduleDates, LoanOfferingBO loanProduct, CustomerBO customer,
+    LoanSchedule create(List<DateTime> loanScheduleDates, LoanOfferingBO loanProduct, CustomerBO customer, MeetingBO loanMeeting,
             Money loanAmountDisbursed, Double interestRate, Integer interestDays, Integer graceDuration,
             List<AccountFeesEntity> accountFees);
 
