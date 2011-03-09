@@ -85,10 +85,17 @@ public class LoanAccountController {
     	formBean.setProductId(productId);
     	formBean.setCustomerId(dto.getCustomerDetailDto().getCustomerId());
     	formBean.setRepaymentScheduleIndependentOfCustomerMeeting(dto.isRepaymentIndependentOfMeetingEnabled());
-    	
+
     	if (dto.isRepaymentIndependentOfMeetingEnabled()) {
     	    formBean.setRepaymentRecursEvery(dto.getCustomerMeetingDetail().getMeetingDetailsDto().getEvery());
     	    formBean.setRepaymentDayOfWeek(dto.getCustomerMeetingDetail().getMeetingDetailsDto().getRecurrenceDetails().getDayOfWeek());
+    	}
+    	
+    	formBean.setVariableInstallmentsAllowed(dto.isVariableInstallmentsAllowed());
+    	if (dto.isVariableInstallmentsAllowed()) {
+    	    formBean.setMinGapInDays(dto.getMinGapInDays());
+    	    formBean.setMaxGapInDays(dto.getMaxGapInDays());
+    	    formBean.setMinInstallmentAmount(dto.getMinInstallmentAmount());
     	}
     	
     	formBean.setAmount(dto.getDefaultLoanAmount());
