@@ -20,14 +20,7 @@
 
 package org.mifos.test.acceptance.questionnaire;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.joda.time.DateTime;
-import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
@@ -40,28 +33,23 @@ import org.mifos.test.acceptance.framework.savings.SavingsAccountDetailPage;
 import org.mifos.test.acceptance.framework.testhelpers.QuestionGroupTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.SavingsAccountHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
-import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
 @Test(singleThreaded = true, groups = {"client", "acceptance", "ui", "no_db_unit"})
 public class QuestionGroupSavingsAccountTest extends UiTestCaseBase {
-
-    @Autowired
-    private DriverManagerDataSource dataSource;
-
-    @Autowired
-    private DbUnitUtilities dbUnitUtilities;
-
-    @Autowired
-    private InitializeApplicationRemoteTestingService initRemote;
 
     @Autowired
     private ApplicationDatabaseOperation applicationDatabaseOperation;
@@ -129,7 +117,6 @@ public class QuestionGroupSavingsAccountTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(enabled = false)
     public void verifyCapturingResponsesDuringSavingsCreation() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_016_dbunit.xml", dataSource, selenium);
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         DateTime targetTime = new DateTime(2011, 2, 28, 15, 0, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
@@ -193,8 +180,7 @@ public class QuestionGroupSavingsAccountTest extends UiTestCaseBase {
         String[] questionsInactive = {"DateQuestion", "question 2", "MultiSelectQuestion", "SingleSelectQuestion", "DateQuestion", "question 2"};
 
 
-        QuestionResponsePage questionResponsePage = new QuestionResponsePage(selenium);
-        questionResponsePage = savingsAccountHelper.navigateToQuestionResponseDuringCreateSavings(searchParameters, submitAccountParameters);
+        QuestionResponsePage questionResponsePage = savingsAccountHelper.navigateToQuestionResponseDuringCreateSavings(searchParameters, submitAccountParameters);
         questionResponsePage.verifyQuestionsExists(questionsExist);
         questionResponsePage.verifyQuestionsDoesnotappear(questionsInactive);
 
