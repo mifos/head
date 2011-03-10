@@ -49,8 +49,6 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 
 
 @Controller
-@RequestMapping("/defineLabels")
-@SessionAttributes("formBean")
 public class CustomizeMessagesController {
 
     @Autowired
@@ -63,11 +61,16 @@ public class CustomizeMessagesController {
     public CustomizeMessagesController(final MessageCustomizerServiceFacade messageCustomizerServiceFacade) {
         this.messageCustomizerServiceFacade = messageCustomizerServiceFacade;
     }
-
+/*
     @ModelAttribute("breadcrumbs")
     public List<BreadCrumbsLinks> showBreadCrumbs() {
         return new AdminBreadcrumbBuilder().withLink("admin.customizeMessages", "customizeMessages.ftl").build();
     }
+    */
+    @ModelAttribute("breadcrumbs")
+    public List<BreadCrumbsLinks> showBreadCrumbs() {
+        return new AdminBreadcrumbBuilder().withLink("customMessagesView.messageList", "viewCustomMessages.ftl").build();
+    }    
     
     public Map<String,String> retrieveCustomMessages() {
     	return messageCustomizerServiceFacade.retrieveCustomMessages();

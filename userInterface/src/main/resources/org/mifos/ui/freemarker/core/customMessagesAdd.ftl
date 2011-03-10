@@ -23,6 +23,7 @@
    <!--  Main Content Begins-->
   <div class=" content">
   <span id="page.id" title="customizeMessages"></span>
+  [@mifos.crumbs breadcrumbs/]
 
 <form action="${flowExecutionUrl}" method="post" class="two-columns">
 <div class="fontBold"><span class="orangeheading">[@spring.message "customMessagesAdd.title"/]</span></div>

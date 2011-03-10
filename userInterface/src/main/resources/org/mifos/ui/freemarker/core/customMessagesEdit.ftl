@@ -23,8 +23,9 @@
    <!--  Main Content Begins-->
   <div class=" content">
   <span id="page.id" title="customizeMessages"></span>
-
+  [@mifos.crumbs breadcrumbs/]
 <form action="${flowExecutionUrl}" method="post" class="two-columns">
+<div class="fontBold"><span class="orangeheading">[@spring.message "customMessagesEdit.title"/]</span></div>
     <fieldset>
     <div class="row">
         [@form.label "Old Message" true /][@spring.message "customMessagesAdd.addMessage.oldMessage"/]

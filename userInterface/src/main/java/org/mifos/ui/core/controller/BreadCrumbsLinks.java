@@ -20,7 +20,11 @@
 
 package org.mifos.ui.core.controller;
 
-public class BreadCrumbsLinks {
+import java.io.Serializable;
+
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID"}, justification="should disable at filter level and also for pmd - not important for us")
+public class BreadCrumbsLinks implements Serializable {
 
     private String link;
     private String message;

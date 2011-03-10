@@ -23,13 +23,13 @@
    <!--  Main Content Begins-->
   <div class=" content">
   <span id="page.id" title="customizeMessages"></span>
-
+    [@mifos.crumbs breadcrumbs/]
+    
 <form action="${flowExecutionUrl}" method="post" class="one-column">
 <div class="fontBold"><span class="orangeheading">[@spring.message "customMessagesView.messageList"/]</span></div>
 
-    <fieldset>
-        [@form.singleSelectWithPrompt path="customMessageSelectFormBean.message" options=customMessagesMap selectPrompt="" attributes="size=10, style=width:200px;"/]
-    </fieldset>
+    [@form.singleSelectWithPrompt path="customMessageSelectFormBean.message" options=customMessagesMap selectPrompt="" attributes="size=10, style=width:200px;"/]
+    
 <!--
 	<select size=10>
 [#list customMessagesMap?keys as key]

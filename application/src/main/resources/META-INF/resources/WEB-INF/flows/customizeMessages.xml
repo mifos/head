@@ -9,6 +9,7 @@
     <view-state id="selectCustomMessageStep" view="customMessagesView" model="customMessageSelectFormBean">
         <on-entry>
             <evaluate expression="customizeMessagesController.retrieveCustomMessagesMap()" result="flowScope.customMessagesMap" />
+            <evaluate expression="customizeMessagesController.showBreadCrumbs()" result="flowScope.breadcrumbs" />
         </on-entry>    
         <transition on="add" to="addCustomMessageStep" validate="false" bind="false"/>
         <transition on="remove" to="selectCustomMessageStep" validate="true">
