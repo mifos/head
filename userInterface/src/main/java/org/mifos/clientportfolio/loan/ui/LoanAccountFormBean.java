@@ -21,6 +21,7 @@
 package org.mifos.clientportfolio.loan.ui;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import javax.validation.constraints.NotNull;
 
@@ -89,6 +90,12 @@ public class LoanAccountFormBean implements Serializable {
     private boolean repaymentScheduleIndependentOfCustomerMeeting = false;
     private Integer repaymentRecursEvery;
     private Integer repaymentDayOfWeek;
+    
+    // variable installments only for validation purposes
+    private boolean variableInstallmentsAllowed;
+    private Integer minGapInDays;
+    private Integer maxGapInDays;
+    private BigDecimal minInstallmentAmount;
 
     public void validateEditAccountDetailsStep(ValidationContext context) {
         validateEnterAccountDetailsStep(context);
@@ -439,5 +446,37 @@ public class LoanAccountFormBean implements Serializable {
 
     public void setRepaymentDayOfWeek(Integer repaymentDayOfWeek) {
         this.repaymentDayOfWeek = repaymentDayOfWeek;
+    }
+    
+    public boolean isVariableInstallmentsAllowed() {
+        return variableInstallmentsAllowed;
+    }
+
+    public void setVariableInstallmentsAllowed(boolean variableInstallmentsAllowed) {
+        this.variableInstallmentsAllowed = variableInstallmentsAllowed;
+    }
+
+    public Integer getMinGapInDays() {
+        return minGapInDays;
+    }
+
+    public void setMinGapInDays(Integer minGapInDays) {
+        this.minGapInDays = minGapInDays;
+    }
+
+    public Integer getMaxGapInDays() {
+        return maxGapInDays;
+    }
+
+    public void setMaxGapInDays(Integer maxGapInDays) {
+        this.maxGapInDays = maxGapInDays;
+    }
+
+    public BigDecimal getMinInstallmentAmount() {
+        return minInstallmentAmount;
+    }
+
+    public void setMinInstallmentAmount(BigDecimal minInstallmentAmount) {
+        this.minInstallmentAmount = minInstallmentAmount;
     }
 }

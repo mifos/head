@@ -55,6 +55,7 @@ import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.persistence.CustomerDao;
+import org.mifos.dto.domain.LoanCreationInstallmentDto;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.platform.cashflow.service.CashFlowDetail;
@@ -115,7 +116,13 @@ public class LoanServiceFacadeWebTierTest {
         when(installmentsValidator.validateInputInstallments(anyListOf(RepaymentScheduleInstallment.class), any(InstallmentValidationContext.class))).thenReturn(errors);
         when(customerDao.findCustomerById(customerId)).thenReturn(customer);
         when(customer.getOfficeId()).thenReturn(Short.valueOf("1"));
-        Errors actual = loanServiceFacade.validateInputInstallments(null, null, new ArrayList<RepaymentScheduleInstallment>(), customerId);
+        
+        Date disbursementDate = null; 
+        Integer minGapInDays = Integer.valueOf(0); 
+        Integer maxGapInDays = Integer.valueOf(0);
+        BigDecimal minInstallmentAmount = BigDecimal.ZERO;
+        
+        Errors actual = loanServiceFacade.validateInputInstallments(disbursementDate, minGapInDays, maxGapInDays, minInstallmentAmount, new ArrayList<LoanCreationInstallmentDto>(), customerId);
         assertThat(actual, is(errors));
         verify(installmentsValidator).validateInputInstallments(anyListOf(RepaymentScheduleInstallment.class), any(InstallmentValidationContext.class));
         verify(customerDao).findCustomerById(customerId);
@@ -126,11 +133,13 @@ public class LoanServiceFacadeWebTierTest {
     public void shouldValidateInstallmentSchedule() {
         List<RepaymentScheduleInstallment> installments = new ArrayList<RepaymentScheduleInstallment>();
         Errors expectedErrors = new Errors();
-        VariableInstallmentDetailsBO variableInstallmentDetailsBO = new VariableInstallmentDetailsBO();
-        when(installmentsValidator.validateInstallmentSchedule(installments, variableInstallmentDetailsBO)).thenReturn(expectedErrors);
-        Errors errors = loanServiceFacade.validateInstallmentSchedule(installments, variableInstallmentDetailsBO);
+        
+        BigDecimal minInstallmentAmount = BigDecimal.ZERO;
+        
+        when(installmentsValidator.validateInstallmentSchedule(installments, minInstallmentAmount)).thenReturn(expectedErrors);
+        Errors errors = loanServiceFacade.validateInstallmentSchedule(new ArrayList<LoanCreationInstallmentDto>(), minInstallmentAmount);
         assertThat(errors, is(expectedErrors));
-        verify(installmentsValidator).validateInstallmentSchedule(installments, variableInstallmentDetailsBO);
+        verify(installmentsValidator).validateInstallmentSchedule(installments, minInstallmentAmount);
     }
 
     @Test

@@ -9,6 +9,7 @@
     <var name="loanAccountQuestionGroupFormBean" class="org.mifos.clientportfolio.loan.ui.LoanAccountQuestionGroupFormBean" />
     <var name="cashFlow" class="org.mifos.platform.cashflow.ui.model.CashFlowForm"/>
     <var name="cashFlowSummaryFormBean" class="org.mifos.clientportfolio.loan.ui.CashFlowSummaryFormBean" />
+    <var name="loanScheduleFormBean" class="org.mifos.clientportfolio.loan.ui.LoanScheduleFormBean" />
 
     <decision-state id="isCustomerSearchRequiredStep">
         <if test="requestParameters.customerId == null" then="customerSearchStep" else="handleSelectedCustomer" />
@@ -93,11 +94,11 @@
         <transition on="cancel" to="cancel" bind="false" validate="false" history="invalidate"/>
     </view-state>
     
-    <view-state id="calculateAndReviewLoanSchedule" view="createloanAccountReviewLoanSchedule">
+    <view-state id="calculateAndReviewLoanSchedule" view="createloanAccountReviewLoanSchedule" model="loanScheduleFormBean">
     	<on-entry>
 	    	<evaluate expression="loanAccountController.retrieveLoanSchedule(flowScope.customerId, flowScope.productId, loanAccountFormBean)" result="flowScope.loanScheduleReferenceData"/>
         </on-entry>
-        <transition on="preview" to="previewStep" validate="false" bind="false" />
+        <transition on="preview" to="previewStep" />
         <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/>
     </view-state>
     

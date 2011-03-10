@@ -141,8 +141,7 @@ public class InstallmentRulesValidatorTest {
     public void shouldValidateMinInstallmentForVariableInstallments() {
         RepaymentScheduleInstallment installment = installmentBuilder.reset(locale).withInstallment(1).
                 withPrincipal(new Money(rupee, "49")).withTotalValue("50").build();
-        VariableInstallmentDetailsBO variableInstallmentDetails = getVariableInstallmentDetails(null, null, 100, rupee);
-        List<ErrorEntry> errorEntries = installmentRulesValidator.validateForMinimumInstallmentAmount(asList(installment), variableInstallmentDetails);
+        List<ErrorEntry> errorEntries = installmentRulesValidator.validateForMinimumInstallmentAmount(asList(installment), BigDecimal.valueOf(Double.valueOf("100.0")));
         assertErrorEntry(errorEntries.get(0), AccountConstants.INSTALLMENT_AMOUNT_LESS_THAN_MIN_AMOUNT, "1");
     }
 
@@ -184,7 +183,8 @@ public class InstallmentRulesValidatorTest {
         RepaymentScheduleInstallment installment4 =
                 getRepaymentScheduleInstallment("22-Sep-2010", 4, "414.1", "1.9", "1", "417.0");
         List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3, installment4);
-        List<ErrorEntry> errorEntries = installmentRulesValidator.validateForMinimumInstallmentAmount(installments, getVariableInstallmentDetails(2, 5, 50, rupee));
+        
+        List<ErrorEntry> errorEntries = installmentRulesValidator.validateForMinimumInstallmentAmount(installments, BigDecimal.valueOf(Double.valueOf("50.0")));
         assertThat(errorEntries.size(), is(3));
         assertErrorEntry(errorEntries.get(0), AccountConstants.INSTALLMENT_AMOUNT_LESS_THAN_INTEREST_FEE, "1");
         assertErrorEntry(errorEntries.get(1), AccountConstants.INSTALLMENT_AMOUNT_LESS_THAN_INTEREST_FEE, "2");

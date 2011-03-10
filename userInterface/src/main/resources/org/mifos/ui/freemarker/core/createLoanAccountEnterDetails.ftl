@@ -60,6 +60,28 @@
         <div class="attribute">[@spring.message "productSummary.freqOfInstallments"/]</div>
         <div class="value">${loanProductReferenceData.loanOfferingMeetingDetail.meetingDetailsDto.every}&nbsp;${loanProductReferenceData.loanOfferingMeetingDetail.meetingDetailsDto.recurrenceName}</div>
     </div>
+    [#if loanProductReferenceData.variableInstallmentsAllowed]
+    <div class="row">
+        <div class="attribute">[@spring.message "productSummary.variableInstallmentsAllowed"/]</div>
+        <div class="value">[@spring.message "boolean.yes"/]</div>
+    </div>
+    <div class="row">
+        <div class="attribute">[@spring.message "productSummary.variabeInstallments.minGap"/]</div>
+        <div class="value">${loanProductReferenceData.minGapInDays?string.number}</div>
+    </div>
+    <div class="row">
+        <div class="attribute">[@spring.message "productSummary.variabeInstallments.maxGap"/]</div>
+        <div class="value">${loanProductReferenceData.maxGapInDays?string.number}</div>
+    </div>
+    <div class="row">
+        <div class="attribute">[@spring.message "productSummary.variabeInstallments.minInstallmentAmount"/]</div>
+        [#if loanProductReferenceData.minInstallmentAmount == 0.0]
+        <div class="value">[@spring.message "productSummary.variabeInstallments.minInstallmentAmount.notapplicable"/]</div>
+        [#else]
+        <div class="value">${loanProductReferenceData.minInstallmentAmount?string.number}</div>
+        [/#if]
+    </div>
+    [/#if]
 </div>
 <br/>
 <br/>

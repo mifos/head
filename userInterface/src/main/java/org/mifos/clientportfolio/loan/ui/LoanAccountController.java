@@ -21,6 +21,7 @@
 package org.mifos.clientportfolio.loan.ui;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -85,10 +86,17 @@ public class LoanAccountController {
     	formBean.setProductId(productId);
     	formBean.setCustomerId(dto.getCustomerDetailDto().getCustomerId());
     	formBean.setRepaymentScheduleIndependentOfCustomerMeeting(dto.isRepaymentIndependentOfMeetingEnabled());
-    	
+
     	if (dto.isRepaymentIndependentOfMeetingEnabled()) {
     	    formBean.setRepaymentRecursEvery(dto.getCustomerMeetingDetail().getMeetingDetailsDto().getEvery());
     	    formBean.setRepaymentDayOfWeek(dto.getCustomerMeetingDetail().getMeetingDetailsDto().getRecurrenceDetails().getDayOfWeek());
+    	}
+    	
+    	formBean.setVariableInstallmentsAllowed(dto.isVariableInstallmentsAllowed());
+    	if (dto.isVariableInstallmentsAllowed()) {
+    	    formBean.setMinGapInDays(dto.getMinGapInDays());
+    	    formBean.setMaxGapInDays(dto.getMaxGapInDays());
+    	    formBean.setMinInstallmentAmount(dto.getMinInstallmentAmount());
     	}
     	
     	formBean.setAmount(dto.getDefaultLoanAmount());
@@ -167,14 +175,17 @@ public class LoanAccountController {
         BigDecimal totalInstallmentAmount = BigDecimal.ZERO;
         Date firstInstallmentDueDate = new Date();
         Date lastInstallmentDueDate = new Date();
+        List<Date> installments = new ArrayList<Date>();
         if (!loanScheduleDto.getInstallments().isEmpty()) {
             firstInstallmentDueDate = loanScheduleDto.firstInstallment().toDate();
             lastInstallmentDueDate = loanScheduleDto.lastInstallment().toDate();
             
             for (LoanCreationInstallmentDto installment : loanScheduleDto.getInstallments()) {
                 totalInstallmentAmount = totalInstallmentAmount.add(BigDecimal.valueOf(installment.getTotal()));
+                installments.add(installment.getDueDate());
             }
         }
+        formBean.setInstallments(installments);
         LoanInstallmentsDto loanInstallmentsDto = new LoanInstallmentsDto(loanAmount, totalInstallmentAmount, firstInstallmentDueDate, lastInstallmentDueDate);
 
         BigDecimal cashFlowTotalBalance = BigDecimal.ZERO;        

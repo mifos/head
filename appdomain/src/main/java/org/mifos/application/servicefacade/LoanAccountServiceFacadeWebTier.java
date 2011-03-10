@@ -81,6 +81,7 @@ import org.mifos.accounts.productdefinition.business.LoanAmountOption;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingFundEntity;
 import org.mifos.accounts.productdefinition.business.LoanOfferingInstallmentRange;
+import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.accounts.productdefinition.business.service.LoanProductService;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
@@ -547,12 +548,24 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                 daysOfTheWeekOptions.put(workDay.getValue().toString(), weekdayName);
             }
             
+            boolean variableInstallmentsAllowed = loanProduct.isVariableInstallmentsAllowed();
+            Integer minGapInDays = Integer.valueOf(0);
+            Integer maxGapInDays = Integer.valueOf(0);
+            BigDecimal minInstallmentAmount = BigDecimal.ZERO;
+            if (variableInstallmentsAllowed) {
+                VariableInstallmentDetailsBO variableInstallmentsDetails = loanProduct.getVariableInstallmentDetails();
+                minGapInDays = variableInstallmentsDetails.getMinGapInDays();
+                maxGapInDays = variableInstallmentsDetails.getMaxGapInDays();
+                minInstallmentAmount = variableInstallmentsDetails.getMinInstallmentAmount().getAmount();
+            }
+            
             return new LoanCreationLoanDetailsDto(isRepaymentIndependentOfMeetingEnabled, loanOfferingMeetingDto,
                     customer.getCustomerMeetingValue().toDto(), loanPurposes, productDto, customerDetailDto, loanProductDtos, 
                     interestTypeName, fundDtos, collateralOptions, purposeOfLoanOptions, 
                     defaultFeeOptions, additionalFeeOptions, defaultFees, BigDecimal.valueOf(eligibleLoanAmount.getDefaultLoanAmount()), 
                     BigDecimal.valueOf(eligibleLoanAmount.getMaxLoanAmount()), BigDecimal.valueOf(eligibleLoanAmount.getMinLoanAmount()), defaultInterestRate, maxInterestRate, minInterestRate,
-                    eligibleNoOfInstall.getDefaultNoOfInstall().intValue(), eligibleNoOfInstall.getMaxNoOfInstall().intValue(), eligibleNoOfInstall.getMinNoOfInstall().intValue(), nextPossibleDisbursementDate, daysOfTheWeekOptions);
+                    eligibleNoOfInstall.getDefaultNoOfInstall().intValue(), eligibleNoOfInstall.getMaxNoOfInstall().intValue(), eligibleNoOfInstall.getMinNoOfInstall().intValue(), nextPossibleDisbursementDate, 
+                    daysOfTheWeekOptions, variableInstallmentsAllowed, minGapInDays, maxGapInDays, minInstallmentAmount);
 
         } catch (SystemException e) {
             throw new MifosRuntimeException(e);
