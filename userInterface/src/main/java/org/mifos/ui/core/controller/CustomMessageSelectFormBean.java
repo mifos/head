@@ -21,21 +21,9 @@
 package org.mifos.ui.core.controller;
 
 import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
-
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.NotEmpty;
-import org.mifos.dto.domain.CustomerDto;
-import org.mifos.dto.domain.PrdOfferingDto;
-import org.mifos.dto.screen.SavingsProductReferenceDto;
-import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
-import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.validation.MifosBeanValidator;
-import org.mifos.platform.validations.ValidationException;
-import org.mifos.ui.core.controller.util.ValidationExceptionMessageExtractor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.binding.message.MessageContext;
 import org.springframework.binding.validation.ValidationContext;
