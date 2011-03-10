@@ -563,7 +563,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
         }
         else if(parameters.getCalculateLoanAmount() == SubmitFormParameters.BY_LAST_LOAN_AMOUNT) {
             for(int i = 1; i <= SubmitFormParameters.MAX_CYCLES; i++) {
-                selenium.typeKeysKeys("endRangeLoanAmt"+i, parameters.getLastAmountByLastLoanAmount(i-1));
+                selenium.typeKeys("endRangeLoanAmt"+i, parameters.getLastAmountByLastLoanAmount(i-1));
                 selenium.fireEvent("endRangeLoanAmt"+i, "blur");
                 selenium.typeKeys("lastLoanMinLoanAmt"+i, parameters.getMinAmountByLastLoanAmount(i-1));
                 selenium.typeKeys("lastLoanMaxLoanAmt"+i, parameters.getMaxAmountByLastLoanAmount(i-1));
@@ -591,7 +591,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
         }
         else if(parameters.getCalculateInstallments() == SubmitFormParameters.BY_LAST_LOAN_AMOUNT) {
             for(int i = 1; i <= SubmitFormParameters.MAX_CYCLES; i++) {
-                selenium.typeKeysKeys("endInstallmentRange"+i, parameters.getLastInstallmentByLastLoanAmount(i-1));
+                selenium.typeKeys("endInstallmentRange"+i, parameters.getLastInstallmentByLastLoanAmount(i-1));
                 selenium.fireEvent("endInstallmentRange"+i, "blur");
                 selenium.typeKeys("minLoanInstallment"+i, parameters.getMinInstallmentByLastLoanAmount(i-1));
                 selenium.typeKeys("maxLoanInstallment"+i, parameters.getMaxInstallmentByLastLoanAmount(i-1));

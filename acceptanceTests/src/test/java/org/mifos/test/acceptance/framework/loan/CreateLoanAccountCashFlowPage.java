@@ -91,7 +91,7 @@ public class CreateLoanAccountCashFlowPage extends AbstractPage{
         String lengthWrongDigits = getNumbers(FIELD_MAX_DIGITS+1);
         String lengthWrongDecimal = "0."+getNumbers(FIELD_MAX_DECIMAL_PLACES+1);
 
-        selenium.typeKeysKeys("monthlyCashFlows[0].expense", lengthMaxDigits);
+        selenium.typeKeys("monthlyCashFlows[0].expense", lengthMaxDigits);
         selenium.fireEvent("monthlyCashFlows[0].expense", "blur");
         selenium.fireEvent("monthlyCashFlows[1].expense", "blur");
         Assert.assertFalse(isTextPresentInPage(error));
@@ -109,7 +109,7 @@ public class CreateLoanAccountCashFlowPage extends AbstractPage{
         Assert.assertTrue(isTextPresentInPage(error));
         selenium.typeKeys("monthlyCashFlows[0].expense", "");
 
-        selenium.typeKeysKeys("monthlyCashFlows[0].expense", lengthWrongDigits);
+        selenium.typeKeys("monthlyCashFlows[0].expense", lengthWrongDigits);
         selenium.fireEvent("monthlyCashFlows[0].expense", "blur");
         selenium.fireEvent("monthlyCashFlows[1].expense", "blur");
         Assert.assertTrue(isTextPresentInPage(error));
