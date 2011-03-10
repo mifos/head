@@ -69,13 +69,10 @@ public class SystemInfoDateTimeTest extends UiTestCaseBase {
         DateTime targetTime = new DateTime(2008,1,1,0,0,0,0);
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
 
-        SystemInfoPage systemInfoPage = adminTestHelper.navigateToSystemInfoPage();
-        systemInfoPage.verifyDateTime(new DateTime());
-
         TimeMachinePage timeMachinePage = dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
         timeMachinePage.verifySuccess(targetTime);
 
-        systemInfoPage = adminTestHelper.navigateToSystemInfoPage();
+        SystemInfoPage systemInfoPage = adminTestHelper.navigateToSystemInfoPage();
         systemInfoPage.verifyDateTime(targetTime);
     }
 
