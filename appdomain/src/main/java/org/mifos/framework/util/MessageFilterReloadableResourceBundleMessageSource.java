@@ -36,6 +36,9 @@ public class MessageFilterReloadableResourceBundleMessageSource extends
 	}
 	
 	protected String resolveCodeWithoutArguments(String code, Locale locale) {
+		if (code.endsWith("NO_CUSTOMIZING")) {
+			return super.resolveCodeWithoutArguments(code, locale);			
+		}
 		return messageCustomizerServiceFacade.replaceSubstitutions(super.resolveCodeWithoutArguments(code, locale));
 	}
 	

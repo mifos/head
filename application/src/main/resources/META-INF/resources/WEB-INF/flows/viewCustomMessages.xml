@@ -11,10 +11,10 @@
             <evaluate expression="customizeMessagesController.retrieveCustomMessagesMap()" result="flowScope.customMessagesMap" />
         </on-entry>    
         <transition on="add" to="addCustomMessageStep" validate="false" bind="false"/>
-        <transition on="remove" to="selectCustomMessageStep">
+        <transition on="remove" to="selectCustomMessageStep" validate="true">
             <evaluate expression="customizeMessagesController.removeCustomMessage(customMessageSelectFormBean)" />        
         </transition>
-        <transition on="edit" to="editCustomMessageStep">
+        <transition on="edit" to="editCustomMessageStep" validate="true">
             <evaluate expression="customizeMessagesController.getCustomMessage(customMessageSelectFormBean)" result="flowScope.customMessage"/>        
         </transition>
         <transition on="done" to="done" validate="false" bind="false" history="invalidate"/>

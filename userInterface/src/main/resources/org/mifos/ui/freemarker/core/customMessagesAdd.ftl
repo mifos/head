@@ -25,6 +25,7 @@
   <span id="page.id" title="customizeMessages"></span>
 
 <form action="${flowExecutionUrl}" method="post" class="two-columns">
+<div class="fontBold"><span class="orangeheading">[@spring.message "customMessagesAdd.title"/]</span></div>
     <fieldset>
     <div class="row">
         [@form.label "Old Message" true /][@spring.message "customMessagesAdd.addMessage.oldMessage"/]

@@ -97,6 +97,9 @@ public class CustomizeMessagesController {
     }
     
     public void removeCustomMessage(CustomMessageSelectFormBean customMessageFormBean) {
+    	if (customMessageFormBean.getMessage() == null) {
+    		return;
+    	}
     	messageCustomizerServiceFacade.removeCustomMessage(customMessageFormBean.getMessage());
     }    
 

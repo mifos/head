@@ -43,50 +43,50 @@ import org.springframework.context.MessageSource;
  */
 public class MessageCustomizerServiceFacadeWebTier implements MessageCustomizerServiceFacade {
 
-    private static final String HEAD_OFFICE_KEY = "datadisplayandrules.defineLabels.headoffice";
-    private static final String REGIONAL_OFFICE_KEY = "datadisplayandrules.defineLabels.regionaloffice";
-    private static final String SUB_REGIONAL_OFFICE_KEY = "datadisplayandrules.defineLabels.subregionaloffice";
-    private static final String AREA_OFFICE_KEY = "datadisplayandrules.defineLabels.areaoffice";
-    private static final String BRANCH_OFFICE_KEY = "datadisplayandrules.defineLabels.branchoffice";
+    private static final String HEAD_OFFICE_KEY = "datadisplayandrules.defineLabels.headoffice.NO_CUSTOMIZING";
+    private static final String REGIONAL_OFFICE_KEY = "datadisplayandrules.defineLabels.regionaloffice.NO_CUSTOMIZING";
+    private static final String SUB_REGIONAL_OFFICE_KEY = "datadisplayandrules.defineLabels.subregionaloffice.NO_CUSTOMIZING";
+    private static final String AREA_OFFICE_KEY = "datadisplayandrules.defineLabels.areaoffice.NO_CUSTOMIZING";
+    private static final String BRANCH_OFFICE_KEY = "datadisplayandrules.defineLabels.branchoffice.NO_CUSTOMIZING";
     
-    private static final String CLIENT_KEY = "datadisplayandrules.defineLabels.client";    
-    private static final String GROUP_KEY = "datadisplayandrules.defineLabels.group";
-    private static final String CENTER_KEY = "datadisplayandrules.defineLabels.center";
+    private static final String CLIENT_KEY = "datadisplayandrules.defineLabels.client.NO_CUSTOMIZING";    
+    private static final String GROUP_KEY = "datadisplayandrules.defineLabels.group.NO_CUSTOMIZING";
+    private static final String CENTER_KEY = "datadisplayandrules.defineLabels.center.NO_CUSTOMIZING";
     
-    private static final String LOANS_KEY = "datadisplayandrules.defineLabels.loans";
-    private static final String SAVINGS_KEY = "datadisplayandrules.defineLabels.savings";
+    private static final String LOANS_KEY = "datadisplayandrules.defineLabels.loans.NO_CUSTOMIZING";
+    private static final String SAVINGS_KEY = "datadisplayandrules.defineLabels.savings.NO_CUSTOMIZING";
     
-    private static final String STATE_KEY = "datadisplayandrules.defineLabels.state";
-    private static final String POSTAL_CODE_KEY = "datadisplayandrules.defineLabels.postalcode";
-    private static final String ETHNICITY_KEY = "datadisplayandrules.defineLabels.ethnicity";
-    private static final String CITIZENSHIP_KEY = "datadisplayandrules.defineLabels.citizenship";
-    private static final String HANDICAPPED_KEY = "datadisplayandrules.defineLabels.handicapped";
-    private static final String GOVERNMENT_ID_KEY = "datadisplayandrules.defineLabels.governmentID";
-    private static final String ADDRESS1_KEY = "datadisplayandrules.defineLabels.address1";
-    private static final String ADDRESS2_KEY = "datadisplayandrules.defineLabels.address2";
-    private static final String ADDRESS3_KEY = "datadisplayandrules.defineLabels.address3";
+    private static final String STATE_KEY = "datadisplayandrules.defineLabels.state.NO_CUSTOMIZING";
+    private static final String POSTAL_CODE_KEY = "datadisplayandrules.defineLabels.postalcode.NO_CUSTOMIZING";
+    private static final String ETHNICITY_KEY = "datadisplayandrules.defineLabels.ethnicity.NO_CUSTOMIZING";
+    private static final String CITIZENSHIP_KEY = "datadisplayandrules.defineLabels.citizenship.NO_CUSTOMIZING";
+    private static final String HANDICAPPED_KEY = "datadisplayandrules.defineLabels.handicapped.NO_CUSTOMIZING";
+    private static final String GOVERNMENT_ID_KEY = "datadisplayandrules.defineLabels.governmentID.NO_CUSTOMIZING";
+    private static final String ADDRESS1_KEY = "datadisplayandrules.defineLabels.address1.NO_CUSTOMIZING";
+    private static final String ADDRESS2_KEY = "datadisplayandrules.defineLabels.address2.NO_CUSTOMIZING";
+    private static final String ADDRESS3_KEY = "datadisplayandrules.defineLabels.address3.NO_CUSTOMIZING";
     
-    private static final String PARTIAL_APPLICATION_KEY = "datadisplayandrules.defineLabels.partialApplication";
-    private static final String PENDING_APPROVAL_KEY = "datadisplayandrules.defineLabels.pendingApproval";
-    private static final String APPROVED_KEY = "datadisplayandrules.defineLabels.approved";
-    private static final String CANCEL_KEY = "datadisplayandrules.defineLabels.cancel";
-    private static final String CLOSED_KEY = "datadisplayandrules.defineLabels.closed";
-    private static final String ON_HOLD_KEY = "datadisplayandrules.defineLabels.onhold";
-    private static final String ACTIVE_KEY = "datadisplayandrules.defineLabels.active";
-    private static final String INACTIVE_KEY = "datadisplayandrules.defineLabels.inactive";
-    private static final String ACTIVE_IN_GOOD_STANDING_KEY = "datadisplayandrules.defineLabels.activeingoodstanding";
-    private static final String ACTIVE_IN_BAD_STANDING_KEY = "datadisplayandrules.defineLabels.activeinbadstanding";
-    private static final String CLOSED_OBLIGATION_MET_KEY = "datadisplayandrules.defineLabels.closed-obligationmet";
-    private static final String CLOSED_RESCHEDULED_KEY = "datadisplayandrules.defineLabels.closed-rescheduled";
-    private static final String CLOSED_WRITTEN_OFF_KEY = "datadisplayandrules.defineLabels.closed-writtenoff";
+    private static final String PARTIAL_APPLICATION_KEY = "datadisplayandrules.defineLabels.partialApplication.NO_CUSTOMIZING";
+    private static final String PENDING_APPROVAL_KEY = "datadisplayandrules.defineLabels.pendingApproval.NO_CUSTOMIZING";
+    private static final String APPROVED_KEY = "datadisplayandrules.defineLabels.approved.NO_CUSTOMIZING";
+    private static final String CANCEL_KEY = "datadisplayandrules.defineLabels.cancel.NO_CUSTOMIZING";
+    private static final String CLOSED_KEY = "datadisplayandrules.defineLabels.closed.NO_CUSTOMIZING";
+    private static final String ON_HOLD_KEY = "datadisplayandrules.defineLabels.onhold.NO_CUSTOMIZING";
+    private static final String ACTIVE_KEY = "datadisplayandrules.defineLabels.active.NO_CUSTOMIZING";
+    private static final String INACTIVE_KEY = "datadisplayandrules.defineLabels.inactive.NO_CUSTOMIZING";
+    private static final String ACTIVE_IN_GOOD_STANDING_KEY = "datadisplayandrules.defineLabels.activeingoodstanding.NO_CUSTOMIZING";
+    private static final String ACTIVE_IN_BAD_STANDING_KEY = "datadisplayandrules.defineLabels.activeinbadstanding.NO_CUSTOMIZING";
+    private static final String CLOSED_OBLIGATION_MET_KEY = "datadisplayandrules.defineLabels.closed-obligationmet.NO_CUSTOMIZING";
+    private static final String CLOSED_RESCHEDULED_KEY = "datadisplayandrules.defineLabels.closed-rescheduled.NO_CUSTOMIZING";
+    private static final String CLOSED_WRITTEN_OFF_KEY = "datadisplayandrules.defineLabels.closed-writtenoff.NO_CUSTOMIZING";
     
-    private static final String NONE_KEY = "datadisplayandrules.defineLabels.none";
-    private static final String GRACE_ON_ALL_REPAYMENTS_KEY = "datadisplayandrules.defineLabels.graceonallrepayments";
-    private static final String PRINCIPAL_ONLY_GRACE_KEY = "datadisplayandrules.defineLabels.principalonlygrace";
+    private static final String NONE_KEY = "datadisplayandrules.defineLabels.none.NO_CUSTOMIZING";
+    private static final String GRACE_ON_ALL_REPAYMENTS_KEY = "datadisplayandrules.defineLabels.graceonallrepayments.NO_CUSTOMIZING";
+    private static final String PRINCIPAL_ONLY_GRACE_KEY = "datadisplayandrules.defineLabels.principalonlygrace.NO_CUSTOMIZING";
     
-    private static final String INTEREST_KEY = "datadisplayandrules.defineLabels.interest";
-    private static final String EXTERNAL_ID_KEY = "datadisplayandrules.defineLabels.externalID";
-    private static final String BULK_ENTRY_KEY = "datadisplayandrules.defineLabels.bulkentry";
+    private static final String INTEREST_KEY = "datadisplayandrules.defineLabels.interest.NO_CUSTOMIZING";
+    private static final String EXTERNAL_ID_KEY = "datadisplayandrules.defineLabels.externalID.NO_CUSTOMIZING";
+    private static final String BULK_ENTRY_KEY = "datadisplayandrules.defineLabels.bulkentry.NO_CUSTOMIZING";
 
     private final HibernateTransactionHelper transactionHelper;
     
@@ -167,11 +167,7 @@ public class MessageCustomizerServiceFacadeWebTier implements MessageCustomizerS
     @Override
     public String replaceSubstitutions(String message) {
     	if (message == null) return message;
-    	
-    	if (message.startsWith("|||")) {
-    		return message.substring(3);
-    	}
-    	
+
     	String newMessage = message;
     	
     	Map<String,String> messageFilterMap = messageCustomizerDao.getCustomMessages();

@@ -25,6 +25,8 @@
   <span id="page.id" title="customizeMessages"></span>
 
 <form action="${flowExecutionUrl}" method="post" class="one-column">
+<div class="fontBold"><span class="orangeheading">[@spring.message "customMessagesView.messageList"/]</span></div>
+
     <fieldset>
         [@form.singleSelectWithPrompt path="customMessageSelectFormBean.message" options=customMessagesMap selectPrompt="" attributes="size=10, style=width:200px;"/]
     </fieldset>

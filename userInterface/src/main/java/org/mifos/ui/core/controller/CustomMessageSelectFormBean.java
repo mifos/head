@@ -49,6 +49,13 @@ public class CustomMessageSelectFormBean implements Serializable {
 
     @NotEmpty
     private String message;
+    
+    @Autowired
+    private transient MifosBeanValidator validator;
+
+    public void setValidator(MifosBeanValidator validator) {
+        this.validator = validator;
+    }    
 
 	public String getMessage() {
 		return message;
@@ -58,6 +65,17 @@ public class CustomMessageSelectFormBean implements Serializable {
 		this.message = message;
 	}
 
+    /**
+     * Validation method that Spring webflow calls on state transition out of
+     * customerSearchStep.
+     */
+    public void validateSelectCustomMessageStep(ValidationContext context) {
+        MessageContext messages = context.getMessageContext();
+        if (context.getUserEvent().equals("add")) {
+        	return;
+        }
+        validator.validate(this, messages);
+    }	
 }
 
 
