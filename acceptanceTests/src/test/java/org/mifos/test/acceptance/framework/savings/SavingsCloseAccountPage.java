@@ -35,7 +35,7 @@ public class SavingsCloseAccountPage extends MifosPage {
 
     public SavingsAccountDetailPage closeSavingsAccount(String notes) {
         selenium.select("paymentTypeId", "label=Cash");
-        selenium.type("closesavingsaccount.input.notes", notes);
+        selenium.typeKeys("closesavingsaccount.input.notes", notes);
         selenium.click("closesavingsaccount.button.submit");
         waitForPageToLoad();
         selenium.click("closeButton");

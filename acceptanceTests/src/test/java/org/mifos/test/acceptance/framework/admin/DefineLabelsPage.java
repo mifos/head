@@ -36,7 +36,7 @@ public class DefineLabelsPage extends MifosPage {
     }
 
     public void setLabelValue(String label, String value) {
-        selenium.type(label, value);
+        selenium.typeKeys(label, value);
     }
 
     public String getCitizenshipLabel() {

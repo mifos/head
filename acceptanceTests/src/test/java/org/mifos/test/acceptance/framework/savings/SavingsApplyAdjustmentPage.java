@@ -36,8 +36,8 @@ public class SavingsApplyAdjustmentPage extends AbstractPage {
     }
 
     public void applyAdjustment(String adjustmentAmount, String notes) {
-        selenium.type("applyadjustment.input.amount",adjustmentAmount);
-        selenium.type("applyadjustment.input.notes", notes);
+        selenium.typeKeys("applyadjustment.input.amount",adjustmentAmount);
+        selenium.typeKeys("applyadjustment.input.notes", notes);
         selenium.click("applyadjustment.button.submit");
         waitForPageToLoad();
         selenium.click("//input[@value='Submit']");

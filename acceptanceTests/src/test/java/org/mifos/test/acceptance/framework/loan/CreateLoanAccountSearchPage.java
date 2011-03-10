@@ -37,7 +37,7 @@ public class CreateLoanAccountSearchPage extends AbstractPage {
 
 
     public CreateLoanAccountEntryPage searchAndNavigateToCreateLoanAccountPage(CreateLoanAccountSearchParameters formParameters) {
-        selenium.type("cust_search_account.input.searchString", formParameters.getSearchString());
+        selenium.typeKeys("cust_search_account.input.searchString", formParameters.getSearchString());
         selenium.click("cust_search_account.button.search");
         waitForPageToLoad();
         selenium.click("link=*" + formParameters.getSearchString() + "*");

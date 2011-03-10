@@ -104,7 +104,7 @@ public class CreateLoanAccountEntryPage extends MifosPage {
 
     private void submitLoanAccount(CreateLoanAccountSubmitParameters formParameters) {
         if(formParameters.getAmount() != null){
-            selenium.type("loancreationdetails.input.sumLoanAmount",formParameters.getAmount());
+            selenium.typeKeys("loancreationdetails.input.sumLoanAmount",formParameters.getAmount());
         }
         if (formParameters.isGracePeriodTypeNone()) {
             Assert.assertFalse(selenium.isEditable("loancreationdetails.input.gracePeriod"));
@@ -112,13 +112,13 @@ public class CreateLoanAccountEntryPage extends MifosPage {
         if (formParameters.getLsimFrequencyWeeks() != null)
         {
             selenium.click("loancreationdetails.input.frequencyWeeks");
-            selenium.type("loancreationdetails.input.weekFrequency",formParameters.getLsimWeekFrequency());
+            selenium.typeKeys("loancreationdetails.input.weekFrequency",formParameters.getLsimWeekFrequency());
             selenium.select("weekDay", "label=Friday");
         }
         if (formParameters.getLsimMonthTypeDayOfMonth() != null)
         {
             selenium.click("loancreationdetails.input.monthType1");
-            selenium.type("loancreationdetails.input.dayOfMonth", formParameters.getLsimDayOfMonth());
+            selenium.typeKeys("loancreationdetails.input.dayOfMonth", formParameters.getLsimDayOfMonth());
         }
         if (formParameters.getLsimMonthTypeNthWeekdayOfMonth() != null)
         {
@@ -188,10 +188,10 @@ public class CreateLoanAccountEntryPage extends MifosPage {
 
     public void selectAdditionalFees() {
         selenium.select("selectedFee[0].feeId", "label=One Time Upfront Fee");
-        selenium.type("loancreationdetails.input.feeAmount", "6.6");
+        selenium.typeKeys("loancreationdetails.input.feeAmount", "6.6");
 
         selenium.select("selectedFee[1].feeId", "label=One Time Upfront Fee");
-        selenium.type("selectedFee[1].amount", "3.3");
+        selenium.typeKeys("selectedFee[1].amount", "3.3");
     }
 
     public void unselectAdditionalFee() {
@@ -200,10 +200,10 @@ public class CreateLoanAccountEntryPage extends MifosPage {
 
     public void selectTwoClientsForGlim() {
         selenium.click("glimLoanForm.input.select");
-        selenium.type("glimLoanForm.input.loanAmount", "1234");
+        selenium.typeKeys("glimLoanForm.input.loanAmount", "1234");
 
         selenium.click("clients[1]");
-        selenium.type("clientDetails[1].loanAmount", "4321");
+        selenium.typeKeys("clientDetails[1].loanAmount", "4321");
     }
 
     public void selectPurposeForGlim() {
@@ -219,7 +219,7 @@ public class CreateLoanAccountEntryPage extends MifosPage {
     public void selectGLIMClients(int clientNumber, String expectedClientName, String loanAmount, String loanPurpose) {
         Assert.assertEquals(selenium.getText("GLIMLoanAccounts.clientName." + clientNumber), expectedClientName);
         selenium.check("clients[" + clientNumber + "]");
-        selenium.type("clientDetails[" + clientNumber + "].loanAmount", loanAmount);
+        selenium.typeKeys("clientDetails[" + clientNumber + "].loanAmount", loanAmount);
         if(loanPurpose!=null){
             selenium.select("clientDetails[" + clientNumber + "].businessActivity", "label=" + loanPurpose);
         }
@@ -283,13 +283,13 @@ public class CreateLoanAccountEntryPage extends MifosPage {
     }
 
     private void setDisbursalDate(String dd, String mm, String yy) {
-        selenium.type("disbursementDateDD",dd);
+        selenium.typeKeys("disbursementDateDD",dd);
         selenium.fireEvent("name=disbursementDateDD", "blur");
 
-        selenium.type("disbursementDateMM",mm);
+        selenium.typeKeys("disbursementDateMM",mm);
         selenium.fireEvent("name=disbursementDateMM", "blur");
 
-        selenium.type("disbursementDateYY",yy);
+        selenium.typeKeys("disbursementDateYY",yy);
         selenium.fireEvent("name=disbursementDateYY", "blur");
     }
 
@@ -300,7 +300,7 @@ public class CreateLoanAccountEntryPage extends MifosPage {
     }
 
     public CreateLoanAccountEntryPage setInstallments(int noOfInstallment) {
-        selenium.type("noOfInstallments",String.valueOf(noOfInstallment));
+        selenium.typeKeys("noOfInstallments",String.valueOf(noOfInstallment));
         selenium.fireEvent("noOfInstallments","blur");
         return this;
     }

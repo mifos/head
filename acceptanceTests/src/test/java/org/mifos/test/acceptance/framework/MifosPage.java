@@ -68,7 +68,7 @@ public class MifosPage extends AbstractPage {
 
     protected void typeTextIfNotEmpty(String locator, String value) {
         if (!isEmpty(value)) {
-            selenium.type(locator, value);
+            selenium.typeKeys(locator, value);
         }
     }
 

@@ -550,65 +550,65 @@ public class DefineNewLoanProductPage extends AbstractPage {
     }
 
     public DefineNewLoanProductPage fillLoanParameters(SubmitFormParameters parameters) {
-        selenium.type("createLoanProduct.input.prdOffering", parameters.getOfferingName());
-        selenium.type("createLoanProduct.input.prdOfferingShortName", parameters.getOfferingShortName());
-        selenium.type("createLoanProduct.input.description", parameters.getDescription());
+        selenium.typeKeys("createLoanProduct.input.prdOffering", parameters.getOfferingName());
+        selenium.typeKeys("createLoanProduct.input.prdOfferingShortName", parameters.getOfferingShortName());
+        selenium.typeKeys("createLoanProduct.input.description", parameters.getDescription());
         selenium.select("prdCategory", "label=" + parameters.getCategory());
         selenium.select("prdApplicableMaster", "value=" + parameters.getApplicableFor());
         selenium.click("name=loanAmtCalcType value=" + parameters.getCalculateLoanAmount());
         if(parameters.getCalculateLoanAmount() == SubmitFormParameters.SAME_FOR_ALL_LOANS) {
-            selenium.type("minLoanAmount", parameters.getMinLoanAmount());
-            selenium.type("maxLoanAmount", parameters.getMaxLoanAmount());
-            selenium.type("defaultLoanAmount", parameters.getDefaultLoanAmount());
+            selenium.typeKeys("minLoanAmount", parameters.getMinLoanAmount());
+            selenium.typeKeys("maxLoanAmount", parameters.getMaxLoanAmount());
+            selenium.typeKeys("defaultLoanAmount", parameters.getDefaultLoanAmount());
         }
         else if(parameters.getCalculateLoanAmount() == SubmitFormParameters.BY_LAST_LOAN_AMOUNT) {
             for(int i = 1; i <= SubmitFormParameters.MAX_CYCLES; i++) {
-                selenium.typeKeys("endRangeLoanAmt"+i, parameters.getLastAmountByLastLoanAmount(i-1));
+                selenium.typeKeysKeys("endRangeLoanAmt"+i, parameters.getLastAmountByLastLoanAmount(i-1));
                 selenium.fireEvent("endRangeLoanAmt"+i, "blur");
-                selenium.type("lastLoanMinLoanAmt"+i, parameters.getMinAmountByLastLoanAmount(i-1));
-                selenium.type("lastLoanMaxLoanAmt"+i, parameters.getMaxAmountByLastLoanAmount(i-1));
-                selenium.type("lastLoanDefaultLoanAmt"+i, parameters.getDefAmountByLastLoanAmount(i-1));
+                selenium.typeKeys("lastLoanMinLoanAmt"+i, parameters.getMinAmountByLastLoanAmount(i-1));
+                selenium.typeKeys("lastLoanMaxLoanAmt"+i, parameters.getMaxAmountByLastLoanAmount(i-1));
+                selenium.typeKeys("lastLoanDefaultLoanAmt"+i, parameters.getDefAmountByLastLoanAmount(i-1));
             }
         }
         else {
             for(int i = 1; i <= SubmitFormParameters.MAX_CYCLES; i++) {
-                selenium.type("cycleLoanMinLoanAmt"+i, parameters.getMinCycleLoanAmount(i-1));
-                selenium.type("cycleLoanMaxLoanAmt"+i, parameters.getMaxCycleLoanAmount(i-1));
-                selenium.type("cycleLoanDefaultLoanAmt"+i, parameters.getDefCycleLoanAmount(i-1));
+                selenium.typeKeys("cycleLoanMinLoanAmt"+i, parameters.getMinCycleLoanAmount(i-1));
+                selenium.typeKeys("cycleLoanMaxLoanAmt"+i, parameters.getMaxCycleLoanAmount(i-1));
+                selenium.typeKeys("cycleLoanDefaultLoanAmt"+i, parameters.getDefCycleLoanAmount(i-1));
             }
         }
         selectWaiverInterest(parameters);
         selenium.select("interestTypes", "value=" + parameters.getInterestTypes());
-        selenium.type("createLoanProduct.input.maxInterestRate", parameters.getMaxInterestRate());
-        selenium.type("createLoanProduct.input.minInterestRate", parameters.getMinInterestRate());
-        selenium.type("createLoanProduct.input.defInterestRate", parameters.getDefaultInterestRate());
+        selenium.typeKeys("createLoanProduct.input.maxInterestRate", parameters.getMaxInterestRate());
+        selenium.typeKeys("createLoanProduct.input.minInterestRate", parameters.getMinInterestRate());
+        selenium.typeKeys("createLoanProduct.input.defInterestRate", parameters.getDefaultInterestRate());
         selenium.click("name=freqOfInstallments value=" + parameters.getFreqOfInstallments());
         selenium.click("name=calcInstallmentType value=" + parameters.getCalculateInstallments());
         if(parameters.getCalculateInstallments() == SubmitFormParameters.SAME_FOR_ALL_LOANS) {
-            selenium.type("minNoInstallments", parameters.getMinInstallemnts());
-            selenium.type("maxNoInstallments", parameters.getMaxInstallments());
-            selenium.type("defNoInstallments", parameters.getDefInstallments());
+            selenium.typeKeys("minNoInstallments", parameters.getMinInstallemnts());
+            selenium.typeKeys("maxNoInstallments", parameters.getMaxInstallments());
+            selenium.typeKeys("defNoInstallments", parameters.getDefInstallments());
         }
         else if(parameters.getCalculateInstallments() == SubmitFormParameters.BY_LAST_LOAN_AMOUNT) {
             for(int i = 1; i <= SubmitFormParameters.MAX_CYCLES; i++) {
-                selenium.typeKeys("endInstallmentRange"+i, parameters.getLastInstallmentByLastLoanAmount(i-1));
+                selenium.typeKeysKeys("endInstallmentRange"+i, parameters.getLastInstallmentByLastLoanAmount(i-1));
                 selenium.fireEvent("endInstallmentRange"+i, "blur");
-                selenium.type("minLoanInstallment"+i, parameters.getMinInstallmentByLastLoanAmount(i-1));
-                selenium.type("maxLoanInstallment"+i, parameters.getMaxInstallmentByLastLoanAmount(i-1));
-                selenium.type("defLoanInstallment"+i, parameters.getDefInstallmentByLastLoanAmount(i-1));
+                selenium.typeKeys("minLoanInstallment"+i, parameters.getMinInstallmentByLastLoanAmount(i-1));
+                selenium.typeKeys("maxLoanInstallment"+i, parameters.getMaxInstallmentByLastLoanAmount(i-1));
+                selenium.typeKeys("defLoanInstallment"+i, parameters.getDefInstallmentByLastLoanAmount(i-1));
             }
         }
         else {
             for(int i = 1; i <= SubmitFormParameters.MAX_CYCLES; i++) {
-                selenium.type("minCycleInstallment"+i, parameters.getMinCycleInstallment(i-1));
-                selenium.type("maxCycleInstallment"+i, parameters.getMaxCycleInstallment(i-1));
-                selenium.type("defCycleInstallment"+i, parameters.getDefCycleInstallment(i-1));
+                selenium.typeKeys("minCycleInstallment"+i, parameters.getMinCycleInstallment(i-1));
+                selenium.typeKeys("maxCycleInstallment"+i, parameters.getMaxCycleInstallment(i-1));
+                selenium.typeKeys("defCycleInstallment"+i, parameters.getDefCycleInstallment(i-1));
             }
         }
         selenium.select("gracePeriodType", "value=" + parameters.getGracePeriodType());
         selenium.fireEvent("gracePeriodType", "change");
         if(parameters.getGracePeriodType()>1){
-            selenium.type("gracePeriodDuration", parameters.getGracePeriodDuration());
+            selenium.typeKeys("gracePeriodDuration", parameters.getGracePeriodDuration());
         }
         selenium.select("interestGLCode", "label=" + parameters.getInterestGLCode());
         selenium.select("principalGLCode", "label=" + parameters.getPrincipalGLCode());
@@ -706,9 +706,9 @@ public class DefineNewLoanProductPage extends AbstractPage {
         if (!selenium.isChecked(configureVariableInstalmentsCheckbox)) {
             selectVariableInstalmentAndWaitForLoad();
         }
-        selenium.type(maxInstalmentGapTextBox, maxGap);
-        selenium.type(minInstalmentGapTextBox, minGap);
-        selenium.type(minInstalmentAmountTextBox, minInstalmentAmount);
+        selenium.typeKeys(maxInstalmentGapTextBox, maxGap);
+        selenium.typeKeys(minInstalmentGapTextBox, minGap);
+        selenium.typeKeys(minInstalmentAmountTextBox, minInstalmentAmount);
         return this;
     }
 
@@ -732,9 +732,9 @@ public class DefineNewLoanProductPage extends AbstractPage {
         if (!selenium.isChecked(cashFlowCheckbox)) {
             selenium.click(cashFlowCheckbox);
         }
-        selenium.type(cashFlowThresholdTextBox, warningThreshold);
-        selenium.type(indebtentRate, indebtentValue);
-        selenium.type(repaymentCapacity, repaymentValue);
+        selenium.typeKeys(cashFlowThresholdTextBox, warningThreshold);
+        selenium.typeKeys(indebtentRate, indebtentValue);
+        selenium.typeKeys(repaymentCapacity, repaymentValue);
         return this;
     }
 

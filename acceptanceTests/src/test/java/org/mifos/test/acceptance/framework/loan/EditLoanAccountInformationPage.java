@@ -49,25 +49,25 @@ public class EditLoanAccountInformationPage extends MifosPage {
     }
 
     public  void editExternalID(EditLoanAccountInformationParameters params) {
-        selenium.type("externalId", params.getExternalID());
+        selenium.typeKeys("externalId", params.getExternalID());
     }
 
 
     public EditLoanAccountInformationPage editAccountParams(CreateLoanAccountSubmitParameters accountSubmitParameters, EditLoanAccountInformationParameters editAccountParameters) {
         if (accountSubmitParameters.getAmount() != null) {
-            selenium.type("editLoanAccount.input.loanAmount", accountSubmitParameters.getAmount());
+            selenium.typeKeys("editLoanAccount.input.loanAmount", accountSubmitParameters.getAmount());
         }
         if (editAccountParameters.getGracePeriod() != null) {
-            selenium.type("editLoanAccount.input.gracePeriod", editAccountParameters.getGracePeriod());
+            selenium.typeKeys("editLoanAccount.input.gracePeriod", editAccountParameters.getGracePeriod());
         }
         if (editAccountParameters.getCollateralNotes() != null) {
-            selenium.type("editLoanAccount.textbox.collateralnotes", editAccountParameters.getCollateralNotes());
+            selenium.typeKeys("editLoanAccount.textbox.collateralnotes", editAccountParameters.getCollateralNotes());
         }
         if (editAccountParameters.getCollateralType() != null) {
             selenium.select("editLoanAccount.select.collateraltype", "label=" + editAccountParameters.getCollateralType());
         }
         if (editAccountParameters.getExternalID() != null) {
-            selenium.type("editLoanAccount.input.externalid", editAccountParameters.getExternalID());
+            selenium.typeKeys("editLoanAccount.input.externalid", editAccountParameters.getExternalID());
         }
         if (editAccountParameters.getPurposeOfLoan() != null) {
             selenium.select("editLoanAccount.input.purposeofloan", "label=" + editAccountParameters.getPurposeOfLoan());

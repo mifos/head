@@ -62,7 +62,7 @@ public class FundCreatePage extends AbstractPage {
     }
 
     public CreateNewFundConfirmationPage submitAndNavigateToNewFundConfirmationPage(CreateFundSubmitParameters formParameters) {
-        selenium.type("name",formParameters.getFundName());
+        selenium.typeKeys("name",formParameters.getFundName());
         selenium.select("codeId", "label=" + formParameters.getFundCode());
         selenium.click("preview");
         waitForPageToLoad();

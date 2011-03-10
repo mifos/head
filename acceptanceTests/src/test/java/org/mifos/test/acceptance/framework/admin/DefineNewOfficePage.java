@@ -34,11 +34,11 @@ public class DefineNewOfficePage extends MifosPage {
     }
 
     public void setOfficeName(String officeName) {
-        selenium.type("CreateNewOffice.input.officeName", officeName);
+        selenium.typeKeys("CreateNewOffice.input.officeName", officeName);
     }
 
     public void setOfficeShortName(String officeShortName) {
-        selenium.type("CreateNewOffice.input.shortName", officeShortName);
+        selenium.typeKeys("CreateNewOffice.input.shortName", officeShortName);
     }
 
     public void setOfficeType(String officeShortName) {

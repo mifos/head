@@ -32,7 +32,7 @@ public class DefineLookupOptionPage extends MifosPage {
     }
 
     public DefineLookupOptionsPage fillFormAndSubmit(DefineLookupOptionParameters lookupOptionParams) {
-        selenium.type("lookupValue", lookupOptionParams.getName());
+        selenium.typeKeys("lookupValue", lookupOptionParams.getName());
         selenium.click("defineLookupOption.button.submit");
         waitForPageToLoad();
         return new DefineLookupOptionsPage(selenium);

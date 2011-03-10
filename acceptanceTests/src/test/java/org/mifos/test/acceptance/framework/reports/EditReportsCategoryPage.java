@@ -31,7 +31,7 @@ public class EditReportsCategoryPage extends MifosPage {
     }
 
     public EditReportsCategoryPage setCategoryName(String categoryName) {
-        selenium.type("categoryName", categoryName);
+        selenium.typeKeys("categoryName", categoryName);
         return this;
     }
 

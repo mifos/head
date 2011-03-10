@@ -98,7 +98,7 @@ public class QuestionGroupTestHelper {
     public void validateQuestionGroupTitle(List<String> titles) {
         navigationHelper.navigateToAdminPage().navigateToCreateQuestionGroupPage();
         for(String title : titles) {
-            selenium.type("title", title);
+            selenium.typeKeys("title", title);
             Assert.assertEquals(selenium.getValue("title"), title);
         }
     }

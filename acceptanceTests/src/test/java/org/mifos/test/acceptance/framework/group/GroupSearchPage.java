@@ -44,7 +44,7 @@ public class GroupSearchPage extends MifosPage {
     }
 
     public void setGroup(String group){
-        selenium.type("group_search.input.search", group);
+        selenium.typeKeys("group_search.input.search", group);
     }
 
     public CreateClientEnterPersonalDataPage selectGroup(String group)  {

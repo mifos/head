@@ -34,12 +34,12 @@ public class ClientEditMFIPage extends MifosPage {
     }
 
     public ClientEditMFIPreviewPage submitAndNavigateToClientEditMFIPreviewPage(ClientEditMFIParameters params) {
-        selenium.type("edit_ClientMfiInfo.input.externalId", params.getExternalId());
+        selenium.typeKeys("edit_ClientMfiInfo.input.externalId", params.getExternalId());
         selenium.click("trained");
 
-        selenium.type("trainedDateDD", params.getTrainedDateDD());
-        selenium.type("trainedDateMM", params.getTrainedDateMM());
-        selenium.type("trainedDateYY", params.getTrainedDateYYYY());
+        selenium.typeKeys("trainedDateDD", params.getTrainedDateDD());
+        selenium.typeKeys("trainedDateMM", params.getTrainedDateMM());
+        selenium.typeKeys("trainedDateYY", params.getTrainedDateYYYY());
 
         selenium.fireEvent("trainedDateDD", "blur");
 

@@ -34,7 +34,7 @@ public class EditCenterMembershipSearchPage extends MifosPage {
     }
 
     public EditCenterMembershipConfirmationPage selectCenterAndNavigateToEditCenterMembershiConfirmationPage(String centerName) {
-        selenium.type("center_search_transfer_group.input.search", centerName);
+        selenium.typeKeys("center_search_transfer_group.input.search", centerName);
         selenium.click("center_search_transfer_group.button.search");
         waitForPageToLoad();
         selenium.click("link=" + centerName);

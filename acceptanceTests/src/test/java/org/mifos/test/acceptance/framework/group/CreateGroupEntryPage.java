@@ -79,7 +79,7 @@ public class CreateGroupEntryPage extends MifosPage {
     }
 
     private void enterGroupData(CreateGroupSubmitParameters formParameters) {
-        selenium.type("creategroup.input.displayName", formParameters.getGroupName());
+        selenium.typeKeys("creategroup.input.displayName", formParameters.getGroupName());
         typeTextIfNotEmpty("formedByPersonnel", formParameters.getRecruitedBy());
         typeTextIfNotEmpty("trainedDateDD", formParameters.getTrainedDateDay());
         typeTextIfNotEmpty("trainedDateMM", formParameters.getTrainedDateMonth());

@@ -35,7 +35,7 @@ public class AccountAddNotesPage extends MifosPage {
     }
 
     public AccountPreviewNotesPage submitAndNavigateToAccountAddNotesPreviewPage( String note ) {
-        selenium.type("account_addnotes.input.note", note);
+        selenium.typeKeys("account_addnotes.input.note", note);
         selenium.click("account_addnotes.button.preview");
         waitForPageToLoad();
 

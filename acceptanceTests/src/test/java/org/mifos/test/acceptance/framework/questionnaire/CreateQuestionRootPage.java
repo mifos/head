@@ -13,7 +13,7 @@ public class CreateQuestionRootPage extends MifosPage {
     }
 
     protected void enterDetails(CreateQuestionParameters createQuestionParameters) {
-        selenium.type("currentQuestion.text", createQuestionParameters.getText());
+        selenium.typeKeys("currentQuestion.text", createQuestionParameters.getText());
         selenium.select("id=currentQuestion.type", "value=" + translateQuestionType(createQuestionParameters.getType()));
         fillUpChoices(createQuestionParameters);
         fillUpNumericDetails(createQuestionParameters);
@@ -46,8 +46,8 @@ public class CreateQuestionRootPage extends MifosPage {
 
     private void fillUpNumericDetails(CreateQuestionParameters createQuestionParameters) {
         if (createQuestionParameters.isNumericQuestionType()) {
-            selenium.type("currentQuestion.numericMin", createQuestionParameters.getNumericMin().toString());
-            selenium.type("currentQuestion.numericMax", createQuestionParameters.getNumericMax().toString());
+            selenium.typeKeys("currentQuestion.numericMin", createQuestionParameters.getNumericMin().toString());
+            selenium.typeKeys("currentQuestion.numericMax", createQuestionParameters.getNumericMax().toString());
         }
     }
 
@@ -63,13 +63,13 @@ public class CreateQuestionRootPage extends MifosPage {
         List<Choice> choices = createQuestionParameters.getChoices();
         for (int i = 0, choicesSize = choices.size(); i < choicesSize; i++) {
             Choice choice = choices.get(i);
-            selenium.type("currentQuestion.currentSmartChoice", choice.getChoiceText());
+            selenium.typeKeys("currentQuestion.currentSmartChoice", choice.getChoiceText());
             selenium.keyUp("id=currentQuestion.currentSmartChoice", " ");
             selenium.click("_eventId_addSmartChoice");
             waitForPageToLoad();
             for (String tag : choice.getTags()) {
                 String tagId = "currentQuestion.currentSmartChoiceTags[" + i + "]";
-                selenium.type(tagId, tag);
+                selenium.typeKeys(tagId, tag);
                 selenium.keyUp("id=" + tagId, " ");
                 selenium.click("addSmartChoiceTag_" + i);
                 waitForPageToLoad();
@@ -79,7 +79,7 @@ public class CreateQuestionRootPage extends MifosPage {
 
     private void setAnswerChoices(CreateQuestionParameters createQuestionParameters) {
         for (String choice : createQuestionParameters.getChoicesAsStrings()) {
-            selenium.type("currentQuestion.currentChoice", choice);
+            selenium.typeKeys("currentQuestion.currentChoice", choice);
             selenium.keyUp("id=currentQuestion.currentChoice"," ");
             selenium.click("_eventId_addChoice");
             waitForPageToLoad();

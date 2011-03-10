@@ -524,8 +524,8 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         SavingsProductDetailsPage savingsProductDetailsPage = viewSavingsProducts.viewSavingsProductDetails(productName);
         EditSavingsProductPage editSavingsProductPage = savingsProductDetailsPage.editSavingsProduct();
 
-        selenium.type("interestRate", "10.0");
-        selenium.type("minBalanceRequiredForInterestCalculation", "100.0");
+        selenium.typeKeys("interestRate", "10.0");
+        selenium.typeKeys("minBalanceRequiredForInterestCalculation", "100.0");
 
         EditSavingsProductPreviewPage editSavingsProductPreviewPage = editSavingsProductPage.editSubmit();
         savingsProductDetailsPage = editSavingsProductPreviewPage.submit();

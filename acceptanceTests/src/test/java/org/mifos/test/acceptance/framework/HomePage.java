@@ -71,7 +71,7 @@ public class HomePage extends MifosPage {
     }
 
     public SearchResultsPage search(String searchFor) {
-        selenium.type("home.input.search", searchFor);
+        selenium.typeKeys("home.input.search", searchFor);
         selenium.click("home.button.search");
         waitForPageToLoad();
         return new SearchResultsPage(selenium);

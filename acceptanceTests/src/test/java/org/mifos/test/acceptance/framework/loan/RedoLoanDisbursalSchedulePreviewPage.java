@@ -54,7 +54,7 @@ public class RedoLoanDisbursalSchedulePreviewPage extends MifosPage {
     }
 
     public void typeAmountPaid(int amountPaid, int row) {
-        selenium.type("name="+String.format(paidAmountField, row), String.valueOf(amountPaid));
+        selenium.typeKeys("name="+String.format(paidAmountField, row), String.valueOf(amountPaid));
     }
 
     public RedoLoanDisbursalSchedulePreviewPage validateRepaymentScheduleFieldDefault(int defInstallments) {
@@ -242,7 +242,7 @@ public class RedoLoanDisbursalSchedulePreviewPage extends MifosPage {
 
     private void fillAllFields(int noOfInstallments, String totalField, String installmentAmount) {
         for (int installment = 0; installment < noOfInstallments-1; installment++) {
-            selenium.type(String.format(totalField,installment), installmentAmount);
+            selenium.typeKeys(String.format(totalField,installment), installmentAmount);
         }
     }
 
@@ -262,7 +262,7 @@ public class RedoLoanDisbursalSchedulePreviewPage extends MifosPage {
     }
 
     private void setInstallmentDate(String installment, String date) {
-        selenium.type(String.format(dateField,installment), date);
+        selenium.typeKeys(String.format(dateField,installment), date);
     }
 
     public RedoLoanDisbursalSchedulePreviewPage verifyRecalculationWhenDateAndTotalChange() {
@@ -292,7 +292,7 @@ public class RedoLoanDisbursalSchedulePreviewPage extends MifosPage {
     }
 
     private void setInstallmentTotal(int installment, String total) {
-        selenium.type(String.format(totalField,installment-1),total);
+        selenium.typeKeys(String.format(totalField,installment-1),total);
     }
 
     public RedoLoanAccountPreviewPage clickPreviewAndGoToReviewLoanAccountPage() {
@@ -303,8 +303,8 @@ public class RedoLoanDisbursalSchedulePreviewPage extends MifosPage {
 
     public RedoLoanDisbursalSchedulePreviewPage setPaidField(String[][] payment) {
         for (int rowIndex = 0; rowIndex < payment.length; rowIndex++) {
-            selenium.type(String.format(paidDateField,rowIndex),payment[rowIndex][0]);
-            selenium.type(String.format(paidAmountField,rowIndex),payment[rowIndex][1]);
+            selenium.typeKeys(String.format(paidDateField,rowIndex),payment[rowIndex][0]);
+            selenium.typeKeys(String.format(paidAmountField,rowIndex),payment[rowIndex][1]);
         }
         return this;
     }

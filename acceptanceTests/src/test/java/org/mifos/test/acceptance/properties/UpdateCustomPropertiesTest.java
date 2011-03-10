@@ -299,8 +299,8 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
         formParameters.setSearchString("UpdateCustomProperties TestClient");
         accountSearchPage.searchAndNavigateToCreateLoanAccountPage(formParameters);
 
-        selenium.type("loancreationdetails.input.sumLoanAmount", "123456789012345");
-        selenium.type("loancreationdetails.input.interestRate", "12.000001");
+        selenium.typeKeys("loancreationdetails.input.sumLoanAmount", "123456789012345");
+        selenium.typeKeys("loancreationdetails.input.interestRate", "12.000001");
         selenium.click("loancreationdetails.button.continue");
         selenium.waitForPageToLoad("30000");
         //Then
@@ -310,8 +310,8 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
         Assert.assertEquals(interestError, true);
         Assert.assertEquals(amountError, true);
         //When
-        selenium.type("loancreationdetails.input.sumLoanAmount", "12345678901234");
-        selenium.type("loancreationdetails.input.interestRate", "12.00001");
+        selenium.typeKeys("loancreationdetails.input.sumLoanAmount", "12345678901234");
+        selenium.typeKeys("loancreationdetails.input.interestRate", "12.00001");
         selenium.click("loancreationdetails.button.continue");
         selenium.waitForPageToLoad("30000");
         //Then

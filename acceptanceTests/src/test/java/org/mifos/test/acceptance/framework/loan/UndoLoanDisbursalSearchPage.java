@@ -32,7 +32,7 @@ public class UndoLoanDisbursalSearchPage extends MifosPage {
     }
 
     public UndoLoanDisbursalEntryPage searchAndNavigateToUndoLoanDisbursalPage(String loanId) {
-        selenium.type("undoloandisbursalsearch.input.search", loanId);
+        selenium.typeKeys("undoloandisbursalsearch.input.search", loanId);
         selenium.click("undoloandisbursalsearch.button.search");
         waitForPageToLoad();
 
@@ -40,7 +40,7 @@ public class UndoLoanDisbursalSearchPage extends MifosPage {
     }
 
     public void verifyLoanCantBeReversed(String loanID) {
-        selenium.type("undoloandisbursalsearch.input.search", loanID);
+        selenium.typeKeys("undoloandisbursalsearch.input.search", loanID);
         selenium.click("undoloandisbursalsearch.button.search");
         waitForPageToLoad();
         this.verifyPage("UndoLoanDisbursalSearch");

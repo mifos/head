@@ -36,7 +36,7 @@ public class CreateSavingsAccountEntryPage extends AbstractPage {
     }
 
     public CreateSavingsAccountConfirmationPage submitAndNavigateToSavingsAccountConfirmationPageWithoutPendingApprovalState(CreateSavingsAccountSubmitParameters formParameters) {
-        selenium.type("continuecreatesavingsaccount.input.recommendedAmount",formParameters.getAmount());
+        selenium.typeKeys("continuecreatesavingsaccount.input.recommendedAmount",formParameters.getAmount());
         selenium.click("continuecreatesavingsaccount.button.preview");
         waitForPageToLoad();
         selenium.isVisible("approvedButton");
@@ -47,7 +47,7 @@ public class CreateSavingsAccountEntryPage extends AbstractPage {
     }
 
     public CreateSavingsAccountConfirmationPage submitAndNavigateToSavingsAccountConfirmationPage(CreateSavingsAccountSubmitParameters formParameters) {
-        selenium.type("continuecreatesavingsaccount.input.recommendedAmount",formParameters.getAmount());
+        selenium.typeKeys("continuecreatesavingsaccount.input.recommendedAmount",formParameters.getAmount());
         selenium.click("continuecreatesavingsaccount.button.preview");
         waitForPageToLoad();
         selenium.isVisible("createsavingsaccountpreview.button.submitForApproval");
@@ -58,7 +58,7 @@ public class CreateSavingsAccountEntryPage extends AbstractPage {
     }
 
     public CreateSavingsAccountConfirmationPage submitWithQGAndNavigateToSavingsAccountConfirmationPage(CreateSavingsAccountSubmitParameters formParameters) {
-        selenium.type("continuecreatesavingsaccount.input.recommendedAmount",formParameters.getAmount());
+        selenium.typeKeys("continuecreatesavingsaccount.input.recommendedAmount",formParameters.getAmount());
         selenium.click("continuecreatesavingsaccount.button.preview");
         waitForPageToLoad();
 
@@ -74,7 +74,7 @@ public class CreateSavingsAccountEntryPage extends AbstractPage {
     }
 
     public QuestionResponsePage submitAndNavigateToQuestionResponsePage(CreateSavingsAccountSubmitParameters formParameters) {
-        selenium.type("continuecreatesavingsaccount.input.recommendedAmount",formParameters.getAmount());
+        selenium.typeKeys("continuecreatesavingsaccount.input.recommendedAmount",formParameters.getAmount());
         selenium.click("continuecreatesavingsaccount.button.preview");
         waitForPageToLoad();
         return new QuestionResponsePage(selenium);

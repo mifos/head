@@ -182,10 +182,10 @@ public class CreateHolidayEntryPage extends MifosPage {
 
     public CreateHolidayConfirmationPage submitAndNavigateToHolidayConfirmationPage(
             CreateHolidaySubmitParameters formParameters) {
-        selenium.type("holiday.input.name", formParameters.getName());
-        selenium.type("holidayFromDateDD", formParameters.getFromDateDD());
-        selenium.type("holidayFromDateMM", formParameters.getFromDateMM());
-        selenium.type("holidayFromDateYY", formParameters.getFromDateYYYY());
+        selenium.typeKeys("holiday.input.name", formParameters.getName());
+        selenium.typeKeys("holidayFromDateDD", formParameters.getFromDateDD());
+        selenium.typeKeys("holidayFromDateMM", formParameters.getFromDateMM());
+        selenium.typeKeys("holidayFromDateYY", formParameters.getFromDateYYYY());
         this.typeTextIfNotEmpty("holidayThruDateDD", formParameters.getThruDateDD());
         this.typeTextIfNotEmpty("holidayThruDateMM", formParameters.getThruDateMM());
         this.typeTextIfNotEmpty("holidayThruDateYY", formParameters.getThruDateYYYY());
@@ -207,7 +207,7 @@ public class CreateHolidayEntryPage extends MifosPage {
                 selenium.click("link=*" + officeName);
             }
         } else {
-            selenium.type("selectedOfficeIds", formParameters.getSelectedOfficeIds());
+            selenium.typeKeys("selectedOfficeIds", formParameters.getSelectedOfficeIds());
             getEval("window.CreateHoliday.setState();");
         }
         selenium.click("holiday.button.preview");

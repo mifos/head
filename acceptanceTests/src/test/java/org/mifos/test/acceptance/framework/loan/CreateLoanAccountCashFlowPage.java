@@ -67,8 +67,8 @@ public class CreateLoanAccountCashFlowPage extends AbstractPage{
         }
         Assert.assertEquals(selenium.getText("monthlyCashFlows[0].expense"), "");
         Assert.assertEquals(selenium.getText("monthlyCashFlows[0].revenue"), "");
-        selenium.type("monthlyCashFlows[0].expense", "");
-        selenium.type("monthlyCashFlows[0].revenue", "");
+        selenium.typeKeys("monthlyCashFlows[0].expense", "");
+        selenium.typeKeys("monthlyCashFlows[0].revenue", "");
     }
 
     public void verifyErrorsOnPage() {
@@ -91,44 +91,44 @@ public class CreateLoanAccountCashFlowPage extends AbstractPage{
         String lengthWrongDigits = getNumbers(FIELD_MAX_DIGITS+1);
         String lengthWrongDecimal = "0."+getNumbers(FIELD_MAX_DECIMAL_PLACES+1);
 
-        selenium.typeKeys("monthlyCashFlows[0].expense", lengthMaxDigits);
+        selenium.typeKeysKeys("monthlyCashFlows[0].expense", lengthMaxDigits);
         selenium.fireEvent("monthlyCashFlows[0].expense", "blur");
         selenium.fireEvent("monthlyCashFlows[1].expense", "blur");
         Assert.assertFalse(isTextPresentInPage(error));
-        selenium.type("monthlyCashFlows[0].expense", "");
+        selenium.typeKeys("monthlyCashFlows[0].expense", "");
 
-        selenium.type("monthlyCashFlows[0].expense", lengthMaxDecimal);
+        selenium.typeKeys("monthlyCashFlows[0].expense", lengthMaxDecimal);
         selenium.fireEvent("monthlyCashFlows[0].expense", "blur");
         selenium.fireEvent("monthlyCashFlows[1].expense", "blur");
         Assert.assertFalse(isTextPresentInPage(error));
-        selenium.type("monthlyCashFlows[0].expense", "");
+        selenium.typeKeys("monthlyCashFlows[0].expense", "");
 
-        selenium.type("monthlyCashFlows[0].expense", lengthWrongDecimal);
+        selenium.typeKeys("monthlyCashFlows[0].expense", lengthWrongDecimal);
         selenium.fireEvent("monthlyCashFlows[0].expense", "blur");
         selenium.fireEvent("monthlyCashFlows[1].expense", "blur");
         Assert.assertTrue(isTextPresentInPage(error));
-        selenium.type("monthlyCashFlows[0].expense", "");
+        selenium.typeKeys("monthlyCashFlows[0].expense", "");
 
-        selenium.typeKeys("monthlyCashFlows[0].expense", lengthWrongDigits);
+        selenium.typeKeysKeys("monthlyCashFlows[0].expense", lengthWrongDigits);
         selenium.fireEvent("monthlyCashFlows[0].expense", "blur");
         selenium.fireEvent("monthlyCashFlows[1].expense", "blur");
         Assert.assertTrue(isTextPresentInPage(error));
-        selenium.type("monthlyCashFlows[0].expense", "");
+        selenium.typeKeys("monthlyCashFlows[0].expense", "");
         selenium.fireEvent("monthlyCashFlows[0].expense", "focus");
     }
 
     public CreateLoanAccountCashFlowPage enterValidData(String expense, double incremental, int cashFlowBase, String totalCapital, String totalLiability) {
         int noOfMonths = selenium.getXpathCount("//input[contains(@id,'expense')]").intValue();
         for (int rowIndex = 1; rowIndex <= noOfMonths ; rowIndex++) {
-            selenium.type("//tr[" + rowIndex + "]/td[2]/input", expense);
-            selenium.type("//tr[" + rowIndex + "]/td[3]/input", String.valueOf(cashFlowBase + incremental));
-            selenium.type("//tr[" + rowIndex + "]/td[4]/input","notes" + rowIndex);
+            selenium.typeKeys("//tr[" + rowIndex + "]/td[2]/input", expense);
+            selenium.typeKeys("//tr[" + rowIndex + "]/td[3]/input", String.valueOf(cashFlowBase + incremental));
+            selenium.typeKeys("//tr[" + rowIndex + "]/td[4]/input","notes" + rowIndex);
         }
         if (totalCapital != null) {
-            selenium.type(this.totalCapital, totalCapital);
+            selenium.typeKeys(this.totalCapital, totalCapital);
         }
         if (totalLiability != null) {
-            selenium.type(this.totalLiability, totalLiability);
+            selenium.typeKeys(this.totalLiability, totalLiability);
         }
         return this;
     }
@@ -154,16 +154,16 @@ public class CreateLoanAccountCashFlowPage extends AbstractPage{
         clickContinue();
         Assert.assertTrue(isTextPresentInPage("Please specify the total capital"));
         Assert.assertTrue(isTextPresentInPage("Please specify the total liability"));
-//        selenium.type(totalCapital,"abc");
-//        selenium.type(totalLiability,"abc");
+//        selenium.typeKeys(totalCapital,"abc");
+//        selenium.typeKeys(totalLiability,"abc");
 //        Assert.assertTrue(selenium.getValue(totalCapital).equals(""));
 //        Assert.assertTrue(selenium.getValue(totalLiability).equals(""));
         return this;
     }
 
     public CreateLoanAccountCashFlowPage verifyInvalidIndebentRate(String maxValue, String capital, String liability) {
-        selenium.type(totalCapital, capital);
-        selenium.type(totalLiability, liability);
+        selenium.typeKeys(totalCapital, capital);
+        selenium.typeKeys(totalLiability, liability);
         clickContinue();
         Assert.assertTrue(isTextPresentInPage("Indebtedness rate of the client is 49.99 % which should be lesser than the allowable value of " + maxValue + " %"));
         return this;

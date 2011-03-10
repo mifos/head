@@ -40,7 +40,7 @@ public class CollectionSheetReportParametersPage extends MifosPage {
         selenium.select("branchId_selection", formParameters.getBranch());
         selenium.select("loanOfficerId_selection", formParameters.getLoanOfficer());
         selenium.select("centerId_selection", formParameters.getCenter());
-        selenium.type("meetingDate", formParameters.getTransactionDay() + "/" +
+        selenium.typeKeys("meetingDate", formParameters.getTransactionDay() + "/" +
                                      formParameters.getTransactionMonth() + "/" +
                                      formParameters.getTransactionYear());
         selenium.click("//input[@value='Generate']");

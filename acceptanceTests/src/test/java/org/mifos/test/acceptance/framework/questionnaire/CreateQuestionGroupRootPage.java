@@ -67,11 +67,11 @@ public class CreateQuestionGroupRootPage extends CreateQuestionRootPage{
     }
 
     public void setTitle(String title) {
-        selenium.type("name=title", title);
+        selenium.typeKeys("name=title", title);
     }
 
     public void setSection(String section) {
-        selenium.type("id=sectionName", section);
+        selenium.typeKeys("id=sectionName", section);
     }
 
 }

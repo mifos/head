@@ -32,7 +32,7 @@ public class ClientNotesPage extends MifosPage {
        super(selenium);
     }
     public ClientViewDetailsPage addNotePreviewAndSubmit(String note){
-        selenium.type("addCustomerNotes.input.note", note);
+        selenium.typeKeys("addCustomerNotes.input.note", note);
         selenium.click("addCustomerNotes.button.preview");
         waitForPageToLoad();
         selenium.click("previewCustomerNotes.button.submit");

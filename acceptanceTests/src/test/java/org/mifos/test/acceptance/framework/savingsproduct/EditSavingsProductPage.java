@@ -34,14 +34,14 @@ public class EditSavingsProductPage extends MifosPage {
     }
 
     public EditSavingsProductPreviewPage submitRequiredDescriptionAndInterestChanges(SubmitSavingsFormParameters parameters) {
-        selenium.type("createSavingsProduct.input.prdOfferingName", parameters.getOfferingName());
-        selenium.type("createSavingsProduct.input.prdOfferingShortName", parameters.getOfferingShortName());
-        selenium.type("startDateDD", parameters.getStartDateDd());
-        selenium.type("startDateMM", parameters.getStartDateMm());
-        selenium.type("startDateYY", parameters.getStartDateYy());
-        selenium.type("interestRate", parameters.getInterestRate());
-        selenium.type("interestPostingMonthlyFrequency", parameters.getFrequencyInterest());
-        selenium.type("interestCalculationFrequency", parameters.getTimePeriodInterest());
+        selenium.typeKeys("createSavingsProduct.input.prdOfferingName", parameters.getOfferingName());
+        selenium.typeKeys("createSavingsProduct.input.prdOfferingShortName", parameters.getOfferingShortName());
+        selenium.typeKeys("startDateDD", parameters.getStartDateDd());
+        selenium.typeKeys("startDateMM", parameters.getStartDateMm());
+        selenium.typeKeys("startDateYY", parameters.getStartDateYy());
+        selenium.typeKeys("interestRate", parameters.getInterestRate());
+        selenium.typeKeys("interestPostingMonthlyFrequency", parameters.getFrequencyInterest());
+        selenium.typeKeys("interestCalculationFrequency", parameters.getTimePeriodInterest());
 
         if(parameters.getProductCategory()==0) {
             selenium.select("generalDetails.selectedCategory", "value=");

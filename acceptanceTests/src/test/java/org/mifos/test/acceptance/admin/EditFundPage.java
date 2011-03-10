@@ -55,7 +55,7 @@ public class EditFundPage extends AbstractPage {
     }
 
     public EditFundConfirmationPage submitAndNavigateToEditFundConfirmationPage(EditFundSubmitParameters formParameters) {
-        selenium.type("name",formParameters.getFundName());
+        selenium.typeKeys("name",formParameters.getFundName());
         selenium.click("preview");
         waitForPageToLoad();
 

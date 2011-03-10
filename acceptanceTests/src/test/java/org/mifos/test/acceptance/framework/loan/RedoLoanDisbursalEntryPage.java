@@ -73,9 +73,9 @@ public class RedoLoanDisbursalEntryPage extends MifosPage {
         this.typeTextIfNotEmpty("loancreationdetails.input.sumLoanAmount", params.getLoanAmount());
         this.typeTextIfNotEmpty("loancreationdetails.input.interestRate", params.getInterestRate());
         this.typeTextIfNotEmpty("loancreationdetails.input.numberOfInstallments", params.getNumberOfInstallments());
-        selenium.type("disbursementDateDD", params.getDisbursalDateDD());
-        selenium.type("disbursementDateMM", params.getDisbursalDateMM());
-        selenium.type("disbursementDateYY", params.getDisbursalDateYYYY());
+        selenium.typeKeys("disbursementDateDD", params.getDisbursalDateDD());
+        selenium.typeKeys("disbursementDateMM", params.getDisbursalDateMM());
+        selenium.typeKeys("disbursementDateYY", params.getDisbursalDateYYYY());
 
         selenium.fireEvent("disbursementDateYY", "blur");
     }
@@ -83,7 +83,7 @@ public class RedoLoanDisbursalEntryPage extends MifosPage {
     private void typeGLIMData(RedoLoanDisbursalParameters params) {
         for(int i = 0; i < params.getClientsCount(); i++) {
             selenium.click("clients["+params.getCLientsID(i)+"]");
-            selenium.type("clientDetails["+params.getCLientsID(i)+"].loanAmount", params.getClientsAmount(i));
+            selenium.typeKeys("clientDetails["+params.getCLientsID(i)+"].loanAmount", params.getClientsAmount(i));
             selenium.select("clientDetails["+params.getCLientsID(i)+"].businessActivity", params.getClientsPurpose(i));
         }
     }

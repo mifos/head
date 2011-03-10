@@ -38,7 +38,7 @@ public class GroupSearchClientTransferPage extends MifosPage {
     }
 
     private void setSearchedGroupName(String groupName){
-        selenium.type("group_search_client_transfer.input.search", groupName);
+        selenium.typeKeys("group_search_client_transfer.input.search", groupName);
     }
 
     private void search(){

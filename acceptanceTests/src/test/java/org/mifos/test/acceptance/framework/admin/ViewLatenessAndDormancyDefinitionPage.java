@@ -56,8 +56,8 @@ public class ViewLatenessAndDormancyDefinitionPage extends MifosPage {
     }
 
     private void fillFromAndSubmit(String lateness, String dormancy){
-        selenium.type("lateness", lateness);
-        selenium.type("dormancy", dormancy);
+        selenium.typeKeys("lateness", lateness);
+        selenium.typeKeys("dormancy", dormancy);
         selenium.click("name=submit");
         waitForPageToLoad();
     }

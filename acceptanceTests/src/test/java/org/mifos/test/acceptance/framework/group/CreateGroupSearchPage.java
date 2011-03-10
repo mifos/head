@@ -36,7 +36,7 @@ public class CreateGroupSearchPage extends AbstractPage {
 
 
     public CreateGroupEntryPage searchAndNavigateToCreateGroupPage(String centerName) {
-        selenium.type("center_search.input.search", centerName);
+        selenium.typeKeys("center_search.input.search", centerName);
         selenium.click("center_search.button.search");
         waitForPageToLoad();
         selenium.click("link=" + centerName + "*");

@@ -173,11 +173,11 @@ public class DefineNewSavingsProductPage extends MifosPage {
 
     }
     public DefineNewSavingsProductPreviewPage submitAndNavigateToDefineNewSavingsProductPreviewPage(SavingsProductParameters productParameters) {
-        selenium.type("CreateSavingsProduct.input.prdOfferingName", productParameters.getProductInstanceName());
-        selenium.type("CreateSavingsProduct.input.prdOfferingShortName", productParameters.getShortName());
-        selenium.type("startDateDD", productParameters.getStartDateDD());
-        selenium.type("startDateMM", productParameters.getStartDateMM());
-        selenium.type("startDateYY", productParameters.getStartDateYYYY());
+        selenium.typeKeys("CreateSavingsProduct.input.prdOfferingName", productParameters.getProductInstanceName());
+        selenium.typeKeys("CreateSavingsProduct.input.prdOfferingShortName", productParameters.getShortName());
+        selenium.typeKeys("startDateDD", productParameters.getStartDateDD());
+        selenium.typeKeys("startDateMM", productParameters.getStartDateMM());
+        selenium.typeKeys("startDateYY", productParameters.getStartDateYYYY());
 
         selectValueIfNotZero("generalDetails.selectedCategory", productParameters.getProductCategory());
 
@@ -185,14 +185,14 @@ public class DefineNewSavingsProductPage extends MifosPage {
         selectValueIfNotZero("selectedDepositType", productParameters.getTypeOfDeposits());
         typeTextIfNotEmpty("amountForDeposit", productParameters.getMandatoryAmount());
         selectValueIfNotZero("selectedGroupSavingsApproach", productParameters.getAmountAppliesTo());
-        selenium.type("interestRate", productParameters.getInterestRate());
+        selenium.typeKeys("interestRate", productParameters.getInterestRate());
 
         selectValueIfNotZero("selectedInterestCalculation", productParameters.getBalanceUsedForInterestCalculation());
 
-        selenium.type("interestCalculationFrequency", productParameters.getNumberOfDaysOrMonthsForInterestCalculation());
+        selenium.typeKeys("interestCalculationFrequency", productParameters.getNumberOfDaysOrMonthsForInterestCalculation());
         selectValueIfNotZero("selectedFequencyPeriod", productParameters.getDaysOrMonthsForInterestCalculation());
 
-        selenium.type("interestPostingMonthlyFrequency", productParameters.getFrequencyOfInterestPostings());
+        selenium.typeKeys("interestPostingMonthlyFrequency", productParameters.getFrequencyOfInterestPostings());
 
         selectIfNotEmpty("selectedPrincipalGlCode", productParameters.getGlCodeForDeposit());
         selectIfNotEmpty("selectedInterestGlCode", productParameters.getGlCodeForInterest());

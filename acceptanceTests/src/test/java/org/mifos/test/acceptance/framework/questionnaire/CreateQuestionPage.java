@@ -26,10 +26,10 @@ public class CreateQuestionPage extends CreateQuestionRootPage {
     }
 
     public void setNumberQuestion(String name, String min, String max) {
-        selenium.type("currentQuestion.text", name);
+        selenium.typeKeys("currentQuestion.text", name);
         selenium.select("id=currentQuestion.type", "value=number");
-        selenium.type("currentQuestion.numericMin", min);
-        selenium.type("currentQuestion.numericMax", max);
+        selenium.typeKeys("currentQuestion.numericMin", min);
+        selenium.typeKeys("currentQuestion.numericMax", max);
     }
 
     public AdminPage submitQuestions() {

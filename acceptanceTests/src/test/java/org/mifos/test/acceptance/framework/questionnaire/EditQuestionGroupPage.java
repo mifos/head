@@ -51,7 +51,7 @@ public class EditQuestionGroupPage extends CreateQuestionGroupRootPage {
     public void addNewQuestions(List<CreateQuestionParameters> questions) {
         selenium.click("addQuestionFlag1");
         for(CreateQuestionParameters question : questions) {
-            selenium.type("currentQuestion.text", question.getText());
+            selenium.typeKeys("currentQuestion.text", question.getText());
             selenium.select("currentQuestion.type", question.getType());
             selenium.click("_eventId_addQuestion");
             waitForPageToLoad();

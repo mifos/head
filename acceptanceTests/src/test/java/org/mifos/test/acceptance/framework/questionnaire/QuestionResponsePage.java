@@ -74,7 +74,7 @@ public class QuestionResponsePage extends MifosPage {
 
     public void populateSmartSelect(String smartSelectId, Map<String, String> tags) {
         for (String tag : tags.keySet()) {
-            selenium.type(smartSelectId, tag);
+            selenium.typeKeys(smartSelectId, tag);
             selenium.keyUp(smartSelectId, " ");
             selenium.check(String.format("css=input[value=%s:%s]", tags.get(tag), tag));
         }
@@ -153,7 +153,7 @@ public class QuestionResponsePage extends MifosPage {
     }
 
     public void populateTextAnswer(String questionInputId, String answer) {
-        selenium.type(questionInputId, answer);
+        selenium.typeKeys(questionInputId, answer);
     }
 
     private void populateSingleSelectAnswer(String questionInputId, String answer) {

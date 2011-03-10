@@ -46,7 +46,7 @@ public class AccountChangeStatusPage extends MifosPage {
         if (StringUtils.isNotEmpty(params.getCancelReason())) {
             selenium.select("change_status.input.cancel_reason", "value=" + params.getCancelReasonValue());
         }
-        selenium.type("change_status.input.note", params.getNote());
+        selenium.typeKeys("change_status.input.note", params.getNote());
 
         submit();
         return new EditAccountStatusConfirmationPage(selenium);
@@ -68,7 +68,7 @@ public class AccountChangeStatusPage extends MifosPage {
         selenium.check("name=newStatusId value=" + editAccountStatusParameters.getAccountStatus().getId());
         selenium.fireEvent("name=newStatusId value=" + editAccountStatusParameters.getAccountStatus().getId(), "click");
 
-        selenium.type("change_status.input.note", editAccountStatusParameters.getNote());
+        selenium.typeKeys("change_status.input.note", editAccountStatusParameters.getNote());
     }
 
     private void submit() {

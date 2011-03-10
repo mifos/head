@@ -47,23 +47,23 @@ public class EditLoanProductPage extends MifosPage {
     }
 
     public EditLoanProductPreviewPage submitDescriptionAndInterestChanges(SubmitFormParameters parameters) {
-        selenium.type("EditLoanProduct.input.description", parameters.getDescription());
-        selenium.type("EditLoanProduct.input.maxInterestRate", parameters.getMaxInterestRate());
-        selenium.type("EditLoanProduct.input.minInterestRate", parameters.getMinInterestRate() );
-        selenium.type("EditLoanProduct.input.defaultInterestRate", parameters.getDefaultInterestRate());
+        selenium.typeKeys("EditLoanProduct.input.description", parameters.getDescription());
+        selenium.typeKeys("EditLoanProduct.input.maxInterestRate", parameters.getMaxInterestRate());
+        selenium.typeKeys("EditLoanProduct.input.minInterestRate", parameters.getMinInterestRate() );
+        selenium.typeKeys("EditLoanProduct.input.defaultInterestRate", parameters.getDefaultInterestRate());
         return editSubmit();
     }
 
     public EditLoanProductPreviewPage submitRequiredDescriptionAndInterestChanges(SubmitFormParameters parameters) {
-            selenium.type("EditLoanProduct.input.name", parameters.getOfferingName());
-            selenium.type("EditLoanProduct.input.shortName", parameters.getOfferingShortName());
-            selenium.type("EditLoanProduct.input.description", parameters.getDescription());
-            selenium.type("startDateDD", parameters.getStartDateDd());
-            selenium.type("startDateMM", parameters.getStartDateMm());
-            selenium.type("startDateYY", parameters.getStartDateYy());
-            selenium.type("EditLoanProduct.input.maxInterestRate", parameters.getMaxInterestRate());
-            selenium.type("EditLoanProduct.input.minInterestRate", parameters.getMinInterestRate() );
-            selenium.type("EditLoanProduct.input.defaultInterestRate", parameters.getDefaultInterestRate());
+            selenium.typeKeys("EditLoanProduct.input.name", parameters.getOfferingName());
+            selenium.typeKeys("EditLoanProduct.input.shortName", parameters.getOfferingShortName());
+            selenium.typeKeys("EditLoanProduct.input.description", parameters.getDescription());
+            selenium.typeKeys("startDateDD", parameters.getStartDateDd());
+            selenium.typeKeys("startDateMM", parameters.getStartDateMm());
+            selenium.typeKeys("startDateYY", parameters.getStartDateYy());
+            selenium.typeKeys("EditLoanProduct.input.maxInterestRate", parameters.getMaxInterestRate());
+            selenium.typeKeys("EditLoanProduct.input.minInterestRate", parameters.getMinInterestRate() );
+            selenium.typeKeys("EditLoanProduct.input.defaultInterestRate", parameters.getDefaultInterestRate());
 
             if(parameters.getProductCategory()==0) {
                 selenium.select("EditLoanProduct.input.category", "value=");
@@ -164,9 +164,9 @@ public class EditLoanProductPage extends MifosPage {
         }
         waitForElementToVisible("minimumInstallmentAmount");
 //        selenium.waitForCondition("selenium.isVisible('minimumInstallmentAmount')","10000");
-        selenium.type(maxInstalmentGapTextBox, maxGap);
-        selenium.type(minInstalmentGapTextBox, minGap);
-        selenium.type(minInstalmentAmountTextBox, minInstalmentAmount);
+        selenium.typeKeys(maxInstalmentGapTextBox, maxGap);
+        selenium.typeKeys(minInstalmentGapTextBox, minGap);
+        selenium.typeKeys(minInstalmentAmountTextBox, minInstalmentAmount);
         return editSubmit();
     }
     public EditLoanProductPreviewPage editSubmit() {
@@ -183,7 +183,7 @@ public class EditLoanProductPage extends MifosPage {
         if (!selenium.isChecked(cashFlowCheckbox)) {
             selenium.click(cashFlowCheckbox);
         }
-        selenium.type(cashFlowThresholdTextBox, warningThreshold);
+        selenium.typeKeys(cashFlowThresholdTextBox, warningThreshold);
         return this;
     }
 

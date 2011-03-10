@@ -92,7 +92,7 @@ public class ClientsAndAccountsHomepage extends AbstractPage {
     // TODO is this not in SearchHelper?
     public ClientSearchResultsPage searchForClient(String searchString)
     {
-        selenium.type("clients_accounts.input.search", searchString);
+        selenium.typeKeys("clients_accounts.input.search", searchString);
         selenium.click("clients_accounts.button.search");
         waitForPageToLoad();
         return new ClientSearchResultsPage(selenium);

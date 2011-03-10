@@ -32,7 +32,7 @@ public class GroupSearchAddMemberPage extends MifosPage{
     }
 
     private void setSearchedGroupName(String groupName){
-        selenium.type("group_search_addMember.input.search", groupName);
+        selenium.typeKeys("group_search_addMember.input.search", groupName);
     }
 
     private void search(){

@@ -31,7 +31,7 @@ public class RedoLoanDisbursalSearchPage extends MifosPage {
     }
 
     public RedoLoanDisbursalSearchResultsPage searchAndNavigateToRedoLoanDisbursalPage(String searchString) {
-        selenium.type("cust_search_account.input.searchString", searchString);
+        selenium.typeKeys("cust_search_account.input.searchString", searchString);
         selenium.click("cust_search_account.button.search");
         waitForPageToLoad();
 

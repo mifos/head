@@ -169,7 +169,7 @@ public class FeesCreatePage extends AbstractPage {
     }
 
     public FeesCreatePage fillFeesParameters(SubmitFormParameters parameters) {
-        selenium.type("feescreate.input.feeName", parameters.getFeeName());
+        selenium.typeKeys("feescreate.input.feeName", parameters.getFeeName());
         selenium.select("feescreate.label.categoryType", "label=" + parameters.getCategoryType());
         selenium.click("//input[@id='feescreate.button.feeFrequencyType' and @value='"
                 + parameters.getFeeFrequencyType() + "']");
@@ -179,10 +179,10 @@ public class FeesCreatePage extends AbstractPage {
                     + parameters.getFeeRecurrenceType() + "']");
         }
         if (parameters.weekRecurAfter != 0) {
-            selenium.type("feescreate.input.weekRecurAfter", Integer.toString(parameters.getWeekRecurAfter()));
+            selenium.typeKeys("feescreate.input.weekRecurAfter", Integer.toString(parameters.getWeekRecurAfter()));
         }
         if (parameters.monthRecurAfter != 0) {
-            selenium.type("feescreate.input.monthRecurAfter", Integer.toString(parameters.getMonthRecurAfter()));
+            selenium.typeKeys("feescreate.input.monthRecurAfter", Integer.toString(parameters.getMonthRecurAfter()));
         }
         if (parameters.getCustomerCharge() != null) {
             if (parameters.getCategoryType().equals(FeesCreatePage.SubmitFormParameters.LOAN)) {
@@ -193,11 +193,11 @@ public class FeesCreatePage extends AbstractPage {
         }
 
         if (parameters.getAmount() != 0) {
-            selenium.type("feescreate.input.amount", Double.toString(parameters.getAmount()));
+            selenium.typeKeys("feescreate.input.amount", Double.toString(parameters.getAmount()));
         }
         if (parameters.getFeeFormula() != null) {
             selenium.select("feescreate.label.feeFormula", parameters.getFeeFormula());
-            selenium.type("feescreate.input.rate", Double.toString(parameters.getRate()));
+            selenium.typeKeys("feescreate.input.rate", Double.toString(parameters.getRate()));
         }
         if(parameters.getCategoryType().equals("Loans")) {
             fillLoanParameters(parameters);
@@ -212,7 +212,7 @@ public class FeesCreatePage extends AbstractPage {
             selenium.select("currencyId", "value=" + Integer.toString(parameters.getCurrency()));
         }
         if(parameters.getCalcuateFeeAs() != null){
-            selenium.type("feescreate.input.rate", "label=" + parameters.getCalcuateFeeAs());
+            selenium.typeKeys("feescreate.input.rate", "label=" + parameters.getCalcuateFeeAs());
         }
         if(parameters.getCalcuateFeeAs() != null){
             selenium.select("feescreate.label.feeFormula", "label=" + Integer.toString(parameters.getCalculateType()));

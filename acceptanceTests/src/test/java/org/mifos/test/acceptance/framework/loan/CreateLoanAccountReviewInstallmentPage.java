@@ -246,7 +246,7 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
 
     private void fillAllTotalFields(int noOfInstallments, String installmentAmount) {
         for (int installment = 0; installment < noOfInstallments-1; installment++) {
-            selenium.type("installments["+installment+"].total", installmentAmount);
+            selenium.typeKeys("installments["+installment+"].total", installmentAmount);
         }
     }
 
@@ -352,12 +352,12 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
     }
 
     private void setInstallmentDate(String installment, String date) {
-        selenium.type("installments["+installment+"].dueDate", date);
+        selenium.typeKeys("installments["+installment+"].dueDate", date);
     }
 
     private void setFirstAndSecondInstallmentTotal(String total) {
-        selenium.type("installments[0].total", total);
-        selenium.type("installments[1].total", total);
+        selenium.typeKeys("installments[0].total", total);
+        selenium.typeKeys("installments[1].total", total);
     }
 
     private void verifyWarningThresholdMessageOnReviewSchedulePage(String button, double warningThreshold) {
@@ -407,7 +407,7 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
     }
 
     private void setInstallmentTotal(int installment, String total) {
-        selenium.type("installments["+ (installment-1) +"].total",total);
+        selenium.typeKeys("installments["+ (installment-1) +"].total",total);
     }
 
     public CreateLoanAccountReviewInstallmentPage verifyLoanScheduleForDecliningPrincipal() {

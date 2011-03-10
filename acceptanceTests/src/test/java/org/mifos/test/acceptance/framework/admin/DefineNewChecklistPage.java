@@ -38,12 +38,12 @@ public class DefineNewChecklistPage extends MifosPage {
 
     public DefineNewChecklistPreviewPage fillFormAndNavigateToPreviewPage(DefineChecklistParameters checklistParams) {
 
-        selenium.type("checklistName", checklistParams.getName());
+        selenium.typeKeys("checklistName", checklistParams.getName());
         selenium.select("type", checklistParams.getType());
         waitForPageToLoad();
         selenium.select("stateId", checklistParams.getDisplayedWhenMovingIntoStatus());
         for(String item : checklistParams.getItemsArray()) {
-            selenium.type("createChecklist.input.items", item);
+            selenium.typeKeys("createChecklist.input.items", item);
             selenium.click("createChecklist.button.addItem");
         }
 

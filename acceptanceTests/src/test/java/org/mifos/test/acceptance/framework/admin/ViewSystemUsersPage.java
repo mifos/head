@@ -13,7 +13,7 @@ public class ViewSystemUsersPage extends MifosPage {
     }
 
     public UserViewDetailsPage searchAndNavigateToUserViewDetailsPage(String userName) {
-        selenium.type("viewusers.input.search", userName);
+        selenium.typeKeys("viewusers.input.search", userName);
         selenium.click("viewusers.button.search");
         waitForPageToLoad();
         selenium.click("link=*"+userName+"*");

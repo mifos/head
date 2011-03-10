@@ -32,7 +32,7 @@ public class UndoLoanDisbursalEntryPage extends MifosPage {
     }
 
     public UndoLoanDisbursalPreviewPage submitAndNavigateToUndoLoanDisbursalConfirmationPage(String note) {
-        selenium.type("undoloandisbursal.input.note", note);
+        selenium.typeKeys("undoloandisbursal.input.note", note);
         selenium.click("undoloandisbursal.button.preview");
         waitForPageToLoad();
 

@@ -58,7 +58,7 @@ public class CustomerChangeStatusPage extends MifosPage {
         if(customerStatusParameters.getCenterStatus() != null) {
             selenium.check("name=newStatusId value=" + customerStatusParameters.getCenterStatus().getId());
         }
-        selenium.type("customerchangeStatus.input.notes", customerStatusParameters.getNote());
+        selenium.typeKeys("customerchangeStatus.input.notes", customerStatusParameters.getNote());
         selenium.click("customerchangeStatus.button.preview");
         waitForPageToLoad();
     }

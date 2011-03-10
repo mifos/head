@@ -30,7 +30,7 @@ public class DefineNewReportsCategoryPage extends MifosPage{
     }
 
     public DefineNewReportsCategoryPage setCategoryName(String categoryName) {
-        selenium.type("categoryName", categoryName);
+        selenium.typeKeys("categoryName", categoryName);
         return this;
     }
 

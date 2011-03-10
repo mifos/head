@@ -34,7 +34,7 @@ public class CreateQuestionGroupPage extends CreateQuestionGroupRootPage {
 
     public void submit(CreateQuestionGroupParameters createQuestionGroupParameters) {
         if (createQuestionGroupParameters.getTitle() != null) {
-            selenium.type("name=title", createQuestionGroupParameters.getTitle());
+            selenium.typeKeys("name=title", createQuestionGroupParameters.getTitle());
         }
         if (createQuestionGroupParameters.isAnswerEditable()) {
            selenium.click("id=editable");
@@ -68,7 +68,7 @@ public class CreateQuestionGroupPage extends CreateQuestionGroupRootPage {
         if (!selenium.isVisible("id=selectQuestionsDiv")) {
             selenium.fireEvent("name=addQuestionFlag", "change");
         }
-        selenium.type("id=sectionName", sectionName);
+        selenium.typeKeys("id=sectionName", sectionName);
         selenium.click("id=_eventId_addSection");
         waitForPageToLoad();
     }

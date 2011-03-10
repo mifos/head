@@ -166,7 +166,7 @@ public class ViewRepaymentSchedulePage extends AbstractPage {
     }
 
     private void setScheduleDate(String date) {
-        selenium.type(scheduleDate, date);
+        selenium.typeKeys(scheduleDate, date);
         selenium.click(viewScheduleButton);
         waitForPageToLoad();
     }

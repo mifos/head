@@ -68,17 +68,17 @@ public class LoginPage extends MifosPage {
     }
 
     public void tryToLoginAs(String userName, String password) {
-        selenium.type(USERNAME_INPUT_ID, userName);
-        selenium.type(PASSWORD_INPUT_ID, password);
+        selenium.typeKeys(USERNAME_INPUT_ID, userName);
+        selenium.typeKeys(PASSWORD_INPUT_ID, password);
         selenium.click(LOGIN_BUTTON_ID);
         waitForPageToLoad();
     }
 
     public HomePage loginSuccessfulAsWithChnagePasw(String userName, String password) {
         tryToLoginAs(userName, password);
-        selenium.type("changePassword.input.oldPassword", password);
-        selenium.type("changePassword.input.newPassword", "newPasw");
-        selenium.type("changePassword.input.confirmPassword", "newPasw");
+        selenium.typeKeys("changePassword.input.oldPassword", password);
+        selenium.typeKeys("changePassword.input.newPassword", "newPasw");
+        selenium.typeKeys("changePassword.input.confirmPassword", "newPasw");
         selenium.click("changePassword.button.submit");
         waitForPageToLoad();
         return new HomePage(selenium);

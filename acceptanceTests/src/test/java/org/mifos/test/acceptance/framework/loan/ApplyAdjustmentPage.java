@@ -49,7 +49,7 @@ public class ApplyAdjustmentPage extends AbstractPage {
     private void applyAdjustment(String adjustmentAmount) {
         if(selenium.isElementPresent("applyadjustment.input.revertLastPayment")) {
             selenium.click("applyadjustment.input.revertLastPayment");
-            selenium.type("applyadjustment.input.note", "testNotes paid Amount: " + adjustmentAmount);
+            selenium.typeKeys("applyadjustment.input.note", "testNotes paid Amount: " + adjustmentAmount);
             selenium.click("applyadjustment.button.submit");
             waitForPageToLoad();
         }
@@ -72,7 +72,7 @@ public class ApplyAdjustmentPage extends AbstractPage {
     public LoanAccountPage verifyAdjustment(String adjustmentAmount, String note) {
         Assert.assertTrue(isTextPresentInPage("Last payment made: " + adjustmentAmount + " "));
         selenium.click("applyadjustment.input.revertLastPayment");
-        selenium.type("applyadjustment.input.note", note);
+        selenium.typeKeys("applyadjustment.input.note", note);
         selenium.click("applyadjustment.button.submit");
         waitForPageToLoad();
         selenium.click("applyadjustment.button.submit");

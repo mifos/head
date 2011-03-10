@@ -45,11 +45,11 @@ public class ApplyPaymentPage extends MifosPage {
     }
 
     private void enterPaymentData(PaymentParameters params) {
-        selenium.type("transactionDateDD", params.getTransactionDateDD());
-        selenium.type("transactionDateMM", params.getTransactionDateMM());
-        selenium.type("transactionDateYY", params.getTransactionDateYYYY());
+        selenium.typeKeys("transactionDateDD", params.getTransactionDateDD());
+        selenium.typeKeys("transactionDateMM", params.getTransactionDateMM());
+        selenium.typeKeys("transactionDateYY", params.getTransactionDateYYYY());
 
-        selenium.type("applypayment.input.amount", params.getAmount());
+        selenium.typeKeys("applypayment.input.amount", params.getAmount());
 
         selenium.select("applypayment.input.paymentType", "value=" + params.getPaymentTypeValue());
 

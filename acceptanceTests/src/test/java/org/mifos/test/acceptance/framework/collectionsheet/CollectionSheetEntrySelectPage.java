@@ -237,7 +237,7 @@ public class CollectionSheetEntrySelectPage extends MifosPage {
 
     private void typeText(String locator, String value, boolean onlyTypeIfEmpty) {
         if (value != null && (!onlyTypeIfEmpty || !value.isEmpty())) {
-            selenium.type(locator, value);
+            selenium.typeKeys(locator, value);
         }
     }
 }

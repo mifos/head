@@ -41,7 +41,7 @@ public class ImportTransactionsPage extends MifosPage {
 
     public ImportTransactionsConfirmationPage importTransactions(String importFile, String importFormat) {
         selenium.select("importPluginName", "label=" + importFormat);
-        selenium.type("importTransactionsFile", importFile);
+        selenium.typeKeys("importTransactionsFile", importFile);
         selenium.click("import_transactions.button.review");
         waitForPageToLoad();
         selenium.click("import_transactions_results.button.submit");
@@ -52,7 +52,7 @@ public class ImportTransactionsPage extends MifosPage {
 
      public void reviewTransactions(String importFile, String importFormat) {
         selenium.select("importPluginName", "label=" + importFormat);
-        selenium.type("importTransactionsFile", importFile);
+        selenium.typeKeys("importTransactionsFile", importFile);
         selenium.click("import_transactions.button.review");
         waitForPageToLoad();
 
@@ -75,7 +75,7 @@ public class ImportTransactionsPage extends MifosPage {
 
     public ImportTransactionsPage failImportTransaction(String importFile, String importFormat) {
         selenium.select("importPluginName", "label=" + importFormat);
-        selenium.type("importTransactionsFile", importFile);
+        selenium.typeKeys("importTransactionsFile", importFile);
         selenium.click("import_transactions.button.review");
         waitForPageToLoad();
         return new ImportTransactionsPage(selenium);

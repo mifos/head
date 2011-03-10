@@ -76,7 +76,7 @@ public class EditQuestionPage extends CreateQuestionRootPage {
     }
 
     public void setQuestionName(String name) {
-        selenium.type("currentQuestion.text", name);
+        selenium.typeKeys("currentQuestion.text", name);
     }
 
     public void verifyQuestionName(String name) {
@@ -84,8 +84,8 @@ public class EditQuestionPage extends CreateQuestionRootPage {
     }
 
     public void setNumberQuestion(String min, String max) {
-        selenium.type("currentQuestion.numericMin", min);
-        selenium.type("currentQuestion.numericMax", max);
+        selenium.typeKeys("currentQuestion.numericMin", min);
+        selenium.typeKeys("currentQuestion.numericMax", max);
     }
 
     public void verifyNumberQuestion(String min, String max) {
@@ -95,7 +95,7 @@ public class EditQuestionPage extends CreateQuestionRootPage {
 
     public void addSmartAnswerChoices(List<String> answerChoices) {
         for(String answerChoice : answerChoices) {
-            selenium.type("currentQuestion.currentSmartChoice", answerChoice);
+            selenium.typeKeys("currentQuestion.currentSmartChoice", answerChoice);
             selenium.keyUp("id=currentQuestion.currentSmartChoice", " ");
             selenium.click("_eventId_addSmartChoice");
             waitForPageToLoad();
@@ -104,7 +104,7 @@ public class EditQuestionPage extends CreateQuestionRootPage {
 
     public void addAnswerChoices(List<String> answerChoices) {
         for(String answerChoice : answerChoices) {
-            selenium.type("currentQuestion.currentChoice", answerChoice);
+            selenium.typeKeys("currentQuestion.currentChoice", answerChoice);
             selenium.keyUp("id=currentQuestion.currentChoice"," ");
             selenium.click("_eventId_addChoice");
             waitForPageToLoad();

@@ -63,9 +63,9 @@ public class QuestionnairePage extends MifosPage {
     public void setResponse(String question, String answer) {
         Number questionCount = selenium.getXpathCount("//label/following-sibling::textarea");
         if ((Integer) questionCount == 1) {
-            selenium.type("//label/following-sibling::textarea", answer);
+            selenium.typeKeys("//label/following-sibling::textarea", answer);
         } else {
-            selenium.type("id=" + getQuestionLocator(question), answer);
+            selenium.typeKeys("id=" + getQuestionLocator(question), answer);
         }
     }
 
@@ -209,6 +209,6 @@ public class QuestionnairePage extends MifosPage {
 
 
     public void typeText(String locator, String value) {
-        selenium.type(locator,value);
+        selenium.typeKeys(locator,value);
     }
 }

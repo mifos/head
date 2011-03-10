@@ -26,7 +26,7 @@ import org.mifos.test.framework.util.DatabaseTestUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverBackedSelenium;
-import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
@@ -76,7 +76,8 @@ public class UiTestCaseBase extends AbstractTestNGSpringContextTests {
     @Autowired
     @Test(enabled=false)
     public void setServerPort(String serverPort) {
-        selenium = new WebDriverBackedSelenium(new FirefoxDriver(), "http://localhost:" + serverPort + "/mifos");
+//        selenium = new WebDriverBackedSelenium(new FirefoxDriver(), "http://localhost:" + serverPort + "/mifos");
+        selenium = new WebDriverBackedSelenium(new HtmlUnitDriver(true), "http://localhost:" + serverPort + "/mifos");
         driver = ((WebDriverBackedSelenium) selenium).getUnderlyingWebDriver();
 
     }
