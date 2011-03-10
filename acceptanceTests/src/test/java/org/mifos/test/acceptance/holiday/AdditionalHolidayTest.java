@@ -134,15 +134,15 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     //http://mifosforge.jira.com/browse/MIFOSTEST-280
+    @Test(groups = "no_db_unit")
     public void testBranchSpecificMoratorium() throws Exception {
         //Given
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
         CreateHolidaySubmitParameters param = getCreateHolidaySubmitParameters();
         //When / Then
         holidayTestHelper.createHoliday(param);
     }
 
-    public CreateHolidaySubmitParameters getCreateHolidaySubmitParameters() {
+    private CreateHolidaySubmitParameters getCreateHolidaySubmitParameters() {
         CreateHolidaySubmitParameters params = new CreateHolidayEntryPage.CreateHolidaySubmitParameters();
         params.setName("Holiday" + StringUtil.getRandomString(8));
         params.setFromDateDD("01");
@@ -152,7 +152,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         params.setThruDateMM("02");
         params.setThruDateYYYY("2011");
         params.setRepaymentRule(CreateHolidaySubmitParameters.MORATORIUM);
-        params.addOffice("MyOffice1233266206574");
+        params.addOffice("MyOfficeDHMFT");
         return params;
     }
 
