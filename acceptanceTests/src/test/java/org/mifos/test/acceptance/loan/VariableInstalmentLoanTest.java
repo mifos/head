@@ -70,12 +70,9 @@ public class VariableInstalmentLoanTest extends UiTestCaseBase {
         feeTestHelper = new FeeTestHelper(dataSetup);
     }
 
-    /**
-     * FIXME - disabled for now - keithw
-     */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void verifyRepaymentScheduleField() throws Exception {
         int noOfInstallments = 5;
         int maxGap = 10;
