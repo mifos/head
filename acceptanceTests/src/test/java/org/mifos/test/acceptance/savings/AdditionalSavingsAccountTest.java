@@ -20,6 +20,7 @@
 
 package org.mifos.test.acceptance.savings;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,6 +48,7 @@ import org.mifos.test.acceptance.framework.testhelpers.SavingsAccountHelper;
 import org.mifos.test.acceptance.framework.testhelpers.SavingsProductHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
+import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
@@ -68,6 +70,8 @@ public class AdditionalSavingsAccountTest extends UiTestCaseBase {
     private DriverManagerDataSource dataSource;
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
+    @Autowired
+    private ApplicationDatabaseOperation applicationDatabaseOperation;
 
     private SavingsAccountHelper savingsAccountHelper;
     private NavigationHelper navigationHelper;
@@ -207,12 +211,12 @@ public class AdditionalSavingsAccountTest extends UiTestCaseBase {
 
     //http://mifosforge.jira.com/browse/MIFOSTEST-721
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")// one of the dependent methods throws Exception
+    @Test(groups = "no_db_unit")
     public void savingsAccountsWithDifferentTransactionsOrdering() throws Exception {
         //Given
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         DateTime targetTime = new DateTime(2011,2,10,13,0,0,0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
 
         //When
         SavingsProductParameters params = savingsProductHelper.getMandatoryClientsMinimumBalanceSavingsProductParameters();
@@ -221,7 +225,7 @@ public class AdditionalSavingsAccountTest extends UiTestCaseBase {
         confirmationPage.navigateToSavingsProductDetails();
 
         //account1
-        SavingsAccountDetailPage savingsAccountDetailPage = createSavingAccountWithCreatedProduct("Stu1233266079799 Client1233266079799",params.getProductInstanceName(),"100000.0");
+        SavingsAccountDetailPage savingsAccountDetailPage = createSavingAccountWithCreatedProduct("Stu1233171716380 Client1233171716380",params.getProductInstanceName(),"100000.0");
         String savingsId = savingsAccountDetailPage.getAccountId();
 
         EditAccountStatusParameters editAccountStatusParameters =new EditAccountStatusParameters();
@@ -239,7 +243,7 @@ public class AdditionalSavingsAccountTest extends UiTestCaseBase {
 
         //account2
         targetTime = new DateTime(2011,2,10,13,0,0,0);
-        savingsAccountDetailPage = createSavingAccountWithCreatedProduct("Stu1233266079799 Client1233266079799",params.getProductInstanceName(),"100000.0");
+        savingsAccountDetailPage = createSavingAccountWithCreatedProduct("Stu1233171716380 Client1233171716380",params.getProductInstanceName(),"100000.0");
         String savingsId2 = savingsAccountDetailPage.getAccountId();
 
         editAccountStatusParameters =new EditAccountStatusParameters();
@@ -261,7 +265,7 @@ public class AdditionalSavingsAccountTest extends UiTestCaseBase {
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
 
         navigationHelper.navigateToAdminPage();
-        runBatchJobsForSavingsIntPosting();
+        runBatchJobsForSavingsIntPostingWithCleanup();
 
         navigationHelper.navigateToSavingsAccountDetailPage(savingsId);
         Assert.assertEquals(selenium.getTable("recentActivityForDetailPage.1.2"),"48.6");
@@ -272,12 +276,12 @@ public class AdditionalSavingsAccountTest extends UiTestCaseBase {
 
     //http://mifosforge.jira.com/browse/MIFOSTEST-624
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")// one of the dependent methods throws Exception
+    @Test(groups = "no_db_unit")
     public void savingsMonthlyAccountsAverageBalance() throws Exception {
         //Given
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         DateTime targetTime = new DateTime(2011,2,10,13,0,0,0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
 
         //When
         SavingsProductParameters params = savingsProductHelper.getMandatoryClientsMinimumBalanceSavingsProductParameters();
@@ -293,7 +297,7 @@ public class AdditionalSavingsAccountTest extends UiTestCaseBase {
         navigationHelper.navigateToSavingsAccountDetailPage(savingsId);
 
         navigationHelper.navigateToAdminPage();
-        runBatchJobsForSavingsIntPosting();
+        runBatchJobsForSavingsIntPostingWithCleanup();
 
         navigationHelper.navigateToSavingsAccountDetailPage(savingsId);
         Assert.assertEquals(selenium.getTable("recentActivityForDetailPage.1.2"),"57.4");
@@ -302,15 +306,15 @@ public class AdditionalSavingsAccountTest extends UiTestCaseBase {
 
     //http://mifosforge.jira.com/browse/MIFOSTEST-1070
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")// one of the dependent methods throws Exception
+    @Test(groups = "no_db_unit")
     public void restrictionsSavingsTransactions() throws Exception {
         //Given
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         DateTime targetTime = new DateTime(2011,2,25,13,0,0,0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
 
         //When
-        SavingsAccountDetailPage savingsAccountDetailPage = createSavingAccountWithCreatedProduct("Stu1232993852651 Client1232993852651", "MySavingsProduct1233265923516", "100000.0");
+        SavingsAccountDetailPage savingsAccountDetailPage = createSavingAccountWithCreatedProduct("Stu1233171716380 Client1233171716380", "SavingsProductWithInterestOnMonthlyAvgBalance", "100000.0");
         String savingsId = savingsAccountDetailPage.getAccountId();
 
         EditAccountStatusParameters editAccountStatusParameters =new EditAccountStatusParameters();
@@ -324,7 +328,7 @@ public class AdditionalSavingsAccountTest extends UiTestCaseBase {
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
 
         navigationHelper.navigateToAdminPage();
-        runBatchJobsForSavingsIntPosting();
+        runBatchJobsForSavingsIntPostingWithCleanup();
 
         navigationHelper.navigateToSavingsAccountDetailPage(savingsId);
         Assert.assertEquals(selenium.getTable("recentActivityForDetailPage.1.2"),"20594.9");
@@ -499,12 +503,12 @@ public class AdditionalSavingsAccountTest extends UiTestCaseBase {
 
     //http://mifosforge.jira.com/browse/MIFOSTEST-722
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")// one of the dependent methods throws Exception
+    @Test(groups = "no_db_unit")
     public void savingsAccountsWithAdjustments() throws Exception {
         //Given
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         DateTime targetTime = new DateTime(2011,1,1,13,0,0,0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
 
         //When
         SavingsProductParameters params = getVoluntaryGroupsMonthCalculactionProductParameters();
@@ -512,7 +516,7 @@ public class AdditionalSavingsAccountTest extends UiTestCaseBase {
         confirmationPage.navigateToSavingsProductDetails();
 
         //account1
-        SavingsAccountDetailPage savingsAccountDetailPage = createSavingAccountWithCreatedProduct("MyGroup1232993846342",params.getProductInstanceName(),"2000.0");
+        SavingsAccountDetailPage savingsAccountDetailPage = createSavingAccountWithCreatedProduct("Default Group",params.getProductInstanceName(),"2000.0");
         String savingsId = savingsAccountDetailPage.getAccountId();
 
         EditAccountStatusParameters editAccountStatusParameters =new EditAccountStatusParameters();
@@ -530,7 +534,7 @@ public class AdditionalSavingsAccountTest extends UiTestCaseBase {
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
 
         navigationHelper.navigateToAdminPage();
-        runBatchJobsForSavingsIntPosting();
+        runBatchJobsForSavingsIntPostingWithCleanup();
 
         //Then
         navigationHelper.navigateToSavingsAccountDetailPage(savingsId);
@@ -541,7 +545,7 @@ public class AdditionalSavingsAccountTest extends UiTestCaseBase {
         //When
         targetTime = new DateTime(2011,3,1,13,0,0,0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
-        savingsAccountDetailPage = createSavingAccountWithCreatedProduct("MyGroup1232993846342",params.getProductInstanceName(),"2000.0");
+        savingsAccountDetailPage = createSavingAccountWithCreatedProduct("Default Group",params.getProductInstanceName(),"2000.0");
         String savingsId2 = savingsAccountDetailPage.getAccountId();
 
         editAccountStatusParameters =new EditAccountStatusParameters();
@@ -558,7 +562,7 @@ public class AdditionalSavingsAccountTest extends UiTestCaseBase {
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
 
         navigationHelper.navigateToAdminPage();
-        runBatchJobsForSavingsIntPosting();
+        runBatchJobsForSavingsIntPostingWithCleanup();
 
         //Then
         navigationHelper.navigateToSavingsAccountDetailPage(savingsId2);
@@ -569,7 +573,7 @@ public class AdditionalSavingsAccountTest extends UiTestCaseBase {
     private String createSavingsAccount(SavingsProductParameters params){
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
         confirmationPage.navigateToSavingsProductDetails();
-        SavingsAccountDetailPage savingsAccountDetailPage = createSavingAccountWithCreatedProduct("Stu1233266079799 Client1233266079799", params.getProductInstanceName(), "100000.0");
+        SavingsAccountDetailPage savingsAccountDetailPage = createSavingAccountWithCreatedProduct("Stu1233266299995 Client1233266299995", params.getProductInstanceName(), "100000.0");
         String savingsId = savingsAccountDetailPage.getAccountId();
 
         EditAccountStatusParameters editAccountStatusParameters =new EditAccountStatusParameters();
@@ -642,6 +646,11 @@ public class AdditionalSavingsAccountTest extends UiTestCaseBase {
         List<String> jobsToRun = new ArrayList<String>();
         jobsToRun.add("SavingsIntPostingTaskJob");
         new BatchJobHelper(selenium).runSomeBatchJobs(jobsToRun);
+    }
+
+     private void runBatchJobsForSavingsIntPostingWithCleanup() throws SQLException {
+        applicationDatabaseOperation.cleanBatchJobTables();
+        runBatchJobsForSavingsIntPosting();
     }
 
 }
