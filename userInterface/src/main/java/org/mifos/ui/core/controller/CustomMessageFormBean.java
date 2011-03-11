@@ -22,26 +22,51 @@ package org.mifos.ui.core.controller;
 
 import java.io.Serializable;
 
+import org.hibernate.validator.constraints.NotEmpty;
+import org.mifos.platform.validation.MifosBeanValidator;
+import org.springframework.beans.factory.annotation.Autowired;
+
+/**
+ * An object to hold information collected in create savings account process.
+ */
 @SuppressWarnings("PMD")
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID"}, justification="should disable at filter level and also for pmd - not important for us")
-public class BreadCrumbsLinks implements Serializable {
+public class CustomMessageFormBean implements Serializable {
 
-    private String link;
-    private String message;
+    @NotEmpty
+    private String oldMessage;
 
-    public String getMessage() {
-        return this.message;
+    @NotEmpty
+    private String newMessage;
+
+    @Autowired
+    private transient MifosBeanValidator validator;
+
+    public void setValidator(MifosBeanValidator validator) {
+        this.validator = validator;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
+	public String getOldMessage() {
+		return oldMessage;
+	}
 
-    public String getLink() {
-        return this.link;
-    }
+	public void setOldMessage(String oldMessage) {
+		this.oldMessage = oldMessage;
+	}
 
-    public void setLink(String link) {
-        this.link = link;
-    }
+	public String getNewMessage() {
+		return newMessage;
+	}
+
+	public void setNewMessage(String newMessage) {
+		this.newMessage = newMessage;
+	}
+
+	public MifosBeanValidator getValidator() {
+		return validator;
+	}
+
+
 }
+
+

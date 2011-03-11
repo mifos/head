@@ -13,7 +13,7 @@
             </column>
         </createTable>
         <modifySql dbms="mysql">
-            <append value=" engine=innodb character set utf8"/>
+            <append value=" engine=innodb character set utf8 collate utf8_bin"/>
         </modifySql>
     </changeSet>
 </databaseChangeLog>

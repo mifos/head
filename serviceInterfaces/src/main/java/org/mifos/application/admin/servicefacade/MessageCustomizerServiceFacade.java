@@ -37,6 +37,17 @@ public interface MessageCustomizerServiceFacade {
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_LABELS')")
 	void updateApplicationLabels(Map<String, String> messageFilterMap);
 
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_LABELS')")
+	Map<String, String> retrieveCustomMessages();
+    
 	String replaceSubstitutions(String message);
+
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_LABELS')")
+	void addOrUpdateCustomMessage(String oldMessage, String newMessage);
+
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_LABELS')")
+	void removeCustomMessage(String oldMessage);
+
+	CustomMessageDto getCustomMessageDto(String oldMessage);
 
 }

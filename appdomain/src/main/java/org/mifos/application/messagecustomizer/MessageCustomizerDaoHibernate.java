@@ -58,7 +58,7 @@ public class MessageCustomizerDaoHibernate implements MessageCustomizerDao {
         	if(entry.getKey().contentEquals(entry.getValue())) {
         		removeCustomMessage(entry.getKey());      			        	
         	} else if (!currentMessages.containsKey(entry.getKey())) {
-        		addCustomMessage(entry.getKey(), entry.getValue());
+        		addOrUpdateCustomMessage(entry.getKey(), entry.getValue());
         	} else {
         		CustomMessage message = findCustomMessageByOldMessage(entry.getKey());
         		message.setNewMessage(entry.getValue());
@@ -67,11 +67,13 @@ public class MessageCustomizerDaoHibernate implements MessageCustomizerDao {
 		
 	}
 
-    private void addCustomMessage(String oldMessage, String newMessage) {
+	@Override
+    public void addOrUpdateCustomMessage(String oldMessage, String newMessage) {
     	genericDao.createOrUpdate(new CustomMessage(oldMessage, newMessage));		
 	}
 
-	private void removeCustomMessage(String oldMessage) {
+	@Override
+	public void removeCustomMessage(String oldMessage) {
 		CustomMessage message = findCustomMessageByOldMessage(oldMessage);
 		
 		if (message != null) {

@@ -78,6 +78,8 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.accounts.business.service.AccountBusinessService;
@@ -536,7 +538,9 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             List<LoanCreationInstallmentDto> dtoInstallments = new ArrayList<LoanCreationInstallmentDto>();
             List<RepaymentScheduleInstallment> installments = getInstallments(loanActionForm,request);
             for (RepaymentScheduleInstallment repaymentScheduleInstallment : installments) {
-                LoanCreationInstallmentDto installmentDto = new LoanCreationInstallmentDto(repaymentScheduleInstallment.getInstallment(), new LocalDate(repaymentScheduleInstallment.getDueDateValue()), 
+                
+                LocalDate dueDate = new LocalDate(repaymentScheduleInstallment.getDueDateValue());
+                LoanCreationInstallmentDto installmentDto = new LoanCreationInstallmentDto(repaymentScheduleInstallment.getInstallment(), dueDate, 
                         repaymentScheduleInstallment.getPrincipal().getAmount().doubleValue(), repaymentScheduleInstallment.getInterest().getAmount().doubleValue(), 
                         repaymentScheduleInstallment.getFees().getAmount().doubleValue(), Double.valueOf("0.0"), repaymentScheduleInstallment.getTotalValue().getAmount().doubleValue());
                 dtoInstallments.add(installmentDto);
@@ -616,6 +620,14 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         } else {
             installments = loanActionForm.getInstallments();
         }
+        
+        UserContext userContext = getUserContext(request);
+        for (RepaymentScheduleInstallment repaymentScheduleInstallment : installments) {
+            DateTimeFormatter formatter = DateTimeFormat.mediumDate();
+            DateTime parsedDate = formatter.withLocale(userContext.getCurrentLocale()).parseDateTime(repaymentScheduleInstallment.getDueDate());
+            repaymentScheduleInstallment.setDueDateValue(parsedDate.toDateMidnight().toDate());            
+        }
+        
         return installments;
     }
 
