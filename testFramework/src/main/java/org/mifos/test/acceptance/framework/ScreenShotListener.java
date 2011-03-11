@@ -31,7 +31,7 @@ public class ScreenShotListener extends TestListenerAdapter {
         super.onTestFailure(testResult);
         if (!testResult.isSuccess()) {
             File file = new File(System.getProperty("java.io.tmpdir"));
-            String fileName = file.getAbsolutePath() + System.getProperty("file.separator") + testResult.getName() + ".png";
+            String fileName = file.getAbsolutePath() + System.getProperty("file.separator") + testResult.getName() + System.currentTimeMillis() + ".png";
             Reporter.log("Screen shot saved at " + fileName, 0, true);
             UiTestCaseBase.selenium.
                     captureEntirePageScreenshot(fileName, "background=#CCFFDD");
