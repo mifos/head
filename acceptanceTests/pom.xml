@@ -307,6 +307,12 @@
                     <runOrder>alphabetical</runOrder>
                     <testFailureIgnore>true</testFailureIgnore>
                     <skip>true</skip>
+                    <properties>
+                      <property>
+                        <name>listener</name>
+                        <value>org.mifos.test.acceptance.framework.ScreenShotListener</value>
+                      </property>
+                    </properties>
                     <systemProperties>
                         <property>
                             <name>browser</name>

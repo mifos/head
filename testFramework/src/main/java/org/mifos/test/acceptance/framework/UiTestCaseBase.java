@@ -30,7 +30,6 @@ import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.Assert;
 import org.testng.annotations.AfterGroups;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
@@ -41,7 +40,6 @@ import static org.testng.Assert.assertTrue;
 
 @ContextConfiguration(locations = {"classpath:test-context.xml", "classpath:ui-test-context.xml"})
 @Test(sequential = true)
-@Listeners({ScreenShotListener.class})
 public class UiTestCaseBase extends AbstractTestNGSpringContextTests {
     private static Boolean seleniumServerIsRunning = Boolean.FALSE;
     private static final String ERROR_ELEMENT_ID = "*.errors";
