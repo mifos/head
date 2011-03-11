@@ -417,6 +417,7 @@ public class QuestionGroupTest extends UiTestCaseBase {
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled=false)
     public void attachingQuestionGroupToMultipleFlowsTest() throws Exception{
         //Given
         String groupName = "group1";
