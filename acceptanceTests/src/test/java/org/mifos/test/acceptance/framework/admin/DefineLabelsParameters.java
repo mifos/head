@@ -29,6 +29,7 @@ public class DefineLabelsParameters {
     public static final String GOVERNMENT_ID = "govtId";
     public static final String STATE = "state";
     public static final String POSTAL_CODE = "postalCode";
+    public static final String ADDRESS1 = "address1";
 
     private Map<String, String> labelMap = new HashMap<String, String>();
 

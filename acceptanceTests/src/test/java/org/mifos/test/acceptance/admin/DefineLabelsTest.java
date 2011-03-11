@@ -66,14 +66,13 @@ public class DefineLabelsTest  extends UiTestCaseBase {
      * http://mifosforge.jira.com/browse/MIFOSTEST-631
      * @throws Exception
      */
-    @Test(enabled = false) // TODO js - temporarily disabled failing test (there is probably a bug in Mifos-master)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void defineLabelsTest() throws Exception {
-        String chineese = "有";
+        String chineese = "地址";
         String arabic = "عربية";
         DefineLabelsParameters defineLabelsParams = new DefineLabelsParameters();
         defineLabelsParams.setLabel(DefineLabelsParameters.STATE, new String(arabic.getBytes(), "UTF-8"));
-        defineLabelsParams.setLabel(DefineLabelsParameters.POSTAL_CODE, new String(chineese.getBytes(), "UTF-8"));
+        defineLabelsParams.setLabel(DefineLabelsParameters.ADDRESS1, new String(chineese.getBytes(), "UTF-8"));
 
         adminTestHelper.defineLabels(defineLabelsParams);
 
