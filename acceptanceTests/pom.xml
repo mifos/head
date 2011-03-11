@@ -305,6 +305,7 @@
                 <configuration>
                     <redirectTestOutputToFile>true</redirectTestOutputToFile>
                     <runOrder>alphabetical</runOrder>
+                    <testFailureIgnore>true</testFailureIgnore>
                     <skip>true</skip>
                     <systemProperties>
                         <property>
@@ -333,6 +334,7 @@
                             <excludedGroups>workInProgress</excludedGroups>
                             <skip>${maven.test.skip}</skip>
                             <failIfNoTests>false</failIfNoTests>
+                            <reportsDirectory>${project.build.directory}/surefire-reports/integration/no_db_unit</reportsDirectory>
                         </configuration>
                     </execution>
                     <execution>
@@ -346,6 +348,7 @@
                             <excludedGroups>no_db_unit,workInProgress</excludedGroups>
                             <skip>${maven.test.skip}</skip>
                             <failIfNoTests>false</failIfNoTests>
+                            <reportsDirectory>${project.build.directory}/surefire-reports/integration/db_unit</reportsDirectory>
                         </configuration>
                     </execution>
                 </executions>
