@@ -181,7 +181,7 @@ CREATE TABLE DATABASECHANGELOG (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 /*!40000 ALTER TABLE DATABASECHANGELOG DISABLE KEYS */;
-INSERT INTO DATABASECHANGELOG (ID, AUTHOR, FILENAME, DATEEXECUTED, ORDEREXECUTED, EXECTYPE, MD5SUM, DESCRIPTION, COMMENTS, TAG, LIQUIBASE) VALUES ('MIFOS-4633_1','Van Mittal-Henkle','changesets/changelog-Release_G.xml','2011-03-07 13:04:44',1,'EXECUTED','3:97f1bb9c7aecaac1ecee7c98afedf848','Create Table','',NULL,'2.0.0');
+INSERT INTO DATABASECHANGELOG (ID, AUTHOR, FILENAME, DATEEXECUTED, ORDEREXECUTED, EXECTYPE, MD5SUM, DESCRIPTION, COMMENTS, TAG, LIQUIBASE) VALUES ('MIFOS-4633_1','Van Mittal-Henkle','changesets/changelog-Release_G.xml','2011-03-11 12:34:15',1,'EXECUTED','3:2a33e5334d6993445cf27a2c48d086c1','Create Table','',NULL,'2.0.0');
 /*!40000 ALTER TABLE DATABASECHANGELOG ENABLE KEYS */;
 DROP TABLE IF EXISTS DATABASECHANGELOGLOCK;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -1396,10 +1396,10 @@ DROP TABLE IF EXISTS custom_message;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE custom_message (
-  old_message varchar(50) NOT NULL,
-  new_message varchar(50) NOT NULL,
+  old_message varchar(50) COLLATE utf8_bin NOT NULL,
+  new_message varchar(50) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (old_message)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 /*!40000 ALTER TABLE custom_message DISABLE KEYS */;
@@ -5119,7 +5119,7 @@ CREATE TABLE supported_locale (
   KEY country_id (country_id),
   KEY lang_id (lang_id),
   CONSTRAINT supported_locale_ibfk_1 FOREIGN KEY (country_id) REFERENCES country (country_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT supported_locale_ibfk_2 FOREIGN KEY (lang_id) REFERENCES language (lang_id) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT supported_locale_ibfk_2 FOREIGN KEY (lang_id) REFERENCES `language` (lang_id) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
