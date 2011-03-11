@@ -3,4 +3,10 @@
     <Match>
         <Bug code="UwF" />
     </Match>
+    <Match>
+        <Bug code="MS" />
+    </Match>
+    <Match>
+        <Bug code="ST" />
+    </Match>
 </FindBugsFilter>

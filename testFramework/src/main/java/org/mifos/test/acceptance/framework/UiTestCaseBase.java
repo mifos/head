@@ -30,6 +30,7 @@ import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.Assert;
 import org.testng.annotations.AfterGroups;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
@@ -38,20 +39,20 @@ import java.sql.SQLException;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
-@ContextConfiguration(locations={"classpath:test-context.xml", "classpath:ui-test-context.xml"})
-@Test(sequential=true)
+@ContextConfiguration(locations = {"classpath:test-context.xml", "classpath:ui-test-context.xml"})
+@Test(sequential = true)
+@Listeners({ScreenShotListener.class})
 public class UiTestCaseBase extends AbstractTestNGSpringContextTests {
-
     private static Boolean seleniumServerIsRunning = Boolean.FALSE;
     private static final String ERROR_ELEMENT_ID = "*.errors";
-
 
     @Autowired
     protected DriverManagerDataSource dataSource;
 
     private final DatabaseTestUtils dbUtils = new DatabaseTestUtils();
 
-    protected Selenium selenium;
+    protected static Selenium selenium;
+
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // allow for overriding methods to throw Exception
     @BeforeMethod
@@ -59,9 +60,9 @@ public class UiTestCaseBase extends AbstractTestNGSpringContextTests {
         // do nothing
     }
 
-    @AfterGroups(groups={"ui"})
+    @AfterGroups(groups = {"ui"})
     public void stopSelenium() {
-        synchronized(UiTestCaseBase.class) {
+        synchronized (UiTestCaseBase.class) {
             if (seleniumServerIsRunning.booleanValue() && this.selenium != null) {
                 this.selenium.stop();
             }
@@ -69,10 +70,10 @@ public class UiTestCaseBase extends AbstractTestNGSpringContextTests {
     }
 
     @Autowired
-    @Test(enabled=false)
+    @Test(enabled = false)
     public void setSelenium(Selenium selenium) {
         this.selenium = selenium;
-        synchronized(UiTestCaseBase.class) {
+        synchronized (UiTestCaseBase.class) {
             if (!seleniumServerIsRunning.booleanValue()) {
                 selenium.start();
                 seleniumServerIsRunning = Boolean.TRUE;
@@ -80,18 +81,18 @@ public class UiTestCaseBase extends AbstractTestNGSpringContextTests {
         }
     }
 
-    @Test(enabled=false)
+    @Test(enabled = false)
     public Selenium getSelenium() {
-        synchronized(UiTestCaseBase.class) {
+        synchronized (UiTestCaseBase.class) {
             return selenium;
         }
     }
 
-    protected void assertTextFoundOnPage (String text, String message) {
+    protected void assertTextFoundOnPage(String text, String message) {
         assertTrue(selenium.isTextPresent(text), message);
     }
 
-    protected void assertTextFoundOnPage (String text) {
+    protected void assertTextFoundOnPage(String text) {
         assertTextFoundOnPage(text, "Text \"" + text + "\" was not found.");
     }
 
@@ -129,8 +130,8 @@ public class UiTestCaseBase extends AbstractTestNGSpringContextTests {
         assertTrue(selenium.isElementPresent(elementId), messageIfFail);
     }
 
-    protected void deleteDataFromTables(String...tableNames)
-                    throws IOException, DatabaseUnitException, SQLException {
+    protected void deleteDataFromTables(String... tableNames)
+            throws IOException, DatabaseUnitException, SQLException {
         dbUtils.deleteDataFromTables(dataSource, tableNames);
     }
 
@@ -138,3 +139,4 @@ public class UiTestCaseBase extends AbstractTestNGSpringContextTests {
         assertEquals(selenium.getAttribute("page.id@title"), pageName);
     }
 }
+
