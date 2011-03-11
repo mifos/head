@@ -33,7 +33,7 @@ import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 import org.mifos.test.acceptance.framework.questionnaire.AttachQuestionGroupParameters;
 import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionParameters;
-import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionnairePage;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSearchParameters;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSubmitParameters;
 import org.mifos.test.acceptance.framework.savings.SavingsAccountDetailPage;
@@ -122,9 +122,7 @@ public class QuestionGroupSavingsAccountTest extends UiTestCaseBase {
     }
 
     //http://mifosforge.jira.com/browse/MIFOSTEST-669
-    //disabled due to MIFOS-4814
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled = false)
     public void verifyCapturingResponsesDuringSavingsCreation() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_016_dbunit.xml", dataSource, selenium);
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
@@ -140,14 +138,13 @@ public class QuestionGroupSavingsAccountTest extends UiTestCaseBase {
 
         QuestionResponseParameters questionResponseParameters = new QuestionResponseParameters();
         questionResponseParameters.addTextAnswer("questionGroups[0].sectionDetails[0].questions[0].value", "04/02/2011");
-        questionResponseParameters.addSingleSelectAnswer("questionGroups[0].sectionDetails[0].questions[1].valuesAsArray", "green");
+        questionResponseParameters.addSingleSelectAnswer("questionGroups[0].sectionDetails[0].questions[1].values", "green");
         questionResponseParameters.addTextAnswer("questionGroups[0].sectionDetails[0].questions[2].value", "123");
         questionResponseParameters.addTextAnswer("questionGroups[0].sectionDetails[0].questions[3].value", "23");
         questionResponseParameters.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[0].value", "yes");
-        questionResponseParameters.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[1].valuesAsArray", "Yes");
+        questionResponseParameters.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[1].values", "Yes");
 
         questionResponseParameters.addSingleSelectAnswer("questionGroups[1].sectionDetails[0].questions[0].value", "1");
-        //questionResponseParameters.addSingleSelectAnswer("questionGroups[1].sectionDetails[0].questions[1].valuesAsArray", "january");
         questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[0].questions[2].value", "234");
         questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[0].questions[3].value", "textquestion");
         questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[1].questions[0].value", "04/02/2011");
@@ -165,37 +162,36 @@ public class QuestionGroupSavingsAccountTest extends UiTestCaseBase {
         savingsAccountDetailPage = savingsAccountHelper.editAdditionalInformationDurringCreationSavingsAccount(questionResponseParameters2);
         String savingsId = savingsAccountDetailPage.getAccountId();
 
-        questionGroupTestHelper.markQuestionGroupAsInactive("DateQuestion");
-        questionGroupTestHelper.markQuestionGroupAsInactive("question 2");
+        questionGroupTestHelper.markQuestionGroupAsInactive("CreateSavingsQG2");
         questionGroupTestHelper.markQuestionAsInactive("SingleSelectQuestion");
         questionGroupTestHelper.markQuestionAsInactive("SmartSelect");
         questionGroupTestHelper.markQuestionAsInactive("Text");
         questionGroupTestHelper.markQuestionAsInactive("TextQuestion");
-        questionGroupTestHelper.markQuestionAsInactive("Date");
-        questionGroupTestHelper.markQuestionGroupAsInactive("Number");
-        questionGroupTestHelper.markQuestionGroupAsInactive("question 1");
 
         CreateQuestionParameters createQuestionParameters = new CreateQuestionParameters();
         createQuestionParameters.setType(createQuestionParameters.TYPE_FREE_TEXT);
         createQuestionParameters.setText("newQuestion232");
         List<CreateQuestionParameters> newQuestionList = new ArrayList<CreateQuestionParameters>();
         newQuestionList.add(createQuestionParameters);
-        questionGroupTestHelper.addNewQuestionsToQuestionGroup("CreateGroupQG", newQuestionList);
+        questionGroupTestHelper.addNewQuestionsToQuestionGroup("CreateSavingsQG", newQuestionList);
 
         Map<String, String> questionsAndAnswers = new HashMap<String, String>();
-        questionsAndAnswers.put("MultiSelect", "third");
-        questionsAndAnswers.put("NumberQuestion2", "10");
-        questionsAndAnswers.put("question 2", "35");
-        String[] questionsExist = {"newQuestion232", "MultiSelectQuestion", "NumberQuestion2", "question 4", "question 5"};
-        String[] questionsInactive = {"DateQuestion", "question 2", "MultiSelectQuestion", "SingleSelectQuestion", "DateQuestion", "question 2"};
+        questionsAndAnswers.put("MultiSelectQuestion", "green");
+        questionsAndAnswers.put("DateQuestion", "05/02/2011");
+        questionsAndAnswers.put("NumberQuestion", "123");
+        questionsAndAnswers.put("question 2", "23");
+        questionsAndAnswers.put("question 4", "yes");
+        questionsAndAnswers.put("question 5", "Yes");
+        questionsAndAnswers.put("Date", "04/02/2011");
+        String[] questionsExist = {"newQuestion232", "MultiSelectQuestion", "NumberQuestion", "question 4", "question 5", "question 2", "DateQuestion","Date"};
+        String[] questionsInactive = {"SingleSelectQuestion", "SmartSelect", "Text", "TextQuestion"};
 
 
-        QuestionResponsePage questionResponsePage = new QuestionResponsePage(selenium);
-        questionResponsePage =savingsAccountHelper.navigateToQuestionResponseDuringCreateSavings(searchParameters, submitAccountParameters);
-        questionResponsePage.verifyQuestionsExists(questionsExist);
-        questionResponsePage.verifyQuestionsDoesnotappear(questionsInactive);
+        QuestionnairePage questionnairePage = savingsAccountHelper.navigateToQuestionResponseDuringCreateSavings(searchParameters, submitAccountParameters);
+        questionnairePage.verifyQuestionsExists(questionsExist);
+        questionnairePage.verifyQuestionsDoesnotappear(questionsInactive);
 
-        verifyQuestionResponsesExistInDatabase(savingsId, "Disburse Loan", questionsAndAnswers);
+        verifyQuestionResponsesExistInDatabase(savingsId, "Create Savings", questionsAndAnswers);
 
     }
 

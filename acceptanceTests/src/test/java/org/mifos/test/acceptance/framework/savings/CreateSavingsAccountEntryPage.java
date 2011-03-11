@@ -22,6 +22,7 @@ package org.mifos.test.acceptance.framework.savings;
 
 import org.mifos.test.acceptance.framework.AbstractPage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionnairePage;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -73,6 +74,13 @@ public class CreateSavingsAccountEntryPage extends AbstractPage {
 
     }
 
+    public QuestionnairePage submitAndNavigateToQuestionnairePage(CreateSavingsAccountSubmitParameters formParameters) {
+        selenium.type("continuecreatesavingsaccount.input.recommendedAmount",formParameters.getAmount());
+        selenium.click("continuecreatesavingsaccount.button.preview");
+        waitForPageToLoad();
+        return new QuestionnairePage(selenium);
+    }
+    
     public QuestionResponsePage submitAndNavigateToQuestionResponsePage(CreateSavingsAccountSubmitParameters formParameters) {
         selenium.type("continuecreatesavingsaccount.input.recommendedAmount",formParameters.getAmount());
         selenium.click("continuecreatesavingsaccount.button.preview");

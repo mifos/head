@@ -27,11 +27,14 @@ import org.mifos.test.acceptance.framework.center.CenterViewDetailsPage;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
+import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 import org.mifos.test.acceptance.framework.user.UserViewDetailsPage;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
+import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountPreviewPage;
 import org.mifos.test.acceptance.framework.savings.SavingsAccountDetailPage;
 
 import org.testng.Assert;
@@ -197,5 +200,32 @@ public class QuestionnairePage extends MifosPage {
 
     public void verifyTextPresent(String expectedText, String errorMessage) {
         Assert.assertTrue(selenium.isTextPresent(expectedText), errorMessage);
+    }
+    
+    public void populateAnswers(QuestionResponseParameters responseParameters) {
+        for (Map.Entry<String, String> entry : responseParameters.getTextResponses().entrySet()) {
+            selenium.type(entry.getKey(), entry.getValue());
+        }
+        for (Map.Entry<String, String> entry : responseParameters.getSingleSelectResponses().entrySet()) {
+            selenium.check("//input[@name='" + entry.getKey() + "' and @value='" + entry.getValue() + "']");
+        }
+    }
+    
+    public CreateSavingsAccountPreviewPage navigateToNextPageSavingsAccountCreation() {
+        selenium.click("captureQuestionResponses.button.continue");
+        waitForPageToLoad();
+        return new CreateSavingsAccountPreviewPage(selenium);
+    }
+    
+    public void verifyQuestionsExists(String[] questions) {
+        for(String question: questions) {
+            Assert.assertTrue(selenium.isTextPresent(question));
+        }
+    }
+    
+    public void verifyQuestionsDoesnotappear(String[] questions) {
+        for (String question : questions) {
+            Assert.assertFalse(selenium.isTextPresent(question));
+        }
     }
 }
