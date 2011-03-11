@@ -22,7 +22,27 @@
 [@adminLeftPaneLayout]
         <script type="text/javascript" src="pages/accounting/js/accounting.js"></script>
         <span id="page.id" title="view_accounting_data_exports"></span>
+<script>
+function addExportListLink(listStartDay, totalNumberOfExports) {
+	if(listStartDay == 0) {
+	   $("#previous").html("<font color='grey'>[@spring.message "accounting.previous"/]</font>");
+	}
+	else
+	{
+        $("#previous").html("<a href='#' onclick=\"javascript:loadExportsList("+ (listStartDay-10) + ","+totalNumberOfExports+");\">[@spring.message "accounting.previous"/]</a>");
+    }
 
+	if(listStartDay > (totalNumberOfExports - 11)) {
+	    $("#results").html("[@spring.message "accounting.results"/] "+(listStartDay+1)+"-"+(totalNumberOfExports)+" of "+totalNumberOfExports);
+	    $("#next").html("<font color='grey'>[@spring.message "accounting.next"/]</font>");
+	}
+	else 
+	{
+	    $("#results").html("[@spring.message "accounting.results"/] "+(listStartDay+1)+"-"+(listStartDay +10)+" of "+totalNumberOfExports);
+        $("#next").html("<a href='#' onclick=\"javascript:loadExportsList("+ (listStartDay+10) + ","+totalNumberOfExports+");\">[@spring.message "accounting.next"/]</a>");
+    }
+}
+</script>
 
 <div class="content "> <!--  Main Content Begins-->
    [@mifos.crumbs breadcrumbs /]

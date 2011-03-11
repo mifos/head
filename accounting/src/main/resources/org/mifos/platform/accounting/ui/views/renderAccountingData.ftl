@@ -48,19 +48,19 @@
                 <tr>
                   <td colspan='7'>
                       <div align='right'>
-                           <a target="_blank" href="pages/accounting/jsp/processTallyXMLOutput.jsp?fromDate=${fromDate}&toDate=${toDate}">Download Tally XML format</a>
+                           <a target="_blank" href="pages/accounting/jsp/processTallyXMLOutput.jsp?fromDate=${fromDate}&toDate=${toDate}">[@spring.message "accounting.downloadtallyxml"/]</a>
                       </div>
-                      <div align='right'><a href="javascript:void(processPrint('table'));">Print</a> </div>
+                      <div align='right'><a href="javascript:void(processPrint('table'));">[@spring.message "accounting.downloadtallyxml.print"/]</a> </div>
                   </td>
                 </tr>
                 <tr>
-                    <th class='drawtablehd'>Branch</th>
-                    <th class='drawtablehd'>Voucher Date</th>
-                    <th class='drawtablehd'>Voucher Type</th>
-                    <th class='drawtablehd'>GL Code</th>
-                    <th class='drawtablehd'>GL Name</th>
-                    <th class='drawtablehd'>Debit</th>
-                    <th class='drawtablehd'>Credit</th>
+                    <th class='drawtablehd'>[@spring.message "accounting.viewaccountingexport.branch"/]</th>
+                    <th class='drawtablehd'>[@spring.message "accounting.viewaccountingexport.voucherdate"/]</th>
+                    <th class='drawtablehd'>[@spring.message "accounting.viewaccountingexport.vouchertype"/]</th>
+                    <th class='drawtablehd'>[@spring.message "accounting.viewaccountingexport.glcode"/]</th>
+                    <th class='drawtablehd'>[@spring.message "accounting.viewaccountingexport.glname"/]</th>
+                    <th class='drawtablehd'>[@spring.message "accounting.viewaccountingexport.debit"/]</th>
+                    <th class='drawtablehd'>[@spring.message "accounting.viewaccountingexport.credit"/]</th>
                 </tr>
         [#list accountingData as instance]
                 <tr>
@@ -77,7 +77,7 @@
         </div>
     [/#if]
          <div class="buttonsSubmitCancel margin20right">
-            <input id='back' type="button" class="buttn" value="Back to Previous Page" onclick="javascript:goToViewExports();" />
+            <input id='back' type="button" class="buttn" value="[@spring.message "accounting.viewaccountingexport.back"/]" onclick="javascript:goToViewExports();" />
         </div>
   </div>
 </div><!--Main Content Ends-->

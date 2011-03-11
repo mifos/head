@@ -37,26 +37,6 @@ function loadExportsList(listStartDay, totalNumberOfExports) {
 	})
 }
 
-function addExportListLink(listStartDay, totalNumberOfExports) {
-	if(listStartDay == 0) {
-	   $("#previous").html("<font color='grey'>Previous</font>");
-	}
-	else
-	{
-        $("#previous").html("<a href='#' onclick=\"javascript:loadExportsList("+ (listStartDay-10) + ","+totalNumberOfExports+");\">Previous</a>");
-    }
-
-	if(listStartDay > (totalNumberOfExports - 11)) {
-	    $("#results").html("Results "+(listStartDay+1)+"-"+(totalNumberOfExports)+" of "+totalNumberOfExports);
-	    $("#next").html("<font color='grey'>Next</font>");
-	}
-	else 
-	{
-	    $("#results").html("Results "+(listStartDay+1)+"-"+(listStartDay +10)+" of "+totalNumberOfExports);
-        $("#next").html("<a href='#' onclick=\"javascript:loadExportsList("+ (listStartDay+10) + ","+totalNumberOfExports+");\">Next</a>");
-    }
-}
-
 var gAutoPrint = true;
 
 function processPrint(table) {
