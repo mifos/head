@@ -22,6 +22,7 @@ package org.mifos.application.master.business;
 
 import org.mifos.framework.business.AbstractEntity;
 
+@Deprecated
 public class LookUpLabelEntity extends AbstractEntity {
 
     private String labelName;

@@ -32,5 +32,6 @@ public interface MessageCustomizerDao {
 
 	void addOrUpdateCustomMessage(String oldMessage, String newMessage);
 
-	void removeCustomMessage(String oldMessage);	
+	void removeCustomMessage(String oldMessage);
+
 }
