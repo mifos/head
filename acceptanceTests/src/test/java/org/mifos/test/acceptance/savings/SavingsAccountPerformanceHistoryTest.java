@@ -47,7 +47,7 @@ public class SavingsAccountPerformanceHistoryTest extends UiTestCaseBase {
         super.setUp();
 
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = new DateTime(2009,9,9,8,0,0,0);
+        DateTime targetTime = new DateTime(2011,3,14,8,0,0,0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
         savingsAccountHelper = new SavingsAccountHelper(selenium);
 
@@ -62,39 +62,38 @@ public class SavingsAccountPerformanceHistoryTest extends UiTestCaseBase {
     public void savingsDepositWithdrawalAndVerifyPerformanceHistory() throws Exception {
         DepositWithdrawalSavingsParameters params = new DepositWithdrawalSavingsParameters();
 
-        params.setTrxnDateMM("09");
-        params.setTrxnDateDD("09");
-        params.setTrxnDateYYYY("2009");
+        params.setTrxnDateMM("14");
+        params.setTrxnDateDD("03");
+        params.setTrxnDateYYYY("2011");
         params.setAmount("888.8");
         params.setPaymentType(DepositWithdrawalSavingsParameters.CASH);
         params.setTrxnType(DepositWithdrawalSavingsParameters.DEPOSIT);
-        params.setClientId("5");
 
         // deposit initial amount to savings account
-        SavingsAccountDetailPage savingsAccountDetailPage = savingsAccountHelper.makeDepositOrWithdrawalOnSavingsAccount("000100000000002", params);
+        SavingsAccountDetailPage savingsAccountDetailPage = savingsAccountHelper.makeDepositOrWithdrawalOnSavingsAccount("000100000000066", params);
         savingsAccountDetailPage.verifyPage();
 
         // withdraw portion of savings
         params.setAmount("123.0");
         params.setTrxnType(DepositWithdrawalSavingsParameters.WITHDRAWAL);
 
-        savingsAccountHelper.makeDepositOrWithdrawalOnSavingsAccount("000100000000002", params);
+        savingsAccountHelper.makeDepositOrWithdrawalOnSavingsAccount("000100000000066", params);
 
         // another deposit
         params.setAmount("10.0");
         params.setTrxnType(DepositWithdrawalSavingsParameters.DEPOSIT);
 
-        savingsAccountHelper.makeDepositOrWithdrawalOnSavingsAccount("000100000000002", params);
+        savingsAccountHelper.makeDepositOrWithdrawalOnSavingsAccount("000100000000066", params);
 
         // another withdrawal
         params.setAmount("20.0");
         params.setTrxnType(DepositWithdrawalSavingsParameters.WITHDRAWAL);
 
-        savingsAccountHelper.makeDepositOrWithdrawalOnSavingsAccount("000100000000002", params);
+        savingsAccountHelper.makeDepositOrWithdrawalOnSavingsAccount("000100000000066", params);
 
         Assert.assertEquals("Performance history", selenium.getTable("performanceHistoryTable.0.0"));
-        Assert.assertEquals("Date account opened: 01/01/2009", selenium.getTable("performanceHistoryTable.2.0"));
-        Assert.assertEquals("Total deposits: 1898.8", selenium.getTable("performanceHistoryTable.3.0"));
+        Assert.assertEquals("Date account opened: 14/03/2011", selenium.getTable("performanceHistoryTable.2.0"));
+        Assert.assertEquals("Total deposits: 898.8", selenium.getTable("performanceHistoryTable.3.0"));
         Assert.assertEquals("Total interest earned: 0.0", selenium.getTable("performanceHistoryTable.4.0"));
         Assert.assertEquals("Total withdrawals: 143.0", selenium.getTable("performanceHistoryTable.5.0"));
     }
