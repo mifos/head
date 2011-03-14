@@ -39,7 +39,7 @@ import org.springframework.binding.message.MessageContext;
 import org.springframework.binding.validation.ValidationContext;
 
 @SuppressWarnings("PMD")
-@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID"}, justification="should disable at filter level and also for pmd - not important for us")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID", "EI_EXPOSE_REP", "EI_EXPOSE_REP2"}, justification="should disable at filter level and also for pmd - not important for us")
 public class CashFlowSummaryFormBean implements Serializable {
 
     @Autowired
@@ -94,29 +94,13 @@ public class CashFlowSummaryFormBean implements Serializable {
         Errors errors = loanAccountServiceFacade.validateCashFlowForInstallments(loanInstallmentsDto, monthlyCashFlows, repaymentCapacity, cashFlowTotalBalance);
         if (warnings.hasErrors()) {
             for (ErrorEntry fieldError : warnings.getErrorEntries()) {
-                
-                String[] errorCodes = new String[1];
-                errorCodes[0] = fieldError.getErrorCode();
-                List<Object> args = new ArrayList<Object>(fieldError.getArgs());
-                MessageBuilder builder = new MessageBuilder().error().source(fieldError.getFieldName())
-                                                      .codes(errorCodes)
-                                                      .defaultText(fieldError.getDefaultMessage()).args(args.toArray());
-                
-                messageContext.addMessage(builder.build());
+                addErrorMessageToContext(messageContext, fieldError);
             }
         }
         
         if (errors.hasErrors()) {
             for (ErrorEntry fieldError : errors.getErrorEntries()) {
-                
-                String[] errorCodes = new String[1];
-                errorCodes[0] = fieldError.getErrorCode();
-                List<Object> args = new ArrayList<Object>(fieldError.getArgs());
-                MessageBuilder builder = new MessageBuilder().error().source(fieldError.getFieldName())
-                                                      .codes(errorCodes)
-                                                      .defaultText(fieldError.getDefaultMessage()).args(args.toArray());
-                
-                messageContext.addMessage(builder.build());
+                addErrorMessageToContext(messageContext, fieldError);
             }
         }
         
@@ -126,38 +110,30 @@ public class CashFlowSummaryFormBean implements Serializable {
             
             if (inputInstallmentsErrors.hasErrors()) {
                 for (ErrorEntry fieldError : inputInstallmentsErrors.getErrorEntries()) {
-                    
-                    String[] errorCodes = new String[1];
-                    errorCodes[0] = fieldError.getErrorCode();
-                    List<Object> args = new ArrayList<Object>();
-                    if (fieldError.hasErrorArgs()) {
-                        args = new ArrayList<Object>(fieldError.getArgs());
-                    }
-                    MessageBuilder builder = new MessageBuilder().error().source(fieldError.getFieldName())
-                                                          .codes(errorCodes)
-                                                          .defaultText(fieldError.getDefaultMessage()).args(args.toArray());
-                    
-                    messageContext.addMessage(builder.build());
+                    addErrorMessageToContext(messageContext, fieldError);
                 }
             }
             
             if (scheduleErrors.hasErrors()) {
                 for (ErrorEntry fieldError : scheduleErrors.getErrorEntries()) {
-                    
-                    String[] errorCodes = new String[1];
-                    errorCodes[0] = fieldError.getErrorCode();
-                    List<Object> args = new ArrayList<Object>();
-                    if (fieldError.hasErrorArgs()) {
-                        args = new ArrayList<Object>(fieldError.getArgs());
-                    }
-                    MessageBuilder builder = new MessageBuilder().error().source(fieldError.getFieldName())
-                                                          .codes(errorCodes)
-                                                          .defaultText(fieldError.getDefaultMessage()).args(args.toArray());
-                    
-                    messageContext.addMessage(builder.build());
+                    addErrorMessageToContext(messageContext, fieldError);
                 }
             }
         }
+    }
+
+    private void addErrorMessageToContext(MessageContext messageContext, ErrorEntry fieldError) {
+        String[] errorCodes = new String[1];
+        errorCodes[0] = fieldError.getErrorCode();
+        List<Object> args = new ArrayList<Object>();
+        if (fieldError.hasErrorArgs()) {
+            args = new ArrayList<Object>(fieldError.getArgs());
+        }
+        MessageBuilder builder = new MessageBuilder().error().source(fieldError.getFieldName())
+                                              .codes(errorCodes)
+                                              .defaultText(fieldError.getDefaultMessage()).args(args.toArray());
+        
+        messageContext.addMessage(builder.build());
     }
     
     public Integer getProductId() {
