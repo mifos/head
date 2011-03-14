@@ -218,21 +218,24 @@ public class LoanAccountController {
         return cashFlowDataDtos;
     }
     
-    public LoanCreationResultDto saveLoanApplicationForLater(LoanAccountFormBean formBean, LoanAccountQuestionGroupFormBean loanAccountQuestionGroupFormBean, LoanAccountCashFlow loanAccountCashFlow) {
+    public LoanCreationResultDto saveLoanApplicationForLater(LoanAccountFormBean formBean, LoanAccountQuestionGroupFormBean loanAccountQuestionGroupFormBean,
+            LoanAccountCashFlow loanAccountCashFlow, CashFlowSummaryFormBean cashFlowSummaryFormBean) {
         
         LoanApplicationStateDto applicationState = loanAccountServiceFacade.retrieveLoanApplicationState();
         
-        return submitLoanApplication(applicationState.getPartialApplicationId(), formBean, loanAccountQuestionGroupFormBean, loanAccountCashFlow);
+        return submitLoanApplication(applicationState.getPartialApplicationId(), formBean, loanAccountQuestionGroupFormBean, loanAccountCashFlow, cashFlowSummaryFormBean);
     }
 
-    public LoanCreationResultDto submitLoanApplication(LoanAccountFormBean formBean, LoanAccountQuestionGroupFormBean loanAccountQuestionGroupFormBean, LoanAccountCashFlow loanAccountCashFlow) {
+    public LoanCreationResultDto submitLoanApplication(LoanAccountFormBean formBean, LoanAccountQuestionGroupFormBean loanAccountQuestionGroupFormBean, 
+            LoanAccountCashFlow loanAccountCashFlow, CashFlowSummaryFormBean cashFlowSummaryFormBean) {
         
         LoanApplicationStateDto applicationState = loanAccountServiceFacade.retrieveLoanApplicationState();
         
-        return submitLoanApplication(applicationState.getConfiguredApplicationId(), formBean, loanAccountQuestionGroupFormBean, loanAccountCashFlow);
+        return submitLoanApplication(applicationState.getConfiguredApplicationId(), formBean, loanAccountQuestionGroupFormBean, loanAccountCashFlow, cashFlowSummaryFormBean);
     }
 
-    private LoanCreationResultDto submitLoanApplication(Integer accountState, LoanAccountFormBean formBean, LoanAccountQuestionGroupFormBean loanAccountQuestionGroupFormBean, LoanAccountCashFlow loanAccountCashFlow) {
+    private LoanCreationResultDto submitLoanApplication(Integer accountState, LoanAccountFormBean formBean, LoanAccountQuestionGroupFormBean loanAccountQuestionGroupFormBean, 
+            LoanAccountCashFlow loanAccountCashFlow, CashFlowSummaryFormBean cashFlowSummaryFormBean) {
 
         LocalDate disbursementDate = new LocalDate().withDayOfMonth(formBean.getDisbursalDateDay().intValue())
                                                     .withMonthOfYear(formBean.getDisbursalDateMonth().intValue())
@@ -252,7 +255,11 @@ public class LoanAccountController {
                                                                                     formBean.isRepaymentScheduleIndependentOfCustomerMeeting(),
                                                                                     formBean.getRepaymentRecursEvery(),
                                                                                     formBean.getRepaymentDayOfWeek());
-
-        return loanAccountServiceFacade.createLoan(createLoanAccount, loanAccountQuestionGroupFormBean.getQuestionGroups(), loanAccountCashFlow);
+        
+        if (formBean.isVariableInstallmentsAllowed()) {
+            return loanAccountServiceFacade.createLoan(createLoanAccount, loanAccountQuestionGroupFormBean.getQuestionGroups(), loanAccountCashFlow, cashFlowSummaryFormBean.getInstallments());
+        } else {
+            return loanAccountServiceFacade.createLoan(createLoanAccount, loanAccountQuestionGroupFormBean.getQuestionGroups(), loanAccountCashFlow);
+        }
     }
 }

@@ -90,7 +90,7 @@
     		<evaluate expression="loanAccountController.retrieveCashFlowSettings(flowScope.loanScheduleReferenceData, flowScope.productId)" result="flowScope.cashFlowSettings"/>
     		<evaluate expression="cashFlowController.retrieveCashFlowForm(flowScope.cashFlowSettings)" result="flowScope.cashFlow"/>
     	</on-entry>
-        <transition on="capture" to="summaryOfCashflow" validate="true"/>
+        <transition on="capture" to="prepareSummaryOfCashflow" validate="true"/>
         <transition on="cancel" to="cancel" bind="false" validate="false" history="invalidate"/>
     </view-state>
     
@@ -102,12 +102,16 @@
         <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/>
     </view-state>
     
-    <view-state id="summaryOfCashflow" view="createloanAccountReviewLoanSchedule" model="cashFlowSummaryFormBean">
+    <action-state id="prepareSummaryOfCashflow">
     	<on-entry>
 	    	<evaluate expression="loanAccountController.retrieveLoanSchedule(flowScope.customerId, flowScope.productId, loanAccountFormBean)" result="flowScope.loanScheduleReferenceData"/>
     	    <evaluate expression="cashFlowController.retrieveMonthlyCashflowDetails(flowScope.cashFlow, flowScope.loanScheduleReferenceData.disbursementDate, flowScope.loanScheduleReferenceData.loanAmount)" result="flowScope.monthlyCashFlowDetails"/>
             <evaluate expression="loanAccountController.retrieveCashflowSummaryDetails(cashFlowSummaryFormBean, flowScope.cashFlowSettings, flowScope.monthlyCashFlowDetails, flowScope.loanScheduleReferenceData, flowScope.productId, loanAccountFormBean)" result="flowScope.cashflowSummaryDetails"/>
         </on-entry>
+        <transition to="summaryOfCashflow" />
+    </action-state>
+    
+    <view-state id="summaryOfCashflow" view="createloanAccountReviewLoanSchedule" model="cashFlowSummaryFormBean">
         <transition on="validate" to="summaryOfCashflow" validate="true" />
         <transition on="preview" to="previewStep" validate="true" />
         <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/>
@@ -119,13 +123,13 @@
         
         <transition on="saveForLater" to="confirmation">
         	<evaluate expression="cashFlowController.transformCashFlow(flowScope.cashFlow)" result="flowScope.loanAccountCashFlow" />
-        	<evaluate expression="loanAccountController.saveLoanApplicationForLater(loanAccountFormBean, loanAccountQuestionGroupFormBean, flowScope.loanAccountCashFlow)" result="flowScope.loanCreationResultDto" />
+        	<evaluate expression="loanAccountController.saveLoanApplicationForLater(loanAccountFormBean, loanAccountQuestionGroupFormBean, flowScope.loanAccountCashFlow, cashFlowSummaryFormBean)" result="flowScope.loanCreationResultDto" />
         </transition>
         
         <transition on="submit" to="confirmation">
         	<set name="flowScope.accountStateId" value="requestParameters.accountState" type="int"/>
         	<evaluate expression="cashFlowController.transformCashFlow(flowScope.cashFlow)" result="flowScope.loanAccountCashFlow" />
-        	<evaluate expression="loanAccountController.submitLoanApplication(loanAccountFormBean, loanAccountQuestionGroupFormBean, flowScope.loanAccountCashFlow)" result="flowScope.loanCreationResultDto" />
+        	<evaluate expression="loanAccountController.submitLoanApplication(loanAccountFormBean, loanAccountQuestionGroupFormBean, flowScope.loanAccountCashFlow, cashFlowSummaryFormBean)" result="flowScope.loanCreationResultDto" />
         </transition>
         
         <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/>

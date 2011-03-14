@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.joda.time.LocalDate;
 import org.mifos.application.servicefacade.LoanAccountServiceFacade;
 import org.mifos.dto.domain.LoanCreationInstallmentDto;
 import org.mifos.dto.domain.MonthlyCashFlowDto;
@@ -90,6 +91,11 @@ public class CashFlowSummaryFormBean implements Serializable {
      */
     public void validateSummaryOfCashflow(ValidationContext context) {
         MessageContext messageContext = context.getMessageContext();
+        
+        Date firstInstallmentDueDate = installments.get(0);
+        Date lastInstallmentDueDate = installments.get(installments.size()-1);
+        this.loanInstallmentsDto = new LoanInstallmentsDto(this.loanInstallmentsDto.getLoanAmount(), this.loanInstallmentsDto.getTotalInstallmentAmount(), firstInstallmentDueDate, lastInstallmentDueDate);
+        
         Errors warnings = loanAccountServiceFacade.validateCashFlowForInstallmentsForWarnings(cashFlowDataDtos, productId);
         Errors errors = loanAccountServiceFacade.validateCashFlowForInstallments(loanInstallmentsDto, monthlyCashFlows, repaymentCapacity, cashFlowTotalBalance);
         if (warnings.hasErrors()) {
@@ -105,6 +111,11 @@ public class CashFlowSummaryFormBean implements Serializable {
         }
         
         if (this.variableInstallmentsAllowed) {
+            int index=0;
+            for (LoanCreationInstallmentDto variableInstallment : this.variableInstallments) {
+                variableInstallment.setDueDate(new LocalDate(this.installments.get(index)));
+                index++;
+            }
             Errors inputInstallmentsErrors = loanAccountServiceFacade.validateInputInstallments(disbursementDate, minGapInDays, maxGapInDays, minInstallmentAmount, variableInstallments, customerId);
             Errors scheduleErrors = loanAccountServiceFacade.validateInstallmentSchedule(variableInstallments, minInstallmentAmount);
             

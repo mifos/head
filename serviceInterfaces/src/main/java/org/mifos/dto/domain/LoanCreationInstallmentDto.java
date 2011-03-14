@@ -30,7 +30,7 @@ import org.joda.time.LocalDate;
 public class LoanCreationInstallmentDto implements Serializable {
 
     private final Integer installmentNumber;
-    private final LocalDate dueDate;
+    private LocalDate dueDate;
     private final Double principal;
     private final Double interest;
     private final Double fees;
@@ -53,6 +53,10 @@ public class LoanCreationInstallmentDto implements Serializable {
     
     public Date getDueDate() {
         return this.dueDate.toDateMidnight().toDate();
+    }
+    
+    public void setDueDate(LocalDate dueDate) {
+        this.dueDate = dueDate;
     }
     
     public Double getFees() {

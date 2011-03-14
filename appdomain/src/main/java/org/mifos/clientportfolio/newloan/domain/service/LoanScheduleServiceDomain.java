@@ -58,6 +58,23 @@ public class LoanScheduleServiceDomain implements LoanScheduleService {
             LoanProductOverridenDetail overridenDetail, LoanScheduleConfiguration configuration, Short userBranchOfficeId, 
             List<AccountFeesEntity> accountFees) {
         
+        List<DateTime> loanScheduleDates = generateScheduleDates(loanProduct, loanMeeting, overridenDetail, configuration, userBranchOfficeId);
+        
+        return loanScheduleFactory.create(loanScheduleDates, loanProduct, customer, loanMeeting, overridenDetail.getLoanAmount(), 
+                overridenDetail.getInterestRate(), configuration.getNumberOfInterestDays(), overridenDetail.getGraceDuration(), accountFees);
+    }
+    
+    @Override
+    public LoanSchedule generate(LoanOfferingBO loanProduct, CustomerBO customer, MeetingBO loanMeeting,LoanProductOverridenDetail overridenDetail, LoanScheduleConfiguration configuration, 
+            List<AccountFeesEntity> accountFees, List<DateTime> loanScheduleDates) {
+        
+        return loanScheduleFactory.create(loanScheduleDates, loanProduct, customer, loanMeeting, overridenDetail.getLoanAmount(), 
+                overridenDetail.getInterestRate(), configuration.getNumberOfInterestDays(), overridenDetail.getGraceDuration(), accountFees);
+    }
+
+    private List<DateTime> generateScheduleDates(LoanOfferingBO loanProduct, MeetingBO loanMeeting,
+            LoanProductOverridenDetail overridenDetail, LoanScheduleConfiguration configuration,
+            Short userBranchOfficeId) {
         LoanInstallmentGenerator loanInstallmentGenerator = loanInstallmentFactory.create(loanMeeting, configuration.isLoanScheduleIndependentOfCustomerMeetingEnabled());
         
         List<InstallmentDate> installmentDates = loanInstallmentGenerator.generate(overridenDetail.getDisbursementDate(), overridenDetail.getNumberOfInstallments(), loanProduct.getGracePeriodType().asEnum(), overridenDetail.getGraceDuration(), userBranchOfficeId);
@@ -65,8 +82,6 @@ public class LoanScheduleServiceDomain implements LoanScheduleService {
         for (InstallmentDate installmentDate : installmentDates) {
             loanScheduleDates.add(new DateTime(installmentDate.getInstallmentDueDate()));
         }
-        
-        return loanScheduleFactory.create(loanScheduleDates, loanProduct, customer, loanMeeting, overridenDetail.getLoanAmount(), 
-                overridenDetail.getInterestRate(), configuration.getNumberOfInterestDays(), overridenDetail.getGraceDuration(), accountFees);
+        return loanScheduleDates;
     }
 }
