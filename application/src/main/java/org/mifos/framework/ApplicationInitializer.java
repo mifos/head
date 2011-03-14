@@ -20,9 +20,26 @@
 
 package org.mifos.framework;
 
+import java.lang.reflect.Field;
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Locale;
+import java.util.Timer;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+import javax.servlet.ServletRequestEvent;
+import javax.servlet.ServletRequestListener;
+import javax.servlet.http.HttpSessionEvent;
+import javax.servlet.http.HttpSessionListener;
+
 import org.hibernate.SessionFactory;
 import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
+import org.mifos.application.admin.servicefacade.CustomizedTextServiceFacade;
 import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.config.AccountingRules;
@@ -59,21 +76,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
-
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import javax.servlet.ServletRequestEvent;
-import javax.servlet.ServletRequestListener;
-import javax.servlet.http.HttpSessionEvent;
-import javax.servlet.http.HttpSessionListener;
-import java.lang.reflect.Field;
-import java.sql.Driver;
-import java.sql.DriverManager;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Locale;
-import java.util.Timer;
 
 /**
  * This class should prepare all the sub-systems that are required by the app. Cleanup should also happen here when the
@@ -208,6 +210,9 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         FinancialInitializer.initialize();
         EntityMasterData.getInstance().init();
         initializeEntityMaster();
+       
+        applicationContext.getBean(CustomizedTextServiceFacade.class).convertMigratedLabelKeysToLocalizedText(Localization.getInstance().getMainLocale());
+
     }
 
     public void setAttributesOnContext(ServletContext servletContext) throws TaskSystemException {

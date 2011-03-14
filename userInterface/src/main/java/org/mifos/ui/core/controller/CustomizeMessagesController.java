@@ -24,8 +24,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.mifos.application.admin.servicefacade.CustomMessageDto;
-import org.mifos.application.admin.servicefacade.MessageCustomizerServiceFacade;
+import org.mifos.application.admin.servicefacade.CustomizedTextDto;
+import org.mifos.application.admin.servicefacade.CustomizedTextServiceFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -35,14 +35,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 public class CustomizeMessagesController {
 
     @Autowired
-    private MessageCustomizerServiceFacade messageCustomizerServiceFacade;
+    private CustomizedTextServiceFacade customizedTextServiceFacade;
     
     protected CustomizeMessagesController() {
         // default contructor for spring autowiring
     }
 
-    public CustomizeMessagesController(final MessageCustomizerServiceFacade messageCustomizerServiceFacade) {
-        this.messageCustomizerServiceFacade = messageCustomizerServiceFacade;
+    public CustomizeMessagesController(final CustomizedTextServiceFacade customizedTextServiceFacade) {
+        this.customizedTextServiceFacade = customizedTextServiceFacade;
     }
 /*
     @ModelAttribute("breadcrumbs")
@@ -56,11 +56,11 @@ public class CustomizeMessagesController {
     }    
     
     public Map<String,String> retrieveCustomMessages() {
-    	return messageCustomizerServiceFacade.retrieveCustomMessages();
+    	return customizedTextServiceFacade.retrieveCustomizedText();
     }
 
     public Map<String,String> retrieveCustomMessagesMap() {
-    	Map<String,String> rawMessageMap = messageCustomizerServiceFacade.retrieveCustomMessages();
+    	Map<String,String> rawMessageMap = customizedTextServiceFacade.retrieveCustomizedText();
     	Map<String,String> ftlMessageMap = new LinkedHashMap<String,String>();
     	
         for (Map.Entry<String, String> entry : rawMessageMap.entrySet()) { 
@@ -70,15 +70,15 @@ public class CustomizeMessagesController {
     }
 
     public CustomMessageFormBean getCustomMessage(CustomMessageSelectFormBean customMessageSelectFormBean) {
-    	CustomMessageDto customMessageDto = messageCustomizerServiceFacade.getCustomMessageDto(customMessageSelectFormBean.getMessage());
+    	CustomizedTextDto customizedTextDto = customizedTextServiceFacade.getCustomizedTextDto(customMessageSelectFormBean.getMessage());
     	CustomMessageFormBean customMessageFormBean = new CustomMessageFormBean();
-    	customMessageFormBean.setOldMessage(customMessageDto.getOldMessage());
-    	customMessageFormBean.setNewMessage(customMessageDto.getNewMessage());
+    	customMessageFormBean.setOldMessage(customizedTextDto.getOriginalText());
+    	customMessageFormBean.setNewMessage(customizedTextDto.getCustomText());
     	return customMessageFormBean;
     }
     
     public void addOrUpdateCustomMessage(CustomMessageFormBean customMessageFormBean) {
-    	messageCustomizerServiceFacade.addOrUpdateCustomMessage(customMessageFormBean.getOldMessage(), 
+    	customizedTextServiceFacade.addOrUpdateCustomizedText(customMessageFormBean.getOldMessage(), 
     			customMessageFormBean.getNewMessage());
     }
     
@@ -86,7 +86,7 @@ public class CustomizeMessagesController {
     	if (customMessageFormBean.getMessage() == null) {
     		return;
     	}
-    	messageCustomizerServiceFacade.removeCustomMessage(customMessageFormBean.getMessage());
+    	customizedTextServiceFacade.removeCustomizedText(customMessageFormBean.getMessage());
     }    
 
 }

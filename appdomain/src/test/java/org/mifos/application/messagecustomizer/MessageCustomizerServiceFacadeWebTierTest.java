@@ -21,16 +21,22 @@
 package org.mifos.application.messagecustomizer;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.doNothing;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
+import java.util.LinkedHashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.application.messagecustomizer.MessageCustomizerServiceFacadeWebTier;
+import org.mifos.application.messagecustomizer.CustomizedTextServiceFacadeWebTier;
 import org.mifos.dto.domain.AccountStatusesLabelDto;
 import org.mifos.dto.domain.ConfigurableLookupLabelDto;
 import org.mifos.dto.domain.GracePeriodDto;
@@ -43,17 +49,17 @@ import org.springframework.context.MessageSource;
 @RunWith(MockitoJUnitRunner.class)
 public class MessageCustomizerServiceFacadeWebTierTest {
 
-	private MessageCustomizerServiceFacadeWebTier messageCustomizerServiceFacadeWebTier;
+	private CustomizedTextServiceFacadeWebTier customizedTextServiceFacadeWebTier;
 
 	@Mock
 	private MessageSource messageSource;	
 	
 	@Mock
-	private MessageCustomizerDao messageCustomizerDao;
+	private CustomizedTextDao messageCustomizerDao;
 	
 	@Before
     public void setup() {
-		messageCustomizerServiceFacadeWebTier = new MessageCustomizerServiceFacadeWebTier(
+		customizedTextServiceFacadeWebTier = new CustomizedTextServiceFacadeWebTier(
 				messageCustomizerDao, messageSource);
 	}
 	
@@ -61,7 +67,7 @@ public class MessageCustomizerServiceFacadeWebTierTest {
 	public void shouldRetrieveConfigurableLabels() {
 		when(messageSource.getMessage(any(String.class), any(Object[].class), any(Locale.class))).thenReturn("test:");
 		ConfigureApplicationLabelsDto labelsDto =
-			messageCustomizerServiceFacadeWebTier.retrieveConfigurableLabels(new Locale("en"));
+			customizedTextServiceFacadeWebTier.retrieveConfigurableLabels(new Locale("en"));
 		
 		AccountStatusesLabelDto accountStatusesLabelDto = labelsDto.getAccountStatusLabels();
 		ConfigurableLookupLabelDto configurableLookupLabelDto = labelsDto.getLookupLabels();
@@ -70,4 +76,36 @@ public class MessageCustomizerServiceFacadeWebTierTest {
 		
 		assertThat(accountStatusesLabelDto.getActive(),is("test"));
 	}
+	
+	@Test
+	public void shouldConvertAndRemoveLoan() {
+		Map<String,String> messageMap = new LinkedHashMap<String,String>();
+		messageMap.put("Client.Label", "Borrower");
+		messageMap.put("Loan.Label", "Loan");
+
+		Map<String,String> messageMap2 = new LinkedHashMap<String,String>();
+		messageMap2.put("Client.Label", "Borrower");
+		messageMap2.put("Loan", "Loan");
+		
+		when(messageSource.getMessage(eq("Client.Label"), any(Object[].class), any(Locale.class))).thenReturn("Client");
+		when(messageSource.getMessage(eq("Loan.Label"), any(Object[].class), any(Locale.class))).thenReturn("Loan");
+
+		customizedTextServiceFacadeWebTier = spy(customizedTextServiceFacadeWebTier);
+		when(customizedTextServiceFacadeWebTier.retrieveCustomizedText())
+			.thenReturn(messageMap)
+			.thenReturn(messageMap2);
+		doNothing().when(customizedTextServiceFacadeWebTier).addOrUpdateCustomizedText(any(String.class), any(String.class));
+		doNothing().when(customizedTextServiceFacadeWebTier).removeCustomizedText(any(String.class));
+		
+		customizedTextServiceFacadeWebTier.convertMigratedLabelKeysToLocalizedText(Locale.ENGLISH);
+		
+		verify(customizedTextServiceFacadeWebTier).addOrUpdateCustomizedText("Client", "Borrower");
+		verify(customizedTextServiceFacadeWebTier).removeCustomizedText("Client.Label");
+
+		verify(customizedTextServiceFacadeWebTier).addOrUpdateCustomizedText("Loan", "Loan");
+		verify(customizedTextServiceFacadeWebTier).removeCustomizedText("Loan.Label");
+		verify(customizedTextServiceFacadeWebTier).removeCustomizedText("Loan");
+		
+	}
+	
 }

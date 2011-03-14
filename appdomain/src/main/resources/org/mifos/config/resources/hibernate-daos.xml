@@ -37,5 +37,5 @@
 
     <bean id="clientAttendanceDao" class="org.mifos.accounts.loan.persistance.StandardClientAttendanceDao" />
     
-    <bean id="messageCustomizerDao" class="org.mifos.application.messagecustomizer.MessageCustomizerDaoHibernate" />
+    <bean id="customizedTextDao" class="org.mifos.application.messagecustomizer.CustomizedTextDaoHibernate" />
 </beans>

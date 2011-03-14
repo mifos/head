@@ -34,115 +34,115 @@ import static org.junit.matchers.JUnitMatchers.hasItem;
 /**
  *
  */
-public class MessageCustomizerDaoHibernateIntegrationTest extends MifosIntegrationTestCase {
+public class CustomizedTextDaoHibernateIntegrationTest extends MifosIntegrationTestCase {
     // class under test
     @Autowired
-    private MessageCustomizerDao messageCustomizerDao;
+    private CustomizedTextDao customizedTextDao;
     
 	@Test
 	public void shouldGetNoCustomMessages() {
-		assertThat(messageCustomizerDao.getCustomMessages().isEmpty(), is(true));
+		assertThat(customizedTextDao.getCustomizedText().isEmpty(), is(true));
 	}
 	
 	@Test
-	public void shouldSetAndGetCustomMessages() {
+	public void shouldSetAndGetCustomizedText() {
 		// we should start out empty
-		assertThat(messageCustomizerDao.getCustomMessages().isEmpty(), is(true));
+		assertThat(customizedTextDao.getCustomizedText().isEmpty(), is(true));
 		
 		// add a message
 		Map<String,String> messageMap = new HashMap<String, String>();
 		messageMap.put("testold", "testnew");
-		messageCustomizerDao.setCustomMessages(messageMap);
+		customizedTextDao.setCustomizedText(messageMap);
 		
 		// check that the message we added comes back
 		messageMap.clear();
-		messageMap = messageCustomizerDao.getCustomMessages();
+		messageMap = customizedTextDao.getCustomizedText();
 		assertThat(messageMap.get("testold"),is("testnew"));
 		
 		// remove the message
 		messageMap.put("testold", "testold");
-		messageCustomizerDao.setCustomMessages(messageMap);
+		customizedTextDao.setCustomizedText(messageMap);
 		
 		// check that we end up empty
-		assertThat(messageCustomizerDao.getCustomMessages().isEmpty(), is(true));		
+		assertThat(customizedTextDao.getCustomizedText().isEmpty(), is(true));		
 	}
 	
 	@Test
-	public void shouldUpdateCustomMessages() {
+	public void shouldUpdateCustomizedTextMap() {
 		// we should start out empty
-		assertThat(messageCustomizerDao.getCustomMessages().isEmpty(), is(true));
+		assertThat(customizedTextDao.getCustomizedText().isEmpty(), is(true));
 		
 		// add a message
 		Map<String,String> messageMap = new HashMap<String, String>();
 		messageMap.put("testold", "testnew");
-		messageCustomizerDao.setCustomMessages(messageMap);
+		customizedTextDao.setCustomizedText(messageMap);
 		
 		// check that the message we added comes back
 		messageMap.clear();
-		messageMap = messageCustomizerDao.getCustomMessages();
+		messageMap = customizedTextDao.getCustomizedText();
 		assertThat(messageMap.get("testold"),is("testnew"));
 		
 		// update the message
 		messageMap.put("testold", "anothertest");
-		messageCustomizerDao.setCustomMessages(messageMap);
+		customizedTextDao.setCustomizedText(messageMap);
 
 		// check that the message we added comes back
 		messageMap.clear();
-		messageMap = messageCustomizerDao.getCustomMessages();
+		messageMap = customizedTextDao.getCustomizedText();
 		assertThat(messageMap.get("testold"),is("anothertest"));
 				
 		// remove the message
 		messageMap.put("testold", "testold");
-		messageCustomizerDao.setCustomMessages(messageMap);
+		customizedTextDao.setCustomizedText(messageMap);
 		
 		// check that we end up empty
-		assertThat(messageCustomizerDao.getCustomMessages().isEmpty(), is(true));		
+		assertThat(customizedTextDao.getCustomizedText().isEmpty(), is(true));		
 	}	
 
 	@Test
-	public void shouldAddRemoveCustomMessage() {
+	public void shouldAddRemoveCustomizedText() {
 		// we should start out empty
-		assertThat(messageCustomizerDao.getCustomMessages().isEmpty(), is(true));
+		assertThat(customizedTextDao.getCustomizedText().isEmpty(), is(true));
 		
 		// add a message
-		messageCustomizerDao.addOrUpdateCustomMessage("testold", "testnew");
+		customizedTextDao.addOrUpdateCustomizedText("testold", "testnew");
 		
 		// check that the message we added comes back
-		Map<String,String> messageMap = messageCustomizerDao.getCustomMessages();
+		Map<String,String> messageMap = customizedTextDao.getCustomizedText();
 		assertThat(messageMap.get("testold"),is("testnew"));
 		
 		// remove the message
-		messageCustomizerDao.removeCustomMessage("testold");
+		customizedTextDao.removeCustomizedText("testold");
 		
 		// check that we end up empty
-		assertThat(messageCustomizerDao.getCustomMessages().isEmpty(), is(true));		
+		assertThat(customizedTextDao.getCustomizedText().isEmpty(), is(true));		
 	}
 	
 	@Test
-	public void shouldUpdateCustomMessage() {
+	public void shouldUpdateCustomizedText() {
 		// we should start out empty
-		assertThat(messageCustomizerDao.getCustomMessages().isEmpty(), is(true));
+		assertThat(customizedTextDao.getCustomizedText().isEmpty(), is(true));
 		
 		// add a message
-		messageCustomizerDao.addOrUpdateCustomMessage("testold", "testnew");
+		customizedTextDao.addOrUpdateCustomizedText("testold", "testnew");
 		
 		// check that the message we added comes back
-		Map<String,String> messageMap = messageCustomizerDao.getCustomMessages();
+		Map<String,String> messageMap = customizedTextDao.getCustomizedText();
 		assertThat(messageMap.get("testold"),is("testnew"));
 		
 		// update the message
-		messageCustomizerDao.addOrUpdateCustomMessage("testold", "anothertest");
+		customizedTextDao.addOrUpdateCustomizedText("testold", "anothertest");
 
 		// check that the message we added comes back
 		messageMap.clear();
-		messageMap = messageCustomizerDao.getCustomMessages();
+		messageMap = customizedTextDao.getCustomizedText();
 		assertThat(messageMap.get("testold"),is("anothertest"));
 				
 		// remove the message
-		messageCustomizerDao.removeCustomMessage("testold");
+		customizedTextDao.removeCustomizedText("testold");
 		
 		// check that we end up empty
-		assertThat(messageCustomizerDao.getCustomMessages().isEmpty(), is(true));		
+		assertThat(customizedTextDao.getCustomizedText().isEmpty(), is(true));		
 	}	
 	
 }

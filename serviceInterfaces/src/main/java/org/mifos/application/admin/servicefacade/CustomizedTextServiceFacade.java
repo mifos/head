@@ -26,7 +26,7 @@ import java.util.Map;
 import org.mifos.dto.screen.ConfigureApplicationLabelsDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
-public interface MessageCustomizerServiceFacade {
+public interface CustomizedTextServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_LABELS')")
     ConfigureApplicationLabelsDto retrieveConfigurableLabels(Locale locale);
@@ -38,16 +38,18 @@ public interface MessageCustomizerServiceFacade {
 	void updateApplicationLabels(Map<String, String> messageFilterMap);
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_LABELS')")
-	Map<String, String> retrieveCustomMessages();
+	Map<String, String> retrieveCustomizedText();
     
 	String replaceSubstitutions(String message);
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_LABELS')")
-	void addOrUpdateCustomMessage(String oldMessage, String newMessage);
+	void addOrUpdateCustomizedText(String originalText, String customText);
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_LABELS')")
-	void removeCustomMessage(String oldMessage);
+	void removeCustomizedText(String oldMessage);
 
-	CustomMessageDto getCustomMessageDto(String oldMessage);
+	CustomizedTextDto getCustomizedTextDto(String oldMessage);
+
+	void convertMigratedLabelKeysToLocalizedText(Locale locale);
 
 }

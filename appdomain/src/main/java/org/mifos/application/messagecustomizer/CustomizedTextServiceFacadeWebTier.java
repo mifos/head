@@ -23,9 +23,10 @@ package org.mifos.application.messagecustomizer;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 
-import org.mifos.application.admin.servicefacade.CustomMessageDto;
-import org.mifos.application.admin.servicefacade.MessageCustomizerServiceFacade;
+import org.mifos.application.admin.servicefacade.CustomizedTextDto;
+import org.mifos.application.admin.servicefacade.CustomizedTextServiceFacade;
 import org.mifos.config.business.MifosConfiguration;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.dto.domain.AccountStatusesLabelDto;
@@ -42,7 +43,7 @@ import org.springframework.context.MessageSource;
 /**
  *
  */
-public class MessageCustomizerServiceFacadeWebTier implements MessageCustomizerServiceFacade {
+public class CustomizedTextServiceFacadeWebTier implements CustomizedTextServiceFacade {
 
     private static final String HEAD_OFFICE_KEY = "datadisplayandrules.defineLabels.headoffice.NO_CUSTOMIZING";
     private static final String REGIONAL_OFFICE_KEY = "datadisplayandrules.defineLabels.regionaloffice.NO_CUSTOMIZING";
@@ -92,17 +93,17 @@ public class MessageCustomizerServiceFacadeWebTier implements MessageCustomizerS
     private final HibernateTransactionHelper transactionHelper;
     
 	@Autowired
-	private MessageCustomizerDao messageCustomizerDao;
+	private CustomizedTextDao customizedTextDao;
 	
 	@Autowired
 	private MessageSource messageSource;
 		
     @Autowired
-	public MessageCustomizerServiceFacadeWebTier(
-			MessageCustomizerDao messageCustomizerDao,
+	public CustomizedTextServiceFacadeWebTier(
+			CustomizedTextDao customizedTextDao,
 			MessageSource messageSource) {
 		super();
-		this.messageCustomizerDao = messageCustomizerDao;
+		this.customizedTextDao = customizedTextDao;
 		this.messageSource = messageSource;
         transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
 		
@@ -127,16 +128,16 @@ public class MessageCustomizerServiceFacadeWebTier implements MessageCustomizerS
 	
 	@Override
 	public void updateApplicationLabels(Map<String,String> messageMap) {
-		messageCustomizerDao.setCustomMessages(messageMap);
+		customizedTextDao.setCustomizedText(messageMap);
 		updateLegacyCaches();
 	}
 	
 	@Override
-	public void addOrUpdateCustomMessage(String oldMessage, String newMessage) {
+	public void addOrUpdateCustomizedText(String originalText, String customText) {
         try {
             this.transactionHelper.startTransaction();
 
-    		messageCustomizerDao.addOrUpdateCustomMessage(oldMessage, newMessage);
+    		customizedTextDao.addOrUpdateCustomizedText(originalText, customText);
             
             this.transactionHelper.commitTransaction();
         } catch (Exception e) {
@@ -149,11 +150,11 @@ public class MessageCustomizerServiceFacadeWebTier implements MessageCustomizerS
 	}
 
 	@Override
-	public void removeCustomMessage(String oldMessage) {
+	public void removeCustomizedText(String originalText) {
         try {
             this.transactionHelper.startTransaction();
 
-    		messageCustomizerDao.removeCustomMessage(oldMessage);
+    		customizedTextDao.removeCustomizedText(originalText);
             
             this.transactionHelper.commitTransaction();
         } catch (Exception e) {
@@ -166,8 +167,8 @@ public class MessageCustomizerServiceFacadeWebTier implements MessageCustomizerS
 	}	
 	
 	@Override
-	public Map<String, String> retrieveCustomMessages() {
-	    return messageCustomizerDao.getCustomMessages();    	
+	public Map<String, String> retrieveCustomizedText() {
+	    return customizedTextDao.getCustomizedText();    	
 	}
 	
     @Override
@@ -176,7 +177,7 @@ public class MessageCustomizerServiceFacadeWebTier implements MessageCustomizerS
 
     	String newMessage = message;
     	
-    	Map<String,String> messageFilterMap = messageCustomizerDao.getCustomMessages();
+    	Map<String,String> messageFilterMap = customizedTextDao.getCustomizedText();
     	
         for (Map.Entry<String, String> entry : messageFilterMap.entrySet()) { 
         	newMessage = newMessage.replace(entry.getKey(), entry.getValue());
@@ -303,12 +304,12 @@ public class MessageCustomizerServiceFacadeWebTier implements MessageCustomizerS
 	}
 
 	private String getCustomMessageFor(String message) {
-		CustomMessage customMessage = messageCustomizerDao.findCustomMessageByOldMessage(message);
+		CustomizedText customMessage = customizedTextDao.findCustomizedTextByOriginalText(message);
 
 		if (customMessage == null) {
 			return message;
 		}
-		return customMessage.getNewMessage();
+		return customMessage.getCustomText();
 	}
 	
 	@Override
@@ -407,10 +408,31 @@ public class MessageCustomizerServiceFacadeWebTier implements MessageCustomizerS
 	}
 
 	@Override
-	public CustomMessageDto getCustomMessageDto(String oldMessage) {
-		CustomMessage customMessage = messageCustomizerDao.findCustomMessageByOldMessage(oldMessage);
+	public CustomizedTextDto getCustomizedTextDto(String originalText) {
+		CustomizedText customizedText = customizedTextDao.findCustomizedTextByOriginalText(originalText);
 		
-		return new CustomMessageDto(customMessage.getOldMessage(), customMessage.getNewMessage());
+		return new CustomizedTextDto(customizedText.getOriginalText(), customizedText.getCustomText());
 	}
 
+	@Override
+	public void convertMigratedLabelKeysToLocalizedText(Locale locale) {
+		Map<String, String> messageMap = retrieveCustomizedText();
+		
+		for (Entry<String,String> entry : messageMap.entrySet()) {
+			if (entry.getKey().endsWith(".Label")) {
+				// create a new entry with the localized string for the label
+				String localizedMessageKey = messageSource.getMessage(entry.getKey(), null, locale);
+				addOrUpdateCustomizedText(localizedMessageKey, entry.getValue());
+				removeCustomizedText(entry.getKey());
+			}
+		}
+		messageMap = retrieveCustomizedText();
+		
+		// remove any entries where the old and new messages are exactly the same
+		for (Entry<String,String> entry : messageMap.entrySet()) {
+			if (entry.getKey().equals(entry.getValue())) {
+				removeCustomizedText(entry.getKey());
+			}
+		}			
+	}
 }
