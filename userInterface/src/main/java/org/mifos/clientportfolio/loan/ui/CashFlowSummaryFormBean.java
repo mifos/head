@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.mifos.application.servicefacade.LoanAccountServiceFacade;
+import org.mifos.dto.domain.LoanCreationInstallmentDto;
 import org.mifos.dto.domain.MonthlyCashFlowDto;
 import org.mifos.dto.screen.CashFlowDataDto;
 import org.mifos.dto.screen.LoanInstallmentsDto;
@@ -54,6 +55,16 @@ public class CashFlowSummaryFormBean implements Serializable {
     
     // variable installments
     private List<Date> installments = new ArrayList<Date>();
+    
+    // variable installments only for validation purposes
+    private boolean variableInstallmentsAllowed;
+    private Integer minGapInDays;
+    private Integer maxGapInDays;
+    private BigDecimal minInstallmentAmount;
+    
+    private Date disbursementDate;
+    private Integer customerId;
+    private List<LoanCreationInstallmentDto> variableInstallments = new ArrayList<LoanCreationInstallmentDto>();
     
     public List<Date> getInstallments() {
         if (installments.isEmpty()) {
@@ -108,6 +119,45 @@ public class CashFlowSummaryFormBean implements Serializable {
                 messageContext.addMessage(builder.build());
             }
         }
+        
+        if (this.variableInstallmentsAllowed) {
+            Errors inputInstallmentsErrors = loanAccountServiceFacade.validateInputInstallments(disbursementDate, minGapInDays, maxGapInDays, minInstallmentAmount, variableInstallments, customerId);
+            Errors scheduleErrors = loanAccountServiceFacade.validateInstallmentSchedule(variableInstallments, minInstallmentAmount);
+            
+            if (inputInstallmentsErrors.hasErrors()) {
+                for (ErrorEntry fieldError : inputInstallmentsErrors.getErrorEntries()) {
+                    
+                    String[] errorCodes = new String[1];
+                    errorCodes[0] = fieldError.getErrorCode();
+                    List<Object> args = new ArrayList<Object>();
+                    if (fieldError.hasErrorArgs()) {
+                        args = new ArrayList<Object>(fieldError.getArgs());
+                    }
+                    MessageBuilder builder = new MessageBuilder().error().source(fieldError.getFieldName())
+                                                          .codes(errorCodes)
+                                                          .defaultText(fieldError.getDefaultMessage()).args(args.toArray());
+                    
+                    messageContext.addMessage(builder.build());
+                }
+            }
+            
+            if (scheduleErrors.hasErrors()) {
+                for (ErrorEntry fieldError : scheduleErrors.getErrorEntries()) {
+                    
+                    String[] errorCodes = new String[1];
+                    errorCodes[0] = fieldError.getErrorCode();
+                    List<Object> args = new ArrayList<Object>();
+                    if (fieldError.hasErrorArgs()) {
+                        args = new ArrayList<Object>(fieldError.getArgs());
+                    }
+                    MessageBuilder builder = new MessageBuilder().error().source(fieldError.getFieldName())
+                                                          .codes(errorCodes)
+                                                          .defaultText(fieldError.getDefaultMessage()).args(args.toArray());
+                    
+                    messageContext.addMessage(builder.build());
+                }
+            }
+        }
     }
     
     public Integer getProductId() {
@@ -156,5 +206,61 @@ public class CashFlowSummaryFormBean implements Serializable {
 
     public void setCashFlowTotalBalance(BigDecimal cashFlowTotalBalance) {
         this.cashFlowTotalBalance = cashFlowTotalBalance;
+    }
+    
+    public boolean isVariableInstallmentsAllowed() {
+        return variableInstallmentsAllowed;
+    }
+
+    public void setVariableInstallmentsAllowed(boolean variableInstallmentsAllowed) {
+        this.variableInstallmentsAllowed = variableInstallmentsAllowed;
+    }
+
+    public Integer getMinGapInDays() {
+        return minGapInDays;
+    }
+
+    public void setMinGapInDays(Integer minGapInDays) {
+        this.minGapInDays = minGapInDays;
+    }
+
+    public Integer getMaxGapInDays() {
+        return maxGapInDays;
+    }
+
+    public void setMaxGapInDays(Integer maxGapInDays) {
+        this.maxGapInDays = maxGapInDays;
+    }
+
+    public BigDecimal getMinInstallmentAmount() {
+        return minInstallmentAmount;
+    }
+
+    public void setMinInstallmentAmount(BigDecimal minInstallmentAmount) {
+        this.minInstallmentAmount = minInstallmentAmount;
+    }
+    
+    public Date getDisbursementDate() {
+        return disbursementDate;
+    }
+
+    public void setDisbursementDate(Date disbursementDate) {
+        this.disbursementDate = disbursementDate;
+    }
+
+    public Integer getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(Integer customerId) {
+        this.customerId = customerId;
+    }
+
+    public List<LoanCreationInstallmentDto> getVariableInstallments() {
+        return variableInstallments;
+    }
+
+    public void setVariableInstallments(List<LoanCreationInstallmentDto> variableInstallments) {
+        this.variableInstallments = variableInstallments;
     }
 }

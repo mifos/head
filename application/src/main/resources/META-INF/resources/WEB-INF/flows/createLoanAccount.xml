@@ -106,8 +106,9 @@
     	<on-entry>
 	    	<evaluate expression="loanAccountController.retrieveLoanSchedule(flowScope.customerId, flowScope.productId, loanAccountFormBean)" result="flowScope.loanScheduleReferenceData"/>
     	    <evaluate expression="cashFlowController.retrieveMonthlyCashflowDetails(flowScope.cashFlow, flowScope.loanScheduleReferenceData.disbursementDate, flowScope.loanScheduleReferenceData.loanAmount)" result="flowScope.monthlyCashFlowDetails"/>
-            <evaluate expression="loanAccountController.retrieveCashflowSummaryDetails(cashFlowSummaryFormBean, flowScope.cashFlowSettings, flowScope.monthlyCashFlowDetails, flowScope.loanScheduleReferenceData, flowScope.productId)" result="flowScope.cashflowSummaryDetails"/>
+            <evaluate expression="loanAccountController.retrieveCashflowSummaryDetails(cashFlowSummaryFormBean, flowScope.cashFlowSettings, flowScope.monthlyCashFlowDetails, flowScope.loanScheduleReferenceData, flowScope.productId, loanAccountFormBean)" result="flowScope.cashflowSummaryDetails"/>
         </on-entry>
+        <transition on="validate" to="summaryOfCashflow" validate="true" />
         <transition on="preview" to="previewStep" validate="true" />
         <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/>
     </view-state>

@@ -165,7 +165,8 @@ public class LoanAccountController {
         return loanAccountServiceFacade.retrieveCashFlowSettings(firstInstallment, lastInstallment, productId, BigDecimal.valueOf(loanScheduleDto.getLoanAmount()));
     }
     
-    public List<CashFlowDataDto> retrieveCashflowSummaryDetails(CashFlowSummaryFormBean formBean, CashFlowDto cashFlowDto, List<MonthlyCashFlowDto> monthlyCashFlow, LoanScheduleDto loanScheduleDto, int productId) {
+    public List<CashFlowDataDto> retrieveCashflowSummaryDetails(CashFlowSummaryFormBean formBean, CashFlowDto cashFlowDto, 
+            List<MonthlyCashFlowDto> monthlyCashFlow, LoanScheduleDto loanScheduleDto, int productId, LoanAccountFormBean loanAccountFormBean) {
         
         List<CashFlowDataDto> cashFlowDataDtos = this.loanAccountServiceFacade.retrieveCashFlowSummary(monthlyCashFlow, loanScheduleDto);
         formBean.setCashFlowDataDtos(cashFlowDataDtos);
@@ -197,6 +198,22 @@ public class LoanAccountController {
         formBean.setLoanInstallmentsDto(loanInstallmentsDto);
         formBean.setCashFlowTotalBalance(cashFlowTotalBalance);
         formBean.setRepaymentCapacity(cashFlowDto.getRepaymentCapacity());
+        
+        // variable installments related
+        formBean.setVariableInstallmentsAllowed(loanAccountFormBean.isVariableInstallmentsAllowed());
+        if (loanAccountFormBean.isVariableInstallmentsAllowed()) {
+            formBean.setMinGapInDays(loanAccountFormBean.getMinGapInDays());
+            formBean.setMaxGapInDays(loanAccountFormBean.getMaxGapInDays());
+            formBean.setMinInstallmentAmount(loanAccountFormBean.getMinInstallmentAmount());
+            
+            LocalDate disbursementDate = new LocalDate().withDayOfMonth(loanAccountFormBean.getDisbursalDateDay().intValue())
+            .withMonthOfYear(loanAccountFormBean.getDisbursalDateMonth().intValue())
+             .withYearOfEra(loanAccountFormBean.getDisbursalDateYear().intValue());
+            
+            formBean.setDisbursementDate(disbursementDate.toDateMidnight().toDate());
+            formBean.setCustomerId(loanAccountFormBean.getCustomerId());
+            formBean.setVariableInstallments(loanScheduleDto.getInstallments());
+        }
         
         return cashFlowDataDtos;
     }
