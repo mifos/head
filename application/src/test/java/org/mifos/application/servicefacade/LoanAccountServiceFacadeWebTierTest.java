@@ -61,6 +61,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -323,4 +324,16 @@ public class LoanAccountServiceFacadeWebTierTest {
         verify(customer).getOfficeId();
     }
 
+    @Test
+    public void shouldValidateInstallmentSchedule() {
+        List<RepaymentScheduleInstallment> installments = new ArrayList<RepaymentScheduleInstallment>();
+        Errors expectedErrors = new Errors();
+        
+        BigDecimal minInstallmentAmount = BigDecimal.ZERO;
+        
+        when(installmentsValidator.validateInstallmentSchedule(installments, minInstallmentAmount)).thenReturn(expectedErrors);
+        Errors errors = loanAccountServiceFacade.validateInstallmentSchedule(new ArrayList<LoanCreationInstallmentDto>(), minInstallmentAmount);
+        assertThat(errors, is(expectedErrors));
+        verify(installmentsValidator).validateInstallmentSchedule(installments, minInstallmentAmount);
+    }
 }

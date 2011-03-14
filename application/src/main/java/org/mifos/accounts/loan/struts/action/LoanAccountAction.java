@@ -577,7 +577,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                         new LoanScheduleGenerationDto(disbursementDate, loanAmount, loanActionForm.getInterestDoubleValue(), installments));
                 // TODO need to figure out a way to avoid putting 'installments' onto session - required for mifostabletag in schedulePreview.jsp
                 setInstallmentsOnSession(request, loanActionForm);
-                actionErrors = getActionErrors(loanServiceFacade.validateInstallmentSchedule(dtoInstallments, variableInstallmentDetails.getMinInstallmentAmount().getAmount()));
+                actionErrors = getActionErrors(loanAccountServiceFacade.validateInstallmentSchedule(dtoInstallments, variableInstallmentDetails.getMinInstallmentAmount().getAmount()));
                 if (!actionErrors.isEmpty()) {
                     addErrors(request, actionErrors);
                     result = false;

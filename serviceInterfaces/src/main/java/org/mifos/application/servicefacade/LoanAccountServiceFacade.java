@@ -183,4 +183,7 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
     @PreAuthorize("isFullyAuthenticated()")
     Errors validateInputInstallments(Date disbursementDate, Integer minGapInDays, Integer maxGapInDays, 
             BigDecimal minInstallmentAmount, List<LoanCreationInstallmentDto> installments, Integer customerId);
+    
+    @PreAuthorize("isFullyAuthenticated()")
+    Errors validateInstallmentSchedule(List<LoanCreationInstallmentDto> installments, BigDecimal minInstallmentAmount);
 }
