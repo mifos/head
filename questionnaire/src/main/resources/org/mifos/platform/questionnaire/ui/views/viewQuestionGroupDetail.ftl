@@ -64,7 +64,7 @@
                                 <thead>
                                  <tr>
                                      <th class="name">[@spring.message "questionnaire.question.name"/]</th>
-                                     <th class="mandatory">[@spring.message "questionnaire.question.mandatory"/]</th>
+                                     <th class="isMandatory">[@spring.message "questionnaire.question.mandatory"/]</th>
                                      <th class="status">[@spring.message "questionnaire.status"/]</th>
                                  </tr>
                                  </thead>
@@ -72,7 +72,7 @@
                                 [#list section.sectionQuestions as sectionQuestion]
                                      <tr>
                                          <td class="name" ><a href="viewAndEditQuestion.ftl?questionId=${sectionQuestion.questionId}">${sectionQuestion.text}</a></td>
-                                         <td class="mandatory" >
+                                         <td class="isMandatory" >
                                              [#if sectionQuestion.mandatory]
                                                  [@spring.message "questionnaire.yes"/]
                                              [#else]
