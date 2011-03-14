@@ -108,27 +108,7 @@ public class LoanServiceFacadeWebTierTest {
         rupee = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
         loanServiceFacade = new LoanServiceFacadeWebTier(customerDao, loanDao, installmentsValidator, loanBusinessService, holidayServiceFacade);
     }
-
-    @Test
-    public void shouldValidateInstallments() {
-        int customerId = 121;
-        Errors errors = new Errors();
-        when(installmentsValidator.validateInputInstallments(anyListOf(RepaymentScheduleInstallment.class), any(InstallmentValidationContext.class))).thenReturn(errors);
-        when(customerDao.findCustomerById(customerId)).thenReturn(customer);
-        when(customer.getOfficeId()).thenReturn(Short.valueOf("1"));
-        
-        Date disbursementDate = null; 
-        Integer minGapInDays = Integer.valueOf(0); 
-        Integer maxGapInDays = Integer.valueOf(0);
-        BigDecimal minInstallmentAmount = BigDecimal.ZERO;
-        
-        Errors actual = loanServiceFacade.validateInputInstallments(disbursementDate, minGapInDays, maxGapInDays, minInstallmentAmount, new ArrayList<LoanCreationInstallmentDto>(), customerId);
-        assertThat(actual, is(errors));
-        verify(installmentsValidator).validateInputInstallments(anyListOf(RepaymentScheduleInstallment.class), any(InstallmentValidationContext.class));
-        verify(customerDao).findCustomerById(customerId);
-        verify(customer).getOfficeId();
-    }
-
+   
     @Test
     public void shouldValidateInstallmentSchedule() {
         List<RepaymentScheduleInstallment> installments = new ArrayList<RepaymentScheduleInstallment>();

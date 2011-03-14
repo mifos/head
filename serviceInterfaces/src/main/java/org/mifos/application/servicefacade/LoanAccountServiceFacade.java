@@ -41,6 +41,7 @@ import org.mifos.dto.domain.CustomerSearchDto;
 import org.mifos.dto.domain.CustomerSearchResultDto;
 import org.mifos.dto.domain.LoanAccountDetailsDto;
 import org.mifos.dto.domain.LoanActivityDto;
+import org.mifos.dto.domain.LoanCreationInstallmentDto;
 import org.mifos.dto.domain.LoanInstallmentDetailsDto;
 import org.mifos.dto.domain.LoanPaymentDto;
 import org.mifos.dto.domain.MonthlyCashFlowDto;
@@ -178,4 +179,8 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
     
     @PreAuthorize("isFullyAuthenticated()")
     boolean isCompareWithCashFlowEnabledOnProduct(Integer productId);
+    
+    @PreAuthorize("isFullyAuthenticated()")
+    Errors validateInputInstallments(Date disbursementDate, Integer minGapInDays, Integer maxGapInDays, 
+            BigDecimal minInstallmentAmount, List<LoanCreationInstallmentDto> installments, Integer customerId);
 }

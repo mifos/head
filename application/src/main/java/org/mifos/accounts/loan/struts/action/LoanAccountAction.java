@@ -549,7 +549,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             VariableInstallmentDetailsBO variableInstallmentDetails = loanOffering.getVariableInstallmentDetails();
             java.sql.Date disbursementDate = loanActionForm.getDisbursementDateValue(userContext.getPreferredLocale());
             
-            Errors errors = loanServiceFacade.validateInputInstallments(disbursementDate, variableInstallmentDetails.getMinGapInDays(), variableInstallmentDetails.getMaxGapInDays(), variableInstallmentDetails.getMinInstallmentAmount().getAmount(), dtoInstallments, loanActionForm.getCustomerIdValue());
+            Errors errors = loanAccountServiceFacade.validateInputInstallments(disbursementDate, variableInstallmentDetails.getMinGapInDays(), variableInstallmentDetails.getMaxGapInDays(), variableInstallmentDetails.getMinInstallmentAmount().getAmount(), dtoInstallments, loanActionForm.getCustomerIdValue());
             ActionErrors actionErrors = getActionErrors(errors);
             
             LoanInstallmentsDto loanInstallmentsDto = createLoanInstallmentDto(loanActionForm, installments);
@@ -623,9 +623,11 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         
         UserContext userContext = getUserContext(request);
         for (RepaymentScheduleInstallment repaymentScheduleInstallment : installments) {
-            DateTimeFormatter formatter = DateTimeFormat.mediumDate();
-            DateTime parsedDate = formatter.withLocale(userContext.getCurrentLocale()).parseDateTime(repaymentScheduleInstallment.getDueDate());
-            repaymentScheduleInstallment.setDueDateValue(parsedDate.toDateMidnight().toDate());            
+            if (org.springframework.util.StringUtils.hasText(repaymentScheduleInstallment.getDueDate())) {
+                DateTimeFormatter formatter = DateTimeFormat.mediumDate();
+                DateTime parsedDate = formatter.withLocale(userContext.getCurrentLocale()).parseDateTime(repaymentScheduleInstallment.getDueDate());
+                repaymentScheduleInstallment.setDueDateValue(parsedDate.toDateMidnight().toDate());
+            }
         }
         
         return installments;

@@ -21,12 +21,10 @@
 package org.mifos.application.servicefacade;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 import org.mifos.accounts.loan.business.service.OriginalScheduleInfoDto;
-import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.dto.domain.LoanCreationInstallmentDto;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.platform.validations.Errors;
@@ -36,9 +34,6 @@ import org.mifos.platform.validations.Errors;
  */
 @Deprecated
 public interface LoanServiceFacade {
-
-    Errors validateInputInstallments(Date disbursementDate, Integer minGapInDays, Integer maxGapInDays, 
-            BigDecimal minInstallmentAmount, List<LoanCreationInstallmentDto> installments, Integer customerId);
 
     Errors validateInstallmentSchedule(List<LoanCreationInstallmentDto> installments, BigDecimal minInstallmentAmount);
 

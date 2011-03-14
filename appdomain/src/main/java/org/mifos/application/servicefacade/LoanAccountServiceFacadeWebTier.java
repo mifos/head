@@ -70,6 +70,8 @@ import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.business.RepaymentResultsHolder;
 import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
+import org.mifos.accounts.loan.business.service.validators.InstallmentValidationContext;
+import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.struts.action.validate.ProductMixValidator;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
@@ -92,6 +94,7 @@ import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountSearchResultsDto;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.PaymentData;
+import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomValueDto;
@@ -257,12 +260,15 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     
     @Autowired
     private CashFlowService cashFlowService;
+    private final InstallmentsValidator installmentsValidator;
+    private final HolidayServiceFacade holidayServiceFacade;
 
     @Autowired
     public LoanAccountServiceFacadeWebTier(OfficeDao officeDao, LoanProductDao loanProductDao, CustomerDao customerDao,
                                            PersonnelDao personnelDao, FundDao fundDao, LoanDao loanDao, HolidayDao holidayDao,
                                            AccountService accountService, ScheduleCalculatorAdaptor scheduleCalculatorAdaptor,
-                                           LoanBusinessService loanBusinessService, LoanService loanService, LoanScheduleService loanScheduleService) {
+                                           LoanBusinessService loanBusinessService, LoanService loanService, LoanScheduleService loanScheduleService,
+                                           InstallmentsValidator installmentsValidator, HolidayServiceFacade holidayServiceFacade) {
         this.officeDao = officeDao;
         this.loanProductDao = loanProductDao;
         this.customerDao = customerDao;
@@ -275,6 +281,8 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         this.loanBusinessService = loanBusinessService;
         this.loanService = loanService;
         this.loanScheduleService = loanScheduleService;
+        this.installmentsValidator = installmentsValidator;
+        this.holidayServiceFacade = holidayServiceFacade;
         transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
     }
 
@@ -2082,5 +2090,34 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     public boolean isCompareWithCashFlowEnabledOnProduct(Integer productId) {
         LoanOfferingBO loanProduct = this.loanProductDao.findById(productId);
         return loanProduct.isCashFlowCheckEnabled();
+    }
+    
+    @Override
+    public Errors validateInputInstallments(Date disbursementDate, Integer minGapInDays, Integer maxGapInDays,
+            BigDecimal minInstallmentAmount, List<LoanCreationInstallmentDto> dtoInstallments, Integer customerId) {
+        Short officeId = customerDao.findCustomerById(customerId).getOfficeId();
+        VariableInstallmentDetailsBO variableInstallmentDetails = new VariableInstallmentDetailsBO();
+        variableInstallmentDetails.setMinGapInDays(minGapInDays);
+        variableInstallmentDetails.setMaxGapInDays(maxGapInDays);
+        InstallmentValidationContext context = new InstallmentValidationContext(disbursementDate, variableInstallmentDetails, minInstallmentAmount, holidayServiceFacade, officeId);
+
+        MifosCurrency currency = Money.getDefaultCurrency();
+        Locale locale = Localization.getInstance().getConfiguredLocale();
+        List<RepaymentScheduleInstallment> installments = new ArrayList<RepaymentScheduleInstallment>();
+        
+        for (LoanCreationInstallmentDto dto : dtoInstallments) {
+            Money principal = new Money(currency, dto.getPrincipal());
+            Money interest = new Money(currency, dto.getInterest());
+            Money fees = new Money(currency, dto.getFees());
+            Money miscFees = new Money(currency);
+            Money miscPenalty = new Money(currency);
+            RepaymentScheduleInstallment installment = new RepaymentScheduleInstallment(dto.getInstallmentNumber(), 
+                    dto.getDueDate(), principal, interest, fees, miscFees, miscPenalty, locale);
+            installment.setTotalAndTotalValue(new Money(currency, dto.getTotal()));
+            
+            installments.add(installment);
+        }
+        
+        return installmentsValidator.validateInputInstallments(installments, context);
     }
 }
