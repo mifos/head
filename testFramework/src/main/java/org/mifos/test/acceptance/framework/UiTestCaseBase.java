@@ -22,7 +22,6 @@ package org.mifos.test.acceptance.framework;
 
 import com.thoughtworks.selenium.Selenium;
 import org.dbunit.DatabaseUnitException;
-import org.junit.BeforeClass;
 import org.mifos.test.framework.util.DatabaseTestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -51,11 +50,6 @@ public class UiTestCaseBase extends AbstractTestNGSpringContextTests {
     private final DatabaseTestUtils dbUtils = new DatabaseTestUtils();
 
     protected static Selenium selenium;
-
-    @BeforeClass
-    public void beforeClass() {
-        selenium.windowMaximize();
-    }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // allow for overriding methods to throw Exception
     @BeforeMethod
