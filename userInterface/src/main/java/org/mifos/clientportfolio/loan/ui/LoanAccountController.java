@@ -264,10 +264,12 @@ public class LoanAccountController {
                                                                                     formBean.getRepaymentRecursEvery(),
                                                                                     formBean.getRepaymentDayOfWeek());
         
+        LoanCreationResultDto loanCreationResultDto = null;
         if (formBean.isVariableInstallmentsAllowed()) {
-            return loanAccountServiceFacade.createLoan(createLoanAccount, loanAccountQuestionGroupFormBean.getQuestionGroups(), loanAccountCashFlow, cashFlowSummaryFormBean.getInstallments());
+            loanCreationResultDto = loanAccountServiceFacade.createLoan(createLoanAccount, loanAccountQuestionGroupFormBean.getQuestionGroups(), loanAccountCashFlow, cashFlowSummaryFormBean.getInstallments());
         } else {
-            return loanAccountServiceFacade.createLoan(createLoanAccount, loanAccountQuestionGroupFormBean.getQuestionGroups(), loanAccountCashFlow);
+            loanCreationResultDto = loanAccountServiceFacade.createLoan(createLoanAccount, loanAccountQuestionGroupFormBean.getQuestionGroups(), loanAccountCashFlow);
         }
+        return loanCreationResultDto;
     }
 }
