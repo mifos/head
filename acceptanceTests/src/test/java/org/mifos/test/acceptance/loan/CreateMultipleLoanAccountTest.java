@@ -85,19 +85,19 @@ public class CreateMultipleLoanAccountTest extends UiTestCaseBase {
         customerStatusParams.setNote("note");
         CreateLoanAccountsSearchPage multipleAccPage = navigateToCreateMultipleLoanAccountsSearchPage();
 
-        multipleAccPage.selectBranchOfficerAndCenter("branch1", "loanofficer branch1", "branch1 center");
+        multipleAccPage.selectBranchOfficerAndCenter("branch2", "loanofficerbranch2 loanofficerbranch2", "branch2 center");
 
-        userHelper.changeUserStatus("loanofficer branch1", EditUserDataPage.STATUS_INACTIVE);
-        centerTestHelper.changeCenterStatus("branch1 center", customerStatusParams);
-        officeHelper.changeOfficeStatus("branch1", OfficeEditInformationPage.STATUS_INACTIVE);
+        userHelper.changeUserStatus("loanofficerbranch2 loanofficerbranch2", EditUserDataPage.STATUS_INACTIVE);
+        centerTestHelper.changeCenterStatus("branch2 center", customerStatusParams);
+        officeHelper.changeOfficeStatus("branch2", OfficeEditInformationPage.STATUS_INACTIVE);
 
         multipleAccPage = navigateToCreateMultipleLoanAccountsSearchPage();
-        multipleAccPage.verifyBranchNotInSelectOptions("branch1");
+        multipleAccPage.verifyBranchNotInSelectOptions("branch2");
 
-        officeHelper.changeOfficeStatus("branch1", OfficeEditInformationPage.STATUS_ACTIVE);
+        officeHelper.changeOfficeStatus("branch2", OfficeEditInformationPage.STATUS_ACTIVE);
         multipleAccPage = navigateToCreateMultipleLoanAccountsSearchPage();
-        multipleAccPage.verifyOfficerNotInSelectOptions("branch1", "loanofficer branch1");
-        multipleAccPage.verifyCenterIsNotInSelectOptions("branch1", "branch1 center");
+        multipleAccPage.verifyOfficerNotInSelectOptions("branch2", "loanofficerbranch2 loanofficerbranch2");
+        multipleAccPage.verifyCenterIsNotInSelectOptions("branch2", "branch2 center");
     }
 
     /**
