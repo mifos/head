@@ -147,7 +147,7 @@ public class LoanAccountController {
         return this.loanAccountServiceFacade.isCompareWithCashFlowEnabledOnProduct(productId);
     }
     
-    public LoanScheduleDto retrieveLoanSchedule(int customerId, int productId, LoanAccountFormBean formBean) {
+    public LoanScheduleDto retrieveLoanSchedule(int customerId, int productId, LoanAccountFormBean formBean, LoanScheduleFormBean loanScheduleFormBean) {
         
         LocalDate disbursementDate = new LocalDate().withDayOfMonth(formBean.getDisbursalDateDay().intValue())
                                                     .withMonthOfYear(formBean.getDisbursalDateMonth().intValue())
@@ -156,7 +156,15 @@ public class LoanAccountController {
         CreateLoanSchedule createLoanAccount = new CreateLoanSchedule(customerId, productId, BigDecimal.valueOf(formBean.getAmount().doubleValue()), formBean.getInterestRate().doubleValue(), disbursementDate, 
                 formBean.getNumberOfInstallments().intValue(), formBean.getGraceDuration().intValue(), formBean.isRepaymentScheduleIndependentOfCustomerMeeting(), formBean.getRepaymentRecursEvery(), formBean.getRepaymentDayOfWeek());
         
-        return loanAccountServiceFacade.createLoanSchedule(createLoanAccount);
+        LoanScheduleDto loanSchedule = loanAccountServiceFacade.createLoanSchedule(createLoanAccount);
+
+        List<Date> installments = new ArrayList<Date>();
+        for (LoanCreationInstallmentDto installment :loanSchedule.getInstallments()) {
+            installments.add(installment.getDueDate());
+        }
+        loanScheduleFormBean.setInstallments(installments);
+        
+        return loanSchedule;
     }
     
     public CashFlowDto retrieveCashFlowSettings(LoanScheduleDto loanScheduleDto, int productId) {
