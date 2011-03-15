@@ -21,7 +21,6 @@ package org.mifos.db.upgrade;
 
 import liquibase.exception.LiquibaseException;
 import org.junit.Assert;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -38,8 +37,7 @@ public class DatabaseUpgradeSupportIntegrationTest {
     @Autowired
     DatabaseUpgradeSupport databaseUpgradeSupport;
 
-    @Test
-    public void testSpringWiringForDbUpgrade() throws SQLException, LiquibaseException {
+    private void testSpringWiringForDbUpgrade() throws SQLException, LiquibaseException {
         DbUpgradeValidationResult validationResult = databaseUpgradeSupport.validate();
         Assert.assertNotNull(validationResult);
         String unAppliedChangeSets = validationResult.getUnAppliedChangeSets();
