@@ -33,7 +33,7 @@ import org.springframework.binding.validation.ValidationContext;
  */
 @SuppressWarnings("PMD")
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID"}, justification="should disable at filter level and also for pmd - not important for us")
-public class CustomMessageSelectFormBean implements Serializable {
+public class CustomizedTextSelectFormBean implements Serializable {
 
     @NotEmpty
     private String message;
@@ -57,7 +57,7 @@ public class CustomMessageSelectFormBean implements Serializable {
      * Validation method that Spring webflow calls on state transition out of
      * customerSearchStep.
      */
-    public void validateSelectCustomMessageStep(ValidationContext context) {
+    public void validateSelectCustomizedTextStep(ValidationContext context) {
         MessageContext messages = context.getMessageContext();
         if (context.getUserEvent().equals("add")) {
         	return;

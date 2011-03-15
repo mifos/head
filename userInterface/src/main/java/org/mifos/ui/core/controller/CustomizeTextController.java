@@ -32,16 +32,16 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 
 
 @Controller
-public class CustomizeMessagesController {
+public class CustomizeTextController {
 
     @Autowired
     private CustomizedTextServiceFacade customizedTextServiceFacade;
     
-    protected CustomizeMessagesController() {
+    protected CustomizeTextController() {
         // default contructor for spring autowiring
     }
 
-    public CustomizeMessagesController(final CustomizedTextServiceFacade customizedTextServiceFacade) {
+    public CustomizeTextController(final CustomizedTextServiceFacade customizedTextServiceFacade) {
         this.customizedTextServiceFacade = customizedTextServiceFacade;
     }
 /*
@@ -52,14 +52,14 @@ public class CustomizeMessagesController {
     */
     @ModelAttribute("breadcrumbs")
     public List<BreadCrumbsLinks> showBreadCrumbs() {
-        return new AdminBreadcrumbBuilder().withLink("customMessagesView.messageList", "viewCustomMessages.ftl").build();
+        return new AdminBreadcrumbBuilder().withLink("customizeTextView.customizedTextList", "viewCustomMessages.ftl").build();
     }    
     
     public Map<String,String> retrieveCustomMessages() {
     	return customizedTextServiceFacade.retrieveCustomizedText();
     }
 
-    public Map<String,String> retrieveCustomMessagesMap() {
+    public Map<String,String> retrieveCustomizedTextMap() {
     	Map<String,String> rawMessageMap = customizedTextServiceFacade.retrieveCustomizedText();
     	Map<String,String> ftlMessageMap = new LinkedHashMap<String,String>();
     	
@@ -69,20 +69,20 @@ public class CustomizeMessagesController {
         return ftlMessageMap;
     }
 
-    public CustomMessageFormBean getCustomMessage(CustomMessageSelectFormBean customMessageSelectFormBean) {
-    	CustomizedTextDto customizedTextDto = customizedTextServiceFacade.getCustomizedTextDto(customMessageSelectFormBean.getMessage());
-    	CustomMessageFormBean customMessageFormBean = new CustomMessageFormBean();
-    	customMessageFormBean.setOldMessage(customizedTextDto.getOriginalText());
-    	customMessageFormBean.setNewMessage(customizedTextDto.getCustomText());
-    	return customMessageFormBean;
+    public CustomizedTextFormBean getCustomizedText(CustomizedTextSelectFormBean customizedTextSelectFormBean) {
+    	CustomizedTextDto customizedTextDto = customizedTextServiceFacade.getCustomizedTextDto(customizedTextSelectFormBean.getMessage());
+    	CustomizedTextFormBean customizedTextFormBean = new CustomizedTextFormBean();
+    	customizedTextFormBean.setOriginalText(customizedTextDto.getOriginalText());
+    	customizedTextFormBean.setCustomText(customizedTextDto.getCustomText());
+    	return customizedTextFormBean;
     }
     
-    public void addOrUpdateCustomMessage(CustomMessageFormBean customMessageFormBean) {
-    	customizedTextServiceFacade.addOrUpdateCustomizedText(customMessageFormBean.getOldMessage(), 
-    			customMessageFormBean.getNewMessage());
+    public void addOrUpdateCustomizedText(CustomizedTextFormBean customizedTextFormBean) {
+    	customizedTextServiceFacade.addOrUpdateCustomizedText(customizedTextFormBean.getOriginalText(), 
+    			customizedTextFormBean.getCustomText());
     }
     
-    public void removeCustomMessage(CustomMessageSelectFormBean customMessageFormBean) {
+    public void removeCustomizedText(CustomizedTextSelectFormBean customMessageFormBean) {
     	if (customMessageFormBean.getMessage() == null) {
     		return;
     	}

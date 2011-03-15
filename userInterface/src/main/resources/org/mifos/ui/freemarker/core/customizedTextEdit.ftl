@@ -23,27 +23,25 @@
    <!--  Main Content Begins-->
   <div class=" content">
   <span id="page.id" title="customizeMessages"></span>
-    [@mifos.crumbs breadcrumbs/]
-    
-<form action="${flowExecutionUrl}" method="post" class="one-column">
-<div class="fontBold"><span class="orangeheading">[@spring.message "customMessagesView.messageList"/]</span></div>
-
-    [@form.singleSelectWithPrompt path="customMessageSelectFormBean.message" options=customMessagesMap selectPrompt="" attributes="size=10, style=width:200px;"/]
-    
-<!--
-	<select size=10>
-[#list customMessagesMap?keys as key]
-    <option value="${key}">${key} > ${customMessagesMap[key]}</option>
-[/#list]
-	</select>
--->
+  [@mifos.crumbs breadcrumbs/]
+<form action="${flowExecutionUrl}" method="post" class="two-columns">
+<div class="fontBold"><span class="orangeheading">[@spring.message "customizeTextEdit.title"/]</span></div>
+    <fieldset>
     <div class="row">
-        [@form.submitButton label="widget.form.buttonLabel.add" webflowEvent="add" /]
-        [@form.submitButton label="widget.form.buttonLabel.remove" webflowEvent="remove" /]
-        [@form.submitButton label="widget.form.buttonLabel.edit" webflowEvent="edit" /]                
-        [@form.cancelButton label="widget.form.buttonLabel.done" webflowEvent="done"  /]
+        [@form.label "Old Message" true /][@spring.message "customizeTextAdd.addMessage.originalText"/]
+        [@form.input path="customizedTextFormBean.originalText"  id="originalText" attributes="disabled"/]
+    </div>
+    <div class="row">
+        [@form.label "New Message" true /][@spring.message "customizeTextAdd.addMessage.customText"/]
+        [@form.input path="customizedTextFormBean.customText" id="customText" /]
+    </div>
+    </fieldset>
+    <div class="row webflow-controls">
+        [@form.submitButton label="widget.form.buttonLabel.submit" id="addcustommessage.button.submit" webflowEvent="submit" /]
+        [@form.cancelButton label="widget.form.buttonLabel.cancel" webflowEvent="cancel" /]
     </div>
 </form>
+
   </div>
   <!--Main content ends-->
   [/@adminLeftPaneLayout]

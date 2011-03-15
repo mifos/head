@@ -23,25 +23,20 @@
    <!--  Main Content Begins-->
   <div class=" content">
   <span id="page.id" title="customizeMessages"></span>
-  [@mifos.crumbs breadcrumbs/]
-<form action="${flowExecutionUrl}" method="post" class="two-columns">
-<div class="fontBold"><span class="orangeheading">[@spring.message "customMessagesEdit.title"/]</span></div>
-    <fieldset>
+    [@mifos.crumbs breadcrumbs/]
+    
+<form action="${flowExecutionUrl}" method="post" class="one-column">
+<div class="fontBold"><span class="orangeheading">[@spring.message "customizeTextView.customizedTextList"/]</span></div>
+
+    [@form.singleSelectWithPrompt path="customizedTextSelectFormBean.message" options=customizedTextMap selectPrompt="" attributes="size=10, style=width:200px;"/]
+    
     <div class="row">
-        [@form.label "Old Message" true /][@spring.message "customMessagesAdd.addMessage.oldMessage"/]
-        [@form.input path="customMessageFormBean.oldMessage"  id="oldMessage" attributes="disabled"/]
-    </div>
-    <div class="row">
-        [@form.label "New Message" true /][@spring.message "customMessagesAdd.addMessage.newMessage"/]
-        [@form.input path="customMessageFormBean.newMessage" id="newMessage" /]
-    </div>
-    </fieldset>
-    <div class="row webflow-controls">
-        [@form.submitButton label="widget.form.buttonLabel.submit" id="addcustommessage.button.submit" webflowEvent="submit" /]
-        [@form.cancelButton label="widget.form.buttonLabel.cancel" webflowEvent="cancel" /]
+        [@form.submitButton label="widget.form.buttonLabel.add" webflowEvent="add" /]
+        [@form.submitButton label="widget.form.buttonLabel.remove" webflowEvent="remove" /]
+        [@form.submitButton label="widget.form.buttonLabel.edit" webflowEvent="edit" /]                
+        [@form.cancelButton label="widget.form.buttonLabel.done" webflowEvent="done"  /]
     </div>
 </form>
-
   </div>
   <!--Main content ends-->
   [/@adminLeftPaneLayout]

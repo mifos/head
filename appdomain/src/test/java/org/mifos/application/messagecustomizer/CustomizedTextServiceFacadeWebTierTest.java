@@ -47,7 +47,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.context.MessageSource;
 
 @RunWith(MockitoJUnitRunner.class)
-public class MessageCustomizerServiceFacadeWebTierTest {
+public class CustomizedTextServiceFacadeWebTierTest {
 
 	private CustomizedTextServiceFacadeWebTier customizedTextServiceFacadeWebTier;
 

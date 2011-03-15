@@ -31,13 +31,13 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 @SuppressWarnings("PMD")
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID"}, justification="should disable at filter level and also for pmd - not important for us")
-public class CustomMessageFormBean implements Serializable {
+public class CustomizedTextFormBean implements Serializable {
 
     @NotEmpty
-    private String oldMessage;
+    private String originalText;
 
     @NotEmpty
-    private String newMessage;
+    private String customText;
 
     @Autowired
     private transient MifosBeanValidator validator;
@@ -46,24 +46,24 @@ public class CustomMessageFormBean implements Serializable {
         this.validator = validator;
     }
 
-	public String getOldMessage() {
-		return oldMessage;
-	}
-
-	public void setOldMessage(String oldMessage) {
-		this.oldMessage = oldMessage;
-	}
-
-	public String getNewMessage() {
-		return newMessage;
-	}
-
-	public void setNewMessage(String newMessage) {
-		this.newMessage = newMessage;
-	}
-
 	public MifosBeanValidator getValidator() {
 		return validator;
+	}
+
+	public String getOriginalText() {
+		return originalText;
+	}
+
+	public void setOriginalText(String originalText) {
+		this.originalText = originalText;
+	}
+
+	public String getCustomText() {
+		return customText;
+	}
+
+	public void setCustomText(String customText) {
+		this.customText = customText;
 	}
 
 
