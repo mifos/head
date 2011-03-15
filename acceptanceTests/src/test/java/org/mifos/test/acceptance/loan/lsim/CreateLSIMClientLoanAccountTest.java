@@ -114,6 +114,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
+    @Test(enabled=false)
     public void newMonthlyClientLoanAccountWithMeetingOnSameWeekAndWeekday() throws Exception {
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("Monthly3rdFriday");
