@@ -29,7 +29,7 @@
     <fieldset>
     <div class="row">
         [@form.label "Old Message" true /][@spring.message "customMessagesAdd.addMessage.oldMessage"/]
-        [@form.input path="customMessageFormBean.oldMessage"  id="oldMessage" /]
+        [@form.input path="customMessageFormBean.oldMessage"  id="oldMessage" attributes="disabled"/]
     </div>
     <div class="row">
         [@form.label "New Message" true /][@spring.message "customMessagesAdd.addMessage.newMessage"/]

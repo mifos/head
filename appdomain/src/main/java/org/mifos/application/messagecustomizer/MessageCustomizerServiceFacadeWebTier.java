@@ -26,6 +26,7 @@ import java.util.Map;
 
 import org.mifos.application.admin.servicefacade.CustomMessageDto;
 import org.mifos.application.admin.servicefacade.MessageCustomizerServiceFacade;
+import org.mifos.config.business.MifosConfiguration;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.dto.domain.AccountStatusesLabelDto;
 import org.mifos.dto.domain.ConfigurableLookupLabelDto;
@@ -117,11 +118,17 @@ public class MessageCustomizerServiceFacadeWebTier implements MessageCustomizerS
 		return new ConfigureApplicationLabelsDto(officeLevels, gracePeriodDto, lookupLabels, accountStatusLabels);
 	}
 
+	private void updateLegacyCaches() {
+		// legacy menu code caches strings, so force the menus to rebuild after a change
+		MenuRepository.getInstance().removeMenuForAllLocale();   
+
+		MifosConfiguration.getInstance().initializeLabelCache();
+	}
+	
 	@Override
 	public void updateApplicationLabels(Map<String,String> messageMap) {
 		messageCustomizerDao.setCustomMessages(messageMap);
-		// legacy menu code caches strings, so force the menus to rebuild after a change
-		MenuRepository.getInstance().removeMenuForAllLocale();   
+		updateLegacyCaches();
 	}
 	
 	@Override
@@ -138,9 +145,7 @@ public class MessageCustomizerServiceFacadeWebTier implements MessageCustomizerS
         } finally {
             this.transactionHelper.closeSession();
         }		
-		// legacy menu code caches strings, so force the menus to rebuild after a change
-		MenuRepository.getInstance().removeMenuForAllLocale();   
-	
+        updateLegacyCaches();	
 	}
 
 	@Override
@@ -157,8 +162,9 @@ public class MessageCustomizerServiceFacadeWebTier implements MessageCustomizerS
         } finally {
             this.transactionHelper.closeSession();
         }		
-	
+        updateLegacyCaches();
 	}	
+	
 	@Override
 	public Map<String, String> retrieveCustomMessages() {
 	    return messageCustomizerDao.getCustomMessages();    	
@@ -295,15 +301,7 @@ public class MessageCustomizerServiceFacadeWebTier implements MessageCustomizerS
 		lookupLabels.setBulkEntry(getCustomMessageFor(message));
 		return lookupLabels;
 	}
-/*
-	private String getCustomMessageFor(String message) {
-		String customMessage = messageFilterMap.get(message);
-		if (customMessage == null) {
-			return message;
-		}
-		return customMessage;
-	}
-*/
+
 	private String getCustomMessageFor(String message) {
 		CustomMessage customMessage = messageCustomizerDao.findCustomMessageByOldMessage(message);
 

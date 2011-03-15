@@ -20,11 +20,17 @@
 
 package org.mifos.clientportfolio.newloan.domain;
 
-import org.mifos.schedule.ScheduledEvent;
+import org.joda.time.LocalDate;
 
-public interface LoanDisbursementDateFactory {
+public class VariableInstallmentsLoanDisbursementStrategyImpl implements LoanDisbursementStrategy {
 
-    LoanDisbursementStrategy create(ScheduledEvent customerMeetingSchedule, ScheduledEvent loanProductMeetingSchedule, 
-            boolean isRepaymentIndependentOfMeetingEnabled, boolean isVariableInstallmentsAllowed);
+    @Override
+    public LocalDate findClosestMatchingDateFromAndInclusiveOf(LocalDate fromAndInclusiveOf) {
+        return fromAndInclusiveOf;
+    }
 
+    @Override
+    public boolean isDisbursementDateValid(@SuppressWarnings("unused") LocalDate disbursementDate) {
+        return true;
+    }
 }

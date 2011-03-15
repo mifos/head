@@ -111,11 +111,21 @@ $(function() {
 		<tr>
 			<td>${row.installmentNumber?string.number}</td>
 			[#if loanProductReferenceData.variableInstallmentsAllowed]
-			[@spring.bind "cashFlowSummaryFormBean.installments[${ind}]"/]
-			<td><input type="text" name="installments[${ind}]" size="10" value="${cashFlowSummaryFormBean.installments[ind]?date?string.medium}" id="installment.dueDate.${ind}" class="date-pick" /></td>
+				[#if loanProductReferenceData.compareCashflowEnabled]
+					[@spring.bind "cashFlowSummaryFormBean.installments[${ind}]"/]
+					<td><input type="text" name="installments[${ind}]" size="10" value="${cashFlowSummaryFormBean.installments[ind]?date?string.medium}" id="installment.dueDate.${ind}" class="date-pick" /></td>
+				[#else]
+					[@spring.bind "loanScheduleFormBean.installments[${ind}]"/]
+					<td><input type="text" name="installments[${ind}]" size="10" value="${loanScheduleFormBean.installments[ind]?date?string.medium}" id="installment.dueDate.${ind}" class="date-pick" /></td>
+				[/#if]
 			[#else]
-			[@spring.bind "cashFlowSummaryFormBean.installments[${ind}]"/]
-			<td><input type="text" name="installments[${ind}]" size="10" value="${cashFlowSummaryFormBean.installments[ind]?date?string.medium}" id="installment.dueDate.${ind}" readonly /></td>
+				[#if loanProductReferenceData.compareCashflowEnabled]
+					[@spring.bind "cashFlowSummaryFormBean.installments[${ind}]"/]
+					<td><input type="text" name="installments[${ind}]" size="10" value="${cashFlowSummaryFormBean.installments[ind]?date?string.medium}" id="installment.dueDate.${ind}" readonly /></td>
+				[#else]
+					[@spring.bind "loanScheduleFormBean.installments[${ind}]"/]
+					<td><input type="text" name="installments[${ind}]" size="10" value="${loanScheduleFormBean.installments[ind]?date?string.medium}" id="installment.dueDate.${ind}" readonly /></td>
+				[/#if]
 			[/#if]
 			<td>${row.principal?string.currency}</td>
 			<td>${row.interest?string.currency}</td>

@@ -31,32 +31,43 @@ import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.business.RepaymentResultsHolder;
 import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
+import org.mifos.accounts.loan.business.service.validators.InstallmentValidationContext;
+import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
+import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
+import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.clientportfolio.newloan.domain.LoanService;
 import org.mifos.clientportfolio.newloan.domain.service.LoanScheduleService;
+import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
+import org.mifos.dto.domain.LoanCreationInstallmentDto;
 import org.mifos.dto.screen.RepayLoanDto;
 import org.mifos.dto.screen.RepayLoanInfoDto;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.platform.validations.Errors;
 import org.mifos.service.BusinessRuleException;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.eq;
@@ -96,10 +107,13 @@ public class LoanAccountServiceFacadeWebTierTest {
     
     @Mock private LoanService loanService;
     @Mock private LoanScheduleService loanScheduleService;
+    
+    @Mock private InstallmentsValidator installmentsValidator;
+    @Mock private HolidayServiceFacade holidayServiceFacade;
 
     // test data
-    @Mock
-    private LoanBO loanBO;
+    @Mock private LoanBO loanBO;
+    @Mock private CustomerBO customer;
 
     @Mock
     private ScheduleCalculatorAdaptor scheduleCalculatorAdaptor;
@@ -111,7 +125,7 @@ public class LoanAccountServiceFacadeWebTierTest {
     @Before
     public void setupAndInjectDependencies() {
         loanAccountServiceFacade = new LoanAccountServiceFacadeWebTier(officeDao, loanProductDao, customerDao, personnelDao,
-                fundDao, loanDao, holidayDao, accountService, scheduleCalculatorAdaptor, loanBusinessService, loanService, loanScheduleService);
+                fundDao, loanDao, holidayDao, accountService, scheduleCalculatorAdaptor, loanBusinessService, loanService, loanScheduleService, installmentsValidator, holidayServiceFacade);
         rupee = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
     }
 
@@ -288,5 +302,38 @@ public class LoanAccountServiceFacadeWebTierTest {
         BigDecimal interestDue = ((LoanAccountServiceFacadeWebTier) loanAccountServiceFacade).
                 interestDueForNextInstallment(BigDecimal.TEN, BigDecimal.ZERO, loanBO, false);
         assertThat(interestDue.doubleValue(), is(0d));
+    }
+    
+    @Test
+    public void shouldValidateInstallments() {
+        int customerId = 121;
+        Errors errors = new Errors();
+        when(installmentsValidator.validateInputInstallments(anyListOf(RepaymentScheduleInstallment.class), any(InstallmentValidationContext.class))).thenReturn(errors);
+        when(customerDao.findCustomerById(customerId)).thenReturn(customer);
+        when(customer.getOfficeId()).thenReturn(Short.valueOf("1"));
+        
+        Date disbursementDate = null; 
+        Integer minGapInDays = Integer.valueOf(0); 
+        Integer maxGapInDays = Integer.valueOf(0);
+        BigDecimal minInstallmentAmount = BigDecimal.ZERO;
+        
+        Errors actual = loanAccountServiceFacade.validateInputInstallments(disbursementDate, minGapInDays, maxGapInDays, minInstallmentAmount, new ArrayList<LoanCreationInstallmentDto>(), customerId);
+        assertThat(actual, is(errors));
+        verify(installmentsValidator).validateInputInstallments(anyListOf(RepaymentScheduleInstallment.class), any(InstallmentValidationContext.class));
+        verify(customerDao).findCustomerById(customerId);
+        verify(customer).getOfficeId();
+    }
+
+    @Test
+    public void shouldValidateInstallmentSchedule() {
+        List<RepaymentScheduleInstallment> installments = new ArrayList<RepaymentScheduleInstallment>();
+        Errors expectedErrors = new Errors();
+        
+        BigDecimal minInstallmentAmount = BigDecimal.ZERO;
+        
+        when(installmentsValidator.validateInstallmentSchedule(installments, minInstallmentAmount)).thenReturn(expectedErrors);
+        Errors errors = loanAccountServiceFacade.validateInstallmentSchedule(new ArrayList<LoanCreationInstallmentDto>(), minInstallmentAmount);
+        assertThat(errors, is(expectedErrors));
+        verify(installmentsValidator).validateInstallmentSchedule(installments, minInstallmentAmount);
     }
 }
