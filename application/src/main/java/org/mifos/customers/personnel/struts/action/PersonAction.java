@@ -483,13 +483,12 @@ public class PersonAction extends SearchAction {
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         PersonActionForm personActionForm = (PersonActionForm) form;
-
-        String personnelId = ((PersonActionForm) form).getPersonnelId();
-        Long userId = null;
-        if (personnelId != null) {
-            userId = Long.valueOf(personnelId);
+        String globalId = request.getParameter("globalPersonnelNum");
+        if (globalId == null) {
+            globalId = personActionForm.getGlobalPersonnelNum();
         }
-        PersonnelInformationDto personnelInformationDto = this.personnelServiceFacade.getPersonnelInformationDto(userId, ((PersonActionForm) form).getGlobalPersonnelNum());
+
+        PersonnelInformationDto personnelInformationDto = this.personnelServiceFacade.getPersonnelInformationDto(null, globalId);
 
         SessionUtils.removeThenSetAttribute("personnelInformationDto", personnelInformationDto, request);
 
