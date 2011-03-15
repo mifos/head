@@ -100,6 +100,7 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
     @Test(enabled = true)
     public void createVoluntarySavingsProductForCenters() throws Exception {
         SavingsProductParameters params = savingsProductHelper.getGenericSavingsProductParameters(SavingsProductParameters.VOLUNTARY, SavingsProductParameters.CENTERS);
+        params.setShortName("M139");
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
 
         confirmationPage.navigateToSavingsProductDetails();
@@ -111,6 +112,7 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
     public void createVoluntarySavingsProductForGroups() throws Exception {
 
         SavingsProductParameters params = savingsProductHelper.getGenericSavingsProductParameters(SavingsProductParameters.VOLUNTARY, SavingsProductParameters.GROUPS);
+        params.setShortName("M137");
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
 
         confirmationPage.navigateToSavingsProductDetails();
@@ -122,6 +124,7 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
     public void createVoluntarySavingsProductForClients() throws Exception {
 
         SavingsProductParameters params = savingsProductHelper.getGenericSavingsProductParameters(SavingsProductParameters.VOLUNTARY, SavingsProductParameters.CLIENTS);
+        params.setShortName("1093");
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
 
         confirmationPage.navigateToSavingsProductDetails();
@@ -133,6 +136,7 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
     public void createMandatorySavingsProductForGroups() throws Exception {
 
         SavingsProductParameters params = savingsProductHelper.getGenericSavingsProductParameters(SavingsProductParameters.MANDATORY, SavingsProductParameters.GROUPS);
+        params.setShortName("1094");
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
 
         confirmationPage.navigateToSavingsProductDetails();
@@ -144,6 +148,7 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
     public void createMandatorySavingsProductForClients() throws Exception {
 
         SavingsProductParameters params = savingsProductHelper.getGenericSavingsProductParameters(SavingsProductParameters.MANDATORY, SavingsProductParameters.CLIENTS);
+        params.setShortName("M138");
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
 
         confirmationPage.navigateToSavingsProductDetails();
@@ -155,6 +160,7 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
     public void createMandatorySavingsProductForCenters() throws Exception {
 
         SavingsProductParameters params = savingsProductHelper.getGenericSavingsProductParameters(SavingsProductParameters.MANDATORY, SavingsProductParameters.CENTERS);
+        params.setShortName("1095");
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
 
         confirmationPage.navigateToSavingsProductDetails();
@@ -173,6 +179,7 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
 
         //When
         SavingsProductParameters params = savingsProductHelper.getMandatoryClientsMinimumBalanceSavingsProductParameters();
+        params.setShortName("M712");
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
         confirmationPage.navigateToSavingsProductDetails();     //"Stu1233266079799 Client1233266079799"
         SavingsAccountDetailPage savingsAccountDetailPage = createSavingAccountWithCreatedProduct("Stu1233266079799 Client1233266079799", params.getProductInstanceName(), "100000.0");
@@ -240,7 +247,7 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
 
         //When
         SavingsProductParameters params = savingsProductHelper.getVoluntaryClients3MonthCalculactionPostingProductParameters();
-
+        params.setShortName("M141");
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
         confirmationPage.navigateToSavingsProductDetails();
         SavingsAccountDetailPage savingsAccountDetailPage = createSavingAccountWithCreatedProduct("Stu1233266079799 Client1233266079799", params.getProductInstanceName(), "100000.0");
@@ -290,6 +297,7 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         //When
         SavingsProductParameters params = savingsProductHelper.getMandatoryClientsMinimumBalanceSavingsProductParameters();
         params.setTypeOfDeposits(SavingsProductParameters.VOLUNTARY);
+        params.setShortName("M721");
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
         confirmationPage.navigateToSavingsProductDetails();
 
@@ -356,7 +364,7 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         //When
         SavingsProductParameters params = savingsProductHelper.getMandatoryClientsMinimumBalanceSavingsProductParameters();
         params.setBalanceUsedForInterestCalculation(SavingsProductParameters.AVERAGE_BALANCE);
-
+        params.setShortName("M624");
         String savingsId = createSavingsAccount(params);
         make3StraightDeposit(savingsId);
 
@@ -497,7 +505,8 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         SavingsProductParameters params = savingsProductHelper.getMandatoryClientsMinimumBalanceSavingsProductParameters();
         params.setBalanceUsedForInterestCalculation(SavingsProductParameters.AVERAGE_BALANCE);
         params.setTypeOfDeposits(SavingsProductParameters.VOLUNTARY);
-
+        params.setShortName("M725");
+        
         String productName = params.getProductInstanceName();
         String savingsId = createSavingsAccount(params);
 
@@ -560,6 +569,7 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         params.setStartDateMM("01");
         params.setStartDateYYYY("2011");
         params.setInterestRate("10");
+        params.setShortName("M144");
         String savingsId = createSavingsAccount(params);
         DepositWithdrawalSavingsParameters depositParams = new DepositWithdrawalSavingsParameters();
         depositParams = makeDefaultDepositWithdrawal(targetTime, depositParams, savingsId);
