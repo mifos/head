@@ -62,9 +62,6 @@ public class SavingsAccountPerformanceHistoryTest extends UiTestCaseBase {
     public void savingsDepositWithdrawalAndVerifyPerformanceHistory() throws Exception {
         DepositWithdrawalSavingsParameters params = new DepositWithdrawalSavingsParameters();
 
-        params.setTrxnDateMM("28");
-        params.setTrxnDateDD("03");
-        params.setTrxnDateYYYY("2011");
         params.setAmount("888.8");
         params.setPaymentType(DepositWithdrawalSavingsParameters.CASH);
         params.setTrxnType(DepositWithdrawalSavingsParameters.DEPOSIT);
