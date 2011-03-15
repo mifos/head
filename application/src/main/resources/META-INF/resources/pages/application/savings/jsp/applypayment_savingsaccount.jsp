@@ -77,7 +77,7 @@ explanation of the license and how it is applied.
             <table width="95%" border="0" cellspacing="0" cellpadding="3">
 	            <tr>
 		          <td colspan="2">
-		    	      <font class="fontnormalRedBold"><html-el:errors	bundle="SavingsUIResources" /></font>
+		              <div class="fontnormalRedBold" id="error.messages"><html-el:errors	bundle="SavingsUIResources" /></div>
 			      </td>
 			  </tr>			  
                 	<c:set var="customerLevel" value="${BusinessKey.customer.customerLevel.id}" />
