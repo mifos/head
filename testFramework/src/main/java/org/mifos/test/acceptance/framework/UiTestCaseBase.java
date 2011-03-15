@@ -39,7 +39,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 @ContextConfiguration(locations = {"classpath:test-context.xml", "classpath:ui-test-context.xml"})
-@Test(sequential = true)
+@Test(singleThreaded = true)
 public class UiTestCaseBase extends AbstractTestNGSpringContextTests {
     private static Boolean seleniumServerIsRunning = Boolean.FALSE;
     private static final String ERROR_ELEMENT_ID = "*.errors";
