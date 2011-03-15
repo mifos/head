@@ -483,7 +483,6 @@
                     <testNGArtifactName>null</testNGArtifactName>
                     <printSummary>true</printSummary>
                     <redirectTestOutputToFile>true</redirectTestOutputToFile>
-                    <argLine>-javaagent:${jacoco.agent.path}=destfile=${jacoco.file.path},includes=org.mifos.*,excludes=*_javaassist_*</argLine>
                     <includes>
                         <include>**/*Test.java</include>
                     </includes>
@@ -505,8 +504,6 @@
                             <testNGArtifactName>null</testNGArtifactName>
                             <printSummary>true</printSummary>
                             <redirectTestOutputToFile>true</redirectTestOutputToFile>
-                            
-                            
                             <includes>
                                 <include>**/*IntegrationTest.java</include>
                                 <include>**/*StrutsTest.java</include>
