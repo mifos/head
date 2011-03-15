@@ -676,6 +676,7 @@ public class ActivityMapper {
         security.allow("validateInstallments", SecurityConstants.VIEW);
         security.allow("showPreview", SecurityConstants.VIEW);
         security.allow("viewOriginalSchedule", SecurityConstants.VIEW);
+        security.allow("viewAndEditAdditionalInformation", SecurityConstants.VIEW);
         return security;
     }
 

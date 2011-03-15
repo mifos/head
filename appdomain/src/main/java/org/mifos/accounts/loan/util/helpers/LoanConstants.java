@@ -219,4 +219,5 @@ public interface LoanConstants {
     String ORIGINAL_INSTALLMENTS = "originalInstallments";
 
     String CANNOT_VIEW_REPAYMENT_SCHEDULE = "cannot.view.repayment.schedule";
+    String QUESTION_GROUP_INSTANCES = "questionGroupInstances";
 }
