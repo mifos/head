@@ -61,7 +61,11 @@ public class AbstractPage {
     }
 
     public void verifyPage(String pageName) {
-        Assert.assertEquals(selenium.getAttribute("page.id@title"), pageName);
+        String pageId = selenium.getAttribute("page.id@title");
+        if(!pageId.equals(pageName)) {
+            String errors = selenium.getText("error.messages");
+            Assert.fail("Expected page <" +pageName +">, actual page <"+pageId+">!!! with error message > " + errors);
+        }
     }
 
     public void verifyPage(String pageName, String secondName) {

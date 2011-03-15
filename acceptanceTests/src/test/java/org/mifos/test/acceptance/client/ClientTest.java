@@ -400,6 +400,8 @@ public class ClientTest extends UiTestCaseBase {
                 "12", "1987");
         CreateClientEnterMfiDataPage nextPage = clientPersonalDataPage.submitAndGotoCreateClientEnterMfiDataPage();
         nextPage.verifyPage("CreateClientMfiInfo");
+        propertiesHelper.setMinimumAgeForClients(0);
+        propertiesHelper.setMaximumAgeForClients(0);
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -410,6 +412,8 @@ public class ClientTest extends UiTestCaseBase {
                 "12", "1940");
         CreateClientEnterPersonalDataPage nextPage = clientPersonalDataPage.dontLoadNext();
         nextPage.verifyPage("CreateClientPersonalInfo");
+        propertiesHelper.setMinimumAgeForClients(0);
+        propertiesHelper.setMaximumAgeForClients(0);
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -420,6 +424,8 @@ public class ClientTest extends UiTestCaseBase {
                 "12", "1995");
         CreateClientEnterPersonalDataPage nextPage = clientPersonalDataPage.dontLoadNext();
         nextPage.verifyPage("CreateClientPersonalInfo");
+        propertiesHelper.setMinimumAgeForClients(0);
+        propertiesHelper.setMaximumAgeForClients(0);
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")

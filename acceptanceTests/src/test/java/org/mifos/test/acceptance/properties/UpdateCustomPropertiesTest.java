@@ -243,7 +243,7 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
         GroupViewDetailsPage groupViewDetailsPage = groupTestHelper.createNewGroupWithoutPendingForApproval("Default Center" , groupParams);
         //Then
         groupViewDetailsPage.verifyStatus("Active");
-
+        propertiesHelper.setGroupPendingApprovalStateEnabled("true");
     }
 
     //http://mifosforge.jira.com/browse/MIFOSTEST-86

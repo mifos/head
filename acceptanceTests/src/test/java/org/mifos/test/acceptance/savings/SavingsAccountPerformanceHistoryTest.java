@@ -45,7 +45,6 @@ public class SavingsAccountPerformanceHistoryTest extends UiTestCaseBase {
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
-
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         DateTime targetTime = new DateTime(2011,3,28,8,0,0,0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
@@ -58,7 +57,6 @@ public class SavingsAccountPerformanceHistoryTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
-    @Test(enabled=false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void savingsDepositWithdrawalAndVerifyPerformanceHistory() throws Exception {
         DepositWithdrawalSavingsParameters params = new DepositWithdrawalSavingsParameters();
