@@ -58,6 +58,7 @@ public class SavingsAccountPerformanceHistoryTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
+    @Test(enabled=false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void savingsDepositWithdrawalAndVerifyPerformanceHistory() throws Exception {
         DepositWithdrawalSavingsParameters params = new DepositWithdrawalSavingsParameters();
