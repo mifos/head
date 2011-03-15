@@ -20,33 +20,44 @@
 
 package org.mifos.test.acceptance.savings;
 
+import org.dbunit.dataset.IDataSet;
 import org.joda.time.DateTime;
-import org.junit.Assert;
+import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.savings.DepositWithdrawalSavingsParameters;
 import org.mifos.test.acceptance.framework.savings.SavingsAccountDetailPage;
 import org.mifos.test.acceptance.framework.testhelpers.SavingsAccountHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
+import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(singleThreaded = true, groups={"savings","acceptance","ui", "no_db_unit"})
+@Test(sequential=true, groups={"savings","acceptance","ui"})
 public class SavingsAccountPerformanceHistoryTest extends UiTestCaseBase {
 
     private SavingsAccountHelper savingsAccountHelper;
 
+    @Autowired
+    private DriverManagerDataSource dataSource;
+    @Autowired
+    private DbUnitUtilities dbUnitUtilities;
+    @Autowired
+    private InitializeApplicationRemoteTestingService initRemote;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
+
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = new DateTime(2011,3,28,8,0,0,0);
+        DateTime targetTime = new DateTime(2009,9,9,8,0,0,0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
         savingsAccountHelper = new SavingsAccountHelper(selenium);
 
@@ -59,38 +70,44 @@ public class SavingsAccountPerformanceHistoryTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void savingsDepositWithdrawalAndVerifyPerformanceHistory() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
+
         DepositWithdrawalSavingsParameters params = new DepositWithdrawalSavingsParameters();
 
+        params.setTrxnDateMM("09");
+        params.setTrxnDateDD("09");
+        params.setTrxnDateYYYY("2009");
         params.setAmount("888.8");
         params.setPaymentType(DepositWithdrawalSavingsParameters.CASH);
         params.setTrxnType(DepositWithdrawalSavingsParameters.DEPOSIT);
 
         // deposit initial amount to savings account
-        SavingsAccountDetailPage savingsAccountDetailPage = savingsAccountHelper.makeDepositOrWithdrawalOnSavingsAccount("000100000000067", params);
+        SavingsAccountDetailPage savingsAccountDetailPage = savingsAccountHelper.makeDepositOrWithdrawalOnSavingsAccount("000100000000119", params);
         savingsAccountDetailPage.verifyPage();
 
         // withdraw portion of savings
         params.setAmount("123.0");
         params.setTrxnType(DepositWithdrawalSavingsParameters.WITHDRAWAL);
 
-        savingsAccountHelper.makeDepositOrWithdrawalOnSavingsAccount("000100000000067", params);
+        savingsAccountHelper.makeDepositOrWithdrawalOnSavingsAccount("000100000000119", params);
 
         // another deposit
         params.setAmount("10.0");
         params.setTrxnType(DepositWithdrawalSavingsParameters.DEPOSIT);
 
-        savingsAccountHelper.makeDepositOrWithdrawalOnSavingsAccount("000100000000067", params);
+        savingsAccountHelper.makeDepositOrWithdrawalOnSavingsAccount("000100000000119", params);
 
         // another withdrawal
         params.setAmount("20.0");
         params.setTrxnType(DepositWithdrawalSavingsParameters.WITHDRAWAL);
 
-        savingsAccountHelper.makeDepositOrWithdrawalOnSavingsAccount("000100000000067", params);
+        savingsAccountHelper.makeDepositOrWithdrawalOnSavingsAccount("000100000000119", params);
+        // validate savings performance history
+        String[] tablesToValidate = { "SAVINGS_ACCOUNT", "SAVINGS_PERFORMANCE" };
 
-        Assert.assertEquals("Performance history", selenium.getTable("performanceHistoryTable.0.0"));
-        Assert.assertEquals("Date account opened: 14/03/2011", selenium.getTable("performanceHistoryTable.2.0"));
-        Assert.assertEquals("Total deposits: 898.8", selenium.getTable("performanceHistoryTable.3.0"));
-        Assert.assertEquals("Total interest earned: 0.0", selenium.getTable("performanceHistoryTable.4.0"));
-        Assert.assertEquals("Total withdrawals: 143.0", selenium.getTable("performanceHistoryTable.5.0"));
+        IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromDataSetDirectoryFile("SavingsPerformanceHistory_001_dbunit.xml");
+        IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTables(dataSource, tablesToValidate);
+        dbUnitUtilities.verifyTables(tablesToValidate, databaseDataSet, expectedDataSet);
+
     }
 }
