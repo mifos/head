@@ -111,6 +111,7 @@ public class VariableInstalmentRecalculationTest extends UiTestCaseBase {
                 verifyInstallmentDatesOutOfCashFlowCapturedOnPreview().
                 verifyRecalculationOfCashFlowOnPreview().
                 verifyWarningThresholdMessageOnPreview(warningThreshold);
+        applicationDatabaseOperation.updateLSIM(0);
     }
 
     /**
@@ -139,6 +140,7 @@ public class VariableInstalmentRecalculationTest extends UiTestCaseBase {
                 enterValidData("100", cashFlowIncremental, cashFlowBase, null, null).
                 clickContinue().
                 verifyRecalculationWhenDateAndTotalChange();
+        applicationDatabaseOperation.updateLSIM(0);
     }
 
     private DefineNewLoanProductPage.SubmitFormParameters defineLoanProductParameters(int defInstallments, int defaultLoanAmount, int defaultInterestRate) {

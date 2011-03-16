@@ -248,6 +248,7 @@ public class EditLoanProductTest extends UiTestCaseBase {
                 editSubmit().
                 verifyVariableInstalmentUnChecked().submit().
                 verifyVariableInstalmentOptionUnChecked();
+        applicationDatabaseOperation.updateLSIM(0);
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")// one of the dependent methods throws Exception
@@ -262,6 +263,7 @@ public class EditLoanProductTest extends UiTestCaseBase {
         applicationDatabaseOperation.updateLSIM(1);
         createNewLoanProductAndNavigateToEditLoanPage();
         setAndValidateInstalmentOption("","1","");
+        applicationDatabaseOperation.updateLSIM(0);
     }
 
     @Test(enabled=false)
