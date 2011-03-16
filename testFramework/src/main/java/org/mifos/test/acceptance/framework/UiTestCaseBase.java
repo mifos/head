@@ -73,6 +73,8 @@ public class UiTestCaseBase extends AbstractTestNGSpringContextTests {
         synchronized (UiTestCaseBase.class) {
             if (!seleniumServerIsRunning.booleanValue()) {
                 selenium.start();
+                selenium.windowFocus();
+                selenium.windowMaximize();
                 seleniumServerIsRunning = Boolean.TRUE;
             }
         }

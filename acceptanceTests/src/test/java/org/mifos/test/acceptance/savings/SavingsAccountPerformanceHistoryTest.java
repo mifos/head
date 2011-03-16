@@ -38,7 +38,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"savings","acceptance","ui"})
+@Test(sequential=true, groups={"savings","acceptance","ui"}, enabled = false)
 public class SavingsAccountPerformanceHistoryTest extends UiTestCaseBase {
 
     private SavingsAccountHelper savingsAccountHelper;
