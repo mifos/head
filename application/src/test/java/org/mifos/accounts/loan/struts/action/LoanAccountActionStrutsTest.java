@@ -20,35 +20,7 @@
 
 package org.mifos.accounts.loan.struts.action;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.classextension.EasyMock.createMock;
-import static org.easymock.classextension.EasyMock.replay;
-import static org.easymock.classextension.EasyMock.verify;
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
-
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map.Entry;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-
 import junit.framework.Assert;
-
 import org.joda.time.DateMidnight;
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -139,6 +111,30 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import static org.easymock.EasyMock.expect;
+import static org.easymock.classextension.EasyMock.*;
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
@@ -815,7 +811,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
     @Test
     public void testValidateInstallmentsForInstallmentAmountValidation() throws Exception {
         LoanOfferingBO loanOfferingWithVariableInstallments = getLoanOffering("VarInstLoanPrd", "VILP", ApplicableTo.GROUPS, WEEKLY,
-                                            EVERY_WEEK, getVariableInstallmentDetails(2, 15, 100));
+                                            EVERY_WEEK, getVariableInstallmentDetails(2, 15, 101));
 
         request.getSession().setAttribute(Constants.BUSINESS_KEY, group);
         MeetingBO meeting = new MeetingBuilder().weekly().every(1).occuringOnA(WeekDay.MONDAY).build();
@@ -851,7 +847,8 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
 
         addRequestParameter("method", "validateInstallments");
         actionPerform();
-        verifyActionErrors(new String[] { AccountConstants.INSTALLMENT_AMOUNT_LESS_THAN_MIN_AMOUNT });
+        verifyActionErrors(new String[] { AccountConstants.INSTALLMENT_AMOUNT_LESS_THAN_MIN_AMOUNT,
+                AccountConstants.INSTALLMENT_AMOUNT_LESS_THAN_MIN_AMOUNT,AccountConstants.INSTALLMENT_AMOUNT_LESS_THAN_MIN_AMOUNT });
         verifyForward(ActionForwards.validateInstallments_failure.toString());
 
         group = TestObjectFactory.getGroup(group.getCustomerId());
