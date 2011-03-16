@@ -268,8 +268,10 @@ explanation of the license and how it is applied.
 										</tr>
 									</table>
 									<span class="fontnormal"><mifos:mifoslabel name="client.amtdue"
-										bundle="ClientUIResources" isColonRequired="yes"/> <c:out
-										value="${clientInformationDto.customerAccountSummary.nextDueAmount}" />
+										bundle="ClientUIResources" isColonRequired="yes"/>
+										<span id="viewClientDetails.text.amountDue">
+											<c:out value="${clientInformationDto.customerAccountSummary.nextDueAmount}" />
+										</span>
 									</span></td>
 								</tr>
 

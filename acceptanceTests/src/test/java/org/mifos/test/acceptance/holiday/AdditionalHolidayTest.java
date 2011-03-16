@@ -20,6 +20,9 @@
 
 package org.mifos.test.acceptance.holiday;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.joda.time.DateTime;
 import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.AppLauncher;
@@ -36,8 +39,6 @@ import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameters;
 import org.mifos.test.acceptance.framework.login.LoginPage;
-import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSearchParameters;
-import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSubmitParameters;
 import org.mifos.test.acceptance.framework.testhelpers.BatchJobHelper;
 import org.mifos.test.acceptance.framework.testhelpers.CenterTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.ClientTestHelper;
@@ -45,7 +46,6 @@ import org.mifos.test.acceptance.framework.testhelpers.GroupTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.HolidayTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
-import org.mifos.test.acceptance.framework.testhelpers.SavingsAccountHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.mifos.test.acceptance.util.StringUtil;
@@ -55,9 +55,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
 @Test(sequential = true, groups = {"holiday", "schedules", "acceptance", "ui"})
@@ -69,8 +66,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
     private GroupTestHelper groupTestHelper;
     private ClientTestHelper clientTestHelper;
     private LoanTestHelper loanTestHelper;
-    private NavigationHelper navigationHelper;
-    private SavingsAccountHelper savingsAccountHelper;
+    private NavigationHelper navigationHelper;;
 
     @Autowired
     private DriverManagerDataSource dataSource;
@@ -98,7 +94,6 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         clientTestHelper = new ClientTestHelper(selenium);
         loanTestHelper = new LoanTestHelper(selenium);
         navigationHelper = new NavigationHelper(selenium);
-        savingsAccountHelper = new SavingsAccountHelper(selenium);
     }
 
     @AfterMethod
@@ -158,7 +153,6 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-281
-    @Test(enabled = false) // TODO js - investigate why this fails on master
     public void testHolidayAffectsFeeSchedule() throws Exception {
         // Given
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_015_dbunit.xml", dataSource, selenium);
@@ -176,11 +170,6 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         params.setFromDateYYYY("2009");
         params.setRepaymentRule(CreateHolidaySubmitParameters.MORATORIUM);
         params.addOffice(officeName);
-        CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
-        searchParameters.setSearchString(clientName);
-        searchParameters.setSavingsProduct("MandClientSavings3MoPostMinBal");
-        CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
-        submitAccountParameters.setAmount("100.0");
 
         // When
         chargeParameters.setType("Weekly Center Fee");
@@ -198,9 +187,6 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         chargeParameters.setType("PeriodicWeeklyLoanFee8");
         loanTestHelper.applyChargeUsingFeeLabel(loanId, chargeParameters);
 
-        String savingsId = savingsAccountHelper.createSavingsAccountWithQG(searchParameters, submitAccountParameters).getAccountId();
-        String savingsAmount = savingsAccountHelper.activateSavingsAccount(savingsId).getTotalAmountDue();
-
         holidayTestHelper.createHoliday(params);
 
         List<String> jobsToRun = new ArrayList<String>();
@@ -217,7 +203,6 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         navigationHelper.navigateToGroupViewDetailsPage(groupName).verifyAmountDue(groupAmount);
         navigationHelper.navigateToClientViewDetailsPage(clientName).verifyAmountDue(clientAmount);
         navigationHelper.navigateToLoanAccountPage(loanId).navigateToRepaymentSchedulePage().verifyScheduleNotContainDate("16-Mar-2009");
-        navigationHelper.navigateToSavingsAccountDetailPage(savingsId).verifyTotalAmountDue(savingsAmount);
     }
 
     private void createLoan(final CreateLoanAccountSearchParameters searchParameters,

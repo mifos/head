@@ -314,8 +314,11 @@ explanation of the license and how it is applied.
 										</tr>
 										<tr>
 											<td><span class="fontnormal"><mifos:mifoslabel
-												name="Group.amountdue" bundle="GroupUIResources" /> <c:out
-												value="${groupInformationDto.customerAccountSummary.nextDueAmount}" /> </span></td>
+												name="Group.amountdue" bundle="GroupUIResources" />
+												<span id="viewgroupdetails.text.amountDue">
+													<c:out value="${groupInformationDto.customerAccountSummary.nextDueAmount}" />
+												</span> 
+											</span></td>
 										</tr>
 									</table>
 									</td>
