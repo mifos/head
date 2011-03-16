@@ -828,8 +828,7 @@ public class ClientTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-40
-    @Test(enabled = false)
-    // TODO js - temporarily disabled broken test
+    @Test(enabled = false) //blocked by MIFOS-4858
     public void addingMemeberOnHoldStatusToGroupWithDiffrentStatuses() throws Exception {
         String groupName = "testGroup";
         String clientName = "test";
@@ -843,7 +842,7 @@ public class ClientTest extends UiTestCaseBase {
                 "MyOfficeDHMFT");
         clientTestHelper.changeCustomerStatus(clientDetailsPage, ClientStatus.ACTIVE);
         clientTestHelper.changeCustomerStatus(clientDetailsPage, ClientStatus.ON_HOLD);
-        groupTestHelper.createNewGroupPartialApplication("MyCenter1233171688286", groupParams);
+        groupTestHelper.createNewGroupPartialApplication("Default Center", groupParams);
         // Then
         clientTestHelper.addClientToGroupWithErrorGroupLowerStatus(clientName, groupName);
 
