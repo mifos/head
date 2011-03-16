@@ -1001,8 +1001,7 @@ public class ClientTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-45
-    @Test(enabled = false)
-    // TODO js - temporarily disabled broken test
+    @Test(enabled = false) //blocked by MIFOS-4272
     public void addClientWithSavingToGroupWithSavingsCheckGroupCalculation() throws Exception {
 
         String groupName = "group1";
@@ -1022,14 +1021,18 @@ public class ClientTest extends UiTestCaseBase {
 
         searchParameters.setSavingsProduct("MonthlyClientSavingsAccount");
         searchParameters.setSearchString(clientName);
-        String savingsId = savingsAccountHelper.createSavingsAccountWithQG(searchParameters, submitAccountParameters)
-                .getAccountId();
+        
+        String savingsId = savingsAccountHelper.createSavingsAccount(searchParameters, submitAccountParameters).getAccountId();
         savingsAccountHelper.changeStatus(savingsId, editAccountStatusParameters);
 
-        searchParameters.setSavingsProduct("MandGroupSavingsPerIndiv1MoPost");
+        SavingsProductParameters savingsProductParameters = savingsProductHelper.getGenericSavingsProductParameters(SavingsProductParameters.MANDATORY,SavingsProductParameters.GROUPS);
+        savingsProductParameters.setShortName("M-45");
+        savingsProductParameters.setAmountAppliesTo(SavingsProductParameters.PER_INDIVIDUAL);
+        savingsProductHelper.createSavingsProduct(savingsProductParameters);
+        
+        searchParameters.setSavingsProduct(savingsProductParameters.getProductInstanceName());
         searchParameters.setSearchString(groupName);
-        savingsId = savingsAccountHelper.createSavingsAccountWithQG(searchParameters, submitAccountParameters)
-                .getAccountId();
+        savingsId = savingsAccountHelper.createSavingsAccount(searchParameters, submitAccountParameters).getAccountId();
         savingsAccountHelper.changeStatus(savingsId, editAccountStatusParameters);
 
         clientTestHelper.addClientToGroup(clientName, groupName);
