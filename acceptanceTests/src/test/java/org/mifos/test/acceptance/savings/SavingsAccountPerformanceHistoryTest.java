@@ -20,7 +20,6 @@
 
 package org.mifos.test.acceptance.savings;
 
-import org.dbunit.dataset.IDataSet;
 import org.joda.time.DateTime;
 import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -33,6 +32,7 @@ import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingServic
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
+import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -102,12 +102,12 @@ public class SavingsAccountPerformanceHistoryTest extends UiTestCaseBase {
         params.setTrxnType(DepositWithdrawalSavingsParameters.WITHDRAWAL);
 
         savingsAccountHelper.makeDepositOrWithdrawalOnSavingsAccount("000100000000119", params);
+
         // validate savings performance history
-        String[] tablesToValidate = { "SAVINGS_ACCOUNT", "SAVINGS_PERFORMANCE" };
-
-        IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromDataSetDirectoryFile("SavingsPerformanceHistory_001_dbunit.xml");
-        IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTables(dataSource, tablesToValidate);
-        dbUnitUtilities.verifyTables(tablesToValidate, databaseDataSet, expectedDataSet);
-
+        Assert.assertEquals("Performance history", selenium.getTable("performanceHistoryTable.0.0"));
+        Assert.assertEquals("Date account opened: 29/01/2009", selenium.getTable("performanceHistoryTable.2.0"));
+        Assert.assertEquals("Total deposits: 898.8", selenium.getTable("performanceHistoryTable.3.0"));
+        Assert.assertEquals("Total interest earned: 0.0", selenium.getTable("performanceHistoryTable.4.0"));
+        Assert.assertEquals("Total withdrawals: 143.0", selenium.getTable("performanceHistoryTable.5.0"));
     }
 }
