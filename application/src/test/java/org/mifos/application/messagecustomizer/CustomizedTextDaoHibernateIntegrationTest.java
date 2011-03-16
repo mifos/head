@@ -40,14 +40,8 @@ public class CustomizedTextDaoHibernateIntegrationTest extends MifosIntegrationT
     private CustomizedTextDao customizedTextDao;
     
 	@Test
-	public void shouldGetNoCustomMessages() {
-		assertThat(customizedTextDao.getCustomizedText().isEmpty(), is(true));
-	}
-	
-	@Test
 	public void shouldSetAndGetCustomizedText() {
-		// we should start out empty
-		assertThat(customizedTextDao.getCustomizedText().isEmpty(), is(true));
+		int initialCustomizedTextCount = customizedTextDao.getCustomizedText().size();
 		
 		// add a message
 		Map<String,String> messageMap = new HashMap<String, String>();
@@ -63,14 +57,13 @@ public class CustomizedTextDaoHibernateIntegrationTest extends MifosIntegrationT
 		messageMap.put("testold", "testold");
 		customizedTextDao.setCustomizedText(messageMap);
 		
-		// check that we end up empty
-		assertThat(customizedTextDao.getCustomizedText().isEmpty(), is(true));		
+		// check that we end up with what we started with
+		assertThat(customizedTextDao.getCustomizedText().size(), is(initialCustomizedTextCount));		
 	}
 	
 	@Test
 	public void shouldUpdateCustomizedTextMap() {
-		// we should start out empty
-		assertThat(customizedTextDao.getCustomizedText().isEmpty(), is(true));
+		int initialCustomizedTextCount = customizedTextDao.getCustomizedText().size();
 		
 		// add a message
 		Map<String,String> messageMap = new HashMap<String, String>();
@@ -95,14 +88,13 @@ public class CustomizedTextDaoHibernateIntegrationTest extends MifosIntegrationT
 		messageMap.put("testold", "testold");
 		customizedTextDao.setCustomizedText(messageMap);
 		
-		// check that we end up empty
-		assertThat(customizedTextDao.getCustomizedText().isEmpty(), is(true));		
+		// check that we end up with what we started with
+		assertThat(customizedTextDao.getCustomizedText().size(), is(initialCustomizedTextCount));		
 	}	
 
 	@Test
 	public void shouldAddRemoveCustomizedText() {
-		// we should start out empty
-		assertThat(customizedTextDao.getCustomizedText().isEmpty(), is(true));
+		int initialCustomizedTextCount = customizedTextDao.getCustomizedText().size();
 		
 		// add a message
 		customizedTextDao.addOrUpdateCustomizedText("testold", "testnew");
@@ -114,14 +106,13 @@ public class CustomizedTextDaoHibernateIntegrationTest extends MifosIntegrationT
 		// remove the message
 		customizedTextDao.removeCustomizedText("testold");
 		
-		// check that we end up empty
-		assertThat(customizedTextDao.getCustomizedText().isEmpty(), is(true));		
+		// check that we end up with what we started with
+		assertThat(customizedTextDao.getCustomizedText().size(), is(initialCustomizedTextCount));		
 	}
 	
 	@Test
 	public void shouldUpdateCustomizedText() {
-		// we should start out empty
-		assertThat(customizedTextDao.getCustomizedText().isEmpty(), is(true));
+		int initialCustomizedTextCount = customizedTextDao.getCustomizedText().size();
 		
 		// add a message
 		customizedTextDao.addOrUpdateCustomizedText("testold", "testnew");
@@ -141,8 +132,8 @@ public class CustomizedTextDaoHibernateIntegrationTest extends MifosIntegrationT
 		// remove the message
 		customizedTextDao.removeCustomizedText("testold");
 		
-		// check that we end up empty
-		assertThat(customizedTextDao.getCustomizedText().isEmpty(), is(true));		
+		// check that we end up with what we started with
+		assertThat(customizedTextDao.getCustomizedText().size(), is(initialCustomizedTextCount));		
 	}	
 	
 }
