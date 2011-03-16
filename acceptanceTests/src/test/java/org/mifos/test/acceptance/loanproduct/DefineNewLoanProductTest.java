@@ -23,7 +23,6 @@ package org.mifos.test.acceptance.loanproduct;
 
 import org.joda.time.DateTime;
 import org.junit.Assert;
-import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
@@ -44,9 +43,6 @@ import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.loan.QuestionGroupHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
-import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -55,24 +51,17 @@ import org.testng.annotations.Test;
 import java.util.Random;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(sequential = true, groups = { "loanproduct", "acceptance"})
+@Test(singleThreaded = true, groups = {"loanproduct", "acceptance", "no_db_unit"})
 public class DefineNewLoanProductTest extends UiTestCaseBase {
 
     private Random random;
     private QuestionGroupHelper questionGroupHelper;
-    @Autowired
-    private DriverManagerDataSource dataSource;
-    @Autowired
-    private DbUnitUtilities dbUnitUtilities;
-    @Autowired
-    private InitializeApplicationRemoteTestingService initRemote;
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     @BeforeMethod
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        selenium.windowMaximize();
         questionGroupHelper = new QuestionGroupHelper(new NavigationHelper(selenium));
         random = new Random();
     }
@@ -86,12 +75,12 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
     public void createWeeklyLoanProduct() throws Exception {
         SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
         new NavigationHelper(selenium).navigateToAdminPage().
-        verifyPage().
-        defineLoanProduct(formParameters);
+                verifyPage().
+                defineLoanProduct(formParameters);
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    public void createWeeklyLoanProductWithQuestionGroups()throws Exception {
+    public void createWeeklyLoanProductWithQuestionGroups() throws Exception {
         String questionGroupTitle = "QG1" + random.nextInt(100);
         String question1 = "DT_" + random.nextInt(100);
         String question2 = "SS_" + random.nextInt(100);
@@ -99,7 +88,7 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
 
         SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParametersWithQuestionGroups(questionGroupTitle);
         new NavigationHelper(selenium).navigateToAdminPage().
-        verifyPage().defineLoanProduct(formParameters);
+                verifyPage().defineLoanProduct(formParameters);
 
     }
 
@@ -107,15 +96,15 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
     public void createMonthlyLoanProduct() throws Exception {
         SubmitFormParameters formParameters = FormParametersHelper.getMonthlyLoanProductParameters();
         new NavigationHelper(selenium).navigateToAdminPage().
-        verifyPage().defineLoanProduct(formParameters);
+                verifyPage().defineLoanProduct(formParameters);
     }
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     //http://mifosforge.jira.com/browse/MIFOSTEST-710
-    public void verifyWaiveInterestForLoanAccount() throws Exception{
+    public void verifyWaiveInterestForLoanAccount() throws Exception {
         //Given
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime systemDateTime = new DateTime(2009,2,7,12,0,0,0);
+        DateTime systemDateTime = new DateTime(2011, 3, 7, 12, 0, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(systemDateTime);
         //When
         DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
@@ -146,7 +135,7 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
 
         //When
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
-        searchParameters.setSearchString("Stu1232993852651 Client1232993852651");
+        searchParameters.setSearchString("WeeklyClient Monday");
         searchParameters.setLoanProduct(formParameters.getOfferingName());
 
         LoanTestHelper loanTestHelper = new LoanTestHelper(selenium);
@@ -159,8 +148,8 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
         disburseParameters.setPaymentType(PaymentParameters.CASH);
 
         loanAccountPage.navigateToDisburseLoan()
-        .submitAndNavigateToDisburseLoanConfirmationPage(disburseParameters)
-        .submitAndNavigateToLoanAccountPage();
+                .submitAndNavigateToDisburseLoanConfirmationPage(disburseParameters)
+                .submitAndNavigateToLoanAccountPage();
 
         RepayLoanPage repayLoanPage = loanAccountPage.navigateToRepayLoan();
         //Then
@@ -183,11 +172,11 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
         //Then
         loanAccountPage.verifyStatus("Closed- Obligation met");
         String[][] accountSummaryTable = {{"", "Original Loan", "Amount paid", "Loan balance"},
-            {"Principal", "2500.0", "2500.0", "0.0"},
-            {"Interest", "9.1", "9.1", "0.0"},
-            {"Fees", "0.0", "0.0", "0.0"},
-            {"Penalty", "0.0", "0.0", "0.0"},
-            {"Total", "2509.1", "2509.1", "0.0"}};
+                {"Principal", "2500.0", "2500.0", "0.0"},
+                {"Interest", "9.1", "9.1", "0.0"},
+                {"Fees", "0.0", "0.0", "0.0"},
+                {"Penalty", "0.0", "0.0", "0.0"},
+                {"Total", "2509.1", "2509.1", "0.0"}};
         loanAccountPage.verifyAccountSummary(accountSummaryTable);
         loanAccountPage.navigateToAccountActivityPage();
         Assert.assertEquals("Loan Repayment", selenium.getTable("accountActivityTable.2.1").trim());

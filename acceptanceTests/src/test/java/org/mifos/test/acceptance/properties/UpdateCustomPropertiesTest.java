@@ -55,7 +55,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"acceptance","ui", "properties", "no_db_unit"})
+@Test(singleThreaded = true, groups={"acceptance","ui", "properties", "no_db_unit"})
 public class UpdateCustomPropertiesTest extends UiTestCaseBase {
     NavigationHelper navigationHelper;
     CustomPropertiesHelper propertiesHelper;
@@ -243,7 +243,7 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
         GroupViewDetailsPage groupViewDetailsPage = groupTestHelper.createNewGroupWithoutPendingForApproval("Default Center" , groupParams);
         //Then
         groupViewDetailsPage.verifyStatus("Active");
-
+        propertiesHelper.setGroupPendingApprovalStateEnabled("true");
     }
 
     //http://mifosforge.jira.com/browse/MIFOSTEST-86

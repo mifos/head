@@ -29,7 +29,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(sequential = true, groups = {"admin", "acceptance", "ui", "smoke", "no_db_unit"})
+@Test(singleThreaded = true, groups = {"admin", "acceptance", "ui", "smoke", "no_db_unit"})
 public class DefineAndViewOfficeTest extends UiTestCaseBase {
 
     private OfficeHelper officeHelper;

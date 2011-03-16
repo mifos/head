@@ -20,9 +20,7 @@
 
 package org.mifos.test.acceptance.framework.testhelpers;
 
-import java.util.List;
-import java.util.Map;
-
+import com.thoughtworks.selenium.Selenium;
 import org.mifos.test.acceptance.framework.account.EditAccountStatusParameters;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.center.CenterViewDetailsPage;
@@ -30,6 +28,7 @@ import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
 import org.mifos.test.acceptance.framework.loan.AttachSurveyPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
+import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 import org.mifos.test.acceptance.framework.office.CreateOfficePreviewDataPage;
@@ -43,18 +42,17 @@ import org.mifos.test.acceptance.framework.questionnaire.EditQuestionGroupPage;
 import org.mifos.test.acceptance.framework.questionnaire.EditQuestionPage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionDetailPage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionGroupDetailPage;
-import org.mifos.test.acceptance.framework.questionnaire.ViewQuestionResponseDetailPage;
-
-import com.thoughtworks.selenium.Selenium;
-
-import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionGroupResponsePage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionnairePage;
 import org.mifos.test.acceptance.framework.questionnaire.ViewAllQuestionGroupsPage;
 import org.mifos.test.acceptance.framework.questionnaire.ViewAllQuestionsPage;
+import org.mifos.test.acceptance.framework.questionnaire.ViewQuestionResponseDetailPage;
 import org.mifos.test.acceptance.framework.savings.SavingsAccountDetailPage;
 import org.testng.Assert;
+
+import java.util.List;
+import java.util.Map;
 
 public class QuestionGroupTestHelper {
 
@@ -384,11 +382,11 @@ public class QuestionGroupTestHelper {
     }
 
     public OfficeViewDetailsPage createOfficeWithQuestionGroup(QuestionResponsePage questionResponsePage,
-            QuestionResponseParameters responseParameters, QuestionResponseParameters responseParameters2) {
-        questionResponsePage.populateAnswers(responseParameters);
+            QuestionResponseParameters initialResponse, QuestionResponseParameters updatedResponse) {
+        questionResponsePage.populateAnswers(initialResponse);
         CreateOfficePreviewDataPage createOfficePreviewDataPage = questionResponsePage.navigateToNextPageAndReturnPage();
         QuestionResponsePage questionResponsePage2 = createOfficePreviewDataPage.editAdditionalInformation();
-        questionResponsePage2.populateAnswers(responseParameters2);
+        questionResponsePage2.populateAnswers(updatedResponse);
         createOfficePreviewDataPage = questionResponsePage2.navigateToNextPageAndReturnPage();
         return createOfficePreviewDataPage.submit().navigateToOfficeViewDetailsPage();
     }

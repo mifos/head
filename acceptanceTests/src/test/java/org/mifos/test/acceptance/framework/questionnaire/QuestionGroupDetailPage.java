@@ -92,7 +92,7 @@ public class QuestionGroupDetailPage extends MifosPage {
 
     public void verifyOrderQuestions(List<String> questions, int maxRowCount) {
         for(int i=1;i<maxRowCount;i++) {
-            Assert.assertEquals(selenium.getTable("sections.table.Sec 1."+i+".0"),questions.get(i-1));
+            Assert.assertEquals(selenium.getTable("sections.table.Misc."+i+".0"),questions.get(i-1));
         }
     }
 

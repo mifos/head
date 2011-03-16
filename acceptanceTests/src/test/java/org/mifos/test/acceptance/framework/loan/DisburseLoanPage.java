@@ -64,6 +64,7 @@ public class DisburseLoanPage extends MifosPage {
     }
 
     private void submit() {
+        selenium.fireEvent("transactionDateMM", "blur");
         selenium.click("DisburseLoan.button.reviewTransaction");
         waitForPageToLoad();
     }

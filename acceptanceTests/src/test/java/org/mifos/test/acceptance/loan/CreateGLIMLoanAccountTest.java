@@ -44,7 +44,7 @@ import java.sql.SQLException;
 
 @SuppressWarnings("PMD")
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(sequential = true, groups = {"loan", "acceptance", "ui", "no_db_unit"})
+@Test(singleThreaded = true, groups = {"loan", "acceptance", "ui", "no_db_unit"})
 public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
 
     private LoanTestHelper loanTestHelper;

@@ -20,12 +20,8 @@
 
 package org.mifos.test.acceptance.collectionsheet;
 
-import java.io.UnsupportedEncodingException;
-
 import junit.framework.Assert;
-
 import org.joda.time.DateTime;
-import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntryEnterDataPage;
@@ -34,32 +30,20 @@ import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntryS
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntrySelectPage.SubmitFormParameters;
 import org.mifos.test.acceptance.framework.testhelpers.CollectionSheetEntryTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
-import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.io.UnsupportedEncodingException;
+
 @edu.umd.cs.findbugs.annotations.SuppressWarnings("CPD")
-@ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"collectionsheet","acceptance","ui"})
+@ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
+@Test(singleThreaded = true, groups = {"collectionsheet", "acceptance", "ui", "no_db_unit"})
 public class CollectionSheetEntrySimpleTest extends UiTestCaseBase {
 
-
     private static final String VALID_RECEIPT_DAY = "4";
-
     private static final String VALID_TRANSACTION_DAY = "7";
-
-    @Autowired
-    private DriverManagerDataSource dataSource;
-
-    @Autowired
-    private DbUnitUtilities dbUnitUtilities;
-
-    @Autowired
-    private InitializeApplicationRemoteTestingService initRemote;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
@@ -84,33 +68,29 @@ public class CollectionSheetEntrySimpleTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     private void checkForValueObjectConversionErrorWhenEnteringInvalidDate(SubmitFormParameters invalidFormParameters,
-            SubmitFormParameters validFormParameters) throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml", dataSource, selenium);
+                                                                           SubmitFormParameters validFormParameters) throws Exception {
         CollectionSheetEntrySelectPage selectPage =
-            new CollectionSheetEntryTestHelper(selenium).loginAndNavigateToCollectionSheetEntrySelectPage();
+                new CollectionSheetEntryTestHelper(selenium).loginAndNavigateToCollectionSheetEntrySelectPage();
         selectPage.verifyPage();
-
         boolean onlyTypeIfFieldIsEmpty = true;
         boolean waitForPageToLoad = true;
         selectPage.submitAndGotoCollectionSheetEntryEnterDataPageWithoutVerifyingPage(invalidFormParameters, onlyTypeIfFieldIsEmpty, waitForPageToLoad);
         CollectionSheetEntrySelectPage collectionSheetEntrySelectPageWithError = new CollectionSheetEntrySelectPage(selenium);
         collectionSheetEntrySelectPageWithError.verifyPage();
         Assert.assertTrue(collectionSheetEntrySelectPageWithError.isErrorMessageDisplayed());
-
         onlyTypeIfFieldIsEmpty = false;
         waitForPageToLoad = false;
         CollectionSheetEntryEnterDataPage enterDataPage =
-            collectionSheetEntrySelectPageWithError.submitAndGotoCollectionSheetEntryEnterDataPage(validFormParameters, onlyTypeIfFieldIsEmpty, waitForPageToLoad);
+                collectionSheetEntrySelectPageWithError.submitAndGotoCollectionSheetEntryEnterDataPage(validFormParameters, onlyTypeIfFieldIsEmpty, waitForPageToLoad);
         enterDataPage.verifyPage();
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    @Test(enabled=false) // TODO js - temporarily disabled broken test
+    @Test(enabled = false) // TODO js - temporarily disabled broken test
     public void checkThatPreviewEditButtonWorks() throws Exception {
         SubmitFormParameters formParameters = getFormParameters();
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml", dataSource, selenium);
         CollectionSheetEntrySelectPage selectPage =
-            new CollectionSheetEntryTestHelper(selenium).loginAndNavigateToCollectionSheetEntrySelectPage();
+                new CollectionSheetEntryTestHelper(selenium).loginAndNavigateToCollectionSheetEntrySelectPage();
         selectPage.verifyPage();
         CollectionSheetEntryEnterDataPage enterDataPage = selectPage.submitAndGotoCollectionSheetEntryEnterDataPage(formParameters);
         enterDataPage.verifyPage();
@@ -126,14 +106,14 @@ public class CollectionSheetEntrySimpleTest extends UiTestCaseBase {
     }
 
     private SubmitFormParameters getFormParameters() {
-        return getFormParameters(VALID_RECEIPT_DAY,VALID_TRANSACTION_DAY);
+        return getFormParameters(VALID_RECEIPT_DAY, VALID_TRANSACTION_DAY);
     }
 
     private SubmitFormParameters getFormParameters(String receiptDay, String transactionDay) {
         SubmitFormParameters formParameters = new SubmitFormParameters();
-        formParameters.setBranch("Office1");
-        formParameters.setLoanOfficer("Bagonza Wilson");
-        formParameters.setCenter("Center1");
+        formParameters.setBranch("branch1");
+        formParameters.setLoanOfficer("loanofficer branch1");
+        formParameters.setCenter("branch1 center");
         formParameters.setPaymentMode("Cash");
         formParameters.setReceiptDay(receiptDay);
         formParameters.setReceiptMonth("11");
@@ -146,7 +126,7 @@ public class CollectionSheetEntrySimpleTest extends UiTestCaseBase {
 
     private void setSystemDate() throws UnsupportedEncodingException {
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = new DateTime(2009,2,23,2,0,0,0);
+        DateTime targetTime = new DateTime(2009, 2, 23, 2, 0, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
     }
 

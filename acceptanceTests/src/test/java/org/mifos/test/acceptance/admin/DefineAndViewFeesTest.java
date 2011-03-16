@@ -11,7 +11,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(sequential = true, groups = {"smoke", "fees", "acceptance", "no_db_unit"})
+@Test(singleThreaded = true, groups = {"smoke", "fees", "acceptance", "no_db_unit"})
 public class DefineAndViewFeesTest extends UiTestCaseBase {
 
     private FeesHelper feesHelper;

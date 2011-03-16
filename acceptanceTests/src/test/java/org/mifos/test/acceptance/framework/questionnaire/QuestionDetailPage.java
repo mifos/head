@@ -79,7 +79,7 @@ public class QuestionDetailPage extends MifosPage {
         }
     }
 
-    void assertForNumericDetails(String type, int numericMin, int numericMax) {
+    public void assertForNumericDetails(String type, int numericMin, int numericMax) {
         if ("Number".equals(type)) {
             Assert.assertTrue(selenium.isTextPresent("Minimum value: " + numericMin));
             Assert.assertTrue(selenium.isTextPresent("Maximum value: " + numericMax));
@@ -89,7 +89,7 @@ public class QuestionDetailPage extends MifosPage {
         }
     }
 
-    void verifyQuestionTitle(String type, String title) {
+    public void verifyQuestionTitle(String type, String title) {
         Assert.assertTrue(selenium.isTextPresent("Question: " + title + type), "Title is missing");
         Assert.assertTrue(selenium.isTextPresent("Answer Type: " + type), "Answer type is missing");
     }

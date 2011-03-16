@@ -36,7 +36,7 @@ import org.testng.annotations.Test;
  */
 @SuppressWarnings("PMD")
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"user","acceptance","ui", "no_db_unit"})
+@Test(singleThreaded = true, groups={"user","acceptance","ui", "no_db_unit"})
 public class DefaultAdminUserCanLoginTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;

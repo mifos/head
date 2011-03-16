@@ -31,7 +31,7 @@ import org.testng.annotations.Test;
 
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"acceptance","ui","no_db_unit"})
+@Test(singleThreaded = true, groups = {"acceptance","ui","no_db_unit"})
 public class ViewProductCategoriesTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;

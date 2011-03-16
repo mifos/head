@@ -20,44 +20,24 @@
 
 package org.mifos.test.acceptance.savings;
 
-import org.dbunit.DatabaseUnitException;
 import org.joda.time.DateTime;
-import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.loan.AccountNotesPage;
 import org.mifos.test.acceptance.framework.savings.SavingsAccountDetailPage;
 import org.mifos.test.acceptance.framework.testhelpers.SavingsAccountHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
-import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.sql.SQLException;
-
-@ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"savings","acceptance","ui"})
+@ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
+@Test(singleThreaded = true, groups = {"savings", "acceptance", "ui", "no_db_unit"})
 public class SavingsAccountAddNoteTest extends UiTestCaseBase {
 
     private SavingsAccountHelper savingsAccountHelper;
-
-
-    @Autowired
-    private DriverManagerDataSource dataSource;
-    @Autowired
-    private DbUnitUtilities dbUnitUtilities;
-    @Autowired
-    private InitializeApplicationRemoteTestingService initRemote;
-
-    private static final String startDataSet = "acceptance_small_008_dbunit.xml";
-
-    private static final String TEST_ACCOUNT = "000100000000015";
+    private static final String TEST_ACCOUNT = "000100000000002";
     private static final String TEST_ACCOUNT_NOTE = "Acceptance Test note for SavingsAccountAddNoteTest";
 
     @Override
@@ -65,12 +45,10 @@ public class SavingsAccountAddNoteTest extends UiTestCaseBase {
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
-
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = new DateTime(2009,9,9,8,0,0,0);
+        DateTime targetTime = new DateTime(2009, 9, 9, 8, 0, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
         savingsAccountHelper = new SavingsAccountHelper(selenium);
-
     }
 
     @AfterMethod
@@ -79,31 +57,11 @@ public class SavingsAccountAddNoteTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    public void addNoteToSavingsAccountAndVerifyRecentNotes() throws Exception {
-        initData();
-        SavingsAccountDetailPage savingsAccountDetailPage = savingsAccountHelper.addNoteToSavingsAccount(TEST_ACCOUNT, TEST_ACCOUNT_NOTE);
-        savingsAccountDetailPage.verifyPage();
-        assertTextFoundOnPage(TEST_ACCOUNT_NOTE);
-    }
-
-    /**
-     * FIXME - KEITHW - see http://mifosforge.jira.com/browse/MIFOS-4734
-     */
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    @Test(enabled=false)
-    public void addNoteToSavingsAccountAndVerifyAllNotes() throws Exception {
-        initData();
-
+    public void addNoteToSavingsAccountAndVerifyRecentNotesAndAllNotes() throws Exception {
         SavingsAccountDetailPage savingsAccountDetailPage = savingsAccountHelper.addNoteToSavingsAccount(TEST_ACCOUNT, TEST_ACCOUNT_NOTE);
         savingsAccountDetailPage.verifyPage();
         AccountNotesPage accountNotesPage = savingsAccountDetailPage.navigateToAccountNotesPage();
         accountNotesPage.verifyPage();
         assertTextFoundOnPage(TEST_ACCOUNT_NOTE);
     }
-
-    private void initData() throws DatabaseUnitException, SQLException, IOException, URISyntaxException {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, startDataSet, dataSource, selenium);
-    }
-
-
 }

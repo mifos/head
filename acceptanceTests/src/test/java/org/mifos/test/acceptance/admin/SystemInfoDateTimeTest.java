@@ -37,7 +37,7 @@ import java.io.UnsupportedEncodingException;
 
 @SuppressWarnings("PMD")
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"admin", "acceptance","ui","no_db_unit"})
+@Test(singleThreaded = true, groups = {"admin", "acceptance","ui","no_db_unit"})
 public class SystemInfoDateTimeTest extends UiTestCaseBase {
 
     private AdminTestHelper adminTestHelper;
@@ -69,13 +69,10 @@ public class SystemInfoDateTimeTest extends UiTestCaseBase {
         DateTime targetTime = new DateTime(2008,1,1,0,0,0,0);
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
 
-        SystemInfoPage systemInfoPage = adminTestHelper.navigateToSystemInfoPage();
-        systemInfoPage.verifyDateTime(new DateTime());
-
         TimeMachinePage timeMachinePage = dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
         timeMachinePage.verifySuccess(targetTime);
 
-        systemInfoPage = adminTestHelper.navigateToSystemInfoPage();
+        SystemInfoPage systemInfoPage = adminTestHelper.navigateToSystemInfoPage();
         systemInfoPage.verifyDateTime(targetTime);
     }
 

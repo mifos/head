@@ -34,7 +34,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(groups = {"admin", "acceptance","ui", "no_db_unit"})
+@Test(singleThreaded = true, groups = {"admin", "acceptance","ui", "no_db_unit"})
 public class AccountingIntegrationTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;
