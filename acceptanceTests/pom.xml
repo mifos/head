@@ -307,12 +307,6 @@
                     <runOrder>alphabetical</runOrder>
                     <testFailureIgnore>true</testFailureIgnore>
                     <skip>true</skip>
-                    <properties>
-                      <property>
-                        <name>listener</name>
-                        <value>org.mifos.test.acceptance.framework.ScreenShotListener</value>
-                      </property>
-                    </properties>
                     <systemProperties>
                         <property>
                             <name>browser</name>
@@ -341,6 +335,12 @@
                             <skip>${maven.test.skip}</skip>
                             <failIfNoTests>false</failIfNoTests>
                             <reportsDirectory>${project.build.directory}/surefire-reports/integration/no_db_unit</reportsDirectory>
+                            <properties>
+                                <property>
+                                    <name>listener</name>
+                                    <value>org.mifos.test.acceptance.framework.ScreenShotListener</value>
+                                </property>
+                            </properties>
                         </configuration>
                     </execution>
                     <execution>
@@ -355,6 +355,12 @@
                             <skip>${maven.test.skip}</skip>
                             <failIfNoTests>false</failIfNoTests>
                             <reportsDirectory>${project.build.directory}/surefire-reports/integration/db_unit</reportsDirectory>
+                            <properties>
+                                <property>
+                                    <name>listener</name>
+                                    <value>org.mifos.test.acceptance.framework.ScreenShotListener</value>
+                                </property>
+                            </properties>
                         </configuration>
                     </execution>
                 </executions>
