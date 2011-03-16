@@ -99,7 +99,7 @@ public class VariableInstalmentLoanProductTest extends UiTestCaseBase {
                 .clickContinue().
                 clickPreviewAndGoToReviewLoanAccountPage()
                 .verifyEditScheduleDisabled();
-
+        applicationDatabaseOperation.updateLSIM(0);
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
@@ -110,6 +110,7 @@ public class VariableInstalmentLoanProductTest extends UiTestCaseBase {
         loanProductName = formParameters.getOfferingName();
         createAndValidateLoanProductWithVariableInstalment("","1","",formParameters);
         navigateToCreateNewLoanPageAndValidateInstallmentSummary("","1","");
+        applicationDatabaseOperation.updateLSIM(0);
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
@@ -120,6 +121,7 @@ public class VariableInstalmentLoanProductTest extends UiTestCaseBase {
         loanProductName = formParameters.getOfferingName();
         createAndValidateLoanProductWithVariableInstalment("60", "1", "100.5", formParameters);
         navigateToCreateNewLoanPageAndValidateInstallmentSummary("60", "1", "100.5");
+        applicationDatabaseOperation.updateLSIM(0);
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
@@ -138,6 +140,7 @@ public class VariableInstalmentLoanProductTest extends UiTestCaseBase {
                 verifyVariableInstalmentOptionsFields().
                 verifyBlockedInterestTypes().
                 verifyFeeTypesBlocked(new String[]{periodicFees, fixedFeePerAmountAndInterest, fixedFeePerInterest});
+            applicationDatabaseOperation.updateLSIM(0);
     }
 
     private void createAndValidateLoanProductWithVariableInstalment(String maxGap, String minGap, String minInstalmentAmount, DefineNewLoanProductPage.SubmitFormParameters formParameters) {

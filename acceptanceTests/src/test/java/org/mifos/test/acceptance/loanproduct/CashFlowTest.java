@@ -96,6 +96,7 @@ public class CashFlowTest extends UiTestCaseBase {
                 navigateToCreateLoanAccountEntryPageWithoutLogout(clientName, loanProductName).
                 clickContinue().
                 verifyPage("SchedulePreview");
+        applicationDatabaseOperation.updateLSIM(0);
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
@@ -137,6 +138,7 @@ public class CashFlowTest extends UiTestCaseBase {
         DateTime disbursalDate = systemDateTime.plusDays(1);
         int installment = 3;
         verifyNegativeAndZeroCashFlow(formParameters, warningThreshold, disbursalDate, installment);
+        applicationDatabaseOperation.updateLSIM(0);
     }
 
     /**
@@ -151,6 +153,7 @@ public class CashFlowTest extends UiTestCaseBase {
         createAndValidateLoanProductWithCashFlow("89.99", formParameters, "49.99", minRC, true);
         validateCashFlowForLoanAccount(formParameters, minRC, "998.34");
         verifyRepaymentCapacityOnValidate(formParameters, minRC, "998.34");
+        applicationDatabaseOperation.updateLSIM(0);
     }
 
     /**
