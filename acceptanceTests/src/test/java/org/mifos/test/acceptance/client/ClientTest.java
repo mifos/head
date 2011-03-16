@@ -505,6 +505,7 @@ public class ClientTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+
     public void createClientWithCorrectAgeTest() throws Exception {
         propertiesHelper.setMinimumAgeForClients(18);
         propertiesHelper.setMaximumAgeForClients(60);
@@ -782,8 +783,7 @@ public class ClientTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-35
-    @Test(enabled = false)
-    // TODO js - temporarily disabled broken test
+    @Test(enabled = false) //blocked by MIFOS-4858
     public void addingMemeberToGroupWithDiffrentStatuses() throws Exception {
         String groupName = "testGroup";
         String clientName = "test";
