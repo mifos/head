@@ -23,10 +23,14 @@
    <!--  Main Content Begins-->
   <div class=" content">
   <span id="page.id" title="customizeMessages"></span>
-  [@mifos.crumbs breadcrumbs/]
+    [@mifos.flowCrumbs breadcrumbs/]
 
 <form action="${flowExecutionUrl}" method="post" class="two-columns">
 <div class="fontBold"><span class="orangeheading">[@spring.message "customizeTextAdd.title"/]</span></div>
+	<div>[@spring.message "customizeTextAdd.instructions" /]</div>
+	&nbsp;		
+	<div>[@spring.message "customizeTextAddEdit.example" /]</div>
+    <div><span class="red">* </span>[@spring.message "fieldsmarkedwithanasteriskarerequired" /] </div>
     <fieldset>
     <div class="row">
         [@form.label "Old Message" true /][@spring.message "customizeTextAdd.addMessage.originalText"/]
@@ -38,7 +42,7 @@
     </div>
     </fieldset>
     <div class="row webflow-controls">
-        [@form.submitButton label="widget.form.buttonLabel.add" id="addcustommessage.button.add" webflowEvent="add" /]
+        [@form.submitButton label="widget.form.buttonLabel.submit" id="addcustommessage.button.add" webflowEvent="add" /]
         [@form.cancelButton label="widget.form.buttonLabel.cancel" webflowEvent="cancel" /]
     </div>
 </form>

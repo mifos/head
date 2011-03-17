@@ -42,6 +42,11 @@ public class CustomizedTextFormBean implements Serializable {
     @Autowired
     private transient MifosBeanValidator validator;
 
+    public void clear() {
+    	originalText = "";
+    	customText = "";
+    }
+    
     public void setValidator(MifosBeanValidator validator) {
         this.validator = validator;
     }

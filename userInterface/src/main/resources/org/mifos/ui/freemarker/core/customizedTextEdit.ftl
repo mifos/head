@@ -23,9 +23,13 @@
    <!--  Main Content Begins-->
   <div class=" content">
   <span id="page.id" title="customizeMessages"></span>
-  [@mifos.crumbs breadcrumbs/]
+    [@mifos.flowCrumbs breadcrumbs/]
 <form action="${flowExecutionUrl}" method="post" class="two-columns">
-<div class="fontBold"><span class="orangeheading">[@spring.message "customizeTextEdit.title"/]</span></div>
+	<div class="fontBold"><span class="orangeheading">[@spring.message "customizeTextEdit.title"/]</span></div>
+	<div>[@spring.message "customizeTextEdit.instructions" /]</div>
+	&nbsp;
+	<div>[@spring.message "customizeTextAddEdit.example" /]</div>
+    <div><span class="red">* </span>[@spring.message "fieldsmarkedwithanasteriskarerequired" /] </div>
     <fieldset>
     <div class="row">
         [@form.label "Old Message" true /][@spring.message "customizeTextAdd.addMessage.originalText"/]

@@ -44,16 +44,27 @@ public class CustomizeTextController {
     public CustomizeTextController(final CustomizedTextServiceFacade customizedTextServiceFacade) {
         this.customizedTextServiceFacade = customizedTextServiceFacade;
     }
-/*
-    @ModelAttribute("breadcrumbs")
-    public List<BreadCrumbsLinks> showBreadCrumbs() {
-        return new AdminBreadcrumbBuilder().withLink("admin.customizeMessages", "customizeMessages.ftl").build();
-    }
-    */
-    @ModelAttribute("breadcrumbs")
-    public List<BreadCrumbsLinks> showBreadCrumbs() {
-        return new AdminBreadcrumbBuilder().withLink("customizeTextView.customizedTextList", "viewCustomMessages.ftl").build();
+
+    public List<BreadCrumbsLinks> showBreadCrumbsForView() {
+        return new AdminBreadcrumbBuilder().withLink("customizeTextView.customizedTextList", "unused")
+        	.withAdminLink("done")
+        	.build();
     }    
+    
+    public List<BreadCrumbsLinks> showBreadCrumbsForAdd() {
+        return new AdminBreadcrumbBuilder()
+        .withLink("customizeTextView.customizedTextList", "cancel")
+        .withLink("customizeTextAdd.title", "unused")
+    	.withAdminLink("done")
+    	.build();
+   }
+
+    public List<BreadCrumbsLinks> showBreadCrumbsForEdit() {
+        return new AdminBreadcrumbBuilder()
+        .withLink("customizeTextView.customizedTextList", "cancel")
+        .withLink("customizeTextEdit.title", "unused")
+    	.withAdminLink("done")
+    	.build();    }
     
     public Map<String,String> retrieveCustomMessages() {
     	return customizedTextServiceFacade.retrieveCustomizedText();

@@ -23,19 +23,23 @@
    <!--  Main Content Begins-->
   <div class=" content">
   <span id="page.id" title="customizeMessages"></span>
-    [@mifos.crumbs breadcrumbs/]
+    [@mifos.flowCrumbs breadcrumbs/]
     
-<form action="${flowExecutionUrl}" method="post" class="one-column">
+<form action="${flowExecutionUrl}" method="post" class="two-column">
 <div class="fontBold"><span class="orangeheading">[@spring.message "customizeTextView.customizedTextList"/]</span></div>
-
-    [@form.singleSelectWithPrompt path="customizedTextSelectFormBean.message" options=customizedTextMap selectPrompt="" attributes="size=10, style=width:200px;"/]
-    
+	<div>[@spring.message "customizeTextView.instructions" /]</div>
+	&nbsp;
+	<center>
+    <div class="row">	
+    [@form.singleSelectWithPrompt path="customizedTextSelectFormBean.message" options=customizedTextMap selectPrompt="" attributes="size=12, style=width:300px;"/]
+    </div>
     <div class="row">
         [@form.submitButton label="widget.form.buttonLabel.add" webflowEvent="add" /]
-        [@form.submitButton label="widget.form.buttonLabel.remove" webflowEvent="remove" /]
         [@form.submitButton label="widget.form.buttonLabel.edit" webflowEvent="edit" /]                
+        [@form.submitButton label="widget.form.buttonLabel.remove" webflowEvent="remove" /]
         [@form.cancelButton label="widget.form.buttonLabel.done" webflowEvent="done"  /]
     </div>
+    </center>
 </form>
   </div>
   <!--Main content ends-->
