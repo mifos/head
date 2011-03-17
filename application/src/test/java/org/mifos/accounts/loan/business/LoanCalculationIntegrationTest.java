@@ -92,6 +92,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.util.ResourceUtils;
 
 /*
@@ -129,7 +130,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     final String feeTypePrincipal = "Principal";
     final String feeTypeValue = "Value";
     final String account999 = "Account 999";
-    String rootPath = "org/mifos/accounts/loan/business/testCaseData/";
+    final String rootPath = "org/mifos/accounts/loan/business/testCaseData/";
 
     // TODO: probably should be of type LoanBO
     protected AccountBO accountBO = null;
@@ -185,7 +186,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     /****************************************************************************/
     /****************************************************************************/
 
-    private void runOne999AccountTestCaseWithDataFromSpreadSheetForLastPaymentReversal(String fileName,
+    private void runOne999AccountTestCaseWithDataFromSpreadSheetForLastPaymentReversal(Resource fileName,
             int expected999AccountTransactions, int paymentToReverse, boolean payLastPayment)
             throws Exception {
 
@@ -227,7 +228,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    private void runOne999AccountTestCaseWithDataFromSpreadSheetForLoanReversal(String fileName,
+    private void runOne999AccountTestCaseWithDataFromSpreadSheetForLoanReversal(Resource fileName,
             int expected999AccountTransactions, int paymentToReverse, boolean payLastPayment)
             throws Exception {
 
@@ -342,27 +343,21 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    private void runOneLoanScheduleGenerationForLastPaymentReversal(String fileName) throws Exception
-
+    private void runOneLoanScheduleGenerationForLastPaymentReversal(Resource fileName) throws Exception
     {
-
         LoanTestCaseData testCaseData = loadSpreadSheetData(fileName);
         InternalConfiguration config = testCaseData.getInternalConfig();
         LoanParameters loanParams = testCaseData.getLoanParams();
         setUpLoanAndVerifyForScheduleGenerationWhenLastPaymentIsReversed(config, loanParams,
                 testCaseData.expectedResult);
-
     }
 
-    private void runOneLoanScheduleGenerationForLoanReversal(String fileName) throws Exception
-
+    private void runOneLoanScheduleGenerationForLoanReversal(Resource fileName) throws Exception
     {
-
         LoanTestCaseData testCaseData = loadSpreadSheetData(fileName);
         InternalConfiguration config = testCaseData.getInternalConfig();
         LoanParameters loanParams = testCaseData.getLoanParams();
         setUpLoanAndVerifyForScheduleGenerationWhenLoanIsReversed(config, loanParams, testCaseData.expectedResult);
-
     }
 
     private void verifyScheduleAndPaymentDetail(LoanScheduleEntity schedule, PaymentDetail payment) {
@@ -647,8 +642,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    private void run999AccountWhenLoanIsRepaid(String fileName) throws Exception {
-
+    private void run999AccountWhenLoanIsRepaid(Resource fileName) throws Exception {
         LoanTestCaseData testCaseData = loadSpreadSheetData(fileName);
         InternalConfiguration config = testCaseData.getInternalConfig();
         LoanParameters loanParams = testCaseData.getLoanParams();
@@ -657,15 +651,13 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
     @Test
     public void testDecliningInterestEPITestCases() throws Exception {
-        String rootPath = "org/mifos/accounts/loan/business/testCaseData/decliningEPI/";
-        String[] dataFileNames = getCSVFiles(rootPath);
-        for (String dataFileName : dataFileNames) {
-
-            if (fileNameContains(dataFileName, decliningEPIGraceFeeTestCases)) {
-                runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileName);
-                StaticHibernateUtil.clearSession();
-                StaticHibernateUtil.rollbackTransaction();
-            }
+        String pattern = "org/mifos/accounts/loan/business/testCaseData/decliningEPI/testcase-2008-06-27-decliningEPI-grace-fee-set1*.csv";
+        Resource[] dataFiles = MifosResourceUtil.getClassPathResourcesAsResources(pattern);
+        org.junit.Assert.assertEquals(25, dataFiles.length);
+        for (Resource dataFile : dataFiles) {
+            runOneTestCaseWithDataFromSpreadSheet(dataFile);
+            StaticHibernateUtil.clearSession();
+            StaticHibernateUtil.rollbackTransaction();
         }
     }
 
@@ -716,32 +708,27 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     }
 
     @Test
-    public void test999AccountLoansWithFees() throws NumberFormatException, PropertyNotFoundException, SystemException,
-            ApplicationException, URISyntaxException, Exception {
-        String rootPath = "org/mifos/accounts/loan/business/testCaseData/decliningInterest/";
-        String[] dataFileNames = getCSVFiles(rootPath);
-        for (String dataFileName : dataFileNames) {
-            if (dataFileName.startsWith("testcase-2008-05-13-declining-grace-fee-set1")) {
-                runOne999AccountTestCaseLoanWithFees(rootPath + dataFileName);
-                StaticHibernateUtil.clearSession();
-                StaticHibernateUtil.rollbackTransaction();
-            }
+    public void test999AccountLoansWithFees() throws Exception {
+        String pattern = "org/mifos/accounts/loan/business/testCaseData/decliningInterest/testcase-2008-05-13-declining-grace-fee-set1*.csv";
+        Resource[] dataFiles = MifosResourceUtil.getClassPathResourcesAsResources(pattern);
+        org.junit.Assert.assertEquals(25, dataFiles.length);
+        for (Resource dataFile : dataFiles) {
+            runOne999AccountTestCaseLoanWithFees(dataFile);
+            StaticHibernateUtil.clearSession();
+            StaticHibernateUtil.rollbackTransaction();
         }
     }
 
     @Test
-    public void test999AccountLoansWithFees2() throws NumberFormatException, PropertyNotFoundException,
-            SystemException, ApplicationException, URISyntaxException, Exception {
-        String rootPath = "org/mifos/accounts/loan/business/testCaseData/flatInterest/";
-        String[] dataFileNames = getCSVFiles(rootPath);
-        for (String dataFileName : dataFileNames) {
-            if (dataFileName.startsWith("testcase") && dataFileName.contains("flat-grace-fee-set")) {
-                runOne999AccountTestCaseLoanWithFees(rootPath + dataFileName);
-                StaticHibernateUtil.clearSession();
-                StaticHibernateUtil.rollbackTransaction();
-            }
+    public void test999AccountLoansWithFees2() throws Exception {
+        String pattern = "org/mifos/accounts/loan/business/testCaseData/flatInterest/testcase*flat-grace-fee-set*.csv";
+        Resource[] dataFiles = MifosResourceUtil.getClassPathResourcesAsResources(pattern);
+        org.junit.Assert.assertEquals(25, dataFiles.length);
+        for (Resource dataFile : dataFiles) {
+            runOne999AccountTestCaseLoanWithFees(dataFile);
+            StaticHibernateUtil.clearSession();
+            StaticHibernateUtil.rollbackTransaction();
         }
-
     }
 
     // verify that 999 account transactions are logged after last payment is
@@ -749,14 +736,14 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     @Test
     public void testPositive999AccountTest2LoanWithFees() throws Exception {
         String dataFileName = "account999-withfees.csv";
-        runOne999AccountTestCaseLoanWithFees(rootPath + dataFileName);
+        runOne999AccountTestCaseLoanWithFees(new ClassPathResource(rootPath + dataFileName));
     }
 
     @Test
     public void test999AccountWhenLoanIsRepaid() throws NumberFormatException, PropertyNotFoundException,
             SystemException, ApplicationException, URISyntaxException, Exception {
         String dataFileName = "account999-test3.csv";
-        run999AccountWhenLoanIsRepaid(rootPath + dataFileName);
+        run999AccountWhenLoanIsRepaid(new ClassPathResource(rootPath + dataFileName));
     }
 
     @Test
@@ -765,7 +752,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         int expected999AccountTransactions = 4;
         int paymentToReverse = 3;
         boolean payLastPayment = false;
-        runOne999AccountTestCaseWithDataFromSpreadSheetForLoanReversal(rootPath + dataFileName,
+        runOne999AccountTestCaseWithDataFromSpreadSheetForLoanReversal(new ClassPathResource(rootPath + dataFileName),
                 expected999AccountTransactions, paymentToReverse, payLastPayment);
     }
 
@@ -775,20 +762,20 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         int expected999AccountTransactions = 4;
         int paymentToReverse = 3;
         boolean payLastPayment = false;
-        runOne999AccountTestCaseWithDataFromSpreadSheetForLastPaymentReversal(rootPath + dataFileName,
+        runOne999AccountTestCaseWithDataFromSpreadSheetForLastPaymentReversal(new ClassPathResource(rootPath + dataFileName),
                 expected999AccountTransactions, paymentToReverse, payLastPayment);
     }
 
     @Test
     public void testLoanScheduleGenerationWhenLastPaymentIsReversed() throws Exception {
         String dataFileName = "account999-test3.csv";
-        runOneLoanScheduleGenerationForLastPaymentReversal(rootPath + dataFileName);
+        runOneLoanScheduleGenerationForLastPaymentReversal(new ClassPathResource(rootPath + dataFileName));
     }
 
     @Test
     public void testLoanScheduleGenerationWhenLoanIsReversed() throws Exception {
         String dataFileName = "account999-test3.csv";
-        runOneLoanScheduleGenerationForLoanReversal(rootPath + dataFileName);
+        runOneLoanScheduleGenerationForLoanReversal(new ClassPathResource(rootPath + dataFileName));
     }
 
     // verify that 999 account transactions are logged after last payment is
@@ -796,7 +783,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     @Test
     public void test999Account() throws Exception {
         String dataFileName = "account999-test2.csv";
-        runOne999AccountTestCaseWithDataFromSpreadSheet(rootPath + dataFileName);
+        runOne999AccountTestCaseWithDataFromSpreadSheet(new ClassPathResource(rootPath + dataFileName));
     }
 
     // verify that 999 account transactions are logged after last payment is
@@ -804,7 +791,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     @Test
     public void test999AccountTest1() throws Exception {
         String dataFileName = "account999-test1.csv";
-        runOne999AccountTestCaseWithDataFromSpreadSheet(rootPath + dataFileName);
+        runOne999AccountTestCaseWithDataFromSpreadSheet(new ClassPathResource(rootPath + dataFileName));
     }
 
     // no 999account should be logged in this case
@@ -814,7 +801,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         int expected999AccountTransactions = 0;
         int paymentToReverse = 2;
         boolean payLastPayment = false;
-        runOne999AccountTestCaseWithDataFromSpreadSheetForLastPaymentReversal(rootPath + dataFileName,
+        runOne999AccountTestCaseWithDataFromSpreadSheetForLastPaymentReversal(new ClassPathResource(rootPath + dataFileName),
                 expected999AccountTransactions, paymentToReverse, payLastPayment);
     }
 
@@ -825,7 +812,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         int expected999AccountTransactions = 2;
         int paymentToReverse = 2;
         boolean payLastPayment = true;
-        runOne999AccountTestCaseWithDataFromSpreadSheetForLastPaymentReversal(rootPath + dataFileName,
+        runOne999AccountTestCaseWithDataFromSpreadSheetForLastPaymentReversal(new ClassPathResource(rootPath + dataFileName),
                 expected999AccountTransactions, paymentToReverse, payLastPayment);
     }
 
@@ -963,16 +950,16 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         return loan;
     }
 
-    private void compare999Account(Money expected999Account, Money calculated999Account, String testName) {
+    private void compare999Account(Money expected999Account, Money calculated999Account, Resource dataFile) {
         if (isAllConsoleOutputEnabled()) {
-            System.out.println("Running test: " + testName);
+            System.out.println("Running test: " + dataFile);
             System.out.println("Results   (Expected : Calculated : Difference)");
             printComparison("999 Account:   ", expected999Account, calculated999Account);
         }
         Assert.assertEquals(expected999Account, calculated999Account);
     }
 
-    private void runOne999AccountTestCaseWithDataFromSpreadSheet(String fileName) throws Exception {
+    private void runOne999AccountTestCaseWithDataFromSpreadSheet(Resource fileName) throws Exception {
 
         LoanTestCaseData testCaseData = loadSpreadSheetData(fileName);
         Results calculatedResults = new Results();
@@ -1013,12 +1000,12 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    private void runOne999AccountTestCaseLoanWithFees(String fileName) throws Exception {
+    private void runOne999AccountTestCaseLoanWithFees(Resource dataFile) throws Exception {
         if (isAllConsoleOutputEnabled() || isFileNameConsoleOutputEnabled()) {
-            System.out.println("Running 999 Account Test with Fees: " + fileName);
+            System.out.println("Running 999 Account Test with Fees: " + dataFile);
         }
 
-        LoanTestCaseData testCaseData = loadSpreadSheetData(fileName);
+        LoanTestCaseData testCaseData = loadSpreadSheetData(dataFile);
         Results calculatedResults = new Results();
         InternalConfiguration config = testCaseData.getInternalConfig();
         LoanParameters loanParams = testCaseData.getLoanParams();
@@ -1042,7 +1029,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                     Money postedAmount = financialTransaction.getPostedAmount();
                     Money expected999Account = testCaseData.getExpectedResult().getAccount999();
                     if (!postedAmount.equals(removeSign(expected999Account))) {
-                        System.out.println("File name: " + fileName + " posted amount: " + postedAmount
+                        System.out.println("File name: " + dataFile + " posted amount: " + postedAmount
                                 + " expected amount: " + expected999Account);
                     }
                     Assert.assertEquals(removeSign(expected999Account), postedAmount);
@@ -1057,7 +1044,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                 }
             }
         }
-        compare999Account(testCaseData.getExpectedResult().getAccount999(), calculatedResults.getAccount999(), fileName);
+        compare999Account(testCaseData.getExpectedResult().getAccount999(), calculatedResults.getAccount999(), dataFile);
 
     }
 
@@ -1080,7 +1067,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     @Test
     public void testPositive999AccountTest2() throws Exception {
         String dataFileName = "account999-test3.csv";
-        runOne999AccountTestCaseWithDataFromSpreadSheet(rootPath + dataFileName);
+        runOne999AccountTestCaseWithDataFromSpreadSheet(new ClassPathResource(rootPath + dataFileName));
     }
 
     private void printLoanScheduleEntities(LoanScheduleEntity[] loanSchedules) {
@@ -1894,8 +1881,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    private LoanTestCaseData loadSpreadSheetData(String fileName) throws Exception {
-        FileInputStream fileInputStream = null;
+    private LoanTestCaseData loadSpreadSheetData(Resource dataFile) throws Exception {
         InputStreamReader inputStreamReader = null;
         BufferedReader bufferedReader = null;
         LoanTestCaseData testCaseData = new LoanTestCaseData();
@@ -1904,7 +1890,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         String line = null;
 
         try {
-            inputStreamReader = new InputStreamReader(MifosResourceUtil.getClassPathResourceAsStream(fileName));
+            inputStreamReader = new InputStreamReader(dataFile.getInputStream());
             bufferedReader = new BufferedReader(inputStreamReader);
 
             // dataInputStream.available() returns 0 if the file does not have
@@ -1959,7 +1945,6 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                 }
 
             }
-            fileInputStream.close();
             inputStreamReader.close();
             bufferedReader.close();
 
@@ -1974,32 +1959,22 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
      * This test case will populate the data classes for a loan test case with data from spreadsheet and calculates
      * payments and compares
      */
-    private void runOneTestCaseWithDataFromSpreadSheet(String directoryName, String fileName)
+    private void runOneTestCaseWithDataFromSpreadSheet(String rootPath, String name) throws URISyntaxException, Exception {
+        runOneTestCaseWithDataFromSpreadSheet(new ClassPathResource(rootPath + "/" + name));
+    }
+    private void runOneTestCaseWithDataFromSpreadSheet(Resource data)
             throws Exception,
             URISyntaxException {
 
         if (isAllConsoleOutputEnabled() || isFileNameConsoleOutputEnabled()) {
-            System.out.println("Running Test: " + fileName);
+            System.out.println("Running Test: " + data);
         }
-        LoanTestCaseData testCaseData = loadSpreadSheetData(directoryName + fileName);
+        LoanTestCaseData testCaseData = loadSpreadSheetData(data);
         accountBO = setUpLoan(testCaseData.getInternalConfig(), testCaseData.getLoanParams());
         // calculated results
         Results calculatedResult = calculatePayments(testCaseData.getInternalConfig(), accountBO, testCaseData
                 .getLoanParams());
-        compareResults(testCaseData.getExpectedResult(), calculatedResult, fileName);
-
-    }
-
-    private String[] getCSVFiles(String directoryPath) throws Exception {
-        File dir = MifosResourceUtil.getClassPathResource(directoryPath);
-
-        FilenameFilter filter = new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-                return name.endsWith(".csv");
-            }
-        };
-        return dir.list(filter);
+        compareResults(testCaseData.getExpectedResult(), calculatedResult, data.getFilename());
 
     }
 
@@ -2018,7 +1993,6 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
     @Test
     public void testIssue1623FromSpreadSheets() throws Exception {
-
         String rootPath = "org/mifos/accounts/loan/business/testCaseData/";
         String[] dataFileNames = { "loan-repayment-master-issue1623.csv" };
         for (String dataFileName : dataFileNames) {
@@ -2029,159 +2003,26 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
     @Test
     public void testFlatInterestTestCases() throws Exception {
-        String rootPath = "org/mifos/accounts/loan/business/testCaseData/flatInterest/";
-        String[] dataFileNames = getCSVFiles(rootPath);
-        for (String dataFileName : dataFileNames) {
-            if (
-            // dataFileNames[i].contains("set1.23")
-
-            fileNameContains(dataFileName, flatGraceFeeTestCases)
-                    || fileNameContains(dataFileName, flatNegativeLastPaymentTestCases)) {
-                runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileName);
-                StaticHibernateUtil.clearSession();
-                StaticHibernateUtil.rollbackTransaction();
-            }
+        String pattern = "org/mifos/accounts/loan/business/testCaseData/flatInterest/*.csv";
+        Resource[] dataFiles = MifosResourceUtil.getClassPathResourcesAsResources(pattern);
+        org.junit.Assert.assertEquals(25 + 3, dataFiles.length);
+        for (Resource dataFile : dataFiles) {
+            runOneTestCaseWithDataFromSpreadSheet(dataFile);
+            StaticHibernateUtil.clearSession();
+            StaticHibernateUtil.rollbackTransaction();
         }
     }
 
     @Test
     public void testDecliningInterestTestCases() throws Exception {
-        String rootPath = "org/mifos/accounts/loan/business/testCaseData/decliningInterest/";
-        String[] dataFileNames = getCSVFiles(rootPath);
-
-        for (String dataFileName : dataFileNames) {
-
-            if (fileNameContains(dataFileName, decliningGraceFeeTestCases)
-                    || fileNameContains(dataFileName, decliningNegativeLastPaymentTestCases)) {
-                runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileName);
-                StaticHibernateUtil.clearSession();
-                StaticHibernateUtil.rollbackTransaction();
-            }
+        String pattern = "org/mifos/accounts/loan/business/testCaseData/decliningInterest/*.csv";
+        Resource[] dataFiles = MifosResourceUtil.getClassPathResourcesAsResources(pattern);
+        org.junit.Assert.assertEquals(25 + 3, dataFiles.length);
+        for (Resource dataFile : dataFiles) {
+            runOneTestCaseWithDataFromSpreadSheet(dataFile);
+            StaticHibernateUtil.clearSession();
+            StaticHibernateUtil.rollbackTransaction();
         }
-    }
-
-    public void xtestAllDecliningInterestEdgeTestCases() throws Exception {
-        String rootPath = "org/mifos/accounts/loan/business/testCaseData/decliningInterestedge/";
-        String[] dataFileNames = getCSVFiles(rootPath);
-        for (String dataFileName : dataFileNames) {
-            if (dataFileName.startsWith("testcase") && fileNameContains(dataFileName, selectedCaseNumbers)) {
-                runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileName);
-            }
-        }
-    }
-
-    // marked "@Ignore" in JUnit4, so converting to xtest so it won't run in JUnit3
-    public void xtestAllFlatInterestEdgeTestCases() throws Exception {
-        String rootPath = "org/mifos/accounts/loan/business/testCaseData/flatinterestedge/";
-        String[] dataFileNames = getCSVFiles(rootPath);
-        for (String dataFileName : dataFileNames) {
-            if (dataFileName.startsWith("testcase") && fileNameContains(dataFileName, flatTestCases)) {
-                runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileName);
-            }
-        }
-    }
-
-    private final String[] flatTestCases = { "testcase-2008-05-12-flat-set1.01", "testcase-2008-05-12-flat-set1.02",
-            "testcase-2008-05-12-flat-set1.03", "testcase-2008-05-12-flat-set1.04", "testcase-2008-05-12-flat-set1.05",
-            "testcase-2008-05-12-flat-set1.06", "testcase-2008-05-12-flat-set1.07", "testcase-2008-05-12-flat-set1.08",
-            "testcase-2008-05-12-flat-set1.09", "testcase-2008-05-12-flat-set1.10", "testcase-2008-05-12-flat-set1.11",
-            "testcase-2008-05-12-flat-set1.12", "testcase-2008-05-12-flat-set1.13", "testcase-2008-05-12-flat-set1.14",
-            "testcase-2008-05-12-flat-set1.15", "testcase-2008-05-12-flat-set1.16", "testcase-2008-05-12-flat-set1.17",
-            "testcase-2008-05-12-flat-set1.18", "testcase-2008-05-12-flat-set1.19" };
-
-    private final String[] flatNegativeLastPaymentTestCases = { "testcase-2008-05-27-flat-negative-payment-set1.01.csv",
-            "testcase-2008-05-27-flat-negative-payment-set1.02.csv",
-            "testcase-2008-05-27-flat-negative-payment-set1.03.csv" };
-
-    private final String[] decliningNegativeLastPaymentTestCases = {
-            "testcase-2008-05-27-declining-negative-payment-set1.01.csv",
-            "testcase-2008-05-27-declining-negative-payment-set1.02.csv",
-            "testcase-2008-05-27-declining-negative-payment-set1.03.csv" };
-
-    private final String[] flatGraceFeeTestCases = { "testcase-2008-05-13-flat-grace-fee-set1.01",
-            "testcase-2008-05-13-flat-grace-fee-set1.02", "testcase-2008-05-13-flat-grace-fee-set1.03",
-            "testcase-2008-05-13-flat-grace-fee-set1.04", "testcase-2008-05-13-flat-grace-fee-set1.05",
-            "testcase-2008-05-13-flat-grace-fee-set1.06", "testcase-2008-05-13-flat-grace-fee-set1.07",
-            "testcase-2008-05-13-flat-grace-fee-set1.08", "testcase-2008-05-13-flat-grace-fee-set1.09",
-            "testcase-2008-05-13-flat-grace-fee-set1.10", "testcase-2008-05-13-flat-grace-fee-set1.11",
-            "testcase-2008-05-13-flat-grace-fee-set1.12", "testcase-2008-05-13-flat-grace-fee-set1.13",
-            "testcase-2008-05-13-flat-grace-fee-set1.14", "testcase-2008-05-13-flat-grace-fee-set1.15",
-            "testcase-2008-05-13-flat-grace-fee-set1.16", "testcase-2008-05-13-flat-grace-fee-set1.17",
-            "testcase-2008-05-13-flat-grace-fee-set1.18", "testcase-2008-05-13-flat-grace-fee-set1.19",
-            "testcase-2008-05-13-flat-grace-fee-set1.20", "testcase-2008-05-13-flat-grace-fee-set1.21",
-            "testcase-2008-05-13-flat-grace-fee-set1.22", "testcase-2008-05-13-flat-grace-fee-set1.23",
-            "testcase-2008-05-13-flat-grace-fee-set1.24", "testcase-2008-05-13-flat-grace-fee-set1.25",
-            "testcase-2008-05-13-flat-grace-fee-set1.26" };
-
-    private final String[] decliningEPIGraceFeeTestCases = { "testcase-2008-06-27-decliningEPI-grace-fee-set1.01",
-            "testcase-2008-06-27-decliningEPI-grace-fee-set1.02", "testcase-2008-06-27-decliningEPI-grace-fee-set1.03",
-            "testcase-2008-06-27-decliningEPI-grace-fee-set1.04", "testcase-2008-06-27-decliningEPI-grace-fee-set1.05",
-            "testcase-2008-06-27-decliningEPI-grace-fee-set1.06", "testcase-2008-06-27-decliningEPI-grace-fee-set1.07",
-            "testcase-2008-06-27-decliningEPI-grace-fee-set1.08", "testcase-2008-06-27-decliningEPI-grace-fee-set1.09",
-            "testcase-2008-06-27-decliningEPI-grace-fee-set1.10", "testcase-2008-06-27-decliningEPI-grace-fee-set1.11",
-            "testcase-2008-06-27-decliningEPI-grace-fee-set1.12", "testcase-2008-06-27-decliningEPI-grace-fee-set1.13",
-            "testcase-2008-06-27-decliningEPI-grace-fee-set1.14", "testcase-2008-06-27-decliningEPI-grace-fee-set1.15",
-            "testcase-2008-06-27-decliningEPI-grace-fee-set1.16", "testcase-2008-06-27-decliningEPI-grace-fee-set1.17",
-            "testcase-2008-06-27-decliningEPI-grace-fee-set1.18", "testcase-2008-06-27-decliningEPI-grace-fee-set1.19",
-            "testcase-2008-06-27-decliningEPI-grace-fee-set1.20", "testcase-2008-06-27-decliningEPI-grace-fee-set1.21",
-            "testcase-2008-06-27-decliningEPI-grace-fee-set1.22", "testcase-2008-06-27-decliningEPI-grace-fee-set1.23",
-            "testcase-2008-06-27-decliningEPI-grace-fee-set1.24", "testcase-2008-06-27-decliningEPI-grace-fee-set1.25",
-            "testcase-2008-06-27-decliningEPI-grace-fee-set1.26"
-
-    };
-
-    private final String[] decliningGraceFeeTestCases = { "testcase-2008-05-13-declining-grace-fee-set1.01",
-            "testcase-2008-05-13-declining-grace-fee-set1.02", "testcase-2008-05-13-declining-grace-fee-set1.03",
-            "testcase-2008-05-13-declining-grace-fee-set1.04", "testcase-2008-05-13-declining-grace-fee-set1.05",
-            "testcase-2008-05-13-declining-grace-fee-set1.06", "testcase-2008-05-13-declining-grace-fee-set1.07",
-            "testcase-2008-05-13-declining-grace-fee-set1.08", "testcase-2008-05-13-declining-grace-fee-set1.09",
-            "testcase-2008-05-13-declining-grace-fee-set1.10", "testcase-2008-05-13-declining-grace-fee-set1.11",
-            "testcase-2008-05-13-declining-grace-fee-set1.12", "testcase-2008-05-13-declining-grace-fee-set1.13",
-            "testcase-2008-05-13-declining-grace-fee-set1.14", "testcase-2008-05-13-declining-grace-fee-set1.15",
-            "testcase-2008-05-13-declining-grace-fee-set1.16", "testcase-2008-05-13-declining-grace-fee-set1.17",
-            "testcase-2008-05-13-declining-grace-fee-set1.18", "testcase-2008-05-13-declining-grace-fee-set1.19",
-            "testcase-2008-05-13-declining-grace-fee-set1.20", "testcase-2008-05-13-declining-grace-fee-set1.21",
-            "testcase-2008-05-13-declining-grace-fee-set1.22", "testcase-2008-05-13-declining-grace-fee-set1.23",
-            "testcase-2008-05-13-declining-grace-fee-set1.24", "testcase-2008-05-13-declining-grace-fee-set1.25",
-            "testcase-2008-05-13-declining-grace-fee-set1.26" };
-
-    private final String[] selectedCaseNumbers = {
-    // "set1.01", //JDBC error could not insert LoanOfferingBO
-    // "set1.02a",
-    // "set1.03", //negative principal payments
-    // "set1.04",
-    // "set1.05" //Infinite or NAN
-    // "set1.06", //JDBC error could not insert LoanOfferingBO
-    // "set1.07", //negative principal payments
-    // "set1.08",
-    // "set1.09",
-    // "set1.10" //Infinite or NAN
-    // "set1.11", //JDBC error could not insert LoanOfferingBO
-    // "set1.12",
-    "set1.13" // assertion failed -- comparison failure
-    // "set1.14",
-    // "set1.15", //spreadsheet error
-    // "set1.16", //spreadsheet error
-    // "set1.17", //spreadsheet error
-    // "set1.18",
-    // "set1.19", //JDBC error could not insert LoanOfferingBO
-    // "set1.20",
-    // "set1.21", //Infinite or NAN
-    // "set1.22", //spreadsheet error
-    // "set1.23",
-    // "set1.24", //JDBC error could not insert LoanOfferingBO
-    // "set1.25", //spreadsheet error
-    // "set1.26" //Infinite or NAN
-    // "set2"
-    };
-
-    private boolean fileNameContains(String fileName, String[] testNumbers) {
-        for (String testNumber : testNumbers) {
-            if (fileName.contains(testNumber)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /*

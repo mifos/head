@@ -34,15 +34,18 @@ import java.util.logging.Logger;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.util.ResourceUtils;
 
 /**
  * Load resources from the classpath.
  */
-public class MifosResourceUtil {
+public abstract class MifosResourceUtil {
 
     private static final Logger LOGGER = Logger.getLogger(MifosResourceUtil.class.getName());
-
+    private static final ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
+    
     public static File getFile(String fileNameWithLocation) {
         File file;
         try {
@@ -130,6 +133,19 @@ public class MifosResourceUtil {
     @Deprecated
     public static String getURI(String fileName) throws IOException {
         return getClassPathResourceAsURI(fileName);
+    }
+
+    /**
+     * Returns all classpath resources matching a certain pattern.
+     * 
+     * @param pattern an Ant-style "/"-based (not "."-based) resource path pattern, WITHOUT any prefix 
+     * (like "classpath:" or "classpath*:"); so e.g. "org/mifos/package/**&#47;*.xml".
+     * @return an array of {@link Resource}. These may not actually be ClassPathResource instance, but any Resource (e.g. FileSystemResource)
+     * @throws IOException in case of I/O errors
+     */
+    public static Resource[] getClassPathResourcesAsResources(String pattern) throws IOException {
+        return resourcePatternResolver.getResources(ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX + "/" + pattern);
+        
     }
 
     
