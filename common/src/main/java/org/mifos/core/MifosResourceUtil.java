@@ -41,8 +41,10 @@ import org.springframework.util.ResourceUtils;
 /**
  * Load resources from the classpath.
  */
-public abstract class MifosResourceUtil {
-
+public class MifosResourceUtil {
+    private MifosResourceUtil() {
+    }
+    
     private static final Logger LOGGER = Logger.getLogger(MifosResourceUtil.class.getName());
     private static final ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
     
