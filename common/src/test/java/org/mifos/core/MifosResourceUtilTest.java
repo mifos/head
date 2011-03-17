@@ -39,7 +39,7 @@ public class MifosResourceUtilTest {
         assertEquals(2, found.length);
         for (Resource resource : found) {
             String f = resource.getFilename();
-            if (!f.equals("y.xml") && !f.equals("z.xml")) {
+            if (!"y.xml".equals(f) && !"z.xml".equals(f)) {
                 fail(resource + " should not have been returned");
             }
         }
