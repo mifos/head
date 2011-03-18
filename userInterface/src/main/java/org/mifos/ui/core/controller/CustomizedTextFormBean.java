@@ -33,37 +33,68 @@ import org.springframework.binding.validation.ValidationContext;
  */
 @SuppressWarnings("PMD")
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID"}, justification="should disable at filter level and also for pmd - not important for us")
-public class CustomMessageSelectFormBean implements Serializable {
+public class CustomizedTextFormBean implements Serializable {
 
     @NotEmpty
-    private String message;
-    
+    private String originalText;
+
+    @NotEmpty
+    private String customText;
+
     @Autowired
     private transient MifosBeanValidator validator;
 
+    public void clear() {
+    	originalText = "";
+    	customText = "";
+    }
+    
     public void setValidator(MifosBeanValidator validator) {
         this.validator = validator;
-    }    
+    }
 
-	public String getMessage() {
-		return message;
+	public MifosBeanValidator getValidator() {
+		return validator;
 	}
 
-	public void setMessage(String message) {
-		this.message = message;
+	public String getOriginalText() {
+		return originalText;
+	}
+
+	public void setOriginalText(String originalText) {
+		this.originalText = originalText;
+	}
+
+	public String getCustomText() {
+		return customText;
+	}
+
+	public void setCustomText(String customText) {
+		this.customText = customText;
 	}
 
     /**
      * Validation method that Spring webflow calls on state transition out of
-     * customerSearchStep.
+     * addCustomizedTextStep.
      */
-    public void validateSelectCustomMessageStep(ValidationContext context) {
+    public void validateAddCustomizedTextStep(ValidationContext context) {
+        doValidation(context);
+    }	
+
+    /**
+     * Validation method that Spring webflow calls on state transition out of
+     * editCustomizedTextStep.
+     */
+    public void validateEditCustomizedTextStep(ValidationContext context) {
+        doValidation(context);
+    }	
+    
+    private void doValidation(ValidationContext context) {
         MessageContext messages = context.getMessageContext();
-        if (context.getUserEvent().equals("add")) {
-        	return;
-        }
+
         validator.validate(this, messages);
     }	
+    
 }
 
 

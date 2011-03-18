@@ -25,48 +25,45 @@ import java.io.Serializable;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.mifos.platform.validation.MifosBeanValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.binding.message.MessageContext;
+import org.springframework.binding.validation.ValidationContext;
 
 /**
  * An object to hold information collected in create savings account process.
  */
 @SuppressWarnings("PMD")
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID"}, justification="should disable at filter level and also for pmd - not important for us")
-public class CustomMessageFormBean implements Serializable {
+public class CustomizedTextSelectFormBean implements Serializable {
 
     @NotEmpty
-    private String oldMessage;
-
-    @NotEmpty
-    private String newMessage;
-
+    private String message;
+    
     @Autowired
     private transient MifosBeanValidator validator;
 
     public void setValidator(MifosBeanValidator validator) {
         this.validator = validator;
-    }
+    }    
 
-	public String getOldMessage() {
-		return oldMessage;
+	public String getMessage() {
+		return message;
 	}
 
-	public void setOldMessage(String oldMessage) {
-		this.oldMessage = oldMessage;
+	public void setMessage(String message) {
+		this.message = message;
 	}
 
-	public String getNewMessage() {
-		return newMessage;
-	}
-
-	public void setNewMessage(String newMessage) {
-		this.newMessage = newMessage;
-	}
-
-	public MifosBeanValidator getValidator() {
-		return validator;
-	}
-
-
+    /**
+     * Validation method that Spring webflow calls on state transition out of
+     * customerSearchStep.
+     */
+    public void validateSelectCustomizedTextStep(ValidationContext context) {
+        MessageContext messages = context.getMessageContext();
+        if (context.getUserEvent().equals("add")) {
+        	return;
+        }
+        validator.validate(this, messages);
+    }	
 }
 
 

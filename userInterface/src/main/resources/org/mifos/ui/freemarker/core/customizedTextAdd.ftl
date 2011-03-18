@@ -23,21 +23,27 @@
    <!--  Main Content Begins-->
   <div class=" content">
   <span id="page.id" title="customizeMessages"></span>
-  [@mifos.crumbs breadcrumbs/]
+    [@mifos.flowCrumbs breadcrumbs/]
+
+[@form.errors "customizedTextFormBean.*"/]    
 <form action="${flowExecutionUrl}" method="post" class="two-columns">
-<div class="fontBold"><span class="orangeheading">[@spring.message "customMessagesEdit.title"/]</span></div>
+<div class="fontBold"><span class="orangeheading">[@spring.message "customizeTextAdd.title"/]</span></div>
+	<div>[@spring.message "customizeTextAdd.instructions" /]</div>
+	&nbsp;		
+	<div>[@spring.message "customizeTextAddEdit.example" /]</div>
+    <div><span class="red">* </span>[@spring.message "fieldsmarkedwithanasteriskarerequired" /] </div>
     <fieldset>
     <div class="row">
-        [@form.label "Old Message" true /][@spring.message "customMessagesAdd.addMessage.oldMessage"/]
-        [@form.input path="customMessageFormBean.oldMessage"  id="oldMessage" attributes="disabled"/]
+        [@form.label "Old Message" true /][@spring.message "customizeTextAdd.addMessage.originalText"/]
+        [@form.input path="customizedTextFormBean.originalText"  id="originalText" /]
     </div>
     <div class="row">
-        [@form.label "New Message" true /][@spring.message "customMessagesAdd.addMessage.newMessage"/]
-        [@form.input path="customMessageFormBean.newMessage" id="newMessage" /]
+        [@form.label "New Message" true /][@spring.message "customizeTextAdd.addMessage.customText"/]
+        [@form.input path="customizedTextFormBean.customText" id="customText" /]
     </div>
     </fieldset>
     <div class="row webflow-controls">
-        [@form.submitButton label="widget.form.buttonLabel.submit" id="addcustommessage.button.submit" webflowEvent="submit" /]
+        [@form.submitButton label="widget.form.buttonLabel.submit" id="addcustommessage.button.add" webflowEvent="add" /]
         [@form.cancelButton label="widget.form.buttonLabel.cancel" webflowEvent="cancel" /]
     </div>
 </form>

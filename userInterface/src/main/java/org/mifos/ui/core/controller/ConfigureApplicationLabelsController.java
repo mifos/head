@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.apache.commons.lang.StringUtils;
-import org.mifos.application.admin.servicefacade.MessageCustomizerServiceFacade;
+import org.mifos.application.admin.servicefacade.CustomizedTextServiceFacade;
 import org.mifos.dto.domain.AccountStatusesLabelDto;
 import org.mifos.dto.domain.ConfigurableLookupLabelDto;
 import org.mifos.dto.domain.GracePeriodDto;
@@ -55,14 +55,14 @@ public class ConfigureApplicationLabelsController {
     private static final String CANCEL_PARAM = "CANCEL";
 
     @Autowired
-    private MessageCustomizerServiceFacade messageCustomizerServiceFacade;
+    private CustomizedTextServiceFacade customizedTextServiceFacade;
     
     protected ConfigureApplicationLabelsController() {
         // default contructor for spring autowiring
     }
 
-    public ConfigureApplicationLabelsController(final MessageCustomizerServiceFacade messageCustomizerServiceFacade) {
-        this.messageCustomizerServiceFacade = messageCustomizerServiceFacade;
+    public ConfigureApplicationLabelsController(final CustomizedTextServiceFacade customizedTextServiceFacade) {
+        this.customizedTextServiceFacade = customizedTextServiceFacade;
     }
 
     @ModelAttribute("breadcrumbs")
@@ -76,7 +76,7 @@ public class ConfigureApplicationLabelsController {
     public ConfigureApplicationLabelsFormBean showPopulatedForm(HttpServletRequest request) {
     	Locale locale = RequestContextUtils.getLocale(request);
     	
-        ConfigureApplicationLabelsDto appLabels = messageCustomizerServiceFacade.retrieveConfigurableLabels(locale);
+        ConfigureApplicationLabelsDto appLabels = customizedTextServiceFacade.retrieveConfigurableLabels(locale);
         ConfigureApplicationLabelsFormBean formBean = new ConfigureApplicationLabelsFormBean();
 
         populateOfficeHierarchyLabels(formBean, appLabels.getOfficeLevels());
@@ -216,7 +216,7 @@ public class ConfigureApplicationLabelsController {
             ConfigureApplicationLabelsDto applicationLabels = new ConfigureApplicationLabelsDto(officeLevels, gracePeriodDto, lookupLabels, accountStatusLabels);
 
         	Locale locale = RequestContextUtils.getLocale(request);            
-            messageCustomizerServiceFacade.updateApplicationLabels(applicationLabels, locale);
+            customizedTextServiceFacade.updateApplicationLabels(applicationLabels, locale);
             status.setComplete();
         }
         return viewName;

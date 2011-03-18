@@ -225,7 +225,8 @@ CREATE TABLE DATABASECHANGELOG (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 /*!40000 ALTER TABLE DATABASECHANGELOG DISABLE KEYS */;
-INSERT INTO DATABASECHANGELOG VALUES ('MIFOS-4633_1','Van Mittal-Henkle','changesets/changelog-Release_G.xml','2011-03-11 12:34:15',1,'EXECUTED','3:2a33e5334d6993445cf27a2c48d086c1','Create Table','',NULL,'2.0.0');
+INSERT INTO DATABASECHANGELOG VALUES ('MIFOS-4633_1','Van Mittal-Henkle','changesets/changelog-Release_G.xml','2011-03-16 16:00:35',1,'EXECUTED','3:b47549abaeb58b3bde90195d5e8e65b8','Create Table','',NULL,'2.0.0');
+INSERT INTO DATABASECHANGELOG VALUES ('MIFOS-4633_2','Van Mittal-Henkle','changesets/changelog-Release_G.xml','2011-03-16 16:00:35',2,'EXECUTED','3:0a7e597a8de1dba32d857ba4f29bac59','Custom SQL','',NULL,'2.0.0');
 /*!40000 ALTER TABLE DATABASECHANGELOG ENABLE KEYS */;
 DROP TABLE IF EXISTS DATABASECHANGELOGLOCK;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -2584,18 +2585,6 @@ CREATE TABLE custom_field_definition (
 
 /*!40000 ALTER TABLE custom_field_definition DISABLE KEYS */;
 /*!40000 ALTER TABLE custom_field_definition ENABLE KEYS */;
-DROP TABLE IF EXISTS custom_message;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE custom_message (
-  old_message varchar(50) COLLATE utf8_bin NOT NULL,
-  new_message varchar(50) COLLATE utf8_bin NOT NULL,
-  PRIMARY KEY (old_message)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
-/*!40000 ALTER TABLE custom_message DISABLE KEYS */;
-/*!40000 ALTER TABLE custom_message ENABLE KEYS */;
 DROP TABLE IF EXISTS customer;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -4035,6 +4024,18 @@ CREATE TABLE customer_trxn_detail (
 
 /*!40000 ALTER TABLE customer_trxn_detail DISABLE KEYS */;
 /*!40000 ALTER TABLE customer_trxn_detail ENABLE KEYS */;
+DROP TABLE IF EXISTS customized_text;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE customized_text (
+  original_text varchar(50) COLLATE utf8_bin NOT NULL,
+  custom_text varchar(50) COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (original_text)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+/*!40000 ALTER TABLE customized_text DISABLE KEYS */;
+/*!40000 ALTER TABLE customized_text ENABLE KEYS */;
 DROP TABLE IF EXISTS entity_master;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -8088,7 +8089,7 @@ CREATE TABLE personnel (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 /*!40000 ALTER TABLE personnel DISABLE KEYS */;
-INSERT INTO personnel VALUES (1,2,'1',1,1,1,1,NULL,1,'\"d��#0�a�M�2�Nj����d�QS8�','mifos',NULL,1,'mifos',1,NULL,1,'2011-03-14','2011-03-14',0,0,23);
+INSERT INTO personnel VALUES (1,2,'1',1,1,1,1,NULL,1,'\"d��#0�a�M�2�Nj����d�QS8�','mifos',NULL,1,'mifos',1,NULL,1,'2011-03-14','2011-03-14',0,0,23);
 INSERT INTO personnel VALUES (2,1,'0002-00002',2,NULL,1,1,NULL,NULL,'ï¿œ;}ï¿œï¿œï¿œÇï¿œ1d&ï¿œDï¿œï¿œï¿œï¿œ1sIï¿œ@}ï¿œ','loanofficer','',0,'loan officer',1,'2011-02-18',NULL,NULL,NULL,0,0,1);
 INSERT INTO personnel VALUES (3,1,'0003-00003',3,NULL,1,1,NULL,NULL,'-$��Ϥk�U�h�B\\�[>��\Z4�h','loanofficerbranch1','',0,'loanofficer branch1',1,'2011-03-03',NULL,NULL,NULL,0,0,1);
 INSERT INTO personnel VALUES (4,1,'0004-00004',4,NULL,1,1,NULL,NULL,'ͱ~�y9��I�(�P\\bc4&I�','loanofficerbranch2','',0,'loanofficerbranch2 loanofficerbranch2',1,'2011-03-14',NULL,NULL,NULL,0,0,1);
@@ -9984,7 +9985,7 @@ CREATE TABLE supported_locale (
   KEY country_id (country_id),
   KEY lang_id (lang_id),
   CONSTRAINT supported_locale_ibfk_1 FOREIGN KEY (country_id) REFERENCES country (country_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT supported_locale_ibfk_2 FOREIGN KEY (lang_id) REFERENCES language (lang_id) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT supported_locale_ibfk_2 FOREIGN KEY (lang_id) REFERENCES `language` (lang_id) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

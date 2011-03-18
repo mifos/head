@@ -23,13 +23,28 @@
 
 [#-- 
 Creates a simple breadcrumb from a List of BreadCrumbLinks object. The list can be 
-created using the output of AdminBreadcrumbBuild. 
+created using the output of AdminBreadcrumbBuilder. 
 --]
 [#macro crumbs breadcrumbs]
 <div class="breadcrumb">
         [#list breadcrumbs as messages]
             [#if messages_has_next]
                 <a href="${messages.link}">[@spring.message "${messages.message}" /]</a>&nbsp;/&nbsp;[#else]<span class="fontBold">[@spring.messageText "${messages.message}","${messages.message}" /]</span>
+            [/#if]
+        [/#list]
+ </div>
+[/#macro]
+
+[#-- 
+Creates a breadcrumb from a List of BreadCrumbLinks object. The list can be 
+created using the output of AdminBreadcrumbBuilder.  The links in this list
+are interpreted as event names in a Spring Webflow definition.
+--]
+[#macro flowCrumbs breadcrumbs]
+<div class="breadcrumb">
+        [#list breadcrumbs as messages]
+            [#if messages_has_next]
+                <a href="${flowExecutionUrl}&_eventId=${messages.link}">[@spring.message "${messages.message}" /]</a>&nbsp;/&nbsp;[#else]<span class="fontBold">[@spring.messageText "${messages.message}","${messages.message}" /]</span>
             [/#if]
         [/#list]
  </div>

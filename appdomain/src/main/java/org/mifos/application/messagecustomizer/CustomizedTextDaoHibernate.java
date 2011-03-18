@@ -30,51 +30,57 @@ import org.mifos.accounts.savings.persistence.GenericDao;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
-public class MessageCustomizerDaoHibernate implements MessageCustomizerDao {
+public class CustomizedTextDaoHibernate implements CustomizedTextDao {
     private final GenericDao genericDao;
 
     @Autowired
-    public MessageCustomizerDaoHibernate(GenericDao genericDao) {
+    public CustomizedTextDaoHibernate(GenericDao genericDao) {
         this.genericDao = genericDao;
     }
 
 	@Override
-	public Map<String, String> getCustomMessages() {
-		List<CustomMessage> messages = getAllMessages();
+	public Map<String, String> getCustomizedText() {
+		List<CustomizedText> messages = getAllCustomizedText();
 		
 		LinkedHashMap<String,String> messageMap = new LinkedHashMap<String,String>();
 		
-		for (CustomMessage message: messages) {
-			messageMap.put(message.getOldMessage(), message.getNewMessage());
+		for (CustomizedText message: messages) {
+			messageMap.put(message.getOriginalText(), message.getCustomText());
 		}
 		return messageMap;
 	}
 
 	@Override
-	public void setCustomMessages(Map<String, String> messageMap) {
-		Map<String, String> currentMessages = getCustomMessages();
+	public void setCustomizedText(Map<String, String> messageMap) {
+		Map<String, String> currentMessages = getCustomizedText();
 		
         for (Map.Entry<String, String> entry : messageMap.entrySet()) { 
         	if(entry.getKey().contentEquals(entry.getValue())) {
-        		removeCustomMessage(entry.getKey());      			        	
+        		removeCustomizedText(entry.getKey());      			        	
         	} else if (!currentMessages.containsKey(entry.getKey())) {
-        		addOrUpdateCustomMessage(entry.getKey(), entry.getValue());
+        		addOrUpdateCustomizedText(entry.getKey(), entry.getValue());
         	} else {
-        		CustomMessage message = findCustomMessageByOldMessage(entry.getKey());
-        		message.setNewMessage(entry.getValue());
+        		CustomizedText message = findCustomizedTextByOriginalText(entry.getKey());
+        		message.setCustomText(entry.getValue());
         	}
         }
 		
 	}
 
 	@Override
-    public void addOrUpdateCustomMessage(String oldMessage, String newMessage) {
-    	genericDao.createOrUpdate(new CustomMessage(oldMessage, newMessage));		
+    public void addOrUpdateCustomizedText(String oldMessage, String newMessage) {
+		CustomizedText message = findCustomizedTextByOriginalText(oldMessage);
+		if (message == null) {
+			message = new CustomizedText(oldMessage, newMessage);
+		} else {
+			message.setCustomText(newMessage);
+		}
+    	genericDao.createOrUpdate(message);		
 	}
 
 	@Override
-	public void removeCustomMessage(String oldMessage) {
-		CustomMessage message = findCustomMessageByOldMessage(oldMessage);
+	public void removeCustomizedText(String oldMessage) {
+		CustomizedText message = findCustomizedTextByOriginalText(oldMessage);
 		
 		if (message != null) {
 			genericDao.delete(message);
@@ -82,12 +88,12 @@ public class MessageCustomizerDaoHibernate implements MessageCustomizerDao {
 	}
 
 	@SuppressWarnings("unchecked")
-    private List<CustomMessage> getAllMessages() {
+    private List<CustomizedText> getAllCustomizedText() {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
-        List<CustomMessage> queryResult = (List<CustomMessage>) this.genericDao.executeNamedQuery(
+        List<CustomizedText> queryResult = (List<CustomizedText>) this.genericDao.executeNamedQuery(
                 "allMessagesNative", queryParameters);
 
-        List<CustomMessage> messages = new ArrayList<CustomMessage>();
+        List<CustomizedText> messages = new ArrayList<CustomizedText>();
 
         if (queryResult != null) {
             messages.addAll(queryResult);
@@ -96,12 +102,12 @@ public class MessageCustomizerDaoHibernate implements MessageCustomizerDao {
         return messages;
     }	
 	
-    public CustomMessage findCustomMessageByOldMessage(final String oldMessage) {
+    public CustomizedText findCustomizedTextByOriginalText(final String originalText) {
 
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("oldMessage", oldMessage);
+        queryParameters.put("originalText", originalText);
 
-        CustomMessage entity = (CustomMessage) this.genericDao.executeUniqueResultNamedQuery("findCustomMessageByOldMessage", queryParameters);
+        CustomizedText entity = (CustomizedText) this.genericDao.executeUniqueResultNamedQuery("findCustomMessageByOldMessage", queryParameters);
 
         return entity;
     }	

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+    <var name="customizedTextFormBean" class="org.mifos.ui.core.controller.CustomizedTextFormBean" />
+    <var name="customizedTextSelectFormBean" class="org.mifos.ui.core.controller.CustomizedTextSelectFormBean" />
+
+    <view-state id="selectCustomizedTextStep" view="customizedTextView" model="customizedTextSelectFormBean">
+        <on-entry>
+            <evaluate expression="customizeTextController.retrieveCustomizedTextMap()" result="flowScope.customizedTextMap" />
+            <evaluate expression="customizeTextController.showBreadCrumbsForView()" result="flowScope.breadcrumbs" />
+        </on-entry>    
+        <transition on="add" to="addCustomizedTextStep" validate="false" bind="false"/>
+        <transition on="remove" to="selectCustomizedTextStep" validate="true">
+            <evaluate expression="customizeTextController.removeCustomizedText(customizedTextSelectFormBean)" />        
+        </transition>
+        <transition on="edit" to="editCustomizedTextStep" validate="true">
+            <evaluate expression="customizeTextController.getCustomizedText(customizedTextSelectFormBean)" result="flowScope.customizedText"/>        
+        </transition>
+        <transition on="done" to="done" validate="false" bind="false" history="invalidate"/>
+    </view-state>
+
+    <view-state id="addCustomizedTextStep" view="customizedTextAdd" model="customizedTextFormBean">
+        <on-entry>
+            <evaluate expression="customizeTextController.showBreadCrumbsForAdd()" result="flowScope.breadcrumbs" />
+            <evaluate expression="customizedTextFormBean.clear()" />
+        </on-entry>    
+        <transition on="add" to="selectCustomizedTextStep" >
+            <evaluate expression="customizeTextController.addOrUpdateCustomizedText(customizedTextFormBean)" />
+        </transition>
+        
+        <transition on="cancel" to="selectCustomizedTextStep" validate="false" bind="false"/>
+        <transition on="done" to="done" validate="false" bind="false" history="invalidate"/>
+    </view-state>
+
+    <view-state id="editCustomizedTextStep" view="customizedTextEdit" model="customizedTextFormBean">
+        <on-entry>
+            <evaluate expression="customizedTextFormBean.setOriginalText(customizedText.getOriginalText())" />
+            <evaluate expression="customizedTextFormBean.setCustomText(customizedText.getCustomText())" />
+            <evaluate expression="customizeTextController.showBreadCrumbsForEdit()" result="flowScope.breadcrumbs" />
+        </on-entry>    
+
+        <transition on="submit" to="selectCustomizedTextStep" >
+            <evaluate expression="customizeTextController.addOrUpdateCustomizedText(customizedTextFormBean)" />
+        </transition>
+        
+        <transition on="cancel" to="selectCustomizedTextStep" validate="false" bind="false"/>
+        <transition on="done" to="done" validate="false" bind="false" history="invalidate"/>
+    </view-state>        
+    <end-state id="done" view="externalRedirect:contextRelative:/AdminAction.do?method=load"/>
+</flow>
