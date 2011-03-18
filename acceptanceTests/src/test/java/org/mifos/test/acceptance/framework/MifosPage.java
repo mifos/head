@@ -155,6 +155,20 @@ public class MifosPage extends AbstractPage {
         return new ClientsAndAccountsHomepage(selenium);
     }
 
+    public String getClientsAndAccountsHeaderTabText() {
+        // id is sometimes different
+        if(selenium.isElementPresent("header.link.clientsAndAccounts")) {
+            return selenium.getText("header.link.clientsAndAccounts");
+        }
+        else if(selenium.isElementPresent("clientsAndAccountsHeader.link.clientsAndAccounts")) {
+            return selenium.getText("clientsAndAccountsHeader.link.clientsAndAccounts");
+        }
+        else {
+            return selenium.getText("homeheader.link.clientsAndAccounts");
+        }
+    }
+    
+    
     public AdminPage navigateToAdminPageUsingHeaderTab() {
      // id is sometimes different
         if(selenium.isElementPresent("header.link.admin")) {

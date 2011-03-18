@@ -36,16 +36,16 @@
     <fieldset>
     <div class="row">
         [@form.label "Old Message" true /][@spring.message "customizeTextAdd.addMessage.originalText"/]
-        [@form.input path="customizedTextFormBean.originalText"  id="originalText" attributes="disabled"/]
+        [@form.input path="customizedTextFormBean.originalText"  id="customizeTextEdit.input.originalText" attributes="disabled"/]
     </div>
     <div class="row">
         [@form.label "New Message" true /][@spring.message "customizeTextAdd.addMessage.customText"/]
-        [@form.input path="customizedTextFormBean.customText" id="customText" /]
+        [@form.input path="customizedTextFormBean.customText" id="customizeTextEdit.input.customText" /]
     </div>
     </fieldset>
     <div class="row webflow-controls">
-        [@form.submitButton label="widget.form.buttonLabel.submit" id="addcustommessage.button.submit" webflowEvent="submit" /]
-        [@form.cancelButton label="widget.form.buttonLabel.cancel" webflowEvent="cancel" /]
+        [@form.submitButton label="widget.form.buttonLabel.submit" id="customizeTextEdit.button.submit" webflowEvent="submit" /]
+        [@form.cancelButton label="widget.form.buttonLabel.cancel" id="customizeTextEdit.button.cancel" webflowEvent="cancel" /]
     </div>
 </form>
 

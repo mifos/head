@@ -51,10 +51,12 @@ public class CustomizeTextViewPage extends MifosPage {
         return new CustomizeTextAddPage(selenium);
 	}
 
-	public AdminPage navigateToCustomizeTextEditPage() {
+	public CustomizeTextEditPage navigateToCustomizeTextEditPage(String originalText) {
+        selenium.select("customizeTextView.select.customizedText", "value="+originalText);
+
         selenium.click("customizeTextView.button.edit");
         waitForPageToLoad();
-        return new AdminPage(selenium);
+        return new CustomizeTextEditPage(selenium);
 	}
 	
 	public CustomizeTextViewPage removeCustomizedText(String originalText) {
