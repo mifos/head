@@ -22,7 +22,7 @@
 [@adminLeftPaneLayout]
    <!--  Main Content Begins-->
   <div class=" content">
-  <span id="page.id" title="customizeMessages"></span>
+  <span id="page.id" title="customizeTextView"></span>
     [@mifos.flowCrumbs breadcrumbs/]
     
 [@form.errors "customizedTextSelectFormBean.*"/]      
@@ -32,13 +32,13 @@
 	&nbsp;
 	<center>
     <div class="row">	
-    [@form.singleSelectWithPrompt path="customizedTextSelectFormBean.message" options=customizedTextMap selectPrompt="" attributes="size=12, style=width:300px;"/]
+    [@form.singleSelectWithPrompt path="customizedTextSelectFormBean.message" id="customizeTextView.select.customizedText" options=customizedTextMap selectPrompt="" attributes="size=12, style=width:300px;"/]
     </div>
     <div class="row">
-        [@form.submitButton label="widget.form.buttonLabel.add" webflowEvent="add" /]
-        [@form.submitButton label="widget.form.buttonLabel.edit" webflowEvent="edit" /]                
-        [@form.submitButton label="widget.form.buttonLabel.remove" webflowEvent="remove" /]
-        [@form.cancelButton label="widget.form.buttonLabel.done" webflowEvent="done"  /]
+        [@form.submitButton label="widget.form.buttonLabel.add" id="customizeTextView.button.add" webflowEvent="add" /]
+        [@form.submitButton label="widget.form.buttonLabel.edit" id="customizeTextView.button.edit" webflowEvent="edit" /]                
+        [@form.submitButton label="widget.form.buttonLabel.remove" id="customizeTextView.button.remove" webflowEvent="remove" /]
+        [@form.cancelButton label="widget.form.buttonLabel.done" id="customizeTextView.button.done" webflowEvent="done"  /]
     </div>
     </center>
 </form>

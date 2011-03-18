@@ -22,7 +22,7 @@
 [@adminLeftPaneLayout]
    <!--  Main Content Begins-->
   <div class=" content">
-  <span id="page.id" title="customizeMessages"></span>
+  <span id="page.id" title="customizeTextEdit"></span>
     [@mifos.flowCrumbs breadcrumbs/]
 
 [@form.errors "customizedTextFormBean.*"/]    

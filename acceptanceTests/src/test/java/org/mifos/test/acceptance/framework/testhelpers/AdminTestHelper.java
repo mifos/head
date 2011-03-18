@@ -22,6 +22,8 @@ package org.mifos.test.acceptance.framework.testhelpers;
 
 import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.admin.ChecklistDetailsPage;
+import org.mifos.test.acceptance.framework.admin.CustomizeTextAddPage;
+import org.mifos.test.acceptance.framework.admin.CustomizeTextViewPage;
 import org.mifos.test.acceptance.framework.admin.DefineChecklistParameters;
 import org.mifos.test.acceptance.framework.admin.DefineLabelsPage;
 import org.mifos.test.acceptance.framework.admin.DefineLabelsParameters;
@@ -61,6 +63,18 @@ public class AdminTestHelper {
             .verifyLookupOption(lookupOptionParams);
     }
 
+    public CustomizeTextViewPage addCustomizedText(String originalText, String customText) {
+        CustomizeTextAddPage customizeTextAddPage = navigationHelper
+            .navigateToAdminPage()
+            .navigateToCustomizeTextViewPage()
+            .navigateToCustomizeTextAddPage();
+        
+        customizeTextAddPage.setOriginalText(originalText);
+        customizeTextAddPage.setCustomText(customText);
+        
+        return customizeTextAddPage.submit();
+    }
+    
     public AdminPage defineLabels(DefineLabelsParameters defineLabelsParams) {
         DefineLabelsPage defineLabelsPage = navigationHelper
             .navigateToAdminPage()
@@ -108,4 +122,5 @@ public class AdminTestHelper {
             .navigateToViewChecklistsPage()
             .navigateToChecklistDetailsPage(checklistName);
     }
+
 }

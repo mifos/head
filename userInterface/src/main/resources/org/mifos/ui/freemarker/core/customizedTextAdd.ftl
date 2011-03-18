@@ -22,7 +22,7 @@
 [@adminLeftPaneLayout]
    <!--  Main Content Begins-->
   <div class=" content">
-  <span id="page.id" title="customizeMessages"></span>
+  <span id="page.id" title="customizeTextAdd"></span>
     [@mifos.flowCrumbs breadcrumbs/]
 
 [@form.errors "customizedTextFormBean.*"/]    
@@ -35,16 +35,16 @@
     <fieldset>
     <div class="row">
         [@form.label "Old Message" true /][@spring.message "customizeTextAdd.addMessage.originalText"/]
-        [@form.input path="customizedTextFormBean.originalText"  id="originalText" /]
+        [@form.input path="customizedTextFormBean.originalText"  id="customizeTextAdd.input.originalText" /]
     </div>
     <div class="row">
         [@form.label "New Message" true /][@spring.message "customizeTextAdd.addMessage.customText"/]
-        [@form.input path="customizedTextFormBean.customText" id="customText" /]
+        [@form.input path="customizedTextFormBean.customText" id="customizeTextAdd.input.customText" /]
     </div>
     </fieldset>
     <div class="row webflow-controls">
-        [@form.submitButton label="widget.form.buttonLabel.submit" id="addcustommessage.button.add" webflowEvent="add" /]
-        [@form.cancelButton label="widget.form.buttonLabel.cancel" webflowEvent="cancel" /]
+        [@form.submitButton label="widget.form.buttonLabel.submit" id="customizeTextAdd.button.submit" webflowEvent="add" /]
+        [@form.cancelButton label="widget.form.buttonLabel.cancel" id="customizeTextAdd.button.cancel" webflowEvent="cancel" /]
     </div>
 </form>
 
