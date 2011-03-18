@@ -29,6 +29,7 @@ import org.mifos.config.Localization;
 import org.mifos.config.business.MifosConfiguration;
 import org.mifos.config.persistence.ApplicationConfigurationDao;
 import org.mifos.config.persistence.ConfigurationPersistence;
+import org.mifos.db.upgrade.DatabaseUpgradeSupport;
 import org.mifos.framework.components.audit.util.helpers.AuditConfiguration;
 import org.mifos.framework.hibernate.helper.AuditInterceptorFactory;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -51,9 +52,11 @@ public class TestCaseInitializer {
     private static boolean initialized = false;
 
     private ApplicationConfigurationDao applicationConfigurationDao = ApplicationContextProvider.getBean(ApplicationConfigurationDao.class);
+    private DatabaseUpgradeSupport databaseUpgradeSupport = ApplicationContextProvider.getBean(DatabaseUpgradeSupport.class);
 
     public void initialize(SessionFactory sessionFactory) throws Exception {
         if (!initialized) {
+            databaseUpgradeSupport.upgrade();
             initializeDB(sessionFactory);
             initialized = true;
         }
