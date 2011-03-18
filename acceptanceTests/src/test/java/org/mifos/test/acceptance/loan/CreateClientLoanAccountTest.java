@@ -44,6 +44,7 @@ import org.mifos.test.acceptance.framework.questionnaire.ViewQuestionResponseDet
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
+import org.mifos.test.acceptance.loanproduct.LoanProductTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +64,7 @@ import java.util.Random;
 public class CreateClientLoanAccountTest extends UiTestCaseBase {
 
     private LoanTestHelper loanTestHelper;
+    private LoanProductTestHelper loanProductTestHelper;
     private NavigationHelper navigationHelper;
 
     @Autowired
@@ -83,6 +85,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
     public void setUp() throws Exception {
         super.setUp();
         loanTestHelper = new LoanTestHelper(selenium);
+        loanProductTestHelper = new LoanProductTestHelper(selenium);
         navigationHelper = new NavigationHelper(selenium);
         questionGroupHelper = new QuestionGroupHelper(navigationHelper);
         random = new Random();
@@ -102,7 +105,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         String answer = "01/01/2010";
         String choiceAnswer = "Choice2";
         questionGroupHelper.createQuestionGroup(questionGroupTitle, question1, question2, "Create Loan");
-        loanTestHelper.editLoanProduct("Flat Interest Loan Product With Fee", questionGroupTitle);
+        loanProductTestHelper.editLoanProduct("Flat Interest Loan Product With Fee", questionGroupTitle);
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("client1 lastname");
         searchParameters.setLoanProduct("Flat Interest Loan Product With Fee");
@@ -412,7 +415,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         disburseParams.setDisbursalDateMM("01");
         disburseParams.setDisbursalDateYYYY("2011");
 
-        LoanProductDetailsPage loanProductDetailsPage = loanTestHelper.defineNewLoanProduct(productParams);
+        LoanProductDetailsPage loanProductDetailsPage = loanProductTestHelper.defineNewLoanProduct(productParams);
         loanProductDetailsPage.verifyLoanAmountTableTypeSame("1000.0", "10000.0", "5000.0");
         loanProductDetailsPage.verifyInstallmentsTableTypeFromCycle(cycleInstallments);
         LoanAccountPage loanAccountPage = loanTestHelper.createActivateAndDisburseDefaultLoanAccount(searchParams, disburseParams);

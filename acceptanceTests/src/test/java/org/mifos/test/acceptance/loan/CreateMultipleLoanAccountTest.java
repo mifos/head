@@ -32,11 +32,11 @@ import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.
 import org.mifos.test.acceptance.framework.office.OfficeEditInformationPage;
 import org.mifos.test.acceptance.framework.testhelpers.CenterTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
-import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.framework.testhelpers.OfficeHelper;
 import org.mifos.test.acceptance.framework.testhelpers.UserHelper;
 import org.mifos.test.acceptance.framework.user.EditUserDataPage;
+import org.mifos.test.acceptance.loanproduct.LoanProductTestHelper;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -49,9 +49,9 @@ public class CreateMultipleLoanAccountTest extends UiTestCaseBase {
 
     private OfficeHelper officeHelper;
     private UserHelper userHelper;
-    private LoanTestHelper loanTestHelper;
     private CenterTestHelper centerTestHelper;
     private NavigationHelper navigationHelper;
+    private LoanProductTestHelper loanProductTestHelper;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
@@ -60,9 +60,9 @@ public class CreateMultipleLoanAccountTest extends UiTestCaseBase {
         super.setUp();
         officeHelper = new OfficeHelper(selenium);
         userHelper = new UserHelper(selenium);
-        loanTestHelper = new LoanTestHelper(selenium);
         centerTestHelper = new CenterTestHelper(selenium);
         navigationHelper = new NavigationHelper(selenium);
+        loanProductTestHelper = new LoanProductTestHelper(selenium);
     }
 
     @AfterMethod
@@ -133,7 +133,7 @@ public class CreateMultipleLoanAccountTest extends UiTestCaseBase {
         multipleSelectParams.setCenter("Default Center");
         multipleSelectParams.setLoanProduct("LoanCycleProduct");
 
-        loanTestHelper.defineNewLoanProduct(productParams);
+        loanProductTestHelper.defineNewLoanProduct(productParams);
         CreateLoanAccountsEntryPage createLoanAccountsEntryPage = navigateToCreateMultipleLoanAccountsEntryPage(multipleSelectParams);
         for (int i = 0; i < 4; i++) {
             createLoanAccountsEntryPage.verifyNoOfInstallments(i, "52");

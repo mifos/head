@@ -74,7 +74,7 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
         systemDateTime = new DateTime(2011, 10, 10, 10, 0, 0, 0);
         loanTestHelper.setApplicationTime(systemDateTime);
         createHolidays(dataSetup);
-        new FeeTestHelper(dataSetup).createPeriodicFee(feeName, FeesCreatePage.SubmitFormParameters.LOAN, FeesCreatePage.SubmitFormParameters.WEEKLY_FEE_RECURRENCE, 1, 100);
+        new FeeTestHelper(dataSetup, new NavigationHelper(selenium)).createPeriodicFee(feeName, FeesCreatePage.SubmitFormParameters.LOAN, FeesCreatePage.SubmitFormParameters.WEEKLY_FEE_RECURRENCE, 1, 100);
         isSetUpDone=true;
     }
 

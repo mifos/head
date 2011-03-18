@@ -14,14 +14,14 @@ import org.testng.annotations.Test;
 @Test(singleThreaded = true, groups = {"smoke", "fees", "acceptance", "no_db_unit"})
 public class DefineAndViewFeesTest extends UiTestCaseBase {
 
-    private FeesHelper feesHelper;
+    private FeeTestHelper feeTestHelper;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     @BeforeMethod(alwaysRun = true)
     public void setUp() throws Exception {
         super.setUp();
-        feesHelper = new FeesHelper(new NavigationHelper(selenium));
+        feeTestHelper = new FeeTestHelper(null,new NavigationHelper(selenium));
     }
 
     @AfterMethod
@@ -33,30 +33,30 @@ public class DefineAndViewFeesTest extends UiTestCaseBase {
     public void verifyViewFeesTableContentsTest() throws Exception {
         defineFee("ClientFee", "All Customers");
         defineFee("ProductFee", "Loans");
-        feesHelper.viewClientFees("ClientFee");
-        feesHelper.viewProductFees("ProductFee");
+        feeTestHelper.viewClientFees("ClientFee");
+        feeTestHelper.viewProductFees("ProductFee");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void createPeriodicFees() throws Exception {
-        SubmitFormParameters feeParameters = feesHelper.getFeeParameters(StringUtil.getRandomString(5), "Group", false, SubmitFormParameters.PERIODIC_FEE_FREQUENCY, 6, 6201);
+        SubmitFormParameters feeParameters = feeTestHelper.getFeeParameters(StringUtil.getRandomString(5), "Group", false, SubmitFormParameters.PERIODIC_FEE_FREQUENCY, 6, 6201);
         feeParameters.setFeeFrequencyType(feeParameters.PERIODIC_FEE_FREQUENCY);
         feeParameters.setFeeRecurrenceType(feeParameters.MONTHLY_FEE_RECURRENCE);
         feeParameters.setMonthRecurAfter(2);
-        feesHelper.defineFees(feeParameters);
+        feeTestHelper.defineFees(feeParameters);
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void createOneTimeFees() {
-        SubmitFormParameters feeParameters = feesHelper.getFeeParameters(StringUtil.getRandomString(5), "All Customers", false, SubmitFormParameters.ONETIME_FEE_FREQUENCY, 20, 31301);
+        SubmitFormParameters feeParameters = feeTestHelper.getFeeParameters(StringUtil.getRandomString(5), "All Customers", false, SubmitFormParameters.ONETIME_FEE_FREQUENCY, 20, 31301);
         feeParameters.setCustomerCharge("Upfront");
-        feesHelper.defineFees(feeParameters);
+        feeTestHelper.defineFees(feeParameters);
     }
 
     private void defineFee(String feeName, String categoryType) {
-        SubmitFormParameters feeParameters = feesHelper.getFeeParameters(feeName, categoryType, false, SubmitFormParameters.ONETIME_FEE_FREQUENCY, 20, 31301);
+        SubmitFormParameters feeParameters = feeTestHelper.getFeeParameters(feeName, categoryType, false, SubmitFormParameters.ONETIME_FEE_FREQUENCY, 20, 31301);
         feeParameters.setCustomerCharge("Upfront");
-        feesHelper.defineFees(feeParameters);
+        feeTestHelper.defineFees(feeParameters);
     }
 
 }

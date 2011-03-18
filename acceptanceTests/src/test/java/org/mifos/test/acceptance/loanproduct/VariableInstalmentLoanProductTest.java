@@ -63,7 +63,7 @@ public class VariableInstalmentLoanProductTest extends UiTestCaseBase {
         loanTestHelper.setApplicationTime(systemDateTime);
         TestDataSetup dataSetup = new TestDataSetup(selenium, applicationDatabaseOperation);
         dataSetup.addDecliningPrincipalBalance();
-        feeTestHelper = new FeeTestHelper(dataSetup);
+        feeTestHelper = new FeeTestHelper(dataSetup, new NavigationHelper(selenium));
     }
 
     @AfterMethod

@@ -22,7 +22,7 @@ package org.mifos.test.acceptance.admin;
 
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
-import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
+import org.mifos.test.acceptance.framework.testhelpers.OfficeHelper;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -39,7 +39,7 @@ public class DefineAndViewOfficeTest extends UiTestCaseBase {
     @BeforeMethod(alwaysRun = true)
     public void setUp() throws Exception {
         super.setUp();
-        officeHelper = new OfficeHelper(new NavigationHelper(selenium));
+        officeHelper = new OfficeHelper(selenium);
     }
 
     @AfterMethod

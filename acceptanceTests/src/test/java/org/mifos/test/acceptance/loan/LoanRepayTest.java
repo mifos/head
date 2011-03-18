@@ -29,8 +29,8 @@ import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.RepayLoanConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.RepayLoanPage;
 import org.mifos.test.acceptance.framework.loan.RepayLoanParameters;
-import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
+import org.mifos.test.acceptance.loanproduct.LoanProductTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.Assert;
@@ -46,9 +46,9 @@ import java.sql.SQLException;
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
 @Test(singleThreaded = true, groups = {"acceptance", "ui", "loan", "no_db_unit"})
 public class LoanRepayTest extends UiTestCaseBase {
-    private LoanTestHelper loanTestHelper;
     private String loanId = "000100000000037";
     private NavigationHelper navigationHelper;
+    private LoanProductTestHelper loanProductTestHelper;
 
 
     @Override
@@ -57,8 +57,8 @@ public class LoanRepayTest extends UiTestCaseBase {
     @BeforeMethod(alwaysRun = true)
     public void setUp() throws Exception {
         super.setUp();
-        loanTestHelper = new LoanTestHelper(selenium);
         navigationHelper = new NavigationHelper(selenium);
+        loanProductTestHelper= new LoanProductTestHelper(selenium);
         setupTime();
     }
 
@@ -69,7 +69,7 @@ public class LoanRepayTest extends UiTestCaseBase {
 
     public void repay() {
         testRepayLoanPageWhenProductHasNoInterestWaiver();
-        loanTestHelper.enableInterestWaiver("InterestWaiverLoan", true);
+        loanProductTestHelper.enableInterestWaiver("InterestWaiverLoan", true);
         testRepayLoanPageWhenProductHasInterestWaiver();
         repayLoanWithInterestWaived();
         verifyLoanStateAndAccountSummary();
