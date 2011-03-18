@@ -25,6 +25,8 @@ import java.io.Serializable;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.mifos.platform.validation.MifosBeanValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.binding.message.MessageContext;
+import org.springframework.binding.validation.ValidationContext;
 
 /**
  * An object to hold information collected in create savings account process.
@@ -71,7 +73,28 @@ public class CustomizedTextFormBean implements Serializable {
 		this.customText = customText;
 	}
 
+    /**
+     * Validation method that Spring webflow calls on state transition out of
+     * addCustomizedTextStep.
+     */
+    public void validateAddCustomizedTextStep(ValidationContext context) {
+        doValidation(context);
+    }	
 
+    /**
+     * Validation method that Spring webflow calls on state transition out of
+     * editCustomizedTextStep.
+     */
+    public void validateEditCustomizedTextStep(ValidationContext context) {
+        doValidation(context);
+    }	
+    
+    private void doValidation(ValidationContext context) {
+        MessageContext messages = context.getMessageContext();
+
+        validator.validate(this, messages);
+    }	
+    
 }
 
 

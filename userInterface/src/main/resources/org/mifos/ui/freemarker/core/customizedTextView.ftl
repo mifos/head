@@ -25,6 +25,7 @@
   <span id="page.id" title="customizeMessages"></span>
     [@mifos.flowCrumbs breadcrumbs/]
     
+[@form.errors "customizedTextSelectFormBean.*"/]      
 <form action="${flowExecutionUrl}" method="post" class="two-column">
 <div class="fontBold"><span class="orangeheading">[@spring.message "customizeTextView.customizedTextList"/]</span></div>
 	<div>[@spring.message "customizeTextView.instructions" /]</div>
