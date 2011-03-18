@@ -55,6 +55,15 @@
                 <create.props.skip>false</create.props.skip>
             </properties>
         </profile>
+        <profile>
+            <id>jacoco-coverage</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <surefire.jacoco.agent>-javaagent:${jacoco.agent.path}=destfile=${jacoco.file.path},includes=org.mifos.*,excludes=*_javassist_*</surefire.jacoco.agent>
+            </properties>
+        </profile>
     </profiles>
 
     <dependencies>
@@ -490,6 +499,7 @@
                             <testNGArtifactName>null</testNGArtifactName>
                             <printSummary>true</printSummary>
                             <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                            <argLine>${surefire.jacoco.agent}</argLine>
                             <reportsDirectory>${project.build.directory}/surefire-reports/unit</reportsDirectory>
                             <includes>
                                 <include>**/*Test.java</include>
