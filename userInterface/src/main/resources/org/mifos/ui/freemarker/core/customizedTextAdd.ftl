@@ -31,6 +31,7 @@
 	<div>[@spring.message "customizeTextAdd.instructions" /]</div>
 	&nbsp;		
 	<div>[@spring.message "customizeTextAddEdit.example" /]</div>
+	&nbsp;
     <div><span class="red">* </span>[@spring.message "fieldsmarkedwithanasteriskarerequired" /] </div>
     <fieldset>
     <div class="row">

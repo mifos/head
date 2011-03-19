@@ -22,12 +22,10 @@ package org.mifos.application.messagecustomizer;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.doNothing;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
 
 import java.util.LinkedHashMap;
 import java.util.Locale;
@@ -36,12 +34,6 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.application.messagecustomizer.CustomizedTextServiceFacadeWebTier;
-import org.mifos.dto.domain.AccountStatusesLabelDto;
-import org.mifos.dto.domain.ConfigurableLookupLabelDto;
-import org.mifos.dto.domain.GracePeriodDto;
-import org.mifos.dto.domain.OfficeLevelDto;
-import org.mifos.dto.screen.ConfigureApplicationLabelsDto;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.context.MessageSource;
@@ -61,20 +53,6 @@ public class CustomizedTextServiceFacadeWebTierTest {
     public void setup() {
 		customizedTextServiceFacadeWebTier = new CustomizedTextServiceFacadeWebTier(
 				messageCustomizerDao, messageSource);
-	}
-	
-	@Test
-	public void shouldRetrieveConfigurableLabels() {
-		when(messageSource.getMessage(any(String.class), any(Object[].class), any(Locale.class))).thenReturn("test:");
-		ConfigureApplicationLabelsDto labelsDto =
-			customizedTextServiceFacadeWebTier.retrieveConfigurableLabels(new Locale("en"));
-		
-		AccountStatusesLabelDto accountStatusesLabelDto = labelsDto.getAccountStatusLabels();
-		ConfigurableLookupLabelDto configurableLookupLabelDto = labelsDto.getLookupLabels();
-		GracePeriodDto gracePeriodDto = labelsDto.getGracePeriodDto();
-		OfficeLevelDto officeLevelDto = labelsDto.getOfficeLevels();
-		
-		assertThat(accountStatusesLabelDto.getActive(),is("test"));
 	}
 	
 	@Test

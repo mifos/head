@@ -31,7 +31,6 @@
 	<div class="fontBold"><span class="orangeheading">[@spring.message "customizeTextEdit.title"/]</span></div>
 	<div>[@spring.message "customizeTextEdit.instructions" /]</div>
 	&nbsp;
-	<div>[@spring.message "customizeTextAddEdit.example" /]</div>
     <div><span class="red">* </span>[@spring.message "fieldsmarkedwithanasteriskarerequired" /] </div>
     <fieldset>
     <div class="row">

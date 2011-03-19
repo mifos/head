@@ -64,8 +64,8 @@ public class CustomizeTextTest  extends UiTestCaseBase {
     public void addEditRemoveCustomizedText() {
     	String originalText = "Client";
     	String customText = "Person";
-    	String newCustomText = "Borrower";
-
+        String newCustomText = "有";  // try some Chinese
+        
     	CustomizeTextViewPage customizeTextViewPage = 
     		adminTestHelper.addCustomizedText(originalText, customText);
     	

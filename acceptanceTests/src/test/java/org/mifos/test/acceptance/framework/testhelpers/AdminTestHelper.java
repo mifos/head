@@ -25,8 +25,6 @@ import org.mifos.test.acceptance.framework.admin.ChecklistDetailsPage;
 import org.mifos.test.acceptance.framework.admin.CustomizeTextAddPage;
 import org.mifos.test.acceptance.framework.admin.CustomizeTextViewPage;
 import org.mifos.test.acceptance.framework.admin.DefineChecklistParameters;
-import org.mifos.test.acceptance.framework.admin.DefineLabelsPage;
-import org.mifos.test.acceptance.framework.admin.DefineLabelsParameters;
 import org.mifos.test.acceptance.framework.admin.DefineLookupOptionParameters;
 import org.mifos.test.acceptance.framework.admin.DefineLookupOptionsPage;
 import org.mifos.test.acceptance.framework.admin.SystemInfoPage;
@@ -75,26 +73,6 @@ public class AdminTestHelper {
         return customizeTextAddPage.submit();
     }
     
-    public AdminPage defineLabels(DefineLabelsParameters defineLabelsParams) {
-        DefineLabelsPage defineLabelsPage = navigationHelper
-            .navigateToAdminPage()
-            .navigateToDefineLabelsPage();
-        for(String label : defineLabelsParams.getKeys()) {
-            defineLabelsPage.setLabelValue(label, defineLabelsParams.getLabelText(label));
-        }
-        return defineLabelsPage.submit();
-    }
-
-    public AdminPage verifyLabels(DefineLabelsParameters defineLabelsParams) {
-        DefineLabelsPage defineLabelsPage = navigationHelper
-            .navigateToAdminPage()
-            .navigateToDefineLabelsPage();
-        for(String label : defineLabelsParams.getKeys()) {
-            defineLabelsPage.verifyLabelValue(label, defineLabelsParams.getLabelText(label));
-        }
-        return defineLabelsPage.cancel();
-    }
-
     public SystemInfoPage navigateToSystemInfoPage() {
         return navigationHelper
             .navigateToAdminPage()

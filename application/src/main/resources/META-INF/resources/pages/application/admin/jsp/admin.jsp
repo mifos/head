@@ -150,10 +150,7 @@ explanation of the license and how it is applied.
 							<tr class="fontnormal">
 								<td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
 								<td width="97%">
-								<a id="admin.link.customizeText" href="customizeText.ftl"><mifos:mifoslabel name="admin.customizeText" /></a>
-								
-								<!-- <a id="admin.link.defineLabels" href="defineLabels.ftl"><mifos:mifoslabel name="admin.definelabels" /></a> -->
-								<!-- <html-el:link styleId="admin.link.defineLabels" action="labelconfigurationaction.do?method=load&randomNUm=${sessionScope.randomNUm}"></html-el:link> -->
+								<a id="admin.link.customizeText" href="customizeText.ftl"><mifos:mifoslabel name="admin.customizeText" /></a>								
 								</td>
 							</tr>
 							<tr class="fontnormal">

@@ -80,12 +80,13 @@ public class CustomizeTextViewPage extends MifosPage {
 	}
 	
 	public int getCustomizedTextCount() {
+		int length;
 		String[] options =  selenium.getSelectOptions("customizeTextView.select.customizedText");
-		if (options.length == 1) {
-			if (options[0].length() == 0) {
-				return 0;
-			}
+		if (options.length == 1 && options[0].length() == 0) {
+			length = 0;
+		} else {
+			length = options.length;
 		}
-		return options.length;
+		return length;
 	}
 }
