@@ -87,7 +87,6 @@ import org.testng.Assert;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Arrays;
 
 /**
  * Holds methods common to most loan tests.
