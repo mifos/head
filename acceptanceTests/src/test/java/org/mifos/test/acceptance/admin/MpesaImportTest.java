@@ -315,7 +315,7 @@ public class MpesaImportTest extends UiTestCaseBase {
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled = true)
+    @Test(enabled = false) // Disabled because of MIFOS-4853
     public void failImportTransaction() throws Exception {
         //Given
         String path = this.getClass().getResource("/mpesa/" + FILE_WITH_OVERPAYMENT_AMOUNT).toString();
