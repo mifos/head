@@ -21,10 +21,17 @@ package org.mifos.db.upgrade;
 
 import liquibase.exception.LiquibaseException;
 import org.junit.Assert;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
 
 import java.sql.SQLException;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {"/test-dbContext.xml", "/META-INF/spring/DbUpgradeContext.xml"})
+@TransactionConfiguration(transactionManager = "platformTransactionManager", defaultRollback = true)
 public class DatabaseUpgradeSupportIntegrationTest {
 
     @Autowired
