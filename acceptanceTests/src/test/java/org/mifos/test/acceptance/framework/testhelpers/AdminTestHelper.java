@@ -22,9 +22,9 @@ package org.mifos.test.acceptance.framework.testhelpers;
 
 import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.admin.ChecklistDetailsPage;
+import org.mifos.test.acceptance.framework.admin.CustomizeTextAddPage;
+import org.mifos.test.acceptance.framework.admin.CustomizeTextViewPage;
 import org.mifos.test.acceptance.framework.admin.DefineChecklistParameters;
-import org.mifos.test.acceptance.framework.admin.DefineLabelsPage;
-import org.mifos.test.acceptance.framework.admin.DefineLabelsParameters;
 import org.mifos.test.acceptance.framework.admin.DefineLookupOptionParameters;
 import org.mifos.test.acceptance.framework.admin.DefineLookupOptionsPage;
 import org.mifos.test.acceptance.framework.admin.SystemInfoPage;
@@ -61,26 +61,18 @@ public class AdminTestHelper {
             .verifyLookupOption(lookupOptionParams);
     }
 
-    public AdminPage defineLabels(DefineLabelsParameters defineLabelsParams) {
-        DefineLabelsPage defineLabelsPage = navigationHelper
+    public CustomizeTextViewPage addCustomizedText(String originalText, String customText) {
+        CustomizeTextAddPage customizeTextAddPage = navigationHelper
             .navigateToAdminPage()
-            .navigateToDefineLabelsPage();
-        for(String label : defineLabelsParams.getKeys()) {
-            defineLabelsPage.setLabelValue(label, defineLabelsParams.getLabelText(label));
-        }
-        return defineLabelsPage.submit();
+            .navigateToCustomizeTextViewPage()
+            .navigateToCustomizeTextAddPage();
+        
+        customizeTextAddPage.setOriginalText(originalText);
+        customizeTextAddPage.setCustomText(customText);
+        
+        return customizeTextAddPage.submit();
     }
-
-    public AdminPage verifyLabels(DefineLabelsParameters defineLabelsParams) {
-        DefineLabelsPage defineLabelsPage = navigationHelper
-            .navigateToAdminPage()
-            .navigateToDefineLabelsPage();
-        for(String label : defineLabelsParams.getKeys()) {
-            defineLabelsPage.verifyLabelValue(label, defineLabelsParams.getLabelText(label));
-        }
-        return defineLabelsPage.cancel();
-    }
-
+    
     public SystemInfoPage navigateToSystemInfoPage() {
         return navigationHelper
             .navigateToAdminPage()
@@ -108,4 +100,5 @@ public class AdminTestHelper {
             .navigateToViewChecklistsPage()
             .navigateToChecklistDetailsPage(checklistName);
     }
+
 }

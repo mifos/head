@@ -1,15 +1,20 @@
 package org.mifos.test.acceptance.admin;
 
+import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.admin.FeesCreatePage;
+import org.mifos.test.acceptance.framework.admin.ViewFeesPage;
+import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.util.TestDataSetup;
 
 import java.sql.SQLException;
 
 public class FeeTestHelper {
     private final TestDataSetup dataSetup;
-
-    public FeeTestHelper(TestDataSetup dataSetup) {
+    private final NavigationHelper navigationHelper;
+    
+    public FeeTestHelper(TestDataSetup dataSetup, NavigationHelper navigationHelper) {
         this.dataSetup = dataSetup;
+        this.navigationHelper = navigationHelper;
     }
 
     public String createFixedFee(String feeName, String feeType, String payWhen, int rateAmount, String baseRate) throws SQLException {
@@ -49,5 +54,37 @@ public class FeeTestHelper {
         feeParameters.setGlCode(31301);
         dataSetup.createFee(feeParameters);
         return feeName;
+    }
+    
+    public void defineFees(FeesCreatePage.SubmitFormParameters feeParameters) {
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        adminPage.defineNewFees(feeParameters);
+    }
+
+    public FeesCreatePage.SubmitFormParameters getFeeParameters(String feeName, String categoryType, boolean defaultFees,
+                                                                int frequencyType, int amount, int glCode) {
+        FeesCreatePage.SubmitFormParameters formParameters = new FeesCreatePage.SubmitFormParameters();
+        formParameters.setFeeName(feeName);
+        formParameters.setCategoryType(categoryType);
+        formParameters.setDefaultFees(defaultFees);
+        formParameters.setFeeFrequencyType(frequencyType);
+        formParameters.setAmount(amount);
+        formParameters.setGlCode(glCode);
+        return formParameters;
+    }
+
+    public void viewClientFees(String expectedClientFees) {
+        ViewFeesPage viewFeesPage = navigateToViewFeesPage();
+        viewFeesPage.verifyClientFees(expectedClientFees);
+    }
+
+    public void viewProductFees(String expectedProductFees) {
+        ViewFeesPage viewFeesPage = navigateToViewFeesPage();
+        viewFeesPage.verifyProductFees(expectedProductFees);
+    }
+
+    private ViewFeesPage navigateToViewFeesPage() {
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        return adminPage.navigateToViewFeesPage();
     }
 }

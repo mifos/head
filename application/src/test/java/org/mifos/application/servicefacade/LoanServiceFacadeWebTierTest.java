@@ -22,10 +22,7 @@ package org.mifos.application.servicefacade;
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
@@ -45,16 +42,10 @@ import org.mifos.accounts.loan.business.OriginalLoanScheduleEntity;
 import org.mifos.accounts.loan.business.matchers.OriginalScheduleInfoDtoMatcher;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.business.service.OriginalScheduleInfoDto;
-import org.mifos.accounts.loan.business.service.validators.InstallmentValidationContext;
-import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallmentBuilder;
-import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
-import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.platform.cashflow.service.CashFlowDetail;
@@ -73,9 +64,6 @@ public class LoanServiceFacadeWebTierTest {
 
     // collaborators
     @Mock
-    private CustomerDao customerDao;
-
-    @Mock
     private LoanDao loanDao;
 
     @Mock
@@ -83,16 +71,7 @@ public class LoanServiceFacadeWebTierTest {
 
     // test data
     @Mock
-    private CustomerBO customer;
-
-    @Mock
     private LoanBO loanBO;
-
-    @Mock
-    private InstallmentsValidator installmentsValidator;
-
-    @Mock
-    private HolidayServiceFacade holidayServiceFacade;
 
     private RepaymentScheduleInstallmentBuilder installmentBuilder;
 
@@ -105,34 +84,9 @@ public class LoanServiceFacadeWebTierTest {
         locale = new Locale("en", "GB");
         installmentBuilder = new RepaymentScheduleInstallmentBuilder(locale);
         rupee = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
-        loanServiceFacade = new LoanServiceFacadeWebTier(customerDao, loanDao, installmentsValidator, loanBusinessService, holidayServiceFacade);
+        loanServiceFacade = new LoanServiceFacadeWebTier(loanDao, loanBusinessService);
     }
-
-    @Test
-    public void shouldValidateInstallments() {
-        int customerId = 121;
-        Errors errors = new Errors();
-        when(installmentsValidator.validateInputInstallments(anyListOf(RepaymentScheduleInstallment.class), any(InstallmentValidationContext.class))).thenReturn(errors);
-        when(customerDao.findCustomerById(customerId)).thenReturn(customer);
-        when(customer.getOfficeId()).thenReturn(Short.valueOf("1"));
-        Errors actual = loanServiceFacade.validateInputInstallments(null, null, new ArrayList<RepaymentScheduleInstallment>(), customerId);
-        assertThat(actual, is(errors));
-        verify(installmentsValidator).validateInputInstallments(anyListOf(RepaymentScheduleInstallment.class), any(InstallmentValidationContext.class));
-        verify(customerDao).findCustomerById(customerId);
-        verify(customer).getOfficeId();
-    }
-
-    @Test
-    public void shouldValidateInstallmentSchedule() {
-        List<RepaymentScheduleInstallment> installments = new ArrayList<RepaymentScheduleInstallment>();
-        Errors expectedErrors = new Errors();
-        VariableInstallmentDetailsBO variableInstallmentDetailsBO = new VariableInstallmentDetailsBO();
-        when(installmentsValidator.validateInstallmentSchedule(installments, variableInstallmentDetailsBO)).thenReturn(expectedErrors);
-        Errors errors = loanServiceFacade.validateInstallmentSchedule(installments, variableInstallmentDetailsBO);
-        assertThat(errors, is(expectedErrors));
-        verify(installmentsValidator).validateInstallmentSchedule(installments, variableInstallmentDetailsBO);
-    }
-
+   
     @Test
     public void retrieveOriginalLoanSchedule() throws PersistenceException {
         Integer accountId = new Integer(1);

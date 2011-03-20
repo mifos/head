@@ -26,10 +26,16 @@ public class LoanDisbursmentDateFactoryImpl implements LoanDisbursementDateFacto
 
     @Override
     public LoanDisbursementStrategy create(ScheduledEvent customerMeetingSchedule,
-            ScheduledEvent loanProductMeetingSchedule, boolean isRepaymentIndependentOfMeetingEnabled) {
-        
-        // FIXME - keithw - previous strategy was only based on customer meeting schedule for loan creation
-        return new ScheduledEventLoanDisbursementStrategyImpl(customerMeetingSchedule);
-    }
+            ScheduledEvent loanProductMeetingSchedule, boolean isRepaymentIndependentOfMeetingEnabled,
+            boolean variableInstallmentsAllowed) {
 
+        // FIXME - keithw - previous strategy was only based on customer meeting schedule for loan creation
+        LoanDisbursementStrategy loanDisbursementStrategy = new ScheduledEventLoanDisbursementStrategyImpl(
+                customerMeetingSchedule);
+        if (variableInstallmentsAllowed) {
+            loanDisbursementStrategy = new VariableInstallmentsLoanDisbursementStrategyImpl();
+        }
+
+        return loanDisbursementStrategy;
+    }
 }

@@ -4,20 +4,23 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
+import org.mifos.accounts.loan.struts.action.Criteria;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.platform.validations.ValidationException;
 import org.mifos.platform.questionnaire.exceptions.BadNumericResponseException;
 import org.mifos.platform.questionnaire.exceptions.MandatoryAnswerNotFoundException;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
+import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.util.CollectionUtils;
+import org.mifos.platform.validations.ValidationException;
 import org.mifos.security.util.UserContext;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 public class QuestionnaireFlowAdapter {
@@ -79,12 +82,11 @@ public class QuestionnaireFlowAdapter {
         } catch (ValidationException e) {
             if (e.hasChildExceptions()) {
                 for (ValidationException ve : e.getChildExceptions()) {
-                   if (ve instanceof MandatoryAnswerNotFoundException) {
-                       errors.add(ClientConstants.ERROR_REQUIRED, new ActionMessage(ClientConstants.ERROR_REQUIRED, ve.getIdentifier()));
-                   }
-                   else if (ve instanceof BadNumericResponseException) {
-                       populateNumericError((BadNumericResponseException) ve, errors);
-                   }
+                    if (ve instanceof MandatoryAnswerNotFoundException) {
+                        errors.add(ClientConstants.ERROR_REQUIRED, new ActionMessage(ClientConstants.ERROR_REQUIRED, ve.getIdentifier()));
+                    } else if (ve instanceof BadNumericResponseException) {
+                        populateNumericError((BadNumericResponseException) ve, errors);
+                    }
                 }
             }
         }
@@ -135,7 +137,39 @@ public class QuestionnaireFlowAdapter {
 
     private List<QuestionGroupDetail> getQuestionGroups(HttpServletRequest request) {
         QuestionnaireServiceFacade questionnaireServiceFacade = serviceLocator.getService(request);
-        return questionnaireServiceFacade != null ? questionGroupFilter.doFilter(questionnaireServiceFacade.getQuestionGroups(event, source)) : null;
+        Criteria<QuestionGroupDetail> criteria = new Criteria<QuestionGroupDetail>() {
+            @Override
+            public QuestionGroupDetail filter(Integer questionGroupId, List<QuestionGroupDetail> questionGroupDetails) {
+                QuestionGroupDetail result = null;
+                for (QuestionGroupDetail questionGroupDetail : questionGroupDetails) {
+                    if (questionGroupId.equals(questionGroupDetail.getId())) {
+                        result = questionGroupDetail;
+                        break;
+                    }
+                }
+                return result;
+            }
+        };
+        return questionnaireServiceFacade != null ? questionGroupFilter.doFilter(questionnaireServiceFacade.getQuestionGroups(event, source), criteria) : null;
+    }
+
+    public List<QuestionGroupInstanceDetail> getQuestionGroupInstances(HttpServletRequest request, Integer entityId) {
+        QuestionnaireServiceFacade questionnaireServiceFacade = serviceLocator.getService(request);
+        Criteria<QuestionGroupInstanceDetail> criteria = new Criteria<QuestionGroupInstanceDetail>() {
+            @Override
+            public QuestionGroupInstanceDetail filter(Integer questionGroupId, List<QuestionGroupInstanceDetail> questionGroupInstanceDetails) {
+                QuestionGroupInstanceDetail result = null;
+                for (QuestionGroupInstanceDetail questionGroupInstanceDetail : questionGroupInstanceDetails) {
+                    if (questionGroupId.equals(questionGroupInstanceDetail.getQuestionGroupDetail().getId())) {
+                        result = questionGroupInstanceDetail;
+                        break;
+                    }
+                }
+                return result;
+            }
+        };
+        return questionnaireServiceFacade != null ? questionGroupFilter.doFilter(questionnaireServiceFacade.
+                getQuestionGroupInstancesWithUnansweredQuestionGroups(entityId, event, source), criteria): new ArrayList<QuestionGroupInstanceDetail>();
     }
 
     private void setQuestionnaireAttributesToRequest(HttpServletRequest request, QuestionResponseCapturer form) {
@@ -152,8 +186,8 @@ public class QuestionnaireFlowAdapter {
     private static QuestionGroupFilter getDefaultQuestionGroupFilter() {
         return new QuestionGroupFilter() {
             @Override
-            public List<QuestionGroupDetail> doFilter(List<QuestionGroupDetail> questionGroupDetails) {
-                return questionGroupDetails; // no filtering by default
+            public <T> List<T> doFilter(List<T> t, Criteria<T> criteria) {
+                return t; // no filtering by default
             }
         };
     }

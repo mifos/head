@@ -69,6 +69,11 @@ public class LoanCreationLoanDetailsDto implements Serializable {
     private final Integer maxNumberOfInstallments;
     private final Integer minNumberOfInstallments;
     private final LocalDate nextPossibleDisbursementDate;
+    private final boolean variableInstallmentsAllowed;
+    private final Integer minGapInDays;
+    private final Integer maxGapInDays;
+    private final BigDecimal minInstallmentAmount;
+    private final boolean compareCashflowEnabled;
 
     public LoanCreationLoanDetailsDto(boolean isRepaymentIndependentOfMeetingEnabled,
             MeetingDto loanOfferingMeetingDetail, MeetingDto customerMeetingDetail,
@@ -77,7 +82,8 @@ public class LoanCreationLoanDetailsDto implements Serializable {
             HashMap<String, String> purposeOfLoanOptions, Map<String, String> defaultFeeOptions, Map<String, String> additionalFeeOptions, List<FeeDto> defaultFees, 
             BigDecimal defaultLoanAmount, BigDecimal maxLoanAmount, BigDecimal minLoanAmount, 
             Double defaultInterestRate, Double maxInterestRate, Double minInterestRate, 
-            Integer defaultNumberOfInstallments, Integer maxNumberOfInstallments, Integer minNumberOfInstallments, LocalDate nextPossibleDisbursementDate, Map<String, String> daysOfTheWeekOptions) {
+            Integer defaultNumberOfInstallments, Integer maxNumberOfInstallments, Integer minNumberOfInstallments, LocalDate nextPossibleDisbursementDate, Map<String, String> daysOfTheWeekOptions, 
+            boolean variableInstallmentsAllowed, Integer minGapInDays, Integer maxGapInDays, BigDecimal minInstallmentAmount, boolean compareCashflowEnabled) {
         this.repaymentIndependentOfMeetingEnabled = isRepaymentIndependentOfMeetingEnabled;
         this.loanOfferingMeetingDetail = loanOfferingMeetingDetail;
         this.customerMeetingDetail = customerMeetingDetail;
@@ -99,6 +105,11 @@ public class LoanCreationLoanDetailsDto implements Serializable {
         this.minNumberOfInstallments = minNumberOfInstallments;
         this.nextPossibleDisbursementDate = nextPossibleDisbursementDate;
         this.daysOfTheWeekOptions = daysOfTheWeekOptions;
+        this.variableInstallmentsAllowed = variableInstallmentsAllowed;
+        this.minGapInDays = minGapInDays;
+        this.maxGapInDays = maxGapInDays;
+        this.minInstallmentAmount = minInstallmentAmount;
+        this.compareCashflowEnabled = compareCashflowEnabled;
 		populateProductOptions(loanProductDtos);
 		populateFundOptions(fundDtos);
 		this.collateralOptions = collateralOptions;
@@ -225,5 +236,25 @@ public class LoanCreationLoanDetailsDto implements Serializable {
     
     public Map<String, String> getDaysOfTheWeekOptions() {
         return daysOfTheWeekOptions;
+    }
+    
+    public boolean isVariableInstallmentsAllowed() {
+        return variableInstallmentsAllowed;
+    }
+
+    public Integer getMinGapInDays() {
+        return minGapInDays;
+    }
+
+    public Integer getMaxGapInDays() {
+        return maxGapInDays;
+    }
+
+    public BigDecimal getMinInstallmentAmount() {
+        return minInstallmentAmount;
+    }
+    
+    public boolean isCompareCashflowEnabled() {
+        return compareCashflowEnabled;
     }
 }

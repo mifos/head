@@ -21,6 +21,7 @@
 package org.mifos.framework.util;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -86,9 +87,9 @@ public class DataSetUpgradeUtil {
     String dataSetName;
     String databaseName ="mifos_gazelle_acceptance";
     String user;
-    String password;
+    String password = "";
     String dataSetDirectoryName;
-    String schemaFileName = "latest-schema_last.sql";
+    String schemaFileName = "base_schema.sql";
     String port = "3306";
 
     DbUnitUtilities dbUnitUtilities;
@@ -179,7 +180,7 @@ public class DataSetUpgradeUtil {
             jdbcConnection = DriverManager.getConnection(getUrl(databaseName, port, params), user, password);
             jdbcConnection.setAutoCommit(false);
             resetDatabase(databaseName, jdbcConnection);
-            SqlExecutor.execute(MifosResourceUtil.getSQLFileAsStream(schemaFileName), jdbcConnection);
+            SqlExecutor.execute(new FileInputStream(schemaFileName), jdbcConnection);
             jdbcConnection.commit();
             jdbcConnection.setAutoCommit(true);
             IDatabaseConnection databaseConnection = new DatabaseConnection(jdbcConnection);
@@ -204,6 +205,7 @@ public class DataSetUpgradeUtil {
         return new ClassPathXmlApplicationContext(
                                     "classpath:/org/mifos/config/resources/applicationContext.xml",
                                     "classpath:META-INF/spring/DbUpgradeContext.xml",
+                                    "classpath:META-INF/spring/CashFlowContext.xml",
                                     "classpath:META-INF/spring/QuestionnaireContext.xml");
     }
 
@@ -325,21 +327,20 @@ public class DataSetUpgradeUtil {
             }
             if( line.hasOption( PASSWORD_OPTION_NAME ) ) {
                 password = line.getOptionValue(PASSWORD_OPTION_NAME);
-            } else {
-                missingOption(passwordOption);
-            }
+            } 
             if( line.hasOption( DATABASE_OPTION_NAME ) ) {
                 databaseName = line.getOptionValue(DATABASE_OPTION_NAME);
             }
             if( line.hasOption( SCHEMA_FILE_OPTION_NAME ) ) {
                 schemaFileName = line.getOptionValue(SCHEMA_FILE_OPTION_NAME);
-                try {
-					MifosResourceUtil.getSQLFileAsReader(schemaFileName);
-				} catch (FileNotFoundException e) {
-					fail("Unable to find schema file: " + schemaFileName);
-					e.printStackTrace();
-				}
+               	File file = new File(schemaFileName);
+               	if (!file.exists()) {
+    				fail("Unable to find schema file: " + schemaFileName);
+    			}
+            } else {
+                missingOption(schemaFileOption);            	
             }
+            
             if( line.hasOption( PORT_OPTION_NAME ) ) {
                 port = line.getOptionValue(PORT_OPTION_NAME);
             }

@@ -21,6 +21,8 @@
 package org.mifos.test.acceptance.framework;
 
 import com.thoughtworks.selenium.Selenium;
+import com.thoughtworks.selenium.SeleniumException;
+
 import org.testng.Assert;
 
 /**
@@ -61,7 +63,21 @@ public class AbstractPage {
     }
 
     public void verifyPage(String pageName) {
-        Assert.assertEquals(selenium.getAttribute("page.id@title"), pageName);
+        String pageId = selenium.getAttribute("page.id@title");
+        if(!pageId.equals(pageName)) {
+            String errors = getTextIfExists("error.messages");
+            Assert.fail("Expected page <" +pageName +">, actual page <"+pageId+">!!! with error message > " + errors);
+        }
+    }
+
+    public String getTextIfExists(String locator) {
+        String text = null;
+        try {
+         text = selenium.getText("error.messages");
+        } catch (SeleniumException se) { // NOPMD by ugupta on 15/3/11 10:16 PM
+            // do nothing
+        }
+        return text;
     }
 
     public void verifyPage(String pageName, String secondName) {

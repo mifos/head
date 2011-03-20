@@ -25,6 +25,8 @@ import org.mifos.test.acceptance.framework.MifosPage;
 
 import com.thoughtworks.selenium.Selenium;
 
+import java.util.Arrays;
+
 public class DefineProductMixPage extends MifosPage {
 
     public DefineProductMixPage(Selenium selenium) {
@@ -37,7 +39,10 @@ public class DefineProductMixPage extends MifosPage {
         waitForPageToLoad();
         selenium.select("productId", prod1);
         waitForPageToLoad();
-        selenium.select("allowed", prod2);
+        if (!Arrays.asList(selenium.getSelectOptions("notAllowed")).contains(prod2))
+        {
+            selenium.select("allowed", prod2);
+        }
         selenium.click("defineProductMix.button.remove");
         selenium.click("holiday.button.preview");
         waitForPageToLoad();

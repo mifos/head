@@ -1,24 +1,25 @@
 package org.mifos.accounts.loan.business.service.validators;
 
+import static org.mifos.accounts.util.helpers.AccountConstants.INSTALLMENT_AMOUNT_LESS_THAN_MIN_AMOUNT;
+import static org.mifos.accounts.util.helpers.AccountConstants.INSTALLMENT_DUEDATE_BEFORE_DISBURSE_DATE;
+import static org.mifos.accounts.util.helpers.AccountConstants.INSTALLMENT_DUEDATE_LESS_THAN_MIN_GAP;
+import static org.mifos.accounts.util.helpers.AccountConstants.INSTALLMENT_DUEDATE_MORE_THAN_MAX_GAP;
+import static org.mifos.accounts.util.helpers.AccountConstants.INSTALLMENT_DUEDATE_SAME_AS_DISBURSE_DATE;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.Money;
 import org.mifos.platform.validations.ErrorEntry;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
-import static org.mifos.accounts.util.helpers.AccountConstants.INSTALLMENT_AMOUNT_LESS_THAN_MIN_AMOUNT;
-import static org.mifos.accounts.util.helpers.AccountConstants.INSTALLMENT_DUEDATE_BEFORE_DISBURSE_DATE;
-import static org.mifos.accounts.util.helpers.AccountConstants.INSTALLMENT_DUEDATE_LESS_THAN_MIN_GAP;
-import static org.mifos.accounts.util.helpers.AccountConstants.INSTALLMENT_DUEDATE_MORE_THAN_MAX_GAP;
-import static org.mifos.accounts.util.helpers.AccountConstants.INSTALLMENT_DUEDATE_SAME_AS_DISBURSE_DATE;
 
 public class InstallmentRulesValidatorImpl implements InstallmentRulesValidator {
     @Override
@@ -55,22 +56,28 @@ public class InstallmentRulesValidatorImpl implements InstallmentRulesValidator 
             Calendar dueDate = installment.getDueDateValueAsCalendar();
             if (dueDate != null && holidayServiceFacade.isFutureRepaymentHoliday(officeId, dueDate)) {
                 String identifier = installment.getInstallmentNumberAsString();
-                errorEntries.add(new ErrorEntry(AccountConstants.INSTALLMENT_DUEDATE_IS_HOLIDAY, identifier));
+                
+                ErrorEntry entry = new ErrorEntry(AccountConstants.INSTALLMENT_DUEDATE_IS_HOLIDAY, identifier);
+                entry.setArgs(Arrays.asList(identifier));
+                errorEntries.add(entry);
             }
         }
         return errorEntries;
     }
 
     @Override
-    public List<ErrorEntry> validateForMinimumInstallmentAmount(List<RepaymentScheduleInstallment> installments, VariableInstallmentDetailsBO variableInstallmentDetailsBO) {
+    public List<ErrorEntry> validateForMinimumInstallmentAmount(List<RepaymentScheduleInstallment> installments, BigDecimal minInstallmentAmount) {
         List<ErrorEntry> errorEntries = new ArrayList<ErrorEntry>();
-        Money minInstallmentAmount = variableInstallmentDetailsBO.getMinInstallmentAmount();
         for (RepaymentScheduleInstallment installment : installments) {
             String identifier = installment.getInstallmentNumberAsString();
             if (installment.isTotalAmountInValid()) {
-                errorEntries.add(new ErrorEntry(AccountConstants.INSTALLMENT_AMOUNT_LESS_THAN_INTEREST_FEE, identifier));
+                ErrorEntry entry = new ErrorEntry(AccountConstants.INSTALLMENT_AMOUNT_LESS_THAN_INTEREST_FEE, identifier);
+                entry.setArgs(Arrays.asList(identifier));
+                errorEntries.add(entry);
             } else if (installment.isTotalAmountLessThan(minInstallmentAmount)) {
-                errorEntries.add(new ErrorEntry(INSTALLMENT_AMOUNT_LESS_THAN_MIN_AMOUNT, identifier));
+                ErrorEntry entry = new ErrorEntry(INSTALLMENT_AMOUNT_LESS_THAN_MIN_AMOUNT, identifier);
+                entry.setArgs(Arrays.asList(identifier));
+                errorEntries.add(entry);
             }
         }
         return errorEntries;
@@ -85,11 +92,15 @@ public class InstallmentRulesValidatorImpl implements InstallmentRulesValidator 
             long diffInDays = DateUtils.getNumberOfDaysBetweenTwoDates(dueDateValue, previousDueDate);
             Integer minGapInDays = variableInstallmentDetailsBO.getMinGapInDays();
             if (minGapInDays != null && diffInDays < minGapInDays) {
-                errorEntries.add(new ErrorEntry(INSTALLMENT_DUEDATE_LESS_THAN_MIN_GAP, identifier));
+                ErrorEntry entry = new ErrorEntry(INSTALLMENT_DUEDATE_LESS_THAN_MIN_GAP, identifier);
+                entry.setArgs(Arrays.asList(identifier));
+                errorEntries.add(entry);
             } else {
                 Integer maxGapInDays = variableInstallmentDetailsBO.getMaxGapInDays();
                 if (maxGapInDays != null && diffInDays > maxGapInDays) {
-                    errorEntries.add(new ErrorEntry(INSTALLMENT_DUEDATE_MORE_THAN_MAX_GAP, identifier));
+                    ErrorEntry entry = new ErrorEntry(INSTALLMENT_DUEDATE_MORE_THAN_MAX_GAP, identifier);
+                    entry.setArgs(Arrays.asList(identifier));
+                    errorEntries.add(entry);
                 }
             }
         }
@@ -101,9 +112,13 @@ public class InstallmentRulesValidatorImpl implements InstallmentRulesValidator 
         Date dueDateValue = installment.getDueDateValue();
         if (dueDateValue != null) {
             if (dueDateValue.compareTo(disbursementDate) == 0) {
-                errorEntries.add(new ErrorEntry(INSTALLMENT_DUEDATE_SAME_AS_DISBURSE_DATE, identifier));
+                ErrorEntry entry = new ErrorEntry(INSTALLMENT_DUEDATE_SAME_AS_DISBURSE_DATE, identifier);
+                entry.setArgs(Arrays.asList(identifier));
+                errorEntries.add(entry);
             } else if (dueDateValue.compareTo(disbursementDate) < 0) {
-                errorEntries.add(new ErrorEntry(INSTALLMENT_DUEDATE_BEFORE_DISBURSE_DATE, identifier));
+                ErrorEntry entry = new ErrorEntry(INSTALLMENT_DUEDATE_BEFORE_DISBURSE_DATE, identifier);
+                entry.setArgs(Arrays.asList(identifier));
+                errorEntries.add(entry);
             }
         }
     }

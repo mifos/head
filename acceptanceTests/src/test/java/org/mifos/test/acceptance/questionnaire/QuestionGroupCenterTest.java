@@ -20,15 +20,10 @@
 
 package org.mifos.test.acceptance.questionnaire;
 
-
-import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.questionnaire.AttachQuestionGroupParameters;
 import org.mifos.test.acceptance.framework.testhelpers.QuestionGroupTestHelper;
-import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -36,17 +31,8 @@ import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
 @SuppressWarnings("PMD.CyclomaticComplexity")
-@Test(groups = {"client", "acceptance", "ui"})
+@Test(singleThreaded = true, groups = {"client", "acceptance", "ui", "no_db_unit"})
 public class QuestionGroupCenterTest extends UiTestCaseBase {
-
-    @Autowired
-    private DriverManagerDataSource dataSource;
-
-    @Autowired
-    private DbUnitUtilities dbUnitUtilities;
-
-    @Autowired
-    private InitializeApplicationRemoteTestingService initRemote;
 
     private QuestionGroupTestHelper questionGroupTestHelper;
 
@@ -70,10 +56,9 @@ public class QuestionGroupCenterTest extends UiTestCaseBase {
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyAttachingQuestionGroupToCenter() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_016_dbunit.xml", dataSource, selenium);
         AttachQuestionGroupParameters attachParams = new AttachQuestionGroupParameters();
-        attachParams.setTarget("MyCenter1233265933427");
-        attachParams.setQuestionGroupName("ViewCenterQG2");
+        attachParams.setTarget("Default Center");
+        attachParams.setQuestionGroupName("ViewCenterQG");
         attachParams.addTextResponse("Date", "09/02/2011");
         attachParams.addTextResponse("question 3", "25/02/2011");
         attachParams.addCheckResponse("question 4", "yes");
@@ -82,8 +67,8 @@ public class QuestionGroupCenterTest extends UiTestCaseBase {
         attachParams.addTextResponse("question 1", "tekst tekst");
         attachParams.addTextResponse("Text", "ale alo olu");
         AttachQuestionGroupParameters attachErrorParams = new AttachQuestionGroupParameters();
-        attachErrorParams.setTarget("MyCenter1233265933427");
-        attachErrorParams.setQuestionGroupName("ViewCenterQG2");
+        attachErrorParams.setTarget("Default Center");
+        attachErrorParams.setQuestionGroupName("ViewCenterQG");
         attachErrorParams.addTextResponse("question 3", "25/02/2011");
         attachErrorParams.addTextResponse("Number", "sdfsdf");
         attachErrorParams.addCheckResponse("question 4", "yes");

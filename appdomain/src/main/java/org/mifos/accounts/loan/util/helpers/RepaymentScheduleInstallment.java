@@ -20,15 +20,16 @@
 
 package org.mifos.accounts.loan.util.helpers;
 
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
 import org.joda.time.LocalDate;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
-
-import java.io.Serializable;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 
 public class RepaymentScheduleInstallment implements Serializable {
 
@@ -208,6 +209,10 @@ public class RepaymentScheduleInstallment implements Serializable {
 
     public boolean isTotalAmountLessThan(Money minInstallmentAmount) {
         return minInstallmentAmount != null && (totalValue == null || totalValue.isLessThan(minInstallmentAmount));
+    }
+    
+    public boolean isTotalAmountLessThan(BigDecimal minInstallmentAmount) {
+        return minInstallmentAmount != null && (totalValue == null || totalValue.getAmount().doubleValue() < minInstallmentAmount.doubleValue());
     }
 
     public Money getFeesWithMiscFee() {

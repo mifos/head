@@ -24,6 +24,7 @@ import org.mifos.schedule.ScheduledEvent;
 
 public interface LoanDisbursementDateFactory {
 
-    LoanDisbursementStrategy create(ScheduledEvent customerMeetingSchedule, ScheduledEvent loanProductMeetingSchedule, boolean isRepaymentIndependentOfMeetingEnabled);
+    LoanDisbursementStrategy create(ScheduledEvent customerMeetingSchedule, ScheduledEvent loanProductMeetingSchedule, 
+            boolean isRepaymentIndependentOfMeetingEnabled, boolean isVariableInstallmentsAllowed);
 
 }

@@ -36,7 +36,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(sequential = true, groups = {"reports", "acceptance", "ui", "no_db_unit"})
+@Test(singleThreaded = true, groups = {"reports", "acceptance", "ui", "no_db_unit"})
 public class StandardReportsTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;
@@ -94,10 +94,7 @@ public class StandardReportsTest extends UiTestCaseBase {
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled = false)
     public void reportCategoriesTest() throws Exception {
-
-        //Given
 
         //When
         ViewReportCategoriesPage viewReportCategoriesPage = reportTestHelper.navigateToViewReportCategories();

@@ -77,6 +77,16 @@
  </div>
 [/#macro]
 
+[#macro flowCrumbs breadcrumbs]
+<div class="breadcrumb">
+        [#list breadcrumbs as messages]
+            [#if messages_has_next]
+                <a href="${flowExecutionUrl}&_eventId=${messages.link}">[@spring.message "${messages.message}" /]</a>&nbsp;/&nbsp;[#else]<span class="fontBold">[@spring.messageText "${messages.message}","${messages.message}" /]</span>
+            [/#if]
+        [/#list]
+ </div>
+[/#macro]
+
 [#macro crumbpairs breadcrumbs lastEntryIsText="true"]
 <div class="breadcrumb">
         [#list breadcrumbs?keys as text]

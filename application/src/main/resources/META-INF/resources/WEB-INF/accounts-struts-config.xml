@@ -219,6 +219,7 @@
             <forward name="validateInstallments_success" path="/pages/application/loan/jsp/schedulePreview.jsp"/>
             <forward name="validateInstallments_failure" path="/pages/application/loan/jsp/schedulePreview.jsp"/>
             <forward name="capture_cash_flow" path="/captureCashFlow.ftl"/>
+            <forward name="viewAndEditAdditionalInformation" path="/viewAndEditQuestionnaire.ftl"/>
         </action>
 
         <!--

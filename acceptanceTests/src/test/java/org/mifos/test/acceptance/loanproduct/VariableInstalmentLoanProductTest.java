@@ -27,7 +27,6 @@ import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.FeesCreatePage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
-import org.mifos.test.acceptance.framework.office.OfficeParameters;
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
@@ -41,21 +40,17 @@ import org.testng.annotations.Test;
 
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(sequential = true, groups = {"loanproduct", "acceptance", "ui","no_db_unit"})
+@Test(singleThreaded = true, groups = {"loanproduct", "acceptance", "ui","no_db_unit"})
 public class VariableInstalmentLoanProductTest extends UiTestCaseBase {
 
     @Autowired
     private ApplicationDatabaseOperation applicationDatabaseOperation;
-    String officeName = "test_office";
-    String userLoginName = "test_user";
-    String userName="test user";
-    String clientName = "test client";
+    String clientName = "WeeklyOld Monday";
     String loanProductName;
     LoanProductTestHelper loanProductTestHelper;
     LoanTestHelper loanTestHelper;
     DateTime systemDateTime;
     private FeeTestHelper feeTestHelper;
-    // ---
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
@@ -67,11 +62,8 @@ public class VariableInstalmentLoanProductTest extends UiTestCaseBase {
         systemDateTime = new DateTime(2010, 10, 11, 10, 0, 0, 0);
         loanTestHelper.setApplicationTime(systemDateTime);
         TestDataSetup dataSetup = new TestDataSetup(selenium, applicationDatabaseOperation);
-        dataSetup.createBranch(OfficeParameters.BRANCH_OFFICE, officeName, "Off");
-        dataSetup.createUser(userLoginName, userName, officeName);
-        dataSetup.createClient(clientName, officeName, userName);
         dataSetup.addDecliningPrincipalBalance();
-        feeTestHelper = new FeeTestHelper(dataSetup);
+        feeTestHelper = new FeeTestHelper(dataSetup, new NavigationHelper(selenium));
     }
 
     @AfterMethod
@@ -107,7 +99,7 @@ public class VariableInstalmentLoanProductTest extends UiTestCaseBase {
                 .clickContinue().
                 clickPreviewAndGoToReviewLoanAccountPage()
                 .verifyEditScheduleDisabled();
-
+        applicationDatabaseOperation.updateLSIM(0);
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
@@ -118,6 +110,7 @@ public class VariableInstalmentLoanProductTest extends UiTestCaseBase {
         loanProductName = formParameters.getOfferingName();
         createAndValidateLoanProductWithVariableInstalment("","1","",formParameters);
         navigateToCreateNewLoanPageAndValidateInstallmentSummary("","1","");
+        applicationDatabaseOperation.updateLSIM(0);
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
@@ -128,6 +121,7 @@ public class VariableInstalmentLoanProductTest extends UiTestCaseBase {
         loanProductName = formParameters.getOfferingName();
         createAndValidateLoanProductWithVariableInstalment("60", "1", "100.5", formParameters);
         navigateToCreateNewLoanPageAndValidateInstallmentSummary("60", "1", "100.5");
+        applicationDatabaseOperation.updateLSIM(0);
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
@@ -146,6 +140,7 @@ public class VariableInstalmentLoanProductTest extends UiTestCaseBase {
                 verifyVariableInstalmentOptionsFields().
                 verifyBlockedInterestTypes().
                 verifyFeeTypesBlocked(new String[]{periodicFees, fixedFeePerAmountAndInterest, fixedFeePerInterest});
+            applicationDatabaseOperation.updateLSIM(0);
     }
 
     private void createAndValidateLoanProductWithVariableInstalment(String maxGap, String minGap, String minInstalmentAmount, DefineNewLoanProductPage.SubmitFormParameters formParameters) {

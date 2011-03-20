@@ -26,6 +26,7 @@ import java.util.List;
 
 public class AdminBreadcrumbBuilder {
 
+	private String adminPageLink = "AdminAction.do?method=load";
     private final List<BreadCrumbsLinks> breadcrumbs = new LinkedList<BreadCrumbsLinks>();
 
     public AdminBreadcrumbBuilder withLink(String message, String link) {
@@ -36,12 +37,17 @@ public class AdminBreadcrumbBuilder {
         breadcrumbs.add(breadCrumb);
         return this;
     }
+    
+    public AdminBreadcrumbBuilder withAdminLink(String adminLink) {
+    	adminPageLink = adminLink;
+    	return this;
+    }
 
     public List<BreadCrumbsLinks> build() {
 
         BreadCrumbsLinks root = new BreadCrumbsLinks();
         root.setMessage("admin");
-        root.setLink("AdminAction.do?method=load");
+        root.setLink(adminPageLink);
 
         breadcrumbs.add(0, root);
         return breadcrumbs;

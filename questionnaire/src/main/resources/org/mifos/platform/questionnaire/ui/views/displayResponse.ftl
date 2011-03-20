@@ -23,49 +23,51 @@
     <STYLE TYPE="text/css"><!-- @import url(pages/questionnaire/css/questionnaire.css); --></STYLE>
     <script src="pages/questionnaire/js/display.js" type="text/javascript"></script>
     <span id="page.id" title="display_question_group_reponse"></span>
-    [#if Session.urlMap??]
-        [#assign breadcrumb = Session.urlMap/]
-        [@mifos.crumbpairs breadcrumb "false"/]
-    [/#if]
-    <div class="content_panel">
-        <h1>
-            ${questionGroupInstance.questionGroupTitle} - ${questionGroupInstance.dateCompletedAsString}
-        </h1>
-        <form action="viewAndEditQuestionnaire.ftl?execution=${flowExecutionKey}" id="displayResponseForm"
-              name="displayResponseForm" method="post">
-            <input type="submit" id="_eventId_questionnaire" name="_eventId_questionnaire" value="" style="visibility:hidden"/>
-            <fieldset id="questionGroupInstance.questionGroupDetail.sections" class="bluetableborderFull marginTop15">
-                [#if questionGroupInstance.questionGroupDetail.active && questionGroupInstance.questionGroupDetail.editable]
-                    <span class="topRight">
-                        <a href="editQuestionnaire#" questionGroupInstanceDetailIndex="0">[@spring.message "questionnaire.edit"/]</a>
-                    </span>
-                [/#if]
-                [#list questionGroupInstance.questionGroupDetail.sectionDetails as sectionDetail]
-                <br/>
-                <span class="paddingleft10 fontnormalbold">${sectionDetail.name}</span>
-                <ol>
-                    [#list sectionDetail.questions as sectionQuestionDetail]
-                    <li style='background-color: ${((sectionQuestionDetail_index % 2)==0)?string("#F2F2F2", "#FFFFFF")}'>
-                        <label>[#if sectionQuestionDetail.mandatory]<span class="red">*</span>[/#if]
-                            <span id="displayQuestionGroupReponse.text.section[${sectionDetail_index}].question[${sectionQuestionDetail_index}].questionName">${sectionQuestionDetail.text}</span>:</label>[#if sectionQuestionDetail.multiSelectQuestion && sectionQuestionDetail.values?size > 1]
-                        <ol>
-                            [#list sectionQuestionDetail.values as answer]
-                            <li>
-                                <span id="displayQuestionGroupReponse.text.section[${sectionDetail_index}].question[${sectionQuestionDetail_index}].questionAnswer[${answer_index}]">${answer}</span>
-                            </li>
-                            [/#list]
-                        </ol>
-                        [#else]
-                            <span id="displayQuestionGroupReponse.text.section[${sectionDetail_index}].question[${sectionQuestionDetail_index}].questionAnswer">${sectionQuestionDetail.answer}</span>
-                        [/#if]
-                    </li>
-                    [/#list]
-                </ol>
-                [/#list]
-            </fieldset>
-            <div class="buttonWidth">
-                <input id="_eventId_cancel" name="_eventId_cancel" type="submit" class="buttn" value="[@spring.message "questionnaire.back.to.previous"/]"/>
-            </div>
-        </form>
-    </div>
+    <div class="content">
+	    [#if Session.urlMap??]
+	        [#assign breadcrumb = Session.urlMap/]
+	        [@mifos.crumbpairs breadcrumb "false"/]
+	    [/#if]
+	    <div class="content_panel">
+	        <h1>
+	            ${questionGroupInstance.questionGroupTitle} - ${questionGroupInstance.dateCompletedAsString}
+	        </h1>
+	        <form action="viewAndEditQuestionnaire.ftl?execution=${flowExecutionKey}" id="displayResponseForm"
+	              name="displayResponseForm" method="post">
+	            <input type="submit" id="_eventId_questionnaire" name="_eventId_questionnaire" value="" style="visibility:hidden"/>
+	            <fieldset id="questionGroupInstance.questionGroupDetail.sections" class="bluetableborderFull marginTop15">
+	                [#if questionGroupInstance.questionGroupDetail.active && questionGroupInstance.questionGroupDetail.editable]
+	                    <span class="topRight">
+	                        <a href="editQuestionnaire#" questionGroupInstanceDetailIndex="0">[@spring.message "questionnaire.edit"/]</a>
+	                    </span>
+	                [/#if]
+	                [#list questionGroupInstance.questionGroupDetail.sectionDetails as sectionDetail]
+	                <br/>
+	                <span class="paddingleft10 fontnormalbold">${sectionDetail.name}</span>
+	                <ol>
+	                    [#list sectionDetail.questions as sectionQuestionDetail]
+	                    <li style='background-color: ${((sectionQuestionDetail_index % 2)==0)?string("#F2F2F2", "#FFFFFF")}'>
+	                        <label>[#if sectionQuestionDetail.mandatory]<span class="red">*</span>[/#if]
+	                            <span id="displayQuestionGroupReponse.text.section[${sectionDetail_index}].question[${sectionQuestionDetail_index}].questionName">${sectionQuestionDetail.text}</span>:</label>[#if sectionQuestionDetail.multiSelectQuestion && sectionQuestionDetail.values?size > 1]
+	                        <ol>
+	                            [#list sectionQuestionDetail.values as answer]
+	                            <li>
+	                                <span id="displayQuestionGroupReponse.text.section[${sectionDetail_index}].question[${sectionQuestionDetail_index}].questionAnswer[${answer_index}]">${answer}</span>
+	                            </li>
+	                            [/#list]
+	                        </ol>
+	                        [#else]
+	                            <span id="displayQuestionGroupReponse.text.section[${sectionDetail_index}].question[${sectionQuestionDetail_index}].questionAnswer">${sectionQuestionDetail.answer}</span>
+	                        [/#if]
+	                    </li>
+	                    [/#list]
+	                </ol>
+	                [/#list]
+	            </fieldset>
+	            <div class="buttonWidth">
+	                <input id="_eventId_cancel" name="_eventId_cancel" type="submit" class="buttn" value="[@spring.message "questionnaire.back.to.previous"/]"/>
+	            </div>
+	        </form>
+	    </div>
+	</div>
 [/@clientLeftPane]

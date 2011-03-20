@@ -22,7 +22,6 @@ package org.mifos.test.acceptance.framework.user;
 
 import org.junit.Assert;
 import org.mifos.test.acceptance.framework.MifosPage;
-import org.mifos.test.acceptance.framework.admin.DefineLabelsParameters;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -84,16 +83,6 @@ public class EditUserDataPage extends MifosPage {
     public void verifyPasswordChangeError() {
         String errorMsg = selenium.getText("edit_user.error.message");
         Assert.assertTrue(errorMsg.contains("Please ensure that password and confirm password entries are made and they are identical."));
-    }
-
-    private String getLabel(String label) {
-        return selenium.getText("edit_user.label." + label);
-    }
-
-    public void verifyLabels(DefineLabelsParameters defineLabelsParams) {
-        for (String label : defineLabelsParams.getKeys()) {
-            Assert.assertEquals(getLabel(label), defineLabelsParams.getLabelText(label) + ":");
-        }
     }
 
 }

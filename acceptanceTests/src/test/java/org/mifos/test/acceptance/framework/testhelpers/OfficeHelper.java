@@ -21,6 +21,8 @@
 package org.mifos.test.acceptance.framework.testhelpers;
 
 import org.mifos.test.acceptance.framework.admin.AdminPage;
+import org.mifos.test.acceptance.framework.admin.DefineNewOfficePage;
+import org.mifos.test.acceptance.framework.admin.ViewOfficesPage;
 import org.mifos.test.acceptance.framework.office.CreateOfficeConfirmationPage;
 import org.mifos.test.acceptance.framework.office.CreateOfficeEnterDataPage;
 import org.mifos.test.acceptance.framework.office.CreateOfficePreviewDataPage;
@@ -88,5 +90,23 @@ public class OfficeHelper {
             .navigateToOfficeViewDetailsPage(officeName).
             navigateToViewAdditionalInformation().
             verifyQuestionPresent(question, answers);
+    }
+    
+    public void defineOffice(String officeName, String shortName, String officeType, String parentOffice) {
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        DefineNewOfficePage defineNewOfficePage = adminPage.navigateToDefineANewOfficePage();
+        defineNewOfficePage.setOfficeName(officeName);
+        defineNewOfficePage.setOfficeShortName(shortName);
+        defineNewOfficePage.setOfficeType(officeType);
+        defineNewOfficePage.setParentOffice(parentOffice);
+        defineNewOfficePage.preview();
+        defineNewOfficePage.submit();
+    }
+
+    public void viewOffice(String[] expectedData) {
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        ViewOfficesPage viewOfficesPage = adminPage.navigateToViewOfficesPage();
+        viewOfficesPage.verifyPage();
+        viewOfficesPage.verifyOfficeList(expectedData);
     }
 }

@@ -295,12 +295,12 @@ public class AdminPage extends MifosPage {
         return new ViewReportCategoriesPage(selenium);
     }
 
-    public DefineLabelsPage navigateToDefineLabelsPage() {
-        selenium.click("admin.link.defineLabels");
+    public CustomizeTextViewPage navigateToCustomizeTextViewPage() {
+        selenium.click("admin.link.customizeText");
         waitForPageToLoad();
-        return new DefineLabelsPage(selenium);
+        return new CustomizeTextViewPage(selenium);
     }
-
+    
     public ViewRolesPage navigateToViewRolesPage() {
         selenium.click("admin.link.manageRoles");
         waitForPageToLoad();

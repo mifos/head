@@ -20,11 +20,12 @@
 
 package org.mifos.test.acceptance.util;
 
+import org.apache.commons.lang.RandomStringUtils;
+
 public class StringUtil {
 
     public static String getRandomString(int length) {
-        String millis = Long.toString(System.currentTimeMillis());
-        return millis.substring(millis.length() - length);
+        return RandomStringUtils.randomAlphanumeric(length);
     }
 }
 

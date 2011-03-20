@@ -21,24 +21,34 @@
 package org.mifos.test.acceptance.savings;
 
 import org.joda.time.DateTime;
-import org.junit.Assert;
+import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.savings.DepositWithdrawalSavingsParameters;
 import org.mifos.test.acceptance.framework.savings.SavingsAccountDetailPage;
 import org.mifos.test.acceptance.framework.testhelpers.SavingsAccountHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
+import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
+import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"savings","acceptance","ui", "no_db_unit"})
+@Test(sequential=true, groups={"savings","acceptance","ui"})
 public class SavingsAccountPerformanceHistoryTest extends UiTestCaseBase {
 
     private SavingsAccountHelper savingsAccountHelper;
 
+    @Autowired
+    private DriverManagerDataSource dataSource;
+    @Autowired
+    private DbUnitUtilities dbUnitUtilities;
+    @Autowired
+    private InitializeApplicationRemoteTestingService initRemote;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
@@ -60,6 +70,8 @@ public class SavingsAccountPerformanceHistoryTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void savingsDepositWithdrawalAndVerifyPerformanceHistory() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
+
         DepositWithdrawalSavingsParameters params = new DepositWithdrawalSavingsParameters();
 
         params.setTrxnDateMM("09");
@@ -68,33 +80,33 @@ public class SavingsAccountPerformanceHistoryTest extends UiTestCaseBase {
         params.setAmount("888.8");
         params.setPaymentType(DepositWithdrawalSavingsParameters.CASH);
         params.setTrxnType(DepositWithdrawalSavingsParameters.DEPOSIT);
-        params.setClientId("5");
 
         // deposit initial amount to savings account
-        SavingsAccountDetailPage savingsAccountDetailPage = savingsAccountHelper.makeDepositOrWithdrawalOnSavingsAccount("000100000000002", params);
+        SavingsAccountDetailPage savingsAccountDetailPage = savingsAccountHelper.makeDepositOrWithdrawalOnSavingsAccount("000100000000119", params);
         savingsAccountDetailPage.verifyPage();
 
         // withdraw portion of savings
         params.setAmount("123.0");
         params.setTrxnType(DepositWithdrawalSavingsParameters.WITHDRAWAL);
 
-        savingsAccountHelper.makeDepositOrWithdrawalOnSavingsAccount("000100000000002", params);
+        savingsAccountHelper.makeDepositOrWithdrawalOnSavingsAccount("000100000000119", params);
 
         // another deposit
         params.setAmount("10.0");
         params.setTrxnType(DepositWithdrawalSavingsParameters.DEPOSIT);
 
-        savingsAccountHelper.makeDepositOrWithdrawalOnSavingsAccount("000100000000002", params);
+        savingsAccountHelper.makeDepositOrWithdrawalOnSavingsAccount("000100000000119", params);
 
         // another withdrawal
         params.setAmount("20.0");
         params.setTrxnType(DepositWithdrawalSavingsParameters.WITHDRAWAL);
 
-        savingsAccountHelper.makeDepositOrWithdrawalOnSavingsAccount("000100000000002", params);
+        savingsAccountHelper.makeDepositOrWithdrawalOnSavingsAccount("000100000000119", params);
 
+        // validate savings performance history
         Assert.assertEquals("Performance history", selenium.getTable("performanceHistoryTable.0.0"));
-        Assert.assertEquals("Date account opened: 01/01/2009", selenium.getTable("performanceHistoryTable.2.0"));
-        Assert.assertEquals("Total deposits: 1898.8", selenium.getTable("performanceHistoryTable.3.0"));
+        Assert.assertEquals("Date account opened: 29/01/2009", selenium.getTable("performanceHistoryTable.2.0"));
+        Assert.assertEquals("Total deposits: 898.8", selenium.getTable("performanceHistoryTable.3.0"));
         Assert.assertEquals("Total interest earned: 0.0", selenium.getTable("performanceHistoryTable.4.0"));
         Assert.assertEquals("Total withdrawals: 143.0", selenium.getTable("performanceHistoryTable.5.0"));
     }

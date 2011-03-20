@@ -26,7 +26,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"core","acceptance","ui"})
+@Test(singleThreaded = true, groups={"core","acceptance","ui", "no_db_unit"})
 public class PingTest extends UiTestCaseBase {
 
     public void pingTest() {

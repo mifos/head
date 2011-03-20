@@ -31,6 +31,7 @@ import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.
 import org.mifos.test.acceptance.framework.loanproduct.LoanProductDetailsPage;
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
+import org.mifos.test.acceptance.loanproduct.LoanProductTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
@@ -38,9 +39,11 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(sequential = true, groups = {"acceptance", "ui", "loan", "no_db_unit"})
+@Test(singleThreaded = true, groups = {"acceptance", "ui", "loan", "no_db_unit"})
 public class LoanAccountCycleTest extends UiTestCaseBase {
+    
     private LoanTestHelper loanTestHelper;
+    private LoanProductTestHelper loanProductTestHelper;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -51,6 +54,7 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
         DateTime targetTime = new DateTime(2011, 2, 25, 15, 0, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
         loanTestHelper = new LoanTestHelper(selenium);
+        loanProductTestHelper = new LoanProductTestHelper(selenium);
     }
 
     @AfterMethod
@@ -78,7 +82,7 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
         String[][] calculateInstallments = getInstallmentsFromLastAmount();
         productParams.setInstallmentsByLastLoanAmount(calculateInstallments);
 
-        LoanProductDetailsPage loanProductDetailsPage = loanTestHelper.defineNewLoanProduct(productParams);
+        LoanProductDetailsPage loanProductDetailsPage = loanProductTestHelper.defineNewLoanProduct(productParams);
         loanProductDetailsPage.verifyInstallmentTableTypeFromLastAmount(calculateInstallments);
         loanProductDetailsPage.verifyLoanAmountTableTypeSame("1000.0", "7000.0", "2000.0");
     }
@@ -105,7 +109,7 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
         searchParams.setLoanProduct("LastCycleBasedProduct");
         DisburseLoanParameters disburseParams = DisburseLoanParameters.getDisbursalParameters("25", "02", "2011");
 
-        LoanProductDetailsPage loanProductDetailsPage = loanTestHelper.defineNewLoanProduct(productParams);
+        LoanProductDetailsPage loanProductDetailsPage = loanProductTestHelper.defineNewLoanProduct(productParams);
         loanProductDetailsPage.verifyLoanAmountTableTypeFromCycle(cycleLoanAmount);
         loanProductDetailsPage.verifyInstallments("10", "100", "50");
         LoanAccountPage loanAccountPage = loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"1000.0", "5000.0", "3000.0"}, null, new String[]{"10", "100", "50"});
@@ -142,7 +146,7 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
         searchParams.setLoanProduct("product107");
         DisburseLoanParameters disburseParams = DisburseLoanParameters.getDisbursalParameters("25", "02", "2011");
 
-        LoanProductDetailsPage loanProductDetailsPage = loanTestHelper.defineNewLoanProduct(productParams);
+        LoanProductDetailsPage loanProductDetailsPage = loanProductTestHelper.defineNewLoanProduct(productParams);
         loanProductDetailsPage.verifyLoanAmountTableTypeFromCycle(cycleLoanAmount);
         loanProductDetailsPage.verifyInstallmentsTableTypeFromCycle(calculateInstallments);
         LoanAccountPage loanAccountPage = loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"1000.0", "5000.0", "3000.0"}, null, new String[]{"26", "52", "52"});
@@ -173,7 +177,7 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
         searchParams.setLoanProduct("product110");
         DisburseLoanParameters disburseParams = DisburseLoanParameters.getDisbursalParameters("25", "02", "2011");
 
-        LoanProductDetailsPage loanProductDetailsPage = loanTestHelper.defineNewLoanProduct(productParams);
+        LoanProductDetailsPage loanProductDetailsPage = loanProductTestHelper.defineNewLoanProduct(productParams);
         loanProductDetailsPage.verifyLoanAmountTableTypeFromCycle(cycleLoanAmount);
         loanProductDetailsPage.verifyInstallmentTableTypeFromLastAmount(calculateInstallments);
         LoanAccountPage loanAccountPage = loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"1000.0", "5000.0", "3000.0"}, null, new String[]{"5", "10", "5"});
@@ -207,7 +211,7 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
         searchParams.setLoanProduct("product112");
         DisburseLoanParameters disburseParams = DisburseLoanParameters.getDisbursalParameters("25", "02", "2011");
 
-        LoanProductDetailsPage loanProductDetailsPage = loanTestHelper.defineNewLoanProduct(productParams);
+        LoanProductDetailsPage loanProductDetailsPage = loanProductTestHelper.defineNewLoanProduct(productParams);
         loanProductDetailsPage.verifyAmountTableTypeFromLastAmount(lastLoanAmount);
         loanProductDetailsPage.verifyInstallments("10", "100", "50");
         LoanAccountPage loanAccountPage = loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"500.0", "1500.0", "1200.0"}, null, null);
@@ -241,7 +245,7 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
         searchParams.setLoanProduct("product114");
         DisburseLoanParameters disburseParams = DisburseLoanParameters.getDisbursalParameters("25", "02", "2011");
 
-        LoanProductDetailsPage loanProductDetailsPage = loanTestHelper.defineNewLoanProduct(productParams);
+        LoanProductDetailsPage loanProductDetailsPage = loanProductTestHelper.defineNewLoanProduct(productParams);
         loanProductDetailsPage.verifyAmountTableTypeFromLastAmount(lastLoanAmount);
         loanProductDetailsPage.verifyInstallmentsTableTypeFromCycle(calculateInstallments);
         LoanAccountPage loanAccountPage = loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"500.0", "1500.0", "1200.0"}, null, new String[]{"26", "52", "52"});
@@ -275,7 +279,7 @@ public class LoanAccountCycleTest extends UiTestCaseBase {
         searchParams.setLoanProduct("product116");
         DisburseLoanParameters disburseParams = DisburseLoanParameters.getDisbursalParameters("25", "02", "2011");
 
-        LoanProductDetailsPage loanProductDetailsPage = loanTestHelper.defineNewLoanProduct(productParams);
+        LoanProductDetailsPage loanProductDetailsPage = loanProductTestHelper.defineNewLoanProduct(productParams);
         loanProductDetailsPage.verifyAmountTableTypeFromLastAmount(lastLoanAmount);
         loanProductDetailsPage.verifyInstallmentTableTypeFromLastAmount(calculateInstallments);
         LoanAccountPage loanAccountPage = loanTestHelper.createWithVerificationAndActivationLoanAccount(searchParams, new String[]{"500.0", "1500.0", "1200.0"}, null, new String[]{"5", "10", "5"});

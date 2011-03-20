@@ -30,7 +30,7 @@ import static org.mifos.test.acceptance.framework.holiday.CreateHolidayEntryPage
 
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(sequential = true, groups = {"loanproduct", "acceptance", "ui", "no_db_unit"})
+@Test(singleThreaded = true, groups = {"loanproduct", "acceptance", "ui", "no_db_unit"})
 public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
 
     @Autowired
@@ -74,7 +74,7 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
         systemDateTime = new DateTime(2011, 10, 10, 10, 0, 0, 0);
         loanTestHelper.setApplicationTime(systemDateTime);
         createHolidays(dataSetup);
-        new FeeTestHelper(dataSetup).createPeriodicFee(feeName, FeesCreatePage.SubmitFormParameters.LOAN, FeesCreatePage.SubmitFormParameters.WEEKLY_FEE_RECURRENCE, 1, 100);
+        new FeeTestHelper(dataSetup, new NavigationHelper(selenium)).createPeriodicFee(feeName, FeesCreatePage.SubmitFormParameters.LOAN, FeesCreatePage.SubmitFormParameters.WEEKLY_FEE_RECURRENCE, 1, 100);
         isSetUpDone=true;
     }
 
@@ -111,6 +111,7 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
                 fillVariableInstalmentOption("30","1","100").
                 submitAndGotoNewLoanProductPreviewPage().submit();
         verifyLoanAccountOriginalSchedule(systemDateTime.plusDays(1), systemDateTime, OriginalScheduleData.VARIABLE_LOAN_EARLY_DISBURSAL_SCHEDULE, false, systemDateTime.plusDays(5));
+        applicationDatabaseOperation.updateLSIM(0);
     }
 
     @Test(enabled=false)
@@ -124,6 +125,7 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
                 fillVariableInstalmentOption("20","1","100").
                 submitAndGotoNewLoanProductPreviewPage().submit();
         verifyLoanAccountOriginalSchedule(systemDateTime, systemDateTime.plusDays(1), OriginalScheduleData.VARIABLE_LOAN_LATE_DISBURSAL_SCHEDULE, false, systemDateTime.plusDays(15));
+        applicationDatabaseOperation.updateLSIM(0);
     }
 
     // FIXME - this test fails after merge
@@ -135,6 +137,7 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
         createLoanProduct(interestType);
         verifyLoanAccountOriginalSchedule(systemDateTime.plusDays(1), systemDateTime, OriginalScheduleData.DEC_BAL_INT_RECALC_LOAN_EARLY_DISBURSAL_SCHEDULE_ON, true, systemDateTime.plusDays(15));
         applyChargesAndVerifySchedule(OriginalScheduleData.DEC_BAL_INT_RECALC_LOAN_EARLY_DISBURSAL_SCHEDULE_ON);
+        applicationDatabaseOperation.updateLSIM(0);
     }
 
     // FIXME - this test fails after merge
@@ -146,6 +149,7 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
         createLoanProduct(interestType);
         verifyLoanAccountOriginalSchedule(systemDateTime, systemDateTime.plusDays(1), OriginalScheduleData.DEC_BAL_INT_RECALC_LOAN_LATE_DISBURSAL_SCHEDULE_ON, true, systemDateTime.plusDays(15));
         applyChargesAndVerifySchedule(OriginalScheduleData.DEC_BAL_INT_RECALC_LOAN_LATE_DISBURSAL_SCHEDULE_ON);
+        applicationDatabaseOperation.updateLSIM(0);
     }
 
     /**

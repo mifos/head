@@ -20,14 +20,7 @@
 
 package org.mifos.test.acceptance.questionnaire;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.joda.time.DateTime;
-import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
@@ -40,28 +33,23 @@ import org.mifos.test.acceptance.framework.savings.SavingsAccountDetailPage;
 import org.mifos.test.acceptance.framework.testhelpers.QuestionGroupTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.SavingsAccountHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
-import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(groups = {"client", "acceptance", "ui"})
+@Test(singleThreaded = true, groups = {"client", "acceptance", "ui", "no_db_unit"})
 public class QuestionGroupSavingsAccountTest extends UiTestCaseBase {
-
-    @Autowired
-    private DriverManagerDataSource dataSource;
-
-    @Autowired
-    private DbUnitUtilities dbUnitUtilities;
-
-    @Autowired
-    private InitializeApplicationRemoteTestingService initRemote;
 
     @Autowired
     private ApplicationDatabaseOperation applicationDatabaseOperation;
@@ -71,7 +59,7 @@ public class QuestionGroupSavingsAccountTest extends UiTestCaseBase {
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @BeforeMethod(alwaysRun=true)
+    @BeforeMethod(alwaysRun = true)
     public void setUp() throws Exception {
         super.setUp();
         questionGroupTestHelper = new QuestionGroupTestHelper(selenium);
@@ -86,47 +74,48 @@ public class QuestionGroupSavingsAccountTest extends UiTestCaseBase {
     /**
      * Attaching a Question Group to a Savings Account and capturing responses
      * http://mifosforge.jira.com/browse/MIFOSTEST-659
+     *
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyAttachingQuestionGroupToSavingsAccount() throws Exception {
         //Given
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_016_dbunit.xml", dataSource, selenium);
-        AttachQuestionGroupParameters attachParams = new AttachQuestionGroupParameters();
-        attachParams.setTarget("000100000000015");
-        attachParams.setQuestionGroupName("ViewSavingsQG");
-        attachParams.addTextResponse("DateQuestion", "09/02/2011");
-        attachParams.addTextResponse("NumberQuestion", "10");
-        attachParams.addTextResponse("NumberQuestion2", "13");
-        attachParams.addTextResponse("question 2", "22");
-        attachParams.addCheckResponse("question 4", "yes");
+        questionGroupTestHelper.markQuestionGroupAsActive("QGForViewSavings");
+        try {
+            AttachQuestionGroupParameters attachParams = new AttachQuestionGroupParameters();
+            attachParams.setTarget("000100000000059");
+            attachParams.setQuestionGroupName("QGForViewSavings");
+            attachParams.addTextResponse("DateQuestion", "09/02/2011");
+            attachParams.addTextResponse("Number", "10");
+            attachParams.addTextResponse("NumberBetween5And10", "6");
 
-        AttachQuestionGroupParameters attachErrorParams = new AttachQuestionGroupParameters();
-        attachErrorParams.setTarget("000100000000015");
-        attachErrorParams.setQuestionGroupName("ViewSavingsQG");
-        attachErrorParams.addTextResponse("NumberQuestion", "qwerty");
-        attachErrorParams.addTextResponse("NumberQuestion2", "qwerty");
-        attachErrorParams.addTextResponse("question 2", "test");
-        attachErrorParams.addCheckResponse("question 4", "yes");
-        attachErrorParams.addError("Please specify DateQuestion");
-        attachErrorParams.addError("Please specify a number for NumberQuestion");
-        attachErrorParams.addError("Please specify a number between 5 and 15 for NumberQuestion2");
-        attachErrorParams.addError("Please specify a number for question 2");
-        //When
-        questionGroupTestHelper.verifyErrorsWhileAttachingQuestionGroupToSavingsAccount(attachErrorParams);
-        questionGroupTestHelper.attachQuestionGroupToSavingsAccount(attachParams);
-        attachParams.addTextResponse("NumberQuestion", "14");
-        attachParams.addTextResponse("NumberQuestion2", "11");
-        //Then
-        questionGroupTestHelper.editQuestionGroupResponsesInSavingsAccount(attachParams);
+            AttachQuestionGroupParameters attachErrorParams = new AttachQuestionGroupParameters();
+            attachErrorParams.setTarget("000100000000059");
+            attachErrorParams.setQuestionGroupName("QGForViewSavings");
+            attachErrorParams.addTextResponse("Number", "qwerty");
+            attachErrorParams.addTextResponse("NumberBetween5And10", "qwerty");
+
+            attachErrorParams.addError("Please specify DateQuestion");
+            attachErrorParams.addError("Please specify a number for Number");
+            attachErrorParams.addError("Please specify a number between 5 and 10 for NumberBetween5And10");
+
+            //When
+            questionGroupTestHelper.verifyErrorsWhileAttachingQuestionGroupToSavingsAccount(attachErrorParams);
+            questionGroupTestHelper.attachQuestionGroupToSavingsAccount(attachParams);
+            attachParams.addTextResponse("Number", "15");
+            attachParams.addTextResponse("NumberBetween5And10", "10");
+            //Then
+            questionGroupTestHelper.editQuestionGroupResponsesInSavingsAccount(attachParams);
+        } finally {
+            questionGroupTestHelper.markQuestionGroupAsInactive("QGForViewSavings");
+        }
     }
 
     //http://mifosforge.jira.com/browse/MIFOSTEST-669
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyCapturingResponsesDuringSavingsCreation() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_016_dbunit.xml", dataSource, selenium);
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        DateTime targetTime = new DateTime(2011,2,28,15,0,0,0);
+        DateTime targetTime = new DateTime(2011, 2, 28, 15, 0, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
 
         CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
@@ -155,11 +144,10 @@ public class QuestionGroupSavingsAccountTest extends UiTestCaseBase {
         questionResponseParameters2.addTextAnswer("questionGroups[0].sectionDetails[0].questions[0].value", "05/02/2011");
         questionResponseParameters2.addTextAnswer("questionGroups[1].sectionDetails[0].questions[3].value", "textQuestion");
 
-        SavingsAccountDetailPage savingsAccountDetailPage = new SavingsAccountDetailPage(selenium);
         savingsAccountHelper.fillQuestionGroupsDurringCreationSavingsAccount(searchParameters, submitAccountParameters, questionResponseParameters);
 
 
-        savingsAccountDetailPage = savingsAccountHelper.editAdditionalInformationDurringCreationSavingsAccount(questionResponseParameters2);
+        SavingsAccountDetailPage savingsAccountDetailPage = savingsAccountHelper.editAdditionalInformationDurringCreationSavingsAccount(questionResponseParameters2);
         String savingsId = savingsAccountDetailPage.getAccountId();
 
         questionGroupTestHelper.markQuestionGroupAsInactive("CreateSavingsQG2");
@@ -169,7 +157,7 @@ public class QuestionGroupSavingsAccountTest extends UiTestCaseBase {
         questionGroupTestHelper.markQuestionAsInactive("TextQuestion");
 
         CreateQuestionParameters createQuestionParameters = new CreateQuestionParameters();
-        createQuestionParameters.setType(createQuestionParameters.TYPE_FREE_TEXT);
+        createQuestionParameters.setType(CreateQuestionParameters.TYPE_FREE_TEXT);
         createQuestionParameters.setText("newQuestion232");
         List<CreateQuestionParameters> newQuestionList = new ArrayList<CreateQuestionParameters>();
         newQuestionList.add(createQuestionParameters);
@@ -195,8 +183,8 @@ public class QuestionGroupSavingsAccountTest extends UiTestCaseBase {
 
     }
 
-    public void verifyQuestionResponsesExistInDatabase(String savingsID, String event, Map<String, String> questions) throws SQLException {
-        for(String question : questions.keySet()) {
+    private void verifyQuestionResponsesExistInDatabase(String savingsID, String event, Map<String, String> questions) throws SQLException {
+        for (String question : questions.keySet()) {
             Assert.assertTrue(applicationDatabaseOperation.deosQuestionResponseForSavingsExist(savingsID, event, question, questions.get(question)));
         }
     }

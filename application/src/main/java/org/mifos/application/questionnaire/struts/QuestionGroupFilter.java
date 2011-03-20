@@ -1,9 +1,9 @@
 package org.mifos.application.questionnaire.struts;
 
-import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
+import org.mifos.accounts.loan.struts.action.Criteria;
 
 import java.util.List;
 
 public interface QuestionGroupFilter {
-    List<QuestionGroupDetail> doFilter(List<QuestionGroupDetail> questionGroupDetails);
+    <T> List<T> doFilter(List<T> t, Criteria<T> criteria);
 }

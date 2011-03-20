@@ -14,7 +14,8 @@
             <set name="flowScope.questionGroupDetails.entityId" value="requestParameters.entityId" type="int"/>
             <set name="flowScope.questionGroupDetails.creatorId" value="requestParameters.creatorId" type="int"/>
         </on-entry>
-        <if test="requestParameters.instanceId == null" then="displayResponses" else="displayResponse"/>
+        <if test="requestParameters.instanceId != null" then="displayResponse"/>
+        <if test="externalContext.sessionMap.questionGroupInstances == null" then="getQuestionGroupInstance" else="getQuestionGroupInstanceFromSession"/>
     </decision-state>
 
     <view-state id="displayResponse">
@@ -26,9 +27,19 @@
         <transition on="cancel" to="viewDetails" bind="false" history="discard"/>
     </view-state>
 
+    <action-state id="getQuestionGroupInstanceFromSession">
+        <evaluate result="flowScope.questionGroupInstanceDetails" expression="externalContext.sessionMap.questionGroupInstances"/>
+        <transition to="displayResponses"/>
+    </action-state>
+
+    <action-state id="getQuestionGroupInstance">
+        <evaluate result="flowScope.questionGroupInstanceDetails" expression="questionnaireServiceFacade.getQuestionGroupInstancesWithUnansweredQuestionGroups(requestParameters.entityId, requestParameters.event, requestParameters.source)"/>
+        <transition to="displayResponses"/>
+    </action-state>
+
     <view-state id="displayResponses">
         <on-entry>
-            <evaluate result="flowScope.questionGroupInstanceDetails" expression="questionnaireServiceFacade.getQuestionGroupInstancesWithUnansweredQuestionGroups(requestParameters.entityId, requestParameters.event, requestParameters.source)"/>
+            <set name="externalContext.sessionMap.questionGroupInstances" value="null"/>
         </on-entry>
         <transition on="questionnaire" to="questionnaire">
             <evaluate expression="flowScope.questionGroupDetails.details.add(flowScope.questionGroupInstanceDetails.get(requestParameters._eventId_questionnaire).questionGroupDetail)"/>

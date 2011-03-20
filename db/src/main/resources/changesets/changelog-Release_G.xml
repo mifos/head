@@ -4,16 +4,31 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
     <changeSet id="MIFOS-4633_1" author="Van Mittal-Henkle" context="expansion">
-        <createTable tableName="custom_message">
-            <column name="old_message" type="varchar(50)">
+        <createTable tableName="customized_text">
+            <column name="original_text" type="varchar(50)">
 				<constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="new_message" type="varchar(50)">
+            <column name="custom_text" type="varchar(50)">
 				<constraints nullable="false"/>
             </column>
         </createTable>
         <modifySql dbms="mysql">
-            <append value=" engine=innodb character set utf8"/>
+            <append value=" engine=innodb character set utf8 collate utf8_bin"/>
         </modifySql>
     </changeSet>
+    <changeSet id="MIFOS-4633_2" author="Van Mittal-Henkle" context="expansion">
+        <sql endDelimiter=";">
+				insert into customized_text(original_text, custom_text)
+				select concat(lookup_entity.entity_name, ".Label"), lookup_label.entity_name 
+				from lookup_label lookup_label,	lookup_entity lookup_entity
+				where lookup_label.entity_id = lookup_entity.entity_id 
+				and lookup_label.entity_name is not null 
+				and not lookup_entity.entity_name like 'CustomField%';       
+		</sql> 
+		<rollback>
+            <sql endDelimiter=";">
+                delete from customized_text where original_text like '%.Label';
+            </sql>
+        </rollback>
+    </changeSet>    
 </databaseChangeLog>

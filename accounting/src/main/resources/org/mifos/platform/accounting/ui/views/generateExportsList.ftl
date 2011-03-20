@@ -21,23 +21,23 @@
 <div id='table'>
         <table>
             <tr>
-                <th class='drawtablehd' colspan=2>File name</th>
-                <th class='drawtablehd' colspan=2>Action</th>
+                <th class='drawtablehd' colspan=2>[@spring.message "accounting.viewaccountingexports.filename"/]</th>
+                <th class='drawtablehd' colspan=2>[@spring.message "accounting.viewaccountingexports.action"/]</th>
             </tr>
          [#list exports as instance ]
              <tr>
                  <td class="drawtablerow" colspan=2>${instance.fileName}</td>
                 [#if instance.isExistInCache]
                 <td class="drawtablerow">
-                    <a href='renderAccountingData.ftl?fromDate=${instance.startDate}&toDate=${instance.endDate}' title='This export has already been generated'>
-                        View Details
+                    <a href='renderAccountingData.ftl?fromDate=${instance.startDate}&toDate=${instance.endDate}' title='[@spring.message "accounting.viewaccountingexports.generated"/]'>
+                        [@spring.message "accounting.viewaccountingexports.viewdetails"/]
                     </a>
-                    &nbsp; (Generated on ${instance.lastModified})
+                    &nbsp; ([@spring.message "accounting.viewaccountingexports.generatedon"/] ${instance.lastModified})
                 </td>
                 [#else]
                 <td class="drawtablerow" colspan=2>
-                    <a href='renderAccountingData.ftl?fromDate=${instance.startDate}&toDate=${instance.endDate}' title='This export has not been generated'>
-                        Generate Export and View Details
+                    <a href='renderAccountingData.ftl?fromDate=${instance.startDate}&toDate=${instance.endDate}' title='[@spring.message "accounting.viewaccountingexports.notgenerated"/]'>
+                        [@spring.message "accounting.viewaccountingexports.exportandview"/]
                     </a>
                 </td>
                 [/#if]

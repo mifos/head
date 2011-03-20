@@ -52,7 +52,7 @@ import org.testng.Assert;
 
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = { "loanproduct", "acceptance"})
+@Test(singleThreaded = true, groups = { "loanproduct", "acceptance"})
 public class LoanProcessWithDifferentCurrencyTest extends UiTestCaseBase {
 
     //private AppLauncher appLauncher;

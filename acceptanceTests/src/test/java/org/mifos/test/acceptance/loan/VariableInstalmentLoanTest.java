@@ -39,7 +39,7 @@ import org.testng.annotations.Test;
 
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(sequential = true, groups = {"loanproduct", "acceptance", "ui", "no_db_unit"})
+@Test(singleThreaded = true, groups = {"loanproduct", "acceptance", "ui", "no_db_unit"})
 public class VariableInstalmentLoanTest extends UiTestCaseBase {
 
     @Autowired
@@ -67,12 +67,15 @@ public class VariableInstalmentLoanTest extends UiTestCaseBase {
         loanTestHelper = new LoanTestHelper(selenium);
         loanTestHelper.setApplicationTime(systemDateTime);
         TestDataSetup dataSetup = new TestDataSetup(selenium, applicationDatabaseOperation);
-        feeTestHelper = new FeeTestHelper(dataSetup);
+        feeTestHelper = new FeeTestHelper(dataSetup, new NavigationHelper(selenium));
     }
 
+    /**
+     * FIXME - disabled for now - keithw
+     */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
-    @Test(enabled = true)
+    @Test(enabled = false)
     public void verifyRepaymentScheduleField() throws Exception {
         int noOfInstallments = 5;
         int maxGap = 10;

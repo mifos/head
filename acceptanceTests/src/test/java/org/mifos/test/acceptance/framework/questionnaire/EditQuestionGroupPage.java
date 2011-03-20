@@ -20,9 +20,9 @@
 
 package org.mifos.test.acceptance.framework.questionnaire;
 
-import java.util.List;
-
 import com.thoughtworks.selenium.Selenium;
+
+import java.util.List;
 
 public class EditQuestionGroupPage extends CreateQuestionGroupRootPage {
 
@@ -105,14 +105,14 @@ public class EditQuestionGroupPage extends CreateQuestionGroupRootPage {
         return new EditQuestionGroupPage(selenium);
     }
 
-    public EditQuestionGroupPage moveQuestionUp(String nameSection, int questionId) {
+    public EditQuestionGroupPage moveQuestionUp(int questionId) {
         selenium.click("moveQuestionUp_"+questionId);
         waitForPageToLoad();
 
         return new EditQuestionGroupPage(selenium);
     }
 
-    public EditQuestionGroupPage moveQuestionDown(String nameSection, int questionId) {
+    public EditQuestionGroupPage moveQuestionDown(int questionId) {
         selenium.click("moveQuestionDown_"+questionId);
         waitForPageToLoad();
 

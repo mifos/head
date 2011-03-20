@@ -20,7 +20,6 @@
 
 package org.mifos.test.acceptance.savings;
 
-import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.account.AccountStatus;
@@ -35,9 +34,6 @@ import org.mifos.test.acceptance.framework.savings.SavingsDepositWithdrawalPage;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.framework.testhelpers.QuestionGroupTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.SavingsAccountHelper;
-import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -49,12 +45,6 @@ public class CreateSavingsAccountTest extends UiTestCaseBase {
 
     private SavingsAccountHelper savingsAccountHelper;
 
-    @Autowired
-    private DriverManagerDataSource dataSource;
-    @Autowired
-    private DbUnitUtilities dbUnitUtilities;
-    @Autowired
-    private InitializeApplicationRemoteTestingService initRemote;
     private QuestionGroupTestHelper questionGroupTestHelper;
 
     @Override
@@ -75,7 +65,7 @@ public class CreateSavingsAccountTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(sequential = true, groups = {"savings", "acceptance", "ui", "no_db_unit"})
+    @Test(singleThreaded = true, groups = {"savings", "acceptance", "ui", "no_db_unit"})
     public void verifyPaymentTypesForWithdrawalsAndDeposits() throws Exception {
         //When
         NavigationHelper navigationHelper = new NavigationHelper(selenium);
@@ -126,7 +116,7 @@ public class CreateSavingsAccountTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(sequential = true, groups = {"smoke", "savings", "acceptance", "ui", "no_db_unit"})
+    @Test(singleThreaded = true, groups = {"smoke", "savings", "acceptance", "ui", "no_db_unit"})
     public void newMandatoryClientSavingsAccountWithDateTypeCustomField() throws Exception {
 
         CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();

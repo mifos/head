@@ -20,59 +20,29 @@
 
 package org.mifos.test.acceptance.savingsproduct;
 
-import org.joda.time.DateTime;
-import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
-import org.mifos.test.acceptance.framework.account.AccountStatus;
-import org.mifos.test.acceptance.framework.account.EditAccountStatusParameters;
-import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSearchParameters;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSubmitParameters;
-import org.mifos.test.acceptance.framework.savings.DepositWithdrawalSavingsParameters;
 import org.mifos.test.acceptance.framework.savings.SavingsAccountDetailPage;
-import org.mifos.test.acceptance.framework.savings.SavingsApplyAdjustmentPage;
 import org.mifos.test.acceptance.framework.savingsproduct.DefineNewSavingsProductConfirmationPage;
-import org.mifos.test.acceptance.framework.savingsproduct.EditSavingsProductPage;
-import org.mifos.test.acceptance.framework.savingsproduct.EditSavingsProductPreviewPage;
-import org.mifos.test.acceptance.framework.savingsproduct.SavingsProductDetailsPage;
 import org.mifos.test.acceptance.framework.savingsproduct.SavingsProductParameters;
-import org.mifos.test.acceptance.framework.savingsproduct.ViewSavingsProductsPage;
-import org.mifos.test.acceptance.framework.testhelpers.BatchJobHelper;
-import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
-import org.mifos.test.acceptance.framework.testhelpers.QuestionGroupTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.SavingsAccountHelper;
 import org.mifos.test.acceptance.framework.testhelpers.SavingsProductHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
-import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
-import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(sequential = true, groups = {"savingsproduct", "acceptance", "ui", "no_db_unit"})
+@Test(singleThreaded = true, groups = {"savingsproduct", "acceptance", "ui", "no_db_unit"})
 @SuppressWarnings("PMD.SignatureDeclareThrowsException")
 public class DefineNewSavingsProductTest extends UiTestCaseBase {
 
     private SavingsProductHelper savingsProductHelper;
 
-    @Autowired
-    private DbUnitUtilities dbUnitUtilities;
-    @Autowired
-    private DriverManagerDataSource dataSource;
-    @Autowired
-    private InitializeApplicationRemoteTestingService initRemote;
-
     private SavingsAccountHelper savingsAccountHelper;
-    private NavigationHelper navigationHelper;
-    private QuestionGroupTestHelper questionGroupTestHelper;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
@@ -85,30 +55,24 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
 
         savingsProductHelper = new SavingsProductHelper(selenium);
         savingsAccountHelper = new SavingsAccountHelper(selenium);
-        navigationHelper = new NavigationHelper(selenium);
-        questionGroupTestHelper = new QuestionGroupTestHelper(selenium);
-        questionGroupTestHelper.markQuestionGroupAsActive("QGForCreateSavingsAccount");
     }
 
     @AfterMethod
     public void logOut() {
-        questionGroupTestHelper.markQuestionGroupAsInactive("QGForCreateSavingsAccount");
         (new MifosPage(selenium)).logout();
     }
 
     // http://mifosforge.jira.com/browse/MIFOSTEST-139
-    @Test(enabled = true)
     public void createVoluntarySavingsProductForCenters() throws Exception {
         SavingsProductParameters params = savingsProductHelper.getGenericSavingsProductParameters(SavingsProductParameters.VOLUNTARY, SavingsProductParameters.CENTERS);
         params.setShortName("M139");
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
 
         confirmationPage.navigateToSavingsProductDetails();
-        createSavingAccountWithCreatedProduct("Default Center", params.getProductInstanceName(), "7777.8");
+        createSavingAccountWithCreatedProduct("DefineNewSavingsProductTestCenter", params.getProductInstanceName(), "7777.8");
     }
 
     // http://mifosforge.jira.com/browse/MIFOSTEST-137
-    @Test(enabled = true)
     public void createVoluntarySavingsProductForGroups() throws Exception {
 
         SavingsProductParameters params = savingsProductHelper.getGenericSavingsProductParameters(SavingsProductParameters.VOLUNTARY, SavingsProductParameters.GROUPS);
@@ -116,11 +80,10 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
 
         confirmationPage.navigateToSavingsProductDetails();
-        createSavingAccountWithCreatedProduct("Default Group", params.getProductInstanceName(), "234.0");
+        createSavingAccountWithCreatedProduct("DefineNewSavingsProductTestGroup", params.getProductInstanceName(), "234.0");
     }
 
     // http://mifosforge.jira.com/browse/MIFOSTEST-1093
-    @Test(enabled = true)
     public void createVoluntarySavingsProductForClients() throws Exception {
 
         SavingsProductParameters params = savingsProductHelper.getGenericSavingsProductParameters(SavingsProductParameters.VOLUNTARY, SavingsProductParameters.CLIENTS);
@@ -128,11 +91,10 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
 
         confirmationPage.navigateToSavingsProductDetails();
-        createSavingAccountWithCreatedProduct("Client - Mary Monthly", params.getProductInstanceName(), "200.0");
+        createSavingAccountWithCreatedProduct("DefineNewSavingsProduct TestClient", params.getProductInstanceName(), "200.0");
     }
 
     // http://mifosforge.jira.com/browse/MIFOSTEST-1094
-    @Test(enabled = true)
     public void createMandatorySavingsProductForGroups() throws Exception {
 
         SavingsProductParameters params = savingsProductHelper.getGenericSavingsProductParameters(SavingsProductParameters.MANDATORY, SavingsProductParameters.GROUPS);
@@ -140,11 +102,10 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
 
         confirmationPage.navigateToSavingsProductDetails();
-        createSavingAccountWithCreatedProduct("Default Group", params.getProductInstanceName(), "534.0");
+        createSavingAccountWithCreatedProduct("DefineNewSavingsProductTestGroup", params.getProductInstanceName(), "534.0");
     }
 
     // http://mifosforge.jira.com/browse/MIFOSTEST-138
-    @Test(enabled = true)
     public void createMandatorySavingsProductForClients() throws Exception {
 
         SavingsProductParameters params = savingsProductHelper.getGenericSavingsProductParameters(SavingsProductParameters.MANDATORY, SavingsProductParameters.CLIENTS);
@@ -152,11 +113,10 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
 
         confirmationPage.navigateToSavingsProductDetails();
-        createSavingAccountWithCreatedProduct("Client - Mary Monthly", params.getProductInstanceName(), "248.0");
+        createSavingAccountWithCreatedProduct("DefineNewSavingsProduct TestClient", params.getProductInstanceName(), "248.0");
     }
 
     // http://mifosforge.jira.com/browse/MIFOSTEST-1095
-    @Test(enabled = true)
     public void createMandatorySavingsProductForCenters() throws Exception {
 
         SavingsProductParameters params = savingsProductHelper.getGenericSavingsProductParameters(SavingsProductParameters.MANDATORY, SavingsProductParameters.CENTERS);
@@ -164,6 +124,7 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
 
         confirmationPage.navigateToSavingsProductDetails();
+<<<<<<< HEAD
         createSavingAccountWithCreatedProduct("Default Center", params.getProductInstanceName(), "7777.8");
     }
 
@@ -705,27 +666,23 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
     }
 
     private SavingsAccountDetailPage createSavingAccountWithCreatedProduct(String client, String productName, String amount) {
+=======
+        createSavingAccountWithCreatedProduct("DefineNewSavingsProductTestCenter", params.getProductInstanceName(), "7777.8");
+    }
+
+    private SavingsAccountDetailPage createSavingAccountWithCreatedProduct(String client, String productName, String amount){
+>>>>>>> master
         CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
         searchParameters.setSearchString(client);
         searchParameters.setSavingsProduct(productName);
 
         CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
         submitAccountParameters.setAmount(amount);
-        SavingsAccountDetailPage savingsAccountPage = savingsAccountHelper.createSavingsAccountWithQG(searchParameters, submitAccountParameters);
+        SavingsAccountDetailPage savingsAccountPage = savingsAccountHelper.createSavingsAccount(searchParameters, submitAccountParameters);
         savingsAccountPage.verifyPage();
         savingsAccountPage.verifySavingsAmount(submitAccountParameters.getAmount());
         savingsAccountPage.verifySavingsProduct(searchParameters.getSavingsProduct());
         return savingsAccountPage;
     }
 
-    private SavingsProductParameters getVoluntaryGroupsMonthCalculactionProductParameters() {
-        SavingsProductParameters params = savingsProductHelper.getGenericSavingsProductParameters(SavingsProductParameters.VOLUNTARY, SavingsProductParameters.GROUPS);
-        params.setMandatoryAmount("2000");
-        params.setInterestRate("5");
-        params.setDaysOrMonthsForInterestCalculation(params.MONTHS);
-        params.setFrequencyOfInterestPostings("1");
-        params.setNumberOfDaysOrMonthsForInterestCalculation("1");
-        params.setAmountAppliesTo(SavingsProductParameters.WHOLE_GROUP);
-        return params;
-    }
 }

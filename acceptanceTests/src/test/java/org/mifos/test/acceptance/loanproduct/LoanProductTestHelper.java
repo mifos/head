@@ -1,7 +1,14 @@
 package org.mifos.test.acceptance.loanproduct;
 
+import java.util.Arrays;
+
+import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductConfirmationPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
+import org.mifos.test.acceptance.framework.loanproduct.EditLoanProductPage;
+import org.mifos.test.acceptance.framework.loanproduct.EditLoanProductPreviewPage;
+import org.mifos.test.acceptance.framework.loanproduct.LoanProductDetailsPage;
+import org.mifos.test.acceptance.framework.loanproduct.ViewLoanProductsPage;
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.util.StringUtil;
@@ -79,5 +86,48 @@ public class LoanProductTestHelper {
             j++;
         }
         return clientsInstallments;
+    }
+    
+    public void editLoanProductIncludeInLoanCounter(String loanProduct, boolean includeInLoanCounter) {
+        EditLoanProductPage editLoanProductPage = navigationHelper.navigateToAdminPage().
+                navigateToViewLoanProducts().
+                viewLoanProductDetails(loanProduct).
+                editLoanProduct();
+        DefineNewLoanProductPage.SubmitFormParameters formParameters = new DefineNewLoanProductPage.SubmitFormParameters();
+        formParameters.setIncludeInLoanCounter(includeInLoanCounter);
+        editLoanProductPage.submitIncludeInLoanCounter(formParameters).submit();
+    }
+
+    public void editLoanProduct(String loanProduct, String... questionGroup) {
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        ViewLoanProductsPage viewLoanProducts = adminPage.navigateToViewLoanProducts();
+        LoanProductDetailsPage loanProductDetailsPage = viewLoanProducts.viewLoanProductDetails(loanProduct);
+        EditLoanProductPage editLoanProductPage = loanProductDetailsPage.editLoanProduct();
+        DefineNewLoanProductPage.SubmitFormParameters formParameters = new DefineNewLoanProductPage.SubmitFormParameters();
+        formParameters.setQuestionGroups(Arrays.asList(questionGroup));
+        EditLoanProductPreviewPage editLoanProductPreviewPage = editLoanProductPage.submitQuestionGroupChanges(formParameters);
+        editLoanProductPreviewPage.submit();
+    }
+    
+    public LoanProductDetailsPage defineNewLoanProduct(DefineNewLoanProductPage.SubmitFormParameters productParams) {
+        DefineNewLoanProductPage defineNewLoanProductPage = navigationHelper
+            .navigateToAdminPage()
+            .navigateToDefineLoanProduct();
+        defineNewLoanProductPage.fillLoanParameters(productParams);
+        return defineNewLoanProductPage
+            .submitAndGotoNewLoanProductPreviewPage()
+            .submit()
+            .navigateToViewLoanDetailsPage();
+    }
+    
+    public void enableInterestWaiver(String loanProduct, boolean interestWaiver) {
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        ViewLoanProductsPage viewLoanProducts = adminPage.navigateToViewLoanProducts();
+        LoanProductDetailsPage loanProductDetailsPage = viewLoanProducts.viewLoanProductDetails(loanProduct);
+        EditLoanProductPage editLoanProductPage = loanProductDetailsPage.editLoanProduct();
+        DefineNewLoanProductPage.SubmitFormParameters formParameters = new DefineNewLoanProductPage.SubmitFormParameters();
+        formParameters.setInterestWaiver(interestWaiver);
+        EditLoanProductPreviewPage editLoanProductPreviewPage = editLoanProductPage.submitInterestWaiverChanges(formParameters);
+        editLoanProductPreviewPage.submit();
     }
 }

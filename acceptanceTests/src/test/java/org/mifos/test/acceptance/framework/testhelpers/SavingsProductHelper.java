@@ -55,7 +55,7 @@ public class SavingsProductHelper {
         SavingsProductParameters params = new SavingsProductParameters();
 
         params.setProductInstanceName("Savings product test" + StringUtil.getRandomString(3));
-        params.setShortName("SV" + StringUtil.getRandomString(2));
+        params.setShortName(StringUtil.getRandomString(4));
         params.setProductCategory(SavingsProductParameters.OTHER);
         DateTime today = new DateTime();
         params.setStartDateDD(Integer.valueOf(today.getDayOfMonth()).toString());

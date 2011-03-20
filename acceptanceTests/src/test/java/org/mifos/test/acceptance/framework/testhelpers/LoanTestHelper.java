@@ -73,10 +73,10 @@ import org.mifos.test.acceptance.framework.loan.RepayLoanParameters;
 import org.mifos.test.acceptance.framework.loan.TransactionHistoryPage;
 import org.mifos.test.acceptance.framework.loan.ViewLoanStatusHistoryPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
+import org.mifos.test.acceptance.framework.loanproduct.ViewLoanProductsPage;
+import org.mifos.test.acceptance.framework.loanproduct.LoanProductDetailsPage;
 import org.mifos.test.acceptance.framework.loanproduct.EditLoanProductPage;
 import org.mifos.test.acceptance.framework.loanproduct.EditLoanProductPreviewPage;
-import org.mifos.test.acceptance.framework.loanproduct.LoanProductDetailsPage;
-import org.mifos.test.acceptance.framework.loanproduct.ViewLoanProductsPage;
 import org.mifos.test.acceptance.framework.login.LoginPage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
@@ -86,8 +86,8 @@ import org.testng.Assert;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Arrays;
 
 /**
  * Holds methods common to most loan tests.
@@ -834,17 +834,6 @@ public class LoanTestHelper {
         return createLoanAccountEntryPage
             .continuePreviewSubmitAndNavigateToDetailsPage()
             .changeAccountStatusToAccepted();
-    }
-
-    public LoanProductDetailsPage defineNewLoanProduct(DefineNewLoanProductPage.SubmitFormParameters productParams) {
-        DefineNewLoanProductPage defineNewLoanProductPage = navigationHelper
-            .navigateToAdminPage()
-            .navigateToDefineLoanProduct();
-        defineNewLoanProductPage.fillLoanParameters(productParams);
-        return defineNewLoanProductPage
-            .submitAndGotoNewLoanProductPreviewPage()
-            .submit()
-            .navigateToViewLoanDetailsPage();
     }
 
     public AdminPage loginAndNavigateToAdminPage() {

@@ -20,15 +20,9 @@
 
 package org.mifos.application.servicefacade;
 
-import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import org.mifos.accounts.loan.business.service.OriginalScheduleInfoDto;
-import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
-import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
-import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.platform.validations.Errors;
 
 /**
  * @deprecated - do not use. please add functionality to {@link LoanAccountServiceFacade} instead.
@@ -36,9 +30,5 @@ import org.mifos.platform.validations.Errors;
 @Deprecated
 public interface LoanServiceFacade {
 
-    Errors validateInputInstallments(Date disbursementDate, VariableInstallmentDetailsBO variableInstallmentDetails, List<RepaymentScheduleInstallment> installments, Integer customerId);
-
-    Errors validateInstallmentSchedule(List<RepaymentScheduleInstallment> installments, VariableInstallmentDetailsBO variableInstallmentDetailsBO);
-
-    OriginalScheduleInfoDto retrieveOriginalLoanSchedule(Integer accountId, Locale locale) throws PersistenceException;
+    OriginalScheduleInfoDto retrieveOriginalLoanSchedule(Integer accountId, Locale locale);
 }

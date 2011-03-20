@@ -28,6 +28,7 @@ import org.mifos.test.acceptance.framework.admin.FeesCreatePage;
 import org.mifos.test.acceptance.framework.loan.ChargeParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
+import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
 import org.mifos.test.acceptance.util.TestDataSetup;
@@ -39,7 +40,7 @@ import org.testng.annotations.Test;
 
 @SuppressWarnings("PMD")
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(sequential = true, groups = {"loan", "acceptance", "ui", "no_db_unit"})
+@Test(singleThreaded = true, groups = {"loan", "acceptance", "ui", "no_db_unit"})
 public class FeeTest extends UiTestCaseBase {
 
     private LoanTestHelper loanTestHelper;
@@ -62,7 +63,7 @@ public class FeeTest extends UiTestCaseBase {
         dataSetup = new TestDataSetup(selenium, applicationDatabaseOperation);
 
         loanTestHelper = new LoanTestHelper(selenium);
-        feeTestHelper = new FeeTestHelper(dataSetup);
+        feeTestHelper = new FeeTestHelper(dataSetup, new NavigationHelper(selenium));
     }
 
     @AfterMethod

@@ -97,7 +97,7 @@ public class GroupTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-247
-    @Test(sequential = true, groups = {"group", "acceptance", "ui", "no_db_unit"})
+    @Test(singleThreaded = true, groups = {"group", "acceptance", "ui", "no_db_unit"})
     public void verifyAcceptedPaymentTypesForGroup() throws Exception {
         //When
         GroupTestHelper groupTestHelper = new GroupTestHelper(selenium);
@@ -121,7 +121,7 @@ public class GroupTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    @Test(sequential = true, groups = {"group", "acceptance", "ui", "no_db_unit"})
+    @Test(singleThreaded = true, groups = {"group", "acceptance", "ui", "no_db_unit"})
     public void testHitGroupDashboard() throws Exception {
         LoginPage loginPage = appLauncher.launchMifos();
         HomePage homePage = loginPage.loginSuccessfullyUsingDefaultCredentials();
@@ -131,7 +131,7 @@ public class GroupTest extends UiTestCaseBase {
         searchResultsPage.navigateToGroupViewDetailsPage("link=Default Group*");
     }
 
-    @Test(sequential = true, groups = {"group", "acceptance", "ui", "no_db_unit"})
+    @Test(singleThreaded = true, groups = {"group", "acceptance", "ui", "no_db_unit"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     // http://mifosforge.jira.com/browse/MIFOSTEST-301
     public void createGroupInPendingApprovalStateTest() throws Exception {
@@ -154,7 +154,7 @@ public class GroupTest extends UiTestCaseBase {
         detailsPage.verifyStatus("Active*");
     }
 
-    @Test(sequential = true, groups = {"group", "acceptance", "ui", "no_db_unit"})
+    @Test(singleThreaded = true, groups = {"group", "acceptance", "ui", "no_db_unit"})
     // http://mifosforge.jira.com/browse/MIFOSTEST-300
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void createGroupInPartialApplicationStateTest() throws Exception {
@@ -177,7 +177,7 @@ public class GroupTest extends UiTestCaseBase {
         detailsPage.verifyStatus("Application Pending Approval*");
     }
 
-    @Test(sequential = true, groups = {"group", "acceptance", "ui", "no_db_unit"})
+    @Test(singleThreaded = true, groups = {"group", "acceptance", "ui", "no_db_unit"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void changeCenterMembership() throws Exception {
         CreateGroupEntryPage groupEntryPage = loginAndNavigateToNewGroupPage();
@@ -193,7 +193,7 @@ public class GroupTest extends UiTestCaseBase {
         groupDetailsPage.verifyLoanOfficer(" Loan officer: loan officer");
     }
 
-    @Test(sequential = true, groups = {"smoke", "group", "acceptance", "ui", "no_db_unit"})
+    @Test(singleThreaded = true, groups = {"smoke", "group", "acceptance", "ui", "no_db_unit"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void createGroupInPendingApprovalStateTestWithSurveys() throws Exception {
         QuestionGroupTestHelper questionGroupTestHelper = new QuestionGroupTestHelper(selenium);
@@ -265,7 +265,7 @@ public class GroupTest extends UiTestCaseBase {
         groupViewDetailsPage.navigateToGroupsCenter(newCenterName);
     }
 
-    @Test(sequential = true, groups = {"group", "acceptance", "ui"}, enabled = false)
+    @Test(singleThreaded = true, groups = {"group", "acceptance", "ui"}, enabled = false)
     // http://mifosforge.jira.com/browse/MIFOSTEST-682
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createGroupWithQuestionGroup() throws Exception {

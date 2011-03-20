@@ -30,6 +30,7 @@
         <liquibase.rollbackCount>1000</liquibase.rollbackCount>
         <liquibase.jar.path>${settings.localRepository}/org/liquibase/liquibase-core/${liquibase.version}</liquibase.jar.path>
         <mysql.connector.jar.path>${settings.localRepository}/mysql/mysql-connector-java/${mysql.connector.version}</mysql.connector.jar.path>
+        <maven.surefire.memory>-Xmx1024m</maven.surefire.memory>
     </properties>
 
     <dependencies>
@@ -269,6 +270,48 @@
                                 <srcFile>${sql.resources.main.directory}/base-data.sql</srcFile>
                                 <srcFile>${sql.resources.test.directory}/integration_test_data.sql</srcFile>
                             </srcFiles>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.4.3</version>
+                <configuration>
+                    <printSummary>true</printSummary>
+                    <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                    <includes>
+                        <include>**/*Test.java</include>
+                    </includes>
+                    <!-- Exclude integration test classes    -->
+                    <excludes>
+                        <exclude>**/*IntegrationTest.java</exclude>
+                    </excludes>
+                    <reportsDirectory>${project.build.directory}/surefire-reports/unit</reportsDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>integration-test</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <printSummary>true</printSummary>
+                            <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                            <!-- override exclude integration test classes    -->
+                            <excludes>
+                                <exclude>none</exclude>
+                            </excludes>
+                            <includes>
+                                <include>**/*IntegrationTest.java</include>
+                            </includes>
+                            <systemProperties>
+                                <mifos.mode>integration</mifos.mode>
+                            </systemProperties>
+                            <argLine>${maven.surefire.memory}</argLine>
+                            <reportsDirectory>${project.build.directory}/surefire-reports/integration</reportsDirectory>
                         </configuration>
                     </execution>
                 </executions>

@@ -41,6 +41,7 @@ import org.mifos.dto.domain.CustomerSearchDto;
 import org.mifos.dto.domain.CustomerSearchResultDto;
 import org.mifos.dto.domain.LoanAccountDetailsDto;
 import org.mifos.dto.domain.LoanActivityDto;
+import org.mifos.dto.domain.LoanCreationInstallmentDto;
 import org.mifos.dto.domain.LoanInstallmentDetailsDto;
 import org.mifos.dto.domain.LoanPaymentDto;
 import org.mifos.dto.domain.MonthlyCashFlowDto;
@@ -91,6 +92,10 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
 
     @PreAuthorize("isFullyAuthenticated()")
     LoanCreationResultDto createLoan(LoanAccountMeetingDto loanAccountMeetingDto, LoanAccountInfoDto loanAccountInfoDto, List<LoanScheduledInstallmentDto> loanRepayments);
+    
+    @PreAuthorize("isFullyAuthenticated()")
+    LoanCreationResultDto createLoan(CreateLoanAccount createLoanAccount, List<QuestionGroupDetail> questionGroups, 
+            LoanAccountCashFlow loanAccountCashFlow, List<Date> installments);
 
     @PreAuthorize("isFullyAuthenticated()")
     String createLoan(OpeningBalanceLoanAccount openingBalanceLoan);
@@ -178,4 +183,11 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
     
     @PreAuthorize("isFullyAuthenticated()")
     boolean isCompareWithCashFlowEnabledOnProduct(Integer productId);
+    
+    @PreAuthorize("isFullyAuthenticated()")
+    Errors validateInputInstallments(Date disbursementDate, Integer minGapInDays, Integer maxGapInDays, 
+            BigDecimal minInstallmentAmount, List<LoanCreationInstallmentDto> installments, Integer customerId);
+    
+    @PreAuthorize("isFullyAuthenticated()")
+    Errors validateInstallmentSchedule(List<LoanCreationInstallmentDto> installments, BigDecimal minInstallmentAmount);
 }

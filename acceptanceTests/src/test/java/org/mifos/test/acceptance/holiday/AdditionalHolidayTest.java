@@ -57,7 +57,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(sequential = true, groups = {"holiday", "schedules", "acceptance", "ui"})
+@Test(singleThreaded = true, groups = {"holiday", "schedules", "acceptance", "ui"})
 public class AdditionalHolidayTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;
@@ -75,6 +75,8 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
 
+    private DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService;
+
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
@@ -82,11 +84,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
     public void setUp() throws Exception {
         super.setUp();
 
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(
-                selenium);
-        DateTime targetTime = new DateTime(2009, 3, 11, 0, 0, 0, 0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
-
+        dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         appLauncher = new AppLauncher(selenium);
         holidayTestHelper = new HolidayTestHelper(selenium);
         centerTestHelper = new CenterTestHelper(selenium);
@@ -102,14 +100,14 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(groups = "no_db_unit")
     public void createTwoWeeklyLoansInDifferentOffices() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
-        CreateLoanAccountSearchParameters searchParameters1 = new CreateLoanAccountSearchParameters();
-        // This client meets weekly on Wednesdays
-        searchParameters1.setSearchString("Stu1233171716380 Client1233171716380");
+        DateTime targetTime = new DateTime(2011, 3, 9, 0, 0, 0, 0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
 
-        // This loan product is a weekly flat-interest loan without fees that defaults to 11 installments.
-        searchParameters1.setLoanProduct("MyLoanProduct1232993826860");
+        CreateLoanAccountSearchParameters searchParameters1 = new CreateLoanAccountSearchParameters();
+        searchParameters1.setSearchString("Stu1233171716380 Client1233171716380");
+        searchParameters1.setLoanProduct("WeeklyClientFlatLoanWithNoFee");
 
         CreateLoanAccountSubmitParameters submitAccountParameters1 = new CreateLoanAccountSubmitParameters();
         submitAccountParameters1.setAmount("2000");
@@ -118,8 +116,8 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
 
         // create second loan account
         CreateLoanAccountSearchParameters searchParameters2 = new CreateLoanAccountSearchParameters();
-        searchParameters2.setSearchString("Stu1232993852651 Client1232993852651");
-        searchParameters2.setLoanProduct("MyLoanProduct1232993826860");
+        searchParameters2.setSearchString("ClientInBranch1 ClientInBranch1");
+        searchParameters2.setLoanProduct("WeeklyClientFlatLoanWithNoFee");
 
         CreateLoanAccountSubmitParameters submitAccountParameters2 = new CreateLoanAccountSubmitParameters();
         submitAccountParameters2.setAmount("2000");
@@ -129,15 +127,17 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     //http://mifosforge.jira.com/browse/MIFOSTEST-280
+    @Test(groups = "no_db_unit")
     public void testBranchSpecificMoratorium() throws Exception {
+        DateTime targetTime = new DateTime(2009, 3, 11, 0, 0, 0, 0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
         //Given
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
         CreateHolidaySubmitParameters param = getCreateHolidaySubmitParameters();
         //When / Then
         holidayTestHelper.createHoliday(param);
     }
 
-    public CreateHolidaySubmitParameters getCreateHolidaySubmitParameters() {
+    private CreateHolidaySubmitParameters getCreateHolidaySubmitParameters() {
         CreateHolidaySubmitParameters params = new CreateHolidayEntryPage.CreateHolidaySubmitParameters();
         params.setName("Holiday" + StringUtil.getRandomString(8));
         params.setFromDateDD("01");
@@ -147,13 +147,15 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         params.setThruDateMM("02");
         params.setThruDateYYYY("2011");
         params.setRepaymentRule(CreateHolidaySubmitParameters.MORATORIUM);
-        params.addOffice("MyOffice1233266206574");
+        params.addOffice("MyOfficeDHMFT");
         return params;
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-281
     public void testHolidayAffectsFeeSchedule() throws Exception {
+        DateTime targetTime = new DateTime(2009, 3, 11, 0, 0, 0, 0);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
         // Given
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_015_dbunit.xml", dataSource, selenium);
 
@@ -194,9 +196,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         navigationHelper.navigateToAdminPage();
         new BatchJobHelper(selenium).runSomeBatchJobs(jobsToRun);
 
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(
-                selenium);
-        DateTime targetTime = new DateTime(2009, 3, 17, 0, 0, 0, 0);
+        targetTime = new DateTime(2009, 3, 17, 0, 0, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
 
         navigationHelper.navigateToCenterViewDetailsPage(centerName).verifyAmountDue(centerAmount);

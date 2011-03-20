@@ -8,7 +8,7 @@ import org.testng.annotations.Test;
 import org.springframework.test.context.ContextConfiguration;
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"acceptance","ui", "batchjobs"})
+@Test(singleThreaded = true, groups={"acceptance","ui", "batchjobs", "no_db_unit"})
 public class BatchJobTest extends UiTestCaseBase{
 
     private NavigationHelper navigationHelper;

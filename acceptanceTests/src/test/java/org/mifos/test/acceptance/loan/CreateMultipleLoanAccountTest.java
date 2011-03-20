@@ -32,11 +32,11 @@ import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.
 import org.mifos.test.acceptance.framework.office.OfficeEditInformationPage;
 import org.mifos.test.acceptance.framework.testhelpers.CenterTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
-import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.framework.testhelpers.OfficeHelper;
 import org.mifos.test.acceptance.framework.testhelpers.UserHelper;
 import org.mifos.test.acceptance.framework.user.EditUserDataPage;
+import org.mifos.test.acceptance.loanproduct.LoanProductTestHelper;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -44,14 +44,14 @@ import org.testng.annotations.Test;
 
 @SuppressWarnings("PMD")
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(sequential = true, groups = {"loan", "acceptance", "ui", "no_db_unit"})
+@Test(singleThreaded = true, groups = {"loan", "acceptance", "ui", "no_db_unit"})
 public class CreateMultipleLoanAccountTest extends UiTestCaseBase {
 
     private OfficeHelper officeHelper;
     private UserHelper userHelper;
-    private LoanTestHelper loanTestHelper;
     private CenterTestHelper centerTestHelper;
     private NavigationHelper navigationHelper;
+    private LoanProductTestHelper loanProductTestHelper;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
@@ -60,9 +60,9 @@ public class CreateMultipleLoanAccountTest extends UiTestCaseBase {
         super.setUp();
         officeHelper = new OfficeHelper(selenium);
         userHelper = new UserHelper(selenium);
-        loanTestHelper = new LoanTestHelper(selenium);
         centerTestHelper = new CenterTestHelper(selenium);
         navigationHelper = new NavigationHelper(selenium);
+        loanProductTestHelper = new LoanProductTestHelper(selenium);
     }
 
     @AfterMethod
@@ -85,19 +85,19 @@ public class CreateMultipleLoanAccountTest extends UiTestCaseBase {
         customerStatusParams.setNote("note");
         CreateLoanAccountsSearchPage multipleAccPage = navigateToCreateMultipleLoanAccountsSearchPage();
 
-        multipleAccPage.selectBranchOfficerAndCenter("branch1", "loanofficer branch1", "branch1 center");
+        multipleAccPage.selectBranchOfficerAndCenter("branch2", "loanofficerbranch2 loanofficerbranch2", "branch2 center");
 
-        userHelper.changeUserStatus("loanofficer branch1", EditUserDataPage.STATUS_INACTIVE);
-        centerTestHelper.changeCenterStatus("branch1 center", customerStatusParams);
-        officeHelper.changeOfficeStatus("branch1", OfficeEditInformationPage.STATUS_INACTIVE);
+        userHelper.changeUserStatus("loanofficerbranch2 loanofficerbranch2", EditUserDataPage.STATUS_INACTIVE);
+        centerTestHelper.changeCenterStatus("branch2 center", customerStatusParams);
+        officeHelper.changeOfficeStatus("branch2", OfficeEditInformationPage.STATUS_INACTIVE);
 
         multipleAccPage = navigateToCreateMultipleLoanAccountsSearchPage();
-        multipleAccPage.verifyBranchNotInSelectOptions("branch1");
+        multipleAccPage.verifyBranchNotInSelectOptions("branch2");
 
-        officeHelper.changeOfficeStatus("branch1", OfficeEditInformationPage.STATUS_ACTIVE);
+        officeHelper.changeOfficeStatus("branch2", OfficeEditInformationPage.STATUS_ACTIVE);
         multipleAccPage = navigateToCreateMultipleLoanAccountsSearchPage();
-        multipleAccPage.verifyOfficerNotInSelectOptions("branch1", "loanofficer branch1");
-        multipleAccPage.verifyCenterIsNotInSelectOptions("branch1", "branch1 center");
+        multipleAccPage.verifyOfficerNotInSelectOptions("branch2", "loanofficerbranch2 loanofficerbranch2");
+        multipleAccPage.verifyCenterIsNotInSelectOptions("branch2", "branch2 center");
     }
 
     /**
@@ -133,7 +133,7 @@ public class CreateMultipleLoanAccountTest extends UiTestCaseBase {
         multipleSelectParams.setCenter("Default Center");
         multipleSelectParams.setLoanProduct("LoanCycleProduct");
 
-        loanTestHelper.defineNewLoanProduct(productParams);
+        loanProductTestHelper.defineNewLoanProduct(productParams);
         CreateLoanAccountsEntryPage createLoanAccountsEntryPage = navigateToCreateMultipleLoanAccountsEntryPage(multipleSelectParams);
         for (int i = 0; i < 4; i++) {
             createLoanAccountsEntryPage.verifyNoOfInstallments(i, "52");

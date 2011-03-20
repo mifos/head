@@ -20,8 +20,7 @@
 
 package org.mifos.test.acceptance.framework.testhelpers;
 
-import java.util.Map;
-
+import com.thoughtworks.selenium.Selenium;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.center.MeetingParameters;
 import org.mifos.test.acceptance.framework.client.ChooseOfficePage;
@@ -46,7 +45,7 @@ import org.mifos.test.acceptance.framework.questionnaire.QuestionnairePage;
 import org.mifos.test.acceptance.framework.questionnaire.ViewQuestionResponseDetailPage;
 import org.mifos.test.acceptance.util.StringUtil;
 
-import com.thoughtworks.selenium.Selenium;
+import java.util.Map;
 
 public class ClientTestHelper {
 
@@ -55,7 +54,6 @@ public class ClientTestHelper {
     public static final String ACTIVE = "Active";
     public static final String PENDING_APPROVAL = "Application Pending Approval";
     public static final String PARTIAL_APPLICATION = "Partial Application";
-
 
 
     public ClientTestHelper(Selenium selenium) {
@@ -80,7 +78,7 @@ public class ClientTestHelper {
         editCustomerStatusParameters.setClientStatus(ClientStatus.PENDING_APPROVAL);
         editCustomerStatusParameters.setNote("notes");
         CustomerChangeStatusPreviewPage statusPreviewPage2 =
-            statusChangePage2.setChangeStatusParametersAndSubmit(editCustomerStatusParameters);
+                statusChangePage2.setChangeStatusParametersAndSubmit(editCustomerStatusParameters);
 
 
         ClientViewDetailsPage clientDetailsPage3 = statusPreviewPage2.submitAndGotoClientViewDetailsPage();
@@ -91,7 +89,7 @@ public class ClientTestHelper {
         editCustomerStatusParameters.setClientStatus(ClientStatus.ACTIVE);
         editCustomerStatusParameters.setNote("notes");
         CustomerChangeStatusPreviewPage statusPreviewPage3 =
-            statusChangePage3.setChangeStatusParametersAndSubmit(editCustomerStatusParameters);
+                statusChangePage3.setChangeStatusParametersAndSubmit(editCustomerStatusParameters);
 
 
         ClientViewDetailsPage clientDetailsPage4 = statusPreviewPage3.submitAndGotoClientViewDetailsPage();
@@ -130,14 +128,14 @@ public class ClientTestHelper {
         return newClientDetailsPage;
     }
 
-    public ClientViewDetailsPage activateClient(String clientName){
+    public ClientViewDetailsPage activateClient(String clientName) {
         EditCustomerStatusParameters editCustomerStatusParameters = new EditCustomerStatusParameters();
         editCustomerStatusParameters.setClientStatus(ClientStatus.ACTIVE);
         editCustomerStatusParameters.setNote("Activate Client");
         return changeCustomerStatus(clientName, editCustomerStatusParameters);
     }
 
-    public QuestionResponsePage navigateToQuestionResponsePageWhenCloseClientAccount(String clientName){
+    public QuestionResponsePage navigateToQuestionResponsePageWhenCloseClientAccount(String clientName) {
         EditCustomerStatusParameters editCustomerStatusParameters = new EditCustomerStatusParameters();
         editCustomerStatusParameters.setClientStatus(ClientStatus.CLOSED);
         editCustomerStatusParameters.setClientCloseReason(ClientCloseReason.LEFT_PROGRAM);
@@ -162,7 +160,7 @@ public class ClientTestHelper {
     }
 
     public ClientViewDetailsPage createClientWithQuestionGroups(CreateClientEnterPersonalDataPage.SubmitFormParameters parameters, String group, QuestionResponseParameters responseParams) {
-        QuestionResponsePage questionResponsePage = navigateToQuestionResponsePage(parameters,group);
+        QuestionResponsePage questionResponsePage = navigateToQuestionResponsePage(parameters, group);
         questionResponsePage.populateAnswers(responseParams);
         CreateClientEnterMfiDataPage createClientEnterMfiDataPage = questionResponsePage.navigateToNextPageClientCreation();
         CreateClientPreviewDataPage clientPreviewDataPage = createClientEnterMfiDataPage.navigateToPreview();
@@ -172,32 +170,32 @@ public class ClientTestHelper {
 
     public QuestionResponsePage navigateToQuestionResponsePage(CreateClientEnterPersonalDataPage.SubmitFormParameters parameters, String group) {
         return navigationHelper
-        .navigateToClientsAndAccountsPage()
-        .navigateToCreateNewClientPage()
-        .selectGroup(group)
-        .create(parameters)
-        .submitAndGotoCaptureQuestionResponsePage();
+                .navigateToClientsAndAccountsPage()
+                .navigateToCreateNewClientPage()
+                .selectGroup(group)
+                .create(parameters)
+                .submitAndGotoCaptureQuestionResponsePage();
     }
 
-    private GroupSearchAddClientPage navigateToGroupSearchAddClientResult(String clientName, String groupName){
+    private GroupSearchAddClientPage navigateToGroupSearchAddClientResult(String clientName, String groupName) {
         return navigationHelper.navigateToClientViewDetailsPage(clientName)
-        .navigateToEditMeetingSchedule()
-        .addGroupMembership()
-        .searchGroup(groupName);
+                .navigateToEditMeetingSchedule()
+                .addGroupMembership()
+                .searchGroup(groupName);
     }
 
-    public void tryAddClientToClosedOrOnHoldGroup(String clientName, String groupName){
+    public void tryAddClientToClosedOrOnHoldGroup(String clientName, String groupName) {
         navigateToGroupSearchAddClientResult(clientName, groupName)
-            .verifyNoResult();
+                .verifyNoResult();
     }
 
-    public void addClientToGroupWithErrorGroupLowerStatus(String clientName, String groupName){
+    public void addClientToGroupWithErrorGroupLowerStatus(String clientName, String groupName) {
         navigateToGroupSearchAddClientResult(clientName, groupName)
-            .selectGroupToAdd(groupName)
-            .submitAddGroupWithErrorGroupLowerStatus();
+                .selectGroupToAdd(groupName)
+                .submitAddGroupWithErrorGroupLowerStatus();
     }
 
-    public void transferClientToGroupWithErrors(String clientName, String groupName){
+    public void transferClientToGroupWithErrors(String clientName, String groupName) {
         navigationHelper
                 .navigateToClientViewDetailsPage(clientName)
                 .navigateToEditRemoveGroupMembership()
@@ -206,16 +204,16 @@ public class ClientTestHelper {
                 .submitAddGroupWithError();
     }
 
-    public void addClientToGroup(String clientName, String groupName){
+    public void addClientToGroup(String clientName, String groupName) {
         ClientViewDetailsPage clientViewDetailsPage = navigateToGroupSearchAddClientResult(clientName, groupName)
-            .selectGroupToAdd(groupName)
-            .submitAddGroup();
+                .selectGroupToAdd(groupName)
+                .submitAddGroup();
         clientViewDetailsPage.verifyGroupMembership(groupName);
         String clientMeetingschedule = clientViewDetailsPage.getMeetingSchedule();
         navigationHelper.navigateToGroupViewDetailsPage(groupName).verifyMeetingSchedule(clientMeetingschedule);
     }
 
-    public void deleteClientGroupMembership(String clientName, String note){
+    public void deleteClientGroupMembership(String clientName, String note) {
         ClientViewDetailsPage clientViewDetailsPage = navigationHelper.navigateToClientViewDetailsPage(clientName);
         String oldMeetingshedule = clientViewDetailsPage.getMeetingSchedule();
         String groupName = clientViewDetailsPage.getGroupMembership();
@@ -227,26 +225,26 @@ public class ClientTestHelper {
 
         clientViewDetailsPage = navigationHelper.navigateToClientViewDetailsPage(clientName);
         clientViewDetailsPage = clientViewDetailsPage.navigateToEditRemoveGroupMembership()
-            .deleteGroupMembership()
-            .confirmDeleteGroupMembership(note);
+                .deleteGroupMembership()
+                .confirmDeleteGroupMembership(note);
 
         clientViewDetailsPage.verifyMeetingSchedule(oldMeetingshedule);
         clientViewDetailsPage.verifyNotes(note);
         clientViewDetailsPage.navigateToClientViewChangeLog()
-            .verifyLastEntryOnChangeLog("Name", groupName, "-", "mifos");
+                .verifyLastEntryOnChangeLog("Name", groupName, "-", "mifos");
 
         groupViewDetailsPage = navigationHelper.navigateToGroupViewDetailsPage(groupName);
-        groupViewDetailsPage.verifyNumberOfClientsInGroup(Integer.toString(activeClients-1));
+        groupViewDetailsPage.verifyNumberOfClientsInGroup(Integer.toString(activeClients - 1));
         groupViewDetailsPage.verifyAvgIndyvidualLoanSize(avgIndyvidualLoanSize);
         groupViewDetailsPage.verifyTotalLoanPortfolio(totalLoanPortfolio);
     }
 
-    public void deleteClientGroupMembershipWithError(String clientName){
+    public void deleteClientGroupMembershipWithError(String clientName) {
         navigationHelper
-            .navigateToClientViewDetailsPage(clientName)
-            .navigateToEditRemoveGroupMembership()
-            .deleteGroupMembership()
-            .confirmDeleteGroupMembershipFail();
+                .navigateToClientViewDetailsPage(clientName)
+                .navigateToEditRemoveGroupMembership()
+                .deleteGroupMembership()
+                .confirmDeleteGroupMembershipFail();
     }
 
     public ClientViewDetailsPage createClientAndVerify(String loanOfficer, String officeName) {
@@ -257,7 +255,7 @@ public class ClientTestHelper {
     public CreateClientEnterPersonalDataPage.SubmitFormParameters createClient(String loanOfficer, String officeName) {
         CreateClientEnterPersonalDataPage clientPersonalDataPage = navigateToPersonalDataPage(officeName);
         CreateClientEnterPersonalDataPage.SubmitFormParameters formParameters = FormParametersHelper.getClientEnterPersonalDataPageFormParameters();
-        clientPersonalDataPage=clientPersonalDataPage.create(formParameters);
+        clientPersonalDataPage = clientPersonalDataPage.create(formParameters);
         clientPersonalDataPage.submitAndGotoCreateClientEnterMfiDataPage();
         navigateToConfirmationPage(loanOfficer);
         return formParameters;
@@ -308,7 +306,7 @@ public class ClientTestHelper {
         return chooseOfficePage.chooseOffice(officeName);
     }
 
-    public CreateClientEnterPersonalDataPage createClient(String officeName, String dd, String mm, String yy){
+    public CreateClientEnterPersonalDataPage createClient(String officeName, String dd, String mm, String yy) {
         CreateClientEnterPersonalDataPage clientPersonalDataPage = navigateToPersonalDataPage(officeName);
         CreateClientEnterPersonalDataPage.SubmitFormParameters formParameters = new CreateClientEnterPersonalDataPage.SubmitFormParameters();
         formParameters.setSalutation(CreateClientEnterPersonalDataPage.SubmitFormParameters.MRS);
@@ -329,34 +327,34 @@ public class ClientTestHelper {
 
     public CreateClientEnterPersonalDataPage createClientForFamilyInfo(String officeName, String dd, String mm, String yy) {
         CreateClientEnterPersonalDataPage clientPersonalDataPage = navigateToPersonalDataPage(officeName);
-         CreateClientEnterPersonalDataPage.SubmitFormParameters formParameters = new CreateClientEnterPersonalDataPage.SubmitFormParameters();
-         formParameters.setLastName("Customer" + StringUtil.getRandomString(8));
-         formParameters.setSalutation(CreateClientEnterPersonalDataPage.SubmitFormParameters.MRS);
-         formParameters.setFirstName("test");
-         formParameters.setDateOfBirthYYYY(yy);
-         formParameters.setLastName("Customer" + StringUtil.getRandomString(8));
-         formParameters.setDateOfBirthDD(dd);
-         formParameters.setDateOfBirthMM(mm);
-         formParameters.setGender(CreateClientEnterPersonalDataPage.SubmitFormParameters.FEMALE);
-         formParameters.setPovertyStatus(CreateClientEnterPersonalDataPage.SubmitFormParameters.POOR);
-         formParameters.setHandicapped("Yes");
-         return clientPersonalDataPage.createWithoutSpouse(formParameters);
-     }
-
-    public CreateClientEnterFamilyDetailsPage createFamily(String fname, String lname, String dd, String mm, String yy, CreateClientEnterFamilyDetailsPage page) {
-         CreateClientEnterFamilyDetailsPage.SubmitFormParameters formParameters = new CreateClientEnterFamilyDetailsPage.SubmitFormParameters();
-         formParameters.setRelationship(CreateClientEnterFamilyDetailsPage.SubmitFormParameters.FATHER);
-         formParameters.setFirstName(fname);
-         formParameters.setLastName(lname);
-         formParameters.setDateOfBirthDD(dd);
-         formParameters.setDateOfBirthMM(mm);
-         formParameters.setDateOfBirthYY(yy);
-         formParameters.setGender(CreateClientEnterFamilyDetailsPage.SubmitFormParameters.MALE);
-         formParameters.setLivingStatus(CreateClientEnterFamilyDetailsPage.SubmitFormParameters.TOGETHER);
-         return page.createMember(formParameters);
+        CreateClientEnterPersonalDataPage.SubmitFormParameters formParameters = new CreateClientEnterPersonalDataPage.SubmitFormParameters();
+        formParameters.setLastName("Customer" + StringUtil.getRandomString(8));
+        formParameters.setSalutation(CreateClientEnterPersonalDataPage.SubmitFormParameters.MRS);
+        formParameters.setFirstName("test");
+        formParameters.setDateOfBirthYYYY(yy);
+        formParameters.setLastName("Customer" + StringUtil.getRandomString(8));
+        formParameters.setDateOfBirthDD(dd);
+        formParameters.setDateOfBirthMM(mm);
+        formParameters.setGender(CreateClientEnterPersonalDataPage.SubmitFormParameters.FEMALE);
+        formParameters.setPovertyStatus(CreateClientEnterPersonalDataPage.SubmitFormParameters.POOR);
+        formParameters.setHandicapped("Yes");
+        return clientPersonalDataPage.createWithoutSpouse(formParameters);
     }
 
-    public CreateClientEnterFamilyDetailsPage createFamilyWithoutLookups(Integer relation,Integer gender, Integer livingStatus,CreateClientEnterFamilyDetailsPage page) {
+    public CreateClientEnterFamilyDetailsPage createFamily(String fname, String lname, String dd, String mm, String yy, CreateClientEnterFamilyDetailsPage page) {
+        CreateClientEnterFamilyDetailsPage.SubmitFormParameters formParameters = new CreateClientEnterFamilyDetailsPage.SubmitFormParameters();
+        formParameters.setRelationship(CreateClientEnterFamilyDetailsPage.SubmitFormParameters.FATHER);
+        formParameters.setFirstName(fname);
+        formParameters.setLastName(lname);
+        formParameters.setDateOfBirthDD(dd);
+        formParameters.setDateOfBirthMM(mm);
+        formParameters.setDateOfBirthYY(yy);
+        formParameters.setGender(CreateClientEnterFamilyDetailsPage.SubmitFormParameters.MALE);
+        formParameters.setLivingStatus(CreateClientEnterFamilyDetailsPage.SubmitFormParameters.TOGETHER);
+        return page.createMember(formParameters);
+    }
+
+    public CreateClientEnterFamilyDetailsPage createFamilyWithoutLookups(Integer relation, Integer gender, Integer livingStatus, CreateClientEnterFamilyDetailsPage page) {
         CreateClientEnterFamilyDetailsPage.SubmitFormParameters formParameters = new CreateClientEnterFamilyDetailsPage.SubmitFormParameters();
         formParameters.setRelationship(relation);
         formParameters.setFirstName("fname");
@@ -367,62 +365,55 @@ public class ClientTestHelper {
         formParameters.setGender(gender);
         formParameters.setLivingStatus(livingStatus);
         return page.createMember(formParameters);
-   }
+    }
 
-   public CreateClientPreviewDataPage createClientMFIInformationAndGoToPreviewPage(String loanOfficer,CreateClientEnterMfiDataPage clientMfiDataPage) {
-       CreateClientEnterMfiDataPage.SubmitFormParameters mfiFormParameters = new CreateClientEnterMfiDataPage.SubmitFormParameters();
-       mfiFormParameters.setLoanOfficerId(loanOfficer);
+    public CreateClientPreviewDataPage createClientMFIInformationAndGoToPreviewPage(String loanOfficer, CreateClientEnterMfiDataPage clientMfiDataPage) {
+        CreateClientEnterMfiDataPage.SubmitFormParameters mfiFormParameters = new CreateClientEnterMfiDataPage.SubmitFormParameters();
+        mfiFormParameters.setLoanOfficerId(loanOfficer);
 
-       MeetingParameters meetingFormParameters = new MeetingParameters();
-       meetingFormParameters.setWeekFrequency("1");
-       meetingFormParameters.setWeekDay(MeetingParameters.WEDNESDAY);
-       meetingFormParameters.setMeetingPlace("Mangalore");
+        MeetingParameters meetingFormParameters = new MeetingParameters();
+        meetingFormParameters.setWeekFrequency("1");
+        meetingFormParameters.setWeekDay(MeetingParameters.WEDNESDAY);
+        meetingFormParameters.setMeetingPlace("Mangalore");
 
-       mfiFormParameters.setMeeting(meetingFormParameters);
-       return clientMfiDataPage.submitAndGotoCreateClientPreviewDataPage(mfiFormParameters);
-   }
+        mfiFormParameters.setMeeting(meetingFormParameters);
+        return clientMfiDataPage.submitAndGotoCreateClientPreviewDataPage(mfiFormParameters);
+    }
 
-   public ClientViewDetailsPage createNewClient(String groupName, CreateClientEnterPersonalDataPage.SubmitFormParameters clientParams) {
+    public ClientViewDetailsPage createNewClient(String groupName, CreateClientEnterPersonalDataPage.SubmitFormParameters clientParams) {
         return navigationHelper
-           .navigateToClientsAndAccountsPage()
-           .navigateToCreateNewClientPage()
-           .selectGroup(groupName)
-           .create(clientParams)
-           .submitAndGotoCreateClientEnterMfiDataPage()
-           .navigateToPreview()
-           .submit()
-           .navigateToClientViewDetailsPage();
-   }
+                .navigateToClientsAndAccountsPage()
+                .navigateToCreateNewClientPage()
+                .selectGroup(groupName)
+                .create(clientParams)
+                .submitAndGotoCreateClientEnterMfiDataPage()
+                .navigateToPreview()
+                .submit()
+                .navigateToClientViewDetailsPage();
+    }
 
-   public ClientViewDetailsPage navigateToClientViewDetailsPage(String clientName) {
-        ClientViewDetailsPage clientViewDetailsPage =  navigationHelper.navigateToClientViewDetailsPage(clientName);
+    public ClientViewDetailsPage navigateToClientViewDetailsPage(String clientName) {
+        ClientViewDetailsPage clientViewDetailsPage = navigationHelper.navigateToClientViewDetailsPage(clientName);
         clientViewDetailsPage.verifyPage("ViewClientDetails");
 
         return clientViewDetailsPage;
-   }
+    }
 
-   public ClientViewDetailsPage editQuestionGroupResponses(ClientViewDetailsPage clientViewDetailsPage, String numberSection, Map<String, Integer> questions) {
+    public ClientViewDetailsPage editQuestionGroupResponses(ClientViewDetailsPage clientViewDetailsPage, String numberSection, String locator, String response) {
         ViewQuestionResponseDetailPage viewQuestionResponseDetailPage = clientViewDetailsPage.navigateToViewAdditionalInformationPage();
         viewQuestionResponseDetailPage.verifyPage();
         QuestionnairePage questionnairePage = viewQuestionResponseDetailPage.navigateToEditSection(numberSection);
         questionnairePage.verifyPage();
-        for(String key : questions.keySet()) {
-            if(Integer.valueOf(questions.get(key)) == 0) {
-                questionnairePage.checkResponse(key.split(":")[0],key.split(":")[1]);
-            } else {
-                questionnairePage.setResponse(key.split(":")[0],key.split(":")[1]);
-            }
-        }
-
-        ClientViewDetailsPage clientViewDetailsPage2 = (ClientViewDetailsPage)questionnairePage.submit();
+        selenium.type(locator, response);
+        ClientViewDetailsPage clientViewDetailsPage2 = (ClientViewDetailsPage) questionnairePage.submit();
         clientViewDetailsPage2.verifyPage("ViewClientDetails");
         return clientViewDetailsPage2;
-   }
+    }
 
-   public void applyCharge(String clientSearchString, ChargeParameters chargeParameters) {
-       navigationHelper.navigateToClientViewDetailsPage(clientSearchString)
-           .navigateToViewClientChargesDetail()
-           .navigateToApplyCharges()
-           .applyChargeAndNaviagteToViewClientChargesDetail(chargeParameters);
-   }
+    public void applyCharge(String clientSearchString, ChargeParameters chargeParameters) {
+        navigationHelper.navigateToClientViewDetailsPage(clientSearchString)
+                .navigateToViewClientChargesDetail()
+                .navigateToApplyCharges()
+                .applyChargeAndNaviagteToViewClientChargesDetail(chargeParameters);
+    }
 }

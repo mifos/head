@@ -96,7 +96,7 @@ import static java.util.Arrays.asList;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
 @SuppressWarnings({"PMD.TooManyFields","PMD.ExcessiveClassLength"})
-@Test(sequential = true, groups = {"client", "acceptance", "ui", "no_db_unit"})
+@Test(singleThreaded = true, groups = {"client", "acceptance", "ui", "no_db_unit"})
 public class ClientTest extends UiTestCaseBase {
 
     private NavigationHelper navigationHelper;
@@ -184,7 +184,7 @@ public class ClientTest extends UiTestCaseBase {
 
     }
 
-    @Test(sequential = true, groups = {"smoke", "client", "acceptance", "ui"})
+    @Test(singleThreaded = true, groups = {"smoke", "client", "acceptance", "ui"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-208
     public void createClientAndChangeStatusTest() throws Exception {
@@ -512,6 +512,8 @@ public class ClientTest extends UiTestCaseBase {
                 "12", "1987");
         CreateClientEnterMfiDataPage nextPage = clientPersonalDataPage.submitAndGotoCreateClientEnterMfiDataPage();
         nextPage.verifyPage("CreateClientMfiInfo");
+        propertiesHelper.setMinimumAgeForClients(0);
+        propertiesHelper.setMaximumAgeForClients(0);
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -522,6 +524,8 @@ public class ClientTest extends UiTestCaseBase {
                 "12", "1940");
         CreateClientEnterPersonalDataPage nextPage = clientPersonalDataPage.dontLoadNext();
         nextPage.verifyPage("CreateClientPersonalInfo");
+        propertiesHelper.setMinimumAgeForClients(0);
+        propertiesHelper.setMaximumAgeForClients(0);
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -532,6 +536,8 @@ public class ClientTest extends UiTestCaseBase {
                 "12", "1995");
         CreateClientEnterPersonalDataPage nextPage = clientPersonalDataPage.dontLoadNext();
         nextPage.verifyPage("CreateClientPersonalInfo");
+        propertiesHelper.setMinimumAgeForClients(0);
+        propertiesHelper.setMaximumAgeForClients(0);
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -684,11 +690,11 @@ public class ClientTest extends UiTestCaseBase {
         createQuestions();
 
         CreateQuestionGroupParameters qg = questionGroupTestHelper.getCreateQuestionGroupParameters("CreateClientQG",
-                asList("question 1", "question 2", "question 3"), "Create Client", "Sec 1");
+                asList("q1", "q2", "q3"), "Create Client", "Sec 1");
         questionGroupTestHelper.createQuestionGroup(qg);
 
         CreateQuestionGroupParameters qg2 = questionGroupTestHelper.getCreateQuestionGroupParameters("CreateClientQG2",
-                asList("question 6"), "Create Client", "Sec 2");
+                asList("q6"), "Create Client", "Sec 2");
         questionGroupTestHelper.createQuestionGroup(qg2);
 
         CreateClientEnterPersonalDataPage.SubmitFormParameters formParameters = createFormParameters();
@@ -702,11 +708,11 @@ public class ClientTest extends UiTestCaseBase {
         clientTestHelper.createClientWithQuestionGroups(formParameters, "group1", responseParams);
 
         List<String> questionToAdd = new ArrayList<String>();
-        questionToAdd.add("question 4");
-        questionToAdd.add("question 5");
+        questionToAdd.add("q4");
+        questionToAdd.add("q5");
 
         List<String> questionToDeactivate = new ArrayList<String>();
-        questionToDeactivate.add("question 6");
+        questionToDeactivate.add("q6");
 
         CreateQuestionGroupParameters createQuestionGroupParameters = new CreateQuestionGroupParameters();
         for (String question : questionToAdd) {
@@ -751,29 +757,29 @@ public class ClientTest extends UiTestCaseBase {
         List<CreateQuestionParameters> questions = new ArrayList<CreateQuestionParameters>();
         CreateQuestionParameters q1 = new CreateQuestionParameters();
         q1.setType(CreateQuestionParameters.TYPE_SINGLE_SELECT);
-        q1.setText("question 1");
+        q1.setText("q1");
         q1.setChoicesFromStrings(Arrays.asList(new String[]{"yes", "no"}));
         questions.add(q1);
         CreateQuestionParameters q2 = new CreateQuestionParameters();
         q2.setType(CreateQuestionParameters.TYPE_SINGLE_SELECT);
-        q2.setText("question 2");
+        q2.setText("q2");
         q2.setChoicesFromStrings(Arrays.asList(new String[]{"good", "bad", "average"}));
         questions.add(q2);
         CreateQuestionParameters q3 = new CreateQuestionParameters();
         q3.setType(CreateQuestionParameters.TYPE_FREE_TEXT);
-        q3.setText("question 3");
+        q3.setText("q3");
         questions.add(q3);
         CreateQuestionParameters q4 = new CreateQuestionParameters();
         q4.setType(CreateQuestionParameters.TYPE_DATE);
-        q4.setText("question 4");
+        q4.setText("q4");
         questions.add(q4);
         CreateQuestionParameters q5 = new CreateQuestionParameters();
         q5.setType(CreateQuestionParameters.TYPE_FREE_TEXT);
-        q5.setText("question 5");
+        q5.setText("q5");
         questions.add(q5);
         CreateQuestionParameters q6 = new CreateQuestionParameters();
         q6.setType(CreateQuestionParameters.TYPE_NUMBER);
-        q6.setText("question 6");
+        q6.setText("q6");
         q6.setNumericMax(10);
         q6.setNumericMin(0);
         questions.add(q6);

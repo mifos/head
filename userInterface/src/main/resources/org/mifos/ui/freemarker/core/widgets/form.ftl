@@ -47,7 +47,9 @@ Renders an HTML select element.
 [#macro singleSelectWithPrompt path options id="" selectPrompt="" attributes=""]
     [@spring.bind path/]
     <select id="${id}" name="${spring.status.expression}" ${attributes}>
-        <option value="" [@spring.checkSelected ""/]>[@spring.message "${selectPrompt}"/]</option>
+    	[#if selectPrompt?length > 0]
+        	<option value="" [@spring.checkSelected ""/]>[@spring.message "${selectPrompt}"/]</option>
+        [/#if]
         [#if options?is_hash]
             [#list options?keys as value]
             <option value="${value?html}"[@spring.checkSelected value/]>${options[value]?html}</option>
@@ -111,13 +113,13 @@ Renders a cancel button.
     buttonLabel : The value shown on the button.
     webflowEvent: If this button is part of a form that drives webflow, you may specify the event Id here.
 --]
-[#macro cancelButton label="widget.form.buttonLabel.cancel" webflowEvent=""]
+[#macro cancelButton label="widget.form.buttonLabel.cancel" id="" webflowEvent=""]
     [#if webflowEvent?length == 0]
         [#assign name="" /]
     [#else]
         [#assign name="_eventId_${webflowEvent}" /]
     [/#if]
-    <input type="submit" class="cancel" value="[@spring.message label /]" name="${name}" />
+    <input id="${id}" type="submit" class="cancel" value="[@spring.message label /]" name="${name}" />
 [/#macro]
 
 [#-- 
