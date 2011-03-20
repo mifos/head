@@ -82,8 +82,9 @@
         <profile>
             <id>continuous-integration</id>
             <properties>
-                <!-- leaving <test.group.no_db_unit> empty means to run everything -->
-                <test.group.no_db_unit></test.group.no_db_unit>
+                <test.group.no_db_unit>no_db_unit</test.group.no_db_unit>
+                <!-- leaving empty means to run everything -->
+                <test.group.db_unit></test.group.db_unit>
                 <SELENIUM_PORT>${env.SELENIUM_PORT}</SELENIUM_PORT>
                 <SERVLET_PORT>${env.SERVLET_PORT}</SERVLET_PORT>
                 <stop.port>${env.CI_JETTY_STOP_PORT}</stop.port>
