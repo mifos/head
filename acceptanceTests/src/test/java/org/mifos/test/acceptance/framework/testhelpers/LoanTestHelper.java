@@ -304,27 +304,6 @@ public class LoanTestHelper {
         editLoanProductPreviewPage.submit();
     }
 
-    public void editLoanProductIncludeInLoanCounter(String loanProduct, boolean includeInLoanCounter) {
-        EditLoanProductPage editLoanProductPage = navigationHelper.navigateToAdminPage().
-                navigateToViewLoanProducts().
-                viewLoanProductDetails(loanProduct).
-                editLoanProduct();
-        DefineNewLoanProductPage.SubmitFormParameters formParameters = new DefineNewLoanProductPage.SubmitFormParameters();
-        formParameters.setIncludeInLoanCounter(includeInLoanCounter);
-        editLoanProductPage.submitIncludeInLoanCounter(formParameters).submit();
-    }
-
-    public void editLoanProduct(String loanProduct, String... questionGroup) {
-        AdminPage adminPage = navigationHelper.navigateToAdminPage();
-        ViewLoanProductsPage viewLoanProducts = adminPage.navigateToViewLoanProducts();
-        LoanProductDetailsPage loanProductDetailsPage = viewLoanProducts.viewLoanProductDetails(loanProduct);
-        EditLoanProductPage editLoanProductPage = loanProductDetailsPage.editLoanProduct();
-        DefineNewLoanProductPage.SubmitFormParameters formParameters = new DefineNewLoanProductPage.SubmitFormParameters();
-        formParameters.setQuestionGroups(Arrays.asList(questionGroup));
-        EditLoanProductPreviewPage editLoanProductPreviewPage = editLoanProductPage.submitQuestionGroupChanges(formParameters);
-        editLoanProductPreviewPage.submit();
-    }
-
     public DisburseLoanPage prepareToDisburseLoan(String loanId) {
         LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
         return loanAccountPage.navigateToDisburseLoan();
