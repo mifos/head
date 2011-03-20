@@ -48,6 +48,7 @@ import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionnairePage;
 import org.mifos.test.acceptance.framework.questionnaire.ViewAllQuestionGroupsPage;
 import org.mifos.test.acceptance.framework.questionnaire.ViewAllQuestionsPage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionGroupResponsePage;
 import org.mifos.test.acceptance.framework.savings.SavingsAccountDetailPage;
 import org.testng.Assert;
 
@@ -394,6 +395,16 @@ public class QuestionGroupTestHelper {
         questionResponsePage2.populateAnswers(updatedResponse);
         createOfficePreviewDataPage = questionResponsePage2.navigateToNextPageAndReturnPage();
         return createOfficePreviewDataPage.submit().navigateToOfficeViewDetailsPage();
+    }
+
+    public void editResponses(ClientViewDetailsPage clientViewDetailsPage, int id, Map<String,String> answers) {
+        QuestionGroupResponsePage questionGroupResponsePage = clientViewDetailsPage.navigateToQuestionGroupResponsePage(id);
+        QuestionnairePage questionnairePage = questionGroupResponsePage.navigateToEditResponses();
+        for(String question: answers.keySet()) {
+            questionnairePage.setResponse(question, answers.get(question));
+        }
+        ClientViewDetailsPage clientViewDetailsPage2 = (ClientViewDetailsPage)questionnairePage.submit();
+        Assert.assertEquals(clientViewDetailsPage2.getQuestionGroupInstances().get(2).getName(),"TestQuestionGroup");
     }
 
     public QuestionResponsePage navigateToQuestionResponsePageDuringLoanDisbursal(String loanAccountID, DisburseLoanParameters disburseParams) {
