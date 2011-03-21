@@ -23,7 +23,10 @@ package org.mifos.test.acceptance.framework.testhelpers;
 import org.mifos.test.acceptance.framework.group.CreateGroupEntryPage;
 import org.mifos.test.acceptance.framework.group.CreateGroupEntryPage.CreateGroupSubmitParameters;
 import org.mifos.test.acceptance.framework.group.EditCustomerStatusParameters;
+import org.mifos.test.acceptance.framework.group.GroupStatus;
 import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
+import org.mifos.test.acceptance.framework.group.ViewGroupChargesDetailPage;
+import org.mifos.test.acceptance.framework.loan.ChargeParameters;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -76,5 +79,19 @@ public class GroupTestHelper {
             .navigateToEditCenterMembership()
             .selectCenterAndNavigateToEditCenterMembershiConfirmationPage(centerName)
             .submitAndNavigateToGroupDetailsPage();
+    }
+
+    public ViewGroupChargesDetailPage applyCharge(String groupName, ChargeParameters chargeParameters) {
+        return navigationHelper.navigateToGroupViewDetailsPage(groupName)
+            .navigateToViewGroupChargesDetailPage()
+            .navigateToApplyCharges()
+            .applyChargeAndNaviagteToViewGroupChargesDetailPage(chargeParameters);
+    }
+
+    public GroupViewDetailsPage activateGroup(String groupName){
+        EditCustomerStatusParameters editCustomerStatusParameters = new EditCustomerStatusParameters();
+        editCustomerStatusParameters.setGroupStatus(GroupStatus.ACTIVE);
+        editCustomerStatusParameters.setNote("Activate group");
+        return changeGroupStatus(groupName, editCustomerStatusParameters);
     }
 }

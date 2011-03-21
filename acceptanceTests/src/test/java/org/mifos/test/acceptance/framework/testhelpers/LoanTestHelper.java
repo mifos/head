@@ -237,6 +237,13 @@ public class LoanTestHelper {
         changeLoanAccountStatusProvidingQuestionGroupResponses(loanId, params, null);
     }
 
+    public void activateLoanAccount(String loanId){
+        EditLoanAccountStatusParameters editLoanAccountStatusParameters = new EditLoanAccountStatusParameters();
+        editLoanAccountStatusParameters.setStatus(AccountStatus.LOAN_APPROVED.getStatusText());
+        editLoanAccountStatusParameters.setNote("Activate account");
+        changeLoanAccountStatus(loanId, editLoanAccountStatusParameters);
+    }
+
     public void changeLoanAccountStatusProvidingQuestionGroupResponses(String loanId, EditLoanAccountStatusParameters params, QuestionResponseParameters responseParameters) {
         LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
 

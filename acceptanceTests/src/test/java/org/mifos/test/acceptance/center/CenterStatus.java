@@ -22,6 +22,7 @@ package org.mifos.test.acceptance.center;
 
 public enum CenterStatus {
 
+    ACTIVE ("Active", 13),
     INACTIVE ("Inactive", 14);
 
     private final String statusText;

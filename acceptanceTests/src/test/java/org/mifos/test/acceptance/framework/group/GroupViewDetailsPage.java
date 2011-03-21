@@ -170,4 +170,12 @@ public class GroupViewDetailsPage extends MifosPage {
         waitForPageToLoad();
         return new ViewGroupChargesDetailPage(selenium);
     }
+
+    public String getAmountDue(){
+        return selenium.getText("viewgroupdetails.text.amountDue");
+    }
+
+    public void verifyAmountDue(String amountDue){
+        Assert.assertEquals(getAmountDue(), amountDue);
+    }
 }

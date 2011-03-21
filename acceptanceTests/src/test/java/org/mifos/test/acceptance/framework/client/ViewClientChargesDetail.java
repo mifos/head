@@ -9,6 +9,7 @@ public class ViewClientChargesDetail extends AbstractPage {
 
     public ViewClientChargesDetail(Selenium selenium){
         super(selenium);
+        verifyPage("ViewClientChargesDetail");
     }
 
     public ApplyChargesPage navigateToApplyCharges(){
