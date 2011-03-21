@@ -115,17 +115,17 @@ public class ClientTest extends UiTestCaseBase {
     public static final String NUMBER = "Number";
     public static final String SMART_SELECT = "Smart Select";
     private String questionGroupTitle;
-    private String question1 = "q1";
-    private String question2 = "q2";
-    private static final String question3 = "q3";
-    private static final String question4 = "q4";
-    private static final String question5 = "q5";
-    private static final String question6 = "q6";
-    private static final String question7 = "q7";
-    private static final String question8 = "q8";
-    private static final String question9 = "q9";
-    private static final String question10 = "q10";
-    private static final String question11 = "q11";
+    private String question1 = "663q1";
+    private String question2 = "663q2";
+    private static final String question3 = "663q3";
+    private static final String question4 = "663q4";
+    private static final String question5 = "663q5";
+    private static final String question6 = "663q6";
+    private static final String question7 = "663q7";
+    private static final String question8 = "663q8";
+    private static final String question9 = "663q9";
+    private static final String question10 = "663q10";
+    private static final String question11 = "663q11";
     private String response;
     private ClientViewDetailsPage viewClientDetailsPage;
     private Map<Integer, QuestionGroup> questionGroupInstancesOfClient;
@@ -316,16 +316,16 @@ public class ClientTest extends UiTestCaseBase {
         QuestionResponseParameters responseParams2 = getQuestionResponseParametersForClientAccountClose("answer2");
         QuestionResponseParameters responseParamsAfterModyfication = getQuestionResponseParametersForClientAccountCloseAfterModyfication("answer2");
         List<CreateQuestionParameters> questionsList = new ArrayList<CreateQuestionParameters>();
-        questionsList.add(newFreeTextQuestionParameters("new question 1"));
-        questionsList.add(newFreeTextQuestionParameters("new question 2"));
-        questionsList.add(newFreeTextQuestionParameters("new question 3"));
-        String[] newActiveQuestions = { "new question 1", "new question 2" };
-        String[] deactivateArray = { "new question 3", question3, question6, question2, question5};
+        questionsList.add(newFreeTextQuestionParameters("663new question 1"));
+        questionsList.add(newFreeTextQuestionParameters("663new question 2"));
+        questionsList.add(newFreeTextQuestionParameters("663new question 3"));
+        String[] newActiveQuestions = { "663new question 1", "663new question 2" };
+        String[] deactivateArray = { "663new question 3", question3, question6, question2, question5};
         String[] deactivatedGroupArray = {question10, question11};
         List<String> deactivateList = Arrays.asList(deactivateArray);
         Map<String, String> questionsAndAnswers = new HashMap<String, String>();
-        questionsAndAnswers.put("new question 1", "answer2");
-        questionsAndAnswers.put("new question 2", "answer2");
+        questionsAndAnswers.put("663new question 1", "answer2");
+        questionsAndAnswers.put("663new question 2", "answer2");
         questionsAndAnswers.put(question1, "24/01/2011");
         questionsAndAnswers.put(question4, "10");
         questionsAndAnswers.put(question7, "24/01/2011");
@@ -355,7 +355,7 @@ public class ClientTest extends UiTestCaseBase {
 
         verifyQuestionResponsesExistInDatabase(clientName, "Close Client", questionsAndAnswers);
         
-        questionTestHelper.markQuestionsAsInactive(asList("new question 1","new question 2", question1,
+        questionTestHelper.markQuestionsAsInactive(asList("663new question 1","663new question 2", question1,
                 question2, question4, question7, question8, question9, question10, question11));
         questionTestHelper.markQuestionGroupAsInactive(qG_1);
     }
