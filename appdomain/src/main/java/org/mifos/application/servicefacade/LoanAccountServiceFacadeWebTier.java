@@ -670,6 +670,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             WeekDay weekDay = WeekDay.getWeekDay(createLoanSchedule.getDayOfWeek());
             loanMeeting.getMeetingDetails().getMeetingRecurrence().setWeekDay(weekDay);
             loanMeeting.setMeetingStartDate(new Date());
+            if (loanProduct.isVariableInstallmentsAllowed()) {
+                loanMeeting.setMeetingStartDate(createLoanSchedule.getDisbursementDate().toDateMidnight().toDate());
+            }
         }
         LoanScheduleConfiguration configuration = new LoanScheduleConfiguration(loanScheduleIndependentOfCustomerMeetingEnabled, interestDays);
         

@@ -33,7 +33,7 @@ public class LoanDisbursmentDateFactoryImpl implements LoanDisbursementDateFacto
         LoanDisbursementStrategy loanDisbursementStrategy = new ScheduledEventLoanDisbursementStrategyImpl(
                 customerMeetingSchedule);
         if (variableInstallmentsAllowed) {
-            loanDisbursementStrategy = new VariableInstallmentsLoanDisbursementStrategyImpl();
+            loanDisbursementStrategy = new VariableInstallmentsLoanDisbursementStrategyImpl(customerMeetingSchedule);
         }
 
         return loanDisbursementStrategy;

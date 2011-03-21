@@ -62,20 +62,30 @@ public class CashFlowForm implements Serializable {
     }
 
     public BigDecimal getTotalCapital() {
-        return cashFlowDetail.getTotalCapital();
+        BigDecimal totalCapital = BigDecimal.ZERO;
+        if (cashFlowDetail != null) {
+            totalCapital = cashFlowDetail.getTotalCapital();
+        }
+        return totalCapital;
     }
 
     public BigDecimal getTotalLiability() {
-        return cashFlowDetail.getTotalLiability();
+        BigDecimal totalLiability = BigDecimal.ZERO;
+        if (cashFlowDetail != null) {
+            totalLiability = cashFlowDetail.getTotalLiability();
+        }
+        return totalLiability;
     }
 
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public List<MonthlyCashFlowForm> getMonthlyCashFlows() {
         List<MonthlyCashFlowForm> monthlyCashFlows = new ArrayList<MonthlyCashFlowForm>();
-        for (MonthlyCashFlowDetail monthlyCashFlowDetail : cashFlowDetail.getMonthlyCashFlowDetails()) {
-            MonthlyCashFlowForm monthlyCashFlowForm = new MonthlyCashFlowForm(monthlyCashFlowDetail);
-            monthlyCashFlowForm.setLocale(locale);
-            monthlyCashFlows.add(monthlyCashFlowForm);
+        if (cashFlowDetail != null) {
+            for (MonthlyCashFlowDetail monthlyCashFlowDetail : cashFlowDetail.getMonthlyCashFlowDetails()) {
+                MonthlyCashFlowForm monthlyCashFlowForm = new MonthlyCashFlowForm(monthlyCashFlowDetail);
+                monthlyCashFlowForm.setLocale(locale);
+                monthlyCashFlows.add(monthlyCashFlowForm);
+            }
         }
         return monthlyCashFlows;
     }

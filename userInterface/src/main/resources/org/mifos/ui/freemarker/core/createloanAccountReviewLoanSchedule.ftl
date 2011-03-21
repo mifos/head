@@ -52,6 +52,7 @@ $(function() {
 <p>[@spring.message "createLoanAccount.reviewInstallments.instructions" /]</p>
 <br/>
 
+[@form.errors "loanScheduleFormBean.*"/]
 [@form.errors "cashFlowSummaryFormBean.*"/]
 
 <div class="product-summary">
