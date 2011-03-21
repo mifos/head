@@ -37,7 +37,7 @@ import org.springframework.binding.message.MessageContext;
 import org.springframework.binding.validation.ValidationContext;
 
 @SuppressWarnings("PMD")
-@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID"}, justification="should disable at filter level and also for pmd - not important for us")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID", "EI_EXPOSE_REP", "EI_EXPOSE_REP2"}, justification="should disable at filter level and also for pmd - not important for us")
 public class LoanScheduleFormBean implements Serializable {
 
     @Autowired
@@ -59,35 +59,6 @@ public class LoanScheduleFormBean implements Serializable {
         // constructor
     }
     
-    /**
-     * validateXXXX is invoked on transition from state 
-     */
-    public void validateCalculateAndReviewLoanSchedule(ValidationContext context) {
-        MessageContext messageContext = context.getMessageContext();
-        
-        if (this.variableInstallmentsAllowed) {
-            int index=0;
-            for (LoanCreationInstallmentDto variableInstallment : this.variableInstallments) {
-                variableInstallment.setDueDate(new LocalDate(this.installments.get(index)));
-                index++;
-            }
-            Errors inputInstallmentsErrors = loanAccountServiceFacade.validateInputInstallments(disbursementDate, minGapInDays, maxGapInDays, minInstallmentAmount, variableInstallments, customerId);
-            Errors scheduleErrors = loanAccountServiceFacade.validateInstallmentSchedule(variableInstallments, minInstallmentAmount);
-            
-            if (inputInstallmentsErrors.hasErrors()) {
-                for (ErrorEntry fieldError : inputInstallmentsErrors.getErrorEntries()) {
-                    addErrorMessageToContext(messageContext, fieldError);
-                }
-            }
-            
-            if (scheduleErrors.hasErrors()) {
-                for (ErrorEntry fieldError : scheduleErrors.getErrorEntries()) {
-                    addErrorMessageToContext(messageContext, fieldError);
-                }
-            }
-        }
-    }
-
     private void addErrorMessageToContext(MessageContext messageContext, ErrorEntry fieldError) {
         String[] errorCodes = new String[1];
         errorCodes[0] = fieldError.getErrorCode();
@@ -100,6 +71,43 @@ public class LoanScheduleFormBean implements Serializable {
                                               .defaultText(fieldError.getDefaultMessage()).args(args.toArray());
         
         messageContext.addMessage(builder.build());
+    }
+    
+    /**
+     * validateXXXX is invoked on transition from state 
+     */
+    public void validateCalculateAndReviewLoanSchedule(ValidationContext context) {
+        MessageContext messageContext = context.getMessageContext();
+        
+        if (this.variableInstallmentsAllowed) {
+            setInstallmentDatesThatMayOfBeingInputed();
+            Errors inputInstallmentsErrors = loanAccountServiceFacade.validateInputInstallments(disbursementDate, minGapInDays, maxGapInDays, minInstallmentAmount, variableInstallments, customerId);
+            Errors scheduleErrors = loanAccountServiceFacade.validateInstallmentSchedule(variableInstallments, minInstallmentAmount);
+            
+            handleErrors(messageContext, inputInstallmentsErrors, scheduleErrors);
+        }
+    }
+
+    private void handleErrors(MessageContext messageContext, Errors inputInstallmentsErrors, Errors scheduleErrors) {
+        if (inputInstallmentsErrors.hasErrors()) {
+            for (ErrorEntry fieldError : inputInstallmentsErrors.getErrorEntries()) {
+                addErrorMessageToContext(messageContext, fieldError);
+            }
+        }
+        
+        if (scheduleErrors.hasErrors()) {
+            for (ErrorEntry fieldError : scheduleErrors.getErrorEntries()) {
+                addErrorMessageToContext(messageContext, fieldError);
+            }
+        }
+    }
+
+    private void setInstallmentDatesThatMayOfBeingInputed() {
+        int index=0;
+        for (LoanCreationInstallmentDto variableInstallment : this.variableInstallments) {
+            variableInstallment.setDueDate(new LocalDate(this.installments.get(index)));
+            index++;
+        }
     }
 
     public List<Date> getInstallments() {
