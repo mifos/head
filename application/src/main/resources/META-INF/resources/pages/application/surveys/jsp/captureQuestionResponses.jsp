@@ -178,7 +178,7 @@ explanation of the license and how it is applied.
                                       <c:if test="${question.questionType == 'MULTI_SELECT'}">
                                          <fieldset style="width:70%" class="right_section">
 				                            <ol class="noPadding">
-				                              <input type="checkbox" checked="checked" name="questionGroups[${groupIdx}].sectionDetails[${sectionIdx}].questions[${questionIdx}].valuesAsArray" value="" style="display:none;"/>
+				                              <input type="checkbox" checked="checked" name="questionGroups[${groupIdx}].sectionDetails[${sectionIdx}].questions[${questionIdx}].valuesAsArray" value="" style="display:none;" />
 				                              <c:forEach var="choiceValue" items="${question.answerChoices}" >
 				                                 <li class="noPadding">
 								    				<html:multibox property="questionGroups[${groupIdx}].sectionDetails[${sectionIdx}].questions[${questionIdx}].valuesAsArray" value="${choiceValue}" /> ${choiceValue}
@@ -189,25 +189,26 @@ explanation of the license and how it is applied.
                                      </c:if>
                                      <c:if test="${question.questionType == 'SMART_SELECT'}">
                                          <fieldset style="width:70%" class="right_section">
-                                            <li class="noPadding" style="list-style: none;">
-				                                <input type="text" autocomplete="off" id="txtListSearch" name="txtListSearch" style="width:21em;" class="txtListSearch"/>
-				                            </li>
-				                            <ol class="questionList" id="questionList" style="overflow:auto; width:19em; height:180px; border:1px solid #336699; padding-left:5px">
-                                              <input type="checkbox" checked="checked" name="questionGroups[${groupIdx}].sectionDetails[${sectionIdx}].questions[${questionIdx}].valuesAsArray" value="" style="display:none;"/>
+
+                                            <div class="noPadding" style="list-style: none;">
+				                                <input type="text" autocomplete="off" id="txtListSearch" name="txtListSearch" style="width:21em;" class="txtListSearch" />
+				                            </div>
+				                            <ol class="questionList" id="questionList" style="overflow:auto; width:20em; height:180px; border:1px solid #336699; padding:5px; margin:12px 0;">
+                                              <input type="checkbox" checked="checked" name="questionGroups[${groupIdx}].sectionDetails[${sectionIdx}].questions[${questionIdx}].valuesAsArray" value="" style="display:none;" />
 				                              <c:forEach var="choiceValue" items="${question.answerChoices}" >
 		            							<c:choose>
                                                   <c:when test="${choiceValue.tags !=null && !empty choiceValue.tags}">
                                                     <c:forEach var="tagValue" items="${choiceValue.tags}" >
-                                                         <li class="noPadding">
-                                                            <html:multibox property="questionGroups[${groupIdx}].sectionDetails[${sectionIdx}].questions[${questionIdx}].valuesAsArray" value="${choiceValue}:${tagValue}" />
-                                                            <label tag="${tagValue}" choice="${choiceValue}" style="float:none;">${choiceValue}&nbsp;:&nbsp;${tagValue}</label>
+                                                         <li class="noPadding" style="overflow:hidden; margin-right: -3px;">
+                                                            <html:multibox property="questionGroups[${groupIdx}].sectionDetails[${sectionIdx}].questions[${questionIdx}].valuesAsArray" value="${choiceValue}:${tagValue}" style="float:left;" />
+                                                            <label tag="${tagValue}" choice="${choiceValue}" style="float:left; width: 180px; margin: 0;">${choiceValue}&nbsp;:&nbsp;${tagValue}</label>
                                                          </li>
                                                     </c:forEach>
                                                   </c:when>
             									  <c:otherwise>
-                                                     <li class="noPadding">
-                                                        <html:multibox property="questionGroups[${groupIdx}].sectionDetails[${sectionIdx}].questions[${questionIdx}].valuesAsArray" value="${choiceValue}" />
-                                                        <label tag="" choice="${choiceValue}" style="float:none;">${choiceValue}</label>
+                                                     <li class="noPadding" style="overflow:hidden; margin-right: -3px;">
+                                                        <html:multibox property="questionGroups[${groupIdx}].sectionDetails[${sectionIdx}].questions[${questionIdx}].valuesAsArray" value="${choiceValue}" style="float:left;" />
+                                                        <label tag="" choice="${choiceValue}" style="float:left; width: 180px; margin: 0;">${choiceValue}</label>
                                                      </li>
             									  </c:otherwise>
             									</c:choose>
@@ -224,14 +225,14 @@ explanation of the license and how it is applied.
                      <tr>
                         <td>&nbsp;</td>
 						<td align="left">
-							<input type="submit" class="buttn" name="captureQuestionResponses.button.continue" id="captureQuestionResponses.button.continue" value="<fmt:message key='Surveys.button.continue'/>"/>
-							<input type="button" class="cancelbuttn" name="captureQuestionResponses_button_cancel" id="captureQuestionResponses_button_cancel" value="<fmt:message key='Surveys.button.cancel'/>"/>
+							<input type="submit" class="buttn" name="captureQuestionResponses.button.continue" id="captureQuestionResponses.button.continue" value="<fmt:message key='Surveys.button.continue'/>" />
+							<input type="button" class="cancelbuttn" name="captureQuestionResponses_button_cancel" id="captureQuestionResponses_button_cancel" value="<fmt:message key='Surveys.button.cancel'/>" />
                         </td>
                     </tr>
                  </table>
 			</c:if>
 			<!-- Question Groups end -->
-			<input type="hidden" name="captureResponse_cancel" id="captureResponse_cancel" value="${requestScope.cancelToURL}"/>
+			<input type="hidden" name="captureResponse_cancel" id="captureResponse_cancel" value="${requestScope.cancelToURL}" />
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 			<html-el:hidden property="method" value="captureQuestionResponses" />
             <html-el:hidden property="perspective" value="${requestScope.perspective}" />
