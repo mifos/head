@@ -663,7 +663,8 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         Integer interestDays = Integer.valueOf(AccountingRules.getNumberOfInterestDays().intValue());
         boolean loanScheduleIndependentOfCustomerMeetingEnabled = createLoanSchedule.isRepaymentIndependentOfCustomerMeetingSchedule();
         
-        // FIXME - the default meeting should be customer meeting for LSIM off
+        // FIXME - the default meeting should be customer meeting for LSIM off for loan creation
+        //       - for LSIM on (not variable installments) the meeting details from loan creation flow should be used.
 //        MeetingBO loanMeeting = loanProduct.getLoanOfferingMeetingValue();
         MeetingBO loanMeeting = customer.getCustomerMeetingValue();
         if (loanScheduleIndependentOfCustomerMeetingEnabled) {

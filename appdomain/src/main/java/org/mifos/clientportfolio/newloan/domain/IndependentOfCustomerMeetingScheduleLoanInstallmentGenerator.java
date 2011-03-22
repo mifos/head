@@ -34,7 +34,7 @@ public class IndependentOfCustomerMeetingScheduleLoanInstallmentGenerator implem
 		List<InstallmentDate> installmentDates = new ArrayList<InstallmentDate>();
 		
 		int installmentsToSkip = getInstallmentSkipToStartRepayment(graceType, graceDuration);
-        installmentDates = getInstallmentDates(this.scheduledEvent, meetingStartDate, numberOfInstallments, installmentsToSkip, officeId);
+        installmentDates = getInstallmentDates(this.scheduledEvent, actualDisbursementDate, numberOfInstallments, installmentsToSkip, officeId);
 		
 		return installmentDates;
 	}

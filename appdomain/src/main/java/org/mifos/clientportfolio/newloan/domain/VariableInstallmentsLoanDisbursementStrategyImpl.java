@@ -33,9 +33,8 @@ public class VariableInstallmentsLoanDisbursementStrategyImpl implements LoanDis
 
     @Override
     public LocalDate findClosestMatchingDateFromAndInclusiveOf(LocalDate fromAndInclusiveOf) {
-        return new LocalDate(scheduledEvent.nextEventDateAfter(fromAndInclusiveOf.minusDays(1).toDateMidnight().toDateTime()));
+        return new LocalDate(scheduledEvent.nearestMatchingDateBeginningAt(fromAndInclusiveOf.minusDays(1).toDateMidnight().toDateTime()));
     }
-
 
     @Override
     public boolean isDisbursementDateValid(@SuppressWarnings("unused") LocalDate disbursementDate) {
