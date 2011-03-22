@@ -795,8 +795,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             List<QuestionGroupDetail> questionGroups, LoanAccountCashFlow loanAccountCashFlow, List<Date> loanScheduleInstallmentDates) {
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = toUserContext(user);
-        
+
         // assemble
+        PersonnelBO createdBy = this.personnelDao.findPersonnelById(userContext.getId());
         OfficeBO userOffice = this.officeDao.findOfficeById(user.getBranchId());
         CustomerBO customer = this.customerDao.findCustomerById(loanAccountInfo.getCustomerId());
         LoanOfferingBO loanProduct = this.loanProductDao.findById(loanAccountInfo.getProductId());
@@ -835,7 +836,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         LoanSchedule loanSchedule = this.loanScheduleService.generate(loanProduct, customer, repaymentDayMeeting, overridenDetail, configuration, accountFees, loanScheduleDates);
         
         return createLoanAccount(loanAccountInfo, questionGroups, loanAccountCashFlow, user, userOffice, customer,
-                loanProduct, accountStateType, fund, overridenDetail, configuration, repaymentDayMeeting, loanSchedule);
+                loanProduct, accountStateType, fund, overridenDetail, configuration, repaymentDayMeeting, loanSchedule, createdBy);
     }
     
     @Override
@@ -845,6 +846,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         UserContext userContext = toUserContext(user);
         
         // assemble
+        PersonnelBO createdBy = this.personnelDao.findPersonnelById(userContext.getId());
         OfficeBO userOffice = this.officeDao.findOfficeById(user.getBranchId());
         CustomerBO customer = this.customerDao.findCustomerById(loanAccountInfo.getCustomerId());
         LoanOfferingBO loanProduct = this.loanProductDao.findById(loanAccountInfo.getProductId());
@@ -879,17 +881,18 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         LoanSchedule loanSchedule = this.loanScheduleService.generate(loanProduct, customer, repaymentDayMeeting, overridenDetail, configuration, userContext.getBranchId(), accountFees);
         
         return createLoanAccount(loanAccountInfo, questionGroups, loanAccountCashFlow, user, userOffice, customer,
-                loanProduct, accountStateType, fund, overridenDetail, configuration, repaymentDayMeeting, loanSchedule);
+                loanProduct, accountStateType, fund, overridenDetail, configuration, repaymentDayMeeting, loanSchedule, createdBy);
     }
     
     private LoanCreationResultDto createLoanAccount(CreateLoanAccount loanAccountInfo,
             List<QuestionGroupDetail> questionGroups, LoanAccountCashFlow loanAccountCashFlow, MifosUser user,
             OfficeBO userOffice, CustomerBO customer, LoanOfferingBO loanProduct, AccountState accountStateType,
             FundBO fund, LoanProductOverridenDetail overridenDetail, LoanScheduleConfiguration configuration,
-            MeetingBO repaymentDayMeeting, LoanSchedule loanSchedule) {
+            MeetingBO repaymentDayMeeting, LoanSchedule loanSchedule, PersonnelBO createdBy) {
         
         CreationDetail creationDetail = new CreationDetail(new DateTime(), Integer.valueOf(user.getUserId()));
         LoanBO loan = LoanBO.openStandardLoanAccount(loanProduct, customer, repaymentDayMeeting, loanSchedule, accountStateType, fund, overridenDetail, configuration, creationDetail);
+        loan.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(loan.getAccountState(), loan.getAccountState(), createdBy, loan));
         loan.setBusinessActivityId(loanAccountInfo.getLoanPurposeId());
         loan.setExternalId(loanAccountInfo.getExternalId());
         loan.setCollateralNote(loanAccountInfo.getCollateralNotes());
