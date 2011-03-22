@@ -10,6 +10,7 @@
         <on-entry>
             <evaluate expression="customizeTextController.retrieveCustomizedTextMap()" result="flowScope.customizedTextMap" />
             <evaluate expression="customizeTextController.showBreadCrumbsForView()" result="flowScope.breadcrumbs" />
+            <evaluate expression="customizedTextSelectFormBean.clear()" />
         </on-entry>    
         <transition on="add" to="addCustomizedTextStep" validate="false" bind="false"/>
         <transition on="remove" to="selectCustomizedTextStep" validate="true">

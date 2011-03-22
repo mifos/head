@@ -52,8 +52,8 @@ input.cancel, input.edit
 .validationErrors
 {
     color: #FF0000;
-    background-color: #FFC1CC;
-    border: 1px solid #FF0000;
+/*    background-color: #FFC1CC; 
+    border: 1px solid #FF0000; */
     padding: 1em;
     margin: 1em 0em;
 }

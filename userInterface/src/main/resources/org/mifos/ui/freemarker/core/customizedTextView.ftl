@@ -20,28 +20,39 @@
 --]
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
-   <!--  Main Content Begins-->
-  <div class=" content">
-  <span id="page.id" title="customizeTextView"></span>
-    [@mifos.flowCrumbs breadcrumbs/]
-    
-[@form.errors "customizedTextSelectFormBean.*"/]      
-<form action="${flowExecutionUrl}" method="post" class="two-column">
-<div class="fontBold"><span class="orangeheading">[@spring.message "customizeTextView.customizedTextList"/]</span></div>
-	<div>[@spring.message "customizeTextView.instructions" /]</div>
-	&nbsp;
-	<center>
-    <div class="row">	
-    [@form.singleSelectWithPrompt path="customizedTextSelectFormBean.message" id="customizeTextView.select.customizedText" options=customizedTextMap selectPrompt="" attributes="size=12, style=width:300px;"/]
-    </div>
-    <div class="row">
-        [@form.submitButton label="widget.form.buttonLabel.add" id="customizeTextView.button.add" webflowEvent="add" /]
-        [@form.submitButton label="widget.form.buttonLabel.edit" id="customizeTextView.button.edit" webflowEvent="edit" /]                
-        [@form.submitButton label="widget.form.buttonLabel.remove" id="customizeTextView.button.remove" webflowEvent="remove" /]
-        [@form.cancelButton label="widget.form.buttonLabel.done" id="customizeTextView.button.done" webflowEvent="done"  /]
-    </div>
-    </center>
-</form>
-  </div>
-  <!--Main content ends-->
-  [/@adminLeftPaneLayout]
+<!--  Main Content Begins-->
+<style type="text/css">
+	select { 
+		font-size: 1.0em;
+		margin-bottom: 15px;
+	}
+	input {
+		width: auto; 
+		min-width: 80px;
+		margin: 4px;
+	}
+</style>
+<div class=" content">
+	<span id="page.id" title="customizeTextView"></span>
+	[@mifos.flowCrumbs breadcrumbs/]
+	        
+	<form action="${flowExecutionUrl}" method="post" class="two-column">
+		<div class="fontBold"><span class="orangeheading">[@spring.message "customizeTextView.customizedTextList"/]</span></div>
+		<div>[@spring.message "customizeTextView.instructions" /]</div>
+		&nbsp;
+		[@form.errors "customizedTextSelectFormBean.*"/]  
+		<center>
+	    	<div class="row">	
+	    	[@form.singleSelectWithPrompt path="customizedTextSelectFormBean.message" id="customizeTextView.select.customizedText" options=customizedTextMap selectPrompt="" attributes="size=12, style=width:330px;"/]
+	    	</div>
+	    	<div class="row">
+		        [@form.submitButton label="widget.form.buttonLabel.add" id="customizeTextView.button.add" webflowEvent="add" /]
+		        [@form.submitButton label="widget.form.buttonLabel.edit" id="customizeTextView.button.edit" webflowEvent="edit" /]                
+		        [@form.submitButton label="widget.form.buttonLabel.remove" id="customizeTextView.button.remove" webflowEvent="remove" /]
+		        [@form.cancelButton label="widget.form.buttonLabel.done" id="customizeTextView.button.done" webflowEvent="done"  /]
+		    </div>
+    	</center>
+	</form>
+</div>
+<!--Main content ends-->
+[/@adminLeftPaneLayout]

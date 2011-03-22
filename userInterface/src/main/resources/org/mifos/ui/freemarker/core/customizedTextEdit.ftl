@@ -24,14 +24,13 @@
   <div class=" content">
   <span id="page.id" title="customizeTextEdit"></span>
     [@mifos.flowCrumbs breadcrumbs/]
-
-[@form.errors "customizedTextFormBean.*"/]    
     
 <form action="${flowExecutionUrl}" method="post" class="two-columns">
 	<div class="fontBold"><span class="orangeheading">[@spring.message "customizeTextEdit.title"/]</span></div>
 	<div>[@spring.message "customizeTextEdit.instructions" /]</div>
 	&nbsp;
     <div><span class="red">* </span>[@spring.message "fieldsmarkedwithanasteriskarerequired" /] </div>
+	[@form.errors "customizedTextFormBean.*"/]      
     <fieldset>
     <div class="row">
         [@form.label "Old Message" true /][@spring.message "customizeTextAdd.addMessage.originalText"/]
