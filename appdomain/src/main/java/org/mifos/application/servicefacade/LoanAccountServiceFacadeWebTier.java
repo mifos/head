@@ -662,7 +662,10 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         
         Integer interestDays = Integer.valueOf(AccountingRules.getNumberOfInterestDays().intValue());
         boolean loanScheduleIndependentOfCustomerMeetingEnabled = createLoanSchedule.isRepaymentIndependentOfCustomerMeetingSchedule();
-        MeetingBO loanMeeting = loanProduct.getLoanOfferingMeetingValue();
+        
+        // FIXME - the default meeting should be customer meeting for LSIM off
+//        MeetingBO loanMeeting = loanProduct.getLoanOfferingMeetingValue();
+        MeetingBO loanMeeting = customer.getCustomerMeetingValue();
         if (loanScheduleIndependentOfCustomerMeetingEnabled) {
             loanMeeting = customer.getCustomerMeetingValue();
             loanMeeting.getMeetingDetails().setRecurAfter(createLoanSchedule.getEvery().shortValue());

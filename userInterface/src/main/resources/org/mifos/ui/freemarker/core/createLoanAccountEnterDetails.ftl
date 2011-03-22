@@ -90,29 +90,29 @@
 <form action="${flowExecutionUrl}" method="post" class="two-columns">
     <fieldset>
     <div class="row">
-        [@form.label "amount" true /][@spring.message "createLoanAccount.amount"/]
+        [@form.label "amount" true ][@spring.message "createLoanAccount.amount"/][/@form.label]
         [@form.input path="loanAccountFormBean.amount"  id="amount" /]
         <span>([@spring.message "createLoanAccount.allowedAmount"/] ${loanProductReferenceData.minLoanAmount?string.number} - ${loanProductReferenceData.maxLoanAmount?string.number})</span>
     </div>
     <div class="row">
-        [@form.label "interestRate" true /][@spring.message "createLoanAccount.interestRate"/]
+        [@form.label "interestRate" true ][@spring.message "createLoanAccount.interestRate"/][/@form.label]
         [@form.input path="loanAccountFormBean.interestRate" id="interestRate" /]
         <span>([@spring.message "createLoanAccount.allowedInterestRate"/] ${loanProductReferenceData.minInterestRate?string.number} - ${loanProductReferenceData.maxInterestRate?string.number} %)</span>
     </div>
     <div class="row">
-        [@form.label "numberOfInstallments" true /][@spring.message "createLoanAccount.numberOfInstallments"/]
+        [@form.label "numberOfInstallments" true ][@spring.message "createLoanAccount.numberOfInstallments"/][/@form.label]
         [@form.input path="loanAccountFormBean.numberOfInstallments" id="numberOfInstallments" /]
         <span>([@spring.message "createLoanAccount.allowedNumberOfInstallments"/] ${loanProductReferenceData.minNumberOfInstallments?string.number} - ${loanProductReferenceData.maxNumberOfInstallments?string.number})</span>
     </div>
     <div class="row">
-        [@form.label "disbursaldatedd" true /][@spring.message "createLoanAccount.disbursalDate"/]
+        [@form.label "disbursaldatedd" true ][@spring.message "createLoanAccount.disbursalDate"/][/@form.label]
         [@form.input path="loanAccountFormBean.disbursalDateDay" id="disbursaldatedd" attributes="size=1 maxlength=2" /]<span>[@spring.message "datefield.dd"/]</span>
         [@form.input path="loanAccountFormBean.disbursalDateMonth" id="disbursaldatemm" attributes="size=1 maxlength=2" /]<span>[@spring.message "datefield.mm"/]</span>
         [@form.input path="loanAccountFormBean.disbursalDateYear" id="disbursaldateyyyy" attributes="size=3 maxlength=4" /]<span>[@spring.message "datefield.yyyy"/]</span>
     </div>
     
     [#if loanProductReferenceData.repaymentIndependentOfMeetingEnabled]
-    	[@form.label "weekly.repaymentFrequency" true /][@spring.message "createLoanAccount.repaymentDay"/]
+    	[@form.label "weekly.repaymentFrequency" true ][@spring.message "createLoanAccount.repaymentDay"/][/@form.label]
     	
     		[#if loanProductReferenceData.loanOfferingMeetingDetail.meetingDetailsDto.recurrenceTypeId == 1]
     		<div class="row">
@@ -142,7 +142,7 @@
     [/#if]
     
     <div class="row">
-        [@form.label "graceduration" true /][@spring.message "createLoanAccount.graceDuration"/]
+        [@form.label "graceduration" true ][@spring.message "createLoanAccount.graceDuration"/][/@form.label]
         [@form.input path="loanAccountFormBean.graceDuration" id="graceduration" attributes="disabled"/]
         <span>[@spring.message "createLoanAccount.allowedGraceInInstallments"/]</span>
     </div>
@@ -168,7 +168,7 @@
     </div>
     
     <div class="row">
-        [@form.label "externalId" false /][@spring.message "createLoanAccount.externalId"/]
+        [@form.label "externalId" false ][@spring.message "createLoanAccount.externalId"/][/@form.label]
         [@form.input path="loanAccountFormBean.externalId" id="externalId" /]
     </div>
     

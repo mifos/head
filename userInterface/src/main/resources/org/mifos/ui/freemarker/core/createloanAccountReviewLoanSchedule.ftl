@@ -26,6 +26,7 @@
                          "createLoanAccount.flowState.reviewInstallments", 
                          "createLoanAccount.flowState.reviewAndSubmit"]]
 
+[#if loanProductReferenceData.variableInstallmentsAllowed]
 <script type="text/javascript" src="pages/js/jquery/jquery-ui.min.js"></script>
 <script type="text/javascript" src="pages/js/jquery/jquery.datePicker.configuration.js"></script>
 <script type="text/javascript" src="pages/js/jquery/jquery.ui.datepicker.min.js"></script>
@@ -47,6 +48,7 @@ $(function() {
 	$.datepicker.setDefaults($.datepicker.regional[""]);
 });
 </script>
+[/#if]
                          
 <h1>[@spring.message "createLoanAccount.wizard.title" /] - <span class="standout">[@spring.message "createLoanAccount.reviewInstallments.pageSubtitle" /]</span></h1>
 <p>[@spring.message "createLoanAccount.reviewInstallments.instructions" /]</p>
@@ -122,10 +124,10 @@ $(function() {
 			[#else]
 				[#if loanProductReferenceData.compareCashflowEnabled]
 					[@spring.bind "cashFlowSummaryFormBean.installments[${ind}]"/]
-					<td><input type="text" name="installments[${ind}]" size="10" value="${cashFlowSummaryFormBean.installments[ind]?date?string.medium}" id="installment.dueDate.${ind}" readonly /></td>
+					<td><input type="text" name="installments[${ind}]" size="10" value="${cashFlowSummaryFormBean.installments[ind]?date?string.medium}" id="installment.dueDate.${ind}" disabled=disabled /></td>
 				[#else]
 					[@spring.bind "loanScheduleFormBean.installments[${ind}]"/]
-					<td><input type="text" name="installments[${ind}]" size="10" value="${loanScheduleFormBean.installments[ind]?date?string.medium}" id="installment.dueDate.${ind}" readonly /></td>
+					<td><input type="text" name="installments[${ind}]" size="10" value="${loanScheduleFormBean.installments[ind]?date?string.medium}" id="installment.dueDate.${ind}" disabled=disabled /></td>
 				[/#if]
 			[/#if]
 			<td>${row.principal?string.currency}</td>
