@@ -20,17 +20,16 @@
 
 package org.mifos.platform.cashflow.ui.model;
 
-import org.mifos.platform.cashflow.CashFlowConstants;
-import org.mifos.platform.cashflow.service.CashFlowDetail;
-import org.mifos.platform.cashflow.service.MonthlyCashFlowDetail;
-import org.springframework.binding.message.MessageContext;
-import org.springframework.binding.validation.ValidationContext;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import org.mifos.platform.cashflow.CashFlowConstants;
+import org.mifos.platform.cashflow.service.CashFlowDetail;
+import org.mifos.platform.cashflow.service.MonthlyCashFlowDetail;
+import org.springframework.binding.validation.ValidationContext;
 
 public class CashFlowForm implements Serializable {
     private static final long serialVersionUID = -3806820293757764245L;
