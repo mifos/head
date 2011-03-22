@@ -620,13 +620,14 @@ public class LoanTestHelper {
         transactionHistoryPage.verifyTransactionHistory(paymentAmount, 1, 6);
     }
 
-    public LoanAccountPage createTwoLoanAccountsWithMixedRestricedPoducts(CreateLoanAccountSearchParameters searchParams1, CreateLoanAccountSearchParameters searchParams2, DisburseLoanParameters disburseParams) {
+    public LoanAccountPage createTwoLoanAccountsWithMixedRestricedPoducts(CreateLoanAccountSearchParameters searchParams1, CreateLoanAccountSearchParameters searchParams2, DisburseLoanParameters disburseParams, DateTime disbursalDate) {
         LoanAccountPage loanAccountPage = navigationHelper
             .navigateToAdminPage()
             .navigateToDefineProductMix()
             .createOneMixAndNavigateToClientsAndAccounts(searchParams1.getLoanProduct(), searchParams2.getLoanProduct())
             .navigateToCreateLoanAccountUsingLeftMenu()
             .searchAndNavigateToCreateLoanAccountPage(searchParams1)
+            .setDisbursalDate(disbursalDate)
             .continuePreviewSubmitAndNavigateToDetailsPage();
         loanAccountPage.changeAccountStatusToAccepted();
         loanAccountPage.navigateToDisburseLoan()
@@ -637,6 +638,7 @@ public class LoanTestHelper {
         return loanAccountPage.navigateToClientsAndAccountsUsingHeaderTab()
             .navigateToCreateLoanAccountUsingLeftMenu()
             .searchAndNavigateToCreateLoanAccountPage(searchParams2)
+            .setDisbursalDate(disbursalDate)
             .continuePreviewSubmitAndNavigateToDetailsPage()
             .changeAccountStatusToAccepted()
             .tryNavigatingToDisburseLoanWithError();
