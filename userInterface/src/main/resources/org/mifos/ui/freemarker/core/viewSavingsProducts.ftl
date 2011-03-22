@@ -27,15 +27,14 @@
     <p>&nbsp;&nbsp;</p>
 
     <p class="font15 orangeheading" style="margin-left:18px;">
-         [#assign savings][@mifostag.mifoslabel name="Savings" /][/#assign]
-         [@spring.messageArgs "ftlDefinedLabels.admin.viewSavingsproducts" , [savings]  /]
+         [@spring.message "ftlDefinedLabels.admin.viewSavingsproducts"  /]
     </p>
 
     <div style="margin-left:18px; margin-top:2px;">
         <p>
-            [@spring.messageArgs "ftlDefinedLabels.manageLoanProducts.viewSavingsProducts.clickonaSavingsproductbelowtoviewdetailsandmakechangesor" , [savings]  /]
+            [@spring.message "ftlDefinedLabels.manageLoanProducts.viewSavingsProducts.clickonaSavingsproductbelowtoviewdetailsandmakechangesor" /]
             <a href="defineSavingsProduct.ftl">
-                [@spring.messageArgs "ftlDefinedLabels.manageLoanProducts.viewSavingsProducts.defineNewSavingPorduct" , [savings]  /]
+                [@spring.message "ftlDefinedLabels.manageLoanProducts.viewSavingsProducts.defineNewSavingPorduct"  /]
             </a>
         </p>
         [#list products as product]

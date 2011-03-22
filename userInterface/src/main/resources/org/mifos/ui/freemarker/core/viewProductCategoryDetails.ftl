@@ -32,15 +32,13 @@
                     [#case 1]
                         <span><img src="pages/framework/images/status_activegreen.gif" /></span>&nbsp;
                         <span>
-                            [#assign active][@mifostag.mifoslabel name="ProductState-Active" /][/#assign]
-                            [@spring.messageArgs "ftlDefinedLabels.active" , [active] /]
+                            [@spring.message "ftlDefinedLabels.active" /]
                         </span>
                     [#break]
                     [#case 2]
                         <span><img src="pages/framework/images/status_closedblack.gif" /></span>&nbsp;
                         <span>
-                            [#assign inactive][@mifostag.mifoslabel name="ProductState-Inactive" /][/#assign]
-                            [@spring.messageArgs "ftlDefinedLabels.inactive" , [inactive] /]
+                            [@spring.message "ftlDefinedLabels.inactive" /]
                         </span>
                     [#break]
                 [/#switch]

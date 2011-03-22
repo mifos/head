@@ -42,32 +42,27 @@
 
     <span>
     [@spring.formCheckbox "formBean.headOffice" "disabled=disabled"/]
-    [#assign headOffice][@mifostag.mifoslabel name="OfficeLevels-HeadOffice" /][/#assign]
-    [@spring.messageArgs "ftlDefinedLabels.viewOfficeHierarchy.headOffice" , [headOffice]  /]
+    [@spring.message "ftlDefinedLabels.viewOfficeHierarchy.headOffice"  /]
     </span><br/>
 
     <span>
     [@spring.formCheckbox "formBean.regionalOffice" /]
-    [#assign regionalOffice][@mifostag.mifoslabel name="OfficeLevels-RegionalOffice" /][/#assign]
-    [@spring.messageArgs "ftlDefinedLabels.viewOfficeHierarchy.regionalOffice" , [regionalOffice]  /]
+    [@spring.message "ftlDefinedLabels.viewOfficeHierarchy.regionalOffice"  /]
     </span><br/>
 
      <span>
      [@spring.formCheckbox "formBean.subRegionalOffice" /]
-     [#assign divisionalOffice][@mifostag.mifoslabel name="OfficeLevels-DivisionalOffice" /][/#assign]
-     [@spring.messageArgs "ftlDefinedLabels.viewOfficeHierarchy.divisionalOffice" , [divisionalOffice] /]
+     [@spring.message "ftlDefinedLabels.viewOfficeHierarchy.divisionalOffice" /]
      </span><br/>
 
      <span>
      [@spring.formCheckbox "formBean.areaOffice" /]
-     [#assign areaOffice][@mifostag.mifoslabel name="OfficeLevels-AreaOffice" /][/#assign]
-     [@spring.messageArgs "ftlDefinedLabels.viewOfficeHierarchy.areaOffice" , [areaOffice] /]
+     [@spring.message "ftlDefinedLabels.viewOfficeHierarchy.areaOffice" /]
      </span><br/>
 
      <span>
-     [@spring.formCheckbox "formBean.branchOffice" "disabled"/]
-     [#assign branchOffice][@mifostag.mifoslabel name="OfficeLevels-BranchOffice" /][/#assign]
-     [@spring.messageArgs "ftlDefinedLabels.viewOfficeHierarchy.branchOffice" , [branchOffice] /]
+     [@spring.formCheckbox "formBean.branchOffice" "disabled" /]
+     [@spring.message "ftlDefinedLabels.viewOfficeHierarchy.branchOffice" /]
      </span><br/>
 
                     </div>

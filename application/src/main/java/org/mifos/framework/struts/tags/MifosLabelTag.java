@@ -41,7 +41,10 @@ import org.mifos.framework.util.helpers.LabelTagUtils;
  * "FirstPartUIResources". So BEWARE. It would be good to remove this behavior
  * which couples the name of a message key with the name of a resource bundle.
  *
+ * USE OF THIS CLASS IS DEPRECATED: label customization has been been moved 
+ * to the CustomizedText mechanism. 
  */
+@Deprecated
 public class MifosLabelTag extends BodyTagSupport {
 
     /**
