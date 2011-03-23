@@ -36,6 +36,7 @@ import org.mifos.clientportfolio.newloan.applicationservice.LoanApplicationState
 import org.mifos.dto.domain.CashFlowDto;
 import org.mifos.dto.domain.CustomerSearchDto;
 import org.mifos.dto.domain.CustomerSearchResultDto;
+import org.mifos.dto.domain.LoanAccountDetailsDto;
 import org.mifos.dto.domain.LoanCreationInstallmentDto;
 import org.mifos.dto.domain.MandatoryHiddenFieldsDto;
 import org.mifos.dto.domain.MonthlyCashFlowDto;
@@ -99,7 +100,16 @@ public class LoanAccountController {
     	    formBean.setMinInstallmentAmount(dto.getMinInstallmentAmount());
     	}
     	
-    	formBean.setAmount(dto.getDefaultLoanAmount());
+    	formBean.setGlimApplicable(dto.isGlimApplicable());
+    	if (dto.isGlimApplicable()) {
+    	    List<LoanAccountDetailsDto> clientData = dto.getClientDetails();
+    	    formBean.setClientSelectForGroup(new Boolean[clientData.size()]);
+    	    formBean.setClientAmount(new Number[clientData.size()]);
+    	    formBean.setClientLoanPurposeId(new Integer[clientData.size()]);
+    	} else {
+    	    formBean.setAmount(dto.getDefaultLoanAmount());    
+    	}
+    	
     	formBean.setMinAllowedAmount(dto.getMinLoanAmount());
     	formBean.setMaxAllowedAmount(dto.getMaxLoanAmount());
     	

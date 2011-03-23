@@ -96,6 +96,12 @@ public class LoanAccountFormBean implements Serializable {
     private Integer minGapInDays;
     private Integer maxGapInDays;
     private BigDecimal minInstallmentAmount;
+    
+    // GLIM specific
+    private boolean glimApplicable;
+    private Boolean[] clientSelectForGroup = new Boolean[1];
+    private Number[] clientAmount = new Number[1];
+    private Integer[] clientLoanPurposeId = new Integer[1];
 
     public void validateEditAccountDetailsStep(ValidationContext context) {
         validateEnterAccountDetailsStep(context);
@@ -478,5 +484,37 @@ public class LoanAccountFormBean implements Serializable {
 
     public void setMinInstallmentAmount(BigDecimal minInstallmentAmount) {
         this.minInstallmentAmount = minInstallmentAmount;
+    }
+    
+    public Integer[] getClientLoanPurposeId() {
+        return this.clientLoanPurposeId;
+    }
+
+    public void setClientLoanPurposeId(Integer[] clientLoanPurposeId) {
+        this.clientLoanPurposeId = clientLoanPurposeId;
+    }
+
+    public Number[] getClientAmount() {
+        return clientAmount;
+    }
+
+    public void setClientAmount(Number[] clientAmount) {
+        this.clientAmount = clientAmount;
+    }
+    
+    public boolean isGlimApplicable() {
+        return glimApplicable;
+    }
+
+    public void setGlimApplicable(boolean glimApplicable) {
+        this.glimApplicable = glimApplicable;
+    }
+    
+    public Boolean[] getClientSelectForGroup() {
+        return clientSelectForGroup;
+    }
+
+    public void setClientSelectForGroup(Boolean[] clientSelectForGroup) {
+        this.clientSelectForGroup = clientSelectForGroup;
     }
 }

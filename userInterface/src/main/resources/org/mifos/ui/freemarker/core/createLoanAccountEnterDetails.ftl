@@ -89,11 +89,49 @@
 <p><span class="standout">[@spring.message "createLoanAccount.enterAccountInfo.accountDetail.header" /]</span></p>
 <form action="${flowExecutionUrl}" method="post" class="two-columns">
     <fieldset>
+    [#if loanProductReferenceData.glimApplicable]
+    <table border="1">
+    	<tr>
+    		<td><input type="checkbox" name="allClients" id="allClients"/></td>
+    		<td>[@spring.message "selectProduct.accountOwnerName" /]</td>
+    		<td>&nbsp;</td>
+    		<td><span class="mandatory">*</span>[@spring.message "createLoanAccount.amount"/]</td>
+    		<td>&nbsp;</td>
+    		<td>[#if loanAccountFormBean.purposeOfLoanMandatory]<span class="mandatory">*</span>[/#if][@spring.message "createLoanAccount.purposeOfLoan" /]</td>
+    	</tr>
+    	[#assign index = 0]
+    	[#list loanProductReferenceData.clientDetails as clientdata]
+    	<tr>
+    		<td>
+    			[@spring.formCheckbox "loanAccountFormBean.clientSelectForGroup[${index}]" /]
+    		</td>
+    		<td>
+    			<div><span class="standout">Client:</span>${clientdata.clientName}</div>
+    			<div><span class="standout">Client Id</span>:${clientdata.clientId}</div>
+    		</td>
+    		<td>&nbsp;</td>
+    		<td>[@form.input path="loanAccountFormBean.clientAmount[${index}]"  id="clientAmount[${index}]" /]</td>
+    		<td>&nbsp;</td>
+    		<td>[@form.singleSelectWithPrompt path="loanAccountFormBean.clientLoanPurposeId[${index}]" options=loanProductReferenceData.purposeOfLoanOptions selectPrompt="selectPrompt" /]</td>
+    	</tr>
+    	[#assign index = index + 1]
+    	[/#list]
+    	<tr>
+    		<td>&nbsp;</td>
+    		<td>&nbsp;</td>
+    		<td>Total amount:</td>
+    		<td>[@form.input path="loanAccountFormBean.amount"  id="amount" /]</td>
+    		<td><span>([@spring.message "createLoanAccount.allowedAmount"/] ${loanProductReferenceData.minLoanAmount?string.number} - ${loanProductReferenceData.maxLoanAmount?string.number})</span></td>
+    		<td>&nbsp;</td>
+    	</tr>
+    </table>
+    [#else]
     <div class="row">
         [@form.label "amount" true ][@spring.message "createLoanAccount.amount"/][/@form.label]
         [@form.input path="loanAccountFormBean.amount"  id="amount" /]
         <span>([@spring.message "createLoanAccount.allowedAmount"/] ${loanProductReferenceData.minLoanAmount?string.number} - ${loanProductReferenceData.maxLoanAmount?string.number})</span>
     </div>
+    [/#if]
     <div class="row">
         [@form.label "interestRate" true ][@spring.message "createLoanAccount.interestRate"/][/@form.label]
         [@form.input path="loanAccountFormBean.interestRate" id="interestRate" /]
@@ -151,10 +189,13 @@
         [@form.singleSelectWithPrompt path="loanAccountFormBean.fundId" options=loanProductReferenceData.fundOptions selectPrompt="selectPrompt" /]
     </div>
 
+	[#if loanProductReferenceData.glimApplicable]
+	[#else]
     <div class="row">
         [@form.label "loanPurposeId" loanAccountFormBean.purposeOfLoanMandatory][@spring.message "createLoanAccount.purposeOfLoan" /][/@form.label]
         [@form.singleSelectWithPrompt path="loanAccountFormBean.loanPurposeId" options=loanProductReferenceData.purposeOfLoanOptions selectPrompt="selectPrompt" /]
     </div>
+    [/#if]
     
     <div class="row">
         [@form.label "collateralTypeId" false][@spring.message "createLoanAccount.collateralType" /][/@form.label]

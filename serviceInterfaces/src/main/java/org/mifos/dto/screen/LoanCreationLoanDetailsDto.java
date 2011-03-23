@@ -31,6 +31,7 @@ import org.joda.time.LocalDate;
 import org.mifos.accounts.fund.servicefacade.FundDto;
 import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.FeeDto;
+import org.mifos.dto.domain.LoanAccountDetailsDto;
 import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.domain.ProductDetailsDto;
@@ -74,6 +75,9 @@ public class LoanCreationLoanDetailsDto implements Serializable {
     private final Integer maxGapInDays;
     private final BigDecimal minInstallmentAmount;
     private final boolean compareCashflowEnabled;
+    private final boolean isGlimEnabled;
+    private final boolean isGroup;
+    private final List<LoanAccountDetailsDto> clientDetails;
 
     public LoanCreationLoanDetailsDto(boolean isRepaymentIndependentOfMeetingEnabled,
             MeetingDto loanOfferingMeetingDetail, MeetingDto customerMeetingDetail,
@@ -83,7 +87,8 @@ public class LoanCreationLoanDetailsDto implements Serializable {
             BigDecimal defaultLoanAmount, BigDecimal maxLoanAmount, BigDecimal minLoanAmount, 
             Double defaultInterestRate, Double maxInterestRate, Double minInterestRate, 
             Integer defaultNumberOfInstallments, Integer maxNumberOfInstallments, Integer minNumberOfInstallments, LocalDate nextPossibleDisbursementDate, Map<String, String> daysOfTheWeekOptions, 
-            boolean variableInstallmentsAllowed, Integer minGapInDays, Integer maxGapInDays, BigDecimal minInstallmentAmount, boolean compareCashflowEnabled) {
+            boolean variableInstallmentsAllowed, Integer minGapInDays, Integer maxGapInDays, BigDecimal minInstallmentAmount, boolean compareCashflowEnabled, 
+            boolean isGlimEnabled, boolean isGroup, List<LoanAccountDetailsDto> clientDetails) {
         this.repaymentIndependentOfMeetingEnabled = isRepaymentIndependentOfMeetingEnabled;
         this.loanOfferingMeetingDetail = loanOfferingMeetingDetail;
         this.customerMeetingDetail = customerMeetingDetail;
@@ -110,6 +115,9 @@ public class LoanCreationLoanDetailsDto implements Serializable {
         this.maxGapInDays = maxGapInDays;
         this.minInstallmentAmount = minInstallmentAmount;
         this.compareCashflowEnabled = compareCashflowEnabled;
+        this.isGlimEnabled = isGlimEnabled;
+        this.isGroup = isGroup;
+        this.clientDetails = clientDetails;
 		populateProductOptions(loanProductDtos);
 		populateFundOptions(fundDtos);
 		this.collateralOptions = collateralOptions;
@@ -257,4 +265,22 @@ public class LoanCreationLoanDetailsDto implements Serializable {
     public boolean isCompareCashflowEnabled() {
         return compareCashflowEnabled;
     }
+    
+    public boolean isGlimApplicable() {
+        return this.isGlimEnabled && this.isGroup;
+    }
+    
+    public boolean isGlimEnabled() {
+        return isGlimEnabled;
+    }
+
+    public boolean isGroup() {
+        return isGroup;
+    }
+
+    public List<LoanAccountDetailsDto> getClientDetails() {
+        return clientDetails;
+    }
+    
+    
 }

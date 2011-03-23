@@ -568,6 +568,29 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             }
             
             boolean compareCashflowEnabled = loanProduct.isCashFlowCheckEnabled();
+
+            // GLIM specific
+            final boolean isGroup = customer.isGroup();
+            final boolean isGlimEnabled = new ConfigurationPersistence().isGlimEnabled();
+
+            List<LoanAccountDetailsDto> clientDetails = new ArrayList<LoanAccountDetailsDto>();
+
+            if (isGroup && isGlimEnabled) {
+                final List<ClientBO> activeClientsOfGroup = customerDao.findActiveClientsUnderGroup(customer);
+
+                if (activeClientsOfGroup == null || activeClientsOfGroup.isEmpty()) {
+                    throw new BusinessRuleException(GroupConstants.IMPOSSIBLE_TO_CREATE_GROUP_LOAN);
+                }
+
+                for (ClientBO client : activeClientsOfGroup) {
+                    LoanAccountDetailsDto clientDetail = new LoanAccountDetailsDto();
+                    clientDetail.setClientId(client.getGlobalCustNum());
+                    clientDetail.setClientName(client.getDisplayName());
+                    clientDetails.add(clientDetail);
+                }
+            }
+            // end of GLIM specific
+
             
             return new LoanCreationLoanDetailsDto(isRepaymentIndependentOfMeetingEnabled, loanOfferingMeetingDto,
                     customer.getCustomerMeetingValue().toDto(), loanPurposes, productDto, customerDetailDto, loanProductDtos, 
@@ -575,7 +598,8 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                     defaultFeeOptions, additionalFeeOptions, defaultFees, BigDecimal.valueOf(eligibleLoanAmount.getDefaultLoanAmount()), 
                     BigDecimal.valueOf(eligibleLoanAmount.getMaxLoanAmount()), BigDecimal.valueOf(eligibleLoanAmount.getMinLoanAmount()), defaultInterestRate, maxInterestRate, minInterestRate,
                     eligibleNoOfInstall.getDefaultNoOfInstall().intValue(), eligibleNoOfInstall.getMaxNoOfInstall().intValue(), eligibleNoOfInstall.getMinNoOfInstall().intValue(), nextPossibleDisbursementDate, 
-                    daysOfTheWeekOptions, variableInstallmentsAllowed, minGapInDays, maxGapInDays, minInstallmentAmount, compareCashflowEnabled);
+                    daysOfTheWeekOptions, variableInstallmentsAllowed, minGapInDays, maxGapInDays, minInstallmentAmount, compareCashflowEnabled,
+                    isGlimEnabled, isGroup, clientDetails);
 
         } catch (SystemException e) {
             throw new MifosRuntimeException(e);
