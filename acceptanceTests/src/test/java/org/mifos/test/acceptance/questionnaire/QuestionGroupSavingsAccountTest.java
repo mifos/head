@@ -25,6 +25,7 @@ import static java.util.Arrays.asList;
 import org.joda.time.DateTime;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
+import org.mifos.test.acceptance.framework.client.CreateClientEnterPersonalDataPage;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 import org.mifos.test.acceptance.framework.questionnaire.AttachQuestionGroupParameters;
 import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionGroupParameters;
@@ -33,6 +34,7 @@ import org.mifos.test.acceptance.framework.questionnaire.QuestionnairePage;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSearchParameters;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSubmitParameters;
 import org.mifos.test.acceptance.framework.savings.SavingsAccountDetailPage;
+import org.mifos.test.acceptance.framework.testhelpers.ClientTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.QuestionGroupTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.SavingsAccountHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
@@ -59,6 +61,7 @@ public class QuestionGroupSavingsAccountTest extends UiTestCaseBase {
 
     private QuestionGroupTestHelper questionGroupTestHelper;
     private SavingsAccountHelper savingsAccountHelper;
+    private ClientTestHelper clientTestHelper;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -67,6 +70,7 @@ public class QuestionGroupSavingsAccountTest extends UiTestCaseBase {
         super.setUp();
         questionGroupTestHelper = new QuestionGroupTestHelper(selenium);
         savingsAccountHelper = new SavingsAccountHelper(selenium);
+        clientTestHelper = new ClientTestHelper(selenium);
     }
 
     @AfterMethod
@@ -122,9 +126,10 @@ public class QuestionGroupSavingsAccountTest extends UiTestCaseBase {
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
 
         setQuestionGroup();
+        createClient();
         
         CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
-        searchParameters.setSearchString("client1 lastname");
+        searchParameters.setSearchString("Joe669 Doe669");
         searchParameters.setSavingsProduct("MonthlyClientSavingsAccount");
 
         CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
@@ -132,27 +137,27 @@ public class QuestionGroupSavingsAccountTest extends UiTestCaseBase {
 
         QuestionResponseParameters questionResponseParameters = new QuestionResponseParameters();
         
-        questionResponseParameters.addTextAnswer("questionGroups[0].sectionDetails[0].questions[0].value", "textquestion");
-        questionResponseParameters.addTextAnswer("questionGroups[0].sectionDetails[0].questions[1].value", "100");
-        questionResponseParameters.addTextAnswer("questionGroups[0].sectionDetails[0].questions[2].value", "Text");
-        questionResponseParameters.addSingleSelectAnswer("questionGroups[0].sectionDetails[0].questions[3].value", "blue");
+        questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[0].questions[0].value", "textquestion");
+        questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[0].questions[1].value", "100");
+        questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[0].questions[2].value", "Text");
+        questionResponseParameters.addSingleSelectAnswer("questionGroups[1].sectionDetails[0].questions[3].value", "blue");
         
-        questionResponseParameters.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[0].values", "two");
-        questionResponseParameters.addTextAnswer("questionGroups[0].sectionDetails[1].questions[1].value", "6");
+        questionResponseParameters.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[0].values", "two");
+        questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[1].questions[1].value", "6");
         
-        questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[0].questions[0].value", "04/02/2011");
-        questionResponseParameters.addSingleSelectAnswer("questionGroups[1].sectionDetails[0].questions[1].values", "one");
-        questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[0].questions[2].value", "123");
-        questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[0].questions[3].value", "7");
+        questionResponseParameters.addTextAnswer("questionGroups[0].sectionDetails[0].questions[0].value", "04/02/2011");
+        questionResponseParameters.addSingleSelectAnswer("questionGroups[0].sectionDetails[0].questions[1].values", "one");
+        questionResponseParameters.addTextAnswer("questionGroups[0].sectionDetails[0].questions[2].value", "123");
+        questionResponseParameters.addTextAnswer("questionGroups[0].sectionDetails[0].questions[3].value", "7");
         
-        questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[1].questions[0].value", "Text");
-        questionResponseParameters.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[1].value", "red");
+        questionResponseParameters.addTextAnswer("questionGroups[0].sectionDetails[1].questions[0].value", "Text");
+        questionResponseParameters.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[1].value", "red");
         
-        questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[2].questions[0].value", "Text");
+        questionResponseParameters.addTextAnswer("questionGroups[0].sectionDetails[2].questions[0].value", "Text");
 
         QuestionResponseParameters questionResponseParameters2 = new QuestionResponseParameters();
-        questionResponseParameters2.addTextAnswer("questionGroups[0].sectionDetails[0].questions[0].value", "textQuestion");
-        questionResponseParameters2.addTextAnswer("questionGroups[1].sectionDetails[0].questions[3].value", "9");
+        questionResponseParameters2.addTextAnswer("questionGroups[1].sectionDetails[0].questions[0].value", "textQuestion");
+        questionResponseParameters2.addTextAnswer("questionGroups[0].sectionDetails[0].questions[3].value", "9");
 
         savingsAccountHelper.fillQuestionGroupsDurringCreationSavingsAccount(searchParameters, submitAccountParameters, questionResponseParameters);
 
@@ -194,6 +199,24 @@ public class QuestionGroupSavingsAccountTest extends UiTestCaseBase {
         questionGroupTestHelper.markQuestionAsActive("question 1");
     }
 
+    private void createClient() {
+        String groupName = "group1";
+        CreateClientEnterPersonalDataPage.SubmitFormParameters clientParams = new CreateClientEnterPersonalDataPage.SubmitFormParameters();
+        clientParams.setSalutation(CreateClientEnterPersonalDataPage.SubmitFormParameters.MRS);
+        clientParams.setFirstName("Joe669");
+        clientParams.setLastName("Doe669");
+        clientParams.setDateOfBirthDD("17");
+        clientParams.setDateOfBirthMM("11");
+        clientParams.setDateOfBirthYYYY("1977");
+        clientParams.setGender(CreateClientEnterPersonalDataPage.SubmitFormParameters.MALE);
+        clientParams.setPovertyStatus(CreateClientEnterPersonalDataPage.SubmitFormParameters.NOT_POOR);
+        clientParams.setSpouseNameType(CreateClientEnterPersonalDataPage.SubmitFormParameters.FATHER);
+        clientParams.setSpouseFirstName("fatherName");
+        clientParams.setSpouseLastName("fatherLastName");
+        clientTestHelper.createNewClient(groupName, clientParams);
+        clientTestHelper.activateClient("Joe669 Doe669");
+    }
+    
     private void verifyQuestionResponsesExistInDatabase(String savingsID, String event, Map<String, String> questions) throws SQLException {
         for (String question : questions.keySet()) {
             Assert.assertTrue(applicationDatabaseOperation.deosQuestionResponseForSavingsExist(savingsID, event, question, questions.get(question)));
