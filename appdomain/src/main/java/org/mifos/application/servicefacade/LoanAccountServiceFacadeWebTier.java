@@ -811,21 +811,15 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         
         LoanProductOverridenDetail overridenDetail = new LoanProductOverridenDetail(loanAmount, loanAccountInfo.getDisbursementDate(), 
                 loanAccountInfo.getInterestRate(), loanAccountInfo.getNumberOfInstallments(), loanAccountInfo.getGraceDuration());
-        
+
+        final int minDaysInterval = new ConfigurationPersistence().getConfigurationKeyValueInteger(MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY).getValue();
         Integer interestDays = Integer.valueOf(AccountingRules.getNumberOfInterestDays().intValue());
         boolean loanScheduleIndependentOfCustomerMeetingEnabled = loanAccountInfo.isRepaymentScheduleIndependentOfCustomerMeeting();
         LoanScheduleConfiguration configuration = new LoanScheduleConfiguration(loanScheduleIndependentOfCustomerMeetingEnabled, interestDays);
         
-        MeetingBO repaymentDayMeeting = loanProduct.getLoanOfferingMeetingValue();
+        MeetingBO repaymentDayMeeting = customer.getCustomerMeetingValue();
         if (loanScheduleIndependentOfCustomerMeetingEnabled) {
-            repaymentDayMeeting = customer.getCustomerMeetingValue();
-            repaymentDayMeeting.getMeetingDetails().setRecurAfter(loanAccountInfo.getEvery().shortValue());
-            
-            WeekDay weekDay = WeekDay.getWeekDay(loanAccountInfo.getDayOfWeek());
-            repaymentDayMeeting.getMeetingDetails().getMeetingRecurrence().setWeekDay(weekDay);
-            repaymentDayMeeting.setMeetingStartDate(new Date());
-            
-            MeetingBO customerMeeting = customer.getCustomerMeetingValue();
+            repaymentDayMeeting = createNewRepaymentDayMeeting(customer.getCustomerMeetingValue(), loanAccountInfo, minDaysInterval);
         }
 
         // FIXME - keitw - handle fees for loan schedule
@@ -840,6 +834,39 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                 loanProduct, accountStateType, fund, overridenDetail, configuration, repaymentDayMeeting, loanSchedule, createdBy);
     }
     
+    private MeetingBO createNewRepaymentDayMeeting(MeetingBO customerMeetingValue, CreateLoanAccount loanAccountInfo, int minDaysInterval) {
+        
+        MeetingBO newMeetingForRepaymentDay = null;
+        Short recurrenceId = customerMeetingValue.getRecurrenceType().getValue();
+
+        final Date repaymentStartDate = loanAccountInfo.getDisbursementDate().plusDays(minDaysInterval).toDateMidnight().toDate();
+
+        if (RecurrenceType.WEEKLY.getValue().equals(recurrenceId)) {
+            
+            WeekDay weekDay = WeekDay.getWeekDay(loanAccountInfo.getDayOfWeek());
+            
+            try {
+                newMeetingForRepaymentDay = new MeetingBO(weekDay, loanAccountInfo.getEvery().shortValue(), repaymentStartDate,
+                        MeetingType.LOAN_INSTALLMENT, customerMeetingValue.getMeetingPlace());
+            } catch (MeetingException e) {
+                throw new MifosRuntimeException(e);
+            }
+        } else if (RecurrenceType.MONTHLY.getValue().equals(recurrenceId)) {
+            // FIXME - keithw - fix loan creation for LSIM on and monthly meeting schedule
+//            if (loanAccountActionForm.getMonthType().equals("1")) {
+//                newMeetingForRepaymentDay = new MeetingBO(Short.valueOf(loanAccountActionForm.getMonthDay()), Short
+//                        .valueOf(loanAccountActionForm.getDayRecurMonth()), repaymentStartDate,
+//                        MeetingType.LOAN_INSTALLMENT, customer.getCustomerMeeting().getMeeting().getMeetingPlace());
+//            } else {
+//                newMeetingForRepaymentDay = new MeetingBO(Short.valueOf(loanAccountActionForm.getMonthWeek()), Short
+//                        .valueOf(loanAccountActionForm.getRecurMonth()), repaymentStartDate,
+//                        MeetingType.LOAN_INSTALLMENT, customer.getCustomerMeeting().getMeeting().getMeetingPlace(),
+//                        Short.valueOf(loanAccountActionForm.getMonthRank()));
+//            }
+        }
+        return newMeetingForRepaymentDay;
+    }
+
     @Override
     public LoanCreationResultDto createLoan(CreateLoanAccount loanAccountInfo, List<QuestionGroupDetail> questionGroups, LoanAccountCashFlow loanAccountCashFlow) {
 
@@ -861,22 +888,16 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         LoanProductOverridenDetail overridenDetail = new LoanProductOverridenDetail(loanAmount, loanAccountInfo.getDisbursementDate(), 
                 loanAccountInfo.getInterestRate(), loanAccountInfo.getNumberOfInstallments(), loanAccountInfo.getGraceDuration());
         
+        final int minDaysInterval = new ConfigurationPersistence().getConfigurationKeyValueInteger(MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY).getValue();
         Integer interestDays = Integer.valueOf(AccountingRules.getNumberOfInterestDays().intValue());
         boolean loanScheduleIndependentOfCustomerMeetingEnabled = loanAccountInfo.isRepaymentScheduleIndependentOfCustomerMeeting();
         LoanScheduleConfiguration configuration = new LoanScheduleConfiguration(loanScheduleIndependentOfCustomerMeetingEnabled, interestDays);
         
-        MeetingBO repaymentDayMeeting = loanProduct.getLoanOfferingMeetingValue();
+        MeetingBO repaymentDayMeeting = customer.getCustomerMeetingValue();
         if (loanScheduleIndependentOfCustomerMeetingEnabled) {
-            repaymentDayMeeting = customer.getCustomerMeetingValue();
-            repaymentDayMeeting.getMeetingDetails().setRecurAfter(loanAccountInfo.getEvery().shortValue());
-            
-            WeekDay weekDay = WeekDay.getWeekDay(loanAccountInfo.getDayOfWeek());
-            repaymentDayMeeting.getMeetingDetails().getMeetingRecurrence().setWeekDay(weekDay);
-            repaymentDayMeeting.setMeetingStartDate(new Date());
-            
-            MeetingBO customerMeeting = customer.getCustomerMeetingValue();
+            repaymentDayMeeting = createNewRepaymentDayMeeting(customer.getCustomerMeetingValue(), loanAccountInfo, minDaysInterval);
         }
-
+        
         // FIXME - keitw - handle fees for loan schedule
         List<AccountFeesEntity> accountFees = new ArrayList<AccountFeesEntity>();
         LoanSchedule loanSchedule = this.loanScheduleService.generate(loanProduct, customer, repaymentDayMeeting, overridenDetail, configuration, userContext.getBranchId(), accountFees);
