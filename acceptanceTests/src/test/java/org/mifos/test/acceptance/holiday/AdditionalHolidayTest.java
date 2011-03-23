@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.DateTime;
-import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
@@ -47,10 +46,7 @@ import org.mifos.test.acceptance.framework.testhelpers.HolidayTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
-import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.mifos.test.acceptance.util.StringUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -67,13 +63,6 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
     private ClientTestHelper clientTestHelper;
     private LoanTestHelper loanTestHelper;
     private NavigationHelper navigationHelper;;
-
-    @Autowired
-    private DriverManagerDataSource dataSource;
-    @Autowired
-    private DbUnitUtilities dbUnitUtilities;
-    @Autowired
-    private InitializeApplicationRemoteTestingService initRemote;
 
     private DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService;
 
@@ -157,14 +146,13 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         DateTime targetTime = new DateTime(2009, 3, 11, 0, 0, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
         // Given
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_015_dbunit.xml", dataSource, selenium);
 
         ChargeParameters chargeParameters = new ChargeParameters();
-        String officeName = "MyOffice1232993831593";
-        String centerName = "MyCenter1232993841778";
-        String groupName = "MyGroup1232993846342";
-        String clientName = "Stu1232993852651 Client1232993852651";
-        String loanId = "000100000000004";
+        String officeName = "MyOfficeDHMFT";
+        String centerName = "Default Center";
+        String groupName = "Default Group";
+        String clientName = "Holiday TestClient";
+        String loanId = "000100000000035";
         CreateHolidaySubmitParameters params = new CreateHolidayEntryPage.CreateHolidaySubmitParameters();
         params.setName("Holiday" + StringUtil.getRandomString(8));
         params.setFromDateDD("16");
@@ -174,19 +162,23 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         params.addOffice(officeName);
 
         // When
-        chargeParameters.setType("Weekly Center Fee");
+        chargeParameters.setType("Misc Fees");
+        chargeParameters.setAmount("100");
         centerTestHelper.applyCharge(centerName, chargeParameters);
         String centerAmount = navigationHelper.navigateToCenterViewDetailsPage(centerName).getAmountDue();
 
-        chargeParameters.setType("Weekly Group Fee");
+        chargeParameters.setType("Misc Fees");
+        chargeParameters.setAmount("100");
         groupTestHelper.applyCharge(groupName, chargeParameters);
         String groupAmount = navigationHelper.navigateToGroupViewDetailsPage(groupName).getAmountDue();
 
-        chargeParameters.setType("Weekly Client Fee");
+        chargeParameters.setType("Misc Fees");
+        chargeParameters.setAmount("100");
         clientTestHelper.applyCharge(clientName, chargeParameters);
         String clientAmount = navigationHelper.navigateToClientViewDetailsPage(clientName).getAmountDue();
 
-        chargeParameters.setType("PeriodicWeeklyLoanFee8");
+        chargeParameters.setType("loanWeeklyFee");
+        chargeParameters.setAmount("100");
         loanTestHelper.applyChargeUsingFeeLabel(loanId, chargeParameters);
 
         holidayTestHelper.createHoliday(params);
