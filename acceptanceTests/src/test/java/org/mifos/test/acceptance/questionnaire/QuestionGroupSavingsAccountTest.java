@@ -20,11 +20,14 @@
 
 package org.mifos.test.acceptance.questionnaire;
 
+import static java.util.Arrays.asList;
+
 import org.joda.time.DateTime;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 import org.mifos.test.acceptance.framework.questionnaire.AttachQuestionGroupParameters;
+import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionGroupParameters;
 import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionParameters;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionnairePage;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountSearchParameters;
@@ -118,31 +121,38 @@ public class QuestionGroupSavingsAccountTest extends UiTestCaseBase {
         DateTime targetTime = new DateTime(2011, 2, 28, 15, 0, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
 
+        setQuestionGroup();
+        
         CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
-        searchParameters.setSearchString("Stu1232993852651 Client1232993852651");
-        searchParameters.setSavingsProduct("MySavingsProduct1233265923516");
+        searchParameters.setSearchString("client1 lastname");
+        searchParameters.setSavingsProduct("MonthlyClientSavingsAccount");
 
         CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
         submitAccountParameters.setAmount("248.0");
 
         QuestionResponseParameters questionResponseParameters = new QuestionResponseParameters();
-        questionResponseParameters.addTextAnswer("questionGroups[0].sectionDetails[0].questions[0].value", "04/02/2011");
-        questionResponseParameters.addSingleSelectAnswer("questionGroups[0].sectionDetails[0].questions[1].values", "green");
-        questionResponseParameters.addTextAnswer("questionGroups[0].sectionDetails[0].questions[2].value", "123");
-        questionResponseParameters.addTextAnswer("questionGroups[0].sectionDetails[0].questions[3].value", "23");
-        questionResponseParameters.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[0].value", "yes");
-        questionResponseParameters.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[1].values", "Yes");
-
-        questionResponseParameters.addSingleSelectAnswer("questionGroups[1].sectionDetails[0].questions[0].value", "1");
-        questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[0].questions[2].value", "234");
-        questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[0].questions[3].value", "textquestion");
-        questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[1].questions[0].value", "04/02/2011");
-        questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[1].questions[1].value", "234");
-        questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[1].questions[2].value", "234");
+        
+        questionResponseParameters.addTextAnswer("questionGroups[0].sectionDetails[0].questions[0].value", "textquestion");
+        questionResponseParameters.addTextAnswer("questionGroups[0].sectionDetails[0].questions[1].value", "100");
+        questionResponseParameters.addTextAnswer("questionGroups[0].sectionDetails[0].questions[2].value", "Text");
+        questionResponseParameters.addSingleSelectAnswer("questionGroups[0].sectionDetails[0].questions[3].value", "blue");
+        
+        questionResponseParameters.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[0].values", "two");
+        questionResponseParameters.addTextAnswer("questionGroups[0].sectionDetails[1].questions[1].value", "6");
+        
+        questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[0].questions[0].value", "04/02/2011");
+        questionResponseParameters.addSingleSelectAnswer("questionGroups[1].sectionDetails[0].questions[1].values", "one");
+        questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[0].questions[2].value", "123");
+        questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[0].questions[3].value", "7");
+        
+        questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[1].questions[0].value", "Text");
+        questionResponseParameters.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[1].value", "red");
+        
+        questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[2].questions[0].value", "Text");
 
         QuestionResponseParameters questionResponseParameters2 = new QuestionResponseParameters();
-        questionResponseParameters2.addTextAnswer("questionGroups[0].sectionDetails[0].questions[0].value", "05/02/2011");
-        questionResponseParameters2.addTextAnswer("questionGroups[1].sectionDetails[0].questions[3].value", "textQuestion");
+        questionResponseParameters2.addTextAnswer("questionGroups[0].sectionDetails[0].questions[0].value", "textQuestion");
+        questionResponseParameters2.addTextAnswer("questionGroups[1].sectionDetails[0].questions[3].value", "9");
 
         savingsAccountHelper.fillQuestionGroupsDurringCreationSavingsAccount(searchParameters, submitAccountParameters, questionResponseParameters);
 
@@ -150,29 +160,25 @@ public class QuestionGroupSavingsAccountTest extends UiTestCaseBase {
         SavingsAccountDetailPage savingsAccountDetailPage = savingsAccountHelper.editAdditionalInformationDurringCreationSavingsAccount(questionResponseParameters2);
         String savingsId = savingsAccountDetailPage.getAccountId();
 
-        questionGroupTestHelper.markQuestionGroupAsInactive("CreateSavingsQG2");
-        questionGroupTestHelper.markQuestionAsInactive("SingleSelectQuestion");
-        questionGroupTestHelper.markQuestionAsInactive("SmartSelect");
-        questionGroupTestHelper.markQuestionAsInactive("Text");
-        questionGroupTestHelper.markQuestionAsInactive("TextQuestion");
+        questionGroupTestHelper.markQuestionGroupAsInactive("QGForCreateSavingsAccount");
+        questionGroupTestHelper.markQuestionAsInactive("SingleSelect");
+        questionGroupTestHelper.markQuestionAsInactive("NumberBetween5And10");
+        questionGroupTestHelper.markQuestionAsInactive("Question1");
+        questionGroupTestHelper.markQuestionAsInactive("question 1");
 
         CreateQuestionParameters createQuestionParameters = new CreateQuestionParameters();
         createQuestionParameters.setType(CreateQuestionParameters.TYPE_FREE_TEXT);
         createQuestionParameters.setText("newQuestion232");
         List<CreateQuestionParameters> newQuestionList = new ArrayList<CreateQuestionParameters>();
         newQuestionList.add(createQuestionParameters);
-        questionGroupTestHelper.addNewQuestionsToQuestionGroup("CreateSavingsQG", newQuestionList);
+        questionGroupTestHelper.addNewQuestionsToQuestionGroup("QGForCreateSavingsAccount2", newQuestionList);
 
         Map<String, String> questionsAndAnswers = new HashMap<String, String>();
-        questionsAndAnswers.put("MultiSelectQuestion", "green");
-        questionsAndAnswers.put("DateQuestion", "05/02/2011");
-        questionsAndAnswers.put("NumberQuestion", "123");
-        questionsAndAnswers.put("question 2", "23");
-        questionsAndAnswers.put("question 4", "yes");
-        questionsAndAnswers.put("question 5", "Yes");
-        questionsAndAnswers.put("Date", "04/02/2011");
-        String[] questionsExist = {"newQuestion232", "MultiSelectQuestion", "NumberQuestion", "question 4", "question 5", "question 2", "DateQuestion","Date"};
-        String[] questionsInactive = {"SingleSelectQuestion", "SmartSelect", "Text", "TextQuestion"};
+        questionsAndAnswers.put("MultiSelect", "two");
+        questionsAndAnswers.put("Number", "100");
+        questionsAndAnswers.put("FreeText", "textquestion");
+        String[] questionsExist = {"newQuestion232", "MultiSelect", "Number", "FreeText"};
+        String[] questionsInactive = {"SingleSelect", "NumberBetween5And10", "Question1", "question 1", "Date"};
 
 
         QuestionnairePage questionnairePage = savingsAccountHelper.navigateToQuestionResponseDuringCreateSavings(searchParameters, submitAccountParameters);
@@ -180,12 +186,45 @@ public class QuestionGroupSavingsAccountTest extends UiTestCaseBase {
         questionnairePage.verifyQuestionsDoesnotappear(questionsInactive);
 
         verifyQuestionResponsesExistInDatabase(savingsId, "Create Savings", questionsAndAnswers);
-
+        
+        questionGroupTestHelper.markQuestionGroupAsInactive("QGForCreateSavingsAccount2");
+        questionGroupTestHelper.markQuestionAsActive("SingleSelect");
+        questionGroupTestHelper.markQuestionAsActive("NumberBetween5And10");
+        questionGroupTestHelper.markQuestionAsActive("Question1");
+        questionGroupTestHelper.markQuestionAsActive("question 1");
     }
 
     private void verifyQuestionResponsesExistInDatabase(String savingsID, String event, Map<String, String> questions) throws SQLException {
         for (String question : questions.keySet()) {
             Assert.assertTrue(applicationDatabaseOperation.deosQuestionResponseForSavingsExist(savingsID, event, question, questions.get(question)));
         }
+    }
+    
+    private void setQuestionGroup() {
+        String questionGroupName = "QGForCreateSavingsAccount";
+        questionGroupTestHelper.markQuestionGroupAsActive(questionGroupName);
+        CreateQuestionGroupParameters createQuestionGroupParameters = questionGroupTestHelper.getCreateQuestionGroupParameters(questionGroupName+"2",
+                asList("Number", "SingleSelect", "FreeText" , "question 1"), "Create Savings", "Sec 1");
+        createQuestionGroupParameters.addExistingQuestion("Sec 2", "NumberBetween5And10");
+        createQuestionGroupParameters.addExistingQuestion("Sec 2", "MultiSelect");
+        
+        questionGroupTestHelper.createQuestionGroup(createQuestionGroupParameters);
+        Map<String, List<String>> sectionQuestions = new HashMap<String, List<String>>();
+
+        List<String> questions = new ArrayList<String>();
+
+        questions.add("Date");
+        questions.add("MultiSelect");
+        questions.add("Number");
+        questions.add("NumberBetween5And10");
+        sectionQuestions.put("Sec 1", questions);
+
+        questions = new ArrayList<String>();
+        questions.add("SingleSelect");
+        questions.add("FreeText");
+
+        sectionQuestions.put("Sec 2", questions);
+        
+        questionGroupTestHelper.addQuestionsToQuestionGroup(questionGroupName, sectionQuestions);
     }
 }
