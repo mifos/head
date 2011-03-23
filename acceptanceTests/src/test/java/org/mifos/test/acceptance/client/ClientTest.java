@@ -349,9 +349,8 @@ public class ClientTest extends UiTestCaseBase {
         responsePage.verifyQuestionsDoesnotappear(deactivateArray);
         responsePage.verifyQuestionsDoesnotappear(deactivatedGroupArray);
         responsePage.verifyQuestionsExists(newActiveQuestions);
-        responsePage.populateAnswers(responseParamsAfterModyfication);
-        responsePage.navigateToNextPage();
-        new CustomerChangeStatusPreviewPage(selenium).submitAndGotoClientViewDetailsPage();
+        
+        clientTestHelper.closeClientWithQG(clientName, responseParamsAfterModyfication);
 
         verifyQuestionResponsesExistInDatabase(clientName, "Close Client", questionsAndAnswers);
         
