@@ -51,23 +51,6 @@ public class CustomizedTextDaoHibernate implements CustomizedTextDao {
 	}
 
 	@Override
-	public void setCustomizedText(Map<String, String> messageMap) {
-		Map<String, String> currentMessages = getCustomizedText();
-		
-        for (Map.Entry<String, String> entry : messageMap.entrySet()) { 
-        	if(entry.getKey().contentEquals(entry.getValue())) {
-        		removeCustomizedText(entry.getKey());      			        	
-        	} else if (!currentMessages.containsKey(entry.getKey())) {
-        		addOrUpdateCustomizedText(entry.getKey(), entry.getValue());
-        	} else {
-        		CustomizedText message = findCustomizedTextByOriginalText(entry.getKey());
-        		message.setCustomText(entry.getValue());
-        	}
-        }
-		
-	}
-
-	@Override
     public void addOrUpdateCustomizedText(String oldMessage, String newMessage) {
 		CustomizedText message = findCustomizedTextByOriginalText(oldMessage);
 		if (message == null) {

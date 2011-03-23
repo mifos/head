@@ -26,8 +26,6 @@ public interface CustomizedTextDao {
 
 	public Map<String,String> getCustomizedText();
 	
-	public void setCustomizedText(Map<String,String> messageMap);
-	
 	public CustomizedText findCustomizedTextByOriginalText(final String originalText);
 
 	void addOrUpdateCustomizedText(String originalText, String customText);
