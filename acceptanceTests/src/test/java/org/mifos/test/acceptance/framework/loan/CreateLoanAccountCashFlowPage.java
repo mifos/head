@@ -174,4 +174,12 @@ public class CreateLoanAccountCashFlowPage extends AbstractPage{
         waitForPageToLoad();
         return new ClientsAndAccountsHomepage(selenium);
     }
+
+    public CreateLoanAccountCashFlowPage clickContinueAndVerifyNegativeOrZeroCashFlowWarning(String... monthYears) {
+        clickContinue();
+        for (String monthYear : monthYears) {
+            Assert.assertTrue(selenium.isTextPresent("Cumulative cash flow for " + monthYear + " should be greater than zero"));
+        }
+        return this;
+    }
 }
