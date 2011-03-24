@@ -129,9 +129,53 @@ public class LoanAccountFormBean implements Serializable {
             }
         }
         
+        if (this.glimApplicable) {
+            int index = 0;
+            int selectedCount = 0;
+                for (Boolean clientSelected : this.clientSelectForGroup) {
+                    if (clientSelected != null && clientSelected.booleanValue()) {
+
+                        Number clientAmount = this.clientAmount[index];
+
+                        if (clientAmount == null || exceedsMax(clientAmount, this.maxAllowedAmount)) {
+                            String defaultErrorMessage = "Please specify valid Amount.";
+                            rejectGlimClientAmountField(index + 1, errors, defaultErrorMessage);
+                        }
+
+                        // check error message of loan purpose for each client when its mandatory..
+                        Integer clientLoanPurposeId = this.clientLoanPurposeId[index];
+                        if (this.purposeOfLoanMandatory && isInvalidSelection(clientLoanPurposeId)) {
+                            errors.rejectValue("clientLoanPurposeId", "loanAccountFormBean.glim.purposeOfLoan.invalid", new Object[] {index+1}, "Please specify loan purpose.");
+                        }
+
+                        selectedCount++;
+                    } else {
+
+                        Number clientAmount = this.clientAmount[index];
+                        Integer clientLoanPurposeId = this.clientLoanPurposeId[index];
+                        if (clientAmount != null || clientLoanPurposeId != null) {
+                            String defaultErrorMessage = "You have entered details for a member you have not selected. Select the checkbox in front of the member's name in order to include him or her in the loan.";
+                            rejectUnselectedGlimClientAmountField(index + 1, errors, defaultErrorMessage);
+                        }
+                    }
+
+                    index++;
+                }
+
+                if (selectedCount < 2) {
+                    String defaultErrorMessage = "Not enough clients for group loan.";
+                    rejectGroupLoanWithTooFewClients(errors, defaultErrorMessage);
+                }
+        }
+        
         if (this.amount == null || exceedsMinOrMax(this.amount, this.minAllowedAmount, this.maxAllowedAmount)) {
             String defaultErrorMessage = "Please specify valid Amount.";
-            rejectAmountField(errors, defaultErrorMessage);
+            if (glimApplicable) {
+                defaultErrorMessage = "The sum of the amounts specified for each member is outside the allowable total amount for this loan product.";
+                rejectGlimTotalAmountField(errors, defaultErrorMessage);
+            } else {
+                rejectAmountField(errors, defaultErrorMessage);
+            }
         }
         
         if (this.interestRate == null || exceedsMinOrMax(this.interestRate, this.minAllowedInterestRate, this.maxAllowedInterestRate)) {
@@ -164,7 +208,7 @@ public class LoanAccountFormBean implements Serializable {
             errors.rejectValue("fundId", "loanAccountFormBean.SourceOfFunds.invalid", "Please specify source of funds.");
         }
         
-        if (this.purposeOfLoanMandatory && isInvalidSelection(this.loanPurposeId)) {
+        if (!this.glimApplicable && this.purposeOfLoanMandatory && isInvalidSelection(this.loanPurposeId)) {
             errors.rejectValue("loanPurposeId", "loanAccountFormBean.PurposeOfLoan.invalid", "Please specify loan purpose.");
         }
         
@@ -177,6 +221,22 @@ public class LoanAccountFormBean implements Serializable {
                 messageContext.addMessage(builder.build());
             }
         }
+    }
+
+    private void rejectGlimTotalAmountField(Errors errors, String defaultErrorMessage) {
+        errors.rejectValue("disbursalDateDay", "loanAccountFormBean.glim.totalAmount.invalid", new Object[] {this.minAllowedAmount, this.maxAllowedAmount}, defaultErrorMessage);
+    }
+
+    private void rejectGroupLoanWithTooFewClients(Errors errors, String defaultErrorMessage) {
+        errors.rejectValue("disbursalDateDay", "loanAccountFormBean.glim.notEnoughClients", defaultErrorMessage);
+    }
+
+    private void rejectUnselectedGlimClientAmountField(int clientIndex, Errors errors, String defaultErrorMessage) {
+        errors.rejectValue("clientAmount", "loanAccountFormBean.glim.client.notselected", new Object[] {clientIndex}, defaultErrorMessage);
+    }
+
+    private void rejectGlimClientAmountField(int clientIndex, Errors errors, String defaultErrorMessage) {
+        errors.rejectValue("clientAmount", "loanAccountFormBean.glim.clientAmount.invalid", new Object[] {clientIndex, this.minAllowedAmount, this.maxAllowedAmount}, defaultErrorMessage);
     }
 
     private void rejectDisbursementDateField(Errors errors, String defaultErrorMessage, String errorCode) {
@@ -223,6 +283,10 @@ public class LoanAccountFormBean implements Serializable {
 
     private boolean exceedsMinOrMax(Number defaultValue, Number minValue, Number maxValue) {
         return defaultValue.doubleValue() > maxValue.doubleValue() || defaultValue.doubleValue() < minValue.doubleValue();
+    }
+    
+    private boolean exceedsMax(Number defaultValue, Number maxValue) {
+        return defaultValue.doubleValue() > maxValue.doubleValue();
     }
 
     public String[] getSelectedFeeId() {

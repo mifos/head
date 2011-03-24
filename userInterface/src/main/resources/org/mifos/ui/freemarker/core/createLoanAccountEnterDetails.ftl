@@ -96,6 +96,9 @@
 				var total = 0;
 				$('.amountfield').each(function(index) {
 					var fieldamount = parseFloat($(this).val());
+					if (isNaN(fieldamount)) {
+						fieldamount = 0;
+					}
 					$('.clientbox').each(function(subindex) {
 						if (this.checked && index==subindex) {
 							total = total + fieldamount;
