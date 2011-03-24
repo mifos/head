@@ -33,9 +33,8 @@ public class CashFlowConstants {
     public static final String START_MONTH = "startMonth";
     public static final String CASH_FLOW_FORM = "cashFlow";
     public static final String CAPTURE_CAPITAL_LIABILITY_INFO = "captureCapitalLiabilityInfo";
-    public static final String TOTAL_LIABILITY = "cashFlow.totalLiability";
-    public static final String TOTAL_CAPITAL= "cashFlow.totalCapital";
     public static final String TOTAL_CAPITAL_SHOULD_BE_GREATER_THAN_ZERO = "cashFlowForm.totalCapital.should.be.greater.than.zero";
+    public static final String CUMULATIVE_CASH_FLOW_FOR_MONTH_SHOULD_BE_GREATER_THAN_ZERO = "cashFlowForm.cumulativeCashFlow.should.be.greater.than.zero";
     public static final String TOTAL_CAPITAL_SHOULD_NOT_BE_EMPTY = "cashFlowForm.totalCapital.should.not.be.empty";
     public static final String TOTAL_LIABILITY_SHOULD_NOT_BE_EMPTY = "cashFlowForm.totalLiability.should.not.be.empty";
     public static final String TOTAL_LIABILITY_SHOULD_BE_NON_NEGATIVE = "cashFlowForm.totalLiability.should.be.non.negative";

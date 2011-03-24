@@ -40,9 +40,27 @@ public class CashFlowValidator {
             validateRevenue(messageContext, monthlyCashFlowForm);
             validateNotes(messageContext, monthlyCashFlowForm);
         }
+        validateCumulativeCashFlow(cashFlow, messageContext);
         validateTotalCapitalAndLiability(cashFlow, messageContext);
         validateIndebtednessRatio(cashFlow, messageContext);
         setTotalsOnCashFlowForm(cashFlow, messageContext);
+    }
+
+    private void validateCumulativeCashFlow(CashFlowForm cashFlow, MessageContext messageContext) {
+        if (!messageContext.hasErrorMessages()) {
+            for (MonthlyCashFlowForm monthlyCashFlowForm : cashFlow.getMonthlyCashFlows()) {
+                validateCumulativeCashFlow(messageContext, monthlyCashFlowForm);
+            }
+        }
+    }
+
+    private void validateCumulativeCashFlow(MessageContext messageContext, MonthlyCashFlowForm monthlyCashFlowForm) {
+        if (monthlyCashFlowForm.cumulativeCashFlowIsLessThanOrEqualToZero()) {
+            String message = format("Cumulative cash flow for {0} {1} should be greater than zero", monthlyCashFlowForm.getMonthInLocale(),
+                    Integer.toString(monthlyCashFlowForm.getYear()));
+            constructErrorMessage(CashFlowConstants.CUMULATIVE_CASH_FLOW_FOR_MONTH_SHOULD_BE_GREATER_THAN_ZERO, message, messageContext,
+                    monthlyCashFlowForm.getMonthInLocale(), Integer.toString(monthlyCashFlowForm.getYear()));
+        }
     }
 
     private void setTotalsOnCashFlowForm(CashFlowForm cashFlowForm, MessageContext messageContext) {
@@ -106,7 +124,7 @@ public class CashFlowValidator {
     }
 
     private void validateExpense(MessageContext messageContext, MonthlyCashFlowForm monthlyCashFlowForm) {
-        if (isNull(monthlyCashFlowForm.getExpense())) {
+        if (monthlyCashFlowForm.hasNoExpense()) {
             String message = format("Please specify expense for {0} {1}.", monthlyCashFlowForm.getMonthInLocale(),
                     Integer.toString(monthlyCashFlowForm.getYear()));
             constructErrorMessage(CashFlowConstants.EMPTY_EXPENSE, message, messageContext,
@@ -115,7 +133,7 @@ public class CashFlowValidator {
     }
 
     private void validateRevenue(MessageContext messageContext, MonthlyCashFlowForm monthlyCashFlowForm) {
-        if (isNull(monthlyCashFlowForm.getRevenue())) {
+        if (monthlyCashFlowForm.hasNoRevenue()) {
             String message = format("Please specify revenue for {0} {1}.", monthlyCashFlowForm.getMonthInLocale(),
                     Integer.toString(monthlyCashFlowForm.getYear()));
             constructErrorMessage(CashFlowConstants.EMPTY_REVENUE, message, messageContext,
