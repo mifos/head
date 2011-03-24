@@ -90,9 +90,46 @@
 <form action="${flowExecutionUrl}" method="post" class="two-columns">
     <fieldset>
     [#if loanProductReferenceData.glimApplicable]
+    <script type="text/javascript">
+    	function calculateTotalLoanAmount() {
+    		$(document).ready(function () {
+				var total = 0;
+				$('.amountfield').each(function(index) {
+					var fieldamount = parseFloat($(this).val());
+					$('.clientbox').each(function(subindex) {
+						if (this.checked && index==subindex) {
+							total = total + fieldamount;
+						};
+					});	
+  				});
+				
+				$('#amount').val(total);
+    		});
+    	}
+    
+    	$(document).ready(function () {
+			$('#selectAll').change(function() {
+				 if (this.checked)
+				 {
+				    $('.clientbox').attr("checked",true);
+				 } else {
+				 	$('.clientbox').attr("checked",false);
+				 }
+				 calculateTotalLoanAmount();
+			});
+			
+			$('.clientbox').click(function() {
+				calculateTotalLoanAmount();
+			});
+			
+			$('.amountfield').change(function() {
+				calculateTotalLoanAmount();
+			});
+    	});
+    </script>
     <table border="1">
     	<tr>
-    		<td><input type="checkbox" name="allClients" id="allClients"/></td>
+    		<td><input type="checkbox" name="selectAll" id="selectAll" /></td>
     		<td>[@spring.message "selectProduct.accountOwnerName" /]</td>
     		<td>&nbsp;</td>
     		<td><span class="mandatory">*</span>[@spring.message "createLoanAccount.amount"/]</td>
@@ -103,16 +140,16 @@
     	[#list loanProductReferenceData.clientDetails as clientdata]
     	<tr>
     		<td>
-    			[@spring.formCheckbox "loanAccountFormBean.clientSelectForGroup[${index}]" /]
+    			[@spring.formCheckbox "loanAccountFormBean.clientSelectForGroup[${index}]" "class='clientbox'"/]
     		</td>
     		<td>
     			<div><span class="standout">Client:</span>${clientdata.clientName}</div>
     			<div><span class="standout">Client Id</span>:${clientdata.clientId}</div>
     		</td>
     		<td>&nbsp;</td>
-    		<td>[@form.input path="loanAccountFormBean.clientAmount[${index}]"  id="clientAmount[${index}]" /]</td>
+    		<td>[@form.input path="loanAccountFormBean.clientAmount[${index}]"  id="clientAmount[${index}]" attributes="class='amountfield'"/]</td>
     		<td>&nbsp;</td>
-    		<td>[@form.singleSelectWithPrompt path="loanAccountFormBean.clientLoanPurposeId[${index}]" options=loanProductReferenceData.purposeOfLoanOptions selectPrompt="selectPrompt" /]</td>
+    		<td>[@form.singleSelectWithPrompt path="loanAccountFormBean.clientLoanPurposeId[${index}]" options=loanProductReferenceData.purposeOfLoanOptions selectPrompt="selectPrompt" attributes="class=trigger"/]</td>
     	</tr>
     	[#assign index = index + 1]
     	[/#list]
