@@ -47,18 +47,18 @@ public class HolidayFormValidator implements Validator {
         }
 
         HolidayFormBean formBean = (HolidayFormBean) target;
-        rejectIfEmptyOrWhitespace(errors, formBean.getName(), "error.holiday.mandatory_field", "Please specify Holiday Name.");
+        rejectIfEmptyOrWhitespace(errors, formBean.getName(), "error.holiday.mandatory_field");
 
         Date dateFrom = null;
         Date dateTo = null;
         try {
             dateFrom = new DateTime().withDate(Integer.parseInt(formBean.getFromYear()), formBean.getFromMonth(), formBean.getFromDay()).toDate();
         } catch (Exception e) {
-            errors.reject("holiday.fromDate.invalid", "Please specify From Date.");
+            errors.reject("holiday.fromDate.invalid");
         }
 
         if (formBean.anyToDateFieldFilled() && !formBean.allToDateFieldsFilled()) {
-            errors.reject("holiday.thruDate.invalid", "Please specify thru Date.");
+            errors.reject("holiday.thruDate.invalid");
         }
 
         try {
@@ -67,38 +67,38 @@ public class HolidayFormValidator implements Validator {
             }
         } catch (Exception e) {
             if (!errors.hasFieldErrors("holiday.thruDate.invalid")) {
-                errors.reject("holiday.thruDate.invalid", "Please specify thru Date.");
+                errors.reject("holiday.thruDate.invalid");
             }
         }
 
         // FIXME - keithw - the follow validation performed below is really business logic validation and not web-data-validation
         // it should exist in one place within the domain layer
         if (dateFrom != null && dateTo != null && new DateTime(dateFrom).compareTo(new DateTime(dateTo)) > 0) {
-            errors.reject("holiday.fromDate.invalid", "From Date is greater than To Date.");
+            errors.reject("holiday.fromDate.invalid2");
         }
 
         if (dateFrom != null && new DateMidnight(dateFrom).compareTo(new DateMidnight()) < 0) {
-            errors.reject("holiday.fromDate.invalid", "From Date cannot be in the past.");
+            errors.reject("holiday.fromDate.invalid3");
         }
 
 		if (dateFrom != null && new DateMidnight(dateFrom).compareTo(new DateMidnight()) == 0) {
-            errors.reject("holiday.fromDate.invalid", "From Date cannot be today's date.");
+            errors.reject("holiday.fromDate.invalid4");
         }
 		// end of business logic rules
 
         if (formBean.getRepaymentRuleId() == null || Integer.parseInt(formBean.getRepaymentRuleId()) < 0) {
-            errors.reject("holiday.repaymentrule.required", "Please specify Repayment Rule.");
+            errors.reject("holiday.repaymentrule.required");
         }
 
         if (formBean.getSelectedOfficeIds().trim().isEmpty()) {
-            errors.reject("holiday.appliesto.required", "Please specify Applies To.");
+            errors.reject("holiday.appliesto.required");
         }
     }
 
-    private void rejectIfEmptyOrWhitespace(Errors errors, String value, String errorCode, String defaultMessage) {
+    private void rejectIfEmptyOrWhitespace(Errors errors, String value, String errorCode) {
 
         if (value == null ||!StringUtils.hasText(value)) {
-            errors.reject(errorCode, defaultMessage);
+            errors.reject(errorCode);
         }
     }
 
