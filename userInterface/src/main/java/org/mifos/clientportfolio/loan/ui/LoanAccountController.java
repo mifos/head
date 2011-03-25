@@ -326,7 +326,7 @@ public class LoanAccountController {
             if (clientSelected != null && clientSelected.booleanValue()) {
                 String globalId = formBean.getClientGlobalId()[index];
                 BigDecimal loanAmount = BigDecimal.valueOf(formBean.getClientAmount()[index].doubleValue());
-                Integer loanPurposeId = formBean.getLoanPurposeId();
+                Integer loanPurposeId = formBean.getClientLoanPurposeId()[index];
                 GroupMemberAccountDto memberAccount = new GroupMemberAccountDto(globalId, loanAmount, loanPurposeId);
                 
                 memberAccounts.add(memberAccount);
