@@ -113,10 +113,14 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.clientportfolio.loan.service.CreateLoanSchedule;
+import org.mifos.clientportfolio.newloan.applicationservice.CreateGlimLoanAccount;
 import org.mifos.clientportfolio.newloan.applicationservice.CreateLoanAccount;
+import org.mifos.clientportfolio.newloan.applicationservice.GroupMemberAccountDto;
 import org.mifos.clientportfolio.newloan.applicationservice.LoanAccountCashFlow;
 import org.mifos.clientportfolio.newloan.applicationservice.LoanApplicationStateDto;
 import org.mifos.clientportfolio.newloan.domain.CreationDetail;
+import org.mifos.clientportfolio.newloan.domain.GroupMemberLoanDetail;
+import org.mifos.clientportfolio.newloan.domain.LoanAccountDetail;
 import org.mifos.clientportfolio.newloan.domain.LoanDisbursementDateFactory;
 import org.mifos.clientportfolio.newloan.domain.LoanDisbursementDateFinder;
 import org.mifos.clientportfolio.newloan.domain.LoanDisbursementDateValidator;
@@ -818,14 +822,43 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     @Override
     public LoanCreationResultDto createLoan(CreateLoanAccount loanAccountInfo,
             List<QuestionGroupDetail> questionGroups, LoanAccountCashFlow loanAccountCashFlow, List<Date> loanScheduleInstallmentDates) {
+        
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = toUserContext(user);
-
-        // assemble
         PersonnelBO createdBy = this.personnelDao.findPersonnelById(userContext.getId());
         OfficeBO userOffice = this.officeDao.findOfficeById(user.getBranchId());
+        
+        // assemble
+        LoanAccountDetail loanAccountDetail = assembleLoanAccountDetail(loanAccountInfo);
+        
+        LoanProductOverridenDetail overridenDetail = new LoanProductOverridenDetail(loanAccountDetail.getLoanAmount(), loanAccountInfo.getDisbursementDate(), 
+                loanAccountInfo.getInterestRate(), loanAccountInfo.getNumberOfInstallments(), loanAccountInfo.getGraceDuration());
+
+        Integer interestDays = Integer.valueOf(AccountingRules.getNumberOfInterestDays().intValue());
+        boolean loanScheduleIndependentOfCustomerMeetingEnabled = loanAccountInfo.isRepaymentScheduleIndependentOfCustomerMeeting();
+        LoanScheduleConfiguration configuration = new LoanScheduleConfiguration(loanScheduleIndependentOfCustomerMeetingEnabled, interestDays);
+        
+        MeetingBO repaymentDayMeeting = loanAccountDetail.getCustomer().getCustomerMeetingValue();
+        if (loanScheduleIndependentOfCustomerMeetingEnabled) {
+            final int minDaysInterval = new ConfigurationPersistence().getConfigurationKeyValueInteger(MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY).getValue();
+            repaymentDayMeeting = createNewRepaymentDayMeeting(repaymentDayMeeting, loanAccountInfo, minDaysInterval);
+        }
+
+        List<DateTime> loanScheduleDates = new ArrayList<DateTime>();
+        for (Date loanScheduleInstallmentDate : loanScheduleInstallmentDates) {
+            loanScheduleDates.add(new DateTime(loanScheduleInstallmentDate));
+        }
+        
+        LoanSchedule loanSchedule = assembleLoanSchedule(loanAccountDetail.getCustomer(), loanAccountDetail.getLoanProduct(), overridenDetail, configuration, repaymentDayMeeting, userOffice, loanScheduleDates);
+        
+        return createLoanAccount(loanAccountInfo, questionGroups, loanAccountCashFlow, user, userOffice, loanAccountDetail, overridenDetail, configuration, repaymentDayMeeting, loanSchedule, createdBy, new ArrayList<GroupMemberLoanDetail>());
+    }
+
+    private LoanAccountDetail assembleLoanAccountDetail(CreateLoanAccount loanAccountInfo) {
+        
         CustomerBO customer = this.customerDao.findCustomerById(loanAccountInfo.getCustomerId());
         LoanOfferingBO loanProduct = this.loanProductDao.findById(loanAccountInfo.getProductId());
+        
         Money loanAmount = new Money(loanProduct.getCurrency(), loanAccountInfo.getLoanAmount());
         AccountState accountStateType = AccountState.fromShort(loanAccountInfo.getAccountState().shortValue());
         FundBO fund = null;
@@ -833,29 +866,24 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             fund = this.fundDao.findById(loanAccountInfo.getSourceOfFundId().shortValue());
         }
         
-        LoanProductOverridenDetail overridenDetail = new LoanProductOverridenDetail(loanAmount, loanAccountInfo.getDisbursementDate(), 
-                loanAccountInfo.getInterestRate(), loanAccountInfo.getNumberOfInstallments(), loanAccountInfo.getGraceDuration());
+        return new LoanAccountDetail(customer, loanProduct, loanAmount, accountStateType, fund);
+    }
 
-        final int minDaysInterval = new ConfigurationPersistence().getConfigurationKeyValueInteger(MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY).getValue();
-        Integer interestDays = Integer.valueOf(AccountingRules.getNumberOfInterestDays().intValue());
-        boolean loanScheduleIndependentOfCustomerMeetingEnabled = loanAccountInfo.isRepaymentScheduleIndependentOfCustomerMeeting();
-        LoanScheduleConfiguration configuration = new LoanScheduleConfiguration(loanScheduleIndependentOfCustomerMeetingEnabled, interestDays);
+    private LoanSchedule assembleLoanSchedule(CustomerBO customer, LoanOfferingBO loanProduct,
+            LoanProductOverridenDetail overridenDetail, LoanScheduleConfiguration configuration,
+            MeetingBO repaymentDayMeeting, OfficeBO userOffice, List<DateTime> loanScheduleDates) {
         
-        MeetingBO repaymentDayMeeting = customer.getCustomerMeetingValue();
-        if (loanScheduleIndependentOfCustomerMeetingEnabled) {
-            repaymentDayMeeting = createNewRepaymentDayMeeting(customer.getCustomerMeetingValue(), loanAccountInfo, minDaysInterval);
-        }
-
-        // FIXME - keitw - handle fees for loan schedule
+        // FIXME - keithw - handle fees for loan schedule
         List<AccountFeesEntity> accountFees = new ArrayList<AccountFeesEntity>();
-        List<DateTime> loanScheduleDates = new ArrayList<DateTime>();
-        for (Date loanScheduleInstallmentDate : loanScheduleInstallmentDates) {
-            loanScheduleDates.add(new DateTime(loanScheduleInstallmentDate));
-        }
-        LoanSchedule loanSchedule = this.loanScheduleService.generate(loanProduct, customer, repaymentDayMeeting, overridenDetail, configuration, accountFees, loanScheduleDates);
         
-        return createLoanAccount(loanAccountInfo, questionGroups, loanAccountCashFlow, user, userOffice, customer,
-                loanProduct, accountStateType, fund, overridenDetail, configuration, repaymentDayMeeting, loanSchedule, createdBy);
+        LoanSchedule loanSchedule = null;
+        if (loanScheduleDates.isEmpty()) {
+            loanSchedule = this.loanScheduleService.generate(loanProduct, customer, repaymentDayMeeting, overridenDetail, configuration, userOffice.getOfficeId(), accountFees);
+        } else {
+            loanSchedule = this.loanScheduleService.generate(loanProduct, customer, repaymentDayMeeting, overridenDetail, configuration, accountFees, loanScheduleDates);
+        }
+        
+        return loanSchedule;
     }
     
     private MeetingBO createNewRepaymentDayMeeting(MeetingBO customerMeetingValue, CreateLoanAccount loanAccountInfo, int minDaysInterval) {
@@ -896,49 +924,37 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = toUserContext(user);
+        OfficeBO userOffice = this.officeDao.findOfficeById(user.getBranchId());
+        PersonnelBO createdBy = this.personnelDao.findPersonnelById(userContext.getId());
         
         // assemble
-        PersonnelBO createdBy = this.personnelDao.findPersonnelById(userContext.getId());
-        OfficeBO userOffice = this.officeDao.findOfficeById(user.getBranchId());
-        CustomerBO customer = this.customerDao.findCustomerById(loanAccountInfo.getCustomerId());
-        LoanOfferingBO loanProduct = this.loanProductDao.findById(loanAccountInfo.getProductId());
-        Money loanAmount = new Money(loanProduct.getCurrency(), loanAccountInfo.getLoanAmount());
-        AccountState accountStateType = AccountState.fromShort(loanAccountInfo.getAccountState().shortValue());
-        FundBO fund = null;
-        if (loanAccountInfo.getSourceOfFundId() != null) {
-            fund = this.fundDao.findById(loanAccountInfo.getSourceOfFundId().shortValue());
-        }
+        LoanAccountDetail loanAccountDetail = assembleLoanAccountDetail(loanAccountInfo);
         
-        LoanProductOverridenDetail overridenDetail = new LoanProductOverridenDetail(loanAmount, loanAccountInfo.getDisbursementDate(), 
+        LoanProductOverridenDetail overridenDetail = new LoanProductOverridenDetail(loanAccountDetail.getLoanAmount(), loanAccountInfo.getDisbursementDate(), 
                 loanAccountInfo.getInterestRate(), loanAccountInfo.getNumberOfInstallments(), loanAccountInfo.getGraceDuration());
         
-        final int minDaysInterval = new ConfigurationPersistence().getConfigurationKeyValueInteger(MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY).getValue();
         Integer interestDays = Integer.valueOf(AccountingRules.getNumberOfInterestDays().intValue());
         boolean loanScheduleIndependentOfCustomerMeetingEnabled = loanAccountInfo.isRepaymentScheduleIndependentOfCustomerMeeting();
         LoanScheduleConfiguration configuration = new LoanScheduleConfiguration(loanScheduleIndependentOfCustomerMeetingEnabled, interestDays);
         
-        MeetingBO repaymentDayMeeting = customer.getCustomerMeetingValue();
+        MeetingBO repaymentDayMeeting = loanAccountDetail.getCustomer().getCustomerMeetingValue();
         if (loanScheduleIndependentOfCustomerMeetingEnabled) {
-            repaymentDayMeeting = createNewRepaymentDayMeeting(customer.getCustomerMeetingValue(), loanAccountInfo, minDaysInterval);
+            final int minDaysInterval = new ConfigurationPersistence().getConfigurationKeyValueInteger(MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY).getValue();
+            repaymentDayMeeting = createNewRepaymentDayMeeting(repaymentDayMeeting, loanAccountInfo, minDaysInterval);
         }
         
-        // FIXME - keitw - handle fees for loan schedule
-        List<AccountFeesEntity> accountFees = new ArrayList<AccountFeesEntity>();
-        LoanSchedule loanSchedule = this.loanScheduleService.generate(loanProduct, customer, repaymentDayMeeting, overridenDetail, configuration, userContext.getBranchId(), accountFees);
+        LoanSchedule loanSchedule = assembleLoanSchedule(loanAccountDetail.getCustomer(), loanAccountDetail.getLoanProduct(), overridenDetail, configuration, repaymentDayMeeting, userOffice, new ArrayList<DateTime>());
         
-        return createLoanAccount(loanAccountInfo, questionGroups, loanAccountCashFlow, user, userOffice, customer,
-                loanProduct, accountStateType, fund, overridenDetail, configuration, repaymentDayMeeting, loanSchedule, createdBy);
+        return createLoanAccount(loanAccountInfo, questionGroups, loanAccountCashFlow, user, userOffice, loanAccountDetail, overridenDetail, configuration, repaymentDayMeeting, loanSchedule, createdBy, new ArrayList<GroupMemberLoanDetail>());
     }
     
     private LoanCreationResultDto createLoanAccount(CreateLoanAccount loanAccountInfo,
             List<QuestionGroupDetail> questionGroups, LoanAccountCashFlow loanAccountCashFlow, MifosUser user,
-            OfficeBO userOffice, CustomerBO customer, LoanOfferingBO loanProduct, AccountState accountStateType,
-            FundBO fund, LoanProductOverridenDetail overridenDetail, LoanScheduleConfiguration configuration,
-            MeetingBO repaymentDayMeeting, LoanSchedule loanSchedule, PersonnelBO createdBy) {
+            OfficeBO userOffice, LoanAccountDetail loanAccountDetail, LoanProductOverridenDetail overridenDetail, LoanScheduleConfiguration configuration,
+            MeetingBO repaymentDayMeeting, LoanSchedule loanSchedule, PersonnelBO createdBy, List<GroupMemberLoanDetail> individualMembersOfGroupLoan) {
         
         CreationDetail creationDetail = new CreationDetail(new DateTime(), Integer.valueOf(user.getUserId()));
-        LoanBO loan = LoanBO.openStandardLoanAccount(loanProduct, customer, repaymentDayMeeting, loanSchedule, accountStateType, fund, overridenDetail, configuration, creationDetail);
-        loan.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(loan.getAccountState(), loan.getAccountState(), createdBy, loan));
+        LoanBO loan = LoanBO.openStandardLoanAccount(loanAccountDetail.getLoanProduct(), loanAccountDetail.getCustomer(), repaymentDayMeeting, loanSchedule, loanAccountDetail.getAccountState(), loanAccountDetail.getFund(), overridenDetail, configuration, creationDetail, createdBy);
         loan.setBusinessActivityId(loanAccountInfo.getLoanPurposeId());
         loan.setExternalId(loanAccountInfo.getExternalId());
         loan.setCollateralNote(loanAccountInfo.getCollateralNotes());
@@ -948,6 +964,15 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             transactionHelper.startTransaction();
             this.loanService.create(loan, userOffice.getGlobalOfficeNum());
             transactionHelper.flushSession();
+            
+            // for GLIM loans only
+            for (GroupMemberLoanDetail groupMemberAccount : individualMembersOfGroupLoan) {
+                
+                LoanBO memberLoan = LoanBO.openGroupMemberLoanAccount(loan, loanAccountDetail.getLoanProduct(), groupMemberAccount.getMember(), repaymentDayMeeting, groupMemberAccount.getMemberSchedule(), groupMemberAccount.getMemberOverridenDetail(), configuration, creationDetail, createdBy);
+                memberLoan.setBusinessActivityId(groupMemberAccount.getLoanPurposeId());
+                this.loanService.create(memberLoan, userOffice.getGlobalOfficeNum());
+                transactionHelper.flushSession();
+            }
             
             // save question groups
             if (!questionGroups.isEmpty()) {
@@ -986,6 +1011,49 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         } finally {
             this.transactionHelper.closeSession();
         }
+    }
+
+    @Override
+    public LoanCreationResultDto createGroupLoanWithIndividualMonitoring(CreateGlimLoanAccount glimLoanAccount, 
+            List<QuestionGroupDetail> questionGroups, LoanAccountCashFlow loanAccountCashFlow) {
+        
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+        OfficeBO userOffice = this.officeDao.findOfficeById(user.getBranchId());
+        PersonnelBO createdBy = this.personnelDao.findPersonnelById(userContext.getId());
+        
+        // assemble
+        CreateLoanAccount loanAccountInfo = glimLoanAccount.getGroupLoanAccountDetails();
+        LoanAccountDetail loanAccountDetail = assembleLoanAccountDetail(loanAccountInfo);
+        
+        LoanProductOverridenDetail overridenDetail = new LoanProductOverridenDetail(loanAccountDetail.getLoanAmount(), loanAccountInfo.getDisbursementDate(), 
+                loanAccountInfo.getInterestRate(), loanAccountInfo.getNumberOfInstallments(), loanAccountInfo.getGraceDuration());
+        
+        Integer interestDays = Integer.valueOf(AccountingRules.getNumberOfInterestDays().intValue());
+        boolean loanScheduleIndependentOfCustomerMeetingEnabled = loanAccountInfo.isRepaymentScheduleIndependentOfCustomerMeeting();
+        LoanScheduleConfiguration configuration = new LoanScheduleConfiguration(loanScheduleIndependentOfCustomerMeetingEnabled, interestDays);
+        
+        MeetingBO repaymentDayMeeting = loanAccountDetail.getCustomer().getCustomerMeetingValue();
+        if (loanScheduleIndependentOfCustomerMeetingEnabled) {
+            final int minDaysInterval = new ConfigurationPersistence().getConfigurationKeyValueInteger(MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY).getValue();
+            repaymentDayMeeting = createNewRepaymentDayMeeting(repaymentDayMeeting, loanAccountInfo, minDaysInterval);
+        }
+        
+        LoanSchedule loanSchedule = assembleLoanSchedule(loanAccountDetail.getCustomer(), loanAccountDetail.getLoanProduct(), overridenDetail, configuration, repaymentDayMeeting, userOffice, new ArrayList<DateTime>());
+        
+        List<GroupMemberLoanDetail> memberLoanDetails = new ArrayList<GroupMemberLoanDetail>();
+        for (GroupMemberAccountDto groupMemberAccount : glimLoanAccount.getMemberDetails()) {
+            ClientBO member = this.customerDao.findClientBySystemId(groupMemberAccount.getGlobalId());
+            Money loanAmount = new Money(loanAccountDetail.getLoanProduct().getCurrency(), groupMemberAccount.getLoanAmount());
+            LoanProductOverridenDetail memberOverridenDetail = new LoanProductOverridenDetail(loanAmount, overridenDetail);
+            
+            LoanSchedule memberSchedule = assembleLoanSchedule(member, loanAccountDetail.getLoanProduct(), memberOverridenDetail, configuration, repaymentDayMeeting, userOffice, new ArrayList<DateTime>());
+            
+            GroupMemberLoanDetail groupMemberLoanDetail = new GroupMemberLoanDetail(member, memberOverridenDetail, memberSchedule, groupMemberAccount.getLoanPurposeId());
+            memberLoanDetails.add(groupMemberLoanDetail);
+        }
+        
+        return createLoanAccount(loanAccountInfo, questionGroups, loanAccountCashFlow, user, userOffice, loanAccountDetail, overridenDetail, configuration, repaymentDayMeeting, loanSchedule, createdBy, memberLoanDetails);
     }
 
     @Override

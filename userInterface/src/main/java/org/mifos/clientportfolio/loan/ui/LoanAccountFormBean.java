@@ -100,6 +100,7 @@ public class LoanAccountFormBean implements Serializable {
     // GLIM specific
     private boolean glimApplicable;
     private Boolean[] clientSelectForGroup = new Boolean[1];
+    private String[] clientGlobalId = new String[1];
     private Number[] clientAmount = new Number[1];
     private Integer[] clientLoanPurposeId = new Integer[1];
 
@@ -580,5 +581,13 @@ public class LoanAccountFormBean implements Serializable {
 
     public void setClientSelectForGroup(Boolean[] clientSelectForGroup) {
         this.clientSelectForGroup = clientSelectForGroup;
+    }
+    
+    public String[] getClientGlobalId() {
+        return clientGlobalId;
+    }
+
+    public void setClientGlobalId(String[] clientGlobalId) {
+        this.clientGlobalId = clientGlobalId;
     }
 }

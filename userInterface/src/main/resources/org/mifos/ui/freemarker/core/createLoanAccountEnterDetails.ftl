@@ -148,6 +148,7 @@
     		<td>
     			<div><span class="standout">Client:</span>${clientdata.clientName}</div>
     			<div><span class="standout">Client Id</span>:${clientdata.clientId}</div>
+    			[@spring.formHiddenInput "loanAccountFormBean.clientGlobalId[${index}]" /]
     		</td>
     		<td>&nbsp;</td>
     		<td>[@form.input path="loanAccountFormBean.clientAmount[${index}]"  id="clientAmount[${index}]" attributes="class='amountfield'"/]</td>

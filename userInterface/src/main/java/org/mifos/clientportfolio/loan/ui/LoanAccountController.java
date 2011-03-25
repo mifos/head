@@ -30,7 +30,9 @@ import org.joda.time.LocalDate;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.application.servicefacade.LoanAccountServiceFacade;
 import org.mifos.clientportfolio.loan.service.CreateLoanSchedule;
+import org.mifos.clientportfolio.newloan.applicationservice.CreateGlimLoanAccount;
 import org.mifos.clientportfolio.newloan.applicationservice.CreateLoanAccount;
+import org.mifos.clientportfolio.newloan.applicationservice.GroupMemberAccountDto;
 import org.mifos.clientportfolio.newloan.applicationservice.LoanAccountCashFlow;
 import org.mifos.clientportfolio.newloan.applicationservice.LoanApplicationStateDto;
 import org.mifos.dto.domain.CashFlowDto;
@@ -103,9 +105,18 @@ public class LoanAccountController {
     	formBean.setGlimApplicable(dto.isGlimApplicable());
     	if (dto.isGlimApplicable()) {
     	    List<LoanAccountDetailsDto> clientData = dto.getClientDetails();
+    	    String[] clientGlobalIdArray = new String[clientData.size()];
+    	    int index = 0;
+    	    for (LoanAccountDetailsDto loanAccountDetailsDto : clientData) {
+                clientGlobalIdArray[index] = loanAccountDetailsDto.getClientId();
+                index++;
+            }
+    	    formBean.setClientGlobalId(clientGlobalIdArray);
+    	    
     	    formBean.setClientSelectForGroup(new Boolean[clientData.size()]);
     	    formBean.setClientAmount(new Number[clientData.size()]);
     	    formBean.setClientLoanPurposeId(new Integer[clientData.size()]);
+    	    
     	} else {
     	    formBean.setAmount(dto.getDefaultLoanAmount());    
     	}
@@ -271,31 +282,58 @@ public class LoanAccountController {
                                                     .withMonthOfYear(formBean.getDisbursalDateMonth().intValue())
                                                      .withYearOfEra(formBean.getDisbursalDateYear().intValue());
         
-        CreateLoanAccount createLoanAccount = new CreateLoanAccount(formBean.getCustomerId(), formBean.getProductId(), accountState, 
-                                                                                    BigDecimal.valueOf(formBean.getAmount().doubleValue()), 
-                                                                                    formBean.getInterestRate().doubleValue(), 
-                                                                                    disbursementDate, 
-                                                                                    formBean.getNumberOfInstallments().intValue(),
-                                                                                    formBean.getGraceDuration().intValue(),
-                                                                                    formBean.getFundId(),
-                                                                                    formBean.getLoanPurposeId(),
-                                                                                    formBean.getCollateralTypeId(),
-                                                                                    formBean.getCollateralNotes(),
-                                                                                    formBean.getExternalId(),
-                                                                                    formBean.isRepaymentScheduleIndependentOfCustomerMeeting(),
-                                                                                    formBean.getRepaymentRecursEvery(),
-                                                                                    formBean.getRepaymentDayOfWeek());
-        
+        CreateLoanAccount loanAccountDetails = new CreateLoanAccount(formBean.getCustomerId(),
+                formBean.getProductId(), accountState, BigDecimal.valueOf(formBean.getAmount().doubleValue()),
+                formBean.getInterestRate().doubleValue(), disbursementDate, formBean.getNumberOfInstallments()
+                        .intValue(), formBean.getGraceDuration().intValue(), formBean.getFundId(),
+                formBean.getLoanPurposeId(), formBean.getCollateralTypeId(), formBean.getCollateralNotes(),
+                formBean.getExternalId(), formBean.isRepaymentScheduleIndependentOfCustomerMeeting(),
+                formBean.getRepaymentRecursEvery(), formBean.getRepaymentDayOfWeek());
+
         LoanCreationResultDto loanCreationResultDto = null;
-        if (formBean.isVariableInstallmentsAllowed()) {
-            List<Date> installmentDates = cashFlowSummaryFormBean.getInstallments();
-            if (installmentDates.isEmpty()) {
-                installmentDates = loanScheduleFormBean.getInstallments();
-            }
-            loanCreationResultDto = loanAccountServiceFacade.createLoan(createLoanAccount, loanAccountQuestionGroupFormBean.getQuestionGroups(), loanAccountCashFlow, installmentDates);
+        
+        if (formBean.isGlimApplicable()) {
+            
+            List<GroupMemberAccountDto> memberAccounts = createGroupMemberAccounts(formBean);
+            BigDecimal totalLoanAmount = BigDecimal.valueOf(formBean.getAmount().doubleValue());
+            
+            CreateGlimLoanAccount createGroupLoanAccount = new CreateGlimLoanAccount(memberAccounts, totalLoanAmount, loanAccountDetails); 
+            
+            loanCreationResultDto = loanAccountServiceFacade.createGroupLoanWithIndividualMonitoring(createGroupLoanAccount, loanAccountQuestionGroupFormBean.getQuestionGroups(), loanAccountCashFlow);
         } else {
-            loanCreationResultDto = loanAccountServiceFacade.createLoan(createLoanAccount, loanAccountQuestionGroupFormBean.getQuestionGroups(), loanAccountCashFlow);
+            
+            if (formBean.isVariableInstallmentsAllowed()) {
+                List<Date> installmentDates = cashFlowSummaryFormBean.getInstallments();
+                if (installmentDates.isEmpty()) {
+                    installmentDates = loanScheduleFormBean.getInstallments();
+                }
+                loanCreationResultDto = loanAccountServiceFacade.createLoan(loanAccountDetails,
+                        loanAccountQuestionGroupFormBean.getQuestionGroups(), loanAccountCashFlow, installmentDates);
+            } else {
+                loanCreationResultDto = loanAccountServiceFacade.createLoan(loanAccountDetails,
+                        loanAccountQuestionGroupFormBean.getQuestionGroups(), loanAccountCashFlow);
+            }
         }
         return loanCreationResultDto;
+    }
+
+    private List<GroupMemberAccountDto> createGroupMemberAccounts(LoanAccountFormBean formBean) {
+        
+        List<GroupMemberAccountDto> memberAccounts = new ArrayList<GroupMemberAccountDto>();
+        
+        int index = 0;
+        for (Boolean clientSelected : formBean.getClientSelectForGroup()) {
+            if (clientSelected != null && clientSelected.booleanValue()) {
+                String globalId = formBean.getClientGlobalId()[index];
+                BigDecimal loanAmount = BigDecimal.valueOf(formBean.getClientAmount()[index].doubleValue());
+                Integer loanPurposeId = formBean.getLoanPurposeId();
+                GroupMemberAccountDto memberAccount = new GroupMemberAccountDto(globalId, loanAmount, loanPurposeId);
+                
+                memberAccounts.add(memberAccount);
+            }
+            index++;
+        }
+        
+        return memberAccounts;
     }
 }

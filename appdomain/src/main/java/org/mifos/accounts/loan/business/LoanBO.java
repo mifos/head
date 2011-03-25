@@ -51,6 +51,7 @@ import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.accounts.business.AccountTrxnEntity;
+import org.mifos.accounts.business.AccountTypeEntity;
 import org.mifos.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeBO;
@@ -136,6 +137,7 @@ import org.mifos.config.AccountingRules;
 import org.mifos.config.business.Configuration;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupPerformanceHistoryEntity;
@@ -313,6 +315,7 @@ public class LoanBO extends AccountBO implements Loan {
     public LoanBO(LoanOfferingBO loanProduct, CustomerBO customer, AccountState loanState, LoanProductOverridenDetail overridenDetail, 
             MeetingBO repaymentDayMeeting, LoanSchedule loanSchedule, LoanScheduleConfiguration configuration, CreationDetail creationDetail) {
         super(AccountTypes.LOAN_ACCOUNT, loanState, customer, loanSchedule.getRoundedLoanSchedules(), creationDetail);
+        this.parentAccount = null; // used for GLIM loans and will be set in factory method for this.
         this.performanceHistory = new LoanPerformanceHistoryEntity(this);
 
         this.loanOffering = loanProduct;
@@ -560,11 +563,28 @@ public class LoanBO extends AccountBO implements Loan {
     
     public static LoanBO openStandardLoanAccount(LoanOfferingBO loanProduct, CustomerBO customer,
             MeetingBO repaymentDayMeeting, LoanSchedule loanSchedule, AccountState loanState, FundBO fund, 
-            LoanProductOverridenDetail overridenDetail, LoanScheduleConfiguration configuration, CreationDetail creationDetail) {
+            LoanProductOverridenDetail overridenDetail, LoanScheduleConfiguration configuration, CreationDetail creationDetail, PersonnelBO createdBy) {
         
         LoanBO standardLoan = new LoanBO(loanProduct, customer, loanState, overridenDetail, repaymentDayMeeting, loanSchedule, configuration, creationDetail);
         standardLoan.setFund(fund);
+        standardLoan.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(standardLoan.getAccountState(), standardLoan.getAccountState(), createdBy, standardLoan));
         return standardLoan;
+    }
+    
+    public static LoanBO openGroupMemberLoanAccount(LoanBO parentLoan, LoanOfferingBO loanProduct, ClientBO member,
+            MeetingBO repaymentDayMeeting, LoanSchedule loanSchedule, LoanProductOverridenDetail overridenDetail,
+            LoanScheduleConfiguration configuration, CreationDetail creationDetail, PersonnelBO createdBy) {
+        
+        AccountState loanState = AccountState.LOAN_PENDING_APPROVAL;
+        LoanBO groupMemberLoan = new LoanBO(loanProduct, member, loanState, overridenDetail, repaymentDayMeeting, loanSchedule, configuration, creationDetail);
+        groupMemberLoan.setParentAccount(parentLoan);
+        groupMemberLoan.markAsIndividualLoanAccount();
+        groupMemberLoan.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(groupMemberLoan.getAccountState(), groupMemberLoan.getAccountState(), createdBy, groupMemberLoan));
+        return groupMemberLoan;
+    }
+
+    private void markAsIndividualLoanAccount() {
+        this.accountType = new AccountTypeEntity(AccountTypes.INDIVIDUAL_LOAN_ACCOUNT.getValue());
     }
 
     /**
