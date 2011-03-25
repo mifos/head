@@ -814,11 +814,7 @@ public class CustomerServiceImpl implements CustomerService {
 
                 if (client.isGroupStatusLower(newStatus.getValue(), groupStatus.getValue())) {
 
-                    throw new CustomerException(ClientConstants.INVALID_CLIENT_STATUS_EXCEPTION, new Object[] {
-                            MessageLookup.getInstance().lookupLabel(ConfigurationConstants.GROUP,
-                                    client.getUserContext()),
-                            MessageLookup.getInstance().lookupLabel(ConfigurationConstants.CLIENT,
-                                    client.getUserContext()) });
+                    throw new CustomerException(ClientConstants.INVALID_CLIENT_STATUS_EXCEPTION);
                 }
             }
         }
