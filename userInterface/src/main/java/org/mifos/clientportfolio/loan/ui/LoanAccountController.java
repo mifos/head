@@ -317,6 +317,7 @@ public class LoanAccountController {
         return loanCreationResultDto;
     }
 
+    @SuppressWarnings("PMD")
     private List<GroupMemberAccountDto> createGroupMemberAccounts(LoanAccountFormBean formBean) {
         
         List<GroupMemberAccountDto> memberAccounts = new ArrayList<GroupMemberAccountDto>();
