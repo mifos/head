@@ -28,7 +28,6 @@ import org.mifos.application.servicefacade.LoanAccountServiceFacade;
 import org.mifos.clientportfolio.loan.ui.LoanAccountQuestionGroupFormBean;
 import org.mifos.clientportfolio.loan.ui.LoanAccountStatusFormBean;
 import org.mifos.clientportfolio.newloan.applicationservice.LoanApplicationStateDto;
-import org.mifos.dto.domain.AccountStatusDto;
 import org.mifos.dto.screen.LoanInformationDto;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +55,7 @@ public class LoanAccountStatusController {
 
         // TODO store and display current account status
         // what does this do? have to get a list of account status and then grab the flag message text (AFAIK, only cancel has them)
-        AccountStatusDto accountStatuses = this.loanAccountServiceFacade.retrieveAccountStatuses(loanInformation.getAccountId().longValue());
+//        AccountStatusDto accountStatuses = this.loanAccountServiceFacade.retrieveAccountStatuses(loanInformation.getAccountId().longValue());
 //        formBean.setCurrentAccountStatus();
         
         LoanApplicationStateDto loanApplicationState = loanAccountServiceFacade.retrieveLoanApplicationState();
