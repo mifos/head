@@ -27,7 +27,7 @@ explanation of the license and how it is applied.
 <head>
 <title><tiles:getAsString name="title" /></title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-
+<link rel="shortcut icon" href="http://mifos.org/favicon.ico"/>
 <tiles:importAttribute name="mifoscss" scope="request" />
 <link href='<%=request.getAttribute("mifoscss")%>' rel="stylesheet"
 	type="text/css">

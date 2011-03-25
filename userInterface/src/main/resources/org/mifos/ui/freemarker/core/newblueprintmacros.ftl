@@ -114,6 +114,7 @@
         <link href="pages/css/screen.css" rel="stylesheet" type="text/css" />
         <link href="pages/css/main.css" rel="stylesheet" type="text/css" />
         <link href="pages/css/app.css" rel="stylesheet" type="text/css" />
+        <link rel="shortcut icon" href="http://mifos.org/favicon.ico"/>
         <script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
     </head>
     <body>
