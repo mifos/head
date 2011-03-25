@@ -59,6 +59,7 @@ public class EditLoanAccountStatusTest extends AbstractXmlFlowExecutionTests {
     private static final int STATE_PENDING = 1;
     private static final int STATE_PARTIAL = 2;
     private static final int STATE_APPROVED = 3;
+    private static final int STATE_CANCELLED = 10;
     
     @Before
     protected void setUp() {
@@ -68,7 +69,7 @@ public class EditLoanAccountStatusTest extends AbstractXmlFlowExecutionTests {
         questionnaireServiceFacade = mock(QuestionnaireServiceFacade.class);
         loanAccountQuestionGroupFormBean = new LoanAccountQuestionGroupFormBean();
         loanAccountStatusFormBean = new LoanAccountStatusFormBean();
-        loanAccountStatusFormBean.setLoanApplicationState(new LoanApplicationStateDto(STATE_PENDING, STATE_PARTIAL, STATE_APPROVED));
+        loanAccountStatusFormBean.setLoanApplicationState(new LoanApplicationStateDto(STATE_PENDING, STATE_PARTIAL, STATE_APPROVED, STATE_CANCELLED));
     }
     
     @Test

@@ -29,11 +29,13 @@ public class LoanApplicationStateDto implements Serializable {
     private final Integer partialApplicationId;
     private final Integer configuredApplicationId;
     private final Integer approvedApplicationId;
-
-    public LoanApplicationStateDto(Integer partialApplicationId, Integer configuredApplicationId, Integer approvedApplicationId) {
+    private final Integer cancelledApplicationId;
+    
+    public LoanApplicationStateDto(Integer partialApplicationId, Integer configuredApplicationId, Integer approvedApplicationId, Integer cancelledApplicationId) {
         this.partialApplicationId = partialApplicationId;
         this.configuredApplicationId = configuredApplicationId;
         this.approvedApplicationId = approvedApplicationId;
+        this.cancelledApplicationId = cancelledApplicationId;
     }
 
     public Integer getPartialApplicationId() {
@@ -46,5 +48,9 @@ public class LoanApplicationStateDto implements Serializable {
 
     public Integer getApprovedApplicationId() {
         return approvedApplicationId;
+    }
+
+    public Integer getCancelledApplicationId() {
+        return cancelledApplicationId;
     }
 }

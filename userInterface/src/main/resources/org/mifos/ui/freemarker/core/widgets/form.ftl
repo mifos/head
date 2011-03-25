@@ -183,15 +183,22 @@ use "checkboxes" macro.
 Renders a group of radio buttons.
 
     path: spring bind path
-    options: an array of values. TODO add support for hashes.
+    options: an array of values or a map of value=>label
     separator  : HTML fragment that gets inserted between each radio button 
     attributes : extra HTML attributes to be added to each radio button
 --]
 [#macro radioButtons path options separator attributes=""]
     [@spring.bind path /]
-    [#list options as value]
-    [#assign id="${spring.status.expression}${value_index}"]
-    <input type="radio" id="${id}" name="${spring.status.expression}" value="${value?html}"[#if spring.stringStatusValue == value] checked="checked"[/#if] ${attributes}[@spring.closeTag/]
-    <label for="${id}">${value?html}</label>${separator}
-    [/#list]
+    [#if options?is_sequence]
+	    [#list options as value]
+	    [#assign id="${spring.status.expression}${value_index}"]
+	    <input type="radio" id="${id}" name="${spring.status.expression}" value="${value?html}"[#if spring.stringStatusValue == value] checked="checked"[/#if] ${attributes}[@spring.closeTag/]
+	    <label for="${id}">${value?html}</label>${separator}
+	    [/#list]
+    [#else]
+    	[#list options?keys as key]
+	    <input type="radio" id="${key}" name="${spring.status.expression}" value="${key}"[#if spring.stringStatusValue == key] checked="checked"[/#if] ${attributes}[@spring.closeTag/]
+	    <label for="${path}_${key}">${options[key]?html}</label>${separator}
+    	[/#list]
+    [/#if]
 [/#macro]

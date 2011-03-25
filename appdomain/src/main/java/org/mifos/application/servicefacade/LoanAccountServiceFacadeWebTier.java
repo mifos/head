@@ -1888,7 +1888,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             applicationState = AccountState.LOAN_PENDING_APPROVAL;
         }
         
-        return new LoanApplicationStateDto(AccountState.LOAN_PARTIAL_APPLICATION.getValue().intValue(), applicationState.getValue().intValue(), AccountState.LOAN_APPROVED.getValue().intValue());
+        return new LoanApplicationStateDto(AccountState.LOAN_PARTIAL_APPLICATION.getValue().intValue(), 
+                applicationState.getValue().intValue(), AccountState.LOAN_APPROVED.getValue().intValue(),
+                AccountState.LOAN_CANCELLED.getValue().intValue());
     }
 
     @Override
@@ -1902,6 +1904,15 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         return questionGroupDetails;
     }
 
+    @Override
+    public List<QuestionGroupDetail> retrieveLoanStatusUpdateQuestionGroups(Integer newLoanStatus) {
+        List<QuestionGroupDetail> questionGroupDetails = new ArrayList<QuestionGroupDetail>();
+        if (AccountState.LOAN_APPROVED.getValue() == newLoanStatus.shortValue()) {
+            questionGroupDetails = questionnaireServiceFacade.getQuestionGroups("Approve", "Loan");
+        }
+        return questionGroupDetails;
+    }
+    
     @Override
     public CashFlowDto retrieveCashFlowSettings(DateTime firstInstallment, DateTime lastInstallment, Integer productId, BigDecimal loanAmount) {
         LoanOfferingBO loanProduct = this.loanProductDao.findById(productId);

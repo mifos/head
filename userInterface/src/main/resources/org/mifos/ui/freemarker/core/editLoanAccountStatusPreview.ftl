@@ -28,20 +28,21 @@ global account number: ${loanAccountStatusFormBean.loanInformation.globalAccount
 account name: ${loanAccountStatusFormBean.loanInformation.prdOfferingName}<br/>
 step: change status (externalize!)<br/>
 
-<form action="${flowExecutionUrl}" method="post" class="two-columns">
-    <fieldset>
+preview
+
+<form action="${flowExecutionUrl}" method="post">
+	<input type="hidden" name="globalAccountNumber" value="${loanAccountStatusFormBean.loanInformation.globalAccountNum}"/>
+    <input type="submit" class="edit" value="edit - i18n" name="_eventId_edit" />
+</form>
+
+Edit...<br/>
+Checklist...<br/>
+New Status: ${loanAccountStatusFormBean.status}<br/>
+
+<form action="${flowExecutionUrl}" method="post">
     <div class="row">
-        [@form.label for="status" required=true]Status (i18n):[/@form.label]
-		[@form.radioButtons path="loanAccountStatusFormBean.status" options=loanAccountStatusFormBean.accountStatusOptions separator="<br/>" attributes="" /]
-    </div>
-    <div class="row">
-        [@form.label for="note" required=true]Note (i18n):[/@form.label]
-		[@spring.formTextarea path="loanAccountStatusFormBean.note" attributes="class='note'" /]
-    </div>
-    </fieldset>
-    <div class="row">
-		[@form.submitButton label="widget.form.buttonLabel.preview" webflowEvent="detailsEntered" /]
-		[@form.submitButton webflowEvent="cancel" /]
+        [@form.submitButton webflowEvent="save" /]
+        [@form.cancelButton webflowEvent="cancel"  /]
     </div>
 </form>
 

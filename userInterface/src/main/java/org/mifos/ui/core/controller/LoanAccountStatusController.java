@@ -20,12 +20,15 @@
 
 package org.mifos.ui.core.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.mifos.application.servicefacade.LoanAccountServiceFacade;
 import org.mifos.clientportfolio.loan.ui.LoanAccountQuestionGroupFormBean;
 import org.mifos.clientportfolio.loan.ui.LoanAccountStatusFormBean;
 import org.mifos.clientportfolio.newloan.applicationservice.LoanApplicationStateDto;
+import org.mifos.dto.domain.AccountStatusDto;
 import org.mifos.dto.screen.LoanInformationDto;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,20 +44,46 @@ public class LoanAccountStatusController {
         this.loanAccountServiceFacade = loanAccountServiceFacade;
     }
 
-    public void loadQuestionGroups(Integer productId, LoanAccountQuestionGroupFormBean loanAccountQuestionGroupFormBean) {
-        List<QuestionGroupDetail> questionGroups = loanAccountServiceFacade.retrieveApplicableQuestionGroups(productId);
+    public void loadQuestionGroups(Integer loanStatus, LoanAccountQuestionGroupFormBean loanAccountQuestionGroupFormBean) {
+        List<QuestionGroupDetail> questionGroups = loanAccountServiceFacade.retrieveLoanStatusUpdateQuestionGroups(loanStatus);
         loanAccountQuestionGroupFormBean.setQuestionGroups(questionGroups);
     }
 
     public void loadAccount(String globalAccountNum, LoanAccountStatusFormBean formBean) {
+
         LoanInformationDto loanInformation = loanAccountServiceFacade.retrieveLoanInformation(globalAccountNum);
         formBean.setLoanInformation(loanInformation);
+
+        // TODO store and display current account status
+        // what does this do? have to get a list of account status and then grab the flag message text (AFAIK, only cancel has them)
+        AccountStatusDto accountStatuses = this.loanAccountServiceFacade.retrieveAccountStatuses(loanInformation.getAccountId().longValue());
+//        formBean.setCurrentAccountStatus();
         
         LoanApplicationStateDto loanApplicationState = loanAccountServiceFacade.retrieveLoanApplicationState();
         formBean.setLoanApplicationState(loanApplicationState);
+        
+        Map<String, String> accountStatusOptions = getAccountStatusOptions();
+        formBean.setAccountStatusOptions(accountStatusOptions);
+        
+        Map<String, String> cancelOptions = getCancelOptions();
+        formBean.setCancelOptions(cancelOptions);
     }
     
     public void updateStatus(LoanAccountStatusFormBean formBean) {
         // TODO
+    }
+    
+    private Map<String, String> getCancelOptions() {
+        // TODO
+        return new HashMap<String, String>();
+    }
+    
+    private Map<String, String> getAccountStatusOptions() {
+        LoanApplicationStateDto loanApplicationState = loanAccountServiceFacade.retrieveLoanApplicationState();
+        Map<String, String> options = new HashMap<String, String>();
+        options.put(loanApplicationState.getApprovedApplicationId().toString(), "Approved - TODO i18n");
+        options.put(loanApplicationState.getPartialApplicationId().toString(), "Partial - TODO i18n");
+        options.put(loanApplicationState.getCancelledApplicationId().toString(), "Cancelled - TODO i18n");
+        return options;
     }
 }

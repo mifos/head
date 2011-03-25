@@ -1,6 +1,7 @@
 package org.mifos.clientportfolio.loan.ui;
 
 import java.io.Serializable;
+import java.util.Map;
 
 import javax.validation.constraints.NotNull;
 
@@ -22,8 +23,12 @@ public class LoanAccountStatusFormBean implements Serializable {
     
     private LoanInformationDto loanInformation;
     
+    private Map<String, String> accountStatusOptions;
+    
     // custom validation
     private Integer cancelReason;
+    
+    private Map<String, String> cancelOptions;
     
     public void setStatus(Integer status) {
         this.status = status;
@@ -50,7 +55,7 @@ public class LoanAccountStatusFormBean implements Serializable {
     }
     
     public boolean isLoanApproved() {
-        return this.status == this.loanApplicationState.getApprovedApplicationId();
+        return this.status.equals(this.loanApplicationState.getApprovedApplicationId());
     }
 
     public void setLoanApplicationState(LoanApplicationStateDto loanApplicationState) {
@@ -67,5 +72,21 @@ public class LoanAccountStatusFormBean implements Serializable {
     
     public LoanInformationDto getLoanInformation() {
         return loanInformation;
+    }
+
+    public void setAccountStatusOptions(Map<String, String> accountStatusOptions) {
+        this.accountStatusOptions = accountStatusOptions;
+    }
+
+    public Map<String, String> getAccountStatusOptions() {
+        return accountStatusOptions;
+    }
+
+    public void setCancelOptions(Map<String, String> cancelOptions) {
+        this.cancelOptions = cancelOptions;
+    }
+
+    public Map<String, String> getCancelOptions() {
+        return cancelOptions;
     }
 }

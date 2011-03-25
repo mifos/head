@@ -164,6 +164,9 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
     List<QuestionGroupDetail> retrieveApplicableQuestionGroups(Integer productId);
 
     @PreAuthorize("isFullyAuthenticated()")
+    List<QuestionGroupDetail> retrieveLoanStatusUpdateQuestionGroups(Integer newLoanStatus);
+
+    @PreAuthorize("isFullyAuthenticated()")
     CashFlowDto retrieveCashFlowSettings(DateTime firstInstallment, DateTime lastInstallment, Integer productId, BigDecimal loanAmount);
 
     @PreAuthorize("isFullyAuthenticated()")
