@@ -21,18 +21,7 @@
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
 <!--  Main Content Begins-->
-<style type="text/css">
-	select { 
-		font-size: 1.0em;
-		margin-bottom: 15px;
-	}
-	input {
-		width: auto; 
-		min-width: 80px;
-		margin: 4px;
-	}
-</style>
-<div class=" content">
+<div class="customized-text content">
 	<span id="page.id" title="customizeTextView"></span>
 	[@mifos.flowCrumbs breadcrumbs/]
 	        

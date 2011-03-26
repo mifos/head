@@ -256,3 +256,15 @@ form.two-columns input.submit
 {
     margin-left: 1em;
 }
+
+.customized-text select 
+{ 
+	font-size: 1.0em;
+	margin-bottom: 15px;
+}
+
+.customized-text input {
+	width: auto; 
+	min-width: 80px;
+	margin: 4px;
+}

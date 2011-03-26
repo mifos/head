@@ -255,9 +255,61 @@
     </div>
     
     <p><span class="standout">[@spring.message "createLoanAccount.enterAccountInfo.defaultfees.header" /]</span></p>
-    
+<div class="default-fees">
+<style type="text/css">
+.default-fees .name
+{
+    width: 25em;
+    margin-right: 0.5em;
+    text-align: right;
+    float: left;
+}
+.default-fees .value
+{
+    float: left;
+    width: 15%;
+}	
+
+.default-fees .details 
+{
+    float: left;
+   	width: 25%;
+}
+
+.default-fees .removeCheckbox 
+{
+    float: left;
+   	width: 15%;
+}
+</style>
+
+    	[#assign index = 0]
+    	[#list loanProductReferenceData.defaultFees as defaultFee]
+	    	[#assign index = index + 1]
+		    <div class="row">
+		        <div class="name">${defaultFee.name}:</div>
+		        [#if defaultFee.rateBasedFee]
+		        <div class="value">${defaultFee.rate}</div>
+		        [#else]
+		        <div class="value">${defaultFee.amount}</div>
+		        [/#if]
+		        [#if defaultFee.feeFrequencyType == "Periodic"]
+		        <div class="details">[@spring.message "createLoanAccount.periodicity"/] ${defaultFee.feeFrequencyType}		        
+		        </div>
+		        [#else]
+		        <div class="details">[@spring.message "createLoanAccount.periodicity"/] ${defaultFee.feeFrequencyType}
+		        	[#if defaultFee.rateBasedFee]
+		        	<br/>Formula: % ${defaultFee.feeFormula.name}
+		        	[/#if]
+		        </div>
+		        [/#if]
+		        <div class="removeCheckbox">Check to remove</div>
+		     </div>	    	
+	    [/#list]
+</div>  
+<div class="clear"/>  
     <br />
-    <p><span class="standout">[@spring.message "createLoanAccount.enterAccountInfo.additionalfees.header" /]</span></p>
+    <p><div class="standout">[@spring.message "createLoanAccount.enterAccountInfo.additionalfees.header" /]</div></p>
     
 
 <!-- additional fees -->
