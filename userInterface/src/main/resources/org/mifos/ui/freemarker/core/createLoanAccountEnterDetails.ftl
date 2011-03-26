@@ -294,12 +294,17 @@
 		        <div class="value">${defaultFee.amount}</div>
 		        [/#if]
 		        [#if defaultFee.feeFrequencyType == "Periodic"]
-		        <div class="details">[@spring.message "createLoanAccount.periodicity"/] ${defaultFee.feeFrequencyType}		        
+		        <div class="details">[@spring.message "createLoanAccount.periodicity"/] ${defaultFee.feeFrequency.recurAfterPeriod} 
+		        	[#if defaultFee.feeFrequency.weekly]
+		        		[@spring.message "createLoanAccount.weeks"/]
+		       		[#else]
+		        		[@spring.message "createLoanAccount.months"/]
+		       		[/#if]
 		        </div>
 		        [#else]
 		        <div class="details">[@spring.message "createLoanAccount.periodicity"/] ${defaultFee.feeFrequencyType}
 		        	[#if defaultFee.rateBasedFee]
-		        	<br/>Formula: % ${defaultFee.feeFormula.name}
+		        	<br/>[@spring.message "createLoanAccount.formula"/] ${defaultFee.feeFormula.name}
 		        	[/#if]
 		        </div>
 		        [/#if]
