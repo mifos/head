@@ -28,9 +28,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 public interface CustomizedTextServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_LABELS')")
-	void updateApplicationLabels(Map<String, String> messageFilterMap);
-
-    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DEFINE_LABELS')")
 	Map<String, String> retrieveCustomizedText();
     
 	String replaceSubstitutions(String message);

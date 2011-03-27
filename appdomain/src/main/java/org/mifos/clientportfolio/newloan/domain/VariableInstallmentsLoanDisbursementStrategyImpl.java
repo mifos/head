@@ -21,12 +21,19 @@
 package org.mifos.clientportfolio.newloan.domain;
 
 import org.joda.time.LocalDate;
+import org.mifos.schedule.ScheduledEvent;
 
 public class VariableInstallmentsLoanDisbursementStrategyImpl implements LoanDisbursementStrategy {
 
+    private final ScheduledEvent scheduledEvent;
+
+    public VariableInstallmentsLoanDisbursementStrategyImpl(ScheduledEvent scheduledEvent) {
+        this.scheduledEvent = scheduledEvent;
+    }
+
     @Override
     public LocalDate findClosestMatchingDateFromAndInclusiveOf(LocalDate fromAndInclusiveOf) {
-        return fromAndInclusiveOf;
+        return new LocalDate(scheduledEvent.nearestMatchingDateBeginningAt(fromAndInclusiveOf.minusDays(1).toDateMidnight().toDateTime()));
     }
 
     @Override

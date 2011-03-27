@@ -20,7 +20,6 @@
 --]
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
-[#assign savings][@mifostag.mifoslabel name="Savings" /][/#assign]
 <!--  Main Content Begins-->
 <span id="page.id" title="SavingsProductDetails"></span>
 
@@ -31,7 +30,7 @@
             [@spring.message "admin" /]</a>
             &nbsp;/
             <a href="viewSavingsProducts.ftl">
-               [@spring.messageArgs "ftlDefinedLabels.manageSavngsProducts.editsavingsproduct.viewSavingsproducts" , [savings]  /]
+               [@spring.message "ftlDefinedLabels.manageSavngsProducts.editsavingsproduct.viewSavingsproducts"  /]
             </a>&nbsp;/
             <span class="fontBold">${savingsProductDetails.productDetails.name}</span>
         </div>
@@ -41,7 +40,7 @@
                 <span class="orangeheading">${savingsProductDetails.productDetails.name}</span>
                 <div style="position:relative;top:-17px; text-align:right;">
                     <a id="SavingsProductDetails.link.editSavingsProduct" href="editSavingsProduct.ftl?productId=${savingsProductDetails.productDetails.id}">
-                        [@spring.messageArgs "ftlDefinedLabels.manageSavngsProducts.editsavingsproduct.editSavingsproductinformation" , [savings]  /]
+                        [@spring.message "ftlDefinedLabels.manageSavngsProducts.editsavingsproduct.editSavingsproductinformation" /]
                     </a>
                 </div>
                 [#switch savingsProductDetails.productDetails.status]
@@ -49,16 +48,14 @@
                         <span><img
                                 src="pages/framework/images/status_activegreen.gif"/></span>&nbsp;
                                 <span>
-                                    [#assign active][@mifostag.mifoslabel name="ProductState-Active" /][/#assign]
-                                    [@spring.messageArgs "ftlDefinedLabels.active" , [active] /]
+                                    [@spring.message "ftlDefinedLabels.active" /]
                                 </span>
                         [#break]
                     [#case 5]
                         <span><img
                                 src="pages/framework/images/status_closedblack.gif"/></span>&nbsp;
                                 <span>
-                                    [#assign inactive][@mifostag.mifoslabel name="ProductState-Inactive" /][/#assign]
-                                    [@spring.messageArgs "ftlDefinedLabels.inactive" , [inactive] /]
+                                    [@spring.message "ftlDefinedLabels.inactive" /]
                                 </span>
                         [#break]
                 [/#switch]
@@ -66,7 +63,7 @@
             <div style="height:5px;" class="clear">&nbsp;</div>
             <p class="span-24 ">
             <div class="fontBold black-subheading">
-                [@spring.messageArgs "ftlDefinedLabels.manageSavngsProducts.editsavingsproduct.savingsproductdetails" , [savings]  /]
+                [@spring.message "ftlDefinedLabels.manageSavngsProducts.editsavingsproduct.savingsproductdetails"  /]
             </div>
             <div>
                 <span>[@spring.message "manageSavngsProducts.editsavingsproduct.productinstancename" /]</span>

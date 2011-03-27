@@ -89,30 +89,109 @@
 <p><span class="standout">[@spring.message "createLoanAccount.enterAccountInfo.accountDetail.header" /]</span></p>
 <form action="${flowExecutionUrl}" method="post" class="two-columns">
     <fieldset>
+    [#if loanProductReferenceData.glimApplicable]
+    <script type="text/javascript">
+    	function calculateTotalLoanAmount() {
+    		$(document).ready(function () {
+				var total = 0;
+				$('.amountfield').each(function(index) {
+					var fieldamount = parseFloat($(this).val());
+					if (isNaN(fieldamount)) {
+						fieldamount = 0;
+					}
+					$('.clientbox').each(function(subindex) {
+						if (this.checked && index==subindex) {
+							total = total + fieldamount;
+						};
+					});	
+  				});
+				
+				$('#amount').val(total);
+    		});
+    	}
+    
+    	$(document).ready(function () {
+			$('#selectAll').change(function() {
+				 if (this.checked)
+				 {
+				    $('.clientbox').attr("checked",true);
+				 } else {
+				 	$('.clientbox').attr("checked",false);
+				 }
+				 calculateTotalLoanAmount();
+			});
+			
+			$('.clientbox').click(function() {
+				calculateTotalLoanAmount();
+			});
+			
+			$('.amountfield').change(function() {
+				calculateTotalLoanAmount();
+			});
+    	});
+    </script>
+    <table border="1">
+    	<tr>
+    		<td><input type="checkbox" name="selectAll" id="selectAll" /></td>
+    		<td>[@spring.message "selectProduct.accountOwnerName" /]</td>
+    		<td>&nbsp;</td>
+    		<td><span class="mandatory">*</span>[@spring.message "createLoanAccount.amount"/]</td>
+    		<td>&nbsp;</td>
+    		<td>[#if loanAccountFormBean.purposeOfLoanMandatory]<span class="mandatory">*</span>[/#if][@spring.message "createLoanAccount.purposeOfLoan" /]</td>
+    	</tr>
+    	[#assign index = 0]
+    	[#list loanProductReferenceData.clientDetails as clientdata]
+    	<tr>
+    		<td>
+    			[@spring.formCheckbox "loanAccountFormBean.clientSelectForGroup[${index}]" "class='clientbox'"/]
+    		</td>
+    		<td>
+    			<div><span class="standout">Client:</span>${clientdata.clientName}</div>
+    			<div><span class="standout">Client Id</span>:${clientdata.clientId}</div>
+    			[@spring.formHiddenInput "loanAccountFormBean.clientGlobalId[${index}]" /]
+    		</td>
+    		<td>&nbsp;</td>
+    		<td>[@form.input path="loanAccountFormBean.clientAmount[${index}]"  id="clientAmount[${index}]" attributes="class='amountfield'"/]</td>
+    		<td>&nbsp;</td>
+    		<td>[@form.singleSelectWithPrompt path="loanAccountFormBean.clientLoanPurposeId[${index}]" options=loanProductReferenceData.purposeOfLoanOptions selectPrompt="selectPrompt" attributes="class=trigger"/]</td>
+    	</tr>
+    	[#assign index = index + 1]
+    	[/#list]
+    	<tr>
+    		<td>&nbsp;</td>
+    		<td>&nbsp;</td>
+    		<td>Total amount:</td>
+    		<td>[@form.input path="loanAccountFormBean.amount"  id="amount" /]</td>
+    		<td><span>([@spring.message "createLoanAccount.allowedAmount"/] ${loanProductReferenceData.minLoanAmount?string.number} - ${loanProductReferenceData.maxLoanAmount?string.number})</span></td>
+    		<td>&nbsp;</td>
+    	</tr>
+    </table>
+    [#else]
     <div class="row">
-        [@form.label "amount" true /][@spring.message "createLoanAccount.amount"/]
+        [@form.label "amount" true ][@spring.message "createLoanAccount.amount"/][/@form.label]
         [@form.input path="loanAccountFormBean.amount"  id="amount" /]
         <span>([@spring.message "createLoanAccount.allowedAmount"/] ${loanProductReferenceData.minLoanAmount?string.number} - ${loanProductReferenceData.maxLoanAmount?string.number})</span>
     </div>
+    [/#if]
     <div class="row">
-        [@form.label "interestRate" true /][@spring.message "createLoanAccount.interestRate"/]
+        [@form.label "interestRate" true ][@spring.message "createLoanAccount.interestRate"/][/@form.label]
         [@form.input path="loanAccountFormBean.interestRate" id="interestRate" /]
         <span>([@spring.message "createLoanAccount.allowedInterestRate"/] ${loanProductReferenceData.minInterestRate?string.number} - ${loanProductReferenceData.maxInterestRate?string.number} %)</span>
     </div>
     <div class="row">
-        [@form.label "numberOfInstallments" true /][@spring.message "createLoanAccount.numberOfInstallments"/]
+        [@form.label "numberOfInstallments" true ][@spring.message "createLoanAccount.numberOfInstallments"/][/@form.label]
         [@form.input path="loanAccountFormBean.numberOfInstallments" id="numberOfInstallments" /]
         <span>([@spring.message "createLoanAccount.allowedNumberOfInstallments"/] ${loanProductReferenceData.minNumberOfInstallments?string.number} - ${loanProductReferenceData.maxNumberOfInstallments?string.number})</span>
     </div>
     <div class="row">
-        [@form.label "disbursaldatedd" true /][@spring.message "createLoanAccount.disbursalDate"/]
+        [@form.label "disbursaldatedd" true ][@spring.message "createLoanAccount.disbursalDate"/][/@form.label]
         [@form.input path="loanAccountFormBean.disbursalDateDay" id="disbursaldatedd" attributes="size=1 maxlength=2" /]<span>[@spring.message "datefield.dd"/]</span>
         [@form.input path="loanAccountFormBean.disbursalDateMonth" id="disbursaldatemm" attributes="size=1 maxlength=2" /]<span>[@spring.message "datefield.mm"/]</span>
         [@form.input path="loanAccountFormBean.disbursalDateYear" id="disbursaldateyyyy" attributes="size=3 maxlength=4" /]<span>[@spring.message "datefield.yyyy"/]</span>
     </div>
     
     [#if loanProductReferenceData.repaymentIndependentOfMeetingEnabled]
-    	[@form.label "weekly.repaymentFrequency" true /][@spring.message "createLoanAccount.repaymentDay"/]
+    	[@form.label "weekly.repaymentFrequency" true ][@spring.message "createLoanAccount.repaymentDay"/][/@form.label]
     	
     		[#if loanProductReferenceData.loanOfferingMeetingDetail.meetingDetailsDto.recurrenceTypeId == 1]
     		<div class="row">
@@ -142,7 +221,7 @@
     [/#if]
     
     <div class="row">
-        [@form.label "graceduration" true /][@spring.message "createLoanAccount.graceDuration"/]
+        [@form.label "graceduration" true ][@spring.message "createLoanAccount.graceDuration"/][/@form.label]
         [@form.input path="loanAccountFormBean.graceDuration" id="graceduration" attributes="disabled"/]
         <span>[@spring.message "createLoanAccount.allowedGraceInInstallments"/]</span>
     </div>
@@ -151,10 +230,13 @@
         [@form.singleSelectWithPrompt path="loanAccountFormBean.fundId" options=loanProductReferenceData.fundOptions selectPrompt="selectPrompt" /]
     </div>
 
+	[#if loanProductReferenceData.glimApplicable]
+	[#else]
     <div class="row">
         [@form.label "loanPurposeId" loanAccountFormBean.purposeOfLoanMandatory][@spring.message "createLoanAccount.purposeOfLoan" /][/@form.label]
         [@form.singleSelectWithPrompt path="loanAccountFormBean.loanPurposeId" options=loanProductReferenceData.purposeOfLoanOptions selectPrompt="selectPrompt" /]
     </div>
+    [/#if]
     
     <div class="row">
         [@form.label "collateralTypeId" false][@spring.message "createLoanAccount.collateralType" /][/@form.label]
@@ -168,7 +250,7 @@
     </div>
     
     <div class="row">
-        [@form.label "externalId" false /][@spring.message "createLoanAccount.externalId"/]
+        [@form.label "externalId" false ][@spring.message "createLoanAccount.externalId"/][/@form.label]
         [@form.input path="loanAccountFormBean.externalId" id="externalId" /]
     </div>
     

@@ -32,8 +32,7 @@
 
         <div class="lineheight1p2">
             <span class="fontBold">
-                [#assign loan][@mifostag.mifoslabel name="Loan" /][/#assign]
-                [@spring.messageArgs "ftlDefinedLabels.manageProducts.viewProductCategories.loans" , [loan]  /]
+                [@spring.message "ftlDefinedLabels.manageProducts.viewProductCategories.loans"  /]
             </span>
             <ul>
                 [#list dto.productCategoryTypeList as typeList]
@@ -49,8 +48,7 @@
         </div>
         <div class="lineheight1p2">
             <span class="fontBold">
-                [#assign savings][@mifostag.mifoslabel name="Savings" /][/#assign]
-                [@spring.messageArgs "ftlDefinedLabels.manageProducts.viewProductCategories.savings" , [savings]  /]
+                [@spring.message "ftlDefinedLabels.manageProducts.viewProductCategories.savings" /]
             </span>
             <ul>
                 [#list dto.productCategoryTypeList as typeList]

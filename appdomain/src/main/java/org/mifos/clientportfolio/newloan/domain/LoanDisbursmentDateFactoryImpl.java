@@ -30,10 +30,9 @@ public class LoanDisbursmentDateFactoryImpl implements LoanDisbursementDateFacto
             boolean variableInstallmentsAllowed) {
 
         // FIXME - keithw - previous strategy was only based on customer meeting schedule for loan creation
-        LoanDisbursementStrategy loanDisbursementStrategy = new ScheduledEventLoanDisbursementStrategyImpl(
-                customerMeetingSchedule);
-        if (variableInstallmentsAllowed) {
-            loanDisbursementStrategy = new VariableInstallmentsLoanDisbursementStrategyImpl();
+        LoanDisbursementStrategy loanDisbursementStrategy = new ScheduledEventLoanDisbursementStrategyImpl(customerMeetingSchedule);
+        if (variableInstallmentsAllowed || isRepaymentIndependentOfMeetingEnabled) {
+            loanDisbursementStrategy = new VariableInstallmentsLoanDisbursementStrategyImpl(customerMeetingSchedule);
         }
 
         return loanDisbursementStrategy;

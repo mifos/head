@@ -53,14 +53,13 @@
     }
 </script>
 [@mifos.topNavigationNoSecurity currentTab="Admin" /]
-[#assign savings][@mifostag.mifoslabel name="Savings" /][/#assign]
   <!--  Main Content Begins-->
   <span id="page.id" title="Edit_SavingsProduct"></span>
 <div class="content definePageMargin">
     <div class="borders margin20lefttop width90prc">
         <div class="borderbtm width100prc height25px">
             <p class="span-17 timelineboldorange arrowIMG  padding20left" style="width:50%">
-                 [@spring.messageArgs "ftlDefinedLabels.manageProducts.defineSavingsProducts.savingsproductinformation" , [savings]  /]
+                 [@spring.message "ftlDefinedLabels.manageProducts.defineSavingsProducts.savingsproductinformation"  /]
             </p>
             <p class="span-3 timelineboldorange arrowIMG1 last padding20left10right width130px" style="float:right">[@spring.message "reviewAndSubmit" /]</p>
         </div>
@@ -73,16 +72,16 @@
             [@spring.bind "savingsProduct.generalDetails.name" /]
               <span class="fontBold margin5bottom">${spring.status.value?if_exists}</span>&nbsp;-
               <span class="orangeheading">
-                [@spring.messageArgs "ftlDefinedLabels.manageSavngsProducts.editsavingsproduct.editSavingsproductinformation" , [savings]  /]
+                [@spring.message "ftlDefinedLabels.manageSavngsProducts.editsavingsproduct.editSavingsproductinformation"  /]
               </span>
           </p>
           <div>
-            [@spring.messageArgs "ftlDefinedLabels.manageProducts.editsavingsproduct.editthefieldsbelow" , [savings]  /]
+            [@spring.message "ftlDefinedLabels.manageProducts.editsavingsproduct.editthefieldsbelow"  /]
           </div>
           <div><span class="red">* </span>[@spring.message "fieldsmarkedwithanasteriskarerequired." /]</div>
           [@mifos.showAllErrors "savingsProduct.*"/]
           <p class="fontBold margin10topbottom">
-                [@spring.messageArgs "ftlDefinedLabels.manageProducts.defineSavingsProducts.savingsproductdetails" , [savings]  /]
+                [@spring.message "ftlDefinedLabels.manageProducts.defineSavingsProducts.savingsproductdetails"  /]
           </p>
           <div class=" prepend-2  span-21 last">
               <div class="span-20 ">

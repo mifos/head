@@ -68,13 +68,6 @@ public class CashFlowSummaryFormBean implements Serializable {
     private List<LoanCreationInstallmentDto> variableInstallments = new ArrayList<LoanCreationInstallmentDto>();
     
     public List<Date> getInstallments() {
-        if (installments.isEmpty()) {
-            installments.add(new Date());
-            installments.add(new Date());
-            installments.add(new Date());
-            installments.add(new Date());
-            installments.add(new Date());
-        }
         return installments;
     }
 

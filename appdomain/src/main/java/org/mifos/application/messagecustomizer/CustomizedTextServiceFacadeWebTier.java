@@ -38,15 +38,18 @@ import org.springframework.context.MessageSource;
  *
  */
 public class CustomizedTextServiceFacadeWebTier implements CustomizedTextServiceFacade {
-
-    private final HibernateTransactionHelper transactionHelper;
-    
+   
 	@Autowired
 	private CustomizedTextDao customizedTextDao;
 	
 	@Autowired
 	private MessageSource messageSource;
-		
+
+	// for testing purposes, allow these legacy objects to be injected
+    private HibernateTransactionHelper transactionHelper;
+	private MenuRepository menuRepository;
+	private MifosConfiguration mifosConfiguration;
+	
     @Autowired
 	public CustomizedTextServiceFacadeWebTier(
 			CustomizedTextDao customizedTextDao,
@@ -57,18 +60,37 @@ public class CustomizedTextServiceFacadeWebTier implements CustomizedTextService
         transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
 		
 	}
+    
+    protected void setTransactionHelper(HibernateTransactionHelper hibernateTransactionHelper) {
+    	this.transactionHelper = hibernateTransactionHelper;
+    }
+
+    protected MenuRepository getMenuRepository() {
+    	if (menuRepository == null) {
+    		menuRepository = MenuRepository.getInstance();
+    	}
+		return menuRepository;
+	}
+
+	protected void setMenuRepository(MenuRepository menuRepository) {
+		this.menuRepository = menuRepository;
+	}
+
+	protected MifosConfiguration getMifosConfiguration() {
+    	if (mifosConfiguration == null) {
+    		mifosConfiguration = MifosConfiguration.getInstance();
+    	}
+		return mifosConfiguration;
+	}
+
+	protected void setMifosConfiguration(MifosConfiguration mifosConfiguration) {
+		this.mifosConfiguration = mifosConfiguration;
+	}
 
 	private void updateLegacyCaches() {
 		// legacy menu code caches strings, so force the menus to rebuild after a change
-		MenuRepository.getInstance().removeMenuForAllLocale();   
-
-		MifosConfiguration.getInstance().initializeLabelCache();
-	}
-	
-	@Override
-	public void updateApplicationLabels(Map<String,String> messageMap) {
-		customizedTextDao.setCustomizedText(messageMap);
-		updateLegacyCaches();
+		getMenuRepository().removeMenuForAllLocale();   
+		getMifosConfiguration().initializeLabelCache();
 	}
 	
 	@Override

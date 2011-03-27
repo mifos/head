@@ -43,12 +43,11 @@
                     </p>
 
                     <div class="fontBold">
-                        [#assign loan][@mifostag.mifoslabel name="Loan" /][/#assign]
-                        [@spring.messageArgs "ftlDefinedLabels.manageProducts.editLatenessDormancy.loan" , [loan]  /]
+                        [@spring.message "ftlDefinedLabels.manageProducts.editLatenessDormancy.loan"  /]
                     </div>
                     <div class="span-23 width95prc">
                         <span class="span-11 width50prc">
-                            [@spring.messageArgs "ftlDefinedLabels.manageProducts.editLatenessDormancy.specifyTheNumberOfDaysOfNonPayment" , [loan]  /]
+                            [@spring.message "ftlDefinedLabels.manageProducts.editLatenessDormancy.specifyTheNumberOfDaysOfNonPayment"  /]
                         </span>
                     <span class="span-8">
                         [@spring.bind "formBean.latenessDays" /]
@@ -63,12 +62,11 @@
                     <p class="font15 orangeheading margin10topbottom">[@spring.message "manageProducts.editLatenessDormancy.setDormancyDefinition" /] </p>
 
                     <div class="fontBold">
-                        [#assign savings][@mifostag.mifoslabel name="Savings" /][/#assign]
-                        [@spring.messageArgs "ftlDefinedLabels.manageProducts.editLatenessDormancy.savings" , [savings]  /]
+                        [@spring.message "ftlDefinedLabels.manageProducts.editLatenessDormancy.savings"  /]
                     </div>
                     <div class="span-23 width95prc">
                         <span class="span-11 width50prc">
-                            [@spring.messageArgs "ftlDefinedLabels.manageProducts.editLatenessDormancy.specifyTheNumberOfDaysToDefineDormancy" , [savings]  /]
+                            [@spring.message "ftlDefinedLabels.manageProducts.editLatenessDormancy.specifyTheNumberOfDaysToDefineDormancy"  /]
                         </span>
                 <span class="span-8">
                     [@spring.bind "formBean.dormancyDays" /]

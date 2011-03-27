@@ -64,7 +64,7 @@ public class ScheduledEventLoanDisbursementStrategyImplTest {
         LocalDate result = loanDisbursementStrategy.findClosestMatchingDateFromAndInclusiveOf(fromAndInclusiveOf);
         
         // verification
-        verify(scheduledEvent).nextEventDateAfter(expectedDateTimeToStartSearchFrom);
+        verify(scheduledEvent).nearestMatchingDateBeginningAt(expectedDateTimeToStartSearchFrom);
         assertThat(result, is(nextMatchingDate.toLocalDate()));
     }
     

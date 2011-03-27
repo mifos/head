@@ -45,14 +45,12 @@
               <span class="fontBold">[@spring.message "manageProducts.defineNewCategory.productType"/]</span><span>:&nbsp;[#switch formBean.productTypeId]
                     [#case "1"]
                         <span>
-                            [#assign loan][@mifostag.mifoslabel name="Loan" /][/#assign]
-                            [@spring.messageArgs "ftlDefinedLabels.manageProducts.editCategory.loan" , [loan]  /]
+                            [@spring.message "ftlDefinedLabels.manageProducts.editCategory.loan"  /]
                         </span>
                     [#break]
                     [#case "2"]
                         <span></span>&nbsp;<span>
-                             [#assign savings][@mifostag.mifoslabel name="Savings" /][/#assign]
-                             [@spring.messageArgs "ftlDefinedLabels.manageProducts.editCategory.savings" , [savings]  /]
+                             [@spring.message "ftlDefinedLabels.manageProducts.editCategory.savings"  /]
                         </span>
                     [#break]
                 [/#switch] [@spring.bind "formBean.productTypeId"/]<input type="hidden" name="${spring.status.expression}" value="${spring.status.value?default("")}"/></span><br />

@@ -19,13 +19,13 @@
  */
 package org.mifos.platform.cashflow.ui.model;
 
+import org.joda.time.DateTime;
+import org.mifos.platform.cashflow.service.MonthlyCashFlowDetail;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Locale;
-
-import org.joda.time.DateTime;
-import org.mifos.platform.cashflow.service.MonthlyCashFlowDetail;
 
 public class MonthlyCashFlowForm implements Serializable {
     private static final long serialVersionUID = 6876855921528555322L;
@@ -113,4 +113,15 @@ public class MonthlyCashFlowForm implements Serializable {
         return locale;
     }
 
+    boolean hasNoExpense() {
+        return getExpense() == null;
+    }
+
+    boolean hasNoRevenue() {
+        return getRevenue() == null;
+    }
+
+    boolean cumulativeCashFlowIsLessThanOrEqualToZero() {
+        return getCumulativeCashFlow().compareTo(BigDecimal.ZERO) <= 0;
+    }
 }

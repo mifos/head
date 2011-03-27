@@ -39,6 +39,14 @@ public class LoanProductOverridenDetail {
         this.graceDuration = graceDuration;
     }
 
+    public LoanProductOverridenDetail(Money loanAmount, LoanProductOverridenDetail overridenDetail) {
+        this.loanAmount = loanAmount;
+        this.disbursementDate = overridenDetail.getDisbursementDate();
+        this.interestRate = overridenDetail.getInterestRate();
+        this.numberOfInstallments = overridenDetail.getNumberOfInstallments();
+        this.graceDuration = overridenDetail.getGraceDuration();
+    }
+
     public Money getLoanAmount() {
         return loanAmount;
     }

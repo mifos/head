@@ -20,15 +20,16 @@
 
 package org.mifos.platform.cashflow.ui.model;
 
-import org.mifos.platform.cashflow.CashFlowConstants;
-import org.mifos.platform.cashflow.service.CashFlowDetail;
-import org.mifos.platform.cashflow.service.MonthlyCashFlowDetail;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import org.mifos.platform.cashflow.CashFlowConstants;
+import org.mifos.platform.cashflow.service.CashFlowDetail;
+import org.mifos.platform.cashflow.service.MonthlyCashFlowDetail;
+import org.springframework.binding.validation.ValidationContext;
 
 public class CashFlowForm implements Serializable {
     private static final long serialVersionUID = -3806820293757764245L;
@@ -62,20 +63,30 @@ public class CashFlowForm implements Serializable {
     }
 
     public BigDecimal getTotalCapital() {
-        return cashFlowDetail.getTotalCapital();
+        BigDecimal totalCapital = BigDecimal.ZERO;
+        if (cashFlowDetail != null) {
+            totalCapital = cashFlowDetail.getTotalCapital();
+        }
+        return totalCapital;
     }
 
     public BigDecimal getTotalLiability() {
-        return cashFlowDetail.getTotalLiability();
+        BigDecimal totalLiability = BigDecimal.ZERO;
+        if (cashFlowDetail != null) {
+            totalLiability = cashFlowDetail.getTotalLiability();
+        }
+        return totalLiability;
     }
 
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public List<MonthlyCashFlowForm> getMonthlyCashFlows() {
         List<MonthlyCashFlowForm> monthlyCashFlows = new ArrayList<MonthlyCashFlowForm>();
-        for (MonthlyCashFlowDetail monthlyCashFlowDetail : cashFlowDetail.getMonthlyCashFlowDetails()) {
-            MonthlyCashFlowForm monthlyCashFlowForm = new MonthlyCashFlowForm(monthlyCashFlowDetail);
-            monthlyCashFlowForm.setLocale(locale);
-            monthlyCashFlows.add(monthlyCashFlowForm);
+        if (cashFlowDetail != null) {
+            for (MonthlyCashFlowDetail monthlyCashFlowDetail : cashFlowDetail.getMonthlyCashFlowDetails()) {
+                MonthlyCashFlowForm monthlyCashFlowForm = new MonthlyCashFlowForm(monthlyCashFlowDetail);
+                monthlyCashFlowForm.setLocale(locale);
+                monthlyCashFlows.add(monthlyCashFlowForm);
+            }
         }
         return monthlyCashFlows;
     }
@@ -95,6 +106,16 @@ public class CashFlowForm implements Serializable {
     public boolean shouldForValidateIndebtednessRate() {
         return captureCapitalLiabilityInfo && indebtednessRatio != null && indebtednessRatio > 0 &&
                 loanAmount != null && cashFlowDetail != null && cashFlowDetail.shouldForValidateIndebtednessRate();
+    }
+    
+    /*
+     * from newer createLoanAccount.xml flow and not legacy captureCashFlow.xml flow 
+     */
+    public void validateCaptureCashFlowDetails(ValidationContext context) {
+        if (shouldForValidateIndebtednessRate()) {
+            CashFlowValidator validator = new CashFlowValidator();
+            validator.validateCaptureCashFlow(this, context);
+        }
     }
 
     public BigDecimal getTotalRevenues() {

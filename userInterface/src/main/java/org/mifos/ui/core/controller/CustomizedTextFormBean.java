@@ -22,6 +22,8 @@ package org.mifos.ui.core.controller;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.Size;
+
 import org.hibernate.validator.constraints.NotEmpty;
 import org.mifos.platform.validation.MifosBeanValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,9 +37,11 @@ import org.springframework.binding.validation.ValidationContext;
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID"}, justification="should disable at filter level and also for pmd - not important for us")
 public class CustomizedTextFormBean implements Serializable {
 
+    @Size(max = 50)
     @NotEmpty
     private String originalText;
 
+    @Size(max = 50)
     @NotEmpty
     private String customText;
 

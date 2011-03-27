@@ -30,8 +30,7 @@
                 <p class="margin5top10bottom">[@spring.message "manageProduct.viewProductMix.clickonaproductinstancebelowtoviewmixdetailsandmakechangesor" /] <a href="defineProductMix.ftl" >[@spring.message "admin.defineproductsmix"/] </a></p>
                 <div>
                         <span class="fontBold">
-                        [#assign loan][@mifostag.mifoslabel name="Loan" /][/#assign]
-                        [@spring.messageArgs "ftlDefinedLabels.manageProduct.viewProductMix.loan" , [loan]  /]
+                        [@spring.message "ftlDefinedLabels.manageProduct.viewProductMix.loan" /]
                         </span>
                         <ul>
                         [#list mixList.mix as text]
@@ -45,8 +44,7 @@
                     </div>
                     <div>
                     <span class="fontBold">
-                    [#assign savings][@mifostag.mifoslabel name="Savings" /][/#assign]
-                    [@spring.messageArgs "ftlDefinedLabels.manageProduct.viewProductMix.savings" , [savings]  /]
+                    [@spring.message "ftlDefinedLabels.manageProduct.viewProductMix.savings"  /]
                 </span>
                 </form>
             </div>

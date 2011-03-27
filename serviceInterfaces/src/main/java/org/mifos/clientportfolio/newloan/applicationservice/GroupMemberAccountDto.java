@@ -18,18 +18,31 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.messagecustomizer;
+package org.mifos.clientportfolio.newloan.applicationservice;
 
-import java.util.Map;
+import java.math.BigDecimal;
 
-public interface CustomizedTextDao {
+public class GroupMemberAccountDto {
 
-	public Map<String,String> getCustomizedText();
-	
-	public CustomizedText findCustomizedTextByOriginalText(final String originalText);
+    private final String globalId;
+    private final BigDecimal loanAmount;
+    private final Integer loanPurposeId;
 
-	void addOrUpdateCustomizedText(String originalText, String customText);
+    public GroupMemberAccountDto(String globalId, BigDecimal loanAmount, Integer loanPurposeId) {
+        this.globalId = globalId;
+        this.loanAmount = loanAmount;
+        this.loanPurposeId = loanPurposeId;
+    }
 
-	void removeCustomizedText(String originalText);
+    public String getGlobalId() {
+        return globalId;
+    }
 
+    public BigDecimal getLoanAmount() {
+        return loanAmount;
+    }
+
+    public Integer getLoanPurposeId() {
+        return loanPurposeId;
+    }
 }

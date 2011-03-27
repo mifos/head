@@ -52,6 +52,10 @@ public class CustomizedTextSelectFormBean implements Serializable {
 	public void setMessage(String message) {
 		this.message = message;
 	}
+	
+	public void clear() {
+		message = "";
+	}
 
     /**
      * Validation method that Spring webflow calls on state transition out of

@@ -839,9 +839,7 @@ public class ClientBO extends CustomerBO {
 
     private void validateForGroupStatus(final CustomerStatus groupStatus) throws CustomerException {
         if (isGroupStatusLower(getStatus(), groupStatus)) {
-            throw new CustomerException(ClientConstants.ERRORS_LOWER_GROUP_STATUS, new Object[] {
-                    MessageLookup.getInstance().lookupLabel(ConfigurationConstants.GROUP, userContext),
-                    MessageLookup.getInstance().lookupLabel(ConfigurationConstants.CLIENT, userContext) });
+            throw new CustomerException(ClientConstants.ERRORS_LOWER_GROUP_STATUS);
         }
         if (groupStatus.equals(CustomerStatus.GROUP_CANCELLED) || groupStatus.equals(CustomerStatus.GROUP_CLOSED)) {
             throw new CustomerException(CustomerConstants.ERRORS_INTRANSFER_PARENT_INACTIVE);
@@ -900,9 +898,7 @@ public class ClientBO extends CustomerBO {
 
             if (isGroupStatusLower(clientStatusId, groupStatus)) {
 
-                throw new CustomerException(ClientConstants.INVALID_CLIENT_STATUS_EXCEPTION, new Object[] {
-                        MessageLookup.getInstance().lookupLabel(ConfigurationConstants.GROUP, this.getUserContext()),
-                        MessageLookup.getInstance().lookupLabel(ConfigurationConstants.CLIENT, this.getUserContext()) });
+                throw new CustomerException(ClientConstants.INVALID_CLIENT_STATUS_EXCEPTION);
             }
         }
     }
@@ -920,9 +916,7 @@ public class ClientBO extends CustomerBO {
 
             if (isGroupStatusLower(clientStatusId, groupStatus)) {
 
-                throw new CustomerException(ClientConstants.INVALID_CLIENT_STATUS_EXCEPTION, new Object[] {
-                        MessageLookup.getInstance().lookupLabel(ConfigurationConstants.GROUP, this.getUserContext()),
-                        MessageLookup.getInstance().lookupLabel(ConfigurationConstants.CLIENT, this.getUserContext()) });
+                throw new CustomerException(ClientConstants.INVALID_CLIENT_STATUS_EXCEPTION);
             }
         }
     }

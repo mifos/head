@@ -37,7 +37,8 @@
             settings in acceptanceDatabase.properties.
         -->
         <acceptanceTest.settings>${basedir}/src/test/resources/org/mifos/config/resources/acceptanceTest.properties</acceptanceTest.settings>
-        <acceptanceTest.groups.to.run>smoke</acceptanceTest.groups.to.run>
+        <test.group.no_db_unit>smoke</test.group.no_db_unit>
+        <test.group.db_unit>smoke</test.group.db_unit>
 
     </properties>
 
@@ -73,15 +74,17 @@
         <profile>
             <id>allTests</id>
             <properties>
-                <!-- leaving <acceptanceTest.groups.to.run> empty means to run everything -->
-                <acceptanceTest.groups.to.run></acceptanceTest.groups.to.run>
+                <test.group.no_db_unit>no_db_unit</test.group.no_db_unit>
+                <!-- leaving empty means to run everything -->
+                <test.group.db_unit></test.group.db_unit>
             </properties>
         </profile>
         <profile>
             <id>continuous-integration</id>
             <properties>
-                <!-- leaving <acceptanceTest.groups.to.run> empty means to run everything -->
-                <acceptanceTest.groups.to.run></acceptanceTest.groups.to.run>
+                <test.group.no_db_unit>no_db_unit</test.group.no_db_unit>
+                <!-- leaving empty means to run everything -->
+                <test.group.db_unit></test.group.db_unit>
                 <SELENIUM_PORT>${env.SELENIUM_PORT}</SELENIUM_PORT>
                 <SERVLET_PORT>${env.SERVLET_PORT}</SERVLET_PORT>
                 <stop.port>${env.CI_JETTY_STOP_PORT}</stop.port>
@@ -299,13 +302,35 @@
                 </configuration>
             </plugin>
             <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>selenium-maven-plugin</artifactId>
+                <version>1.1</version>
+                <executions>
+                    <execution>
+                        <id>start-selenium</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>start-server</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <skip>${maven.test.skip}</skip>
+                    <background>${selenium.background}</background>
+                    <port>${SELENIUM_PORT}</port>
+                    <logOutput>${selenium.log.output}</logOutput>
+                    <browserSideLog>true</browserSideLog>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.4.3</version>
+                <version>2.7.1</version>
                 <configuration>
-                    <redirectTestOutputToFile>true</redirectTestOutputToFile>
-                    <runOrder>alphabetical</runOrder>
+                    <redirectTestOutputToFile>false</redirectTestOutputToFile>
+                    <runOrder>reversealphabetical</runOrder>
                     <testFailureIgnore>true</testFailureIgnore>
+                    <threadCount>1</threadCount>
                     <skip>true</skip>
                     <systemProperties>
                         <property>
@@ -330,7 +355,7 @@
                             <goal>test</goal>
                         </goals>
                         <configuration>
-                            <groups>no_db_unit</groups>
+                            <groups>${test.group.no_db_unit}</groups>
                             <excludedGroups>workInProgress</excludedGroups>
                             <skip>${maven.test.skip}</skip>
                             <failIfNoTests>false</failIfNoTests>
@@ -350,7 +375,7 @@
                             <goal>test</goal>
                         </goals>
                         <configuration>
-                            <groups>${acceptanceTest.groups.to.run}</groups>
+                            <groups>${test.group.db_unit}</groups>
                             <excludedGroups>no_db_unit,workInProgress</excludedGroups>
                             <skip>${maven.test.skip}</skip>
                             <failIfNoTests>false</failIfNoTests>
@@ -407,27 +432,6 @@
                             <value>acceptance</value>
                         </systemProperty>
                     </systemProperties>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>selenium-maven-plugin</artifactId>
-                <version>1.1</version>
-                <executions>
-                    <execution>
-                        <id>start-selenium</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>start-server</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <skip>${maven.test.skip}</skip>
-                    <background>${selenium.background}</background>
-                    <port>${SELENIUM_PORT}</port>
-                    <logOutput>${selenium.log.output}</logOutput>
-                    <browserSideLog>true</browserSideLog>
                 </configuration>
             </plugin>
         </plugins>

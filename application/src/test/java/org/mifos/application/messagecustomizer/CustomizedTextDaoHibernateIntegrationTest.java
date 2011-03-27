@@ -40,59 +40,6 @@ public class CustomizedTextDaoHibernateIntegrationTest extends MifosIntegrationT
     private CustomizedTextDao customizedTextDao;
     
 	@Test
-	public void shouldSetAndGetCustomizedText() {
-		int initialCustomizedTextCount = customizedTextDao.getCustomizedText().size();
-		
-		// add a message
-		Map<String,String> messageMap = new HashMap<String, String>();
-		messageMap.put("testold", "testnew");
-		customizedTextDao.setCustomizedText(messageMap);
-		
-		// check that the message we added comes back
-		messageMap.clear();
-		messageMap = customizedTextDao.getCustomizedText();
-		assertThat(messageMap.get("testold"),is("testnew"));
-		
-		// remove the message
-		messageMap.put("testold", "testold");
-		customizedTextDao.setCustomizedText(messageMap);
-		
-		// check that we end up with what we started with
-		assertThat(customizedTextDao.getCustomizedText().size(), is(initialCustomizedTextCount));		
-	}
-	
-	@Test
-	public void shouldUpdateCustomizedTextMap() {
-		int initialCustomizedTextCount = customizedTextDao.getCustomizedText().size();
-		
-		// add a message
-		Map<String,String> messageMap = new HashMap<String, String>();
-		messageMap.put("testold", "testnew");
-		customizedTextDao.setCustomizedText(messageMap);
-		
-		// check that the message we added comes back
-		messageMap.clear();
-		messageMap = customizedTextDao.getCustomizedText();
-		assertThat(messageMap.get("testold"),is("testnew"));
-		
-		// update the message
-		messageMap.put("testold", "anothertest");
-		customizedTextDao.setCustomizedText(messageMap);
-
-		// check that the message we added comes back
-		messageMap.clear();
-		messageMap = customizedTextDao.getCustomizedText();
-		assertThat(messageMap.get("testold"),is("anothertest"));
-				
-		// remove the message
-		messageMap.put("testold", "testold");
-		customizedTextDao.setCustomizedText(messageMap);
-		
-		// check that we end up with what we started with
-		assertThat(customizedTextDao.getCustomizedText().size(), is(initialCustomizedTextCount));		
-	}	
-
-	@Test
 	public void shouldAddRemoveCustomizedText() {
 		int initialCustomizedTextCount = customizedTextDao.getCustomizedText().size();
 		

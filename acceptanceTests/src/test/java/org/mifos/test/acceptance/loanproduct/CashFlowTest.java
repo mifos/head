@@ -120,10 +120,10 @@ public class CashFlowTest extends UiTestCaseBase {
         DateTime disbursalDate = systemDateTime.plusDays(1);
         int installment = 3;
         createLoanAccountAndNavigateToCashFlowPage(formParameters, disbursalDate, installment).
-                enterValidData("1000", 100, 1, null, null).clickContinue().
+                enterValidData("1000", 1000, 1, null, null).clickContinue().
                 clickPreviewAndGoToReviewLoanAccountPage();
         //verifyWarningForThreshold(warningThreshold);
-        verifyNegativeAndZeroCashFlow(formParameters, warningThreshold, disbursalDate, installment);
+        verifyNegativeAndZeroCashFlow(formParameters, disbursalDate, installment);
 
     }
 
@@ -137,7 +137,7 @@ public class CashFlowTest extends UiTestCaseBase {
         createAndValidateLoanProductWithCashFlow(warningThreshold, formParameters, "", "", true);
         DateTime disbursalDate = systemDateTime.plusDays(1);
         int installment = 3;
-        verifyNegativeAndZeroCashFlow(formParameters, warningThreshold, disbursalDate, installment);
+        verifyNegativeAndZeroCashFlow(formParameters, disbursalDate, installment);
         applicationDatabaseOperation.updateLSIM(0);
     }
 
@@ -191,15 +191,16 @@ public class CashFlowTest extends UiTestCaseBase {
         CreateLoanAccountReviewInstallmentPage reviewPage = cashFlowPage.clickContinue();
         reviewPage.verifyCashFlow(-100.0, 2000.0);
     }
-
-    private void verifyNegativeAndZeroCashFlow(DefineNewLoanProductPage.SubmitFormParameters formParameters, String warningThreshold, DateTime disbursalDate, int installment) {
+    
+    private void verifyNegativeAndZeroCashFlow(DefineNewLoanProductPage.SubmitFormParameters formParameters, DateTime disbursalDate, int installment) {
         createLoanAccountAndNavigateToCashFlowPage(formParameters, disbursalDate, installment).
-                enterValidData("10000", 1, 10, null, null).clickContinue().
-                clickPreviewAndGoToReviewLoanAccountPage().verifyNegativeCashFlowWarning();
+                enterValidData("10000", 1, 10, null, null).clickContinueAndVerifyNegativeOrZeroCashFlowWarning("September 2010",
+                "October 2010", "November 2010", "December 2010");
         createLoanAccountAndNavigateToCashFlowPage(formParameters, disbursalDate, installment).
-                enterValidData("100", 0, 100, null, null).clickContinue().
-                clickPreviewAndGoToReviewLoanAccountPage().verifyZeroCashFlowWarning(warningThreshold);
+                enterValidData("100", 0, 100, null, null).clickContinueAndVerifyNegativeOrZeroCashFlowWarning("September 2010",
+                "October 2010", "November 2010", "December 2010");
     }
+
 
     private CreateLoanAccountCashFlowPage createLoanAccountAndNavigateToCashFlowPage(DefineNewLoanProductPage.SubmitFormParameters formParameters, DateTime disbursalDate, int installment) {
         new NavigationHelper(selenium).navigateToHomePage();

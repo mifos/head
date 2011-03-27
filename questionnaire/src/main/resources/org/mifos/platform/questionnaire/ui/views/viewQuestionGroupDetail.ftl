@@ -63,9 +63,9 @@
                             <table class="table_common" id="sections.table.${section.name}" name="sections.table.${section.name}">
                                 <thead>
                                  <tr>
-                                     <th class="name">[@spring.message "questionnaire.question.name"/]</th>
-                                     <th class="isMandatory">[@spring.message "questionnaire.question.mandatory"/]</th>
-                                     <th class="status">[@spring.message "questionnaire.status"/]</th>
+                                     <th class="name" width="60%">[@spring.message "questionnaire.question.name"/]</th>
+                                     <th class="isMandatory" width="20%">[@spring.message "questionnaire.question.mandatory"/]</th>
+                                     <th class="status" width="20%">[@spring.message "questionnaire.status"/]</th>
                                  </tr>
                                  </thead>
                                 <tbody>

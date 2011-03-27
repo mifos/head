@@ -60,14 +60,13 @@
                             [#if typeList?is_hash]
                                 [#list typeList?keys as value]
                                 <option value="${value?html}"[@spring.checkSelected value/]>
-                                    <!-- ftldefinelabels - hack to populate select -->
-                                    [@mifostag.mifoslabel name="${springMacroRequestContext.getMessage(typeList[value]?html)}"  /]
+                                    [@spring.message "${typeList[value]}"  /]
                                 </option>
                                 [/#list]
                             [#else]
                                 [#list typeList as value]
                                     <option value="${value?html}"[@spring.checkSelected value/]>
-                                        [@mifostag.mifoslabel name="${springMacroRequestContext.getMessage(value?html)}"  /]
+                                        [@spring.message "${typeList[value]}"  /]
                                     </option>
                                 [/#list]
                             [/#if]

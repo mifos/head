@@ -28,7 +28,6 @@ import org.apache.commons.lang.StringUtils;
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID"}, justification="should disable at filter level and also for pmd - not important for us")
 public class LoanAccountDetailsDto implements Serializable {
 
-    private final Integer individualAccountId;
     private String accountId;
     private String clientId;
     private String clientName;
@@ -47,12 +46,8 @@ public class LoanAccountDetailsDto implements Serializable {
         return new LoanAccountDetailsDto(clientId, businessActivity, loanAmount, accountId);
     }
 
-    public LoanAccountDetailsDto(Integer individualAccountId) {
-        this.individualAccountId = individualAccountId;
-    }
-
     public LoanAccountDetailsDto() {
-        this(null);
+        // empty constructor
     }
 
     /**
@@ -60,7 +55,6 @@ public class LoanAccountDetailsDto implements Serializable {
      */
     @Deprecated
     public LoanAccountDetailsDto(String clientId, String businessActivity, String loanAmount) {
-        this(null);
         this.clientId = clientId;
         this.businessActivity = businessActivity;
         this.loanAmount = loanAmount;
@@ -71,7 +65,6 @@ public class LoanAccountDetailsDto implements Serializable {
      */
     @Deprecated
     public LoanAccountDetailsDto(String clientId, String businessActivity, String loanAmount, String accountId) {
-        this(null);
         this.clientId = clientId;
         this.businessActivity = businessActivity;
         this.loanAmount = loanAmount;
@@ -133,10 +126,7 @@ public class LoanAccountDetailsDto implements Serializable {
     public void setClientName(String clientName) {
         this.clientName = clientName;
     }
-
-    public Integer getIndividualAccountId() {
-        return individualAccountId;
-    }
+    
 
     public String getAccountId() {
         return accountId;
@@ -160,7 +150,6 @@ public class LoanAccountDetailsDto implements Serializable {
         result = PRIME * result + ((clientId == null) ? 0 : clientId.hashCode());
         result = PRIME * result + ((clientName == null) ? 0 : clientName.hashCode());
         result = PRIME * result + ((govermentId == null) ? 0 : govermentId.hashCode());
-        result = PRIME * result + ((individualAccountId == null) ? 0 : individualAccountId.hashCode());
         result = PRIME * result + ((loanAmount == null) ? 0 : loanAmount.hashCode());
         result = PRIME * result + ((loanPurpose == null) ? 0 : loanPurpose.hashCode());
         return result;
@@ -218,13 +207,6 @@ public class LoanAccountDetailsDto implements Serializable {
                 return false;
             }
         } else if (!govermentId.equals(other.govermentId)) {
-            return false;
-        }
-        if (individualAccountId == null) {
-            if (other.individualAccountId != null) {
-                return false;
-            }
-        } else if (!individualAccountId.equals(other.individualAccountId)) {
             return false;
         }
         if (loanAmount == null) {
