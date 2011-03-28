@@ -79,7 +79,7 @@ public class ConfigurationLocator {
         return returnValue;
     }
 
-    // TODO It may be clearer if this returned a File instead of a String?
+    // TODO It would be clearer if this returned a File or even better a Resource instead of a String
     public String getFilePath(String filename) throws IOException {
         File file = getFile(filename);
         if(file != null && file.exists()){
@@ -133,11 +133,7 @@ public class ConfigurationLocator {
         return configurationLocatorHelper.getFile(directory);
     }
 
-    /**
-     * @deprecated Please replace usages of this method by e.g. {@link #getResource(String)}, and remove this method ASAP.
-     */
-    @Deprecated
-    public File getFile(String filename) throws IOException {
+    private File getFile(String filename) throws IOException {
         File fileToReturn = getConfigurationResource(filename).getFile();
         LOGGER.info("ConfigurationLocator found configuration file: " + fileToReturn);
         return fileToReturn;
@@ -145,7 +141,7 @@ public class ConfigurationLocator {
 
     /**
      * Get a Configuration Resource, either from the classpath or from a configuration directory.
-     * 
+     *
      * @param configurationName name of a configuration resource on the classpatch (e.g. "package/something.properties")
      * @return always a Resource, never null (use {@link Resource#exists()} to check)
      * @throws IOException if something unexpected went wrong
@@ -155,7 +151,7 @@ public class ConfigurationLocator {
         LOGGER.info("ConfigurationLocator found configuration in resource: " + res.getDescription());
         return res;
     }
-    
+
     public void setConfigurationLocatorHelper(ConfigurationLocatorHelper fileFactory) {
         this.configurationLocatorHelper = fileFactory;
     }
