@@ -220,7 +220,7 @@ public class LoanBusinessServiceTest {
         loanBusinessService.applyDailyInterestRatesWhereApplicable(new LoanScheduleGenerationDto(TestUtils.getDate(22, 8, 2010),
                 loanBO, loanAccountActionForm.isVariableInstallmentsAllowed(), loanAccountActionForm.getLoanAmountValue(),
                 loanAccountActionForm.getInterestDoubleValue()), locale);
-        verify(loanBO,never()).copyInstallmentSchedule(installments);
+        verify(loanBO).copyInstallmentSchedule(installments);
         verify(loanBO).toRepaymentScheduleDto(locale);
     }
 

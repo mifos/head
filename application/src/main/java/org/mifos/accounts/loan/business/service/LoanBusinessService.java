@@ -116,7 +116,7 @@ public class LoanBusinessService implements BusinessService {
             return getLoanPersistence().findBySystemId(accountGlobalNum);
         } catch (PersistenceException e) {
             throw new ServiceException(AccountExceptionConstants.FINDBYGLOBALACCNTEXCEPTION, e,
-                    new Object[]{accountGlobalNum});
+                    new Object[] { accountGlobalNum });
         }
     }
 
@@ -129,7 +129,7 @@ public class LoanBusinessService implements BusinessService {
             return getLoanPersistence().findIndividualLoans(accountId);
         } catch (PersistenceException e) {
             throw new ServiceException(AccountExceptionConstants.FINDBYGLOBALACCNTEXCEPTION, e,
-                    new Object[]{accountId});
+                    new Object[] { accountId });
         }
     }
 
@@ -219,7 +219,7 @@ public class LoanBusinessService implements BusinessService {
     }
 
     private boolean dailyInterestRatesApplicable(LoanScheduleGenerationDto loanScheduleGenerationDto, LoanBO loanBO) {
-        return loanScheduleGenerationDto.isVariableInstallmentsAllowed();
+        return loanScheduleGenerationDto.isVariableInstallmentsAllowed() || loanBO.isDecliningBalanceInterestRecalculation();
     }
 
     public void applyDailyInterestRates(LoanScheduleGenerationDto loanScheduleGenerationDto) {
@@ -307,7 +307,7 @@ public class LoanBusinessService implements BusinessService {
         Collection<LoanScheduleEntity> loanScheduleEntities = loan.getLoanScheduleEntities();
         Collection<OriginalLoanScheduleEntity> originalLoanScheduleEntities = new ArrayList<OriginalLoanScheduleEntity>();
         for (LoanScheduleEntity loanScheduleEntity : loanScheduleEntities) {
-            originalLoanScheduleEntities.add(new OriginalLoanScheduleEntity(loanScheduleEntity));
+                   originalLoanScheduleEntities.add(new OriginalLoanScheduleEntity(loanScheduleEntity));
         }
         loanPersistence.saveOriginalSchedule(originalLoanScheduleEntities);
     }
