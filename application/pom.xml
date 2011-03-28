@@ -377,12 +377,6 @@
                 <filtering>true</filtering>
                 <targetPath>sql</targetPath>
             </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-                <!-- these must be filtered by native2ascii, don't just copy them -->
-                <excludes><exclude>**/localizedResources/*.properties</exclude></excludes>
-            </resource>
         </resources>
         <testResources>
             <testResource>
@@ -417,6 +411,29 @@
                                     <filtering>false</filtering>
                                 </resource>
                             </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-main-resources-binarysafe</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/classes</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/resources</directory>
+                                    <!-- these must be filtered by native2ascii, don't just copy them -->
+                                    <excludes>
+                                        <exclude>**/localizedResources/*.properties</exclude>
+                                    </excludes>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                            <nonFilteredFileExtensions>
+                                <nonFilteredFileExtension>ico</nonFilteredFileExtension>
+                            </nonFilteredFileExtensions>
                         </configuration>
                     </execution>
                 </executions>
