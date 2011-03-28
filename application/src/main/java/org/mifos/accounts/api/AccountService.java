@@ -52,10 +52,10 @@ public interface AccountService {
     /**
      * Disburse multiple loan accounts within a single transaction.
      *
-     * @param accountPaymentParameter
+     * @param accountPaymentParametersDtoList a list of loan payment parameters
      * @param locale
      */
-    void disburseLoan(AccountPaymentParametersDto accountPaymentParameter, Locale locale) throws Exception;
+    void disburseLoans(List<AccountPaymentParametersDto> accountPaymentParametersDtoList, Locale locale) throws Exception;
 
     /**
      * Lookup a loan account reference for a loan with a matching primary key.

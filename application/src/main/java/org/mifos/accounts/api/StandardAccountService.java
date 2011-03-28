@@ -139,10 +139,10 @@ public class StandardAccountService implements AccountService {
 
         PaymentData paymentData = account.createPaymentData(amount, accountPaymentParametersDto.getPaymentDate().toDateMidnight().toDate(),
                 accountPaymentParametersDto.getReceiptId(), receiptDate, accountPaymentParametersDto.getPaymentType()
-                .getValue(), loggedInUser);
+                        .getValue(), loggedInUser);
         if (accountPaymentParametersDto.getCustomer() != null) {
             paymentData.setCustomer(customerDao.findCustomerById(
-                    accountPaymentParametersDto.getCustomer().getCustomerId()));
+                accountPaymentParametersDto.getCustomer().getCustomerId()));
         }
         paymentData.setComment(accountPaymentParametersDto.getComment());
 
@@ -152,37 +152,40 @@ public class StandardAccountService implements AccountService {
     }
 
     @Override
-    public void disburseLoan(AccountPaymentParametersDto accountPaymentParameter, Locale locale) throws Exception {
+    public void disburseLoans(List<AccountPaymentParametersDto> accountPaymentParametersDtoList, Locale locale) throws Exception {
+
         StaticHibernateUtil.startTransaction();
-        LoanBO loan = this.loanPersistence.getAccount(accountPaymentParameter.getAccountId());
+        for (AccountPaymentParametersDto accountPaymentParametersDto : accountPaymentParametersDtoList) {
+            LoanBO loan = this.loanPersistence.getAccount(accountPaymentParametersDto.getAccountId());
 
-        Money amount = new Money(loan.getCurrency(), accountPaymentParameter.getPaymentAmount());
-        Date receiptDate = null;
-        if (null != accountPaymentParameter.getReceiptDate()) {
-            receiptDate = accountPaymentParameter.getReceiptDate().toDateMidnight().toDate();
+            PaymentTypeEntity paymentTypeEntity = (PaymentTypeEntity) new MasterPersistence().getMasterDataEntity(
+                    PaymentTypeEntity.class, accountPaymentParametersDto.getPaymentType().getValue());
+            Money amount = new Money(loan.getCurrency(), accountPaymentParametersDto.getPaymentAmount());
+            Date receiptDate = null;
+            if (null != accountPaymentParametersDto.getReceiptDate()) {
+                receiptDate = accountPaymentParametersDto.getReceiptDate().toDateMidnight().toDate();
+            }
+            Date transactionDate = accountPaymentParametersDto.getPaymentDate().toDateMidnight().toDate();
+            String receiptId = accountPaymentParametersDto.getReceiptId();
+
+            AccountPaymentEntity disbursalPayment = new AccountPaymentEntity(loan, amount, receiptId, receiptDate,
+                    paymentTypeEntity, transactionDate);
+            PersonnelBO personnelBO = personnelDao.findPersonnelById(accountPaymentParametersDto.getUserMakingPayment()
+                    .getUserId());
+            disbursalPayment.setCreatedByUser(personnelBO);
+            Double interestRate = loan.getInterestRate();
+
+            Date oldDisbursementDate = loan.getDisbursementDate();
+            List<RepaymentScheduleInstallment> originalInstallments = loan.toRepaymentScheduleDto(locale);
+            loan.disburseLoan(disbursalPayment);
+            Date newDisbursementDate = loan.getDisbursementDate();
+            boolean variableInstallmentsAllowed = loan.isVariableInstallmentsAllowed();
+            loanBusinessService.adjustDatesForVariableInstallments(variableInstallmentsAllowed, originalInstallments,
+                    oldDisbursementDate, newDisbursementDate, loan.getOfficeId());
+            loanBusinessService.applyDailyInterestRatesWhereApplicable(new LoanScheduleGenerationDto(newDisbursementDate,
+                    loan, variableInstallmentsAllowed, amount, interestRate), originalInstallments);
+            loanBusinessService.persistOriginalSchedule(loan);
         }
-        Date transactionDate = accountPaymentParameter.getPaymentDate().toDateMidnight().toDate();
-        PaymentTypeEntity paymentTypeEntity = (PaymentTypeEntity) new MasterPersistence().getMasterDataEntity(
-                PaymentTypeEntity.class, accountPaymentParameter.getPaymentType().getValue());
-        String receiptId = accountPaymentParameter.getReceiptId();
-
-        AccountPaymentEntity disbursalPayment = new AccountPaymentEntity(loan, amount, receiptId, receiptDate,
-                paymentTypeEntity, transactionDate);
-        PersonnelBO personnelBO = personnelDao.findPersonnelById(accountPaymentParameter.getUserMakingPayment()
-                .getUserId());
-        disbursalPayment.setCreatedByUser(personnelBO);
-        Double interestRate = loan.getInterestRate();
-
-        Date oldDisbursementDate = loan.getDisbursementDate();
-        List<RepaymentScheduleInstallment> originalInstallments = loan.toRepaymentScheduleDto(locale);
-        loan.disburseLoan(disbursalPayment);
-        Date newDisbursementDate = loan.getDisbursementDate();
-        boolean variableInstallmentsAllowed = loan.isVariableInstallmentsAllowed();
-        loanBusinessService.adjustDatesForVariableInstallments(variableInstallmentsAllowed, originalInstallments,
-                oldDisbursementDate, newDisbursementDate, loan.getOfficeId());
-        loanBusinessService.applyDailyInterestRatesWhereApplicable(new LoanScheduleGenerationDto(newDisbursementDate,
-                loan, variableInstallmentsAllowed, amount, interestRate), originalInstallments);
-        loanBusinessService.persistOriginalSchedule(loan);
         StaticHibernateUtil.commitTransaction();
     }
 
@@ -236,7 +239,7 @@ public class StandardAccountService implements AccountService {
     }
 
     void disbursalAmountMatchesFullLoanAmount(AccountPaymentParametersDto payment, List<InvalidPaymentReason> errors,
-                                              LoanBO loanAccount) {
+            LoanBO loanAccount) {
         /* BigDecimal.compareTo() ignores scale, .equals() was explicitly avoided */
         if (loanAccount.getLoanAmount().getAmount().compareTo(payment.getPaymentAmount()) != 0) {
             errors.add(InvalidPaymentReason.INVALID_LOAN_DISBURSAL_AMOUNT);
@@ -255,7 +258,7 @@ public class StandardAccountService implements AccountService {
             errors.add(InvalidPaymentReason.INVALID_DATE);
         }
         if (accountBo instanceof LoanBO) {
-            if (((LoanBO) accountBo).paymentsNotAllowed()) {
+            if (((LoanBO)accountBo).paymentsNotAllowed()) {
                 errors.add(InvalidPaymentReason.INVALID_LOAN_STATE);
             }
         }
@@ -285,7 +288,7 @@ public class StandardAccountService implements AccountService {
 
     @Override
     public List<AccountPaymentParametersDto> lookupPayments(AccountReferenceDto accountRef)
-            throws PersistenceException {
+    throws PersistenceException {
         final int accountId = accountRef.getAccountId();
         final AccountBO account = this.accountPersistence.getAccount(accountId);
         List<AccountPaymentParametersDto> paymentDtos = new ArrayList<AccountPaymentParametersDto>();
@@ -300,18 +303,18 @@ public class StandardAccountService implements AccountService {
                 paymentEntity.getCreatedByUser() == null ?
                         new UserReferenceDto(paymentEntity.getAccountTrxns().iterator().next().
                                 getPersonnel().getPersonnelId()) :
-                        new UserReferenceDto(paymentEntity.getCreatedByUser().getPersonnelId()),
-                new AccountReferenceDto(paymentEntity.getAccount().getAccountId()),
-                paymentEntity.getAmount().getAmount(),
-                LocalDate.fromDateFields(paymentEntity.getPaymentDate()),
-                new PaymentTypeDto(paymentEntity.getPaymentType().getId(),
-                        paymentEntity.getPaymentType().toString()),
-                paymentEntity.getComment() == null ?
-                        paymentEntity.toString() :
-                        paymentEntity.getComment(),
-                paymentEntity.getReceiptDate() == null ? null :
-                        LocalDate.fromDateFields(paymentEntity.getReceiptDate()),
-                paymentEntity.getReceiptNumber(), null);
+                                    new UserReferenceDto(paymentEntity.getCreatedByUser().getPersonnelId()),
+                                    new AccountReferenceDto(paymentEntity.getAccount().getAccountId()),
+                                    paymentEntity.getAmount().getAmount(),
+                                    LocalDate.fromDateFields(paymentEntity.getPaymentDate()),
+                                    new PaymentTypeDto(paymentEntity.getPaymentType().getId(),
+                                            paymentEntity.getPaymentType().toString()),
+                                            paymentEntity.getComment() == null ?
+                                                    paymentEntity.toString() :
+                                                        paymentEntity.getComment(),
+                                                        paymentEntity.getReceiptDate() == null ? null :
+                                                            LocalDate.fromDateFields(paymentEntity.getReceiptDate()),
+                                                            paymentEntity.getReceiptNumber(), null);
         return paymentDto;
     }
 
@@ -439,9 +442,9 @@ public class StandardAccountService implements AccountService {
         return cfgMng.getProperty(propertyKey);
     }
 
-    @Override
-    public boolean receiptExists(String receiptNumber) throws Exception {
+	@Override
+	public boolean receiptExists(String receiptNumber) throws Exception {
         List<AccountPaymentEntity> existentPaymentsWIthGivenReceiptNumber = this.accountPersistence.findAccountPaymentsByReceiptNumber(receiptNumber);
-        return existentPaymentsWIthGivenReceiptNumber != null && !existentPaymentsWIthGivenReceiptNumber.isEmpty();
-    }
+		return existentPaymentsWIthGivenReceiptNumber != null && !existentPaymentsWIthGivenReceiptNumber.isEmpty();
+	}
 }

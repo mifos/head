@@ -30,59 +30,65 @@ import java.math.BigDecimal;
  * payment to a loan account.
  */
 public class AccountPaymentParametersDto {
+
+    /** The user making the payment. */
     private final UserReferenceDto userMakingPayment;
 
+    /** The account the payment is made to. */
     private final AccountReferenceDto account;
 
+    /** The payment amount. */
     private final BigDecimal paymentAmount;
 
+    /** The payment date. */
     private final LocalDate paymentDate;
 
+    /** The receipt date. */
     private final LocalDate receiptDate;
 
+    /** The receipt id. */
     private final String receiptId;
 
+    /** The payment type. */
     private PaymentTypeDto paymentType;
 
+    /** The comment associated with the payment. */
     private final String comment;
 
+    /** Customer making the payment */
     private CustomerDto customer;
 
     /**
      * Instantiates a new account payment parameters dto.
      *
      * @param userMakingPayment the user making payment
-     * @param account           the account the payment is made to
-     * @param paymentAmount     the payment amount
-     * @param paymentDate       the payment date
-     * @param paymentType       the payment type
-     * @param comment           the comment associated with the payment
+     * @param account the account the payment is made to
+     * @param paymentAmount the payment amount
+     * @param paymentDate the payment date
+     * @param paymentType the payment type
+     * @param comment the comment associated with the payment
      */
     public AccountPaymentParametersDto(UserReferenceDto userMakingPayment, AccountReferenceDto account,
-                                       BigDecimal paymentAmount, LocalDate paymentDate, PaymentTypeDto paymentType, String comment) {
+            BigDecimal paymentAmount, LocalDate paymentDate, PaymentTypeDto paymentType, String comment) {
         this(userMakingPayment, account, paymentAmount, paymentDate, paymentType, comment, null, null, null);
-    }
-
-    public AccountPaymentParametersDto(Short userId, Integer accountId, BigDecimal paymentAmount, LocalDate paymentDate, PaymentTypeDto paymentType, String comment) {
-        this(new UserReferenceDto(userId), new AccountReferenceDto(accountId), paymentAmount, paymentDate, paymentType, comment);
     }
 
     /**
      * Instantiates a new account payment parameters dto.
      *
      * @param userMakingPayment the user making payment
-     * @param account           the account the payment is made to
-     * @param paymentAmount     the payment amount
-     * @param paymentDate       the payment date
-     * @param paymentType       the payment type
-     * @param comment           the comment associated with the payment
-     * @param receiptDate       the receipt date
-     * @param receiptId         the receipt id
-     * @param customer          a customer making payment
+     * @param account the account the payment is made to
+     * @param paymentAmount the payment amount
+     * @param paymentDate the payment date
+     * @param paymentType the payment type
+     * @param comment the comment associated with the payment
+     * @param receiptDate the receipt date
+     * @param receiptId the receipt id
+     * @param customer a customer making payment
      */
     public AccountPaymentParametersDto(UserReferenceDto userMakingPayment, AccountReferenceDto account,
-                                       BigDecimal paymentAmount, LocalDate paymentDate, PaymentTypeDto paymentType, String comment,
-                                       LocalDate receiptDate, String receiptId, CustomerDto customer) {
+            BigDecimal paymentAmount, LocalDate paymentDate, PaymentTypeDto paymentType, String comment,
+            LocalDate receiptDate, String receiptId, CustomerDto customer) {
         super();
         if (null == userMakingPayment) {
             throw new IllegalArgumentException("userMakingPayment cannot be null");
