@@ -23,13 +23,10 @@ package org.mifos.core;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.Reader;
-import java.net.URL;
 import java.util.logging.Logger;
 
 import org.springframework.core.io.ClassPathResource;
@@ -68,36 +65,6 @@ public final class MifosResourceUtil {
 
     public static InputStream getSQLFileAsStream(String fileName) throws FileNotFoundException {
         return new FileInputStream(getFile("/sql/" + fileName));
-    }
-
-    /**
-     * @deprecated Please replace usages of this method by e.g. {@link #getClassPathResourceAsURI(String)}, and remove this method ASAP.
-     */
-    @Deprecated
-    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"OS_OPEN_STREAM_EXCEPTION_PATH","OBL_UNSATISFIED_OBLIGATION"}, justification="this is a bug")
-    public static File getClassPathResource(String fileName) throws IOException {
-        URL url = getClassPathResourceAsResource(fileName).getURL();
-        File file = null;
-        if (url.getProtocol().equals(ResourceUtils.URL_PROTOCOL_FILE)) {
-            file = getClassPathResourceAsResource(fileName).getFile();
-        } else if (url.getProtocol().equals(ResourceUtils.URL_PROTOCOL_JAR)) {
-            LOGGER.warning("Creating tmp file from InputSteam, use InputStream instead of file " + url);
-            LOGGER.warning("Can not extract file from a jar in a container " + url);
-            InputStream stream = getClassPathResourceAsStream(fileName);
-            File jarResource = File.createTempFile("Mifos", ".xml");
-            @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="")
-            OutputStream out = new FileOutputStream(jarResource);
-            byte buf[] = new byte[1024];
-            int len;
-            while ((len = stream.read(buf)) > 0) { // NOPMD by ugupta on 7/2/11 5:23 PM
-                out.write(buf, 0, len);
-            }
-            out.close();
-            stream.close();
-            file = jarResource;
-            LOGGER.warning("Created tmp file " + jarResource);
-        }
-        return file;
     }
 
     /**
