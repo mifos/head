@@ -41,13 +41,13 @@ import org.springframework.util.ResourceUtils;
 /**
  * Load resources from the classpath.
  */
-public class MifosResourceUtil {
+public final class MifosResourceUtil {
     private MifosResourceUtil() {
     }
-    
+
     private static final Logger LOGGER = Logger.getLogger(MifosResourceUtil.class.getName());
     private static final ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
-    
+
     public static File getFile(String fileNameWithLocation) {
         File file;
         try {
@@ -111,17 +111,17 @@ public class MifosResourceUtil {
     public static Resource getClassPathResourceAsResource(String fileName) throws IOException {
         return new ClassPathResource(fileName);
     }
-    
+
     /**
      * Find a Resource on the Classpath and return it's URI (as a String).
-     * 
+     *
      * Intended for calling code which accepts URI, such as the javax.xml APIs. Better than File-based API, which should
      * never be used. Better than InputStream, because an InputStream needs to be closed by somebody - and that's
      * usually forgotten.
-     * 
+     *
      * If calling code can deal directly with a org.springframework.core.io.Resource, that's always preferable over a
      * raw URI; simply use new ClassPathResource(path) in that case.
-     * 
+     *
      * @param path Path on the classpath, e.g. "org/mifos/something.xml"
      * @return a Stringified Classpath URI
      */
@@ -139,14 +139,13 @@ public class MifosResourceUtil {
 
     /**
      * Returns all classpath resources matching a certain pattern.
-     * 
-     * @param pattern an Ant-style "/"-based (not "."-based) resource path pattern, WITHOUT any prefix 
+     *
+     * @param pattern an Ant-style "/"-based (not "."-based) resource path pattern, WITHOUT any prefix
      * (like "classpath:" or "classpath*:"); so e.g. "org/mifos/package/**&#47;*.xml".
      * @return an array of {@link Resource}. These may not actually be ClassPathResource instance, but any Resource (e.g. FileSystemResource)
      * @throws IOException in case of I/O errors
      */
     public static Resource[] getClassPathResourcesAsResources(String pattern) throws IOException {
         return resourcePatternResolver.getResources(ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX + "/" + pattern);
-        
     }
 }
