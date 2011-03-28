@@ -51,14 +51,14 @@ public class TableTagParser {
 
             SchemaFactory schfactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
             schfactory.setErrorHandler(null);
-            Schema schema = schfactory.newSchema(new StreamSource(MifosResourceUtil.getURI(FilePaths.CUSTOMTABLETAGXSD)));
+            Schema schema = schfactory.newSchema(new StreamSource(MifosResourceUtil.getClassPathResourceAsURIString(FilePaths.CUSTOMTABLETAGXSD)));
             factory.setNamespaceAware(false);
             factory.setValidating(false);
             factory.setSchema(schema);
 
             DocumentBuilder builder = factory.newDocumentBuilder();
             builder.setErrorHandler(null);
-            Document document = builder.parse(MifosResourceUtil.getURI(file));
+            Document document = builder.parse(MifosResourceUtil.getClassPathResourceAsURIString(file));
 
             table = createTable(document);
 

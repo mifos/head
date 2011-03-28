@@ -27,8 +27,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
-import java.util.logging.Logger;
-
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -42,7 +40,6 @@ public final class MifosResourceUtil {
     private MifosResourceUtil() {
     }
 
-    private static final Logger LOGGER = Logger.getLogger(MifosResourceUtil.class.getName());
     private static final ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
 
     public static File getFile(String fileNameWithLocation) {
@@ -92,16 +89,8 @@ public final class MifosResourceUtil {
      * @param path Path on the classpath, e.g. "org/mifos/something.xml"
      * @return a Stringified Classpath URI
      */
-    public static String getClassPathResourceAsURI(String path) throws IOException {
+    public static String getClassPathResourceAsURIString(String path) throws IOException {
         return new ClassPathResource(path).getURI().toString();
-    }
-
-    /**
-     * @deprecated Please replace usages of this method by {@link #getClassPathResourceAsURI(String)}, and remove this method.
-     */
-    @Deprecated
-    public static String getURI(String fileName) throws IOException {
-        return getClassPathResourceAsURI(fileName);
     }
 
     /**
