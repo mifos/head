@@ -404,7 +404,7 @@ public class QuestionGroupTestHelper {
             questionnairePage.setResponse(question, answers.get(question));
         }
         ClientViewDetailsPage clientViewDetailsPage2 = (ClientViewDetailsPage)questionnairePage.submit();
-        if(clientViewDetailsPage2!=null && clientViewDetailsPage2.getQuestionGroupInstances()!=null && clientViewDetailsPage2.getQuestionGroupInstances().size()>1) {
+        if(clientViewDetailsPage2!=null && clientViewDetailsPage2.getQuestionGroupInstances()!=null && clientViewDetailsPage2.getQuestionGroupInstances().size()>2) {
             Assert.assertEquals(clientViewDetailsPage2.getQuestionGroupInstances().get(2).getName(),"TestQuestionGroup");
         }
     }
