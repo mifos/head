@@ -29,6 +29,7 @@ import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallmentBuilder;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.customers.business.CustomerBO;
@@ -118,7 +119,7 @@ public class LoanBOTest {
     }
 
     @Test
-    public void testCopyInstallmentSchedule() {
+    public void testCopyInstallmentScheduleForNonDecliningBalanceIntRecalculation() {
         LoanBO loanBO = new LoanBO();
         loanBO.addAccountActionDate(getLoanScheduleEntity(rupee, getDate(23, 10, 2010), "100", "10", "1", Money.zero(rupee)));
         loanBO.addAccountActionDate(getLoanScheduleEntity(rupee, getDate(23, 11, 2010), "100", "10", "2", Money.zero(rupee)));
