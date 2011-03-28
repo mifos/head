@@ -48,6 +48,7 @@ public class PaymentTypeDto {
         this.name = name;
     }
 
+    
     /**
      * Gets the ID value.
      *

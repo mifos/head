@@ -1105,15 +1105,14 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
     @Override
     public void disburseLoan(AccountPaymentParametersDto loanDisbursement, Short paymentTypeId) {
-
         MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = new UserContextFactory().create(mifosUser);
-
         try {
             PaymentTypeDto paymentType = null;
-            for (org.mifos.dto.domain.PaymentTypeDto paymentTypeDto : accountService.getLoanDisbursementTypes()) {
-                if (paymentTypeDto.getValue() == paymentTypeId) {
+            for (PaymentTypeDto paymentTypeDto : accountService.getLoanDisbursementTypes()) {
+                if (paymentTypeDto.getValue().equals(paymentTypeId)) {
                     paymentType = paymentTypeDto;
+                    break;
                 }
             }
 
@@ -1128,10 +1127,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                 throw new BusinessRuleException("errors.invalidTxndate");
             }
 
-            List<AccountPaymentParametersDto> loanDisbursements = new ArrayList<AccountPaymentParametersDto>();
-            loanDisbursements.add(loanDisbursement);
-
-            accountService.disburseLoans(loanDisbursements, userContext.getPreferredLocale());
+            accountService.disburseLoan(loanDisbursement, userContext.getPreferredLocale());
         } catch (Exception e) {
             throw new MifosRuntimeException(e);
         }

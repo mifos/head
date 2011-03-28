@@ -20,33 +20,18 @@
 
 package org.mifos.accounts.api;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyShort;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.joda.time.LocalDate;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.accounts.business.AccountBO;
-import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.application.collectionsheet.persistence.LoanAccountBuilder;
+import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.persistence.CustomerDao;
@@ -64,6 +49,15 @@ import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.util.helpers.Money;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class StandardAccountServiceTest {
@@ -91,8 +85,6 @@ public class StandardAccountServiceTest {
     @Mock
     private AccountBO someAccountBo;
 
-    private LoanBO accountBO;
-
     @Mock
     private LoanPersistence loanPersistence;
 
@@ -110,77 +102,25 @@ public class StandardAccountServiceTest {
     @Mock
     private HibernateTransactionHelper transactionHelper;
 
+    @Mock
+    LoanBO mockLoanAccount;
+
     @Before
     public void setup() {
         standardAccountService = new StandardAccountService(accountPersistence, loanPersistence,
                 acceptedPaymentTypePersistence, personnelDao, customerDao, loanBusinessService, transactionHelper);
         Money.setDefaultCurrency(TestUtils.RUPEE);
-        accountBO = new LoanAccountBuilder().withCustomer(customerBO).build();
+        LoanBO accountBO = new LoanAccountBuilder().withCustomer(customerBO).build();
         accountBO.setAccountPersistence(accountPersistence);
     }
 
-    @Ignore
     @Test
-    public void testMakeLoanPayment() throws PersistenceException, AccountException {
-        short userId = 1;
-        int accountId = 100;
-        int customerId = 1;
-        UserReferenceDto userMakingPayment = new UserReferenceDto(userId);
-        AccountReferenceDto loanAccount = new AccountReferenceDto(accountId);
-        BigDecimal paymentAmount = new BigDecimal("100");
-        LocalDate paymentDate = new LocalDate(2009, 10, 1);
-        String comment = "some comment";
-        java.sql.Date lastMeetingDate = new java.sql.Date(paymentDate.minusWeeks(3).toDateMidnight().getMillis());
-
-        when(customerBO.getCustomerId()).thenReturn(customerId);
-        when(accountPersistence.getAccount(accountId)).thenReturn(accountBO);
-        // when(accountBO.isTrxnDateValid(paymentDate.toDateMidnight().toDate())).thenReturn(true);
-        when(configurationPersistence.isRepaymentIndepOfMeetingEnabled()).thenReturn(false);
-        when(customerPersistence.getLastMeetingDateForCustomer(anyInt())).thenReturn(lastMeetingDate);
-        when(personnelPersistence.getPersonnel(anyShort())).thenReturn(personnelBO);
-
-        // FIXME - work in progress Vanmh
-        // standardLoanAccountService.makeLoanPayment(new AccountPaymentParametersDTO(userMakingPayment, loanAccount,
-        // paymentAmount, paymentDate, PaymentTypeDTO.CASH, comment));
+    public void disburseLoan() throws Exception {
+        LocalDate disbursalDate = new LocalDate(2011, 1, 10);
+        PaymentTypeDto paymentTypeDto = new PaymentTypeDto((short) 1, PaymentTypes.CASH.toString());
+        AccountPaymentParametersDto accountPaymentParameter = new AccountPaymentParametersDto((short)1, 1, BigDecimal.ONE, disbursalDate, paymentTypeDto, "");
+        standardAccountService.disburseLoan(accountPaymentParameter, Locale.US);
     }
-
-    private AccountPaymentParametersDto createAccountPaymentParametersDto(short userId, int accountId,
-            String paymentAmount) {
-        AccountPaymentParametersDto accountPaymentParametersDTO = new AccountPaymentParametersDto(new UserReferenceDto(
-                userId), new AccountReferenceDto(accountId), new BigDecimal(paymentAmount), new LocalDate(),
-                new PaymentTypeDto((short) 1, "CASH"), "");
-
-        return accountPaymentParametersDTO;
-    }
-
-    /*
-     * IGNORING as is not running as unit tests as it accesses hibernate..
-     *
-     * Make sure that a payment is made for each DTO passed in
-     */
-    @Ignore
-    @Test
-    public void testMakeLoanPayments() throws Exception {
-        short userId = 1;
-        int accountId = 100;
-        String paymentAmount = "100";
-        List<AccountPaymentParametersDto> accountPaymentParametersDtoList = new ArrayList();
-        AccountPaymentParametersDto dto1 = createAccountPaymentParametersDto(userId, accountId, paymentAmount);
-        AccountPaymentParametersDto dto2 = createAccountPaymentParametersDto(userId, accountId, paymentAmount);
-        accountPaymentParametersDtoList.add(dto1);
-        accountPaymentParametersDtoList.add(dto2);
-
-        StandardAccountService standardAccountServiceSpy = spy(standardAccountService);
-        doNothing().when(standardAccountServiceSpy).makePaymentNoCommit((AccountPaymentParametersDto) any());
-
-        standardAccountServiceSpy.makePayments(accountPaymentParametersDtoList);
-        verify(standardAccountServiceSpy).makePaymentNoCommit(dto1);
-        verify(standardAccountServiceSpy).makePaymentNoCommit(dto2);
-
-    }
-
-    @Mock
-    LoanBO mockLoanAccount;
 
     @Test
     public void testDisbursalAmountMustMatchFullLoanAmount() throws Exception {
@@ -219,7 +159,6 @@ public class StandardAccountServiceTest {
     public void testFailureOfLookupLoanAccountReferenceFromGlobalAccountNumber() throws Exception {
         String globalAccountNumber = "123456789012345";
         when(accountPersistence.findBySystemId(globalAccountNumber)).thenReturn(null);
-        AccountReferenceDto accountReferenceDto = standardAccountService
-                .lookupLoanAccountReferenceFromGlobalAccountNumber(globalAccountNumber);
+        standardAccountService.lookupLoanAccountReferenceFromGlobalAccountNumber(globalAccountNumber);
     }
 }
