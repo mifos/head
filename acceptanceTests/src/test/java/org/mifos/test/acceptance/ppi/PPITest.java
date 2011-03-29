@@ -56,7 +56,9 @@ public class PPITest extends UiTestCaseBase {
         String configPath = new ConfigurationLocator().getConfigurationDirectory();
         String fileName= "PPISurveyBANGLADESH2009.xml";
         String sourcePath = PPITest.class.getResource("/mpesa/"+fileName).getFile();
-        String destPath = configPath +"/uploads/questionGroups/" + fileName;
+        String qgDestPath = configPath +"/uploads/questionGroups/";
+        String destPath = qgDestPath + fileName;
+        new File(qgDestPath).mkdirs();
         File sourceFile = new File(sourcePath);
         File destFile = new File(destPath);
         List <String> QGlist = new ArrayList<String>();
