@@ -23,6 +23,7 @@ package org.mifos.dto.screen;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +36,7 @@ import org.mifos.dto.domain.PrdOfferingDto;
 public class LoanCreationProductDetailsDto implements Serializable {
 
     private final List<PrdOfferingDto> loanProductDtos;
-    private Map<String, String> productOptions = new HashMap<String, String>();
+    private Map<String, String> productOptions = new LinkedHashMap<String, String>();
 	private final CustomerDetailDto customerDetailDto;
     private final Date nextMeetingDate;
     private final boolean isGroup;

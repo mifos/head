@@ -90,7 +90,8 @@ public class LoanAccountFormBean implements Serializable {
     private boolean repaymentScheduleIndependentOfCustomerMeeting = false;
     private Integer repaymentRecursEvery;
     private Integer repaymentDayOfWeek;
-    
+    private Integer repaymentDayOfMonth;
+
     // variable installments only for validation purposes
     private boolean variableInstallmentsAllowed;
     private Integer minGapInDays;
@@ -589,5 +590,13 @@ public class LoanAccountFormBean implements Serializable {
 
     public void setClientGlobalId(String[] clientGlobalId) {
         this.clientGlobalId = clientGlobalId;
+    }
+    
+    public Integer getRepaymentDayOfMonth() {
+        return repaymentDayOfMonth;
+    }
+
+    public void setRepaymentDayOfMonth(Integer repaymentDayOfMonth) {
+        this.repaymentDayOfMonth = repaymentDayOfMonth;
     }
 }
