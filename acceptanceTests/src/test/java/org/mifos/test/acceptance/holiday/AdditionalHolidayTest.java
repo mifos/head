@@ -53,7 +53,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(singleThreaded = true, groups = {"holiday", "schedules", "acceptance", "ui"})
+@Test(singleThreaded = true, groups = {"holiday", "schedules", "acceptance", "ui", "no_db_unit"})
 public class AdditionalHolidayTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;
@@ -62,7 +62,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
     private GroupTestHelper groupTestHelper;
     private ClientTestHelper clientTestHelper;
     private LoanTestHelper loanTestHelper;
-    private NavigationHelper navigationHelper;;
+    private NavigationHelper navigationHelper;
 
     private DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService;
 
@@ -89,7 +89,6 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(groups = "no_db_unit")
     public void createTwoWeeklyLoansInDifferentOffices() throws Exception {
         DateTime targetTime = new DateTime(2011, 3, 9, 0, 0, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
@@ -116,7 +115,6 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     //http://mifosforge.jira.com/browse/MIFOSTEST-280
-    @Test(groups = "no_db_unit")
     public void testBranchSpecificMoratorium() throws Exception {
         DateTime targetTime = new DateTime(2009, 3, 11, 0, 0, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
