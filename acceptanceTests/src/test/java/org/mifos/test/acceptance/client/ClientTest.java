@@ -303,13 +303,17 @@ public class ClientTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void closeClientAccountWithQG() throws Exception {
         //Given
-        CreateGroupSubmitParameters groupParams = new CreateGroupSubmitParameters();
-        groupParams.setGroupName("GroupTest");
+        String groupName = "group1";
+        CreateClientEnterPersonalDataPage.SubmitFormParameters clientParams = clientParams();
+        clientParams.setFirstName("John");
+        clientParams.setLastName("Doe4321");
+        ClientViewDetailsPage clientPage = clientTestHelper.createNewClient(groupName, clientParams);
+        String clientName = clientPage.getGlobalCustNum();
+        clientTestHelper.changeCustomerStatus(clientPage, ClientStatus.ACTIVE);
         
         createQuestions2();
         createQuestionGroup2();
-        
-        String clientName = "0002-000000008";
+
         String qG_1 = "CloseClientQG";
         String qG_2 = "CloseClientQG2";
         QuestionResponseParameters responseParams = getQuestionResponseParametersForClientAccountClose("answer1");
