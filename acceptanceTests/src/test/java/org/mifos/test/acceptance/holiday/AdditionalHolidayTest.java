@@ -46,7 +46,9 @@ import org.mifos.test.acceptance.framework.testhelpers.HolidayTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
+import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
 import org.mifos.test.acceptance.util.StringUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -55,6 +57,9 @@ import org.testng.annotations.Test;
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
 @Test(singleThreaded = true, groups = {"holiday", "schedules", "acceptance", "ui", "no_db_unit"})
 public class AdditionalHolidayTest extends UiTestCaseBase {
+
+    @Autowired
+    private ApplicationDatabaseOperation applicationDatabaseOperation;
 
     private AppLauncher appLauncher;
     private HolidayTestHelper holidayTestHelper;
@@ -181,9 +186,11 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
 
         holidayTestHelper.createHoliday(params);
 
+        navigationHelper.navigateToAdminPage();
+
+        applicationDatabaseOperation.cleanBatchJobTables();
         List<String> jobsToRun = new ArrayList<String>();
         jobsToRun.add("ApplyHolidayChangesTaskJob");
-        navigationHelper.navigateToAdminPage();
         new BatchJobHelper(selenium).runSomeBatchJobs(jobsToRun);
 
         targetTime = new DateTime(2009, 3, 17, 0, 0, 0, 0);
