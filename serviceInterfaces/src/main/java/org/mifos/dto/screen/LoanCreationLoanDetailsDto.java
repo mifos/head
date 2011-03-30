@@ -22,7 +22,6 @@ package org.mifos.dto.screen;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,8 +56,9 @@ public class LoanCreationLoanDetailsDto implements Serializable {
 	private final Map<String, String> defaultFeeOptions;
 	private final Map<String, String> additionalFeeOptions;
 	private final Map<String, String> daysOfTheWeekOptions;
-	
-	private final List<FundDto> fundDtos;
+	private final Map<String, String> weeksOfTheMonthOptions;
+
+    private final List<FundDto> fundDtos;
     private final List<FeeDto> defaultFees;
     private final BigDecimal defaultLoanAmount;
     private final BigDecimal maxLoanAmount;
@@ -82,11 +82,12 @@ public class LoanCreationLoanDetailsDto implements Serializable {
     public LoanCreationLoanDetailsDto(boolean isRepaymentIndependentOfMeetingEnabled,
             MeetingDto loanOfferingMeetingDetail, MeetingDto customerMeetingDetail,
             List<ValueListElement> loanPurposes, ProductDetailsDto productDto, CustomerDetailDto customerDetailDto, List<PrdOfferingDto> loanProductDtos, 
-            String interestRateType, List<FundDto> fundDtos, HashMap<String, String> collateralOptions, 
-            HashMap<String, String> purposeOfLoanOptions, Map<String, String> defaultFeeOptions, Map<String, String> additionalFeeOptions, List<FeeDto> defaultFees, 
+            String interestRateType, List<FundDto> fundDtos, LinkedHashMap<String, String> collateralOptions, 
+            LinkedHashMap<String, String> purposeOfLoanOptions, Map<String, String> defaultFeeOptions, Map<String, String> additionalFeeOptions, List<FeeDto> defaultFees, 
             BigDecimal defaultLoanAmount, BigDecimal maxLoanAmount, BigDecimal minLoanAmount, 
             Double defaultInterestRate, Double maxInterestRate, Double minInterestRate, 
-            Integer defaultNumberOfInstallments, Integer maxNumberOfInstallments, Integer minNumberOfInstallments, LocalDate nextPossibleDisbursementDate, Map<String, String> daysOfTheWeekOptions, 
+            Integer defaultNumberOfInstallments, Integer maxNumberOfInstallments, Integer minNumberOfInstallments, LocalDate nextPossibleDisbursementDate, 
+            LinkedHashMap<String, String> daysOfTheWeekOptions, LinkedHashMap<String, String> weeksOfTheMonthOptions, 
             boolean variableInstallmentsAllowed, Integer minGapInDays, Integer maxGapInDays, BigDecimal minInstallmentAmount, boolean compareCashflowEnabled, 
             boolean isGlimEnabled, boolean isGroup, List<LoanAccountDetailsDto> clientDetails) {
         this.repaymentIndependentOfMeetingEnabled = isRepaymentIndependentOfMeetingEnabled;
@@ -110,6 +111,7 @@ public class LoanCreationLoanDetailsDto implements Serializable {
         this.minNumberOfInstallments = minNumberOfInstallments;
         this.nextPossibleDisbursementDate = nextPossibleDisbursementDate;
         this.daysOfTheWeekOptions = daysOfTheWeekOptions;
+        this.weeksOfTheMonthOptions = weeksOfTheMonthOptions;
         this.variableInstallmentsAllowed = variableInstallmentsAllowed;
         this.minGapInDays = minGapInDays;
         this.maxGapInDays = maxGapInDays;
@@ -282,5 +284,7 @@ public class LoanCreationLoanDetailsDto implements Serializable {
         return clientDetails;
     }
     
-    
+    public Map<String, String> getWeeksOfTheMonthOptions() {
+        return weeksOfTheMonthOptions;
+    }    
 }

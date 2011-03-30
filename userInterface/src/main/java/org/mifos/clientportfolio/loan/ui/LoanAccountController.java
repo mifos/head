@@ -30,6 +30,10 @@ import org.joda.time.LocalDate;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.application.servicefacade.LoanAccountServiceFacade;
 import org.mifos.clientportfolio.loan.service.CreateLoanSchedule;
+import org.mifos.clientportfolio.loan.service.MonthlyOnDayOfMonthSchedule;
+import org.mifos.clientportfolio.loan.service.MonthlyOnWeekOfMonthSchedule;
+import org.mifos.clientportfolio.loan.service.RecurringSchedule;
+import org.mifos.clientportfolio.loan.service.WeeklySchedule;
 import org.mifos.clientportfolio.newloan.applicationservice.CreateGlimLoanAccount;
 import org.mifos.clientportfolio.newloan.applicationservice.CreateLoanAccount;
 import org.mifos.clientportfolio.newloan.applicationservice.GroupMemberAccountDto;
@@ -90,9 +94,20 @@ public class LoanAccountController {
     	formBean.setCustomerId(dto.getCustomerDetailDto().getCustomerId());
     	formBean.setRepaymentScheduleIndependentOfCustomerMeeting(dto.isRepaymentIndependentOfMeetingEnabled());
 
+    	
     	if (dto.isRepaymentIndependentOfMeetingEnabled()) {
-    	    formBean.setRepaymentRecursEvery(dto.getCustomerMeetingDetail().getMeetingDetailsDto().getEvery());
-    	    formBean.setRepaymentDayOfWeek(dto.getCustomerMeetingDetail().getMeetingDetailsDto().getRecurrenceDetails().getDayOfWeek());
+    	    
+    	    Integer recursEvery = dto.getCustomerMeetingDetail().getMeetingDetailsDto().getEvery();
+    	    Integer dayOfMonth = dto.getCustomerMeetingDetail().getMeetingDetailsDto().getRecurrenceDetails().getDayNumber();
+    	    Integer weekOfMonth = dto.getCustomerMeetingDetail().getMeetingDetailsDto().getRecurrenceDetails().getWeekOfMonth();
+    	    Integer dayOfWeek = dto.getCustomerMeetingDetail().getMeetingDetailsDto().getRecurrenceDetails().getDayOfWeek();
+    	    if (dayOfMonth != null && dayOfMonth > 0) {
+    	        formBean.setDayOfMonthDetails(dayOfMonth, recursEvery);
+    	    } else if (weekOfMonth != null){
+    	        formBean.setWeekOfMonthDetails(weekOfMonth, dayOfWeek, recursEvery);
+    	    } else if (dayOfWeek != null) {
+    	        formBean.setWeeklyDetails(dayOfWeek, recursEvery);
+    	    }
     	}
     	
     	formBean.setVariableInstallmentsAllowed(dto.isVariableInstallmentsAllowed());
@@ -174,8 +189,10 @@ public class LoanAccountController {
                                                     .withMonthOfYear(formBean.getDisbursalDateMonth().intValue())
                                                     .withYearOfEra(formBean.getDisbursalDateYear().intValue());
         
+        RecurringSchedule recurringSchedule = determineRecurringSchedule(formBean);
+        
         CreateLoanSchedule createLoanAccount = new CreateLoanSchedule(customerId, productId, BigDecimal.valueOf(formBean.getAmount().doubleValue()), formBean.getInterestRate().doubleValue(), disbursementDate, 
-                formBean.getNumberOfInstallments().intValue(), formBean.getGraceDuration().intValue(), formBean.isRepaymentScheduleIndependentOfCustomerMeeting(), formBean.getRepaymentRecursEvery(), formBean.getRepaymentDayOfWeek());
+                formBean.getNumberOfInstallments().intValue(), formBean.getGraceDuration().intValue(), formBean.isRepaymentScheduleIndependentOfCustomerMeeting(), recurringSchedule);
         
         LoanScheduleDto loanSchedule = loanAccountServiceFacade.createLoanSchedule(createLoanAccount);
 
@@ -198,6 +215,20 @@ public class LoanAccountController {
         }
         
         return loanSchedule;
+    }
+
+    private RecurringSchedule determineRecurringSchedule(LoanAccountFormBean formBean) {
+        RecurringSchedule recurringSchedule = null;
+        if (formBean.isMonthly()) {
+            if (formBean.isMonthlyDayOfMonthOptionSelected()) {
+                recurringSchedule = new MonthlyOnDayOfMonthSchedule(formBean.getRepaymentRecursEvery(), formBean.getRepaymentDayOfMonth());
+            } else if (formBean.isMonthlyWeekOfMonthOptionSelected()) {
+                recurringSchedule = new MonthlyOnWeekOfMonthSchedule(formBean.getRepaymentRecursEvery(), formBean.getRepaymentWeekOfMonth(), formBean.getRepaymentDayOfWeek());
+            }
+        } else if (formBean.isWeekly()) {
+            recurringSchedule = new WeeklySchedule(formBean.getRepaymentRecursEvery(), formBean.getRepaymentDayOfWeek());            
+        }
+        return recurringSchedule;
     }
     
     public CashFlowDto retrieveCashFlowSettings(LoanScheduleDto loanScheduleDto, int productId) {
@@ -282,13 +313,14 @@ public class LoanAccountController {
                                                     .withMonthOfYear(formBean.getDisbursalDateMonth().intValue())
                                                      .withYearOfEra(formBean.getDisbursalDateYear().intValue());
         
+        RecurringSchedule recurringSchedule = determineRecurringSchedule(formBean);
+        
         CreateLoanAccount loanAccountDetails = new CreateLoanAccount(formBean.getCustomerId(),
                 formBean.getProductId(), accountState, BigDecimal.valueOf(formBean.getAmount().doubleValue()),
                 formBean.getInterestRate().doubleValue(), disbursementDate, formBean.getNumberOfInstallments()
                         .intValue(), formBean.getGraceDuration().intValue(), formBean.getFundId(),
                 formBean.getLoanPurposeId(), formBean.getCollateralTypeId(), formBean.getCollateralNotes(),
-                formBean.getExternalId(), formBean.isRepaymentScheduleIndependentOfCustomerMeeting(),
-                formBean.getRepaymentRecursEvery(), formBean.getRepaymentDayOfWeek());
+                formBean.getExternalId(), formBean.isRepaymentScheduleIndependentOfCustomerMeeting(), recurringSchedule);
 
         LoanCreationResultDto loanCreationResultDto = null;
         
