@@ -42,12 +42,13 @@ import org.mifos.test.acceptance.framework.questionnaire.EditQuestionGroupPage;
 import org.mifos.test.acceptance.framework.questionnaire.EditQuestionPage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionDetailPage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionGroupDetailPage;
-import org.mifos.test.acceptance.framework.questionnaire.QuestionGroupResponsePage;
+import org.mifos.test.acceptance.framework.questionnaire.ViewQuestionResponseDetailPage;
+
 import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionnairePage;
 import org.mifos.test.acceptance.framework.questionnaire.ViewAllQuestionGroupsPage;
 import org.mifos.test.acceptance.framework.questionnaire.ViewAllQuestionsPage;
-import org.mifos.test.acceptance.framework.questionnaire.ViewQuestionResponseDetailPage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionGroupResponsePage;
 import org.mifos.test.acceptance.framework.savings.SavingsAccountDetailPage;
 import org.testng.Assert;
 
@@ -78,6 +79,11 @@ public class QuestionGroupTestHelper {
             }
         }
         createQuestionGroupPage.submit(createQuestionGroupParameters);
+    }
+
+    public QuestionGroupDetailPage changeAppliesTo(String questionGroup, String[] eventList){
+        EditQuestionGroupPage editQuestionGroupPage = naviagateToEditQuestionGroup(questionGroup);
+        return editQuestionGroupPage.changeAppliesTo(eventList);
     }
 
     public void validatePageBlankMandatoryField() {
@@ -398,7 +404,9 @@ public class QuestionGroupTestHelper {
             questionnairePage.setResponse(question, answers.get(question));
         }
         ClientViewDetailsPage clientViewDetailsPage2 = (ClientViewDetailsPage)questionnairePage.submit();
-        Assert.assertEquals(clientViewDetailsPage2.getQuestionGroupInstances().get(2).getName(),"TestQuestionGroup");
+        if(clientViewDetailsPage2!=null && clientViewDetailsPage2.getQuestionGroupInstances()!=null && clientViewDetailsPage2.getQuestionGroupInstances().size()>2) {
+            Assert.assertEquals(clientViewDetailsPage2.getQuestionGroupInstances().get(2).getName(),"TestQuestionGroup");
+        }
     }
 
     public QuestionResponsePage navigateToQuestionResponsePageDuringLoanDisbursal(String loanAccountID, DisburseLoanParameters disburseParams) {
@@ -470,5 +478,12 @@ public class QuestionGroupTestHelper {
             .submit();
         questionnairePage.verifyErrorsOnPage(attachParams.getErrors());
         return questionnairePage.cancelAndNavigateToSavingsAccountDetailPage();
+    }
+
+    public AdminPage activatePPI(String countryName){
+        return navigationHelper
+            .navigateToAdminPage()
+            .navigateToActivatePPI()
+            .activateQuestionGroup(countryName);
     }
 }

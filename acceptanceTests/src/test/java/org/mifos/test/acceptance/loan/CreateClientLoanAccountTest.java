@@ -113,7 +113,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         submitAccountParameters.setAmount("1012.0");
         QuestionResponseParameters parameters = new QuestionResponseParameters();
         parameters.addTextAnswer("create_ClientPersonalInfo.input.customField", answer);
-        parameters.addSingleSelectAnswer("name=questionGroups[0].sectionDetails[0].questions[1].value", choiceAnswer);
+        parameters.addSingleSelectAnswer("questionGroups[0].sectionDetails[0].questions[1].value", choiceAnswer);
 
         LoanAccountPage loanAccountPage = createLoanAccount(searchParameters, submitAccountParameters, parameters);
         ViewQuestionResponseDetailPage questionResponseDetailPage = loanAccountPage.navigateToAdditionalInformationPage();
@@ -252,19 +252,35 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
      *
      * @throws Exception
      */
-    @Test(enabled = false) // TODO js - temporarily disabled broken test (blocked by MIFOS-4792)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createLoanAccountsWithRestrictedProductsMix() throws Exception {
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         DateTime targetTime = new DateTime(2011, 1, 24, 15, 0, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
 
+        DefineNewLoanProductPage.SubmitFormParameters productParams = FormParametersHelper.getWeeklyLoanProductParameters();
+        productParams.setOfferingName("product94");
+        productParams.setOfferingShortName("p94");
+        productParams.setDefaultInterestRate("15.3");
+        productParams.setMaxInterestRate("50");
+        productParams.setInterestTypes(SubmitFormParameters.DECLINING_BALANCE);
+        productParams.setDefaultLoanAmount("13333");
+        productParams.setDefInstallments("13");
+        productParams.setApplicableFor(DefineNewLoanProductPage.SubmitFormParameters.GROUPS);
+        
+        loanProductTestHelper.defineNewLoanProduct(productParams);
+        
+        productParams.setOfferingName("product94B");
+        productParams.setOfferingShortName("p94b");
+        
+        loanProductTestHelper.defineNewLoanProduct(productParams);
+        
         CreateLoanAccountSearchParameters searchParams1 = new CreateLoanAccountSearchParameters();
-        searchParams1.setSearchString("MyGroup1233266255641");
-        searchParams1.setLoanProduct("WeeklyGroupFlatLoanWithOnetimeFee");
+        searchParams1.setSearchString("GroupWeekly");
+        searchParams1.setLoanProduct("product94");
         CreateLoanAccountSearchParameters searchParams2 = new CreateLoanAccountSearchParameters();
-        searchParams2.setSearchString("MyGroup1233266255641");
-        searchParams2.setLoanProduct("WeeklyGroupDeclineLoanWithPeriodicFee");
+        searchParams2.setSearchString("GroupWeekly");
+        searchParams2.setLoanProduct("product94B");
         DisburseLoanParameters disburseParams = new DisburseLoanParameters();
         disburseParams.setPaymentType(DisburseLoanParameters.CASH);
         disburseParams.setDisbursalDateDD("24");
@@ -272,7 +288,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         disburseParams.setDisbursalDateYYYY("2011");
         String error = "The loan could not be disbursed as " + searchParams1.getLoanProduct() + " and " + searchParams2.getLoanProduct() + " are not allowed to co-exist";
 
-        LoanAccountPage loanAccountPage = loanTestHelper.createTwoLoanAccountsWithMixedRestricedPoducts(searchParams1, searchParams2, disburseParams);
+        LoanAccountPage loanAccountPage = loanTestHelper.createTwoLoanAccountsWithMixedRestricedPoducts(searchParams1, searchParams2, disburseParams, new DateTime(2011, 02, 28, 10, 0, 0, 0));
 
         loanAccountPage.verifyError(error);
 
@@ -286,31 +302,44 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
      *
      * @throws Exception
      */
-    @Test(enabled = false) // TODO js - temporarily disabled broken test (blocked by MIFOS-4792)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createMultipleLoanAccountsWithRestrictedProductsMix() throws Exception {
         setDateAsToday();
 
+        DefineNewLoanProductPage.SubmitFormParameters productParams = FormParametersHelper.getWeeklyLoanProductParameters();
+        productParams.setOfferingName("product95");
+        productParams.setOfferingShortName("p95");
+        productParams.setDefaultInterestRate("15.3");
+        productParams.setMaxInterestRate("50");
+        productParams.setInterestTypes(SubmitFormParameters.DECLINING_BALANCE);
+        productParams.setDefaultLoanAmount("13333");
+        productParams.setDefInstallments("13");
+        
+        loanProductTestHelper.defineNewLoanProduct(productParams);
+        
+        productParams.setOfferingName("product95B");
+        productParams.setOfferingShortName("p95b");
+        
+        loanProductTestHelper.defineNewLoanProduct(productParams);
+        
         CreateMultipleLoanAccountSelectParameters multipleAccParameters1 = new CreateMultipleLoanAccountSelectParameters();
-        multipleAccParameters1.setBranch("MyOffice1233265929385");
-        multipleAccParameters1.setLoanOfficer("Joe1233265931256 Guy1233265931256");
-        multipleAccParameters1.setCenter("MyCenter1233265933427");
-        multipleAccParameters1.setLoanProduct("WeeklyFlatLoanWithOneTimeFees");
+        multipleAccParameters1.setBranch("MyOfficeDHMFT");
+        multipleAccParameters1.setLoanOfficer("loan officer");
+        multipleAccParameters1.setCenter("WeeklyMeetingCenter");
+        multipleAccParameters1.setLoanProduct("product95");
         CreateMultipleLoanAccountSelectParameters multipleAccParameters2 = new CreateMultipleLoanAccountSelectParameters();
-        multipleAccParameters2.setBranch("MyOffice1233265929385");
-        multipleAccParameters2.setLoanOfficer("Joe1233265931256 Guy1233265931256");
-        multipleAccParameters2.setCenter("MyCenter1233265933427");
-        multipleAccParameters2.setLoanProduct("WeeklyClientDeclinetLoanWithPeriodicFee");
+        multipleAccParameters2.setBranch("MyOfficeDHMFT");
+        multipleAccParameters2.setLoanOfficer("loan officer");
+        multipleAccParameters2.setCenter("WeeklyMeetingCenter");
+        multipleAccParameters2.setLoanProduct("product95B");
         DisburseLoanParameters disburseParams = new DisburseLoanParameters();
         disburseParams.setPaymentType(DisburseLoanParameters.CASH);
-        disburseParams.setDisbursalDateDD("24");
-        disburseParams.setDisbursalDateMM("01");
+        disburseParams.setDisbursalDateDD("20");
+        disburseParams.setDisbursalDateMM("03");
         disburseParams.setDisbursalDateYYYY("2011");
         String error = "The loan could not be disbursed as " + multipleAccParameters1.getLoanProduct() + " and " + multipleAccParameters2.getLoanProduct() + " are not allowed to co-exist";
-        String[] clients = new String[3];
-        clients[0] = "Stu1233265941610 Client1233265941610";
-        clients[1] = "Stu1233265958456 Client1233265958456";
-        clients[2] = "Stu1233265968663 Client1233265968663";
+        String[] clients = new String[1];
+        clients[0] = "MemberWeekly Group";
 
         CreateLoanAccountsSuccessPage createLoanAccountsSuccessPage = loanTestHelper.createMultipleLoanAccountsWithMixedRestricedPoducts(multipleAccParameters1, multipleAccParameters2, disburseParams, clients);
         List<String> accountNumbers = createLoanAccountsSuccessPage.verifyAndGetLoanAccountNumbers(clients.length);

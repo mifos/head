@@ -25,6 +25,7 @@ import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
+import org.mifos.test.acceptance.framework.savingsproduct.SavingsProductParameters;
 import org.mifos.test.acceptance.framework.account.AccountStatus;
 import org.mifos.test.acceptance.framework.account.EditAccountStatusParameters;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
@@ -70,6 +71,7 @@ import org.mifos.test.acceptance.framework.testhelpers.GroupTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.framework.testhelpers.QuestionGroupTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.SavingsAccountHelper;
+import org.mifos.test.acceptance.framework.testhelpers.SavingsProductHelper;
 import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
 import org.mifos.test.acceptance.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,6 +79,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -92,7 +95,7 @@ import java.util.Set;
 import static java.util.Arrays.asList;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@SuppressWarnings("PMD.TooManyFields")
+@SuppressWarnings({"PMD.TooManyFields","PMD.ExcessiveClassLength"})
 @Test(singleThreaded = true, groups = {"client", "acceptance", "ui", "no_db_unit"})
 public class ClientTest extends UiTestCaseBase {
 
@@ -102,6 +105,7 @@ public class ClientTest extends UiTestCaseBase {
     private QuestionGroupTestHelper questionGroupTestHelper;
     private GroupTestHelper groupTestHelper;
     private SavingsAccountHelper savingsAccountHelper;
+    private SavingsProductHelper savingsProductHelper;
 
     @Autowired
     private ApplicationDatabaseOperation applicationDatabaseOperation;
@@ -111,8 +115,17 @@ public class ClientTest extends UiTestCaseBase {
     public static final String NUMBER = "Number";
     public static final String SMART_SELECT = "Smart Select";
     private String questionGroupTitle;
-    private String question1;
-    private String question2;
+    private String question1 = "663q1";
+    private String question2 = "663q2";
+    private static final String question3 = "663q3";
+    private static final String question4 = "663q4";
+    private static final String question5 = "663q5";
+    private static final String question6 = "663q6";
+    private static final String question7 = "663q7";
+    private static final String question8 = "663q8";
+    private static final String question9 = "663q9";
+    private static final String question10 = "663q10";
+    private static final String question11 = "663q11";
     private String response;
     private ClientViewDetailsPage viewClientDetailsPage;
     private Map<Integer, QuestionGroup> questionGroupInstancesOfClient;
@@ -129,6 +142,7 @@ public class ClientTest extends UiTestCaseBase {
         questionGroupTestHelper = new QuestionGroupTestHelper(selenium);
         groupTestHelper = new GroupTestHelper(selenium);
         savingsAccountHelper = new SavingsAccountHelper(selenium);
+        savingsProductHelper = new SavingsProductHelper(selenium);
     }
 
     @AfterMethod(alwaysRun = true)
@@ -286,33 +300,41 @@ public class ClientTest extends UiTestCaseBase {
     }
 
     // http://mifosforge.jira.com/browse/MIFOSTEST-663
-    @Test(enabled = false) // TODO js - make it no_db_unit
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void closeClientAccountWithQG() throws Exception {
-        CreateGroupSubmitParameters groupParams = new CreateGroupSubmitParameters();
-        groupParams.setGroupName("GroupTest");
-        String clientName = "0004-000000057";
+        //Given
+        String groupName = "group1";
+        CreateClientEnterPersonalDataPage.SubmitFormParameters clientParams = clientParams();
+        clientParams.setFirstName("John");
+        clientParams.setLastName("Doe4321");
+        ClientViewDetailsPage clientPage = clientTestHelper.createNewClient(groupName, clientParams);
+        String clientName = clientPage.getGlobalCustNum();
+        clientTestHelper.changeCustomerStatus(clientPage, ClientStatus.ACTIVE);
+        
+        createQuestions2();
+        createQuestionGroup2();
+
         String qG_1 = "CloseClientQG";
         String qG_2 = "CloseClientQG2";
         QuestionResponseParameters responseParams = getQuestionResponseParametersForClientAccountClose("answer1");
         QuestionResponseParameters responseParams2 = getQuestionResponseParametersForClientAccountClose("answer2");
         QuestionResponseParameters responseParamsAfterModyfication = getQuestionResponseParametersForClientAccountCloseAfterModyfication("answer2");
         List<CreateQuestionParameters> questionsList = new ArrayList<CreateQuestionParameters>();
-        questionsList.add(newFreeTextQuestionParameters("new q1"));
-        questionsList.add(newFreeTextQuestionParameters("new q2"));
-        questionsList.add(newFreeTextQuestionParameters("new q3"));
-        String[] newActiveQuestions = {"new q1", "new q2"};
-        String[] deactivateArray = {"new q3", "q3", "SingleSelect", "SmartSelect", "TextQuestion"};
-        String[] deactivatedGroupArray = {"SingleSelectQuestion", "SmartSelectQuestion"};
+        questionsList.add(newFreeTextQuestionParameters("663new question 1"));
+        questionsList.add(newFreeTextQuestionParameters("663new question 2"));
+        questionsList.add(newFreeTextQuestionParameters("663new question 3"));
+        String[] newActiveQuestions = { "663new question 1", "663new question 2" };
+        String[] deactivateArray = { "663new question 3", question3, question6, question2, question5};
+        String[] deactivatedGroupArray = {question10, question11};
         List<String> deactivateList = Arrays.asList(deactivateArray);
         Map<String, String> questionsAndAnswers = new HashMap<String, String>();
-        questionsAndAnswers.put("new q1", "answer2");
-        questionsAndAnswers.put("new q2", "answer2");
-        questionsAndAnswers.put("DateQuestion", "24/01/2011");
-        questionsAndAnswers.put("MultiSelect", "first");
-        questionsAndAnswers.put("Number", "10");
-        questionsAndAnswers.put("NumberQuestion", "10");
-        questionsAndAnswers.put("q1", "answer2");
+        questionsAndAnswers.put("663new question 1", "answer2");
+        questionsAndAnswers.put("663new question 2", "answer2");
+        questionsAndAnswers.put(question1, "24/01/2011");
+        questionsAndAnswers.put(question4, "10");
+        questionsAndAnswers.put(question7, "24/01/2011");
+        questionsAndAnswers.put(question8, "jan");
+        questionsAndAnswers.put(question9, "answer2");
         //When / Then
         QuestionResponsePage responsePage = clientTestHelper.navigateToQuestionResponsePageWhenCloseClientAccount(clientName);
         responsePage.populateAnswers(responseParams);
@@ -331,13 +353,105 @@ public class ClientTest extends UiTestCaseBase {
         responsePage.verifyQuestionsDoesnotappear(deactivateArray);
         responsePage.verifyQuestionsDoesnotappear(deactivatedGroupArray);
         responsePage.verifyQuestionsExists(newActiveQuestions);
-        responsePage.populateAnswers(responseParamsAfterModyfication);
-        responsePage.navigateToNextPage();
-        new CustomerChangeStatusPreviewPage(selenium).submitAndGotoClientViewDetailsPage();
+        
+        clientTestHelper.closeClientWithQG(clientName, responseParamsAfterModyfication);
 
         verifyQuestionResponsesExistInDatabase(clientName, "Close Client", questionsAndAnswers);
+        
+        questionTestHelper.markQuestionsAsInactive(asList("663new question 1","663new question 2", question1,
+                question2, question4, question7, question8, question9, question10, question11));
+        questionTestHelper.markQuestionGroupAsInactive(qG_1);
     }
+    
+    private void createQuestions2() {
+        List<CreateQuestionParameters> questions = new ArrayList<CreateQuestionParameters>();
+        CreateQuestionParameters q1 = new CreateQuestionParameters();
+        q1.setType(CreateQuestionParameters.TYPE_DATE);
+        q1.setText(question1);
+        questions.add(q1);
+        CreateQuestionParameters q2 = new CreateQuestionParameters();
+        q2.setType(CreateQuestionParameters.TYPE_MULTI_SELECT);
+        q2.setText(question2);
+        q2.setChoicesFromStrings(Arrays.asList(new String[] {"first", "second"}));
+        questions.add(q2);
+        CreateQuestionParameters q3 = new CreateQuestionParameters();
+        q3.setType(CreateQuestionParameters.TYPE_NUMBER);
+        q3.setText(question3);
+        q3.setNumericMax(10);
+        q3.setNumericMin(0);
+        questions.add(q3);
+        CreateQuestionParameters q4 = new CreateQuestionParameters();
+        q4.setType(CreateQuestionParameters.TYPE_NUMBER);
+        q4.setText(question4);
+        q4.setNumericMax(10);
+        q4.setNumericMin(0);
+        questions.add(q4);
+        CreateQuestionParameters q5 = new CreateQuestionParameters();
+        q5.setType(CreateQuestionParameters.TYPE_FREE_TEXT);
+        q5.setText(question5);
+        questions.add(q5);
+        CreateQuestionParameters q6 = new CreateQuestionParameters();
+        q6.setType(CreateQuestionParameters.TYPE_SINGLE_SELECT);
+        q6.setText(question6);
+        q6.setChoicesFromStrings(asList("good", "wrong"));
+        questions.add(q6);
+        CreateQuestionParameters q7 = new CreateQuestionParameters();
+        q7.setType(CreateQuestionParameters.TYPE_DATE);
+        q7.setText(question7);
+        questions.add(q7);
+        CreateQuestionParameters q8 = new CreateQuestionParameters();
+        q8.setType(CreateQuestionParameters.TYPE_MULTI_SELECT);
+        q8.setText(question8);
+        q8.setChoicesFromStrings(Arrays.asList(new String[] {"jan", "feb"}));
+        questions.add(q8);
+        CreateQuestionParameters q9 = new CreateQuestionParameters();
+        q9.setType(CreateQuestionParameters.TYPE_FREE_TEXT);
+        q9.setText(question9);
+        questions.add(q9);
+        CreateQuestionParameters q10 = new CreateQuestionParameters();
+        q10.setType(CreateQuestionParameters.TYPE_SINGLE_SELECT);
+        q10.setText(question10);
+        q10.setChoicesFromStrings(Arrays.asList(new String[] {"1", "2","3"}));
+        questions.add(q10);
+        CreateQuestionParameters q11 = new CreateQuestionParameters();
+        q11.setType(CreateQuestionParameters.TYPE_FREE_TEXT);
+        q11.setText(question11);
+        questions.add(q11);
+        questionGroupTestHelper.createQuestions(questions);
+    }
+    
+    private void createQuestionGroup2() {
+        String qG_1 = "CloseClientQG";
+        String qG_2 = "CloseClientQG2";
 
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        CreateQuestionGroupPage createQuestionGroupPage = adminPage.navigateToCreateQuestionGroupPage();
+        CreateQuestionGroupParameters parameters;
+        parameters = questionGroupTestHelper.getCreateQuestionGroupParameters(qG_1, asList(question1, question2, question3, question4, question5),
+                "Close Client", "Section1");
+        parameters.addExistingQuestion("Section2", question7);
+        parameters.addExistingQuestion("Section2", question6);
+        parameters.addExistingQuestion("Section2", question9);
+        parameters.addExistingQuestion("Section2", question8);
+        for (String section : parameters.getExistingQuestions().keySet()) {
+            createQuestionGroupPage.addExistingQuestion(section, parameters.getExistingQuestions().get(section));
+        }
+        createQuestionGroupPage.markEveryOtherQuestionsMandatory(asList(question1));
+        createQuestionGroupPage.submit(parameters);
+        adminPage = navigationHelper.navigateToAdminPage();
+        createQuestionGroupPage = adminPage.navigateToCreateQuestionGroupPage();
+        parameters = questionGroupTestHelper.getCreateQuestionGroupParameters(qG_2, asList(question1, question6, question3, question5),
+                "Close Client", "Section1");
+        parameters.addExistingQuestion("Section2", question9);
+        parameters.addExistingQuestion("Section2", question10);
+        parameters.addExistingQuestion("Section2", question8);
+        parameters.addExistingQuestion("Section2", question11);
+        for (String section : parameters.getExistingQuestions().keySet()) {
+            createQuestionGroupPage.addExistingQuestion(section, parameters.getExistingQuestions().get(section));
+        }
+        createQuestionGroupPage.submit(parameters);
+    }
+    
     public void verifyQuestionResponsesExistInDatabase(String clientID, String event, Map<String, String> questions) throws SQLException {
         for (String question : questions.keySet()) {
             Assert.assertTrue(applicationDatabaseOperation.deosQuestionResponseForClientExist(clientID, event, question, questions.get(question)));
@@ -352,19 +466,19 @@ public class ClientTest extends UiTestCaseBase {
         responseParams.addTextAnswer("questionGroups[0].sectionDetails[0].questions[3].value", "10");
         responseParams.addTextAnswer("questionGroups[0].sectionDetails[0].questions[4].value", answer);
 
-        responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[0].value", "24/01/2011");
-        responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[1].value", "good");
-        responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[2].valuesAsArray", "february:feb");
+        responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[0].value", "good");
+        responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[1].value", "24/01/2011");
+        responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[2].valuesAsArray", "feb");
         responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[3].value", answer);
 
         responseParams.addTextAnswer("questionGroups[1].sectionDetails[0].questions[0].value", "24/01/2011");
         responseParams.addTextAnswer("questionGroups[1].sectionDetails[0].questions[1].value", "10");
-        responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[0].questions[2].value", "good");
-        responseParams.addTextAnswer("questionGroups[1].sectionDetails[0].questions[3].value", answer);
+        responseParams.addTextAnswer("questionGroups[1].sectionDetails[0].questions[2].value", answer);
+        responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[0].questions[3].value", "good");
 
-        responseParams.addTextAnswer("questionGroups[1].sectionDetails[1].questions[0].value", answer);
-        responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[1].value", "1");
-        responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[2].valuesAsArray", "one:a");
+        responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[0].value", "1");
+        responseParams.addTextAnswer("questionGroups[1].sectionDetails[1].questions[1].value", answer);
+        responseParams.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[2].valuesAsArray", "jan");
         responseParams.addTextAnswer("questionGroups[1].sectionDetails[1].questions[3].value", answer);
 
         return responseParams;
@@ -376,10 +490,11 @@ public class ClientTest extends UiTestCaseBase {
         responseParams.addTextAnswer("questionGroups[0].sectionDetails[0].questions[1].value", answer);
 
         responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[0].value", "24/01/2011");
-        responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[1].questions[1].valuesAsArray", "first");
-        responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[2].value", "10");
-        responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[3].value", "10");
-        responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[4].value", answer);
+        responseParams.addTextAnswer("questionGroups[0].sectionDetails[1].questions[1].value", "10");
+        
+        responseParams.addTextAnswer("questionGroups[0].sectionDetails[2].questions[0].value", "24/01/2011");
+        responseParams.addSingleSelectAnswer("questionGroups[0].sectionDetails[2].questions[1].valuesAsArray", "jan");
+        responseParams.addTextAnswer("questionGroups[0].sectionDetails[2].questions[2].value", answer);
         return responseParams;
     }
 
@@ -676,8 +791,7 @@ public class ClientTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-35
-    @Test(enabled = false)
-    // TODO js - temporarily disabled broken test
+    @Test(enabled = false) //blocked by MIFOS-4858
     public void addingMemeberToGroupWithDiffrentStatuses() throws Exception {
         String groupName = "testGroup";
         String clientName = "test";
@@ -723,8 +837,7 @@ public class ClientTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-40
-    @Test(enabled = false)
-    // TODO js - temporarily disabled broken test
+    @Test(enabled = false) //blocked by MIFOS-4858
     public void addingMemeberOnHoldStatusToGroupWithDiffrentStatuses() throws Exception {
         String groupName = "testGroup";
         String clientName = "test";
@@ -738,7 +851,7 @@ public class ClientTest extends UiTestCaseBase {
                 "MyOfficeDHMFT");
         clientTestHelper.changeCustomerStatus(clientDetailsPage, ClientStatus.ACTIVE);
         clientTestHelper.changeCustomerStatus(clientDetailsPage, ClientStatus.ON_HOLD);
-        groupTestHelper.createNewGroupPartialApplication("MyCenter1233171688286", groupParams);
+        groupTestHelper.createNewGroupPartialApplication("Default Center", groupParams);
         // Then
         clientTestHelper.addClientToGroupWithErrorGroupLowerStatus(clientName, groupName);
 
@@ -835,20 +948,21 @@ public class ClientTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-48
-    @Test(enabled = false)
-    // TODO js - temporarily disabled broken test
+    @Test(enabled = false) //blocked by MIFOS-4272
     public void removeClientWithLoanFromGroup() throws Exception {
+        // Given
         String clientName = "client1 lastname";
         String groupName = navigationHelper.navigateToClientViewDetailsPage(clientName).getGroupMembership();
+        SavingsProductParameters params = savingsProductHelper.getGenericSavingsProductParameters(SavingsProductParameters.MANDATORY,SavingsProductParameters.GROUPS);
+        savingsProductHelper.createSavingsProduct(params);
         CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
         searchParameters.setSearchString(groupName);
-        searchParameters.setSavingsProduct("MandGroupSavingsPerIndiv1MoPost");
+        searchParameters.setSavingsProduct(params.getProductInstanceName());
 
         CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
         submitAccountParameters.setAmount("250.0");
 
-        String savingsId = savingsAccountHelper.createSavingsAccountWithQG(searchParameters, submitAccountParameters)
-                .getAccountId();
+        String savingsId = savingsAccountHelper.createSavingsAccount(searchParameters, submitAccountParameters).getAccountId();
         EditAccountStatusParameters editAccountStatusParameters = new EditAccountStatusParameters();
         editAccountStatusParameters.setAccountStatus(AccountStatus.SAVINGS_ACTIVE);
         editAccountStatusParameters.setNote("change status to active");
@@ -896,8 +1010,7 @@ public class ClientTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-45
-    @Test(enabled = false)
-    // TODO js - temporarily disabled broken test
+    @Test(enabled = false) //blocked by MIFOS-4272
     public void addClientWithSavingToGroupWithSavingsCheckGroupCalculation() throws Exception {
 
         String groupName = "group1";
@@ -917,14 +1030,18 @@ public class ClientTest extends UiTestCaseBase {
 
         searchParameters.setSavingsProduct("MonthlyClientSavingsAccount");
         searchParameters.setSearchString(clientName);
-        String savingsId = savingsAccountHelper.createSavingsAccountWithQG(searchParameters, submitAccountParameters)
-                .getAccountId();
+        
+        String savingsId = savingsAccountHelper.createSavingsAccount(searchParameters, submitAccountParameters).getAccountId();
         savingsAccountHelper.changeStatus(savingsId, editAccountStatusParameters);
 
-        searchParameters.setSavingsProduct("MandGroupSavingsPerIndiv1MoPost");
+        SavingsProductParameters savingsProductParameters = savingsProductHelper.getGenericSavingsProductParameters(SavingsProductParameters.MANDATORY,SavingsProductParameters.GROUPS);
+        savingsProductParameters.setShortName("M-45");
+        savingsProductParameters.setAmountAppliesTo(SavingsProductParameters.PER_INDIVIDUAL);
+        savingsProductHelper.createSavingsProduct(savingsProductParameters);
+        
+        searchParameters.setSavingsProduct(savingsProductParameters.getProductInstanceName());
         searchParameters.setSearchString(groupName);
-        savingsId = savingsAccountHelper.createSavingsAccountWithQG(searchParameters, submitAccountParameters)
-                .getAccountId();
+        savingsId = savingsAccountHelper.createSavingsAccount(searchParameters, submitAccountParameters).getAccountId();
         savingsAccountHelper.changeStatus(savingsId, editAccountStatusParameters);
 
         clientTestHelper.addClientToGroup(clientName, groupName);

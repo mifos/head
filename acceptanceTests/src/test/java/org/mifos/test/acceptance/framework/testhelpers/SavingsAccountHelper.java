@@ -31,7 +31,7 @@ import org.mifos.test.acceptance.framework.loan.AccountPreviewNotesPage;
 import org.mifos.test.acceptance.framework.loan.EditAccountStatusConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 import org.mifos.test.acceptance.framework.login.LoginPage;
-import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
+import org.mifos.test.acceptance.framework.questionnaire.QuestionnairePage;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountConfirmationPage;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountEntryPage;
 import org.mifos.test.acceptance.framework.savings.CreateSavingsAccountPreviewPage;
@@ -93,13 +93,13 @@ public class SavingsAccountHelper {
         return savingsAccountDetailPage;
     }
 
-    public QuestionResponsePage navigateToQuestionResponseDuringCreateSavings(CreateSavingsAccountSearchParameters searchParameters,
+    public QuestionnairePage navigateToQuestionResponseDuringCreateSavings(CreateSavingsAccountSearchParameters searchParameters,
             CreateSavingsAccountSubmitParameters submitAccountParameters) {
         CreateSavingsAccountSearchPage createSavingsAccountSearchPage = navigateToCreateSavingsAccountSearchPage();
         createSavingsAccountSearchPage.verifyPage();
         CreateSavingsAccountEntryPage createSavingsAccountEntryPage = createSavingsAccountSearchPage.searchAndNavigateToCreateSavingsAccountPage(searchParameters);
         createSavingsAccountEntryPage.verifyPage();
-        return createSavingsAccountEntryPage.submitAndNavigateToQuestionResponsePage(submitAccountParameters);
+        return createSavingsAccountEntryPage.submitAndNavigateToQuestionnairePage(submitAccountParameters);
     }
 
     private CreateSavingsAccountSearchPage navigateToCreateSavingsAccountSearchPage() {
@@ -163,16 +163,16 @@ public class SavingsAccountHelper {
         createSavingsAccountSearchPage.verifyPage();
         CreateSavingsAccountEntryPage createSavingsAccountEntryPage = createSavingsAccountSearchPage.searchAndNavigateToCreateSavingsAccountPage(searchParameters);
         createSavingsAccountEntryPage.verifyPage();
-        QuestionResponsePage questionResponsePage = createSavingsAccountEntryPage.submitAndNavigateToQuestionResponsePage(submitAccountParameters);
-        questionResponsePage.populateAnswers(responseParams);
-        return questionResponsePage.navigateToNextPageSavingsAccountCreation();
+        QuestionnairePage questionnairePage = createSavingsAccountEntryPage.submitAndNavigateToQuestionnairePage(submitAccountParameters);
+        questionnairePage.populateAnswers(responseParams);
+        return questionnairePage.navigateToNextPageSavingsAccountCreation();
     }
     public SavingsAccountDetailPage editAdditionalInformationDurringCreationSavingsAccount(QuestionResponseParameters responseParams) {
         CreateSavingsAccountPreviewPage createSavingsAccountPreviewPage = new CreateSavingsAccountPreviewPage(selenium);
-        QuestionResponsePage questionResponsePage = createSavingsAccountPreviewPage.editAdditionalInformation();
+        QuestionnairePage questionnairePage = createSavingsAccountPreviewPage.editAdditionalInformationQuestionnairePage();
         UiTestUtils.sleep(1500);
-        questionResponsePage.populateAnswers(responseParams);
-        createSavingsAccountPreviewPage = questionResponsePage.navigateToNextPageSavingsAccountCreation();
+        questionnairePage.populateAnswers(responseParams);
+        createSavingsAccountPreviewPage = questionnairePage.navigateToNextPageSavingsAccountCreation();
         createSavingsAccountPreviewPage.verifyPage();
         CreateSavingsAccountConfirmationPage createSavingsAccountConfirmationPage = createSavingsAccountPreviewPage.submitForApproval();
 

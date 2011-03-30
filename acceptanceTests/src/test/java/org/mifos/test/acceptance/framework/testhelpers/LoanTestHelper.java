@@ -73,6 +73,10 @@ import org.mifos.test.acceptance.framework.loan.RepayLoanParameters;
 import org.mifos.test.acceptance.framework.loan.TransactionHistoryPage;
 import org.mifos.test.acceptance.framework.loan.ViewLoanStatusHistoryPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
+import org.mifos.test.acceptance.framework.loanproduct.ViewLoanProductsPage;
+import org.mifos.test.acceptance.framework.loanproduct.LoanProductDetailsPage;
+import org.mifos.test.acceptance.framework.loanproduct.EditLoanProductPage;
+import org.mifos.test.acceptance.framework.loanproduct.EditLoanProductPreviewPage;
 import org.mifos.test.acceptance.framework.login.LoginPage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
@@ -280,6 +284,23 @@ public class LoanTestHelper {
         LoanAccountPage loanAccountPage = disburseLoanConfirmationPage.submitAndNavigateToLoanAccountPage();
         loanAccountPage.verifyStatus(LoanAccountPage.ACTIVE);
         return loanAccountPage;
+    }
+
+    public void disburseLoanWithWrongParams(String loanId, DisburseLoanParameters params,  String msg) {
+        DisburseLoanPage disburseLoanPage = prepareToDisburseLoan(loanId);
+        disburseLoanPage.submitWithWrongParams(params,msg);
+        prepareToDisburseLoan(loanId);
+    }
+
+    public void enableInterestWaiver(String loanProduct, boolean interestWaiver) {
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        ViewLoanProductsPage viewLoanProducts = adminPage.navigateToViewLoanProducts();
+        LoanProductDetailsPage loanProductDetailsPage = viewLoanProducts.viewLoanProductDetails(loanProduct);
+        EditLoanProductPage editLoanProductPage = loanProductDetailsPage.editLoanProduct();
+        DefineNewLoanProductPage.SubmitFormParameters formParameters = new DefineNewLoanProductPage.SubmitFormParameters();
+        formParameters.setInterestWaiver(interestWaiver);
+        EditLoanProductPreviewPage editLoanProductPreviewPage = editLoanProductPage.submitInterestWaiverChanges(formParameters);
+        editLoanProductPreviewPage.submit();
     }
 
     public DisburseLoanPage prepareToDisburseLoan(String loanId) {
@@ -599,13 +620,14 @@ public class LoanTestHelper {
         transactionHistoryPage.verifyTransactionHistory(paymentAmount, 1, 6);
     }
 
-    public LoanAccountPage createTwoLoanAccountsWithMixedRestricedPoducts(CreateLoanAccountSearchParameters searchParams1, CreateLoanAccountSearchParameters searchParams2, DisburseLoanParameters disburseParams) {
+    public LoanAccountPage createTwoLoanAccountsWithMixedRestricedPoducts(CreateLoanAccountSearchParameters searchParams1, CreateLoanAccountSearchParameters searchParams2, DisburseLoanParameters disburseParams, DateTime disbursalDate) {
         LoanAccountPage loanAccountPage = navigationHelper
             .navigateToAdminPage()
             .navigateToDefineProductMix()
             .createOneMixAndNavigateToClientsAndAccounts(searchParams1.getLoanProduct(), searchParams2.getLoanProduct())
             .navigateToCreateLoanAccountUsingLeftMenu()
             .searchAndNavigateToCreateLoanAccountPage(searchParams1)
+            .setDisbursalDate(disbursalDate)
             .continuePreviewSubmitAndNavigateToDetailsPage();
         loanAccountPage.changeAccountStatusToAccepted();
         loanAccountPage.navigateToDisburseLoan()
@@ -616,6 +638,7 @@ public class LoanTestHelper {
         return loanAccountPage.navigateToClientsAndAccountsUsingHeaderTab()
             .navigateToCreateLoanAccountUsingLeftMenu()
             .searchAndNavigateToCreateLoanAccountPage(searchParams2)
+            .setDisbursalDate(disbursalDate)
             .continuePreviewSubmitAndNavigateToDetailsPage()
             .changeAccountStatusToAccepted()
             .tryNavigatingToDisburseLoanWithError();
@@ -833,8 +856,8 @@ public class LoanTestHelper {
         loanAccountPage.verifyStatus(LoanAccountPage.ACTIVE);
     }
 
-    public void createLoanAccount(String clientName, String loanProductName) {
-        navigateToLoanAccountEntryPage(setLoanSearchParameters(clientName,loanProductName)).
+    public LoanAccountPage createLoanAccount(String clientName, String loanProductName) {
+        return navigateToLoanAccountEntryPage(setLoanSearchParameters(clientName,loanProductName)).
                 clickContinueAndNavigateToLoanAccountConfirmationPage().
                 navigateToLoanAccountDetailsPage();
     }

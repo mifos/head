@@ -26,6 +26,8 @@
                          "createSavingsAccount.flowState.enterAccountInfo", 
                          "createSavingsAccount.flowState.reviewAndSubmit"]] 
 
+<span id="page.id" title="createsavingsaccountpreview"></span>
+
 <h1>[@spring.message "createSavingsAccount.preview.pageTitle" /] - <span class="standout">[@spring.message "createSavingsAccount.preview.pageSubtitle" /]</span></h1>
 <p>[@spring.message "createSavingsAccount.preview.instructions" /]</p>
 <br/>

@@ -93,11 +93,10 @@ public class CollectionSheetEntrySimpleTest extends UiTestCaseBase {
                 new CollectionSheetEntryTestHelper(selenium).loginAndNavigateToCollectionSheetEntrySelectPage();
         selectPage.verifyPage();
         CollectionSheetEntryEnterDataPage enterDataPage = selectPage.submitAndGotoCollectionSheetEntryEnterDataPage(formParameters);
-        enterDataPage.verifyPage();
         CollectionSheetEntryPreviewDataPage previewDataPage = enterDataPage.submitAndGotoCollectionSheetEntryPreviewDataPage();
+
         previewDataPage.verifyPage(formParameters);
-        CollectionSheetEntryEnterDataPage newEnterDataPage = previewDataPage.editAndGoToCollectionSheetEntryEnterDataPage();
-        newEnterDataPage.verifyPage();
+        previewDataPage.editAndGoToCollectionSheetEntryEnterDataPage();
     }
 
     private SubmitFormParameters getFormParametersWithInvalidReceiptDay() {

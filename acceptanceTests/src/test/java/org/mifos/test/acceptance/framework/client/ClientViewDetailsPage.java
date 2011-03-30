@@ -49,6 +49,10 @@ public class ClientViewDetailsPage extends MifosPage {
         verifyPage("ViewClientDetails");
     }
 
+    public String getGlobalCustNum() {
+        return selenium.getText("viewClientDetails.text.globalcustnum");
+    }
+
     public String getHeading() {
         return selenium.getText("viewClientDetails.heading");
     }

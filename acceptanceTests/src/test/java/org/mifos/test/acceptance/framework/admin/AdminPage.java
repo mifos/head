@@ -40,6 +40,7 @@ import org.mifos.test.acceptance.framework.office.ChooseOfficePage;
 import org.mifos.test.acceptance.framework.office.CreateOfficeEnterDataPage;
 import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionGroupPage;
 import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionPage;
+import org.mifos.test.acceptance.framework.questionnaire.UploadQuestionGroupPage;
 import org.mifos.test.acceptance.framework.questionnaire.ViewAllQuestionGroupsPage;
 import org.mifos.test.acceptance.framework.questionnaire.ViewAllQuestionsPage;
 import org.mifos.test.acceptance.framework.savingsproduct.DefineNewSavingsProductPage;
@@ -416,5 +417,11 @@ public class AdminPage extends MifosPage {
         selenium.click("admin.link.defineHiddenMandatoryFields");
         waitForPageToLoad();
         return new DefineHiddenMandatoryFieldsPage(selenium);
+    }
+
+    public UploadQuestionGroupPage navigateToActivatePPI() {
+        selenium.click("admin.link.uploadPPI");
+        waitForPageToLoad();
+        return new UploadQuestionGroupPage(selenium);
     }
 }

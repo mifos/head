@@ -58,6 +58,17 @@ public class EditQuestionGroupPage extends CreateQuestionGroupRootPage {
         }
     }
 
+    private void setAppliesTo(String[] eventList){
+        for (String event : eventList) {
+            selenium.addSelection("eventSourceIds", "label=" + event);
+        }
+    }
+
+    public QuestionGroupDetailPage changeAppliesTo(String[] eventList){
+        setAppliesTo(eventList);
+        return submit();
+    }
+
     public QuestionGroupDetailPage editQuestionGroup(boolean active, String title,
         String appliesTo, List<String> questionsId) {
 
@@ -97,7 +108,7 @@ public class EditQuestionGroupPage extends CreateQuestionGroupRootPage {
     public EditQuestionGroupPage moveQuestionUp(int questionId) {
         selenium.click("moveQuestionUp_"+questionId);
         waitForPageToLoad();
-        
+
         return new EditQuestionGroupPage(selenium);
     }
 
