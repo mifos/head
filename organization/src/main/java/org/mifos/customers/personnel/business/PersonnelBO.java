@@ -502,7 +502,7 @@ public class PersonnelBO extends AbstractBusinessObject {
         }
     }
 
-    private boolean isPasswordValid(final String password) throws PersonnelException {
+    public boolean isPasswordValid(final String password) throws PersonnelException {
         logger.debug("Checking password valid or not");
         try {
             return EncryptionService.getInstance().verifyPassword(password, getEncryptedPassword());

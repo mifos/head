@@ -20,11 +20,16 @@
 
 package org.mifos.ui.core.controller;
 
+import javax.validation.Valid;
+
+import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.application.servicefacade.NewLoginServiceFacade;
 import org.mifos.dto.domain.ChangePasswordRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -62,9 +67,16 @@ public class ChangePasswordController {
         return formBean;
     }
 
+    @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        LazyBindingErrorProcessor errorProcessor = new LazyBindingErrorProcessor();
+        binder.setValidator(new ChangePasswordValidator());
+        binder.setBindingErrorProcessor(errorProcessor);
+    }
+    
     @RequestMapping(method = RequestMethod.POST)
     public String processFormSubmit(@RequestParam(value = CANCEL_PARAM, required = false) String cancel,
-                                    @ModelAttribute("formBean") ChangePasswordFormBean formBean,
+                                    @ModelAttribute("formBean") @Valid ChangePasswordFormBean formBean,
                                     BindingResult result,
                                     SessionStatus status) {
 

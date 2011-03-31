@@ -30,5 +30,7 @@ public interface NewLoginServiceFacade {
     void changePassword(ChangePasswordRequest changePasswordRequest);
 
     boolean updatePassword(String username, String oldPassword, String newPassword);
+    
+    boolean checkOldPassword(String username, String oldPassword);
 
 }
