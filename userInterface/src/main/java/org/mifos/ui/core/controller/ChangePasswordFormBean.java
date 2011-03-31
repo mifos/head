@@ -2,8 +2,6 @@ package org.mifos.ui.core.controller;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.NotEmpty;
 
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = "EQ_UNUSUAL", justification = "using commons equals builder")
 public class ChangePasswordFormBean {

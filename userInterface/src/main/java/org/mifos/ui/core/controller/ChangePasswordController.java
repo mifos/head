@@ -22,7 +22,6 @@ package org.mifos.ui.core.controller;
 
 import javax.validation.Valid;
 
-import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.application.servicefacade.NewLoginServiceFacade;
 import org.mifos.dto.domain.ChangePasswordRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,14 +48,6 @@ public class ChangePasswordController {
 
     @Autowired
     private NewLoginServiceFacade loginServiceFacade;
-
-    protected ChangePasswordController() {
-        // default contructor for spring autowiring
-    }
-
-    public ChangePasswordController(final NewLoginServiceFacade adminServiceFacade) {
-        this.loginServiceFacade = adminServiceFacade;
-    }
 
     @RequestMapping(method = RequestMethod.GET)
     @ModelAttribute("formBean")

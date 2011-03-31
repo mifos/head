@@ -1,7 +1,6 @@
 package org.mifos.ui.core.controller;
 
 import java.util.Locale;
-import java.util.ResourceBundle;
 
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.application.servicefacade.NewLoginServiceFacade;
@@ -12,7 +11,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
-@SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.NPathComplexity", "PMD.ExcessiveMethodLength"})
+@SuppressWarnings("PMD.CyclomaticComplexity")
 @Component
 public class ChangePasswordValidator extends SpringBeanAutowiringSupport implements Validator{
 	
@@ -24,8 +23,6 @@ public class ChangePasswordValidator extends SpringBeanAutowiringSupport impleme
     
     @Autowired
     MessageSource messageSource;
-	
-	protected ChangePasswordValidator() { }
 
 	@Override
 	public boolean supports(Class<?> clazz) {
@@ -45,10 +42,12 @@ public class ChangePasswordValidator extends SpringBeanAutowiringSupport impleme
 		if(formBean.getOldPassword().isEmpty()){
 			errors.reject("errors.mandatory", new String[]{oldPasswordLabel},null );
 		}else{
-			if(!loginServiceFacade.checkOldPassword(formBean.getUsername(), formBean.getOldPassword())){
+			if(loginServiceFacade.checkOldPassword(formBean.getUsername(), formBean.getOldPassword())){
+				if(!formBean.getNewPassword().equals(formBean.getNewPasswordConfirmed())){
+					errors.reject("errors.newconfpassword");
+				}
+			}else {
 				errors.reject("errors.invalidoldpassword");
-			}else if(!formBean.getNewPassword().equals(formBean.getNewPasswordConfirmed())){
-				errors.reject("errors.newconfpassword");
 			}
 			if(formBean.getNewPassword().equals(formBean.getOldPassword())){
 				errors.reject("errors.sameoldandnewpassword");
