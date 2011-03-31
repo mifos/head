@@ -220,6 +220,30 @@ public class LoanAccountFormBean implements Serializable {
             errors.rejectValue("loanPurposeId", "loanAccountFormBean.PurposeOfLoan.invalid", "Please specify loan purpose.");
         }
         
+        if (this.repaymentScheduleIndependentOfCustomerMeeting) {
+            if (isInvalidRecurringFrequency(this.repaymentRecursEvery)) {
+                errors.rejectValue("repaymentRecursEvery", "loanAccountFormBean.repaymentDay.recursEvery.invalid", "Please specify a valid recurring frequency for repayment day.");
+            }
+            if (this.weekly) {
+                if (isInvalidDayOfWeekSelection()) {
+                    errors.rejectValue("repaymentDayOfWeek", "loanAccountFormBean.repaymentDay.weekly.dayOfWeek.invalid", "Please select a day of the week for repayment day.");
+                }
+            } else if (this.monthly) {
+                if (this.monthlyDayOfMonthOptionSelected) {
+                    if (isInvalidDayOfMonthEntered()) {
+                        errors.rejectValue("repaymentDayOfMonth", "loanAccountFormBean.repaymentDay.monthly.dayOfMonth.invalid", "Please select a day of the month for repayment day.");
+                    }
+                } else if (this.monthlyWeekOfMonthOptionSelected) {
+                    if (isInvalidWeekOfMonthSelection()) {
+                        errors.rejectValue("repaymentWeekOfMonth", "loanAccountFormBean.repaymentDay.monthly.weekOfMonth.invalid", "Please select a week of the month for repayment day.");
+                    }
+                    if (isInvalidDayOfWeekSelection()) {
+                        errors.rejectValue("repaymentDayOfWeek", "loanAccountFormBean.repaymentDay.monthly.dayOfWeek.invalid", "Please select a day of the week for repayment day.");
+                    }
+                }
+            }
+        }
+        
         if (errors.hasErrors()) {
             for (FieldError fieldError : errors.getFieldErrors()) {
                 MessageBuilder builder = new MessageBuilder().error().source(fieldError.getField())
@@ -229,6 +253,22 @@ public class LoanAccountFormBean implements Serializable {
                 messageContext.addMessage(builder.build());
             }
         }
+    }
+
+    private boolean isInvalidDayOfMonthEntered() {
+        return this.repaymentDayOfMonth == null || this.repaymentDayOfMonth < 1 || this.repaymentDayOfMonth > 31;
+    }
+
+    private boolean isInvalidWeekOfMonthSelection() {
+        return this.repaymentWeekOfMonth == null;
+    }
+
+    private boolean isInvalidDayOfWeekSelection() {
+        return this.repaymentDayOfWeek == null;
+    }
+
+    private boolean isInvalidRecurringFrequency(Integer recursEvery) {
+        return (recursEvery == null || recursEvery < 1);
     }
 
     private void rejectGlimTotalAmountField(Errors errors, String defaultErrorMessage) {
