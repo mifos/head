@@ -202,8 +202,8 @@ public class BatchJobCatchUpIntegrationTest extends MifosIntegrationTestCase {
 
     private MifosScheduler getMifosScheduler(String taskConfigurationPath) throws TaskSystemException, IOException, FileNotFoundException {
         ConfigurationLocator mockConfigurationLocator = createMock(ConfigurationLocator.class);
-        expect(mockConfigurationLocator.getFileInputStream(SchedulerConstants.CONFIGURATION_FILE_NAME)).andReturn(
-                MifosResourceUtil.getClassPathResourceAsStream(taskConfigurationPath));
+        expect(mockConfigurationLocator.getResource(SchedulerConstants.CONFIGURATION_FILE_NAME)).andReturn(
+                MifosResourceUtil.getClassPathResourceAsResource(taskConfigurationPath));
         expectLastCall().times(2);
         replay(mockConfigurationLocator);
         MifosScheduler mifosScheduler = new MifosScheduler();

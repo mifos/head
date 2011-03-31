@@ -20,9 +20,8 @@
 
 package org.mifos.framework.components.batchjobs;
 
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
@@ -73,9 +72,9 @@ import org.springframework.batch.core.step.tasklet.TaskletStep;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.support.transaction.ResourcelessTransactionManager;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.support.FileSystemXmlApplicationContext;
 import org.springframework.scheduling.quartz.JobDetailBean;
 import org.springframework.orm.hibernate3.SessionFactoryUtils;
+import org.springframework.core.io.Resource;
 import org.springframework.core.task.SyncTaskExecutor;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 import org.springframework.jdbc.support.incrementer.MySQLMaxValueIncrementer;
@@ -83,7 +82,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
-import org.xml.sax.InputSource;
 
 import edu.emory.mathcs.backport.java.util.Arrays;
 import edu.emory.mathcs.backport.java.util.Collections;
@@ -104,10 +102,10 @@ public class MifosScheduler {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
-            Document document = builder.parse(getTaskConfigurationInputSource());
+            Document document = builder.parse(getTaskConfigurationResource().getURI().toString());
             NodeList rootElement = document.getElementsByTagName(SchedulerConstants.SPRING_BEANS_FILE_ROOT_TAG);
             if(rootElement.getLength() > 0) { // new Quartz scheduler
-                springTaskContext = new FileSystemXmlApplicationContext("file:"+getTaskConfigurationFilePath());
+                springTaskContext = ApplicationContextFactory.createApplicationContext(getTaskConfigurationResource());
                 scheduler = (Scheduler)springTaskContext.getBean(SchedulerConstants.SPRING_SCHEDULER_BEAN_NAME);
                 jobExplorer = (JobExplorer)springTaskContext.getBean(SchedulerConstants.JOB_EXPLORER_BEAN_NAME);
                 jobRepository = (JobRepository)springTaskContext.getBean(SchedulerConstants.JOB_REPOSITORY_BEAN_NAME);
@@ -115,8 +113,10 @@ public class MifosScheduler {
                 jobLocator = (JobLocator)springTaskContext.getBean(SchedulerConstants.JOB_LOCATOR_BEAN_NAME);
             } else { // old legacy Mifos Scheduler
                 StdSchedulerFactory schedulerFactory = new StdSchedulerFactory();
-                String configPath = getQuartzSchedulerConfigurationFilePath();
-                schedulerFactory.initialize(configPath);
+                Resource config = getQuartzSchedulerConfigurationResource();
+                InputStream is = config.getInputStream();
+                schedulerFactory.initialize(is);
+                is.close();
                 scheduler = schedulerFactory.getScheduler();
                 if (!scheduler.isInStandbyMode()) {
                     scheduler.standby();
@@ -572,23 +572,16 @@ public class MifosScheduler {
         return jobLocator;
     }
 
-    private InputSource getTaskConfigurationInputSource() throws IOException {
-        File configurationFile = getConfigurationLocator().getFile(SchedulerConstants.CONFIGURATION_FILE_NAME);
-        FileReader fileReader = new FileReader(configurationFile);
-        logger.info("Reading task configuration from: " + configurationFile.getAbsolutePath());
-        return new InputSource(fileReader);
+    private Resource getTaskConfigurationResource() throws IOException {
+        Resource configuration = getConfigurationLocator().getResource(SchedulerConstants.CONFIGURATION_FILE_NAME);
+        logger.info("Reading task configuration from: " + configuration.getDescription());
+        return configuration;
     }
 
-    private String getTaskConfigurationFilePath() throws IOException {
-        File configurationFile = getConfigurationLocator().getFile(SchedulerConstants.CONFIGURATION_FILE_NAME);
-        logger.info("Reading task configuration from: " + configurationFile.getAbsolutePath());
-        return configurationFile.getAbsolutePath();
-    }
-
-    private String getQuartzSchedulerConfigurationFilePath() throws IOException {
-        File configurationFile = getConfigurationLocator().getFile(SchedulerConstants.SCHEDULER_CONFIGURATION_FILE_NAME);
-        logger.info("Reading scheduler configuration from: " + configurationFile.getAbsolutePath());
-        return configurationFile.getAbsolutePath();
+    private Resource getQuartzSchedulerConfigurationResource() throws IOException {
+        Resource configuration = getConfigurationLocator().getResource(SchedulerConstants.SCHEDULER_CONFIGURATION_FILE_NAME);
+        logger.info("Reading scheduler configuration from: " + configuration.getDescription());
+        return configuration;
     }
 
     public ConfigurationLocator getConfigurationLocator() {

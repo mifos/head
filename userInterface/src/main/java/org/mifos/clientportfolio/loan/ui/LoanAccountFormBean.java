@@ -90,7 +90,14 @@ public class LoanAccountFormBean implements Serializable {
     private boolean repaymentScheduleIndependentOfCustomerMeeting = false;
     private Integer repaymentRecursEvery;
     private Integer repaymentDayOfWeek;
-    
+    private Integer repaymentDayOfMonth;
+    private Integer repaymentWeekOfMonth;
+    private boolean monthly;
+    private boolean monthlyDayOfMonthOptionSelected;
+    private boolean monthlyWeekOfMonthOptionSelected;
+    private String montlyOption = "weekOfMonth";
+    private boolean weekly;
+
     // variable installments only for validation purposes
     private boolean variableInstallmentsAllowed;
     private Integer minGapInDays;
@@ -213,6 +220,30 @@ public class LoanAccountFormBean implements Serializable {
             errors.rejectValue("loanPurposeId", "loanAccountFormBean.PurposeOfLoan.invalid", "Please specify loan purpose.");
         }
         
+        if (this.repaymentScheduleIndependentOfCustomerMeeting) {
+            if (isInvalidRecurringFrequency(this.repaymentRecursEvery)) {
+                errors.rejectValue("repaymentRecursEvery", "loanAccountFormBean.repaymentDay.recursEvery.invalid", "Please specify a valid recurring frequency for repayment day.");
+            }
+            if (this.weekly) {
+                if (isInvalidDayOfWeekSelection()) {
+                    errors.rejectValue("repaymentDayOfWeek", "loanAccountFormBean.repaymentDay.weekly.dayOfWeek.invalid", "Please select a day of the week for repayment day.");
+                }
+            } else if (this.monthly) {
+                if (this.monthlyDayOfMonthOptionSelected) {
+                    if (isInvalidDayOfMonthEntered()) {
+                        errors.rejectValue("repaymentDayOfMonth", "loanAccountFormBean.repaymentDay.monthly.dayOfMonth.invalid", "Please select a day of the month for repayment day.");
+                    }
+                } else if (this.monthlyWeekOfMonthOptionSelected) {
+                    if (isInvalidWeekOfMonthSelection()) {
+                        errors.rejectValue("repaymentWeekOfMonth", "loanAccountFormBean.repaymentDay.monthly.weekOfMonth.invalid", "Please select a week of the month for repayment day.");
+                    }
+                    if (isInvalidDayOfWeekSelection()) {
+                        errors.rejectValue("repaymentDayOfWeek", "loanAccountFormBean.repaymentDay.monthly.dayOfWeek.invalid", "Please select a day of the week for repayment day.");
+                    }
+                }
+            }
+        }
+        
         if (errors.hasErrors()) {
             for (FieldError fieldError : errors.getFieldErrors()) {
                 MessageBuilder builder = new MessageBuilder().error().source(fieldError.getField())
@@ -222,6 +253,22 @@ public class LoanAccountFormBean implements Serializable {
                 messageContext.addMessage(builder.build());
             }
         }
+    }
+
+    private boolean isInvalidDayOfMonthEntered() {
+        return this.repaymentDayOfMonth == null || this.repaymentDayOfMonth < 1 || this.repaymentDayOfMonth > 31;
+    }
+
+    private boolean isInvalidWeekOfMonthSelection() {
+        return this.repaymentWeekOfMonth == null;
+    }
+
+    private boolean isInvalidDayOfWeekSelection() {
+        return this.repaymentDayOfWeek == null;
+    }
+
+    private boolean isInvalidRecurringFrequency(Integer recursEvery) {
+        return (recursEvery == null || recursEvery < 1);
     }
 
     private void rejectGlimTotalAmountField(Errors errors, String defaultErrorMessage) {
@@ -589,5 +636,103 @@ public class LoanAccountFormBean implements Serializable {
 
     public void setClientGlobalId(String[] clientGlobalId) {
         this.clientGlobalId = clientGlobalId;
+    }
+    
+    public Integer getRepaymentDayOfMonth() {
+        return repaymentDayOfMonth;
+    }
+
+    public void setRepaymentDayOfMonth(Integer repaymentDayOfMonth) {
+        this.repaymentDayOfMonth = repaymentDayOfMonth;
+    }
+    
+    public Integer getRepaymentWeekOfMonth() {
+        return repaymentWeekOfMonth;
+    }
+
+    public void setRepaymentWeekOfMonth(Integer repaymentWeekOfMonth) {
+        this.repaymentWeekOfMonth = repaymentWeekOfMonth;
+    }
+    
+    public boolean isMonthly() {
+        return monthly;
+    }
+
+    public void setMonthly(boolean monthly) {
+        this.monthly = monthly;
+    }
+
+    public boolean isMonthlyDayOfMonthOptionSelected() {
+        return monthlyDayOfMonthOptionSelected;
+    }
+
+    public void setMonthlyDayOfMonthOptionSelected(boolean monthlyDayOfMonthOptionSelected) {
+        this.monthlyDayOfMonthOptionSelected = monthlyDayOfMonthOptionSelected;
+    }
+
+    public boolean isMonthlyWeekOfMonthOptionSelected() {
+        return monthlyWeekOfMonthOptionSelected;
+    }
+
+    public void setMonthlyWeekOfMonthOptionSelected(boolean monthlyWeekOfMonthOptionSelected) {
+        this.monthlyWeekOfMonthOptionSelected = monthlyWeekOfMonthOptionSelected;
+    }
+
+    public boolean isWeekly() {
+        return weekly;
+    }
+
+    public void setWeekly(boolean weekly) {
+        this.weekly = weekly;
+    }
+    
+    public String getMontlyOption() {
+        return montlyOption;
+    }
+
+    public void setMontlyOption(String montlyOption) {
+        this.montlyOption = montlyOption;
+        if (this.montlyOption.equalsIgnoreCase("weekOfMonth")) {
+            this.monthlyDayOfMonthOptionSelected = false;
+            this.monthlyWeekOfMonthOptionSelected = true;
+        } else if (this.montlyOption.equalsIgnoreCase("dayOfMonth")) {
+            this.monthlyDayOfMonthOptionSelected = true;
+            this.monthlyWeekOfMonthOptionSelected = true;
+        }
+    }
+
+    public void setDayOfMonthDetails(Integer dayOfMonth, Integer recursEvery) {
+        this.weekly = false;
+        this.monthly = true;
+        this.monthlyDayOfMonthOptionSelected = true;
+        this.monthlyWeekOfMonthOptionSelected = false;
+        this.repaymentDayOfMonth = dayOfMonth;
+        this.repaymentWeekOfMonth = null;
+        this.repaymentDayOfWeek = null;
+        this.repaymentRecursEvery = recursEvery;
+        this.montlyOption = "dayOfMonth";
+    }
+
+    public void setWeekOfMonthDetails(Integer weekOfMonth, Integer dayOfWeek, Integer recursEvery) {
+        this.weekly = false;
+        this.monthly = true;
+        this.monthlyDayOfMonthOptionSelected = false;
+        this.monthlyWeekOfMonthOptionSelected = true;
+        this.repaymentDayOfMonth = null;
+        this.repaymentWeekOfMonth = weekOfMonth;
+        this.repaymentDayOfWeek = dayOfWeek;
+        this.repaymentRecursEvery = recursEvery;
+        this.montlyOption = "weekOfMonth";
+    }
+
+    public void setWeeklyDetails(Integer dayOfWeek, Integer recursEvery) {
+        this.weekly = true;
+        this.monthly = false;
+        this.monthlyDayOfMonthOptionSelected = false;
+        this.monthlyWeekOfMonthOptionSelected = false;
+        this.repaymentDayOfMonth = null;
+        this.repaymentWeekOfMonth = null;
+        this.repaymentDayOfWeek = dayOfWeek;
+        this.repaymentRecursEvery = recursEvery;
     }
 }

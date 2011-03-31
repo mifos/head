@@ -25,7 +25,7 @@ import java.math.BigDecimal;
 import org.joda.time.LocalDate;
 
 @SuppressWarnings("PMD")
-public class CreateLoanSchedule {
+public class CreateLoanSchedule implements RecurringSchedule {
 
     private final Integer customerId;
     private final Integer productId;
@@ -35,12 +35,11 @@ public class CreateLoanSchedule {
     private final int numberOfInstallments;
     private final int graceDuration;
     private final boolean repaymentIndependentOfCustomerMeetingSchedule;
-    private final Integer every;
-    private final Integer dayOfWeek;
+    private final RecurringSchedule recurringSchedule;
 
     public CreateLoanSchedule(Integer customerId, Integer productId, BigDecimal loanAmount, Double interestRate,
             LocalDate disbursementDate, int numberOfInstallments, int graceDuration, 
-            boolean repaymentIndependentOfCustomerMeetingSchedule, Integer every, Integer dayOfWeek) {
+            boolean repaymentIndependentOfCustomerMeetingSchedule, RecurringSchedule recurringSchedule) {
         this.customerId = customerId;
         this.productId = productId;
         this.loanAmount = loanAmount;
@@ -49,8 +48,7 @@ public class CreateLoanSchedule {
         this.numberOfInstallments = numberOfInstallments;
         this.graceDuration = graceDuration;
         this.repaymentIndependentOfCustomerMeetingSchedule = repaymentIndependentOfCustomerMeetingSchedule;
-        this.every = every;
-        this.dayOfWeek = dayOfWeek;
+        this.recurringSchedule = recurringSchedule;
     }
 
     public int getGraceDuration() {
@@ -85,11 +83,38 @@ public class CreateLoanSchedule {
         return repaymentIndependentOfCustomerMeetingSchedule;
     }
 
-    public Integer getEvery() {
-        return every;
+    @Override
+    public boolean isWeekly() {
+        return this.recurringSchedule.isWeekly();
     }
 
-    public Integer getDayOfWeek() {
-        return dayOfWeek;
+    @Override
+    public boolean isMonthly() {
+        return this.recurringSchedule.isMonthly();
+    }
+
+    @Override
+    public boolean isMonthlyOnDayOfMonth() {
+        return this.recurringSchedule.isMonthlyOnDayOfMonth();
+    }
+
+    @Override
+    public boolean isMonthlyOnWeekAndDayOfMonth() {
+        return this.recurringSchedule.isMonthlyOnWeekAndDayOfMonth();
+    }
+
+    @Override
+    public Integer getEvery() {
+        return this.recurringSchedule.getEvery();
+    }
+
+    @Override
+    public Integer getDay() {
+        return this.recurringSchedule.getDay();
+    }
+
+    @Override
+    public Integer getWeek() {
+        return this.recurringSchedule.getWeek();
     }
 }

@@ -200,14 +200,14 @@
 	    		<input type="radio" id="monthly.repaymentFrequency" name="repaymentFrequency" disabled=disabled/>
 	    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.month(s)"/]</span>
     		</div>
-    		<div id="week" class="paddingLeft" id="weekDIV" >
-		        <span id="weekSpecifyMessage">[@spring.message "manageLoanProducts.defineLoanProduct.ifweeks,specifythefollowing" /]</span>
+    		<div style="margin-left: 200px;">
+    			<span id="weekSpecifyMessage" style="display:none">[@spring.message "manageLoanProducts.defineLoanProduct.ifweeks,specifythefollowing" /]</span>
 		        <span id="monthSpecifyMessage" style="display:none">[@spring.message "manageLoanProducts.defineLoanProduct.ifmonths,specifythefollowing" /]</span>
-		        <br />
-		        [@spring.message "manageLoanProducts.defineLoanProduct.recurevery" /]
+    		</div>
+    		<div id="week" class="row" id="weekDIV">
+		        [@form.label "recursEvery" true][@spring.message "manageLoanProducts.defineLoanProduct.recurevery" /][/@form.label]
 		        [@form.input path="loanAccountFormBean.repaymentRecursEvery" id="recursEvery" attributes="size=3 maxlength=2"/]
 		        <span id="weekLabelMessage">[@spring.message "manageLoanProducts.defineLoanProduct.week(s)" /]</span>
-		        <span id="monthLabelMessage" style="display:none">[@spring.message "manageLoanProducts.defineLoanProduct.month(s)" /]</span>
 		        [@spring.formSingleSelect "loanAccountFormBean.repaymentDayOfWeek" loanProductReferenceData.daysOfTheWeekOptions /]
 	    	</div>
     		[#else]
@@ -216,6 +216,35 @@
 	    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.week(s)"/]</span>
 	    		<input type="radio" id="monthly.repaymentFrequency" name="repaymentFrequency" checked=checked />
 	    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.month(s)"/]</span>
+	    	</div>
+	    	<div id="monthly" class="row">
+	    		[@form.label "monthlyDayOfMonthOptionSelected" false]&nbsp;[/@form.label]
+	    		[@spring.bind "loanAccountFormBean.montlyOption" /]
+	    		<input type="radio" id="${spring.status.expression}0" name="montlyOption" value="dayOfMonth"
+	    			[#if spring.stringStatusValue == "dayOfMonth"]
+	    				checked="checked"
+	    			[/#if]
+	    		/>
+	    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.dayOfMonthLabel" /]</span>
+	    		[@form.input path="loanAccountFormBean.repaymentDayOfMonth" id="repaymentDayOfMonth" attributes="size=3 maxlength=2"/]
+	    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.ofEvery" /]</span>
+		        [@form.input path="loanAccountFormBean.repaymentRecursEvery" id="recursEvery" attributes="size=3 maxlength=2 disabled=disabled"/]
+		        <span id="monthLabelMessage">[@spring.message "manageLoanProducts.defineLoanProduct.month(s)" /]</span>
+	    	</div>
+	    	<div id="monthlyoption2" class="row">
+	    		[@form.label "monthlyWeekOfMonthOptionSelected" false]&nbsp;[/@form.label]
+	    		[@spring.bind "loanAccountFormBean.montlyOption" /]
+	    		<input type="radio" id="${spring.status.expression}1" name="montlyOption" value="weekOfMonth"
+	    			[#if spring.stringStatusValue == "weekOfMonth"]
+	    				checked="checked"
+	    			[/#if]
+	    		/>
+	    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.weekOfMonthLabel" /]</span>
+	    		[@form.singleSelectWithPrompt path="loanAccountFormBean.repaymentWeekOfMonth" options=loanProductReferenceData.weeksOfTheMonthOptions selectPrompt="selectPrompt" /]
+	    		[@form.singleSelectWithPrompt path="loanAccountFormBean.repaymentDayOfWeek" options=loanProductReferenceData.daysOfTheWeekOptions selectPrompt="selectPrompt" /]
+	    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.ofEvery" /]</span>
+		        [@form.input path="loanAccountFormBean.repaymentRecursEvery" id="recursEvery" attributes="size=3 maxlength=2 disabled=disabled"/]
+		        <span id="monthLabelMessage">[@spring.message "manageLoanProducts.defineLoanProduct.month(s)" /]</span>
 	    	</div>
     		[/#if]
     [/#if]

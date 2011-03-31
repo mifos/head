@@ -29,7 +29,6 @@ import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -110,6 +109,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingHelper;
 import org.mifos.application.meeting.util.helpers.MeetingType;
+import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.clientportfolio.loan.service.CreateLoanSchedule;
@@ -515,10 +515,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             Double defaultInterestRate = loanProduct.getDefInterestRate();
             Double maxInterestRate = loanProduct.getMaxInterestRate();
             Double minInterestRate = loanProduct.getMinInterestRate();
-
             
-            HashMap<String, String> collateralOptions = new LinkedHashMap<String, String>();
-            HashMap<String, String> purposeOfLoanOptions = new LinkedHashMap<String, String>();
+            LinkedHashMap<String, String> collateralOptions = new LinkedHashMap<String, String>();
+            LinkedHashMap<String, String> purposeOfLoanOptions = new LinkedHashMap<String, String>();
             
             CustomValueDto customValueDto = legacyMasterDao.getLookUpEntity(MasterConstants.COLLATERAL_TYPES);
             List<CustomValueListElementDto> collateralTypes = customValueDto.getCustomValueListElements();
@@ -552,12 +551,18 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             InterestTypesEntity productInterestType = this.loanProductDao.findInterestType(interestType); 
             String interestTypeName = MessageLookup.getInstance().lookup(productInterestType.getLookUpValue());
 
-            Map<String, String> daysOfTheWeekOptions = new LinkedHashMap<String, String>();
+            LinkedHashMap<String, String> daysOfTheWeekOptions = new LinkedHashMap<String, String>();
             List<WeekDay> workingDays = new FiscalCalendarRules().getWorkingDays();
             for (WeekDay workDay : workingDays) {
                 String weekdayName = MessageLookup.getInstance().lookup(workDay.getPropertiesKey());
                 workDay.setWeekdayName(weekdayName);
                 daysOfTheWeekOptions.put(workDay.getValue().toString(), weekdayName);
+            }
+            
+            LinkedHashMap<String, String> weeksOfTheMonthOptions = new LinkedHashMap<String, String>();
+            for(RankOfDay weekOfMonth : RankOfDay.values()) {
+                String weekOfMonthName = MessageLookup.getInstance().lookup(weekOfMonth.getPropertiesKey());
+                weeksOfTheMonthOptions.put(weekOfMonth.getValue().toString(), weekOfMonthName);
             }
             
             boolean variableInstallmentsAllowed = loanProduct.isVariableInstallmentsAllowed();
@@ -602,7 +607,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                     defaultFeeOptions, additionalFeeOptions, defaultFees, BigDecimal.valueOf(eligibleLoanAmount.getDefaultLoanAmount()), 
                     BigDecimal.valueOf(eligibleLoanAmount.getMaxLoanAmount()), BigDecimal.valueOf(eligibleLoanAmount.getMinLoanAmount()), defaultInterestRate, maxInterestRate, minInterestRate,
                     eligibleNoOfInstall.getDefaultNoOfInstall().intValue(), eligibleNoOfInstall.getMaxNoOfInstall().intValue(), eligibleNoOfInstall.getMinNoOfInstall().intValue(), nextPossibleDisbursementDate, 
-                    daysOfTheWeekOptions, variableInstallmentsAllowed, minGapInDays, maxGapInDays, minInstallmentAmount, compareCashflowEnabled,
+                    daysOfTheWeekOptions, weeksOfTheMonthOptions, variableInstallmentsAllowed, minGapInDays, maxGapInDays, minInstallmentAmount, compareCashflowEnabled,
                     isGlimEnabled, isGroup, clientDetails);
 
         } catch (SystemException e) {
@@ -691,16 +696,27 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         Integer interestDays = Integer.valueOf(AccountingRules.getNumberOfInterestDays().intValue());
         boolean loanScheduleIndependentOfCustomerMeetingEnabled = createLoanSchedule.isRepaymentIndependentOfCustomerMeetingSchedule();
         
-        // FIXME - the default meeting should be customer meeting for LSIM off for loan creation
-        //       - for LSIM on (not variable installments) the meeting details from loan creation flow should be used.
-//        MeetingBO loanMeeting = loanProduct.getLoanOfferingMeetingValue();
         MeetingBO loanMeeting = customer.getCustomerMeetingValue();
         if (loanScheduleIndependentOfCustomerMeetingEnabled) {
             loanMeeting = customer.getCustomerMeetingValue();
             loanMeeting.getMeetingDetails().setRecurAfter(createLoanSchedule.getEvery().shortValue());
             
-            WeekDay weekDay = WeekDay.getWeekDay(createLoanSchedule.getDayOfWeek());
-            loanMeeting.getMeetingDetails().getMeetingRecurrence().setWeekDay(weekDay);
+            if (createLoanSchedule.isWeekly()) {
+                WeekDay weekDay = WeekDay.getWeekDay(createLoanSchedule.getDay());
+                loanMeeting.getMeetingDetails().getMeetingRecurrence().setWeekDay(weekDay);
+            }
+            
+            if (createLoanSchedule.isMonthlyOnDayOfMonth()) {
+                loanMeeting.getMeetingDetails().getMeetingRecurrence().setDayNumber(createLoanSchedule.getDay().shortValue());
+            }
+            
+            if (createLoanSchedule.isMonthlyOnWeekAndDayOfMonth()) {
+                WeekDay weekDay = WeekDay.getWeekDay(createLoanSchedule.getDay());
+                loanMeeting.getMeetingDetails().getMeetingRecurrence().setWeekDay(weekDay);
+                RankOfDay weekOfMonth = RankOfDay.getRankOfDay(createLoanSchedule.getWeek());
+                loanMeeting.getMeetingDetails().getMeetingRecurrence().setRankOfDays(weekOfMonth);
+            }
+            
             loanMeeting.setMeetingStartDate(new Date());
             if (loanProduct.isVariableInstallmentsAllowed()) {
                 loanMeeting.setMeetingStartDate(createLoanSchedule.getDisbursementDate().toDateMidnight().toDate());
@@ -886,35 +902,38 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         return loanSchedule;
     }
     
-    private MeetingBO createNewRepaymentDayMeeting(MeetingBO customerMeetingValue, CreateLoanAccount loanAccountInfo, int minDaysInterval) {
-        
+    private MeetingBO createNewRepaymentDayMeeting(MeetingBO customerMeetingValue, CreateLoanAccount loanAccountInfo,
+            int minDaysInterval) {
+
         MeetingBO newMeetingForRepaymentDay = null;
         Short recurrenceId = customerMeetingValue.getRecurrenceType().getValue();
 
-        final Date repaymentStartDate = loanAccountInfo.getDisbursementDate().plusDays(minDaysInterval).toDateMidnight().toDate();
+        final Date repaymentStartDate = loanAccountInfo.getDisbursementDate().plusDays(minDaysInterval)
+                .toDateMidnight().toDate();
+        final String meetingPlace = customerMeetingValue.getMeetingPlace();
+        try {
+            if (RecurrenceType.WEEKLY.getValue().equals(recurrenceId)) {
 
-        if (RecurrenceType.WEEKLY.getValue().equals(recurrenceId)) {
-            
-            WeekDay weekDay = WeekDay.getWeekDay(loanAccountInfo.getDayOfWeek());
-            
-            try {
-                newMeetingForRepaymentDay = new MeetingBO(weekDay, loanAccountInfo.getEvery().shortValue(), repaymentStartDate,
-                        MeetingType.LOAN_INSTALLMENT, customerMeetingValue.getMeetingPlace());
-            } catch (MeetingException e) {
-                throw new MifosRuntimeException(e);
+                WeekDay weekDay = WeekDay.getWeekDay(loanAccountInfo.getDay());
+
+                newMeetingForRepaymentDay = new MeetingBO(weekDay, loanAccountInfo.getEvery().shortValue(),
+                        repaymentStartDate, MeetingType.LOAN_INSTALLMENT, meetingPlace);
+            } else if (RecurrenceType.MONTHLY.getValue().equals(recurrenceId)) {
+
+                if (loanAccountInfo.isMonthlyOnDayOfMonth()) {
+                    newMeetingForRepaymentDay = new MeetingBO(Short.valueOf(loanAccountInfo.getDay().shortValue()),
+                            Short.valueOf(loanAccountInfo.getEvery().shortValue()), repaymentStartDate,
+                            MeetingType.LOAN_INSTALLMENT, meetingPlace);
+
+                } else if (loanAccountInfo.isMonthlyOnWeekAndDayOfMonth()) {
+                    newMeetingForRepaymentDay = new MeetingBO(Short.valueOf(loanAccountInfo.getDay().shortValue()),
+                            Short.valueOf(loanAccountInfo.getEvery().shortValue()), repaymentStartDate,
+                            MeetingType.LOAN_INSTALLMENT, meetingPlace, Short.valueOf(loanAccountInfo.getWeek()
+                                    .shortValue()));
+                }
             }
-        } else if (RecurrenceType.MONTHLY.getValue().equals(recurrenceId)) {
-            // FIXME - keithw - fix loan creation for LSIM on and monthly meeting schedule
-//            if (loanAccountActionForm.getMonthType().equals("1")) {
-//                newMeetingForRepaymentDay = new MeetingBO(Short.valueOf(loanAccountActionForm.getMonthDay()), Short
-//                        .valueOf(loanAccountActionForm.getDayRecurMonth()), repaymentStartDate,
-//                        MeetingType.LOAN_INSTALLMENT, customer.getCustomerMeeting().getMeeting().getMeetingPlace());
-//            } else {
-//                newMeetingForRepaymentDay = new MeetingBO(Short.valueOf(loanAccountActionForm.getMonthWeek()), Short
-//                        .valueOf(loanAccountActionForm.getRecurMonth()), repaymentStartDate,
-//                        MeetingType.LOAN_INSTALLMENT, customer.getCustomerMeeting().getMeeting().getMeetingPlace(),
-//                        Short.valueOf(loanAccountActionForm.getMonthRank()));
-//            }
+        } catch (MeetingException e) {
+            throw new MifosRuntimeException(e);
         }
         return newMeetingForRepaymentDay;
     }

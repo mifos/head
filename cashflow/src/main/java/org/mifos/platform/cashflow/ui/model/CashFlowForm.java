@@ -112,10 +112,8 @@ public class CashFlowForm implements Serializable {
      * from newer createLoanAccount.xml flow and not legacy captureCashFlow.xml flow 
      */
     public void validateCaptureCashFlowDetails(ValidationContext context) {
-        if (shouldForValidateIndebtednessRate()) {
-            CashFlowValidator validator = new CashFlowValidator();
-            validator.validateCaptureCashFlow(this, context);
-        }
+        CashFlowValidator validator = new CashFlowValidator();
+        validator.validateCaptureCashFlow(this, context);
     }
 
     public BigDecimal getTotalRevenues() {

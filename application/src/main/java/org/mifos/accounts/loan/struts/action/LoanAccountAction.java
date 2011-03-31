@@ -312,38 +312,43 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                                          final HttpServletRequest request,
                                          @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
 
-        final LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
-
-        Integer customerId = loanActionForm.getCustomerIdValue();
-        LoanCreationProductDetailsDto loanCreationProductDetailsDto = this.loanAccountServiceFacade.retrieveGetProductDetailsForLoanAccountCreation(customerId);
-
-        storeCollectionOnSessionForUseInJspPage(request, LoanConstants.LOANPRDOFFERINGS, loanCreationProductDetailsDto.getLoanProductDtos());
-        storeObjectOnSessionForUseInJspPage(request, LoanConstants.LOANACCOUNTOWNER, loanCreationProductDetailsDto.getCustomerDetailDto());
-        storeObjectOnSessionForUseInJspPage(request, LoanConstants.PROPOSED_DISBURSAL_DATE, loanCreationProductDetailsDto.getNextMeetingDate());
-
-        storeRedoLoanSettingOnRequestForUseInJspIfPerspectiveParamaterOnQueryString(request);
-
-        if (loanCreationProductDetailsDto.isGlimEnabled()) {
-            setGlimEnabledSessionAttributes(request, loanCreationProductDetailsDto.isGroup());
-            request.setAttribute(METHODCALLED, "getPrdOfferings");
-
-            if (loanCreationProductDetailsDto.isGroup()) {
-                loanActionForm.setClientDetails(loanCreationProductDetailsDto.getClientDetails());
-
-                LoanCreationGlimDto loanCreationGlimDto = loanCreationProductDetailsDto.getLoanCreationGlimDto();
-                storeCollectionOnSessionForUseInJspPage(request, MasterConstants.BUSINESS_ACTIVITIES, loanCreationGlimDto.getLoanPurposes());
-
-                CustomerBO customer = this.customerDao.findCustomerById(customerId);
-                final List<ClientBO> activeClientsOfGroup = this.customerDao.findActiveClientsUnderGroup(customer);
-
-                storeCollectionOnSessionForUseInJspPage(request, LoanConstants.CLIENT_LIST, activeClientsOfGroup);
-                storeObjectOnSessionForUseInJspPage(request, "clientListSize", activeClientsOfGroup.size());
+        try {
+            final LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
+    
+            Integer customerId = loanActionForm.getCustomerIdValue();
+            LoanCreationProductDetailsDto loanCreationProductDetailsDto = this.loanAccountServiceFacade.retrieveGetProductDetailsForLoanAccountCreation(customerId);
+    
+            storeCollectionOnSessionForUseInJspPage(request, LoanConstants.LOANPRDOFFERINGS, loanCreationProductDetailsDto.getLoanProductDtos());
+            storeObjectOnSessionForUseInJspPage(request, LoanConstants.LOANACCOUNTOWNER, loanCreationProductDetailsDto.getCustomerDetailDto());
+            storeObjectOnSessionForUseInJspPage(request, LoanConstants.PROPOSED_DISBURSAL_DATE, loanCreationProductDetailsDto.getNextMeetingDate());
+    
+            storeRedoLoanSettingOnRequestForUseInJspIfPerspectiveParamaterOnQueryString(request);
+    
+            if (loanCreationProductDetailsDto.isGlimEnabled()) {
+                setGlimEnabledSessionAttributes(request, loanCreationProductDetailsDto.isGroup());
+                request.setAttribute(METHODCALLED, "getPrdOfferings");
+    
+                if (loanCreationProductDetailsDto.isGroup()) {
+                    loanActionForm.setClientDetails(loanCreationProductDetailsDto.getClientDetails());
+    
+                    LoanCreationGlimDto loanCreationGlimDto = loanCreationProductDetailsDto.getLoanCreationGlimDto();
+                    storeCollectionOnSessionForUseInJspPage(request, MasterConstants.BUSINESS_ACTIVITIES, loanCreationGlimDto.getLoanPurposes());
+    
+                    CustomerBO customer = this.customerDao.findCustomerById(customerId);
+                    final List<ClientBO> activeClientsOfGroup = this.customerDao.findActiveClientsUnderGroup(customer);
+    
+                    storeCollectionOnSessionForUseInJspPage(request, LoanConstants.CLIENT_LIST, activeClientsOfGroup);
+                    storeObjectOnSessionForUseInJspPage(request, "clientListSize", activeClientsOfGroup.size());
+                }
             }
+    
+            handleRepaymentsIndependentOfMeetingIfConfigured(request, loanActionForm, loanCreationProductDetailsDto.getRecurMonth());
+    
+            return mapping.findForward(ActionForwards.getPrdOfferigs_success.toString());
+        } catch (BusinessRuleException e) {
+            request.setAttribute(METHODCALLED, "getPrdOfferings");
+            throw new ApplicationException(e.getMessageKey(), e);
         }
-
-        handleRepaymentsIndependentOfMeetingIfConfigured(request, loanActionForm, loanCreationProductDetailsDto.getRecurMonth());
-
-        return mapping.findForward(ActionForwards.getPrdOfferigs_success.toString());
     }
 
     @TransactionDemarcate(joinToken = true)

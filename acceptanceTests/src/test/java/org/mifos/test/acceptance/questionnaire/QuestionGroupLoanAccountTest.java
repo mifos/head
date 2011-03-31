@@ -22,9 +22,9 @@ package org.mifos.test.acceptance.questionnaire;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 import org.joda.time.DateTime;
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -61,7 +61,7 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @BeforeMethod
+    @BeforeMethod(alwaysRun=true)
     public void setUp() throws Exception {
         super.setUp();
         questionGroupTestHelper = new QuestionGroupTestHelper(selenium);
@@ -311,5 +311,4 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
             Assert.assertTrue(applicationDatabaseOperation.deosQuestionResponseForLoanExist(loanID, event, question, questions.get(question)), "Can't find question '" + question + "' and answer '" + questions.get(question) + "' in database");
         }
     }
-
 }

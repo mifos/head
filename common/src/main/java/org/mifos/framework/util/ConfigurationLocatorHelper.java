@@ -22,7 +22,8 @@ package org.mifos.framework.util;
 
 import java.io.File;
 
-public class ConfigurationLocatorHelper {
+/* package local helper, not public */ 
+class ConfigurationLocatorHelper {
 
     public File getFile(String directory) {
         return new File (directory);

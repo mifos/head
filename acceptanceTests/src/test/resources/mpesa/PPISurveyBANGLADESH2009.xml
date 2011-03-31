@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QuestionGroup xmlns="http://www.mifos.org/QuestionGroupDefinition"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="http://www.mifos.org/QuestionGroupDefinition QuestionGroupDefinition.xsd ">
+    <ppi>true</ppi>
+    <title>PPI Bangladesh 2009</title>
+    <editable>false</editable>
+    <eventSource>
+        <event>Create</event>
+        <source>Client</source>
+    </eventSource>
+    <section order="1">
+        <name>PPI Bangladesh 2009</name>
+        <question order="1">
+            <text>Date Survey Was Taken</text>
+            <nickname>ppi_bangladesh_2009_survey_date</nickname>
+            <type>DATE</type>
+            <mandatory>true</mandatory>
+        </question>
+        <question order="2">
+            <text>How many household members are 11-years-old or younger?</text>
+            <nickname>ppi_bangladesh_2009_family_members_0_to_11</nickname>
+            <type>SINGLE_SELECT</type>
+            <choice order="1">
+                <value>Four or more</value>
+            </choice>
+            <choice order="2">
+                <value>Three</value>
+            </choice>
+            <choice order="3">
+                <value>Two</value>
+            </choice>
+            <choice order="4">
+                <value>One</value>
+            </choice>
+            <choice order="5">
+                <value>None</value>
+            </choice>
+
+            <mandatory>true</mandatory>
+        </question>
+        <question order="3">
+            <text>Does any household member work for a daily wage?</text>
+            <nickname>ppi_bangladesh_2009_daily_wage_earner</nickname>
+            <type>SINGLE_SELECT</type>
+            <choice order="1">
+                <value>Yes</value>
+            </choice>
+            <choice order="2">
+                <value>No</value>
+            </choice>
+
+            <mandatory>true</mandatory>
+        </question>
+        <question order="4">
+            <text>What type of latrine does the household use?</text>
+            <nickname>ppi_bangladesh_2009_latrine_type</nickname>
+            <type>SINGLE_SELECT</type>
+            <choice order="1">
+                <value>Open field</value>
+            </choice>
+            <choice order="2">
+                <value>Kacha latrine (temporary or permanent), pacca (pit or water seal), or sanitary</value>
+            </choice>
+
+            <mandatory>true</mandatory>
+        </question>
+        <question order="5">
+            <text>How many rooms does the household occupy (excluding rooms used for business)?</text>
+            <nickname>ppi_bangladesh_2009_rooms_for_family</nickname>
+            <type>SINGLE_SELECT</type>
+            <choice order="1">
+                <value>One, two, or three</value>
+            </choice>
+            <choice order="2">
+                <value>Four</value>
+            </choice>
+            <choice order="3">
+                <value>Five or more</value>
+            </choice>
+
+            <mandatory>true</mandatory>
+        </question>
+        <question order="6">
+            <text>What is the main construction material of the walls?</text>
+            <nickname>ppi_bangladesh_2009_house_walls</nickname>
+            <type>SINGLE_SELECT</type>
+            <choice order="1">
+                <value>Mud brick, hemp/hay/ bamboo, or other</value>
+            </choice>
+            <choice order="2">
+                <value>C.I. sheet/wood</value>
+            </choice>
+            <choice order="3">
+                <value>Brick/cement</value>
+            </choice>
+
+            <mandatory>true</mandatory>
+        </question>
+        <question order="7">
+            <text>What is the main construction material of the roof?</text>
+            <nickname>ppi_bangladesh_2009_house_roof</nickname>
+            <type>SINGLE_SELECT</type>
+            <choice order="1">
+                <value>Tile/wood, hemp/hay/ bamboo, or other</value>
+            </choice>
+            <choice order="2">
+                <value>C.I. sheet/wood</value>
+            </choice>
+            <choice order="3">
+                <value>Cement</value>
+            </choice>
+
+            <mandatory>true</mandatory>
+        </question>
+        <question order="8">
+            <text>What is the total cultivable agricultural land owned by the household?</text>
+            <nickname>ppi_bangladesh_2009_land_owned</nickname>
+            <type>SINGLE_SELECT</type>
+            <choice order="1">
+                <value>None, or less than 0.5 acres</value>
+            </choice>
+            <choice order="2">
+                <value>More than 0.5 acres, but less than 1 acre</value>
+            </choice>
+            <choice order="3">
+                <value>More than 1 acre</value>
+            </choice>
+
+            <mandatory>true</mandatory>
+        </question>
+        <question order="9">
+            <text>Does the household own a television?</text>
+            <nickname>ppi_bangladesh_2009_owns_television</nickname>
+            <type>SINGLE_SELECT</type>
+            <choice order="1">
+                <value>No</value>
+            </choice>
+            <choice order="2">
+                <value>Yes</value>
+            </choice>
+
+            <mandatory>true</mandatory>
+        </question>
+        <question order="10">
+            <text>Does the household own a two-in-one cassette player?</text>
+            <nickname>ppi_bangladesh_2009_owns_cassette_player</nickname>
+            <type>SINGLE_SELECT</type>
+            <choice order="1">
+                <value>No</value>
+            </choice>
+            <choice order="2">
+                <value>Yes</value>
+            </choice>
+
+            <mandatory>true</mandatory>
+        </question>
+        <question order="11">
+            <text>Does the household own a wristwatch?</text>
+            <nickname>ppi_bangladesh_2009_owns_wristwatch</nickname>
+            <type>SINGLE_SELECT</type>
+            <choice order="1">
+                <value>No</value>
+            </choice>
+            <choice order="2">
+                <value>Yes</value>
+            </choice>
+
+            <mandatory>true</mandatory>
+        </question>
+
+    </section>
+</QuestionGroup>

@@ -121,10 +121,6 @@
             <artifactId>mifos-reporting</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.mifos</groupId>
-            <artifactId>mifos-db</artifactId>
-        </dependency>
-        <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>jsp-api</artifactId>
             <scope>provided</scope>
@@ -381,12 +377,6 @@
                 <filtering>true</filtering>
                 <targetPath>sql</targetPath>
             </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-                <!-- these must be filtered by native2ascii, don't just copy them -->
-                <excludes><exclude>**/localizedResources/*.properties</exclude></excludes>
-            </resource>
         </resources>
         <testResources>
             <testResource>
@@ -421,7 +411,29 @@
                                     <filtering>false</filtering>
                                 </resource>
                             </resources>
-                            <encoding>UTF-8</encoding>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-main-resources-binarysafe</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/classes</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/resources</directory>
+                                    <!-- these must be filtered by native2ascii, don't just copy them -->
+                                    <excludes>
+                                        <exclude>**/localizedResources/*.properties</exclude>
+                                    </excludes>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                            <nonFilteredFileExtensions>
+                                <nonFilteredFileExtension>ico</nonFilteredFileExtension>
+                            </nonFilteredFileExtensions>
                         </configuration>
                     </execution>
                 </executions>
@@ -660,6 +672,7 @@
                 <!-- this goes away once we're completely off Struts -->
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>native2ascii-maven-plugin</artifactId>
+                <version>1.0-alpha-1</version>
                 <executions>
                     <execution>
                         <id>native2ascii</id>

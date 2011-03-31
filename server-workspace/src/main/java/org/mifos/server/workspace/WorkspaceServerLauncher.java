@@ -40,9 +40,9 @@ import org.mifos.server.AbstractServerLauncher;
 
 /**
  * Jetty-based all-classpath web application starter.
- * 
+ *
  * @see https://sites.google.com/site/michaelvorburger/simpleservers
- * 
+ *
  * @author Michael Vorburger
  */
 public class WorkspaceServerLauncher extends AbstractServerLauncher {
@@ -57,7 +57,7 @@ public class WorkspaceServerLauncher extends AbstractServerLauncher {
     protected WebAppContext createWebAppContext() throws Exception {
         final WebContextWithServletContextResourceExtension webAppContext;
         webAppContext = new WebContextWithServletContextResourceExtension(null, "/" + getContext());
-        
+
         final ResourceCollection baseResources = baseResources();
         if (baseResources != null) {
             // This is if a web.xml
@@ -79,7 +79,13 @@ public class WorkspaceServerLauncher extends AbstractServerLauncher {
         // NOTE: Several patterns can be listed, separate by comma
         webAppContext.setAttribute(WebInfConfiguration.CONTAINER_JAR_PATTERN, ".*");
         webAppContext.setAttribute(WebInfConfiguration.WEBINF_JAR_PATTERN, ".*");
-        
+
+        // Needed for http://mifosforge.jira.com/browse/MIFOS-4918
+        File tmp = new File("./targetEclipse/jetty-work");
+        IO.delete(tmp);
+        tmp.mkdirs();
+        webAppContext.setTempDirectory(tmp);
+
         return webAppContext;
     }
 
@@ -98,7 +104,7 @@ public class WorkspaceServerLauncher extends AbstractServerLauncher {
 
     /**
      * Finds the web.xml
-     * 
+     *
      * @return URL of the web.xml on the Classpath
      */
     private static URL webXmlUrl() throws IOException {

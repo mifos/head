@@ -89,9 +89,9 @@ explanation of the license and how it is applied.
 									<mifos:MifosImage id="blackListed" moduleName="org.mifos.customers.client.util.resources.clientImages" />
 								</c:if> <c:out value="${flagSet.statusFlagName}" /> </span>
 							</c:forEach> </span><br>
-							<!-- System Id of the center --> <span class="fontnormal"><mifos:mifoslabel
+							<!-- System Id of the client --> <span class="fontnormal"><mifos:mifoslabel
 								name="client.SystemId" bundle="ClientUIResources" isColonRequired="yes"></mifos:mifoslabel></span>
-							<span class="fontnormal"><c:out
+							<span id="viewClientDetails.text.globalcustnum" class="fontnormal"><c:out
 								value="${clientInformationDto.clientDisplay.globalCustNum}" /></span><br>
 							<!-- Loan Officer of the client --> <span class="fontnormal"> <mifos:mifoslabel
 								name="client.LoanOff" bundle="ClientUIResources"></mifos:mifoslabel>
@@ -268,8 +268,10 @@ explanation of the license and how it is applied.
 										</tr>
 									</table>
 									<span class="fontnormal"><mifos:mifoslabel name="client.amtdue"
-										bundle="ClientUIResources" isColonRequired="yes"/> <c:out
-										value="${clientInformationDto.customerAccountSummary.nextDueAmount}" />
+										bundle="ClientUIResources" isColonRequired="yes"/>
+										<span id="viewClientDetails.text.amountDue">
+											<c:out value="${clientInformationDto.customerAccountSummary.nextDueAmount}" />
+										</span>
 									</span></td>
 								</tr>
 

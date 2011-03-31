@@ -61,6 +61,12 @@ public class ViewLatenessAndDormancyDefinitionPage extends MifosPage {
         selenium.click("name=submit");
         waitForPageToLoad();
     }
+
+    public AdminPage submitAndNavigateToAdminPage() {
+        selenium.click("name=submit");
+        waitForPageToLoad();
+        return new AdminPage(selenium);
+    }
 }
 
 

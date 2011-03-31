@@ -27,6 +27,7 @@ import org.mifos.config.Localization;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.service.PersonnelService;
+import org.mifos.customers.personnel.exceptions.PersonnelException;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.dto.domain.ChangePasswordRequest;
 import org.mifos.dto.domain.LoginDto;
@@ -133,4 +134,13 @@ public class LoginServiceFacadeWebTier implements NewLoginServiceFacade {
 
         return passwordIsAlreadyChanged;
     }
+
+	@Override
+	public boolean checkOldPassword(String username, String oldPassword) {
+		try {
+			return this.personnelDao.findPersonnelByUsername(username).isPasswordValid(oldPassword);
+		} catch (PersonnelException e) {
+			return false;
+		}
+	}
 }

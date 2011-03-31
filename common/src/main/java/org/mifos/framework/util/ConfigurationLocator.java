@@ -21,9 +21,7 @@
 package org.mifos.framework.util;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,6 +29,9 @@ import org.apache.commons.lang.StringUtils;
 import org.mifos.core.MifosResourceUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 
 /**
  * Encapsulates logic for determining which directory to look in for
@@ -66,17 +67,19 @@ public class ConfigurationLocator {
      * @throws IOException
      */
     @SuppressWarnings("PMD")
+    // TODO It may be clearer if this returned an URI or URL instead of a String?
     public String getCustomFilePath(String filename) throws IOException {
         String returnValue = filename;
         LOGGER.info("Checking existance of : " + filename);
-        File configFile = getFile(filename);
+        Resource configFile = getResource(filename);
         if(configFile != null && configFile.exists()) {
-            returnValue = "file:"+ configFile.getAbsolutePath();
+            returnValue = configFile.getURL().toExternalForm();
             LOGGER.info("Custom configuration file exists : " + returnValue);
         }
         return returnValue;
     }
 
+    // TODO It would be clearer if this returned a File or even better a Resource instead of a String
     public String getFilePath(String filename) throws IOException {
         File file = getFile(filename);
         if(file != null && file.exists()){
@@ -106,37 +109,16 @@ public class ConfigurationLocator {
     }
 
     @SuppressWarnings({"PMD.AvoidInstantiatingObjectsInLoops", "PMD.OnlyOneReturn"})
-    private InputStream getConfiguration(String filename) throws IOException {
+    private Resource getConfigurationResource(String name) throws IOException {
         for (String directoryPath : getDirectoriesToSearch()) {
             if (StringUtils.isNotBlank(directoryPath)) {
-                File file = MifosResourceUtil.getFile(directoryPath +"/"+ filename);
+                File file = MifosResourceUtil.getFile(directoryPath +"/"+ name);
                 if (file.exists()) {
-                    LOGGER.info("ConfigurationLocator found configuration file: " + file);
-                    return new FileInputStream(file);
+                    return new FileSystemResource(file);
                 }
             }
         }
-        return MifosResourceUtil.getClassPathResourceAsStream(getDefaultConfigPath() + filename);
-    }
-
-    @SuppressWarnings({"PMD.AvoidInstantiatingObjectsInLoops", "PMD.OnlyOneReturn"})
-    private File getConfigurationFile(String filename) throws IOException {
-        for (String directoryPath : getDirectoriesToSearch()) {
-            if (StringUtils.isNotBlank(directoryPath)) {
-                File file = MifosResourceUtil.getFile(directoryPath +"/"+ filename);
-                if (file.exists()) {
-                    LOGGER.info("ConfigurationLocator found configuration file: " + file);
-                    return file;
-                }
-            }
-        }
-        File file = null;
-        try {
-            file = MifosResourceUtil.getClassPathResource(getDefaultConfigPath() + filename);
-        } catch (IOException e) {
-            LOGGER.info("file not found : " + filename);
-        }
-        return file;
+        return new ClassPathResource(getDefaultConfigPath() + name);
     }
 
     private String getHomeProperty() {
@@ -151,12 +133,23 @@ public class ConfigurationLocator {
         return configurationLocatorHelper.getFile(directory);
     }
 
-    public InputStream getFileInputStream(String filename) throws IOException {
-        return getConfiguration(filename);
+    private File getFile(String filename) throws IOException {
+        File fileToReturn = getConfigurationResource(filename).getFile();
+        LOGGER.info("ConfigurationLocator found configuration file: " + fileToReturn);
+        return fileToReturn;
     }
 
-    public File getFile(String filename) throws IOException {
-        return getConfigurationFile(filename);
+    /**
+     * Get a Configuration Resource, either from the classpath or from a configuration directory.
+     *
+     * @param configurationName name of a configuration resource on the classpatch (e.g. "package/something.properties")
+     * @return always a Resource, never null (use {@link Resource#exists()} to check)
+     * @throws IOException if something unexpected went wrong
+     */
+    public Resource getResource(String configurationName) throws IOException {
+        Resource res = getConfigurationResource(configurationName);
+        LOGGER.info("ConfigurationLocator found configuration in resource: " + res.getDescription());
+        return res;
     }
 
     public void setConfigurationLocatorHelper(ConfigurationLocatorHelper fileFactory) {
