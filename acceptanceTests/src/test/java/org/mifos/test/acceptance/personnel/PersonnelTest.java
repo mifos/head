@@ -283,7 +283,6 @@ public class PersonnelTest extends UiTestCaseBase {
 
     //http://mifosforge.jira.com/browse/MIFOSTEST-296
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled=false) // http://mifosforge.jira.com/browse/MIFOS-4844
     public void changePasswordTest() throws Exception {
 
         HomePage homePage = loginSuccessfully();
