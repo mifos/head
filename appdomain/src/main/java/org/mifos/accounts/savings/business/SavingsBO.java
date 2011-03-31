@@ -80,6 +80,7 @@ import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.exceptions.CustomerException;
+import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
@@ -492,8 +493,8 @@ public class SavingsBO extends AccountBO {
                     .getAccountState(), getPersonnelPersistence().getPersonnel(userContext.getId()), this));
 
             getSavingsPersistence().createOrUpdate(this);
-
-            this.globalAccountNum = generateId(userContext.getBranchGlobalNum());
+            OfficeBO branch = getSavingsPersistence().getPersistentObject(OfficeBO.class, userContext.getBranchId());
+            this.globalAccountNum = generateId(branch.getGlobalOfficeNum());
 
             getSavingsPersistence().createOrUpdate(this);
         } catch (PersistenceException e) {
