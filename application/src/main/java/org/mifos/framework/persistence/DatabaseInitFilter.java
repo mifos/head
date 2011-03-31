@@ -43,7 +43,7 @@ public class DatabaseInitFilter implements Filter {
     }
 
     @Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
+	public synchronized void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
             ServletException {
 
         if (!databaseVerified) {
@@ -98,7 +98,7 @@ public class DatabaseInitFilter implements Filter {
     }
 
     @Override
-	public void init(FilterConfig filterConfig) {
+	public synchronized void init(FilterConfig filterConfig) {
         try {
             DatabaseUpgradeSupport databaseUpgradeSupport = ServletUtils.getBean(filterConfig.getServletContext(), BEAN_NAME);
             DbUpgradeValidationResult validationResult = databaseUpgradeSupport.validate();
