@@ -33,9 +33,9 @@
     "sSearch":       "[@spring.message "jquery.datatables.filter" /]",
     "sUrl": "",
     "oPaginate": {
-        "sFirst":    "[@spring.message "jquery.datatables.firstPage" /]",
-        "sPrevious": "[@spring.message "jquery.datatables.previousPage" /]",
-        "sNext":     "[@spring.message "jquery.datatables.nextPage" /]",
-        "sLast":     "[@spring.message "jquery.datatables.lastPage" /]"
+        "sFirst":    "<<",
+        "sPrevious": "<",
+        "sNext":     ">",
+        "sLast":     ">>"
     }
 }
