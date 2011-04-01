@@ -26,6 +26,7 @@ import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.ScrollableResults;
+import org.hibernate.Session;
 import org.mifos.framework.exceptions.HibernateSearchException;
 
 /**
@@ -46,6 +47,8 @@ public class QueryResultDTOImpl implements QueryResult {
     protected DTOBuilder dtoBuilder = null;
 
     protected boolean buildDTO = false;
+
+    private Session hibernateSession = null;
 
     protected int size = 0;
 
@@ -90,11 +93,11 @@ public class QueryResultDTOImpl implements QueryResult {
      *
      */
     @Override
-	public List<Object> get(int position, int noOfObjects) throws HibernateSearchException {
-        List<Object> returnList = new ArrayList<Object>();
+	public List get(int position, int noOfObjects) throws HibernateSearchException {
+        List returnList = new ArrayList();
         try {
             scrollResult.setRowNumber(position);
-            returnList = new ArrayList<Object>();
+            returnList = new ArrayList();
             if (position < size) {
                 if (buildDTO) {
                     returnList.add(buildDTO(scrollResult.get()));
