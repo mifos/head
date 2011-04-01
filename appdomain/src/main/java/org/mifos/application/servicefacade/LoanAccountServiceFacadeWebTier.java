@@ -2089,19 +2089,21 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             int position = (customerSearchDto.getPage()-1) * customerSearchDto.getPageSize();
             List<AccountSearchResultsDto> pagedResults = customerForSavings.get(position, customerSearchDto.getPageSize());
             int i=1;
-            for (AccountSearchResultsDto customerBO : pagedResults) {
-                  CustomerSearchResultDto customer = new CustomerSearchResultDto();
-                  customer.setCustomerId(customerBO.getClientId());
-                  customer.setBranchName(customerBO.getOfficeName());
-                  customer.setGlobalId(customerBO.getGlobelNo());
+            for (AccountSearchResultsDto accountSearchResult : pagedResults) {
 
-                  customer.setCenterName(StringUtils.defaultIfEmpty(customerBO.getCenterName(), "--"));
-                  customer.setGroupName(StringUtils.defaultIfEmpty(customerBO.getGroupName(), "--"));
-                  customer.setClientName(customerBO.getClientName());
+                  CustomerSearchResultDto customerSearchResult = new CustomerSearchResultDto();
+                  customerSearchResult.setCustomerId(accountSearchResult.getCustomerId());
+                  customerSearchResult.setBranchName(accountSearchResult.getOfficeName());
+                  customerSearchResult.setGlobalId(accountSearchResult.getGlobelNo());
 
-                  pagedDetails.add(customer);
+                  customerSearchResult.setCenterName(StringUtils.defaultIfEmpty(accountSearchResult.getParentOfParentCustomerName(), "--"));
+                  customerSearchResult.setGroupName(StringUtils.defaultIfEmpty(accountSearchResult.getParentCustomerName(), "--"));
+                  customerSearchResult.setClientName(accountSearchResult.getCustomerName());
+
+                  pagedDetails.add(customerSearchResult);
                   i++;
             }
+
             return pagedDetails;
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);

@@ -1254,13 +1254,13 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             int i = 1;
             for (AccountSearchResultsDto customerBO : pagedResults) {
                 CustomerSearchResultDto customer = new CustomerSearchResultDto();
-                customer.setCustomerId(customerBO.getClientId());
+                customer.setCustomerId(customerBO.getCustomerId());
                 customer.setBranchName(customerBO.getOfficeName());
                 customer.setGlobalId(customerBO.getGlobelNo());
 
-                customer.setCenterName(StringUtils.defaultIfEmpty(customerBO.getCenterName(), "no center"));
-                customer.setGroupName(StringUtils.defaultIfEmpty(customerBO.getGroupName(), "no group"));
-                customer.setClientName(customerBO.getClientName());
+                customer.setCenterName(StringUtils.defaultIfEmpty(customerBO.getParentOfParentCustomerName(), "--"));
+                customer.setGroupName(StringUtils.defaultIfEmpty(customerBO.getParentCustomerName(), "--"));
+                customer.setClientName(customerBO.getCustomerName());
 
                 pagedDetails.add(customer);
                 i++;

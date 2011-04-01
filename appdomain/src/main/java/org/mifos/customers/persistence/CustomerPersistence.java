@@ -352,7 +352,7 @@ public class CustomerPersistence extends LegacyGenericDao {
         paramList.add(typeNameValue("Boolean", "GROUP_LOAN_ALLOWED", ClientRules.getGroupCanApplyLoans() ? Boolean.TRUE
                 : Boolean.FALSE));
 
-        String[] aliasNames = { "clientName", "clientId", "groupName", "centerName", "officeName", "globelNo" };
+        String[] aliasNames = { "customerName", "customerId", "customerLevelId", "parentCustomerName", "parentOfParentCustomerName", "officeName", "globelNo" };
         queryInputs.setQueryStrings(namedQuery);
         queryInputs.setPath("org.mifos.accounts.util.helpers.AccountSearchResultsDto");
         queryInputs.setAliasNames(aliasNames);
@@ -384,7 +384,7 @@ public class CustomerPersistence extends LegacyGenericDao {
         paramList.add(typeNameValue("String", "SEARCH_ID", personnel.getOffice().getSearchId() + "%"));
         paramList.add(typeNameValue("String", "SEARCH_STRING", searchString + "%"));
 
-        String[] aliasNames = { "clientName", "clientId", "groupName", "centerName", "officeName", "globelNo" };
+        String[] aliasNames = { "customerName", "customerId", "customerLevelId", "parentCustomerName", "parentOfParentCustomerName", "officeName", "globelNo" };
         queryInputs.setQueryStrings(namedQuery);
         queryInputs.setPath("org.mifos.accounts.util.helpers.AccountSearchResultsDto");
         queryInputs.setAliasNames(aliasNames);

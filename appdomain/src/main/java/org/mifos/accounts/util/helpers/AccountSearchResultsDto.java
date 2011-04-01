@@ -24,70 +24,61 @@ import org.mifos.customers.api.DataTransferObject;
 
 public class AccountSearchResultsDto implements DataTransferObject {
 
+    private static final long serialVersionUID = -2925583671044915036L;
+
     private String officeName;
 
-    private short levelId;
+    private short customerLevelId;
 
-    private String centerName;
+    private String parentOfParentCustomerName;
 
-    private String groupName;
+    private String parentCustomerName;
 
-    private String clientName;
+    private String customerName;
 
-    private int clientId;
+    private int customerId;
 
     private String globelNo;
 
-    public String getCenterName() {
-        return this.centerName;
+    public String getParentOfParentCustomerName() {
+        return this.parentOfParentCustomerName;
     }
 
-    public void setCenterName(String centerName) {
-        if (centerName == null) {
-            centerName = "";
-        }
-        this.centerName = centerName;
+    public void setParentOfParentCustomerName(String parentOfParentCustomerName) {
+        this.parentOfParentCustomerName = parentOfParentCustomerName;
     }
 
-    public int getClientId() {
-        return clientId;
+    public int getCustomerId() {
+        return customerId;
     }
 
-    public void setClientId(int clientId) {
-        this.clientId = clientId;
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
     }
 
-    public short getLevelId() {
-        return levelId;
+    public short getCustomerLevelId() {
+        return customerLevelId;
     }
 
-    public void setLevelId(short levelId) {
-        this.levelId = levelId;
+    public void setCustomerLevelId(short customerLevelId) {
+        this.customerLevelId = customerLevelId;
     }
 
-    public String getClientName() {
+    public String getCustomerName() {
 
-        return clientName;
+        return customerName;
     }
 
-    public void setClientName(String clientName) {
-        if (null == clientName) {
-            clientName = "";
-        }
-        this.clientName = clientName;
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
 
-    public String getGroupName() {
-
-        return groupName;
-
+    public String getParentCustomerName() {
+        return parentCustomerName;
     }
 
-    public void setGroupName(String groupName) {
-        if (null == groupName) {
-            groupName = "";
-        }
-        this.groupName = groupName;
+    public void setParentCustomerName(String parentCustomerName) {
+        this.parentCustomerName = parentCustomerName;
     }
 
     public String getOfficeName() {
@@ -96,40 +87,6 @@ public class AccountSearchResultsDto implements DataTransferObject {
 
     public void setOfficeName(String officeName) {
         this.officeName = officeName;
-    }
-
-    public String getGroupId() {
-        if (null == this.centerName) {
-            return String.valueOf(this.clientId);
-        } else {
-            return "";
-        }
-    }
-
-    public String getGroupLink() {
-        if (null == this.centerName) {
-            return "true";
-        } else {
-            return "false";
-        }
-    }
-
-    public String getClientLink() {
-        if (null != this.centerName) {
-            return "true";
-        } else {
-            return "false";
-        }
-
-    }
-
-    public String getIdClient() {
-        if (null == this.centerName) {
-            return "";
-        } else {
-            return String.valueOf(this.clientId);
-        }
-
     }
 
     public String getGlobelNo() {
