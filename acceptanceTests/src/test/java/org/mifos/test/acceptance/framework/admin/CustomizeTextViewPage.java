@@ -89,4 +89,20 @@ public class CustomizeTextViewPage extends MifosPage {
 		}
 		return length;
 	}
+	
+	public CustomizeTextViewPage clickEditButton() {
+	    selenium.click("customizeTextView.button.remove");
+        waitForPageToLoad();
+	    return this;
+	}
+	
+	public CustomizeTextViewPage clickRemoveButton() {
+        selenium.click("customizeTextView.button.edit");
+        waitForPageToLoad();
+        return this;
+    }
+	
+	public void verifyTextPresent(String expectedText, String errorMessage) {
+        Assert.assertTrue(selenium.isTextPresent(expectedText), errorMessage);
+    }
 }
