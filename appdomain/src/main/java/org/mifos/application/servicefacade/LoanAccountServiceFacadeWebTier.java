@@ -2095,8 +2095,8 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                   customer.setBranchName(customerBO.getOfficeName());
                   customer.setGlobalId(customerBO.getGlobelNo());
 
-                  customer.setCenterName(StringUtils.defaultIfEmpty(customerBO.getCenterName(), "no center"));
-                  customer.setGroupName(StringUtils.defaultIfEmpty(customerBO.getGroupName(), "no group"));
+                  customer.setCenterName(StringUtils.defaultIfEmpty(customerBO.getCenterName(), "--"));
+                  customer.setGroupName(StringUtils.defaultIfEmpty(customerBO.getGroupName(), "--"));
                   customer.setClientName(customerBO.getClientName());
 
                   pagedDetails.add(customer);
