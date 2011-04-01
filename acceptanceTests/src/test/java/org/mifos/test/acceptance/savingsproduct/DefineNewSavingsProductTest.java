@@ -39,6 +39,7 @@ import org.mifos.test.acceptance.framework.testhelpers.BatchJobHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.framework.testhelpers.SavingsAccountHelper;
 import org.mifos.test.acceptance.framework.testhelpers.SavingsProductHelper;
+import org.mifos.test.acceptance.framework.util.UiTestUtils;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.mifos.test.acceptance.util.StringUtil;
@@ -159,7 +160,7 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
 
     //http://mifosforge.jira.com/browse/MIFOSTEST-712
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")// one of the dependent methods throws Exception
-    @Test(enabled=false) // TODO js - temporarily disabled broken test
+    @Test(enabled=true)
     public void savingsAccountWithDailyInterestMandatoryDeposits() throws Exception {
         //Given
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
@@ -171,7 +172,7 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         SavingsProductParameters params = getMandatoryClientsMinimumBalanceSavingsProductParameters();
         DefineNewSavingsProductConfirmationPage confirmationPage = savingsProductHelper.createSavingsProduct(params);
         confirmationPage.navigateToSavingsProductDetails();     //"Stu1233266079799 Client1233266079799"
-        SavingsAccountDetailPage savingsAccountDetailPage = createSavingAccountWithCreatedProduct("Stu1233266079799 Client1233266079799", params.getProductInstanceName(), "1000000.0");
+        SavingsAccountDetailPage savingsAccountDetailPage = createSavingAccountWithCreatedProduct("Stu1233266079799 Client1233266079799", params.getProductInstanceName(), "100000.0");
         String savingsId = savingsAccountDetailPage.getAccountId();
 
         EditAccountStatusParameters editAccountStatusParameters =new EditAccountStatusParameters();
@@ -201,9 +202,10 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
 
         navigationHelper.navigateToAdminPage();
         runBatchJobsForSavingsIntPosting();
+        UiTestUtils.sleep(10000);
 
         navigationHelper.navigateToSavingsAccountDetailPage(savingsId);
-        Assert.assertEquals(selenium.getTable("recentActivityForDetailPage.1.2"),"520.6");
+        Assert.assertEquals(selenium.getTable("recentActivityForDetailPage.1.2"),"57.4");
 
         //When
         targetTime = new DateTime(2011,3,7,13,0,0,0);
@@ -221,14 +223,15 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         //Then
         targetTime = new DateTime(2011,4,1,13,0,0,0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
-        depositParams = setDepositParams(depositParams, "1", "04", "2011");
+
         navigationHelper.navigateToSavingsAccountDetailPage(savingsId);
 
         navigationHelper.navigateToAdminPage();
         runBatchJobsForSavingsIntPosting();
+        UiTestUtils.sleep(10000);
 
         navigationHelper.navigateToSavingsAccountDetailPage(savingsId);
-        Assert.assertEquals(selenium.getTable("recentActivityForDetailPage.1.2"),"3945.6");
+        Assert.assertEquals(selenium.getTable("recentActivityForDetailPage.1.2"),"402.7");
     }
 
     private DepositWithdrawalSavingsParameters makeDefaultDeposit(DateTime date, DepositWithdrawalSavingsParameters depositParams, String savingsId) throws Exception {
@@ -244,7 +247,7 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         depositParams.setTrxnDateMM(dd);
         depositParams.setTrxnDateDD(mm);
         depositParams.setTrxnDateYYYY(yy);
-        depositParams.setAmount("1000000.0");
+        depositParams.setAmount("100000.0");
         depositParams.setPaymentType(DepositWithdrawalSavingsParameters.CASH);
         depositParams.setTrxnType(DepositWithdrawalSavingsParameters.DEPOSIT);
         return depositParams;
@@ -256,8 +259,9 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
         params.setDaysOrMonthsForInterestCalculation(params.DAYS);
         params.setInterestRate("1");
         params.setFrequencyOfInterestPostings("1");
+        params.setNumberOfDaysOrMonthsForInterestCalculation("1");
         params.setBalanceUsedForInterestCalculation(SavingsProductParameters.MINIMUM_BALANCE);
-        params.setMandatoryAmount("1000000");
+        params.setMandatoryAmount("100000");
         return params;
     }
 
