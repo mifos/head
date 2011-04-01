@@ -16,9 +16,8 @@ public class RateInstalmentFeeCalculator implements InstallmentFeeCalculator {
     }
 
     @Override
-    public Money calculate(Double feeAmount, Money loanAmount, Money loanInterest, FeeBO fee) {
+    public Money calculate(Double feeRate, Money loanAmount, Money loanInterest, FeeBO fee) {
 
-        // FIXME - keithw - is this refetch of the fee needed?
         RateFeeBO rateFeeBO = (RateFeeBO) this.feeDao.findById(fee.getFeeId());
         FeeFormulaEntity formula = rateFeeBO.getFeeFormula();
 
@@ -30,11 +29,7 @@ public class RateInstalmentFeeCalculator implements InstallmentFeeCalculator {
         } else if (formula.getId().equals(FeeFormula.INTEREST.getValue())) {
             amountToCalculateOn = loanInterest;
         }
-        Double rateAmount = amountToCalculateOn.multiply(feeAmount).divide(100).getAmountDoubleValue();
-        Money rateAmountMoney = amountToCalculateOn.multiply(feeAmount).divide(100);
-
-        String rateBasedOnFormula = rateAmount.toString();
-        return new Money(loanAmount.getCurrency(), rateBasedOnFormula);
+        return amountToCalculateOn.multiply(feeRate).divide(100);
     }
 
 }

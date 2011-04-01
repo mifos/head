@@ -176,6 +176,10 @@ public class FeeDto implements Serializable {
     public String getAmount() {
         return amount;
     }
+    
+    public Double getAmountAsNumber() {
+        return Double.valueOf(amount);
+    }
 
     public void setFeeFrequency(FeeFrequencyDto feeFrequency) {
         this.feeFrequency = feeFrequency;

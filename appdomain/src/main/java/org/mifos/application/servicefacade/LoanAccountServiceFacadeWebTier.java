@@ -690,8 +690,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
         Money loanAmountDisbursed = new Money(loanProduct.getCurrency(), createLoanSchedule.getLoanAmount());
 
+        List<AccountFeesEntity> accountFeeEntities = assembleAccountFees(createLoanSchedule.getAccountFeeEntities());
         LoanProductOverridenDetail overridenDetail = new LoanProductOverridenDetail(loanAmountDisbursed, createLoanSchedule.getDisbursementDate(),
-                createLoanSchedule.getInterestRate(), createLoanSchedule.getNumberOfInstallments(), createLoanSchedule.getGraceDuration());
+                createLoanSchedule.getInterestRate(), createLoanSchedule.getNumberOfInstallments(), createLoanSchedule.getGraceDuration(), accountFeeEntities);
 
         Integer interestDays = Integer.valueOf(AccountingRules.getNumberOfInterestDays().intValue());
         boolean loanScheduleIndependentOfCustomerMeetingEnabled = createLoanSchedule.isRepaymentIndependentOfCustomerMeetingSchedule();
@@ -724,9 +725,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         }
         LoanScheduleConfiguration configuration = new LoanScheduleConfiguration(loanScheduleIndependentOfCustomerMeetingEnabled, interestDays);
 
-        // FIXME - keitw - handle fees for loan schedule
-        List<AccountFeesEntity> accountFees = new ArrayList<AccountFeesEntity>();
-        LoanSchedule loanSchedule = this.loanScheduleService.generate(loanProduct, customer, loanMeeting, overridenDetail, configuration, userContext.getBranchId(), accountFees);
+        LoanSchedule loanSchedule = this.loanScheduleService.generate(loanProduct, customer, loanMeeting, overridenDetail, configuration, userContext.getBranchId(), accountFeeEntities);
 
         // translate to DTO form
         List<LoanCreationInstallmentDto> installments = new ArrayList<LoanCreationInstallmentDto>();
@@ -736,7 +735,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             LocalDate dueDate = new LocalDate(loanScheduleEntity.getActionDate());
             String principal = loanScheduleEntity.getPrincipal().toString(digitsAfterDecimal);
             String interest = loanScheduleEntity.getInterest().toString(digitsAfterDecimal);
-            String fees = "0.0";
+            String fees = loanScheduleEntity.getTotalFees().toString(digitsAfterDecimal);
             String penalty = "0.0";
             String total = loanScheduleEntity.getPrincipal().add(loanScheduleEntity.getInterest()).toString(digitsAfterDecimal);
             LoanCreationInstallmentDto installment = new LoanCreationInstallmentDto(installmentNumber, dueDate,
@@ -778,7 +777,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         int graceDuration = 0;
 
         LoanProductOverridenDetail overridenDetail = new LoanProductOverridenDetail(loanAmountDisbursed, actualDisbursementDate,
-                interestRate, numberOfInstallments, graceDuration);
+                interestRate, numberOfInstallments, graceDuration, new ArrayList<AccountFeesEntity>());
 
         Integer interestDays = Integer.valueOf(AccountingRules.getNumberOfInterestDays().intValue());
         boolean loanScheduleIndependentOfCustomerMeetingEnabled = false;
@@ -847,9 +846,10 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         // assemble
         LoanAccountDetail loanAccountDetail = assembleLoanAccountDetail(loanAccountInfo);
 
+        List<AccountFeesEntity> accountFeeEntities = assembleAccountFees(loanAccountInfo.getAccountFees());
         LoanProductOverridenDetail overridenDetail = new LoanProductOverridenDetail(loanAccountDetail.getLoanAmount(), loanAccountInfo.getDisbursementDate(),
-                loanAccountInfo.getInterestRate(), loanAccountInfo.getNumberOfInstallments(), loanAccountInfo.getGraceDuration());
-
+                loanAccountInfo.getInterestRate(), loanAccountInfo.getNumberOfInstallments(), loanAccountInfo.getGraceDuration(), accountFeeEntities);
+        
         Integer interestDays = Integer.valueOf(AccountingRules.getNumberOfInterestDays().intValue());
         boolean loanScheduleIndependentOfCustomerMeetingEnabled = loanAccountInfo.isRepaymentScheduleIndependentOfCustomerMeeting();
         LoanScheduleConfiguration configuration = new LoanScheduleConfiguration(loanScheduleIndependentOfCustomerMeetingEnabled, interestDays);
@@ -889,14 +889,11 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             LoanProductOverridenDetail overridenDetail, LoanScheduleConfiguration configuration,
             MeetingBO repaymentDayMeeting, OfficeBO userOffice, List<DateTime> loanScheduleDates) {
 
-        // FIXME - keithw - handle fees for loan schedule
-        List<AccountFeesEntity> accountFees = new ArrayList<AccountFeesEntity>();
-
         LoanSchedule loanSchedule = null;
         if (loanScheduleDates.isEmpty()) {
-            loanSchedule = this.loanScheduleService.generate(loanProduct, customer, repaymentDayMeeting, overridenDetail, configuration, userOffice.getOfficeId(), accountFees);
+            loanSchedule = this.loanScheduleService.generate(loanProduct, customer, repaymentDayMeeting, overridenDetail, configuration, userOffice.getOfficeId(), overridenDetail.getAccountFeeEntities());
         } else {
-            loanSchedule = this.loanScheduleService.generate(loanProduct, customer, repaymentDayMeeting, overridenDetail, configuration, accountFees, loanScheduleDates);
+            loanSchedule = this.loanScheduleService.generate(loanProduct, customer, repaymentDayMeeting, overridenDetail, configuration, overridenDetail.getAccountFeeEntities(), loanScheduleDates);
         }
 
         return loanSchedule;
@@ -949,8 +946,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         // assemble
         LoanAccountDetail loanAccountDetail = assembleLoanAccountDetail(loanAccountInfo);
 
+        List<AccountFeesEntity> accountFeeEntities = assembleAccountFees(loanAccountInfo.getAccountFees());
         LoanProductOverridenDetail overridenDetail = new LoanProductOverridenDetail(loanAccountDetail.getLoanAmount(), loanAccountInfo.getDisbursementDate(),
-                loanAccountInfo.getInterestRate(), loanAccountInfo.getNumberOfInstallments(), loanAccountInfo.getGraceDuration());
+                loanAccountInfo.getInterestRate(), loanAccountInfo.getNumberOfInstallments(), loanAccountInfo.getGraceDuration(), accountFeeEntities);
 
         Integer interestDays = Integer.valueOf(AccountingRules.getNumberOfInterestDays().intValue());
         boolean loanScheduleIndependentOfCustomerMeetingEnabled = loanAccountInfo.isRepaymentScheduleIndependentOfCustomerMeeting();
@@ -965,6 +963,16 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         LoanSchedule loanSchedule = assembleLoanSchedule(loanAccountDetail.getCustomer(), loanAccountDetail.getLoanProduct(), overridenDetail, configuration, repaymentDayMeeting, userOffice, new ArrayList<DateTime>());
 
         return createLoanAccount(loanAccountInfo, questionGroups, loanAccountCashFlow, user, userOffice, loanAccountDetail, overridenDetail, configuration, repaymentDayMeeting, loanSchedule, createdBy, new ArrayList<GroupMemberLoanDetail>());
+    }
+
+    private List<AccountFeesEntity> assembleAccountFees(List<CreateAccountFeeDto> defaultAccountFees) {
+        List<AccountFeesEntity> accountFeeEntities = new ArrayList<AccountFeesEntity>();
+        for (CreateAccountFeeDto defaultFee : defaultAccountFees) {
+            FeeBO fee = this.feeDao.findById(defaultFee.getFeeId().shortValue());
+            AccountFeesEntity deafultAccountFeeEntity = new AccountFeesEntity(null, fee, Double.valueOf(defaultFee.getAmount()));
+            accountFeeEntities.add(deafultAccountFeeEntity);
+        }
+        return accountFeeEntities;
     }
 
     private LoanCreationResultDto createLoanAccount(CreateLoanAccount loanAccountInfo,
@@ -1045,9 +1053,10 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         CreateLoanAccount loanAccountInfo = glimLoanAccount.getGroupLoanAccountDetails();
         LoanAccountDetail loanAccountDetail = assembleLoanAccountDetail(loanAccountInfo);
 
+        List<AccountFeesEntity> accountFeeEntities = assembleAccountFees(loanAccountInfo.getAccountFees());
         LoanProductOverridenDetail overridenDetail = new LoanProductOverridenDetail(loanAccountDetail.getLoanAmount(), loanAccountInfo.getDisbursementDate(),
-                loanAccountInfo.getInterestRate(), loanAccountInfo.getNumberOfInstallments(), loanAccountInfo.getGraceDuration());
-
+                loanAccountInfo.getInterestRate(), loanAccountInfo.getNumberOfInstallments(), loanAccountInfo.getGraceDuration(), accountFeeEntities);
+        
         Integer interestDays = Integer.valueOf(AccountingRules.getNumberOfInterestDays().intValue());
         boolean loanScheduleIndependentOfCustomerMeetingEnabled = loanAccountInfo.isRepaymentScheduleIndependentOfCustomerMeeting();
         LoanScheduleConfiguration configuration = new LoanScheduleConfiguration(loanScheduleIndependentOfCustomerMeetingEnabled, interestDays);

@@ -130,8 +130,8 @@ public class IndividualLoanScheduleFactory implements LoanScheduleFactory {
                 RateAmountFlag feeType = accountFeesEntity.getFees().getFeeType();
                 InstallmentFeeCalculator installmentFeeCalculator = installmentFeeCalculatorFactory.create(this.feeDao, feeType);
 
-                Double feeAmount = accountFeesEntity.getFeeAmount();
-                Money accountFeeAmount = installmentFeeCalculator.calculate(feeAmount, loanAmount, loanInterest, accountFeesEntity.getFees());
+                Double feeAmountOrRate = accountFeesEntity.getFeeAmount();
+                Money accountFeeAmount = installmentFeeCalculator.calculate(feeAmountOrRate, loanAmount, loanInterest, accountFeesEntity.getFees());
                 accountFeesEntity.setAccountFeeAmount(accountFeeAmount);
             }
             feeInstallments = FeeInstallment.createMergedFeeInstallments(meetingScheduledEvent, accountFees, installmentDates.size());

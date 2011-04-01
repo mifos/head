@@ -21,8 +21,10 @@
 package org.mifos.clientportfolio.loan.service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.joda.time.LocalDate;
+import org.mifos.dto.domain.CreateAccountFeeDto;
 
 @SuppressWarnings("PMD")
 public class CreateLoanSchedule implements RecurringSchedule {
@@ -36,10 +38,11 @@ public class CreateLoanSchedule implements RecurringSchedule {
     private final int graceDuration;
     private final boolean repaymentIndependentOfCustomerMeetingSchedule;
     private final RecurringSchedule recurringSchedule;
+    private final List<CreateAccountFeeDto> accountFeeEntities;
 
     public CreateLoanSchedule(Integer customerId, Integer productId, BigDecimal loanAmount, Double interestRate,
             LocalDate disbursementDate, int numberOfInstallments, int graceDuration, 
-            boolean repaymentIndependentOfCustomerMeetingSchedule, RecurringSchedule recurringSchedule) {
+            boolean repaymentIndependentOfCustomerMeetingSchedule, RecurringSchedule recurringSchedule, List<CreateAccountFeeDto> accountFeeEntities) {
         this.customerId = customerId;
         this.productId = productId;
         this.loanAmount = loanAmount;
@@ -49,6 +52,7 @@ public class CreateLoanSchedule implements RecurringSchedule {
         this.graceDuration = graceDuration;
         this.repaymentIndependentOfCustomerMeetingSchedule = repaymentIndependentOfCustomerMeetingSchedule;
         this.recurringSchedule = recurringSchedule;
+        this.accountFeeEntities = accountFeeEntities;
     }
 
     public int getGraceDuration() {
@@ -116,5 +120,9 @@ public class CreateLoanSchedule implements RecurringSchedule {
     @Override
     public Integer getWeek() {
         return this.recurringSchedule.getWeek();
+    }
+    
+    public List<CreateAccountFeeDto> getAccountFeeEntities() {
+        return accountFeeEntities;
     }
 }

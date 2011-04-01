@@ -20,7 +20,10 @@
 
 package org.mifos.clientportfolio.newloan.domain;
 
+import java.util.List;
+
 import org.joda.time.LocalDate;
+import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.framework.util.helpers.Money;
 
 public class LoanProductOverridenDetail {
@@ -30,13 +33,15 @@ public class LoanProductOverridenDetail {
     private final Double interestRate;
     private final int numberOfInstallments;
     private final int graceDuration;
+    private final List<AccountFeesEntity> accountFeeEntities;
 
-    public LoanProductOverridenDetail(Money loanAmount, LocalDate disbursementDate, Double interestRate, int numberOfInstallments, int graceDuration) {
+    public LoanProductOverridenDetail(Money loanAmount, LocalDate disbursementDate, Double interestRate, int numberOfInstallments, int graceDuration, List<AccountFeesEntity> accountFeeEntities) {
         this.loanAmount = loanAmount;
         this.disbursementDate = disbursementDate;
         this.interestRate = interestRate;
         this.numberOfInstallments = numberOfInstallments;
         this.graceDuration = graceDuration;
+        this.accountFeeEntities = accountFeeEntities;
     }
 
     public LoanProductOverridenDetail(Money loanAmount, LoanProductOverridenDetail overridenDetail) {
@@ -45,6 +50,7 @@ public class LoanProductOverridenDetail {
         this.interestRate = overridenDetail.getInterestRate();
         this.numberOfInstallments = overridenDetail.getNumberOfInstallments();
         this.graceDuration = overridenDetail.getGraceDuration();
+        this.accountFeeEntities = overridenDetail.getAccountFeeEntities();
     }
 
     public Money getLoanAmount() {
@@ -65,5 +71,9 @@ public class LoanProductOverridenDetail {
 
     public int getGraceDuration() {
         return graceDuration;
+    }
+    
+    public List<AccountFeesEntity> getAccountFeeEntities() {
+        return accountFeeEntities;
     }
 }

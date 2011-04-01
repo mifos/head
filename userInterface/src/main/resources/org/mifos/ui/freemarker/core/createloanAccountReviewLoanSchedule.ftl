@@ -72,6 +72,14 @@ $(function() {
 	</div>
 [#if loanProductReferenceData.variableInstallmentsAllowed]
 	<div class="row">
+	    <div class="attribute"><span class="standout">[@spring.message "productSummary.variabeInstallments.minInstallmentAmount"/]</span></div>
+	    [#if loanProductReferenceData.minInstallmentAmount == 0.0]
+	    <div class="value">[@spring.message "productSummary.variabeInstallments.minInstallmentAmount.notapplicable"/]</div>
+	    [#else]
+	    <div class="value">${loanProductReferenceData.minInstallmentAmount?string.number}</div>
+	    [/#if]
+	</div>
+	<div class="row">
 	    <div class="attribute"><span class="standout">[@spring.message "productSummary.variableInstallmentsAllowed"/]</span></div>
 	    <div class="value">[@spring.message "boolean.yes"/]</div>
 	</div>
@@ -83,15 +91,41 @@ $(function() {
 	    <div class="attribute"><span class="standout">[@spring.message "productSummary.variabeInstallments.maxGap"/]</span></div>
 	    <div class="value">${loanProductReferenceData.maxGapInDays?string.number}</div>
 	</div>
-	<div class="row">
-	    <div class="attribute"><span class="standout">[@spring.message "productSummary.variabeInstallments.minInstallmentAmount"/]</span></div>
-	    [#if loanProductReferenceData.minInstallmentAmount == 0.0]
-	    <div class="value">[@spring.message "productSummary.variabeInstallments.minInstallmentAmount.notapplicable"/]</div>
-	    [#else]
-	    <div class="value">${loanProductReferenceData.minInstallmentAmount?string.number}</div>
-	    [/#if]
-	</div>
 [/#if]
+</div>
+<div class="product-summary">
+	[#assign index = 0]
+	[#list loanProductReferenceData.defaultFees as defaultFee]
+	    <div class="row">
+	        <div class="attribute"><span class="standout">${defaultFee.name}</span></div>
+	        <div class="value">
+	        	[#if defaultFee.rateBasedFee]
+	        		[#assign rateAsFraction = defaultFee.rate/100]
+	        		${rateAsFraction?string.percent}
+	        	[#else]
+	        		${defaultFee.amountAsNumber?string.currency}
+	        	[/#if]
+
+				[#if defaultFee.rateBasedFee]
+		        	${defaultFee.feeFormula.name}
+		       	[/#if]
+		       		        	
+				[#if defaultFee.feeFrequencyType == "Periodic"]
+		        	<span class="standout">[@spring.message "createLoanAccount.periodicity"/]:</span> ${defaultFee.feeFrequency.recurAfterPeriod}
+		        	[#if defaultFee.feeFrequency.weekly]
+		        		<span>[@spring.message "createLoanAccount.weeks"/]</span>
+		       		[#else]
+		        		<span>[@spring.message "createLoanAccount.months"/]</span>
+		       		[/#if]
+		       	[#else]
+		       		<span class="standout">[@spring.message "createLoanAccount.periodicity"/]:</span> ${defaultFee.feeFrequencyType}
+		       	[/#if]
+	       	</div>
+	    <!-- end of row -->
+	    </div>
+ 		[#assign index = index + 1]	    	
+    [/#list]
+<!-- end of product summary -->
 </div>
 <br/>
 

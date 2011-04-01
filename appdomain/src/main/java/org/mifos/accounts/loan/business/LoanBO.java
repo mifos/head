@@ -325,6 +325,12 @@ public class LoanBO extends AccountBO implements Loan {
         this.gracePeriodDuration = Integer.valueOf(overridenDetail.getGraceDuration()).shortValue();
         this.disbursementDate = overridenDetail.getDisbursementDate().toDateMidnight().toDate();
         
+        List<AccountFeesEntity> accountFeeEntities = overridenDetail.getAccountFeeEntities();
+        for (AccountFeesEntity accountFeesEntity : accountFeeEntities) {
+            accountFeesEntity.setAccount(this);
+        }
+        this.accountFees = new HashSet<AccountFeesEntity>(accountFeeEntities);
+        
         // inherit properties from loan product
         this.interestType = new InterestTypesEntity(loanProduct.getInterestType());
         this.interestRate = overridenDetail.getInterestRate();

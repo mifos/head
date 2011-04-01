@@ -312,33 +312,36 @@
 }
 </style>
 
-    	[#assign index = 0]
+		[#assign index = 0]
     	[#list loanProductReferenceData.defaultFees as defaultFee]
-	    	[#assign index = index + 1]
 		    <div class="row">
-		        <div class="name">${defaultFee.name}:</div>
-		        [#if defaultFee.rateBasedFee]
-		        <div class="value">${defaultFee.rate}</div>
-		        [#else]
-		        <div class="value">${defaultFee.amount}</div>
-		        [/#if]
+		        [@form.label "defaultFeeAmountOrRate[${index}]" false ]${defaultFee.name}:[/@form.label]
+		        
 		        [#if defaultFee.feeFrequencyType == "Periodic"]
-		        <div class="details">[@spring.message "createLoanAccount.periodicity"/] ${defaultFee.feeFrequency.recurAfterPeriod} 
-		        	[#if defaultFee.feeFrequency.weekly]
-		        		[@spring.message "createLoanAccount.weeks"/]
-		       		[#else]
-		        		[@spring.message "createLoanAccount.months"/]
-		       		[/#if]
-		        </div>
+		        	[@form.input path="loanAccountFormBean.defaultFeeAmountOrRate[${index}]" id="defaultFeeAmountOrRate[${index}]" attributes="disabled='disabled'"/]
 		        [#else]
-		        <div class="details">[@spring.message "createLoanAccount.periodicity"/] ${defaultFee.feeFrequencyType}
-		        	[#if defaultFee.rateBasedFee]
-		        	<br/>[@spring.message "createLoanAccount.formula"/] ${defaultFee.feeFormula.name}
-		        	[/#if]
-		        </div>
+					[@form.input path="loanAccountFormBean.defaultFeeAmountOrRate[${index}]" id="defaultFeeAmountOrRate[${index}]" /]		        	
 		        [/#if]
-		        <div class="removeCheckbox">Check to remove</div>
-		     </div>	    	
+		        
+		        <span style="margin-left: 20px;">
+		        [#if defaultFee.feeFrequencyType == "Periodic"]
+		        	[@spring.message "createLoanAccount.periodicity"/] ${defaultFee.feeFrequency.recurAfterPeriod}
+		        	[#if defaultFee.feeFrequency.weekly]
+		        		<span>[@spring.message "createLoanAccount.weeks"/]</span>
+		       		[#else]
+		        		<span>[@spring.message "createLoanAccount.months"/]</span>
+		       		[/#if]
+		       	[#else]
+		       		[@spring.message "createLoanAccount.periodicity"/] ${defaultFee.feeFrequencyType}
+		       	[/#if]
+		       	[#if defaultFee.rateBasedFee]
+		        	<span style="position:relative; left: -116px; top: 15px">[@spring.message "createLoanAccount.formula"/] ${defaultFee.feeFormula.name}</span>
+		       	[/#if]
+		       	</span>
+		       	<div style="position:relative; left: 650px; top: -25px; height: 2px;">[@spring.formCheckbox "loanAccountFormBean.defaultFeeSelected[${index}]"/]Check to remove</div>
+		       	[@spring.formHiddenInput "loanAccountFormBean.defaultFeeId[${index}]" /]
+		    </div>
+     		[#assign index = index + 1]	    	
 	    [/#list]
 </div>  
 <div class="clear"/>  

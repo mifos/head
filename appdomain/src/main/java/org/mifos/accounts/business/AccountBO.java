@@ -116,8 +116,8 @@ public class AccountBO extends AbstractBusinessObject {
     /**
      * Links this loan to its applied fees
      */
-    private final Set<AccountFeesEntity> accountFees;
-    private final Set<AccountActionDateEntity> accountActionDates;
+    protected Set<AccountFeesEntity> accountFees;
+    protected Set<AccountActionDateEntity> accountActionDates;
     protected List<AccountPaymentEntity> accountPayments;
     private Set<AccountCustomFieldEntity> accountCustomFields;
 

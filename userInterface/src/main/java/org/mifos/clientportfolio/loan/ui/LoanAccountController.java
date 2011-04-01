@@ -40,8 +40,10 @@ import org.mifos.clientportfolio.newloan.applicationservice.GroupMemberAccountDt
 import org.mifos.clientportfolio.newloan.applicationservice.LoanAccountCashFlow;
 import org.mifos.clientportfolio.newloan.applicationservice.LoanApplicationStateDto;
 import org.mifos.dto.domain.CashFlowDto;
+import org.mifos.dto.domain.CreateAccountFeeDto;
 import org.mifos.dto.domain.CustomerSearchDto;
 import org.mifos.dto.domain.CustomerSearchResultDto;
+import org.mifos.dto.domain.FeeDto;
 import org.mifos.dto.domain.LoanAccountDetailsDto;
 import org.mifos.dto.domain.LoanCreationInstallmentDto;
 import org.mifos.dto.domain.MandatoryHiddenFieldsDto;
@@ -156,6 +158,22 @@ public class LoanAccountController {
     	formBean.setDisbursalDateYear(possibleDisbursementDate.getYearOfEra());
     	
     	formBean.setCollateralNotes("");
+
+    	Number[] defaultFeeId = new Number[dto.getDefaultFees().size()];
+    	Number[] defaultFeeAmountOrRate = new Number[dto.getDefaultFees().size()];
+    	int index=0;
+    	for (FeeDto defaultFee : dto.getDefaultFees()) {
+    	    if (defaultFee.isRateBasedFee()) {
+    	        defaultFeeAmountOrRate[index] = defaultFee.getRate();
+    	    } else {
+    	        defaultFeeAmountOrRate[index] = defaultFee.getAmountAsNumber();
+    	    }
+    	    defaultFeeId[index] = Long.valueOf(defaultFee.getId());
+    	    index++;
+    	}
+    	formBean.setDefaultFeeAmountOrRate(defaultFeeAmountOrRate);
+    	formBean.setDefaultFeeId(defaultFeeId);
+    	formBean.setDefaultFeeSelected(new Boolean[dto.getDefaultFees().size()]);
     	
     	String[] selectedFeeId = new String[3];
     	selectedFeeId[0] = "";
@@ -185,14 +203,13 @@ public class LoanAccountController {
     
     public LoanScheduleDto retrieveLoanSchedule(int customerId, int productId, LoanAccountFormBean formBean, LoanScheduleFormBean loanScheduleFormBean) {
         
-        LocalDate disbursementDate = new LocalDate().withDayOfMonth(formBean.getDisbursalDateDay().intValue())
-                                                    .withMonthOfYear(formBean.getDisbursalDateMonth().intValue())
-                                                    .withYearOfEra(formBean.getDisbursalDateYear().intValue());
+        LocalDate disbursementDate = translateDisbursementDateToLocalDate(formBean);
         
         RecurringSchedule recurringSchedule = determineRecurringSchedule(formBean);
+        List<CreateAccountFeeDto> accountFees = translateToAccountFeeDtos(formBean);
         
         CreateLoanSchedule createLoanAccount = new CreateLoanSchedule(customerId, productId, BigDecimal.valueOf(formBean.getAmount().doubleValue()), formBean.getInterestRate().doubleValue(), disbursementDate, 
-                formBean.getNumberOfInstallments().intValue(), formBean.getGraceDuration().intValue(), formBean.isRepaymentScheduleIndependentOfCustomerMeeting(), recurringSchedule);
+                formBean.getNumberOfInstallments().intValue(), formBean.getGraceDuration().intValue(), formBean.isRepaymentScheduleIndependentOfCustomerMeeting(), recurringSchedule, accountFees);
         
         LoanScheduleDto loanSchedule = loanAccountServiceFacade.createLoanSchedule(createLoanAccount);
 
@@ -215,6 +232,11 @@ public class LoanAccountController {
         }
         
         return loanSchedule;
+    }
+
+    private LocalDate translateDisbursementDateToLocalDate(LoanAccountFormBean formBean) {
+        LocalDate disbursementDate = new DateTime().withDate(formBean.getDisbursalDateYear().intValue(), formBean.getDisbursalDateMonth().intValue(), formBean.getDisbursalDateDay().intValue()).toLocalDate();
+        return disbursementDate;
     }
 
     private RecurringSchedule determineRecurringSchedule(LoanAccountFormBean formBean) {
@@ -277,10 +299,8 @@ public class LoanAccountController {
             formBean.setMinGapInDays(loanAccountFormBean.getMinGapInDays());
             formBean.setMaxGapInDays(loanAccountFormBean.getMaxGapInDays());
             formBean.setMinInstallmentAmount(loanAccountFormBean.getMinInstallmentAmount());
-            
-            LocalDate disbursementDate = new LocalDate().withDayOfMonth(loanAccountFormBean.getDisbursalDateDay().intValue())
-            .withMonthOfYear(loanAccountFormBean.getDisbursalDateMonth().intValue())
-             .withYearOfEra(loanAccountFormBean.getDisbursalDateYear().intValue());
+         
+            LocalDate disbursementDate = translateDisbursementDateToLocalDate(loanAccountFormBean);
             
             formBean.setDisbursementDate(disbursementDate.toDateMidnight().toDate());
             formBean.setCustomerId(loanAccountFormBean.getCustomerId());
@@ -309,18 +329,16 @@ public class LoanAccountController {
     private LoanCreationResultDto submitLoanApplication(Integer accountState, LoanAccountFormBean formBean, LoanAccountQuestionGroupFormBean loanAccountQuestionGroupFormBean, 
             LoanAccountCashFlow loanAccountCashFlow, CashFlowSummaryFormBean cashFlowSummaryFormBean, LoanScheduleFormBean loanScheduleFormBean) {
 
-        LocalDate disbursementDate = new LocalDate().withDayOfMonth(formBean.getDisbursalDateDay().intValue())
-                                                    .withMonthOfYear(formBean.getDisbursalDateMonth().intValue())
-                                                     .withYearOfEra(formBean.getDisbursalDateYear().intValue());
-        
+        LocalDate disbursementDate = translateDisbursementDateToLocalDate(formBean);
         RecurringSchedule recurringSchedule = determineRecurringSchedule(formBean);
+        List<CreateAccountFeeDto> accountFees = translateToAccountFeeDtos(formBean);
         
         CreateLoanAccount loanAccountDetails = new CreateLoanAccount(formBean.getCustomerId(),
                 formBean.getProductId(), accountState, BigDecimal.valueOf(formBean.getAmount().doubleValue()),
                 formBean.getInterestRate().doubleValue(), disbursementDate, formBean.getNumberOfInstallments()
                         .intValue(), formBean.getGraceDuration().intValue(), formBean.getFundId(),
                 formBean.getLoanPurposeId(), formBean.getCollateralTypeId(), formBean.getCollateralNotes(),
-                formBean.getExternalId(), formBean.isRepaymentScheduleIndependentOfCustomerMeeting(), recurringSchedule);
+                formBean.getExternalId(), formBean.isRepaymentScheduleIndependentOfCustomerMeeting(), recurringSchedule, accountFees);
 
         LoanCreationResultDto loanCreationResultDto = null;
         
@@ -347,6 +365,24 @@ public class LoanAccountController {
             }
         }
         return loanCreationResultDto;
+    }
+
+    private List<CreateAccountFeeDto> translateToAccountFeeDtos(LoanAccountFormBean formBean) {
+        List<CreateAccountFeeDto> accountFees = new ArrayList<CreateAccountFeeDto>();
+        Number[] defaultFeeIds = formBean.getDefaultFeeId();
+        if (defaultFeeIds != null) {
+            int feeIndex = 0;
+            for (Number feeId : defaultFeeIds) {
+                Boolean removeDefaultFeeSelected = formBean.getDefaultFeeSelected()[feeIndex];
+                if (removeDefaultFeeSelected == null || !removeDefaultFeeSelected) {
+                    String amount = formBean.getDefaultFeeAmountOrRate()[feeIndex].toString();
+                    CreateAccountFeeDto accountFee = new CreateAccountFeeDto(feeId.intValue(), amount);
+                    accountFees.add(accountFee);
+                }
+                feeIndex++;
+            }
+        }
+        return accountFees;
     }
 
     @SuppressWarnings("PMD")

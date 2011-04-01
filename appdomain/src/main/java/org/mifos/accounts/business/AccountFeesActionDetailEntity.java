@@ -50,7 +50,7 @@ public class AccountFeesActionDetailEntity extends AbstractEntity implements Com
         this.accountActionDate = accountActionDate;
         if (accountActionDate != null) {
             this.installmentId = accountActionDate.getInstallmentId();
-            this.feeAmountPaid = new Money(accountActionDate.getAccount().getCurrency());
+            this.feeAmountPaid = new Money(feeAmount.getCurrency());
         }
         else {
             this.installmentId = null;

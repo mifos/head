@@ -21,9 +21,11 @@
 package org.mifos.clientportfolio.newloan.applicationservice;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.joda.time.LocalDate;
 import org.mifos.clientportfolio.loan.service.RecurringSchedule;
+import org.mifos.dto.domain.CreateAccountFeeDto;
 
 @SuppressWarnings("PMD")
 public class CreateLoanAccount implements RecurringSchedule {
@@ -43,11 +45,12 @@ public class CreateLoanAccount implements RecurringSchedule {
     private final String externalId;
     private final boolean repaymentScheduleIndependentOfCustomerMeeting;
     private final RecurringSchedule recurringSchedule;
+    private final List<CreateAccountFeeDto> accountFees;
 
     public CreateLoanAccount(Integer customerId, Integer productId, Integer accountState, BigDecimal loanAmount, Double interestRate,
             LocalDate disbursementDate, int numberOfInstallments, int graceDuration, Integer sourceOfFundId,
             Integer loanPurposeId, Integer collateralTypeId, String collateralNotes, String externalId, 
-            boolean repaymentScheduleIndependentOfCustomerMeeting, RecurringSchedule recurringSchedule) {
+            boolean repaymentScheduleIndependentOfCustomerMeeting, RecurringSchedule recurringSchedule, List<CreateAccountFeeDto> accountFees) {
         this.customerId = customerId;
         this.productId = productId;
         this.accountState = accountState;
@@ -63,6 +66,7 @@ public class CreateLoanAccount implements RecurringSchedule {
         this.externalId = externalId;
         this.repaymentScheduleIndependentOfCustomerMeeting = repaymentScheduleIndependentOfCustomerMeeting;
         this.recurringSchedule = recurringSchedule;
+        this.accountFees = accountFees;
     }
 
     public Integer getCustomerId() {
@@ -154,5 +158,9 @@ public class CreateLoanAccount implements RecurringSchedule {
     @Override
     public Integer getWeek() {
         return this.recurringSchedule.getWeek();
+    }
+    
+    public List<CreateAccountFeeDto> getAccountFees() {
+        return accountFees;
     }
 }

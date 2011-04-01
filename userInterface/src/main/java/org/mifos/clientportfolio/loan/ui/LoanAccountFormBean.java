@@ -82,10 +82,7 @@ public class LoanAccountFormBean implements Serializable {
     private Integer collateralTypeId;
     private String collateralNotes;
     private String externalId;
-    
-    private String[] selectedFeeId;
-    private String[] selectedFeeAmount;
-    
+
     // only when LSIM is turned on.
     private boolean repaymentScheduleIndependentOfCustomerMeeting = false;
     private Integer repaymentRecursEvery;
@@ -110,6 +107,14 @@ public class LoanAccountFormBean implements Serializable {
     private String[] clientGlobalId = new String[1];
     private Number[] clientAmount = new Number[1];
     private Integer[] clientLoanPurposeId = new Integer[1];
+    
+    // fees
+    private Boolean[] defaultFeeSelected;
+    private Number[] defaultFeeAmountOrRate;
+    private Number[] defaultFeeId;
+
+    private String[] selectedFeeId;
+    private String[] selectedFeeAmount;
 
     public void validateEditAccountDetailsStep(ValidationContext context) {
         validateEnterAccountDetailsStep(context);
@@ -734,5 +739,29 @@ public class LoanAccountFormBean implements Serializable {
         this.repaymentWeekOfMonth = null;
         this.repaymentDayOfWeek = dayOfWeek;
         this.repaymentRecursEvery = recursEvery;
+    }
+    
+    public Boolean[] getDefaultFeeSelected() {
+        return defaultFeeSelected;
+    }
+
+    public void setDefaultFeeSelected(Boolean[] defaultFeeSelected) {
+        this.defaultFeeSelected = defaultFeeSelected;
+    }
+    
+    public Number[] getDefaultFeeAmountOrRate() {
+        return defaultFeeAmountOrRate;
+    }
+
+    public void setDefaultFeeAmountOrRate(Number[] defaultFeeAmountOrRate) {
+        this.defaultFeeAmountOrRate = defaultFeeAmountOrRate;
+    }
+    
+    public Number[] getDefaultFeeId() {
+        return defaultFeeId;
+    }
+
+    public void setDefaultFeeId(Number[] defaultFeeId) {
+        this.defaultFeeId = defaultFeeId;
     }
 }
