@@ -68,7 +68,7 @@ public class BatchJobHelper {
         }
         batchJobsPage.runSelectedBatchJobs();
         // TODO we should check if the batch job is finished on the batch jobs page. For now we give 2 seconds fot the batch job to finish
-        UiTestUtils.sleep(2000);
+        UiTestUtils.sleep(3000);
     }
 
 }
