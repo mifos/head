@@ -20,7 +20,10 @@
 
 package org.mifos.test.acceptance.framework.admin;
 
+import static org.testng.Assert.assertEquals;
+
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -49,4 +52,22 @@ public class CustomizeTextEditPage extends MifosPage {
 	public void setCustomText(String customText) {
         selenium.type("customizeTextEdit.input.customText", customText);
 	}	
+	
+	public String originalTextInputStatus() {
+        return selenium.getEval("window.document.getElementById('customizeTextEdit.input.originalText').disabled");
+    }
+	
+	public void verifyOriginalTextInput() {
+	    assertEquals("true", originalTextInputStatus());
+	}
+	
+	public CustomizeTextEditPage trySubmit() {
+        selenium.click("customizeTextEdit.button.submit");
+        waitForPageToLoad();
+        return this;
+    }
+    
+    public void verifyTextPresent(String expectedText, String errorMessage) {
+        Assert.assertTrue(selenium.isTextPresent(expectedText), errorMessage);
+    }
 }

@@ -93,7 +93,9 @@ public class StaticHibernateUtil {
     }
 
     public static void shutdown() {
-        hibernateUtil.shutdown();
+        if (null != hibernateUtil) {
+            hibernateUtil.shutdown();
+        }
     }
 
     public static Connection getConnection() {
