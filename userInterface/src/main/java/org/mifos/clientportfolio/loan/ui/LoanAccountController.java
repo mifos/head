@@ -60,6 +60,7 @@ import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+@SuppressWarnings("PMD")
 @Controller
 public class LoanAccountController {
 
@@ -235,8 +236,7 @@ public class LoanAccountController {
     }
 
     private LocalDate translateDisbursementDateToLocalDate(LoanAccountFormBean formBean) {
-        LocalDate disbursementDate = new DateTime().withDate(formBean.getDisbursalDateYear().intValue(), formBean.getDisbursalDateMonth().intValue(), formBean.getDisbursalDateDay().intValue()).toLocalDate();
-        return disbursementDate;
+        return new DateTime().withDate(formBean.getDisbursalDateYear().intValue(), formBean.getDisbursalDateMonth().intValue(), formBean.getDisbursalDateDay().intValue()).toLocalDate();
     }
 
     private RecurringSchedule determineRecurringSchedule(LoanAccountFormBean formBean) {
