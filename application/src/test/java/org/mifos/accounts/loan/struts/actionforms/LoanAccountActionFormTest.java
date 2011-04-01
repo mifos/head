@@ -33,10 +33,13 @@ import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.LoanExceptionConstants;
+import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
+import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallmentBuilder;
 import org.mifos.accounts.productdefinition.business.AmountRange;
 import org.mifos.accounts.productdefinition.business.LoanAmountSameForAllLoanBO;
 import org.mifos.accounts.productdefinition.business.NoOfInstallSameForAllLoanBO;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.config.AccountingRules;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
@@ -45,12 +48,14 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
+import static java.util.Arrays.asList;
 import static org.apache.commons.lang.StringUtils.EMPTY;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.classextension.EasyMock.createMock;
@@ -73,6 +78,9 @@ public class LoanAccountActionFormTest extends TestCase {
     private ActionErrors actionErrors;
     private static final String INTEREST_ERROR_KEY = "interest.invalid";
     private static final String AMOUNT_ERROR_KEY = "amount.invalid";
+    private RepaymentScheduleInstallmentBuilder installmentBuilder;
+    private Locale locale;
+    private MifosCurrency rupee;
 
     public void testShouldAddErrorIfTransactionDateForAPaymentIsInFuture() throws InvalidDateException {
         expect(paymentMock.getTransactionDate()).andReturn(DateUtils.getDateFromToday(1));
@@ -115,6 +123,9 @@ public class LoanAccountActionFormTest extends TestCase {
         paymentMock = createMock(PaymentDataHtmlBean.class);
         expect(paymentMock.hasTotalAmount()).andReturn(true);
         actionErrors = new ActionErrors();
+        locale = new Locale("en", "GB");
+        installmentBuilder = new RepaymentScheduleInstallmentBuilder(locale);
+        rupee = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
     }
 
     private void validateForNoErrorsOnDate(Date transactionDate) throws InvalidDateException {
@@ -200,14 +211,14 @@ public class LoanAccountActionFormTest extends TestCase {
     }
 
     public void testShouldValidateIfMembersSelected() throws Exception {
-        form.setClients(Arrays.asList("1", "2"));
+        form.setClients(asList("1", "2"));
         form.validateSelectedClients(actionErrors);
        Assert.assertEquals(0, actionErrors.size());
     }
 
     public void testShouldAddErrorIfIndividualLoanAmountIsNull() throws Exception {
-        form.setClientDetails(Arrays.asList(LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_NULL));
-        form.setClients(Arrays.asList("1"));
+        form.setClientDetails(asList(LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_NULL));
+        form.setClients(asList("1"));
         form.validateSumOfTheAmountsSpecified(actionErrors);
        Assert.assertEquals(1, actionErrors.size());
     }
@@ -216,16 +227,16 @@ public class LoanAccountActionFormTest extends TestCase {
         AmountRange loanAmountRange = new LoanAmountSameForAllLoanBO();
         loanAmountRange.setMinLoanAmount(100d);
         loanAmountRange.setMaxLoanAmount(1000d);
-        form.setClientDetails(Arrays.asList(LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_100));
+        form.setClientDetails(asList(LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_100));
         form.setLoanAmountRange(loanAmountRange);
-        form.setClients(Arrays.asList("1"));
+        form.setClients(asList("1"));
         form.validateSumOfTheAmountsSpecified(actionErrors);
        Assert.assertEquals(0, actionErrors.size());
     }
 
     public void testShouldAddErrorIfIndividualLoanAmountIsZero() throws Exception {
-        form.setClientDetails(Arrays.asList(LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_ZERO));
-        form.setClients(Arrays.asList("1"));
+        form.setClientDetails(asList(LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_ZERO));
+        form.setClients(asList("1"));
         form.validateSumOfTheAmountsSpecified(actionErrors);
        Assert.assertEquals(1, actionErrors.size());
     }
@@ -234,16 +245,16 @@ public class LoanAccountActionFormTest extends TestCase {
         FieldConfigurationEntity fieldConfigMock = createMock(FieldConfigurationEntity.class);
         expect(fieldConfigMock.getFieldName()).andReturn(LoanConstants.PURPOSE_OF_LOAN);
         replay(fieldConfigMock);
-        form.setClientDetails(Arrays.asList(LOAN_ACCOUNT_DETAILS_WITH_PURPOSE_NULL));
-        form.setClients(Arrays.asList("1"));
-        form.validatePurposeOfLoanForGlim(actionErrors, Arrays.asList(fieldConfigMock));
+        form.setClientDetails(asList(LOAN_ACCOUNT_DETAILS_WITH_PURPOSE_NULL));
+        form.setClients(asList("1"));
+        form.validatePurposeOfLoanForGlim(actionErrors, asList(fieldConfigMock));
         Assert.assertEquals(1, actionErrors.size());
         verify(fieldConfigMock);
     }
 
     public void testShouldntAddErrorIfPurposeOfLoanIsNull() throws Exception {
-        form.setClientDetails(Arrays.asList(LOAN_ACCOUNT_DETAILS_WITH_PURPOSE_NULL));
-        form.setClients(Arrays.asList("1"));
+        form.setClientDetails(asList(LOAN_ACCOUNT_DETAILS_WITH_PURPOSE_NULL));
+        form.setClients(asList("1"));
         form.validatePurposeOfLoanForGlim(actionErrors, Collections.<FieldConfigurationEntity>emptyList());
         Assert.assertEquals(0, actionErrors.size());
     }
@@ -252,18 +263,18 @@ public class LoanAccountActionFormTest extends TestCase {
         FieldConfigurationEntity fieldConfigMock = createMock(FieldConfigurationEntity.class);
         expect(fieldConfigMock.getFieldName()).andReturn(LoanConstants.PURPOSE_OF_LOAN);
         replay(fieldConfigMock);
-        form.setClientDetails(Arrays.asList(LOAN_ACCOUNT_DETAILS_WITH_VALID_PURPOSE,
+        form.setClientDetails(asList(LOAN_ACCOUNT_DETAILS_WITH_VALID_PURPOSE,
                 LOAN_ACCOUNT_DETAILS_WITH_PURPOSE_EMPTY));
-        form.setClients(Arrays.asList("1"));
-        form.validatePurposeOfLoanForGlim(actionErrors, Arrays.asList(fieldConfigMock));
+        form.setClients(asList("1"));
+        form.validatePurposeOfLoanForGlim(actionErrors, asList(fieldConfigMock));
         Assert.assertEquals(1, actionErrors.size());
         verify(fieldConfigMock);
     }
 
     public void testShouldntAddErrorIfPurposeOfLoanIsEmpty() throws Exception {
-        form.setClientDetails(Arrays.asList(LOAN_ACCOUNT_DETAILS_WITH_VALID_PURPOSE,
+        form.setClientDetails(asList(LOAN_ACCOUNT_DETAILS_WITH_VALID_PURPOSE,
                 LOAN_ACCOUNT_DETAILS_WITH_PURPOSE_EMPTY));
-        form.setClients(Arrays.asList("1"));
+        form.setClients(asList("1"));
         form.validatePurposeOfLoanForGlim(actionErrors, Collections.<FieldConfigurationEntity>emptyList());
         Assert.assertEquals(0, actionErrors.size());
     }
@@ -272,18 +283,18 @@ public class LoanAccountActionFormTest extends TestCase {
         FieldConfigurationEntity fieldConfigMock = createMock(FieldConfigurationEntity.class);
         expect(fieldConfigMock.getFieldName()).andReturn(LoanConstants.PURPOSE_OF_LOAN);
         replay(fieldConfigMock);
-        form.setClientDetails(Arrays.asList(LOAN_ACCOUNT_DETAILS_WITH_VALID_PURPOSE));
-        form.setClients(Arrays.asList("1"));
-        form.validatePurposeOfLoanForGlim(actionErrors, Arrays.asList(fieldConfigMock));
+        form.setClientDetails(asList(LOAN_ACCOUNT_DETAILS_WITH_VALID_PURPOSE));
+        form.setClients(asList("1"));
+        form.validatePurposeOfLoanForGlim(actionErrors, asList(fieldConfigMock));
         Assert.assertEquals(0, actionErrors.size());
         verify(fieldConfigMock);
     }
 
     public void testShouldRemoveClientDetailsIfNoMatchingEntryFoundInClients() throws Exception {
-        form.setClientDetails(Arrays.asList(LOAN_ACCOUNT_DETAILS_WITH_VALID_PURPOSE,
+        form.setClientDetails(asList(LOAN_ACCOUNT_DETAILS_WITH_VALID_PURPOSE,
                 LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_AND_PURPOSE_NULL,
                 LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_AND_PURPOSE_NULL2));
-        form.setClients(Arrays.asList("1"));
+        form.setClients(asList("1"));
         form.removeClientDetailsWithNoMatchingClients();
        Assert.assertEquals(1, form.getClientDetails().size());
     }
@@ -291,19 +302,19 @@ public class LoanAccountActionFormTest extends TestCase {
     public void testShouldGetSelectedClientIdsFromRequest() throws Exception {
         HttpServletRequest requestMock = createMock(HttpServletRequest.class);
         expect(requestMock.getParameterNames()).andReturn(
-                Collections.enumeration(Arrays.asList("clients[0]", "clients[1]", "clients[2]")));
+                Collections.enumeration(asList("clients[0]", "clients[1]", "clients[2]")));
         expect(requestMock.getParameter("clients[0]")).andReturn("1");
         expect(requestMock.getParameter("clients[1]")).andReturn("2");
         expect(requestMock.getParameter("clients[2]")).andReturn("3");
         replay(requestMock);
-       Assert.assertEquals(Arrays.asList("1", "2", "3"), form.getSelectedClientIdsFromRequest(requestMock));
+       Assert.assertEquals(asList("1", "2", "3"), form.getSelectedClientIdsFromRequest(requestMock));
         verify(requestMock);
     }
 
     public void testSetsEmptyStringForClientsNotMatchingInput() throws Exception {
-        form.setClients(Arrays.asList("1", "2", "3", "4"));
-        form.setClientsNotPresentInInputToEmptyString(Arrays.asList("1", "2", "3"));
-       Assert.assertEquals(Arrays.asList("1", "2", "3", ""), form.getClients());
+        form.setClients(asList("1", "2", "3", "4"));
+        form.setClientsNotPresentInInputToEmptyString(asList("1", "2", "3"));
+       Assert.assertEquals(asList("1", "2", "3", ""), form.getClients());
     }
 
     public void testValidateLoanAmount()  {
@@ -321,6 +332,38 @@ public class LoanAccountActionFormTest extends TestCase {
         form.validateDefaultFee(errors, Locale.ENGLISH, TestUtils.RUPEE);
         Assert.assertEquals("No Error was expected",0, errors.size());
         AccountingRules.setDigitsAfterDecimal(saveDigitsAfterDecimal);
+    }
+
+    public void testValidatePaymentDatesOrdering(){
+        ActionErrors actionErrors;
+
+        RepaymentScheduleInstallment installment1 = installmentBuilder.reset(locale).withPrincipal(new Money(rupee, "49")).withTotalValue("50").withDueDateValue("01-Feb-2010").withTotalValue("522.0").withInstallment(1).build();
+        RepaymentScheduleInstallment installment2 = installmentBuilder.reset(locale).withPrincipal(new Money(rupee, "49")).withTotalValue("50").withDueDateValue("01-Mar-2010").withTotalValue("522.0").withInstallment(2).build();
+        RepaymentScheduleInstallment installment3 = installmentBuilder.reset(locale).withPrincipal(new Money(rupee, "49")).withTotalValue("50").withDueDateValue("01-Apr-2010").withTotalValue("522.0").withInstallment(3).build();
+        RepaymentScheduleInstallment installment4 = installmentBuilder.reset(locale).withPrincipal(new Money(rupee, "49")).withTotalValue("50").withDueDateValue("01-May-2010").withTotalValue("522.0").withInstallment(4).build();
+
+        PaymentDataHtmlBean paymentDataHtmlBean1 = new PaymentDataHtmlBean(locale, null, installment1);
+        paymentDataHtmlBean1.setDate("01-Jan-2010");
+        PaymentDataHtmlBean paymentDataHtmlBean2 = new PaymentDataHtmlBean(locale, null, installment2);
+        paymentDataHtmlBean2.setDate("01-Mar-2010");
+        PaymentDataHtmlBean paymentDataHtmlBean3 = new PaymentDataHtmlBean(locale, null, installment3);
+        paymentDataHtmlBean3.setDate("01-Feb-2010");
+        PaymentDataHtmlBean paymentDataHtmlBean4 = new PaymentDataHtmlBean(locale, null, installment4);
+        paymentDataHtmlBean4.setDate("01-Apr-2010");
+
+        List<PaymentDataHtmlBean> validPaymentBeans = asList(paymentDataHtmlBean1, paymentDataHtmlBean2,
+                                                            paymentDataHtmlBean3, paymentDataHtmlBean4);
+
+        actionErrors = new ActionErrors();
+        form.validatePaymentDatesOrdering(validPaymentBeans, actionErrors);
+        Assert.assertEquals(1, actionErrors.size());
+        ActionMessage actionMessage = (ActionMessage) actionErrors.get().next();
+        assertEquals("3", actionMessage.getValues()[0]);
+
+        paymentDataHtmlBean3.setDate("03-Mar-2010");
+        actionErrors = new ActionErrors();
+        form.validatePaymentDatesOrdering(validPaymentBeans, actionErrors);
+        Assert.assertEquals(0, actionErrors.size());
     }
 
     private ArrayList <FeeDto> createDefaultFees() {

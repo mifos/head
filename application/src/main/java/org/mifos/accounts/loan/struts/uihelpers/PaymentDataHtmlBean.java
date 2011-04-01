@@ -23,7 +23,6 @@ package org.mifos.accounts.loan.struts.uihelpers;
 import org.apache.commons.lang.StringUtils;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.util.helpers.PaymentDataTemplate;
-import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.util.DateTimeService;
@@ -130,5 +129,9 @@ public class PaymentDataHtmlBean implements PaymentDataTemplate {
 
     public boolean hasTotalAmount() {
         return StringUtils.isNotEmpty(getTotal());
+    }
+
+    public String getInstallmentNumber() {
+        return this.installment.getInstallmentNumberAsString();
     }
 }

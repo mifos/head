@@ -1381,7 +1381,8 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
         });
     }
 
-    private void validatePaymentDatesOrdering(List<PaymentDataHtmlBean> validPaymentBeans, ActionErrors errors) {
+    // TODO: Make this method non-private and write a unit test
+    void validatePaymentDatesOrdering(List<PaymentDataHtmlBean> validPaymentBeans, ActionErrors errors) {
         List<java.util.Date> transactionDates = collect(validPaymentBeans, new Transformer<PaymentDataHtmlBean, java.util.Date>() {
             @Override
             public java.util.Date transform(PaymentDataHtmlBean input) {
@@ -1390,8 +1391,9 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
         });
         int indexOutOfOrder = itemIndexOutOfAscendingOrder(transactionDates);
         if (indexOutOfOrder >= 0) {
-            errors.add(LoanExceptionConstants.INVALIDTRANSACTIONDATE, new ActionMessage(
-                    LoanExceptionConstants.INVALIDTRANSACTIONDATE));
+            String installmentNumber = validPaymentBeans.get(indexOutOfOrder).getInstallmentNumber();
+            String errorCode = LoanExceptionConstants.INVALIDTRANSACTIONDATEORDER;
+            errors.add(errorCode, new ActionMessage(errorCode, installmentNumber));
         }
     }
 

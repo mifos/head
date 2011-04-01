@@ -32,6 +32,7 @@ public interface LoanExceptionConstants {
     String ERROR_INVALID_DISBURSEMENT_DATE_FORMAT = "errors.invalidDisbursementDateFormat";
     String ERROR_INVALIDDISBURSEMENTDATE_FOR_REDO_LOAN = "errors.invalidDisbursementDateForRedoLoan";
     String INVALIDTRANSACTIONDATE = "exceptions.application.loan.invalidTransactionDate";
+    String INVALIDTRANSACTIONDATEORDER = "exceptions.application.loan.invalidTransactionDateOrder";
     String INVALIDTRANSACTIONDATEFORPAYMENT = "exceptions.application.loan.invalidTransactionDateForPayment";
     String INVALIDNOOFINSTALLMENTS = "exceptions.application.loan.invalidNoOfInstallments";
     String INCOMPATIBLERECCURENCE = "exceptions.application.loan.incompatibleMeetingrecurrence";
