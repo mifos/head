@@ -44,6 +44,8 @@ $(document).ready(function() {
         "bPaginate": true,
         "bLengthChange": true,
         "bFilter": true,
+        "bProcessing": true,
+        "aaSorting": [],
         "bSort": true,
         "bInfo": true,
         "bAutoWidth": true,

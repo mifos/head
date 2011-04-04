@@ -30,12 +30,6 @@
 <p>[@spring.message "selectCustomer.instructions" /]</p>
 <br/>
 
-[#if customerSearchResultsDto.pagedDetails?size == customerSearchResultsDto.searchDetails.pageSize]
-    [#assign args=[customerSearchResultsDto.searchDetails.pageSize, customerSearchResultsDto.searchDetails.pageSize] /]
-    <div class="notice">[@spring.messageArgs "customerSearch.searchLimitReached" args /]</div>
-    <br/>
-[/#if]
-
 [@form.errors "customerSearchFormBean.*"/]
 <form action="${flowExecutionUrl}" method="post">
     <div class="row">
@@ -50,19 +44,27 @@
 <table id="customerSearchResults" class="datatable">
     <thead>
         <tr>
-            <th>Branch</th>
-            <th>Center</th>
-            <th>Group</th>
-            <th>Client</th>
+            <th>Global No.</th>
+            <th>Branch Office</th>
+            <th>Customer</th>
         </tr>
     </thead>
     <tbody>
         [#list customerSearchResultsDto.pagedDetails as customer]
             <tr>
-                <td>${customer.branchName}</td>
-                <td>${customer.centerName}</td>
-                <td>${customer.groupName}</td>
-                <td><a href="${flowExecutionUrl}&_eventId=customerSelected&customerId=${customer.customerId}">${customer.clientName}: ${customer.globalId}</a></td>
+                <td>${customer.globalId}</td>
+                <td>
+                ${customer.branchName}
+                </td>
+                <td>
+               [#if customer.centerName != "--"]
+               ${customer.centerName}/
+               [/#if]
+               [#if customer.groupName != "--"]
+               ${customer.groupName}/
+               [/#if]
+                  <a href="${flowExecutionUrl}&_eventId=customerSelected&customerId=${customer.customerId}">${customer.clientName}</a>
+               </td>
             </tr>
         [/#list]
     </tbody>
