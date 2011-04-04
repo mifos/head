@@ -113,8 +113,8 @@ public class LoanAccountFormBean implements Serializable {
     private Number[] defaultFeeAmountOrRate;
     private Number[] defaultFeeId;
 
-    private String[] selectedFeeId;
-    private String[] selectedFeeAmount;
+    private Number[] selectedFeeId;
+    private Number[] selectedFeeAmount;
 
     public void validateEditAccountDetailsStep(ValidationContext context) {
         validateEnterAccountDetailsStep(context);
@@ -342,19 +342,19 @@ public class LoanAccountFormBean implements Serializable {
         return defaultValue.doubleValue() > maxValue.doubleValue();
     }
 
-    public String[] getSelectedFeeId() {
+    public Number[] getSelectedFeeId() {
 		return selectedFeeId;
 	}
 
-	public void setSelectedFeeId(String[] selectedFeeId) {
+	public void setSelectedFeeId(Number[] selectedFeeId) {
 		this.selectedFeeId = selectedFeeId;
 	}
 
-	public String[] getSelectedFeeAmount() {
+	public Number[] getSelectedFeeAmount() {
 		return selectedFeeAmount;
 	}
 
-	public void setSelectedFeeAmount(String[] selectedFeeAmount) {
+	public void setSelectedFeeAmount(Number[] selectedFeeAmount) {
 		this.selectedFeeAmount = selectedFeeAmount;
 	}
 

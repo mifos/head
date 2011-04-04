@@ -604,7 +604,8 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             return new LoanCreationLoanDetailsDto(isRepaymentIndependentOfMeetingEnabled, loanOfferingMeetingDto,
                     customer.getCustomerMeetingValue().toDto(), loanPurposes, productDto, customerDetailDto, loanProductDtos,
                     interestTypeName, fundDtos, collateralOptions, purposeOfLoanOptions,
-                    defaultFeeOptions, additionalFeeOptions, defaultFees, BigDecimal.valueOf(eligibleLoanAmount.getDefaultLoanAmount()),
+                    defaultFeeOptions, additionalFeeOptions, defaultFees, additionalFees,
+                    BigDecimal.valueOf(eligibleLoanAmount.getDefaultLoanAmount()),
                     BigDecimal.valueOf(eligibleLoanAmount.getMaxLoanAmount()), BigDecimal.valueOf(eligibleLoanAmount.getMinLoanAmount()), defaultInterestRate, maxInterestRate, minInterestRate,
                     eligibleNoOfInstall.getDefaultNoOfInstall().intValue(), eligibleNoOfInstall.getMaxNoOfInstall().intValue(), eligibleNoOfInstall.getMinNoOfInstall().intValue(), nextPossibleDisbursementDate,
                     daysOfTheWeekOptions, weeksOfTheMonthOptions, variableInstallmentsAllowed, minGapInDays, maxGapInDays, minInstallmentAmount, compareCashflowEnabled,
@@ -737,7 +738,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             String interest = loanScheduleEntity.getInterest().toString(digitsAfterDecimal);
             String fees = loanScheduleEntity.getTotalFees().toString(digitsAfterDecimal);
             String penalty = "0.0";
-            String total = loanScheduleEntity.getPrincipal().add(loanScheduleEntity.getInterest()).toString(digitsAfterDecimal);
+            String total = loanScheduleEntity.getPrincipal().add(loanScheduleEntity.getInterest()).add(loanScheduleEntity.getTotalFees()).toString(digitsAfterDecimal);
             LoanCreationInstallmentDto installment = new LoanCreationInstallmentDto(installmentNumber, dueDate,
                     Double.valueOf(principal), Double.valueOf(interest), Double.valueOf(fees), Double.valueOf(penalty),
                     Double.valueOf(total));

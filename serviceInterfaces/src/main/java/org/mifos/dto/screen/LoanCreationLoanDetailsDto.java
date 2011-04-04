@@ -78,13 +78,14 @@ public class LoanCreationLoanDetailsDto implements Serializable {
     private final boolean isGlimEnabled;
     private final boolean isGroup;
     private final List<LoanAccountDetailsDto> clientDetails;
+    private final List<FeeDto> additionalFees;
 
     public LoanCreationLoanDetailsDto(boolean isRepaymentIndependentOfMeetingEnabled,
             MeetingDto loanOfferingMeetingDetail, MeetingDto customerMeetingDetail,
             List<ValueListElement> loanPurposes, ProductDetailsDto productDto, CustomerDetailDto customerDetailDto, List<PrdOfferingDto> loanProductDtos, 
             String interestRateType, List<FundDto> fundDtos, LinkedHashMap<String, String> collateralOptions, 
             LinkedHashMap<String, String> purposeOfLoanOptions, Map<String, String> defaultFeeOptions, Map<String, String> additionalFeeOptions, List<FeeDto> defaultFees, 
-            BigDecimal defaultLoanAmount, BigDecimal maxLoanAmount, BigDecimal minLoanAmount, 
+            List<FeeDto> additionalFees, BigDecimal defaultLoanAmount, BigDecimal maxLoanAmount, BigDecimal minLoanAmount, 
             Double defaultInterestRate, Double maxInterestRate, Double minInterestRate, 
             Integer defaultNumberOfInstallments, Integer maxNumberOfInstallments, Integer minNumberOfInstallments, LocalDate nextPossibleDisbursementDate, 
             LinkedHashMap<String, String> daysOfTheWeekOptions, LinkedHashMap<String, String> weeksOfTheMonthOptions, 
@@ -100,6 +101,7 @@ public class LoanCreationLoanDetailsDto implements Serializable {
 		this.interestRateType = interestRateType;
 		this.fundDtos = fundDtos;
         this.defaultFees = defaultFees;
+        this.additionalFees = additionalFees;
         this.defaultLoanAmount = defaultLoanAmount;
         this.maxLoanAmount = maxLoanAmount;
         this.minLoanAmount = minLoanAmount;
@@ -127,7 +129,7 @@ public class LoanCreationLoanDetailsDto implements Serializable {
 		this.defaultFeeOptions = defaultFeeOptions;
 		this.additionalFeeOptions = additionalFeeOptions;
     }
-	
+
     private void populateFundOptions(List<FundDto> funds) {
     	for (FundDto fund : funds) {
 			this.fundOptions.put(fund.getId(), fund.getName());
@@ -202,6 +204,10 @@ public class LoanCreationLoanDetailsDto implements Serializable {
 	
     public List<FeeDto> getDefaultFees() {
         return defaultFees;
+    }
+    
+    public List<FeeDto> getAdditionalFees() {
+        return additionalFees;
     }
     
     public BigDecimal getDefaultLoanAmount() {

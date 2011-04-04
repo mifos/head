@@ -22,6 +22,8 @@ package org.mifos.dto.domain;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang.StringUtils;
+
 @SuppressWarnings("PMD")
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID", "EI_EXPOSE_REP", "EI_EXPOSE_REP2", "NM_CONFUSING"}, justification="should disable at filter level and also for pmd - not important for us")
 public class FeeDto implements Serializable {
@@ -32,7 +34,7 @@ public class FeeDto implements Serializable {
     private String categoryType;
     private String glCode;
     private Integer currencyId;
-    private String amount;
+    private String amount = "";
     private FeeFrequencyDto feeFrequency;
     private FeeStatusDto feeStatus;
     private Short changeType;
@@ -175,6 +177,17 @@ public class FeeDto implements Serializable {
 
     public String getAmount() {
         return amount;
+    }
+    
+    public Double getAmountOrRate() {
+        Double amountOrRate = Double.valueOf("0");
+        if (StringUtils.isNotBlank(this.amount)) {
+            amountOrRate = Double.valueOf(this.amount);
+        }
+        if (this.isRateBasedFee()) {
+            amountOrRate = this.rate;
+        }
+        return amountOrRate;
     }
     
     public Double getAmountAsNumber() {

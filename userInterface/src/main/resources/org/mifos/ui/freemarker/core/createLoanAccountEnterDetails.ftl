@@ -284,34 +284,8 @@
     </div>
     
     <p><span class="standout">[@spring.message "createLoanAccount.enterAccountInfo.defaultfees.header" /]</span></p>
-<div class="default-fees">
-<style type="text/css">
-.default-fees .name
-{
-    width: 25em;
-    margin-right: 0.5em;
-    text-align: right;
-    float: left;
-}
-.default-fees .value
-{
-    float: left;
-    width: 15%;
-}	
 
-.default-fees .details 
-{
-    float: left;
-   	width: 25%;
-}
-
-.default-fees .removeCheckbox 
-{
-    float: left;
-   	width: 15%;
-}
-</style>
-
+	<div class="default-fees">
 		[#assign index = 0]
     	[#list loanProductReferenceData.defaultFees as defaultFee]
 		    <div class="row">
@@ -343,44 +317,86 @@
 		    </div>
      		[#assign index = index + 1]	    	
 	    [/#list]
-</div>  
-<div class="clear"/>  
+	</div>  
+	<div class="clear"/>  
     <br />
     <p><div class="standout">[@spring.message "createLoanAccount.enterAccountInfo.additionalfees.header" /]</div></p>
     
-
-<!-- additional fees -->
-<!-- FIXME: keithw - leave out fees for now - keithw -->
-<!--    
-    [@form.label "selectedFeeId[1]" false][@spring.message "createLoanAccount.feeType" /][/@form.label]
-    [@form.singleSelectWithPrompt path="loanAccountFormBean.selectedFeeId[0]" options=loanProductReferenceData.additionalFeeOptions selectPrompt="selectPrompt" /]
-    
-    [@form.label "selectedFeeId0Amount" false][@spring.message "createLoanAccount.feeAmount" /][/@form.label]
-    [@form.input path="loanAccountFormBean.selectedFeeAmount[0]" id="selectedFeeId0Amount" /]
-
-	[@form.label "selectedFeeId[1]" false][@spring.message "createLoanAccount.feeType" /][/@form.label]
-    [@form.singleSelectWithPrompt path="loanAccountFormBean.selectedFeeId[1]" options=loanProductReferenceData.additionalFeeOptions selectPrompt="selectPrompt" /]
-    
-    [@form.label "selectedFeeId1Amount" false][@spring.message "createLoanAccount.feeAmount" /][/@form.label]
-    [@form.input path="loanAccountFormBean.selectedFeeAmount[1]" id="selectedFeeId1Amount" /]
-    
-    [@form.label "selectedFeeId[2]" false][@spring.message "createLoanAccount.feeType" /][/@form.label]
-    [@form.singleSelectWithPrompt path="loanAccountFormBean.selectedFeeId[2]" options=loanProductReferenceData.additionalFeeOptions selectPrompt="selectPrompt" /]
-    
-    [@form.label "selectedFeeId2Amount" false][@spring.message "createLoanAccount.feeAmount" /][/@form.label]
-    [@form.input path="loanAccountFormBean.selectedFeeAmount[2]" id="selectedFeeId2Amount" /]
--->
+    <div class="additional-fees">
+	    <div class="row">
+			[@form.label "selectedFeeId[0]" false][@spring.message "createLoanAccount.feeType" /][/@form.label]
+	    	[@form.singleSelectWithPrompt path="loanAccountFormBean.selectedFeeId[0]" options=loanProductReferenceData.additionalFeeOptions selectPrompt="selectPrompt" id="selectedFeeId0" /]
+	    	<span style="margin-left: 10px;">[@spring.message "createLoanAccount.feeAmount" /]</span>
+	    	[@form.input path="loanAccountFormBean.selectedFeeAmount[0]" id="selectedFeeId0Amount" attributes="style='margin-left: 20px;'"/]
+	    </div>
+	    <div class="row">
+			[@form.label "selectedFeeId[1]" false][@spring.message "createLoanAccount.feeType" /][/@form.label]
+	    	[@form.singleSelectWithPrompt path="loanAccountFormBean.selectedFeeId[1]" options=loanProductReferenceData.additionalFeeOptions selectPrompt="selectPrompt" id="selectedFeeId1" /]
+	    	<span style="margin-left: 10px;">[@spring.message "createLoanAccount.feeAmount" /]</span>
+	    	[@form.input path="loanAccountFormBean.selectedFeeAmount[1]" id="selectedFeeId1Amount" attributes="style='margin-left: 20px;'"/]
+	    </div>
+	    <div class="row">
+			[@form.label "selectedFeeId[2]" false][@spring.message "createLoanAccount.feeType" /][/@form.label]
+	    	[@form.singleSelectWithPrompt path="loanAccountFormBean.selectedFeeId[2]" options=loanProductReferenceData.additionalFeeOptions selectPrompt="selectPrompt" id="selectedFeeId2" /]
+	    	<span style="margin-left: 10px;">[@spring.message "createLoanAccount.feeAmount" /]</span>
+	    	[@form.input path="loanAccountFormBean.selectedFeeAmount[2]" id="selectedFeeId2Amount" attributes="style='margin-left: 20px;'"/]
+	    </div>
+	</div>
     </fieldset>
     <div class="row webflow-controls">
         [@form.submitButton label="widget.form.buttonLabel.continue" id="continuecreateloanaccount.button.preview" webflowEvent="detailsEntered" /]
         [@form.cancelButton label="widget.form.buttonLabel.cancel" webflowEvent="cancel" /]
     </div>
+    
+    
+    [#list loanProductReferenceData.additionalFees as additionalFee]
+    	<input type="hidden" id="hiddenFeeAmount${additionalFee.id}" value="${additionalFee.amountOrRate}" />
+    [/#list]
 </form>
 
 <script type="text/javascript">
 $(document).ready(function() {
     $('#productId').change(function(e) {
         $(this).closest('form').submit();
+    });
+    
+    $('#selectedFeeId0').change(function(e) {
+          $("#selectedFeeId0 option:selected").each(function () {
+          		var selectedValue = $(this).val();
+                if (selectedValue == null || selectedValue == "") {
+          			$('#selectedFeeId0Amount').val("");
+          		} else {
+	                var hiddenField = "#hiddenFeeAmount" + selectedValue;
+	                var hiddenValue = $(hiddenField).val();
+	                $('#selectedFeeId0Amount').val(hiddenValue);
+                }
+           });
+    });
+    
+    $('#selectedFeeId1').change(function(e) {
+          $("#selectedFeeId1 option:selected").each(function () {
+          		var selectedValue = $(this).val();
+                if (selectedValue == null || selectedValue == "") {
+          			$('#selectedFeeId1Amount').val("");
+          		} else {
+	                var hiddenField = "#hiddenFeeAmount" + selectedValue;
+	                var hiddenValue = $(hiddenField).val();
+	                $('#selectedFeeId1Amount').val(hiddenValue);
+                }
+           });
+    });
+    
+    $('#selectedFeeId2').change(function(e) {
+          $("#selectedFeeId2 option:selected").each(function () {
+          		var selectedValue = $(this).val();
+                if (selectedValue == null || selectedValue == "") {
+          			$('#selectedFeeId2Amount').val("");
+          		} else {
+	                var hiddenField = "#hiddenFeeAmount" + selectedValue;
+	                var hiddenValue = $(hiddenField).val();
+	                $('#selectedFeeId2Amount').val(hiddenValue);
+                }
+           });
     });
 });
 </script>

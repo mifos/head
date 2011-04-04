@@ -96,7 +96,6 @@ public class LoanAccountController {
     	formBean.setProductId(productId);
     	formBean.setCustomerId(dto.getCustomerDetailDto().getCustomerId());
     	formBean.setRepaymentScheduleIndependentOfCustomerMeeting(dto.isRepaymentIndependentOfMeetingEnabled());
-
     	
     	if (dto.isRepaymentIndependentOfMeetingEnabled()) {
     	    
@@ -176,17 +175,10 @@ public class LoanAccountController {
     	formBean.setDefaultFeeId(defaultFeeId);
     	formBean.setDefaultFeeSelected(new Boolean[dto.getDefaultFees().size()]);
     	
-    	String[] selectedFeeId = new String[3];
-    	selectedFeeId[0] = "";
-    	selectedFeeId[1] = "";
-    	selectedFeeId[2] = "";
-    	
+    	Number[] selectedFeeId = new Number[3];
 		formBean.setSelectedFeeId(selectedFeeId);
 		
-		String[] selectedFeeAmount = new String[3];
-		selectedFeeAmount[0] = "";
-		selectedFeeAmount[1] = "";
-		selectedFeeAmount[2] = "";
+		Number[] selectedFeeAmount = new Number[3];
 		formBean.setSelectedFeeAmount(selectedFeeAmount);
     	
     	return dto;
@@ -208,6 +200,8 @@ public class LoanAccountController {
         
         RecurringSchedule recurringSchedule = determineRecurringSchedule(formBean);
         List<CreateAccountFeeDto> accountFees = translateToAccountFeeDtos(formBean);
+        List<CreateAccountFeeDto> additionalAccountFees = translateToAdditionalAccountFeeDtos(formBean);
+        accountFees.addAll(additionalAccountFees);
         
         CreateLoanSchedule createLoanAccount = new CreateLoanSchedule(customerId, productId, BigDecimal.valueOf(formBean.getAmount().doubleValue()), formBean.getInterestRate().doubleValue(), disbursementDate, 
                 formBean.getNumberOfInstallments().intValue(), formBean.getGraceDuration().intValue(), formBean.isRepaymentScheduleIndependentOfCustomerMeeting(), recurringSchedule, accountFees);
@@ -332,6 +326,8 @@ public class LoanAccountController {
         LocalDate disbursementDate = translateDisbursementDateToLocalDate(formBean);
         RecurringSchedule recurringSchedule = determineRecurringSchedule(formBean);
         List<CreateAccountFeeDto> accountFees = translateToAccountFeeDtos(formBean);
+        List<CreateAccountFeeDto> additionalAccountFees = translateToAdditionalAccountFeeDtos(formBean);
+        accountFees.addAll(additionalAccountFees);
         
         CreateLoanAccount loanAccountDetails = new CreateLoanAccount(formBean.getCustomerId(),
                 formBean.getProductId(), accountState, BigDecimal.valueOf(formBean.getAmount().doubleValue()),
@@ -365,6 +361,22 @@ public class LoanAccountController {
             }
         }
         return loanCreationResultDto;
+    }
+
+    private List<CreateAccountFeeDto> translateToAdditionalAccountFeeDtos(LoanAccountFormBean formBean) {
+        List<CreateAccountFeeDto> accountFees = new ArrayList<CreateAccountFeeDto>();
+        
+        int index = 0;
+        for (Number feeId : formBean.getSelectedFeeId()) {
+            if (feeId != null) {
+                Number feeAmountOrRate = formBean.getSelectedFeeAmount()[index];
+                CreateAccountFeeDto accountFee = new CreateAccountFeeDto(feeId.intValue(), feeAmountOrRate.toString());
+                accountFees.add(accountFee);
+            }
+            index++;
+        }
+        
+        return accountFees;
     }
 
     private List<CreateAccountFeeDto> translateToAccountFeeDtos(LoanAccountFormBean formBean) {
