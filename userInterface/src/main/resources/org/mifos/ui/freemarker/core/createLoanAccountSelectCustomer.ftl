@@ -42,28 +42,21 @@
 <br/>
 <div class="search-results">
 <table id="customerSearchResults" class="datatable">
-    <thead>
-        <tr>
-            <th>Global No.</th>
-            <th>Branch Office</th>
-            <th>Customer</th>
-        </tr>
-    </thead>
     <tbody>
         [#list customerSearchResultsDto.pagedDetails as customer]
             <tr>
-                <td>${customer.globalId}</td>
-                <td>
-                ${customer.branchName}
-                </td>
-                <td>
+               <td>
+               ${customer.searchIndex}. &nbsp;&nbsp;&nbsp;
+               </td>
+               <td>
+               ${customer.branchName}
                [#if customer.centerName != "--"]
-               ${customer.centerName}/
+               <b>/</b>${customer.centerName}
                [/#if]
                [#if customer.groupName != "--"]
-               ${customer.groupName}/
+               <b>/</b>${customer.groupName}
                [/#if]
-                  <a href="${flowExecutionUrl}&_eventId=customerSelected&customerId=${customer.customerId}">${customer.clientName}</a>
+                  <b>/</b><b><a href="${flowExecutionUrl}&_eventId=customerSelected&customerId=${customer.customerId}">${customer.clientName}:${customer.globalId}</a></b>
                </td>
             </tr>
         [/#list]

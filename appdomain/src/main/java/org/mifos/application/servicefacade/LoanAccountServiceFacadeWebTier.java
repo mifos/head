@@ -850,7 +850,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         List<AccountFeesEntity> accountFeeEntities = assembleAccountFees(loanAccountInfo.getAccountFees());
         LoanProductOverridenDetail overridenDetail = new LoanProductOverridenDetail(loanAccountDetail.getLoanAmount(), loanAccountInfo.getDisbursementDate(),
                 loanAccountInfo.getInterestRate(), loanAccountInfo.getNumberOfInstallments(), loanAccountInfo.getGraceDuration(), accountFeeEntities);
-        
+
         Integer interestDays = Integer.valueOf(AccountingRules.getNumberOfInterestDays().intValue());
         boolean loanScheduleIndependentOfCustomerMeetingEnabled = loanAccountInfo.isRepaymentScheduleIndependentOfCustomerMeeting();
         LoanScheduleConfiguration configuration = new LoanScheduleConfiguration(loanScheduleIndependentOfCustomerMeetingEnabled, interestDays);
@@ -1057,7 +1057,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         List<AccountFeesEntity> accountFeeEntities = assembleAccountFees(loanAccountInfo.getAccountFees());
         LoanProductOverridenDetail overridenDetail = new LoanProductOverridenDetail(loanAccountDetail.getLoanAmount(), loanAccountInfo.getDisbursementDate(),
                 loanAccountInfo.getInterestRate(), loanAccountInfo.getNumberOfInstallments(), loanAccountInfo.getGraceDuration(), accountFeeEntities);
-        
+
         Integer interestDays = Integer.valueOf(AccountingRules.getNumberOfInterestDays().intValue());
         boolean loanScheduleIndependentOfCustomerMeetingEnabled = loanAccountInfo.isRepaymentScheduleIndependentOfCustomerMeeting();
         LoanScheduleConfiguration configuration = new LoanScheduleConfiguration(loanScheduleIndependentOfCustomerMeetingEnabled, interestDays);
@@ -2104,6 +2104,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                   customer.setCustomerId(customerBO.getClientId());
                   customer.setBranchName(customerBO.getOfficeName());
                   customer.setGlobalId(customerBO.getGlobelNo());
+                  customer.setSearchIndex(i);
 
                   customer.setCenterName(StringUtils.defaultIfEmpty(customerBO.getCenterName(), "--"));
                   customer.setGroupName(StringUtils.defaultIfEmpty(customerBO.getGroupName(), "--"));

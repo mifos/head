@@ -47,24 +47,26 @@
 <br/>
 <div class="search-results">
 <table id="customerSearchResults" class="datatable">
-    <thead>
-        <tr>
-            <th>Branch</th>
-            <th>Center</th>
-            <th>Group</th>
-            <th>Client</th>
-        </tr>
-    </thead>
     <tbody>
         [#list customerSearchResultsDto.pagedDetails as customer]
             <tr>
-                <td>${customer.branchName}</td>
-                <td>${customer.centerName}</td>
-                <td>${customer.groupName}</td>
-                <td><a href="${flowExecutionUrl}&_eventId=customerSelected&customerId=${customer.customerId}">${customer.clientName}: ${customer.globalId}</a></td>
+               <td>
+               ${customer.searchIndex}. &nbsp;&nbsp;&nbsp;
+               </td>
+               <td>
+               ${customer.branchName}
+               [#if customer.centerName != "--"]
+               <b>/</b>${customer.centerName}
+               [/#if]
+               [#if customer.groupName != "--"]
+               <b>/</b>${customer.groupName}
+               [/#if]
+                  <b>/</b><b><a href="${flowExecutionUrl}&_eventId=customerSelected&customerId=${customer.customerId}">${customer.clientName}:${customer.globalId}</a></b>
+               </td>
             </tr>
         [/#list]
     </tbody>
+</table>
 </table>
 [@widget.datatable "customerSearchResults" /]
 </div>

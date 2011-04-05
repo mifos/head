@@ -7,3 +7,17 @@
 {
     width: 100%;
 }
+
+tr.even td {
+    background: white;
+}
+
+tr.odd td {
+    background: #E5ECF9;
+}
+
+td {
+    height: 20pt;
+}
+
+
