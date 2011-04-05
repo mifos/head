@@ -66,7 +66,7 @@ $(function() {
 	</div>
 	<div class="row">
 	    <div class="attribute"><span class="standout">[@spring.message "reviewInstallments.loanAmount"/]</span></div>
-	    <div class="value"><span id="schedulepreview.text.loanamount">${loanScheduleReferenceData.loanAmount?string.currency}</span></div>
+	    <div class="value"><span id="schedulepreview.text.loanamount">${loanScheduleReferenceData.loanAmount?string}</span></div>
 	</div>
 	<div class="row">
 	    <div class="attribute"><span class="standout">[@spring.message "reviewInstallments.disbursmentDate"/]</span></div>
@@ -204,7 +204,7 @@ $(function() {
 [#if loanProductReferenceData.variableInstallmentsAllowed]
 	<div class="row webflow-controls">
 		<input type="submit" id="schedulePreview.button.validate" class="submit" name="_eventId_validate" value=[@spring.message "widget.form.buttonLabel.validate" /] />
-		<input type="submit" id="schedulePreview.button.preview" class="submit" style="margin-left: 1em;" name="_eventId_preview" value=[@spring.message "widget.form.buttonLabel.preview" /] />
+		<input type="submit" id="previewBtn" class="submit" style="margin-left: 1em;" name="_eventId_preview" value=[@spring.message "widget.form.buttonLabel.preview" /] />
         [@form.cancelButton id="schedulePreview.button.cancel" label="widget.form.buttonLabel.cancel" webflowEvent="cancel" /]
     </div>
 </form>

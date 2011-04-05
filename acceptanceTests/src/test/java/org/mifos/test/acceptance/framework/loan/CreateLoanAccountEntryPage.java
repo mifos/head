@@ -325,8 +325,10 @@ public class CreateLoanAccountEntryPage extends MifosPage {
         return this;
     }
 
+    @SuppressWarnings("PMD")
     public void verifyAllowedAmounts(String min, String max, String def) {
-        Assert.assertTrue(selenium.isTextPresent("(Allowed Amount:   "+min+"   -   "+max+" )"));
+        final String expectedText = "(Allowed Amount:   "+min+"   -   "+max+" )";
+        Assert.assertTrue(selenium.isTextPresent(expectedText), expectedText + " was expected but not found on page.");
         Assert.assertEquals(selenium.getValue("loancreationdetails.input.sumLoanAmount"), def);
     }
 

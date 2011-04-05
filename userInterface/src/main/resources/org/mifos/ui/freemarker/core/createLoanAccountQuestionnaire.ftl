@@ -27,6 +27,8 @@
                          "createLoanAccount.flowState.enterAccountInfo",
                          "createLoanAccount.flowState.reviewInstallments", 
                          "createLoanAccount.flowState.reviewAndSubmit"]]
+
+<span id="page.id" title="captureQuestionResponse"></span>
                           
 [@questionnaire.responseForm loanAccountQuestionGroupFormBean "loanAccountQuestionGroupFormBean" /]
 
