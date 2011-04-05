@@ -67,11 +67,11 @@ public class CreateLoanAccountEntryPage extends MifosPage {
     public CreateLoanAccountConfirmationPage submitAndNavigateToLoanAccountConfirmationPage(CreateLoanAccountSubmitParameters formParameters,
                                                                                             QuestionResponseParameters responseParameters) {
         submitLoanAccount(formParameters);
-        populateQuestionResponsesIfNeeded(responseParameters, selenium.getAttribute("page.id@title"));
+        populateCreateLoanQuestionResponsesIfNeeded(responseParameters, selenium.getAttribute("page.id@title"));
         return navigateToConfirmationPage();
     }
 
-    private void populateQuestionResponsesIfNeeded(QuestionResponseParameters responseParameters, String pageId) {
+    private void populateCreateLoanQuestionResponsesIfNeeded(QuestionResponseParameters responseParameters, String pageId) {
         if (StringUtils.equalsIgnoreCase(pageId, "captureQuestionResponse")) {
             QuestionResponsePage responsePage = new QuestionResponsePage(selenium);
             responsePage.populateAnswers(responseParameters);
