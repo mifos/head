@@ -26,7 +26,7 @@
                          "createLoanAccount.flowState.reviewInstallments", 
                          "createLoanAccount.flowState.reviewAndSubmit"]]
                          
-<span id="page.id" title="continuecreatesavingsaccount"></span>
+<span id="page.id" title="LoanCreationDetail"></span>
 
 <h1>[@spring.message "createLoanAccount.wizard.title" /] - <span class="standout">[@spring.message "createLoanAccount.selectProduct.pageSubtitle" /]</span></h1>
 <p>[@spring.message "createLoanAccount.selectProduct.instructions" /]</p>
@@ -40,8 +40,8 @@
 <form action="${flowExecutionUrl}&_eventId=newProductSelected" method="post" class="two-columns">
     <fieldset>
     <div class="row">
-        [@form.label "productId" true][@spring.message "selectProduct.selectProductLabel" /][/@form.label]
-        [@spring.formSingleSelect "loanAccountFormBean.productId" loanProductReferenceData.productOptions /]
+        [@form.label "loancreationprodofferingselect.select.loanProduct" true][@spring.message "selectProduct.selectProductLabel" /][/@form.label]
+        [@form.singleSelectWithPrompt path="loanAccountFormBean.productId" options=loanProductReferenceData.productOptions id="loancreationprodofferingselect.select.loanProduct" /]
     </div>
     </fieldset>
 </form>
@@ -161,7 +161,7 @@
     		<td>&nbsp;</td>
     		<td>&nbsp;</td>
     		<td>Total amount:</td>
-    		<td>[@form.input path="loanAccountFormBean.amount"  id="amount" /]</td>
+    		<td>[@form.input path="loanAccountFormBean.amount"  id="loancreationdetails.input.sumLoanAmount" /]</td>
     		<td><span>([@spring.message "createLoanAccount.allowedAmount"/] ${loanProductReferenceData.minLoanAmount?string.number} - ${loanProductReferenceData.maxLoanAmount?string.number})</span></td>
     		<td>&nbsp;</td>
     	</tr>
@@ -169,7 +169,7 @@
     [#else]
     <div class="row">
         [@form.label "amount" true ][@spring.message "createLoanAccount.amount"/][/@form.label]
-        [@form.input path="loanAccountFormBean.amount"  id="amount" /]
+        [@form.input path="loanAccountFormBean.amount"  id="loancreationdetails.input.sumLoanAmount" /]
         <span>([@spring.message "createLoanAccount.allowedAmount"/] ${loanProductReferenceData.minLoanAmount?string.number} - ${loanProductReferenceData.maxLoanAmount?string.number})</span>
     </div>
     [/#if]
@@ -185,9 +185,9 @@
     </div>
     <div class="row">
         [@form.label "disbursaldatedd" true ][@spring.message "createLoanAccount.disbursalDate"/][/@form.label]
-        [@form.input path="loanAccountFormBean.disbursalDateDay" id="disbursaldatedd" attributes="size=1 maxlength=2" /]<span>[@spring.message "datefield.dd"/]</span>
-        [@form.input path="loanAccountFormBean.disbursalDateMonth" id="disbursaldatemm" attributes="size=1 maxlength=2" /]<span>[@spring.message "datefield.mm"/]</span>
-        [@form.input path="loanAccountFormBean.disbursalDateYear" id="disbursaldateyyyy" attributes="size=3 maxlength=4" /]<span>[@spring.message "datefield.yyyy"/]</span>
+        [@form.input path="loanAccountFormBean.disbursalDateDay" id="disbursementDateDD" attributes="size=1 maxlength=2" /]<span>[@spring.message "datefield.dd"/]</span>
+        [@form.input path="loanAccountFormBean.disbursalDateMonth" id="disbursementDateMM" attributes="size=1 maxlength=2" /]<span>[@spring.message "datefield.mm"/]</span>
+        [@form.input path="loanAccountFormBean.disbursalDateYear" id="disbursementDateYY" attributes="size=3 maxlength=4" /]<span>[@spring.message "datefield.yyyy"/]</span>
     </div>
     
     [#if loanProductReferenceData.repaymentIndependentOfMeetingEnabled]
@@ -195,9 +195,9 @@
     	
     		[#if loanProductReferenceData.loanOfferingMeetingDetail.meetingDetailsDto.recurrenceTypeId == 1]
     		<div class="row">
-	    		<input type="radio" id="weekly.repaymentFrequency" name="repaymentFrequency" checked=checked />
+	    		<input type="radio" id="loancreationdetails.input.frequencyWeeks" name="repaymentFrequency" checked=checked />
 	    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.week(s)"/]</span>
-	    		<input type="radio" id="monthly.repaymentFrequency" name="repaymentFrequency" disabled=disabled/>
+	    		<input type="radio" id="loancreationdetails.input.frequencyMonths" name="repaymentFrequency" disabled=disabled/>
 	    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.month(s)"/]</span>
     		</div>
     		<div style="margin-left: 200px;">
@@ -206,15 +206,15 @@
     		</div>
     		<div id="week" class="row" id="weekDIV">
 		        [@form.label "recursEvery" true][@spring.message "manageLoanProducts.defineLoanProduct.recurevery" /][/@form.label]
-		        [@form.input path="loanAccountFormBean.repaymentRecursEvery" id="recursEvery" attributes="size=3 maxlength=2"/]
+		        [@form.input path="loanAccountFormBean.repaymentRecursEvery" id="loancreationdetails.input.weekFrequency" attributes="size=3 maxlength=2"/]
 		        <span id="weekLabelMessage">[@spring.message "manageLoanProducts.defineLoanProduct.week(s)" /]</span>
-		        [@spring.formSingleSelect "loanAccountFormBean.repaymentDayOfWeek" loanProductReferenceData.daysOfTheWeekOptions /]
+		        [@form.singleSelectWithPrompt path="loanAccountFormBean.repaymentDayOfWeek" options=loanProductReferenceData.daysOfTheWeekOptions id="weekDay" /]
 	    	</div>
     		[#else]
     		<div class="row">
-	    		<input type="radio" id="weekly.repaymentFrequency" name="repaymentFrequency" disabled=disabled />
+	    		<input type="radio" id="loancreationdetails.input.frequencyWeeks" name="repaymentFrequency" disabled=disabled />
 	    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.week(s)"/]</span>
-	    		<input type="radio" id="monthly.repaymentFrequency" name="repaymentFrequency" checked=checked />
+	    		<input type="radio" id="loancreationdetails.input.frequencyMonths" name="repaymentFrequency" checked=checked />
 	    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.month(s)"/]</span>
 	    	</div>
 	    	<div id="monthly" class="row">
@@ -226,7 +226,7 @@
 	    			[/#if]
 	    		/>
 	    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.dayOfMonthLabel" /]</span>
-	    		[@form.input path="loanAccountFormBean.repaymentDayOfMonth" id="repaymentDayOfMonth" attributes="size=3 maxlength=2"/]
+	    		[@form.input path="loanAccountFormBean.repaymentDayOfMonth" id="loancreationdetails.input.dayOfMonth" attributes="size=3 maxlength=2"/]
 	    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.ofEvery" /]</span>
 		        [@form.input path="loanAccountFormBean.repaymentRecursEvery" id="recursEvery" attributes="size=3 maxlength=2 disabled=disabled"/]
 		        <span id="monthLabelMessage">[@spring.message "manageLoanProducts.defineLoanProduct.month(s)" /]</span>
@@ -240,8 +240,8 @@
 	    			[/#if]
 	    		/>
 	    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.weekOfMonthLabel" /]</span>
-	    		[@form.singleSelectWithPrompt path="loanAccountFormBean.repaymentWeekOfMonth" options=loanProductReferenceData.weeksOfTheMonthOptions selectPrompt="selectPrompt" /]
-	    		[@form.singleSelectWithPrompt path="loanAccountFormBean.repaymentDayOfWeek" options=loanProductReferenceData.daysOfTheWeekOptions selectPrompt="selectPrompt" /]
+	    		[@form.singleSelectWithPrompt path="loanAccountFormBean.repaymentWeekOfMonth" options=loanProductReferenceData.weeksOfTheMonthOptions selectPrompt="selectPrompt" id="monthRank" /]
+	    		[@form.singleSelectWithPrompt path="loanAccountFormBean.repaymentDayOfWeek" options=loanProductReferenceData.daysOfTheWeekOptions selectPrompt="selectPrompt" id="monthWeek"/]
 	    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.ofEvery" /]</span>
 		        [@form.input path="loanAccountFormBean.repaymentRecursEvery" id="recursEvery" attributes="size=3 maxlength=2 disabled=disabled"/]
 		        <span id="monthLabelMessage">[@spring.message "manageLoanProducts.defineLoanProduct.month(s)" /]</span>
@@ -251,7 +251,7 @@
     
     <div class="row">
         [@form.label "graceduration" true ][@spring.message "createLoanAccount.graceDuration"/][/@form.label]
-        [@form.input path="loanAccountFormBean.graceDuration" id="graceduration" attributes="disabled"/]
+        [@form.input path="loanAccountFormBean.graceDuration" id="loancreationdetails.input.gracePeriod" attributes="disabled"/]
         <span>[@spring.message "createLoanAccount.allowedGraceInInstallments"/]</span>
     </div>
     <div class="row">
@@ -344,7 +344,7 @@
 	</div>
     </fieldset>
     <div class="row webflow-controls">
-        [@form.submitButton label="widget.form.buttonLabel.continue" id="continuecreateloanaccount.button.preview" webflowEvent="detailsEntered" /]
+        [@form.submitButton label="widget.form.buttonLabel.continue" id="loancreationdetails.button.continue" webflowEvent="detailsEntered" /]
         [@form.cancelButton label="widget.form.buttonLabel.cancel" webflowEvent="cancel" /]
     </div>
     

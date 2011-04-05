@@ -25,7 +25,7 @@
                          "createLoanAccount.flowState.enterAccountInfo",
                          "createLoanAccount.flowState.reviewInstallments", 
                          "createLoanAccount.flowState.reviewAndSubmit"]]
-
+<span id="page.id" title="LoanCreationPrdOfferingSelect"></span>
 <h1>[@spring.message "createLoanAccount.wizard.title" /] - <span class="standout">[@spring.message "createLoanAccount.selectProduct.pageSubtitle" /]</span></h1>
 <p>[@spring.message "createLoanAccount.selectProduct.instructions" /]</p>
 <p><span class="mandatory">*</span>[@spring.message "requiredFieldsInstructions" /]</p>
@@ -38,12 +38,12 @@
 <form action="${flowExecutionUrl}" method="post" class="two-columns">
     <fieldset>
     <div class="row">
-        [@form.label "productId" true][@spring.message "selectProduct.selectProductLabel" /][/@form.label]
-        [@form.singleSelectWithPrompt path="selectProductFormBean.productId" options=loanCreationProductDetailsDto.productOptions id="createloanaccount.select.loanProduct" selectPrompt="selectPrompt" /]
+        [@form.label "loancreationprodofferingselect.select.loanProduct" true][@spring.message "selectProduct.selectProductLabel" /][/@form.label]
+        [@form.singleSelectWithPrompt path="selectProductFormBean.productId" options=loanCreationProductDetailsDto.productOptions id="loancreationprodofferingselect.select.loanProduct" selectPrompt="selectPrompt" /]
     </div>
     </fieldset>
     <div class="row webflow-controls">
-        [@form.submitButton label="widget.form.buttonLabel.continue" id="createloanaccount.button.continue" webflowEvent="productSelected" /]
+        [@form.submitButton label="widget.form.buttonLabel.continue" id="loancreationprdofferingselect.button.continue" webflowEvent="productSelected" /]
         [@form.cancelButton label="widget.form.buttonLabel.cancel" webflowEvent="cancel" /]
     </div>
 </form>
