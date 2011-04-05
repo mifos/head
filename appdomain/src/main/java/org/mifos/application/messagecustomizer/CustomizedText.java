@@ -20,12 +20,16 @@
 
 package org.mifos.application.messagecustomizer;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.NamedNativeQuery;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 @NamedQueries({
         @NamedQuery(name = "allMessages", query = "from CustomizedText"),
@@ -36,6 +40,8 @@ import javax.persistence.Table;
                   resultClass = CustomizedText.class)
 @Entity
 @Table(name = "customized_text")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class CustomizedText {
 
     @Id
