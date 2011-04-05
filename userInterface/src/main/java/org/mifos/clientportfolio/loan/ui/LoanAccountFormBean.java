@@ -22,6 +22,8 @@ package org.mifos.clientportfolio.loan.ui;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
@@ -245,6 +247,18 @@ public class LoanAccountFormBean implements Serializable {
                     if (isInvalidDayOfWeekSelection()) {
                         errors.rejectValue("repaymentDayOfWeek", "loanAccountFormBean.repaymentDay.monthly.dayOfWeek.invalid", "Please select a day of the week for repayment day.");
                     }
+                }
+            }
+        }
+        
+        // validate additional fees not duplicated
+        Set<Integer> feeSet = new HashSet<Integer>();
+        if (this.selectedFeeId != null) {
+            for (Number feeId : this.selectedFeeId) {
+                boolean noDuplicateExists = feeSet.add(feeId.intValue());
+                if (!noDuplicateExists) {
+                    errors.rejectValue("selectedFeeId", "loanAccountFormBean.additionalfees.invalid", "Multiple instances of the same fee are not allowed.");
+                    break;
                 }
             }
         }
