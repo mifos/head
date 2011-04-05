@@ -293,11 +293,11 @@ public class LoanAccountFormBean implements Serializable {
     }
 
     private void rejectGlimTotalAmountField(Errors errors, String defaultErrorMessage) {
-        errors.rejectValue("disbursalDateDay", "loanAccountFormBean.glim.totalAmount.invalid", new Object[] {this.minAllowedAmount, this.maxAllowedAmount}, defaultErrorMessage);
+        errors.rejectValue("disbursementDateDD", "loanAccountFormBean.glim.totalAmount.invalid", new Object[] {this.minAllowedAmount, this.maxAllowedAmount}, defaultErrorMessage);
     }
 
     private void rejectGroupLoanWithTooFewClients(Errors errors, String defaultErrorMessage) {
-        errors.rejectValue("disbursalDateDay", "loanAccountFormBean.glim.notEnoughClients", defaultErrorMessage);
+        errors.rejectValue("disbursementDateDD", "loanAccountFormBean.glim.notEnoughClients", defaultErrorMessage);
     }
 
     private void rejectUnselectedGlimClientAmountField(int clientIndex, Errors errors, String defaultErrorMessage) {
@@ -309,7 +309,7 @@ public class LoanAccountFormBean implements Serializable {
     }
 
     private void rejectDisbursementDateField(Errors errors, String defaultErrorMessage, String errorCode) {
-        errors.rejectValue("disbursalDateDay", errorCode, defaultErrorMessage);
+        errors.rejectValue("disbursementDateDD", errorCode, defaultErrorMessage);
     }
 
     private void rejectNumberOfInstallmentsField(Errors errors, String defaultErrorMessage) {
