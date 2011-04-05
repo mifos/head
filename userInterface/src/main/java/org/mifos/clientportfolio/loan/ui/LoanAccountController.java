@@ -81,7 +81,7 @@ public class LoanAccountController {
     	CustomerSearchDto customerSearchDto = new CustomerSearchDto(formBean.getSearchString(), Integer.valueOf(1), searchCap);
     	List<CustomerSearchResultDto> pagedDetails = this.loanAccountServiceFacade.retrieveCustomersThatQualifyForLoans(customerSearchDto);
 
-    	int firstResult = formBean.getPage() * formBean.getPageSize() - (formBean.getPageSize()-1);
+    	//int firstResult = formBean.getPage() * formBean.getPageSize() - (formBean.getPageSize()-1);
 
     	// FIXME selected pageNumber and pageSize info should be passed in on bean.
 		SearchDetailsDto searchDetails = new SearchDetailsDto(pagedDetails.size(),  1, 1, searchCap);
