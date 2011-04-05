@@ -3,6 +3,7 @@
     "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
     <session-factory>
+        <property name="cache.provider_class">org.hibernate.cache.EhCacheProvider</property>
         <mapping class="org.mifos.platform.cashflow.domain.CashFlow" />
         <mapping class="org.mifos.platform.cashflow.domain.MonthlyCashFlow" />
         <mapping resource="org/mifos/platform/cashflow/domain/CashFlow.hbm.xml" />

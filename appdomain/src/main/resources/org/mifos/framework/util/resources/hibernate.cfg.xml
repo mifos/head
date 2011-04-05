@@ -6,6 +6,7 @@
 <hibernate-configuration>
 
     <session-factory>
+        <property name="cache.provider_class">org.hibernate.cache.EhCacheProvider</property>
 
         <!-- master data mapping files-->
 
