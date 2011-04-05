@@ -150,7 +150,7 @@
 
 <br />
 <form action="${flowExecutionUrl}" method="post">
-	[@form.submitButton label="widget.form.buttonLabel.editaccountinfo" id="continuecreateloanaccount.button.preview" webflowEvent="editAccountDetails" /]
+	[@form.submitButton label="widget.form.buttonLabel.editaccountinfo" id="createloanpreview.button.edit" webflowEvent="editAccountDetails" /]
 </form>
 <br />
 
@@ -188,8 +188,8 @@
 
 <form action="${flowExecutionUrl}" method="post" class="webflow-controls centered">
     <div class="row">
-        [@form.submitButton id="createloanaccountpreview.button.submitForLater" label="widget.form.buttonLabel.saveForLater" webflowEvent="saveForLater" /]
-        [@form.submitButton id="createloanaccountpreview.button.submitForApproval" label="widget.form.buttonLabel.saveForApproval" webflowEvent="submit" /]
+        [@form.submitButton id="createloanpreview.button.saveForLater" label="widget.form.buttonLabel.saveForLater" webflowEvent="saveForLater" /]
+        [@form.submitButton id="createloanpreview.button.submitForApproval" label="widget.form.buttonLabel.saveForApproval" webflowEvent="submit" /]
         [@form.cancelButton label="widget.form.buttonLabel.cancel" webflowEvent="cancel" /]
     </div>
 </form>

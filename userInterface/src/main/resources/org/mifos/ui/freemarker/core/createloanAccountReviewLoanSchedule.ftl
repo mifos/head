@@ -201,16 +201,16 @@ $(function() {
 
 [#if loanProductReferenceData.variableInstallmentsAllowed]
 	<div class="row webflow-controls">
-		<input type="submit" id="createloanaccount.validate" class="submit" name="_eventId_validate" value=[@spring.message "widget.form.buttonLabel.validate" /] />
-		<input type="submit" id="continuecreateloanaccount.button.preview" class="submit" style="margin-left: 1em;" name="_eventId_preview" value=[@spring.message "widget.form.buttonLabel.preview" /] />
-        [@form.cancelButton label="widget.form.buttonLabel.cancel" webflowEvent="cancel" /]
+		<input type="submit" id="schedulePreview.button.validate" class="submit" name="_eventId_validate" value=[@spring.message "widget.form.buttonLabel.validate" /] />
+		<input type="submit" id="schedulePreview.button.preview" class="submit" style="margin-left: 1em;" name="_eventId_preview" value=[@spring.message "widget.form.buttonLabel.preview" /] />
+        [@form.cancelButton id="schedulePreview.button.cancel" label="widget.form.buttonLabel.cancel" webflowEvent="cancel" /]
     </div>
 </form>
 [#else]
 <form action="${flowExecutionUrl}" method="post" class="two-columns">
 <div class="row webflow-controls">
-        [@form.submitButton label="widget.form.buttonLabel.preview" id="continuecreateloanaccount.button.preview" webflowEvent="preview" /]
-        [@form.cancelButton label="widget.form.buttonLabel.cancel" webflowEvent="cancel" /]
+        [@form.submitButton label="widget.form.buttonLabel.preview" id="schedulePreview.button.preview" webflowEvent="preview" /]
+        [@form.cancelButton label="widget.form.buttonLabel.cancel" id="schedulePreview.button.cancel" webflowEvent="cancel" /]
     </div>
 </form>
 [/#if]
