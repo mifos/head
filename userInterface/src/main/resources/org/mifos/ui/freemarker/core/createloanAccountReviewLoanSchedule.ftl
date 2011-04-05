@@ -26,6 +26,8 @@
                          "createLoanAccount.flowState.reviewInstallments", 
                          "createLoanAccount.flowState.reviewAndSubmit"]]
 
+<span id="page.id" title="SchedulePreview"></span>
+
 [#if loanProductReferenceData.variableInstallmentsAllowed]
 <script type="text/javascript" src="pages/js/jquery/jquery-ui.min.js"></script>
 <script type="text/javascript" src="pages/js/jquery/jquery.datePicker.configuration.js"></script>
