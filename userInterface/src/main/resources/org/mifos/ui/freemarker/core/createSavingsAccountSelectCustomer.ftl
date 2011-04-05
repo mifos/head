@@ -61,7 +61,7 @@
                [#if customer.groupName != "--"]
                <b>/</b>${customer.groupName}
                [/#if]
-                  <b>/</b><b><a href="${flowExecutionUrl}&_eventId=customerSelected&customerId=${customer.customerId}">${customer.clientName}:${customer.globalId}</a></b>
+                  <b>/</b><b><a href="${flowExecutionUrl}&_eventId=customerSelected&customerId=${customer.customerId}">${customer.clientName}:ID${customer.globalId}</a></b>
                </td>
             </tr>
         [/#list]
