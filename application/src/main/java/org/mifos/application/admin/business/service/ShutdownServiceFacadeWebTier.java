@@ -44,7 +44,6 @@ import java.util.List;
 import java.util.Collection;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Locale;
 
 public class ShutdownServiceFacadeWebTier implements ShutdownServiceFacade {
     @Override
@@ -90,10 +89,10 @@ public class ShutdownServiceFacadeWebTier implements ShutdownServiceFacade {
     }
 
     @Override
-    public String getStatus(HttpServletRequest request, Locale locale) {
+    public String getStatus(HttpServletRequest request) {
         ShutdownManager shutdownManager = (ShutdownManager) ServletUtils.getGlobal(request, ShutdownManager.class
                 .getName());
-        return shutdownManager.getStatus(locale);
+        return shutdownManager.getStatus();
     }
 
     @Override

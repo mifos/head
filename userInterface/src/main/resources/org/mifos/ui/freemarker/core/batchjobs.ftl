@@ -18,6 +18,14 @@
 *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 *  explanation of the license and how it is applied.
 --]
+[#assign completed][@spring.message "systemAdministration.batchjobs.completed"/][/#assign]
+[#assign starting][@spring.message "systemAdministration.batchjobs.starting"/][/#assign]
+[#assign started][@spring.message "systemAdministration.batchjobs.started"/][/#assign]
+[#assign stopping][@spring.message "systemAdministration.batchjobs.stopping"/][/#assign]
+[#assign stopped][@spring.message "systemAdministration.batchjobs.stopped"/][/#assign]
+[#assign failed][@spring.message "systemAdministration.batchjobs.failed"/][/#assign]
+[#assign abandoned][@spring.message "systemAdministration.batchjobs.abandoned"/][/#assign]
+[#assign neverExecutedYet][@spring.message "systemAdministration.batchjobs.neverExecutedYet"/][/#assign]
 [#import "spring.ftl" as spring]
 [#import "blueprintmacros.ftl" as mifos]
 
@@ -121,7 +129,7 @@
                             <span class="span-8">
                                 [@spring.message "systemAdministration.batchjobs.previousRunStatus" /]:&nbsp;
                                 [#if batchjobs.lastRunStatus != ""]
-                                    ${batchjobs.lastRunStatus}
+                                    ${{"Completed":completed, "Starting":starting, "Started":started, "Stopping":stopping, "Stopped":stopped, "Failed":failed, "Abandoned":abandoned, "Never executed yet":neverExecutedYet}[batchjobs.lastRunStatus]}
                                 [#else]
                                     [@spring.message "systemAdministration.batchjobs.unknown" /]
                                 [/#if]

@@ -79,9 +79,8 @@ public class ShutdownController {
         Map<String, Object> model = new HashMap<String, Object>();
         model.put("request", request);
         model.put("activeSessions", shutdownServiceFacade.getLoggedUsers(request));
-        model.put("shutdownStatus", shutdownServiceFacade.getStatus(request, request.getLocale()));
+        model.put("shutdownStatus", shutdownServiceFacade.getStatus(request));
         model.put("submitButtonDisabled", shutdownServiceFacade.isShutdownInProgress(request));
-
         Map<String, Object> status = new HashMap<String, Object>();
         List<String> errorMessages = new ArrayList<String>();
         status.put("errorMessages", errorMessages);

@@ -24,14 +24,13 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Locale;
 
 public interface ShutdownServiceFacade {
     @PreAuthorize("isFullyAuthenticated()")
     List<LoggedUserDto> getLoggedUsers(HttpServletRequest request);
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_OPEN_SHUTDOWN_PAGE')")
-    String getStatus(HttpServletRequest request, Locale locale);
+    String getStatus(HttpServletRequest request);
 
     boolean isShutdownInProgress(HttpServletRequest request);
 

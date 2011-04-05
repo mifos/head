@@ -32,6 +32,7 @@ import javax.servlet.http.HttpSessionEvent;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.mifos.config.ConfigLocale;
 import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.FilePaths;
@@ -43,8 +44,8 @@ public class ShutdownManager implements Serializable {
     private Long shutdownTime;
     private final Map<String, HttpSession> activeSessions = new HashMap<String, HttpSession>();
 
-    public synchronized String getStatus(Locale locale) {
-        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.ADMIN_UI_PROPERTY_FILE, locale);
+    public synchronized String getStatus() {
+        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.ADMIN_UI_PROPERTY_FILE, new ConfigLocale().getLocale());
         if (isShutdownInProgress()) {
             String inProgressString = resources.getString("admin.shutdown.status.inprogress");
             long timeLeft = shutdownTime - System.currentTimeMillis();
