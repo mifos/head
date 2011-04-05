@@ -26,7 +26,7 @@
                          "createLoanAccount.flowState.reviewInstallments", 
                          "createLoanAccount.flowState.reviewAndSubmit"]]
 
-<span id="page.id" title="createloanaccountconfirmation"></span>
+<span id="page.id" title="CreateLoanAccountConfirmation"></span>
 
 <h1 class="success">[@spring.message "createLoanAccount.accountCreated.successMessage" /]</h1>
 
@@ -35,7 +35,7 @@
 [@spring.messageArgs "createLoanAccount.accountCreated.accountDetails" args /]</p>
 <br/>
 
-<p><a id="createloanaccountconfirmation.link.viewLoanAccount" href="loanAccountAction.do?method=get&globalAccountNum=${loanCreationResultDto.globalAccountNum}" class="standout">[@spring.message "createLoanAccount.accountCreated.action.viewSavingsAccount" /]</a></p>
+<p><a id="CreateLoanAccountConfirmation.link.viewLoanDetails" href="loanAccountAction.do?method=get&globalAccountNum=${loanCreationResultDto.globalAccountNum}" class="standout">[@spring.message "createLoanAccount.accountCreated.action.viewSavingsAccount" /]</a></p>
 <br/>
 
 <div class="suggestion">[@spring.message "createLoanAccount.accountCreated.nextSteps" /]</div>

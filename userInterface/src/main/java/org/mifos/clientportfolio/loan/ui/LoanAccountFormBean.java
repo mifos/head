@@ -255,10 +255,12 @@ public class LoanAccountFormBean implements Serializable {
         Set<Integer> feeSet = new HashSet<Integer>();
         if (this.selectedFeeId != null) {
             for (Number feeId : this.selectedFeeId) {
-                boolean noDuplicateExists = feeSet.add(feeId.intValue());
-                if (!noDuplicateExists) {
-                    errors.rejectValue("selectedFeeId", "loanAccountFormBean.additionalfees.invalid", "Multiple instances of the same fee are not allowed.");
-                    break;
+                if (feeId != null) {
+                    boolean noDuplicateExists = feeSet.add(feeId.intValue());
+                    if (!noDuplicateExists) {
+                        errors.rejectValue("selectedFeeId", "loanAccountFormBean.additionalfees.invalid", "Multiple instances of the same fee are not allowed.");
+                        break;
+                    }
                 }
             }
         }

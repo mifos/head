@@ -26,7 +26,7 @@
                          "createLoanAccount.flowState.enterAccountInfo",
                          "createLoanAccount.flowState.reviewInstallments", 
                          "createLoanAccount.flowState.reviewAndSubmit"]]
-                         
+<span id="page.id" title="CreateLoanPreview"></span>
 <h1>[@spring.message "createLoanAccount.wizard.title" /] - <span class="standout">[@spring.message "createLoanAccount.preview.pageSubtitle" /]</span></h1>
 <p>[@spring.message "createLoanAccount.preview.instructions" /]</p>
 <br/>
