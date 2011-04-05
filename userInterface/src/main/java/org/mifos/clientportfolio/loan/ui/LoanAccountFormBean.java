@@ -69,9 +69,9 @@ public class LoanAccountFormBean implements Serializable {
     private Number numberOfInstallments;
     private Number minNumberOfInstallments;
     private Number maxNumberOfInstallments;
-    private Number disbursalDateDay;
-    private Number disbursalDateMonth;
-    private Number disbursalDateYear;
+    private Number disbursementDateDD;
+    private Number disbursementDateMM;
+    private Number disbursementDateYY;
     
     private Number graceDuration = Integer.valueOf(0);
     
@@ -206,11 +206,11 @@ public class LoanAccountFormBean implements Serializable {
         if (dateValidator == null) {
             dateValidator = new DateValidator();
         }
-        if (!dateValidator.formsValidDate(this.disbursalDateDay, this.disbursalDateMonth, this.disbursalDateYear)) {
+        if (!dateValidator.formsValidDate(this.disbursementDateDD, this.disbursementDateMM, this.disbursementDateYY)) {
             String defaultErrorMessage = "Please specify valid disbursal date.";
             rejectDisbursementDateField(errors, defaultErrorMessage, "loanAccountFormBean.DisbursalDate.invalid");
         } else {
-            LocalDate validDate = new DateTime().withDate(disbursalDateYear.intValue(), disbursalDateMonth.intValue(), disbursalDateDay.intValue()).toLocalDate();
+            LocalDate validDate = new DateTime().withDate(disbursementDateYY.intValue(), disbursementDateMM.intValue(), disbursementDateDD.intValue()).toLocalDate();
             try {
                 loanDisbursementDateValidationServiceFacade.validateLoanDisbursementDate(validDate, customerId, productId);
             } catch (BusinessRuleException e) {
@@ -454,28 +454,28 @@ public class LoanAccountFormBean implements Serializable {
 		this.numberOfInstallments = numberOfInstallments;
 	}
 
-	public Number getDisbursalDateDay() {
-		return disbursalDateDay;
+	public Number getDisbursementDateDD() {
+		return disbursementDateDD;
 	}
 
-	public void setDisbursalDateDay(Number disbursalDateDay) {
-		this.disbursalDateDay = disbursalDateDay;
+	public void setDisbursementDateDD(Number disbursalDateDay) {
+		this.disbursementDateDD = disbursalDateDay;
 	}
 
-	public Number getDisbursalDateMonth() {
-		return disbursalDateMonth;
+	public Number getDisbursementDateMM() {
+		return disbursementDateMM;
 	}
 
-	public void setDisbursalDateMonth(Number disbursalDateMonth) {
-		this.disbursalDateMonth = disbursalDateMonth;
+	public void setDisbursementDateMM(Number disbursalDateMonth) {
+		this.disbursementDateMM = disbursalDateMonth;
 	}
 
-	public Number getDisbursalDateYear() {
-		return disbursalDateYear;
+	public Number getDisbursementDateYY() {
+		return disbursementDateYY;
 	}
 
-	public void setDisbursalDateYear(Number disbursalDateYear) {
-		this.disbursalDateYear = disbursalDateYear;
+	public void setDisbursementDateYY(Number disbursalDateYear) {
+		this.disbursementDateYY = disbursalDateYear;
 	}
 	
     public Number getMinAllowedAmount() {

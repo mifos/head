@@ -66,9 +66,9 @@ public class LoanAccountFormBeanTest {
         loanAccountFormBean.setMinAllowedInterestRate(Double.valueOf(1.0));
         loanAccountFormBean.setMaxAllowedInterestRate(Double.valueOf(20.0));
         
-        loanAccountFormBean.setDisbursalDateDay(24);
-        loanAccountFormBean.setDisbursalDateMonth(02);
-        loanAccountFormBean.setDisbursalDateYear(2011);
+        loanAccountFormBean.setDisbursementDateDD(24);
+        loanAccountFormBean.setDisbursementDateMM(02);
+        loanAccountFormBean.setDisbursementDateYY(2011);
         
         loanAccountFormBean.setNumberOfInstallments(12);
         loanAccountFormBean.setMinNumberOfInstallments(1);
@@ -141,9 +141,9 @@ public class LoanAccountFormBeanTest {
     public void shouldContainValidationMessageOnDisbursementDateDayFieldWhenDateIsInvalid() {
 
         // setup
-        loanAccountFormBean.setDisbursalDateDay(32);
-        loanAccountFormBean.setDisbursalDateMonth(1);
-        loanAccountFormBean.setDisbursalDateYear(2011);
+        loanAccountFormBean.setDisbursementDateDD(32);
+        loanAccountFormBean.setDisbursementDateMM(1);
+        loanAccountFormBean.setDisbursementDateYY(2011);
         
         // exercise test
         loanAccountFormBean.validateEnterAccountDetailsStep(context);

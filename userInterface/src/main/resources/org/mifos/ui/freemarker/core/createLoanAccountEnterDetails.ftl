@@ -185,9 +185,9 @@
     </div>
     <div class="row">
         [@form.label "disbursaldatedd" true ][@spring.message "createLoanAccount.disbursalDate"/][/@form.label]
-        [@form.input path="loanAccountFormBean.disbursalDateDay" id="disbursementDateDD" attributes="size=1 maxlength=2" /]<span>[@spring.message "datefield.dd"/]</span>
-        [@form.input path="loanAccountFormBean.disbursalDateMonth" id="disbursementDateMM" attributes="size=1 maxlength=2" /]<span>[@spring.message "datefield.mm"/]</span>
-        [@form.input path="loanAccountFormBean.disbursalDateYear" id="disbursementDateYY" attributes="size=3 maxlength=4" /]<span>[@spring.message "datefield.yyyy"/]</span>
+        [@form.input path="loanAccountFormBean.disbursementDateDD" id="disbursementDateDD" attributes="size=1 maxlength=2" /]<span>[@spring.message "datefield.dd"/]</span>
+        [@form.input path="loanAccountFormBean.disbursementDateMM" id="disbursementDateMM" attributes="size=1 maxlength=2" /]<span>[@spring.message "datefield.mm"/]</span>
+        [@form.input path="loanAccountFormBean.disbursementDateYY" id="disbursementDateYY" attributes="size=3 maxlength=4" /]<span>[@spring.message "datefield.yyyy"/]</span>
     </div>
     
     [#if loanProductReferenceData.repaymentIndependentOfMeetingEnabled]

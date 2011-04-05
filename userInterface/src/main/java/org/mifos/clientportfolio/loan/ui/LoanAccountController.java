@@ -153,9 +153,9 @@ public class LoanAccountController {
     	formBean.setPurposeOfLoanMandatory(mandatoryHidden.isMandatoryLoanAccountPurpose());
     	
     	LocalDate possibleDisbursementDate = dto.getNextPossibleDisbursementDate();
-    	formBean.setDisbursalDateDay(possibleDisbursementDate.getDayOfMonth());
-    	formBean.setDisbursalDateMonth(possibleDisbursementDate.getMonthOfYear());
-    	formBean.setDisbursalDateYear(possibleDisbursementDate.getYearOfEra());
+    	formBean.setDisbursementDateDD(possibleDisbursementDate.getDayOfMonth());
+    	formBean.setDisbursementDateMM(possibleDisbursementDate.getMonthOfYear());
+    	formBean.setDisbursementDateYY(possibleDisbursementDate.getYearOfEra());
     	
     	formBean.setCollateralNotes("");
 
@@ -230,7 +230,7 @@ public class LoanAccountController {
     }
 
     private LocalDate translateDisbursementDateToLocalDate(LoanAccountFormBean formBean) {
-        return new DateTime().withDate(formBean.getDisbursalDateYear().intValue(), formBean.getDisbursalDateMonth().intValue(), formBean.getDisbursalDateDay().intValue()).toLocalDate();
+        return new DateTime().withDate(formBean.getDisbursementDateYY().intValue(), formBean.getDisbursementDateMM().intValue(), formBean.getDisbursementDateDD().intValue()).toLocalDate();
     }
 
     private RecurringSchedule determineRecurringSchedule(LoanAccountFormBean formBean) {
