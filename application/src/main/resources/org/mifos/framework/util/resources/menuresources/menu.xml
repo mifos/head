@@ -19,7 +19,10 @@
                     <displayname>
                         <namefragment>label.createNewClient</namefragment>
                     </displayname>
-                    <linkvalue>groupCustAction.do?method=loadSearch&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=createClient</linkvalue>
+                    <linkvalue>createLoanAccount.ftl</linkvalue>
+                    <!-- 
+                    	<linkvalue>groupCustAction.do?method=loadSearch&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=createClient</linkvalue>
+                    -->
                 </menuitem>
             </menugroup>
             <menugroup>
@@ -31,7 +34,10 @@
                     <displayname>
                         <namefragment>label.openNewLoanAccount</namefragment>
                     </displayname>
+                    <linkvalue>createLoanAccount.ftl</linkvalue>
+                    <!-- 
                     <linkvalue> custSearchAction.do?method=loadSearch&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=loan    </linkvalue>
+                    -->
                 </menuitem>
                 <menuitem>
                     <displayname>
