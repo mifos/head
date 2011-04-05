@@ -154,7 +154,7 @@ public class LoanAccountFormBeanTest {
 
         assertThat(messages.length, is(1));
         Message message = messages[0];
-        assertThat(message.getSource().toString(), is("disbursalDateDay"));
+        assertThat(message.getSource().toString(), is("disbursementDateDD"));
         assertThat(message.getText().toString(), containsString("loanAccountFormBean.DisbursalDate.invalid"));
     }
     
