@@ -28,8 +28,8 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
 
     public ViewInstallmentDetailsPage(Selenium selenium) {
         super(selenium);
-        verifyPage("SchedulePreview", "NextPaymentLoanAccount");
-        verifyPage("SchedulePreview");
+//        verifyPage("SchedulePreview", "NextPaymentLoanAccount");
+        verifyPage("NextPaymentLoanAccount");
     }
 
     public void verifyInstallmentAmount(int row, int column, String amount) {

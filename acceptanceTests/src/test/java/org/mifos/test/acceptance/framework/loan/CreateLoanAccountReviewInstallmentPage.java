@@ -507,7 +507,7 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
     public void verifyLoanAmount(String amount) {
 
         try {
-            Assert.assertEquals(getLoanAmount(), amount + ".0");
+            Assert.assertEquals(getLoanAmount()+ ".0", amount);
         } catch (AssertionError assertionError) {
             Assert.assertEquals(getLoanAmount(), amount);
         }
