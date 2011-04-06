@@ -10,16 +10,17 @@
 
 tr.even td {
     background: white;
-}
-
-tr.odd td {
-    background: white;
-}
-
-td {
     height: 20pt;
     border-bottom:1px #D7DEEE solid;
     border-top:1px #D7DEEE solid;
 }
+
+tr.odd td {
+    background: white;
+    height: 20pt;
+    border-bottom:1px #D7DEEE solid;
+    border-top:1px #D7DEEE solid;
+}
+
 
 
