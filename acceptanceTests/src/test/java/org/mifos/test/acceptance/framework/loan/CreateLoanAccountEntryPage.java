@@ -327,18 +327,37 @@ public class CreateLoanAccountEntryPage extends MifosPage {
 
     @SuppressWarnings("PMD")
     public void verifyAllowedAmounts(String min, String max, String def) {
-        final String expectedText = "(Allowed Amount:   "+min+"   -   "+max+" )";
-        Assert.assertTrue(selenium.isTextPresent(expectedText), expectedText + " was expected but not found on page.");
+        final String expectedText = "(Allowed Amount: " + min + " - " + max +" )";
+        final String expectedText2 = "(Allowed Amount: " + min + ".0 - " + max +".0 )";
+        
+        if (selenium.isTextPresent(expectedText) || selenium.isTextPresent(expectedText2)) {
+            Assert.assertTrue(true);
+        } else {
+            Assert.fail(expectedText + " was expected but not found on page.");
+        }
+        
         Assert.assertEquals(selenium.getValue("loancreationdetails.input.sumLoanAmount"), def);
     }
 
     public void verifyAllowedInterestRate(String min, String max, String def) {
-        Assert.assertTrue(selenium.isTextPresent("(Allowed Interest rate amount   "+min+"   -   "+max+" %)"));
+        final String expectedText = "(Allowed Interest rate amount " + min + " - " + max + " %)";
+        final String expectedText2 = "(Allowed Interest rate amount " + min + ".0 - " + max + ".0 %)";
+        if (selenium.isTextPresent(expectedText) || selenium.isTextPresent(expectedText2)) {
+            Assert.assertTrue(true);
+        } else {
+            Assert.fail(expectedText + " was expected but not found on page.");
+        }
         Assert.assertEquals(selenium.getValue("loancreationdetails.input.interestRate"), def);
     }
 
     public void verifyAllowedInstallments(String min, String max, String def) {
-        Assert.assertTrue(selenium.isTextPresent("(Allowed Number of Installments:   "+min+"   -   "+max+" )"));
+        final String expectedText = "(Allowed Number of Installments: " + min + " - " + max + " )";
+        final String expectedText2 = "(Allowed Number of Installments: " + min + ".0 - " + max + ".0 )";
+        if (selenium.isTextPresent(expectedText) || selenium.isTextPresent(expectedText2)) {
+            Assert.assertTrue(true);
+        } else {
+            Assert.fail(expectedText + " was expected but not found on page.");
+        }
         Assert.assertEquals(selenium.getValue("loancreationdetails.input.numberOfInstallments"), def);
     }
 

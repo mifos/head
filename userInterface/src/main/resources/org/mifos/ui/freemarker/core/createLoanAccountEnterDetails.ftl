@@ -180,7 +180,7 @@
     </div>
     <div class="row">
         [@form.label "numberOfInstallments" true ][@spring.message "createLoanAccount.numberOfInstallments"/][/@form.label]
-        [@form.input path="loanAccountFormBean.numberOfInstallments" id="numberOfInstallments" /]
+        [@form.input path="loanAccountFormBean.numberOfInstallments" id="loancreationdetails.input.numberOfInstallments" /]
         <span>([@spring.message "createLoanAccount.allowedNumberOfInstallments"/] ${loanProductReferenceData.minNumberOfInstallments?string.number} - ${loanProductReferenceData.maxNumberOfInstallments?string.number})</span>
     </div>
     <div class="row">
