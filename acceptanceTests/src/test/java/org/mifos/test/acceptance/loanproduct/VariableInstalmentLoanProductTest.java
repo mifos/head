@@ -87,7 +87,7 @@ public class VariableInstalmentLoanProductTest extends UiTestCaseBase {
         loanProductName = formParameters.getOfferingName();
         applicationDatabaseOperation.updateLSIM(1);
         loanProductTestHelper.
-                navigateToDefineNewLoanPangAndFillMandatoryFields(formParameters).
+                navigateToDefineNewLoanPageAndFillMandatoryFields(formParameters).
                 submitAndGotoNewLoanProductPreviewPage().
                 verifyVariableInstalmentUnChecked().submit().
                 navigateToViewLoanDetails().
@@ -135,7 +135,7 @@ public class VariableInstalmentLoanProductTest extends UiTestCaseBase {
         String fixedFeePerInterest = feeTestHelper.createFixedFee("fixedFeePerInterest", FeesCreatePage.SubmitFormParameters.LOAN, "Upfront", 20, "Interest");
 
             loanProductTestHelper.
-                navigateToDefineNewLoanPangAndFillMandatoryFields(formParameters).
+                navigateToDefineNewLoanPageAndFillMandatoryFields(formParameters).
                 verifyVariableInstalmentOptionsDefaults().
                 verifyVariableInstalmentOptionsFields().
                 verifyBlockedInterestTypes().
@@ -145,7 +145,7 @@ public class VariableInstalmentLoanProductTest extends UiTestCaseBase {
 
     private void createAndValidateLoanProductWithVariableInstalment(String maxGap, String minGap, String minInstalmentAmount, DefineNewLoanProductPage.SubmitFormParameters formParameters) {
         loanProductTestHelper.
-                navigateToDefineNewLoanPangAndFillMandatoryFields(formParameters).
+                navigateToDefineNewLoanPageAndFillMandatoryFields(formParameters).
                 fillVariableInstalmentOption(maxGap, minGap, minInstalmentAmount).
                 submitAndGotoNewLoanProductPreviewPage().
                 verifyVariableInstalmentOption(maxGap, minGap, minInstalmentAmount).

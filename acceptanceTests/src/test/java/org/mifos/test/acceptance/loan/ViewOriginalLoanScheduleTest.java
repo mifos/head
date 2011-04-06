@@ -107,7 +107,7 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
         applicationDatabaseOperation.updateLSIM(1);
         DefineNewLoanProductPage.SubmitFormParameters formParameters = defineLoanProductParameters(interestType);
         loanProductTestHelper.
-                navigateToDefineNewLoanPangAndFillMandatoryFields(formParameters).
+                navigateToDefineNewLoanPageAndFillMandatoryFields(formParameters).
                 fillVariableInstalmentOption("30","1","100").
                 submitAndGotoNewLoanProductPreviewPage().submit();
         verifyLoanAccountOriginalSchedule(systemDateTime.plusDays(1), systemDateTime, OriginalScheduleData.VARIABLE_LOAN_EARLY_DISBURSAL_SCHEDULE, false, systemDateTime.plusDays(5));
@@ -121,7 +121,7 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
         applicationDatabaseOperation.updateLSIM(1);
         DefineNewLoanProductPage.SubmitFormParameters formParameters = defineLoanProductParameters(interestType);
         loanProductTestHelper.
-                navigateToDefineNewLoanPangAndFillMandatoryFields(formParameters).
+                navigateToDefineNewLoanPageAndFillMandatoryFields(formParameters).
                 fillVariableInstalmentOption("20","1","100").
                 submitAndGotoNewLoanProductPreviewPage().submit();
         verifyLoanAccountOriginalSchedule(systemDateTime, systemDateTime.plusDays(1), OriginalScheduleData.VARIABLE_LOAN_LATE_DISBURSAL_SCHEDULE, false, systemDateTime.plusDays(15));
@@ -223,7 +223,7 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
     private void createLoanProduct(int interestType) {
         DefineNewLoanProductPage.SubmitFormParameters formParameters = defineLoanProductParameters(interestType);
         loanProductTestHelper.
-                navigateToDefineNewLoanPangAndFillMandatoryFields(formParameters).
+                navigateToDefineNewLoanPageAndFillMandatoryFields(formParameters).
                 submitAndGotoNewLoanProductPreviewPage().submit();
     }
 

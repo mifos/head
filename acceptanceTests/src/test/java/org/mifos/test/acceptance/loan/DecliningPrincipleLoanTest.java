@@ -90,7 +90,7 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
         applicationDatabaseOperation.updateLSIM(1);
         DefineNewLoanProductPage.SubmitFormParameters formParameters = loanProductTestHelper.defineLoanProductParameters(3, 1000, 20, interestType);
         loanProductTestHelper.
-                navigateToDefineNewLoanPangAndFillMandatoryFields(formParameters).
+                navigateToDefineNewLoanPageAndFillMandatoryFields(formParameters).
                 submitAndGotoNewLoanProductPreviewPage().
                 verifyInterestTypeInPreview(interestTypeName).
                 submit().navigateToViewLoanDetails().

@@ -69,7 +69,7 @@ public class CashFlowTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyCashFlowFields() throws Exception {
         DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getMonthlyLoanProductParameters();
-        loanProductTestHelper.navigateToDefineNewLoanPangAndFillMandatoryFields(formParameters).
+        loanProductTestHelper.navigateToDefineNewLoanPageAndFillMandatoryFields(formParameters).
                 verifyCashFlowFieldDefault().
                 verifyCashFlowFields();
     }
@@ -86,7 +86,7 @@ public class CashFlowTest extends UiTestCaseBase {
         DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
         String loanProductName = formParameters.getOfferingName();
         loanProductTestHelper.
-                navigateToDefineNewLoanPangAndFillMandatoryFields(formParameters).
+                navigateToDefineNewLoanPageAndFillMandatoryFields(formParameters).
                 submitAndGotoNewLoanProductPreviewPage().
                 verifyCashFlowUnCheckedInPreview().submit().
                 navigateToViewLoanDetails().
@@ -174,7 +174,7 @@ public class CashFlowTest extends UiTestCaseBase {
         loanSearchParams.setLoanProduct("productCF1");
         DateTime disbursalDate = systemDateTime.plusDays(1);
 
-        loanProductTestHelper.navigateToDefineNewLoanPangAndFillMandatoryFields(productParams).
+        loanProductTestHelper.navigateToDefineNewLoanPageAndFillMandatoryFields(productParams).
                 fillCashFlow("", "", "")
                 .submitAndGotoNewLoanProductPreviewPage()
                 .submit();
@@ -270,7 +270,7 @@ public class CashFlowTest extends UiTestCaseBase {
     }
 
     private void createAndValidateLoanProductWithCashFlow(String warningThreshold, DefineNewLoanProductPage.SubmitFormParameters formParameters, String indebtentValue, String repaymentValue, boolean isVariableLoan) {
-        DefineNewLoanProductPage loanProductPage = loanProductTestHelper.navigateToDefineNewLoanPangAndFillMandatoryFields(formParameters);
+        DefineNewLoanProductPage loanProductPage = loanProductTestHelper.navigateToDefineNewLoanPageAndFillMandatoryFields(formParameters);
         if (isVariableLoan) {
             loanProductPage.fillVariableInstalmentOption("", "1", "");
         }

@@ -87,7 +87,7 @@ public class RolesAndPermissionTest extends UiTestCaseBase {
                 verifyPermissionText("5_1_9", "Can adjust back dated transactions").submitAndGotoViewRolesPage();
         DefineNewLoanProductPage.SubmitFormParameters formParameters = loanProductTestHelper.defineLoanProductParameters(5, 1000, 20, DefineNewLoanProductPage.SubmitFormParameters.DECLINING_BALANCE_INTEREST_RECALCULATION);
         loanProductTestHelper.
-                navigateToDefineNewLoanPangAndFillMandatoryFields(formParameters).
+                navigateToDefineNewLoanPageAndFillMandatoryFields(formParameters).
                 submitAndGotoNewLoanProductPreviewPage().submit();
         loanTestHelper.createLoanAccount(clientName, formParameters.getOfferingName());
         loanTestHelper.approveLoan();

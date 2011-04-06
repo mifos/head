@@ -217,7 +217,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
 
         //When / Then
         loanProductTestHelper
-            .navigateToDefineNewLoanPangAndFillMandatoryFields(formParameters)
+            .navigateToDefineNewLoanPageAndFillMandatoryFields(formParameters)
             .verifyVariableInstalmentOptionsDefaults()
             .checkConfigureVariableInstalmentsCheckbox()
             .submitAndGotoNewLoanProductPreviewPage()

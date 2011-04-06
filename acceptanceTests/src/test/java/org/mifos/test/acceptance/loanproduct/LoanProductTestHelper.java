@@ -25,7 +25,7 @@ public class LoanProductTestHelper {
         this.navigationHelper = new NavigationHelper(selenium);
     }
 
-    public DefineNewLoanProductPage navigateToDefineNewLoanPangAndFillMandatoryFields(
+    public DefineNewLoanProductPage navigateToDefineNewLoanPageAndFillMandatoryFields(
             DefineNewLoanProductPage.SubmitFormParameters formParameters) {
         formParameters.setOfferingShortName(StringUtil.getRandomString(4));
         return navigateToDefineNewLoanProductPage().fillLoanParameters(formParameters);

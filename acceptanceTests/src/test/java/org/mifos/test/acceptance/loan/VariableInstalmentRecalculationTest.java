@@ -155,7 +155,7 @@ public class VariableInstalmentRecalculationTest extends UiTestCaseBase {
     private void createLoanProduct(int maxGap, int minGap, int minInstalmentAmount, DefineNewLoanProductPage.SubmitFormParameters formParameters, double cashFlowIncremental) {
         loanProductName = formParameters.getOfferingName();
         loanProductTestHelper.
-                navigateToDefineNewLoanPangAndFillMandatoryFields(formParameters).
+                navigateToDefineNewLoanPageAndFillMandatoryFields(formParameters).
                 fillVariableInstalmentOption(String.valueOf(maxGap),String.valueOf(minGap), String.valueOf(minInstalmentAmount)).
                 fillCashFlow(String.valueOf(cashFlowIncremental), "", "").
                 submitAndGotoNewLoanProductPreviewPage().
