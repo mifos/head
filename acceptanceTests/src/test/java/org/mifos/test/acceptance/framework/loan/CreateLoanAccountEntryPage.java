@@ -332,11 +332,13 @@ public class CreateLoanAccountEntryPage extends MifosPage {
     public void verifyAllowedAmounts(String min, String max, String def) {
         final String expectedText = "(Allowed Amount: " + min + " - " + max +" )";
         final String expectedText2 = "(Allowed Amount: " + min + ".0 - " + max +".0 )";
+
+        String allowedAmountText = selenium.getText("createloan.allowedamounttext");
         
         if (selenium.isTextPresent(expectedText) || selenium.isTextPresent(expectedText2)) {
             Assert.assertTrue(true);
         } else {
-            Assert.fail(expectedText + " was expected but not found on page.");
+            Assert.fail(expectedText + " was expected but not found on page. instead was: " + allowedAmountText);
         }
         
         Assert.assertEquals(selenium.getValue("loancreationdetails.input.sumLoanAmount"), def);

@@ -106,8 +106,8 @@ public class SavingsAccountPerformanceHistoryTest extends UiTestCaseBase {
         // validate savings performance history
         Assert.assertEquals("Performance history", selenium.getTable("performanceHistoryTable.0.0"));
         Assert.assertEquals("Date account opened: 29/01/2009", selenium.getTable("performanceHistoryTable.2.0"));
-        Assert.assertEquals(selenium.getTable("performanceHistoryTable.3.0"), "Total deposits: 898.8");
-        Assert.assertEquals(selenium.getTable("performanceHistoryTable.4.0"), "Total interest earned: 0.0");
-        Assert.assertEquals(selenium.getTable("performanceHistoryTable.5.0"), "Total withdrawals: 143.0");
+        Assert.assertEquals(selenium.getTable("performanceHistoryTable.3.0"), "Total deposits: 898.80");
+        Assert.assertEquals(selenium.getTable("performanceHistoryTable.4.0"), "Total interest earned: 0.00");
+        Assert.assertEquals(selenium.getTable("performanceHistoryTable.5.0"), "Total withdrawals: 143.00");
     }
 }
