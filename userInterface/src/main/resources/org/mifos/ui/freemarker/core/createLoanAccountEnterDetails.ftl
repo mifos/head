@@ -36,7 +36,7 @@
 <p><span class="standout">[@spring.message "selectProduct.accountOwnerName" /]</span> ${loanProductReferenceData.customerDetailDto.displayName}</p>
 <br/>
 
-[@form.errors "loanAccountFormBean.*"/]
+<span id="loancreationdetails.error.message">[@form.errors "loanAccountFormBean.*"/]</span>
 <form action="${flowExecutionUrl}&_eventId=newProductSelected" method="post" class="two-columns">
     <fieldset>
     <div class="row">

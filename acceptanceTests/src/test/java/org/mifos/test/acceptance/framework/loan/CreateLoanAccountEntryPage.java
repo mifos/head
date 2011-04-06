@@ -56,7 +56,7 @@ public class CreateLoanAccountEntryPage extends MifosPage {
     }
 
     public CreateLoanAccountConfirmationPage submitAndNavigateToLoanAccountConfirmationPage(CreateLoanAccountSubmitParameters formParameters) {
-        submitAndNavigateToLoanPreviewPage(formParameters);
+        submitAndNavigateToLoanReviewInstallmentsPage(formParameters);
         return navigateToConfirmationPage();
     }
 
@@ -98,9 +98,11 @@ public class CreateLoanAccountEntryPage extends MifosPage {
         return new CreateLoanAccountConfirmationPage(selenium);
     }
 
-    public ViewInstallmentDetailsPage submitAndNavigateToLoanPreviewPage(CreateLoanAccountSubmitParameters formParameters) {
+    public CreateLoanAccountReviewInstallmentPage submitAndNavigateToLoanReviewInstallmentsPage(CreateLoanAccountSubmitParameters formParameters) {
         submitLoanAccount(formParameters);
-        return new ViewInstallmentDetailsPage(selenium);
+        return new CreateLoanAccountReviewInstallmentPage(selenium);
+        // FIXME: - was going to view installments page which is a page of loan account details page!!! not on creation flow at all...
+//        return new ViewInstallmentDetailsPage(selenium);
     }
 
     private void submitLoanAccount(CreateLoanAccountSubmitParameters formParameters) {

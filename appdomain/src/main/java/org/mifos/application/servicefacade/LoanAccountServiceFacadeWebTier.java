@@ -2160,8 +2160,14 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         List<QuestionGroupDetail> questionGroupDetails = new ArrayList<QuestionGroupDetail>();
         LoanOfferingBO loanProduct = this.loanProductDao.findById(productId);
         if (!loanProduct.getQuestionGroups().isEmpty()) {
-            questionGroupDetails = questionnaireServiceFacade.getQuestionGroups("Create", "Loan");
+            List<QuestionGroupDetail> allQuestionGroupDetails = questionnaireServiceFacade.getQuestionGroups("Create", "Loan");
+            for (QuestionGroupDetail questionGroupDetail : allQuestionGroupDetails) {
+                if (questionGroupDetail.isActive()) {
+                    questionGroupDetails.add(questionGroupDetail);
+                }
+            }
         }
+        
         return questionGroupDetails;
     }
 
