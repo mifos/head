@@ -20,11 +20,9 @@
 
 package org.mifos.application.admin.servicefacade;
 
-
 public class CustomizedTextDto {
 	private String originalText;
 	private String customText;
-	
 	
 	public CustomizedTextDto(String originalText, String customText) {
 		super();
@@ -35,15 +33,16 @@ public class CustomizedTextDto {
 	public String getOriginalText() {
 		return originalText;
 	}
+
 	public void setOriginalText(String originalText) {
 		this.originalText = originalText;
 	}
+
 	public String getCustomText() {
 		return customText;
 	}
+
 	public void setCustomText(String customText) {
 		this.customText = customText;
 	}
-	
-	
 }

@@ -34,6 +34,7 @@ import org.springframework.binding.validation.ValidationContext;
 @SuppressWarnings("PMD")
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID"}, justification="should disable at filter level and also for pmd - not important for us")
 public class CustomizedTextSelectFormBean implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     @NotEmpty
     private String message;
@@ -69,5 +70,3 @@ public class CustomizedTextSelectFormBean implements Serializable {
         validator.validate(this, messages);
     }	
 }
-
-
