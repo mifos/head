@@ -333,15 +333,19 @@ public class CreateLoanAccountEntryPage extends MifosPage {
         final String expectedText = "(Allowed Amount: " + min + " - " + max +" )";
         final String expectedText2 = "(Allowed Amount: " + min + ".0 - " + max +".0 )";
 
-        String allowedAmountText = selenium.getText("createloan.allowedamounttext");
-        
-        if (selenium.isTextPresent(expectedText) || selenium.isTextPresent(expectedText2)) {
-            Assert.assertTrue(true);
+        if (!selenium.isElementPresent("id=createloan.allowedamounttext")) {
+            Assert.fail("failed as span with id: createloan.allowedamounttext not on page: " +  selenium.getLocation());
         } else {
-            Assert.fail(expectedText + " was expected but not found on page. instead was: " + allowedAmountText);
-        }
+            String allowedAmountText = selenium.getText("id=createloan.allowedamounttext");
         
-        Assert.assertEquals(selenium.getValue("loancreationdetails.input.sumLoanAmount"), def);
+            if (selenium.isTextPresent(expectedText) || selenium.isTextPresent(expectedText2)) {
+                Assert.assertTrue(true);
+            } else {
+                Assert.fail(expectedText + " was expected but not found on page. instead was: " + allowedAmountText);
+            }
+        
+            Assert.assertEquals(selenium.getValue("loancreationdetails.input.sumLoanAmount"), def);
+        }
     }
 
     public void verifyAllowedInterestRate(String min, String max, String def) {
