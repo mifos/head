@@ -13,11 +13,13 @@ tr.even td {
 }
 
 tr.odd td {
-    background: #E5ECF9;
+    background: white;
 }
 
 td {
     height: 20pt;
+    border-bottom:1px #D7DEEE solid;
+    border-top:1px #D7DEEE solid;
 }
 
 
