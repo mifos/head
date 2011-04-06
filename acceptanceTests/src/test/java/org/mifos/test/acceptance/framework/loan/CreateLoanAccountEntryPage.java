@@ -30,6 +30,7 @@ import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
 
+@SuppressWarnings("PMD")
 public class CreateLoanAccountEntryPage extends MifosPage {
 
     String continueButton = "loancreationdetails.button.continue";
