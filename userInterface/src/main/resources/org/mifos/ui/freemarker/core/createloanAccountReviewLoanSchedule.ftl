@@ -66,7 +66,7 @@ $(function() {
 	</div>
 	<div class="row">
 	    <div class="attribute"><span class="standout">[@spring.message "reviewInstallments.loanAmount"/]</span></div>
-	    <div class="value"><span id="schedulepreview.text.loanamount">${loanScheduleReferenceData.loanAmount?string}</span></div>
+	    <div class="value"><span id="schedulepreview.text.loanamount">${loanScheduleReferenceData.loanAmount}</span></div>
 	</div>
 	<div class="row">
 	    <div class="attribute"><span class="standout">[@spring.message "reviewInstallments.disbursmentDate"/]</span></div>
