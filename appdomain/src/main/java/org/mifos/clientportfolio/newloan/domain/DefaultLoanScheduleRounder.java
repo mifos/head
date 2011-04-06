@@ -10,7 +10,7 @@ import org.mifos.accounts.productdefinition.util.helpers.GraceType;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.framework.util.helpers.Money;
 
-import edu.emory.mathcs.backport.java.util.Collections;
+import java.util.Collections;
 
 /**
  * I am responsible for applying rounding rules from AccountingRules.

@@ -24,7 +24,7 @@ import java.util.List;
 
 import org.mifos.application.master.MessageLookup;
 
-import edu.emory.mathcs.backport.java.util.Arrays;
+import java.util.Arrays;
 
 public enum RankOfDay {
 

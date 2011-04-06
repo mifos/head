@@ -40,7 +40,7 @@ import org.mifos.framework.util.helpers.Money;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import edu.emory.mathcs.backport.java.util.Arrays;
+import java.util.Arrays;
 
 @SuppressWarnings("unchecked")
 @RunWith(MockitoJUnitRunner.class)
