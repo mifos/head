@@ -336,7 +336,7 @@ public class CreateLoanAccountEntryPage extends MifosPage {
         if (!selenium.isElementPresent("//span[@id='createloan.allowedamounttext']")) {
             Assert.fail("failed as span with id: createloan.allowedamounttext not on page: " +  selenium.getLocation());
         } else {
-            String allowedAmountText = selenium.getText("id=createloan.allowedamounttext");
+            String allowedAmountText = selenium.getText("//span[@id='createloan.allowedamounttext']");
         
             if (selenium.isTextPresent(expectedText) || selenium.isTextPresent(expectedText2)) {
                 Assert.assertTrue(true);

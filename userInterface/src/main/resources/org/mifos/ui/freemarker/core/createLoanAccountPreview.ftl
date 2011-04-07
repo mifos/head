@@ -59,7 +59,7 @@
 <div class="product-summary">
     <div class="row">
         <div class="attribute">[@spring.message "createLoanAccount.amount"/]</div>
-        <div class="value">${loanScheduleReferenceData.loanAmount?string.currency} <span>([@spring.message "createLoanAccount.allowedAmount"/] ${loanProductReferenceData.minLoanAmount?string.currency} - ${loanProductReferenceData.maxLoanAmount?string.currency})</span></div>
+        <div class="value"><span id="createloanpreview.text.loanamount">${loanScheduleReferenceData.loanAmount}</span> <span>([@spring.message "createLoanAccount.allowedAmount"/] ${loanProductReferenceData.minLoanAmount?string.currency} - ${loanProductReferenceData.maxLoanAmount?string.currency})</span></div>
     </div>
     <div class="row">
         <div class="attribute">[@spring.message "createLoanAccount.interestRate"/]</div>
