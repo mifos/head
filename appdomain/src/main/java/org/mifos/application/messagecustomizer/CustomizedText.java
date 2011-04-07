@@ -23,21 +23,23 @@ package org.mifos.application.messagecustomizer;
 import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.QueryHint;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.NamedNativeQuery;
+import org.hibernate.ejb.QueryHints;
 
 @NamedQueries({
         @NamedQuery(name = "allMessages", query = "from CustomizedText"),
         @NamedQuery(name = "findCustomMessageByOldMessage",
                     query = "from CustomizedText message where message.originalText=:originalText") })
 @NamedNativeQuery(name = "allMessagesNative",
-                  cacheable = true,
                   query = "select * from customized_text order by char_length(original_text) desc",
+                  hints = { @QueryHint(name=QueryHints.HINT_CACHEABLE,value="true") },
                   resultClass = CustomizedText.class)
 @Entity
 @Table(name = "customized_text")
