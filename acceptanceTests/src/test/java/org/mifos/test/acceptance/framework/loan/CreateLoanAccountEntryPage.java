@@ -330,8 +330,8 @@ public class CreateLoanAccountEntryPage extends MifosPage {
 
     @SuppressWarnings("PMD")
     public void verifyAllowedAmounts(String min, String max, String def) {
-        min = min.replaceAll(".0", "");
-        max = min.replaceAll(".0", "");
+        min = min.substring(0, min.length()-2);
+        max = max.substring(0, max.length()-2);
         final String expectedText = "(Allowed amount: " + min + " - " + max +")";
         final String expectedText2 = "(Allowed amount: " + min + ".0 - " + max +".0)";
 
