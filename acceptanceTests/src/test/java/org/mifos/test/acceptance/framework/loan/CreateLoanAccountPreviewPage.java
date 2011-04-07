@@ -55,7 +55,7 @@ public class CreateLoanAccountPreviewPage extends AbstractPage {
     }
 
     public CreateLoanAccountConfirmationPage submit() {
-        selenium.click("submitForApprovalButton");
+        selenium.click("_eventId_submit");
         waitForPageToLoad();
         return new CreateLoanAccountConfirmationPage(selenium);
     }

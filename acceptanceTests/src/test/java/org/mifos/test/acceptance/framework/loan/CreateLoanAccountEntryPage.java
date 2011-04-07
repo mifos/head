@@ -338,10 +338,10 @@ public class CreateLoanAccountEntryPage extends MifosPage {
         } else {
             String allowedAmountText = selenium.getText("//span[@id='createloan.allowedamounttext']");
         
-            if (selenium.isTextPresent(expectedText) || selenium.isTextPresent(expectedText2)) {
+            if (allowedAmountText.equalsIgnoreCase(expectedText) || allowedAmountText.equalsIgnoreCase(expectedText2)) {
                 Assert.assertTrue(true);
             } else {
-                Assert.fail(expectedText + " was expected but not found on page. instead was: " + allowedAmountText);
+                Assert.fail(expectedText + " or " + expectedText2 + " was expected but not found on page. instead was: " + allowedAmountText);
             }
         
             Assert.assertEquals(selenium.getValue("loancreationdetails.input.sumLoanAmount"), def);

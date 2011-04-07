@@ -304,8 +304,16 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
         selenium.waitForPageToLoad("30000");
         //Then
         String error = selenium.getText("loancreationdetails.error.message");
-        boolean interestError = error.contains("The Interest ratethe number of digits after the decimal separator exceeds the allowed number 5 is invalid because");
-        boolean amountError = error.contains("The Amount is invalid because the number of digits before the decimal separator exceeds the allowed number 14");
+        String expectedInterestErrorMessage = "The Interest rate the number of digits after the decimal separator exceeds the allowed number 5 is invalid because";
+        boolean interestError = error.contains(expectedInterestErrorMessage);
+        if (!interestError) {
+            Assert.fail(error + " did not contain: " + expectedInterestErrorMessage);
+        }
+        String expectedAmountErrorMessage = "The Amount is invalid because the number of digits before the decimal separator exceeds the allowed number 14";
+        boolean amountError = error.contains(expectedAmountErrorMessage);
+        if (!amountError) {
+            Assert.fail(error + " did not contain: " + expectedAmountErrorMessage);
+        }
         Assert.assertEquals(interestError, true, "actual result returned was: " + error);
         Assert.assertEquals(amountError, true, "actual result returned was: " + error);
         //When
@@ -316,7 +324,7 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
         //Then
         error = selenium.getText("loancreationdetails.error.message");
         interestError = error.contains("The Interest ratethe number of digits after the decimal separator exceeds the allowed number 5 is invalid because");
-        amountError = error.contains("The Amount is invalid because the number of digits before the decimal separator exceeds the allowed number 14");
+        amountError = error.contains(expectedAmountErrorMessage);
         Assert.assertEquals(interestError, false);
         Assert.assertEquals(amountError, false);
     }
