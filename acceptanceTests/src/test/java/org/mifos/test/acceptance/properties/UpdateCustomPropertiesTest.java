@@ -306,8 +306,8 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
         String error = selenium.getText("loancreationdetails.error.message");
         boolean interestError = error.contains("The Interest ratethe number of digits after the decimal separator exceeds the allowed number 5 is invalid because");
         boolean amountError = error.contains("The Amount is invalid because the number of digits before the decimal separator exceeds the allowed number 14");
-        Assert.assertEquals(interestError, true);
-        Assert.assertEquals(amountError, true);
+        Assert.assertEquals(interestError, true, "actual result returned was: " + error);
+        Assert.assertEquals(amountError, true, "actual result returned was: " + error);
         //When
         selenium.type("loancreationdetails.input.sumLoanAmount", "12345678901234");
         selenium.type("loancreationdetails.input.interestRate", "12.00001");

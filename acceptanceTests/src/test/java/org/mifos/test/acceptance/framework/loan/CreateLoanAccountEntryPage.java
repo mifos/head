@@ -330,8 +330,8 @@ public class CreateLoanAccountEntryPage extends MifosPage {
 
     @SuppressWarnings("PMD")
     public void verifyAllowedAmounts(String min, String max, String def) {
-        final String expectedText = "(Allowed Amount: " + min + " - " + max +" )";
-        final String expectedText2 = "(Allowed Amount: " + min + ".0 - " + max +".0 )";
+        final String expectedText = "(Allowed Amount: " + min + " - " + max +")";
+        final String expectedText2 = "(Allowed Amount: " + min + ".0 - " + max +".0)";
 
         if (!selenium.isElementPresent("//span[@id='createloan.allowedamounttext']")) {
             Assert.fail("failed as span with id: createloan.allowedamounttext not on page: " +  selenium.getLocation());
