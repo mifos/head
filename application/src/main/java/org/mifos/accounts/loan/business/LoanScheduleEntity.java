@@ -110,7 +110,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         return interestPaid;
     }
 
-    void setInterestPaid(Money interestPaid) {
+    public void setInterestPaid(Money interestPaid) {
         this.interestPaid = interestPaid;
     }
 
@@ -233,24 +233,20 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         return overDueAmounts;
     }
 
-    void makeEarlyRepaymentEnteries(String payFullOrPartial) {
+    void makeEarlyRepaymentEntries(String payFullOrPartial, Money interestDue) {
+        setPrincipalPaid(getPrincipalPaid().add(getPrincipalDue()));
+        setExtraInterestPaid(getExtraInterestPaid().add(getExtraInterestDue()));
         if (payFullOrPartial.equals(LoanConstants.PAY_FEES_PENALTY_INTEREST)) {
-            setPrincipalPaid(getPrincipalPaid().add(getPrincipalDue()));
-            setInterestPaid(getInterestPaid().add(getInterestDue()));
+            setInterestPaid(getInterestPaid().add(interestDue));
             setPenaltyPaid(getPenaltyPaid().add(getPenaltyDue()));
             setMiscFeePaid(getMiscFeePaid().add(getMiscFee()));
             setMiscPenaltyPaid(getMiscPenaltyPaid().add(getMiscPenalty()));
-            makeRepaymentEntries(payFullOrPartial);
         } else if (payFullOrPartial.equals(LoanConstants.PAY_FEES_PENALTY)) {
-            setPrincipalPaid(getPrincipalPaid().add(getPrincipalDue()));
             setPenaltyPaid(getPenaltyPaid().add(getPenaltyDue()));
             setMiscFeePaid(getMiscFeePaid().add(getMiscFee()));
             setMiscPenaltyPaid(getMiscPenaltyPaid().add(getMiscPenalty()));
-            makeRepaymentEntries(payFullOrPartial);
-        } else {
-            setPrincipalPaid(getPrincipalPaid().add(getPrincipalDue()));
-            makeRepaymentEntries(payFullOrPartial);
         }
+        makeRepaymentEntries(payFullOrPartial);
     }
 
     private void makeRepaymentEntries(String payFullOrPartial) {

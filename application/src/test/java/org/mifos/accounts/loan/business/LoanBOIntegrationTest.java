@@ -174,6 +174,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
     private LoanDaoLegacyImpl loanDao;
     private AccountPersistence accountPersistence = null;
     private Money zeroMoney;
+    private String interestDueForNextInstallment = "0";
+
 
     @Before
     public void setUp() throws Exception {
@@ -1280,7 +1282,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         LoanBO loanBO = (LoanBO) accountBO;
         UserContext uc = TestUtils.makeUser();
         Money totalRepaymentAmount = loanBO.getEarlyRepayAmount();
-        loanBO.makeEarlyRepayment(loanBO.getEarlyRepayAmount(), null, null, "1", uc.getId(), false);
+        loanBO.makeEarlyRepayment(loanBO.getEarlyRepayAmount(), null, null, "1", uc.getId(), false,
+                new Money(loanBO.getCurrency(), "12"));
 
         StaticHibernateUtil.flushAndClearSession();
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
@@ -1335,7 +1338,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         LoanBO loanBO = (LoanBO) accountBO;
         UserContext uc = TestUtils.makeUser();
         Money totalRepaymentAmount = loanBO.getEarlyRepayAmount().subtract(loanBO.waiverAmount());
-        loanBO.makeEarlyRepayment(totalRepaymentAmount, null, null, "1", uc.getId(), true);
+        loanBO.makeEarlyRepayment(totalRepaymentAmount, null, null, "1", uc.getId(), true, new Money(loanBO.getCurrency(), this.interestDueForNextInstallment));
 
         StaticHibernateUtil.flushAndClearSession();
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
@@ -1401,7 +1404,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         LoanBO loanBO = (LoanBO) accountBO;
         UserContext uc = TestUtils.makeUser();
         Money totalRepaymentAmount = loanBO.getEarlyRepayAmount();
-        loanBO.makeEarlyRepayment(loanBO.getEarlyRepayAmount(), null, null, "1", uc.getId(), false);
+        loanBO.makeEarlyRepayment(loanBO.getEarlyRepayAmount(), null, null, "1", uc.getId(),
+                false, new Money(loanBO.getCurrency(), "12"));
 
         StaticHibernateUtil.flushAndClearSession();
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
@@ -1454,7 +1458,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         LoanBO loanBO = (LoanBO) accountBO;
         UserContext uc = TestUtils.makeUser();
         Money totalRepaymentAmount = loanBO.getEarlyRepayAmount().subtract(loanBO.waiverAmount());
-        loanBO.makeEarlyRepayment(totalRepaymentAmount, null, null, "1", uc.getId(), true);
+        loanBO.makeEarlyRepayment(totalRepaymentAmount, null, null, "1", uc.getId(), true, new Money(loanBO.getCurrency(), this.interestDueForNextInstallment));
 
         StaticHibernateUtil.flushAndClearSession();
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
@@ -1542,7 +1546,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         UserContext uc = TestUtils.makeUser();
         Money totalRepaymentAmount = loanBO.getEarlyRepayAmount();
         Assert.assertEquals(new Money(getCurrency(), "300.2"), totalRepaymentAmount);
-        loanBO.makeEarlyRepayment(loanBO.getEarlyRepayAmount(), null, null, "1", uc.getId(), false);
+        loanBO.makeEarlyRepayment(loanBO.getEarlyRepayAmount(), null, null, "1", uc.getId(),
+                false, new Money(loanBO.getCurrency(), "0.2"));
 
         StaticHibernateUtil.flushAndClearSession();
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
@@ -1632,7 +1637,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         UserContext uc = TestUtils.makeUser();
         Money totalRepaymentAmount = loanBO.getEarlyRepayAmount().subtract(loanBO.waiverAmount());
         Assert.assertEquals(new Money(getCurrency(), "300"), totalRepaymentAmount);
-        loanBO.makeEarlyRepayment(totalRepaymentAmount, null, null, "1", uc.getId(), true);
+        loanBO.makeEarlyRepayment(totalRepaymentAmount, null, null, "1", uc.getId(), true, new Money(loanBO.getCurrency(), this.interestDueForNextInstallment));
 
         StaticHibernateUtil.flushAndClearSession();
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
@@ -1866,7 +1871,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         UserContext uc = TestUtils.makeUser();
         Money totalRepaymentAmount = loanBO.getEarlyRepayAmount();
         Assert.assertEquals(new Money(getCurrency(), "280.1"), totalRepaymentAmount);
-        loanBO.makeEarlyRepayment(loanBO.getEarlyRepayAmount(), null, null, "1", uc.getId(), false);
+        loanBO.makeEarlyRepayment(loanBO.getEarlyRepayAmount(), null, null, "1", uc.getId(), false, new Money(loanBO.getCurrency(), this.interestDueForNextInstallment));
 
         StaticHibernateUtil.flushAndClearSession();
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
@@ -1959,7 +1964,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         UserContext uc = TestUtils.makeUser();
         Money totalRepaymentAmount = loanBO.getEarlyRepayAmount();
         Assert.assertEquals(new Money(getCurrency(), "280.1"), totalRepaymentAmount);
-        loanBO.makeEarlyRepayment(loanBO.getEarlyRepayAmount().subtract(loanBO.waiverAmount()), null, null, "1", uc.getId(), true);
+        loanBO.makeEarlyRepayment(loanBO.getEarlyRepayAmount().subtract(loanBO.waiverAmount()), null, null, "1", uc.getId(), true, new Money(loanBO.getCurrency(), this.interestDueForNextInstallment));
 
         StaticHibernateUtil.flushAndClearSession();
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
@@ -2702,7 +2707,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
     public void ignore_testHasPortfolioAtRisk() {
         accountBO = getLoanAccount();
         Assert.assertFalse(((LoanBO) accountBO).hasPortfolioAtRisk());
-        changeFirstInstallmentDate(accountBO, -31);
+        accountBO.changeFirstInstallmentDateBy(-31);
         Assert.assertTrue(((LoanBO) accountBO).hasPortfolioAtRisk());
     }
 
@@ -2799,7 +2804,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
         LoanPerformanceHistoryEntity loanPerfHistory = ((LoanBO) accountBO).getPerformanceHistory();
         Integer noOfPayments = loanPerfHistory.getNoOfPayments();
-        loanBO.makeEarlyRepayment(loanBO.getEarlyRepayAmount(), null, null, "1", uc.getId(), false);
+        loanBO.makeEarlyRepayment(loanBO.getEarlyRepayAmount(), null, null, "1", uc.getId(), false, new Money(loanBO.getCurrency(), this.interestDueForNextInstallment));
         StaticHibernateUtil.flushAndClearSession();
         client = TestObjectFactory.getCustomer(client.getCustomerId());
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
@@ -2846,7 +2851,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
         LoanPerformanceHistoryEntity loanPerfHistory = ((LoanBO) accountBO).getPerformanceHistory();
         Integer noOfPayments = loanPerfHistory.getNoOfPayments();
-        loanBO.makeEarlyRepayment(loanBO.getEarlyRepayAmount().subtract(loanBO.waiverAmount()), null, null, "1", uc.getId(), true);
+        loanBO.makeEarlyRepayment(loanBO.getEarlyRepayAmount().subtract(loanBO.waiverAmount()), null, null, "1", uc.getId(), true, new Money(loanBO.getCurrency(), this.interestDueForNextInstallment));
         StaticHibernateUtil.flushAndClearSession();
         client = TestObjectFactory.getCustomer(client.getCustomerId());
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
@@ -5746,7 +5751,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private void changeFirstInstallmentDateToNextDate(final AccountBO accountBO) {
-        changeFirstInstallmentDate(accountBO, 1);
+        accountBO.changeFirstInstallmentDateBy(1);
     }
 
     private AccountBO applyPaymentandRetrieveAccount() throws AccountException, SystemException {
@@ -5865,22 +5870,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private void changeFirstInstallmentDateToYesterday(final AccountBO accountBO) {
-        changeFirstInstallmentDate(accountBO, -1);
-    }
-
-    private void changeFirstInstallmentDate(final AccountBO accountBO, final int numberOfDays) {
-        Calendar currentDateCalendar = new GregorianCalendar();
-        int year = currentDateCalendar.get(Calendar.YEAR);
-        int month = currentDateCalendar.get(Calendar.MONTH);
-        int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
-        currentDateCalendar = new GregorianCalendar(year, month, day + numberOfDays);
-        changeActionDateOfFirstInstallment(currentDateCalendar, accountBO.getAccountActionDates());
-    }
-
-    private void changeActionDateOfFirstInstallment(Calendar currentDateCalendar, Set<AccountActionDateEntity> accountActionDates) {
-        if (accountActionDates.isEmpty()) return;
-        java.sql.Date actionDate = new java.sql.Date(currentDateCalendar.getTimeInMillis());
-        accountActionDates.toArray(new AccountActionDateEntity[accountActionDates.size()])[0].setActionDate(actionDate);
+        accountBO.changeFirstInstallmentDateBy(-1);
     }
 
     private AccountBO saveAndFetch(final AccountBO account) throws Exception {

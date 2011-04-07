@@ -49,4 +49,7 @@ public enum AccountActionTypes {
         return "AccountActionTypes." + toString();
     }
 
+    public boolean isWrittenOffOrRescheduled() {
+        return this == WRITEOFF || this == LOAN_RESCHEDULED;
+    }
 }

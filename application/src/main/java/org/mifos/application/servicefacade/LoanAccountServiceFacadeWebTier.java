@@ -20,16 +20,6 @@
 
 package org.mifos.application.servicefacade;
 
-import static org.apache.commons.lang.StringUtils.EMPTY;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
-import static org.mifos.framework.util.CollectionUtils.collect;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.api.AccountService;
@@ -56,7 +46,6 @@ import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.business.RepaymentResultsHolder;
 import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
-import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.struts.action.validate.ProductMixValidator;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
@@ -74,7 +63,6 @@ import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.PaymentData;
-import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
 import org.mifos.application.master.business.CustomValueDto;
 import org.mifos.application.master.business.CustomValueListElementDto;
 import org.mifos.application.master.business.InterestTypesEntity;
@@ -150,6 +138,7 @@ import org.mifos.dto.screen.LoanScheduledInstallmentDto;
 import org.mifos.dto.screen.LoanSummaryDto;
 import org.mifos.dto.screen.MultipleLoanAccountDetailsDto;
 import org.mifos.dto.screen.RepayLoanDto;
+import org.mifos.dto.screen.RepayLoanInfoDto;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -172,6 +161,17 @@ import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static org.apache.commons.lang.StringUtils.EMPTY;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
+import static org.mifos.framework.util.CollectionUtils.collect;
+
 public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade {
 
     private final OfficeDao officeDao;
@@ -181,18 +181,14 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     private final FundDao fundDao;
     private final LoanDao loanDao;
     private final AccountService accountService;
-    private final InstallmentsValidator installmentsValidator;
     private final ScheduleCalculatorAdaptor scheduleCalculatorAdaptor;
     private final LoanBusinessService loanBusinessService;
-    private final HolidayServiceFacade holidayServiceFacade;
-    private final LoanPrdBusinessService loanPrdBusinessService;
-    private HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
+    private final HibernateTransactionHelper transactionHelper;
 
-    public LoanAccountServiceFacadeWebTier(final OfficeDao officeDao, final LoanProductDao loanProductDao, final CustomerDao customerDao,
-            PersonnelDao personnelDao, FundDao fundDao, final LoanDao loanDao, final AccountService accountService,
-            InstallmentsValidator installmentsValidator, ScheduleCalculatorAdaptor scheduleCalculatorAdaptor,
-            LoanBusinessService loanBusinessService, HolidayServiceFacade holidayServiceFacade,
-            LoanPrdBusinessService loanPrdBusinessService) {
+    public LoanAccountServiceFacadeWebTier(OfficeDao officeDao, LoanProductDao loanProductDao, CustomerDao customerDao,
+                                           PersonnelDao personnelDao, FundDao fundDao, LoanDao loanDao,
+                                           AccountService accountService, ScheduleCalculatorAdaptor scheduleCalculatorAdaptor,
+                                           LoanBusinessService loanBusinessService) {
         this.officeDao = officeDao;
         this.loanProductDao = loanProductDao;
         this.customerDao = customerDao;
@@ -200,11 +196,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         this.fundDao = fundDao;
         this.loanDao = loanDao;
         this.accountService = accountService;
-        this.installmentsValidator = installmentsValidator;
         this.scheduleCalculatorAdaptor = scheduleCalculatorAdaptor;
         this.loanBusinessService = loanBusinessService;
-        this.holidayServiceFacade = holidayServiceFacade;
-        this.loanPrdBusinessService = loanPrdBusinessService;
+        transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
     }
 
     @Override
@@ -881,20 +875,41 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     }
 
     @Override
-    public void makeEarlyRepayment(String globalAccountNum, String earlyRepayAmountStr,
-                                   String receiptNumber, java.sql.Date receiptDate,
-                                   String paymentTypeId, Short userId, boolean waiveOffInterest) {
+    public void makeEarlyRepayment(RepayLoanInfoDto repayLoanInfoDto) {
 
         try {
-            LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
-            if (waiveOffInterest && !loan.isInterestWaived()) {
+            LoanBO loan = this.loanDao.findByGlobalAccountNum(repayLoanInfoDto.getGlobalAccountNum());
+            if (repayLoanInfoDto.isWaiveInterest() && !loan.isInterestWaived()) {
                 throw new BusinessRuleException(LoanConstants.WAIVER_INTEREST_NOT_CONFIGURED);
             }
-            Money earlyRepayAmount = new Money(loan.getCurrency(), earlyRepayAmountStr);
-
-            loan.makeEarlyRepayment(earlyRepayAmount, receiptNumber, receiptDate, paymentTypeId, userId, waiveOffInterest);
+            Money earlyRepayAmount = new Money(loan.getCurrency(), repayLoanInfoDto.getEarlyRepayAmount());
+            loanBusinessService.computeExtraInterest(loan, repayLoanInfoDto.getDateOfPayment());
+            BigDecimal interestDueForCurrentInstallment =
+                    interestDueForNextInstallment(repayLoanInfoDto.getTotalRepaymentAmount(),
+                    repayLoanInfoDto.getWaivedAmount(),loan,repayLoanInfoDto.isWaiveInterest());
+            loan.makeEarlyRepayment(earlyRepayAmount, repayLoanInfoDto.getReceiptNumber(),
+                    repayLoanInfoDto.getReceiptDate(), repayLoanInfoDto.getPaymentTypeId(), repayLoanInfoDto.getId(),
+                    repayLoanInfoDto.isWaiveInterest(), new Money(loan.getCurrency(), interestDueForCurrentInstallment));
         } catch (AccountException e) {
             throw new BusinessRuleException(e.getKey(), e);
+        }
+    }
+
+    BigDecimal interestDueForNextInstallment(BigDecimal totalRepaymentAmount, BigDecimal waivedAmount,
+                                             LoanBO loan, boolean waiveInterest) {
+        if (loan.isDecliningBalanceInterestRecalculation()) {
+            if (waiveInterest) {
+                return BigDecimal.ZERO;
+            } else {
+                return totalRepaymentAmount.subtract(waivedAmount);
+            }
+        } else {
+            if (waiveInterest) {
+                return BigDecimal.ZERO;
+            } else {
+                LoanScheduleEntity nextInstallment = (LoanScheduleEntity) loan.getDetailsOfNextInstallment();
+                return nextInstallment.getInterestDue().getAmount();
+            }
         }
     }
 

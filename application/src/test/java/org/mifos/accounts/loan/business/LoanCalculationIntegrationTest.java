@@ -618,8 +618,10 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         printLoanScheduleEntities(paymentsArray);
         // loan repay
         UserContext uc = TestUtils.makeUser();
+        String interestDueForNextInstallment = "0";
+
         ((LoanBO) accountBO).makeEarlyRepayment(((LoanBO) accountBO).getEarlyRepayAmount(), null, null, "1",
-                uc.getId(), false);
+                uc.getId(), false, new Money(((LoanBO) accountBO).getCurrency(), interestDueForNextInstallment));
         new TestObjectPersistence().persist(accountBO);
         actionDateEntities = accountBO.getAccountActionDates();
         paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(actionDateEntities, loanParams

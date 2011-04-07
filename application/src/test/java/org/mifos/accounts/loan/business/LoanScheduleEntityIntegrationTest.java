@@ -168,7 +168,7 @@ public class LoanScheduleEntityIntegrationTest extends AccountIntegrationTestCas
     public void testMakeEarlyRepaymentEnteriesForFeePayment() {
         for (AccountActionDateEntity accountAction : groupLoan.getAccountActionDates()) {
             LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountAction;
-            accountActionDateEntity.makeEarlyRepaymentEnteries(LoanConstants.PAY_FEES_PENALTY_INTEREST);
+            accountActionDateEntity.makeEarlyRepaymentEntries(LoanConstants.PAY_FEES_PENALTY_INTEREST, accountActionDateEntity.getInterestDue());
             Assert.assertEquals(accountActionDateEntity.getPrincipal(), accountActionDateEntity.getPrincipalPaid());
             Assert.assertEquals(accountActionDateEntity.getInterest(), accountActionDateEntity.getInterestPaid());
             Assert.assertEquals(accountActionDateEntity.getPenalty(), accountActionDateEntity.getPenaltyPaid());
@@ -186,7 +186,7 @@ public class LoanScheduleEntityIntegrationTest extends AccountIntegrationTestCas
             Money preRepaymentPenalty = accountActionDateEntity.getPenalty();
             Money preRepaymentMiscFee = accountActionDateEntity.getMiscFee();
 
-            accountActionDateEntity.makeEarlyRepaymentEnteries(LoanConstants.DONOT_PAY_FEES_PENALTY_INTEREST);
+            accountActionDateEntity.makeEarlyRepaymentEntries(LoanConstants.DONOT_PAY_FEES_PENALTY_INTEREST, accountActionDateEntity.getInterestDue());
             Assert.assertEquals(accountActionDateEntity.getPrincipal(), accountActionDateEntity.getPrincipalPaid());
             Assert.assertEquals(accountActionDateEntity.getInterest(), preRepaymentInterest);
             Assert.assertEquals(accountActionDateEntity.getPenalty(), preRepaymentPenalty);

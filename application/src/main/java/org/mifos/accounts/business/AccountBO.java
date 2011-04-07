@@ -25,15 +25,7 @@ import static org.mifos.accounts.util.helpers.AccountTypes.SAVINGS_ACCOUNT;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
@@ -1700,5 +1692,20 @@ public class AccountBO extends AbstractBusinessObject {
 
     public boolean isCustomerAccount() {
         return AccountTypes.CUSTOMER_ACCOUNT.equals(this.getType());
+    }
+
+    private void changeActionDateOfFirstInstallment(Calendar date, Set<AccountActionDateEntity> accountActionDates) {
+        if (accountActionDates.isEmpty()) return;
+        java.sql.Date actionDate = new java.sql.Date(date.getTimeInMillis());
+        accountActionDates.toArray(new AccountActionDateEntity[accountActionDates.size()])[0].setActionDate(actionDate);
+    }
+
+    public void changeFirstInstallmentDateBy(final int numberOfDays) {
+        Calendar currentDateCalendar = new GregorianCalendar();
+        int year = currentDateCalendar.get(Calendar.YEAR);
+        int month = currentDateCalendar.get(Calendar.MONTH);
+        int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
+        currentDateCalendar = new GregorianCalendar(year, month, day + numberOfDays);
+        changeActionDateOfFirstInstallment(currentDateCalendar, getAccountActionDates());
     }
 }

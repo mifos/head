@@ -43,6 +43,7 @@ import org.mifos.dto.screen.LoanInformationDto;
 import org.mifos.dto.screen.LoanScheduledInstallmentDto;
 import org.mifos.dto.screen.MultipleLoanAccountDetailsDto;
 import org.mifos.dto.screen.RepayLoanDto;
+import org.mifos.dto.screen.RepayLoanInfoDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.Date;
@@ -87,7 +88,7 @@ public interface LoanAccountServiceFacade {
     boolean isTrxnDateValid(Integer loanAccountId, Date trxnDate);
 
     @PreAuthorize("isFullyAuthenticated()")
-    void makeEarlyRepayment(String globalAccountNum, String earlyRepayAmount, String receiptNumber, java.sql.Date receiptDate, String paymentTypeId, Short id, boolean waiveInterest);
+    void makeEarlyRepayment(RepayLoanInfoDto repayLoanInfoDto);
 
     @PreAuthorize("isFullyAuthenticated()")
     LoanInformationDto retrieveLoanInformation(String globalAccountNum);

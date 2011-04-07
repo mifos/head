@@ -20,19 +20,15 @@
 
 package org.mifos.accounts.loan.struts.action;
 
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 import junit.framework.Assert;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.loan.business.LoanBOTestUtils;
 import org.mifos.accounts.loan.business.LoanSummaryEntity;
 import org.mifos.accounts.loan.struts.actionforms.RepayLoanActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
@@ -51,8 +47,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
 public class RepayLoanActionStrutsTest extends MifosMockStrutsTestCase {
-
-
 
     protected AccountBO accountBO = null;
 
@@ -125,6 +119,8 @@ public class RepayLoanActionStrutsTest extends MifosMockStrutsTestCase {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, accountBO, request);
         Money amount = ((LoanBO) accountBO).getEarlyRepayAmount();
+        SessionUtils.setAttribute(LoanConstants.WAIVED_REPAYMENT_AMOUNT, Money.zero(),request);
+        SessionUtils.setAttribute(LoanConstants.TOTAL_REPAYMENT_AMOUNT, amount,request);
         setRequestPathInfo("/repayLoanAction");
         addRequestParameter("method", "makeRepayment");
         addRequestParameter("globalAccountNum", accountBO.getGlobalAccountNum());
@@ -134,6 +130,7 @@ public class RepayLoanActionStrutsTest extends MifosMockStrutsTestCase {
         RepayLoanActionForm repayLoanActionForm = new RepayLoanActionForm();
         repayLoanActionForm.setAmount(amount.toString());
         repayLoanActionForm.setWaiverInterest(false);
+        repayLoanActionForm.setDateOfPayment("23/12/2010");
         setActionForm(repayLoanActionForm);
         actionPerform();
         verifyForward(Constants.UPDATE_SUCCESS);
@@ -152,6 +149,8 @@ public class RepayLoanActionStrutsTest extends MifosMockStrutsTestCase {
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, accountBO, request);
         Money amount = ((LoanBO) accountBO).getEarlyRepayAmount();
         Money waivedAmount = amount.subtract(((LoanBO) accountBO).waiverAmount());
+        SessionUtils.setAttribute(LoanConstants.WAIVED_REPAYMENT_AMOUNT, waivedAmount, request);
+        SessionUtils.setAttribute(LoanConstants.TOTAL_REPAYMENT_AMOUNT, amount,request);
         setRequestPathInfo("/repayLoanAction");
         addRequestParameter("method", "makeRepayment");
         addRequestParameter("globalAccountNum", accountBO.getGlobalAccountNum());
@@ -161,6 +160,7 @@ public class RepayLoanActionStrutsTest extends MifosMockStrutsTestCase {
         RepayLoanActionForm repayLoanActionForm = new RepayLoanActionForm();
         repayLoanActionForm.setAmount(amount.toString());
         repayLoanActionForm.setWaiverInterest(true);
+        repayLoanActionForm.setDateOfPayment("23/12/2010");
         setActionForm(repayLoanActionForm);
         actionPerform();
         verifyForward(Constants.UPDATE_SUCCESS);
@@ -176,9 +176,12 @@ public class RepayLoanActionStrutsTest extends MifosMockStrutsTestCase {
     @Test
     public void testMakeRepaymentForCurrentDateLiesBetweenInstallmentDates() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-        changeFirstInstallmentDate(accountBO);
+        accountBO.changeFirstInstallmentDateBy(-1);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, accountBO, request);
         Money amount = ((LoanBO) accountBO).getEarlyRepayAmount();
+        SessionUtils.setAttribute(LoanConstants.WAIVED_REPAYMENT_AMOUNT, Money.zero(),request);
+        SessionUtils.setAttribute(LoanConstants.TOTAL_REPAYMENT_AMOUNT, amount,request);
+
 
         setRequestPathInfo("/repayLoanAction");
         addRequestParameter("method", "makeRepayment");
@@ -189,6 +192,7 @@ public class RepayLoanActionStrutsTest extends MifosMockStrutsTestCase {
         RepayLoanActionForm repayLoanActionForm = new RepayLoanActionForm();
         repayLoanActionForm.setAmount(amount.toString());
         repayLoanActionForm.setWaiverInterest(false);
+        repayLoanActionForm.setDateOfPayment("23/12/2010");
         setActionForm(repayLoanActionForm);
         actionPerform();
         verifyForward(Constants.UPDATE_SUCCESS);
@@ -204,10 +208,12 @@ public class RepayLoanActionStrutsTest extends MifosMockStrutsTestCase {
     @Test
     public void testMakeRepaymentForCurrentDateLiesBetweenInstallmentDatesWithInterestWaiver() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-        changeFirstInstallmentDate(accountBO);
+        accountBO.changeFirstInstallmentDateBy(-1);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, accountBO, request);
         Money amount = ((LoanBO) accountBO).getEarlyRepayAmount();
         Money waivedAmount = amount.subtract(((LoanBO) accountBO).waiverAmount());
+        SessionUtils.setAttribute(LoanConstants.WAIVED_REPAYMENT_AMOUNT, waivedAmount,request);
+        SessionUtils.setAttribute(LoanConstants.TOTAL_REPAYMENT_AMOUNT, amount,request);
 
         setRequestPathInfo("/repayLoanAction");
         addRequestParameter("method", "makeRepayment");
@@ -219,6 +225,7 @@ public class RepayLoanActionStrutsTest extends MifosMockStrutsTestCase {
         repayLoanActionForm.setAmount(amount.toString());
         repayLoanActionForm.setWaiverInterest(true);
         setActionForm(repayLoanActionForm);
+        repayLoanActionForm.setDateOfPayment("23/12/2010");
         actionPerform();
         verifyForward(Constants.UPDATE_SUCCESS);
 
@@ -228,19 +235,6 @@ public class RepayLoanActionStrutsTest extends MifosMockStrutsTestCase {
        Assert.assertEquals(waivedAmount, loanSummaryEntity.getPrincipalPaid().add(loanSummaryEntity.getFeesPaid()).add(
                 loanSummaryEntity.getInterestPaid()).add(loanSummaryEntity.getPenaltyPaid()));
 
-    }
-
-    private void changeFirstInstallmentDate(AccountBO accountBO) {
-        Calendar currentDateCalendar = new GregorianCalendar();
-        int year = currentDateCalendar.get(Calendar.YEAR);
-        int month = currentDateCalendar.get(Calendar.MONTH);
-        int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH - 1);
-        currentDateCalendar = new GregorianCalendar(year, month, day);
-        for (AccountActionDateEntity accountActionDateEntity : accountBO.getAccountActionDates()) {
-            LoanBOTestUtils.setActionDate(accountActionDateEntity, new java.sql.Date(currentDateCalendar
-                    .getTimeInMillis()));
-            break;
-        }
     }
 
     private AccountBO getLoanAccount() {

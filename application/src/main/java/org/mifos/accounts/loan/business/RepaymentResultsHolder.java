@@ -6,6 +6,7 @@ public class RepaymentResultsHolder {
     private BigDecimal totalRepaymentAmount;
     private BigDecimal waiverAmount;
 
+
     public RepaymentResultsHolder() {
         totalRepaymentAmount = BigDecimal.ZERO;
         waiverAmount = BigDecimal.ZERO;

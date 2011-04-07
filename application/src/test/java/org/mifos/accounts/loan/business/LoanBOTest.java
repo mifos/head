@@ -23,15 +23,21 @@ import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.accounts.business.AccountActionDateEntity;
+import org.mifos.accounts.business.*;
 import org.mifos.accounts.exceptions.AccountException;
+import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallmentBuilder;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.accounts.savings.business.SavingsTrxnDetailEntity;
+import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.PaymentStatus;
+import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
@@ -41,13 +47,10 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.annotation.ExpectedException;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.mifos.framework.TestUtils.getDate;
 import static org.mockito.Mockito.mock;
@@ -158,6 +161,127 @@ public class LoanBOTest {
             junit.framework.Assert.fail("should fail because of invalid session");
         } catch (AccountException e) {
         }
+    }
+
+    @Test
+    public void repayInstallmentsShouldPopulateCalculatedInterestsForDIPBLoans() throws PersistenceException {
+        final LoanPersistence loanPersistence = mock(LoanPersistence.class);
+        final CustomerBO customerBO = mock(CustomerBO.class);
+        final LoanSummaryEntity loanSummaryEntity = mock(LoanSummaryEntity.class);
+
+        LoanBO loanBO = new LoanBO(){
+            @Override
+            public boolean isDecliningBalanceInterestRecalculation() {
+                return true;
+            }
+
+            @Override
+            public LoanPersistence getLoanPersistence() {
+                return loanPersistence;
+            }
+
+            @Override
+            public CustomerBO getCustomer() {
+                return customerBO;
+            }
+
+            @Override
+            public LoanSummaryEntity getLoanSummary() {
+                return loanSummaryEntity;
+            }
+        };
+        AccountActionTypes accountActionTypes = AccountActionTypes.LOAN_REPAYMENT;
+        AccountActionEntity accountActionEntity = mock(AccountActionEntity.class);
+        AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntityBuilder().with(loanBO).build();
+        PersonnelBO user = new PersonnelBO();
+        Money extraInterestDue = new Money(rupee, "0.98");
+        Money interest = new Money(rupee, "10");
+        Money interestDue = new Money(rupee, "2.07");
+
+        when(loanPersistence.getPersistentObject(AccountActionEntity.class, accountActionTypes.getValue())).thenReturn(accountActionEntity);
+        when(loanScheduleEntity.getPrincipalDue()).thenReturn(new Money(rupee,"1000"));
+        when(loanScheduleEntity.getTotalFeeDueWithMiscFeeDue()).thenReturn(new Money(rupee,"10"));
+        when(loanScheduleEntity.getPenaltyDue()).thenReturn(new Money(rupee,"10"));
+        when(loanScheduleEntity.getPenalty()).thenReturn(new Money(rupee,"100"));
+        when(loanScheduleEntity.getExtraInterestDue()).thenReturn(extraInterestDue);
+        when(loanScheduleEntity.getExtraInterestPaid()).thenReturn(extraInterestDue);
+        when(loanScheduleEntity.getInterest()).thenReturn(interest);
+
+        loanBO.repayInstallment(loanScheduleEntity,accountPaymentEntity,accountActionTypes,user,"", interestDue);
+
+        Set<AccountTrxnEntity> accountTrxns = accountPaymentEntity.getAccountTrxns();
+        AccountTrxnEntity accountTrxnEntity = accountTrxns.toArray(new AccountTrxnEntity[accountTrxns.size()])[0];
+        LoanTrxnDetailEntity loanTrxnDetailEntity = (LoanTrxnDetailEntity) accountTrxnEntity;
+        assertThat(loanTrxnDetailEntity.getInterestAmount().getAmount().doubleValue(), is(3.05));
+        CalculatedInterestOnPayment calculatedInterestOnPayment = loanTrxnDetailEntity.getCalculatedInterestOnPayment();
+        assertNotNull(calculatedInterestOnPayment);
+        assertThat(calculatedInterestOnPayment.getExtraInterestPaid(),is(extraInterestDue));
+        assertThat(calculatedInterestOnPayment.getInterestDueTillPaid(),is(interestDue));
+        assertThat(calculatedInterestOnPayment.getOriginalInterest(),is(interest));
+        Mockito.verify(loanScheduleEntity).makeEarlyRepaymentEntries(LoanConstants.PAY_FEES_PENALTY_INTEREST, interestDue);
+    }
+
+    @Test
+    public void repayInstallmentsShouldPopulateCalculatedInterestsForDIPBLoansWithWaiverInterest() throws PersistenceException {
+        final LoanPersistence loanPersistence = mock(LoanPersistence.class);
+        final CustomerBO customerBO = mock(CustomerBO.class);
+        final LoanSummaryEntity loanSummaryEntity = mock(LoanSummaryEntity.class);
+
+        LoanBO loanBO = new LoanBO(){
+            @Override
+            public boolean isDecliningBalanceInterestRecalculation() {
+                return true;
+            }
+
+            @Override
+            public LoanPersistence getLoanPersistence() {
+                return loanPersistence;
+            }
+
+            @Override
+            public CustomerBO getCustomer() {
+                return customerBO;
+            }
+
+            @Override
+            public LoanSummaryEntity getLoanSummary() {
+                return loanSummaryEntity;
+            }
+
+            @Override
+            public MifosCurrency getCurrency() {
+                return rupee;
+            }
+        };
+        AccountActionTypes accountActionTypes = AccountActionTypes.LOAN_REPAYMENT;
+        AccountActionEntity accountActionEntity = mock(AccountActionEntity.class);
+        AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntityBuilder().with(loanBO).build();
+        PersonnelBO user = new PersonnelBO();
+        Money extraInterestDue = new Money(rupee, "0.98");
+        Money interest = new Money(rupee, "10");
+        Money interestDue = new Money(rupee, "0");
+
+        when(loanPersistence.getPersistentObject(AccountActionEntity.class, accountActionTypes.getValue())).thenReturn(accountActionEntity);
+        when(loanScheduleEntity.getPrincipalDue()).thenReturn(new Money(rupee,"1000"));
+        when(loanScheduleEntity.getTotalFeeDueWithMiscFeeDue()).thenReturn(new Money(rupee,"10"));
+        when(loanScheduleEntity.getPenaltyDue()).thenReturn(new Money(rupee,"10"));
+        when(loanScheduleEntity.getPenalty()).thenReturn(new Money(rupee,"100"));
+        when(loanScheduleEntity.getExtraInterestDue()).thenReturn(extraInterestDue);
+        when(loanScheduleEntity.getExtraInterestPaid()).thenReturn(extraInterestDue);
+        when(loanScheduleEntity.getInterest()).thenReturn(interest);
+
+        loanBO.repayInstallmentWithInterestWaiver(loanScheduleEntity,accountPaymentEntity,"",accountActionTypes,user);
+
+        Set<AccountTrxnEntity> accountTrxns = accountPaymentEntity.getAccountTrxns();
+        AccountTrxnEntity accountTrxnEntity = accountTrxns.toArray(new AccountTrxnEntity[accountTrxns.size()])[0];
+        LoanTrxnDetailEntity loanTrxnDetailEntity = (LoanTrxnDetailEntity) accountTrxnEntity;
+        assertThat(loanTrxnDetailEntity.getInterestAmount().getAmount().doubleValue(), is(0.98));
+        CalculatedInterestOnPayment calculatedInterestOnPayment = loanTrxnDetailEntity.getCalculatedInterestOnPayment();
+        assertNotNull(calculatedInterestOnPayment);
+        assertThat(calculatedInterestOnPayment.getExtraInterestPaid(),is(extraInterestDue));
+        assertThat(calculatedInterestOnPayment.getInterestDueTillPaid(),is(interestDue));
+        assertThat(calculatedInterestOnPayment.getOriginalInterest(),is(interest));
+        Mockito.verify(loanScheduleEntity).makeEarlyRepaymentEntries(LoanConstants.PAY_FEES_PENALTY, interestDue);
     }
 
     private LoanScheduleEntity getLoanScheduleEntity(MifosCurrency currency, Date date, String principal, String interest, String installmentId, Money extraInterest) {

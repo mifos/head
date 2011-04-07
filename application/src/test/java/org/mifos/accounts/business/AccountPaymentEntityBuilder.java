@@ -23,7 +23,6 @@ package org.mifos.accounts.business;
 import java.util.Date;
 
 import org.joda.time.DateTime;
-import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -41,8 +40,8 @@ public class AccountPaymentEntityBuilder {
         return new AccountPaymentEntity(account, amount, receiptNumber, receiptDate, paymentType, paymentDate);
     }
 
-    public AccountPaymentEntityBuilder with(SavingsBO savingsAccount) {
-        this.account = savingsAccount;
+    public AccountPaymentEntityBuilder with(AccountBO account) {
+        this.account = account;
         return this;
     }
 

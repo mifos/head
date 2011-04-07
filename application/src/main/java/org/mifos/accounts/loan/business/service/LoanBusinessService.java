@@ -89,7 +89,9 @@ public class LoanBusinessService implements BusinessService {
      */
     @Deprecated
     public LoanBusinessService() {
-        this(new LoanPersistence(), new ConfigurationBusinessService(), new AccountBusinessService(), DependencyInjectedServiceLocator.locateHolidayService(), null);
+        this(new LoanPersistence(), new ConfigurationBusinessService(),
+                new AccountBusinessService(), DependencyInjectedServiceLocator.locateHolidayService(),
+                DependencyInjectedServiceLocator.locateScheduleCalculatorAdaptor());
     }
 
     public LoanBusinessService(LoanPersistence loanPersistence, ConfigurationBusinessService configService,
@@ -314,5 +316,9 @@ public class LoanBusinessService implements BusinessService {
 
     public List<OriginalLoanScheduleEntity> retrieveOriginalLoanSchedule(Integer accountId) throws PersistenceException {
         return loanPersistence.getOriginalLoanScheduleEntity(accountId);
+    }
+
+    public void computeExtraInterest(LoanBO loan, Date asOfDate) {
+        scheduleCalculatorAdaptor.computeExtraInterest(loan, asOfDate);
     }
 }
