@@ -20,12 +20,17 @@
 
 package org.mifos.framework;
 
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryPoolMXBean;
 import java.lang.reflect.Field;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Properties;
 import java.util.Timer;
 
 import javax.servlet.ServletContext;
@@ -121,7 +126,51 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
 
     @Override
     public void contextInitialized(ServletContextEvent ctx) {
+        printSystemProperties();
+        printSystemEnvironment();
+        printMemoryPool();
+        Long startTime = System.currentTimeMillis();
         init(ctx);
+        logger.info("Took " + (System.currentTimeMillis() - startTime) + " msec to start");
+    }
+
+    private void printSystemProperties() {
+        Properties properties = System.getProperties();
+        String props = "\n";
+        for(Object key :  properties.keySet()) {
+            props += key + " : " +properties.get(key) +"\n";
+        }
+        logger.info(props);
+    }
+
+    private void printMemoryPool() {
+        logger.info("Memory MXBean");
+        logger.info("Heap Memory Usage: " + ManagementFactory.getMemoryMXBean().getHeapMemoryUsage());
+        logger.info("Non-Heap Memory Usage: " + ManagementFactory.getMemoryMXBean().getNonHeapMemoryUsage());
+
+        logger.info("-----Memory Pool MXBeans------");
+
+        Iterator<MemoryPoolMXBean> iter = ManagementFactory.getMemoryPoolMXBeans().iterator();
+
+        while (iter.hasNext()) {
+            MemoryPoolMXBean item = iter.next();
+
+            logger.info("Name: " + item.getName());
+            logger.info("Type: " + item.getType());
+            logger.info("Usage: " + item.getUsage());
+            logger.info("Peak Usage: " + item.getPeakUsage());
+            logger.info("Collection Usage: " + item.getCollectionUsage());
+            logger.info("+++++++++++++++++++");
+        }
+    }
+
+    private void printSystemEnvironment() {
+        Map<String, String> envMap = System.getenv();
+        String env = "\n";
+        for(String key : envMap.keySet()) {
+            env += key + " : " +envMap.get(key) +"\n";
+        }
+        logger.info(env);
     }
 
     public void init(ServletContextEvent servletContextEvent) {
@@ -212,7 +261,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         FinancialInitializer.initialize();
         EntityMasterData.getInstance().init();
         initializeEntityMaster();
-       
+
         applicationContext.getBean(CustomizedTextServiceFacade.class).convertMigratedLabelKeysToLocalizedText(Localization.getInstance().getMainLocale());
 
     }
