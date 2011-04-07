@@ -22,17 +22,33 @@ package org.mifos.application.master.business;
 
 import java.util.Set;
 
+import javax.persistence.Cacheable;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 
+@Entity
+@Table(name = "spouse_father_lookup")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class SpouseFatherLookupEntity extends MasterDataEntity {
 
-    /** The composite primary key value */
+    @Id
+    @GeneratedValue
+    @Column(name="spouse_father_id")
     private Short id;
 
-    private Short localeId;
-
-    /** The value of the lookupValue association. */
+    @ManyToOne
+    @JoinColumn(name="lookup_id", updatable=false, insertable = false)
     private LookUpValueEntity lookUpValue;
 
     protected SpouseFatherLookupEntity() {
@@ -45,10 +61,6 @@ public class SpouseFatherLookupEntity extends MasterDataEntity {
     @Override
     public Short getId() {
         return id;
-    }
-
-    public Short getLocaleId() {
-        return localeId;
     }
 
     @Override
@@ -76,11 +88,6 @@ public class SpouseFatherLookupEntity extends MasterDataEntity {
 
     protected void setId(Short id) {
         this.id = id;
-    }
-
-    @Override
-    public void setLocaleId(Short localeId) {
-        this.localeId = localeId;
     }
 
     protected void setLookUpValue(LookUpValueEntity lookUpValue) {

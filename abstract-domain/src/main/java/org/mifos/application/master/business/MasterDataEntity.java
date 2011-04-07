@@ -36,13 +36,21 @@ public abstract class MasterDataEntity extends AbstractEntity {
     // values which override localized values are stored with locale =1
     public static Short CUSTOMIZATION_LOCALE_ID = (short) 1;
 
+    private Short localeId;
+
+    public Short getLocaleId() {
+        return localeId;
+    }
+
+    public void setLocaleId(Short localeId) {
+        this.localeId = localeId;
+    }
+
     public abstract Short getId();
 
     public abstract Set<LookUpValueLocaleEntity> getNames();
 
     public abstract String getName();
-
-    public abstract void setLocaleId(Short locale);
 
     public abstract LookUpValueEntity getLookUpValue();
 
