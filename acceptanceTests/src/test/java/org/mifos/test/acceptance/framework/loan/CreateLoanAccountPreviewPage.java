@@ -78,7 +78,11 @@ public class CreateLoanAccountPreviewPage extends AbstractPage {
     }
 
     public void verifyLoanAmount(String amount) {
-        Assert.assertEquals(getLoanAmount(), amount);
+        try {
+            Assert.assertEquals(getLoanAmount()+ ".0", amount);
+        } catch (AssertionError assertionError) {
+            Assert.assertEquals(getLoanAmount(), amount);
+        }
     }
 
     public String getLoanAmount() {
