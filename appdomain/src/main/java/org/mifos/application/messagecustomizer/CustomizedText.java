@@ -1,17 +1,17 @@
 package org.mifos.application.messagecustomizer;
 
 import javax.persistence.Cacheable;
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.QueryHint;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.NamedNativeQuery;
+import org.hibernate.ejb.QueryHints;
 
 @NamedQueries( {
 	  @NamedQuery(
@@ -21,14 +21,14 @@ import org.hibernate.annotations.NamedNativeQuery;
 	  @NamedQuery(
 	          name = "findCustomMessageByOldMessage",
 	          query = "from CustomizedText message where message.originalText=:originalText"
-	  )	  
+	  )
 })
 
 	  @NamedNativeQuery(
 	    name="allMessagesNative",
-	    cacheable=true,
 	    query="select * from customized_text order by char_length(original_text) desc",
-	    resultClass = CustomizedText.class
+	    resultClass = CustomizedText.class,
+	    hints = { @QueryHint(name=QueryHints.HINT_CACHEABLE,value="true") }
 	  )
 
 @Entity
@@ -40,9 +40,9 @@ public class CustomizedText {
     @Id
 	private String originalText;
 	private String customText;
-	
+
 	protected CustomizedText() {}
-	
+
 	public CustomizedText(String originalText, String customText) {
 		super();
 		this.originalText = originalText;
@@ -64,6 +64,6 @@ public class CustomizedText {
 	public void setCustomText(String customText) {
 		this.customText = customText;
 	}
-	
+
 
 }
