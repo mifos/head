@@ -231,7 +231,7 @@ public class CreateLoanAccountEntryPage extends MifosPage {
 
     public CreateLoanAccountReviewInstallmentPage clickContinue(){
         submit();
-        selenium.isVisible("schedulePreview.button.preview");
+//        selenium.isVisible("schedulePreview.button.preview");
         return  new CreateLoanAccountReviewInstallmentPage(selenium);
     }
 
@@ -330,6 +330,8 @@ public class CreateLoanAccountEntryPage extends MifosPage {
 
     @SuppressWarnings("PMD")
     public void verifyAllowedAmounts(String min, String max, String def) {
+        min = min.replaceAll(".0", "");
+        max = min.replaceAll(".0", "");
         final String expectedText = "(Allowed amount: " + min + " - " + max +")";
         final String expectedText2 = "(Allowed amount: " + min + ".0 - " + max +".0)";
 
