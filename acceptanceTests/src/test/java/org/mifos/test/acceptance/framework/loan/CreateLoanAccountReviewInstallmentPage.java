@@ -33,11 +33,11 @@ import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
 public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
-    String validateButton = "validateBtn";
+    private String validateButton = "_eventId_validate";
     // TODO - English locale hard-coded
-    DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("dd-MMM-yyyy").withLocale(Locale.ENGLISH);
-    String tableXpath = "//table[@id='cashflow']";
-    String previewButton = "previewBtn";
+    private DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("dd-MMM-yyyy").withLocale(Locale.ENGLISH);
+    private String tableXpath = "//table[@id='cashflow']";
+    private String previewButton = "_eventId_preview";
 
     public CreateLoanAccountReviewInstallmentPage(Selenium selenium) {
         super(selenium);

@@ -333,7 +333,7 @@ public class CreateLoanAccountEntryPage extends MifosPage {
         final String expectedText = "(Allowed Amount: " + min + " - " + max +" )";
         final String expectedText2 = "(Allowed Amount: " + min + ".0 - " + max +".0 )";
 
-        if (!selenium.isElementPresent("id=createloan.allowedamounttext")) {
+        if (!selenium.isElementPresent("//span[@id='createloan.allowedamounttext']")) {
             Assert.fail("failed as span with id: createloan.allowedamounttext not on page: " +  selenium.getLocation());
         } else {
             String allowedAmountText = selenium.getText("id=createloan.allowedamounttext");
