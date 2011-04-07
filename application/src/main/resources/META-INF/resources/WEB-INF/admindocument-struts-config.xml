@@ -22,6 +22,7 @@
             <forward name="editpreview_failure" path="/pages/application/admindocument/jsp/editBirtAdminDocumentUpload.jsp" />
             <forward name="get_success" path="/pages/application/admindocument/jsp/viewAdministrativeDocuments.jsp" />
             <forward name="download_success" path="/reportTemplateDownload?realPath=adminReport" />
+            <forward name="download_failure" path="/pages/application/admindocument/jsp/fileNotFound.jsp" />
             <forward name="edit_success" path="/pages/application/admindocument/jsp/editBirtAdminDocumentUpload.jsp" />
                <forward name="edit_preview_success" path="/pages/application/admindocument/jsp/editPreviewBirtAdminDocumentUpload.jsp" />
             <!--  _failure -->

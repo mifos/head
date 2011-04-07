@@ -70,13 +70,13 @@ explanation of the license and how it is applied.
 		            	</span>
 		            </td>
               		<table width="95%" border="0" cellpadding="3" cellspacing="0">
-              		<tr>
+					<tr>
               			<td>
 								<font class="fontnormalRedBold">
 									<html-el:errors	bundle="adminUIResources" />	
 								</font>
 						</td>
-					</tr>	
+					</tr>
 					</table>
              		 	<table width="75%" border="0" cellpadding="3" cellspacing="0">
 	                 		<c:forEach var="adminDocuments" items="${sessionScope.listOfAdministrativeDocuments}" varStatus="loop" begin='0'>
@@ -92,7 +92,7 @@ explanation of the license and how it is applied.
 										<mifos:mifoslabel name = "reports.edit" bundle="reportsUIResources" />
 									</a>
 						      		|
-									<a href="birtAdminDocumentUploadAction.do?method=downloadAdminDocument&admindocId=<c:out value="${adminDocuments.admindocId}" />">
+									<a href="birtAdminDocumentUploadAction.do?method=downloadAdminDocument&admindocId=<c:out value="${adminDocuments.admindocId}" />" >
 										<mifos:mifoslabel name = "reports.downloadadminDocuments" bundle="reportsUIResources" />
 									</a>
 								</td>				
