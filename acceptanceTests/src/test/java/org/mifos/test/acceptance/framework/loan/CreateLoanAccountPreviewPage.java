@@ -26,7 +26,7 @@ import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 import org.testng.Assert;
 
 public class CreateLoanAccountPreviewPage extends AbstractPage {
-    String editScheduleButton = "//input[@id='createloanpreview.button.edit' and @name='editButton' and @value='Edit Loan Schedule Information']";
+    String editScheduleButton = "//input[@id='createloanpreview.button.edit']";
 
     public CreateLoanAccountPreviewPage(Selenium selenium) {
         super(selenium);
