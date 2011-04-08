@@ -516,12 +516,13 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
     }
 
     public String getLoanAmount() {
+        String loanAmount = "";
         try {
-            return selenium.getText("//span[@id='schedulepreview.text.loanamount']");
+            loanAmount = selenium.getText("//span[@id='schedulepreview.text.loanamount']");
         } catch (SeleniumException e) {
             Assert.fail("cant find span with id: schedulepreview.text.loanamount on page" + selenium.getLocation());
         }
-        return "";
+        return loanAmount;
     }
 
 }
