@@ -45,7 +45,6 @@ import org.mifos.customers.api.CustomerLevel;
 import org.mifos.dto.domain.CustomerDto;
 import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.dto.domain.PersonnelDto;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.Constants;
@@ -104,7 +103,7 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
 
         try {
             final List<PaymentTypeEntity> paymentTypesList = legacyMasterDao.findMasterDataEntitiesWithLocale(
-                    PaymentTypeEntity.class, Short.valueOf("1"));
+                    PaymentTypeEntity.class);
             paymentTypesDtoList = convertToPaymentTypesListItemDto(paymentTypesList);
 
             activeBranches = officePersistence.getActiveOffices(branchId);

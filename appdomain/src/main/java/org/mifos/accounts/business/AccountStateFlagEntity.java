@@ -32,7 +32,6 @@ public class AccountStateFlagEntity extends MasterDataEntity {
     /** The composite primary key value */
     private Short id;
     private String flagDescription;
-    private Short localeId;
     private Short retained;
     private Short statusId;
     private String statusFlagMessageText = "";
@@ -50,10 +49,6 @@ public class AccountStateFlagEntity extends MasterDataEntity {
     @Override
     public Short getId() {
         return id;
-    }
-
-    public Short getLocaleId() {
-        return localeId;
     }
 
     @Override
@@ -90,11 +85,6 @@ public class AccountStateFlagEntity extends MasterDataEntity {
 
     protected void setId(Short id) {
         this.id = id;
-    }
-
-    @Override
-    public void setLocaleId(Short localeId) {
-        this.localeId = localeId;
     }
 
     protected void setLookUpValue(LookUpValueEntity lookUpValue) {

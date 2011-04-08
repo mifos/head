@@ -149,7 +149,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     private LoanProductAssembler loanProductAssembler;
 
     private LinkedHashMap<String,String> messageFilterMap = new LinkedHashMap<String,String>();
-    
+
     @Autowired
     private FeeDao feeDao;
 
@@ -182,7 +182,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         this.applicationConfigurationDao = applicationConfigurationDao;
         this.fundDao = fundDao;
         this.generalLedgerDao = generalLedgerDao;
-        this.loanProductAssembler = new LoanProductAssembler(this.loanProductDao, this.generalLedgerDao, this.fundDao);             
+        this.loanProductAssembler = new LoanProductAssembler(this.loanProductDao, this.generalLedgerDao, this.fundDao);
     }
 
     @Override
@@ -310,20 +310,22 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
 
     @Override
     public String replaceSubstitutions(String message) {
-    	if (message == null) return message;
-    	
+    	if (message == null) {
+            return message;
+        }
+
     	if (message.startsWith("|||")) {
     		return message.substring(3);
     	}
-    	
+
     	String newMessage = message;
-    	
-        for (Map.Entry<String, String> entry : messageFilterMap.entrySet()) { 
+
+        for (Map.Entry<String, String> entry : messageFilterMap.entrySet()) {
         	newMessage = newMessage.replace(entry.getKey(), entry.getValue());
         }
     	return newMessage;
-    }	    
-    
+    }
+
     @Override
     public MandatoryHiddenFieldsDto retrieveHiddenMandatoryFields() {
 
@@ -491,7 +493,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         List<PaymentTypeDto> paymentTypeList = new ArrayList<PaymentTypeDto>();
         PaymentTypeDto payment = null;
         Short id = 0;
-        List<PaymentTypeEntity> paymentTypes = getMasterEntities(PaymentTypeEntity.class, localeId);
+        List<PaymentTypeEntity> paymentTypes = getMasterEntities(PaymentTypeEntity.class);
         for (PaymentTypeEntity masterDataEntity : paymentTypes) {
             PaymentTypeEntity paymentType = masterDataEntity;
             id = paymentType.getId();
@@ -502,8 +504,8 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         return paymentTypeList;
     }
 
-    private <T extends MasterDataEntity> List<T> getMasterEntities(Class<T> type, Short localeId) {
-        return legacyMasterDao.findMasterDataEntitiesWithLocale(type, localeId);
+    private <T extends MasterDataEntity> List<T> getMasterEntities(Class<T> type) {
+        return legacyMasterDao.findMasterDataEntitiesWithLocale(type);
     }
 
     private void setPaymentTypesForATransaction(List<PaymentTypeDto> payments, TrxnTypes transactionType,

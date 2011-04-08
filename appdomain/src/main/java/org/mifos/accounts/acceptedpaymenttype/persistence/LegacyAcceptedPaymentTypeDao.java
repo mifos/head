@@ -81,7 +81,6 @@ public class LegacyAcceptedPaymentTypeDao extends LegacyGenericDao {
             // the localeId is set so when the paymentTypeEntity.getName is
             // called the localeId will be used
             // to determine what the name to match with that localeId
-            paymentTypeEntity.setLocaleId(localeId);
             paymentTypeList.add(paymentTypeEntity);
         }
 

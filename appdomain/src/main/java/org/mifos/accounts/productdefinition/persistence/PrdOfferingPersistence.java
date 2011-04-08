@@ -99,7 +99,6 @@ public class PrdOfferingPersistence extends LegacyGenericDao {
         for (PrdStatusEntity prdStatus : prdStatusList) {
             Hibernate.initialize(prdStatus);
             Hibernate.initialize(prdStatus.getPrdState());
-            prdStatus.getPrdState().setLocaleId(localeId);
         }
         logger.debug("getting the applicable product Status Done and : " + prdStatusList);
         return prdStatusList;

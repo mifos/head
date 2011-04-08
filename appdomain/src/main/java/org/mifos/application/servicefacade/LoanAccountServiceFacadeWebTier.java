@@ -305,7 +305,6 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             List<AccountStateEntity> statusList = AccountStateMachines.getInstance().getLoanStatusList(
                     loanAccount.getAccountState());
             for (AccountStateEntity accountState : statusList) {
-                accountState.setLocaleId(userContext.getLocaleId());
                 loanStatesList.add(new ListElement(accountState.getId().intValue(), accountState.getName()));
             }
 

@@ -297,7 +297,6 @@ public class AuditConfiguration {
         }
         List<MasterDataEntity> masterDataList = legacyMasterDao.findMasterDataEntities(clazz);
         for (MasterDataEntity masterDataEntity : masterDataList) {
-            masterDataEntity.setLocaleId(localeId);
 
             if (masterDataEntity instanceof PersonnelStatusEntity) {
                 String name = MessageLookup.getInstance().lookup(masterDataEntity.getLookUpValue());
@@ -332,7 +331,7 @@ public class AuditConfiguration {
                 columnName = columnName + " " + columnNames.getString(key);
             } else {
                 try {
-                    columnName = columnName + " " + labelConfig.getLabel(key, locale);
+                    columnName = columnName + " " + labelConfig.getLabel(key);
                 } catch (ConfigurationException ce) {
                     // ignore it user may not see the label
                 }

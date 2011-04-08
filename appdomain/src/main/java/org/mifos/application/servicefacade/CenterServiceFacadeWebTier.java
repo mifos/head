@@ -275,8 +275,8 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
 
         List<PositionEntity> customerPositions = new ArrayList<PositionEntity>();
 
-        List<PositionEntity> allCustomerPositions = legacyMasterDao.findMasterDataEntitiesWithLocale(PositionEntity.class, localeId);
-        if (!new ClientRules().getCenterHierarchyExists()) {
+        List<PositionEntity> allCustomerPositions = legacyMasterDao.findMasterDataEntitiesWithLocale(PositionEntity.class);
+        if (!ClientRules.getCenterHierarchyExists()) {
             customerPositions = populateWithNonCenterRelatedPositions(allCustomerPositions);
         } else {
             customerPositions.addAll(allCustomerPositions);
@@ -425,9 +425,6 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
 
     @Override
     public void initializeCenterStates(String centerGlobalNum) {
-        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserContext userContext = toUserContext(user);
-
         CenterBO center = this.customerDao.findCenterBySystemId(centerGlobalNum);
 
         try {
@@ -436,7 +433,6 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
 
             List<CustomerStatusEntity> statusList = AccountStateMachines.getInstance().getCenterStatusList(center.getCustomerStatus());
             for (CustomerStatusEntity customerState : statusList) {
-                customerState.setLocaleId(userContext.getLocaleId());
                 savingsStatesList.add(new ListElement(customerState.getId().intValue(), customerState.getName()));
             }
         } catch (StatesInitializationException e) {
@@ -446,9 +442,6 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
 
     @Override
     public void initializeGroupStates(String groupGlobalNum) {
-        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserContext userContext = toUserContext(user);
-
         GroupBO group = this.customerDao.findGroupBySystemId(groupGlobalNum);
 
         try {
@@ -457,7 +450,6 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
 
             List<CustomerStatusEntity> statusList = AccountStateMachines.getInstance().getGroupStatusList(group.getCustomerStatus());
             for (CustomerStatusEntity customerState : statusList) {
-                customerState.setLocaleId(userContext.getLocaleId());
                 savingsStatesList.add(new ListElement(customerState.getId().intValue(), customerState.getName()));
             }
         } catch (StatesInitializationException e) {
@@ -467,9 +459,6 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
 
     @Override
     public void initializeClientStates(String clientGlobalNum) {
-        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserContext userContext = toUserContext(user);
-
         ClientBO client = this.customerDao.findClientBySystemId(clientGlobalNum);
 
         try {
@@ -478,7 +467,6 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
 
             List<CustomerStatusEntity> statusList = AccountStateMachines.getInstance().getClientStatusList(client.getCustomerStatus());
             for (CustomerStatusEntity customerState : statusList) {
-                customerState.setLocaleId(userContext.getLocaleId());
                 savingsStatesList.add(new ListElement(customerState.getId().intValue(), customerState.getName()));
             }
         } catch (StatesInitializationException e) {

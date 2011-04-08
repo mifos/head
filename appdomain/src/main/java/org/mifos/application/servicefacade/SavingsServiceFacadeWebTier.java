@@ -885,7 +885,6 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             List<AccountStateEntity> statusList = AccountStateMachines.getInstance().getSavingsStatusList(
                     savingsAccount.getAccountState());
             for (AccountStateEntity accountState : statusList) {
-                accountState.setLocaleId(userContext.getLocaleId());
                 savingsStatesList.add(new ListElement(accountState.getId().intValue(), accountState.getName()));
             }
 
@@ -954,7 +953,6 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         DueOnDateDto nextdueDate = new DueOnDateDto(nextDueDate, MoneyUtils.currencyRound(totalDue).toString());
 
         AccountStateEntity accountStateEntity = savingsAccount.getAccountState();
-        accountStateEntity.setLocaleId(userContext.getLocaleId());
 
         return new SavingsAccountDepositDueDto(nextdueDate, previousDueDates, accountStateEntity.getId(),
                 accountStateEntity.getName());

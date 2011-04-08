@@ -595,7 +595,6 @@ public class AccountBO extends AbstractBusinessObject {
             LegacyMasterDao legacyMasterDao = getlegacyMasterDao();
             AccountStateEntity accountStateEntity = legacyMasterDao.getPersistentObject(
                     AccountStateEntity.class, newStatusId);
-            accountStateEntity.setLocaleId(this.getUserContext().getLocaleId());
             AccountStateFlagEntity accountStateFlagEntity = null;
             if (flagId != null) {
                 accountStateFlagEntity = legacyMasterDao.getPersistentObject(
@@ -1584,7 +1583,6 @@ public class AccountBO extends AbstractBusinessObject {
     }
 
     private void setFlag(final AccountStateFlagEntity accountStateFlagEntity) {
-        accountStateFlagEntity.setLocaleId(this.getUserContext().getLocaleId());
         Iterator iter = this.getAccountFlags().iterator();
         while (iter.hasNext()) {
             AccountFlagMapping currentFlag = (AccountFlagMapping) iter.next();

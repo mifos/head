@@ -26,7 +26,6 @@ import org.junit.Test;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class PersonnelStatusEntityIntegrationTest extends MifosIntegrationTestCase {
@@ -43,7 +42,6 @@ public class PersonnelStatusEntityIntegrationTest extends MifosIntegrationTestCa
         (personnelStatusEntity).setName(name);
 
         Assert.assertEquals(Short.valueOf("1"), personnelStatusEntity.getId());
-        personnelStatusEntity.setLocaleId(TestObjectFactory.TEST_LOCALE);
         Assert.assertEquals("Active", personnelStatusEntity.getName());
     }
 }

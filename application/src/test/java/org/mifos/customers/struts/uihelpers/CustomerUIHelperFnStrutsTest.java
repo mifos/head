@@ -115,9 +115,6 @@ public class CustomerUIHelperFnStrutsTest extends MifosMockStrutsTestCase {
         group = TestObjectFactory.getCustomer(group.getCustomerId());
         center = TestObjectFactory.getCustomer(center.getCustomerId());
         group.setUserContext(TestObjectFactory.getContext());
-        for (CustomerPositionEntity customerPositionEntity2 : group.getCustomerPositions()) {
-            customerPositionEntity2.getPosition().setLocaleId(TestObjectFactory.getContext().getLocaleId());
-        }
         CustomerDetailDto clientDetail = new CustomerDetailDto(client.getCustomerId(), client.getDisplayName(), client
                 .getSearchId(), client.getGlobalCustNum());
 

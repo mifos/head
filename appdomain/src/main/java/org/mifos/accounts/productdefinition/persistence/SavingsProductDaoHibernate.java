@@ -98,11 +98,6 @@ public class SavingsProductDaoHibernate implements SavingsProductDao {
 
         List<SavingsOfferingBO> savingsOfferings = (List<SavingsOfferingBO>) genericDao.executeNamedQuery(
                 NamedQueryConstants.PRODUCT_NOTMIXED_SAVING_PRODUCTS, queryParameters);
-        if (null != savingsOfferings && savingsOfferings.size() > 0) {
-            for (SavingsOfferingBO savingOffering : savingsOfferings) {
-                savingOffering.getPrdStatus().getPrdState().setLocaleId(localeId);
-            }
-        }
         return savingsOfferings;
     }
 

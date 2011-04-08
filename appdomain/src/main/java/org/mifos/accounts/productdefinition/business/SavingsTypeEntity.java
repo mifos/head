@@ -37,7 +37,6 @@ public class SavingsTypeEntity extends MasterDataEntity {
     protected SavingsTypeEntity() {
         super();
     }
-    private Short localeId;
 
     /** The composite primary key value */
     private Short id;
@@ -61,15 +60,6 @@ public class SavingsTypeEntity extends MasterDataEntity {
 
     protected void setLookUpValue(LookUpValueEntity lookUpValue) {
         this.lookUpValue = lookUpValue;
-    }
-
-    public Short getLocaleId() {
-        return localeId;
-    }
-
-    @Override
-    public void setLocaleId(Short localeId) {
-        this.localeId = localeId;
     }
 
     @Override

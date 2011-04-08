@@ -333,7 +333,7 @@ public class PersonAction extends SearchAction {
         SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, customFieldDefs, request);
 
         UserContext userContext = getUserContext(request);
-        List<PersonnelStatusEntity> statuses = legacyMasterDao.findMasterDataEntitiesWithLocale(PersonnelStatusEntity.class, getUserContext(request).getLocaleId());
+        List<PersonnelStatusEntity> statuses = legacyMasterDao.findMasterDataEntitiesWithLocale(PersonnelStatusEntity.class);
         for (PersonnelStatusEntity personnelStatusEntity : statuses) {
             String messageTextLookup = MessageLookup.getInstance().lookup(personnelStatusEntity.getLookUpValue().getPropertiesKey());
             personnelStatusEntity.setName(messageTextLookup);

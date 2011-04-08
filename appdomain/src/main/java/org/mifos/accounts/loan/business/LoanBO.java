@@ -312,7 +312,7 @@ public class LoanBO extends AccountBO implements Loan {
     }
 
     // opening balance loan constructor
-    public LoanBO(LoanOfferingBO loanProduct, CustomerBO customer, AccountState loanState, LoanProductOverridenDetail overridenDetail, 
+    public LoanBO(LoanOfferingBO loanProduct, CustomerBO customer, AccountState loanState, LoanProductOverridenDetail overridenDetail,
             MeetingBO repaymentDayMeeting, LoanSchedule loanSchedule, LoanScheduleConfiguration configuration, CreationDetail creationDetail) {
         super(AccountTypes.LOAN_ACCOUNT, loanState, customer, loanSchedule.getRoundedLoanSchedules(), creationDetail);
         this.parentAccount = null; // used for GLIM loans and will be set in factory method for this.
@@ -324,13 +324,13 @@ public class LoanBO extends AccountBO implements Loan {
         this.noOfInstallments = Integer.valueOf(overridenDetail.getNumberOfInstallments()).shortValue();
         this.gracePeriodDuration = Integer.valueOf(overridenDetail.getGraceDuration()).shortValue();
         this.disbursementDate = overridenDetail.getDisbursementDate().toDateMidnight().toDate();
-        
+
         List<AccountFeesEntity> accountFeeEntities = overridenDetail.getAccountFeeEntities();
         for (AccountFeesEntity accountFeesEntity : accountFeeEntities) {
             accountFeesEntity.setAccount(this);
         }
         this.accountFees = new HashSet<AccountFeesEntity>(accountFeeEntities);
-        
+
         // inherit properties from loan product
         this.interestType = new InterestTypesEntity(loanProduct.getInterestType());
         this.interestRate = overridenDetail.getInterestRate();
@@ -346,9 +346,9 @@ public class LoanBO extends AccountBO implements Loan {
         } else {
             this.maxMinNoOfInstall = new MaxMinNoOfInstall(this.noOfInstallments, this.noOfInstallments, this);
         }
-        
+
         this.maxMinInterestRate = new MaxMinInterestRate(loanProduct.getMaxInterestRate(), loanProduct.getMinInterestRate(), this);
-        
+
         if (!loanProduct.getLoanAmountSameForAllLoan().isEmpty()) {
             LoanAmountSameForAllLoanBO maxMinInstall = new ArrayList<LoanAmountSameForAllLoanBO>(loanProduct.getLoanAmountSameForAllLoan()).get(0);
             this.maxMinLoanAmount = new MaxMinLoanAmount(maxMinInstall.getMaxLoanAmount(), maxMinInstall.getMinLoanAmount(), this);
@@ -364,7 +364,7 @@ public class LoanBO extends AccountBO implements Loan {
             if (configuration.isLoanScheduleIndependentOfCustomerMeetingEnabled()) {
                 this.loanMeeting = repaymentDayMeeting;
             } else {
-                this.loanMeeting = buildLoanMeeting(customer.getCustomerMeetingValue(), loanProduct.getLoanOfferingMeetingValue(), disbursementDate);                
+                this.loanMeeting = buildLoanMeeting(customer.getCustomerMeetingValue(), loanProduct.getLoanOfferingMeetingValue(), disbursementDate);
             }
         } catch (AccountException e) {
             throw new BusinessRuleException(e.getKey());
@@ -566,21 +566,21 @@ public class LoanBO extends AccountBO implements Loan {
     private static boolean isAnyLoanParamsNull(final Object... args) {
         return Arrays.asList(args).contains(null);
     }
-    
+
     public static LoanBO openStandardLoanAccount(LoanOfferingBO loanProduct, CustomerBO customer,
-            MeetingBO repaymentDayMeeting, LoanSchedule loanSchedule, AccountState loanState, FundBO fund, 
+            MeetingBO repaymentDayMeeting, LoanSchedule loanSchedule, AccountState loanState, FundBO fund,
             LoanProductOverridenDetail overridenDetail, LoanScheduleConfiguration configuration, CreationDetail creationDetail, PersonnelBO createdBy) {
-        
+
         LoanBO standardLoan = new LoanBO(loanProduct, customer, loanState, overridenDetail, repaymentDayMeeting, loanSchedule, configuration, creationDetail);
         standardLoan.setFund(fund);
         standardLoan.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(standardLoan.getAccountState(), standardLoan.getAccountState(), createdBy, standardLoan));
         return standardLoan;
     }
-    
+
     public static LoanBO openGroupMemberLoanAccount(LoanBO parentLoan, LoanOfferingBO loanProduct, ClientBO member,
             MeetingBO repaymentDayMeeting, LoanSchedule loanSchedule, LoanProductOverridenDetail overridenDetail,
             LoanScheduleConfiguration configuration, CreationDetail creationDetail, PersonnelBO createdBy) {
-        
+
         AccountState loanState = AccountState.LOAN_PENDING_APPROVAL;
         LoanBO groupMemberLoan = new LoanBO(loanProduct, member, loanState, overridenDetail, repaymentDayMeeting, loanSchedule, configuration, creationDetail);
         groupMemberLoan.setParentAccount(parentLoan);
@@ -1080,13 +1080,13 @@ public class LoanBO extends AccountBO implements Loan {
             updateAccountActivity(null, null, totalFeeAmount, null, personnelId, description);
 
             if (!havePaymentsBeenMade()) {
-            	
+
             	LoanScheduleRounderHelper loanScheduleRounderHelper = new DefaultLoanScheduleRounderHelper();
                 LoanScheduleRounder loanScheduleInstallmentRounder = new DefaultLoanScheduleRounder(loanScheduleRounderHelper);
 
                 List<LoanScheduleEntity> unroundedLoanSchedules = new ArrayList<LoanScheduleEntity>();
 				List<LoanScheduleEntity> allExistingLoanSchedules = new ArrayList<LoanScheduleEntity>();
-                
+
                 List<AccountActionDateEntity> installmentsToRound = getInstallmentsToRound();
                 for (AccountActionDateEntity installment : installmentsToRound) {
                 	unroundedLoanSchedules.add((LoanScheduleEntity)installment);
@@ -1169,17 +1169,17 @@ public class LoanBO extends AccountBO implements Loan {
 
             	List<LoanScheduleEntity> unroundedLoanSchedules = new ArrayList<LoanScheduleEntity>();
 				List<LoanScheduleEntity> allExistingLoanSchedules = new ArrayList<LoanScheduleEntity>();
-                
+
 				List<AccountActionDateEntity> installmentsToRound = getInstallmentsToRound();
                 for (AccountActionDateEntity installment : installmentsToRound) {
                 	unroundedLoanSchedules.add((LoanScheduleEntity)installment);
 				}
-				
+
                 List<AccountActionDateEntity> allExistingInstallments= this.getAllInstallments();
 				for (AccountActionDateEntity installment : allExistingInstallments) {
 					allExistingLoanSchedules.add((LoanScheduleEntity)installment);
 				}
-				
+
             	applyRoundingOnInstallments(unroundedLoanSchedules, allExistingLoanSchedules);
             }
         } else {
@@ -1198,33 +1198,33 @@ public class LoanBO extends AccountBO implements Loan {
             } else {
                 applyPeriodicFee(fee, charge, dueInstallments);
             }
-            
+
             if (!havePaymentsBeenMade()) {
             	List<LoanScheduleEntity> unroundedLoanSchedules = new ArrayList<LoanScheduleEntity>();
 				List<LoanScheduleEntity> allExistingLoanSchedules = new ArrayList<LoanScheduleEntity>();
-                
+
 				List<AccountActionDateEntity> installmentsToRound = getInstallmentsToRound();
                 for (AccountActionDateEntity installment : installmentsToRound) {
                 	unroundedLoanSchedules.add((LoanScheduleEntity)installment);
 				}
-				
+
                 List<AccountActionDateEntity> allExistingInstallments= this.getAllInstallments();
 				for (AccountActionDateEntity installment : allExistingInstallments) {
 					allExistingLoanSchedules.add((LoanScheduleEntity)installment);
 				}
-				
+
             	applyRoundingOnInstallments(unroundedLoanSchedules, allExistingLoanSchedules);
             }
         }
     }
 
     private void applyRoundingOnInstallments(List<LoanScheduleEntity> unroundedLoanSchedules, List<LoanScheduleEntity> allExistingLoanSchedules) {
-    	
+
     	LoanScheduleRounderHelper loanScheduleRounderHelper = new DefaultLoanScheduleRounderHelper();
         LoanScheduleRounder loanScheduleInstallmentRounder = new DefaultLoanScheduleRounder(loanScheduleRounderHelper);
 		loanScheduleInstallmentRounder.round(this.gracePeriodType.asEnum(), this.gracePeriodDuration, this.loanAmount,
         		this.interestType.asEnum(), unroundedLoanSchedules, allExistingLoanSchedules);
-    	
+
 	}
 
 	private AccountActionDateEntity getLastUnpaidInstallment() throws AccountException {
@@ -1747,7 +1747,7 @@ public class LoanBO extends AccountBO implements Loan {
                     throw new AccountException(LoanExceptionConstants.INVALIDNOOFINSTALLMENTS);
                 }
                 setGracePeriodType(legacyMasterDao.findMasterDataEntityWithLocale(GracePeriodTypeEntity.class, GraceType.NONE
-                        .getValue(), getUserContext().getLocaleId()));
+                        .getValue()));
             } catch (PersistenceException e) {
                 throw new AccountException(e);
             }
@@ -2536,7 +2536,7 @@ public class LoanBO extends AccountBO implements Loan {
             } catch (MeetingException me) {
                 throw new AccountException(me);
             }
-        } 
+        }
 
         throw new AccountException(AccountExceptionConstants.CHANGEINLOANMEETING);
     }
@@ -2692,49 +2692,49 @@ public class LoanBO extends AccountBO implements Loan {
         }
         this.resetAccountActionDates();
         loanMeeting.setMeetingStartDate(disbursementDate);
-        
+
         // FIXME - keithw - newMeetingForRepaymentDay is only populated when updating loan see LoanAccountAction.update
 		if (isRepaymentIndepOfMeetingEnabled && newMeetingForRepaymentDay != null) {
 		    setLoanMeeting(newMeetingForRepaymentDay);
 		}
-		
+
 		RecurringScheduledEventFactory scheduledEventFactory = new RecurringScheduledEventFactoryImpl();
 		ScheduledEvent meetingScheduledEvent = scheduledEventFactory.createScheduledEventFrom(this.loanMeeting);
-		
+
 		LoanInstallmentFactory loanInstallmentFactory = new LoanInstallmentFactoryImpl(scheduledEventFactory);
 		LoanInstallmentGenerator loanInstallmentGenerator = loanInstallmentFactory.create(this.getLoanMeeting(), isRepaymentIndepOfMeetingEnabled);
-		
+
 		LocalDate actualDisbursementDate = new LocalDate(this.disbursementDate);
 		List<InstallmentDate> installmentDates = loanInstallmentGenerator.generate(actualDisbursementDate, this.noOfInstallments, this.gracePeriodType.asEnum(), this.gracePeriodDuration, this.office.getOfficeId());
-		
+
 		Integer numberOfInstallments = installmentDates.size();
 		GraceType graceType = this.gracePeriodType.asEnum();
 		InterestType interestType = InterestType.fromInt(this.interestType.getId());
 		Integer interestDays = AccountingRules.getNumberOfInterestDays().intValue();
-		
+
 		LoanDecliningInterestAnnualPeriodCalculator decliningInterestAnnualPeriodCalculator = new LoanDecliningInterestAnnualPeriodCalculatorFactory().create(loanMeeting.getRecurrenceType());
 		Double decliningInterestAnnualPeriod = decliningInterestAnnualPeriodCalculator.calculate(loanMeeting.getRecurAfter().intValue(), interestDays);
 		Double interestFractionalRatePerInstallment = interestRate / decliningInterestAnnualPeriod / 100;
-		
+
 		LoanDurationInAccountingYearsCalculator loanDurationInAccountingYearsCalculator = new LoanDurationInAccountingYearsCalculatorFactory().create(loanMeeting.getRecurrenceType());
 		Double durationInYears = loanDurationInAccountingYearsCalculator.calculate(loanMeeting.getRecurAfter().intValue(), numberOfInstallments, interestDays);
-		
+
 		LoanInterestCalculationDetails loanInterestCalculationDetails = new LoanInterestCalculationDetails(loanAmount, interestRate, graceType, gracePeriodDuration.intValue(),
 		        numberOfInstallments, durationInYears, interestFractionalRatePerInstallment);
-		
+
 		LoanInterestCalculatorFactory loanInterestCalculatorFactory = new LoanInterestCalculatorFactoryImpl();
 		LoanInterestCalculator loanInterestCalculator = loanInterestCalculatorFactory.create(interestType);
-		
+
 		Money loanInterest = loanInterestCalculator.calculate(loanInterestCalculationDetails);
-		
+
 		EqualInstallmentGeneratorFactory equalInstallmentGeneratorFactory = new EqualInstallmentGeneratorFactoryImpl();
 		PrincipalWithInterestGenerator equalInstallmentGenerator = equalInstallmentGeneratorFactory.create(interestType, loanInterest);
-		
+
 		List<InstallmentPrincipalAndInterest> principalWithInterestInstallments = equalInstallmentGenerator.generateEqualInstallments(loanInterestCalculationDetails);
 		List<LoanScheduleEntity> unroundedLoanSchedules = createUnroundedLoanSchedulesFromInstallments(installmentDates, loanInterest, this.loanAmount, meetingScheduledEvent, principalWithInterestInstallments, this.getAccountFees());
-		
+
 		Money rawAmount = calculateTotalFeesAndInterestForLoanSchedules(unroundedLoanSchedules);
-		
+
 		if (loanSummary == null) {
 		    // save it to LoanBO first and when loan summary is created it will
 		    // be retrieved and save to loan summary
@@ -2742,15 +2742,15 @@ public class LoanBO extends AccountBO implements Loan {
 		} else {
 		    loanSummary.setRawAmountTotal(rawAmount);
 		}
-		
+
 		List<LoanScheduleEntity> allExistingLoanSchedules = new ArrayList<LoanScheduleEntity>();
-		
+
 		LoanScheduleRounderHelper loanScheduleRounderHelper = new DefaultLoanScheduleRounderHelper();
 		LoanScheduleRounder loanScheduleInstallmentRounder = new DefaultLoanScheduleRounder(loanScheduleRounderHelper);
-		
+
 		List<LoanScheduleEntity> roundedLoanSchedules = loanScheduleInstallmentRounder.round(graceType, gracePeriodDuration, loanAmount,
 				interestType, unroundedLoanSchedules, allExistingLoanSchedules);
-		
+
 		for (LoanScheduleEntity roundedLoanSchedule : roundedLoanSchedules) {
 		    addAccountActionDate(roundedLoanSchedule);
 		}
@@ -3140,13 +3140,13 @@ public class LoanBO extends AccountBO implements Loan {
 
         RecurringScheduledEventFactory scheduledEventFactory = new RecurringScheduledEventFactoryImpl();
         ScheduledEvent meetingScheduledEvent = scheduledEventFactory.createScheduledEventFrom(this.loanMeeting);
-        
+
         LoanInstallmentFactory loanInstallmentFactory = new LoanInstallmentFactoryImpl(scheduledEventFactory);
         LoanInstallmentGenerator loanInstallmentGenerator = loanInstallmentFactory.create(this.getLoanMeeting(), isRepaymentIndepOfMeetingEnabled);
-        
+
         LocalDate actualDisbursementDate = new LocalDate(this.disbursementDate);
         List<InstallmentDate> installmentDates = loanInstallmentGenerator.generate(actualDisbursementDate, this.noOfInstallments, this.gracePeriodType.asEnum(), this.gracePeriodDuration, this.office.getOfficeId());
-        
+
         Integer numberOfInstallments = installmentDates.size();
         GraceType graceType = this.gracePeriodType.asEnum();
         InterestType interestType = InterestType.fromInt(this.interestType.getId());
@@ -3184,7 +3184,7 @@ public class LoanBO extends AccountBO implements Loan {
         }
 
         List<LoanScheduleEntity> allExistingLoanSchedules = new ArrayList<LoanScheduleEntity>();
-        
+
         LoanScheduleRounderHelper loanScheduleRounderHelper = new DefaultLoanScheduleRounderHelper();
         LoanScheduleRounder loanScheduleInstallmentRounder = new DefaultLoanScheduleRounder(loanScheduleRounderHelper);
 
@@ -3302,7 +3302,7 @@ public class LoanBO extends AccountBO implements Loan {
     }
 
 	public void updateInstallmentSchedule(List<RepaymentScheduleInstallment> installments) {
-		
+
 		Map<Integer, LoanScheduleEntity> loanScheduleEntityLookUp = getLoanScheduleEntityMap();
 		for (RepaymentScheduleInstallment installment : installments) {
 			LoanScheduleEntity loanScheduleEntity = loanScheduleEntityLookUp

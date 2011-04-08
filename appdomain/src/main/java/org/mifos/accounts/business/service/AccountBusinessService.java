@@ -96,7 +96,6 @@ public class AccountBusinessService implements BusinessService {
         try {
             accountAction = ApplicationContextProvider.getBean(LegacyMasterDao.class).getPersistentObject(
                     AccountActionEntity.class, actionType);
-            accountAction.setLocaleId(localeId);
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
@@ -333,11 +332,6 @@ public class AccountBusinessService implements BusinessService {
     public List<AccountStateEntity> getStatusList(AccountStateEntity accountStateEntity, AccountTypes accountType,
             Short localeId) {
         List<AccountStateEntity> statusList = AccountStateMachines.getInstance().getStatusList(accountStateEntity, accountType);
-        if (null != statusList) {
-            for (AccountStateEntity accountState : statusList) {
-                accountState.setLocaleId(localeId);
-            }
-        }
         return statusList;
     }
 

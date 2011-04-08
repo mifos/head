@@ -94,10 +94,6 @@ public class LoanPrdPersistence extends LegacyGenericDao {
         Hibernate.initialize(loanOffering);
         Hibernate.initialize(loanOffering.getCurrency());
         loanOffering.getPrdCategory().getProductCategoryName();
-        loanOffering.getPrdApplicableMaster().setLocaleId(localeId);
-        loanOffering.getPrdStatus().getPrdState().setLocaleId(localeId);
-        loanOffering.getInterestTypes().setLocaleId(localeId);
-        loanOffering.getGracePeriodType().setLocaleId(localeId);
         loanOffering.getPrincipalGLcode().getGlcode();
         loanOffering.getInterestGLcode().getGlcode();
         if (loanOffering.getLoanOfferingFunds() != null && loanOffering.getLoanOfferingFunds().size() > 0) {
@@ -116,11 +112,6 @@ public class LoanPrdPersistence extends LegacyGenericDao {
 
     public List<LoanOfferingBO> getAllLoanOfferings(final Short localeId) throws PersistenceException {
         List<LoanOfferingBO> loanOfferings = executeNamedQuery(NamedQueryConstants.PRODUCT_ALL_LOAN_PRODUCTS, null);
-        if (null != loanOfferings && loanOfferings.size() > 0) {
-            for (LoanOfferingBO loanOffering : loanOfferings) {
-                loanOffering.getPrdStatus().getPrdState().setLocaleId(localeId);
-            }
-        }
         return loanOfferings;
     }
 
@@ -130,11 +121,6 @@ public class LoanPrdPersistence extends LegacyGenericDao {
 
         List<LoanOfferingBO> loanOfferings = executeNamedQuery(NamedQueryConstants.PRODUCT_ALL_ACTIVE_LOAN_PRODUCTS,
                 queryParameters);
-        if (null != loanOfferings && loanOfferings.size() > 0) {
-            for (LoanOfferingBO loanOffering : loanOfferings) {
-                loanOffering.getPrdStatus().getPrdState().setLocaleId(localeId);
-            }
-        }
         return loanOfferings;
     }
 
@@ -145,13 +131,6 @@ public class LoanPrdPersistence extends LegacyGenericDao {
 
         List<LoanOfferingBO> loanOfferings = executeNamedQuery(NamedQueryConstants.PRODUCT_NOTMIXED_LOAN_PRODUCTS,
                 queryParameters);
-        if (null != loanOfferings && loanOfferings.size() > 0) {
-            for (LoanOfferingBO loanOffering : loanOfferings) {
-                if (localeId != null) {
-                    loanOffering.getPrdStatus().getPrdState().setLocaleId(localeId);
-                }
-            }
-        }
         return loanOfferings;
     }
 }

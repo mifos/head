@@ -27,8 +27,6 @@ import org.mifos.application.master.MessageLookup;
 
 public class PaymentTypeEntity extends MasterDataEntity {
 
-    private Short localeId;
-
     /** The composite primary key value */
     private Short id;
 
@@ -59,10 +57,6 @@ public class PaymentTypeEntity extends MasterDataEntity {
         return id;
     }
 
-    public Short getLocaleId() {
-        return localeId;
-    }
-
     @Override
     public LookUpValueEntity getLookUpValue() {
         return lookUpValue;
@@ -82,11 +76,6 @@ public class PaymentTypeEntity extends MasterDataEntity {
 
     protected void setId(Short id) {
         this.id = id;
-    }
-
-    @Override
-    public void setLocaleId(Short localeId) {
-        this.localeId = localeId;
     }
 
     protected void setLookUpValue(LookUpValueEntity lookUpValue) {

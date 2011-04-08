@@ -305,8 +305,7 @@ public abstract class FeeBO extends AbstractBusinessObject {
 
     private FeeStatusEntity retrieveFeeStatusEntity(final FeeStatus status) throws FeeException {
         try {
-            return ApplicationContextProvider.getBean(LegacyMasterDao.class).findMasterDataEntityWithLocale(FeeStatusEntity.class, status.getValue(),
-                     userContext.getLocaleId());
+            return ApplicationContextProvider.getBean(LegacyMasterDao.class).findMasterDataEntityWithLocale(FeeStatusEntity.class, status.getValue());
         } catch (PersistenceException pe) {
             throw new FeeException(pe);
         }
@@ -319,7 +318,7 @@ public abstract class FeeBO extends AbstractBusinessObject {
     public boolean isWeekly() {
         return this.feeFrequency.getFeeMeetingFrequency().isWeekly();
     }
-	
+
     public FeeDto toDto() {
         FeeDto feeDto = new FeeDto();
         feeDto.setId(Short.toString(this.feeId));
@@ -331,7 +330,7 @@ public abstract class FeeBO extends AbstractBusinessObject {
         feeDto.setRateBasedFee(this instanceof RateFeeBO);
 
         feeDto.setChangeType(this.changeType);
-        
+
         FeeFrequencyDto feeFrequencyDto = this.feeFrequency.toDto();
         feeDto.setFeeFrequency(feeFrequencyDto);
 //        feeDto.setFeeFrequencyType(feeFrequencyDto.getType());

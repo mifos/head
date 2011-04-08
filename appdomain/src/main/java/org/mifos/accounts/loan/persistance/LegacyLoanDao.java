@@ -263,8 +263,6 @@ public class LegacyLoanDao extends LegacyGenericDao {
                 loanOfferingFund.getFund().getFundName();
             }
         }
-        loanOffering.getInterestTypes().setLocaleId(localeId);
-        loanOffering.getGracePeriodType().setLocaleId(localeId);
         return loanOffering;
     }
 

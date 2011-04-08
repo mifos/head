@@ -64,7 +64,6 @@ public class AddAccountActionIntegrationTest extends MifosIntegrationTestCase {
     private void upgradeAndCheck(Upgrade upgrade) throws Exception {
         upgrade.upgrade(connection);
         AccountActionEntity action = (AccountActionEntity) session.get(AccountActionEntity.class, SEND_TO_ORPHANS);
-        action.setLocaleId(TEST_LOCALE);
        Assert.assertEquals(SEND_TO_ORPHANS, (short) action.getId());
        Assert.assertEquals(" ", action.getLookUpValue().getLookUpName());
     }

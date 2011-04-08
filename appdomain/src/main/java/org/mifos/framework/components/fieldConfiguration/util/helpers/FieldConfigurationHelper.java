@@ -54,7 +54,7 @@ public class FieldConfigurationHelper {
     public static String getConfiguredFieldName(String fieldName, UserContext userContext) {
         try {
             String labelName = fieldName.substring(fieldName.indexOf(".") + 1);
-            labelName = MifosConfiguration.getInstance().getLabel(labelName, userContext.getPreferredLocale());
+            labelName = MifosConfiguration.getInstance().getLabel(labelName);
             if (labelName != null) {
                 return labelName;
             }
