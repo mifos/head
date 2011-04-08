@@ -351,8 +351,10 @@ public class CreateLoanAccountEntryPage extends MifosPage {
     }
 
     public void verifyAllowedInterestRate(String min, String max, String def) {
-        final String expectedText = "(Allowed Interest rate amount " + min + " - " + max + " %)";
-        final String expectedText2 = "(Allowed Interest rate amount " + min + ".0 - " + max + ".0 %)";
+        min = min.substring(0, min.length()-2);
+        max = max.substring(0, max.length()-2);
+        final String expectedText = "(Allowed interest rate: " + min + " - " + max + " %)";
+        final String expectedText2 = "(Allowed interest rate: " + min + ".0 - " + max + ".0 %)";
         if (selenium.isTextPresent(expectedText) || selenium.isTextPresent(expectedText2)) {
             Assert.assertTrue(true);
         } else {
@@ -362,12 +364,11 @@ public class CreateLoanAccountEntryPage extends MifosPage {
     }
 
     public void verifyAllowedInstallments(String min, String max, String def) {
-        final String expectedText = "(Allowed Number of Installments: " + min + " - " + max + " )";
-        final String expectedText2 = "(Allowed Number of Installments: " + min + ".0 - " + max + ".0 )";
-        if (selenium.isTextPresent(expectedText) || selenium.isTextPresent(expectedText2)) {
+        String expectedInstallmentText = "(Allowed number of installments: " + min + " - " + max + ")";
+        if (selenium.isTextPresent(expectedInstallmentText)) {
             Assert.assertTrue(true);
         } else {
-            Assert.fail(expectedText + " was expected but not found on page.");
+            Assert.fail(expectedInstallmentText + " was expected but not found on page.");
         }
         Assert.assertEquals(selenium.getValue("loancreationdetails.input.numberOfInstallments"), def);
     }

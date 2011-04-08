@@ -21,6 +21,8 @@
 package org.mifos.test.acceptance.framework.loan;
 
 import com.thoughtworks.selenium.Selenium;
+import com.thoughtworks.selenium.SeleniumException;
+
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -514,7 +516,12 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
     }
 
     public String getLoanAmount() {
-        return selenium.getText("schedulepreview.text.loanamount");
+        try {
+            return selenium.getText("//span[@id='schedulepreview.text.loanamount']");
+        } catch (SeleniumException e) {
+            Assert.fail("cant find span with id: schedulepreview.text.loanamount on page" + selenium.getLocation());
+        }
+        return "";
     }
 
 }

@@ -197,9 +197,14 @@ public class LoanAccountPage extends MifosPage {
     }
 
     public void verifyNumberOfInstallments(String min, String max, String expected) {
-        String expectedInstallmentText = "No. of installments: "+expected+" (Allowed Number of Installments: "+min+" - "+max+")";
-        boolean result = selenium.isTextPresent(expectedInstallmentText);
+        
+        String expectedInstallmentText = "(Allowed number of installments: " + min + " - " + max + ")";
+        boolean result = selenium.isTextPresent(expected);
+        boolean result2 = selenium.isTextPresent(expectedInstallmentText);
         if (!result) {
+            Assert.fail(expected + " :not found on page: " + selenium.getLocation());
+        }
+        if (!result2) {
             Assert.fail(expectedInstallmentText + " :not found on page: " + selenium.getLocation());
         }
     }
