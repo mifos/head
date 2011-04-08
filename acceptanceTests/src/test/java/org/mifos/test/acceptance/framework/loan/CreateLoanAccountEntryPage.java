@@ -56,8 +56,10 @@ public class CreateLoanAccountEntryPage extends MifosPage {
     }
 
     public CreateLoanAccountConfirmationPage submitAndNavigateToLoanAccountConfirmationPage(CreateLoanAccountSubmitParameters formParameters) {
-        submitAndNavigateToLoanReviewInstallmentsPage(formParameters);
-        return navigateToConfirmationPage();
+        CreateLoanAccountReviewInstallmentPage reviewInstallmentsPage = submitAndNavigateToLoanReviewInstallmentsPage(formParameters);
+        CreateLoanAccountPreviewPage previewPage = reviewInstallmentsPage.clickPreviewAndNavigateToPreviewPage();
+        return previewPage.submitForApprovalAndNavigateToConfirmationPage();
+//        return navigateToConfirmationPage();
     }
 
     public QuestionResponsePage submitAndNavigateToQuestionResponsePage() {
@@ -303,7 +305,7 @@ public class CreateLoanAccountEntryPage extends MifosPage {
     }
 
     public CreateLoanAccountEntryPage setInstallments(int noOfInstallment) {
-        typeText("noOfInstallments",String.valueOf(noOfInstallment));
+        typeText("numberOfInstallments",String.valueOf(noOfInstallment));
         return this;
     }
 

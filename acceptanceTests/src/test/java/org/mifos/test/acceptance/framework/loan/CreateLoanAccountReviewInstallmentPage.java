@@ -498,6 +498,12 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
         waitForPageToLoad();
         return this;
     }
+    
+    public CreateLoanAccountPreviewPage clickPreviewAndNavigateToPreviewPage() {
+        selenium.click(previewButton);
+        waitForPageToLoad();
+        return new CreateLoanAccountPreviewPage(this.selenium);
+    }
 
     public CreateLoanAccountReviewInstallmentPage verifyRepaymentCapacityOnValidate(String expectedRc, String minRc) {
         clickValidateAndWaitForPageToLoad();
