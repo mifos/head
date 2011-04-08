@@ -146,6 +146,10 @@ public class CustomizeTextTest  extends UiTestCaseBase {
             .removeCustomizedText(originalText);
     }
     
+    /*
+     * http://mifosforge.jira.com/browse/MIFOSTEST-1171
+     * Verify customized text on various Mifos pages
+     */
     @SuppressWarnings("PMD")
     @Test
     public void verifyCustomizedTextOnVariousPages() {
@@ -280,10 +284,10 @@ public class CustomizeTextTest  extends UiTestCaseBase {
         verifyDefineNewSystemUserTextPostal(originalCustomText.get("postal code"));
     }
     
-        /*
-        * http://mifosforge.jira.com/browse/MIFOSTEST-1170
-        * Verify customized text on 'Change Loan status' page
-         */
+    /*
+     * http://mifosforge.jira.com/browse/MIFOSTEST-1170
+     * Verify customized text on 'Change Loan status' page
+     */
     @Test
     public void verifyCustomizedTextChangeLoanStatusPage() {
         String errorMessage;
