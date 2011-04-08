@@ -21,6 +21,7 @@
 package org.mifos.test.acceptance.framework.loan;
 
 import org.apache.commons.lang.StringUtils;
+import org.testng.Assert;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.account.EditAccountStatusParameters;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
@@ -75,5 +76,12 @@ public class AccountChangeStatusPage extends MifosPage {
         selenium.click("change_status.button.submit");
         waitForPageToLoad();
     }
-
+    
+    public void verifyTextPresent(String expectedText, String errorMessage) {
+        Assert.assertTrue(selenium.isTextPresent(expectedText), errorMessage);
+    }
+    
+    public void verifyNotTextPresent(String expectedText, String errorMessage) {
+        Assert.assertFalse(selenium.isTextPresent(expectedText), errorMessage);
+    }
 }

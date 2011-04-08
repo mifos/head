@@ -107,4 +107,44 @@ public class ClientsAndAccountsHomepage extends AbstractPage {
         Assert.assertFalse(selenium.isElementPresent("menu.link.label.createnewcenter"));
         Assert.assertTrue(selenium.isTextPresent("To review or edit a Client, Group or account"));    	
     }    
+    
+    public String getClientsAndAccountsCreateCenterLink() {
+        return selenium.getText("menu.link.label.createnewcenter");
+    }
+    
+    public String getClientsAndAccountsChangeAccountStatusLink() {
+        return selenium.getText("menu.link.label.changeaccountstatus");
+    }
+    
+    public String getClientsAndAccountsCreateMultipleLoansLink() {
+        return selenium.getText("menu.link.label.createmultipleloanaccounts");
+    }
+    
+    public String getClientsAndAccountsCreateClientLink() {
+        return selenium.getText("menu.link.label.createnewclient");
+    }
+    
+    public String getClientsAndAccountsCreateGroupLink() {
+        return selenium.getText("menu.link.label.createnewgroup");
+    }
+    
+    public String getClientsAndAccountsCreateLoanAccountLink() {
+        return selenium.getText("menu.link.label.createloanaccount");
+    }
+    
+    public String getClientsAndAccountsAdminHeaderTab() {
+        return selenium.getText("clientsAndAccountsHeader.link.admin"); 
+    }
+    
+    public String getClientsAndAccountsHeaderTab() {
+        return selenium.getText("clientsAndAccountsHeader.link.clientsAndAccounts"); 
+    }
+    
+    public String getClientsAndAccountsHomeHeaderTab() {
+        return selenium.getText("clientsAndAccountsHeader.link.home"); 
+    }
+    
+    public String getClientsAndAccountsReportsHeaderTab() {
+        return selenium.getText("clientsAndAccountsHeader.link.reports"); 
+    }
 }

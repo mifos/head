@@ -100,5 +100,11 @@ public class AdminTestHelper {
             .navigateToViewChecklistsPage()
             .navigateToChecklistDetailsPage(checklistName);
     }
-
+    
+    public CustomizeTextViewPage removeCustomizedText(String originalText) {
+        return navigationHelper
+            .navigateToAdminPage()
+            .navigateToCustomizeTextViewPage()
+            .removeCustomizedText(originalText);
+    }
 }
