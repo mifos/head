@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.struts.Globals;
 import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.servicefacade.NewLoginServiceFacade;
@@ -187,7 +188,7 @@ public class MifosLegacyUsernamePasswordAuthenticationFilter extends UsernamePas
             if (loginActivity.isPasswordChanged()) {
                 HttpSession hs = request.getSession(false);
                 hs.setAttribute(Constants.USERCONTEXT, userContext);
-                hs.setAttribute("org.apache.struts.action.LOCALE", userContext.getCurrentLocale());
+                hs.setAttribute(Globals.LOCALE_KEY, userContext.getCurrentLocale());
             } else {
                 flowManager.addObjectToFlow(flowKey, Constants.TEMPUSERCONTEXT, userContext);
             }
