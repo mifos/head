@@ -209,7 +209,7 @@ public class LoanAccountPage extends MifosPage {
         if (result2 || result3) {
             Assert.assertTrue(true);
         } else {
-            Assert.fail(expectedInstallmentText + " :not found on page: " + selenium.getLocation() + " source: " + selenium.getHtmlSource());
+            Assert.fail(expectedInstallmentText + " :not found on page: " + selenium.getLocation());
         }
     }
 

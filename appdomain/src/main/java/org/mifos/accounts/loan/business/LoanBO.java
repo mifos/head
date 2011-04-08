@@ -40,6 +40,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import javassist.compiler.NoFieldException;
+
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
@@ -73,8 +75,11 @@ import org.mifos.accounts.loan.util.helpers.LoanPaymentTypes;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
+import org.mifos.accounts.productdefinition.business.LoanAmountFromLoanCycleBO;
 import org.mifos.accounts.productdefinition.business.LoanAmountSameForAllLoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.accounts.productdefinition.business.NoOfInstallFromLastLoanAmountBO;
+import org.mifos.accounts.productdefinition.business.NoOfInstallFromLoanCycleBO;
 import org.mifos.accounts.productdefinition.business.NoOfInstallSameForAllLoanBO;
 import org.mifos.accounts.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
@@ -343,6 +348,12 @@ public class LoanBO extends AccountBO implements Loan {
         if (!loanProduct.getNoOfInstallSameForAllLoan().isEmpty()) {
             NoOfInstallSameForAllLoanBO maxMinInstall = new ArrayList<NoOfInstallSameForAllLoanBO>(loanProduct.getNoOfInstallSameForAllLoan()).get(0);
             this.maxMinNoOfInstall = new MaxMinNoOfInstall(maxMinInstall.getMaxNoOfInstall(), maxMinInstall.getMinNoOfInstall(), this);
+        } else if (!loanProduct.getNoOfInstallFromLoanCycle().isEmpty()) {
+            NoOfInstallFromLoanCycleBO maxMinInstall = new ArrayList<NoOfInstallFromLoanCycleBO>(loanProduct.getNoOfInstallFromLoanCycle()).get(0);
+            this.maxMinNoOfInstall = new MaxMinNoOfInstall(maxMinInstall.getMaxNoOfInstall(), maxMinInstall.getMinNoOfInstall(), this);
+        } else if (!loanProduct.getNoOfInstallFromLastLoan().isEmpty()) {
+            NoOfInstallFromLastLoanAmountBO maxMinInstall = new ArrayList<NoOfInstallFromLastLoanAmountBO>(loanProduct.getNoOfInstallFromLastLoan()).get(0);
+            this.maxMinNoOfInstall = new MaxMinNoOfInstall(maxMinInstall.getMaxNoOfInstall(), maxMinInstall.getMinNoOfInstall(), this);
         } else {
             this.maxMinNoOfInstall = new MaxMinNoOfInstall(this.noOfInstallments, this.noOfInstallments, this);
         }
@@ -351,6 +362,12 @@ public class LoanBO extends AccountBO implements Loan {
         
         if (!loanProduct.getLoanAmountSameForAllLoan().isEmpty()) {
             LoanAmountSameForAllLoanBO maxMinInstall = new ArrayList<LoanAmountSameForAllLoanBO>(loanProduct.getLoanAmountSameForAllLoan()).get(0);
+            this.maxMinLoanAmount = new MaxMinLoanAmount(maxMinInstall.getMaxLoanAmount(), maxMinInstall.getMinLoanAmount(), this);
+        } else if (!loanProduct.getLoanAmountFromLoanCycle().isEmpty()) {
+            LoanAmountFromLoanCycleBO maxMinInstall = new ArrayList<LoanAmountFromLoanCycleBO>(loanProduct.getLoanAmountFromLoanCycle()).get(0);
+            this.maxMinLoanAmount = new MaxMinLoanAmount(maxMinInstall.getMaxLoanAmount(), maxMinInstall.getMinLoanAmount(), this);
+        } else if (!loanProduct.getLoanAmountFromLoanCycle().isEmpty()) {
+            LoanAmountFromLoanCycleBO maxMinInstall = new ArrayList<LoanAmountFromLoanCycleBO>(loanProduct.getLoanAmountFromLoanCycle()).get(0);
             this.maxMinLoanAmount = new MaxMinLoanAmount(maxMinInstall.getMaxLoanAmount(), maxMinInstall.getMinLoanAmount(), this);
         } else {
             this.maxMinLoanAmount = new MaxMinLoanAmount(overridenDetail.getLoanAmount().getAmount().doubleValue(), overridenDetail.getLoanAmount().getAmount().doubleValue(), this);

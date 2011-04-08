@@ -102,9 +102,8 @@ public class CreateLoanAccountEntryPage extends MifosPage {
 
     public CreateLoanAccountReviewInstallmentPage submitAndNavigateToLoanReviewInstallmentsPage(CreateLoanAccountSubmitParameters formParameters) {
         submitLoanAccount(formParameters);
-        return new CreateLoanAccountReviewInstallmentPage(selenium);
-        // FIXME: - was going to view installments page which is a page of loan account details page!!! not on creation flow at all...
-//        return new ViewInstallmentDetailsPage(selenium);
+        waitForPageToLoad();
+        return new CreateLoanAccountReviewInstallmentPage(selenium).verifyPage();
     }
 
     private void submitLoanAccount(CreateLoanAccountSubmitParameters formParameters) {
@@ -140,16 +139,14 @@ public class CreateLoanAccountEntryPage extends MifosPage {
 
     public void fillAdditionalFee(CreateLoanAccountSubmitParameters formParameters){
         if(formParameters.getAdditionalFee1()!=null) {
-            selenium.select("selectedFee[0].feeId", "label=" + formParameters.getAdditionalFee1());
+            selenium.select("selectedFeeId0", "label=" + formParameters.getAdditionalFee1());
         }
         if(formParameters.getAdditionalFee2()!=null) {
-            selenium.select("selectedFee[1].feeId", "label=" + formParameters.getAdditionalFee2());
+            selenium.select("selectedFeeId1", "label=" + formParameters.getAdditionalFee2());
         }
         if(formParameters.getAdditionalFee3()!=null) {
-            selenium.select("selectedFee[2].feeId", "label=" + formParameters.getAdditionalFee3());
+            selenium.select("selectedFeeId2", "label=" + formParameters.getAdditionalFee3());
         }
-
-        //selenium.select("selectedFee[0].feeId", "label=USDfeeAdditional");
     }
 
     public CreateLoanAccountConfirmationPage submitAndNavigateToGLIMLoanAccountConfirmationPage() {
@@ -192,29 +189,28 @@ public class CreateLoanAccountEntryPage extends MifosPage {
     }
 
     public void selectAdditionalFees() {
-        selenium.select("selectedFee[0].feeId", "label=One Time Upfront Fee");
-        selenium.type("loancreationdetails.input.feeAmount", "6.6");
+        selenium.select("selectedFeeId0", "label=One Time Upfront Fee");
+        selenium.type("selectedFeeId0Amount", "6.6");
 
-        selenium.select("selectedFee[1].feeId", "label=One Time Upfront Fee");
-        selenium.type("selectedFee[1].amount", "3.3");
+        selenium.select("selectedFeeId1", "label=One Time Upfront Fee");
+        selenium.type("selectedFeeId1Amount", "3.3");
     }
 
     public void unselectAdditionalFee() {
-        selenium.select("selectedFee[1].feeId", "label=--Select--");
+        selenium.select("selectedFeeId1", "label=--Select--");
     }
 
     public void selectTwoClientsForGlim() {
-        selenium.click("glimLoanForm.input.select");
-        selenium.type("glimLoanForm.input.loanAmount", "1234");
+        selenium.click("selectAll");
+        selenium.type("clientAmount[0]", "1234");
 
         selenium.click("clients[1]");
-        selenium.type("clientDetails[1].loanAmount", "4321");
+        selenium.type("clientAmount[1]", "4321");
     }
 
     public void selectPurposeForGlim() {
-        selenium.select("clientDetails[0].businessActivity", "label=0003-Goat Purchase");
-
-        selenium.select("clientDetails[1].businessActivity", "label=0010-Camel");
+        selenium.select("clientLoanPurposeId[0]", "label=0003-Goat Purchase");
+        selenium.select("clientLoanPurposeId[1]", "label=0010-Camel");
     }
 
     public void selectGLIMClients(int clientNumber, String expectedClientName, String loanAmount) {
@@ -230,10 +226,8 @@ public class CreateLoanAccountEntryPage extends MifosPage {
         }
     }
 
-
     public CreateLoanAccountReviewInstallmentPage clickContinue(){
         submit();
-//        selenium.isVisible("schedulePreview.button.preview");
         return  new CreateLoanAccountReviewInstallmentPage(selenium);
     }
 
@@ -242,13 +236,6 @@ public class CreateLoanAccountEntryPage extends MifosPage {
         return navigateToConfirmationPage();
 
     }
-
-//    public CreateLoanAccountConfirmationPage clickContinue() {
-//        selenium.click("loancreationdetails.button.continue");
-//        waitForPageToLoad();
-//        selenium.isVisible("schedulePreview.button.preview");
-//        return new CreateLoanAccountConfirmationPage(selenium);
-//    }
 
     public void checkTotalAmount(String expectedTotalAmount) {
         Assert.assertEquals(selenium.getValue("sumLoanAmount"), expectedTotalAmount);
