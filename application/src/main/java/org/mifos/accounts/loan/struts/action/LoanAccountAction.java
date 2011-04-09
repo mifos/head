@@ -1228,7 +1228,9 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         LoanBO loan = getLoan(loanId);
         loan.updateDetails(userContext);
         Errors errors = loanBusinessService.computeExtraInterest(loan, viewDate);
-        if (errors.hasErrors()) loanAccountActionForm.resetScheduleViewDate();
+        if (errors.hasErrors()) {
+            loanAccountActionForm.resetScheduleViewDate();
+        }
 
         OriginalScheduleInfoDto originalSchedule = this.loanServiceFacade.retrieveOriginalLoanSchedule(loanId, locale);
 
@@ -1463,6 +1465,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         loanAccountInfo.setExternalId(loanActionForm.getExternalId());
         loanAccountInfo.setSelectedLoanPurpose(loanActionForm.getBusinessActivityIdValue());
         loanAccountInfo.setSelectedCollateralType(loanActionForm.getCollateralTypeIdValue());
+        loanAccountInfo.setCollateralNote(loanActionForm.getCollateralNote());
         loanAccountInfo.setAccountState(loanActionForm.getState().getValue());
 
         List<CreateAccountFeeDto> accountFeesToCreate = new ArrayList<CreateAccountFeeDto>();
