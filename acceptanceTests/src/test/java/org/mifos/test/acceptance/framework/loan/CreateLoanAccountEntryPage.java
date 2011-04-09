@@ -297,7 +297,13 @@ public class CreateLoanAccountEntryPage extends MifosPage {
     }
 
     public CreateLoanAccountEntryPage verifyInterestTypeInLoanCreation(String interestTypeName) {
-        Assert.assertTrue(selenium.isTextPresent("Interest Rate Type:"));
+        if(!selenium.isTextPresent("Interest rate type:")) {
+            Assert.fail("Interest rate type: was expected but not found on page: " + selenium.getLocation());
+        }
+        
+        if(!selenium.isTextPresent(interestTypeName)) {
+            Assert.fail(interestTypeName + " was expected but not found on page: " + selenium.getLocation());
+        }
         Assert.assertTrue(selenium.isTextPresent(interestTypeName));
         return this;
     }
