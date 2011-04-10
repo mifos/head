@@ -67,11 +67,11 @@
     </div>
     <div class="row">
         <div class="attribute">[@spring.message "productSummary.variabeInstallments.minGap"/]</div>
-        <div class="value">${loanProductReferenceData.minGapInDays?string.number}</div>
+        <div class="value">${loanProductReferenceData.minGapInDays?string.number}<span>&nbsp;[@spring.message "productSummary.variabeInstallments.days"/]</span></div>
     </div>
     <div class="row">
         <div class="attribute">[@spring.message "productSummary.variabeInstallments.maxGap"/]</div>
-        <div class="value">${loanProductReferenceData.maxGapInDays?string.number}</div>
+        <div class="value">${loanProductReferenceData.maxGapInDays?string.number}<span>&nbsp;[@spring.message "productSummary.variabeInstallments.days"/]</span></div>
     </div>
     <div class="row">
         <div class="attribute">[@spring.message "productSummary.variabeInstallments.minInstallmentAmount"/]</div>
