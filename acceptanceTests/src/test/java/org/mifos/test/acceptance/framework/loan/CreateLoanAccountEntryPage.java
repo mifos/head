@@ -311,14 +311,14 @@ public class CreateLoanAccountEntryPage extends MifosPage {
     public CreateLoanAccountEntryPage verifyInvalidFeeBlocked(String[] fees) {
         for (int index = 0; index < fees.length; index++) {
             String fee = fees[index];
-            selenium.select("selectedFee[" + index + "].feeId",fee);
+            selenium.select("selectedFeeId" + index, fee);
         }
         submit();
         for (String fee : fees) {
             Assert.assertTrue(selenium.isTextPresent(fee + " fee cannot be applied to loan with variable installments"));
         }
         for (int index = 0; index < fees.length; index++) {
-            selenium.select("selectedFee[" + index + "].feeId","--Select--");
+            selenium.select("selectedFeeId" + index,"--Select--");
         }
         return this;
     }
