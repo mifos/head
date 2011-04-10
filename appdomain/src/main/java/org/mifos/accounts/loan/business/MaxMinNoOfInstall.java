@@ -41,8 +41,8 @@ public class MaxMinNoOfInstall extends InstallmentRange {
         this(null, null, null);
     }
 
-    public MaxMinNoOfInstall(Short maxLoanAmount, Short minLoanAmount, LoanBO loanBO) {
-        super(minLoanAmount, maxLoanAmount);
+    public MaxMinNoOfInstall(Short minNumberOfInstallments, Short maxNumberOfInstallments, LoanBO loanBO) {
+        super(minNumberOfInstallments, maxNumberOfInstallments);
         this.loan = loanBO;
         this.accountId = null;
     }

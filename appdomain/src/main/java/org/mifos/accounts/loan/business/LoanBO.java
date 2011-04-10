@@ -349,7 +349,7 @@ public class LoanBO extends AccountBO implements Loan {
         this.loanSummary = buildLoanSummary();
         this.maxMinInterestRate = new MaxMinInterestRate(loanProduct.getMaxInterestRate(), loanProduct.getMinInterestRate(), this);
         
-        this.maxMinNoOfInstall = new MaxMinNoOfInstall(installmentRange.getMaxNoOfInstall(), installmentRange.getMinNoOfInstall(), this);
+        this.maxMinNoOfInstall = new MaxMinNoOfInstall(installmentRange.getMinNoOfInstall(), installmentRange.getMaxNoOfInstall(), this);
         this.maxMinLoanAmount = new MaxMinLoanAmount(loanAmountRange.getMaxLoanAmount(), loanAmountRange.getMinLoanAmount(), this);
 
         // legacy
