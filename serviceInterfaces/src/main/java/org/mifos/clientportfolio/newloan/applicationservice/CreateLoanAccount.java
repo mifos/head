@@ -46,18 +46,27 @@ public class CreateLoanAccount implements RecurringSchedule {
     private final boolean repaymentScheduleIndependentOfCustomerMeeting;
     private final RecurringSchedule recurringSchedule;
     private final List<CreateAccountFeeDto> accountFees;
+    private final int minAllowedNumberOfInstallments;
+    private final int maxAllowedNumberOfInstallments;
+    private final BigDecimal minAllowedLoanAmount;
+    private final BigDecimal maxAllowedLoanAmount;
 
-    public CreateLoanAccount(Integer customerId, Integer productId, Integer accountState, BigDecimal loanAmount, Double interestRate,
-            LocalDate disbursementDate, int numberOfInstallments, int graceDuration, Integer sourceOfFundId,
+    public CreateLoanAccount(Integer customerId, Integer productId, Integer accountState, BigDecimal loanAmount, BigDecimal minAllowedLoanAmount, BigDecimal maxAllowedLoanAmount, Double interestRate,
+            LocalDate disbursementDate, int numberOfInstallments, int minAllowedNumberOfInstallments, int maxAllowedNumberOfInstallments, 
+            int graceDuration, Integer sourceOfFundId,
             Integer loanPurposeId, Integer collateralTypeId, String collateralNotes, String externalId, 
             boolean repaymentScheduleIndependentOfCustomerMeeting, RecurringSchedule recurringSchedule, List<CreateAccountFeeDto> accountFees) {
         this.customerId = customerId;
         this.productId = productId;
         this.accountState = accountState;
         this.loanAmount = loanAmount;
+        this.minAllowedLoanAmount = minAllowedLoanAmount;
+        this.maxAllowedLoanAmount = maxAllowedLoanAmount;
         this.interestRate = interestRate;
         this.disbursementDate = disbursementDate;
         this.numberOfInstallments = numberOfInstallments;
+        this.minAllowedNumberOfInstallments = minAllowedNumberOfInstallments;
+        this.maxAllowedNumberOfInstallments = maxAllowedNumberOfInstallments;
         this.graceDuration = graceDuration;
         this.sourceOfFundId = sourceOfFundId;
         this.loanPurposeId = loanPurposeId;
@@ -162,5 +171,21 @@ public class CreateLoanAccount implements RecurringSchedule {
     
     public List<CreateAccountFeeDto> getAccountFees() {
         return accountFees;
+    }
+    
+    public Integer getMinAllowedNumberOfInstallments() {
+        return minAllowedNumberOfInstallments;
+    }
+
+    public Integer getMaxAllowedNumberOfInstallments() {
+        return maxAllowedNumberOfInstallments;
+    }
+
+    public BigDecimal getMinAllowedLoanAmount() {
+        return minAllowedLoanAmount;
+    }
+
+    public BigDecimal getMaxAllowedLoanAmount() {
+        return maxAllowedLoanAmount;
     }
 }

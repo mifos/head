@@ -66,6 +66,8 @@ import org.mifos.accounts.loan.business.LoanActivityEntity;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanPerformanceHistoryEntity;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
+import org.mifos.accounts.loan.business.MaxMinLoanAmount;
+import org.mifos.accounts.loan.business.MaxMinNoOfInstall;
 import org.mifos.accounts.loan.business.RepaymentResultsHolder;
 import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
@@ -76,8 +78,10 @@ import org.mifos.accounts.loan.struts.action.validate.ProductMixValidator;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.MultipleLoanCreationDto;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
+import org.mifos.accounts.productdefinition.business.AmountRange;
 import org.mifos.accounts.productdefinition.business.CashFlowDetail;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
+import org.mifos.accounts.productdefinition.business.InstallmentRange;
 import org.mifos.accounts.productdefinition.business.LoanAmountOption;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingFundEntity;
@@ -747,6 +751,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
         return new LoanScheduleDto(customer.getDisplayName(), Double.valueOf(createLoanSchedule.getLoanAmount().doubleValue()), createLoanSchedule.getDisbursementDate(), installments);
     }
+    
     /**
      * @deprecated - not fully implemented yet.
      */
@@ -788,20 +793,20 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         List<AccountFeesEntity> accountFees = new ArrayList<AccountFeesEntity>();
         LoanSchedule loanSchedule = this.loanScheduleService.generate(loanProduct, customer, loanProduct.getLoanOfferingMeetingValue(), overridenDetail, configuration, userContext.getBranchId(), accountFees);
 
-        LoanBO loan = LoanBO.createOpeningBalanceLoan(userContext, loanProduct, customer, loanApprovedState,
-                firstInstallmentDate, openingBalanceLoan.getCurrentInstallmentDate(),
-                amountPaidToDate, openingBalanceLoan.getLoanCycle(), loanSchedule, overridenDetail);
+//        LoanBO loan = LoanBO.createOpeningBalanceLoan(userContext, loanProduct, customer, loanApprovedState,
+//                firstInstallmentDate, openingBalanceLoan.getCurrentInstallmentDate(),
+//                amountPaidToDate, openingBalanceLoan.getLoanCycle(), loanSchedule, overridenDetail);
 
         try {
             // create loan
             StaticHibernateUtil.startTransaction();
             PersonnelBO createdBy = this.personnelDao.findPersonnelById(userContext.getId());
-            loan.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(loan.getAccountState(), loan.getAccountState(), createdBy, loan));
-            this.loanDao.save(loan);
+//            loan.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(loan.getAccountState(), loan.getAccountState(), createdBy, loan));
+//            this.loanDao.save(loan);
             StaticHibernateUtil.flushSession();
 
-            loan.setGlobalAccountNum(loan.generateId(userOffice.getGlobalOfficeNum()));
-            this.loanDao.save(loan);
+//            loan.setGlobalAccountNum(loan.generateId(userOffice.getGlobalOfficeNum()));
+//            this.loanDao.save(loan);
             StaticHibernateUtil.flushSession();
 
             // disburse loan
@@ -809,30 +814,31 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             Date receiptDate = null;
             PaymentTypeEntity paymentType = new PaymentTypeEntity(PaymentTypes.CASH.getValue());
             Date paymentDate = openingBalanceLoan.getDisbursementDate().toDateMidnight().toDate();
-            AccountPaymentEntity disbursalPayment = new AccountPaymentEntity(loan, loanAmountDisbursed, receiptNumber, receiptDate, paymentType, paymentDate);
-            disbursalPayment.setCreatedByUser(createdBy);
-            loan.disburseLoan(disbursalPayment);
-            this.loanDao.save(loan);
+//            AccountPaymentEntity disbursalPayment = new AccountPaymentEntity(loan, loanAmountDisbursed, receiptNumber, receiptDate, paymentType, paymentDate);
+//            disbursalPayment.setCreatedByUser(createdBy);
+//            loan.disburseLoan(disbursalPayment);
+//            this.loanDao.save(loan);
             StaticHibernateUtil.flushSession();
 
             Short paymentId = PaymentTypes.CASH.getValue();
             PaymentData paymentData = new PaymentData(amountPaidToDate, createdBy, paymentId, firstInstallmentDate.toDateMidnight().toDate());
             // make payment for balance against first installment date.
-            loan.applyPayment(paymentData);
-            this.loanDao.save(loan);
+//            loan.applyPayment(paymentData);
+//            this.loanDao.save(loan);
             StaticHibernateUtil.commitTransaction();
-        } catch (AccountException e) {
-            StaticHibernateUtil.rollbackTransaction();
-            throw new BusinessRuleException(e.getKey(), e);
-        } catch (PersistenceException e) {
-            StaticHibernateUtil.rollbackTransaction();
-            throw new BusinessRuleException(e.getKey(), e);
+//        } catch (AccountException e) {
+//            StaticHibernateUtil.rollbackTransaction();
+//            throw new BusinessRuleException(e.getKey(), e);
+//        } catch (PersistenceException e) {
+//            StaticHibernateUtil.rollbackTransaction();
+//            throw new BusinessRuleException(e.getKey(), e);
         } finally {
             StaticHibernateUtil.closeSession();
         }
 
 
-        return loan.getGlobalAccountNum();
+//        return loan.getGlobalAccountNum();
+        return "";
     }
 
     @Override
@@ -981,8 +987,14 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             OfficeBO userOffice, LoanAccountDetail loanAccountDetail, LoanProductOverridenDetail overridenDetail, LoanScheduleConfiguration configuration,
             MeetingBO repaymentDayMeeting, LoanSchedule loanSchedule, PersonnelBO createdBy, List<GroupMemberLoanDetail> individualMembersOfGroupLoan) {
 
+        InstallmentRange installmentRange = new MaxMinNoOfInstall(loanAccountInfo.getMinAllowedNumberOfInstallments().shortValue(), 
+                loanAccountInfo.getMaxAllowedNumberOfInstallments().shortValue(), null);
+        AmountRange amountRange = new MaxMinLoanAmount(loanAccountInfo.getMaxAllowedLoanAmount().doubleValue(), loanAccountInfo.getMinAllowedLoanAmount().doubleValue(), null);
+        
         CreationDetail creationDetail = new CreationDetail(new DateTime(), Integer.valueOf(user.getUserId()));
-        LoanBO loan = LoanBO.openStandardLoanAccount(loanAccountDetail.getLoanProduct(), loanAccountDetail.getCustomer(), repaymentDayMeeting, loanSchedule, loanAccountDetail.getAccountState(), loanAccountDetail.getFund(), overridenDetail, configuration, creationDetail, createdBy);
+        LoanBO loan = LoanBO.openStandardLoanAccount(loanAccountDetail.getLoanProduct(), loanAccountDetail.getCustomer(), repaymentDayMeeting, 
+                loanSchedule, loanAccountDetail.getAccountState(), loanAccountDetail.getFund(), overridenDetail, configuration, installmentRange, amountRange,
+                creationDetail, createdBy);
         loan.setBusinessActivityId(loanAccountInfo.getLoanPurposeId());
         loan.setExternalId(loanAccountInfo.getExternalId());
         loan.setCollateralNote(loanAccountInfo.getCollateralNotes());
@@ -996,7 +1008,8 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             // for GLIM loans only
             for (GroupMemberLoanDetail groupMemberAccount : individualMembersOfGroupLoan) {
 
-                LoanBO memberLoan = LoanBO.openGroupMemberLoanAccount(loan, loanAccountDetail.getLoanProduct(), groupMemberAccount.getMember(), repaymentDayMeeting, groupMemberAccount.getMemberSchedule(), groupMemberAccount.getMemberOverridenDetail(), configuration, creationDetail, createdBy);
+                LoanBO memberLoan = LoanBO.openGroupMemberLoanAccount(loan, loanAccountDetail.getLoanProduct(), groupMemberAccount.getMember(), repaymentDayMeeting, groupMemberAccount.getMemberSchedule(), groupMemberAccount.getMemberOverridenDetail(), configuration,
+                        installmentRange, amountRange, creationDetail, createdBy);
                 memberLoan.setBusinessActivityId(groupMemberAccount.getLoanPurposeId());
                 this.loanService.create(memberLoan, userOffice.getGlobalOfficeNum());
                 transactionHelper.flushSession();

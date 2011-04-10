@@ -329,10 +329,14 @@ public class LoanAccountController {
         List<CreateAccountFeeDto> additionalAccountFees = translateToAdditionalAccountFeeDtos(formBean);
         accountFees.addAll(additionalAccountFees);
         
+        BigDecimal loanAmount = BigDecimal.valueOf(formBean.getAmount().doubleValue());
+        BigDecimal minAllowedLoanAmount = BigDecimal.valueOf(formBean.getMinAllowedAmount().doubleValue());
+        BigDecimal maxAllowedLoanAmount = BigDecimal.valueOf(formBean.getMaxAllowedAmount().doubleValue());
         CreateLoanAccount loanAccountDetails = new CreateLoanAccount(formBean.getCustomerId(),
-                formBean.getProductId(), accountState, BigDecimal.valueOf(formBean.getAmount().doubleValue()),
-                formBean.getInterestRate().doubleValue(), disbursementDate, formBean.getNumberOfInstallments()
-                        .intValue(), formBean.getGraceDuration().intValue(), formBean.getFundId(),
+                formBean.getProductId(), accountState, loanAmount, minAllowedLoanAmount, maxAllowedLoanAmount,
+                formBean.getInterestRate().doubleValue(), disbursementDate, formBean.getNumberOfInstallments().intValue(),
+                formBean.getMinNumberOfInstallments().intValue(), formBean.getMaxNumberOfInstallments().intValue(),
+                formBean.getGraceDuration().intValue(), formBean.getFundId(),
                 formBean.getLoanPurposeId(), formBean.getCollateralTypeId(), formBean.getCollateralNotes(),
                 formBean.getExternalId(), formBean.isRepaymentScheduleIndependentOfCustomerMeeting(), recurringSchedule, accountFees);
 

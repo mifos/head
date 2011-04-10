@@ -74,7 +74,9 @@ import org.mifos.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.accounts.loan.util.helpers.LoanPaymentTypes;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.persistence.LegacyAccountDao;
+import org.mifos.accounts.productdefinition.business.AmountRange;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
+import org.mifos.accounts.productdefinition.business.InstallmentRange;
 import org.mifos.accounts.productdefinition.business.LoanAmountFromLoanCycleBO;
 import org.mifos.accounts.productdefinition.business.LoanAmountSameForAllLoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -318,7 +320,8 @@ public class LoanBO extends AccountBO implements Loan {
 
     // opening balance loan constructor
     public LoanBO(LoanOfferingBO loanProduct, CustomerBO customer, AccountState loanState, LoanProductOverridenDetail overridenDetail, 
-            MeetingBO repaymentDayMeeting, LoanSchedule loanSchedule, LoanScheduleConfiguration configuration, CreationDetail creationDetail) {
+            MeetingBO repaymentDayMeeting, LoanSchedule loanSchedule, LoanScheduleConfiguration configuration, 
+            InstallmentRange installmentRange, AmountRange loanAmountRange, CreationDetail creationDetail) {
         super(AccountTypes.LOAN_ACCOUNT, loanState, customer, loanSchedule.getRoundedLoanSchedules(), creationDetail);
         this.parentAccount = null; // used for GLIM loans and will be set in factory method for this.
         this.performanceHistory = new LoanPerformanceHistoryEntity(this);
@@ -344,34 +347,10 @@ public class LoanBO extends AccountBO implements Loan {
         this.loanActivityDetails = new ArrayList<LoanActivityEntity>();
         this.rawAmountTotal = loanSchedule.getRawAmount();
         this.loanSummary = buildLoanSummary();
-
-        if (!loanProduct.getNoOfInstallSameForAllLoan().isEmpty()) {
-            NoOfInstallSameForAllLoanBO maxMinInstall = new ArrayList<NoOfInstallSameForAllLoanBO>(loanProduct.getNoOfInstallSameForAllLoan()).get(0);
-            this.maxMinNoOfInstall = new MaxMinNoOfInstall(maxMinInstall.getMaxNoOfInstall(), maxMinInstall.getMinNoOfInstall(), this);
-        } else if (!loanProduct.getNoOfInstallFromLoanCycle().isEmpty()) {
-            NoOfInstallFromLoanCycleBO maxMinInstall = new ArrayList<NoOfInstallFromLoanCycleBO>(loanProduct.getNoOfInstallFromLoanCycle()).get(0);
-            this.maxMinNoOfInstall = new MaxMinNoOfInstall(maxMinInstall.getMaxNoOfInstall(), maxMinInstall.getMinNoOfInstall(), this);
-        } else if (!loanProduct.getNoOfInstallFromLastLoan().isEmpty()) {
-            NoOfInstallFromLastLoanAmountBO maxMinInstall = new ArrayList<NoOfInstallFromLastLoanAmountBO>(loanProduct.getNoOfInstallFromLastLoan()).get(0);
-            this.maxMinNoOfInstall = new MaxMinNoOfInstall(maxMinInstall.getMaxNoOfInstall(), maxMinInstall.getMinNoOfInstall(), this);
-        } else {
-            this.maxMinNoOfInstall = new MaxMinNoOfInstall(this.noOfInstallments, this.noOfInstallments, this);
-        }
-        
         this.maxMinInterestRate = new MaxMinInterestRate(loanProduct.getMaxInterestRate(), loanProduct.getMinInterestRate(), this);
         
-        if (!loanProduct.getLoanAmountSameForAllLoan().isEmpty()) {
-            LoanAmountSameForAllLoanBO maxMinInstall = new ArrayList<LoanAmountSameForAllLoanBO>(loanProduct.getLoanAmountSameForAllLoan()).get(0);
-            this.maxMinLoanAmount = new MaxMinLoanAmount(maxMinInstall.getMaxLoanAmount(), maxMinInstall.getMinLoanAmount(), this);
-        } else if (!loanProduct.getLoanAmountFromLoanCycle().isEmpty()) {
-            LoanAmountFromLoanCycleBO maxMinInstall = new ArrayList<LoanAmountFromLoanCycleBO>(loanProduct.getLoanAmountFromLoanCycle()).get(0);
-            this.maxMinLoanAmount = new MaxMinLoanAmount(maxMinInstall.getMaxLoanAmount(), maxMinInstall.getMinLoanAmount(), this);
-        } else if (!loanProduct.getLoanAmountFromLoanCycle().isEmpty()) {
-            LoanAmountFromLoanCycleBO maxMinInstall = new ArrayList<LoanAmountFromLoanCycleBO>(loanProduct.getLoanAmountFromLoanCycle()).get(0);
-            this.maxMinLoanAmount = new MaxMinLoanAmount(maxMinInstall.getMaxLoanAmount(), maxMinInstall.getMinLoanAmount(), this);
-        } else {
-            this.maxMinLoanAmount = new MaxMinLoanAmount(overridenDetail.getLoanAmount().getAmount().doubleValue(), overridenDetail.getLoanAmount().getAmount().doubleValue(), this);
-        }
+        this.maxMinNoOfInstall = new MaxMinNoOfInstall(installmentRange.getMaxNoOfInstall(), installmentRange.getMinNoOfInstall(), this);
+        this.maxMinLoanAmount = new MaxMinLoanAmount(loanAmountRange.getMaxLoanAmount(), loanAmountRange.getMinLoanAmount(), this);
 
         // legacy
         this.intrestAtDisbursement = Short.valueOf("0"); // false
@@ -586,9 +565,11 @@ public class LoanBO extends AccountBO implements Loan {
     
     public static LoanBO openStandardLoanAccount(LoanOfferingBO loanProduct, CustomerBO customer,
             MeetingBO repaymentDayMeeting, LoanSchedule loanSchedule, AccountState loanState, FundBO fund, 
-            LoanProductOverridenDetail overridenDetail, LoanScheduleConfiguration configuration, CreationDetail creationDetail, PersonnelBO createdBy) {
+            LoanProductOverridenDetail overridenDetail, LoanScheduleConfiguration configuration, 
+            InstallmentRange installmentRange, AmountRange loanAmountRange, 
+            CreationDetail creationDetail, PersonnelBO createdBy) {
         
-        LoanBO standardLoan = new LoanBO(loanProduct, customer, loanState, overridenDetail, repaymentDayMeeting, loanSchedule, configuration, creationDetail);
+        LoanBO standardLoan = new LoanBO(loanProduct, customer, loanState, overridenDetail, repaymentDayMeeting, loanSchedule, configuration, installmentRange, loanAmountRange, creationDetail);
         standardLoan.setFund(fund);
         standardLoan.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(standardLoan.getAccountState(), standardLoan.getAccountState(), createdBy, standardLoan));
         return standardLoan;
@@ -596,10 +577,10 @@ public class LoanBO extends AccountBO implements Loan {
     
     public static LoanBO openGroupMemberLoanAccount(LoanBO parentLoan, LoanOfferingBO loanProduct, ClientBO member,
             MeetingBO repaymentDayMeeting, LoanSchedule loanSchedule, LoanProductOverridenDetail overridenDetail,
-            LoanScheduleConfiguration configuration, CreationDetail creationDetail, PersonnelBO createdBy) {
+            LoanScheduleConfiguration configuration, InstallmentRange installmentRange, AmountRange loanAmountRange, CreationDetail creationDetail, PersonnelBO createdBy) {
         
         AccountState loanState = AccountState.LOAN_PENDING_APPROVAL;
-        LoanBO groupMemberLoan = new LoanBO(loanProduct, member, loanState, overridenDetail, repaymentDayMeeting, loanSchedule, configuration, creationDetail);
+        LoanBO groupMemberLoan = new LoanBO(loanProduct, member, loanState, overridenDetail, repaymentDayMeeting, loanSchedule, configuration, installmentRange, loanAmountRange, creationDetail);
         groupMemberLoan.setParentAccount(parentLoan);
         groupMemberLoan.markAsIndividualLoanAccount();
         groupMemberLoan.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(groupMemberLoan.getAccountState(), groupMemberLoan.getAccountState(), createdBy, groupMemberLoan));
@@ -608,20 +589,6 @@ public class LoanBO extends AccountBO implements Loan {
 
     private void markAsIndividualLoanAccount() {
         this.accountType = new AccountTypeEntity(AccountTypes.INDIVIDUAL_LOAN_ACCOUNT.getValue());
-    }
-
-    /**
-     * @deprecated - opening balance functionality incomplete.
-     */
-    @Deprecated
-    public static LoanBO createOpeningBalanceLoan(UserContext userContext, LoanOfferingBO loanProduct,
-            CustomerBO customer, AccountState loanState, LocalDate firstInstallmentDate, LocalDate currentInstallmentDate,
-            Money amountPaidToDate, Integer loanCycle, LoanSchedule loanSchedule, LoanProductOverridenDetail overridenDetail) {
-        CreationDetail creationDetail = new CreationDetail(new DateTime(), Integer.valueOf(userContext.getId()));
-        LoanBO openingBalanceLoan = new LoanBO(loanProduct, customer, loanState, overridenDetail, null, loanSchedule, null, creationDetail);
-        openingBalanceLoan.setDisbursementDate(overridenDetail.getDisbursementDate().toDateMidnight().toDate());
-
-        return openingBalanceLoan;
     }
 
     public static LoanBO createLoan(final UserContext userContext, final LoanOfferingBO loanOffering,
