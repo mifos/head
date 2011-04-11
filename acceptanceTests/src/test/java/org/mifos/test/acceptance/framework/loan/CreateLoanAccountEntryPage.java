@@ -201,10 +201,10 @@ public class CreateLoanAccountEntryPage extends MifosPage {
     }
 
     public void selectTwoClientsForGlim() {
-        selenium.click("selectAll");
+        selenium.click("clientSelectForGroup[0]");
         selenium.type("clientAmount[0]", "1234");
 
-        selenium.click("clients[1]");
+        selenium.click("clientSelectForGroup[1]");
         selenium.type("clientAmount[1]", "4321");
     }
 
@@ -231,6 +231,11 @@ public class CreateLoanAccountEntryPage extends MifosPage {
     public CreateLoanAccountReviewInstallmentPage clickContinue(){
         submit();
         return new CreateLoanAccountReviewInstallmentPage(selenium);
+    }
+    
+    public CreateLoanAccountEntryPage clickContinueButExpectValidationFailure(){
+        submit();
+        return new CreateLoanAccountEntryPage(selenium);
     }
 
     public CreateLoanAccountConfirmationPage clickContinueAndNavigateToLoanAccountConfirmationPage() {
@@ -418,6 +423,6 @@ public class CreateLoanAccountEntryPage extends MifosPage {
     }
 
     public void verifyError(String error) {
-        Assert.assertTrue(selenium.isElementPresent("//span[@id='loancreationdetails.error.message']/li[text()='"+error+"']"));
+        Assert.assertTrue(selenium.isElementPresent("//span[@id='loancreationdetails.error.message']/div/ul/li/span[text()='"+error+"']"));
     }
 }

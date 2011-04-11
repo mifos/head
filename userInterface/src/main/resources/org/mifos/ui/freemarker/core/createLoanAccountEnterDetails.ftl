@@ -105,8 +105,8 @@
 						};
 					});	
   				});
-				
-				$('#amount').val(total);
+  				
+				$('#glimsumloanamount').val(total);
     		});
     	}
     
@@ -161,7 +161,7 @@
     		<td>&nbsp;</td>
     		<td>&nbsp;</td>
     		<td>Total amount:</td>
-    		<td>[@form.input path="loanAccountFormBean.amount"  id="loancreationdetails.input.sumLoanAmount" /]</td>
+    		<td>[@form.input path="loanAccountFormBean.amount"  id="glimsumloanamount" /]</td>
     		<td><span id="createloan.allowedamounttext">([@spring.message "createLoanAccount.allowedAmount"/] ${loanProductReferenceData.minLoanAmount} - ${loanProductReferenceData.maxLoanAmount})</span></td>
     		<td>&nbsp;</td>
     	</tr>
