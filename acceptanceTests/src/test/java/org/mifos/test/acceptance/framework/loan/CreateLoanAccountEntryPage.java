@@ -247,6 +247,7 @@ public class CreateLoanAccountEntryPage extends MifosPage {
         Assert.assertEquals(selenium.getValue("sumLoanAmount"), expectedTotalAmount);
     }
 
+    @SuppressWarnings("PMD")
     public CreateLoanAccountEntryPage verifyVariableInstalmentsInLoanProductSummery(String maxGap, String minGap, String minInstalmentAmount) {
         String expectedMaximumGap = "Maximum gap between installments:";
         boolean expectedMaximumGapResult = selenium.isTextPresent(expectedMaximumGap);
@@ -288,21 +289,21 @@ public class CreateLoanAccountEntryPage extends MifosPage {
             Assert.fail(expectedCanConfigureValueFound + " was expected but not found.");
         }
 
-        String expectedMinInstalmentAmount = "Minimum installment amount:";
-        boolean expectedMinInstalmentAmountResult = selenium.isTextPresent(expectedMinInstalmentAmount);
-        if (!expectedMinInstalmentAmountResult) {
-            Assert.fail(expectedMinInstalmentAmount + " was expected but not found.");
-        }
-
-        String expectedMinInstalmentAmountNumber = minInstalmentAmount;
-        if ("".equals(minInstalmentAmount)) {
-            expectedMinInstalmentAmountNumber = "N/A";
-        } else {
-            boolean expectedMinInstalmentAmountNumberResult = selenium.isTextPresent(expectedMinInstalmentAmountNumber);
-            if (!expectedMinInstalmentAmountNumberResult) {
-                Assert.fail(expectedMinInstalmentAmountNumber + " was expected but not found.");
-            }            
-        }
+//        String expectedMinInstalmentAmount = "Minimum installment amount:";
+//        boolean expectedMinInstalmentAmountResult = selenium.isTextPresent(expectedMinInstalmentAmount);
+//        if (!expectedMinInstalmentAmountResult) {
+//            Assert.fail(expectedMinInstalmentAmount + " was expected but not found.");
+//        }
+//
+//        String expectedMinInstalmentAmountNumber = minInstalmentAmount;
+//        if ("".equals(minInstalmentAmount)) {
+//            expectedMinInstalmentAmountNumber = "N/A";
+//        } else {
+//            boolean expectedMinInstalmentAmountNumberResult = selenium.isTextPresent(expectedMinInstalmentAmountNumber);
+//            if (!expectedMinInstalmentAmountNumberResult) {
+//                Assert.fail(expectedMinInstalmentAmountNumber + " was expected but not found.");
+//            }            
+//        }
 
         return this;
     }

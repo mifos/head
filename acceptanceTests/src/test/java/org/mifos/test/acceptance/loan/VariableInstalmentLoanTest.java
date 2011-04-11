@@ -110,11 +110,7 @@ public class VariableInstalmentLoanTest extends UiTestCaseBase {
         loanTestHelper.
                 navigateToCreateLoanAccountEntryPageWithoutLogout(setLoanSearchParameters()).
                 setDisbursalDate(disbursalDate).
-                verifyInvalidFeeBlocked(blockedInterest).
-                clickContinue().
-                clickPreviewAndGoToReviewLoanAccountPage().
-                submit().navigateToLoanAccountDetailsPage().
-                navigateToApplyCharge().verifyBlockedFee(blockedInterest);
+                verifyInvalidFeeBlocked(blockedInterest);
     }
 
     private CreateLoanAccountSearchParameters setLoanSearchParameters() {
