@@ -41,7 +41,7 @@ public class GroupBuilder {
     private final CustomerAccountBuilder customerAccountBuilder = new CustomerAccountBuilder();
     private String name = "Test Group";
     private MeetingBO meeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
-    private OfficeBO office;
+    private OfficeBO office = new OfficeBuilder().withGlobalOfficeNum("xxx-9999").withOfficeId(new Short("1")).build();
     private PersonnelBO loanOfficer;
     private CustomerStatus customerStatus = CustomerStatus.GROUP_ACTIVE;
     private CustomerBO parentCustomer = new CenterBuilder().build();
@@ -53,6 +53,7 @@ public class GroupBuilder {
     private int numberOfChildrenUnderBranch = 0;
     private UserContext userContext = TestUtils.makeUser();
     private Integer versionNumber;
+
 
     public GroupBO build() {
 

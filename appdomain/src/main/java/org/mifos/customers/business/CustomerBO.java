@@ -114,8 +114,9 @@ public abstract class CustomerBO extends AbstractBusinessObject {
     private Set<CustomerBO> children;
     private CustomerAccountBO customerAccount;
 
-    private CustomerPersistence customerPersistence;
-    private LegacyPersonnelDao personnelPersistence;
+    private CustomerPersistence customerPersistence = null;
+    private LegacyPersonnelDao personnelPersistence = null;
+    private CustomerDao customerDao = null;    
 
     //associations
     private PersonnelBO personnel;
@@ -230,6 +231,17 @@ public abstract class CustomerBO extends AbstractBusinessObject {
 
         this.setCreateDetails();
 
+    }
+
+    private CustomerDao getCustomerDao() {
+        if (customerDao == null) {
+            customerDao = ApplicationContextProvider.getBean(CustomerDao.class);
+        }
+        return customerDao;
+    }
+
+    public void setCustomerDao(CustomerDao customerDao) {
+        this.customerDao = customerDao;
     }
 
     public Integer getCustomerId() {
@@ -1035,12 +1047,12 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         return true;
     }
 
-    protected void generateSearchId() {
+    public void generateSearchId() {
         if (getParentCustomer() != null) {
             childAddedForParent(getParentCustomer());
             this.setSearchId(getParentCustomer().getSearchId() + "." + getParentCustomer().getMaxChildCount());
         } else {
-            CustomerDao customerDao = ApplicationContextProvider.getBean(CustomerDao.class);
+            CustomerDao customerDao = getCustomerDao();
             int numberOfCustomersInOfficeAlready = customerDao.retrieveLastSearchIdValueForNonParentCustomersInOffice(getOffice().getOfficeId());
 
             String searchId = GroupConstants.PREFIX_SEARCH_STRING + ++numberOfCustomersInOfficeAlready;

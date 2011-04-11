@@ -112,6 +112,8 @@ public class CustomerServiceImpl implements CustomerService {
     private CustomerAccountFactory customerAccountFactory = DefaultCustomerAccountFactory.createNew();
     private MessageLookupHelper messageLookupHelper = DefaultMessageLookupHelper.createNew();
 
+    private ConfigurationPersistence configurationPersistence;
+
     @Autowired
     private LegacyMasterDao legacyMasterDao;
 
@@ -137,6 +139,16 @@ public class CustomerServiceImpl implements CustomerService {
         this.messageLookupHelper = messageLookupHelper;
     }
 
+    private ConfigurationPersistence getConfigurationPersistence() {
+        if (configurationPersistence == null) {
+            configurationPersistence = new ConfigurationPersistence();
+        }
+        return configurationPersistence;
+    }
+
+    public void setConfigurationPersistence(ConfigurationPersistence configurationPersistence) {
+        this.configurationPersistence = configurationPersistence;
+    }
     @Override
     public final void createCenter(CenterBO customer, MeetingBO meeting, List<AccountFeesEntity> accountFees) {
 
@@ -1140,7 +1152,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         if (client.getParentCustomer() != null) {
 
-            boolean glimEnabled = new ConfigurationPersistence().isGlimEnabled();
+            boolean glimEnabled = getConfigurationPersistence().isGlimEnabled();
 
             if (glimEnabled) {
                 if (customerIsMemberOfAnyExistingGlimLoanAccount(client, client.getParentCustomer())) {
@@ -1179,6 +1191,8 @@ public class CustomerServiceImpl implements CustomerService {
             this.hibernateTransactionHelper.closeSession();
         }
     }
+
+
 
     private boolean customerIsMemberOfAnyExistingGlimLoanAccount(CustomerBO customerToRemoveFromGroup, CustomerBO customerWithActiveAccounts) {
 
