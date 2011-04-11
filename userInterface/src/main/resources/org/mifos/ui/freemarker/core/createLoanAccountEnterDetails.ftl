@@ -146,7 +146,7 @@
     			[@spring.formCheckbox "loanAccountFormBean.clientSelectForGroup[${index}]" "class='clientbox'"/]
     		</td>
     		<td>
-    			<div><span class="standout">Client:</span>${clientdata.clientName}</div>
+    			<div><span class="standout">Client:</span><span id="GLIMLoanAccounts.clientName.${index}">${clientdata.clientName}</span></div>
     			<div><span class="standout">Client Id</span>:${clientdata.clientId}</div>
     			[@spring.formHiddenInput "loanAccountFormBean.clientGlobalId[${index}]" /]
     		</td>
