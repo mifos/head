@@ -22,12 +22,22 @@ package org.mifos.security.rolesandpermission.business;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.persistence.Version;
 
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.annotations.GenericGenerator;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.security.rolesandpermission.exceptions.RolesPermissionException;
 import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
@@ -35,25 +45,47 @@ import org.mifos.security.util.UserContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@NamedQueries({
+    @NamedQuery(name="getRoleForGivenName",query="FROM RoleBO role WHERE role.name =:RoleName"),
+    @NamedQuery(name="getAllRoles",query="from RoleBO role order by role.name")
+})
+
+@Entity
+@Table(name = "role")
 public class RoleBO extends AbstractBusinessObject {
 
     private static final Logger logger = LoggerFactory.getLogger(RoleBO.class);
 
+    @GenericGenerator(name = "generator", strategy = "increment")
+    @Id
+    @GeneratedValue(generator = "generator")
+    @Column(name = "role_id", nullable = false)
     private Short id = null;
 
+    @Column(name = "role_name")
     private String name;
 
+    @Column(name = "created_date")
     private Date createdDate;
 
+    @Column(name = "created_by")
     private Short createdBy;
 
+    @Column(name = "updated_date")
     private Date updatedDate;
 
+    @Column(name = "updated_by")
     private Short updatedBy;
 
+    @Version
+    @Column(name = "version_no", nullable = false)
     private Integer versionNo;
 
-    private final Set<RoleActivityEntity> activities = new HashSet<RoleActivityEntity>();
+    @ManyToMany
+    @JoinTable(name="roles_activity",
+            joinColumns={ @JoinColumn(name="role_id", referencedColumnName="role_id")},
+            inverseJoinColumns={ @JoinColumn(name="activity_id", referencedColumnName="activity_id")})
+    private final List<ActivityEntity> activities = new ArrayList<ActivityEntity>(0);
 
     RoleBO() {
     }
@@ -87,17 +119,13 @@ public class RoleBO extends AbstractBusinessObject {
     }
 
     public List<ActivityEntity> getActivities() {
-        List<ActivityEntity> activityList = new ArrayList<ActivityEntity>();
-        for (RoleActivityEntity roleActivityEntity : activities) {
-            activityList.add(roleActivityEntity.getActivity());
-        }
-        return activityList;
+        return activities;
     }
 
     public List<Short> getActivityIds() {
         List<Short> ids = new ArrayList<Short>();
-        for (RoleActivityEntity roleActivityEntity : activities) {
-            ids.add(roleActivityEntity.getActivity().getId());
+        for (ActivityEntity activity : activities) {
+            ids.add(activity.getId());
         }
         return ids;
     }
@@ -165,22 +193,9 @@ public class RoleBO extends AbstractBusinessObject {
 
     private void updateRoleActivities(List<ActivityEntity> activityList) {
         // Removing activities
-        List<Short> activityIds = getActivityIds(activityList);
-        for (Iterator<RoleActivityEntity> iter = activities.iterator(); iter.hasNext();) {
-            RoleActivityEntity roleActivityEntity = iter.next();
-            if (!activityIds.contains(roleActivityEntity.getActivity().getId())) {
-                iter.remove();
-            }
-
-        }
+        activities.clear();
         // Adding activities
-        activityIds = getActivityIds(getActivities());
-        for (ActivityEntity activityEntity : activityList) {
-            if (!activityIds.contains(activityEntity.getId())) {
-                RoleActivityEntity roleActivityEntity = new RoleActivityEntity(this, activityEntity);
-                activities.add(roleActivityEntity);
-            }
-        }
+        activities.addAll(activityList);
     }
 
     private List<Short> getActivityIds(List<ActivityEntity> activityList) {
@@ -193,8 +208,7 @@ public class RoleBO extends AbstractBusinessObject {
 
     private void createRoleActivites(List<ActivityEntity> activityList) {
         for (ActivityEntity activityEntity : activityList) {
-            RoleActivityEntity roleActivityEntity = new RoleActivityEntity(this, activityEntity);
-            activities.add(roleActivityEntity);
+            activities.add(activityEntity);
         }
     }
 

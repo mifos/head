@@ -204,9 +204,8 @@
         <mapping resource="org/mifos/customers/client/business/CustomerPictureEntity.hbm.xml" />
         <mapping resource="org/mifos/customers/client/business/ClientInitialSavingsOfferingEntity.hbm.xml" />
 
-        <mapping resource="org/mifos/security/rolesandpermission/business/ActivityEntity.hbm.xml" />
-        <mapping resource="org/mifos/security/rolesandpermission/business/RoleActivityEntity.hbm.xml" />
-        <mapping resource="org/mifos/security/rolesandpermission/business/RoleBO.hbm.xml" />
+        <mapping class="org.mifos.security.rolesandpermission.business.ActivityEntity" />
+        <mapping class="org.mifos.security.rolesandpermission.business.RoleBO" />
         <mapping resource="org/mifos/accounts/fund/business/FundBO.hbm.xml" />
         <mapping class="org.mifos.application.master.business.FundCodeEntity" />
 

@@ -105,17 +105,13 @@ public class PersonnelDaoHibernate implements PersonnelDao {
             return null;
         }
 
+        Set<Short> activityIds = new HashSet<Short>();
         Set<Short> roleIds = new HashSet<Short>();
+
         for (PersonnelRoleEntity personnelRole : user.getPersonnelRoles()) {
             RoleBO role = personnelRole.getRole();
             roleIds.add(role.getId());
-        }
-
-        List<Short> activityIds = new ArrayList<Short>();
-        if (!roleIds.isEmpty()) {
-            HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-            queryParameters.put("ROLE_IDS", new ArrayList<Short>(roleIds));
-            activityIds = (List<Short>) this.genericDao.executeNamedQuery("findDistinctActivityIdsForGivenSetOfRoleIds", queryParameters);
+            activityIds.addAll(role.getActivityIds());
         }
 
         byte[] password = user.getEncryptedPassword();
@@ -168,7 +164,7 @@ public class PersonnelDaoHibernate implements PersonnelDao {
         return personnel;
     }
 
-    private List<GrantedAuthority> getGrantedActivityAuthorities(List<Short> activityIds) {
+    private List<GrantedAuthority> getGrantedActivityAuthorities(Set<Short> activityIds) {
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
         for(Short activityId : activityIds) {
             authorities.add(new GrantedAuthorityImpl(getRoleForActivityId(activityId.toString())));
