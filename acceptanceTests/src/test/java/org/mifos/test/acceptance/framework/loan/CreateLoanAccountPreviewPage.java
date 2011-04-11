@@ -90,7 +90,7 @@ public class CreateLoanAccountPreviewPage extends AbstractPage {
     }
 
     public QuestionResponsePage navigateToQuestionResponsePage() {
-        selenium.click("editQuestionResponses_button");
+        selenium.click("_eventId_editQuestionGroups");
         waitForPageToLoad();
         return new QuestionResponsePage(selenium);
     }

@@ -63,7 +63,7 @@ public class CreateLoanAccountEntryPage extends MifosPage {
     }
 
     public QuestionResponsePage submitAndNavigateToQuestionResponsePage() {
-        submit();
+        submitAndWaitForPage();
         return new QuestionResponsePage(selenium);
     }
 
@@ -134,7 +134,7 @@ public class CreateLoanAccountEntryPage extends MifosPage {
             setDisbursalDate(formParameters.getDd(), formParameters.getMm(), formParameters.getYy());
         }
         fillAdditionalFee(formParameters);
-        submit();
+        submitAndWaitForPage();
     }
 
     public void fillAdditionalFee(CreateLoanAccountSubmitParameters formParameters){
@@ -150,29 +150,29 @@ public class CreateLoanAccountEntryPage extends MifosPage {
     }
 
     public CreateLoanAccountConfirmationPage submitAndNavigateToGLIMLoanAccountConfirmationPage() {
-        submit();
+        submitAndWaitForPage();
         return navigateToConfirmationPage();
 
     }
 
     public CreateLoanAccountConfirmationPage submitAndNavigateToGLIMLoanAccountConfirmationPageSaveForLaterButton() {
-        submit();
+        submitAndWaitForPage();
         return navigateToConfirmationPageSaveForLaterButton();
 
     }
 
     public CreateLoanAccountCashFlowPage submitAndNavigateToCreateLoanAccountCashFlowPage() {
-        submit();
+        submitAndWaitForPage();
         return new CreateLoanAccountCashFlowPage(selenium);
     }
 
-    public void submit() {
+    public void submitAndWaitForPage() {
         selenium.click(continueButton);
         waitForPageToLoad();
     }
 
     public LoanAccountPage continuePreviewSubmitAndNavigateToDetailsPage() {
-        submit();
+        submitAndWaitForPage();
         selenium.click("schedulePreview.button.preview");
         waitForPageToLoad();
         selenium.click("createloanpreview.button.submitForApproval");
@@ -229,17 +229,17 @@ public class CreateLoanAccountEntryPage extends MifosPage {
     }
 
     public CreateLoanAccountReviewInstallmentPage clickContinue(){
-        submit();
+        submitAndWaitForPage();
         return new CreateLoanAccountReviewInstallmentPage(selenium);
     }
     
     public CreateLoanAccountEntryPage clickContinueButExpectValidationFailure(){
-        submit();
+        submitAndWaitForPage();
         return new CreateLoanAccountEntryPage(selenium);
     }
 
     public CreateLoanAccountConfirmationPage clickContinueAndNavigateToLoanAccountConfirmationPage() {
-        submit();
+        submitAndWaitForPage();
         return navigateToConfirmationPage();
     }
 
@@ -364,9 +364,12 @@ public class CreateLoanAccountEntryPage extends MifosPage {
             String fee = fees[index];
             selenium.select("selectedFeeId" + index, fee);
         }
-        submit();
+        submitAndWaitForPage();
         for (String fee : fees) {
-            Assert.assertTrue(selenium.isTextPresent(fee + " fee cannot be applied to loan with variable installments"));
+            String expectedErrorText = fee + " fee cannot be applied to loan with variable installments";
+            if (!selenium.isTextPresent(expectedErrorText)) {
+                Assert.fail(expectedErrorText + " was expected but not found on " + selenium.getLocation() + " with the following source <br/> " + selenium.getHtmlSource());
+            }
         }
         for (int index = 0; index < fees.length; index++) {
             selenium.select("selectedFeeId" + index,"--Select--");

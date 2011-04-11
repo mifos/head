@@ -233,7 +233,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         loanAccountEntryPage.selectAdditionalFees();
 
         // there should be an error
-        loanAccountEntryPage.submit();
+        loanAccountEntryPage.submitAndWaitForPage();
         loanAccountEntryPage.verifyError("Multiple instances of the same one-time fee are not allowed");
 
         // after unselect everything should pass

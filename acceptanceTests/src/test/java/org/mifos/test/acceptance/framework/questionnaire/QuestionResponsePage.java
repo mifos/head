@@ -92,7 +92,7 @@ public class QuestionResponsePage extends MifosPage {
 
     public void navigateToNextPageAndTestEdit() {
         navigateToNextPage();
-        selenium.click("editQuestionResponses_button");
+        selenium.click("_eventId_editQuestionGroups");
         waitForPageToLoad();
         super.verifyPage("captureQuestionResponse");
         navigateToNextPage();
@@ -160,7 +160,7 @@ public class QuestionResponsePage extends MifosPage {
 
     private void populateSingleSelectAnswer(String questionInputId, String answer) {
         //selenium.check(questionInputId + " value=" + answer);
-            selenium.check("//input[@name='" + questionInputId + "' and @value='" + answer + "']");
+        selenium.check("//input[@id='" + questionInputId + "' and @value='" + answer + "']");
 
         // TODO for more than 6 answers: selenium.select(questionInputId, answer);
     }

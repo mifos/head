@@ -104,7 +104,9 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
     }
 
     private void isTextPresentInPage(String validationMessage) {
-        Assert.assertTrue(selenium.isTextPresent(validationMessage), validationMessage);
+        if (!selenium.isTextPresent(validationMessage)) {
+            Assert.fail(validationMessage + " was expected but not found on: " + selenium.getLocation() + " source code <br/> " + selenium.getHtmlSource());
+        }
         Assert.assertTrue(!selenium.isElementPresent("//span[@id='schedulePreview.error.message']/li[text()='']"), "Blank Error message is thrown");
         Assert.assertTrue(!selenium.isElementPresent("//span[@id='schedulePreview.error.message']/li[text()=' ']"), "Blank Error message is thrown");
     }
