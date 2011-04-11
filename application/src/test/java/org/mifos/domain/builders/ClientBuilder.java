@@ -76,6 +76,9 @@ public class ClientBuilder {
     private CustomerBO parentCustomer;
     private String externalId;
     private Address address;
+    private Integer versionNumber = 1;
+
+    private boolean underBranch = false;
 
     public ClientBO buildForIntegrationTests() {
 
@@ -103,17 +106,29 @@ public class ClientBuilder {
         clientNameDetailDto.setNames("first_name,middle_name,last_name,second_last_name".split(","));
         this.clientNameDetailEntity = new ClientNameDetailEntity(null, null, clientNameDetailDto);
 
+        if (underBranch) {
+            ClientBO client = ClientBO.createNewOutOfGroupHierarchy(
+                    userContext, name, customerStatus, mfiJoiningDate,
+                    office, loanOfficer, meeting, formedBy, clientNameDetailEntity, dateOfBirth, governmentId,
+                    trained, trainedDate, groupFlag, clientFirstName, clientLastName, secondLastName,
+                    spouseFatherNameDetailEntity, clientDetailEntity, pictureAsBlob, associatedOfferings, externalId,
+                    address, 10);
+            client.setVersionNo(versionNumber);
+            return client;
+        }
+
         if (parentCustomer == null) {
             CenterBO center = new CenterBuilder().withLoanOfficer(loanOfficer).with(meeting).with(office).build();
             parentCustomer = new GroupBuilder().withParentCustomer(center).build();
         }
 
-        final ClientBO client = ClientBO.createNewInGroupHierarchy(userContext, name, customerStatus, mfiJoiningDate,
+        ClientBO client = ClientBO.createNewInGroupHierarchy(userContext, name, customerStatus, mfiJoiningDate,
                 parentCustomer, formedBy, clientNameDetailEntity, dateOfBirth, governmentId,
                 trained, trainedDate, groupFlag, clientFirstName, clientLastName, secondLastName,
                 spouseFatherNameDetailEntity, clientDetailEntity, pictureAsBlob, associatedOfferings, externalId, address, new LocalDate(activationDate));
-
+        client.setVersionNo(versionNumber);
         return client;
+
     }
 
     public ClientBuilder withName(final String withName) {
@@ -143,6 +158,11 @@ public class ClientBuilder {
             this.office = withParentCustomer.getOffice();
             this.loanOfficer = withParentCustomer.getPersonnel();
         }
+        return this;
+    }
+
+    public ClientBuilder withNoParent() {
+        underBranch = true;
         return this;
     }
 
@@ -183,6 +203,11 @@ public class ClientBuilder {
 
     public ClientBuilder withGovernmentId(String clientGovernmentId) {
         this.governmentId = clientGovernmentId;
+        return this;
+    }
+
+    public ClientBuilder withVersion(int version) {
+        this.versionNumber = version;
         return this;
     }
 }
