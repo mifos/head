@@ -92,8 +92,8 @@ public class QuestionResponsePage extends MifosPage {
 
     public void navigateToNextPageAndTestEdit() {
         navigateToNextPage();
-//        selenium.click("editQuestionResponses_button");
-        selenium.click("_eventId_editQuestionGroups");
+        selenium.click("editQuestionResponses_button");
+//        selenium.click("_eventId_editQuestionGroups");
         waitForPageToLoad();
         super.verifyPage("captureQuestionResponse");
         navigateToNextPage();
