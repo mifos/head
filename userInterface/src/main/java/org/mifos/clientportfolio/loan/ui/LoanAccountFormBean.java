@@ -30,6 +30,8 @@ import javax.validation.constraints.NotNull;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.clientportfolio.newloan.applicationservice.LoanDisbursementDateValidationServiceFacade;
+import org.mifos.clientportfolio.newloan.applicationservice.VariableInstallmentWithFeeValidationResult;
+import org.mifos.clientportfolio.newloan.applicationservice.VariableInstallmentsFeeValidationServiceFacade;
 import org.mifos.platform.validation.MifosBeanValidator;
 import org.mifos.service.BusinessRuleException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +52,9 @@ public class LoanAccountFormBean implements Serializable {
     
     @Autowired
     private transient LoanDisbursementDateValidationServiceFacade loanDisbursementDateValidationServiceFacade;
+    
+    @Autowired
+    private transient VariableInstallmentsFeeValidationServiceFacade variableInstallmentsFeeValidationServiceFacade;
     
     private transient DateValidator dateValidator;
 
@@ -227,6 +232,20 @@ public class LoanAccountFormBean implements Serializable {
             errors.rejectValue("loanPurposeId", "loanAccountFormBean.PurposeOfLoan.invalid", "Please specify loan purpose.");
         }
         
+        // validate additional fees not duplicated
+        Set<Integer> feeSet = new HashSet<Integer>();
+        if (this.selectedFeeId != null) {
+            for (Number feeId : this.selectedFeeId) {
+                if (feeId != null) {
+                    boolean noDuplicateExists = feeSet.add(feeId.intValue());
+                    if (!noDuplicateExists) {
+                        errors.rejectValue("selectedFeeId", "loanAccountFormBean.additionalfees.invalid", "Multiple instances of the same fee are not allowed.");
+                        break;
+                    }
+                }
+            }
+        }
+        
         if (this.repaymentScheduleIndependentOfCustomerMeeting) {
             if (isInvalidRecurringFrequency(this.repaymentRecursEvery)) {
                 errors.rejectValue("repaymentRecursEvery", "loanAccountFormBean.repaymentDay.recursEvery.invalid", "Please specify a valid recurring frequency for repayment day.");
@@ -249,17 +268,16 @@ public class LoanAccountFormBean implements Serializable {
                     }
                 }
             }
-        }
-        
-        // validate additional fees not duplicated
-        Set<Integer> feeSet = new HashSet<Integer>();
-        if (this.selectedFeeId != null) {
-            for (Number feeId : this.selectedFeeId) {
-                if (feeId != null) {
-                    boolean noDuplicateExists = feeSet.add(feeId.intValue());
-                    if (!noDuplicateExists) {
-                        errors.rejectValue("selectedFeeId", "loanAccountFormBean.additionalfees.invalid", "Multiple instances of the same fee are not allowed.");
-                        break;
+            
+            if (this.variableInstallmentsAllowed) {
+                if (this.selectedFeeId != null) {
+                    for (Number feeId : this.selectedFeeId) {
+                        if (feeId != null) {
+                            VariableInstallmentWithFeeValidationResult result = variableInstallmentsFeeValidationServiceFacade.validateFeeCanBeAppliedToVariableInstallmentLoan(feeId.longValue());
+                            if (!result.isFeeCanBeAppliedToVariableInstallmentLoan()) {
+                                errors.rejectValue("selectedFeeId", "loanAccountFormBean.additionalfees.variableinstallments.invalid", new String[] {result.getFeeName()}, "This type of fee cannot be applied to loan with variable installments.");
+                            }
+                        }
                     }
                 }
             }

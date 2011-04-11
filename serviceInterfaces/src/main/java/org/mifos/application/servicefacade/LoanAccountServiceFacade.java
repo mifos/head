@@ -31,6 +31,7 @@ import org.mifos.clientportfolio.newloan.applicationservice.CreateLoanAccount;
 import org.mifos.clientportfolio.newloan.applicationservice.LoanAccountCashFlow;
 import org.mifos.clientportfolio.newloan.applicationservice.LoanApplicationStateDto;
 import org.mifos.clientportfolio.newloan.applicationservice.LoanDisbursementDateValidationServiceFacade;
+import org.mifos.clientportfolio.newloan.applicationservice.VariableInstallmentsFeeValidationServiceFacade;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AccountStatusDto;
 import org.mifos.dto.domain.AccountUpdateStatus;
@@ -68,7 +69,7 @@ import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.validations.Errors;
 import org.springframework.security.access.prepost.PreAuthorize;
 
-public interface LoanAccountServiceFacade extends LoanDisbursementDateValidationServiceFacade {
+public interface LoanAccountServiceFacade extends LoanDisbursementDateValidationServiceFacade, VariableInstallmentsFeeValidationServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     AccountStatusDto retrieveAccountStatuses(Long loanAccountId);

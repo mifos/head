@@ -56,6 +56,7 @@ import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.business.FeeFrequencyTypeEntity;
 import org.mifos.accounts.fees.business.FeePaymentEntity;
 import org.mifos.accounts.fees.persistence.FeeDao;
+import org.mifos.accounts.fees.util.helpers.FeeFormula;
 import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
 import org.mifos.accounts.fees.util.helpers.FeePayment;
 import org.mifos.accounts.fund.business.FundBO;
@@ -122,6 +123,7 @@ import org.mifos.clientportfolio.newloan.applicationservice.CreateLoanAccount;
 import org.mifos.clientportfolio.newloan.applicationservice.GroupMemberAccountDto;
 import org.mifos.clientportfolio.newloan.applicationservice.LoanAccountCashFlow;
 import org.mifos.clientportfolio.newloan.applicationservice.LoanApplicationStateDto;
+import org.mifos.clientportfolio.newloan.applicationservice.VariableInstallmentWithFeeValidationResult;
 import org.mifos.clientportfolio.newloan.domain.CreationDetail;
 import org.mifos.clientportfolio.newloan.domain.GroupMemberLoanDetail;
 import org.mifos.clientportfolio.newloan.domain.LoanAccountDetail;
@@ -210,6 +212,7 @@ import org.mifos.dto.screen.RepayLoanDto;
 import org.mifos.dto.screen.RepayLoanInfoDto;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.StatesInitializationException;
 import org.mifos.framework.exceptions.SystemException;
@@ -2373,5 +2376,33 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         }
 
         return installmentsValidator.validateInstallmentSchedule(installments, minInstallmentAmount);
+    }
+
+    @Override
+    public VariableInstallmentWithFeeValidationResult validateFeeCanBeAppliedToVariableInstallmentLoan(Long feeId) {
+
+        try {
+            org.mifos.dto.domain.FeeDto fee = this.feeDao.findDtoById(feeId.shortValue());
+            boolean feeCanBeAppliedToVariableInstallmentLoan = true;
+            String feeName = fee.getName();
+            if (fee.isPeriodic()) {
+                feeCanBeAppliedToVariableInstallmentLoan = false;
+            } else if (fee.isRateBasedFee()) {
+                FeeFormula formula = FeeFormula.getFeeFormula(fee.getFeeFormula().getId());
+                switch (formula) {
+                case AMOUNT_AND_INTEREST:
+                    feeCanBeAppliedToVariableInstallmentLoan = false;
+                    break;
+                case INTEREST:
+                    feeCanBeAppliedToVariableInstallmentLoan = false;
+                    break;
+                default:
+                    break;
+                }
+            }
+            return new VariableInstallmentWithFeeValidationResult(feeCanBeAppliedToVariableInstallmentLoan, feeName);
+        } catch (PropertyNotFoundException e) {
+            throw new MifosRuntimeException(e);
+        }
     }
 }
