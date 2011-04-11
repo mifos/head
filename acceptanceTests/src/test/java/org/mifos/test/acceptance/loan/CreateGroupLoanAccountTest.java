@@ -65,6 +65,7 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
     public void setUp() throws Exception {
         super.setUp();
         loanTestHelper = new LoanTestHelper(selenium);
+        questionGroupTestHelper = new QuestionGroupTestHelper(selenium);
         questionGroupTestHelper.markQuestionGroupAsInactive("QGForCreateLoan1");
         questionGroupTestHelper.markQuestionGroupAsInactive("QGForCreateLoan2");
     }

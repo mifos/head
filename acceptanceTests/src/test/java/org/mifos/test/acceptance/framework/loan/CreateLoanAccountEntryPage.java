@@ -245,19 +245,57 @@ public class CreateLoanAccountEntryPage extends MifosPage {
         if ("".equals(maxGap)) {
             Assert.assertTrue(selenium.isTextPresent("Maximum gap between installments: N/A"));
         } else {
-            String expectedMaximumGap = "Maximum gap between installments: " + maxGap;
+            String expectedMaximumGap = "Maximum gap between installments:";
             boolean result = selenium.isTextPresent(expectedMaximumGap);
             if (!result) {
-                Assert.fail(expectedMaximumGap + " was expected but not found in, " + selenium.getHtmlSource());
+                Assert.fail(expectedMaximumGap + " was expected but not found.");
+            }
+            String expectedMaximumGapNumber = maxGap;
+            boolean result2 = selenium.isTextPresent(expectedMaximumGapNumber);
+            if (!result2) {
+                Assert.fail(expectedMaximumGapNumber + " was expected but not found.");
             }
         }
+        
         if ("".equals(minInstalmentAmount)) {
             Assert.assertTrue(selenium.isTextPresent("Minimum installment amount: N/A")) ;
         } else {
-            Assert.assertTrue(selenium.isTextPresent("Minimum installment amount: " + minInstalmentAmount)) ;
+            
+            String expectedMinInstalmentAmount = "Minimum installment amount:";
+            boolean result = selenium.isTextPresent(expectedMinInstalmentAmount);
+            if (!result) {
+                Assert.fail(expectedMinInstalmentAmount + " was expected but not found.");
+            }
+            String expectedMinInstalmentAmountNumber = minInstalmentAmount;
+            boolean result2 = selenium.isTextPresent(expectedMinInstalmentAmountNumber);
+            if (!result2) {
+                Assert.fail(expectedMinInstalmentAmountNumber + " was expected but not found.");
+            }
         }
-        Assert.assertTrue(selenium.isTextPresent("Minimum gap between installments: " + minGap));
-        Assert.assertTrue(selenium.isTextPresent("Can configure variable installments: Yes"));
+        
+        String expectedMinimumGap = "Minimum gap between installments:";
+        boolean result = selenium.isTextPresent(expectedMinimumGap);
+        if (!result) {
+            Assert.fail(expectedMinimumGap + " was expected but not found.");
+        }
+        String expectedMinimumGapNumber = minGap;
+        boolean result2 = selenium.isTextPresent(expectedMinimumGapNumber);
+        if (!result2) {
+            Assert.fail(expectedMinimumGapNumber + " was expected but not found.");
+        }
+        
+        String expectedCanConfigure = "Can configure variable installments:";
+        boolean canConfigureFound = selenium.isTextPresent(expectedCanConfigure);
+        if (!canConfigureFound) {
+            Assert.fail(expectedCanConfigure + " was expected but not found.");
+        }
+        
+        String expectedCanConfigureValue = "Yes";
+        boolean expectedCanConfigureValueFound = selenium.isTextPresent(expectedCanConfigureValue);
+        if (!expectedCanConfigureValueFound) {
+            Assert.fail(expectedCanConfigureValueFound + " was expected but not found.");
+        }
+        
         return this;
     }
 
