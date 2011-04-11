@@ -218,7 +218,9 @@ public class CreateLoanAccountEntryPage extends MifosPage {
     }
 
     public void selectGLIMClients(int clientNumber, String expectedClientName, String loanAmount, String loanPurpose) {
-        Assert.assertEquals(selenium.getText("GLIMLoanAccounts.clientName." + clientNumber), expectedClientName);
+        String clientName = selenium.getText("GLIMLoanAccounts.clientName." + clientNumber);
+        String clientId = selenium.getText("GLIMLoanAccounts.clientId." + clientNumber);
+        Assert.assertEquals(clientName + " " + clientId, expectedClientName);
         selenium.check("clientSelectForGroup[" + clientNumber + "]");
         selenium.type("clientAmount[" + clientNumber + "]", loanAmount);
         if(loanPurpose!=null){
@@ -228,13 +230,12 @@ public class CreateLoanAccountEntryPage extends MifosPage {
 
     public CreateLoanAccountReviewInstallmentPage clickContinue(){
         submit();
-        return  new CreateLoanAccountReviewInstallmentPage(selenium);
+        return new CreateLoanAccountReviewInstallmentPage(selenium);
     }
 
     public CreateLoanAccountConfirmationPage clickContinueAndNavigateToLoanAccountConfirmationPage() {
         submit();
         return navigateToConfirmationPage();
-
     }
 
     public void checkTotalAmount(String expectedTotalAmount) {
@@ -251,11 +252,11 @@ public class CreateLoanAccountEntryPage extends MifosPage {
         String expectedMaximumGapNumber = maxGap;
         if ("".equals(maxGap)) {
             expectedMaximumGapNumber = "N/A";
-        }
-        
-        boolean expectedMaximumGapNumberResult = selenium.isTextPresent(expectedMaximumGapNumber);
-        if (!expectedMaximumGapNumberResult) {
-            Assert.fail(expectedMaximumGapNumber + " was expected but not found.");
+        } else {
+            boolean expectedMaximumGapNumberResult = selenium.isTextPresent(expectedMaximumGapNumber);
+            if (!expectedMaximumGapNumberResult) {
+                Assert.fail(expectedMaximumGapNumber + " was expected but not found.");
+            }            
         }
 
         String expectedMinInstalmentAmount = "Minimum installment amount:";
@@ -267,11 +268,11 @@ public class CreateLoanAccountEntryPage extends MifosPage {
         String expectedMinInstalmentAmountNumber = minInstalmentAmount;
         if ("".equals(minInstalmentAmount)) {
             expectedMinInstalmentAmountNumber = "N/A";
-        }
-        
-        boolean expectedMinInstalmentAmountNumberResult = selenium.isTextPresent(expectedMinInstalmentAmountNumber);
-        if (!expectedMinInstalmentAmountNumberResult) {
-            Assert.fail(expectedMinInstalmentAmountNumber + " was expected but not found.");
+        } else {
+            boolean expectedMinInstalmentAmountNumberResult = selenium.isTextPresent(expectedMinInstalmentAmountNumber);
+            if (!expectedMinInstalmentAmountNumberResult) {
+                Assert.fail(expectedMinInstalmentAmountNumber + " was expected but not found.");
+            }            
         }
         
         String expectedMinimumGap = "Minimum gap between installments:";

@@ -781,7 +781,9 @@ public class LoanTestHelper {
             .searchAndNavigateToCreateLoanAccountPage(searchParams);
         String loanAmount = createLoanAccountEntryPage.getLoanAmount();
         CreateLoanAccountReviewInstallmentPage createLoanAccountReviewInstallmentPage = createLoanAccountEntryPage.clickContinue();
+        createLoanAccountReviewInstallmentPage = createLoanAccountReviewInstallmentPage.verifyPage();
         createLoanAccountReviewInstallmentPage.verifyLoanAmount(loanAmount);
+        
         CreateLoanAccountPreviewPage createLoanAccountPreviewPage = createLoanAccountReviewInstallmentPage.clickPreviewAndGoToReviewLoanAccountPage();
         createLoanAccountPreviewPage.verifyLoanAmount(loanAmount);
         return createLoanAccountPreviewPage

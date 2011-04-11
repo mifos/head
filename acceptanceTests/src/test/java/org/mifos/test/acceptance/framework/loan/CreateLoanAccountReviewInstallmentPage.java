@@ -487,11 +487,10 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
         return this;
     }
 
-    public CreateLoanAccountReviewInstallmentPage verifyRepaymentCapacityOnPreview(String expectedRc, String minRc) {
-        clickPreview();
-        verifyPage("SchedulePreview");
+    public CreateLoanAccountPreviewPage verifyRepaymentCapacityOnPreview(String expectedRc, String minRc) {
+        CreateLoanAccountPreviewPage previewPage = clickPreviewAndNavigateToPreviewPage();
         isTextPresentInPage("Repayment Capacity of the client is " + expectedRc + " % which should be greater than the required value of " + minRc + " %");
-        return this;
+        return previewPage;
     }
 
     public CreateLoanAccountReviewInstallmentPage clickPreview() {

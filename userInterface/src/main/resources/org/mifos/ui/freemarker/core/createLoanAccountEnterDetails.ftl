@@ -147,7 +147,7 @@
     		</td>
     		<td>
     			<div><span class="standout">Client:</span><span id="GLIMLoanAccounts.clientName.${index}">${clientdata.clientName}</span></div>
-    			<div><span class="standout">Client Id</span>:${clientdata.clientId}</div>
+    			<div><span class="standout">Client Id</span>:<span id="GLIMLoanAccounts.clientId.${index}">${clientdata.clientId}</span></div>
     			[@spring.formHiddenInput "loanAccountFormBean.clientGlobalId[${index}]" /]
     		</td>
     		<td>&nbsp;</td>
