@@ -405,7 +405,8 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
     }
 
     private void verifyCellValueOfInstallments(int row, int column, String value) {
-        Assert.assertEquals(selenium.getText("//table[@id='installments']//tr[" + (row + 1) + "]/td[" + column + "]"), value);
+        String result = selenium.getText("//table[@id='installments']//tr[" + (row + 1) + "]/td[" + column + "]");
+        Assert.assertEquals(result, value, "expected was: " + result + " but was: " + value);
     }
 
     private void setInstallmentTotal(int installment, String total) {

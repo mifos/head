@@ -245,7 +245,11 @@ public class CreateLoanAccountEntryPage extends MifosPage {
         if ("".equals(maxGap)) {
             Assert.assertTrue(selenium.isTextPresent("Maximum gap between installments: N/A"));
         } else {
-            Assert.assertTrue(selenium.isTextPresent("Maximum gap between installments: " + maxGap  + " days"));
+            String expectedMaximumGap = "Maximum gap between installments: " + maxGap;
+            boolean result = selenium.isTextPresent(expectedMaximumGap);
+            if (!result) {
+                Assert.fail(expectedMaximumGap + " was expected but not found in, " + selenium.getHtmlSource());
+            }
         }
         if ("".equals(minInstalmentAmount)) {
             Assert.assertTrue(selenium.isTextPresent("Minimum installment amount: N/A")) ;

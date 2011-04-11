@@ -36,6 +36,7 @@ import org.mifos.test.acceptance.framework.loan.EditLoanAccountStatusParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.login.LoginPage;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
+import org.mifos.test.acceptance.framework.testhelpers.QuestionGroupTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,7 @@ import org.testng.annotations.Test;
 //@Test(singleThreaded = true, groups = {"loan", "acceptance", "ui", "no_db_unit"})
 public class CreateGroupLoanAccountTest extends UiTestCaseBase {
 
+    private QuestionGroupTestHelper questionGroupTestHelper;
     private LoanTestHelper loanTestHelper;
 
     @Autowired
@@ -63,6 +65,8 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
     public void setUp() throws Exception {
         super.setUp();
         loanTestHelper = new LoanTestHelper(selenium);
+        questionGroupTestHelper.markQuestionGroupAsInactive("QGForCreateLoan1");
+        questionGroupTestHelper.markQuestionGroupAsInactive("QGForCreateLoan2");
     }
 
     @AfterMethod

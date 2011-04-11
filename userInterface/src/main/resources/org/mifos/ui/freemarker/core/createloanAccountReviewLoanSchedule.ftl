@@ -135,8 +135,8 @@ $(function() {
 <form action="${flowExecutionUrl}" method="post" class="two-columns">
 [/#if]
 <h1><span class="standout">[@spring.message "reviewInstallments.heading" /]</span></h1>
-<table>
-	<tbody>
+<table id="installments">
+	<thead>
 		<tr>
 			<th>[@spring.message "reviewInstallments.installmentHeading" /]</th>
 			<th>[@spring.message "reviewInstallments.dueDateHeading" /]</th>
@@ -145,6 +145,8 @@ $(function() {
 			<th>[@spring.message "reviewInstallments.feesHeading" /]</th>
 			<th>[@spring.message "reviewInstallments.totalHeading" /]</th>
 		</tr>
+	</thead>
+	<tbody>
 		[#assign ind = 0]
 		[#list loanScheduleReferenceData.installments as row]
 		<tr>
