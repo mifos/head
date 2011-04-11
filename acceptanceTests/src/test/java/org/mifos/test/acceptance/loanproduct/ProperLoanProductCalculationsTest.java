@@ -21,6 +21,7 @@
 package org.mifos.test.acceptance.loanproduct;
 
 
+import org.joda.time.DateTime;
 import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
@@ -69,6 +70,7 @@ public class ProperLoanProductCalculationsTest extends UiTestCaseBase {
         loanProductTestHelper = new LoanProductTestHelper(selenium);
         loanTestHelper = new LoanTestHelper(selenium);
         customPropertiesHelper = new CustomPropertiesHelper(selenium);
+        loanTestHelper.setApplicationTime(new DateTime(2011, 03, 11, 10, 0, 0, 0));
     }
 
     @AfterMethod
