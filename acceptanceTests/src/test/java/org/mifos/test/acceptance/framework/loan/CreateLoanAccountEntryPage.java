@@ -121,12 +121,12 @@ public class CreateLoanAccountEntryPage extends MifosPage {
         }
         if (formParameters.getLsimMonthTypeDayOfMonth() != null)
         {
-            selenium.click("loancreationdetails.input.monthType1");
+            selenium.click("montlyOption0");
             selenium.type("loancreationdetails.input.dayOfMonth", formParameters.getLsimDayOfMonth());
         }
         if (formParameters.getLsimMonthTypeNthWeekdayOfMonth() != null)
         {
-            selenium.click("loancreationdetails.input.monthType2");
+            selenium.click("montlyOption1");
             selenium.select("monthRank", formParameters.getLsimMonthRank());
             selenium.select("monthWeek", formParameters.getLsimWeekDay());
         }

@@ -200,10 +200,6 @@
 	    		<input type="radio" id="loancreationdetails.input.frequencyMonths" name="repaymentFrequency" disabled=disabled/>
 	    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.month(s)"/]</span>
     		</div>
-    		<div style="margin-left: 200px;">
-    			<span id="weekSpecifyMessage" style="display:none">[@spring.message "manageLoanProducts.defineLoanProduct.ifweeks,specifythefollowing" /]</span>
-		        <span id="monthSpecifyMessage" style="display:none">[@spring.message "manageLoanProducts.defineLoanProduct.ifmonths,specifythefollowing" /]</span>
-    		</div>
     		<div id="week" class="row" id="weekDIV">
 		        [@form.label "recursEvery" true][@spring.message "manageLoanProducts.defineLoanProduct.recurevery" /][/@form.label]
 		        [@form.input path="loanAccountFormBean.repaymentRecursEvery" id="loancreationdetails.input.weekFrequency" attributes="size=3 maxlength=2"/]

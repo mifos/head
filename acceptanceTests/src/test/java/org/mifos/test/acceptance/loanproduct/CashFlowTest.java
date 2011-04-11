@@ -264,9 +264,7 @@ public class CashFlowTest extends UiTestCaseBase {
                 enterValidData("100", cashFlowIncremental, 100, "7003", "1000").
                 clickContinue().
                 verifyCashFlow(cashFlowIncremental, loanAmount).
-                clickPreview().
-                verifyPage("SchedulePreview");
-
+                clickPreview();
     }
 
     private void createAndValidateLoanProductWithCashFlow(String warningThreshold, DefineNewLoanProductPage.SubmitFormParameters formParameters, String indebtentValue, String repaymentValue, boolean isVariableLoan) {
