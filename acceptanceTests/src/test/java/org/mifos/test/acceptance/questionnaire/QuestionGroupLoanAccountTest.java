@@ -106,7 +106,7 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
 
             questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[0].questions[0].value", "07/02/2011");
             questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[0].questions[1].value", "20");
-            questionResponseParameters.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[0].value2", "three");
+            questionResponseParameters.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[0].values2", "three");
             questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[1].questions[1].value", "free text2");
 
             LoanAccountPage loanAccountPage = loanTestHelper.createAndActivateDefaultLoanAccount(createLoanAccountSearchParameters);
@@ -178,7 +178,7 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
 
             questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[0].questions[0].value", "07/02/2011");
             questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[0].questions[1].value", "20");
-            questionResponseParameters.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[0].value2", "three");
+            questionResponseParameters.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[0].values2", "three");
             questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[1].questions[1].value", "free text2");
 
             CreateQuestionParameters createQuestionParameters = new CreateQuestionParameters();
@@ -260,7 +260,7 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
 
             questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[0].questions[0].value", "07/02/2011");
             questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[0].questions[1].value", "20");
-            questionResponseParameters.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[0].value2", "three");
+            questionResponseParameters.addSingleSelectAnswer("questionGroups[1].sectionDetails[1].questions[0].values2", "three");
             questionResponseParameters.addTextAnswer("questionGroups[1].sectionDetails[1].questions[1].value", "free text2");
 
             CreateQuestionParameters createQuestionParameters = new CreateQuestionParameters();
