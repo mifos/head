@@ -77,7 +77,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
-    @Test(groups = {"loan", "acceptance", "ui"})
+    @Test(enabled=false, groups = {"loan", "acceptance", "ui"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // http://mifosforge.jira.com/browse/MIFOSTEST-127
     public void newWeeklyLSIMClientLoanAccount() throws Exception {
@@ -97,6 +97,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
+    @Test(enabled=false)
     public void newMonthlyClientLoanAccountWithMeetingOnSpecificDayOfMonth() throws Exception {
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("Client - Mary Monthly1");

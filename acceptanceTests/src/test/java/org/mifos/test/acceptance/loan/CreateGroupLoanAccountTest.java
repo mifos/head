@@ -76,7 +76,7 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
     }
 
     //http://mifosforge.jira.com/browse/MIFOSTEST-303
-    @Test(enabled=true)
+    @Test(enabled=false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void newWeeklyGroupLoanAccount() throws Exception {
         //Given
@@ -109,7 +109,7 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
         loanTestHelper.disburseLoan(loanId, disburseParameters);
     }
 
-    @Test(enabled=true)
+    @Test(enabled=false)
     @SuppressWarnings({"PMD.SignatureDeclareThrowsException"})
     public void newMonthlyGroupLoanAccountWithMeetingOnSpecificDayOfMonth() throws Exception {
         //Given
@@ -136,7 +136,7 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
         createLoanAccountConfirmationPage.navigateToLoanAccountDetailsPage();
     }
 
-    @Test(enabled=true)
+    @Test(enabled=false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void newMonthlyGroupLoanAccountWithMeetingOnSameWeekAndWeekdayOfMonth() throws Exception {
         homePage = loginSuccessfully();

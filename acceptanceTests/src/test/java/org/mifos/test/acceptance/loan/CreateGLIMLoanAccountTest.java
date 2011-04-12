@@ -151,8 +151,8 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
         searchParameters.setSearchString("Default Group");
         searchParameters.setLoanProduct("WeeklyGroupFlatLoanWithOnetimeFee");
         CreateLoanAccountEntryPage loanAccountEntryPage = loanTestHelper.navigateToCreateLoanAccountEntryPage(searchParameters);
-        loanAccountEntryPage.selectGLIMClients(0, "Stu1233266299995 Client1233266299995 \n Client Id: 0002-000000012", "301");
-        loanAccountEntryPage.selectGLIMClients(2, "Stu1233266319760 Client1233266319760 \n Client Id: 0002-000000014", "401");
+        loanAccountEntryPage.selectGLIMClients(0, "Stu1233266299995 Client1233266299995 Client Id: 0002-000000012", "301");
+        loanAccountEntryPage.selectGLIMClients(2, "Stu1233266319760 Client1233266319760 Client Id: 0002-000000014", "401");
         loanAccountEntryPage.submitAndNavigateToGLIMLoanAccountConfirmationPage();
     }
 
@@ -162,9 +162,9 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
         searchParameters.setSearchString("Default Group");
         searchParameters.setLoanProduct("WeeklyGroupFlatLoanWithOnetimeFee");
         CreateLoanAccountEntryPage loanAccountEntryPage = loanTestHelper.navigateToCreateLoanAccountEntryPage(searchParameters);
-        loanAccountEntryPage.selectGLIMClients(0, "Stu1233266299995 Client1233266299995 \n Client Id: 0002-000000012", "9999.9");
-        loanAccountEntryPage.selectGLIMClients(1, "Stu1233266309851 Client1233266309851 \n Client Id: 0002-000000013", "99999.9");
-        loanAccountEntryPage.selectGLIMClients(2, "Stu1233266319760 Client1233266319760 \n Client Id: 0002-000000014", "99999.9");
+        loanAccountEntryPage.selectGLIMClients(0, "Stu1233266299995 Client1233266299995 Client Id: 0002-000000012", "9999.9");
+        loanAccountEntryPage.selectGLIMClients(1, "Stu1233266309851 Client1233266309851 Client Id: 0002-000000013", "99999.9");
+        loanAccountEntryPage.selectGLIMClients(2, "Stu1233266319760 Client1233266319760 Client Id: 0002-000000014", "99999.9");
         loanAccountEntryPage.checkTotalAmount("209999.7");
     }
 
@@ -174,9 +174,9 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
         searchParameters.setSearchString("Default Group");
         searchParameters.setLoanProduct("WeeklyGroupFlatLoanWithOnetimeFee");
         CreateLoanAccountEntryPage loanAccountEntryPage = loanTestHelper.navigateToCreateLoanAccountEntryPage(searchParameters);
-        loanAccountEntryPage.selectGLIMClients(0, "Stu1233266299995 Client1233266299995 \n Client Id: 0002-000000012", "9999");
-        loanAccountEntryPage.selectGLIMClients(1, "Stu1233266309851 Client1233266309851 \n Client Id: 0002-000000013", "99999");
-        loanAccountEntryPage.selectGLIMClients(2, "Stu1233266319760 Client1233266319760 \n Client Id: 0002-000000014", "99999");
+        loanAccountEntryPage.selectGLIMClients(0, "Stu1233266299995 Client1233266299995 Client Id: 0002-000000012", "9999");
+        loanAccountEntryPage.selectGLIMClients(1, "Stu1233266309851 Client1233266309851 Client Id: 0002-000000013", "99999");
+        loanAccountEntryPage.selectGLIMClients(2, "Stu1233266319760 Client1233266319760 Client Id: 0002-000000014", "99999");
         loanAccountEntryPage.checkTotalAmount("209997");
     }
 }
