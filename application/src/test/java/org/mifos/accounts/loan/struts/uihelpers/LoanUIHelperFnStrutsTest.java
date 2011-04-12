@@ -119,14 +119,14 @@ public class LoanUIHelperFnStrutsTest extends MifosMockStrutsTestCase {
                 new Money(getCurrency(), "100.0"),
                 new Money(getCurrency(), "100.0"),
                 new Money(getCurrency(), "100.0"),
-                new Money(getCurrency(), "100.0"), Locale.FRENCH);
+                new Money(getCurrency(), "100.0"), new Locale("1"));
 
         Money m = new Money(getCurrency(), "100");
        Assert.assertEquals("Due date", new Date(l), repaymentScheduleInstallment.getDueDateValue());
        Assert.assertEquals("fees", m, repaymentScheduleInstallment.getFees());
        Assert.assertEquals("Installment","10", repaymentScheduleInstallment.getInstallmentNumberAsString());
        Assert.assertEquals("Interest", m, repaymentScheduleInstallment.getFees());
-       Assert.assertEquals("Locale", Locale.FRENCH.toString(), repaymentScheduleInstallment.getLocale().toString());
+       Assert.assertEquals("Locale", "1", repaymentScheduleInstallment.getLocale().toString());
        Assert.assertEquals("Misc fees", m, repaymentScheduleInstallment.getMiscFees());
        Assert.assertEquals("Misc penalty", m, repaymentScheduleInstallment.getMiscPenalty());
        Assert.assertEquals("principal", m, repaymentScheduleInstallment.getPrincipal());

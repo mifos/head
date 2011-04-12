@@ -751,13 +751,13 @@ public class DateUtils {
     }
 
     public static Date parseDate(String dateStr, Locale locale) throws ParseException {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(getShortDateFormat(locale), locale);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy", locale);
         dateFormat.setLenient(false);
         return dateFormat.parse(dateStr);
     }
 
     public static String formatDate(Date date, Locale locale) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(getShortDateFormat(locale), locale);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy", locale);
         dateFormat.setLenient(false);
         return dateFormat.format(date);
     }
