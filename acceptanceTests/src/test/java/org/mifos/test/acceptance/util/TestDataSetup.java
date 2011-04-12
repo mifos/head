@@ -107,7 +107,7 @@ public class TestDataSetup {
         MeetingParameters meetingParameters = new MeetingParameters();
         meetingParameters.setMeetingPlace("test_location");
         meetingParameters.setWeekFrequency("1");
-        meetingParameters.setWeekDay(MeetingParameters.TUESDAY);
+        meetingParameters.setWeekDay(MeetingParameters.WeekDay.TUESDAY);
         return meetingParameters;
     }
 

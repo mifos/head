@@ -24,6 +24,7 @@ import org.mifos.test.acceptance.framework.center.CenterViewDetailsPage;
 import org.mifos.test.acceptance.framework.center.CreateCenterConfirmationPage;
 import org.mifos.test.acceptance.framework.center.CreateCenterEnterDataPage;
 import org.mifos.test.acceptance.framework.center.CreateCenterPreviewDataPage;
+import org.mifos.test.acceptance.framework.center.MeetingParameters;
 import org.mifos.test.acceptance.framework.center.ViewCenterChargesDetailPage;
 import org.mifos.test.acceptance.framework.group.EditCustomerStatusParameters;
 import org.mifos.test.acceptance.framework.loan.ChargeParameters;
@@ -95,5 +96,13 @@ public class CenterTestHelper {
             .navigateToViewCenterChargesDetailPage()
             .navigateToApplyCharges()
             .applyChargeAndNaviagteToViewCenterChargesDetailPage(chargeParameters);
+    }
+    
+    public CenterViewDetailsPage editCenterMeetingSchedule(String centerName, MeetingParameters parameters){
+    	CenterViewDetailsPage centerViewDetailsPage = navigationHelper.navigateToCenterViewDetailsPage(centerName)
+    		.navigateToEditMeetingPage()
+    		.editCenterMeeting(parameters);
+    	centerViewDetailsPage.varifyMeetingSchedule(parameters);
+    	return centerViewDetailsPage;
     }
 }

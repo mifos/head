@@ -178,7 +178,7 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
         formParameters.setLoanOfficer("loan officer");
         MeetingParameters meeting = new MeetingParameters();
         meeting.setMeetingPlace("Bangalore");
-        meeting.setWeekDay(MeetingParameters.WEDNESDAY);
+        meeting.setWeekDay(MeetingParameters.WeekDay.WEDNESDAY);
         meeting.setWeekFrequency("1");
         formParameters.setMeeting(meeting);
         CenterViewDetailsPage centerViewDetailsPage = centerTestHelper.createCenter(formParameters, "MyOfficeDHMFT");
@@ -441,7 +441,7 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
         MeetingParameters meeting = new MeetingParameters();
         meeting.setMeetingPlace("testMeetingPlace");
         meeting.setWeekFrequency("1");
-        meeting.setWeekDay(MeetingParameters.MONDAY);
+        meeting.setWeekDay(MeetingParameters.WeekDay.MONDAY);
         formParameters.setMeeting(meeting);
         return  formParameters;
     }

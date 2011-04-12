@@ -288,7 +288,7 @@ public class ClientTestHelper {
 
         MeetingParameters meetingFormParameters = new MeetingParameters();
         meetingFormParameters.setWeekFrequency("1");
-        meetingFormParameters.setWeekDay(MeetingParameters.WEDNESDAY);
+        meetingFormParameters.setWeekDay(MeetingParameters.WeekDay.WEDNESDAY);
         meetingFormParameters.setMeetingPlace("Bangalore");
 
         mfiFormParameters.setMeeting(meetingFormParameters);
@@ -373,7 +373,7 @@ public class ClientTestHelper {
 
         MeetingParameters meetingFormParameters = new MeetingParameters();
         meetingFormParameters.setWeekFrequency("1");
-        meetingFormParameters.setWeekDay(MeetingParameters.WEDNESDAY);
+        meetingFormParameters.setWeekDay(MeetingParameters.WeekDay.WEDNESDAY);
         meetingFormParameters.setMeetingPlace("Mangalore");
 
         mfiFormParameters.setMeeting(meetingFormParameters);
@@ -415,5 +415,10 @@ public class ClientTestHelper {
                 .navigateToViewClientChargesDetail()
                 .navigateToApplyCharges()
                 .applyChargeAndNaviagteToViewClientChargesDetail(chargeParameters);
+    }
+    
+    public void verifyMeetingSchedule(String clientName, String meetingSchedule){
+    	navigationHelper.navigateToClientViewDetailsPage(clientName)
+    		.verifyMeetingSchedule(meetingSchedule);
     }
 }

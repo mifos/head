@@ -22,6 +22,7 @@ package org.mifos.test.acceptance.framework.center;
 
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.center.CreateCenterEnterDataPage.SubmitFormParameters;
+import org.mifos.test.acceptance.framework.client.EditMeetingPage;
 import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPage;
 import org.mifos.test.acceptance.framework.loan.AttachSurveyPage;
 import org.mifos.test.acceptance.framework.loan.ClosedAccountsPage;
@@ -48,13 +49,21 @@ public class CenterViewDetailsPage extends MifosPage {
     public String getLoanOfficer() {
         return selenium.getText("viewCenterDetails.text.loanOfficer");
     }
+    
+    public String getMeetingSchedule(){
+    	return selenium.getText("viewCenterDetails.text.meetingSchedule");
+    }
+    
+    public void varifyMeetingSchedule(MeetingParameters parameters){
+    	Assert.assertTrue(getMeetingSchedule().contains(parameters.getWeekDay().getName()));
+    }
 
     public void verifyActiveCenter(SubmitFormParameters formParameters) {
         Assert.assertEquals(getCenterName(), formParameters.getCenterName());
         Assert.assertEquals(getStatus(), "Active");
         // TODO: Verify this in another way. "Active" is locale dependant.
         Assert.assertEquals(getLoanOfficer(), formParameters.getLoanOfficer());
-        Assert.assertEquals(selenium.getText("viewCenterDetails.meeting.text.day"), "Meetings:  Recur every 1 Week(s) on Wednesday");
+        Assert.assertEquals(getMeetingSchedule(), "Recur every 1 Week(s) on Wednesday");
         Assert.assertEquals(selenium.getText("viewCenterDetails.meeting.text.meetingplace"), "Bangalore");
     }
 
@@ -73,6 +82,12 @@ public class CenterViewDetailsPage extends MifosPage {
         selenium.click("viewCenterDetails.link.attachSurvey");
         waitForPageToLoad();
         return new AttachSurveyPage(selenium);
+    }
+    
+    public EditMeetingPage navigateToEditMeetingPage(){
+    	selenium.click("viewCenterDetails.link.meetings");
+    	waitForPageToLoad();
+    	return new EditMeetingPage(selenium);
     }
 
     public ViewQuestionResponseDetailPage navigateToViewAdditionalInformation() {

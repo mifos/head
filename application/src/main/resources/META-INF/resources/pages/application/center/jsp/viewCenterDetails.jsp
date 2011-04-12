@@ -366,9 +366,9 @@ explanation of the license and how it is applied.
 									</html-el:link></td>
 								</tr>
 							</table>
-							<span id="viewCenterDetails.meeting.text.day" class="fontnormalRed"> <mifos:mifoslabel
+							<span class="fontnormalRed"> <mifos:mifoslabel
 								name="Center.MeetingsSubHeading" />:&nbsp;
-							<c:out value="${centerInformationDto.customerMeeting.meetingSchedule}" /></span>
+							<span id="viewCenterDetails.text.meetingSchedule"><c:out value="${centerInformationDto.customerMeeting.meetingSchedule}" /></span></span>
 							<span class="fontnormal"><br></span>
 							<span id="viewCenterDetails.meeting.text.meetingplace" class="fontnormal"><c:out
 								value="${centerInformationDto.customerMeeting.meetingPlace}" /></span>

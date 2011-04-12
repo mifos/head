@@ -249,7 +249,7 @@ public class ClientTest extends UiTestCaseBase {
         MeetingParameters meeting = new MeetingParameters();
         meeting.setMeetingPlace("testMeetingPlace");
         meeting.setWeekFrequency("1");
-        meeting.setWeekDay(MeetingParameters.MONDAY);
+        meeting.setWeekDay(MeetingParameters.WeekDay.MONDAY);
         parameters.setMeeting(meeting);
 
         CreateClientPreviewDataPage createClientPreviewDataPage = clientEnterMfiDataPage

@@ -38,7 +38,7 @@ public class CreateMeetingPage extends MifosPage {
     }
 
     public CreateCenterEnterDataPage submitAndGotoCreateCenterEnterDataPage(MeetingParameters parameters) {
-        selectValueIfNotZero("weekDay", parameters.getWeekDay());
+        selectValueIfNotZero("weekDay", parameters.getWeekDay().getId());
         typeTextIfNotEmpty("createmeeting.input.weekFrequency", parameters.getWeekFrequency());
         typeTextIfNotEmpty("createmeeting.input.meetingPlace", parameters.getMeetingPlace());
         selenium.click("createmeeting.button.save");
@@ -47,7 +47,7 @@ public class CreateMeetingPage extends MifosPage {
     }
 
     public CreateClientEnterMfiDataPage submitAndGotoCreateClientEnterMfiDataPage(MeetingParameters parameters) {
-        selectValueIfNotZero("weekDay", parameters.getWeekDay());
+        selectValueIfNotZero("weekDay", parameters.getWeekDay().getId());
         typeTextIfNotEmpty("createmeeting.input.weekFrequency", parameters.getWeekFrequency());
         typeTextIfNotEmpty("createmeeting.input.meetingPlace", parameters.getMeetingPlace());
         selenium.click("createmeeting.button.save");

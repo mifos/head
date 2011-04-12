@@ -116,4 +116,9 @@ public class GroupTestHelper {
         return navigateToCreateGroupEntryPage(centerName)
             .submitAndNavigateToQuestionResponsePage(groupParams);
     }
+    
+    public void verifyMeetingSchedule(String groupName, String meetingSchedule){
+    	navigationHelper.navigateToGroupViewDetailsPage(groupName)
+    		.verifyMeetingSchedule(meetingSchedule);
+    }
 }

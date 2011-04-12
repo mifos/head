@@ -41,6 +41,8 @@ import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionnairePage;
 import org.mifos.test.acceptance.framework.questionnaire.ViewQuestionResponseDetailPage;
 import org.mifos.test.acceptance.framework.testhelpers.CenterTestHelper;
+import org.mifos.test.acceptance.framework.testhelpers.ClientTestHelper;
+import org.mifos.test.acceptance.framework.testhelpers.GroupTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.framework.testhelpers.QuestionGroupTestHelper;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
@@ -57,6 +59,10 @@ public class CenterTest extends UiTestCaseBase {
     private CenterTestHelper centerTestHelper;
 
     private QuestionGroupTestHelper questionTestHelper;
+    
+    private ClientTestHelper clientTestHelper;
+    
+    private GroupTestHelper groupTestHelper;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -66,6 +72,8 @@ public class CenterTest extends UiTestCaseBase {
         super.setUp();
         centerTestHelper = new CenterTestHelper(selenium);
         questionTestHelper = new QuestionGroupTestHelper(selenium);
+        clientTestHelper = new ClientTestHelper(selenium);
+        groupTestHelper = new GroupTestHelper(selenium);
         new InitializeApplicationRemoteTestingService().reinitializeApplication(selenium);
     }
 
@@ -85,7 +93,7 @@ public class CenterTest extends UiTestCaseBase {
         MeetingParameters meeting = new MeetingParameters();
         meeting.setMeetingPlace("centerTestMeetingPlace" + StringUtil.getRandomString(2));
         meeting.setWeekFrequency("1");
-        meeting.setWeekDay(MeetingParameters.MONDAY);
+        meeting.setWeekDay(MeetingParameters.WeekDay.MONDAY);
         formParameters.setMeeting(meeting);
         centerTestHelper.createCenter(formParameters, "MyOfficeDHMFT");
 
@@ -162,6 +170,23 @@ public class CenterTest extends UiTestCaseBase {
         questionnairePage.verifyField("details[0].sectionDetails[0].questions[1].value", "");
         questionTestHelper.markQuestionGroupAsInactive(qG1Name);
     }
+    
+    // http://mifosforge.jira.com/browse/MIFOSTEST-1176
+    public void editingCenterMeetinSchedule(){
+    	//Given
+    	String centerName="DefineNewSavingsProductTestCenter";
+    	String groupName="DefineNewSavingsProductTestGroup";
+    	String clientName="DefineNewSavingsProduct TestClient";
+        MeetingParameters parameters = new MeetingParameters();
+        parameters.setWeekDay(MeetingParameters.WeekDay.THURSDAY);
+    	//When
+    	String meetingSchedule = centerTestHelper.editCenterMeetingSchedule(centerName, parameters).getMeetingSchedule();
+    	//Then
+    	clientTestHelper.verifyMeetingSchedule(clientName, meetingSchedule);
+    	groupTestHelper.verifyMeetingSchedule(groupName, meetingSchedule);
+    	parameters.setWeekDay(MeetingParameters.WeekDay.MONDAY);
+    	centerTestHelper.editCenterMeetingSchedule(centerName, parameters);
+    }
 
     private QuestionResponseParameters getQuestionResponseParameters(String answer) {
         QuestionResponseParameters responseParams = new QuestionResponseParameters();
@@ -220,7 +245,7 @@ public class CenterTest extends UiTestCaseBase {
 
         MeetingParameters meetingFormParameters = new MeetingParameters();
         meetingFormParameters.setWeekFrequency("1");
-        meetingFormParameters.setWeekDay(MeetingParameters.WEDNESDAY);
+        meetingFormParameters.setWeekDay(MeetingParameters.WeekDay.WEDNESDAY);
         meetingFormParameters.setMeetingPlace("Bangalore");
 
         formParameters.setMeeting(meetingFormParameters);

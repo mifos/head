@@ -22,22 +22,43 @@ package org.mifos.test.acceptance.framework.center;
 
 @SuppressWarnings("PMD.TooManyFields") // lots of fields ok for form input case
 public class MeetingParameters {
-    public static final int MONDAY = 2;
-    public static final int TUESDAY = 3;
-    public static final int WEDNESDAY = 4;
-    public static final int THURSDAY = 5;
-    public static final int FRIDAY = 6;
-    public static final int SATURDAY = 7;
 
-    int weekDay;
+    public enum WeekDay {
+
+        MONDAY ("Monday", 2),
+        TUESDAY ("Tuesday", 3),
+        WEDNESDAY ("Wednesday", 4),
+        THURSDAY ("Thursday", 5),
+        FRIDAY ("Friday", 6),
+        SATURDAY ("Saturday", 7);
+
+        private final String statusText;
+        private final Integer id;
+
+        private WeekDay(String statusText, Integer id) {
+            this.statusText = statusText;
+            this.id = id;
+        }
+
+        public String getName() {
+            return this.statusText;
+        }
+
+        public Integer getId() {
+            return this.id;
+        }
+
+    }
+    
+    WeekDay weekDay;
     String weekFrequency;
     String meetingPlace;
 
-    public int getWeekDay() {
+    public WeekDay getWeekDay() {
         return this.weekDay;
     }
 
-    public void setWeekDay(int weekDay) {
+    public void setWeekDay(WeekDay weekDay) {
         this.weekDay = weekDay;
     }
 
