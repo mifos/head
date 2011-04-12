@@ -551,6 +551,8 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
             ProductDetailsDto productDto = loanProduct.toDetailsDto();
             CustomerDetailDto customerDetailDto = customer.toCustomerDetailDto();
+            
+            Integer gracePeriodInInstallments = loanProduct.getGracePeriodDuration().intValue();
 
             final List<PrdOfferingDto> loanProductDtos = retrieveActiveLoanProductsApplicableForCustomer(customer);
 
@@ -609,7 +611,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
 
             return new LoanCreationLoanDetailsDto(isRepaymentIndependentOfMeetingEnabled, loanOfferingMeetingDto,
-                    customer.getCustomerMeetingValue().toDto(), loanPurposes, productDto, customerDetailDto, loanProductDtos,
+                    customer.getCustomerMeetingValue().toDto(), loanPurposes, productDto, gracePeriodInInstallments, customerDetailDto, loanProductDtos,
                     interestTypeName, fundDtos, collateralOptions, purposeOfLoanOptions,
                     defaultFeeOptions, additionalFeeOptions, defaultFees, additionalFees,
                     BigDecimal.valueOf(eligibleLoanAmount.getDefaultLoanAmount()),

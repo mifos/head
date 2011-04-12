@@ -96,6 +96,8 @@ public class LoanAccountController {
     	formBean.setProductId(productId);
     	formBean.setCustomerId(dto.getCustomerDetailDto().getCustomerId());
     	formBean.setRepaymentScheduleIndependentOfCustomerMeeting(dto.isRepaymentIndependentOfMeetingEnabled());
+    	formBean.setGraceDuration(dto.getGracePeriodInInstallments());
+    	formBean.setMaxGraceDuration(dto.getGracePeriodInInstallments());
     	
     	if (dto.isRepaymentIndependentOfMeetingEnabled()) {
     	    

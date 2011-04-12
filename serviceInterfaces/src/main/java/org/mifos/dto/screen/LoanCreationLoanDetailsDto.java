@@ -79,10 +79,11 @@ public class LoanCreationLoanDetailsDto implements Serializable {
     private final boolean isGroup;
     private final List<LoanAccountDetailsDto> clientDetails;
     private final List<FeeDto> additionalFees;
+    private final Integer gracePeriodInInstallments;
 
     public LoanCreationLoanDetailsDto(boolean isRepaymentIndependentOfMeetingEnabled,
             MeetingDto loanOfferingMeetingDetail, MeetingDto customerMeetingDetail,
-            List<ValueListElement> loanPurposes, ProductDetailsDto productDto, CustomerDetailDto customerDetailDto, List<PrdOfferingDto> loanProductDtos, 
+            List<ValueListElement> loanPurposes, ProductDetailsDto productDto, Integer gracePeriodInInstallments, CustomerDetailDto customerDetailDto, List<PrdOfferingDto> loanProductDtos, 
             String interestRateType, List<FundDto> fundDtos, LinkedHashMap<String, String> collateralOptions, 
             LinkedHashMap<String, String> purposeOfLoanOptions, Map<String, String> defaultFeeOptions, Map<String, String> additionalFeeOptions, List<FeeDto> defaultFees, 
             List<FeeDto> additionalFees, BigDecimal defaultLoanAmount, BigDecimal maxLoanAmount, BigDecimal minLoanAmount, 
@@ -96,6 +97,7 @@ public class LoanCreationLoanDetailsDto implements Serializable {
         this.customerMeetingDetail = customerMeetingDetail;
         this.loanPurposes = loanPurposes;
 		this.productDto = productDto;
+        this.gracePeriodInInstallments = gracePeriodInInstallments;
 		this.customerDetailDto = customerDetailDto;
 		this.loanProductDtos = loanProductDtos;
 		this.interestRateType = interestRateType;
@@ -128,6 +130,10 @@ public class LoanCreationLoanDetailsDto implements Serializable {
 		this.purposeOfLoanOptions = purposeOfLoanOptions;
 		this.defaultFeeOptions = defaultFeeOptions;
 		this.additionalFeeOptions = additionalFeeOptions;
+    }
+
+    public Integer getGracePeriodInInstallments() {
+        return gracePeriodInInstallments;
     }
 
     private void populateFundOptions(List<FundDto> funds) {

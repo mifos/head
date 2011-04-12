@@ -79,7 +79,8 @@ public class LoanAccountFormBean implements Serializable {
     private Number disbursementDateYY;
     
     private Number graceDuration = Integer.valueOf(0);
-    
+    private Number maxGraceDuration = Integer.valueOf(0);
+
     private boolean sourceOfFundsMandatory;
     private Integer fundId;
     
@@ -207,7 +208,12 @@ public class LoanAccountFormBean implements Serializable {
             String defaultErrorMessage = "Please specify valid number of installments.";
             rejectNumberOfInstallmentsField(errors, defaultErrorMessage);
         }
-
+        
+        if (this.graceDuration.intValue() > this.maxGraceDuration.intValue()) {
+            String defaultErrorMessage = "The Grace period cannot be greater than in loan product definition.";
+            errors.rejectValue("graceDuration", "loanAccountFormBean.gracePeriodDuration.invalid", defaultErrorMessage);
+        }
+        
         if (dateValidator == null) {
             dateValidator = new DateValidator();
         }
@@ -797,5 +803,13 @@ public class LoanAccountFormBean implements Serializable {
 
     public void setDefaultFeeId(Number[] defaultFeeId) {
         this.defaultFeeId = defaultFeeId;
+    }
+    
+    public Number getMaxGraceDuration() {
+        return maxGraceDuration;
+    }
+
+    public void setMaxGraceDuration(Number maxGraceDuration) {
+        this.maxGraceDuration = maxGraceDuration;
     }
 }

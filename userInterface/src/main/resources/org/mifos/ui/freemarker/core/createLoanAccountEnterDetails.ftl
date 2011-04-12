@@ -247,7 +247,11 @@
     
     <div class="row">
         [@form.label "graceduration" true ][@spring.message "createLoanAccount.graceDuration"/][/@form.label]
-        [@form.input path="loanAccountFormBean.graceDuration" id="loancreationdetails.input.gracePeriod" attributes="disabled"/]
+        [#if loanAccountFormBean.graceDuration == 0]
+	    	[@form.input path="loanAccountFormBean.graceDuration" id="loancreationdetails.input.gracePeriod" attributes="disabled"/]
+	    [#else]
+	    	[@form.input path="loanAccountFormBean.graceDuration" id="loancreationdetails.input.gracePeriod" /]
+	   	[/#if]
         <span>[@spring.message "createLoanAccount.allowedGraceInInstallments"/]</span>
     </div>
     <div class="row">
