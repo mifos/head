@@ -450,7 +450,7 @@ public class MifosSelect extends BodyTagSupport {
             rawselect[0].setMultiple(getSize());
             rawselect[1].setMultiple(getSize());
         }
-        rawbutton[1].setValue("<< Remove");
+        rawbutton[1].setValue("<< Remove"); // FIXME: untranslatable
         rawbutton[1].setId(getInput() + ".button.remove");
         rawbutton[0].setOnclick("moveOptions(this.form." + rawselect[0].getName() + "," + "this.form."
                 + rawselect[1].getName() + ")");
