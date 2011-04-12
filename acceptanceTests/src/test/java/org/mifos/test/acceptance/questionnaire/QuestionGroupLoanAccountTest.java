@@ -83,7 +83,10 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
      *
      * @throws Exception
      */
-    @Test(enabled=true)
+    /*
+     * FIXME - keithw - disabled 
+     */
+    @Test(enabled=false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyCapturingResponsesDuringLoanDisburse() throws Exception {
 
@@ -160,7 +163,10 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
      *
      * @throws Exception
      */
-    @Test(enabled=true)
+    /*
+     * FIXME - keithw - disabled 
+     */
+    @Test(enabled=false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyResponsesDuringCreationOfLoanAccount() throws Exception {
         questionGroupTestHelper.markQuestionGroupAsActive("QGForCreateLoan1");
@@ -238,7 +244,10 @@ public class QuestionGroupLoanAccountTest extends UiTestCaseBase {
      *
      * @throws Exception
      */
-    @Test(enabled=true)
+    /*
+     * FIXME - keithw - disabled 
+     */
+    @Test(enabled=false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyResponsesDuringLoanAccountApproval() throws Exception {
         questionGroupTestHelper.markQuestionGroupAsActive("QGForApproveLoan1");
