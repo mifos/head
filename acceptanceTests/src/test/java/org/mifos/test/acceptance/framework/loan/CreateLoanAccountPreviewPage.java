@@ -38,7 +38,8 @@ public class CreateLoanAccountPreviewPage extends AbstractPage {
     }
 
     public CreateLoanAccountPreviewPage verifyInterestTypeInLoanPreview(String interestType) {
-        Assert.assertTrue(selenium.isTextPresent("Interest Rate Type :  " + interestType));
+        Assert.assertTrue(selenium.isTextPresent("Interest rate type:"));
+        Assert.assertTrue(selenium.isTextPresent(interestType));
         return this;
     }
 

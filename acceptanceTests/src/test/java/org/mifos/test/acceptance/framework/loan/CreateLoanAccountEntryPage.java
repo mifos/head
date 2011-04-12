@@ -244,7 +244,7 @@ public class CreateLoanAccountEntryPage extends MifosPage {
     }
 
     public void checkTotalAmount(String expectedTotalAmount) {
-        Assert.assertEquals(selenium.getValue("sumLoanAmount"), expectedTotalAmount);
+        Assert.assertEquals(selenium.getValue("glimsumloanamount"), expectedTotalAmount);
     }
 
     @SuppressWarnings("PMD")
