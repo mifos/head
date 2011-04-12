@@ -151,8 +151,10 @@ public class CreateLoanAccountEntryPage extends MifosPage {
 
     public CreateLoanAccountConfirmationPage submitAndNavigateToGLIMLoanAccountConfirmationPage() {
         submitAndWaitForPage();
-        return navigateToConfirmationPage();
-
+        CreateLoanAccountReviewInstallmentPage reviewInstallmentPage = new CreateLoanAccountReviewInstallmentPage(this.selenium).verifyPage();
+        CreateLoanAccountPreviewPage previewPage = reviewInstallmentPage.clickPreviewAndNavigateToPreviewPage();
+        return previewPage.submitForApprovalAndNavigateToConfirmationPage();
+//        return navigateToConfirmationPage();
     }
 
     public CreateLoanAccountConfirmationPage submitAndNavigateToGLIMLoanAccountConfirmationPageSaveForLaterButton() {
