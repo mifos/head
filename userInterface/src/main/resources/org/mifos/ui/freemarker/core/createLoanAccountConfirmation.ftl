@@ -30,9 +30,11 @@
 
 <h1 class="success">[@spring.message "createLoanAccount.accountCreated.successMessage" /]</h1>
 
-[#assign args=[loanCreationProductDetailsDto.customerDetailDto.displayName, loanCreationResultDto.globalAccountNum] /]
+[#assign args=[loanCreationProductDetailsDto.customerDetailDto.displayName] /]
 <p><span class="standout">[@spring.message "createLoanAccount.accountCreated.pleasenote" /] </span>
-[@spring.messageArgs "createLoanAccount.accountCreated.accountDetails" args /]</p>
+ [@spring.messageArgs "createLoanAccount.accountCreated.accountDetails" args /]
+<span class="account-number"> ${loanCreationResultDto.globalAccountNum}. </span>
+ [@spring.message "createLoanAccount.accountCreated.searchInstruction" /]</p>
 <br/>
 
 <p><a id="CreateLoanAccountConfirmation.link.viewLoanDetails" href="loanAccountAction.do?method=get&globalAccountNum=${loanCreationResultDto.globalAccountNum}" class="standout">[@spring.message "createLoanAccount.accountCreated.action.viewSavingsAccount" /]</a></p>

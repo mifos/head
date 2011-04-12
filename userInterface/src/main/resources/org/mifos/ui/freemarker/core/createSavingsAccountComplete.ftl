@@ -29,8 +29,12 @@
 
 <h1 class="success">[@spring.message "createSavingsAccount.accountCreated.successMessage" /]</h1>
 
-[#assign args=[savingsAccountFormBean.customer.displayName, account.globalAccountNum] /]
-<p>[@spring.messageArgs "createSavingsAccount.accountCreated.accountDetails" args /]</p>
+[#assign args=[savingsAccountFormBean.customer.displayName] /]
+<p>
+<span class="standout">[@spring.message "createSavingsAccount.accountCreated.pleasenote" /] </span>
+ [@spring.messageArgs "createSavingsAccount.accountCreated.accountDetails" args /]
+<span class="account-number"> ${account.globalAccountNum}. </span>
+ [@spring.message "createSavingsAccount.accountCreated.searchInstruction" /]</p>
 <br/>
 
 <p><a id="createsavingsaccountconfirmation.link.viewSavingsAccount" href="savingsAction.do?method=get&globalAccountNum=${account.globalAccountNum}" class="standout">[@spring.message "createSavingsAccount.accountCreated.action.viewSavingsAccount" /]</a></p>

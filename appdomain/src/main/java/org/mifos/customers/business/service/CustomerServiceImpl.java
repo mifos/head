@@ -1126,8 +1126,6 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void removeGroupMembership(ClientBO client, PersonnelBO loanOfficer, CustomerNoteEntity accountNotesEntity, Short localeId) {
 
-        client.getCustomerStatus().setLocaleId(localeId);
-
         if (client.hasActiveLoanAccounts()) {
             throw new BusinessRuleException(CustomerConstants.CLIENT_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
         }

@@ -126,7 +126,7 @@ public class CollectionSheetServiceFacadeWebTierTest {
         // stubbing
         when(masterDataEntity.getId()).thenReturn(paymentTypeId);
         when(masterDataEntity.getName()).thenReturn(paymentTypeName);
-        when(legacyMasterDao.findMasterDataEntitiesWithLocale(PaymentTypeEntity.class, Short.valueOf("1"))).thenReturn(
+        when(legacyMasterDao.findMasterDataEntitiesWithLocale(PaymentTypeEntity.class)).thenReturn(
                 paymentTypeEntities);
 
         // exercise test

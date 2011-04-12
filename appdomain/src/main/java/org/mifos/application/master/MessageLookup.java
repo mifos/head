@@ -25,7 +25,6 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.mifos.accounts.savings.persistence.GenericDao;
-import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.application.admin.servicefacade.CustomizedTextServiceFacade;
 import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.LookUpLabelEntity;
@@ -86,9 +85,9 @@ public class MessageLookup implements MessageSourceAware {
     @Autowired(required=false)
     LegacyMasterDao legacyMasterDao;
 
-    @Autowired(required=false)    
-	CustomizedTextServiceFacade customizedTextServiceFacade;	
-    
+    @Autowired(required=false)
+	CustomizedTextServiceFacade customizedTextServiceFacade;
+
     private MessageSource messageSource;
 
     public static final MessageLookup getInstance() {
@@ -104,7 +103,7 @@ public class MessageLookup implements MessageSourceAware {
 	public String replaceSubstitutions(String message) {
 		return customizedTextServiceFacade.replaceSubstitutions(message);
 	}
-	
+
     public String lookup(LocalizedTextLookup namedObject, Locale locale) {
         return customizedTextServiceFacade.replaceSubstitutions(lookup(namedObject.getPropertiesKey(), locale));
     }
@@ -134,11 +133,11 @@ public class MessageLookup implements MessageSourceAware {
 
     public String lookup(String lookupKey, Locale locale) {
         try {
-            String textMessage = MifosConfiguration.getInstance().getLabel(lookupKey, locale);
+            String textMessage = MifosConfiguration.getInstance().getLabel(lookupKey);
             // if we don't find a message above, then it means that it has not
             // been customized and
             // we should return the default message from the properties file
-            return StringUtils.isEmpty(textMessage) ? 
+            return StringUtils.isEmpty(textMessage) ?
             		customizedTextServiceFacade.replaceSubstitutions(messageSource.getMessage(lookupKey, null, lookupKey, locale))
                     : customizedTextServiceFacade.replaceSubstitutions(textMessage);
         } catch (ConfigurationException e) {
@@ -165,7 +164,7 @@ public class MessageLookup implements MessageSourceAware {
      */
     protected String lookupLabel(String labelKey, Locale locale) {
         try {
-            String labelText = MifosConfiguration.getInstance().getLabel(labelKey, locale);
+            String labelText = MifosConfiguration.getInstance().getLabel(labelKey);
             // if we don't find a label here, then it means that it has not been
             // customized and
             // we should return the default label from the properties file

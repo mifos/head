@@ -43,8 +43,8 @@
                     <li>
                         <label for="selectedCountry"><span class="red">*</span>[@spring.message
                         "questionnaire.select.questionGroup"/]:</label>
-                    [@mifosmacros.formSingleSelectWithPrompt "uploadQuestionGroupForm.selectedCountry", uploadQuestionGroupForm.countries,
-                    "--select one--" /]
+                    [@mifos.formSingleSelectWithPrompt "uploadQuestionGroupForm.selectedCountry", uploadQuestionGroupForm.countries,
+                    "--selectone--" /]
                     </li>
                 </ol>
             </fieldset>

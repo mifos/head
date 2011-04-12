@@ -58,8 +58,6 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.reports.admindocuments.business.AdminDocAccStateMixBO;
 import org.mifos.reports.admindocuments.business.AdminDocumentBO;
-import org.mifos.reports.admindocuments.persistence.LegacyAdminDocAccStateMixDao;
-import org.mifos.reports.admindocuments.persistence.LegacyAdminDocumentDao;
 import org.mifos.reports.admindocuments.struts.actionforms.BirtAdminDocumentUploadActionForm;
 import org.mifos.reports.admindocuments.util.helpers.AdminDocumentsContants;
 import org.mifos.reports.business.service.ReportsBusinessService;
@@ -248,6 +246,11 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
         request.getSession().setAttribute(AdminDocumentsContants.LISTOFADMINISTRATIVEDOCUMENTS,
                 legacyAdminDocumentDao.getAllAdminDocuments());
         return mapping.findForward(ActionForwards.get_success.toString());
+    }
+    
+    public ActionForward getFileNotFoundPage(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form,
+            HttpServletRequest request, @SuppressWarnings("unused") HttpServletResponse response) {
+        return mapping.findForward(ActionForwards.download_failure.toString());
     }
 
     @TransactionDemarcate(saveToken = true)

@@ -31,8 +31,6 @@ public class LanguageEntity extends MasterDataEntity {
 
     private final String languageShortName;
 
-    private Short localeId;
-
     /** The value of the lookupValue association. */
     private LookUpValueEntity lookUpValue;
 
@@ -55,14 +53,6 @@ public class LanguageEntity extends MasterDataEntity {
         return languageShortName;
     }
 
-    public Short getLocaleId() {
-        return localeId;
-    }
-
-//    public String getLookedUpLanguageName() {
-//        return this.getName();
-//    }
-
     @Override
     public LookUpValueEntity getLookUpValue() {
         return lookUpValue;
@@ -82,11 +72,6 @@ public class LanguageEntity extends MasterDataEntity {
 
     protected void setId(Short id) {
         this.id = id;
-    }
-
-    @Override
-    public void setLocaleId(Short localeId) {
-        this.localeId = localeId;
     }
 
     protected void setLookUpValue(LookUpValueEntity lookUpValue) {

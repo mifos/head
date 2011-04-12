@@ -120,7 +120,6 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
         AccountActionEntity accountaction = service.getAccountAction(AccountActionTypes.SAVINGS_DEPOSIT.getValue(),
                 Short.valueOf("1"));
         Assert.assertNotNull(accountaction);
-        Assert.assertEquals(Short.valueOf("1"), accountaction.getLocaleId());
     }
 
     @Test

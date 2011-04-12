@@ -117,25 +117,22 @@ public class LegacyMasterDao extends LegacyGenericDao {
      */
     @SuppressWarnings("unchecked")
     @Deprecated
-    public <T extends MasterDataEntity> List<T> findMasterDataEntitiesWithLocale(final Class<T> type, final Short localeId) {
+    public <T extends MasterDataEntity> List<T> findMasterDataEntitiesWithLocale(final Class<T> type) {
         Session session = getSession();
         List<T> masterEntities = session.createQuery("from " + type.getName()).list();
         for (MasterDataEntity masterData : masterEntities) {
             Hibernate.initialize(masterData.getNames());
-            masterData.setLocaleId(localeId);
         }
         return masterEntities;
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends MasterDataEntity> T findMasterDataEntityWithLocale(final Class<T> entityType, final Short entityId,
-            final Short localeId) throws PersistenceException {
+    public <T extends MasterDataEntity> T findMasterDataEntityWithLocale(final Class<T> entityType, final Short entityId) throws PersistenceException {
         Session session = getSession();
         List<T> masterEntities = session.createQuery(
                 "from " + entityType.getName() + " masterEntity where masterEntity.id = " + entityId).list();
         if (masterEntities != null && masterEntities.size() > 0) {
             T masterDataEntity = masterEntities.get(0);
-            masterDataEntity.setLocaleId(localeId);
             Hibernate.initialize(masterDataEntity.getNames());
             return masterDataEntity;
         }

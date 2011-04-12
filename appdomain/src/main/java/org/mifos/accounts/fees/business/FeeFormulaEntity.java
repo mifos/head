@@ -36,8 +36,6 @@ public class FeeFormulaEntity extends MasterDataEntity {
     /** The composite primary key value */
     private Short id;
 
-    private Short localeId;
-
     /** The value of the lookupValue association. */
     private LookUpValueEntity lookUpValue;
 
@@ -81,10 +79,6 @@ public class FeeFormulaEntity extends MasterDataEntity {
         return id;
     }
 
-    public Short getLocaleId() {
-        return localeId;
-    }
-
     @Override
     public LookUpValueEntity getLookUpValue() {
         return lookUpValue;
@@ -104,11 +98,6 @@ public class FeeFormulaEntity extends MasterDataEntity {
 
     protected void setId(Short id) {
         this.id = id;
-    }
-
-    @Override
-    public void setLocaleId(Short localeId) {
-        this.localeId = localeId;
     }
 
     public void setLookUpValue(LookUpValueEntity lookUpValue) {

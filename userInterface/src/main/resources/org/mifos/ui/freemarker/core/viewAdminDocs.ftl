@@ -37,7 +37,6 @@
             <a href="birtAdminDocumentUploadAction.do?method=getBirtAdminDocumentUploadPage&viewPath=administerreports_path">
             [@spring.message "manageReports.uploadanewadmindoc"/]</a>
         </p>
-
         <table width="75%" border="0" cellpadding="3" cellspacing="0" >
             [#list listofadministrativedocuments as adminDocument]
                 <tr>

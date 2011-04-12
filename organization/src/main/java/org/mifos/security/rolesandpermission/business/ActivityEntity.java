@@ -20,25 +20,59 @@
 
 package org.mifos.security.rolesandpermission.business;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.framework.business.AbstractEntity;
 
+@NamedQueries({
+        @NamedQuery(name="getAllActivities",query="from ActivityEntity ae order by ae.id"),
+        @NamedQuery(name="activityEntity.getActivityEntityByLookUpValueEntity",
+                    query="from ActivityEntity ae where ae.activityNameLookupValues=:aLookUpValueEntity"),
+        @NamedQuery(name="getActivityById",query="from ActivityEntity ae where ae.id = :ACTIVITY_ID")
+})
+
+@Entity
+@Table(name = "activity")
 public class ActivityEntity extends AbstractEntity {
 
+    @Id
+    @Column(name = "activity_id", nullable = false)
     private final Short id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
     private ActivityEntity parent;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "activity_name_lookup_id")
     private final LookUpValueEntity activityNameLookupValues;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "description_lookup_id")
     private final LookUpValueEntity descriptionLookupValues;
-    private final Set<RoleActivityEntity> roles = new HashSet<RoleActivityEntity>();
 
-    private String description;
-    private String activityName;
+    @ManyToMany
+    @JoinTable(name="roles_activity",
+            joinColumns={@JoinColumn(name="activity_id", referencedColumnName="activity_id")},
+            inverseJoinColumns={@JoinColumn(name="role_id", referencedColumnName="role_id")})
+    private final List<RoleBO> roles = new ArrayList<RoleBO>(0);
+
+    private transient String description;
+    private transient String activityName;
 
     protected ActivityEntity() {
         this.id = null;
@@ -91,7 +125,7 @@ public class ActivityEntity extends AbstractEntity {
         this.parent = parent;
     }
 
-    public Set<RoleActivityEntity> getRoles() {
+    public List<RoleBO> getRoles() {
         return roles;
     }
 

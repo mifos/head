@@ -50,7 +50,6 @@ import org.mifos.framework.util.helpers.SearchUtils;
 import org.mifos.security.activity.ActivityGeneratorException;
 import org.mifos.security.activity.DynamicLookUpValueCreationTypes;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
-import org.mifos.security.rolesandpermission.business.RoleActivityEntity;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.security.rolesandpermission.business.service.RolesPermissionsBusinessService;
 import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
@@ -270,8 +269,8 @@ public class LegacyRolesPermissionsDao extends LegacyGenericDao {
 
     private void insertRolesActivity(ActivityEntity activityEntity) throws PersistenceException {
         RoleBO role = getPersistentObject(RoleBO.class, (short) RolesAndPermissionConstants.ADMIN_ROLE);
-        RoleActivityEntity roleActivityEntity = new RoleActivityEntity(role, activityEntity);
-        createOrUpdate(roleActivityEntity);
+        role.getActivities().add(activityEntity);
+        createOrUpdate(activityEntity);
     }
 
     private ActivityEntity createActivityEntity(short parentActivity, int lookUpId) throws ServiceException,

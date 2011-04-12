@@ -27,7 +27,7 @@
 <div class="content_panel">
     <div class="marginLeft30 marginTop20">
         <h3 id="accessDeniedHeading">[@spring.message "accessDeniedHeading" /]</h3>
-        <p id="accessDeniedMessage">[@spring.message "accessDeniedMessage" /]</p>
+        <p id="accessDeniedMessage" class="red">[@spring.message "accessDeniedMessage" /]</p>
     </div>
 </div>
 

@@ -155,9 +155,9 @@ public class SavingsAction extends BaseAction {
 
         // NOTE - these details are included in SavingsProductReferenceDto but left as is to satisfy JSP at present
         SessionUtils.setCollectionAttribute(MasterConstants.SAVINGS_TYPE, legacyMasterDao.findMasterDataEntitiesWithLocale(
-                SavingsTypeEntity.class, uc.getLocaleId()), request);
+                SavingsTypeEntity.class), request);
         SessionUtils.setCollectionAttribute(MasterConstants.RECOMMENDED_AMOUNT_UNIT, legacyMasterDao
-                .findMasterDataEntitiesWithLocale(RecommendedAmntUnitEntity.class, uc.getLocaleId()), request);
+                .findMasterDataEntitiesWithLocale(RecommendedAmntUnitEntity.class), request);
 
         List<CustomFieldDefinitionEntity> customFieldDefinitions = new ArrayList<CustomFieldDefinitionEntity>();
         SessionUtils.setCollectionAttribute(SavingsConstants.CUSTOM_FIELDS, customFieldDefinitions, request);
@@ -253,14 +253,9 @@ public class SavingsAction extends BaseAction {
         SavingsBO savings = this.savingsDao.findBySystemId(globalAccountNum);
         savings.setUserContext(uc);
 
-        savings.getAccountState().setLocaleId(uc.getLocaleId());
-        for (AccountFlagMapping accountFlagMapping : savings.getAccountFlags()) {
-            accountFlagMapping.getFlag().setLocaleId(uc.getLocaleId());
-        }
-
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
-        SessionUtils.setCollectionAttribute(MasterConstants.SAVINGS_TYPE, legacyMasterDao.findMasterDataEntitiesWithLocale(SavingsTypeEntity.class, uc.getLocaleId()), request);
-        SessionUtils.setCollectionAttribute(MasterConstants.RECOMMENDED_AMOUNT_UNIT, legacyMasterDao.findMasterDataEntitiesWithLocale(RecommendedAmntUnitEntity.class, uc.getLocaleId()), request);
+        SessionUtils.setCollectionAttribute(MasterConstants.SAVINGS_TYPE, legacyMasterDao.findMasterDataEntitiesWithLocale(SavingsTypeEntity.class), request);
+        SessionUtils.setCollectionAttribute(MasterConstants.RECOMMENDED_AMOUNT_UNIT, legacyMasterDao.findMasterDataEntitiesWithLocale(RecommendedAmntUnitEntity.class), request);
 
         List<CustomFieldDefinitionEntity> customFieldDefinitions = new ArrayList<CustomFieldDefinitionEntity>();
         SessionUtils.setCollectionAttribute(SavingsConstants.CUSTOM_FIELDS, customFieldDefinitions, request);
@@ -445,10 +440,8 @@ public class SavingsAction extends BaseAction {
 
         for (AccountFlagMapping accountFlagMapping : savings.getAccountFlags()) {
             Hibernate.initialize(accountFlagMapping.getFlag());
-            accountFlagMapping.getFlag().setLocaleId(uc.getLocaleId());
         }
         Hibernate.initialize(savings.getAccountFlags());
-        savings.getAccountState().setLocaleId(uc.getLocaleId());
         savings.setUserContext(uc);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
 

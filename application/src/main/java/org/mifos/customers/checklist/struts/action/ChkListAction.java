@@ -164,13 +164,10 @@ public class ChkListAction extends BaseAction {
         CheckListBO checkList = new CheckListPersistence().getCheckList(checklistId);
         if (checkList.getCheckListType().equals(CheckListType.CUSTOMER_CHECKLIST)) {
             CustomerCheckListBO customerCheckList = (CustomerCheckListBO) checkList;
-            customerCheckList.getCustomerStatus().setLocaleId(localeId);
-            customerCheckList.getCustomerLevel().setLocaleId(localeId);
             SessionUtils.setAttribute(Constants.BUSINESS_KEY, customerCheckList, request);
             SessionUtils.setAttribute(CheckListConstants.TYPE, CheckListType.CUSTOMER_CHECKLIST.getValue(), request);
         } else {
             AccountCheckListBO accountCheckList = (AccountCheckListBO) checkList;
-            accountCheckList.getAccountStateEntity().setLocaleId(localeId);
             SessionUtils.setAttribute(Constants.BUSINESS_KEY, accountCheckList, request);
             SessionUtils.setAttribute(CheckListConstants.TYPE, CheckListType.ACCOUNT_CHECKLIST.getValue(), request);
         }
@@ -216,7 +213,6 @@ public class ChkListAction extends BaseAction {
                 } else {
                     chkListActionForm.setType("4");
                 }
-                ((AccountCheckListBO) checkList).getAccountStateEntity().setLocaleId(getUserContext(request).getLocaleId());
                 chkListActionForm.setMasterTypeName(((AccountCheckListBO) checkList).getProductTypeEntity().getName());
                 chkListActionForm.setStateName(((AccountCheckListBO) checkList).getAccountStateEntity().getName());
                 chkListActionForm.setStateId(getStringValue(((AccountCheckListBO) checkList).getAccountStateEntity().getId()));
@@ -262,7 +258,6 @@ public class ChkListAction extends BaseAction {
                 } else {
                     chkListActionForm.setType("4");
                 }
-                ((AccountCheckListBO) checkList).getAccountStateEntity().setLocaleId(getUserContext(request).getLocaleId());
                 chkListActionForm.setMasterTypeName(((AccountCheckListBO) checkList).getProductTypeEntity().getName());
                 chkListActionForm.setStateName(((AccountCheckListBO) checkList).getAccountStateEntity().getName());
                 chkListActionForm.setStateId(getStringValue(((AccountCheckListBO) checkList).getAccountStateEntity().getId()));

@@ -30,6 +30,20 @@
 [#import "blueprintmacros.ftl" as mifos]
 
 [#include "layout.ftl"]
+	
+<script type="text/javascript">
+
+	function selectAll(x) {
+		for(var i=0,l=x.form.length; i<l; i++)
+		{
+			if(x.form[i].type == 'checkbox' && x.form[i].name != 'selectAll'){
+				x.form[i].checked=x.checked
+			}
+		}
+	}
+
+</script>
+
 [@adminLeftPaneLayout]
 <!--  Main Content Begins-->
 <div class=" content">
@@ -81,6 +95,13 @@
                     <p class="font15"><span class="orangeheading">[@spring.message "systemAdministration.batchjobs.scheduledTasks" /]</span></p>
                 </div>
                 <div class="span-21">
+                	<span class="span-1">
+                		<input id="selectAll1" type="checkbox" name="selectAll1" onchange="javascript:selectAll(this)"/>
+            		</span>
+            		<span class="span-9">
+                		[@spring.message "systemAdministration.batchjobs.selectAll"/]
+                	</span>
+                	<div class="clear">&nbsp;</div>
                     [#list model.batchjobs as batchjobs]
                         <div class="span-21 paddingLeft">
                             <span class="span-1">
@@ -177,7 +198,7 @@
                 </div>
                 <div class="clear">&nbsp;</div>
                 <div class="span-21 buttonsSubmitCancel" >
-                        <input class="buttn"  type="submit" id="RUN" name="RUN" value="[@spring.message "systemAdministration.batchjobs.runSelectedTasks"/]"/>
+                        <input class="buttn" type="submit" id="RUN" name="RUN" value="[@spring.message "systemAdministration.batchjobs.runSelectedTasks"/]"/>
                 </div>
                 <div class="clear">&nbsp;</div>
             </div>

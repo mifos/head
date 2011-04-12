@@ -348,7 +348,7 @@ public class CustomerPersistence extends LegacyGenericDao {
         }
 
         paramList.add(typeNameValue("String", "SEARCH_ID", personnel.getOffice().getSearchId() + "%"));
-        paramList.add(typeNameValue("String", "SEARCH_STRING", searchString + "%"));
+        paramList.add(typeNameValue("String", "SEARCH_STRING", "%" + searchString + "%"));
         paramList.add(typeNameValue("Boolean", "GROUP_LOAN_ALLOWED", ClientRules.getGroupCanApplyLoans() ? Boolean.TRUE
                 : Boolean.FALSE));
 
@@ -382,7 +382,7 @@ public class CustomerPersistence extends LegacyGenericDao {
             namedQuery[1] = NamedQueryConstants.SEARCH_CUSTOMER_FOR_SAVINGS_NOLO;
         }
         paramList.add(typeNameValue("String", "SEARCH_ID", personnel.getOffice().getSearchId() + "%"));
-        paramList.add(typeNameValue("String", "SEARCH_STRING", searchString + "%"));
+        paramList.add(typeNameValue("String", "SEARCH_STRING", "%" + searchString + "%"));
 
         String[] aliasNames = { "clientName", "clientId", "groupName", "centerName", "officeName", "globelNo" };
         queryInputs.setQueryStrings(namedQuery);

@@ -43,8 +43,6 @@ public class CustomerLevelEntity extends MasterDataEntity {
     /** The composite primary key value */
     private Short id;
 
-    private Short localeId;
-
     /** The value of the lookupValue association. */
     private LookUpValueEntity lookUpValue;
 
@@ -65,10 +63,6 @@ public class CustomerLevelEntity extends MasterDataEntity {
     @Override
     public Short getId() {
         return id;
-    }
-
-    public Short getLocaleId() {
-        return localeId;
     }
 
     @Override
@@ -120,11 +114,6 @@ public class CustomerLevelEntity extends MasterDataEntity {
 
     protected void setId(Short id) {
         this.id = id;
-    }
-
-    @Override
-    public void setLocaleId(Short localeId) {
-        this.localeId = localeId;
     }
 
     protected void setLookUpValue(LookUpValueEntity lookUpValue) {

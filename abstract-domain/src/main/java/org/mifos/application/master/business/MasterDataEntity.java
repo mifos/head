@@ -22,7 +22,6 @@ package org.mifos.application.master.business;
 
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
 import org.mifos.framework.business.AbstractEntity;
 
 /**
@@ -37,27 +36,22 @@ public abstract class MasterDataEntity extends AbstractEntity {
     // values which override localized values are stored with locale =1
     public static Short CUSTOMIZATION_LOCALE_ID = (short) 1;
 
+    private Short localeId;
+
+    public Short getLocaleId() {
+        return localeId;
+    }
+
+    public void setLocaleId(Short localeId) {
+        this.localeId = localeId;
+    }
+
     public abstract Short getId();
 
     public abstract Set<LookUpValueLocaleEntity> getNames();
 
     public abstract String getName();
 
-    public abstract void setLocaleId(Short locale);
-
     public abstract LookUpValueEntity getLookUpValue();
 
-    public void update(String newValue) {
-        Set<LookUpValueLocaleEntity> lookUpValueLocales = getLookUpValue().getLookUpValueLocales();
-        if ((lookUpValueLocales != null) && StringUtils.isNotBlank(newValue)) {
-            for (LookUpValueLocaleEntity entity : lookUpValueLocales) {
-                if (entity.getLookUpId().equals(getLookUpValue().getLookUpId())
-                        && (entity.getLookUpValue() == null || !entity.getLookUpValue().equals(newValue))) {
-                    entity.setLookUpValue(newValue);
-                    break;
-                }
-            }
-        }
-
-    }
 }

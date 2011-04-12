@@ -8,16 +8,21 @@
     width: 100%;
 }
 
+table {
+    border-top:1px #D7DEEE solid;
+}
+
 tr.even td {
     background: white;
+    height: 20pt;
+    border-bottom:1px #D7DEEE solid;
 }
 
 tr.odd td {
-    background: #E5ECF9;
+    background: white;
+    height: 20pt;
+    border-bottom:1px #D7DEEE solid;
 }
 
-td {
-    height: 20pt;
-}
 
 

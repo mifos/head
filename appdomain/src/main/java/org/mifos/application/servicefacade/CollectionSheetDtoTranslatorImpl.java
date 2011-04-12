@@ -43,7 +43,7 @@ import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.dto.domain.PersonnelDto;
 import org.mifos.framework.util.helpers.Money;
 
-import edu.emory.mathcs.backport.java.util.Collections;
+import java.util.Collections;
 
 public class CollectionSheetDtoTranslatorImpl implements CollectionSheetDtoTranslator {
 

@@ -35,7 +35,7 @@ public class RawButton {
     public RawButton() {
         name = null;
         type = "button";
-        value = "Add >>";
+        value = "Add >>"; // FIXME: untranslatable
         disabled = null;
         title = null;
         style = null;

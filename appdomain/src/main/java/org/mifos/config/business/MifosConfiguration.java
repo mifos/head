@@ -21,15 +21,11 @@
 package org.mifos.config.business;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang.StringUtils;
 import org.mifos.application.master.MessageLookup;
-import org.mifos.application.master.business.LookUpEntity;
-import org.mifos.application.master.business.LookUpLabelEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
@@ -138,7 +134,7 @@ public class MifosConfiguration {
         return labelCache.get(new LabelKey(key, localeId));
     }
 
-    public String getLabel(String key, Locale locale) throws ConfigurationException {
+    public String getLabel(String key) throws ConfigurationException {
         // we only use localeId 1 to store labels since it is an override for
         // all locales
         return (key == null) ? null : getLabelValue(key, (short) 1);

@@ -87,7 +87,6 @@ import org.mifos.dto.screen.ClientPersonalInfoDto;
 import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
@@ -99,7 +98,6 @@ import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
-import org.mifos.service.BusinessRuleException;
 
 public class ClientCustAction extends CustAction implements QuestionnaireAction {
 
@@ -157,7 +155,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         List<ApplicableAccountFeeDto> additionalFees = clientFormCreationDto.getAdditionalFees();
         SessionUtils.setCollectionAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, additionalFees, request);
 
-        List<SpouseFatherLookupEntity> spouseFather = legacyMasterDao.findMasterDataEntitiesWithLocale(SpouseFatherLookupEntity.class, userContext.getLocaleId());
+        List<SpouseFatherLookupEntity> spouseFather = legacyMasterDao.findMasterDataEntitiesWithLocale(SpouseFatherLookupEntity.class);
         SessionUtils.setCollectionAttribute(ClientConstants.SPOUSE_FATHER_ENTITY, spouseFather, request);
 
         SessionUtils.setCollectionAttribute(ClientConstants.SALUTATION_ENTITY, clientFormCreationDto.getClientDropdowns().getSalutations(), request);
@@ -583,7 +581,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         SessionUtils.setCollectionAttribute(ClientConstants.HANDICAPPED_ENTITY, personalInfo.getClientDropdowns().getHandicapped(), request);
 
         UserContext userContext = getUserContext(request);
-        List<SpouseFatherLookupEntity> spouseFather = legacyMasterDao.findMasterDataEntitiesWithLocale(SpouseFatherLookupEntity.class, userContext.getLocaleId());
+        List<SpouseFatherLookupEntity> spouseFather = legacyMasterDao.findMasterDataEntitiesWithLocale(SpouseFatherLookupEntity.class);
         SessionUtils.setCollectionAttribute(ClientConstants.SPOUSE_FATHER_ENTITY, spouseFather, request);
 
         SessionUtils.setAttribute("CanEditPhoneNumber", ActivityMapper.getInstance().isEditPhoneNumberPermitted(userContext, userContext.getBranchId()), request);
@@ -780,7 +778,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, new ArrayList<CustomFieldDto>(), request);
 
         UserContext userContext = getUserContext(request);
-        List<SpouseFatherLookupEntity> spouseFather = legacyMasterDao.findMasterDataEntitiesWithLocale(SpouseFatherLookupEntity.class, userContext.getLocaleId());
+        List<SpouseFatherLookupEntity> spouseFather = legacyMasterDao.findMasterDataEntitiesWithLocale(SpouseFatherLookupEntity.class);
         SessionUtils.setCollectionAttribute(ClientConstants.SPOUSE_FATHER_ENTITY, spouseFather, request);
 
         SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_MANDATORY, isFamilyDetailsMandatory(), request);

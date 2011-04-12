@@ -424,8 +424,8 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
         List<PositionEntity> customerPositions = new ArrayList<PositionEntity>();
 
         List<PositionEntity> allCustomerPositions = legacyMasterDao.findMasterDataEntitiesWithLocale(
-                PositionEntity.class, localeId);
-        if (!new ClientRules().getCenterHierarchyExists()) {
+                PositionEntity.class);
+        if (!ClientRules.getCenterHierarchyExists()) {
             customerPositions = populateWithNonCenterRelatedPositions(allCustomerPositions);
         } else {
             customerPositions.addAll(allCustomerPositions);

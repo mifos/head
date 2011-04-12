@@ -75,7 +75,6 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
             AccountPaymentEntity lastPayment = savings.findMostRecentPaymentByPaymentDate();
             AccountActionEntity accountAction = legacyMasterDao.getPersistentObject(
                     AccountActionEntity.class, new SavingsHelper().getPaymentActionType(lastPayment));
-            accountAction.setLocaleId(uc.getLocaleId());
 
             Hibernate.initialize(savings.findMostRecentPaymentByPaymentDate().getAccountTrxns());
 

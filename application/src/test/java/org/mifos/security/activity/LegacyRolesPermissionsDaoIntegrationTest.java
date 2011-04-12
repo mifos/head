@@ -22,7 +22,6 @@ package org.mifos.security.activity;
 
 import junit.framework.Assert;
 
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.junit.Test;
 import org.mifos.application.master.business.LookUpEntity;
@@ -50,18 +49,22 @@ public class LegacyRolesPermissionsDaoIntegrationTest extends MifosIntegrationTe
     @Test
     public void testShouldInsertSuccessActivity() throws Exception {
         Session session = StaticHibernateUtil.getSessionTL();
+        short parentId = 13;
+        int numberOfActivitiesBefore = session.createQuery("from ActivityEntity r where r.parent.id =" + parentId).list().size();
+        RoleBO roleBo = (RoleBO) session.load(RoleBO.class, (short) RolesAndPermissionConstants.ADMIN_ROLE);
+        int adminActivities = roleBo.getActivities().size();
+
         LookUpEntity lookUpEntity = new LookUpEntity();
         lookUpEntity.setEntityId((short) LookUpEntity.ACTIVITY);
-        short parentId = 13;
+
         int lookUpId = legacyRolesPermissionsDao.createActivityForReports(parentId, "abcd");
         Assert.assertEquals("abcd",legacyMasterDao.retrieveOneLookUpValueLocaleEntity(Localization.ENGLISH_LOCALE, lookUpId).getLookUpValue());
-        Assert.assertEquals(legacyRolesPermissionsDao.calculateDynamicActivityId(),
-                (int) legacyRolesPermissionsDao.getActivityEntity(lookUpId).getId() - 1);
-        Query query = session.createQuery("from RoleActivityEntity r where r.activity = :activity and r.role = :role");
-        query.setParameter("activity", legacyRolesPermissionsDao.getActivityEntity(lookUpId));
-        RoleBO roleBo = (RoleBO) session.load(RoleBO.class, (short) RolesAndPermissionConstants.ADMIN_ROLE);
-        query.setParameter("role", roleBo);
-        Assert.assertEquals(1, query.list().size());
+        Assert.assertEquals(legacyRolesPermissionsDao.calculateDynamicActivityId(), (int) legacyRolesPermissionsDao.getActivityEntity(lookUpId).getId() - 1);
+
+        int numberOfActivitiesAfter = session.createQuery("from ActivityEntity r where r.parent.id =" + parentId).list().size();
+
+        Assert.assertEquals(numberOfActivitiesBefore + 1, numberOfActivitiesAfter);
+        Assert.assertEquals(adminActivities + 1, roleBo.getActivities().size());
 
     }
 

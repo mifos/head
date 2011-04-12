@@ -35,7 +35,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".create">
 	<tiles:put name="body" type="string">
-        <span id="page.id" title="CreateLoanProduct"/>
+        <span id="page.id" title="CreateLoanProduct"></span>
 		<script src="pages/framework/js/date.js"></script>
 		<script src="pages/framework/js/func.js"></script>
 		<script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>

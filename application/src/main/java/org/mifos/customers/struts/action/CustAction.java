@@ -29,7 +29,6 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.accounts.business.AccountBO;
-import org.mifos.accounts.business.AccountFlagMapping;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -59,12 +58,6 @@ public class CustAction extends SearchAction {
 
         List<AccountBO> loanAccountsList = new CustomerPersistence().getAllClosedAccount(customerId, AccountTypes.LOAN_ACCOUNT.getValue());
         List<AccountBO> savingsAccountList = new CustomerPersistence().getAllClosedAccount(customerId,AccountTypes.SAVINGS_ACCOUNT.getValue());
-        for (AccountBO savingsBO : savingsAccountList) {
-            setLocaleIdForToRetrieveMasterDataName(savingsBO, userContext);
-        }
-        for (AccountBO loanBO : loanAccountsList) {
-            setLocaleIdForToRetrieveMasterDataName(loanBO, userContext);
-        }
         SessionUtils.setCollectionAttribute(AccountConstants.CLOSEDLOANACCOUNTSLIST, loanAccountsList, request);
         SessionUtils.setCollectionAttribute(AccountConstants.CLOSEDSAVINGSACCOUNTSLIST, savingsAccountList, request);
 
@@ -87,12 +80,5 @@ public class CustAction extends SearchAction {
             forward = ActionForwards.client_detail_page.toString();
         }
         return forward;
-    }
-
-    private void setLocaleIdForToRetrieveMasterDataName(AccountBO accountBO, UserContext userContext) {
-        accountBO.getAccountState().setLocaleId(userContext.getLocaleId());
-        for (AccountFlagMapping accountFlagMapping : accountBO.getAccountFlags()) {
-            accountFlagMapping.getFlag().setLocaleId(userContext.getLocaleId());
-        }
     }
 }

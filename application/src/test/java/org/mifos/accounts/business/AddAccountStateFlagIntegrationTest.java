@@ -74,7 +74,6 @@ public class AddAccountStateFlagIntegrationTest extends MifosIntegrationTestCase
         session = StaticHibernateUtil.getSessionTL();
         AccountStateFlagEntity flag = (AccountStateFlagEntity) session.get(AccountStateFlagEntity.class,
                 FLAG_FEET_TOO_BIG);
-        flag.setLocaleId(TEST_LOCALE);
 
        Assert.assertEquals((Object) FLAG_FEET_TOO_BIG, (Object) flag.getId());
        Assert.assertEquals(10, (short) flag.getStatusId());

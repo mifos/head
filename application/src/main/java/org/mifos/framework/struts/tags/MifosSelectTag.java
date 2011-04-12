@@ -22,6 +22,7 @@ package org.mifos.framework.struts.tags;
 
 import javax.servlet.jsp.JspException;
 
+import org.apache.struts.Globals;
 import org.apache.struts.taglib.TagUtils;
 import org.apache.struts.taglib.html.Constants;
 import org.apache.strutsel.taglib.html.ELSelectTag;
@@ -72,8 +73,7 @@ public class MifosSelectTag extends ELSelectTag {
         // Render a tag representing the end of our current form
         StringBuffer results = new StringBuffer();
         results.append("<option value= \"\">");
-        String preferredUserLocale = LabelTagUtils.getInstance().getUserPreferredLocale(pageContext);
-        String label = (LabelTagUtils.getInstance().getLabel(pageContext, bundle, preferredUserLocale, name, null));
+        String label = (LabelTagUtils.getInstance().getLabel(pageContext, bundle, Globals.LOCALE_KEY, name, null));
         TagUtils.getInstance().write(pageContext, renderDoEndTag(label));
         return (EVAL_PAGE);
     }

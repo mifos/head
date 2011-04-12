@@ -217,6 +217,7 @@ public class ActivityMapper {
         security.allow("editprevious", SecurityConstants.CAN_UPLOAD_ADMIN_DOCUMENTS);
         security.allow("editThenUpload", SecurityConstants.CAN_UPLOAD_ADMIN_DOCUMENTS);
         security.allow("downloadAdminDocument", SecurityConstants.DOWNLOAD_REPORT_TEMPLATE);
+        security.allow("getFileNotFoundPage", SecurityConstants.DOWNLOAD_REPORT_TEMPLATE);
         return security;
     }
 

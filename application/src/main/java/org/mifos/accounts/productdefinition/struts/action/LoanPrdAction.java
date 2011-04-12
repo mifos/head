@@ -66,7 +66,6 @@ import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MasterDataEntity;
-import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
@@ -441,11 +440,11 @@ public class LoanPrdAction extends BaseAction {
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANAPPLFORLIST, service
                 .getLoanApplicableCustomerTypes(localeId), request);
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANGRACEPERIODTYPELIST, legacyMasterDao.findMasterDataEntitiesWithLocale(
-                GracePeriodTypeEntity.class, localeId), request);
+                GracePeriodTypeEntity.class), request);
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.INTERESTTYPESLIST, legacyMasterDao.findMasterDataEntitiesWithLocale(
-                InterestTypesEntity.class, localeId), request);
+                InterestTypesEntity.class), request);
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.INTCALCTYPESLIST, legacyMasterDao.findMasterDataEntitiesWithLocale(
-                InterestCalcTypeEntity.class, localeId), request);
+                InterestCalcTypeEntity.class), request);
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.SRCFUNDSLIST, this.fundDao.findAllFunds(),
                 request);
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANFEESLIST, getFeeViewList(

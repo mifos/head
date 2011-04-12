@@ -42,8 +42,6 @@ public class FeeStatusEntity extends MasterDataEntity {
         return getId().equals(FeeStatus.ACTIVE.getValue());
     }
 
-    private Short localeId;
-
     /** The composite primary key value */
     private Short id;
 
@@ -66,15 +64,6 @@ public class FeeStatusEntity extends MasterDataEntity {
 
     protected void setLookUpValue(LookUpValueEntity lookUpValue) {
         this.lookUpValue = lookUpValue;
-    }
-
-    public Short getLocaleId() {
-        return localeId;
-    }
-
-    @Override
-    public void setLocaleId(Short localeId) {
-        this.localeId = localeId;
     }
 
     @Override
