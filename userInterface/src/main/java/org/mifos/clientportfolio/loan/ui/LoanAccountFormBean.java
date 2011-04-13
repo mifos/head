@@ -214,6 +214,11 @@ public class LoanAccountFormBean implements Serializable {
             errors.rejectValue("graceDuration", "loanAccountFormBean.gracePeriodDuration.invalid", defaultErrorMessage);
         }
         
+        if (this.graceDuration.intValue() >= this.numberOfInstallments.intValue()) {
+            String defaultErrorMessage = "Grace period for repayments must be less than number of loan installments.";
+            errors.rejectValue("graceDuration", "loanAccountFormBean.gracePeriodDurationInRelationToInstallments.invalid", defaultErrorMessage);
+        }
+        
         if (dateValidator == null) {
             dateValidator = new DateValidator();
         }
