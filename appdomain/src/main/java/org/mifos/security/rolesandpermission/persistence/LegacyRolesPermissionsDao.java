@@ -20,6 +20,9 @@
 
 package org.mifos.security.rolesandpermission.persistence;
 
+import static org.mifos.security.authorization.HierarchyManager.BranchLocation.BELOW;
+import static org.mifos.security.authorization.HierarchyManager.BranchLocation.SAME;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,6 +41,7 @@ import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.Localization;
 import org.mifos.core.MifosRuntimeException;
+import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -49,12 +53,15 @@ import org.mifos.framework.persistence.LegacyGenericDao;
 import org.mifos.framework.util.helpers.SearchUtils;
 import org.mifos.security.activity.ActivityGeneratorException;
 import org.mifos.security.activity.DynamicLookUpValueCreationTypes;
+import org.mifos.security.authorization.HierarchyManager;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.security.rolesandpermission.business.service.RolesPermissionsBusinessService;
 import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
+import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.PersonRoles;
 import org.mifos.security.util.SecurityConstants;
+import org.mifos.security.util.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class LegacyRolesPermissionsDao extends LegacyGenericDao {
@@ -167,8 +174,50 @@ public class LegacyRolesPermissionsDao extends LegacyGenericDao {
 
             }
         }
-
         return l;
+    }
+
+    public boolean isActivityAllowed(UserContext userContext, ActivityContext activityContext) {
+        try {
+            ActivityEntity activity = getActivityById(activityContext.getActivityId());
+            if (activity == null) {
+                return false;
+            }
+
+            Set<Short> activityAllowedRoles = activity.getRoleIds();
+            if (activityAllowedRoles == null) {
+                return false;
+            }
+
+            Set<Short> userRoles = userContext.getRoles();
+
+            activityAllowedRoles.retainAll(userRoles);
+
+            if (activityAllowedRoles.isEmpty()) {
+                return false;
+            }
+
+            HierarchyManager.BranchLocation where = HierarchyManager.getInstance().compareOfficeInHierarchy(userContext, activityContext.getRecordOfficeId());
+            PersonnelLevel personnelLevel = userContext.getLevel();
+            short userId = userContext.getId().shortValue();
+            if (where == SAME) {
+                // 1 check if record belog to him if so let him do
+                if (userId == activityContext.getRecordLoanOfficer()) {
+                    return true;
+                } else if (PersonnelLevel.LOAN_OFFICER == personnelLevel) {
+                    return false;
+                }
+
+                return true;
+
+            } else if (where == BELOW && PersonnelLevel.LOAN_OFFICER != personnelLevel) {
+                return true;
+            }
+
+            return false;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**

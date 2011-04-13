@@ -33,7 +33,6 @@ import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.security.authorization.AuthorizationManager;
 import org.mifos.security.rolesandpermission.RoleTestUtil;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
 import org.mifos.security.rolesandpermission.business.RoleBO;
@@ -134,11 +133,11 @@ public class RolesPermissionsActionStrutsTest extends MifosMockStrutsTestCase {
 
         UserContext userContext = TestUtils.makeUser(role.getId());
         ActivityContext activityContext = new ActivityContext((short) 3, (short) 1, (short) 0);
-        Assert.assertTrue(AuthorizationManager.getInstance().isActivityAllowed(userContext, activityContext));
+        Assert.assertTrue(legacyRolesPermissionsDao.isActivityAllowed(userContext, activityContext));
         activityContext = new ActivityContext((short) 4, (short) 1, (short) 0);
-        Assert.assertTrue(AuthorizationManager.getInstance().isActivityAllowed(userContext, activityContext));
+        Assert.assertTrue(legacyRolesPermissionsDao.isActivityAllowed(userContext, activityContext));
         activityContext = new ActivityContext((short) 5, (short) 1, (short) 0);
-        Assert.assertFalse(AuthorizationManager.getInstance().isActivityAllowed(userContext, activityContext));
+        Assert.assertFalse(legacyRolesPermissionsDao.isActivityAllowed(userContext, activityContext));
 
     }
 
@@ -271,11 +270,11 @@ public class RolesPermissionsActionStrutsTest extends MifosMockStrutsTestCase {
 
         UserContext userContext = TestUtils.makeUser(role.getId());
         ActivityContext activityContext = new ActivityContext((short) 3, (short) 1, (short) 0);
-        Assert.assertTrue(AuthorizationManager.getInstance().isActivityAllowed(userContext, activityContext));
+        Assert.assertTrue(legacyRolesPermissionsDao.isActivityAllowed(userContext, activityContext));
         activityContext = new ActivityContext((short) 4, (short) 1, (short) 0);
-        Assert.assertTrue(AuthorizationManager.getInstance().isActivityAllowed(userContext, activityContext));
+        Assert.assertTrue(legacyRolesPermissionsDao.isActivityAllowed(userContext, activityContext));
         activityContext = new ActivityContext((short) 5, (short) 1, (short) 0);
-        Assert.assertFalse(AuthorizationManager.getInstance().isActivityAllowed(userContext, activityContext));
+        Assert.assertFalse(legacyRolesPermissionsDao.isActivityAllowed(userContext, activityContext));
     }
 
     @Test
@@ -461,15 +460,15 @@ public class RolesPermissionsActionStrutsTest extends MifosMockStrutsTestCase {
 
         UserContext userContext = TestUtils.makeUser(roleId);
         ActivityContext activityContext = new ActivityContext(activityEntity_0.getId(), (short) 1, (short) 0);
-        Assert.assertFalse(AuthorizationManager.getInstance().isActivityAllowed(userContext, activityContext));
+        Assert.assertFalse(legacyRolesPermissionsDao.isActivityAllowed(userContext, activityContext));
         activityContext = new ActivityContext(activityEntity_1.getId(), (short) 1, (short) 0);
-        Assert.assertFalse(AuthorizationManager.getInstance().isActivityAllowed(userContext, activityContext));
+        Assert.assertFalse(legacyRolesPermissionsDao.isActivityAllowed(userContext, activityContext));
         activityContext = new ActivityContext(activityEntity_2.getId(), (short) 1, (short) 0);
-        Assert.assertFalse(AuthorizationManager.getInstance().isActivityAllowed(userContext, activityContext));
+        Assert.assertFalse(legacyRolesPermissionsDao.isActivityAllowed(userContext, activityContext));
         activityContext = new ActivityContext(activityEntity_3.getId(), (short) 1, (short) 0);
-        Assert.assertFalse(AuthorizationManager.getInstance().isActivityAllowed(userContext, activityContext));
+        Assert.assertFalse(legacyRolesPermissionsDao.isActivityAllowed(userContext, activityContext));
         activityContext = new ActivityContext(activityEntity_4.getId(), (short) 1, (short) 0);
-        Assert.assertFalse(AuthorizationManager.getInstance().isActivityAllowed(userContext, activityContext));
+        Assert.assertFalse(legacyRolesPermissionsDao.isActivityAllowed(userContext, activityContext));
 
     }
 

@@ -235,7 +235,7 @@ import org.mifos.platform.util.CollectionUtils;
 import org.mifos.platform.validations.Errors;
 import org.mifos.schedule.ScheduledEvent;
 import org.mifos.security.MifosUser;
-import org.mifos.security.authorization.AuthorizationManager;
+import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsDao;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
@@ -268,6 +268,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
     @Autowired
     private QuestionnaireServiceFacade questionnaireServiceFacade;
+
+    @Autowired
+    private LegacyRolesPermissionsDao legacyRolesPermissionsDao;
 
     @Autowired
     private CashFlowService cashFlowService;
@@ -550,7 +553,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
             ProductDetailsDto productDto = loanProduct.toDetailsDto();
             CustomerDetailDto customerDetailDto = customer.toCustomerDetailDto();
-            
+
             Integer gracePeriodInInstallments = loanProduct.getGracePeriodDuration().intValue();
 
             final List<PrdOfferingDto> loanProductDtos = retrieveActiveLoanProductsApplicableForCustomer(customer);
@@ -755,7 +758,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
         return new LoanScheduleDto(customer.getDisplayName(), Double.valueOf(createLoanSchedule.getLoanAmount().doubleValue()), createLoanSchedule.getDisbursementDate(), installments);
     }
-    
+
     /**
      * @deprecated - not fully implemented yet.
      */
@@ -991,12 +994,12 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             OfficeBO userOffice, LoanAccountDetail loanAccountDetail, LoanProductOverridenDetail overridenDetail, LoanScheduleConfiguration configuration,
             MeetingBO repaymentDayMeeting, LoanSchedule loanSchedule, PersonnelBO createdBy, List<GroupMemberLoanDetail> individualMembersOfGroupLoan) {
 
-        InstallmentRange installmentRange = new MaxMinNoOfInstall(loanAccountInfo.getMinAllowedNumberOfInstallments().shortValue(), 
+        InstallmentRange installmentRange = new MaxMinNoOfInstall(loanAccountInfo.getMinAllowedNumberOfInstallments().shortValue(),
                 loanAccountInfo.getMaxAllowedNumberOfInstallments().shortValue(), null);
         AmountRange amountRange = new MaxMinLoanAmount(loanAccountInfo.getMaxAllowedLoanAmount().doubleValue(), loanAccountInfo.getMinAllowedLoanAmount().doubleValue(), null);
-        
+
         CreationDetail creationDetail = new CreationDetail(new DateTime(), Integer.valueOf(user.getUserId()));
-        LoanBO loan = LoanBO.openStandardLoanAccount(loanAccountDetail.getLoanProduct(), loanAccountDetail.getCustomer(), repaymentDayMeeting, 
+        LoanBO loan = LoanBO.openStandardLoanAccount(loanAccountDetail.getLoanProduct(), loanAccountDetail.getCustomer(), repaymentDayMeeting,
                 loanSchedule, loanAccountDetail.getAccountState(), loanAccountDetail.getFund(), overridenDetail, configuration, installmentRange, amountRange,
                 creationDetail, createdBy);
         loan.setBusinessActivityId(loanAccountInfo.getLoanPurposeId());
@@ -2097,7 +2100,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
     private boolean isPermissionAllowed(final Short newSate, final UserContext userContext, final Short officeId,
             final Short loanOfficerId) {
-        return AuthorizationManager.getInstance().isActivityAllowed(
+        return legacyRolesPermissionsDao.isActivityAllowed(
                 userContext,
                 new ActivityContext(ActivityMapper.getInstance().getActivityIdForState(newSate), officeId, loanOfficerId));
     }
@@ -2184,7 +2187,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                 }
             }
         }
-        
+
         return questionGroupDetails;
     }
 

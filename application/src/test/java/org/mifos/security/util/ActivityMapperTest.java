@@ -21,14 +21,17 @@
 package org.mifos.security.util;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.DateTimeService;
-import org.mifos.security.authorization.AuthorizationManager;
+import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsDao;
 import org.mockito.Matchers;
-
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import java.util.regex.Pattern;
 
 import static org.mockito.Matchers.eq;
@@ -38,27 +41,27 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-public class ActivityMapperTest extends TestCase {
+@RunWith(MockitoJUnitRunner.class)
+public class ActivityMapperTest {
 
     Pattern allowableActionName = Pattern.compile("([a-zA-Z])+");
 
-    private AuthorizationManager authorizationManager;
+    @Mock
+    private LegacyRolesPermissionsDao legacyRolesPermissionsDao;
+
     private UserContext userContext;
     private ActivityMapper activityMapper;
 
-    @Override
+    @Before
     public void setUp(){
         initMocks(this);
-        authorizationManager = mock(AuthorizationManager.class);
         userContext = mock(UserContext.class);
-        activityMapper = new ActivityMapper(){
-            @Override
-            AuthorizationManager getAuthorizationManager() {
-                return authorizationManager;
-            }
-        };
+        legacyRolesPermissionsDao = mock(LegacyRolesPermissionsDao.class);
+        activityMapper = ActivityMapper.getInstance();
+        activityMapper.setLegacyRolesPermissionDao(legacyRolesPermissionsDao);
     }
 
+    @Test
     public void testNamesAcceptable() {
         for (ActionSecurity security : ActivityMapper.getInstance().getAllSecurity()) {
             String name = security.getActionName();
@@ -66,6 +69,7 @@ public class ActivityMapperTest extends TestCase {
         }
     }
 
+    @Test
     public void testMachinery() {
        Assert.assertTrue(acceptableName("openSesame"));
         Assert.assertFalse(acceptableName("/bin/sh"));
@@ -77,27 +81,30 @@ public class ActivityMapperTest extends TestCase {
         Assert.assertFalse(acceptableName(null));
     }
 
+    @Test
     public void testAdjustmentPermittedForBackDatedPayments() {
         new DateTimeService().setCurrentDateTime(TestUtils.getDateTime(11,10,2010));
-        when(authorizationManager.isActivityAllowed(eq(userContext), Matchers.argThat(new ActivityContextTypeSafeMatcher()))).thenReturn(true);
-        assertTrue(activityMapper.isAdjustmentPermittedForBackDatedPayments(TestUtils.getDate(10, 10, 2010),
+        when(legacyRolesPermissionsDao.isActivityAllowed(eq(userContext), Matchers.argThat(new ActivityContextTypeSafeMatcher()))).thenReturn(true);
+        Assert.assertTrue(activityMapper.isAdjustmentPermittedForBackDatedPayments(TestUtils.getDate(10, 10, 2010),
                 userContext, new Short("1"), new Short("1")));
-        verify(authorizationManager).isActivityAllowed(eq(userContext), Matchers.argThat(new ActivityContextTypeSafeMatcher()));
+        verify(legacyRolesPermissionsDao).isActivityAllowed(eq(userContext), Matchers.argThat(new ActivityContextTypeSafeMatcher()));
     }
 
+    @Test
     public void testAdjustmentNotPermittedForBackDatedPayments() {
         new DateTimeService().setCurrentDateTime(TestUtils.getDateTime(11,10,2010));
-        when(authorizationManager.isActivityAllowed(eq(userContext), Matchers.argThat(new ActivityContextTypeSafeMatcher()))).thenReturn(false);
-        assertFalse(activityMapper.isAdjustmentPermittedForBackDatedPayments(TestUtils.getDate(10, 10, 2010),
+        when(legacyRolesPermissionsDao.isActivityAllowed(eq(userContext), Matchers.argThat(new ActivityContextTypeSafeMatcher()))).thenReturn(false);
+        Assert.assertFalse(activityMapper.isAdjustmentPermittedForBackDatedPayments(TestUtils.getDate(10, 10, 2010),
                 userContext, new Short("1"), new Short("1")));
-        verify(authorizationManager).isActivityAllowed(eq(userContext), Matchers.argThat(new ActivityContextTypeSafeMatcher()));
+        verify(legacyRolesPermissionsDao).isActivityAllowed(eq(userContext), Matchers.argThat(new ActivityContextTypeSafeMatcher()));
     }
 
+    @Test
     public void testAdjustmentPermittedForSameDayPayments() {
         new DateTimeService().setCurrentDateTime(TestUtils.getDateTime(10, 10, 2010));
-        assertTrue(activityMapper.isAdjustmentPermittedForBackDatedPayments(TestUtils.getDate(10, 10, 2010),
+        Assert.assertTrue(activityMapper.isAdjustmentPermittedForBackDatedPayments(TestUtils.getDate(10, 10, 2010),
                 userContext, new Short("1"), new Short("1")));
-        verify(authorizationManager, never()).isActivityAllowed(Matchers.<UserContext>anyObject(), Matchers.<ActivityContext>anyObject());
+        verify(legacyRolesPermissionsDao, never()).isActivityAllowed(Matchers.<UserContext>anyObject(), Matchers.<ActivityContext>anyObject());
     }
 
     private boolean acceptableName(String name) {

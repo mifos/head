@@ -40,10 +40,11 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.tiles.TilesRequestProcessor;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.PreviousRequestValues;
-import org.mifos.security.authorization.AuthorizationManager;
+import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsDao;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
@@ -138,7 +139,7 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
             } else if (activityId.shortValue() == 0) {
                 return true;
             }
-            returnValue = AuthorizationManager.getInstance().isActivityAllowed(
+            returnValue = ApplicationContextProvider.getBean(LegacyRolesPermissionsDao.class).isActivityAllowed(
                     (UserContext) session.getAttribute("UserContext"),
                     setActivityContextFromRequest(request, activityId));
         }

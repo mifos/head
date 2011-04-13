@@ -53,6 +53,7 @@ import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.questionnaire.struts.QuestionnaireServiceFacadeLocator;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.ProcessFlowRules;
 import org.mifos.customers.business.CustomerBO;
@@ -74,7 +75,7 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
-import org.mifos.security.authorization.AuthorizationManager;
+import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsDao;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.ActivityMapper;
@@ -499,7 +500,7 @@ public class SavingsAction extends BaseAction {
     }
 
     private boolean isPermissionAllowed(Short newSate, UserContext userContext, Short officeId, Short loanOfficerId) {
-        return AuthorizationManager.getInstance().isActivityAllowed(
+        return ApplicationContextProvider.getBean(LegacyRolesPermissionsDao.class).isActivityAllowed(
                 userContext,
                 new ActivityContext(ActivityMapper.getInstance().getActivityIdForState(newSate), officeId,
                         loanOfficerId));

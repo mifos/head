@@ -23,13 +23,14 @@ package org.mifos.security.util;
 import org.mifos.accounts.util.helpers.AccountStates;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.WaiveEnum;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.reports.business.ReportsBO;
 import org.mifos.reports.persistence.ReportsPersistence;
-import org.mifos.security.authorization.AuthorizationManager;
+import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsDao;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -93,6 +94,8 @@ public class ActivityMapper {
 
     private static ActivityMapper instance = new ActivityMapper();
 
+    private LegacyRolesPermissionsDao legacyRolesPermissionsDao = ApplicationContextProvider.getBean(LegacyRolesPermissionsDao.class);
+
     public static ActivityMapper getInstance() {
         return instance;
     }
@@ -107,6 +110,11 @@ public class ActivityMapper {
 
     public List<ActionSecurity> getAllSecurity() {
         return Collections.unmodifiableList(allSecurity);
+    }
+
+    // for testing
+    public void setLegacyRolesPermissionDao(LegacyRolesPermissionsDao legacyRolesPermissionsDao) {
+        this.legacyRolesPermissionsDao = legacyRolesPermissionsDao;
     }
 
     public void init() {
@@ -1328,7 +1336,7 @@ public class ActivityMapper {
 
     public boolean isStateChangePermittedForAccount(short newSate, short stateFlag, UserContext userContext,
             Short recordOfficeId, Short recordLoanOfficerId) {
-        return getAuthorizationManager()
+        return legacyRolesPermissionsDao
                 .isActivityAllowed(
                         userContext,
                         new ActivityContext(getActivityIdForNewStateId(newSate, stateFlag), recordOfficeId,
@@ -1337,7 +1345,7 @@ public class ActivityMapper {
 
     public boolean isStateChangePermittedForCustomer(short newSate, short stateFlag, UserContext userContext,
             Short recordOfficeId, Short recordLoanOfficerId) {
-        return getAuthorizationManager().isActivityAllowed(
+        return legacyRolesPermissionsDao.isActivityAllowed(
                 userContext,
                 new ActivityContext(getActivityIdForNewCustomerStateId(newSate, stateFlag), recordOfficeId,
                         recordLoanOfficerId));
@@ -1345,7 +1353,7 @@ public class ActivityMapper {
 
     public boolean isSavePermittedForAccount(short newSate, UserContext userContext, Short recordOfficeId,
             Short recordLoanOfficerId) {
-        return getAuthorizationManager().isActivityAllowed(userContext,
+        return legacyRolesPermissionsDao.isActivityAllowed(userContext,
                 new ActivityContext(getActivityIdForState(newSate), recordOfficeId, recordLoanOfficerId));
     }
 
@@ -1365,7 +1373,7 @@ public class ActivityMapper {
 
         ActivityContext activityContext = new ActivityContext(activityId, officeId, loanOfficerId);
 
-        return getAuthorizationManager().isActivityAllowed(userContext, activityContext);
+        return legacyRolesPermissionsDao.isActivityAllowed(userContext, activityContext);
     }
 
     public boolean isAddingNotesPermittedForAccounts(AccountTypes accountTypes, CustomerLevel customerLevel,
@@ -1373,7 +1381,7 @@ public class ActivityMapper {
 
         short activityId = getActivityIdForAddingNotes(accountTypes, customerLevel);
         ActivityContext activityContext = new ActivityContext(activityId, recordOfficeId, recordLoanOfficerId);
-        return getAuthorizationManager().isActivityAllowed(userContext, activityContext);
+        return legacyRolesPermissionsDao.isActivityAllowed(userContext, activityContext);
     }
 
     private short getActivityIdForAddingNotes(AccountTypes accountTypes, CustomerLevel customerLevel) {
@@ -1396,13 +1404,13 @@ public class ActivityMapper {
 
     public boolean isAddingNotesPermittedForPersonnel(UserContext userContext, Short recordOfficeId,
             Short recordLoanOfficerId) {
-        return getAuthorizationManager().isActivityAllowed(userContext,
+        return legacyRolesPermissionsDao.isActivityAllowed(userContext,
                 new ActivityContext(SecurityConstants.PERSONNEL_NOTE_CREATE, recordOfficeId, recordLoanOfficerId));
     }
 
     public boolean isPaymentPermittedForAccounts(AccountTypes accountTypes, CustomerLevel customerLevel,
             UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) {
-        return getAuthorizationManager().isActivityAllowed(
+        return legacyRolesPermissionsDao.isActivityAllowed(
                 userContext,
                 new ActivityContext(getActivityIdForPayment(accountTypes, customerLevel), recordOfficeId,
                         recordLoanOfficerId));
@@ -1426,7 +1434,7 @@ public class ActivityMapper {
 
     public boolean isAdjustmentPermittedForAccounts(AccountTypes accountTypes, CustomerLevel customerLevel,
             UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) {
-        return getAuthorizationManager().isActivityAllowed(
+        return legacyRolesPermissionsDao.isActivityAllowed(
                 userContext,
                 new ActivityContext(getActivityIdForAdjustment(accountTypes, customerLevel), recordOfficeId,
                         recordLoanOfficerId));
@@ -1452,7 +1460,7 @@ public class ActivityMapper {
 
     public boolean isAddingHistoricaldataPermittedForCustomers(CustomerLevel customerLevel, UserContext userContext,
             Short recordOfficeId, Short recordLoanOfficerId) {
-        return getAuthorizationManager().isActivityAllowed(
+        return legacyRolesPermissionsDao.isActivityAllowed(
                 userContext,
                 new ActivityContext(getActivityIdForAddingHistoricaldata(customerLevel), recordOfficeId,
                         recordLoanOfficerId));
@@ -1470,7 +1478,7 @@ public class ActivityMapper {
 
     public boolean isWaiveDuePermittedForCustomers(WaiveEnum waiveEnum, AccountTypes accountTypes,
             CustomerLevel customerLevel, UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) {
-        return getAuthorizationManager().isActivityAllowed(
+        return legacyRolesPermissionsDao.isActivityAllowed(
                 userContext,
                 new ActivityContext(getActivityIdForWaiveDue(waiveEnum, accountTypes, customerLevel), recordOfficeId,
                         recordLoanOfficerId));
@@ -1498,14 +1506,14 @@ public class ActivityMapper {
 
     public boolean isRemoveFeesPermittedForAccounts(AccountTypes accountTypes, CustomerLevel customerLevel,
             UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) {
-        return getAuthorizationManager().isActivityAllowed(
+        return legacyRolesPermissionsDao.isActivityAllowed(
                 userContext,
                 new ActivityContext(getActivityIdForRemoveFees(accountTypes, customerLevel), recordOfficeId,
                         recordLoanOfficerId));
     }
 
     public boolean isViewActiveSessionsPermitted(UserContext userContext, Short officeId) {
-        return getAuthorizationManager().isActivityAllowed(
+        return legacyRolesPermissionsDao.isActivityAllowed(
                 userContext,
                 new ActivityContext(SecurityConstants.CAN_VIEW_ACTIVE_SESSIONS, officeId));
     }
@@ -1528,7 +1536,7 @@ public class ActivityMapper {
 
     public boolean isApplyChargesPermittedForAccounts(AccountTypes accountTypes, CustomerLevel customerLevel,
             UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) {
-        return getAuthorizationManager().isActivityAllowed(
+        return legacyRolesPermissionsDao.isActivityAllowed(
                 userContext,
                 new ActivityContext(getActivityIdForApplyCharges(accountTypes, customerLevel), recordOfficeId,
                         recordLoanOfficerId));
@@ -1552,7 +1560,7 @@ public class ActivityMapper {
 
     public boolean isEditMeetingSchedulePermittedForCustomers(CustomerLevel customerLevel, UserContext userContext,
             Short recordOfficeId, Short recordLoanOfficerId) {
-        return getAuthorizationManager().isActivityAllowed(
+        return legacyRolesPermissionsDao.isActivityAllowed(
                 userContext,
                 new ActivityContext(getActivityIdForEditMeetingSchedule(customerLevel), recordOfficeId,
                         recordLoanOfficerId));
@@ -1586,18 +1594,14 @@ public class ActivityMapper {
         Date today = DateUtils.currentDate();
         if(DateUtils.dateFallsBeforeDate(lastPaymentDate, today)){
             ActivityContext activityContext = new ActivityContext(SecurityConstants.LOAN_ADJUST_BACK_DATED_TRXNS, recordOfficeId, recordLoanOfficer);
-            activityAllowed = getAuthorizationManager().isActivityAllowed(userContext, activityContext);
+            activityAllowed = legacyRolesPermissionsDao.isActivityAllowed(userContext, activityContext);
         }
 
         return activityAllowed;
     }
 
-    AuthorizationManager getAuthorizationManager() {
-        return AuthorizationManager.getInstance();
-    }
-
      public boolean isEditPhoneNumberPermitted(UserContext useContext, Short officeId){
-        return AuthorizationManager.getInstance().isActivityAllowed(
+        return legacyRolesPermissionsDao.isActivityAllowed(
                 useContext,
                 new ActivityContext(SecurityConstants.CAN_EDIT_PHONE_NUMBER, officeId));
     }

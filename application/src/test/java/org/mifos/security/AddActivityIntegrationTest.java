@@ -43,16 +43,20 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.Upgrade;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-import org.mifos.security.authorization.AuthorizationManager;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
+import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsDao;
 import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class AddActivityIntegrationTest extends MifosIntegrationTestCase {
 
     private Session session;
+
+    @Autowired
+    private LegacyRolesPermissionsDao legacyRolesPermissionsDao;
 
     @Before
     public void setUp() throws Exception {
@@ -103,13 +107,12 @@ public class AddActivityIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(SecurityConstants.LOAN_MANAGEMENT, (short) fetched.getParent().getId());
 
         ActivityContext activityContext = new ActivityContext(newId, TestObjectFactory.HEAD_OFFICE);
-        AuthorizationManager authorizer = AuthorizationManager.getInstance();
 
         UserContext admin = TestUtils.makeUser(RolesAndPermissionConstants.ADMIN_ROLE);
-       Assert.assertTrue(authorizer.isActivityAllowed(admin, activityContext));
+       Assert.assertTrue(legacyRolesPermissionsDao.isActivityAllowed(admin, activityContext));
 
         UserContext nonAdmin = TestUtils.makeUser(TestUtils.DUMMY_ROLE);
-        Assert.assertFalse(authorizer.isActivityAllowed(nonAdmin, activityContext));
+        Assert.assertFalse(legacyRolesPermissionsDao.isActivityAllowed(nonAdmin, activityContext));
         return upgrade;
     }
 
