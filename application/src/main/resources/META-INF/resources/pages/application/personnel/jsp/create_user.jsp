@@ -240,9 +240,11 @@ explanation of the license and how it is applied.
 										property="address.line3" maxlength="200" /></td>
 								</tr>
 								<tr class="fontnormal">
-									<td align="right"><span id="create_user.label.city"><mifos:mifoslabel
-										name="${ConfigurationConstants.CITY}" bundle="PersonnelUIResources"/></span>:</td>
-									<td><mifos:mifosalphanumtext styleId="create_user.input.city" name="personActionForm"
+									<td align="right"><span id="create_user.label.city"><mifos:mifoslabel keyhm="Personnel.City"
+										isColonRequired="yes" 
+										name="${ConfigurationConstants.CITY}" bundle="PersonnelUIResources"/></span></td>
+									<td><mifos:mifosalphanumtext styleId="create_user.input.city" keyhm="Personnel.City"
+										name="personActionForm"
 										property="address.city" maxlength="100" /></td>
 								</tr>
 								<tr class="fontnormal">

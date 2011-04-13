@@ -252,11 +252,11 @@ explanation of the license and how it is applied.
               <tr class="fontnormal">
                 <td align="right">
                 <span id="edit_user.label.city">
-			<mifos:mifoslabel name="${ConfigurationConstants.CITY}"  bundle="PersonnelUIResources"></mifos:mifoslabel>:
+			<mifos:mifoslabel keyhm="Personnel.City" isColonRequired="yes" name="${ConfigurationConstants.CITY}"  bundle="PersonnelUIResources"></mifos:mifoslabel>
 			</span>
 		</td>
                 <td>
-                    <mifos:mifosalphanumtext styleId="edit_user.input.city" name="personActionForm" property="address.city" maxlength="100" />
+                    <mifos:mifosalphanumtext styleId="edit_user.input.city" keyhm="Personnel.City" name="personActionForm" property="address.city" maxlength="100" />
                 </td>
               </tr>
               <tr class="fontnormal">

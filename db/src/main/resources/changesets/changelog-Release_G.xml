@@ -30,5 +30,16 @@
                 delete from customized_text where original_text like '%.Label';
             </sql>
         </rollback>
+    </changeSet>
+    <changeSet id="MIFOS_2852_1" author="Piotr Bogacz" context="expansion">
+        <sql endDelimiter=";">
+            insert into field_configuration(field_config_id,field_name,entity_id,mandatory_flag,hidden_flag) values((select max(fc.field_config_id)+1 from
+            field_configuration fc), 'City', 17, 0, 0);
+        </sql>
+        <rollback>
+            <sql endDelimiter=";">
+                delete from field_configuration where field_name = 'City' and entity_id = 17;
+            </sql>
+        </rollback>
     </changeSet>    
 </databaseChangeLog>
