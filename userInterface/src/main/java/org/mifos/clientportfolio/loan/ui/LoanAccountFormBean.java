@@ -369,6 +369,25 @@ public class LoanAccountFormBean implements Serializable {
         if (isAnyOf("disbursalDateDay", "disbursalDateMonth", "disbursalDateYear", message.getSource())) {
             rejectDisbursementDateField(errors, message.getText(), "loanAccountFormBean.DisbursalDate.invalid");
         }
+        
+        if (message.getSource().toString().startsWith("selectedFeeAmount")) {
+            rejectAdditionalOrDefaultFeeField(errors, message.getText(), "loanAccountFormBean.additionalfee.invalid");
+        }
+        
+        String messageSource = message.getSource().toString();
+        if (messageSource.startsWith("defaultFeeAmountOrRate")) {
+            int first = messageSource.indexOf("[");
+            int last = messageSource.indexOf("]");
+            Integer feeIndex = Integer.valueOf(messageSource.substring(first+1, last));
+            Boolean feeSelectedForRemoval = this.defaultFeeSelected[feeIndex]; 
+            if (feeSelectedForRemoval == null || !feeSelectedForRemoval) {
+                rejectAdditionalOrDefaultFeeField(errors, message.getText(), "loanAccountFormBean.additionalfee.invalid");
+            }
+        }
+    }
+
+    private void rejectAdditionalOrDefaultFeeField(Errors errors, String defaultErrorMessage, String errorCode) {
+        errors.rejectValue("selectedFeeAmount[0]", errorCode, defaultErrorMessage);
     }
 
     private boolean isAnyOf(String field1, String field2, String field3, Object sourceField) {
