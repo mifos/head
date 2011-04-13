@@ -34,12 +34,14 @@ import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
+import org.mifos.test.acceptance.framework.admin.DefineNewOfficePage;
 import org.mifos.test.acceptance.framework.client.ClientCloseReason;
 import org.mifos.test.acceptance.framework.client.ClientStatus;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import org.mifos.test.acceptance.framework.client.CreateClientEnterPersonalDataPage;
 import org.mifos.test.acceptance.framework.group.EditCustomerStatusParameters;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
+import org.mifos.test.acceptance.framework.office.CreateOfficePreviewDataPage;
 import org.mifos.test.acceptance.framework.office.OfficeParameters;
 import org.mifos.test.acceptance.framework.office.OfficeViewDetailsPage;
 import org.mifos.test.acceptance.framework.questionnaire.AttachQuestionGroupParameters;
@@ -132,7 +134,7 @@ public class QuestionGroupTest extends UiTestCaseBase {
     public void logOut() {
         (new MifosPage(selenium)).logout();
     }
-
+    @Test(enabled=true)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createQuestionGroup() throws Exception {
         try {
@@ -151,12 +153,13 @@ public class QuestionGroupTest extends UiTestCaseBase {
     }
 
     /**
-     * Verify that user is able to edit the defined Question Groups and
-     * change the order of questions and sections
+     * Verify that user is able to edit the defined Question Groups
+     * and create Office with edited Question Group
      * http://mifosforge.jira.com/browse/MIFOSTEST-666
      *
      * @throws Exception
      */
+    @Test(enabled=true)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void editQuestionGroupsForCreateOffice() throws Exception {
         //When
@@ -182,20 +185,21 @@ public class QuestionGroupTest extends UiTestCaseBase {
         //Then
         viewAllQuestionGroupsPage.verifyInactiveQuestions(0, 0);
     }
-
-    /**
-     * Capturing responses during the Office creation
-     * http://mifosforge.jira.com/browse/MIFOSTEST-671
-     *
-     * @throws Exception
-     */
+  
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     private void createOfficeWithQuestionGroup() throws Exception {
         //When
-        QuestionResponsePage questionResponsePage = officeHelper.navigateToQuestionResponsePage(getOfficeParameters("TestOffice", "TO"));
+        QuestionResponsePage questionResponsePage = officeHelper.navigateToQuestionResponsePage(getOfficeParameters("MyOfficeDHMFT", "DHM"));
         QuestionResponseParameters initialResponse = getResponse("123");
         QuestionResponseParameters updatedResponse = getResponse("1234");
-        OfficeViewDetailsPage officeViewDetailsPage = questionGroupTestHelper.createOfficeWithQuestionGroup(questionResponsePage, initialResponse, updatedResponse);
+        CreateOfficePreviewDataPage createOfficePreviewDataPage = questionGroupTestHelper.createOfficeWithQuestionGroup(questionResponsePage, initialResponse, updatedResponse);
+        assertTextFoundOnPage("This office name already exist");
+        DefineNewOfficePage defineNewOfficePage = createOfficePreviewDataPage.editOfficeInformation();
+        defineNewOfficePage.setOfficeName("TestOffice");
+        defineNewOfficePage.setOfficeShortName("TO");
+        defineNewOfficePage.preview();
+        defineNewOfficePage.next();
+        OfficeViewDetailsPage officeViewDetailsPage = createOfficePreviewDataPage.submit().navigateToOfficeViewDetailsPage();
         ViewQuestionResponseDetailPage viewQuestionResponseDetailPage = officeViewDetailsPage.navigateToViewAdditionalInformation();
         viewQuestionResponseDetailPage.verifyQuestionPresent("FreeText", "1234");
         officeViewDetailsPage = viewQuestionResponseDetailPage.navigateToDetailsPage();
@@ -213,13 +217,17 @@ public class QuestionGroupTest extends UiTestCaseBase {
 
         officeHelper.verifyQuestionPresent("TestOffice", "Text", "");
     }
+    
 
+
+    
     /**
      * Verifying that Change Log for Question Groups has an appropriate format
      * http://mifosforge.jira.com/browse/MIFOSTEST-667
      *
      * @throws Exception
      */
+    @Test(enabled=true)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void testChangeLog() throws Exception {
         String questionGroup = "CreateClientQG-1";
@@ -268,6 +276,7 @@ public class QuestionGroupTest extends UiTestCaseBase {
      *
      * @throws Exception
      */
+    @Test(enabled=true)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createAndEditQuestionsTest() throws Exception {
         //When
@@ -360,6 +369,7 @@ public class QuestionGroupTest extends UiTestCaseBase {
      *
      * @throws Exception
      */
+    @Test(enabled=true)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void attachingQuestionGroupToMultipleFlowsTest() throws Exception {
         String newClient = "Joe701 Doe701";
@@ -429,12 +439,13 @@ public class QuestionGroupTest extends UiTestCaseBase {
         clientTestHelper.createNewClient(groupName, clientParams);
         clientTestHelper.activateClient(firstName + " " + lastName);
     }
-    
+    @Test(enabled=true)
     //http://mifosforge.jira.com/browse/MIFOSTEST-660
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyAttachingQuestionGroupToGroup() throws Exception {
         Map<String, List<String>> sectionQuestions = new HashMap<String, List<String>>();
         List<String> questions = new ArrayList<String>();
+        String title = "TestQuestionGroup" + StringUtil.getRandomString(6);
         questions.add("Date");
         questions.add("question 3");
         questions.add("question 4");
@@ -448,7 +459,7 @@ public class QuestionGroupTest extends UiTestCaseBase {
         CreateQuestionGroupParameters createQuestionGroupParameters = new CreateQuestionGroupParameters();
         createQuestionGroupParameters.setAnswerEditable(true);
         createQuestionGroupParameters.setAppliesTo("View Group");
-        createQuestionGroupParameters.setTitle("TestQuestionGroup" + StringUtil.getRandomString(6));
+        createQuestionGroupParameters.setTitle(title);
         createQuestionGroupParameters.setExistingQuestions(sectionQuestions);
         AttachQuestionGroupParameters attachParams = new AttachQuestionGroupParameters();
         attachParams.setTarget("Default Group");
@@ -478,8 +489,10 @@ public class QuestionGroupTest extends UiTestCaseBase {
         attachParams.addTextResponse("question 3", "21/02/2011");
         //Then
         questionGroupTestHelper.editQuestionGroupResponsesInGroup(attachParams);
+        
+        questionGroupTestHelper.markQuestionGroupAsInactive(title);
     }
-
+    @Test(enabled=true)
     //http://mifosforge.jira.com/browse/MIFOSTEST-662
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyAttachingQuestionGroupToLoan() throws Exception {
@@ -534,7 +547,7 @@ public class QuestionGroupTest extends UiTestCaseBase {
             questionGroupTestHelper.markQuestionGroupAsInactive(title);
         }
     }
-
+    @Test(enabled=true)
     //http://mifosforge.jira.com/browse/MIFOSTEST-680
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyAttachingQuestionGroupToViewClient() throws Exception {

@@ -21,6 +21,7 @@
 package org.mifos.test.acceptance.framework.admin;
 
 import org.mifos.test.acceptance.framework.MifosPage;
+
 import com.thoughtworks.selenium.Selenium;
 
 public class DefineNewOfficePage extends MifosPage {
@@ -59,4 +60,13 @@ public class DefineNewOfficePage extends MifosPage {
         selenium.click("preview_new_office.button.submit");
         waitForPageToLoad();
     }
+    public void editOfficeInformation() {
+        selenium.click("preview_new_office.button.edit");
+        waitForPageToLoad();
+    }
+    public void next() {
+        selenium.click("captureQuestionResponses.button.continue");
+        waitForPageToLoad();
+    }
+    
 }

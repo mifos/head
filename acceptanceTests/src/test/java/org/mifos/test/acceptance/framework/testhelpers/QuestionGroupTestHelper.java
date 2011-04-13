@@ -32,7 +32,6 @@ import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 import org.mifos.test.acceptance.framework.office.CreateOfficePreviewDataPage;
-import org.mifos.test.acceptance.framework.office.OfficeViewDetailsPage;
 import org.mifos.test.acceptance.framework.questionnaire.AttachQuestionGroupParameters;
 import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionGroupPage;
 import org.mifos.test.acceptance.framework.questionnaire.CreateQuestionGroupParameters;
@@ -387,14 +386,14 @@ public class QuestionGroupTestHelper {
         return parameters;
     }
 
-    public OfficeViewDetailsPage createOfficeWithQuestionGroup(QuestionResponsePage questionResponsePage,
+    public CreateOfficePreviewDataPage createOfficeWithQuestionGroup(QuestionResponsePage questionResponsePage,
             QuestionResponseParameters initialResponse, QuestionResponseParameters updatedResponse) {
         questionResponsePage.populateAnswers(initialResponse);
         CreateOfficePreviewDataPage createOfficePreviewDataPage = questionResponsePage.navigateToNextPageAndReturnPage();
         QuestionResponsePage questionResponsePage2 = createOfficePreviewDataPage.editAdditionalInformation();
         questionResponsePage2.populateAnswers(updatedResponse);
         createOfficePreviewDataPage = questionResponsePage2.navigateToNextPageAndReturnPage();
-        return createOfficePreviewDataPage.submit().navigateToOfficeViewDetailsPage();
+        return createOfficePreviewDataPage.submitWithError();
     }
 
     public void editResponses(ClientViewDetailsPage clientViewDetailsPage, int id, Map<String,String> answers) {

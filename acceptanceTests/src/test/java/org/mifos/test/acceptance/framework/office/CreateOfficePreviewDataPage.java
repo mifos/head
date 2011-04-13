@@ -23,6 +23,8 @@ package org.mifos.test.acceptance.framework.office;
 import org.mifos.test.acceptance.framework.MifosPage;
 
 import com.thoughtworks.selenium.Selenium;
+
+import org.mifos.test.acceptance.framework.admin.DefineNewOfficePage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 
 public class CreateOfficePreviewDataPage extends MifosPage {
@@ -55,11 +57,23 @@ public class CreateOfficePreviewDataPage extends MifosPage {
         waitForPageToLoad();
         return new CreateOfficeConfirmationPage(selenium);
     }
-
+    
+    public CreateOfficePreviewDataPage submitWithError() {
+        selenium.click("preview_new_office.button.submit");
+        waitForPageToLoad();
+        return new CreateOfficePreviewDataPage(selenium);
+    }
+    
     public QuestionResponsePage editAdditionalInformation() {
         selenium.click("editQuestionResponses_button");
         waitForPageToLoad();
 
         return new QuestionResponsePage(selenium);
+    }
+    
+    public DefineNewOfficePage editOfficeInformation() {
+        selenium.click("preview_new_office.button.edit");
+        waitForPageToLoad();
+        return new DefineNewOfficePage(selenium);
     }
 }
