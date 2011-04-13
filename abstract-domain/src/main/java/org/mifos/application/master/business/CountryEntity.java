@@ -19,15 +19,20 @@
  */
 package org.mifos.application.master.business;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.mifos.framework.business.AbstractEntity;
 
 @Entity
 @Table(name = "country")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class CountryEntity extends AbstractEntity {
 
     @Id

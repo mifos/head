@@ -20,8 +20,12 @@
 
 package org.mifos.application.master.business;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.ejb.QueryHints;
 import org.mifos.framework.business.AbstractEntity;
 
+import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -32,6 +36,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.QueryHint;
 import javax.persistence.Table;
 import java.util.Set;
 
@@ -43,34 +48,41 @@ import java.util.Set;
 @NamedQueries( {
   @NamedQuery(
     name="entities",
-    query="from LookUpEntity "
+    query="from LookUpEntity ",
+    hints = { @QueryHint(name=QueryHints.HINT_CACHEABLE,value="true") }
   ),
   @NamedQuery(
     name="masterdata.mifosEntityValue",
     query="select new org.mifos.application.master.business.BusinessActivityEntity(value.lookUpId ,value.lookUpName, value.lookUpName) "+
           "from LookUpEntity entity, LookUpValueEntity value "+
-          "where entity.entityId = value.lookUpEntity.entityId and entity.entityType=:entityType "
+          "where entity.entityId = value.lookUpEntity.entityId and entity.entityType=:entityType ",
+          hints = { @QueryHint(name=QueryHints.HINT_CACHEABLE,value="true") }
   ),
   @NamedQuery(
     name = "masterdata.entityvalue",
     query = "select new org.mifos.application.master.business.CustomValueDto(entity.entityId ,label.localeId,label.labelName) "
          + "from LookUpEntity entity, LookUpLabelEntity label "
-         + "where entity.entityId = label.lookUpEntity.entityId and entity.entityType=:entityType"
+         + "where entity.entityId = label.lookUpEntity.entityId and entity.entityType=:entityType",
+         hints = { @QueryHint(name=QueryHints.HINT_CACHEABLE,value="true") }
   ),
   @NamedQuery(
           name = "findLookupEntityByEntityType",
-          query = "from LookUpEntity entity where entity.entityType=:entityType"
+          query = "from LookUpEntity entity where entity.entityType=:entityType",
+          hints = { @QueryHint(name=QueryHints.HINT_CACHEABLE,value="true") }
   ),
   @NamedQuery(
     name = "masterdata.entitylookupvalue",
     query = "select new org.mifos.application.master.business.CustomValueListElementDto(lookup.lookUpId,lookup.lookUpName, lookup.lookUpName) "
                 + "from LookUpValueEntity lookup, LookUpEntity entity "
-                + "where entity.entityType=:entityType and lookup.lookUpEntity.entityId =entity.entityId"
+                + "where entity.entityType=:entityType and lookup.lookUpEntity.entityId =entity.entityId",
+                hints = { @QueryHint(name=QueryHints.HINT_CACHEABLE,value="true") }
   )
 
 })
 @Entity
 @Table(name = "lookup_entity")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class LookUpEntity extends AbstractEntity {
 
     public static final Short DEFAULT_LOCALE_ID = 1;

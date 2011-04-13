@@ -39,7 +39,7 @@ import org.mifos.customers.client.util.helpers.ClientConstants;
 @Entity
 @Table(name = "spouse_father_lookup")
 @Cacheable
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class SpouseFatherLookupEntity extends MasterDataEntity {
 
     @Id

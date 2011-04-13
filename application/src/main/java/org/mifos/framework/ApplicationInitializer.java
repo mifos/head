@@ -393,9 +393,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
     private void initializeSecurity() throws AppNotConfiguredException {
         try {
             ActivityMapper.getInstance().init();
-
             HierarchyManager.getInstance().init();
-
         } catch (XMLReaderException e) {
 
             throw new AppNotConfiguredException(e);

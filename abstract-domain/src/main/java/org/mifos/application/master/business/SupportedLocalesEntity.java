@@ -20,26 +20,61 @@
 
 package org.mifos.application.master.business;
 
-import java.util.Set;
+import javax.persistence.Cacheable;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.QueryHint;
+import javax.persistence.Table;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+import org.hibernate.ejb.QueryHints;
 import org.mifos.framework.business.AbstractEntity;
 
+@NamedQueries({
+    @NamedQuery(name = "supportedlocales", query = "from SupportedLocalesEntity",
+                hints = { @QueryHint(name=QueryHints.HINT_CACHEABLE,value="true") }),
+    @NamedQuery(name = "getMFILocale",
+                query = "from  SupportedLocalesEntity s where s.defaultLocale=1",
+                hints = { @QueryHint(name=QueryHints.HINT_CACHEABLE,value="true") })
+             })
+
+@Entity
+@Table(name = "supported_locale")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class SupportedLocalesEntity extends AbstractEntity {
 
-    private CountryEntity country;
-
-    private Short defaultLocale;
-
-    /** The composite primary key value */
-    private Short id;
-
-    private LanguageEntity language;
+    @Id
+    @GeneratedValue
+    @Column(name = "locale_id", nullable = false)
     private Short localeId;
 
+    @Column(name = "default_locale")
+    private Short defaultLocale;
+
+
+    @Column(name = "locale_name")
     private String localeName;
 
-    /** The value of the lookupValue association. */
-    private LookUpValueEntity lookUpValue;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @Cascade({ CascadeType.SAVE_UPDATE })
+    @JoinColumn(name = "country_id", unique = true)
+    private CountryEntity country;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @Cascade({ CascadeType.SAVE_UPDATE })
+    @JoinColumn(name = "lang_id", unique = true)
+    private LanguageEntity language;
 
     public SupportedLocalesEntity() {
         super();
@@ -67,10 +102,6 @@ public class SupportedLocalesEntity extends AbstractEntity {
         return defaultLocale;
     }
 
-    public Short getId() {
-        return id;
-    }
-
     public LanguageEntity getLanguage() {
         return language;
     }
@@ -91,29 +122,12 @@ public class SupportedLocalesEntity extends AbstractEntity {
         return localeName;
     }
 
-    public LookUpValueEntity getLookUpValue() {
-        return lookUpValue;
-    }
-
-//    public String getName() {
-//        String name = MessageLookup.getInstance().lookup(getLookUpValue());
-//        return name;
-//    }
-
-    public Set<LookUpValueLocaleEntity> getNames() {
-        return getLookUpValue().getLookUpValueLocales();
-    }
-
     public void setCountry(CountryEntity country) {
         this.country = country;
     }
 
     public void setDefaultLocale(Short defaultLocale) {
         this.defaultLocale = defaultLocale;
-    }
-
-    protected void setId(Short id) {
-        this.id = id;
     }
 
     public void setLanguage(LanguageEntity language) {
@@ -126,9 +140,5 @@ public class SupportedLocalesEntity extends AbstractEntity {
 
     public void setLocaleName(String localeName) {
         this.localeName = localeName;
-    }
-
-    protected void setLookUpValue(LookUpValueEntity lookUpValue) {
-        this.lookUpValue = lookUpValue;
     }
 }

@@ -20,19 +20,43 @@
 
 package org.mifos.application.master.business;
 
+import javax.persistence.Cacheable;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.mifos.framework.business.AbstractEntity;
 
-@Deprecated
+@Entity
+@Table(name = "lookup_label")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class LookUpLabelEntity extends AbstractEntity {
 
-    private String labelName;
-
+    @Id
+    @GeneratedValue
+    @Column(name = "label_id", nullable = false)
     private Short LookUpLabelId;
 
+    @Column(name = "entity_name")
+    private String labelName;
+
+    @Column(name = "locale_id")
     private Short localeId;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "locale_id", unique = true, insertable = false, updatable = false)
     private SupportedLocalesEntity locale;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "entity_id")
     private LookUpEntity lookUpEntity;
 
     public String getLabelKey() {

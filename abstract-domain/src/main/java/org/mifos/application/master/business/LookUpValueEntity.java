@@ -22,20 +22,57 @@ package org.mifos.application.master.business;
 
 import java.util.Set;
 
+import javax.persistence.Cacheable;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.QueryHint;
+import javax.persistence.Table;
+
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.ejb.QueryHints;
 import org.mifos.config.LocalizedTextLookup;
 import org.mifos.framework.business.AbstractEntity;
 
+@NamedQueries({
+    @NamedQuery(name = "lookupvalues", query = "from LookUpValueEntity",
+                hints = { @QueryHint(name=QueryHints.HINT_CACHEABLE,value="true") })
+})
+
+@Entity
+@Table(name = "lookup_value")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class LookUpValueEntity extends AbstractEntity implements LocalizedTextLookup {
 
+    @Id
+    @GeneratedValue
+    @Column(name = "lookup_id", nullable = false)
     private Integer lookUpId;
 
     /*
      * The key used for retrieving localized resource bundle message text.
      */
+    @Column(name = "lookup_name")
     private String lookUpName;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "entity_id", unique = true)
     private LookUpEntity lookUpEntity;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "lookup_id", updatable = false)
+    private Set<LookUpValueLocaleEntity> lookUpValueLocales;
 
     public LookUpValueEntity(){
     }
@@ -43,8 +80,6 @@ public class LookUpValueEntity extends AbstractEntity implements LocalizedTextLo
     public LookUpValueEntity(String lookUpName){
         this.lookUpName = lookUpName;
     }
-
-    private Set<LookUpValueLocaleEntity> lookUpValueLocales;
 
     public String getLookUpName() {
         return lookUpName;

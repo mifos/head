@@ -22,16 +22,47 @@ package org.mifos.application.master.business;
 
 import java.util.Set;
 
+import javax.persistence.Cacheable;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.QueryHint;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.ejb.QueryHints;
+
+@NamedQueries({
+    @NamedQuery(name = "availableLanguages", query = "from  LanguageEntity",
+                hints = { @QueryHint(name=QueryHints.HINT_CACHEABLE,value="true") })
+})
+
+@Entity
+@Table(name = "language")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class LanguageEntity extends MasterDataEntity {
 
-    /** The composite primary key value */
+    @Id
+    @GeneratedValue
+    @Column(name = "lang_id", nullable = false)
     private Short id;
 
+    @Column(name = "lang_name")
     private final String languageName;
 
+    @Column(name = "lang_short_name")
     private final String languageShortName;
 
-    /** The value of the lookupValue association. */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "lookup_id", unique = true, updatable = false)
     private LookUpValueEntity lookUpValue;
 
     public LanguageEntity() {
