@@ -74,7 +74,6 @@ import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.MoneyCompositeUserType;
-import org.mifos.security.authorization.AuthorizationManager;
 import org.mifos.security.authorization.HierarchyManager;
 import org.mifos.security.util.ActivityMapper;
 import org.slf4j.Logger;
@@ -394,8 +393,6 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
     private void initializeSecurity() throws AppNotConfiguredException {
         try {
             ActivityMapper.getInstance().init();
-
-            AuthorizationManager.getInstance().init();
 
             HierarchyManager.getInstance().init();
 

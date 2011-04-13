@@ -41,21 +41,18 @@ import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.struts.actionforms.CustSearchActionForm;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerSearchConstants;
 import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.UserDetailDto;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.struts.action.SearchAction;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SearchUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.security.authorization.AuthorizationManager;
 import org.mifos.security.util.UserContext;
 
 public class CustSearchAction extends SearchAction {
@@ -143,20 +140,7 @@ public class CustSearchAction extends SearchAction {
         UserContext userContext = getUserContext(request);
         SessionUtils.setAttribute("isCenterHierarchyExists", ClientRules.getCenterHierarchyExists(), request);
         loadMasterData(userContext.getId(), request, actionForm);
-
-        fixUpReportSecurity();
-
         return mapping.findForward(CustomerConstants.GETHOMEPAGE_SUCCESS);
-    }
-
-    private static void fixUpReportSecurity() {
-        // MIFOS-3108: the following line doesn't make too much sense (and causes permission problems).
-        // ActivityMapper.getInstance().getActivityMap().put("/reportsUserParamsAction-loadAddList-" + 4, (short) -1);
-        try {
-            AuthorizationManager.getInstance().init();
-        } catch (ApplicationException e) {
-            e.printStackTrace();
-        }
     }
 
     @TransactionDemarcate(saveToken = true)

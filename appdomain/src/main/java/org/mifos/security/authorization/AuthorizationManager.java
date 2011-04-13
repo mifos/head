@@ -23,22 +23,13 @@ package org.mifos.security.authorization;
 import static org.mifos.security.authorization.HierarchyManager.BranchLocation.BELOW;
 import static org.mifos.security.authorization.HierarchyManager.BranchLocation.SAME;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SecurityException;
-import org.mifos.framework.exceptions.SystemException;
-import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.security.util.ActivityContext;
-import org.mifos.security.util.ActivityRoles;
-import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+import org.mifos.security.rolesandpermission.business.ActivityEntity;
 import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsDao;
 
 /**
@@ -48,48 +39,34 @@ import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsD
 @SuppressWarnings("unchecked")
 public class AuthorizationManager {
 
-    private Map<Short, Set> activityToRolesCacheMap = null;
     private static AuthorizationManager manager = new AuthorizationManager();
 
     private LegacyRolesPermissionsDao legacyRolesPermissionsDao = ApplicationContextProvider.getBean(LegacyRolesPermissionsDao.class);
 
     private AuthorizationManager() {
-        activityToRolesCacheMap = new HashMap<Short, Set>();
     }
 
-    public static AuthorizationManager getInstance() {
+    public static synchronized AuthorizationManager getInstance() {
         return manager;
     }
 
-    public void init() throws SystemException, ApplicationException {
+    public  synchronized boolean isActivityAllowed(UserContext userContext, ActivityContext activityContext) {
         try {
-            initialize();
-        } catch (Exception e) {
-            throw new SecurityException(SecurityConstants.INITIALIZATIONFAILED, e);
-        }
-    }
-
-    private void initialize() throws ApplicationException {
-        List<ActivityRoles> al = legacyRolesPermissionsDao.getActivitiesRoles();
-        activityToRolesCacheMap.clear();
-        List leafs = legacyRolesPermissionsDao.getLeafActivities();
-        for (ActivityRoles act : al) {
-            if (leafs.contains(act.getId())) {
-                activityToRolesCacheMap.put(act.getId(), act.getActivityRoles());
-            }
-        }
-    }
-
-    public boolean isActivityAllowed(UserContext userContext, ActivityContext activityContext) {
-        try {
-            Set rolesFromActivity = activityToRolesCacheMap.get(activityContext.getActivityId());
-            if (rolesFromActivity == null) {
+            ActivityEntity activity = legacyRolesPermissionsDao.getActivityById(activityContext.getActivityId());
+            if (activity == null) {
                 return false;
             }
 
-            Set roles = new HashSet(rolesFromActivity);
-            roles.retainAll(userContext.getRoles());
-            if (roles.isEmpty()) {
+            Set<Short> activityAllowedRoles = activity.getRoleIds();
+            if (activityAllowedRoles == null) {
+                return false;
+            }
+
+            Set<Short> userRoles = userContext.getRoles();
+
+            activityAllowedRoles.retainAll(userRoles);
+
+            if (activityAllowedRoles.isEmpty()) {
                 return false;
             }
 
@@ -113,51 +90,6 @@ public class AuthorizationManager {
             return false;
         } catch (Exception e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    public void addRole(RoleBO role) {
-        List<Short> activityIds = role.getActivityIds();
-        Set<Short> keys = activityToRolesCacheMap.keySet();
-        for (Short activityId : keys) {
-            // see if for role has this activityId assingned. If it is, add it
-            // to the cache
-            if (activityIds.contains(activityId)) {
-                Set<Short> roleSet = activityToRolesCacheMap.get(activityId);
-                roleSet.add(role.getId());
-            }
-        }
-    }
-
-    public void updateRole(RoleBO role) {
-        List<Short> activityIds = role.getActivityIds();
-        Set<Short> keys = activityToRolesCacheMap.keySet();
-        synchronized (activityToRolesCacheMap) {
-            for (Short activityId : keys) {
-                // see if for this activity role activitySet has anything in
-                // it If there is not any remove it from the cache
-                Set<Short> roleSet = activityToRolesCacheMap.get(activityId);
-                if (activityIds.contains(activityId)) {
-                    roleSet.add(role.getId());
-                } else {
-                    roleSet.remove(role.getId());
-                }
-            }
-        }
-    }
-
-    public void deleteRole(RoleBO role) {
-        List<Short> activityIds = role.getActivityIds();
-        Set<Short> keys = activityToRolesCacheMap.keySet();
-        synchronized (activityToRolesCacheMap) {
-            for (Short activityId : keys) {
-                // see if for this activity role activitySet has anything in
-                // it If there is any remove it from the cache
-                if (activityIds.contains(activityId)) {
-                    Set<Short> roleSet = activityToRolesCacheMap.get(activityId);
-                    roleSet.remove(role.getId());
-                }
-            }
         }
     }
 

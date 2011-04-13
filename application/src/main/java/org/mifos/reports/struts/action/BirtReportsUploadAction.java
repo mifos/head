@@ -40,7 +40,6 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionServlet;
 import org.apache.struts.upload.FormFile;
-import org.hibernate.HibernateException;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.Localization;
 import org.mifos.config.business.MifosConfigurationManager;
@@ -49,7 +48,6 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.DatabaseMigrator;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.reports.business.ReportsBO;
@@ -60,8 +58,6 @@ import org.mifos.reports.persistence.ReportsPersistence;
 import org.mifos.reports.struts.actionforms.BirtReportsUploadActionForm;
 import org.mifos.reports.util.helpers.ReportsConstants;
 import org.mifos.security.activity.ActivityGeneratorException;
-import org.mifos.security.activity.DynamicLookUpValueCreationTypes;
-import org.mifos.security.authorization.AuthorizationManager;
 import org.mifos.security.util.ActivityMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -148,8 +144,6 @@ public class BirtReportsUploadAction extends BaseAction {
     private void allowActivityPermission(ReportsBO reportBO, int newActivityId) throws ApplicationException {
         ActivityMapper.getInstance().getActivityMap().put(
                 "/reportsUserParamsAction-loadAddList-" + reportBO.getReportId(), (short) newActivityId);
-
-        AuthorizationManager.getInstance().init();
     }
 
     private static String getServletRoot(ActionServlet servlet) {

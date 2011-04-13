@@ -22,7 +22,9 @@ package org.mifos.security.rolesandpermission.business;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -36,29 +38,24 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
-import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.GenericGenerator;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.security.rolesandpermission.exceptions.RolesPermissionException;
-import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
 import org.mifos.security.util.UserContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@NamedQueries({
-    @NamedQuery(name="getRoleForGivenName",query="FROM RoleBO role WHERE role.name =:RoleName"),
-    @NamedQuery(name="getAllRoles",query="from RoleBO role order by role.name")
-})
-
+@NamedQueries({ @NamedQuery(name = "getRoleForGivenName", query = "FROM RoleBO role WHERE role.name =:RoleName"),
+        @NamedQuery(name = "getAllRoles", query = "from RoleBO role order by role.name") })
 @Entity
 @Table(name = "role")
 public class RoleBO extends AbstractBusinessObject {
 
     private static final Logger logger = LoggerFactory.getLogger(RoleBO.class);
 
-    @GenericGenerator(name = "generator", strategy = "increment")
     @Id
     @GeneratedValue(generator = "generator")
+    @GenericGenerator(name = "generator", strategy = "increment")
     @Column(name = "role_id", nullable = false)
     private Short id = null;
 
@@ -82,28 +79,20 @@ public class RoleBO extends AbstractBusinessObject {
     private Integer versionNo;
 
     @ManyToMany
-    @JoinTable(name="roles_activity",
-            joinColumns={ @JoinColumn(name="role_id", referencedColumnName="role_id")},
-            inverseJoinColumns={ @JoinColumn(name="activity_id", referencedColumnName="activity_id")})
-    private final List<ActivityEntity> activities = new ArrayList<ActivityEntity>(0);
+    @JoinTable(name = "roles_activity", joinColumns = { @JoinColumn(name = "role_id", referencedColumnName = "role_id") }, inverseJoinColumns = { @JoinColumn(name = "activity_id", referencedColumnName = "activity_id") })
+    private final Set<ActivityEntity> activities = new HashSet<ActivityEntity>(0);
 
-    RoleBO() {
+    @SuppressWarnings("unused")
+    private RoleBO() {
     }
 
-    RoleBO(int id) {
-        this.id = (short) id;
-    }
-
-    public RoleBO(UserContext userContext, String roleName, List<ActivityEntity> activityList)
-            throws RolesPermissionException {
+    public RoleBO(UserContext userContext, String roleName, List<ActivityEntity> activityList) throws RolesPermissionException {
         super(userContext);
-        logger.info("Creating a new role");
-        validateRoleName(roleName);
-        validateActivities(activityList);
+        logger.info("Creating a new role:" + roleName);
         name = roleName;
         createRoleActivites(activityList);
         setCreateDetails();
-        logger.info("New role created");
+        logger.info("New role created:" + roleName);
     }
 
     public Short getId() {
@@ -114,11 +103,7 @@ public class RoleBO extends AbstractBusinessObject {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<ActivityEntity> getActivities() {
+    public Set<ActivityEntity> getActivities() {
         return activities;
     }
 
@@ -130,8 +115,8 @@ public class RoleBO extends AbstractBusinessObject {
         return ids;
     }
 
-        @Override
-        public Short getCreatedBy() {
+    @Override
+    public Short getCreatedBy() {
         return createdBy;
     }
 
@@ -180,57 +165,25 @@ public class RoleBO extends AbstractBusinessObject {
         this.versionNo = versionNo;
     }
 
-    public void update(Short perosnnelId, String roleName, List<ActivityEntity> activityList)
-            throws RolesPermissionException {
+    public void update(Short perosnnelId, String roleName, List<ActivityEntity> activityList) throws RolesPermissionException {
         logger.info("Updating role");
-        validateRoleName(roleName);
-        validateActivities(activityList);
         name = roleName;
-        updateRoleActivities(activityList);
+        createRoleActivites(activityList);
         setUpdateDetails(perosnnelId);
         logger.info("Role updated");
     }
 
-    private void updateRoleActivities(List<ActivityEntity> activityList) {
-        // Removing activities
-        activities.clear();
-        // Adding activities
-        activities.addAll(activityList);
-    }
-
-    private List<Short> getActivityIds(List<ActivityEntity> activityList) {
-        List<Short> activityIds = new ArrayList<Short>();
-        for (ActivityEntity activityEntity : activityList) {
-            activityIds.add(activityEntity.getId());
-        }
-        return activityIds;
-    }
-
     private void createRoleActivites(List<ActivityEntity> activityList) {
-        for (ActivityEntity activityEntity : activityList) {
-            activities.add(activityEntity);
+        activities.clear();
+        if(activityList != null) {
+            activities.addAll(activityList);
         }
-    }
-
-    public void validateRoleName(String roleName) throws RolesPermissionException {
-        if (StringUtils.isBlank(roleName)) {
-            throw new RolesPermissionException(RolesAndPermissionConstants.KEYROLENAMENOTSPECIFIED);
-        }
-    }
-
-    private void validateActivities(List<ActivityEntity> activityList) throws RolesPermissionException {
-        logger.info("Validating activities");
-        if (null == activityList || activityList.size() == 0) {
-            throw new RolesPermissionException(RolesAndPermissionConstants.KEYROLEWITHNOACTIVITIES);
-        }
-        logger.info("Activities validated");
     }
 
     @Override
     public int hashCode() {
         final int PRIME = 31;
         int result = 1;
-        result = PRIME * result + ((id == null) ? 0 : id.hashCode());
         result = PRIME * result + ((name == null) ? 0 : name.hashCode());
         return result;
     }
@@ -247,13 +200,6 @@ public class RoleBO extends AbstractBusinessObject {
             return false;
         }
         final RoleBO other = (RoleBO) obj;
-        if (id == null) {
-            if (other.id != null) {
-                return false;
-            }
-        } else if (!id.equals(other.id)) {
-            return false;
-        }
         if (name == null) {
             if (other.name != null) {
                 return false;
@@ -262,5 +208,10 @@ public class RoleBO extends AbstractBusinessObject {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "RoleBO [id=" + id + ", name=" + name + "]";
     }
 }

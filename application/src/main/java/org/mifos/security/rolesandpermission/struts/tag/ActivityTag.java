@@ -61,7 +61,7 @@ public class ActivityTag extends TagSupport {
                 Set<Short> activitySet = convertToIdSet(flitered);
                 builder.setCurrentActivites(activitySet);
             } else if (role != null) {
-                List<ActivityEntity> flitered = filterActivities(role.getActivities());
+                List<ActivityEntity> flitered = filterActivities(new ArrayList<ActivityEntity>(role.getActivities()));
                 Set<Short> activitySet = convertToIdSet(flitered);
                 builder.setCurrentActivites(activitySet);
             }

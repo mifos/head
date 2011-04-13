@@ -53,7 +53,6 @@ import org.mifos.security.rolesandpermission.business.ActivityEntity;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.security.rolesandpermission.business.service.RolesPermissionsBusinessService;
 import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
-import org.mifos.security.util.ActivityRoles;
 import org.mifos.security.util.PersonRoles;
 import org.mifos.security.util.SecurityConstants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -199,28 +198,24 @@ public class LegacyRolesPermissionsDao extends LegacyGenericDao {
         }
     }
 
-    /**
-     * This function is used to retrive the all the activities in the system and
-     * the set of roles which includes these activities
-     *
-     * @return list of ActivityRoles objects
-     * @throws HibernateProcessException
-     */
-    public List<ActivityRoles> getActivitiesRoles() throws SystemException, ApplicationException {
-        try {
-            Session session = StaticHibernateUtil.getSessionTL();
-            Query query = session.getNamedQuery(NamedQueryConstants.GETACTIVITYROLES);
-            List<ActivityRoles> activityRolesList = query.list();
-            return activityRolesList;
-        } catch (HibernateException e) {
-            throw new SecurityException(SecurityConstants.GENERALERROR, e);
-        }
-    }
-
     public List<ActivityEntity> getActivities() throws PersistenceException {
         try {
             Query query = getSession().getNamedQuery(NamedQueryConstants.GET_ALL_ACTIVITIES);
             return query.list();
+        } catch (Exception e) {
+            throw new PersistenceException(e);
+        }
+    }
+
+    public List<Short> getActivitieIds() throws PersistenceException {
+        try {
+            Query query = getSession().getNamedQuery(NamedQueryConstants.GET_ALL_ACTIVITIES);
+            List<ActivityEntity> activities = query.list();
+            List<Short> activityIds = new ArrayList();
+            for(ActivityEntity activity: activities) {
+                activityIds.add(activity.getId());
+            }
+            return activityIds;
         } catch (Exception e) {
             throw new PersistenceException(e);
         }
@@ -262,15 +257,10 @@ public class LegacyRolesPermissionsDao extends LegacyGenericDao {
         int lookUpId = createLookUpValue(DynamicLookUpValueCreationTypes.BirtReport, lookUpDescription);
         insertLookUpValueLocale(lookUpId, lookUpDescription);
         ActivityEntity activityEntity = createActivityEntity(parentActivity, lookUpId);
-        insertRolesActivity(activityEntity);
+        RoleBO role = getPersistentObject(RoleBO.class, RolesAndPermissionConstants.ADMIN_ROLE);
+        role.getActivities().add(activityEntity);
         StaticHibernateUtil.commitTransaction();
         return lookUpId;
-    }
-
-    private void insertRolesActivity(ActivityEntity activityEntity) throws PersistenceException {
-        RoleBO role = getPersistentObject(RoleBO.class, (short) RolesAndPermissionConstants.ADMIN_ROLE);
-        role.getActivities().add(activityEntity);
-        createOrUpdate(activityEntity);
     }
 
     private ActivityEntity createActivityEntity(short parentActivity, int lookUpId) throws ServiceException,
@@ -285,7 +275,6 @@ public class LegacyRolesPermissionsDao extends LegacyGenericDao {
         ActivityEntity activityEntity = new ActivityEntity((short) calculateDynamicActivityId(), parentActivityEntity,
                 lookupValueEntity);
         createOrUpdate(activityEntity);
-
         return activityEntity;
     }
 

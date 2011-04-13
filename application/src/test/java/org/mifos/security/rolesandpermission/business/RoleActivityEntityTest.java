@@ -27,10 +27,10 @@ public class RoleActivityEntityTest {
 
     @Test
     public void testEquals() throws Exception {
-        RoleBO x = new RoleBO(78);
-        RoleBO notx = new RoleBO(77);
-        RoleBO y = new RoleBO(78);
-        RoleBO z = new RoleBO(78);
+        RoleBO x = new RoleBO(null,"Role",null);
+        RoleBO notx = new RoleBO(null,"Role2",null);
+        RoleBO y = new RoleBO(null,"Role",null);
+        RoleBO z = new RoleBO(null,"Role",null);
 
         TestUtils.assertEqualsAndHashContract(x, notx, y, z);
     }

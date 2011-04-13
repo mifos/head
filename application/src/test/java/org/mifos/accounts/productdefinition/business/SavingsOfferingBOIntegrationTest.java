@@ -53,8 +53,6 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
 
     private SavingsOfferingBO savingsProduct;
 
-    private SavingsOfferingBO savingsOffering1;
-
     @Before
     public void setUp() throws Exception {
     }
@@ -62,7 +60,6 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
     @After
     public void tearDown() throws Exception {
         savingsProduct = null;
-        savingsOffering1 = null;
      }
 
     @Test
@@ -493,7 +490,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         Date startDate = offSetCurrentDate(0);
         Date endDate = offSetCurrentDate(7);
         savingsProduct = createSavingsOfferingBO("Savings_offering", "S");
-        savingsOffering1 = createSavingsOfferingBO("Savings_offering1", "S1");
+        createSavingsOfferingBO("Savings_offering1", "S1");
         try {
             savingsProduct.update(Short.valueOf("1"), "Savings_offering1", "S", productCategory, prdApplicableMaster,
                     startDate, endDate, "Desc", PrdStatus.SAVINGS_ACTIVE, null, savingsType, intCalType,
@@ -517,7 +514,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         Date startDate = offSetCurrentDate(0);
         Date endDate = offSetCurrentDate(7);
         savingsProduct = createSavingsOfferingBO("Savings_offering", "S");
-        savingsOffering1 = createSavingsOfferingBO("Savings_offering1", "S1");
+        createSavingsOfferingBO("Savings_offering1", "S1");
         try {
             savingsProduct
                     .update(Short.valueOf("1"), "Savings_offeringChanged", "S1", productCategory, prdApplicableMaster,

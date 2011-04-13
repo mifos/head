@@ -104,7 +104,6 @@ public class AddActivityIntegrationTest extends MifosIntegrationTestCase {
 
         ActivityContext activityContext = new ActivityContext(newId, TestObjectFactory.HEAD_OFFICE);
         AuthorizationManager authorizer = AuthorizationManager.getInstance();
-        authorizer.init();
 
         UserContext admin = TestUtils.makeUser(RolesAndPermissionConstants.ADMIN_ROLE);
        Assert.assertTrue(authorizer.isActivityAllowed(admin, activityContext));

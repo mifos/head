@@ -41,7 +41,6 @@ import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.DatabaseMigrator;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.reports.business.MockFormFile;
 import org.mifos.reports.business.ReportsBO;
@@ -51,8 +50,6 @@ import org.mifos.reports.persistence.ReportsPersistence;
 import org.mifos.reports.struts.actionforms.BirtReportsUploadActionForm;
 import org.mifos.reports.util.helpers.ReportsConstants;
 import org.mifos.security.AddActivity;
-import org.mifos.security.activity.DynamicLookUpValueCreationTypes;
-import org.mifos.security.authorization.AuthorizationManager;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.security.rolesandpermission.business.service.RolesPermissionsBusinessService;
@@ -61,10 +58,6 @@ import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
 
@@ -239,8 +232,6 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Test
     public void testShouldSubmitSucessWhenUploadNewReport() throws Exception {
-        // TODO Temporary solution to avoid unsuccessful test on some machines
-
 
         setRequestPathInfo("/birtReportsUploadAction.do");
 
@@ -337,7 +328,7 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
         request.getSession(false).setAttribute(Constants.ACTIVITYCONTEXT, ac);
 
         RoleBO role = legacyRolesPermissionsDao.getRole(userContext.getRoles().iterator().next());
-        List<ActivityEntity> roleActivities = role.getActivities();
+        List<ActivityEntity> roleActivities = new ArrayList<ActivityEntity>(role.getActivities());
         List<ActivityEntity> updatedRoleActivities = new ArrayList<ActivityEntity>();
         for (ActivityEntity ae : roleActivities) {
             if (ae.getId() != SecurityConstants.EDIT_REPORT_INFORMATION || allowReportEdit) {
@@ -349,8 +340,11 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
             StaticHibernateUtil.startTransaction();
             role.update(userContext.getId(), "test", updatedRoleActivities);
             legacyRolesPermissionsDao.save(role);
+            StaticHibernateUtil.flushSession();
+            for(ActivityEntity ae : legacyRolesPermissionsDao.getActivities()) {
+                StaticHibernateUtil.getSessionTL().refresh(ae);
+            }
             StaticHibernateUtil.commitTransaction();
-            AuthorizationManager.getInstance().updateRole(role);
         } catch (Exception e) {
             StaticHibernateUtil.rollbackTransaction();
             throw new MifosRuntimeException(e);

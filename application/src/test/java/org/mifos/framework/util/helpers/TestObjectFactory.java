@@ -182,11 +182,7 @@ import org.mifos.schedule.ScheduledEventFactory;
 import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration;
 import org.mifos.security.authentication.EncryptionService;
 import org.mifos.security.authorization.HierarchyManager;
-import org.mifos.security.rolesandpermission.business.ActivityEntity;
 import org.mifos.security.rolesandpermission.business.RoleBO;
-import org.mifos.security.rolesandpermission.exceptions.RolesPermissionException;
-import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsDao;
-import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
 
@@ -1753,26 +1749,6 @@ public class TestObjectFactory {
 
         IntegrationTestObjectMother.createPersonnel(personnelBO);
         return IntegrationTestObjectMother.findPersonnelById(personnelBO.getPersonnelId());
-    }
-
-    public static RoleBO createRole(final UserContext context, final String roleName,
-                                    final List<ActivityEntity> activities) throws Exception {
-
-        LegacyRolesPermissionsDao rolesPermissionsPersistence = ApplicationContextProvider.getBean(LegacyRolesPermissionsDao.class);
-
-        RoleBO roleBO = new RoleBO(context, roleName, activities);
-        roleBO.validateRoleName(roleName);
-
-        if (roleBO.getName() == null || !roleBO.getName().trim().equalsIgnoreCase(roleName.trim())) {
-            if (rolesPermissionsPersistence.getRole(roleName.trim()) != null) {
-                throw new RolesPermissionException(RolesAndPermissionConstants.KEYROLEALREADYEXIST);
-            }
-        }
-
-        StaticHibernateUtil.startTransaction();
-        rolesPermissionsPersistence.save(roleBO);
-        StaticHibernateUtil.commitTransaction();
-        return roleBO;
     }
 
     public static FundBO createFund(final FundCodeEntity fundCode, final String fundName) throws Exception {

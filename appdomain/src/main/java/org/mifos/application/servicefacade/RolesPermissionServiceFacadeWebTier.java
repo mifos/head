@@ -3,6 +3,7 @@ package org.mifos.application.servicefacade;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.application.admin.servicefacade.RolesPermissionServiceFacade;
 import org.mifos.core.MifosRuntimeException;
@@ -12,7 +13,6 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.security.MifosUser;
-import org.mifos.security.authorization.AuthorizationManager;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.security.rolesandpermission.business.service.RolesPermissionsBusinessService;
@@ -62,20 +62,19 @@ public class RolesPermissionServiceFacadeWebTier implements RolesPermissionServi
         List<ActivityEntity> activityEntities = getActivityEntities(ActivityIds);
 
         RoleBO roleBO = new RoleBO(userContext, name, activityEntities);
-
-        roleBO.validateRoleName(name);
-
         try {
-            if (roleBO.getName() == null || !roleBO.getName().trim().equalsIgnoreCase(name.trim())) {
-                if (legacyRolesPermissionsDao.getRole(name.trim()) != null) {
-                    throw new RolesPermissionException(RolesAndPermissionConstants.KEYROLEALREADYEXIST);
-                }
-            }
+
+            validateRole(name, activityEntities, roleBO);
 
             StaticHibernateUtil.startTransaction();
             legacyRolesPermissionsDao.save(roleBO);
+
+            StaticHibernateUtil.flushSession();
+            for(ActivityEntity ae : activityEntities) {
+                StaticHibernateUtil.getSessionTL().refresh(ae);
+            }
+
             StaticHibernateUtil.commitTransaction();
-            AuthorizationManager.getInstance().addRole(roleBO);
         } catch (PersistenceException e) {
             StaticHibernateUtil.rollbackTransaction();
             throw new MifosRuntimeException(e);
@@ -84,23 +83,41 @@ public class RolesPermissionServiceFacadeWebTier implements RolesPermissionServi
         }
     }
 
+    private void validateRole(String roleName, List<ActivityEntity> activityEntities, RoleBO roleBO) throws RolesPermissionException, PersistenceException {
+        if (StringUtils.isBlank(roleName)) {
+            throw new RolesPermissionException(RolesAndPermissionConstants.KEYROLENAMENOTSPECIFIED);
+        }
+        logger.info("Validating activities");
+        if (null == activityEntities || activityEntities.size() == 0) {
+            throw new RolesPermissionException(RolesAndPermissionConstants.KEYROLEWITHNOACTIVITIES);
+        }
+        logger.info("Activities validated");
+        if (roleBO.getName() == null || !roleBO.getName().trim().equalsIgnoreCase(roleName.trim())) {
+            if (legacyRolesPermissionsDao.getRole(roleName.trim()) != null) {
+                throw new RolesPermissionException(RolesAndPermissionConstants.KEYROLEALREADYEXIST);
+            }
+        }
+    }
+
     @Override
     public void updateRole(Short roleId, Short userId, String name, List<Short> ActivityIds) throws Exception {
         RolesPermissionsBusinessService rolesPermissionsBusinessService = new RolesPermissionsBusinessService();
         RoleBO role = rolesPermissionsBusinessService.getRole(roleId);
-
-        if (role.getName() == null || !role.getName().trim().equalsIgnoreCase(name.trim())) {
-            if (legacyRolesPermissionsDao.getRole(name.trim()) != null) {
-                throw new RolesPermissionException(RolesAndPermissionConstants.KEYROLEALREADYEXIST);
-            }
-        }
+        List<ActivityEntity> activityList = getActivityEntities(ActivityIds);
+        validateRole(name, activityList, role);
 
         try {
             StaticHibernateUtil.startTransaction();
-            role.update(userId, name, getActivityEntities(ActivityIds));
+
+            role.update(userId, name, activityList);
             legacyRolesPermissionsDao.save(role);
+
+            StaticHibernateUtil.flushSession();
+            for(ActivityEntity ae : legacyRolesPermissionsDao.getActivities()) {
+                StaticHibernateUtil.getSessionTL().refresh(ae);
+            }
+
             StaticHibernateUtil.commitTransaction();
-            AuthorizationManager.getInstance().updateRole(role);
         } catch (RolesPermissionException e) {
             StaticHibernateUtil.rollbackTransaction();
             throw new BusinessRuleException(e.getKey(), e);
@@ -136,10 +153,14 @@ public class RolesPermissionServiceFacadeWebTier implements RolesPermissionServi
 
         try {
             StaticHibernateUtil.startTransaction();
-
             legacyRolesPermissionsDao.delete(role);
+
+            StaticHibernateUtil.flushSession();
+            for(ActivityEntity ae : legacyRolesPermissionsDao.getActivities()) {
+                StaticHibernateUtil.getSessionTL().refresh(ae);
+            }
+
             StaticHibernateUtil.commitTransaction();
-            AuthorizationManager.getInstance().deleteRole(role);
         } catch (PersistenceException e) {
             StaticHibernateUtil.rollbackTransaction();
             throw new MifosRuntimeException(e);

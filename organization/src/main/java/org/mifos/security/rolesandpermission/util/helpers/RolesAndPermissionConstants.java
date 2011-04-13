@@ -46,6 +46,6 @@ public interface RolesAndPermissionConstants {
     String KEYROLENAMENOTSPECIFIED = "roleandpermission.rolename.required";
 
     /* Set up in latest-data.sql */
-    int ADMIN_ROLE = 1;
+    short ADMIN_ROLE = 1;
 
 }

@@ -20,8 +20,8 @@
 
 package org.mifos.security.rolesandpermission.business;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -65,11 +65,11 @@ public class ActivityEntity extends AbstractEntity {
     @JoinColumn(name = "description_lookup_id")
     private final LookUpValueEntity descriptionLookupValues;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name="roles_activity",
             joinColumns={@JoinColumn(name="activity_id", referencedColumnName="activity_id")},
             inverseJoinColumns={@JoinColumn(name="role_id", referencedColumnName="role_id")})
-    private final List<RoleBO> roles = new ArrayList<RoleBO>(0);
+    private final Set<RoleBO> roles = new HashSet<RoleBO>(0);
 
     private transient String description;
     private transient String activityName;
@@ -125,8 +125,16 @@ public class ActivityEntity extends AbstractEntity {
         this.parent = parent;
     }
 
-    public List<RoleBO> getRoles() {
+    public Set<RoleBO> getRoles() {
         return roles;
+    }
+
+    public Set<Short> getRoleIds() {
+        Set<Short> roleIds = new HashSet<Short>();
+        for(RoleBO role:roles) {
+            roleIds.add(role.getId());
+        }
+        return roleIds;
     }
 
     public void setDescription(String description) {
@@ -137,4 +145,47 @@ public class ActivityEntity extends AbstractEntity {
         this.activityName = activityName;
     }
 
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        result = prime * result + ((parent == null) ? 0 : parent.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        ActivityEntity other = (ActivityEntity) obj;
+        if (id == null) {
+            if (other.id != null) {
+                return false;
+            }
+        } else if (!id.equals(other.id)) {
+            return false;
+        }
+        if (parent == null) {
+            if (other.parent != null) {
+                return false;
+            }
+        } else if (!parent.equals(other.parent)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "ActivityEntity [id=" + id + "]";
+    }
 }

@@ -38,14 +38,11 @@ import org.mifos.core.MifosException;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.components.batchjobs.MifosScheduler;
 import org.mifos.framework.components.batchjobs.exceptions.TaskSystemException;
-import org.mifos.framework.components.mifosmenu.MenuBuilder;
 import org.mifos.framework.components.mifosmenu.MenuRepository;
 import org.mifos.framework.util.helpers.FilePaths;
-import org.mifos.security.authorization.AuthorizationManager;
 import org.mifos.security.authorization.HierarchyManager;
 import org.mifos.service.test.TestMode;
 import org.mifos.service.test.TestingService;
-import org.apache.commons.lang.StringUtils;
 
 /**
  * Encapsulates all logic necessary to have the application behave differently during acceptance and integration tests.
@@ -112,7 +109,6 @@ public class StandardTestingService implements TestingService {
     public void reinitializeCaches() {
         try {
             HierarchyManager.getInstance().init();
-            AuthorizationManager.getInstance().init();
             AccountingRules.init();
         } catch (Exception e) {
             throw new RuntimeException(e);

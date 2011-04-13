@@ -33,7 +33,6 @@ import org.mifos.db.upgrade.DatabaseUpgradeSupport;
 import org.mifos.framework.components.audit.util.helpers.AuditConfiguration;
 import org.mifos.framework.hibernate.helper.AuditInterceptorFactory;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.security.authorization.AuthorizationManager;
 import org.mifos.security.authorization.HierarchyManager;
 import org.mifos.security.util.ActivityMapper;
 
@@ -71,7 +70,6 @@ public class TestCaseInitializer {
 
         FinancialInitializer.initialize();
         ActivityMapper.getInstance().init();
-        AuthorizationManager.getInstance().init();
         HierarchyManager.getInstance().init();
 
         MifosConfiguration.getInstance().init();
