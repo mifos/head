@@ -233,7 +233,46 @@ public class LoanAccountController {
             loanScheduleFormBean.setVariableInstallments(loanSchedule.getInstallments());
         }
 
+        List<FeeDto> applicableFees = new ArrayList<FeeDto>();
+        LoanCreationLoanDetailsDto dto = this.loanAccountServiceFacade.retrieveLoanDetailsForLoanAccountCreation(customerId, Integer.valueOf(productId).shortValue());
+        int feeIndex = 0;
+        for (Boolean defaultFeeSelectedForRemoval : formBean.getDefaultFeeSelected()) {
+            if (defaultFeeSelectedForRemoval == null || !defaultFeeSelectedForRemoval) {
+                Integer feeId = formBean.getDefaultFeeId()[feeIndex].intValue();
+                BigDecimal amountOrRate = BigDecimal.valueOf(formBean.getDefaultFeeAmountOrRate()[feeIndex].doubleValue());
+                applicableFees.add(findById(dto.getDefaultFees(), feeId, amountOrRate));
+            }
+            feeIndex++;
+        }
+        
+        feeIndex = 0;
+        Number[] additionalFeesSelected = formBean.getSelectedFeeId();
+        if (additionalFeesSelected != null) {
+            for (Number additionalFee : additionalFeesSelected) {
+                if (additionalFee != null) {
+                    BigDecimal amountOrRate = BigDecimal.valueOf(formBean.getSelectedFeeAmount()[feeIndex].doubleValue());
+                    applicableFees.add(findById(dto.getAdditionalFees(), additionalFee.intValue(), amountOrRate));
+                }
+                feeIndex++;
+            }
+        }
+        
+        loanScheduleFormBean.setApplicableFees(applicableFees);
+
         return loanSchedule;
+    }
+
+    private FeeDto findById(List<FeeDto> defaultFees, Integer feeId, BigDecimal amountOrRate) {
+        FeeDto found = null;
+        
+        for (FeeDto feeDto : defaultFees) {
+            if (Integer.valueOf(feeDto.getId()).equals(feeId)) {
+                feeDto.setAmount(amountOrRate.toPlainString());
+                found = feeDto;
+            }
+        }
+        
+        return found;
     }
 
     private LocalDate translateDisbursementDateToLocalDate(LoanAccountFormBean formBean) {

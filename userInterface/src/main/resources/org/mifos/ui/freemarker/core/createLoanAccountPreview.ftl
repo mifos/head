@@ -113,8 +113,8 @@
 <br/>
 <p><span class="standout">[@spring.message "createLoanAccount.preview.chargesAppliedHeading" /]</span></p>
 <div class="product-summary">
-	[#assign index = 0]
-	[#list loanProductReferenceData.defaultFees as defaultFee]
+[#assign index = 0]
+	[#list loanScheduleFormBean.applicableFees as defaultFee]
 	    <div class="row">
 	        <div class="attribute"><span class="standout">${defaultFee.name}</span></div>
 	        <div class="value">
@@ -122,7 +122,7 @@
 	        		[#assign rateAsFraction = defaultFee.rate/100]
 	        		${rateAsFraction?string.percent}
 	        	[#else]
-	        		${defaultFee.amountAsNumber?string.currency}
+	        		${defaultFee.amountAsNumber?string.number}
 	        	[/#if]
 
 				[#if defaultFee.rateBasedFee]

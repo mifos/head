@@ -28,6 +28,7 @@ import java.util.List;
 
 import org.joda.time.LocalDate;
 import org.mifos.application.servicefacade.LoanAccountServiceFacade;
+import org.mifos.dto.domain.FeeDto;
 import org.mifos.dto.domain.LoanCreationInstallmentDto;
 import org.mifos.platform.validations.ErrorEntry;
 import org.mifos.platform.validations.Errors;
@@ -54,7 +55,9 @@ public class LoanScheduleFormBean implements Serializable {
     private Date disbursementDate;
     private Integer customerId;
     private List<LoanCreationInstallmentDto> variableInstallments = new ArrayList<LoanCreationInstallmentDto>();
-    
+
+    private List<FeeDto> applicableFees = new ArrayList<FeeDto>();
+
     public LoanScheduleFormBean() {
         // constructor
     }
@@ -87,7 +90,7 @@ public class LoanScheduleFormBean implements Serializable {
             handleErrors(messageContext, inputInstallmentsErrors, scheduleErrors);
         }
     }
-
+    
     private void handleErrors(MessageContext messageContext, Errors inputInstallmentsErrors, Errors scheduleErrors) {
         if (inputInstallmentsErrors.hasErrors()) {
             for (ErrorEntry fieldError : inputInstallmentsErrors.getErrorEntries()) {
@@ -172,5 +175,13 @@ public class LoanScheduleFormBean implements Serializable {
 
     public void setVariableInstallments(List<LoanCreationInstallmentDto> variableInstallments) {
         this.variableInstallments = variableInstallments;
+    }
+    
+    public List<FeeDto> getApplicableFees() {
+        return applicableFees;
+    }
+
+    public void setApplicableFees(List<FeeDto> applicableFees) {
+        this.applicableFees = applicableFees;
     }
 }

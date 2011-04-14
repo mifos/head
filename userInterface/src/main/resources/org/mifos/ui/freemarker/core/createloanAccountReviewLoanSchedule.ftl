@@ -97,7 +97,7 @@ $(function() {
 </div>
 <div class="product-summary">
 	[#assign index = 0]
-	[#list loanProductReferenceData.defaultFees as defaultFee]
+	[#list loanScheduleFormBean.applicableFees as defaultFee]
 	    <div class="row">
 	        <div class="attribute"><span class="standout">${defaultFee.name}</span></div>
 	        <div class="value">
@@ -105,7 +105,7 @@ $(function() {
 	        		[#assign rateAsFraction = defaultFee.rate/100]
 	        		${rateAsFraction?string.percent}
 	        	[#else]
-	        		${defaultFee.amountAsNumber?string.currency}
+	        		${defaultFee.amountAsNumber?string.number}
 	        	[/#if]
 
 				[#if defaultFee.rateBasedFee]
@@ -126,7 +126,7 @@ $(function() {
 	    <!-- end of row -->
 	    </div>
  		[#assign index = index + 1]	    	
-    [/#list]
+    [/#list]    
 <!-- end of product summary -->
 </div>
 <br/>
