@@ -162,6 +162,7 @@ import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AccountStatusDto;
 import org.mifos.dto.domain.AccountUpdateStatus;
+import org.mifos.dto.domain.ApplicationConfigurationDto;
 import org.mifos.dto.domain.CashFlowDto;
 import org.mifos.dto.domain.CenterCreation;
 import org.mifos.dto.domain.CreateAccountFeeDto;
@@ -611,6 +612,10 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             }
             // end of GLIM specific
 
+            int digitsAfterDecimalForInterest = AccountingRules.getDigitsAfterDecimalForInterest().intValue();
+            int digitsBeforeDecimalForInterest = AccountingRules.getDigitsBeforeDecimalForInterest().intValue();
+            
+            ApplicationConfigurationDto appConfig = new ApplicationConfigurationDto(digitsAfterDecimalForInterest, digitsBeforeDecimalForInterest);
 
             return new LoanCreationLoanDetailsDto(isRepaymentIndependentOfMeetingEnabled, loanOfferingMeetingDto,
                     customer.getCustomerMeetingValue().toDto(), loanPurposes, productDto, gracePeriodInInstallments, customerDetailDto, loanProductDtos,
@@ -620,7 +625,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                     BigDecimal.valueOf(eligibleLoanAmount.getMaxLoanAmount()), BigDecimal.valueOf(eligibleLoanAmount.getMinLoanAmount()), defaultInterestRate, maxInterestRate, minInterestRate,
                     eligibleNoOfInstall.getDefaultNoOfInstall().intValue(), eligibleNoOfInstall.getMaxNoOfInstall().intValue(), eligibleNoOfInstall.getMinNoOfInstall().intValue(), nextPossibleDisbursementDate,
                     daysOfTheWeekOptions, weeksOfTheMonthOptions, variableInstallmentsAllowed, minGapInDays, maxGapInDays, minInstallmentAmount, compareCashflowEnabled,
-                    isGlimEnabled, isGroup, clientDetails);
+                    isGlimEnabled, isGroup, clientDetails, appConfig);
 
         } catch (SystemException e) {
             throw new MifosRuntimeException(e);

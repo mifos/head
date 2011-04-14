@@ -41,7 +41,7 @@
     <fieldset>
     <div class="row">
         [@form.label "loancreationprodofferingselect.select.loanProduct" true][@spring.message "selectProduct.selectProductLabel" /][/@form.label]
-        [@form.singleSelectWithPrompt path="loanAccountFormBean.productId" options=loanProductReferenceData.productOptions id="loancreationprodofferingselect.select.loanProduct" /]
+        [@form.singleSelectWithPrompt path="loanAccountFormBean.productId" options=loanProductReferenceData.productOptions id="loancreationprodofferingselect.select.loanProduct" attributes="class='selectnewproduct'" /]
     </div>
     </fieldset>
 </form>
@@ -356,7 +356,7 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
-    $('#productId').change(function(e) {
+    $('.selectnewproduct').change(function(e) {
         $(this).closest('form').submit();
     });
     

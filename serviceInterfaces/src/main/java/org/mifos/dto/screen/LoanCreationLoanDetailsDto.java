@@ -28,6 +28,7 @@ import java.util.Map;
 
 import org.joda.time.LocalDate;
 import org.mifos.accounts.fund.servicefacade.FundDto;
+import org.mifos.dto.domain.ApplicationConfigurationDto;
 import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.FeeDto;
 import org.mifos.dto.domain.LoanAccountDetailsDto;
@@ -80,6 +81,7 @@ public class LoanCreationLoanDetailsDto implements Serializable {
     private final List<LoanAccountDetailsDto> clientDetails;
     private final List<FeeDto> additionalFees;
     private final Integer gracePeriodInInstallments;
+    private final ApplicationConfigurationDto appConfig;
 
     public LoanCreationLoanDetailsDto(boolean isRepaymentIndependentOfMeetingEnabled,
             MeetingDto loanOfferingMeetingDetail, MeetingDto customerMeetingDetail,
@@ -91,7 +93,7 @@ public class LoanCreationLoanDetailsDto implements Serializable {
             Integer defaultNumberOfInstallments, Integer maxNumberOfInstallments, Integer minNumberOfInstallments, LocalDate nextPossibleDisbursementDate, 
             LinkedHashMap<String, String> daysOfTheWeekOptions, LinkedHashMap<String, String> weeksOfTheMonthOptions, 
             boolean variableInstallmentsAllowed, Integer minGapInDays, Integer maxGapInDays, BigDecimal minInstallmentAmount, boolean compareCashflowEnabled, 
-            boolean isGlimEnabled, boolean isGroup, List<LoanAccountDetailsDto> clientDetails) {
+            boolean isGlimEnabled, boolean isGroup, List<LoanAccountDetailsDto> clientDetails, ApplicationConfigurationDto appConfig) {
         this.repaymentIndependentOfMeetingEnabled = isRepaymentIndependentOfMeetingEnabled;
         this.loanOfferingMeetingDetail = loanOfferingMeetingDetail;
         this.customerMeetingDetail = customerMeetingDetail;
@@ -124,6 +126,7 @@ public class LoanCreationLoanDetailsDto implements Serializable {
         this.isGlimEnabled = isGlimEnabled;
         this.isGroup = isGroup;
         this.clientDetails = clientDetails;
+        this.appConfig = appConfig;
 		populateProductOptions(loanProductDtos);
 		populateFundOptions(fundDtos);
 		this.collateralOptions = collateralOptions;
@@ -298,5 +301,9 @@ public class LoanCreationLoanDetailsDto implements Serializable {
     
     public Map<String, String> getWeeksOfTheMonthOptions() {
         return weeksOfTheMonthOptions;
-    }    
+    }
+
+    public ApplicationConfigurationDto getAppConfig() {
+        return appConfig;
+    }
 }

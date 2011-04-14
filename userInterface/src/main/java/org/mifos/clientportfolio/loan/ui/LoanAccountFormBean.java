@@ -123,10 +123,39 @@ public class LoanAccountFormBean implements Serializable {
 
     private Number[] selectedFeeId;
     private Number[] selectedFeeAmount;
+    
+    // validation of interest field
+    private int digitsBeforeDecimalForInterest;
+    private int digitsAfterDecimalForInterest;
 
     public void validateEditAccountDetailsStep(ValidationContext context) {
         validateEnterAccountDetailsStep(context);
     }
+    
+    public static int getNumberOfDecimalPlace(Double value) {
+        //For whole numbers like 0
+        if (Math.round(value) == value) return 0;
+
+        final String s = Double.toString(value);
+        final int index = s.indexOf('.');
+        if (index < 0) {
+           return 0;
+        }
+        return s.length() - 1 - index;
+    }
+    
+    public static int getNumberDigitsBeforeDecimalPlace(Double value) {
+        //For whole numbers like 0
+        if (Math.round(value) == value) return 0;
+
+        final String s = Double.toString(value);
+        final int index = s.indexOf('.');
+        if (index-1 <= 0) {
+           return 0;
+        }
+        return index-1;
+    }
+
     
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SIC_INNER_SHOULD_BE_STATIC_ANON"}, justification="")
     public void validateEnterAccountDetailsStep(ValidationContext context) {
@@ -202,6 +231,18 @@ public class LoanAccountFormBean implements Serializable {
         if (this.interestRate == null || exceedsMinOrMax(this.interestRate, this.minAllowedInterestRate, this.maxAllowedInterestRate)) {
             String defaultErrorMessage = "Please specify valid Interest rate.";
             rejectInterestRateField(errors, defaultErrorMessage);
+        }
+        
+        int places = getNumberOfDecimalPlace(this.interestRate.doubleValue());
+        if (places > this.digitsAfterDecimalForInterest) {
+            String defaultErrorMessage = "The number of digits after the decimal separator exceeds the allowed number.";
+            rejectInterestRateFieldValue(errors, defaultErrorMessage, "loanAccountFormBean.digitsAfterDecimalForInterest.invalid", new Object[] {this.digitsAfterDecimalForInterest});
+        }
+        
+        int digitsBefore = getNumberDigitsBeforeDecimalPlace(this.interestRate.doubleValue());
+        if (digitsBefore > this.digitsBeforeDecimalForInterest) {
+            String defaultErrorMessage = "The number of digits before the decimal separator exceeds the allowed number.";
+            rejectInterestRateFieldValue(errors, defaultErrorMessage, "loanAccountFormBean.digitsBeforeDecimalForInterest.invalid", new Object[] {this.digitsBeforeDecimalForInterest});
         }
         
         if (this.numberOfInstallments == null || exceedsMinOrMax(this.numberOfInstallments, this.minNumberOfInstallments, this.maxNumberOfInstallments)) {
@@ -351,6 +392,10 @@ public class LoanAccountFormBean implements Serializable {
     
     private void rejectInterestRateField(Errors errors, String defaultErrorMessage) {
         errors.rejectValue("interestRate", "loanAccountFormBean.InterestRate.invalid", new Object[] {this.minAllowedInterestRate, this.maxAllowedInterestRate}, defaultErrorMessage);
+    }
+    
+    private void rejectInterestRateFieldValue(Errors errors, String defaultErrorMessage, String errorCode, Object[] args) {
+        errors.rejectValue("interestRate", errorCode, args, defaultErrorMessage);
     }
 
     private void handleDataMappingError(Errors errors, Message message) {
@@ -835,5 +880,21 @@ public class LoanAccountFormBean implements Serializable {
 
     public void setMaxGraceDuration(Number maxGraceDuration) {
         this.maxGraceDuration = maxGraceDuration;
+    }
+
+    public int getDigitsAfterDecimalForInterest() {
+        return digitsAfterDecimalForInterest;
+    }
+
+    public void setDigitsAfterDecimalForInterest(int digitsAfterDecimalForInterest) {
+        this.digitsAfterDecimalForInterest = digitsAfterDecimalForInterest;
+    }
+    
+    public int getDigitsBeforeDecimalForInterest() {
+        return digitsBeforeDecimalForInterest;
+    }
+
+    public void setDigitsBeforeDecimalForInterest(int digitsBeforeDecimalForInterest) {
+        this.digitsBeforeDecimalForInterest = digitsBeforeDecimalForInterest;
     }
 }
