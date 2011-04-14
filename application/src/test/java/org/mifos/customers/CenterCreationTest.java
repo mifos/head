@@ -140,6 +140,7 @@ public class CenterCreationTest {
         // setup
         OfficeBO withOffice = new OfficeBO(new Short("1"), "testOffice",new Integer("1"),new Short("1"));
         CenterBO center = new CenterBuilder().withLoanOfficer(anyLoanOfficer()).with(withOffice).build();
+        center.setCustomerDao(customerDao);
         List<AccountFeesEntity> accountFees = new ArrayList<AccountFeesEntity>();
 
         // stub

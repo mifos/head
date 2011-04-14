@@ -1052,10 +1052,11 @@ public abstract class CustomerBO extends AbstractBusinessObject {
             childAddedForParent(getParentCustomer());
             this.setSearchId(getParentCustomer().getSearchId() + "." + getParentCustomer().getMaxChildCount());
         } else {
-            CustomerDao customerDao = getCustomerDao();
-            int numberOfCustomersInOfficeAlready = customerDao.retrieveLastSearchIdValueForNonParentCustomersInOffice(getOffice().getOfficeId());
+            //CustomerDao customerDao = getCustomerDao();
+            //int numberOfCustomersInOfficeAlready = customerDao.retrieveLastSearchIdValueForNonParentCustomersInOffice(getOffice().getOfficeId());
 
-            String searchId = GroupConstants.PREFIX_SEARCH_STRING + ++numberOfCustomersInOfficeAlready;
+            //String searchId = GroupConstants.PREFIX_SEARCH_STRING + ++numberOfCustomersInOfficeAlready;
+            String searchId = GroupConstants.PREFIX_SEARCH_STRING + getCustomerId();
             this.setSearchId(searchId);
         }
     }
