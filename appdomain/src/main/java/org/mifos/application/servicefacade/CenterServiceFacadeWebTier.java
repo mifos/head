@@ -187,8 +187,6 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
         PersonnelBO loanOfficer = this.personnelDao.findPersonnelById(createCenterDetail.getLoanOfficerId());
         OfficeBO centerOffice = this.officeDao.findOfficeById(createCenterDetail.getOfficeId());
 
-        int numberOfCustomersInOfficeAlready = customerDao.retrieveLastSearchIdValueForNonParentCustomersInOffice(createCenterDetail.getOfficeId());
-
         List<AccountFeesEntity> feesForCustomerAccount = createAccountFeeEntities(createCenterDetail.getFeesToApply());
 
         DateTime mfiJoiningDate = null;
@@ -200,7 +198,7 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
         meeting.setUserContext(userContext);
 
         CenterBO center = CenterBO.createNew(userContext, centerName, mfiJoiningDate, meeting, loanOfficer,
-                centerOffice, numberOfCustomersInOfficeAlready, centerAddress, externalId, new DateMidnight().toDateTime());
+                centerOffice, centerAddress, externalId, new DateMidnight().toDateTime());
 
         this.customerService.createCenter(center, meeting, feesForCustomerAccount);
 

@@ -133,10 +133,14 @@ public class CustomerSearchIdGenerationTest {
         CustomerStatusUpdate customerStatusUpdate = new CustomerStatusUpdateBuilder().with(CustomerStatus.GROUP_CANCELLED).build();
 
         PersonnelBO loanOfficer = PersonnelBuilder.anyLoanOfficer();
-        CenterBO existingCenter = new CenterBuilder().withLoanOfficer(loanOfficer).active().build();
+        CenterBO existingCenter = new CenterBuilder().withLoanOfficer(loanOfficer).active().withNumberOfExistingCustomersInOffice(1).build();
         GroupBO existingGroup = new GroupBuilder().pendingApproval().withParentCustomer(existingCenter).withVersion(customerStatusUpdate.getVersionNum()).build();
         ClientBO existingClient = new ClientBuilder().withParentCustomer(existingGroup).pendingApproval().buildForUnitTests();
         existingGroup.addChild(existingClient);
+        UserContext userContext = TestUtils.makeUser();
+        existingGroup.setUserContext(userContext);
+        existingClient.setUserContext(userContext);
+        existingClient.setCustomerDao(customerDao);
 
         // stubbing
         when(configurationPersistence.isGlimEnabled()).thenReturn(false);

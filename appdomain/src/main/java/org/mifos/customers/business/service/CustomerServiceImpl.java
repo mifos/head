@@ -262,6 +262,7 @@ public class CustomerServiceImpl implements CustomerService {
             this.hibernateTransactionHelper.flushSession();
 
             customer.generateGlobalCustomerNumber();
+            customer.generateSearchId();
             this.customerDao.save(customer);
 
             if (customer.getParentCustomer() != null) {
@@ -976,17 +977,15 @@ public class CustomerServiceImpl implements CustomerService {
             if (client.getParentCustomer() != null) {
                 CustomerBO parent = client.getParentCustomer();
                 parent.incrementChildCount();
-                this.customerDao.save(parent);
-                this.hibernateTransactionHelper.flushSession();
-                client.setSearchId(client.getParentCustomer().getSearchId() + "." + client.getParentCustomer().getMaxChildCount());
-            } else {
-                int numberOfCustomersInOfficeAlready = customerDao.retrieveLastSearchIdValueForNonParentCustomersInOffice(client.getOfficeId());
-
-                String searchId = GroupConstants.PREFIX_SEARCH_STRING + ++numberOfCustomersInOfficeAlready;
-                client.setSearchId(searchId);
             }
 
+            this.hibernateTransactionHelper.flushSession();
+            client.generateSearchId();
             this.customerDao.save(client);
+
+            if (client.getParentCustomer() != null) {
+                this.customerDao.save(client.getParentCustomer());
+            }
             this.hibernateTransactionHelper.commitTransaction();
         } catch (ApplicationException e) {
             this.hibernateTransactionHelper.rollbackTransaction();
@@ -1018,22 +1017,14 @@ public class CustomerServiceImpl implements CustomerService {
             }
 
             CustomerBO oldParentOfGroup = group.getParentCustomer();
-
-            String searchId = null;
             if (oldParentOfGroup != null) {
                 oldParentOfGroup.incrementChildCount();
-                searchId = oldParentOfGroup.getSearchId() + "." + oldParentOfGroup.getMaxChildCount();
-            } else {
-                int newSearchIdSuffix = this.customerDao.retrieveLastSearchIdValueForNonParentCustomersInOffice(group.getOfficeId());
-                searchId = GroupConstants.PREFIX_SEARCH_STRING + (newSearchIdSuffix + 1);
-            }
-            group.setSearchId(searchId);
-            group.setUpdateDetails();
-
-            if (oldParentOfGroup != null) {
                 customerDao.save(oldParentOfGroup);
             }
 
+            this.hibernateTransactionHelper.flushSession();
+            group.generateSearchId();
+            group.setUpdateDetails();
             customerDao.save(group);
 
             Set<CustomerBO> clients = group.getChildren();
@@ -1162,10 +1153,6 @@ public class CustomerServiceImpl implements CustomerService {
         try {
             this.hibernateTransactionHelper.startTransaction();
             this.hibernateTransactionHelper.beginAuditLoggingFor(client);
-            int numberOfCustomersInOfficeAlready = customerDao.retrieveLastSearchIdValueForNonParentCustomersInOffice(client.getOffice().getOfficeId());
-
-            String searchId = GroupConstants.PREFIX_SEARCH_STRING + ++numberOfCustomersInOfficeAlready;
-            client.setSearchId(searchId);
 
             client.addCustomerNotes(accountNotesEntity);
 
@@ -1178,10 +1165,12 @@ public class CustomerServiceImpl implements CustomerService {
             client.setPersonnel(loanOfficer);
             client.setParentCustomer(null);
             client.removeGroupMembership();
+            client.generateSearchId();
             this.customerDao.save(client);
             this.hibernateTransactionHelper.commitTransaction();
         } catch (Exception e) {
             this.hibernateTransactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
         } finally {
             this.hibernateTransactionHelper.closeSession();
         }

@@ -47,7 +47,6 @@ public class CenterBuilder {
     private PersonnelBO loanOfficer;
     private UserContext userContext = new UserContext(Locale.getDefault(), Short.valueOf("1"));
     private DateTime mfiJoiningDate = new DateTime();
-    private int numberOfCustomersInOfficeAlready = 0;
     private List<CustomerCustomFieldEntity> customerCustomFields = new ArrayList<CustomerCustomFieldEntity>();
     private Address address = null;
     private String externalId = null;
@@ -60,6 +59,7 @@ public class CenterBuilder {
      */
     private Integer versionNumber = null;
     private DateTime activationDate = new DateMidnight().toDateTime();
+    private int numberOfCustomersInOfficeAlready;
 
     public CenterBO build() {
 
@@ -68,8 +68,9 @@ public class CenterBuilder {
         }
 
         center = CenterBO.createNew(userContext, name, mfiJoiningDate, meeting, loanOfficer, office,
-                numberOfCustomersInOfficeAlready, address, externalId, activationDate);
+                address, externalId, activationDate);
         center.updateCustomerStatus(status);
+        center.setSearchId("1." + numberOfCustomersInOfficeAlready);
 
         if (versionNumber != null) {
             center.setVersionNo(versionNumber);

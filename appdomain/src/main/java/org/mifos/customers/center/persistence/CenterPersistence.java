@@ -126,11 +126,10 @@ public class CenterPersistence extends LegacyGenericDao {
 
         OfficeBO centerOffice = officePersistence.getOffice(template.getOfficeId());
         PersonnelBO loanOfficer = legacyPersonnelDao.getPersonnel(template.getLoanOfficerId());
-        int numberOfCustomersInOfficeAlready = 1;
         MeetingBO meeting = template.getMeeting();
 
         CenterBO center = CenterBO.createNew(userContext, template.getDisplayName(), new DateTime(template.getMfiJoiningDate()), meeting, loanOfficer,
-                centerOffice, numberOfCustomersInOfficeAlready, template.getAddress(), template.getExternalId(), new DateMidnight().toDateTime());
+                centerOffice, template.getAddress(), template.getExternalId(), new DateMidnight().toDateTime());
 
         CustomerDao customerDao = ApplicationContextProvider.getBean(CustomerDao.class);
 
