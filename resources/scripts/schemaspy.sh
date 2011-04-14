@@ -1,7 +1,7 @@
 #!/bin/bash
 set -o errexit
 
-DATABASE_VERSION=`echo 'select max(upgrade_id) from applied_upgrades' | mysql --skip-column-names -u hudson -phudson hudson_mifos_gazelle_trunk`
+DATABASE_VERSION=`echo 'select UNIX_TIMESTAMP(DATEEXECUTED) from DATABASECHANGELOG where ORDEREXECUTED = (select MIN(ORDEREXECUTED) from DATABASECHANGELOG)' | mysql --skip-column-names -u hudson -phudson hudson_mifos_gazelle_trunk`
 tempDir=`mktemp -d`
 outputDir=/var/www/schema/head/$DATABASE_VERSION
 
