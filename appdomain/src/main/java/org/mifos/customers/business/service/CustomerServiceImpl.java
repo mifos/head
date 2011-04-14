@@ -1119,7 +1119,7 @@ public class CustomerServiceImpl implements CustomerService {
         Set<AccountBO> accounts = customer.getAccounts();
         for (AccountBO account : accounts) {
             if (account instanceof LoanBO && lsimEnabled) {
-                System.out.println("");
+                // do not change schedules when LSIm is on for loan accounts
             } else {
                 account.handleChangeInMeetingSchedule(workingDays, orderedUpcomingHolidays);
                 customerDao.save(account);
