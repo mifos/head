@@ -145,13 +145,15 @@ public class CustomerSearchIdGenerationTest {
         // stubbing
         when(configurationPersistence.isGlimEnabled()).thenReturn(false);
         when(customerDao.retrieveLastSearchIdValueForNonParentCustomersInOffice(anyShort())).thenReturn(3);
-
+        existingClient = spy(existingClient);
+        int customer_id = 22;
+        when(existingClient.getCustomerId()).thenReturn(customer_id);
         // exercise test
         assertThat(existingClient.getSearchId(), is("1.1.1.1"));
         customerService.removeGroupMembership(existingClient, loanOfficer, accountNotesEntity, localeId);
 
         // verification
-        assertThat(existingClient.getSearchId(), is("1.4"));
+        assertThat(existingClient.getSearchId(), is("1." + customer_id));
     }
 
     @Test
@@ -161,6 +163,10 @@ public class CustomerSearchIdGenerationTest {
         OfficeBO office1 = new OfficeBuilder().withName("office1").branchOffice().withOfficeId(office1_id).build();
         PersonnelBO loanOfficer = PersonnelBuilder.anyLoanOfficer();
         GroupBO existingGroup = new GroupBuilder().pendingApproval().withLoanOfficer(loanOfficer).buildAsTopOfHierarchy();
+        existingGroup = spy(existingGroup);
+        int customer_id = 22;
+        when(existingGroup.getCustomerId()).thenReturn(customer_id);
+        existingGroup.generateSearchId();
         ClientBO existingClient = new ClientBuilder().pendingApproval().withParentCustomer(existingGroup).buildForUnitTests();
         existingGroup.addChild(existingClient);
         existingGroup.setCustomerDao(customerDao);
@@ -170,14 +176,15 @@ public class CustomerSearchIdGenerationTest {
         // stubbing
         when(customerDao.retrieveLastSearchIdValueForNonParentCustomersInOffice(office1_id)).thenReturn(3);
 
+
         // exercise test
-        assertThat(existingGroup.getSearchId(), is("1.1"));
-        assertThat(existingClient.getSearchId(), is("1.1.1"));
+        assertThat(existingGroup.getSearchId(), is("1." + customer_id));
+        assertThat(existingClient.getSearchId(), is("1." + customer_id + ".1"));
         customerService.transferGroupTo(existingGroup, office1);
 
         // verification
-        assertThat(existingGroup.getSearchId(), is("1.4"));
-        assertThat(existingClient.getSearchId(), is("1.4.1"));
+        assertThat(existingGroup.getSearchId(), is("1." + customer_id));
+        assertThat(existingClient.getSearchId(), is("1." + customer_id + ".1"));
     }
 
     @Test
@@ -188,6 +195,9 @@ public class CustomerSearchIdGenerationTest {
         PersonnelBO loanOfficer = PersonnelBuilder.anyLoanOfficer();
         ClientBO existingClient = new ClientBuilder().pendingApproval().withNoParent().withLoanOfficer(loanOfficer).buildForUnitTests();
         existingClient.setCustomerDao(customerDao);
+        existingClient = spy(existingClient);
+        int customer_id = 22;
+        when(existingClient.getCustomerId()).thenReturn(customer_id);
         existingClient.generateSearchId();
         UserContext userContext = TestUtils.makeUser();
         existingClient.setUserContext(userContext);
@@ -196,11 +206,11 @@ public class CustomerSearchIdGenerationTest {
         when(customerDao.retrieveLastSearchIdValueForNonParentCustomersInOffice(office1_id)).thenReturn(3);
 
         // exercise test
-        assertThat(existingClient.getSearchId(), is("1.1"));
+        assertThat(existingClient.getSearchId(), is("1." + customer_id));
         customerService.transferClientTo(existingClient, office1);
 
         // verification
-        assertThat(existingClient.getSearchId(), is("1.4"));
+        assertThat(existingClient.getSearchId(), is("1." + customer_id));
     }
 
     @Test
