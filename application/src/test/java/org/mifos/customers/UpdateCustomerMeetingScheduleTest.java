@@ -36,14 +36,17 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.calendar.CalendarEvent;
 import org.mifos.calendar.DayOfWeek;
 import org.mifos.customers.business.service.CustomerAccountFactory;
 import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.business.service.CustomerServiceImpl;
+import org.mifos.customers.business.service.MifosConfigurationHelper;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.persistence.CustomerDao;
@@ -89,10 +92,14 @@ public class UpdateCustomerMeetingScheduleTest {
 
     @Mock
     private CustomerAccountFactory customerAccountFactory;
+    
+    @Mock private MifosConfigurationHelper configurationHelper;
 
     // stubbed data
     @Mock
     private CenterBO mockedCenter;
+
+    @Mock private LoanBO loanAccount;
 
     private static MifosCurrency oldDefaultCurrency;
 
@@ -108,11 +115,11 @@ public class UpdateCustomerMeetingScheduleTest {
         Money.setDefaultCurrency(oldDefaultCurrency);
     }
 
-
     @Before
     public void setupAndInjectDependencies() {
         customerService = new CustomerServiceImpl(customerDao, personnelDao, officeDao, holidayDao, hibernateTransaction);
         ((CustomerServiceImpl)customerService).setCustomerAccountFactory(customerAccountFactory);
+        ((CustomerServiceImpl)customerService).setConfigurationHelper(configurationHelper);
     }
 
     @Test(expected = BusinessRuleException.class)
@@ -224,5 +231,36 @@ public class UpdateCustomerMeetingScheduleTest {
         // verification
         assertThat(center.getCustomerMeeting(), is(notNullValue()));
         assertThat(center.getCustomerMeetingValue(), is(notNullValue()));
+    }
+    
+    @Test
+    public void givenLsimIsEnabledShouldNotRegenerateSchedulesForLoanAccountsButShouldRegenerateSchedulesForCustomerAndSavingsAccounts() throws Exception {
+
+        // setup
+        UserContext userContext = TestUtils.makeUser();
+        DateTime mondayTwoWeeksAgo = new DateTime().withDayOfWeek(DayOfWeek.monday()).minusWeeks(2);
+        MeetingBO weeklyMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).withStartDate(mondayTwoWeeksAgo).build();
+        weeklyMeeting.updateDetails(userContext);
+
+        CustomerAccountBuilder accountBuilder = new CustomerAccountBuilder();
+        CenterBO center = new CenterBuilder().active().with(weeklyMeeting).withAccount(accountBuilder).withAccount(this.loanAccount).build();
+        
+        MeetingBO weeklyWednesdayMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).occuringOnA(WeekDay.WEDNESDAY).build();
+        weeklyWednesdayMeeting.updateDetails(userContext);
+
+        // stubbing
+        CalendarEvent calendarEvent = new CalendarEventBuilder().build();
+        when(holidayDao.findCalendarEventsForThisYearAndNext(anyShort())).thenReturn(calendarEvent);
+        when(configurationHelper.isLoanScheduleRepaymentIndependentOfCustomerMeetingEnabled()).thenReturn(true);
+
+        // pre - verification
+        assertThatAllCustomerSchedulesOccuringAfterCurrentInstallmentPeriodFallOnDayOfWeek(center, WeekDay.MONDAY);
+
+        // exercise test
+        customerService.updateCustomerMeetingSchedule(weeklyWednesdayMeeting, center);
+
+        // verification
+        assertThatAllCustomerSchedulesOccuringBeforeOrOnCurrentInstallmentPeriodRemainUnchanged(center, WeekDay.MONDAY);
+        assertThatAllCustomerSchedulesOccuringAfterCurrentInstallmentPeriodFallOnDayOfWeek(center, WeekDay.WEDNESDAY);
     }
 }

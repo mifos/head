@@ -25,6 +25,7 @@ import java.util.Locale;
 
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
+import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
@@ -60,6 +61,8 @@ public class CenterBuilder {
      */
     private Integer versionNumber = null;
     private DateTime activationDate = new DateMidnight().toDateTime();
+    private LoanAccountBuilder loanAccountBuilder;
+    private LoanBO loanAccount;
 
     public CenterBO build() {
 
@@ -80,6 +83,9 @@ public class CenterBuilder {
             center.addAccount(customerAccount);
         }
 
+        if (loanAccount != null) {
+            center.addAccount(loanAccount);
+        }
         return center;
     }
 
@@ -170,6 +176,11 @@ public class CenterBuilder {
 
     public CenterBuilder withActivationDate(DateTime withActivationDate) {
         this.activationDate = withActivationDate;
+        return this;
+    }
+
+    public CenterBuilder withAccount(LoanBO loan) {
+        this.loanAccount = loan;
         return this;
     }
 }

@@ -33,6 +33,7 @@ import org.joda.time.Days;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.exceptions.AccountException;
+import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
@@ -116,6 +117,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Autowired
     private SavingsProductDao savingsProductDao;
+    private MifosConfigurationHelper configurationHelper = new DefaultMifosConfigurationHelper();
 
     @Autowired
     public CustomerServiceImpl(CustomerDao customerDao, PersonnelDao personnelDao, OfficeDao officeDao,
@@ -1112,10 +1114,16 @@ public class CustomerServiceImpl implements CustomerService {
 
     private void handleChangeInMeetingSchedule(CustomerBO customer, final List<Days> workingDays, final List<Holiday> orderedUpcomingHolidays) throws AccountException {
 
+        boolean lsimEnabled = this.configurationHelper.isLoanScheduleRepaymentIndependentOfCustomerMeetingEnabled();
+        
         Set<AccountBO> accounts = customer.getAccounts();
         for (AccountBO account : accounts) {
-            account.handleChangeInMeetingSchedule(workingDays, orderedUpcomingHolidays);
-            customerDao.save(account);
+            if (account instanceof LoanBO && lsimEnabled) {
+                System.out.println("");
+            } else {
+                account.handleChangeInMeetingSchedule(workingDays, orderedUpcomingHolidays);
+                customerDao.save(account);
+            }
         }
 
         for (CustomerBO child : customer.getChildren()) {
@@ -1177,5 +1185,9 @@ public class CustomerServiceImpl implements CustomerService {
         List<AccountBO> activeLoanAccounts = customerDao.findGLIMLoanAccountsApplicableTo(customerToRemoveFromGroup.getCustomerId(), customerWithActiveAccounts.getCustomerId());
 
         return !activeLoanAccounts.isEmpty();
+    }
+    
+    public void setConfigurationHelper(MifosConfigurationHelper configurationHelper) {
+        this.configurationHelper = configurationHelper;
     }
 }
