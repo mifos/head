@@ -112,10 +112,10 @@
     </div>
 </div>
 <br/>
-<p><span class="standout">[@spring.message "createLoanAccount.preview.chargesAppliedHeading" /]</span></p>
 <div class="product-summary">
 	[#assign index = 0]
 	[#list loanScheduleFormBean.applicableFees as defaultFee]
+		[#if index == 0]<p><span class="standout">[@spring.message "createLoanAccount.preview.chargesAppliedHeading" /]</span></p>[/#if]
 	    <div class="row">
 	        <div class="attribute"><span class="standout">${defaultFee.name}</span></div>
 	        <div class="value">
@@ -154,9 +154,11 @@
     [/#list]    
 <!-- end of product summary -->
 </div>
+[#if index > 0]
 <br/>
 <br/>
-<br />
+[/#if]
+<br/>
 <form action="${flowExecutionUrl}" method="post">
 	[@form.submitButton label="widget.form.buttonLabel.editaccountinfo" id="createloanpreview.button.edit" webflowEvent="editAccountDetails" /]
 </form>

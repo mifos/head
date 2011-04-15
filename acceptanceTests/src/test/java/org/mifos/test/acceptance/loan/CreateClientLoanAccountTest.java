@@ -424,7 +424,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         productParams.setOfferingShortName("T99");
         productParams.setMinLoanAmount("1000");
         productParams.setMaxLoanAmount("10000");
-        productParams.setDefaultLoanAmount("5,000");
+        productParams.setDefaultLoanAmount("5000");
         productParams.setCalculateInstallments(SubmitFormParameters.BY_LOAN_CYCLE);
         String[][] cycleInstallments = {
                 {"26", "52", "52"},
