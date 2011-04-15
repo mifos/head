@@ -28,10 +28,15 @@ public class ApplicationConfigurationDto implements Serializable {
 
     private final int digitsAfterDecimalForInterest;
     private final int digitsBeforeDecimalForInterest;
+    private final int digitsAfterDecimalForMonetaryAmounts;
+    private final int digitsBeforeDecimalForMonetaryAmounts;
 
-    public ApplicationConfigurationDto(int digitsAfterDecimalForInterest, int digitsBeforeDecimalForInterest) {
+    public ApplicationConfigurationDto(int digitsAfterDecimalForInterest, int digitsBeforeDecimalForInterest, 
+            int digitsAfterDecimalForMonetaryAmounts, int digitsBeforeDecimalForMonetaryAmounts) {
         this.digitsAfterDecimalForInterest = digitsAfterDecimalForInterest;
         this.digitsBeforeDecimalForInterest = digitsBeforeDecimalForInterest;
+        this.digitsAfterDecimalForMonetaryAmounts = digitsAfterDecimalForMonetaryAmounts;
+        this.digitsBeforeDecimalForMonetaryAmounts = digitsBeforeDecimalForMonetaryAmounts;
     }
 
     public int getDigitsAfterDecimalForInterest() {
@@ -40,5 +45,13 @@ public class ApplicationConfigurationDto implements Serializable {
 
     public int getDigitsBeforeDecimalForInterest() {
         return digitsBeforeDecimalForInterest;
+    }
+    
+    public int getDigitsAfterDecimalForMonetaryAmounts() {
+        return digitsAfterDecimalForMonetaryAmounts;
+    }
+
+    public int getDigitsBeforeDecimalForMonetaryAmounts() {
+        return digitsBeforeDecimalForMonetaryAmounts;
     }
 }

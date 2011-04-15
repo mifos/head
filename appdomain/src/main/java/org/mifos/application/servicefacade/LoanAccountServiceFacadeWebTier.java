@@ -614,8 +614,10 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
             int digitsAfterDecimalForInterest = AccountingRules.getDigitsAfterDecimalForInterest().intValue();
             int digitsBeforeDecimalForInterest = AccountingRules.getDigitsBeforeDecimalForInterest().intValue();
+            int digitsAfterDecimalForMonetaryAmounts = AccountingRules.getDigitsAfterDecimal().intValue();
+            int digitsBeforeDecimalForMonetaryAmounts = AccountingRules.getDigitsBeforeDecimal().intValue();
             
-            ApplicationConfigurationDto appConfig = new ApplicationConfigurationDto(digitsAfterDecimalForInterest, digitsBeforeDecimalForInterest);
+            ApplicationConfigurationDto appConfig = new ApplicationConfigurationDto(digitsAfterDecimalForInterest, digitsBeforeDecimalForInterest, digitsAfterDecimalForMonetaryAmounts, digitsBeforeDecimalForMonetaryAmounts);
 
             return new LoanCreationLoanDetailsDto(isRepaymentIndependentOfMeetingEnabled, loanOfferingMeetingDto,
                     customer.getCustomerMeetingValue().toDto(), loanPurposes, productDto, gracePeriodInInstallments, customerDetailDto, loanProductDtos,

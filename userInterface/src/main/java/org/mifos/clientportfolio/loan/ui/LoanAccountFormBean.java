@@ -65,7 +65,7 @@ public class LoanAccountFormBean implements Serializable {
     private Integer productId;
 
     // custom validation
-    private Number amount;
+    private Double amount;
     private Number minAllowedAmount;
     private Number maxAllowedAmount;
     private Number interestRate;
@@ -127,6 +127,8 @@ public class LoanAccountFormBean implements Serializable {
     // validation of interest field
     private int digitsBeforeDecimalForInterest;
     private int digitsAfterDecimalForInterest;
+    private int digitsBeforeDecimalForMonetaryAmounts;
+    private int digitsAfterDecimalForMonetaryAmounts;
 
     public void validateEditAccountDetailsStep(ValidationContext context) {
         validateEnterAccountDetailsStep(context);
@@ -224,21 +226,45 @@ public class LoanAccountFormBean implements Serializable {
             }
         }
         
+        if (this.amount != null) {
+            int places = getNumberOfDecimalPlace(this.amount.doubleValue());
+            if (places > this.digitsAfterDecimalForMonetaryAmounts) {
+                String defaultErrorMessage = "The number of digits after the decimal separator exceeds the allowed number.";
+                rejectInterestRateFieldValue(errors, defaultErrorMessage,
+                        "loanAccountFormBean.amount.digitsAfterDecimal.invalid",
+                        new Object[] { this.digitsAfterDecimalForMonetaryAmounts });
+            }
+            
+            int digitsBefore = getNumberDigitsBeforeDecimalPlace(this.amount.doubleValue());
+            if (digitsBefore > this.digitsBeforeDecimalForMonetaryAmounts) {
+                String defaultErrorMessage = "The number of digits before the decimal separator exceeds the allowed number.";
+                rejectInterestRateFieldValue(errors, defaultErrorMessage,
+                        "loanAccountFormBean.amount.digitsBeforeDecimal.invalid",
+                        new Object[] { this.digitsBeforeDecimalForMonetaryAmounts});
+            }
+        }
+        
         if (this.interestRate == null || exceedsMinOrMax(this.interestRate, this.minAllowedInterestRate, this.maxAllowedInterestRate)) {
             String defaultErrorMessage = "Please specify valid Interest rate.";
             rejectInterestRateField(errors, defaultErrorMessage);
         }
         
-        int places = getNumberOfDecimalPlace(this.interestRate.doubleValue());
-        if (places > this.digitsAfterDecimalForInterest) {
-            String defaultErrorMessage = "The number of digits after the decimal separator exceeds the allowed number.";
-            rejectInterestRateFieldValue(errors, defaultErrorMessage, "loanAccountFormBean.digitsAfterDecimalForInterest.invalid", new Object[] {this.digitsAfterDecimalForInterest});
-        }
-        
-        int digitsBefore = getNumberDigitsBeforeDecimalPlace(this.interestRate.doubleValue());
-        if (digitsBefore > this.digitsBeforeDecimalForInterest) {
-            String defaultErrorMessage = "The number of digits before the decimal separator exceeds the allowed number.";
-            rejectInterestRateFieldValue(errors, defaultErrorMessage, "loanAccountFormBean.digitsBeforeDecimalForInterest.invalid", new Object[] {this.digitsBeforeDecimalForInterest});
+        if (this.interestRate != null) {
+            int places = getNumberOfDecimalPlace(this.interestRate.doubleValue());
+            if (places > this.digitsAfterDecimalForInterest) {
+                String defaultErrorMessage = "The number of digits after the decimal separator exceeds the allowed number.";
+                rejectInterestRateFieldValue(errors, defaultErrorMessage,
+                        "loanAccountFormBean.digitsAfterDecimalForInterest.invalid",
+                        new Object[] { this.digitsAfterDecimalForInterest });
+            }
+
+            int digitsBefore = getNumberDigitsBeforeDecimalPlace(this.interestRate.doubleValue());
+            if (digitsBefore > this.digitsBeforeDecimalForInterest) {
+                String defaultErrorMessage = "The number of digits before the decimal separator exceeds the allowed number.";
+                rejectInterestRateFieldValue(errors, defaultErrorMessage,
+                        "loanAccountFormBean.digitsBeforeDecimalForInterest.invalid",
+                        new Object[] { this.digitsBeforeDecimalForInterest });
+            }
         }
         
         if (this.numberOfInstallments == null || exceedsMinOrMax(this.numberOfInstallments, this.minNumberOfInstallments, this.maxNumberOfInstallments)) {
@@ -519,11 +545,11 @@ public class LoanAccountFormBean implements Serializable {
 		this.productId = productId;
 	}
 
-	public Number getAmount() {
+	public Double getAmount() {
 		return amount;
 	}
 
-	public void setAmount(Number amount) {
+	public void setAmount(Double amount) {
 		this.amount = amount;
 	}
 
@@ -892,5 +918,29 @@ public class LoanAccountFormBean implements Serializable {
 
     public void setDigitsBeforeDecimalForInterest(int digitsBeforeDecimalForInterest) {
         this.digitsBeforeDecimalForInterest = digitsBeforeDecimalForInterest;
+    }
+    
+    public int getDigitsAfterDecimalForMonetaryAmounts() {
+        return digitsAfterDecimalForMonetaryAmounts;
+    }
+
+    public void setDigitsAfterDecimalForMonetaryAmounts(int digitsAfterDecimalForMonetaryAmounts) {
+        this.digitsAfterDecimalForMonetaryAmounts = digitsAfterDecimalForMonetaryAmounts;
+    }
+    
+    public int getDigitsBeforeDecimalForMonetaryAmounts() {
+        return digitsBeforeDecimalForMonetaryAmounts;
+    }
+
+    public void setDigitsBeforeDecimalForMonetaryAmounts(int digitsBeforeDecimalForMonetaryAmounts) {
+        this.digitsBeforeDecimalForMonetaryAmounts = digitsBeforeDecimalForMonetaryAmounts;
+    }
+    
+    public String getNumberFormatForMonetaryAmounts() {
+        String numberFormat = "0.";
+        for(int i=0; i<this.digitsAfterDecimalForMonetaryAmounts; i++) {
+            numberFormat += "#";
+        }
+        return numberFormat;
     }
 }

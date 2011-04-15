@@ -59,6 +59,7 @@ $(function() {
 [@form.errors "loanScheduleFormBean.*"/]
 [@form.errors "cashFlowSummaryFormBean.*"/]
 
+[#setting number_format=loanAccountFormBean.numberFormatForMonetaryAmounts]
 <div class="product-summary">
 	<div class="row">
 	    <div class="attribute"><span class="standout">[@spring.message "selectProduct.accountOwnerName"/]</span></div>
@@ -66,7 +67,7 @@ $(function() {
 	</div>
 	<div class="row">
 	    <div class="attribute"><span class="standout">[@spring.message "reviewInstallments.loanAmount"/]</span></div>
-	    <div class="value"><span id="schedulepreview.text.loanamount">${loanScheduleReferenceData.loanAmount?string("0.#")}</span></div>
+	    <div class="value"><span id="schedulepreview.text.loanamount">${loanAccountFormBean.amount?string.number}</span></div>
 	</div>
 	<div class="row">
 	    <div class="attribute"><span class="standout">[@spring.message "reviewInstallments.disbursmentDate"/]</span></div>
@@ -170,16 +171,16 @@ $(function() {
 			[#else]
 				[#if loanProductReferenceData.compareCashflowEnabled]
 					[@spring.bind "cashFlowSummaryFormBean.installments[${ind}]"/]
-					<td><input type="text" name="installments[${ind}]" size="10" value="${cashFlowSummaryFormBean.installments[ind]?date?string.medium}" id="installment.dueDate.${ind}" disabled=disabled /></td>
+					<td>${cashFlowSummaryFormBean.installments[ind]?date?string.medium}</td>
 				[#else]
 					[@spring.bind "loanScheduleFormBean.installments[${ind}]"/]
-					<td><input type="text" name="installments[${ind}]" size="10" value="${loanScheduleFormBean.installments[ind]?date?string.medium}" id="installment.dueDate.${ind}" disabled=disabled /></td>
+					<td>${loanScheduleFormBean.installments[ind]?date?string.medium}</td>
 				[/#if]
 			[/#if]
-			<td>${row.principal?string.currency}</td>
-			<td>${row.interest?string.currency}</td>
-			<td>${row.fees?string.currency}</td>
-			<td>${row.total?string.currency}</td>
+			<td>${row.principal?string.number}</td>
+			<td>${row.interest?string.number}</td>
+			<td>${row.fees?string.number}</td>
+			<td>${row.total?string.number}</td>
 		</tr>
 		[#assign ind = ind + 1]
 		[/#list]

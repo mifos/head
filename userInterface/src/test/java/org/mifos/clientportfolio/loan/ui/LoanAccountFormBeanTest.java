@@ -58,7 +58,7 @@ public class LoanAccountFormBeanTest {
         loanAccountFormBean.setPurposeOfLoanMandatory(false);
         loanAccountFormBean.setSourceOfFundsMandatory(false);
         
-        loanAccountFormBean.setAmount(Integer.valueOf(1000));
+        loanAccountFormBean.setAmount(Double.valueOf("1000.0"));
         loanAccountFormBean.setMinAllowedAmount(Integer.valueOf(400));
         loanAccountFormBean.setMaxAllowedAmount(Integer.valueOf(20000));
         
@@ -67,6 +67,8 @@ public class LoanAccountFormBeanTest {
         loanAccountFormBean.setMaxAllowedInterestRate(Double.valueOf(20.0));
         loanAccountFormBean.setDigitsBeforeDecimalForInterest(10);
         loanAccountFormBean.setDigitsAfterDecimalForInterest(5);
+        loanAccountFormBean.setDigitsBeforeDecimalForMonetaryAmounts(14);
+        loanAccountFormBean.setDigitsAfterDecimalForMonetaryAmounts(1);
         
         loanAccountFormBean.setDisbursementDateDD(24);
         loanAccountFormBean.setDisbursementDateMM(02);
@@ -86,7 +88,7 @@ public class LoanAccountFormBeanTest {
     public void shouldContainValidationMessageOnAmountFieldWhenAmountViolatesAllowedRange() {
 
         // setup
-        loanAccountFormBean.setAmount(Integer.valueOf(0));
+        loanAccountFormBean.setAmount(Double.valueOf("0.0"));
         
         // exercise test
         loanAccountFormBean.validateEnterAccountDetailsStep(context);

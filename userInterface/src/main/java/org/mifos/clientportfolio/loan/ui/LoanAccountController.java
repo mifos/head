@@ -100,6 +100,8 @@ public class LoanAccountController {
 
     	formBean.setDigitsBeforeDecimalForInterest(dto.getAppConfig().getDigitsBeforeDecimalForInterest());
     	formBean.setDigitsAfterDecimalForInterest(dto.getAppConfig().getDigitsAfterDecimalForInterest());
+    	formBean.setDigitsBeforeDecimalForMonetaryAmounts(dto.getAppConfig().getDigitsBeforeDecimalForMonetaryAmounts());
+    	formBean.setDigitsAfterDecimalForMonetaryAmounts(dto.getAppConfig().getDigitsAfterDecimalForMonetaryAmounts());
     	
     	formBean.setProductId(productId);
     	formBean.setCustomerId(dto.getCustomerDetailDto().getCustomerId());
@@ -145,7 +147,7 @@ public class LoanAccountController {
     	    formBean.setClientLoanPurposeId(new Integer[clientData.size()]);
 
     	} else {
-    	    formBean.setAmount(dto.getDefaultLoanAmount());
+    	    formBean.setAmount(Double.valueOf(dto.getDefaultLoanAmount().toPlainString()));
     	}
 
     	formBean.setMinAllowedAmount(dto.getMinLoanAmount());
