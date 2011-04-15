@@ -65,6 +65,8 @@ public class LoanAccountFormBeanTest {
         loanAccountFormBean.setInterestRate(Double.valueOf(10.0));
         loanAccountFormBean.setMinAllowedInterestRate(Double.valueOf(1.0));
         loanAccountFormBean.setMaxAllowedInterestRate(Double.valueOf(20.0));
+        loanAccountFormBean.setDigitsBeforeDecimalForInterest(10);
+        loanAccountFormBean.setDigitsAfterDecimalForInterest(5);
         
         loanAccountFormBean.setDisbursementDateDD(24);
         loanAccountFormBean.setDisbursementDateMM(02);
