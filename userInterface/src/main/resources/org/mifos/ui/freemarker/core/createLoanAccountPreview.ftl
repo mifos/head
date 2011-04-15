@@ -56,10 +56,11 @@
     </div>
 </div>
 <br/>
+[#setting number_format=loanAccountFormBean.numberFormatForMonetaryAmounts]
 <div class="product-summary">
     <div class="row">
         <div class="attribute">[@spring.message "createLoanAccount.amount"/]</div>
-        <div class="value"><span id="createloanpreview.text.loanamount">${loanScheduleReferenceData.loanAmount?string("0.#")}</span> <span id="createloan.allowedamounttext">([@spring.message "createLoanAccount.allowedAmount"/] ${loanProductReferenceData.minLoanAmount?string("0.#")} - ${loanProductReferenceData.maxLoanAmount?string("0.#")})</span></div>
+        <div class="value"><span id="createloanpreview.text.loanamount">${loanAccountFormBean.amount?string.number}</span> <span id="createloan.allowedamounttext">([@spring.message "createLoanAccount.allowedAmount"/] ${loanProductReferenceData.minLoanAmount?string.number} - ${loanProductReferenceData.maxLoanAmount?string.number})</span></div>
     </div>
     <div class="row">
         <div class="attribute">[@spring.message "createLoanAccount.interestRate"/]</div>
@@ -162,30 +163,34 @@
 <br />
 
 <h1><span class="standout">[@spring.message "reviewInstallments.heading" /]</span></h1>
-<table border="0">
-	<tbody>
+<table style="margin-bottom: 15px;">
+		<thead>
 		<tr>
-			<th>[@spring.message "reviewInstallments.installmentHeading" /]</th>
-			<th>[@spring.message "reviewInstallments.dueDateHeading" /]</th>
-			<th>[@spring.message "reviewInstallments.principalHeading" /]</th>
-			<th>[@spring.message "reviewInstallments.interestHeading" /]</th>
-			<th>[@spring.message "reviewInstallments.feesHeading" /]</th>
-			<th>[@spring.message "reviewInstallments.totalHeading" /]</th>
+			<th style="border-top: 1px solid grey;">[@spring.message "reviewInstallments.installmentHeading" /]</th>
+			<th style="border-top: 1px solid grey;">[@spring.message "reviewInstallments.dueDateHeading" /]</th>
+			<th style="border-top: 1px solid grey;">[@spring.message "reviewInstallments.principalHeading" /]</th>
+			<th style="border-top: 1px solid grey;">[@spring.message "reviewInstallments.interestHeading" /]</th>
+			<th style="border-top: 1px solid grey;">[@spring.message "reviewInstallments.feesHeading" /]</th>
+			<th style="border-top: 1px solid grey;">[@spring.message "reviewInstallments.totalHeading" /]</th>
 		</tr>
+		</thead>
+		<tbody>
 		[#list loanScheduleReferenceData.installments as row]
 		<tr>
-			<td>${row.installmentNumber?string.number}</td>
-			<td>${row.dueDate?date?string.medium}</td>
-			<td>${row.principal?string.currency}</td>
-			<td>${row.interest?string.currency}</td>
-			<td>${row.fees?string.currency}</td>
-			<td>${row.total?string.currency}</td>
+			<td style="border-top: 1px solid grey;">${row.installmentNumber?string.number}</td>
+			<td style="border-top: 1px solid grey;">${row.dueDate?date?string.medium}</td>
+			<td style="border-top: 1px solid grey;">${row.principal?string.number}</td>
+			<td style="border-top: 1px solid grey;">${row.interest?string.number}</td>
+			<td style="border-top: 1px solid grey;">${row.fees?string.number}</td>
+			<td style="border-top: 1px solid grey;">${row.total?string.number}</td>
 		</tr>
 		[/#list]
-	</tbody>
+		</tbody>
 </table>
 
 [#if loanAccountQuestionGroupFormBean.questionGroups?size > 0]
+<br/>
+<br/>
     [@questionnaire.preview loanAccountQuestionGroupFormBean.questionGroups /]
     <form action="${flowExecutionUrl}" method="post">
     	[@form.submitButton label="widget.form.buttonLabel.editquestiongroupinfo" id="continuecreateloanaccount.button.preview" webflowEvent="editQuestionGroups" /]
