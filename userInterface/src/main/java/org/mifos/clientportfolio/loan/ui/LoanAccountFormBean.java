@@ -937,10 +937,10 @@ public class LoanAccountFormBean implements Serializable {
     }
     
     public String getNumberFormatForMonetaryAmounts() {
-        String numberFormat = "0.";
+        StringBuilder numberFormat = new StringBuilder("0.");
         for(int i=0; i<this.digitsAfterDecimalForMonetaryAmounts; i++) {
-            numberFormat += "#";
+            numberFormat.append("#");
         }
-        return numberFormat;
+        return numberFormat.toString();
     }
 }
