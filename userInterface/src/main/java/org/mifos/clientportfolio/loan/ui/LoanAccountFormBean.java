@@ -146,14 +146,10 @@ public class LoanAccountFormBean implements Serializable {
     
     public static int getNumberDigitsBeforeDecimalPlace(Double value) {
         //For whole numbers like 0
-        if (Math.round(value) == value) return 0;
+        Long rounded = Math.round(value);
 
-        final String s = Double.toString(value);
-        final int index = s.indexOf('.');
-        if (index-1 <= 0) {
-           return 0;
-        }
-        return index-1;
+        final String s = BigDecimal.valueOf(rounded).toPlainString();
+        return s.length();
     }
 
     
