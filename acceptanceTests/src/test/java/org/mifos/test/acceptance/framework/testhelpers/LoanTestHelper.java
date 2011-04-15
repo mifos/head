@@ -82,11 +82,13 @@ import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
 import org.mifos.test.acceptance.loanproduct.LoanProductTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
+import org.springframework.format.number.NumberFormatter;
 import org.testng.Assert;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Holds methods common to most loan tests.
@@ -779,7 +781,10 @@ public class LoanTestHelper {
             .navigateToClientsAndAccountsPage()
             .navigateToCreateLoanAccountUsingLeftMenu()
             .searchAndNavigateToCreateLoanAccountPage(searchParams);
-        String loanAmount = createLoanAccountEntryPage.getLoanAmount();
+        
+        Double loanAmountDouble = Double.valueOf(createLoanAccountEntryPage.getLoanAmount());
+        
+        String loanAmount = new NumberFormatter().print(loanAmountDouble, Locale.getDefault());
         CreateLoanAccountReviewInstallmentPage createLoanAccountReviewInstallmentPage = createLoanAccountEntryPage.clickContinue();
         createLoanAccountReviewInstallmentPage = createLoanAccountReviewInstallmentPage.verifyPage();
         createLoanAccountReviewInstallmentPage.verifyLoanAmount(loanAmount);

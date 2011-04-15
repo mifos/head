@@ -144,43 +144,43 @@ $(function() {
 <form action="${flowExecutionUrl}" method="post" class="two-columns">
 [/#if]
 <h1><span class="standout">[@spring.message "reviewInstallments.heading" /]</span></h1>
-<table id="installments">
+<table id="installments" style="margin-bottom: 15px;">
 	<thead>
 		<tr>
-			<th>[@spring.message "reviewInstallments.installmentHeading" /]</th>
-			<th>[@spring.message "reviewInstallments.dueDateHeading" /]</th>
-			<th>[@spring.message "reviewInstallments.principalHeading" /]</th>
-			<th>[@spring.message "reviewInstallments.interestHeading" /]</th>
-			<th>[@spring.message "reviewInstallments.feesHeading" /]</th>
-			<th>[@spring.message "reviewInstallments.totalHeading" /]</th>
+			<th style="border-top: 1px solid grey;">[@spring.message "reviewInstallments.installmentHeading" /]</th>
+			<th style="border-top: 1px solid grey;">[@spring.message "reviewInstallments.dueDateHeading" /]</th>
+			<th style="border-top: 1px solid grey;">[@spring.message "reviewInstallments.principalHeading" /]</th>
+			<th style="border-top: 1px solid grey;">[@spring.message "reviewInstallments.interestHeading" /]</th>
+			<th style="border-top: 1px solid grey;">[@spring.message "reviewInstallments.feesHeading" /]</th>
+			<th style="border-top: 1px solid grey;">[@spring.message "reviewInstallments.totalHeading" /]</th>
 		</tr>
 	</thead>
 	<tbody>
 		[#assign ind = 0]
 		[#list loanScheduleReferenceData.installments as row]
 		<tr>
-			<td>${row.installmentNumber?string.number}</td>
+			<td style="border-top: 1px solid grey;">${row.installmentNumber?string.number}</td>
 			[#if loanProductReferenceData.variableInstallmentsAllowed]
 				[#if loanProductReferenceData.compareCashflowEnabled]
 					[@spring.bind "cashFlowSummaryFormBean.installments[${ind}]"/]
-					<td><input type="text" name="installments[${ind}]" size="10" value="${cashFlowSummaryFormBean.installments[ind]?date?string.medium}" id="installment.dueDate.${ind}" class="date-pick" /></td>
+					<td style="border-top: 1px solid grey;"><input type="text" name="installments[${ind}]" size="10" value="${cashFlowSummaryFormBean.installments[ind]?date?string.medium}" id="installment.dueDate.${ind}" class="date-pick" /></td>
 				[#else]
 					[@spring.bind "loanScheduleFormBean.installments[${ind}]"/]
-					<td><input type="text" name="installments[${ind}]" size="10" value="${loanScheduleFormBean.installments[ind]?date?string.medium}" id="installment.dueDate.${ind}" class="date-pick" /></td>
+					<td style="border-top: 1px solid grey;"><input type="text" name="installments[${ind}]" size="10" value="${loanScheduleFormBean.installments[ind]?date?string.medium}" id="installment.dueDate.${ind}" class="date-pick" /></td>
 				[/#if]
 			[#else]
 				[#if loanProductReferenceData.compareCashflowEnabled]
 					[@spring.bind "cashFlowSummaryFormBean.installments[${ind}]"/]
-					<td>${cashFlowSummaryFormBean.installments[ind]?date?string.medium}</td>
+					<td style="border-top: 1px solid grey;">${cashFlowSummaryFormBean.installments[ind]?date?string.medium}</td>
 				[#else]
 					[@spring.bind "loanScheduleFormBean.installments[${ind}]"/]
-					<td>${loanScheduleFormBean.installments[ind]?date?string.medium}</td>
+					<td style="border-top: 1px solid grey;">${loanScheduleFormBean.installments[ind]?date?string.medium}</td>
 				[/#if]
 			[/#if]
-			<td>${row.principal?string.number}</td>
-			<td>${row.interest?string.number}</td>
-			<td>${row.fees?string.number}</td>
-			<td>${row.total?string.number}</td>
+			<td style="border-top: 1px solid grey;">${row.principal?string.number}</td>
+			<td style="border-top: 1px solid grey;">${row.interest?string.number}</td>
+			<td style="border-top: 1px solid grey;">${row.fees?string.number}</td>
+			<td style="border-top: 1px solid grey;">${row.total?string.number}</td>
 		</tr>
 		[#assign ind = ind + 1]
 		[/#list]
