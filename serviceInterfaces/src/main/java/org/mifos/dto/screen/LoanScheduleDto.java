@@ -37,12 +37,14 @@ public class LoanScheduleDto implements Serializable {
     
     private final LocalDate disbursementDate;
     private final List<LoanCreationInstallmentDto> installments;
+    private final Integer graceType;
 
     public LoanScheduleDto(String accountOwner, Double loanAmount, LocalDate disbursementDate,
-            List<LoanCreationInstallmentDto> installments) {
+            Integer graceType, List<LoanCreationInstallmentDto> installments) {
         this.accountOwner = accountOwner;
         this.loanAmount = loanAmount;
         this.disbursementDate = disbursementDate;
+        this.graceType = graceType;
         this.installments = installments;
     }
 
@@ -56,6 +58,10 @@ public class LoanScheduleDto implements Serializable {
 
     public Date getDisbursementDate() {
         return this.disbursementDate.toDateMidnight().toDate();
+    }
+    
+    public Integer getGraceType() {
+        return graceType;
     }
 
     public List<LoanCreationInstallmentDto> getInstallments() {

@@ -763,7 +763,8 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             installments.add(installment);
         }
 
-        return new LoanScheduleDto(customer.getDisplayName(), Double.valueOf(createLoanSchedule.getLoanAmount().doubleValue()), createLoanSchedule.getDisbursementDate(), installments);
+        return new LoanScheduleDto(customer.getDisplayName(), Double.valueOf(createLoanSchedule.getLoanAmount().doubleValue()), 
+                createLoanSchedule.getDisbursementDate(), loanProduct.getGraceType().getValue().intValue(), installments);
     }
 
     /**

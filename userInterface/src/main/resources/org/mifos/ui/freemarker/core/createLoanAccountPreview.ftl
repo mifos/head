@@ -54,6 +54,18 @@
         <div class="attribute">[@spring.message "productSummary.freqOfInstallments"/]</div>
         <div class="value">${loanProductReferenceData.loanOfferingMeetingDetail.meetingDetailsDto.every}&nbsp;${loanProductReferenceData.loanOfferingMeetingDetail.meetingDetailsDto.recurrenceName}</div>
     </div>
+    <div class="row">
+        <div class="attribute">[@spring.message "productSummary.gracePeriodtype"/]</div>
+        [#if loanScheduleReferenceData.graceType == 1]
+        <div class="value">[@spring.message "productSummary.gracePeriod.none"/]</div>
+        [/#if]
+        [#if loanScheduleReferenceData.graceType == 2]
+        <div class="value">[@spring.message "productSummary.gracePeriod.allrepayments"/]</div>
+        [/#if]
+        [#if loanScheduleReferenceData.graceType == 3]
+        <div class="value">[@spring.message "productSummary.gracePeriod.principalonly"/]</div>
+        [/#if]
+    </div>
 </div>
 <br/>
 [#setting number_format=loanAccountFormBean.numberFormatForMonetaryAmounts]
