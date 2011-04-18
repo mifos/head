@@ -39,7 +39,10 @@ public class AnyScheduledEventLoanInstallmentGenerator implements LoanInstallmen
 
             holidays = holidayDao.findAllHolidaysFromDateAndNext(officeId, startFromMeetingDate.toString());
 
-            final int occurrences = numberOfInstallments + gracePeriodDuration;
+            int occurrences = numberOfInstallments;
+            if (graceType == GraceType.GRACEONALLREPAYMENTS) {
+                occurrences += gracePeriodDuration;
+            }
 
             ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, holidays);
 
@@ -49,19 +52,22 @@ public class AnyScheduledEventLoanInstallmentGenerator implements LoanInstallmen
                 dueDates.add(installmentDate.toDate());
             }
 
-            installmentDates = createInstallmentDates(gracePeriodDuration, dueDates);
+            installmentDates = createInstallmentDates(dueDates);
+            if (graceType == GraceType.GRACEONALLREPAYMENTS) {
+                removeInstallmentsNeedNotPay(gracePeriodDuration, installmentDates);
+            }
         }
 		
 		return installmentDates;
 	}
 	
-    private List<InstallmentDate> createInstallmentDates(final int installmentToSkip, final List<Date> dueDates) {
+    private List<InstallmentDate> createInstallmentDates(final List<Date> dueDates) {
         List<InstallmentDate> installmentDates = new ArrayList<InstallmentDate>();
         int installmentId = 1;
         for (Date date : dueDates) {
             installmentDates.add(new InstallmentDate((short) installmentId++, date));
         }
-        removeInstallmentsNeedNotPay(installmentToSkip, installmentDates);
+
         return installmentDates;
     }
 
