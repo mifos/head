@@ -191,21 +191,23 @@ $(function() {
 <br />
 <h1><span class="standout">[@spring.message "cashflow.summary.heading" /]</span></h1>
 <table>
+	<thead>
+	<tr>
+		<th style="border-top: 1px solid grey;">[@spring.message "cashflow.summary.column.months" /]</th>
+		<th style="border-top: 1px solid grey;">[@spring.message "cashflow.summary.column.cumulative" /]</th>
+		<th style="border-top: 1px solid grey;">[@spring.message "cashflow.summary.column.installmentpermonth" /]</th>
+		<th style="border-top: 1px solid grey;">[@spring.message "cashflow.summary.column.installmentpermonthpercentage" /]</th>
+		<th style="border-top: 1px solid grey;">[@spring.message "cashflow.summary.column.notes" /]</th>
+	</tr>
+	</thead>
 	<tbody>
-		<tr>
-			<th>[@spring.message "cashflow.summary.column.months" /]</th>
-			<th>[@spring.message "cashflow.summary.column.cumulative" /]</th>
-			<th>[@spring.message "cashflow.summary.column.installmentpermonth" /]</th>
-			<th>[@spring.message "cashflow.summary.column.installmentpermonthpercentage" /]</th>
-			<th>[@spring.message "cashflow.summary.column.notes" /]</th>
-		</tr>
 		[#list cashflowSummaryDetails as row]
 		<tr>
-			<td>${row.month} ${row.year}</td>
-			<td>${row.cumulativeCashFlow}</td>
-			<td>${row.diffCumulativeCashflowAndInstallment}</td>
-			<td>${row.diffCumulativeCashflowAndInstallmentPercent}</td>
-			<td>${row.notes}</td>
+			<td style="border-top: 1px solid grey; width: 100px;">${row.month} ${row.year}</td>
+			<td style="border-top: 1px solid grey; width: 100px;">${row.cumulativeCashFlow}</td>
+			<td style="border-top: 1px solid grey; width: 100px;">${row.diffCumulativeCashflowAndInstallment}</td>
+			<td style="border-top: 1px solid grey; width: 100px;">${row.diffCumulativeCashflowAndInstallmentPercent}</td>
+			<td style="border-top: 1px solid grey;">${row.notes}</td>
 		</tr>
 		[/#list]
 	</tbody>
