@@ -39,6 +39,10 @@ import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.hibernate.SessionFactory;
+import org.hibernate.connection.ConnectionProvider;
+import org.hibernate.engine.SessionFactoryImplementor;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.components.batchjobs.exceptions.TaskSystemException;
 import org.mifos.framework.util.ConfigurationLocator;
 import org.mifos.framework.util.DateTimeService;
@@ -75,6 +79,7 @@ import org.springframework.batch.support.transaction.ResourcelessTransactionMana
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 import org.springframework.scheduling.quartz.JobDetailBean;
+import org.springframework.orm.hibernate3.LocalDataSourceConnectionProvider;
 import org.springframework.orm.hibernate3.SessionFactoryUtils;
 import org.springframework.core.task.SyncTaskExecutor;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
