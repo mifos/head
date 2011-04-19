@@ -340,8 +340,9 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         String error = "The loan could not be disbursed as " + multipleAccParameters1.getLoanProduct() + " and " + multipleAccParameters2.getLoanProduct() + " are not allowed to co-exist";
         String[] clients = new String[1];
         clients[0] = "MemberWeekly Group";
+        String firstRepaymentDate = "21-Mar-2011";
 
-        CreateLoanAccountsSuccessPage createLoanAccountsSuccessPage = loanTestHelper.createMultipleLoanAccountsWithMixedRestricedPoducts(multipleAccParameters1, multipleAccParameters2, disburseParams, clients);
+        CreateLoanAccountsSuccessPage createLoanAccountsSuccessPage = loanTestHelper.createMultipleLoanAccountsWithMixedRestricedPoducts(multipleAccParameters1, multipleAccParameters2, disburseParams, clients, firstRepaymentDate);
         List<String> accountNumbers = createLoanAccountsSuccessPage.verifyAndGetLoanAccountNumbers(clients.length);
         LoanAccountPage loanAccountPage = createLoanAccountsSuccessPage.selectLoansAndNavigateToLoanAccountPage(0);
 
