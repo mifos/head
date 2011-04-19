@@ -34,7 +34,11 @@ public class ScheduledEventLoanDisbursementStrategyImpl implements LoanDisbursem
 
     @Override
     public LocalDate findClosestMatchingDateFromAndInclusiveOf(LocalDate fromAndInclusiveOf) {
-        return new LocalDate(scheduledEvent.nearestMatchingDateBeginningAt(fromAndInclusiveOf.minusDays(1).toDateMidnight().toDateTime()));
+        LocalDate nearestMatchingDate = new LocalDate(scheduledEvent.nearestMatchingDateBeginningAt(fromAndInclusiveOf.minusDays(1).toDateMidnight().toDateTime()));
+        if (nearestMatchingDate.isBefore(new LocalDate())) {
+            nearestMatchingDate = new LocalDate(scheduledEvent.nearestMatchingDateBeginningAt(fromAndInclusiveOf.toDateMidnight().toDateTime()));
+        }
+        return nearestMatchingDate;
     }
 
     @Override
