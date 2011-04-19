@@ -373,4 +373,7 @@
     <!--  Accepted Payment Type resources -->
     <message-resources key="acceptedPaymentTypeUIResources"
                        parameter="org.mifos.config.localizedResources.AcceptedPaymentTypeUIResources"/>
+
+    <!-- messages for SpringMVC/FTL user interface -->
+    <message-resources key="messages" parameter="org.mifos.ui.localizedProperties.messages"/>
 </struts-config>

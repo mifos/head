@@ -20,16 +20,23 @@
 
 package org.mifos.framework.struts.tags;
 
+import static org.mockito.Mockito.when;
+
 import java.util.Collections;
 import java.util.Map;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
-import org.testng.annotations.Test;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mifos.application.master.MessageLookup;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
-@Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
-public class MifosSelectTest extends TestCase {
+@RunWith(MockitoJUnitRunner.class)
+public class MifosSelectTest {
+    @Mock
+    MessageLookup mockMessageLookup;
 
     private static final String INTRODUCTORY_STYLES_AND_SCRIPT = " <STYLE> " + ".ttip {border:1px solid black;"
             + "font-size:12px;" + "layer-background-color:lightyellow;" + "background-color:lightyellow}  "
@@ -37,6 +44,7 @@ public class MifosSelectTest extends TestCase {
             + "<link rel=\"stylesheet\" type=\"text/css\" " + "href=\"pages/framework/css/tooltip.css\" "
             + "title=\"MyCSS\"/>";
 
+    @Test
     public void testGettersAndSetters() {
         MifosSelect mifosSelect = new MifosSelect();
         mifosSelect.setId("id");
@@ -66,9 +74,13 @@ public class MifosSelectTest extends TestCase {
        Assert.assertEquals("newlabel", mifosSelect.getLabel());
     }
 
+    @Test
     public void testRenderEmpty() throws Exception {
-        String output = new MifosSelect().render(Collections.EMPTY_LIST, Collections.EMPTY_LIST);
-        // TestUtils.assertWellFormedFragment(output);
+        MifosSelect select = new MifosSelect();
+        select.setMessageLookup(mockMessageLookup);
+        when(mockMessageLookup.lookup("add")).thenReturn("Add");
+        when(mockMessageLookup.lookup("remove")).thenReturn("Remove");
+        String output = select.render(Collections.EMPTY_LIST, Collections.EMPTY_LIST);
        Assert.assertEquals(INTRODUCTORY_STYLES_AND_SCRIPT + "<table >" + "<tr> " + "<td>" + selectTheItem(true) + "</td>"
                 + "<td>" + "<table width=\"50%\" border=\"0\" " + "cellspacing=\"0\" cellpadding=\"3\"> " + "<tr>"
                 + "<td align=\"center\">" + "<INPUT  name=\"MoveRight\" type=\"button\" value=\"Add >>\" "
@@ -93,11 +105,13 @@ public class MifosSelectTest extends TestCase {
                 + (leftSelect ? "name=\"LeftSelect\" " : "") + "size=\"5\">" + "</SELECT> ";
     }
 
+    @Test
     public void testHelperEmpty() throws Exception {
         Map<?, ?> map = new MifosSelect().helper(Collections.EMPTY_LIST);
        Assert.assertEquals(null, map);
     }
 
+    @Test
     public void testHelperSameClass() throws Exception {
         MifosSelect select = new MifosSelect();
         select.setProperty1("propertyOne");
@@ -108,6 +122,7 @@ public class MifosSelectTest extends TestCase {
        Assert.assertEquals("Acorn", map.get(5));
     }
 
+    @Test
     public void testHelperPrivate() throws Exception {
         MifosSelect select = new MifosSelect();
         select.setProperty1("propertyOne");
@@ -118,6 +133,7 @@ public class MifosSelectTest extends TestCase {
         } catch (NoSuchMethodException e){}
         }
 
+    @Test
     public void testHelperParent() throws Exception {
         MifosSelect select = new MifosSelect();
         select.setProperty1("parentPropertyOne");

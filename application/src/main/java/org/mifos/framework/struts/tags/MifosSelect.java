@@ -32,6 +32,7 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import org.apache.struts.taglib.TagUtils;
+import org.mifos.application.master.MessageLookup;
 
 /**
  * This class is mifos Select tag which renders the tag on the screen User
@@ -325,7 +326,7 @@ public class MifosSelect extends BodyTagSupport {
         return super.doEndTag();
     }
 
-    String render(Collection inColl, Collection outColl) {
+    String render(Collection inColl, Collection outColl) throws JspException {
         StringBuffer html = new StringBuffer();
         Map<Object, Object> inMap;
         Map<Object, Object> outMap;
@@ -418,7 +419,7 @@ public class MifosSelect extends BodyTagSupport {
     /**
      * Function to Initialize the members of the MifosSelect class
      */
-    private void init() {
+    private void init() throws JspException {
         if (getAddButtonName() == null) {
             rawbutton[0].setName("MoveRight");
             rawbutton[0].setId(getInput() + ".button.add");
@@ -450,12 +451,34 @@ public class MifosSelect extends BodyTagSupport {
             rawselect[0].setMultiple(getSize());
             rawselect[1].setMultiple(getSize());
         }
-        rawbutton[1].setValue("<< Remove"); // FIXME: untranslatable
+        rawbutton[0].setValue(getLabelAdd() + " >>");
+        rawbutton[1].setValue("<< " + getLabelRemove());
         rawbutton[1].setId(getInput() + ".button.remove");
         rawbutton[0].setOnclick("moveOptions(this.form." + rawselect[0].getName() + "," + "this.form."
                 + rawselect[1].getName() + ")");
         rawbutton[1].setOnclick("moveOptions(this.form." + rawselect[1].getName() + "," + "this.form."
                 + rawselect[0].getName() + ")");
+    }
+
+    private String getLabelAdd() throws JspException {
+        return getMessageLookup().lookup("add");
+    }
+
+    private String getLabelRemove() throws JspException {
+        return getMessageLookup().lookup("remove");
+    }
+
+    MessageLookup messageLookup;
+
+    private MessageLookup getMessageLookup() {
+        if (null == messageLookup) {
+            messageLookup = MessageLookup.getInstance();
+        }
+        return messageLookup;
+    }
+
+    public void setMessageLookup(MessageLookup messageLookup) {
+        this.messageLookup = messageLookup;
     }
 
     Map helper(Collection coll) throws SecurityException, NoSuchMethodException, IllegalArgumentException,
