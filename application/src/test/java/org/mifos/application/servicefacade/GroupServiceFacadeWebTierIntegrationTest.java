@@ -148,7 +148,7 @@ public class GroupServiceFacadeWebTierIntegrationTest extends MifosIntegrationTe
         // verification
         ClientRules.setCenterHierarchyExists(centerHierarchyExistsOriginal);
         GroupBO group = customerDao.findGroupBySystemId(newlyCreatedGroupDetails.getGlobalCustNum());
-        Assert.assertThat(group.getSearchId(), is("1.1"));
+        Assert.assertThat(group.getSearchId(), is("1." + group.getCustomerId()));
     }
 
     private void createOfficeHierarchyUnderHeadOffice(OfficeBO headOffice) {
