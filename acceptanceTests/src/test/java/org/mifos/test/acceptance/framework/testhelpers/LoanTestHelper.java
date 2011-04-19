@@ -736,7 +736,9 @@ public class LoanTestHelper {
     }
 
 
-    public CreateLoanAccountsSuccessPage createMultipleLoanAccountsWithMixedRestricedPoducts(CreateMultipleLoanAccountSelectParameters multipleAccParameters1, CreateMultipleLoanAccountSelectParameters multipleAccParameters2, DisburseLoanParameters disburseParams, String[] clients) {
+    public CreateLoanAccountsSuccessPage createMultipleLoanAccountsWithMixedRestricedPoducts(CreateMultipleLoanAccountSelectParameters multipleAccParameters1,
+                                                                                             CreateMultipleLoanAccountSelectParameters multipleAccParameters2,
+                                                                                             DisburseLoanParameters disburseParams, String[] clients, String firstRepaymentDate) {
         navigationHelper.navigateToAdminPage()
             .navigateToDefineProductMix()
             .createOneMixAndNavigateToClientsAndAccounts(multipleAccParameters1.getLoanProduct(), multipleAccParameters2.getLoanProduct());
@@ -754,6 +756,9 @@ public class LoanTestHelper {
             loanAccountPage.navigateToDisburseLoan()
                 .submitAndNavigateToDisburseLoanConfirmationPage(disburseParams)
                 .submitAndNavigateToLoanAccountPage();
+            // additional schedule verification due to MIFOS-4943
+            loanAccountPage.navigateToRepaymentSchedulePage();
+            Assert.assertEquals(selenium.getTable("installments.3.1").trim(), firstRepaymentDate);
         }
         loanAccountPage.navigateToClientsAndAccountsUsingHeaderTab();
         return createMultipleLoanAccounts(multipleAccParameters2, clients, "0000-Animal Husbandry");

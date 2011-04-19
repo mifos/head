@@ -1339,6 +1339,36 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                 Date disbursementDate = center.getCustomerAccount().getNextMeetingDate();
                 boolean interestDeductedAtDisbursement = loanProduct.isIntDedDisbursement();
                 boolean isRepaymentIndepOfMeetingEnabled = new ConfigurationBusinessService().isRepaymentIndepOfMeetingEnabled();
+
+                MeetingBO newMeetingForRepaymentDay = null;
+                if (isRepaymentIndepOfMeetingEnabled) {
+                    MeetingBO meeting = center.getCustomerAccount().getMeetingForAccount();
+                    LoanAccountMeetingDto loanAccountMeetingDto = null;
+
+                    if (meeting.isWeekly()) {
+                        loanAccountMeetingDto = new LoanAccountMeetingDto(RecurrenceType.WEEKLY.getValue().toString(),
+                                meeting.getMeetingDetails().getWeekDay().getValue().toString(),
+                                meeting.getMeetingDetails().getRecurAfter().toString(),
+                                null, null, null, null, null, null);
+                    } else if (meeting.isMonthly()) {
+                        if (meeting.isMonthlyOnDate()) {
+                            loanAccountMeetingDto = new LoanAccountMeetingDto(RecurrenceType.MONTHLY.getValue().toString(),
+                                    null, null, "1",
+                                    meeting.getMeetingDetails().getDayNumber().toString(),
+                                    meeting.getMeetingDetails().getRecurAfter().toString(),
+                                    null, null, null);
+                        } else {
+                            loanAccountMeetingDto = new LoanAccountMeetingDto(RecurrenceType.MONTHLY.getValue().toString(),
+                                    null, null, "2", null, null,
+                                    meeting.getMeetingDetails().getWeekDay().getValue().toString(),
+                                    meeting.getMeetingDetails().getRecurAfter().toString(),
+                                    meeting.getMeetingDetails().getWeekRank().getValue().toString());
+                        }
+                    }
+
+                    newMeetingForRepaymentDay = this.createNewMeetingForRepaymentDay(new LocalDate(disbursementDate), loanAccountMeetingDto, client);
+                }
+
                 Double interestRate = loanProduct.getDefInterestRate();
                 Short gracePeriodDuration = loanProduct.getGracePeriodDuration();
 
@@ -1362,7 +1392,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                         disbursementDate, interestDeductedAtDisbursement, interestRate, gracePeriodDuration, fund, defaultFees,
                         customFields, isRedone, maxLoanAmount, minLoanAmount,
                         loanProduct.getMaxInterestRate(), loanProduct.getMinInterestRate(),
-                        maxNoOfInstall, minNoOfInstall, isRepaymentIndepOfMeetingEnabled, null);
+                        maxNoOfInstall, minNoOfInstall, isRepaymentIndepOfMeetingEnabled, newMeetingForRepaymentDay);
                 loan.setBusinessActivityId(loanDetail.getLoanPurpose());
 
                 PersonnelBO loggedInUser = this.personnelDao.findPersonnelById(userContext.getId());

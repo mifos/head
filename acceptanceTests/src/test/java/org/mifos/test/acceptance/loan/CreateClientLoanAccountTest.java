@@ -255,7 +255,6 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
      *
      * @throws Exception
      */
-    @Test(enabled=false) // TODO js - temporarily disabled broken test (blocked by MIFOS-4792)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createLoanAccountsWithRestrictedProductsMix() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
@@ -290,7 +289,6 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
      *
      * @throws Exception
      */
-    @Test(enabled=false) // TODO js - temporarily disabled broken test (blocked by MIFOS-4792)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createMultipleLoanAccountsWithRestrictedProductsMix() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
@@ -318,8 +316,9 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         clients[0] = "Stu1233265941610 Client1233265941610";
         clients[1] = "Stu1233265958456 Client1233265958456";
         clients[2] = "Stu1233265968663 Client1233265968663";
+        String firstRepaymentDate = "27-Jan-2011";
 
-        CreateLoanAccountsSuccessPage createLoanAccountsSuccessPage = loanTestHelper.createMultipleLoanAccountsWithMixedRestricedPoducts(multipleAccParameters1, multipleAccParameters2, disburseParams, clients);
+        CreateLoanAccountsSuccessPage createLoanAccountsSuccessPage = loanTestHelper.createMultipleLoanAccountsWithMixedRestricedPoducts(multipleAccParameters1, multipleAccParameters2, disburseParams, clients, firstRepaymentDate);
         List<String> accountNumbers = createLoanAccountsSuccessPage.verifyAndGetLoanAccountNumbers(clients.length);
         LoanAccountPage loanAccountPage = createLoanAccountsSuccessPage.selectLoansAndNavigateToLoanAccountPage(0);
 
