@@ -78,22 +78,36 @@ public class CashFlowController {
         
         List<MonthlyCashFlowDto> cashflowDtos = new ArrayList<MonthlyCashFlowDto>();
         
-        for (MonthlyCashFlowForm monthlyCashFlowForm : cashFlowForm.getMonthlyCashFlows()) {
-            if(isSameMonthYear(new LocalDate(monthlyCashFlowForm.getDate()), new LocalDate(disbursementDate))) {
-                BigDecimal revenue = monthlyCashFlowForm.getRevenue();
-                monthlyCashFlowForm.setRevenue((revenue == null)? BigDecimal.valueOf(loanAmount) : BigDecimal.valueOf(loanAmount).add(revenue));
-                break;
-            }         
-        }
-        
         for (MonthlyCashFlowForm monthlyCashflowform : cashFlowForm.getMonthlyCashFlows()) {
             
+            BigDecimal monthlyRevenue = monthlyCashflowform.getRevenue();
+            BigDecimal cumulativeCashflow = monthlyCashflowform.getCumulativeCashFlow();
+            if (isSameMonthYear(new LocalDate(monthlyCashflowform.getDate()), new LocalDate(disbursementDate))) {
+                if (monthlyRevenue == null) {
+                    monthlyRevenue = BigDecimal.valueOf(loanAmount);
+                } else {
+                    monthlyRevenue = BigDecimal.valueOf(loanAmount).add(monthlyCashflowform.getRevenue());
+                }
+            }
+            
+            if (isAfterOrOnDisbursementMonthYear(new LocalDate(monthlyCashflowform.getDate()), new LocalDate(disbursementDate))) {
+                if (cumulativeCashflow == null) {
+                    cumulativeCashflow = BigDecimal.valueOf(loanAmount);
+                } else {
+                    cumulativeCashflow = cumulativeCashflow.add(BigDecimal.valueOf(loanAmount));                    
+                }
+            }
+            
             MonthlyCashFlowDto monthlyCashFlow = new MonthlyCashFlowDto(monthlyCashflowform.getDateTime(), 
-                    monthlyCashflowform.getCumulativeCashFlow(), monthlyCashflowform.getNotes(), monthlyCashflowform.getRevenue(), monthlyCashflowform.getExpense());
+                    cumulativeCashflow, monthlyCashflowform.getNotes(), monthlyRevenue, monthlyCashflowform.getExpense());
             cashflowDtos.add(monthlyCashFlow);
         }
         
         return cashflowDtos;
+    }
+
+    private boolean isAfterOrOnDisbursementMonthYear(LocalDate date, LocalDate comparedWith) {
+        return isSameMonthYear(date, comparedWith) || (date.isAfter(comparedWith));
     }
 
     private boolean isSameMonthYear(LocalDate date, LocalDate comparedWith) {
