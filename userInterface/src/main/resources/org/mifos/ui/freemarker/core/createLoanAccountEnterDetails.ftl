@@ -199,48 +199,50 @@
 	    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.week(s)"/]</span>
 	    		<input type="radio" id="loancreationdetails.input.frequencyMonths" name="repaymentFrequency" disabled=disabled/>
 	    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.month(s)"/]</span>
+		    	<div id="week" id="weekDIV" style="margin-left: 306px; margin-bottom: 5px; margin-top: 5px; border: 1px solid grey; padding-left: 4px;">
+		    		<div style="margin-top: 2px; margin-bottom: 2px;">[@spring.message "manageLoanProducts.defineLoanProduct.ifweeks,specifythefollowing" /]</div>
+			        [@spring.message "manageLoanProducts.defineLoanProduct.recurevery" /]
+			        [@form.input path="loanAccountFormBean.repaymentRecursEvery" id="loancreationdetails.input.weekFrequency" attributes="size=3 maxlength=2"/]
+			        <span id="weekLabelMessage">[@spring.message "manageLoanProducts.defineLoanProduct.week(s)" /]</span>
+			        [@form.singleSelectWithPrompt path="loanAccountFormBean.repaymentDayOfWeek" options=loanProductReferenceData.daysOfTheWeekOptions id="weekDay" /]
+		    	</div>
     		</div>
-    		<div id="week" class="row" id="weekDIV">
-		        [@form.label "recursEvery" true][@spring.message "manageLoanProducts.defineLoanProduct.recurevery" /][/@form.label]
-		        [@form.input path="loanAccountFormBean.repaymentRecursEvery" id="loancreationdetails.input.weekFrequency" attributes="size=3 maxlength=2"/]
-		        <span id="weekLabelMessage">[@spring.message "manageLoanProducts.defineLoanProduct.week(s)" /]</span>
-		        [@form.singleSelectWithPrompt path="loanAccountFormBean.repaymentDayOfWeek" options=loanProductReferenceData.daysOfTheWeekOptions id="weekDay" /]
-	    	</div>
     		[#else]
     		<div class="row">
 	    		<input type="radio" id="loancreationdetails.input.frequencyWeeks" name="repaymentFrequency" disabled=disabled />
 	    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.week(s)"/]</span>
 	    		<input type="radio" id="loancreationdetails.input.frequencyMonths" name="repaymentFrequency" checked=checked />
 	    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.month(s)"/]</span>
-	    	</div>
-	    	<div id="monthly" class="row">
-	    		[@form.label "monthlyDayOfMonthOptionSelected" false]&nbsp;[/@form.label]
-	    		[@spring.bind "loanAccountFormBean.montlyOption" /]
-	    		<input type="radio" id="${spring.status.expression}0" name="montlyOption" value="dayOfMonth"
-	    			[#if spring.stringStatusValue == "dayOfMonth"]
-	    				checked="checked"
-	    			[/#if]
-	    		/>
-	    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.dayOfMonthLabel" /]</span>
-	    		[@form.input path="loanAccountFormBean.repaymentDayOfMonth" id="loancreationdetails.input.dayOfMonth" attributes="size=3 maxlength=2"/]
-	    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.ofEvery" /]</span>
-		        [@form.input path="loanAccountFormBean.repaymentRecursEvery" id="recursEvery" attributes="size=3 maxlength=2 disabled=disabled"/]
-		        <span id="monthLabelMessage">[@spring.message "manageLoanProducts.defineLoanProduct.month(s)" /]</span>
-	    	</div>
-	    	<div id="monthlyoption2" class="row">
-	    		[@form.label "monthlyWeekOfMonthOptionSelected" false]&nbsp;[/@form.label]
-	    		[@spring.bind "loanAccountFormBean.montlyOption" /]
-	    		<input type="radio" id="${spring.status.expression}1" name="montlyOption" value="weekOfMonth"
-	    			[#if spring.stringStatusValue == "weekOfMonth"]
-	    				checked="checked"
-	    			[/#if]
-	    		/>
-	    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.weekOfMonthLabel" /]</span>
-	    		[@form.singleSelectWithPrompt path="loanAccountFormBean.repaymentWeekOfMonth" options=loanProductReferenceData.weeksOfTheMonthOptions selectPrompt="selectPrompt" id="monthRank" /]
-	    		[@form.singleSelectWithPrompt path="loanAccountFormBean.repaymentDayOfWeek" options=loanProductReferenceData.daysOfTheWeekOptions selectPrompt="selectPrompt" id="monthWeek"/]
-	    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.ofEvery" /]</span>
-		        [@form.input path="loanAccountFormBean.repaymentRecursEvery" id="recursEvery" attributes="size=3 maxlength=2 disabled=disabled"/]
-		        <span id="monthLabelMessage">[@spring.message "manageLoanProducts.defineLoanProduct.month(s)" /]</span>
+	    		<div id="montlycontainer" style="margin-left: 306px; margin-bottom: 5px; margin-top: 5px; border: 1px solid grey; padding-left: 4px;">
+			    	<div id="monthlyoption1">
+			    		<div style="margin-top: 2px; margin-bottom: 2px;">[@spring.message "manageLoanProducts.defineLoanProduct.ifmonths,specifythefollowing" /]</div>
+			    		[@spring.bind "loanAccountFormBean.montlyOption" /]
+			    		<input type="radio" id="${spring.status.expression}0" name="montlyOption" value="dayOfMonth"
+			    			[#if spring.stringStatusValue == "dayOfMonth"]
+			    				checked="checked"
+			    			[/#if]
+			    		/>
+			    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.dayOfMonthLabel" /]</span>
+			    		[@form.input path="loanAccountFormBean.repaymentDayOfMonth" id="loancreationdetails.input.dayOfMonth" attributes="size=3 maxlength=2"/]
+			    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.ofEvery" /]</span>
+				        [@form.input path="loanAccountFormBean.repaymentRecursEvery" id="recursEvery" attributes="size=3 maxlength=2 disabled=disabled"/]
+				        <span id="monthLabelMessage">[@spring.message "manageLoanProducts.defineLoanProduct.month(s)" /]</span>
+			    	</div>
+			    	<div id="monthlyoption2">
+			    		[@spring.bind "loanAccountFormBean.montlyOption" /]
+			    		<input type="radio" id="${spring.status.expression}1" name="montlyOption" value="weekOfMonth"
+			    			[#if spring.stringStatusValue == "weekOfMonth"]
+			    				checked="checked"
+			    			[/#if]
+			    		/>
+			    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.weekOfMonthLabel" /]</span>
+			    		[@form.singleSelectWithPrompt path="loanAccountFormBean.repaymentWeekOfMonth" options=loanProductReferenceData.weeksOfTheMonthOptions selectPrompt="selectPrompt" id="monthRank" /]
+			    		[@form.singleSelectWithPrompt path="loanAccountFormBean.repaymentDayOfWeek" options=loanProductReferenceData.daysOfTheWeekOptions selectPrompt="selectPrompt" id="monthWeek"/]
+			    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.ofEvery" /]</span>
+				        [@form.input path="loanAccountFormBean.repaymentRecursEvery" id="recursEvery" attributes="size=3 maxlength=2 disabled=disabled"/]
+				        <span id="monthLabelMessage">[@spring.message "manageLoanProducts.defineLoanProduct.month(s)" /]</span>
+			    	</div>
+			    </div>
 	    	</div>
     		[/#if]
     [/#if]
