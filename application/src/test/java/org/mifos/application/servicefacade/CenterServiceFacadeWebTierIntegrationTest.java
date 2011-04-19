@@ -93,7 +93,7 @@ public class CenterServiceFacadeWebTierIntegrationTest extends MifosIntegrationT
 
         // verification
         CenterBO center = customerDao.findCenterBySystemId(newlyCreatedCenterDetails.getGlobalCustNum());
-        Assert.assertThat(center.getSearchId(), is("1.1"));
+        Assert.assertThat(center.getSearchId(), is("1." + center.getCustomerId()));
     }
 
 

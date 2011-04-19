@@ -139,12 +139,12 @@ public class GroupCreationUsingCustomerServiceIntegrationTest extends MifosInteg
         // verification
         assertThat(group.getDisplayName(), is("newGroup"));
         assertThat(group.getAddress().getDisplayAddress(), is("line1, line2, line3"));
-        assertThat(group.getSearchId(), is("1.1.1"));
+        assertThat(group.getSearchId(), is("1." + group.getParentCustomer().getCustomerId() + ".3"));
         assertThat(group.getStatus(), is(CustomerStatus.GROUP_ACTIVE));
         assertThat(group.getGroupPerformanceHistory().getGroup().getCustomerId(), is(group.getCustomerId()));
         assertThat(group.getCustomFields().size(), is(0));
         assertThat(group.getMaxChildCount(), is(0));
-        assertThat(existingCenter.getMaxChildCount(), is(1));
+        assertThat(existingCenter.getMaxChildCount(), is(3));
     }
 
     @Test
@@ -166,7 +166,7 @@ public class GroupCreationUsingCustomerServiceIntegrationTest extends MifosInteg
 
         // verification
         assertThat(group.getDisplayName(), is("group-on-top-of-hierarchy"));
-        assertThat(group.getSearchId(), is("1.1"));
+        assertThat(group.getSearchId(), is("1." + group.getCustomerId()));
         assertThat(group.getStatus(), is(CustomerStatus.GROUP_ACTIVE));
         assertThat(group.getGroupPerformanceHistory().getGroup().getCustomerId(), is(group.getCustomerId()));
         assertThat(group.getCustomFields().size(), is(0));
