@@ -33,7 +33,7 @@ public class MifosTextareaTagTest extends TestCase {
         mifosTextareaTag.setKeyhm("test1");
         mifosTextareaTag.setPropertyExpr("test2");
         StringBuffer inputsForhidden = new StringBuffer();
-        inputsForhidden.append("<input type=\"hidden\" name=\"" + "test1" + "\" value=\"" + "test2" + "\" />");
+        inputsForhidden.append("<input type=\"hidden\" name=\"test1\" value=\"test2\" />");
        Assert.assertEquals(inputsForhidden.toString(), mifosTextareaTag.render());
         assertWellFormedFragment(mifosTextareaTag.render());
     }
