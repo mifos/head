@@ -35,7 +35,7 @@ public class RawButton {
     public RawButton() {
         name = null;
         type = "button";
-        value = "Add >>"; // FIXME: untranslatable
+        value = "Add >>"; // translated in MifosSelect
         disabled = null;
         title = null;
         style = null;
