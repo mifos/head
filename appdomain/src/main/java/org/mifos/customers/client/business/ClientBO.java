@@ -132,9 +132,8 @@ public class ClientBO extends CustomerBO {
                 clientLastName, secondLastName, clientDetailEntity);
 
         client.setParentCustomer(group);
-        group.incrementChildCount();
 
-        client.setSearchId(client.getParentCustomer().getSearchId() + "." + client.getParentCustomer().getMaxChildCount());
+        client.generateSearchId();
         client.updateAddress(address);
         client.setExternalId(externalId);
         client.addNameDetailSet(clientNameDetailEntity);
@@ -169,9 +168,7 @@ public class ClientBO extends CustomerBO {
 
         client.setParentCustomer(null);
 
-        int searchIdCustomerCount = numberOfCustomersInOfficeAlready + 1;
-        final String searchId = GroupConstants.PREFIX_SEARCH_STRING + searchIdCustomerCount;
-        client.setSearchId(searchId);
+        client.generateSearchId();
         client.updateAddress(address);
         client.setExternalId(externalId);
         client.addNameDetailSet(clientNameDetailEntity);
@@ -1222,8 +1219,7 @@ public class ClientBO extends CustomerBO {
         }
 
         this.addGroupMembership();
-        receivingGroup.incrementChildCount();
-        this.setSearchId(receivingGroup.getSearchId() + "." + receivingGroup.getMaxChildCount());
+        this.generateSearchId();
 
         return regenerateClientSchedules;
     }

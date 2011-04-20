@@ -84,7 +84,6 @@ public class GroupBO extends CustomerBO {
         GroupBO group = new GroupBO(userContext, groupName, formedBy, meeting, loanOfficer, office, customerStatus,
                 mfiJoiningDate, activationDate);
 
-        group.childAddedForParent(parentCustomer);
         group.setParentCustomer(parentCustomer);
 
         if (customerStatus.isGroupActive()) {
@@ -92,9 +91,7 @@ public class GroupBO extends CustomerBO {
             group.addCustomerHierarchy(hierarchy);
         }
 
-        String searchId = parentCustomer.getSearchId() + "." + parentCustomer.getMaxChildCount();
-
-        group.setSearchId(searchId);
+        group.generateSearchId();
         group.setExternalId(externalId);
         group.updateAddress(address);
         group.setTrained(trained);
@@ -120,8 +117,7 @@ public class GroupBO extends CustomerBO {
 
         GroupBO group = new GroupBO(userContext, groupName, formedBy, meeting, loanOfficer, office, customerStatus, mfiJoiningDate, activationDate);
 
-        final String searchId = GroupConstants.PREFIX_SEARCH_STRING + (numberOfCustomersInOfficeAlready + 1);
-        group.setSearchId(searchId);
+        group.generateSearchId();
         group.setExternalId(externalId);
         group.updateAddress(address);
         group.setTrained(trained);
@@ -315,22 +311,7 @@ public class GroupBO extends CustomerBO {
     @Deprecated
     private void setValues(final boolean trained, final Date trainedDate) throws CustomerException {
 
-        String searchId = null;
-        if (getParentCustomer() != null) {
-            // for a group that is under a center
-            childAddedForParent(getParentCustomer());
-            searchId = getParentCustomer().getSearchId() + "." + getParentCustomer().getMaxChildCount();
-        } else {
-            // for a group that is under an office/branch
-            try {
-                int newSearchIdSuffix = getCustomerPersistence().getMaxSearchIdSuffix(CustomerLevel.GROUP, getOffice().getOfficeId()) + 1;
-                searchId = GroupConstants.PREFIX_SEARCH_STRING + newSearchIdSuffix;
-            } catch (PersistenceException pe) {
-                throw new CustomerException(pe);
-            }
-        }
-
-        this.setSearchId(searchId);
+        this.generateSearchId();
         this.setTrained(trained);
         if (trained) {
             this.setTrainedDate(trainedDate);
@@ -529,8 +510,7 @@ public class GroupBO extends CustomerBO {
             regenerateGroupSchedules = true;
         }
 
-        receivingCenter.incrementChildCount();
-        this.setSearchId(receivingCenter.getSearchId() + "." + receivingCenter.getMaxChildCount());
+        this.generateSearchId();
 
         return regenerateGroupSchedules;
     }

@@ -216,8 +216,8 @@ public class CustomerSearchIdGenerationTest {
     @Test
     public void transferClientFromGroupToGroupTest() throws Exception {
         final short office1_id = 2;
-        final Integer group1_id = 1;
-        final Integer group2_id = 2;
+        final Integer group1_id = 33;
+        final Integer group2_id = 22;
         final int group2_child_count = 8;
         // setup
         UserContext userContext = TestUtils.makeUser();
@@ -226,15 +226,20 @@ public class CustomerSearchIdGenerationTest {
         GroupBO existingGroup = new GroupBuilder().pendingApproval().withLoanOfficer(loanOfficer).
             with(userContext).buildAsTopOfHierarchy();
         existingGroup = spy(existingGroup);
+        when(existingGroup.getCustomerId()).thenReturn(group1_id);
+        existingGroup.generateSearchId();
         ClientBO existingClient = new ClientBuilder().pendingApproval().withParentCustomer(existingGroup).
             withVersion(1).buildForUnitTests();
         existingGroup.addChild(existingClient);
         existingGroup.setCustomerDao(customerDao);
-        when(existingGroup.getCustomerId()).thenReturn(group1_id);
+
 
         GroupBO existingGroup2 = new GroupBuilder().pendingApproval().withLoanOfficer(loanOfficer).
             with(userContext).withSearchId(group2_child_count).withOffice(office1).buildAsTopOfHierarchy();
         existingGroup2.setCustomerDao(customerDao);
+        existingGroup2 = spy(existingGroup2);
+        when(existingGroup2.getCustomerId()).thenReturn(group2_id);
+        existingGroup2.generateSearchId();
 
         // stubbing
         when(customerDao.retrieveLastSearchIdValueForNonParentCustomersInOffice(office1_id)).thenReturn(3);
@@ -243,14 +248,14 @@ public class CustomerSearchIdGenerationTest {
         when(holidayDao.findCalendarEventsForThisYearAndNext(anyShort())).thenReturn(calendarEvent);
 
         // exercise test
-        assertThat(existingGroup.getSearchId(), is("1.1"));
-        assertThat(existingClient.getSearchId(), is("1.1.1"));
+        assertThat(existingGroup.getSearchId(), is("1." + group1_id));
+        assertThat(existingClient.getSearchId(), is("1." + group1_id + ".1"));
 
         customerService.transferClientTo(userContext, group2_id, "clientid", 1);
 
         // verification
-        assertThat(existingGroup2.getSearchId(), is("1." + (group2_child_count+1)));
-        assertThat(existingClient.getSearchId(), is("1." + (group2_child_count+1) + ".1"));
+        assertThat(existingGroup2.getSearchId(), is("1." + group2_id));
+        assertThat(existingClient.getSearchId(), is("1." + group2_id + "." + (group2_child_count + 1)));
     }
 
 }

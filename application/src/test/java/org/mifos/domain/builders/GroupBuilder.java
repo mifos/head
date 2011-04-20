@@ -84,7 +84,9 @@ public class GroupBuilder {
         DateTime activationDate = new DateTime().toDateMidnight().toDateTime();
         group = GroupBO.createGroupAsTopOfCustomerHierarchy(userContext, name, formedBy, meeting, loanOfficer, office,
                 address, externalId, trained, trainedOn, customerStatus, numberOfChildrenUnderBranch, mfiJoiningDate, activationDate);
-
+        for(int child=0; child < numberOfChildrenUnderBranch; ++child) {
+            group.incrementChildCount();
+        }
         return group;
     }
 
