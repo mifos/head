@@ -268,7 +268,6 @@ public class CustomerServiceImpl implements CustomerService {
             this.customerDao.save(customer);
             this.hibernateTransactionHelper.flushSession();
             if (customer.getParentCustomer() != null) {
-                customer.getParentCustomer().incrementChildCount();
                 this.customerDao.save(customer.getParentCustomer());
             }
 

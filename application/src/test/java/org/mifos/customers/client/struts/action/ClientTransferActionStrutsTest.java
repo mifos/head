@@ -202,13 +202,13 @@ public class ClientTransferActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("parentGroupName", group1.getDisplayName());
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
+        StaticHibernateUtil.flushAndCloseSession();
         verifyForward(ActionForwards.update_success.toString());
         client = TestObjectFactory.getClient(client.getCustomerId());
         group = TestObjectFactory.getGroup(group.getCustomerId());
         group1 = TestObjectFactory.getGroup(group1.getCustomerId());
         center = TestObjectFactory.getCenter(center.getCustomerId());
         Assert.assertEquals(group1.getCustomerId(), client.getParentCustomer().getCustomerId());
-        Assert.assertEquals(1, group1.getMaxChildCount().intValue());
         Assert.assertEquals(center1.getSearchId() + ".1.1", client.getSearchId());
         CustomerHierarchyEntity currentHierarchy = client.getActiveCustomerHierarchy();
         Assert.assertEquals(group1.getCustomerId(), currentHierarchy.getParentCustomer().getCustomerId());
