@@ -45,6 +45,7 @@ public class LoanScheduleFormBean implements Serializable {
     private transient LoanAccountServiceFacade loanAccountServiceFacade;
     
     private List<Date> installments = new ArrayList<Date>();
+    private List<Number> installmentAmounts = new ArrayList<Number>();
     
     // variable installments only for validation purposes
     private boolean variableInstallmentsAllowed;
@@ -57,6 +58,8 @@ public class LoanScheduleFormBean implements Serializable {
     private List<LoanCreationInstallmentDto> variableInstallments = new ArrayList<LoanCreationInstallmentDto>();
 
     private List<FeeDto> applicableFees = new ArrayList<FeeDto>();
+
+    private BigDecimal loanPrincipal;
 
     public LoanScheduleFormBean() {
         // constructor
@@ -74,6 +77,13 @@ public class LoanScheduleFormBean implements Serializable {
                                               .defaultText(fieldError.getDefaultMessage()).args(args.toArray());
         
         messageContext.addMessage(builder.build());
+    }
+    
+    /**
+     * validateXXXX is invoked on transition from state 
+     */
+    public void validateReviewLoanSchedule(ValidationContext context) {
+        validateCalculateAndReviewLoanSchedule(context);
     }
     
     /**
@@ -107,10 +117,33 @@ public class LoanScheduleFormBean implements Serializable {
 
     private void setInstallmentDatesThatMayOfBeingInputed() {
         int index=0;
+        Double cumulativeNewTotal = Double.valueOf("0.0");
         for (LoanCreationInstallmentDto variableInstallment : this.variableInstallments) {
             variableInstallment.setDueDate(new LocalDate(this.installments.get(index)));
+            
+            Double newTotal = this.installmentAmounts.get(index).doubleValue();
+            // adjust principal based on total and interest + fees
+            if (index == this.variableInstallments.size()-1) {
+                // sum up all totals and make final total = loan principal - sum of other totals
+                Double finalInstallmentTotal = this.loanPrincipal.subtract(BigDecimal.valueOf(cumulativeNewTotal)).doubleValue();
+                Double finalInstallmentPrincipal = calculatePrincipalBasedOnNewTotal(variableInstallment, finalInstallmentTotal);
+                variableInstallment.setTotal(finalInstallmentTotal);
+                variableInstallment.setPrincipal(finalInstallmentPrincipal);
+                this.installmentAmounts.set(index, finalInstallmentTotal);
+            } else {
+                variableInstallment.setTotal(newTotal);
+                variableInstallment.setPrincipal(calculatePrincipalBasedOnNewTotal(variableInstallment, newTotal));
+                cumulativeNewTotal += newTotal;
+            }
             index++;
         }
+    }
+
+    private Double calculatePrincipalBasedOnNewTotal(LoanCreationInstallmentDto variableInstallment, Double newTotal) {
+        BigDecimal fees = BigDecimal.valueOf(variableInstallment.getFees());
+        BigDecimal interest = BigDecimal.valueOf(variableInstallment.getInterest());
+        
+        return BigDecimal.valueOf(newTotal).subtract(fees.add(interest)).doubleValue();
     }
 
     public List<Date> getInstallments() {
@@ -183,5 +216,21 @@ public class LoanScheduleFormBean implements Serializable {
 
     public void setApplicableFees(List<FeeDto> applicableFees) {
         this.applicableFees = applicableFees;
+    }
+    
+    public List<Number> getInstallmentAmounts() {
+        return installmentAmounts;
+    }
+
+    public void setInstallmentAmounts(List<Number> installmentAmounts) {
+        this.installmentAmounts = installmentAmounts;
+    }
+    
+    public BigDecimal getLoanPrincipal() {
+        return loanPrincipal;
+    }
+
+    public void setLoanPrincipal(BigDecimal loanPrincipal) {
+        this.loanPrincipal = loanPrincipal;
     }
 }

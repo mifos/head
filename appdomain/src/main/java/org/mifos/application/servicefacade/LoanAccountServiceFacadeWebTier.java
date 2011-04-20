@@ -858,7 +858,8 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
     @Override
     public LoanCreationResultDto createLoan(CreateLoanAccount loanAccountInfo,
-            List<QuestionGroupDetail> questionGroups, LoanAccountCashFlow loanAccountCashFlow, List<Date> loanScheduleInstallmentDates) {
+            List<QuestionGroupDetail> questionGroups, LoanAccountCashFlow loanAccountCashFlow, 
+            List<Date> loanScheduleInstallmentDates, List<Number> installmentPrincipalAmounts) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = toUserContext(user);
@@ -888,6 +889,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         }
 
         LoanSchedule loanSchedule = assembleLoanSchedule(loanAccountDetail.getCustomer(), loanAccountDetail.getLoanProduct(), overridenDetail, configuration, repaymentDayMeeting, userOffice, loanScheduleDates);
+        loanSchedule.modifyPrincipalAmounts(installmentPrincipalAmounts);
 
         return createLoanAccount(loanAccountInfo, questionGroups, loanAccountCashFlow, user, userOffice, loanAccountDetail, overridenDetail, configuration, repaymentDayMeeting, loanSchedule, createdBy, new ArrayList<GroupMemberLoanDetail>());
     }

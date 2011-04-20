@@ -88,11 +88,11 @@ $(function() {
 	</div>
 	<div class="row">
 	    <div class="attribute"><span class="standout">[@spring.message "productSummary.variabeInstallments.minGap"/]</span></div>
-	    <div class="value">${loanProductReferenceData.minGapInDays?string.number}</div>
+	    <div class="value">${loanProductReferenceData.minGapInDays?string.number}<span>&nbsp;[@spring.message "productSummary.variabeInstallments.days"/]</span></div>
 	</div>
 	<div class="row">
 	    <div class="attribute"><span class="standout">[@spring.message "productSummary.variabeInstallments.maxGap"/]</span></div>
-	    <div class="value">${loanProductReferenceData.maxGapInDays?string.number}</div>
+	    <div class="value">${loanProductReferenceData.maxGapInDays?string.number}<span>&nbsp;[@spring.message "productSummary.variabeInstallments.days"/]</span></div>
 	</div>
 [/#if]
 </div>
@@ -180,7 +180,20 @@ $(function() {
 			<td style="border-top: 1px solid grey;">${row.principal?string.number}</td>
 			<td style="border-top: 1px solid grey;">${row.interest?string.number}</td>
 			<td style="border-top: 1px solid grey;">${row.fees?string.number}</td>
-			<td style="border-top: 1px solid grey;">${row.total?string.number}</td>
+			
+			[#if loanProductReferenceData.variableInstallmentsAllowed]
+				[#if loanProductReferenceData.compareCashflowEnabled]
+				[#else]
+					[@spring.bind "loanScheduleFormBean.installmentAmounts[${ind}]"/]
+					[#if ind == loanAccountFormBean.numberOfInstallments - 1]
+					<td style="border-top: 1px solid grey;"><input type="text" name="installmentAmounts[${ind}]" size="10" value="${loanScheduleFormBean.installmentAmounts[ind]?string.number}" disabled="disabled" /></td>
+					[#else]
+					<td style="border-top: 1px solid grey;"><input type="text" name="installmentAmounts[${ind}]" size="10" value="${loanScheduleFormBean.installmentAmounts[ind]?string.number}" /></td>
+					[/#if]
+				[/#if]
+			[#else]
+				<td style="border-top: 1px solid grey;">${row.total?string.number}</td>
+			[/#if]
 		</tr>
 		[#assign ind = ind + 1]
 		[/#list]

@@ -221,10 +221,14 @@ public class LoanAccountController {
         LoanScheduleDto loanSchedule = loanAccountServiceFacade.createLoanSchedule(createLoanAccount);
 
         List<Date> installments = new ArrayList<Date>();
+        List<Number> installmentAmounts = new ArrayList<Number>();
         for (LoanCreationInstallmentDto installment :loanSchedule.getInstallments()) {
             installments.add(installment.getDueDate());
+            installmentAmounts.add(installment.getTotal());
         }
         loanScheduleFormBean.setInstallments(installments);
+        loanScheduleFormBean.setInstallmentAmounts(installmentAmounts);
+        loanScheduleFormBean.setLoanPrincipal(BigDecimal.valueOf(formBean.getAmount()));
 
         // variable installments related
         loanScheduleFormBean.setVariableInstallmentsAllowed(formBean.isVariableInstallmentsAllowed());
@@ -406,11 +410,15 @@ public class LoanAccountController {
 
             if (formBean.isVariableInstallmentsAllowed()) {
                 List<Date> installmentDates = cashFlowSummaryFormBean.getInstallments();
+                List<Number> installmentPrincipalAmounts = new ArrayList<Number>();
                 if (installmentDates.isEmpty()) {
                     installmentDates = loanScheduleFormBean.getInstallments();
+                    installmentPrincipalAmounts = loanScheduleFormBean.getInstallmentAmounts();
                 }
+                // api for creating loan with premade loan schedule
+                
                 loanCreationResultDto = loanAccountServiceFacade.createLoan(loanAccountDetails,
-                        loanAccountQuestionGroupFormBean.getQuestionGroups(), loanAccountCashFlow, installmentDates);
+                        loanAccountQuestionGroupFormBean.getQuestionGroups(), loanAccountCashFlow, installmentDates, installmentPrincipalAmounts);
             } else {
                 loanCreationResultDto = loanAccountServiceFacade.createLoan(loanAccountDetails,
                         loanAccountQuestionGroupFormBean.getQuestionGroups(), loanAccountCashFlow);

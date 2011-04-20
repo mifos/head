@@ -31,11 +31,11 @@ public class LoanCreationInstallmentDto implements Serializable {
 
     private final Integer installmentNumber;
     private LocalDate dueDate;
-    private final Double principal;
+    private Double principal;
     private final Double interest;
     private final Double fees;
     private final Double penalty;
-    private final Double total;
+    private Double total;
 
     public LoanCreationInstallmentDto(Integer installmentNumber, LocalDate dueDate, Double principal, Double interest, Double fees, Double penalty, Double total) {
         this.installmentNumber = installmentNumber;
@@ -75,7 +75,15 @@ public class LoanCreationInstallmentDto implements Serializable {
         return principal;
     }
     
+    public void setPrincipal(Double principal) {
+        this.principal = principal;
+    }
+    
     public Double getTotal() {
         return total;
+    }
+    
+    public void setTotal(Double total) {
+        this.total = total;
     }
 }

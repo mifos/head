@@ -34,6 +34,17 @@ public class LoanSchedule {
         this.roundedLoanSchedules = roundedLoanSchedules;
         this.rawAmount = rawAmount;
     }
+    
+    public void modifyPrincipalAmounts(List<Number> installmentTotalAmounts) {
+        int index = 0;
+        for (LoanScheduleEntity scheduleEntity : this.roundedLoanSchedules) {
+            Money newTotalAmount = new Money(scheduleEntity.getCurrency(), installmentTotalAmounts.get(index).doubleValue());
+            Money feesAndInterest = scheduleEntity.getTotalDueWithoutPrincipal();
+            Money newPrincipalForInstallment = newTotalAmount.subtract(feesAndInterest);
+            scheduleEntity.setPrincipal(newPrincipalForInstallment);
+            index++;
+        }
+    }
 
     public List<LoanScheduleEntity> getRoundedLoanSchedules() {
         return roundedLoanSchedules;
