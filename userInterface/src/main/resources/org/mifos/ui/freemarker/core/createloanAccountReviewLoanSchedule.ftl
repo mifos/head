@@ -29,6 +29,7 @@
 <span id="page.id" title="SchedulePreview"></span>
 
 [#if loanProductReferenceData.variableInstallmentsAllowed]
+<STYLE TYPE="text/css"><!-- @import url(pages/css/jquery/jquery-ui.css); --></STYLE>
 <script type="text/javascript" src="pages/js/jquery/jquery-ui.min.js"></script>
 <script type="text/javascript" src="pages/js/jquery/jquery.datePicker.configuration.js"></script>
 <script type="text/javascript" src="pages/js/jquery/jquery.ui.datepicker.min.js"></script>
@@ -45,7 +46,6 @@ $(document).ready(function() {
     });
   }
 );
-
 $(function() {
 	$.datepicker.setDefaults($.datepicker.regional[""]);
 });
@@ -247,6 +247,10 @@ $(function() {
     </div>
 </form>
 [/#if]
-	
 <br/>
+<style>
+.ui-widget-content {
+ border: 0;
+}
+</style>
 [/@layout.webflow]
