@@ -56,7 +56,8 @@ public class CashFlowSummaryFormBean implements Serializable {
     
     // variable installments
     private List<Date> installments = new ArrayList<Date>();
-    
+    private List<Number> installmentAmounts = new ArrayList<Number>();
+
     // variable installments only for validation purposes
     private boolean variableInstallmentsAllowed;
     private Integer minGapInDays;
@@ -66,14 +67,8 @@ public class CashFlowSummaryFormBean implements Serializable {
     private Date disbursementDate;
     private Integer customerId;
     private List<LoanCreationInstallmentDto> variableInstallments = new ArrayList<LoanCreationInstallmentDto>();
-    
-    public List<Date> getInstallments() {
-        return installments;
-    }
 
-    public void setInstallments(List<Date> installments) {
-        this.installments = installments;
-    }
+    private BigDecimal loanPrincipal;
 
     public CashFlowSummaryFormBean() {
         // constructor
@@ -104,11 +99,8 @@ public class CashFlowSummaryFormBean implements Serializable {
         }
         
         if (this.variableInstallmentsAllowed) {
-            int index=0;
-            for (LoanCreationInstallmentDto variableInstallment : this.variableInstallments) {
-                variableInstallment.setDueDate(new LocalDate(this.installments.get(index)));
-                index++;
-            }
+            recalculatePrincipalBasedOnTotalAmountForEachInstallmentWhileSettingInstallmentDate();
+            
             Errors inputInstallmentsErrors = loanAccountServiceFacade.validateInputInstallments(disbursementDate, minGapInDays, maxGapInDays, minInstallmentAmount, variableInstallments, customerId);
             Errors scheduleErrors = loanAccountServiceFacade.validateInstallmentSchedule(variableInstallments, minInstallmentAmount);
             
@@ -124,6 +116,37 @@ public class CashFlowSummaryFormBean implements Serializable {
                 }
             }
         }
+    }
+    
+    private void recalculatePrincipalBasedOnTotalAmountForEachInstallmentWhileSettingInstallmentDate() {
+        int index=0;
+        Double cumulativeNewTotal = Double.valueOf("0.0");
+        for (LoanCreationInstallmentDto variableInstallment : this.variableInstallments) {
+            variableInstallment.setDueDate(new LocalDate(this.installments.get(index)));
+            
+            Double newTotal = this.installmentAmounts.get(index).doubleValue();
+            // adjust principal based on total and interest + fees
+            if (index == this.variableInstallments.size()-1) {
+                // sum up all totals and make final total = loan principal - sum of other totals
+                Double finalInstallmentTotal = this.loanPrincipal.subtract(BigDecimal.valueOf(cumulativeNewTotal)).doubleValue();
+                Double finalInstallmentPrincipal = calculatePrincipalBasedOnNewTotal(variableInstallment, finalInstallmentTotal);
+                variableInstallment.setTotal(finalInstallmentTotal);
+                variableInstallment.setPrincipal(finalInstallmentPrincipal);
+                this.installmentAmounts.set(index, finalInstallmentTotal);
+            } else {
+                variableInstallment.setTotal(newTotal);
+                variableInstallment.setPrincipal(calculatePrincipalBasedOnNewTotal(variableInstallment, newTotal));
+                cumulativeNewTotal += newTotal;
+            }
+            index++;
+        }
+    }
+    
+    private Double calculatePrincipalBasedOnNewTotal(LoanCreationInstallmentDto variableInstallment, Double newTotal) {
+        BigDecimal fees = BigDecimal.valueOf(variableInstallment.getFees());
+        BigDecimal interest = BigDecimal.valueOf(variableInstallment.getInterest());
+        
+        return BigDecimal.valueOf(newTotal).subtract(fees.add(interest)).doubleValue();
     }
 
     private void addErrorMessageToContext(MessageContext messageContext, ErrorEntry fieldError) {
@@ -242,5 +265,29 @@ public class CashFlowSummaryFormBean implements Serializable {
 
     public void setVariableInstallments(List<LoanCreationInstallmentDto> variableInstallments) {
         this.variableInstallments = variableInstallments;
+    }
+    
+    public List<Number> getInstallmentAmounts() {
+        return installmentAmounts;
+    }
+
+    public void setInstallmentAmounts(List<Number> installmentAmounts) {
+        this.installmentAmounts = installmentAmounts;
+    }
+    
+    public BigDecimal getLoanPrincipal() {
+        return loanPrincipal;
+    }
+
+    public void setLoanPrincipal(BigDecimal loanPrincipal) {
+        this.loanPrincipal = loanPrincipal;
+    }
+
+    public List<Date> getInstallments() {
+        return installments;
+    }
+
+    public void setInstallments(List<Date> installments) {
+        this.installments = installments;
     }
 }

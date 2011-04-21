@@ -320,6 +320,7 @@ public class LoanAccountController {
         Date firstInstallmentDueDate = new Date();
         Date lastInstallmentDueDate = new Date();
         List<Date> installments = new ArrayList<Date>();
+        List<Number> installmentAmounts = new ArrayList<Number>();
         if (!loanScheduleDto.getInstallments().isEmpty()) {
             firstInstallmentDueDate = loanScheduleDto.firstInstallment().toDate();
             lastInstallmentDueDate = loanScheduleDto.lastInstallment().toDate();
@@ -327,9 +328,12 @@ public class LoanAccountController {
             for (LoanCreationInstallmentDto installment : loanScheduleDto.getInstallments()) {
                 totalInstallmentAmount = totalInstallmentAmount.add(BigDecimal.valueOf(installment.getTotal()));
                 installments.add(installment.getDueDate());
+                installmentAmounts.add(installment.getTotal());
             }
         }
         formBean.setInstallments(installments);
+        formBean.setInstallmentAmounts(installmentAmounts);
+        formBean.setLoanPrincipal(loanAmount);
         LoanInstallmentsDto loanInstallmentsDto = new LoanInstallmentsDto(loanAmount, totalInstallmentAmount, firstInstallmentDueDate, lastInstallmentDueDate);
 
         BigDecimal cashFlowTotalBalance = BigDecimal.ZERO;
@@ -410,7 +414,7 @@ public class LoanAccountController {
 
             if (formBean.isVariableInstallmentsAllowed()) {
                 List<Date> installmentDates = cashFlowSummaryFormBean.getInstallments();
-                List<Number> installmentPrincipalAmounts = new ArrayList<Number>();
+                List<Number> installmentPrincipalAmounts = cashFlowSummaryFormBean.getInstallmentAmounts();
                 if (installmentDates.isEmpty()) {
                     installmentDates = loanScheduleFormBean.getInstallments();
                     installmentPrincipalAmounts = loanScheduleFormBean.getInstallmentAmounts();

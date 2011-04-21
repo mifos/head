@@ -93,7 +93,7 @@ public class LoanScheduleFormBean implements Serializable {
         MessageContext messageContext = context.getMessageContext();
         
         if (this.variableInstallmentsAllowed) {
-            setInstallmentDatesThatMayOfBeingInputed();
+            recalculatePrincipalBasedOnTotalAmountForEachInstallmentWhileSettingInstallmentDate();
             Errors inputInstallmentsErrors = loanAccountServiceFacade.validateInputInstallments(disbursementDate, minGapInDays, maxGapInDays, minInstallmentAmount, variableInstallments, customerId);
             Errors scheduleErrors = loanAccountServiceFacade.validateInstallmentSchedule(variableInstallments, minInstallmentAmount);
             
@@ -115,7 +115,7 @@ public class LoanScheduleFormBean implements Serializable {
         }
     }
 
-    private void setInstallmentDatesThatMayOfBeingInputed() {
+    private void recalculatePrincipalBasedOnTotalAmountForEachInstallmentWhileSettingInstallmentDate() {
         int index=0;
         Double cumulativeNewTotal = Double.valueOf("0.0");
         for (LoanCreationInstallmentDto variableInstallment : this.variableInstallments) {
