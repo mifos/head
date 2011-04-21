@@ -47,13 +47,20 @@ public class MifosDaoAuthenticationProvider extends DaoAuthenticationProvider {
         }
 
         String presentedPassword = authentication.getCredentials().toString();
-
-        boolean isPasswordValid = passwordHashing.verifyPassword(presentedPassword, user.getPasswordAsBytes());
+        boolean isPasswordValid;
+        if(user.getPasswordAsBytes()==null){
+        	isPasswordValid = passwordHashing.verifyPasswordBCrypt(presentedPassword, user.getHash());
+        } else {
+        	isPasswordValid = passwordHashing.verifyPassword(presentedPassword, user.getPasswordAsBytes());
+        }
 
         if (!isPasswordValid) {
             throw new BadCredentialsException(messages.getMessage(
                     "AbstractUserDetailsAuthenticationProvider.badCredentials", "Bad credentials"),
                     isIncludeDetailsObject() ? userDetails : null);
+        }
+        else{
+        	
         }
     }
 }

@@ -89,8 +89,9 @@ public class PersonnelBO extends AbstractBusinessObject {
     private Set<PersonnelRoleEntity> personnelRoles;
     private SupportedLocalesEntity preferredLocale;
     private byte[] encryptedPassword;
+    private String hash;
 
-    public PersonnelBO(final PersonnelLevel level, final OfficeBO office, final Integer title, final Short preferredLocale, final String password,
+	public PersonnelBO(final PersonnelLevel level, final OfficeBO office, final Integer title, final Short preferredLocale, final String password,
             final String userName, final String emailId, final List<RoleBO> roles, final List<CustomFieldDto> customFields, final Name name,
             final String governmentIdNumber, final Date dob, final Integer maritalStatus, final Integer gender, final Date dateOfJoiningMFI,
             final Date dateOfJoiningBranch, final Address address, final Short createdBy) {
@@ -120,7 +121,7 @@ public class PersonnelBO extends AbstractBusinessObject {
         this.passwordChanged = Constants.NO;
         this.locked = LockStatus.UNLOCK.getValue();
         this.noOfTries = 0;
-        this.encryptedPassword = getEncryptedPassword(password);
+        this.hash = EncryptionService.getInstance().encryptPasswordBCrypt(password);
         this.status = new PersonnelStatusEntity(PersonnelStatus.ACTIVE);
     }
 
@@ -163,6 +164,14 @@ public class PersonnelBO extends AbstractBusinessObject {
         return "";
     }
 
+    public String getHash() {
+		return hash;
+	}
+
+	public void setHash(String hash) {
+		this.hash = hash;
+	}
+    
     public Set<PersonnelCustomFieldEntity> getCustomFields() {
         return customFields;
     }
@@ -373,12 +382,6 @@ public class PersonnelBO extends AbstractBusinessObject {
         return userGlobalNum;
     }
 
-    private byte[] getEncryptedPassword(final String password) {
-        byte[] encryptedPassword = null;
-        encryptedPassword = EncryptionService.getInstance().createEncryptedPassword(password);
-        return encryptedPassword;
-    }
-
     private void updatePersonnelRoles(final List<RoleBO> roles) {
         this.personnelRoles.clear();
         if (roles != null) {
@@ -446,6 +449,9 @@ public class PersonnelBO extends AbstractBusinessObject {
         if (!isPasswordValid(password)) {
             updateNoOfTries();
         } else {
+        	if(this.getHash()==null){
+        		migratePasswordToBCrypt(password);
+        	}
             resetNoOfTries();
 
             if (isPasswordChanged()) {
@@ -454,10 +460,15 @@ public class PersonnelBO extends AbstractBusinessObject {
             logger.info("Login successful for user=" + this.userName + ", branchID=" + this.office.getGlobalOfficeNum());
         }
     }
+    
+    public void migratePasswordToBCrypt(final String password){
+    	this.hash = EncryptionService.getInstance().encryptPasswordBCrypt(password);
+    	this.encryptedPassword = null;
+    }
 
     public void updatePassword(final String oldPassword, final String newPassword) throws PersonnelException {
-        byte[] encryptedPassword = getEncryptedPassword(oldPassword, newPassword);
-        this.setEncryptedPassword(encryptedPassword);
+        String encryptedPassword = getEncryptedPassword(oldPassword, newPassword);
+        this.setHash(encryptedPassword);
         this.setPasswordChanged(passwordChangedShortValue());
         if (this.getLastLogin() == null) {
             this.setLastLogin(new DateTime().toDate());
@@ -469,8 +480,8 @@ public class PersonnelBO extends AbstractBusinessObject {
     }
 
     public void changePasswordTo(String newPassword, final Short changedByUserId) {
-        byte[] encryptedPassword = getEncryptedPassword(newPassword);
-        this.setEncryptedPassword(encryptedPassword);
+        String encryptedPassword = EncryptionService.getInstance().encryptPasswordBCrypt(newPassword);
+        this.setHash(encryptedPassword);
         this.setPasswordChanged(passwordChangedShortValue());
         if (this.getLastLogin() == null) {
             this.setLastLogin(new DateTime().toDate());
@@ -505,7 +516,13 @@ public class PersonnelBO extends AbstractBusinessObject {
     public boolean isPasswordValid(final String password) throws PersonnelException {
         logger.debug("Checking password valid or not");
         try {
-            return EncryptionService.getInstance().verifyPassword(password, getEncryptedPassword());
+        	boolean verifyReasult;
+        	if(this.getHash()==null){
+        		verifyReasult = EncryptionService.getInstance().verifyPassword(password, getEncryptedPassword());
+        	} else {
+        		verifyReasult = EncryptionService.getInstance().verifyBCryptPassword(password, this.getHash());
+        	}
+        	return verifyReasult;
         } catch (SystemException se) {
             throw new PersonnelException(se);
         }
@@ -523,11 +540,11 @@ public class PersonnelBO extends AbstractBusinessObject {
         return roles;
     }
 
-    private byte[] getEncryptedPassword(final String oldPassword, final String newPassword) throws PersonnelException {
+    private String getEncryptedPassword(final String oldPassword, final String newPassword) throws PersonnelException {
         logger.debug("Matching oldpassword with entered password.");
-        byte[] newEncryptedPassword = null;
+        String newEncryptedPassword = null;
         if (isPasswordValid(oldPassword)) {
-            newEncryptedPassword = getEncryptedPassword(newPassword);
+            newEncryptedPassword = EncryptionService.getInstance().encryptPasswordBCrypt(newPassword);
         } else {
             throw new PersonnelException(INVALIDOLDPASSWORD);
         }
@@ -579,9 +596,8 @@ public class PersonnelBO extends AbstractBusinessObject {
         this.status = personnelStatus;
         this.level = personnelLevel;
 
-        // fix me, use encrpytion service outside of pojo?
         if (StringUtils.isNotBlank(password)) {
-            this.encryptedPassword = getEncryptedPassword(password);
+            this.hash = EncryptionService.getInstance().encryptPasswordBCrypt(password);
         }
 
         updatePersonnelRoles(roles);

@@ -39,6 +39,8 @@
             type="integer" />
         <property name="encryptedPassword" column="password"
             type="binary" access="field" />
+        <property name="hash" column="hash"
+            type="string" access="field" />
         <property name="userName" column="login_name" unique="true"
             type="string" access="field" />
         <property name="emailId" column="email_id" type="string"
