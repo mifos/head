@@ -99,7 +99,62 @@ public class LabelTagUtils {
 
         if (StringUtils.isBlank(message)) {
 
-            message = MessageLookup.getInstance().lookupLabel(key);
+            if (ConfigurationConstants.CENTER.equalsIgnoreCase(key)) {
+                ConfigurableLookupLabelDto lookupLabels = populateConfigurableLookupLabels();
+                message = lookupLabels.getCenter();
+            } else if (ConfigurationConstants.GROUP.equalsIgnoreCase(key)) {
+                ConfigurableLookupLabelDto lookupLabels = populateConfigurableLookupLabels();
+                message = lookupLabels.getGroup();
+            } else if (ConfigurationConstants.CLIENT.equalsIgnoreCase(key)) {
+                ConfigurableLookupLabelDto lookupLabels = populateConfigurableLookupLabels();
+                message = lookupLabels.getClient();
+            } else if (ConfigurationConstants.LOAN.equalsIgnoreCase(key)) {
+                ConfigurableLookupLabelDto lookupLabels = populateConfigurableLookupLabels();
+                message = lookupLabels.getLoans();
+            } else if (ConfigurationConstants.SAVINGS.equalsIgnoreCase(key)) {
+                ConfigurableLookupLabelDto lookupLabels = populateConfigurableLookupLabels();
+                message = lookupLabels.getSavings();
+            } else if ((ConfigurationConstants.INTEREST.equalsIgnoreCase(key))
+                    || (ConfigurationConstants.SERVICE_CHARGE.equalsIgnoreCase(key))) {
+                ConfigurableLookupLabelDto lookupLabels = populateConfigurableLookupLabels();
+                message = lookupLabels.getInterest();
+            } else if (ConfigurationConstants.STATE.equalsIgnoreCase(key)) {
+                ConfigurableLookupLabelDto lookupLabels = populateConfigurableLookupLabels();
+                message = lookupLabels.getState();
+            } else if (ConfigurationConstants.POSTAL_CODE.equalsIgnoreCase(key)) {
+                ConfigurableLookupLabelDto lookupLabels = populateConfigurableLookupLabels();
+                message = lookupLabels.getPostalCode();
+            } else if (ConfigurationConstants.ETHINICITY.equalsIgnoreCase(key)) {
+                ConfigurableLookupLabelDto lookupLabels = populateConfigurableLookupLabels();
+                message = lookupLabels.getEthnicity();
+            } else if (ConfigurationConstants.CITIZENSHIP.equalsIgnoreCase(key)) {
+                ConfigurableLookupLabelDto lookupLabels = populateConfigurableLookupLabels();
+                message = lookupLabels.getCitizenship();
+            } else if (ConfigurationConstants.HANDICAPPED.equalsIgnoreCase(key)) {
+                ConfigurableLookupLabelDto lookupLabels = populateConfigurableLookupLabels();
+                message = lookupLabels.getHandicapped();
+            } else if (ConfigurationConstants.GOVERNMENT_ID.equalsIgnoreCase(key)) {
+                ConfigurableLookupLabelDto lookupLabels = populateConfigurableLookupLabels();
+                message = lookupLabels.getGovtId();
+            } else if (ConfigurationConstants.ADDRESS1.equalsIgnoreCase(key)) {
+                ConfigurableLookupLabelDto lookupLabels = populateConfigurableLookupLabels();
+                message = lookupLabels.getAddress1();
+            } else if (ConfigurationConstants.ADDRESS2.equalsIgnoreCase(key)) {
+                ConfigurableLookupLabelDto lookupLabels = populateConfigurableLookupLabels();
+                message = lookupLabels.getAddress2();
+            } else if (ConfigurationConstants.ADDRESS3.equalsIgnoreCase(key)) {
+                ConfigurableLookupLabelDto lookupLabels = populateConfigurableLookupLabels();
+                message = lookupLabels.getAddress3();
+            } else if (ConfigurationConstants.EXTERNALID.equalsIgnoreCase(key)) {
+                ConfigurableLookupLabelDto lookupLabels = populateConfigurableLookupLabels();
+                message = lookupLabels.getExternalId();
+            } else if (ConfigurationConstants.BULKENTRY.equalsIgnoreCase(key)) {
+                ConfigurableLookupLabelDto lookupLabels = populateConfigurableLookupLabels();
+                message = lookupLabels.getBulkEntry();
+            } else if (ConfigurationConstants.CITY.equalsIgnoreCase(key)) {
+                ConfigurableLookupLabelDto lookupLabels = populateConfigurableLookupLabels();
+                message = lookupLabels.getCity();
+            }
         }
 
         if (StringUtils.isBlank(message)) {
