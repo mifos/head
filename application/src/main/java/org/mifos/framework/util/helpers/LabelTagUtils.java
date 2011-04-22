@@ -98,8 +98,30 @@ public class LabelTagUtils {
         }
 
         if (StringUtils.isBlank(message)) {
-
-            message = MessageLookup.getInstance().lookupLabel(key);
+            String labelKey = key;
+            if (ConfigurationConstants.SERVICE_CHARGE.equalsIgnoreCase(key)) {
+                labelKey = ConfigurationConstants.INTEREST;
+            }
+            if (ConfigurationConstants.CENTER.equalsIgnoreCase(key) ||
+                    ConfigurationConstants.GROUP.equalsIgnoreCase(key) ||
+                    ConfigurationConstants.CLIENT.equalsIgnoreCase(key) ||
+                    ConfigurationConstants.LOAN.equalsIgnoreCase(key) ||
+                    ConfigurationConstants.SAVINGS.equalsIgnoreCase(key) ||
+                    ConfigurationConstants.INTEREST.equalsIgnoreCase(key) ||
+                    ConfigurationConstants.STATE.equalsIgnoreCase(key) ||
+                    ConfigurationConstants.POSTAL_CODE.equalsIgnoreCase(key) ||
+                    ConfigurationConstants.ETHINICITY.equalsIgnoreCase(key) ||
+                    ConfigurationConstants.CITIZENSHIP.equalsIgnoreCase(key) ||
+                    ConfigurationConstants.HANDICAPPED.equalsIgnoreCase(key) ||
+                    ConfigurationConstants.GOVERNMENT_ID.equalsIgnoreCase(key) ||
+                    ConfigurationConstants.ADDRESS1.equalsIgnoreCase(key) ||
+                    ConfigurationConstants.ADDRESS2.equalsIgnoreCase(key) ||
+                    ConfigurationConstants.ADDRESS3.equalsIgnoreCase(key) ||
+                    ConfigurationConstants.EXTERNALID.equalsIgnoreCase(key) ||
+                    ConfigurationConstants.BULKENTRY.equalsIgnoreCase(key) ||
+                    ConfigurationConstants.CITY.equalsIgnoreCase(key)) {
+                message = MessageLookup.getInstance().lookupLabel(labelKey);
+            }
         }
 
         if (StringUtils.isBlank(message)) {
