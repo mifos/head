@@ -154,7 +154,7 @@ public class ClientServiceFacadeWebTierIntegrationTest extends MifosIntegrationT
         // verification
         ClientRules.setCenterHierarchyExists(centerHierarchyExistsOriginal);
         ClientBO client = customerDao.findClientBySystemId(newlyCreatedCustomerDetails.getGlobalCustNum());
-        Assert.assertThat(client.getSearchId(), is("1.1"));
+        Assert.assertThat(client.getSearchId(), is("1." + client.getCustomerId()));
     }
 
     private void createOfficeHierarchyUnderHeadOffice(OfficeBO headOffice) {
