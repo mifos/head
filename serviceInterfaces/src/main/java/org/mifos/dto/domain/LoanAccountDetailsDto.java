@@ -31,7 +31,7 @@ public class LoanAccountDetailsDto implements Serializable {
     private String accountId;
     private String clientId;
     private String clientName;
-    private String govermentId;
+    private String govermentId = "";
     private String loanPurpose;
     private String loanAmount;
     private String businessActivity;

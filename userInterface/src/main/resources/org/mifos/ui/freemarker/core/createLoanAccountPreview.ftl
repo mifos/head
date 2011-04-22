@@ -67,7 +67,36 @@
         [/#if]
     </div>
 </div>
-<br/>
+<br />
+[#if loanProductReferenceData.glimApplicable]
+<table style="margin-bottom: 15px;">
+		<thead>
+		<tr>
+			<th style="border-top: 1px solid grey;">[@spring.message "createLoanAccount.preview.glim.clientIdHeading" /]</th>
+			<th style="border-top: 1px solid grey;">[@spring.message "createLoanAccount.preview.glim.clientNameHeading" /]</th>
+			<th style="border-top: 1px solid grey;">[@spring.message "createLoanAccount.preview.glim.governmentIdHeading" /]</th>
+			<th style="border-top: 1px solid grey;">[@spring.message "createLoanAccount.preview.glim.loanAmountHeading" /]</th>
+			<th style="border-top: 1px solid grey;">[@spring.message "createLoanAccount.preview.glim.loanPurposeHeading" /]</th>
+		</tr>
+		</thead>
+		<tbody>
+		[#assign index = 0]
+    	[#list loanProductReferenceData.clientDetails as clientdata]
+    	[#if loanAccountFormBean.isClientSelected[index]]
+    	<tr>
+    		<td style="border-top: 1px solid grey;">${clientdata.clientId}</td>
+    		<td style="border-top: 1px solid grey;">${clientdata.clientName}</td>
+			<td style="border-top: 1px solid grey;">${clientdata.govermentId}</td>
+			<td style="border-top: 1px solid grey;">${loanAccountFormBean.clientAmount[index]}</td>
+			[#assign purposeId = loanAccountFormBean.clientLoanPurposeId[index]]
+			<td style="border-top: 1px solid grey;">${loanProductReferenceData.getPurposeOfLoan(purposeId)}</td>
+    	</tr>
+    	[/#if]
+    	[#assign index = index + 1]
+    	[/#list]
+		</tbody>
+</table>
+[/#if]
 [#setting number_format=loanAccountFormBean.numberFormatForMonetaryAmounts]
 <div class="product-summary">
     <div class="row">

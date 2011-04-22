@@ -190,6 +190,10 @@ public class LoanCreationLoanDetailsDto implements Serializable {
 	public Map<String, String> getFundOptions() {
 		return fundOptions;
 	}
+	
+	public String getPurposeOfLoan(Integer key) {
+	    return this.purposeOfLoanOptions.get(key.toString());
+	}
 
 	public Map<String, String> getPurposeOfLoanOptions() {
 		return purposeOfLoanOptions;

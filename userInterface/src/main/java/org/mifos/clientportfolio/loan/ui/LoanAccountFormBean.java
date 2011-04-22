@@ -747,6 +747,15 @@ public class LoanAccountFormBean implements Serializable {
         this.clientSelectForGroup = clientSelectForGroup;
     }
     
+    public boolean isClientSelected(Integer index) {
+        Boolean result = this.clientSelectForGroup[index];
+        boolean clientSelected = false;
+        if (result != null) {
+            clientSelected = result.booleanValue();
+        }
+        return clientSelected;
+    }
+    
     public String[] getClientGlobalId() {
         return clientGlobalId;
     }
