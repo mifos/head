@@ -48,7 +48,7 @@ import java.sql.SQLException;
 
 @SuppressWarnings("PMD")
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(singleThreaded = true, groups = {"loan", "acceptance", "ui", "no_db_unit"})
+@Test(singleThreaded = true, groups = {"loan", "acceptance", "ui", "no_db_unit", "smoke"})
 public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
 
     private LoanTestHelper loanTestHelper;
@@ -134,6 +134,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
     }
 
     // http://mifosforge.jira.com/browse/MIFOSTEST-123
+    @Test(enabled=true)
     public void createLoanAccountWithNonMeetingDatesForDisburseAndRepay() throws Exception {
         //Given
         setTime(2011, 02, 24);
@@ -171,6 +172,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
     }
 
     // http://mifosforge.jira.com/browse/MIFOSTEST-121
+    @Test(enabled=true)
     public void createWeeklyLoanAccountWithNonMeetingDatesForDisburseAndRepay() throws Exception {
         //Given
         setTime(2011, 02, 23);
@@ -206,7 +208,8 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
     }
 
     // http://mifosforge.jira.com/browse/MIFOSTEST-124
-    public void VerifyGracePeriodEffectOnLoanSchedule() throws Exception{
+    @Test(enabled=true)
+    public void verifyGracePeriodEffectOnLoanSchedule() throws Exception{
         //Given
         applicationDatabaseOperation.updateLSIM(1);
         DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
