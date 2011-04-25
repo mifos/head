@@ -39,38 +39,19 @@ import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.UserContext;
 
 /**
- * This Util class is a singleton class used by the MifosLabelTag to obtain the
- * Label based on the Locale. The class is also used to determine whether the
- * eleemnt is configurable mandatory and also to obtain the currency of the
- * Locale, if the element is of type currency.
+ * This singleton is used by the MifosLabelTag to look up internationalized messages. This is legacy Struts/JSP code
+ * that will eventually be replaced by SpringMVC/Freemarker code.
  */
 public class LabelTagUtils {
-    /**
-     * The static instance of the class
-     */
     private static LabelTagUtils instance = new LabelTagUtils();
 
-    /**
-     * private constructor to prevent multiple instance creation.
-     */
     private LabelTagUtils() {
     }
 
-    /**
-     * static method to obatin the instance of the class.
-     */
     public static LabelTagUtils getInstance() {
         return instance;
     }
 
-    /**
-     * The method is used to obtain the label associated with the key based on
-     * the Locale.
-     *
-     * @param key
-     *            -- The key used to obtain the Label
-     * @return Label associated with key of the Locale
-     */
     public String getLabel(PageContext pageContext, String bundle, String localeKey, String key, String[] args)
             throws JspException {
         return TagUtils.getInstance().message(pageContext, bundle, localeKey, key, args);
@@ -140,16 +121,6 @@ public class LabelTagUtils {
         return returnVal;
     }
 
-    /**
-     * The method is used to check, if the element associated with the key is
-     * configurable mandatory or not.
-     *
-     * @param key
-     *            -- The key used to determine if the element associated with is
-     *            configurable mandatory or not
-     * @return true if the element associated with the key is configurable
-     *         mandatory
-     */
     @SuppressWarnings("unchecked")
     public boolean isConfigurableMandatory(String key, PageContext pageContext) {
         // TODO get is mandatory or not from the cache.
@@ -161,15 +132,6 @@ public class LabelTagUtils {
         return mandatoryMap.containsKey(key);
     }
 
-    /**
-     * The method is used to check, if the element associated with the key is
-     * hidden or not.
-     *
-     * @param key
-     *            --The key used to determine if the element associated with is
-     *            hidden or not
-     * @return true if the element associated with the key is hidden
-     */
     @SuppressWarnings("unchecked")
     public boolean isHidden(String key, PageContext pageContext) {
         // TODO get is hidden or not from the cache.
@@ -181,15 +143,6 @@ public class LabelTagUtils {
         return hiddenMap.containsKey(key);
     }
 
-    /**
-     * The method is used to check, if the element associated with the key is
-     * confidential or not.
-     *
-     * @param key
-     *            --The key used to determine if the element associated with is
-     *            confidential or not
-     * @return true if the element associated with the key is confidential
-     */
     @SuppressWarnings("unchecked")
     public boolean isConfidential(String key, PageContext pageContext) {
         // TODO get is confidential or not from the cache.
@@ -202,11 +155,8 @@ public class LabelTagUtils {
     }
 
     /**
-     * This helper method returns the User Preferred Locale, if any. Otherwise
-     * it returns default Mifos Locale
-     *
-     * @param pageContext
-     * @return User Preferred Locale
+     * This helper method returns the user-preferred locale as a Java locale ID string. Note: user-preferred locales are
+     * unimplemented.
      */
     public String getUserPreferredLocale(PageContext pageContext) {
         String userPreferredLocale = null;
