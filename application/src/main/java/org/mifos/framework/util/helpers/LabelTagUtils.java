@@ -102,24 +102,24 @@ public class LabelTagUtils {
             if (ConfigurationConstants.SERVICE_CHARGE.equalsIgnoreCase(key)) {
                 labelKey = ConfigurationConstants.INTEREST;
             }
-            if (ConfigurationConstants.CENTER.equalsIgnoreCase(key) ||
-                    ConfigurationConstants.GROUP.equalsIgnoreCase(key) ||
-                    ConfigurationConstants.CLIENT.equalsIgnoreCase(key) ||
-                    ConfigurationConstants.LOAN.equalsIgnoreCase(key) ||
-                    ConfigurationConstants.SAVINGS.equalsIgnoreCase(key) ||
-                    ConfigurationConstants.INTEREST.equalsIgnoreCase(key) ||
-                    ConfigurationConstants.STATE.equalsIgnoreCase(key) ||
-                    ConfigurationConstants.POSTAL_CODE.equalsIgnoreCase(key) ||
-                    ConfigurationConstants.ETHINICITY.equalsIgnoreCase(key) ||
-                    ConfigurationConstants.CITIZENSHIP.equalsIgnoreCase(key) ||
-                    ConfigurationConstants.HANDICAPPED.equalsIgnoreCase(key) ||
-                    ConfigurationConstants.GOVERNMENT_ID.equalsIgnoreCase(key) ||
-                    ConfigurationConstants.ADDRESS1.equalsIgnoreCase(key) ||
-                    ConfigurationConstants.ADDRESS2.equalsIgnoreCase(key) ||
-                    ConfigurationConstants.ADDRESS3.equalsIgnoreCase(key) ||
-                    ConfigurationConstants.EXTERNALID.equalsIgnoreCase(key) ||
-                    ConfigurationConstants.BULKENTRY.equalsIgnoreCase(key) ||
-                    ConfigurationConstants.CITY.equalsIgnoreCase(key)) {
+            if (ConfigurationConstants.CENTER.equalsIgnoreCase(labelKey) ||
+                    ConfigurationConstants.GROUP.equalsIgnoreCase(labelKey) ||
+                    ConfigurationConstants.CLIENT.equalsIgnoreCase(labelKey) ||
+                    ConfigurationConstants.LOAN.equalsIgnoreCase(labelKey) ||
+                    ConfigurationConstants.SAVINGS.equalsIgnoreCase(labelKey) ||
+                    ConfigurationConstants.INTEREST.equalsIgnoreCase(labelKey) ||
+                    ConfigurationConstants.STATE.equalsIgnoreCase(labelKey) ||
+                    ConfigurationConstants.POSTAL_CODE.equalsIgnoreCase(labelKey) ||
+                    ConfigurationConstants.ETHINICITY.equalsIgnoreCase(labelKey) ||
+                    ConfigurationConstants.CITIZENSHIP.equalsIgnoreCase(labelKey) ||
+                    ConfigurationConstants.HANDICAPPED.equalsIgnoreCase(labelKey) ||
+                    ConfigurationConstants.GOVERNMENT_ID.equalsIgnoreCase(labelKey) ||
+                    ConfigurationConstants.ADDRESS1.equalsIgnoreCase(labelKey) ||
+                    ConfigurationConstants.ADDRESS2.equalsIgnoreCase(labelKey) ||
+                    ConfigurationConstants.ADDRESS3.equalsIgnoreCase(labelKey) ||
+                    ConfigurationConstants.EXTERNALID.equalsIgnoreCase(labelKey) ||
+                    ConfigurationConstants.BULKENTRY.equalsIgnoreCase(labelKey) ||
+                    ConfigurationConstants.CITY.equalsIgnoreCase(labelKey)) {
                 message = MessageLookup.getInstance().lookupLabel(labelKey);
             }
         }
