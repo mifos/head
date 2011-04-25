@@ -405,8 +405,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         final String recurMonth = customer.getCustomerMeeting().getMeeting().getMeetingDetails().getRecurAfter().toString();
         final boolean isGroup = customer.isGroup();
         final boolean isGlimEnabled = new ConfigurationPersistence().isGlimEnabled();
+        final boolean isLsimEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
 
-        final List<PrdOfferingDto> loanProductDtos = retrieveActiveLoanProductsApplicableForCustomer(customer);
+        final List<PrdOfferingDto> loanProductDtos = retrieveActiveLoanProductsApplicableForCustomer(customer, isLsimEnabled);
 
         LoanCreationGlimDto loanCreationGlimDto = null;
         List<LoanAccountDetailsDto> clientDetails = new ArrayList<LoanAccountDetailsDto>();
@@ -432,20 +433,22 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                 isGroup, isGlimEnabled, loanCreationGlimDto, clientDetails);
     }
 
-    private List<PrdOfferingDto> retrieveActiveLoanProductsApplicableForCustomer(final CustomerBO customer) {
+    private List<PrdOfferingDto> retrieveActiveLoanProductsApplicableForCustomer(final CustomerBO customer, boolean lsimEnabled) {
 
         final List<LoanOfferingBO> applicableLoanProducts = new ArrayList<LoanOfferingBO>();
 
         final List<LoanOfferingBO> loanOfferings = loanProductDao
                 .findActiveLoanProductsApplicableToCustomerLevel(customer.getCustomerLevel());
 
-        final MeetingBO customerMeeting = customer.getCustomerMeetingValue();
-        for (LoanOfferingBO loanProduct : loanOfferings) {
-            if (MeetingBO.isMeetingMatched(customerMeeting, loanProduct.getLoanOfferingMeetingValue())) {
-                applicableLoanProducts.add(loanProduct);
+        if (!lsimEnabled) {
+            final MeetingBO customerMeeting = customer.getCustomerMeetingValue();
+            for (LoanOfferingBO loanProduct : loanOfferings) {
+                if (MeetingBO.isMeetingMatched(customerMeeting, loanProduct.getLoanOfferingMeetingValue())) {
+                    applicableLoanProducts.add(loanProduct);
+                }
             }
         }
-
+        
         List<PrdOfferingDto> applicationLoanProductDtos = new ArrayList<PrdOfferingDto>();
         for (LoanOfferingBO loanProduct : applicableLoanProducts) {
             applicationLoanProductDtos.add(loanProduct.toDto());
@@ -557,7 +560,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
             Integer gracePeriodInInstallments = loanProduct.getGracePeriodDuration().intValue();
 
-            final List<PrdOfferingDto> loanProductDtos = retrieveActiveLoanProductsApplicableForCustomer(customer);
+            final List<PrdOfferingDto> loanProductDtos = retrieveActiveLoanProductsApplicableForCustomer(customer, isRepaymentIndependentOfMeetingEnabled);
 
             InterestType interestType = InterestType.fromInt(loanProduct.getInterestTypes().getId().intValue());
             InterestTypesEntity productInterestType = this.loanProductDao.findInterestType(interestType);
