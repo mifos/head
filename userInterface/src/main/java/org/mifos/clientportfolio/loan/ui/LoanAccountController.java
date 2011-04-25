@@ -113,14 +113,21 @@ public class LoanAccountController {
 
     	    // use loan product to default meeting details
     	    Integer recursEvery = dto.getLoanOfferingMeetingDetail().getMeetingDetailsDto().getEvery();
-    	    Integer dayOfMonth = dto.getLoanOfferingMeetingDetail().getMeetingDetailsDto().getRecurrenceDetails().getDayNumber();
-    	    Integer weekOfMonth = dto.getLoanOfferingMeetingDetail().getMeetingDetailsDto().getRecurrenceDetails().getWeekOfMonth();
-    	    Integer dayOfWeek = dto.getLoanOfferingMeetingDetail().getMeetingDetailsDto().getRecurrenceDetails().getDayOfWeek();
+            Integer dayOfMonth = dto.getLoanOfferingMeetingDetail().getMeetingDetailsDto().getRecurrenceDetails().getDayNumber();
+            Integer weekOfMonth = dto.getLoanOfferingMeetingDetail().getMeetingDetailsDto().getRecurrenceDetails().getWeekOfMonth();
+            Integer dayOfWeek = dto.getLoanOfferingMeetingDetail().getMeetingDetailsDto().getRecurrenceDetails().getDayOfWeek();    	    
+    	    if (dto.getLoanOfferingMeetingDetail().getMeetingDetailsDto().getRecurrenceTypeId().equals(dto.getCustomerMeetingDetail().getMeetingDetailsDto().getRecurrenceTypeId())) {
+    	        // if customer and product meeting frequencies are the same e.g. weekly or monthly, then default to customer details
+    	        recursEvery = dto.getCustomerMeetingDetail().getMeetingDetailsDto().getEvery();
+                dayOfMonth = dto.getCustomerMeetingDetail().getMeetingDetailsDto().getRecurrenceDetails().getDayNumber();
+                weekOfMonth = dto.getCustomerMeetingDetail().getMeetingDetailsDto().getRecurrenceDetails().getWeekOfMonth();
+                dayOfWeek = dto.getCustomerMeetingDetail().getMeetingDetailsDto().getRecurrenceDetails().getDayOfWeek();
+    	    }
     	    if (dayOfMonth != null && dayOfMonth > 0) {
     	        formBean.setDayOfMonthDetails(dayOfMonth, recursEvery);
-    	    } else if (weekOfMonth != null){
+    	    } else if (weekOfMonth != null && weekOfMonth > 0){
     	        formBean.setWeekOfMonthDetails(weekOfMonth, dayOfWeek, recursEvery);
-    	    } else if (dayOfWeek != null) {
+    	    } else if (dayOfWeek != null && dayOfWeek > 0) {
     	        formBean.setWeeklyDetails(dayOfWeek, recursEvery);
     	    }
     	}
