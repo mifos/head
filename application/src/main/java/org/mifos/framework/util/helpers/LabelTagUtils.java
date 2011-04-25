@@ -21,8 +21,6 @@
 package org.mifos.framework.util.helpers;
 
 import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -33,21 +31,12 @@ import javax.servlet.jsp.PageContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.taglib.TagUtils;
 import org.apache.struts.util.MessageResources;
-import org.mifos.accounts.savings.persistence.GenericDao;
-import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
-import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.application.master.MessageLookup;
-import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.config.Localization;
-import org.mifos.config.persistence.ApplicationConfigurationDao;
-import org.mifos.config.persistence.ApplicationConfigurationDaoHibernate;
 import org.mifos.config.util.helpers.ConfigurationConstants;
-import org.mifos.dto.domain.ConfigurableLookupLabelDto;
 import org.mifos.framework.struts.tags.MifosPropertyMessageResources;
-import org.mifos.framework.util.MessageFilterReloadableResourceBundleMessageSource;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.UserContext;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * This Util class is a singleton class used by the MifosLabelTag to obtain the
