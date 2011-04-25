@@ -137,69 +137,6 @@ public class LabelTagUtils {
         return MessageLookup.getInstance().replaceSubstitutions(message);
     }
 
-    private ConfigurableLookupLabelDto populateConfigurableLookupLabels() {
-        GenericDao genericDao = new GenericDaoHibernate();
-        ApplicationConfigurationDao  applicationConfigurationDao = new ApplicationConfigurationDaoHibernate(genericDao);
-        List<LookUpEntity> lookupEntities = applicationConfigurationDao.findLookupEntities();
-        ConfigurableLookupLabelDto lookupLabels = assembleLookupEntities(lookupEntities);
-        return lookupLabels;
-    }
-
-    private ConfigurableLookupLabelDto assembleLookupEntities(List<LookUpEntity> lookupEntities) {
-
-        ConfigurableLookupLabelDto lookupLabels = new ConfigurableLookupLabelDto();
-
-        for (LookUpEntity entity : lookupEntities) {
-
-            String labelText = MessageLookup.getInstance().lookupLabel(entity.findLabelKey());           
-
-            if (StringUtils.isBlank(labelText)) {
-                labelText = "test-blank";
-            }
-
-            if (entity.getEntityType().equals(ConfigurationConstants.CLIENT)) {
-                lookupLabels.setClient(labelText);
-            } else if (entity.getEntityType().equals(ConfigurationConstants.GROUP)) {
-                lookupLabels.setGroup(labelText);
-            } else if (entity.getEntityType().equals(ConfigurationConstants.CENTER)) {
-                lookupLabels.setCenter(labelText);
-            } else if (entity.getEntityType().equals(ConfigurationConstants.LOAN)) {
-                lookupLabels.setLoans(labelText);
-            } else if (entity.getEntityType().equals(ConfigurationConstants.SAVINGS)) {
-                lookupLabels.setSavings(labelText);
-            } else if (entity.getEntityType().equals(ConfigurationConstants.STATE)) {
-                lookupLabels.setState(labelText);
-            } else if (entity.getEntityType().equals(ConfigurationConstants.POSTAL_CODE)) {
-                lookupLabels.setPostalCode(labelText);
-            } else if (entity.getEntityType().equals(ConfigurationConstants.ETHINICITY)) {
-                lookupLabels.setEthnicity(labelText);
-            } else if (entity.getEntityType().equals(ConfigurationConstants.CITIZENSHIP)) {
-                lookupLabels.setCitizenship(labelText);
-            } else if (entity.getEntityType().equals(ConfigurationConstants.HANDICAPPED)) {
-                lookupLabels.setHandicapped(labelText);
-            } else if (entity.getEntityType().equals(ConfigurationConstants.GOVERNMENT_ID)) {
-                lookupLabels.setGovtId(labelText);
-            } else if (entity.getEntityType().equals(ConfigurationConstants.ADDRESS1)) {
-                lookupLabels.setAddress1(labelText);
-            } else if (entity.getEntityType().equals(ConfigurationConstants.ADDRESS2)) {
-                lookupLabels.setAddress2(labelText);
-            } else if (entity.getEntityType().equals(ConfigurationConstants.ADDRESS3)) {
-                lookupLabels.setAddress3(labelText);
-            } else if (entity.getEntityType().equals(ConfigurationConstants.CITY)) {
-                lookupLabels.setCity(labelText);
-            } else if ((entity.getEntityType().equals(ConfigurationConstants.INTEREST))
-                || (entity.getEntityType().equals(ConfigurationConstants.SERVICE_CHARGE))) {
-                lookupLabels.setInterest(labelText);
-            } else if (entity.getEntityType().equals(ConfigurationConstants.EXTERNALID)) {
-                lookupLabels.setExternalId(labelText);
-            } else if (entity.getEntityType().equals(ConfigurationConstants.BULKENTRY)) {
-                lookupLabels.setBulkEntry(labelText);
-            }
-        }
-
-        return lookupLabels;
-    }
-
     /**
      * Only use is in MifosSelectNew, which doesn't appear to be used.
      */
