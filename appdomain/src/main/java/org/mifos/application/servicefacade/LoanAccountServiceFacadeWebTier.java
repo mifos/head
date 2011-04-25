@@ -118,6 +118,7 @@ import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.clientportfolio.loan.service.CreateLoanSchedule;
+import org.mifos.clientportfolio.loan.service.RecurringSchedule;
 import org.mifos.clientportfolio.newloan.applicationservice.CreateGlimLoanAccount;
 import org.mifos.clientportfolio.newloan.applicationservice.CreateLoanAccount;
 import org.mifos.clientportfolio.newloan.applicationservice.GroupMemberAccountDto;
@@ -435,6 +436,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
     private List<PrdOfferingDto> retrieveActiveLoanProductsApplicableForCustomer(final CustomerBO customer, boolean lsimEnabled) {
 
+        List<PrdOfferingDto> applicationLoanProductDtos = new ArrayList<PrdOfferingDto>();
         final List<LoanOfferingBO> applicableLoanProducts = new ArrayList<LoanOfferingBO>();
 
         final List<LoanOfferingBO> loanOfferings = loanProductDao
@@ -447,11 +449,14 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                     applicableLoanProducts.add(loanProduct);
                 }
             }
-        }
-        
-        List<PrdOfferingDto> applicationLoanProductDtos = new ArrayList<PrdOfferingDto>();
-        for (LoanOfferingBO loanProduct : applicableLoanProducts) {
-            applicationLoanProductDtos.add(loanProduct.toDto());
+            
+            for (LoanOfferingBO loanProduct : applicableLoanProducts) {
+                applicationLoanProductDtos.add(loanProduct.toDto());
+            }
+        } else {
+            for (LoanOfferingBO loanProduct : loanOfferings) {
+                applicationLoanProductDtos.add(loanProduct.toDto());
+            }
         }
 
         return applicationLoanProductDtos;
@@ -721,26 +726,8 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
         MeetingBO loanMeeting = customer.getCustomerMeetingValue();
         if (loanScheduleIndependentOfCustomerMeetingEnabled) {
-            loanMeeting = customer.getCustomerMeetingValue();
-            loanMeeting.getMeetingDetails().setRecurAfter(createLoanSchedule.getEvery().shortValue());
-
-            if (createLoanSchedule.isWeekly()) {
-                WeekDay weekDay = WeekDay.getWeekDay(createLoanSchedule.getDay());
-                loanMeeting.getMeetingDetails().getMeetingRecurrence().setWeekDay(weekDay);
-            }
-
-            if (createLoanSchedule.isMonthlyOnDayOfMonth()) {
-                loanMeeting.getMeetingDetails().getMeetingRecurrence().setDayNumber(createLoanSchedule.getDay().shortValue());
-            }
-
-            if (createLoanSchedule.isMonthlyOnWeekAndDayOfMonth()) {
-                WeekDay weekDay = WeekDay.getWeekDay(createLoanSchedule.getDay());
-                loanMeeting.getMeetingDetails().getMeetingRecurrence().setWeekDay(weekDay);
-                RankOfDay weekOfMonth = RankOfDay.getRankOfDay(createLoanSchedule.getWeek());
-                loanMeeting.getMeetingDetails().getMeetingRecurrence().setRankOfDays(weekOfMonth);
-            }
-
-            loanMeeting.setMeetingStartDate(new Date());
+            loanMeeting = this.createNewMeetingForRepaymentDay(createLoanSchedule.getDisbursementDate(), createLoanSchedule, customer);
+            
             if (loanProduct.isVariableInstallmentsAllowed()) {
                 loanMeeting.setMeetingStartDate(createLoanSchedule.getDisbursementDate().toDateMidnight().toDate());
             }
@@ -882,8 +869,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
         MeetingBO repaymentDayMeeting = loanAccountDetail.getCustomer().getCustomerMeetingValue();
         if (loanScheduleIndependentOfCustomerMeetingEnabled) {
-            final int minDaysInterval = new ConfigurationPersistence().getConfigurationKeyValueInteger(MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY).getValue();
-            repaymentDayMeeting = createNewRepaymentDayMeeting(repaymentDayMeeting, loanAccountInfo, minDaysInterval);
+            repaymentDayMeeting = this.createNewMeetingForRepaymentDay(loanAccountInfo.getDisbursementDate(), loanAccountInfo, loanAccountDetail.getCustomer());
         }
 
         List<DateTime> loanScheduleDates = new ArrayList<DateTime>();
@@ -926,42 +912,6 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         return loanSchedule;
     }
 
-    private MeetingBO createNewRepaymentDayMeeting(MeetingBO customerMeetingValue, CreateLoanAccount loanAccountInfo,
-            int minDaysInterval) {
-
-        MeetingBO newMeetingForRepaymentDay = null;
-        Short recurrenceId = customerMeetingValue.getRecurrenceType().getValue();
-
-        final Date repaymentStartDate = loanAccountInfo.getDisbursementDate().plusDays(minDaysInterval)
-                .toDateMidnight().toDate();
-        final String meetingPlace = customerMeetingValue.getMeetingPlace();
-        try {
-            if (RecurrenceType.WEEKLY.getValue().equals(recurrenceId)) {
-
-                WeekDay weekDay = WeekDay.getWeekDay(loanAccountInfo.getDay());
-
-                newMeetingForRepaymentDay = new MeetingBO(weekDay, loanAccountInfo.getEvery().shortValue(),
-                        repaymentStartDate, MeetingType.LOAN_INSTALLMENT, meetingPlace);
-            } else if (RecurrenceType.MONTHLY.getValue().equals(recurrenceId)) {
-
-                if (loanAccountInfo.isMonthlyOnDayOfMonth()) {
-                    newMeetingForRepaymentDay = new MeetingBO(Short.valueOf(loanAccountInfo.getDay().shortValue()),
-                            Short.valueOf(loanAccountInfo.getEvery().shortValue()), repaymentStartDate,
-                            MeetingType.LOAN_INSTALLMENT, meetingPlace);
-
-                } else if (loanAccountInfo.isMonthlyOnWeekAndDayOfMonth()) {
-                    newMeetingForRepaymentDay = new MeetingBO(Short.valueOf(loanAccountInfo.getDay().shortValue()),
-                            Short.valueOf(loanAccountInfo.getEvery().shortValue()), repaymentStartDate,
-                            MeetingType.LOAN_INSTALLMENT, meetingPlace, Short.valueOf(loanAccountInfo.getWeek()
-                                    .shortValue()));
-                }
-            }
-        } catch (MeetingException e) {
-            throw new MifosRuntimeException(e);
-        }
-        return newMeetingForRepaymentDay;
-    }
-
     @Override
     public LoanCreationResultDto createLoan(CreateLoanAccount loanAccountInfo, List<QuestionGroupDetail> questionGroups, LoanAccountCashFlow loanAccountCashFlow) {
 
@@ -983,8 +933,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
         MeetingBO repaymentDayMeeting = loanAccountDetail.getCustomer().getCustomerMeetingValue();
         if (loanScheduleIndependentOfCustomerMeetingEnabled) {
-            final int minDaysInterval = new ConfigurationPersistence().getConfigurationKeyValueInteger(MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY).getValue();
-            repaymentDayMeeting = createNewRepaymentDayMeeting(repaymentDayMeeting, loanAccountInfo, minDaysInterval);
+            repaymentDayMeeting = this.createNewMeetingForRepaymentDay(loanAccountInfo.getDisbursementDate(), loanAccountInfo, loanAccountDetail.getCustomer());
         }
 
         LoanSchedule loanSchedule = assembleLoanSchedule(loanAccountDetail.getCustomer(), loanAccountDetail.getLoanProduct(), overridenDetail, configuration, repaymentDayMeeting, userOffice, new ArrayList<DateTime>());
@@ -1097,8 +1046,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
         MeetingBO repaymentDayMeeting = loanAccountDetail.getCustomer().getCustomerMeetingValue();
         if (loanScheduleIndependentOfCustomerMeetingEnabled) {
-            final int minDaysInterval = new ConfigurationPersistence().getConfigurationKeyValueInteger(MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY).getValue();
-            repaymentDayMeeting = createNewRepaymentDayMeeting(repaymentDayMeeting, loanAccountInfo, minDaysInterval);
+            repaymentDayMeeting = this.createNewMeetingForRepaymentDay(loanAccountInfo.getDisbursementDate(), loanAccountInfo, loanAccountDetail.getCustomer());
         }
 
         LoanSchedule loanSchedule = assembleLoanSchedule(loanAccountDetail.getCustomer(), loanAccountDetail.getLoanProduct(), overridenDetail, configuration, repaymentDayMeeting, userOffice, new ArrayList<DateTime>());
@@ -1186,11 +1134,49 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         loan.updateInstallmentSchedule(installments);
     }
 
+    private MeetingBO createNewMeetingForRepaymentDay(LocalDate disbursementDate, RecurringSchedule recurringSchedule, CustomerBO customer) {
+        MeetingBO newMeetingForRepaymentDay = null;
+
+        final int minDaysInterval = new ConfigurationPersistence().getConfigurationKeyValueInteger(
+                MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY).getValue();
+
+        final Date repaymentStartDate = disbursementDate.plusDays(minDaysInterval).toDateMidnight().toDateTime().toDate();
+        try {
+            if (recurringSchedule.isWeekly()) {
+                WeekDay weekDay = WeekDay.getWeekDay(recurringSchedule.getDay().shortValue());
+                Short recurEvery = recurringSchedule.getEvery().shortValue();
+                newMeetingForRepaymentDay = new MeetingBO(weekDay, recurEvery, repaymentStartDate,
+                        MeetingType.LOAN_INSTALLMENT, customer.getCustomerMeeting().getMeeting().getMeetingPlace());
+            } else if (recurringSchedule.isMonthly()) {
+                if (recurringSchedule.isMonthlyOnDayOfMonth()) {
+                    Short dayOfMonth = recurringSchedule.getDay().shortValue();
+                    Short dayRecurMonth = recurringSchedule.getEvery().shortValue();
+                    newMeetingForRepaymentDay = new MeetingBO(dayOfMonth, dayRecurMonth, repaymentStartDate,
+                            MeetingType.LOAN_INSTALLMENT, customer.getCustomerMeeting().getMeeting().getMeetingPlace());
+                } else {
+                    Short weekOfMonth = recurringSchedule.getDay().shortValue();
+                    Short monthRank = recurringSchedule.getWeek().shortValue();
+                    Short everyMonth = recurringSchedule.getEvery().shortValue();
+                    
+                    newMeetingForRepaymentDay = new MeetingBO(weekOfMonth, everyMonth , repaymentStartDate,
+                            MeetingType.LOAN_INSTALLMENT, customer.getCustomerMeeting().getMeeting().getMeetingPlace(),
+                            monthRank);
+                }
+            }
+            return newMeetingForRepaymentDay;
+        } catch (NumberFormatException nfe) {
+            throw new MifosRuntimeException(nfe);
+        } catch (MeetingException me) {
+            throw new BusinessRuleException(me.getKey(), me);
+        }
+
+    }
+    
     private MeetingBO createNewMeetingForRepaymentDay(LocalDate disbursementDate,
-            final LoanAccountMeetingDto loanAccountActionForm, final CustomerBO customer) {
+            final LoanAccountMeetingDto meetingDto, final CustomerBO customer) {
 
         MeetingBO newMeetingForRepaymentDay = null;
-        Short recurrenceId = Short.valueOf(loanAccountActionForm.getRecurrenceId());
+        Short recurrenceId = Short.valueOf(meetingDto.getRecurrenceId());
 
         final int minDaysInterval = new ConfigurationPersistence().getConfigurationKeyValueInteger(
                 MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY).getValue();
@@ -1198,20 +1184,20 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         final Date repaymentStartDate = disbursementDate.plusDays(minDaysInterval).toDateMidnight().toDateTime().toDate();
         try {
             if (RecurrenceType.WEEKLY.getValue().equals(recurrenceId)) {
-                WeekDay weekDay = WeekDay.getWeekDay(Short.valueOf(loanAccountActionForm.getWeekDay()));
-                Short recurEvery = Short.valueOf(loanAccountActionForm.getEveryWeek());
+                WeekDay weekDay = WeekDay.getWeekDay(Short.valueOf(meetingDto.getWeekDay()));
+                Short recurEvery = Short.valueOf(meetingDto.getEveryWeek());
                 newMeetingForRepaymentDay = new MeetingBO(weekDay, recurEvery, repaymentStartDate,
                         MeetingType.LOAN_INSTALLMENT, customer.getCustomerMeeting().getMeeting().getMeetingPlace());
             } else if (RecurrenceType.MONTHLY.getValue().equals(recurrenceId)) {
-                if (loanAccountActionForm.getMonthType().equals("1")) {
-                    Short dayOfMonth = Short.valueOf(loanAccountActionForm.getDayOfMonth());
-                    Short dayRecurMonth = Short.valueOf(loanAccountActionForm.getDayRecurMonth());
+                if (meetingDto.getMonthType().equals("1")) {
+                    Short dayOfMonth = Short.valueOf(meetingDto.getDayOfMonth());
+                    Short dayRecurMonth = Short.valueOf(meetingDto.getDayRecurMonth());
                     newMeetingForRepaymentDay = new MeetingBO(dayOfMonth, dayRecurMonth, repaymentStartDate,
                             MeetingType.LOAN_INSTALLMENT, customer.getCustomerMeeting().getMeeting().getMeetingPlace());
                 } else {
-                    Short weekOfMonth = Short.valueOf(loanAccountActionForm.getWeekOfMonth());
-                    Short everyMonth = Short.valueOf(loanAccountActionForm.getEveryMonth());
-                    Short monthRank = Short.valueOf(loanAccountActionForm.getMonthRank());
+                    Short weekOfMonth = Short.valueOf(meetingDto.getWeekOfMonth());
+                    Short everyMonth = Short.valueOf(meetingDto.getEveryMonth());
+                    Short monthRank = Short.valueOf(meetingDto.getMonthRank());
                     newMeetingForRepaymentDay = new MeetingBO(weekOfMonth, everyMonth , repaymentStartDate,
                             MeetingType.LOAN_INSTALLMENT, customer.getCustomerMeeting().getMeeting().getMeetingPlace(),
                             monthRank);

@@ -225,7 +225,7 @@
 			    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.dayOfMonthLabel" /]</span>
 			    		[@form.input path="loanAccountFormBean.repaymentDayOfMonth" id="loancreationdetails.input.dayOfMonth" attributes="size=3 maxlength=2"/]
 			    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.ofEvery" /]</span>
-				        [@form.input path="loanAccountFormBean.repaymentRecursEvery" id="recursEvery" attributes="size=3 maxlength=2 disabled=disabled"/]
+				        [@form.input path="loanAccountFormBean.repaymentRecursEvery" id="recursEvery" attributes="size=3 maxlength=2"/]
 				        <span id="monthLabelMessage">[@spring.message "manageLoanProducts.defineLoanProduct.month(s)" /]</span>
 			    	</div>
 			    	<div id="monthlyoption2">
@@ -239,7 +239,7 @@
 			    		[@form.singleSelectWithPrompt path="loanAccountFormBean.repaymentWeekOfMonth" options=loanProductReferenceData.weeksOfTheMonthOptions selectPrompt="selectPrompt" id="monthRank" /]
 			    		[@form.singleSelectWithPrompt path="loanAccountFormBean.repaymentDayOfWeek" options=loanProductReferenceData.daysOfTheWeekOptions selectPrompt="selectPrompt" id="monthWeek"/]
 			    		<span>[@spring.message "manageLoanProducts.defineLoanProduct.ofEvery" /]</span>
-				        [@form.input path="loanAccountFormBean.repaymentRecursEvery" id="recursEvery" attributes="size=3 maxlength=2 disabled=disabled"/]
+				        [@form.input path="loanAccountFormBean.repaymentRecursEvery" id="recursEvery" attributes="size=3 maxlength=2"/]
 				        <span id="monthLabelMessage">[@spring.message "manageLoanProducts.defineLoanProduct.month(s)" /]</span>
 			    	</div>
 			    </div>

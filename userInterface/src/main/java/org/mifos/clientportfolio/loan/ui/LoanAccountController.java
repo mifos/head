@@ -111,10 +111,11 @@ public class LoanAccountController {
     	
     	if (dto.isRepaymentIndependentOfMeetingEnabled()) {
 
-    	    Integer recursEvery = dto.getCustomerMeetingDetail().getMeetingDetailsDto().getEvery();
-    	    Integer dayOfMonth = dto.getCustomerMeetingDetail().getMeetingDetailsDto().getRecurrenceDetails().getDayNumber();
-    	    Integer weekOfMonth = dto.getCustomerMeetingDetail().getMeetingDetailsDto().getRecurrenceDetails().getWeekOfMonth();
-    	    Integer dayOfWeek = dto.getCustomerMeetingDetail().getMeetingDetailsDto().getRecurrenceDetails().getDayOfWeek();
+    	    // use loan product to default meeting details
+    	    Integer recursEvery = dto.getLoanOfferingMeetingDetail().getMeetingDetailsDto().getEvery();
+    	    Integer dayOfMonth = dto.getLoanOfferingMeetingDetail().getMeetingDetailsDto().getRecurrenceDetails().getDayNumber();
+    	    Integer weekOfMonth = dto.getLoanOfferingMeetingDetail().getMeetingDetailsDto().getRecurrenceDetails().getWeekOfMonth();
+    	    Integer dayOfWeek = dto.getLoanOfferingMeetingDetail().getMeetingDetailsDto().getRecurrenceDetails().getDayOfWeek();
     	    if (dayOfMonth != null && dayOfMonth > 0) {
     	        formBean.setDayOfMonthDetails(dayOfMonth, recursEvery);
     	    } else if (weekOfMonth != null){
