@@ -107,20 +107,6 @@ public class LabelTagUtils {
         return MessageLookup.getInstance().replaceSubstitutions(message);
     }
 
-    /**
-     * Only use is in MifosSelectNew, which doesn't appear to be used.
-     */
-    @SuppressWarnings("unchecked")
-    public Collection getCustomValueListElements(PageContext pageContext, String bundle, Locale locale, String key,
-            String mappingKey, String[] args) throws JspException {
-        Collection returnVal = null;
-        MifosPropertyMessageResources resources = (MifosPropertyMessageResources) TagUtils.getInstance()
-                .retrieveMessageResources(pageContext, bundle, false);
-        returnVal = resources.getCustomValueListElements(locale, key, mappingKey);
-
-        return returnVal;
-    }
-
     @SuppressWarnings("unchecked")
     public boolean isConfigurableMandatory(String key, PageContext pageContext) {
         // TODO get is mandatory or not from the cache.

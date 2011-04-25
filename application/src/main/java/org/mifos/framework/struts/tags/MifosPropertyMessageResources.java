@@ -33,7 +33,6 @@ import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.business.MifosConfiguration;
 import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.framework.util.helpers.BundleKey;
-import org.mifos.framework.util.helpers.MifosSelectHelper;
 
 public class MifosPropertyMessageResources extends PropertyMessageResources {
 
@@ -49,9 +48,6 @@ public class MifosPropertyMessageResources extends PropertyMessageResources {
         super(factory, config);
     }
 
-    /**
-     * serial version UID for serailization
-     */
     private static final long serialVersionUID = 75674564734673651L;
 
     /**
@@ -69,63 +65,13 @@ public class MifosPropertyMessageResources extends PropertyMessageResources {
                 returnVal = MifosConfiguration.getInstance().getLabel(key);
             } catch (ConfigurationException ce) {
                 // eat it
-                // TODO we may log it
             }
-
-            // logger.debug("The value from the local hash map is - " +
-            // (returnVal == null ? "null" : returnVal) );
         }
 
         if (returnVal == null) {
             returnVal = dbMap_labels.get(new BundleKey(locale, key));
         }
-/*
-        if (returnVal == null) {
-            // try to get it from the database
-            try {
 
-                CustomValueDto entity = getEntity( key);
-                if (entity != null) {
-                    returnVal = entity.getEntityLabel();
-                    // put it into hash map for further use
-                    dbMap_labels.put(new BundleKey(locale, key), returnVal);
-                }
-
-            } catch (Exception e) {
-                // logger.error(e.getMessage());
-            }
-        }
-*/
-        // logger.debug("The final value is - " + (returnVal == null ? "null" :
-        // returnVal) );
-
-        return returnVal;
-    }
-
-    /**
-     * Only used in one method (LabelTagUtils.getCustomValueListElements), which
-     * may never be called
-     */
-    public Collection<?> getCustomValueListElements(final Locale locale, final String key, final String mappingKey) {
-
-        Collection<?> returnVal = null;
-        returnVal = dbMap_Values.get(new BundleKey(locale, key));
-
-        if (returnVal == null) {
-                CustomValueDto entity = null;
-                if (mappingKey == null || mappingKey.equals("")) {
-                    entity = legacyMasterDao.getLookUpEntity(key);
-                } else {
-                    String[] mappingValues = MifosSelectHelper.getInstance().getValue(mappingKey);
-                    if (mappingValues != null && mappingValues.length == 2) {
-                        entity = legacyMasterDao.getCustomValueList(key, mappingValues[0], mappingValues[1]);
-                    }
-                }
-                if (entity != null) {
-                    returnVal = entity.getCustomValueListElements();
-                    dbMap_Values.put(new BundleKey(locale, key), returnVal);
-                }
-        }
         return returnVal;
     }
 
