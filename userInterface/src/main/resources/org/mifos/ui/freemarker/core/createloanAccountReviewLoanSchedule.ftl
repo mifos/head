@@ -208,7 +208,7 @@ $(function() {
 [#if cashflowSummaryDetails??]
 <br />
 <h1><span class="standout">[@spring.message "cashflow.summary.heading" /]</span></h1>
-<table>
+<table id="cashflow">
 	<thead>
 	<tr>
 		<th style="border-top: 1px solid grey;">[@spring.message "cashflow.summary.column.months" /]</th>
