@@ -135,6 +135,6 @@
 </div>
 <div class="add_question">
     <div class="button_container">
-        <input type="submit" name="_eventId_addQuestion" value="Add Question" class="buttn" id="_eventId_addQuestion">
+        <input type="submit" name="_eventId_addQuestion" value="[@spring.message "questionnaire.add.question" /]" class="buttn" id="_eventId_addQuestion">
     </div>
 </div>

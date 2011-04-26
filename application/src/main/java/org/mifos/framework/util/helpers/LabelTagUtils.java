@@ -21,8 +21,6 @@
 package org.mifos.framework.util.helpers;
 
 import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -33,55 +31,27 @@ import javax.servlet.jsp.PageContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.taglib.TagUtils;
 import org.apache.struts.util.MessageResources;
-import org.mifos.accounts.savings.persistence.GenericDao;
-import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
-import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.application.master.MessageLookup;
-import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.config.Localization;
-import org.mifos.config.persistence.ApplicationConfigurationDao;
-import org.mifos.config.persistence.ApplicationConfigurationDaoHibernate;
 import org.mifos.config.util.helpers.ConfigurationConstants;
-import org.mifos.dto.domain.ConfigurableLookupLabelDto;
 import org.mifos.framework.struts.tags.MifosPropertyMessageResources;
-import org.mifos.framework.util.MessageFilterReloadableResourceBundleMessageSource;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.UserContext;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * This Util class is a singleton class used by the MifosLabelTag to obtain the
- * Label based on the Locale. The class is also used to determine whether the
- * eleemnt is configurable mandatory and also to obtain the currency of the
- * Locale, if the element is of type currency.
+ * This singleton is used by the MifosLabelTag to look up internationalized messages. This is legacy Struts/JSP code
+ * that will eventually be replaced by SpringMVC/Freemarker code.
  */
 public class LabelTagUtils {
-    /**
-     * The static instance of the class
-     */
     private static LabelTagUtils instance = new LabelTagUtils();
 
-    /**
-     * private constructor to prevent multiple instance creation.
-     */
     private LabelTagUtils() {
     }
 
-    /**
-     * static method to obatin the instance of the class.
-     */
     public static LabelTagUtils getInstance() {
         return instance;
     }
 
-    /**
-     * The method is used to obtain the label associated with the key based on
-     * the Locale.
-     *
-     * @param key
-     *            -- The key used to obtain the Label
-     * @return Label associated with key of the Locale
-     */
     public String getLabel(PageContext pageContext, String bundle, String localeKey, String key, String[] args)
             throws JspException {
         return TagUtils.getInstance().message(pageContext, bundle, localeKey, key, args);
@@ -98,62 +68,29 @@ public class LabelTagUtils {
         }
 
         if (StringUtils.isBlank(message)) {
-
-            if (ConfigurationConstants.CENTER.equalsIgnoreCase(key)) {
-                ConfigurableLookupLabelDto lookupLabels = populateConfigurableLookupLabels();
-                message = lookupLabels.getCenter();
-            } else if (ConfigurationConstants.GROUP.equalsIgnoreCase(key)) {
-                ConfigurableLookupLabelDto lookupLabels = populateConfigurableLookupLabels();
-                message = lookupLabels.getGroup();
-            } else if (ConfigurationConstants.CLIENT.equalsIgnoreCase(key)) {
-                ConfigurableLookupLabelDto lookupLabels = populateConfigurableLookupLabels();
-                message = lookupLabels.getClient();
-            } else if (ConfigurationConstants.LOAN.equalsIgnoreCase(key)) {
-                ConfigurableLookupLabelDto lookupLabels = populateConfigurableLookupLabels();
-                message = lookupLabels.getLoans();
-            } else if (ConfigurationConstants.SAVINGS.equalsIgnoreCase(key)) {
-                ConfigurableLookupLabelDto lookupLabels = populateConfigurableLookupLabels();
-                message = lookupLabels.getSavings();
-            } else if ((ConfigurationConstants.INTEREST.equalsIgnoreCase(key))
-                    || (ConfigurationConstants.SERVICE_CHARGE.equalsIgnoreCase(key))) {
-                ConfigurableLookupLabelDto lookupLabels = populateConfigurableLookupLabels();
-                message = lookupLabels.getInterest();
-            } else if (ConfigurationConstants.STATE.equalsIgnoreCase(key)) {
-                ConfigurableLookupLabelDto lookupLabels = populateConfigurableLookupLabels();
-                message = lookupLabels.getState();
-            } else if (ConfigurationConstants.POSTAL_CODE.equalsIgnoreCase(key)) {
-                ConfigurableLookupLabelDto lookupLabels = populateConfigurableLookupLabels();
-                message = lookupLabels.getPostalCode();
-            } else if (ConfigurationConstants.ETHINICITY.equalsIgnoreCase(key)) {
-                ConfigurableLookupLabelDto lookupLabels = populateConfigurableLookupLabels();
-                message = lookupLabels.getEthnicity();
-            } else if (ConfigurationConstants.CITIZENSHIP.equalsIgnoreCase(key)) {
-                ConfigurableLookupLabelDto lookupLabels = populateConfigurableLookupLabels();
-                message = lookupLabels.getCitizenship();
-            } else if (ConfigurationConstants.HANDICAPPED.equalsIgnoreCase(key)) {
-                ConfigurableLookupLabelDto lookupLabels = populateConfigurableLookupLabels();
-                message = lookupLabels.getHandicapped();
-            } else if (ConfigurationConstants.GOVERNMENT_ID.equalsIgnoreCase(key)) {
-                ConfigurableLookupLabelDto lookupLabels = populateConfigurableLookupLabels();
-                message = lookupLabels.getGovtId();
-            } else if (ConfigurationConstants.ADDRESS1.equalsIgnoreCase(key)) {
-                ConfigurableLookupLabelDto lookupLabels = populateConfigurableLookupLabels();
-                message = lookupLabels.getAddress1();
-            } else if (ConfigurationConstants.ADDRESS2.equalsIgnoreCase(key)) {
-                ConfigurableLookupLabelDto lookupLabels = populateConfigurableLookupLabels();
-                message = lookupLabels.getAddress2();
-            } else if (ConfigurationConstants.ADDRESS3.equalsIgnoreCase(key)) {
-                ConfigurableLookupLabelDto lookupLabels = populateConfigurableLookupLabels();
-                message = lookupLabels.getAddress3();
-            } else if (ConfigurationConstants.EXTERNALID.equalsIgnoreCase(key)) {
-                ConfigurableLookupLabelDto lookupLabels = populateConfigurableLookupLabels();
-                message = lookupLabels.getExternalId();
-            } else if (ConfigurationConstants.BULKENTRY.equalsIgnoreCase(key)) {
-                ConfigurableLookupLabelDto lookupLabels = populateConfigurableLookupLabels();
-                message = lookupLabels.getBulkEntry();
-            } else if (ConfigurationConstants.CITY.equalsIgnoreCase(key)) {
-                ConfigurableLookupLabelDto lookupLabels = populateConfigurableLookupLabels();
-                message = lookupLabels.getCity();
+            String labelKey = key;
+            if (ConfigurationConstants.SERVICE_CHARGE.equalsIgnoreCase(key)) {
+                labelKey = ConfigurationConstants.INTEREST;
+            }
+            if (ConfigurationConstants.CENTER.equalsIgnoreCase(labelKey) ||
+                    ConfigurationConstants.GROUP.equalsIgnoreCase(labelKey) ||
+                    ConfigurationConstants.CLIENT.equalsIgnoreCase(labelKey) ||
+                    ConfigurationConstants.LOAN.equalsIgnoreCase(labelKey) ||
+                    ConfigurationConstants.SAVINGS.equalsIgnoreCase(labelKey) ||
+                    ConfigurationConstants.INTEREST.equalsIgnoreCase(labelKey) ||
+                    ConfigurationConstants.STATE.equalsIgnoreCase(labelKey) ||
+                    ConfigurationConstants.POSTAL_CODE.equalsIgnoreCase(labelKey) ||
+                    ConfigurationConstants.ETHINICITY.equalsIgnoreCase(labelKey) ||
+                    ConfigurationConstants.CITIZENSHIP.equalsIgnoreCase(labelKey) ||
+                    ConfigurationConstants.HANDICAPPED.equalsIgnoreCase(labelKey) ||
+                    ConfigurationConstants.GOVERNMENT_ID.equalsIgnoreCase(labelKey) ||
+                    ConfigurationConstants.ADDRESS1.equalsIgnoreCase(labelKey) ||
+                    ConfigurationConstants.ADDRESS2.equalsIgnoreCase(labelKey) ||
+                    ConfigurationConstants.ADDRESS3.equalsIgnoreCase(labelKey) ||
+                    ConfigurationConstants.EXTERNALID.equalsIgnoreCase(labelKey) ||
+                    ConfigurationConstants.BULKENTRY.equalsIgnoreCase(labelKey) ||
+                    ConfigurationConstants.CITY.equalsIgnoreCase(labelKey)) {
+                message = MessageLookup.getInstance().lookupLabel(labelKey);
             }
         }
 
@@ -170,93 +107,6 @@ public class LabelTagUtils {
         return MessageLookup.getInstance().replaceSubstitutions(message);
     }
 
-    private ConfigurableLookupLabelDto populateConfigurableLookupLabels() {
-        GenericDao genericDao = new GenericDaoHibernate();
-        ApplicationConfigurationDao  applicationConfigurationDao = new ApplicationConfigurationDaoHibernate(genericDao);
-        List<LookUpEntity> lookupEntities = applicationConfigurationDao.findLookupEntities();
-        ConfigurableLookupLabelDto lookupLabels = assembleLookupEntities(lookupEntities);
-        return lookupLabels;
-    }
-
-    private ConfigurableLookupLabelDto assembleLookupEntities(List<LookUpEntity> lookupEntities) {
-
-        ConfigurableLookupLabelDto lookupLabels = new ConfigurableLookupLabelDto();
-
-        for (LookUpEntity entity : lookupEntities) {
-
-            String labelText = MessageLookup.getInstance().lookupLabel(entity.findLabelKey());           
-
-            if (StringUtils.isBlank(labelText)) {
-                labelText = "test-blank";
-            }
-
-            if (entity.getEntityType().equals(ConfigurationConstants.CLIENT)) {
-                lookupLabels.setClient(labelText);
-            } else if (entity.getEntityType().equals(ConfigurationConstants.GROUP)) {
-                lookupLabels.setGroup(labelText);
-            } else if (entity.getEntityType().equals(ConfigurationConstants.CENTER)) {
-                lookupLabels.setCenter(labelText);
-            } else if (entity.getEntityType().equals(ConfigurationConstants.LOAN)) {
-                lookupLabels.setLoans(labelText);
-            } else if (entity.getEntityType().equals(ConfigurationConstants.SAVINGS)) {
-                lookupLabels.setSavings(labelText);
-            } else if (entity.getEntityType().equals(ConfigurationConstants.STATE)) {
-                lookupLabels.setState(labelText);
-            } else if (entity.getEntityType().equals(ConfigurationConstants.POSTAL_CODE)) {
-                lookupLabels.setPostalCode(labelText);
-            } else if (entity.getEntityType().equals(ConfigurationConstants.ETHINICITY)) {
-                lookupLabels.setEthnicity(labelText);
-            } else if (entity.getEntityType().equals(ConfigurationConstants.CITIZENSHIP)) {
-                lookupLabels.setCitizenship(labelText);
-            } else if (entity.getEntityType().equals(ConfigurationConstants.HANDICAPPED)) {
-                lookupLabels.setHandicapped(labelText);
-            } else if (entity.getEntityType().equals(ConfigurationConstants.GOVERNMENT_ID)) {
-                lookupLabels.setGovtId(labelText);
-            } else if (entity.getEntityType().equals(ConfigurationConstants.ADDRESS1)) {
-                lookupLabels.setAddress1(labelText);
-            } else if (entity.getEntityType().equals(ConfigurationConstants.ADDRESS2)) {
-                lookupLabels.setAddress2(labelText);
-            } else if (entity.getEntityType().equals(ConfigurationConstants.ADDRESS3)) {
-                lookupLabels.setAddress3(labelText);
-            } else if (entity.getEntityType().equals(ConfigurationConstants.CITY)) {
-                lookupLabels.setCity(labelText);
-            } else if ((entity.getEntityType().equals(ConfigurationConstants.INTEREST))
-                || (entity.getEntityType().equals(ConfigurationConstants.SERVICE_CHARGE))) {
-                lookupLabels.setInterest(labelText);
-            } else if (entity.getEntityType().equals(ConfigurationConstants.EXTERNALID)) {
-                lookupLabels.setExternalId(labelText);
-            } else if (entity.getEntityType().equals(ConfigurationConstants.BULKENTRY)) {
-                lookupLabels.setBulkEntry(labelText);
-            }
-        }
-
-        return lookupLabels;
-    }
-
-    /**
-     * Only use is in MifosSelectNew, which doesn't appear to be used.
-     */
-    @SuppressWarnings("unchecked")
-    public Collection getCustomValueListElements(PageContext pageContext, String bundle, Locale locale, String key,
-            String mappingKey, String[] args) throws JspException {
-        Collection returnVal = null;
-        MifosPropertyMessageResources resources = (MifosPropertyMessageResources) TagUtils.getInstance()
-                .retrieveMessageResources(pageContext, bundle, false);
-        returnVal = resources.getCustomValueListElements(locale, key, mappingKey);
-
-        return returnVal;
-    }
-
-    /**
-     * The method is used to check, if the element associated with the key is
-     * configurable mandatory or not.
-     *
-     * @param key
-     *            -- The key used to determine if the element associated with is
-     *            configurable mandatory or not
-     * @return true if the element associated with the key is configurable
-     *         mandatory
-     */
     @SuppressWarnings("unchecked")
     public boolean isConfigurableMandatory(String key, PageContext pageContext) {
         // TODO get is mandatory or not from the cache.
@@ -268,15 +118,6 @@ public class LabelTagUtils {
         return mandatoryMap.containsKey(key);
     }
 
-    /**
-     * The method is used to check, if the element associated with the key is
-     * hidden or not.
-     *
-     * @param key
-     *            --The key used to determine if the element associated with is
-     *            hidden or not
-     * @return true if the element associated with the key is hidden
-     */
     @SuppressWarnings("unchecked")
     public boolean isHidden(String key, PageContext pageContext) {
         // TODO get is hidden or not from the cache.
@@ -288,15 +129,6 @@ public class LabelTagUtils {
         return hiddenMap.containsKey(key);
     }
 
-    /**
-     * The method is used to check, if the element associated with the key is
-     * confidential or not.
-     *
-     * @param key
-     *            --The key used to determine if the element associated with is
-     *            confidential or not
-     * @return true if the element associated with the key is confidential
-     */
     @SuppressWarnings("unchecked")
     public boolean isConfidential(String key, PageContext pageContext) {
         // TODO get is confidential or not from the cache.
@@ -309,11 +141,8 @@ public class LabelTagUtils {
     }
 
     /**
-     * This helper method returns the User Preferred Locale, if any. Otherwise
-     * it returns default Mifos Locale
-     *
-     * @param pageContext
-     * @return User Preferred Locale
+     * This helper method returns the user-preferred locale as a Java locale ID string. Note: user-preferred locales are
+     * unimplemented.
      */
     public String getUserPreferredLocale(PageContext pageContext) {
         String userPreferredLocale = null;
