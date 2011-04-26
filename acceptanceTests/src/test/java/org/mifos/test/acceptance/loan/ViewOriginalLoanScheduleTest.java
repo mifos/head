@@ -1,11 +1,14 @@
 package org.mifos.test.acceptance.loan;
 
 
+import java.io.UnsupportedEncodingException;
+import java.sql.SQLException;
+
 import org.joda.time.DateTime;
 import org.mifos.test.acceptance.admin.FeeTestHelper;
-import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.FeesCreatePage;
+import org.mifos.test.acceptance.framework.holiday.CreateHolidayEntryPage.CreateHolidaySubmitParameters;
 import org.mifos.test.acceptance.framework.loan.ChargeParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
@@ -19,14 +22,8 @@ import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
 import org.mifos.test.acceptance.util.TestDataSetup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.io.UnsupportedEncodingException;
-import java.sql.SQLException;
-
-import static org.mifos.test.acceptance.framework.holiday.CreateHolidayEntryPage.CreateHolidaySubmitParameters;
 
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
@@ -47,10 +44,10 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
     String feeName = "loanWeeklyFee";
     boolean isSetUpDone = false;
 
-    @AfterMethod
-    public void logOut() {
-        (new MifosPage(selenium)).logout();
-    }
+//    @AfterMethod
+//    public void logOut() {
+//        (new MifosPage(selenium)).logout();
+//    }
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
@@ -110,7 +107,24 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
                 navigateToDefineNewLoanPageAndFillMandatoryFields(formParameters).
                 fillVariableInstalmentOption("30","1","100").
                 submitAndGotoNewLoanProductPreviewPage().submit();
-        verifyLoanAccountOriginalSchedule(systemDateTime.plusDays(1), systemDateTime, OriginalScheduleData.VARIABLE_LOAN_EARLY_DISBURSAL_SCHEDULE, false, systemDateTime.plusDays(5));
+        
+        navigationHelper.navigateToHomePage();
+        loanTestHelper.
+                navigateToCreateLoanAccountEntryPageWithoutLogout(setLoanSearchParameters()).
+                setDisbursalDate(systemDateTime.plusDays(1)).
+                clickContinue().clickPreviewAndGoToReviewLoanAccountPage(); //.submit().navigateToLoanAccountDetailsPage();
+        loanTestHelper.applyCharge(ChargeParameters.MISC_FEES, "10");
+        loanTestHelper.applyCharge(ChargeParameters.MISC_PENALTY, "10");
+        loanTestHelper.approveLoan();
+        loanTestHelper.disburseLoan(systemDateTime);
+        
+        String[][] tableOnOriginalInstallment = OriginalScheduleData.VARIABLE_LOAN_EARLY_DISBURSAL_SCHEDULE;
+        verifyOriginalSchedule(tableOnOriginalInstallment);
+        loanTestHelper.applyCharge(ChargeParameters.MISC_FEES, "10");
+        loanTestHelper.applyCharge(ChargeParameters.MISC_PENALTY, "10");
+        verifyOriginalSchedule(tableOnOriginalInstallment);
+        loanTestHelper.makePayment(systemDateTime.plusDays(5), "100");
+        verifyOriginalSchedule(tableOnOriginalInstallment);
         applicationDatabaseOperation.updateLSIM(0);
     }
 

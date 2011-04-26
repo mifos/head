@@ -115,21 +115,29 @@ public class LoanAccountController {
     	    Integer recursEvery = dto.getLoanOfferingMeetingDetail().getMeetingDetailsDto().getEvery();
             Integer dayOfMonth = dto.getLoanOfferingMeetingDetail().getMeetingDetailsDto().getRecurrenceDetails().getDayNumber();
             Integer weekOfMonth = dto.getLoanOfferingMeetingDetail().getMeetingDetailsDto().getRecurrenceDetails().getWeekOfMonth();
-            Integer dayOfWeek = dto.getLoanOfferingMeetingDetail().getMeetingDetailsDto().getRecurrenceDetails().getDayOfWeek();    	    
-    	    if (dto.getLoanOfferingMeetingDetail().getMeetingDetailsDto().getRecurrenceTypeId().equals(dto.getCustomerMeetingDetail().getMeetingDetailsDto().getRecurrenceTypeId())) {
+            Integer dayOfWeek = dto.getLoanOfferingMeetingDetail().getMeetingDetailsDto().getRecurrenceDetails().getDayOfWeek();
+            Integer recurrenceType = dto.getLoanOfferingMeetingDetail().getMeetingDetailsDto().getRecurrenceTypeId();
+            Integer customerRecurrenceType = dto.getCustomerMeetingDetail().getMeetingDetailsDto().getRecurrenceTypeId();
+    	    if (recurrenceType.equals(customerRecurrenceType)) {
     	        // if customer and product meeting frequencies are the same e.g. weekly or monthly, then default to customer details
     	        recursEvery = dto.getCustomerMeetingDetail().getMeetingDetailsDto().getEvery();
                 dayOfMonth = dto.getCustomerMeetingDetail().getMeetingDetailsDto().getRecurrenceDetails().getDayNumber();
                 weekOfMonth = dto.getCustomerMeetingDetail().getMeetingDetailsDto().getRecurrenceDetails().getWeekOfMonth();
                 dayOfWeek = dto.getCustomerMeetingDetail().getMeetingDetailsDto().getRecurrenceDetails().getDayOfWeek();
     	    }
-    	    if (dayOfMonth != null && dayOfMonth > 0) {
-    	        formBean.setDayOfMonthDetails(dayOfMonth, recursEvery);
-    	    } else if (weekOfMonth != null && weekOfMonth > 0){
-    	        formBean.setWeekOfMonthDetails(weekOfMonth, dayOfWeek, recursEvery);
-    	    } else if (dayOfWeek != null && dayOfWeek > 0) {
-    	        formBean.setWeeklyDetails(dayOfWeek, recursEvery);
-    	    }
+    	    
+    	    // sometimes it seems customer meeting information can be setup wrong (i.e. has a day of month even though its weekly)
+            if (recurrenceType == 1) {
+                if (dateInformationIsAvailable(dayOfWeek)) {
+                    formBean.setWeeklyDetails(dayOfWeek, recursEvery);
+                }
+            } else if (recurrenceType == 2) {
+                if (dateInformationIsAvailable(weekOfMonth) && dateInformationIsAvailable(dayOfWeek)) {
+                    formBean.setWeekOfMonthDetails(weekOfMonth, dayOfWeek, recursEvery);
+                } else if (dateInformationIsAvailable(dayOfMonth)) {
+                    formBean.setDayOfMonthDetails(dayOfMonth, recursEvery);
+                }
+            }
     	}
 
     	formBean.setVariableInstallmentsAllowed(dto.isVariableInstallmentsAllowed());
@@ -202,6 +210,10 @@ public class LoanAccountController {
 		formBean.setSelectedFeeAmount(selectedFeeAmount);
 
     	return dto;
+    }
+
+    private boolean dateInformationIsAvailable(Integer dayOfWeek) {
+        return dayOfWeek != null && dayOfWeek > 0;
     }
 
     public void loadQuestionGroups(Integer productId, LoanAccountQuestionGroupFormBean loanAccountQuestionGroupFormBean) {
