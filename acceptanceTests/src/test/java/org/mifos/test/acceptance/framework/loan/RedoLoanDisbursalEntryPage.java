@@ -20,6 +20,7 @@
 
 package org.mifos.test.acceptance.framework.loan;
 
+import org.joda.time.DateTime;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.testng.Assert;
 
@@ -112,5 +113,14 @@ public class RedoLoanDisbursalEntryPage extends MifosPage {
             selenium.select("selectedFee[" + index + "].feeId",fee);
         }
         return this;
+    }
+
+    public void enterDisbursementDate(DateTime disbursalDate) {
+        selenium.type("disbursementDateDD", Integer.valueOf(disbursalDate.getDayOfMonth()).toString());
+        selenium.type("disbursementDateMM", Integer.valueOf(disbursalDate.getMonthOfYear()).toString());
+        selenium.type("disbursementDateYY", Integer.valueOf(disbursalDate.getYearOfEra()).toString());
+
+        selenium.fireEvent("disbursementDateYY", "blur");
+
     }
 }

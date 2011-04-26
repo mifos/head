@@ -67,6 +67,7 @@ public class CashFlowTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
+    @Test(enabled=true)
     public void verifyCashFlowFields() throws Exception {
         DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getMonthlyLoanProductParameters();
         loanProductTestHelper.navigateToDefineNewLoanPageAndFillMandatoryFields(formParameters).
@@ -75,12 +76,14 @@ public class CashFlowTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
+    @Test(enabled=false)
     public void verifyCashFlowWithNullValue() throws Exception {
         DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
         createAndValidateLoanProductWithCashFlow("", formParameters, "", "", false);
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
+    @Test(enabled=true)
     public void verifyCashFlowUnChecked() throws Exception {
         applicationDatabaseOperation.updateLSIM(1);
         DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
@@ -111,6 +114,7 @@ public class CashFlowTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
+    @Test(enabled=true)
     public void verifyWarningsForNonVariableInstallmentLoan() throws Exception {
         applicationDatabaseOperation.updateLSIM(0);
         DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
@@ -143,10 +147,10 @@ public class CashFlowTest extends UiTestCaseBase {
         applicationDatabaseOperation.updateLSIM(0);
     }
 
-    /**
-     * FIXME - disabled for now - keithw
-     */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
+    /*
+     * cant find disbursementDateDD element?
+     */
     @Test(enabled=false)
     public void verifyCashFlowForVariableInstallmentLoan() throws Exception {
         String minRC = "999.99";
@@ -165,6 +169,7 @@ public class CashFlowTest extends UiTestCaseBase {
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled=true)
     public void verifyCashFlowPageInLoanAccountCreationFlow() throws Exception {
         DefineNewLoanProductPage.SubmitFormParameters productParams = FormParametersHelper.getWeeklyLoanProductParameters();
         productParams.setOfferingName("productCF1");
@@ -280,7 +285,4 @@ public class CashFlowTest extends UiTestCaseBase {
                 submit().navigateToViewLoanDetails().
                 verifyCashFlowInViewLoanProductPage(warningThreshold, indebtentValue, repaymentValue);
     }
-
-
 }
-
