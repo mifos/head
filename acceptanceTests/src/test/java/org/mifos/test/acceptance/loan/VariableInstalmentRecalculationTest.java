@@ -41,7 +41,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(singleThreaded = true, groups = {"loanproduct", "acceptance", "ui","no_db_unit", "smoke"})
+@Test(singleThreaded = true, groups = {"loanproduct", "acceptance", "ui","no_db_unit"})
 public class VariableInstalmentRecalculationTest extends UiTestCaseBase {
 
     @Autowired
