@@ -120,15 +120,20 @@ public class CashFlowSummaryFormBean implements Serializable {
     
     private void recalculatePrincipalBasedOnTotalAmountForEachInstallmentWhileSettingInstallmentDate() {
         int index=0;
-        Double cumulativeNewTotal = Double.valueOf("0.0");
+        Double cumulativeNewInstallmentTotal = Double.valueOf("0.0");
+        BigDecimal totalInterestAndFeesDue = BigDecimal.ZERO;
+        for (LoanCreationInstallmentDto variableInstallment : this.variableInstallments) {
+            totalInterestAndFeesDue = totalInterestAndFeesDue.add(BigDecimal.valueOf(variableInstallment.getInterest()).add(BigDecimal.valueOf(variableInstallment.getFees())));
+        }
+        
         for (LoanCreationInstallmentDto variableInstallment : this.variableInstallments) {
             variableInstallment.setDueDate(new LocalDate(this.installments.get(index)));
             
             Double newTotal = this.installmentAmounts.get(index).doubleValue();
             // adjust principal based on total and interest + fees
             if (index == this.variableInstallments.size()-1) {
-                // sum up all totals and make final total = loan principal - sum of other totals
-                Double finalInstallmentTotal = this.loanPrincipal.subtract(BigDecimal.valueOf(cumulativeNewTotal)).doubleValue();
+                // sum up all totals and make final total = loan principal + interest and fees due - sum of other installment totals
+                Double finalInstallmentTotal = this.loanPrincipal.add(totalInterestAndFeesDue).subtract(BigDecimal.valueOf(cumulativeNewInstallmentTotal)).doubleValue();
                 Double finalInstallmentPrincipal = calculatePrincipalBasedOnNewTotal(variableInstallment, finalInstallmentTotal);
                 variableInstallment.setTotal(finalInstallmentTotal);
                 variableInstallment.setPrincipal(finalInstallmentPrincipal);
@@ -136,7 +141,7 @@ public class CashFlowSummaryFormBean implements Serializable {
             } else {
                 variableInstallment.setTotal(newTotal);
                 variableInstallment.setPrincipal(calculatePrincipalBasedOnNewTotal(variableInstallment, newTotal));
-                cumulativeNewTotal += newTotal;
+                cumulativeNewInstallmentTotal += newTotal;
             }
             index++;
         }

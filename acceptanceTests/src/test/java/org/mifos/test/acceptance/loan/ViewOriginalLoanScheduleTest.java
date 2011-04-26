@@ -6,6 +6,7 @@ import java.sql.SQLException;
 
 import org.joda.time.DateTime;
 import org.mifos.test.acceptance.admin.FeeTestHelper;
+import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.FeesCreatePage;
 import org.mifos.test.acceptance.framework.holiday.CreateHolidayEntryPage.CreateHolidaySubmitParameters;
@@ -22,6 +23,7 @@ import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
 import org.mifos.test.acceptance.util.TestDataSetup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -44,10 +46,10 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
     String feeName = "loanWeeklyFee";
     boolean isSetUpDone = false;
 
-//    @AfterMethod
-//    public void logOut() {
-//        (new MifosPage(selenium)).logout();
-//    }
+    @AfterMethod
+    public void logOut() {
+        (new MifosPage(selenium)).logout();
+    }
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
@@ -112,7 +114,7 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
         loanTestHelper.
                 navigateToCreateLoanAccountEntryPageWithoutLogout(setLoanSearchParameters()).
                 setDisbursalDate(systemDateTime.plusDays(1)).
-                clickContinue().clickPreviewAndGoToReviewLoanAccountPage(); //.submit().navigateToLoanAccountDetailsPage();
+                clickContinue().clickPreviewAndGoToReviewLoanAccountPage().submit().navigateToLoanAccountDetailsPage();
         loanTestHelper.applyCharge(ChargeParameters.MISC_FEES, "10");
         loanTestHelper.applyCharge(ChargeParameters.MISC_PENALTY, "10");
         loanTestHelper.approveLoan();

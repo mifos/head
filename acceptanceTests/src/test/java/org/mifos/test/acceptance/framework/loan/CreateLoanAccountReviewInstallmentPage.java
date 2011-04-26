@@ -356,12 +356,12 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
     }
 
     private void setInstallmentDate(String installment, String date) {
-        selenium.type("installments["+installment+"].dueDate", date);
+        selenium.type("installments["+installment+"]", date);
     }
 
     private void setFirstAndSecondInstallmentTotal(String total) {
-        selenium.type("installments[0].total", total);
-        selenium.type("installments[1].total", total);
+        selenium.type("installmentAmounts[0]", total);
+        selenium.type("installmentAmounts[1]", total);
     }
 
     private void verifyWarningThresholdMessageOnReviewSchedulePage(String button, double warningThreshold) {
@@ -396,23 +396,25 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
         setInstallmentDate("2","04-Nov-2010");
         setInstallmentDate("3","10-Nov-2010");
         clickValidateAndWaitForPageToLoad();
-        verifyCellValueOfInstallments(1,3, "196.7");
-        verifyCellValueOfInstallments(2,3, "146.0");
-        verifyCellValueOfInstallments(3,3, "247.1");
-//        verifyCellValueOfInstallments(4,3, "410.2");
-        verifyCellValueOfInstallments(1,4, "3.3");
-        verifyCellValueOfInstallments(2,4, "4.0");
-        verifyCellValueOfInstallments(3,4, "2.9");
-        verifyCellValueOfInstallments(4,4, "1.3");
+        // principal
+        verifyCellValueOfInstallments(1,3, "196.2");
+        verifyCellValueOfInstallments(2,3, "147.1");
+        verifyCellValueOfInstallments(3,3, "248.1");
+        verifyCellValueOfInstallments(4,3, "408.6");
+        // interest values
+        verifyCellValueOfInstallments(1,4, "3.8");
+        verifyCellValueOfInstallments(2,4, "2.9");
+        verifyCellValueOfInstallments(3,4, "1.9");
+        verifyCellValueOfInstallments(4,4, "1.4");
     }
 
     private void verifyCellValueOfInstallments(int row, int column, String value) {
-        String result = selenium.getText("//table[@id='installments']//tr[" + (row + 1) + "]/td[" + column + "]");
+        String result = selenium.getText("//table[@id='installments']//tbody//tr[" + (row ) + "]/td[" + column + "]");
         Assert.assertEquals(result, value, "expected was: " + result + " but was: " + value);
     }
 
     private void setInstallmentTotal(int installment, String total) {
-        selenium.type("installments["+ (installment-1) +"].total",total);
+        selenium.type("installmentAmounts["+ (installment-1) +"]",total);
     }
 
     public CreateLoanAccountReviewInstallmentPage verifyLoanScheduleForDecliningPrincipal() {
@@ -532,5 +534,4 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
         }
         return loanAmount;
     }
-
 }

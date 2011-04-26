@@ -22,7 +22,6 @@ package org.mifos.test.acceptance.loan;
 
 
 import org.joda.time.DateTime;
-import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountCashFlowPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
@@ -36,7 +35,6 @@ import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
 import org.mifos.test.acceptance.util.TestDataSetup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -73,10 +71,10 @@ public class VariableInstalmentRecalculationTest extends UiTestCaseBase {
         dataSetup.createClient(clientName, officeName, userName);
     }
 
-    @AfterMethod
-    public void logOut() {
-        (new MifosPage(selenium)).logout();
-    }
+//    @AfterMethod
+//    public void logOut() {
+//        (new MifosPage(selenium)).logout();
+//    }
 
     // TODO - this test do not work on systems with other locale than English.
     // verifyWarningThresholdMessageOnReviewSchedulePage expects:
@@ -114,11 +112,8 @@ public class VariableInstalmentRecalculationTest extends UiTestCaseBase {
         applicationDatabaseOperation.updateLSIM(0);
     }
 
-    /**
-     * FIXME - disabled for now - keithw
-     */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
-    @Test(enabled=false)
+    @Test(enabled=true)
     public void verifyPrincipalAndInterestRecalculation() throws Exception {
         int noOfInstallments = 4;
         int loanAmount = 1000;
@@ -140,6 +135,7 @@ public class VariableInstalmentRecalculationTest extends UiTestCaseBase {
                 enterValidData("100", cashFlowIncremental, cashFlowBase, null, null).
                 clickContinue().
                 verifyRecalculationWhenDateAndTotalChange();
+        
         applicationDatabaseOperation.updateLSIM(0);
     }
 
