@@ -87,16 +87,19 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
-    /**
-     * FIXME - keithw
-     */
-    @Test(enabled=false, groups={"loanproduct"})
+    @Test(enabled=true)
     public void verifyForFlatLoanEarlyDisbursal() throws Exception {
         int interestType = DefineNewLoanProductPage.SubmitFormParameters.FLAT;
         applicationDatabaseOperation.updateLSIM(0);
         createLoanProduct(interestType);
-        verifyLoanAccountOriginalSchedule(systemDateTime.plusDays(1), systemDateTime, OriginalScheduleData.FLAT_LOAN_SCHEDULE, true, systemDateTime.plusDays(5));
-        applyChargesAndVerifySchedule(OriginalScheduleData.FLAT_LOAN_SCHEDULE);
+        String[][] tableOnOriginalInstallment = OriginalScheduleData.FLAT_LOAN_SCHEDULE;
+        createLoanAccount(systemDateTime.plusDays(1), systemDateTime, true);
+        verifyOriginalSchedule(tableOnOriginalInstallment);
+        loanTestHelper.applyCharge(ChargeParameters.MISC_FEES, "10");
+        loanTestHelper.applyCharge(ChargeParameters.MISC_PENALTY, "10");
+        verifyOriginalSchedule(tableOnOriginalInstallment);
+        loanTestHelper.makePayment(systemDateTime.plusDays(5), "100");
+        verifyOriginalSchedule(tableOnOriginalInstallment);
     }
 
     @Test(enabled=true)
@@ -130,7 +133,7 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
         applicationDatabaseOperation.updateLSIM(0);
     }
 
-    @Test(enabled=false)
+    @Test(enabled=true)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyForVariableInstallmentLoanLateDisbursal() throws Exception {
         int interestType = DefineNewLoanProductPage.SubmitFormParameters.DECLINING_BALANCE;
@@ -140,19 +143,50 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
                 navigateToDefineNewLoanPageAndFillMandatoryFields(formParameters).
                 fillVariableInstalmentOption("20","1","100").
                 submitAndGotoNewLoanProductPreviewPage().submit();
-        verifyLoanAccountOriginalSchedule(systemDateTime, systemDateTime.plusDays(1), OriginalScheduleData.VARIABLE_LOAN_LATE_DISBURSAL_SCHEDULE, false, systemDateTime.plusDays(15));
+        String[][] tableOnOriginalInstallment = OriginalScheduleData.VARIABLE_LOAN_LATE_DISBURSAL_SCHEDULE;
+        createLoanAccount(systemDateTime, systemDateTime.plusDays(1), false);
+        verifyOriginalSchedule(tableOnOriginalInstallment);
+        loanTestHelper.applyCharge(ChargeParameters.MISC_FEES, "10");
+        loanTestHelper.applyCharge(ChargeParameters.MISC_PENALTY, "10");
+        verifyOriginalSchedule(tableOnOriginalInstallment);
+        loanTestHelper.makePayment(systemDateTime.plusDays(15), "100");
+        verifyOriginalSchedule(tableOnOriginalInstallment);
         applicationDatabaseOperation.updateLSIM(0);
     }
 
-    // FIXME - this test fails after merge
-    @Test(enabled=false)
+    @Test(enabled=true)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyForDecBalIntReCalcLoanEarlyDisbursalLSIMOn() throws Exception {
         int interestType = DefineNewLoanProductPage.SubmitFormParameters.DECLINING_BALANCE_INTEREST_RECALCULATION;
         applicationDatabaseOperation.updateLSIM(1);
         createLoanProduct(interestType);
-        verifyLoanAccountOriginalSchedule(systemDateTime.plusDays(1), systemDateTime, OriginalScheduleData.DEC_BAL_INT_RECALC_LOAN_EARLY_DISBURSAL_SCHEDULE_ON, true, systemDateTime.plusDays(15));
-        applyChargesAndVerifySchedule(OriginalScheduleData.DEC_BAL_INT_RECALC_LOAN_EARLY_DISBURSAL_SCHEDULE_ON);
+        
+        navigationHelper.navigateToHomePage();
+        loanTestHelper.
+                navigateToCreateLoanAccountEntryPageWithoutLogout(setLoanSearchParameters()).
+                setDisbursalDate(systemDateTime.plusDays(1)).
+                clickContinue().clickPreviewAndGoToReviewLoanAccountPage().submit().navigateToLoanAccountDetailsPage();
+        
+        ChargeParameters chargeParameters = new ChargeParameters();
+        chargeParameters.setType(feeName);
+        new LoanAccountPage(selenium).navigateToApplyCharge().applyFeeAndConfirm(chargeParameters);
+        
+        loanTestHelper.applyCharge(ChargeParameters.MISC_FEES, "10");
+        loanTestHelper.applyCharge(ChargeParameters.MISC_PENALTY, "10");
+        loanTestHelper.approveLoan();
+        loanTestHelper.disburseLoan(systemDateTime);
+        
+        String[][] tableOnOriginalInstallment = OriginalScheduleData.DEC_BAL_INT_RECALC_LOAN_EARLY_DISBURSAL_SCHEDULE_ON;
+        verifyOriginalSchedule(tableOnOriginalInstallment);
+        
+        loanTestHelper.applyCharge(ChargeParameters.MISC_FEES, "10");
+        loanTestHelper.applyCharge(ChargeParameters.MISC_PENALTY, "10");
+        verifyOriginalSchedule(tableOnOriginalInstallment);
+        loanTestHelper.makePayment(systemDateTime.plusDays(15), "100");
+        verifyOriginalSchedule(tableOnOriginalInstallment);
+//        loanTestHelper.applyCharge(ChargeParameters.MISC_FEES, "10");
+//        loanTestHelper.applyCharge(ChargeParameters.MISC_PENALTY, "10");
+//        verifyOriginalSchedule(tableOnOriginalInstallment);
         applicationDatabaseOperation.updateLSIM(0);
     }
 

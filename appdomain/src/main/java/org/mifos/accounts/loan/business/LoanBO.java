@@ -1291,9 +1291,10 @@ public class LoanBO extends AccountBO implements Loan {
                 DateUtils.getDateWithoutTimeStamp(transactionDate.getTime()))) {
             final boolean lsimEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
             if (lsimEnabled) {
+                // QUESTION: does minDays
                 final int minDaysInterval = new ConfigurationPersistence().getConfigurationKeyValueInteger(
                         MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY).getValue();
-                this.disbursementDate = new DateTime(transactionDate).plusDays(minDaysInterval).toDate();
+                this.disbursementDate = new DateTime(transactionDate).plusDays(minDaysInterval-1).toDate();
             }
             else {
                 this.disbursementDate = transactionDate;
