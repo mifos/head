@@ -26,13 +26,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.config.ClientRules;
-import org.mifos.customers.group.business.GroupBO;
+import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
@@ -40,20 +38,20 @@ import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.domain.builders.MeetingBuilder;
 import org.mifos.domain.builders.OfficeBuilder;
 import org.mifos.dto.domain.AddressDto;
-import org.mifos.dto.domain.ApplicableAccountFeeDto;
+import org.mifos.dto.domain.CenterCreationDetail;
+import org.mifos.dto.domain.CreateAccountFeeDto;
 import org.mifos.dto.domain.CustomerDetailsDto;
-import org.mifos.dto.domain.GroupCreationDetail;
 import org.mifos.dto.domain.MeetingDto;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.security.AuthenticationAuthorizationServiceFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class GroupServiceFacadeWebTierIntegrationTest extends MifosIntegrationTestCase {
+public class CenterServiceFacadeWebTierIntegrationTest extends MifosIntegrationTestCase {
 
     // class under test
     @Autowired
-    private GroupServiceFacade groupServiceFacade;
+    private CenterServiceFacade centerServiceFacade;
 
     @Autowired private AuthenticationAuthorizationServiceFacade authenticationAuthorizationService;
     @Autowired private CustomerDao customerDao;
@@ -67,26 +65,19 @@ public class GroupServiceFacadeWebTierIntegrationTest extends MifosIntegrationTe
     }
 
     @Test
-    public void shouldCreateGroupWithActivationDateInPast() {
-
-        // setup
-        boolean centerHierarchyExistsOriginal = ClientRules.getCenterHierarchyExists();
+    public void shouldCreateCenterWithExpectedSearchId() {
 
         MeetingBO meeting = new MeetingBuilder().withStartDate(new DateTime().minusWeeks(2)).build();
         MeetingDto meetingDto = meeting.toDto();
 
-        String displayName = "testGroup";
+        String displayName = "testCenter";
         String externalId = null;
-        AddressDto addressDto = null;
+        AddressDto addressDto = new AddressDto("here", "", "", "", "", "", "", "");
 
         PersonnelBO user = IntegrationTestObjectMother.findPersonnelById(Short.valueOf("1"));
         Short loanOfficerId = user.getPersonnelId();
-        List<ApplicableAccountFeeDto> feesToApply = new ArrayList<ApplicableAccountFeeDto>();
-        Short customerStatus = CustomerStatus.GROUP_ACTIVE.getValue();
-        boolean trained = false;
-        DateTime trainedOn = null;
-        String parentSystemId = null;
-
+        List<CreateAccountFeeDto> feesToApply = new ArrayList<CreateAccountFeeDto>();
+        CustomerStatus.GROUP_ACTIVE.getValue();
         OfficeBO headOffice = IntegrationTestObjectMother.findOfficeById(Short.valueOf("1"));
 
         // setup
@@ -94,62 +85,17 @@ public class GroupServiceFacadeWebTierIntegrationTest extends MifosIntegrationTe
 
         Short officeId = branch1.getOfficeId();
         DateTime mfiJoiningDate = new DateTime().minusWeeks(2);
-        DateTime activationDate = new DateTime().minusWeeks(1);
-        GroupCreationDetail groupCenterDetail = new GroupCreationDetail(displayName, externalId, addressDto, loanOfficerId,
-                feesToApply, customerStatus, trained, trainedOn, parentSystemId, officeId, mfiJoiningDate, activationDate);
-
+        new DateTime().minusWeeks(1);
+        CenterCreationDetail centerCreationDetail = new CenterCreationDetail(mfiJoiningDate.toLocalDate(), displayName, externalId,
+                addressDto, loanOfficerId, officeId, feesToApply);
         // exercise test
-        ClientRules.setCenterHierarchyExists(false);
-        CustomerDetailsDto newlyCreatedGroupDetails = groupServiceFacade.createNewGroup(groupCenterDetail, meetingDto);
+        CustomerDetailsDto newlyCreatedCenterDetails = centerServiceFacade.createNewCenter(centerCreationDetail, meetingDto);
 
         // verification
-        ClientRules.setCenterHierarchyExists(centerHierarchyExistsOriginal);
-        GroupBO group = customerDao.findGroupBySystemId(newlyCreatedGroupDetails.getGlobalCustNum());
-        Assert.assertThat(new LocalDate(group.getCustomerActivationDate()), is(activationDate.toLocalDate()));
+        CenterBO center = customerDao.findCenterBySystemId(newlyCreatedCenterDetails.getGlobalCustNum());
+        Assert.assertThat(center.getSearchId(), is("1." + center.getCustomerId()));
     }
 
-
-    @Test
-    public void shouldCreateGroupWithExpectedSearchId() {
-
-        // setup
-        boolean centerHierarchyExistsOriginal = ClientRules.getCenterHierarchyExists();
-
-        MeetingBO meeting = new MeetingBuilder().withStartDate(new DateTime().minusWeeks(2)).build();
-        MeetingDto meetingDto = meeting.toDto();
-
-        String displayName = "testGroup";
-        String externalId = null;
-        AddressDto addressDto = null;
-
-        PersonnelBO user = IntegrationTestObjectMother.findPersonnelById(Short.valueOf("1"));
-        Short loanOfficerId = user.getPersonnelId();
-        List<ApplicableAccountFeeDto> feesToApply = new ArrayList<ApplicableAccountFeeDto>();
-        Short customerStatus = CustomerStatus.GROUP_ACTIVE.getValue();
-        boolean trained = false;
-        DateTime trainedOn = null;
-        String parentSystemId = null;
-
-        OfficeBO headOffice = IntegrationTestObjectMother.findOfficeById(Short.valueOf("1"));
-
-        // setup
-        createOfficeHierarchyUnderHeadOffice(headOffice);
-
-        Short officeId = branch1.getOfficeId();
-        DateTime mfiJoiningDate = new DateTime().minusWeeks(2);
-        DateTime activationDate = new DateTime().minusWeeks(1);
-        GroupCreationDetail groupCenterDetail = new GroupCreationDetail(displayName, externalId, addressDto, loanOfficerId,
-                feesToApply, customerStatus, trained, trainedOn, parentSystemId, officeId, mfiJoiningDate, activationDate);
-
-        // exercise test
-        ClientRules.setCenterHierarchyExists(false);
-        CustomerDetailsDto newlyCreatedGroupDetails = groupServiceFacade.createNewGroup(groupCenterDetail, meetingDto);
-
-        // verification
-        ClientRules.setCenterHierarchyExists(centerHierarchyExistsOriginal);
-        GroupBO group = customerDao.findGroupBySystemId(newlyCreatedGroupDetails.getGlobalCustNum());
-        Assert.assertThat(group.getSearchId(), is("1." + group.getCustomerId()));
-    }
 
     private void createOfficeHierarchyUnderHeadOffice(OfficeBO headOffice) {
         areaOffice1 = new OfficeBuilder().areaOffice()

@@ -114,8 +114,9 @@ public abstract class CustomerBO extends AbstractBusinessObject {
     private Set<CustomerBO> children;
     private CustomerAccountBO customerAccount;
 
-    private CustomerPersistence customerPersistence;
-    private LegacyPersonnelDao personnelPersistence;
+    private CustomerPersistence customerPersistence = null;
+    private LegacyPersonnelDao personnelPersistence = null;
+    private CustomerDao customerDao = null;    
 
     //associations
     private PersonnelBO personnel;
@@ -214,7 +215,7 @@ public abstract class CustomerBO extends AbstractBusinessObject {
 
         formedByPersonnel = formedBy;
 
-        this.parentCustomer = parentCustomer;
+        setParentCustomer(parentCustomer);
 
         createCustomFields(customFields);
 
@@ -230,6 +231,17 @@ public abstract class CustomerBO extends AbstractBusinessObject {
 
         this.setCreateDetails();
 
+    }
+
+    private CustomerDao getCustomerDao() {
+        if (customerDao == null) {
+            customerDao = ApplicationContextProvider.getBean(CustomerDao.class);
+        }
+        return customerDao;
+    }
+
+    public void setCustomerDao(CustomerDao customerDao) {
+        this.customerDao = customerDao;
     }
 
     public Integer getCustomerId() {
@@ -349,10 +361,20 @@ public abstract class CustomerBO extends AbstractBusinessObject {
 
     public void setParentCustomer(final CustomerBO parentCustomer) {
         this.parentCustomer = parentCustomer;
+        if (parentCustomer != null) {
+            parentCustomer.incrementChildCount();
+        }
     }
 
     public CustomerBO getParentCustomer() {
         return parentCustomer;
+    }
+
+    /*
+     * This only appears to be used in tests
+     */
+    public final void addChild(final CustomerBO existingClient) {
+        this.children.add(existingClient);
     }
 
     public Set<CustomerBO> getChildren() {
@@ -981,14 +1003,6 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         }
     }
 
-    /**
-     * just call incrementChildCount directly
-     */
-    @Deprecated
-    public void childAddedForParent(final CustomerBO parent) {
-        parent.incrementChildCount();
-    }
-
     public void resetPositions(final CustomerBO newParent) {
         newParent.resetPositionsAssignedToClient(this.getCustomerId());
     }
@@ -1035,15 +1049,11 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         return true;
     }
 
-    protected void generateSearchId() {
+    public void generateSearchId() {
         if (getParentCustomer() != null) {
-            childAddedForParent(getParentCustomer());
             this.setSearchId(getParentCustomer().getSearchId() + "." + getParentCustomer().getMaxChildCount());
         } else {
-            CustomerDao customerDao = ApplicationContextProvider.getBean(CustomerDao.class);
-            int numberOfCustomersInOfficeAlready = customerDao.retrieveLastSearchIdValueForNonParentCustomersInOffice(getOffice().getOfficeId());
-
-            String searchId = GroupConstants.PREFIX_SEARCH_STRING + ++numberOfCustomersInOfficeAlready;
+            String searchId = GroupConstants.PREFIX_SEARCH_STRING + getCustomerId();
             this.setSearchId(searchId);
         }
     }
@@ -1276,10 +1286,6 @@ public abstract class CustomerBO extends AbstractBusinessObject {
 
     public Short getOfficeId() {
         return office.getOfficeId();
-    }
-
-    public final void addChild(final CustomerBO existingClient) {
-        this.children.add(existingClient);
     }
 
     public void validateIsTopOfHierarchy() throws CustomerException {

@@ -47,12 +47,12 @@ import org.mifos.security.util.UserContext;
 public class CenterBO extends CustomerBO {
 
     public static CenterBO createNew(UserContext userContext, String centerName, DateTime mfiJoiningDate,
-            MeetingBO meeting, PersonnelBO loanOfficer, OfficeBO centerOffice, int numberOfCustomersInOfficeAlready,
+            MeetingBO meeting, PersonnelBO loanOfficer, OfficeBO centerOffice,
             Address centerAddress, String externalId, DateTime activationDate) {
 
         PersonnelBO formedBy = null;
         CenterBO center = new CenterBO(userContext, centerName, mfiJoiningDate, meeting, loanOfficer, centerOffice,
-                numberOfCustomersInOfficeAlready, CustomerStatus.CENTER_ACTIVE, formedBy, activationDate);
+                CustomerStatus.CENTER_ACTIVE, formedBy, activationDate);
 
         center.setExternalId(externalId);
         center.updateAddress(centerAddress);
@@ -76,12 +76,10 @@ public class CenterBO extends CustomerBO {
      * minimal legal constructor for {@link CenterBO}.
      */
     public CenterBO(UserContext userContext, String centerName, DateTime mfiJoiningDate, MeetingBO meeting,
-            PersonnelBO loanOfficer, OfficeBO office, int numberOfCustomersInOfficeAlready,
+            PersonnelBO loanOfficer, OfficeBO office,
             CustomerStatus customerStatus, PersonnelBO formedBy, DateTime activationDate) {
         super(userContext, centerName, CustomerLevel.CENTER, customerStatus, mfiJoiningDate, office, meeting, loanOfficer, formedBy);
 
-        int searchIdCustomerValue = numberOfCustomersInOfficeAlready + 1;
-        this.setSearchId("1." + searchIdCustomerValue);
         this.setCustomerActivationDate(activationDate.toDate());
     }
 
