@@ -196,6 +196,7 @@
                 <configuration>
                     <inputDirectory>src/main/resources/org/mifos/ui/localizedProperties</inputDirectory>
                     <outputDirectory>target/classes/org/mifos/ui/localizedProperties</outputDirectory>
+                    <inputFilenamePattern>^[A-Za-z_]+essages\.properties$</inputFilenamePattern>
                 </configuration>
                 <executions>
                     <execution>
