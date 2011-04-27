@@ -50,7 +50,7 @@ import org.testng.annotations.Test;
 
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(singleThreaded = true, groups = {"loan", "acceptance", "ui", "no_db_unit", "smoke"})
+@Test(singleThreaded = true, groups = {"loan", "acceptance", "ui", "no_db_unit"})
 public class RedoLoanDisbursalTest extends UiTestCaseBase {
     private LoanTestHelper loanTestHelper;
     private NavigationHelper navigationHelper;

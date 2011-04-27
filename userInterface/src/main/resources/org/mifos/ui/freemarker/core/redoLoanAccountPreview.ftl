@@ -215,19 +215,64 @@
 <table style="margin-bottom: 15px;">
 		<thead>
 		<tr>
-			<th style="border-top: 1px solid grey;">[@spring.message "reviewInstallments.installmentHeading" /]</th>
-			<th style="border-top: 1px solid grey;">[@spring.message "reviewInstallments.dueDateHeading" /]</th>
-			<th style="border-top: 1px solid grey;">[@spring.message "reviewInstallments.principalHeading" /]</th>
-			<th style="border-top: 1px solid grey;">[@spring.message "reviewInstallments.interestHeading" /]</th>
-			<th style="border-top: 1px solid grey;">[@spring.message "reviewInstallments.feesHeading" /]</th>
-			<th style="border-top: 1px solid grey;">[@spring.message "reviewInstallments.totalHeading" /]</th>
+			<th style="border-top: 1px solid grey; width: 50px;">[@spring.message "reviewInstallments.installmentHeading" /]</th>
+			<th style="border-top: 1px solid grey; width: 75px;">[@spring.message "reviewInstallments.dueDateHeading" /]</th>
+			<th style="border-top: 1px solid grey; width: 75px;">[@spring.message "reviewInstallments.redo.datePaidHeading" /]</th>
+			<th style="border-top: 1px solid grey; width: 50px;">[@spring.message "reviewInstallments.principalHeading" /]</th>
+			<th style="border-top: 1px solid grey; width: 50px;">[@spring.message "reviewInstallments.interestHeading" /]</th>
+			<th style="border-top: 1px solid grey; width: 50px;">[@spring.message "reviewInstallments.feesHeading" /]</th>
+			<th style="border-top: 1px solid grey; width: 50px;">[@spring.message "reviewInstallments.totalHeading" /]</th>
+			<th style="border-top: 1px solid grey; width: 50px;">&nbsp;</th>
+			<th style="border-top: 1px solid grey;">[@spring.message "reviewInstallments.redo.principalHeading" /]</th>
+			<th style="border-top: 1px solid grey;">[@spring.message "reviewInstallments.redo.interestHeading" /]</th>
+			<th style="border-top: 1px solid grey;">[@spring.message "reviewInstallments.redo.feesHeading" /]</th>
+			<th style="border-top: 1px solid grey;">[@spring.message "reviewInstallments.redo.totalInstallmentHeading" /]</th>
+		</tr>
+		<tr>
+			<th colspan="12">[@spring.message "reviewInstallments.redo.paidInstallmentsHeading" /]</th>
 		</tr>
 		</thead>
 		<tbody>
-		[#list loanScheduleReferenceData.installments as row]
+		[#list loanScheduleFormBean.loanRepaymentPaidInstallmentsWithRunningBalance as row]
+		<tr>
+			<td style="border-top: 1px solid grey;">${row.installmentDetails.installmentNumber?string.number}</td>
+			<td style="border-top: 1px solid grey;">${row.installmentDetails.dueDate?date?string.medium}</td>
+			<td style="border-top: 1px solid grey;">${row.paymentDate?date?string.medium}</td>
+			<td style="border-top: 1px solid grey;">${row.installmentDetails.principal?string.number}</td>
+			<td style="border-top: 1px solid grey;">${row.installmentDetails.interest?string.number}</td>
+			<td style="border-top: 1px solid grey;">${row.installmentDetails.fees?string.number}</td>
+			<td style="border-top: 1px solid grey;">${row.total?string.number}</td>
+			<th style="border-top: 1px solid grey; width: 20px;">&nbsp;</th>
+			<td style="border-top: 1px solid grey;">${row.principal?string.number}</td>
+			<td style="border-top: 1px solid grey;">${row.interest?string.number}</td>
+			<td style="border-top: 1px solid grey;">${row.fees?string.number}</td>
+			<td style="border-top: 1px solid grey;">${row.totalInstallment?string.number}</td>
+		</tr>
+		[/#list]
+		</tbody>
+</table>
+
+<table style="margin-bottom: 15px; width: 515px;">
+		<thead>
+		<tr>
+			<th style="border-top: 1px solid grey; width: 50px;">[@spring.message "reviewInstallments.installmentHeading" /]</th>
+			<th style="border-top: 1px solid grey; width: 75px;">[@spring.message "reviewInstallments.dueDateHeading" /]</th>
+			<th style="border-top: 1px solid grey; width: 75px;">[@spring.message "reviewInstallments.redo.datePaidHeading" /]</th>
+			<th style="border-top: 1px solid grey; width: 50px;">[@spring.message "reviewInstallments.principalHeading" /]</th>
+			<th style="border-top: 1px solid grey; width: 50px;">[@spring.message "reviewInstallments.interestHeading" /]</th>
+			<th style="border-top: 1px solid grey; width: 50px;">[@spring.message "reviewInstallments.feesHeading" /]</th>
+			<th style="border-top: 1px solid grey; width: 50px;">[@spring.message "reviewInstallments.totalHeading" /]</th>
+		</tr>
+		<tr>
+			<th colspan="7">[@spring.message "reviewInstallments.redo.futureInstallmentsHeading" /]</th>
+		</tr>
+		</thead>
+		<tbody>
+		[#list loanScheduleFormBean.loanRepaymentFutureInstallments as row]
 		<tr>
 			<td style="border-top: 1px solid grey;">${row.installmentNumber?string.number}</td>
 			<td style="border-top: 1px solid grey;">${row.dueDate?date?string.medium}</td>
+			<th style="border-top: 1px solid grey; width: 20px;">-</th>
 			<td style="border-top: 1px solid grey;">${row.principal?string.number}</td>
 			<td style="border-top: 1px solid grey;">${row.interest?string.number}</td>
 			<td style="border-top: 1px solid grey;">${row.fees?string.number}</td>
@@ -249,7 +294,6 @@
 
 <form action="${flowExecutionUrl}" method="post" class="webflow-controls centered">
     <div class="row">
-        [@form.submitButton id="createloanpreview.button.saveForLater" label="widget.form.buttonLabel.saveForLater" webflowEvent="saveForLater" /]
         [@form.submitButton id="createloanpreview.button.submitForApproval" label="widget.form.buttonLabel.saveForApproval" webflowEvent="submit" /]
         [@form.cancelButton label="widget.form.buttonLabel.cancel" webflowEvent="cancel" /]
     </div>

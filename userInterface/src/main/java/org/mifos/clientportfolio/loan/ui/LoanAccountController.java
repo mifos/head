@@ -72,6 +72,10 @@ public class LoanAccountController {
 		this.loanAccountServiceFacade = loanAccountServiceFacade;
         this.adminServiceFacade = adminServiceFacade;
     }
+	
+	public void markAsRedoLoanAccount(CustomerSearchFormBean formBean) {
+	    formBean.setRedoLoanAccount(true);
+	}
 
 	public CustomerSearchResultsDto searchCustomers(CustomerSearchFormBean formBean) {
 
@@ -241,14 +245,35 @@ public class LoanAccountController {
         LoanScheduleDto loanSchedule = loanAccountServiceFacade.createLoanSchedule(createLoanAccount);
 
         List<Date> installments = new ArrayList<Date>();
+        List<Date> actualPaymentDates = new ArrayList<Date>();
         List<Number> installmentAmounts = new ArrayList<Number>();
+        List<Number> actualPaymentAmounts = new ArrayList<Number>();
+
+        BigDecimal totalLoanInterest = BigDecimal.ZERO;
+        BigDecimal totalLoanFees = BigDecimal.ZERO;
         for (LoanCreationInstallmentDto installment :loanSchedule.getInstallments()) {
+            
+            totalLoanInterest = totalLoanInterest.add(BigDecimal.valueOf(installment.getInterest()));
+            totalLoanFees = totalLoanFees.add(BigDecimal.valueOf(installment.getFees()));
+            
             installments.add(installment.getDueDate());
+            actualPaymentDates.add(installment.getDueDate());
             installmentAmounts.add(installment.getTotal());
+            if (new LocalDate(installment.getDueDate()).isBefore(new LocalDate().plusDays(1))) {
+                actualPaymentAmounts.add(installment.getTotal());
+            } else {
+                actualPaymentAmounts.add(Double.valueOf("0.0"));
+            }
         }
         loanScheduleFormBean.setInstallments(installments);
         loanScheduleFormBean.setInstallmentAmounts(installmentAmounts);
+        loanScheduleFormBean.setActualPaymentDates(actualPaymentDates);
+        loanScheduleFormBean.setActualPaymentAmounts(actualPaymentAmounts);
+        
         loanScheduleFormBean.setLoanPrincipal(BigDecimal.valueOf(formBean.getAmount()));
+        loanScheduleFormBean.setTotalLoanInterest(totalLoanInterest);
+        loanScheduleFormBean.setTotalLoanFees(totalLoanFees);
+        loanScheduleFormBean.setRepaymentInstallments(loanSchedule.getInstallments());
 
         // variable installments related
         loanScheduleFormBean.setVariableInstallmentsAllowed(formBean.isVariableInstallmentsAllowed());

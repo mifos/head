@@ -38,7 +38,9 @@ public class CustomerSearchFormBean implements Serializable {
 	@NotEmpty
 	private String searchString;
 	
-	private int page = 1;
+	private boolean redoLoanAccount = false;
+	
+    private int page = 1;
 	private int pageSize = 10;
 
 	public String getSearchString() {
@@ -64,6 +66,14 @@ public class CustomerSearchFormBean implements Serializable {
 	public void setPageSize(int pageSize) {
 		this.pageSize = pageSize;
 	}
+	
+    public boolean isRedoLoanAccount() {
+        return redoLoanAccount;
+    }
+
+    public void setRedoLoanAccount(boolean redoLoanAccount) {
+        this.redoLoanAccount = redoLoanAccount;
+    }
 	
 	/**
      * validateXXXX is invoked on transition from state 

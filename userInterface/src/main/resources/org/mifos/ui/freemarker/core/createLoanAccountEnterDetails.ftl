@@ -28,7 +28,12 @@
                          
 <span id="page.id" title="LoanCreationDetail"></span>
 
+[#if customerSearchFormBean.redoLoanAccount]
+<p class="red standout" style="margin-bottom: 5px;">[@spring.message "redoLoanAccount.wizard.highlightedNote" /]</p>
+<h1>[@spring.message "redoLoanAccount.wizard.title" /] - <span class="standout">[@spring.message "createLoanAccount.selectProduct.pageSubtitle" /]</span></h1>
+[#else]
 <h1>[@spring.message "createLoanAccount.wizard.title" /] - <span class="standout">[@spring.message "createLoanAccount.selectProduct.pageSubtitle" /]</span></h1>
+[/#if]
 <p>[@spring.message "createLoanAccount.selectProduct.instructions" /]</p>
 <p><span class="mandatory">*</span>[@spring.message "requiredFieldsInstructions" /]</p>
 <br/>
