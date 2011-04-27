@@ -41,6 +41,7 @@ import org.mifos.customers.business.service.CustomerAccountFactory;
 import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.business.service.CustomerServiceImpl;
 import org.mifos.customers.business.service.MessageLookupHelper;
+import org.mifos.customers.business.service.MifosConfigurationHelper;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
@@ -99,6 +100,9 @@ public class CustomerSearchIdGenerationTest {
 
     @Mock
     private static ConfigurationPersistence configurationPersistence;
+    
+    @Mock
+    private MifosConfigurationHelper configurationHelper;
 
     @Mock
     CalendarEvent calendarEvent;
@@ -122,6 +126,7 @@ public class CustomerSearchIdGenerationTest {
         ((CustomerServiceImpl)customerService).setCustomerAccountFactory(customerAccountFactory);
         ((CustomerServiceImpl)customerService).setMessageLookupHelper(messageLookupHelper);
         ((CustomerServiceImpl)customerService).setConfigurationPersistence(configurationPersistence);
+        ((CustomerServiceImpl)customerService).setConfigurationHelper(configurationHelper);        
     }
 
 
@@ -246,6 +251,7 @@ public class CustomerSearchIdGenerationTest {
         when(customerDao.findClientBySystemId("clientid")).thenReturn(existingClient);
         when(customerDao.findCustomerById(group2_id)).thenReturn(existingGroup2);
         when(holidayDao.findCalendarEventsForThisYearAndNext(anyShort())).thenReturn(calendarEvent);
+        when(configurationHelper.isLoanScheduleRepaymentIndependentOfCustomerMeetingEnabled()).thenReturn(true);
 
         // exercise test
         assertThat(existingGroup.getSearchId(), is("1." + group1_id));
