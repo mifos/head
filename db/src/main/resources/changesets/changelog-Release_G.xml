@@ -42,7 +42,7 @@
             </sql>
         </rollback>
     </changeSet>
-    <changeSet id="MIFOS-4951_1" author="Van Mittal-Henkle" context="contraction">
+    <changeSet id="MIFOS-4951_1" author="Van Mittal-Henkle" context="expansion">
         <sql endDelimiter=";">
 			DROP PROCEDURE IF EXISTS reassignSearchIds;
 		</sql>
