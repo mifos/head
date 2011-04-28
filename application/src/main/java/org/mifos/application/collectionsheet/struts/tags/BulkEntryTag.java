@@ -41,6 +41,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.security.util.UserContext;
 
@@ -98,7 +99,7 @@ public class BulkEntryTag extends BodyTagSupport {
         builder.append(bulkEntryDisplayHelper.buildTableHeadings(loanProducts, savingsProducts, userContext
                 .getPreferredLocale()));
         CollectionSheetEntryDto bulkEntryParentView = bulkEntry.getBulkEntryParent();
-        Double[] totals = null;
+        Money[] totals = null;
 
         boolean centerHierachyExists = ClientRules.getCenterHierarchyExists();
         if (centerHierachyExists) {
