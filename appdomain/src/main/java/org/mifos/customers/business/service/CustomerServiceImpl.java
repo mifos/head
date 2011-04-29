@@ -160,7 +160,7 @@ public class CustomerServiceImpl implements CustomerService {
 
             createCustomer(customer, meeting, accountFees);
         } catch (CustomerException e) {
-            throw new BusinessRuleException(e.getKey(), e);
+            throw new BusinessRuleException(e.getKey(), new Object[] { customer.getDisplayName()});
         }
     }
 

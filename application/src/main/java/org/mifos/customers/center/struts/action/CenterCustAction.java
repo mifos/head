@@ -171,7 +171,7 @@ public class CenterCustAction extends CustAction {
             actionForm.setCustomerId(centerDetails.getId().toString());
             actionForm.setGlobalCustNum(centerDetails.getGlobalCustNum());
         } catch (BusinessRuleException e) {
-            throw new ApplicationException(e.getMessageKey(), e);
+            throw new ApplicationException(e.getMessageKey(), e.getMessageValues());
         }
 
         return mapping.findForward(ActionForwards.create_success.toString());
