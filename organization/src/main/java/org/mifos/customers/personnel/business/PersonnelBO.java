@@ -622,4 +622,17 @@ public class PersonnelBO extends AbstractBusinessObject {
     public void setUserName(String userName) {
         this.userName = userName;
     }
+    
+    public boolean isExpire(){
+    	return ((this.hash==null && this.encryptedPassword==null)?true:false);
+    }
+    
+    public void expireAccount(){
+    	if(this.hash!=null){
+    		this.hash=null;
+    	}
+    	if(this.encryptedPassword!=null){
+    		this.encryptedPassword=null;
+    	}
+    }
 }

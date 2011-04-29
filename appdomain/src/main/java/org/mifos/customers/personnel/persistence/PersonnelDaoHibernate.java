@@ -21,6 +21,8 @@
 package org.mifos.customers.personnel.persistence;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -37,18 +39,24 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.application.NamedQueryConstants;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelRoleEntity;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.personnel.util.helpers.PersonnelStatus;
 import org.mifos.dto.domain.CenterCreation;
+import org.mifos.dto.domain.LoginDto;
 import org.mifos.dto.domain.PersonnelDto;
 import org.mifos.dto.domain.UserDetailDto;
 import org.mifos.dto.domain.UserSearchDto;
 import org.mifos.dto.screen.SystemUserSearchResultsDto;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
+import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.security.MifosUser;
 import org.mifos.security.rolesandpermission.business.RoleBO;
+import org.mifos.service.BusinessRuleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
@@ -56,6 +64,8 @@ import org.springframework.security.core.authority.GrantedAuthorityImpl;
 public class PersonnelDaoHibernate implements PersonnelDao {
 
     private final GenericDao genericDao;
+    
+    private HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
 
     private static final ResourceBundle activityIdToRolesMap = ResourceBundle.getBundle("org.mifos.security.rolesandpermission.mifos_activity_role");
 
@@ -115,7 +125,31 @@ public class PersonnelDaoHibernate implements PersonnelDao {
 
         byte[] password = user.getEncryptedPassword();
         boolean enabled = user.isActive();
-        boolean accountNonExpired = !user.isLocked();
+        boolean accountNonExpired = !user.isExpire();
+        if(accountNonExpired){
+        	Calendar cal = Calendar.getInstance();
+        	cal.add(Calendar.MONTH, -1);
+        	Date date = user.getLastLogin();
+        	if(date == null){
+        		date = user.getCreatedDate();
+        	}
+        	Calendar calDate = Calendar.getInstance();
+        	calDate.setTime(date);
+        	if(cal.after(calDate)){
+        		 try {
+                    this.transactionHelper.startTransaction();
+                    user.expireAccount();
+                    this.save(user);
+                    this.transactionHelper.commitTransaction();
+                } catch (Exception e) {
+                    this.transactionHelper.rollbackTransaction();
+                    throw new MifosRuntimeException(e);
+                } finally {
+                    this.transactionHelper.closeSession();
+                }
+        		accountNonExpired=false;
+        	}
+        }
         boolean credentialsNonExpired = true;
         boolean accountNonLocked = !user.isLocked();
 
