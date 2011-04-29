@@ -26,7 +26,6 @@ import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_ME
 import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
 import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
 import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testUser;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_SECOND_WEEK;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 import java.sql.Date;
@@ -626,47 +625,6 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
                 Assert.assertEquals(1, ((CustomerScheduleEntity) accountActionDateEntity).getAccountFeesActionDetails()
                         .size());
                 Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(incrementCurrentDate(7).getTime()), DateUtils
-                        .getDateWithoutTimeStamp(((CustomerScheduleEntity) accountActionDateEntity).getActionDate()
-                                .getTime()));
-            }
-            Assert.assertFalse(((CustomerScheduleEntity) accountActionDateEntity).isPaid());
-        }
-    }
-
-    @Test
-    public void testGenerateMeetingScheduleWithRecurAfterEveryTwoWeeks() throws Exception {
-        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY,
-                EVERY_SECOND_WEEK, CUSTOMER_MEETING));
-        List<FeeDto> feeDto = new ArrayList<FeeDto>();
-        FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee("Periodic Fee", FeeCategory.ALLCUSTOMERS, "100",
-                RecurrenceType.WEEKLY, Short.valueOf("1"));
-        feeDto.add(new FeeDto(userContext, periodicFee));
-        FeeBO upfrontFee = TestObjectFactory.createOneTimeAmountFee("Upfront Fee", FeeCategory.ALLCUSTOMERS, "30",
-                FeePayment.UPFRONT);
-        feeDto.add(new FeeDto(userContext, upfrontFee));
-        center = TestObjectFactory.createCenter("Center_Active_test", meeting, feeDto);
-        Date startDate = new Date(System.currentTimeMillis());
-        for (AccountActionDateEntity accountActionDateEntity : center.getCustomerAccount().getAccountActionDates()) {
-            if (accountActionDateEntity.getInstallmentId().equals(Short.valueOf("1"))) {
-                Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(startDate.getTime()), DateUtils
-                        .getDateWithoutTimeStamp(((CustomerScheduleEntity) accountActionDateEntity).getActionDate()
-                                .getTime()));
-                Assert.assertEquals(2, ((CustomerScheduleEntity) accountActionDateEntity).getAccountFeesActionDetails()
-                        .size());
-                for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((CustomerScheduleEntity) accountActionDateEntity)
-                        .getAccountFeesActionDetails()) {
-
-                    if (accountFeesActionDetailEntity.getFee().getFeeName().equals("Periodic Fee")) {
-                        Assert.assertEquals(new Money(getCurrency(), "100.0"), accountFeesActionDetailEntity.getFeeAmount());
-                    } else {
-                        Assert.assertEquals("Upfront Fee", accountFeesActionDetailEntity.getFee().getFeeName());
-                        Assert.assertEquals(new Money(getCurrency(), "30.0"), accountFeesActionDetailEntity.getFeeAmount());
-                    }
-                }
-            } else if (accountActionDateEntity.getInstallmentId().equals(Short.valueOf("2"))) {
-                Assert.assertEquals(1, ((CustomerScheduleEntity) accountActionDateEntity).getAccountFeesActionDetails()
-                        .size());
-                Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(incrementCurrentDate(14).getTime()), DateUtils
                         .getDateWithoutTimeStamp(((CustomerScheduleEntity) accountActionDateEntity).getActionDate()
                                 .getTime()));
             }

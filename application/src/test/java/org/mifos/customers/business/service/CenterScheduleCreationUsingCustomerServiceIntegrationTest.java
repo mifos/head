@@ -595,9 +595,9 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest extends M
         customerService.createCenter(center, biWeeklyMeeting, new ArrayList<AccountFeesEntity>());
 
         // verification
-        validateDates(center.getGlobalCustNum(), startDate, startDate.plusWeeks(2), startDate.plusWeeks(4), startDate.plusWeeks(6),
-                startDate.plusWeeks(8), startDate.plusWeeks(10), startDate.plusWeeks(12), startDate.plusWeeks(14),
-                startDate.plusWeeks(16), startDate.plusWeeks(18));
+        validateDates(center.getGlobalCustNum(), startDate.plusWeeks(1), startDate.plusWeeks(3), startDate.plusWeeks(5), startDate.plusWeeks(7),
+                startDate.plusWeeks(9), startDate.plusWeeks(11), startDate.plusWeeks(13), startDate.plusWeeks(15),
+                startDate.plusWeeks(17), startDate.plusWeeks(19));
     }
 
     @Ignore

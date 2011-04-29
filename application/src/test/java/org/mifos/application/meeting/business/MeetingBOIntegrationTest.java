@@ -45,7 +45,6 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
 
     private static final Short ONE = Short.valueOf("1");
     private static final Short TWO = Short.valueOf("2");
-    private static final Short THREE = Short.valueOf("3");
     private static final Short FIVE = Short.valueOf("5");
     private static final Short SIX = Short.valueOf("6");
     private static final Short TEN = Short.valueOf("10");
@@ -317,28 +316,6 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertFalse(meeting.isValidMeetingDate(getDate("28/02/2004"), occurrences));
     }
 
-    // ExpectedList("25/11/2005,27/01/2006,31/03/2006,26/05/2006,28/07/2006,29/09/2006");
-    @Test
-    public void testIsValidScheduleDate_MonthlyOnWeekDay_6Occurences() throws Exception {
-        // dates that lies on last friday of every two months
-        startDate = getDate("15/11/2005");
-        occurrences = 6;
-        meeting = createMonthlyMeetingOnWeekDay(WeekDay.FRIDAY, RankOfDay.LAST, TWO, startDate);
-        Assert.assertTrue(meeting.isValidMeetingDate(getDate("31/03/2006"), occurrences));
-        Assert.assertFalse(meeting.isValidMeetingDate(getDate("27/10/2006"), occurrences));
-    }
-
-    // ExpectedList("15/11/2005,27/12/2005,07/02/2006");
-    @Test
-    public void testIsValidScheduleDate_EverySixWeek_3Occurences() throws Exception {
-        startDate = getDate("15/11/2005");
-        occurrences = 3;
-        meeting = createWeeklyMeeting(WeekDay.TUESDAY, SIX, startDate);
-
-        Assert.assertTrue(meeting.isValidMeetingDate(getDate("27/12/2005"), occurrences));
-        Assert.assertFalse(meeting.isValidMeetingDate(getDate("26/12/2006"), occurrences));
-    }
-
     // ExpectedList("28/08/2005,07/09/2005,17/09/2005");
     @Test
     public void testIsValidScheduleDate_Day_3Occurences() throws Exception {
@@ -379,19 +356,6 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    // ExpectedList("05/12/2005,05/03/2006,05/06/2006,05/09/2006");
-    @Test
-    public void testIsValidScheduleDate_MonthlyOnDate() throws Exception {
-        // 5th day of every three months
-        startDate = getDate("15/11/2005");
-        endDate = getDate("15/10/2006");
-        dayNumber = FIVE;
-        meeting = createMonthlyMeetingOnDate(dayNumber, THREE, startDate);
-
-        Assert.assertTrue(meeting.isValidMeetingDate(getDate("05/09/2006"), endDate));
-        Assert.assertFalse(meeting.isValidMeetingDate(getDate("05/12/2006"), endDate));
-    }
-
     // ExpectedList("29/08/2006,30/08/2006,31/08/2006,01/09/2006,02/09/2006");
     @Test
     public void testIsValidScheduleDate_31Day() throws Exception {
@@ -412,17 +376,7 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertTrue(meeting.isValidMeetingDate(getDate("13/03/2006"), endDate));
         Assert.assertFalse(meeting.isValidMeetingDate(getDate("15/10/2006"), endDate));
     }
-
-    // ExpectedList("18/11/2005,09/12/2005,30/12/2005,20/01/2006,10/02/2006");
-    @Test
-    public void testIsValidScheduleDate_EveryThreeWeek() throws Exception {
-        startDate = getDate("15/11/2005");
-        endDate = getDate("01/03/2006");
-        meeting = createWeeklyMeeting(WeekDay.FRIDAY, THREE, startDate);
-        Assert.assertTrue(meeting.isValidMeetingDate(getDate("18/11/2005"), endDate));
-        Assert.assertFalse(meeting.isValidMeetingDate(getDate("03/03/2006"), endDate));
-    }
-
+    
     @Test
     public void testGetPrevScheduleDateAfterRecurrenceOnStartofMonth() throws Exception {
         startDate = getDate("01/01/2006");

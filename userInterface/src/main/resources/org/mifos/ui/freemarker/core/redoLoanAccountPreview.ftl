@@ -294,7 +294,7 @@
 
 <form action="${flowExecutionUrl}" method="post" class="webflow-controls centered">
     <div class="row">
-        [@form.submitButton id="createloanpreview.button.submitForApproval" label="widget.form.buttonLabel.saveForApproval" webflowEvent="submit" /]
+        [@form.submitButton id="createloanpreview.button.submitForApproval" label="widget.form.buttonLabel.submit" webflowEvent="submit" /]
         [@form.cancelButton label="widget.form.buttonLabel.cancel" webflowEvent="cancel" /]
     </div>
 </form>

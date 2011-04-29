@@ -20,7 +20,7 @@
 
 package org.mifos.accounts.business;
 
-import java.sql.Date;
+import java.util.Date;
 
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.business.AbstractEntity;
@@ -44,7 +44,7 @@ public class AccountNotesEntity extends AbstractEntity {
         this.account = null;
     }
 
-    public AccountNotesEntity(java.sql.Date commentDate, String comment, PersonnelBO personnel, AccountBO account) {
+    public AccountNotesEntity(Date commentDate, String comment, PersonnelBO personnel, AccountBO account) {
         commentId = null;
         this.commentDate = commentDate;
         this.comment = comment;
@@ -60,7 +60,7 @@ public class AccountNotesEntity extends AbstractEntity {
         return (commentDate != null) ? this.commentDate.toString() : "";
     }
 
-    public java.sql.Date getCommentDate() {
+    public Date getCommentDate() {
         return this.commentDate;
     }
 

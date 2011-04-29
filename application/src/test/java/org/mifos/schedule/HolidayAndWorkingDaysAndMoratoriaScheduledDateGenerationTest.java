@@ -374,7 +374,7 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGenerationTest {
                                            .withStartDate(date(2011,6,27))
                                            .withNumberOfDates(3)
                                            .build(),
-                      date(2011, 6, 27), date(2011, 7, 11), date(2011, 7, 25));
+                      date(2011, 7, 4), date(2011, 7, 18), date(2011, 8, 1));
    }
 
     @Test
@@ -390,7 +390,7 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGenerationTest {
                                            .withStartDate(date(2011,6,27))
                                            .withNumberOfDates(3)
                                            .build(),
-                      date(2011, 6, 27), date(2011, 7, 25), date(2011, 7, 25));
+                                           date(2011, 7, 4), date(2011, 7, 18), date(2011, 8, 1));
    }
 
     @Test
@@ -406,7 +406,7 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGenerationTest {
                                            .withStartDate(date(2011,6,20))
                                            .withNumberOfDates(3)
                                            .build(),
-                      date(2011, 6, 20), date(2011,7,18), date(2011,8,1));
+                      date(2011, 6, 27), date(2011,7,11), date(2011,7 ,25));
     }
 
     @Test
@@ -604,7 +604,7 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGenerationTest {
                                            .withStartDate(date(2011, 5, 6))
                                            .withNumberOfDates(4)
                                            .build(),
-                      date(2011, 5, 6), date(2011, 7, 6), date(2011, 9, 6), date(2011, 11, 7));
+                      date(2011, 6, 6), date(2011, 8, 8), date(2011, 10, 6), date(2011, 12, 6));
    }
 
     @Test
@@ -615,7 +615,7 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGenerationTest {
                                            .withStartDate(date(2011,5,6))
                                            .withNumberOfDates(3)
                                            .build(),
-                      date(2011, 5, 6), date(2011, 9, 6), date(2011, 11, 7));
+                                           date(2011, 6, 6), date(2011, 8, 8), date(2011, 10, 6));
    }
 
     @Test
@@ -631,7 +631,7 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGenerationTest {
                                            .withStartDate(date(2011,5,6))
                                            .withNumberOfDates(3)
                                            .build(),
-                      date(2011, 5, 6), date(2011, 7, 18), date(2011, 9, 6));
+        date(2011, 6, 6), date(2011, 8, 8), date(2011, 10, 6));
    }
 
     @Test
@@ -647,7 +647,7 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGenerationTest {
                                            .withStartDate(date(2011,5,6))
                                            .withNumberOfDates(3)
                                            .build(),
-                      date(2011, 5, 6), date(2011, 9, 6), date(2011, 9, 6));
+                                           date(2011, 6, 6), date(2011, 8, 8), date(2011, 10, 6));
    }
 
     @Test
@@ -663,7 +663,7 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGenerationTest {
                                            .withStartDate(date(2011,5,6))
                                            .withNumberOfDates(3)
                                            .build(),
-                      date(2011, 5, 6), date(2011, 7, 6), date(2011, 9, 6));
+                                           date(2011, 6, 6), date(2011, 8, 8), date(2011, 10, 6));
    }
 
     @Test

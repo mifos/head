@@ -53,4 +53,15 @@ public class WeeklyScheduledEventTest {
 
         assertThat(result, is(monday.plusDays(9)));
     }
+    
+    @Test
+    public void canRollForwardDateToNextNearestDateMatchingScheduleWhenUsingBiWeeklySchedule() {
+
+        scheduledEvent = new ScheduledEventBuilder().every(2).weeks().on(DayOfWeek.wednesday()).build();
+        DateTime thursday = DayOfWeek.thursdayMidnight();
+
+        DateTime result = scheduledEvent.nearestMatchingDateBeginningAt(thursday);
+
+        assertThat(result, is(thursday.plusDays(13)));
+    }
 }

@@ -102,6 +102,12 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
     @PreAuthorize("isFullyAuthenticated()")
     String createLoan(OpeningBalanceLoanAccount openingBalanceLoan);
     
+    /**
+     * create a loan and automatically approve/disburse and make payments
+     */
+    @PreAuthorize("isFullyAuthenticated()")
+    LoanCreationResultDto createLoanWithBackdatedPayments(CreateLoanAccount loanAccountDetails, List<QuestionGroupDetail> questionGroups, LoanAccountCashFlow loanAccountCashFlow);
+    
     @PreAuthorize("isFullyAuthenticated()")
     LoanCreationResultDto createLoan(CreateLoanAccount createLoanAccount, List<QuestionGroupDetail> questionGroups, LoanAccountCashFlow loanAccountCashFlow);
     

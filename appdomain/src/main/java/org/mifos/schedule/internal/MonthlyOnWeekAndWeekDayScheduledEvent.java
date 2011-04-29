@@ -45,7 +45,7 @@ public class MonthlyOnWeekAndWeekDayScheduledEvent extends AbstractScheduledEven
     @Override
     public DateTime nearestMatchingDateBeginningAt(final DateTime startDate) {
 
-        return CalendarUtils.getFirstDayForMonthUsingWeekRankAndWeekday(startDate, this.weekOfMonth, this.dayOfWeek);
+        return CalendarUtils.getFirstDayForMonthUsingWeekRankAndWeekday(startDate, this.weekOfMonth, this.dayOfWeek).plusMonths(this.every-1);
     }
 
     @Override

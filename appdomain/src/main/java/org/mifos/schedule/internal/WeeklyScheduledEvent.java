@@ -41,7 +41,7 @@ public class WeeklyScheduledEvent extends AbstractScheduledEvent {
     @Override
     public DateTime nearestMatchingDateBeginningAt(final DateTime startDate) {
 
-        return CalendarUtils.getFirstDateForWeek(startDate, this.dayOfWeek);
+        return CalendarUtils.getFirstDateForWeek(startDate, this.dayOfWeek).plusWeeks(this.every-1);
     }
 
     @Override

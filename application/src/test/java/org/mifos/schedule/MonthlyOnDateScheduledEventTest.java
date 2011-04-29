@@ -52,4 +52,16 @@ public class MonthlyOnDateScheduledEventTest {
 
         assertThat(result, is(fifthDayOfMonth.plusMonths(1).minusDays(2)));
     }
+    
+    @Test
+    public void canRollForwardDateTwoMonthsToMatchDayOfMonthWhenDayOfMonthHasBeingPast() {
+
+        scheduledEvent = new ScheduledEventBuilder().every(2).months().onDayOfMonth(3).build();
+        DateTime fifthDayOfMonth = new DateTime().plusMonths(1).withDayOfMonth(5).toDateMidnight().toDateTime();
+
+        DateTime result = scheduledEvent.nearestMatchingDateBeginningAt(fifthDayOfMonth);
+
+        assertThat(result, is(fifthDayOfMonth.plusMonths(2).minusDays(2)));
+    }
+
 }

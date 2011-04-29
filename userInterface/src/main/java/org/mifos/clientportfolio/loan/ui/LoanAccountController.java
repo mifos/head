@@ -423,7 +423,39 @@ public class LoanAccountController {
 
         return submitLoanApplication(applicationState.getConfiguredApplicationId(), formBean, loanAccountQuestionGroupFormBean, loanAccountCashFlow, cashFlowSummaryFormBean, loanScheduleFormBean);
     }
+    
+    public LoanCreationResultDto openLoanWithBackdatedPayments(LoanAccountFormBean formBean, LoanAccountQuestionGroupFormBean loanAccountQuestionGroupFormBean,
+            LoanAccountCashFlow loanAccountCashFlow, CashFlowSummaryFormBean cashFlowSummaryFormBean, LoanScheduleFormBean loanScheduleFormBean) {
 
+        LoanApplicationStateDto applicationState = loanAccountServiceFacade.retrieveLoanApplicationState();
+
+        return submitLoanWithBackdatedPaymentsApplication(applicationState.getPartialApplicationId(), formBean, loanAccountQuestionGroupFormBean, loanAccountCashFlow, cashFlowSummaryFormBean, loanScheduleFormBean);
+    }
+    
+    private LoanCreationResultDto submitLoanWithBackdatedPaymentsApplication(Integer accountState, LoanAccountFormBean formBean, LoanAccountQuestionGroupFormBean loanAccountQuestionGroupFormBean,
+            LoanAccountCashFlow loanAccountCashFlow, CashFlowSummaryFormBean cashFlowSummaryFormBean, LoanScheduleFormBean loanScheduleFormBean) {
+
+        LocalDate disbursementDate = translateDisbursementDateToLocalDate(formBean);
+        RecurringSchedule recurringSchedule = determineRecurringSchedule(formBean);
+        List<CreateAccountFeeDto> accountFees = translateToAccountFeeDtos(formBean);
+        List<CreateAccountFeeDto> additionalAccountFees = translateToAdditionalAccountFeeDtos(formBean);
+        accountFees.addAll(additionalAccountFees);
+        
+        BigDecimal loanAmount = BigDecimal.valueOf(formBean.getAmount().doubleValue());
+        BigDecimal minAllowedLoanAmount = BigDecimal.valueOf(formBean.getMinAllowedAmount().doubleValue());
+        BigDecimal maxAllowedLoanAmount = BigDecimal.valueOf(formBean.getMaxAllowedAmount().doubleValue());
+
+        CreateLoanAccount loanAccountDetails = new CreateLoanAccount(formBean.getCustomerId(),
+                formBean.getProductId(), accountState, loanAmount, minAllowedLoanAmount, maxAllowedLoanAmount,
+                formBean.getInterestRate().doubleValue(), disbursementDate, formBean.getNumberOfInstallments().intValue(),
+                formBean.getMinNumberOfInstallments().intValue(), formBean.getMaxNumberOfInstallments().intValue(),
+                formBean.getGraceDuration().intValue(), formBean.getFundId(),
+                formBean.getLoanPurposeId(), formBean.getCollateralTypeId(), formBean.getCollateralNotes(),
+                formBean.getExternalId(), formBean.isRepaymentScheduleIndependentOfCustomerMeeting(), recurringSchedule, accountFees);
+
+        return loanAccountServiceFacade.createLoanWithBackdatedPayments(loanAccountDetails, loanAccountQuestionGroupFormBean.getQuestionGroups(), loanAccountCashFlow);
+    }
+    
     private LoanCreationResultDto submitLoanApplication(Integer accountState, LoanAccountFormBean formBean, LoanAccountQuestionGroupFormBean loanAccountQuestionGroupFormBean,
             LoanAccountCashFlow loanAccountCashFlow, CashFlowSummaryFormBean cashFlowSummaryFormBean, LoanScheduleFormBean loanScheduleFormBean) {
 

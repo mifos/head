@@ -27,11 +27,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import org.hibernate.NonUniqueResultException;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentTypeDao;
 import org.mifos.accounts.business.AccountBO;
-import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountFeesEntity;
+import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
@@ -39,8 +40,6 @@ import org.mifos.accounts.loan.business.service.LoanScheduleGenerationDto;
 import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.persistence.LegacyAccountDao;
-import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
-import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountTypes;
@@ -56,8 +55,8 @@ import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.personnel.persistence.LegacyPersonnelDao;
+import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AccountReferenceDto;
 import org.mifos.dto.domain.PaymentTypeDto;
@@ -68,7 +67,6 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.service.BusinessRuleException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.hibernate.NonUniqueResultException;
 
 /**
  * A service class implementation to expose basic functions on loans. As an external API, this class should not expose
@@ -169,45 +167,49 @@ public class StandardAccountService implements AccountService {
         StaticHibernateUtil.startTransaction();
         for (AccountPaymentParametersDto accountPaymentParametersDto : accountPaymentParametersDtoList) {
             LoanBO loan = this.legacyLoanDao.getAccount(accountPaymentParametersDto.getAccountId());
-
+          PersonnelBO personnelBO = personnelDao.findPersonnelById(accountPaymentParametersDto.getUserMakingPayment()
+          .getUserId());
             BigDecimal paymentAmount = accountPaymentParametersDto.getPaymentAmount();
-
-            if ("MPESA".equals(accountPaymentParametersDto.getPaymentType().getName())) {
-                paymentAmount = computeWithdrawnForMPESA(paymentAmount, loan);
-            }
-
-            PaymentTypeEntity paymentTypeEntity = legacyMasterDao.getPersistentObject(
-                    PaymentTypeEntity.class, accountPaymentParametersDto.getPaymentType().getValue());
-            Money amount = new Money(loan.getCurrency(), paymentAmount);
-            Date receiptDate = null;
-            if (null != accountPaymentParametersDto.getReceiptDate()) {
-                receiptDate = accountPaymentParametersDto.getReceiptDate().toDateMidnight().toDate();
-            }
-            Date transactionDate = accountPaymentParametersDto.getPaymentDate().toDateMidnight().toDate();
-            String receiptId = accountPaymentParametersDto.getReceiptId();
-
-            AccountPaymentEntity disbursalPayment = new AccountPaymentEntity(loan, amount, receiptId, receiptDate,
-                    paymentTypeEntity, transactionDate);
-            PersonnelBO personnelBO = personnelDao.findPersonnelById(accountPaymentParametersDto.getUserMakingPayment()
-                    .getUserId());
-            disbursalPayment.setCreatedByUser(personnelBO);
-            Double interestRate = loan.getInterestRate();
-
-            Date oldDisbursementDate = loan.getDisbursementDate();
-            List<RepaymentScheduleInstallment> originalInstallments = loan.toRepaymentScheduleDto(locale);
-            loan.disburseLoan(disbursalPayment);
-            if (!loan.isVariableInstallmentsAllowed()) {
-                originalInstallments = loan.toRepaymentScheduleDto(locale);
-            }
-            Date newDisbursementDate = loan.getDisbursementDate();
-            boolean variableInstallmentsAllowed = loan.isVariableInstallmentsAllowed();
-            loanBusinessService.adjustDatesForVariableInstallments(variableInstallmentsAllowed, originalInstallments,
-                    oldDisbursementDate, newDisbursementDate, loan.getOfficeId());
-            loanBusinessService.applyDailyInterestRatesWhereApplicable(new LoanScheduleGenerationDto(newDisbursementDate,
-                    loan, variableInstallmentsAllowed, amount, interestRate), originalInstallments);
-            loanBusinessService.persistOriginalSchedule(loan);
+            handleLoanDisbursal(locale, loan, personnelBO, paymentAmount, accountPaymentParametersDto.getPaymentType(), accountPaymentParametersDto.getReceiptDate(), accountPaymentParametersDto.getPaymentDate(), 
+                    accountPaymentParametersDto.getReceiptId());
         }
         StaticHibernateUtil.commitTransaction();
+    }
+
+    public void handleLoanDisbursal(Locale locale, LoanBO loan, PersonnelBO personnelBO, BigDecimal paymentAmount, PaymentTypeDto paymentType, LocalDate receiptLocalDate, LocalDate paymentLocalDate, String receiptId)
+            throws PersistenceException, AccountException {
+
+        if ("MPESA".equals(paymentType.getName())) {
+            paymentAmount = computeWithdrawnForMPESA(paymentAmount, loan);
+        }
+
+        PaymentTypeEntity paymentTypeEntity = legacyMasterDao.getPersistentObject(
+                PaymentTypeEntity.class, paymentType.getValue());
+        Money amount = new Money(loan.getCurrency(), paymentAmount);
+        Date receiptDate = null;
+        if (null != receiptLocalDate) {
+            receiptDate = receiptLocalDate.toDateMidnight().toDate();
+        }
+        Date transactionDate = paymentLocalDate.toDateMidnight().toDate();
+
+        AccountPaymentEntity disbursalPayment = new AccountPaymentEntity(loan, amount, receiptId, receiptDate,
+                paymentTypeEntity, transactionDate);
+        disbursalPayment.setCreatedByUser(personnelBO);
+        Double interestRate = loan.getInterestRate();
+
+        Date oldDisbursementDate = loan.getDisbursementDate();
+        List<RepaymentScheduleInstallment> originalInstallments = loan.toRepaymentScheduleDto(locale);
+        loan.disburseLoan(disbursalPayment);
+        if (!loan.isVariableInstallmentsAllowed()) {
+            originalInstallments = loan.toRepaymentScheduleDto(locale);
+        }
+        Date newDisbursementDate = loan.getDisbursementDate();
+        boolean variableInstallmentsAllowed = loan.isVariableInstallmentsAllowed();
+        loanBusinessService.adjustDatesForVariableInstallments(variableInstallmentsAllowed, originalInstallments,
+                oldDisbursementDate, newDisbursementDate, loan.getOfficeId());
+        loanBusinessService.applyDailyInterestRatesWhereApplicable(new LoanScheduleGenerationDto(newDisbursementDate,
+                loan, variableInstallmentsAllowed, amount, interestRate), originalInstallments);
+        loanBusinessService.persistOriginalSchedule(loan);
     }
 
     @Override

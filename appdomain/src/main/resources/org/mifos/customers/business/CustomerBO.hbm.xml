@@ -612,7 +612,7 @@
             savings.accountState.id in (13,14,16,18) ]]>
     </query>
     <query name="customer.findById">
-        <![CDATA[from CustomerBO customer where customer.customerId = :CUSTOMER_ID ]]>
+        <![CDATA[from CustomerBO customer left join fetch customer.customerLevel as cl left join fetch customer.parentCustomer pc where customer.customerId = :CUSTOMER_ID]]>
     </query>
     <query name="customer.findBySystemId">
         <![CDATA[from org.mifos.customers.business.CustomerBO customer where customer.globalCustNum = :globalCustNum ]]>

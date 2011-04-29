@@ -69,6 +69,18 @@ public class MonthlyOnWeekAndWeekDayScheduledEventTest {
         assertThat(result, is(tuesdayOnFirstWeekOneMonthFrom(wednesday7thOfApril)));
     }
 
+    @Test
+    public void canRollForwardDateTwoMonthsToMatchWeekOfMonthAndDayOfWeekWhenStartingOneWeekAndDayAhead() {
+
+        scheduledEvent = new ScheduledEventBuilder().every(2).months().onWeekOfMonth(1).on(DayOfWeek.tuesday()).build();
+
+        DateTime wednesday7thOfApril = new DateTime().withDayOfMonth(7).withMonthOfYear(4).withYear(2010).withDayOfWeek(DayOfWeek.wednesday())
+                .toDateMidnight().toDateTime();
+
+        DateTime result = scheduledEvent.nearestMatchingDateBeginningAt(wednesday7thOfApril);
+
+        assertThat(result, is(tuesdayOnFirstWeekOneMonthFrom(wednesday7thOfApril).plusMonths(1)));
+    }
     private DateTime tuesdayOnFirstWeekOneMonthFrom(final DateTime from) {
         return from.plusMonths(1).withDayOfMonth(7).withDayOfWeek(DayOfWeek.tuesday());
     }

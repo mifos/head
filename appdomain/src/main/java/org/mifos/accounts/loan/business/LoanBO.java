@@ -48,6 +48,7 @@ import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.accounts.business.AccountFeesEntity;
+import org.mifos.accounts.business.AccountNotesEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
@@ -2229,7 +2230,7 @@ public class LoanBO extends AccountBO implements Loan {
                         .getOriginalPenalty().subtract(loanSummary.getPenaltyPaid()), activityDate);
     }
 
-    private LoanActivityEntity buildLoanActivity(final Money totalPrincipal, final PersonnelBO personnel,
+    public LoanActivityEntity buildLoanActivity(final Money totalPrincipal, final PersonnelBO personnel,
             final String comments, final Date trxnDate) {
         Money interest = new Money(getCurrency());
         Money penalty = new Money(getCurrency());
@@ -2776,7 +2777,7 @@ public class LoanBO extends AccountBO implements Loan {
 
     }
 
-    private AccountActionDateEntity getLastInstallmentAccountAction() {
+    public AccountActionDateEntity getLastInstallmentAccountAction() {
         Set<AccountActionDateEntity> accountActionDateEntitySet = getAccountActionDates();
         AccountActionDateEntity nextAccountAction = null;
         if (isNotEmpty(accountActionDateEntitySet)) {
@@ -2825,7 +2826,7 @@ public class LoanBO extends AccountBO implements Loan {
         return amount;
     }
 
-    private void processFeesAtDisbursement(final AccountPaymentEntity accountPayment,
+    public void processFeesAtDisbursement(final AccountPaymentEntity accountPayment,
             final Money feeAmountAtDisbursement) {
 
         loanSummary.updateFeePaid(feeAmountAtDisbursement);
@@ -3404,7 +3405,7 @@ public class LoanBO extends AccountBO implements Loan {
         this.intrestAtDisbursement = intrestAtDisbursement;
     }
 
-    private Money getFeesDueAtDisbursement() {
+    public Money getFeesDueAtDisbursement() {
 
         Money totalFeesDueAtDisbursement = new Money(getCurrency());
         if (getAccountFees() != null && getAccountFees().size() > 0) {
@@ -3427,7 +3428,7 @@ public class LoanBO extends AccountBO implements Loan {
      * @deprecated - is using persistence
      */
     @Deprecated
-    private PaymentTypeEntity getPaymentTypeEntity(final short paymentTypeId) {
+    public PaymentTypeEntity getPaymentTypeEntity(final short paymentTypeId) {
         return getlegacyLoanDao().loadPersistentObject(PaymentTypeEntity.class, paymentTypeId);
     }
 
@@ -3490,5 +3491,39 @@ public class LoanBO extends AccountBO implements Loan {
     public LoanAccountDetailDto toDto() {
         PrdOfferingDto productDetails = this.loanOffering.toDto();
         return new LoanAccountDetailDto(productDetails, this.globalAccountNum);
+    }
+
+    public void markAsCreatedWithBackdatedPayments() {
+        this.redone = true;
+    }
+
+    public void approve(PersonnelBO createdBy, String comment, LocalDate approvalDate) {
+        AccountStateEntity approvedState = new AccountStateEntity(AccountState.LOAN_APPROVED);
+        AccountStatusChangeHistoryEntity historyEntity = new AccountStatusChangeHistoryEntity(this.getAccountState()
+                , approvedState, createdBy, this);
+        
+        
+        AccountNotesEntity accountNotesEntity = new AccountNotesEntity(approvalDate.toDateMidnight().toDate(), comment, createdBy, this);
+        
+        this.addAccountStatusChangeHistory(historyEntity);
+        this.setAccountState(approvedState);
+        this.addAccountNotes(accountNotesEntity);
+    }
+
+    public void activate(PersonnelBO createdBy, Date transactionDate) {
+        addLoanActivity(buildLoanActivity(getLoanAmount(), createdBy, AccountConstants.LOAN_DISBURSAL, transactionDate));
+        
+        final AccountStateEntity newState = new AccountStateEntity(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING);
+        addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(getAccountState(), newState,
+                createdBy, this));
+        setAccountState(newState);
+        
+        if (getPerformanceHistory() != null) {
+            getPerformanceHistory().setLoanMaturityDate(getLastInstallmentAccountAction().getActionDate());
+        }
+    }
+
+    public void updateCustomer(CustomerBO customer) {
+        this.customer = customer;
     }
 }

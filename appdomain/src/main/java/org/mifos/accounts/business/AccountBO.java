@@ -418,7 +418,7 @@ public class AccountBO extends AbstractBusinessObject {
         accountActionDates.add(accountAction);
     }
 
-    protected void addAccountPayment(final AccountPaymentEntity payment) {
+    public void addAccountPayment(final AccountPaymentEntity payment) {
         if (accountPayments == null) {
             accountPayments = new ArrayList<AccountPaymentEntity>();
         }
@@ -1085,7 +1085,7 @@ public class AccountBO extends AbstractBusinessObject {
     /*
      * Delegate to an injected service.
      */
-    protected final void buildFinancialEntries(final Set<AccountTrxnEntity> accountTrxns) throws AccountException {
+    public final void buildFinancialEntries(final Set<AccountTrxnEntity> accountTrxns) throws AccountException {
         getFinancialBusinessService().buildFinancialEntries(accountTrxns);
     }
 
