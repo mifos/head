@@ -42,7 +42,7 @@ public class MonthlyOnDateScheduledEvent extends AbstractScheduledEvent {
     @Override
     public DateTime nearestMatchingDateBeginningAt(final DateTime startDate) {
 
-        return CalendarUtils.getFirstDateForMonthOnDate(startDate, this.dayOfMonth);
+        return CalendarUtils.getFirstDateForMonthOnDate(startDate, this.dayOfMonth).plusMonths(this.every-1);
     }
 
     @Override

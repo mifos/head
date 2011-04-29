@@ -67,7 +67,6 @@ import org.mifos.accounts.financial.util.helpers.ChartOfAccountsCache;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.loan.business.LoanBOIntegrationTest;
 import org.mifos.accounts.loan.business.LoanBOTestUtils;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.business.LoanTrxnDetailEntity;
@@ -1174,14 +1173,6 @@ public class TestObjectFactory {
         }
     }
 
-    /**
-     * createOneTimeRateFee.
-     * <p/>
-     * Changing TestObjectFactory#getUserContext() to {@link TestUtils#makeUserWithLocales()} caused a failure in
-     * {@link LoanBOIntegrationTest#testApplyUpfrontFee} (and other tests).
-     *
-     * @param categoryTypeName TODO
-     */
     public static FeeBO createOneTimeRateFee(final String feeName, final FeeCategory feeCategory, final Double rate,
                                              final FeeFormula feeFormula, final FeePayment feePayment, String categoryTypeName) {
         GLCodeEntity glCode = (GLCodeEntity) StaticHibernateUtil.getSessionTL().get(GLCodeEntity.class,
