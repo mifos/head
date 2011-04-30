@@ -1053,7 +1053,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     }
     
     @Override
-    public LoanCreationResultDto createLoanWithBackdatedPayments(CreateLoanAccount loanAccountInfo,
+    public LoanCreationResultDto createLoanWithBackdatedPayments(CreateLoanAccount loanAccountInfo, List<LoanPaymentDto> backdatedLoanPayments,
             List<QuestionGroupDetail> questionGroups, LoanAccountCashFlow loanAccountCashFlow) {
         
         // 1. assemble loan details
@@ -1149,66 +1149,35 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             Date paymentDate = loanAccountInfo.getDisbursementDate().toDateMidnight().toDate();
             AccountPaymentEntity disbursalPayment = new AccountPaymentEntity(loan, loan.getLoanAmount(), receiptNumber, receiptDate, paymentType, paymentDate);
             disbursalPayment.setCreatedByUser(createdBy);
-            String receiptNum = disbursalPayment.getReceiptNumber();
-            Date transactionDate = disbursalPayment.getPaymentDate();
-            PersonnelBO loggedInUser = disbursalPayment.getCreatedByUser();
-            Date receiptDate1 = disbursalPayment.getReceiptDate();
             
             // refactoring of loan disbursal
-            // FIXME - keithw - refactor disburseLoan method - pull out to 'service facade' layer
             if (customer.isDisbursalPreventedDueToAnyExistingActiveLoansForTheSameProduct(loan.getLoanOffering())) {
                 throw new AccountException("errors.cannotDisburseLoan.because.otherLoansAreActive");
             }
             
             try {
-                customer.isGroup();
                 loan.updateCustomer(customer);
                 new ProductMixValidator().checkIfProductsOfferingCanCoexist(loan);
             } catch (ServiceException e1) {
                 throw new AccountException(e1.getMessage());
             }
             
-            loan.activate(createdBy, transactionDate);
+            loan.disburse(createdBy, disbursalPayment);
             
             customer.updatePerformanceHistoryOnDisbursement(loan, loan.getLoanAmount());
-            
-            // build up account payment related data
-            AccountPaymentEntity accountPayment = null;
-
-            // Disbursal process has to create its own accountPayment taking into account any disbursement fees
-            Money feeAmountAtDisbursement = loan.getFeesDueAtDisbursement();
-            accountPayment = new AccountPaymentEntity(loan, loan.getLoanAmount().subtract(feeAmountAtDisbursement),
-                    receiptNum, receiptDate1, loan.getPaymentTypeEntity(disbursalPayment
-                                        .getPaymentType().getId()), transactionDate);
-            accountPayment.setCreatedByUser(loggedInUser);
-        
-            if (feeAmountAtDisbursement.isGreaterThanZero()) {
-                loan.processFeesAtDisbursement(accountPayment, feeAmountAtDisbursement);
-            }
-            
-            // create trxn entry for disbursal
-            final LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPayment,
-                    AccountActionTypes.DISBURSAL, Short.valueOf("0"), transactionDate, loggedInUser, transactionDate,
-                    loan.getLoanAmount(), "-", null, loan.getLoanAmount(), new Money(loan.getCurrency()), new Money(loan.getCurrency()),
-                    new Money(loan.getCurrency()), new Money(loan.getCurrency()), null);
-            
-            accountPayment.addAccountTrxn(loanTrxnDetailEntity);
-            loan.addAccountPayment(accountPayment);
-            loan.buildFinancialEntries(accountPayment.getAccountTrxns());
-            
-            
             // end of refactoring of loan disbural
             
             this.loanDao.save(loan);
-            StaticHibernateUtil.flushSession();
+            transactionHelper.flushSession();
 
-//            Short paymentId = PaymentTypes.CASH.getValue();
-//            PaymentData paymentData = new PaymentData(amountPaidToDate, createdBy, paymentId, firstInstallmentDate.toDateMidnight().toDate());
-            // make payment for balance against first installment date.
-//            loan.applyPayment(paymentData);
-//            this.loanDao.save(loan);
-            
             // 5. apply each payment
+            Short paymentId = PaymentTypes.CASH.getValue();
+            for (LoanPaymentDto loanPayment : backdatedLoanPayments) {
+                Money amountPaidToDate = new Money(loan.getCurrency(), loanPayment.getAmount());
+                PaymentData paymentData = new PaymentData(amountPaidToDate, createdBy, paymentId, loanPayment.getPaymentDate().toDateMidnight().toDate());
+                loan.applyPayment(paymentData);
+                this.loanDao.save(loan);    
+            }
             transactionHelper.commitTransaction();
 
             return new LoanCreationResultDto(false, loan.getAccountId(), loan.getGlobalAccountNum());

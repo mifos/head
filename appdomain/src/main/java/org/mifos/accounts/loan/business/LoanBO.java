@@ -3510,7 +3510,9 @@ public class LoanBO extends AccountBO implements Loan {
         this.addAccountNotes(accountNotesEntity);
     }
 
-    public void activate(PersonnelBO createdBy, Date transactionDate) {
+    public void disburse(PersonnelBO createdBy, AccountPaymentEntity disbursalPayment) throws AccountException {
+        Date transactionDate = disbursalPayment.getPaymentDate();
+        
         addLoanActivity(buildLoanActivity(getLoanAmount(), createdBy, AccountConstants.LOAN_DISBURSAL, transactionDate));
         
         final AccountStateEntity newState = new AccountStateEntity(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING);
@@ -3521,6 +3523,29 @@ public class LoanBO extends AccountBO implements Loan {
         if (getPerformanceHistory() != null) {
             getPerformanceHistory().setLoanMaturityDate(getLastInstallmentAccountAction().getActionDate());
         }
+        
+        // build up account payment related data
+        AccountPaymentEntity accountPayment = null;
+
+        // Disbursal process has to create its own accountPayment taking into account any disbursement fees
+        Money feeAmountAtDisbursement = getFeesDueAtDisbursement();
+        accountPayment = new AccountPaymentEntity(this, getLoanAmount().subtract(feeAmountAtDisbursement),
+                disbursalPayment.getReceiptNumber(), disbursalPayment.getReceiptDate(), getPaymentTypeEntity(disbursalPayment.getPaymentType().getId()), transactionDate);
+        accountPayment.setCreatedByUser(createdBy);
+    
+        if (feeAmountAtDisbursement.isGreaterThanZero()) {
+            processFeesAtDisbursement(accountPayment, feeAmountAtDisbursement);
+        }
+        
+        // create trxn entry for disbursal
+        final LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPayment,
+                AccountActionTypes.DISBURSAL, Short.valueOf("0"), transactionDate, createdBy, transactionDate,
+                getLoanAmount(), "-", null, getLoanAmount(), new Money(getCurrency()), new Money(getCurrency()),
+                new Money(getCurrency()), new Money(getCurrency()), null);
+        
+        accountPayment.addAccountTrxn(loanTrxnDetailEntity);
+        addAccountPayment(accountPayment);
+        buildFinancialEntries(accountPayment.getAccountTrxns());
     }
 
     public void updateCustomer(CustomerBO customer) {

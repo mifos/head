@@ -104,9 +104,10 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
     
     /**
      * create a loan and automatically approve/disburse and make payments
+     * @param backdatedLoanPayments 
      */
     @PreAuthorize("isFullyAuthenticated()")
-    LoanCreationResultDto createLoanWithBackdatedPayments(CreateLoanAccount loanAccountDetails, List<QuestionGroupDetail> questionGroups, LoanAccountCashFlow loanAccountCashFlow);
+    LoanCreationResultDto createLoanWithBackdatedPayments(CreateLoanAccount loanAccountDetails, List<LoanPaymentDto> backdatedLoanPayments, List<QuestionGroupDetail> questionGroups, LoanAccountCashFlow loanAccountCashFlow);
     
     @PreAuthorize("isFullyAuthenticated()")
     LoanCreationResultDto createLoan(CreateLoanAccount createLoanAccount, List<QuestionGroupDetail> questionGroups, LoanAccountCashFlow loanAccountCashFlow);

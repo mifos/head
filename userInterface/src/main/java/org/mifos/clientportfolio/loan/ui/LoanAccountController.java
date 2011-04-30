@@ -46,6 +46,7 @@ import org.mifos.dto.domain.CustomerSearchResultDto;
 import org.mifos.dto.domain.FeeDto;
 import org.mifos.dto.domain.LoanAccountDetailsDto;
 import org.mifos.dto.domain.LoanCreationInstallmentDto;
+import org.mifos.dto.domain.LoanPaymentDto;
 import org.mifos.dto.domain.MandatoryHiddenFieldsDto;
 import org.mifos.dto.domain.MonthlyCashFlowDto;
 import org.mifos.dto.screen.CashFlowDataDto;
@@ -452,8 +453,18 @@ public class LoanAccountController {
                 formBean.getGraceDuration().intValue(), formBean.getFundId(),
                 formBean.getLoanPurposeId(), formBean.getCollateralTypeId(), formBean.getCollateralNotes(),
                 formBean.getExternalId(), formBean.isRepaymentScheduleIndependentOfCustomerMeeting(), recurringSchedule, accountFees);
+        
+        List<LoanPaymentDto> backdatedLoanPayments = new ArrayList<LoanPaymentDto>();
+        int index = 0;
+        for (Number actualPaymentAmount : loanScheduleFormBean.getActualPaymentAmounts()) {
+            if (actualPaymentAmount.doubleValue() > 0) {
+                LocalDate transactionDate = new LocalDate(loanScheduleFormBean.getActualPaymentDates().get(index));
+                backdatedLoanPayments.add(new LoanPaymentDto(actualPaymentAmount.toString(), transactionDate, null, null));
+            }
+            index++;
+        }
 
-        return loanAccountServiceFacade.createLoanWithBackdatedPayments(loanAccountDetails, loanAccountQuestionGroupFormBean.getQuestionGroups(), loanAccountCashFlow);
+        return loanAccountServiceFacade.createLoanWithBackdatedPayments(loanAccountDetails, backdatedLoanPayments, loanAccountQuestionGroupFormBean.getQuestionGroups(), loanAccountCashFlow);
     }
     
     private LoanCreationResultDto submitLoanApplication(Integer accountState, LoanAccountFormBean formBean, LoanAccountQuestionGroupFormBean loanAccountQuestionGroupFormBean,
