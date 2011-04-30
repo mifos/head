@@ -45,6 +45,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.Assert;
+import org.testng.annotations.Test;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -85,6 +86,7 @@ public class LoanRepayTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
+    @Test(enabled=false)
     public void repay() {
         chargeFeeAndPenalty();
         loanTestHelper.disburseLoan(loanId, getDisburseLoanParameters());
@@ -98,6 +100,7 @@ public class LoanRepayTest extends UiTestCaseBase {
     }
 
     //http://mifosforge.jira.com/browse/MIFOSTEST-251
+    @Test(enabled=true)
     public void paymentTypeForLoanRepayments()  throws Exception{
         //Given
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
@@ -285,5 +288,4 @@ public class LoanRepayTest extends UiTestCaseBase {
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml", dataSource, selenium);
     }
-
 }
