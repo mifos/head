@@ -4,6 +4,151 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
         
+    <changeSet id="MIFOS_4700_0a" author="John Woodlock" context="expansion">
+        <sql endDelimiter=";">
+			ALTER TABLE loan_activity_details
+			DROP FOREIGN KEY `loan_activity_details_ibfk_10` , 
+			DROP FOREIGN KEY `loan_activity_details_ibfk_3` , 
+			DROP FOREIGN KEY `loan_activity_details_ibfk_4` , 
+			DROP FOREIGN KEY `loan_activity_details_ibfk_5` , 
+			DROP FOREIGN KEY `loan_activity_details_ibfk_6` , 
+			DROP FOREIGN KEY `loan_activity_details_ibfk_7` , 
+			DROP FOREIGN KEY `loan_activity_details_ibfk_8` , 
+			DROP FOREIGN KEY `loan_activity_details_ibfk_9` 
+			, DROP INDEX `balance_fee_amount_currency_id` 
+			, DROP INDEX `balance_interest_amount_currency_id` 
+			, DROP INDEX `balance_penalty_amount_currency_id` 
+			, DROP INDEX `balance_principal_amount_currency_id` 
+			, DROP INDEX `fee_amount_currency_id` 
+			, DROP INDEX `interest_amount_currency_id` 
+			, DROP INDEX `penalty_amount_currency_id` 
+			, DROP INDEX `principal_amount_currency_id` ;
+        </sql>
+        <rollback>
+            <sql endDelimiter=";">
+				ALTER TABLE loan_activity_details
+  				ADD KEY `principal_amount_currency_id` (`principal_amount_currency_id`),
+  				ADD KEY `interest_amount_currency_id` (`interest_amount_currency_id`),
+  				ADD KEY `fee_amount_currency_id` (`fee_amount_currency_id`),
+  				ADD KEY `penalty_amount_currency_id` (`penalty_amount_currency_id`),
+  				ADD KEY `balance_principal_amount_currency_id` (`balance_principal_amount_currency_id`),
+  				ADD KEY `balance_interest_amount_currency_id` (`balance_interest_amount_currency_id`),
+  				ADD KEY `balance_penalty_amount_currency_id` (`balance_penalty_amount_currency_id`),
+  				ADD KEY `balance_fee_amount_currency_id` (`balance_fee_amount_currency_id`),
+  				ADD CONSTRAINT `loan_activity_details_ibfk_10` FOREIGN KEY (`balance_fee_amount_currency_id`) REFERENCES `currency` (`currency_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  				ADD CONSTRAINT `loan_activity_details_ibfk_3` FOREIGN KEY (`principal_amount_currency_id`) REFERENCES `currency` (`currency_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  				ADD CONSTRAINT `loan_activity_details_ibfk_4` FOREIGN KEY (`interest_amount_currency_id`) REFERENCES `currency` (`currency_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  				ADD CONSTRAINT `loan_activity_details_ibfk_5` FOREIGN KEY (`fee_amount_currency_id`) REFERENCES `currency` (`currency_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  				ADD CONSTRAINT `loan_activity_details_ibfk_6` FOREIGN KEY (`penalty_amount_currency_id`) REFERENCES `currency` (`currency_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  				ADD CONSTRAINT `loan_activity_details_ibfk_7` FOREIGN KEY (`balance_principal_amount_currency_id`) REFERENCES `currency` (`currency_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  				ADD CONSTRAINT `loan_activity_details_ibfk_8` FOREIGN KEY (`balance_interest_amount_currency_id`) REFERENCES `currency` (`currency_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  				ADD CONSTRAINT `loan_activity_details_ibfk_9` FOREIGN KEY (`balance_penalty_amount_currency_id`) REFERENCES `currency` (`currency_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+            </sql>
+        </rollback>
+    </changeSet>    
+    <changeSet id="MIFOS_4700_0b" author="John Woodlock" context="expansion">
+        <sql endDelimiter=";">
+        	ALTER TABLE savings_activity_details
+        	DROP FOREIGN KEY `savings_activity_details_ibfk_4` , 
+        	DROP FOREIGN KEY `savings_activity_details_ibfk_5` 
+			, DROP INDEX `amount_currency_id` 
+			, DROP INDEX `balance_amount_currency_id` ;
+        </sql>
+        <rollback>
+        	<sql endDelimiter=";">
+        		ALTER TABLE savings_activity_details
+  				ADD KEY `amount_currency_id` (`amount_currency_id`),
+  				ADD KEY `balance_amount_currency_id` (`balance_amount_currency_id`),
+  				ADD CONSTRAINT `savings_activity_details_ibfk_4` FOREIGN KEY (`amount_currency_id`) REFERENCES `currency` (`currency_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  				ADD CONSTRAINT `savings_activity_details_ibfk_5` FOREIGN KEY (`balance_amount_currency_id`) REFERENCES `currency` (`currency_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+        	</sql>
+        </rollback>
+    </changeSet>    
+    
+    <changeSet id="MIFOS_4700_0c" author="John Woodlock" context="expansion">
+        <sql endDelimiter=";">
+			ALTER TABLE account_fees
+			DROP FOREIGN KEY `account_fees_ibfk_3` 
+			, DROP INDEX `ACCOUNT_FEE_AMNT_CURRENCY_ID` ;
+        </sql>
+        <rollback>
+        	<sql endDelimiter=";">
+				ALTER TABLE account_fees
+  				ADD KEY `account_fee_amnt_currency_id` (`account_fee_amnt_currency_id`),
+  				ADD CONSTRAINT `account_fees_ibfk_3` FOREIGN KEY (`account_fee_amnt_currency_id`) REFERENCES `currency` (`currency_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+        	</sql>
+        </rollback>
+    </changeSet>    
+    <changeSet id="MIFOS_4700_0d" author="John Woodlock" context="expansion">
+        <sql endDelimiter=";">
+			ALTER TABLE loan_summary
+			DROP FOREIGN KEY `loan_summary_ibfk_1` , 
+			DROP FOREIGN KEY `loan_summary_ibfk_2` , 
+			DROP FOREIGN KEY `loan_summary_ibfk_3` , 
+			DROP FOREIGN KEY `loan_summary_ibfk_4` , 
+			DROP FOREIGN KEY `loan_summary_ibfk_5` , 
+			DROP FOREIGN KEY `loan_summary_ibfk_6` , 
+			DROP FOREIGN KEY `loan_summary_ibfk_7` , 
+			DROP FOREIGN KEY `loan_summary_ibfk_8` 
+			, DROP INDEX `fees_paid_currency_id` 
+			, DROP INDEX `interest_paid_currency_id` 
+			, DROP INDEX `orig_fees_currency_id` 
+			, DROP INDEX `orig_interest_currency_id` 
+			, DROP INDEX `orig_penalty_currency_id` 
+			, DROP INDEX `orig_principal_currency_id` 
+			, DROP INDEX `penalty_paid_currency_id` 
+			, DROP INDEX `principal_paid_currency_id` ;
+        </sql>
+        <rollback>
+        	<sql endDelimiter=";">
+				ALTER TABLE loan_summary
+  				ADD KEY `orig_principal_currency_id` (`orig_principal_currency_id`),
+  				ADD KEY `orig_interest_currency_id` (`orig_interest_currency_id`),
+  				ADD KEY `orig_fees_currency_id` (`orig_fees_currency_id`),
+  				ADD KEY `orig_penalty_currency_id` (`orig_penalty_currency_id`),
+  				ADD KEY `principal_paid_currency_id` (`principal_paid_currency_id`),
+  				ADD KEY `interest_paid_currency_id` (`interest_paid_currency_id`),
+  				ADD KEY `fees_paid_currency_id` (`fees_paid_currency_id`),
+  				ADD KEY `penalty_paid_currency_id` (`penalty_paid_currency_id`),
+  				ADD CONSTRAINT `loan_summary_ibfk_1` FOREIGN KEY (`orig_principal_currency_id`) REFERENCES `currency` (`currency_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  				ADD CONSTRAINT `loan_summary_ibfk_2` FOREIGN KEY (`orig_interest_currency_id`) REFERENCES `currency` (`currency_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  				ADD CONSTRAINT `loan_summary_ibfk_3` FOREIGN KEY (`orig_fees_currency_id`) REFERENCES `currency` (`currency_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  				ADD CONSTRAINT `loan_summary_ibfk_4` FOREIGN KEY (`orig_penalty_currency_id`) REFERENCES `currency` (`currency_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  				ADD CONSTRAINT `loan_summary_ibfk_5` FOREIGN KEY (`principal_paid_currency_id`) REFERENCES `currency` (`currency_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  				ADD CONSTRAINT `loan_summary_ibfk_6` FOREIGN KEY (`interest_paid_currency_id`) REFERENCES `currency` (`currency_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  				ADD CONSTRAINT `loan_summary_ibfk_7` FOREIGN KEY (`fees_paid_currency_id`) REFERENCES `currency` (`currency_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  				ADD CONSTRAINT `loan_summary_ibfk_8` FOREIGN KEY (`penalty_paid_currency_id`) REFERENCES `currency` (`currency_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+        	</sql>
+        </rollback>
+    </changeSet>    
+    <changeSet id="MIFOS_4700_0e" author="John Woodlock" context="expansion">
+        <sql endDelimiter=";">
+  			ALTER TABLE account_payment
+  			DROP FOREIGN KEY `account_payment_ibfk_2` 
+			, DROP INDEX `CURRENCY_ID` ;
+        </sql>
+        <rollback>
+        	<sql endDelimiter=";">
+  				ALTER TABLE account_payment
+  				ADD KEY `currency_id` (`currency_id`),
+  				ADD CONSTRAINT `account_payment_ibfk_2` FOREIGN KEY (`currency_id`) REFERENCES `currency` (`currency_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+        	</sql>
+        </rollback>
+    </changeSet>    
+    <changeSet id="MIFOS_4700_0f" author="John Woodlock" context="expansion">
+        <sql endDelimiter=";">
+			ALTER TABLE customer_account_activity
+			DROP FOREIGN KEY `customer_account_activity_ibfk_2` 
+			, DROP INDEX `FEE_AMOUNT_CURRENCY_ID` ;
+		</sql>
+        <rollback>
+        	<sql endDelimiter=";">
+				ALTER TABLE customer_account_activity
+  				ADD KEY `fee_amount_currency_id` (`fee_amount_currency_id`),
+  				ADD CONSTRAINT `customer_account_activity_ibfk_2` FOREIGN KEY (`fee_amount_currency_id`) REFERENCES `currency` (`currency_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+        	</sql>
+        </rollback>
+    </changeSet>    
     <changeSet id="MIFOS_4700_1" author="John Woodlock" context="expansion">
         <sql endDelimiter=";">
             ALTER TABLE loan_schedule 
