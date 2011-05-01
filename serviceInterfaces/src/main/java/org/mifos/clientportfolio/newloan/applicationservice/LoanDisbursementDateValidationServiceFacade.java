@@ -21,9 +21,11 @@
 package org.mifos.clientportfolio.newloan.applicationservice;
 
 import org.joda.time.LocalDate;
+import org.mifos.platform.validations.Errors;
 
 public interface LoanDisbursementDateValidationServiceFacade {
 
     void validateLoanDisbursementDate(LocalDate loanDisbursementDate, Integer customerId, Integer productId);
-
+    
+    Errors validateLoanWithBackdatedPaymentsDisbursementDate(LocalDate loanDisbursementDate, Integer customerId, Integer productId);
 }

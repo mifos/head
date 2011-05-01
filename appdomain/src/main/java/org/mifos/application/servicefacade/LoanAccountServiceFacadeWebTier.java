@@ -67,7 +67,6 @@ import org.mifos.accounts.loan.business.LoanActivityEntity;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanPerformanceHistoryEntity;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
-import org.mifos.accounts.loan.business.LoanTrxnDetailEntity;
 import org.mifos.accounts.loan.business.MaxMinLoanAmount;
 import org.mifos.accounts.loan.business.MaxMinNoOfInstall;
 import org.mifos.accounts.loan.business.RepaymentResultsHolder;
@@ -80,7 +79,6 @@ import org.mifos.accounts.loan.struts.action.validate.ProductMixValidator;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.MultipleLoanCreationDto;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
-import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.productdefinition.business.AmountRange;
 import org.mifos.accounts.productdefinition.business.CashFlowDetail;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
@@ -138,8 +136,6 @@ import org.mifos.clientportfolio.newloan.domain.LoanProductOverridenDetail;
 import org.mifos.clientportfolio.newloan.domain.LoanSchedule;
 import org.mifos.clientportfolio.newloan.domain.LoanScheduleConfiguration;
 import org.mifos.clientportfolio.newloan.domain.LoanService;
-import org.mifos.clientportfolio.newloan.domain.RecurringScheduledEventFactory;
-import org.mifos.clientportfolio.newloan.domain.RecurringScheduledEventFactoryImpl;
 import org.mifos.clientportfolio.newloan.domain.service.LoanScheduleService;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
@@ -237,7 +233,6 @@ import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.util.CollectionUtils;
 import org.mifos.platform.validations.Errors;
-import org.mifos.schedule.ScheduledEvent;
 import org.mifos.security.MifosUser;
 import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsDao;
 import org.mifos.security.util.ActivityContext;
@@ -465,7 +460,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     }
 
     @Override
-    public LoanCreationLoanDetailsDto retrieveLoanDetailsForLoanAccountCreation(Integer customerId, Short productId) {
+    public LoanCreationLoanDetailsDto retrieveLoanDetailsForLoanAccountCreation(Integer customerId, Short productId, boolean isLoanWithBackdatedPayments) {
 
         try {
             List<org.mifos.dto.domain.FeeDto> additionalFees = new ArrayList<org.mifos.dto.domain.FeeDto>();
@@ -521,12 +516,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
             CustomerBO customer = this.customerDao.findCustomerById(customerId);
             boolean isRepaymentIndependentOfMeetingEnabled = new ConfigurationBusinessService().isRepaymentIndepOfMeetingEnabled();
-            RecurringScheduledEventFactory recurringScheduledEventFactory = new RecurringScheduledEventFactoryImpl();
-            ScheduledEvent customerMeetingSchedule = recurringScheduledEventFactory.createScheduledEventFrom(customer.getCustomerMeetingValue());
-            ScheduledEvent loanProductMeetingSchedule = recurringScheduledEventFactory.createScheduledEventFrom(loanProductMeeting);
 
             LoanDisbursementDateFactory loanDisbursementDateFactory = new LoanDisbursmentDateFactoryImpl();
-            LoanDisbursementDateFinder loanDisbursementDateFinder = loanDisbursementDateFactory.create(customerMeetingSchedule, loanProductMeetingSchedule, isRepaymentIndependentOfMeetingEnabled, loanProduct.isVariableInstallmentsAllowed());
+            LoanDisbursementDateFinder loanDisbursementDateFinder = loanDisbursementDateFactory.create(customer, loanProduct, isRepaymentIndependentOfMeetingEnabled, isLoanWithBackdatedPayments);
             LocalDate nextPossibleDisbursementDate = loanDisbursementDateFinder.findClosestMatchingDateFromAndInclusiveOf(new LocalDate());
 
             LoanAmountOption eligibleLoanAmount = loanProduct.eligibleLoanAmount(customer.getMaxLoanAmount(loanProduct), customer.getMaxLoanCycleForProduct(loanProduct));
@@ -2319,18 +2311,48 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
         CustomerBO customer = this.customerDao.findCustomerById(customerId);
         LoanOfferingBO loanProduct = this.loanProductDao.findById(productId);
-
         boolean isRepaymentIndependentOfMeetingEnabled = new ConfigurationBusinessService().isRepaymentIndepOfMeetingEnabled();
-        RecurringScheduledEventFactory recurringScheduledEventFactory = new RecurringScheduledEventFactoryImpl();
-        ScheduledEvent customerMeetingSchedule = recurringScheduledEventFactory.createScheduledEventFrom(customer.getCustomerMeetingValue());
-        ScheduledEvent loanProductMeetingSchedule = recurringScheduledEventFactory.createScheduledEventFrom(loanProduct.getLoanOfferingMeetingValue());
-
+        
         LoanDisbursementDateFactory loanDisbursementDateFactory = new LoanDisbursmentDateFactoryImpl();
-        LoanDisbursementDateValidator loanDisbursementDateFinder = loanDisbursementDateFactory.create(customerMeetingSchedule, loanProductMeetingSchedule, isRepaymentIndependentOfMeetingEnabled, loanProduct.isVariableInstallmentsAllowed());
+        LoanDisbursementDateValidator loanDisbursementDateFinder = loanDisbursementDateFactory.create(customer, loanProduct, isRepaymentIndependentOfMeetingEnabled, false);
+        
         boolean isValid = loanDisbursementDateFinder.isDisbursementDateValid(disbursementDate);
         if (!isValid) {
             throw new BusinessRuleException("Invalid disbursement date");
         }
+    }
+    
+    @Override
+    public Errors validateLoanWithBackdatedPaymentsDisbursementDate(LocalDate loanDisbursementDate, Integer customerId, Integer productId) {
+        Errors errors = new Errors();
+        
+        if (!loanDisbursementDate.isBefore(new LocalDate())) {
+            String[] args = {""};
+            errors.addError("dibursementdate.before.todays.date", args);
+        }
+        
+        CustomerBO customer = this.customerDao.findCustomerById(customerId);
+        LocalDate customerActivationDate = new LocalDate(customer.getCustomerActivationDate());
+        if (loanDisbursementDate.isBefore(customerActivationDate)) {
+            String[] args = {customerActivationDate.toString("dd-MMM-yyyy")};
+            errors.addError("dibursementdate.before.customer.activation.date", args);
+        }
+        
+        LoanOfferingBO loanProduct = this.loanProductDao.findById(productId);
+        LocalDate productStartDate = new LocalDate(loanProduct.getStartDate());
+        if (loanDisbursementDate.isBefore(productStartDate)) {
+            String[] args = {productStartDate.toString("dd-MMM-yyyy")};
+            errors.addError("dibursementdate.before.product.startDate", args);
+        }
+        
+        try {
+            this.holidayServiceFacade.validateDisbursementDateForNewLoan(customer.getOfficeId(), loanDisbursementDate.toDateMidnight().toDateTime());
+        } catch (BusinessRuleException e) {
+            String[] args = {""};
+            errors.addError("dibursementdate.falls.on.holiday", args);
+        }
+        
+        return errors;
     }
 
     @Override

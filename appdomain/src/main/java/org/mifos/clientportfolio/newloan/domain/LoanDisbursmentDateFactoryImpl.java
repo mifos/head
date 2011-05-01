@@ -20,18 +20,23 @@
 
 package org.mifos.clientportfolio.newloan.domain;
 
+import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.customers.business.CustomerBO;
 import org.mifos.schedule.ScheduledEvent;
 
 public class LoanDisbursmentDateFactoryImpl implements LoanDisbursementDateFactory {
 
     @Override
-    public LoanDisbursementStrategy create(ScheduledEvent customerMeetingSchedule,
-            ScheduledEvent loanProductMeetingSchedule, boolean isRepaymentIndependentOfMeetingEnabled,
-            boolean variableInstallmentsAllowed) {
-
-        // FIXME - keithw - previous strategy was only based on customer meeting schedule for loan creation
+    public LoanDisbursementStrategy create(CustomerBO customer, LoanOfferingBO loanProduct,
+            boolean isRepaymentIndependentOfMeetingEnabled, boolean isLoanWithBackdatedPayments) {
+        
+        RecurringScheduledEventFactory recurringScheduledEventFactory = new RecurringScheduledEventFactoryImpl();
+        ScheduledEvent customerMeetingSchedule = recurringScheduledEventFactory.createScheduledEventFrom(customer.getCustomerMeetingValue());
+        
         LoanDisbursementStrategy loanDisbursementStrategy = new ScheduledEventLoanDisbursementStrategyImpl(customerMeetingSchedule);
-        if (variableInstallmentsAllowed || isRepaymentIndependentOfMeetingEnabled) {
+        if (isLoanWithBackdatedPayments) {
+            loanDisbursementStrategy = new LoanWithBackdatedPaymentsDisbursementStrategyImpl();
+        } else if (loanProduct.isVariableInstallmentsAllowed() || isRepaymentIndependentOfMeetingEnabled) {
             loanDisbursementStrategy = new VariableInstallmentsLoanDisbursementStrategyImpl(customerMeetingSchedule);
         }
 

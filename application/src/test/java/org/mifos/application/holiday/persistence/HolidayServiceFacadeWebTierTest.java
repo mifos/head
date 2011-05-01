@@ -36,6 +36,7 @@ import java.util.Locale;
 
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -114,7 +115,7 @@ public class HolidayServiceFacadeWebTierTest {
         holidays.add(holiday);
         try {
 
-            when(holidayDao.findAllHolidaysThisYearAndNext(officeId)).thenReturn(holidays);
+            when(holidayDao.findAllHolidaysFromDateAndNext(officeId, new LocalDate(disbursementDate).toString())).thenReturn(holidays);
 
             holidayServiceFacade.validateDisbursementDateForNewLoan(officeId, disbursementDate);
             fail("Should have thrown BusinessRuleException");

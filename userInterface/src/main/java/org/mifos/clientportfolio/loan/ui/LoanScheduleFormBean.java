@@ -69,6 +69,8 @@ public class LoanScheduleFormBean implements Serializable {
     private List<LoanRepaymentRunningBalance> loanRepaymentPaidInstallmentsWithRunningBalance;
     private List<LoanRepaymentFutureInstallments> loanRepaymentFutureInstallments;
 
+    private boolean loanWithBackdatedPayments = true;
+
     public LoanScheduleFormBean() {
         // constructor
     }
@@ -408,5 +410,9 @@ public class LoanScheduleFormBean implements Serializable {
     public void setLoanRepaymentPaidInstallmentsWithRunningBalance(
             List<LoanRepaymentRunningBalance> loanRepaymentPaidInstallmentsWithRunningBalance) {
         this.loanRepaymentPaidInstallmentsWithRunningBalance = loanRepaymentPaidInstallmentsWithRunningBalance;
+    }
+
+    public boolean isLoanWithBackdatedPayments() {
+        return loanWithBackdatedPayments;
     }
 }

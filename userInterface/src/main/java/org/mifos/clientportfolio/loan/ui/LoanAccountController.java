@@ -77,6 +77,10 @@ public class LoanAccountController {
 	public void markAsRedoLoanAccount(CustomerSearchFormBean formBean) {
 	    formBean.setRedoLoanAccount(true);
 	}
+	
+	public void markAsRedoLoanAccount(LoanAccountFormBean formBean) {
+        formBean.setRedoLoanAccount(true);
+    }
 
 	public CustomerSearchResultsDto searchCustomers(CustomerSearchFormBean formBean) {
 
@@ -100,8 +104,9 @@ public class LoanAccountController {
     @SuppressWarnings("PMD")
     public LoanCreationLoanDetailsDto retrieveLoanCreationDetails(int customerId, int productId, LoanAccountFormBean formBean) {
 
+        boolean isLoanWithBackdatedPayments = true;
         MandatoryHiddenFieldsDto mandatoryHidden = this.adminServiceFacade.retrieveHiddenMandatoryFields();
-    	LoanCreationLoanDetailsDto dto = this.loanAccountServiceFacade.retrieveLoanDetailsForLoanAccountCreation(customerId, Integer.valueOf(productId).shortValue());
+    	LoanCreationLoanDetailsDto dto = this.loanAccountServiceFacade.retrieveLoanDetailsForLoanAccountCreation(customerId, Integer.valueOf(productId).shortValue(), isLoanWithBackdatedPayments);
 
     	formBean.setDigitsBeforeDecimalForInterest(dto.getAppConfig().getDigitsBeforeDecimalForInterest());
     	formBean.setDigitsAfterDecimalForInterest(dto.getAppConfig().getDigitsAfterDecimalForInterest());
@@ -186,9 +191,11 @@ public class LoanAccountController {
     	formBean.setPurposeOfLoanMandatory(mandatoryHidden.isMandatoryLoanAccountPurpose());
 
     	LocalDate possibleDisbursementDate = dto.getNextPossibleDisbursementDate();
-    	formBean.setDisbursementDateDD(possibleDisbursementDate.getDayOfMonth());
-    	formBean.setDisbursementDateMM(possibleDisbursementDate.getMonthOfYear());
-    	formBean.setDisbursementDateYY(possibleDisbursementDate.getYearOfEra());
+    	if (possibleDisbursementDate != null) {
+        	formBean.setDisbursementDateDD(possibleDisbursementDate.getDayOfMonth());
+        	formBean.setDisbursementDateMM(possibleDisbursementDate.getMonthOfYear());
+        	formBean.setDisbursementDateYY(possibleDisbursementDate.getYearOfEra());
+    	}
     	
     	formBean.setCollateralNotes("");
 
@@ -289,7 +296,7 @@ public class LoanAccountController {
         }
 
         List<FeeDto> applicableFees = new ArrayList<FeeDto>();
-        LoanCreationLoanDetailsDto dto = this.loanAccountServiceFacade.retrieveLoanDetailsForLoanAccountCreation(customerId, Integer.valueOf(productId).shortValue());
+        LoanCreationLoanDetailsDto dto = this.loanAccountServiceFacade.retrieveLoanDetailsForLoanAccountCreation(customerId, Integer.valueOf(productId).shortValue(), loanScheduleFormBean.isLoanWithBackdatedPayments());
         int feeIndex = 0;
         for (Boolean defaultFeeSelectedForRemoval : formBean.getDefaultFeeSelected()) {
             if (defaultFeeSelectedForRemoval == null || !defaultFeeSelectedForRemoval) {

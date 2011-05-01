@@ -152,7 +152,7 @@ public class HolidayServiceFacadeWebTier implements HolidayServiceFacade {
         List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
         validateDisbursementDateIsWorkingDay(disbursementDate, workingDays);
 
-        List<Holiday> holidays = holidayDao.findAllHolidaysThisYearAndNext(officeId);
+        List<Holiday> holidays = holidayDao.findAllHolidaysFromDateAndNext(officeId, new LocalDate(disbursementDate).toString());
         validateDisbursementDateIsNotInHoliday(disbursementDate, holidays);
     }
 

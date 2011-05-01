@@ -20,12 +20,18 @@
 
 package org.mifos.clientportfolio.newloan.domain;
 
-import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
-import org.mifos.customers.business.CustomerBO;
+import org.joda.time.LocalDate;
 
-public interface LoanDisbursementDateFactory {
+public class LoanWithBackdatedPaymentsDisbursementStrategyImpl implements LoanDisbursementStrategy {
 
-    LoanDisbursementStrategy create(CustomerBO customer, LoanOfferingBO loanProduct,
-            boolean isRepaymentIndependentOfMeetingEnabled, boolean isLoanWithBackdatedPayments);
+    @Override
+    public LocalDate findClosestMatchingDateFromAndInclusiveOf(@SuppressWarnings("unused") LocalDate fromAndInclusiveOf) {
+        return null;
+    }
+
+    @Override
+    public boolean isDisbursementDateValid(@SuppressWarnings("unused") LocalDate disbursementDate) {
+        return false;
+    }
 
 }

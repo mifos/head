@@ -87,7 +87,7 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
     LoanCreationProductDetailsDto retrieveGetProductDetailsForLoanAccountCreation(Integer customerId);
 
     @PreAuthorize("isFullyAuthenticated()")
-    LoanCreationLoanDetailsDto retrieveLoanDetailsForLoanAccountCreation(Integer customerId, Short productId);
+    LoanCreationLoanDetailsDto retrieveLoanDetailsForLoanAccountCreation(Integer customerId, Short productId, boolean isLoanWithBackdatedPayments);
 
     @PreAuthorize("isFullyAuthenticated()")
     LoanCreationPreviewDto previewLoanCreationDetails(Integer customerId, List<LoanAccountDetailsDto> accountDetails, List<String> selectedClientIds);
