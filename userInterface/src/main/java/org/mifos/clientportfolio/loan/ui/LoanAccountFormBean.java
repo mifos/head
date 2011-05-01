@@ -117,7 +117,7 @@ public class LoanAccountFormBean implements Serializable {
     private Boolean[] clientSelectForGroup = new Boolean[1];
     private String[] clientGlobalId = new String[1];
     private Number[] clientAmount = new Number[1];
-    private Integer[] clientLoanPurposeId = new Integer[1];
+    private Integer[] clientLoanPurposeId = new Integer[] {0};
     
     // fees
     private Boolean[] defaultFeeSelected;
@@ -173,6 +173,12 @@ public class LoanAccountFormBean implements Serializable {
                         }
 
                         // check error message of loan purpose for each client when its mandatory..
+                        
+                        for (Integer loanPurposeId : this.clientLoanPurposeId) {
+                            if (loanPurposeId == null) {
+                                this.clientLoanPurposeId[index] = 0;
+                            }
+                        }
                         Integer clientLoanPurposeId = this.clientLoanPurposeId[index];
                         if (this.purposeOfLoanMandatory && isInvalidSelection(clientLoanPurposeId)) {
                             errors.rejectValue("clientLoanPurposeId", "loanAccountFormBean.glim.purposeOfLoan.invalid", new Object[] {index+1}, "Please specify loan purpose.");

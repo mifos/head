@@ -192,7 +192,11 @@ public class LoanCreationLoanDetailsDto implements Serializable {
 	}
 	
 	public String getPurposeOfLoan(Integer key) {
-	    return this.purposeOfLoanOptions.get(key.toString());
+	    String result = "-";
+	    if (key.intValue() > 0) {
+	        result = this.purposeOfLoanOptions.get(key.toString());
+	    }
+	    return result;
 	}
 
 	public Map<String, String> getPurposeOfLoanOptions() {

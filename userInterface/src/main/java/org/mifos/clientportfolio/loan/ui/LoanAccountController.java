@@ -104,9 +104,8 @@ public class LoanAccountController {
     @SuppressWarnings("PMD")
     public LoanCreationLoanDetailsDto retrieveLoanCreationDetails(int customerId, int productId, LoanAccountFormBean formBean) {
 
-        boolean isLoanWithBackdatedPayments = true;
         MandatoryHiddenFieldsDto mandatoryHidden = this.adminServiceFacade.retrieveHiddenMandatoryFields();
-    	LoanCreationLoanDetailsDto dto = this.loanAccountServiceFacade.retrieveLoanDetailsForLoanAccountCreation(customerId, Integer.valueOf(productId).shortValue(), isLoanWithBackdatedPayments);
+    	LoanCreationLoanDetailsDto dto = this.loanAccountServiceFacade.retrieveLoanDetailsForLoanAccountCreation(customerId, Integer.valueOf(productId).shortValue(), formBean.isRedoLoanAccount());
 
     	formBean.setDigitsBeforeDecimalForInterest(dto.getAppConfig().getDigitsBeforeDecimalForInterest());
     	formBean.setDigitsAfterDecimalForInterest(dto.getAppConfig().getDigitsAfterDecimalForInterest());
@@ -170,7 +169,8 @@ public class LoanAccountController {
 
     	    formBean.setClientSelectForGroup(new Boolean[clientData.size()]);
     	    formBean.setClientAmount(new Number[clientData.size()]);
-    	    formBean.setClientLoanPurposeId(new Integer[clientData.size()]);
+    	    Integer[] loanPurpose = new Integer[clientData.size()];
+    	    formBean.setClientLoanPurposeId(loanPurpose);
 
     	} else {
     	    formBean.setAmount(Double.valueOf(dto.getDefaultLoanAmount().toPlainString()));

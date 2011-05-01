@@ -1251,7 +1251,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
                 LoanBO memberLoan = LoanBO.openGroupMemberLoanAccount(loan, loanAccountDetail.getLoanProduct(), groupMemberAccount.getMember(), repaymentDayMeeting, groupMemberAccount.getMemberSchedule(), groupMemberAccount.getMemberOverridenDetail(), configuration,
                         installmentRange, amountRange, creationDetail, createdBy);
-                memberLoan.setBusinessActivityId(groupMemberAccount.getLoanPurposeId());
+                if (groupMemberAccount.getLoanPurposeId() > 0) {
+                    memberLoan.setBusinessActivityId(groupMemberAccount.getLoanPurposeId());
+                }
                 this.loanService.create(memberLoan, userOffice.getGlobalOfficeNum());
                 transactionHelper.flushSession();
             }
