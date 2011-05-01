@@ -1329,7 +1329,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         for (GroupMemberAccountDto groupMemberAccount : glimLoanAccount.getMemberDetails()) {
             ClientBO member = this.customerDao.findClientBySystemId(groupMemberAccount.getGlobalId());
             Money loanAmount = new Money(loanAccountDetail.getLoanProduct().getCurrency(), groupMemberAccount.getLoanAmount());
-            LoanProductOverridenDetail memberOverridenDetail = new LoanProductOverridenDetail(loanAmount, overridenDetail);
+            LoanProductOverridenDetail memberOverridenDetail = new LoanProductOverridenDetail(loanAmount, new ArrayList<AccountFeesEntity>(), overridenDetail);
 
             LoanSchedule memberSchedule = assembleLoanSchedule(member, loanAccountDetail.getLoanProduct(), memberOverridenDetail, configuration, repaymentDayMeeting, userOffice, new ArrayList<DateTime>());
 

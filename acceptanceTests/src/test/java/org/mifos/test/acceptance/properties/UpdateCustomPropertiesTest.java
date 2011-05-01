@@ -55,7 +55,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(singleThreaded = true, groups={"acceptance","ui", "properties", "no_db_unit", "smoke"})
+@Test(singleThreaded = true, groups={"acceptance","ui", "properties", "no_db_unit"})
 public class UpdateCustomPropertiesTest extends UiTestCaseBase {
     NavigationHelper navigationHelper;
     CustomPropertiesHelper propertiesHelper;

@@ -120,8 +120,9 @@ public class IndividualLoanScheduleFactory implements LoanScheduleFactory {
             List<InstallmentPrincipalAndInterest> principalWithInterestInstallments, List<AccountFeesEntity> accountFees, CustomerBO customer) {
 
         List<LoanScheduleEntity> unroundedLoanSchedules = new ArrayList<LoanScheduleEntity>();
-
+        List<AccountFeesEntity> accountFeesWithNoTimeOfDibursementFees = new ArrayList<AccountFeesEntity>();
         List<FeeInstallment> feeInstallments = new ArrayList<FeeInstallment>();
+        
         if (!accountFees.isEmpty()) {
             InstallmentFeeCalculatorFactory installmentFeeCalculatorFactory = new InstallmentFeeCalculatorFactoryImpl();
 
@@ -133,8 +134,12 @@ public class IndividualLoanScheduleFactory implements LoanScheduleFactory {
                 Double feeAmountOrRate = accountFeesEntity.getFeeAmount();
                 Money accountFeeAmount = installmentFeeCalculator.calculate(feeAmountOrRate, loanAmount, loanInterest, accountFeesEntity.getFees());
                 accountFeesEntity.setAccountFeeAmount(accountFeeAmount);
+                
+                if (!accountFeesEntity.isTimeOfDisbursement()) {
+                    accountFeesWithNoTimeOfDibursementFees.add(accountFeesEntity);
+                }
             }
-            feeInstallments = FeeInstallment.createMergedFeeInstallments(meetingScheduledEvent, accountFees, installmentDates.size());
+            feeInstallments = FeeInstallment.createMergedFeeInstallments(meetingScheduledEvent, accountFeesWithNoTimeOfDibursementFees, installmentDates.size());
         }
 
         int installmentIndex = 0;
@@ -148,21 +153,10 @@ public class IndividualLoanScheduleFactory implements LoanScheduleFactory {
 
             for (FeeInstallment feeInstallment : feeInstallments) {
                 if (feeInstallment.getInstallmentId().equals(installmentDate1.getInstallmentId())) {
-                    
-                    if (!feeInstallment.getAccountFeesEntity().getFees().isTimeOfDisbursement()) {
-                        
                         LoanFeeScheduleEntity loanFeeScheduleEntity = new LoanFeeScheduleEntity(loanScheduleEntity,
                                 feeInstallment.getAccountFeesEntity().getFees(), feeInstallment.getAccountFeesEntity(),
                                 feeInstallment.getAccountFee());
                         loanScheduleEntity.addAccountFeesAction(loanFeeScheduleEntity);
-                        
-                    } else if (feeInstallment.getAccountFeesEntity().getFees().isTimeOfDisbursement()) {
-                        
-                        LoanFeeScheduleEntity loanFeeScheduleEntity = new LoanFeeScheduleEntity(loanScheduleEntity,
-                                feeInstallment.getAccountFeesEntity().getFees(), feeInstallment.getAccountFeesEntity(),
-                                feeInstallment.getAccountFee());
-                        loanScheduleEntity.addAccountFeesAction(loanFeeScheduleEntity);
-                    }
                 }
             }
 

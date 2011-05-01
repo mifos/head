@@ -44,13 +44,13 @@ public class LoanProductOverridenDetail {
         this.accountFeeEntities = accountFeeEntities;
     }
 
-    public LoanProductOverridenDetail(Money loanAmount, LoanProductOverridenDetail overridenDetail) {
+    public LoanProductOverridenDetail(Money loanAmount, List<AccountFeesEntity> accountFeeEntities, LoanProductOverridenDetail overridenDetail) {
         this.loanAmount = loanAmount;
         this.disbursementDate = overridenDetail.getDisbursementDate();
         this.interestRate = overridenDetail.getInterestRate();
         this.numberOfInstallments = overridenDetail.getNumberOfInstallments();
         this.graceDuration = overridenDetail.getGraceDuration();
-        this.accountFeeEntities = overridenDetail.getAccountFeeEntities();
+        this.accountFeeEntities = accountFeeEntities;
     }
 
     public Money getLoanAmount() {
