@@ -1046,7 +1046,8 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     
     @Override
     public LoanCreationResultDto createLoanWithBackdatedPayments(CreateLoanAccount loanAccountInfo, List<LoanPaymentDto> backdatedLoanPayments,
-            List<QuestionGroupDetail> questionGroups, LoanAccountCashFlow loanAccountCashFlow) {
+            List<QuestionGroupDetail> questionGroups, LoanAccountCashFlow loanAccountCashFlow, List<Date> loanScheduleInstallmentDates,
+            List<Number> installmentPrincipalAmounts) {
         
         // 1. assemble loan details
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -1071,7 +1072,17 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             repaymentDayMeeting = this.createNewMeetingForRepaymentDay(loanAccountInfo.getDisbursementDate(), loanAccountInfo, loanAccountDetail.getCustomer());
         }
 
-        LoanSchedule loanSchedule = assembleLoanSchedule(loanAccountDetail.getCustomer(), loanAccountDetail.getLoanProduct(), overridenDetail, configuration, repaymentDayMeeting, userOffice, new ArrayList<DateTime>());
+        List<DateTime> loanScheduleDates = new ArrayList<DateTime>();
+        for (Date loanScheduleInstallmentDate : loanScheduleInstallmentDates) {
+            loanScheduleDates.add(new DateTime(loanScheduleInstallmentDate));
+        }
+
+        LoanSchedule loanSchedule = assembleLoanSchedule(loanAccountDetail.getCustomer(), loanAccountDetail.getLoanProduct(), overridenDetail, configuration, repaymentDayMeeting, userOffice, loanScheduleDates);
+        if (!installmentPrincipalAmounts.isEmpty()) {
+            loanSchedule.modifyPrincipalAmounts(installmentPrincipalAmounts);
+        }
+
+//        LoanSchedule loanSchedule = assembleLoanSchedule(loanAccountDetail.getCustomer(), loanAccountDetail.getLoanProduct(), overridenDetail, configuration, repaymentDayMeeting, userOffice, new ArrayList<DateTime>());
         
         // 2. create loan
         InstallmentRange installmentRange = new MaxMinNoOfInstall(loanAccountInfo.getMinAllowedNumberOfInstallments().shortValue(),

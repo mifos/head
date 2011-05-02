@@ -479,8 +479,22 @@ public class LoanAccountController {
             }
             index++;
         }
+        
+        LoanCreationResultDto loanCreationResultDto = null;
+        if (formBean.isVariableInstallmentsAllowed()) {
+            List<Date> installmentDates = cashFlowSummaryFormBean.getInstallments();
+            List<Number> installmentPrincipalAmounts = cashFlowSummaryFormBean.getInstallmentAmounts();
+            if (installmentDates.isEmpty()) {
+                installmentDates = loanScheduleFormBean.getInstallments();
+                installmentPrincipalAmounts = loanScheduleFormBean.getInstallmentAmounts();
+            }
+            // api for creating loan with premade loan schedule
+            loanCreationResultDto = loanAccountServiceFacade.createLoanWithBackdatedPayments(loanAccountDetails, backdatedLoanPayments, loanAccountQuestionGroupFormBean.getQuestionGroups(), loanAccountCashFlow, installmentDates, installmentPrincipalAmounts);
+        } else {
+            loanCreationResultDto = loanAccountServiceFacade.createLoanWithBackdatedPayments(loanAccountDetails, backdatedLoanPayments, loanAccountQuestionGroupFormBean.getQuestionGroups(), loanAccountCashFlow, new ArrayList<Date>(), new ArrayList<Number>());
+        }
 
-        return loanAccountServiceFacade.createLoanWithBackdatedPayments(loanAccountDetails, backdatedLoanPayments, loanAccountQuestionGroupFormBean.getQuestionGroups(), loanAccountCashFlow);
+        return loanCreationResultDto;
     }
     
     private LoanCreationResultDto submitLoanApplication(Integer accountState, LoanAccountFormBean formBean, LoanAccountQuestionGroupFormBean loanAccountQuestionGroupFormBean,
