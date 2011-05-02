@@ -282,7 +282,9 @@ public class LoanAccountController {
         loanScheduleFormBean.setTotalLoanInterest(totalLoanInterest);
         loanScheduleFormBean.setTotalLoanFees(totalLoanFees);
         loanScheduleFormBean.setRepaymentInstallments(loanSchedule.getInstallments());
-        loanScheduleFormBean.setDisbursementDate(disbursementDate.toDateMidnight().toDate());
+        if (disbursementDate != null) {
+            loanScheduleFormBean.setDisbursementDate(disbursementDate.toDateMidnight().toDate());            
+        }
         
         // variable installments related
         loanScheduleFormBean.setVariableInstallmentsAllowed(formBean.isVariableInstallmentsAllowed());

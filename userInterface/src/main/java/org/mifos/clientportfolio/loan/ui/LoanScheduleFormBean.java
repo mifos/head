@@ -126,7 +126,7 @@ public class LoanScheduleFormBean implements Serializable {
             paymentIndex++;
         }
         
-        int lastHandledFutureInstallmentNumber = 0;
+        int lastHandledFutureInstallmentNumber = loanRepaymentPaidInstallmentsWithRunningBalance.size();
         if (!this.loanRepaymentFutureInstallments.isEmpty()) {
             lastHandledFutureInstallmentNumber = this.loanRepaymentFutureInstallments.get(this.loanRepaymentFutureInstallments.size()-1).getInstallmentNumber();
         }
@@ -167,7 +167,7 @@ public class LoanScheduleFormBean implements Serializable {
                 addErrorMessageToContext(messageContext, fieldError);
             }
             
-            if (paymentDate.isAfter(new LocalDate())) {
+            if (paymentDate.isAfter(new LocalDate()) && actualPayment.doubleValue() > 0) {
                 
                 String defaultMessage = "The payment date cannot be in the future.";
                 ErrorEntry fieldError = new ErrorEntry("paymentDate.is.future.date.invalid", "disbursementDate", defaultMessage);
@@ -209,7 +209,7 @@ public class LoanScheduleFormBean implements Serializable {
         BigDecimal cumulativeFeesPaid = BigDecimal.ZERO;
         BigDecimal cumulativeInterestPaid = BigDecimal.ZERO;
         BigDecimal totalInstallmentDue = BigDecimal.valueOf(installmentAmounts.get(paymentIndex).doubleValue()); 
-        if (cumulativePaymentDetail.getRemainingPayment().doubleValue() > totalInstallmentDue.doubleValue()) {
+        if (cumulativePaymentDetail.getRemainingPayment().doubleValue() >= totalInstallmentDue.doubleValue()) {
             // pay off total installment amount
             payment = cumulativePaymentDetail.getRemainingPayment().subtract(totalInstallmentDue);
             // sum total amounts paid to date.

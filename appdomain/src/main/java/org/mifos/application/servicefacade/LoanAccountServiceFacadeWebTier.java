@@ -1086,9 +1086,10 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         loan.setExternalId(loanAccountInfo.getExternalId());
         loan.setCollateralNote(loanAccountInfo.getCollateralNotes());
         loan.setCollateralTypeId(loanAccountInfo.getCollateralTypeId());
-        
-//        if backdatedpaymentsexist
-        loan.markAsCreatedWithBackdatedPayments();
+
+        if (!backdatedLoanPayments.isEmpty()) {
+            loan.markAsCreatedWithBackdatedPayments();
+        }
 
         try {
             transactionHelper.startTransaction();
