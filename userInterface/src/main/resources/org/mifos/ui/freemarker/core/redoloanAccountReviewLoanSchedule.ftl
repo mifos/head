@@ -172,6 +172,7 @@ $(function() {
 				[#else]
 					[@spring.bind "loanScheduleFormBean.installments[${ind}]"/]
 					<td style="border-top: 1px solid grey;"><input type="text" name="installments[${ind}]" size="10" value="${loanScheduleFormBean.installments[ind]?date?string.medium}" id="installment.dueDate.${ind}" class="date-pick" /></td>
+					<td style="border-top: 1px solid grey;"><input type="text" name="actualPaymentDates[${ind}]" size="10" value="${loanScheduleFormBean.actualPaymentDates[ind]?date?string.medium}" id="installment.actualPaymentDate.${ind}" class="date-pick" /></td>
 				[/#if]
 			[#else]
 				[#if loanProductReferenceData.compareCashflowEnabled]

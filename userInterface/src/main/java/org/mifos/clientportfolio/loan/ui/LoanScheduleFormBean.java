@@ -103,6 +103,14 @@ public class LoanScheduleFormBean implements Serializable {
     public void validateCalculateAndReviewLoanSchedule(ValidationContext context) {
         MessageContext messageContext = context.getMessageContext();
         
+        if (this.variableInstallmentsAllowed) {
+            recalculatePrincipalBasedOnTotalAmountForEachInstallmentWhileSettingInstallmentDate();
+            Errors inputInstallmentsErrors = loanAccountServiceFacade.validateInputInstallments(disbursementDate, minGapInDays, maxGapInDays, minInstallmentAmount, variableInstallments, customerId);
+            Errors scheduleErrors = loanAccountServiceFacade.validateInstallmentSchedule(variableInstallments, minInstallmentAmount);
+            
+            handleErrors(messageContext, inputInstallmentsErrors, scheduleErrors);
+        }
+        
         List<LoanRepaymentTransaction> loanRepaymentTransaction = new ArrayList<LoanRepaymentTransaction>();
         this.loanRepaymentPaidInstallmentsWithRunningBalance = new ArrayList<LoanRepaymentRunningBalance>();
         this.loanRepaymentFutureInstallments = new ArrayList<LoanRepaymentFutureInstallments>();
@@ -138,14 +146,6 @@ public class LoanScheduleFormBean implements Serializable {
                         BigDecimal.valueOf(installmentDto.getFees()), 
                         BigDecimal.valueOf(installmentDto.getTotal())));
             }
-        }
-        
-        if (this.variableInstallmentsAllowed) {
-            recalculatePrincipalBasedOnTotalAmountForEachInstallmentWhileSettingInstallmentDate();
-            Errors inputInstallmentsErrors = loanAccountServiceFacade.validateInputInstallments(disbursementDate, minGapInDays, maxGapInDays, minInstallmentAmount, variableInstallments, customerId);
-            Errors scheduleErrors = loanAccountServiceFacade.validateInstallmentSchedule(variableInstallments, minInstallmentAmount);
-            
-            handleErrors(messageContext, inputInstallmentsErrors, scheduleErrors);
         }
     }
     
