@@ -79,7 +79,7 @@
     
     <decision-state id="checkIfCompareForCashFlowIsEnabledForLoanCreation">
         <on-entry>
-            <evaluate expression="loanAccountController.isCompareForCashFlowEnabled(flowScope.productId)" result="flowScope.cashFlowEnabled" />
+            <evaluate expression="loanAccountController.isCompareForCashFlowEnabled(loanAccountFormBean, flowScope.productId)" result="flowScope.cashFlowEnabled" />
         </on-entry>
         <if test="flowScope.cashFlowEnabled" then="captureCashFlowDetails" else="calculateAndReviewLoanSchedule"/>
     </decision-state>

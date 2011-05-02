@@ -60,7 +60,7 @@ import java.util.Random;
 
 @SuppressWarnings("PMD")
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(singleThreaded = true, groups = {"loan", "acceptance", "ui", "no_db_unit"})
+@Test(singleThreaded = true, groups = {"loan", "acceptance", "ui", "no_db_unit", "smoke"})
 public class CreateClientLoanAccountTest extends UiTestCaseBase {
 
     private LoanTestHelper loanTestHelper;
@@ -125,6 +125,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // add grace period of 10 to "Flat Interest Loan Product With Fee"
+    @Test(enabled=true)
     public void newWeeklyClientLoanAccountWithModifyErrors() throws Exception {
         setAppDate(new DateTime(2011, 3, 7, 15, 0, 0, 0));
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
@@ -163,6 +164,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     //http://mifosforge.jira.com/browse/MIFOSTEST-308
+    @Test(enabled=true)
     public void newMonthlyClientLoanAccountWithMeetingOnSpecificDayOfMonth() throws Exception {
         //Given
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
@@ -219,8 +221,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled = false)
-    //IGNORED BY VIVEK SINGH
+    @Test(enabled = false)    //IGNORED BY VIVEK SINGH
     public void tryClientLoanAccountWithAdditionalFees() throws Exception {
         setDateAsToday();
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
@@ -253,6 +254,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled=true)
     public void createLoanAccountsWithRestrictedProductsMix() throws Exception {
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         DateTime targetTime = new DateTime(2011, 1, 24, 15, 0, 0, 0);
@@ -303,6 +305,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled=true)
     public void createMultipleLoanAccountsWithRestrictedProductsMix() throws Exception {
         setDateAsToday();
 
@@ -376,6 +379,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     //CreateClient: weekly, Stu12332659912419 Client12332659912419, monday, activate
+    @Test(enabled=true)
     public void verifyAccountFromProductInstallmentsSame() throws Exception {
         setAppDate(new DateTime(2011, 1, 24, 15, 0, 0, 0));
 
@@ -417,6 +421,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
      * @throws Exception
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled=true)
     public void verifyCreatingLoanAccountsOnProductWithLoanCycles() throws Exception {
         setAppDate(new DateTime(2011, 1, 24, 15, 0, 0, 0));
 
