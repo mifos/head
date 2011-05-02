@@ -75,7 +75,7 @@ public class LoanCreationLoanDetailsDto implements Serializable {
     private final Integer minGapInDays;
     private final Integer maxGapInDays;
     private final BigDecimal minInstallmentAmount;
-    private final boolean compareCashflowEnabled;
+    private boolean compareCashflowEnabled;
     private final boolean isGlimEnabled;
     private final boolean isGroup;
     private final List<LoanAccountDetailsDto> clientDetails;
@@ -313,5 +313,9 @@ public class LoanCreationLoanDetailsDto implements Serializable {
 
     public ApplicationConfigurationDto getAppConfig() {
         return appConfig;
+    }
+    
+    public void setCompareCashflowEnabled(boolean compareCashflowEnabled) {
+        this.compareCashflowEnabled = compareCashflowEnabled;
     }
 }

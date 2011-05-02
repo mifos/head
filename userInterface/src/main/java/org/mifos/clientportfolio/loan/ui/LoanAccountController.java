@@ -106,6 +106,10 @@ public class LoanAccountController {
 
         MandatoryHiddenFieldsDto mandatoryHidden = this.adminServiceFacade.retrieveHiddenMandatoryFields();
     	LoanCreationLoanDetailsDto dto = this.loanAccountServiceFacade.retrieveLoanDetailsForLoanAccountCreation(customerId, Integer.valueOf(productId).shortValue(), formBean.isRedoLoanAccount());
+    	
+    	if (formBean.isRedoLoanAccount()) {
+    	    dto.setCompareCashflowEnabled(false);
+    	}
 
     	formBean.setDigitsBeforeDecimalForInterest(dto.getAppConfig().getDigitsBeforeDecimalForInterest());
     	formBean.setDigitsAfterDecimalForInterest(dto.getAppConfig().getDigitsAfterDecimalForInterest());
@@ -234,8 +238,12 @@ public class LoanAccountController {
         loanAccountQuestionGroupFormBean.setQuestionGroups(questionGroups);
     }
 
-    public boolean isCompareForCashFlowEnabled(Integer productId) {
-        return this.loanAccountServiceFacade.isCompareWithCashFlowEnabledOnProduct(productId);
+    public boolean isCompareForCashFlowEnabled(LoanAccountFormBean loanAccountFormBean, Integer productId) {
+        boolean cashflowEnabled = false;
+        if (!loanAccountFormBean.isRedoLoanAccount()) {
+            cashflowEnabled = this.loanAccountServiceFacade.isCompareWithCashFlowEnabledOnProduct(productId);
+        }
+        return cashflowEnabled;
     }
 
     public LoanScheduleDto retrieveLoanSchedule(int customerId, int productId, LoanAccountFormBean formBean, LoanScheduleFormBean loanScheduleFormBean) {
