@@ -282,15 +282,14 @@ public class LoanAccountController {
         loanScheduleFormBean.setTotalLoanInterest(totalLoanInterest);
         loanScheduleFormBean.setTotalLoanFees(totalLoanFees);
         loanScheduleFormBean.setRepaymentInstallments(loanSchedule.getInstallments());
-
+        loanScheduleFormBean.setDisbursementDate(disbursementDate.toDateMidnight().toDate());
+        
         // variable installments related
         loanScheduleFormBean.setVariableInstallmentsAllowed(formBean.isVariableInstallmentsAllowed());
         if (loanScheduleFormBean.isVariableInstallmentsAllowed()) {
             loanScheduleFormBean.setMinGapInDays(formBean.getMinGapInDays());
             loanScheduleFormBean.setMaxGapInDays(formBean.getMaxGapInDays());
             loanScheduleFormBean.setMinInstallmentAmount(formBean.getMinInstallmentAmount());
-
-            loanScheduleFormBean.setDisbursementDate(disbursementDate.toDateMidnight().toDate());
             loanScheduleFormBean.setCustomerId(formBean.getCustomerId());
             loanScheduleFormBean.setVariableInstallments(loanSchedule.getInstallments());
         }

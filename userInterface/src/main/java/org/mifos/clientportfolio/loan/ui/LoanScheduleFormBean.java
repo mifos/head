@@ -23,6 +23,7 @@ package org.mifos.clientportfolio.loan.ui;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -106,6 +107,7 @@ public class LoanScheduleFormBean implements Serializable {
         this.loanRepaymentPaidInstallmentsWithRunningBalance = new ArrayList<LoanRepaymentRunningBalance>();
         this.loanRepaymentFutureInstallments = new ArrayList<LoanRepaymentFutureInstallments>();
         // if any actual payment data exists, calculate
+        validatePaymentsAndAmounts(messageContext, this.actualPaymentDates, this.actualPaymentAmounts);
         int paymentIndex = 0;
         CumulativePaymentDetail cumulativePaymentDetail = new CumulativePaymentDetail();
         for (Number actualPayment : this.actualPaymentAmounts) {
@@ -116,7 +118,7 @@ public class LoanScheduleFormBean implements Serializable {
             loanRepaymentTransaction.add(new LoanRepaymentTransaction(paymentDate, payment));
           
             int currentInstallmentIndex = paymentIndex;
-            while (cumulativePaymentDetail.getRemainingPayment().doubleValue() > BigDecimal.ZERO.doubleValue()) {
+            while (cumulativePaymentDetail.getRemainingPayment().doubleValue() > BigDecimal.ZERO.doubleValue() && currentInstallmentIndex < this.actualPaymentAmounts.size()-1) {
                 LoanCreationInstallmentDto installmentDetails = this.repaymentInstallments.get(currentInstallmentIndex);
                 cumulativePaymentDetail = handlePayment(currentInstallmentIndex, cumulativePaymentDetail, installmentDetails, paymentDate);
                 currentInstallmentIndex++;
@@ -147,6 +149,59 @@ public class LoanScheduleFormBean implements Serializable {
         }
     }
     
+    private void validatePaymentsAndAmounts(MessageContext messageContext, List<Date> actualPaymentDates, List<Number> actualPaymentAmounts) {
+        int index = 0;
+        LocalDate lastPaymentDate = null;
+        BigDecimal totalPayment = BigDecimal.ZERO;
+        
+        for (Number actualPayment : actualPaymentAmounts) {
+            String installment = Integer.valueOf(index+1).toString();
+            LocalDate paymentDate = new LocalDate(actualPaymentDates.get(index));
+            
+            if (paymentDate.isBefore(new LocalDate(this.disbursementDate))) {
+                
+                String defaultMessage = "The payment date cannot be before disbursement date";
+                ErrorEntry fieldError = new ErrorEntry("paymentDate.before.disbursementDate.invalid", "disbursementDate", defaultMessage);
+                fieldError.setArgs(Arrays.asList(installment));
+                
+                addErrorMessageToContext(messageContext, fieldError);
+            }
+            
+            if (paymentDate.isAfter(new LocalDate())) {
+                
+                String defaultMessage = "The payment date cannot be in the future.";
+                ErrorEntry fieldError = new ErrorEntry("paymentDate.is.future.date.invalid", "disbursementDate", defaultMessage);
+                fieldError.setArgs(Arrays.asList(installment));
+                
+                addErrorMessageToContext(messageContext, fieldError);
+            }
+            
+            if (lastPaymentDate != null) {
+                if (!paymentDate.isAfter(lastPaymentDate)) {
+                    String defaultMessage = "The payment date cannot be before the previous payment date";
+                    ErrorEntry fieldError = new ErrorEntry("paymentDate.before.lastPaymentDate.invalid", "disbursementDate", defaultMessage);
+                    fieldError.setArgs(Arrays.asList(installment));
+                    
+                    addErrorMessageToContext(messageContext, fieldError);
+                }
+            }
+            
+            BigDecimal payment = BigDecimal.valueOf(actualPayment.doubleValue());
+            if (payment.doubleValue() > BigDecimal.ZERO.doubleValue()) {
+                totalPayment = totalPayment.add(payment);
+            }
+            index++;
+            lastPaymentDate = paymentDate;
+        }
+        
+        BigDecimal totalAllowedPayments = this.loanPrincipal.add(this.totalLoanFees).add(this.totalLoanFees);
+        if (totalPayment.doubleValue() > totalAllowedPayments.doubleValue()) {
+            String defaultMessage = "Exceeds total payments allowed for loan.";
+            ErrorEntry fieldError = new ErrorEntry("totalPayments.exceeded.invalid", "disbursementDate", defaultMessage);
+            addErrorMessageToContext(messageContext, fieldError);
+        }
+    }
+
     private CumulativePaymentDetail handlePayment(int paymentIndex, CumulativePaymentDetail cumulativePaymentDetail, LoanCreationInstallmentDto installmentDetails, LocalDate paymentDate) {
         
         BigDecimal payment = BigDecimal.ZERO;
