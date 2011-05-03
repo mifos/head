@@ -286,7 +286,7 @@ public class LoanAccountController {
         loanScheduleFormBean.setActualPaymentDates(actualPaymentDates);
         loanScheduleFormBean.setActualPaymentAmounts(actualPaymentAmounts);
         
-        loanScheduleFormBean.setLoanPrincipal(BigDecimal.valueOf(formBean.getAmount()));
+        loanScheduleFormBean.setLoanPrincipal(BigDecimal.valueOf(formBean.getAmount().doubleValue()));
         loanScheduleFormBean.setTotalLoanInterest(totalLoanInterest);
         loanScheduleFormBean.setTotalLoanFees(totalLoanFees);
         loanScheduleFormBean.setRepaymentInstallments(loanSchedule.getInstallments());

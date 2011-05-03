@@ -22,6 +22,7 @@ package org.mifos.clientportfolio.loan.ui;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -68,7 +69,7 @@ public class LoanAccountFormBean implements Serializable {
     private Integer productId;
 
     // custom validation
-    private Double amount;
+    private Number amount;
     private Number minAllowedAmount;
     private Number maxAllowedAmount;
     private Number interestRate;
@@ -215,7 +216,9 @@ public class LoanAccountFormBean implements Serializable {
         }
         
         if (this.amount != null) {
-            BigDecimal amountAsDecimal = BigDecimal.valueOf(this.amount.doubleValue()).stripTrailingZeros();
+            BigDecimal amountAsDecimal = new BigDecimal(this.amount.toString()).stripTrailingZeros();
+            amountAsDecimal.setScale(this.digitsAfterDecimalForMonetaryAmounts+1, RoundingMode.CEILING);
+
             int places = amountAsDecimal.scale();
             if (places > this.digitsAfterDecimalForMonetaryAmounts) {
                 String defaultErrorMessage = "The number of digits after the decimal separator exceeds the allowed number.";
@@ -239,7 +242,8 @@ public class LoanAccountFormBean implements Serializable {
         }
         
         if (this.interestRate != null) {
-            BigDecimal interestRateAsDecimal = BigDecimal.valueOf(this.interestRate.doubleValue()).stripTrailingZeros();
+            BigDecimal interestRateAsDecimal = new BigDecimal(this.interestRate.toString()).stripTrailingZeros();
+            interestRateAsDecimal.setScale(this.digitsAfterDecimalForInterest+1, RoundingMode.CEILING);
             int places = interestRateAsDecimal.scale();
             if (places > this.digitsAfterDecimalForInterest) {
                 String defaultErrorMessage = "The number of digits after the decimal separator exceeds the allowed number.";
@@ -545,11 +549,11 @@ public class LoanAccountFormBean implements Serializable {
 		this.productId = productId;
 	}
 
-	public Double getAmount() {
+	public Number getAmount() {
 		return amount;
 	}
 
-	public void setAmount(Double amount) {
+	public void setAmount(Number amount) {
 		this.amount = amount;
 	}
 
