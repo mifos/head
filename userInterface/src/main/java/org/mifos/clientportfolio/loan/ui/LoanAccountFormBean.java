@@ -22,7 +22,6 @@ package org.mifos.clientportfolio.loan.ui;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -217,8 +216,6 @@ public class LoanAccountFormBean implements Serializable {
         
         if (this.amount != null) {
             BigDecimal amountAsDecimal = new BigDecimal(this.amount.toString()).stripTrailingZeros();
-            amountAsDecimal.setScale(this.digitsAfterDecimalForMonetaryAmounts+1, RoundingMode.CEILING);
-
             int places = amountAsDecimal.scale();
             if (places > this.digitsAfterDecimalForMonetaryAmounts) {
                 String defaultErrorMessage = "The number of digits after the decimal separator exceeds the allowed number.";
@@ -243,7 +240,6 @@ public class LoanAccountFormBean implements Serializable {
         
         if (this.interestRate != null) {
             BigDecimal interestRateAsDecimal = new BigDecimal(this.interestRate.toString()).stripTrailingZeros();
-            interestRateAsDecimal.setScale(this.digitsAfterDecimalForInterest+1, RoundingMode.CEILING);
             int places = interestRateAsDecimal.scale();
             if (places > this.digitsAfterDecimalForInterest) {
                 String defaultErrorMessage = "The number of digits after the decimal separator exceeds the allowed number.";
