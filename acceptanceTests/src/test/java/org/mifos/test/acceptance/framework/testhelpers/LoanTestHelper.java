@@ -789,7 +789,7 @@ public class LoanTestHelper {
         
         Double loanAmountDouble = Double.valueOf(createLoanAccountEntryPage.getLoanAmount());
         
-        String loanAmount = new NumberFormatter().print(loanAmountDouble, Locale.getDefault());
+        String loanAmount = new NumberFormatter().print(loanAmountDouble, Locale.ENGLISH);
         CreateLoanAccountReviewInstallmentPage createLoanAccountReviewInstallmentPage = createLoanAccountEntryPage.clickContinue();
         createLoanAccountReviewInstallmentPage = createLoanAccountReviewInstallmentPage.verifyPage();
         createLoanAccountReviewInstallmentPage.verifyLoanAmount(loanAmount);

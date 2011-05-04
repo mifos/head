@@ -22,12 +22,17 @@ package org.mifos.test.acceptance.loan;
 
 import org.joda.time.DateTime;
 import org.mifos.framework.util.DbUnitUtilities;
+import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.loan.ChargeParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountEntryPage;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountPreviewPage;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountReviewInstallmentPage;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSelectLoanProductPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountsSuccessPage;
 import org.mifos.test.acceptance.framework.loan.CreateMultipleLoanAccountSelectParameters;
@@ -44,6 +49,7 @@ import org.mifos.test.acceptance.framework.questionnaire.ViewQuestionResponseDet
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
+import org.mifos.test.acceptance.framework.testhelpers.QuestionGroupTestHelper;
 import org.mifos.test.acceptance.loanproduct.LoanProductTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
@@ -77,6 +83,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
     public static final String DATE = "Date";
     public static final String SINGLE_SELECT = "Single Select";
     private QuestionGroupHelper questionGroupHelper;
+    private QuestionGroupTestHelper questionGroupTestHelper;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -88,6 +95,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         loanProductTestHelper = new LoanProductTestHelper(selenium);
         navigationHelper = new NavigationHelper(selenium);
         questionGroupHelper = new QuestionGroupHelper(navigationHelper);
+        questionGroupTestHelper = new QuestionGroupTestHelper(selenium);
         random = new Random();
     }
 
@@ -121,6 +129,8 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         questionResponseDetailPage.verifyQuestionPresent(question1, answer);
         questionResponseDetailPage.verifyQuestionPresent(question2, choiceAnswer);
         questionResponseDetailPage.navigateToDetailsPage();
+        
+        questionGroupTestHelper.markQuestionGroupAsInactive(questionGroupTitle);
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -504,5 +514,41 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         disburseParameters.setDisbursalDateYYYY("2011");
         //Then
         loanTestHelper.disburseLoan(loanId, disburseParameters);
+    }
+    
+    /**
+    * Verify functionality of 'Cancel' buttons during the Loan creation flow
+    * http://mifosforge.jira.com/browse/MIFOSTEST-1178
+    *
+    * @throws Exception
+    */
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void verifyCancelButtons() throws Exception {
+        ClientsAndAccountsHomepage clientsAndAccountsHomepage = navigationHelper.navigateToClientsAndAccountsPage();
+        CreateLoanAccountSearchPage createLoanAccountSearchPage = clientsAndAccountsHomepage.navigateToCreateLoanAccountUsingLeftMenu();
+        createLoanAccountSearchPage.cancel();
+        clientsAndAccountsHomepage.navigateToCreateLoanAccountUsingLeftMenu();
+        CreateLoanAccountSearchParameters formParameters = new CreateLoanAccountSearchParameters();
+        formParameters.setSearchString("%");
+        createLoanAccountSearchPage.navigateToCreateLoanAccountEntryPage(formParameters);
+        createLoanAccountSearchPage.cancel();
+        clientsAndAccountsHomepage.navigateToCreateLoanAccountUsingLeftMenu();
+        CreateLoanAccountSearchParameters formParameters2 = new CreateLoanAccountSearchParameters();
+        formParameters2.setSearchString("Client1233266063395");
+        CreateLoanAccountSelectLoanProductPage createLoanAccountSelectLoanProductPage = createLoanAccountSearchPage.navigateToCreateLoanAccountSelectLoanProductPage(formParameters2);
+        createLoanAccountSelectLoanProductPage.cancel();
+        clientsAndAccountsHomepage.navigateToCreateLoanAccountUsingLeftMenu();
+        formParameters2.setLoanProduct("ClientEmergencyLoan");
+        CreateLoanAccountEntryPage createLoanAccountEntryPage = createLoanAccountSearchPage.searchAndNavigateToCreateLoanAccountPage(formParameters2);
+        createLoanAccountEntryPage.cancel();
+        clientsAndAccountsHomepage.navigateToCreateLoanAccountUsingLeftMenu();
+        createLoanAccountSearchPage.searchAndNavigateToCreateLoanAccountPage(formParameters2);
+        CreateLoanAccountReviewInstallmentPage createLoanAccountReviewInstallmentPage = createLoanAccountEntryPage.navigateToReviewInstallmentsPage();
+        createLoanAccountReviewInstallmentPage.cancel();
+        clientsAndAccountsHomepage.navigateToCreateLoanAccountUsingLeftMenu();
+        createLoanAccountSearchPage.searchAndNavigateToCreateLoanAccountPage(formParameters2);
+        createLoanAccountEntryPage.navigateToReviewInstallmentsPage();
+        CreateLoanAccountPreviewPage createLoanAccountPreviewPage = createLoanAccountReviewInstallmentPage.clickPreviewAndGoToReviewLoanAccountPage();
+        createLoanAccountPreviewPage.cancel();
     }
 }

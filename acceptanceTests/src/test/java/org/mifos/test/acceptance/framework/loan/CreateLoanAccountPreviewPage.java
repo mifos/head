@@ -22,6 +22,7 @@ package org.mifos.test.acceptance.framework.loan;
 
 import com.thoughtworks.selenium.Selenium;
 import org.mifos.test.acceptance.framework.AbstractPage;
+import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 import org.testng.Assert;
 
@@ -108,5 +109,11 @@ public class CreateLoanAccountPreviewPage extends AbstractPage {
         selenium.click("createloanpreview.button.saveForLater");
         waitForPageToLoad();
         return new CreateLoanAccountConfirmationPage(selenium);
+    }
+    
+    public ClientsAndAccountsHomepage cancel(){
+        selenium.click("_eventId_cancel");
+        waitForPageToLoad();
+        return new ClientsAndAccountsHomepage(selenium);
     }
 }

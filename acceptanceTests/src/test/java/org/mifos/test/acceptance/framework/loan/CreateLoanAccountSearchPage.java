@@ -21,6 +21,7 @@
 package org.mifos.test.acceptance.framework.loan;
 
 import org.mifos.test.acceptance.framework.AbstractPage;
+import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -47,5 +48,26 @@ public class CreateLoanAccountSearchPage extends AbstractPage {
         waitForPageToLoad();
         return new CreateLoanAccountEntryPage(selenium);
     }
+    
+    public ClientsAndAccountsHomepage cancel(){
+        selenium.click("_eventId_cancel");
+        waitForPageToLoad();
+        return new ClientsAndAccountsHomepage(selenium);
+    }
+            
+    public CreateLoanAccountSearchPage navigateToCreateLoanAccountEntryPage(CreateLoanAccountSearchParameters formParameters){
+        selenium.type("cust_search_account.input.searchString", formParameters.getSearchString());
+        selenium.click("cust_search_account.button.search");
+        waitForPageToLoad();
+        return this;
+    }
 
+    public CreateLoanAccountSelectLoanProductPage navigateToCreateLoanAccountSelectLoanProductPage(CreateLoanAccountSearchParameters formParameters){
+        selenium.type("cust_search_account.input.searchString", formParameters.getSearchString());
+        selenium.click("cust_search_account.button.search");
+        waitForPageToLoad();
+        selenium.click("link=*" + formParameters.getSearchString() + "*");
+        waitForPageToLoad();
+        return new CreateLoanAccountSelectLoanProductPage(selenium);
+    }
 }

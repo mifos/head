@@ -23,6 +23,7 @@ package org.mifos.test.acceptance.framework.loan;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
+import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
@@ -433,5 +434,17 @@ public class CreateLoanAccountEntryPage extends MifosPage {
 
     public void verifyError(String error) {
         Assert.assertTrue(selenium.isElementPresent("//span[@id='loancreationdetails.error.message']/div/ul/li/span[text()='"+error+"']"));
+    }
+    
+    public CreateLoanAccountReviewInstallmentPage navigateToReviewInstallmentsPage(){
+        selenium.click("loancreationdetails.button.continue");
+        waitForPageToLoad();
+        return new CreateLoanAccountReviewInstallmentPage(selenium);
+    }
+            
+    public ClientsAndAccountsHomepage cancel(){
+        selenium.click("_eventId_cancel");
+        waitForPageToLoad();
+        return new ClientsAndAccountsHomepage(selenium);
     }
 }

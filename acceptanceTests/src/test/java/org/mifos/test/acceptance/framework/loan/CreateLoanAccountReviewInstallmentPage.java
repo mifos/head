@@ -27,6 +27,7 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.mifos.test.acceptance.framework.AbstractPage;
+import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.testng.Assert;
 
@@ -518,9 +519,9 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
     public void verifyLoanAmount(String amount) {
 
         try {
-            Assert.assertEquals(getLoanAmount()+ ".0", amount);
-        } catch (AssertionError assertionError) {
             Assert.assertEquals(getLoanAmount(), amount);
+        } catch (AssertionError assertionError) {
+            Assert.assertEquals(getLoanAmount() + ".0", amount);
         }
     }
 
@@ -532,5 +533,11 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
             Assert.fail("cant find span with id: schedulepreview.text.loanamount on page" + selenium.getLocation());
         }
         return loanAmount;
+    }
+    
+    public ClientsAndAccountsHomepage cancel(){
+        selenium.click("schedulePreview.button.cancel");
+        waitForPageToLoad();
+        return new ClientsAndAccountsHomepage(selenium);
     }
 }
