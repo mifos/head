@@ -44,4 +44,9 @@ public class DailyScheduledEvent extends AbstractScheduledEvent {
     public int getEvery() {
         return every;
     }
+
+    @Override
+    public DateTime rollFrowardDateByFrequency(DateTime date) {
+        return date.plusDays(this.every);
+    }
 }

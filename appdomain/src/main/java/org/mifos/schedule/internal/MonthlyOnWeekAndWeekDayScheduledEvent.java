@@ -53,4 +53,8 @@ public class MonthlyOnWeekAndWeekDayScheduledEvent extends AbstractScheduledEven
         return every;
     }
 
+    @Override
+    public DateTime rollFrowardDateByFrequency(DateTime date) {
+        return date.plusMonths(this.every);
+    }
 }

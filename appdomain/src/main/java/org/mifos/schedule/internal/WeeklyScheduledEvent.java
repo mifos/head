@@ -48,4 +48,9 @@ public class WeeklyScheduledEvent extends AbstractScheduledEvent {
     public int getEvery() {
         return every;
     }
+    
+    @Override
+    public DateTime rollFrowardDateByFrequency(DateTime date) {
+        return date.plusWeeks(this.every);
+    }
 }

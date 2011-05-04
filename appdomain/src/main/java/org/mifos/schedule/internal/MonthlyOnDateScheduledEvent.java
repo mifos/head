@@ -49,4 +49,9 @@ public class MonthlyOnDateScheduledEvent extends AbstractScheduledEvent {
     public int getEvery() {
         return every;
     }
+    
+    @Override
+    public DateTime rollFrowardDateByFrequency(DateTime date) {
+        return date.plusMonths(this.every);
+    }
 }

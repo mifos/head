@@ -35,4 +35,6 @@ public interface ScheduledEvent {
     int numberOfDependentOccurrencesRollingUpToThisOccurrenceStartingWith
                     (ScheduledEvent dependentEvent, int occurrence, int startingOccurrence);
 
+    DateTime rollFrowardDateByFrequency(DateTime date);
+
 }

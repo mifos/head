@@ -53,6 +53,7 @@ public class GroupBuilder {
     private int numberOfChildrenUnderBranch = 0;
     private UserContext userContext = TestUtils.makeUser();
     private Integer versionNumber;
+    private DateTime activationDate = new DateTime().toDateMidnight().toDateTime();
 
 
     public GroupBO build() {
@@ -62,7 +63,6 @@ public class GroupBuilder {
         }
 
         DateTime mfiJoiningDate = new DateTime().toDateMidnight().toDateTime();
-        DateTime activationDate = new DateTime().toDateMidnight().toDateTime();
         group = GroupBO.createGroupWithCenterAsParent(userContext, name, formedBy, parentCustomer,
                 address, externalId, trained, trainedOn, customerStatus, mfiJoiningDate, activationDate);
 
@@ -180,6 +180,11 @@ public class GroupBuilder {
 
     public GroupBuilder pendingApproval() {
         this.customerStatus = CustomerStatus.GROUP_PENDING;
+        return this;
+    }
+
+    public GroupBuilder withActivationDate(DateTime withActivationDate) {
+        this.activationDate = withActivationDate;
         return this;
     }
 }

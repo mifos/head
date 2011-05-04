@@ -117,7 +117,7 @@ public class CustomerAccountBO extends AccountBO {
             CustomerAccountBO customerAccount = new CustomerAccountBO(customer, accountFees);
             if (customer.isActive()) {
                 DateTime scheduleGenerationStartingFromDate = new DateTime(customer.getCustomerActivationDate());
-                customerAccount.createSchedulesAndFeeSchedules(customer, accountFees, customerMeeting, applicableCalendarEvents, scheduleGenerationStartingFromDate);
+                customerAccount.createSchedulesAndFeeSchedulesForFirstTimeActiveCustomer(customer, accountFees, customerMeeting, applicableCalendarEvents, scheduleGenerationStartingFromDate);
             }
             return customerAccount;
         } catch (AccountException e) {
@@ -142,13 +142,39 @@ public class CustomerAccountBO extends AccountBO {
      *      is attached
      * </ul>
      */
-    public void createSchedulesAndFeeSchedules(CustomerBO customer, List<AccountFeesEntity> accountFees, MeetingBO customerMeeting, CalendarEvent applicableCalendarEvents, DateTime scheduleGenerationStartingFrom) {
+    public void createSchedulesAndFeeSchedulesForFirstTimeActiveCustomer(CustomerBO customer, List<AccountFeesEntity> accountFees, MeetingBO customerMeeting, CalendarEvent applicableCalendarEvents, DateTime scheduleGenerationStartingFrom) {
 
         final ScheduledEvent customerMeetingEvent = ScheduledEventFactory.createScheduledEventFrom(customerMeeting);
+        DateTime beginningFrom = scheduleGenerationStartingFrom;
+        // synch up generated schedule for center/group/client or group/client hierarchy
+        CustomerBO upmostParent = upmostParentOf(customer);
+        if (upmostParent != null) {
+            DateTime parentCustomerActiviationDate = new DateTime(upmostParent.getCustomerActivationDate());
+            DateTime childCustomerActiviationDate = new DateTime(customer.getCustomerActivationDate());
 
-        createInitialSetOfCustomerScheduleEntities(customer, scheduleGenerationStartingFrom, applicableCalendarEvents, customerMeetingEvent);
+            DateTime bestMatch = parentCustomerActiviationDate;
+            while (customerMeetingEvent.rollFrowardDateByFrequency(bestMatch).isBefore(childCustomerActiviationDate)) {
+                bestMatch = customerMeetingEvent.rollFrowardDateByFrequency(bestMatch);
+            }
+
+            beginningFrom = bestMatch;
+        }
+
+        createInitialSetOfCustomerScheduleEntities(customer, beginningFrom, applicableCalendarEvents, customerMeetingEvent);
 
         applyFeesToInitialSetOfInstallments(new ArrayList<AccountFeesEntity>(accountFees), customerMeetingEvent);
+    }
+
+    private CustomerBO upmostParentOf(CustomerBO customer) {
+        CustomerBO firstParent = customer.getParentCustomer();
+        CustomerBO upmostParent = firstParent;
+        if (firstParent != null) {
+            CustomerBO grandParent = firstParent.getParentCustomer();
+            if (grandParent != null) {
+                upmostParent = grandParent;
+            }
+        }
+        return upmostParent;
     }
 
     private void createInitialSetOfCustomerScheduleEntities (CustomerBO customer, DateTime meetingStartDate, CalendarEvent calendarEvents, final ScheduledEvent scheduledEvent) {
