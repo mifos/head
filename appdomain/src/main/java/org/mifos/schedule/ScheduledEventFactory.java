@@ -29,7 +29,7 @@ import org.mifos.schedule.internal.MonthlyOnWeekAndWeekDayScheduledEvent;
 import org.mifos.schedule.internal.WeeklyScheduledEvent;
 
 /**
- * @deprecated - use non static implementation of factory. see RecurringSecheduledEventFactory
+ * @deprecated - use non static implementation of factory. see RecurringScheduledEventFactory
  */
 @Deprecated
 public class ScheduledEventFactory {

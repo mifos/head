@@ -462,7 +462,7 @@ public class GroupBO extends CustomerBO {
         CustomerAccountBO customerAccount = this.getCustomerAccount();
         if (customerAccount != null) {
             List<AccountFeesEntity> accountFees = new ArrayList<AccountFeesEntity>(customerAccount.getAccountFees());
-            customerAccount.createSchedulesAndFeeSchedules(this, accountFees, this.getCustomerMeetingValue(), applicableCalendarEvents, new DateMidnight().toDateTime());
+            customerAccount.createSchedulesAndFeeSchedulesForFirstTimeActiveCustomer(this, accountFees, this.getCustomerMeetingValue(), applicableCalendarEvents, new DateMidnight().toDateTime());
         }
     }
 
