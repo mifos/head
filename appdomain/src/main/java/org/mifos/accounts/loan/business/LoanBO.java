@@ -2485,10 +2485,7 @@ public class LoanBO extends AccountBO implements Loan {
             final Date disbursementDate) throws AccountException {
         if (customerMeeting != null
                 && loanOfferingMeeting != null
-                && customerMeeting.getMeetingDetails().getRecurrenceType().getRecurrenceId().equals(
-                        loanOfferingMeeting.getMeetingDetails().getRecurrenceType().getRecurrenceId())
-                && isMultiple(loanOfferingMeeting.getMeetingDetails().getRecurAfter(), customerMeeting
-                        .getMeetingDetails().getRecurAfter())) {
+                && customerMeeting.hasSameRecurrenceAs(loanOfferingMeeting)) {
 
             RecurrenceType meetingFrequency = customerMeeting.getMeetingDetails().getRecurrenceTypeEnum();
             MeetingType meetingType = MeetingType.fromInt(customerMeeting.getMeetingType().getMeetingTypeId());

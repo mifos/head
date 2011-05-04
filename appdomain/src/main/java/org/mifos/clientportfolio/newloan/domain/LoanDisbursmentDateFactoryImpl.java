@@ -20,6 +20,9 @@
 
 package org.mifos.clientportfolio.newloan.domain;
 
+import java.util.Date;
+
+import org.joda.time.LocalDate;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.schedule.ScheduledEvent;
@@ -32,11 +35,13 @@ public class LoanDisbursmentDateFactoryImpl implements LoanDisbursementDateFacto
         
         RecurringScheduledEventFactory recurringScheduledEventFactory = new RecurringScheduledEventFactoryImpl();
         ScheduledEvent customerMeetingSchedule = recurringScheduledEventFactory.createScheduledEventFrom(customer.getCustomerMeetingValue());
-        
-        LoanDisbursementStrategy loanDisbursementStrategy = new ScheduledEventLoanDisbursementStrategyImpl(customerMeetingSchedule);
+        final Date nextMeetingDate = customer.getCustomerAccount().getNextMeetingDate();
+        LocalDate nextValidCustomerMeetingDate = new LocalDate(nextMeetingDate);
+        LoanDisbursementStrategy loanDisbursementStrategy = new LoanDisbursementCoupledToCustomerMeetingScheduleStrategyImpl(customerMeetingSchedule, nextValidCustomerMeetingDate);
         if (isLoanWithBackdatedPayments) {
             loanDisbursementStrategy = new LoanWithBackdatedPaymentsDisbursementStrategyImpl();
         } else if (loanProduct.isVariableInstallmentsAllowed() || isRepaymentIndependentOfMeetingEnabled) {
+            // LSIM ON
             loanDisbursementStrategy = new VariableInstallmentsLoanDisbursementStrategyImpl(customerMeetingSchedule);
         }
 

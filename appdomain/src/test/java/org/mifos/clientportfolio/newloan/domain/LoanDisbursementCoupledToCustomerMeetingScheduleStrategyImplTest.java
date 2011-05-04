@@ -21,10 +21,8 @@
 package org.mifos.clientportfolio.newloan.domain;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.joda.time.DateTime;
@@ -37,7 +35,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ScheduledEventLoanDisbursementStrategyImplTest {
+public class LoanDisbursementCoupledToCustomerMeetingScheduleStrategyImplTest {
 
     // class under test
     private LoanDisbursementStrategy loanDisbursementStrategy;
@@ -46,7 +44,8 @@ public class ScheduledEventLoanDisbursementStrategyImplTest {
     
     @Before
     public void setup() {
-        loanDisbursementStrategy = new ScheduledEventLoanDisbursementStrategyImpl(scheduledEvent);
+        LocalDate nextValidCustomerMeetingDate = new LocalDate();
+        loanDisbursementStrategy = new LoanDisbursementCoupledToCustomerMeetingScheduleStrategyImpl(scheduledEvent, nextValidCustomerMeetingDate);
     }
     
     @Test
@@ -64,7 +63,6 @@ public class ScheduledEventLoanDisbursementStrategyImplTest {
         LocalDate result = loanDisbursementStrategy.findClosestMatchingDateFromAndInclusiveOf(fromAndInclusiveOf);
         
         // verification
-        verify(scheduledEvent).nearestMatchingDateBeginningAt(expectedDateTimeToStartSearchFrom);
         assertThat(result, is(nextMatchingDate.toLocalDate()));
     }
     
@@ -82,25 +80,6 @@ public class ScheduledEventLoanDisbursementStrategyImplTest {
         boolean result = loanDisbursementStrategy.isDisbursementDateValid(disbursementDate);
         
         // verification
-        verify(scheduledEvent).nearestMatchingDateBeginningAt(disbursementDateAsDateTime);
         assertTrue("given nearest matching valid date is same as date provided, then dibursement date should be valid.", result);
-    }
-    
-    @Test
-    public void shouldDetermineDateAsInvalidForScheduleWhenReturnsDateDifferentToProvidedDisbursementDate() {
-        
-        // setup
-        LocalDate disbursementDate = new LocalDate();
-        DateTime disbursementDateAsDateTime = disbursementDate.toDateMidnight().toDateTime();
-        
-        // stubbing
-        when(scheduledEvent.nearestMatchingDateBeginningAt(disbursementDateAsDateTime)).thenReturn(disbursementDateAsDateTime.plusDays(7));
-        
-        // exercise test
-        boolean result = loanDisbursementStrategy.isDisbursementDateValid(disbursementDate);
-        
-        // verification
-        verify(scheduledEvent).nearestMatchingDateBeginningAt(disbursementDateAsDateTime);
-        assertFalse("given nearest matching valid date is not the same as date provided, then dibursement date should be invalid.", result);
     }
 }

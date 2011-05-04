@@ -36,7 +36,6 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.joda.time.LocalDate;
-import org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentTypeDao;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.struts.actionforms.LoanDisbursementActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
@@ -48,6 +47,7 @@ import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.config.AccountingRulesConstants;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AccountReferenceDto;
 import org.mifos.dto.domain.CustomerDto;
@@ -62,7 +62,7 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.util.UserContext;
-import org.mifos.core.MifosRuntimeException;
+import org.mifos.service.BusinessRuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -146,13 +146,13 @@ public class LoanDisbursementAction extends BaseAction {
                     new LocalDate(receiptDate), actionForm.getReceiptId(), customerDto);
 
             this.loanAccountServiceFacade.disburseLoan(loanDisbursement, paymentTypeId);
+        } catch (BusinessRuleException e) {
+            throw new AccountException(e.getMessage());
+        } catch (MifosRuntimeException e) {
+            String msg = "errors.cannotDisburseLoan.because.disburseFailed";
+            logger.error(msg, e);
+            throw new AccountException(msg);
         } catch (Exception e) {
-            if (e.getMessage().startsWith("errors.")) {
-                if (e instanceof MifosRuntimeException) { // UI do not like these exceptions
-                    throw new AccountException(e.getMessage());
-                }
-                throw e;
-            }
             String msg = "errors.cannotDisburseLoan.because.disburseFailed";
             logger.error(msg, e);
             throw new AccountException(msg);

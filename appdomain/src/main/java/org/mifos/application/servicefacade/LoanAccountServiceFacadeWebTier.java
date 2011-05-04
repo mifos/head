@@ -442,7 +442,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         if (!lsimEnabled) {
             final MeetingBO customerMeeting = customer.getCustomerMeetingValue();
             for (LoanOfferingBO loanProduct : loanOfferings) {
-                if (MeetingBO.isMeetingMatched(customerMeeting, loanProduct.getLoanOfferingMeetingValue())) {
+                if (loanProduct.getLoanOfferingMeetingValue().hasSameRecurrenceAs(customerMeeting)) {
                     applicableLoanProducts.add(loanProduct);
                 }
             }
@@ -1926,28 +1926,32 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = new UserContextFactory().create(mifosUser);
 
+        PaymentTypeDto paymentType = null;
         try {
-            PaymentTypeDto paymentType = null;
             for (org.mifos.dto.domain.PaymentTypeDto paymentTypeDto : accountService.getLoanDisbursementTypes()) {
                 if (paymentTypeDto.getValue() == paymentTypeId) {
                     paymentType = paymentTypeDto;
                 }
             }
+        } catch (Exception e) {
+            throw new MifosRuntimeException(e.getMessage(), e);
+        }
 
-            if (paymentType == null) {
-                throw new MifosRuntimeException("Expected loan PaymentTypeDto not found for id: " + paymentTypeId);
-            }
+        if (paymentType == null) {
+            throw new MifosRuntimeException("Expected loan PaymentTypeDto not found for id: " + paymentTypeId);
+        }
 
-            loanDisbursement.setPaymentType(paymentType);
+        loanDisbursement.setPaymentType(paymentType);
 
-            Date trxnDate = DateUtils.getDateWithoutTimeStamp(loanDisbursement.getPaymentDate().toDateMidnight().toDate());
-            if (!isTrxnDateValid(Integer.valueOf(loanDisbursement.getAccountId()), trxnDate)) {
-                throw new BusinessRuleException("errors.invalidTxndate");
-            }
+        Date trxnDate = DateUtils.getDateWithoutTimeStamp(loanDisbursement.getPaymentDate().toDateMidnight().toDate());
+        if (!isTrxnDateValid(Integer.valueOf(loanDisbursement.getAccountId()), trxnDate)) {
+            throw new BusinessRuleException("errors.invalidTxndate");
+        }
 
-            List<AccountPaymentParametersDto> loanDisbursements = new ArrayList<AccountPaymentParametersDto>();
-            loanDisbursements.add(loanDisbursement);
+        List<AccountPaymentParametersDto> loanDisbursements = new ArrayList<AccountPaymentParametersDto>();
+        loanDisbursements.add(loanDisbursement);
 
+        try {
             accountService.disburseLoans(loanDisbursements, userContext.getPreferredLocale());
         } catch (Exception e) {
             throw new MifosRuntimeException(e.getMessage(), e);
