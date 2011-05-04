@@ -20,32 +20,13 @@
 
 package org.mifos.application.master.persistence;
 
-import org.mifos.security.AddActivity;
-import org.mifos.security.util.SecurityConstants;
-import org.mifos.framework.persistence.Upgrade;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.components.batchjobs.MifosBatchJob;
-import org.springframework.orm.hibernate3.SessionFactoryUtils;
-import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
-import org.springframework.jdbc.support.incrementer.MySQLMaxValueIncrementer;
-import org.springframework.batch.core.repository.dao.JdbcJobInstanceDao;
-import org.springframework.batch.core.repository.dao.JdbcJobExecutionDao;
-import org.springframework.batch.core.JobParameters;
-import org.springframework.batch.core.JobParameter;
-import org.springframework.batch.core.JobExecution;
-import org.springframework.batch.core.JobInstance;
-import org.springframework.batch.core.ExitStatus;
-import org.springframework.batch.core.BatchStatus;
-
-import javax.sql.DataSource;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.ResultSet;
-import java.sql.Timestamp;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Date;
+
+import org.mifos.framework.persistence.Upgrade;
+import org.mifos.security.AddActivity;
+import org.mifos.security.util.SecurityConstants;
 
 public class Upgrade1283765911 extends Upgrade {
 
@@ -55,56 +36,10 @@ public class Upgrade1283765911 extends Upgrade {
                 SecurityConstants.SYSTEM_INFORMATION).upgrade(connection);
         new AddActivity("Permissions-CanUpdateBatchJobsConfiguration", SecurityConstants.CAN_UPDATE_BATCH_JOBS_CONFIGURATION,
                 SecurityConstants.SYSTEM_INFORMATION).upgrade(connection);
-
-        ResultSet rs;
-        rs = connection.createStatement().executeQuery("select taskname, max(starttime) from scheduled_tasks where status = 1 and description = 'Finished Successfully' group by taskname");
-        if (rs.first()) {
-            JdbcJobInstanceDao jobInstanceDao;
-            JdbcJobExecutionDao jobExecutionDao;
-            try {
-                DataSource dataSource = SessionFactoryUtils.getDataSource(StaticHibernateUtil.getSessionFactory());
-                SimpleJdbcTemplate jdbcTemplate = new SimpleJdbcTemplate(dataSource);
-
-                jobInstanceDao = new JdbcJobInstanceDao();
-                jobInstanceDao.setJdbcTemplate(jdbcTemplate);
-                jobInstanceDao.setJobIncrementer(new MySQLMaxValueIncrementer(dataSource, "BATCH_JOB_SEQ", "id"));
-                jobInstanceDao.afterPropertiesSet();
-
-                jobExecutionDao = new JdbcJobExecutionDao();
-                jobExecutionDao.setJdbcTemplate(jdbcTemplate);
-                jobExecutionDao.setJobExecutionIncrementer(new MySQLMaxValueIncrementer(dataSource, "BATCH_JOB_EXECUTION_SEQ", "id"));
-                jobExecutionDao.afterPropertiesSet();
-
-            } catch (Exception e) {
-                throw new IOException(e);
-            }
-            createSpringBatchJobInstance(jobInstanceDao, jobExecutionDao, rs.getString(1), rs.getTimestamp(2));
-            while (rs.next()) {
-                createSpringBatchJobInstance(jobInstanceDao, jobExecutionDao, rs.getString(1), rs.getTimestamp(2));
-            }
-        }
-
+        /* removed usage of SessionFactoryUtils.getDataSource to allow upgrade to run with reconfigured dataSource
+         * for MIFOS-4950. Historic batch job run info is not migrated.
+         */
         connection.createStatement().executeUpdate("drop table scheduled_tasks");
-    }
-
-    private void createSpringBatchJobInstance(JdbcJobInstanceDao jobInstanceDao, JdbcJobExecutionDao jobExecutionDao, String jobName, Timestamp startTime) {
-        if ("PortfolioAtRiskTask".equals(jobName)) {
-            createSpringBatchJobInstance(jobInstanceDao, jobExecutionDao, "LoanArrearsAndPortfolioAtRiskTask", startTime);
-        }
-        JobParameter jobParameter = new JobParameter(startTime.getTime());
-        Map<String, JobParameter> parameters = new HashMap<String, JobParameter>();
-        parameters.put(MifosBatchJob.JOB_EXECUTION_TIME_KEY, jobParameter);
-        JobParameters jobParameters = new JobParameters(parameters);
-        JobInstance job = jobInstanceDao.createJobInstance(jobName + "Job", jobParameters);
-
-        JobExecution jobExecution = new JobExecution(job);
-        Date jobExecutionTime = new Date(startTime.getTime());
-        jobExecution.setCreateTime(jobExecutionTime);
-        jobExecution.setStartTime(jobExecutionTime);
-        jobExecution.setEndTime(jobExecutionTime);
-        jobExecution.setExitStatus(ExitStatus.COMPLETED);
-        jobExecution.setStatus(BatchStatus.COMPLETED);
-        jobExecutionDao.saveJobExecution(jobExecution);
     }
 
 }
