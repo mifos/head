@@ -33,7 +33,6 @@ import org.mifos.schedule.ScheduledEvent;
 
 /**
  *
- *
  */
 public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration implements ScheduledDateGeneration {
 
@@ -45,8 +44,9 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration implements
         this.upcomingHolidays = upcomingHolidays;
     }
 
-    public List<DateTime> generateScheduledDates
-                                (int occurences, DateTime lastScheduledDate, ScheduledEvent scheduledEvent) {
+    @Override
+	public List<DateTime> generateScheduledDates
+                                (int occurences, DateTime lastScheduledDate, ScheduledEvent scheduledEvent, boolean isCustomerSchedule) {
 
         HolidayAndWorkingDaysScheduledDateGeneration generatorForHolidaysAndWorkingDays
             = new HolidayAndWorkingDaysScheduledDateGeneration(workingDays, new ArrayList<Holiday>());
@@ -54,19 +54,19 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration implements
         //Generate dates adjusted only for working days
         List<DateTime> unAdjustedDates
                 = generatorForHolidaysAndWorkingDays.generateScheduledDates
-                                                            (occurences, lastScheduledDate, scheduledEvent);
+                                                            (occurences, lastScheduledDate, scheduledEvent, isCustomerSchedule);
 
         return adjustDatesForHolidays (unAdjustedDates, upcomingHolidays, scheduledEvent);
     }
 
     @Override
     public List<DateTime> generateScheduledDatesThrough(DateTime lastScheduledDate, DateTime throughDate,
-            ScheduledEvent scheduledEvent) {
+            ScheduledEvent scheduledEvent, boolean isCustomerSchedule) {
 
         DateTime lastGeneratedDate = lastScheduledDate;
         List<DateTime> generatedDates = new ArrayList<DateTime>();
         do {
-            generatedDates.addAll(this.generateScheduledDates(10, lastGeneratedDate, scheduledEvent));
+            generatedDates.addAll(this.generateScheduledDates(10, lastGeneratedDate, scheduledEvent, isCustomerSchedule));
             lastGeneratedDate = generatedDates.get(generatedDates.size()-1);
 
             if (lastGeneratedDate.isBefore(throughDate)) {

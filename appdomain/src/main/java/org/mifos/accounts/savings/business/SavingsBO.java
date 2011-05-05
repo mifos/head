@@ -251,7 +251,7 @@ public class SavingsBO extends AccountBO {
             ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(calendarEvents.getWorkingDays(), calendarEvents.getHolidays());
 
             for (CustomerBO client : activeAndOnHoldClients) {
-                List<DateTime> depositDates = dateGeneration.generateScheduledDates(10, activationDate.toDateTimeAtStartOfDay(), scheduledEvent);
+                List<DateTime> depositDates = dateGeneration.generateScheduledDates(10, activationDate.toDateTimeAtStartOfDay(), scheduledEvent, false);
 
                 short installmentNumber = 1;
                 for (DateTime date : depositDates) {
@@ -282,7 +282,7 @@ public class SavingsBO extends AccountBO {
             ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(customer.getCustomerMeetingValue());
             ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(calendarEvents.getWorkingDays(), calendarEvents.getHolidays());
 
-            List<DateTime> depositDates = dateGeneration.generateScheduledDates(10, activationDate.toDateTimeAtStartOfDay(), scheduledEvent);
+            List<DateTime> depositDates = dateGeneration.generateScheduledDates(10, activationDate.toDateTimeAtStartOfDay(), scheduledEvent, false);
 
             short installmentNumber = 1;
             for (DateTime date : depositDates) {
@@ -658,7 +658,7 @@ public class SavingsBO extends AccountBO {
         ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(
                 workingDays, holidays);
 
-        List<DateTime> depositDates = dateGeneration.generateScheduledDates(10, startingFrom, scheduledEvent);
+        List<DateTime> depositDates = dateGeneration.generateScheduledDates(10, startingFrom, scheduledEvent, false);
 
         short installmentNumber = 1;
         for (DateTime date : depositDates) {
@@ -679,7 +679,7 @@ public class SavingsBO extends AccountBO {
         ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(
                 workingDays, holidays);
         List<DateTime> depositDates = dateGeneration.generateScheduledDates(10,
-                startFromDayAfterLastKnownInstallmentDate, scheduledEvent);
+                startFromDayAfterLastKnownInstallmentDate, scheduledEvent, false);
 
         short installmentNumber = lastInstallment.getInstallmentId();
         for (DateTime depositDate : depositDates) {
@@ -1477,7 +1477,7 @@ public class SavingsBO extends AccountBO {
 
         int numberOfInstallmentsToGenerate = getLastInstallmentId();
         List<DateTime> meetingDates = dateGeneration.generateScheduledDates(numberOfInstallmentsToGenerate,
-                futureIntervalStartDate, scheduledEvent);
+                futureIntervalStartDate, scheduledEvent, false);
 
         if (getCustomer().getCustomerLevel().getId().equals(CustomerLevel.CLIENT.getValue())
                 || getCustomer().getCustomerLevel().getId().equals(CustomerLevel.GROUP.getValue())

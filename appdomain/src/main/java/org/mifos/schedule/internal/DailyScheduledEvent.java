@@ -35,8 +35,13 @@ public class DailyScheduledEvent extends AbstractScheduledEvent {
         return CalendarUtils.getNextDateForDay(startDate, every);
     }
 
-    public DateTime nearestMatchingDateBeginningAt(final DateTime startDate) {
+    @Override
+    public DateTime nearestMatchNotTakingIntoAccountScheduleFrequency(DateTime startDate) {
+        return CalendarUtils.getNextDateForDay(startDate, every);
+    }
 
+    @Override
+	public DateTime nearestMatchingDateBeginningAt(final DateTime startDate) {
         return CalendarUtils.getNextDateForDay(startDate, every);
     }
 

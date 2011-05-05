@@ -37,7 +37,7 @@ public class HolidayAndWorkingDaysScheduledDateGeneration implements ScheduledDa
     //TODO KRP: implement this
     @Override
     public List<DateTime> generateScheduledDatesThrough(DateTime lastScheduledDate, DateTime throughDate,
-            ScheduledEvent scheduledEvent) {
+            ScheduledEvent scheduledEvent, boolean isCustomerSchedule) {
         return null;
     }
 
@@ -54,12 +54,14 @@ public class HolidayAndWorkingDaysScheduledDateGeneration implements ScheduledDa
      */
     @Override
     public List<DateTime> generateScheduledDates(final int occurences, final DateTime lastScheduledDate,
-            final ScheduledEvent scheduledEvent) {
+            final ScheduledEvent scheduledEvent, boolean isCustomerSchedule) {
 
         DateTime matchingDayOfWeekDate = scheduledEvent.nearestMatchingDateBeginningAt(lastScheduledDate);
+        if (isCustomerSchedule) {
+            matchingDayOfWeekDate = scheduledEvent.nearestMatchNotTakingIntoAccountScheduleFrequency(lastScheduledDate);    
+        }
 
         List<DateTime> scheduledDates = new ArrayList<DateTime>();
-
 
         // Prepare a list of dates scheduled without adjusting working days/holidays.
         // It is used for computing next dates by 'ScheduledEvent' to omit problems

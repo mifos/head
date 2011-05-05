@@ -39,7 +39,11 @@ public class MonthlyOnWeekAndWeekDayScheduledEvent extends AbstractScheduledEven
     public DateTime nextEventDateAfter(final DateTime startDate) {
 
         return CalendarUtils.getNextDayForMonthUsingWeekRankAndWeekday(startDate, weekOfMonth, this.dayOfWeek, every);
-
+    }
+    
+    @Override
+    public DateTime nearestMatchNotTakingIntoAccountScheduleFrequency(DateTime startDate) {
+        return CalendarUtils.getFirstDayForMonthUsingWeekRankAndWeekday(startDate, this.weekOfMonth, this.dayOfWeek);
     }
 
     @Override

@@ -334,7 +334,7 @@ public class MeetingBO extends AbstractBusinessObject {
 
     private DateTime findNearestMatchingDate(DateTime startingFrom) {
         ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(this);
-        return scheduledEvent.nearestMatchingDateBeginningAt(startingFrom);
+        return scheduledEvent.nearestMatchNotTakingIntoAccountScheduleFrequency(startingFrom);
     }
 
     public Date getPrevScheduleDateAfterRecurrence(final Date meetingDate) throws MeetingException {
@@ -454,7 +454,7 @@ public class MeetingBO extends AbstractBusinessObject {
     public boolean hasSameRecurrenceAs(MeetingBO customerMeetingValue) {
         return this.getRecurrenceType().equals(customerMeetingValue.getRecurrenceType());
     }
-    
+
     public boolean recursOnMultipleOf(MeetingBO meeting) {
         return meeting.getMeetingDetails().getRecurAfter().intValue() % this.meetingDetails.getRecurAfter().intValue() == 0;
     }

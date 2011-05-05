@@ -24,7 +24,9 @@ import org.joda.time.DateTime;
 
 public interface ScheduledEvent {
 
-    DateTime nearestMatchingDateBeginningAt(DateTime lastScheduledDate);
+    DateTime nearestMatchNotTakingIntoAccountScheduleFrequency(DateTime startDate);
+    
+    DateTime nearestMatchingDateBeginningAt(DateTime startDate);
 
     DateTime nextEventDateAfter(DateTime lastestGeneratedDate);
 
@@ -36,5 +38,7 @@ public interface ScheduledEvent {
                     (ScheduledEvent dependentEvent, int occurrence, int startingOccurrence);
 
     DateTime rollFrowardDateByFrequency(DateTime date);
+
+    
 
 }

@@ -1196,9 +1196,17 @@ public class AccountBO extends AbstractBusinessObject {
             ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(
                     workingDays, holidays);
 
-            List<DateTime> installmentDates = dateGeneration.generateScheduledDates(occurrences, startFromMeetingDate,
-                    scheduledEvent);
+            List<DateTime> installmentDates = dateGeneration.generateScheduledDates(occurrences, startFromMeetingDate,scheduledEvent, false);
             dueDates = new ArrayList<Date>();
+
+//            // FIXME - keithw - this whole area of installment creation should be pulled out of domain
+//            DateTime startFromDayAfterAssignedMeetingDateRatherThanSkippingInstallments = startFromMeetingDate;
+//            if (this.isLoanAccount()) {
+//                // ensure loans that are created or disbursed on a meeting date start on next valid meeting date and not todays meeting
+//                // ensure loans that are created or disbursed before a meeting date start on next valid meeting date
+//                startFromDayAfterAssignedMeetingDateRatherThanSkippingInstallments = startFromMeetingDate.plusDays(1);
+//            }
+//            List<DateTime> installmentDates = dateGeneration.generateScheduledDates(occurrences, startFromDayAfterAssignedMeetingDateRatherThanSkippingInstallments, scheduledEvent, false);
             for (DateTime installmentDate : installmentDates) {
                 dueDates.add(installmentDate.toDate());
             }
@@ -1270,7 +1278,7 @@ public class AccountBO extends AbstractBusinessObject {
                 workingDays, holidays);
 
         List<DateTime> feeScheduleDates = dateGeneration.generateScheduledDatesThrough(startFromMeetingDate,
-                repaymentEndDatetime, scheduledEvent);
+                repaymentEndDatetime, scheduledEvent, true);
 
         List<Date> feeSchedulesAsJavaDates = new ArrayList<Date>();
         for (DateTime feeSchedule : feeScheduleDates) {

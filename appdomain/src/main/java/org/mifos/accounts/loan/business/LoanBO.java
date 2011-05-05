@@ -1913,7 +1913,7 @@ public class LoanBO extends AccountBO {
                 workingDays, holidays);
 
         List<DateTime> meetingDates = dateGeneration.generateScheduledDates(numberOfInstallmentsToGenerate,
-                futureIntervalStartDate, scheduledEvent);
+                futureIntervalStartDate, scheduledEvent, false);
 
         updateSchedule(nextInstallment.getInstallmentId(), meetingDates);
     }
@@ -2392,9 +2392,10 @@ public class LoanBO extends AccountBO {
                 && customerMeeting.hasSameRecurrenceAs(loanOfferingMeeting)
                 &&  customerMeeting.recursOnMultipleOf(loanOfferingMeeting)) {
 
-            RecurrenceType meetingFrequency = customerMeeting.getMeetingDetails().getRecurrenceTypeEnum();
-            MeetingType meetingType = MeetingType.fromInt(customerMeeting.getMeetingType().getMeetingTypeId());
-            Short recurAfter = customerMeeting.getMeetingDetails().getRecurAfter();
+            // NOTE: loan schedules are generated based on the loan product frequency every 3 weeks etc
+            RecurrenceType meetingFrequency = loanOfferingMeeting.getMeetingDetails().getRecurrenceTypeEnum();
+            MeetingType meetingType = MeetingType.fromInt(loanOfferingMeeting.getMeetingType().getMeetingTypeId());
+            Short recurAfter = loanOfferingMeeting.getMeetingDetails().getRecurAfter();
             try {
                 MeetingBO meetingToReturn;
                 if (meetingFrequency.equals(RecurrenceType.MONTHLY)) {
@@ -3011,7 +3012,7 @@ public class LoanBO extends AccountBO {
                 ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, holidays);
 
                 List<Date> dueDates = new ArrayList<Date>();
-                List<DateTime> installmentDateTimes = dateGeneration.generateScheduledDates(occurrences, startFromMeetingDate, scheduledEvent);
+                List<DateTime> installmentDateTimes = dateGeneration.generateScheduledDates(occurrences, startFromMeetingDate, scheduledEvent, false);
                 for (DateTime installmentDate : installmentDateTimes) {
                     dueDates.add(installmentDate.toDate());
                 }

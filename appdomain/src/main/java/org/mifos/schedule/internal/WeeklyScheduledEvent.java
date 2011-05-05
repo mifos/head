@@ -39,6 +39,11 @@ public class WeeklyScheduledEvent extends AbstractScheduledEvent {
     }
 
     @Override
+    public DateTime nearestMatchNotTakingIntoAccountScheduleFrequency(DateTime startDate) {
+        return CalendarUtils.getFirstDateForWeek(startDate, this.dayOfWeek);
+    }
+    
+    @Override
     public DateTime nearestMatchingDateBeginningAt(final DateTime startDate) {
 
         return CalendarUtils.getFirstDateForWeek(startDate, this.dayOfWeek).plusWeeks(this.every-1);

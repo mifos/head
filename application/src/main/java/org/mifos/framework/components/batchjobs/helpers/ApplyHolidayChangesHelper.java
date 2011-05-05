@@ -242,7 +242,7 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
 
         DateTime dayBeforeFirstDateToGenerate = new DateTime(installments.get(0).getActionDate()).minusDays(1);
         return dateGeneration.generateScheduledDates(numberOfDatesToGenerate, dayBeforeFirstDateToGenerate,
-                scheduledEvent);
+                scheduledEvent, false);
     }
 
     private ScheduledDateGeneration getScheduledDateGeneration(Short officeId) {
