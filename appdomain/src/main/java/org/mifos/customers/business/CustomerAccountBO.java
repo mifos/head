@@ -140,12 +140,13 @@ public class CustomerAccountBO extends AccountBO {
             DateTime parentCustomerActiviationDate = new DateTime(upmostParent.getCustomerActivationDate());
             DateTime childCustomerActiviationDate = new DateTime(customer.getCustomerActivationDate());
 
-            DateTime bestMatch = parentCustomerActiviationDate;
-            while (customerMeetingEvent.rollFrowardDateByFrequency(bestMatch).isBefore(childCustomerActiviationDate)) {
-                bestMatch = customerMeetingEvent.rollFrowardDateByFrequency(bestMatch);
+            DateTime validCustomerMeetingMatch = customerMeetingEvent.nearestMatchNotTakingIntoAccountScheduleFrequency(parentCustomerActiviationDate);
+            
+            while (childCustomerActiviationDate.isAfter(validCustomerMeetingMatch)) {
+                validCustomerMeetingMatch = customerMeetingEvent.rollFrowardDateByFrequency(validCustomerMeetingMatch);
             }
-
-            beginningFrom = bestMatch;
+            
+            beginningFrom = validCustomerMeetingMatch;
         }
         
         createInitialSetOfCustomerScheduleEntities(customer, beginningFrom, applicableCalendarEvents, customerMeetingEvent);
@@ -192,7 +193,7 @@ public class CustomerAccountBO extends AccountBO {
     private List<InstallmentDate> generateInitialInstallmentDates(DateTime startingFrom, CalendarEvent calendarEvents, ScheduledEvent meetingEvent) {
 
         ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(calendarEvents.getWorkingDays(), calendarEvents.getHolidays());
-        List<DateTime> meetingDates = dateGeneration.generateScheduledDates(numberOfMeetingDatesToGenerate, startingFrom, meetingEvent);
+        List<DateTime> meetingDates = dateGeneration.generateScheduledDates(numberOfMeetingDatesToGenerate, startingFrom, meetingEvent, true);
         return InstallmentDate.createInstallmentDates(meetingDates);
     }
 
@@ -601,7 +602,7 @@ public class CustomerAccountBO extends AccountBO {
 
             ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, holidays);
 
-            List<DateTime> meetingDates = dateGeneration.generateScheduledDates(numberOfInstallmentsToGenerate, futureIntervalStartDate, scheduledEvent);
+            List<DateTime> meetingDates = dateGeneration.generateScheduledDates(numberOfInstallmentsToGenerate, futureIntervalStartDate, scheduledEvent, true);
 
             updateSchedule(nextInstallment.getInstallmentId(), meetingDates);
     }
@@ -678,7 +679,7 @@ public class CustomerAccountBO extends AccountBO {
          * skip the first date when adding account actions because it's already there.
          */
         DateTime dateOfLastInstallment = new DateTime(lastInstallmentDate).toDateMidnight().toDateTime();
-        List<DateTime> scheduledDates = scheduleGenerationStrategy.generateScheduledDates(numberOfMeetingDatesToGenerate + 1, dateOfLastInstallment, scheduledEvent);
+        List<DateTime> scheduledDates = scheduleGenerationStrategy.generateScheduledDates(numberOfMeetingDatesToGenerate + 1, dateOfLastInstallment, scheduledEvent, true);
 
         int count = 1;
         for (DateTime installmentDate : allButFirst(scheduledDates)) {

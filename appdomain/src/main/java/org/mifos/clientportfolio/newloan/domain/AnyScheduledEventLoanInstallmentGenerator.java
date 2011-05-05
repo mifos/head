@@ -47,7 +47,7 @@ public class AnyScheduledEventLoanInstallmentGenerator implements LoanInstallmen
             ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, holidays);
 
             List<Date> dueDates = new ArrayList<Date>();
-            List<DateTime> installmentDateTimes = dateGeneration.generateScheduledDates(occurrences, startFromMeetingDate.toDateMidnight().toDateTime(), scheduledEvent);
+            List<DateTime> installmentDateTimes = dateGeneration.generateScheduledDates(occurrences, startFromMeetingDate.toDateMidnight().toDateTime(), scheduledEvent, false);
             for (DateTime installmentDate : installmentDateTimes) {
                 dueDates.add(installmentDate.toDate());
             }

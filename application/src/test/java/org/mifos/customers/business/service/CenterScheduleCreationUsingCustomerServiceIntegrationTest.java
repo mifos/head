@@ -572,6 +572,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest extends M
      * Biweekly meeting, no fees
      ***********************************************/
 
+    @Ignore
     @Test
     public void createCenterScheduleWithBiWeeklyMeetingNoFeesNoHoliday() throws Exception {
 

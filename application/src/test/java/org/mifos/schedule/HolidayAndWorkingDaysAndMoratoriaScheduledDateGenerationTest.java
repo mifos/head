@@ -157,7 +157,7 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGenerationTest {
         ScheduledEvent recurringEvent = new ScheduledEventBuilder().every(1).weeks().on(DayOfWeek.monday()).build();
 
         List<DateTime> scheduledDates = scheduleGeneration
-                .generateScheduledDates(10, lastScheduledDate, recurringEvent);
+                .generateScheduledDates(10, lastScheduledDate, recurringEvent, false);
 
         assertThat(scheduledDates.size(), is(notNullValue()));
         assertThat(scheduledDates.size(), is(10));
@@ -171,7 +171,7 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGenerationTest {
         ScheduledEvent recurringEvent = new ScheduledEventBuilder().every(1).weeks().on(DayOfWeek.monday()).build();
 
         List<DateTime> scheduledDates = scheduleGeneration
-                .generateScheduledDates(10, lastScheduledDate, recurringEvent);
+                .generateScheduledDates(10, lastScheduledDate, recurringEvent, false);
 
         assertThat(scheduledDates.get(0), is(lastScheduledDate));
         assertThat(scheduledDates.get(1), is(DayOfWeek.oneWeekFrom(lastScheduledDate)));
@@ -186,7 +186,7 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGenerationTest {
         ScheduledEvent scheduleEvent = new ScheduledEventBuilder().every(1).weeks().on(DayOfWeek.monday()).build();
 
         List<DateTime> scheduledDates = scheduleGeneration.generateScheduledDates(10, dayAfterLastScheduledDate,
-                scheduleEvent);
+                scheduleEvent, false);
 
         DateTime lastDate = lastScheduledDate;
         for (DateTime generatedDate : scheduledDates) {
@@ -689,7 +689,7 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGenerationTest {
         DateTime throughDate = new DateTime().withYear(2010).withMonthOfYear(6).withDayOfMonth(21).toDateMidnight()
                 .toDateTime();
 
-        scheduleGeneration.generateScheduledDatesThrough(startDate, throughDate, scheduledEvent);
+        scheduleGeneration.generateScheduledDatesThrough(startDate, throughDate, scheduledEvent, false);
     }
 
     @Test
@@ -703,7 +703,7 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGenerationTest {
         DateTime throughDate = new DateTime().withYear(2010).withMonthOfYear(6).withDayOfMonth(7).toDateMidnight()
                 .toDateTime();
 
-        scheduleGeneration.generateScheduledDatesThrough(startDate, throughDate, scheduledEvent);
+        scheduleGeneration.generateScheduledDatesThrough(startDate, throughDate, scheduledEvent, false);
     }
 
     /*******************************
@@ -735,7 +735,7 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGenerationTest {
         public List<DateTime> build() {
             HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration generator
                 = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, holidays);
-            return generator.generateScheduledDates(numberOfDatesToGenerate, startDate, scheduledEvent);
+            return generator.generateScheduledDates(numberOfDatesToGenerate, startDate, scheduledEvent, false);
         }
 
 

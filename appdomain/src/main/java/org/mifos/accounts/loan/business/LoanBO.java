@@ -2124,7 +2124,7 @@ public class LoanBO extends AccountBO implements Loan {
                 workingDays, holidays);
 
         List<DateTime> meetingDates = dateGeneration.generateScheduledDates(numberOfInstallmentsToGenerate,
-                futureIntervalStartDate, scheduledEvent);
+                futureIntervalStartDate, scheduledEvent, false);
 
         updateSchedule(nextInstallment.getInstallmentId(), meetingDates);
     }

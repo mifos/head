@@ -71,7 +71,7 @@ public class IndependentOfCustomerMeetingScheduleLoanInstallmentGenerator implem
 			// ensure loans that are created or disbursed before a meeting date start on next valid meeting date
 			startFromDayAfterAssignedMeetingDateRatherThanSkippingInstallments = startFromMeetingDate.plusDays(1);
 			
-            List<DateTime> installmentDates = dateGeneration.generateScheduledDates(occurrences, startFromDayAfterAssignedMeetingDateRatherThanSkippingInstallments, scheduledEvent);
+            List<DateTime> installmentDates = dateGeneration.generateScheduledDates(occurrences, startFromDayAfterAssignedMeetingDateRatherThanSkippingInstallments, scheduledEvent, false);
             for (DateTime installmentDate : installmentDates) {
                 dueDates.add(installmentDate.toDate());
             }

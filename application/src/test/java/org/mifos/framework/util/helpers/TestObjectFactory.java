@@ -984,7 +984,7 @@ public class TestObjectFactory {
 
         ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(
                 workingDays, upcomingHolidays);
-        List<DateTime> allDates = dateGeneration.generateScheduledDates(occurrences, meetingStartDate, scheduledEvent);
+        List<DateTime> allDates = dateGeneration.generateScheduledDates(occurrences, meetingStartDate, scheduledEvent, false);
 
         List<Date> dates = new ArrayList<Date>();
         for (DateTime dateTime : allDates) {
@@ -1007,7 +1007,7 @@ public class TestObjectFactory {
         ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(
                 workingDays, upcomingHolidays);
         List<DateTime> allDates = dateGeneration.generateScheduledDatesThrough(meetingStartDate, endDateTime,
-                scheduledEvent);
+                scheduledEvent, false);
 
         List<Date> dates = new ArrayList<Date>();
         for (DateTime dateTime : allDates) {

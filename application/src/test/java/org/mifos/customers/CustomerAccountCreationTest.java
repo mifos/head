@@ -184,7 +184,58 @@ public class CustomerAccountCreationTest {
     }
     
     @Test
-    public void customerSchedulesForCustomerInHierarchyAreInSynchWithParentForBiWeekly() throws Exception {
+    public void firstCustomerScheduleIsAlwaysTheClosestMatchingDayOfWeekAndDoesNotTakeIntoAccountWeeklyMeetingFrequency() throws Exception {
+
+        // setup
+        applicableCalendarEvents = new CalendarEventBuilder().build();
+
+        DateTime tue19thOfApril = new DateTime().withDate(2011, 4, 19);
+        accountFees = new ArrayList<AccountFeesEntity>();
+        
+        MeetingBO centerMeeting = new MeetingBuilder().customerMeeting().weekly().every(2).occuringOnA(WeekDay.MONDAY).startingFrom(tue19thOfApril.minusDays(1).toDate()).build();
+
+        CenterBO center = new CenterBuilder().active().withActivationDate(tue19thOfApril).with(centerMeeting).build();
+
+        // exercise test
+        CustomerAccountBO centerAccount = CustomerAccountBO.createNew(center, accountFees, centerMeeting, applicableCalendarEvents);
+
+        // verification
+        List<AccountActionDateEntity> centerSchedules = new ArrayList<AccountActionDateEntity>(centerAccount.getAccountActionDates());
+
+        LocalDate firstCenterDate = new LocalDate(centerSchedules.get(0).getActionDate());
+        
+        LocalDate mon25thOfApril = new DateTime().withDate(2011, 4, 25).toLocalDate();
+        assertThat(firstCenterDate, is(mon25thOfApril));
+    }
+
+    @Test
+    public void firstCustomerScheduleIsAlwaysTheClosestMatchingDayOfWeekAndDoesNotTakeIntoAccountMonthlyMeetingFrequency() throws Exception {
+
+        // setup
+        applicableCalendarEvents = new CalendarEventBuilder().build();
+
+        DateTime tue19thOfApril = new DateTime().withDate(2011, 4, 19);
+        accountFees = new ArrayList<AccountFeesEntity>();
+        
+        MeetingBO centerMeeting = new MeetingBuilder().customerMeeting().monthly().every(2).occuringOnA(WeekDay.MONDAY).startingFrom(tue19thOfApril.minusDays(1).toDate()).onDayOfMonth(18).build();
+
+        CenterBO center = new CenterBuilder().active().withActivationDate(tue19thOfApril).with(centerMeeting).build();
+
+        // exercise test
+        CustomerAccountBO centerAccount = CustomerAccountBO.createNew(center, accountFees, centerMeeting, applicableCalendarEvents);
+
+        // verification
+        List<AccountActionDateEntity> centerSchedules = new ArrayList<AccountActionDateEntity>(centerAccount.getAccountActionDates());
+
+        LocalDate firstCenterDate = new LocalDate(centerSchedules.get(0).getActionDate());
+        
+        LocalDate mon18thOfMay = new DateTime().withDate(2011, 5, 18).toLocalDate();
+        assertThat(firstCenterDate, is(mon18thOfMay));
+    }
+
+    
+    @Test
+    public void givenBiWeeklyFrequencyFirstCustomerScheduleForChildSynchsWithNearestScheduleOfParent() throws Exception {
 
         // setup
         applicableCalendarEvents = new CalendarEventBuilder().build();
@@ -207,32 +258,31 @@ public class CustomerAccountCreationTest {
         List<AccountActionDateEntity> centerSchedules = new ArrayList<AccountActionDateEntity>(centerAccount.getAccountActionDates());
         List<AccountActionDateEntity> groupSchedules = new ArrayList<AccountActionDateEntity>(groupAccount.getAccountActionDates());
 
-        LocalDate firstCenterDate = new LocalDate(centerSchedules.get(0).getActionDate());
         LocalDate secondCenterDate = new LocalDate(centerSchedules.get(1).getActionDate());
-//        LocalDate thirdCenterDate = new LocalDate(centerSchedules.get(2).getActionDate());
+        LocalDate thirdCenterDate = new LocalDate(centerSchedules.get(2).getActionDate());
         
         LocalDate firstGroupDate = new LocalDate(groupSchedules.get(0).getActionDate());
         LocalDate secondGroupDate = new LocalDate(groupSchedules.get(1).getActionDate());
         
-        assertThat(firstGroupDate, is(firstCenterDate));
-        assertThat(secondGroupDate, is(secondCenterDate));
+        assertThat("group is activated after center first schedule and so should start on its second scheduled date", firstGroupDate, is(secondCenterDate));
+        assertThat(secondGroupDate, is(thirdCenterDate));
     }
     
     @Test
-    public void customerSchedulesForCustomerInHierarchyAreInSynchWithParentForBiWeeklyOffsetByTwoWeeks() throws Exception {
+    public void givenBiWeeklyFrequencyAndChildCreatedThreeWeeksAfterParentFirstCustomerScheduleForChildSynchsWithNearestScheduleOfParent() throws Exception {
 
         // setup
         applicableCalendarEvents = new CalendarEventBuilder().build();
 
         DateTime tue19thOfApril = new DateTime().withDate(2011, 4, 19);
-        DateTime tue26thOfApril = new DateTime().withDate(2011, 4, 26).plusWeeks(2);
+        DateTime tue10thOfMay = new DateTime().withDate(2011, 4, 26).plusWeeks(2);
         accountFees = new ArrayList<AccountFeesEntity>();
         
         MeetingBO centerMeeting = new MeetingBuilder().customerMeeting().weekly().every(2).occuringOnA(WeekDay.MONDAY).startingFrom(tue19thOfApril.minusDays(1).toDate()).build();
-        MeetingBO groupMeeting = new MeetingBuilder().customerMeeting().weekly().every(2).occuringOnA(WeekDay.MONDAY).startingFrom(tue26thOfApril.minusDays(1).toDate()).build();
+        MeetingBO groupMeeting = new MeetingBuilder().customerMeeting().weekly().every(2).occuringOnA(WeekDay.MONDAY).startingFrom(tue10thOfMay.minusDays(1).toDate()).build();
 
         CenterBO center = new CenterBuilder().active().withActivationDate(tue19thOfApril).with(centerMeeting).build();
-        GroupBO group = new GroupBuilder().active().withParentCustomer(center).withActivationDate(tue26thOfApril).withMeeting(groupMeeting).build();
+        GroupBO group = new GroupBuilder().active().withParentCustomer(center).withActivationDate(tue10thOfMay).withMeeting(groupMeeting).build();
 
         // exercise test
         CustomerAccountBO centerAccount = CustomerAccountBO.createNew(center, accountFees, centerMeeting, applicableCalendarEvents);
@@ -242,19 +292,15 @@ public class CustomerAccountCreationTest {
         List<AccountActionDateEntity> centerSchedules = new ArrayList<AccountActionDateEntity>(centerAccount.getAccountActionDates());
         List<AccountActionDateEntity> groupSchedules = new ArrayList<AccountActionDateEntity>(groupAccount.getAccountActionDates());
 
-//        LocalDate firstCenterDate = new LocalDate(centerSchedules.get(0).getActionDate());
-        LocalDate secondCenterDate = new LocalDate(centerSchedules.get(1).getActionDate());
         LocalDate thirdCenterDate = new LocalDate(centerSchedules.get(2).getActionDate());
         
         LocalDate firstGroupDate = new LocalDate(groupSchedules.get(0).getActionDate());
-        LocalDate secondGroupDate = new LocalDate(groupSchedules.get(1).getActionDate());
-        
-        assertThat(firstGroupDate, is(secondCenterDate));
-        assertThat(secondGroupDate, is(thirdCenterDate));
+
+        assertThat(firstGroupDate, is(thirdCenterDate));
     }
 
     @Test
-    public void customerSchedulesForCustomerInHierarchyAreInSynchWithParentForTriWeekly() throws Exception {
+    public void givenTriWeeklyFrequencyFirstCustomerScheduleForChildSynchsWithNearestScheduleOfParent() throws Exception {
 
         // setup
         applicableCalendarEvents = new CalendarEventBuilder().build();
@@ -277,42 +323,6 @@ public class CustomerAccountCreationTest {
         List<AccountActionDateEntity> centerSchedules = new ArrayList<AccountActionDateEntity>(centerAccount.getAccountActionDates());
         List<AccountActionDateEntity> groupSchedules = new ArrayList<AccountActionDateEntity>(groupAccount.getAccountActionDates());
 
-        LocalDate firstCenterDate = new LocalDate(centerSchedules.get(0).getActionDate());
-        LocalDate secondCenterDate = new LocalDate(centerSchedules.get(1).getActionDate());
-//        LocalDate thirdCenterDate = new LocalDate(centerSchedules.get(2).getActionDate());
-        
-        LocalDate firstGroupDate = new LocalDate(groupSchedules.get(0).getActionDate());
-        LocalDate secondGroupDate = new LocalDate(groupSchedules.get(1).getActionDate());
-        
-        assertThat(firstGroupDate, is(firstCenterDate));
-        assertThat(secondGroupDate, is(secondCenterDate));
-    }
-    
-    @Test
-    public void customerSchedulesForCustomerInHierarchyAreInSynchWithParentForTriWeeklyOffsetByThreeWeeks() throws Exception {
-
-        // setup
-        applicableCalendarEvents = new CalendarEventBuilder().build();
-
-        DateTime tue19thOfApril = new DateTime().withDate(2011, 4, 19);
-        DateTime tue26thOfApril = new DateTime().withDate(2011, 4, 26).plusWeeks(3);
-        accountFees = new ArrayList<AccountFeesEntity>();
-        
-        MeetingBO centerMeeting = new MeetingBuilder().customerMeeting().weekly().every(3).occuringOnA(WeekDay.MONDAY).startingFrom(tue19thOfApril.minusDays(1).toDate()).build();
-        MeetingBO groupMeeting = new MeetingBuilder().customerMeeting().weekly().every(3).occuringOnA(WeekDay.MONDAY).startingFrom(tue26thOfApril.minusDays(1).toDate()).build();
-
-        CenterBO center = new CenterBuilder().active().withActivationDate(tue19thOfApril).with(centerMeeting).build();
-        GroupBO group = new GroupBuilder().active().withParentCustomer(center).withActivationDate(tue26thOfApril).withMeeting(groupMeeting).build();
-
-        // exercise test
-        CustomerAccountBO centerAccount = CustomerAccountBO.createNew(center, accountFees, centerMeeting, applicableCalendarEvents);
-        CustomerAccountBO groupAccount = CustomerAccountBO.createNew(group, accountFees, groupMeeting, applicableCalendarEvents);
-
-        // verification
-        List<AccountActionDateEntity> centerSchedules = new ArrayList<AccountActionDateEntity>(centerAccount.getAccountActionDates());
-        List<AccountActionDateEntity> groupSchedules = new ArrayList<AccountActionDateEntity>(groupAccount.getAccountActionDates());
-
-//        LocalDate firstCenterDate = new LocalDate(centerSchedules.get(0).getActionDate());
         LocalDate secondCenterDate = new LocalDate(centerSchedules.get(1).getActionDate());
         LocalDate thirdCenterDate = new LocalDate(centerSchedules.get(2).getActionDate());
         
@@ -324,7 +334,7 @@ public class CustomerAccountCreationTest {
     }
 
     @Test
-    public void customerSchedulesForCustomerInHierarchyAreInSynchWithParentForMonthly() throws Exception {
+    public void givenMonthlyFrequencyFirstCustomerScheduleForChildSynchsWithNearestScheduleOfParent() throws Exception {
 
         // setup
         applicableCalendarEvents = new CalendarEventBuilder().build();
@@ -349,7 +359,6 @@ public class CustomerAccountCreationTest {
 
         LocalDate firstCenterDate = new LocalDate(centerSchedules.get(0).getActionDate());
         LocalDate secondCenterDate = new LocalDate(centerSchedules.get(1).getActionDate());
-//        LocalDate thirdCenterDate = new LocalDate(centerSchedules.get(2).getActionDate());
         
         LocalDate firstGroupDate = new LocalDate(groupSchedules.get(0).getActionDate());
         LocalDate secondGroupDate = new LocalDate(groupSchedules.get(1).getActionDate());
@@ -359,7 +368,39 @@ public class CustomerAccountCreationTest {
     }
 
     @Test
-    public void customerSchedulesForCustomerInHierarchyAreInSynchWithParentForBiMonthly() throws Exception {
+    public void givenMonthlyFrequencyAndChildCreatedAfterParentsFirstScheduleFirstCustomerScheduleForChildSynchsWithNearestScheduleOfParent() throws Exception {
+
+        // setup
+        applicableCalendarEvents = new CalendarEventBuilder().build();
+
+        DateTime tue19thOfApril = new DateTime().withDate(2011, 4, 19);
+        DateTime thursday26thOfMay = new DateTime().withDate(2011, 5, 26);
+        accountFees = new ArrayList<AccountFeesEntity>();
+        
+        MeetingBO centerMeeting = new MeetingBuilder().customerMeeting().monthly().every(1).occuringOnA(WeekDay.MONDAY).startingFrom(tue19thOfApril.minusDays(1).toDate()).onDayOfMonth(18).build();
+        MeetingBO groupMeeting = new MeetingBuilder().customerMeeting().monthly().every(1).occuringOnA(WeekDay.MONDAY).startingFrom(thursday26thOfMay.minusDays(1).toDate()).onDayOfMonth(18).build();
+
+        CenterBO center = new CenterBuilder().active().withActivationDate(tue19thOfApril).with(centerMeeting).build();
+        GroupBO group = new GroupBuilder().active().withParentCustomer(center).withActivationDate(thursday26thOfMay).withMeeting(groupMeeting).build();
+
+        // exercise test
+        CustomerAccountBO centerAccount = CustomerAccountBO.createNew(center, accountFees, centerMeeting, applicableCalendarEvents);
+        CustomerAccountBO groupAccount = CustomerAccountBO.createNew(group, accountFees, groupMeeting, applicableCalendarEvents);
+
+        // verification
+        List<AccountActionDateEntity> centerSchedules = new ArrayList<AccountActionDateEntity>(centerAccount.getAccountActionDates());
+        List<AccountActionDateEntity> groupSchedules = new ArrayList<AccountActionDateEntity>(groupAccount.getAccountActionDates());
+
+        LocalDate secondCenterDate = new LocalDate(centerSchedules.get(1).getActionDate());
+        
+        LocalDate firstGroupDate = new LocalDate(groupSchedules.get(0).getActionDate());
+        
+        assertThat(firstGroupDate, is(secondCenterDate));
+    }
+
+    
+    @Test
+    public void givenBiMonthlyFrequencyFirstCustomerScheduleForChildSynchsWithNearestScheduleOfParent() throws Exception {
 
         // setup
         applicableCalendarEvents = new CalendarEventBuilder().build();
@@ -384,7 +425,6 @@ public class CustomerAccountCreationTest {
 
         LocalDate firstCenterDate = new LocalDate(centerSchedules.get(0).getActionDate());
         LocalDate secondCenterDate = new LocalDate(centerSchedules.get(1).getActionDate());
-//        LocalDate thirdCenterDate = new LocalDate(centerSchedules.get(2).getActionDate());
         
         LocalDate firstGroupDate = new LocalDate(groupSchedules.get(0).getActionDate());
         LocalDate secondGroupDate = new LocalDate(groupSchedules.get(1).getActionDate());
@@ -394,17 +434,17 @@ public class CustomerAccountCreationTest {
     }
     
     @Test
-    public void customerSchedulesForCustomerInHierarchyAreInSynchWithParentForBiMonthlyOffsetByTwoMonths() throws Exception {
+    public void givenTriMonthlyFrequencyFirstCustomerScheduleForChildSynchsWithNearestScheduleOfParent() throws Exception {
 
         // setup
         applicableCalendarEvents = new CalendarEventBuilder().build();
 
         DateTime tue19thOfApril = new DateTime().withDate(2011, 4, 19);
-        DateTime tue26thOfApril = new DateTime().withDate(2011, 4, 26).plusMonths(2);
+        DateTime tue26thOfApril = new DateTime().withDate(2011, 4, 26);
         accountFees = new ArrayList<AccountFeesEntity>();
         
-        MeetingBO centerMeeting = new MeetingBuilder().customerMeeting().monthly().every(2).occuringOnA(WeekDay.MONDAY).startingFrom(tue19thOfApril.minusDays(1).toDate()).onDayOfMonth(18).build();
-        MeetingBO groupMeeting = new MeetingBuilder().customerMeeting().monthly().every(2).occuringOnA(WeekDay.MONDAY).startingFrom(tue26thOfApril.minusDays(1).toDate()).onDayOfMonth(18).build();
+        MeetingBO centerMeeting = new MeetingBuilder().customerMeeting().monthly().every(3).occuringOnA(WeekDay.MONDAY).startingFrom(tue19thOfApril.minusDays(1).toDate()).onDayOfMonth(18).build();
+        MeetingBO groupMeeting = new MeetingBuilder().customerMeeting().monthly().every(3).occuringOnA(WeekDay.MONDAY).startingFrom(tue26thOfApril.minusDays(1).toDate()).onDayOfMonth(18).build();
 
         CenterBO center = new CenterBuilder().active().withActivationDate(tue19thOfApril).with(centerMeeting).build();
         GroupBO group = new GroupBuilder().active().withParentCustomer(center).withActivationDate(tue26thOfApril).withMeeting(groupMeeting).build();
@@ -417,14 +457,14 @@ public class CustomerAccountCreationTest {
         List<AccountActionDateEntity> centerSchedules = new ArrayList<AccountActionDateEntity>(centerAccount.getAccountActionDates());
         List<AccountActionDateEntity> groupSchedules = new ArrayList<AccountActionDateEntity>(groupAccount.getAccountActionDates());
 
-//        LocalDate firstCenterDate = new LocalDate(centerSchedules.get(0).getActionDate());
+        LocalDate firstCenterDate = new LocalDate(centerSchedules.get(0).getActionDate());
         LocalDate secondCenterDate = new LocalDate(centerSchedules.get(1).getActionDate());
-        LocalDate thirdCenterDate = new LocalDate(centerSchedules.get(2).getActionDate());
         
         LocalDate firstGroupDate = new LocalDate(groupSchedules.get(0).getActionDate());
         LocalDate secondGroupDate = new LocalDate(groupSchedules.get(1).getActionDate());
         
-        assertThat(firstGroupDate, is(secondCenterDate));
-        assertThat(secondGroupDate, is(thirdCenterDate));
+        assertThat(firstGroupDate, is(firstCenterDate));
+        assertThat(secondGroupDate, is(secondCenterDate));
     }
+
 }

@@ -22,6 +22,7 @@ package org.mifos.customers;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.spy;
@@ -124,7 +125,7 @@ public class CustomerAccountGenerateNextSetOfMeetingDatesTest {
 
         // stubbing
         List<DateTime> generatedDates = elevenDatesStartingFromAndIncluding(lastScheduledDate, scheduledEvent);
-        when(scheduledDateGeneration.generateScheduledDates(anyInt(), (DateTime)anyObject(), (ScheduledEvent)anyObject())).thenReturn(generatedDates);
+        when(scheduledDateGeneration.generateScheduledDates(anyInt(), (DateTime)anyObject(), (ScheduledEvent)anyObject(), anyBoolean())).thenReturn(generatedDates);
 
         // exercise test
         customerAccount.generateNextSetOfMeetingDates(scheduledDateGeneration);
@@ -147,7 +148,7 @@ public class CustomerAccountGenerateNextSetOfMeetingDatesTest {
 
         // stubbing
         List<DateTime> generatedDates = elevenDatesStartingFromAndIncluding(lastScheduledDate, scheduledEvent);
-        when(scheduledDateGeneration.generateScheduledDates(anyInt(), (DateTime)anyObject(), (ScheduledEvent)anyObject())).thenReturn(generatedDates);
+        when(scheduledDateGeneration.generateScheduledDates(anyInt(), (DateTime)anyObject(), (ScheduledEvent)anyObject(), anyBoolean())).thenReturn(generatedDates);
 
         // exercise test
         customerAccount.generateNextSetOfMeetingDates(scheduledDateGeneration);
@@ -175,7 +176,7 @@ public class CustomerAccountGenerateNextSetOfMeetingDatesTest {
 
         // stubbing
         List<DateTime> generatedDates = elevenDatesStartingFromAndIncluding(lastScheduledDate, scheduledEvent);
-        when(scheduledDateGeneration.generateScheduledDates(anyInt(), (DateTime)anyObject(), (ScheduledEvent)anyObject())).thenReturn(generatedDates);
+        when(scheduledDateGeneration.generateScheduledDates(anyInt(), (DateTime)anyObject(), (ScheduledEvent)anyObject(), anyBoolean())).thenReturn(generatedDates);
 
         // exercise test
         customerAccount.generateNextSetOfMeetingDates(scheduledDateGeneration);

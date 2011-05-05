@@ -22,21 +22,13 @@ package org.mifos.accounts.util.helpers;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import org.joda.time.DateTime;
-import org.joda.time.Days;
 import org.mifos.accounts.business.AccountFeesEntity;
-import org.mifos.application.holiday.business.Holiday;
-import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.config.FiscalCalendarRules;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.schedule.ScheduledDateGeneration;
 import org.mifos.schedule.ScheduledEvent;
 import org.mifos.schedule.ScheduledEventFactory;
-import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration;
 
 public class FeeInstallment {
 
@@ -52,24 +44,6 @@ public class FeeInstallment {
         feeInstallment.setAccountFeesEntity(accountFee);
         //accountFee.setAccountFeeAmount(accountFeeAmount);
         return feeInstallment;
-    }
-
-    public static List<FeeInstallment> createFeeInstallments(final List<InstallmentDate> installmentDates,
-            List<AccountFeesEntity> accountFees) {
-
-        List<FeeInstallment> feeInstallmentList = new ArrayList<FeeInstallment>();
-
-        for (AccountFeesEntity accountFeesEntity : accountFees) {
-            if (accountFeesEntity.isActive()) {
-                if (accountFeesEntity.isOneTime()) {
-                    feeInstallmentList.add(FeeInstallment.handleOneTime(accountFeesEntity, installmentDates));
-                } else { //periodic
-                    feeInstallmentList.addAll(FeeInstallment.handlePeriodic(accountFeesEntity, installmentDates));
-                }
-            }
-        }
-
-        return feeInstallmentList;
     }
 
     public static List<FeeInstallment> createMergedFeeInstallments(ScheduledEvent masterEvent,
@@ -124,40 +98,6 @@ public class FeeInstallment {
             }
         }
         return mergedFeeInstallments;
-    }
-
-    public static FeeInstallment handleOneTime(final AccountFeesEntity accountFee,
-            final List<InstallmentDate> installmentDates) {
-        Money accountFeeAmount = accountFee.getAccountFeeAmount();
-        Date feeDate = installmentDates.get(0).getInstallmentDueDate();
-        Short installmentId = InstallmentDate.findMatchingInstallmentId(installmentDates, feeDate);
-        return FeeInstallment.buildFeeInstallment(installmentId, accountFeeAmount, accountFee);
-    }
-
-    public static List<FeeInstallment> handlePeriodic(final AccountFeesEntity accountFee,
-            final List<InstallmentDate> installmentDates) {
-
-        Money accountFeeAmount = accountFee.getAccountFeeAmount();
-        MeetingBO feeMeetingFrequency = accountFee.getFees().getFeeFrequency().getFeeMeetingFrequency();
-
-        DateTime startFromMeetingDate = new DateTime(feeMeetingFrequency.getMeetingStartDate());
-        ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(feeMeetingFrequency);
-
-        List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
-        List<Holiday> noHolidays = new ArrayList<Holiday>();
-
-        ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays,
-                noHolidays);
-        DateTime endDate = new DateTime(installmentDates.get(installmentDates.size()-1).getInstallmentDueDate());
-        List<DateTime> feeDates = dateGeneration.generateScheduledDatesThrough(startFromMeetingDate, endDate, scheduledEvent);
-
-        List<FeeInstallment> feeInstallmentList = new ArrayList<FeeInstallment>();
-        for (DateTime feeDate : feeDates) {
-            Short installmentId = InstallmentDate.findMatchingInstallmentId(installmentDates, feeDate.toDate());
-            feeInstallmentList.add(FeeInstallment.buildFeeInstallment(installmentId, accountFeeAmount, accountFee));
-        }
-
-        return feeInstallmentList;
     }
 
     public static List<FeeInstallment> mergeFeeInstallments(final List<FeeInstallment> feeInstallmentList) {

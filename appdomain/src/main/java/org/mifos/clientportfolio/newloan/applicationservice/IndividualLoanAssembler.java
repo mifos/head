@@ -68,7 +68,7 @@ public class IndividualLoanAssembler implements LoanAssembler {
         DateTime lastScheduledDate = new DateTime();
 
         ScheduledEvent scheduledEvent = scheduledEventFactory.createScheduledEventFrom(loanProduct.getLoanOfferingMeetingValue());
-        List<DateTime> loanScheduleDates = scheduledDateGeneration.generateScheduledDates(occurences, lastScheduledDate, scheduledEvent);
+        List<DateTime> loanScheduleDates = scheduledDateGeneration.generateScheduledDates(occurences, lastScheduledDate, scheduledEvent, false);
 
         // FIXME - assemble loanAmount from dto
         Money loanAmount = null;
