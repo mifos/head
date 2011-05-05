@@ -299,6 +299,31 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     @Test
+    public void testFailureFeeFrequencyMismatch() throws Exception {
+        List<FeeDto> feesToRemove = getFees(RecurrenceType.MONTHLY);
+        setRequestPathInfo("/centerCustAction.do");
+        addRequestParameter("method", "load");
+        addRequestParameter("officeId", "3");
+        actionPerform();
+
+        SessionUtils.setAttribute(CustomerConstants.CUSTOMER_MEETING, new MeetingBO(RecurrenceType.MONTHLY, Short
+                .valueOf("3"), new Date(), MeetingType.CUSTOMER_MEETING), request);
+        List<ApplicableAccountFeeDto> feeList = retrieveAdditionalFeesFromSession();
+        ApplicableAccountFeeDto fee = feeList.get(0);
+        setRequestPathInfo("/centerCustAction.do");
+        addRequestParameter("method", "preview");
+        addRequestParameter("displayName", "center");
+        addRequestParameter("loanOfficerId", "1");
+        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+
+        addRequestParameter("selectedFee[0].feeId", fee.getFeeId().toString());
+        addRequestParameter("selectedFee[0].amount", fee.getAmount());
+        actionPerform();
+
+        Assert.assertEquals("Fee", 1, getErrorSize(CustomerConstants.ERRORS_FEE_FREQUENCY_MISMATCH));
+    }
+    
+    @Test
     public void testSuccessfulCreate() throws Exception {
 
         MeetingBO weeklyMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();

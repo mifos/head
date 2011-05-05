@@ -484,9 +484,10 @@ public abstract class CustomerActionForm extends BaseActionForm {
     }
 
     private boolean isFrequencyMatches(ApplicableAccountFeeDto fee, MeetingBO meeting) {
-        return (fee.isMonthly() && meeting.isMonthly())
-                || (fee.isWeekly() && meeting.isWeekly());
-
+        String feeRecur = fee.getFeeSchedule().split(" ")[0];
+        return (((fee.isMonthly() && meeting.isMonthly())
+                || (fee.isWeekly() && meeting.isWeekly())) 
+                && meeting.getRecurAfter().equals(Short.valueOf(feeRecur)));
     }
 
     protected void validateForFeeAmount(ActionErrors errors, Locale locale) {
