@@ -217,5 +217,16 @@ public class ViewRepaymentSchedulePage extends AbstractPage {
         }
         Assert.assertEquals(gracePeriodDuration, zeroPrincipalCount);
     }
+    
+    public void verifyRepaymentScheduleTableDueDate(int row, int column, String value) {
+        Assert.assertEquals(selenium.getTable("installments." + row + "." + column), value);
+    }
 
+    public void verifyRepaymentScheduleTablePrincipal(int row, int column, String value) {
+        Assert.assertEquals(selenium.getTable("installments." + row + "." + column), value);
+    }
+       
+    public void verifyRepaymentScheduleTableFees(int row, int column, String value) {
+        Assert.assertEquals(selenium.getTable("installments." + row + "." + column), value);
+    }
 }

@@ -447,4 +447,8 @@ public class CreateLoanAccountEntryPage extends MifosPage {
         waitForPageToLoad();
         return new ClientsAndAccountsHomepage(selenium);
     }
+            
+    public void setAmount(String amount) {
+        selenium.type("loancreationdetails.input.sumLoanAmount", amount);
+    }
 }

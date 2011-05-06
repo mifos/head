@@ -27,6 +27,7 @@ import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.loan.ChargeParameters;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountEntryPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountPreviewPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountReviewInstallmentPage;
@@ -42,6 +43,7 @@ import org.mifos.test.acceptance.framework.loan.EditLoanAccountInformationParame
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountStatusParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
+import org.mifos.test.acceptance.framework.loan.ViewRepaymentSchedulePage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.SubmitFormParameters;
 import org.mifos.test.acceptance.framework.loanproduct.LoanProductDetailsPage;
@@ -56,6 +58,7 @@ import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingServic
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
+import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -550,5 +553,65 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         createLoanAccountEntryPage.navigateToReviewInstallmentsPage();
         CreateLoanAccountPreviewPage createLoanAccountPreviewPage = createLoanAccountReviewInstallmentPage.clickPreviewAndGoToReviewLoanAccountPage();
         createLoanAccountPreviewPage.cancel();
+    }
+    
+    /**
+    * Create a new Client Loan in 'Partial Application' status
+    * http://mifosforge.jira.com/browse/MIFOSTEST-1177
+    *
+    * @throws Exception
+    */
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void createLoanInPartialApplicationStatus() throws Exception {
+        setAppDate(new DateTime(2011, 4, 27, 15, 0, 0, 0));
+        ClientsAndAccountsHomepage clientsAndAccountsHomepage = navigationHelper.navigateToClientsAndAccountsPage();
+        CreateLoanAccountSearchPage createLoanAccountSearchPage = clientsAndAccountsHomepage.navigateToCreateLoanAccountUsingLeftMenu();
+        CreateLoanAccountSearchParameters formParameters = new CreateLoanAccountSearchParameters();
+        formParameters.setSearchString("Client1233266063395");
+        formParameters.setLoanProduct("ClientEmergencyLoan");
+        CreateLoanAccountEntryPage createLoanAccountEntryPage = createLoanAccountSearchPage.searchAndNavigateToCreateLoanAccountPage(formParameters);
+        CreateLoanAccountReviewInstallmentPage createLoanAccountReviewInstallmentPage = createLoanAccountEntryPage.navigateToReviewInstallmentsPage();
+        verifyFirstInstallmentAndDisbursalDateOnReviewPage();
+        CreateLoanAccountPreviewPage createLoanAccountPreviewPage = createLoanAccountReviewInstallmentPage.clickPreviewAndGoToReviewLoanAccountPage();
+        verifyFirstInstallmentAndDisbursalDateOnPreviewPage();
+        CreateLoanAccountConfirmationPage createLoanAccountConfirmationPage = createLoanAccountPreviewPage.submitForLaterAndNavigateToConfirmationPage();
+        LoanAccountPage loanAccountPage = createLoanAccountConfirmationPage.navigateToLoanAccountDetailsPage();
+        loanAccountPage.verifyLoanIsInPartialApplication();
+        loanAccountPage.verifyNumberOfInstallments("10");
+        loanAccountPage.verifyDisbursalDate("Disbursal date: 02/05/2011");
+        loanAccountPage.verifyPrincipalOriginal("1000.0");
+        loanAccountPage.verifyLoanTotalBalance("1000.0");
+        ViewRepaymentSchedulePage viewRepaymentSchedulePage = loanAccountPage.navigateToViewRepaymentSchedule();
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(3, 1, "09-May-2011");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(4, 1, "16-May-2011");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(5, 1, "23-May-2011");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(6, 1, "30-May-2011");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(7, 1, "06-Jun-2011");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(8, 1, "13-Jun-2011");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(9, 1, "20-Jun-2011");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(10, 1, "27-Jun-2011");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(11, 1, "04-Jul-2011");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTableDueDate(12, 1, "11-Jul-2011");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(3, 3, "100.0");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(4, 3, "100.0");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(5, 3, "100.0");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(6, 3, "100.0");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(7, 3, "100.0");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(8, 3, "100.0");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(9, 3, "100.0");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(10, 3, "100.0");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(11, 3, "100.0");
+        viewRepaymentSchedulePage.verifyRepaymentScheduleTablePrincipal(12, 3, "100.0");
+        viewRepaymentSchedulePage.navigateToLoanAccountPage();
+    }
+       
+    private void verifyFirstInstallmentAndDisbursalDateOnReviewPage(){
+        Assert.assertEquals(selenium.getText("xpath=//div[@class='product-summary']/div[3]/div[2]"), ("02-May-2011"));
+        Assert.assertEquals(selenium.getTable("installments.1.1"), ("09-May-2011"));
+    }
+        
+    private void verifyFirstInstallmentAndDisbursalDateOnPreviewPage(){
+        Assert.assertEquals(selenium.getText("xpath=//div[@class='product-summary'][2]/div[4]/div[2]"), ("02-May-2011"));
+        Assert.assertEquals(selenium.getTable("installments.1.1"), ("09-May-2011"));
     }
 }

@@ -504,5 +504,9 @@ public class LoanAccountPage extends MifosPage {
         .submitAndNavigateToDisburseLoanConfirmationPage(disburseParams)
         .submitAndNavigateToLoanAccountPage();
     }
+    
+    public void verifyDisbursalDate(String disbursalDate) {
+        Assert.assertEquals(selenium.getText("loanaccountdetail.details.disbursaldateline"), disbursalDate);
+    }
 }
 

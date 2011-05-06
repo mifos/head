@@ -212,7 +212,7 @@
 <br />
 
 <h1><span class="standout">[@spring.message "reviewInstallments.heading" /]</span></h1>
-<table style="margin-bottom: 15px;">
+<table id="installments" style="margin-bottom: 15px;">
 		<thead>
 		<tr>
 			<th style="border-top: 1px solid grey;">[@spring.message "reviewInstallments.installmentHeading" /]</th>
