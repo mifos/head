@@ -25,13 +25,12 @@ import org.mifos.test.acceptance.framework.MifosPage;
 import com.thoughtworks.selenium.Selenium;
 
 /**
- * @author hjon
- *
+ * 
  */
 public class RedoLoanDisbursalSearchResultsPage extends MifosPage {
     public RedoLoanDisbursalSearchResultsPage(Selenium selenium) {
         super(selenium);
-        verifyPage("CustSearchAccountResults");
+        verifyPage("CustSearchAccount");
     }
 
     public RedoLoanDisbursalChooseLoanInstancePage navigateToRedoLoanDisbursalChooseLoanProductPage(String linkText) {

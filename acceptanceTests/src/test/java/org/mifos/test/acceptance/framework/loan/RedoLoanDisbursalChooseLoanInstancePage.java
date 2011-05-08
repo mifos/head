@@ -26,8 +26,7 @@ import com.thoughtworks.selenium.Selenium;
 
 
 /**
- * @author hjon
- *
+ * 
  */
 public class RedoLoanDisbursalChooseLoanInstancePage extends MifosPage {
     public RedoLoanDisbursalChooseLoanInstancePage(Selenium selenium) {

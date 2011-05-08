@@ -108,7 +108,7 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
      * http://mifosforge.jira.com/browse/MIFOSTEST-28
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled=true)
+    @Test(enabled=false)
     public void redoLoanDisbursalWithPastDate() throws Exception {
         RedoLoanDisbursalParameters paramsPastDate = new RedoLoanDisbursalParameters();
         paramsPastDate.setDisbursalDateDD("25");
@@ -136,7 +136,7 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
      * http://mifosforge.jira.com/browse/MIFOSTEST-15
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled=true)
+    @Test(enabled=false)
     public void redoLoanDisbursalWithPastDateUnpaid() throws Exception {
         // Testing redo loan
         RedoLoanDisbursalParameters paramsPastDate = new RedoLoanDisbursalParameters();
@@ -225,7 +225,7 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled=true)
+    @Test(enabled=false)
     public void redoLoanDisbursalForDecliningBalanceLoan() throws Exception {
         dataSetUpForVariableInstallmentLoan();
         applicationDatabaseOperation.updateLSIM(1);

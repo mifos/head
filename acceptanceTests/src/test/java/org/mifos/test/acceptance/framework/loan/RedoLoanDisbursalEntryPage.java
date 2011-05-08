@@ -83,9 +83,9 @@ public class RedoLoanDisbursalEntryPage extends MifosPage {
 
     private void typeGLIMData(RedoLoanDisbursalParameters params) {
         for(int i = 0; i < params.getClientsCount(); i++) {
-            selenium.click("clients["+params.getCLientsID(i)+"]");
-            selenium.type("clientDetails["+params.getCLientsID(i)+"].loanAmount", params.getClientsAmount(i));
-            selenium.select("clientDetails["+params.getCLientsID(i)+"].businessActivity", params.getClientsPurpose(i));
+            selenium.click("clientSelectForGroup["+params.getCLientsID(i)+"]");
+            selenium.type("clientAmount["+params.getCLientsID(i)+"]", params.getClientsAmount(i));
+            selenium.select("clientLoanPurposeId["+params.getCLientsID(i)+"]", params.getClientsPurpose(i));
         }
     }
 
@@ -101,7 +101,7 @@ public class RedoLoanDisbursalEntryPage extends MifosPage {
             Assert.assertTrue(selenium.isTextPresent(fee + " fee cannot be applied to loan with variable installments"));
         }
         for (int index = 0; index < fees.length; index++) {
-            selenium.select("selectedFee[" + index + "].feeId","--Select--");
+            selenium.select("selectedFeeId[" + index + "]","--Select--");
         }
         return this;
 
@@ -110,7 +110,7 @@ public class RedoLoanDisbursalEntryPage extends MifosPage {
     public RedoLoanDisbursalEntryPage selectFee(String[] fees) {
         for (int index = 0; index < fees.length; index++) {
             String fee = fees[index];
-            selenium.select("selectedFee[" + index + "].feeId",fee);
+            selenium.select("selectedFeeId" + index, fee);
         }
         return this;
     }

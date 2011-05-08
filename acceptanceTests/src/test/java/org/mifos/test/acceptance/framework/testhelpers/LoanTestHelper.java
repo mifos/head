@@ -64,9 +64,12 @@ import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.PaymentParameters;
 import org.mifos.test.acceptance.framework.loan.PerformanceHistoryAtributes;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
+import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalChooseLoanInstancePage;
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalEntryPage;
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalParameters;
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalSchedulePreviewPage;
+import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalSearchPage;
+import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalSearchResultsPage;
 import org.mifos.test.acceptance.framework.loan.RepayLoanConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.RepayLoanPage;
 import org.mifos.test.acceptance.framework.loan.RepayLoanParameters;
@@ -438,16 +441,23 @@ public class LoanTestHelper {
     }
 
     public LoanAccountPage redoLoanDisbursalWithGLIMandLSIM(String clientName, String loanProduct, RedoLoanDisbursalParameters paramsPastDate) {
-        return navigationHelper
-            .navigateToAdminPage()
-            .navigateToRedoLoanDisbursal()
-            .searchAndNavigateToRedoLoanDisbursalPage(clientName)
-            .navigateToRedoLoanDisbursalChooseLoanProductPage(clientName)
-            .submitAndNavigateToRedoLoanDisbursalEntryPage(loanProduct)
-            .submitWithGLIMandLSIPAndNavigateToPreviewPage(paramsPastDate)
-            .submitAndNavigateToRedoLoanDisbursalPreviewPage()
-            .submitAndNavigateToLoanAccountConfirmationPage()
-            .navigateToLoanAccountDetailsPage();
+        
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        RedoLoanDisbursalSearchPage searchPage = adminPage.navigateToRedoLoanDisbursal();
+        RedoLoanDisbursalSearchResultsPage resultsPage = searchPage.searchAndNavigateToRedoLoanDisbursalPage(clientName);
+        RedoLoanDisbursalChooseLoanInstancePage chooseProductPage = resultsPage.navigateToRedoLoanDisbursalChooseLoanProductPage(clientName);
+        RedoLoanDisbursalEntryPage accountDetailsPage = chooseProductPage.submitAndNavigateToRedoLoanDisbursalEntryPage(loanProduct);
+        return accountDetailsPage.submitWithGLIMandLSIPAndNavigateToPreviewPage(paramsPastDate)
+        .submitAndNavigateToRedoLoanDisbursalPreviewPage()
+        .submitAndNavigateToLoanAccountConfirmationPage()
+        .navigateToLoanAccountDetailsPage();        
+//        return navigationHelper
+//            .navigateToAdminPage()
+//            .navigateToRedoLoanDisbursal()
+//            .searchAndNavigateToRedoLoanDisbursalPage(clientName)
+//            .navigateToRedoLoanDisbursalChooseLoanProductPage(clientName)
+//            .submitAndNavigateToRedoLoanDisbursalEntryPage(loanProduct)
+
     }
 
     /**
