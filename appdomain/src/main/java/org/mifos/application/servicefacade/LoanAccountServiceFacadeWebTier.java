@@ -918,7 +918,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     @Override
     public LoanCreationResultDto createLoan(CreateLoanAccount loanAccountInfo, List<QuestionGroupDetail> questionGroups, LoanAccountCashFlow loanAccountCashFlow) {
 
-        return createLoanAccount(loanAccountInfo, new ArrayList<LoanPaymentDto>(), questionGroups, loanAccountCashFlow, new ArrayList<Date>(), new ArrayList<Number>(), new ArrayList<GroupMemberAccountDto>());
+        return createLoanAccount(loanAccountInfo, new ArrayList<LoanPaymentDto>(), questionGroups, loanAccountCashFlow, new ArrayList<Date>(), new ArrayList<Number>(), new ArrayList<GroupMemberAccountDto>(), false);
     }
     
     @Override
@@ -926,14 +926,14 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             List<QuestionGroupDetail> questionGroups, LoanAccountCashFlow loanAccountCashFlow, 
             List<Date> loanScheduleInstallmentDates, List<Number> installmentPrincipalAmounts) {
 
-        return createLoanAccount(loanAccountInfo, new ArrayList<LoanPaymentDto>(), questionGroups, loanAccountCashFlow, loanScheduleInstallmentDates, installmentPrincipalAmounts, new ArrayList<GroupMemberAccountDto>());
+        return createLoanAccount(loanAccountInfo, new ArrayList<LoanPaymentDto>(), questionGroups, loanAccountCashFlow, loanScheduleInstallmentDates, installmentPrincipalAmounts, new ArrayList<GroupMemberAccountDto>(), false);
     }
     
     @Override
     public LoanCreationResultDto createGroupLoanWithIndividualMonitoring(CreateGlimLoanAccount glimLoanAccount,
             List<QuestionGroupDetail> questionGroups, LoanAccountCashFlow loanAccountCashFlow) {
 
-        return createLoanAccount(glimLoanAccount.getGroupLoanAccountDetails(), new ArrayList<LoanPaymentDto>(), questionGroups, loanAccountCashFlow, new ArrayList<Date>(), new ArrayList<Number>(), glimLoanAccount.getMemberDetails());
+        return createLoanAccount(glimLoanAccount.getGroupLoanAccountDetails(), new ArrayList<LoanPaymentDto>(), questionGroups, loanAccountCashFlow, new ArrayList<Date>(), new ArrayList<Number>(), glimLoanAccount.getMemberDetails(), false);
     }
     
     @Override
@@ -944,7 +944,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         CreateLoanAccount loanAccountInfo = glimLoanAccount.getGroupLoanAccountDetails();
         
         return createLoanAccount(loanAccountInfo, backdatedLoanPayments, questionGroups, 
-                loanAccountCashFlow, new ArrayList<Date>(), new ArrayList<Number>(), glimLoanAccount.getMemberDetails());
+                loanAccountCashFlow, new ArrayList<Date>(), new ArrayList<Number>(), glimLoanAccount.getMemberDetails(), true);
     }
     
     @Override
@@ -953,7 +953,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             LoanAccountCashFlow loanAccountCashFlow, List<Date> loanScheduleInstallmentDates,
             List<Number> installmentPrincipalAmounts) {
         return createLoanAccount(loanAccountInfo, backdatedLoanPayments, questionGroups, 
-                loanAccountCashFlow, loanScheduleInstallmentDates, installmentPrincipalAmounts, new ArrayList<GroupMemberAccountDto>());
+                loanAccountCashFlow, loanScheduleInstallmentDates, installmentPrincipalAmounts, new ArrayList<GroupMemberAccountDto>(), true);
     }
     
     @Override
@@ -961,12 +961,12 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             List<LoanPaymentDto> backdatedLoanPayments, List<QuestionGroupDetail> questionGroups,
             LoanAccountCashFlow loanAccountCashFlow) {
         return createLoanAccount(loanAccountInfo, backdatedLoanPayments, questionGroups, 
-                loanAccountCashFlow, new ArrayList<Date>(), new ArrayList<Number>(), new ArrayList<GroupMemberAccountDto>());
+                loanAccountCashFlow, new ArrayList<Date>(), new ArrayList<Number>(), new ArrayList<GroupMemberAccountDto>(), true);
     }
     
     private LoanCreationResultDto createLoanAccount(CreateLoanAccount loanAccountInfo, List<LoanPaymentDto> backdatedLoanPayments,
             List<QuestionGroupDetail> questionGroups, LoanAccountCashFlow loanAccountCashFlow, List<Date> loanScheduleInstallmentDates,
-            List<Number> installmentPrincipalAmounts, List<GroupMemberAccountDto> memberDetails) {
+            List<Number> installmentPrincipalAmounts, List<GroupMemberAccountDto> memberDetails, boolean isBackdatedLoan) {
         
         // 1. assemble loan details
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -1007,7 +1007,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         AmountRange amountRange = new MaxMinLoanAmount(loanAccountInfo.getMaxAllowedLoanAmount().doubleValue(), loanAccountInfo.getMinAllowedLoanAmount().doubleValue(), null);
 
         DateTime creationDate = new DateTime();
-        if (!backdatedLoanPayments.isEmpty()) {
+        if (isBackdatedLoan) {
             creationDate = loanAccountInfo.getDisbursementDate().toDateMidnight().toDateTime();
         }
         CreationDetail creationDetail = new CreationDetail(creationDate, Integer.valueOf(user.getUserId()));
@@ -1019,7 +1019,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         loan.setCollateralNote(loanAccountInfo.getCollateralNotes());
         loan.setCollateralTypeId(loanAccountInfo.getCollateralTypeId());
 
-        if (!backdatedLoanPayments.isEmpty()) {
+        if (isBackdatedLoan) {
             loan.markAsCreatedWithBackdatedPayments();
         }
         
@@ -1095,7 +1095,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                 transactionHelper.flushSession();
             }
 
-            if (!backdatedLoanPayments.isEmpty()) {
+            if (isBackdatedLoan) {
                 // 3. auto approve loan
                 String comment = "Automatic Status Update (Redo Loan)";
                 LocalDate approvalDate = loanAccountInfo.getDisbursementDate();
