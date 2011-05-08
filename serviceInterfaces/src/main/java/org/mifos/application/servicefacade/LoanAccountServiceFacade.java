@@ -47,7 +47,6 @@ import org.mifos.dto.domain.LoanCreationInstallmentDto;
 import org.mifos.dto.domain.LoanInstallmentDetailsDto;
 import org.mifos.dto.domain.LoanPaymentDto;
 import org.mifos.dto.domain.MonthlyCashFlowDto;
-import org.mifos.dto.domain.OpeningBalanceLoanAccount;
 import org.mifos.dto.screen.CashFlowDataDto;
 import org.mifos.dto.screen.ChangeAccountStatusDto;
 import org.mifos.dto.screen.LoanAccountDetailDto;
@@ -70,6 +69,20 @@ import org.mifos.platform.validations.Errors;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface LoanAccountServiceFacade extends LoanDisbursementDateValidationServiceFacade, VariableInstallmentsFeeValidationServiceFacade {
+    
+    /**
+     * use other methods for creating loans
+     */
+    @Deprecated
+    @PreAuthorize("isFullyAuthenticated()")
+    LoanCreationResultDto createLoan(LoanAccountMeetingDto loanAccountMeetingDto, LoanAccountInfoDto loanAccountInfoDto, List<LoanScheduledInstallmentDto> loanRepayments);
+    
+    /**
+     * use other methods for creating back dated loans
+     */
+    @Deprecated
+    @PreAuthorize("isFullyAuthenticated()")
+    LoanCreationResultDto redoLoan(LoanAccountMeetingDto loanAccountMeetingDto, LoanAccountInfoDto loanAccountInfoDto, List<LoanPaymentDto> existingLoanPayments, List<LoanScheduledInstallmentDto> installmentDtos);
 
     @PreAuthorize("isFullyAuthenticated()")
     AccountStatusDto retrieveAccountStatuses(Long loanAccountId);
@@ -93,15 +106,15 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
     LoanCreationPreviewDto previewLoanCreationDetails(Integer customerId, List<LoanAccountDetailsDto> accountDetails, List<String> selectedClientIds);
 
     @PreAuthorize("isFullyAuthenticated()")
-    LoanCreationResultDto createLoan(LoanAccountMeetingDto loanAccountMeetingDto, LoanAccountInfoDto loanAccountInfoDto, List<LoanScheduledInstallmentDto> loanRepayments);
+    LoanCreationResultDto createLoan(CreateLoanAccount createLoanAccount, List<QuestionGroupDetail> questionGroups, LoanAccountCashFlow loanAccountCashFlow);
     
     @PreAuthorize("isFullyAuthenticated()")
     LoanCreationResultDto createLoan(CreateLoanAccount createLoanAccount, List<QuestionGroupDetail> questionGroups, 
             LoanAccountCashFlow loanAccountCashFlow, List<Date> installments, List<Number> installmentPrincipalAmounts);
-
-    @PreAuthorize("isFullyAuthenticated()")
-    String createLoan(OpeningBalanceLoanAccount openingBalanceLoan);
     
+    @PreAuthorize("isFullyAuthenticated()")
+    LoanCreationResultDto createGroupLoanWithIndividualMonitoring(CreateGlimLoanAccount createLoanAccount, List<QuestionGroupDetail> questionGroups, LoanAccountCashFlow loanAccountCashFlow);
+
     /**
      * create a backdated loan and provide loan schedule dates and amounts.
      * Will automatically approve/disburse and make payments.
@@ -129,16 +142,8 @@ public interface LoanAccountServiceFacade extends LoanDisbursementDateValidation
             CreateGlimLoanAccount glimLoanAccount, List<LoanPaymentDto> backdatedLoanPayments,
             List<QuestionGroupDetail> questionGroups, LoanAccountCashFlow loanAccountCashFlow);
     
-    @PreAuthorize("isFullyAuthenticated()")
-    LoanCreationResultDto createLoan(CreateLoanAccount createLoanAccount, List<QuestionGroupDetail> questionGroups, LoanAccountCashFlow loanAccountCashFlow);
-    
-    @PreAuthorize("isFullyAuthenticated()")
-    LoanCreationResultDto createGroupLoanWithIndividualMonitoring(CreateGlimLoanAccount createLoanAccount, List<QuestionGroupDetail> questionGroups, LoanAccountCashFlow loanAccountCashFlow);
-    
     LoanScheduleDto createLoanSchedule(CreateLoanSchedule createLoanAccount);
 
-    @PreAuthorize("isFullyAuthenticated()")
-    LoanCreationResultDto redoLoan(LoanAccountMeetingDto loanAccountMeetingDto, LoanAccountInfoDto loanAccountInfoDto, List<LoanPaymentDto> existingLoanPayments, List<LoanScheduledInstallmentDto> installmentDtos);
 
     @PreAuthorize("isFullyAuthenticated()")
     List<LoanActivityDto> retrieveAllLoanAccountActivities(String globalAccountNum);
