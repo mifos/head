@@ -23,12 +23,15 @@ package org.mifos.clientportfolio.loan.ui;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.containsString;
+import static org.mockito.Mockito.*;
 
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.clientportfolio.newloan.applicationservice.LoanDisbursementDateValidationServiceFacade;
 import org.mifos.platform.validation.MifosBeanValidator;
+import org.mifos.platform.validations.Errors;
 import org.mifos.ui.validation.StubValidationContext;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -54,7 +57,11 @@ public class LoanAccountFormBeanTest {
         validator.setTargetValidator(targetValidator);
 
         loanAccountFormBean = new LoanAccountFormBean();
-        loanAccountFormBean.setProductId(1);
+        Integer productId = Integer.valueOf(1);
+        Integer customerId = Integer.valueOf(1);
+        loanAccountFormBean.setProductId(productId);
+        loanAccountFormBean.setCustomerId(customerId);
+        
         loanAccountFormBean.setPurposeOfLoanMandatory(false);
         loanAccountFormBean.setSourceOfFundsMandatory(false);
         
@@ -82,6 +89,8 @@ public class LoanAccountFormBeanTest {
         loanAccountFormBean.setLoanDisbursementDateValidationServiceFacade(loanDisbursementDateValidationServiceFacade);
         
         context = new StubValidationContext();
+        
+        when(loanDisbursementDateValidationServiceFacade.validateLoanDisbursementDate((LocalDate)anyObject(), anyInt(), anyInt())).thenReturn(new Errors());
     }
     
     @Test
