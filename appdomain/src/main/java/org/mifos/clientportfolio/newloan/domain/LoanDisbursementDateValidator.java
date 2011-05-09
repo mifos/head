@@ -24,6 +24,6 @@ import org.joda.time.LocalDate;
 
 public interface LoanDisbursementDateValidator {
 
-    boolean isDisbursementDateValid(LocalDate disbursementDate);
+    boolean isDisbursementDateValidInRelationToSchedule(LocalDate disbursementDate);
 
 }

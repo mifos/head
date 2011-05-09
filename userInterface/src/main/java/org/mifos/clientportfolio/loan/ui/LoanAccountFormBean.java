@@ -34,7 +34,6 @@ import org.mifos.clientportfolio.newloan.applicationservice.VariableInstallmentW
 import org.mifos.clientportfolio.newloan.applicationservice.VariableInstallmentsFeeValidationServiceFacade;
 import org.mifos.platform.validation.MifosBeanValidator;
 import org.mifos.platform.validations.ErrorEntry;
-import org.mifos.service.BusinessRuleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.binding.message.Message;
 import org.springframework.binding.message.MessageBuilder;
@@ -282,21 +281,16 @@ public class LoanAccountFormBean implements Serializable {
             rejectDisbursementDateField(errors, defaultErrorMessage, "loanAccountFormBean.DisbursalDate.invalid", "");
         } else {
             LocalDate validDate = new DateTime().withDate(disbursementDateYY.intValue(), disbursementDateMM.intValue(), disbursementDateDD.intValue()).toLocalDate();
+            
+            org.mifos.platform.validations.Errors disbursementDateErrors = new org.mifos.platform.validations.Errors();
             if (this.redoLoanAccount) {
-                org.mifos.platform.validations.Errors backdatedPaymentErrors = loanDisbursementDateValidationServiceFacade.validateLoanWithBackdatedPaymentsDisbursementDate(validDate, customerId, productId);
-                
-                for (ErrorEntry entry : backdatedPaymentErrors.getErrorEntries()) {
-                    String defaultErrorMessage = "The disbursal date is invalid.";
-                    rejectDisbursementDateField(errors, defaultErrorMessage, entry.getErrorCode(), entry.getArgs().get(0));
-                }
-                
+                disbursementDateErrors = loanDisbursementDateValidationServiceFacade.validateLoanWithBackdatedPaymentsDisbursementDate(validDate, customerId, productId);
             } else {
-                try {
-                    loanDisbursementDateValidationServiceFacade.validateLoanDisbursementDate(validDate, customerId, productId);
-                } catch (BusinessRuleException e) {
-                    String defaultErrorMessage = "The disbursal date is invalid.";
-                    rejectDisbursementDateField(errors, defaultErrorMessage, "loanAccountFormBean.DisbursalDate.validButNotAllowed", "");
-                }
+                disbursementDateErrors = loanDisbursementDateValidationServiceFacade.validateLoanDisbursementDate(validDate, customerId, productId);
+            }
+            for (ErrorEntry entry : disbursementDateErrors.getErrorEntries()) {
+                String defaultErrorMessage = "The disbursal date is invalid.";
+                rejectDisbursementDateField(errors, defaultErrorMessage, entry.getErrorCode(), entry.getArgs().get(0));
             }
         }
         

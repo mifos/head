@@ -30,7 +30,7 @@ public class LoanWithBackdatedPaymentsDisbursementStrategyImpl implements LoanDi
     }
 
     @Override
-    public boolean isDisbursementDateValid(@SuppressWarnings("unused") LocalDate disbursementDate) {
+    public boolean isDisbursementDateValidInRelationToSchedule(@SuppressWarnings("unused") LocalDate disbursementDate) {
         return false;
     }
 

@@ -77,7 +77,7 @@ public class LoanDisbursementCoupledToCustomerMeetingScheduleStrategyImplTest {
         when(scheduledEvent.nearestMatchingDateBeginningAt(disbursementDateAsDateTime)).thenReturn(disbursementDateAsDateTime);
         
         // exercise test
-        boolean result = loanDisbursementStrategy.isDisbursementDateValid(disbursementDate);
+        boolean result = loanDisbursementStrategy.isDisbursementDateValidInRelationToSchedule(disbursementDate);
         
         // verification
         assertTrue("given nearest matching valid date is same as date provided, then dibursement date should be valid.", result);

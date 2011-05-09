@@ -2144,19 +2144,48 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     }
 
     @Override
-    public void validateLoanDisbursementDate(LocalDate disbursementDate, Integer customerId, Integer productId) {
-
+    public Errors validateLoanDisbursementDate(LocalDate loanDisbursementDate, Integer customerId, Integer productId) {
+        
+        Errors errors = new Errors();
+        
+        if (loanDisbursementDate.isBefore(new LocalDate())) {
+            String[] args = {""};
+            errors.addError("dibursementdate.cannot.be.before.todays.date", args);
+        }
+        
         CustomerBO customer = this.customerDao.findCustomerById(customerId);
+        LocalDate customerActivationDate = new LocalDate(customer.getCustomerActivationDate());
+        if (loanDisbursementDate.isBefore(customerActivationDate)) {
+            String[] args = {customerActivationDate.toString("dd-MMM-yyyy")};
+            errors.addError("dibursementdate.before.customer.activation.date", args);
+        }
+        
         LoanOfferingBO loanProduct = this.loanProductDao.findById(productId);
+        LocalDate productStartDate = new LocalDate(loanProduct.getStartDate());
+        if (loanDisbursementDate.isBefore(productStartDate)) {
+            String[] args = {productStartDate.toString("dd-MMM-yyyy")};
+            errors.addError("dibursementdate.before.product.startDate", args);
+        }
+        
+        try {
+            this.holidayServiceFacade.validateDisbursementDateForNewLoan(customer.getOfficeId(), loanDisbursementDate.toDateMidnight().toDateTime());
+        } catch (BusinessRuleException e) {
+            String[] args = {""};
+            errors.addError("dibursementdate.falls.on.holiday", args);
+        }
+        
         boolean isRepaymentIndependentOfMeetingEnabled = new ConfigurationBusinessService().isRepaymentIndepOfMeetingEnabled();
         
         LoanDisbursementDateFactory loanDisbursementDateFactory = new LoanDisbursmentDateFactoryImpl();
         LoanDisbursementDateValidator loanDisbursementDateFinder = loanDisbursementDateFactory.create(customer, loanProduct, isRepaymentIndependentOfMeetingEnabled, false);
         
-        boolean isValid = loanDisbursementDateFinder.isDisbursementDateValid(disbursementDate);
+        boolean isValid = loanDisbursementDateFinder.isDisbursementDateValidInRelationToSchedule(loanDisbursementDate);
         if (!isValid) {
-            throw new BusinessRuleException("Invalid disbursement date");
+            String[] args = {""};
+            errors.addError("dibursementdate.invalid.in.relation.to.meeting.schedule", args);
         }
+        
+        return errors;
     }
     
     @Override

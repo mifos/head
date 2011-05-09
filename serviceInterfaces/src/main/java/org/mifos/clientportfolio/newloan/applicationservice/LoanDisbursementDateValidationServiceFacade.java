@@ -25,7 +25,7 @@ import org.mifos.platform.validations.Errors;
 
 public interface LoanDisbursementDateValidationServiceFacade {
 
-    void validateLoanDisbursementDate(LocalDate loanDisbursementDate, Integer customerId, Integer productId);
+    Errors validateLoanDisbursementDate(LocalDate loanDisbursementDate, Integer customerId, Integer productId);
     
     Errors validateLoanWithBackdatedPaymentsDisbursementDate(LocalDate loanDisbursementDate, Integer customerId, Integer productId);
 }

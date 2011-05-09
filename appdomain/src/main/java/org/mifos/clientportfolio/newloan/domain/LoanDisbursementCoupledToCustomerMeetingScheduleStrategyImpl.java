@@ -47,7 +47,7 @@ public class LoanDisbursementCoupledToCustomerMeetingScheduleStrategyImpl implem
     }
 
     @Override
-    public boolean isDisbursementDateValid(LocalDate disbursementDate) {
+    public boolean isDisbursementDateValidInRelationToSchedule(LocalDate disbursementDate) {
         
         boolean result = false;
         
