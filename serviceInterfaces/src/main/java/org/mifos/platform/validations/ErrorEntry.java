@@ -20,11 +20,13 @@
 
 package org.mifos.platform.validations;
 
-import org.mifos.platform.util.CollectionUtils;
-
+import java.io.Serializable;
 import java.util.List;
 
-public class ErrorEntry {
+import org.mifos.platform.util.CollectionUtils;
+
+public class ErrorEntry implements Serializable {
+    
     private final String fieldName;
     private final String errorCode;
     private final String defaultMessage;

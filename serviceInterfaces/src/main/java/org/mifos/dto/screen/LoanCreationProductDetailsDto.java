@@ -29,6 +29,7 @@ import java.util.Map;
 import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.LoanAccountDetailsDto;
 import org.mifos.dto.domain.PrdOfferingDto;
+import org.mifos.platform.validations.Errors;
 
 @SuppressWarnings("PMD")
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID", "EI_EXPOSE_REP", "EI_EXPOSE_REP2"}, justification="")
@@ -43,9 +44,10 @@ public class LoanCreationProductDetailsDto implements Serializable {
     private final LoanCreationGlimDto loanCreationGlimDto;
     private final List<LoanAccountDetailsDto> clientDetails;
     private final String recurMonth;
+    private final Errors errors;
 
     public LoanCreationProductDetailsDto(List<PrdOfferingDto> loanProductDtos, CustomerDetailDto customerDetailDto,
-            Date nextMeetingDate, String recurMonth, boolean isGroup, boolean isGlimEnabled, LoanCreationGlimDto loanCreationGlimDto, List<LoanAccountDetailsDto> clientDetails) {
+            Date nextMeetingDate, String recurMonth, boolean isGroup, boolean isGlimEnabled, LoanCreationGlimDto loanCreationGlimDto, List<LoanAccountDetailsDto> clientDetails, Errors errors) {
         this.loanProductDtos = loanProductDtos;
         this.customerDetailDto = customerDetailDto;
         this.nextMeetingDate = nextMeetingDate;
@@ -54,6 +56,7 @@ public class LoanCreationProductDetailsDto implements Serializable {
         this.isGlimEnabled = isGlimEnabled;
         this.loanCreationGlimDto = loanCreationGlimDto;
         this.clientDetails = clientDetails;
+        this.errors = errors;
         populateProductOptions(loanProductDtos);
     }
 
@@ -98,4 +101,8 @@ public class LoanCreationProductDetailsDto implements Serializable {
     public Map<String, String> getProductOptions() {
 		return productOptions;
 	}
+    
+    public Errors getErrors() {
+        return errors;
+    }
 }

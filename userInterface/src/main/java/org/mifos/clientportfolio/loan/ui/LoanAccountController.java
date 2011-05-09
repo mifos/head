@@ -22,6 +22,7 @@ package org.mifos.clientportfolio.loan.ui;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -58,8 +59,9 @@ import org.mifos.dto.screen.LoanInstallmentsDto;
 import org.mifos.dto.screen.LoanScheduleDto;
 import org.mifos.dto.screen.SearchDetailsDto;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
-import org.mifos.service.BusinessRuleException;
+import org.mifos.platform.validations.ErrorEntry;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.binding.message.MessageBuilder;
 import org.springframework.stereotype.Controller;
 
 @SuppressWarnings("PMD")
@@ -98,12 +100,19 @@ public class LoanAccountController {
         return new CustomerSearchResultsDto(searchDetails, pagedDetails);
     }
 
-    public LoanCreationProductDetailsDto retrieveLoanProducts(int customerId) {
-        try {
-            return this.loanAccountServiceFacade.retrieveGetProductDetailsForLoanAccountCreation(customerId);
-        } catch (BusinessRuleException e) {
-            throw e;
+    public LoanCreationProductDetailsDto retrieveLoanProducts(int customerId, org.springframework.binding.message.MessageContext messageContext) {
+        LoanCreationProductDetailsDto loanProductDetails = this.loanAccountServiceFacade.retrieveGetProductDetailsForLoanAccountCreation(customerId);
+        
+        if (loanProductDetails.getErrors().hasErrors()) {
+          
+            ErrorEntry entry = loanProductDetails.getErrors().getErrorEntries().get(0);
+            MessageBuilder builder = new MessageBuilder().error().source(entry.getFieldName())
+            .codes(Arrays.asList(entry.getErrorCode()).toArray(new String[1]))
+            .defaultText(entry.getDefaultMessage());
+
+            messageContext.addMessage(builder.build());
         }
+        return loanProductDetails;
     }
 
     @SuppressWarnings("PMD")

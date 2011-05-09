@@ -28,6 +28,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -231,6 +232,7 @@ import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetails;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.util.CollectionUtils;
+import org.mifos.platform.validations.ErrorEntry;
 import org.mifos.platform.validations.Errors;
 import org.mifos.security.MifosUser;
 import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsDao;
@@ -401,30 +403,35 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         final boolean isGlimEnabled = new ConfigurationPersistence().isGlimEnabled();
         final boolean isLsimEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
 
-        final List<PrdOfferingDto> loanProductDtos = retrieveActiveLoanProductsApplicableForCustomer(customer, isLsimEnabled);
+        List<PrdOfferingDto> loanProductDtos = retrieveActiveLoanProductsApplicableForCustomer(customer, isLsimEnabled);
 
         LoanCreationGlimDto loanCreationGlimDto = null;
         List<LoanAccountDetailsDto> clientDetails = new ArrayList<LoanAccountDetailsDto>();
 
+        Errors errors = new Errors();
         if (isGroup && isGlimEnabled) {
             final List<ValueListElement> loanPurposes = loanProductDao.findAllLoanPurposes();
             final List<ClientBO> activeClientsOfGroup = customerDao.findActiveClientsUnderGroup(customer);
             loanCreationGlimDto = new LoanCreationGlimDto(loanPurposes);
 
-            if (activeClientsOfGroup == null || activeClientsOfGroup.isEmpty()) {
-                throw new BusinessRuleException(GroupConstants.IMPOSSIBLE_TO_CREATE_GROUP_LOAN);
-            }
+            if (activeClientsOfGroup == null || activeClientsOfGroup.size() < 2) {
+                String defaultMessage = "Group loan is not allowed as there must be at least two active clients within the group when Group loan with individual monitoring (GLIM) is enabled";
+                ErrorEntry errorEntry  = new ErrorEntry("createLoanAccount.glim.invalid.less.than.two.active.clients.in.group", "activeClients", defaultMessage);
+                errors.addErrors(Arrays.asList(errorEntry));
+                loanProductDtos = new ArrayList<PrdOfferingDto>();
+            } else {
 
-            for (ClientBO client : activeClientsOfGroup) {
-                LoanAccountDetailsDto clientDetail = new LoanAccountDetailsDto();
-                clientDetail.setClientId(client.getCustomerId().toString());
-                clientDetail.setClientName(client.getDisplayName());
-                clientDetails.add(clientDetail);
+                for (ClientBO client : activeClientsOfGroup) {
+                    LoanAccountDetailsDto clientDetail = new LoanAccountDetailsDto();
+                    clientDetail.setClientId(client.getCustomerId().toString());
+                    clientDetail.setClientName(client.getDisplayName());
+                    clientDetails.add(clientDetail);
+                }
             }
         }
 
         return new LoanCreationProductDetailsDto(loanProductDtos, customerDetailDto, nextMeetingDate, recurMonth,
-                isGroup, isGlimEnabled, loanCreationGlimDto, clientDetails);
+                isGroup, isGlimEnabled, loanCreationGlimDto, clientDetails, errors);
     }
 
     private List<PrdOfferingDto> retrieveActiveLoanProductsApplicableForCustomer(final CustomerBO customer, boolean lsimEnabled) {

@@ -20,11 +20,13 @@
 
 package org.mifos.platform.validations;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Errors {
+public class Errors implements Serializable {
+    
     private final List<ErrorEntry> errorEntries;
 
     public Errors() {

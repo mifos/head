@@ -38,7 +38,7 @@ public class SelectProductFormBean implements Serializable {
     
     @NotNull
     private Integer productId;
-    
+
 	/**
      * validateXXXX is invoked on transition from state 
      */

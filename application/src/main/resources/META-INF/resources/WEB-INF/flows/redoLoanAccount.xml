@@ -43,7 +43,7 @@
 
     <view-state id="selectLoanProductStep" view="createLoanAccountSelectProduct" model="selectProductFormBean">
         <on-entry>
-            <evaluate expression="loanAccountController.retrieveLoanProducts(flowScope.customerId)" result="flowScope.loanCreationProductDetailsDto" />
+            <evaluate expression="loanAccountController.retrieveLoanProducts(flowScope.customerId, messageContext)" result="flowScope.loanCreationProductDetailsDto" />
         </on-entry>
         <transition on="productSelected" to="enterAccountDetailsStep">
             <set name="flowScope.productId" value="requestParameters.productId" type="int"/>
