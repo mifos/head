@@ -9,9 +9,7 @@
 
     <name>Mifos - WAR</name>
     <description>The actual mifos.war (as the mifos-webapp/application is now a JAR)</description>
-    <properties>
-        <current.release.name>mifos-${env.BUILD_TAG}</current.release.name>
-    </properties>
+
     <parent>
         <groupId>org.mifos</groupId>
         <artifactId>mifos-parent</artifactId>
@@ -52,7 +50,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <finalName>${current.release.name}</finalName>
+                    <finalName>mifos-g-${env.BUILD_TAG}</finalName>
                     <appendAssemblyId>false</appendAssemblyId>
                     <descriptors>
                         <descriptor>src/main/assembly/release.xml</descriptor>
