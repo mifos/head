@@ -20,7 +20,7 @@
         <integration.database.properties.file>
             ${modules.root.dir}/application/src/test/resources/org/mifos/config/resources/integrationDatabase.properties
         </integration.database.properties.file>
-                <!-- mimics ConfigurationLocator directory search behavior -->
+        <!-- mimics ConfigurationLocator directory search behavior -->
         <mifos.overrides.conf>${mifos.conf}/local.properties</mifos.overrides.conf>
         <mifos.overrides.env>${env.MIFOS_CONF}/local.properties</mifos.overrides.env>
         <mifos.overrides.home>${user.home}/.mifos/local.properties</mifos.overrides.home>
@@ -112,8 +112,8 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                        <outputDirectory>${basedir}/target/release/db/changesets</outputDirectory>
-                        <resources>
+                            <outputDirectory>${basedir}/target/release/db/changesets</outputDirectory>
+                            <resources>
                                 <resource>
                                     <directory>${basedir}/../db/src/main/resources/changesets</directory>
                                     <includes>

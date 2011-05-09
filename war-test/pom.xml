@@ -1,37 +1,37 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<artifactId>mifos-parent</artifactId>
-		<groupId>org.mifos</groupId>
-		<version>1.10-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath>
-	</parent>
+    <parent>
+        <artifactId>mifos-parent</artifactId>
+        <groupId>org.mifos</groupId>
+        <version>1.10-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
 
-	<groupId>org.mifos</groupId>
-	<artifactId>mifos-war-test</artifactId>
+    <groupId>org.mifos</groupId>
+    <artifactId>mifos-war-test</artifactId>
 
-	<name>Mifos - Test of packaged WAR</name>
-	<description>Integration tests the packaged WAR</description>
+    <name>Mifos - Test of packaged WAR</name>
+    <description>Integration tests the packaged WAR</description>
 
-	<dependencies>
-		<!-- Mifos Application must not be listed as dependency here! -->
+    <dependencies>
+        <!-- Mifos Application must not be listed as dependency here! -->
 
-		<!-- Jetty Server -->
-		<dependency>
-			<groupId>org.mifos</groupId>
-			<artifactId>mifos-server-jetty</artifactId>
-		</dependency>
-		
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
+        <!-- Jetty Server -->
+        <dependency>
+            <groupId>org.mifos</groupId>
+            <artifactId>mifos-server-jetty</artifactId>
+        </dependency>
 
-		<!-- Mifos Application must not be listed as dependency here! -->
-	</dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Mifos Application must not be listed as dependency here! -->
+    </dependencies>
 
 
 </project>
