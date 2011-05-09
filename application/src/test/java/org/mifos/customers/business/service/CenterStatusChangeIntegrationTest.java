@@ -229,6 +229,7 @@ public class CenterStatusChangeIntegrationTest extends MifosIntegrationTestCase 
         ClientBO existingPartialClient = new ClientBuilder().withStatus(CustomerStatus.CLIENT_PARTIAL).withParentCustomer(
                 existingPartialGroup).buildForIntegrationTests();
         IntegrationTestObjectMother.createClient(existingPartialClient, existingMeeting);
+        StaticHibernateUtil.flushAndClearSession();
 
         existingCenter = this.customerDao.findCenterBySystemId(existingCenter.getGlobalCustNum());
         existingCenter.setUserContext(TestUtils.makeUser());

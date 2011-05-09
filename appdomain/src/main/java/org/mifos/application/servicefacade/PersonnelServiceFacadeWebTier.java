@@ -287,7 +287,7 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
 
             transactionHelper.startTransaction();
             this.personnelDao.save(newPersonnel);
-            transactionHelper.flushAndClearSession();
+            transactionHelper.flushSession();
             newPersonnel.generateGlobalPersonnelNum();
             this.personnelDao.save(newPersonnel);
             transactionHelper.commitTransaction();

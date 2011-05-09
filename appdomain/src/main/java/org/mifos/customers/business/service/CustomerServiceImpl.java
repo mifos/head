@@ -278,7 +278,7 @@ public class CustomerServiceImpl implements CustomerService {
             customer.addAccount(customerAccount);
 
             this.customerDao.save(customer);
-            this.hibernateTransactionHelper.flushAndClearSession();
+            this.hibernateTransactionHelper.flushSession();
             if (customer.getParentCustomer() != null) {
                 this.customerDao.save(customer.getParentCustomer());
             }
@@ -902,7 +902,7 @@ public class CustomerServiceImpl implements CustomerService {
                 client.setUpdateDetails();
                 customerDao.save(client);
             }
-            hibernateTransactionHelper.flushAndClearSession();
+            hibernateTransactionHelper.flushSession();
 
             GroupBO groupInitialised = group;
             if (regenerateSchedules) {
@@ -995,7 +995,7 @@ public class CustomerServiceImpl implements CustomerService {
                 parent.incrementChildCount();
             }
 
-            this.hibernateTransactionHelper.flushAndClearSession();
+            this.hibernateTransactionHelper.flushSession();
             client.generateSearchId();
             this.customerDao.save(client);
 
@@ -1180,7 +1180,7 @@ public class CustomerServiceImpl implements CustomerService {
             client.getParentCustomer().updateDetails(client.getUserContext());
             this.customerDao.save(client.getParentCustomer());
 
-            this.hibernateTransactionHelper.flushAndClearSession();
+            this.hibernateTransactionHelper.flushSession();
 
             client.setPersonnel(loanOfficer);
             client.setParentCustomer(null);

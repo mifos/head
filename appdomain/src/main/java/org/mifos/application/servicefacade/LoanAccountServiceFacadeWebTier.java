@@ -2120,7 +2120,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                 this.transactionHelper.startTransaction();
                 loan.addAccountStatusChangeHistory(statusChange);
                 this.loanDao.save(loan);
-                this.transactionHelper.flushAndClearSession();
+                this.transactionHelper.flushSession();
                 String globalAccountNum = loan.generateId(userContext.getBranchGlobalNum());
                 loan.setGlobalAccountNum(globalAccountNum);
                 this.loanDao.save(loan);
