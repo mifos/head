@@ -55,7 +55,6 @@ import org.testng.annotations.Test;
 @SuppressWarnings("PMD")
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
 @Test(singleThreaded = true, groups = {"loan", "acceptance", "ui", "no_db_unit", "smoke"})
-//@Test(singleThreaded = true, groups = {"loan", "acceptance", "ui", "no_db_unit"})
 public class CreateGroupLoanAccountTest extends UiTestCaseBase {
 
     private QuestionGroupTestHelper questionGroupTestHelper;
@@ -86,6 +85,10 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
 
     //http://mifosforge.jira.com/browse/MIFOSTEST-303
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+     /*
+     * suppressing for MIFOS-4060 - KEITHW 
+     */
+    @Test(enabled=false)
     public void newWeeklyGroupLoanAccount() throws Exception {
         //Given
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
@@ -177,6 +180,10 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
     * @throws Exception
     */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    /*
+     * suppressing for MIFOS-4060 - KEITHW 
+     */
+    @Test(enabled=false)
     public void CreateLoanWithGLIMandLSIMenabled() throws Exception {
         applicationDatabaseOperation.updateGLIM(1);
         applicationDatabaseOperation.updateLSIM(1);
