@@ -724,7 +724,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 
             this.transactionHelper.startTransaction();
             this.savingsDao.save(savingsAccount);
-            this.transactionHelper.flushAndClearSession();
+            this.transactionHelper.flushSession();
             savingsAccount.generateSystemId(createdBy.getOffice().getGlobalOfficeNum());
             this.savingsDao.save(savingsAccount);
             this.transactionHelper.commitTransaction();
