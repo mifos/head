@@ -37,5 +37,7 @@ public interface HibernateTransactionHelper {
 
     void closeSession();
 
+    void flushAndClearSession();
+
     void flushSession();
 }
