@@ -55,6 +55,7 @@ import org.mifos.dto.screen.ClientFamilyDetailDto;
 import org.mifos.dto.screen.ClientNameDetailDto;
 import org.mifos.dto.screen.ClientPersonalDetailDto;
 import org.mifos.framework.MifosIntegrationTestCase;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.security.AuthenticationAuthorizationServiceFacade;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,17 +66,16 @@ public class GroupServiceFacadeWebTierIntegrationTest extends MifosIntegrationTe
     @Autowired
     private GroupServiceFacade groupServiceFacade;
 
-/* WIP
     @Autowired
     private ClientServiceFacade clientServiceFacade;
-*/
+
 
     @Autowired private AuthenticationAuthorizationServiceFacade authenticationAuthorizationService;
     @Autowired private CustomerDao customerDao;
 
     private OfficeBO areaOffice1;
     private OfficeBO branch1;
-
+    private OfficeBO branch2;
     @Before
     public void setup () {
         authenticationAuthorizationService.reloadUserDetailsForSecurityContext("mifos");
@@ -128,12 +128,25 @@ public class GroupServiceFacadeWebTierIntegrationTest extends MifosIntegrationTe
     public void shouldCreateGroupWithExpectedSearchId() {
 
         // setup
+        OfficeBO headOffice = IntegrationTestObjectMother.findOfficeById(Short.valueOf("1"));
+        createOfficeHierarchyUnderHeadOffice(headOffice);
         boolean centerHierarchyExistsOriginal = ClientRules.getCenterHierarchyExists();
+        ClientRules.setCenterHierarchyExists(false);
 
+        Short officeId = branch1.getOfficeId();
+        String displayName = "testGroup";
+        CustomerDetailsDto newlyCreatedGroupDetails = createGroup(displayName, officeId);
+
+        // verification
+        ClientRules.setCenterHierarchyExists(centerHierarchyExistsOriginal);
+        GroupBO group = customerDao.findGroupBySystemId(newlyCreatedGroupDetails.getGlobalCustNum());
+        Assert.assertThat(group.getSearchId(), is("1." + group.getCustomerId()));
+    }
+
+    private CustomerDetailsDto createGroup(String displayName, Short officeId) {
         MeetingBO meeting = new MeetingBuilder().withStartDate(new DateTime().minusWeeks(2)).build();
         MeetingDto meetingDto = meeting.toDto();
 
-        String displayName = "testGroup";
         String externalId = null;
         AddressDto addressDto = null;
 
@@ -145,33 +158,40 @@ public class GroupServiceFacadeWebTierIntegrationTest extends MifosIntegrationTe
         DateTime trainedOn = null;
         String parentSystemId = null;
 
-        OfficeBO headOffice = IntegrationTestObjectMother.findOfficeById(Short.valueOf("1"));
-
-        // setup
-        createOfficeHierarchyUnderHeadOffice(headOffice);
-
-        Short officeId = branch1.getOfficeId();
         DateTime mfiJoiningDate = new DateTime().minusWeeks(2);
         DateTime activationDate = new DateTime().minusWeeks(1);
         GroupCreationDetail groupCenterDetail = new GroupCreationDetail(displayName, externalId, addressDto, loanOfficerId,
                 feesToApply, customerStatus, trained, trainedOn, parentSystemId, officeId, mfiJoiningDate, activationDate);
 
         // exercise test
-        ClientRules.setCenterHierarchyExists(false);
         CustomerDetailsDto newlyCreatedGroupDetails = groupServiceFacade.createNewGroup(groupCenterDetail, meetingDto);
-
-        // verification
-        ClientRules.setCenterHierarchyExists(centerHierarchyExistsOriginal);
-        GroupBO group = customerDao.findGroupBySystemId(newlyCreatedGroupDetails.getGlobalCustNum());
-        Assert.assertThat(group.getSearchId(), is("1." + group.getCustomerId()));
+        return newlyCreatedGroupDetails;
     }
 
-    /* WIP
+    @Test
     public void shouldTransferGroupFromOfficeToOffice() {
 
         // setup
         boolean centerHierarchyExistsOriginal = ClientRules.getCenterHierarchyExists();
+        ClientRules.setCenterHierarchyExists(false);
+        OfficeBO headOffice = IntegrationTestObjectMother.findOfficeById(Short.valueOf("1"));
+        createOfficeHierarchyUnderHeadOffice(headOffice);
 
+        Short officeId1 = branch1.getOfficeId();
+        CustomerDetailsDto group1Details = createGroup("group1", officeId1);
+        Short officeId2 = branch2.getOfficeId();
+        CustomerDetailsDto group2Details = createGroup("group2", officeId2);
+        CustomerDetailsDto newlyCreatedCustomerDetails = createClient(group1Details.getId().toString());
+        // flush and clear the session to set us up for a transfer starting from a clean session
+        StaticHibernateUtil.flushAndClearSession();
+
+        GroupBO group1 = customerDao.findGroupBySystemId(group1Details.getGlobalCustNum());
+        groupServiceFacade.transferGroupToBranch(group1Details.getGlobalCustNum(), officeId2, group1.getVersionNo());
+
+        ClientRules.setCenterHierarchyExists(centerHierarchyExistsOriginal);
+    }
+
+    private CustomerDetailsDto createClient(String parentGroupId) {
         MeetingBO meeting = new MeetingBuilder().withStartDate(new DateTime().minusWeeks(2)).build();
         MeetingDto meetingDto = meeting.toDto();
 
@@ -183,11 +203,8 @@ public class GroupServiceFacadeWebTierIntegrationTest extends MifosIntegrationTe
         List<ApplicableAccountFeeDto> feesToApply = new ArrayList<ApplicableAccountFeeDto>();
         CustomerStatus.CLIENT_ACTIVE.getValue();
         boolean trained = false;
-        OfficeBO headOffice = IntegrationTestObjectMother.findOfficeById(Short.valueOf("1"));
 
         // setup
-        createOfficeHierarchyUnderHeadOffice(headOffice);
-
         Short officeId = branch1.getOfficeId();
         DateTime mfiJoiningDate = new DateTime().minusWeeks(2);
         DateTime activationDate = new DateTime().minusWeeks(1);
@@ -198,7 +215,7 @@ public class GroupServiceFacadeWebTierIntegrationTest extends MifosIntegrationTe
         Date dateOfBirth = new LocalDate(1990, 1, 1).toDateMidnight().toDate();
         String governmentId ="";
         Date trainedDate = new LocalDate(2000, 1, 1).toDateMidnight().toDate();;
-        Short groupFlag = YesNoFlag.NO.getValue(); // not in a group
+        Short groupFlag = YesNoFlag.YES.getValue(); // not in a group
         Integer salutation = 1;
         String firstName = "first";
         String middleName = null;
@@ -225,7 +242,6 @@ public class GroupServiceFacadeWebTierIntegrationTest extends MifosIntegrationTe
         ClientNameDetailDto spouseFatherName = new ClientNameDetailDto(NameType.SPOUSE.getValue(),
                 salutation, firstName, middleName, lastName, secondLastName);
         InputStream picture = null;
-        String parentGroupId = null;
         List<ClientNameDetailDto> familyNames = null;
         List<ClientFamilyDetailDto> familyDetails = null;
 
@@ -236,17 +252,12 @@ public class GroupServiceFacadeWebTierIntegrationTest extends MifosIntegrationTe
                 parentGroupId, familyNames , familyDetails , loanOfficerId, officeId, activationDate.toLocalDate());
 
         // exercise test
-        ClientRules.setCenterHierarchyExists(false);
+
         List<SavingsDetailDto> allowedSavingProducts = new ArrayList<SavingsDetailDto>();
         CustomerDetailsDto newlyCreatedCustomerDetails = clientServiceFacade.createNewClient(
                 clientCreationDetail, meetingDto, allowedSavingProducts);
-
-        // verification
-        ClientRules.setCenterHierarchyExists(centerHierarchyExistsOriginal);
-        ClientBO client = customerDao.findClientBySystemId(newlyCreatedCustomerDetails.getGlobalCustNum());
-        Assert.assertThat(client.getSearchId(), is("1." + client.getCustomerId()));
+        return newlyCreatedCustomerDetails;
     }
-    */
 
     private void createOfficeHierarchyUnderHeadOffice(OfficeBO headOffice) {
         areaOffice1 = new OfficeBuilder().areaOffice()
@@ -264,5 +275,13 @@ public class GroupServiceFacadeWebTierIntegrationTest extends MifosIntegrationTe
                                               .withSearchId("1.1.2.1")
                                               .build();
         IntegrationTestObjectMother.createOffice(branch1);
+
+        branch2 = new OfficeBuilder().branchOffice()
+        .withParentOffice(areaOffice1)
+        .withName("branch2")
+        .withGlobalOfficeNum("x006")
+        .withSearchId("1.1.2.2")
+        .build();
+        IntegrationTestObjectMother.createOffice(branch2);
     }
 }
