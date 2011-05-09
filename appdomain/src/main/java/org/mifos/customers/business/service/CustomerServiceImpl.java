@@ -278,7 +278,7 @@ public class CustomerServiceImpl implements CustomerService {
             customer.addAccount(customerAccount);
 
             this.customerDao.save(customer);
-            this.hibernateTransactionHelper.flushSession();
+            this.hibernateTransactionHelper.flushAndClearSession();
             if (customer.getParentCustomer() != null) {
                 this.customerDao.save(customer.getParentCustomer());
             }
@@ -902,7 +902,7 @@ public class CustomerServiceImpl implements CustomerService {
                 client.setUpdateDetails();
                 customerDao.save(client);
             }
-            hibernateTransactionHelper.flushSession();
+            hibernateTransactionHelper.flushAndClearSession();
 
             GroupBO groupInitialised = group;
             if (regenerateSchedules) {
@@ -962,7 +962,7 @@ public class CustomerServiceImpl implements CustomerService {
             client.updateDetails(userContext);
             customerDao.save(client);
 
-            hibernateTransactionHelper.flushSession();
+            hibernateTransactionHelper.flushAndClearSession();
 
             if (regenerateSchedules) {
                 client = customerDao.findClientBySystemId(clientGlobalCustNum);
@@ -995,7 +995,7 @@ public class CustomerServiceImpl implements CustomerService {
                 parent.incrementChildCount();
             }
 
-            this.hibernateTransactionHelper.flushSession();
+            this.hibernateTransactionHelper.flushAndClearSession();
             client.generateSearchId();
             this.customerDao.save(client);
 
@@ -1180,7 +1180,7 @@ public class CustomerServiceImpl implements CustomerService {
             client.getParentCustomer().updateDetails(client.getUserContext());
             this.customerDao.save(client.getParentCustomer());
 
-            this.hibernateTransactionHelper.flushSession();
+            this.hibernateTransactionHelper.flushAndClearSession();
 
             client.setPersonnel(loanOfficer);
             client.setParentCustomer(null);

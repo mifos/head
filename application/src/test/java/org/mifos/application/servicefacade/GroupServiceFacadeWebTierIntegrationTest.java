@@ -22,7 +22,9 @@ package org.mifos.application.servicefacade;
 
 import static org.hamcrest.Matchers.is;
 
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -31,7 +33,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.ClientRules;
+import org.mifos.customers.client.business.ClientBO;
+import org.mifos.customers.client.business.NameType;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.persistence.CustomerDao;
@@ -41,9 +46,14 @@ import org.mifos.domain.builders.MeetingBuilder;
 import org.mifos.domain.builders.OfficeBuilder;
 import org.mifos.dto.domain.AddressDto;
 import org.mifos.dto.domain.ApplicableAccountFeeDto;
+import org.mifos.dto.domain.ClientCreationDetail;
 import org.mifos.dto.domain.CustomerDetailsDto;
 import org.mifos.dto.domain.GroupCreationDetail;
 import org.mifos.dto.domain.MeetingDto;
+import org.mifos.dto.domain.SavingsDetailDto;
+import org.mifos.dto.screen.ClientFamilyDetailDto;
+import org.mifos.dto.screen.ClientNameDetailDto;
+import org.mifos.dto.screen.ClientPersonalDetailDto;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.security.AuthenticationAuthorizationServiceFacade;
@@ -54,6 +64,11 @@ public class GroupServiceFacadeWebTierIntegrationTest extends MifosIntegrationTe
     // class under test
     @Autowired
     private GroupServiceFacade groupServiceFacade;
+
+/* WIP
+    @Autowired
+    private ClientServiceFacade clientServiceFacade;
+*/
 
     @Autowired private AuthenticationAuthorizationServiceFacade authenticationAuthorizationService;
     @Autowired private CustomerDao customerDao;
@@ -150,6 +165,88 @@ public class GroupServiceFacadeWebTierIntegrationTest extends MifosIntegrationTe
         GroupBO group = customerDao.findGroupBySystemId(newlyCreatedGroupDetails.getGlobalCustNum());
         Assert.assertThat(group.getSearchId(), is("1." + group.getCustomerId()));
     }
+
+    /* WIP
+    public void shouldTransferGroupFromOfficeToOffice() {
+
+        // setup
+        boolean centerHierarchyExistsOriginal = ClientRules.getCenterHierarchyExists();
+
+        MeetingBO meeting = new MeetingBuilder().withStartDate(new DateTime().minusWeeks(2)).build();
+        MeetingDto meetingDto = meeting.toDto();
+
+        String externalId = null;
+        AddressDto addressDto = new AddressDto("here", "", "", "", "", "", "", "");
+
+        PersonnelBO user = IntegrationTestObjectMother.findPersonnelById(Short.valueOf("1"));
+        Short loanOfficerId = user.getPersonnelId();
+        List<ApplicableAccountFeeDto> feesToApply = new ArrayList<ApplicableAccountFeeDto>();
+        CustomerStatus.CLIENT_ACTIVE.getValue();
+        boolean trained = false;
+        OfficeBO headOffice = IntegrationTestObjectMother.findOfficeById(Short.valueOf("1"));
+
+        // setup
+        createOfficeHierarchyUnderHeadOffice(headOffice);
+
+        Short officeId = branch1.getOfficeId();
+        DateTime mfiJoiningDate = new DateTime().minusWeeks(2);
+        DateTime activationDate = new DateTime().minusWeeks(1);
+        List<Short> selectedSavingProducts = new ArrayList<Short>();
+        String clientName = "client";
+
+        Short formedBy = loanOfficerId;
+        Date dateOfBirth = new LocalDate(1990, 1, 1).toDateMidnight().toDate();
+        String governmentId ="";
+        Date trainedDate = new LocalDate(2000, 1, 1).toDateMidnight().toDate();;
+        Short groupFlag = YesNoFlag.NO.getValue(); // not in a group
+        Integer salutation = 1;
+        String firstName = "first";
+        String middleName = null;
+        String lastName = "last";
+        String secondLastName = null;
+        ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto(NameType.CLIENT.getValue(),
+                salutation, firstName, middleName, lastName, secondLastName);
+
+        // magic numbers from default data
+        Integer ethnicity = 218;
+        Integer citizenship = 130;
+        Integer handicapped = 138;
+        Integer businessActivities = 225;
+        Integer educationLevel = 226;
+        Short numChildren = 0;
+        Short gender = 49;
+        Short povertyStatus = 41;
+        Integer maritalStatus = ClientPersonalDetailDto.MARRIED;
+        Short clientStatus = 3; // active
+
+        ClientPersonalDetailDto clientPersonalDetailDto = new ClientPersonalDetailDto(ethnicity,
+                citizenship , handicapped , businessActivities , maritalStatus , educationLevel ,
+                numChildren , gender, povertyStatus);
+        ClientNameDetailDto spouseFatherName = new ClientNameDetailDto(NameType.SPOUSE.getValue(),
+                salutation, firstName, middleName, lastName, secondLastName);
+        InputStream picture = null;
+        String parentGroupId = null;
+        List<ClientNameDetailDto> familyNames = null;
+        List<ClientFamilyDetailDto> familyDetails = null;
+
+        ClientCreationDetail clientCreationDetail = new ClientCreationDetail(selectedSavingProducts,
+                clientName , clientStatus, mfiJoiningDate.toDate(), externalId,
+                addressDto, formedBy, dateOfBirth , governmentId , trained, trainedDate , groupFlag,
+                clientNameDetailDto, clientPersonalDetailDto, spouseFatherName, picture, feesToApply,
+                parentGroupId, familyNames , familyDetails , loanOfficerId, officeId, activationDate.toLocalDate());
+
+        // exercise test
+        ClientRules.setCenterHierarchyExists(false);
+        List<SavingsDetailDto> allowedSavingProducts = new ArrayList<SavingsDetailDto>();
+        CustomerDetailsDto newlyCreatedCustomerDetails = clientServiceFacade.createNewClient(
+                clientCreationDetail, meetingDto, allowedSavingProducts);
+
+        // verification
+        ClientRules.setCenterHierarchyExists(centerHierarchyExistsOriginal);
+        ClientBO client = customerDao.findClientBySystemId(newlyCreatedCustomerDetails.getGlobalCustNum());
+        Assert.assertThat(client.getSearchId(), is("1." + client.getCustomerId()));
+    }
+    */
 
     private void createOfficeHierarchyUnderHeadOffice(OfficeBO headOffice) {
         areaOffice1 = new OfficeBuilder().areaOffice()

@@ -839,7 +839,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 
             this.transactionHelper.startTransaction();
             this.savingsDao.save(savingsAccount);
-            this.transactionHelper.flushSession();
+            this.transactionHelper.flushAndClearSession();
             savingsAccount.generateSystemId(createdBy.getOffice().getGlobalOfficeNum());
             this.savingsDao.save(savingsAccount);
             this.transactionHelper.flushSession();
