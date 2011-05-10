@@ -315,6 +315,32 @@ public class LoanAccountFormBean implements Serializable {
                 }
             }
         }
+
+        int additionalFeeIndex = 0;
+        if (this.selectedFeeId != null) {
+            for (Number feeId : this.selectedFeeId) {
+                if (feeId != null) {
+                    Number amountOrRate = this.selectedFeeAmount[additionalFeeIndex];
+                    if (amountOrRate == null) {
+                        errors.rejectValue("selectedFeeId", "loanAccountFormBean.additionalfees.amountOrRate.invalid", "Please specify fee amount for additional fee " + Integer.valueOf(additionalFeeIndex+1).toString());
+                    }
+                }
+                additionalFeeIndex++;
+            }
+        }
+        
+        int defaultFeeIndex = 0;
+        if (this.defaultFeeId != null) {
+            for (Number feeId : this.defaultFeeId) {
+                if (feeId != null) {
+                    Number amountOrRate = this.defaultFeeAmountOrRate[defaultFeeIndex];
+                    if (amountOrRate == null) {
+                        errors.rejectValue("defaultFeeId", "loanAccountFormBean.defaultfees.amountOrRate.invalid", "Please specify fee amount for administrative fee " + Integer.valueOf(defaultFeeIndex+1).toString());
+                    }
+                }
+                defaultFeeIndex++;
+            }
+        }
         
         if (this.repaymentScheduleIndependentOfCustomerMeeting) {
             if (isInvalidRecurringFrequency(this.repaymentRecursEvery)) {
