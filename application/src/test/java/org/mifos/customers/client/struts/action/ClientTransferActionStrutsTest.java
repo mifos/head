@@ -50,6 +50,9 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
+import java.io.IOException;
+import java.util.List;
+
 public class ClientTransferActionStrutsTest extends MifosMockStrutsTestCase {
 
 
@@ -236,8 +239,8 @@ public class ClientTransferActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals(EntityType.CLIENT.getValue(), auditLogList.get(0).getEntityType());
         Assert.assertEquals(client.getCustomerId(), auditLogList.get(0).getEntityId());
 
-        Assert.assertEquals(4, auditLogList.get(0).getAuditLogRecords().size());
-        
+        Assert.assertEquals(3, auditLogList.get(0).getAuditLogRecords().size());
+
         for (AuditLogRecord auditLogRecord : auditLogList.get(0).getAuditLogRecords()) {
             if (auditLogRecord.getFieldName().equalsIgnoreCase("Loan Officer Assigned")) {
                 matchValues(auditLogRecord, "mifos", "-");
