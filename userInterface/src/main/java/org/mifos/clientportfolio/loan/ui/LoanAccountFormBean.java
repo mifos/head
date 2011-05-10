@@ -27,6 +27,7 @@ import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.clientportfolio.newloan.applicationservice.LoanDisbursementDateValidationServiceFacade;
@@ -89,8 +90,11 @@ public class LoanAccountFormBean implements Serializable {
     private boolean purposeOfLoanMandatory;
     private Integer loanPurposeId;
     
+    private boolean collateralTypeAndNotesHidden;
     private Integer collateralTypeId;
     private String collateralNotes;
+    private boolean externalIdHidden;
+    private boolean externalIdMandatory;
     private String externalId;
 
     // only when LSIM is turned on.
@@ -298,6 +302,10 @@ public class LoanAccountFormBean implements Serializable {
             errors.rejectValue("fundId", "loanAccountFormBean.SourceOfFunds.invalid", "Please specify source of funds.");
         }
         
+        if (this.externalIdMandatory && StringUtils.isBlank(this.externalId)) {
+            errors.rejectValue("externalId", "loanAccountFormBean.externalid.invalid", "Please specify required external id.");
+        }
+        
         if (!this.glimApplicable && this.purposeOfLoanMandatory && isInvalidSelection(this.loanPurposeId)) {
             errors.rejectValue("loanPurposeId", "loanAccountFormBean.PurposeOfLoan.invalid", "Please specify loan purpose.");
         }
@@ -313,6 +321,32 @@ public class LoanAccountFormBean implements Serializable {
                         break;
                     }
                 }
+            }
+        }
+
+        int additionalFeeIndex = 0;
+        if (this.selectedFeeId != null) {
+            for (Number feeId : this.selectedFeeId) {
+                if (feeId != null) {
+                    Number amountOrRate = this.selectedFeeAmount[additionalFeeIndex];
+                    if (amountOrRate == null) {
+                        errors.rejectValue("selectedFeeId", "loanAccountFormBean.additionalfees.amountOrRate.invalid", "Please specify fee amount for additional fee " + Integer.valueOf(additionalFeeIndex+1).toString());
+                    }
+                }
+                additionalFeeIndex++;
+            }
+        }
+        
+        int defaultFeeIndex = 0;
+        if (this.defaultFeeId != null) {
+            for (Number feeId : this.defaultFeeId) {
+                if (feeId != null) {
+                    Number amountOrRate = this.defaultFeeAmountOrRate[defaultFeeIndex];
+                    if (amountOrRate == null) {
+                        errors.rejectValue("defaultFeeId", "loanAccountFormBean.defaultfees.amountOrRate.invalid", "Please specify fee amount for administrative fee " + Integer.valueOf(defaultFeeIndex+1).toString());
+                    }
+                }
+                defaultFeeIndex++;
             }
         }
         
@@ -955,5 +989,29 @@ public class LoanAccountFormBean implements Serializable {
 
     public void setRedoLoanAccount(boolean redoLoanAccount) {
         this.redoLoanAccount = redoLoanAccount;
+    }
+    
+    public boolean isCollateralTypeAndNotesHidden() {
+        return collateralTypeAndNotesHidden;
+    }
+
+    public void setCollateralTypeAndNotesHidden(boolean collateralTypeAndNotesHidden) {
+        this.collateralTypeAndNotesHidden = collateralTypeAndNotesHidden;
+    }
+
+    public boolean isExternalIdHidden() {
+        return externalIdHidden;
+    }
+
+    public void setExternalIdHidden(boolean externalIdHidden) {
+        this.externalIdHidden = externalIdHidden;
+    }
+
+    public boolean isExternalIdMandatory() {
+        return externalIdMandatory;
+    }
+
+    public void setExternalIdMandatory(boolean externalIdMandatory) {
+        this.externalIdMandatory = externalIdMandatory;
     }
 }

@@ -279,16 +279,22 @@
         [@form.singleSelectWithPrompt path="loanAccountFormBean.collateralTypeId" options=loanProductReferenceData.collateralOptions selectPrompt="selectPrompt" /]
     </div>
     
+    [#if loanAccountFormBean.collateralTypeAndNotesHidden]
+    [#else]
     <div class="row">
         [@form.label "collateralNotes" false][@spring.message "createLoanAccount.collateralNotes" /][/@form.label]
         [@spring.bind "loanAccountFormBean.collateralNotes" /]
         <textarea name="${spring.status.expression}" rows="4" cols="50" maxlength="200">${spring.status.value?if_exists}</textarea>
     </div>
+    [/#if]
     
+    [#if loanAccountFormBean.externalIdHidden]
+    [#else]
     <div class="row">
-        [@form.label "externalId" false ][@spring.message "createLoanAccount.externalId"/][/@form.label]
+        [@form.label "externalId" loanAccountFormBean.externalIdMandatory][@spring.message "createLoanAccount.externalId"/][/@form.label]
         [@form.input path="loanAccountFormBean.externalId" id="externalId" /]
     </div>
+    [/#if]
     
     <p><span class="standout">[@spring.message "createLoanAccount.enterAccountInfo.defaultfees.header" /]</span></p>
 
