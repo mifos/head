@@ -35,7 +35,6 @@ public class MifosUserBuilder {
     private PersonnelLevel level = PersonnelLevel.LOAN_OFFICER;
     private String username = "mifos";
     private byte[] password = "testmifos".getBytes();
-    private String hash = "testmifos";
     private boolean enabled  = true;
     private boolean accountNonExpired = true;
     private boolean credentialsNonExpired = true;
@@ -44,7 +43,7 @@ public class MifosUserBuilder {
     private List<Short> roleIds = new ArrayList<Short>();
 
     public MifosUser build() {
-        return new MifosUser(userId, branchId, level.getValue(), roleIds, username, password, hash, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
+        return new MifosUser(userId, branchId, level.getValue(), roleIds, username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
     }
 
     public MifosUserBuilder withAdminRole() {

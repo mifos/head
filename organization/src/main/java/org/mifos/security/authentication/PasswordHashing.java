@@ -27,7 +27,6 @@ import java.security.SecureRandom;
 import java.util.Arrays;
 
 import org.mifos.framework.exceptions.SystemException;
-import org.mindrot.jbcrypt.BCrypt;
 
 /**
  * This class encapsulate all the logic related to password hashing
@@ -78,18 +77,7 @@ public class PasswordHashing {
 
         return compare(encPassword, decPassword);
     }
-    
-    /**
-     * This function verifies a given password
-     * algorithm BCrypt
-     */
-    public boolean verifyPasswordBCrypt(String password, String hash) {
-    	return BCrypt.checkpw(password, hash);
-    }
 
-    public String encryptPasswordBCrypt(String password){
-    	return BCrypt.hashpw(password, BCrypt.gensalt());
-    }
     /**
      * This function create the hashed password
      *

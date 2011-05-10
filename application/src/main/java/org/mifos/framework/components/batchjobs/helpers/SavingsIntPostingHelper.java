@@ -83,7 +83,6 @@ public class SavingsIntPostingHelper extends TaskHelper {
         Short branchId = Short.valueOf("1");
         String username = "mifos";
         byte[] password = "testmifos".getBytes();
-        String hash = "testmifos";
         boolean enabled  = true;
         boolean accountNonExpired = true;
         boolean credentialsNonExpired = true;
@@ -91,6 +90,6 @@ public class SavingsIntPostingHelper extends TaskHelper {
         Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
         List<Short> roleIds = new ArrayList<Short>();
 
-       return new MifosUser(userId, branchId, PersonnelLevel.LOAN_OFFICER.getValue(), roleIds, username, password, hash,  enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
+       return new MifosUser(userId, branchId, PersonnelLevel.LOAN_OFFICER.getValue(), roleIds, username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
     }
 }

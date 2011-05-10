@@ -41,16 +41,8 @@ public class EncryptionService {
     public byte[] createEncryptedPassword(String password) {
         return new PasswordHashing().createEncryptedPassword(password);
     }
-    
-    public String encryptPasswordBCrypt(String password){
-    	return new PasswordHashing().encryptPasswordBCrypt(password);
-    }
-  
+
     public boolean verifyPassword(String password, byte[] encPassword) {
         return new PasswordHashing().verifyPassword(password, encPassword);
-    }
-    
-    public boolean verifyBCryptPassword(String password, String hash){
-    	return new PasswordHashing().verifyPasswordBCrypt(password, hash);
     }
 }

@@ -36,8 +36,7 @@ public class MifosUser implements UserDetails {
 
     private final String username;
     private final byte[] password;
-    private final String hash;
-	private final boolean enabled;
+    private final boolean enabled;
     private final boolean accountNonExpired;
     private final boolean credentialsNonExpired;
     private final boolean accountNonLocked;
@@ -48,13 +47,12 @@ public class MifosUser implements UserDetails {
     private final List<Short> roleIds;
 
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="EI_EXPOSE_REP", justification="ignoring for now..")
-    public MifosUser(int userId, Short branchId, Short levelId, List<Short> roleIds, String username, byte[] password,String hash, boolean enabled, boolean accountNonExpired,
+    public MifosUser(int userId, Short branchId, Short levelId, List<Short> roleIds, String username, byte[] password, boolean enabled, boolean accountNonExpired,
             boolean credentialsNonExpired, boolean accountNonLocked, Collection<GrantedAuthority> authorities) {
         this.levelId = levelId;
         this.roleIds = new ArrayList<Short>(roleIds);
         this.username = username;
         this.password = password;
-        this.hash=hash;
         this.enabled = enabled;
         this.accountNonExpired = accountNonExpired;
         this.credentialsNonExpired = credentialsNonExpired;
@@ -107,10 +105,6 @@ public class MifosUser implements UserDetails {
     public boolean isEnabled() {
         return this.enabled;
     }
-    
-    public String getHash() {
-		return hash;
-	}
 
     public Short getBranchId() {
         return this.branchId;

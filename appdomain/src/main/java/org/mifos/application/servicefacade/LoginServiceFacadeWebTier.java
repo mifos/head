@@ -143,5 +143,4 @@ public class LoginServiceFacadeWebTier implements NewLoginServiceFacade {
 			return false;
 		}
 	}
-	
 }
