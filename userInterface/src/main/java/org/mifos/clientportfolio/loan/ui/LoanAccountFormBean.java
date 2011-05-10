@@ -27,6 +27,7 @@ import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.clientportfolio.newloan.applicationservice.LoanDisbursementDateValidationServiceFacade;
@@ -89,8 +90,11 @@ public class LoanAccountFormBean implements Serializable {
     private boolean purposeOfLoanMandatory;
     private Integer loanPurposeId;
     
+    private boolean collateralTypeAndNotesHidden;
     private Integer collateralTypeId;
     private String collateralNotes;
+    private boolean externalIdHidden;
+    private boolean externalIdMandatory;
     private String externalId;
 
     // only when LSIM is turned on.
@@ -296,6 +300,10 @@ public class LoanAccountFormBean implements Serializable {
         
         if (this.sourceOfFundsMandatory && isInvalidSelection(this.fundId)) {
             errors.rejectValue("fundId", "loanAccountFormBean.SourceOfFunds.invalid", "Please specify source of funds.");
+        }
+        
+        if (this.externalIdMandatory && StringUtils.isBlank(this.externalId)) {
+            errors.rejectValue("externalId", "loanAccountFormBean.externalid.invalid", "Please specify required external id.");
         }
         
         if (!this.glimApplicable && this.purposeOfLoanMandatory && isInvalidSelection(this.loanPurposeId)) {
@@ -981,5 +989,29 @@ public class LoanAccountFormBean implements Serializable {
 
     public void setRedoLoanAccount(boolean redoLoanAccount) {
         this.redoLoanAccount = redoLoanAccount;
+    }
+    
+    public boolean isCollateralTypeAndNotesHidden() {
+        return collateralTypeAndNotesHidden;
+    }
+
+    public void setCollateralTypeAndNotesHidden(boolean collateralTypeAndNotesHidden) {
+        this.collateralTypeAndNotesHidden = collateralTypeAndNotesHidden;
+    }
+
+    public boolean isExternalIdHidden() {
+        return externalIdHidden;
+    }
+
+    public void setExternalIdHidden(boolean externalIdHidden) {
+        this.externalIdHidden = externalIdHidden;
+    }
+
+    public boolean isExternalIdMandatory() {
+        return externalIdMandatory;
+    }
+
+    public void setExternalIdMandatory(boolean externalIdMandatory) {
+        this.externalIdMandatory = externalIdMandatory;
     }
 }

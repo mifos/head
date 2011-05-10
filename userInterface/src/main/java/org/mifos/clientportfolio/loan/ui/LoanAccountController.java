@@ -207,6 +207,11 @@ public class LoanAccountController {
 
     	formBean.setSourceOfFundsMandatory(mandatoryHidden.isMandatoryLoanSourceOfFund());
     	formBean.setPurposeOfLoanMandatory(mandatoryHidden.isMandatoryLoanAccountPurpose());
+    	formBean.setCollateralTypeAndNotesHidden(mandatoryHidden.isHideSystemCollateralTypeNotes());
+    	formBean.setExternalIdHidden(mandatoryHidden.isHideSystemExternalId());
+    	if (!mandatoryHidden.isHideSystemExternalId()) {
+    	    formBean.setExternalIdMandatory(mandatoryHidden.isMandatorySystemExternalId());
+    	}
 
     	LocalDate possibleDisbursementDate = dto.getNextPossibleDisbursementDate();
     	if (possibleDisbursementDate != null) {
