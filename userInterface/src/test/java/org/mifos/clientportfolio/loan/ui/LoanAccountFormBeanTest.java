@@ -64,6 +64,8 @@ public class LoanAccountFormBeanTest {
         
         loanAccountFormBean.setPurposeOfLoanMandatory(false);
         loanAccountFormBean.setSourceOfFundsMandatory(false);
+        loanAccountFormBean.setExternalIdMandatory(false);
+        loanAccountFormBean.setCollateralTypeAndNotesHidden(false);
         
         loanAccountFormBean.setAmount(Double.valueOf("1000.0"));
         loanAccountFormBean.setMinAllowedAmount(Integer.valueOf(400));
