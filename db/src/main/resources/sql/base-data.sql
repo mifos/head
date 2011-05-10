@@ -2192,7 +2192,7 @@ created_date,updated_by,updated_date,no_of_tries,last_login,locked,version_no)
 values(1,2,'1',1,
 1,1,1,null,1,null,
 'mifos',null,1,'mifos',1,
-null,1,CURDATE(),0,CURDATE(),0,0);
+null,1,null,0,null,0,0);
 
 /* The table Personnel Details contains the address information of the default user  - Configuration */
 insert into personnel_details

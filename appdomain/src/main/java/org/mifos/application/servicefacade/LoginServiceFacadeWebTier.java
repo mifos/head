@@ -47,112 +47,101 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
  */
 public class LoginServiceFacadeWebTier implements NewLoginServiceFacade {
 
-	private final PersonnelService personnelService;
-	private final PersonnelDao personnelDao;
-	private HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
+    private final PersonnelService personnelService;
+    private final PersonnelDao personnelDao;
+    private HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
 
-	@Autowired
-	public LoginServiceFacadeWebTier(PersonnelService personnelService,
-			PersonnelDao personnelDao) {
-		this.personnelService = personnelService;
-		this.personnelDao = personnelDao;
-	}
+    @Autowired
+    public LoginServiceFacadeWebTier(PersonnelService personnelService, PersonnelDao personnelDao) {
+        this.personnelService = personnelService;
+        this.personnelDao = personnelDao;
+    }
 
-	@Override
-	public LoginDto login(String username, String password) {
+    @Override
+    public LoginDto login(String username, String password) {
 
-		PersonnelBO user = this.personnelDao.findPersonnelByUsername(username);
-		if (user == null) {
-			throw new UsernameNotFoundException(LoginConstants.KEYINVALIDUSER);
-		}
-		if (!user.isExpire()) {
+        PersonnelBO user = this.personnelDao.findPersonnelByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException(LoginConstants.KEYINVALIDUSER);
+        }
 
-			Locale preferredLocale = Localization.getInstance()
-					.getConfiguredLocale();
-			Short localeId = Localization.getInstance().getLocaleId();
-			UserContext userContext = new UserContext(preferredLocale, localeId);
-			userContext.setId(user.getPersonnelId());
-			userContext.setName(user.getDisplayName());
-			userContext.setLevel(user.getLevelEnum());
-			userContext.setRoles(user.getRoles());
-			userContext.setLastLogin(user.getLastLogin());
-			userContext.setPasswordChanged(user.getPasswordChanged());
-			userContext.setBranchId(user.getOffice().getOfficeId());
-			userContext.setBranchGlobalNum(user.getOffice()
-					.getGlobalOfficeNum());
-			userContext.setOfficeLevelId(user.getOffice().getLevel().getId());
+        Locale preferredLocale = Localization.getInstance().getConfiguredLocale();
+        Short localeId = Localization.getInstance().getLocaleId();
+        UserContext userContext = new UserContext(preferredLocale, localeId);
+        userContext.setId(user.getPersonnelId());
+        userContext.setName(user.getDisplayName());
+        userContext.setLevel(user.getLevelEnum());
+        userContext.setRoles(user.getRoles());
+        userContext.setLastLogin(user.getLastLogin());
+        userContext.setPasswordChanged(user.getPasswordChanged());
+        userContext.setBranchId(user.getOffice().getOfficeId());
+        userContext.setBranchGlobalNum(user.getOffice().getGlobalOfficeNum());
+        userContext.setOfficeLevelId(user.getOffice().getLevel().getId());
 
-			user.updateDetails(userContext);
-			try {
-				this.transactionHelper.startTransaction();
-				this.transactionHelper.beginAuditLoggingFor(user);
-				user.login(password);
-				this.personnelDao.save(user);
-				this.transactionHelper.commitTransaction();
 
-				return new LoginDto(user.getPersonnelId(), user.getOffice()
-						.getOfficeId(), user.isPasswordChanged());
-			} catch (ApplicationException e) {
-				this.transactionHelper.rollbackTransaction();
-				throw new BusinessRuleException(e.getKey(), e);
-			} catch (Exception e) {
-				this.transactionHelper.rollbackTransaction();
-				throw new MifosRuntimeException(e);
-			} finally {
-				this.transactionHelper.closeSession();
-			}
-		} else
-			return null;
-	}
+        user.updateDetails(userContext);
+        try {
+            this.transactionHelper.startTransaction();
+            this.transactionHelper.beginAuditLoggingFor(user);
+            user.login(password);
+            this.personnelDao.save(user);
+            this.transactionHelper.commitTransaction();
 
-	@Override
-	public void changePassword(ChangePasswordRequest changePasswordRequest) {
-		PersonnelBO user = this.personnelDao
-				.findPersonnelByUsername(changePasswordRequest.getUsername());
+            return new LoginDto(user.getPersonnelId(), user.getOffice().getOfficeId(), user.isPasswordChanged());
+        } catch (ApplicationException e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new BusinessRuleException(e.getKey(), e);
+        } catch (Exception e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            this.transactionHelper.closeSession();
+        }
+    }
 
-		this.personnelService.changePassword(user,
-				changePasswordRequest.getNewPassword());
-	}
+    @Override
+    public void changePassword(ChangePasswordRequest changePasswordRequest) {
+        PersonnelBO user = this.personnelDao.findPersonnelByUsername(changePasswordRequest.getUsername());
 
-	@Override
-	public boolean updatePassword(String username, String oldPassword,
-			String newPassword) {
+        this.personnelService.changePassword(user, changePasswordRequest.getNewPassword());
+    }
 
-		MifosUser appUser = (MifosUser) SecurityContextHolder.getContext()
-				.getAuthentication().getPrincipal();
-		UserContext userContext = new UserContextFactory().create(appUser);
+    @Override
+    public boolean updatePassword(String username, String oldPassword, String newPassword) {
 
-		PersonnelBO user = this.personnelDao.findPersonnelByUsername(username);
-		boolean passwordIsAlreadyChanged = user.isPasswordChanged();
+        MifosUser appUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = new UserContextFactory().create(appUser);
 
-		user.updateDetails(userContext);
-		try {
-			this.transactionHelper.startTransaction();
-			this.transactionHelper.beginAuditLoggingFor(user);
-			user.updatePassword(oldPassword, newPassword);
-			this.personnelDao.save(user);
-			this.transactionHelper.commitTransaction();
-		} catch (ApplicationException e) {
-			this.transactionHelper.rollbackTransaction();
-			throw new BusinessRuleException(e.getKey(), e);
-		} catch (Exception e) {
-			this.transactionHelper.rollbackTransaction();
-			throw new MifosRuntimeException(e);
-		} finally {
-			this.transactionHelper.closeSession();
-		}
+        PersonnelBO user = this.personnelDao.findPersonnelByUsername(username);
+        boolean passwordIsAlreadyChanged = user.isPasswordChanged();
 
-		return passwordIsAlreadyChanged;
-	}
+        user.updateDetails(userContext);
+        try {
+            this.transactionHelper.startTransaction();
+            this.transactionHelper.beginAuditLoggingFor(user);
+            user.updatePassword(oldPassword, newPassword);
+            this.personnelDao.save(user);
+            this.transactionHelper.commitTransaction();
+        } catch (ApplicationException e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new BusinessRuleException(e.getKey(), e);
+        } catch (Exception e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            this.transactionHelper.closeSession();
+        }
+
+        return passwordIsAlreadyChanged;
+    }
 
 	@Override
 	public boolean checkOldPassword(String username, String oldPassword) {
 		try {
-			return this.personnelDao.findPersonnelByUsername(username)
-					.isPasswordValid(oldPassword);
+			return this.personnelDao.findPersonnelByUsername(username).isPasswordValid(oldPassword);
 		} catch (PersonnelException e) {
 			return false;
 		}
 	}
-
+	
 }
