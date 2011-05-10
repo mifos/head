@@ -1,4 +1,4 @@
-release-schema-version:mifos-v2.1.0-schema
+release-schema-version:mifos-v2.1.1-schema
 1277565300
 1277565388
 1277565389
@@ -77,3 +77,4 @@ release-schema-version:mifos-v2.1.0-schema
 1296137314
 1298198335
 1299279218
+1303401726
