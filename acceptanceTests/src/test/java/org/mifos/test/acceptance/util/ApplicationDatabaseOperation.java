@@ -1,16 +1,16 @@
 package org.mifos.test.acceptance.util;
 
-import org.joda.time.DateTime;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.test.context.ContextConfiguration;
-
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.Locale;
+
+import org.joda.time.DateTime;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.test.context.ContextConfiguration;
 
 @ContextConfiguration(locations={"classpath:test-context.xml", "classpath:ui-test-context.xml"})
 public class ApplicationDatabaseOperation {
@@ -154,7 +154,7 @@ public class ApplicationDatabaseOperation {
     }
     
     public void  updateUserLastLogin(DateTime date, String userName) throws SQLException {
-    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
         getStatement().executeUpdate("update personnel set last_login='" + sdf.format(date.toDate()) + "' where login_name='" + userName +"'");
         closeConnection();
     }

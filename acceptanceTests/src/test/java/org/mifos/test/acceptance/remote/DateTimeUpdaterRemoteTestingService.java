@@ -37,7 +37,7 @@ public class DateTimeUpdaterRemoteTestingService {
 
     private static final String MAX_WAIT_FOR_PAGE_TO_LOAD_IN_MILLISECONDS = "30000";
     protected Selenium selenium;
-    private ApplicationDatabaseOperation applicationDatabaseOperation;
+    private final ApplicationDatabaseOperation applicationDatabaseOperation;
 
     public DateTimeUpdaterRemoteTestingService(Selenium selenium, ApplicationDatabaseOperation applicationDatabaseOperation) {
         this.selenium = selenium;
