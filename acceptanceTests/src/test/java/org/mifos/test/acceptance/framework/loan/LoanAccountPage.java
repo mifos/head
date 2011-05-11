@@ -370,6 +370,7 @@ public class LoanAccountPage extends MifosPage {
         return new ClientsAndAccountsHomepage(selenium);
     }
 
+    @Override
     public AdminPage navigateToAdminPageUsingHeaderTab() {
         selenium.click("clientsAndAccountsHeader.link.admin");
         waitForPageToLoad();

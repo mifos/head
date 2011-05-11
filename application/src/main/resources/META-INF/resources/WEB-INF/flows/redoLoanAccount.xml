@@ -86,7 +86,7 @@
     
     <decision-state id="checkIfCompareForCashFlowIsEnabledForLoanCreation">
         <on-entry>
-            <evaluate expression="loanAccountController.isCompareForCashFlowEnabled(loanAccountFormBean, flowScope.productId)" result="flowScope.cashFlowEnabled" />
+            <evaluate expression="loanAccountController.isCompareForCashFlowEnabled(flowScope.productId)" result="flowScope.cashFlowEnabled" />
         </on-entry>
         <if test="flowScope.cashFlowEnabled" then="captureCashFlowDetails" else="calculateAndReviewLoanSchedule"/>
     </decision-state>
@@ -101,6 +101,14 @@
         	<evaluate expression="loanAccountController.retrieveLoanSchedule(flowScope.customerId, flowScope.productId, loanAccountFormBean, loanScheduleFormBean)" result="flowScope.loanScheduleReferenceData"/>
     	    <evaluate expression="cashFlowController.retrieveMonthlyCashflowDetails(flowScope.cashFlow, flowScope.loanScheduleReferenceData.disbursementDate, flowScope.loanScheduleReferenceData.loanAmount)" result="flowScope.monthlyCashFlowDetails"/>
             <evaluate expression="loanAccountController.retrieveCashflowSummaryDetails(cashFlowSummaryFormBean, flowScope.cashFlowSettings, flowScope.monthlyCashFlowDetails, flowScope.loanScheduleReferenceData, flowScope.productId, loanAccountFormBean)" result="flowScope.cashflowSummaryDetails"/>
+        </transition>
+        <transition on="cancel" to="cancel" bind="false" validate="false" history="invalidate"/>
+    </view-state>
+    
+    <view-state id="editCashflow" view="createLoanAccountCashFlow" model="cashFlow">
+        <transition on="capture" to="summaryOfCashflow" validate="true">        	
+    	    <evaluate expression="cashFlowController.retrieveMonthlyCashflowDetails(flowScope.cashFlow, flowScope.loanScheduleReferenceData.disbursementDate, flowScope.loanScheduleReferenceData.loanAmount)" result="flowScope.monthlyCashFlowDetails"/>
+            <evaluate expression="loanAccountController.recalculateCashflowSummaryDetails(cashFlowSummaryFormBean, flowScope.cashFlowSettings, flowScope.monthlyCashFlowDetails, flowScope.loanScheduleReferenceData, flowScope.productId)" result="flowScope.cashflowSummaryDetails"/>
         </transition>
         <transition on="cancel" to="cancel" bind="false" validate="false" history="invalidate"/>
     </view-state>
@@ -120,7 +128,8 @@
         <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/>
     </view-state>
     
-    <view-state id="summaryOfCashflow" view="createloanAccountReviewLoanSchedule" model="cashFlowSummaryFormBean">
+    <view-state id="summaryOfCashflow" view="redoloanAccountReviewLoanSchedule" model="cashFlowSummaryFormBean">
+    	<transition on="editCashflow" to="editCashflow" validate="false"/>
         <transition on="validate" to="summaryOfCashflow" validate="true" />
         <transition on="preview" to="previewStep" validate="true" />
         <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/>
@@ -128,7 +137,7 @@
     
     <view-state id="previewStep" view="redoLoanAccountPreview">
         <transition on="editAccountDetails" to="editAccountDetailsStep" validate="false" bind="false"/>
-        <transition on="editLoanSchedule" to="reviewLoanSchedule" validate="false" bind="false"/>
+        <transition on="editLoanSchedule" to="chooseCorrectViewForEditLoanSchedule" validate="false" bind="false"/>
         <transition on="editQuestionGroups" to="answerQuestionGroupStep" validate="false" bind="false"/>
         
         <transition on="submit" to="confirmation">
@@ -139,6 +148,10 @@
         
         <transition on="cancel" to="cancel" validate="false" bind="false" history="invalidate"/>
     </view-state>
+    
+     <decision-state id="chooseCorrectViewForEditLoanSchedule">
+        <if test="flowScope.cashFlowEnabled" then="summaryOfCashflow" else="reviewLoanSchedule"/>
+    </decision-state>
     
     <end-state id="confirmation" view="createLoanAccountConfirmation"/>
     <end-state id="cancel" view="externalRedirect:contextRelative:/custSearchAction.do?method=loadMainSearch"/>

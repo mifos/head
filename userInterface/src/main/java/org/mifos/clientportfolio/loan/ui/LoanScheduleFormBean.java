@@ -20,7 +20,6 @@
 
 package org.mifos.clientportfolio.loan.ui;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,7 +39,7 @@ import org.springframework.binding.validation.ValidationContext;
 
 @SuppressWarnings("PMD")
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID", "EI_EXPOSE_REP", "EI_EXPOSE_REP2", "DLS_DEAD_LOCAL_STORE"}, justification="should disable at filter level and also for pmd - not important for us")
-public class LoanScheduleFormBean implements Serializable {
+public class LoanScheduleFormBean implements BackdatedPaymentable {
 
     @Autowired
     private transient LoanAccountServiceFacade loanAccountServiceFacade;
@@ -66,11 +65,9 @@ public class LoanScheduleFormBean implements Serializable {
     private BigDecimal totalLoanInterest;
     private BigDecimal totalLoanFees;
 
-    private List<LoanCreationInstallmentDto> repaymentInstallments;
-    private List<LoanRepaymentRunningBalance> loanRepaymentPaidInstallmentsWithRunningBalance;
-    private List<LoanRepaymentFutureInstallments> loanRepaymentFutureInstallments;
-
-    private boolean loanWithBackdatedPayments = true;
+    private List<LoanCreationInstallmentDto> repaymentInstallments = new ArrayList<LoanCreationInstallmentDto>();
+    private List<LoanRepaymentRunningBalance> loanRepaymentPaidInstallmentsWithRunningBalance = new ArrayList<LoanRepaymentRunningBalance>();
+    private List<LoanRepaymentFutureInstallments> loanRepaymentFutureInstallments = new ArrayList<LoanRepaymentFutureInstallments>();
 
     public LoanScheduleFormBean() {
         // constructor
@@ -376,14 +373,17 @@ public class LoanScheduleFormBean implements Serializable {
         return installments;
     }
 
+    @Override
     public void setInstallments(List<Date> installments) {
         this.installments = installments;
     }
 
+    @Override
     public boolean isVariableInstallmentsAllowed() {
         return variableInstallmentsAllowed;
     }
 
+    @Override
     public void setVariableInstallmentsAllowed(boolean variableInstallmentsAllowed) {
         this.variableInstallmentsAllowed = variableInstallmentsAllowed;
     }
@@ -392,6 +392,7 @@ public class LoanScheduleFormBean implements Serializable {
         return minGapInDays;
     }
 
+    @Override
     public void setMinGapInDays(Integer minGapInDays) {
         this.minGapInDays = minGapInDays;
     }
@@ -400,6 +401,7 @@ public class LoanScheduleFormBean implements Serializable {
         return maxGapInDays;
     }
 
+    @Override
     public void setMaxGapInDays(Integer maxGapInDays) {
         this.maxGapInDays = maxGapInDays;
     }
@@ -408,6 +410,7 @@ public class LoanScheduleFormBean implements Serializable {
         return minInstallmentAmount;
     }
 
+    @Override
     public void setMinInstallmentAmount(BigDecimal minInstallmentAmount) {
         this.minInstallmentAmount = minInstallmentAmount;
     }
@@ -416,6 +419,7 @@ public class LoanScheduleFormBean implements Serializable {
         return disbursementDate;
     }
 
+    @Override
     public void setDisbursementDate(Date disbursementDate) {
         this.disbursementDate = disbursementDate;
     }
@@ -424,6 +428,7 @@ public class LoanScheduleFormBean implements Serializable {
         return customerId;
     }
 
+    @Override
     public void setCustomerId(Integer customerId) {
         this.customerId = customerId;
     }
@@ -432,6 +437,7 @@ public class LoanScheduleFormBean implements Serializable {
         return variableInstallments;
     }
 
+    @Override
     public void setVariableInstallments(List<LoanCreationInstallmentDto> variableInstallments) {
         this.variableInstallments = variableInstallments;
     }
@@ -440,6 +446,7 @@ public class LoanScheduleFormBean implements Serializable {
         return applicableFees;
     }
 
+    @Override
     public void setApplicableFees(List<FeeDto> applicableFees) {
         this.applicableFees = applicableFees;
     }
@@ -448,6 +455,7 @@ public class LoanScheduleFormBean implements Serializable {
         return installmentAmounts;
     }
 
+    @Override
     public void setInstallmentAmounts(List<Number> installmentAmounts) {
         this.installmentAmounts = installmentAmounts;
     }
@@ -456,6 +464,7 @@ public class LoanScheduleFormBean implements Serializable {
         return loanPrincipal;
     }
 
+    @Override
     public void setLoanPrincipal(BigDecimal loanPrincipal) {
         this.loanPrincipal = loanPrincipal;
     }
@@ -464,6 +473,7 @@ public class LoanScheduleFormBean implements Serializable {
         return actualPaymentDates;
     }
 
+    @Override
     public void setActualPaymentDates(List<Date> actualPaymentDates) {
         this.actualPaymentDates = actualPaymentDates;
     }
@@ -472,6 +482,7 @@ public class LoanScheduleFormBean implements Serializable {
         return actualPaymentAmounts;
     }
 
+    @Override
     public void setActualPaymentAmounts(List<Number> actualPaymentAmounts) {
         this.actualPaymentAmounts = actualPaymentAmounts;
     }
@@ -480,6 +491,7 @@ public class LoanScheduleFormBean implements Serializable {
         return totalLoanInterest;
     }
 
+    @Override
     public void setTotalLoanInterest(BigDecimal totalLoanInterest) {
         this.totalLoanInterest = totalLoanInterest;
     }
@@ -488,6 +500,7 @@ public class LoanScheduleFormBean implements Serializable {
         return totalLoanFees;
     }
 
+    @Override
     public void setTotalLoanFees(BigDecimal totalLoanFees) {
         this.totalLoanFees = totalLoanFees;
     }
@@ -496,6 +509,7 @@ public class LoanScheduleFormBean implements Serializable {
         return repaymentInstallments;
     }
     
+    @Override
     public void setRepaymentInstallments(List<LoanCreationInstallmentDto> repaymentInstallments) {
         this.repaymentInstallments = repaymentInstallments;
     }
@@ -515,9 +529,5 @@ public class LoanScheduleFormBean implements Serializable {
     public void setLoanRepaymentPaidInstallmentsWithRunningBalance(
             List<LoanRepaymentRunningBalance> loanRepaymentPaidInstallmentsWithRunningBalance) {
         this.loanRepaymentPaidInstallmentsWithRunningBalance = loanRepaymentPaidInstallmentsWithRunningBalance;
-    }
-
-    public boolean isLoanWithBackdatedPayments() {
-        return loanWithBackdatedPayments;
     }
 }

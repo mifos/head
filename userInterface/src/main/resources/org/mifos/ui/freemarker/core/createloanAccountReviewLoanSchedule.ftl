@@ -51,8 +51,14 @@ $(function() {
 });
 </script>
 [/#if]
-                         
+
+
+[#if customerSearchFormBean.redoLoanAccount]
+<p class="red standout" style="margin-bottom: 5px;">[@spring.message "redoLoanAccount.wizard.highlightedNote" /]</p>
+<h1>[@spring.message "redoLoanAccount.wizard.title" /] - <span class="standout">[@spring.message "createLoanAccount.reviewInstallments.pageSubtitle" /]</span></h1>
+[#else]
 <h1>[@spring.message "createLoanAccount.wizard.title" /] - <span class="standout">[@spring.message "createLoanAccount.reviewInstallments.pageSubtitle" /]</span></h1>
+[/#if] 
 <p>[@spring.message "createLoanAccount.reviewInstallments.instructions" /]</p>
 <br/>
 
