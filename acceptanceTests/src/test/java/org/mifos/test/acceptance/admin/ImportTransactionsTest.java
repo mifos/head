@@ -28,6 +28,8 @@ import org.mifos.test.acceptance.framework.admin.ImportTransactionsConfirmationP
 import org.mifos.test.acceptance.framework.admin.ImportTransactionsPage;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
+import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -39,6 +41,8 @@ public class ImportTransactionsTest extends UiTestCaseBase {
 
     private NavigationHelper navigationHelper;
     private static final String EXCEL_IMPORT_TYPE = "Audi Bank (Excel 2007)";
+    @Autowired
+    private ApplicationDatabaseOperation applicationDatabaseOperation;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -47,9 +51,9 @@ public class ImportTransactionsTest extends UiTestCaseBase {
     public void setUp() throws Exception {
         super.setUp();
         navigationHelper = new NavigationHelper(selenium);
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation);
         DateTime targetTime = new DateTime(2009, 11, 7, 10, 0, 0, 0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(targetTime);
 
     }
 

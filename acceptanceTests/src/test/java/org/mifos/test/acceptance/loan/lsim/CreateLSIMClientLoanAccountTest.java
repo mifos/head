@@ -66,9 +66,9 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
         applicationDatabaseOperation.updateLSIM(1);
         loanTestHelper = new LoanTestHelper(selenium);
         loanProductTestHelper = new LoanProductTestHelper(selenium);
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation);
         DateTime targetTime = new DateTime(2010, 1, 22, 10, 55, 0, 0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(targetTime);
     }
 
     @AfterMethod(alwaysRun = true)
@@ -166,9 +166,9 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
 
     private void setTime(int year, int monthOfYear, int dayOfMonth) throws UnsupportedEncodingException {
 
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation);
         DateTime systemTime = new DateTime(year, monthOfYear, dayOfMonth, 12, 0, 0, 0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(systemTime);
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(systemTime);
     }
 
     // http://mifosforge.jira.com/browse/MIFOSTEST-121

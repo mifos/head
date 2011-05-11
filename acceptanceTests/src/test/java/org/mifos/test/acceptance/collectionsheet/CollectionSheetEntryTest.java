@@ -36,6 +36,7 @@ import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.testhelpers.CollectionSheetEntryTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
+import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
@@ -66,6 +67,8 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
     private DbUnitUtilities dbUnitUtilities;
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
+    @Autowired
+    private ApplicationDatabaseOperation applicationDatabaseOperation;
 
     private CollectionSheetEntryTestHelper sheetTestHelper;
 
@@ -75,16 +78,16 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation);
         DateTime targetTime = new DateTime(2009,2,23,2,0,0,0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(targetTime);
         sheetTestHelper = new CollectionSheetEntryTestHelper(selenium);
     }
 
     @AfterMethod
     public void logOut() {
         (new MifosPage(selenium)).logout();
-        new DateTimeUpdaterRemoteTestingService(selenium).resetDateTime();
+        new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation).resetDateTime();
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception

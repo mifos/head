@@ -28,6 +28,8 @@ import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalParameters;
 import org.mifos.test.acceptance.framework.loan.TransactionHistoryPage;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
+import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -38,14 +40,17 @@ import org.testng.annotations.Test;
 public class LoanAccountAdjustmentsTest extends UiTestCaseBase {
     private LoanTestHelper loanTestHelper;
 
+    @Autowired
+    private ApplicationDatabaseOperation applicationDatabaseOperation;
+    
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation);
         DateTime targetTime = new DateTime(2011, 3, 23, 15, 0, 0, 0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(targetTime);
         loanTestHelper = new LoanTestHelper(selenium);
     }
 

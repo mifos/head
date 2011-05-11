@@ -31,6 +31,8 @@ import org.mifos.test.acceptance.framework.loan.PaymentParameters;
 import org.mifos.test.acceptance.framework.loan.PerformanceHistoryAtributes;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
+import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -46,6 +48,9 @@ public class LoanAccountPerformanceHistoryTest extends UiTestCaseBase {
 
     private LoanTestHelper loanTestHelper;
 
+    @Autowired
+    private ApplicationDatabaseOperation applicationDatabaseOperation;
+    
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
@@ -55,9 +60,9 @@ public class LoanAccountPerformanceHistoryTest extends UiTestCaseBase {
 
         //appLauncher = new AppLauncher(selenium);
 
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation);
         DateTime targetTime = new DateTime(2011, 03, 04, 1, 0, 0, 0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(targetTime);
 
         loanTestHelper = new LoanTestHelper(selenium);
     }

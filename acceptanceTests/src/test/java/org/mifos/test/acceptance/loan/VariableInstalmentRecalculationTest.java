@@ -65,7 +65,7 @@ public class VariableInstalmentRecalculationTest extends UiTestCaseBase {
         navigationHelper = new NavigationHelper(selenium);
         loanProductTestHelper = new LoanProductTestHelper(selenium);
         systemDateTime = new DateTime(2010, 10, 11, 10, 0, 0, 0);
-        loanTestHelper.setApplicationTime(systemDateTime);
+        loanTestHelper.setApplicationTime(systemDateTime, applicationDatabaseOperation);
         TestDataSetup dataSetup = new TestDataSetup(selenium, applicationDatabaseOperation);
         dataSetup.createBranch(OfficeParameters.BRANCH_OFFICE, officeName, "Off");
         dataSetup.createUser(userLoginName, userName, officeName);

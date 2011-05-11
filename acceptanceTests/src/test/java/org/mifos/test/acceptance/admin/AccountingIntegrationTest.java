@@ -28,6 +28,8 @@ import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.admin.ViewAccountingExportsPage;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
+import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -38,6 +40,8 @@ import org.testng.annotations.Test;
 public class AccountingIntegrationTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;
+    @Autowired
+    private ApplicationDatabaseOperation applicationDatabaseOperation;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -46,9 +50,9 @@ public class AccountingIntegrationTest extends UiTestCaseBase {
     public void setUp() throws Exception {
         super.setUp();
         appLauncher = new AppLauncher(selenium);
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation);
         DateTime targetTime = new DateTime(2011,2,19,13,0,0,0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(targetTime);
     }
 
     @AfterMethod

@@ -32,6 +32,8 @@ import org.mifos.test.acceptance.framework.loan.RepayLoanParameters;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.loanproduct.LoanProductTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
+import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
@@ -50,6 +52,8 @@ public class LoanRepayTest extends UiTestCaseBase {
     private NavigationHelper navigationHelper;
     private LoanProductTestHelper loanProductTestHelper;
 
+    @Autowired
+    private ApplicationDatabaseOperation applicationDatabaseOperation;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -187,9 +191,9 @@ public class LoanRepayTest extends UiTestCaseBase {
     }
 
     private void setupTime() throws DatabaseUnitException, SQLException, IOException, URISyntaxException {
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation);
         DateTime targetTime = new DateTime(2011, 3, 13, 13, 0, 0, 0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(targetTime);
     }
 
 }

@@ -58,7 +58,7 @@ public class CashFlowTest extends UiTestCaseBase {
         systemDateTime = new DateTime(2010, 10, 11, 10, 0, 0, 0);
         loanProductTestHelper = new LoanProductTestHelper(selenium);
         loanTestHelper = new LoanTestHelper(selenium);
-        loanTestHelper.setApplicationTime(systemDateTime);
+        loanTestHelper.setApplicationTime(systemDateTime, applicationDatabaseOperation);
     }
 
     @AfterMethod

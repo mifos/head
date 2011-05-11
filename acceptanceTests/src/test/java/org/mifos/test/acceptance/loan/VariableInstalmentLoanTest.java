@@ -65,7 +65,7 @@ public class VariableInstalmentLoanTest extends UiTestCaseBase {
         navigationHelper = new NavigationHelper(selenium);
         systemDateTime = new DateTime(2010, 10, 11, 10, 0, 0, 0);
         loanTestHelper = new LoanTestHelper(selenium);
-        loanTestHelper.setApplicationTime(systemDateTime);
+        loanTestHelper.setApplicationTime(systemDateTime, applicationDatabaseOperation);
         TestDataSetup dataSetup = new TestDataSetup(selenium, applicationDatabaseOperation);
         feeTestHelper = new FeeTestHelper(dataSetup, new NavigationHelper(selenium));
     }

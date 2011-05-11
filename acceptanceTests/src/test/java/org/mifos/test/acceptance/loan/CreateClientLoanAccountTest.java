@@ -55,6 +55,7 @@ import org.mifos.test.acceptance.framework.testhelpers.QuestionGroupTestHelper;
 import org.mifos.test.acceptance.loanproduct.LoanProductTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
+import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
@@ -82,6 +83,9 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
     private DbUnitUtilities dbUnitUtilities;
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
+    @Autowired
+    private ApplicationDatabaseOperation applicationDatabaseOperation;
+    
     private Random random;
     public static final String DATE = "Date";
     public static final String SINGLE_SELECT = "Single Select";
@@ -180,9 +184,9 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
     @Test(enabled=true)
     public void newMonthlyClientLoanAccountWithMeetingOnSpecificDayOfMonth() throws Exception {
         //Given
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation);
         DateTime targetTime = new DateTime(2011, 2, 1, 13, 0, 0, 0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(targetTime);
 
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("Client - Mary Monthly");
@@ -202,9 +206,9 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
     // (1,4,'test' to (1,4,'test','2011-02-01'
     public void newMonthlyClientLoanAccountWithMeetingOnSameWeekAndWeekdayOfMonth() throws Exception {
         //Given
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation);
         DateTime targetTime = new DateTime(2011, 2, 1, 13, 0, 0, 0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(targetTime);
 
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("Client - Mia Monthly3rdFriday");
@@ -269,9 +273,9 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(enabled=true)
     public void createLoanAccountsWithRestrictedProductsMix() throws Exception {
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation);
         DateTime targetTime = new DateTime(2011, 1, 24, 15, 0, 0, 0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(targetTime);
 
         DefineNewLoanProductPage.SubmitFormParameters productParams = FormParametersHelper.getWeeklyLoanProductParameters();
         productParams.setOfferingName("product94");
@@ -379,8 +383,8 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
     }
 
     private void setAppDate(DateTime dateTime) throws UnsupportedEncodingException {
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        dateTimeUpdaterRemoteTestingService.setDateTime(dateTime);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation);
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(dateTime);
     }
 
     /**

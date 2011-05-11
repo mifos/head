@@ -26,6 +26,8 @@ import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountStatusParameters;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
+import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -35,6 +37,9 @@ import org.testng.annotations.Test;
 @Test(singleThreaded = true, groups = {"acceptance", "ui", "loan", "no_db_unit"})
 public class ClientLoanStatusHistoryTest extends UiTestCaseBase {
     private LoanTestHelper loanTestHelper;
+    
+    @Autowired
+    private ApplicationDatabaseOperation applicationDatabaseOperation;
 
     // acceptance_small_007 account id's:
     private static final String ACCOUNT_APPROVED_ID = "000100000000052";
@@ -46,9 +51,9 @@ public class ClientLoanStatusHistoryTest extends UiTestCaseBase {
     public void setUp() throws Exception {
         super.setUp();
 
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation);
         DateTime targetTime = new DateTime(2009, 7, 4, 12, 0, 0, 0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(targetTime);
 
         loanTestHelper = new LoanTestHelper(selenium);
     }

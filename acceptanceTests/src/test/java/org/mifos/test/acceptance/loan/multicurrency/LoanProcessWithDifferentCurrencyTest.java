@@ -41,6 +41,7 @@ import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
+import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
 import org.mifos.test.acceptance.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -68,6 +69,8 @@ public class LoanProcessWithDifferentCurrencyTest extends UiTestCaseBase {
     private DbUnitUtilities dbUnitUtilities;
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
+    @Autowired
+    private ApplicationDatabaseOperation applicationDatabaseOperation;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -96,9 +99,9 @@ public class LoanProcessWithDifferentCurrencyTest extends UiTestCaseBase {
     public void createLoanProductThenAccount() throws Exception {
         //Given
         propertiesHelper.setAdditionalCurrenciesCode("EUR,USD");
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation);
         DateTime targetTime = new DateTime(2011,2,17,13,0,0,0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(targetTime);
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "LoanProcessWithDifferentCurrencyTest_001_dbunit.xml", dataSource, selenium);
 
         //When

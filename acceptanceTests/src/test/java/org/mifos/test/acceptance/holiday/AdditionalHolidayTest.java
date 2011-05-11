@@ -78,7 +78,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
     public void setUp() throws Exception {
         super.setUp();
 
-        dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation);
         appLauncher = new AppLauncher(selenium);
         holidayTestHelper = new HolidayTestHelper(selenium);
         centerTestHelper = new CenterTestHelper(selenium);
@@ -100,7 +100,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
     @Test(enabled=false)
     public void createTwoWeeklyLoansInDifferentOffices() throws Exception {
         DateTime targetTime = new DateTime(2011, 3, 9, 0, 0, 0, 0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(targetTime);
 
         CreateLoanAccountSearchParameters searchParameters1 = new CreateLoanAccountSearchParameters();
         searchParameters1.setSearchString("Stu1233171716380 Client1233171716380");
@@ -126,7 +126,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
     //http://mifosforge.jira.com/browse/MIFOSTEST-280
     public void testBranchSpecificMoratorium() throws Exception {
         DateTime targetTime = new DateTime(2009, 3, 11, 0, 0, 0, 0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(targetTime);
         //Given
         CreateHolidaySubmitParameters param = getCreateHolidaySubmitParameters();
         //When / Then
@@ -151,7 +151,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
     // http://mifosforge.jira.com/browse/MIFOSTEST-281
     public void testHolidayAffectsFeeSchedule() throws Exception {
         DateTime targetTime = new DateTime(2009, 3, 11, 0, 0, 0, 0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(targetTime);
         // Given
 
         ChargeParameters chargeParameters = new ChargeParameters();
@@ -198,7 +198,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         new BatchJobHelper(selenium).runSomeBatchJobs(jobsToRun);
 
         targetTime = new DateTime(2009, 3, 17, 0, 0, 0, 0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(targetTime);
 
         navigationHelper.navigateToCenterViewDetailsPage(centerName).verifyAmountDue(centerAmount);
         navigationHelper.navigateToGroupViewDetailsPage(groupName).verifyAmountDue(groupAmount);

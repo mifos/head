@@ -47,7 +47,7 @@ public class NoDBUnitAdditionalHolidayTest extends UiTestCaseBase {
         super.setUp();
 
         dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(
-                selenium);
+                selenium, applicationDatabaseOperation);
         loanTestHelper = new LoanTestHelper(selenium);
         navigationHelper = new NavigationHelper(selenium);
         appLauncher = new AppLauncher(selenium);
@@ -65,7 +65,7 @@ public class NoDBUnitAdditionalHolidayTest extends UiTestCaseBase {
     @Test(enabled=false)
     public void createHolidayOnAMeetingWithRepaymentSameDay() throws Exception {
         //Given
-        dateTimeUpdaterRemoteTestingService.setDateTime(new DateTime(2041,1,1,13,0,0,0));
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(new DateTime(2041,1,1,13,0,0,0));
         // create loan paid on the 1st of every month and then create a holiday on 1st July
         LoanAccountPage page = createMonthlyLoan("2041");
         String loanId = page.getAccountId();

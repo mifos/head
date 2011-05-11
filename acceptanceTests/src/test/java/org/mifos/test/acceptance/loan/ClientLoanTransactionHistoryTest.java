@@ -29,6 +29,8 @@ import org.mifos.test.acceptance.framework.loan.EditLoanAccountStatusParameters;
 import org.mifos.test.acceptance.framework.loan.PaymentParameters;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
+import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -44,6 +46,9 @@ public class ClientLoanTransactionHistoryTest extends UiTestCaseBase {
     private LoanTestHelper loanTestHelper;
 
     private DateTime systemDateTime;
+    
+    @Autowired
+    private ApplicationDatabaseOperation applicationDatabaseOperation;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -52,9 +57,9 @@ public class ClientLoanTransactionHistoryTest extends UiTestCaseBase {
     public void setUp() throws Exception {
         super.setUp();
 
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation);
         systemDateTime = new DateTime(2011, 3, 4, 12, 0, 0, 0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(systemDateTime);
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(systemDateTime);
 
         loanTestHelper = new LoanTestHelper(selenium);
     }
@@ -87,7 +92,7 @@ public class ClientLoanTransactionHistoryTest extends UiTestCaseBase {
         loanTestHelper.verifyLastEntryInStatusHistory(loanId, EditLoanAccountStatusParameters.PENDING_APPROVAL, EditLoanAccountStatusParameters.APPROVED);
         //When
         loanTestHelper.disburseLoan(loanId, disburseParameters);
-        loanTestHelper.setApplicationTime(paymentDate);
+        loanTestHelper.setApplicationTime(paymentDate, applicationDatabaseOperation);
         loanTestHelper.applyPayment(loanId, paymentParameters);
         //Then
         loanTestHelper.verifyTransactionHistory(loanId, Double.valueOf(paymentParameters.getAmount()));

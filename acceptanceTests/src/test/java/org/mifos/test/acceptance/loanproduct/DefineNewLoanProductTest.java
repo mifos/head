@@ -43,6 +43,8 @@ import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.loan.QuestionGroupHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
+import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -56,6 +58,9 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
 
     private Random random;
     private QuestionGroupHelper questionGroupHelper;
+    
+    @Autowired
+    private ApplicationDatabaseOperation applicationDatabaseOperation;
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     @BeforeMethod
@@ -107,9 +112,9 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
     //http://mifosforge.jira.com/browse/MIFOSTEST-710
     public void verifyWaiveInterestForLoanAccount() throws Exception {
         //Given
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation);
         DateTime systemDateTime = new DateTime(2011, 3, 7, 12, 0, 0, 0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(systemDateTime);
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(systemDateTime);
         //When
         DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
         formParameters.setInterestWaiver(true);

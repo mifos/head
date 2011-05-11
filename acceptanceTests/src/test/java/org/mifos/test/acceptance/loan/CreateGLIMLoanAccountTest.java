@@ -86,9 +86,9 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
     public void checkGLIMLoanCreatedBySubmitForApproval() throws Exception {
         //Given
         applicationDatabaseOperation.updateGLIM(1);
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation);
         DateTime targetTime = new DateTime(2011, 03, 1, 13, 0, 0, 0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(targetTime);
         //When
         ClientsAndAccountsHomepage clientsAndAccountsHomepage = navigationHelper.navigateToClientsAndAccountsPage();
         CreateLoanAccountSearchPage createLoanAccountSearchPage = clientsAndAccountsHomepage.navigateToCreateLoanAccountUsingLeftMenu();
@@ -135,7 +135,7 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
         viewRepaymentSchedulePage.verifyRepaymentScheduleTableFees(6, 5, "100.0");
         viewRepaymentSchedulePage.navigateToLoanAccountPage();
         loanId = loanAccountPage.getAccountId();
-        dateTimeUpdaterRemoteTestingService.setDateTime(new LocalDate(2011, 3, 8).toDateTimeAtStartOfDay());
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(new LocalDate(2011, 3, 8).toDateTimeAtStartOfDay());
         EditLoanAccountStatusParameters statusParameters = new EditLoanAccountStatusParameters();
         statusParameters.setStatus(EditLoanAccountStatusParameters.APPROVED);
         statusParameters.setNote("Test");
@@ -146,7 +146,7 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
         params.setDisbursalDateYYYY("2011");
         params.setPaymentType(DisburseLoanParameters.CASH);
         loanTestHelper.disburseLoan(loanId, params);
-        dateTimeUpdaterRemoteTestingService.setDateTime(new LocalDate(2011, 3, 15).toDateTimeAtStartOfDay());
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(new LocalDate(2011, 3, 15).toDateTimeAtStartOfDay());
         EditLoanAccountInformationParameters editLoanAccountInformationParameters = new EditLoanAccountInformationParameters();
         editLoanAccountInformationParameters.setExternalID("ID2323ID");
         loanTestHelper.changeLoanAccountInformation(loanId, new CreateLoanAccountSubmitParameters(), editLoanAccountInformationParameters);
@@ -191,9 +191,9 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
     // http://mifosforge.jira.com/browse/MIFOSTEST-133
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void checkGLIMLoanCreatedBySaveForLater() throws Exception {
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation);
         DateTime targetTime = new DateTime(2011, 03, 1, 13, 0, 0, 0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(targetTime);
         loanTestHelper.createLoanAccountForMultipleClientsInGroup(false);
     }
 
@@ -201,9 +201,9 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyLoanAccountCreationPipelineWhenGlimIsEnabled() throws Exception {
         //Given
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation);
         DateTime targetTime = new DateTime(2009,7,11,13,0,0,0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(targetTime);
 
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("Stu1233266063395 Client1233266063395");

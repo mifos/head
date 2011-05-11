@@ -52,6 +52,7 @@ import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.framework.testhelpers.SavingsAccountHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
+import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
@@ -88,6 +89,9 @@ public class MpesaImportTest extends UiTestCaseBase {
 
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
+    
+    @Autowired
+    private ApplicationDatabaseOperation applicationDatabaseOperation;
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     private void loadPlugin() throws Exception{
@@ -204,9 +208,9 @@ public class MpesaImportTest extends UiTestCaseBase {
     @SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.SystemPrintln"})
     @Test(enabled = false)
     public void importTransactionsFromFileWithNoErrors() throws Exception {
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation);
         DateTime targetTime = new DateTime(2011,01,28,12,0,0,0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(targetTime);
 
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         ViewRolesPage viewRolesPage = adminPage.navigateToViewRolesPage();
@@ -353,9 +357,9 @@ public class MpesaImportTest extends UiTestCaseBase {
     @Test(enabled = false)
     public void importTheSameFiles() throws Exception {
         //Given
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation);
         DateTime targetTime = new DateTime(2011,01,28,12,0,0,0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(targetTime);
         String path = this.getClass().getResource("/mpesa/" + FILE_WITH_NO_ERRORS).toString();
         String dataset = "mpesa_export.xml";
 

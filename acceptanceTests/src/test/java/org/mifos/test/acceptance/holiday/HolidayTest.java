@@ -69,7 +69,7 @@ public class HolidayTest extends UiTestCaseBase {
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
-        dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation);
         navigationHelper = new NavigationHelper(selenium);
         loanTestHelper = new LoanTestHelper(selenium);
         holidayTestHelper = new HolidayTestHelper(selenium);
@@ -115,7 +115,7 @@ public class HolidayTest extends UiTestCaseBase {
     @Test(enabled = false)
     public void holidaysRepaymentRule() throws Exception {
         //Given
-            dateTimeUpdaterRemoteTestingService.setDateTime(new DateTime(2031,1,1,13,0,0,0));
+            dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(new DateTime(2031,1,1,13,0,0,0));
         //When
         createHolidayForInstallments(getHolidayParameters("2031"));
 
@@ -131,7 +131,7 @@ public class HolidayTest extends UiTestCaseBase {
     @Test(enabled = false)
     public void holidaysRepaymentRuleSameDay() throws Exception {
         //Given
-        dateTimeUpdaterRemoteTestingService.setDateTime(new DateTime(2032,1,1,13,0,0,0));
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(new DateTime(2032,1,1,13,0,0,0));
         //When
         CreateHolidaySubmitParameters param = getHolidayParameters("2032");
         param.setRepaymentRule(CreateHolidaySubmitParameters.SAME_DAY);
@@ -149,7 +149,7 @@ public class HolidayTest extends UiTestCaseBase {
     @Test(enabled = false)
     public void holidaysRepaymentRuleNextWorkingDay() throws Exception {
         //Given
-        dateTimeUpdaterRemoteTestingService.setDateTime(new DateTime(2033,1,1,13,0,0,0));
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(new DateTime(2033,1,1,13,0,0,0));
         //When
         CreateHolidaySubmitParameters param = getHolidayParameters("2033");
         param.setRepaymentRule(CreateHolidaySubmitParameters.NEXT_WORKING_DAY);
@@ -168,7 +168,7 @@ public class HolidayTest extends UiTestCaseBase {
     @Test(enabled = false)
     public void holidaysRepaymentRuleWithBatchJobs() throws Exception {
         //Given
-        dateTimeUpdaterRemoteTestingService.setDateTime(new DateTime(2034,1,1,13,0,0,0));
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(new DateTime(2034,1,1,13,0,0,0));
         //When
         CreateLoanAccountSearchParameters searchParameters=setSearchParameters();
         CreateLoanAccountSubmitParameters submitAccountParameters = setSubmitParameters();
@@ -192,7 +192,7 @@ public class HolidayTest extends UiTestCaseBase {
     @Test(enabled = false)
     public void holidaysRepaymentRuleSameDayWithBatchJobs() throws Exception {
         //Given
-        dateTimeUpdaterRemoteTestingService.setDateTime(new DateTime(2035,1,1,13,0,0,0));
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(new DateTime(2035,1,1,13,0,0,0));
         //When
         CreateLoanAccountSearchParameters searchParameters=setSearchParameters();
         CreateLoanAccountSubmitParameters submitAccountParameters = setSubmitParameters();
@@ -217,7 +217,7 @@ public class HolidayTest extends UiTestCaseBase {
     @Test(enabled = false)
     public void holidaysRepaymentRuleNextWorkingDayWithBatchJobs() throws Exception {
         //Given
-        dateTimeUpdaterRemoteTestingService.setDateTime(new DateTime(2036,1,1,13,0,0,0));
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(new DateTime(2036,1,1,13,0,0,0));
         //When
         CreateLoanAccountSearchParameters searchParameters=setSearchParameters();
         CreateLoanAccountSubmitParameters submitAccountParameters = setSubmitParameters();
@@ -242,7 +242,7 @@ public class HolidayTest extends UiTestCaseBase {
     @Test(enabled = false)
     public void definedAndViewHoliday() throws Exception {
         //Given
-        dateTimeUpdaterRemoteTestingService.setDateTime(new DateTime(2037,1,1,13,0,0,0));
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(new DateTime(2037,1,1,13,0,0,0));
         //When / Then
         CreateHolidaySubmitParameters params = getHolidayParameters("2037");
         params.setRepaymentRule(CreateHolidaySubmitParameters.SAME_DAY);

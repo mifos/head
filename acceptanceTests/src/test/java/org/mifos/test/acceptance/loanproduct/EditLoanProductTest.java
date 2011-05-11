@@ -132,9 +132,9 @@ public class EditLoanProductTest extends UiTestCaseBase {
     //http://mifosforge.jira.com/browse/MIFOSTEST-312
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")// one of the dependent methods throws Exception
     public void editExistingLoanAndSavingsProduct() throws Exception {
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation);
         DateTime targetTime = new DateTime(2011,2,02,13,0,0,0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(targetTime);
 
         EditLoanProductPage editLoanProductPage = createNewLoanProductAndNavigateToEditLoanPage();
         editLoanProductPage.verifyPage();

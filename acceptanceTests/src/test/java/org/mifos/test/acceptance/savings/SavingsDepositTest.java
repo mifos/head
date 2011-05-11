@@ -34,6 +34,7 @@ import org.mifos.test.acceptance.framework.savings.DepositWithdrawalSavingsParam
 import org.mifos.test.acceptance.framework.testhelpers.SavingsAccountHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
+import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
@@ -56,6 +57,9 @@ public class SavingsDepositTest extends UiTestCaseBase {
 
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
+    
+    @Autowired
+    private ApplicationDatabaseOperation applicationDatabaseOperation;
 
     private static final String startDataSet = "acceptance_small_008_dbunit.xml";
 
@@ -66,9 +70,9 @@ public class SavingsDepositTest extends UiTestCaseBase {
     public void setUp() throws Exception {
         super.setUp();
 
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation);
         DateTime targetTime = new DateTime(2009,9,9,8,0,0,0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(targetTime);
         savingsAccountHelper = new SavingsAccountHelper(selenium);
 
     }

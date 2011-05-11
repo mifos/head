@@ -29,6 +29,8 @@ import org.mifos.test.acceptance.framework.loan.UndoLoanDisbursalSearchPage;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
+import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -41,6 +43,9 @@ import java.io.UnsupportedEncodingException;
 public class UndoLoanDisbursalTest extends UiTestCaseBase {
     private LoanTestHelper loanTestHelper;
 
+    @Autowired
+    private ApplicationDatabaseOperation applicationDatabaseOperation;
+    
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     @BeforeMethod
@@ -74,9 +79,9 @@ public class UndoLoanDisbursalTest extends UiTestCaseBase {
     }
 
     private void setTime(int year, int monthOfYear, int dayOfMonth) throws UnsupportedEncodingException {
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation);
         DateTime targetTime = new DateTime(year, monthOfYear, dayOfMonth, 14, 0, 0, 0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(targetTime);
     }
 
     /**

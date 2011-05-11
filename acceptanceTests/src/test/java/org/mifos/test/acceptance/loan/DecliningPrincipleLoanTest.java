@@ -80,7 +80,7 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
         loanProductTestHelper = new LoanProductTestHelper(selenium);
         systemDateTime = new DateTime(2010, 10, 11, 10, 0, 0, 0);
         TestDataSetup dataSetup = new TestDataSetup(selenium, applicationDatabaseOperation);
-        loanTestHelper.setApplicationTime(systemDateTime);
+        loanTestHelper.setApplicationTime(systemDateTime, applicationDatabaseOperation);
         dataSetup.addDecliningPrincipalBalance();
     }
 
@@ -152,9 +152,9 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
     }
 
     private void verifyRepaymentAndAdjustment(DateTime repaymentDate, DateTime adjustmentDate, String loanAmount, String[][] repaymentAccountSummery, String[][] adjustedAccountSummery, String loanStatus) throws UnsupportedEncodingException {
-        loanTestHelper.repayLoan(repaymentDate).
+        loanTestHelper.repayLoan(repaymentDate, applicationDatabaseOperation).
                 verifyLoanStatus(LOAN_CLOSED).verifyAccountSummary(repaymentAccountSummery);
-        loanTestHelper.setApplicationTime(adjustmentDate).navigateBack();
+        loanTestHelper.setApplicationTime(adjustmentDate, applicationDatabaseOperation).navigateBack();
         new LoanAccountPage(selenium).navigateToApplyAdjustment().
                 verifyRepayAdjustment(loanAmount).verifyLoanStatus(loanStatus).verifyAccountSummary(adjustedAccountSummery);
     }
@@ -221,7 +221,7 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
     }
 
     private String makePaymentAndVerifyPayment(String accountId, DateTime paymentDate, String paymentAmount, String[][] expectedSchedule) throws UnsupportedEncodingException {
-        loanTestHelper.makePayment(paymentDate, paymentAmount).
+        loanTestHelper.makePayment(paymentDate, paymentAmount, applicationDatabaseOperation).
                 navigateToRepaymentSchedulePage().
                 verifyScheduleTable(expectedSchedule).navigateToLoanAccountPage();
         return accountId;
@@ -229,7 +229,7 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
 
     private LoanAccountPage createAndDisburseLoanAccount(int noOfInstallments, DateTime disbursalDate, String loanProductName) throws UnsupportedEncodingException {
         DisburseLoanParameters disburseLoanParameters = loanTestHelper.setDisbursalParams(disbursalDate.minusDays(1));
-        loanTestHelper.setApplicationTime(systemDateTime);
+        loanTestHelper.setApplicationTime(systemDateTime, applicationDatabaseOperation);
         navigationHelper.navigateToHomePage();
         return loanTestHelper.
                 navigateToCreateLoanAccountEntryPageWithoutLogout(clientName, loanProductName).

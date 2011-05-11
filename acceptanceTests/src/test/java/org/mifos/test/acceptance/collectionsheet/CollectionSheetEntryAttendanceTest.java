@@ -31,6 +31,7 @@ import org.mifos.test.acceptance.framework.testhelpers.CollectionSheetEntryTestH
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
+import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
@@ -56,15 +57,17 @@ public class CollectionSheetEntryAttendanceTest extends UiTestCaseBase {
     private DbUnitUtilities dbUnitUtilities;
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
+    @Autowired
+    private ApplicationDatabaseOperation applicationDatabaseOperation;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @BeforeMethod(alwaysRun = true)
     public void setUp() throws Exception {
         super.setUp();
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation);
         DateTime targetTime = new DateTime(2009,7,23,1,0,0,0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(targetTime);
 
         collectionSheetEntryTestHelper = new CollectionSheetEntryTestHelper(selenium);
         navigationHelper = new NavigationHelper(selenium);

@@ -30,6 +30,8 @@ import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntryS
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntrySelectPage.SubmitFormParameters;
 import org.mifos.test.acceptance.framework.testhelpers.CollectionSheetEntryTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
+import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -44,6 +46,9 @@ public class CollectionSheetEntrySimpleTest extends UiTestCaseBase {
 
     private static final String VALID_RECEIPT_DAY = "4";
     private static final String VALID_TRANSACTION_DAY = "7";
+    
+    @Autowired
+    private ApplicationDatabaseOperation applicationDatabaseOperation;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
@@ -56,7 +61,7 @@ public class CollectionSheetEntrySimpleTest extends UiTestCaseBase {
     @AfterMethod
     public void logOut() {
         (new MifosPage(selenium)).logout();
-        new DateTimeUpdaterRemoteTestingService(selenium).resetDateTime();
+        new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation).resetDateTime();
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
@@ -124,9 +129,9 @@ public class CollectionSheetEntrySimpleTest extends UiTestCaseBase {
     }
 
     private void setSystemDate() throws UnsupportedEncodingException {
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation);
         DateTime targetTime = new DateTime(2009, 2, 23, 2, 0, 0, 0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(targetTime);
     }
 
 }

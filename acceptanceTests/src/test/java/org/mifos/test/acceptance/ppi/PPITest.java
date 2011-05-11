@@ -20,6 +20,7 @@ import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.framework.testhelpers.QuestionGroupTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
+import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.BeforeMethod;
@@ -34,6 +35,8 @@ public class PPITest extends UiTestCaseBase {
     private InitializeApplicationRemoteTestingService initRemote;
     @Autowired
     private DbUnitUtilities dbUnitUtilities;
+    @Autowired
+    private ApplicationDatabaseOperation applicationDatabaseOperation;
 
     private QuestionGroupTestHelper questionGroupTestHelper;
     private ClientTestHelper clientTestHelper;
@@ -44,9 +47,9 @@ public class PPITest extends UiTestCaseBase {
         super.setUp();
         questionGroupTestHelper= new QuestionGroupTestHelper(selenium);
         clientTestHelper = new ClientTestHelper(selenium);
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation);
         DateTime targetTime = new DateTime(2009,11,7,10,0,0,0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(targetTime);
     }
 
   //http://mifosforge.jira.com/browse/MIFOSTEST-147

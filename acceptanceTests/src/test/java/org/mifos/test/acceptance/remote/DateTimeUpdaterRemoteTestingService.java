@@ -28,6 +28,7 @@ import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 import org.mifos.test.acceptance.framework.TimeMachinePage;
+import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -35,12 +36,14 @@ public class DateTimeUpdaterRemoteTestingService {
 
     private static final String MAX_WAIT_FOR_PAGE_TO_LOAD_IN_MILLISECONDS = "30000";
     protected Selenium selenium;
+    private ApplicationDatabaseOperation applicationDatabaseOperation;
 
-    public DateTimeUpdaterRemoteTestingService(Selenium selenium) {
+    public DateTimeUpdaterRemoteTestingService(Selenium selenium, ApplicationDatabaseOperation applicationDatabaseOperation) {
         this.selenium = selenium;
+        this.applicationDatabaseOperation = applicationDatabaseOperation;
     }
 
-    public TimeMachinePage setDateTime(DateTime dateTime) throws UnsupportedEncodingException {
+    public TimeMachinePage setDateTimeWithMifosLastLoginUpdate(DateTime dateTime) throws UnsupportedEncodingException {
         DateTimeZone defaultDateTimeZone = null;
         return setDateTime(dateTime, defaultDateTimeZone);
     }

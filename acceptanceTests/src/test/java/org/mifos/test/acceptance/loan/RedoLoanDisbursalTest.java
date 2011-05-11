@@ -66,9 +66,9 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation);
         DateTime targetTime = new DateTime(2012, 02, 22, 15, 0, 0, 0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(targetTime);
         loanTestHelper = new LoanTestHelper(selenium);
     }
 
@@ -199,7 +199,7 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
         DateTime disbursalDate = systemDateTime;
         RedoLoanDisbursalParameters redoLoanDisbursalParameters = setLoanParams(disbursalDate, interest, noOfInstallments, loanAmount);
         
-        loanTestHelper.setApplicationTime(systemDateTime.plusDays(14));
+        loanTestHelper.setApplicationTime(systemDateTime.plusDays(14), applicationDatabaseOperation);
         
         RedoLoanDisbursalEntryPage redoLoanDisbursalEntryPage = navigateToRedoLoanPage();
         redoLoanDisbursalEntryPage.enterDisbursementDate(disbursalDate);
@@ -231,7 +231,7 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
         applicationDatabaseOperation.updateLSIM(1);
         String[] fees = getInvalidFees();
 
-        loanTestHelper.setApplicationTime(systemDateTime.plusDays(14));
+        loanTestHelper.setApplicationTime(systemDateTime.plusDays(14), applicationDatabaseOperation);
         RedoLoanDisbursalEntryPage redoLoanDisbursalEntryPage = navigateToRedoLoanPage().selectFee(new String[]{fees[0]});
         
         int interest = 24;
@@ -275,7 +275,7 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
         loanProductTestHelper = new LoanProductTestHelper(selenium);
         systemDateTime = new DateTime(2010, 10, 11, 10, 0, 0, 0);
         TestDataSetup dataSetup = new TestDataSetup(selenium, applicationDatabaseOperation);
-        loanTestHelper.setApplicationTime(systemDateTime);
+        loanTestHelper.setApplicationTime(systemDateTime, applicationDatabaseOperation);
         dataSetup.addDecliningPrincipalBalance();
     }
 

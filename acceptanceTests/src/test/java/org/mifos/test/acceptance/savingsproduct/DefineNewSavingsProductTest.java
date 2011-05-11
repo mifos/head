@@ -30,6 +30,8 @@ import org.mifos.test.acceptance.framework.savingsproduct.SavingsProductParamete
 import org.mifos.test.acceptance.framework.testhelpers.SavingsAccountHelper;
 import org.mifos.test.acceptance.framework.testhelpers.SavingsProductHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
+import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -43,6 +45,9 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
     private SavingsProductHelper savingsProductHelper;
 
     private SavingsAccountHelper savingsAccountHelper;
+    
+    @Autowired
+    private ApplicationDatabaseOperation applicationDatabaseOperation;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
@@ -50,7 +55,7 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
     public void setUp() throws Exception {
         super.setUp();
 
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation);
         dateTimeUpdaterRemoteTestingService.resetDateTime();
 
         savingsProductHelper = new SavingsProductHelper(selenium);

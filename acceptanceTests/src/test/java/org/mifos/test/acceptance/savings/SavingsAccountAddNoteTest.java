@@ -27,6 +27,8 @@ import org.mifos.test.acceptance.framework.loan.AccountNotesPage;
 import org.mifos.test.acceptance.framework.savings.SavingsAccountDetailPage;
 import org.mifos.test.acceptance.framework.testhelpers.SavingsAccountHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
+import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -39,15 +41,18 @@ public class SavingsAccountAddNoteTest extends UiTestCaseBase {
     private SavingsAccountHelper savingsAccountHelper;
     private static final String TEST_ACCOUNT = "000100000000002";
     private static final String TEST_ACCOUNT_NOTE = "Acceptance Test note for SavingsAccountAddNoteTest";
+    
+    @Autowired
+    private ApplicationDatabaseOperation applicationDatabaseOperation;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation);
         DateTime targetTime = new DateTime(2009, 9, 9, 8, 0, 0, 0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(targetTime);
         savingsAccountHelper = new SavingsAccountHelper(selenium);
     }
 

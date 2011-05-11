@@ -31,6 +31,8 @@ import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.framework.testhelpers.QuestionGroupTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
+import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -43,16 +45,18 @@ public class AttachSurveyLinkTest extends UiTestCaseBase {
     private NavigationHelper navigationHelper;
     private QuestionGroupTestHelper questionGroupTestHelper;
 
-
+    @Autowired
+    private ApplicationDatabaseOperation applicationDatabaseOperation;
+    
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation);
         DateTime targetTime = new DateTime(2009, 7, 11, 14, 01, 0, 0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(targetTime);
         navigationHelper = new NavigationHelper(selenium);
         questionGroupTestHelper = new QuestionGroupTestHelper(selenium);
         questionGroupTestHelper.markQuestionGroupAsActive(QG_FOR_VIEW_CLIENT_CENTRE_GROUP_LOAN);

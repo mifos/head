@@ -85,6 +85,7 @@ import org.mifos.test.acceptance.framework.questionnaire.QuestionResponsePage;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
 import org.mifos.test.acceptance.loanproduct.LoanProductTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
+import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
 import org.springframework.format.number.NumberFormatter;
 import org.testng.Assert;
 
@@ -571,9 +572,9 @@ public class LoanTestHelper {
     }
 
 
-    public AbstractPage setApplicationTime(DateTime systemDateTime) throws UnsupportedEncodingException {
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        dateTimeUpdaterRemoteTestingService.setDateTime(systemDateTime);
+    public AbstractPage setApplicationTime(DateTime systemDateTime, ApplicationDatabaseOperation applicationDatabaseOperation) throws UnsupportedEncodingException {
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation);
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(systemDateTime);
         return new AbstractPage(selenium);
     }
 
@@ -849,17 +850,17 @@ public class LoanTestHelper {
         return repayLoanParameters;
     }
 
-    public LoanAccountPage repayLoan(DateTime repaymentDate) throws UnsupportedEncodingException {
-        setApplicationTime(repaymentDate).navigateBack();
+    public LoanAccountPage repayLoan(DateTime repaymentDate, ApplicationDatabaseOperation applicationDatabaseOperation) throws UnsupportedEncodingException {
+        setApplicationTime(repaymentDate, applicationDatabaseOperation).navigateBack();
         RepayLoanParameters params = setRepaymentParameters();
         return new LoanAccountPage(selenium).navigateToRepayLoan().
                 submitAndNavigateToRepayLoanConfirmationPage(params).
                 submitAndNavigateToLoanAccountDetailsPage();
     }
 
-    public LoanAccountPage  makePayment(DateTime paymentDate, String paymentAmount) throws UnsupportedEncodingException {
+    public LoanAccountPage  makePayment(DateTime paymentDate, String paymentAmount, ApplicationDatabaseOperation applicationDatabaseOperation) throws UnsupportedEncodingException {
         PaymentParameters paymentParameters =setPaymentParams(paymentAmount, paymentDate);
-        setApplicationTime(paymentDate).navigateBack();
+        setApplicationTime(paymentDate, applicationDatabaseOperation).navigateBack();
         LoanAccountPage loanAccountPage = new LoanAccountPage(selenium).navigateToApplyPayment().
                 submitAndNavigateToApplyPaymentConfirmationPage(paymentParameters).
                 submitAndNavigateToLoanAccountDetailsPage();
@@ -869,8 +870,8 @@ public class LoanTestHelper {
         return loanAccountPage;
     }
 
-    public void disburseLoan(DateTime disbursalDate) throws UnsupportedEncodingException {
-        setApplicationTime(disbursalDate).navigateBack();
+    public void disburseLoan(DateTime disbursalDate, ApplicationDatabaseOperation applicationDatabaseOperation) throws UnsupportedEncodingException {
+        setApplicationTime(disbursalDate, applicationDatabaseOperation).navigateBack();
         DisburseLoanParameters disburseLoanParameters = setDisbursalParams(disbursalDate);
         LoanAccountPage loanAccountPage = new LoanAccountPage(selenium).navigateToDisburseLoan().
                 submitAndNavigateToDisburseLoanConfirmationPage(disburseLoanParameters).

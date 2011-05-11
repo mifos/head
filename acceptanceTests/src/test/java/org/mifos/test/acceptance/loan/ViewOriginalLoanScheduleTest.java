@@ -56,20 +56,20 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
         super.setUp();
         if (isSetUpDone) {
             systemDateTime = new DateTime(2011, 10, 10, 10, 0, 0, 0);
-            loanTestHelper.setApplicationTime(systemDateTime);
+            loanTestHelper.setApplicationTime(systemDateTime, applicationDatabaseOperation);
             return;
         }
         loanProductTestHelper = new LoanProductTestHelper(selenium);
         navigationHelper = new NavigationHelper(selenium);
         systemDateTime = new DateTime(2010, 10, 11, 10, 0, 0, 0);
         loanTestHelper = new LoanTestHelper(selenium);
-        loanTestHelper.setApplicationTime(systemDateTime);
+        loanTestHelper.setApplicationTime(systemDateTime, applicationDatabaseOperation);
         TestDataSetup dataSetup = new TestDataSetup(selenium, applicationDatabaseOperation);
         dataSetup.createBranch(OfficeParameters.BRANCH_OFFICE, officeName, "Off");
         dataSetup.createUser(userLoginName, userName, officeName);
         dataSetup.createClient(clientName, officeName, userName);
         systemDateTime = new DateTime(2011, 10, 10, 10, 0, 0, 0);
-        loanTestHelper.setApplicationTime(systemDateTime);
+        loanTestHelper.setApplicationTime(systemDateTime, applicationDatabaseOperation);
         createHolidays(dataSetup);
         new FeeTestHelper(dataSetup, new NavigationHelper(selenium)).createPeriodicFee(feeName, FeesCreatePage.SubmitFormParameters.LOAN, FeesCreatePage.SubmitFormParameters.WEEKLY_FEE_RECURRENCE, 1, 100);
         isSetUpDone=true;
@@ -96,7 +96,7 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
         loanTestHelper.applyCharge(ChargeParameters.MISC_FEES, "10");
         loanTestHelper.applyCharge(ChargeParameters.MISC_PENALTY, "10");
         verifyOriginalSchedule(tableOnOriginalInstallment);
-        loanTestHelper.makePayment(systemDateTime.plusDays(5), "100");
+        loanTestHelper.makePayment(systemDateTime.plusDays(5), "100", applicationDatabaseOperation);
         verifyOriginalSchedule(tableOnOriginalInstallment);
     }
 
@@ -119,14 +119,14 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
         loanTestHelper.applyCharge(ChargeParameters.MISC_FEES, "10");
         loanTestHelper.applyCharge(ChargeParameters.MISC_PENALTY, "10");
         loanTestHelper.approveLoan();
-        loanTestHelper.disburseLoan(systemDateTime);
+        loanTestHelper.disburseLoan(systemDateTime, applicationDatabaseOperation);
         
         String[][] tableOnOriginalInstallment = OriginalScheduleData.VARIABLE_LOAN_EARLY_DISBURSAL_SCHEDULE;
         verifyOriginalSchedule(tableOnOriginalInstallment);
         loanTestHelper.applyCharge(ChargeParameters.MISC_FEES, "10");
         loanTestHelper.applyCharge(ChargeParameters.MISC_PENALTY, "10");
         verifyOriginalSchedule(tableOnOriginalInstallment);
-        loanTestHelper.makePayment(systemDateTime.plusDays(5), "100");
+        loanTestHelper.makePayment(systemDateTime.plusDays(5), "100", applicationDatabaseOperation);
         verifyOriginalSchedule(tableOnOriginalInstallment);
         applicationDatabaseOperation.updateLSIM(0);
     }
@@ -147,7 +147,7 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
         loanTestHelper.applyCharge(ChargeParameters.MISC_FEES, "10");
         loanTestHelper.applyCharge(ChargeParameters.MISC_PENALTY, "10");
         verifyOriginalSchedule(tableOnOriginalInstallment);
-        loanTestHelper.makePayment(systemDateTime.plusDays(15), "100");
+        loanTestHelper.makePayment(systemDateTime.plusDays(15), "100", applicationDatabaseOperation);
         verifyOriginalSchedule(tableOnOriginalInstallment);
         applicationDatabaseOperation.updateLSIM(0);
     }
@@ -172,7 +172,7 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
         loanTestHelper.applyCharge(ChargeParameters.MISC_FEES, "10");
         loanTestHelper.applyCharge(ChargeParameters.MISC_PENALTY, "10");
         loanTestHelper.approveLoan();
-        loanTestHelper.disburseLoan(systemDateTime);
+        loanTestHelper.disburseLoan(systemDateTime, applicationDatabaseOperation);
         
         String[][] tableOnOriginalInstallment = OriginalScheduleData.DEC_BAL_INT_RECALC_LOAN_EARLY_DISBURSAL_SCHEDULE_ON;
         verifyOriginalSchedule(tableOnOriginalInstallment);
@@ -180,7 +180,7 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
         loanTestHelper.applyCharge(ChargeParameters.MISC_FEES, "10");
         loanTestHelper.applyCharge(ChargeParameters.MISC_PENALTY, "10");
         verifyOriginalSchedule(tableOnOriginalInstallment);
-        loanTestHelper.makePayment(systemDateTime.plusDays(15), "100");
+        loanTestHelper.makePayment(systemDateTime.plusDays(15), "100", applicationDatabaseOperation);
         verifyOriginalSchedule(tableOnOriginalInstallment);
 //        loanTestHelper.applyCharge(ChargeParameters.MISC_FEES, "10");
 //        loanTestHelper.applyCharge(ChargeParameters.MISC_PENALTY, "10");
@@ -200,7 +200,7 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
         loanTestHelper.applyCharge(ChargeParameters.MISC_FEES, "10");
         loanTestHelper.applyCharge(ChargeParameters.MISC_PENALTY, "10");
         verifyOriginalSchedule(tableOnOriginalInstallment);
-        loanTestHelper.makePayment(systemDateTime.plusDays(15), "100");
+        loanTestHelper.makePayment(systemDateTime.plusDays(15), "100", applicationDatabaseOperation);
         verifyOriginalSchedule(tableOnOriginalInstallment);
         
 //        loanTestHelper.applyCharge(ChargeParameters.MISC_FEES, "10");
@@ -221,7 +221,7 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
         loanTestHelper.applyCharge(ChargeParameters.MISC_FEES, "10");
         loanTestHelper.applyCharge(ChargeParameters.MISC_PENALTY, "10");
         verifyOriginalSchedule(tableOnOriginalInstallment);
-        loanTestHelper.makePayment(systemDateTime.plusDays(15), "100");
+        loanTestHelper.makePayment(systemDateTime.plusDays(15), "100", applicationDatabaseOperation);
         verifyOriginalSchedule(tableOnOriginalInstallment);
 //        loanTestHelper.applyCharge(ChargeParameters.MISC_FEES, "10");
 //        loanTestHelper.applyCharge(ChargeParameters.MISC_PENALTY, "10");
@@ -240,7 +240,7 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
         loanTestHelper.applyCharge(ChargeParameters.MISC_FEES, "10");
         loanTestHelper.applyCharge(ChargeParameters.MISC_PENALTY, "10");
         verifyOriginalSchedule(tableOnOriginalInstallment);
-        loanTestHelper.makePayment(systemDateTime.plusDays(15), "100");
+        loanTestHelper.makePayment(systemDateTime.plusDays(15), "100", applicationDatabaseOperation);
         verifyOriginalSchedule(tableOnOriginalInstallment);
         
 //        loanTestHelper.applyCharge(ChargeParameters.MISC_FEES, "10");
@@ -262,7 +262,7 @@ public class ViewOriginalLoanScheduleTest extends UiTestCaseBase {
         loanTestHelper.applyCharge(ChargeParameters.MISC_FEES, "10");
         loanTestHelper.applyCharge(ChargeParameters.MISC_PENALTY, "10");
         loanTestHelper.approveLoan();
-        loanTestHelper.disburseLoan(actualDisbursalDate);
+        loanTestHelper.disburseLoan(actualDisbursalDate, applicationDatabaseOperation);
     }
 
     private LoanAccountPage verifyOriginalSchedule(String[][] tableOnOriginalInstallment) {

@@ -91,9 +91,9 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
     @Test(enabled=false)
     public void newWeeklyGroupLoanAccount() throws Exception {
         //Given
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation);
         DateTime targetTime = new DateTime(2011, 2, 18, 1, 0, 0, 0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(targetTime);
         //When
         ClientsAndAccountsHomepage clientsAndAccountsHomepage = navigationHelper.navigateToClientsAndAccountsPage();
         CreateLoanAccountSearchPage createLoanAccountSearchPage = clientsAndAccountsHomepage.navigateToCreateLoanAccountUsingLeftMenu();
@@ -250,8 +250,8 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
     }
         
     private void setAppDate(DateTime dateTime) throws UnsupportedEncodingException {
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
-        dateTimeUpdaterRemoteTestingService.setDateTime(dateTime);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation);
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(dateTime);
     }
        
     private void verifyDisbursalDateOnLoanEntryPage() {
@@ -268,9 +268,9 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
     @SuppressWarnings({"PMD.SignatureDeclareThrowsException"})
     public void newMonthlyGroupLoanAccountWithMeetingOnSpecificDayOfMonth() throws Exception {
         //Given
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation);
         DateTime targetTime = new DateTime(2010, 8, 13, 1, 0, 0, 0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(targetTime);
         //When
         homePage = loginSuccessfully();
 

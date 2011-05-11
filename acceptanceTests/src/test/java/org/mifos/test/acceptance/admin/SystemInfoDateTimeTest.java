@@ -28,6 +28,8 @@ import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.SystemInfoPage;
 import org.mifos.test.acceptance.framework.testhelpers.AdminTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
+import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -41,6 +43,9 @@ import java.io.UnsupportedEncodingException;
 public class SystemInfoDateTimeTest extends UiTestCaseBase {
 
     private AdminTestHelper adminTestHelper;
+    
+    @Autowired
+    private ApplicationDatabaseOperation applicationDatabaseOperation;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -49,13 +54,13 @@ public class SystemInfoDateTimeTest extends UiTestCaseBase {
     public void setUp() throws Exception {
         super.setUp();
         adminTestHelper = new AdminTestHelper(selenium);
-        new DateTimeUpdaterRemoteTestingService(selenium).resetDateTime();
+        new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation).resetDateTime();
     }
 
     @AfterMethod
     public void tearDown() {
         (new MifosPage(selenium)).logout();
-        new DateTimeUpdaterRemoteTestingService(selenium).resetDateTime();
+        new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation).resetDateTime();
     }
 
     /**
@@ -67,9 +72,9 @@ public class SystemInfoDateTimeTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyDateTimeWithTimeMachineModification() throws Exception {
         DateTime targetTime = new DateTime(2008,1,1,0,0,0,0);
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation);
 
-        TimeMachinePage timeMachinePage = dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        TimeMachinePage timeMachinePage = dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(targetTime);
         timeMachinePage.verifySuccess(targetTime);
 
         SystemInfoPage systemInfoPage = adminTestHelper.navigateToSystemInfoPage();
@@ -79,7 +84,7 @@ public class SystemInfoDateTimeTest extends UiTestCaseBase {
     public void verifyDateTimeAndTimeZone() throws UnsupportedEncodingException {
         DateTimeZone dateTimeZone = DateTimeZone.forOffsetHours(1);
         DateTime targetTime = new DateTime(2008,1,1,0,0,0,0);
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime, dateTimeZone);
 
         SystemInfoPage systemInfoPage = adminTestHelper.navigateToSystemInfoPage();

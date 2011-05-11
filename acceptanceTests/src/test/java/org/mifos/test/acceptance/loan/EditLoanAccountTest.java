@@ -29,6 +29,8 @@ import org.mifos.test.acceptance.framework.loan.EditPreviewLoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
+import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -38,14 +40,17 @@ import org.testng.annotations.Test;
 @Test(singleThreaded = true, groups = {"loan", "acceptance", "ui", "no_db_unit"})
 public class EditLoanAccountTest extends UiTestCaseBase {
 
+    @Autowired
+    private ApplicationDatabaseOperation applicationDatabaseOperation;
+	
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
-        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation);
         DateTime targetTime = new DateTime(2011, 2, 21, 17, 0, 0, 0);
-        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
+        dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(targetTime);
     }
 
     @AfterMethod

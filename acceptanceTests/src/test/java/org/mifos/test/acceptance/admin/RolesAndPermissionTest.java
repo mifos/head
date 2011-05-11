@@ -67,7 +67,7 @@ public class RolesAndPermissionTest extends UiTestCaseBase {
         loanProductTestHelper = new LoanProductTestHelper(selenium);
         systemDateTime = new DateTime(2010, 10, 11, 10, 0, 0, 0);
         TestDataSetup dataSetup = new TestDataSetup(selenium, applicationDatabaseOperation);
-        loanTestHelper.setApplicationTime(systemDateTime);
+        loanTestHelper.setApplicationTime(systemDateTime, applicationDatabaseOperation);
         dataSetup.createBranch(OfficeParameters.BRANCH_OFFICE, officeName, "Off");
         dataSetup.createUser(userLoginName, userName, officeName);
         dataSetup.createClient(clientName, officeName, userName);
@@ -91,12 +91,12 @@ public class RolesAndPermissionTest extends UiTestCaseBase {
                 submitAndGotoNewLoanProductPreviewPage().submit();
         loanTestHelper.createLoanAccount(clientName, formParameters.getOfferingName());
         loanTestHelper.approveLoan();
-        loanTestHelper.disburseLoan(systemDateTime.plusDays(1));
-        loanTestHelper.makePayment(systemDateTime.plusDays(10), "10");
-        loanTestHelper.setApplicationTime(systemDateTime.plusDays(11)).navigateBack();
+        loanTestHelper.disburseLoan(systemDateTime.plusDays(1), applicationDatabaseOperation);
+        loanTestHelper.makePayment(systemDateTime.plusDays(10), "10", applicationDatabaseOperation);
+        loanTestHelper.setApplicationTime(systemDateTime.plusDays(11), applicationDatabaseOperation).navigateBack();
         new LoanAccountPage(selenium).navigateToApplyAdjustment().verifyAdjustBackdatedPermission().cancelAdjustment();
-        loanTestHelper.repayLoan(systemDateTime.plusDays(11));
-        loanTestHelper.setApplicationTime(systemDateTime.plusDays(12)).navigateBack();
+        loanTestHelper.repayLoan(systemDateTime.plusDays(11), applicationDatabaseOperation);
+        loanTestHelper.setApplicationTime(systemDateTime.plusDays(12), applicationDatabaseOperation).navigateBack();
         new LoanAccountPage(selenium).navigateToApplyAdjustment().verifyAdjustBackdatedPermissionOnRepay().cancelAdjustment();
         navigationHelper.navigateToAdminPage().navigateToViewRolesPage().navigateToManageRolePage("Admin").enablePermission("5_1_9").submitAndGotoViewRolesPage();
     }
