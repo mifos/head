@@ -85,6 +85,7 @@ public class CustomizedTextDaoHibernate implements CustomizedTextDao {
         return messages;
     }	
 	
+    @Override
     public CustomizedText findCustomizedTextByOriginalText(final String originalText) {
 
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();

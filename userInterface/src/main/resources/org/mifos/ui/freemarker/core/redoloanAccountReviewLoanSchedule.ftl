@@ -55,7 +55,7 @@ $(function() {
 <h1>[@spring.message "redoLoanAccount.wizard.title" /] - <span class="standout">[@spring.message "createLoanAccount.reviewInstallments.pageSubtitle" /]</span></h1>
 [#else]
 <h1>[@spring.message "createLoanAccount.wizard.title" /] - <span class="standout">[@spring.message "createLoanAccount.reviewInstallments.pageSubtitle" /]</span></h1>
-[/#if]                         
+[/#if] 
 <p>[@spring.message "createLoanAccount.reviewInstallments.instructions" /]</p>
 <br/>
 
@@ -178,6 +178,7 @@ $(function() {
 				[#if loanProductReferenceData.compareCashflowEnabled]
 					[@spring.bind "cashFlowSummaryFormBean.installments[${ind}]"/]
 					<td style="border-top: 1px solid grey;">${cashFlowSummaryFormBean.installments[ind]?date?string.medium}</td>
+					<td style="border-top: 1px solid grey;"><input type="text" name="actualPaymentDates[${ind}]" size="10" value="${cashFlowSummaryFormBean.actualPaymentDates[ind]?date?string.medium}" id="installment.actualPaymentDate.${ind}" class="date-pick" /></td>
 				[#else]
 					[@spring.bind "loanScheduleFormBean.installments[${ind}]"/]
 					<td style="border-top: 1px solid grey;">${loanScheduleFormBean.installments[ind]?date?string.medium}</td>
@@ -202,11 +203,16 @@ $(function() {
 					[#else]
 					<td style="border-top: 1px solid grey;"><input type="text" name="installmentAmounts[${ind}]" size="10" value="${loanScheduleFormBean.installmentAmounts[ind]?string.number}" /></td>
 					[/#if]
-					<td style="border-top: 1px solid grey;"><input type="text" name="actualPaymentAmounts[${ind}]" size="10" value="${loanScheduleFormBean.actualPaymentAmounts[ind]?string.number}" /></td>
+					<td style="border-top: 1px solid grey;"><input type="text" name="actualPaymentAmounts[${ind}]" size="10" value="${loanScheduleFormBean.actualPaymentAmounts[ind]?string.number}" /</td>
 				[/#if]
 			[#else]
-				<td style="border-top: 1px solid grey;">${row.total?string.number}</td>
-				<td style="border-top: 1px solid grey;"><input type="text" name="actualPaymentAmounts[${ind}]" size="10" value="${loanScheduleFormBean.actualPaymentAmounts[ind]?string.number}" /></td>
+				[#if loanProductReferenceData.compareCashflowEnabled]
+					<td style="border-top: 1px solid grey;">${row.total?string.number}</td>
+					<td style="border-top: 1px solid grey;"><input type="text" name="actualPaymentAmounts[${ind}]" size="10" value="${cashFlowSummaryFormBean.actualPaymentAmounts[ind]?string.number}" /></td>
+				[#else]
+					<td style="border-top: 1px solid grey;">${row.total?string.number}</td>
+					<td style="border-top: 1px solid grey;"><input type="text" name="actualPaymentAmounts[${ind}]" size="10" value="${loanScheduleFormBean.actualPaymentAmounts[ind]?string.number}" /></td>
+				[/#if]
 			[/#if]
 		</tr>
 		[#assign ind = ind + 1]
@@ -239,6 +245,10 @@ $(function() {
 		[/#list]
 	</tbody>
 </table>
+<br />
+<input id="createloanpreview.button.edit.cashflow" type="submit" class="submit" style="margin-left: 0px;" 
+value='[@spring.message "widget.form.buttonLabel.editcashflowinfo" /]' 
+name="_eventId_editCashflow" />
 [/#if]
 
 [#if loanProductReferenceData.variableInstallmentsAllowed]

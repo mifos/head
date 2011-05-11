@@ -120,10 +120,6 @@ public class LoanAccountController {
 
         MandatoryHiddenFieldsDto mandatoryHidden = this.adminServiceFacade.retrieveHiddenMandatoryFields();
     	LoanCreationLoanDetailsDto dto = this.loanAccountServiceFacade.retrieveLoanDetailsForLoanAccountCreation(customerId, Integer.valueOf(productId).shortValue(), formBean.isRedoLoanAccount());
-    	
-    	if (formBean.isRedoLoanAccount()) {
-    	    dto.setCompareCashflowEnabled(false);
-    	}
 
     	formBean.setDigitsBeforeDecimalForInterest(dto.getAppConfig().getDigitsBeforeDecimalForInterest());
     	formBean.setDigitsAfterDecimalForInterest(dto.getAppConfig().getDigitsAfterDecimalForInterest());
@@ -257,12 +253,8 @@ public class LoanAccountController {
         loanAccountQuestionGroupFormBean.setQuestionGroups(questionGroups);
     }
 
-    public boolean isCompareForCashFlowEnabled(LoanAccountFormBean loanAccountFormBean, Integer productId) {
-        boolean cashflowEnabled = false;
-        if (!loanAccountFormBean.isRedoLoanAccount()) {
-            cashflowEnabled = this.loanAccountServiceFacade.isCompareWithCashFlowEnabledOnProduct(productId);
-        }
-        return cashflowEnabled;
+    public boolean isCompareForCashFlowEnabled(Integer productId) {
+        return this.loanAccountServiceFacade.isCompareWithCashFlowEnabledOnProduct(productId);
     }
 
     public LoanScheduleDto retrieveLoanSchedule(int customerId, int productId, LoanAccountFormBean formBean, LoanScheduleFormBean loanScheduleFormBean) {
@@ -279,6 +271,13 @@ public class LoanAccountController {
 
         LoanScheduleDto loanSchedule = loanAccountServiceFacade.createLoanSchedule(createLoanAccount);
 
+        populateFormBeanFromDto(customerId, productId, formBean, loanScheduleFormBean, disbursementDate, loanSchedule);
+
+        return loanSchedule;
+    }
+
+    private void populateFormBeanFromDto(int customerId, int productId, LoanAccountFormBean formBean,
+            BackdatedPaymentable loanScheduleFormBean, LocalDate disbursementDate, LoanScheduleDto loanSchedule) {
         List<Date> installments = new ArrayList<Date>();
         List<Date> actualPaymentDates = new ArrayList<Date>();
         List<Number> installmentAmounts = new ArrayList<Number>();
@@ -319,12 +318,13 @@ public class LoanAccountController {
             loanScheduleFormBean.setMinGapInDays(formBean.getMinGapInDays());
             loanScheduleFormBean.setMaxGapInDays(formBean.getMaxGapInDays());
             loanScheduleFormBean.setMinInstallmentAmount(formBean.getMinInstallmentAmount());
+            
             loanScheduleFormBean.setCustomerId(formBean.getCustomerId());
             loanScheduleFormBean.setVariableInstallments(loanSchedule.getInstallments());
         }
 
         List<FeeDto> applicableFees = new ArrayList<FeeDto>();
-        LoanCreationLoanDetailsDto dto = this.loanAccountServiceFacade.retrieveLoanDetailsForLoanAccountCreation(customerId, Integer.valueOf(productId).shortValue(), loanScheduleFormBean.isLoanWithBackdatedPayments());
+        LoanCreationLoanDetailsDto dto = this.loanAccountServiceFacade.retrieveLoanDetailsForLoanAccountCreation(customerId, Integer.valueOf(productId).shortValue(), formBean.isRedoLoanAccount());
         int feeIndex = 0;
         for (Boolean defaultFeeSelectedForRemoval : formBean.getDefaultFeeSelected()) {
             if (defaultFeeSelectedForRemoval == null || !defaultFeeSelectedForRemoval) {
@@ -348,8 +348,6 @@ public class LoanAccountController {
         }
         
         loanScheduleFormBean.setApplicableFees(applicableFees);
-
-        return loanSchedule;
     }
 
     private FeeDto findById(List<FeeDto> defaultFees, Integer feeId, BigDecimal amountOrRate) {
@@ -389,8 +387,27 @@ public class LoanAccountController {
         return loanAccountServiceFacade.retrieveCashFlowSettings(firstInstallment, lastInstallment, productId, BigDecimal.valueOf(loanScheduleDto.getLoanAmount()));
     }
 
+    public List<CashFlowDataDto> recalculateCashflowSummaryDetails(CashFlowSummaryFormBean formBean, CashFlowDto cashFlowDto,
+            List<MonthlyCashFlowDto> monthlyCashFlow, LoanScheduleDto loanScheduleDto, int productId) {
+        
+        List<CashFlowDataDto> cashFlowDataDtos = this.loanAccountServiceFacade.retrieveCashFlowSummary(monthlyCashFlow, loanScheduleDto);
+        formBean.setCashFlowDataDtos(cashFlowDataDtos);
+        formBean.setProductId(productId);
+        
+        BigDecimal cashFlowTotalBalance = BigDecimal.ZERO;
+        for (MonthlyCashFlowDto monthlyCashFlowDto : monthlyCashFlow) {
+            cashFlowTotalBalance = cashFlowTotalBalance.add(monthlyCashFlowDto.calculateRevenueMinusExpenses());
+        }
+
+        formBean.setMonthlyCashFlows(monthlyCashFlow);
+        formBean.setCashFlowTotalBalance(cashFlowTotalBalance);
+        formBean.setRepaymentCapacity(cashFlowDto.getRepaymentCapacity());
+        
+        return cashFlowDataDtos;
+    }
     public List<CashFlowDataDto> retrieveCashflowSummaryDetails(CashFlowSummaryFormBean formBean, CashFlowDto cashFlowDto,
-            List<MonthlyCashFlowDto> monthlyCashFlow, LoanScheduleDto loanScheduleDto, int productId, LoanAccountFormBean loanAccountFormBean) {
+            List<MonthlyCashFlowDto> monthlyCashFlow, LoanScheduleDto loanScheduleDto, int productId, 
+            LoanAccountFormBean loanAccountFormBean) {
 
         List<CashFlowDataDto> cashFlowDataDtos = this.loanAccountServiceFacade.retrieveCashFlowSummary(monthlyCashFlow, loanScheduleDto);
         formBean.setCashFlowDataDtos(cashFlowDataDtos);
@@ -412,9 +429,11 @@ public class LoanAccountController {
                 installmentAmounts.add(installment.getTotal());
             }
         }
+        
         formBean.setInstallments(installments);
         formBean.setInstallmentAmounts(installmentAmounts);
         formBean.setLoanPrincipal(loanAmount);
+        
         LoanInstallmentsDto loanInstallmentsDto = new LoanInstallmentsDto(loanAmount, totalInstallmentAmount, firstInstallmentDueDate, lastInstallmentDueDate);
 
         BigDecimal cashFlowTotalBalance = BigDecimal.ZERO;
@@ -426,20 +445,9 @@ public class LoanAccountController {
         formBean.setLoanInstallmentsDto(loanInstallmentsDto);
         formBean.setCashFlowTotalBalance(cashFlowTotalBalance);
         formBean.setRepaymentCapacity(cashFlowDto.getRepaymentCapacity());
-
-        // variable installments related
-        formBean.setVariableInstallmentsAllowed(loanAccountFormBean.isVariableInstallmentsAllowed());
-        if (loanAccountFormBean.isVariableInstallmentsAllowed()) {
-            formBean.setMinGapInDays(loanAccountFormBean.getMinGapInDays());
-            formBean.setMaxGapInDays(loanAccountFormBean.getMaxGapInDays());
-            formBean.setMinInstallmentAmount(loanAccountFormBean.getMinInstallmentAmount());
-
-            LocalDate disbursementDate = translateDisbursementDateToLocalDate(loanAccountFormBean);
-
-            formBean.setDisbursementDate(disbursementDate.toDateMidnight().toDate());
-            formBean.setCustomerId(loanAccountFormBean.getCustomerId());
-            formBean.setVariableInstallments(loanScheduleDto.getInstallments());
-        }
+        
+        LocalDate disbursementDate = translateDisbursementDateToLocalDate(loanAccountFormBean);
+        populateFormBeanFromDto(loanAccountFormBean.getCustomerId(), productId, loanAccountFormBean, formBean, disbursementDate, loanScheduleDto);
 
         return cashFlowDataDtos;
     }
@@ -491,7 +499,11 @@ public class LoanAccountController {
         
         List<LoanPaymentDto> backdatedLoanPayments = new ArrayList<LoanPaymentDto>();
         int index = 0;
-        for (Number actualPaymentAmount : loanScheduleFormBean.getActualPaymentAmounts()) {
+        List<Number> actualPaymentAmountDetails = cashFlowSummaryFormBean.getActualPaymentAmounts();
+        if (actualPaymentAmountDetails.isEmpty()) {
+            actualPaymentAmountDetails = loanScheduleFormBean.getActualPaymentAmounts();
+        }
+        for (Number actualPaymentAmount : actualPaymentAmountDetails) {
             if (actualPaymentAmount.doubleValue() > 0) {
                 LocalDate transactionDate = new LocalDate(loanScheduleFormBean.getActualPaymentDates().get(index));
                 backdatedLoanPayments.add(new LoanPaymentDto(actualPaymentAmount.toString(), transactionDate, null, null));
