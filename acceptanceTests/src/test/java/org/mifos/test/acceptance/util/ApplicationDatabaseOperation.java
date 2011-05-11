@@ -8,6 +8,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 @ContextConfiguration(locations={"classpath:test-context.xml", "classpath:ui-test-context.xml"})
 public class ApplicationDatabaseOperation {
@@ -148,5 +150,11 @@ public class ApplicationDatabaseOperation {
                     +")"
                 +");"
         );
+    }
+    
+    public void  updateUserLastLogin(Calendar date, String userName) throws SQLException {
+    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        getStatement().executeUpdate("update personnel set last_login='" + sdf.format(date.getTime()) + "' where login_name='" + userName +"'");
+        closeConnection();
     }
 }

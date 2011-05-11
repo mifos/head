@@ -37,6 +37,7 @@ import org.hibernate.Session;
 import org.hibernate.criterion.LogicalExpression;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.joda.time.DateTime;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.core.MifosRuntimeException;
@@ -45,18 +46,15 @@ import org.mifos.customers.personnel.business.PersonnelRoleEntity;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.personnel.util.helpers.PersonnelStatus;
 import org.mifos.dto.domain.CenterCreation;
-import org.mifos.dto.domain.LoginDto;
 import org.mifos.dto.domain.PersonnelDto;
 import org.mifos.dto.domain.UserDetailDto;
 import org.mifos.dto.domain.UserSearchDto;
 import org.mifos.dto.screen.SystemUserSearchResultsDto;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.security.MifosUser;
 import org.mifos.security.rolesandpermission.business.RoleBO;
-import org.mifos.service.BusinessRuleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
@@ -128,6 +126,7 @@ public class PersonnelDaoHibernate implements PersonnelDao {
         boolean accountNonExpired = !user.isExpire();
         if(accountNonExpired){
         	Calendar cal = Calendar.getInstance();
+        	cal.setTime(new DateTime().toDate());
         	cal.add(Calendar.MONTH, -1);
         	Date date = user.getLastLogin();
         	if(date == null){
