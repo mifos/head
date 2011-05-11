@@ -22,6 +22,7 @@ package org.mifos.test.acceptance.remote;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.sql.SQLException;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -43,7 +44,8 @@ public class DateTimeUpdaterRemoteTestingService {
         this.applicationDatabaseOperation = applicationDatabaseOperation;
     }
 
-    public TimeMachinePage setDateTimeWithMifosLastLoginUpdate(DateTime dateTime) throws UnsupportedEncodingException {
+    public TimeMachinePage setDateTimeWithMifosLastLoginUpdate(DateTime dateTime) throws UnsupportedEncodingException, SQLException {
+    	applicationDatabaseOperation.updateUserLastLogin(dateTime, "mifos");
         DateTimeZone defaultDateTimeZone = null;
         return setDateTime(dateTime, defaultDateTimeZone);
     }

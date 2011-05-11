@@ -65,6 +65,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.io.UnsupportedEncodingException;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Random;
 
@@ -378,11 +379,11 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         }
     }
 
-    private void setDateAsToday() throws UnsupportedEncodingException {
+    private void setDateAsToday() throws UnsupportedEncodingException, SQLException {
         setAppDate(new DateTime(System.currentTimeMillis()));
     }
 
-    private void setAppDate(DateTime dateTime) throws UnsupportedEncodingException {
+    private void setAppDate(DateTime dateTime) throws UnsupportedEncodingException, SQLException {
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation);
         dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(dateTime);
     }

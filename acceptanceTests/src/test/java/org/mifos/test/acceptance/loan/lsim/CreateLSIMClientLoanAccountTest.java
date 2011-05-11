@@ -164,7 +164,7 @@ public class CreateLSIMClientLoanAccountTest extends UiTestCaseBase {
         loanTestHelper.repayLoan(loanId);
     }
 
-    private void setTime(int year, int monthOfYear, int dayOfMonth) throws UnsupportedEncodingException {
+    private void setTime(int year, int monthOfYear, int dayOfMonth) throws UnsupportedEncodingException, SQLException {
 
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation);
         DateTime systemTime = new DateTime(year, monthOfYear, dayOfMonth, 12, 0, 0, 0);

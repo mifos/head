@@ -21,6 +21,7 @@
 package org.mifos.test.acceptance.loan;
 
 import java.io.UnsupportedEncodingException;
+import java.sql.SQLException;
 
 import org.joda.time.DateTime;
 import org.mifos.test.acceptance.framework.AppLauncher;
@@ -249,7 +250,7 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
         Assert.assertEquals(selenium.getTable("installments.1.1"), ("29-Apr-2011"));
     }
         
-    private void setAppDate(DateTime dateTime) throws UnsupportedEncodingException {
+    private void setAppDate(DateTime dateTime) throws UnsupportedEncodingException, SQLException {
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation);
         dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(dateTime);
     }

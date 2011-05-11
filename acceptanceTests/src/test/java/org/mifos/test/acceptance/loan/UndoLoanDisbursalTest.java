@@ -37,6 +37,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.io.UnsupportedEncodingException;
+import java.sql.SQLException;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
 @Test(singleThreaded = true, groups = {"loan", "acceptance", "ui", "no_db_unit"})
@@ -78,7 +79,7 @@ public class UndoLoanDisbursalTest extends UiTestCaseBase {
         loanTestHelper.verifyHistoryAndSummaryReversedLoan(clientViewDetailsPage.navigateToClosedAccountsPage(), clientLoanID);
     }
 
-    private void setTime(int year, int monthOfYear, int dayOfMonth) throws UnsupportedEncodingException {
+    private void setTime(int year, int monthOfYear, int dayOfMonth) throws UnsupportedEncodingException, SQLException {
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation);
         DateTime targetTime = new DateTime(year, monthOfYear, dayOfMonth, 14, 0, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(targetTime);

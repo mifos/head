@@ -122,13 +122,13 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
 //    }
 
 
-    private void verifyMultipleDue(String accountId) throws UnsupportedEncodingException {
+    private void verifyMultipleDue(String accountId) throws UnsupportedEncodingException, SQLException {
         navigationHelper.navigateToLoanAccountPage(accountId);
         verifyPayment(accountId);
         verifyAdjustment();
     }
 
-    private void verifyPayment(String accountId) throws UnsupportedEncodingException {
+    private void verifyPayment(String accountId) throws UnsupportedEncodingException, SQLException {
         verifyRepaymentAndAdjustment(systemDateTime.plusDays(0), systemDateTime.plusDays(5), "1100.0", RepaymentScheduleData.ACCOUNT_SUMMARY_REPAYMENT_ONE, RepaymentScheduleData.ACCOUNT_SUMMARY_ADJUSTMENT_ONE, LOAN_ACTIVE_GOOD);
         makePaymentAndVerifyPayment(accountId, systemDateTime.plusDays(24), "403", RepaymentScheduleData.MULTIPLE_DUE_FIRST_PAYMENT);//verify first the due fee is knocked
         verifyRepaymentAndAdjustment(systemDateTime.plusDays(24), systemDateTime.plusDays(25), "1012.8", RepaymentScheduleData.ACCOUNT_SUMMARY_REPAYMENT_TWO, RepaymentScheduleData.ACCOUNT_SUMMARY_ADJUSTMENT_TWO, LOAN_ACTIVE_BAD);
@@ -151,7 +151,7 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
         verifyAdjustmentFromRepaymentSchedule("403.0", RepaymentScheduleData.MULTIPLE_DUE_SEVENTH_ADJUSTMENT);
     }
 
-    private void verifyRepaymentAndAdjustment(DateTime repaymentDate, DateTime adjustmentDate, String loanAmount, String[][] repaymentAccountSummery, String[][] adjustedAccountSummery, String loanStatus) throws UnsupportedEncodingException {
+    private void verifyRepaymentAndAdjustment(DateTime repaymentDate, DateTime adjustmentDate, String loanAmount, String[][] repaymentAccountSummery, String[][] adjustedAccountSummery, String loanStatus) throws UnsupportedEncodingException, SQLException {
         loanTestHelper.repayLoan(repaymentDate, applicationDatabaseOperation).
                 verifyLoanStatus(LOAN_CLOSED).verifyAccountSummary(repaymentAccountSummery);
         loanTestHelper.setApplicationTime(adjustmentDate, applicationDatabaseOperation).navigateBack();
@@ -185,7 +185,7 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
                 verifyScheduleTable(adjustedSchedule).navigateToLoanAccountPage();
     }
 
-    private void verifyLateLessPayment(String accountId) throws UnsupportedEncodingException {
+    private void verifyLateLessPayment(String accountId) throws UnsupportedEncodingException, SQLException {
         DateTime paymentDate = systemDateTime.plusDays(12);
         navigationHelper.navigateToLoanAccountPage(accountId);
         makePaymentAndVerifyPayment(accountId, paymentDate, "100", RepaymentScheduleData.LATE_LESS_FIRST_PAYMENT);//verify first the due fee is knocked
@@ -194,7 +194,7 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
         new LoanAccountPage(selenium).navigateToApplyPayment().verifyPaymentPriorLastPaymentDate(loanTestHelper.setPaymentParams("10", paymentDate));
     }
 
-    private void verifyLateExcessPayment(String accountId) throws UnsupportedEncodingException {
+    private void verifyLateExcessPayment(String accountId) throws UnsupportedEncodingException, SQLException {
         DateTime paymentDate = systemDateTime.plusDays(12);
         navigationHelper.navigateToLoanAccountPage(accountId);
         makePaymentAndVerifyPayment(accountId, paymentDate, "354", RepaymentScheduleData.LATE_EXCESS_PAYMENT);
@@ -202,7 +202,7 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
         makePaymentAndVerifyPayment(accountId, paymentDate, "100", RepaymentScheduleData.LATE_EXCESS_THIRD_PAYMENT);//verify if future interest in reduced as the future principle is paid
     }
 
-    private void verifyEarlyLessPayment(String accountId) throws UnsupportedEncodingException {
+    private void verifyEarlyLessPayment(String accountId) throws UnsupportedEncodingException, SQLException {
         DateTime paymentDate = systemDateTime.plusDays(1);
         navigationHelper.navigateToLoanAccountPage(accountId);
         makePaymentAndVerifyPayment(accountId, paymentDate, "100", RepaymentScheduleData.EARLY_LESS_FIRST_PAYMENT); //verifying interest till date
@@ -214,20 +214,20 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
         createAndDisburseLoanAccount(4, systemDateTime.plusDays(1), "productWeekly7466");
     }
 
-    private void verifyEarlyExcessPayment(String accountID) throws UnsupportedEncodingException {
+    private void verifyEarlyExcessPayment(String accountID) throws UnsupportedEncodingException, SQLException {
         DateTime paymentDate = systemDateTime.plusDays(1);
         navigationHelper.navigateToLoanAccountPage(accountID);
         makePaymentAndVerifyPayment(accountID, paymentDate, "280", RepaymentScheduleData.EARLY_EXCESS_FIRST_PAYMENT);
     }
 
-    private String makePaymentAndVerifyPayment(String accountId, DateTime paymentDate, String paymentAmount, String[][] expectedSchedule) throws UnsupportedEncodingException {
+    private String makePaymentAndVerifyPayment(String accountId, DateTime paymentDate, String paymentAmount, String[][] expectedSchedule) throws UnsupportedEncodingException, SQLException {
         loanTestHelper.makePayment(paymentDate, paymentAmount, applicationDatabaseOperation).
                 navigateToRepaymentSchedulePage().
                 verifyScheduleTable(expectedSchedule).navigateToLoanAccountPage();
         return accountId;
     }
 
-    private LoanAccountPage createAndDisburseLoanAccount(int noOfInstallments, DateTime disbursalDate, String loanProductName) throws UnsupportedEncodingException {
+    private LoanAccountPage createAndDisburseLoanAccount(int noOfInstallments, DateTime disbursalDate, String loanProductName) throws UnsupportedEncodingException, SQLException {
         DisburseLoanParameters disburseLoanParameters = loanTestHelper.setDisbursalParams(disbursalDate.minusDays(1));
         loanTestHelper.setApplicationTime(systemDateTime, applicationDatabaseOperation);
         navigationHelper.navigateToHomePage();

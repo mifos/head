@@ -38,6 +38,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.io.UnsupportedEncodingException;
+import java.sql.SQLException;
 
 @edu.umd.cs.findbugs.annotations.SuppressWarnings("CPD")
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
@@ -128,7 +129,7 @@ public class CollectionSheetEntrySimpleTest extends UiTestCaseBase {
         return formParameters;
     }
 
-    private void setSystemDate() throws UnsupportedEncodingException {
+    private void setSystemDate() throws UnsupportedEncodingException, SQLException {
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation);
         DateTime targetTime = new DateTime(2009, 2, 23, 2, 0, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(targetTime);
