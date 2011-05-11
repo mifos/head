@@ -274,13 +274,13 @@
     </div>
     [/#if]
     
+    [#if loanAccountFormBean.collateralTypeAndNotesHidden]
+    [#else]
     <div class="row">
         [@form.label "collateralTypeId" false][@spring.message "createLoanAccount.collateralType" /][/@form.label]
         [@form.singleSelectWithPrompt path="loanAccountFormBean.collateralTypeId" options=loanProductReferenceData.collateralOptions selectPrompt="selectPrompt" /]
     </div>
     
-    [#if loanAccountFormBean.collateralTypeAndNotesHidden]
-    [#else]
     <div class="row">
         [@form.label "collateralNotes" false][@spring.message "createLoanAccount.collateralNotes" /][/@form.label]
         [@spring.bind "loanAccountFormBean.collateralNotes" /]

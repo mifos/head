@@ -30,12 +30,14 @@ public class MessageFilterReloadableResourceBundleMessageSource extends
 		this.customizedTextServiceFacade = customizedTextServiceFacade;
 	}
 
-	protected MessageFormat resolveCode(String code, Locale locale) {
+	@Override
+    protected MessageFormat resolveCode(String code, Locale locale) {
 		MessageFormat messageFormat = super.resolveCode(code, locale);
 		return messageFormat;
 	}
 	
-	protected String resolveCodeWithoutArguments(String code, Locale locale) {
+	@Override
+    protected String resolveCodeWithoutArguments(String code, Locale locale) {
 		if (code.endsWith("NO_CUSTOMIZING")) {
 			return super.resolveCodeWithoutArguments(code, locale);			
 		}
