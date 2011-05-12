@@ -141,6 +141,8 @@
 	        [/#if]
         </div>
     </div>
+    [#if loanAccountFormBean.collateralTypeAndNotesHidden]
+    [#else]
     <div class="row">
         <div class="attribute">[@spring.message "createLoanAccount.collateralType"/]</div>
         <div class="value">
@@ -153,10 +155,14 @@
         <div class="attribute">[@spring.message "createLoanAccount.collateralNotes"/]</div>
         <div class="value">${loanAccountFormBean.collateralNotes}</div>
     </div>
+    [/#if]
+    [#if loanAccountFormBean.externalIdHidden]
+    [#else]
     <div class="row">
         <div class="attribute">[@spring.message "createLoanAccount.externalId"/]</div>
         <div class="value">${loanAccountFormBean.externalId}</div>
     </div>
+    [/#if]
 </div>
 <br/>
 <div class="product-summary">
