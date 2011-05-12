@@ -36,6 +36,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.io.UnsupportedEncodingException;
+import java.sql.SQLException;
 
 @SuppressWarnings("PMD")
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
@@ -58,7 +59,7 @@ public class SystemInfoDateTimeTest extends UiTestCaseBase {
     }
 
     @AfterMethod
-    public void tearDown() {
+    public void tearDown() throws SQLException {
         (new MifosPage(selenium)).logout();
         new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation).resetDateTime();
     }
@@ -81,7 +82,7 @@ public class SystemInfoDateTimeTest extends UiTestCaseBase {
         systemInfoPage.verifyDateTime(targetTime);
     }
 
-    public void verifyDateTimeAndTimeZone() throws UnsupportedEncodingException {
+    public void verifyDateTimeAndTimeZone() throws UnsupportedEncodingException, SQLException {
         DateTimeZone dateTimeZone = DateTimeZone.forOffsetHours(1);
         DateTime targetTime = new DateTime(2008,1,1,0,0,0,0);
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation);

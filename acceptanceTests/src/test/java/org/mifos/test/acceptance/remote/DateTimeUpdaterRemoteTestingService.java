@@ -45,12 +45,12 @@ public class DateTimeUpdaterRemoteTestingService {
     }
 
     public TimeMachinePage setDateTimeWithMifosLastLoginUpdate(DateTime dateTime) throws UnsupportedEncodingException, SQLException {
-    	applicationDatabaseOperation.updateUserLastLogin(dateTime, "mifos");
         DateTimeZone defaultDateTimeZone = null;
         return setDateTime(dateTime, defaultDateTimeZone);
     }
 
-    public TimeMachinePage setDateTime(DateTime dateTime, DateTimeZone dateTimeZone) throws UnsupportedEncodingException {
+    public TimeMachinePage setDateTime(DateTime dateTime, DateTimeZone dateTimeZone) throws UnsupportedEncodingException, SQLException {
+    	applicationDatabaseOperation.updateUserLastLogin(dateTime, "mifos");
         DateTimeFormatter formatter = ISODateTimeFormat.basicDateTimeNoMillis().withZone(dateTimeZone);
         String timeMachineUrl = "dateTimeUpdate.ftl?dateTime=" + getUrlEncodedTimeMachineDate(dateTime, formatter);
         selenium.open(timeMachineUrl);
@@ -63,9 +63,10 @@ public class DateTimeUpdaterRemoteTestingService {
         return URLEncoder.encode(formatter.print(dateTime.getMillis()), "UTF-8");
     }
 
-    public TimeMachinePage resetDateTime() {
+    public TimeMachinePage resetDateTime() throws SQLException {
         selenium.open("dateTimeUpdate.ftl?dateTime=system");
         waitForPageToLoad();
+        applicationDatabaseOperation.updateUserLastLogin(new DateTime(), "mifos");
         return new TimeMachinePage(selenium);
 
     }

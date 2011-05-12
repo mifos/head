@@ -60,7 +60,7 @@ public class CollectionSheetEntrySimpleTest extends UiTestCaseBase {
     }
 
     @AfterMethod
-    public void logOut() {
+    public void logOut() throws SQLException {
         (new MifosPage(selenium)).logout();
         new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation).resetDateTime();
     }

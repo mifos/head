@@ -20,6 +20,8 @@
 
 package org.mifos.test.acceptance.collectionsheet;
 
+import java.sql.SQLException;
+
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
@@ -90,7 +92,7 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
 
 
     @AfterMethod
-    public void logOut() {
+    public void logOut() throws SQLException {
         (new MifosPage(selenium)).logout();
          new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation).resetDateTime();
 
