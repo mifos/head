@@ -103,7 +103,7 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
     public void clientAccountFeesSavedToDatabase() throws Exception {
         try {
             SubmitFormParameters formParameters = getFormParametersForTestOffice();
-            initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
+            initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium, applicationDatabaseOperation);
             enterAndSubmitCustomerAccountData(formParameters, BASIC_CUSTOMER_ACCT_VALUES);
             verifyCollectionSheetData("ColSheetCustAcct_001_result_dbunit.xml");
         } catch (Error e) {
@@ -115,7 +115,7 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void previousPaidFeeNotDisplayedOnSecondCollectionSheetEntry() throws Exception {
         SubmitFormParameters formParameters = getFormParametersForTestOffice();
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium, applicationDatabaseOperation);
         CollectionSheetEntryConfirmationPage confirmationPage = enterAndSubmitCustomerAccountData(formParameters, BASIC_CUSTOMER_ACCT_VALUES);
         //navigate back to collection sheet entry
         HomePage homePage = confirmationPage.navigateToHomePage();
@@ -137,7 +137,7 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
     @Test(enabled=true)
     public void unpaidFeeDisplayedOnSecondCollectionSheetEntryAndSaved() throws Exception {
         SubmitFormParameters formParameters = getFormParametersForTestOffice();
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium, applicationDatabaseOperation);
         CollectionSheetEntryConfirmationPage confirmationPage = enterAndSubmitCustomerAccountDataOnSecondEditing(formParameters, TEST_ACCT_VALUES, FIRST_PARTIAL_CUSTOMER_ACCT_VALUES);
         //navigate back to collection sheet entry
         HomePage homePage = confirmationPage.navigateToHomePage();

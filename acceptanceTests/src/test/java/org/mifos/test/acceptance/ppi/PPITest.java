@@ -55,7 +55,7 @@ public class PPITest extends UiTestCaseBase {
   //http://mifosforge.jira.com/browse/MIFOSTEST-147
     public void verifyPPIQuestionGroup() throws Exception {
         //Given
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium, applicationDatabaseOperation);
         String configPath = new ConfigurationLocator().getConfigurationDirectory();
         String fileName= "PPISurveyBANGLADESH2009.xml";
         String sourcePath = PPITest.class.getResource("/mpesa/"+fileName).getFile();

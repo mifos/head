@@ -73,7 +73,7 @@ public class SavingsAccountPerformanceHistoryTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void savingsDepositWithdrawalAndVerifyPerformanceHistory() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium, applicationDatabaseOperation);
 
         DepositWithdrawalSavingsParameters params = new DepositWithdrawalSavingsParameters();
 

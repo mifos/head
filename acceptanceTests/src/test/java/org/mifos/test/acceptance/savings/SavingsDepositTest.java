@@ -116,7 +116,7 @@ public class SavingsDepositTest extends UiTestCaseBase {
 
 
     private void initData() throws DatabaseUnitException, SQLException, IOException, URISyntaxException {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, startDataSet, dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, startDataSet, dataSource, selenium, applicationDatabaseOperation);
     }
 
 

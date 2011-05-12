@@ -85,7 +85,7 @@ public class CollectionSheetEntryAttendanceTest extends UiTestCaseBase {
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyEnteringAttendanceForOneCenterDoesntAffectOtherCenters() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml", dataSource, selenium, applicationDatabaseOperation);
         int[] overwriteAttendanceValues = new int[] { ATTENDANCE_L, ATTENDANCE_AA, ATTENDANCE_A, ATTENDANCE_P };
         int[] basicAttendanceValues = new int[] { ATTENDANCE_P, ATTENDANCE_P, ATTENDANCE_P, ATTENDANCE_L };
         int[] secondCenterAttendance = new int[] { ATTENDANCE_AA, ATTENDANCE_A, ATTENDANCE_L };

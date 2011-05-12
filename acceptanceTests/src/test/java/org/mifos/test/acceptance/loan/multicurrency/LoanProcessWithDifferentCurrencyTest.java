@@ -102,7 +102,7 @@ public class LoanProcessWithDifferentCurrencyTest extends UiTestCaseBase {
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium, applicationDatabaseOperation);
         DateTime targetTime = new DateTime(2011,2,17,13,0,0,0);
         dateTimeUpdaterRemoteTestingService.setDateTimeWithMifosLastLoginUpdate(targetTime);
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "LoanProcessWithDifferentCurrencyTest_001_dbunit.xml", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "LoanProcessWithDifferentCurrencyTest_001_dbunit.xml", dataSource, selenium, applicationDatabaseOperation);
 
         //When
         propertiesHelper.setDigitsAfterDecimal(2);

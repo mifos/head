@@ -25,8 +25,10 @@ import java.net.URISyntaxException;
 import java.sql.SQLException;
 
 import org.dbunit.DatabaseUnitException;
+import org.joda.time.DateTime;
 import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.InitializeApplicationPage;
+import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import com.thoughtworks.selenium.Selenium;
@@ -39,9 +41,10 @@ public class InitializeApplicationRemoteTestingService {
     }
 
     public void dataLoadAndCacheRefresh(DbUnitUtilities dbUnitUtilities, String dataset,
-            DriverManagerDataSource dataSource, Selenium selenium) throws DatabaseUnitException, SQLException,
+            DriverManagerDataSource dataSource, Selenium selenium, ApplicationDatabaseOperation applicationDatabaseOperation) throws DatabaseUnitException, SQLException,
             IOException, URISyntaxException {
         dbUnitUtilities.loadDataFromFile(dataset, dataSource);
+        applicationDatabaseOperation.updateUserLastLogin(new DateTime(), "mifos");
         reinitializeApplication(selenium);
     }
 }

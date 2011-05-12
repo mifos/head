@@ -100,7 +100,7 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
         formParameters.setCenter("Center1");
         formParameters.setPaymentMode("Cash");
 
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml", dataSource, selenium, applicationDatabaseOperation);
 
         CollectionSheetEntrySelectPage selectPage =
             new CollectionSheetEntryTestHelper(selenium).loginAndNavigateToCollectionSheetEntrySelectPage();
@@ -123,7 +123,7 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void twoLoansWithSameProductHasMergedLoanAmount() throws Exception {
         SubmitFormParameters formParameters = getFormParametersForTestOffice();
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium, applicationDatabaseOperation);
         CollectionSheetEntryEnterDataPage enterDataPage = navigateToCollectionSheetEntryEnterData(formParameters);
         //check amount due for client who has two loan accounts on the same product
         enterDataPage.verifyLoanAmountValue(3, 0, 2088.0);
@@ -135,7 +135,7 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
     //http://mifosforge.jira.com/browse/MIFOSTEST-3
     public void defaultAmountsForMediumCenterSavedToDatabase() throws Exception {
         // Given
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_medium_005_dbunit.xml", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_medium_005_dbunit.xml", dataSource, selenium, applicationDatabaseOperation);
         SubmitFormParameters formParameters = new SubmitFormParameters();
         String office = "MyOffice1233171674227";
         String officer = "Joe1233171679953 Guy1233171679953";

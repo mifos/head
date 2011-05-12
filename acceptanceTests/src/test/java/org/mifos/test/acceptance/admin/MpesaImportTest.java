@@ -192,7 +192,7 @@ public class MpesaImportTest extends UiTestCaseBase {
         propertiesHelper.setImportTransactionOrder("AL3,AL5");
 
         String dataset = "mpesa_export.xml";
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, dataset, dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, dataset, dataSource, selenium, applicationDatabaseOperation);
 
         for (String importFile : TEST_FILES) {
             String path = this.getClass().getResource("/mpesa/" + importFile).toString();
@@ -236,7 +236,7 @@ public class MpesaImportTest extends UiTestCaseBase {
         propertiesHelper.setImportTransactionOrder("AL3,AL5");
 
         String dataset = "mpesa_export.xml";
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, dataset, dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, dataset, dataSource, selenium, applicationDatabaseOperation);
 
         String path = this.getClass().getResource("/mpesa/" + FILE_WITH_NO_ERRORS).toString();
 
@@ -325,7 +325,7 @@ public class MpesaImportTest extends UiTestCaseBase {
         String path = this.getClass().getResource("/mpesa/" + FILE_WITH_OVERPAYMENT_AMOUNT).toString();
         String dataset = "mpesa_export.xml";
 
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, dataset, dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, dataset, dataSource, selenium, applicationDatabaseOperation);
 
         propertiesHelper.setImportTransactionOrder("AL3,AL5");
 
@@ -363,7 +363,7 @@ public class MpesaImportTest extends UiTestCaseBase {
         String path = this.getClass().getResource("/mpesa/" + FILE_WITH_NO_ERRORS).toString();
         String dataset = "mpesa_export.xml";
 
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, dataset, dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, dataset, dataSource, selenium, applicationDatabaseOperation);
 
         propertiesHelper.setImportTransactionOrder("AL3,AL5");
 
@@ -414,7 +414,7 @@ public class MpesaImportTest extends UiTestCaseBase {
         String path = this.getClass().getResource("/mpesa/" + DISBURSAL_IMPORT).toString();
         String dataset = "mpesa_export.xml";
 
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, dataset, dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, dataset, dataSource, selenium, applicationDatabaseOperation);
 
         propertiesHelper.setImportTransactionOrder("AL3,AL5");
         propertiesHelper.setDigitsAfterDecimal(0);
