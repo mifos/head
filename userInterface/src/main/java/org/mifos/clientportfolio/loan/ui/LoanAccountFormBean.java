@@ -282,7 +282,7 @@ public class LoanAccountFormBean implements Serializable {
         }
         if (!dateValidator.formsValidDate(this.disbursementDateDD, this.disbursementDateMM, this.disbursementDateYY)) {
             String defaultErrorMessage = "Please specify valid disbursal date.";
-            rejectDisbursementDateField(errors, defaultErrorMessage, "loanAccountFormBean.DisbursalDate.invalid", "");
+            rejectDisbursementDateField(errors, defaultErrorMessage, "disbursementDateDD", "loanAccountFormBean.DisbursalDate.invalid", "");
         } else {
             LocalDate validDate = new DateTime().withDate(disbursementDateYY.intValue(), disbursementDateMM.intValue(), disbursementDateDD.intValue()).toLocalDate();
             
@@ -294,7 +294,7 @@ public class LoanAccountFormBean implements Serializable {
             }
             for (ErrorEntry entry : disbursementDateErrors.getErrorEntries()) {
                 String defaultErrorMessage = "The disbursal date is invalid.";
-                rejectDisbursementDateField(errors, defaultErrorMessage, entry.getErrorCode(), entry.getArgs().get(0));
+                rejectDisbursementDateField(errors, defaultErrorMessage, "disbursementDateDD", entry.getErrorCode(), entry.getArgs().get(0));
             }
         }
         
@@ -430,8 +430,8 @@ public class LoanAccountFormBean implements Serializable {
         errors.rejectValue("clientAmount", "loanAccountFormBean.glim.clientAmount.invalid", new Object[] {clientIndex, this.minAllowedAmount, this.maxAllowedAmount}, defaultErrorMessage);
     }
 
-    private void rejectDisbursementDateField(Errors errors, String defaultErrorMessage, String errorCode, String args) {
-        errors.rejectValue("disbursementDateDD", errorCode, new Object[] {args}, defaultErrorMessage);
+    private void rejectDisbursementDateField(Errors errors, String defaultErrorMessage, String field, String errorCode, String args) {
+        errors.rejectValue(field, errorCode, new Object[] {args}, defaultErrorMessage);
     }
 
     private void rejectNumberOfInstallmentsField(Errors errors, String defaultErrorMessage) {
@@ -463,8 +463,16 @@ public class LoanAccountFormBean implements Serializable {
             rejectNumberOfInstallmentsField(errors, message.getText());
         }
         
-        if (isAnyOf("disbursalDateDay", "disbursalDateMonth", "disbursalDateYear", message.getSource())) {
-            rejectDisbursementDateField(errors, message.getText(), "loanAccountFormBean.DisbursalDate.invalid", "");
+        if ("disbursementDateDD".equals(message.getSource())) {
+            rejectDisbursementDateField(errors, message.getText(), message.getSource().toString(), "loanAccountFormBean.DisbursalDate.dd.invalid", "");
+        }
+        
+        if ("disbursementDateMM".equals(message.getSource())) {
+            rejectDisbursementDateField(errors, message.getText(), message.getSource().toString(), "loanAccountFormBean.DisbursalDate.mm.invalid", "");
+        }
+        
+        if ("disbursementDateYY".equals(message.getSource())) {
+            rejectDisbursementDateField(errors, message.getText(), message.getSource().toString(), "loanAccountFormBean.DisbursalDate.yyyy.invalid", "");
         }
         
         if (message.getSource().toString().startsWith("selectedFeeAmount")) {
@@ -485,10 +493,6 @@ public class LoanAccountFormBean implements Serializable {
 
     private void rejectAdditionalOrDefaultFeeField(Errors errors, String defaultErrorMessage, String errorCode) {
         errors.rejectValue("selectedFeeAmount[0]", errorCode, defaultErrorMessage);
-    }
-
-    private boolean isAnyOf(String field1, String field2, String field3, Object sourceField) {
-        return (field1.equals(sourceField) || field2.equals(sourceField) || field3.equals(sourceField));
     }
 
     private boolean isInvalidSelection(Integer selectionId) {
