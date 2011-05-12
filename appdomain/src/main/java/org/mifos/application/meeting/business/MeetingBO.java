@@ -448,6 +448,10 @@ public class MeetingBO extends AbstractBusinessObject {
     public boolean hasSameRecurrenceAs(MeetingBO customerMeetingValue) {
         return this.getRecurrenceType().equals(customerMeetingValue.getRecurrenceType());
     }
+    
+    public boolean recursOnMultipleOf(MeetingBO meeting) {
+        return meeting.getMeetingDetails().getRecurAfter().intValue() % this.meetingDetails.getRecurAfter().intValue() == 0;
+    }
 
     public boolean isDayOfWeekDifferent(WeekDay dayOfWeek) {
         return !dayOfWeek.equals(this.getMeetingDetails().getWeekDay());
