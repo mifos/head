@@ -284,22 +284,41 @@
 		</tr>
 		</thead>
 		<tbody>
-		[#list cashFlowSummaryFormBean.loanRepaymentPaidInstallmentsWithRunningBalance as row]
-		<tr>
-			<td style="border-top: 1px solid grey;">${row.installmentDetails.installmentNumber?string.number}</td>
-			<td style="border-top: 1px solid grey;">${row.installmentDetails.dueDate?date?string.medium}</td>
-			<td style="border-top: 1px solid grey;">${row.paymentDate?date?string.medium}</td>
-			<td style="border-top: 1px solid grey;">${row.installmentDetails.principal?string.number}</td>
-			<td style="border-top: 1px solid grey;">${row.installmentDetails.interest?string.number}</td>
-			<td style="border-top: 1px solid grey;">${row.installmentDetails.fees?string.number}</td>
-			<td style="border-top: 1px solid grey;">${row.total?string.number}</td>
-			<th style="border-top: 1px solid grey; width: 20px;">&nbsp;</th>
-			<td style="border-top: 1px solid grey;">${row.principal?string.number}</td>
-			<td style="border-top: 1px solid grey;">${row.interest?string.number}</td>
-			<td style="border-top: 1px solid grey;">${row.fees?string.number}</td>
-			<td style="border-top: 1px solid grey;">${row.totalInstallment?string.number}</td>
-		</tr>
-		[/#list]
+		[#if loanProductReferenceData.compareCashflowEnabled]
+			[#list cashFlowSummaryFormBean.loanRepaymentPaidInstallmentsWithRunningBalance as row]
+			<tr>
+				<td style="border-top: 1px solid grey;">${row.installmentDetails.installmentNumber?string.number}</td>
+				<td style="border-top: 1px solid grey;">${row.installmentDetails.dueDate?date?string.medium}</td>
+				<td style="border-top: 1px solid grey;">${row.paymentDate?date?string.medium}</td>
+				<td style="border-top: 1px solid grey;">${row.installmentDetails.principal?string.number}</td>
+				<td style="border-top: 1px solid grey;">${row.installmentDetails.interest?string.number}</td>
+				<td style="border-top: 1px solid grey;">${row.installmentDetails.fees?string.number}</td>
+				<td style="border-top: 1px solid grey;">${row.total?string.number}</td>
+				<th style="border-top: 1px solid grey; width: 20px;">&nbsp;</th>
+				<td style="border-top: 1px solid grey;">${row.principal?string.number}</td>
+				<td style="border-top: 1px solid grey;">${row.interest?string.number}</td>
+				<td style="border-top: 1px solid grey;">${row.fees?string.number}</td>
+				<td style="border-top: 1px solid grey;">${row.totalInstallment?string.number}</td>
+			</tr>
+			[/#list]
+		[#else]
+			[#list loanScheduleFormBean.loanRepaymentPaidInstallmentsWithRunningBalance as row]
+			<tr>
+				<td style="border-top: 1px solid grey;">${row.installmentDetails.installmentNumber?string.number}</td>
+				<td style="border-top: 1px solid grey;">${row.installmentDetails.dueDate?date?string.medium}</td>
+				<td style="border-top: 1px solid grey;">${row.paymentDate?date?string.medium}</td>
+				<td style="border-top: 1px solid grey;">${row.installmentDetails.principal?string.number}</td>
+				<td style="border-top: 1px solid grey;">${row.installmentDetails.interest?string.number}</td>
+				<td style="border-top: 1px solid grey;">${row.installmentDetails.fees?string.number}</td>
+				<td style="border-top: 1px solid grey;">${row.total?string.number}</td>
+				<th style="border-top: 1px solid grey; width: 20px;">&nbsp;</th>
+				<td style="border-top: 1px solid grey;">${row.principal?string.number}</td>
+				<td style="border-top: 1px solid grey;">${row.interest?string.number}</td>
+				<td style="border-top: 1px solid grey;">${row.fees?string.number}</td>
+				<td style="border-top: 1px solid grey;">${row.totalInstallment?string.number}</td>
+			</tr>
+			[/#list]
+		[/#if]
 		</tbody>
 </table>
 
@@ -319,17 +338,31 @@
 		</tr>
 		</thead>
 		<tbody>
-		[#list cashFlowSummaryFormBean.loanRepaymentFutureInstallments as row]
-		<tr>
-			<td style="border-top: 1px solid grey;">${row.installmentNumber?string.number}</td>
-			<td style="border-top: 1px solid grey;">${row.dueDate?date?string.medium}</td>
-			<th style="border-top: 1px solid grey; width: 20px;">-</th>
-			<td style="border-top: 1px solid grey;">${row.principal?string.number}</td>
-			<td style="border-top: 1px solid grey;">${row.interest?string.number}</td>
-			<td style="border-top: 1px solid grey;">${row.fees?string.number}</td>
-			<td style="border-top: 1px solid grey;">${row.total?string.number}</td>
-		</tr>
-		[/#list]
+		[#if loanProductReferenceData.compareCashflowEnabled]
+			[#list cashFlowSummaryFormBean.loanRepaymentFutureInstallments as row]
+			<tr>
+				<td style="border-top: 1px solid grey;">${row.installmentNumber?string.number}</td>
+				<td style="border-top: 1px solid grey;">${row.dueDate?date?string.medium}</td>
+				<th style="border-top: 1px solid grey; width: 20px;">-</th>
+				<td style="border-top: 1px solid grey;">${row.principal?string.number}</td>
+				<td style="border-top: 1px solid grey;">${row.interest?string.number}</td>
+				<td style="border-top: 1px solid grey;">${row.fees?string.number}</td>
+				<td style="border-top: 1px solid grey;">${row.total?string.number}</td>
+			</tr>
+			[/#list]
+		[#else]
+			[#list loanScheduleFormBean.loanRepaymentFutureInstallments as row]
+			<tr>
+				<td style="border-top: 1px solid grey;">${row.installmentNumber?string.number}</td>
+				<td style="border-top: 1px solid grey;">${row.dueDate?date?string.medium}</td>
+				<th style="border-top: 1px solid grey; width: 20px;">-</th>
+				<td style="border-top: 1px solid grey;">${row.principal?string.number}</td>
+				<td style="border-top: 1px solid grey;">${row.interest?string.number}</td>
+				<td style="border-top: 1px solid grey;">${row.fees?string.number}</td>
+				<td style="border-top: 1px solid grey;">${row.total?string.number}</td>
+			</tr>
+			[/#list]
+		[/#if]
 		</tbody>
 </table>
 <form action="${flowExecutionUrl}" method="post">
