@@ -193,25 +193,25 @@ $(function() {
 				[@spring.bind "loanScheduleFormBean.installmentAmounts[${ind}]"/]
 				[#if loanProductReferenceData.compareCashflowEnabled]
 					[#if ind == loanAccountFormBean.numberOfInstallments - 1]
-					<td style="border-top: 1px solid grey;"><input type="text" name="installmentAmounts[${ind}]" size="10" value="${cashFlowSummaryFormBean.installmentAmounts[ind]?string.number}" disabled="disabled" /></td>
+					<td style="border-top: 1px solid grey;"><input type="text" name="installmentAmounts[${ind}]" size="10" value="${cashFlowSummaryFormBean.installmentAmounts[ind]?c}" disabled="disabled" /></td>
 					[#else]
-					<td style="border-top: 1px solid grey;"><input type="text" name="installmentAmounts[${ind}]" size="10" value="${cashFlowSummaryFormBean.installmentAmounts[ind]?string.number}" /></td>
+					<td style="border-top: 1px solid grey;"><input type="text" name="installmentAmounts[${ind}]" size="10" value="${cashFlowSummaryFormBean.installmentAmounts[ind]?c}" /></td>
 					[/#if]
 				[#else]
 					[#if ind == loanAccountFormBean.numberOfInstallments - 1]
-					<td style="border-top: 1px solid grey;"><input type="text" name="installmentAmounts[${ind}]" size="10" value="${loanScheduleFormBean.installmentAmounts[ind]?string.number}" disabled="disabled" /></td>
+					<td style="border-top: 1px solid grey;"><input type="text" name="installmentAmounts[${ind}]" size="10" value="${loanScheduleFormBean.installmentAmounts[ind]?c}" disabled="disabled" /></td>
 					[#else]
-					<td style="border-top: 1px solid grey;"><input type="text" name="installmentAmounts[${ind}]" size="10" value="${loanScheduleFormBean.installmentAmounts[ind]?string.number}" /></td>
+					<td style="border-top: 1px solid grey;"><input type="text" name="installmentAmounts[${ind}]" size="10" value="${loanScheduleFormBean.installmentAmounts[ind]?c}" /></td>
 					[/#if]
-					<td style="border-top: 1px solid grey;"><input type="text" name="actualPaymentAmounts[${ind}]" size="10" value="${loanScheduleFormBean.actualPaymentAmounts[ind]?string.number}" /</td>
+					<td style="border-top: 1px solid grey;"><input type="text" name="actualPaymentAmounts[${ind}]" size="10" value="${loanScheduleFormBean.actualPaymentAmounts[ind]?c}" /</td>
 				[/#if]
 			[#else]
 				[#if loanProductReferenceData.compareCashflowEnabled]
 					<td style="border-top: 1px solid grey;">${row.total?string.number}</td>
-					<td style="border-top: 1px solid grey;"><input type="text" name="actualPaymentAmounts[${ind}]" size="10" value="${cashFlowSummaryFormBean.actualPaymentAmounts[ind]?string.number}" /></td>
+					<td style="border-top: 1px solid grey;"><input type="text" name="actualPaymentAmounts[${ind}]" size="10" value="${cashFlowSummaryFormBean.actualPaymentAmounts[ind]?c}" /></td>
 				[#else]
 					<td style="border-top: 1px solid grey;">${row.total?string.number}</td>
-					<td style="border-top: 1px solid grey;"><input type="text" name="actualPaymentAmounts[${ind}]" size="10" value="${loanScheduleFormBean.actualPaymentAmounts[ind]?string.number}" /></td>
+					<td style="border-top: 1px solid grey;"><input type="text" name="actualPaymentAmounts[${ind}]" size="10" value="${loanScheduleFormBean.actualPaymentAmounts[ind]?c}" /></td>
 				[/#if]
 			[/#if]
 		</tr>
