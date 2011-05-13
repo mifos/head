@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">          
+    <changeSet id="MIFOS_4342_1" author="Lukasz Domzalski" context="expansion">
+        <sql endDelimiter=";">
+			alter table personnel add HASH varchar(60) default null;
+        </sql>
+        <rollback>
+            <sql endDelimiter=";">
+                alter table personnel drop HASH;
+            </sql>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>
