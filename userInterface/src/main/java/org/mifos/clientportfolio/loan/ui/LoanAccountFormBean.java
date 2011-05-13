@@ -984,6 +984,11 @@ public class LoanAccountFormBean implements Serializable {
         for(int i=0; i<this.digitsAfterDecimalForMonetaryAmounts; i++) {
             numberFormat.append("#");
         }
+        
+        if (this.digitsAfterDecimalForMonetaryAmounts == 0) {
+            numberFormat = new StringBuilder("0");
+        }
+        
         return numberFormat.toString();
     }
     
