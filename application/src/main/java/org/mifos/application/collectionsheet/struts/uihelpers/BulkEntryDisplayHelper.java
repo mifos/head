@@ -139,14 +139,14 @@ public class BulkEntryDisplayHelper {
         groupAccountStr = " " + groupAccountStr + " ";
 
         for (CollectionSheetEntryDto child : parent.getCollectionSheetEntryChildren()) {
-            buildCompleteRow(child, loanProducts, savingsProducts, parent.getCollectionSheetEntryChildren().size(), 0,
+            buildClientRow(child, loanProducts, savingsProducts, parent.getCollectionSheetEntryChildren().size(), 0,
                     rowIndex, groupTotals, centerTotals, child.getCustomerDetail().getDisplayName(), builder, method,
                     1, currency);
             generateAttendance(builder, custAttTypes, rowIndex, child, method);
             BulkEntryTagUIHelper.getInstance().generateEndTR(builder);
             rowIndex++;
         }
-        buildCompleteRow(parent, loanProducts, savingsProducts, parent.getCollectionSheetEntryChildren().size(), 0,
+        buildClientRow(parent, loanProducts, savingsProducts, parent.getCollectionSheetEntryChildren().size(), 0,
                 rowIndex, groupTotals, centerTotals, groupAccountStr, builder, method, 2, currency);
         BulkEntryTagUIHelper.getInstance().generateEmptyTD(builder, true);
         BulkEntryTagUIHelper.getInstance().generateEndTR(builder);
@@ -184,7 +184,7 @@ public class BulkEntryDisplayHelper {
 
             for (CollectionSheetEntryDto clientEntry : clientEntries) {
                 final int levelId = 1;
-                buildCompleteRow(clientEntry, loanProducts, savingsProducts, clientCount, groupInitialAccNum, rowIndex,
+                buildClientRow(clientEntry, loanProducts, savingsProducts, clientCount, groupInitialAccNum, rowIndex,
                         groupTotals, centerTotals, clientEntry.getCustomerDetail().getDisplayName(), builder, method,
                         levelId,
                         currency);
@@ -197,7 +197,7 @@ public class BulkEntryDisplayHelper {
             final String groupLabel = getLabel(ConfigurationConstants.GROUP, userContext);
             final String formattedGroupAccountStr = accountLabel.format(accountLabel, groupLabel);
             final String groupAccountStr = " " + formattedGroupAccountStr + " ";
-            buildCompleteRow(groupEntry, loanProducts, savingsProducts, clientCount, groupInitialAccNum, rowIndex,
+            buildClientRow(groupEntry, loanProducts, savingsProducts, clientCount, groupInitialAccNum, rowIndex,
                     groupTotals, centerTotals, groupAccountStr, builder, method, levelId, currency);
             BulkEntryTagUIHelper.getInstance().generateEmptyTD(builder, true);
             BulkEntryTagUIHelper.getInstance().generateEndTR(builder);
@@ -211,7 +211,7 @@ public class BulkEntryDisplayHelper {
         final String center = getLabel(ConfigurationConstants.CENTER, userContext);
         final String formattedCenterAccountStr = accountLabel.format(accountLabel, center);
         final String centerAccountStr = " " + formattedCenterAccountStr + " ";
-        buildCompleteRow(centerEntry, loanProducts, savingsProducts, 0, 0, rowIndex, groupTotals, centerTotals,
+        buildClientRow(centerEntry, loanProducts, savingsProducts, 0, 0, rowIndex, groupTotals, centerTotals,
                 centerAccountStr, builder, method, levelId, currency);
         BulkEntryTagUIHelper.getInstance().generateEmptyTD(builder, true);
         BulkEntryTagUIHelper.getInstance().generateEndTR(builder);
@@ -220,7 +220,7 @@ public class BulkEntryDisplayHelper {
         return centerTotals;
     }
 
-    private void buildCompleteRow(final CollectionSheetEntryDto collectionSheetEntryDto, final List<ProductDto> loanProducts,
+    private void buildClientRow(final CollectionSheetEntryDto collectionSheetEntryDto, final List<ProductDto> loanProducts,
             final List<ProductDto> savingsProducts, final int groupChildSize, final int groupInitialAccNum, final int rowIndex,
             final Double[] groupTotals, final Double[] centerTotals, final String customerName, final StringBuilder builder, final String method,
             final int levelId,
@@ -233,9 +233,8 @@ public class BulkEntryDisplayHelper {
         getLoanRow(builder, bulkEntryLoanAccounts, loanProducts, rowIndex, groupTotals, centerTotals,
                 groupChildSize,
                 groupInitialAccNum, savingsProducts.size(), method, true);
-        getDepositSavingsRow(builder, bulkEntrySavingsAccounts, savingsProducts, rowIndex, groupTotals, centerTotals,
-                groupChildSize, groupInitialAccNum, loanProducts.size(), method, levelId,
-                currency);
+        
+        getDepositSavingsRow(builder, bulkEntrySavingsAccounts, savingsProducts, rowIndex, groupTotals, centerTotals, groupChildSize, groupInitialAccNum, loanProducts.size(), method, levelId, currency);
         BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "&nbsp;", true);
         BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "&nbsp;", true);
         getLoanRow(builder, bulkEntryLoanAccounts, loanProducts, rowIndex, groupTotals, centerTotals,
@@ -244,6 +243,7 @@ public class BulkEntryDisplayHelper {
         getWithdrawalSavingsRow(builder, bulkEntrySavingsAccounts, savingsProducts, rowIndex, groupTotals,
                 centerTotals, groupChildSize, groupInitialAccNum, loanProducts.size(),
                 method, levelId, currency);
+        
         BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "&nbsp;", true);
         BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "&nbsp;", true);
         buildCustomerAccount(collectionSheetEntryDto.getCustomerAccountDetails(), builder, method, currency, rowIndex,
@@ -296,16 +296,13 @@ public class BulkEntryDisplayHelper {
             final List<ProductDto> savingsProducts, final int rows, final Double[] groupTotals, final Double[] centerTotals,
             final int size, final int initialAccNo, final int loanProductsSize,
             final String method, final int levelId, final MifosCurrency currency) {
+        
         for (ProductDto prdOffering : savingsProducts) {
             boolean isIdMatched = false;
             builder.append("<td class=\"drawtablerow\">");
             for (SavingsAccountDto accountView : bulkEntryAccountList) {
                 if (levelId == 1) {
-                    isIdMatched = prdOffering.getId().equals(
-                            accountView.getSavingsOfferingId())
-                            && (null == accountView.getRecommendedAmntUnitId() || accountView
-                                    .getRecommendedAmntUnitId().equals(
-                                            RecommendedAmountUnit.PER_INDIVIDUAL.getValue()));
+                    isIdMatched = prdOffering.getId().equals(accountView.getSavingsOfferingId()) && !accountView.getAccountTrxnDetails().isEmpty();
                 } else {
                     isIdMatched = prdOffering.getId().equals(
                             accountView.getSavingsOfferingId());
