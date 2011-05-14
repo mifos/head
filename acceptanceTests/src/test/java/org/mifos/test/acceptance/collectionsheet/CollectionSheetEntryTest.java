@@ -44,7 +44,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(singleThreaded = true, groups={"collectionsheet","acceptance","ui"})
+@Test(singleThreaded = true, groups={"collectionsheet","acceptance","ui", "smoke"})
 public class CollectionSheetEntryTest extends UiTestCaseBase {
 
     private static final String FINANCIAL_TRXN = "FINANCIAL_TRXN";
@@ -57,8 +57,6 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
     private static final String LOAN_ACTIVITY_DETAILS = "LOAN_ACTIVITY_DETAILS";
     private static final String ACCOUNT_STATUS_CHANGE_HISTORY = "ACCOUNT_STATUS_CHANGE_HISTORY";
     private static final String CUSTOMER_ATTENDANCE = "CUSTOMER_ATTENDANCE";
-
-
 
     @Autowired
     private DriverManagerDataSource dataSource;
@@ -88,6 +86,7 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
+    @Test(enabled=false)
     public void defaultAdminUserSelectsValidCollectionSheetEntryParameters() throws Exception {
         SubmitFormParameters formParameters = new SubmitFormParameters();
         formParameters.setBranch("Office1");
@@ -116,6 +115,7 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
+    @Test(enabled=false)
     public void twoLoansWithSameProductHasMergedLoanAmount() throws Exception {
         SubmitFormParameters formParameters = getFormParametersForTestOffice();
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
@@ -128,6 +128,7 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     //http://mifosforge.jira.com/browse/MIFOSTEST-3
+    @Test(enabled=false)
     public void defaultAmountsForMediumCenterSavedToDatabase() throws Exception {
         // Given
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_medium_005_dbunit.xml", dataSource, selenium);
@@ -227,6 +228,4 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
       formParameters.setPaymentMode("Cash");
         return formParameters;
     }
-
 }
-
