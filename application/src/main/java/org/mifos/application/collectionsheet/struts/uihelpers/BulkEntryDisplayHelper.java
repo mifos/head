@@ -450,7 +450,9 @@ public class BulkEntryDisplayHelper {
             } else {
                 enteredAmount = new Money(Money.getDefaultCurrency(), accountViewBO.getDisBursementAmountEntered());
                 if (accountViewBO.isValidDisbursementAmount()) {
-                    totalAmount = new Money(Money.getDefaultCurrency(), accountViewBO.getEnteredAmount());
+                    if (StringUtils.isNotBlank(accountViewBO.getEnteredAmount())) {
+                        totalAmount = new Money(Money.getDefaultCurrency(), accountViewBO.getEnteredAmount());
+                    }
                 }
             }
             if (amountToBeShown.subtract(totalAmount).isNonZero()) {
