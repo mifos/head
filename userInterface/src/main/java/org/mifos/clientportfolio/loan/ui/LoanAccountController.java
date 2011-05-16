@@ -233,12 +233,14 @@ public class LoanAccountController {
     	formBean.setDefaultFeeAmountOrRate(defaultFeeAmountOrRate);
     	formBean.setDefaultFeeId(defaultFeeId);
     	formBean.setDefaultFeeSelected(new Boolean[dto.getDefaultFees().size()]);
+    	formBean.setDefaultFees(dto.getDefaultFees());
 
     	Number[] selectedFeeId = new Number[3];
 		formBean.setSelectedFeeId(selectedFeeId);
 
 		Number[] selectedFeeAmount = new Number[3];
 		formBean.setSelectedFeeAmount(selectedFeeAmount);
+		formBean.setAdditionalFees(dto.getAdditionalFees());
 
     	return dto;
     }
@@ -356,6 +358,9 @@ public class LoanAccountController {
         for (FeeDto feeDto : defaultFees) {
             if (Integer.valueOf(feeDto.getId()).equals(feeId)) {
                 feeDto.setAmount(amountOrRate.toPlainString());
+                if (feeDto.isRateBasedFee()) {
+                    feeDto.setRate(amountOrRate.doubleValue());
+                }
                 found = feeDto;
             }
         }

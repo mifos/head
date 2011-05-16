@@ -109,8 +109,9 @@ $(function() {
 	        <div class="attribute"><span class="standout">${defaultFee.name}</span></div>
 	        <div class="value">
 	        	[#if defaultFee.rateBasedFee]
-	        		[#assign rateAsFraction = defaultFee.rate/100]
-	        		${rateAsFraction?string.percent}
+	        		[#setting number_format="#.###"]
+	        		${defaultFee.rate?string.number}%
+					[#setting number_format=loanAccountFormBean.numberFormatForMonetaryAmounts]	        		
 	        	[#else]
 	        		${defaultFee.amountAsNumber?string.number}
 	        	[/#if]
